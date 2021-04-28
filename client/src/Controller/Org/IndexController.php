@@ -9,11 +9,13 @@ use App\Entity\User;
 use App\Exception\RestClientException;
 use App\Form as FormDir;
 use App\Service\Audit\AuditEvents;
+use App\Service\Auth\UserProvider;
 use App\Service\Client\Internal\ClientApi;
 use App\Service\Client\RestClient;
 use App\Service\Logger;
 use App\Service\Time\DateTimeProvider;
 use Sensio\Bundle\FrameworkExtraBundle\Configuration\Template;
+use Symfony\Component\Security\Core\Security as SecurityHelper;
 use Symfony\Component\Form\FormError;
 use Symfony\Component\Form\FormFactoryInterface;
 use Symfony\Component\Form\SubmitButton;
@@ -73,6 +75,11 @@ class IndexController extends AbstractController
 
         /** @var User $user */
         $user = $this->getUser();
+
+        if (!$user->getAgreeTermsUse()) {
+            $token = $this->restClient->get('/user/get-reg-token', 'array');
+            return $this->redirectToRoute('user_agree_terms_use', ['token' => $token]);
+        }
 
         $endpoint = sprintf(
             '%s?%s',

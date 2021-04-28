@@ -67,8 +67,8 @@ class UserController extends AbstractController
 
         // check $token is correct
         try {
-            $user = $this->restClient->loadUserByToken($token);
             /* @var $user EntityDir\User */
+            $user = $this->restClient->loadUserByToken($token);
         } catch (\Throwable $e) {
             return $this->renderError('This link is not working or has already been used', $e->getCode());
         }
@@ -125,6 +125,9 @@ class UserController extends AbstractController
 
             // set password for user
             $this->restClient->put('user/'.$user->getId().'/set-password', $data);
+
+            // set agree terms for user
+            $this->userApi->agreeTermsUse($token);
 
             // log in
             $clientToken = new UsernamePasswordToken($user, null, 'secured_area', $user->getRoles());
@@ -339,9 +342,8 @@ class UserController extends AbstractController
         $form = $this->createForm(FormDir\User\AgreeTermsType::class, $user);
         $form->handleRequest($request);
         if ($form->isSubmitted() && $form->isValid()) {
-            $this->restClient->agreeTermsUse($token);
-
-            return $this->redirectToRoute('user_activate', ['token' => $token, 'action' => 'activate']);
+            $this->userApi->agreeTermsUse($token);
+            return $this->redirectToRoute('org_dashboard');
         }
 
         if (EntityDir\User::ROLE_PA_NAMED == $user->getRoleName()) {

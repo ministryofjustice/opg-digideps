@@ -14,6 +14,7 @@ use Doctrine\Common\Collections\ArrayCollection;
 use Doctrine\ORM\EntityManagerInterface;
 use Doctrine\ORM\OptimisticLockException;
 use Doctrine\ORM\ORMException;
+use Exception;
 use Sensio\Bundle\FrameworkExtraBundle\Configuration\Security;
 use Symfony\Component\HttpFoundation\Request;
 use Symfony\Component\Routing\Annotation\Route;
@@ -118,6 +119,12 @@ class UserController extends RestController
 
         // check if rolename in data - if so add audit log
         $this->userService->editUser($originalUser, $requestedUser);
+
+        if ($requestedUser->getRegistrationToken() !== NULL) {
+            $requestedUser->setRegistrationToken(null);
+            $this->em->persist($requestedUser);
+            $this->em->flush();
+        }
 
         return ['id' => $requestedUser->getId()];
     }
@@ -367,24 +374,38 @@ class UserController extends RestController
     /**
      * @Route("/agree-terms-use/{token}", methods={"PUT"})
      */
-    public function agreeTermsUSe(Request $request, $token)
+    public function agreeTermsUse(Request $request, $token)
     {
         if (!$this->authService->isSecretValid($request)) {
             throw new \RuntimeException('client secret not accepted.', 403);
         }
 
-        $user = $this->findEntityBy(User::class, ['registrationToken' => $token], 'User not found');
         /* @var $user User */
+        $user = $this->findEntityBy(User::class, ['registrationToken' => $token], 'User not found');
 
         if (!$this->authService->isSecretValidForRole($user->getRoleName(), $request)) {
             throw new \RuntimeException($user->getRoleName().' user role not allowed from this client.', 403);
         }
 
         $user->setAgreeTermsUse(true);
+        if ($this->userRegBeforeToday($user)) {
+            $user->setRegistrationToken(null);
+        }
+        
         $this->em->persist($user);
         $this->em->flush($user);
 
         return $user->getId();
+    }
+
+    /**
+     * Check if a user registration was before today
+     * @param $user
+     * @return bool
+     */
+    private function userRegBeforeToday(User $user)
+    {
+        return $user->getRegistrationDate() < (new \DateTime())->setTime(00, 00, 00);
     }
 
     /**
@@ -468,5 +489,25 @@ class UserController extends RestController
         $this->formatter->setJmsSerialiserGroups($groups);
 
         return $requestedUserTeams->first();
+    }
+
+    /**
+     * Endpoint for getting a reg token for user
+     *
+     * @Route("/get-reg-token", methods={"GET"})
+     *
+     * @throws Exception
+     */
+    public function getRegToken(Request $request)
+    {
+        /** @var User $user */
+        $user = $this->getUser();
+        $user->recreateRegistrationToken();
+        $user->setRegistrationToken($user->getRegistrationToken());
+
+        $this->em->persist($user);
+        $this->em->flush();
+
+        return $user->getRegistrationToken();
     }
 }
