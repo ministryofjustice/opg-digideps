@@ -1,11 +1,12 @@
 <?php
 
-
 namespace DigidepsBehat\v2\Helpers;
 
+use App\Entity\Client;
 use App\Entity\Ndr\Ndr;
 use App\Entity\User;
 use App\TestHelpers\BehatFixtures;
+use App\TestHelpers\ClientTestHelper;
 use Doctrine\ORM\EntityManagerInterface;
 
 class FixtureHelper
@@ -39,7 +40,16 @@ class FixtureHelper
             'currentReportNdrOrReport' => $currentReport instanceof Ndr ? 'ndr' : 'report',
             'previousReportId' => $previousReport->getId(),
             'previousReportType' => $previousReport->getType(),
-            'previousReportNdrOrReport' => $previousReport instanceof Ndr ? 'ndr' : 'report'
+            'previousReportNdrOrReport' => $previousReport instanceof Ndr ? 'ndr' : 'report',
         ];
+    }
+
+    public function duplicateClient(int $clientId)
+    {
+        $client = clone $this->em->getRepository(Client::class)->find($clientId);
+        $client->setCaseNumber(ClientTestHelper::createValidCaseNumber());
+
+        $this->em->persist($client);
+        $this->em->flush();
     }
 }

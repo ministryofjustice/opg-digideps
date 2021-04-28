@@ -22,7 +22,6 @@ trait PageUrlsTrait
     private string $adminClientDetailsUrl = '/admin/client/%s/details';
 
     // Fixtures
-    private string $duplicateClientFixtureUrl = '/admin/fixture/duplicate-client/%s';
     private string $courtOrdersFixtureUrl = '/admin/fixture/court-orders?%s';
 
     public function getReportSubmittedUrl(int $reportId): string
@@ -83,10 +82,5 @@ trait PageUrlsTrait
     public function getCourtOrdersFixtureUrl(string $queryString): string
     {
         return sprintf($this->courtOrdersFixtureUrl, $queryString);
-    }
-
-    public function getDuplicateClientFixtureUrl(int $clientId): string
-    {
-        return sprintf($this->duplicateClientFixtureUrl, $clientId);
     }
 }

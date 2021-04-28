@@ -68,11 +68,7 @@ trait FixturesTrait
      */
     public function twoClientsHaveSameNames()
     {
-        $this->loginToAdminAs($this->superAdminDetails->getUserEmail());
-
-        $duplicateClientUrl = $this->getDuplicateClientFixtureUrl($this->layDeputyNotStartedDetails->getClientId());
-        $this->visitAdminPath($duplicateClientUrl);
-
+        $this->fixtureHelper->duplicateClient($this->layDeputyNotStartedDetails->getClientId());
         $this->interactingWithUserDetails = $this->layDeputyNotStartedDetails;
     }
 
