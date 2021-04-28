@@ -17,7 +17,6 @@ use App\Repository\NdrRepository;
 use App\Repository\OrganisationRepository;
 use App\Repository\ReportRepository;
 use App\Repository\UserRepository;
-use App\TestHelpers\BehatFixtures;
 use App\v2\Controller\ControllerTrait;
 use App\v2\Fixture\ReportSection;
 use Doctrine\ORM\EntityManagerInterface;
@@ -49,7 +48,6 @@ class FixtureController extends AbstractController
     private $ndrRepository;
     private $casRecFactory;
     private string $symfonyEnvironment;
-    private BehatFixtures $behatFixtures;
 
     public function __construct(
         EntityManagerInterface $em,
@@ -64,8 +62,7 @@ class FixtureController extends AbstractController
         UserRepository $userRepository,
         NdrRepository $ndrRepository,
         CasRecFactory $casRecFactory,
-        string $symfonyEnvironment,
-        BehatFixtures $behatFixtures
+        string $symfonyEnvironment
     ) {
         $this->em = $em;
         $this->clientFactory = $clientFactory;
@@ -80,7 +77,6 @@ class FixtureController extends AbstractController
         $this->ndrRepository = $ndrRepository;
         $this->casRecFactory = $casRecFactory;
         $this->symfonyEnvironment = $symfonyEnvironment;
-        $this->behatFixtures = $behatFixtures;
     }
 
     /**
