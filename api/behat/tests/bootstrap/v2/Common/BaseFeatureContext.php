@@ -18,7 +18,6 @@ class BaseFeatureContext extends MinkContext
     use AlertsTrait;
     use AuthTrait;
     use AssertTrait;
-    use CourtOrderTrait;
     use DebugTrait;
     use ElementSelectionTrait;
     use ErrorsTrait;
