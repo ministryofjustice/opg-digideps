@@ -46,7 +46,7 @@ trait DeputyManagementTrait
      */
     public function userShouldBeDeleted($userEmail)
     {
-        $this->visitAdminPath("/admin/fixtures/getUserIDByEmail/" . strtolower($userEmail));
+        $this->visitAdminPath("/admin/fixture/getUserIDByEmail/" . strtolower($userEmail));
 
         /** @var Session $session */
         $session = $this->getSession();

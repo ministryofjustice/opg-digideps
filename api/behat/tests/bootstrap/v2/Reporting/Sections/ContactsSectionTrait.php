@@ -1,11 +1,8 @@
-<?php declare(strict_types=1);
+<?php
+
+declare(strict_types=1);
 
 namespace DigidepsBehat\v2\Reporting\Sections;
-
-use Behat\Behat\Hook\Scope\AfterStepScope;
-use Behat\Behat\Tester\Result\ExecutedStepResult;
-use Exception;
-use Faker\Factory;
 
 trait ContactsSectionTrait
 {
@@ -26,6 +23,7 @@ trait ContactsSectionTrait
     {
         if ($noContacts) {
             $this->formValuesEntered[] = $this->reasonForNoContacts = $this->faker->text(200);
+
             return;
         }
 
@@ -45,7 +43,7 @@ trait ContactsSectionTrait
     public function iViewContactsSection()
     {
         $activeReportId = $this->loggedInUserDetails->getCurrentReportId();
-        $reportSectionUrl = sprintf(self::REPORT_SECTION_ENDPOINT, $activeReportId, 'contacts');
+        $reportSectionUrl = sprintf(self::REPORT_SECTION_ENDPOINT, $this->reportUrlPrefix, $activeReportId, 'contacts');
 
         $this->visitPath($reportSectionUrl);
 

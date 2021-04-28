@@ -1,5 +1,6 @@
-<?php declare(strict_types=1);
+<?php
 
+declare(strict_types=1);
 
 namespace DigidepsBehat\v2\Common;
 
@@ -7,6 +8,8 @@ use Exception;
 
 trait ReportTrait
 {
+    public string $reportUrlPrefix = 'report';
+
     /**
      * @Given /^I submit the report$/
      */
@@ -27,7 +30,7 @@ trait ReportTrait
         }
 
         $this->clickLink('Continue');
-        ;
+
         $this->checkOption(sprintf('%s_declaration[agree]', $ndrOrReport));
         $this->selectOption(sprintf('%s_declaration[agreedBehalfDeputy]', $ndrOrReport), 'only_deputy');
         $this->pressButton(sprintf('%s_declaration[save]', $ndrOrReport));
@@ -42,11 +45,12 @@ trait ReportTrait
             throw new Exception('It looks like fixtures are not loaded - missing $layDeputyNotStartedDetails');
         }
 
-        $this->loginToFrontendAs($this->layDeputyNotStartedDetails->getEmail());
+        $this->loginToFrontendAs($this->layDeputyNotStartedDetails->getUserEmail());
     }
 
     /**
      * @Given a Lay Deputy has a completed report
+     *
      * @throws Exception
      */
     public function aLayDeputyHasCompletedReport()
@@ -55,11 +59,40 @@ trait ReportTrait
             throw new Exception('It looks like fixtures are not loaded - missing $layDeputyCompletedDetails');
         }
 
-        $this->loginToFrontendAs($this->layDeputyCompletedDetails->getEmail());
+        $this->loginToFrontendAs($this->layDeputyCompletedDetails->getUserEmail());
+    }
+
+    /**
+     * @Given a Lay Deputy has not started an NDR report
+     */
+    public function aNdrLayDeputyHasNotStartedAReport()
+    {
+        if (empty($this->ndrLayDeputyNotStartedDetails)) {
+            throw new Exception('It looks like fixtures are not loaded - missing $ndrLayDeputyNotStartedDetails');
+        }
+
+        $this->loginToFrontendAs($this->ndrLayDeputyNotStartedDetails->getUserEmail());
+        $this->reportUrlPrefix = $this->ndrLayDeputyNotStartedDetails->getCurrentReportNdrOrReport();
+    }
+
+    /**
+     * @Given a Lay Deputy has a completed NDR report
+     *
+     * @throws Exception
+     */
+    public function aNdrLayDeputyHasCompletedReport()
+    {
+        if (empty($this->ndrLayDeputyCompletedDetails)) {
+            throw new Exception('It looks like fixtures are not loaded - missing $ndrLayDeputyCompletedDetails');
+        }
+
+        $this->loginToFrontendAs($this->ndrLayDeputyCompletedDetails->getUserEmail());
+        $this->reportUrlPrefix = $this->ndrLayDeputyCompletedDetails->getCurrentReportNdrOrReport();
     }
 
     /**
      * @Given a Lay Deputy has submitted a report
+     *
      * @throws Exception
      */
     public function aLayDeputyHasSubmittedAReport()
@@ -68,7 +101,7 @@ trait ReportTrait
             throw new Exception('It looks like fixtures are not loaded - missing $layDeputySubmittedDetails');
         }
 
-        $this->loginToFrontendAs($this->layDeputySubmittedDetails->getEmail());
+        $this->loginToFrontendAs($this->layDeputySubmittedDetails->getUserEmail());
     }
 
     /**
@@ -80,6 +113,6 @@ trait ReportTrait
             throw new Exception('It looks like fixtures are not loaded - missing $profAdminDeputyNotStartedDetails');
         }
 
-        $this->loginToFrontendAs($this->profAdminDeputyNotStartedDetails->getEmail());
+        $this->loginToFrontendAs($this->profAdminDeputyNotStartedDetails->getUserEmail());
     }
 }

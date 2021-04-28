@@ -1,4 +1,6 @@
-<?php declare(strict_types=1);
+<?php
+
+declare(strict_types=1);
 
 namespace DigidepsBehat\v2\Reporting\Sections;
 
@@ -18,7 +20,7 @@ trait DocumentsSectionTrait
     private string $invalidFileTypeErrorMessage = 'Please upload a valid file type';
     private string $fileTooBigErrorMessage = 'The file you selected to upload is too big';
     private string $answerNotUpdatedErrorMessage = "Your answer could not be updated to 'No' because you have attached documents";
-    private string $orgCostCertificateMessage = "Send your final cost certificate for the previous reporting period";
+    private string $orgCostCertificateMessage = 'Send your final cost certificate for the previous reporting period';
 
     private array $uploadedDocumentFilenames = [];
 
@@ -28,7 +30,7 @@ trait DocumentsSectionTrait
     public function iViewDocumentsSection()
     {
         $activeReportId = $this->loggedInUserDetails->getCurrentReportId();
-        $reportSectionUrl = sprintf(self::REPORT_SECTION_ENDPOINT, $activeReportId, 'documents');
+        $reportSectionUrl = sprintf(self::REPORT_SECTION_ENDPOINT, $this->reportUrlPrefix, $activeReportId, 'documents');
 
         $this->visitPath($reportSectionUrl);
 
@@ -96,7 +98,7 @@ trait DocumentsSectionTrait
 
         $descriptionLists = $this->getSession()->getPage()->findAll('css', 'dl');
 
-        if (count($descriptionLists) === 0) {
+        if (0 === count($descriptionLists)) {
             $this->throwContextualException('A dl element was not found on the page - make sure the current url is as expected');
         }
 
@@ -243,7 +245,6 @@ trait DocumentsSectionTrait
     {
         $this->assertOnErrorMessage($this->answerNotUpdatedErrorMessage);
     }
-
 
     /**
      * @When I change my mind and confirm I have no documents to upload

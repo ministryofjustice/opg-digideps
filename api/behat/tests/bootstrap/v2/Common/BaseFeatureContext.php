@@ -1,5 +1,6 @@
-<?php declare(strict_types=1);
+<?php
 
+declare(strict_types=1);
 
 namespace DigidepsBehat\v2\Common;
 
@@ -14,21 +15,27 @@ use Symfony\Component\HttpKernel\KernelInterface;
 
 class BaseFeatureContext extends MinkContext
 {
+    use AlertsTrait;
     use AuthTrait;
+    use AssertTrait;
     use CourtOrderTrait;
     use DebugTrait;
-    use ReportTrait;
-    use IShouldBeOnTrait;
-    use PageUrlsTrait;
     use ElementSelectionTrait;
     use ErrorsTrait;
-    use AlertsTrait;
-    use IVisitTrait;
+    use FixturesTrait;
+    use INavigateToAdminTrait;
+    use IShouldBeOnTrait;
+    use IVisitAdminTrait;
+    use IVisitFrontendTrait;
+    use PageUrlsTrait;
+    use ReportTrait;
 
-    const BEHAT_FRONT_RESET_FIXTURES = '/behat/frontend/reset-fixtures?testRunId=%s';
-    const BEHAT_FRONT_USER_DETAILS = '/behat/frontend/user/%s/details';
+    public const BEHAT_FRONT_RESET_FIXTURES = '/behat/frontend/reset-fixtures?testRunId=%s';
+    public const BEHAT_FRONT_USER_DETAILS = '/behat/frontend/user/%s/details';
+    public const REPORT_SECTION_ENDPOINT = '%s/%s/%s ';
 
     public UserDetails $adminDetails;
+    public UserDetails $elevatedAdminDetails;
     public UserDetails $superAdminDetails;
 
     public UserDetails $layDeputyNotStartedDetails;
@@ -39,7 +46,12 @@ class BaseFeatureContext extends MinkContext
     public UserDetails $profAdminDeputyCompletedDetails;
     public UserDetails $profAdminDeputySubmittedDetails;
 
-    public UserDetails $loggedInUserDetails;
+    public UserDetails $ndrLayDeputyNotStartedDetails;
+    public UserDetails $ndrLayDeputyCompletedDetails;
+    public UserDetails $ndrLayDeputySubmittedDetails;
+
+    public ?UserDetails $loggedInUserDetails = null;
+    public ?UserDetails $interactingWithUserDetails = null;
 
     public array $fixtureUsers = [];
 
@@ -48,16 +60,14 @@ class BaseFeatureContext extends MinkContext
     public Generator $faker;
 
     private KernelInterface $symfonyKernel;
-    /**
-     * @var FixtureHelper
-     */
+
     private FixtureHelper $fixtureHelper;
 
     public function __construct(KernelInterface $symfonyKernel, FixtureHelper $fixtureHelper)
     {
         $this->symfonyKernel = $symfonyKernel;
 
-        if ($this->symfonyKernel->getEnvironment() === 'prod') {
+        if ('prod' === $this->symfonyKernel->getEnvironment()) {
             throw new Exception('Unable to run behat tests in prod mode. Change the apps mode to dev or test and try again');
         }
 
@@ -75,18 +85,22 @@ class BaseFeatureContext extends MinkContext
         $userDetails = $this->fixtureHelper->resetFixtures($this->testRunId);
 
         $this->fixtureUsers[] = $this->adminDetails = new UserDetails($userDetails['admin-users']['admin']);
+        $this->fixtureUsers[] = $this->elevatedAdminDetails = new UserDetails($userDetails['admin-users']['elevated-admin']);
         $this->fixtureUsers[] = $this->superAdminDetails = new UserDetails($userDetails['admin-users']['super-admin']);
         $this->fixtureUsers[] = $this->layDeputyNotStartedDetails = new UserDetails($userDetails['lays']['not-started']);
         $this->fixtureUsers[] = $this->layDeputyCompletedDetails = new UserDetails($userDetails['lays']['completed']);
         $this->fixtureUsers[] = $this->layDeputySubmittedDetails = new UserDetails($userDetails['lays']['submitted']);
+        $this->fixtureUsers[] = $this->ndrLayDeputyNotStartedDetails = new UserDetails($userDetails['lays-ndr']['not-started']);
+        $this->fixtureUsers[] = $this->ndrLayDeputyCompletedDetails = new UserDetails($userDetails['lays-ndr']['completed']);
+        $this->fixtureUsers[] = $this->ndrLayDeputySubmittedDetails = new UserDetails($userDetails['lays-ndr']['submitted']);
         $this->fixtureUsers[] = $this->profAdminDeputyNotStartedDetails = new UserDetails($userDetails['professionals']['admin']['not-started']);
         $this->fixtureUsers[] = $this->profAdminDeputyCompletedDetails = new UserDetails($userDetails['professionals']['admin']['completed']);
         $this->fixtureUsers[] = $this->profAdminDeputySubmittedDetails = new UserDetails($userDetails['professionals']['admin']['submitted']);
+
+        $this->loggedInUserDetails = null;
+        $this->interactingWithUserDetails = null;
     }
 
-    /**
-     * @return string
-     */
     public function getAdminUrl(): string
     {
         return getenv('ADMIN_HOST');
@@ -103,13 +117,13 @@ class BaseFeatureContext extends MinkContext
     public function visitFrontendPath(string $path)
     {
         $siteUrl = $this->getSiteUrl();
-        $this->visitPath($siteUrl . $path);
+        $this->visitPath($siteUrl.$path);
     }
 
     public function visitAdminPath(string $path)
     {
         $adminUrl = $this->getAdminUrl();
-        $this->visitPath($adminUrl . $path);
+        $this->visitPath($adminUrl.$path);
     }
 
     public function getPageContent()
@@ -123,7 +137,7 @@ class BaseFeatureContext extends MinkContext
 
     public function throwContextualException(string $message)
     {
-        $loggedInEmail = !isset($this->loggedInUserDetails) ? 'Not logged in' : $this->loggedInUserDetails->getEmail();
+        $loggedInEmail = !isset($this->loggedInUserDetails) ? 'Not logged in' : $this->loggedInUserDetails->getUserEmail();
 
         $contextMessage = <<<CONTEXT
 $message

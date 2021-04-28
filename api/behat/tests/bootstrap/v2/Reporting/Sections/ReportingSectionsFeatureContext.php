@@ -1,5 +1,6 @@
-<?php declare(strict_types=1);
+<?php
 
+declare(strict_types=1);
 
 namespace DigidepsBehat\v2\Reporting\Sections;
 
@@ -7,20 +8,20 @@ use DigidepsBehat\v2\Common\BaseFeatureContext;
 
 class ReportingSectionsFeatureContext extends BaseFeatureContext
 {
-    use ContactsSectionTrait;
+    use AccountsSectionTrait;
     use ActionsSectionTrait;
-    use GiftsSectionTrait;
     use AdditionalInformationSectionTrait;
+    use ContactsSectionTrait;
     use DocumentsSectionTrait;
-
-    const REPORT_SECTION_ENDPOINT = 'report/%s/%s';
+    use GiftsSectionTrait;
+    use VisitsAndCareSectionTrait;
 
     /**
      * @Then the previous section should be :sectionName
      */
     public function previousSectionShouldBe(string $sectionName)
     {
-        $anchor = $this->getSession()->getPage()->find('named', ['link', "Navigate to previous part"]);
+        $anchor = $this->getSession()->getPage()->find('named', ['link', 'Navigate to previous part']);
 
         if (!$anchor) {
             $this->throwContextualException(
@@ -42,7 +43,7 @@ class ReportingSectionsFeatureContext extends BaseFeatureContext
      */
     public function nextSectionShouldBe(string $sectionName)
     {
-        $anchor = $this->getSession()->getPage()->find('named', ['link', "Navigate to next part"]);
+        $anchor = $this->getSession()->getPage()->find('named', ['link', 'Navigate to next part']);
 
         if (!$anchor) {
             $this->throwContextualException(
@@ -64,8 +65,8 @@ class ReportingSectionsFeatureContext extends BaseFeatureContext
      */
     public function iNavigateBackToReportSection()
     {
-        $this->clickLink('Deputy report overview');
-        assert($this->iAmOnReportsOverviewPage());
+        $this->iClickBasedOnAttributeTypeAndValue('a', 'data-action', 'report.overview');
+        $this->iAmOnReportsOverviewPage();
     }
 
     /**
@@ -82,7 +83,17 @@ class ReportingSectionsFeatureContext extends BaseFeatureContext
     public function iGoToReportOverviewUrl()
     {
         $activeReportId = $this->loggedInUserDetails->getCurrentReportId();
-        $reportOverviewUrl = sprintf(self::REPORT_SECTION_ENDPOINT, $activeReportId, 'overview');
+        $reportOverviewUrl = sprintf(self::REPORT_SECTION_ENDPOINT, $this->reportUrlPrefix, $activeReportId, 'overview');
+        $this->visitPath($reportOverviewUrl);
+    }
+
+    /**
+     * @When I view the NDR overview page
+     */
+    public function iGoToNDROverviewUrl()
+    {
+        $activeReportId = $this->loggedInUserDetails->getCurrentReportId();
+        $reportOverviewUrl = sprintf(self::REPORT_SECTION_ENDPOINT, $this->reportUrlPrefix, $activeReportId, 'overview');
         $this->visitPath($reportOverviewUrl);
     }
 
@@ -91,17 +102,18 @@ class ReportingSectionsFeatureContext extends BaseFeatureContext
      */
     public function iShouldSeeSectionAs($section, $status)
     {
-        $divs = $this->getSession()->getPage()->findAll('css', 'div');
+        $divs = $this->getSession()->getPage()->findAll('css', 'div.opg-overview-section');
 
         if (!$divs) {
             $this->throwContextualException('A div element was not found on the page');
         }
 
-        $sectionFormatted = '/report/' . $this->loggedInUserDetails->getCurrentReportId() . '/' . $section;
+        $sectionFormatted = sprintf('/%s/%s/%s', $this->reportUrlPrefix, $this->loggedInUserDetails->getCurrentReportId(), $section);
+
         $statusCorrect = false;
 
         foreach ($divs as $div) {
-            if ($div->getAttribute('href') === $sectionFormatted) {
+            if ($div->find('css', 'a')->getAttribute('href') === $sectionFormatted) {
                 $statuses = $div->findAll('css', 'span');
 
                 foreach ($statuses as $sts) {
@@ -114,7 +126,7 @@ class ReportingSectionsFeatureContext extends BaseFeatureContext
 
         if (!$statusCorrect) {
             $this->throwContextualException(
-                sprintf('Report section status not as expected. Status: %s not found. ', $status)
+                sprintf('Report section status not as expected. Status "%s" not found. ', $status)
             );
         }
     }
@@ -139,12 +151,15 @@ class ReportingSectionsFeatureContext extends BaseFeatureContext
         $furtherInfoNeeded = false;
 
         foreach ($tableEntry as $entry) {
-            if (str_contains(trim(strtolower($entry->getHtml())), "please answer this question")) {
+            if (str_contains(trim(strtolower($entry->getHtml())), 'please answer this question')) {
                 $furtherInfoNeeded = true;
             }
         }
 
-        assert($furtherInfoNeeded);
+        assert(
+            $furtherInfoNeeded,
+            'The text: "please answer this question" not found'
+        );
     }
 
     /**

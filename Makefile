@@ -61,7 +61,7 @@ down-app: ### Tears down the app
 
 client-unit-tests: ## Run the client unit tests
 	REQUIRE_XDEBUG_FRONTEND=false REQUIRE_XDEBUG_API=false docker-compose build frontend admin
-	docker-compose -f docker-compose.yml run -e APP_ENV=unit_test -e APP_DEBUG=0 --rm frontend bin/phpunit -c tests/phpunit
+	docker-compose -f docker-compose.yml run -e APP_ENV=unit_test -e APP_DEBUG=0 --rm frontend vendor/bin/phpunit -c tests/phpunit
 
 api-unit-tests: reset-database reset-fixtures ## Run the api unit tests
 	REQUIRE_XDEBUG_FRONTEND=false REQUIRE_XDEBUG_API=false docker-compose build api
@@ -116,3 +116,9 @@ enable-debug: ## Puts app in dev mode and enables debug (so the app has toolbar/
 	  APP_ENV=dev APP_DEBUG=1 docker-compose up -d --no-deps $$c; \
 	  echo "$$c: debug enabled." ; \
 	done
+
+phpstan-api:
+	docker-compose run --rm api vendor/phpstan/phpstan/phpstan analyse src --memory-limit=0 --level=max
+
+phpstan-frontend:
+	docker-compose run --rm frontend vendor/phpstan/phpstan/phpstan analyse src --memory-limit=0 --level=max

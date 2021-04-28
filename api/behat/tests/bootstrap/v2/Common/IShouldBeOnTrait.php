@@ -1,5 +1,6 @@
-<?php declare(strict_types=1);
+<?php
 
+declare(strict_types=1);
 
 namespace DigidepsBehat\v2\Common;
 
@@ -110,7 +111,7 @@ trait IShouldBeOnTrait
      */
     public function iAmOnReportsOverviewPage()
     {
-        return $this->iAmOnPage('/report\/.*\/overview$/');
+        return $this->iAmOnPage(sprintf('/%s\/.*\/overview$/', $this->reportUrlPrefix));
     }
 
     /**
@@ -167,5 +168,93 @@ trait IShouldBeOnTrait
     public function iAmOnGiftsStartPage()
     {
         return $this->iAmOnPage('/report\/.*\/gifts$/');
+    }
+
+    /**
+     * @Then I should be on the visits and care first step page
+     */
+    public function iAmOnVisitsAndCareStep1Page()
+    {
+        return $this->iAmOnPage('/report\/.*\/visits-care\/step\/1$/');
+    }
+
+    /**
+     * @Then I should be on the visits and care second step page
+     */
+    public function iAmOnVisitsAndCareStep2Page()
+    {
+        return $this->iAmOnPage('/report\/.*\/visits-care\/step\/2$/');
+    }
+
+    /**
+     * @Then I should be on the accounts summary page
+     */
+    public function iAmOnAccountsSummaryPage()
+    {
+        return $this->iAmOnPage(sprintf('/%s\/.*\/bank-account.*\/summary$/', $this->reportUrlPrefix));
+    }
+
+    /**
+     * @Then I should be on the add another accounts page
+     */
+    public function iAmOnAccountsAddAnotherPage()
+    {
+        return $this->iAmOnPage(sprintf('/%s\/.*\/bank-account.*\/add_another$/', $this->reportUrlPrefix));
+    }
+
+    /**
+     * @Then I should be on add initial account page
+     */
+    public function iAmOnAccountsAddInitialPage()
+    {
+        return $this->iAmOnPage(sprintf('/%s\/.*\/bank-account\/step1.*$/', $this->reportUrlPrefix));
+    }
+
+    /**
+     * @Then I should be on add account details page
+     */
+    public function iAmOnAccountsDetailsPage()
+    {
+        return $this->iAmOnPage(sprintf('/%s\/.*\/bank-account\/step2.*$/', $this->reportUrlPrefix));
+    }
+
+    /**
+     * @Then I should be on delete account details page
+     */
+    public function iAmOnAccountsDeletePage()
+    {
+        return $this->iAmOnPage(sprintf('/%s\/.*\/bank-account\/.*\/delete$/', $this->reportUrlPrefix));
+    }
+
+    /**
+     * @Then I should be on account start page
+     */
+    public function iAmOnAccountsStartPage()
+    {
+        return $this->iAmOnPage(sprintf('/%s\/.*\/bank-accounts$/', $this->reportUrlPrefix));
+    }
+
+    /**
+     * @Then I should be on the admin clients search page
+     */
+    public function iAmOnAdminClientsSearchPage()
+    {
+        return $this->iAmOnPage('/admin\/client\/se\arch$/');
+    }
+
+    /**
+     * @Then I should be on the admin client details page
+     */
+    public function iAmOnAdminClientDetailsPage()
+    {
+        return $this->iAmOnPage('/admin\/client\/.*\/details$/');
+    }
+
+    /**
+     * @Then I should be on the admin client discharge page
+     */
+    public function iAmOnAdminClientDischargePage()
+    {
+        return $this->iAmOnPage('/admin\/client\/.*\/discharge/');
     }
 }

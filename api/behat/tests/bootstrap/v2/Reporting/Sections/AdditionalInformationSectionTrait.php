@@ -1,11 +1,8 @@
-<?php declare(strict_types=1);
+<?php
+
+declare(strict_types=1);
 
 namespace DigidepsBehat\v2\Reporting\Sections;
-
-use Behat\Behat\Hook\Scope\AfterStepScope;
-use Behat\Behat\Tester\Result\ExecutedStepResult;
-use Exception;
-use Faker\Factory;
 
 trait AdditionalInformationSectionTrait
 {
@@ -30,7 +27,7 @@ trait AdditionalInformationSectionTrait
     public function iViewAdditionalInformationSection()
     {
         $activeReportId = $this->loggedInUserDetails->getCurrentReportId();
-        $reportSectionUrl = sprintf(self::REPORT_SECTION_ENDPOINT, $activeReportId, 'any-other-info');
+        $reportSectionUrl = sprintf(self::REPORT_SECTION_ENDPOINT, $this->reportUrlPrefix, $activeReportId, 'any-other-info');
 
         $this->visitPath($reportSectionUrl);
 

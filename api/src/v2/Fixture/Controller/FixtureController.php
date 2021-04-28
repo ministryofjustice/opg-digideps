@@ -2,33 +2,32 @@
 
 namespace App\v2\Fixture\Controller;
 
-use App\DataFixtures\DocumentSyncFixtures;
 use App\Entity\Client;
+use App\Entity\NamedDeputy;
 use App\Entity\Ndr\Ndr;
-use App\Repository\NdrRepository;
 use App\Entity\Organisation;
 use App\Entity\Report\Report;
-use App\Entity\NamedDeputy;
-use App\Repository\OrganisationRepository;
-use App\Repository\ReportRepository;
-use App\Repository\UserRepository;
 use App\Entity\User;
 use App\Factory\OrganisationFactory;
 use App\FixtureFactory\CasRecFactory;
 use App\FixtureFactory\ClientFactory;
 use App\FixtureFactory\ReportFactory;
 use App\FixtureFactory\UserFactory;
+use App\Repository\NdrRepository;
+use App\Repository\OrganisationRepository;
+use App\Repository\ReportRepository;
+use App\Repository\UserRepository;
 use App\TestHelpers\BehatFixtures;
 use App\v2\Controller\ControllerTrait;
 use App\v2\Fixture\ReportSection;
 use Doctrine\ORM\EntityManagerInterface;
+use Sensio\Bundle\FrameworkExtraBundle\Configuration\Security;
 use Symfony\Bundle\FrameworkBundle\Controller\AbstractController;
 use Symfony\Component\HttpFoundation\JsonResponse;
 use Symfony\Component\HttpFoundation\Request;
 use Symfony\Component\HttpFoundation\Response;
 use Symfony\Component\HttpKernel\Exception\NotFoundHttpException;
 use Symfony\Component\Routing\Annotation\Route;
-use Sensio\Bundle\FrameworkExtraBundle\Configuration\Security;
 
 /**
  * @Route("/fixture")
@@ -88,13 +87,13 @@ class FixtureController extends AbstractController
      * @Route("/court-order", methods={"POST"})
      * @Security("is_granted('ROLE_ADMIN')")
      *
-     * @param Request $request
      * @return JsonResponse
+     *
      * @throws \Exception
      */
     public function createCourtOrderAction(Request $request)
     {
-        if ($this->symfonyEnvironment === 'prod') {
+        if ('prod' === $this->symfonyEnvironment) {
             throw $this->createNotFoundException();
         }
 
@@ -110,21 +109,21 @@ class FixtureController extends AbstractController
                     'clientLastName' => $client->getLastname(),
                     'deputyPostCode' => $deputy->getAddressPostcode(),
                     'deputyLastName' => $deputy->getLastname(),
-                    'reportType' => $fromRequest['reportType']
+                    'reportType' => $fromRequest['reportType'],
                 ]
             );
 
             $this->em->persist($deputyCasRec);
         }
 
-        if (strtolower($fromRequest['reportType']) === 'ndr') {
+        if ('ndr' === strtolower($fromRequest['reportType'])) {
             $this->createNdr($fromRequest, $client);
             $deputy->setNdrEnabled(true);
         } else {
             $this->createReport($fromRequest, $client);
         }
 
-        if ($fromRequest['deputyType'] === User::TYPE_LAY) {
+        if (User::TYPE_LAY === $fromRequest['deputyType']) {
             $deputy->addClient($client);
         } else {
             $this->createOrgAndAttachParticipants($fromRequest, $deputy, $client);
@@ -140,7 +139,7 @@ class FixtureController extends AbstractController
                     'clientLastName' => $client->getLastname(),
                     'deputyPostCode' => $coDeputy->getAddressPostcode(),
                     'deputyLastName' => $coDeputy->getLastname(),
-                    'reportType' => $fromRequest['reportType']
+                    'reportType' => $fromRequest['reportType'],
                 ]
             );
 
@@ -161,21 +160,21 @@ class FixtureController extends AbstractController
 
     /**
      * @param $fromRequest
-     * @return Client
      */
     private function createClient($fromRequest): Client
     {
         $client = $this->clientFactory->create([
             'id' => $fromRequest['caseNumber'],
-            'courtDate' => $fromRequest['courtDate']
+            'courtDate' => $fromRequest['courtDate'],
         ]);
         $this->em->persist($client);
+
         return $client;
     }
 
     /**
      * @param $fromRequest
-     * @return User
+     *
      * @throws \Exception
      */
     private function createDeputy($fromRequest): User
@@ -184,17 +183,18 @@ class FixtureController extends AbstractController
             'id' => $fromRequest['deputyEmail'],
             'deputyType' => $fromRequest['deputyType'],
             'email' => $fromRequest['deputyEmail'],
-            'activated'=> $fromRequest['activated'],
-            'coDeputyEnabled' => $fromRequest['coDeputyEnabled']
+            'activated' => $fromRequest['activated'],
+            'coDeputyEnabled' => $fromRequest['coDeputyEnabled'],
         ]);
 
         $this->em->persist($deputy);
+
         return $deputy;
     }
 
     /**
      * @param $fromRequest
-     * @param Client $client
+     *
      * @throws \Exception
      */
     private function createReport($fromRequest, Client $client): void
@@ -202,23 +202,19 @@ class FixtureController extends AbstractController
         $report = $this->reportFactory->create([
             'deputyType' => $fromRequest['deputyType'],
             'reportType' => $fromRequest['reportType'],
-            'reportStatus' => $fromRequest['reportStatus']
+            'reportStatus' => $fromRequest['reportStatus'],
         ], $client);
 
         $this->em->persist($report);
     }
 
-    /**
-     * @param array $fromRequest
-     * @param Client $client
-     */
     private function createNdr(array $fromRequest, Client $client)
     {
         $ndr = new Ndr($client);
 
         $this->em->persist($ndr);
 
-        if (isset($fromRequest['reportStatus']) && $fromRequest['reportStatus'] === Report::STATUS_READY_TO_SUBMIT) {
+        if (isset($fromRequest['reportStatus']) && Report::STATUS_READY_TO_SUBMIT === $fromRequest['reportStatus']) {
             foreach (['visits_care', 'expenses', 'income_benefits', 'bank_accounts', 'assets', 'debts', 'actions', 'other_info'] as $section) {
                 $this->reportSection->completeSection($ndr, $section);
             }
@@ -227,8 +223,6 @@ class FixtureController extends AbstractController
 
     /**
      * @param $fromRequest
-     * @param User $deputy
-     * @param Client $client
      */
     private function createOrgAndAttachParticipants($fromRequest, User $deputy, Client $client): void
     {
@@ -267,7 +261,6 @@ class FixtureController extends AbstractController
     }
 
     /**
-     * @param User $deputy
      * @return NamedDeputy
      */
     private function buildNamedDeputy(User $deputy, array $fromRequest)
@@ -277,7 +270,7 @@ class FixtureController extends AbstractController
             ->setLastname($deputy->getLastname())
             ->setEmail1($deputy->getEmail())
             ->setDeputyNo($deputy->getDeputyNo())
-            ->setDeputyType($fromRequest['deputyType'] === 'PA' ? 23 : 21);
+            ->setDeputyType('PA' === $fromRequest['deputyType'] ? 23 : 21);
 
         $this->em->persist($namedDeputy);
 
@@ -288,18 +281,19 @@ class FixtureController extends AbstractController
      * @Route("/complete-sections/{reportType}/{reportId}", requirements={"id":"\d+"}, methods={"PUT"})
      * @Security("is_granted('ROLE_ADMIN')")
      *
-     * @param Request $request
      * @param $id
+     *
      * @return JsonResponse
+     *
      * @throws \Exception
      */
     public function completeReportSectionsAction(Request $request, string $reportType, $reportId)
     {
-        if ($this->symfonyEnvironment === 'prod') {
+        if ('prod' === $this->symfonyEnvironment) {
             throw $this->createNotFoundException();
         }
 
-        $repository = $reportType === 'ndr' ? $this->ndrRepository : $this->reportRepository;
+        $repository = 'ndr' === $reportType ? $this->ndrRepository : $this->reportRepository;
 
         if (null === $report = $repository->find(intval($reportId))) {
             throw new NotFoundHttpException(sprintf('Report id %s not found', $reportId));
@@ -313,7 +307,7 @@ class FixtureController extends AbstractController
             $this->reportSection->completeSection($report, $section);
         }
 
-        if ($reportType === 'report') {
+        if ('report' === $reportType) {
             $report->updateSectionsStatusCache($report->getAvailableSections());
         }
 
@@ -328,7 +322,7 @@ class FixtureController extends AbstractController
      */
     public function createAdmin(Request $request)
     {
-        if ($this->symfonyEnvironment === 'prod') {
+        if ('prod' === $this->symfonyEnvironment) {
             throw $this->createNotFoundException();
         }
 
@@ -340,7 +334,7 @@ class FixtureController extends AbstractController
             'ndr' => $fromRequest['ndr'],
             'firstName' => $fromRequest['firstName'],
             'lastName' => $fromRequest['lastName'],
-            'activated' => $fromRequest['activated']
+            'activated' => $fromRequest['activated'],
         ]);
 
         $this->em->persist($deputy);
@@ -355,13 +349,13 @@ class FixtureController extends AbstractController
      */
     public function getUserIDByEmail(string $email)
     {
-        if ($this->symfonyEnvironment === 'prod') {
+        if ('prod' === $this->symfonyEnvironment) {
             throw $this->createNotFoundException();
         }
 
         $user = $this->userRepository->findOneBy(['email' => $email]);
 
-        if ($user !== null) {
+        if (null !== $user) {
             return $this->buildSuccessResponse(['id' => $user->getId()], 'User found', Response::HTTP_OK);
         } else {
             return $this->buildNotFoundResponse("Could not find user with email address '$email'");
@@ -369,14 +363,14 @@ class FixtureController extends AbstractController
     }
 
     /**
-     * Used for creating non-prof/pa users only as Org ID is required for those types
+     * Used for creating non-prof/pa users only as Org ID is required for those types.
      *
      * @Route("/createUser", methods={"POST"})
      * @Security("is_granted('ROLE_ADMIN', 'ROLE_AD')")
      */
     public function createUser(Request $request)
     {
-        if ($this->symfonyEnvironment === 'prod') {
+        if ('prod' === $this->symfonyEnvironment) {
             throw $this->createNotFoundException();
         }
 
@@ -390,7 +384,7 @@ class FixtureController extends AbstractController
             'firstName' => $fromRequest['firstName'],
             'lastName' => $fromRequest['lastName'],
             'postCode' => $fromRequest['postCode'],
-            'activated' => $fromRequest['activated']
+            'activated' => $fromRequest['activated'],
         ]);
 
         $this->em->persist($deputy);
@@ -400,14 +394,14 @@ class FixtureController extends AbstractController
     }
 
     /**
-     * Used for deleting users to clean up after tests
+     * Used for deleting users to clean up after tests.
      *
      * @Route("/deleteUser", methods={"POST"})
      * @Security("is_granted('ROLE_SUPER_ADMIN')")
      */
     public function deleteUser(Request $request)
     {
-        if ($this->symfonyEnvironment === 'prod') {
+        if ('prod' === $this->symfonyEnvironment) {
             throw $this->createNotFoundException();
         }
 
@@ -415,7 +409,7 @@ class FixtureController extends AbstractController
 
         $user = $this->em
             ->getRepository(User::class)
-            ->findOneBy(array('email' => $fromRequest['email']));
+            ->findOneBy(['email' => $fromRequest['email']]);
 
         $this->em->remove($user);
         $this->em->flush();
@@ -429,27 +423,27 @@ class FixtureController extends AbstractController
      */
     public function createClientAndAttachToDeputy(Request $request)
     {
-        if ($this->symfonyEnvironment === 'prod') {
+        if ('prod' === $this->symfonyEnvironment) {
             throw $this->createNotFoundException();
         }
 
         $fromRequest = json_decode($request->getContent(), true);
 
         $client = $this->clientFactory->create([
-            "firstName" => $fromRequest['firstName'],
-            "lastName" => $fromRequest['lastName'],
-            "phone" => $fromRequest['phone'],
-            "address" => $fromRequest['address'],
-            "address2" => $fromRequest['address2'],
-            "county" => $fromRequest['county'],
-            "postCode" => $fromRequest['postCode'],
-            "caseNumber" => $fromRequest['caseNumber'],
+            'firstName' => $fromRequest['firstName'],
+            'lastName' => $fromRequest['lastName'],
+            'phone' => $fromRequest['phone'],
+            'address' => $fromRequest['address'],
+            'address2' => $fromRequest['address2'],
+            'county' => $fromRequest['county'],
+            'postCode' => $fromRequest['postCode'],
+            'caseNumber' => $fromRequest['caseNumber'],
         ]);
 
         /** @var User $deputy */
         $deputy = $this->em->getRepository(User::class)->findOneBy(['email' => $fromRequest['deputyEmail']]);
 
-        if ($deputy === null) {
+        if (null === $deputy) {
             return $this->buildNotFoundResponse(sprintf("Could not find user with email address '%s'", $fromRequest['deputyEmail']));
         }
 
@@ -467,21 +461,21 @@ class FixtureController extends AbstractController
      */
     public function createClientAndAttachToOrgs(Request $request)
     {
-        if ($this->symfonyEnvironment === 'prod') {
+        if ('prod' === $this->symfonyEnvironment) {
             throw $this->createNotFoundException();
         }
 
         $fromRequest = json_decode($request->getContent(), true);
 
         $client = $this->clientFactory->create([
-            "firstName" => $fromRequest['firstName'],
-            "lastName" => $fromRequest['lastName'],
-            "phone" => $fromRequest['phone'],
-            "address" => $fromRequest['address'],
-            "address2" => $fromRequest['address2'],
-            "county" => $fromRequest['county'],
-            "postCode" => $fromRequest['postCode'],
-            "caseNumber" => $fromRequest['caseNumber'],
+            'firstName' => $fromRequest['firstName'],
+            'lastName' => $fromRequest['lastName'],
+            'phone' => $fromRequest['phone'],
+            'address' => $fromRequest['address'],
+            'address2' => $fromRequest['address2'],
+            'county' => $fromRequest['county'],
+            'postCode' => $fromRequest['postCode'],
+            'caseNumber' => $fromRequest['caseNumber'],
         ]);
 
         /** @var Organisation $org */
@@ -541,7 +535,7 @@ class FixtureController extends AbstractController
      */
     public function createCasrec(Request $request)
     {
-        if ($this->symfonyEnvironment === 'prod') {
+        if ('prod' === $this->symfonyEnvironment) {
             throw $this->createNotFoundException();
         }
 
@@ -553,7 +547,7 @@ class FixtureController extends AbstractController
             'caseNumber' => $casRec->getCaseNumber(),
             'clientLastName' => $casRec->getClientLastname(),
             'deputyLastName' => $casRec->getDeputySurname(),
-            'deputyPostCode' => $casRec->getDeputyPostCode()
+            'deputyPostCode' => $casRec->getDeputyPostCode(),
         ];
 
         if ($fromRequest['createCoDeputy']) {
@@ -566,19 +560,18 @@ class FixtureController extends AbstractController
         $this->em->persist($casRec);
         $this->em->flush();
 
-
         return $this->buildSuccessResponse($data, 'CasRec row created', Response::HTTP_OK);
     }
 
     /**
      * @Route("/move-users-clients-to-users-org/{userEmail}", name="move_users_clients_to_org", methods={"GET"})
      * @Security("is_granted('ROLE_ADMIN')")
-     * @param string $userEmail
+     *
      * @return JsonResponse
      */
     public function moveUsersClientsToUsersOrg(string $userEmail)
     {
-        if ($this->symfonyEnvironment === 'prod') {
+        if ('prod' === $this->symfonyEnvironment) {
             throw $this->createNotFoundException();
         }
 
@@ -608,13 +601,13 @@ class FixtureController extends AbstractController
     /**
      * @Route("/activateOrg/{orgName}", name="activate_org", methods={"GET"})
      * @Security("is_granted('ROLE_ADMIN')")
-     * @param string $orgName
+     *
      * @return JsonResponse
      */
     public function activateOrg(string $orgName)
     {
         try {
-            if ($this->symfonyEnvironment === 'prod') {
+            if ('prod' === $this->symfonyEnvironment) {
                 throw $this->createNotFoundException();
             }
 

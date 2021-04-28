@@ -1,4 +1,6 @@
-<?php declare(strict_types=1);
+<?php
+
+declare(strict_types=1);
 
 namespace DigidepsBehat\v2\Reporting\Sections;
 
@@ -13,7 +15,7 @@ trait GiftsSectionTrait
     public function iViewGiftsSection()
     {
         $activeReportId = $this->loggedInUserDetails->getCurrentReportId();
-        $reportSectionUrl = sprintf(self::REPORT_SECTION_ENDPOINT, $activeReportId, 'gifts');
+        $reportSectionUrl = sprintf(self::REPORT_SECTION_ENDPOINT, $this->reportUrlPrefix, $activeReportId, 'gifts');
         $this->visitPath($reportSectionUrl);
     }
 
@@ -50,10 +52,10 @@ trait GiftsSectionTrait
     public function iFillGiftDescriptionAndAmount()
     {
         $formFields = [];
-        $this->giftId += 1;
+        ++$this->giftId;
 
-        $this->fillField('gifts_single[explanation]', 'random-gift-' . $this->giftId);
-        array_push($formFields, 'random-gift-' . $this->giftId);
+        $this->fillField('gifts_single[explanation]', 'random-gift-'.$this->giftId);
+        array_push($formFields, 'random-gift-'.$this->giftId);
 
         if ($this->elementExistsOnPage('select', 'id', 'gifts_single_bankAccountId')) {
             $choiceMade = $this->iSelectBasedOnChoiceNumber('select', 'id', 'gifts_single_bankAccountId', 1);
@@ -63,7 +65,7 @@ trait GiftsSectionTrait
         }
 
         $this->fillField('gifts_single[amount]', $this->giftId + 100);
-        array_push($formFields, '£' . ($this->giftId + 100) . '.00');
+        array_push($formFields, '£'.($this->giftId + 100).'.00');
 
         // Add gifts to giftDetails array
         array_push($this->giftDetails, $formFields);
@@ -75,10 +77,10 @@ trait GiftsSectionTrait
     public function iEditGiftDescriptionAndAmount()
     {
         $formFields = [];
-        $this->giftId += 1;
+        ++$this->giftId;
 
-        $this->fillField('gifts_single[explanation]', 'random-gift-' . $this->giftId);
-        array_push($formFields, 'random-gift-' . $this->giftId);
+        $this->fillField('gifts_single[explanation]', 'random-gift-'.$this->giftId);
+        array_push($formFields, 'random-gift-'.$this->giftId);
         if ($this->elementExistsOnPage('select', 'id', 'gifts_single_bankAccountId')) {
             $choiceMade = $this->iSelectBasedOnChoiceNumber('select', 'id', 'gifts_single_bankAccountId', 1);
             array_push($formFields, $choiceMade);
@@ -86,7 +88,7 @@ trait GiftsSectionTrait
             array_push($formFields, '-');
         }
         $this->fillField('gifts_single[amount]', $this->giftId + 100);
-        array_push($formFields, '£' . ($this->giftId + 100) . '.00');
+        array_push($formFields, '£'.($this->giftId + 100).'.00');
 
         // Update first gift in giftDetails array
         $this->giftDetails[0] = $formFields;
@@ -97,7 +99,7 @@ trait GiftsSectionTrait
      */
     public function iFollowEditLinkForGifts()
     {
-        $this->iClickBasedOnElementId('a', 'edit-gifts');
+        $this->iClickBasedOnAttributeTypeAndValue('a', 'id', 'edit-gifts');
     }
 
     /**
@@ -152,7 +154,7 @@ trait GiftsSectionTrait
      */
     public function iChooseToRemoveGift()
     {
-        $this->iClickBasedOnElementId('button', 'confirm_delete_confirm');
+        $this->iClickBasedOnAttributeTypeAndValue('button', 'id', 'confirm_delete_confirm');
     }
 
     /**
@@ -160,10 +162,10 @@ trait GiftsSectionTrait
      */
     public function iHaveNotGivenAnyGifts()
     {
-        assert($this->iAmOnGiftsExistPage());
+        $this->iAmOnGiftsExistPage();
         $this->iChooseNoOnGiftsExistSection();
 
-        assert($this->iAmOnGiftsSummaryPage());
+        $this->iAmOnGiftsSummaryPage();
     }
 
     /**
@@ -171,20 +173,20 @@ trait GiftsSectionTrait
      */
     public function iHaveGivenMultipleGifts()
     {
-        assert($this->iAmOnGiftsExistPage());
+        $this->iAmOnGiftsExistPage();
         $this->iChooseYesOnGiftsExistSection();
 
         // Fill in details for first gift
-        assert($this->iAmOnGiftsAddPage());
+        $this->iAmOnGiftsAddPage();
         $this->iFillGiftDescriptionAndAmount();
         $this->iChooseToSaveAndAddAnother();
 
         // Fill in details for second gift
-        assert($this->iAmOnGiftsAddPage());
+        $this->iAmOnGiftsAddPage();
         $this->iFillGiftDescriptionAndAmount();
         $this->iChooseToSaveAndContinue();
 
-        assert($this->iAmOnGiftsSummaryPage());
+        $this->iAmOnGiftsSummaryPage();
     }
 
     /**
@@ -193,17 +195,17 @@ trait GiftsSectionTrait
     public function iChangeMyMindAndDeclareGift()
     {
         $this->iViewGiftsSection();
-        assert($this->iAmOnGiftsSummaryPage());
+        $this->iAmOnGiftsSummaryPage();
 
         $this->iFollowEditExistsLink();
-        assert($this->iAmOnGiftsExistPage());
+        $this->iAmOnGiftsExistPage();
 
         $this->iChooseYesOnGiftsExistSection();
-        assert($this->iAmOnGiftsAddPage());
+        $this->iAmOnGiftsAddPage();
 
         $this->iFillGiftDescriptionAndAmount();
         $this->iChooseToSaveAndContinue();
-        assert($this->iAmOnGiftsSummaryPage());
+        $this->iAmOnGiftsSummaryPage();
     }
 
     /**
@@ -221,9 +223,9 @@ trait GiftsSectionTrait
         // edit the gift
         $this->iGoToReportOverviewUrl();
         $this->iFollowEditLinkForGifts();
-        assert($this->iAmOnGiftsSummaryPage());
+        $this->iAmOnGiftsSummaryPage();
         $this->iFollowEditLinkOnFirstGift();
-        assert($this->iAmOnGiftsEditPage());
+        $this->iAmOnGiftsEditPage();
         $this->iEditGiftDescriptionAndAmount();
         $this->iChooseToSaveAndContinue();
     }
@@ -234,9 +236,9 @@ trait GiftsSectionTrait
     public function iRemoveTheSecondGift()
     {
         $this->iFollowRemoveAGiftLinkOnSecondGift();
-        assert($this->iAmOnGiftsDeletionPage());
+        $this->iAmOnGiftsDeletionPage();
         $this->iChooseToRemoveGift();
-        assert($this->iAmOnGiftsSummaryPage());
+        $this->iAmOnGiftsSummaryPage();
     }
 
     /**
@@ -245,9 +247,9 @@ trait GiftsSectionTrait
     public function iRemoveTheFirstGift()
     {
         $this->iFollowRemoveAGiftLinkOnFirstGift();
-        assert($this->iAmOnGiftsDeletionPage());
+        $this->iAmOnGiftsDeletionPage();
         $this->iChooseToRemoveGift();
-        assert($this->iAmOnGiftsStartPage());
+        $this->iAmOnGiftsStartPage();
     }
 
     /**
@@ -268,7 +270,7 @@ trait GiftsSectionTrait
         }
 
         foreach ($descriptionListEntry as $entry) {
-            if ($entry->getAttribute('class') === 'govuk-summary-list__value') {
+            if ('govuk-summary-list__value' === $entry->getAttribute('class')) {
                 $actualResponse = trim(strtolower($entry->getHtml()));
             }
         }
@@ -287,7 +289,7 @@ trait GiftsSectionTrait
             $tableRows = $tableBody->findAll('css', 'tr');
 
             if (!$tableRows) {
-                $this->throwContextualException('A tbody element was not found on the page');
+                $this->throwContextualException('A tr element was not found on the page');
             }
 
             foreach ($tableRows as $tableRow) {
@@ -306,20 +308,12 @@ trait GiftsSectionTrait
             $expectedResponse = 'no';
         }
 
-        assert($expectedResponse == $actualResponse);
+        $this->assertStringEqualsString($expectedResponse, $actualResponse, 'Gift user answers');
 
-        foreach ($this->giftDetails as $key=>$gift) {
+        foreach ($this->giftDetails as $key => $gift) {
             $summaryGift = $summaryGifts[$key];
-            foreach ($gift as $fkey=>$giftField) {
-                assert(
-                    trim(strtolower($giftField)) == trim(strtolower($summaryGift[$fkey])),
-                    sprintf(
-                        '%s is not equal to %s in array element %s',
-                        trim(strtolower($giftField)),
-                        trim(strtolower($summaryGift[$fkey])),
-                        $key
-                    )
-                );
+            foreach ($gift as $fkey => $giftField) {
+                $this->assertStringEqualsString($giftField, $summaryGift[$fkey], 'Gift names');
             }
         }
     }

@@ -46,7 +46,7 @@ trait AuthenticationTrait
      */
     public function openActivationOrPasswordResetPage($admin, $pageType, $email)
     {
-        $url = sprintf('/admin/fixtures/user-registration-token?email=%s', $email);
+        $url = sprintf('/admin/fixture/user-registration-token?email=%s', $email);
         $this->iAmLoggedInToAdminAsWithPassword('admin@publicguardian.gov.uk', 'DigidepsPass1234');
         $this->visitAdminPath($url);
         $token = $this->getSession()->getPage()->getContent();
