@@ -223,7 +223,7 @@ trait IShouldBeOnTrait
      */
     public function iAmOnAccountsSummaryPage()
     {
-        return $this->iAmOnPage(sprintf('/%s\/.*\/bank-account.*\/summary$/', $this->reportUrlPrefix));
+        return $this->iAmOnPage(sprintf('/%s\/.*\/bank-account.*\/summary.*$/', $this->reportUrlPrefix));
     }
 
     /**

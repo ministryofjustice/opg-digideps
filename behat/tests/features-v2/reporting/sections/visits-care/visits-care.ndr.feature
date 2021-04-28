@@ -1,44 +1,30 @@
 @v2 @visits-care.ndr
 Feature: Visits and Care (NDR)
 
-  Scenario: A user lives with a client that doesn't receive paid care and doesn't have a care plan.
+  Scenario: A user lives with a client that doesn't receive paid care, doesn't have a care plan and has no plans to move.
     Given a Lay Deputy has not started an NDR report
     And I view and start the visits and care report section
-    Then I should be on the live with client page
-    When I choose yes and save on the live with the client section
-    Then I should be on the client receive paid care page
-    When I choose no and save on the client receive paid care section
-    Then I should be on the who is doing the caring page
-    When I fill out and save the who is doing caring section
-    Then I should be on the does the client have a care plan page
-    When I choose no and save on the client has care plan section
-    Then I should be on the plans to move client page
-    When I choose no and save on the plans to move client to a new residence section
-    Then I should be on the visits and care report summary page
+    When I confirm I live with the client
+    When I confirm the client does not receive paid care
+    When I provide details on who is doing the caring
+    When I confirm the client does not have a care plan
+    When I confirm there are no plans to move the client to a new residence section
     And I should see the expected visits and care report section responses
-    And I should see all the additional information I gave for visit and care
     And the previous section should be "Report overview"
     And the next section should be "Deputy Expenses"
     When I follow link back to report overview page
     Then I should be on the Lay reports overview page
     And I should see "visits-care" as "finished"
 
-  Scenario: A user does not live with a client that receives paid care and has a care plan.
+  Scenario: A user does not live with a client that receives paid care, has a care plan and has plans to move.
     Given a Lay Deputy has not started an NDR report
     And I view and start the visits and care report section
-    Then I should be on the live with client page
-    When I choose no and save on the live with the client section
-    Then I should be on the client receive paid care page
-    When I choose yes and all care is paid for by someone else and then save on the receive paid care section
-    Then I should be on the who is doing the caring page
-    When I fill out and save the who is doing caring section
-    Then I should be on the does the client have a care plan page
-    When I choose yes and save on the client has care plan section
-    Then I should be on the plans to move client page
-    When I choose yes and save on the plans to move client to a new residence section
-    Then I should be on the visits and care report summary page
+    When I confirm I do not live with the client
+    When I confirm the client receives paid care which is fully funded by someone else
+    When I provide details on who is doing the caring
+    When I confirm the client has a care plan
+    When I confirm there are plans to to move the client to a new residence section
     And I should see the expected visits and care report section responses
-    And I should see all the additional information I gave for visit and care
     And the previous section should be "Report overview"
     And the next section should be "Deputy Expenses"
     When I follow link back to report overview page
@@ -50,21 +36,15 @@ Feature: Visits and Care (NDR)
     And I view the report overview page
     Then I should see "visits-care" as "not started"
     When I view and start the visits and care report section
-    Then I choose yes and save on the live with the client section
-    Then I should be on the client receive paid care page
-    When I choose yes and all care is paid for by someone else and then save on the receive paid care section
-    Then I should be on the who is doing the caring page
+    Then I confirm I live with the client
+    When I confirm the client receives paid care which is fully funded by someone else
     And I press report sub section back button
-    Then I should be on the client receive paid care page
-    When I choose yes and client gets some financial help and then save on the receive paid care section
-    Then I should be on the who is doing the caring page
+    When I confirm the client receives paid care which is partially funded by someone else
     And I press report sub section back button
     And I press report sub section back button
     And I press report sub section back button
     When I follow link back to report overview page
     Then I should see "visits-care" as "not finished"
     When I view the visits and care report section
-    Then I should be on the visits and care report summary page
     When I follow edit link for does client receive paid care page
-    And I choose yes and all care is paid for by someone else and then save on the receive paid care section
-    Then I should be on the visits and care report summary page
+    And I confirm the client receives paid care which is funded by themselves

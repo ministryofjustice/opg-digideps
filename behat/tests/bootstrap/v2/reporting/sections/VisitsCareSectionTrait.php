@@ -26,12 +26,17 @@ trait VisitsCareSectionTrait
      */
     public function iViewAndStartVisitsCareSection()
     {
+        $driver = $this->getSession()->getDriver();
+        if ('Behat\Mink\Driver\Selenium2Driver' == get_class($driver)) {
+            $this->getSession()->maximizeWindow();
+        }
         $this->iViewVisitsCareSection();
         $this->clickLink('Start visits and care');
+        $this->iAmOnVisitsCarePage1();
     }
 
     /**
-     * @Given I choose yes and save on the live with the client section
+     * @Given I confirm I live with the client
      */
     public function iChooseYesOnLiveWithTheClientSection()
     {
@@ -39,25 +44,34 @@ trait VisitsCareSectionTrait
         ++$this->answeredYes;
 
         $this->pressButton('Save and continue');
+        $this->iAmOnVisitsCarePage2();
     }
 
     /**
-     * @Given I choose no and save on the live with the client section
+     * @Given I confirm I do not live with the client
      */
     public function iChooseNoOnLiveWithTheClientSection()
     {
-        $this->selectOption('visits_care[doYouLiveWithClient]', 'no');
-        ++$this->answeredNo;
+        $info = 'Information on how often there is contact with the client';
 
-        $info = 'The first set of information';
-        $this->fillField('visits_care[howOftenDoYouContactClient]', $info);
+        $driver = $this->getSession()->getDriver();
+        if ('Behat\Mink\Driver\Selenium2Driver' == get_class($driver)) {
+            $this->iFillFieldForCrossBrowser('visits_care_doYouLiveWithClient_1', 'no');
+            $this->iFillFieldForCrossBrowser('visits_care_howOftenDoYouContactClient', $info);
+        } else {
+            $this->selectOption('visits_care[doYouLiveWithClient]', 'no');
+            $this->fillField('visits_care[howOftenDoYouContactClient]', $info);
+        }
+
+        ++$this->answeredNo;
         array_push($this->additionalInfo, $info);
 
         $this->pressButton('Save and continue');
+        $this->iAmOnVisitsCarePage2();
     }
 
     /**
-     * @Given I choose no and save on the client receive paid care section
+     * @Given I confirm the client does not receive paid care
      */
     public function iChooseNoOnReceivePaidCareSection()
     {
@@ -65,13 +79,19 @@ trait VisitsCareSectionTrait
         ++$this->answeredNo;
 
         $this->pressButton('Save and continue');
+        $this->iAmOnVisitsCarePage3();
     }
 
     /**
-     * @Given I choose yes and save on the client receive paid care section
+     * @Given I confirm the client receives paid care which is funded by themselves
      */
     public function iChooseYesOnReceivePaidCareSection()
     {
+        $fromSummaryPage = false;
+        if ($this->iAmOnPage(sprintf('/%s\/.*\/visits-care\/step\/[0-9]\?from=summary$/', $this->reportUrlPrefix))) {
+            $fromSummaryPage = true;
+        }
+
         $this->selectOption('visits_care[doesClientReceivePaidCare]', 'yes');
         ++$this->answeredYes;
 
@@ -79,64 +99,55 @@ trait VisitsCareSectionTrait
         $this->careFundedChoice = 1;
 
         $this->pressButton('Save and continue');
+
+        true === $fromSummaryPage ? $this->iAmOnVisitsCareSummaryPage() : $this->iAmOnVisitsCarePage3();
     }
 
     /**
-     * @Given I choose yes and client pays for all care and then save on the receive paid care section
-     */
-    public function iChooseYesAndOptionOneOnReceivePaidCareSection()
-    {
-        $this->selectOption('visits_care[doesClientReceivePaidCare]', 'yes');
-        ++$this->answeredYes;
-
-        $this->selectOption('visits_care[howIsCareFunded]', 'client_pays_for_all');
-        $this->careFundedChoice = 1;
-
-        $this->pressButton('Save and continue');
-    }
-
-    /**
-     * @Given I choose yes and client gets some financial help and then save on the receive paid care section
+     * @Given I confirm the client receives paid care which is partially funded by someone else
      */
     public function iChooseYesAndOptionTwoOnReceivePaidCareSection()
     {
         $this->selectOption('visits_care[doesClientReceivePaidCare]', 'yes');
         ++$this->answeredYes;
 
-        $this->selectOption('visits_care[howIsCareFunded]', 'client_pays_for_all');
+        $this->selectOption('visits_care[howIsCareFunded]', 'client_gets_financial_help');
         $this->careFundedChoice = 2;
 
         $this->pressButton('Save and continue');
+        $this->iAmOnVisitsCarePage3();
     }
 
     /**
-     * @Given I choose yes and all care is paid for by someone else and then save on the receive paid care section
+     * @Given I confirm the client receives paid care which is fully funded by someone else
      */
     public function iChooseYesAndOptionThreeOnReceivePaidCareSection()
     {
         $this->selectOption('visits_care[doesClientReceivePaidCare]', 'yes');
         ++$this->answeredYes;
 
-        $this->selectOption('visits_care[howIsCareFunded]', 'client_pays_for_all');
+        $this->selectOption('visits_care[howIsCareFunded]', 'all_care_is_paid_by_someone_else');
         $this->careFundedChoice = 3;
 
         $this->pressButton('Save and continue');
+        $this->iAmOnVisitsCarePage3();
     }
 
     /**
-     * @Given I fill out and save the who is doing caring section
+     * @Given I provide details on who is doing the caring
      */
     public function iFillOutWhoIsDoingCaringSection()
     {
-        $info = 'The second set of information';
+        $info = 'Information on who is doing the caring';
         $this->fillField('visits_care[whoIsDoingTheCaring]', $info);
         array_push($this->additionalInfo, $info);
 
         $this->pressButton('Save and continue');
+        $this->iAmOnVisitsCarePage4();
     }
 
     /**
-     * @Given I choose no and save on the client has care plan section
+     * @Given I confirm the client does not have a care plan
      */
     public function iChooseNoOnHasCarePlanSection()
     {
@@ -144,10 +155,16 @@ trait VisitsCareSectionTrait
         ++$this->answeredNo;
 
         $this->pressButton('Save and continue');
+
+        if ('ndr' == $this->reportUrlPrefix) {
+            $this->iAmOnVisitsCarePage5();
+        } else {
+            $this->iAmOnVisitsCareSummaryPage();
+        }
     }
 
     /**
-     * @Given I choose yes and save on the client has care plan section
+     * @Given I confirm the client has a care plan
      */
     public function iChooseYesOnHasCarePlanSection()
     {
@@ -164,10 +181,16 @@ trait VisitsCareSectionTrait
         array_push($this->additionalInfo, $year);
 
         $this->pressButton('Save and continue');
+
+        if ('ndr' == $this->reportUrlPrefix) {
+            $this->iAmOnVisitsCarePage5();
+        } else {
+            $this->iAmOnVisitsCareSummaryPage();
+        }
     }
 
     /**
-     * @Given I choose no and save on the plans to move client to a new residence section
+     * @Given I confirm there are no plans to move the client to a new residence section
      */
     public function iChooseNoOnPlansToMoveClient()
     {
@@ -175,21 +198,23 @@ trait VisitsCareSectionTrait
         ++$this->answeredNo;
 
         $this->pressButton('Save and continue');
+        $this->iAmOnVisitsCareSummaryPage();
     }
 
     /**
-     * @Given I choose yes and save on the plans to move client to a new residence section
+     * @Given I confirm there are plans to to move the client to a new residence section
      */
     public function iChooseYesOnPlansToMoveClient()
     {
         $this->selectOption('visits_care[planMoveNewResidence]', 'yes');
         ++$this->answeredYes;
 
-        $info = 'The third set of information';
+        $info = 'Information on plans to move the client';
         $this->fillField('visits_care[planMoveNewResidenceDetails]', $info);
         array_push($this->additionalInfo, $info);
 
         $this->pressButton('Save and continue');
+        $this->iAmOnVisitsCareSummaryPage();
     }
 
     /**
@@ -244,6 +269,8 @@ trait VisitsCareSectionTrait
 
         assert($countNegativeResponse == $this->answeredNo);
         assert($countPositiveResponse == $this->answeredYes);
+
+        $this->iShouldSeeTheExpectedVisitCareAdditionalInfo();
     }
 
     /**
@@ -271,34 +298,6 @@ trait VisitsCareSectionTrait
         $urlRegex = sprintf('/%s\/.*\/visits-care\/step\/2\?from\=summary$/', $this->reportUrlPrefix);
         $this->iClickOnNthElementBasedOnRegex($urlRegex, 1);
 
-        $this->iAmOnVisitsCarePage2();
-    }
-
-    /**
-     * @Given I view and start visits and care section
-     */
-    public function iViewAndStartVisitsAndCareSectionCrossBrowser()
-    {
-        $this->getSession()->maximizeWindow();
-        $this->iViewVisitsAndCareSection();
-        $this->clickLink('Start visits and care');
-    }
-
-    /**
-     * @When I enter that I do not live with client
-     */
-    public function iDoNotLiveWithClientVisitsAndCareSectionCrossBrowser()
-    {
-        $this->iFillFieldForCrossBrowser('visits_care_doYouLiveWithClient_1', 'no');
-    }
-
-    /**
-     * @When I can see and fill in a text box with how often I visit client
-     */
-    public function iCanSeeAndFillInVisitsTextBoxCrossBrowser()
-    {
-        $this->iFillFieldForCrossBrowser('visits_care_howOftenDoYouContactClient', 'daily');
-        $this->pressButton('Save and continue');
         $this->iAmOnVisitsCarePage2();
     }
 }
