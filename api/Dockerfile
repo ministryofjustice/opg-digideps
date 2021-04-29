@@ -98,10 +98,10 @@ COPY phpstan.neon .
 
 # Behat
 COPY behat/tests behat/tests
-COPY behat/docker-entrypoint.sh behat/
-COPY behat/docker-smoke-test-entrypoint.sh behat/
-RUN ["chmod", "+x", "behat/docker-entrypoint.sh"]
-RUN ["chmod", "+x", "behat/docker-smoke-test-entrypoint.sh"]
+COPY behat/run-tests.sh behat/
+COPY behat/run-smoke-tests.sh behat/
+RUN ["chmod", "+x", "behat/run-tests.sh"]
+RUN ["chmod", "+x", "behat/run-smoke-tests.sh"]
 
 # Prebuild cache
 RUN su-exec www-data php -d memory_limit=-1 app/console cache:warmup

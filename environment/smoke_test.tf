@@ -59,7 +59,7 @@ locals {
         "awslogs-stream-prefix": "${aws_iam_role.test.name}"
       }
     },
-    "entryPoint": ["docker-smoke-test-entrypoint.sh"],
+    "entryPoint": ["run-smoke-tests.sh"],
     "secrets": [
       { "name": "PGPASSWORD", "valueFrom": "${data.aws_secretsmanager_secret.database_password.arn}" },
       { "name": "SECRET", "valueFrom": "${data.aws_secretsmanager_secret.front_frontend_secret.arn}" }
