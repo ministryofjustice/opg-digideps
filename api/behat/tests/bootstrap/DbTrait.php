@@ -14,8 +14,8 @@ trait DbTrait
     {
         $sqlFile = self::getSnapshotPath($status);
         // truncate cascade + insert. faster than drop + table recreate
-        exec('echo "SET client_min_messages TO WARNING; truncate dd_user, satisfaction, dd_team, named_deputy, organisation, casrec, setting, user_team, client cascade;" > ' . $sqlFile);
-        exec('pg_dump ' . self::$dbName . "  --data-only  --inserts --exclude-table='migrations' | sed '/EXTENSION/d' >> {$sqlFile}", $output, $return);
+        exec('echo "SET client_min_messages TO WARNING; truncate dd_user, satisfaction, named_deputy, organisation, casrec, setting, client cascade;" > '.$sqlFile);
+        exec('pg_dump '.self::$dbName."  --data-only  --inserts --exclude-table='migrations' | sed '/EXTENSION/d' >> {$sqlFile}", $output, $return);
         if (!file_exists($sqlFile) || filesize($sqlFile) < 100) {
             throw new \RuntimeException("SQL snapshot $sqlFile not created or not valid");
         }
@@ -43,8 +43,8 @@ trait DbTrait
     private static function getSnapshotPath($name)
     {
         return '/tmp/sql/behat-snapshot-'
-                . strtolower(preg_replace('/[^\w]+/', '-', $name))
-                . '.sql';
+                .strtolower(preg_replace('/[^\w]+/', '-', $name))
+                .'.sql';
     }
 
     /**
@@ -69,7 +69,7 @@ trait DbTrait
         }
 
         $snapshotName = preg_replace('/([^a-z0-9])/i', '-', $scope->getScenario()->getTitle())
-                        . '-before-auto';
+                        .'-before-auto';
 
         self::iSaveTheApplicationStatusInto($snapshotName);
     }
@@ -84,7 +84,7 @@ trait DbTrait
         }
 
         $snapshotName = preg_replace('/([^a-z0-9])/i', '-', $scope->getScenario()->getTitle())
-                        . '-after-auto';
+                        .'-after-auto';
 
         self::iSaveTheApplicationStatusInto($snapshotName);
     }
@@ -92,10 +92,10 @@ trait DbTrait
     public function dbQueryRaw($table, array $fields)
     {
         if (!$fields) {
-            throw new \InvalidArgumentException(__METHOD__ . ' array with at least one element expected');
+            throw new \InvalidArgumentException(__METHOD__.' array with at least one element expected');
         }
         $columns = join(',', array_keys($fields));
-        $values = "'" . join("', '", array_values($fields)) . "'";
+        $values = "'".join("', '", array_values($fields))."'";
         $query = sprintf("INSERT INTO {$table} ({$columns}) VALUES({$values})");
         $command = sprintf('psql %s -c "%s"', self::$dbName, $query);
         exec($command);
@@ -127,8 +127,8 @@ trait DbTrait
     public function iAddTheClientWithCaseNumberToBeDeputisedByEmail($caseNumber, $deputyEmail)
     {
         $query = "INSERT INTO deputy_case (client_id, user_id) VALUES (
-                    (SELECT id from client where case_number = '" . $caseNumber . "'),
-                    (SELECT id from dd_user where email = '" . $deputyEmail . "')
+                    (SELECT id from client where case_number = '".$caseNumber."'),
+                    (SELECT id from dd_user where email = '".$deputyEmail."')
                   )";
         $command = sprintf('psql %s -c "%s"', self::$dbName, $query);
         exec($command);
@@ -143,6 +143,7 @@ trait DbTrait
         $command = sprintf('psql %s -c "%s"', self::$dbName, $query);
         exec($command);
     }
+
     /**
      * @Given the organisation :organisationEmailIdentifier is inactive
      */
