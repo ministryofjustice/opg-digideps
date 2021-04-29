@@ -2,7 +2,7 @@
 
 declare(strict_types=1);
 
-namespace DigidepsBehat\v2\asfafdas;
+namespace DigidepsBehat\v2\ClientManagement;
 
 use DateTime;
 use DigidepsBehat\v2\Common\UserDetails;
