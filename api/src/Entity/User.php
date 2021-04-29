@@ -956,10 +956,12 @@ class User implements UserInterface
     /**
      * @param bool $agreeTermsUse
      */
-    public function setAgreeTermsUse($agreeTermsUse)
+    public function setAgreeTermsUse(bool $agreeTermsUse)
     {
         $this->agreeTermsUse = $agreeTermsUse;
         $this->agreeTermsUseDate = new \DateTime('now');
+        
+        return $this;
     }
 
     /**
