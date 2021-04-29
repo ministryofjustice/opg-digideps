@@ -19,6 +19,6 @@ Feature: Limiting access to sections of the app to super admins
     Given I am logged in to admin as "super-admin@publicguardian.gov.uk" with password "DigidepsPass1234"
     Then I should see "Fixtures" in the "navbar" region
     When I follow "Fixtures"
-    Then I should be on "/admin/fixture/"
+    Then I should be on "/admin/fixtures/"
     Given I am logged in to admin as "admin@publicguardian.gov.uk" with password "DigidepsPass1234"
     Then I should not see "Fixtures" in the "navbar" region

@@ -22,7 +22,7 @@ trait PageUrlsTrait
     private string $adminClientDetailsUrl = '/admin/client/%s/details';
 
     // Fixtures
-    private string $courtOrdersFixtureUrl = '/admin/fixture/court-orders?%s';
+    private string $courtOrdersFixtureUrl = '/admin/fixtures/court-orders?%s';
 
     public function getReportSubmittedUrl(int $reportId): string
     {

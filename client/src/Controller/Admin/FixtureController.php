@@ -24,7 +24,7 @@ use Symfony\Component\Serializer\SerializerInterface;
 use Twig\Environment;
 
 /**
- * @Route("/admin/fixture")
+ * @Route("/admin/fixtures")
  */
 class FixtureController extends AbstractController
 {
