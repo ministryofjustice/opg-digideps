@@ -24,12 +24,12 @@ services:
             NODE_ENV: production
 
     composerapi:
-        image: composer:1.10.16
+        image: composer:2.0.8
         volumes:
             - ./api/:/app
 
     composerfront:
-        image: composer:1.10.16
+        image: composer:2.0.8
         volumes:
             - ./client/:/app
 
