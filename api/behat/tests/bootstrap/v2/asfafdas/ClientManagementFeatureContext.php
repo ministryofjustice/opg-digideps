@@ -2,7 +2,7 @@
 
 declare(strict_types=1);
 
-namespace DigidepsBehat\v2\ClientManagement;
+namespace DigidepsBehat\v2\asfafdas;
 
 use DigidepsBehat\v2\Common\BaseFeatureContext;
 
