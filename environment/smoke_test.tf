@@ -50,7 +50,7 @@ locals {
   smoke_test_container = <<EOF
   {
     "name": "smoke-test",
-    "image": "${local.images.test}",
+    "image": "${local.images.api}",
     "logConfiguration": {
       "logDriver": "awslogs",
       "options": {
