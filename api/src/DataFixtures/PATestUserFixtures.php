@@ -205,7 +205,7 @@ class PATestUserFixtures extends AbstractDataFixture
             ->setAddressCountry('GB')
             ->setDeputyNo(isset($data['Deputy No']) ? $data['Deputy No'] : null)
             ->setRoleName($data['roleName'])
-            ->setAgreeTermsUse(isset($data['Agree Terms Use']) ? true : $data['Agree Terms Use']);
+            ->setAgreeTermsUse(isset($data['Agree Terms Use']) ? $data['Agree Terms Use'] : true);
 
         $manager->persist($user);
 
