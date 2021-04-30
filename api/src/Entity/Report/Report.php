@@ -6,6 +6,7 @@ use App\Entity\Client;
 use App\Entity\Ndr\Ndr;
 use App\Entity\Report\Traits as ReportTraits;
 use App\Entity\ReportInterface;
+use App\Entity\Satisfaction;
 use App\Entity\User;
 use App\Service\ReportService;
 use App\Service\ReportStatusService;
@@ -440,6 +441,14 @@ class Report implements ReportInterface
      * @ORM\OneToOne(targetEntity="App\Entity\Report\ReviewChecklist", mappedBy="report", cascade={"persist", "remove"})
      */
     private $reviewChecklist;
+
+    /**
+     * @ORM\OneToOne(targetEntity="App\Entity\Satisfaction", mappedBy="report", cascade={"persist", "remove"})
+     *
+     * @JMS\Type("App\Entity\Satisfaction")
+     * @JMS\Groups({"user-research", "satisfaction"})
+     */
+    private Satisfaction $satisfaction;
 
     /**
      * Report constructor.
@@ -1353,5 +1362,23 @@ class Report implements ReportInterface
     public function isProfReport()
     {
         return in_array($this->getType(), [self::TYPE_102_5, self::TYPE_103_5, self::TYPE_104_5, self::TYPE_102_4_5, self::TYPE_103_4_5]);
+    }
+
+    /**
+     * @return Satisfaction
+     */
+    public function getSatisfaction(): Satisfaction
+    {
+        return $this->satisfaction;
+    }
+
+    /**
+     * @param Satisfaction $satisfaction
+     * @return Report
+     */
+    public function setSatisfaction(Satisfaction $satisfaction): Report
+    {
+        $this->satisfaction = $satisfaction;
+        return $this;
     }
 }

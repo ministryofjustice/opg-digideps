@@ -3,6 +3,7 @@
 namespace App\Repository;
 
 use App\Entity\Satisfaction;
+use DateTime;
 use Doctrine\Bundle\DoctrineBundle\Repository\ServiceEntityRepository;
 use Doctrine\Persistence\ManagerRegistry;
 
@@ -14,21 +15,15 @@ class SatisfactionRepository extends ServiceEntityRepository
     }
 
     /**
-     * @param $offset
-     * @param $limit
-     * @param \DateTime $fromDate
-     * @param \DateTime $toDate
-     * @param string $orderBy default createdAt
-     * @param string $order default ASC
+     * @param DateTime|null $fromDate
+     * @param DateTime|null $toDate
      * @return array
      */
     public function findAllSatisfactionSubmissions(
-        \DateTime $fromDate = null,
-        \DateTime $toDate = null,
-        $orderBy = 'createdAt',
-        $order = 'ASC'
+        ?DateTime $fromDate = null,
+        ?DateTime $toDate = null
     ) {
-        $entityManager = $this->getEntityManager(EntityDir\Satisfaction::class);
+        $entityManager = $this->getEntityManager();
         $query = $entityManager->createQuery(
             'SELECT s.id, s.score, s.comments, s.deputyrole, s.reporttype, s.created
              FROM App:Satisfaction s
@@ -36,6 +31,7 @@ class SatisfactionRepository extends ServiceEntityRepository
              AND s.created < :toDate'
         )
             ->setParameters(['fromDate' => $fromDate, 'toDate' => $toDate]);
+
         return $query->getResult();
     }
 }

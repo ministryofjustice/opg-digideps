@@ -309,7 +309,7 @@ class RestClient implements RestClientInterface
         if ($expectedResponseType == 'array') {
             return $responseArray;
         } elseif (substr($expectedResponseType, -2) == '[]') {
-            return $this->arrayToEntities('App\\Entity\\' . $expectedResponseType, $responseArray);
+            return $this->arrayToEntities($expectedResponseType, $responseArray);
         } elseif (class_exists('App\\Entity\\' . $expectedResponseType)) {
             return $this->arrayToEntity($expectedResponseType, $responseArray ?: []);
         } else {
@@ -434,7 +434,9 @@ class RestClient implements RestClientInterface
      */
     public function arrayToEntities(string $class, array $data)
     {
-        $expectedResponseType = substr($class, 0, -2);
+        $fullClassName = (str_contains($class, 'App')) ? $class : 'App\\Entity\\' . $class;
+
+        $expectedResponseType = substr($fullClassName, 0, -2);
         $ret = [];
         foreach ($data as $row) {
             $entity = $this->arrayToEntity($expectedResponseType, $row);

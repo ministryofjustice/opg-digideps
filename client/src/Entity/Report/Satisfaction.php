@@ -1,7 +1,10 @@
 <?php
 
+declare(strict_types=1);
+
 namespace App\Entity\Report;
 
+use App\Entity\Ndr\Ndr;
 use DateTime;
 use JMS\Serializer\Annotation as JMS;
 
@@ -36,6 +39,21 @@ class Satisfaction
      * @JMS\Type("DateTime")
      */
     private $created;
+
+    /**
+     * @JMS\Type("App\Entity\UserResearch\UserResearchResponse")
+     */
+    private UserResearchResponse $userResearchResponse;
+
+    /**
+     * @JMS\Type("App\Entity\Report\Report")
+     */
+    private ?Report $report = null;
+
+    /**
+     * @JMS\Type("App\Entity\Ndr\Ndr")
+     */
+    private ?Ndr $ndr = null;
 
     /**
      * @return int
@@ -142,6 +160,60 @@ class Satisfaction
     public function setCreated($created): Satisfaction
     {
         $this->created = $created;
+        return $this;
+    }
+
+    /**
+     * @return UserResearchResponse
+     */
+    public function getUserResearchResponse(): UserResearchResponse
+    {
+        return $this->userResearchResponse;
+    }
+
+    /**
+     * @param UserResearchResponse $userResearchResponse
+     * @return Satisfaction
+     */
+    public function setUserResearchResponse(UserResearchResponse $userResearchResponse): Satisfaction
+    {
+        $this->userResearchResponse = $userResearchResponse;
+        return $this;
+    }
+
+    /**
+     * @return Report|null
+     */
+    public function getReport(): ?Report
+    {
+        return $this->report;
+    }
+
+    /**
+     * @param Report|null $report
+     * @return Satisfaction
+     */
+    public function setReport(?Report $report): Satisfaction
+    {
+        $this->report = $report;
+        return $this;
+    }
+
+    /**
+     * @return Ndr|null
+     */
+    public function getNdr(): ?Ndr
+    {
+        return $this->ndr;
+    }
+
+    /**
+     * @param Ndr|null $ndr
+     * @return Satisfaction
+     */
+    public function setNdr(?Ndr $ndr): Satisfaction
+    {
+        $this->ndr = $ndr;
         return $this;
     }
 }

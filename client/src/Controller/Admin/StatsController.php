@@ -7,15 +7,16 @@ use App\Exception\DisplayableException;
 use App\Form\Admin\ReportSubmissionDownloadFilterType;
 use App\Form\Admin\SatisfactionFilterType;
 use App\Form\Admin\StatPeriodType;
+use App\Form\Admin\UserResearchResponseFilterType;
+use App\Mapper\DateRangeQuery;
 use App\Mapper\ReportSatisfaction\ReportSatisfactionSummaryMapper;
-use App\Mapper\ReportSatisfaction\ReportSatisfactionSummaryQuery;
 use App\Mapper\ReportSubmission\ReportSubmissionSummaryMapper;
-use App\Mapper\ReportSubmission\ReportSubmissionSummaryQuery;
+use App\Mapper\UserResearchResponse\UserResearchResponseSummaryMapper;
 use App\Service\Client\Internal\StatsApi;
-use App\Service\Client\Internal\UserApi;
 use App\Service\Client\RestClient;
 use App\Service\Csv\ActiveLaysCsvGenerator;
 use App\Service\Csv\SatisfactionCsvGenerator;
+use App\Service\Csv\UserResearchResponseCsvGenerator;
 use App\Transformer\ReportSubmission\ReportSubmissionBurFixedWidthTransformer;
 use Sensio\Bundle\FrameworkExtraBundle\Configuration\Security;
 use Sensio\Bundle\FrameworkExtraBundle\Configuration\Template;
@@ -30,20 +31,23 @@ use Symfony\Component\Routing\Annotation\Route;
 class StatsController extends AbstractController
 {
     private RestClient $restClient;
-    private SatisfactionCsvGenerator $csvGenerator;
+    private SatisfactionCsvGenerator $satisfactionCsvGenerator;
     private StatsApi $statsApi;
     private ActiveLaysCsvGenerator $activeLaysCsvGenerator;
+    private UserResearchResponseCsvGenerator $userResearchResponseCsvGenerator;
 
     public function __construct(
         RestClient $restClient,
-        SatisfactionCsvGenerator $csvGenerator,
+        SatisfactionCsvGenerator $satisfactionCsvGenerator,
         StatsApi $statsApi,
-        ActiveLaysCsvGenerator $activeLaysCsvGenerator
+        ActiveLaysCsvGenerator $activeLaysCsvGenerator,
+        UserResearchResponseCsvGenerator $userResearchResponseCsvGenerator
     ) {
         $this->restClient = $restClient;
-        $this->csvGenerator = $csvGenerator;
+        $this->satisfactionCsvGenerator = $satisfactionCsvGenerator;
         $this->statsApi = $statsApi;
         $this->activeLaysCsvGenerator = $activeLaysCsvGenerator;
+        $this->userResearchResponseCsvGenerator = $userResearchResponseCsvGenerator;
     }
 
     /**
@@ -57,9 +61,9 @@ class StatsController extends AbstractController
      *
      * @return array|Response
      */
-    public function statsAction(Request $request, ReportSubmissionSummaryMapper $mapper, ReportSubmissionBurFixedWidthTransformer $transformer)
+    public function stats(Request $request, ReportSubmissionSummaryMapper $mapper, ReportSubmissionBurFixedWidthTransformer $transformer)
     {
-        $form = $this->createForm(ReportSubmissionDownloadFilterType::class, new ReportSubmissionSummaryQuery());
+        $form = $this->createForm(ReportSubmissionDownloadFilterType::class, new DateRangeQuery());
         $form->handleRequest($request);
 
         if ($form->isSubmitted() && $form->isValid()) {
@@ -86,15 +90,15 @@ class StatsController extends AbstractController
      * @param ReportSatisfactionSummaryMapper $mapper
      * @return array|Response
      */
-    public function satisfactionAction(Request $request, ReportSatisfactionSummaryMapper $mapper)
+    public function satisfaction(Request $request, ReportSatisfactionSummaryMapper $mapper)
     {
-        $form = $this->createForm(SatisfactionFilterType::class, new ReportSatisfactionSummaryQuery());
+        $form = $this->createForm(SatisfactionFilterType::class, new DateRangeQuery());
         $form->handleRequest($request);
 
         if ($form->isSubmitted() && $form->isValid()) {
             try {
                 $reportSatisfactionSummaries = $mapper->getBy($form->getData());
-                $csv = $this->csvGenerator->generateSatisfactionResponsesCsv($reportSatisfactionSummaries);
+                $csv = $this->satisfactionCsvGenerator->generateSatisfactionResponsesCsv($reportSatisfactionSummaries);
 
                 $response = new Response($csv);
 
@@ -102,6 +106,44 @@ class StatsController extends AbstractController
                 $disposition = $response->headers->makeDisposition(
                     ResponseHeaderBag::DISPOSITION_ATTACHMENT,
                     'satisfaction.csv'
+                );
+
+                $response->headers->set('Content-Disposition', $disposition);
+                return $response;
+            } catch (\Throwable $e) {
+                throw new DisplayableException($e);
+            }
+        }
+
+        return [
+            'form' => $form->createView()
+        ];
+    }
+
+    /**
+     * @Route("/user-research", name="admin_user_research")
+     * @Security("is_granted('ROLE_SUPER_ADMIN')")
+     * @Template("@App/Admin/Stats/urResponses.html.twig")
+     * @param Request $request
+     * @param UserResearchResponseSummaryMapper $mapper
+     * @return array|Response
+     */
+    public function userResearchResponses(Request $request, UserResearchResponseSummaryMapper $mapper)
+    {
+        $form = $this->createForm(UserResearchResponseFilterType::class, new DateRangeQuery());
+        $form->handleRequest($request);
+
+        if ($form->isSubmitted() && $form->isValid()) {
+            try {
+                $userResearchResponses = $mapper->getBy($form->getData());
+                $csv = $this->userResearchResponseCsvGenerator->generateUserResearchResponsesCsv($userResearchResponses);
+
+                $response = new Response($csv);
+
+                $response->headers->set('Content-Type', 'text/csv; charset=utf-8');
+                $disposition = $response->headers->makeDisposition(
+                    ResponseHeaderBag::DISPOSITION_ATTACHMENT,
+                    'user-research-responses.csv'
                 );
 
                 $response->headers->set('Content-Disposition', $disposition);

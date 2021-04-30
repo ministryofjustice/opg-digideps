@@ -30,13 +30,19 @@ class UserFactory
     {
         $roleName = $this->convertRoleName($data['deputyType']);
 
+        if (isset($data['ndr'])) {
+            $ndrEnabled = strtolower($data['ndr']) === 'enabled' ? true : false;
+        } else {
+            $ndrEnabled = false;
+        }
+
         $user = (new User())
             ->setFirstname(isset($data['firstName']) ? $data['firstName'] : ucfirst($data['deputyType']) . ' Deputy ' . $data['id'])
             ->setLastname(isset($data['lastName']) ? $data['lastName'] : 'User')
             ->setEmail(isset($data['email']) ? $data['email'] : 'behat-' . strtolower($data['deputyType']) .  '-deputy-' . $data['id'] . '@publicguardian.gov.uk')
             ->setActive(true)
             ->setRegistrationDate(new \DateTime())
-            ->setNdrEnabled(strtolower($data['ndr']) === 'enabled' ? true : false)
+            ->setNdrEnabled($ndrEnabled)
             ->setCoDeputyClientConfirmed(isset($data['codeputyEnabled']))
             ->setPhoneMain('07911111111111')
             ->setAddress1('Victoria Road')

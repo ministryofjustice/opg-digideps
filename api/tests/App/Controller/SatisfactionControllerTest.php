@@ -2,7 +2,10 @@
 
 namespace Tests\App\Controller;
 
+use App\Entity\Report\Report;
 use App\Entity\Satisfaction;
+use App\TestHelpers\ClientTestHelper;
+use App\TestHelpers\ReportTestHelper;
 use Symfony\Bridge\Doctrine\Tests\Fixtures\User;
 
 class SatisfactionControllerTest extends AbstractTestController
@@ -24,21 +27,87 @@ class SatisfactionControllerTest extends AbstractTestController
         }
     }
 
-    public function testSatisfactionHasSuitablePermissions()
+    public function testSatisfactionHasSuitablePermissions_allowed_deputy()
     {
+        $report = $this->prepareReport();
+
         $url = '/satisfaction';
         $okayData = [
             'score'      => 4,
             'reportType' => '103',
-            'comments' => 'a comment'
+            'comments' => 'a comment',
+            'reportId' => $report->getId()
         ];
 
-        // assert Auth
-        $this->assertEndpointNeedsAuth('POST', $url);
-        $this->assertEndpointNotAllowedFor('POST', $url, self::$tokenAdmin, $okayData);
         $this->assertEndpointAllowedFor('POST', $url, self::$tokenDeputy, $okayData);
+    }
+
+    public function testSatisfactionHasSuitablePermissions_allowed_prof()
+    {
+        $report = $this->prepareReport();
+
+        $url = '/satisfaction';
+        $okayData = [
+            'score'      => 4,
+            'reportType' => '103',
+            'comments' => 'a comment',
+            'reportId' => $report->getId()
+        ];
+
         $this->assertEndpointAllowedFor('POST', $url, self::$tokenProf, $okayData);
+    }
+
+    public function testSatisfactionHasSuitablePermissions_allowed_pa()
+    {
+        $report = $this->prepareReport();
+
+        $url = '/satisfaction';
+        $okayData = [
+            'score'      => 4,
+            'reportType' => '103',
+            'comments' => 'a comment',
+            'reportId' => $report->getId()
+        ];
+
         $this->assertEndpointAllowedFor('POST', $url, self::$tokenPa, $okayData);
+    }
+
+    public function testSatisfactionHasSuitablePermissions_not_allowed()
+    {
+        $report = $this->prepareReport();
+
+        $url = '/satisfaction';
+        $okayData = [
+            'score'      => 4,
+            'reportType' => '103',
+            'comments' => 'a comment',
+            'reportId' => $report->getId()
+        ];
+
+        $this->assertEndpointNotAllowedFor('POST', $url, self::$tokenAdmin, $okayData);
+    }
+
+    private function prepareReport()
+    {
+        $reportTestHelper = new ReportTestHelper();
+        $em = self::$container->get('em');
+
+        $report = $reportTestHelper->generateReport($em);
+        $client = (new ClientTestHelper())->generateClient($em);
+
+        $report->setClient($client);
+
+        $em->persist($client);
+        $em->persist($report);
+        $em->flush();
+
+        return $report;
+    }
+
+    public function testSatisfactionHasSuitablePermissions_no_token()
+    {
+        $url = '/satisfaction';
+        $this->assertEndpointNeedsAuth('POST', $url);
     }
 
     public function testPublicEndpointHasSuitablePermissions()
@@ -84,6 +153,9 @@ class SatisfactionControllerTest extends AbstractTestController
      */
     public function testSatisfactionAcceptsValidData($url, $data)
     {
+        $report = $this->prepareReport();
+        $data['reportId'] = $report->getId();
+
         $response = $this->assertJsonRequest('POST', $url, [
             'mustSucceed' => true,
             'AuthToken' => self::$tokenDeputy,
