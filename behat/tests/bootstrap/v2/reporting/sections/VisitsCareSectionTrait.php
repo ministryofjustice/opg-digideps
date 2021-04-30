@@ -236,23 +236,14 @@ trait VisitsCareSectionTrait
 
         $countNegativeResponse = 0;
         $countPositiveResponse = 0;
-
+        $comparisonSubject = 'Care funding explanation';
         foreach ($tableEntry as $entry) {
             if (1 == $this->careFundedChoice) {
-                assert(
-                    str_contains($entry, 'pays for all the care'),
-                    sprintf('matching care funding explanation %s ', 'Client pays for all the care')
-                );
+                $this->assertStringContainsString('pays for all the care', $entry, $comparisonSubject);
             } elseif (1 == $this->careFundedChoice) {
-                assert(
-                    str_contains($entry, 'gets some financial help'),
-                    sprintf('matching care funding explanation %s ', 'Client gets some financial help')
-                );
+                $this->assertStringContainsString('gets some financial help', $entry, $comparisonSubject);
             } elseif (1 == $this->careFundedChoice) {
-                assert(
-                    str_contains($entry, 'care is paid for by someone else'),
-                    sprintf('matching care funding explanation %s ', 'Client\'s care is paid for by someone else')
-                );
+                $this->assertStringContainsString('care is paid for by someone else', $entry, $comparisonSubject);
             }
 
             if ('no' === strtolower(trim($entry->getHtml()))) {
@@ -262,13 +253,8 @@ trait VisitsCareSectionTrait
             }
         }
 
-        assert(
-            $countNegativeResponse == $this->answeredNo,
-            sprintf('Expected %d No responses, actual was %d', $this->answeredNo, $countNegativeResponse)
-        );
-
-        assert($countNegativeResponse == $this->answeredNo);
-        assert($countPositiveResponse == $this->answeredYes);
+        $this->assertIntEqualsInt($this->answeredNo, $countNegativeResponse, 'Number of Yes Responses');
+        $this->assertIntEqualsInt($this->answeredYes, $countPositiveResponse, 'Number of No Responses');
 
         $this->iShouldSeeTheExpectedVisitCareAdditionalInfo();
     }
@@ -285,7 +271,7 @@ trait VisitsCareSectionTrait
         }
 
         foreach ($this->additionalInfo as $info) {
-            assert(str_contains($table->getHtml(), $info));
+            $this->assertStringContainsString($info, $table->getHtml(), 'Written responses');
         }
     }
 

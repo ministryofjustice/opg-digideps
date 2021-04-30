@@ -10,8 +10,6 @@ Feature: Visits and Care (NDR)
     When I confirm the client does not have a care plan
     When I confirm there are no plans to move the client to a new residence section
     And I should see the expected visits and care report section responses
-    And the previous section should be "Report overview"
-    And the next section should be "Deputy Expenses"
     When I follow link back to report overview page
     Then I should be on the Lay reports overview page
     And I should see "visits-care" as "finished"
@@ -25,8 +23,6 @@ Feature: Visits and Care (NDR)
     When I confirm the client has a care plan
     When I confirm there are plans to to move the client to a new residence section
     And I should see the expected visits and care report section responses
-    And the previous section should be "Report overview"
-    And the next section should be "Deputy Expenses"
     When I follow link back to report overview page
     Then I should be on the Lay reports overview page
     And I should see "visits-care" as "finished"

@@ -9,8 +9,6 @@ Feature: Visits and Care
     When I provide details on who is doing the caring
     When I confirm the client does not have a care plan
     And I should see the expected visits and care report section responses
-    And the previous section should be "Contacts"
-    And the next section should be "Bank accounts"
     When I follow link back to report overview page
     Then I should be on the Lay reports overview page
     And I should see "visits-care" as "finished"
@@ -23,8 +21,6 @@ Feature: Visits and Care
     When I provide details on who is doing the caring
     When I confirm the client has a care plan
     And I should see the expected visits and care report section responses
-    And the previous section should be "Contacts"
-    And the next section should be "Bank accounts"
     When I follow link back to report overview page
     Then I should be on the Lay reports overview page
     And I should see "visits-care" as "finished"
