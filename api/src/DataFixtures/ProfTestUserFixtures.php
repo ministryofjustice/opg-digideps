@@ -540,7 +540,8 @@ class ProfTestUserFixtures extends AbstractDataFixture
             ->setAddressPostcode(isset($data['Dep Postcode']) ? $data['Dep Postcode'] : 'SW1')
             ->setAddressCountry('GB')
             ->setDeputyNo(isset($data['Deputy No']) ? $data['Deputy No'] : null)
-            ->setRoleName($data['roleName']);
+            ->setRoleName($data['roleName'])
+            ->setAgreeTermsUse(true);
 
         $manager->persist($user);
 
