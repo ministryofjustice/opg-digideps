@@ -60,6 +60,7 @@ class PATestUserFixtures extends AbstractDataFixture
             'Dep Adrs4' => 'ADD4',
             'Dep Adrs5' => 'ADD5',
             'Phone Main' => '+4410000000001',
+            'Agree Terms Use' => false,
             'clients' => [
                 [
                     'firstname' => 'CLY1',
@@ -110,6 +111,7 @@ class PATestUserFixtures extends AbstractDataFixture
             'Dep Adrs4' => 'ADD4',
             'Dep Adrs5' => 'ADD5',
             'Phone Main' => '+4410000000002',
+            'Agree Terms Use' => false,
             'clients' => [
                 [
                     'firstname' => 'CLY301',
@@ -144,6 +146,7 @@ class PATestUserFixtures extends AbstractDataFixture
             'Dep Adrs4' => 'ADD4',
             'Dep Adrs5' => 'ADD5',
             'Phone Main' => '+4410000000003',
+            'Agree Terms Use' => false,
             'clients' => [
                 [
                     'firstname' => 'CLY201',
@@ -201,7 +204,8 @@ class PATestUserFixtures extends AbstractDataFixture
             ->setAddressPostcode(isset($data['addressPostcode']) ? $data['addressPostcode'] : 'SW1')
             ->setAddressCountry('GB')
             ->setDeputyNo(isset($data['Deputy No']) ? $data['Deputy No'] : null)
-            ->setRoleName($data['roleName']);
+            ->setRoleName($data['roleName'])
+            ->setAgreeTermsUse(isset($data['Agree Terms Use']) ? true : $data['Agree Terms Use']);
 
         $manager->persist($user);
 

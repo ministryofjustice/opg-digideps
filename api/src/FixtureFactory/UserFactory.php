@@ -48,7 +48,8 @@ class UserFactory
             ->setAddress1('Victoria Road')
             ->setAddressPostcode(isset($data['postCode']) ? $data['postCode'] : 'SW1')
             ->setAddressCountry('GB')
-            ->setRoleName($roleName);
+            ->setRoleName($roleName)
+            ->setAgreeTermsUse(true);
 
         if ($data['activated'] === 'true' || $data['activated'] === true) {
             $user->setPassword($this->encoder->encodePassword($user, 'DigidepsPass1234'));

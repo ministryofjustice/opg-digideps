@@ -343,6 +343,11 @@ class UserController extends AbstractController
         $form->handleRequest($request);
         if ($form->isSubmitted() && $form->isValid()) {
             $this->userApi->agreeTermsUse($token);
+
+            if (!$user->getActive()) {
+                return $this->redirectToRoute('user_activate', ['token' => $token, 'action' => 'activate']);
+            }
+
             return $this->redirectToRoute('org_dashboard');
         }
 
