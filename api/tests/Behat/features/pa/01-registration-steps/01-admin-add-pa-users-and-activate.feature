@@ -13,6 +13,13 @@ Feature: Add PA users and activate PA user (journey)
 
   Scenario: PA user registration steps
     When I open the activation page for "behat-pa1@publicguardian.gov.uk"
+    # terms
+    And I press "agree_terms_save"
+    Then the following fields should have an error:
+      | agree_terms_agreeTermsUse |
+    When I check "agree_terms_agreeTermsUse"
+    And I press "agree_terms_save"
+    Then the form should be valid
     # password step
     When I fill in the password fields with "DigidepsPass1234"
     And I check "set_password_showTermsAndConditions"
@@ -56,6 +63,10 @@ Feature: Add PA users and activate PA user (journey)
     And I click on "send-activation-email" in the "user-behat-pa2publicguardiangovuk" region
     And I go to "/logout"
     When I open the activation page for "behat-pa2@publicguardian.gov.uk"
+    # terms
+    When I check "agree_terms_agreeTermsUse"
+    And I press "agree_terms_save"
+    Then the form should be valid
     # password step
     When I fill in the password fields with "DigidepsPass1234"
     And I check "set_password_showTermsAndConditions"
@@ -78,6 +89,10 @@ Feature: Add PA users and activate PA user (journey)
     And I click on "send-activation-email" in the "user-behat-pa3publicguardiangovuk" region
     And I go to "/logout"
     When I open the activation page for "behat-pa3@publicguardian.gov.uk"
+    # terms
+    When I check "agree_terms_agreeTermsUse"
+    And I press "agree_terms_save"
+    Then the form should be valid
     # password step
     When I fill in the password fields with "DigidepsPass1234"
     And I check "set_password_showTermsAndConditions"
