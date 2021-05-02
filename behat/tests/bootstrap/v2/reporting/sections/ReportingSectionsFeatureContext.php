@@ -1,4 +1,6 @@
-<?php declare(strict_types=1);
+<?php
+
+declare(strict_types=1);
 
 namespace DigidepsBehat\v2\Reporting\Sections;
 
@@ -12,6 +14,7 @@ class ReportingSectionsFeatureContext extends BaseFeatureContext
     use ContactsSectionTrait;
     use DocumentsSectionTrait;
     use GiftsSectionTrait;
+    use MoneyOutShortSectionTrait;
     use VisitsAndCareSectionTrait;
 
     /**
@@ -19,7 +22,7 @@ class ReportingSectionsFeatureContext extends BaseFeatureContext
      */
     public function previousSectionShouldBe(string $sectionName)
     {
-        $anchor = $this->getSession()->getPage()->find('named', ['link', "Navigate to previous part"]);
+        $anchor = $this->getSession()->getPage()->find('named', ['link', 'Navigate to previous part']);
 
         if (!$anchor) {
             $this->throwContextualException(
@@ -41,7 +44,7 @@ class ReportingSectionsFeatureContext extends BaseFeatureContext
      */
     public function nextSectionShouldBe(string $sectionName)
     {
-        $anchor = $this->getSession()->getPage()->find('named', ['link', "Navigate to next part"]);
+        $anchor = $this->getSession()->getPage()->find('named', ['link', 'Navigate to next part']);
 
         if (!$anchor) {
             $this->throwContextualException(
@@ -149,7 +152,7 @@ class ReportingSectionsFeatureContext extends BaseFeatureContext
         $furtherInfoNeeded = false;
 
         foreach ($tableEntry as $entry) {
-            if (str_contains(trim(strtolower($entry->getHtml())), "please answer this question")) {
+            if (str_contains(trim(strtolower($entry->getHtml())), 'please answer this question')) {
                 $furtherInfoNeeded = true;
             }
         }

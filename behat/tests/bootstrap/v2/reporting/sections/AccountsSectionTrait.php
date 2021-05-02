@@ -1,4 +1,6 @@
-<?php declare(strict_types=1);
+<?php
+
+declare(strict_types=1);
 
 namespace DigidepsBehat\v2\Reporting\Sections;
 
@@ -28,7 +30,7 @@ trait AccountsSectionTrait
             'sortCode' => '01-01-01',
             'joint' => 'no',
             'openingBalance' => '101',
-            'closingBalance' => '201'
+            'closingBalance' => '201',
         ];
 
         $this->accountList[] = $account;
@@ -117,7 +119,7 @@ trait AccountsSectionTrait
                 'sortCode' => '01-01-01',
                 'joint' => 'no',
                 'openingBalance' => '101',
-                'closingBalance' => '201'
+                'closingBalance' => '201',
             ];
 
         $this->iFillInAccountDetails(
@@ -151,7 +153,7 @@ trait AccountsSectionTrait
                 'sortCode' => '02-02-02',
                 'joint' => 'no',
                 'openingBalance' => '102',
-                'closingBalance' => '202'
+                'closingBalance' => '202',
             ];
 
         $urlRegex = sprintf('/%s\/.*\/bank-account\/step1\/[0-9].*$/', $this->reportUrlPrefix);
@@ -183,7 +185,7 @@ trait AccountsSectionTrait
                 'sortCode' => '01-01-01',
                 'joint' => 'no',
                 'openingBalance' => '101',
-                'closingBalance' => '201'
+                'closingBalance' => '201',
             ],
             [
                 'account' => 'savings',
@@ -193,7 +195,7 @@ trait AccountsSectionTrait
                 'sortCode' => '02-02-02',
                 'joint' => 'yes',
                 'openingBalance' => '102',
-                'closingBalance' => '202'
+                'closingBalance' => '202',
             ],
             [
                 'account' => 'isa',
@@ -203,7 +205,7 @@ trait AccountsSectionTrait
                 'sortCode' => '03-03-03',
                 'joint' => 'no',
                 'openingBalance' => '103',
-                'closingBalance' => '203'
+                'closingBalance' => '203',
             ],
             [
                 'account' => 'postoffice',
@@ -213,7 +215,7 @@ trait AccountsSectionTrait
                 'sortCode' => '',
                 'joint' => 'yes',
                 'openingBalance' => '104',
-                'closingBalance' => '204'
+                'closingBalance' => '204',
             ],
             [
                 'account' => 'cfo',
@@ -223,7 +225,7 @@ trait AccountsSectionTrait
                 'sortCode' => '',
                 'joint' => 'no',
                 'openingBalance' => '105',
-                'closingBalance' => '205'
+                'closingBalance' => '205',
             ],
             [
                 'account' => 'other',
@@ -233,7 +235,7 @@ trait AccountsSectionTrait
                 'sortCode' => '06-06-06',
                 'joint' => 'yes',
                 'openingBalance' => '106',
-                'closingBalance' => '206'
+                'closingBalance' => '206',
             ],
             [
                 'account' => 'other_no_sortcode',
@@ -243,7 +245,7 @@ trait AccountsSectionTrait
                 'sortCode' => '',
                 'joint' => 'no',
                 'openingBalance' => '107',
-                'closingBalance' => '207'
+                'closingBalance' => '207',
             ],
         ];
 
@@ -269,12 +271,13 @@ trait AccountsSectionTrait
      */
     public function iShouldSeeTheExpectedAccountsOnSummaryPage()
     {
-        $isNdr = $this->reportUrlPrefix == 'ndr' ? true : false;
+        $isNdr = 'ndr' == $this->reportUrlPrefix ? true : false;
+
         $accountSummaryElems = [
           'tableBody' => $isNdr ? 'dl' : 'tbody',
           'row' => $isNdr ? 'div.govuk-summary-list__row' : 'tr',
           'head' => $isNdr ? 'dt' : 'th',
-          'data' => $isNdr ? 'dd' : 'td'
+          'data' => $isNdr ? 'dd' : 'td',
         ];
 
         $this->iAmOnAccountsSummaryPage();
@@ -296,7 +299,7 @@ trait AccountsSectionTrait
             $tableRows = array_values($tableRows);
         }
 
-        foreach ($tableRows as $tRowKey=>$tableRow) {
+        foreach ($tableRows as $tRowKey => $tableRow) {
             $tableHeader = $tableRow->find('css', $accountSummaryElems['head']);
             $headHtml = trim(strtolower($tableHeader->getHtml()));
             $this->assertStringContainsString($this->accountList[$tRowKey]['accountType'], $headHtml, 'Accounts Type');
@@ -309,11 +312,11 @@ trait AccountsSectionTrait
 
             $tableFields = $tableRow->findAll('css', $accountSummaryElems['data']);
 
-            foreach ($tableFields as $tFieldKey=>$tableField) {
+            foreach ($tableFields as $tFieldKey => $tableField) {
                 $balanceItem = trim(strtolower($tableField->getHtml()));
-                if ($tFieldKey == 0) {
+                if (0 == $tFieldKey) {
                     $this->assertStringContainsString($this->accountList[$tRowKey]['openingBalance'], $balanceItem, 'Accounts Opening Balance');
-                } elseif ($tFieldKey == 1 and $this->reportUrlPrefix != 'ndr') {
+                } elseif (1 == $tFieldKey and 'ndr' != $this->reportUrlPrefix) {
                     $this->assertStringContainsString($this->accountList[$tRowKey]['closingBalance'], $balanceItem, 'Accounts Closing Balance');
                 }
             }
@@ -334,7 +337,7 @@ trait AccountsSectionTrait
                 'sortCode' => '01-01-01',
                 'joint' => 'no',
                 'openingBalance' => '101',
-                'closingBalance' => '201'
+                'closingBalance' => '201',
             ],
             [
                 'account' => 'current',
@@ -344,8 +347,8 @@ trait AccountsSectionTrait
                 'sortCode' => '02-02-02',
                 'joint' => 'yes',
                 'openingBalance' => '102',
-                'closingBalance' => '202'
-            ]
+                'closingBalance' => '202',
+            ],
         ];
         foreach ($this->accountList as $account) {
             $this->visitPath($this->getAccountsAddAnAccountUrl($this->loggedInUserDetails->getCurrentReportId()));
@@ -424,7 +427,7 @@ trait AccountsSectionTrait
 
     public function iFillInAccountBalance(string $openingBalance, string $closingBalance)
     {
-        if ($this->reportUrlPrefix == 'ndr') {
+        if ('ndr' == $this->reportUrlPrefix) {
             $this->fillField('account[balanceOnCourtOrderDate]', $openingBalance);
         } else {
             $this->fillField('account[openingBalance]', $openingBalance);

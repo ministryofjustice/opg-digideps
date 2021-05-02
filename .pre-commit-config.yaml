@@ -21,7 +21,7 @@ repos:
     hooks:
     - id: php-cs-fixer
       files: \.(php)$
-      args: ["--rules=@PSR12,@Symfony"]
+      args: ["--rules=@PSR2,@Symfony"]
     - id: php-stan
       files: \.(php)$
 -   repo: https://github.com/ministryofjustice/opg-pre-commit-hooks.git

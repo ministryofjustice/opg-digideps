@@ -1,5 +1,6 @@
-<?php declare(strict_types=1);
+<?php
 
+declare(strict_types=1);
 
 namespace DigidepsBehat\v2\Common;
 
@@ -255,5 +256,21 @@ trait IShouldBeOnTrait
     public function iAmOnAdminClientDischargePage()
     {
         return $this->iAmOnPage('/admin\/client\/.*\/discharge/');
+    }
+
+    /**
+     * @Then I should be on the money out short category page
+     */
+    public function iAmOnMoneyOutShortCategoryPage()
+    {
+        return $this->iAmOnPage(sprintf('/%s\/.*\/money-out-short\/category$/', $this->reportUrlPrefix));
+    }
+
+    /**
+     * @Then I should be on the money out short summary page
+     */
+    public function iAmOnMoneyOutShortSummaryPage()
+    {
+        return $this->iAmOnPage(sprintf('/%s\/.*\/money-out-short\/summary$/', $this->reportUrlPrefix));
     }
 }

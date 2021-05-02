@@ -1,10 +1,19 @@
-<?php declare(strict_types=1);
+<?php
 
+declare(strict_types=1);
 
 namespace DigidepsBehat\v2\Common;
 
 trait IVisitFrontendTrait
 {
+    /**
+     * @When I visit the report overview page
+     */
+    public function iViewReportOverviewPage()
+    {
+        $this->visitPath($this->getReportOverviewUrl($this->loggedInUserDetails->getCurrentReportId()));
+    }
+
     /**
      * @When I visit the report submitted page
      */
@@ -18,6 +27,14 @@ trait IVisitFrontendTrait
 
         $submittedReportUrl = $this->getReportSubmittedUrl($this->loggedInUserDetails->getPreviousReportId());
         $this->visitFrontendPath($submittedReportUrl);
+    }
+
+    /**
+     * @When I visit the money out report section
+     */
+    public function iVisitMoneyOutSection()
+    {
+        $this->visitPath($this->getMoneyOutShortSectionUrl($this->loggedInUserDetails->getCurrentReportId()));
     }
 
     /**

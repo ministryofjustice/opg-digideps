@@ -16,7 +16,7 @@ class BaseFeatureContext extends MinkContext
     use AlertsTrait;
     use AuthTrait;
     use AssertTrait;
-    use CourtOrderTrait;
+//    use CourtOrderTrait;
     use DebugTrait;
     use ElementSelectionTrait;
     use ErrorsTrait;
@@ -40,7 +40,7 @@ class BaseFeatureContext extends MinkContext
     public UserDetails $layDeputyCompletedDetails;
     public UserDetails $layDeputySubmittedDetails;
 
-    /** @var UserDetails $profAdminDeputyNotStartedDetails */
+    /** @var UserDetails */
     public UserDetails $profAdminDeputyNotStartedDetails;
     public UserDetails $profAdminDeputyCompletedDetails;
     public UserDetails $profAdminDeputySubmittedDetails;
@@ -93,9 +93,6 @@ class BaseFeatureContext extends MinkContext
         $this->interactingWithUserDetails = null;
     }
 
-    /**
-     * @return string
-     */
     public function getAdminUrl(): string
     {
         return getenv('ADMIN_HOST');
@@ -112,13 +109,13 @@ class BaseFeatureContext extends MinkContext
     public function visitFrontendPath(string $path)
     {
         $siteUrl = $this->getSiteUrl();
-        $this->visitPath($siteUrl . $path);
+        $this->visitPath($siteUrl.$path);
     }
 
     public function visitAdminPath(string $path)
     {
         $adminUrl = $this->getAdminUrl();
-        $this->visitPath($adminUrl . $path);
+        $this->visitPath($adminUrl.$path);
     }
 
     public function getPageContent()
