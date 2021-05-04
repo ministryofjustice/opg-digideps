@@ -2,6 +2,9 @@
 
 namespace App\Entity;
 
+use App\Entity\Ndr\Ndr;
+use App\Entity\Report\Report;
+use App\Entity\UserResearch\UserResearchResponse;
 use Doctrine\ORM\Mapping as ORM;
 use Gedmo\Mapping\Annotation as Gedmo;
 use JMS\Serializer\Annotation as JMS;
@@ -72,7 +75,33 @@ class Satisfaction
      * @ORM\Column(name="created_at", type="datetime")
      * @Gedmo\Timestampable(on="create")
      */
-    private $created;
+    private DateTime $created;
+
+    /**
+     * @ORM\OneToOne(targetEntity="App\Entity\UserResearch\UserResearchResponse", mappedBy="satisfaction", cascade={"persist", "remove"})
+     *
+     * @JMS\Type("App\Entity\UserResearch\UserResearchResponse")
+     * @JMS\Groups({"user-research", "satisfaction"})
+     */
+    private UserResearchResponse $userResearchResponse;
+
+    /**
+     * @var Report|null
+     * @JMS\Type("App\Entity\Report\Report")
+     * @JMS\Groups({"user-research", "satisfaction"})
+     *
+     * @ORM\OneToOne(targetEntity="App\Entity\Report\Report", inversedBy="satisfaction", cascade={"persist"})
+     */
+    private ?Report $report = null;
+
+    /**
+     * @var Ndr|null
+     * @JMS\Type("App\Entity\Ndr\Ndr")
+     * @JMS\Groups({"user-research", "satisfaction"})
+     *
+     * @ORM\OneToOne(targetEntity="App\Entity\Ndr\Ndr", inversedBy="satisfaction", cascade={"persist"})
+     */
+    private ?Ndr $ndr = null;
 
     /**
      * @return int
@@ -179,6 +208,60 @@ class Satisfaction
     public function setCreated(DateTime $created): Satisfaction
     {
         $this->created = $created;
+        return $this;
+    }
+
+    /**
+     * @return UserResearchResponse
+     */
+    public function getUserResearchResponse(): UserResearchResponse
+    {
+        return $this->userResearchResponse;
+    }
+
+    /**
+     * @param UserResearchResponse $userResearchResponse
+     * @return Satisfaction
+     */
+    public function setUserResearchResponse(UserResearchResponse $userResearchResponse): Satisfaction
+    {
+        $this->userResearchResponse = $userResearchResponse;
+        return $this;
+    }
+
+    /**
+     * @return Report
+     */
+    public function getReport(): ?Report
+    {
+        return $this->report;
+    }
+
+    /**
+     * @param Report|null $report
+     * @return Satisfaction
+     */
+    public function setReport(?Report $report): Satisfaction
+    {
+        $this->report = $report;
+        return $this;
+    }
+
+    /**
+     * @return Ndr
+     */
+    public function getNdr(): ?Ndr
+    {
+        return $this->ndr;
+    }
+
+    /**
+     * @param Ndr|null $ndr
+     * @return Satisfaction
+     */
+    public function setNdr(?Ndr $ndr): Satisfaction
+    {
+        $this->ndr = $ndr;
         return $this;
     }
 }

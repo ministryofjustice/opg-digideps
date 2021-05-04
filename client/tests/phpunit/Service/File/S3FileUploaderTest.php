@@ -110,7 +110,7 @@ class S3FileUploaderTest extends KernelTestCase
     /** @test */
     public function removeFileFromS3()
     {
-        $reportPdf = DocumentHelpers::generateReportPdfDocument();
+        $reportPdf = DocumentHelpers::createReportPdfDocument();
 
         $this->storage->removeFromS3($reportPdf->getStorageReference())->shouldBeCalled();
 
@@ -122,7 +122,7 @@ class S3FileUploaderTest extends KernelTestCase
     {
         self::expectException(Exception::class);
 
-        $reportPdf = DocumentHelpers::generateReportPdfDocument();
+        $reportPdf = DocumentHelpers::createReportPdfDocument();
         $reportPdf->setStorageReference(null);
 
         $this->storage->removeFromS3($reportPdf->getStorageReference())->shouldNotBeCalled();

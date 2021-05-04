@@ -115,7 +115,7 @@ class RestInputOuputFormatter
         }
 
         // if data is defined,
-        if ($groupsCheck && !empty($data['data']) && $this->containsEntity($data['data']) && empty($context->getAttribute('groups'))) {
+        if ($groupsCheck && !empty($data['data']) && $this->containsEntity($data['data']) && $context->hasAttribute('groups') === false) {
             throw new \RuntimeException($request->getMethod() . ' ' . $request->getUri() . ' missing JMS group');
         }
 

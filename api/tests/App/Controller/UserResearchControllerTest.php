@@ -3,6 +3,10 @@
 
 namespace Tests\App\Controller;
 
+use App\Entity\Satisfaction;
+use App\TestHelpers\ClientTestHelper;
+use App\TestHelpers\ReportTestHelper;
+
 class UserResearchControllerTest extends AbstractTestController
 {
     private static $tokenAdmin;
@@ -13,6 +17,8 @@ class UserResearchControllerTest extends AbstractTestController
 
     public function setUp(): void
     {
+        parent::setUp();
+
         if (null === self::$tokenAdmin) {
             self::$tokenAdmin = $this->loginAsAdmin();
             self::$tokenSuperAdmin = $this->loginAsSuperAdmin();
@@ -23,21 +29,106 @@ class UserResearchControllerTest extends AbstractTestController
     }
 
     /** @test */
-    public function userResearchHasSuitablePermissions()
+    public function userResearchHasSuitablePermissions_not_allowed_admin()
     {
+        $satisfaction = $this->prepareSatisfaction();
         $url = '/user-research';
         $validData = [
             'deputyshipLength' => 'underOne',
             'agreedResearchTypes' => ['surveys', 'videoCall', 'phone'],
             'hasAccessToVideoCallDevice' => 'yes',
+            'satisfaction' => $satisfaction->getId()
         ];
 
-        $this->assertEndpointNeedsAuth('POST', $url);
         $this->assertEndpointNotAllowedFor('POST', $url, self::$tokenAdmin, $validData);
+    }
+
+    /** @test */
+    public function userResearchHasSuitablePermissions_not_allowed_super_admin()
+    {
+        $satisfaction = $this->prepareSatisfaction();
+        $url = '/user-research';
+        $validData = [
+            'deputyshipLength' => 'underOne',
+            'agreedResearchTypes' => ['surveys', 'videoCall', 'phone'],
+            'hasAccessToVideoCallDevice' => 'yes',
+            'satisfaction' => $satisfaction->getId()
+        ];
+
         $this->assertEndpointNotAllowedFor('POST', $url, self::$tokenSuperAdmin, $validData);
+    }
+
+    /** @test */
+    public function userResearchHasSuitablePermissions_allowed_lay()
+    {
+        $satisfaction = $this->prepareSatisfaction();
+        $url = '/user-research';
+        $validData = [
+            'deputyshipLength' => 'underOne',
+            'agreedResearchTypes' => ['surveys', 'videoCall', 'phone'],
+            'hasAccessToVideoCallDevice' => 'yes',
+            'satisfaction' => $satisfaction->getId()
+        ];
+
         $this->assertEndpointAllowedFor('POST', $url, self::$tokenDeputy, $validData);
-        $this->assertEndpointAllowedFor('POST', $url, self::$tokenProf, $validData);
+    }
+
+    /** @test */
+    public function userResearchHasSuitablePermissions_allowed_pa()
+    {
+        $satisfaction = $this->prepareSatisfaction();
+        $url = '/user-research';
+        $validData = [
+            'deputyshipLength' => 'underOne',
+            'agreedResearchTypes' => ['surveys', 'videoCall', 'phone'],
+            'hasAccessToVideoCallDevice' => 'yes',
+            'satisfaction' => $satisfaction->getId()
+        ];
+
         $this->assertEndpointAllowedFor('POST', $url, self::$tokenPa, $validData);
+    }
+
+    /** @test */
+    public function userResearchHasSuitablePermissions_allowed_prof()
+    {
+        $satisfaction = $this->prepareSatisfaction();
+        $url = '/user-research';
+        $validData = [
+            'deputyshipLength' => 'underOne',
+            'agreedResearchTypes' => ['surveys', 'videoCall', 'phone'],
+            'hasAccessToVideoCallDevice' => 'yes',
+            'satisfaction' => $satisfaction->getId()
+        ];
+
+        $this->assertEndpointAllowedFor('POST', $url, self::$tokenProf, $validData);
+    }
+
+    /** @test */
+    public function userResearchHasSuitablePermissions_needs_auth_no_token()
+    {
+        $url = '/user-research';
+        $this->assertEndpointNeedsAuth('POST', $url);
+    }
+
+    private function prepareSatisfaction()
+    {
+        $em = self::$container->get('em');
+
+        $report = (new ReportTestHelper())->generateReport($em);
+        $client = (new ClientTestHelper())->generateClient($em);
+
+        $report->setClient($client);
+
+        $satisfaction = (new Satisfaction())
+            ->setReport($report)
+            ->setScore(2);
+
+        $em->persist($client);
+        $em->persist($report);
+        $em->persist($satisfaction);
+        $em->flush();
+
+        return $satisfaction;
     }
 
     /**

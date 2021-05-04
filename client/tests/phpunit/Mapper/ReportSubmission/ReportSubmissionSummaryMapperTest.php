@@ -2,8 +2,7 @@
 
 namespace App\Mapper\ReportSubmission;
 
-use App\Mapper\ReportSubmission\ReportSubmissionSummaryMapper;
-use App\Mapper\ReportSubmission\ReportSubmissionSummaryQuery;
+use App\Mapper\DateRangeQuery;
 use App\Service\Client\RestClient;
 use PHPUnit\Framework\TestCase;
 
@@ -12,7 +11,7 @@ class ReportSubmissionSummaryMapperTest extends TestCase
     /** @var ReportSubmissionSummaryMapper */
     private $sut;
 
-    /** @var ReportSubmissionSummaryQuery */
+    /** @var DateRangeQuery */
     private $query;
 
     /** @var RestClient | \PHPUnit_Framework_MockObject_MockObject */
@@ -32,7 +31,7 @@ class ReportSubmissionSummaryMapperTest extends TestCase
 
     public function testReturnsReportSubmissionsByDefaultParameters()
     {
-        $this->query = new ReportSubmissionSummaryQuery();
+        $this->query = new DateRangeQuery();
 
         $this->assertRestClientIsCalledWithDefaultQueryParameters();
         $this->assertRestClientPopulatesAnArrayOfExpectedEntities();
@@ -42,7 +41,7 @@ class ReportSubmissionSummaryMapperTest extends TestCase
 
     public function testReturnsReportSubmissionsByCustomParameters()
     {
-        $this->query = (new ReportSubmissionSummaryQuery())
+        $this->query = (new DateRangeQuery())
             ->setStartDate(new \DateTime('01-01-2001'))
             ->setEndDate(new \DateTime('02-01-2001'))
             ->setOrderBy('foo')

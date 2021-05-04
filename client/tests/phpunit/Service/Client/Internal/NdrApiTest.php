@@ -25,7 +25,7 @@ class NdrApiTest extends TestCase
         $userApi = self::prophesize(UserApi::class);
 
         $ndr = NdrHelpers::createNdr();
-        $document = DocumentHelpers::generateReportPdfDocument();
+        $document = DocumentHelpers::createReportPdfDocument();
         $activeReport = ReportHelpers::createReport();
         $client = (ClientHelpers::createClient($activeReport));
         $submittedByWithClientsAndReports = (UserHelpers::createUser())->setClients([$client]);

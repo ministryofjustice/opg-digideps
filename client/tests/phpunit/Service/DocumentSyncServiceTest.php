@@ -1,4 +1,6 @@
-<?php declare(strict_types=1);
+<?php
+
+declare(strict_types=1);
 
 namespace App\Service;
 
@@ -8,9 +10,9 @@ use App\Entity\Report\ReportSubmission;
 use App\Model\Sirius\QueuedDocumentData;
 use App\Service\Client\RestClient;
 use App\Service\Client\Sirius\SiriusApiGatewayClient;
+use App\Service\File\FileNameFixer;
 use App\Service\File\Storage\S3Storage;
 use DateTime;
-use DigidepsTests\Helpers\DocumentHelpers;
 use DigidepsTests\Helpers\SiriusHelpers;
 use GuzzleHttp\Exception\RequestException;
 use GuzzleHttp\Psr7\Request;
@@ -23,20 +25,23 @@ use Symfony\Component\HttpFoundation\Response as SymfonyResponse;
 
 class DocumentSyncServiceTest extends KernelTestCase
 {
-    /** @var S3Storage&ObjectProphecy $s3Storage */
+    /** @var S3Storage&ObjectProphecy */
     private $s3Storage;
 
-    /** @var SiriusApiGatewayClient&ObjectProphecy $siriusApiGatewayClient */
+    /** @var SiriusApiGatewayClient&ObjectProphecy */
     private $siriusApiGatewayClient;
 
-    /** @var RestClient|ObjectProphecy $restClient */
+    /** @var RestClient|ObjectProphecy */
     private $restClient;
 
-    /** @var SiriusApiErrorTranslator|ObjectProphecy $restClient */
+    /** @var SiriusApiErrorTranslator|ObjectProphecy */
     private $errorTranslator;
 
-    /** @var Serializer $serializer */
+    /** @var Serializer */
     private $serializer;
+
+    /** @var FileNameFixer&ObjectProphecy */
+    private $fileNameFixer;
 
     /** @var DateTime */
     private $reportSubmittedDate;
@@ -53,21 +58,6 @@ class DocumentSyncServiceTest extends KernelTestCase
 
     public function setUp(): void
     {
-        /** @var S3Storage&ObjectProphecy $s3Storage */
-        $this->s3Storage = self::prophesize(S3Storage::class);
-
-        /** @var SiriusApiGatewayClient&ObjectProphecy $siriusApiGatewayClient */
-        $this->siriusApiGatewayClient = self::prophesize(SiriusApiGatewayClient::class);
-
-        /** @var RestClient|ObjectProphecy $restClient */
-        $this->restClient = self::prophesize(RestClient::class);
-
-        /** @var SiriusApiErrorTranslator|ObjectProphecy $restClient */
-        $this->errorTranslator = self::prophesize(SiriusApiErrorTranslator::class);
-
-        /** @var Serializer serializer */
-        $this->serializer = (self::bootKernel(['debug' => false]))->getContainer()->get('jms_serializer');
-
         $this->reportStartDate = new DateTime('2018-05-14');
         $this->reportEndDate = new DateTime('2019-05-13');
         $this->reportSubmittedDate = new DateTime('2019-06-20');
@@ -75,13 +65,32 @@ class DocumentSyncServiceTest extends KernelTestCase
         $this->reportPdfSubmissionUuid = '5a8b1a26-8296-4373-ae61-f8d0b250e123';
         $this->fileName = 'test.pdf';
         $this->s3Reference = 'dd_doc_98765_01234567890123';
+
+        /* @var S3Storage&ObjectProphecy $s3Storage */
+        $this->s3Storage = self::prophesize(S3Storage::class);
+
+        /* @var SiriusApiGatewayClient&ObjectProphecy $siriusApiGatewayClient */
+        $this->siriusApiGatewayClient = self::prophesize(SiriusApiGatewayClient::class);
+
+        /* @var RestClient|ObjectProphecy $restClient */
+        $this->restClient = self::prophesize(RestClient::class);
+
+        /* @var SiriusApiErrorTranslator|ObjectProphecy $errorTranslator */
+        $this->errorTranslator = self::prophesize(SiriusApiErrorTranslator::class);
+
+        /* @var SiriusApiErrorTranslator|ObjectProphecy $fileNameFixer */
+        $this->fileNameFixer = self::prophesize(FileNameFixer::class);
+        $this->fileNameFixer->removeWhiteSpaceBeforeFileExtension(Argument::any())->willReturn($this->fileName);
+
+        /* @var Serializer serializer */
+        $this->serializer = (self::bootKernel(['debug' => false]))->getContainer()->get('jms_serializer');
     }
 
     /**
      * @test
      * @dataProvider reportTypeProvider
      */
-    public function syncDocument_report_pdf_sync_success(string $reportTypeCode, string $expectedReportType)
+    public function syncDocumentReportPdfSyncSuccess(string $reportTypeCode, string $expectedReportType)
     {
         $reportPdfReportSubmission =
             (new ReportSubmission())
@@ -96,7 +105,7 @@ class DocumentSyncServiceTest extends KernelTestCase
             ->setReportStartDate($this->reportStartDate)
             ->setReportEndDate($this->reportEndDate)
             ->setReportSubmitDate($this->reportSubmittedDate)
-            ->setFilename('test.pdf')
+            ->setFilename($this->fileName)
             ->setIsReportPdf(true)
             ->setCaseNumber('1234567t')
             ->setNdrId(null)
@@ -148,7 +157,8 @@ class DocumentSyncServiceTest extends KernelTestCase
             $this->s3Storage->reveal(),
             $this->siriusApiGatewayClient->reveal(),
             $this->restClient->reveal(),
-            $this->errorTranslator->reveal()
+            $this->errorTranslator->reveal(),
+            $this->fileNameFixer->reveal()
         );
 
         $sut->syncDocument($queuedDocumentData);
@@ -168,7 +178,7 @@ class DocumentSyncServiceTest extends KernelTestCase
     /**
      * @test
      */
-    public function syncDocument_report_pdf_ndr_sync_success()
+    public function syncDocumentReportPdfNdrSyncSuccess()
     {
         $reportPdfReportSubmission =
             (new ReportSubmission())
@@ -183,7 +193,7 @@ class DocumentSyncServiceTest extends KernelTestCase
             ->setReportStartDate($this->reportStartDate)
             ->setReportEndDate($this->reportEndDate)
             ->setReportSubmitDate($this->reportSubmittedDate)
-            ->setFilename('test.pdf')
+            ->setFilename($this->fileName)
             ->setIsReportPdf(true)
             ->setCaseNumber('1234567t')
             ->setNdrId(123)
@@ -235,14 +245,15 @@ class DocumentSyncServiceTest extends KernelTestCase
             $this->s3Storage->reveal(),
             $this->siriusApiGatewayClient->reveal(),
             $this->restClient->reveal(),
-            $this->errorTranslator->reveal()
+            $this->errorTranslator->reveal(),
+            $this->fileNameFixer->reveal()
         );
 
         $sut->syncDocument($queuedDocumentData);
     }
 
     /** @test */
-    public function sendDocument_sync_failure_sirius_report_pdf()
+    public function sendDocumentSyncFailureSiriusReportPdf()
     {
         $reportPdfReportSubmission =
             (new ReportSubmission())
@@ -257,12 +268,11 @@ class DocumentSyncServiceTest extends KernelTestCase
             ->setReportStartDate($this->reportStartDate)
             ->setReportEndDate($this->reportEndDate)
             ->setReportSubmitDate($this->reportSubmittedDate)
-            ->setFilename('test.pdf')
+            ->setFilename($this->fileName)
             ->setIsReportPdf(true)
             ->setCaseNumber('1234567t')
             ->setNdrId(null)
             ->setStorageReference($this->s3Reference);
-
 
         $siriusDocumentUpload = SiriusHelpers::generateSiriusReportPdfDocumentUpload(
             $this->reportStartDate,
@@ -294,7 +304,7 @@ class DocumentSyncServiceTest extends KernelTestCase
                 'document/6789',
                 json_encode(
                     ['syncStatus' => Document::SYNC_STATUS_PERMANENT_ERROR,
-                    'syncError' => 'OPGDATA-API-FORBIDDEN: Credentials used for integration lack correct permissions'
+                    'syncError' => 'OPGDATA-API-FORBIDDEN: Credentials used for integration lack correct permissions',
                     ]
                 ),
                 'Report\\Document',
@@ -308,7 +318,8 @@ class DocumentSyncServiceTest extends KernelTestCase
             $this->s3Storage->reveal(),
             $this->siriusApiGatewayClient->reveal(),
             $this->restClient->reveal(),
-            $this->errorTranslator->reveal()
+            $this->errorTranslator->reveal(),
+            $this->fileNameFixer->reveal()
         );
 
         $sut->syncDocument($queuedDocumentData);
@@ -319,7 +330,7 @@ class DocumentSyncServiceTest extends KernelTestCase
     /**
      * @test
      */
-    public function sendSupportingDocument_success()
+    public function sendSupportingDocumentSuccess()
     {
         $document = (new Document())->setId(6789);
 
@@ -335,7 +346,7 @@ class DocumentSyncServiceTest extends KernelTestCase
             ->setReportStartDate($this->reportStartDate)
             ->setReportEndDate($this->reportEndDate)
             ->setReportSubmitDate($this->reportSubmittedDate)
-            ->setFilename('bank-statement.pdf')
+            ->setFilename($this->fileName)
             ->setIsReportPdf(false)
             ->setCaseNumber('1234567t')
             ->setNdrId(null)
@@ -346,7 +357,7 @@ class DocumentSyncServiceTest extends KernelTestCase
 
         $siriusDocumentUpload = SiriusHelpers::generateSiriusSupportingDocumentUpload(
             $expectedSubmissionIdUsedForSync,
-            'bank-statement.pdf',
+            $this->fileName,
             null,
             $this->s3Reference
         );
@@ -372,14 +383,15 @@ class DocumentSyncServiceTest extends KernelTestCase
             $this->s3Storage->reveal(),
             $this->siriusApiGatewayClient->reveal(),
             $this->restClient->reveal(),
-            $this->errorTranslator->reveal()
+            $this->errorTranslator->reveal(),
+            $this->fileNameFixer->reveal()
         );
 
         $sut->syncDocument($queuedDocumentData);
     }
 
     /** @test */
-    public function sendSupportingDocument_report_pdf_not_submitted()
+    public function sendSupportingDocumentReportPdfNotSubmitted()
     {
         $queuedDocumentData = (new QueuedDocumentData())
             ->setReportType(Report::TYPE_PROPERTY_AND_AFFAIRS_HIGH_ASSETS)
@@ -389,7 +401,7 @@ class DocumentSyncServiceTest extends KernelTestCase
             ->setReportStartDate($this->reportStartDate)
             ->setReportEndDate($this->reportEndDate)
             ->setReportSubmitDate($this->reportSubmittedDate)
-            ->setFilename('bank-statement.pdf')
+            ->setFilename($this->fileName)
             ->setIsReportPdf(false)
             ->setCaseNumber('1234567t')
             ->setNdrId(null)
@@ -411,14 +423,15 @@ class DocumentSyncServiceTest extends KernelTestCase
             $this->s3Storage->reveal(),
             $this->siriusApiGatewayClient->reveal(),
             $this->restClient->reveal(),
-            $this->errorTranslator->reveal()
+            $this->errorTranslator->reveal(),
+            $this->fileNameFixer->reveal()
         );
 
         $sut->syncDocument($queuedDocumentData);
     }
 
     /** @test */
-    public function sendSupportingDocument_sync_failure()
+    public function sendSupportingDocumentSyncFailure()
     {
         $queuedDocumentData = (new QueuedDocumentData())
             ->setReportType(Report::TYPE_PROPERTY_AND_AFFAIRS_HIGH_ASSETS)
@@ -428,12 +441,11 @@ class DocumentSyncServiceTest extends KernelTestCase
             ->setReportStartDate($this->reportStartDate)
             ->setReportEndDate($this->reportEndDate)
             ->setReportSubmitDate($this->reportSubmittedDate)
-            ->setFilename('bank-statement.pdf')
+            ->setFilename($this->fileName)
             ->setIsReportPdf(false)
             ->setCaseNumber('1234567t')
             ->setNdrId(null)
             ->setStorageReference($this->s3Reference);
-        ;
 
         $failureResponseBody = ['errors' => [0 => ['id' => 'ABC123', 'code' => 'OPGDATA-API-FORBIDDEN']]];
         $failureResponse = new Response('403', [], json_encode($failureResponseBody));
@@ -454,7 +466,7 @@ class DocumentSyncServiceTest extends KernelTestCase
                 'document/6789',
                 json_encode(
                     ['syncStatus' => Document::SYNC_STATUS_PERMANENT_ERROR,
-                        'syncError' => 'OPGDATA-API-FORBIDDEN: Credentials used for integration lack correct permissions'
+                        'syncError' => 'OPGDATA-API-FORBIDDEN: Credentials used for integration lack correct permissions',
                     ]
                 ),
                 'Report\\Document',
@@ -468,7 +480,8 @@ class DocumentSyncServiceTest extends KernelTestCase
             $this->s3Storage->reveal(),
             $this->siriusApiGatewayClient->reveal(),
             $this->restClient->reveal(),
-            $this->errorTranslator->reveal()
+            $this->errorTranslator->reveal(),
+            $this->fileNameFixer->reveal()
         );
 
         $sut->syncDocument($queuedDocumentData);
@@ -480,7 +493,7 @@ class DocumentSyncServiceTest extends KernelTestCase
      * @test
      * @dataProvider errorCodeProvider
      */
-    public function sendDocument_sync_failure_sirius_error_type_based_on_response_code(string $errorCode, string $expectedErrorType, int $syncAttempts)
+    public function sendDocumentSyncFailureSiriusErrorTypeBasedOnResponseCode(string $errorCode, string $expectedErrorType, int $syncAttempts)
     {
         $reportPdfReportSubmission =
             (new ReportSubmission())
@@ -496,7 +509,7 @@ class DocumentSyncServiceTest extends KernelTestCase
             ->setReportEndDate($this->reportEndDate)
             ->setReportSubmitDate($this->reportSubmittedDate)
             ->setStorageReference($this->s3Reference)
-            ->setFilename('test.pdf')
+            ->setFilename($this->fileName)
             ->setIsReportPdf(true)
             ->setCaseNumber('1234567t')
             ->setNdrId(null)
@@ -532,7 +545,7 @@ class DocumentSyncServiceTest extends KernelTestCase
                 'document/6789',
                 json_encode(
                     ['syncStatus' => $expectedErrorType,
-                        'syncError' => 'OPGDATA-API-FORBIDDEN: Credentials used for integration lack correct permissions'
+                        'syncError' => 'OPGDATA-API-FORBIDDEN: Credentials used for integration lack correct permissions',
                     ]
                 ),
                 'Report\\Document',
@@ -546,7 +559,8 @@ class DocumentSyncServiceTest extends KernelTestCase
             $this->s3Storage->reveal(),
             $this->siriusApiGatewayClient->reveal(),
             $this->restClient->reveal(),
-            $this->errorTranslator->reveal()
+            $this->errorTranslator->reveal(),
+            $this->fileNameFixer->reveal()
         );
 
         $sut->syncDocument($queuedDocumentData);
@@ -557,7 +571,131 @@ class DocumentSyncServiceTest extends KernelTestCase
         return [
             '4XX error code' => ['400', Document::SYNC_STATUS_PERMANENT_ERROR, 0],
             '5XX error code' => ['500', Document::SYNC_STATUS_TEMPORARY_ERROR, 0],
-            '5XX error code - 4th attempt' => ['500', Document::SYNC_STATUS_PERMANENT_ERROR, 3]
+            '5XX error code - 4th attempt' => ['500', Document::SYNC_STATUS_PERMANENT_ERROR, 3],
         ];
+    }
+
+    /**
+     * @test
+     */
+    public function sendDocumentInvalidFilenamesAreFixed()
+    {
+        $document = (new Document())->setId(6789);
+
+        $expectedUuidUsedToSyncDoc = 'report-pdf-submission-uuid';
+        $expectedSubmissionIdUsedForSync = 1234;
+        $expectedCaseRefUsedForSync = '1234567T';
+
+        $queuedDocumentData = (new QueuedDocumentData())
+            ->setReportType(Report::TYPE_PROPERTY_AND_AFFAIRS_HIGH_ASSETS)
+            ->setDocumentId($document->getId())
+            ->setReportSubmissionId($expectedSubmissionIdUsedForSync)
+            ->setReportSubmissionUuid($expectedUuidUsedToSyncDoc)
+            ->setReportStartDate($this->reportStartDate)
+            ->setReportEndDate($this->reportEndDate)
+            ->setReportSubmitDate($this->reportSubmittedDate)
+            ->setFilename('test .pdf')
+            ->setIsReportPdf(false)
+            ->setCaseNumber('1234567t')
+            ->setNdrId(null)
+            ->setStorageReference($this->s3Reference);
+
+        $successResponseBody = ['data' => ['type' => 'supportingDocument', 'id' => 'a-random-uuid']];
+        $successResponse = new Response('200', [], json_encode($successResponseBody));
+
+        $siriusDocumentUpload = SiriusHelpers::generateSiriusSupportingDocumentUpload(
+            $expectedSubmissionIdUsedForSync,
+            'test.pdf',
+            null,
+            $this->s3Reference
+        );
+
+        $this->siriusApiGatewayClient
+            ->sendSupportingDocument($siriusDocumentUpload, $expectedUuidUsedToSyncDoc, $expectedCaseRefUsedForSync)
+            ->shouldBeCalled()
+            ->willReturn($successResponse);
+
+        $this->restClient
+            ->apiCall(
+                'put',
+                'document/6789',
+                json_encode(['syncStatus' => Document::SYNC_STATUS_SUCCESS]),
+                'Report\\Document',
+                [],
+                false
+            )
+            ->shouldBeCalled()
+            ->willReturn(new Document());
+
+        $sut = new DocumentSyncService(
+            $this->s3Storage->reveal(),
+            $this->siriusApiGatewayClient->reveal(),
+            $this->restClient->reveal(),
+            $this->errorTranslator->reveal(),
+            $this->fileNameFixer->reveal()
+        );
+
+        $sut->syncDocument($queuedDocumentData);
+    }
+
+    /**
+     * @test
+     */
+    public function sendDocumentMissingFileExtensionThrowsError()
+    {
+        $fileNameFixer = self::prophesize(FileNameFixer::class);
+        $fileNameFixer
+            ->removeWhiteSpaceBeforeFileExtension('filename-with-no-extension')
+            ->willReturn('filename-with-no-extension');
+
+        $document = (new Document())->setId(6789);
+
+        $expectedUuidUsedToSyncDoc = 'report-pdf-submission-uuid';
+        $expectedSubmissionIdUsedForSync = 1234;
+
+        $queuedDocumentData = (new QueuedDocumentData())
+            ->setReportType(Report::TYPE_PROPERTY_AND_AFFAIRS_HIGH_ASSETS)
+            ->setDocumentId($document->getId())
+            ->setReportSubmissionId($expectedSubmissionIdUsedForSync)
+            ->setReportSubmissionUuid($expectedUuidUsedToSyncDoc)
+            ->setReportStartDate($this->reportStartDate)
+            ->setReportEndDate($this->reportEndDate)
+            ->setReportSubmitDate($this->reportSubmittedDate)
+            ->setFilename('filename-with-no-extension')
+            ->setIsReportPdf(false)
+            ->setCaseNumber('1234567t')
+            ->setNdrId(null)
+            ->setStorageReference($this->s3Reference);
+
+        $this->siriusApiGatewayClient
+            ->sendSupportingDocument(Argument::cetera())
+            ->shouldNotBeCalled();
+
+        $this->restClient
+            ->apiCall(
+                'put',
+                'document/6789',
+                json_encode(
+                    [
+                        'syncStatus' => Document::SYNC_STATUS_PERMANENT_ERROR,
+                        'syncError' => 'File extension is missing from filename. This file will need to be manually synced with Sirius',
+                    ]
+                ),
+                'Report\\Document',
+                [],
+                false
+            )
+            ->shouldBeCalled()
+            ->willReturn($this->serializer->serialize(new Document(), 'json'));
+
+        $sut = new DocumentSyncService(
+            $this->s3Storage->reveal(),
+            $this->siriusApiGatewayClient->reveal(),
+            $this->restClient->reveal(),
+            $this->errorTranslator->reveal(),
+            $fileNameFixer->reveal()
+        );
+
+        $sut->syncDocument($queuedDocumentData);
     }
 }
