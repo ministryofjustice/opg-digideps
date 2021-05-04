@@ -10,7 +10,7 @@ use Symfony\Component\HttpFoundation\File\UploadedFile;
 
 class DocumentHelpers
 {
-    public static function generateReportPdfDocument()
+    public static function createReportPdfDocument()
     {
         $faker = Factory::create('GB_en');
 
@@ -23,9 +23,9 @@ class DocumentHelpers
             ->setId(1);
     }
 
-    public static function generateSupportingDocument()
+    public static function createSupportingDocument()
     {
-        return (self::generateReportPdfDocument())
+        return (self::createReportPdfDocument())
             ->setIsReportPdf(false)
             ->setFileName('supporting-document.pdf');
     }

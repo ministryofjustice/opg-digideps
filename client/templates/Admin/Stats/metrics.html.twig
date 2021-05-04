@@ -18,6 +18,10 @@
             {{ (page ~ '.downloadSatisfaction') | trans }}
         </a>
 
+        <a href="{{ path('admin_user_research') }}" role="button" draggable="false" class="govuk-button moj-button-menu__item govuk-button--secondary " data-module="govuk-button">
+            {{ (page ~ '.downloadUserResearch') | trans }}
+        </a>
+
         <a href="{{ path('admin_active_lays_csv') }}" role="button" draggable="false" class="govuk-button moj-button-menu__item govuk-button--secondary " data-module="govuk-button">
             {{ (page ~ '.downloadActiveLays') | trans }}
         </a>

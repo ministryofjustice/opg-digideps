@@ -59,10 +59,12 @@ class UserResearchController extends AbstractController
         $form->handleRequest($request);
 
         if ($form->isSubmitted() && $form->isValid()) {
-            $this->userResearchApi->createPostSubmissionUserResearch($form->getData());
+            $formData = $form->getData();
+            $formData['satisfaction'] = $request->get('satisfactionId');
+            $this->userResearchApi->createPostSubmissionUserResearch($formData);
+
             $routeName = sprintf('%s_user_research_submitted', $reportId ? 'report' : 'ndr');
             $routeParams = $reportId ? ['reportId' => $reportId] : ['ndrId' => $ndrId];
-
             return $this->redirect($this->generateUrl($routeName, $routeParams));
         }
 
