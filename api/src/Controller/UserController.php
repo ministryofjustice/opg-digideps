@@ -388,24 +388,14 @@ class UserController extends RestController
         }
 
         $user->setAgreeTermsUse(true);
-        if ($this->userRegBeforeToday($user)) {
+        if ($user->regBeforeToday($user)) {
             $user->setRegistrationToken(null);
         }
-        
+
         $this->em->persist($user);
         $this->em->flush($user);
 
         return $user->getId();
-    }
-
-    /**
-     * Check if a user registration was before today
-     * @param $user
-     * @return bool
-     */
-    private function userRegBeforeToday(User $user)
-    {
-        return $user->getRegistrationDate() < (new \DateTime())->setTime(00, 00, 00);
     }
 
     /**

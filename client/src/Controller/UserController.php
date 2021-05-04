@@ -348,7 +348,8 @@ class UserController extends AbstractController
                 return $this->redirectToRoute('user_activate', ['token' => $token, 'action' => 'activate']);
             }
 
-            return $this->redirectToRoute('org_dashboard');
+            $redirectRoute = $user->isLayDeputy() ? 'lay_home' : 'org_dashboard';
+            return $this->redirectToRoute($redirectRoute);
         }
 
         if (EntityDir\User::ROLE_PA_NAMED == $user->getRoleName()) {

@@ -960,7 +960,7 @@ class User implements UserInterface
     {
         $this->agreeTermsUse = $agreeTermsUse;
         $this->agreeTermsUseDate = new \DateTime('now');
-        
+
         return $this;
     }
 
@@ -1237,5 +1237,14 @@ class User implements UserInterface
         $this->userResearchResponse = $userResearchResponse;
 
         return $this;
+    }
+
+    /** Check if a user registration was before today
+     * @param $user
+     * @return bool
+     */
+    private function regBeforeToday(User $user)
+    {
+        return $user->getRegistrationDate() < (new \DateTime())->setTime(00, 00, 00);
     }
 }
