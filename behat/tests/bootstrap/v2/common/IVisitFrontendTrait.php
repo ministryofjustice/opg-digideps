@@ -30,9 +30,9 @@ trait IVisitFrontendTrait
     }
 
     /**
-     * @When I visit the money out report section
+     * @When I visit the short money out report section
      */
-    public function iVisitMoneyOutSection()
+    public function iVisitMoneyOutShortSection()
     {
         $this->visitPath($this->getMoneyOutShortSectionUrl($this->loggedInUserDetails->getCurrentReportId()));
     }

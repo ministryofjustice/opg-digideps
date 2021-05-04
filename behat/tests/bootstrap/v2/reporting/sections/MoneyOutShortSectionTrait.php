@@ -14,8 +14,8 @@ trait MoneyOutShortSectionTrait
      */
     public function iViewAndStartMoneyOutShortSection()
     {
-        $this->iVisitReportSubmissionPage();
-        $this->clickLink('Start accounts');
+        $this->iVisitMoneyOutShortSection();
+        $this->clickLink('Start money out');
     }
 
     /**
@@ -24,9 +24,9 @@ trait MoneyOutShortSectionTrait
     public function iHaveMadeNoPaymentsOut()
     {
         $this->iAmOnMoneyOutShortCategoryPage();
-        $this->clickLink('Save and continue');
+        $this->iClickBasedOnAttributeTypeAndValue('button', 'id', 'money_short_save');
         $this->selectOption('yes_no[moneyTransactionsShortOutExist]', 'no');
-        $this->clickLink('Save and continue');
+        $this->iClickBasedOnAttributeTypeAndValue('button', 'id', 'yes_no_save');
     }
 
     /**
@@ -36,19 +36,22 @@ trait MoneyOutShortSectionTrait
     {
         $this->iAmOnMoneyOutShortSummaryPage();
 
-        $tableBody = $this->getSession()->getPage()->find('css', 'dl');
+        $tableBodies = $this->getSession()->getPage()->findAll('css', 'dl');
 
-        if (!$tableBody) {
+        if (!$tableBodies) {
             $this->throwContextualException('A dl element was not found on the page');
         }
 
-        $tableRows = $tableBody->findAll('css', 'div.govuk-summary-list__row');
+        foreach ($tableBodies as $tRowKey => $tableRow) {
+            $tableRows = $tableBody->findAll('css', 'div.govuk-summary-list__row');
 
-        if (!$tableRows) {
-            $this->throwContextualException('A div element was not found on the page');
+            if (!$tableRows) {
+                $this->throwContextualException('A div element was not found on the page');
+            }
+            //first row is the header so get second
+            var_dump($tableRows[0]->getHtml());
+            var_dump($tableRows[1]->getHtml());
         }
-        //first row is the header so get second
-        var_dump($tableRows[1]);
 //        foreach ($tableRows as $tRowKey=>$tableRow) {
 //            $tableHeader = $tableRow->find('css', $accountSummaryElems['head']);
 //            $headHtml = trim(strtolower($tableHeader->getHtml()));

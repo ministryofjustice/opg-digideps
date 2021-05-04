@@ -1,9 +1,12 @@
-<?php declare(strict_types=1);
+<?php
+
+declare(strict_types=1);
 
 namespace App\TestHelpers;
 
 use App\Entity\Ndr\Ndr;
 use App\Entity\Organisation;
+use App\Entity\Report\Report;
 use App\Entity\User;
 use Doctrine\Common\DataFixtures\Purger\ORMPurger;
 use Doctrine\ORM\EntityManagerInterface;
@@ -27,9 +30,13 @@ class BehatFixtures
     private User $elevatedAdmin;
     private User $superAdmin;
 
-    private User $layNotStarted;
-    private User $layCompleted;
-    private User $laySubmitted;
+    private User $layPfaHighAssetsNotStarted;
+    private User $layPfaHighAssetsCompleted;
+    private User $layPfaHighAssetsSubmitted;
+
+    private User $layPfaLowAssetsNotStarted;
+    private User $layPfaLowAssetsCompleted;
+    private User $layPfaLowAssetsSubmitted;
 
     private User $ndrLayNotStarted;
     private User $ndrLayCompleted;
@@ -62,13 +69,13 @@ class BehatFixtures
     }
 
     /**
-     * @param string $testRunId
      * @return array
+     *
      * @throws Exception
      */
     public function loadFixtures(string $testRunId)
     {
-        if ($this->symfonyEnvironment === 'prod') {
+        if ('prod' === $this->symfonyEnvironment) {
             throw new Exception('Prod mode enabled - cannot purge database');
         }
 
@@ -86,22 +93,29 @@ class BehatFixtures
                 'super-admin' => self::buildAdminUserDetails($this->superAdmin),
             ],
             'lays' => [
-                'not-started' => self::buildUserDetails($this->layNotStarted),
-                'completed' => self::buildUserDetails($this->layCompleted),
-                'submitted' => self::buildUserDetails($this->laySubmitted),
+                'pfa-high-assets' => [
+                    'not-started' => self::buildUserDetails($this->layPfaHighAssetsNotStarted),
+                    'completed' => self::buildUserDetails($this->layPfaHighAssetsCompleted),
+                    'submitted' => self::buildUserDetails($this->layPfaHighAssetsSubmitted),
+                ],
+                'pfa-low-assets' => [
+                    'not-started' => self::buildUserDetails($this->layPfaLowAssetsNotStarted),
+                    'completed' => self::buildUserDetails($this->layPfaLowAssetsCompleted),
+                    'submitted' => self::buildUserDetails($this->layPfaLowAssetsSubmitted),
+                ],
             ],
             'lays-ndr' => [
                 'not-started' => self::buildUserDetails($this->ndrLayNotStarted),
                 'completed' => self::buildUserDetails($this->ndrLayCompleted),
-                'submitted' => self::buildUserDetails($this->ndrLaySubmitted)
+                'submitted' => self::buildUserDetails($this->ndrLaySubmitted),
             ],
             'professionals' => [
                 'admin' => [
                     'not-started' => self::buildOrgUserDetails($this->profAdminNotStarted),
                     'completed' => self::buildOrgUserDetails($this->profAdminCompleted),
                     'submitted' => self::buildOrgUserDetails($this->profAdminSubmitted),
-                ]
-            ]
+                ],
+            ],
         ];
     }
 
@@ -113,7 +127,7 @@ class BehatFixtures
         $currentReportType = $user->getNdrEnabled() ? null : $currentReport->getType();
         $previousReport = $user->getNdrEnabled() ? null : $client->getReports()[0];
 
-        $userDetails =  [
+        $userDetails = [
             'userEmail' => $user->getEmail(),
             'userRole' => $user->getRoleName(),
             'userFirstName' => $user->getFirstname(),
@@ -124,7 +138,7 @@ class BehatFixtures
                 $user->getAddress2(),
                 $user->getAddress3(),
                 $user->getAddressPostcode(),
-                $user->getAddressCountry()
+                $user->getAddressCountry(),
             ]),
             'userPhone' => $user->getPhoneMain(),
             'courtOrderNumber' => $client->getCaseNumber(),
@@ -135,7 +149,7 @@ class BehatFixtures
             'currentReportId' => $currentReport->getId(),
             'currentReportType' => $currentReportType,
             'currentReportNdrOrReport' => $currentReport instanceof Ndr ? 'ndr' : 'report',
-            'currentReportDueDate' => $currentReport->getDueDate()->format('j F Y')
+            'currentReportDueDate' => $currentReport->getDueDate()->format('j F Y'),
         ];
 
         if ($previousReport) {
@@ -145,7 +159,7 @@ class BehatFixtures
                     'previousReportId' => $previousReport->getId(),
                     'previousReportType' => $previousReport->getType(),
                     'previousReportNdrOrReport' => $previousReport instanceof Ndr ? 'ndr' : 'report',
-                    'previousReportDueDate' => $previousReport->getDueDate()->format('j F Y')
+                    'previousReportDueDate' => $previousReport->getDueDate()->format('j F Y'),
                 ]
             );
         }
@@ -188,9 +202,12 @@ class BehatFixtures
             $this->admin,
             $this->elevatedAdmin,
             $this->superAdmin,
-            $this->layNotStarted,
-            $this->layCompleted,
-            $this->laySubmitted,
+            $this->layPfaHighAssetsNotStarted,
+            $this->layPfaHighAssetsCompleted,
+            $this->layPfaHighAssetsSubmitted,
+            $this->layPfaLowAssetsNotStarted,
+            $this->layPfaLowAssetsCompleted,
+            $this->layPfaLowAssetsSubmitted,
             $this->ndrLayNotStarted,
             $this->ndrLayCompleted,
             $this->ndrLaySubmitted,
@@ -221,24 +238,40 @@ class BehatFixtures
 
     private function createDeputies()
     {
-        $this->createLays();
+        $this->createLaysPfaHighAssets();
+        $this->createLaysPfaLowAssets();
         $this->createNdrLays();
         $this->createProfs();
     }
 
-    private function createLays()
+    private function createLaysPfaHighAssets()
     {
-        $this->layNotStarted = $this->userTestHelper
-            ->createUser(null, User::ROLE_LAY_DEPUTY, sprintf('lay-not-started-%s@t.uk', $this->testRunId));
-        $this->addClientsAndReportsToLayDeputy($this->layNotStarted, false, false);
+        $this->layPfaHighAssetsNotStarted = $this->userTestHelper
+            ->createUser(null, User::ROLE_LAY_DEPUTY, sprintf('lay-pfa-high-assets-not-started-%s@t.uk', $this->testRunId));
+        $this->addClientsAndReportsToLayDeputy($this->layPfaHighAssetsNotStarted, false, false, Report::TYPE_102);
 
-        $this->layCompleted = $this->userTestHelper
-            ->createUser(null, User::ROLE_LAY_DEPUTY, sprintf('lay-completed-%s@t.uk', $this->testRunId));
-        $this->addClientsAndReportsToLayDeputy($this->layCompleted, true, false);
+        $this->layPfaHighAssetsCompleted = $this->userTestHelper
+            ->createUser(null, User::ROLE_LAY_DEPUTY, sprintf('lay-pfa-high-assets-completed-%s@t.uk', $this->testRunId));
+        $this->addClientsAndReportsToLayDeputy($this->layPfaHighAssetsCompleted, true, false, Report::TYPE_102);
 
-        $this->laySubmitted = $this->userTestHelper
-            ->createUser(null, User::ROLE_LAY_DEPUTY, sprintf('lay-submitted-%s@t.uk', $this->testRunId));
-        $this->addClientsAndReportsToLayDeputy($this->laySubmitted, true, true);
+        $this->layPfaHighAssetsSubmitted = $this->userTestHelper
+            ->createUser(null, User::ROLE_LAY_DEPUTY, sprintf('lay-pfa-high-assets-submitted-%s@t.uk', $this->testRunId));
+        $this->addClientsAndReportsToLayDeputy($this->layPfaHighAssetsSubmitted, true, true, Report::TYPE_102);
+    }
+
+    private function createLaysPfaLowAssets()
+    {
+        $this->layPfaLowAssetsNotStarted = $this->userTestHelper
+            ->createUser(null, User::ROLE_LAY_DEPUTY, sprintf('lay-pfa-low-assets-not-started-%s@t.uk', $this->testRunId));
+        $this->addClientsAndReportsToLayDeputy($this->layPfaLowAssetsNotStarted, false, false, Report::TYPE_103);
+
+        $this->layPfaLowAssetsCompleted = $this->userTestHelper
+            ->createUser(null, User::ROLE_LAY_DEPUTY, sprintf('lay-pfa-low-assets-completed-%s@t.uk', $this->testRunId));
+        $this->addClientsAndReportsToLayDeputy($this->layPfaLowAssetsCompleted, true, false, Report::TYPE_103);
+
+        $this->layPfaLowAssetsSubmitted = $this->userTestHelper
+            ->createUser(null, User::ROLE_LAY_DEPUTY, sprintf('lay-pfa-low-assets-submitted-%s@t.uk', $this->testRunId));
+        $this->addClientsAndReportsToLayDeputy($this->layPfaLowAssetsSubmitted, true, true, Report::TYPE_103);
     }
 
     private function createNdrLays()
@@ -277,10 +310,10 @@ class BehatFixtures
         $this->addOrgClientsNamedDeputyAndReportsToOrgDeputy($this->profAdminSubmitted, $organisation, true, true);
     }
 
-    private function addClientsAndReportsToLayDeputy(User $deputy, bool $completed = false, bool $submitted = false)
+    private function addClientsAndReportsToLayDeputy(User $deputy, bool $completed = false, bool $submitted = false, ?string $type = null)
     {
         $client = $this->clientTestHelper->generateClient($this->entityManager, $deputy);
-        $report = $this->reportTestHelper->generateReport($this->entityManager, $client);
+        $report = $this->reportTestHelper->generateReport($this->entityManager, $client, $type);
 
         $client->addReport($report);
         $report->setClient($client);

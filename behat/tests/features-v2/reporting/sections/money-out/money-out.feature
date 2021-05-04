@@ -2,7 +2,7 @@
 Feature: Money Out
 
   Scenario: A user has had no money go out
-    Given a Lay Deputy has not started a report
+    Given a Lay Deputy has not started a Pfa Low Assets report
     And I visit the report overview page
     Then I should see "money-out-short" as "not started"
     When I view and start the money out report section
