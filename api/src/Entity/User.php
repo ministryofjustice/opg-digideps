@@ -1243,7 +1243,7 @@ class User implements UserInterface
      * @param $user
      * @return bool
      */
-    private function regBeforeToday(User $user)
+    public function regBeforeToday(User $user)
     {
         return $user->getRegistrationDate() < (new \DateTime())->setTime(00, 00, 00);
     }
