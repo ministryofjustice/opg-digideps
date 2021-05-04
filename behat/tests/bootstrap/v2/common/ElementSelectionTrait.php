@@ -1,4 +1,6 @@
-<?php declare(strict_types=1);
+<?php
+
+declare(strict_types=1);
 
 namespace DigidepsBehat\v2\Common;
 
@@ -111,12 +113,11 @@ trait ElementSelectionTrait
         }
 
         foreach ($values as $value) {
-            if ($value->getAttribute('value') == $name) {
+            if (trim($value->getAttribute('value')) == trim($name)) {
                 $select = trim($value->getAttribute('name'));
                 $option = trim($value->getAttribute('value'));
             }
         }
-
         $this->getSession()->getPage()->selectFieldOption($select, $option);
     }
 
@@ -127,11 +128,11 @@ trait ElementSelectionTrait
         $field = str_replace('\\"', '"', $field);
         $value = str_replace('\\"', '"', $value);
 
-        if (substr($field, 0, 1) != '.' && substr($field, 0, 1) != '#') {
-            $field = '#' . $field;
+        if ('.' != substr($field, 0, 1) && '#' != substr($field, 0, 1)) {
+            $field = '#'.$field;
         }
 
-        if (get_class($driver) == 'Behat\Mink\Driver\Selenium2Driver') {
+        if ('Behat\Mink\Driver\Selenium2Driver' == get_class($driver)) {
             $this->scrollToElement($field);
 
             $javascript = <<<EOT
@@ -191,24 +192,24 @@ EOT;
     // Can be used for cross browser tests to scroll so element is in viewport
     public function scrollToElement($element)
     {
-        if (substr($element, 0, 1) != '.' && substr($element, 0, 1) != '#') {
-            $element = '#' . $element;
+        if ('.' != substr($element, 0, 1) && '#' != substr($element, 0, 1)) {
+            $element = '#'.$element;
         }
 
         $driver = $this->getSession()->getDriver();
-        if (get_class($driver) == 'Behat\Mink\Driver\Selenium2Driver') {
+        if ('Behat\Mink\Driver\Selenium2Driver' == get_class($driver)) {
             $javascript =
                 "var el = $('$element');"
-                . 'var elOffset = el.offset().top;'
-                . 'var elHeight = el.height();'
-                . 'var windowHeight = $(window).height();'
-                . 'var offset;'
-                . 'if (elHeight < windowHeight) {'
-                . '  offset = elOffset - ((windowHeight / 2) - (elHeight / 2));'
-                . '} else {'
-                . '  offset = elOffset;'
-                . '}'
-                . 'window.scrollTo(0, offset);';
+                .'var elOffset = el.offset().top;'
+                .'var elHeight = el.height();'
+                .'var windowHeight = $(window).height();'
+                .'var offset;'
+                .'if (elHeight < windowHeight) {'
+                .'  offset = elOffset - ((windowHeight / 2) - (elHeight / 2));'
+                .'} else {'
+                .'  offset = elOffset;'
+                .'}'
+                .'window.scrollTo(0, offset);';
 
             $this->getSession()->executeScript($javascript);
         }

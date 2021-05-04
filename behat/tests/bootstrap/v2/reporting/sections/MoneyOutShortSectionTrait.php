@@ -6,7 +6,7 @@ namespace DigidepsBehat\v2\Reporting\Sections;
 
 trait MoneyOutShortSectionTrait
 {
-    private array $moneyOutList = [];
+    private array $oneOffPaymentsList = [];
     private array $categoryList = [];
 
     /**
@@ -30,6 +30,21 @@ trait MoneyOutShortSectionTrait
     }
 
     /**
+     * @When I add some categories of money paid out
+     */
+    public function iAddSomeCategoriesOfMoneyOut()
+    {
+        $this->iAmOnMoneyOutShortCategoryPage();
+        $this->getSession()->getPage()->selectFieldOption('money_short[moneyShortCategoriesOut][0][present]', '1');
+        $this->categoryList[] = 'accommodation costs';
+        $this->getSession()->getPage()->selectFieldOption('money_short[moneyShortCategoriesOut][3][present]', '1');
+        $this->categoryList[] = 'households bills';
+        $this->iClickBasedOnAttributeTypeAndValue('button', 'id', 'money_short_save');
+        $this->selectOption('yes_no[moneyTransactionsShortOutExist]', 'no');
+        $this->iClickBasedOnAttributeTypeAndValue('button', 'id', 'yes_no_save');
+    }
+
+    /**
      * @Then I should see the expected money out section summary
      */
     public function iShouldSeeTheExpectedMoneyOutSummary()
@@ -42,37 +57,35 @@ trait MoneyOutShortSectionTrait
             $this->throwContextualException('A dl element was not found on the page');
         }
 
-        foreach ($tableBodies as $tRowKey => $tableRow) {
-            $tableRows = $tableBody->findAll('css', 'div.govuk-summary-list__row');
+        $category = $tableBodies[0];
+        $oneOffPayments = $tableBodies[1];
 
-            if (!$tableRows) {
-                $this->throwContextualException('A div element was not found on the page');
-            }
-            //first row is the header so get second
-            var_dump($tableRows[0]->getHtml());
-            var_dump($tableRows[1]->getHtml());
+        $categoryRows = $category->findAll('css', 'div.govuk-summary-list__row');
+
+        if (!$categoryRows) {
+            $this->throwContextualException('A div element was not found on the page');
         }
-//        foreach ($tableRows as $tRowKey=>$tableRow) {
-//            $tableHeader = $tableRow->find('css', $accountSummaryElems['head']);
-//            $headHtml = trim(strtolower($tableHeader->getHtml()));
-//            $this->assertStringContainsString($this->accountList[$tRowKey]['accountType'], $headHtml, 'Accounts Type');
-//            $this->assertStringContainsString($this->accountList[$tRowKey]['name'], $headHtml, 'Accounts Name');
-//            $this->assertStringContainsString($this->accountList[$tRowKey]['accountNumber'], $headHtml, 'Accounts Number');
-//
-//            $sortCode = str_replace('-', '', $this->accountList[$tRowKey]['sortCode']);
-//            $this->assertStringContainsString($sortCode, $headHtml, 'Accounts Sort Code');
-//            $this->assertStringContainsString($this->accountList[$tRowKey]['joint'], $headHtml, 'Accounts Joint');
-//
-//            $tableFields = $tableRow->findAll('css', $accountSummaryElems['data']);
-//
-//            foreach ($tableFields as $tFieldKey=>$tableField) {
-//                $balanceItem = trim(strtolower($tableField->getHtml()));
-//                if ($tFieldKey == 0) {
-//                    $this->assertStringContainsString($this->accountList[$tRowKey]['openingBalance'], $balanceItem, 'Accounts Opening Balance');
-//                } elseif ($tFieldKey == 1 and $this->reportUrlPrefix != 'ndr') {
-//                    $this->assertStringContainsString($this->accountList[$tRowKey]['closingBalance'], $balanceItem, 'Accounts Closing Balance');
-//                }
-//            }
-//        }
+
+        if (count($this->categoryList) < 1) {
+            $this->assertStringContainsString('None', $categoryRows[1]->getHtml(), 'Short Money Out Categories');
+        } else {
+            foreach ($this->categoryList as $expectedCategoryKey => $expectedCategory) {
+                $this->assertStringContainsString($expectedCategory, $categoryRows[$expectedCategoryKey]->getHtml(), 'Short Money Out Categories');
+            }
+        }
+
+        $oneOffPaymentRows = $oneOffPayments->findAll('css', 'div.govuk-summary-list__row');
+
+        if (!$oneOffPaymentRows) {
+            $this->throwContextualException('A div element was not found on the page');
+        }
+
+        if (count($this->oneOffPaymentsList) < 1) {
+            $this->assertStringContainsString('No', $oneOffPaymentRows[1]->getHtml(), 'Short Money Out One Off Payments');
+        } else {
+            foreach ($this->oneOffPaymentsList as $expectedoneOffPaymentKey => $expectedoneOffPayment) {
+                $this->assertStringContainsString($expectedoneOffPayment, $categoryRows[$expectedoneOffPaymentKey]->getHtml(), 'Short Money Out One Off Payments');
+            }
+        }
     }
 }

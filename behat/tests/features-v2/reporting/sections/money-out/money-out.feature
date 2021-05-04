@@ -1,25 +1,25 @@
 @v2 @money-out
 Feature: Money Out
 
-  Scenario: A user has had no money go out
-    Given a Lay Deputy has not started a Pfa Low Assets report
-    And I visit the report overview page
-    Then I should see "money-out-short" as "not started"
-    When I view and start the money out report section
-    And I have made no payments out
-    Then I should see the expected money out section summary
-    When I follow link back to report overview page
-    Then I should see "money-out-short" as "no items"
-
-#  Scenario: A user has had some money go out but nothing over £1k
-#    Given a Lay Deputy has not started a report
+#  Scenario: A user has had no money go out
+#    Given a Lay Deputy has not started a Pfa Low Assets report
+#    And I visit the report overview page
+#    Then I should see "money-out-short" as "not started"
 #    When I view and start the money out report section
-#    And I add some categories of money paid out
+#    And I have made no payments out
+#    Then I should see the expected money out section summary
+#    When I follow link back to report overview page
+#    Then I should see "money-out-short" as "no items"
+
+  Scenario: A user has had some money go out but nothing over £1k
+    Given a Lay Deputy has not started a report
+    When I view and start the money out report section
+    And I add some categories of money paid out
 #    And I answer that there are no one-off payments over £1k
 #    Then I should see the expected money out section summary
 #    When I follow link back to report overview page
 #    Then I should see "money-out-short" as "no items"
-#
+
 #  Scenario: A user has had some money go out including payments over £1k
 #    Given a Lay Deputy has not started a report
 #    When I view and start the money out report section
