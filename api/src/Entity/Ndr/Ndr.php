@@ -6,6 +6,7 @@ use App\Entity\AssetInterface;
 use App\Entity\Client;
 use App\Entity\Ndr\Traits as NdrTraits;
 use App\Entity\ReportInterface;
+use App\Entity\Satisfaction;
 use DateTime;
 use Doctrine\Common\Collections\ArrayCollection;
 use Doctrine\ORM\Mapping as ORM;
@@ -173,6 +174,14 @@ class Ndr implements ReportInterface
      * @ORM\JoinColumn(name="submitted_by", referencedColumnName="id", onDelete="SET NULL")
      */
     private $submittedBy;
+
+    /**
+     * @ORM\OneToOne(targetEntity="App\Entity\Satisfaction", mappedBy="ndr", cascade={"persist", "remove"})
+     *
+     * @JMS\Type("App\Entity\Satisfaction")
+     * @JMS\Groups({"user-research", "satisfaction"})
+     */
+    private Satisfaction $satisfaction;
 
     /**
      * Ndr constructor.
@@ -640,6 +649,24 @@ class Ndr implements ReportInterface
     {
         $this->submittedBy = $submittedBy;
 
+        return $this;
+    }
+
+    /**
+     * @return Satisfaction
+     */
+    public function getSatisfaction(): Satisfaction
+    {
+        return $this->satisfaction;
+    }
+
+    /**
+     * @param Satisfaction $satisfaction
+     * @return Ndr
+     */
+    public function setSatisfaction(Satisfaction $satisfaction): Ndr
+    {
+        $this->satisfaction = $satisfaction;
         return $this;
     }
 }

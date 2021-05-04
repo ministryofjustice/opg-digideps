@@ -2,6 +2,7 @@
 
 namespace App\Mapper\ReportSatisfaction;
 
+use App\Mapper\DateRangeQuery;
 use App\Service\Client\RestClient;
 
 class ReportSatisfactionSummaryMapper
@@ -21,19 +22,19 @@ class ReportSatisfactionSummaryMapper
     }
 
     /**
-     * @param ReportSatisfactionSummaryQuery $query
+     * @param DateRangeQuery $query
      * @return mixed
      */
-    public function getBy(ReportSatisfactionSummaryQuery $query)
+    public function getBy(DateRangeQuery $query)
     {
         return $this->restClient->get($this->generateApiUrl($query), 'Report\Satisfaction[]', ['satisfaction']);
     }
 
     /**
-     * @param ReportSatisfactionSummaryQuery $query
+     * @param DateRangeQuery $query
      * @return string
      */
-    private function generateApiUrl(ReportSatisfactionSummaryQuery $query)
+    private function generateApiUrl(DateRangeQuery $query)
     {
         $queryArray = [
             'orderBy' => $query->getOrderBy(),

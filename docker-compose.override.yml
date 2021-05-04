@@ -9,12 +9,6 @@ services:
 
   admin:
     volumes:
-      - ./client/config/security.yml:/var/www/config/security.yml
-      - ./client/config/config.yml:/var/www/config/config.yml
-      - ./client/config/config_dev.yml:/var/www/config/config_dev.yml
-      - ./client/config/config_dev_with_debug.yml:/var/www/config/config_dev_with_debug.yml
-      - ./client/config/config_unit_test.yml:/var/www/config/config_unit_test.yml
-      - ./client/config/config_prod.yml:/var/www/config/config_prod.yml
       - ./client/config/services.yml:/var/www/config/services.yml
       - ./client/config/services:/var/www/config/services
       - ./client/src:/var/www/src
@@ -43,11 +37,6 @@ services:
   frontend:
     volumes:
       - ./client/config/security.yml:/var/www/config/security.yml
-      - ./client/config/config.yml:/var/www/config/config.yml
-      - ./client/config/config_dev.yml:/var/www/config/config_dev.yml
-      - ./client/config/config_dev_with_debug.yml:/var/www/config/config_dev_with_debug.yml
-      - ./client/config/config_unit_test.yml:/var/www/config/config_unit_test.yml
-      - ./client/config/config_prod.yml:/var/www/config/config_prod.yml
       - ./client/config/services.yml:/var/www/config/services.yml
       - ./client/config/services:/var/www/config/services
       - ./client/src:/var/www/src

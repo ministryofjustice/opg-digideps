@@ -42,19 +42,27 @@ class SatisfactionApi
     }
 
     /**
-     * @param array $formResponse
+     * @param FeedbackReport $formResponse
+     * @param string $reportType
+     * @param int $reportId
+     * @param User $submittedByUser
+     * @return int
      */
-    public function createPostSubmissionFeedback(FeedbackReport $formResponse, string $reportType, User $submittedByUser): void
+    public function createPostSubmissionFeedback(FeedbackReport $formResponse, string $reportType, User $submittedByUser, ?int $reportId = null, ?int $ndrId = null): int
     {
         $feedbackData = [
             'score' => $formResponse->getSatisfactionLevel(),
             'comments' => empty($formResponse->getComments()) ? 'Not provided' : $formResponse->getComments(),
             'reportType' => $reportType,
+            'reportId' => $reportId,
+            'ndrId' => $ndrId
         ];
 
-        $this->restClient->post(self::CREATE_POST_SUBMISSION_FEEDBACK_ENDPOINT, $feedbackData);
+        $satisfactionId = $this->restClient->post(self::CREATE_POST_SUBMISSION_FEEDBACK_ENDPOINT, $feedbackData);
 
         $event = (new PostSubmissionFeedbackSubmittedEvent($formResponse, $submittedByUser));
         $this->eventDispatcher->dispatch($event, PostSubmissionFeedbackSubmittedEvent::NAME);
+
+        return $satisfactionId;
     }
 }

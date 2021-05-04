@@ -53,7 +53,7 @@ resource "aws_rds_cluster_instance" "cluster_instances" {
   }
 
   lifecycle {
-    prevent_destroy = true
+    create_before_destroy = true
   }
 }
 
