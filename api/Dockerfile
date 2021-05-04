@@ -16,7 +16,7 @@ RUN composer run-script post-install-cmd --no-interaction
 
 RUN composer dump-autoload --optimize
 
-FROM php:7.4-fpm-alpine
+FROM php:7.4.16-fpm-alpine
 WORKDIR /var/www
 EXPOSE 80
 EXPOSE 443
@@ -31,9 +31,7 @@ RUN apk --no-cache add \
   nginx-mod-http-headers-more \
   su-exec \
   php7-igbinary \
-  php7-pecl-redis \
-  libzip-dev \
-  unzip
+  php7-pecl-redis
 
 RUN docker-php-ext-install pdo pdo_pgsql opcache
 RUN docker-php-ext-enable opcache
@@ -71,19 +69,15 @@ RUN openssl req -newkey rsa:4096 -x509 -nodes -keyout /etc/nginx/certs/app.key -
 RUN mkdir -p var/cache \
   && mkdir -p var/logs \
   && mkdir -p /var/log/app \
-  && mkdir -p /tmp/html \
-  && mkdir -p /tmp/sql \
   && chown -R www-data var \
-  && chown -R www-data /tmp/html \
-  && chown -R www-data /tmp/sql \
   && chown -R www-data /var/log/app
 
 # See this page for directories required
 # https://symfony.com/doc/3.4/quick_tour/the_architecture.html
 COPY docker/confd /etc/confd
 COPY --from=composer /app/app app
+COPY --from=composer /app/vendor/bin bin
 COPY --from=composer /app/vendor vendor
-COPY --from=composer /app/composer.json composer.json
 COPY --from=composer /app/composer.lock composer.lock
 COPY --from=composer /app/config/parameters.yml config/parameters.yml
 COPY app app
@@ -95,13 +89,6 @@ COPY tests tests
 COPY api.env api.env
 COPY postgres.env postgres.env
 COPY phpstan.neon .
-
-# Behat
-COPY behat/tests behat/tests
-COPY behat/run-tests.sh behat/
-COPY behat/run-smoke-tests.sh behat/
-RUN ["chmod", "+x", "behat/run-tests.sh"]
-RUN ["chmod", "+x", "behat/run-smoke-tests.sh"]
 
 # Prebuild cache
 RUN su-exec www-data php -d memory_limit=-1 app/console cache:warmup
