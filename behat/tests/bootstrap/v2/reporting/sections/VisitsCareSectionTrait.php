@@ -190,7 +190,7 @@ trait VisitsCareSectionTrait
     }
 
     /**
-     * @Given I confirm there are no plans to move the client to a new residence section
+     * @Given I confirm there are no plans to move the client to a new residence
      */
     public function iChooseNoOnPlansToMoveClient()
     {
@@ -202,7 +202,7 @@ trait VisitsCareSectionTrait
     }
 
     /**
-     * @Given I confirm there are plans to to move the client to a new residence section
+     * @Given I confirm there are plans to to move the client to a new residence
      */
     public function iChooseYesOnPlansToMoveClient()
     {
