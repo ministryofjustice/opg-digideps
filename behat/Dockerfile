@@ -9,7 +9,7 @@ RUN composer install --prefer-dist --no-interaction --no-scripts
 RUN composer dump-autoload --optimize
 
 
-FROM php:7.4-alpine
+FROM php:7.4.16-alpine
 WORKDIR /var/www
 
 # Install dependencies
