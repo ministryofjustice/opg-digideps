@@ -1,4 +1,4 @@
-FROM composer:2.0.8 AS composer
+FROM composer:2 AS composer
 
 WORKDIR /app
 
@@ -6,7 +6,7 @@ WORKDIR /app
 COPY composer.json .
 COPY composer.lock .
 
-RUN composer install --prefer-dist --no-interaction --no-scripts
+RUN composer install --prefer-dist --no-interaction --no-scripts --ignore-platform-req=php
 
 COPY app app
 COPY config config

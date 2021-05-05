@@ -1,11 +1,11 @@
-FROM composer:2.0.8 AS composer
+FROM composer:2 AS composer
 WORKDIR /app
 
 # Install composer dependencies
 COPY composer.json .
 COPY composer.lock .
 
-RUN composer install --prefer-dist --no-interaction --no-scripts
+RUN composer install --prefer-dist --no-interaction --no-scripts --ignore-platform-req=php
 RUN composer dump-autoload --optimize
 
 
