@@ -71,7 +71,7 @@ default:
             description: Coverage of Access Control
             paths: [ "%paths.base%/features/v2/acl" ]
             contexts:
-                - DigidepsBehat\ACL\ACLfeatureContext
+                - DigidepsBehat\ACL\ACLFeatureContext
 
         authentication:
             description: Coverage of authentication
@@ -107,7 +107,7 @@ default:
             description: Coverage of Access Control
             paths: [ "%paths.base%/features-v2/acl" ]
             contexts:
-                - DigidepsBehat\ACL\ACLfeatureContext
+                - DigidepsBehat\ACL\ACLFeatureContext
 
         # features-v2
         reporting-preview:
