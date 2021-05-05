@@ -1,4 +1,6 @@
-<?php declare(strict_types=1);
+<?php
+
+declare(strict_types=1);
 
 namespace DigidepsBehat\v2\Common;
 
@@ -13,7 +15,7 @@ trait AssertTrait
         $expectedFormatted = strval(trim(strtolower($expected)));
         assert(
             str_contains($foundFormatted, $expectedFormatted),
-            $this->getAssertMessage($expectedFormatted, 'Not Found', $comparisonSubject)
+            $this->getAssertMessage($expectedFormatted, $foundFormatted, $comparisonSubject)
         );
     }
 

@@ -267,6 +267,22 @@ trait IShouldBeOnTrait
     }
 
     /**
+     * @Then I should be on the money out short exists page
+     */
+    public function iAmOnMoneyOutShortExistsPage()
+    {
+        return $this->iAmOnPage(sprintf('/%s\/.*\/money-out-short\/exist$/', $this->reportUrlPrefix));
+    }
+
+    /**
+     * @Then I should be on the money out short add page
+     */
+    public function iAmOnMoneyOutShortAddPage()
+    {
+        return $this->iAmOnPage(sprintf('/%s\/.*\/money-out-short\/add.*$/', $this->reportUrlPrefix));
+    }
+
+    /**
      * @Then I should be on the money out short summary page
      */
     public function iAmOnMoneyOutShortSummaryPage()
