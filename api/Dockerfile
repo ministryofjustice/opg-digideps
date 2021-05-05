@@ -90,6 +90,13 @@ COPY api.env api.env
 COPY postgres.env postgres.env
 COPY phpstan.neon .
 
+# Behat
+COPY behat behat
+RUN ["chown", "www-data", "/var/www/behat/run-smoke-tests.sh"]
+RUN ["chmod", "544", "/var/www/behat/run-smoke-tests.sh"]
+RUN ["chown", "www-data", "/var/www/behat/run-tests.sh"]
+RUN ["chmod", "544", "/var/www/behat/run-tests.sh"]
+
 # Prebuild cache
 RUN su-exec www-data php -d memory_limit=-1 app/console cache:warmup
 

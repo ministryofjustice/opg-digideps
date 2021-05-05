@@ -31,7 +31,7 @@ trait IShouldBeOnTrait
      */
     public function iAmOnPostSubmissionUserResearchPage()
     {
-        return $this->iAmOnPage('/report\/.*\/post_submission_user_research$/');
+        return $this->iAmOnPage('/report\/.*\/post_submission_user_research/');
     }
 
     /**

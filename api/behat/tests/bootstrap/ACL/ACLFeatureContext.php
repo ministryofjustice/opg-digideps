@@ -1,4 +1,6 @@
-<?php declare(strict_types=1);
+<?php
+
+declare(strict_types=1);
 
 namespace DigidepsBehat\ACL;
 
@@ -8,7 +10,7 @@ use DigidepsBehat\Common\RegionTrait;
 use DigidepsBehat\Common\SiteNavigationTrait;
 use DigidepsBehat\Common\UserOrganisationTrait;
 
-class ACLfeatureContext extends BaseFeatureContext
+class ACLFeatureContext extends BaseFeatureContext
 {
     use CourtOrderTrait;
     use RegionTrait;

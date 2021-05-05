@@ -1,5 +1,1 @@
 services:
-    DigidepsBehat\v2\KernelContext:
-        public: true
-        arguments:
-            - "@kernel"

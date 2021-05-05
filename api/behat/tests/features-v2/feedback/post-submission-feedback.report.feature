@@ -13,7 +13,8 @@ Feature: Providing feedback after submitting a report
 
   Scenario: A user provides user research feedback
     Given a Lay Deputy has submitted a report
-    When I provide valid user research responses
+    When I provide some post-submission feedback
+    And I provide valid user research responses
     Then I should be on the user research feedback submitted page
     When I press "Your reports"
     Then I should be on the Lay homepage

@@ -61,12 +61,12 @@ services:
         resource: '../src/v2/Controller'
         tags: [controller.service_arguments]
 
-    DigidepsBehat\:
-        resource: '../behat/tests/bootstrap/*'
-
     App\v2\Registration\Controller\:
         resource: '../src/v2/Registration/Controller'
         tags: [controller.service_arguments]
+
+    DigidepsBehat\:
+        resource: '../behat/tests/bootstrap/*'
 
     Doctrine\Migrations\Version\DbalMigrationFactory: ~
     App\Migrations\Factory\MigrationFactoryDecorator:

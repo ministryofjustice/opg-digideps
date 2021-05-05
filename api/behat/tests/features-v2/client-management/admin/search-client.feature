@@ -44,6 +44,6 @@ Feature: Admin - Client Search
     Given an admin user accesses the admin app
     And two clients have the same last name
     When I visit the clients search page
-    And I search for an existing client by their last name
+    And I search for an existing client by their full name
     Then I should see both the clients details in the client list results
     And I should see the correct count of clients in the client list results

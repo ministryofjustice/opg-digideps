@@ -68,23 +68,23 @@ api-unit-tests: reset-database reset-fixtures ## Run the api unit tests
 	docker-compose -f docker-compose.yml run --rm -e APP_ENV=test -e APP_DEBUG=0 api sh scripts/apiunittest.sh
 
 behat-tests: up-app-integration-tests reset-fixtures
-	docker-compose -f docker-compose.yml -f docker-compose.dev.yml run --rm test ./behat/run-tests.sh
+	docker-compose -f docker-compose.yml -f docker-compose.dev.yml run --rm test sh ./behat/run-tests.sh
 
 behat-tests-v2-goutte: up-app-integration-tests reset-fixtures disable-debug  ## Pass in suite name as arg e.g. make behat-suite suite=<SUITE NAME>
 ifdef suite
-	docker-compose -f docker-compose.yml -f docker-compose.dev.yml run --rm test ./behat/run-tests.sh --profile v2-tests-goutte --tags @v2 --suite $(suite)
+	docker-compose -f docker-compose.yml -f docker-compose.dev.yml run --rm test sh ./behat/run-tests.sh --profile v2-tests-goutte --tags @v2 --suite $(suite)
 else
-	docker-compose -f docker-compose.yml -f docker-compose.dev.yml run --rm test ./behat/run-tests.sh --profile v2-tests-goutte --tags @v2
+	docker-compose -f docker-compose.yml -f docker-compose.dev.yml run --rm test sh ./behat/run-tests.sh --profile v2-tests-goutte --tags @v2
 endif
 
 behat-tests-v2-browserstack: up-app-integration-tests reset-fixtures disable-debug
-	docker-compose -f docker-compose.yml -f docker-compose.dev.yml run --rm test ./behat/run-tests.sh --profile v2-tests-browserstack --tags @v2
+	docker-compose -f docker-compose.yml -f docker-compose.dev.yml run --rm test sh ./behat/run-tests.sh --profile v2-tests-browserstack --tags @v2
 
 behat-suite: up-app-integration-tests reset-fixtures ## Pass in suite name as arg e.g. make behat-suite suite=<SUITE NAME>
-	docker-compose -f docker-compose.yml -f docker-compose.dev.yml run --rm test ./behat/run-tests.sh --suite $(suite)
+	docker-compose -f docker-compose.yml -f docker-compose.dev.yml run --rm test sh ./behat/run-tests.sh --suite $(suite)
 
 behat-profile-suite: up-app-integration-tests reset-fixtures disable-debug ## Pass in profile and suite name as args e.g. make behat-profile-suite profile=<PROFILE NAME> suite=<SUITE NAME>
-	docker-compose -f docker-compose.yml -f docker-compose.dev.yml run --rm test ./behat/run-tests.sh --profile $(profile) --suite $(suite)
+	docker-compose -f docker-compose.yml -f docker-compose.dev.yml run --rm test sh ./behat/run-tests.sh --profile $(profile) --suite $(suite)
 
 reset-database: ## Resets the DB schema and runs migrations
 	docker-compose run --rm api sh scripts/reset_db_structure_local.sh
