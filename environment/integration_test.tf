@@ -51,7 +51,7 @@ locals {
   {
     "name": "integration-test",
     "image": "${local.images.api}",
-    "entrypoint": [ "sh", "./behat/run-tests.sh", "-d" ],
+    "entrypoint": [ "sh", "./behat/run-tests.sh" ],
     "logConfiguration": {
       "logDriver": "awslogs",
       "options": {
