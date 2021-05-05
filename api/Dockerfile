@@ -92,6 +92,10 @@ COPY phpstan.neon .
 
 # Behat
 COPY behat behat
+
+RUN mkdir -p /tmp/html
+RUN mkdir -p /tmp/sql
+
 RUN ["chown", "www-data", "/var/www/behat/run-smoke-tests.sh"]
 RUN ["chmod", "544", "/var/www/behat/run-smoke-tests.sh"]
 RUN ["chown", "www-data", "/var/www/behat/run-tests.sh"]
