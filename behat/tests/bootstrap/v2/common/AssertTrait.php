@@ -1,4 +1,6 @@
-<?php declare(strict_types=1);
+<?php
+
+declare(strict_types=1);
 
 namespace DigidepsBehat\v2\Common;
 
@@ -27,6 +29,17 @@ trait AssertTrait
         assert(
             $foundFormatted == $expectedFormatted,
             $this->getAssertMessage($expectedFormatted, $foundFormatted, $comparisonSubject)
+        );
+    }
+
+    public function assertIntEqualsInt(
+        $expected,
+        $found,
+        string $comparisonSubject
+    ) {
+        assert(
+            $expected == $found,
+            $this->getAssertMessage($expected, $found, $comparisonSubject)
         );
     }
 
