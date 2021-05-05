@@ -2,7 +2,7 @@
 
 declare(strict_types=1);
 
-namespace DigidepsBehat\v2\Reporting\Sections;
+namespace App\Tests\Behat\v2\Reporting\Sections;
 
 trait ActionsSectionTrait
 {

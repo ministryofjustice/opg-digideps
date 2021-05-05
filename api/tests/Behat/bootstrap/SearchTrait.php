@@ -1,6 +1,6 @@
 <?php
 
-namespace DigidepsBehat;
+namespace App\Tests\Behat;
 
 trait SearchTrait
 {

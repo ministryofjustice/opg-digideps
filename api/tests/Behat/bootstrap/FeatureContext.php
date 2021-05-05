@@ -1,19 +1,19 @@
 <?php
 
-namespace DigidepsBehat;
+namespace App\Tests\Behat;
 
+use App\Tests\Behat\Common\AuthenticationTrait;
+use App\Tests\Behat\Common\CourtOrderTrait;
+use App\Tests\Behat\Common\DebugTrait;
+use App\Tests\Behat\Common\FormTrait;
+use App\Tests\Behat\Common\LinksTrait;
+use App\Tests\Behat\Common\RegionTrait;
+use App\Tests\Behat\Common\ReportTrait;
+use App\Tests\Behat\Common\SiteNavigationTrait;
+use App\Tests\Behat\OrganisationManagement\OrganisationManagementTrait;
+use App\Tests\Behat\UserManagement\UserManagementTrait;
 use Behat\Behat\Context\SnippetAcceptingContext;
 use Behat\MinkExtension\Context\MinkContext;
-use DigidepsBehat\Common\AuthenticationTrait;
-use DigidepsBehat\Common\CourtOrderTrait;
-use DigidepsBehat\Common\DebugTrait;
-use DigidepsBehat\Common\FormTrait;
-use DigidepsBehat\Common\LinksTrait;
-use DigidepsBehat\Common\RegionTrait;
-use DigidepsBehat\Common\ReportTrait;
-use DigidepsBehat\Common\SiteNavigationTrait;
-use DigidepsBehat\OrganisationManagement\OrganisationManagementTrait;
-use DigidepsBehat\UserManagement\UserManagementTrait;
 
 /**
  * Behat context class.

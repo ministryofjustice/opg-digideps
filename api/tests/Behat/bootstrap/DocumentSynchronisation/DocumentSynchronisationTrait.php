@@ -2,7 +2,7 @@
 
 declare(strict_types=1);
 
-namespace DigidepsBehat\DocumentSynchronisation;
+namespace App\Tests\Behat\DocumentSynchronisation;
 
 trait DocumentSynchronisationTrait
 {

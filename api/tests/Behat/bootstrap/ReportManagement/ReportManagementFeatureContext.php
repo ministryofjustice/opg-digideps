@@ -1,12 +1,12 @@
 <?php
 
-namespace DigidepsBehat\ReportManagement;
+namespace App\Tests\Behat\ReportManagement;
 
-use DigidepsBehat\Common\BaseFeatureContext;
-use DigidepsBehat\Common\CourtOrderTrait;
-use DigidepsBehat\Common\LinksTrait;
-use DigidepsBehat\Common\RegionTrait;
-use DigidepsBehat\Common\ReportTrait;
+use App\Tests\Behat\Common\BaseFeatureContext;
+use App\Tests\Behat\Common\CourtOrderTrait;
+use App\Tests\Behat\Common\LinksTrait;
+use App\Tests\Behat\Common\RegionTrait;
+use App\Tests\Behat\Common\ReportTrait;
 
 class ReportManagementFeatureContext extends BaseFeatureContext
 {

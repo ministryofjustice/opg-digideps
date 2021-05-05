@@ -1,6 +1,6 @@
 <?php
 
-namespace DigidepsBehat\ReportManagement;
+namespace App\Tests\Behat\ReportManagement;
 
 use Behat\Gherkin\Node\TableNode;
 use Behat\Mink\Exception\ElementNotFoundException;

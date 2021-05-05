@@ -2,14 +2,14 @@
 
 declare(strict_types=1);
 
-namespace DigidepsBehat\Reporting;
+namespace App\Tests\Behat\Reporting;
 
-use DigidepsBehat\Common\BaseFeatureContext;
-use DigidepsBehat\Common\CourtOrderTrait;
-use DigidepsBehat\Common\LinksTrait;
-use DigidepsBehat\Common\RegionTrait;
-use DigidepsBehat\Common\ReportTrait;
-use DigidepsBehat\ReportManagement\ReportManagementTrait;
+use App\Tests\Behat\Common\BaseFeatureContext;
+use App\Tests\Behat\Common\CourtOrderTrait;
+use App\Tests\Behat\Common\LinksTrait;
+use App\Tests\Behat\Common\RegionTrait;
+use App\Tests\Behat\Common\ReportTrait;
+use App\Tests\Behat\ReportManagement\ReportManagementTrait;
 
 class ReportingFeatureContext extends BaseFeatureContext
 {

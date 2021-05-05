@@ -14,5 +14,5 @@ services:
             # after 10 attempts, freeze for 10 minutes. used by AuthControllerTest::testBruteForceSameEmail
             - [ addFreezingRule, [  10, 600 ] ]
 
-    DigidepsBehat\:
+    App\Tests\Behat\:
         resource: '../tests/Behat/bootstrap/*'

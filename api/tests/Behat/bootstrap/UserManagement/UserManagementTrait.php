@@ -1,6 +1,6 @@
 <?php
 
-namespace DigidepsBehat\UserManagement;
+namespace App\Tests\Behat\UserManagement;
 
 use Behat\Gherkin\Node\TableNode;
 use Behat\Mink\Session;

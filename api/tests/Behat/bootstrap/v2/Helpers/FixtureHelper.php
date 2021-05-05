@@ -1,6 +1,6 @@
 <?php
 
-namespace DigidepsBehat\v2\Helpers;
+namespace App\Tests\Behat\v2\Helpers;
 
 use App\Entity\Client;
 use App\Entity\Ndr\Ndr;

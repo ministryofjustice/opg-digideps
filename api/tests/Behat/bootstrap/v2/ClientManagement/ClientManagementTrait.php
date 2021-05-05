@@ -2,10 +2,10 @@
 
 declare(strict_types=1);
 
-namespace DigidepsBehat\v2\ClientManagement;
+namespace App\Tests\Behat\v2\ClientManagement;
 
+use App\Tests\Behat\v2\Common\UserDetails;
 use DateTime;
-use DigidepsBehat\v2\Common\UserDetails;
 
 trait ClientManagementTrait
 {

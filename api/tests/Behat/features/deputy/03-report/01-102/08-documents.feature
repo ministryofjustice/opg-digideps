@@ -38,7 +38,7 @@ Feature: Report documents
       | report_document_upload_files   |
 
     # check vba-eicar file error
-    When I attach the file "pdf-doc-vba-eicar-dropper.pdf" to "report_document_upload_files"
+    When I attach the file "malicious-vba.pdf" to "report_document_upload_files"
     And I click on "attach-file"
     Then the following fields should have an error:
       | report_document_upload_files   |

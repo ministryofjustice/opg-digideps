@@ -1,6 +1,6 @@
 <?php
 
-namespace DigidepsBehat\v2\Common;
+namespace App\Tests\Behat\v2\Common;
 
 trait INavigateToAdminTrait
 {

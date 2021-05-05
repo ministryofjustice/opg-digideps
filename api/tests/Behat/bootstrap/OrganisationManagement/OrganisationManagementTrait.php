@@ -1,6 +1,6 @@
 <?php
 
-namespace DigidepsBehat\OrganisationManagement;
+namespace App\Tests\Behat\OrganisationManagement;
 
 use Behat\Gherkin\Node\TableNode;
 

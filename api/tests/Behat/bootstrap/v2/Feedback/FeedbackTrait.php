@@ -2,7 +2,7 @@
 
 declare(strict_types=1);
 
-namespace DigidepsBehat\v2\Feedback;
+namespace App\Tests\Behat\v2\Feedback;
 
 trait FeedbackTrait
 {

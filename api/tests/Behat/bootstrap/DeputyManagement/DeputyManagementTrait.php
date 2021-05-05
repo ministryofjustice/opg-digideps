@@ -2,7 +2,7 @@
 
 declare(strict_types=1);
 
-namespace DigidepsBehat\DeputyManagement;
+namespace App\Tests\Behat\DeputyManagement;
 
 use Behat\Mink\Session;
 use Symfony\Component\HttpFoundation\Response;

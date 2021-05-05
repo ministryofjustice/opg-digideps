@@ -2,11 +2,11 @@
 
 declare(strict_types=1);
 
-namespace DigidepsBehat\ContactDetails;
+namespace App\Tests\Behat\ContactDetails;
 
-use DigidepsBehat\Common\BaseFeatureContext;
-use DigidepsBehat\Common\RegionTrait;
-use DigidepsBehat\UserTrait;
+use App\Tests\Behat\Common\BaseFeatureContext;
+use App\Tests\Behat\Common\RegionTrait;
+use App\Tests\Behat\UserTrait;
 
 class ContactDetailsFeatureContext extends BaseFeatureContext
 {

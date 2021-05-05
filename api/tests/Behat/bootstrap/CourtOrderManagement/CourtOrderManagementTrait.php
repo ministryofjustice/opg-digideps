@@ -1,6 +1,6 @@
 <?php
 
-namespace DigidepsBehat\CourtOrderManagement;
+namespace App\Tests\Behat\CourtOrderManagement;
 
 trait CourtOrderManagementTrait
 {

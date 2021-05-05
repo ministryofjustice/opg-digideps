@@ -2,12 +2,12 @@
 
 declare(strict_types=1);
 
-namespace DigidepsBehat\v2\Common;
+namespace App\Tests\Behat\v2\Common;
 
+use App\Tests\Behat\BehatException;
+use App\Tests\Behat\v2\Helpers\FixtureHelper;
 use Behat\Mink\Driver\GoutteDriver;
 use Behat\MinkExtension\Context\MinkContext;
-use DigidepsBehat\BehatException;
-use DigidepsBehat\v2\Helpers\FixtureHelper;
 use Exception;
 use Faker\Factory;
 use Faker\Generator;

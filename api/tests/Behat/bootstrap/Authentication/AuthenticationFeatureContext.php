@@ -1,9 +1,9 @@
 <?php
 
-namespace DigidepsBehat\Authentication;
+namespace App\Tests\Behat\Authentication;
 
-use DigidepsBehat\Common\BaseFeatureContext;
-use DigidepsBehat\UserTrait;
+use App\Tests\Behat\Common\BaseFeatureContext;
+use App\Tests\Behat\UserTrait;
 
 class AuthenticationFeatureContext extends BaseFeatureContext
 {

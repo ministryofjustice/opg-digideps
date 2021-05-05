@@ -1,10 +1,10 @@
 <?php
 
-namespace DigidepsBehat\Registration;
+namespace App\Tests\Behat\Registration;
 
+use App\Tests\Behat\Common\BaseFeatureContext;
+use App\Tests\Behat\Common\LinksTrait;
 use Behat\Gherkin\Node\TableNode;
-use DigidepsBehat\Common\BaseFeatureContext;
-use DigidepsBehat\Common\LinksTrait;
 
 class RegistrationFeatureContext extends BaseFeatureContext
 {

@@ -1,6 +1,6 @@
 <?php
 
-namespace DigidepsBehat\Common;
+namespace App\Tests\Behat\Common;
 
 use Behat\Gherkin\Node\TableNode;
 

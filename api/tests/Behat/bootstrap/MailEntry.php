@@ -1,6 +1,6 @@
 <?php
 
-namespace DigidepsBehat;
+namespace App\Tests\Behat;
 
 /**
  * Contains mail data, constructed on a single mail log,

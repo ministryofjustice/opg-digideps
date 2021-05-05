@@ -13,16 +13,16 @@ export PGUSER=${DATABASE_USERNAME:=api}
 
 # Run each folder of unit tests individually. If we were to run them all
 # individually it would cause a memory leak.
-php vendor/bin/phpunit -c tests tests/App/Command/ --coverage-php tests/coverage/Command.cov
-php vendor/bin/phpunit -c tests tests/App/Controller/ --coverage-php tests/coverage/Controller.cov
-php vendor/bin/phpunit -c tests tests/App/ControllerReport/ --coverage-php tests/coverage/ControllerReport.cov
-php vendor/bin/phpunit -c tests tests/App/Controller-Ndr/ --coverage-php tests/coverage/Controller-Ndr.cov
-php vendor/bin/phpunit -c tests tests/App/Entity/ --coverage-php tests/coverage/Entity.cov
-php vendor/bin/phpunit -c tests tests/App/Factory/ --coverage-php tests/coverage/Factory.cov
-php vendor/bin/phpunit -c tests tests/App/Security/ --coverage-php tests/coverage/Security.cov
-php vendor/bin/phpunit -c tests tests/App/Service/ --coverage-php tests/coverage/Service.cov
-php vendor/bin/phpunit -c tests tests/App/Stats/ --coverage-php tests/coverage/Stats.cov
-php vendor/bin/phpunit -c tests tests/App/Transformer/ --coverage-php tests/coverage/Transformer.cov
-php vendor/bin/phpunit -c tests tests/App/v2/ --coverage-php tests/coverage/v2.cov
+php vendor/bin/phpunit -c tests tests/Unit/Command/ --coverage-php tests/coverage/Command.cov
+php vendor/bin/phpunit -c tests tests/Unit/Controller/ --coverage-php tests/coverage/Controller.cov
+php vendor/bin/phpunit -c tests tests/Unit/ControllerReport/ --coverage-php tests/coverage/ControllerReport.cov
+php vendor/bin/phpunit -c tests tests/Unit/Controller-Ndr/ --coverage-php tests/coverage/Controller-Ndr.cov
+php vendor/bin/phpunit -c tests tests/Unit/Entity/ --coverage-php tests/coverage/Entity.cov
+php vendor/bin/phpunit -c tests tests/Unit/Factory/ --coverage-php tests/coverage/Factory.cov
+php vendor/bin/phpunit -c tests tests/Unit/Security/ --coverage-php tests/coverage/Security.cov
+php vendor/bin/phpunit -c tests tests/Unit/Service/ --coverage-php tests/coverage/Service.cov
+php vendor/bin/phpunit -c tests tests/Unit/Stats/ --coverage-php tests/coverage/Stats.cov
+php vendor/bin/phpunit -c tests tests/Unit/Transformer/ --coverage-php tests/coverage/Transformer.cov
+php vendor/bin/phpunit -c tests tests/Unit/v2/ --coverage-php tests/coverage/v2.cov
 
 php vendor/phpunit/phpcov/phpcov merge --clover "./tests/coverage/api-unit-tests.xml" "./tests/coverage"

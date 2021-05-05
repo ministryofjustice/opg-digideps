@@ -2,12 +2,12 @@
 
 declare(strict_types=1);
 
-namespace DigidepsBehat\UserManagement;
+namespace App\Tests\Behat\UserManagement;
 
-use DigidepsBehat\Common\BaseFeatureContext;
-use DigidepsBehat\Common\LinksTrait;
-use DigidepsBehat\Common\RegionTrait;
-use DigidepsBehat\UserTrait;
+use App\Tests\Behat\Common\BaseFeatureContext;
+use App\Tests\Behat\Common\LinksTrait;
+use App\Tests\Behat\Common\RegionTrait;
+use App\Tests\Behat\UserTrait;
 
 class UserManagementFeatureContext extends BaseFeatureContext
 {

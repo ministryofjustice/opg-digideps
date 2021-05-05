@@ -2,7 +2,7 @@
 
 declare(strict_types=1);
 
-namespace DigidepsBehat\ContactDetails;
+namespace App\Tests\Behat\ContactDetails;
 
 trait ContactDetailsTrait
 {

@@ -2,9 +2,9 @@
 
 declare(strict_types=1);
 
-namespace DigidepsBehat\v2\Reporting\Sections;
+namespace App\Tests\Behat\v2\Reporting\Sections;
 
-use DigidepsBehat\v2\Common\BaseFeatureContext;
+use App\Tests\Behat\v2\Common\BaseFeatureContext;
 
 class ReportingSectionsFeatureContext extends BaseFeatureContext
 {

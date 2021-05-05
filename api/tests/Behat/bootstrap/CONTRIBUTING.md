@@ -21,7 +21,7 @@ suites:
             description: Covering the 'Contacts' section of the report
             paths: [ "%paths.base%/features-v2/reporting/sections/contacts" ]
             contexts:
-                - DigidepsBehat\v2\Reporting\Sections\ReportingSectionsFeatureContext
+                - App\Tests\Behat\v2\Reporting\Sections\ReportingSectionsFeatureContext
 ```
 
 Always extend from `BaseFeatureContext.php` when creating new feature context files as it contains functions that are commonly used across many features and allows us to keep tests state and fixture free by creating data on demand while keeping it accessible throughout the whole feature test. For example, rather than relying on a fixture file we can dynamically create uniquely named users and other objects that are accessible within `BaseFeatureContext` to avoid data collision and allow for parallel test runs.

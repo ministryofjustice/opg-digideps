@@ -1,11 +1,11 @@
 <?php
 
-namespace DigidepsBehat\OrganisationManagement;
+namespace App\Tests\Behat\OrganisationManagement;
 
-use DigidepsBehat\Common\BaseFeatureContext;
-use DigidepsBehat\Common\LinksTrait;
-use DigidepsBehat\Common\RegionTrait;
-use DigidepsBehat\UserTrait;
+use App\Tests\Behat\Common\BaseFeatureContext;
+use App\Tests\Behat\Common\LinksTrait;
+use App\Tests\Behat\Common\RegionTrait;
+use App\Tests\Behat\UserTrait;
 
 class OrganisationManagementFeatureContext extends BaseFeatureContext
 {

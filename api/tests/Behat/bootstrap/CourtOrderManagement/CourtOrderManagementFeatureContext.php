@@ -1,13 +1,13 @@
 <?php
 
-namespace DigidepsBehat\CourtOrderManagement;
+namespace App\Tests\Behat\CourtOrderManagement;
 
-use DigidepsBehat\Common\BaseFeatureContext;
-use DigidepsBehat\Common\CourtOrderTrait;
-use DigidepsBehat\Common\LinksTrait;
-use DigidepsBehat\Common\RegionTrait;
-use DigidepsBehat\UserManagement\UserManagementTrait;
-use DigidepsBehat\UserTrait;
+use App\Tests\Behat\Common\BaseFeatureContext;
+use App\Tests\Behat\Common\CourtOrderTrait;
+use App\Tests\Behat\Common\LinksTrait;
+use App\Tests\Behat\Common\RegionTrait;
+use App\Tests\Behat\UserManagement\UserManagementTrait;
+use App\Tests\Behat\UserTrait;
 
 class CourtOrderManagementFeatureContext extends BaseFeatureContext
 {
