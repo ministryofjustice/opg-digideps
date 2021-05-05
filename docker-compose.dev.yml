@@ -7,12 +7,12 @@ services:
             - localstack-init
             - mock-sirius-integration
         volumes:
-            - ./api/behat/tests:/var/www/behat/tests
-            - ./api/behat/snapshots:/tmp/html
+            - ./api/tests/Behat:/var/www/tests/Behat
+            - ./api/tests/Behat/snapshots:/tmp/html
         env_file:
             - ./api/api.env
-            - ./api/behat/test.env
-            - ./api/behat/.env
+            - ./api/tests/Behat/test.env
+            - ./api/tests/Behat/.env
 
     npm:
         image: node:14.8.0-alpine
@@ -35,10 +35,8 @@ services:
 
     frontend:
         env_file:
-            - ./api/behat/test.env
             - .env
 
     admin:
         env_file:
-            - ./api/behat/test.env
             - .env

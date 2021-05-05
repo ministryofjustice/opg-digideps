@@ -126,7 +126,7 @@ services:
             APP_DEBUG: ${APP_DEBUG:-0}
         env_file:
             - ./api/api.env
-            - ./api/behat/test.env
+            - ./api/tests/Behat/test.env
         restart: always
 
     wkhtmltopdf:

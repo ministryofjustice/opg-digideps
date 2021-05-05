@@ -1,1 +1,3 @@
 services:
+    DigidepsBehat\:
+        resource: '../tests/Behat/bootstrap/*'

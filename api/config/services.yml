@@ -65,9 +65,6 @@ services:
         resource: '../src/v2/Registration/Controller'
         tags: [controller.service_arguments]
 
-    DigidepsBehat\:
-        resource: '../behat/tests/bootstrap/*'
-
     Doctrine\Migrations\Version\DbalMigrationFactory: ~
     App\Migrations\Factory\MigrationFactoryDecorator:
         decorates: Doctrine\Migrations\Version\DbalMigrationFactory

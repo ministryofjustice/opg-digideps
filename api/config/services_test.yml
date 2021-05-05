@@ -13,3 +13,6 @@ services:
             - [ setRedisPrefix, ["test_ac_exception"] ]
             # after 10 attempts, freeze for 10 minutes. used by AuthControllerTest::testBruteForceSameEmail
             - [ addFreezingRule, [  10, 600 ] ]
+
+    DigidepsBehat\:
+        resource: '../tests/Behat/bootstrap/*'
