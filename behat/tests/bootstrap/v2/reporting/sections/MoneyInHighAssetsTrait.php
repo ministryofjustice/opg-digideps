@@ -1,12 +1,19 @@
-<?php declare(strict_types=1);
+<?php
+
+declare(strict_types=1);
 
 namespace DigidepsBehat\v2\Reporting\Sections;
 
 trait MoneyInHighAssetsTrait
 {
-    private $invalidSelectOptionError = 'Please choose an option';
-    private $enterAmountError = 'Please enter an amount';
-    private $invalidAmountError = 'The amount must be between £0.01 and £100,000,000,000';
+    // Expected valudation errors
+    private string $invalidSelectOptionError = 'Please choose an option';
+    private string $enterAmountError = 'Please enter an amount';
+    private string $invalidAmountError = 'The amount must be between £0.01 and £100,000,000,000';
+
+    // Values
+    private string $amountValue = '£1.00';
+    private string $updatedAmountValue = '£2.00';
 
     /**
      * @When I view the money in report section
@@ -44,36 +51,50 @@ trait MoneyInHighAssetsTrait
     }
 
     /**
-     * @Then I select dividends
+     * @And I have a dividend to report on
      */
-    public function iSelectDividends()
+    public function iHaveADividendToReportOn()
     {
         $this->selectOption('account[category]', 'dividends');
         $this->pressButton('Save and continue');
     }
 
     /**
-     * @When I dont enter an amount I see a error
+     * @And I try to submit an empty amount
      */
-    public function iDontEnterAnAmountISeeAError()
+    public function iTryToSubmitAnEmptyAmount()
     {
         $this->pressButton('Save and continue');
+    }
+
+    /**
+     * @Then I should see an empty field error
+     */
+    public function iShouldSeeAnEmptyFieldError()
+    {
         $this->assertOnErrorMessage($this->enterAmountError);
     }
 
     /**
-     * @Then I enter an invalid amount I see a error
+     * @And I try to submit an invalid amount
      */
-    public function iEnterAnInvalidAmountISeeAError()
+    public function iTryToSubmitAnInvalidAmount()
     {
         $this->fillField('account[amount]', '0');
 
         $this->pressButton('Save and continue');
+    }
+
+    /**
+     * @Then I should see an invalid field error
+     */
+    public function iShouldSeeAnInvalidFieldError()
+    {
         $this->assertOnErrorMessage($this->invalidAmountError);
     }
 
     /**
-     * @When I enter a valid amount
+     * @And I enter a valid amount
      */
     public function iEnterAValidAmount()
     {
@@ -83,7 +104,7 @@ trait MoneyInHighAssetsTrait
     }
 
     /**
-     * @Then I dont add another item
+     * @And I dont add another item
      */
     public function iDontAddAnotherItem()
     {
@@ -100,7 +121,7 @@ trait MoneyInHighAssetsTrait
     }
 
     /**
-     * @Then I add another item
+     * @When I add another item
      */
     public function iAddAnotherItem()
     {
@@ -109,7 +130,7 @@ trait MoneyInHighAssetsTrait
     }
 
     /**
-     * @Then I select state pension
+     * @And I select state pension
      */
     public function iSelectStatePension()
     {
@@ -118,15 +139,20 @@ trait MoneyInHighAssetsTrait
     }
 
     /**
-     * @Then I should be on the summary page
+     * @Then the money in summary page should contain the money in values I added
      */
-    public function iShouldBeOnTheSummaryPage()
+    public function theMoneyInSummaryPageShouldContainTheMoneyInValuesIAdded()
     {
         assert($this->iShouldSeeTheMoneyInSummary());
+
+        $descriptionLists = $this->getSession()->getPage()->findAll('css', 'dl');
+        if (0 === count($descriptionLists)) {
+            $this->throwContextualException('A dl element was not found on the page - make sure the current url is as expected');
+        }
     }
 
     /**
-     * @Then I remove the dividends item
+     * @And I remove the dividends item
      */
     public function iRemoveTheDividendsItem()
     {
@@ -144,11 +170,59 @@ trait MoneyInHighAssetsTrait
     }
 
     /**
-     * @Then I should be on the money in page and see entry deleted
+     * @Then I should be on the money in summary page and see entry deleted
      */
     public function iShouldBeOnTheMoneyInPageAndSeeEntryDeleted()
     {
         $entryDeletedText = $this->getSession()->getPage()->find('css', '.opg-alert__message > .govuk-body')->getText();
-        assert("Entry deleted" == $entryDeletedText);
+        assert('Entry deleted' == $entryDeletedText);
+    }
+
+    /**
+     * @When I edit the money in value
+     */
+    public function iEditTheMoneyInValue()
+    {
+        $this->clickLink('Edit');
+        $this->fillField('account[amount]', '2');
+        $this->pressButton('Save and continue');
+    }
+
+    /**
+     * @Then the money in summary page should contain the edited value
+     */
+    public function theMoneyInSummaryPageShouldContainTheEditedValue()
+    {
+        assert($this->iShouldSeeTheMoneyInSummary());
+
+        $descriptionLists = $this->getSession()->getPage()->findAll('css', 'dl');
+        if (0 === count($descriptionLists)) {
+            $this->throwContextualException('A dl element was not found on the page - make sure the current url is as expected');
+        }
+
+        $invalidAmount = false;
+        $editedAmount = '';
+        foreach ($descriptionLists as $descriptionList) {
+            $html = $descriptionList->getHtml();
+            $textVisible = str_contains($html, $this->updatedAmountValue);
+
+            if (!$textVisible) {
+                $editedAmount = $textVisible;
+                $invalidAmount = true;
+            } else {
+                break;
+            }
+        }
+
+        if ($invalidAmount) {
+            $this->throwContextualException(
+                sprintf(
+                    'A dl was found but the row with the expected text was not found. Missing text: %s. HTML found: %s',
+                    $this->updatedAmountValue,
+                    $editedAmount,
+                    $html
+                )
+            );
+        }
     }
 }
