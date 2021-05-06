@@ -262,7 +262,7 @@ v2-tests-goutte:
 
         section-money-in-high-assets:
             description: Covering the 'Money in High Assets' section of the report
-            paths: [ "%paths.base%/features-v2/reporting/sections/money-in" ]
+            paths: [ "%paths.base%/features-v2/reporting/sections/money-in-high-assets" ]
             contexts:
                 - DigidepsBehat\v2\Reporting\Sections\ReportingSectionsFeatureContext
 

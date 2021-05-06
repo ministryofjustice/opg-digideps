@@ -51,7 +51,7 @@ trait MoneyInHighAssetsTrait
     }
 
     /**
-     * @And I have a dividend to report on
+     * @Given I have a dividend to report on
      */
     public function iHaveADividendToReportOn()
     {
@@ -60,7 +60,7 @@ trait MoneyInHighAssetsTrait
     }
 
     /**
-     * @And I try to submit an empty amount
+     * @Given I try to submit an empty amount
      */
     public function iTryToSubmitAnEmptyAmount()
     {
@@ -76,7 +76,7 @@ trait MoneyInHighAssetsTrait
     }
 
     /**
-     * @And I try to submit an invalid amount
+     * @Given I try to submit an invalid amount
      */
     public function iTryToSubmitAnInvalidAmount()
     {
@@ -94,7 +94,7 @@ trait MoneyInHighAssetsTrait
     }
 
     /**
-     * @And I enter a valid amount
+     * @Given I enter a valid amount
      */
     public function iEnterAValidAmount()
     {
@@ -104,7 +104,7 @@ trait MoneyInHighAssetsTrait
     }
 
     /**
-     * @And I dont add another item
+     * @Given I dont add another item
      */
     public function iDontAddAnotherItem()
     {
@@ -130,7 +130,7 @@ trait MoneyInHighAssetsTrait
     }
 
     /**
-     * @And I select state pension
+     * @Given I select state pension
      */
     public function iSelectStatePension()
     {
@@ -145,14 +145,14 @@ trait MoneyInHighAssetsTrait
     {
         assert($this->iShouldSeeTheMoneyInSummary());
 
-        $descriptionLists = $this->getSession()->getPage()->findAll('css', 'dl');
+        $descriptionLists = $this->getSession()->getPage()->findAll('css', 'td');
         if (0 === count($descriptionLists)) {
-            $this->throwContextualException('A dl element was not found on the page - make sure the current url is as expected');
+            $this->throwContextualException('A td element was not found on the page - make sure the current url is as expected');
         }
     }
 
     /**
-     * @And I remove the dividends item
+     * @Given I remove the dividends item
      */
     public function iRemoveTheDividendsItem()
     {
@@ -172,7 +172,7 @@ trait MoneyInHighAssetsTrait
     /**
      * @Then I should be on the money in summary page and see entry deleted
      */
-    public function iShouldBeOnTheMoneyInPageAndSeeEntryDeleted()
+    public function iShouldBeOnTheMoneyInSummaryPageAndSeeEntryDeleted()
     {
         $entryDeletedText = $this->getSession()->getPage()->find('css', '.opg-alert__message > .govuk-body')->getText();
         assert('Entry deleted' == $entryDeletedText);
@@ -195,21 +195,21 @@ trait MoneyInHighAssetsTrait
     {
         assert($this->iShouldSeeTheMoneyInSummary());
 
-        $descriptionLists = $this->getSession()->getPage()->findAll('css', 'dl');
-        if (0 === count($descriptionLists)) {
-            $this->throwContextualException('A dl element was not found on the page - make sure the current url is as expected');
+        $tableData = $this->getSession()->getPage()->findAll('css', 'td');
+        if (0 === count($tableData)) {
+            $this->throwContextualException('A td element was not found on the page - make sure the current url is as expected');
         }
 
         $invalidAmount = false;
         $editedAmount = '';
-        foreach ($descriptionLists as $descriptionList) {
-            $html = $descriptionList->getHtml();
-            $textVisible = str_contains($html, $this->updatedAmountValue);
+        foreach ($tableData as $data) {
+            $text = $data->getText();
 
-            if (!$textVisible) {
-                $editedAmount = $textVisible;
+            if ($text !== $this->updatedAmountValue) {
+                $editedAmount = $text;
                 $invalidAmount = true;
             } else {
+                $invalidAmount = false;
                 break;
             }
         }
@@ -217,10 +217,10 @@ trait MoneyInHighAssetsTrait
         if ($invalidAmount) {
             $this->throwContextualException(
                 sprintf(
-                    'A dl was found but the row with the expected text was not found. Missing text: %s. HTML found: %s',
+                    'A td was found but the row with the expected text was not found. Missing text: %s. Text found: %s',
                     $this->updatedAmountValue,
                     $editedAmount,
-                    $html
+                    $text
                 )
             );
         }
