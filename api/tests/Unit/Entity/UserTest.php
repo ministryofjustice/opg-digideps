@@ -3,8 +3,8 @@
 namespace App\Tests\Unit\Entity;
 
 use App\TestHelpers\ReportSubmissionHelper;
+use App\Tests\Unit\ApiBaseTestCase;
 use DateTime;
-use Tests\ApiBaseTestCase;
 
 /**
  * User Entity test.

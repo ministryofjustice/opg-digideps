@@ -3,7 +3,7 @@
 namespace App\Tests\Unit\Controller;
 
 use App\Entity\CasRec;
-use Tests\Fixtures;
+use App\Tests\Unit\Fixtures;
 
 class CasRecControllerTest extends AbstractTestController
 {

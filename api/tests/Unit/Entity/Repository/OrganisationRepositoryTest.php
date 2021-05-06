@@ -4,11 +4,11 @@ namespace App\Tests\Unit\Entity\Repository;
 
 use App\Entity\Organisation;
 use App\Repository\OrganisationRepository;
+use App\Tests\Unit\Fixtures;
 use Doctrine\Common\DataFixtures\Purger\ORMPurger;
 use Doctrine\ORM\EntityManagerInterface;
 use Doctrine\ORM\Mapping\ClassMetadata;
 use Symfony\Bundle\FrameworkBundle\Test\WebTestCase;
-use Tests\Fixtures;
 
 class OrganisationRepositoryTest extends WebTestCase
 {

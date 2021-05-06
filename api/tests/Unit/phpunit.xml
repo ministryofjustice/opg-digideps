@@ -13,13 +13,8 @@
         bootstrap="./bootstrap.php"
         cacheTokens="false"
 >
-    <testsuites>
-        <testsuite name="src">
-            <directory>./App</directory>
-        </testsuite>
-    </testsuites>
     <php>
-        <server name="KERNEL_DIR" value="../app" />
+        <server name="KERNEL_DIR" value="../../src" />
         <server name="APP_ENV" value="test" />
         <ini name="memory_limit" value="2048M" />
         <env name="SECRETS_FRONT_KEY" value="layDeputySecret" force="true" />
@@ -32,7 +27,7 @@
 
     <filter>
         <whitelist processUncoveredFilesFromWhitelist="true">
-            <directory suffix=".php">../src</directory>
+            <directory suffix=".php">../../src</directory>
         </whitelist>
     </filter>
 

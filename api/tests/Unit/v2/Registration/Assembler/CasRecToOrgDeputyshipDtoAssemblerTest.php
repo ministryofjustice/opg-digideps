@@ -5,12 +5,10 @@ declare(strict_types=1);
 namespace App\Tests\Unit\v2\Registration\Assembler;
 
 use App\Service\ReportUtils;
+use App\Tests\Unit\v2\Registration\TestHelpers\OrgDeputyshipDTOTestHelper;
 use App\v2\Registration\Assembler\CasRecToOrgDeputyshipDtoAssembler;
-use App\v2\Registration\Converter\ReportTypeConverter;
 use DateTime;
 use PHPUnit\Framework\TestCase;
-use Prophecy\Prophecy\ObjectProphecy;
-use Tests\App\v2\Registration\TestHelpers\OrgDeputyshipDTOTestHelper;
 
 class CasRecToOrgDeputyshipDtoAssemblerTest extends TestCase
 {
@@ -26,7 +24,6 @@ class CasRecToOrgDeputyshipDtoAssemblerTest extends TestCase
         $lastReportDate = new DateTime($casrecArray['Last Report Day']);
         $now = new DateTime();
 
-        /** @var ReportTypeConverter|ObjectProphecy $converter */
         $reportUtils = self::prophesize(ReportUtils::class);
         $reportUtils->convertTypeofRepAndCorrefToReportType($casrecArray['Typeofrep'], $casrecArray['Corref'], 'REALM_PROF')
             ->shouldBeCalled()

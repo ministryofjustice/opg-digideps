@@ -3,7 +3,7 @@
 namespace App\Tests\Unit\Controller;
 
 use App\Entity\Setting;
-use Tests\Fixtures;
+use App\Tests\Unit\Fixtures;
 
 class SettingControllerTest extends AbstractTestController
 {

@@ -5,7 +5,7 @@ namespace App\Tests\Unit\ControllerReport;
 use App\Entity\Report\Document;
 use App\Entity\Report\Fee;
 use App\Entity\Report\Report;
-use Tests\App\Controller\AbstractTestController;
+use App\Tests\Unit\Controller\AbstractTestController;
 
 class ReportControllerTest extends AbstractTestController
 {

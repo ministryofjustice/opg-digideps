@@ -4,7 +4,7 @@ namespace App\Tests\Unit\ControllerReport;
 
 use App\Entity\Report\MoneyTransaction;
 use App\Entity\Report\Report;
-use Tests\App\Controller\AbstractTestController;
+use App\Tests\Unit\Controller\AbstractTestController;
 
 class MoneyTransactionControllerTest extends AbstractTestController
 {

@@ -3,7 +3,7 @@
 namespace App\Tests\Unit\Controller\Ndr;
 
 use App\Entity\Report\ReportSubmission;
-use Tests\App\Controller\AbstractTestController;
+use App\Tests\Unit\Controller\AbstractTestController;
 
 class NdrControllerTest extends AbstractTestController
 {

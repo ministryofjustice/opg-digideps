@@ -2,7 +2,7 @@
 
 namespace App\Tests\Unit\Controller\Ndr;
 
-use Tests\App\Controller\AbstractTestController;
+use App\Tests\Unit\Controller\AbstractTestController;
 
 class AccountControllerTest extends AbstractTestController
 {

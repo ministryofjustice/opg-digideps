@@ -4,12 +4,12 @@ namespace App\Tests\Unit\Controller;
 
 use App\Service\BruteForce\AttemptsIncrementalWaitingChecker;
 use App\Service\BruteForce\AttemptsInTimeChecker;
+use App\Tests\Unit\Fixtures;
 use Doctrine\ORM\EntityManager;
 use Symfony\Bundle\FrameworkBundle\Client;
 use Symfony\Bundle\FrameworkBundle\Test\WebTestCase;
 use Symfony\Component\DependencyInjection\Container;
 use Symfony\Component\HttpFoundation\Response;
-use Tests\Fixtures;
 
 abstract class AbstractTestController extends WebTestCase
 {

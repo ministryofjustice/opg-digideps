@@ -7,11 +7,11 @@ use App\Repository\UserRepository;
 use App\TestHelpers\ClientTestHelper;
 use App\TestHelpers\ReportTestHelper;
 use App\TestHelpers\UserTestHelper;
+use App\Tests\Unit\Fixtures;
 use DateTime;
 use Doctrine\Common\DataFixtures\Purger\ORMPurger;
 use Doctrine\ORM\EntityManagerInterface;
 use Symfony\Bundle\FrameworkBundle\Test\WebTestCase;
-use Tests\Fixtures;
 
 class UserRepositoryTest extends WebTestCase
 {

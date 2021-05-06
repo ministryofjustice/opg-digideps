@@ -5,9 +5,9 @@ namespace App\Tests\Unit\ControllerReport;
 use App\Entity\Report\Document;
 use App\Entity\Report\ReportSubmission;
 use App\TestHelpers\ReportSubmissionHelper;
+use App\Tests\Unit\Controller\AbstractTestController;
 use DateTime;
 use Symfony\Component\HttpFoundation\Response;
-use Tests\App\Controller\AbstractTestController;
 
 class ReportSubmissionControllerTest extends AbstractTestController
 {

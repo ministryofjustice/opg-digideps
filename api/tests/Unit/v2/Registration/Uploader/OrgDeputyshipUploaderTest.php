@@ -12,13 +12,13 @@ use App\Repository\ClientRepository;
 use App\Repository\NamedDeputyRepository;
 use App\Repository\OrganisationRepository;
 use App\Repository\ReportRepository;
+use App\Tests\Unit\v2\Registration\TestHelpers\OrgDeputyshipDTOTestHelper;
 use App\v2\Registration\DTO\OrgDeputyshipDto;
 use App\v2\Registration\Uploader\OrgDeputyshipUploader;
 use DateTime;
 use Doctrine\Common\DataFixtures\Purger\ORMPurger;
 use Doctrine\ORM\EntityManager;
 use Symfony\Bundle\FrameworkBundle\Test\KernelTestCase;
-use Tests\App\v2\Registration\TestHelpers\OrgDeputyshipDTOTestHelper;
 
 class OrgDeputyshipUploaderTest extends KernelTestCase
 {

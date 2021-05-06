@@ -3,7 +3,7 @@
 namespace App\Tests\Unit\Controller\Ndr;
 
 use App\Entity\Ndr\VisitsCare;
-use Tests\App\Controller\AbstractTestController;
+use App\Tests\Unit\Controller\AbstractTestController;
 
 class VisitsCareControllerTest extends AbstractTestController
 {
