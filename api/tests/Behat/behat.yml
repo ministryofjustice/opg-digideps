@@ -242,6 +242,12 @@ v2-tests-goutte:
             contexts:
                 - App\Tests\Behat\v2\Reporting\Sections\ReportingSectionsFeatureContext
 
+        section-visit-care:
+            description: Covering the 'Visits and Care' section of the report
+            paths: [ "%paths.base%/features-v2/reporting/sections/visits-care" ]
+            contexts:
+                - DigidepsBehat\v2\Reporting\Sections\ReportingSectionsFeatureContext
+
         client-management:
             description: Covering the client management features of the app (frontend and admin)
             paths: [ "%paths.base%/features-v2/client-management" ]

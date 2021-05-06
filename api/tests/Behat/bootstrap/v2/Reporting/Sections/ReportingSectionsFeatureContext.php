@@ -14,7 +14,7 @@ class ReportingSectionsFeatureContext extends BaseFeatureContext
     use ContactsSectionTrait;
     use DocumentsSectionTrait;
     use GiftsSectionTrait;
-    use VisitsAndCareSectionTrait;
+    use VisitsCareSectionTrait;
 
     /**
      * @Then the previous section should be :sectionName

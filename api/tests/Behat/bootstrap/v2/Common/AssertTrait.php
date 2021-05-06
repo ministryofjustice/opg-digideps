@@ -32,6 +32,17 @@ trait AssertTrait
         );
     }
 
+    public function assertIntEqualsInt(
+        $expected,
+        $found,
+        string $comparisonSubject
+    ) {
+        assert(
+            $expected == $found,
+            $this->getAssertMessage($expected, $found, $comparisonSubject)
+        );
+    }
+
     private function getAssertMessage(
         $expected,
         $found,
