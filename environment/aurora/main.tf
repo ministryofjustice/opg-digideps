@@ -37,7 +37,7 @@ resource "aws_rds_cluster_instance" "cluster_instances" {
   cluster_identifier              = "${var.cluster_identifier}-${terraform.workspace}"
   engine                          = var.engine
   engine_version                  = var.engine_version
-  identifier_prefix               = "${var.cluster_identifier}-${terraform.workspace}-${count.index}"
+  identifier                      = "${var.cluster_identifier}-${terraform.workspace}-${count.index}"
   instance_class                  = var.instance_class
   monitoring_interval             = 30
   monitoring_role_arn             = "arn:aws:iam::${var.account_id}:role/rds-enhanced-monitoring"

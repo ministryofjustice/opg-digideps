@@ -16,7 +16,6 @@ class BaseFeatureContext extends MinkContext
     use AlertsTrait;
     use AuthTrait;
     use AssertTrait;
-//    use CourtOrderTrait;
     use DebugTrait;
     use ElementSelectionTrait;
     use ErrorsTrait;
@@ -44,7 +43,6 @@ class BaseFeatureContext extends MinkContext
     public UserDetails $layDeputyCompletedPfaLowAssetsDetails;
     public UserDetails $layDeputySubmittedPfaLowAssetsDetails;
 
-    /** @var UserDetails */
     public UserDetails $profAdminDeputyNotStartedDetails;
     public UserDetails $profAdminDeputyCompletedDetails;
     public UserDetails $profAdminDeputySubmittedDetails;

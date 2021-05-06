@@ -62,6 +62,18 @@ trait ReportTrait
     }
 
     /**
+     * @Given a Lay Deputy has completed a Pfa Low Assets report
+     */
+    public function aLayDeputyHasCompletedAPfaLowAssetsReport()
+    {
+        if (empty($this->layDeputyCompletedPfaLowAssetsDetails)) {
+            throw new Exception('It looks like fixtures are not loaded - missing $layDeputyCompletedPfaLowAssetsDetails');
+        }
+
+        $this->loginToFrontendAs($this->layDeputyCompletedPfaLowAssetsDetails->getUserEmail());
+    }
+
+    /**
      * @Given a Lay Deputy has a completed report
      *
      * @throws Exception
