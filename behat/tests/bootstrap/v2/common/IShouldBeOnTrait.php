@@ -171,19 +171,51 @@ trait IShouldBeOnTrait
     }
 
     /**
-     * @Then I should be on the visits and care first step page
+     * @Then I should be on the live with client page
      */
-    public function iAmOnVisitsAndCareStep1Page()
+    public function iAmOnVisitsCarePage1()
     {
-        return $this->iAmOnPage('/report\/.*\/visits-care\/step\/1$/');
+        return $this->iAmOnPage(sprintf('/%s\/.*\/visits-care\/step\/1.*$/', $this->reportUrlPrefix));
     }
 
     /**
-     * @Then I should be on the visits and care second step page
+     * @Then I should be on the client receive paid care page
      */
-    public function iAmOnVisitsAndCareStep2Page()
+    public function iAmOnVisitsCarePage2()
     {
-        return $this->iAmOnPage('/report\/.*\/visits-care\/step\/2$/');
+        return $this->iAmOnPage(sprintf('/%s\/.*\/visits-care\/step\/2.*$/', $this->reportUrlPrefix));
+    }
+
+    /**
+     * @Then I should be on the who is doing the caring page
+     */
+    public function iAmOnVisitsCarePage3()
+    {
+        return $this->iAmOnPage(sprintf('/%s\/.*\/visits-care\/step\/3.*$/', $this->reportUrlPrefix));
+    }
+
+    /**
+     * @Then I should be on the does the client have a care plan page
+     */
+    public function iAmOnVisitsCarePage4()
+    {
+        return $this->iAmOnPage(sprintf('/%s\/.*\/visits-care\/step\/4.*$/', $this->reportUrlPrefix));
+    }
+
+    /**
+     * @Then I should be on the plans to move client page
+     */
+    public function iAmOnVisitsCarePage5()
+    {
+        return $this->iAmOnPage(sprintf('/%s\/.*\/visits-care\/step\/5.*$/', $this->reportUrlPrefix));
+    }
+
+    /**
+     * @Then I should be on the visits and care report summary page
+     */
+    public function iAmOnVisitsCareSummaryPage()
+    {
+        return $this->iAmOnPage(sprintf('/%s\/.*\/visits-care\/summary.*$/', $this->reportUrlPrefix));
     }
 
     /**
@@ -191,7 +223,7 @@ trait IShouldBeOnTrait
      */
     public function iAmOnAccountsSummaryPage()
     {
-        return $this->iAmOnPage(sprintf('/%s\/.*\/bank-account.*\/summary$/', $this->reportUrlPrefix));
+        return $this->iAmOnPage(sprintf('/%s\/.*\/bank-account.*\/summary.*$/', $this->reportUrlPrefix));
     }
 
     /**
