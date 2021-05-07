@@ -3,7 +3,7 @@ Feature: Limiting access to sections of the app to super admins
   In order to prevent other types of users from accessing sensitive or confusing data
   I need to limit access to certain areas of the app to Super Admins
 
-  Scenario: Super admin can access satisfaction and active lay reports
+  Scenario: Only super admins can access sensitive reports
     Given I am logged in to admin as "super-admin@publicguardian.gov.uk" with password "DigidepsPass1234"
     When I am on admin page "/admin/stats/metrics"
     And I should see "Download DAT file"
@@ -15,7 +15,7 @@ Feature: Limiting access to sections of the app to super admins
     And I should not see "Download satisfaction report"
     And I should not see "Download active lays report"
 
-  Scenario: Super admin can access fixture endpoints in navigation bar
+  Scenario: Only super admins can access fixture creation page
     Given I am logged in to admin as "super-admin@publicguardian.gov.uk" with password "DigidepsPass1234"
     Then I should see "Fixtures" in the "navbar" region
     When I follow "Fixtures"
