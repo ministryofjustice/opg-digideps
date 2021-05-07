@@ -1,5 +1,6 @@
-<?php declare(strict_types=1);
+<?php
 
+declare(strict_types=1);
 
 namespace DigidepsBehat\v2\Common;
 
@@ -37,6 +38,7 @@ trait ReportTrait
 
     /**
      * @Given a Lay Deputy has not started a report
+     * @Given a Lay Deputy has not started a Pfa High Assets report
      */
     public function aLayDeputyHasNotStartedAReport()
     {
@@ -48,7 +50,32 @@ trait ReportTrait
     }
 
     /**
+     * @Given a Lay Deputy has not started a Pfa Low Assets report
+     */
+    public function aLayDeputyHasNotStartedAPfaLowAssetsReport()
+    {
+        if (empty($this->layDeputyNotStartedPfaLowAssetsDetails)) {
+            throw new Exception('It looks like fixtures are not loaded - missing $layDeputyNotStartedPfaLowAssetsDetails');
+        }
+
+        $this->loginToFrontendAs($this->layDeputyNotStartedPfaLowAssetsDetails->getUserEmail());
+    }
+
+    /**
+     * @Given a Lay Deputy has completed a Pfa Low Assets report
+     */
+    public function aLayDeputyHasCompletedAPfaLowAssetsReport()
+    {
+        if (empty($this->layDeputyCompletedPfaLowAssetsDetails)) {
+            throw new Exception('It looks like fixtures are not loaded - missing $layDeputyCompletedPfaLowAssetsDetails');
+        }
+
+        $this->loginToFrontendAs($this->layDeputyCompletedPfaLowAssetsDetails->getUserEmail());
+    }
+
+    /**
      * @Given a Lay Deputy has a completed report
+     *
      * @throws Exception
      */
     public function aLayDeputyHasCompletedReport()
@@ -75,6 +102,7 @@ trait ReportTrait
 
     /**
      * @Given a Lay Deputy has a completed NDR report
+     *
      * @throws Exception
      */
     public function aNdrLayDeputyHasCompletedReport()
@@ -89,6 +117,7 @@ trait ReportTrait
 
     /**
      * @Given a Lay Deputy has submitted a report
+     *
      * @throws Exception
      */
     public function aLayDeputyHasSubmittedAReport()

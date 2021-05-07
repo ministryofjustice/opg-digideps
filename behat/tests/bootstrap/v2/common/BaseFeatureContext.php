@@ -39,6 +39,10 @@ class BaseFeatureContext extends MinkContext
     public UserDetails $layDeputyCompletedDetails;
     public UserDetails $layDeputySubmittedDetails;
 
+    public UserDetails $layDeputyNotStartedPfaLowAssetsDetails;
+    public UserDetails $layDeputyCompletedPfaLowAssetsDetails;
+    public UserDetails $layDeputySubmittedPfaLowAssetsDetails;
+
     public UserDetails $profAdminDeputyNotStartedDetails;
     public UserDetails $profAdminDeputyCompletedDetails;
     public UserDetails $profAdminDeputySubmittedDetails;
@@ -77,9 +81,12 @@ class BaseFeatureContext extends MinkContext
         $this->fixtureUsers[] = $this->adminDetails = new UserDetails($responseData['data']['admin-users']['admin']);
         $this->fixtureUsers[] = $this->elevatedAdminDetails = new UserDetails($responseData['data']['admin-users']['elevated-admin']);
         $this->fixtureUsers[] = $this->superAdminDetails = new UserDetails($responseData['data']['admin-users']['super-admin']);
-        $this->fixtureUsers[] = $this->layDeputyNotStartedDetails = new UserDetails($responseData['data']['lays']['not-started']);
-        $this->fixtureUsers[] = $this->layDeputyCompletedDetails = new UserDetails($responseData['data']['lays']['completed']);
-        $this->fixtureUsers[] = $this->layDeputySubmittedDetails = new UserDetails($responseData['data']['lays']['submitted']);
+        $this->fixtureUsers[] = $this->layDeputyNotStartedDetails = new UserDetails($responseData['data']['lays']['pfa-high-assets']['not-started']);
+        $this->fixtureUsers[] = $this->layDeputyCompletedDetails = new UserDetails($responseData['data']['lays']['pfa-high-assets']['completed']);
+        $this->fixtureUsers[] = $this->layDeputySubmittedDetails = new UserDetails($responseData['data']['lays']['pfa-high-assets']['submitted']);
+        $this->fixtureUsers[] = $this->layDeputyNotStartedPfaLowAssetsDetails = new UserDetails($responseData['data']['lays']['pfa-low-assets']['not-started']);
+        $this->fixtureUsers[] = $this->layDeputyCompletedPfaLowAssetsDetails = new UserDetails($responseData['data']['lays']['pfa-low-assets']['completed']);
+        $this->fixtureUsers[] = $this->layDeputySubmittedPfaLowAssetsDetails = new UserDetails($responseData['data']['lays']['pfa-low-assets']['submitted']);
         $this->fixtureUsers[] = $this->ndrLayDeputyNotStartedDetails = new UserDetails($responseData['data']['lays-ndr']['not-started']);
         $this->fixtureUsers[] = $this->ndrLayDeputyCompletedDetails = new UserDetails($responseData['data']['lays-ndr']['completed']);
         $this->fixtureUsers[] = $this->ndrLayDeputySubmittedDetails = new UserDetails($responseData['data']['lays-ndr']['submitted']);

@@ -15,7 +15,7 @@ trait AssertTrait
         $expectedFormatted = strval(trim(strtolower($expected)));
         assert(
             str_contains($foundFormatted, $expectedFormatted),
-            $this->getAssertMessage($expectedFormatted, 'Not Found', $comparisonSubject)
+            $this->getAssertMessage($expectedFormatted, $foundFormatted, $comparisonSubject)
         );
     }
 

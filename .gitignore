@@ -8,7 +8,7 @@
 **/.tmp.aws.config
 .phpunit.result.cache
 .php_cs.cache
-
+.php-cs-fixer.cache
 # Common vendor folders
 bin/
 lib/

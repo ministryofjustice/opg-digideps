@@ -289,4 +289,52 @@ trait IShouldBeOnTrait
     {
         return $this->iAmOnPage('/admin\/client\/.*\/discharge/');
     }
+
+    /**
+     * @Then I should be on the money out short category page
+     */
+    public function iAmOnMoneyOutShortCategoryPage()
+    {
+        return $this->iAmOnPage(sprintf('/%s\/.*\/money-out-short\/category$/', $this->reportUrlPrefix));
+    }
+
+    /**
+     * @Then I should be on the money out short exists page
+     */
+    public function iAmOnMoneyOutShortExistsPage()
+    {
+        return $this->iAmOnPage(sprintf('/%s\/.*\/money-out-short\/exist.*$/', $this->reportUrlPrefix));
+    }
+
+    /**
+     * @Then I should be on the money out short add page
+     */
+    public function iAmOnMoneyOutShortAddPage()
+    {
+        return $this->iAmOnPage(sprintf('/%s\/.*\/money-out-short\/add.*$/', $this->reportUrlPrefix));
+    }
+
+    /**
+     * @Then I should be on the money out short edit page
+     */
+    public function iAmOnMoneyOutShortEditPage()
+    {
+        return $this->iAmOnPage(sprintf('/%s\/.*\/money-out-short\/edit.*$/', $this->reportUrlPrefix));
+    }
+
+    /**
+     * @Then I should be on the money out short add another page
+     */
+    public function iAmOnMoneyOutShortAddAnotherPage()
+    {
+        return $this->iAmOnPage(sprintf('/%s\/.*\/money-out-short\/add_another.*$/', $this->reportUrlPrefix));
+    }
+
+    /**
+     * @Then I should be on the money out short summary page
+     */
+    public function iAmOnMoneyOutShortSummaryPage()
+    {
+        return $this->iAmOnPage(sprintf('/%s\/.*\/money-out-short\/summary$/', $this->reportUrlPrefix));
+    }
 }

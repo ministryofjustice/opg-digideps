@@ -14,7 +14,8 @@ class ReportingSectionsFeatureContext extends BaseFeatureContext
     use ContactsSectionTrait;
     use DocumentsSectionTrait;
     use GiftsSectionTrait;
-    use VisitsCareSectionTrait;
+    use MoneyOutShortSectionTrait;
+    use VisitsAndCareSectionTrait;
 
     /**
      * @Then the previous section should be :sectionName
@@ -102,11 +103,7 @@ class ReportingSectionsFeatureContext extends BaseFeatureContext
      */
     public function iShouldSeeSectionAs($section, $status)
     {
-        $divs = $this->getSession()->getPage()->findAll('css', 'div.opg-overview-section');
-
-        if (!$divs) {
-            $this->throwContextualException('A div element was not found on the page');
-        }
+        $divs = $this->findAllCssElements('div.opg-overview-section');
 
         $sectionFormatted = sprintf('/%s/%s/%s', $this->reportUrlPrefix, $this->loggedInUserDetails->getCurrentReportId(), $section);
 
