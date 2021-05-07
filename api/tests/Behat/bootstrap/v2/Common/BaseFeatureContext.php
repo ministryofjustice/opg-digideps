@@ -7,7 +7,6 @@ namespace App\Tests\Behat\v2\Common;
 use App\Tests\Behat\BehatException;
 use App\Tests\Behat\v2\Helpers\FixtureHelper;
 use Behat\Mink\Driver\GoutteDriver;
-use Behat\Mink\Session;
 use Behat\MinkExtension\Context\MinkContext;
 use Exception;
 use Faker\Factory;
@@ -64,8 +63,6 @@ class BaseFeatureContext extends MinkContext
     private KernelInterface $symfonyKernel;
 
     private FixtureHelper $fixtureHelper;
-
-    private Session $session;
 
     public function __construct(
         FixtureHelper $fixtureHelper,
