@@ -35,10 +35,8 @@ services:
 
     frontend:
         env_file:
-            - ./api/tests/Behat/test.env
             - .env
 
     admin:
         env_file:
-            - ./api/tests/Behat/test.env
             - .env
