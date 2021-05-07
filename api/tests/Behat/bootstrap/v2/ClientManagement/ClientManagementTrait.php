@@ -30,6 +30,16 @@ trait ClientManagementTrait
     }
 
     /**
+     * @When I search for an existing client by their full name
+     */
+    public function iSearchForExistingClientByFullName()
+    {
+        $user = is_null($this->interactingWithUserDetails) ? $this->profAdminDeputyNotStartedDetails : $this->interactingWithUserDetails;
+        $fullName = sprintf('%s %s', $user->getClientFirstName(), $user->getClientLastName());
+        $this->searchForClientBy($fullName, $user);
+    }
+
+    /**
      * @When I search for an existing client by their case number
      */
     public function iSearchForExistingClientByCaseNumber()

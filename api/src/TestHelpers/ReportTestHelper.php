@@ -1,5 +1,6 @@
-<?php declare(strict_types=1);
+<?php
 
+declare(strict_types=1);
 
 namespace App\TestHelpers;
 
@@ -17,17 +18,12 @@ use App\Entity\Report\VisitsCare;
 use App\Entity\ReportInterface;
 use DateInterval;
 use DateTime;
-use Doctrine\ORM\EntityManager;
 use Doctrine\Common\Collections\ArrayCollection;
+use Doctrine\ORM\EntityManager;
 
 class ReportTestHelper
 {
     /**
-     * @param EntityManager $em
-     * @param Client|null $client
-     * @param string|null $type
-     * @param DateTime|null $startDate
-     * @param DateTime|null $endDate
      * @return Report
      */
     public function generateReport(EntityManager $em, ?Client $client = null, ?string $type = null, ?DateTime $startDate = null, ?DateTime $endDate = null)
@@ -111,7 +107,6 @@ class ReportTestHelper
     }
 
     /**
-     * @param ReportInterface $report
      * @throws \Exception
      */
     private function completeDecisions(ReportInterface $report): void
@@ -120,17 +115,11 @@ class ReportTestHelper
         (new MentalCapacity($report))->setHasCapacityChanged('no')->setMentalAssessmentDate(new \DateTime());
     }
 
-    /**
-     * @param ReportInterface $report
-     */
     private function completeContacts(ReportInterface $report): void
     {
         $report->setReasonForNoContacts('No need for contacts');
     }
 
-    /**
-     * @param ReportInterface $report
-     */
     private function completeVisitsCare(ReportInterface $report): void
     {
         if ($report instanceof Ndr\Ndr) {
@@ -150,9 +139,6 @@ class ReportTestHelper
         $report->setVisitsCare($vc);
     }
 
-    /**
-     * @param ReportInterface $report
-     */
     private function completeActions(ReportInterface $report): void
     {
         if ($report instanceof Ndr\Ndr) {
@@ -169,17 +155,11 @@ class ReportTestHelper
         }
     }
 
-    /**
-     * @param ReportInterface $report
-     */
     private function completeOtherInfo(ReportInterface $report): void
     {
         $report->setActionMoreInfo('no');
     }
 
-    /**
-     * @param ReportInterface $report
-     */
     private function completeLifestyle(ReportInterface $report): void
     {
         $ls = (new Lifestyle())
@@ -189,25 +169,16 @@ class ReportTestHelper
         $report->setLifestyle($ls);
     }
 
-    /**
-     * @param ReportInterface $report
-     */
     private function completeDocuments(ReportInterface $report): void
     {
         $report->setWishToProvideDocumentation('no');
     }
 
-    /**
-     * @param ReportInterface $report
-     */
     private function completeGifts(ReportInterface $report): void
     {
         $report->setGiftsExist('no');
     }
 
-    /**
-     * @param ReportInterface $report
-     */
     private function completeBankAccounts(ReportInterface $report, EntityManager $em): void
     {
         if ($report instanceof Ndr\Ndr) {
@@ -221,59 +192,41 @@ class ReportTestHelper
         }
     }
 
-    /**
-     * @param ReportInterface $report
-     */
     private function completeMoneyIn(ReportInterface $report): void
     {
         $mt = (new MoneyTransaction($report))->setCategory('salary-or-wages')->setAmount(200);
         $report->addMoneyTransaction($mt);
     }
 
-    /**
-     * @param ReportInterface $report
-     */
     private function completeMoneyOut(ReportInterface $report): void
     {
         $mt = (new MoneyTransaction($report))->setCategory('care-fees')->setAmount(200);
         $report->addMoneyTransaction($mt);
     }
 
-    /**
-     * @param ReportInterface $report
-     */
     private function completeAssets(ReportInterface $report): void
     {
         $report->setNoAssetToAdd(true);
     }
 
-    /**
-     * @param ReportInterface $report
-     */
     private function completeDebts(ReportInterface $report): void
     {
         $report->setHasDebts('no');
     }
 
-    /**
-     * @param ReportInterface $report
-     */
     private function completeMoneyInShort(ReportInterface $report): void
     {
         $report->setMoneyTransactionsShortInExist('no');
     }
 
-    /**
-     * @param ReportInterface $report
-     */
     private function completeMoneyOutShort(ReportInterface $report): void
     {
         $report->setMoneyTransactionsShortOutExist('no');
+//        $report->setMoneyTransactionsShort(new ArrayCollection([
+//            (new MoneyTransactionShortOut($report))->setAmount(1001)
+//        ]));
     }
 
-    /**
-     * @param ReportInterface $report
-     */
     private function completeDeputyExpenses(ReportInterface $report): void
     {
         if ($report instanceof Ndr\Ndr || $report->isLayReport()) {
@@ -294,17 +247,11 @@ class ReportTestHelper
         }
     }
 
-    /**
-     * @param ReportInterface $report
-     */
     private function completeExpenses(ReportInterface $report): void
     {
         $this->completeDeputyExpenses($report);
     }
 
-    /**
-     * @param ReportInterface $report
-     */
     private function completeIncomeBenefits(ReportInterface $report)
     {
         if (!$report instanceof Ndr\Ndr) {
@@ -317,9 +264,6 @@ class ReportTestHelper
             ->setExpectCompensationDamages('no');
     }
 
-    /**
-     * @param ReportInterface $report
-     */
     private function completeMoneyTransfers(ReportInterface $report)
     {
         if (!$report instanceof Ndr\Ndr) {

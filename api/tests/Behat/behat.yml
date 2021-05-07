@@ -246,7 +246,7 @@ v2-tests-goutte:
             description: Covering the 'Visits and Care' section of the report
             paths: [ "%paths.base%/features-v2/reporting/sections/visits-care" ]
             contexts:
-                - DigidepsBehat\v2\Reporting\Sections\ReportingSectionsFeatureContext
+                - App\Tests\Behat\v2\Reporting\Sections\ReportingSectionsFeatureContext
 
         client-management:
             description: Covering the client management features of the app (frontend and admin)
@@ -254,12 +254,30 @@ v2-tests-goutte:
             contexts:
                 - App\Tests\Behat\v2\ClientManagement\ClientManagementFeatureContext
 
+        section-money-out:
+            description: Covering the 'Money Out' section of the report
+            paths: [ "%paths.base%/features-v2/reporting/sections/money-out" ]
+            contexts:
+                - App\Tests\Behat\v2\Reporting\Sections\ReportingSectionsFeatureContext
+
+        section-money-in-high-assets:
+            description: Covering the 'Money in High Assets' section of the report
+            paths: [ "%paths.base%/features-v2/reporting/sections/money-in-high-assets" ]
+            contexts:
+                - App\Tests\Behat\v2\Reporting\Sections\ReportingSectionsFeatureContext
+
     extensions:
         Behat\MinkExtension:
             files_path: '%paths.base%/fixtures/'
             default_session: goutte
+            sessions:
+                symfony:
+                    symfony: ~
         Behatch\Extension: ~
-        FriendsOfBehat\SymfonyExtension: ~
+        FriendsOfBehat\SymfonyExtension:
+            kernel:
+                path: '%paths.base%/../../src/Kernel.php'
+                class: App\Kernel
 
 v2-tests-browserstack:
     suites:

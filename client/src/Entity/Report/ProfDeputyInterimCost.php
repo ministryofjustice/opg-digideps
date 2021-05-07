@@ -21,7 +21,7 @@ class ProfDeputyInterimCost
      * @JMS\Type("string")
      * @JMS\Groups({"profDeputyInterimCosts"})
      *
-     * @Assert\Range(min=0.01, max=10000000, minMessage = "profDeputyInterimCost.amount.minMessage", maxMessage = "profDeputyInterimCost.amount.maxMessage", groups={"prof-deputy-interim-costs"})
+     * @Assert\Range(min=0.01, max=10000000, notInRangeMessage = "profDeputyInterimCost.amount.notInRangeMessage", groups={"prof-deputy-interim-costs"})
      */
     private $amount;
 

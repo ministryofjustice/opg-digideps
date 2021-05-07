@@ -15,7 +15,10 @@ trait PageUrlsTrait
     private string $contactsAddAnotherUrl = '/report/%s/contacts/add_another';
     private string $accountsAddAnAccountUrl = '%s/%s/bank-account/step1';
     private string $accountsSummaryUrl = '%s/%s/bank-account/summary';
-    private string $layReportsOverviewUrl = '/lay';
+    private string $layStartPageUrl = '/lay';
+    private string $reportOverviewUrl = '/%s/%s/overview';
+    private string $moneyOutShortSectionUrl = '%s/%s/money-out-short';
+    private string $moneyOutShortSectionSummaryUrl = '%s/%s/money-out-short/summary';
 
     // Admin
     private string $adminClientSearchUrl = '/admin/client/search';
@@ -37,6 +40,21 @@ trait PageUrlsTrait
     public function getAccountsSummaryUrl(int $reportId): string
     {
         return sprintf($this->accountsSummaryUrl, $this->reportUrlPrefix, $reportId);
+    }
+
+    public function getReportOverviewUrl(int $reportId): string
+    {
+        return sprintf($this->reportOverviewUrl, $this->reportUrlPrefix, $reportId);
+    }
+
+    public function getMoneyOutShortSectionUrl(int $reportId): string
+    {
+        return sprintf($this->moneyOutShortSectionUrl, $this->reportUrlPrefix, $reportId);
+    }
+
+    public function getMoneyOutShortSectionSummaryUrl(int $reportId): string
+    {
+        return sprintf($this->moneyOutShortSectionSummaryUrl, $this->reportUrlPrefix, $reportId);
     }
 
     public function getPostSubmissionUserResearchUrl(int $reportId): string
@@ -64,9 +82,9 @@ trait PageUrlsTrait
         return sprintf($this->contactsAddAnotherUrl, $reportId);
     }
 
-    public function getLayReportsOverviewUrl(): string
+    public function getLayStartPageUrl(): string
     {
-        return $this->layReportsOverviewUrl;
+        return $this->layStartPageUrl;
     }
 
     public function getAdminClientSearchUrl(): string

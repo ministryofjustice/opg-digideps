@@ -96,11 +96,7 @@ trait DocumentsSectionTrait
             );
         }
 
-        $descriptionLists = $this->getSession()->getPage()->findAll('css', 'dl');
-
-        if (0 === count($descriptionLists)) {
-            $this->throwContextualException('A dl element was not found on the page - make sure the current url is as expected');
-        }
+        $descriptionLists = $this->findAllCssElements('dl');
 
         $this->findFileNamesInDls($descriptionLists);
     }

@@ -6,6 +6,18 @@ namespace App\Tests\Behat\v2\Common;
 
 trait ElementSelectionTrait
 {
+    // Bring back list of items based on css selector with error handling
+    public function findAllCssElements($elementType)
+    {
+        $listOfElements = $this->getSession()->getPage()->findAll('css', $elementType);
+
+        if (!$listOfElements) {
+            $this->throwContextualException("A $elementType element was not found on the page");
+        }
+
+        return $listOfElements;
+    }
+
     // Click on a specified occurrence of an href based on a regex you specify
     public function iClickOnNthElementBasedOnRegex(string $regex, int $elementIndex)
     {
@@ -113,7 +125,7 @@ trait ElementSelectionTrait
         }
 
         foreach ($values as $value) {
-            if ($value->getAttribute('value') == $name) {
+            if (trim($value->getAttribute('value')) == trim($name)) {
                 $select = trim($value->getAttribute('name'));
                 $option = trim($value->getAttribute('value'));
             }

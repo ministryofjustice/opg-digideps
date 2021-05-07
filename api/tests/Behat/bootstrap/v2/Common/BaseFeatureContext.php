@@ -7,6 +7,7 @@ namespace App\Tests\Behat\v2\Common;
 use App\Tests\Behat\BehatException;
 use App\Tests\Behat\v2\Helpers\FixtureHelper;
 use Behat\Mink\Driver\GoutteDriver;
+use Behat\Mink\Session;
 use Behat\MinkExtension\Context\MinkContext;
 use Exception;
 use Faker\Factory;
@@ -29,8 +30,6 @@ class BaseFeatureContext extends MinkContext
     use PageUrlsTrait;
     use ReportTrait;
 
-    public const BEHAT_FRONT_RESET_FIXTURES = '/behat/frontend/reset-fixtures?testRunId=%s';
-    public const BEHAT_FRONT_USER_DETAILS = '/behat/frontend/user/%s/details';
     public const REPORT_SECTION_ENDPOINT = '/%s/%s/%s';
 
     public UserDetails $adminDetails;
@@ -40,6 +39,10 @@ class BaseFeatureContext extends MinkContext
     public UserDetails $layDeputyNotStartedDetails;
     public UserDetails $layDeputyCompletedDetails;
     public UserDetails $layDeputySubmittedDetails;
+
+    public UserDetails $layDeputyNotStartedPfaLowAssetsDetails;
+    public UserDetails $layDeputyCompletedPfaLowAssetsDetails;
+    public UserDetails $layDeputySubmittedPfaLowAssetsDetails;
 
     public UserDetails $profAdminDeputyNotStartedDetails;
     public UserDetails $profAdminDeputyCompletedDetails;
@@ -62,8 +65,12 @@ class BaseFeatureContext extends MinkContext
 
     private FixtureHelper $fixtureHelper;
 
-    public function __construct(KernelInterface $symfonyKernel, FixtureHelper $fixtureHelper)
-    {
+    private Session $session;
+
+    public function __construct(
+        FixtureHelper $fixtureHelper,
+        KernelInterface $symfonyKernel
+    ) {
         $this->symfonyKernel = $symfonyKernel;
 
         if ('prod' === $this->symfonyKernel->getEnvironment()) {
@@ -86,9 +93,12 @@ class BaseFeatureContext extends MinkContext
         $this->fixtureUsers[] = $this->adminDetails = new UserDetails($userDetails['admin-users']['admin']);
         $this->fixtureUsers[] = $this->elevatedAdminDetails = new UserDetails($userDetails['admin-users']['elevated-admin']);
         $this->fixtureUsers[] = $this->superAdminDetails = new UserDetails($userDetails['admin-users']['super-admin']);
-        $this->fixtureUsers[] = $this->layDeputyNotStartedDetails = new UserDetails($userDetails['lays']['not-started']);
-        $this->fixtureUsers[] = $this->layDeputyCompletedDetails = new UserDetails($userDetails['lays']['completed']);
-        $this->fixtureUsers[] = $this->layDeputySubmittedDetails = new UserDetails($userDetails['lays']['submitted']);
+        $this->fixtureUsers[] = $this->layDeputyNotStartedDetails = new UserDetails($userDetails['lays']['pfa-high-assets']['not-started']);
+        $this->fixtureUsers[] = $this->layDeputyCompletedDetails = new UserDetails($userDetails['lays']['pfa-high-assets']['completed']);
+        $this->fixtureUsers[] = $this->layDeputySubmittedDetails = new UserDetails($userDetails['lays']['pfa-high-assets']['submitted']);
+        $this->fixtureUsers[] = $this->layDeputyNotStartedPfaLowAssetsDetails = new UserDetails($userDetails['lays']['pfa-low-assets']['not-started']);
+        $this->fixtureUsers[] = $this->layDeputyCompletedPfaLowAssetsDetails = new UserDetails($userDetails['lays']['pfa-low-assets']['completed']);
+        $this->fixtureUsers[] = $this->layDeputySubmittedPfaLowAssetsDetails = new UserDetails($userDetails['lays']['pfa-low-assets']['submitted']);
         $this->fixtureUsers[] = $this->ndrLayDeputyNotStartedDetails = new UserDetails($userDetails['lays-ndr']['not-started']);
         $this->fixtureUsers[] = $this->ndrLayDeputyCompletedDetails = new UserDetails($userDetails['lays-ndr']['completed']);
         $this->fixtureUsers[] = $this->ndrLayDeputySubmittedDetails = new UserDetails($userDetails['lays-ndr']['submitted']);
@@ -105,9 +115,6 @@ class BaseFeatureContext extends MinkContext
         return getenv('ADMIN_HOST');
     }
 
-    /**
-     * @return string
-     */
     public function getSiteUrl()
     {
         return getenv('NONADMIN_HOST');

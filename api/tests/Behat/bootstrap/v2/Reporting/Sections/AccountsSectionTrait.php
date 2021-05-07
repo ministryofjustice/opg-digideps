@@ -272,6 +272,7 @@ trait AccountsSectionTrait
     public function iShouldSeeTheExpectedAccountsOnSummaryPage()
     {
         $isNdr = 'ndr' == $this->reportUrlPrefix ? true : false;
+
         $accountSummaryElems = [
           'tableBody' => $isNdr ? 'dl' : 'tbody',
           'row' => $isNdr ? 'div.govuk-summary-list__row' : 'tr',

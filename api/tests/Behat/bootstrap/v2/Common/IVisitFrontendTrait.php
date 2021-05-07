@@ -7,6 +7,14 @@ namespace App\Tests\Behat\v2\Common;
 trait IVisitFrontendTrait
 {
     /**
+     * @When I visit the report overview page
+     */
+    public function iViewReportOverviewPage()
+    {
+        $this->visitPath($this->getReportOverviewUrl($this->loggedInUserDetails->getCurrentReportId()));
+    }
+
+    /**
      * @When I visit the report submitted page
      */
     public function iVisitReportSubmissionPage()
@@ -19,6 +27,22 @@ trait IVisitFrontendTrait
 
         $submittedReportUrl = $this->getReportSubmittedUrl($this->loggedInUserDetails->getPreviousReportId());
         $this->visitFrontendPath($submittedReportUrl);
+    }
+
+    /**
+     * @When I visit the short money out report section
+     */
+    public function iVisitMoneyOutShortSection()
+    {
+        $this->visitPath($this->getMoneyOutShortSectionUrl($this->loggedInUserDetails->getCurrentReportId()));
+    }
+
+    /**
+     * @When I visit the short money out summary section
+     */
+    public function iVisitMoneyOutShortSummarySection()
+    {
+        $this->visitPath($this->getMoneyOutShortSectionSummaryUrl($this->loggedInUserDetails->getCurrentReportId()));
     }
 
     /**

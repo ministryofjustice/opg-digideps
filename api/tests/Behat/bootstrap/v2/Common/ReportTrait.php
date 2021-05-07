@@ -38,6 +38,7 @@ trait ReportTrait
 
     /**
      * @Given a Lay Deputy has not started a report
+     * @Given a Lay Deputy has not started a Pfa High Assets report
      */
     public function aLayDeputyHasNotStartedAReport()
     {
@@ -46,6 +47,30 @@ trait ReportTrait
         }
 
         $this->loginToFrontendAs($this->layDeputyNotStartedDetails->getUserEmail());
+    }
+
+    /**
+     * @Given a Lay Deputy has not started a Pfa Low Assets report
+     */
+    public function aLayDeputyHasNotStartedAPfaLowAssetsReport()
+    {
+        if (empty($this->layDeputyNotStartedPfaLowAssetsDetails)) {
+            throw new Exception('It looks like fixtures are not loaded - missing $layDeputyNotStartedPfaLowAssetsDetails');
+        }
+
+        $this->loginToFrontendAs($this->layDeputyNotStartedPfaLowAssetsDetails->getUserEmail());
+    }
+
+    /**
+     * @Given a Lay Deputy has completed a Pfa Low Assets report
+     */
+    public function aLayDeputyHasCompletedAPfaLowAssetsReport()
+    {
+        if (empty($this->layDeputyCompletedPfaLowAssetsDetails)) {
+            throw new Exception('It looks like fixtures are not loaded - missing $layDeputyCompletedPfaLowAssetsDetails');
+        }
+
+        $this->loginToFrontendAs($this->layDeputyCompletedPfaLowAssetsDetails->getUserEmail());
     }
 
     /**
