@@ -39,13 +39,24 @@ Feature: Money in High Assets
     When I edit the money in value
     Then the money in summary page should contain the edited value
 
+  Scenario: A user adds a single item of income form with valid values from the summary page
+    Given a Lay Deputy has not started a report
+    When I view and start the money in report section
+    And I have a dividend to report on
+    And I enter a valid amount
+    And I dont add another item
+    Then the money in summary page should contain the money in values I added
+    When I add another single item of income
+    And I dont add another item
+    Then the money in summary page should contain the added value
+
   Scenario: A user submits multiple items of income forms with valid values
     Given a Lay Deputy has not started a report
     When I view and start the money in report section
     And I have a dividend to report on
     And I enter a valid amount
     When I add another item
-    And I select state pension
+    And I have a state pension to report on
     And I enter a valid amount
     And I dont add another item
     Then the money in summary page should contain the money in values I added

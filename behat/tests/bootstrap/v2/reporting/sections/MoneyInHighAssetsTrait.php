@@ -14,6 +14,7 @@ trait MoneyInHighAssetsTrait
     // Values
     private string $amountValue = '£1.00';
     private string $updatedAmountValue = '£2.00';
+    private string $totalAmountText = 'Total money in: £2.00';
 
     /**
      * @When I view the money in report section
@@ -130,9 +131,9 @@ trait MoneyInHighAssetsTrait
     }
 
     /**
-     * @Given I select state pension
+     * @Given I have a state pension to report on
      */
-    public function iSelectStatePension()
+    public function iHaveAStatePensionToReportOn()
     {
         $this->selectOption('account[category]', 'state-pension');
         $this->pressButton('Save and continue');
@@ -221,6 +222,46 @@ trait MoneyInHighAssetsTrait
                     $this->updatedAmountValue,
                     $editedAmount,
                     $text
+                )
+            );
+        }
+    }
+
+    /**
+     * @When I add another single item of income
+     */
+    public function iAddAnotherSingleItemOfIncome()
+    {
+        // Add another item of income
+        $this->clickLink('Add item of income');
+
+        // Select the category as state-pension
+        $this->selectOption('account[category]', 'state-pension');
+        $this->pressButton('Save and continue');
+
+        // Enter amount
+        $this->fillField('account[amount]', '1');
+        $this->pressButton('Save and continue');
+    }
+
+    /**
+     * @Then the money in summary page should contain the added value
+     */
+    public function theMoneyInSummaryPageShouldContainTheAddedValue()
+    {
+        assert($this->iShouldSeeTheMoneyInSummary());
+
+        $totalAmount = $this->getSession()->getPage()->find('css', '.behat-region-total-amount');
+        if (!$totalAmount) {
+            $this->throwContextualException('The .behat-region-total-amount css selector was not found on the page - make sure the current url is as expected');
+        }
+
+        $totalAmountText = $totalAmount->getText();
+        if ($totalAmountText !== $this->totalAmountText) {
+            $this->throwContextualException(
+                sprintf('The total amount does != the expected total amount. Total Amount: %s. Expected Amount: %s',
+                    $totalAmountText,
+                    $this->totalAmountText
                 )
             );
         }
