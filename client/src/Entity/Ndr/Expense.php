@@ -36,7 +36,7 @@ class Expense
      *
      * @Assert\NotBlank(message="expenses.amount.notBlank", groups={"ndr-deputy-expense"})
      * @Assert\Type(type="numeric", message="expenses.amount.type", groups={"ndr-deputy-expense"})
-     * @Assert\Range(min=0.01, max=10000000, minMessage = "expenses.amount.minMessage", maxMessage = "expenses.amount.maxMessage", groups={"ndr-deputy-expense"})
+     * @Assert\Range(min=0.01, max=100000000000, notInRangeMessage="expenses.amount.notInRangeMessage", groups={"ndr-deputy-expense"})
      *
      * @var string
      */

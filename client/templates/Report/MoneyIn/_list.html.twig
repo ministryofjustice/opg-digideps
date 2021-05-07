@@ -103,6 +103,6 @@
 {% endfor %}
 
 {# Total money in #}
-<div class="govuk-heading-m text--right">
+<div class="govuk-heading-m text--right behat-region-total-amount">
     {{ 'summaryPage.moneyIn.totalValue' | trans({ '%value%': (report.moneyInTotal | money_format) }) }}
 </div>

@@ -265,8 +265,7 @@ moneyTransaction:
     amount:
       notBlank: Please enter an amount
       type: Enter a valid amount
-      minMessage: Please input a value of at least £{{ limit }}
-      maxMessage: The amount must be less than £100,000,000,000
+      notInRangeMessage: The amount must be between £{{ min }} and £100,000,000,000
     description:
       notBlank: Please give us some more information about this amount
 
@@ -290,8 +289,7 @@ expenses:
     amount:
       notBlank: Please enter an amount
       type: Enter a valid amount
-      minMessage: Please input a value of at least £{{ limit }}
-      maxMessage: The amount must be less than £100,000,000,000
+      notInRangeMessage: The amount must be between £{{ min }} and £100,000,000,000
 
 gifts:
     giftsExist.notBlank: Please select either 'Yes' or 'No'
@@ -301,8 +299,7 @@ gifts:
     amount:
       notBlank: Please enter an amount
       type: Enter a valid amount
-      minMessage: Please input a value of at least £{{ limit }}
-      maxMessage: The amount must be less than £100,000,000,000
+      notInRangeMessage: The amount must be between £{{ min }} and £100,000,000,000
 
 
 transfer:
@@ -314,8 +311,7 @@ transfer:
     amount:
           notBlank: Enter the amount transferred
           notNumeric: Please use numbers only to enter the amount
-          minMessage: The amount must be more than £{{ limit }}
-          maxMessage: The amount must be less than £100,000,000,000
+          notInRangeMessage: The amount must be between £{{ min }} and £100,000,000,000
     addAnother.notBlank: Please specify if you want to add another transfer
     exist.notBlank: Please choose an option
 
@@ -383,8 +379,7 @@ debt:
     noDebtsChoice.notBlank: Please select either 'Yes' or 'No'
     amount:
       notNumeric: Please use numbers only to enter the amount
-      minMessage: The amount must be positive
-      maxMessage: The amount must be less than £100,000,000,000
+      notInRangeMessage: The amount must be between £{{ min }} and £100,000,000,000
     moreDetails:
       notEmpty: Give us more information about this amount
 
@@ -500,8 +495,7 @@ profDeputyInterimCost:
   amount:
     notBlank: Please enter a value
     notNumeric: Amount not valid
-    minMessage: The amount must be more than £{{ limit }}
-    maxMessage: The amount must be less than £100,000,000,000
+    notInRangeMessage: The amount must be between £{{ min }} and £100,000,000,000
 
 profDeputyCostsScco:
   amountToScco:
@@ -525,8 +519,7 @@ profDeputyEstimateCost:
     breakdownGreaterThanTotal: The individual breakdown of costs must not exceed the total general management amount
   amount:
     notNumeric: Amount not valid
-    minMessage: The amount must be more than £{{ limit }}
-    maxMessage: The amount must be less than £10,000,000,000
+    notInRangeMessage: The amount must be between £{{ min }} and £100,000,000,000
   moreDetails:
       notBlank: Please give us some more information
 
@@ -599,8 +592,7 @@ ndr:
           notBlank: Please tell us how the debt is being managed or reduced
       amount:
         notNumeric: Use numbers only to enter the amount
-        minMessage: The amount must be more than £{{ limit }}
-        maxMessage: The amount must be less than £100,000,000
+        notInRangeMessage: The amount must be between £{{ min }} and £100,000,000,000
       moreDetails:
         notEmpty: Give us more information about this amount
       atLeastOne: Add at least one debt

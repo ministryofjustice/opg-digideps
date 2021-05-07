@@ -23,7 +23,7 @@ class ProfDeputyEstimateCost
      * @JMS\Type("string")
      * @JMS\Groups({"prof-deputy-estimate-costs"})
      * @Assert\Type(type="numeric", message="profDeputyEstimateCost.amount.notNumeric", groups={"prof-deputy-estimate-costs"})
-     * @Assert\Range(min=0, max=100000000, minMessage = "profDeputyEstimateCost.amount.minMessage", maxMessage = "profDeputyEstimateCost.amount.maxMessage", groups={"prof-deputy-estimate-costs"})
+     * @Assert\Range(min=0, max=100000000, notInRangeMessage = "profDeputyEstimateCost.amount.notInRangeMessage", groups={"prof-deputy-estimate-costs"})
      */
     private $amount;
 
