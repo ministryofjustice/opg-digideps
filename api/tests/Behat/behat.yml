@@ -1,0 +1,305 @@
+default:
+    gherkin:
+        cache: ~
+    autoload:
+        'App\Tests\Behat': "%paths.base%/bootstrap"
+    suites:
+        infra:
+            description: Minimal test suite to check infrastructure
+            paths: [ "%paths.base%/features" ]
+            filters:
+                tags: "@infra"
+            contexts:
+                - App\Tests\Behat\FeatureContext
+
+        admin:
+            description: End to end journey for Admin user
+            paths:    [ "%paths.base%/features/admin" ]
+            contexts:
+                - App\Tests\Behat\FeatureContext
+
+        lay:
+            description: End to end journey for Lay deputy user
+            paths:    [ "%paths.base%/features/deputy" ]
+            filters:
+                tags: "@deputy"
+            contexts:
+                - App\Tests\Behat\FeatureContext
+
+        ndr:
+            description: End to end journey for NDR-enabled Lay deputy user (fewer checks than deputy suite for common functionalities)
+            paths:    [ "%paths.base%/features/deputy" ]
+            filters:
+                tags: "@ndr"
+            contexts:
+                - App\Tests\Behat\FeatureContext
+
+        pa:
+            description: End to end journey for Pub Authority users
+            paths:    [ "%paths.base%/features/pa" ]
+            contexts:
+                - App\Tests\Behat\FeatureContext
+
+        prof:
+            description: End to end journey for Professional Deputy users
+            paths:    [ "%paths.base%/features/prof" ]
+            contexts:
+                - App\Tests\Behat\FeatureContext
+
+        security:
+            description: Tests to assert on the apps security features
+            paths: [ "%paths.base%/features/v2/security" ]
+            filters:
+                tags: "@security"
+            contexts:
+                - behatch:context:rest
+                - App\Tests\Behat\FeatureContext
+
+        report-management:
+            description: Coverage of report management features
+            paths: [ "%paths.base%/features/v2/reportManagement" ]
+            contexts:
+                - App\Tests\Behat\ReportManagement\ReportManagementFeatureContext
+
+        court-order-management:
+            description: Coverage of court order management features
+            paths: [ "%paths.base%/features/v2/courtOrderManagement" ]
+            contexts:
+                - App\Tests\Behat\CourtOrderManagement\CourtOrderManagementFeatureContext
+
+        acl:
+            description: Coverage of Access Control
+            paths: [ "%paths.base%/features/v2/acl" ]
+            contexts:
+                - App\Tests\Behat\ACL\ACLFeatureContext
+
+        authentication:
+            description: Coverage of authentication
+            paths: [ "%paths.base%/features/v2/authentication" ]
+            contexts:
+                - App\Tests\Behat\Authentication\AuthenticationFeatureContext
+
+        organisationManagement:
+            description: Coverage of the organisation management features
+            paths: [ "%paths.base%/features/v2/organisationManagement" ]
+            contexts:
+                - App\Tests\Behat\OrganisationManagement\OrganisationManagementFeatureContext
+
+        registration:
+            description: Coverage of the self and auto registration processes
+            paths: [ "%paths.base%/features/v2/registration" ]
+            contexts:
+                - App\Tests\Behat\Registration\RegistrationFeatureContext
+
+        user-management:
+            description: Coverage of user management features (deleteing, editing etc)
+            paths: [ "%paths.base%/features/v2/userManagement" ]
+            contexts:
+                - App\Tests\Behat\UserManagement\UserManagementFeatureContext
+
+        report-synchronisation:
+            description: Coverage of report and document synchronisation features
+            paths: [ "%paths.base%/features-v2/report-syncing" ]
+            contexts:
+                - App\Tests\Behat\DocumentSynchronisation\DocumentSynchronisationFeatureContext
+
+        acl-v2:
+            description: Coverage of Access Control
+            paths: [ "%paths.base%/features-v2/acl" ]
+            contexts:
+                - App\Tests\Behat\ACL\ACLFeatureContext
+
+        # features-v2
+        reporting-preview:
+            description: Coverage of report preview functionality
+            paths: [ "%paths.base%/features-v2/reporting/preview" ]
+            contexts:
+                - App\Tests\Behat\Reporting\ReportingFeatureContext
+
+        deputy-management:
+            description: Coverage of deputy management features - adding, deleting, editing
+            paths: [ "%paths.base%/features-v2/deputy-management" ]
+            contexts:
+                - App\Tests\Behat\DeputyManagement\DeputyManagementFeatureContext
+
+        contact-details:
+            description: Coverage of displaying contact details based on user role
+            paths: [ "%paths.base%/features-v2/contact-details" ]
+            contexts:
+                - App\Tests\Behat\ContactDetails\ContactDetailsFeatureContext
+
+    extensions:
+        Behat\MinkExtension:
+            goutte:
+                guzzle_parameters:
+                    verify: false
+            browser_stack:
+                capabilities:
+                    browserstack-debug: true
+                    browserstack-tunnel: true
+                    acceptSslCerts: true
+                    project: 'Digideps Cross Browser Test - Manual'
+            files_path: '%paths.base%/fixtures/'
+            default_session: goutte
+        Behatch\Extension: ~
+
+cross-browser-chrome:
+    suites:
+        chrome:
+            description: Coverage of user journeys using the Chrome browser
+            paths: [ "%paths.base%/features-v2/cross-browser" ]
+            filters:
+                tags: "@chrome"
+            contexts:
+                - App\Tests\Behat\CrossBrowser\CrossBrowserFeatureContext
+    extensions:
+        Behat\MinkExtension:
+            browser_stack:
+                capabilities:
+                    browser: 'chrome'
+                    browserVersion: 'latest'
+                    os: 'Windows'
+                    os_version: '10'
+                    build: 'Chrome'
+
+cross-browser-ie11:
+    suites:
+        ie11:
+            description: Coverage of user journeys using the Internet Explorer 11 browser
+            paths: [ "%paths.base%/features-v2/cross-browser" ]
+            filters:
+                tags: "@ie11"
+            contexts:
+                - App\Tests\Behat\CrossBrowser\CrossBrowserFeatureContext
+    extensions:
+        Behat\MinkExtension:
+            browser_stack:
+                capabilities:
+                    browser: 'ie'
+                    browserVersion: '11'
+                    os: 'Windows'
+                    os_version: '10'
+                    build: 'Internet Explorer'
+
+cross-browser-android-chrome:
+    suites:
+        android-chrome:
+            description: Coverage of user journeys using the Chrome browser on an android device
+            paths: [ "%paths.base%/features-v2/cross-browser" ]
+            filters:
+                tags: "@android-chrome"
+            contexts:
+                - App\Tests\Behat\CrossBrowser\CrossBrowserFeatureContext
+    extensions:
+        Behat\MinkExtension:
+            browser_stack:
+                capabilities:
+                    os_version: '9.0'
+                    device: 'Samsung Galaxy S10'
+                    build: 'Android'
+
+v2-tests-goutte:
+    suites:
+        feedback:
+            description: Covering features that allow users to give us feedback
+            paths: [ "%paths.base%/features-v2/feedback" ]
+            contexts:
+                - App\Tests\Behat\v2\Feedback\FeedbackFeatureContext
+
+        section-accounts:
+            description: Covering the 'Accounts' section of the report
+            paths: [ "%paths.base%/features-v2/reporting/sections/accounts" ]
+            contexts:
+                - App\Tests\Behat\v2\Reporting\Sections\ReportingSectionsFeatureContext
+
+        section-actions:
+            description: Covering the 'Actions' section of the report
+            paths: [ "%paths.base%/features-v2/reporting/sections/actions" ]
+            contexts:
+                - App\Tests\Behat\v2\Reporting\Sections\ReportingSectionsFeatureContext
+
+        section-additional-information:
+            description: Covering the 'Additional Information' section of the report
+            paths: [ "%paths.base%/features-v2/reporting/sections/additional-information" ]
+            contexts:
+                - App\Tests\Behat\v2\Reporting\Sections\ReportingSectionsFeatureContext
+
+        section-contacts:
+            description: Covering the 'Contacts' section of the report
+            paths: [ "%paths.base%/features-v2/reporting/sections/contacts" ]
+            contexts:
+                - App\Tests\Behat\v2\Reporting\Sections\ReportingSectionsFeatureContext
+
+        section-documents:
+            description: Covering the 'Documents' section of the report
+            paths: [ "%paths.base%/features-v2/reporting/sections/documents" ]
+            contexts:
+                - App\Tests\Behat\v2\Reporting\Sections\ReportingSectionsFeatureContext
+
+        section-gifts:
+            description: Covering the 'Gifts' section of the report
+            paths: [ "%paths.base%/features-v2/reporting/sections/gifts" ]
+            contexts:
+                - App\Tests\Behat\v2\Reporting\Sections\ReportingSectionsFeatureContext
+
+        section-visit-care:
+            description: Covering the 'Visits and Care' section of the report
+            paths: [ "%paths.base%/features-v2/reporting/sections/visits-care" ]
+            contexts:
+                - App\Tests\Behat\v2\Reporting\Sections\ReportingSectionsFeatureContext
+
+        client-management:
+            description: Covering the client management features of the app (frontend and admin)
+            paths: [ "%paths.base%/features-v2/client-management" ]
+            contexts:
+                - App\Tests\Behat\v2\ClientManagement\ClientManagementFeatureContext
+
+        section-money-out:
+            description: Covering the 'Money Out' section of the report
+            paths: [ "%paths.base%/features-v2/reporting/sections/money-out" ]
+            contexts:
+                - App\Tests\Behat\v2\Reporting\Sections\ReportingSectionsFeatureContext
+
+        section-money-in-high-assets:
+            description: Covering the 'Money in High Assets' section of the report
+            paths: [ "%paths.base%/features-v2/reporting/sections/money-in-high-assets" ]
+            contexts:
+                - App\Tests\Behat\v2\Reporting\Sections\ReportingSectionsFeatureContext
+
+    extensions:
+        Behat\MinkExtension:
+            files_path: '%paths.base%/fixtures/'
+            default_session: goutte
+            sessions:
+                symfony:
+                    symfony: ~
+        Behatch\Extension: ~
+        FriendsOfBehat\SymfonyExtension:
+            kernel:
+                path: '%paths.base%/../../src/Kernel.php'
+                class: App\Kernel
+
+v2-tests-browserstack:
+    suites:
+        contacts:
+            description: Covering the 'Contacts' section of the report
+            paths: [ "%paths.base%/features-v2/reporting/sections/contacts" ]
+            contexts:
+                - App\Tests\Behat\v2\Reporting\Sections\ReportingSectionsFeatureContext
+    extensions:
+        Behat\MinkExtension:
+            browser_stack:
+                capabilities:
+                    browserstack-debug: true
+                    browserstack-tunnel: true
+                    acceptSslCerts: true
+                    project: 'Digideps Cross Browser Test - Manual'
+                    browser: 'chrome'
+                    browserVersion: 'latest'
+                    os: 'Windows'
+                    os_version: '10'
+                    build: 'Chrome'
+                    name: 'v2-tests'
+            files_path: '%paths.base%/fixtures/'
+            default_session: browser_stack
+        Behatch\Extension: ~

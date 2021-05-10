@@ -1,14 +1,13 @@
-<?php declare(strict_types=1);
+<?php
+
+declare(strict_types=1);
 
 namespace App\Controller;
 
 use App\Entity\Ndr\Ndr;
 use App\Service\Client\Internal\UserApi;
 use App\Service\Client\RestClient;
-use App\TestHelpers\BehatFixtures;
 use Symfony\Component\HttpFoundation\JsonResponse;
-use Symfony\Component\HttpFoundation\Request;
-use Symfony\Component\HttpFoundation\Response;
 use Symfony\Component\Routing\Annotation\Route;
 
 class BehatController extends AbstractController
@@ -30,12 +29,11 @@ class BehatController extends AbstractController
     /**
      * @Route("/behat/frontend/user/{email}/details", name="behat_front_get_user_details_by_email", methods={"GET"})
      *
-     * @param string $email
      * @return JsonResponse
      */
     public function getUserDetails(string $email)
     {
-        if ($this->symfonyEnvironment === 'prod') {
+        if ('prod' === $this->symfonyEnvironment) {
             throw $this->createNotFoundException();
         }
 
@@ -60,7 +58,7 @@ class BehatController extends AbstractController
                 $user->getAddress2(),
                 $user->getAddress3(),
                 $user->getAddressPostcode(),
-                $user->getAddressCountry()
+                $user->getAddressCountry(),
             ]),
             'userPhone' => $user->getPhoneMain(),
             'courtOrderNumber' => $client->getCaseNumber(),
@@ -71,7 +69,7 @@ class BehatController extends AbstractController
             'currentReportId' => $currentReport->getId(),
             'currentReportType' => $currentReportType,
             'currentReportNdrOrReport' => $currentReport instanceof Ndr ? 'ndr' : 'report',
-            'currentReportDueDate' => $currentReport->getDueDate()->format('j F Y')
+            'currentReportDueDate' => $currentReport->getDueDate()->format('j F Y'),
         ];
 
         if ($previousReport) {
@@ -81,49 +79,11 @@ class BehatController extends AbstractController
                     'previousReportId' => $previousReport->getId(),
                     'previousReportType' => $previousReport->getType(),
                     'previousReportNdrOrReport' => $previousReport instanceof Ndr ? 'ndr' : 'report',
-                    'previousReportDueDate' => $previousReport->getDueDate()->format('j F Y')
+                    'previousReportDueDate' => $previousReport->getDueDate()->format('j F Y'),
                 ]
             );
         }
 
         return new JsonResponse($userDetails);
-    }
-
-    /**
-     * @Route("/behat/frontend/reset-fixtures", name="behat_front_reset-fixtures", methods={"GET"})
-     *
-     * @param string $email
-     * @return JsonResponse
-     */
-    public function resetFixtures(Request $request)
-    {
-        try {
-            if ($this->symfonyEnvironment === 'prod') {
-                throw $this->createNotFoundException();
-            }
-
-            $testRunId = $request->query->get('testRunId');
-
-            $response = $this->restClient->get(
-                sprintf('/v2/fixture/reset-fixtures?testRunId=%s', $testRunId),
-                'response'
-            );
-
-            $users = json_decode($response->getBody()->getContents(), true)['data'];
-
-            return new JsonResponse(
-                [
-                    'response' => 'Behat fixtures loaded', 'data' => $users
-                ]
-            );
-        } catch (\Throwable $e) {
-            return new JsonResponse(
-                [
-                    'response' => sprintf('Behat fixtures not loaded: %s', $e->getMessage()),
-                    'data' => null
-                ],
-                Response::HTTP_INTERNAL_SERVER_ERROR
-            );
-        }
     }
 }

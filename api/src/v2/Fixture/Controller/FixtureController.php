@@ -17,8 +17,6 @@ use App\Repository\NdrRepository;
 use App\Repository\OrganisationRepository;
 use App\Repository\ReportRepository;
 use App\Repository\UserRepository;
-use App\TestHelpers\BehatFixtures;
-use App\TestHelpers\ClientTestHelper;
 use App\v2\Controller\ControllerTrait;
 use App\v2\Fixture\ReportSection;
 use Doctrine\ORM\EntityManagerInterface;
@@ -50,7 +48,6 @@ class FixtureController extends AbstractController
     private $ndrRepository;
     private $casRecFactory;
     private string $symfonyEnvironment;
-    private BehatFixtures $behatFixtures;
 
     public function __construct(
         EntityManagerInterface $em,
@@ -65,8 +62,7 @@ class FixtureController extends AbstractController
         UserRepository $userRepository,
         NdrRepository $ndrRepository,
         CasRecFactory $casRecFactory,
-        string $symfonyEnvironment,
-        BehatFixtures $behatFixtures
+        string $symfonyEnvironment
     ) {
         $this->em = $em;
         $this->clientFactory = $clientFactory;
@@ -81,7 +77,6 @@ class FixtureController extends AbstractController
         $this->ndrRepository = $ndrRepository;
         $this->casRecFactory = $casRecFactory;
         $this->symfonyEnvironment = $symfonyEnvironment;
-        $this->behatFixtures = $behatFixtures;
     }
 
     /**
@@ -626,73 +621,6 @@ class FixtureController extends AbstractController
             return $this->buildSuccessResponse([json_encode($org, JSON_PRETTY_PRINT)], "Org '$orgName' activated", Response::HTTP_OK);
         } catch (\Throwable $e) {
             $this->buildErrorResponse(sprintf("Organisation '%s' could not be activated: %s", $orgName, $e->getMessage()));
-        }
-    }
-
-    /**
-     * @Route("/reset-fixtures", name="behat_reset_fixtures", methods={"GET"})
-     *
-     * @return Response
-     */
-    public function resetFixtures(Request $request)
-    {
-        try {
-            if ('prod' === $this->symfonyEnvironment) {
-                throw $this->createNotFoundException();
-            }
-
-            $testRunId = $request->query->get('testRunId');
-            $users = $this->behatFixtures->loadFixtures($testRunId);
-
-            return new JsonResponse(
-                [
-                    'response' => 'Behat fixtures loaded',
-                    'data' => $users,
-                ],
-                Response::HTTP_CREATED
-            );
-        } catch (\Throwable $e) {
-            return new JsonResponse(
-                [
-                    'response' => sprintf('Behat fixtures not loaded: %s', $e->getMessage()),
-                    'data' => null,
-                ],
-                Response::HTTP_INTERNAL_SERVER_ERROR
-            );
-        }
-    }
-
-    /**
-     * @Route("/duplicate-client/{clientId}", name="behat_duplicate_client", methods={"GET"})
-     *
-     * @return Response
-     */
-    public function duplicateClient(string $clientId)
-    {
-        try {
-            if ('prod' === $this->symfonyEnvironment) {
-                throw $this->createNotFoundException();
-            }
-
-            $client = clone $this->em->getRepository(Client::class)->find($clientId);
-            $client->setCaseNumber(ClientTestHelper::createValidCaseNumber());
-
-            $this->em->persist($client);
-            $this->em->flush();
-
-            return new JsonResponse(
-                [
-                    'response' => 'Client details duplicated (except for case number)',
-                ],
-                Response::HTTP_CREATED
-            );
-        } catch (\Throwable $e) {
-            return new JsonResponse(
-                [
-                    'response' => sprintf('Client not duplicated: %s', $e->getMessage()),
-                ],
-                Response::HTTP_INTERNAL_SERVER_ERROR
-            );
         }
     }
 }
