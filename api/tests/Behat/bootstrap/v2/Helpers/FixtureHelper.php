@@ -230,14 +230,26 @@ class FixtureHelper
 
     private function createAdminUsers()
     {
-        $this->admin = $this->userTestHelper
-            ->createUser(null, User::ROLE_ADMIN, sprintf('admin-%s@t.uk', $this->testRunId));
+        $this->admin = $this->createUser(User::ROLE_ADMIN);
+        $this->elevatedAdmin = $this->createUser(User::ROLE_ELEVATED_ADMIN);
+        $this->superAdmin = $this->createUser(User::ROLE_SUPER_ADMIN);
+    }
 
-        $this->elevatedAdmin = $this->userTestHelper
-            ->createUser(null, User::ROLE_ELEVATED_ADMIN, sprintf('elevated-admin-%s@t.uk', $this->testRunId));
+    public function createUser(string $roleName, ?string $email = null)
+    {
+        if (is_null($email)) {
+            $email = sprintf('%s-%s@t.uk', substr($roleName, 5), $this->testRunId);
+        }
 
-        $this->superAdmin = $this->userTestHelper
-            ->createUser(null, User::ROLE_SUPER_ADMIN, sprintf('super-admin-%s@t.uk', $this->testRunId));
+        return $this->userTestHelper->createUser(null, $roleName, $email);
+    }
+
+    public function createAndPersistUser(string $roleName, ?string $email = null)
+    {
+        $user = $this->createUser($roleName, $email);
+
+        $this->em->persist($user);
+        $this->em->flush();
     }
 
     private function createDeputies()

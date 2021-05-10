@@ -210,7 +210,7 @@ v2-tests-goutte:
             description: Coverage of deputy management features - adding, deleting, editing
             paths: [ "%paths.base%/features-v2/deputy-management" ]
             contexts:
-                - App\Tests\Behat\DeputyManagement\v2\DeputyManagementFeatureContext
+                - App\Tests\Behat\v2\DeputyManagement\DeputyManagementFeatureContext
 
         feedback:
             description: Covering features that allow users to give us feedback

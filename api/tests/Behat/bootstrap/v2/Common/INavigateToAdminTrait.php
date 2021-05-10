@@ -11,4 +11,12 @@ trait INavigateToAdminTrait
     {
         $this->clickLink('Clients');
     }
+
+    /**
+     * @When I navigate to the admin add user page
+     */
+    public function iNavigateToAdminAddUserPage()
+    {
+        $this->clickLink('Clients');
+    }
 }

@@ -4,6 +4,8 @@ declare(strict_types=1);
 
 namespace App\Tests\Behat\v2\Common;
 
+use App\Entity\User;
+use App\Tests\Behat\v2\Helpers\FixtureHelper;
 use Behat\Gherkin\Node\TableNode;
 
 trait FixturesTrait
@@ -70,6 +72,40 @@ trait FixturesTrait
     {
         $this->fixtureHelper->duplicateClient($this->layDeputyNotStartedDetails->getClientId());
         $this->interactingWithUserDetails = $this->layDeputyNotStartedDetails;
+    }
+
+    /**
+     * @Given another super admin user exists
+     */
+    public function anotherSuperAdminUserExists()
+    {
+        $user = $this->createAdditionalAdminUser(User::ROLE_SUPER_ADMIN);
+        $this->interactingWithUserDetails = new UserDetails(FixtureHelper::buildAdminUserDetails($user));
+    }
+
+    /**
+     * @Given another elevated admin user exists
+     */
+    public function anotherElevatedAdminUserExists()
+    {
+        $user = $this->createAdditionalAdminUser(User::ROLE_ELEVATED_ADMIN);
+        $this->interactingWithUserDetails = new UserDetails(FixtureHelper::buildAdminUserDetails($user));
+    }
+
+    /**
+     * @Given another admin user exists
+     */
+    public function anotherAdminUserExists()
+    {
+        $user = $this->createAdditionalAdminUser(User::ROLE_ADMIN);
+        $this->interactingWithUserDetails = new UserDetails(FixtureHelper::buildAdminUserDetails($user));
+    }
+
+    private function createAdditionalAdminUser(string $roleName)
+    {
+        $email = sprintf('%s@t.uk', rand(0, 999999999));
+
+        return $this->fixtureHelper->createAndPersistUser($roleName, $email);
     }
 
     public function assertInteractingWithUserIsSet()
