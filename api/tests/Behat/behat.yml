@@ -116,12 +116,6 @@ default:
             contexts:
                 - App\Tests\Behat\Reporting\ReportingFeatureContext
 
-        deputy-management:
-            description: Coverage of deputy management features - adding, deleting, editing
-            paths: [ "%paths.base%/features-v2/deputy-management" ]
-            contexts:
-                - App\Tests\Behat\DeputyManagement\DeputyManagementFeatureContext
-
         contact-details:
             description: Coverage of displaying contact details based on user role
             paths: [ "%paths.base%/features-v2/contact-details" ]
@@ -204,13 +198,19 @@ v2-tests-goutte:
             description: Covering the admin user management features of the app
             paths: [ "%paths.base%/features-v2/admin-management" ]
             contexts:
-                - App\Tests\Behat\v2\ClientManagement\AdminManagementFeatureContext
+                - App\Tests\Behat\v2\AdminManagement\AdminManagementFeatureContext
 
         client-management:
             description: Covering the client management features of the app (frontend and admin)
             paths: [ "%paths.base%/features-v2/client-management" ]
             contexts:
                 - App\Tests\Behat\v2\ClientManagement\ClientManagementFeatureContext
+
+        deputy-management:
+            description: Coverage of deputy management features - adding, deleting, editing
+            paths: [ "%paths.base%/features-v2/deputy-management" ]
+            contexts:
+                - App\Tests\Behat\DeputyManagement\v2\DeputyManagementFeatureContext
 
         feedback:
             description: Covering features that allow users to give us feedback

@@ -2,7 +2,7 @@
 
 declare(strict_types=1);
 
-namespace App\Tests\Behat\DeputyManagement;
+namespace App\Tests\Behat\v2\DeputyManagement;
 
 use App\Tests\Behat\Common\BaseFeatureContext;
 use App\Tests\Behat\Common\LinksTrait;
