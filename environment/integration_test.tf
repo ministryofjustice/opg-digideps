@@ -50,7 +50,8 @@ locals {
   integration_test_container = <<EOF
   {
     "name": "integration-test",
-    "image": "${local.images.test}",
+    "image": "${local.images.api}",
+    "entrypoint": [ "sh", "./tests/Behat/run-tests.sh" ],
     "logConfiguration": {
       "logDriver": "awslogs",
       "options": {

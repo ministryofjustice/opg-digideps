@@ -9,9 +9,6 @@ services:
   sync:
     image: ${AWS_REGISTRY}/digideps/sync:${VERSION}
     build: ./sync
-  test:
-    image: ${AWS_REGISTRY}/digideps/test:${VERSION}
-    build: ./behat
   wkhtmltopdf:
     image: ${AWS_REGISTRY}/digideps/wkhtmltopdf:${VERSION}
     build: ./wkhtmltopdf
