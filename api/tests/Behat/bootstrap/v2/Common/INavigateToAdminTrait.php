@@ -17,6 +17,6 @@ trait INavigateToAdminTrait
      */
     public function iNavigateToAdminAddUserPage()
     {
-        $this->clickLink('Clients');
+        $this->pressButton('Add new user');
     }
 }

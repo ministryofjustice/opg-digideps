@@ -68,4 +68,37 @@ MESSAGE;
             $this->getCurrentUrl()
         );
     }
+
+    public function assertValueAppearsInSelect(string $expectedValue, string $selectNameAttributeValue)
+    {
+        $values = $this->getValuesFromSelect($selectNameAttributeValue);
+
+        $roleSelectable = in_array($expectedValue, $values);
+
+        assert(
+            $roleSelectable,
+            $this->getAssertMessage(
+                $expectedValue,
+                implode(',', $values),
+                sprintf('Select element with name attribute value \'%s\'', $selectNameAttributeValue)
+            )
+        );
+    }
+
+    private function getValuesFromSelect(string $selectNameValue): array
+    {
+        $selectElement = $this->getSession()->getPage()->find(
+            'xpath',
+            "//select[@name='$selectNameValue']"
+        );
+
+        $options = $selectElement->findAll('xpath', '//option');
+
+        $values = [];
+        foreach ($options as $option) {
+            $values[] = $option->getValue();
+        }
+
+        return $values;
+    }
 }
