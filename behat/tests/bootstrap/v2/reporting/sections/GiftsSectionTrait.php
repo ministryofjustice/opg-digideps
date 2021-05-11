@@ -1,4 +1,6 @@
-<?php declare(strict_types=1);
+<?php
+
+declare(strict_types=1);
 
 namespace DigidepsBehat\v2\Reporting\Sections;
 
@@ -6,6 +8,7 @@ trait GiftsSectionTrait
 {
     private int $giftId = 0;
     private array $giftDetails = [];
+    private array $giftResponse = [];
 
     /**
      * @When I view the gifts report section
@@ -50,10 +53,10 @@ trait GiftsSectionTrait
     public function iFillGiftDescriptionAndAmount()
     {
         $formFields = [];
-        $this->giftId += 1;
+        ++$this->giftId;
 
-        $this->fillField('gifts_single[explanation]', 'random-gift-' . $this->giftId);
-        array_push($formFields, 'random-gift-' . $this->giftId);
+        $this->fillField('gifts_single[explanation]', 'random-gift-'.$this->giftId);
+        array_push($formFields, 'random-gift-'.$this->giftId);
 
         if ($this->elementExistsOnPage('select', 'id', 'gifts_single_bankAccountId')) {
             $choiceMade = $this->iSelectBasedOnChoiceNumber('select', 'id', 'gifts_single_bankAccountId', 1);
@@ -63,7 +66,7 @@ trait GiftsSectionTrait
         }
 
         $this->fillField('gifts_single[amount]', $this->giftId + 100);
-        array_push($formFields, '£' . ($this->giftId + 100) . '.00');
+        array_push($formFields, '£'.($this->giftId + 100).'.00');
 
         // Add gifts to giftDetails array
         array_push($this->giftDetails, $formFields);
@@ -75,10 +78,10 @@ trait GiftsSectionTrait
     public function iEditGiftDescriptionAndAmount()
     {
         $formFields = [];
-        $this->giftId += 1;
+        ++$this->giftId;
 
-        $this->fillField('gifts_single[explanation]', 'random-gift-' . $this->giftId);
-        array_push($formFields, 'random-gift-' . $this->giftId);
+        $this->fillField('gifts_single[explanation]', 'random-gift-'.$this->giftId);
+        array_push($formFields, 'random-gift-'.$this->giftId);
         if ($this->elementExistsOnPage('select', 'id', 'gifts_single_bankAccountId')) {
             $choiceMade = $this->iSelectBasedOnChoiceNumber('select', 'id', 'gifts_single_bankAccountId', 1);
             array_push($formFields, $choiceMade);
@@ -86,7 +89,7 @@ trait GiftsSectionTrait
             array_push($formFields, '-');
         }
         $this->fillField('gifts_single[amount]', $this->giftId + 100);
-        array_push($formFields, '£' . ($this->giftId + 100) . '.00');
+        array_push($formFields, '£'.($this->giftId + 100).'.00');
 
         // Update first gift in giftDetails array
         $this->giftDetails[0] = $formFields;
@@ -255,64 +258,13 @@ trait GiftsSectionTrait
      */
     public function iSeeExpectedGiftsSectionResponses()
     {
-        $descriptionList = $this->getSession()->getPage()->find('css', 'dl');
-
-        if (!$descriptionList) {
-            $this->throwContextualException('A dl element was not found on the page');
-        }
-
-        $descriptionListEntry = $descriptionList->findAll('css', 'dd');
-
-        if (!$descriptionListEntry) {
-            $this->throwContextualException('A dd element was not found on the page');
-        }
-
-        foreach ($descriptionListEntry as $entry) {
-            if ($entry->getAttribute('class') === 'govuk-summary-list__value') {
-                $actualResponse = trim(strtolower($entry->getHtml()));
-            }
-        }
-
-        $summaryGifts = [];
-
         if (count($this->giftDetails) > 0) {
-            $expectedResponse = 'yes';
-
-            $tableBody = $this->getSession()->getPage()->find('css', 'tbody');
-
-            if (!$tableBody) {
-                $this->throwContextualException('A tbody element was not found on the page');
-            }
-
-            $tableRows = $tableBody->findAll('css', 'tr');
-
-            if (!$tableRows) {
-                $this->throwContextualException('A tr element was not found on the page');
-            }
-
-            foreach ($tableRows as $tableRow) {
-                $giftFields = [];
-                $tableHeader = $tableRow->find('css', 'th');
-
-                array_push($giftFields, trim(strtolower($tableHeader->getHtml())));
-                $tableFields = $tableRow->findAll('css', 'td');
-
-                foreach ($tableFields as $tableField) {
-                    array_push($giftFields, trim(strtolower($tableField->getHtml())));
-                }
-                array_push($summaryGifts, $giftFields);
-            }
+            $this->giftResponse[0] = ['yes'];
+            $this->expectedResultsDisplayed(0, $this->giftResponse, 'Gift Answers to Questions');
+            $this->expectedResultsDisplayed(1, $this->giftDetails, 'Gift Details');
         } else {
-            $expectedResponse = 'no';
-        }
-
-        $this->assertStringEqualsString($expectedResponse, $actualResponse, 'Gift user answers');
-
-        foreach ($this->giftDetails as $key=>$gift) {
-            $summaryGift = $summaryGifts[$key];
-            foreach ($gift as $fkey=>$giftField) {
-                $this->assertStringEqualsString($giftField, $summaryGift[$fkey], 'Gift names');
-            }
+            $this->giftResponse[0] = ['no'];
+            $this->expectedResultsDisplayed(0, $this->giftResponse, 'Gift Answers to Questions');
         }
     }
 

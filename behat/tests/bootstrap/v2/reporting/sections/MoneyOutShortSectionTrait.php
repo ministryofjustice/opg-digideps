@@ -178,16 +178,50 @@ trait MoneyOutShortSectionTrait
     public function iShouldSeeTheExpectedMoneyOutSummary()
     {
         $this->iAmOnMoneyOutShortSummaryPage();
-        $descriptionListItems = $this->findAllCssElements('dl');
-        $category = $descriptionListItems[0];
-        $this->checkCategories($category);
 
-        $oneOffPayments = $descriptionListItems[1];
-        $this->checkOneOffPaymentsExist($oneOffPayments);
+        if (count($this->categoryList) > 0) {
+            $categoryWrapper[] = $this->categoryList;
+        } else {
+            $categoryWrapper[] = ['none'];
+        }
+
+        $this->expectedResultsDisplayed(0, $categoryWrapper, 'Categories Entered');
 
         if (count($this->oneOffPaymentsList) > 0) {
-            $oneOffPaymentTBodyRows = $this->findAllCssElements('tbody');
-            $this->checkOneOffPaymentRows($oneOffPaymentTBodyRows);
+            $oneOffExistsWrapper[] = ['yes'];
+        } else {
+            $oneOffExistsWrapper[] = ['no'];
+        }
+
+        // Check the one off payments exist response
+        $this->expectedResultsDisplayed(1, $oneOffExistsWrapper, 'Answers for "One off payments exist"');
+
+        // Only check if we have one off payments
+        if (count($this->oneOffPaymentsList) > 0) {
+            // get one of payments nested array into the correct format to compare
+            $expectedOneOffPayments = $this->oneOffPaymentsList;
+            foreach ($expectedOneOffPayments as $oneOffPaymentKey => $oneOffPayment) {
+                $expectedOneOffPayments[$oneOffPaymentKey]['amount'] = $this->moneyFormat($this->oneOffPaymentsList[$oneOffPaymentKey]['amount']);
+                $dateTimestamp = sprintf(
+                    '%s-%s-%s 00:00',
+                    $expectedOneOffPayments[$oneOffPaymentKey]['year'],
+                    $expectedOneOffPayments[$oneOffPaymentKey]['month'],
+                    $expectedOneOffPayments[$oneOffPaymentKey]['day']
+                );
+                $date = date('j F Y', strtotime($dateTimestamp));
+                //            $expectedOneOffPayments[$oneOffPaymentKey]['date'] = $date;
+                unset($expectedOneOffPayments[$oneOffPaymentKey]['day']);
+                unset($expectedOneOffPayments[$oneOffPaymentKey]['month']);
+                unset($expectedOneOffPayments[$oneOffPaymentKey]['year']);
+                $expectedOneOffPayments[$oneOffPaymentKey] = $this->insertArrayAtPosition($expectedOneOffPayments[$oneOffPaymentKey], ['date' => $date], 1);
+                $this->oneOffPaymentsTotal += floatval($this->oneOffPaymentsList[$oneOffPaymentKey]['amount']);
+            }
+            $expectedOneOffPayments = array_values($expectedOneOffPayments);
+
+            // Check the individual one off payments
+            $this->expectedResultsDisplayed(2, $expectedOneOffPayments, 'One of payments details');
+            // Check the total
+            $this->expectedResultsDisplayed(3, [[$this->moneyFormat($this->oneOffPaymentsTotal)]], 'One of payments total');
         }
     }
 
@@ -267,66 +301,13 @@ trait MoneyOutShortSectionTrait
         return number_format(floatval($value), 2, '.', ',');
     }
 
-    private function checkCategories($category)
+    private function insertArrayAtPosition($array, $insert, $position)
     {
-        $categoryRows = $category->findAll('css', 'div.govuk-summary-list__row');
-
-        if (!$categoryRows) {
-            $this->throwContextualException('A div element was not found on the page');
-        }
-
-        if (count($this->categoryList) < 1) {
-            $this->assertStringContainsString('None', $categoryRows[1]->getHtml(), 'Short Money Out Categories');
-        } else {
-            $categoryListItems = $categoryRows[1]->findAll('css', 'li');
-            foreach ($this->categoryList as $expectedCategoryKey => $expectedCategory) {
-                $this->assertStringContainsString($expectedCategory, $categoryListItems[$expectedCategoryKey]->getHtml(), 'Short Money Out Categories');
-            }
-        }
-    }
-
-    private function checkOneOffPaymentsExist($oneOffPayments)
-    {
-        $oneOffPaymentYesNo = $oneOffPayments->findAll('css', 'div.govuk-summary-list__row');
-
-        if (!$oneOffPaymentYesNo) {
-            $this->throwContextualException('A div element was not found on the page');
-        }
-
-        if (count($this->oneOffPaymentsList) < 1) {
-            $this->assertStringContainsString('No', $oneOffPaymentYesNo[1]->getHtml(), 'Short Money Out One Off Payments');
-        } else {
-            $this->assertStringContainsString('Yes', $oneOffPaymentYesNo[1]->getHtml(), 'Short Money Out One Off Payments');
-        }
-    }
-
-    private function checkOneOffPaymentRows($oneOffPaymentTBodyRows)
-    {
-        $oneOffPaymentRows = $oneOffPaymentTBodyRows[0]->findAll('css', 'tr');
-        $oneOffPaymentTotalRow = $oneOffPaymentTBodyRows[1];
-
-        foreach ($oneOffPaymentRows as $oneOffPaymentRowKey => $oneOffPaymentRow) {
-            $dateTimestamp = sprintf(
-                '%s-%s-%s 00:00',
-                $this->oneOffPaymentsList[$oneOffPaymentRowKey]['year'],
-                $this->oneOffPaymentsList[$oneOffPaymentRowKey]['month'],
-                $this->oneOffPaymentsList[$oneOffPaymentRowKey]['day']
-            );
-
-            $date = date('j F Y', strtotime($dateTimestamp));
-            $amountFormatted = $this->moneyFormat($this->oneOffPaymentsList[$oneOffPaymentRowKey]['amount']);
-
-            $this->assertStringContainsString(
-                $this->oneOffPaymentsList[$oneOffPaymentRowKey]['description'],
-                $oneOffPaymentRow->getHtml(),
-                'Short Money Out One Off Payments Items'
-            );
-            $this->assertStringContainsString($amountFormatted, $oneOffPaymentRow->getHtml(), 'Short Money Out One Off Payments Items');
-            $this->assertStringContainsString($date, $oneOffPaymentRow->getHtml(), 'Short Money Out One Off Payments Items');
-
-            $this->oneOffPaymentsTotal += floatval($this->oneOffPaymentsList[$oneOffPaymentRowKey]['amount']);
-        }
-
-        $this->assertStringContainsString($this->moneyFormat($this->oneOffPaymentsTotal), $oneOffPaymentTotalRow->getHtml(), 'Short Money Out One Off Payments Total');
+        /*
+        $array : The initial array i want to modify
+        $insert : the new array i want to add, eg array('key' => 'value') or array('value')
+        $position : the position where the new array will be inserted into. Please mind that arrays start at 0
+        */
+        return array_slice($array, 0, $position, true) + $insert + array_slice($array, $position, null, true);
     }
 }

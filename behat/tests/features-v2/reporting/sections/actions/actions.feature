@@ -25,7 +25,6 @@ Feature: Actions
     When I choose yes and save on concerns actions section
     Then I should be on the actions report summary page
     And I should see the expected action report section responses
-    And I should see the expected action comments
 
   Scenario: A user partially completes the section and then edits their responses
     Given a Lay Deputy has not started a report

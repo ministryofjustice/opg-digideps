@@ -8,7 +8,7 @@ trait ActionsSectionTrait
 {
     private int $answeredYes = 0;
     private int $answeredNo = 0;
-    private array $comments = [];
+    private array $commentsAndAnswers = [];
 
     /**
      * @Given I view the actions report section
@@ -81,14 +81,10 @@ trait ActionsSectionTrait
     {
         $this->selectOption($actionName, $answer);
 
-        if ('no' === $answer) {
-            ++$this->answeredNo;
-        } elseif ('yes' === $answer) {
-            ++$this->answeredYes;
-        }
+        $this->commentsAndAnswers[] = $answer;
         if (null != $comment) {
             $this->fillField($commentName, $comment);
-            array_push($this->comments, $comment);
+            $this->commentsAndAnswers[] = $comment;
         }
 
         $this->pressButton('Save and continue');
@@ -99,47 +95,12 @@ trait ActionsSectionTrait
      */
     public function iSeeExpectedActionSectionResponses()
     {
-        $table = $this->getSession()->getPage()->find('css', 'dl');
-
-        if (!$table) {
-            $this->throwContextualException('A dl element was not found on the page');
-        }
-
-        $tableEntry = $table->findAll('css', 'dd');
-
-        if (!$tableEntry) {
-            $this->throwContextualException('A dd element was not found on the page');
-        }
-
-        $countNegativeResponse = 0;
-        $countPositiveResponse = 0;
-
-        foreach ($tableEntry as $entry) {
-            if ('no' === trim(strtolower($entry->getHtml()))) {
-                ++$countNegativeResponse;
-            } elseif ('yes' === strtolower(trim($entry->getHtml()))) {
-                ++$countPositiveResponse;
-            }
-        }
-
-        $this->assertStringEqualsString($countNegativeResponse, $this->answeredNo, 'Actions "No" Counts');
-        $this->assertStringEqualsString($countPositiveResponse, $this->answeredYes, 'Actions "Yes" Counts');
-    }
-
-    /**
-     * @Then I should see the expected action comments
-     */
-    public function iShouldSeeTheExpectedActionComments()
-    {
-        $table = $this->getSession()->getPage()->find('css', 'dl');
-
-        if (!$table) {
-            $this->throwContextualException('A dl element was not found on the page');
-        }
-
-        foreach ($this->comments as $comment) {
-            $this->assertStringContainsString($comment, $table->getHtml(), 'Actions Comments');
-        }
+        $commentWrapper[] = $this->commentsAndAnswers;
+        $this->expectedResultsDisplayed(
+            0,
+            $commentWrapper,
+            'Comments and Answers'
+        );
     }
 
     /**

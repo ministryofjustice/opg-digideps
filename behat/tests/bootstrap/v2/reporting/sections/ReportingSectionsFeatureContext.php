@@ -15,7 +15,7 @@ class ReportingSectionsFeatureContext extends BaseFeatureContext
     use DocumentsSectionTrait;
     use GiftsSectionTrait;
     use MoneyOutShortSectionTrait;
-    use VisitsAndCareSectionTrait;
+    use VisitsCareSectionTrait;
 
     /**
      * @Then the previous section should be :sectionName

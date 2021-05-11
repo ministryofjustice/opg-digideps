@@ -337,4 +337,17 @@ trait IShouldBeOnTrait
     {
         return $this->iAmOnPage(sprintf('/%s\/.*\/money-out-short\/summary$/', $this->reportUrlPrefix));
     }
+
+    /**
+     * @Then I should be on the any other info summary page
+     */
+    public function iAmOnAnyOtherInfoSummaryPage()
+    {
+        return $this->iAmOnPage(sprintf('/%s\/.*\/any-other-info\/summary.*$/', $this->reportUrlPrefix));
+    }
+
+    public function iAmOnSpecifiedPage($specifiedUrlRegex)
+    {
+        return $this->iAmOnPage(sprintf('/%s\/.*\/%s$/', $this->reportUrlPrefix, $specifiedUrlRegex));
+    }
 }

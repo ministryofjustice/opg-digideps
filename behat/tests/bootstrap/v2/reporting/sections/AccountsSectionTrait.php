@@ -29,8 +29,8 @@ trait AccountsSectionTrait
             'accountNumber' => '1111',
             'sortCode' => '01-01-01',
             'joint' => 'no',
-            'openingBalance' => '101',
-            'closingBalance' => '201',
+            'openingBalance' => '801',
+            'closingBalance' => '901',
         ];
 
         $this->accountList[] = $account;
@@ -118,8 +118,8 @@ trait AccountsSectionTrait
                 'accountNumber' => '1111',
                 'sortCode' => '01-01-01',
                 'joint' => 'no',
-                'openingBalance' => '101',
-                'closingBalance' => '201',
+                'openingBalance' => '801',
+                'closingBalance' => '901',
             ];
 
         $this->iFillInAccountDetails(
@@ -152,8 +152,8 @@ trait AccountsSectionTrait
                 'accountNumber' => '2222',
                 'sortCode' => '02-02-02',
                 'joint' => 'no',
-                'openingBalance' => '102',
-                'closingBalance' => '202',
+                'openingBalance' => '802',
+                'closingBalance' => '902',
             ];
 
         $urlRegex = sprintf('/%s\/.*\/bank-account\/step1\/[0-9].*$/', $this->reportUrlPrefix);
@@ -184,8 +184,8 @@ trait AccountsSectionTrait
                 'accountNumber' => '1111',
                 'sortCode' => '01-01-01',
                 'joint' => 'no',
-                'openingBalance' => '101',
-                'closingBalance' => '201',
+                'openingBalance' => '801',
+                'closingBalance' => '901',
             ],
             [
                 'account' => 'savings',
@@ -194,8 +194,8 @@ trait AccountsSectionTrait
                 'accountNumber' => '2222',
                 'sortCode' => '02-02-02',
                 'joint' => 'yes',
-                'openingBalance' => '102',
-                'closingBalance' => '202',
+                'openingBalance' => '802',
+                'closingBalance' => '902',
             ],
             [
                 'account' => 'isa',
@@ -204,8 +204,8 @@ trait AccountsSectionTrait
                 'accountNumber' => '3333',
                 'sortCode' => '03-03-03',
                 'joint' => 'no',
-                'openingBalance' => '103',
-                'closingBalance' => '203',
+                'openingBalance' => '803',
+                'closingBalance' => '903',
             ],
             [
                 'account' => 'postoffice',
@@ -214,8 +214,8 @@ trait AccountsSectionTrait
                 'accountNumber' => '4444',
                 'sortCode' => '',
                 'joint' => 'yes',
-                'openingBalance' => '104',
-                'closingBalance' => '204',
+                'openingBalance' => '804',
+                'closingBalance' => '904',
             ],
             [
                 'account' => 'cfo',
@@ -224,8 +224,8 @@ trait AccountsSectionTrait
                 'accountNumber' => '5555',
                 'sortCode' => '',
                 'joint' => 'no',
-                'openingBalance' => '105',
-                'closingBalance' => '205',
+                'openingBalance' => '805',
+                'closingBalance' => '905',
             ],
             [
                 'account' => 'other',
@@ -234,8 +234,8 @@ trait AccountsSectionTrait
                 'accountNumber' => '6666',
                 'sortCode' => '06-06-06',
                 'joint' => 'yes',
-                'openingBalance' => '106',
-                'closingBalance' => '206',
+                'openingBalance' => '806',
+                'closingBalance' => '906',
             ],
             [
                 'account' => 'other_no_sortcode',
@@ -244,8 +244,8 @@ trait AccountsSectionTrait
                 'accountNumber' => '7777',
                 'sortCode' => '',
                 'joint' => 'no',
-                'openingBalance' => '107',
-                'closingBalance' => '207',
+                'openingBalance' => '807',
+                'closingBalance' => '907',
             ],
         ];
 
@@ -271,56 +271,22 @@ trait AccountsSectionTrait
      */
     public function iShouldSeeTheExpectedAccountsOnSummaryPage()
     {
-        $isNdr = 'ndr' == $this->reportUrlPrefix ? true : false;
+        $expectedList = $this->accountList;
 
-        $accountSummaryElems = [
-          'tableBody' => $isNdr ? 'dl' : 'tbody',
-          'row' => $isNdr ? 'div.govuk-summary-list__row' : 'tr',
-          'head' => $isNdr ? 'dt' : 'th',
-          'data' => $isNdr ? 'dd' : 'td',
-        ];
-
-        $this->iAmOnAccountsSummaryPage();
-
-        $tableBody = $this->getSession()->getPage()->find('css', $accountSummaryElems['tableBody']);
-
-        if (!$tableBody) {
-            $this->throwContextualException('A tbody element was not found on the page');
-        }
-
-        $tableRows = $tableBody->findAll('css', $accountSummaryElems['row']);
-
-        if (!$tableRows) {
-            $this->throwContextualException('A tr element was not found on the page');
-        }
-
-        if ($isNdr) {
-            unset($tableRows[0]);
-            $tableRows = array_values($tableRows);
-        }
-
-        foreach ($tableRows as $tRowKey => $tableRow) {
-            $tableHeader = $tableRow->find('css', $accountSummaryElems['head']);
-            $headHtml = trim(strtolower($tableHeader->getHtml()));
-            $this->assertStringContainsString($this->accountList[$tRowKey]['accountType'], $headHtml, 'Accounts Type');
-            $this->assertStringContainsString($this->accountList[$tRowKey]['name'], $headHtml, 'Accounts Name');
-            $this->assertStringContainsString($this->accountList[$tRowKey]['accountNumber'], $headHtml, 'Accounts Number');
-
-            $sortCode = str_replace('-', '', $this->accountList[$tRowKey]['sortCode']);
-            $this->assertStringContainsString($sortCode, $headHtml, 'Accounts Sort Code');
-            $this->assertStringContainsString($this->accountList[$tRowKey]['joint'], $headHtml, 'Accounts Joint');
-
-            $tableFields = $tableRow->findAll('css', $accountSummaryElems['data']);
-
-            foreach ($tableFields as $tFieldKey => $tableField) {
-                $balanceItem = trim(strtolower($tableField->getHtml()));
-                if (0 == $tFieldKey) {
-                    $this->assertStringContainsString($this->accountList[$tRowKey]['openingBalance'], $balanceItem, 'Accounts Opening Balance');
-                } elseif (1 == $tFieldKey and 'ndr' != $this->reportUrlPrefix) {
-                    $this->assertStringContainsString($this->accountList[$tRowKey]['closingBalance'], $balanceItem, 'Accounts Closing Balance');
-                }
+        foreach ($expectedList as $expectedItemKey => $expectedItem) {
+            $expectedList[$expectedItemKey]['sortCode'] = str_replace('-', '', $expectedList[$expectedItemKey]['sortCode']);
+            unset($expectedList[$expectedItemKey]['account']);
+            if ('ndr' == $this->reportUrlPrefix) {
+                unset($expectedList[$expectedItemKey]['closingBalance']);
             }
         }
+        $expectedList = array_values($expectedList);
+
+        $this->expectedResultsDisplayed(
+            0,
+            $expectedList,
+            'Accounts Details'
+        );
     }
 
     /**
