@@ -50,7 +50,7 @@ locals {
   smoke_test_container = <<EOF
   {
     "name": "smoke-test",
-    "image": "${local.images.test}",
+    "image": "${local.images.api}",
     "logConfiguration": {
       "logDriver": "awslogs",
       "options": {
@@ -59,7 +59,7 @@ locals {
         "awslogs-stream-prefix": "${aws_iam_role.test.name}"
       }
     },
-    "entryPoint": ["docker-smoke-test-entrypoint.sh"],
+    "entryPoint": [ "sh", "./behat/run-smoke-tests.sh", "-d" ],
     "secrets": [
       { "name": "PGPASSWORD", "valueFrom": "${data.aws_secretsmanager_secret.database_password.arn}" },
       { "name": "SECRET", "valueFrom": "${data.aws_secretsmanager_secret.front_frontend_secret.arn}" }

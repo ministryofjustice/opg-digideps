@@ -9,8 +9,6 @@ services:
 
   admin:
     volumes:
-      - ./client/config/services.yml:/var/www/config/services.yml
-      - ./client/config/services:/var/www/config/services
       - ./client/src:/var/www/src
       - ./client/tests:/var/www/tests
       - ./client/frontend.env:/var/www/frontend.env
@@ -33,12 +31,10 @@ services:
       - ./api/postgres.env:/var/www/postgres.env
       - ./api/phpstan.neon:/var/www/phpstan.neon
       - ./api/bin:/var/www/vendor/bin
+      - ./api/tests/Behat:/var/www/vendor/tests/Behat
 
   frontend:
     volumes:
-      - ./client/config/security.yml:/var/www/config/security.yml
-      - ./client/config/services.yml:/var/www/config/services.yml
-      - ./client/config/services:/var/www/config/services
       - ./client/src:/var/www/src
       - ./client/tests:/var/www/tests
       - ./client/frontend.env:/var/www/frontend.env
