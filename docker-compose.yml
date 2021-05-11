@@ -153,7 +153,7 @@ services:
         restart: always
 
     file-scanner-server:
-        image: mkodockx/docker-clamav:alpine
+        image: mkodockx/docker-clamav:1.0.1-alpine
         environment:
             CLAMD_CONF_SelfCheck: 0
             FRESHCLAM_CONF_NotifyClamd: 'no'
