@@ -22,6 +22,8 @@ trait AdminManagementTrait
      */
     public function iShouldBeAbleToAddElevatedAdmin()
     {
+        $this->selectOption('admin[roleType]', 'staff');
+        $this->assertValueAppearsInSelect(User::ROLE_ELEVATED_ADMIN, 'admin[roleNameStaff]');
     }
 
     /**
@@ -29,5 +31,7 @@ trait AdminManagementTrait
      */
     public function iShouldBeAbleToAddAdmin()
     {
+        $this->selectOption('admin[roleType]', 'staff');
+        $this->assertValueAppearsInSelect(User::ROLE_ADMIN, 'admin[roleNameStaff]');
     }
 }
