@@ -12,8 +12,8 @@ use App\Service\BruteForce\AttemptsIncrementalWaitingChecker;
 use App\Service\BruteForce\AttemptsInTimeChecker;
 use App\Service\Formatter\RestFormatter;
 use Doctrine\ORM\EntityManagerInterface;
-use Symfony\Component\Routing\Annotation\Route;
 use Symfony\Component\HttpFoundation\Request;
+use Symfony\Component\Routing\Annotation\Route;
 use Symfony\Component\Security\Core\Authentication\Token\Storage\TokenStorageInterface;
 
 /**
@@ -35,12 +35,7 @@ class AuthController extends RestController
      * expected keys in body: 'token' or ('email' and 'password').
      *
      * @Route("/login", methods={"POST"})
-     * @param Request $request
-     * @param UserProvider $userProvider
-     * @param AttemptsInTimeChecker $attemptsInTimechecker
-     * @param AttemptsIncrementalWaitingChecker $incrementalWaitingTimechecker
-     * @param RestInputOuputFormatter $restInputOutputFormatter
-     * @param EntityManagerInterface $em
+     *
      * @return User|bool|null
      */
     public function login(
@@ -58,7 +53,7 @@ class AuthController extends RestController
 
         //brute force checks
         $index = array_key_exists('token', $data) ? 'token' : 'email';
-        $key = $index . $data[$index];
+        $key = $index.$data[$index];
 
         $attemptsInTimechecker->registerAttempt($key); //e.g emailName@example.org
         $incrementalWaitingTimechecker->registerAttempt($key);
@@ -88,8 +83,9 @@ class AuthController extends RestController
                 throw new AppException\UserWrongCredentials();
             }
         }
+
         if (!$this->authService->isSecretValidForRole($user->getRoleName(), $request)) {
-            throw new AppException\UnauthorisedException($user->getRoleName() . ' user role not allowed from this client.');
+            throw new AppException\UnauthorisedException($user->getRoleName().' user role not allowed from this client.');
         }
 
         // reset counters at successful login
@@ -114,7 +110,6 @@ class AuthController extends RestController
 
     /**
      * Return the user by email and hashed password (or exception if not found).
-     *
      *
      * @Route("/logout", methods={"POST"})
      */

@@ -8,6 +8,7 @@ use App\Tests\Behat\BehatException;
 use App\Tests\Behat\v2\Helpers\FixtureHelper;
 use Behat\Mink\Driver\GoutteDriver;
 use Behat\MinkExtension\Context\MinkContext;
+use Doctrine\ORM\EntityManagerInterface;
 use Exception;
 use Faker\Factory;
 use Faker\Generator;
@@ -23,7 +24,8 @@ class BaseFeatureContext extends MinkContext
     use ErrorsTrait;
     use FixturesTrait;
     use INavigateToAdminTrait;
-    use IShouldBeOnTrait;
+    use IShouldBeOnAdminTrait;
+    use IShouldBeOnFrontendTrait;
     use IVisitAdminTrait;
     use IVisitFrontendTrait;
     use PageUrlsTrait;
@@ -63,10 +65,12 @@ class BaseFeatureContext extends MinkContext
     private KernelInterface $symfonyKernel;
 
     private FixtureHelper $fixtureHelper;
+    public EntityManagerInterface $em;
 
     public function __construct(
         FixtureHelper $fixtureHelper,
-        KernelInterface $symfonyKernel
+        KernelInterface $symfonyKernel,
+        EntityManagerInterface $em
     ) {
         $this->symfonyKernel = $symfonyKernel;
 
@@ -75,6 +79,7 @@ class BaseFeatureContext extends MinkContext
         }
 
         $this->fixtureHelper = $fixtureHelper;
+        $this->em = $em;
     }
 
     /**

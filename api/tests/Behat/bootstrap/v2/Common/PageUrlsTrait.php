@@ -23,6 +23,7 @@ trait PageUrlsTrait
     // Admin
     private string $adminClientSearchUrl = '/admin/client/search';
     private string $adminClientDetailsUrl = '/admin/client/%s/details';
+    private string $adminAddUserUrl = '/admin/user-add';
 
     // Fixtures
     private string $courtOrdersFixtureUrl = '/admin/fixtures/court-orders?%s';
@@ -100,5 +101,10 @@ trait PageUrlsTrait
     public function getCourtOrdersFixtureUrl(string $queryString): string
     {
         return sprintf($this->courtOrdersFixtureUrl, $queryString);
+    }
+
+    public function getAdminAddUserPage(): string
+    {
+        return $this->adminAddUserUrl;
     }
 }

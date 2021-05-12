@@ -51,4 +51,12 @@ trait IVisitAdminTrait
 
         $this->interactingWithUserDetails = $this->profAdminDeputySubmittedDetails;
     }
+
+    /**
+     * @When I visit the admin Add Users page
+     */
+    public function iVisitAdminAddUserPage()
+    {
+        $this->visitAdminPath($this->getAdminAddUserPage());
+    }
 }

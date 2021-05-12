@@ -69,16 +69,30 @@ MESSAGE;
         );
     }
 
-    public function assertValueAppearsInSelect(string $expectedValue, string $selectNameAttributeValue)
+    public function assertValueIsInSelect(string $expectedValue, string $selectNameAttributeValue)
     {
         $values = $this->getValuesFromSelect($selectNameAttributeValue);
-
         $roleSelectable = in_array($expectedValue, $values);
 
         assert(
             $roleSelectable,
             $this->getAssertMessage(
                 $expectedValue,
+                implode(',', $values),
+                sprintf('Select element with name attribute value \'%s\'', $selectNameAttributeValue)
+            )
+        );
+    }
+
+    public function assertValueIsNotInSelect(string $expectedMissingValue, string $selectNameAttributeValue)
+    {
+        $values = $this->getValuesFromSelect($selectNameAttributeValue);
+        $roleSelectable = !in_array($expectedMissingValue, $values);
+
+        assert(
+            $roleSelectable,
+            $this->getAssertMessage(
+                sprintf('\'%s\' not to appear', $expectedMissingValue),
                 implode(',', $values),
                 sprintf('Select element with name attribute value \'%s\'', $selectNameAttributeValue)
             )
@@ -100,5 +114,19 @@ MESSAGE;
         }
 
         return $values;
+    }
+
+    public function assertIsClass(
+        $expectedClassName,
+        $actual,
+        string $comparisonSubject
+    ) {
+        $actualClass = get_class($actual);
+        $isExpectedClass = (!is_null($actual) && $actualClass === $expectedClassName);
+
+        assert(
+            $isExpectedClass,
+            $this->getAssertMessage($expectedClassName, $actualClass, $comparisonSubject)
+        );
     }
 }

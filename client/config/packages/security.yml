@@ -32,6 +32,7 @@ services:
 security:
     role_hierarchy:
         ROLE_SUPER_ADMIN :    [ ROLE_ADMIN, ROLE_ELEVATED_ADMIN ]
+        ROLE_ELEVATED_ADMIN : [ ROLE_ADMIN ]
 
         ROLE_PA:              ROLE_ORG
         ROLE_PROF:            ROLE_ORG
