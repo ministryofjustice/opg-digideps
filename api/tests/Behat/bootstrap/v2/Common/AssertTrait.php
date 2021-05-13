@@ -143,7 +143,7 @@ MESSAGE;
     ) {
         assert(
             is_null($actual),
-            $this->getAssertMessage('null', $actual, $comparisonSubject)
+            $this->getAssertMessage('null', gettype($actual), $comparisonSubject)
         );
     }
 
@@ -154,10 +154,16 @@ MESSAGE;
             "//a[text() = '$linkText']"
         );
 
-        $this->assertStringContainsString(
-            $linkText,
-            $linkElement->getHtml(),
-            sprintf('Anchor element with text value \'%s\'', $linkText)
-        );
+        if (is_null($linkElement)) {
+            $expected = sprintf('Anchor element with text value \'%s\'', $linkText);
+
+            $message = $this->getAssertMessage(
+                $expected,
+                'Could not find specified anchor element',
+                $this->getSession()->getPage()->getHtml()
+            );
+
+            assert(false, $message);
+        }
     }
 }

@@ -252,6 +252,8 @@ class FixtureHelper
 
         $this->em->persist($user);
         $this->em->flush();
+
+        return $user;
     }
 
     private function createDeputies()

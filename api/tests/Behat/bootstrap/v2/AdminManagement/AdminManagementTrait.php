@@ -152,15 +152,36 @@ trait AdminManagementTrait
     }
 
     /**
-     * @When I attempt to delete an existing super/elevated admin user
-     * @When I attempt to delete an existing admin user
+     * @When I attempt to delete an existing :role user
      */
-    public function iAttemptToDeleteExistingSuperAdmin()
+    public function iAttemptToDeleteExistingAdminUser($role)
     {
+        if (is_null($this->interactingWithUserDetails)) {
+            switch (strtolower($role)) {
+                case 'super admin':
+                    $this->interactingWithUserDetails = $this->superAdminDetails;
+                    break;
+                case 'elevated admin':
+                    $this->interactingWithUserDetails = $this->elevatedAdminDetails;
+                    break;
+                case 'admin':
+                    $this->interactingWithUserDetails = $this->adminDetails;
+                    break;
+                default:
+                    $this->throwContextualException('Admin role not recognised');
+                    break;
+            }
+        }
+
         $this->iVisitAdminEditUserPageForInteractingWithUser();
-        $this->assertLinkWithTextIsOnPage('Delete user');
-        $this->clickLink('Delete user');
-        $this->clickLink("Yes, I'm sure");
+
+        try {
+            $this->assertLinkWithTextIsOnPage('Delete user');
+            $this->clickLink('Delete user');
+            $this->clickLink("Yes, I'm sure");
+        } catch (\Throwable $e) {
+            // Swallow error as we want to assert on deleting user in further step
+        }
     }
 
     /**
@@ -171,6 +192,7 @@ trait AdminManagementTrait
         $email = $this->interactingWithUserDetails->getUserEmail();
         $user = $this->em->getRepository(User::class)->findOneBy(['email' => $email]);
         $this->assertIsNull($user, sprintf('Queried DB for User with email %s', $email));
+        $this->interactingWithUserDetails = null;
     }
 
     /**
@@ -181,5 +203,6 @@ trait AdminManagementTrait
         $email = $this->interactingWithUserDetails->getUserEmail();
         $user = $this->em->getRepository(User::class)->findOneBy(['email' => $email]);
         $this->assertIsClass(User::class, $user, sprintf('Queried DB for User with email %s', $email));
+        $this->interactingWithUserDetails = null;
     }
 }
