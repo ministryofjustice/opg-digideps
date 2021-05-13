@@ -205,4 +205,38 @@ trait AdminManagementTrait
         $this->assertIsClass(User::class, $user, sprintf('Queried DB for User with email %s', $email));
         $this->interactingWithUserDetails = null;
     }
+
+    /**
+     * @When I update my firstname and lastname
+     */
+    public function updateMyFirstnameAndLastname()
+    {
+        $this->clickLink('Edit your details');
+        $this->completedFormFields['user_details[firstname]'] = $this->faker->firstname;
+        $this->completedFormFields['user_details[lastname]'] = $this->faker->lastname;
+
+        foreach ($this->completedFormFields as $fieldName => $fieldValue) {
+            $this->fillField($fieldName, $fieldValue);
+        }
+
+        $this->pressButton('Save');
+    }
+
+    /**
+     * @Then my details should be updated
+     */
+    public function myDetailsShouldBeUpdated()
+    {
+        $locator = "//th[text()='Full name']/parent::tr";
+        $fullnameTableRow = $this->getSession()->getPage()->find('xpath', $locator);
+        $foundName = $fullnameTableRow->find('xpath', '//td')->getHtml();
+
+        $expectedName = sprintf(
+            '%s %s',
+            $this->completedFormFields['user_details[firstname]'],
+            $this->completedFormFields['user_details[lastname]'],
+        );
+
+        $this->assertStringEqualsString($expectedName, $foundName, 'Full name profile td element');
+    }
 }

@@ -1,6 +1,5 @@
-@v2 @admin-management @acs
+@v2 @admin-management
 Feature: Admin - Admin users delete admin users
-
 
   Scenario: A super admin user deletes other admin users
     Given a super admin user accesses the admin app

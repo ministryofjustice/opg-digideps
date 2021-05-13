@@ -71,4 +71,12 @@ trait IVisitAdminTrait
             $this->getAdminEditUserPage($this->interactingWithUserDetails->getUserId())
         );
     }
+
+    /**
+     * @When I visit my user profile page
+     */
+    public function iVisitMyUserProfilePage()
+    {
+        $this->visitAdminPath($this->getAdminMyUserProfilePage());
+    }
 }

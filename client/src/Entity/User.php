@@ -43,21 +43,27 @@ class User implements UserInterface, DeputyInterface
     const TYPE_PA = 'PA';
     const TYPE_PROF = 'PROF';
 
+    public static array $adminRoles = [
+        self::ROLE_ADMIN,
+        self::ROLE_SUPER_ADMIN,
+        self::ROLE_ELEVATED_ADMIN,
+    ];
+
     /**
      * @JMS\Exclude
      */
     private static $allowedRoles = [
-        self::ROLE_ADMIN          => 'Admin',
-        self::ROLE_SUPER_ADMIN    => 'Super admin',
-        self::ROLE_LAY_DEPUTY     => 'Lay Deputy',
-        self::ROLE_AD             => 'Assisted Digital',
+        self::ROLE_ADMIN => 'Admin',
+        self::ROLE_SUPER_ADMIN => 'Super admin',
+        self::ROLE_LAY_DEPUTY => 'Lay Deputy',
+        self::ROLE_AD => 'Assisted Digital',
         // pa
-        self::ROLE_PA_NAMED       => 'Public Authority (named)',
-        self::ROLE_PA_ADMIN       => 'Public Authority admin',
+        self::ROLE_PA_NAMED => 'Public Authority (named)',
+        self::ROLE_PA_ADMIN => 'Public Authority admin',
         self::ROLE_PA_TEAM_MEMBER => 'Public Authority team member',
         // prof
-        self::ROLE_PROF_NAMED       => 'Professional Deputy (named)',
-        self::ROLE_PROF_ADMIN       => 'Professional Deputy admin',
+        self::ROLE_PROF_NAMED => 'Professional Deputy (named)',
+        self::ROLE_PROF_ADMIN => 'Professional Deputy admin',
         self::ROLE_PROF_TEAM_MEMBER => 'Professional Deputy team member',
     ];
 
@@ -291,7 +297,6 @@ class User implements UserInterface, DeputyInterface
      * @var string
      */
     private $jobTitle;
-
 
     /**
      * @var bool
@@ -599,6 +604,7 @@ class User implements UserInterface, DeputyInterface
 
     /**
      * @param bool $isCoDeputyClientConfirmed
+     *
      * @return User
      */
     public function setCoDeputyClientConfirmed($isCoDeputyClientConfirmed): self
@@ -637,7 +643,7 @@ class User implements UserInterface, DeputyInterface
      */
     public function getFullName()
     {
-        return $this->firstname . ' ' . $this->lastname;
+        return $this->firstname.' '.$this->lastname;
     }
 
     /**
@@ -792,11 +798,13 @@ class User implements UserInterface, DeputyInterface
 
     /**
      * @param mixed $deputyNo
+     *
      * @return $this
      */
     public function setDeputyNo($deputyNo)
     {
         $this->deputyNo = $deputyNo;
+
         return $this;
     }
 
@@ -805,7 +813,7 @@ class User implements UserInterface, DeputyInterface
      */
     public function hasAddressDetails()
     {
-        return  !empty($this->getAddress1())
+        return !empty($this->getAddress1())
               && !empty($this->getAddressCountry())
               && !empty($this->getAddressPostcode())
               && !empty($this->getPhoneMain())
@@ -826,7 +834,7 @@ class User implements UserInterface, DeputyInterface
 
     public function hasReports()
     {
-        if (count($this->clients) === 0) {
+        if (0 === count($this->clients)) {
             return false;
         }
 
@@ -880,7 +888,8 @@ class User implements UserInterface, DeputyInterface
     }
 
     /**
-     * @param  string $jobTitle
+     * @param string $jobTitle
+     *
      * @return User
      */
     public function setJobTitle($jobTitle)
@@ -899,7 +908,8 @@ class User implements UserInterface, DeputyInterface
     }
 
     /**
-     * @param  bool $agreeTermsUse
+     * @param bool $agreeTermsUse
+     *
      * @return User
      */
     public function setAgreeTermsUse($agreeTermsUse)
@@ -916,7 +926,7 @@ class User implements UserInterface, DeputyInterface
      */
     public function isPaTeamMember()
     {
-        return $this->roleName === self::ROLE_PA_TEAM_MEMBER;
+        return self::ROLE_PA_TEAM_MEMBER === $this->roleName;
     }
 
     /**
@@ -926,7 +936,7 @@ class User implements UserInterface, DeputyInterface
      */
     public function isProfTeamMember()
     {
-        return $this->roleName === self::ROLE_PROF_TEAM_MEMBER;
+        return self::ROLE_PROF_TEAM_MEMBER === $this->roleName;
     }
 
     /**
@@ -938,7 +948,7 @@ class User implements UserInterface, DeputyInterface
     {
         return in_array($this->roleName, [
             self::ROLE_PA_TEAM_MEMBER,
-            self::ROLE_PROF_TEAM_MEMBER
+            self::ROLE_PROF_TEAM_MEMBER,
         ]);
     }
 
@@ -953,7 +963,7 @@ class User implements UserInterface, DeputyInterface
             self::ROLE_PA,
             self::ROLE_PA_NAMED,
             self::ROLE_PA_ADMIN,
-            self::ROLE_PA_TEAM_MEMBER
+            self::ROLE_PA_TEAM_MEMBER,
         ]);
     }
 
@@ -968,7 +978,7 @@ class User implements UserInterface, DeputyInterface
             self::ROLE_PROF,
             self::ROLE_PROF_NAMED,
             self::ROLE_PROF_ADMIN,
-            self::ROLE_PROF_TEAM_MEMBER
+            self::ROLE_PROF_TEAM_MEMBER,
         ]);
     }
 
@@ -999,7 +1009,7 @@ class User implements UserInterface, DeputyInterface
      */
     public function isOrgAdministrator()
     {
-        return in_array($this->roleName, [self::ROLE_PA_ADMIN,self::ROLE_PROF_ADMIN]);
+        return in_array($this->roleName, [self::ROLE_PA_ADMIN, self::ROLE_PROF_ADMIN]);
     }
 
     /**
@@ -1047,7 +1057,7 @@ class User implements UserInterface, DeputyInterface
      */
     public function isLayDeputy()
     {
-        return $this->roleName === self::ROLE_LAY_DEPUTY;
+        return self::ROLE_LAY_DEPUTY === $this->roleName;
     }
 
     /**
@@ -1073,7 +1083,7 @@ class User implements UserInterface, DeputyInterface
             self::ROLE_PA_TEAM_MEMBER,
             self::ROLE_PROF_NAMED,
             self::ROLE_PROF_ADMIN,
-            self::ROLE_PROF_TEAM_MEMBER
+            self::ROLE_PROF_TEAM_MEMBER,
         ]);
     }
 
@@ -1102,7 +1112,7 @@ class User implements UserInterface, DeputyInterface
      */
     public function isPaTopRole()
     {
-        return $this->getRoleName() === self::ROLE_PA;
+        return self::ROLE_PA === $this->getRoleName();
     }
 
     /**
@@ -1110,43 +1120,31 @@ class User implements UserInterface, DeputyInterface
      */
     public function isProfTopRole()
     {
-        return $this->getRoleName() === self::ROLE_PROF;
+        return self::ROLE_PROF === $this->getRoleName();
     }
 
-    /**
-     * @return bool
-     */
     public function isAdmin(): bool
     {
-        return $this->getRoleName() === self::ROLE_ADMIN;
+        return self::ROLE_ADMIN === $this->getRoleName();
     }
 
-    /**
-     * @return bool
-     */
     public function isSuperAdmin(): bool
     {
-        return $this->getRoleName() === self::ROLE_SUPER_ADMIN;
+        return self::ROLE_SUPER_ADMIN === $this->getRoleName();
     }
 
-    /**
-     * @return bool
-     */
     public function isElevatedAdmin(): bool
     {
-        return $this->getRoleName() === self::ROLE_ELEVATED_ADMIN;
+        return self::ROLE_ELEVATED_ADMIN === $this->getRoleName();
     }
 
-    /**
-     * @return bool
-     */
     public function hasAdminRole(): bool
     {
         return $this->isAdmin() || $this->isSuperAdmin() || $this->isElevatedAdmin();
     }
 
     /**
-     * Get a generic role output to append to translation keys (ie transkey-PROF)
+     * Get a generic role output to append to translation keys (ie transkey-PROF).
      *
      * @return string
      */
@@ -1171,7 +1169,7 @@ class User implements UserInterface, DeputyInterface
             $this->address2,
             $this->address3,
             $this->addressPostcode,
-            $this->addressCountry
+            $this->addressCountry,
         ]);
     }
 
@@ -1185,6 +1183,7 @@ class User implements UserInterface, DeputyInterface
 
     /**
      * @param ArrayCollection $organisations
+     *
      * @return User
      */
     public function setOrganisations($organisations): self
@@ -1194,9 +1193,6 @@ class User implements UserInterface, DeputyInterface
         return $this;
     }
 
-    /**
-     * @return bool
-     */
     public function belongsToActiveOrganisation(): bool
     {
         foreach ($this->getOrganisations() as $organisation) {
@@ -1213,21 +1209,18 @@ class User implements UserInterface, DeputyInterface
         return count($this->getClients()) > 0 ? $this->getClients()[0] : null;
     }
 
-    /**
-     * @return int
-     */
     public function getNumberOfSubmittedReports(): int
     {
         return $this->numberOfSubmittedReports;
     }
 
     /**
-     * @param int $numberOfSubmittedReports
      * @return User
      */
     public function setNumberOfSubmittedReports(int $numberOfSubmittedReports)
     {
         $this->numberOfSubmittedReports = $numberOfSubmittedReports;
+
         return $this;
     }
 }

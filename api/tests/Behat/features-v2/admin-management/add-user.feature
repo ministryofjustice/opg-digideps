@@ -14,7 +14,6 @@ Feature: Admin - An admin user adds an admin user
     And I submit the form
     Then the new user should be added
 
-
   Scenario: An elevated admin user adds other admin users
     Given an elevated admin user accesses the admin app
     When I visit the admin Add Users page

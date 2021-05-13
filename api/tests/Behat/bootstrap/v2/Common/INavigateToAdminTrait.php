@@ -19,4 +19,14 @@ trait INavigateToAdminTrait
     {
         $this->pressButton('Add new user');
     }
+
+    /**
+     * @When I navigate to my admin user profile page
+     */
+    public function iNavigateToAdminUserProfilePage()
+    {
+        $this->clickLink('Your details');
+        $mainElement = $this->getSession()->getPage()->find('xpath', '//main');
+        $mainElement->clickLink('Your details');
+    }
 }
