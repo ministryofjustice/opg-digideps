@@ -6,83 +6,113 @@ namespace App\Tests\Behat\v2\Common;
 
 trait ExpectedResultsTrait
 {
-    private array $comparisonItems = [];
+    private array $summarySectionItemsFound = [];
 
-    public function expectedResultsDisplayed($sectionNumber, $expectedResultArrays, $context)
+    /*
+     * Adds the contents of each summary section (identified by dl or tbody) to an array
+     * then compares the results of the specified section contents to an array of expected contents.
+     * $summarySectionNumber - which occurrence of tbody or dl to search in in the order they appear on summary page.
+     * $expectedResults - must be an array of arrays of strings. The outer array specifies the 'row' and the
+     * inner array specifies the 'fields'. The 'rows' and 'fields' in this case are dependent on what type of
+     * elements you are searching through and are found automatically by the logic in the function.
+     * $context - a description of what the section is or does.
+     * $debug - set to true to output all the sections to screen for development purposes.
+     * It will debug on the feature you are checking.
+     */
+    public function expectedResultsDisplayed(int $summarySectionNumber, array $expectedResults, string $context, bool $debug = false)
     {
+        $this->checkExpectedResultsCorrectFormat($expectedResults);
+
         $xpath = '//dl|//tbody';
-        $topLevelTables = $this->getSession()->getPage()->findAll('xpath', $xpath);
+        $summarySectionElements = $this->getSession()->getPage()->findAll('xpath', $xpath);
 
         $sections = [];
-        foreach ($topLevelTables as $tableItem) {
-            $this->comparisonItems = [];
-            if ('dl' == $tableItem->getTagName()) {
-                $xpath = "//div[contains(@class, 'govuk-summary-list__row')]";
-                $listSummaryRowItems = $tableItem->findAll('xpath', $xpath);
-
-                if (count($listSummaryRowItems) > 0) {
-                    $xpath = '//li';
-                    $listItems = $tableItem->findAll('xpath', $xpath);
-
-                    if (count($listItems) > 0) {
-                        $this->getTextItems($listItems);
-                    } else {
-                        $xpath = '//dt|//dd';
-                        $descriptionDataItems = $tableItem->findAll('xpath', $xpath);
-                        $this->getTextItems($descriptionDataItems);
-                    }
-                } else {
-                    $xpath = '//li';
-                    $listItems = $tableItem->findAll('xpath', $xpath);
-
-                    if (count($listItems) > 0) {
-                        $this->getTextItems($listItems);
-                    } else {
-                        $xpath = '//dt|//dd';
-                        $descriptionDataItems = $tableItem->findAll('xpath', $xpath);
-                        $this->getTextItems($descriptionDataItems);
-                    }
-                }
-            } elseif ('tbody' == $tableItem->getTagName()) {
-                $xpath = '//tr';
-                $tableRowItems = $tableItem->findAll('xpath', $xpath);
-
-                if (count($tableRowItems) > 0) {
-                    foreach ($tableRowItems as $tableRowItem) {
-                        $xpath = '//td|//th';
-                        $tableDataItems = $tableRowItem->findAll('xpath', $xpath);
-                        $this->getTextItems($tableDataItems);
-                    }
-                } else {
-                    $xpath = '//td|//th';
-                    $tableDataItems = $tableItem->findAll('xpath', $xpath);
-                    $this->getTextItems($tableDataItems);
-                }
+        foreach ($summarySectionElements as $summarySectionElement) {
+            $this->summarySectionItemsFound = [];
+            if ('dl' == $summarySectionElement->getTagName()) {
+                $this->updateSummarySectionItemsFoundFromDescriptionList($summarySectionElement);
+            } elseif ('tbody' == $summarySectionElement->getTagName()) {
+                $this->updateSummarySectionItemsFoundFromTableBody($summarySectionElement);
             } else {
-                $this->throwContextualException('Unrecognised option');
+                $this->throwContextualException('Element must be either dl or tbody');
             }
-            $sections[] = $this->comparisonItems;
+            $sections[] = $this->summarySectionItemsFound;
         }
 
-//        ** Uncomment below for debugging purposes... useful when creating your tests**
-//        foreach ($sections as $sectionKey=>$section) {
-//            var_dump("Section key: ".strval($sectionKey));
-//            var_dump($section);
-//        }
-//        var_dump($expectedResultArrays);
+        if ($debug) {
+            $this->debugExpectedResultsDisplayed($sections, $summarySectionNumber, $expectedResults);
+        }
 
-        foreach ($sections[$sectionNumber] as $foundResultKey => $foundResults) {
-            $this->checkContainsExpectedResults($expectedResultArrays[$foundResultKey], $foundResults, $sectionNumber, $context);
+        foreach ($sections[$summarySectionNumber] as $foundResultKey => $foundResults) {
+            $this->checkContainsExpectedResults($expectedResults[$foundResultKey], $foundResults, $summarySectionNumber, $context);
         }
     }
 
-    private function getTextItems($items)
+    private function updateSummarySectionItemsFoundFromListRow($descriptionList)
+    {
+        $xpath = '//li';
+        $listItems = $descriptionList->findAll('xpath', $xpath);
+
+        if (count($listItems) > 0) {
+            $this->updateSummarySectionItemsFound($listItems);
+        } else {
+            $xpath = '//dt|//dd';
+            $descriptionDataItems = $descriptionList->findAll('xpath', $xpath);
+            $this->updateSummarySectionItemsFound($descriptionDataItems);
+        }
+    }
+
+    private function updateSummarySectionItemsFoundFromNoListRow($descriptionList)
+    {
+        $xpath = '//li';
+        $listItems = $descriptionList->findAll('xpath', $xpath);
+
+        if (count($listItems) > 0) {
+            $this->updateSummarySectionItemsFound($listItems);
+        } else {
+            $xpath = '//dt|//dd';
+            $descriptionDataItems = $descriptionList->findAll('xpath', $xpath);
+            $this->updateSummarySectionItemsFound($descriptionDataItems);
+        }
+    }
+
+    private function updateSummarySectionItemsFoundFromDescriptionList($descriptionList)
+    {
+        $xpath = "//div[contains(@class, 'govuk-summary-list__row')]";
+        $listSummaryRowItems = $descriptionList->findAll('xpath', $xpath);
+
+        if (count($listSummaryRowItems) > 0) {
+            $this->updateSummarySectionItemsFoundFromListRow($descriptionList);
+        } else {
+            $this->updateSummarySectionItemsFoundFromNoListRow($descriptionList);
+        }
+    }
+
+    private function updateSummarySectionItemsFoundFromTableBody($table)
+    {
+        $xpath = '//tr';
+        $tableRowItems = $table->findAll('xpath', $xpath);
+
+        if (count($tableRowItems) > 0) {
+            foreach ($tableRowItems as $tableRowItem) {
+                $xpath = '//td|//th';
+                $tableDataItems = $tableRowItem->findAll('xpath', $xpath);
+                $this->updateSummarySectionItemsFound($tableDataItems);
+            }
+        } else {
+            $xpath = '//td|//th';
+            $tableDataItems = $table->findAll('xpath', $xpath);
+            $this->updateSummarySectionItemsFound($tableDataItems);
+        }
+    }
+
+    private function updateSummarySectionItemsFound($items)
     {
         $tableValues = [];
         foreach ($items as $item) {
             $tableValues[] = trim(strval($item->getText()));
         }
-        $this->comparisonItems[] = $tableValues;
+        $this->summarySectionItemsFound[] = $tableValues;
     }
 
     private function checkContainsExpectedResults($expectedItems, $foundItems, $sectionNumber, $context)
@@ -154,5 +184,73 @@ MESSAGE;
             $context,
             $this->getCurrentUrl()
         );
+    }
+
+    private function debugExpectedResultsDisplayed($sections, $summarySectionNumber, $expectedResults)
+    {
+        $summarySectionsText = '';
+        foreach ($sections as $sectionKey => $section) {
+            $summarySectionsText = $summarySectionsText."\n\nSection Number: ".strval($sectionKey)."\n";
+            foreach ($section as $rowNumber => $row) {
+                $summarySectionsText = $summarySectionsText."\tRow Number: ".strval($rowNumber)."\n";
+                foreach ($row as $fieldNumber => $field) {
+                    $summarySectionsText = $summarySectionsText."\t\t".strtolower(strval($field))."\n";
+                }
+            }
+        }
+
+        $expectedText = "\n\nThe input to this function is specifically looking at section: ".strval($summarySectionNumber)."\n";
+        $expectedText = $expectedText."\n\nSection Number: ".strval($summarySectionNumber)."\n";
+        foreach ($expectedResults as $rowNumber => $row) {
+            $expectedText = $expectedText."\tRow Number: ".strval($rowNumber)."\n";
+            foreach ($row as $fieldNumber => $field) {
+                $expectedText = $expectedText."\t\t".strtolower(strval($field))."\n";
+            }
+        }
+
+        $message = <<<MESSAGE
+
+============================
+-- DEBUG REPORT --
+
+How to use: Firstly, check that the elements under 'found' correspond with what you see on
+the summary screen.
+
+If there are missing items or sections on the screen that don't appear in the found section
+then you may have found an edge case that won't work with this function.
+Either amend the function or use some bespoke code.
+
+Secondly, check that the items you are expecting appear in the equivalent 'Section Number'
+and 'Row Number' and that the 'fields' appear in the right order.
+
+It is completely fine to have more rows in the 'found' section. As long as they are in the
+correct section, row and field order.
+
+-- FOUND --
+%s
+
+-- EXPECTED --
+%s
+
+============================
+
+MESSAGE;
+
+        $this->throwContextualException(sprintf(
+            $message,
+            $summarySectionsText,
+            $expectedText
+        ));
+    }
+
+    private function checkExpectedResultsCorrectFormat($expectedResults)
+    {
+        foreach ($expectedResults as $expectedResult) {
+            if (!is_array($expectedResult)) {
+                $this->throwContextualException(
+                    "\nIncorrect data types - \nexpectedResults must be an array of array of strings to represent rows and fields on summary page"
+                );
+            }
+        }
     }
 }
