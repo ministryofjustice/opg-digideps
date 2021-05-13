@@ -12,6 +12,7 @@ class UserDetails
 {
     public const ADMIN_ROLES = ['ROLE_ADMIN', 'ROLE_SUPER_ADMIN', 'ROLE_ELEVATED_ADMIN'];
 
+    private ?int $userId = null;
     private ?string $userEmail = null;
     private ?string $userRole = null;
     private ?string $userFirstName = null;
@@ -61,6 +62,7 @@ class UserDetails
             throw new Exception(sprintf('Unexpected keys encountered when trying to initialize UserDetails: %s. Supported keys are: %s', $unexpectedKeysList, $supportedKeysList));
         }
 
+        $this->setUserId($userDetails['userId']);
         $this->setUserEmail($userDetails['userEmail']);
         $this->setUserRole($userDetails['userRole']);
         $this->setUserFirstName($userDetails['userFirstName']);
@@ -378,6 +380,18 @@ class UserDetails
     public function setNamedDeputyEmail(?string $namedDeputyEmail): UserDetails
     {
         $this->namedDeputyEmail = $namedDeputyEmail;
+
+        return $this;
+    }
+
+    public function getUserId(): ?int
+    {
+        return $this->userId;
+    }
+
+    public function setUserId(?int $userId): UserDetails
+    {
+        $this->userId = $userId;
 
         return $this;
     }

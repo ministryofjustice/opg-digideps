@@ -121,12 +121,43 @@ MESSAGE;
         $actual,
         string $comparisonSubject
     ) {
+        if (is_null($actual)) {
+            assert(
+                false,
+                $this->getAssertMessage($expectedClassName, 'null', $comparisonSubject)
+            );
+        }
+
         $actualClass = get_class($actual);
-        $isExpectedClass = (!is_null($actual) && $actualClass === $expectedClassName);
+        $isExpectedClass = $actualClass === $expectedClassName;
 
         assert(
             $isExpectedClass,
             $this->getAssertMessage($expectedClassName, $actualClass, $comparisonSubject)
+        );
+    }
+
+    public function assertIsNull(
+        $actual,
+        string $comparisonSubject
+    ) {
+        assert(
+            is_null($actual),
+            $this->getAssertMessage('null', $actual, $comparisonSubject)
+        );
+    }
+
+    public function assertLinkWithTextIsOnPage(string $linkText)
+    {
+        $linkElement = $this->getSession()->getPage()->find(
+            'xpath',
+            "//a[text() = '$linkText']"
+        );
+
+        $this->assertStringContainsString(
+            $linkText,
+            $linkElement->getHtml(),
+            sprintf('Anchor element with text value \'%s\'', $linkText)
         );
     }
 }

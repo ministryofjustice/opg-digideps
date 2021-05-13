@@ -1,4 +1,4 @@
-@v2 @admin-management @acs
+@v2 @admin-management
 Feature: Admin - An admin user adds an admin user
 
   Scenario: A super admin user adds other admin users

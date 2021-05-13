@@ -150,4 +150,36 @@ trait AdminManagementTrait
             sprintf('User retrieved from database with email \'%s\'', $addedUserEmail)
         );
     }
+
+    /**
+     * @When I attempt to delete an existing super/elevated admin user
+     * @When I attempt to delete an existing admin user
+     */
+    public function iAttemptToDeleteExistingSuperAdmin()
+    {
+        $this->iVisitAdminEditUserPageForInteractingWithUser();
+        $this->assertLinkWithTextIsOnPage('Delete user');
+        $this->clickLink('Delete user');
+        $this->clickLink("Yes, I'm sure");
+    }
+
+    /**
+     * @Then the user should be deleted
+     */
+    public function theUserShouldBeDeleted()
+    {
+        $email = $this->interactingWithUserDetails->getUserEmail();
+        $user = $this->em->getRepository(User::class)->findOneBy(['email' => $email]);
+        $this->assertIsNull($user, sprintf('Queried DB for User with email %s', $email));
+    }
+
+    /**
+     * @Then the user should not be deleted
+     */
+    public function theUserShouldNotBeDeleted()
+    {
+        $email = $this->interactingWithUserDetails->getUserEmail();
+        $user = $this->em->getRepository(User::class)->findOneBy(['email' => $email]);
+        $this->assertIsClass(User::class, $user, sprintf('Queried DB for User with email %s', $email));
+    }
 }

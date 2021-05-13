@@ -132,6 +132,7 @@ class FixtureHelper
         $previousReport = $user->getNdrEnabled() ? null : $client->getReports()[0];
 
         $userDetails = [
+            'userId' => $user->getId(),
             'userEmail' => $user->getEmail(),
             'userRole' => $user->getRoleName(),
             'userFirstName' => $user->getFirstname(),
@@ -192,6 +193,7 @@ class FixtureHelper
     public static function buildAdminUserDetails(User $user)
     {
         return [
+            'userId' => $user->getId(),
             'userEmail' => $user->getEmail(),
             'userRole' => $user->getRoleName(),
         ];
