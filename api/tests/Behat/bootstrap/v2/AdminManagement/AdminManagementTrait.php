@@ -239,4 +239,124 @@ trait AdminManagementTrait
 
         $this->assertStringEqualsString($expectedName, $foundName, 'Full name profile td element');
     }
+
+    /**
+     * @When I attempt to update an existing :role users details
+     */
+    public function iAttemptToUpdateExistingAdminUser($role)
+    {
+        if (is_null($this->interactingWithUserDetails)) {
+            switch (strtolower($role)) {
+                case 'super admin':
+                    $this->interactingWithUserDetails = $this->superAdminDetails;
+                    break;
+                case 'elevated admin':
+                    $this->interactingWithUserDetails = $this->elevatedAdminDetails;
+                    break;
+                case 'admin':
+                    $this->interactingWithUserDetails = $this->adminDetails;
+                    break;
+                default:
+                    $this->throwContextualException('Admin role not recognised');
+                    break;
+            }
+        }
+
+        $this->iVisitAdminEditUserPageForInteractingWithUser();
+
+        try {
+            $this->completedFormFields['admin[firstname]'] = $this->faker->firstname;
+            $this->completedFormFields['admin[lastname]'] = $this->faker->lastname;
+            $this->completedFormFields['admin[addressPostcode]'] = $this->faker->postcode;
+
+            if (User::ROLE_SUPER_ADMIN === $this->loggedInUserDetails->getUserRole()) {
+                $this->completedFormFields['admin[email]'] = $this->faker->safeEmail;
+            }
+
+            foreach ($this->completedFormFields as $fieldName => $fieldValue) {
+                $this->fillField($fieldName, $fieldValue);
+            }
+
+            $this->pressButton('Update user');
+        } catch (\Throwable $e) {
+            // Swallow error as we want to assert on deleting user in further step
+        }
+
+        $this->em->clear();
+    }
+
+    /**
+     * @Then the users details should be updated
+     */
+    public function theUserShouldBeUpdated()
+    {
+        $this->assertOnAlertMessage('Your changes were saved');
+        $id = $this->interactingWithUserDetails->getUserId();
+        $user = $this->em->getRepository(User::class)->findOneBy(['id' => $id]);
+
+        $comparisonSubjectMessage = sprintf('Queried DB for User with id %s against form values entered', $id);
+        $this->assertStringEqualsString(
+            $this->completedFormFields['admin[firstname]'],
+            $user->getFirstname(),
+            $comparisonSubjectMessage
+        );
+        $this->assertStringEqualsString(
+            $this->completedFormFields['admin[lastname]'],
+            $user->getLastname(),
+            $comparisonSubjectMessage
+        );
+        $this->assertStringEqualsString(
+            $this->completedFormFields['admin[addressPostcode]'],
+            $user->getAddressPostcode(),
+            $comparisonSubjectMessage
+        );
+
+        if (User::ROLE_SUPER_ADMIN === $this->loggedInUserDetails->getUserRole()) {
+            $this->assertStringEqualsString(
+                $this->completedFormFields['admin[email]'],
+                $user->getEmail(),
+                $comparisonSubjectMessage
+            );
+        }
+
+        $this->interactingWithUserDetails = null;
+        $this->completedFormFields = [];
+    }
+
+    /**
+     * @Then the users details should not be updated
+     */
+    public function theUserShouldNotBeUpdated()
+    {
+        $email = $this->interactingWithUserDetails->getUserEmail();
+        $user = $this->em->getRepository(User::class)->findOneBy(['email' => $email]);
+
+        $comparisonSubjectMessage = sprintf('Queried DB for User with email %s against interactingWithUserDetails', $email);
+        $this->assertStringEqualsString(
+            $this->interactingWithUserDetails->getUserFirstName(),
+            $user->getFirstname(),
+            $comparisonSubjectMessage
+        );
+        $this->assertStringEqualsString(
+            $this->interactingWithUserDetails->getUserLastName(),
+            $user->getLastname(),
+            $comparisonSubjectMessage
+        );
+        $this->assertStringEqualsString(
+            $this->interactingWithUserDetails->getUserFullAddressArray()['addressPostcode'],
+            $user->getAddressPostcode(),
+            $comparisonSubjectMessage
+        );
+
+        if (User::ROLE_SUPER_ADMIN === $this->loggedInUserDetails->getUserRole()) {
+            $this->assertStringEqualsString(
+                $this->interactingWithUserDetails->getUserEmail(),
+                $user->getEmail(),
+                $comparisonSubjectMessage
+            );
+        }
+
+        $this->interactingWithUserDetails = null;
+        $this->completedFormFields = [];
+    }
 }

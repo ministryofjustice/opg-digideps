@@ -1,4 +1,4 @@
-@v2 @admin-management @acs
+@v2 @admin-management
 Feature: Admin - An admin user edits their details
 
   Scenario: A super admin user updates their details

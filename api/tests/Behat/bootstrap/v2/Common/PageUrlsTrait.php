@@ -112,7 +112,7 @@ trait PageUrlsTrait
 
     public function getAdminEditUserPage(int $userId): string
     {
-        return sprintf($this->adminMyUserProfileUrl, $userId);
+        return sprintf($this->adminEditUserUrl, $userId);
     }
 
     public function getAdminMyUserProfilePage(): string

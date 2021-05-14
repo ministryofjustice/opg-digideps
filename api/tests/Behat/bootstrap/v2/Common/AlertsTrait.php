@@ -14,7 +14,7 @@ trait AlertsTrait
             $alertDiv = $this->getSession()->getPage()->find('css', 'div.govuk-error-summary');
             if (is_null($alertDiv)) {
                 $this->throwContextualException(
-                    'A div with the class opg-alert--info was not found. This suggests the page is not was expected or a condition to display an alert has not been met'
+                    'A div with the class opg-alert--info was not found. This suggests the page is not what was expected or a condition to display an alert has not been met'
                 );
             }
         }

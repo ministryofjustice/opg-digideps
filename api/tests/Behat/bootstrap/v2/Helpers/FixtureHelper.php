@@ -138,13 +138,7 @@ class FixtureHelper
             'userFirstName' => $user->getFirstname(),
             'userLastName' => $user->getLastname(),
             'userFullName' => $user->getFullName(),
-            'userFullAddressArray' => array_filter([
-                $user->getAddress1(),
-                $user->getAddress2(),
-                $user->getAddress3(),
-                $user->getAddressPostcode(),
-                $user->getAddressCountry(),
-            ]),
+            'userFullAddressArray' => self::buildAddressArray($user),
             'userPhone' => $user->getPhoneMain(),
             'courtOrderNumber' => $client->getCaseNumber(),
             'clientId' => $client->getId(),
@@ -196,7 +190,28 @@ class FixtureHelper
             'userId' => $user->getId(),
             'userEmail' => $user->getEmail(),
             'userRole' => $user->getRoleName(),
+            'userFirstName' => $user->getFirstname(),
+            'userLastName' => $user->getLastname(),
+            'userFullName' => $user->getFullName(),
+            'userFullAddressArray' => self::buildAddressArray($user),
         ];
+    }
+
+    private static function buildAddressArray(User $user): array
+    {
+        return array_filter(
+            [
+                'address1' => $user->getAddress1(),
+                'address2' => $user->getAddress2(),
+                'address3' => $user->getAddress3(),
+                'addressPostcode' => $user->getAddressPostcode(),
+                'addressCountry' => $user->getAddressCountry(),
+            ],
+            function ($value, $key) {
+                return !is_null($value);
+            },
+            ARRAY_FILTER_USE_BOTH
+        );
     }
 
     private function createUserFixtures()
