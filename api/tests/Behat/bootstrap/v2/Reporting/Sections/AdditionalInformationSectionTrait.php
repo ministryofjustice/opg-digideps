@@ -15,7 +15,7 @@ trait AdditionalInformationSectionTrait
     {
         if ($hasAdditionalInformation) {
             $this->formValuesEntered[0][] = $this->$hasAdditionalInformation = 'Yes';
-            $this->formValuesEntered[0][] = $this->additionalInformation = $this->faker->text(200);
+            $this->formValuesEntered[1][] = $this->additionalInformation = $this->faker->text(200);
         } else {
             $this->formValuesEntered[0][] = $this->$hasAdditionalInformation = 'No';
         }

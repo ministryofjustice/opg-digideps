@@ -80,12 +80,14 @@ trait ActionsSectionTrait
     public function fillInActionsForm($answer, $actionName, $comment = null, $commentName = null)
     {
         $this->selectOption($actionName, $answer);
+        $this->commentsAndAnswers[] = [$answer];
 
-        $this->commentsAndAnswers[] = $answer;
         if (null != $comment) {
             $this->fillField($commentName, $comment);
-            $this->commentsAndAnswers[] = $comment;
+            $this->commentsAndAnswers[] = [$comment];
         }
+
+//        $this->commentsAndAnswers[] = $commentAndAnswer;
 
         $this->pressButton('Save and continue');
     }
@@ -95,10 +97,10 @@ trait ActionsSectionTrait
      */
     public function iSeeExpectedActionSectionResponses()
     {
-        $commentWrapper[] = $this->commentsAndAnswers;
+        $this->commentsAndAnswers;
         $this->expectedResultsDisplayed(
             0,
-            $commentWrapper,
+            $this->commentsAndAnswers,
             'Comments and Answers'
         );
     }
