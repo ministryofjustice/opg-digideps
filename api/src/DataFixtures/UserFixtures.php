@@ -1,4 +1,5 @@
 <?php
+
 namespace App\DataFixtures;
 
 use App\Entity\CasRec;
@@ -6,9 +7,9 @@ use App\Entity\Client;
 use App\Entity\NamedDeputy;
 use App\Entity\Ndr\Ndr;
 use App\Entity\Report\Report;
-use App\Repository\OrganisationRepository;
 use App\Entity\User;
 use App\Factory\OrganisationFactory;
+use App\Repository\OrganisationRepository;
 use Doctrine\Persistence\ObjectManager;
 
 class UserFixtures extends AbstractDataFixture
@@ -182,9 +183,9 @@ class UserFixtures extends AbstractDataFixture
     {
         // Create user
         $user = (new User())
-            ->setFirstname(ucfirst($data['deputyType']) . ' Deputy ' . $data['id'])
+            ->setFirstname(ucfirst($data['deputyType']).' Deputy '.$data['id'])
             ->setLastname('User')
-            ->setEmail(isset($data['email']) ? $data['email'] : 'behat-' . strtolower($data['deputyType']) .  '-deputy-' . $data['id'] . '@publicguardian.gov.uk')
+            ->setEmail(isset($data['email']) ? $data['email'] : 'behat-'.strtolower($data['deputyType']).'-deputy-'.$data['id'].'@publicguardian.gov.uk')
             ->setActive(true)
             ->setRegistrationDate(new \DateTime())
             ->setNdrEnabled(isset($data['ndr']))
@@ -193,12 +194,12 @@ class UserFixtures extends AbstractDataFixture
             ->setAddress1('Victoria Road')
             ->setAddressPostcode('SW1')
             ->setAddressCountry('GB')
-            ->setRoleName($data['deputyType'] === 'LAY' ? 'ROLE_LAY_DEPUTY' : 'ROLE_' . $data['deputyType'] . '_NAMED');
+            ->setRoleName('LAY' === $data['deputyType'] ? 'ROLE_LAY_DEPUTY' : 'ROLE_'.$data['deputyType'].'_NAMED');
 
         $manager->persist($user);
 
         // Create CasRec record for lay deputies
-        if ($data['deputyType'] === 'LAY') {
+        if ('LAY' === $data['deputyType']) {
             $casRec = new CasRec([
                 'Case' => $data['id'],
                 'Surname' => $data['id'],
@@ -207,7 +208,7 @@ class UserFixtures extends AbstractDataFixture
                 'Dep Postcode' => 'SW1',
                 'Typeofrep' => $data['reportType'],
                 'Corref' => $data['reportVariation'],
-                'OrderDate' => new \DateTime('2010-03-30')
+                'OrderDate' => new \DateTime('2010-03-30'),
             ]);
             $manager->persist($casRec);
         }
@@ -217,18 +218,18 @@ class UserFixtures extends AbstractDataFixture
         $client
             ->setCaseNumber($data['id'])
             ->setFirstname('John')
-            ->setLastname($data['id'] . '-client')
+            ->setLastname($data['id'].'-client')
             ->setPhone('022222222222222')
             ->setAddress('Victoria road')
             ->setCourtDate(\DateTime::createFromFormat('d/m/Y', '01/11/2017'));
 
-        if ($data['deputyType'] === 'PROF' || $data['deputyType'] === 'PA') {
+        if ('PROF' === $data['deputyType'] || 'PA' === $data['deputyType']) {
             $namedDeputy = new NamedDeputy();
             $namedDeputy
                 ->setFirstname('Named')
-                ->setLastname('Deputy ' . $data['id'])
-                ->setDeputyNo('nd-' . $data['id'])
-                ->setEmail1('behat-nd-' . $data['id'] . '@publicguardian.gov.uk')
+                ->setLastname('Deputy '.$data['id'])
+                ->setDeputyNo('nd-'.$data['id'])
+                ->setEmail1('behat-nd-'.$data['id'].'@publicguardian.gov.uk')
                 ->setPhoneMain('07911111111111')
                 ->setAddress1('Victoria Road')
                 ->setAddressPostcode('SW1')
@@ -248,8 +249,8 @@ class UserFixtures extends AbstractDataFixture
         }
 
         // Create report for PROF/PA user 2 years ago
-        if ($data['deputyType'] === 'PROF' || $data['deputyType'] === 'PA') {
-            $realm = $data['deputyType'] === 'PROF' ? CasRec::REALM_PROF : CasRec::REALM_PA;
+        if ('PROF' === $data['deputyType'] || 'PA' === $data['deputyType']) {
+            $realm = 'PROF' === $data['deputyType'] ? CasRec::REALM_PROF : CasRec::REALM_PA;
             $type = CasRec::getTypeBasedOnTypeofRepAndCorref($data['reportType'], $data['reportVariation'], $realm);
             $startDate = $client->getExpectedReportStartDate();
             $startDate->setDate('2016', intval($startDate->format('m')), intval($startDate->format('d')));
@@ -273,8 +274,8 @@ class UserFixtures extends AbstractDataFixture
         // If codeputy was enabled, add a secondary account
         if (isset($data['codeputyEnabled'])) {
             $user2 = clone $user;
-            $user2->setLastname($user2->getLastname() . '-2');
-            $user2->setEmail('behat-' . strtolower($data['deputyType']) .  '-deputy-' . $data['id'] . '-2@publicguardian.gov.uk');
+            $user2->setLastname($user2->getLastname().'-2');
+            $user2->setEmail('behat-'.strtolower($data['deputyType']).'-deputy-'.$data['id'].'-2@publicguardian.gov.uk');
             $user2->addClient($client);
 
             $manager->persist($user2);

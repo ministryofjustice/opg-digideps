@@ -1,4 +1,5 @@
 <?php
+
 namespace App\DataFixtures;
 
 use Doctrine\Common\DataFixtures\FixtureInterface;
@@ -55,14 +56,14 @@ abstract class AbstractDataFixture implements ContainerAwareInterface, FixtureIn
      *
      * @see \Doctrine\Common\DataFixtures\FixtureInterface::load()
      *
-     * @param ObjectManager $manager The object manager.
+     * @param ObjectManager $manager the object manager
      */
     abstract protected function doLoad(ObjectManager $manager);
 
     /**
      * Returns the environments the fixtures may be loaded in.
      *
-     * @return array The name of the environments.
+     * @return array the name of the environments
      */
     abstract protected function getEnvironments();
 }

@@ -11,7 +11,7 @@ use Symfony\Component\Console\Output\OutputInterface;
 use Symfony\Component\DependencyInjection\ContainerAwareTrait;
 
 /**
- * Update report.sectionStatusesCached when empty
+ * Update report.sectionStatusesCached when empty.
  *
  * @codeCoverageIgnore
  */
@@ -45,7 +45,6 @@ class ReportStatusUpdaterCommand extends Command
 
         $output->write("Updating report status for next $limit reports: ");
         for ($i = 0, $continue = true; $i < $limit && $continue; $i += $chunkSize) {
-
             /* @var $reports Report[] */
             $reports = $em->getRepository(Report::class)
                 ->createQueryBuilder('r')
@@ -56,7 +55,8 @@ class ReportStatusUpdaterCommand extends Command
                 ->getQuery()
                 ->getResult();
             if (empty($reports)) {
-                $output->writeln("Done");
+                $output->writeln('Done');
+
                 return 0;
             }
             foreach ($reports as $report) {
@@ -65,7 +65,7 @@ class ReportStatusUpdaterCommand extends Command
                 $report->updateSectionsStatusCache($report->getAvailableSections());
             }
 
-            if ($i % 100===0) {
+            if (0 === $i % 100) {
                 $output->write(" $i ");
             }
             $em->flush();
@@ -73,6 +73,6 @@ class ReportStatusUpdaterCommand extends Command
         }
         $em->flush();
 
-        $output->writeln("Done");
+        $output->writeln('Done');
     }
 }

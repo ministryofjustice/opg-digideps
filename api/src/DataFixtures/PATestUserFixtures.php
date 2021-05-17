@@ -1,4 +1,5 @@
 <?php
+
 namespace App\DataFixtures;
 
 use App\Entity\CasRec;
@@ -6,10 +7,10 @@ use App\Entity\Client;
 use App\Entity\NamedDeputy;
 use App\Entity\Ndr\Ndr;
 use App\Entity\Report\Report;
-use App\Repository\NamedDeputyRepository;
-use App\Repository\OrganisationRepository;
 use App\Entity\User;
 use App\Factory\OrganisationFactory;
+use App\Repository\NamedDeputyRepository;
+use App\Repository\OrganisationRepository;
 use App\Service\OrgService;
 use App\Service\ReportUtils;
 use Doctrine\Persistence\ObjectManager;
@@ -73,7 +74,7 @@ class PATestUserFixtures extends AbstractDataFixture
                     'email' => 'cly1@hent.com',
                     'dob' => '01/01/1967',
                     'reportType' => 'OPG102',
-                    'reportVariation' => 'A2'
+                    'reportVariation' => 'A2',
                 ],
                 [
                     'firstname' => 'CLY7',
@@ -88,10 +89,10 @@ class PATestUserFixtures extends AbstractDataFixture
                     'email' => 'cly7@hent.com',
                     'dob' => '07/07/1967',
                     'reportType' => 'OPG102',
-                    'reportVariation' => 'A2'
+                    'reportVariation' => 'A2',
                 ],
             ],
-            'additionalClients' => 16
+            'additionalClients' => 16,
         ],
         [
             'id' => '',
@@ -123,10 +124,9 @@ class PATestUserFixtures extends AbstractDataFixture
                     'email' => 'cly201@hent.com',
                     'dob' => '02/02/1967',
                     'reportType' => 'OPG103',
-                    'reportVariation' => 'A3'
+                    'reportVariation' => 'A3',
                 ],
-
-            ]
+            ],
         ],
         [
             'id' => '',
@@ -158,12 +158,10 @@ class PATestUserFixtures extends AbstractDataFixture
                     'email' => 'cly301@hent.com',
                     'dob' => '02/02/1967',
                     'reportType' => 'OPG102',
-                    'reportVariation' => 'A2'
+                    'reportVariation' => 'A2',
                 ],
-
-            ]
-        ]
-
+            ],
+        ],
     ];
 
     public function __construct(OrgService $orgService, OrganisationRepository $orgRepository, OrganisationFactory $orgFactory, ReportUtils $reportUtils)
@@ -192,7 +190,7 @@ class PATestUserFixtures extends AbstractDataFixture
         $user = (new User())
             ->setFirstname(isset($data['Dep Forename']) ? $data['Dep Forename'] : 'test')
             ->setLastname(isset($data['Dep Surname']) ? $data['Dep Surname'] : $data['id'])
-            ->setEmail(isset($data['Email']) ? $data['Email'] : $data['id'] . '@example.org')
+            ->setEmail(isset($data['Email']) ? $data['Email'] : $data['id'].'@example.org')
             ->setActive(isset($data['active']) ? $data['active'] : true)
             ->setRegistrationDate(new \DateTime())
             ->setNdrEnabled(false)
@@ -216,14 +214,13 @@ class PATestUserFixtures extends AbstractDataFixture
 
         if (isset($data['clients'])) {
             foreach ($data['clients'] as $clientData) {
-
                 // Create client
                 $client = $this->createClient($clientData, $data, $user, $manager);
                 $user->addClient($client);
             }
             if (isset($data['additionalClients'])) {
                 // add dummy clients for pagination tests
-                for ($i=1; $i<=$data['additionalClients']; $i++) {
+                for ($i = 1; $i <= $data['additionalClients']; ++$i) {
                     $client = $this->createClient($this->generateTestClientData($i), $data, $user, $manager);
                     $user->addClient($client);
                     $organisation->addClient($client);
@@ -238,17 +235,17 @@ class PATestUserFixtures extends AbstractDataFixture
         return [
             'lastReportDate' => '01/01/2018',
             'dob' => '04/05/1977',
-            'caseNumber' => '90000' . $iterator,
-            'firstname' => 'TEST CLY' . $iterator,
-            'lastname' => 'HENT' . $iterator,
-            'address1' => 'Address1_' . $iterator,
-            'address2' => 'Address2_' . $iterator,
-            'address3' => 'Address3_' . $iterator,
-            'addressPostcode' => 'PC_' . $iterator,
+            'caseNumber' => '90000'.$iterator,
+            'firstname' => 'TEST CLY'.$iterator,
+            'lastname' => 'HENT'.$iterator,
+            'address1' => 'Address1_'.$iterator,
+            'address2' => 'Address2_'.$iterator,
+            'address3' => 'Address3_'.$iterator,
+            'addressPostcode' => 'PC_'.$iterator,
             'phone' => '01234123123',
-            'email' => 'testCly' . $iterator . '@hent.com',
+            'email' => 'testCly'.$iterator.'@hent.com',
             'reportType' => 'OPG102',
-            'reportVariation' => 'A2'
+            'reportVariation' => 'A2',
         ];
     }
 

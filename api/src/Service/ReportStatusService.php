@@ -9,7 +9,6 @@ use JMS\Serializer\Annotation as JMS;
  * Statuses are cached into report.sectionStatusesCached, and used when present
  * The cached status are set from the endpoints on CRUD operations on sections
  * Look at `ReportStatusUpdaterCommand` and its cron usage.
- *
  */
 class ReportStatusService
 {
@@ -39,6 +38,7 @@ class ReportStatusService
 
     /**
      * @param $useStatusCache
+     *
      * @return $this
      */
     public function setUseStatusCache($useStatusCache)
@@ -64,9 +64,11 @@ class ReportStatusService
         }
 
         $decisionsValid = $hasDecisions || $this->report->getReasonForNoDecisions();
-        if ($decisionsValid && $this->report->getMentalCapacity() &&
-            $this->report->getMentalCapacity()->getHasCapacityChanged()
-            && $this->report->getMentalCapacity()->getMentalAssessmentDate()
+        if (
+            $decisionsValid &&
+            $this->report->getMentalCapacity() &&
+            $this->report->getMentalCapacity()->getHasCapacityChanged() &&
+            $this->report->getMentalCapacity()->getMentalAssessmentDate()
         ) {
             return ['state' => self::STATE_DONE, 'nOfRecords' => count($this->report->getDecisions())];
         }
@@ -128,7 +130,7 @@ class ReportStatusService
     public function getBankAccountsState()
     {
         $bankAccounts = $this->report->getBankAccounts();
-        if (count($bankAccounts) === 0) {
+        if (0 === count($bankAccounts)) {
             return ['state' => self::STATE_NOT_STARTED, 'nOfRecords' => 0];
         }
 
@@ -254,10 +256,11 @@ class ReportStatusService
             return ['state' => self::STATE_DONE, 'nOfRecords' => 0];
         }
 
-        if ($this->report->isMissingMoneyOrAccountsOrClosingBalance()
-            || $this->getGiftsState()['state'] != self::STATE_DONE
-            || $this->getExpensesState()['state'] != self::STATE_DONE // won't be true if the section is not in the report type
-            || $this->getPaFeesExpensesState()['state'] != self::STATE_DONE // won't be true if the section is not in the report type
+        if (
+            $this->report->isMissingMoneyOrAccountsOrClosingBalance()
+            || self::STATE_DONE != $this->getGiftsState()['state']
+            || self::STATE_DONE != $this->getExpensesState()['state'] // won't be true if the section is not in the report type
+            || self::STATE_DONE != $this->getPaFeesExpensesState()['state'] // won't be true if the section is not in the report type
         ) {
             return ['state' => self::STATE_NOT_STARTED, 'nOfRecords' => 0];
         }
@@ -278,11 +281,11 @@ class ReportStatusService
      * @JMS\Type("boolean")
      * @JMS\Groups({"status"})
      *
-     * @return boolean
+     * @return bool
      */
     public function isReadyToSubmit()
     {
-        return count($this->getRemainingSections()) === 0;
+        return 0 === count($this->getRemainingSections());
     }
 
     /**
@@ -320,7 +323,8 @@ class ReportStatusService
         $hasDebts = $this->report->getHasDebts();
         if (empty($hasDebts)) {
             return ['state' => self::STATE_NOT_STARTED, 'nOfRecords' => 0];
-        } elseif ('no' == $hasDebts ||
+        } elseif (
+            'no' == $hasDebts ||
             ('yes' == $hasDebts &&
                 count($this->report->getDebtsWithValidAmount()) > 0) &&
                 !empty($this->report->getDebtManagement())
@@ -400,17 +404,17 @@ class ReportStatusService
         }
 
         // remaining costs are valid if answer is "no" or ("Yes" + at least one record)
-        $isRemainingValid = $this->report->getProfDeputyCostsHasPrevious() === 'no' ||
-            ($this->report->getProfDeputyCostsHasPrevious() === 'yes' && count($this->report->getProfDeputyPreviousCosts()));
+        $isRemainingValid = 'no' === $this->report->getProfDeputyCostsHasPrevious() ||
+            ('yes' === $this->report->getProfDeputyCostsHasPrevious() && count($this->report->getProfDeputyPreviousCosts()));
 
         $hasInterim = $this->report->getProfDeputyCostsHasInterim();
         // interim costs are valid if answer is "no" or ("Yes" + at least one record)
         $isInterimValid = $onlyFixedTicked
-            || $hasInterim === 'no'
-            || ($hasInterim === 'yes' && count($this->report->getProfDeputyInterimCosts()));
+            || 'no' === $hasInterim
+            || ('yes' === $hasInterim && count($this->report->getProfDeputyInterimCosts()));
 
         // skipped if "fixed" is not the only ticked
-        $isFixedRequired = $onlyFixedTicked || $hasInterim === 'no';
+        $isFixedRequired = $onlyFixedTicked || 'no' === $hasInterim;
         $isFixedValid = !$isFixedRequired || $this->report->getProfDeputyFixedCost();
 
         // If costs are only fixed, SCCO question is not required (DDPB-2506)
@@ -485,7 +489,7 @@ class ReportStatusService
      */
     public function getOtherInfoState()
     {
-        if ($this->report->getActionMoreInfo() === null) {
+        if (null === $this->report->getActionMoreInfo()) {
             return ['state' => self::STATE_NOT_STARTED, 'nOfRecords' => 0];
         }
 
@@ -503,9 +507,9 @@ class ReportStatusService
     {
         $numRecords = count($this->report->getDeputyDocuments());
 
-        if ($this->report->getWishToProvideDocumentation() === null) {
+        if (null === $this->report->getWishToProvideDocumentation()) {
             $status = ['state' => self::STATE_NOT_STARTED];
-        } elseif ($this->report->getWishToProvideDocumentation() === 'yes' && $numRecords == 0) {
+        } elseif ('yes' === $this->report->getWishToProvideDocumentation() && 0 == $numRecords) {
             $status = ['state' => self::STATE_INCOMPLETE];
         } else {
             $status = ['state' => self::STATE_DONE];
@@ -554,14 +558,14 @@ class ReportStatusService
     /**
      * @JMS\Exclude
      *
-     * @param boolean
+     * @param bool
      *
      * @return array
      */
     public function getRemainingSections()
     {
         return array_filter($this->getSectionStatus(), function ($e) {
-            return ($e != self::STATE_DONE) && ($e != self::STATE_EXPLAINED);
+            return (self::STATE_DONE != $e) && (self::STATE_EXPLAINED != $e);
         }) ?: [];
     }
 
@@ -569,6 +573,7 @@ class ReportStatusService
      * @JMS\Exclude
      *
      * @param $section SECTION_*
+     *
      * @return array [ state=>STATE_NOT_STARTED/DONE/INCOMPLETE, nOfRecords=> ]
      */
     public function getSectionStateNotCached($section)
@@ -624,16 +629,16 @@ class ReportStatusService
             case Report::SECTION_DOCUMENTS:
                 return $this->getDocumentsState();
             default:
-                throw new \InvalidArgumentException(__METHOD__ . " $section section not defined");
+                throw new \InvalidArgumentException(__METHOD__." $section section not defined");
         }
     }
 
     /**
-     * Get section for the specific report type, along with the status
+     * Get section for the specific report type, along with the status.
      *
      * @JMS\Exclude
      *
-     * @param boolean
+     * @param bool
      *
      * @return array of section=>state e.g. [ decisions => notStarted ]
      */
@@ -688,7 +693,7 @@ class ReportStatusService
     public function getSubmitState()
     {
         return [
-            'state'  => $this->isReadyToSubmit() && $this->report->isDue()
+            'state' => $this->isReadyToSubmit() && $this->report->isDue()
                 ? self::STATE_DONE
                 : self::STATE_NOT_STARTED,
             'nOfRecords' => 0,
@@ -707,14 +712,14 @@ class ReportStatusService
         unset($sectionStatus['moneyTransfers']);
 
         return count(array_filter($sectionStatus, function ($e) {
-            return $e != self::STATE_NOT_STARTED;
+            return self::STATE_NOT_STARTED != $e;
         })) > 0;
     }
 
     /**
      * Calculate status using report info
      * Note: a cached/redundant value is hold in report.sectionStatusesCached
-     * This should not be used from the client, as expensive to calculate each time
+     * This should not be used from the client, as expensive to calculate each time.
      *
      * TODO rewrite API and client to ALWAYS ignore the isDue. Othercase its caching is difficult
      * Also, it makes more sense to decouple the date from the report status that could be renamed into
@@ -737,7 +742,7 @@ class ReportStatusService
 
     /**
      * Used to fill report.reportStatusCached
-     * Ignored the due date. Returns readyTosubmit if sections are completed, even if not due
+     * Ignored the due date. Returns readyTosubmit if sections are completed, even if not due.
      *
      * @return string notStarted|readyToSubmit|notFinished
      */

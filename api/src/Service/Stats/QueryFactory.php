@@ -10,21 +10,14 @@ class QueryFactory
     /** @var EntityManagerInterface */
     private $em;
 
-    /**
-     * @param EntityManagerInterface $em
-     */
     public function __construct(EntityManagerInterface $em)
     {
         $this->em = $em;
     }
 
-    /**
-     * @param StatsQueryParameters $sq
-     * @return Query
-     */
     public function create(StatsQueryParameters $sq): Query
     {
-        $className = 'App\\Service\\Stats\\Query\\'. ucfirst($sq->getMetric()) . 'Query';
+        $className = 'App\\Service\\Stats\\Query\\'.ucfirst($sq->getMetric()).'Query';
 
         if (!class_exists($className)) {
             throw new \InvalidArgumentException('Invalid metric given');

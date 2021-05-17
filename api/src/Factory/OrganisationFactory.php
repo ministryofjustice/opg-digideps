@@ -1,4 +1,6 @@
-<?php declare(strict_types=1);
+<?php
+
+declare(strict_types=1);
 
 namespace App\Factory;
 
@@ -15,68 +17,42 @@ class OrganisationFactory
         $this->sharedDomains = $sharedDomains;
     }
 
-    /**
-     * @param string $name
-     * @param string $email
-     * @param bool $isActivated
-     * @return Organisation
-     */
     public function createFromFullEmail(string $name, string $email, bool $isActivated = false): Organisation
     {
         $email = strtolower($email);
 
         $domainArray = explode('@', $email);
 
-        if (count($domainArray) === 1 && !empty($domainArray[0])) {
+        if (1 === count($domainArray) && !empty($domainArray[0])) {
             return $this->createFromEmailIdentifier($name, $domainArray[0], $isActivated);
         }
 
-        if (count($domainArray) === 2 && !empty($domainArray[1])) {
+        if (2 === count($domainArray) && !empty($domainArray[1])) {
             $domain = $domainArray[1];
             $emailIdentifier = in_array($domain, $this->sharedDomains) ? $email : $domain;
+
             return $this->create($name, $emailIdentifier, $isActivated);
         }
 
-        throw new \InvalidArgumentException(sprintf(
-            "Unable to create organisation from 'emailIdentifier': '%s'",
-            $email
-        ));
+        throw new \InvalidArgumentException(sprintf("Unable to create organisation from 'emailIdentifier': '%s'", $email));
     }
 
-    /**
-     * @param string $name
-     * @param string $emailIdentifier
-     * @param bool $isActivated
-     * @return Organisation
-     */
     public function createFromEmailIdentifier(string $name, string $emailIdentifier, bool $isActivated = false): Organisation
     {
         $domainArray = explode('@', $emailIdentifier);
-        if ((count($domainArray) == 1 && !empty($domainArray[0])) ||
-            (count($domainArray) == 2 && !empty($domainArray[1]))
+        if (
+            (1 == count($domainArray) && !empty($domainArray[0])) ||
+            (2 == count($domainArray) && !empty($domainArray[1]))
         ) {
             return $this->create($name, strtolower($emailIdentifier), $isActivated);
         }
-        throw new \InvalidArgumentException(sprintf(
-            "Unable to create organisation from 'emailIdentifier': '%s'",
-            $emailIdentifier
-        ));
+        throw new \InvalidArgumentException(sprintf("Unable to create organisation from 'emailIdentifier': '%s'", $emailIdentifier));
     }
 
-    /**
-     * @param string $name
-     * @param string $emailIdentifier
-     * @param bool $isActivated
-     * @return Organisation
-     */
     private function create(string $name, string $emailIdentifier, bool $isActivated): Organisation
     {
         if (empty($name) || empty($emailIdentifier)) {
-            throw new \InvalidArgumentException(sprintf(
-                "Unable to create organisation with name '%s' from 'emailIdentifier': '%s'",
-                $name,
-                $emailIdentifier
-            ));
+            throw new \InvalidArgumentException(sprintf("Unable to create organisation with name '%s' from 'emailIdentifier': '%s'", $name, $emailIdentifier));
         }
 
         return (new Organisation())

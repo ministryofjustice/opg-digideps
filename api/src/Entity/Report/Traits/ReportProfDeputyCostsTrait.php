@@ -2,16 +2,13 @@
 
 namespace App\Entity\Report\Traits;
 
-use App\Entity\Report\ProfDeputyEstimateCost;
-use App\Entity\Report\ProfDeputyOtherCost;
 use App\Entity\Report\ProfDeputyInterimCost;
+use App\Entity\Report\ProfDeputyOtherCost;
 use App\Entity\Report\Report;
 use JMS\Serializer\Annotation as JMS;
-use Symfony\Component\Validator\Constraints as Assert;
 
 trait ReportProfDeputyCostsTrait
 {
-
     /**
      * @var string
      *
@@ -141,11 +138,13 @@ trait ReportProfDeputyCostsTrait
 
     /**
      * @param string $profDeputyCostsHowCharged
+     *
      * @return ReportProfDeputyCostsTrait
      */
     public function setProfDeputyCostsHowCharged($profDeputyCostsHowCharged)
     {
         $this->profDeputyCostsHowCharged = $profDeputyCostsHowCharged;
+
         return $this;
     }
 
@@ -159,11 +158,13 @@ trait ReportProfDeputyCostsTrait
 
     /**
      * @param string $profDeputyCostsHasPrevious
+     *
      * @return ReportProfDeputyCostsTrait
      */
     public function setProfDeputyCostsHasPrevious($profDeputyCostsHasPrevious)
     {
         $this->profDeputyCostsHasPrevious = $profDeputyCostsHasPrevious;
+
         return $this;
     }
 
@@ -193,16 +194,17 @@ trait ReportProfDeputyCostsTrait
 
     /**
      * @param $profDeputyOtherCosts
+     *
      * @return $this
      */
     public function setProfDeputyOtherCosts($profDeputyOtherCosts)
     {
         $this->profDeputyOtherCosts = $profDeputyOtherCosts;
+
         return $this;
     }
 
     /**
-     * @param ProfDeputyOtherCost $profDeputyOtherCost
      * @return $this
      */
     public function addProfDeputyOtherCost(ProfDeputyOtherCost $profDeputyOtherCost)
@@ -252,17 +254,16 @@ trait ReportProfDeputyCostsTrait
 
     /**
      * @param mixed $profDeputyInterimCosts
+     *
      * @return ReportProfDeputyCostsTrait
      */
     public function setProfDeputyInterimCosts($profDeputyInterimCosts)
     {
         $this->profDeputyInterimCosts = $profDeputyInterimCosts;
+
         return $this;
     }
 
-    /**
-     * @param ProfDeputyInterimCost $ic
-     */
     public function addProfDeputyInterimCosts(ProfDeputyInterimCost $ic)
     {
         if (!$this->getProfDeputyInterimCosts()->contains($ic)) {
@@ -280,21 +281,25 @@ trait ReportProfDeputyCostsTrait
 
     /**
      * @param float $profDeputyCostsAmountToScco
+     *
      * @return ReportProfDeputyCostsTrait
      */
     public function setProfDeputyCostsAmountToScco($profDeputyCostsAmountToScco)
     {
         $this->profDeputyCostsAmountToScco = $profDeputyCostsAmountToScco;
+
         return $this;
     }
 
     /**
      * @param string $profDeputyCostsReasonBeyondEstimate
+     *
      * @return ReportProfDeputyCostsTrait
      */
     public function setProfDeputyCostsReasonBeyondEstimate($profDeputyCostsReasonBeyondEstimate)
     {
         $this->profDeputyCostsReasonBeyondEstimate = $profDeputyCostsReasonBeyondEstimate;
+
         return $this;
     }
 
@@ -316,11 +321,13 @@ trait ReportProfDeputyCostsTrait
 
     /**
      * @param float $profDeputyFixedCost
+     *
      * @return ReportProfDeputyCostsTrait
      */
     public function setProfDeputyFixedCost($profDeputyFixedCost)
     {
         $this->profDeputyFixedCost = $profDeputyFixedCost;
+
         return $this;
     }
 
@@ -336,7 +343,8 @@ trait ReportProfDeputyCostsTrait
         $onlyFixedTicked = $this->hasProfDeputyCostsHowChargedFixedOnly();
 
         // return null if data incomplete
-        if (!$this->getProfDeputyCostsHasPrevious()
+        if (
+            !$this->getProfDeputyCostsHasPrevious()
             || (!$onlyFixedTicked && !$this->getProfDeputyCostsHasInterim())
             || ($onlyFixedTicked && null === $this->getProfDeputyFixedCost())
         ) {
@@ -348,11 +356,11 @@ trait ReportProfDeputyCostsTrait
         }
 
         // include fixed costs if interim answer is not a "no"
-        if ($this->getProfDeputyCostsHasInterim() !== 'yes') {
+        if ('yes' !== $this->getProfDeputyCostsHasInterim()) {
             $total += (float) $this->getProfDeputyFixedCost();
         }
 
-        if ($this->getProfDeputyCostsHasInterim() === 'yes') {
+        if ('yes' === $this->getProfDeputyCostsHasInterim()) {
             foreach ($this->getProfDeputyInterimCosts() as $interimCost) {
                 $total += (float) $interimCost->getAmount();
             }
@@ -382,11 +390,11 @@ trait ReportProfDeputyCostsTrait
     }
 
     /**
-     * @return boolean
+     * @return bool
      */
     public function hasProfDeputyCostsHowChargedFixedOnly()
     {
-        return $this->getProfDeputyCostsHowCharged() == Report::PROF_DEPUTY_COSTS_TYPE_FIXED;
+        return Report::PROF_DEPUTY_COSTS_TYPE_FIXED == $this->getProfDeputyCostsHowCharged();
     }
 
     /**

@@ -3,9 +3,9 @@
 namespace App\Controller;
 
 use App\Entity\Client;
+use App\Entity\User;
 use App\Repository\ClientRepository;
 use App\Repository\UserRepository;
-use App\Entity\User;
 use App\Security\UserVoter;
 use App\Service\Auth\AuthService;
 use App\Service\Formatter\RestFormatter;
@@ -15,11 +15,11 @@ use Doctrine\ORM\EntityManagerInterface;
 use Doctrine\ORM\OptimisticLockException;
 use Doctrine\ORM\ORMException;
 use Sensio\Bundle\FrameworkExtraBundle\Configuration\Security;
+use Symfony\Component\HttpFoundation\Request;
 use Symfony\Component\Routing\Annotation\Route;
 use Symfony\Component\Security\Core\Authentication\Token\TokenInterface;
-use Symfony\Component\Security\Core\Security as SecurityHelper;
-use Symfony\Component\HttpFoundation\Request;
 use Symfony\Component\Security\Core\Encoder\EncoderFactoryInterface;
+use Symfony\Component\Security\Core\Security as SecurityHelper;
 
 //TODO
 //http://symfony.com/doc/current/bundles/SensioFrameworkExtraBundle/annotations/converters.html
@@ -100,7 +100,8 @@ class UserController extends RestController
         /** @var User $requestedUser */
         $requestedUser = $this->findEntityBy(User::class, $id, 'User not found');
 
-        if ($loggedInUser->getId() != $requestedUser->getId()
+        if (
+            $loggedInUser->getId() != $requestedUser->getId()
             && !$this->isGranted(User::ROLE_ADMIN)
             && !$this->isGranted(User::ROLE_AD)
             && !$this->isGranted(User::ROLE_ORG_NAMED)
@@ -194,13 +195,13 @@ class UserController extends RestController
      */
     public function getOneByFilter(Request $request, $what, $filter)
     {
-        if ($what == 'email') {
+        if ('email' == $what) {
             /** @var User|null $user */
             $user = $this->userRepository->findOneBy(['email' => strtolower($filter)]);
             if (!$user) {
                 throw new \RuntimeException('User not found', 404);
             }
-        } elseif ($what == 'case_number') {
+        } elseif ('case_number' == $what) {
             /** @var Client|null $client */
             $client = $this->clientRepository->findOneBy(['caseNumber' => $filter]);
             if (!$client) {
@@ -210,7 +211,7 @@ class UserController extends RestController
                 throw new \RuntimeException('Client has not users', 404);
             }
             $user = $client->getUsers()[0];
-        } elseif ($what == 'user_id') {
+        } elseif ('user_id' == $what) {
             /** @var User|null $user */
             $user = $this->userRepository->find($filter);
             if (!$user) {
@@ -235,9 +236,11 @@ class UserController extends RestController
         $requestedUserIsLogged = $loggedInUser->getId() == $user->getId();
 
         // only allow admins to access any user, otherwise the user can only see himself
-        if (!$this->isGranted(User::ROLE_ADMIN)
+        if (
+            !$this->isGranted(User::ROLE_ADMIN)
             && !$this->isGranted(User::ROLE_AD)
-            && !$requestedUserIsLogged) {
+            && !$requestedUserIsLogged
+        ) {
             throw $this->createAccessDeniedException("Not authorised to see other user's data");
         }
 
@@ -247,7 +250,7 @@ class UserController extends RestController
     /**
      * Get user by email, and retrieve only id and team names the user belongs to.
      * Only for ROLE_PROF named and admin, when adding users to multiple teams.
-     * Returns empty if user doesn't exist
+     * Returns empty if user doesn't exist.
      *
      * @Route("/get-team-names-by-email/{email}", methods={"GET"})
      * @Security("is_granted('ROLE_ORG_NAMED') or has_role('ROLE_ORG_ADMIN')")
@@ -268,7 +271,9 @@ class UserController extends RestController
      * @Security("is_granted('ROLE_SUPER_ADMIN')")
      *
      * @param int $id
+     *
      * @return array
+     *
      * @throws ORMException
      * @throws OptimisticLockException
      */
@@ -282,8 +287,8 @@ class UserController extends RestController
 
         $canDelete = $this->userVoter->vote($token, $deletee, [UserVoter::DELETE_USER]);
 
-        if ($canDelete === UserVoter::ACCESS_DENIED) {
-            $errMessage = sprintf("A %s cannot delete a %s", $token->getUser()->getRoleName(), $deletee->getRoleName());
+        if (UserVoter::ACCESS_DENIED === $canDelete) {
+            $errMessage = sprintf('A %s cannot delete a %s', $token->getUser()->getRoleName(), $deletee->getRoleName());
             throw $this->createAccessDeniedException($errMessage);
         }
 
@@ -305,6 +310,7 @@ class UserController extends RestController
     public function getAll(Request $request)
     {
         $this->formatter->setJmsSerialiserGroups(['user']);
+
         return $this->userRepository->findUsersByQueryParameters($request);
     }
 
@@ -323,7 +329,7 @@ class UserController extends RestController
         $user = $this->findEntityBy(User::class, ['email' => strtolower($email)]);
         $hasAdminSecret = $this->authService->isSecretValidForRole(User::ROLE_ADMIN, $request);
 
-        if (!$hasAdminSecret && $user->getRoleName() == User::ROLE_ADMIN) {
+        if (!$hasAdminSecret && User::ROLE_ADMIN == $user->getRoleName()) {
             throw new \RuntimeException('Admin emails not accepted.', 403);
         }
 
@@ -348,9 +354,8 @@ class UserController extends RestController
         /* @var $user User */
         $user = $this->findEntityBy(User::class, ['registrationToken' => $token], 'User not found');
 
-
         if (!$this->authService->isSecretValidForRole($user->getRoleName(), $request)) {
-            throw new \RuntimeException($user->getRoleName() . ' user role not allowed from this client.', 403);
+            throw new \RuntimeException($user->getRoleName().' user role not allowed from this client.', 403);
         }
 
         // `user-login` contains number of clients and reports, needed to properly redirect the user to the right page after activation
@@ -372,7 +377,7 @@ class UserController extends RestController
         /* @var $user User */
 
         if (!$this->authService->isSecretValidForRole($user->getRoleName(), $request)) {
-            throw new \RuntimeException($user->getRoleName() . ' user role not allowed from this client.', 403);
+            throw new \RuntimeException($user->getRoleName().' user role not allowed from this client.', 403);
         }
 
         $user->setAgreeTermsUse(true);
@@ -384,10 +389,7 @@ class UserController extends RestController
 
     /**
      * call setters on User when $data contains values.
-     * //TODO move to service
-     *
-     * @param User $user
-     * @param array          $data
+     * //TODO move to service.
      */
     private function populateUser(User $user, array $data)
     {

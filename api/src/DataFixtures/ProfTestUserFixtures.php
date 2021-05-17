@@ -1,4 +1,5 @@
 <?php
+
 namespace App\DataFixtures;
 
 use App\Entity\CasRec;
@@ -6,13 +7,12 @@ use App\Entity\Client;
 use App\Entity\NamedDeputy;
 use App\Entity\Ndr\Ndr;
 use App\Entity\Report\Report;
-use App\Repository\NamedDeputyRepository;
-use App\Repository\OrganisationRepository;
 use App\Entity\User;
 use App\Factory\OrganisationFactory;
-use App\Service\ReportUtils;
+use App\Repository\NamedDeputyRepository;
+use App\Repository\OrganisationRepository;
 use App\Service\OrgService;
-
+use App\Service\ReportUtils;
 use Doctrine\Persistence\ObjectManager;
 
 class ProfTestUserFixtures extends AbstractDataFixture
@@ -74,7 +74,7 @@ class ProfTestUserFixtures extends AbstractDataFixture
                     'email' => 'cly1@hent.com',
                     'dob' => '01/01/1967',
                     'reportType' => 'OPG102',
-                    'reportVariation' => 'A2'
+                    'reportVariation' => 'A2',
                 ],
                 [
                     'firstname' => 'CLY2',
@@ -89,7 +89,7 @@ class ProfTestUserFixtures extends AbstractDataFixture
                     'email' => 'cly2@hent.com',
                     'dob' => '07/07/1967',
                     'reportType' => 'OPG102',
-                    'reportVariation' => 'A2'
+                    'reportVariation' => 'A2',
                 ],
                 [
                     'firstname' => 'CLY3',
@@ -104,7 +104,7 @@ class ProfTestUserFixtures extends AbstractDataFixture
                     'email' => 'cly3@hent.com',
                     'dob' => '07/07/1967',
                     'reportType' => 'OPG102',
-                    'reportVariation' => 'A2'
+                    'reportVariation' => 'A2',
                 ],
                 [
                     'firstname' => 'CLY4',
@@ -119,7 +119,7 @@ class ProfTestUserFixtures extends AbstractDataFixture
                     'email' => 'cly4@hent.com',
                     'dob' => '04/04/1967',
                     'reportType' => 'OPG103',
-                    'reportVariation' => 'A3'
+                    'reportVariation' => 'A3',
                 ],
                 [
                     'firstname' => 'CLY5    ',
@@ -134,7 +134,7 @@ class ProfTestUserFixtures extends AbstractDataFixture
                     'email' => 'cly5@hent.com',
                     'dob' => '05/05/1967',
                     'reportType' => 'OPG103',
-                    'reportVariation' => 'A3'
+                    'reportVariation' => 'A3',
                 ],
                 [
                     'firstname' => 'CLY6    ',
@@ -149,7 +149,7 @@ class ProfTestUserFixtures extends AbstractDataFixture
                     'email' => 'cly5@hent.com',
                     'dob' => '05/05/1967',
                     'reportType' => 'OPG103',
-                    'reportVariation' => 'A3'
+                    'reportVariation' => 'A3',
                 ],
                 [
                     'firstname' => 'CLY7',
@@ -164,7 +164,7 @@ class ProfTestUserFixtures extends AbstractDataFixture
                     'email' => 'cly7@hent.com',
                     'dob' => '07/07/1967',
                     'reportType' => 'OPG102',
-                    'reportVariation' => 'A2'
+                    'reportVariation' => 'A2',
                 ],
                 [
                     'firstname' => 'CLY8',
@@ -179,7 +179,7 @@ class ProfTestUserFixtures extends AbstractDataFixture
                     'email' => 'cly7@hent.com',
                     'dob' => '07/07/1967',
                     'reportType' => 'OPG102',
-                    'reportVariation' => 'A2'
+                    'reportVariation' => 'A2',
                 ],
                 [
                     'firstname' => 'CLY9',
@@ -194,7 +194,7 @@ class ProfTestUserFixtures extends AbstractDataFixture
                     'email' => 'cly7@hent.com',
                     'dob' => '07/07/1967',
                     'reportType' => 'OPG102',
-                    'reportVariation' => 'A2'
+                    'reportVariation' => 'A2',
                 ],
                 [
                     'firstname' => 'CLY10',
@@ -209,7 +209,7 @@ class ProfTestUserFixtures extends AbstractDataFixture
                     'email' => 'cly7@hent.com',
                     'dob' => '07/07/1967',
                     'reportType' => 'OPG102',
-                    'reportVariation' => 'A2'
+                    'reportVariation' => 'A2',
                 ],
                 [
                     'firstname' => 'CLY11',
@@ -224,7 +224,7 @@ class ProfTestUserFixtures extends AbstractDataFixture
                     'email' => 'cly7@hent.com',
                     'dob' => '07/07/1967',
                     'reportType' => 'OPG102',
-                    'reportVariation' => 'A2'
+                    'reportVariation' => 'A2',
                 ],
                 [
                     'firstname' => 'CLY12',
@@ -239,7 +239,7 @@ class ProfTestUserFixtures extends AbstractDataFixture
                     'email' => 'cly7@hent.com',
                     'dob' => '07/07/1967',
                     'reportType' => 'OPG102',
-                    'reportVariation' => 'A2'
+                    'reportVariation' => 'A2',
                 ],
                 [
                     'firstname' => 'CLY13',
@@ -254,7 +254,7 @@ class ProfTestUserFixtures extends AbstractDataFixture
                     'email' => 'cly7@hent.com',
                     'dob' => '07/07/1967',
                     'reportType' => 'OPG102',
-                    'reportVariation' => 'A2'
+                    'reportVariation' => 'A2',
                 ],
                 [
                     'firstname' => 'CLY14',
@@ -269,7 +269,7 @@ class ProfTestUserFixtures extends AbstractDataFixture
                     'email' => 'cly7@hent.com',
                     'dob' => '07/07/1967',
                     'reportType' => 'OPG102',
-                    'reportVariation' => 'A2'
+                    'reportVariation' => 'A2',
                 ],
                 [
                     'firstname' => 'CLY15',
@@ -284,7 +284,7 @@ class ProfTestUserFixtures extends AbstractDataFixture
                     'email' => 'cly7@hent.com',
                     'dob' => '07/07/1967',
                     'reportType' => 'OPG102',
-                    'reportVariation' => 'A2'
+                    'reportVariation' => 'A2',
                 ],
                 [
                     'firstname' => 'CLY16',
@@ -299,10 +299,10 @@ class ProfTestUserFixtures extends AbstractDataFixture
                     'email' => 'cly7@hent.com',
                     'dob' => '07/07/1967',
                     'reportType' => 'OPG102',
-                    'reportVariation' => 'A2'
+                    'reportVariation' => 'A2',
                 ],
             ],
-            'additionalClients' => 2
+            'additionalClients' => 2,
         ],
         [
             'id' => '',
@@ -334,7 +334,7 @@ class ProfTestUserFixtures extends AbstractDataFixture
                     'email' => 'cly201@hent.com',
                     'dob' => '02/02/1967',
                     'reportType' => 'OPG103',
-                    'reportVariation' => 'A3'
+                    'reportVariation' => 'A3',
                 ],
                 [
                     'firstname' => 'CLY202',
@@ -349,7 +349,7 @@ class ProfTestUserFixtures extends AbstractDataFixture
                     'email' => 'cly202@hent.com',
                     'dob' => '18/11/1973',
                     'reportType' => 'OPG102',
-                    'reportVariation' => 'A2'
+                    'reportVariation' => 'A2',
                 ],
                 [
                     'firstname' => 'CLY301',
@@ -364,10 +364,9 @@ class ProfTestUserFixtures extends AbstractDataFixture
                     'email' => 'cly203@hent.com',
                     'dob' => '02/02/1967',
                     'reportType' => 'OPG103',
-                    'reportVariation' => 'A3'
+                    'reportVariation' => 'A3',
                 ],
-
-            ]
+            ],
         ],
         [
             'id' => '',
@@ -399,7 +398,7 @@ class ProfTestUserFixtures extends AbstractDataFixture
                     'email' => 'cly301@hent.com',
                     'dob' => '02/02/1967',
                     'reportType' => 'OPG102',
-                    'reportVariation' => 'A2'
+                    'reportVariation' => 'A2',
                 ],
                 [
                     'firstname' => 'CLY302',
@@ -414,7 +413,7 @@ class ProfTestUserFixtures extends AbstractDataFixture
                     'email' => 'cly301@hent.com',
                     'dob' => '22/11/1977',
                     'reportType' => 'OPG102',
-                    'reportVariation' => 'A2'
+                    'reportVariation' => 'A2',
                 ],
                 [
                     'firstname' => 'CLY303',
@@ -429,9 +428,9 @@ class ProfTestUserFixtures extends AbstractDataFixture
                     'email' => 'cly301@hent.com',
                     'dob' => '23/11/1977',
                     'reportType' => 'OPG103',
-                    'reportVariation' => 'A3'
+                    'reportVariation' => 'A3',
                 ],
-            ]
+            ],
         ],
         [
             'id' => '',
@@ -463,7 +462,7 @@ class ProfTestUserFixtures extends AbstractDataFixture
                     'email' => 'cly401@hent.com',
                     'dob' => '02/02/1967',
                     'reportType' => '',
-                    'reportVariation' => 'hw'
+                    'reportVariation' => 'hw',
                 ],
             ],
         ],
@@ -498,14 +497,11 @@ class ProfTestUserFixtures extends AbstractDataFixture
                     'email' => 'existing_cly1@hent.com',
                     'dob' => '01/01/1967',
                     'reportType' => 'OPG102',
-                    'reportVariation' => 'A2'
-                ]
-            ]
-        ]
+                    'reportVariation' => 'A2',
+                ],
+            ],
+        ],
     ];
-
-
-
 
     public function __construct(OrgService $orgService, OrganisationRepository $orgRepository, OrganisationFactory $orgFactory, ReportUtils $reportUtils)
     {
@@ -515,9 +511,6 @@ class ProfTestUserFixtures extends AbstractDataFixture
         $this->reportUtils = $reportUtils;
     }
 
-    /**
-     * @param ObjectManager $manager
-     */
     public function doLoad(ObjectManager $manager)
     {
         $this->namedDeputyRepository = $manager->getRepository(NamedDeputy::class);
@@ -536,8 +529,8 @@ class ProfTestUserFixtures extends AbstractDataFixture
         $user = (new User())
             ->setFirstname(isset($data['Dep Forename']) ? $data['Dep Forename'] : 'test')
             ->setLastname(isset($data['Dep Surname']) ? $data['Dep Surname'] : $data['id'])
-            ->setEmail(isset($data['Email']) ? $data['Email'] : $data['id'] . '@example.org')
-            ->setActive(isset($data ['active']) ? $data['active'] : true)
+            ->setEmail(isset($data['Email']) ? $data['Email'] : $data['id'].'@example.org')
+            ->setActive(isset($data['active']) ? $data['active'] : true)
             ->setRegistrationDate(new \DateTime())
             ->setNdrEnabled(false)
             ->setPhoneMain(isset($data['Phone Main']) ? $data['Phone Main'] : null)
@@ -560,14 +553,13 @@ class ProfTestUserFixtures extends AbstractDataFixture
 
         if (isset($data['clients'])) {
             foreach ($data['clients'] as $clientData) {
-
                 // Create client
                 $client = $this->createClient($clientData, $data, $user, $manager, $organisation);
                 $user->addClient($client);
             }
             if (isset($data['additionalClients'])) {
                 // add dummy clients for pagination tests
-                for ($i=1; $i<=$data['additionalClients']; $i++) {
+                for ($i = 1; $i <= $data['additionalClients']; ++$i) {
                     $client = $this->createClient($this->generateTestClientData($i), $data, $user, $manager, $organisation);
                     $user->addClient($client);
                     $organisation->addClient($client);
@@ -582,17 +574,17 @@ class ProfTestUserFixtures extends AbstractDataFixture
         return [
             'lastReportDate' => '01/01/2018',
             'dob' => '04/05/1977',
-            'caseNumber' => '80000' . $iterator,
-            'firstname' => 'TEST CLY' . $iterator,
-            'lastname' => 'HENT' . $iterator,
-            'address1' => 'Address1_' . $iterator,
-            'address2' => 'Address2_' . $iterator,
-            'address3' => 'Address3_' . $iterator,
-            'addressPostcode' => 'PC_' . $iterator,
+            'caseNumber' => '80000'.$iterator,
+            'firstname' => 'TEST CLY'.$iterator,
+            'lastname' => 'HENT'.$iterator,
+            'address1' => 'Address1_'.$iterator,
+            'address2' => 'Address2_'.$iterator,
+            'address3' => 'Address3_'.$iterator,
+            'addressPostcode' => 'PC_'.$iterator,
             'phone' => '01234123123',
-            'email' => 'testCly' . $iterator . '@hent.com',
+            'email' => 'testCly'.$iterator.'@hent.com',
             'reportType' => 'OPG102',
-            'reportVariation' => 'A2'
+            'reportVariation' => 'A2',
         ];
     }
 

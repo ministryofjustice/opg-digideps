@@ -1,5 +1,6 @@
-<?php declare(strict_types=1);
+<?php
 
+declare(strict_types=1);
 
 namespace App\TestHelpers;
 
@@ -32,12 +33,12 @@ class ClientTestHelper extends TestCase
             ->setFirstname($faker->firstName)
             ->setLastname($faker->lastName)
             ->setCaseNumber(self::createValidCaseNumber())
-            ->setEmail($faker->safeEmail . rand(1, 100000))
+            ->setEmail($faker->safeEmail.rand(1, 100000))
             ->setCourtDate(new \DateTime())
             ->setAddress($faker->streetAddress)
             ->setPostcode($faker->postcode);
 
-        if (!is_null($user) && $user->getRoleName() === User::ROLE_LAY_DEPUTY) {
+        if (!is_null($user) && User::ROLE_LAY_DEPUTY === $user->getRoleName()) {
             return $client->addUser($user ? $user : (new UserTestHelper())->createAndPersistUser($em));
         }
 
@@ -65,10 +66,10 @@ class ClientTestHelper extends TestCase
 
         $checkbit = (11 - ($sum % 11)) % 11;
 
-        if ($checkbit === 10) {
+        if (10 === $checkbit) {
             $checkbit = 'T';
         }
 
-        return $ref . $checkbit;
+        return $ref.$checkbit;
     }
 }
