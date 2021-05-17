@@ -21,6 +21,7 @@ class BaseFeatureContext extends MinkContext
     use DebugTrait;
     use ElementSelectionTrait;
     use ErrorsTrait;
+    use ExpectedResultsTrait;
     use FixturesTrait;
     use INavigateToAdminTrait;
     use IShouldBeOnTrait;

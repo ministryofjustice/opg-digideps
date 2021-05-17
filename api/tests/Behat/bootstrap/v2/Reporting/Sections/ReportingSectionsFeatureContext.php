@@ -18,7 +18,7 @@ class ReportingSectionsFeatureContext extends BaseFeatureContext
     use VisitsCareSectionTrait;
     use MoneyInHighAssetsTrait;
 
-    const REPORT_SECTION_ENDPOINT = '%s/%s/%s';
+    public const REPORT_SECTION_ENDPOINT = '/%s/%s/%s';
 
     /**
      * @Then the previous section should be :sectionName
