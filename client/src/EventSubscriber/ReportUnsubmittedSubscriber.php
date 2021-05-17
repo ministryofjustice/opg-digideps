@@ -1,13 +1,14 @@
-<?php declare(strict_types=1);
+<?php
 
+declare(strict_types=1);
 
 namespace App\EventSubscriber;
 
 use App\Event\ReportUnsubmittedEvent;
-use Symfony\Component\EventDispatcher\EventSubscriberInterface;
 use App\Service\Audit\AuditEvents;
 use App\Service\Time\DateTimeProvider;
 use Psr\Log\LoggerInterface;
+use Symfony\Component\EventDispatcher\EventSubscriberInterface;
 
 class ReportUnsubmittedSubscriber implements EventSubscriberInterface
 {
@@ -21,16 +22,14 @@ class ReportUnsubmittedSubscriber implements EventSubscriberInterface
         $this->dateTimeProvider = $dateTimeProvider;
     }
 
-
     public static function getSubscribedEvents()
     {
         return [
-            ReportUnsubmittedEvent::NAME => 'logReportUnsubmittedEvent'
+            ReportUnsubmittedEvent::NAME => 'logReportUnsubmittedEvent',
         ];
     }
 
     /**
-     * @param ReportUnsubmittedEvent $event
      * @throws \Exception
      */
     public function logReportUnsubmittedEvent(ReportUnsubmittedEvent $event)

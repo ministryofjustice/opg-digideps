@@ -7,17 +7,17 @@ use App\Entity as EntityDir;
 use App\Form as FormDir;
 use App\Service\Client\Internal\ReportApi;
 use App\Service\Client\RestClient;
-use Symfony\Component\HttpFoundation\RedirectResponse;
-use Symfony\Component\Routing\Annotation\Route;
 use Sensio\Bundle\FrameworkExtraBundle\Configuration\Template;
+use Symfony\Component\HttpFoundation\RedirectResponse;
 use Symfony\Component\HttpFoundation\Request;
+use Symfony\Component\Routing\Annotation\Route;
 
 class DebtController extends AbstractController
 {
     private static $jmsGroups = [
         'debt',
         'debt-state',
-        'debt-management'
+        'debt-management',
     ];
 
     /** @var RestClient */
@@ -38,7 +38,6 @@ class DebtController extends AbstractController
      * @Route("/report/{reportId}/debts", name="debts")
      * @Template("@App/Report/Debt/start.html.twig")
      *
-     * @param Request $request
      * @param $reportId
      *
      * @return array|RedirectResponse
@@ -46,7 +45,7 @@ class DebtController extends AbstractController
     public function startAction(Request $request, $reportId)
     {
         $report = $this->reportApi->getReportIfNotSubmitted($reportId, self::$jmsGroups);
-        if ($report->getStatus()->getDebtsState()['state'] != EntityDir\Report\Status::STATE_NOT_STARTED) {
+        if (EntityDir\Report\Status::STATE_NOT_STARTED != $report->getStatus()->getDebtsState()['state']) {
             return $this->redirectToRoute('debts_summary', ['reportId' => $reportId]);
         }
 
@@ -59,7 +58,6 @@ class DebtController extends AbstractController
      * @Route("/report/{reportId}/debts/exist", name="debts_exist")
      * @Template("@App/Report/Debt/exist.html.twig")
      *
-     * @param Request $request
      * @param $reportId
      *
      * @return array|RedirectResponse
@@ -70,23 +68,23 @@ class DebtController extends AbstractController
         $form = $this->createForm(
             FormDir\YesNoType::class,
             $report,
-            [ 'field' => 'hasDebts', 'translation_domain' => 'report-debts']
+            ['field' => 'hasDebts', 'translation_domain' => 'report-debts']
         );
         $form->handleRequest($request);
 
         if ($form->isSubmitted() && $form->isValid()) {
-            $this->restClient->put('report/' . $reportId, $report, ['debt']);
+            $this->restClient->put('report/'.$reportId, $report, ['debt']);
 
-            if ($report->getHasDebts() == 'yes') {
+            if ('yes' == $report->getHasDebts()) {
                 return $this->redirectToRoute('debts_edit', ['reportId' => $reportId]);
             }
 
             return $this->redirectToRoute('debts_summary', ['reportId' => $reportId]);
         }
 
-        $backLink = $this->generateUrl('debts', ['reportId'=>$reportId]);
-        if ($request->get('from') == 'summary') {
-            $backLink = $this->generateUrl('debts_summary', ['reportId'=>$reportId]);
+        $backLink = $this->generateUrl('debts', ['reportId' => $reportId]);
+        if ('summary' == $request->get('from')) {
+            $backLink = $this->generateUrl('debts_summary', ['reportId' => $reportId]);
         }
 
         return [
@@ -102,7 +100,6 @@ class DebtController extends AbstractController
      * @Route("/report/{reportId}/debts/edit", name="debts_edit")
      * @Template("@App/Report/Debt/edit.html.twig")
      *
-     * @param Request $request
      * @param $reportId
      *
      * @return array|RedirectResponse
@@ -117,22 +114,23 @@ class DebtController extends AbstractController
         $fromPage = $request->get('from');
 
         if ($form->isSubmitted() && $form->isValid()) {
-            $this->restClient->put('report/' . $report->getId(), $form->getData(), ['debt']);
+            $this->restClient->put('report/'.$report->getId(), $form->getData(), ['debt']);
 
-            if ($fromPage == 'summary') {
+            if ('summary' == $fromPage) {
                 if (empty($report->getDebtManagement())) {
                     return $this->redirect($this->generateUrl('debts_management', ['reportId' => $reportId, 'from' => 'summary']));
                 }
                 $request->getSession()->getFlashBag()->add('notice', 'Debt edited');
+
                 return $this->redirect($this->generateUrl('debts_summary', ['reportId' => $reportId, 'from' => 'summary']));
             }
 
             return $this->redirect($this->generateUrl('debts_management', ['reportId' => $reportId]));
         }
 
-        $backLink = $this->generateUrl('debts_exist', ['reportId'=>$reportId]);
-        if ($fromPage == 'summary') {
-            $backLink = $this->generateUrl('debts_summary', ['reportId'=>$reportId]);
+        $backLink = $this->generateUrl('debts_exist', ['reportId' => $reportId]);
+        if ('summary' == $fromPage) {
+            $backLink = $this->generateUrl('debts_summary', ['reportId' => $reportId]);
         }
 
         return [
@@ -148,10 +146,9 @@ class DebtController extends AbstractController
      * @Route("/report/{reportId}/debts/management", name="debts_management")
      * @Template("@App/Report/Debt/management.html.twig")
      *
-     * @param Request $request
      * @param $reportId
-     * @return array|RedirectResponse
      *
+     * @return array|RedirectResponse
      */
     public function managementAction(Request $request, $reportId)
     {
@@ -159,21 +156,21 @@ class DebtController extends AbstractController
         $form = $this->createForm(FormDir\Report\Debt\DebtManagementType::class, $report);
         $form->handleRequest($request);
         $fromPage = $request->get('from');
-        $fromSummaryPage = $request->get('from') == 'summary';
+        $fromSummaryPage = 'summary' == $request->get('from');
 
         if ($form->isSubmitted() && $form->isValid()) {
-            $this->restClient->put('report/' . $report->getId(), $form->getData(), ['debt-management']);
+            $this->restClient->put('report/'.$report->getId(), $form->getData(), ['debt-management']);
 
-            if ($fromPage == 'summary') {
+            if ('summary' == $fromPage) {
                 $request->getSession()->getFlashBag()->add('notice', 'Answer edited');
             }
 
             return $this->redirect($this->generateUrl('debts_summary', ['reportId' => $reportId]));
         }
 
-        $backLink = $this->generateUrl('debts_exist', ['reportId'=>$reportId]);
-        if ($fromPage == 'summary') {
-            $backLink = $this->generateUrl('debts_summary', ['reportId'=>$reportId]);
+        $backLink = $this->generateUrl('debts_exist', ['reportId' => $reportId]);
+        if ('summary' == $fromPage) {
+            $backLink = $this->generateUrl('debts_summary', ['reportId' => $reportId]);
         }
 
         return [
@@ -190,7 +187,6 @@ class DebtController extends AbstractController
      * @Route("/report/{reportId}/debts/summary", name="debts_summary")
      * @Template("@App/Report/Debt/summary.html.twig")
      *
-     * @param Request $request
      * @param $reportId
      *
      * @return array|RedirectResponse
@@ -199,14 +195,14 @@ class DebtController extends AbstractController
     {
         $fromPage = $request->get('from');
         $report = $this->reportApi->getReportIfNotSubmitted($reportId, self::$jmsGroups);
-        if ($report->getStatus()->getDebtsState()['state'] == EntityDir\Report\Status::STATE_NOT_STARTED && $fromPage != 'skip-step') {
+        if (EntityDir\Report\Status::STATE_NOT_STARTED == $report->getStatus()->getDebtsState()['state'] && 'skip-step' != $fromPage) {
             return $this->redirectToRoute('debts', ['reportId' => $reportId]);
         }
 
         return [
-            'comingFromLastStep' => $fromPage == 'skip-step' || $fromPage == 'last-step',
+            'comingFromLastStep' => 'skip-step' == $fromPage || 'last-step' == $fromPage,
             'report' => $report,
-            'status' => $report->getStatus()
+            'status' => $report->getStatus(),
         ];
     }
 

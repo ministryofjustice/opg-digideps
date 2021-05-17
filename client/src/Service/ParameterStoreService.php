@@ -1,4 +1,6 @@
-<?php declare(strict_types=1);
+<?php
+
+declare(strict_types=1);
 
 namespace App\Service;
 
@@ -31,16 +33,16 @@ class ParameterStoreService
 
     public function getParameter(string $parameterKey)
     {
-        $parameterKey = $this->parameterPrefix . $parameterKey;
-        $parameter = $this->ssmClient->getParameter([ 'Name' => $parameterKey ]);
+        $parameterKey = $this->parameterPrefix.$parameterKey;
+        $parameter = $this->ssmClient->getParameter(['Name' => $parameterKey]);
 
         return $parameter['Parameter']['Value'];
     }
 
     public function getFeatureFlag(string $flagKey)
     {
-        $flagName = $this->flagPrefix . $flagKey;
-        $flag = $this->ssmClient->getParameter([ 'Name' => $flagName ]);
+        $flagName = $this->flagPrefix.$flagKey;
+        $flag = $this->ssmClient->getParameter(['Name' => $flagName]);
 
         return $flag['Parameter']['Value'];
     }

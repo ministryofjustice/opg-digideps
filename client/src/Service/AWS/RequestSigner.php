@@ -1,8 +1,9 @@
-<?php declare(strict_types=1);
+<?php
+
+declare(strict_types=1);
 
 namespace App\Service\AWS;
 
-use Aws\Signature\SignatureV4;
 use GuzzleHttp\Psr7\Request;
 
 class RequestSigner
@@ -26,6 +27,7 @@ class RequestSigner
     public function signRequest(Request $request, string $service)
     {
         $credentials = $this->credentialProvider->getCredentials();
+
         return $this->signer->signRequest($request, $credentials, $service);
     }
 }

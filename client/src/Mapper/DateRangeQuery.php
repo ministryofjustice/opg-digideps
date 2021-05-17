@@ -1,4 +1,6 @@
-<?php declare(strict_types=1);
+<?php
+
+declare(strict_types=1);
 
 namespace App\Mapper;
 
@@ -40,7 +42,6 @@ class DateRangeQuery implements StartEndDateComparableInterface
     }
 
     /**
-     * @param DateTime|null $startDate
      * @return DateRangeQuery
      */
     public function setStartDate(?DateTime $startDate)
@@ -51,7 +52,6 @@ class DateRangeQuery implements StartEndDateComparableInterface
     }
 
     /**
-     * @param DateTime|null $endDate
      * @return DateRangeQuery
      */
     public function setEndDate(?DateTime $endDate)
@@ -71,6 +71,7 @@ class DateRangeQuery implements StartEndDateComparableInterface
 
     /**
      * @param mixed $orderBy
+     *
      * @return DateRangeQuery
      */
     public function setOrderBy($orderBy)
@@ -90,6 +91,7 @@ class DateRangeQuery implements StartEndDateComparableInterface
 
     /**
      * @param mixed $sortOrder
+     *
      * @return DateRangeQuery
      */
     public function setSortOrder($sortOrder)

@@ -28,7 +28,6 @@ class AssetController extends AbstractController
      */
     private $restClient;
 
-
     /**
      * @var StepRedirector
      */
@@ -49,12 +48,13 @@ class AssetController extends AbstractController
      * @Template("@App/Ndr/Asset/start.html.twig")
      *
      * @param $ndrId
+     *
      * @return array|RedirectResponse
      */
     public function startAction($ndrId)
     {
         $ndr = $this->reportApi->getNdrIfNotSubmitted($ndrId, self::$jmsGroups);
-        if ($ndr->getStatusService()->getAssetsState()['state'] != NdrStatusService::STATE_NOT_STARTED) {
+        if (NdrStatusService::STATE_NOT_STARTED != $ndr->getStatusService()->getAssetsState()['state']) {
             return $this->redirectToRoute('ndr_assets_summary', ['ndrId' => $ndrId]);
         }
 
@@ -70,13 +70,13 @@ class AssetController extends AbstractController
     public function existAction(Request $request, $ndrId)
     {
         $ndr = $this->reportApi->getNdrIfNotSubmitted($ndrId, self::$jmsGroups);
-        if ($request->getMethod() == 'GET' && $ndr->getAssets()) { // if assets are added, set form default to "Yes"
+        if ('GET' == $request->getMethod() && $ndr->getAssets()) { // if assets are added, set form default to "Yes"
             $ndr->setNoAssetToAdd(0);
         }
         $form = $this->createForm(FormDir\YesNoType::class, $ndr, [
-            'field'              => 'noAssetToAdd',
+            'field' => 'noAssetToAdd',
             'translation_domain' => 'ndr-assets',
-            'choices'            => ['Yes'=>0, 'No'=>1]
+            'choices' => ['Yes' => 0, 'No' => 1],
         ]);
 
         $form->handleRequest($request);
@@ -84,15 +84,16 @@ class AssetController extends AbstractController
         if ($form->isSubmitted() && $form->isValid()) {
             switch ($ndr->getNoAssetToAdd()) {
                 case 0: // yes
-                    return $this->redirectToRoute('ndr_assets_type', ['ndrId' => $ndrId,]);
+                    return $this->redirectToRoute('ndr_assets_type', ['ndrId' => $ndrId]);
                 case 1: //no
-                    $this->restClient->put('ndr/' . $ndrId, $ndr, ['noAssetsToAdd']);
+                    $this->restClient->put('ndr/'.$ndrId, $ndr, ['noAssetsToAdd']);
+
                     return $this->redirectToRoute('ndr_assets_summary', ['ndrId' => $ndrId]);
             }
         }
 
         $backLink = $this->generateUrl('ndr_assets', ['ndrId' => $ndrId]);
-        if ($request->get('from') == 'summary') {
+        if ('summary' == $request->get('from')) {
             $backLink = $this->generateUrl('ndr_assets_summary', ['ndrId' => $ndrId]);
         }
 
@@ -159,7 +160,7 @@ class AssetController extends AbstractController
             'form' => $form->createView(),
             'ndr' => $ndr,
             // avoid sending query string to GA containing user's data
-            'gaCustomUrl' => $this->generateUrl('ndr_asset_other_add', ['ndrId'=>$ndrId, 'title'=>'type'])
+            'gaCustomUrl' => $this->generateUrl('ndr_asset_other_add', ['ndrId' => $ndrId, 'title' => 'type']),
         ];
     }
 
@@ -176,7 +177,6 @@ class AssetController extends AbstractController
             $asset = new EntityDir\Ndr\AssetOther();
             $asset->setndr($ndr);
         }
-
 
         $form = $this->createForm(FormDir\Ndr\Asset\AssetTypeOther::class, $asset);
         $form->handleRequest($request);
@@ -270,7 +270,7 @@ class AssetController extends AbstractController
         isset($dataFromUrl['ser']) && $asset->setIsSubjectToEquityRelease($dataFromUrl['ser']);
         isset($dataFromUrl['hc']) && $asset->setHasCharges($dataFromUrl['hc']);
         $stepRedirector->setStepUrlAdditionalParams([
-            'data' => $dataFromUrl
+            'data' => $dataFromUrl,
         ]);
 
         // create and handle form
@@ -289,33 +289,33 @@ class AssetController extends AbstractController
                 return $this->redirect($this->generateUrl('ndr_assets_summary', ['ndrId' => $ndrId]));
             }
 
-            if ($step == 1) {
+            if (1 == $step) {
                 $stepUrlData['address'] = $asset->getAddress();
                 $stepUrlData['address2'] = $asset->getAddress2();
                 $stepUrlData['postcode'] = $asset->getPostcode();
                 $stepUrlData['county'] = $asset->getCounty();
             }
 
-            if ($step == 2) {
+            if (2 == $step) {
                 $stepUrlData['occupants'] = $asset->getOccupants();
             }
 
-            if ($step == 3) {
+            if (3 == $step) {
                 $stepUrlData['owned'] = $asset->getOwned();
                 $stepUrlData['owned_p'] = $asset->getOwnedPercentage();
             }
 
-            if ($step == 4) {
+            if (4 == $step) {
                 $stepUrlData['has_mg'] = $asset->getHasMortgage();
                 $stepUrlData['mg_oa'] = $asset->getMortgageOutstandingAmount();
             }
-            if ($step == 5) {
+            if (5 == $step) {
                 $stepUrlData['value'] = $asset->getValue();
             }
-            if ($step == 6) {
+            if (6 == $step) {
                 $stepUrlData['ser'] = $asset->getIsSubjectToEquityRelease();
             }
-            if ($step == 7) {
+            if (7 == $step) {
                 $stepUrlData['hc'] = $asset->getHasCharges();
             }
 
@@ -327,7 +327,7 @@ class AssetController extends AbstractController
             }
 
             $stepRedirector->setStepUrlAdditionalParams([
-                'data' => $stepUrlData
+                'data' => $stepUrlData,
             ]);
 
             return $this->redirect($stepRedirector->getRedirectLinkAfterSaving());
@@ -340,7 +340,7 @@ class AssetController extends AbstractController
             'form' => $form->createView(),
             'backLink' => $stepRedirector->getBackLink(),
             'skipLink' => null,
-            'gaCustomUrl' => $request->getPathInfo() // avoid sending query string to GA containing user's data
+            'gaCustomUrl' => $request->getPathInfo(), // avoid sending query string to GA containing user's data
         ];
     }
 
@@ -355,7 +355,7 @@ class AssetController extends AbstractController
     public function summaryAction($ndrId)
     {
         $ndr = $this->reportApi->getNdrIfNotSubmitted($ndrId, self::$jmsGroups);
-        if ($ndr->getStatusService()->getAssetsState()['state'] == NdrStatusService::STATE_NOT_STARTED) {
+        if (NdrStatusService::STATE_NOT_STARTED == $ndr->getStatusService()->getAssetsState()['state']) {
             return $this->redirect($this->generateUrl('ndr_assets', ['ndrId' => $ndrId]));
         }
 

@@ -7,13 +7,13 @@ use App\Entity as EntityDir;
 use App\Form as FormDir;
 use App\Service\Client\Internal\ReportApi;
 use App\Service\Client\RestClient;
-use Symfony\Component\HttpFoundation\RedirectResponse;
-use Symfony\Component\Routing\Annotation\Route;
 use Sensio\Bundle\FrameworkExtraBundle\Configuration\Template;
+use Symfony\Component\HttpFoundation\RedirectResponse;
 use Symfony\Component\HttpFoundation\Request;
+use Symfony\Component\Routing\Annotation\Route;
 
 /**
- * Base route
+ * Base route.
  *
  * @Route("/report/{reportId}/pa-fee-expense")
  */
@@ -51,7 +51,7 @@ class PaFeeExpenseController extends AbstractController
     {
         $report = $this->reportApi->getReportIfNotSubmitted($reportId, self::$jmsGroups);
 
-        if ($report->getStatus()->getPaFeesExpensesState()['state'] != EntityDir\Report\Status::STATE_NOT_STARTED) {
+        if (EntityDir\Report\Status::STATE_NOT_STARTED != $report->getStatus()->getPaFeesExpensesState()['state']) {
             return $this->redirectToRoute('pa_fee_expense_summary', ['reportId' => $reportId]);
         }
 
@@ -64,7 +64,6 @@ class PaFeeExpenseController extends AbstractController
      * @Route("/fee-exist", name="pa_fee_expense_fee_exist")
      * @Template("@App/Report/PaFeeExpense/feeExist.html.twig")
      *
-     * @param Request $request
      * @param $reportId
      *
      * @return array|RedirectResponse
@@ -79,18 +78,20 @@ class PaFeeExpenseController extends AbstractController
             switch ($form['hasFees']->getData()) {
                 case 'yes':
                     $report->setReasonForNoFees(null);
-                    $this->restClient->put('report/' . $reportId, $report, ['reasonForNoFees']);
-                    return $this->redirectToRoute('pa_fee_expense_fee_edit', ['reportId' => $reportId, 'from'=>'fee_exist']);
+                    $this->restClient->put('report/'.$reportId, $report, ['reasonForNoFees']);
+
+                    return $this->redirectToRoute('pa_fee_expense_fee_edit', ['reportId' => $reportId, 'from' => 'fee_exist']);
                 case 'no':
-                    $this->restClient->put('report/' . $reportId, $report, ['reasonForNoFees']);
+                    $this->restClient->put('report/'.$reportId, $report, ['reasonForNoFees']);
                     // if 2nd seciont is complete, go to summary
                     $nextRoute = $report->isOtherFeesSectionComplete() ? 'pa_fee_expense_summary' : 'pa_fee_expense_other_exist';
-                    return $this->redirectToRoute($nextRoute, ['reportId' => $reportId, 'from'=>'fee_exist']);
+
+                    return $this->redirectToRoute($nextRoute, ['reportId' => $reportId, 'from' => 'fee_exist']);
             }
         }
 
-        $backRoute = $request->get('from') === 'summary' ? 'pa_fee_expense_summary' : 'pa_fee_expense';
-        $backLink = $this->generateUrl($backRoute, ['reportId'=>$reportId]);
+        $backRoute = 'summary' === $request->get('from') ? 'pa_fee_expense_summary' : 'pa_fee_expense';
+        $backLink = $this->generateUrl($backRoute, ['reportId' => $reportId]);
 
         return [
             'backLink' => $backLink,
@@ -103,7 +104,6 @@ class PaFeeExpenseController extends AbstractController
      * @Route("/fee-edit", name="pa_fee_expense_fee_edit")
      * @Template("@App/Report/PaFeeExpense/feeEdit.html.twig")
      *
-     * @param Request $request
      * @param $reportId
      *
      * @return array|RedirectResponse
@@ -116,18 +116,20 @@ class PaFeeExpenseController extends AbstractController
         $fromPage = $request->get('from');
 
         if ($form->isSubmitted() && $form->isValid()) {
-            $this->restClient->put('report/' . $report->getId(), $form->getData(), ['fee']);
-            if ($fromPage == 'summary') {
+            $this->restClient->put('report/'.$report->getId(), $form->getData(), ['fee']);
+            if ('summary' == $fromPage) {
                 $request->getSession()->getFlashBag()->add('notice', 'Fee edited');
+
                 return $this->redirectToRoute('pa_fee_expense_summary', ['reportId' => $reportId]);
             }
 
             $nextRoute = $report->isOtherFeesSectionComplete() ? 'pa_fee_expense_summary' : 'pa_fee_expense_other_exist';
+
             return $this->redirectToRoute($nextRoute, ['reportId' => $reportId]);
         }
 
-        $backRoute = $request->get('from') === 'summary' ? 'pa_fee_expense_summary' : 'pa_fee_expense_fee_exist';
-        $backLink = $this->generateUrl($backRoute, ['reportId'=>$reportId]);
+        $backRoute = 'summary' === $request->get('from') ? 'pa_fee_expense_summary' : 'pa_fee_expense_fee_exist';
+        $backLink = $this->generateUrl($backRoute, ['reportId' => $reportId]);
 
         return [
             'backLink' => $backLink,
@@ -140,7 +142,6 @@ class PaFeeExpenseController extends AbstractController
      * @Route("/other/exist", name="pa_fee_expense_other_exist")
      * @Template("@App/Report/PaFeeExpense/otherExist.html.twig")
      *
-     * @param Request $request
      * @param $reportId
      *
      * @return array|RedirectResponse
@@ -151,7 +152,7 @@ class PaFeeExpenseController extends AbstractController
         $form = $this->createForm(
             FormDir\YesNoType::class,
             $report,
-            [ 'field' => 'paidForAnything', 'translation_domain' => 'report-pa-fee-expense']
+            ['field' => 'paidForAnything', 'translation_domain' => 'report-pa-fee-expense']
         );
         $form->handleRequest($request);
 
@@ -164,7 +165,8 @@ class PaFeeExpenseController extends AbstractController
                     // it'd leave the data inconsistent
                     return $this->redirectToRoute('pa_fee_expense_other_add', ['reportId' => $reportId]);
                 case 'no':
-                    $this->restClient->put('report/' . $reportId, $data, ['expenses-paid-anything']);
+                    $this->restClient->put('report/'.$reportId, $data, ['expenses-paid-anything']);
+
                     return $this->redirectToRoute('pa_fee_expense_summary', ['reportId' => $reportId]);
             }
         }
@@ -175,7 +177,7 @@ class PaFeeExpenseController extends AbstractController
             'fee_exist' => 'pa_fee_expense_fee_exist',
         ];
         $backRoute = isset($fromToRoute[$from]) ? $fromToRoute[$from] : 'pa_fee_expense_fee_edit';
-        $backLink = $this->generateUrl($backRoute, ['reportId'=>$reportId]);
+        $backLink = $this->generateUrl($backRoute, ['reportId' => $reportId]);
 
         return [
             'backLink' => $backLink,
@@ -188,7 +190,6 @@ class PaFeeExpenseController extends AbstractController
      * @Route("/other/add", name="pa_fee_expense_other_add")
      * @Template("@App/Report/PaFeeExpense/otherAdd.html.twig")
      *
-     * @param Request $request
      * @param $reportId
      *
      * @return array|RedirectResponse
@@ -203,7 +204,7 @@ class PaFeeExpenseController extends AbstractController
             $expense,
             [
                 'user' => $this->getUser(),
-                'report' => $report
+                'report' => $report,
             ]
         );
         $form->handleRequest($request);
@@ -212,7 +213,7 @@ class PaFeeExpenseController extends AbstractController
             $data = $form->getData();
             $data->setReport($report);
 
-            $this->restClient->post('report/' . $report->getId() . '/expense', $data, ['expenses']);
+            $this->restClient->post('report/'.$report->getId().'/expense', $data, ['expenses']);
 
             return $this->redirect($this->generateUrl('pa_fee_expense_add_another', ['reportId' => $reportId]));
         }
@@ -223,7 +224,7 @@ class PaFeeExpenseController extends AbstractController
             'add_another' => 'pa_fee_expense_add_another',
         ];
         $backRoute = isset($fromToRoute[$from]) ? $fromToRoute[$from] : 'pa_fee_expense_other_exist';
-        $backLink = $this->generateUrl($backRoute, ['reportId'=>$reportId]);
+        $backLink = $this->generateUrl($backRoute, ['reportId' => $reportId]);
 
         return [
             'backLink' => $backLink,
@@ -236,7 +237,6 @@ class PaFeeExpenseController extends AbstractController
      * @Route("/other/add-another", name="pa_fee_expense_add_another")
      * @Template("@App/Report/PaFeeExpense/otherAddAnother.html.twig")
      *
-     * @param Request $request
      * @param $reportId
      *
      * @return array|RedirectResponse
@@ -267,7 +267,6 @@ class PaFeeExpenseController extends AbstractController
      * @Route("/other-edit/{expenseId}", name="pa_fee_expense_edit")
      * @Template("@App/Report/PaFeeExpense/otherEdit.html.twig")
      *
-     * @param Request $request
      * @param $reportId
      * @param $expenseId
      *
@@ -276,14 +275,14 @@ class PaFeeExpenseController extends AbstractController
     public function otherEditAction(Request $request, $reportId, $expenseId)
     {
         $report = $this->reportApi->getReportIfNotSubmitted($reportId, self::$jmsGroups);
-        $expense = $this->restClient->get('report/' . $report->getId() . '/expense/' . $expenseId, 'Report\Expense');
+        $expense = $this->restClient->get('report/'.$report->getId().'/expense/'.$expenseId, 'Report\Expense');
 
         $form = $this->createForm(
             FormDir\Report\DeputyExpenseType::class,
             $expense,
             [
                 'user' => $this->getUser(),
-                'report' => $report
+                'report' => $report,
             ]
         );
 
@@ -293,7 +292,7 @@ class PaFeeExpenseController extends AbstractController
             $data = $form->getData();
             $request->getSession()->getFlashBag()->add('notice', 'Expense edited');
 
-            $this->restClient->put('report/' . $report->getId() . '/expense/' . $expense->getId(), $data, ['expenses']);
+            $this->restClient->put('report/'.$report->getId().'/expense/'.$expense->getId(), $data, ['expenses']);
 
             return $this->redirect($this->generateUrl('pa_fee_expense', ['reportId' => $reportId]));
         }
@@ -309,7 +308,6 @@ class PaFeeExpenseController extends AbstractController
      * @Route("/other/delete/{expenseId}", name="pa_fee_expense_delete")
      * @Template("@App/Common/confirmDelete.html.twig")
      *
-     * @param Request $request
      * @param $reportId
      * @param $expenseId
      *
@@ -325,7 +323,7 @@ class PaFeeExpenseController extends AbstractController
         if ($form->isSubmitted() && $form->isValid()) {
             $report = $this->reportApi->getReportIfNotSubmitted($reportId, self::$jmsGroups);
 
-            $this->restClient->delete('report/' . $report->getId() . '/expense/' . $expenseId);
+            $this->restClient->delete('report/'.$report->getId().'/expense/'.$expenseId);
 
             $request->getSession()->getFlashBag()->add(
                 'notice',
@@ -335,7 +333,7 @@ class PaFeeExpenseController extends AbstractController
             return $this->redirect($this->generateUrl('pa_fee_expense', ['reportId' => $reportId]));
         }
 
-        $expense = $this->restClient->get('report/' . $report->getId() . '/expense/' . $expenseId, 'Report\Expense');
+        $expense = $this->restClient->get('report/'.$report->getId().'/expense/'.$expenseId, 'Report\Expense');
 
         return [
             'translationDomain' => 'report-pa-fee-expense',
@@ -360,7 +358,7 @@ class PaFeeExpenseController extends AbstractController
     public function summaryAction($reportId)
     {
         $report = $this->reportApi->getReportIfNotSubmitted($reportId, self::$jmsGroups);
-        if ($report->getStatus()->getPaFeesExpensesState()['state'] == EntityDir\Report\Status::STATE_NOT_STARTED) {
+        if (EntityDir\Report\Status::STATE_NOT_STARTED == $report->getStatus()->getPaFeesExpensesState()['state']) {
             return $this->redirect($this->generateUrl('pa_fee_expense', ['reportId' => $reportId]));
         }
 

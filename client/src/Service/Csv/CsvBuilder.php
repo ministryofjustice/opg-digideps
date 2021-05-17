@@ -1,5 +1,6 @@
-<?php declare(strict_types=1);
+<?php
 
+declare(strict_types=1);
 
 namespace App\Service\Csv;
 
@@ -28,15 +29,11 @@ class CsvBuilder
     {
         $this->filePointer = fopen('php://temp/maxmemory:1048576', 'w');
 
-        if ($this->filePointer === false) {
+        if (false === $this->filePointer) {
             throw new \Exception('Failed to open temporary file');
         }
     }
 
-
-    /**
-     * @param array $headers
-     */
     private function addHeaders(array $headers): void
     {
         if (!empty($headers)) {
@@ -44,9 +41,6 @@ class CsvBuilder
         }
     }
 
-    /**
-     * @param array $rows
-     */
     private function addRows(array $rows): void
     {
         foreach ($rows as $row) {

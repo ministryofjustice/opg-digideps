@@ -7,14 +7,14 @@ use App\Service\Client\RestClient;
 use App\Service\DeputyProvider;
 use App\Service\Redirector;
 use App\Service\StringUtils;
-use Symfony\Component\HttpFoundation\RedirectResponse;
-use Symfony\Component\Routing\Annotation\Route;
 use Sensio\Bundle\FrameworkExtraBundle\Configuration\Template;
 use Symfony\Component\EventDispatcher\EventDispatcherInterface;
 use Symfony\Component\Form\FormError;
+use Symfony\Component\HttpFoundation\RedirectResponse;
 use Symfony\Component\HttpFoundation\Request;
 use Symfony\Component\HttpFoundation\Response;
 use Symfony\Component\HttpFoundation\Session\SessionInterface;
+use Symfony\Component\Routing\Annotation\Route;
 use Symfony\Component\Routing\Exception\ResourceNotFoundException;
 use Symfony\Component\Routing\RouterInterface;
 use Symfony\Component\Security\Core\Authentication\Token\Storage\TokenStorageInterface;
@@ -37,13 +37,13 @@ class IndexController extends AbstractController
     /** @var TranslatorInterface */
     private $translator;
 
-    /** @var string  */
+    /** @var string */
     private $environment;
 
     /** @var RestClient */
     private $restClient;
 
-    /** @var RouterInterface  */
+    /** @var RouterInterface */
     private $router;
 
     public function __construct(
@@ -67,7 +67,6 @@ class IndexController extends AbstractController
     /**
      * @Route("/", name="homepage")
      *
-     * @param Redirector $redirector
      * @return RedirectResponse|Response|null
      */
     public function indexAction(Redirector $redirector)
@@ -78,7 +77,7 @@ class IndexController extends AbstractController
 
         // deputy homepage with links to register and login
         return $this->render('@App/Index/index.html.twig', [
-                'environment' => $this->environment
+                'environment' => $this->environment,
             ]);
     }
 
@@ -86,7 +85,6 @@ class IndexController extends AbstractController
      * @Route("login", name="login")
      * @Template("@App/Index/login.html.twig")
      *
-     * @param Request $request
      * @return Response|null
      */
     public function loginAction(Request $request)
@@ -96,26 +94,26 @@ class IndexController extends AbstractController
         ]);
         $form->handleRequest($request);
         $vars = [
-            'isAdmin' => $this->environment === 'admin',
+            'isAdmin' => 'admin' === $this->environment,
         ];
 
         if ($form->isSubmitted() && $form->isValid()) {
             try {
                 $this->logUserIn($form->getData(), $request, [
                     '_adId' => null,
-                    '_adFirstname' =>  null,
+                    '_adFirstname' => null,
                     '_adLastname' => null,
                     'loggedOutFrom' => null,
                 ]);
             } catch (\Throwable $e) {
                 $error = $e->getMessage();
 
-                if ($e->getCode() == 423 && method_exists($e, 'getData')) {
+                if (423 == $e->getCode() && method_exists($e, 'getData')) {
                     $lockedFor = ceil(($e->getData()['data'] - time()) / 60);
                     $error = $this->translator->trans('bruteForceLocked', ['%minutes%' => $lockedFor], 'signin');
                 }
 
-                if ($e->getCode() == 499) {
+                if (499 == $e->getCode()) {
                     // too-many-attempts warning. captcha ?
                 }
 
@@ -131,44 +129,44 @@ class IndexController extends AbstractController
         /** @var SessionInterface */
         $session = $request->getSession();
 
-        if ($session->get('loggedOutFrom') === 'logoutPage') {
+        if ('logoutPage' === $session->get('loggedOutFrom')) {
             $session->set('loggedOutFrom', null); //avoid display the message at next page reload
+
             return $this->render('@App/Index/login-from-logout.html.twig', [
-                    'form' => $form->createView()
+                    'form' => $form->createView(),
                 ] + $vars);
-        } elseif ($session->get('loggedOutFrom') === 'timeout' || $request->query->get('from') === 'api') {
+        } elseif ('timeout' === $session->get('loggedOutFrom') || 'api' === $request->query->get('from')) {
             $session->set('loggedOutFrom', null); //avoid display the message at next page reload
             $vars['error'] = $this->translator->trans('sessionTimeoutOutWarning', [
                 '%time%' => StringUtils::secondsToHoursMinutes($this->container->getParameter('session_expire_seconds')),
             ], 'signin');
         }
 
-        $snSetting = $this->restClient->get('setting/service-notification', 'Setting', [], ['addAuthToken'=>false]);
+        $snSetting = $this->restClient->get('setting/service-notification', 'Setting', [], ['addAuthToken' => false]);
 
         return $this->render('@App/Index/login.html.twig', [
                 'form' => $form->createView(),
-                'serviceNotificationContent' => $snSetting->isEnabled() ? $snSetting->getContent() : null
-
+                'serviceNotificationContent' => $snSetting->isEnabled() ? $snSetting->getContent() : null,
         ] + $vars);
     }
 
     /**
      * @Route("login-ad/{userToken}/{adId}/{adFirstname}/{adLastname}", name="ad_login")
      *
-     * @param Request $request
      * @param $userToken
      * @param $adId
      * @param $adFirstname
      * @param $adLastname
      *
      * @return Response
+     *
      * @throws \Throwable
      */
     public function adLoginAction(Request $request, $userToken, $adId, $adFirstname, $adLastname)
     {
         $this->logUserIn(['token' => $userToken], $request, [
             '_adId' => $adId,
-            '_adFirstname' =>  $adFirstname,
+            '_adFirstname' => $adFirstname,
             '_adLastname' => $adLastname,
             'loggedOutFrom' => null,
         ]);
@@ -183,8 +181,6 @@ class IndexController extends AbstractController
 
     /**
      * @param array $credentials see RestClient::login()
-     * @param Request $request
-     * @param array $sessionVars
      *
      * @throws \Throwable
      */
@@ -198,7 +194,7 @@ class IndexController extends AbstractController
         /** @var SessionInterface */
         $session = $request->getSession();
         $session->set('_security_secured_area', serialize($token));
-        foreach ($sessionVars as $k=>$v) {
+        foreach ($sessionVars as $k => $v) {
             $session->set($k, $v);
         }
 
@@ -220,8 +216,6 @@ class IndexController extends AbstractController
 
     /**
      * @Route("error-503", name="error-503")
-     *
-     * @param Request $request
      *
      * @return Response|null
      */
@@ -261,7 +255,7 @@ class IndexController extends AbstractController
     public function termsAction(Request $request)
     {
         return $this->render('@App/Index/terms.html.twig', [
-            'backlink' => $this->getRefererUrlSafe($request, ['terms'])
+            'backlink' => $this->getRefererUrlSafe($request, ['terms']),
         ]);
     }
 
@@ -271,7 +265,7 @@ class IndexController extends AbstractController
     public function privacyAction(Request $request)
     {
         return $this->render('@App/Index/privacy.html.twig', [
-            'backlink' => $this->getRefererUrlSafe($request, ['privacy'])
+            'backlink' => $this->getRefererUrlSafe($request, ['privacy']),
         ]);
     }
 
@@ -281,7 +275,7 @@ class IndexController extends AbstractController
     public function accessibilityAction(Request $request)
     {
         return $this->render('@App/Index/accessibility.html.twig', [
-            'backlink' => $this->getRefererUrlSafe($request, ['accessibility'])
+            'backlink' => $this->getRefererUrlSafe($request, ['accessibility']),
         ]);
     }
 
@@ -311,16 +305,16 @@ class IndexController extends AbstractController
         if ($request->cookies->has('cookie_policy')) {
             $policy = json_decode($request->cookies->get('cookie_policy'));
             $form->get('usage')->setData($policy->usage);
-        } elseif ($request->query->get('accept') === 'all') {
+        } elseif ('all' === $request->query->get('accept')) {
             $form->get('usage')->setData(true);
         }
 
         $form->handleRequest($request);
 
-        if ($form->isSubmitted() && $form->isValid() || $request->query->get('accept') === 'all') {
+        if ($form->isSubmitted() && $form->isValid() || 'all' === $request->query->get('accept')) {
             $settings = [
                 'essential' => true,
-                'usage' => $form->get('usage')->getData()
+                'usage' => $form->get('usage')->getData(),
             ];
             setcookie(
                 'cookie_policy',
@@ -333,16 +327,14 @@ class IndexController extends AbstractController
         }
 
         return $this->render('@App/Index/cookies.html.twig', [
-            'form' => $form->createView()
+            'form' => $form->createView(),
         ]);
     }
 
     /**
-     * Get referer, only if matching an existing route
+     * Get referer, only if matching an existing route.
      *
-     * @param  Request $request
-     * @param  array   $excludedRoutes
-     * @return string|null  referer URL, null if not existing or inside the $excludedRoutes
+     * @return string|null referer URL, null if not existing or inside the $excludedRoutes
      */
     protected function getRefererUrlSafe(Request $request, array $excludedRoutes = [])
     {

@@ -1,9 +1,10 @@
 <?php
+
 /**
  * Created by PhpStorm.
  * User: elvis
  * Date: 28/10/2016
- * Time: 15:50
+ * Time: 15:50.
  */
 
 namespace App\Service;
@@ -57,8 +58,6 @@ class StepRedirector
 
     /**
      * StepRedirector constructor.
-     *
-     * @param RouterInterface $router
      */
     public function __construct(RouterInterface $router)
     {
@@ -90,6 +89,7 @@ class StepRedirector
     public function setFromPage($fromPage)
     {
         $this->fromPage = $fromPage;
+
         return $this;
     }
 
@@ -101,6 +101,7 @@ class StepRedirector
     public function setCurrentStep($currentStep)
     {
         $this->currentStep = (int) $currentStep;
+
         return $this;
     }
 
@@ -110,17 +111,17 @@ class StepRedirector
     public function setTotalSteps($totalSteps)
     {
         $this->totalSteps = (int) $totalSteps;
+
         return $this;
     }
 
     /**
-     * @param array $routeBaseParams
-     *
      * @return StepRedirector
      */
     public function setRouteBaseParams(array $routeBaseParams)
     {
         $this->routeBaseParams = $routeBaseParams;
+
         return $this;
     }
 
@@ -132,19 +133,20 @@ class StepRedirector
     public function setStepUrlAdditionalParams(array $stepUrlAdditionalParams)
     {
         $this->stepUrlAdditionalParams = $stepUrlAdditionalParams;
+
         return $this;
     }
 
     public function getRedirectLinkAfterSaving()
     {
         // return to summary if coming from there, or it's the last step
-        if ($this->fromPage === 'summary') {
+        if ('summary' === $this->fromPage) {
             return $this->generateUrl($this->routeSummary, [
-                'stepEdited' => $this->currentStep
+                'stepEdited' => $this->currentStep,
             ]);
         }
         if ($this->currentStep === $this->totalSteps) {
-            return $this->generateUrl($this->routeSummary, ['from'=>'last-step']);
+            return $this->generateUrl($this->routeSummary, ['from' => 'last-step']);
         }
 
         return $this->generateUrl($this->routeStep, [
@@ -154,30 +156,30 @@ class StepRedirector
 
     public function getBackLink()
     {
-        if ($this->fromPage === 'summary') {
-            return $this->generateUrl($this->routeSummary, ['from'=>'skip-step']);
-        } elseif ($this->currentStep == 1) {
+        if ('summary' === $this->fromPage) {
+            return $this->generateUrl($this->routeSummary, ['from' => 'skip-step']);
+        } elseif (1 == $this->currentStep) {
             return $this->generateUrl($this->step1BackLink);
         }
 
         return $this->generateUrl($this->routeStep, [
-            'step' => $this->currentStep - 1
+            'step' => $this->currentStep - 1,
             ] + $this->stepUrlAdditionalParams);
     }
 
     public function getSkipLink()
     {
-        if (!empty($this->fromPage) || $this->totalSteps == 1) {
+        if (!empty($this->fromPage) || 1 == $this->totalSteps) {
             return null;
         }
         if ($this->currentStep == $this->totalSteps) {
             return $this->generateUrl($this->routeSummary, [
-                'from' => 'skip-step'
+                'from' => 'skip-step',
             ]);
         }
 
         return $this->generateUrl($this->routeStep, [
-            'step' => $this->currentStep + 1
+            'step' => $this->currentStep + 1,
         ]);
     }
 

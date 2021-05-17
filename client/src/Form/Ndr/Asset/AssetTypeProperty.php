@@ -17,7 +17,7 @@ class AssetTypeProperty extends AbstractType
     public function buildForm(FormBuilderInterface $builder, array $options)
     {
         $this->step = (int) $options['step'];
-        if ($this->step === 1) {
+        if (1 === $this->step) {
             $builder
                 ->add('address', FormTypes\TextType::class)
                 ->add('address2', FormTypes\TextType::class)
@@ -25,12 +25,12 @@ class AssetTypeProperty extends AbstractType
                 ->add('county', FormTypes\TextType::class);
         }
 
-        if ($this->step === 2) {
+        if (2 === $this->step) {
             $builder
                 ->add('occupants', FormTypes\TextareaType::class);
         }
 
-        if ($this->step === 3) {
+        if (3 === $this->step) {
             $builder->add('owned', FormTypes\ChoiceType::class, [
                 'choices' => array_flip(['fully' => 'Fully-owned', 'partly' => 'Part-owned']),
                 'expanded' => true,
@@ -38,11 +38,11 @@ class AssetTypeProperty extends AbstractType
                 ->add('ownedPercentage', FormTypes\NumberType::class, [
                     'grouping' => false,
                     'scale' => 0,
-                    'attr' => ['maxlength'=>2],
+                    'attr' => ['maxlength' => 2],
                     'invalid_message' => 'ndr.asset.property.ownedPercentage.type',
                 ]);
         }
-        if ($this->step === 4) {
+        if (4 === $this->step) {
             $builder->add('hasMortgage', FormTypes\ChoiceType::class, [
                 'choices' => ['Yes' => 'yes', 'No' => 'no'],
                 'expanded' => true,
@@ -54,7 +54,7 @@ class AssetTypeProperty extends AbstractType
                 ]);
         }
 
-        if ($this->step === 5) {
+        if (5 === $this->step) {
             $builder->add('value', FormTypes\NumberType::class, [
                 'grouping' => true,
                 'scale' => 2,
@@ -62,7 +62,7 @@ class AssetTypeProperty extends AbstractType
             ]);
         }
 
-        if ($this->step === 6) {
+        if (6 === $this->step) {
             $builder
                 ->add('isSubjectToEquityRelease', FormTypes\ChoiceType::class, [
                     'choices' => ['Yes' => 'yes', 'No' => 'no'],
@@ -70,7 +70,7 @@ class AssetTypeProperty extends AbstractType
                 ]);
         }
 
-        if ($this->step === 7) {
+        if (7 === $this->step) {
             $builder
                 ->add('hasCharges', FormTypes\ChoiceType::class, [
                     'choices' => ['Yes' => 'yes', 'No' => 'no'],
@@ -78,7 +78,7 @@ class AssetTypeProperty extends AbstractType
                 ]);
         }
 
-        if ($this->step === 8) {
+        if (8 === $this->step) {
             $builder
                 ->add('isRentedOut', FormTypes\ChoiceType::class, [
                     'choices' => ['Yes' => 'yes', 'No' => 'no'],
@@ -117,22 +117,20 @@ class AssetTypeProperty extends AbstractType
     protected function getValidationGroups()
     {
         return function (FormInterface $form) {
-
             /** @var $asset \App\Entity\Report\AssetProperty */
             $asset = $form->getData();
 
             return [
                 1 => ['property-address'],
                 2 => ['property-occupants'],
-                3 => ($asset->getOwned() == 'partly') ? ['property-owned', 'property-owned-partly'] : ['property-owned'],
-                4 => ($asset->getHasMortgage() == 'yes') ? ['property-mortgage', 'property-mortgage-outstanding-amount'] : ['property-mortgage'],
+                3 => ('partly' == $asset->getOwned()) ? ['property-owned', 'property-owned-partly'] : ['property-owned'],
+                4 => ('yes' == $asset->getHasMortgage()) ? ['property-mortgage', 'property-mortgage-outstanding-amount'] : ['property-mortgage'],
                 5 => ['property-value'],
                 6 => ['property-subject-equity-release'],
                 7 => ['property-has-charges'],
-                8 => ($asset->getIsRentedOut() == 'yes')
+                8 => ('yes' == $asset->getIsRentedOut())
                     ? ['property-rented-out', 'property-rent-agree-date', 'property-rent-income-month']
                     : ['property-rented-out'],
-
             ][$this->step];
         };
     }

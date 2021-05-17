@@ -8,10 +8,10 @@ use App\Entity\Report\MoneyTransactionShort;
 use App\Form as FormDir;
 use App\Service\Client\Internal\ReportApi;
 use App\Service\Client\RestClient;
-use Symfony\Component\HttpFoundation\RedirectResponse;
-use Symfony\Component\Routing\Annotation\Route;
 use Sensio\Bundle\FrameworkExtraBundle\Configuration\Template;
+use Symfony\Component\HttpFoundation\RedirectResponse;
 use Symfony\Component\HttpFoundation\Request;
+use Symfony\Component\Routing\Annotation\Route;
 use Symfony\Component\Routing\Exception\RouteNotFoundException;
 
 class MoneyInShortController extends AbstractController
@@ -40,7 +40,6 @@ class MoneyInShortController extends AbstractController
      * @Route("/report/{reportId}/money-in-short", name="money_in_short")
      * @Template("@App/Report/MoneyInShort/start.html.twig")
      *
-     * @param Request $request
      * @param $reportId
      *
      * @return array|RedirectResponse
@@ -49,7 +48,7 @@ class MoneyInShortController extends AbstractController
     {
         $report = $this->reportApi->getReportIfNotSubmitted($reportId, self::$jmsGroups);
 
-        if ($report->getStatus()->getMoneyInShortState()['state'] != EntityDir\Report\Status::STATE_NOT_STARTED) {
+        if (EntityDir\Report\Status::STATE_NOT_STARTED != $report->getStatus()->getMoneyInShortState()['state']) {
             return $this->redirectToRoute('money_in_short_summary', ['reportId' => $reportId]);
         }
 
@@ -62,7 +61,6 @@ class MoneyInShortController extends AbstractController
      * @Route("/report/{reportId}/money-in-short/category", name="money_in_short_category")
      * @Template("@App/Report/MoneyInShort/category.html.twig")
      *
-     * @param Request $request
      * @param $reportId
      *
      * @return array|RedirectResponse
@@ -70,7 +68,7 @@ class MoneyInShortController extends AbstractController
     public function categoryAction(Request $request, $reportId)
     {
         $report = $this->reportApi->getReportIfNotSubmitted($reportId, self::$jmsGroups);
-        $fromSummaryPage = $request->get('from') == 'summary';
+        $fromSummaryPage = 'summary' == $request->get('from');
 
         $form = $this->createForm(FormDir\Report\MoneyShortType::class, $report, ['field' => 'moneyShortCategoriesIn']);
         $form->handleRequest($request);
@@ -78,7 +76,7 @@ class MoneyInShortController extends AbstractController
         if ($form->get('save')->isClicked() && $form->isSubmitted() && $form->isValid()) {
             $data = $form->getData();
 
-            $this->restClient->put('report/' . $reportId, $data, ['moneyShortCategoriesIn']);
+            $this->restClient->put('report/'.$reportId, $data, ['moneyShortCategoriesIn']);
 
             if ($fromSummaryPage) {
                 $request->getSession()->getFlashBag()->add(
@@ -86,17 +84,16 @@ class MoneyInShortController extends AbstractController
                     'Answer edited'
                 );
 
-                return $this->redirectToRoute('money_in_short_summary', ['reportId'=>$reportId]);
+                return $this->redirectToRoute('money_in_short_summary', ['reportId' => $reportId]);
             }
 
-            return $this->redirectToRoute('money_in_short_exist', ['reportId'=>$reportId]);
+            return $this->redirectToRoute('money_in_short_exist', ['reportId' => $reportId]);
         }
-
 
         return [
             'report' => $report,
             'form' => $form->createView(),
-            'backLink' => $this->generateUrl($fromSummaryPage ? 'money_in_short_summary' : 'money_in_short', ['reportId'=>$reportId])
+            'backLink' => $this->generateUrl($fromSummaryPage ? 'money_in_short_summary' : 'money_in_short', ['reportId' => $reportId]),
         ];
     }
 
@@ -104,7 +101,6 @@ class MoneyInShortController extends AbstractController
      * @Route("/report/{reportId}/money-in-short/exist", name="money_in_short_exist")
      * @Template("@App/Report/MoneyInShort/exist.html.twig")
      *
-     * @param Request $request
      * @param $reportId
      *
      * @return array|RedirectResponse
@@ -115,25 +111,25 @@ class MoneyInShortController extends AbstractController
         $form = $this->createForm(
             FormDir\YesNoType::class,
             $report,
-            [ 'field' => 'moneyTransactionsShortInExist', 'translation_domain' => 'report-money-short']
+            ['field' => 'moneyTransactionsShortInExist', 'translation_domain' => 'report-money-short']
         );
         $form->handleRequest($request);
-        $fromSummaryPage = $request->get('from') == 'summary';
+        $fromSummaryPage = 'summary' == $request->get('from');
 
         if ($form->isSubmitted() && $form->isValid()) {
             $data = $form->getData();
             /* @var $data EntityDir\Report\Report */
-            $this->restClient->put('report/' . $reportId, $data, ['money-transactions-short-in-exist']);
+            $this->restClient->put('report/'.$reportId, $data, ['money-transactions-short-in-exist']);
             switch ($data->getMoneyTransactionsShortInExist()) {
                 case 'yes':
-                    return $this->redirectToRoute('money_in_short_add', ['reportId' => $reportId, 'from'=>'exist']);
+                    return $this->redirectToRoute('money_in_short_add', ['reportId' => $reportId, 'from' => 'exist']);
                 case 'no':
                     return $this->redirectToRoute('money_in_short_summary', ['reportId' => $reportId]);
             }
         }
 
         return [
-            'backLink' => $this->generateUrl($fromSummaryPage ? 'money_in_short_summary' : 'money_in_short_category', ['reportId'=>$reportId]), //FIX when from summary
+            'backLink' => $this->generateUrl($fromSummaryPage ? 'money_in_short_summary' : 'money_in_short_category', ['reportId' => $reportId]), //FIX when from summary
             'form' => $form->createView(),
             'report' => $report,
         ];
@@ -143,7 +139,6 @@ class MoneyInShortController extends AbstractController
      * @Route("/report/{reportId}/money-in-short/add", name="money_in_short_add")
      * @Template("@App/Report/MoneyInShort/add.html.twig")
      *
-     * @param Request $request
      * @param $reportId
      *
      * @return array|RedirectResponse
@@ -159,14 +154,14 @@ class MoneyInShortController extends AbstractController
 
         if ($form->isSubmitted() && $form->isValid()) {
             $data = $form->getData();
-            $this->restClient->post('report/' . $report->getId() . '/money-transaction-short', $data, ['moneyTransactionShort']);
+            $this->restClient->post('report/'.$report->getId().'/money-transaction-short', $data, ['moneyTransactionShort']);
 
             return $this->redirect($this->generateUrl('money_in_short_add_another', ['reportId' => $reportId]));
         }
 
         try {
-            $backLinkRoute = 'money_in_short_' . $request->get('from');
-            $backLink = $this->generateUrl($backLinkRoute, ['reportId'=>$reportId]);
+            $backLinkRoute = 'money_in_short_'.$request->get('from');
+            $backLink = $this->generateUrl($backLinkRoute, ['reportId' => $reportId]);
 
             return [
                 'backLink' => $backLink,
@@ -186,7 +181,6 @@ class MoneyInShortController extends AbstractController
      * @Route("/report/{reportId}/money-in-short/add_another", name="money_in_short_add_another")
      * @Template("@App/Report/MoneyInShort/addAnother.html.twig")
      *
-     * @param Request $request
      * @param $reportId
      *
      * @return array|RedirectResponse
@@ -216,15 +210,16 @@ class MoneyInShortController extends AbstractController
     /**
      * @Route("/report/{reportId}/money-in-short/edit/{transactionId}", name="money_in_short_edit")
      * @Template("@App/Report/MoneyInShort/edit.html.twig")
-     * @param Request $request
+     *
      * @param $reportId
      * @param $transactionId
+     *
      * @return array|RedirectResponse
      */
     public function editAction(Request $request, $reportId, $transactionId)
     {
         $report = $this->reportApi->getReportIfNotSubmitted($reportId, self::$jmsGroups);
-        $transaction = $this->restClient->get('report/' . $report->getId() . '/money-transaction-short/' . $transactionId, 'Report\MoneyTransactionShort');
+        $transaction = $this->restClient->get('report/'.$report->getId().'/money-transaction-short/'.$transactionId, 'Report\MoneyTransactionShort');
 
         $form = $this->createForm(FormDir\Report\MoneyShortTransactionType::class, $transaction);
         $form->handleRequest($request);
@@ -233,7 +228,7 @@ class MoneyInShortController extends AbstractController
             $data = $form->getData();
             $request->getSession()->getFlashBag()->add('notice', 'Entry edited');
 
-            $this->restClient->put('report/' . $report->getId() . '/money-transaction-short/' . $transaction->getId(), $data, ['moneyTransactionShort']);
+            $this->restClient->put('report/'.$report->getId().'/money-transaction-short/'.$transaction->getId(), $data, ['moneyTransactionShort']);
 
             return $this->redirect($this->generateUrl('money_in_short_summary', ['reportId' => $reportId]));
         }
@@ -249,7 +244,6 @@ class MoneyInShortController extends AbstractController
      * @Route("/report/{reportId}/money-in-short/{transactionId}/delete", name="money_in_short_delete")
      * @Template("@App/Common/confirmDelete.html.twig")
      *
-     * @param Request $request
      * @param $reportId
      * @param $transactionId
      *
@@ -263,7 +257,7 @@ class MoneyInShortController extends AbstractController
         $report = $this->reportApi->getReportIfNotSubmitted($reportId, self::$jmsGroups);
 
         if ($form->isSubmitted() && $form->isValid()) {
-            $this->restClient->delete('report/' . $report->getId() . '/money-transaction-short/' . $transactionId);
+            $this->restClient->delete('report/'.$report->getId().'/money-transaction-short/'.$transactionId);
 
             $request->getSession()->getFlashBag()->add(
                 'notice',
@@ -273,7 +267,7 @@ class MoneyInShortController extends AbstractController
             return $this->redirect($this->generateUrl('money_in_short_summary', ['reportId' => $reportId]));
         }
 
-        $transaction = $this->restClient->get('report/' . $report->getId() . '/money-transaction-short/' . $transactionId, 'Report\MoneyTransactionShort');
+        $transaction = $this->restClient->get('report/'.$report->getId().'/money-transaction-short/'.$transactionId, 'Report\MoneyTransactionShort');
 
         return [
             'translationDomain' => 'report-money-in',
@@ -292,7 +286,6 @@ class MoneyInShortController extends AbstractController
      * @Route("/report/{reportId}/money-in-short/summary", name="money_in_short_summary")
      * @Template("@App/Report/MoneyInShort/summary.html.twig")
      *
-     * @param Request $request
      * @param $reportId
      *
      * @return array|RedirectResponse
@@ -302,14 +295,14 @@ class MoneyInShortController extends AbstractController
         $fromPage = $request->get('from');
         $report = $this->reportApi->getReportIfNotSubmitted($reportId, self::$jmsGroups);
 
-        if ($report->getStatus()->getMoneyInShortState()['state'] == EntityDir\Report\Status::STATE_NOT_STARTED && $fromPage != 'skip-step') {
+        if (EntityDir\Report\Status::STATE_NOT_STARTED == $report->getStatus()->getMoneyInShortState()['state'] && 'skip-step' != $fromPage) {
             return $this->redirectToRoute('money_in_short', ['reportId' => $reportId]);
         }
 
         return [
-            'comingFromLastStep' => $fromPage == 'skip-step' || $fromPage == 'last-step',
+            'comingFromLastStep' => 'skip-step' == $fromPage || 'last-step' == $fromPage,
             'report' => $report,
-            'status' => $report->getStatus()
+            'status' => $report->getStatus(),
         ];
     }
 

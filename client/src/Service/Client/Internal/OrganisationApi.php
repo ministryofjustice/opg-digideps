@@ -1,5 +1,6 @@
-<?php declare(strict_types=1);
+<?php
 
+declare(strict_types=1);
 
 namespace App\Service\Client\Internal;
 
@@ -7,7 +8,6 @@ use App\Entity\Organisation;
 use App\Entity\User;
 use App\Event\UserAddedToOrganisationEvent;
 use App\Event\UserRemovedFromOrganisationEvent;
-use App\Event\UserUpdatedEvent;
 use App\EventDispatcher\ObservableEventDispatcher;
 use App\Service\Client\RestClient;
 
@@ -24,12 +24,6 @@ class OrganisationApi
         $this->eventDispatcher = $eventDispatcher;
     }
 
-    /**
-     * @param Organisation $organisation
-     * @param User $userToAdd
-     * @param User $currentUser
-     * @param string $trigger
-     */
     public function addUserToOrganisation(Organisation $organisation, User $userToAdd, User $currentUser, string $trigger)
     {
         $this->restClient->put(sprintf(self::MANAGE_USER_IN_ORG_ENDPOINT, $organisation->getId(), $userToAdd->getId()), '');
@@ -44,12 +38,6 @@ class OrganisationApi
         $this->eventDispatcher->dispatch($event, UserAddedToOrganisationEvent::NAME);
     }
 
-    /**
-     * @param Organisation $organisation
-     * @param User $userToRemove
-     * @param User $currentUser
-     * @param string $trigger
-     */
     public function removeUserFromOrganisation(Organisation $organisation, User $userToRemove, User $currentUser, string $trigger)
     {
         $this->restClient->delete(sprintf(self::MANAGE_USER_IN_ORG_ENDPOINT, $organisation->getId(), $userToRemove->getId()));

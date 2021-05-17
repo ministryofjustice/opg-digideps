@@ -1,4 +1,6 @@
-<?php declare(strict_types=1);
+<?php
+
+declare(strict_types=1);
 
 namespace App\Service\File;
 
@@ -16,9 +18,7 @@ class S3FileUploader
     private RestClient $restClient;
     private array $options;
     private FileNameFixer $fileNameFixer;
-    /**
-     * @var DateTimeProvider
-     */
+
     private DateTimeProvider $dateTimeProvider;
 
     public function __construct(
@@ -37,7 +37,6 @@ class S3FileUploader
 
     /**
      * @param UploadedFile[] $uploadedFiles
-     * @param Report $report
      */
     public function uploadSupportingFilesAndPersistDocuments(array $uploadedFiles, Report $report): void
     {
@@ -47,10 +46,6 @@ class S3FileUploader
         }
     }
 
-    /**
-     * @param UploadedFile $file
-     * @return array
-     */
     private function getFileBodyAndFileName(UploadedFile $file): array
     {
         /** @var string $body */
@@ -63,12 +58,8 @@ class S3FileUploader
     }
 
     /**
-     * Uploads a file into S3 + create and persist a Document entity using that reference
+     * Uploads a file into S3 + create and persist a Document entity using that reference.
      *
-     * @param ReportInterface $report
-     * @param string $body
-     * @param string $fileName
-     * @param bool $isReportPdf
      * @return Document
      */
     public function uploadFileAndPersistDocument(ReportInterface $report, string $body, string $fileName, bool $isReportPdf)
@@ -102,8 +93,8 @@ class S3FileUploader
     }
 
     /**
-     * Removes a file from S3
-     * @param Document $document
+     * Removes a file from S3.
+     *
      * @throws \Exception
      */
     public function removeFileFromS3(Document $document)

@@ -7,9 +7,9 @@ use App\Form as FormDir;
 use App\Service\Client\Internal\ReportApi;
 use App\Service\Client\RestClient;
 use App\Service\NdrStatusService;
-use Symfony\Component\Routing\Annotation\Route;
 use Sensio\Bundle\FrameworkExtraBundle\Configuration\Template;
 use Symfony\Component\HttpFoundation\Request;
+use Symfony\Component\Routing\Annotation\Route;
 
 class DebtController extends AbstractController
 {
@@ -40,7 +40,7 @@ class DebtController extends AbstractController
     public function startAction(Request $request, $ndrId)
     {
         $ndr = $this->reportApi->getNdrIfNotSubmitted($ndrId, self::$jmsGroups);
-        if ($ndr->getStatusService()->getDebtsState()['state'] != NdrStatusService::STATE_NOT_STARTED) {
+        if (NdrStatusService::STATE_NOT_STARTED != $ndr->getStatusService()->getDebtsState()['state']) {
             return $this->redirectToRoute('ndr_debts_summary', ['ndrId' => $ndr->getId()]);
         }
 
@@ -59,23 +59,23 @@ class DebtController extends AbstractController
         $form = $this->createForm(
             FormDir\YesNoType::class,
             $ndr,
-            [ 'field' => 'hasDebts', 'translation_domain' => 'ndr-debts']
+            ['field' => 'hasDebts', 'translation_domain' => 'ndr-debts']
         );
         $form->handleRequest($request);
 
         if ($form->isSubmitted() && $form->isValid()) {
-            $this->restClient->put('ndr/' . $ndrId, $ndr, ['debt']);
+            $this->restClient->put('ndr/'.$ndrId, $ndr, ['debt']);
 
-            if ($ndr->getHasDebts() == 'yes') {
+            if ('yes' == $ndr->getHasDebts()) {
                 return $this->redirectToRoute('ndr_debts_edit', ['ndrId' => $ndrId]);
             }
 
             return $this->redirectToRoute('ndr_debts_summary', ['ndrId' => $ndrId]);
         }
 
-        $backLink = $this->generateUrl('ndr_debts', ['ndrId'=>$ndrId]);
-        if ($request->get('from') == 'summary') {
-            $backLink = $this->generateUrl('ndr_debts_summary', ['ndrId'=>$ndrId]);
+        $backLink = $this->generateUrl('ndr_debts', ['ndrId' => $ndrId]);
+        if ('summary' == $request->get('from')) {
+            $backLink = $this->generateUrl('ndr_debts_summary', ['ndrId' => $ndrId]);
         }
 
         return [
@@ -99,19 +99,20 @@ class DebtController extends AbstractController
         $fromPage = $request->get('from');
 
         if ($form->isSubmitted() && $form->isValid()) {
-            $this->restClient->put('ndr/' . $ndr->getId(), $form->getData(), ['debt']);
+            $this->restClient->put('ndr/'.$ndr->getId(), $form->getData(), ['debt']);
 
-            if ($fromPage == 'summary') {
+            if ('summary' == $fromPage) {
                 $request->getSession()->getFlashBag()->add('notice', 'Debt edited');
+
                 return $this->redirect($this->generateUrl('ndr_debts_summary', ['ndrId' => $ndrId]));
             }
 
             return $this->redirect($this->generateUrl('ndr_debts_management', ['ndrId' => $ndr->getId()]));
         }
 
-        $backLink = $this->generateUrl('ndr_debts_exist', ['ndrId'=>$ndrId]);
-        if ($fromPage == 'summary') {
-            $backLink = $this->generateUrl('ndr_debts_summary', ['ndrId'=>$ndrId]);
+        $backLink = $this->generateUrl('ndr_debts_exist', ['ndrId' => $ndrId]);
+        if ('summary' == $fromPage) {
+            $backLink = $this->generateUrl('ndr_debts_summary', ['ndrId' => $ndrId]);
         }
 
         return [
@@ -134,12 +135,12 @@ class DebtController extends AbstractController
 
         $form->handleRequest($request);
         $fromPage = $request->get('from');
-        $fromSummaryPage = $request->get('from') == 'summary';
+        $fromSummaryPage = 'summary' == $request->get('from');
 
         if ($form->isSubmitted() && $form->isValid()) {
-            $this->restClient->put('ndr/' . $ndr->getId(), $form->getData(), ['ndr-debt-management']);
+            $this->restClient->put('ndr/'.$ndr->getId(), $form->getData(), ['ndr-debt-management']);
 
-            if ($fromPage == 'summary') {
+            if ('summary' == $fromPage) {
                 $request->getSession()->getFlashBag()->add('notice', 'Answer edited');
             }
 
@@ -147,7 +148,7 @@ class DebtController extends AbstractController
         }
 
         $backLink = $this->generateUrl('ndr_debts_exist', ['ndrId' => $ndr->getId()]);
-        if ($fromPage == 'summary') {
+        if ('summary' == $fromPage) {
             $backLink = $this->generateUrl('ndr_debts_summary', ['ndrId' => $ndr->getId()]);
         }
 
@@ -169,14 +170,14 @@ class DebtController extends AbstractController
     {
         $fromPage = $request->get('from');
         $ndr = $this->reportApi->getNdrIfNotSubmitted($ndrId, self::$jmsGroups);
-        if ($ndr->getStatusService()->getDebtsState()['state'] == NdrStatusService::STATE_NOT_STARTED && $fromPage != 'skip-step') {
+        if (NdrStatusService::STATE_NOT_STARTED == $ndr->getStatusService()->getDebtsState()['state'] && 'skip-step' != $fromPage) {
             return $this->redirectToRoute('ndr_debts', ['ndrId' => $ndrId]);
         }
 
         return [
-            'comingFromLastStep' => $fromPage == 'skip-step' || $fromPage == 'last-step',
+            'comingFromLastStep' => 'skip-step' == $fromPage || 'last-step' == $fromPage,
             'ndr' => $ndr,
-            'status' => $ndr->getStatusService()
+            'status' => $ndr->getStatusService(),
         ];
     }
 }

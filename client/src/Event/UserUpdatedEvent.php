@@ -1,5 +1,6 @@
-<?php declare(strict_types=1);
+<?php
 
+declare(strict_types=1);
 
 namespace App\Event;
 
@@ -26,39 +27,27 @@ class UserUpdatedEvent extends Event
             ->setCurrentUser($currentUser);
     }
 
-    /**
-     * @return string
-     */
     public function getTrigger(): string
     {
         return $this->trigger;
     }
 
-    /**
-     * @param string $trigger
-     * @return UserUpdatedEvent
-     */
     public function setTrigger(string $trigger): UserUpdatedEvent
     {
         $this->trigger = $trigger;
+
         return $this;
     }
 
-    /**
-     * @return User
-     */
     public function getPostUpdateUser(): User
     {
         return $this->postUpdateUser;
     }
 
-    /**
-     * @param User $postUpdateUser
-     * @return UserUpdatedEvent
-     */
     public function setPostUpdateUser(User $postUpdateUser): UserUpdatedEvent
     {
         $this->postUpdateUser = $postUpdateUser;
+
         return $this;
     }
 
@@ -72,29 +61,25 @@ class UserUpdatedEvent extends Event
 
     /**
      * @param mixed $preUpdateUser
+     *
      * @return UserUpdatedEvent
      */
     public function setPreUpdateUser($preUpdateUser)
     {
         $this->preUpdateUser = $preUpdateUser;
+
         return $this;
     }
 
-    /**
-     * @return User
-     */
     public function getCurrentUser(): User
     {
         return $this->currentUser;
     }
 
-    /**
-     * @param User $currentUser
-     * @return UserUpdatedEvent
-     */
     public function setCurrentUser(User $currentUser): UserUpdatedEvent
     {
         $this->currentUser = $currentUser;
+
         return $this;
     }
 }

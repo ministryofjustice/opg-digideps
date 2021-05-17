@@ -1,4 +1,6 @@
-<?php declare(strict_types=1);
+<?php
+
+declare(strict_types=1);
 
 namespace App\Command;
 
@@ -22,7 +24,7 @@ class DocumentSyncCommand extends DaemonableCommand
     /** @var RestClient */
     private $restClient;
 
-    /** @var SerializerInterface  */
+    /** @var SerializerInterface */
     private $serializer;
 
     /** @var ParameterStoreService */
@@ -55,6 +57,7 @@ class DocumentSyncCommand extends DaemonableCommand
 
         if (!$this->isFeatureEnabled()) {
             $output->writeln('Feature disabled, sleeping');
+
             return 0;
         }
 
@@ -82,12 +85,13 @@ class DocumentSyncCommand extends DaemonableCommand
 
     private function isFeatureEnabled(): bool
     {
-        return $this->parameterStore->getFeatureFlag(ParameterStoreService::FLAG_DOCUMENT_SYNC) === '1';
+        return '1' === $this->parameterStore->getFeatureFlag(ParameterStoreService::FLAG_DOCUMENT_SYNC);
     }
 
     private function getSyncRowLimit(): string
     {
         $limit = $this->parameterStore->getParameter(ParameterStoreService::PARAMETER_DOCUMENT_SYNC_ROW_LIMIT);
+
         return $limit ? $limit : self::FALLBACK_ROW_LIMITS;
     }
 

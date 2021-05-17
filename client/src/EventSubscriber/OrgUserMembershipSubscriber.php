@@ -1,5 +1,6 @@
-<?php declare(strict_types=1);
+<?php
 
+declare(strict_types=1);
 
 namespace App\EventSubscriber;
 
@@ -28,13 +29,10 @@ class OrgUserMembershipSubscriber implements EventSubscriberInterface
     {
         return [
             UserAddedToOrganisationEvent::NAME => 'logUserAddedEvent',
-            UserRemovedFromOrganisationEvent::NAME => 'logUserRemovedEvent'
+            UserRemovedFromOrganisationEvent::NAME => 'logUserRemovedEvent',
         ];
     }
 
-    /**
-     * @param UserAddedToOrganisationEvent $event
-     */
     public function logUserAddedEvent(UserAddedToOrganisationEvent $event)
     {
         $auditEvent = (new AuditEvents($this->dateTimeProvider))
@@ -48,9 +46,6 @@ class OrgUserMembershipSubscriber implements EventSubscriberInterface
         $this->logger->notice('', $auditEvent);
     }
 
-    /**
-     * @param UserRemovedFromOrganisationEvent $event
-     */
     public function logUserRemovedEvent(UserRemovedFromOrganisationEvent $event)
     {
         $auditEvent = (new AuditEvents($this->dateTimeProvider))

@@ -1,5 +1,6 @@
-<?php declare(strict_types=1);
+<?php
 
+declare(strict_types=1);
 
 namespace App\Event;
 
@@ -18,21 +19,15 @@ class OrgUserCreatedEvent extends Event
         $this->createdUser = $createdUser;
     }
 
-    /**
-     * @return User
-     */
     public function getCreatedUser(): User
     {
         return $this->createdUser;
     }
 
-    /**
-     * @param User $createdUser
-     * @return OrgUserCreatedEvent
-     */
     public function setCreatedUser(User $createdUser): OrgUserCreatedEvent
     {
         $this->createdUser = $createdUser;
+
         return $this;
     }
 }

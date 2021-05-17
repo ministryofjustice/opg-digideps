@@ -1,16 +1,15 @@
-<?php declare(strict_types=1);
+<?php
 
+declare(strict_types=1);
 
 namespace App\Controller;
 
-use App\Entity\UserResearch\UserResearchResponse;
 use App\Exception\ReportNotSubmittedException;
 use App\Form\UserResearchResponseType;
 use App\Service\Client\Internal\NdrApi;
 use App\Service\Client\Internal\ReportApi;
 use App\Service\Client\Internal\UserResearchApi;
 use Sensio\Bundle\FrameworkExtraBundle\Configuration\Template;
-use Symfony\Component\Form\FormFactory;
 use Symfony\Component\Form\FormFactoryInterface;
 use Symfony\Component\HttpFoundation\Request;
 use Symfony\Component\Routing\Annotation\Route;
@@ -42,7 +41,9 @@ class UserResearchController extends AbstractController
      * @Route("/report/{reportId}/post_submission_user_research", name="report_post_submission_user_research")
      * @Route("/ndr/{ndrId}/post_submission_user_research", name="ndr_post_submission_user_research")
      * @Template("@App/UserResearch/postSubmissionUserResearch.html.twig")
+     *
      * @param $reportId
+     *
      * @return array
      */
     public function postSubmissionUserResearch(Request $request, ?int $reportId = null, ?int $ndrId = null)
@@ -65,6 +66,7 @@ class UserResearchController extends AbstractController
 
             $routeName = sprintf('%s_user_research_submitted', $reportId ? 'report' : 'ndr');
             $routeParams = $reportId ? ['reportId' => $reportId] : ['ndrId' => $ndrId];
+
             return $this->redirect($this->generateUrl($routeName, $routeParams));
         }
 
@@ -77,7 +79,9 @@ class UserResearchController extends AbstractController
      * @Route("/report/{reportId}/post_submission_user_research/submitted", name="report_user_research_submitted")
      * @Route("/ndr/{ndrId}/post_submission_user_research/submitted", name="ndr_user_research_submitted")
      * @Template("@App/UserResearch/userResearchSubmitted.html.twig")
+     *
      * @param $reportId
+     *
      * @return array
      */
     public function userResearchSubmitted(?int $reportId = null, ?int $ndrId = null)

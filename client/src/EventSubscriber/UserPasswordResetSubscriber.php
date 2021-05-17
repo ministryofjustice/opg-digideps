@@ -1,5 +1,6 @@
-<?php declare(strict_types=1);
+<?php
 
+declare(strict_types=1);
 
 namespace App\EventSubscriber;
 
@@ -22,7 +23,7 @@ class UserPasswordResetSubscriber implements EventSubscriberInterface
     public static function getSubscribedEvents()
     {
         return [
-            UserPasswordResetEvent::NAME => 'sendEmail'
+            UserPasswordResetEvent::NAME => 'sendEmail',
         ];
     }
 

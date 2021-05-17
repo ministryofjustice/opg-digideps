@@ -1,5 +1,6 @@
-<?php declare(strict_types=1);
+<?php
 
+declare(strict_types=1);
 
 namespace App\Service\Client\Internal;
 
@@ -18,7 +19,6 @@ class CasrecApi
     }
 
     /**
-     * @param string $caseNumber
      * @return bool
      */
     public function clientHasCoDeputies(string $caseNumber)

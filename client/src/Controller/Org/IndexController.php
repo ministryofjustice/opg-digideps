@@ -62,13 +62,13 @@ class IndexController extends AbstractController
     public function dashboardAction(Request $request)
     {
         $currentFilters = [
-            'q'                 => $request->get('q'),
-            'status'            => $request->get('status'),
+            'q' => $request->get('q'),
+            'status' => $request->get('status'),
             'exclude_submitted' => true,
-            'sort'              => 'end_date',
-            'sort_direction'    => 'asc',
-            'limit'             => $request->query->get('limit') ?: 15,
-            'offset'            => $request->query->get('offset') ?: 0,
+            'sort' => 'end_date',
+            'sort_direction' => 'asc',
+            'limit' => $request->query->get('limit') ?: 15,
+            'offset' => $request->query->get('offset') ?: 0,
         ];
 
         /** @var User $user */
@@ -76,18 +76,18 @@ class IndexController extends AbstractController
 
         $endpoint = sprintf(
             '%s?%s',
-            $user->belongsToActiveOrganisation() ?'/report/get-all-by-orgs' : 'report/get-all-by-user',
+            $user->belongsToActiveOrganisation() ? '/report/get-all-by-orgs' : 'report/get-all-by-user',
             http_build_query($currentFilters)
         );
 
         $response = $this->restClient->get($endpoint, 'array');
 
-        $reports = $this->restClient->arrayToEntities(EntityDir\Report\Report::class . '[]', $response['reports']);
+        $reports = $this->restClient->arrayToEntities(EntityDir\Report\Report::class.'[]', $response['reports']);
 
         return [
             'filters' => $currentFilters,
             'reports' => $reports,
-            'counts'  => [
+            'counts' => [
                 'total' => $response['counts']['total'],
                 'notStarted' => $response['counts']['notStarted'],
                 'notFinished' => $response['counts']['notFinished'],
@@ -99,7 +99,7 @@ class IndexController extends AbstractController
     /**
      * Client edit page
      * Report is only associated to one client, and it's needed for back link routing,
-     * so it's retrieved with the report with a single API call
+     * so it's retrieved with the report with a single API call.
      *
      * @Route("/client/{clientId}/edit", name="org_client_edit")
      * @Template("@App/Org/Index/clientEdit.html.twig")
@@ -108,15 +108,15 @@ class IndexController extends AbstractController
     {
         try {
             /** @var Client $client */
-            $client = $this->restClient->get('client/' . $clientId, 'Client', ['client', 'report-id', 'current-report']);
+            $client = $this->restClient->get('client/'.$clientId, 'Client', ['client', 'report-id', 'current-report']);
         } catch (RestClientException $e) {
             throw $this->createNotFoundException();
         }
 
         // PA client profile is ATM relying on report ID, this is a working until next refactor
-        $returnLink = ($request->get('from') === 'declaration') ?
+        $returnLink = ('declaration' === $request->get('from')) ?
             $this->generateUrl('report_declaration', ['reportId' => $client->getCurrentReport()->getId()]) :
-            $this->generateUrl('report_overview', ['reportId'=>$client->getCurrentReport()->getId()]);
+            $this->generateUrl('report_overview', ['reportId' => $client->getCurrentReport()->getId()]);
 
         $form = $this->form->create(FormDir\Org\ClientType::class, clone $client);
         $form->handleRequest($request);
@@ -136,12 +136,12 @@ class IndexController extends AbstractController
         return [
             'backLink' => $returnLink,
             'form' => $form->createView(),
-            'client'=>$client,
+            'client' => $client,
         ];
     }
 
     /**
-     * Client archive page
+     * Client archive page.
      *
      * @Route("/client/{clientId}/archive", name="org_client_archive")
      * @Template("@App/Org/Index/clientArchive.html.twig")
@@ -149,10 +149,10 @@ class IndexController extends AbstractController
     public function clientArchiveAction(Request $request, $clientId, TranslatorInterface $translator)
     {
         /** @var Client $client */
-        $client = $this->restClient->get('client/' . $clientId, 'Client', ['client', 'report-id', 'current-report']);
+        $client = $this->restClient->get('client/'.$clientId, 'Client', ['client', 'report-id', 'current-report']);
 
         // PA client profile is ATM relying on report ID, this is a working until next refactor
-        $returnLink = $this->generateUrl('report_overview', ['reportId'=>$client->getCurrentReport()->getId()]);
+        $returnLink = $this->generateUrl('report_overview', ['reportId' => $client->getCurrentReport()->getId()]);
         $form = $this->createForm(FormDir\Org\ClientArchiveType::class, $client);
         $form->handleRequest($request);
 
@@ -160,8 +160,9 @@ class IndexController extends AbstractController
         $submitBtn = $form->get('save');
         if ($submitBtn->isClicked() && $form->isSubmitted() && $form->isValid()) {
             if (true === $form->get('confirmArchive')->getData()) {
-                $this->restClient->apiCall('put', 'client/' . $client->getId() . '/archive', null, 'array');
+                $this->restClient->apiCall('put', 'client/'.$client->getId().'/archive', null, 'array');
                 $this->addFlash('notice', 'The client has been archived');
+
                 return $this->redirectToRoute('org_dashboard');
             } else {
                 $form->get('confirmArchive')->addError(new FormError($translator->trans('form.error.confirmArchive', [], 'pa-client-archive')));
@@ -171,7 +172,7 @@ class IndexController extends AbstractController
         return [
             'backLink' => $returnLink,
             'form' => $form->createView(),
-            'client'=>$client,
+            'client' => $client,
         ];
     }
 }

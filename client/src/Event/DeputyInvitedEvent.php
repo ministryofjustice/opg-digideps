@@ -1,5 +1,6 @@
-<?php declare(strict_types=1);
+<?php
 
+declare(strict_types=1);
 
 namespace App\Event;
 
@@ -18,21 +19,15 @@ class DeputyInvitedEvent extends Event
         $this->invitedDeputy = $invitedDeputy;
     }
 
-    /**
-     * @return User
-     */
     public function getInvitedDeputy(): User
     {
         return $this->invitedDeputy;
     }
 
-    /**
-     * @param User $invitedDeputy
-     * @return DeputyInvitedEvent
-     */
     public function setInvitedDeputy(User $invitedDeputy): DeputyInvitedEvent
     {
         $this->invitedDeputy = $invitedDeputy;
+
         return $this;
     }
 }

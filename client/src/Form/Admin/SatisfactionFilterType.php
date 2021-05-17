@@ -1,4 +1,6 @@
-<?php declare(strict_types=1);
+<?php
+
+declare(strict_types=1);
 
 namespace App\Form\Admin;
 
@@ -21,7 +23,7 @@ class SatisfactionFilterType extends AbstractType
                     'widget' => 'text',
                     'input' => 'datetime',
                     'format' => 'dd-MM-yyyy',
-                    'invalid_message' => 'Enter a valid date'
+                    'invalid_message' => 'Enter a valid date',
                 ]
             )
             ->add(
@@ -31,16 +33,13 @@ class SatisfactionFilterType extends AbstractType
                     'widget' => 'text',
                     'input' => 'datetime',
                     'format' => 'dd-MM-yyyy',
-                    'invalid_message' => 'Enter a valid date'
+                    'invalid_message' => 'Enter a valid date',
                 ]
             )
             ->add('submitAndDownload', FormTypes\SubmitType::class)
             ->addEventListener(FormEvents::POST_SUBMIT, [$this, 'onPostSubmit']);
     }
 
-    /**
-     * @param FormEvent $event
-     */
     public function onPostSubmit(FormEvent $event)
     {
         $entity = $event->getData();
@@ -54,7 +53,7 @@ class SatisfactionFilterType extends AbstractType
     public function configureOptions(OptionsResolver $resolver)
     {
         $resolver->setDefaults([
-            'translation_domain' => 'admin'
+            'translation_domain' => 'admin',
         ]);
     }
 

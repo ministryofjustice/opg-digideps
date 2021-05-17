@@ -1,5 +1,6 @@
-<?php declare(strict_types=1);
+<?php
 
+declare(strict_types=1);
 
 namespace App\EventSubscriber;
 
@@ -32,7 +33,7 @@ class ClientUpdatedSubscriber implements EventSubscriberInterface
     {
         return [
             ClientUpdatedEvent::NAME => 'logEvent',
-            ClientUpdatedEvent::NAME => 'sendEmail'
+            ClientUpdatedEvent::NAME => 'sendEmail',
         ];
     }
 
@@ -67,7 +68,6 @@ class ClientUpdatedSubscriber implements EventSubscriberInterface
     }
 
     /**
-     * @param ClientUpdatedEvent $event
      * @return bool
      */
     private function emailHasChanged(ClientUpdatedEvent $event)

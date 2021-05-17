@@ -1,5 +1,6 @@
-<?php declare(strict_types=1);
+<?php
 
+declare(strict_types=1);
 
 namespace App\EventSubscriber;
 
@@ -19,7 +20,7 @@ class DeputySelfRegisteredSubscriber implements EventSubscriberInterface
     public static function getSubscribedEvents()
     {
         return [
-            DeputySelfRegisteredEvent::NAME => 'sendEmail'
+            DeputySelfRegisteredEvent::NAME => 'sendEmail',
         ];
     }
 

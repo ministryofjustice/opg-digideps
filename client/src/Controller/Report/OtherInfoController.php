@@ -5,14 +5,13 @@ namespace App\Controller\Report;
 use App\Controller\AbstractController;
 use App\Entity as EntityDir;
 use App\Form as FormDir;
-
 use App\Service\Client\Internal\ReportApi;
 use App\Service\Client\RestClient;
 use App\Service\StepRedirector;
-use Symfony\Component\HttpFoundation\RedirectResponse;
-use Symfony\Component\Routing\Annotation\Route;
 use Sensio\Bundle\FrameworkExtraBundle\Configuration\Template;
+use Symfony\Component\HttpFoundation\RedirectResponse;
 use Symfony\Component\HttpFoundation\Request;
+use Symfony\Component\Routing\Annotation\Route;
 
 class OtherInfoController extends AbstractController
 {
@@ -44,7 +43,6 @@ class OtherInfoController extends AbstractController
      * @Route("/report/{reportId}/any-other-info", name="other_info")
      * @Template("@App/Report/OtherInfo/start.html.twig")
      *
-     * @param Request $request
      * @param $reportId
      *
      * @return array|RedirectResponse
@@ -52,7 +50,7 @@ class OtherInfoController extends AbstractController
     public function startAction(Request $request, $reportId)
     {
         $report = $this->reportApi->getReportIfNotSubmitted($reportId, self::$jmsGroups);
-        if ($report->getStatus()->getOtherInfoState()['state'] != EntityDir\Report\Status::STATE_NOT_STARTED) {
+        if (EntityDir\Report\Status::STATE_NOT_STARTED != $report->getStatus()->getOtherInfoState()['state']) {
             return $this->redirectToRoute('other_info_summary', ['reportId' => $reportId]);
         }
 
@@ -65,7 +63,6 @@ class OtherInfoController extends AbstractController
      * @Route("/report/{reportId}/any-other-info/step/{step}", name="other_info_step")
      * @Template("@App/Report/OtherInfo/step.html.twig")
      *
-     * @param Request $request
      * @param $reportId
      * @param $step
      *
@@ -80,7 +77,6 @@ class OtherInfoController extends AbstractController
         $report = $this->reportApi->getReportIfNotSubmitted($reportId, self::$jmsGroups);
         $fromPage = $request->get('from');
 
-
         $stepRedirector = $this->stepRedirector
             ->setRoutes('other_info', 'other_info_step', 'other_info_summary')
             ->setFromPage($fromPage)
@@ -92,9 +88,9 @@ class OtherInfoController extends AbstractController
 
         if ($form->get('save')->isClicked() && $form->isSubmitted() && $form->isValid()) {
             $data = $form->getData();
-            $this->restClient->put('report/' . $reportId, $data, ['more-info']);
+            $this->restClient->put('report/'.$reportId, $data, ['more-info']);
 
-            if ($fromPage == 'summary') {
+            if ('summary' == $fromPage) {
                 $request->getSession()->getFlashBag()->add(
                     'notice',
                     'Answer edited'
@@ -105,10 +101,10 @@ class OtherInfoController extends AbstractController
         }
 
         return [
-            'report'       => $report,
-            'step'         => $step,
-            'form'         => $form->createView(),
-            'backLink'     => $stepRedirector->getBackLink()
+            'report' => $report,
+            'step' => $step,
+            'form' => $form->createView(),
+            'backLink' => $stepRedirector->getBackLink(),
         ];
     }
 
@@ -116,7 +112,6 @@ class OtherInfoController extends AbstractController
      * @Route("/report/{reportId}/any-other-info/summary", name="other_info_summary")
      * @Template("@App/Report/OtherInfo/summary.html.twig")
      *
-     * @param Request $request
      * @param $reportId
      *
      * @return array|RedirectResponse
@@ -125,13 +120,13 @@ class OtherInfoController extends AbstractController
     {
         $fromPage = $request->get('from');
         $report = $this->reportApi->getReportIfNotSubmitted($reportId, self::$jmsGroups);
-        if ($report->getStatus()->getOtherInfoState()['state'] == EntityDir\Report\Status::STATE_NOT_STARTED && $fromPage != 'skip-step') {
+        if (EntityDir\Report\Status::STATE_NOT_STARTED == $report->getStatus()->getOtherInfoState()['state'] && 'skip-step' != $fromPage) {
             return $this->redirectToRoute('other_info', ['reportId' => $reportId]);
         }
 
         return [
-            'comingFromLastStep' => $fromPage == 'skip-step' || $fromPage == 'last-step',
-            'report'             => $report,
+            'comingFromLastStep' => 'skip-step' == $fromPage || 'last-step' == $fromPage,
+            'report' => $report,
         ];
     }
 
