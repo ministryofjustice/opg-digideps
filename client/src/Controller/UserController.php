@@ -349,6 +349,7 @@ class UserController extends AbstractController
             }
 
             $redirectRoute = $user->isLayDeputy() ? 'lay_home' : 'org_dashboard';
+
             return $this->redirectToRoute($redirectRoute);
         }
 
@@ -361,6 +362,31 @@ class UserController extends AbstractController
         }
 
         return $this->render($view, [
+            'user' => $user,
+            'form' => $form->createView(),
+        ]);
+    }
+
+    /**
+     * @Route("/user/update-terms-use/{token}", name="user_updated_terms_use")
+     */
+    public function updatedTermsUseAction(Request $request, string $token): Response
+    {
+        $user = $this->restClient->loadUserByToken($token);
+
+        $form = $this->createForm(FormDir\User\AgreeTermsType::class, $user);
+        $form->handleRequest($request);
+        if ($form->isSubmitted() && $form->isValid()) {
+            $this->userApi->agreeTermsUse($token);
+
+            if (!$user->getActive()) {
+                return $this->redirectToRoute('user_activate', ['token' => $token, 'action' => 'activate']);
+            }
+
+            return $this->redirectToRoute('org_dashboard');
+        }
+
+        return $this->render('@App/User/updatedTermsUse.html.twig', [
             'user' => $user,
             'form' => $form->createView(),
         ]);

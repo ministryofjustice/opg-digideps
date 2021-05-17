@@ -20,33 +20,33 @@ class User implements UserInterface
 {
     use AddressTrait;
 
-    const TOKEN_EXPIRE_HOURS = 48;
+    public const TOKEN_EXPIRE_HOURS = 48;
 
-    const ROLE_ADMIN = 'ROLE_ADMIN';
-    const ROLE_ELEVATED_ADMIN = 'ROLE_ELEVATED_ADMIN';
-    const ROLE_SUPER_ADMIN = 'ROLE_SUPER_ADMIN';
+    public const ROLE_ADMIN = 'ROLE_ADMIN';
+    public const ROLE_ELEVATED_ADMIN = 'ROLE_ELEVATED_ADMIN';
+    public const ROLE_SUPER_ADMIN = 'ROLE_SUPER_ADMIN';
 
-    const ROLE_DEPUTY = 'ROLE_DEPUTY';
-    const ROLE_LAY_DEPUTY = 'ROLE_LAY_DEPUTY';
-    const ROLE_AD = 'ROLE_AD';
+    public const ROLE_DEPUTY = 'ROLE_DEPUTY';
+    public const ROLE_LAY_DEPUTY = 'ROLE_LAY_DEPUTY';
+    public const ROLE_AD = 'ROLE_AD';
 
-    const ROLE_ORG_NAMED = 'ROLE_ORG_NAMED';
-    const ROLE_ORG_ADMIN = 'ROLE_ORG_ADMIN';
-    const ROLE_ORG_TEAM_MEMBER = 'ROLE_ORG_TEAM_MEMBER';
+    public const ROLE_ORG_NAMED = 'ROLE_ORG_NAMED';
+    public const ROLE_ORG_ADMIN = 'ROLE_ORG_ADMIN';
+    public const ROLE_ORG_TEAM_MEMBER = 'ROLE_ORG_TEAM_MEMBER';
 
-    const ROLE_PA = 'ROLE_PA';
-    const ROLE_PA_NAMED = 'ROLE_PA_NAMED';
-    const ROLE_PA_ADMIN = 'ROLE_PA_ADMIN';
-    const ROLE_PA_TEAM_MEMBER = 'ROLE_PA_TEAM_MEMBER';
+    public const ROLE_PA = 'ROLE_PA';
+    public const ROLE_PA_NAMED = 'ROLE_PA_NAMED';
+    public const ROLE_PA_ADMIN = 'ROLE_PA_ADMIN';
+    public const ROLE_PA_TEAM_MEMBER = 'ROLE_PA_TEAM_MEMBER';
 
-    const ROLE_PROF = 'ROLE_PROF';
-    const ROLE_PROF_NAMED = 'ROLE_PROF_NAMED';
-    const ROLE_PROF_ADMIN = 'ROLE_PROF_ADMIN';
-    const ROLE_PROF_TEAM_MEMBER = 'ROLE_PROF_TEAM_MEMBER';
+    public const ROLE_PROF = 'ROLE_PROF';
+    public const ROLE_PROF_NAMED = 'ROLE_PROF_NAMED';
+    public const ROLE_PROF_ADMIN = 'ROLE_PROF_ADMIN';
+    public const ROLE_PROF_TEAM_MEMBER = 'ROLE_PROF_TEAM_MEMBER';
 
-    const TYPE_LAY = 'LAY';
-    const TYPE_PA = 'PA';
-    const TYPE_PROF = 'PROF';
+    public const TYPE_LAY = 'LAY';
+    public const TYPE_PA = 'PA';
+    public const TYPE_PROF = 'PROF';
 
     public static $adminRoles = [
         self::ROLE_ADMIN,
@@ -953,9 +953,6 @@ class User implements UserInterface
         return $this->agreeTermsUse;
     }
 
-    /**
-     * @param bool $agreeTermsUse
-     */
     public function setAgreeTermsUse(bool $agreeTermsUse)
     {
         $this->agreeTermsUse = $agreeTermsUse;
@@ -1239,11 +1236,12 @@ class User implements UserInterface
         return $this;
     }
 
-    /** Check if a user registration was before today
+    /**
+     * Check if a user registration was before today.
+     *
      * @param $user
-     * @return bool
      */
-    public function regBeforeToday(User $user)
+    public function regBeforeToday(User $user): bool
     {
         return $user->getRegistrationDate() < (new \DateTime())->setTime(00, 00, 00);
     }
