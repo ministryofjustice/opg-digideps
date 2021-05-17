@@ -87,8 +87,6 @@ trait ActionsSectionTrait
             $this->commentsAndAnswers[] = [$comment];
         }
 
-//        $this->commentsAndAnswers[] = $commentAndAnswer;
-
         $this->pressButton('Save and continue');
     }
 
