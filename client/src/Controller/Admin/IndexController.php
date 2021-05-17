@@ -19,7 +19,6 @@ use Predis\Client;
 use Predis\ClientInterface;
 use Psr\Log\LoggerInterface;
 use Redis;
-use Symfony\Component\Routing\Annotation\Route;
 use Sensio\Bundle\FrameworkExtraBundle\Configuration\Security;
 use Sensio\Bundle\FrameworkExtraBundle\Configuration\Template;
 use Symfony\Component\Form\Extension\Core\Type\ChoiceType;
@@ -28,6 +27,7 @@ use Symfony\Component\Form\FormError;
 use Symfony\Component\HttpFoundation\RedirectResponse;
 use Symfony\Component\HttpFoundation\Request;
 use Symfony\Component\HttpFoundation\Response;
+use Symfony\Component\Routing\Annotation\Route;
 use Symfony\Component\Routing\RouterInterface;
 use Symfony\Contracts\Translation\TranslatorInterface;
 
@@ -64,14 +64,14 @@ class IndexController extends AbstractController
     public function indexAction(Request $request)
     {
         $filters = [
-            'limit'           => 65,
-            'offset'          => $request->get('offset', 'id'),
-            'role_name'       => '',
-            'q'               => '',
-            'ndr_enabled'     => '',
+            'limit' => 65,
+            'offset' => $request->get('offset', 'id'),
+            'role_name' => '',
+            'q' => '',
+            'ndr_enabled' => '',
             'include_clients' => '',
-            'order_by'        => 'registrationDate',
-            'sort_order'      => 'DESC',
+            'order_by' => 'registrationDate',
+            'sort_order' => 'DESC',
         ];
 
         $form = $this->createForm(FormDir\Admin\SearchType::class, null, ['method' => 'GET']);
@@ -80,11 +80,11 @@ class IndexController extends AbstractController
             $filters = $form->getData() + $filters;
         }
 
-        $users = $this->restClient->get('user/get-all?' . http_build_query($filters), 'User[]');
+        $users = $this->restClient->get('user/get-all?'.http_build_query($filters), 'User[]');
 
         return [
-            'form'    => $form->createView(),
-            'users'   => $users,
+            'form' => $form->createView(),
+            'users' => $users,
             'filters' => $filters,
         ];
     }
@@ -93,8 +93,6 @@ class IndexController extends AbstractController
      * @Route("/user-add", name="admin_add_user")
      * @Security("is_granted('ROLE_ADMIN') or has_role('ROLE_AD')")
      * @Template("@App/Admin/Index/addUser.html.twig")
-     *
-     * @param Request $request
      *
      * @return array|RedirectResponse
      */
@@ -106,7 +104,7 @@ class IndexController extends AbstractController
         if ($form->isSubmitted() && $form->isValid()) {
             // add user
             try {
-                if (!$this->isGranted(EntityDir\User::ROLE_SUPER_ADMIN) && $form->getData()->getRoleName() == EntityDir\User::ROLE_SUPER_ADMIN) {
+                if (!$this->isGranted(EntityDir\User::ROLE_SUPER_ADMIN) && EntityDir\User::ROLE_SUPER_ADMIN == $form->getData()->getRoleName()) {
                     throw new \RuntimeException('Cannot add admin from non-admin user');
                 }
 
@@ -134,6 +132,7 @@ class IndexController extends AbstractController
      * @Template("@App/Admin/Index/viewUser.html.twig")
      *
      * @param $id
+     *
      * @return User[]|Response
      */
     public function viewAction($id)
@@ -150,8 +149,8 @@ class IndexController extends AbstractController
      * @Security("is_granted('ROLE_ADMIN') or has_role('ROLE_AD')")
      * @Template("@App/Admin/Index/editUser.html.twig")
      *
-     * @param Request $request
      * @return array|Response
+     *
      * @throws \Throwable
      */
     public function editUserAction(Request $request, TranslatorInterface $translator)
@@ -165,9 +164,13 @@ class IndexController extends AbstractController
             return $this->renderNotFound();
         }
 
-        if ($user->getRoleName() == EntityDir\User::ROLE_ADMIN && !$this->isGranted(EntityDir\User::ROLE_ADMIN)) {
+        try {
+            $this->denyAccessUnlessGranted('edit-user', $user);
+        } catch (\Throwable $e) {
+            $accessErrorMessage = 'You do not have permission to edit this user';
+
             return $this->render('@App/Admin/Index/error.html.twig', [
-                'error' => 'Non-admin cannot edit admin users',
+                'error' => $accessErrorMessage,
             ]);
         }
 
@@ -179,7 +182,7 @@ class IndexController extends AbstractController
             $updateUser = $form->getData();
 
             try {
-                $this->restClient->put('user/' . $user->getId(), $updateUser, ['admin_edit_user']);
+                $this->restClient->put('user/'.$user->getId(), $updateUser, ['admin_edit_user']);
                 $this->addFlash('notice', 'Your changes were saved');
                 $this->redirectToRoute('admin_editUser', ['filter' => $user->getId()]);
             } catch (\Throwable $e) {
@@ -199,10 +202,10 @@ class IndexController extends AbstractController
         }
 
         $view = [
-            'form'          => $form->createView(),
-            'action'        => 'edit',
-            'id'            => $user->getId(),
-            'user'          => $user,
+            'form' => $form->createView(),
+            'action' => 'edit',
+            'id' => $user->getId(),
+            'user' => $user,
             'deputyBaseUrl' => $this->container->getParameter('non_admin_host'),
         ];
 
@@ -215,22 +218,18 @@ class IndexController extends AbstractController
 
     /**
      * @param $id
-     * @return User
      */
     private function getPopulatedUser($id): User
     {
         /* @var User $user */
-        $user = $this->restClient->get("user/{$id}", "User", ["user-rolename"]);
+        $user = $this->restClient->get("user/{$id}", 'User', ['user-rolename']);
 
         /** @var array $groups */
-        $groups = ($user->isDeputyOrg()) ? ["user", "user-organisations"] : ["user", "user-clients", "client", "client-reports"];
+        $groups = ($user->isDeputyOrg()) ? ['user', 'user-organisations'] : ['user', 'user-clients', 'client', 'client-reports'];
 
-        return $this->restClient->get("user/{$id}", "User", $groups);
+        return $this->restClient->get("user/{$id}", 'User', $groups);
     }
 
-    /**
-     * @return Response
-     */
     private function renderNotFound(): Response
     {
         return $this->render('@App/Admin/Index/error.html.twig', [
@@ -242,20 +241,20 @@ class IndexController extends AbstractController
      * @Route("/edit-ndr/{id}", name="admin_editNdr", methods={"POST"})
      * @Security("is_granted('ROLE_ADMIN') or has_role('ROLE_AD')")
      *
-     * @param Request $request
      * @param string $id
+     *
      * @return \Symfony\Component\HttpFoundation\RedirectResponse
      */
     public function editNdrAction(Request $request, $id)
     {
-        $ndr = $this->restClient->get('ndr/' . $id, 'Ndr\Ndr', ['ndr', 'client', 'client-users', 'user']);
+        $ndr = $this->restClient->get('ndr/'.$id, 'Ndr\Ndr', ['ndr', 'client', 'client-users', 'user']);
         $ndrForm = $this->createForm(FormDir\NdrType::class, $ndr);
-        if ($request->getMethod() == 'POST') {
+        if ('POST' == $request->getMethod()) {
             $ndrForm->handleRequest($request);
 
             if ($ndrForm->isSubmitted() && $ndrForm->isValid()) {
                 $updateNdr = $ndrForm->getData();
-                $this->restClient->put('ndr/' . $id, $updateNdr, ['start_date']);
+                $this->restClient->put('ndr/'.$id, $updateNdr, ['start_date']);
                 $this->addFlash('notice', 'Your changes were saved');
             }
         }
@@ -299,6 +298,7 @@ class IndexController extends AbstractController
 
         try {
             $this->userApi->delete($user, AuditEvents::TRIGGER_ADMIN_BUTTON);
+
             return $this->redirect($this->generateUrl('admin_homepage'));
         } catch (\Throwable $e) {
             $this->logger->warning(
@@ -307,6 +307,7 @@ class IndexController extends AbstractController
             );
 
             $this->addFlash('error', 'There was a problem deleting the deputy - please try again later');
+
             return $this->redirect($this->generateUrl('admin_homepage'));
         }
     }
@@ -325,7 +326,7 @@ class IndexController extends AbstractController
                 'choices' => [
                     'upload.form.type.choices.lay' => 'lay',
                     'upload.form.type.choices.org' => 'org',
-                ]
+                ],
             ])
             ->add('save', SubmitType::class)
             ->getForm();
@@ -333,9 +334,9 @@ class IndexController extends AbstractController
         $form->handleRequest($request);
 
         if ($form->isSubmitted() && $form->isValid()) {
-            if ($form->get('type')->getData() === 'lay') {
+            if ('lay' === $form->get('type')->getData()) {
                 return new RedirectResponse($router->generate('casrec_upload'));
-            } elseif ($form->get('type')->getData() === 'org') {
+            } elseif ('org' === $form->get('type')->getData()) {
                 return new RedirectResponse($router->generate('admin_org_upload'));
             }
         }
@@ -395,7 +396,7 @@ class IndexController extends AbstractController
 
                 foreach ($chunks as $k => $chunk) {
                     $compressedData = CsvUploader::compressData($chunk);
-                    $redisClient->set('chunk' . $k, $compressedData);
+                    $redisClient->set('chunk'.$k, $compressedData);
                 }
 
                 return $this->redirect($this->generateUrl('casrec_upload', ['nOfChunks' => count($chunks), 'source' => $source]));
@@ -409,11 +410,11 @@ class IndexController extends AbstractController
         }
 
         return [
-            'nOfChunks'      => $request->get('nOfChunks'),
-            'source'         => $request->get('source'),
+            'nOfChunks' => $request->get('nOfChunks'),
+            'source' => $request->get('source'),
             'currentRecords' => $this->restClient->get('casrec/count', 'array'),
-            'form'           => $form->createView(),
-            'maxUploadSize'  => min([ini_get('upload_max_filesize'), ini_get('post_max_size')]),
+            'form' => $form->createView(),
+            'maxUploadSize' => min([ini_get('upload_max_filesize'), ini_get('post_max_size')]),
         ];
     }
 
@@ -435,7 +436,7 @@ class IndexController extends AbstractController
             try {
                 $data = (new CsvToArray($fileName, true))
                     ->setExpectedColumns([
-                        'Deputy No'
+                        'Deputy No',
                     ])
                     ->getData();
                 $compressedData = CsvUploader::compressData($data);
@@ -451,6 +452,7 @@ class IndexController extends AbstractController
                         $err
                     );
                 }
+
                 return $this->redirect($this->generateUrl('casrec_mld_upgrade'));
             } catch (\Throwable $e) {
                 $message = $e->getMessage();
@@ -463,8 +465,8 @@ class IndexController extends AbstractController
 
         return [
             'currentMldUsers' => $this->restClient->get('codeputy/count', 'array'),
-            'form'            => $form->createView(),
-            'maxUploadSize'   => min([ini_get('upload_max_filesize'), ini_get('post_max_size')]),
+            'form' => $form->createView(),
+            'maxUploadSize' => min([ini_get('upload_max_filesize'), ini_get('post_max_size')]),
         ];
     }
 
@@ -509,7 +511,7 @@ class IndexController extends AbstractController
                         'Corref',
                         'Typeofrep',
                         'Last Report Day',
-                        'Made Date'
+                        'Made Date',
                     ])
                     ->setOptionalColumns([
                         'Client Adrs1',
@@ -522,10 +524,10 @@ class IndexController extends AbstractController
                         'Phone Main',
                         'Phone Alternative',
                         'Fee Payer',
-                        'Corres'
+                        'Corres',
                     ])
                     ->setUnexpectedColumns([
-                        'NDR'
+                        'NDR',
                     ])
                     ->getData();
 
@@ -543,7 +545,7 @@ class IndexController extends AbstractController
 
                 if ($outputStreamResponse) {
                     $this->addFlash('error', $message);
-                    die();
+                    exit();
                 } else {
                     $form->get('file')->addError(new FormError($message));
                 }

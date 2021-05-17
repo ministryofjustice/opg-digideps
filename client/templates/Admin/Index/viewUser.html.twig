@@ -10,9 +10,11 @@
 {% block pageTitle %}{{ user.fullName }}{% endblock %}
 
 {% block actions %}
-    <a href="{{ path('admin_editUser', {'filter': user.id}) }}" role="button" data-module="govuk-button" class="govuk-button govuk-button--secondary">
-        {{ (page ~ '.summary.editUser') | trans }}
-    </a>
+    {% if is_granted('edit-user', user) %}
+        <a href="{{ path('admin_editUser', {'filter': user.id}) }}" role="button" data-module="govuk-button" class="govuk-button govuk-button--secondary">
+            {{ (page ~ '.summary.editUser') | trans }}
+        </a>
+    {% endif %}
 {% endblock %}
 
 {% block supportTitleTop %}

@@ -26,6 +26,12 @@ trait PageUrlsTrait
     private string $adminAddUserUrl = '/admin/user-add';
     private string $adminEditUserUrl = '/admin/edit-user?filter=%s';
     private string $adminMyUserProfileUrl = '/deputyship-details/your-details';
+    private string $adminAnalyticsUrl = '/admin/stats/metrics';
+    private string $adminDATReportUrl = '/admin/stats';
+    private string $adminSatisfactionReportUrl = '/admin/stats/satisfaction';
+    private string $adminUserResearchReportUrl = '/admin/stats/user-research';
+    private string $adminActiveLaysReportUrl = '/admin/stats/downloadActiveLaysCsv';
+    private string $adminFixturesUrl = '/admin/fixtures';
 
     // Fixtures
     private string $courtOrdersFixtureUrl = '/admin/fixtures/court-orders?%s';
@@ -118,5 +124,35 @@ trait PageUrlsTrait
     public function getAdminMyUserProfilePage(): string
     {
         return $this->adminMyUserProfileUrl;
+    }
+
+    public function getAdminDATReportUrl(): string
+    {
+        return $this->adminDATReportUrl;
+    }
+
+    public function getAdminSatisfactionReportUrl(): string
+    {
+        return $this->adminSatisfactionReportUrl;
+    }
+
+    public function getAdminUserResearchReportUrl(): string
+    {
+        return $this->adminUserResearchReportUrl;
+    }
+
+    public function getAdminActiveLaysReportUrl(): string
+    {
+        return $this->adminActiveLaysReportUrl;
+    }
+
+    public function getAdminFixturesUrl(): string
+    {
+        return $this->adminFixturesUrl;
+    }
+
+    public function getAdminAnalyticsUrl(): string
+    {
+        return $this->adminAnalyticsUrl;
     }
 }

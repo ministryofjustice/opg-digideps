@@ -292,7 +292,7 @@ trait AdminManagementTrait
     {
         $this->assertOnAlertMessage('Your changes were saved');
         $id = $this->interactingWithUserDetails->getUserId();
-        $user = $this->em->getRepository(User::class)->findOneBy(['id' => $id]);
+        $user = $this->em->getRepository(User::class)->find($id);
 
         $comparisonSubjectMessage = sprintf('Queried DB for User with id %s against form values entered', $id);
         $this->assertStringEqualsString(

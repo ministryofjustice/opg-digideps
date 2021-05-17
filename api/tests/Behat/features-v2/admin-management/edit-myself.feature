@@ -9,12 +9,12 @@ Feature: Admin - An admin user edits their details
 
   Scenario: An elevated admin user updates their details
     Given an elevated admin user accesses the admin app
-    When I visit my user profile page
+    When I visit my admin user profile page
     And I update my firstname and lastname
     Then my details should be updated
 
   Scenario: An admin user updates their details
     Given an admin user accesses the admin app
-    When I visit my user profile page
+    When I visit my admin user profile page
     And I update my firstname and lastname
     Then my details should be updated

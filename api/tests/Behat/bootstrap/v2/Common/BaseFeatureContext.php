@@ -30,6 +30,7 @@ class BaseFeatureContext extends MinkContext
     use IVisitFrontendTrait;
     use PageUrlsTrait;
     use ReportTrait;
+    use UserExistsTrait;
 
     public const REPORT_SECTION_ENDPOINT = '/%s/%s/%s';
 

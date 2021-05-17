@@ -73,10 +73,58 @@ trait IVisitAdminTrait
     }
 
     /**
-     * @When I visit my user profile page
+     * @When I visit my admin user profile page
      */
     public function iVisitMyUserProfilePage()
     {
         $this->visitAdminPath($this->getAdminMyUserProfilePage());
+    }
+
+    /**
+     * @When I visit the admin DAT report page
+     */
+    public function iVisitAdminDATReportPage()
+    {
+        $this->visitAdminPath($this->getAdminDATReportUrl());
+    }
+
+    /**
+     * @When I visit the admin active lays report page
+     */
+    public function iVisitAdminActiveLaysPage()
+    {
+        $this->visitAdminPath($this->getAdminActiveLaysReportUrl());
+    }
+
+    /**
+     * @When I visit the admin satisfaction report page
+     */
+    public function iVisitAdminSatisfactionReportPage()
+    {
+        $this->visitAdminPath($this->getAdminSatisfactionReportUrl());
+    }
+
+    /**
+     * @When I visit the admin user research report page
+     */
+    public function iVisitAdminUserResearchReportPage()
+    {
+        $this->visitAdminPath($this->getAdminUserResearchReportUrl());
+    }
+
+    /**
+     * @When I visit the admin fixtures page
+     */
+    public function iVisitAdminFixturesPage()
+    {
+        $this->visitAdminPath($this->getAdminFixturesUrl());
+    }
+
+    /**
+     * @When I visit the admin analytics page
+     */
+    public function iVisitAdminAnalyticsPage()
+    {
+        $this->visitAdminPath($this->getAdminAnalyticsUrl());
     }
 }

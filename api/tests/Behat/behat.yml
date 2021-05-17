@@ -67,12 +67,6 @@ default:
             contexts:
                 - App\Tests\Behat\CourtOrderManagement\CourtOrderManagementFeatureContext
 
-        acl:
-            description: Coverage of Access Control
-            paths: [ "%paths.base%/features/v2/acl" ]
-            contexts:
-                - App\Tests\Behat\ACL\ACLFeatureContext
-
         authentication:
             description: Coverage of authentication
             paths: [ "%paths.base%/features/v2/authentication" ]
@@ -102,12 +96,6 @@ default:
             paths: [ "%paths.base%/features-v2/report-syncing" ]
             contexts:
                 - App\Tests\Behat\DocumentSynchronisation\DocumentSynchronisationFeatureContext
-
-        acl-v2:
-            description: Coverage of Access Control
-            paths: [ "%paths.base%/features-v2/acl" ]
-            contexts:
-                - App\Tests\Behat\ACL\ACLFeatureContext
 
         # features-v2
         reporting-preview:
@@ -194,6 +182,12 @@ cross-browser-android-chrome:
 
 v2-tests-goutte:
     suites:
+        acl-v2:
+            description: Coverage of Access Control
+            paths: [ "%paths.base%/features-v2/acl" ]
+            contexts:
+                - App\Tests\Behat\v2\ACL\ACLFeatureContext
+
         admin-management:
             description: Covering the admin user management features of the app
             paths: [ "%paths.base%/features-v2/admin-management" ]

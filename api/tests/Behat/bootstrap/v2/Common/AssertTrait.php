@@ -56,16 +56,21 @@ Found: %s
 
 Subject of Comparison: %s
 Page URL: %s
+Logged in User: %s
 ============================
 
 MESSAGE;
+
+        $loggedInUser =
+            is_null($this->loggedInUserDetails) ? 'User not logged in' : $this->loggedInUserDetails->getUserEmail();
 
         return sprintf(
             $message,
             $expected,
             $found,
             $comparisonSubject,
-            $this->getCurrentUrl()
+            $this->getCurrentUrl(),
+            $loggedInUser
         );
     }
 
@@ -151,7 +156,7 @@ MESSAGE;
     {
         $linkElement = $this->getSession()->getPage()->find(
             'xpath',
-            "//a[text() = '$linkText']"
+            "//a[normalize-space() = '$linkText']"
         );
 
         if (is_null($linkElement)) {
@@ -160,6 +165,26 @@ MESSAGE;
             $message = $this->getAssertMessage(
                 $expected,
                 'Could not find specified anchor element',
+                $this->getSession()->getPage()->getHtml()
+            );
+
+            assert(false, $message);
+        }
+    }
+
+    public function assertLinkWithTextIsNotOnPage(string $linkText)
+    {
+        $linkElement = $this->getSession()->getPage()->find(
+            'xpath',
+            "//a[text() = '$linkText']"
+        );
+
+        if (!is_null($linkElement)) {
+            $expected = sprintf('Not to find anchor element with text value \'%s\'', $linkText);
+
+            $message = $this->getAssertMessage(
+                $expected,
+                'The element appeared on the page',
                 $this->getSession()->getPage()->getHtml()
             );
 

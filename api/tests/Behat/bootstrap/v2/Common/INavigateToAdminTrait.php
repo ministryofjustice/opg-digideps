@@ -29,4 +29,12 @@ trait INavigateToAdminTrait
         $mainElement = $this->getSession()->getPage()->find('xpath', '//main');
         $mainElement->clickLink('Your details');
     }
+
+    /**
+     * @When I navigate to the admin analytics page
+     */
+    public function iNavigateToAdminAnalyticsSearchPage()
+    {
+        $this->clickLink('Analytics');
+    }
 }

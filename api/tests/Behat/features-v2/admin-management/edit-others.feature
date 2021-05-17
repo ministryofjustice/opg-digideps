@@ -1,4 +1,4 @@
-@v2 @admin-management @acs
+@v2 @admin-management
 Feature: Admin - An admin user edits other admins details
 
   Scenario: A super admin user updates other admin users details
@@ -15,7 +15,7 @@ Feature: Admin - An admin user edits other admins details
     Given an elevated admin user accesses the admin app
     And another elevated admin user exists
     When I attempt to update an existing "elevated admin" users details
-    Then the users details should be updated
+    Then the users details should not be updated
     When I attempt to update an existing "super admin" users details
     Then the users details should not be updated
     When I attempt to update an existing "admin" users details
