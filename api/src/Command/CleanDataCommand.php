@@ -12,7 +12,7 @@ use Symfony\Component\DependencyInjection\ContainerAwareTrait;
 
 /**
  * Add data that wasn't added with listeners
- * Firstly wrote when data wasn't added with temporary 103 user on staging
+ * Firstly wrote when data wasn't added with temporary 103 user on staging.
  *
  * @codeCoverageIgnore
  */
@@ -44,25 +44,25 @@ class CleanDataCommand extends Command
     protected function execute(InputInterface $input, OutputInterface $output)
     {
         /**
-         *
          * add DeputyNo to LAY users that skipped the self-registration process.
-         * DeputyNo is needed for stats
-         *
+         * DeputyNo is needed for stats.
          */
         /** @var $user User */
         $fixed = 0;
         $mismatch = 0;
         $clientNotCreated = 0;
 
-        foreach ($this->em->getRepository(User::class)->findBy([
-            'deputyNo'=>null,
+        foreach (
+            $this->em->getRepository(User::class)->findBy([
+            'deputyNo' => null,
             'roleName' => User::ROLE_LAY_DEPUTY,
-        ]) as $user) {
+            ]) as $user
+        ) {
             $output->write("User {$user->getId()}: ");
             try {
                 $client = $user->getFirstClient();
                 if (!$client) {
-                    $clientNotCreated++;
+                    ++$clientNotCreated;
                     throw new \Exception('Client not yet created. skipped');
                 }
 
@@ -76,11 +76,11 @@ class CleanDataCommand extends Command
                 $user->setDeputyNo($deputyNo);
                 $this->em->flush($user);
                 $output->writeln(" deputyNo set to $deputyNo ");
-                $fixed++;
+                ++$fixed;
             } catch (\Throwable $e) {
-                $error = $e->getCode() === 400 ? 'CASREC match not found' : $e->getMessage();
-                $output->writeln(' ERROR: ' . $error);
-                $mismatch++;
+                $error = 400 === $e->getCode() ? 'CASREC match not found' : $e->getMessage();
+                $output->writeln(' ERROR: '.$error);
+                ++$mismatch;
             }
         }
 

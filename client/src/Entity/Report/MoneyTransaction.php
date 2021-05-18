@@ -31,7 +31,7 @@ class MoneyTransaction
      * Keep in sync with API
      * No need to do a separate call to get the list
      * Possible refactor would be moving some entities data into a shared library
-     * ORDER is deprecated, re-order moving elements in the code
+     * ORDER is deprecated, re-order moving elements in the code.
      *
      * @JMS\Exclude
      */
@@ -129,7 +129,6 @@ class MoneyTransaction
         ['transfers-out-to-other-accounts', true, 'moving-money', 'out'],
 
         ['anything-else-paid-out', true, 'moneyout-other', 'out'],
-
     ];
 
     /**
@@ -266,9 +265,10 @@ class MoneyTransaction
     }
 
     /**
-     * Checks category is valid
+     * Checks category is valid.
      *
-     * @param  string $category
+     * @param string $category
+     *
      * @return bool
      */
     public static function isValidCategory($category = '')
@@ -276,12 +276,13 @@ class MoneyTransaction
         foreach (self::$categories as $cat) {
             list($categoryId, $hasDetails, $groupId, $type) = $cat;
 
-            if ((($groupId === $categoryId) && $category == $groupId) ||
+            if (
+                (($groupId === $categoryId) && $category == $groupId) ||
                 $category == $categoryId
             ) {
                 return true;
             }
         }
-        throw new \RuntimeException('Invalid category: ' . $category);
+        throw new \RuntimeException('Invalid category: '.$category);
     }
 }

@@ -1,4 +1,6 @@
-<?php declare(strict_types=1);
+<?php
+
+declare(strict_types=1);
 
 namespace App\Service\Client\Sirius;
 
@@ -34,13 +36,6 @@ class SiriusApiGatewayClient
      */
     private $logger;
 
-    /**
-     * @param Client $httpClient
-     * @param RequestSigner $requestSigner
-     * @param string $baseUrl
-     * @param Serializer $serializer
-     * @param LoggerInterface $logger
-     */
     public function __construct(
         Client $httpClient,
         RequestSigner $requestSigner,
@@ -57,27 +52,27 @@ class SiriusApiGatewayClient
     }
 
     /**
-     * @param string $endpoint
      * @return mixed|\Psr\Http\Message\ResponseInterface
+     *
      * @throws \GuzzleHttp\Exception\GuzzleException
      */
     public function get(string $endpoint)
     {
         $signedRequest = $this->buildSignedRequest($endpoint, 'GET');
+
         return $this->httpClient->send($signedRequest, ['connect_timeout' => 2, 'timeout' => 3]);
     }
 
     /**
-     * @param SiriusDocumentUpload $upload
-     * @param string $caseRef
      * @return mixed|\Psr\Http\Message\ResponseInterface
+     *
      * @throws \GuzzleHttp\Exception\GuzzleException
      */
     public function sendReportPdfDocument(SiriusDocumentUpload $upload, string $caseRef)
     {
         $reportJson = $this->serializer->serialize(['report' => ['data' => $upload]], 'json');
 
-        $this->logger->warning("Syncing reportPDF document");
+        $this->logger->warning('Syncing reportPDF document');
         $this->logger->warning($reportJson);
 
         $signedRequest = $this->buildSignedRequest(
@@ -92,11 +87,10 @@ class SiriusApiGatewayClient
     }
 
     /**
-     * @param SiriusDocumentUpload $upload
      * @param string $content
-     * @param string $submissionUuid
-     * @param string $caseRef
+     *
      * @return mixed|\Psr\Http\Message\ResponseInterface
+     *
      * @throws \GuzzleHttp\Exception\GuzzleException
      */
     public function sendSupportingDocument(SiriusDocumentUpload $upload, string $submissionUuid, string $caseRef)
@@ -117,15 +111,13 @@ class SiriusApiGatewayClient
     }
 
     /**
-     * @param SiriusDocumentUpload $upload
-     * @param string $submissionUuid
-     * @param string $caseRef
      * @return mixed|\Psr\Http\Message\ResponseInterface
+     *
      * @throws \GuzzleHttp\Exception\GuzzleException
      */
     public function postChecklistPdf(SiriusDocumentUpload $upload, string $submissionUuid, string $caseRef)
     {
-        $body = $this->serializer->serialize(['checklist' => ['data' => $upload]], 'json', ["json_encode_options" => JSON_FORCE_OBJECT]);
+        $body = $this->serializer->serialize(['checklist' => ['data' => $upload]], 'json', ['json_encode_options' => JSON_FORCE_OBJECT]);
 
         $signedRequest = $this->buildSignedRequest(
             sprintf(self::SIRIUS_CHECKLIST_POST_ENDPOINT, $caseRef, $submissionUuid),
@@ -138,16 +130,13 @@ class SiriusApiGatewayClient
     }
 
     /**
-     * @param SiriusDocumentUpload $upload
-     * @param string $submissionUuid
-     * @param string $caseRef
-     * @param string $checklistUuid
      * @return mixed|\Psr\Http\Message\ResponseInterface
+     *
      * @throws \GuzzleHttp\Exception\GuzzleException
      */
     public function putChecklistPdf(SiriusDocumentUpload $upload, string $submissionUuid, string $caseRef, string $checklistUuid)
     {
-        $body = $this->serializer->serialize(['checklist' => ['data' => $upload]], 'json', ["json_encode_options" => JSON_FORCE_OBJECT]);
+        $body = $this->serializer->serialize(['checklist' => ['data' => $upload]], 'json', ['json_encode_options' => JSON_FORCE_OBJECT]);
 
         $signedRequest = $this->buildSignedRequest(
             sprintf(self::SIRIUS_CHECKLIST_PUT_ENDPOINT, $caseRef, $submissionUuid, $checklistUuid),
@@ -160,29 +149,25 @@ class SiriusApiGatewayClient
     }
 
     /**
-     * @param string $endpoint
-     * @param string $method
-     * @param string $body
-     * @param string $accept
-     * @param string $contentType
      * @return Request|\Psr\Http\Message\RequestInterface
      */
     private function buildSignedRequest(
         string $endpoint,
         string $method,
-        string $body='',
-        string $accept='application/json',
-        string $contentType='application/json'
+        string $body = '',
+        string $accept = 'application/json',
+        string $contentType = 'application/json'
     ) {
         $url = new Uri(sprintf('%s/%s/%s', $this->baseUrl, self::SIRIUS_API_GATEWAY_VERSION, $endpoint));
 
         $request = new Request($method, $url, [
             'Accept' => $accept,
-            'Content-type' => $contentType
+            'Content-type' => $contentType,
         ], $body);
 
         // Sign the request with an AWS Authorization header.
         $signedRequest = $this->requestSigner->signRequest($request, 'execute-api');
+
         return $signedRequest;
     }
 }

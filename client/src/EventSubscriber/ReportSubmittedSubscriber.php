@@ -1,5 +1,6 @@
-<?php declare(strict_types=1);
+<?php
 
+declare(strict_types=1);
 
 namespace App\EventSubscriber;
 
@@ -21,9 +22,6 @@ class ReportSubmittedSubscriber implements EventSubscriberInterface
 
     private LoggerInterface $logger;
 
-    /**
-     * @var DateTimeProvider
-     */
     private DateTimeProvider $dateTimeProvider;
 
     public function __construct(ReportApi $reportApi, Mailer $mailer, LoggerInterface $logger, DateTimeProvider $dateTimeProvider)
@@ -38,7 +36,7 @@ class ReportSubmittedSubscriber implements EventSubscriberInterface
     {
         return [
             ReportSubmittedEvent::NAME => 'logResubmittedReport',
-            ReportSubmittedEvent::NAME => 'sendEmail'
+            ReportSubmittedEvent::NAME => 'sendEmail',
         ];
     }
 
@@ -52,7 +50,7 @@ class ReportSubmittedSubscriber implements EventSubscriberInterface
 
     public function logResubmittedReport(ReportSubmittedEvent $event)
     {
-        if ($event->getSubmittedReport()->getUnSubmitDate() !== null) {
+        if (null !== $event->getSubmittedReport()->getUnSubmitDate()) {
             $auditEvent = (new AuditEvents($this->dateTimeProvider))
                 ->reportResubmitted(
                     $event->getSubmittedReport(),

@@ -1,4 +1,5 @@
 <?php
+
 namespace App\Security;
 
 use App\Entity\Organisation;
@@ -15,12 +16,9 @@ class OrganisationVoter extends Voter
     /** @var string */
     const EDIT = 'edit';
 
-    /** @var Security  */
+    /** @var Security */
     private $security;
 
-    /**
-     * @param Security $security
-     */
     public function __construct(Security $security)
     {
         $this->security = $security;
@@ -28,7 +26,8 @@ class OrganisationVoter extends Voter
 
     /**
      * @param string $attribute
-     * @param mixed $subject
+     * @param mixed  $subject
+     *
      * @return bool
      */
     protected function supports($attribute, $subject)
@@ -37,9 +36,9 @@ class OrganisationVoter extends Voter
     }
 
     /**
-     * @param string $attribute
+     * @param string       $attribute
      * @param Organisation $organisation
-     * @param TokenInterface $token
+     *
      * @return bool
      */
     protected function voteOnAttribute($attribute, $organisation, TokenInterface $token)
@@ -50,7 +49,6 @@ class OrganisationVoter extends Voter
             // the user must be logged in; if not, deny access
             return false;
         }
-
 
         switch ($attribute) {
             case self::VIEW:
@@ -63,8 +61,6 @@ class OrganisationVoter extends Voter
     }
 
     /**
-     * @param Organisation $organisation
-     * @param User $user
      * @return bool
      */
     private function canManage(Organisation $organisation, User $user)

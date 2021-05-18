@@ -2,21 +2,18 @@
 
 namespace DoctrineMigrations;
 
-use Doctrine\Migrations\AbstractMigration;
 use Doctrine\DBAL\Schema\Schema;
+use Doctrine\Migrations\AbstractMigration;
 
 /**
  * Auto-generated Migration: Please modify to your needs!
  */
 class Version183 extends AbstractMigration
 {
-    /**
-     * @param Schema $schema
-     */
-    public function up(Schema $schema) : void
+    public function up(Schema $schema): void
     {
         // this up() migration is auto-generated, please modify it to your needs
-        $this->abortIf($this->connection->getDatabasePlatform()->getName() != 'postgresql', 'Migration can only be executed safely on \'postgresql\'.');
+        $this->abortIf('postgresql' != $this->connection->getDatabasePlatform()->getName(), 'Migration can only be executed safely on \'postgresql\'.');
 
         $this->addSql('ALTER TABLE checklist ADD last_modified_by INT DEFAULT NULL');
         $this->addSql('ALTER TABLE checklist ADD last_modified_on TIMESTAMP(0) WITHOUT TIME ZONE DEFAULT NULL');
@@ -24,13 +21,10 @@ class Version183 extends AbstractMigration
         $this->addSql('CREATE INDEX IDX_5C696D2F65CF370E ON checklist (last_modified_by)');
     }
 
-    /**
-     * @param Schema $schema
-     */
-    public function down(Schema $schema) : void
+    public function down(Schema $schema): void
     {
         // this down() migration is auto-generated, please modify it to your needs
-        $this->abortIf($this->connection->getDatabasePlatform()->getName() != 'postgresql', 'Migration can only be executed safely on \'postgresql\'.');
+        $this->abortIf('postgresql' != $this->connection->getDatabasePlatform()->getName(), 'Migration can only be executed safely on \'postgresql\'.');
         $this->addSql('ALTER TABLE checklist DROP CONSTRAINT FK_5C696D2F65CF370E');
         $this->addSql('DROP INDEX IDX_5C696D2F65CF370E');
         $this->addSql('ALTER TABLE checklist DROP last_modified_by');

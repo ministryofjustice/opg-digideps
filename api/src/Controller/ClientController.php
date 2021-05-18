@@ -6,9 +6,9 @@ use App\Entity as EntityDir;
 use App\Repository\ClientRepository;
 use App\Service\Formatter\RestFormatter;
 use Doctrine\ORM\EntityManagerInterface;
-use Symfony\Component\Routing\Annotation\Route;
 use Sensio\Bundle\FrameworkExtraBundle\Configuration\Security;
 use Symfony\Component\HttpFoundation\Request;
+use Symfony\Component\Routing\Annotation\Route;
 
 /**
  * @Route("/client")
@@ -28,7 +28,7 @@ class ClientController extends RestController
 
     /**
      * Add/Edit a client.
-     * When added, the current logged used will be added
+     * When added, the current logged used will be added.
      *
      * @Route("/upsert", methods={"POST", "PUT"})
      * @Security("is_granted('ROLE_DEPUTY')")
@@ -39,7 +39,7 @@ class ClientController extends RestController
         /** @var EntityDir\User|null $user */
         $user = $this->getUser();
 
-        if ($user && $request->getMethod() == 'POST') {
+        if ($user && 'POST' == $request->getMethod()) {
             $client = new EntityDir\Client();
             $client->addUser($user);
         } else {
@@ -50,15 +50,15 @@ class ClientController extends RestController
         }
 
         $this->hydrateEntityWithArrayData($client, $data, [
-            'firstname'   => 'setFirstname',
-            'lastname'    => 'setLastname',
-            'address'     => 'setAddress',
-            'address2'    => 'setAddress2',
-            'postcode'    => 'setPostcode',
-            'country'     => 'setCountry',
-            'county'      => 'setCounty',
-            'phone'       => 'setPhone',
-            'email'       => 'setEmail',
+            'firstname' => 'setFirstname',
+            'lastname' => 'setLastname',
+            'address' => 'setAddress',
+            'address2' => 'setAddress2',
+            'postcode' => 'setPostcode',
+            'country' => 'setCountry',
+            'county' => 'setCounty',
+            'phone' => 'setPhone',
+            'email' => 'setEmail',
         ]);
 
         if ($user && $user->isLayDeputy()) {
@@ -92,9 +92,7 @@ class ClientController extends RestController
      * @Route("/{id}", name="client_find_by_id", requirements={"id":"\d+"}, methods={"GET"})
      * @Security("is_granted('ROLE_DEPUTY') or is_granted('ROLE_ADMIN')")
      *
-     * @param Request $request
-     * @param int $id
-     * @return null|object
+     * @return object|null
      */
     public function findByIdAction(Request $request, int $id)
     {
@@ -105,7 +103,7 @@ class ClientController extends RestController
         $client = $this->findEntityBy(EntityDir\Client::class, $id);
         if ($client->getArchivedAt()) {
             throw $this->createAccessDeniedException('Cannot access archived reports');
-        };
+        }
 
         if (!$this->isGranted('view', $client)) {
             throw $this->createAccessDeniedException('Client does not belong to user');
@@ -118,11 +116,7 @@ class ClientController extends RestController
      * @Route("/{id}/details", name="client_details", requirements={"id":"\d+"}, methods={"GET"})
      * @Security("is_granted('ROLE_ADMIN')")
      *
-     * @param Request $request
-     * @param int $id
-     *
-     * @return null|object
-     *
+     * @return object|null
      */
     public function detailsAction(Request $request, int $id)
     {
@@ -139,7 +133,7 @@ class ClientController extends RestController
                 'report',
                 'status',
                 'client-organisations',
-                'organisation'
+                'organisation',
             ];
         }
 
@@ -165,11 +159,11 @@ class ClientController extends RestController
             throw $this->createAccessDeniedException('Client does not belong to user');
         }
 
-        $client->setArchivedAt(new \DateTime);
+        $client->setArchivedAt(new \DateTime());
         $this->em->flush($client);
 
         return [
-            'id' => $client->getId()
+            'id' => $client->getId(),
         ];
     }
 

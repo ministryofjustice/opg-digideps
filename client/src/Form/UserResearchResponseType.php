@@ -1,5 +1,6 @@
-<?php declare(strict_types=1);
+<?php
 
+declare(strict_types=1);
 
 namespace App\Form;
 
@@ -8,7 +9,6 @@ use Symfony\Component\Form\AbstractType;
 use Symfony\Component\Form\Extension\Core\Type\ChoiceType;
 use Symfony\Component\Form\Extension\Core\Type\SubmitType;
 use Symfony\Component\Form\FormBuilderInterface;
-use Symfony\Component\Form\FormInterface;
 use Symfony\Component\OptionsResolver\OptionsResolver;
 use Symfony\Component\Translation\TranslatorInterface;
 
@@ -27,21 +27,21 @@ class UserResearchResponseType extends AbstractType
             UserResearchResponse::UNDER_ONE,
             UserResearchResponse::ONE_TO_FIVE,
             UserResearchResponse::SIX_TO_TEN,
-            UserResearchResponse::OVER_TEN
+            UserResearchResponse::OVER_TEN,
         ];
 
         $deputyshipLengthLabels = array_map(function ($length) {
-            return $this->translator->trans('form.deputyshipLength.choices.' . $length, [], 'report-post-submission-user-research');
+            return $this->translator->trans('form.deputyshipLength.choices.'.$length, [], 'report-post-submission-user-research');
         }, $deputyshipLengthTransKeys);
 
         $typesOfResearchTransKeys = ['surveys', 'videoCall', 'phone', 'inPerson'];
         $typesOfResearchLabels = array_map(function ($researchType) {
-            return $this->translator->trans('form.agreedResearchTypes.choices.' . $researchType, [], 'report-post-submission-user-research');
+            return $this->translator->trans('form.agreedResearchTypes.choices.'.$researchType, [], 'report-post-submission-user-research');
         }, $typesOfResearchTransKeys);
 
         $deviceAccessTransKeys = ['yes', 'no'];
         $deviceAccessLabels = array_map(function ($response) {
-            return $this->translator->trans('form.hasAccessToVideoCallDevice.choices.' . $response, [], 'report-post-submission-user-research');
+            return $this->translator->trans('form.hasAccessToVideoCallDevice.choices.'.$response, [], 'report-post-submission-user-research');
         }, $deviceAccessTransKeys);
 
         $builder
@@ -72,7 +72,7 @@ class UserResearchResponseType extends AbstractType
     public function configureOptions(OptionsResolver $resolver)
     {
         $resolver->setDefaults([
-            'translation_domain' => 'report-post-submission-user-research'
+            'translation_domain' => 'report-post-submission-user-research',
         ]);
     }
 }

@@ -40,7 +40,7 @@ class IndexController extends AbstractController
     private UserVoter $userVoter;
     private Logger $logger;
     private RestClient $restClient;
-    private UserApi$userApi;
+    private UserApi $userApi;
 
     public function __construct(
         OrgService $orgService,
@@ -306,7 +306,7 @@ class IndexController extends AbstractController
                 ['deputy_email' => $user->getEmail()]
             );
 
-            $this->addFlash('error', $e->getMessage());
+            $this->addFlash('error', 'There was a problem deleting the deputy - please try again later');
 
             return $this->redirect($this->generateUrl('admin_homepage'));
         }

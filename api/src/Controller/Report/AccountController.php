@@ -7,9 +7,9 @@ use App\Entity as EntityDir;
 use App\Entity\Report\Report as Report;
 use App\Service\Formatter\RestFormatter;
 use Doctrine\ORM\EntityManagerInterface;
-use Symfony\Component\Routing\Annotation\Route;
 use Sensio\Bundle\FrameworkExtraBundle\Configuration\Security;
 use Symfony\Component\HttpFoundation\Request;
+use Symfony\Component\Routing\Annotation\Route;
 
 class AccountController extends RestController
 {
@@ -117,7 +117,7 @@ class AccountController extends RestController
                 : null,
             'transactions' => [
                 Report::SECTION_DEPUTY_EXPENSES => $report->hasSection(Report::SECTION_DEPUTY_EXPENSES)
-                    ?  count($report->getExpenses()->filter($paymentsFilter))
+                    ? count($report->getExpenses()->filter($paymentsFilter))
                     : null,
                 Report::SECTION_GIFTS => $report->hasSection(Report::SECTION_GIFTS)
                     ? count($report->getGifts()->filter($paymentsFilter))
@@ -127,8 +127,8 @@ class AccountController extends RestController
                     : null,
                 Report::SECTION_MONEY_OUT => $report->hasSection(Report::SECTION_MONEY_OUT)
                     ? count($report->getMoneyTransactionsOut()->filter($paymentsFilter))
-                    : null
-            ]
+                    : null,
+            ],
         ];
 
         $ret['transactionsCount'] = array_sum($ret['transactions']);
@@ -186,7 +186,7 @@ class AccountController extends RestController
         }
 
         if (array_key_exists('is_closed', $data)) {
-            $account->setIsClosed((boolean) $data['is_closed']);
+            $account->setIsClosed((bool) $data['is_closed']);
         }
 
         if (array_key_exists('closing_balance', $data)) {

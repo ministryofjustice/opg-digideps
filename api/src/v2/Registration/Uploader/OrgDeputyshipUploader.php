@@ -1,5 +1,6 @@
-<?php declare(strict_types=1);
+<?php
 
+declare(strict_types=1);
 
 namespace App\v2\Registration\Uploader;
 
@@ -59,7 +60,9 @@ class OrgDeputyshipUploader
 
     /**
      * @param OrgDeputyshipDto[] $deputyshipDtos
+     *
      * @return array
+     *
      * @throws \Exception
      */
     public function upload(array $deputyshipDtos)
@@ -83,12 +86,10 @@ class OrgDeputyshipUploader
         }
 
         $uploadResults['added'] = $this->added;
+
         return $uploadResults;
     }
 
-    /**
-     * @param OrgDeputyshipDto $dto
-     */
     private function handleNamedDeputy(OrgDeputyshipDto $dto)
     {
         $namedDeputy = ($this->em->getRepository(NamedDeputy::class))->findOneBy(
@@ -99,7 +100,7 @@ class OrgDeputyshipUploader
                 'firstname' => $dto->getDeputyFirstname(),
                 'lastname' => $dto->getDeputyLastname(),
                 'address1' => $dto->getDeputyAddress1(),
-                'addressPostcode' => $dto->getDeputyPostCode()
+                'addressPostcode' => $dto->getDeputyPostCode(),
             ]
         );
 
@@ -115,9 +116,6 @@ class OrgDeputyshipUploader
         $this->namedDeputy = $namedDeputy;
     }
 
-    /**
-     * @param OrgDeputyshipDto $dto
-     */
     private function handleOrganisation(OrgDeputyshipDto $dto)
     {
         $this->currentOrganisation = $foundOrganisation = ($this->em->getRepository(Organisation::class))->findByEmailIdentifier($dto->getDeputyEmail());
@@ -133,9 +131,6 @@ class OrgDeputyshipUploader
         }
     }
 
-    /**
-     * @param OrgDeputyshipDto $dto
-     */
     private function handleClient(OrgDeputyshipDto $dto)
     {
         /** @var Client $client */
@@ -170,9 +165,8 @@ class OrgDeputyshipUploader
     }
 
     /**
-     * Returns true if clients organisation has changed
+     * Returns true if clients organisation has changed.
      *
-     * @param Client $client
      * @return bool
      */
     private function clientHasSwitchedOrganisation(Client $client)
@@ -188,11 +182,6 @@ class OrgDeputyshipUploader
         return false;
     }
 
-    /**
-     * @param Client $client
-     * @param NamedDeputy $namedDeputy
-     * @return bool
-     */
     private function clientHasNewNamedDeputy(Client $client, NamedDeputy $namedDeputy): bool
     {
         return
@@ -219,7 +208,7 @@ class OrgDeputyshipUploader
 
             $this->client->addReport($report);
 
-            $this->added['reports'][] = $this->client->getCaseNumber() . '-' . $dto->getReportEndDate()->format('Y-m-d');
+            $this->added['reports'][] = $this->client->getCaseNumber().'-'.$dto->getReportEndDate()->format('Y-m-d');
         }
 
         $this->em->persist($report);
@@ -252,7 +241,7 @@ class OrgDeputyshipUploader
         }
 
         if (!empty($missingDataTypes)) {
-            $errorMessage = sprintf('Missing data to upload row: %s', implode(", ", $missingDataTypes));
+            $errorMessage = sprintf('Missing data to upload row: %s', implode(', ', $missingDataTypes));
             throw new RuntimeException($errorMessage);
         }
     }

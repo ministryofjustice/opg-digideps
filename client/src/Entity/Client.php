@@ -8,7 +8,6 @@ use App\Entity\Traits\IsSoftDeleteableEntity;
 use DateTime;
 use Doctrine\Common\Collections\ArrayCollection;
 use JMS\Serializer\Annotation as JMS;
-use Symfony\Component\Security\Core\User\UserInterface;
 use Symfony\Component\Validator\Constraints as Assert;
 
 class Client
@@ -48,12 +47,14 @@ class Client
 
     /**
      * @JMS\Type("array<App\Entity\User>")
+     *
      * @var User[]
      */
     private $users = [];
 
     /**
      * @JMS\Type("App\Entity\NamedDeputy")
+     *
      * @var NamedDeputy|null
      */
     private $namedDeputy;
@@ -208,9 +209,8 @@ class Client
      */
     private $clientContacts;
 
-
     /**
-     * @var integer
+     * @var int
      *
      * @JMS\Type("integer")
      * @JMS\Groups({"total-report-count"})
@@ -225,7 +225,7 @@ class Client
     private $organisation;
 
     /**
-     * @var integer
+     * @var int
      *
      * @JMS\Type("integer")
      */
@@ -276,7 +276,6 @@ class Client
     }
 
     /**
-     * @param NamedDeputy $namedDeputy
      * @return Client
      */
     public function setNamedDeputy(NamedDeputy $namedDeputy): self
@@ -288,7 +287,7 @@ class Client
 
     /**
      * Return true if the user (based on `getId()` comparison is present among the users.
-     * Return false if any of the user is not an instance of the User class or the ID is not present
+     * Return false if any of the user is not an instance of the User class or the ID is not present.
      *
      * Mainly used from voters
      *
@@ -296,10 +295,12 @@ class Client
      */
     public function hasUser(User $user)
     {
-        foreach ($this->users?:[] as $currentUser) {
-            if ($user->getId()
+        foreach ($this->users ?: [] as $currentUser) {
+            if (
+                $user->getId()
                 && $currentUser instanceof User && $currentUser->getId()
-                && $user->getId() == $currentUser->getId()) {
+                && $user->getId() == $currentUser->getId()
+            ) {
                 return true;
             }
         }
@@ -389,6 +390,7 @@ class Client
 
     /**
      * @param Report $currentReport
+     *
      * @return Client
      */
     public function setCurrentReport($currentReport): self
@@ -452,7 +454,7 @@ class Client
 
     public function getFullname()
     {
-        $this->fullname = $this->firstname . ' ' . $this->lastname;
+        $this->fullname = $this->firstname.' '.$this->lastname;
 
         return $this->fullname;
     }
@@ -745,6 +747,7 @@ class Client
             return;
         }
         $to = new DateTime('today');
+
         return $this->dateOfBirth->diff($to)->y;
     }
 
@@ -792,14 +795,15 @@ class Client
                     $matches = [];
                     preg_match('(^\w+)', $user->getEmail(), $matches);
                     if (!empty($matches[0])) {
-                        $coDeps[strtolower($matches[0]) . $user->getId()] = $user;
+                        $coDeps[strtolower($matches[0]).$user->getId()] = $user;
                     }
                 } else {
-                    $coDeps[strtolower($user->getFirstname()) . $user->getId()] = $user;
+                    $coDeps[strtolower($user->getFirstname()).$user->getId()] = $user;
                 }
             }
             ksort($coDeps);
         }
+
         return array_values($coDeps);
     }
 
@@ -814,6 +818,7 @@ class Client
                 $submittedReports[] = $report;
             }
         }
+
         return $submittedReports;
     }
 
@@ -871,11 +876,13 @@ class Client
 
     /**
      * @param int $unsubmittedReportsCount
+     *
      * @return Client
      */
     public function setUnsubmittedReportsCount($unsubmittedReportsCount)
     {
         $this->unsubmittedReportsCount = $unsubmittedReportsCount;
+
         return $this;
     }
 
@@ -893,6 +900,7 @@ class Client
     public function setExpectedReportStartDate($expectedReportStartDate)
     {
         $this->expectedReportStartDate = $expectedReportStartDate;
+
         return $this;
     }
 
@@ -906,11 +914,13 @@ class Client
 
     /**
      * @param DateTime $expectedReportEndDate
+     *
      * @return $this
      */
     public function setExpectedReportEndDate($expectedReportEndDate)
     {
         $this->expectedReportEndDate = $expectedReportEndDate;
+
         return $this;
     }
 
@@ -946,9 +956,6 @@ class Client
         return $this->organisation;
     }
 
-    /**
-     * @param Organisation $organisation
-     */
     public function setOrganisation(Organisation $organisation): void
     {
         $this->organisation = $organisation;
@@ -963,6 +970,7 @@ class Client
                 }
             }
         }
+
         return false;
     }
 

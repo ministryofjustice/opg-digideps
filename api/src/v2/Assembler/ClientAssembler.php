@@ -2,11 +2,11 @@
 
 namespace App\v2\Assembler;
 
+use App\Entity\Client;
 use App\v2\Assembler\Report\ReportAssemblerInterface;
 use App\v2\DTO\ClientDto;
 use App\v2\DTO\DeputyDto;
 use App\v2\DTO\DtoPropertySetterTrait;
-use App\Entity\Client;
 use App\v2\DTO\OrganisationDto;
 use App\v2\Registration\DTO\OrgDeputyshipDto;
 
@@ -14,20 +14,17 @@ class ClientAssembler
 {
     use DtoPropertySetterTrait;
 
-    /** @var ReportAssemblerInterface  */
+    /** @var ReportAssemblerInterface */
     private $reportDtoAssembler;
 
     /** @var NdrAssembler */
     private $ndrDtoAssembler;
 
-    /** @var NamedDeputyAssembler  */
+    /** @var NamedDeputyAssembler */
     private $namedDeputyAssembler;
 
     /**
      * ClientAssembler constructor.
-     * @param ReportAssemblerInterface $reportDtoAssembler
-     * @param NdrAssembler $ndrDtoAssembler
-     * @param NamedDeputyAssembler $namedDeputyDtoAssembler
      */
     public function __construct(
         ReportAssemblerInterface $reportDtoAssembler,
@@ -40,7 +37,6 @@ class ClientAssembler
     }
 
     /**
-     * @param array $data
      * @return ClientDto
      */
     public function assembleFromArray(array $data, ?OrganisationDto $orgDto = null)
@@ -54,7 +50,7 @@ class ClientAssembler
             $dto->setNdr($this->assembleClientNdr($data['ndr']));
         }
 
-        if (isset($data['reports'])  && is_array($data['reports'])) {
+        if (isset($data['reports']) && is_array($data['reports'])) {
             $dto->setReports($this->assembleClientReports($data['reports']));
             $dto->setReportCount(count($data['reports']));
         }
@@ -75,7 +71,6 @@ class ClientAssembler
     }
 
     /**
-     * @param Client $client
      * @return ClientDto
      */
     public function assembleFromEntity(Client $client)
@@ -92,7 +87,6 @@ class ClientAssembler
     }
 
     /**
-     * @param array $reports
      * @return array
      */
     private function assembleClientReports(array $reports)
@@ -112,7 +106,6 @@ class ClientAssembler
     }
 
     /**
-     * @param array $ndr
      * @return
      */
     private function assembleClientNdr(array $ndr)
@@ -121,7 +114,6 @@ class ClientAssembler
     }
 
     /**
-     * @param array $namedDeputy
      * @return
      */
     private function assembleClientNamedDeputy(array $namedDeputy)
@@ -136,7 +128,7 @@ class ClientAssembler
             ->setFirstname($dto->getClientFirstname())
             ->setLastname($dto->getClientLastname())
             ->setAddress($dto->getClientAddress1() ? $dto->getClientAddress1() : null)
-            ->setAddress2($dto->getClientAddress2() ? $dto->getClientAddress2(): null)
+            ->setAddress2($dto->getClientAddress2() ? $dto->getClientAddress2() : null)
             ->setCounty($dto->getClientCounty() ? $dto->getClientCounty() : null)
             ->setDateOfBirth($dto->getClientDateOfBirth() ? $dto->getClientDateOfBirth() : null);
 

@@ -1,5 +1,6 @@
-<?php declare(strict_types=1);
+<?php
 
+declare(strict_types=1);
 
 namespace App\Event;
 
@@ -24,75 +25,51 @@ class UserRemovedFromOrganisationEvent extends Event
         $this->trigger = $trigger;
     }
 
-    /**
-     * @return Organisation
-     */
     public function getOrganisation(): Organisation
     {
         return $this->organisation;
     }
 
-    /**
-     * @param Organisation $organisation
-     * @return UserRemovedFromOrganisationEvent
-     */
     public function setOrganisation(Organisation $organisation): UserRemovedFromOrganisationEvent
     {
         $this->organisation = $organisation;
+
         return $this;
     }
 
-    /**
-     * @return User
-     */
     public function getRemovedUser(): User
     {
         return $this->removedUser;
     }
 
-    /**
-     * @param User $removedUser
-     * @return UserRemovedFromOrganisationEvent
-     */
     public function setRemovedUser(User $removedUser): UserRemovedFromOrganisationEvent
     {
         $this->removedUser = $removedUser;
+
         return $this;
     }
 
-    /**
-     * @return User
-     */
     public function getCurrentUser(): User
     {
         return $this->currentUser;
     }
 
-    /**
-     * @param User $currentUser
-     * @return UserRemovedFromOrganisationEvent
-     */
     public function setCurrentUser(User $currentUser): UserRemovedFromOrganisationEvent
     {
         $this->currentUser = $currentUser;
+
         return $this;
     }
 
-    /**
-     * @return string
-     */
     public function getTrigger(): string
     {
         return $this->trigger;
     }
 
-    /**
-     * @param string $trigger
-     * @return UserRemovedFromOrganisationEvent
-     */
     public function setTrigger(string $trigger): UserRemovedFromOrganisationEvent
     {
         $this->trigger = $trigger;
+
         return $this;
     }
 }

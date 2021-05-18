@@ -68,16 +68,16 @@ class ReportSubmissionRepository extends ServiceEntityRepository
                 // case number
                 'c.caseNumber = :q',
                 // separate clause to check ndrs
-                'nc.caseNumber = :q'
+                'nc.caseNumber = :q',
             ]));
-            $qb->setParameter('qLike', '%' . strtolower($q) . '%');
+            $qb->setParameter('qLike', '%'.strtolower($q).'%');
             $qb->setParameter('q', strtolower($q));
         }
 
         // role filter
         if ($createdByRole) {
             $qb->andWhere('cb.roleName LIKE :roleNameLikePrefix');
-            $qb->setParameter('roleNameLikePrefix', strtoupper($createdByRole) . '%');
+            $qb->setParameter('roleNameLikePrefix', strtoupper($createdByRole).'%');
         }
 
         // get results (base query + ordered + pagination + status filter)
@@ -87,7 +87,7 @@ class ReportSubmissionRepository extends ServiceEntityRepository
             $qbSelect->andWhere($statusFilters[$status]);
         }
         $qbSelect
-            ->orderBy('rs.' . $orderBy, $order)
+            ->orderBy('rs.'.$orderBy, $order)
             ->setFirstResult($offset)
             ->setMaxResults($limit);
         $this->_em->getFilters()->getFilter('softdeleteable')->disableForEntity(User::class); //disable softdelete for createdBy, needed from admin area
@@ -97,21 +97,20 @@ class ReportSubmissionRepository extends ServiceEntityRepository
 
         // run counts on the base query for each status (new/archived)
         $counts = [];
-        foreach ($statusFilters as $k=>$v) {
+        foreach ($statusFilters as $k => $v) {
             $qbCount = clone $qb;
             $queryCount = $qbCount->select('count(DISTINCT rs.id)')->andWhere($v)->getQuery();
             $counts[$k] = $queryCount->getSingleScalarResult();
         }
 
         return [
-            'records'=>$records,
-            'counts'=>$counts,
+            'records' => $records,
+            'counts' => $counts,
         ];
     }
 
     /**
-     * @param \DateTime $olderThan
-     * @param int       $limit
+     * @param int $limit
      *
      * @return ReportSubmission[]
      */
@@ -134,8 +133,9 @@ class ReportSubmissionRepository extends ServiceEntityRepository
      * @param $limit
      * @param \DateTime $fromDate
      * @param \DateTime $toDate
-     * @param string $orderBy default createdOn
-     * @param string $order default ASC
+     * @param string    $orderBy  default createdOn
+     * @param string    $order    default ASC
+     *
      * @return array
      */
     public function findAllReportSubmissions(
@@ -144,7 +144,6 @@ class ReportSubmissionRepository extends ServiceEntityRepository
         $orderBy = 'createdOn',
         $order = 'ASC'
     ) {
-
         /** @var SoftDeleteableFilter $filter */
         $filter = $this->_em->getFilters()->getFilter('softdeleteable');
         $filter->disableForEntity(Client::class);
@@ -168,7 +167,7 @@ class ReportSubmissionRepository extends ServiceEntityRepository
             ->andWhere('r.submitDate IS NOT NULL OR ndr.submitDate IS NOT NULL')
             ->setParameter(':fromDate', $this->determineCreatedFromDate($fromDate))
             ->setParameter(':toDate', $this->determineCreatedToDate($toDate))
-            ->orderBy('rs.' . $orderBy, $order);
+            ->orderBy('rs.'.$orderBy, $order);
 
         $this->_em->getFilters()->enable('softdeleteable');
 
@@ -178,18 +177,16 @@ class ReportSubmissionRepository extends ServiceEntityRepository
     /**
      * Calculate FromDate for ReportSubmissions. Used for CSV generation to include weekends reports on Monday.
      *
-     * @param \DateTime|null $date
      * @return \DateTime
      */
     private function determineCreatedFromDate(\DateTime $date = null)
     {
-        $dateFormat = (date('N') == 1) ? 'last Friday midnight' : 'yesterday midnight';
+        $dateFormat = (1 == date('N')) ? 'last Friday midnight' : 'yesterday midnight';
 
         return ($date instanceof \DateTime) ? $date : new \DateTime($dateFormat);
     }
 
     /**
-     * @param \DateTime|null $date
      * @return \DateTime
      */
     private function determineCreatedToDate(\DateTime $date = null)
@@ -212,7 +209,7 @@ class ReportSubmissionRepository extends ServiceEntityRepository
             $allSynced = true;
 
             foreach ($reportSubmission->getDocuments() as $document) {
-                if ($document->getSynchronisationStatus() !== Document::SYNC_STATUS_SUCCESS) {
+                if (Document::SYNC_STATUS_SUCCESS !== $document->getSynchronisationStatus()) {
                     $allSynced = false;
                 }
             }

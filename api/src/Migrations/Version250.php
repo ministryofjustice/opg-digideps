@@ -9,12 +9,12 @@ use Doctrine\Migrations\AbstractMigration;
 
 final class Version250 extends AbstractMigration
 {
-    public function getDescription() : string
+    public function getDescription(): string
     {
         return 'Removing teams tables and clearing associations between team members and clients';
     }
 
-    public function up(Schema $schema) : void
+    public function up(Schema $schema): void
     {
         $this->addSql("DELETE from deputy_case WHERE user_id IN (SELECT id FROM dd_user WHERE role_name != 'ROLE_LAY_DEPUTY')");
         $this->addSql('ALTER TABLE user_team DROP CONSTRAINT fk_be61ead6296cd8ae');
@@ -23,7 +23,7 @@ final class Version250 extends AbstractMigration
         $this->addSql('DROP TABLE user_team');
     }
 
-    public function down(Schema $schema) : void
+    public function down(Schema $schema): void
     {
         $this->addSql('CREATE SEQUENCE dd_team_id_seq INCREMENT BY 1 MINVALUE 1 START 1');
         $this->addSql('CREATE TABLE dd_team (id SERIAL NOT NULL, team_name VARCHAR(50) DEFAULT NULL, PRIMARY KEY(id))');

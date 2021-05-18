@@ -1,5 +1,6 @@
-<?php declare(strict_types=1);
+<?php
 
+declare(strict_types=1);
 
 namespace App\EventSubscriber;
 
@@ -22,7 +23,7 @@ class FeedbackSubmittedSubscriber implements EventSubscriberInterface
     {
         return [
             GeneralFeedbackSubmittedEvent::NAME => 'sendGeneralFeedbackEmail',
-            PostSubmissionFeedbackSubmittedEvent::NAME => 'sendPostSubmissionFeedbackEmail'
+            PostSubmissionFeedbackSubmittedEvent::NAME => 'sendPostSubmissionFeedbackEmail',
         ];
     }
 

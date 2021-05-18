@@ -1,16 +1,18 @@
-<?php declare(strict_types=1);
+<?php
+
+declare(strict_types=1);
 
 namespace App\Service\RestHandler;
 
 use App\Entity\Organisation;
-use App\Repository\OrganisationRepository;
-use App\Repository\UserRepository;
 use App\Entity\User;
 use App\Factory\OrganisationFactory;
+use App\Repository\OrganisationRepository;
+use App\Repository\UserRepository;
 use Doctrine\ORM\EntityManager;
 use Doctrine\ORM\OptimisticLockException as OptimisticLockExceptionAlias;
-use Symfony\Component\Validator\Validator\ValidatorInterface;
 use Exception;
+use Symfony\Component\Validator\Validator\ValidatorInterface;
 
 class OrganisationRestHandler
 {
@@ -32,14 +34,6 @@ class OrganisationRestHandler
     /** @var array */
     private $sharedEmailDomains;
 
-    /**
-     * @param EntityManager $em
-     * @param ValidatorInterface $validator
-     * @param OrganisationRepository $orgRepository
-     * @param UserRepository $userRepository
-     * @param OrganisationFactory $organisationFactory
-     * @param array $sharedEmailDomains
-     */
     public function __construct(
         EntityManager $em,
         ValidatorInterface $validator,
@@ -57,18 +51,13 @@ class OrganisationRestHandler
     }
 
     /**
-     * @param array $data
-     * @return Organisation
      * @throws \Doctrine\ORM\ORMException
      * @throws OptimisticLockExceptionAlias
      */
     public function create(array $data): Organisation
     {
         if (!$this->verifyPostedData($data)) {
-            throw new OrganisationCreationException(sprintf(
-                'Missing key or null value given in request: %s',
-                json_encode($data)
-            ));
+            throw new OrganisationCreationException(sprintf('Missing key or null value given in request: %s', json_encode($data)));
         }
 
         $data['email_identifier'] = strtolower($data['email_identifier']);
@@ -84,7 +73,7 @@ class OrganisationRestHandler
         $organisation = $this->organisationFactory->createFromEmailIdentifier(
             $data['name'],
             $data['email_identifier'],
-            (bool)$data['is_activated']
+            (bool) $data['is_activated']
         );
 
         $this->throwExceptionOnInvalidEntity($organisation);
@@ -96,8 +85,8 @@ class OrganisationRestHandler
     }
 
     /**
-     * @param int $id
      * @return bool
+     *
      * @throws OptimisticLockExceptionAlias
      * @throws Exception
      * @throws \Doctrine\ORM\ORMException
@@ -119,21 +108,14 @@ class OrganisationRestHandler
     }
 
     /**
-
     /**
-     * @param array $data
-     * @param int $id
-     * @return Organisation|null
      * @throws OptimisticLockExceptionAlias
      * @throws \Doctrine\ORM\ORMException
      */
     public function update(array $data, int $id): ?Organisation
     {
         if (!$this->verifyPostedData($data)) {
-            throw new OrganisationUpdateException(sprintf(
-                'Missing key or null value given in request: %s',
-                json_encode($data)
-            ));
+            throw new OrganisationUpdateException(sprintf('Missing key or null value given in request: %s', json_encode($data)));
         }
 
         if (null === ($organisation = $this->orgRepository->find($id))) {
@@ -153,10 +135,6 @@ class OrganisationRestHandler
         return $organisation;
     }
 
-    /**
-     * @param array $data
-     * @return bool
-     */
     private function verifyPostedData(array $data): bool
     {
         return
@@ -167,7 +145,6 @@ class OrganisationRestHandler
 
     /**
      * @param $emailId
-     * @return bool
      */
     private function orgWithEmailIdExists($emailId): bool
     {
@@ -176,16 +153,12 @@ class OrganisationRestHandler
         return $org instanceof Organisation ? true : false;
     }
 
-    /**
-     * @param array $data
-     * @param Organisation $organisation
-     */
     private function populateOrganisation(array $data, Organisation $organisation): void
     {
         $organisation
             ->setName($data['name'])
             ->setEmailIdentifier($data['email_identifier'])
-            ->setIsActivated((bool)$data['is_activated']);
+            ->setIsActivated((bool) $data['is_activated']);
     }
 
     /** @param Organisation $entity */
@@ -194,13 +167,11 @@ class OrganisationRestHandler
         $errors = $this->validator->validate($entity);
 
         if (count($errors) > 0) {
-            throw new OrganisationCreationException((string)$errors);
+            throw new OrganisationCreationException((string) $errors);
         }
     }
 
     /**
-     * @param int $orgId
-     * @param int $userId
      * @throws OptimisticLockExceptionAlias
      * @throws \Doctrine\ORM\ORMException
      */
@@ -214,8 +185,6 @@ class OrganisationRestHandler
     }
 
     /**
-     * @param int $orgId
-     * @param int $userId
      * @throws OptimisticLockExceptionAlias
      * @throws \Doctrine\ORM\ORMException
      */
@@ -232,10 +201,6 @@ class OrganisationRestHandler
         $this->em->flush();
     }
 
-    /**
-     * @param int $orgId
-     * @return Organisation|null
-     */
     private function attemptGetOrganisation(int $orgId): ?Organisation
     {
         if (null === ($organisation = $this->orgRepository->find($orgId))) {
@@ -245,10 +210,6 @@ class OrganisationRestHandler
         return $organisation;
     }
 
-    /**
-     * @param int $userId
-     * @return User|null
-     */
     private function attemptGetUser(int $userId): ?User
     {
         if (null === ($user = $this->userRepository->find($userId))) {

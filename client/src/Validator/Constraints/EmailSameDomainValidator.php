@@ -1,4 +1,5 @@
 <?php
+
 namespace App\Validator\Constraints;
 
 use App\Form\Traits\HasTranslatorTrait;
@@ -12,10 +13,9 @@ class EmailSameDomainValidator extends ConstraintValidator
     use HasTranslatorTrait;
 
     /**
-     * Validates a given email address matches the same domain as the logged in user
+     * Validates a given email address matches the same domain as the logged in user.
      *
-     * @param mixed      $email
-     * @param Constraint $constraint
+     * @param mixed $email
      */
     public function validate($email, Constraint $constraint)
     {
@@ -30,7 +30,7 @@ class EmailSameDomainValidator extends ConstraintValidator
     }
 
     /**
-     * Return domain portion of email address
+     * Return domain portion of email address.
      *
      * @param $email string
      *

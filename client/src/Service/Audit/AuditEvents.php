@@ -1,11 +1,13 @@
-<?php declare(strict_types=1);
+<?php
+
+declare(strict_types=1);
 
 namespace App\Service\Audit;
 
 use App\Entity\Organisation;
+use App\Entity\Report\Report;
 use App\Entity\User;
 use App\Service\Time\DateTimeProvider;
-use App\Entity\Report\Report;
 use DateTime;
 
 final class AuditEvents
@@ -43,12 +45,6 @@ final class AuditEvents
     }
 
     /**
-     * @param string $trigger
-     * @param string $caseNumber
-     * @param string $dischargedBy
-     * @param string $deputyName
-     * @param DateTime|null $deputyshipStartDate
-     * @return array
      * @throws \Exception
      */
     public function clientDischarged(
@@ -111,14 +107,7 @@ final class AuditEvents
         return $event + $this->baseEvent(AuditEvents::EVENT_CLIENT_EMAIL_CHANGED);
     }
 
-
     /**
-     * @param string $trigger
-     * @param string $changedFrom
-     * @param string $changedTo
-     * @param string $changedByEmail
-     * @param string $userChangedEmail
-     * @return array
      * @throws \Exception
      */
     public function roleChanged(string $trigger, string $changedFrom, string $changedTo, string $changedByEmail, string $userChangedEmail): array
@@ -136,12 +125,8 @@ final class AuditEvents
     }
 
     /**
-     * @param string $trigger
-     * @param string $deletedBy
-     * @param string $subjectFullName
-     * @param string $subjectEmail
-     * @param string $subjectRole
      * @return array|string[]
+     *
      * @throws \Exception
      */
     public function userDeleted(string $trigger, string $deletedBy, string $subjectFullName, string $subjectEmail, string $subjectRole): array
@@ -162,11 +147,13 @@ final class AuditEvents
     }
 
     /**
-     * @param string $trigger, what caused the event
-     * @param User $addedUser, the user that was added to the org
+     * @param string       $trigger,      what caused the event
+     * @param User         $addedUser,    the user that was added to the org
      * @param Organisation $organisation, the org the user has been added to
-     * @param User $addedBy, the user who added the the user to the org
+     * @param User         $addedBy,      the user who added the the user to the org
+     *
      * @return array|string[]
+     *
      * @throws \Exception
      */
     public function userAddedToOrg(string $trigger, User $addedUser, Organisation $organisation, User $addedBy)
@@ -184,11 +171,13 @@ final class AuditEvents
     }
 
     /**
-     * @param string $trigger, what caused the event
-     * @param User $removedUser, the user that was removed from the org
+     * @param string       $trigger,      what caused the event
+     * @param User         $removedUser,  the user that was removed from the org
      * @param Organisation $organisation, the org the user has been removed from
-     * @param User $removedBy, the user who removed the the user from the org
+     * @param User         $removedBy,    the user who removed the the user from the org
+     *
      * @return array|string[]
+     *
      * @throws \Exception
      */
     public function userRemovedFromOrg(string $trigger, User $removedUser, Organisation $organisation, User $removedBy)
@@ -207,10 +196,11 @@ final class AuditEvents
     }
 
     /**
-     * @param string $trigger, what caused the event
-     * @param User $reportUnsubmittedBy,
-     * @param Report $unsubmittedReport
+     * @param string $trigger,             what caused the event
+     * @param User   $reportUnsubmittedBy,
+     *
      * @return array|string[]
+     *
      * @throws \Exception
      */
     public function reportUnsubmitted(Report $unsubmittedReport, User $reportUnsubmittedBy, string $trigger)
@@ -226,8 +216,6 @@ final class AuditEvents
     }
 
     /**
-     * @param Report $resubmittedReport
-     * @param User $reportSubmittedBy
      * @return array|string[]
      */
     public function reportResubmitted(Report $resubmittedReport, User $reportSubmittedBy)
@@ -242,15 +230,11 @@ final class AuditEvents
         return $event + $this->baseEvent(AuditEvents::EVENT_REPORT_RESUBMITTED);
     }
 
-    /**
-     * @param string $eventName
-     * @return array
-     */
     private function baseEvent(string $eventName): array
     {
         return [
             'event' => $eventName,
-            'type' => 'audit'
+            'type' => 'audit',
         ];
     }
 }

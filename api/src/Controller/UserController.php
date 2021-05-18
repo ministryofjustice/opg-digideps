@@ -100,7 +100,8 @@ class UserController extends RestController
         /** @var User $requestedUser */
         $requestedUser = $this->findEntityBy(User::class, $id, 'User not found');
 
-        if ($loggedInUser->getId() != $requestedUser->getId()
+        if (
+            $loggedInUser->getId() != $requestedUser->getId()
             && !$this->isGranted(User::ROLE_ADMIN)
             && !$this->isGranted(User::ROLE_AD)
             && !$this->isGranted(User::ROLE_ORG_NAMED)
@@ -235,9 +236,11 @@ class UserController extends RestController
         $requestedUserIsLogged = $loggedInUser->getId() == $user->getId();
 
         // only allow admins to access any user, otherwise the user can only see himself
-        if (!$this->isGranted(User::ROLE_ADMIN)
+        if (
+            !$this->isGranted(User::ROLE_ADMIN)
             && !$this->isGranted(User::ROLE_AD)
-            && !$requestedUserIsLogged) {
+            && !$requestedUserIsLogged
+        ) {
             throw $this->createAccessDeniedException("Not authorised to see other user's data");
         }
 

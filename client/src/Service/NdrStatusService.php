@@ -29,7 +29,7 @@ class NdrStatusService
             $visitsCare->getDoesClientHaveACarePlan(),
             $visitsCare->getWhoIsDoingTheCaring(),
             $visitsCare->getDoesClientHaveACarePlan(),
-            $visitsCare->getPlanMoveNewResidence()
+            $visitsCare->getPlanMoveNewResidence(),
         ];
 
         switch (count(array_filter($answers))) {
@@ -48,7 +48,7 @@ class NdrStatusService
     public function getExpensesState()
     {
         $nOfExpenses = count($this->ndr->getExpenses());
-        if ($nOfExpenses > 0 || $this->ndr->getPaidForAnything() === 'no') {
+        if ($nOfExpenses > 0 || 'no' === $this->ndr->getPaidForAnything()) {
             return ['state' => self::STATE_DONE, 'nOfRecords' => $nOfExpenses];
         }
 
@@ -66,15 +66,15 @@ class NdrStatusService
         $compensDamag = $this->ndr->getExpectCompensationDamages();
         $ooCount = count($this->ndr->getOneOffPresent());
 
-        if ($stCount === 0
-            && $statePens == null && $otherInc == null && $compensDamag == null
-            && $ooCount === 0
+        if (
+            0 === $stCount
+            && null == $statePens && null == $otherInc && null == $compensDamag
+            && 0 === $ooCount
         ) {
             return ['state' => self::STATE_NOT_STARTED, 'nOfRecords' => 0];
         }
 
-
-        if ($statePens !== null && $otherInc !== null && $compensDamag !== null) {
+        if (null !== $statePens && null !== $otherInc && null !== $compensDamag) {
             return ['state' => self::STATE_DONE, 'nOfRecords' => 0];
         }
 
@@ -118,8 +118,7 @@ class NdrStatusService
             'no' == $hasDebts ||
             ('yes' == $hasDebts &&
                 count($this->ndr->getDebtsWithValidAmount()) > 0) &&
-            !empty($this->ndr->getDebtManagement()
-            )
+            !empty($this->ndr->getDebtManagement())
         ) {
             return ['state' => self::STATE_DONE];
         } else {
@@ -151,7 +150,7 @@ class NdrStatusService
      */
     public function getOtherInfoState()
     {
-        if ($this->ndr->getActionMoreInfo() === null) {
+        if (null === $this->ndr->getActionMoreInfo()) {
             return ['state' => self::STATE_NOT_STARTED, 'nOfRecords' => 0];
         }
 
@@ -164,14 +163,14 @@ class NdrStatusService
     private function getSectionStatus()
     {
         return [
-            'visitsCare'     => $this->getVisitsCareState()['state'],
-            'expenses'       => $this->getExpensesState()['state'],
+            'visitsCare' => $this->getVisitsCareState()['state'],
+            'expenses' => $this->getExpensesState()['state'],
             'incomeBenefits' => $this->getIncomeBenefitsState()['state'],
-            'assets'         => $this->getAssetsState()['state'],
-            'bankAccounts'   => $this->getBankAccountsState()['state'],
-            'debts'          => $this->getDebtsState()['state'],
-            'actions'        => $this->getActionsState()['state'],
-            'otherInfo'      => $this->getOtherInfoState()['state'],
+            'assets' => $this->getAssetsState()['state'],
+            'bankAccounts' => $this->getBankAccountsState()['state'],
+            'debts' => $this->getDebtsState()['state'],
+            'actions' => $this->getActionsState()['state'],
+            'otherInfo' => $this->getOtherInfoState()['state'],
         ];
     }
 
@@ -181,14 +180,14 @@ class NdrStatusService
     public function getRemainingSections()
     {
         return array_filter($this->getSectionStatus(), function ($e) {
-            return $e != self::STATE_DONE;
+            return self::STATE_DONE != $e;
         });
     }
 
     /** @return bool */
     public function isReadyToSubmit()
     {
-        return count($this->getRemainingSections()) === 0;
+        return 0 === count($this->getRemainingSections());
     }
 
     /**
@@ -197,7 +196,7 @@ class NdrStatusService
     public function getSubmitState()
     {
         return [
-            'state'      => $this->isReadyToSubmit() ? self::STATE_DONE : self::STATE_NOT_STARTED,
+            'state' => $this->isReadyToSubmit() ? self::STATE_DONE : self::STATE_NOT_STARTED,
             'nOfRecords' => 0,
         ];
     }
@@ -207,9 +206,10 @@ class NdrStatusService
      */
     public function getStatus()
     {
-        if (count(array_filter($this->getSectionStatus(), function ($e) {
-            return $e != self::STATE_NOT_STARTED;
-        })) === 0
+        if (
+            0 === count(array_filter($this->getSectionStatus(), function ($e) {
+                return self::STATE_NOT_STARTED != $e;
+            }))
         ) {
             return 'notStarted';
         }

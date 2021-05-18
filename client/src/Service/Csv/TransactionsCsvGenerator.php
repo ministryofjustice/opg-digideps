@@ -1,5 +1,6 @@
-<?php declare(strict_types=1);
+<?php
 
+declare(strict_types=1);
 
 namespace App\Service\Csv;
 
@@ -22,7 +23,6 @@ class TransactionsCsvGenerator
     }
 
     /**
-     * @param ReportInterface $report
      * @return string
      */
     public function generateTransactionsCsv(ReportInterface $report)
@@ -34,9 +34,7 @@ class TransactionsCsvGenerator
     }
 
     /**
-     * Generates the lines of the CSV
-     *
-     * @param ReportInterface $report
+     * Generates the lines of the CSV.
      */
     private function generateTransactionsCsvLines(ReportInterface $report)
     {
@@ -47,7 +45,7 @@ class TransactionsCsvGenerator
     }
 
     /**
-     * Generates Transaction row
+     * Generates Transaction row.
      *
      * @param $transactions
      * @param $type
@@ -61,7 +59,7 @@ class TransactionsCsvGenerator
                 $transaction->getAmount(),
                 $this->generateBankName($transaction),
                 $this->generateBankAccountDetails($transaction),
-                $this->generateDescription($transaction)
+                $this->generateDescription($transaction),
             ];
         }
     }
@@ -71,6 +69,7 @@ class TransactionsCsvGenerator
      * Money transactions have a description property.
      *
      * @param Gift|Expense|MoneyTransaction $transaction
+     *
      * @return string
      */
     private function generateDescription($transaction)
@@ -82,11 +81,13 @@ class TransactionsCsvGenerator
         if (method_exists($transaction, 'getExplanation')) {
             return $transaction->getExplanation();
         }
+
         return '';
     }
 
     /**
      * @param Gift|Expense|MoneyTransaction $transaction
+     *
      * @return string
      */
     private function generateCategory($transaction)
@@ -105,6 +106,7 @@ class TransactionsCsvGenerator
 
     /**
      * @param Gift|Expense|MoneyTransaction $transaction
+     *
      * @return string
      */
     private function generateBankName($transaction)
@@ -114,6 +116,7 @@ class TransactionsCsvGenerator
 
     /**
      * @param Gift|Expense|MoneyTransaction $transaction
+     *
      * @return string
      */
     private function generateBankAccountDetails($transaction)

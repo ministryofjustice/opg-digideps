@@ -1,4 +1,6 @@
-<?php declare(strict_types=1);
+<?php
+
+declare(strict_types=1);
 
 namespace App\Service;
 
@@ -16,7 +18,6 @@ use Twig\Environment;
 
 class DocumentService
 {
-
     /**
      * @var S3Storage
      */
@@ -39,10 +40,6 @@ class DocumentService
 
     /**
      * DocumentService constructor.
-     * @param S3Storage $s3Storage
-     * @param RestClient $restClient
-     * @param LoggerInterface $logger
-     * @param Environment $twig
      */
     public function __construct(S3Storage $s3Storage, RestClient $restClient, LoggerInterface $logger, Environment $twig)
     {
@@ -53,8 +50,6 @@ class DocumentService
     }
 
     /**
-     * @param Document $document
-     *
      * @return bool true if deleted from S3 and database
      */
     public function removeDocumentFromS3(Document $document)
@@ -67,7 +62,7 @@ class DocumentService
                 //Ensure document is removed from s3 and database
                 $s3Result = $this->deleteFromS3($document);
                 //remove from db
-                $endpointResult = $this->restClient->delete('document/' . $documentId);
+                $endpointResult = $this->restClient->delete('document/'.$documentId);
             }
             if ($endpointResult) {
                 $this->log('notice', "Document $documentId (s3 ref $storageRef) deleted successfully from db");
@@ -77,25 +72,26 @@ class DocumentService
 
             return $s3Result && $endpointResult;
         } catch (Throwable $e) {
-            $message = "cannot delete $documentId, ref $storageRef. Error: " . $e->getMessage();
+            $message = "cannot delete $documentId, ref $storageRef. Error: ".$e->getMessage();
             $this->log('error', $message);
 
             // rethrow exception to be caught by controller
-            throw($e);
+            throw ($e);
         }
     }
 
     /**
-     * @param  Document   $document
-     * @throws \Exception if the document doesn't exist (in addition to S3 network/access failures
-     * @return bool       true if delete is successful
+     * @param Document $document
      *
+     * @throws \Exception if the document doesn't exist (in addition to S3 network/access failures
+     *
+     * @return bool true if delete is successful
      */
     private function deleteFromS3(DocumentInterface $document)
     {
         $ref = $document->getStorageReference();
         if (!$ref) {
-            $this->log('notice', 'empty file reference for document ' . $document->getId() . ", cannot delete");
+            $this->log('notice', 'empty file reference for document '.$document->getId().', cannot delete');
             throw new \Exception('Document could not be removed. No Reference.');
         }
 
@@ -108,7 +104,7 @@ class DocumentService
     }
 
     /**
-     * Log message using the internal logger
+     * Log message using the internal logger.
      *
      * @param $level
      * @param $message
@@ -134,7 +130,6 @@ class DocumentService
      * $retrievedDocuments - Array of RetrievedDocuments from S3
      * $missingDocuments - Array of MissingDocuments
      *
-     * @param ReportSubmission $reportSubmission
      * @return array
      */
     public function retrieveDocumentsFromS3ByReportSubmission(ReportSubmission $reportSubmission)
@@ -166,13 +161,14 @@ class DocumentService
     }
 
     /**
-     * When calling this function use the format:
+     * When calling this function use the format:.
      *
      * [$documents, $missing] = retrieveDocumentsFromS3ByReportSubmissions($reportSubmissions);
      *
      * See retrieveDocumentsFromS3ByReportSubmission() docblock for background.
      *
      * @param []ReportSubmission $reportSubmissions
+     *
      * @return array
      */
     public function retrieveDocumentsFromS3ByReportSubmissions(array $reportSubmissions)
@@ -193,9 +189,9 @@ class DocumentService
         return [$allDocuments, $allMissing];
     }
 
-
     /**
      * @param []MissingDocument $missingDocuments
+     *
      * @return string
      */
     public function createMissingDocumentsFlashMessage(array $missingDocuments)

@@ -94,7 +94,7 @@ trait ReportIncomeBenefitTrait
     public function getStateBenefitOther()
     {
         foreach ($this->stateBenefits as $st) {
-            if ($st->getTypeId() == 'other_benefits') {
+            if ('other_benefits' == $st->getTypeId()) {
                 return $st;
             }
         }
@@ -253,14 +253,15 @@ trait ReportIncomeBenefitTrait
         $otherInc = $this->getReceiveOtherIncome();
         $compensDamag = $this->getExpectCompensationDamages();
 
-        if ($stCount === 0
-            && $statePens == null && $otherInc == null && $compensDamag == null
-            && $ooCount === 0
+        if (
+            0 === $stCount
+            && null == $statePens && null == $otherInc && null == $compensDamag
+            && 0 === $ooCount
         ) {
             return 'not-started';
         }
 
-        if ($statePens != null && $otherInc != null && $compensDamag != null) {
+        if (null != $statePens && null != $otherInc && null != $compensDamag) {
             return 'done';
         }
 

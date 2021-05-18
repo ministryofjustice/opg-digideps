@@ -1,5 +1,6 @@
-<?php declare(strict_types=1);
+<?php
 
+declare(strict_types=1);
 
 namespace App\Service\Formatter;
 
@@ -19,8 +20,6 @@ class RestFormatter
     }
 
     /**
-     * @param Request $request
-     * @param array $assertions
      * @return array|null
      */
     public function deserializeBodyContent(Request $request, array $assertions = [])

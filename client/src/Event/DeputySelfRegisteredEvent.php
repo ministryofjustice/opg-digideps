@@ -1,5 +1,6 @@
-<?php declare(strict_types=1);
+<?php
 
+declare(strict_types=1);
 
 namespace App\Event;
 
@@ -18,21 +19,15 @@ class DeputySelfRegisteredEvent extends Event
         $this->registeredDeputy = $registeredDeputy;
     }
 
-    /**
-     * @return User
-     */
     public function getRegisteredDeputy(): User
     {
         return $this->registeredDeputy;
     }
 
-    /**
-     * @param User $registeredDeputy
-     * @return DeputySelfRegisteredEvent
-     */
     public function setRegisteredDeputy(User $registeredDeputy): DeputySelfRegisteredEvent
     {
         $this->registeredDeputy = $registeredDeputy;
+
         return $this;
     }
 }

@@ -1,5 +1,6 @@
-<?php declare(strict_types=1);
+<?php
 
+declare(strict_types=1);
 
 namespace App\Service\Csv;
 
@@ -7,9 +8,6 @@ use App\Entity\UserResearch\UserResearchResponse;
 
 class UserResearchResponseCsvGenerator
 {
-    /**
-     * @var CsvBuilder
-     */
     private CsvBuilder $csvBuilder;
 
     public function __construct(CsvBuilder $csvBuilder)
@@ -19,21 +17,22 @@ class UserResearchResponseCsvGenerator
 
     /**
      * @param []UserResearchResponse $userResearchResponses
+     *
      * @return string
      */
     public function generateUserResearchResponsesCsv(array $userResearchResponses)
     {
         $headers = [
-            "Satisfaction Score",
-            "Comments",
-            "Deputy Role",
-            "Report Type",
-            "Date Provided",
-            "Deputyship Length Years",
-            "Agreed Research Types",
-            "Has Videocall Access",
-            "Email",
-            "Phone Number"
+            'Satisfaction Score',
+            'Comments',
+            'Deputy Role',
+            'Report Type',
+            'Date Provided',
+            'Deputyship Length Years',
+            'Agreed Research Types',
+            'Has Videocall Access',
+            'Email',
+            'Phone Number',
         ];
 
         $rows = [];
@@ -55,7 +54,7 @@ class UserResearchResponseCsvGenerator
                 $response->getResearchType()->getCommaSeparatedTypesAgreed(),
                 $response->GetHasAccessToVideoCallDevice() ? 'Yes' : 'No',
                 $response->getUser()->getEmail(),
-                $response->getUser()->getPhoneMain()
+                $response->getUser()->getPhoneMain(),
             ];
         }
 

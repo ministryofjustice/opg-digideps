@@ -1,5 +1,6 @@
-<?php declare(strict_types=1);
+<?php
 
+declare(strict_types=1);
 
 namespace App\Service\Client;
 
@@ -13,8 +14,8 @@ class RestClientMock implements RestClientInterface
     /**
      * @param $endpoint
      * @param $mixed
-     * @param array $jmsGroups
      * @param string $expectedResponseType
+     *
      * @return Response|mixed
      */
     public function post($endpoint, $mixed, array $jmsGroups = [], $expectedResponseType = 'array')
@@ -38,9 +39,6 @@ class RestClientMock implements RestClientInterface
         return !empty($this->responses) ? array_shift($this->responses) : new Response();
     }
 
-    /**
-     * @param Response $response
-     */
     public function appendResponse(Response $response)
     {
         $this->responses[] = $response;

@@ -7,10 +7,10 @@ use App\Entity as EntityDir;
 use App\Form as FormDir;
 use App\Service\Client\Internal\ReportApi;
 use App\Service\Client\RestClient;
-use Symfony\Component\HttpFoundation\RedirectResponse;
-use Symfony\Component\Routing\Annotation\Route;
 use Sensio\Bundle\FrameworkExtraBundle\Configuration\Template;
+use Symfony\Component\HttpFoundation\RedirectResponse;
 use Symfony\Component\HttpFoundation\Request;
+use Symfony\Component\Routing\Annotation\Route;
 use Symfony\Component\Routing\Exception\RouteNotFoundException;
 
 class DeputyExpenseController extends AbstractController
@@ -18,7 +18,7 @@ class DeputyExpenseController extends AbstractController
     private static $jmsGroups = [
         'expenses',
         'expenses-state',
-        'account'
+        'account',
     ];
 
     /** @var RestClient */
@@ -47,7 +47,7 @@ class DeputyExpenseController extends AbstractController
     {
         $report = $this->reportApi->getReportIfNotSubmitted($reportId, self::$jmsGroups);
 
-        if ($report->getStatus()->getExpensesState()['state'] != EntityDir\Report\Status::STATE_NOT_STARTED) {
+        if (EntityDir\Report\Status::STATE_NOT_STARTED != $report->getStatus()->getExpensesState()['state']) {
             return $this->redirectToRoute('deputy_expenses_summary', ['reportId' => $reportId]);
         }
 
@@ -60,7 +60,6 @@ class DeputyExpenseController extends AbstractController
      * @Route("/report/{reportId}/deputy-expenses/exist", name="deputy_expenses_exist")
      * @Template("@App/Report/DeputyExpense/exist.html.twig")
      *
-     * @param Request $request
      * @param $reportId
      *
      * @return array|RedirectResponse
@@ -71,7 +70,7 @@ class DeputyExpenseController extends AbstractController
         $form = $this->createForm(
             FormDir\YesNoType::class,
             $report,
-            [ 'field' => 'paidForAnything', 'translation_domain' => 'report-deputy-expenses']
+            ['field' => 'paidForAnything', 'translation_domain' => 'report-deputy-expenses']
         );
         $form->handleRequest($request);
 
@@ -80,15 +79,16 @@ class DeputyExpenseController extends AbstractController
             /* @var $data EntityDir\Report\Report */
             switch ($data->getPaidForAnything()) {
                 case 'yes':
-                    return $this->redirectToRoute('deputy_expenses_add', ['reportId' => $reportId, 'from'=>'exist']);
+                    return $this->redirectToRoute('deputy_expenses_add', ['reportId' => $reportId, 'from' => 'exist']);
                 case 'no':
-                    $this->restClient->put('report/' . $reportId, $data, ['expenses-paid-anything']);
+                    $this->restClient->put('report/'.$reportId, $data, ['expenses-paid-anything']);
+
                     return $this->redirectToRoute('deputy_expenses_summary', ['reportId' => $reportId]);
             }
         }
 
         $backLink = $this->generateUrl('deputy_expenses', ['reportId' => $reportId]);
-        if ($request->get('from') == 'summary') {
+        if ('summary' == $request->get('from')) {
             $backLink = $this->generateUrl('deputy_expenses_summary', ['reportId' => $reportId]);
         }
 
@@ -103,7 +103,6 @@ class DeputyExpenseController extends AbstractController
      * @Route("/report/{reportId}/deputy-expenses/add", name="deputy_expenses_add")
      * @Template("@App/Report/DeputyExpense/add.html.twig")
      *
-     * @param Request $request
      * @param $reportId
      *
      * @return array|RedirectResponse
@@ -118,7 +117,7 @@ class DeputyExpenseController extends AbstractController
             $expense,
             [
                 'user' => $this->getUser(),
-                'report' => $report
+                'report' => $report,
             ]
         );
         $form->handleRequest($request);
@@ -127,14 +126,14 @@ class DeputyExpenseController extends AbstractController
             $data = $form->getData();
             $data->setReport($report);
 
-            $this->restClient->post('report/' . $report->getId() . '/expense', $data, ['expenses', 'account']);
+            $this->restClient->post('report/'.$report->getId().'/expense', $data, ['expenses', 'account']);
 
             return $this->redirect($this->generateUrl('deputy_expenses_add_another', ['reportId' => $reportId]));
         }
 
         try {
-            $backLinkRoute = 'deputy_expenses_' . $request->get('from');
-            $backLink = $this->generateUrl($backLinkRoute, ['reportId'=>$reportId]);
+            $backLinkRoute = 'deputy_expenses_'.$request->get('from');
+            $backLink = $this->generateUrl($backLinkRoute, ['reportId' => $reportId]);
 
             return [
                 'backLink' => $backLink,
@@ -154,7 +153,6 @@ class DeputyExpenseController extends AbstractController
      * @Route("/report/{reportId}/deputy-expenses/add_another", name="deputy_expenses_add_another")
      * @Template("@App/Report/DeputyExpense/addAnother.html.twig")
      *
-     * @param Request $request
      * @param $reportId
      *
      * @return array|RedirectResponse
@@ -185,7 +183,6 @@ class DeputyExpenseController extends AbstractController
      * @Route("/report/{reportId}/deputy-expenses/edit/{expenseId}", name="deputy_expenses_edit")
      * @Template("@App/Report/DeputyExpense/edit.html.twig")
      *
-     * @param Request $request
      * @param $reportId
      * @param $expenseId
      *
@@ -195,11 +192,11 @@ class DeputyExpenseController extends AbstractController
     {
         $report = $this->reportApi->getReportIfNotSubmitted($reportId, self::$jmsGroups);
         $expense = $this->restClient->get(
-            'report/' . $report->getId() . '/expense/' . $expenseId,
+            'report/'.$report->getId().'/expense/'.$expenseId,
             'Report\Expense',
             [
                 'expenses',
-                'account'
+                'account',
             ]
         );
 
@@ -212,7 +209,7 @@ class DeputyExpenseController extends AbstractController
             $expense,
             [
                 'user' => $this->getUser(),
-                'report' => $report
+                'report' => $report,
             ]
         );
 
@@ -223,11 +220,11 @@ class DeputyExpenseController extends AbstractController
             $request->getSession()->getFlashBag()->add('notice', 'Expense edited');
 
             $this->restClient->put(
-                'report/' . $report->getId() . '/expense/' . $expense->getId(),
+                'report/'.$report->getId().'/expense/'.$expense->getId(),
                 $data,
                 [
                     'expenses',
-                    'account'
+                    'account',
                 ]
             );
 
@@ -252,7 +249,7 @@ class DeputyExpenseController extends AbstractController
     public function summaryAction($reportId)
     {
         $report = $this->reportApi->getReportIfNotSubmitted($reportId, self::$jmsGroups);
-        if ($report->getStatus()->getExpensesState()['state'] == EntityDir\Report\Status::STATE_NOT_STARTED) {
+        if (EntityDir\Report\Status::STATE_NOT_STARTED == $report->getStatus()->getExpensesState()['state']) {
             return $this->redirect($this->generateUrl('deputy_expenses', ['reportId' => $reportId]));
         }
 
@@ -265,9 +262,9 @@ class DeputyExpenseController extends AbstractController
      * @Route("/report/{reportId}/deputy-expenses/{expenseId}/delete", name="deputy_expenses_delete")
      * @Template("@App/Common/confirmDelete.html.twig")
      *
-     * @param Request $request
      * @param $reportId
      * @param $expenseId
+     *
      * @return array|RedirectResponse
      */
     public function deleteAction(Request $request, $reportId, $expenseId)
@@ -278,7 +275,7 @@ class DeputyExpenseController extends AbstractController
         $form->handleRequest($request);
 
         if ($form->isSubmitted() && $form->isValid()) {
-            $this->restClient->delete('report/' . $report->getId() . '/expense/' . $expenseId);
+            $this->restClient->delete('report/'.$report->getId().'/expense/'.$expenseId);
 
             $request->getSession()->getFlashBag()->add(
                 'notice',
@@ -288,7 +285,7 @@ class DeputyExpenseController extends AbstractController
             return $this->redirect($this->generateUrl('deputy_expenses', ['reportId' => $reportId]));
         }
 
-        $expense = $this->restClient->get('report/' . $reportId . '/expense/' . $expenseId, 'Report\Expense');
+        $expense = $this->restClient->get('report/'.$reportId.'/expense/'.$expenseId, 'Report\Expense');
 
         return [
             'translationDomain' => 'report-deputy-expenses',

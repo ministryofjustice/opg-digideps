@@ -1,4 +1,6 @@
-<?php declare(strict_types=1);
+<?php
+
+declare(strict_types=1);
 
 namespace App\Service;
 
@@ -21,11 +23,6 @@ class ChecklistPdfGenerator
 
     const TEMPLATE_FILE = '@App/Admin/Client/Report/Formatted/checklist_formatted_standalone.html.twig';
 
-    /**
-     * @param Environment $templating
-     * @param WkHtmlToPdfGenerator $wkhtmltopdf
-     * @param LoggerInterface $logger
-     */
     public function __construct(Environment $templating, WkHtmlToPdfGenerator $wkhtmltopdf, LoggerInterface $logger)
     {
         $this->templating = $templating;
@@ -34,7 +31,6 @@ class ChecklistPdfGenerator
     }
 
     /**
-     * @param Report $report
      * @return string
      */
     public function generate(Report $report)
@@ -43,7 +39,7 @@ class ChecklistPdfGenerator
             $html = $this->templating->render(self::TEMPLATE_FILE, [
                 'report' => $report,
                 'lodgingChecklist' => $report->getChecklist(),
-                'reviewChecklist' => $report->getReviewChecklist()
+                'reviewChecklist' => $report->getReviewChecklist(),
             ]);
 
             if (false === ($pdf = $this->wkhtmltopdf->getPdfFromHtml($html))) {

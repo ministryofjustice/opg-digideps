@@ -1,11 +1,12 @@
-<?php declare(strict_types=1);
+<?php
 
+declare(strict_types=1);
 
 namespace App\EventSubscriber;
 
 use App\Event\CoDeputyCreatedEvent;
-use App\Event\CoDeputyInvitedEvent;
 use App\Event\CoDeputyCreationEventInterface;
+use App\Event\CoDeputyInvitedEvent;
 use App\Service\Mailer\Mailer;
 use Symfony\Component\EventDispatcher\EventSubscriberInterface;
 
@@ -25,7 +26,7 @@ class CoDeputyCreationSubscriber implements EventSubscriberInterface
     {
         return [
             CoDeputyInvitedEvent::NAME => 'sendEmail',
-            CoDeputyCreatedEvent::NAME => 'sendEmail'
+            CoDeputyCreatedEvent::NAME => 'sendEmail',
         ];
     }
 

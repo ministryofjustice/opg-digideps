@@ -9,21 +9,21 @@ use App\Exception\ReportNotSubmittedException;
 use App\Exception\ReportSubmittedException;
 use App\Form as FormDir;
 use App\Model as ModelDir;
+use App\Service\Client\Internal\CasrecApi;
 use App\Service\Client\Internal\ClientApi;
 use App\Service\Client\Internal\NdrApi;
 use App\Service\Client\Internal\SatisfactionApi;
 use App\Service\Client\Internal\UserApi;
-use App\Service\Client\Internal\CasrecApi;
 use App\Service\Client\RestClient;
 use App\Service\File\S3FileUploader;
 use App\Service\NdrStatusService;
 use App\Service\Redirector;
 use App\Service\WkHtmlToPdfGenerator;
-use Symfony\Component\HttpFoundation\RedirectResponse;
-use Symfony\Component\Routing\Annotation\Route;
 use Sensio\Bundle\FrameworkExtraBundle\Configuration\Template;
+use Symfony\Component\HttpFoundation\RedirectResponse;
 use Symfony\Component\HttpFoundation\Request;
 use Symfony\Component\HttpFoundation\Response;
+use Symfony\Component\Routing\Annotation\Route;
 
 class NdrController extends AbstractController
 {
@@ -77,7 +77,7 @@ class NdrController extends AbstractController
         ClientApi $clientApi,
         RestClient $restClient,
         CasrecApi $casrecApi,
-        SatisfactionApi  $satisfactionApi,
+        SatisfactionApi $satisfactionApi,
         NdrApi $ndrApi
     ) {
         $this->htmlToPdf = $wkHtmlToPdfGenerator;
@@ -94,7 +94,7 @@ class NdrController extends AbstractController
      *
      * @Route("/ndr", name="ndr_index")
      * @Template("@App/Ndr/Ndr/index.html.twig")
-     * @param Redirector $redirector
+     *
      * @return array|RedirectResponse
      */
     public function indexAction(Redirector $redirector)
@@ -121,14 +121,14 @@ class NdrController extends AbstractController
             'ndr' => $client->getNdr(),
             'reportsSubmitted' => $client->getSubmittedReports(),
             'reportActive' => $client->getActiveReport(),
-            'ndrStatus' => new NdrStatusService($client->getNdr())
+            'ndrStatus' => new NdrStatusService($client->getNdr()),
         ];
     }
 
     /**
      * @Route("/ndr/{ndrId}/overview", name="ndr_overview")
      * @Template("@App/Ndr/Ndr/overview.html.twig")
-     * @param Redirector $redirector
+     *
      * @return array|RedirectResponse
      */
     public function overviewAction(Redirector $redirector)
@@ -212,7 +212,7 @@ class NdrController extends AbstractController
             $ndr->getClient()->getCaseNumber()
         );
 
-        $response->headers->set('Content-Disposition', 'attachment; filename="' . $attachmentName . '"');
+        $response->headers->set('Content-Disposition', 'attachment; filename="'.$attachmentName.'"');
 
         // Send headers before outputting anything
         $response->sendHeaders();
@@ -224,7 +224,7 @@ class NdrController extends AbstractController
     {
         /** @var string */
         $html = $this->render('@App/Ndr/Formatted/formatted_standalone.html.twig', [
-            'ndr' => $ndr, 'adLoggedAsDeputy' => $this->isGranted(User::ROLE_AD)
+            'ndr' => $ndr, 'adLoggedAsDeputy' => $this->isGranted(User::ROLE_AD),
         ])->getContent();
 
         return $this->htmlToPdf->getPdfFromHtml($html);
@@ -234,10 +234,8 @@ class NdrController extends AbstractController
      * @Route("/ndr/{ndrId}/declaration", name="ndr_declaration")
      * @Template("@App/Ndr/Ndr/declaration.html.twig")
      *
-     * @param Request $request
-     * @param S3FileUploader $fileUploader
-     *
      * @return array|RedirectResponse
+     *
      * @throws \Exception
      */
     public function declarationAction(Request $request, $ndrId, S3FileUploader $fileUploader)
@@ -277,7 +275,7 @@ class NdrController extends AbstractController
 
             $this->ndrApi->submit($ndr, $document);
 
-            return $this->redirect($this->generateUrl('ndr_submit_confirmation', ['ndrId'=>$ndr->getId()]));
+            return $this->redirect($this->generateUrl('ndr_submit_confirmation', ['ndrId' => $ndr->getId()]));
         }
 
         return [

@@ -1,4 +1,6 @@
-<?php declare(strict_types=1);
+<?php
+
+declare(strict_types=1);
 
 namespace App\Service\Client\Internal;
 
@@ -27,9 +29,6 @@ class SatisfactionApi
         $this->eventDispatcher = $eventDispatcher;
     }
 
-    /**
-     * @param array $formResponse
-     */
     public function createGeneralFeedback(array $formResponse): void
     {
         $this->restClient->post(
@@ -42,11 +41,7 @@ class SatisfactionApi
     }
 
     /**
-     * @param FeedbackReport $formResponse
-     * @param string $reportType
      * @param int $reportId
-     * @param User $submittedByUser
-     * @return int
      */
     public function createPostSubmissionFeedback(FeedbackReport $formResponse, string $reportType, User $submittedByUser, ?int $reportId = null, ?int $ndrId = null): int
     {
@@ -55,7 +50,7 @@ class SatisfactionApi
             'comments' => empty($formResponse->getComments()) ? 'Not provided' : $formResponse->getComments(),
             'reportType' => $reportType,
             'reportId' => $reportId,
-            'ndrId' => $ndrId
+            'ndrId' => $ndrId,
         ];
 
         $satisfactionId = $this->restClient->post(self::CREATE_POST_SUBMISSION_FEEDBACK_ENDPOINT, $feedbackData);

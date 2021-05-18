@@ -1,4 +1,5 @@
 <?php
+
 namespace App\Entity\Report\Traits;
 
 use App\Entity\Report\MoneyShortCategory;
@@ -59,7 +60,7 @@ trait MoneyShortTrait
     public function getMoneyShortCategoriesIn()
     {
         return $this->getMoneyShortCategories()->filter(function ($e) {
-            return $e->getType() == 'in';
+            return 'in' == $e->getType();
         });
     }
 
@@ -69,7 +70,7 @@ trait MoneyShortTrait
     public function getMoneyShortCategoriesInPresent()
     {
         return $this->getMoneyShortCategories()->filter(function ($e) {
-            return $e->getType() == 'in' && $e->getPresent();
+            return 'in' == $e->getType() && $e->getPresent();
         });
     }
 
@@ -81,7 +82,7 @@ trait MoneyShortTrait
     public function getMoneyShortCategoriesOut()
     {
         return $this->getMoneyShortCategories()->filter(function ($e) {
-            return $e->getType() == 'out';
+            return 'out' == $e->getType();
         });
     }
 
@@ -91,7 +92,7 @@ trait MoneyShortTrait
     public function getMoneyShortCategoriesOutPresent()
     {
         return $this->getMoneyShortCategories()->filter(function ($e) {
-            return $e->getType() == 'out' && $e->getPresent();
+            return 'out' == $e->getType() && $e->getPresent();
         });
     }
 
@@ -132,7 +133,6 @@ trait MoneyShortTrait
     }
 
     /**
-     *
      * @JMS\VirtualProperty
      * @JMS\SerializedName("money_transactions_short_in")
      * @JMS\Groups({"moneyTransactionsShortIn"})

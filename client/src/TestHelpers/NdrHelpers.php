@@ -1,5 +1,6 @@
-<?php declare(strict_types=1);
+<?php
 
+declare(strict_types=1);
 
 namespace App\TestHelpers;
 
@@ -8,9 +9,6 @@ use DateTime;
 
 class NdrHelpers
 {
-    /**
-     * @return Ndr
-     */
     public static function createNdr(): Ndr
     {
         $client = ClientHelpers::createClient();
@@ -23,9 +21,6 @@ class NdrHelpers
             ->setStartDate($startDate);
     }
 
-    /**
-     * @return Ndr
-     */
     public static function createSubmittedNdr(): Ndr
     {
         $submittedDate = new DateTime();

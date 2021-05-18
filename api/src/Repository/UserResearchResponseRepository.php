@@ -1,5 +1,6 @@
-<?php declare(strict_types=1);
+<?php
 
+declare(strict_types=1);
 
 namespace App\Repository;
 
@@ -17,8 +18,6 @@ class UserResearchResponseRepository extends ServiceEntityRepository
     }
 
     /**
-     * @param UserResearchResponse $userResearchResponse
-     * @param User $user
      * @throws \Doctrine\ORM\ORMException
      * @throws \Doctrine\ORM\OptimisticLockException
      */
@@ -32,6 +31,7 @@ class UserResearchResponseRepository extends ServiceEntityRepository
     /**
      * @param DateTime|null $from
      * @param DateTime|null $to
+     *
      * @return int|mixed|string
      */
     public function getAllFilteredByDate(DateTime $from, DateTime $to)

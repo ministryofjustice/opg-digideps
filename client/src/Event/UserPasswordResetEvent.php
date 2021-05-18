@@ -1,5 +1,6 @@
-<?php declare(strict_types=1);
+<?php
 
+declare(strict_types=1);
 
 namespace App\Event;
 
@@ -18,21 +19,15 @@ class UserPasswordResetEvent extends Event
         $this->passwordResetUser = $passwordResetUser;
     }
 
-    /**
-     * @return User
-     */
     public function getPasswordResetUser(): User
     {
         return $this->passwordResetUser;
     }
 
-    /**
-     * @param User $passwordResetUser
-     * @return UserPasswordResetEvent
-     */
     public function setPasswordResetUser(User $passwordResetUser): UserPasswordResetEvent
     {
         $this->passwordResetUser = $passwordResetUser;
+
         return $this;
     }
 }

@@ -1,4 +1,6 @@
-<?php declare(strict_types=1);
+<?php
+
+declare(strict_types=1);
 
 namespace App\FixtureFactory;
 
@@ -8,7 +10,6 @@ use App\v2\Registration\SelfRegistration\Factory\CasRecFactory as CasRecDTOFacto
 
 class CasRecFactory
 {
-
     /**
      * @var CasRecDTOFactory
      */
@@ -20,13 +21,12 @@ class CasRecFactory
     }
 
     /**
-     * @param array $data
      * @return Client
      */
     public function create(array $data): CasRec
     {
-        $caseNumber = str_pad((string) rand(1, 99999999), 8, "0", STR_PAD_LEFT);
-        $deputyNumber = str_pad((string) rand(1, 999999), 6, "0", STR_PAD_LEFT);
+        $caseNumber = str_pad((string) rand(1, 99999999), 8, '0', STR_PAD_LEFT);
+        $deputyNumber = str_pad((string) rand(1, 999999), 6, '0', STR_PAD_LEFT);
 
         $dto = (new LayDeputyshipDto())
             ->setCaseNumber($data['caseNumber'] ? $data['caseNumber'] : $caseNumber)
@@ -45,7 +45,7 @@ class CasRecFactory
 
     public function createCoDeputy(string $caseNumber, array $data): CasRec
     {
-        $deputyNumber = str_pad((string) rand(1, 999999), 6, "0", STR_PAD_LEFT);
+        $deputyNumber = str_pad((string) rand(1, 999999), 6, '0', STR_PAD_LEFT);
 
         $dto = (new LayDeputyshipDto())
             ->setCaseNumber($caseNumber)
@@ -62,10 +62,6 @@ class CasRecFactory
         return $this->casRecFactory->createFromDto($dto);
     }
 
-    /**
-     * @param string $reportType
-     * @return string
-     */
     private function determineCorref(string $reportType): string
     {
         switch ($reportType) {

@@ -16,29 +16,30 @@ class DocumentVoter extends Voter
     /**
      * Does this voter support the attribute?
      *
-     * @param  string $attribute
-     * @param  mixed  $subject
+     * @param string $attribute
+     * @param mixed  $subject
+     *
      * @return bool
      */
     protected function supports($attribute, $subject)
     {
         return
-            $attribute === self::ADD_DOCUMENT ||
-            $attribute === self::DELETE_DOCUMENT;
+            self::ADD_DOCUMENT === $attribute ||
+            self::DELETE_DOCUMENT === $attribute;
     }
 
     /**
-     * Vote on whether to grant attribute permission on subject
+     * Vote on whether to grant attribute permission on subject.
      *
-     * @param  string         $attribute
-     * @param  mixed          $subject
-     * @param  TokenInterface $token
+     * @param string $attribute
+     * @param mixed  $subject
+     *
      * @return bool
      */
     protected function voteOnAttribute($attribute, $subject, TokenInterface $token)
     {
         /** @var User $loggedInUser */
-        $loggedInUser= $token->getUser();
+        $loggedInUser = $token->getUser();
 
         if (!$loggedInUser instanceof User) {
             return false;
