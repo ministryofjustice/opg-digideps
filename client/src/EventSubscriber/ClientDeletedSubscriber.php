@@ -1,5 +1,6 @@
-<?php declare(strict_types=1);
+<?php
 
+declare(strict_types=1);
 
 namespace App\EventSubscriber;
 
@@ -26,7 +27,7 @@ class ClientDeletedSubscriber implements EventSubscriberInterface
     public static function getSubscribedEvents()
     {
         return [
-            ClientDeletedEvent::NAME => 'logEvent'
+            ClientDeletedEvent::NAME => 'logEvent',
         ];
     }
 

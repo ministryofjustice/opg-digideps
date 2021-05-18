@@ -1,12 +1,11 @@
-<?php declare(strict_types=1);
+<?php
 
+declare(strict_types=1);
 
 namespace App\TestHelpers;
 
 use App\Entity\Report\Document;
-use App\Entity\Report\Report;
 use Faker\Factory;
-use Symfony\Component\HttpFoundation\File\UploadedFile;
 
 class DocumentHelpers
 {

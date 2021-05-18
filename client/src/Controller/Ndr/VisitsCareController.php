@@ -9,10 +9,10 @@ use App\Service\Client\Internal\ReportApi;
 use App\Service\Client\RestClient;
 use App\Service\NdrStatusService;
 use App\Service\StepRedirector;
-use Symfony\Component\HttpFoundation\RedirectResponse;
-use Symfony\Component\Routing\Annotation\Route;
 use Sensio\Bundle\FrameworkExtraBundle\Configuration\Template;
+use Symfony\Component\HttpFoundation\RedirectResponse;
 use Symfony\Component\HttpFoundation\Request;
+use Symfony\Component\Routing\Annotation\Route;
 use Symfony\Contracts\Translation\TranslatorInterface;
 
 class VisitsCareController extends AbstractController
@@ -50,7 +50,6 @@ class VisitsCareController extends AbstractController
      * @Route("/ndr/{ndrId}/visits-care", name="ndr_visits_care")
      * @Template("@App/Ndr/VisitsCare/start.html.twig")
      *
-     * @param Request $request
      * @param $ndrId
      *
      * @return array|RedirectResponse
@@ -58,7 +57,7 @@ class VisitsCareController extends AbstractController
     public function startAction(Request $request, $ndrId)
     {
         $ndr = $this->reportApi->getNdrIfNotSubmitted($ndrId, self::$jmsGroups);
-        if ($ndr->getStatusService()->getVisitsCareState()['state'] != NdrStatusService::STATE_NOT_STARTED) {
+        if (NdrStatusService::STATE_NOT_STARTED != $ndr->getStatusService()->getVisitsCareState()['state']) {
             return $this->redirectToRoute('ndr_visits_care_summary', ['ndrId' => $ndrId]);
         }
 
@@ -71,7 +70,6 @@ class VisitsCareController extends AbstractController
      * @Route("/ndr/{ndrId}/visits-care/step/{step}", name="ndr_visits_care_step")
      * @Template("@App/Ndr/VisitsCare/step.html.twig")
      *
-     * @param Request $request
      * @param $ndrId
      * @param $step
      *
@@ -87,12 +85,11 @@ class VisitsCareController extends AbstractController
         $visitsCare = $ndr->getVisitsCare() ?: new EntityDir\Ndr\VisitsCare();
         $fromPage = $request->get('from');
 
-
         $stepRedirector = $this->stepRedirector
             ->setRoutes('ndr_visits_care', 'ndr_visits_care_step', 'ndr_visits_care_summary')
             ->setFromPage($fromPage)
             ->setCurrentStep($step)->setTotalSteps($totalSteps)
-            ->setRouteBaseParams(['ndrId'=>$ndrId]);
+            ->setRouteBaseParams(['ndrId' => $ndrId]);
 
         $form = $this->createForm(
             FormDir\Ndr\VisitsCareType::class,
@@ -100,7 +97,7 @@ class VisitsCareController extends AbstractController
             [
                 'step' => $step,
                 'translator' => $translator,
-                'clientFirstName' => $ndr->getClient()->getFirstname()
+                'clientFirstName' => $ndr->getClient()->getFirstname(),
             ]
         );
 
@@ -113,13 +110,13 @@ class VisitsCareController extends AbstractController
                 ->setNdr($ndr)
                 ->keepOnlyRelevantVisitsCareData();
 
-            if ($visitsCare->getId() === null) {
+            if (null === $visitsCare->getId()) {
                 $this->restClient->post('/ndr/visits-care', $data, ['visits-care', 'ndr-id']);
             } else {
-                $this->restClient->put('/ndr/visits-care/' . $visitsCare->getId(), $data, ['visits-care', 'ndr-id']);
+                $this->restClient->put('/ndr/visits-care/'.$visitsCare->getId(), $data, ['visits-care', 'ndr-id']);
             }
 
-            if ($fromPage == 'summary') {
+            if ('summary' == $fromPage) {
                 $request->getSession()->getFlashBag()->add(
                     'notice',
                     'Answer edited'
@@ -128,7 +125,6 @@ class VisitsCareController extends AbstractController
 
             return $this->redirect($stepRedirector->getRedirectLinkAfterSaving());
         }
-
 
         return [
             'ndr' => $ndr,
@@ -143,7 +139,6 @@ class VisitsCareController extends AbstractController
      * @Route("/ndr/{ndrId}/visits-care/summary", name="ndr_visits_care_summary")
      * @Template("@App/Ndr/VisitsCare/summary.html.twig")
      *
-     * @param Request $request
      * @param $ndrId
      *
      * @return array|RedirectResponse
@@ -152,14 +147,14 @@ class VisitsCareController extends AbstractController
     {
         $fromPage = $request->get('from');
         $ndr = $this->reportApi->getNdrIfNotSubmitted($ndrId, self::$jmsGroups);
-        if ($ndr->getStatusService()->getVisitsCareState()['state'] == NdrStatusService::STATE_NOT_STARTED && $fromPage != 'skip-step') {
+        if (NdrStatusService::STATE_NOT_STARTED == $ndr->getStatusService()->getVisitsCareState()['state'] && 'skip-step' != $fromPage) {
             return $this->redirectToRoute('ndr_visits_care', ['ndrId' => $ndrId]);
         }
 
         return [
-            'comingFromLastStep' => $fromPage == 'skip-step' || $fromPage == 'last-step',
+            'comingFromLastStep' => 'skip-step' == $fromPage || 'last-step' == $fromPage,
             'ndr' => $ndr,
-            'status'=>$ndr->getStatusService()
+            'status' => $ndr->getStatusService(),
         ];
     }
 }

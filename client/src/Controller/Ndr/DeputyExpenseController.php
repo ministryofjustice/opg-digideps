@@ -8,10 +8,10 @@ use App\Form as FormDir;
 use App\Service\Client\Internal\ReportApi;
 use App\Service\Client\RestClient;
 use App\Service\NdrStatusService;
-use Symfony\Component\HttpFoundation\RedirectResponse;
-use Symfony\Component\Routing\Annotation\Route;
 use Sensio\Bundle\FrameworkExtraBundle\Configuration\Template;
+use Symfony\Component\HttpFoundation\RedirectResponse;
 use Symfony\Component\HttpFoundation\Request;
+use Symfony\Component\Routing\Annotation\Route;
 use Symfony\Component\Routing\Exception\RouteNotFoundException;
 use Symfony\Component\Routing\RouterInterface;
 
@@ -52,7 +52,7 @@ class DeputyExpenseController extends AbstractController
     {
         $ndr = $this->reportApi->getNdrIfNotSubmitted($ndrId, self::$jmsGroups);
 
-        if ($ndr->getStatusService()->getExpensesState()['state'] != NdrStatusService::STATE_NOT_STARTED) {
+        if (NdrStatusService::STATE_NOT_STARTED != $ndr->getStatusService()->getExpensesState()['state']) {
             return $this->redirectToRoute('ndr_deputy_expenses_summary', ['ndrId' => $ndrId]);
         }
 
@@ -71,7 +71,7 @@ class DeputyExpenseController extends AbstractController
         $form = $this->createForm(
             FormDir\YesNoType::class,
             $ndr,
-            [ 'field' => 'paidForAnything', 'translation_domain' => 'ndr-deputy-expenses']
+            ['field' => 'paidForAnything', 'translation_domain' => 'ndr-deputy-expenses']
         );
         $form->handleRequest($request);
 
@@ -80,15 +80,16 @@ class DeputyExpenseController extends AbstractController
             /* @var $data EntityDir\Ndr\Ndr */
             switch ($data->getPaidForAnything()) {
                 case 'yes':
-                    return $this->redirectToRoute('ndr_deputy_expenses_add', ['ndrId' => $ndrId, 'from'=>'exist']);
+                    return $this->redirectToRoute('ndr_deputy_expenses_add', ['ndrId' => $ndrId, 'from' => 'exist']);
                 case 'no':
-                    $this->restClient->put('ndr/' . $ndrId, $data, ['ndr-expenses-paid-anything']);
+                    $this->restClient->put('ndr/'.$ndrId, $data, ['ndr-expenses-paid-anything']);
+
                     return $this->redirectToRoute('ndr_deputy_expenses_summary', ['ndrId' => $ndrId]);
             }
         }
 
         $backLink = $this->generateUrl('ndr_deputy_expenses', ['ndrId' => $ndrId]);
-        if ($request->get('from') == 'summary') {
+        if ('summary' == $request->get('from')) {
             $backLink = $this->generateUrl('ndr_deputy_expenses_summary', ['ndrId' => $ndrId]);
         }
 
@@ -103,7 +104,6 @@ class DeputyExpenseController extends AbstractController
      * @Route("/ndr/{ndrId}/deputy-expenses/add", name="ndr_deputy_expenses_add")
      * @Template("@App/Ndr/DeputyExpense/add.html.twig")
      *
-     * @param Request $request
      * @param $ndrId
      *
      * @return array|RedirectResponse
@@ -120,14 +120,14 @@ class DeputyExpenseController extends AbstractController
             $data = $form->getData();
             $data->setNdr($ndr);
 
-            $this->restClient->post('ndr/' . $ndr->getId() . '/expense', $data, ['ndr-expense']);
+            $this->restClient->post('ndr/'.$ndr->getId().'/expense', $data, ['ndr-expense']);
 
             return $this->redirect($this->generateUrl('ndr_deputy_expenses_add_another', ['ndrId' => $ndrId]));
         }
 
         try {
-            $backLinkRoute = 'ndr_deputy_expenses_' . $request->get('from');
-            $backLink = $this->router->generate($backLinkRoute, ['ndrId'=>$ndrId]);
+            $backLinkRoute = 'ndr_deputy_expenses_'.$request->get('from');
+            $backLink = $this->router->generate($backLinkRoute, ['ndrId' => $ndrId]);
 
             return [
                 'backLink' => $backLink,
@@ -176,7 +176,7 @@ class DeputyExpenseController extends AbstractController
     public function editAction(Request $request, $ndrId, $expenseId)
     {
         $ndr = $this->reportApi->getNdrIfNotSubmitted($ndrId, self::$jmsGroups);
-        $expense = $this->restClient->get('ndr/' . $ndr->getId() . '/expense/' . $expenseId, 'Ndr\Expense');
+        $expense = $this->restClient->get('ndr/'.$ndr->getId().'/expense/'.$expenseId, 'Ndr\Expense');
 
         $form = $this->createForm(FormDir\Ndr\DeputyExpenseType::class, $expense);
         $form->handleRequest($request);
@@ -185,7 +185,7 @@ class DeputyExpenseController extends AbstractController
             $data = $form->getData();
             $request->getSession()->getFlashBag()->add('notice', 'Expense edited');
 
-            $this->restClient->put('ndr/' . $ndr->getId() . '/expense/' . $expense->getId(), $data, ['ndr-expense']);
+            $this->restClient->put('ndr/'.$ndr->getId().'/expense/'.$expense->getId(), $data, ['ndr-expense']);
 
             return $this->redirect($this->generateUrl('ndr_deputy_expenses', ['ndrId' => $ndrId]));
         }
@@ -208,7 +208,7 @@ class DeputyExpenseController extends AbstractController
     public function summaryAction($ndrId)
     {
         $ndr = $this->reportApi->getNdrIfNotSubmitted($ndrId, self::$jmsGroups);
-        if ($ndr->getStatusService()->getExpensesState()['state'] == NdrStatusService::STATE_NOT_STARTED) {
+        if (NdrStatusService::STATE_NOT_STARTED == $ndr->getStatusService()->getExpensesState()['state']) {
             return $this->redirect($this->generateUrl('ndr_deputy_expenses', ['ndrId' => $ndrId]));
         }
 
@@ -233,7 +233,7 @@ class DeputyExpenseController extends AbstractController
         if ($form->isSubmitted() && $form->isValid()) {
             $ndr = $this->reportApi->getNdrIfNotSubmitted($ndrId, self::$jmsGroups);
 
-            $this->restClient->delete('ndr/' . $ndr->getId() . '/expense/' . $expenseId);
+            $this->restClient->delete('ndr/'.$ndr->getId().'/expense/'.$expenseId);
 
             $request->getSession()->getFlashBag()->add(
                 'notice',
@@ -243,7 +243,7 @@ class DeputyExpenseController extends AbstractController
             return $this->redirect($this->generateUrl('ndr_deputy_expenses', ['ndrId' => $ndrId]));
         }
 
-        $expense = $this->restClient->get('ndr/' . $ndrId . '/expense/' . $expenseId, 'Ndr\Expense');
+        $expense = $this->restClient->get('ndr/'.$ndrId.'/expense/'.$expenseId, 'Ndr\Expense');
 
         return [
             'translationDomain' => 'ndr-deputy-expenses',

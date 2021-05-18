@@ -1,17 +1,19 @@
-<?php declare(strict_types=1);
+<?php
+
+declare(strict_types=1);
 
 namespace App\Entity;
 
 use App\Entity\Ndr\Ndr;
 use App\Entity\Report\Report;
 use App\Entity\UserResearch\UserResearchResponse;
+use DateTime;
 use Doctrine\ORM\Mapping as ORM;
 use Gedmo\Mapping\Annotation as Gedmo;
 use JMS\Serializer\Annotation as JMS;
-use DateTime;
 
 /**
- * User satisfaction scores
+ * User satisfaction scores.
  *
  * @ORM\Table(name="satisfaction")
  * @ORM\Entity()
@@ -68,7 +70,6 @@ class Satisfaction
     private $reporttype;
 
     /**
-     * @var \DateTime
      * @JMS\Type("DateTime")
      * @JMS\Groups({"satisfaction"})
      *
@@ -86,7 +87,6 @@ class Satisfaction
     private UserResearchResponse $userResearchResponse;
 
     /**
-     * @var Report|null
      * @JMS\Type("App\Entity\Report\Report")
      * @JMS\Groups({"user-research", "satisfaction"})
      *
@@ -95,7 +95,6 @@ class Satisfaction
     private ?Report $report = null;
 
     /**
-     * @var Ndr|null
      * @JMS\Type("App\Entity\Ndr\Ndr")
      * @JMS\Groups({"user-research", "satisfaction"})
      *
@@ -103,57 +102,39 @@ class Satisfaction
      */
     private ?Ndr $ndr = null;
 
-    /**
-     * @return int
-     */
     public function getId(): int
     {
         return $this->id;
     }
 
-    /**
-     * @param int $id
-     * @return Satisfaction
-     */
     public function setId(int $id): Satisfaction
     {
         $this->id = $id;
+
         return $this;
     }
 
-    /**
-     * @return int
-     */
     public function getScore(): int
     {
         return $this->score;
     }
 
-    /**
-     * @param int $score
-     * @return Satisfaction
-     */
     public function setScore(int $score): Satisfaction
     {
         $this->score = $score;
+
         return $this;
     }
 
-    /**
-     * @return string|null
-     */
     public function getComments(): ?string
     {
         return $this->comments;
     }
 
-    /**
-     * @param string|null $comments
-     * @return Satisfaction
-     */
     public function setComments(?string $comments): Satisfaction
     {
         $this->comments = $comments;
+
         return $this;
     }
 
@@ -165,13 +146,10 @@ class Satisfaction
         return $this->deputyrole;
     }
 
-    /**
-     * @param string $deputyrole
-     * @return Satisfaction
-     */
     public function setDeputyrole(string $deputyrole): Satisfaction
     {
         $this->deputyrole = $deputyrole;
+
         return $this;
     }
 
@@ -183,49 +161,34 @@ class Satisfaction
         return $this->reporttype;
     }
 
-    /**
-     * @param string $reporttype
-     * @return Satisfaction
-     */
     public function setReporttype(string $reporttype): Satisfaction
     {
         $this->reporttype = $reporttype;
+
         return $this;
     }
 
-    /**
-     * @return \DateTime
-     */
-    public function getCreated(): \DateTime
+    public function getCreated(): DateTime
     {
         return $this->created;
     }
 
-    /**
-     * @param DateTime $created
-     * @return Satisfaction
-     */
     public function setCreated(DateTime $created): Satisfaction
     {
         $this->created = $created;
+
         return $this;
     }
 
-    /**
-     * @return UserResearchResponse
-     */
     public function getUserResearchResponse(): UserResearchResponse
     {
         return $this->userResearchResponse;
     }
 
-    /**
-     * @param UserResearchResponse $userResearchResponse
-     * @return Satisfaction
-     */
     public function setUserResearchResponse(UserResearchResponse $userResearchResponse): Satisfaction
     {
         $this->userResearchResponse = $userResearchResponse;
+
         return $this;
     }
 
@@ -237,13 +200,10 @@ class Satisfaction
         return $this->report;
     }
 
-    /**
-     * @param Report|null $report
-     * @return Satisfaction
-     */
     public function setReport(?Report $report): Satisfaction
     {
         $this->report = $report;
+
         return $this;
     }
 
@@ -255,13 +215,10 @@ class Satisfaction
         return $this->ndr;
     }
 
-    /**
-     * @param Ndr|null $ndr
-     * @return Satisfaction
-     */
     public function setNdr(?Ndr $ndr): Satisfaction
     {
         $this->ndr = $ndr;
+
         return $this;
     }
 }

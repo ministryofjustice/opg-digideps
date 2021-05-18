@@ -1,5 +1,6 @@
-<?php declare(strict_types=1);
+<?php
 
+declare(strict_types=1);
 
 namespace App\Model\Sirius;
 
@@ -19,16 +20,12 @@ class SiriusDocumentFile
     /** @var string|null */
     private $s3Reference;
 
-    /**
-     * @return string
-     */
     public function getName(): string
     {
         return $this->name;
     }
 
     /**
-     * @param string $name
      * @return SiriusDocumentFile
      */
     public function setName(string $name): self
@@ -38,16 +35,12 @@ class SiriusDocumentFile
         return $this;
     }
 
-    /**
-     * @return string
-     */
     public function getMimetype(): string
     {
         return $this->mimetype;
     }
 
     /**
-     * @param string $mimetype
      * @return SiriusDocumentFile
      */
     public function setMimetype(string $mimetype): self
@@ -57,16 +50,12 @@ class SiriusDocumentFile
         return $this;
     }
 
-    /**
-     * @return string|null
-     */
     public function getSource(): ?string
     {
         return $this->source;
     }
 
     /**
-     * @param string|null $source
      * @return SiriusDocumentFile
      */
     public function setSource(?string $source): self
@@ -83,16 +72,12 @@ class SiriusDocumentFile
         return $this;
     }
 
-    /**
-     * @return string|null
-     */
     public function getS3Reference(): ?string
     {
         return $this->s3Reference;
     }
 
     /**
-     * @param string|null $s3Reference
      * @return SiriusDocumentFile
      */
     public function setS3Reference(?string $s3Reference): self

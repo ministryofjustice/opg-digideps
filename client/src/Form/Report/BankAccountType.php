@@ -24,8 +24,9 @@ class BankAccountType extends AbstractType
     {
         $ret = [];
         foreach (BankAccount::$types as $key) {
-            $ret['form.accountType.choices.' . $key] = $key;
+            $ret['form.accountType.choices.'.$key] = $key;
         }
+
         return $ret;
     }
 
@@ -35,52 +36,52 @@ class BankAccountType extends AbstractType
 
         $builder->add('id', FormTypes\HiddenType::class);
 
-        if ($this->step === 1) {
+        if (1 === $this->step) {
             $builder->add('accountType', FormTypes\ChoiceType::class, [
-                'choices'     => self::getBankAccountChoices(),
-                'expanded'    => true,
+                'choices' => self::getBankAccountChoices(),
+                'expanded' => true,
                 'placeholder' => 'Please select',
             ]);
         }
 
-        if ($this->step === 2) {
+        if (2 === $this->step) {
             $builder->add('bank', FormTypes\TextType::class, [
                 'required' => false,
             ]);
-            $builder->add('accountNumber', FormTypes\TextType::class, ['attr'=>['maxlength' => 4]]);
+            $builder->add('accountNumber', FormTypes\TextType::class, ['attr' => ['maxlength' => 4]]);
             $builder->add('sortCode', SortCodeType::class, [
                 'error_bubbling' => false,
-                'required'       => false,
-                'constraints'    => [
+                'required' => false,
+                'constraints' => [
                     new NotBlank(['message' => 'account.sortCode.notBlank', 'groups' => ['bank-account-sortcode']]),
                     new Type(['type' => 'numeric', 'message' => 'account.sortCode.type', 'groups' => ['bank-account-sortcode']]),
                     new Length(['min' => 6, 'max' => 6, 'exactMessage' => 'account.sortCode.length', 'groups' => ['bank-account-sortcode']]),
                 ],
             ]);
             $builder->add('isJointAccount', FormTypes\ChoiceType::class, [
-                'choices'  => ['Yes' => 'yes', 'No' => 'no'],
+                'choices' => ['Yes' => 'yes', 'No' => 'no'],
                 'expanded' => true,
             ]);
         }
 
-        if ($this->step === 3) {
+        if (3 === $this->step) {
             $builder->add('openingBalance', FormTypes\NumberType::class, [
-                'scale'       => 2,
-                'grouping'        => true,
+                'scale' => 2,
+                'grouping' => true,
                 'invalid_message' => 'account.openingBalance.type',
             ]);
             $builder->add('closingBalance', FormTypes\NumberType::class, [
-                'scale'       => 2,
-                'grouping'        => true,
+                'scale' => 2,
+                'grouping' => true,
                 'invalid_message' => 'account.closingBalance.type',
-                'required'        => false,
+                'required' => false,
             ]);
         }
 
-        if ($this->step === 4) {
+        if (4 === $this->step) {
             $builder->add('isClosed', FormTypes\ChoiceType::class, [
-                'choices'     => array_flip([true => 'Yes', false => 'No']),
-                'expanded'    => true,
+                'choices' => array_flip([true => 'Yes', false => 'No']),
+                'expanded' => true,
                 'placeholder' => 'Please select',
             ]);
         }
@@ -97,7 +98,7 @@ class BankAccountType extends AbstractType
     {
         $resolver->setDefaults([
             'translation_domain' => 'report-bank-accounts',
-            'validation_groups'  => function (FormInterface $form) {
+            'validation_groups' => function (FormInterface $form) {
                 $step2Options = ['bank-account-number', 'bank-account-is-joint'];
                 if ($form->getData()->requiresSortCode()) {
                     $step2Options[] = 'bank-account-sortcode';
@@ -109,8 +110,8 @@ class BankAccountType extends AbstractType
                 return [
                     1 => ['bank-account-type'],
                     2 => $step2Options,
-                    3 => ['bank-account-opening-balance','bank-account-closing-balance'],
-                    4 => 'bank-account-is-closed'
+                    3 => ['bank-account-opening-balance', 'bank-account-closing-balance'],
+                    4 => 'bank-account-is-closed',
                 ][$this->step];
             },
         ])

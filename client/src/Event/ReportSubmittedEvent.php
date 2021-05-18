@@ -1,5 +1,6 @@
-<?php declare(strict_types=1);
+<?php
 
+declare(strict_types=1);
 
 namespace App\Event;
 
@@ -27,39 +28,27 @@ class ReportSubmittedEvent extends Event
         $this->newYearReportId = $newYearReportId;
     }
 
-    /**
-     * @return Report
-     */
     public function getSubmittedReport(): Report
     {
         return $this->submittedReport;
     }
 
-    /**
-     * @param Report $submittedReport
-     * @return ReportSubmittedEvent
-     */
     public function setSubmittedReport(Report $submittedReport): ReportSubmittedEvent
     {
         $this->submittedReport = $submittedReport;
+
         return $this;
     }
 
-    /**
-     * @return User
-     */
     public function getSubmittedBy(): User
     {
         return $this->submittedBy;
     }
 
-    /**
-     * @param User $submittedBy
-     * @return ReportSubmittedEvent
-     */
     public function setSubmittedBy(User $submittedBy): ReportSubmittedEvent
     {
         $this->submittedBy = $submittedBy;
+
         return $this;
     }
 
@@ -73,11 +62,11 @@ class ReportSubmittedEvent extends Event
 
     /**
      * @param string|int|null $newYearReportId
-     * @return ReportSubmittedEvent
      */
     public function setNewYearReportId($newYearReportId): ReportSubmittedEvent
     {
         $this->newYearReportId = $newYearReportId;
+
         return $this;
     }
 }

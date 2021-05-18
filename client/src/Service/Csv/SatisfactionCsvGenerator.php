@@ -1,13 +1,11 @@
-<?php declare(strict_types=1);
+<?php
 
+declare(strict_types=1);
 
 namespace App\Service\Csv;
 
 class SatisfactionCsvGenerator
 {
-    /**
-     * @var CsvBuilder
-     */
     private CsvBuilder $csvBuilder;
 
     public function __construct(CsvBuilder $csvBuilder)
@@ -26,7 +24,7 @@ class SatisfactionCsvGenerator
                 $satisfaction->getComments(),
                 $satisfaction->getDeputyrole(),
                 $satisfaction->getReporttype(),
-                $satisfaction->getCreated()->format('Y-m-d')
+                $satisfaction->getCreated()->format('Y-m-d'),
             ];
         }
 

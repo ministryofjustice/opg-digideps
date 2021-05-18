@@ -1,4 +1,5 @@
 <?php
+
 namespace App\DataFixtures;
 
 use App\Entity\User;
@@ -53,7 +54,7 @@ class TestUserFixtures extends AbstractDataFixture
         $user = (new User())
             ->setFirstname('test')
             ->setLastname($data['id'])
-            ->setEmail($data['id'] . '@example.org')
+            ->setEmail($data['id'].'@example.org')
             ->setActive(true)
             ->setRegistrationDate(new \DateTime())
             ->setNdrEnabled(false)
@@ -68,6 +69,6 @@ class TestUserFixtures extends AbstractDataFixture
 
     protected function getEnvironments()
     {
-        return array('test');
+        return ['test'];
     }
 }

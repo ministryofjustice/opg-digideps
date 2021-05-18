@@ -1,4 +1,6 @@
-<?php declare(strict_types=1);
+<?php
+
+declare(strict_types=1);
 
 namespace App\Controller\Admin;
 
@@ -77,15 +79,15 @@ class ReportSubmissionController extends AbstractController
         }
 
         $currentFilters = self::getFiltersFromRequest($request);
-        $ret = $this->restClient->get('/report-submission?' . http_build_query($currentFilters), 'array');
+        $ret = $this->restClient->get('/report-submission?'.http_build_query($currentFilters), 'array');
 
-        $records = $this->restClient->arrayToEntities(EntityDir\Report\ReportSubmission::class . '[]', $ret['records']);
+        $records = $this->restClient->arrayToEntities(EntityDir\Report\ReportSubmission::class.'[]', $ret['records']);
 
         $nOfdownloadableSubmissions = count(array_filter($records, function ($s) {
             return $s->isDownloadable();
         }));
 
-        if ($currentFilters['status'] === 'archived') {
+        if ('archived' === $currentFilters['status']) {
             $postActions = [self::ACTION_DOWNLOAD];
         } else {
             $postActions = [self::ACTION_DOWNLOAD, self::ACTION_ARCHIVE];
@@ -94,7 +96,7 @@ class ReportSubmissionController extends AbstractController
         /** @var EntityDir\User $user */
         $user = $this->getUser();
 
-        if ($parameterStoreService->getFeatureFlag(ParameterStoreService::FLAG_DOCUMENT_SYNC) === '1' && $user->getRoleName() === EntityDir\User::ROLE_SUPER_ADMIN) {
+        if ('1' === $parameterStoreService->getFeatureFlag(ParameterStoreService::FLAG_DOCUMENT_SYNC) && EntityDir\User::ROLE_SUPER_ADMIN === $user->getRoleName()) {
             $postActions[] = self::ACTION_SYNCHRONISE;
         }
 
@@ -102,9 +104,9 @@ class ReportSubmissionController extends AbstractController
             'filters' => $currentFilters,
             'records' => $records,
             'postActions' => $postActions,
-            'counts'  => [
-                'new'      => $ret['counts']['new'],
-                'pending'  => $ret['counts']['pending'],
+            'counts' => [
+                'new' => $ret['counts']['new'],
+                'pending' => $ret['counts']['pending'],
                 'archived' => $ret['counts']['archived'],
             ],
             'nOfdownloadableSubmissions' => $nOfdownloadableSubmissions,
@@ -128,13 +130,15 @@ class ReportSubmissionController extends AbstractController
                 [$retrievedDocuments, $missingDocuments] = $this->documentDownloader->retrieveDocumentsFromS3ByReportSubmissionIds($request, $reportSubmissionIds);
                 $downloadLocation = $this->documentDownloader->zipDownloadedDocuments($retrievedDocuments);
             } catch (Throwable $e) {
-                $this->addFlash('error', 'There was an error downloading the requested documents: ' . $e->getMessage());
+                $this->addFlash('error', 'There was an error downloading the requested documents: '.$e->getMessage());
+
                 return $this->redirectToRoute('admin_documents_download_ready');
             }
         }
 
         $response = new BinaryFileResponse($downloadLocation);
         $response->setContentDisposition(ResponseHeaderBag::DISPOSITION_ATTACHMENT);
+
         return $response;
     }
 
@@ -153,7 +157,7 @@ class ReportSubmissionController extends AbstractController
             return $document->getId() === $documentId;
         }));
 
-        if (count($documents) !== 1) {
+        if (1 !== count($documents)) {
             throw $this->createNotFoundException('Document not found');
         }
 
@@ -169,7 +173,7 @@ class ReportSubmissionController extends AbstractController
 
         $response = new Response($contents);
         $response->headers->set('Content-Type', 'application/octet-stream');
-        $response->headers->set('Content-Disposition', 'attachment; filename="' . $document->getFileName() . '"');
+        $response->headers->set('Content-Disposition', 'attachment; filename="'.$document->getFileName().'"');
         $response->sendHeaders();
 
         return $response;
@@ -188,15 +192,17 @@ class ReportSubmissionController extends AbstractController
     }
 
     /**
-     * Process a post
+     * Process a post.
      *
      * @param Request $request request
+     *
      * @return Response|void
      */
     private function processPost(Request $request)
     {
         if (empty($request->request->get('checkboxes'))) {
             $this->addFlash('error', 'Please select at least one report submission');
+
             return;
         }
 
@@ -225,13 +231,16 @@ class ReportSubmissionController extends AbstractController
 
                         if (!empty($missingDocuments)) {
                             $this->documentDownloader->setMissingDocsFlashMessage($request, $missingDocuments);
+
                             return $this->redirectToRoute('admin_documents_download_ready', ['reportSubmissionIds' => json_encode($checkedBoxes)]);
                         }
 
                         $fileName = $this->documentDownloader->zipDownloadedDocuments($retrievedDocuments);
+
                         return $this->documentDownloader->generateDownloadResponse($fileName);
                     } catch (Throwable $e) {
-                        $this->addFlash('error', 'There was an error downloading the requested documents: ' . $e->getMessage());
+                        $this->addFlash('error', 'There was an error downloading the requested documents: '.$e->getMessage());
+
                         return $this->redirectToRoute('admin_documents');
                     }
 
@@ -244,35 +253,33 @@ class ReportSubmissionController extends AbstractController
     }
 
     /**
-     * Archive multiple documents based on the supplied ids
+     * Archive multiple documents based on the supplied ids.
      *
      * @param array<int, int|string> $checkedBoxes ids selected by the user
-     *
      */
     private function processArchive($checkedBoxes): void
     {
         foreach ($checkedBoxes as $reportSubmissionId) {
-            $this->restClient->put("report-submission/{$reportSubmissionId}", ['archive'=>true]);
+            $this->restClient->put("report-submission/{$reportSubmissionId}", ['archive' => true]);
         }
     }
 
     /**
-     * @param  Request $request
      * @return array<mixed>
      */
     private static function getFiltersFromRequest(Request $request)
     {
-        $order = $request->get('status', 'new') === 'new' ? 'ASC' : 'DESC';
+        $order = 'new' === $request->get('status', 'new') ? 'ASC' : 'DESC';
 
         return [
-            'q'      => $request->get('q'),
+            'q' => $request->get('q'),
             'status' => $request->get('status', 'new'), // new | archived
-            'limit'             => $request->query->get('limit') ?: 15,
-            'offset'            => $request->query->get('offset') ?: 0,
-            'created_by_role'   => $request->get('created_by_role'),
-            'orderBy'           => $request->get('orderBy', 'createdOn'),
-            'order'             => $request->get('order', $order),
-            'fromDate'          => $request->get('fromDate')
+            'limit' => $request->query->get('limit') ?: 15,
+            'offset' => $request->query->get('offset') ?: 0,
+            'created_by_role' => $request->get('created_by_role'),
+            'orderBy' => $request->get('orderBy', 'createdOn'),
+            'order' => $request->get('order', $order),
+            'fromDate' => $request->get('fromDate'),
         ];
     }
 }

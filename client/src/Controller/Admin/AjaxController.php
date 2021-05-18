@@ -5,14 +5,13 @@ namespace App\Controller\Admin;
 use App\Controller\AbstractController;
 use App\Service\Client\RestClient;
 use Predis\ClientInterface;
-use Symfony\Component\Routing\Annotation\Route;
 use Sensio\Bundle\FrameworkExtraBundle\Configuration\Security;
 use Symfony\Component\HttpFoundation\JsonResponse;
 use Symfony\Component\HttpFoundation\Request;
+use Symfony\Component\Routing\Annotation\Route;
 
 /**
  * @Route("/admin/ajax")
- *
  */
 class AjaxController extends AbstractController
 {
@@ -32,6 +31,7 @@ class AjaxController extends AbstractController
      * @Security("is_granted('ROLE_ADMIN') or has_role('ROLE_AD')")
      *
      * @param $source
+     *
      * @return JsonResponse
      */
     public function deleteUsersBySourceAjaxAction($source)
@@ -41,7 +41,7 @@ class AjaxController extends AbstractController
             $this->restClient->delete('casrec/delete-by-source/'.$source);
             $after = $this->restClient->get('casrec/count', 'array');
 
-            return new JsonResponse(['before'=>$before, 'after'=>$after]);
+            return new JsonResponse(['before' => $before, 'after' => $after]);
         } catch (\Throwable $e) {
             return new JsonResponse($e->getMessage());
         }
@@ -51,13 +51,11 @@ class AjaxController extends AbstractController
      * @Route("/casrec-add", name="casrec_add_ajax")
      * @Security("is_granted('ROLE_ADMIN') or has_role('ROLE_AD')")
      *
-     * @param Request $request
-     * @param ClientInterface $redisClient
      * @return JsonResponse
      */
     public function uploadUsersAjaxAction(Request $request, ClientInterface $redisClient)
     {
-        $chunkId = 'chunk' . $request->get('chunk');
+        $chunkId = 'chunk'.$request->get('chunk');
 
         try {
             $compressedData = $redisClient->get($chunkId);

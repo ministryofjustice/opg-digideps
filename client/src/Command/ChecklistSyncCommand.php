@@ -1,4 +1,6 @@
-<?php declare(strict_types=1);
+<?php
+
+declare(strict_types=1);
 
 namespace App\Command;
 
@@ -39,10 +41,6 @@ class ChecklistSyncCommand extends Command
     private $notSyncedCount = 0;
 
     /**
-     * @param ChecklistPdfGenerator $pdfGenerator
-     * @param ChecklistSyncService $syncService
-     * @param RestClient $restClient
-     * @param ParameterStoreService $parameterStore
      * @param null $name
      */
     public function __construct(
@@ -60,17 +58,13 @@ class ChecklistSyncCommand extends Command
         parent::__construct($name);
     }
 
-    /**
-     * @param InputInterface $input
-     * @param OutputInterface $output
-     * @return int
-     */
     protected function execute(InputInterface $input, OutputInterface $output): int
     {
         ini_set('memory_limit', '512M');
 
         if (!$this->isFeatureEnabled()) {
             $output->writeln('Feature disabled, sleeping');
+
             return 0;
         }
 
@@ -84,7 +78,7 @@ class ChecklistSyncCommand extends Command
                 $content = $this->pdfGenerator->generate($report);
             } catch (PdfGenerationFailedException $e) {
                 $this->updateChecklistWithError($report, $e);
-                $this->notSyncedCount += 1;
+                ++$this->notSyncedCount;
                 continue;
             }
 
@@ -94,7 +88,7 @@ class ChecklistSyncCommand extends Command
                 $this->updateChecklistWithSuccess($report, $uuid);
             } catch (SiriusDocumentSyncFailedException $e) {
                 $this->updateChecklistWithError($report, $e);
-                $this->notSyncedCount += 1;
+                ++$this->notSyncedCount;
             }
         }
 
@@ -106,12 +100,9 @@ class ChecklistSyncCommand extends Command
         return 0;
     }
 
-    /**
-     * @return bool
-     */
     private function isFeatureEnabled(): bool
     {
-        return $this->parameterStore->getFeatureFlag(ParameterStoreService::FLAG_CHECKLIST_SYNC) === '1';
+        return '1' === $this->parameterStore->getFeatureFlag(ParameterStoreService::FLAG_CHECKLIST_SYNC);
     }
 
     /**
@@ -129,19 +120,15 @@ class ChecklistSyncCommand extends Command
         );
     }
 
-    /**
-     * @return string
-     */
     private function getSyncRowLimit(): string
     {
         $limit = $this->parameterStore->getParameter(ParameterStoreService::PARAMETER_CHECKLIST_SYNC_ROW_LIMIT);
+
         return $limit ? $limit : self::FALLBACK_ROW_LIMITS;
     }
 
     /**
-     * @param Report $report
      * @param $content
-     * @return QueuedChecklistData
      */
     protected function buildChecklistData(Report $report, $content): QueuedChecklistData
     {
@@ -166,7 +153,6 @@ class ChecklistSyncCommand extends Command
     }
 
     /**
-     * @param Report $report
      * @param $e
      */
     protected function updateChecklistWithError(Report $report, $e): void
@@ -175,7 +161,6 @@ class ChecklistSyncCommand extends Command
     }
 
     /**
-     * @param Report $report
      * @param $uuid
      */
     protected function updateChecklistWithSuccess(Report $report, $uuid): void
@@ -183,12 +168,6 @@ class ChecklistSyncCommand extends Command
         $this->updateChecklist($report->getChecklist()->getId(), Checklist::SYNC_STATUS_SUCCESS, null, $uuid);
     }
 
-    /**
-     * @param int $id
-     * @param string $status
-     * @param string|null $message
-     * @param string|null $uuid
-     */
     private function updateChecklist(int $id, string $status, string $message = null, string $uuid = null): void
     {
         $data = ['syncStatus' => $status];

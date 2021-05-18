@@ -1,12 +1,12 @@
-<?php declare(strict_types=1);
+<?php
 
+declare(strict_types=1);
 
 namespace App\Controller;
 
-use App\Entity\UserResearch\UserResearchResponse;
+use App\Factory\UserResearchResponseFactory;
 use App\Repository\SatisfactionRepository;
 use App\Repository\UserResearchResponseRepository;
-use App\Factory\UserResearchResponseFactory;
 use App\Service\Formatter\RestFormatter;
 use DateTime;
 use RuntimeException;
@@ -50,6 +50,7 @@ class UserResearchController extends RestController
 
             $groups = $request->get('groups') ? $request->get('groups') : ['satisfaction', 'user-research', 'user'];
             $this->formatter->setJmsSerialiserGroups($groups);
+
             return 'Created';
         } catch (Throwable $e) {
             throw new RuntimeException(sprintf('UserResearchResponse not created: %s', $e->getMessage()), Response::HTTP_BAD_REQUEST);

@@ -1,4 +1,5 @@
 <?php
+
 namespace App\Security;
 
 use App\Entity\Client;
@@ -19,12 +20,9 @@ class ClientVoter extends Voter
     /** @var string */
     const DELETE = 'delete';
 
-    /** @var Security  */
+    /** @var Security */
     private $security;
 
-    /**
-     * @param Security $security
-     */
     public function __construct(Security $security)
     {
         $this->security = $security;
@@ -32,7 +30,8 @@ class ClientVoter extends Voter
 
     /**
      * @param string $attribute
-     * @param mixed $subject
+     * @param mixed  $subject
+     *
      * @return bool
      */
     protected function supports($attribute, $subject)
@@ -43,7 +42,7 @@ class ClientVoter extends Voter
     /**
      * @param string $attribute
      * @param Client $client
-     * @param TokenInterface $token
+     *
      * @return bool
      */
     protected function voteOnAttribute($attribute, $client, TokenInterface $token)
@@ -54,7 +53,6 @@ class ClientVoter extends Voter
             // the user must be logged in; if not, deny access
             return false;
         }
-
 
         switch ($attribute) {
             case self::VIEW:
@@ -69,8 +67,6 @@ class ClientVoter extends Voter
     }
 
     /**
-     * @param Client $client
-     * @param User $user
      * @return bool
      */
     private function canManage(Client $client, User $user)
@@ -95,10 +91,6 @@ class ClientVoter extends Voter
         return false;
     }
 
-    /**
-     * @param User $user
-     * @return bool
-     */
     private function canDelete(User $user): bool
     {
         if ($user->isElevatedAdmin() || $user->isSuperAdmin()) {
@@ -108,13 +100,10 @@ class ClientVoter extends Voter
         return false;
     }
 
-    /**
-     * @param Client $client
-     * @return bool
-     */
     private function clientsOrganisationActive(Client $client): bool
     {
         $organisation = $client->getOrganisation();
+
         return $organisation instanceof Organisation && $organisation->isActivated();
     }
 }

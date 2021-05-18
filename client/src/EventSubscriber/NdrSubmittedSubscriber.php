@@ -1,5 +1,6 @@
-<?php declare(strict_types=1);
+<?php
 
+declare(strict_types=1);
 
 namespace App\EventSubscriber;
 
@@ -20,7 +21,7 @@ class NdrSubmittedSubscriber implements EventSubscriberInterface
     public static function getSubscribedEvents()
     {
         return [
-            NdrSubmittedEvent::NAME => 'sendEmail'
+            NdrSubmittedEvent::NAME => 'sendEmail',
         ];
     }
 

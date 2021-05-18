@@ -1,4 +1,6 @@
-<?php declare(strict_types=1);
+<?php
+
+declare(strict_types=1);
 
 namespace App\Form\Admin\Fixture;
 
@@ -16,15 +18,15 @@ class CasrecFixtureType extends AbstractType
         $builder
             ->add('deputyType', ChoiceType::class, [
                 'choices' => ['Lay' => User::TYPE_LAY],
-                'data' => $options['deputyType']
+                'data' => $options['deputyType'],
             ])
             ->add('reportType', ChoiceType::class, [
                 'choices' => ['Property and financial affairs high assets' => 'OPG102'],
-                'data' => $options['reportType']
+                'data' => $options['reportType'],
             ])
             ->add('createCoDeputy', ChoiceType::class, [
                 'choices' => ['Yes' => true, 'No' => false],
-                'data' => $options['createCoDeputy']
+                'data' => $options['createCoDeputy'],
             ])
             ->add('submit', SubmitType::class);
     }
@@ -32,7 +34,7 @@ class CasrecFixtureType extends AbstractType
     public function configureOptions(OptionsResolver $resolver)
     {
         $resolver->setDefaults([
-            'translation_domain' => 'admin-fixtures'
+            'translation_domain' => 'admin-fixtures',
         ])->setRequired(['deputyType', 'reportType', 'createCoDeputy']);
     }
 }

@@ -2,7 +2,6 @@
 
 namespace App\Form\Ndr;
 
-use App\Entity\Account;
 use App\Entity\Ndr\BankAccount;
 use App\Form\Type\SortCodeType;
 use Symfony\Component\Form\AbstractType;
@@ -25,8 +24,9 @@ class BankAccountType extends AbstractType
     {
         $ret = [];
         foreach (BankAccount::$types as $key) {
-            $ret['form.accountType.choices.' . $key] = $key;
+            $ret['form.accountType.choices.'.$key] = $key;
         }
+
         return $ret;
     }
 
@@ -36,7 +36,7 @@ class BankAccountType extends AbstractType
 
         $builder->add('id', FormTypes\HiddenType::class);
 
-        if ($this->step === 1) {
+        if (1 === $this->step) {
             $builder->add('accountType', FormTypes\ChoiceType::class, [
                 'choices' => self::getBankAccountChoices(),
                 'expanded' => true,
@@ -44,11 +44,11 @@ class BankAccountType extends AbstractType
             ]);
         }
 
-        if ($this->step === 2) {
+        if (2 === $this->step) {
             $builder->add('bank', FormTypes\TextType::class, [
                 'required' => false,
             ]);
-            $builder->add('accountNumber', FormTypes\TextType::class, ['attr'=> ['maxlength' => 4]]);
+            $builder->add('accountNumber', FormTypes\TextType::class, ['attr' => ['maxlength' => 4]]);
             $builder->add('sortCode', SortCodeType::class, [
                 'error_bubbling' => false,
                 'required' => false,
@@ -59,17 +59,16 @@ class BankAccountType extends AbstractType
                 ],
             ]);
             $builder->add('isJointAccount', FormTypes\ChoiceType::class, [
-                'choices'  => ['Yes' => 'yes', 'No' => 'no'],
+                'choices' => ['Yes' => 'yes', 'No' => 'no'],
                 'expanded' => true,
             ]);
         }
 
-        if ($this->step === 3) {
+        if (3 === $this->step) {
             $builder->add('balanceOnCourtOrderDate', FormTypes\NumberType::class, [
                 'scale' => 2,
                 'grouping' => true,
                 'invalid_message' => 'ndr.account.balanceOnCourtOrderDate.type',
-
             ]);
         }
 
@@ -85,7 +84,7 @@ class BankAccountType extends AbstractType
     {
         $resolver->setDefaults([
             'translation_domain' => 'ndr-bank-accounts',
-            'validation_groups'  => function (FormInterface $form) {
+            'validation_groups' => function (FormInterface $form) {
                 $step2Options = ['bank-account-number', 'bank-account-is-joint'];
                 if ($form->getData()->requiresSortCode()) {
                     $step2Options[] = 'sortcode';

@@ -2,17 +2,17 @@
 
 namespace App\v2\Controller;
 
-use App\Entity\Client;
 use App\Controller\RestController;
+use App\Entity\Client;
 use App\Repository\ClientRepository;
 use App\v2\Assembler\ClientAssembler;
 use App\v2\Assembler\OrganisationAssembler;
 use App\v2\Transformer\ClientTransformer;
 use App\v2\Transformer\OrganisationTransformer;
-use Symfony\Component\Routing\Annotation\Route;
 use Sensio\Bundle\FrameworkExtraBundle\Configuration\Security;
 use Symfony\Component\HttpFoundation\JsonResponse;
 use Symfony\Component\HttpKernel\Exception\NotFoundHttpException;
+use Symfony\Component\Routing\Annotation\Route;
 
 /**
  * @Route("/client")
@@ -21,7 +21,7 @@ class ClientController extends RestController
 {
     use ControllerTrait;
 
-    /** @var ClientRepository  */
+    /** @var ClientRepository */
     private $repository;
 
     /** @var ClientAssembler */
@@ -32,25 +32,17 @@ class ClientController extends RestController
 
     /** @var ClientTransformer */
     private $clientTransformer;
-    
+
     /** @var OrganisationTransformer */
     private $orgTransformer;
 
-    /**
-     * @param ClientRepository $repository
-     * @param ClientAssembler $clientAssembler
-     * @param OrganisationAssembler $orgAssembler
-     * @param ClientTransformer $clientTransformer
-     * @param OrganisationTransformer $orgTransformer
-     */
     public function __construct(
-        ClientRepository $repository, 
-        ClientAssembler $clientAssembler, 
-        OrganisationAssembler $orgAssembler, 
+        ClientRepository $repository,
+        ClientAssembler $clientAssembler,
+        OrganisationAssembler $orgAssembler,
         ClientTransformer $clientTransformer,
         OrganisationTransformer $orgTransformer
-    )
-    {
+    ) {
         $this->repository = $repository;
         $this->clientAssembler = $clientAssembler;
         $this->orgAssembler = $orgAssembler;
@@ -63,7 +55,6 @@ class ClientController extends RestController
      * @Security("is_granted('ROLE_ADMIN') or is_granted('ROLE_AD') or is_granted('ROLE_DEPUTY')")
      *
      * @param $id
-     * @return JsonResponse
      */
     public function getByIdAction(int $id): JsonResponse
     {
@@ -72,23 +63,23 @@ class ClientController extends RestController
         }
 
         $dto = $this->clientAssembler->assembleFromArray($data);
-        
+
         $orgDto = null;
         $transformedOrg = null;
         if (isset($data['organisation'])) {
             $orgDto = $this->orgAssembler->assembleFromArray($data['organisation']);
-            $transformedOrg = $this->orgTransformer->transform($orgDto); 
+            $transformedOrg = $this->orgTransformer->transform($orgDto);
         }
 
         $transformedDto = $this->clientTransformer->transform($dto, [], $transformedOrg);
 
         if ($transformedDto['archived_at']) {
             throw $this->createAccessDeniedException('Cannot access archived reports');
-        };
+        }
 
         /* @var Client $client */
         $client = $this->findEntityBy(Client::class, $transformedDto['id']);
-        
+
         if (!$this->isGranted('view', $client)) {
             throw $this->createAccessDeniedException('Client does not belong to user');
         }
@@ -99,9 +90,6 @@ class ClientController extends RestController
     /**
      * @Route("/case-number/{caseNumber}", methods={"GET"})
      * @Security("is_granted('ROLE_ADMIN') or has_role('ROLE_AD') or has_role('ROLE_DEPUTY')")
-     *
-     * @param string $caseNumber
-     * @return JsonResponse
      */
     public function getByCaseNumber(string $caseNumber): JsonResponse
     {
@@ -115,7 +103,7 @@ class ClientController extends RestController
 
         if ($transformedDto['archived_at']) {
             throw $this->createAccessDeniedException('Cannot access archived reports');
-        };
+        }
 
         /* @var $client Client */
         $client = $this->findEntityBy(Client::class, $transformedDto['id']);

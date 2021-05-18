@@ -1,4 +1,6 @@
-<?php declare(strict_types=1);
+<?php
+
+declare(strict_types=1);
 
 namespace App\Service\Client\Internal;
 
@@ -33,8 +35,7 @@ class ReportApi
     }
 
     /**
-     * @param Client $client
-     * @param array  $groups
+     * @param array $groups
      *
      * @return Report[]
      */
@@ -56,9 +57,6 @@ class ReportApi
     }
 
     /**
-     * @param int   $reportId
-     * @param array $groups
-     *
      * @return Report
      */
     public function getReport(int $reportId, array $groups = [])
@@ -76,7 +74,7 @@ class ReportApi
                 $groups
             );
         } catch (RestClientException $e) {
-            if ($e->getStatusCode() === 403 || $e->getStatusCode() === 404) {
+            if (403 === $e->getStatusCode() || 404 === $e->getStatusCode()) {
                 throw new NotFoundHttpException($e->getData()['message']);
             } else {
                 throw $e;
@@ -87,10 +85,7 @@ class ReportApi
     }
 
     /**
-     * @param int   $reportId
-     * @param array $groups
-     *
-     * @throws DisplayableException if report doesn't have specified section
+     * @throws DisplayableException  if report doesn't have specified section
      * @throws NotFoundHttpException if report is submitted
      *
      * @return Report
@@ -112,9 +107,6 @@ class ReportApi
     }
 
     /**
-     * @param int   $ndrId
-     * @param array $groups
-     *
      * @return Ndr
      */
     public function getNdr(int $ndrId, array $groups)
@@ -128,9 +120,6 @@ class ReportApi
     }
 
     /**
-     * @param int $reportId
-     *
-     * @param array $groups
      * @return Ndr
      */
     public function getNdrIfNotSubmitted(int $reportId, array $groups = [])
@@ -160,8 +149,8 @@ class ReportApi
     {
         $report->setUnSubmitDate(new \DateTime());
 
-        $this->restClient->put('report/' . $report->getId() . '/unsubmit', $report, [
-            'submitted', 'unsubmit_date', 'report_unsubmitted_sections_list', 'startEndDates', 'report_due_date'
+        $this->restClient->put('report/'.$report->getId().'/unsubmit', $report, [
+            'submitted', 'unsubmit_date', 'report_unsubmitted_sections_list', 'startEndDates', 'report_due_date',
         ]);
 
         $event = new ReportUnsubmittedEvent(

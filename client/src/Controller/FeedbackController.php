@@ -1,16 +1,18 @@
-<?php declare(strict_types=1);
+<?php
+
+declare(strict_types=1);
 
 namespace App\Controller;
 
 use App\Form\FeedbackType;
 use App\Service\Client\Internal\SatisfactionApi;
-use Symfony\Component\Routing\Annotation\Route;
 use Sensio\Bundle\FrameworkExtraBundle\Configuration\Template;
-use Symfony\Contracts\Translation\TranslatorInterface;
 use Symfony\Component\Form\FormFactoryInterface;
 use Symfony\Component\HttpFoundation\RedirectResponse;
 use Symfony\Component\HttpFoundation\Request;
+use Symfony\Component\Routing\Annotation\Route;
 use Symfony\Component\Routing\RouterInterface;
+use Symfony\Contracts\Translation\TranslatorInterface;
 
 class FeedbackController extends AbstractController
 {
@@ -23,7 +25,7 @@ class FeedbackController extends AbstractController
     /** @var TranslatorInterface */
     private $translator;
 
-    /** @var FormFactoryInterface  */
+    /** @var FormFactoryInterface */
     private $form;
 
     public function __construct(
@@ -41,7 +43,7 @@ class FeedbackController extends AbstractController
     /**
      * @Route("/feedback", name="feedback")
      * @Template("@App/Feedback/index.html.twig")
-     * @param Request $request
+     *
      * @return array|RedirectResponse
      */
     public function create(Request $request)

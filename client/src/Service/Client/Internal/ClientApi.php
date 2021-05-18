@@ -1,4 +1,6 @@
-<?php declare(strict_types=1);
+<?php
+
+declare(strict_types=1);
 
 namespace App\Service\Client\Internal;
 
@@ -64,6 +66,7 @@ class ClientApi
 
     /**
      * @param string[] $jmsGroups
+     *
      * @return Client|null
      */
     public function getFirstClient($jmsGroups = ['user', 'user-clients', 'client'])
@@ -79,8 +82,8 @@ class ClientApi
      * So we need to make another API call with the correct JMS groups
      * thus ensuring the client is retrieved with the current report.
      *
-     * @param Client $client
      * @return string
+     *
      * @throws \Exception
      */
     public function generateClientProfileLink(Client $client)
@@ -108,7 +111,6 @@ class ClientApi
     }
 
     /**
-     * @param int $clientId
      * @return Client
      */
     public function getWithUsers(int $clientId, array $includes = [])
@@ -128,13 +130,12 @@ class ClientApi
                 'client-named-deputy',
                 'named-deputy',
                 'client-organisations',
-                'organisation'
+                'organisation',
             ]
         );
     }
 
     /**
-     * @param int $clientId
      * @return Client
      */
     public function getWithUsersV2(int $clientId, array $includes = [])
@@ -154,15 +155,11 @@ class ClientApi
                 'client-named-deputy',
                 'named-deputy',
                 'client-organisations',
-                'organisation'
+                'organisation',
             ]
         );
     }
 
-    /**
-     * @param int $id
-     * @param string $trigger
-     */
     public function delete(int $id, string $trigger)
     {
         $clientWithUsers = $this->getWithUsersV2($id);
@@ -175,11 +172,6 @@ class ClientApi
         $this->eventDispatcher->dispatch($clientDeletedEvent, ClientDeletedEvent::NAME);
     }
 
-    /**
-     * @param Client $preUpdateClient
-     * @param Client $postUpdateClient
-     * @param string $trigger
-     */
     public function update(Client $preUpdateClient, Client $postUpdateClient, string $trigger)
     {
         $this->restClient->put(self::UPDATE_CLIENT, $postUpdateClient, ['pa-edit', 'edit']);
@@ -191,7 +183,6 @@ class ClientApi
     }
 
     /**
-     * @param string $caseNumber
      * @return Client
      */
     public function getByCaseNumber(string $caseNumber)

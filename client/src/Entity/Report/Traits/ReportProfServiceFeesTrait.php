@@ -2,14 +2,12 @@
 
 namespace App\Entity\Report\Traits;
 
-use App\Entity\Report\Fee;
 use App\Entity\Report\ProfServiceFee;
 use JMS\Serializer\Annotation as JMS;
 use Symfony\Component\Validator\Constraints as Assert;
 
 trait ReportProfServiceFeesTrait
 {
-
     /**
      * @var string yes/no
      *
@@ -65,11 +63,13 @@ trait ReportProfServiceFeesTrait
     }
 
     /**
-     * Return filtered array of ProfServiceFee's
+     * Return filtered array of ProfServiceFee's.
      *
-     * @param  string     $feeTypeId       current|estimated|previous
-     * @param  string     $fixedOrAssessed
+     * @param string $feeTypeId       current|estimated|previous
+     * @param string $fixedOrAssessed
+     *
      * @throws \Exception
+     *
      * @return array
      */
     public function getFilteredFees($feeTypeId, $fixedOrAssessed)
@@ -85,11 +85,11 @@ trait ReportProfServiceFeesTrait
                 $fees = $this->getProfServiceFeesByType(ProfServiceFee::TYPE_PREVIOUS_FEE);
                 break;
             default:
-                throw new \Exception('Invalid Fee type Id:' . $feeTypeId);
+                throw new \Exception('Invalid Fee type Id:'.$feeTypeId);
         }
 
         return array_filter($fees, function ($profServiceFee) use ($fixedOrAssessed) {
-            /** @var $profServiceFee ProfServiceFee */
+            /* @var $profServiceFee ProfServiceFee */
             return $profServiceFee->getAssessedOrFixed() === $fixedOrAssessed;
         });
     }
@@ -98,30 +98,32 @@ trait ReportProfServiceFeesTrait
      * @param string $feeTypeId "current"|"estimated"|"previous"
      *
      * @throws \Exception
-     * @return array
      *
+     * @return array
      */
     public function getProfServiceFeesByType($feeTypeId)
     {
-        if (!in_array(
-            $feeTypeId,
-            [
+        if (
+            !in_array(
+                $feeTypeId,
+                [
                 ProfServiceFee::TYPE_CURRENT_FEE,
                 ProfServiceFee::TYPE_PREVIOUS_FEE,
-                ProfServiceFee::TYPE_ESTIMATED_FEE
-            ]
-        )) {
-            throw new \Exception('Invalid feeTypeId: ' . $feeTypeId);
+                ProfServiceFee::TYPE_ESTIMATED_FEE,
+                ]
+            )
+        ) {
+            throw new \Exception('Invalid feeTypeId: '.$feeTypeId);
         }
 
         return array_filter($this->getProfServiceFees(), function ($profServiceFee) use ($feeTypeId) {
-            /** @var $profServiceFee \App\Entity\Report\ProfServiceFee */
+            /* @var $profServiceFee \App\Entity\Report\ProfServiceFee */
             return $profServiceFee->getFeeTypeId() === $feeTypeId;
         });
     }
 
     /**
-     * Returns current Fixed service fees
+     * Returns current Fixed service fees.
      *
      * @return array
      */
@@ -134,7 +136,7 @@ trait ReportProfServiceFeesTrait
     }
 
     /**
-     * Returns current Assessed service fees
+     * Returns current Assessed service fees.
      *
      * @return array
      */
@@ -155,12 +157,14 @@ trait ReportProfServiceFeesTrait
     }
 
     /**
-     * @param  string $previousProfFeesEstimateGiven
+     * @param string $previousProfFeesEstimateGiven
+     *
      * @return $this
      */
     public function setPreviousProfFeesEstimateGiven($previousProfFeesEstimateGiven)
     {
         $this->previousProfFeesEstimateGiven = $previousProfFeesEstimateGiven;
+
         return $this;
     }
 
@@ -173,12 +177,14 @@ trait ReportProfServiceFeesTrait
     }
 
     /**
-     * @param  string $profFeesEstimateSccoReason
+     * @param string $profFeesEstimateSccoReason
+     *
      * @return $this
      */
     public function setProfFeesEstimateSccoReason($profFeesEstimateSccoReason)
     {
         $this->profFeesEstimateSccoReason = $profFeesEstimateSccoReason;
+
         return $this;
     }
 
@@ -247,9 +253,8 @@ trait ReportProfServiceFeesTrait
     }
 
     /**
-     * Calculate total Received Fees
+     * Calculate total Received Fees.
      *
-     * @param  array $profFees
      * @return float
      */
     private function getTotalReceivedFees(array $profFees)
@@ -257,7 +262,7 @@ trait ReportProfServiceFeesTrait
         $total = 0.00;
 
         foreach ($profFees as $profFee) {
-            /** @var ProfServiceFee $profFee */
+            /* @var ProfServiceFee $profFee */
             $total += $profFee->getAmountReceived();
         }
 
@@ -265,9 +270,8 @@ trait ReportProfServiceFeesTrait
     }
 
     /**
-     * Calculate total Charged Fees
+     * Calculate total Charged Fees.
      *
-     * @param  array $profFees
      * @return float
      */
     private function getTotalChargedFees(array $profFees)
@@ -275,7 +279,7 @@ trait ReportProfServiceFeesTrait
         $total = 0.00;
 
         foreach ($profFees as $profFee) {
-            /** @var ProfServiceFee $profFee */
+            /* @var ProfServiceFee $profFee */
             $total += $profFee->getAmountCharged();
         }
 

@@ -1,12 +1,12 @@
-<?php declare(strict_types=1);
+<?php
 
+declare(strict_types=1);
 
 namespace App\Service\Validator;
 
 class RestArrayValidator
 {
     /**
-     * @param array $data
      * @param array $assertions key=>rule
      *
      * @throws \InvalidArgumentException
@@ -30,12 +30,12 @@ class RestArrayValidator
                     break;
 
                 default:
-                    throw new \InvalidArgumentException(__METHOD__ . ": {$validation} not recognised.");
+                    throw new \InvalidArgumentException(__METHOD__.": {$validation} not recognised.");
             }
         }
 
         if (!empty($errors)) {
-            throw new \InvalidArgumentException('Errors(' . count($errors) . '): ' . implode(', ', $errors));
+            throw new \InvalidArgumentException('Errors('.count($errors).'): '.implode(', ', $errors));
         }
     }
 }

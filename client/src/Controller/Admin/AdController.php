@@ -8,13 +8,13 @@ use App\Exception\RestClientException;
 use App\Form as FormDir;
 use App\Service\Client\Internal\UserApi;
 use App\Service\Client\RestClient;
-use Symfony\Component\Form\FormError;
-use Symfony\Component\HttpFoundation\RedirectResponse;
-use Symfony\Component\HttpFoundation\Response;
-use Symfony\Component\Routing\Annotation\Route;
 use Sensio\Bundle\FrameworkExtraBundle\Configuration\Security;
 use Sensio\Bundle\FrameworkExtraBundle\Configuration\Template;
+use Symfony\Component\Form\FormError;
+use Symfony\Component\HttpFoundation\RedirectResponse;
 use Symfony\Component\HttpFoundation\Request;
+use Symfony\Component\HttpFoundation\Response;
+use Symfony\Component\Routing\Annotation\Route;
 
 /**
  * @Route("/ad")
@@ -38,8 +38,6 @@ class AdController extends AbstractController
      * @Security("is_granted('ROLE_AD')")
      * @Template("@App/Admin/Ad/index.html.twig")
      *
-     * @param Request $request
-     *
      * @return array|RedirectResponse
      */
     public function indexAction(Request $request)
@@ -53,12 +51,12 @@ class AdController extends AbstractController
             'ad_managed' => true,
             'q' => $request->get('q'),
         ];
-        $users = $this->restClient->get('user/get-all?' . http_build_query($filters), 'User[]');
+        $users = $this->restClient->get('user/get-all?'.http_build_query($filters), 'User[]');
 
         // form add
         $form = $this->createForm(FormDir\Ad\AddUserType::class, new EntityDir\User(), [
-            'roleChoices'     => [EntityDir\User::ROLE_LAY_DEPUTY => 'Lay deputy'],
-            'roleNameSetTo'  => EntityDir\User::ROLE_LAY_DEPUTY,
+            'roleChoices' => [EntityDir\User::ROLE_LAY_DEPUTY => 'Lay deputy'],
+            'roleNameSetTo' => EntityDir\User::ROLE_LAY_DEPUTY,
          ]);
 
         if ($request->isMethod('POST')) {
@@ -68,7 +66,7 @@ class AdController extends AbstractController
                 try {
                     $userToAdd = $form->getData(); /* @var $userToAdd EntityDir\User*/
                     // set email (needed to recreate token before login)
-                    $userToAdd->setEmail('ad' . $this->getUser()->getId() . '-' . time() . '@digital.justice.gov.uk');
+                    $userToAdd->setEmail('ad'.$this->getUser()->getId().'-'.time().'@digital.justice.gov.uk');
                     $userToAdd->setAdManaged(true);
                     $response = $this->restClient->post('user', $userToAdd, ['ad_add_user'], 'User');
                     $request->getSession()->getFlashBag()->add(
@@ -77,7 +75,7 @@ class AdController extends AbstractController
                     );
 
                     return $this->redirectToRoute('ad_homepage', [
-                        'userAdded'=>$response->getId(),
+                        'userAdded' => $response->getId(),
                         //'order_by'=>'id's,
                         //'sort_order'=>'DESC',
                     ]);
@@ -98,8 +96,6 @@ class AdController extends AbstractController
      * @Security("is_granted('ROLE_AD')")
      * @Template("@App/Admin/Ad/viewUser.html.twig")
      *
-     * @param Request $request
-     *
      * @return array|Response|null
      */
     public function viewUserAction(Request $request)
@@ -109,14 +105,14 @@ class AdController extends AbstractController
 
         try {
             $user = $this->restClient->get("user/get-one-by/{$what}/{$filter}", 'User', ['user', 'client', 'client-reports',
-                'report', 'ndr']);
+                'report', 'ndr', ]);
         } catch (\Throwable $e) {
             return $this->render('@App/Admin/Ad/error.html.twig', [
                 'error' => 'User not found',
             ]);
         }
 
-        if ($user->getRoleName() != EntityDir\User::ROLE_LAY_DEPUTY) {
+        if (EntityDir\User::ROLE_LAY_DEPUTY != $user->getRoleName()) {
             return $this->render('@App/Admin/Ad/error.html.twig', [
                 'error' => 'You can only view Lay deputies',
             ]);
@@ -145,20 +141,20 @@ class AdController extends AbstractController
         try {
             /* @var $deputy EntityDir\User */
             $deputy = $this->restClient->get("user/get-one-by/user_id/{$deputyId}", 'User', ['user']);
-            if ($deputy->getRoleName() != EntityDir\User::ROLE_LAY_DEPUTY) {
+            if (EntityDir\User::ROLE_LAY_DEPUTY != $deputy->getRoleName()) {
                 throw new \RuntimeException('User not a Lay deputy');
             }
 
             // flag as managed in order to retrieve it later
             $deputy->setAdManaged(true);
-            $this->restClient->put('user/' . $deputy->getId(), $deputy, ['ad_managed']);
+            $this->restClient->put('user/'.$deputy->getId(), $deputy, ['ad_managed']);
 
             // recreate token needed for login
             $deputy = $this->userApi->recreateToken($deputy->getEmail());
 
             // redirect to deputy area
             $deputyBaseUrl = rtrim($this->container->getParameter('non_admin_host'), '/');
-            $redirectUrl = $deputyBaseUrl . $this->generateUrl('ad_login', [
+            $redirectUrl = $deputyBaseUrl.$this->generateUrl('ad_login', [
                     'adId' => $adUser->getId(),
                     'userToken' => $deputy->getRegistrationToken(),
                     'adFirstname' => $adUser->getFirstname(),

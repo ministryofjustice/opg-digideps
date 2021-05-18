@@ -1,9 +1,9 @@
-<?php declare(strict_types=1);
+<?php
 
+declare(strict_types=1);
 
 namespace App\Service\Client\Internal;
 
-use App\Entity\UserResearch\UserResearchResponse;
 use App\Mapper\DateRangeQuery;
 use App\Service\Client\RestClient;
 use App\Service\Client\RestClientInterface;
@@ -40,7 +40,7 @@ class UserResearchApi
                 'order' => $query->getSortOrder(),
                 'fromDate' => $fromDate,
                 'toDate' => $toDate,
-                'groups' => ['satisfaction', 'user', 'user-research']
+                'groups' => ['satisfaction', 'user', 'user-research'],
             ];
 
             $url = sprintf(
@@ -49,7 +49,6 @@ class UserResearchApi
                 http_build_query($queryArray)
             );
         }
-
 
         return $this->restClient->get($url, 'App\Entity\UserResearch\UserResearchResponse[]');
     }

@@ -1,10 +1,11 @@
-<?php declare(strict_types=1);
+<?php
 
+declare(strict_types=1);
 
 namespace App\EventDispatcher;
 
-use Symfony\Contracts\EventDispatcher\EventDispatcherInterface;
 use Symfony\Contracts\EventDispatcher\Event;
+use Symfony\Contracts\EventDispatcher\EventDispatcherInterface;
 
 class ObservableEventDispatcher
 {
@@ -27,9 +28,6 @@ class ObservableEventDispatcher
         $this->dispatchedEvents[] = $event;
     }
 
-    /**
-     * @return array
-     */
     public function getDispatchedEvents(): array
     {
         return $this->dispatchedEvents;

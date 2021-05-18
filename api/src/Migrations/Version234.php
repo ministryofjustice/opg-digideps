@@ -12,15 +12,15 @@ use Doctrine\Migrations\AbstractMigration;
  */
 final class Version234 extends AbstractMigration
 {
-    public function getDescription() : string
+    public function getDescription(): string
     {
         return '';
     }
 
-    public function up(Schema $schema) : void
+    public function up(Schema $schema): void
     {
         // this up() migration is auto-generated, please modify it to your needs
-        $this->abortIf($this->connection->getDatabasePlatform()->getName() !== 'postgresql', 'Migration can only be executed safely on \'postgresql\'.');
+        $this->abortIf('postgresql' !== $this->connection->getDatabasePlatform()->getName(), 'Migration can only be executed safely on \'postgresql\'.');
 
         $this->addSql('CREATE TABLE court_order_address (id SERIAL NOT NULL, court_order_deputy_id INT DEFAULT NULL, addressLine1 VARCHAR(255) DEFAULT NULL, addressLine2 VARCHAR(255) DEFAULT NULL, addressLine3 VARCHAR(255) DEFAULT NULL, town VARCHAR(255) DEFAULT NULL, county VARCHAR(255) DEFAULT NULL, postcode VARCHAR(10) DEFAULT NULL, country VARCHAR(2) DEFAULT NULL, PRIMARY KEY(id))');
         $this->addSql('CREATE INDEX IDX_C2454DABF164D17C ON court_order_address (court_order_deputy_id)');
@@ -34,10 +34,10 @@ final class Version234 extends AbstractMigration
         $this->addSql('ALTER TABLE court_order_deputy ADD CONSTRAINT FK_994DD8A99E6B1585 FOREIGN KEY (organisation_id) REFERENCES organisation (id) ON DELETE SET NULL NOT DEFERRABLE INITIALLY IMMEDIATE');
     }
 
-    public function down(Schema $schema) : void
+    public function down(Schema $schema): void
     {
         // this down() migration is auto-generated, please modify it to your needs
-        $this->abortIf($this->connection->getDatabasePlatform()->getName() !== 'postgresql', 'Migration can only be executed safely on \'postgresql\'.');
+        $this->abortIf('postgresql' !== $this->connection->getDatabasePlatform()->getName(), 'Migration can only be executed safely on \'postgresql\'.');
 
         $this->addSql('ALTER TABLE court_order_address DROP CONSTRAINT FK_C2454DABF164D17C');
         $this->addSql('DROP TABLE court_order_address');

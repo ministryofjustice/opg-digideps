@@ -1,5 +1,6 @@
-<?php declare(strict_types=1);
+<?php
 
+declare(strict_types=1);
 
 namespace App\Event;
 
@@ -13,7 +14,6 @@ interface CoDeputyCreationEventInterface
     public function getInvitedCoDeputy();
 
     /**
-     * @param User $invitedCoDeputy
      * @return self
      */
     public function setInvitedCoDeputy(User $invitedCoDeputy);
@@ -24,7 +24,6 @@ interface CoDeputyCreationEventInterface
     public function getInviterDeputy();
 
     /**
-     * @param User $inviterDeputy
      * @return self
      */
     public function setInviterDeputy(User $inviterDeputy);

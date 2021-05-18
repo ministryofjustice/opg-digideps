@@ -34,8 +34,6 @@ class UserRegistrationService
      * - throw error 425 if client is already used
      * (see <root>/README.md for more info. Keep the readme file updated with this logic).
      *
-     * @param SelfRegisterData $selfRegisterData
-     *
      * @throws \RuntimeException
      *
      * @return User
@@ -88,12 +86,11 @@ class UserRegistrationService
         $user->setNdrEnabled($this->casrecVerificationService->isLastMachedDeputyNdrEnabled());
 
         $this->saveUserAndClient($user, $client);
+
         return $user;
     }
 
     /**
-     * @param SelfRegisterData $selfRegisterData
-     *
      * @throws \RuntimeException
      *
      * @return bool
@@ -120,9 +117,6 @@ class UserRegistrationService
     }
 
     /**
-     * @param User   $user
-     * @param Client $client
-     *
      * @throws \Exception
      */
     public function saveUserAndClient(User $user, Client $client)
@@ -131,7 +125,6 @@ class UserRegistrationService
         $connection->beginTransaction();
 
         try {
-
             // Save the user
             $this->em->persist($user);
             $this->em->flush();
@@ -151,10 +144,6 @@ class UserRegistrationService
         }
     }
 
-    /**
-     * @param User             $user
-     * @param SelfRegisterData $selfRegisterData
-     */
     public function populateUser(User $user, SelfRegisterData $selfRegisterData)
     {
         $user->setFirstname($selfRegisterData->getFirstname());
@@ -166,10 +155,6 @@ class UserRegistrationService
         $user->setRegistrationDate(new \DateTime());
     }
 
-    /**
-     * @param Client           $client
-     * @param SelfRegisterData $selfRegisterData
-     */
     public function populateClient(Client $client, SelfRegisterData $selfRegisterData)
     {
         $client->setFirstname($selfRegisterData->getClientFirstname());

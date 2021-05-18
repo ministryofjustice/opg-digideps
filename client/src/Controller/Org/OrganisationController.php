@@ -1,4 +1,6 @@
-<?php declare(strict_types=1);
+<?php
+
+declare(strict_types=1);
 
 namespace App\Controller\Org;
 
@@ -12,11 +14,11 @@ use App\Service\Client\Internal\UserApi;
 use App\Service\Client\RestClient;
 use App\Service\Logger;
 use App\Service\Time\DateTimeProvider;
-use Symfony\Component\Routing\Annotation\Route;
 use Sensio\Bundle\FrameworkExtraBundle\Configuration\Template;
 use Symfony\Component\Form\FormError;
 use Symfony\Component\HttpFoundation\Request;
 use Symfony\Component\HttpFoundation\Response;
+use Symfony\Component\Routing\Annotation\Route;
 use Symfony\Component\Security\Core\Exception\AccessDeniedException;
 use Symfony\Contracts\Translation\TranslatorInterface;
 
@@ -56,10 +58,11 @@ class OrganisationController extends AbstractController
     {
         $user = $this->userApi->getUserWithData(['user-organisations', 'organisation']);
 
-        if (count($user->getOrganisations()) === 0) {
+        if (0 === count($user->getOrganisations())) {
             throw $this->createNotFoundException();
-        } elseif (count($user->getOrganisations()) === 1) {
+        } elseif (1 === count($user->getOrganisations())) {
             $organisationId = $user->getOrganisations()[0]->getId();
+
             return $this->redirectToRoute('org_organisation_view', ['id' => $organisationId]);
         }
 
@@ -75,13 +78,13 @@ class OrganisationController extends AbstractController
     public function viewAction(Request $request, string $id)
     {
         try {
-            $organisation = $this->restClient->get('v2/organisation/' . $id, 'Organisation');
+            $organisation = $this->restClient->get('v2/organisation/'.$id, 'Organisation');
         } catch (RestClientException $e) {
             throw $this->createNotFoundException('Organisation not found');
         }
 
         return [
-            'organisation' => $organisation
+            'organisation' => $organisation,
         ];
     }
 
@@ -94,7 +97,7 @@ class OrganisationController extends AbstractController
         $this->denyAccessUnlessGranted('can-add-user');
 
         try {
-            $organisation = $this->restClient->get('v2/organisation/' . $id, 'Organisation');
+            $organisation = $this->restClient->get('v2/organisation/'.$id, 'Organisation');
         } catch (AccessDeniedException $e) {
             throw ($e);
         } catch (RestClientException $e) {
@@ -158,7 +161,7 @@ class OrganisationController extends AbstractController
 
         return [
             'organisation' => $organisation,
-            'form' => $form->createView()
+            'form' => $form->createView(),
         ];
     }
 
@@ -169,7 +172,7 @@ class OrganisationController extends AbstractController
     public function editAction(Request $request, int $orgId, int $userId)
     {
         try {
-            $organisation = $this->restClient->get('v2/organisation/' . $orgId, 'Organisation');
+            $organisation = $this->restClient->get('v2/organisation/'.$orgId, 'Organisation');
             $userToEdit = $organisation->getUserById($userId);
         } catch (RestClientException $e) {
             throw $this->createNotFoundException('Organisation not found');
@@ -228,7 +231,7 @@ class OrganisationController extends AbstractController
         return [
             'organisation' => $organisation,
             'user' => $userToEdit,
-            'form' => $form->createView()
+            'form' => $form->createView(),
         ];
     }
 
@@ -239,7 +242,7 @@ class OrganisationController extends AbstractController
     public function deleteConfirmAction(Request $request, int $orgId, int $userId)
     {
         try {
-            $organisation = $this->restClient->get('v2/organisation/' . $orgId, 'Organisation');
+            $organisation = $this->restClient->get('v2/organisation/'.$orgId, 'Organisation');
             $userToRemove = $organisation->getUserById($userId);
         } catch (RestClientException $e) {
             throw $this->createNotFoundException('Organisation not found');
@@ -293,12 +296,13 @@ class OrganisationController extends AbstractController
 
     /**
      * @Route("/{orgId}/send-activation-link/{userId}", name="org_organisation_send_activation_link")
+     *
      * @return \Symfony\Component\HttpFoundation\RedirectResponse|Response
      */
     public function resendActivationEmailAction(Request $request, int $orgId, int $userId)
     {
         try {
-            $organisation = $this->restClient->get('v2/organisation/' . $orgId, 'Organisation');
+            $organisation = $this->restClient->get('v2/organisation/'.$orgId, 'Organisation');
             $user = $organisation->getUserById($userId);
         } catch (RestClientException $e) {
             throw $this->createNotFoundException('Organisation not found');

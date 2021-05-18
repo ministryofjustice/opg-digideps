@@ -1,5 +1,6 @@
-<?php declare(strict_types=1);
+<?php
 
+declare(strict_types=1);
 
 namespace App\Service\Client\Internal;
 
@@ -52,9 +53,6 @@ class NdrApi
     }
 
     /**
-     * @param int   $reportId
-     * @param array $groups
-     *
      * @return Report
      */
     public function getNdr(int $reportId, array $groups = [])
@@ -71,7 +69,7 @@ class NdrApi
                 $groups
             );
         } catch (RestClientException $e) {
-            if ($e->getStatusCode() === 403 || $e->getStatusCode() === 404) {
+            if (403 === $e->getStatusCode() || 404 === $e->getStatusCode()) {
                 throw new NotFoundHttpException($e->getData()['message']);
             } else {
                 throw $e;

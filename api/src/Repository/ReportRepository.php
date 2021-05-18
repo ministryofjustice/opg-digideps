@@ -1,4 +1,6 @@
-<?php declare(strict_types=1);
+<?php
+
+declare(strict_types=1);
 
 namespace App\Repository;
 
@@ -31,8 +33,6 @@ class ReportRepository extends ServiceEntityRepository
      * add empty Debts to Report.
      * Called from doctrine listener.
      *
-     * @param Report $report
-     *
      * @return int changed records
      */
     public function addDebtsToReportIfMissing(Report $report)
@@ -54,8 +54,8 @@ class ReportRepository extends ServiceEntityRepository
     }
 
     /**
-     * @param Report $report
      * @return int|null
+     *
      * @throws \Doctrine\ORM\ORMException
      */
     public function addFeesToReportIfMissing(Report $report)
@@ -83,8 +83,6 @@ class ReportRepository extends ServiceEntityRepository
     /**
      * Called from doctrine listener.
      *
-     * @param Report $report
-     *
      * @return int changed records
      */
     public function addMoneyShortCategoriesIfMissing(Report $report)
@@ -106,8 +104,8 @@ class ReportRepository extends ServiceEntityRepository
     }
 
     /**
-     * @param array $caseNumbers
      * @param string $role
+     *
      * @return mixed
      */
     public function findAllActiveReportsByCaseNumbersAndRole(array $caseNumbers, $role)
@@ -123,29 +121,30 @@ class ReportRepository extends ServiceEntityRepository
     }
 
     /**
-     * @param mixed $orgIdsOrUserId
-     * @param int $determinant
-     * @param ParameterBag $query
-     * @param string $select
+     * @param mixed       $orgIdsOrUserId
+     * @param int         $determinant
+     * @param string      $select
      * @param string|null $status
+     *
      * @return array|mixed|null
+     *
      * @throws \Doctrine\ORM\NonUniqueResultException
      */
     public function getAllByDeterminant($orgIdsOrUserId, $determinant, ParameterBag $query, $select, $status)
     {
         $qb = $this->createQueryBuilder('r');
 
-        if ($determinant === self::USER_DETERMINANT) {
+        if (self::USER_DETERMINANT === $determinant) {
             $qb
-                ->select(($select === 'count') ? 'COUNT(DISTINCT r)' : 'r,c')
+                ->select(('count' === $select) ? 'COUNT(DISTINCT r)' : 'r,c')
                 ->leftJoin('r.client', 'c')
-                ->leftJoin('c.users', 'u')->where('u.id = ' . $orgIdsOrUserId);
+                ->leftJoin('c.users', 'u')->where('u.id = '.$orgIdsOrUserId);
         } else {
             $qb
-                ->select(($select === 'count') ? 'COUNT(DISTINCT r)' : 'r,c,o')
+                ->select(('count' === $select) ? 'COUNT(DISTINCT r)' : 'r,c,o')
                 ->leftJoin('r.client', 'c')
                 ->leftJoin('c.organisation', 'o')
-                ->where('o.isActivated = true AND o.id in (' . implode(',', $orgIdsOrUserId) .')');
+                ->where('o.isActivated = true AND o.id in ('.implode(',', $orgIdsOrUserId).')');
         }
 
         $qb
@@ -158,21 +157,21 @@ class ReportRepository extends ServiceEntityRepository
 
         $endOfToday = new \DateTime('today midnight');
 
-        if ($status === Report::STATUS_READY_TO_SUBMIT) {
+        if (Report::STATUS_READY_TO_SUBMIT === $status) {
             $qb->andWhere('r.reportStatusCached = :status AND r.endDate < :endOfToday')
                 ->setParameter('status', $status)
                 ->setParameter('endOfToday', $endOfToday);
-        } elseif ($status === Report::STATUS_NOT_FINISHED) {
+        } elseif (Report::STATUS_NOT_FINISHED === $status) {
             $qb->andWhere('r.reportStatusCached = :status OR (r.reportStatusCached = :readyToSubmit AND r.endDate >= :endOfToday)')
                 ->setParameter('status', $status)
                 ->setParameter('readyToSubmit', Report::STATUS_READY_TO_SUBMIT)
                 ->setParameter('endOfToday', $endOfToday);
-        } elseif ($status === Report::STATUS_NOT_STARTED) {
+        } elseif (Report::STATUS_NOT_STARTED === $status) {
             $qb->andWhere('r.reportStatusCached = :status')
                 ->setParameter('status', $status);
         }
 
-        if ($select === 'count') {
+        if ('count' === $select) {
             return $qb->getQuery()->getSingleScalarResult();
         }
 
@@ -184,12 +183,10 @@ class ReportRepository extends ServiceEntityRepository
 
         $result = $qb->getQuery()->getArrayResult();
 
-        return count($result) === 0 ? null : $result;
+        return 0 === count($result) ? null : $result;
     }
 
     /**
-     * @param int $limit
-     * @return array
      * @throws \Doctrine\DBAL\DBALException
      */
     public function getReportsIdsWithQueuedChecklistsAndSetChecklistsToInProgress(int $limit): array
@@ -217,7 +214,7 @@ DQL;
                 return $result['checklist_id'];
             }, $result);
 
-            $idsString = implode(",", $ids);
+            $idsString = implode(',', $ids);
             $queryString = "UPDATE checklist SET synchronisation_status = 'IN_PROGRESS' WHERE id IN ($idsString)";
             $query = $conn->prepare($queryString);
             $query->execute();

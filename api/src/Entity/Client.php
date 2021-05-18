@@ -9,8 +9,8 @@ use DateTime;
 use Doctrine\Common\Collections\ArrayCollection;
 use Doctrine\Common\Collections\Collection;
 use Doctrine\ORM\Mapping as ORM;
-use JMS\Serializer\Annotation as JMS;
 use Gedmo\Mapping\Annotation as Gedmo;
+use JMS\Serializer\Annotation as JMS;
 use Symfony\Component\Security\Core\User\UserInterface;
 
 /**
@@ -219,7 +219,7 @@ class Client implements ClientInterface
 
     /**
      * Holds the named deputy the client belongs to
-     * Loaded from the CSV upload
+     * Loaded from the CSV upload.
      *
      * @var NamedDeputy|null
      *
@@ -442,8 +442,6 @@ class Client implements ClientInterface
     /**
      * Set courtDate.
      *
-     * @param DateTime|null $courtDate
-     *
      * @return Client
      */
     public function setCourtDate(DateTime $courtDate = null)
@@ -490,8 +488,6 @@ class Client implements ClientInterface
     /**
      * Add users.
      *
-     * @param User $user
-     *
      * @return Client
      */
     public function addUser(User $user)
@@ -505,8 +501,6 @@ class Client implements ClientInterface
 
     /**
      * Remove users.
-     *
-     * @param User $users
      */
     public function removeUser(User $users)
     {
@@ -525,11 +519,13 @@ class Client implements ClientInterface
 
     /**
      * @param array $users
+     *
      * @return $this
      */
     public function setUsers($users)
     {
         $this->users = $users;
+
         return $this;
     }
 
@@ -552,8 +548,6 @@ class Client implements ClientInterface
     /**
      * Add reports.
      *
-     * @param Report $report
-     *
      * @return Client
      */
     public function addReport(Report $report)
@@ -568,8 +562,6 @@ class Client implements ClientInterface
 
     /**
      * Remove reports.
-     *
-     * @param Report $reports
      */
     public function removeReport(Report $reports)
     {
@@ -587,9 +579,7 @@ class Client implements ClientInterface
     }
 
     /**
-     * Get report by end date
-     *
-     * @param DateTime $endDate
+     * Get report by end date.
      *
      * @return Report|null
      */
@@ -601,7 +591,7 @@ class Client implements ClientInterface
     }
 
     /**
-     * Get un-submitted reports, ordered by most recently submitted first
+     * Get un-submitted reports, ordered by most recently submitted first.
      *
      *  //TODO refactor using OrderBy({"submitDate"="DESC"}) on client.reports
      *
@@ -613,7 +603,7 @@ class Client implements ClientInterface
             return $report->getSubmitted();
         })->getIterator();
 
-        # Sort by submitted date so the most recently submitted are first
+        // Sort by submitted date so the most recently submitted are first
         $arrayIterator->uasort(function ($first, $second) {
             return $first->getSubmitDate() < $second->getSubmitDate() ? 1 : -1;
         });
@@ -621,11 +611,9 @@ class Client implements ClientInterface
         return new ArrayCollection(iterator_to_array($arrayIterator));
     }
 
-
-
     /**
      * get progress the user is currenty work on
-     * That means the first one that is unsubmitted AND has an unsubmit date
+     * That means the first one that is unsubmitted AND has an unsubmit date.
      *
      * @JMS\VirtualProperty
      * @JMS\Type("App\Entity\Report\Report")
@@ -667,9 +655,6 @@ class Client implements ClientInterface
         return $this->ndr;
     }
 
-    /**
-     * @param Ndr|null $ndr
-     */
     public function setNdr(Ndr $ndr = null)
     {
         $this->ndr = $ndr;
@@ -680,7 +665,7 @@ class Client implements ClientInterface
      */
     public function getFullName($space = '&nbsp;')
     {
-        return $this->getFirstname() . $space . $this->getLastname();
+        return $this->getFirstname().$space.$this->getLastname();
     }
 
     /**
@@ -772,8 +757,6 @@ class Client implements ClientInterface
     }
 
     /**
-     * @param DateTime|null $dateOfBirth
-     *
      * @return $this
      */
     public function setDateOfBirth(DateTime $dateOfBirth = null)
@@ -819,11 +802,12 @@ class Client implements ClientInterface
     public function setClientContacts($clientContacts)
     {
         $this->clientContacts = $clientContacts;
+
         return $this;
     }
 
     /**
-     * Regular expression to match a case number
+     * Regular expression to match a case number.
      *
      * @param string $query
      *
@@ -843,12 +827,12 @@ class Client implements ClientInterface
     }
 
     /**
-     * @param NamedDeputy $namedDeputy
      * @return Client
      */
     public function setNamedDeputy(NamedDeputy $namedDeputy)
     {
         $this->namedDeputy = $namedDeputy;
+
         return $this;
     }
 
@@ -858,7 +842,7 @@ class Client implements ClientInterface
      * @JMS\SerializedName("total_report_count")
      * @JMS\Groups({"total-report-count"})
      *
-     * @return integer
+     * @return int
      */
     public function getTotalReportCount()
     {
@@ -870,7 +854,7 @@ class Client implements ClientInterface
      * @JMS\Type("integer")
      * @JMS\Groups({"unsubmitted-reports-count"})
      *
-     * @return integer
+     * @return int
      */
     public function getUnsubmittedReportsCount()
     {
@@ -889,15 +873,17 @@ class Client implements ClientInterface
         });
     }
 
-
     /**
-     * Generates the expected Report Start date based on the Court date
+     * Generates the expected Report Start date based on the Court date.
+     *
      * @JMS\VirtualProperty
+     *
      * @var DateTime
      *
      * @JMS\Type("DateTime<'Y-m-d'>")
      * @JMS\SerializedName("expected_report_start_date")
      * @JMS\Groups({"checklist-information"})
+     *
      * @return DateTime|null
      */
     public function getExpectedReportStartDate($year = null)
@@ -919,14 +905,16 @@ class Client implements ClientInterface
         }
 
         // else make it last year
-        $expectedReportStartDate->setDate($year-1, intval($expectedReportStartDate->format('m')), intval($expectedReportStartDate->format('d')));
+        $expectedReportStartDate->setDate($year - 1, intval($expectedReportStartDate->format('m')), intval($expectedReportStartDate->format('d')));
 
         return $expectedReportStartDate;
     }
 
     /**
-     * Generates the expected Report End date based on the Court date
+     * Generates the expected Report End date based on the Court date.
+     *
      * @JMS\VirtualProperty
+     *
      * @var DateTime
      *
      * @JMS\Type("DateTime<'Y-m-d'>")
@@ -941,12 +929,10 @@ class Client implements ClientInterface
             return null;
         }
         $expectedReportEndDate = clone $this->getExpectedReportStartDate($year);
+
         return $expectedReportEndDate->modify('+1year -1day');
     }
 
-    /**
-     * @param DateTime|null $archivedAt
-     */
     public function setArchivedAt(DateTime $archivedAt = null)
     {
         $this->archivedAt = $archivedAt;
@@ -987,7 +973,7 @@ class Client implements ClientInterface
     }
 
     /**
-     * Get Active From date == earliest report start date for this client
+     * Get Active From date == earliest report start date for this client.
      *
      * @JMS\VirtualProperty
      * @JMS\Type("DateTime<'Y-m-d H:i:s'>")
@@ -1019,9 +1005,10 @@ class Client implements ClientInterface
 
     /**
      * @param Organisation $organisation
+     *
      * @return $this
      */
-    public function setOrganisation(? Organisation $organisation)
+    public function setOrganisation(?Organisation $organisation)
     {
         $this->organisation = $organisation;
 
@@ -1030,6 +1017,7 @@ class Client implements ClientInterface
 
     /**
      * @param User $user
+     *
      * @return bool
      */
     public function userBelongsToClientsOrganisation(UserInterface $user)
@@ -1037,6 +1025,7 @@ class Client implements ClientInterface
         if ($this->getOrganisation() instanceof OrganisationInterface && $this->getOrganisation()->isActivated()) {
             return $this->getOrganisation()->containsUser($user);
         }
+
         return false;
     }
 }

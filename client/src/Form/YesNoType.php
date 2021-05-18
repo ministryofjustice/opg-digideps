@@ -12,7 +12,7 @@ use Symfony\Component\Validator\Constraints\NotBlank;
  * Generic type for Yes/No questions with
  * - single field yes/no (pass the name via ctor)
  * - notBlank validator
- * - save button
+ * - save button.
  */
 class YesNoType extends AbstractType
 {
@@ -20,9 +20,9 @@ class YesNoType extends AbstractType
     {
         $builder
             ->add($options['field'], FormTypes\ChoiceType::class, [
-                'choices'     => $options['choices'],
-                'expanded'    => true,
-                'constraints' => [new NotBlank(['message' => "Please select either 'Yes' or 'No'", 'groups'=>'yesno_type_custom'])],
+                'choices' => $options['choices'],
+                'expanded' => true,
+                'constraints' => [new NotBlank(['message' => "Please select either 'Yes' or 'No'", 'groups' => 'yesno_type_custom'])],
             ])
             ->add('save', FormTypes\SubmitType::class, ['label' => 'save.label']);
     }
@@ -30,8 +30,8 @@ class YesNoType extends AbstractType
     public function configureOptions(OptionsResolver $resolver)
     {
         $resolver->setDefaults([
-            'validation_groups'  => ['yesno_type_custom'],
-            'choices' => ['Yes' => 'yes', 'No' => 'no']
+            'validation_groups' => ['yesno_type_custom'],
+            'choices' => ['Yes' => 'yes', 'No' => 'no'],
          ])
          ->setRequired(['field'])
          ->setAllowedTypes('translation_domain', 'string');

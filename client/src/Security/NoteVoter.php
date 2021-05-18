@@ -22,8 +22,6 @@ class NoteVoter extends Voter
 
     /**
      * NoteVoter constructor.
-     *
-     * @param AccessDecisionManagerInterface $decisionManager
      */
     public function __construct(AccessDecisionManagerInterface $decisionManager)
     {
@@ -33,8 +31,9 @@ class NoteVoter extends Voter
     /**
      * Does this voter support the attribute?
      *
-     * @param  string $attribute
-     * @param  mixed  $subject
+     * @param string $attribute
+     * @param mixed  $subject
+     *
      * @return bool
      */
     protected function supports($attribute, $subject)
@@ -45,7 +44,7 @@ class NoteVoter extends Voter
                 return true;
             case self::EDIT_NOTE:
                 // only vote on User objects inside this voter
-                if ($attribute === self::EDIT_NOTE && $subject instanceof Note) {
+                if (self::EDIT_NOTE === $attribute && $subject instanceof Note) {
                     return true;
                 }
                 break;
@@ -55,17 +54,17 @@ class NoteVoter extends Voter
     }
 
     /**
-     * Vote on whether to grant attribute permission on subject
+     * Vote on whether to grant attribute permission on subject.
      *
-     * @param  string         $attribute
-     * @param  mixed          $subject
-     * @param  TokenInterface $token
+     * @param string $attribute
+     * @param mixed  $subject
+     *
      * @return bool
      */
     protected function voteOnAttribute($attribute, $subject, TokenInterface $token)
     {
         /** @var User $loggedInUser */
-        $loggedInUser= $token->getUser();
+        $loggedInUser = $token->getUser();
 
         if (!$loggedInUser instanceof User && $loggedInUser->isPaDeputy()) {
             // the loggedUser must be logged in PA user; if not, deny access
@@ -75,19 +74,21 @@ class NoteVoter extends Voter
         switch ($attribute) {
             case self::ADD_NOTE:
                 if ($subject instanceof Client) {
-                    /** @var Client $subject */
+                    /* @var Client $subject */
                     return $subject->hasUser($loggedInUser);
                 }
+
                 return false;
             case self::EDIT_NOTE:
             case self::DELETE_NOTE:
                 if ($subject instanceof Note) {
                     $client = $subject->getClient();
                     if ($client instanceof Client) {
-                        /** @var Note $subject */
+                        /* @var Note $subject */
                         return $subject->getClient()->hasUser($loggedInUser);
                     }
                 }
+
                 return false;
         }
 

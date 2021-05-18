@@ -6,10 +6,10 @@ use App\Controller\AbstractController;
 use App\Form as FormDir;
 use App\Service\Client\Internal\ReportApi;
 use App\Service\Client\RestClient;
-use Symfony\Component\HttpFoundation\RedirectResponse;
-use Symfony\Component\Routing\Annotation\Route;
 use Sensio\Bundle\FrameworkExtraBundle\Configuration\Template;
+use Symfony\Component\HttpFoundation\RedirectResponse;
 use Symfony\Component\HttpFoundation\Request;
+use Symfony\Component\Routing\Annotation\Route;
 
 class BalanceController extends AbstractController
 {
@@ -64,20 +64,20 @@ class BalanceController extends AbstractController
 
         if ($form->isSubmitted() && $form->isValid()) {
             $data = $form->getData();
-            $this->restClient->put('report/' . $reportId, $data, ['balance_mismatch_explanation']);
+            $this->restClient->put('report/'.$reportId, $data, ['balance_mismatch_explanation']);
 
 //            $request->getSession()->getFlashBag()->add(
 //                'notice',
 //                'Balance explanation added'
 //            );
 
-            return $this->redirectToRoute('report_overview', ['reportId'=>$report->getId()]);
+            return $this->redirectToRoute('report_overview', ['reportId' => $report->getId()]);
         }
 
         return [
             'report' => $report,
             'form' => $form->createView(),
-            'backLink' => $this->generateUrl('report_overview', ['reportId'=>$report->getId()])
+            'backLink' => $this->generateUrl('report_overview', ['reportId' => $report->getId()]),
         ];
     }
 

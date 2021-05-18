@@ -1,5 +1,6 @@
-<?php declare(strict_types=1);
+<?php
 
+declare(strict_types=1);
 
 namespace App\Form\Admin;
 
@@ -25,7 +26,7 @@ class UserResearchResponseFilterType extends AbstractType
                     'input' => 'datetime',
                     'format' => 'dd-MM-yyyy',
                     'invalid_message' => 'Enter a valid date',
-                    'data' => new DateTime('2020-01-01')
+                    'data' => new DateTime('2020-01-01'),
                 ]
             )
             ->add(
@@ -36,16 +37,13 @@ class UserResearchResponseFilterType extends AbstractType
                     'input' => 'datetime',
                     'format' => 'dd-MM-yyyy',
                     'invalid_message' => 'Enter a valid date',
-                    'data' => new DateTime()
+                    'data' => new DateTime(),
                 ]
             )
             ->add('submitAndDownload', SubmitType::class)
             ->addEventListener(FormEvents::POST_SUBMIT, [$this, 'onPostSubmit']);
     }
 
-    /**
-     * @param FormEvent $event
-     */
     public function onPostSubmit(FormEvent $event)
     {
         $entity = $event->getData();
@@ -59,7 +57,7 @@ class UserResearchResponseFilterType extends AbstractType
     public function configureOptions(OptionsResolver $resolver)
     {
         $resolver->setDefaults([
-            'translation_domain' => 'admin'
+            'translation_domain' => 'admin',
         ]);
     }
 

@@ -5,19 +5,18 @@ namespace App\Controller\Report;
 use App\Controller\RestController;
 use App\Entity as EntityDir;
 use App\Entity\Report\Report;
-use App\Repository\ChecklistRepository;
-use App\Repository\ReportRepository;
 use App\Entity\User;
 use App\Exception\UnauthorisedException;
+use App\Repository\ReportRepository;
 use App\Service\Auth\AuthService;
 use App\Service\Formatter\RestFormatter;
 use App\Service\ReportService;
 use Doctrine\ORM\EntityManagerInterface;
 use Gedmo\SoftDeleteable\Filter\SoftDeleteableFilter;
-use Symfony\Component\HttpKernel\Exception\NotFoundHttpException;
-use Symfony\Component\Routing\Annotation\Route;
 use Sensio\Bundle\FrameworkExtraBundle\Configuration\Security;
 use Symfony\Component\HttpFoundation\Request;
+use Symfony\Component\HttpKernel\Exception\NotFoundHttpException;
+use Symfony\Component\Routing\Annotation\Route;
 
 /**
  * @Route("/report")
@@ -48,7 +47,7 @@ class ReportController extends RestController
         'document-sync',
         'report-submission-uuid',
         'client-case-number',
-        'report-submission-id'
+        'report-submission-id',
     ];
 
     public function __construct(
@@ -70,7 +69,7 @@ class ReportController extends RestController
     /**
      * Add a report
      * Currently only used by Lay deputy during registration steps
-     * Pa report are instead created via OrgService::createReport()
+     * Pa report are instead created via OrgService::createReport().
      *
      * @Route("", methods={"POST"})
      * @Security("is_granted('ROLE_DEPUTY')")
@@ -114,7 +113,7 @@ class ReportController extends RestController
     public function getById(Request $request, $id)
     {
         $groups = $request->query->has('groups')
-            ? (array)$request->query->get('groups') : ['report'];
+            ? (array) $request->query->get('groups') : ['report'];
 
         $this->formatter->setJmsSerialiserGroups($groups);
 
@@ -156,12 +155,12 @@ class ReportController extends RestController
 
         /** @var User $user */
         $user = $this->getUser();
-        if ($data['agreed_behalf_deputy'] === 'not_deputy' && $user->isLayDeputy()) {
+        if ('not_deputy' === $data['agreed_behalf_deputy'] && $user->isLayDeputy()) {
             throw new \InvalidArgumentException('\'not_deputy\' is invalid option of agreed_behalf_deputy for lay deputies');
         }
 
         $currentReport->setAgreedBehalfDeputy($data['agreed_behalf_deputy']);
-        $xplanation = ($data['agreed_behalf_deputy'] === 'more_deputies_not_behalf')
+        $xplanation = ('more_deputies_not_behalf' === $data['agreed_behalf_deputy'])
             ? $data['agreed_behalf_deputy_explanation'] : null;
         $currentReport->setAgreedBehalfDeputyExplanation($xplanation);
 
@@ -182,7 +181,6 @@ class ReportController extends RestController
     {
         /* @var $report Report */
         $report = $this->findEntityBy(EntityDir\Report\Report::class, $id, 'Report not found');
-
 
         // deputies can only edit their own reports
         if (!$this->isGranted(EntityDir\User::ROLE_ADMIN)) {
@@ -205,7 +203,7 @@ class ReportController extends RestController
                 $this->em->flush($debt);
             }
             // set debts as per "debts" key
-            if ($data['has_debts'] == 'yes') {
+            if ('yes' == $data['has_debts']) {
                 foreach ($data['debts'] as $row) {
                     $debt = $report->getDebtByTypeId($row['debt_type_id']);
                     if (!$debt instanceof EntityDir\Report\Debt) {
@@ -218,7 +216,7 @@ class ReportController extends RestController
             $this->formatter->setJmsSerialiserGroups(['debts']); //returns saved data (AJAX operations)
             $this->em->flush();
             $report->updateSectionsStatusCache([
-                Report::SECTION_DEBTS
+                Report::SECTION_DEBTS,
             ]);
         }
 
@@ -226,10 +224,12 @@ class ReportController extends RestController
             $defaultCostTypeIds = array_column($report->getProfDeputyOtherCostTypeIds(), 'typeId');
 
             foreach ($data['prof_deputy_other_costs'] as $postedProfDeputyOtherCostType) {
-                if (in_array(
-                    $postedProfDeputyOtherCostType['prof_deputy_other_cost_type_id'],
-                    $defaultCostTypeIds
-                )) {
+                if (
+                    in_array(
+                        $postedProfDeputyOtherCostType['prof_deputy_other_cost_type_id'],
+                        $defaultCostTypeIds
+                    )
+                ) {
                     $profDeputyOtherCost = $report->getProfDeputyOtherCostByTypeId(
                         $postedProfDeputyOtherCostType['prof_deputy_other_cost_type_id']
                     );
@@ -253,7 +253,7 @@ class ReportController extends RestController
                 }
             }
             $report->updateSectionsStatusCache([
-                Report::SECTION_PROF_DEPUTY_COSTS
+                Report::SECTION_PROF_DEPUTY_COSTS,
             ]);
             $this->em->flush();
         }
@@ -277,7 +277,7 @@ class ReportController extends RestController
             }
             $report->updateSectionsStatusCache([
                 Report::SECTION_DEPUTY_EXPENSES,
-                Report::SECTION_PA_DEPUTY_EXPENSES
+                Report::SECTION_PA_DEPUTY_EXPENSES,
             ]);
         }
 
@@ -292,12 +292,12 @@ class ReportController extends RestController
             $this->em->flush();
             $report->updateSectionsStatusCache([
                 Report::SECTION_DEPUTY_EXPENSES,
-                Report::SECTION_PA_DEPUTY_EXPENSES
+                Report::SECTION_PA_DEPUTY_EXPENSES,
             ]);
         }
 
         if (array_key_exists('paid_for_anything', $data)) {
-            if ($data['paid_for_anything'] === 'no') { // remove existing expenses
+            if ('no' === $data['paid_for_anything']) { // remove existing expenses
                 foreach ($report->getExpenses() as $e) {
                     $this->em->remove($e);
                 }
@@ -306,12 +306,12 @@ class ReportController extends RestController
             $this->em->flush();
             $report->updateSectionsStatusCache([
                 Report::SECTION_DEPUTY_EXPENSES,
-                Report::SECTION_PA_DEPUTY_EXPENSES
+                Report::SECTION_PA_DEPUTY_EXPENSES,
             ]);
         }
 
         if (array_key_exists('gifts_exist', $data)) {
-            if ($data['gifts_exist'] === 'no') { // remove existing gift
+            if ('no' === $data['gifts_exist']) { // remove existing gift
                 foreach ($report->getGifts() as $e) {
                     $this->em->remove($e);
                 }
@@ -338,9 +338,8 @@ class ReportController extends RestController
             $report->updateDueDateBasedOnEndDate();
         }
 
-
         if (array_key_exists('report_seen', $data)) {
-            $report->setReportSeen((boolean)$data['report_seen']);
+            $report->setReportSeen((bool) $data['report_seen']);
         }
 
         if (array_key_exists('reason_for_no_contacts', $data)) {
@@ -349,7 +348,6 @@ class ReportController extends RestController
                 Report::SECTION_CONTACTS,
             ]);
         }
-
 
         if (array_key_exists('no_asset_to_add', $data)) {
             $report->setNoAssetToAdd($data['no_asset_to_add']);
@@ -365,7 +363,7 @@ class ReportController extends RestController
         }
 
         if (array_key_exists('no_transfers_to_add', $data)) {
-            if ($data['no_transfers_to_add'] === true) {
+            if (true === $data['no_transfers_to_add']) {
                 //true here means "no", so remove existing transfers
                 foreach ($report->getMoneyTransfers() as $e) {
                     $this->em->remove($e);
@@ -395,7 +393,7 @@ class ReportController extends RestController
             $report->setActionMoreInfo($data['action_more_info']);
             if (array_key_exists('action_more_info_details', $data)) {
                 $report->setActionMoreInfoDetails(
-                    $data['action_more_info'] == 'yes' ? $data['action_more_info_details'] : null
+                    'yes' == $data['action_more_info'] ? $data['action_more_info_details'] : null
                 );
             }
             $report->updateSectionsStatusCache([
@@ -436,7 +434,7 @@ class ReportController extends RestController
         }
 
         if (array_key_exists('money_transactions_short_in_exist', $data)) {
-            if ($data['money_transactions_short_in_exist'] === 'no') { // remove existing
+            if ('no' === $data['money_transactions_short_in_exist']) { // remove existing
                 foreach ($report->getMoneyTransactionsShortIn() as $e) {
                     $this->em->remove($e);
                 }
@@ -450,7 +448,7 @@ class ReportController extends RestController
         }
 
         if (array_key_exists('money_transactions_short_out_exist', $data)) {
-            if ($data['money_transactions_short_out_exist'] === 'no') { // remove existing
+            if ('no' === $data['money_transactions_short_out_exist']) { // remove existing
                 foreach ($report->getMoneyTransactionsShortOut() as $e) {
                     $this->em->remove($e);
                 }
@@ -474,10 +472,9 @@ class ReportController extends RestController
             ]);
         }
 
-
         if (array_key_exists('previous_prof_fees_estimate_given', $data)) {
             $report->setPreviousProfFeesEstimateGiven($data['previous_prof_fees_estimate_given']);
-            if ($data['previous_prof_fees_estimate_given'] === 'no') {
+            if ('no' === $data['previous_prof_fees_estimate_given']) {
                 $report->setProfFeesEstimateSccoReason(null);
             } else {
                 $report->setProfFeesEstimateSccoReason($data['prof_fees_estimate_scco_reason']);
@@ -489,7 +486,7 @@ class ReportController extends RestController
         }
 
         if (array_key_exists('current_prof_payments_received', $data)) {
-            if ($data['current_prof_payments_received'] == 'no') { //reset whole section
+            if ('no' == $data['current_prof_payments_received']) { //reset whole section
                 foreach ($report->getCurrentProfServiceFees() as $f) {
                     $this->em->remove($f);
                 }
@@ -556,7 +553,7 @@ class ReportController extends RestController
 
     /**
      * Update users's reports cached status when not set
-     * Flushes every 5 records to allow resuming in case of timeouts
+     * Flushes every 5 records to allow resuming in case of timeouts.
      *
      * @param int $userId
      */
@@ -565,7 +562,8 @@ class ReportController extends RestController
         /** @var ReportRepository $repo */
         $repo = $this->em->getRepository(Report::class);
 
-        while (($reports = $repo
+        while (
+            ($reports = $repo
                 ->createQueryBuilder('r')
                 ->select('r,c,u')
                 ->leftJoin('r.client', 'c')
@@ -589,8 +587,8 @@ class ReportController extends RestController
      * @Route("/get-all-by-user", methods={"GET"})
      * @Security("is_granted('ROLE_ORG')")
      *
-     * @param Request $request
      * @return array
+     *
      * @throws \Doctrine\ORM\NonUniqueResultException
      */
     public function getAllByUser(Request $request)
@@ -605,8 +603,8 @@ class ReportController extends RestController
      * @Route("/get-all-by-orgs", methods={"GET"})
      * @Security("is_granted('ROLE_ORG')")
      *
-     * @param Request $request
      * @return array
+     *
      * @throws \Exception
      */
     public function getAllByOrgs(Request $request)
@@ -625,10 +623,8 @@ class ReportController extends RestController
     }
 
     /**
-     * @param Request $request
      * @param mixed $id
-     * @param int $determinant
-     * @return array
+     *
      * @throws \Doctrine\ORM\NonUniqueResultException
      */
     private function getReponseByDeterminant(Request $request, $orgIdsOrUserId, int $determinant): array
@@ -646,10 +642,6 @@ class ReportController extends RestController
         return $result;
     }
 
-    /**
-     * @param array $reportData
-     * @return array
-     */
     private function transformReports(array $reportData): array
     {
         $reports = [];
@@ -661,7 +653,7 @@ class ReportController extends RestController
                     $reportDatum['unSubmitDate']->format('Y-m-d') : null,
                 'status' => [
                     // adjust report status cached using end date
-                    'status' => $this->reportService->adjustReportStatus($reportDatum['reportStatusCached'], $reportDatum['endDate'])
+                    'status' => $this->reportService->adjustReportStatus($reportDatum['reportStatusCached'], $reportDatum['endDate']),
                 ],
                 'due_date' => $reportDatum['dueDate']->format('Y-m-d'),
                 'client' => [
@@ -670,8 +662,8 @@ class ReportController extends RestController
                     'lastname' => $reportDatum['client']['lastname'],
                     'case_number' => $reportDatum['client']['caseNumber'],
                     'organisation' => [
-                        'name' => $reportDatum['client']['organisation']['name']
-                    ]
+                        'name' => $reportDatum['client']['organisation']['name'],
+                    ],
                 ],
             ];
         }
@@ -680,10 +672,8 @@ class ReportController extends RestController
     }
 
     /**
-     * @param Request $request
      * @param mixed $orgIdsOrUserId
-     * @param int $determinant
-     * @return array
+     *
      * @throws \Exception
      */
     private function getReportCountsByStatus(Request $request, $orgIdsOrUserId, int $determinant): array
@@ -691,7 +681,7 @@ class ReportController extends RestController
         $counts = [
             Report::STATUS_NOT_STARTED => $this->getCountOfReportsByStatus(Report::STATUS_NOT_STARTED, $orgIdsOrUserId, $determinant, $request),
             Report::STATUS_NOT_FINISHED => $this->getCountOfReportsByStatus(Report::STATUS_NOT_FINISHED, $orgIdsOrUserId, $determinant, $request),
-            Report::STATUS_READY_TO_SUBMIT => $this->getCountOfReportsByStatus(Report::STATUS_READY_TO_SUBMIT, $orgIdsOrUserId, $determinant, $request)
+            Report::STATUS_READY_TO_SUBMIT => $this->getCountOfReportsByStatus(Report::STATUS_READY_TO_SUBMIT, $orgIdsOrUserId, $determinant, $request),
         ];
 
         $counts['total'] = array_sum($counts);
@@ -700,11 +690,10 @@ class ReportController extends RestController
     }
 
     /**
-     * @param string $status
      * @param int $id
-     * @param int $determinant
-     * @param Request $request
+     *
      * @return array|mixed|null
+     *
      * @throws \Doctrine\ORM\NonUniqueResultException
      */
     private function getCountOfReportsByStatus(string $status, $id, int $determinant, Request $request)
@@ -733,7 +722,7 @@ class ReportController extends RestController
     }
 
     /**
-     * Add a checklist for the report
+     * Add a checklist for the report.
      *
      * @Route("/{report_id}/checked", requirements={"report_id":"\d+"}, methods={"POST"})
      * @Security("is_granted('ROLE_ADMIN')")
@@ -758,7 +747,7 @@ class ReportController extends RestController
             $this->em->persist($info);
         }
 
-        if ($checklistData['button_clicked'] == 'submitAndContinue') {
+        if ('submitAndContinue' == $checklistData['button_clicked']) {
             $checklist->setSubmittedBy($user);
             $checklist->setSubmittedOn(new \DateTime());
         }
@@ -771,7 +760,7 @@ class ReportController extends RestController
     }
 
     /**
-     * Update a checklist for the report
+     * Update a checklist for the report.
      *
      * @Route("/{report_id}/checked", requirements={"report_id":"\d+"}, methods={"PUT"})
      * @Security("is_granted('ROLE_ADMIN')")
@@ -797,7 +786,7 @@ class ReportController extends RestController
             $this->em->persist($info);
         }
 
-        if ($checklistData['button_clicked'] == 'submitAndContinue') {
+        if ('submitAndContinue' == $checklistData['button_clicked']) {
             $checklist->setSubmittedBy($user);
             $checklist->setSubmittedOn(new \DateTime());
         }
@@ -846,7 +835,8 @@ class ReportController extends RestController
     }
 
     /**
-     * Get a checklist for the report
+     * Get a checklist for the report.
+     *
      * @Route("/{report_id}/checklist", requirements={"report_id":"\d+"}, methods={"GET"})
      * @Security("is_granted('ROLE_ADMIN')")
      */
@@ -856,13 +846,13 @@ class ReportController extends RestController
 
         $checklist = $this
             ->getRepository(EntityDir\Report\ReviewChecklist::class)
-            ->findOneBy([ 'report' => $report_id ]);
+            ->findOneBy(['report' => $report_id]);
 
         return $checklist;
     }
 
     /**
-     * Update a checklist for the report
+     * Update a checklist for the report.
      *
      * @Route("/{report_id}/checklist", requirements={"report_id":"\d+"}, methods={"POST", "PUT"})
      * @Security("is_granted('ROLE_ADMIN')")
@@ -880,7 +870,7 @@ class ReportController extends RestController
         /** @var EntityDir\Report\ReviewChecklist|null $checklist */
         $checklist = $this
             ->getRepository(EntityDir\Report\ReviewChecklist::class)
-            ->findOneBy([ 'report' => $report->getId() ]);
+            ->findOneBy(['report' => $report->getId()]);
 
         if (is_null($checklist)) {
             $checklist = new EntityDir\Report\ReviewChecklist($report);
@@ -905,7 +895,7 @@ class ReportController extends RestController
 
     /**
      * @Route("/all-with-queued-checklists", methods={"GET"})
-     * @return array
+     *
      * @throws \Doctrine\DBAL\DBALException
      */
     public function getReportsWithQueuedChecklists(Request $request): array

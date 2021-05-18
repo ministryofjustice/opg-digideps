@@ -1,10 +1,11 @@
-<?php declare(strict_types=1);
+<?php
+
+declare(strict_types=1);
 
 namespace App\Security;
 
 use App\Entity\User;
 use Symfony\Component\Security\Core\Authentication\Token\TokenInterface;
-use Symfony\Component\Security\Core\Authorization\AccessDecisionManagerInterface;
 use Symfony\Component\Security\Core\Authorization\Voter\Voter;
 
 class UserVoter extends Voter
@@ -17,8 +18,9 @@ class UserVoter extends Voter
     /**
      * Does this voter support the attribute?
      *
-     * @param  string $attribute
-     * @param  mixed  $subject
+     * @param string $attribute
+     * @param mixed  $subject
+     *
      * @return bool
      */
     protected function supports($attribute, $subject)
@@ -35,16 +37,16 @@ class UserVoter extends Voter
     }
 
     /**
-     * Vote on whether to grant attribute permission on subject
+     * Vote on whether to grant attribute permission on subject.
      *
-     * @param  string         $attribute
-     * @param  mixed          $subject
-     * @param  TokenInterface $token
+     * @param string $attribute
+     * @param mixed  $subject
+     *
      * @return bool
      */
     protected function voteOnAttribute($attribute, $subject, TokenInterface $token)
     {
-        $loggedInUser= $token->getUser();
+        $loggedInUser = $token->getUser();
 
         if (!$loggedInUser instanceof User) {
             // the loggedUSer must be logged in; if not, deny access
@@ -69,8 +71,6 @@ class UserVoter extends Voter
      *
      * Ensure any changes are mirrored in API/Client version of this class.
      *
-     * @param User $deletor
-     * @param User $deletee
      * @return bool
      */
     private function determineDeletePermission(User $deletor, User $deletee)
@@ -94,10 +94,6 @@ class UserVoter extends Voter
         return false;
     }
 
-    /**
-     * @param User $deletee
-     * @return bool
-     */
     private function paProfNamedAdminDeletePermissions(User $deletee): bool
     {
         switch ($deletee->getRoleName()) {
@@ -111,10 +107,6 @@ class UserVoter extends Voter
         return true;
     }
 
-    /**
-     * @param User $deletee
-     * @return bool
-     */
     private function elevatedAdminDeletePermissions(User $deletee): bool
     {
         if ($deletee->isElevatedAdmin()) {
@@ -129,8 +121,6 @@ class UserVoter extends Voter
      *
      * Ensure any changes are mirrored in API/Client version of this class.
      *
-     * @param User $actor
-     * @param User|null $subject
      * @return bool
      */
     private function determineAddEditPermission(User $actor, ?User $subject)
@@ -152,6 +142,7 @@ class UserVoter extends Voter
                 if ($subject->isSuperAdmin() || $subject->isElevatedAdmin()) {
                     return false;
                 }
+
                 return true;
             case User::ROLE_PA:
             case User::ROLE_PA_NAMED:
@@ -162,6 +153,7 @@ class UserVoter extends Voter
                 ) {
                     return false;
                 }
+
                 return true;
             case User::ROLE_PROF:
             case User::ROLE_PROF_NAMED:
@@ -172,6 +164,7 @@ class UserVoter extends Voter
                 ) {
                     return false;
                 }
+
                 return true;
             case User::ROLE_PA_ADMIN:
                 if (
@@ -183,6 +176,7 @@ class UserVoter extends Voter
                 ) {
                     return false;
                 }
+
                 return true;
             case User::ROLE_PROF_ADMIN:
                 if (
@@ -194,6 +188,7 @@ class UserVoter extends Voter
                 ) {
                     return false;
                 }
+
                 return true;
             default:
                 return false;

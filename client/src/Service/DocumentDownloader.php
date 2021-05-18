@@ -1,5 +1,6 @@
-<?php declare(strict_types=1);
+<?php
 
+declare(strict_types=1);
 
 namespace App\Service;
 
@@ -39,9 +40,8 @@ class DocumentDownloader
     }
 
     /**
-     * Download multiple documents based on the supplied ids
+     * Download multiple documents based on the supplied ids.
      *
-     * @param Request $request
      * @param []string $reportSubmissionIds, an Array of ReportSubmission ids to be downloaded
      *
      * @return array
@@ -84,7 +84,7 @@ class DocumentDownloader
         $response->headers->set('Expires', '0');
         $response->headers->set('Content-type', 'application/octet-stream');
         $response->headers->set('Content-Description', 'File Transfer');
-        $response->headers->set('Content-Disposition', 'attachment; filename="' . basename($fileName) . '";');
+        $response->headers->set('Content-Disposition', 'attachment; filename="'.basename($fileName).'";');
         $response->sendHeaders();
         $response->setContent(readfile($fileName));
 
@@ -94,7 +94,6 @@ class DocumentDownloader
     }
 
     /**
-     * @param Request $request
      * @return FlashBag
      */
     public function getFlashBag(Request $request)

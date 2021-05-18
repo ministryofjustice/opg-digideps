@@ -1,4 +1,6 @@
-<?php declare(strict_types=1);
+<?php
+
+declare(strict_types=1);
 
 namespace App\Repository;
 
@@ -6,7 +8,6 @@ use App\Entity\Report\Document;
 use DateTime;
 use Doctrine\Bundle\DoctrineBundle\Repository\ServiceEntityRepository;
 use Doctrine\DBAL\Connection;
-use Doctrine\DBAL\Driver\Exception;
 use Doctrine\Persistence\ManagerRegistry;
 use PDO;
 
@@ -18,7 +19,7 @@ class DocumentRepository extends ServiceEntityRepository
     }
 
     /**
-     * Get soft-deleted documents
+     * Get soft-deleted documents.
      *
      * @return Document[]
      */
@@ -90,16 +91,15 @@ LIMIT $limit;";
                 'storage_reference' => $row['storage_reference'],
                 'report_submission_uuid' => $row['opg_uuid'],
                 'case_number' => $row['case_number'],
-                'document_sync_attempts' => $row['document_sync_attempts']
+                'document_sync_attempts' => $row['document_sync_attempts'],
             ];
-
 
             $reportIds[] = $row['report_id'];
             $ndrIds[] = $row['ndr_id'];
         }
 
         if (count($documents) > 0) {
-            $getReportSubmissionsQuery =  $this->buildReportSubmissionsQuery(
+            $getReportSubmissionsQuery = $this->buildReportSubmissionsQuery(
                 array_values(array_filter(array_unique($reportIds))),
                 array_values(array_filter(array_unique($ndrIds)))
             );
@@ -123,7 +123,7 @@ LIMIT $limit;";
 
     public function updateSupportingDocumentStatusByReportSubmissionIds(array $reportSubmissionIds, ?string $syncErrorMessage = null)
     {
-        $idsString = implode(",", $reportSubmissionIds);
+        $idsString = implode(',', $reportSubmissionIds);
         $status = Document::SYNC_STATUS_PERMANENT_ERROR;
 
         $updateStatusQuery = "
@@ -134,6 +134,7 @@ AND is_report_pdf=false";
 
         $conn = $this->getEntityManager()->getConnection();
         $stmt = $conn->prepare($updateStatusQuery);
+
         return $stmt->execute();
     }
 
@@ -143,7 +144,7 @@ AND is_report_pdf=false";
             return $submission['id'];
         }, $reportSubmissions);
 
-        $submissionIdStrings = implode(",", $submissionIds);
+        $submissionIdStrings = implode(',', $submissionIds);
 
         $stmt = $connection->prepare("SELECT * FROM document WHERE report_submission_id IN ($submissionIdStrings) ORDER BY created_on ASC");
         $stmt->execute();
@@ -207,10 +208,6 @@ AND is_report_pdf=false";
         return $groupedReportSubmissions;
     }
 
-    /**
-     * @param array $reportSubmissions
-     * @return array
-     */
     private function assignUuidsToAdditionalDocumentSubmissions(array $reportSubmissions): array
     {
         $lastUuid = null;
@@ -220,7 +217,7 @@ AND is_report_pdf=false";
         foreach ($reportSubmissions['reports'] as $reportId => $groupedSubmissions) {
             foreach ($groupedSubmissions as $key => $reportSubmission) {
                 // We only want to pass on UUIDs associated with a submission containing a report PDF to create correct folders in Sirius
-                if (!is_null($reportSubmission['opg_uuid']) && $reportSubmission['contains_report_pdf'] === true) {
+                if (!is_null($reportSubmission['opg_uuid']) && true === $reportSubmission['contains_report_pdf']) {
                     $lastUuid = $reportSubmission['opg_uuid'];
                     $lastReportId = $reportSubmission['report_id'];
                     continue;
@@ -235,11 +232,6 @@ AND is_report_pdf=false";
         return $reportSubmissions;
     }
 
-    /**
-     * @param array $documents
-     * @param array $reportSubmissions
-     * @return array
-     */
     private function extractUuidsFromSubmissionsAndAssignToDocuments(array $documents, array $reportSubmissions): array
     {
         // Extract the uuids from the submissions and assign to the queued documents data array
@@ -261,8 +253,8 @@ AND is_report_pdf=false";
 
     private function buildReportSubmissionsQuery(array $reportIds, array $ndrIds)
     {
-        $reportIdsString = implode(",", $reportIds);
-        $ndrIdsString = implode(",", $ndrIds);
+        $reportIdsString = implode(',', $reportIds);
+        $ndrIdsString = implode(',', $ndrIds);
 
         if (count($reportIds) > 0 && count($ndrIds) < 1) {
             return "SELECT * FROM report_submission WHERE (report_id IN ($reportIdsString)) ORDER BY created_on ASC;";
@@ -278,8 +270,6 @@ AND is_report_pdf=false";
     }
 
     /**
-     * @param array $documents
-     * @param Connection $connection
      * @throws \Doctrine\DBAL\DBALException
      */
     private function setQueuedDocumentsToInProgress(array $documents, Connection $connection): void
@@ -290,7 +280,7 @@ AND is_report_pdf=false";
             foreach ($documents as $data) {
                 $ids[] = $data['document_id'];
 
-                $idsString = implode(",", $ids);
+                $idsString = implode(',', $ids);
 
                 $updateStatusQuery = "UPDATE document SET synchronisation_status = 'IN_PROGRESS' WHERE id IN ($idsString)";
                 $stmt = $connection->prepare($updateStatusQuery);

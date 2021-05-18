@@ -1,5 +1,6 @@
-<?php declare(strict_types=1);
+<?php
 
+declare(strict_types=1);
 
 namespace App\Service;
 
@@ -46,7 +47,7 @@ class SiriusApiErrorTranslator
             'OPGDATA-API-THROTTLED' => 'Too many requests made - throttling in action',
             'OPGDATA-API-UNAUTHORISED' => 'No user/auth provided during requests',
             'OPGDATA-API-MEDIA' => 'Media type of the file is not supported',
-            'OPGDATA-API-WAF_FILTERED' => 'AWS WAF filtered this request and it was not sent to Sirius'
+            'OPGDATA-API-WAF_FILTERED' => 'AWS WAF filtered this request and it was not sent to Sirius',
         ];
 
         if (is_null($apiError->getCode()) || is_null($translations[$apiError->getCode()])) {
@@ -57,12 +58,12 @@ class SiriusApiErrorTranslator
     }
 
     /**
-     * @param string $errorString
      * @return SiriusApiError|string
      */
     private function deserializeError(string $errorString)
     {
         $decodedJson = json_decode($errorString, true)['body']['error'];
+
         return $this->serializer->deserialize(json_encode($decodedJson), 'App\Model\Sirius\SiriusApiError', 'json');
     }
 

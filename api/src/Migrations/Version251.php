@@ -9,12 +9,12 @@ use Doctrine\Migrations\AbstractMigration;
 
 final class Version251 extends AbstractMigration
 {
-    public function getDescription() : string
+    public function getDescription(): string
     {
         return 'Linking UserResearchResponses to Satisfaction and Satisfaction to Report & NDR';
     }
 
-    public function up(Schema $schema) : void
+    public function up(Schema $schema): void
     {
         $this->addSql('DROP INDEX uniq_3b9fe71aa76ed395');
         $this->addSql('ALTER TABLE satisfaction ADD report_id INT DEFAULT NULL');
@@ -30,7 +30,7 @@ final class Version251 extends AbstractMigration
         $this->addSql('CREATE UNIQUE INDEX UNIQ_8A8E0C13B7B86A31 ON satisfaction (ndr_id)');
     }
 
-    public function down(Schema $schema) : void
+    public function down(Schema $schema): void
     {
         $this->addSql('ALTER TABLE user_research_response DROP CONSTRAINT FK_3B9FE71ADE9439B8');
         $this->addSql('ALTER TABLE satisfaction DROP CONSTRAINT FK_8A8E0C13B7B86A31');
