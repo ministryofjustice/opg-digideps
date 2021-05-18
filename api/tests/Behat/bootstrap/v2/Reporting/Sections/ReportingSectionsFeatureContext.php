@@ -14,6 +14,7 @@ class ReportingSectionsFeatureContext extends BaseFeatureContext
     use ContactsSectionTrait;
     use DocumentsSectionTrait;
     use GiftsSectionTrait;
+    use HealthAndLifestyleTrait;
     use MoneyOutShortSectionTrait;
     use VisitsCareSectionTrait;
     use MoneyInHighAssetsTrait;
@@ -106,14 +107,16 @@ class ReportingSectionsFeatureContext extends BaseFeatureContext
      */
     public function iShouldSeeSectionAs($section, $status)
     {
-        $divs = $this->findAllCssElements('div.opg-overview-section');
-
+        $this->iAmOnReportsOverviewPage();
         $sectionFormatted = sprintf('/%s/%s/%s', $this->reportUrlPrefix, $this->loggedInUserDetails->getCurrentReportId(), $section);
-
         $statusCorrect = false;
+        $sectionExists = false;
+        $divs = $this->findAllCssElements('div.opg-overview-section');
 
         foreach ($divs as $div) {
             if ($div->find('css', 'a')->getAttribute('href') === $sectionFormatted) {
+                $sectionExists = true;
+                $foundHtml = $div->getHtml();
                 $statuses = $div->findAll('css', 'span');
 
                 foreach ($statuses as $sts) {
@@ -124,9 +127,15 @@ class ReportingSectionsFeatureContext extends BaseFeatureContext
             }
         }
 
+        if (!$sectionExists) {
+            $this->throwContextualException(
+                sprintf('href matching "%s" not found on %s.', $sectionFormatted, $this->getCurrentUrl())
+            );
+        }
+
         if (!$statusCorrect) {
             $this->throwContextualException(
-                sprintf('Report section status not as expected. Status "%s" not found. ', $status)
+                sprintf('Report section status not as expected. Status "%s" not found. Found: %s.', $status, $foundHtml)
             );
         }
     }

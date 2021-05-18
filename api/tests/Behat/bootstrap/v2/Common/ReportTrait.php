@@ -50,30 +50,6 @@ trait ReportTrait
     }
 
     /**
-     * @Given a Lay Deputy has not started a Pfa Low Assets report
-     */
-    public function aLayDeputyHasNotStartedAPfaLowAssetsReport()
-    {
-        if (empty($this->layDeputyNotStartedPfaLowAssetsDetails)) {
-            throw new Exception('It looks like fixtures are not loaded - missing $layDeputyNotStartedPfaLowAssetsDetails');
-        }
-
-        $this->loginToFrontendAs($this->layDeputyNotStartedPfaLowAssetsDetails->getUserEmail());
-    }
-
-    /**
-     * @Given a Lay Deputy has completed a Pfa Low Assets report
-     */
-    public function aLayDeputyHasCompletedAPfaLowAssetsReport()
-    {
-        if (empty($this->layDeputyCompletedPfaLowAssetsDetails)) {
-            throw new Exception('It looks like fixtures are not loaded - missing $layDeputyCompletedPfaLowAssetsDetails');
-        }
-
-        $this->loginToFrontendAs($this->layDeputyCompletedPfaLowAssetsDetails->getUserEmail());
-    }
-
-    /**
      * @Given a Lay Deputy has a completed report
      *
      * @throws Exception
@@ -139,5 +115,53 @@ trait ReportTrait
         }
 
         $this->loginToFrontendAs($this->profAdminDeputyNotStartedDetails->getUserEmail());
+    }
+
+    /**
+     * @Given a Lay Deputy has not started a Pfa Low Assets report
+     */
+    public function aLayDeputyHasNotStartedAPfaLowAssetsReport()
+    {
+        if (empty($this->layDeputyNotStartedPfaLowAssetsDetails)) {
+            throw new Exception('It looks like fixtures are not loaded - missing $layDeputyNotStartedPfaLowAssetsDetails');
+        }
+
+        $this->loginToFrontendAs($this->layDeputyNotStartedPfaLowAssetsDetails->getUserEmail());
+    }
+
+    /**
+     * @Given a Lay Deputy has completed a Pfa Low Assets report
+     */
+    public function aLayDeputyHasCompletedAPfaLowAssetsReport()
+    {
+        if (empty($this->layDeputyCompletedPfaLowAssetsDetails)) {
+            throw new Exception('It looks like fixtures are not loaded - missing $layDeputyCompletedPfaLowAssetsDetails');
+        }
+
+        $this->loginToFrontendAs($this->layDeputyCompletedPfaLowAssetsDetails->getUserEmail());
+    }
+
+    /**
+     * @Given a Lay Deputy has not started a Health and Welfare report
+     */
+    public function aLayDeputyHasNotStartedAHealthWelfareReport()
+    {
+        if (empty($this->layDeputyNotStartedHealthWelfareDetails)) {
+            throw new Exception('It looks like fixtures are not loaded - missing $layDeputyNotStartedHealthWelfareDetails');
+        }
+
+        $this->loginToFrontendAs($this->layDeputyNotStartedHealthWelfareDetails->getUserEmail());
+    }
+
+    /**
+     * @Given a Lay Deputy has completed a Health and Welfare report
+     */
+    public function aLayDeputyHasCompletedAHealthWelfareReport()
+    {
+        if (empty($this->layDeputyCompletedHealthWelfareDetails)) {
+            throw new Exception('It looks like fixtures are not loaded - missing $layDeputyCompletedHealthWelfareDetails');
+        }
+
+        $this->loginToFrontendAs($this->layDeputyCompletedHealthWelfareDetails->getUserEmail());
     }
 }

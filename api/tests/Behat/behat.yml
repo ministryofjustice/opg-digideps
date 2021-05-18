@@ -194,9 +194,9 @@ cross-browser-android-chrome:
         Behat\MinkExtension:
             browser_stack:
                 capabilities:
-                    os_version: '9.0'
-                    device: 'Samsung Galaxy S10'
-                    build: 'Android'
+                os_version: '9.0'
+                device: 'Samsung Galaxy S10'
+                build: 'Android'
 
 v2-tests-goutte:
     suites:
@@ -205,6 +205,12 @@ v2-tests-goutte:
             paths: [ "%paths.base%/features-v2/feedback" ]
             contexts:
                 - App\Tests\Behat\v2\Feedback\FeedbackFeatureContext
+
+        client-management:
+            description: Covering the client management features of the app (frontend and admin)
+            paths: [ "%paths.base%/features-v2/client-management" ]
+            contexts:
+                - App\Tests\Behat\v2\ClientManagement\ClientManagementFeatureContext
 
         section-accounts:
             description: Covering the 'Accounts' section of the report
@@ -242,17 +248,11 @@ v2-tests-goutte:
             contexts:
                 - App\Tests\Behat\v2\Reporting\Sections\ReportingSectionsFeatureContext
 
-        section-visit-care:
-            description: Covering the 'Visits and Care' section of the report
-            paths: [ "%paths.base%/features-v2/reporting/sections/visits-care" ]
+        section-health-lifestyle:
+            description: Covering the 'Gifts' section of the report
+            paths: [ "%paths.base%/features-v2/reporting/sections/health-lifestyle" ]
             contexts:
                 - App\Tests\Behat\v2\Reporting\Sections\ReportingSectionsFeatureContext
-
-        client-management:
-            description: Covering the client management features of the app (frontend and admin)
-            paths: [ "%paths.base%/features-v2/client-management" ]
-            contexts:
-                - App\Tests\Behat\v2\ClientManagement\ClientManagementFeatureContext
 
         section-money-out:
             description: Covering the 'Money Out' section of the report
@@ -263,6 +263,12 @@ v2-tests-goutte:
         section-money-in-high-assets:
             description: Covering the 'Money in High Assets' section of the report
             paths: [ "%paths.base%/features-v2/reporting/sections/money-in-high-assets" ]
+            contexts:
+                - App\Tests\Behat\v2\Reporting\Sections\ReportingSectionsFeatureContext
+
+        section-visit-care:
+            description: Covering the 'Visits and Care' section of the report
+            paths: [ "%paths.base%/features-v2/reporting/sections/visits-care" ]
             contexts:
                 - App\Tests\Behat\v2\Reporting\Sections\ReportingSectionsFeatureContext
 
