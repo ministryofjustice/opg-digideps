@@ -14,10 +14,10 @@ trait AdditionalInformationSectionTrait
     private function setAdditionalInformationFormValues(bool $hasAdditionalInformation)
     {
         if ($hasAdditionalInformation) {
-            $this->formValuesEntered[] = $this->$hasAdditionalInformation = 'Yes';
-            $this->formValuesEntered[] = $this->additionalInformation = $this->faker->text(200);
+            $this->formValuesEntered[0][] = $this->$hasAdditionalInformation = 'Yes';
+            $this->formValuesEntered[1][] = $this->additionalInformation = $this->faker->text(200);
         } else {
-            $this->formValuesEntered[] = $this->$hasAdditionalInformation = 'No';
+            $this->formValuesEntered[0][] = $this->$hasAdditionalInformation = 'No';
         }
     }
 
@@ -67,6 +67,7 @@ trait AdditionalInformationSectionTrait
      */
     public function thereIsNoAdditionalInformationToAdd()
     {
+        $this->setAdditionalInformationFormValues(false);
         $this->selectOption('more_info[actionMoreInfo]', 'no');
         $this->pressButton('Save and continue');
     }
@@ -76,31 +77,11 @@ trait AdditionalInformationSectionTrait
      */
     public function additionalInformationSummaryPageContainsExpectedText()
     {
-        $descriptionList = $this->getSession()->getPage()->find('css', 'dl');
-
-        if (!$descriptionList) {
-            $this->throwContextualException('A dl element was not found on the page');
-        }
-
-        $missingText = [];
-        $html = $descriptionList->getHtml();
-
-        foreach ($this->formValuesEntered as $info) {
-            $textVisible = str_contains($html, $info);
-
-            if (!$textVisible) {
-                $missingText[] = $info;
-            }
-        }
-
-        if (!empty($missingText)) {
-            $this->throwContextualException(
-                sprintf(
-                    'A dl was found but the row with the expected text was not found. Missing text: %s. HTML found: %s',
-                    implode(', ', $missingText),
-                    $html
-                )
-            );
-        }
+        $this->iAmOnAnyOtherInfoSummaryPage();
+        $this->expectedResultsDisplayed(
+            0,
+            $this->formValuesEntered,
+            'Additional Information Answers and Info'
+        );
     }
 }

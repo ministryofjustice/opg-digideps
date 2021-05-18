@@ -104,7 +104,7 @@ EOF
       "name": "server",
       "essential": true,
       "cpu": 0,
-      "image": "${local.images.file_scanner}",
+      "image": "mkodockx/docker-clamav:1.0.1-alpine",
       "mountPoints": [],
       "volumesFrom": [],
       "healthCheck": {

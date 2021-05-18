@@ -11,6 +11,8 @@ trait VisitsCareSectionTrait
     private int $careFundedChoice = 0;
     private array $additionalInfo = [];
 
+    private array $questionResponses = [];
+
     /**
      * @Given I view the visits and care report section
      */
@@ -42,7 +44,7 @@ trait VisitsCareSectionTrait
     {
         $this->selectOption('visits_care[doYouLiveWithClient]', 'yes');
         ++$this->answeredYes;
-
+        $this->questionResponses[0][] = 'do you live';
         $this->pressButton('Save and continue');
         $this->iAmOnVisitsCarePage2();
     }
@@ -64,6 +66,7 @@ trait VisitsCareSectionTrait
         }
 
         ++$this->answeredNo;
+        $this->questionResponses[0][] = 'do you live';
         array_push($this->additionalInfo, $info);
 
         $this->pressButton('Save and continue');
@@ -77,7 +80,7 @@ trait VisitsCareSectionTrait
     {
         $this->selectOption('visits_care[doesClientReceivePaidCare]', 'no');
         ++$this->answeredNo;
-
+        $this->questionResponses[0][] = 'care that is paid for';
         $this->pressButton('Save and continue');
         $this->iAmOnVisitsCarePage3();
     }
@@ -94,6 +97,7 @@ trait VisitsCareSectionTrait
 
         $this->selectOption('visits_care[doesClientReceivePaidCare]', 'yes');
         ++$this->answeredYes;
+        $this->questionResponses[0][] = 'care that is paid for';
 
         $this->selectOption('visits_care[howIsCareFunded]', 'client_pays_for_all');
         $this->careFundedChoice = 1;
@@ -110,7 +114,7 @@ trait VisitsCareSectionTrait
     {
         $this->selectOption('visits_care[doesClientReceivePaidCare]', 'yes');
         ++$this->answeredYes;
-
+        $this->questionResponses[0][] = 'how is the care funded';
         $this->selectOption('visits_care[howIsCareFunded]', 'client_gets_financial_help');
         $this->careFundedChoice = 2;
 
@@ -125,7 +129,7 @@ trait VisitsCareSectionTrait
     {
         $this->selectOption('visits_care[doesClientReceivePaidCare]', 'yes');
         ++$this->answeredYes;
-
+        $this->questionResponses[0][] = 'paid for by someone else';
         $this->selectOption('visits_care[howIsCareFunded]', 'all_care_is_paid_by_someone_else');
         $this->careFundedChoice = 3;
 
@@ -153,7 +157,7 @@ trait VisitsCareSectionTrait
     {
         $this->selectOption('visits_care[doesClientHaveACarePlan]', 'no');
         ++$this->answeredNo;
-
+        $this->questionResponses[0][] = 'have a care plan';
         $this->pressButton('Save and continue');
 
         if ('ndr' == $this->reportUrlPrefix) {
@@ -170,7 +174,7 @@ trait VisitsCareSectionTrait
     {
         $this->selectOption('visits_care[doesClientHaveACarePlan]', 'yes');
         ++$this->answeredYes;
-
+        $this->questionResponses[0][] = 'have a care plan';
         $monthNumber = '12';
         $monthName = 'December';
         $this->fillField('visits_care[whenWasCarePlanLastReviewed][month]', $monthNumber);
@@ -196,7 +200,6 @@ trait VisitsCareSectionTrait
     {
         $this->selectOption('visits_care[planMoveNewResidence]', 'no');
         ++$this->answeredNo;
-
         $this->pressButton('Save and continue');
         $this->iAmOnVisitsCareSummaryPage();
     }
@@ -222,6 +225,9 @@ trait VisitsCareSectionTrait
      */
     public function iSeeExpectedVisitCareSectionResponses()
     {
+        $this->iAmOnVisitsCareSummaryPage();
+        $this->expectedResultsDisplayed(0, $this->questionResponses, 'Correct questions displayed');
+
         $table = $this->getSession()->getPage()->find('css', 'dl');
 
         if (!$table) {
