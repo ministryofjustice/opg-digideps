@@ -265,7 +265,7 @@ class UserController extends RestController
      * Delete user with clients.
      *
      * @Route("/{id}", methods={"DELETE"})
-     * @Security("is_granted('ROLE_ELEVATED_ADMIN')")
+     * @Security("is_granted('ROLE_ADMIN_MANAGER')")
      *
      * @param int $id
      *

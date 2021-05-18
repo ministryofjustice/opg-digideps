@@ -6,15 +6,16 @@ Feature: Admin - Admin users delete admin users
     And another super admin user exists
     When I attempt to delete an existing "super admin" user
     Then the user should be deleted
-    When I attempt to delete an existing "elevated admin" user
+    When I attempt to delete an existing "admin manager" user
     Then the user should be deleted
     When I attempt to delete an existing "admin" user
     Then the user should be deleted
 
-  Scenario: An elevated admin user deletes other admin users
-    Given an elevated admin user accesses the admin app
-    And another elevated admin user exists
-    When I attempt to delete an existing "elevated admin" user
+  @acs
+  Scenario: An admin manager user deletes other admin users
+    Given an admin manager user accesses the admin app
+    And another admin manager user exists
+    When I attempt to delete an existing "admin manager" user
     Then the user should be deleted
     When I attempt to delete an existing "super admin" user
     Then the user should not be deleted
@@ -26,7 +27,7 @@ Feature: Admin - Admin users delete admin users
     And another admin user exists
     When I attempt to delete an existing "admin" user
     Then the user should not be deleted
-    When I attempt to delete an existing "elevated admin" user
+    When I attempt to delete an existing "admin manager" user
     Then the user should not be deleted
     When I attempt to delete an existing "super admin" user
     Then the user should not be deleted

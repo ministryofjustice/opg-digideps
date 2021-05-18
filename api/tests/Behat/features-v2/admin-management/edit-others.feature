@@ -6,15 +6,15 @@ Feature: Admin - An admin user edits other admins details
     And another super admin user exists
     When I attempt to update an existing "super admin" users details
     Then the users details should be updated
-    When I attempt to update an existing "elevated admin" users details
+    When I attempt to update an existing "admin manager" users details
     Then the users details should be updated
     When I attempt to update an existing admin users details
     Then the users details should be updated
 
-  Scenario: An elevated admin user updates other admin users details
-    Given an elevated admin user accesses the admin app
-    And another elevated admin user exists
-    When I attempt to update an existing "elevated admin" users details
+  Scenario: An admin manager user updates other admin users details
+    Given an admin manager user accesses the admin app
+    And another admin manager user exists
+    When I attempt to update an existing "admin manager" users details
     Then the users details should not be updated
     When I attempt to update an existing "super admin" users details
     Then the users details should not be updated
@@ -28,5 +28,5 @@ Feature: Admin - An admin user edits other admins details
     Then the users details should be updated
     When I attempt to update an existing "super admin" users details
     Then the users details should not be updated
-    When I attempt to update an existing "elevated admin" users details
+    When I attempt to update an existing "admin manager" users details
     Then the users details should not be updated

@@ -40,7 +40,7 @@ class AddUserType extends AbstractType
         $loggedInUser = $this->tokenStorage->getToken()->getUser();
         if (User::ROLE_SUPER_ADMIN === $loggedInUser->getRoleName()) {
             $staffRoles[] = User::ROLE_SUPER_ADMIN;
-            $staffRoles[] = User::ROLE_ELEVATED_ADMIN;
+            $staffRoles[] = User::ROLE_ADMIN_MANAGER;
         }
 
         $builder->add('email', FormTypes\TextType::class)

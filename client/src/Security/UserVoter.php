@@ -85,8 +85,8 @@ class UserVoter extends Voter
             case User::ROLE_PROF_NAMED:
             case User::ROLE_PROF_ADMIN:
                 return $this->paProfNamedAdminDeletePermissions($deletee);
-            case User::ROLE_ELEVATED_ADMIN:
-                return $this->elevatedAdminDeletePermissions($deletee);
+            case User::ROLE_ADMIN_MANAGER:
+                return $this->adminManagerDeletePermissions($deletee);
             case User::ROLE_SUPER_ADMIN:
                 return true;
         }
@@ -99,7 +99,7 @@ class UserVoter extends Voter
         switch ($deletee->getRoleName()) {
             case User::ROLE_LAY_DEPUTY:
             case User::ROLE_ADMIN:
-            case User::ROLE_ELEVATED_ADMIN:
+            case User::ROLE_ADMIN_MANAGER:
             case User::ROLE_SUPER_ADMIN:
                 return false;
         }
@@ -107,9 +107,9 @@ class UserVoter extends Voter
         return true;
     }
 
-    private function elevatedAdminDeletePermissions(User $deletee): bool
+    private function adminManagerDeletePermissions(User $deletee): bool
     {
-        if ($deletee->isElevatedAdmin() || $deletee->isAdmin()) {
+        if ($deletee->isAdminManager() || $deletee->isAdmin()) {
             return true;
         }
 
@@ -138,8 +138,8 @@ class UserVoter extends Voter
                 return true;
             case User::ROLE_ADMIN:
             case User::ROLE_AD:
-            case User::ROLE_ELEVATED_ADMIN:
-                if ($subject->isSuperAdmin() || $subject->isElevatedAdmin()) {
+            case User::ROLE_ADMIN_MANAGER:
+                if ($subject->isSuperAdmin() || $subject->isAdminManager()) {
                     return false;
                 }
 
@@ -201,7 +201,7 @@ class UserVoter extends Voter
             case User::ROLE_SUPER_ADMIN:
             case User::ROLE_ADMIN:
             case User::ROLE_AD:
-            case User::ROLE_ELEVATED_ADMIN:
+            case User::ROLE_ADMIN_MANAGER:
             case User::ROLE_PA:
             case User::ROLE_PA_NAMED:
             case User::ROLE_PROF:

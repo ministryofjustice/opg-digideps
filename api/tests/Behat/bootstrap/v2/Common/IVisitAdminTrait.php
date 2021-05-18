@@ -61,6 +61,18 @@ trait IVisitAdminTrait
     }
 
     /**
+     * @When I visit the admin View User page for the user I'm interacting with
+     */
+    public function iVisitAdminViewUserPageForInteractingWithUser()
+    {
+        $this->assertInteractingWithUserIsSet();
+
+        $this->visitAdminPath(
+            $this->getAdminViewUserPage($this->interactingWithUserDetails->getUserId())
+        );
+    }
+
+    /**
      * @When I visit the admin Edit User page for the user I'm interacting with
      */
     public function iVisitAdminEditUserPageForInteractingWithUser()

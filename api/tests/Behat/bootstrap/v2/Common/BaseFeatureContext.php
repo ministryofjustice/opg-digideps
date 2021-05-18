@@ -35,7 +35,7 @@ class BaseFeatureContext extends MinkContext
     public const REPORT_SECTION_ENDPOINT = '/%s/%s/%s';
 
     public UserDetails $adminDetails;
-    public UserDetails $elevatedAdminDetails;
+    public UserDetails $adminManagerDetails;
     public UserDetails $superAdminDetails;
 
     public UserDetails $layDeputyNotStartedDetails;
@@ -94,7 +94,7 @@ class BaseFeatureContext extends MinkContext
         $userDetails = $this->fixtureHelper->loadFixtures($this->testRunId);
 
         $this->fixtureUsers[] = $this->adminDetails = new UserDetails($userDetails['admin-users']['admin']);
-        $this->fixtureUsers[] = $this->elevatedAdminDetails = new UserDetails($userDetails['admin-users']['elevated-admin']);
+        $this->fixtureUsers[] = $this->adminManagerDetails = new UserDetails($userDetails['admin-users']['admin-manager']);
         $this->fixtureUsers[] = $this->superAdminDetails = new UserDetails($userDetails['admin-users']['super-admin']);
         $this->fixtureUsers[] = $this->layDeputyNotStartedDetails = new UserDetails($userDetails['lays']['pfa-high-assets']['not-started']);
         $this->fixtureUsers[] = $this->layDeputyCompletedDetails = new UserDetails($userDetails['lays']['pfa-high-assets']['completed']);

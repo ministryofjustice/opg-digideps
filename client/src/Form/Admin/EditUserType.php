@@ -34,9 +34,9 @@ class EditUserType extends AbstractType
                 $form->add('ndrEnabled', FormTypes\CheckboxType::class);
             }
 
-            $elevatedAdminCanEditEmail = $operatingUser->isElevatedAdmin() && $user->isLayDeputy();
+            $adminManagerCanEdit = $operatingUser->isAdminManager() && $user->isLayDeputy();
 
-            if ($operatingUser->isSuperAdmin() || $elevatedAdminCanEditEmail) {
+            if ($operatingUser->isSuperAdmin() || $adminManagerCanEdit) {
                 $form->add('email', FormTypes\EmailType::class);
             }
         };

@@ -1,4 +1,4 @@
-@v2 @acl @acs
+@v2 @acl
 Feature: Limiting access to sections of the app to super admins
   As a super admin user
   In order to prevent other types of users from accessing sensitive or confusing data
@@ -13,15 +13,15 @@ Feature: Limiting access to sections of the app to super admins
     Then I should be able to access the "user research report"
     Then I should be able to access the fixtures page
 
-  Scenario: An elevated admin attempts to access analytics and reports
-    Given an elevated admin user accesses the admin app
+  Scenario: An admin manager attempts to access analytics and reports
+    Given an admin manager user accesses the admin app
     When I navigate to the admin analytics page
     Then I should be able to access the "DAT file"
     Then I should not be able to access the "satisfaction report"
     Then I should not be able to access the "active lays report"
     Then I should not be able to access the "user research report"
     Then I should not be able to access the fixtures page
-
+  @acs
   Scenario: An admin attempts to access analytics and reports
     Given an admin user accesses the admin app
     When I navigate to the admin analytics page

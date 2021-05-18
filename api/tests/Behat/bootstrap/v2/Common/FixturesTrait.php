@@ -84,11 +84,11 @@ trait FixturesTrait
     }
 
     /**
-     * @Given another elevated admin user exists
+     * @Given another admin manager user exists
      */
-    public function anotherElevatedAdminUserExists()
+    public function anotherAdminManagerUserExists()
     {
-        $user = $this->createAdditionalAdminUser(User::ROLE_ELEVATED_ADMIN);
+        $user = $this->createAdditionalAdminUser(User::ROLE_ADMIN_MANAGER);
         $this->interactingWithUserDetails = new UserDetails(FixtureHelper::buildAdminUserDetails($user));
     }
 

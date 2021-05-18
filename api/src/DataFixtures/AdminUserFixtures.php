@@ -1,4 +1,5 @@
 <?php
+
 namespace App\DataFixtures;
 
 use App\Entity\User;
@@ -15,6 +16,13 @@ class AdminUserFixtures extends AbstractDataFixture
             ->setEmail('admin@publicguardian.gov.uk')
             ->setActive(true)
             ->setRoleName('ROLE_ADMIN');
+
+        $adminManager = (new User())
+            ->setFirstname('Admin Manager')
+            ->setLastname('User')
+            ->setEmail('admin-manager@publicguardian.gov.uk')
+            ->setActive(true)
+            ->setRoleName('ROLE_ADMIN_MANAGER');
 
         $superAdminUser = (new User())
             ->setFirstname('Super Admin')
@@ -38,6 +46,7 @@ class AdminUserFixtures extends AbstractDataFixture
             ->setRoleName('ROLE_ADMIN');
 
         $manager->persist($adminUser);
+        $manager->persist($adminManager);
         $manager->persist($superAdminUser);
         $manager->persist($adUser);
         $manager->persist($caseManager);

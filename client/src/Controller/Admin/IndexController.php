@@ -306,7 +306,7 @@ class IndexController extends AbstractController
                 ['deputy_email' => $user->getEmail()]
             );
 
-            $this->addFlash('error', 'There was a problem deleting the deputy - please try again later');
+            $this->addFlash('error', $e->getMessage());
 
             return $this->redirect($this->generateUrl('admin_homepage'));
         }

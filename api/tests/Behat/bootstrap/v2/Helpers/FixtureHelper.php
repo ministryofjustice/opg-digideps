@@ -31,7 +31,7 @@ class FixtureHelper
     private NamedDeputyTestHelper $namedDeputyTestHelper;
 
     private User $admin;
-    private User $elevatedAdmin;
+    private User $adminManager;
     private User $superAdmin;
 
     private User $layPfaHighAssetsNotStarted;
@@ -93,7 +93,7 @@ class FixtureHelper
         return [
             'admin-users' => [
                 'admin' => self::buildAdminUserDetails($this->admin),
-                'elevated-admin' => self::buildAdminUserDetails($this->elevatedAdmin),
+                'admin-manager' => self::buildAdminUserDetails($this->adminManager),
                 'super-admin' => self::buildAdminUserDetails($this->superAdmin),
             ],
             'lays' => [
@@ -221,7 +221,7 @@ class FixtureHelper
 
         $users = [
             $this->admin,
-            $this->elevatedAdmin,
+            $this->adminManager,
             $this->superAdmin,
             $this->layPfaHighAssetsNotStarted,
             $this->layPfaHighAssetsCompleted,
@@ -248,7 +248,7 @@ class FixtureHelper
     private function createAdminUsers()
     {
         $this->admin = $this->createUser(User::ROLE_ADMIN);
-        $this->elevatedAdmin = $this->createUser(User::ROLE_ELEVATED_ADMIN);
+        $this->adminManager = $this->createUser(User::ROLE_ADMIN_MANAGER);
         $this->superAdmin = $this->createUser(User::ROLE_SUPER_ADMIN);
     }
 

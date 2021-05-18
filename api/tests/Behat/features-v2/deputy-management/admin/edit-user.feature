@@ -8,8 +8,8 @@ Feature: Admin - Edit deputy users
     When I update the details of the deputy available to me
     Then the deputies details should be updated
 
-  Scenario: An elevated admin user edits a deputy users details
-    Given an elevated admin user accesses the admin app
+  Scenario: An admin manager user edits a deputy users details
+    Given an admin manager user accesses the admin app
     And a Lay Deputy exists
     Then I should be able to update the deputies firstname, lastname, postcode and email address
     When I update the details of the deputy available to me

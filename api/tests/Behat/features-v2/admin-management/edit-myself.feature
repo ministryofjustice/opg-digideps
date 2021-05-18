@@ -7,8 +7,8 @@ Feature: Admin - An admin user edits their details
     And I update my firstname and lastname
     Then my details should be updated
 
-  Scenario: An elevated admin user updates their details
-    Given an elevated admin user accesses the admin app
+  Scenario: An admin manager user updates their details
+    Given an admin manager user accesses the admin app
     When I visit my admin user profile page
     And I update my firstname and lastname
     Then my details should be updated

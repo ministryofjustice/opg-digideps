@@ -20,12 +20,12 @@ trait AdminManagementTrait
     }
 
     /**
-     * @Then I should be able to add an elevated admin user
+     * @Then I should be able to add an admin manager user
      */
-    public function iShouldBeAbleToAddElevatedAdmin()
+    public function iShouldBeAbleToAddAdminManager()
     {
         $this->selectOption('admin[roleType]', 'staff');
-        $this->assertValueIsInSelect(User::ROLE_ELEVATED_ADMIN, 'admin[roleNameStaff]');
+        $this->assertValueIsInSelect(User::ROLE_ADMIN_MANAGER, 'admin[roleNameStaff]');
     }
 
     /**
@@ -47,12 +47,12 @@ trait AdminManagementTrait
     }
 
     /**
-     * @Then I should not be able to add an elevated admin user
+     * @Then I should not be able to add an admin manager user
      */
-    public function iShouldNotBeAbleToAddElevatedAdmin()
+    public function iShouldNotBeAbleToAddAdminManager()
     {
         $this->selectOption('admin[roleType]', 'staff');
-        $this->assertValueIsNotInSelect(User::ROLE_ELEVATED_ADMIN, 'admin[roleNameStaff]');
+        $this->assertValueIsNotInSelect(User::ROLE_ADMIN_MANAGER, 'admin[roleNameStaff]');
     }
 
     /**
@@ -74,12 +74,12 @@ trait AdminManagementTrait
     }
 
     /**
-     * @When I enter valid details for a new elevated admin user
+     * @When I enter valid details for a new admin manager user
      */
-    public function iAddANewElevatedAdminUser()
+    public function iAddANewAdminManagerUser()
     {
         $this->iVisitAdminAddUserPage();
-        $this->setNewUserFormValues(User::ROLE_ELEVATED_ADMIN);
+        $this->setNewUserFormValues(User::ROLE_ADMIN_MANAGER);
         $this->selectOption('admin[roleType]', 'staff');
 
         foreach ($this->completedFormFields['text'] as $fieldName => $fieldValue) {
@@ -161,8 +161,8 @@ trait AdminManagementTrait
                 case 'super admin':
                     $this->interactingWithUserDetails = $this->superAdminDetails;
                     break;
-                case 'elevated admin':
-                    $this->interactingWithUserDetails = $this->elevatedAdminDetails;
+                case 'admin manager':
+                    $this->interactingWithUserDetails = $this->adminManagerDetails;
                     break;
                 case 'admin':
                     $this->interactingWithUserDetails = $this->adminDetails;
@@ -173,14 +173,18 @@ trait AdminManagementTrait
             }
         }
 
-        $this->iVisitAdminEditUserPageForInteractingWithUser();
+        if (User::ROLE_ADMIN_MANAGER === $this->loggedInUserDetails->getUserRole() && 'admin manager' === strtolower($role)) {
+            $this->iVisitAdminViewUserPageForInteractingWithUser();
+        } else {
+            $this->iVisitAdminEditUserPageForInteractingWithUser();
+        }
 
         try {
             $this->assertLinkWithTextIsOnPage('Delete user');
             $this->clickLink('Delete user');
             $this->clickLink("Yes, I'm sure");
         } catch (\Throwable $e) {
-            // Swallow error as we want to assert on deleting user in further step
+//             Swallow error as we want to assert on deleting user in further step
         }
     }
 
@@ -250,8 +254,8 @@ trait AdminManagementTrait
                 case 'super admin':
                     $this->interactingWithUserDetails = $this->superAdminDetails;
                     break;
-                case 'elevated admin':
-                    $this->interactingWithUserDetails = $this->elevatedAdminDetails;
+                case 'admin manager':
+                    $this->interactingWithUserDetails = $this->adminManagerDetails;
                     break;
                 case 'admin':
                     $this->interactingWithUserDetails = $this->adminDetails;

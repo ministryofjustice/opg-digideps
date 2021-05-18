@@ -151,7 +151,7 @@ trait DeputyManagementTrait
 
     private function emailShouldBeUpdated(string $loggedInUserRole, string $userToBeUpdatedRole): bool
     {
-        $rolesElevatedAdminsCanUpdateEmail = [
+        $rolesAdminManagersCanUpdateEmail = [
             User::ROLE_LAY_DEPUTY,
             USER::ROLE_PROF,
             USER::ROLE_PROF_ADMIN,
@@ -164,10 +164,11 @@ trait DeputyManagementTrait
         ];
 
         $isSuperAdmin = User::ROLE_SUPER_ADMIN === $loggedInUserRole;
-        $elevatedAdminIsEditingNonAdminUser =
-            (User::ROLE_ELEVATED_ADMIN === $loggedInUserRole &&
-                in_array($userToBeUpdatedRole, $rolesElevatedAdminsCanUpdateEmail));
 
-        return $isSuperAdmin || $elevatedAdminIsEditingNonAdminUser;
+        $adminManagerIsEditingNonAdminUser =
+            (User::ROLE_ADMIN_MANAGER === $loggedInUserRole &&
+                in_array($userToBeUpdatedRole, $rolesAdminManagersCanUpdateEmail));
+
+        return $isSuperAdmin || $adminManagerIsEditingNonAdminUser;
     }
 }
