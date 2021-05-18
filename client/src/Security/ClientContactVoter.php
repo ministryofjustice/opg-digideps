@@ -21,8 +21,6 @@ class ClientContactVoter extends Voter
 
     /**
      * ClientContactVoter constructor.
-     *
-     * @param AccessDecisionManagerInterface $decisionManager
      */
     public function __construct(AccessDecisionManagerInterface $decisionManager)
     {
@@ -32,8 +30,9 @@ class ClientContactVoter extends Voter
     /**
      * Does this voter support the attribute?
      *
-     * @param  string $attribute
-     * @param  mixed  $subject
+     * @param string $attribute
+     * @param mixed  $subject
+     *
      * @return bool
      */
     protected function supports($attribute, $subject)
@@ -44,7 +43,7 @@ class ClientContactVoter extends Voter
                 return true;
             case self::EDIT_CLIENT_CONTACT:
                 // only vote on User objects inside this voter
-                if ($attribute === self::EDIT_CLIENT_CONTACT && $subject instanceof ClientEntity) {
+                if (self::EDIT_CLIENT_CONTACT === $attribute && $subject instanceof ClientEntity) {
                     return true;
                 }
                 break;
@@ -54,18 +53,17 @@ class ClientContactVoter extends Voter
     }
 
     /**
-     * Vote on whether to grant attribute permission on subject
+     * Vote on whether to grant attribute permission on subject.
      *
-     * @param  string         $attribute
-     * @param  mixed          $subject
-     * @param  TokenInterface $token
+     * @param string $attribute
+     * @param mixed  $subject
+     *
      * @return bool
      */
     protected function voteOnAttribute($attribute, $subject, TokenInterface $token)
     {
-
         /** @var User $loggedInUser */
-        $loggedInUser= $token->getUser();
+        $loggedInUser = $token->getUser();
 
         if (!$loggedInUser instanceof User && $loggedInUser->isPaDeputy()) {
             // the loggedUser must be logged in PA user; if not, deny access
@@ -75,9 +73,10 @@ class ClientContactVoter extends Voter
         switch ($attribute) {
             case self::ADD_CLIENT_CONTACT:
                 if ($subject instanceof ClientEntity) {
-                    /** @var Client $subject */
+                    /* @var Client $subject */
                     return $subject->hasUser($loggedInUser);
                 }
+
                 return false;
             case self::EDIT_CLIENT_CONTACT:
             case self::DELETE_CLIENT_CONTACT:
@@ -85,6 +84,7 @@ class ClientContactVoter extends Voter
                 if ($subject instanceof ClientEntity) {
                     return $subject->hasUser($loggedInUser);
                 }
+
                 return false;
         }
 

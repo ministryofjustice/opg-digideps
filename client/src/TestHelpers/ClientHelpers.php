@@ -1,5 +1,6 @@
-<?php declare(strict_types=1);
+<?php
 
+declare(strict_types=1);
 
 namespace App\TestHelpers;
 
@@ -10,10 +11,6 @@ use Faker;
 
 class ClientHelpers
 {
-    /**
-     * @param Report|null $report
-     * @return Client
-     */
     public static function createClient(?Report $report = null): Client
     {
         $faker = Faker\Factory::create();
@@ -33,13 +30,10 @@ class ClientHelpers
         return $client;
     }
 
-    /**
-     * @param Report|null $report
-     * @return Client
-     */
     public static function createClientWithUsers(?Report $report = null): Client
     {
         $user = UserHelpers::createUser();
+
         return (self::createClient($report))->addUser($user);
     }
 
@@ -60,10 +54,10 @@ class ClientHelpers
 
         $checkbit = (11 - ($sum % 11)) % 11;
 
-        if ($checkbit === 10) {
+        if (10 === $checkbit) {
             $checkbit = 'T';
         }
 
-        return $ref . $checkbit;
+        return $ref.$checkbit;
     }
 }

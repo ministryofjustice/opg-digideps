@@ -1,5 +1,6 @@
-<?php declare(strict_types=1);
+<?php
 
+declare(strict_types=1);
 
 namespace App\TestHelpers;
 
@@ -15,7 +16,7 @@ class NamedDeputyTestHelper
         return (new NamedDeputy())
             ->setFirstname($faker->firstName)
             ->setLastname($faker->lastName)
-            ->setEmail1($faker->safeEmail . rand(1, 100000))
+            ->setEmail1($faker->safeEmail.rand(1, 100000))
             ->setAddress1($faker->streetAddress)
             ->setAddress2($faker->city)
             ->setAddress3($faker->county)

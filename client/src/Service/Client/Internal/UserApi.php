@@ -1,18 +1,19 @@
-<?php declare(strict_types=1);
+<?php
+
+declare(strict_types=1);
 
 namespace App\Service\Client\Internal;
 
 use App\Entity\User;
+use App\Event\AdminUserCreatedEvent;
 use App\Event\CoDeputyCreatedEvent;
 use App\Event\CoDeputyInvitedEvent;
 use App\Event\DeputyInvitedEvent;
 use App\Event\DeputySelfRegisteredEvent;
 use App\Event\OrgUserCreatedEvent;
 use App\Event\UserActivatedEvent;
-use App\Event\UserPasswordResetEvent;
-use App\Event\UserTokenRecreatedEvent;
-use App\Event\AdminUserCreatedEvent;
 use App\Event\UserDeletedEvent;
+use App\Event\UserPasswordResetEvent;
 use App\Event\UserUpdatedEvent;
 use App\EventDispatcher\ObservableEventDispatcher;
 use App\Model\SelfRegisterData;
@@ -29,7 +30,7 @@ class UserApi
     protected const DEPUTY_SELF_REGISTER_ENDPOINT = 'selfregister';
     protected const CREATE_CODEPUTY_ENDPOINT = 'codeputy/add';
 
-    /**  @var RestClientInterface */
+    /** @var RestClientInterface */
     protected $restClient;
 
     /** @var TokenStorageInterface */
@@ -69,8 +70,6 @@ class UserApi
     }
 
     /**
-     * @param int $id
-     * @param array $jmsGroups
      * @return User
      */
     public function get(int $id, array $jmsGroups = [])
@@ -79,7 +78,6 @@ class UserApi
     }
 
     /**
-     * @param string $email
      * @return mixed
      */
     public function getByEmail(string $email, array $jsmgroups = [])
@@ -92,7 +90,6 @@ class UserApi
     }
 
     /**
-     * @param string $email
      * @return mixed
      */
     public function getByEmailOrgAdmins(string $email, array $jsmgroups = [])
@@ -105,8 +102,6 @@ class UserApi
     }
 
     /**
-     * @param array $jmsGroups
-     *
      * @return User
      */
     public function getUserWithData(array $jmsGroups = [])
@@ -126,10 +121,8 @@ class UserApi
     }
 
     /**
-     * @param User $preUpdateUser
-     * @param User $postUpdateUser
      * @param array $jmsGroups
-     * @param string $trigger
+     *
      * @return mixed
      */
     public function update(User $preUpdateUser, User $postUpdateUser, string $trigger, $jmsGroups = [])
@@ -152,10 +145,6 @@ class UserApi
         return $userIdArray;
     }
 
-    /**
-     * @param User $userToDelete
-     * @param string $trigger
-     */
     public function delete(User $userToDelete, string $trigger)
     {
         $this->restClient->delete(sprintf(self::USER_BY_ID_ENDPOINT, $userToDelete->getId()));
@@ -168,7 +157,6 @@ class UserApi
     }
 
     /**
-     * @param string $email
      * @return User
      */
     public function recreateToken(string $email)
@@ -184,7 +172,6 @@ class UserApi
     }
 
     /**
-     * @param string $email
      * @param string $type
      */
     public function activate(string $email)
@@ -195,10 +182,6 @@ class UserApi
         $this->eventDispatcher->dispatch($userActivatedEvent, UserActivatedEvent::NAME);
     }
 
-    /**
-     * @param string $email
-     * @param User $loggedInUser
-     */
     public function reInviteCoDeputy(string $email, User $loggedInUser)
     {
         $invitedCoDeputy = $this->recreateToken($email);
@@ -207,9 +190,6 @@ class UserApi
         $this->eventDispatcher->dispatch($CoDeputyInvitedEvent, CoDeputyInvitedEvent::NAME);
     }
 
-    /**
-     * @param string $email
-     */
     public function reInviteDeputy(string $email)
     {
         $invitedDeputy = $this->recreateToken($email);
@@ -218,9 +198,6 @@ class UserApi
         $this->eventDispatcher->dispatch($deputyInvitedEvent, DeputyInvitedEvent::NAME);
     }
 
-    /**
-     * @param string $email
-     */
     public function resetPassword(string $email)
     {
         $passwordResetUser = $this->recreateToken($email);
@@ -229,9 +206,6 @@ class UserApi
         $this->eventDispatcher->dispatch($passwordResetEvent, UserPasswordResetEvent::NAME);
     }
 
-    /**
-     * @param SelfRegisterData $selfRegisterData
-     */
     public function selfRegister(SelfRegisterData $selfRegisterData)
     {
         $registeredDeputy = $this->restClient->apiCall(
@@ -248,8 +222,6 @@ class UserApi
     }
 
     /**
-     * @param User $invitedCoDeputy
-     * @param User $invitedByDeputyName
      * @return User
      */
     public function createCoDeputy(User $invitedCoDeputy, User $invitedByDeputyName)

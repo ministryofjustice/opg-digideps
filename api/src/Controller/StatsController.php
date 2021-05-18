@@ -1,13 +1,15 @@
-<?php declare(strict_types=1);
+<?php
+
+declare(strict_types=1);
 
 namespace App\Controller;
 
 use App\Repository\UserRepository;
-use App\Service\Stats\StatsQueryParameters;
 use App\Service\Stats\QueryFactory;
-use Symfony\Component\Routing\Annotation\Route;
+use App\Service\Stats\StatsQueryParameters;
 use Sensio\Bundle\FrameworkExtraBundle\Configuration\Security;
 use Symfony\Component\HttpFoundation\Request;
+use Symfony\Component\Routing\Annotation\Route;
 
 class StatsController extends RestController
 {

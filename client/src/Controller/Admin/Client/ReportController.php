@@ -9,26 +9,26 @@ use App\Exception\ReportNotSubmittedException;
 use App\Form\Admin\CloseReportConfirmType;
 use App\Form\Admin\CloseReportType;
 use App\Form\Admin\ManageActiveReportType;
-use App\Form\Admin\ReviewChecklistType;
-use App\Form\Admin\ReportChecklistType;
-use App\Form\Admin\ManageSubmittedReportType;
 use App\Form\Admin\ManageReportConfirmType;
+use App\Form\Admin\ManageSubmittedReportType;
+use App\Form\Admin\ReportChecklistType;
+use App\Form\Admin\ReviewChecklistType;
+use App\Service\Audit\AuditEvents;
 use App\Service\Client\Internal\ReportApi;
 use App\Service\Client\RestClient;
-use App\Service\Audit\AuditEvents;
 use App\Service\ParameterStoreService;
 use App\Service\ReportSubmissionService;
 use Psr\Log\LoggerInterface;
-use Symfony\Component\Form\FormInterface;
-use Symfony\Component\Routing\Annotation\Route;
 use Sensio\Bundle\FrameworkExtraBundle\Configuration\Security;
 use Sensio\Bundle\FrameworkExtraBundle\Configuration\Template;
 use Symfony\Component\Form\Form;
+use Symfony\Component\Form\FormInterface;
 use Symfony\Component\Form\SubmitButton;
 use Symfony\Component\HttpFoundation\RedirectResponse;
 use Symfony\Component\HttpFoundation\Request;
 use Symfony\Component\HttpFoundation\Response;
 use Symfony\Component\HttpFoundation\Session\Session;
+use Symfony\Component\Routing\Annotation\Route;
 
 /**
  * @Route("/admin/report/{id}/", requirements={"id":"\d+"})
@@ -37,7 +37,8 @@ class ReportController extends AbstractController
 {
     /**
      * JMS groups used for report preview and PDF
-     * //TODO consider take/merge the value from ReportController::$reportGroupsAll
+     * //TODO consider take/merge the value from ReportController::$reportGroupsAll.
+     *
      * @var array
      */
     private static $reportGroupsAll = [
@@ -87,7 +88,7 @@ class ReportController extends AbstractController
         'documents',
         'report-prof-service-fees',
         'prof-service-fees',
-        'client-named-deputy'
+        'client-named-deputy',
     ];
 
     /** @var RestClient */
@@ -111,7 +112,7 @@ class ReportController extends AbstractController
     /**
      * @Route("checklist", name="admin_report_checklist")
      * @Security("is_granted('ROLE_ADMIN')")
-     * @param Request $request
+     *
      * @param string $id
      *
      * @Template("@App/Admin/Client/Report/checklist.html.twig")
@@ -125,7 +126,7 @@ class ReportController extends AbstractController
             array_merge(
                 self::$reportGroupsAll,
                 [
-                    'report-checklist', 'checklist-information', 'last-modified', 'user', 'previous-report-data', 'action'
+                    'report-checklist', 'checklist-information', 'last-modified', 'user', 'previous-report-data', 'action',
                 ]
             )
         );
@@ -144,7 +145,7 @@ class ReportController extends AbstractController
         /** @var SubmitButton $buttonClicked */
         $buttonClicked = $form->getClickedButton();
 
-        $reviewChecklist = $this->restClient->get('report/' . $report->getId() . '/checklist', 'Report\\ReviewChecklist');
+        $reviewChecklist = $this->restClient->get('report/'.$report->getId().'/checklist', 'Report\\ReviewChecklist');
         /** @var Form $reviewForm */
         $reviewForm = $this->createForm(ReviewChecklistType::class, $reviewChecklist);
         $reviewForm->handleRequest($request);
@@ -152,21 +153,22 @@ class ReportController extends AbstractController
         if ($reviewForm->isSubmitted() && $reviewForm->isValid()) {
             /** @var SubmitButton $button */
             $button = $reviewForm->getClickedButton();
-            if ($button->getName() === ReviewChecklistType::SUBMIT_ACTION) {
+            if (ReviewChecklistType::SUBMIT_ACTION === $button->getName()) {
                 $reviewChecklist->setIsSubmitted(true);
             }
 
             if (!empty($reviewChecklist->getId())) {
-                $this->restClient->put('report/' . $report->getId() . '/checklist', $reviewChecklist);
+                $this->restClient->put('report/'.$report->getId().'/checklist', $reviewChecklist);
             } else {
-                $this->restClient->post('report/' . $report->getId() . '/checklist', $reviewChecklist);
+                $this->restClient->post('report/'.$report->getId().'/checklist', $reviewChecklist);
             }
 
-            if ($button->getName() === ReviewChecklistType::SUBMIT_ACTION) {
-                return $this->redirect($this->generateUrl('admin_report_checklist_submitted', ['id'=>$report->getId()]));
+            if (ReviewChecklistType::SUBMIT_ACTION === $button->getName()) {
+                return $this->redirect($this->generateUrl('admin_report_checklist_submitted', ['id' => $report->getId()]));
             } else {
                 $this->addFlash('notice', 'Review checklist saved');
-                return $this->redirect($this->generateUrl('admin_report_checklist', ['id'=>$report->getId()]) . '#anchor-fullReview-checklist');
+
+                return $this->redirect($this->generateUrl('admin_report_checklist', ['id' => $report->getId()]).'#anchor-fullReview-checklist');
             }
         }
 
@@ -176,12 +178,12 @@ class ReportController extends AbstractController
 
         if ($form->isSubmitted() && $form->isValid()) {
             if (!empty($checklist->getId())) {
-                $this->restClient->put('report/' . $report->getId() . '/checked', $checklist, [
-                    'report-checklist', 'checklist-information'
+                $this->restClient->put('report/'.$report->getId().'/checked', $checklist, [
+                    'report-checklist', 'checklist-information',
                 ]);
             } else {
-                $this->restClient->post('report/' . $report->getId() . '/checked', $checklist, [
-                    'report-checklist', 'checklist-information'
+                $this->restClient->post('report/'.$report->getId().'/checked', $checklist, [
+                    'report-checklist', 'checklist-information',
                 ]);
             }
 
@@ -194,77 +196,71 @@ class ReportController extends AbstractController
                 $this->addFlash('notice', 'Lodging checklist saved');
             }
 
-            if ($buttonClicked->getName() == 'saveFurtherInformation') {
+            if ('saveFurtherInformation' == $buttonClicked->getName()) {
                 return $this->redirect(
-                    $this->generateUrl('admin_report_checklist', ['id'=>$report->getId()]) . '#furtherInformation'
+                    $this->generateUrl('admin_report_checklist', ['id' => $report->getId()]).'#furtherInformation'
                 );
             } else {
-                if ($buttonClicked->getName() == 'submitAndContinue') {
-                    return $this->redirect($this->generateUrl('admin_report_checklist_submitted', ['id'=>$report->getId()]));
+                if ('submitAndContinue' == $buttonClicked->getName()) {
+                    return $this->redirect($this->generateUrl('admin_report_checklist_submitted', ['id' => $report->getId()]));
                 } else {
-                    return $this->redirect($this->generateUrl('admin_report_checklist', ['id'=>$report->getId()]) . '#');
+                    return $this->redirect($this->generateUrl('admin_report_checklist', ['id' => $report->getId()]).'#');
                 }
             }
         }
 
         $costBreakdown = null;
 
-        if ($report->getProfDeputyCostsEstimateHowCharged() !== Report::PROF_DEPUTY_COSTS_TYPE_FIXED) {
+        if (Report::PROF_DEPUTY_COSTS_TYPE_FIXED !== $report->getProfDeputyCostsEstimateHowCharged()) {
             $costBreakdown = $report->generateActualSubmittedEstimateCosts();
         }
 
         return [
-            'report'   => $report,
+            'report' => $report,
             'submittedEstimateCosts' => $costBreakdown,
-            'form'     => $form->createView(),
+            'form' => $form->createView(),
             'reviewForm' => $reviewForm->createView(),
             'checklist' => $checklist,
             'reviewChecklist' => $reviewChecklist,
-            'previousReportData' => $report->getPreviousReportData()
+            'previousReportData' => $report->getPreviousReportData(),
         ];
     }
 
     /**
      * @Route("checklist-submitted", name="admin_report_checklist_submitted")
      * @Security("is_granted('ROLE_ADMIN')")
-     * @param int $id
      *
      * @return array
      * @Template("@App/Admin/Client/Report/checklistSubmitted.html.twig")
-     *
      */
     public function checklistSubmittedAction(int $id, ParameterStoreService $parameterStore)
     {
         $report = $this->reportApi->getReport(intval($id), ['report-checklist']);
         $syncFeatureIsEnabled = false;
 
-        if ($parameterStore->getFeatureFlag(ParameterStoreService::FLAG_CHECKLIST_SYNC) === '1') {
+        if ('1' === $parameterStore->getFeatureFlag(ParameterStoreService::FLAG_CHECKLIST_SYNC)) {
             $syncFeatureIsEnabled = true;
             $this->queueChecklistForSyncing($report);
         }
 
         return [
             'report' => $report,
-            'syncFeatureIsEnabled' => $syncFeatureIsEnabled
+            'syncFeatureIsEnabled' => $syncFeatureIsEnabled,
         ];
     }
 
-    /**
-     * @param Report $report
-     */
     protected function queueChecklistForSyncing(Report $report): void
     {
         $report->getChecklist()->setSynchronisationStatus(Checklist::SYNC_STATUS_QUEUED);
-        $this->restClient->put('report/' . $report->getId() . '/checked', $report->getChecklist(), ['synchronisation']);
+        $this->restClient->put('report/'.$report->getId().'/checked', $report->getChecklist(), ['synchronisation']);
     }
 
     /**
-     * Generate and return Checklist as Response object
+     * Generate and return Checklist as Response object.
      *
      * @Route("checklist.pdf", name="admin_checklist_pdf")
      * @Security("is_granted('ROLE_ADMIN')")
      *
-     * @param int $id
      * @return Response
      */
     public function checklistPDFViewAction(int $id, ReportSubmissionService $reportSubmissionService)
@@ -286,7 +282,7 @@ class ReportController extends AbstractController
             $report->getClient()->getCaseNumber()
         );
 
-        $response->headers->set('Content-Disposition', 'attachment; filename="' . $attachmentName . '"');
+        $response->headers->set('Content-Disposition', 'attachment; filename="'.$attachmentName.'"');
 
         // Send headers before outputting anything
         $response->sendHeaders();
@@ -297,19 +293,20 @@ class ReportController extends AbstractController
     /**
      * @Route("manage", name="admin_report_manage")
      * @Security("is_granted('ROLE_ADMIN') or has_role('ROLE_AD')")
-     * @param Request $request
+     *
      * @param string $id
      *
      * @Template("@App/Admin/Client/Report/manage.html.twig")
      *
      * @return array|Response|RedirectResponse
+     *
      * @throws \Exception
      */
     public function manageAction(Request $request, $id)
     {
         $report = $this->reportApi->getReport(intval($id), ['report-checklist', 'action']);
 
-        $formClass = ($report->isSubmitted()) ?  ManageSubmittedReportType::class : ManageActiveReportType::class;
+        $formClass = ($report->isSubmitted()) ? ManageSubmittedReportType::class : ManageActiveReportType::class;
         $form = $this->createForm($formClass, $report);
 
         if (is_array($request->get('data'))) {
@@ -319,7 +316,8 @@ class ReportController extends AbstractController
         $form->handleRequest($request);
         if ($form->isSubmitted() && $form->isValid()) {
             $this->setChoicesInSession($request, $form, $report);
-            return $this->redirect($this->generateUrl('admin_report_manage_confirm', ['id'=>$report->getId()]));
+
+            return $this->redirect($this->generateUrl('admin_report_manage_confirm', ['id' => $report->getId()]));
         }
 
         $closeReportForm = null;
@@ -328,20 +326,18 @@ class ReportController extends AbstractController
             $closeReportForm->handleRequest($request);
 
             if ($closeReportForm->isSubmitted() && $closeReportForm->isValid()) {
-                return $this->redirect($this->generateUrl('admin_report_manage_close_report_confirm', ['id'=>$report->getId()]));
+                return $this->redirect($this->generateUrl('admin_report_manage_close_report_confirm', ['id' => $report->getId()]));
             }
         }
 
         return [
-            'report'   => $report,
-            'form'     => $form->createView(),
-            'closeForm' => $closeReportForm ? $closeReportForm->createView() : null
+            'report' => $report,
+            'form' => $form->createView(),
+            'closeForm' => $closeReportForm ? $closeReportForm->createView() : null,
         ];
     }
 
     /**
-     * @param array $dataFromUrl
-     * @param FormInterface $form
      * @throws \Exception
      */
     private function prepopulateWithPreviousChoices(array $dataFromUrl, FormInterface $form): void
@@ -367,15 +363,12 @@ class ReportController extends AbstractController
     }
 
     /**
-     * @param Request $request
-     * @param FormInterface $form
-     * @param Report $report
      * @throws \Exception
      */
     private function setChoicesInSession(Request $request, FormInterface $form, Report $report): void
     {
         $customDueDate = $form['dueDateCustom']->getData();
-        $startDate = isset($form['startDate'])  ? $form['startDate']->getData()->format('Y-m-d') : null;
+        $startDate = isset($form['startDate']) ? $form['startDate']->getData()->format('Y-m-d') : null;
         $endDate = isset($form['endDate']) ? $form['endDate']->getData()->format('Y-m-d') : null;
 
         $request->getSession()->set('report-management-changes', [
@@ -385,14 +378,15 @@ class ReportController extends AbstractController
             'dueDateCustom' => $customDueDate instanceof \DateTime ? $customDueDate->format('Y-m-d') : null,
             'startDate' => $startDate,
             'endDate' => $endDate,
-            'unsubmittedSectionsList' => implode(',', $report->getUnsubmittedSectionsIds())
+            'unsubmittedSectionsList' => implode(',', $report->getUnsubmittedSectionsIds()),
         ]);
     }
 
     /**
-     * @param Report $report
      * @param array $data
+     *
      * @return \DateTime|null
+     *
      * @throws \Exception
      */
     private function determineNewDueDateFromForm(Report $report, FormInterface $form)
@@ -402,7 +396,7 @@ class ReportController extends AbstractController
         if (preg_match('/^\d+$/', $form['dueDateChoice']->getData())) {
             $newDueDate = new \DateTime();
             $newDueDate->modify("+{$form['dueDateChoice']->getData()} weeks");
-        } elseif ($form['dueDateChoice']->getData() == 'custom' && $form['dueDateCustom']->getData() instanceof \DateTime) {
+        } elseif ('custom' == $form['dueDateChoice']->getData() && $form['dueDateCustom']->getData() instanceof \DateTime) {
             $newDueDate = $form['dueDateCustom']->getData();
         }
 
@@ -412,10 +406,11 @@ class ReportController extends AbstractController
     /**
      * @Route("manage-confirm", name="admin_report_manage_confirm")
      * @Security("is_granted('ROLE_ADMIN') or has_role('ROLE_AD')")
-     * @param Request $request
      *
      * @param $id
+     *
      * @return array|Response|RedirectResponse
+     *
      * @throws \Exception
      * @Template("@App/Admin/Client/Report/manageConfirm.html.twig")
      */
@@ -425,22 +420,22 @@ class ReportController extends AbstractController
 
         $sessionData = $request->getSession()->get('report-management-changes');
         if (null === $sessionData || !$this->sufficientDataInSession($sessionData)) {
-            return $this->redirect($this->generateUrl('admin_report_manage', ['id'=>$report->getId()]));
+            return $this->redirect($this->generateUrl('admin_report_manage', ['id' => $report->getId()]));
         }
 
         $form = $this->createForm(ManageReportConfirmType::class, $report);
         $form->handleRequest($request);
 
         if ($form->isSubmitted() && $form->isValid()) {
-            if ($form->has('confirm') && $form['confirm']->getData() === 'no') {
+            if ($form->has('confirm') && 'no' === $form['confirm']->getData()) {
                 // User decided not to update.
-                return $this->redirect($this->generateUrl('admin_client_details', ['id'=>$report->getClient()->getId()]));
+                return $this->redirect($this->generateUrl('admin_client_details', ['id' => $report->getClient()->getId()]));
             }
 
             $this->populateReportFromSession($report, $sessionData);
-            $this->restClient->put('report/' . $report->getId(), $report, ['report_type', 'report_due_date']);
+            $this->restClient->put('report/'.$report->getId(), $report, ['report_type', 'report_due_date']);
 
-            if ($form->has('confirm') && $form['confirm']->getData() === 'yes' && $report->isSubmitted()) {
+            if ($form->has('confirm') && 'yes' === $form['confirm']->getData() && $report->isSubmitted()) {
                 $this->reportApi->unsubmit(
                     $report,
                     $this->getUser(),
@@ -451,20 +446,17 @@ class ReportController extends AbstractController
             }
 
             $request->getSession()->remove('report-management-changes');
-            return $this->redirect($this->generateUrl('admin_client_details', ['id'=>$report->getClient()->getId()]));
+
+            return $this->redirect($this->generateUrl('admin_client_details', ['id' => $report->getClient()->getId()]));
         }
 
         return [
             'report' => $report,
             'form' => $form->createView(),
-            'submitted' => $sessionData
+            'submitted' => $sessionData,
         ];
     }
 
-    /**
-     * @param array $sessionData
-     * @return bool
-     */
     private function sufficientDataInSession(array $sessionData): bool
     {
         return
@@ -477,8 +469,6 @@ class ReportController extends AbstractController
     }
 
     /**
-     * @param Report $report
-     * @param array $sessionData
      * @throws \Exception
      */
     private function populateReportFromSession(Report $report, array $sessionData): void
@@ -502,8 +492,8 @@ class ReportController extends AbstractController
      * @Route("manage-close-report-confirm", name="admin_report_manage_close_report_confirm")
      * @Security("is_granted('ROLE_ADMIN') or has_role('ROLE_AD')")
      *
-     * @param Request $request
      * @param $id
+     *
      * @return array|RedirectResponse
      * @Template("@App/Admin/Client/Report/manageCloseReportConfirm.html.twig")
      *
@@ -518,18 +508,16 @@ class ReportController extends AbstractController
             $report = $this->reportApi->getReport(intval($id));
             $report->setSubmitted(true);
             $report->setUnSubmitDate(null);
-            $this->restClient->put('report/' . $id, $report, ['submitted', 'unsubmit_date']);
-            return $this->redirect($this->generateUrl('admin_client_details', ['id'=>$report->getClient()->getId()]));
+            $this->restClient->put('report/'.$id, $report, ['submitted', 'unsubmit_date']);
+
+            return $this->redirect($this->generateUrl('admin_client_details', ['id' => $report->getClient()->getId()]));
         }
 
         return [
-            'form' => $form->createView()
+            'form' => $form->createView(),
         ];
     }
 
-    /**
-     * @param Report $report
-     */
     private function upsertChecklistInformation(Report $report): void
     {
         $content = $this
@@ -541,8 +529,8 @@ class ReportController extends AbstractController
         $checklist->setFurtherInformationReceived($content);
 
         $httpMethod = empty($checklist->getId()) ? 'post' : 'put';
-        $this->restClient->{$httpMethod}('report/' . $report->getId() . '/checked', $checklist, [
-            'report-checklist', 'checklist-information'
+        $this->restClient->{$httpMethod}('report/'.$report->getId().'/checked', $checklist, [
+            'report-checklist', 'checklist-information',
         ]);
     }
 }

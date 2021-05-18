@@ -11,13 +11,13 @@ use App\Service\Client\Internal\UserApi;
 use App\Service\Client\RestClient;
 use App\Service\Redirector;
 use Psr\Log\LoggerInterface;
-use Symfony\Component\HttpFoundation\RedirectResponse;
-use Symfony\Component\Routing\Annotation\Route;
 use Sensio\Bundle\FrameworkExtraBundle\Configuration\Template;
 use Symfony\Component\Form\FormError;
+use Symfony\Component\HttpFoundation\RedirectResponse;
 use Symfony\Component\HttpFoundation\Request;
-use Symfony\Contracts\Translation\TranslatorInterface;
+use Symfony\Component\Routing\Annotation\Route;
 use Symfony\Component\Validator\Validator\ValidatorInterface;
+use Symfony\Contracts\Translation\TranslatorInterface;
 
 class CoDeputyController extends AbstractController
 {
@@ -67,7 +67,7 @@ class CoDeputyController extends AbstractController
 
             foreach ($errors as $error) {
                 $clientProperty = $error->getPropertyPath();
-                $form->get('client' . ucfirst($clientProperty))->addError(new FormError($error->getMessage()));
+                $form->get('client'.ucfirst($clientProperty))->addError(new FormError($error->getMessage()));
             }
 
             if ($form->isSubmitted() && $form->isValid()) {
@@ -79,8 +79,8 @@ class CoDeputyController extends AbstractController
                 $selfRegisterData->setClientLastname($form['clientLastname']->getData());
                 $selfRegisterData->setCaseNumber($form['clientCaseNumber']->getData());
 
-                $clientId = $this->restClient->get('v2/client/case-number/' . $selfRegisterData->getCaseNumber(), 'Client')->getId();
-                $mainClient = $this->restClient->get('client/' . $clientId, 'Client', ['client', 'client-users', 'report-id', 'current-report', 'user']);
+                $clientId = $this->restClient->get('v2/client/case-number/'.$selfRegisterData->getCaseNumber(), 'Client')->getId();
+                $mainClient = $this->restClient->get('client/'.$clientId, 'Client', ['client', 'client-users', 'report-id', 'current-report', 'user']);
                 $mainDeputy = reset($mainClient->getUsers());
 
                 // validate against casRec
@@ -90,7 +90,8 @@ class CoDeputyController extends AbstractController
                     if ($mainDeputy->isNdrEnabled()) {
                         $user->setNdrEnabled(true);
                     }
-                    $this->restClient->put('user/' . $user->getId(), $user);
+                    $this->restClient->put('user/'.$user->getId(), $user);
+
                     return $this->redirect($this->generateUrl('homepage'));
                 } catch (\Throwable $e) {
                     $translator = $this->translator;
@@ -100,7 +101,7 @@ class CoDeputyController extends AbstractController
                             $form->addError(new FormError(
                                 $translator->trans('email.first.existingError', [
                                     '%login%' => $this->generateUrl('login'),
-                                    '%passwordForgotten%' => $this->generateUrl('password_forgotten')
+                                    '%passwordForgotten%' => $this->generateUrl('password_forgotten'),
                                 ], 'register')
                             ));
                             break;
@@ -121,7 +122,7 @@ class CoDeputyController extends AbstractController
                             $form->addError(new FormError($translator->trans('formErrors.generic', [], 'register')));
                     }
 
-                    $this->logger->error(__METHOD__ . ': ' . $e->getMessage() . ', code: ' . $e->getCode());
+                    $this->logger->error(__METHOD__.': '.$e->getMessage().', code: '.$e->getCode());
                 }
             }
         }
@@ -129,7 +130,7 @@ class CoDeputyController extends AbstractController
         return [
             'form' => $form->createView(),
             'user' => $user,
-            'client_validated' => false
+            'client_validated' => false,
         ];
     }
 
@@ -137,10 +138,8 @@ class CoDeputyController extends AbstractController
      * @Route("/codeputy/{clientId}/add", name="add_co_deputy")
      * @Template("@App/CoDeputy/add.html.twig")
      *
-     * @param Request $request
-     * @param Redirector $redirector
-     *
      * @return array|RedirectResponse
+     *
      * @throws \Throwable
      */
     public function addAction(Request $request, Redirector $redirector)
@@ -157,7 +156,7 @@ class CoDeputyController extends AbstractController
 
         $backLink = $loggedInUser->isNdrEnabled() ?
             $this->generateUrl('ndr_index')
-            :$this->generateUrl('lay_home');
+            : $this->generateUrl('lay_home');
 
         $form->handleRequest($request);
         if ($form->isSubmitted() && $form->isValid()) {
@@ -179,17 +178,17 @@ class CoDeputyController extends AbstractController
                         $form->get('email')->addError(new FormError($this->translator->trans('form.email.existingError', [], 'co-deputy')));
                         break;
                     default:
-                        $this->logger->error(__METHOD__ . ': ' . $e->getMessage() . ', code: ' . $e->getCode());
+                        $this->logger->error(__METHOD__.': '.$e->getMessage().', code: '.$e->getCode());
                         throw $e;
                 }
-                $this->logger->error(__METHOD__ . ': ' . $e->getMessage() . ', code: ' . $e->getCode());
+                $this->logger->error(__METHOD__.': '.$e->getMessage().', code: '.$e->getCode());
             }
         }
 
         return [
             'form' => $form->createView(),
             'backLink' => $backLink,
-            'client' => $this->clientApi->getFirstClient()
+            'client' => $this->clientApi->getFirstClient(),
         ];
     }
 
@@ -197,10 +196,10 @@ class CoDeputyController extends AbstractController
      * @Route("/codeputy/re-invite/{email}", name="codep_resend_activation")
      * @Template("@App/CoDeputy/resendActivation.html.twig")
      *
-     * @param Request $request
      * @param $email
      *
      * @return array|RedirectResponse
+     *
      * @throws \Throwable
      */
     public function resendActivationAction(Request $request, string $email)
@@ -212,7 +211,7 @@ class CoDeputyController extends AbstractController
 
         $backLink = $loggedInUser->isNdrEnabled() ?
             $this->generateUrl('ndr_index')
-            :$this->generateUrl('lay_home');
+            : $this->generateUrl('lay_home');
 
         $form->handleRequest($request);
 
@@ -222,7 +221,7 @@ class CoDeputyController extends AbstractController
 
                 //email was updated on the fly
                 if ($formEmail != $email) {
-                    $this->restClient->put('codeputy/' . $existingCoDeputy->getId(), $form->getData(), []);
+                    $this->restClient->put('codeputy/'.$existingCoDeputy->getId(), $form->getData(), []);
                 }
 
                 $this->userApi->reInviteCoDeputy($formEmail, $loggedInUser);
@@ -236,16 +235,16 @@ class CoDeputyController extends AbstractController
                         $form->get('email')->addError(new FormError($this->translator->trans('form.email.existingError', [], 'co-deputy')));
                         break;
                     default:
-                        $this->logger->error(__METHOD__ . ': ' . $e->getMessage() . ', code: ' . $e->getCode());
+                        $this->logger->error(__METHOD__.': '.$e->getMessage().', code: '.$e->getCode());
                         throw $e;
                 }
-                $this->logger->error(__METHOD__ . ': ' . $e->getMessage() . ', code: ' . $e->getCode());
+                $this->logger->error(__METHOD__.': '.$e->getMessage().', code: '.$e->getCode());
             }
         }
 
         return [
             'form' => $form->createView(),
-            'backLink' => $backLink
+            'backLink' => $backLink,
         ];
     }
 }

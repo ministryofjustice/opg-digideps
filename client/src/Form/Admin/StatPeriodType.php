@@ -16,45 +16,45 @@ class StatPeriodType extends AbstractType
         $builder
             ->add('period', FormTypes\ChoiceType::class, [
                 'choices' => [
-                    'last-30'=> 'last-30',
-                    'this-year'=> 'this-year',
-                    'all-time'=> 'all-time',
-                    'custom'=> 'custom',
+                    'last-30' => 'last-30',
+                    'this-year' => 'this-year',
+                    'all-time' => 'all-time',
+                    'custom' => 'custom',
                 ],
                 'choice_label' => function ($choice) {
-                    return 'form.period.options.' . $choice;
+                    return 'form.period.options.'.$choice;
                 },
                 'expanded' => true,
                 'multiple' => false,
-                'data' => 'last-30'
+                'data' => 'last-30',
             ])
             ->add('startDate', FormTypes\DateType::class, [
                 'widget' => 'text',
                 'input' => 'datetime',
                 'format' => 'dd-MM-yyyy',
                 'invalid_message' => 'Enter a valid date',
-                'data' => new \DateTime('-30 days')
+                'data' => new \DateTime('-30 days'),
             ])
             ->add('endDate', FormTypes\DateType::class, [
                 'widget' => 'text',
                 'input' => 'datetime',
                 'format' => 'dd-MM-yyyy',
                 'invalid_message' => 'Enter a valid date',
-                'data' => new \DateTime()
+                'data' => new \DateTime(),
             ])
             ->add('update', FormTypes\SubmitType::class);
 
         $builder->addEventListener(FormEvents::PRE_SUBMIT, function (FormEvent $event) {
             $data = $event->getData();
 
-            if ($data['period'] === 'last-30') {
+            if ('last-30' === $data['period']) {
                 $startDate = new \DateTime('-30 days');
                 $data['startDate'] = ['day' => $startDate->format('d'), 'month' => $startDate->format('m'), 'year' => $startDate->format('Y')];
                 $data['endDate'] = ['day' => date('d'), 'month' => date('m'), 'year' => date('Y')];
-            } elseif ($data['period'] === 'this-year') {
+            } elseif ('this-year' === $data['period']) {
                 $data['startDate'] = ['day' => 1, 'month' => 1, 'year' => date('Y')];
                 $data['endDate'] = ['day' => date('d'), 'month' => date('m'), 'year' => date('Y')];
-            } elseif ($data['period'] === 'all-time') {
+            } elseif ('all-time' === $data['period']) {
                 $data['startDate'] = ['day' => 1, 'month' => 1, 'year' => 2000];
                 $data['endDate'] = ['day' => date('d'), 'month' => date('m'), 'year' => date('Y')];
             }

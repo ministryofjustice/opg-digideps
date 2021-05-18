@@ -1,15 +1,14 @@
-<?php declare(strict_types=1);
+<?php
+
+declare(strict_types=1);
 
 namespace App\Controller\Admin;
 
 use App\Controller\AbstractController;
 use App\Service\Client\RestClient;
-use Sensio\Bundle\FrameworkExtraBundle\Configuration\Security;
 use Symfony\Bundle\FrameworkBundle\Console\Application;
 use Symfony\Component\Console\Input\ArrayInput;
 use Symfony\Component\Console\Output\NullOutput;
-use Symfony\Component\HttpFoundation\JsonResponse;
-use Symfony\Component\HttpFoundation\Request;
 use Symfony\Component\HttpFoundation\Response;
 use Symfony\Component\HttpKernel\KernelInterface;
 use Symfony\Component\Routing\Annotation\Route;
@@ -31,12 +30,14 @@ class BehatController extends AbstractController
      * @Route("/admin/behat/run-document-sync-command", name="behat_admin_run_sync_command", methods={"GET"})
      *
      * @param KernelInterface $kernel
+     *
      * @return Response
+     *
      * @throws \Exception
      */
     public function runDocumentSyncCommand()
     {
-        if ($this->symfonyEnvironment === 'prod') {
+        if ('prod' === $this->symfonyEnvironment) {
             throw $this->createNotFoundException();
         }
 

@@ -1,5 +1,6 @@
-<?php declare(strict_types=1);
+<?php
 
+declare(strict_types=1);
 
 namespace App\TestHelpers;
 
@@ -9,9 +10,6 @@ use DateTime;
 
 class ReportHelpers
 {
-    /**
-     * @return Report
-     */
     public static function createReport(): Report
     {
         $client = ClientHelpers::createClient();
@@ -29,9 +27,6 @@ class ReportHelpers
             ->setDueDate($endDate);
     }
 
-    /**
-     * @return Report
-     */
     public static function createSubmittedReport(): Report
     {
         $submittedDate = new DateTime();

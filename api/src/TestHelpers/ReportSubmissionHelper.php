@@ -1,21 +1,20 @@
-<?php declare(strict_types=1);
+<?php
 
+declare(strict_types=1);
 
 namespace App\TestHelpers;
 
 use App\Entity\Client;
 use App\Entity\Report\ReportSubmission;
-use App\Entity\User;
 use DateTime;
 use Doctrine\ORM\EntityManager;
-use Faker\Factory;
 use Symfony\Bundle\FrameworkBundle\Test\KernelTestCase;
 
 class ReportSubmissionHelper extends KernelTestCase
 {
     /**
-     * @param EntityManager $em
      * @return ReportSubmission
+     *
      * @throws \Doctrine\ORM\ORMException
      * @throws \Doctrine\ORM\OptimisticLockException
      */

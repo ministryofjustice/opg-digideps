@@ -6,20 +6,20 @@ use App\Entity\AssetInterface;
 use App\Entity\BankAccountInterface;
 use App\Entity\CasRec;
 use App\Entity\Client;
+use App\Entity\Ndr\AssetOther as NdrAssetOther;
+use App\Entity\Ndr\AssetProperty as NdrAssetProperty;
 use App\Entity\Ndr\Ndr;
 use App\Entity\Report\Asset;
-use App\Entity\Report\AssetProperty as ReportAssetProperty;
 use App\Entity\Report\AssetOther as ReportAssetOther;
-use App\Entity\Ndr\AssetProperty as NdrAssetProperty;
-use App\Entity\Ndr\AssetOther as NdrAssetOther;
+use App\Entity\Report\AssetProperty as ReportAssetProperty;
 use App\Entity\Report\BankAccount as BankAccountEntity;
 use App\Entity\Report\BankAccount as ReportBankAccount;
 use App\Entity\Report\Document;
 use App\Entity\Report\Report;
 use App\Entity\Report\ReportSubmission;
 use App\Entity\ReportInterface;
-use App\Repository\ReportRepository;
 use App\Entity\User;
+use App\Repository\ReportRepository;
 use DateTime;
 use Doctrine\Common\Collections\Collection;
 use Doctrine\Common\Persistence\ObjectRepository;
@@ -64,10 +64,10 @@ class ReportService
     }
 
     /**
-     * Set report type based on CasRec record (if existing)
+     * Set report type based on CasRec record (if existing).
      *
-     * @param Client $client
      * @return string|null type
+     *
      * @throws Exception
      */
     public function getReportTypeBasedOnCasrec(Client $client)
@@ -101,9 +101,8 @@ class ReportService
     /**
      * Create new year's report copying data over (and set start/endDate accordingly).
      *
-     * @param ReportInterface $oldReport
-     *
      * @return Report
+     *
      * @throws Exception
      */
     private function createNextYearReport(ReportInterface $oldReport)
@@ -148,9 +147,8 @@ class ReportService
     }
 
     /**
-     * Clone resources which cross report periods from one account to another
+     * Clone resources which cross report periods from one account to another.
      *
-     * @param Report $toReport
      * @param Ndr|Report $fromReport
      */
     public function clonePersistentResources(Report $toReport, $fromReport)
@@ -159,7 +157,6 @@ class ReportService
         $toReport->setNoAssetToAdd($fromReport->getNoAssetToAdd());
         $fromAssets = $fromReport->getAssets();
         foreach ($fromAssets as $asset) {
-
             // Check that the target report doesn't already have a matching asset
             $assetExists = $this->checkAssetExists($toReport, $asset);
 
@@ -189,8 +186,6 @@ class ReportService
     }
 
     /**
-     * @param ReportInterface $toReport
-     * @param AssetInterface $asset
      * @return bool
      */
     private function checkAssetExists(ReportInterface $toReport, AssetInterface $asset)
@@ -209,34 +204,36 @@ class ReportService
     }
 
     /**
-     * @param ReportInterface $toReport
-     * @param BankAccountInterface $account
      * @return bool
      */
     private function checkBankAccountExists(ReportInterface $toReport, BankAccountInterface $account)
     {
         foreach ($toReport->getBankAccounts() as $toAccount) {
-            if ($toAccount->getAccountType() === $account->getAccountType()
+            if (
+                $toAccount->getAccountType() === $account->getAccountType()
                 && $toAccount->getBank() === $account->getBank()
                 && $toAccount->getAccountNumber() === $account->getAccountNumber()
                 && $toAccount->getSortCode() === $account->getSortCode()
-                && !$account->getIsClosed()) {
+                && !$account->getIsClosed()
+            ) {
                 return true;
             }
         }
+
         return false;
     }
 
     /**
-     * Convert NDR asset into Report Asset
+     * Convert NDR asset into Report Asset.
      *
-     * @param AssetInterface  $asset
      * @return ReportAssetOther|NdrAssetOther|ReportAssetProperty
      */
     private function cloneAsset(AssetInterface $asset)
     {
-        if ($asset instanceof NdrAssetProperty ||
-            $asset instanceof ReportAssetProperty) {
+        if (
+            $asset instanceof NdrAssetProperty ||
+            $asset instanceof ReportAssetProperty
+        ) {
             $newAsset = new ReportAssetProperty();
 
             $newAsset->setAddress($asset->getAddress());
@@ -268,9 +265,8 @@ class ReportService
     }
 
     /**
-     * Clones instance of ReportInterface and returns new Report Bank Account
+     * Clones instance of ReportInterface and returns new Report Bank Account.
      *
-     * @param BankAccountInterface $account
      * @return ReportBankAccount
      */
     private function cloneBankAccount(BankAccountInterface $account)
@@ -289,14 +285,11 @@ class ReportService
     }
 
     /**
-     * Set report submitted and create a new year report
+     * Set report submitted and create a new year report.
      *
-     * @param ReportInterface $currentReport
-     * @param User $user
-     * @param DateTime $submitDate
      * @param string|null $ndrDocumentId
-     * @return Report
      *
+     * @return Report
      */
     public function submit(ReportInterface $currentReport, User $user, DateTime $submitDate, $ndrDocumentId = null)
     {
@@ -311,7 +304,7 @@ class ReportService
 
         // create submission record with NEW documents (= documents not yet attached to a submission)
         $submission = new ReportSubmission($currentReport, $user);
-        if ($currentReport instanceof Ndr && ($ndrDocumentId !== null)) {
+        if ($currentReport instanceof Ndr && (null !== $ndrDocumentId)) {
             $document = $this->_em->getRepository(Document::class)->find($ndrDocumentId);
 
             if ($document instanceof Document) {
@@ -335,11 +328,11 @@ class ReportService
             // Find the first report and clone assets/accounts across
             $reports = $currentReport->getClient()->getReports();
 
-            if (count($reports) === 1) {
+            if (1 === count($reports)) {
                 $newYearReport = $reports[0];
 
                 $this->clonePersistentResources($newYearReport, $currentReport);
-            } elseif (count($reports) === 0) {
+            } elseif (0 === count($reports)) {
                 $newYearReport = $this->createNextYearReport($currentReport);
             }
         } elseif ($currentReport instanceof Report && $currentReport->getUnSubmitDate()) {
@@ -366,9 +359,6 @@ class ReportService
     }
 
     /**
-     * @param Report $report
-     * @param DateTime $unsubmitDate
-     * @param DateTime $dueDate
      * @param mixed $sectionList
      */
     public function unSubmit(Report $report, DateTime $unsubmitDate, DateTime $dueDate, DateTime $startDate, DateTime $endDate, $sectionList)
@@ -387,11 +377,7 @@ class ReportService
     }
 
     /**
-     * Set report submission for additional documents
-     *
-     * @param Report $currentReport
-     * @param User $user
-     * @param DateTime $submitDate
+     * Set report submission for additional documents.
      *
      * @return Report new year's report
      */
@@ -415,10 +401,7 @@ class ReportService
     }
 
     /**
-     * If one report started, return the other nonStarted reports with the same start/end date
-     *
-     *
-     * @param Collection $reports
+     * If one report started, return the other nonStarted reports with the same start/end date.
      *
      * @return Report[] indexed by ID
      */
@@ -431,7 +414,7 @@ class ReportService
                 'status' => $ur->getStatus()->getStatus(),
                 'start' => $ur->getStartDate()->format('Y-m-d'),
                 'end' => $ur->getEndDate()->format('Y-m-d'),
-                'sections' => $ur->getStatus()->getSectionStatus()
+                'sections' => $ur->getStatus()->getSectionStatus(),
             ];
         }
 
@@ -444,9 +427,11 @@ class ReportService
                     continue;
                 }
                 // find report with same date that have not started
-                if ($report1->getStatus()->hasStarted()
+                if (
+                    $report1->getStatus()->hasStarted()
                     && $report1->hasSamePeriodAs($report2)
-                    && !$report2->getStatus()->hasStarted()) {
+                    && !$report2->getStatus()->hasStarted()
+                ) {
                     $ret[$report2->getId()] = $report2;
                 }
             }
@@ -455,28 +440,24 @@ class ReportService
         return $ret;
     }
 
-
     /**
      * If the report is ready to submit, but is not yet due, return notFinished instead
-     * In all the the cases, return original $status
+     * In all the the cases, return original $status.
      *
      * @param string $status
-     * @param DateTime $endDate
      *
      * @return string
      */
     public function adjustReportStatus($status, DateTime $endDate)
     {
-        if ($status == Report::STATUS_READY_TO_SUBMIT && !self::isDue($endDate)) {
+        if (Report::STATUS_READY_TO_SUBMIT == $status && !self::isDue($endDate)) {
             return Report::STATUS_NOT_FINISHED;
         }
 
         return $status;
     }
 
-
     /**
-     * @param DateTime|null $endDate
      * @return bool
      */
     public static function isDue(DateTime $endDate = null)

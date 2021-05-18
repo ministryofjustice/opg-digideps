@@ -1,5 +1,6 @@
-<?php declare(strict_types=1);
+<?php
 
+declare(strict_types=1);
 
 namespace App\Event;
 
@@ -24,75 +25,51 @@ class UserAddedToOrganisationEvent extends Event
         $this->trigger = $trigger;
     }
 
-    /**
-     * @return Organisation
-     */
     public function getOrganisation(): Organisation
     {
         return $this->organisation;
     }
 
-    /**
-     * @param Organisation $organisation
-     * @return UserAddedToOrganisationEvent
-     */
     public function setOrganisation(Organisation $organisation): UserAddedToOrganisationEvent
     {
         $this->organisation = $organisation;
+
         return $this;
     }
 
-    /**
-     * @return User
-     */
     public function getAddedUser(): User
     {
         return $this->addedUser;
     }
 
-    /**
-     * @param User $addedUser
-     * @return UserAddedToOrganisationEvent
-     */
     public function setAddedUser(User $addedUser): UserAddedToOrganisationEvent
     {
         $this->addedUser = $addedUser;
+
         return $this;
     }
 
-    /**
-     * @return User
-     */
     public function getCurrentUser(): User
     {
         return $this->currentUser;
     }
 
-    /**
-     * @param User $currentUser
-     * @return UserAddedToOrganisationEvent
-     */
     public function setCurrentUser(User $currentUser): UserAddedToOrganisationEvent
     {
         $this->currentUser = $currentUser;
+
         return $this;
     }
 
-    /**
-     * @return string
-     */
     public function getTrigger(): string
     {
         return $this->trigger;
     }
 
-    /**
-     * @param string $trigger
-     * @return UserAddedToOrganisationEvent
-     */
     public function setTrigger(string $trigger): UserAddedToOrganisationEvent
     {
         $this->trigger = $trigger;
+
         return $this;
     }
 }

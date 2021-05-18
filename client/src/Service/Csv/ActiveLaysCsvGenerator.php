@@ -1,13 +1,11 @@
-<?php declare(strict_types=1);
+<?php
 
+declare(strict_types=1);
 
 namespace App\Service\Csv;
 
 class ActiveLaysCsvGenerator
 {
-    /**
-     * @var CsvBuilder
-     */
     private CsvBuilder $csvBuilder;
 
     public function __construct(CsvBuilder $csvBuilder)
@@ -16,7 +14,6 @@ class ActiveLaysCsvGenerator
     }
 
     /**
-     * @param array $lays
      * @return string
      */
     public function generateActiveLaysCsv(array $lays)
@@ -28,7 +25,7 @@ class ActiveLaysCsvGenerator
             'Deputy Phone Number',
             'Reports Submitted',
             'Registered On',
-            'Client Full Name'
+            'Client Full Name',
         ];
 
         $rows = [];

@@ -1,5 +1,6 @@
-<?php declare(strict_types=1);
+<?php
 
+declare(strict_types=1);
 
 namespace App\Event;
 
@@ -24,57 +25,39 @@ class UserDeletedEvent extends Event
         $this->setDeletedBy($deletedBy);
     }
 
-    /**
-     * @return User
-     */
     public function getDeletedUser(): User
     {
         return $this->deletedUser;
     }
 
-    /**
-     * @param User $deletedUser
-     * @return UserDeletedEvent
-     */
     public function setDeletedUser(User $deletedUser): UserDeletedEvent
     {
         $this->deletedUser = $deletedUser;
+
         return $this;
     }
 
-    /**
-     * @return string
-     */
     public function getTrigger(): string
     {
         return $this->trigger;
     }
 
-    /**
-     * @param string $trigger
-     * @return UserDeletedEvent
-     */
     public function setTrigger(string $trigger): UserDeletedEvent
     {
         $this->trigger = $trigger;
+
         return $this;
     }
 
-    /**
-     * @return User
-     */
     public function getDeletedBy(): User
     {
         return $this->deletedBy;
     }
 
-    /**
-     * @param User $deletedBy
-     * @return UserDeletedEvent
-     */
     public function setDeletedBy(User $deletedBy): UserDeletedEvent
     {
         $this->deletedBy = $deletedBy;
+
         return $this;
     }
 }

@@ -30,12 +30,12 @@ class BankAccount implements BankAccountInterface
     private static $typesNotRequiringSortCode = [
         'postoffice',
         'cfo',
-        'other_no_sortcode'
+        'other_no_sortcode',
     ];
 
     private static $typesNotRequiringBankName = [
         'postoffice',
-        'cfo'
+        'cfo',
     ];
 
     /**
@@ -55,7 +55,6 @@ class BankAccount implements BankAccountInterface
      * @var string
      */
     private $accountType;
-
 
     /**
      * @JMS\Type("string")
@@ -257,7 +256,7 @@ class BankAccount implements BankAccountInterface
 
     public function isClosingBalanceZero()
     {
-        return $this->closingBalance !== null && round($this->closingBalance, 2) === 0.00;
+        return null !== $this->closingBalance && 0.00 === round($this->closingBalance, 2);
     }
 
     /**
@@ -304,9 +303,6 @@ class BankAccount implements BankAccountInterface
         return $this->createdAt;
     }
 
-    /**
-     * @param \DateTime $createdAt
-     */
     public function setCreatedAt(\DateTime $createdAt)
     {
         $this->createdAt = $createdAt;
@@ -387,11 +383,13 @@ class BankAccount implements BankAccountInterface
 
     /**
      * @param string $nameOneLine
+     *
      * @return $this
      */
     public function setNameOneLine($nameOneLine)
     {
         $this->nameOneLine = $nameOneLine;
+
         return $this;
     }
 
@@ -404,33 +402,35 @@ class BankAccount implements BankAccountInterface
     {
         switch ($this->getAccountType()) {
             case 'current':
-                return ($this->getIsJointAccount() ? 'Joint current ': 'Current') . ' account (****' . $this->getAccountNumber() . ' / ' . $this->getDisplaySortCode() . ')';
+                return ($this->getIsJointAccount() ? 'Joint current ' : 'Current').' account (****'.$this->getAccountNumber().' / '.$this->getDisplaySortCode().')';
             case 'savings':
-                return ($this->getIsJointAccount() ? 'Joint savings ': 'Savings') . ' account (****' . $this->getAccountNumber() . ' / ' . $this->getDisplaySortCode() . ')';
+                return ($this->getIsJointAccount() ? 'Joint savings ' : 'Savings').' account (****'.$this->getAccountNumber().' / '.$this->getDisplaySortCode().')';
             case 'isa':
-                return ($this->getIsJointAccount() ? 'Joint ISA ': 'ISA') . ' (****' . $this->getAccountNumber() . ' / ' . $this->getDisplaySortCode() . ')';
+                return ($this->getIsJointAccount() ? 'Joint ISA ' : 'ISA').' (****'.$this->getAccountNumber().' / '.$this->getDisplaySortCode().')';
             case 'postoffice':
-                return ($this->getIsJointAccount() ? 'Joint Post office ': 'Post office') . ' account (****' . $this->getAccountNumber() . ')';
+                return ($this->getIsJointAccount() ? 'Joint Post office ' : 'Post office').' account (****'.$this->getAccountNumber().')';
             case 'cfo':
-                return ($this->getIsJointAccount() ? 'Joint Court funds ': 'Court funds') . ' account (****' . $this->getAccountNumber() . ')';
+                return ($this->getIsJointAccount() ? 'Joint Court funds ' : 'Court funds').' account (****'.$this->getAccountNumber().')';
             case 'other':
-                return ($this->getIsJointAccount() ? 'Joint other ': 'Other') . ' account ' . ' (****' . $this->getAccountNumber() . ' / ' . $this->getDisplaySortCode() . ')';
+                return ($this->getIsJointAccount() ? 'Joint other ' : 'Other').' account '.' (****'.$this->getAccountNumber().' / '.$this->getDisplaySortCode().')';
             case 'other_no_sortcode':
-                return ($this->getIsJointAccount() ? 'Joint other ': 'Other') . ' account ' . ' (****' . $this->getAccountNumber() . ')';
+                return ($this->getIsJointAccount() ? 'Joint other ' : 'Other').' account '.' (****'.$this->getAccountNumber().')';
         }
     }
 
     /**
-     * Formats a sort code with hyphens
+     * Formats a sort code with hyphens.
      *
      * @return string
      */
     public function getDisplaySortCode()
     {
-        if (strlen($this->getSortCode()) == 6) {
+        if (6 == strlen($this->getSortCode())) {
             $sc = str_split($this->getSortCode());
-            return $sc[0] . $sc[1] . '-' . $sc[2] . $sc[3] . '-' . $sc[4] . $sc[5];
+
+            return $sc[0].$sc[1].'-'.$sc[2].$sc[3].'-'.$sc[4].$sc[5];
         }
+
         return $this->getSortCode();
     }
 }

@@ -18,14 +18,14 @@ class SetPasswordType extends AbstractType
             'password',
             FormTypes\RepeatedType::class,
             [
-                'type'            => FormTypes\PasswordType::class,
+                'type' => FormTypes\PasswordType::class,
                 'invalid_message' => $options['passwordMismatchMessage'],
-           ]
+            ]
         );
         if (!empty($options['showTermsAndConditions'])) {
             $builder->add('showTermsAndConditions', FormTypes\CheckboxType::class, [
-                'mapped'=>false,
-                'constraints' => [new Constraints\NotBlank(['message' => 'user.agreeTermsUse.notBlank', 'groups'=>[self::VALIDATION_GROUP]])]
+                'mapped' => false,
+                'constraints' => [new Constraints\NotBlank(['message' => 'user.agreeTermsUse.notBlank', 'groups' => [self::VALIDATION_GROUP]])],
             ]);
         }
         $builder->add('save', FormTypes\SubmitType::class);
@@ -34,9 +34,9 @@ class SetPasswordType extends AbstractType
     public function configureOptions(OptionsResolver $resolver)
     {
         $resolver->setDefaults([
-              'translation_domain'     => 'user-activate',
-              'validation_groups'      => [self::VALIDATION_GROUP],
-              'showTermsAndConditions' => false
+              'translation_domain' => 'user-activate',
+              'validation_groups' => [self::VALIDATION_GROUP],
+              'showTermsAndConditions' => false,
         ])
         ->setRequired(['passwordMismatchMessage']);
     }

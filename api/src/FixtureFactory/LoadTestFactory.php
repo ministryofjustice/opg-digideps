@@ -1,5 +1,6 @@
-<?php declare(strict_types=1);
+<?php
 
+declare(strict_types=1);
 
 namespace App\FixtureFactory;
 
@@ -19,9 +20,7 @@ class LoadTestFactory
     }
 
     /**
-     * Use to persist entities to simulate a prod like databases in size (run in a test for a hacky way to fill the DB)
-     *
-     * @param int $recordsToMake
+     * Use to persist entities to simulate a prod like databases in size (run in a test for a hacky way to fill the DB).
      */
     public function createUsersClientsReports(int $recordsToMake)
     {
@@ -37,7 +36,7 @@ class LoadTestFactory
                     DateTime::createFromImmutable($oneYearAgo->modify('+1 day'))
                 );
 
-            $user->setEmail($user->getEmail() . rand(1, 100000));
+            $user->setEmail($user->getEmail().rand(1, 100000));
 
             $client = $clientTestHelper->generateClient($this->em, $user);
             $user->addClient($client);

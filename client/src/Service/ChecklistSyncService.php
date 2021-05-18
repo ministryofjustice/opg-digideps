@@ -1,4 +1,6 @@
-<?php declare(strict_types=1);
+<?php
+
+declare(strict_types=1);
 
 namespace App\Service;
 
@@ -31,11 +33,6 @@ class ChecklistSyncService
     /** @var string */
     const PAPER_REPORT_UUID_FALLBACK = '99999999-9999-9999-9999-999999999999';
 
-    /**
-     * @param RestClient $restClient
-     * @param SiriusApiGatewayClient $siriusApiGatewayClient
-     * @param SiriusApiErrorTranslator $errorTranslator
-     */
     public function __construct(
         RestClient $restClient,
         SiriusApiGatewayClient $siriusApiGatewayClient,
@@ -47,13 +44,13 @@ class ChecklistSyncService
     }
 
     /**
-     * @param QueuedChecklistData $checklistData
      * @return mixed
      */
     public function sync(QueuedChecklistData $checklistData)
     {
         try {
             $siriusResponse = $this->sendDocument($checklistData);
+
             return json_decode(strval($siriusResponse->getBody()), true)['data']['id'];
         } catch (Throwable $e) {
             throw new SiriusDocumentSyncFailedException($this->determineErrorMessage($e));
@@ -61,8 +58,8 @@ class ChecklistSyncService
     }
 
     /**
-     * @param QueuedChecklistData $checklistData
      * @return mixed|\Psr\Http\Message\ResponseInterface|void
+     *
      * @throws \GuzzleHttp\Exception\GuzzleException
      */
     private function sendDocument(QueuedChecklistData $checklistData)
@@ -78,9 +75,8 @@ class ChecklistSyncService
     }
 
     /**
-     * @param QueuedChecklistData $checklistData
-     * @param string $reportSubmissionUuid
      * @return mixed
+     *
      * @throws \GuzzleHttp\Exception\GuzzleException
      */
     private function postChecklist(QueuedChecklistData $checklistData, string $reportSubmissionUuid)
@@ -95,9 +91,8 @@ class ChecklistSyncService
     }
 
     /**
-     * @param QueuedChecklistData $checklistData
-     * @param string $reportSubmissionUuid
      * @return mixed
+     *
      * @throws \GuzzleHttp\Exception\GuzzleException
      */
     private function putChecklist(QueuedChecklistData $checklistData, string $reportSubmissionUuid)
@@ -113,7 +108,6 @@ class ChecklistSyncService
     /**
      * @param string $content
      * @param Report $report
-     * @return SiriusDocumentUpload
      */
     private function buildUpload(QueuedChecklistData $checklistData): SiriusDocumentUpload
     {
@@ -148,21 +142,14 @@ class ChecklistSyncService
 
     /**
      * @param $e
-     * @return string
      */
-    private function determineErrorMessage(\Throwable $e): string
+    private function determineErrorMessage(Throwable $e): string
     {
         return ($this->errorCanBeTranslated($e)) ?
-            $this->errorTranslator->translateApiError((string)$e->getResponse()->getBody()) :
+            $this->errorTranslator->translateApiError((string) $e->getResponse()->getBody()) :
             substr($e->getMessage(), 0, 254);
     }
 
-    /**
-     * @param int $id
-     * @param string $status
-     * @param string|null $message
-     * @param string|null $uuid
-     */
     private function updateChecklist(int $id, string $status, string $message = null, string $uuid = null): void
     {
         $data = ['syncStatus' => $status];
@@ -186,11 +173,7 @@ class ChecklistSyncService
         );
     }
 
-    /**
-     * @param Throwable $e
-     * @return bool
-     */
-    private function errorCanBeTranslated(\Throwable $e): bool
+    private function errorCanBeTranslated(Throwable $e): bool
     {
         return
             method_exists($e, 'getResponse') &&

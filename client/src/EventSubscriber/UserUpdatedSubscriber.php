@@ -1,5 +1,6 @@
-<?php declare(strict_types=1);
+<?php
 
+declare(strict_types=1);
 
 namespace App\EventSubscriber;
 
@@ -78,7 +79,6 @@ class UserUpdatedSubscriber implements EventSubscriberInterface
     }
 
     /**
-     * @param UserUpdatedEvent $event
      * @return bool
      */
     private function emailHasChanged(UserUpdatedEvent $event)
@@ -109,6 +109,6 @@ class UserUpdatedSubscriber implements EventSubscriberInterface
 
     private function layDeputyDetailsChanged(UserUpdatedEvent $event)
     {
-        return $event->getPostUpdateUser()->getRoleName() === User::ROLE_LAY_DEPUTY && $this->userDetailsHaveChanged($event);
+        return User::ROLE_LAY_DEPUTY === $event->getPostUpdateUser()->getRoleName() && $this->userDetailsHaveChanged($event);
     }
 }

@@ -1,5 +1,6 @@
-<?php declare(strict_types=1);
+<?php
 
+declare(strict_types=1);
 
 namespace App\TestHelpers;
 
@@ -9,7 +10,6 @@ use DateTime;
 use Doctrine\ORM\EntityManager;
 use Faker\Factory;
 use PHPUnit\Framework\TestCase;
-use Symfony\Component\Security\Core\Encoder\UserPasswordEncoderInterface;
 
 class UserTestHelper extends TestCase
 {
@@ -32,7 +32,7 @@ class UserTestHelper extends TestCase
     {
         $faker = Factory::create('en_GB');
 
-        $user = (new User)
+        $user = (new User())
             ->setFirstname($faker->firstName)
             ->setLastname($faker->lastName)
             ->setEmail($email ? $email : $faker->safeEmail)

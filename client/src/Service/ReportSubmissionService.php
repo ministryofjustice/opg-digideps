@@ -5,7 +5,6 @@ namespace App\Service;
 use App\Entity\Report\Report;
 use App\Entity\Report\ReportSubmission;
 use App\Entity\ReportInterface;
-use App\Entity\User;
 use App\Exception\ReportSubmissionDocumentsNotDownloadableException;
 use App\Service\Client\RestClient;
 use App\Service\Csv\TransactionsCsvGenerator;
@@ -62,6 +61,7 @@ class ReportSubmissionService
 
     /**
      * ReportSubmissionService constructor.
+     *
      * @throws \Exception
      */
     public function __construct(
@@ -77,7 +77,7 @@ class ReportSubmissionService
         $this->fileUploader = $fileUploader;
         $this->restClient = $restClient;
         $this->mailSender = $mailSender;
-        $this->mailFactory =$mailFactory;
+        $this->mailFactory = $mailFactory;
         $this->templating = $templating;
         $this->wkhtmltopdf = $wkhtmltopdf;
         $this->logger = $logger;
@@ -85,7 +85,8 @@ class ReportSubmissionService
     }
 
     /**
-     * Wrapper method for all documents generated for a report submission
+     * Wrapper method for all documents generated for a report submission.
+     *
      * @param Report $report
      */
     public function generateReportDocuments(ReportInterface $report)
@@ -105,7 +106,7 @@ class ReportSubmissionService
     }
 
     /**
-     * Generates the PDF of the report
+     * Generates the PDF of the report.
      *
      * @param Report $report
      */
@@ -121,17 +122,18 @@ class ReportSubmissionService
     }
 
     /**
-     * Generate the HTML of the report and convert to PDF
+     * Generate the HTML of the report and convert to PDF.
      *
-     * @param  Report $report
-     * @param  bool   $showSummary
+     * @param Report $report
+     * @param bool   $showSummary
+     *
      * @return string binary PDF content
      */
     public function getPdfBinaryContent(ReportInterface $report, $showSummary = false)
     {
         $html = $this->templating->render('@App/Report/Formatted/formatted_standalone.html.twig', [
             'report' => $report,
-            'showSummary' => $showSummary
+            'showSummary' => $showSummary,
         ]);
 
         return $this->wkhtmltopdf->getPdfFromHtml($html);
@@ -141,13 +143,14 @@ class ReportSubmissionService
      * @to-do move this into a checklist or pdf service
      * Generate the HTML of the report and convert to PDF
      *
-     * @param  Report $report
-     * @param  bool   $showSummary
+     * @param Report $report
+     * @param bool   $showSummary
+     *
      * @return string binary PDF content
      */
     public function getChecklistPdfBinaryContent(ReportInterface $report)
     {
-        $reviewChecklist = $this->restClient->get('report/' . $report->getId() . '/checklist', 'Report\\ReviewChecklist');
+        $reviewChecklist = $this->restClient->get('report/'.$report->getId().'/checklist', 'Report\\ReviewChecklist');
 
         // A null id indicates a reviewChecklist has not yet been submitted.
         if (null === $reviewChecklist->getId()) {
@@ -157,14 +160,13 @@ class ReportSubmissionService
         $html = $this->templating->render('@App/Admin/Client/Report/Formatted/checklist_formatted_standalone.html.twig', [
             'report' => $report,
             'lodgingChecklist' => $report->getChecklist(),
-            'reviewChecklist' => $reviewChecklist
+            'reviewChecklist' => $reviewChecklist,
         ]);
 
         return $this->wkhtmltopdf->getPdfFromHtml($html);
     }
 
     /**
-     * @param string $id
      * @return mixed
      */
     public function getReportSubmissionById(string $id)
@@ -173,7 +175,6 @@ class ReportSubmissionService
     }
 
     /**
-     * @param array $ids
      * @return array
      */
     public function getReportSubmissionsByIds(array $ids)
@@ -190,12 +191,11 @@ class ReportSubmissionService
     }
 
     /**
-     * @param ReportSubmission $reportSubmission
      * @throws ReportSubmissionDocumentsNotDownloadableExceptionAlias
      */
     public function assertReportSubmissionIsDownloadable(ReportSubmission $reportSubmission)
     {
-        if ($reportSubmission->isDownloadable() !== true) {
+        if (true !== $reportSubmission->isDownloadable()) {
             throw new ReportSubmissionDocumentsNotDownloadableException(self::MSG_NOT_DOWNLOADABLE);
         }
 

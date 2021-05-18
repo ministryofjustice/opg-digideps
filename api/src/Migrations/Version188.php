@@ -2,21 +2,18 @@
 
 namespace DoctrineMigrations;
 
-use Doctrine\Migrations\AbstractMigration;
 use Doctrine\DBAL\Schema\Schema;
+use Doctrine\Migrations\AbstractMigration;
 
 /**
  * Auto-generated Migration: Please modify to your needs!
  */
 class Version188 extends AbstractMigration
 {
-    /**
-     * @param Schema $schema
-     */
-    public function up(Schema $schema) : void
+    public function up(Schema $schema): void
     {
         // this up() migration is auto-generated, please modify it to your needs
-        $this->abortIf($this->connection->getDatabasePlatform()->getName() != 'postgresql', 'Migration can only be executed safely on \'postgresql\'.');
+        $this->abortIf('postgresql' != $this->connection->getDatabasePlatform()->getName(), 'Migration can only be executed safely on \'postgresql\'.');
 
         $this->addSql('ALTER TABLE dd_team DROP address1');
         $this->addSql('ALTER TABLE dd_team DROP address2');
@@ -25,13 +22,10 @@ class Version188 extends AbstractMigration
         $this->addSql('ALTER TABLE dd_team DROP address_country');
     }
 
-    /**
-     * @param Schema $schema
-     */
-    public function down(Schema $schema) : void
+    public function down(Schema $schema): void
     {
         // this down() migration is auto-generated, please modify it to your needs
-        $this->abortIf($this->connection->getDatabasePlatform()->getName() != 'postgresql', 'Migration can only be executed safely on \'postgresql\'.');
+        $this->abortIf('postgresql' != $this->connection->getDatabasePlatform()->getName(), 'Migration can only be executed safely on \'postgresql\'.');
 
         $this->addSql('ALTER TABLE dd_team ADD address1 VARCHAR(200) DEFAULT NULL');
         $this->addSql('ALTER TABLE dd_team ADD address2 VARCHAR(200) DEFAULT NULL');

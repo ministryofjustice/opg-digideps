@@ -5,14 +5,13 @@ namespace App\Controller\Report;
 use App\Controller\AbstractController;
 use App\Entity as EntityDir;
 use App\Form as FormDir;
-
 use App\Service\Client\Internal\ReportApi;
 use App\Service\Client\RestClient;
 use App\Service\StepRedirector;
-use Symfony\Component\HttpFoundation\RedirectResponse;
-use Symfony\Component\Routing\Annotation\Route;
 use Sensio\Bundle\FrameworkExtraBundle\Configuration\Template;
+use Symfony\Component\HttpFoundation\RedirectResponse;
 use Symfony\Component\HttpFoundation\Request;
+use Symfony\Component\Routing\Annotation\Route;
 use Symfony\Contracts\Translation\TranslatorInterface;
 
 class VisitsCareController extends AbstractController
@@ -45,7 +44,6 @@ class VisitsCareController extends AbstractController
      * @Route("/report/{reportId}/visits-care", name="visits_care")
      * @Template("@App/Report/VisitsCare/start.html.twig")
      *
-     * @param Request $request
      * @param $reportId
      *
      * @return array|RedirectResponse
@@ -53,7 +51,7 @@ class VisitsCareController extends AbstractController
     public function startAction(Request $request, $reportId)
     {
         $report = $this->reportApi->getReportIfNotSubmitted($reportId, self::$jmsGroups);
-        if ($report->getStatus()->getVisitsCareState()['state'] != EntityDir\Report\Status::STATE_NOT_STARTED) {
+        if (EntityDir\Report\Status::STATE_NOT_STARTED != $report->getStatus()->getVisitsCareState()['state']) {
             return $this->redirectToRoute('visits_care_summary', ['reportId' => $reportId]);
         }
 
@@ -66,7 +64,6 @@ class VisitsCareController extends AbstractController
      * @Route("/report/{reportId}/visits-care/step/{step}", name="visits_care_step")
      * @Template("@App/Report/VisitsCare/step.html.twig")
      *
-     * @param Request $request
      * @param $reportId
      * @param $step
      *
@@ -94,7 +91,7 @@ class VisitsCareController extends AbstractController
             [
                 'step' => $step,
                 'translator' => $translator,
-                'clientFirstName' => $report->getClient()->getFirstname()
+                'clientFirstName' => $report->getClient()->getFirstname(),
             ]
         );
 
@@ -107,13 +104,13 @@ class VisitsCareController extends AbstractController
                 ->setReport($report)
                 ->keepOnlyRelevantVisitsCareData();
 
-            if ($visitsCare->getId() == null) {
+            if (null == $visitsCare->getId()) {
                 $this->restClient->post('report/visits-care', $data, ['visits-care', 'report-id']);
             } else {
-                $this->restClient->put('report/visits-care/' . $visitsCare->getId(), $data, self::$jmsGroups);
+                $this->restClient->put('report/visits-care/'.$visitsCare->getId(), $data, self::$jmsGroups);
             }
 
-            if ($fromPage == 'summary') {
+            if ('summary' == $fromPage) {
                 $request->getSession()->getFlashBag()->add(
                     'notice',
                     'Answer edited'
@@ -123,14 +120,13 @@ class VisitsCareController extends AbstractController
             return $this->redirect($stepRedirector->getRedirectLinkAfterSaving());
         }
 
-
         return [
-            'report'       => $report,
-            'step'         => $step,
+            'report' => $report,
+            'step' => $step,
             'reportStatus' => $report->getStatus(),
-            'form'         => $form->createView(),
-            'backLink'     => $stepRedirector->getBackLink(),
-            'skipLink'     => $stepRedirector->getSkipLink(),
+            'form' => $form->createView(),
+            'backLink' => $stepRedirector->getBackLink(),
+            'skipLink' => $stepRedirector->getSkipLink(),
         ];
     }
 
@@ -138,7 +134,6 @@ class VisitsCareController extends AbstractController
      * @Route("/report/{reportId}/visits-care/summary", name="visits_care_summary")
      * @Template("@App/Report/VisitsCare/summary.html.twig")
      *
-     * @param Request $request
      * @param $reportId
      *
      * @return array|RedirectResponse
@@ -147,7 +142,7 @@ class VisitsCareController extends AbstractController
     {
         $fromPage = $request->get('from');
         $report = $this->reportApi->getReportIfNotSubmitted($reportId, self::$jmsGroups);
-        if ($report->getStatus()->getVisitsCareState()['state'] == EntityDir\Report\Status::STATE_NOT_STARTED && $fromPage != 'skip-step') {
+        if (EntityDir\Report\Status::STATE_NOT_STARTED == $report->getStatus()->getVisitsCareState()['state'] && 'skip-step' != $fromPage) {
             return $this->redirectToRoute('visits_care', ['reportId' => $reportId]);
         }
 
@@ -156,9 +151,9 @@ class VisitsCareController extends AbstractController
         }
 
         return [
-            'comingFromLastStep' => $fromPage == 'skip-step' || $fromPage == 'last-step',
-            'report'             => $report,
-            'status'             => $report->getStatus()
+            'comingFromLastStep' => 'skip-step' == $fromPage || 'last-step' == $fromPage,
+            'report' => $report,
+            'status' => $report->getStatus(),
         ];
     }
 

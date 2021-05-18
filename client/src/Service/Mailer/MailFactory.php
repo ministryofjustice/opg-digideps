@@ -1,18 +1,20 @@
-<?php declare(strict_types=1);
+<?php
+
+declare(strict_types=1);
 
 namespace App\Service\Mailer;
 
 use App\Entity as EntityDir;
-use App\Entity\Report\Report;
 use App\Entity\Client;
+use App\Entity\Report\Report;
 use App\Entity\User;
 use App\Model as ModelDir;
 use App\Model\Email;
 use App\Model\FeedbackReport;
 use App\Service\IntlService;
+use Symfony\Bundle\FrameworkBundle\Templating\EngineInterface;
 use Symfony\Component\Routing\RouterInterface;
 use Symfony\Contracts\Translation\TranslatorInterface;
-use Symfony\Bundle\FrameworkBundle\Templating\EngineInterface;
 
 class MailFactory
 {
@@ -84,7 +86,6 @@ class MailFactory
     /**
      * @param string $area      deputy|admin
      * @param string $routeName must be in YML config under email.routes
-     * @param array  $params
      *
      * @return string calculated route
      */
@@ -92,9 +93,9 @@ class MailFactory
     {
         switch ($area) {
             case self::AREA_DEPUTY:
-                return $this->baseURLs['front'] . $this->router->generate($routeName, $params);
+                return $this->baseURLs['front'].$this->router->generate($routeName, $params);
             case self::AREA_ADMIN:
-                return $this->baseURLs['admin'] . $this->router->generate($routeName, $params);
+                return $this->baseURLs['admin'].$this->router->generate($routeName, $params);
             default:
                 throw new \Exception("area $area not found");
         }
@@ -123,8 +124,6 @@ class MailFactory
     }
 
     /**
-     * @param User $user
-     *
      * @return \App\Model\Email
      */
     public function createActivationEmail(User $user)
@@ -134,7 +133,7 @@ class MailFactory
         $parameters = array_merge($this->getContactParameters($user), [
             'activationLink' => $this->generateAbsoluteLink($area, 'user_activate', [
                 'action' => 'activate',
-                'token'  => $user->getRegistrationToken(),
+                'token' => $user->getRegistrationToken(),
             ]),
         ]);
 
@@ -149,9 +148,6 @@ class MailFactory
     }
 
     /**
-     * @param User $user
-     * @param string|null $deputyName
-     *
      * @return \App\Model\Email
      */
     public function createInvitationEmail(User $user, string $deputyName = null)
@@ -161,7 +157,7 @@ class MailFactory
         $parameters = array_merge($this->getContactParameters($user), [
             'link' => $this->generateAbsoluteLink($area, 'user_activate', [
                 'action' => 'activate',
-                'token'  => $user->getRegistrationToken(),
+                'token' => $user->getRegistrationToken(),
             ]),
         ]);
 
@@ -181,11 +177,10 @@ class MailFactory
 
     /**
      * Generates the recipient Role aspect of the context string. Most users use the 'default' recipient role.
-     * This maps to the translation file
+     * This maps to the translation file.
      *
      * Called from BehatController to allow email-viewer to function
      *
-     * @param  User   $user
      * @return string
      */
     public static function getRecipientRole(User $user)
@@ -204,11 +199,6 @@ class MailFactory
         }
     }
 
-
-    /**
-     * @param User $user
-     * @return Email
-     */
     public function createResetPasswordEmail(User $user): Email
     {
         $area = $this->getUserArea($user);
@@ -216,7 +206,7 @@ class MailFactory
         $notifyParams = array_merge($this->getContactParameters($user), [
             'resetLink' => $this->generateAbsoluteLink($area, 'user_activate', [
                 'action' => 'password-reset',
-                'token'  => $user->getRegistrationToken(),
+                'token' => $user->getRegistrationToken(),
             ]),
             'recreateLink' => $this->generateAbsoluteLink($area, 'password_forgotten'),
         ]);
@@ -230,9 +220,8 @@ class MailFactory
     }
 
     /**
-     * Get user area depending on the role
+     * Get user area depending on the role.
      *
-     * @param User $user
      * @return string
      */
     private function getUserArea(User $user)
@@ -241,9 +230,10 @@ class MailFactory
     }
 
     /**
-     * @param array $response
-     * @param bool $isPostSubmission
+     * @param array     $response
+     * @param bool      $isPostSubmission
      * @param User|null $user
+     *
      * @return ModelDir\Email
      */
     public function createGeneralFeedbackEmail($response)
@@ -303,7 +293,7 @@ class MailFactory
             'address' => $client->getAddress(),
             'address2' => $client->getAddress2(),
             'address3' => $client->getCounty(),
-            'postcode' =>$client->getPostcode(),
+            'postcode' => $client->getPostcode(),
             'countryName' => $countryName,
             'phone' => $client->getPhone(),
         ];
@@ -329,12 +319,12 @@ class MailFactory
             'caseNumber' => $deputy->getFirstClient()->getCaseNumber(),
             'fullName' => $deputy->getFullName(),
             'address' => $deputy->getAddress1(),
-            'address2' => $deputy->getAddress2() !== null ? $deputy->getAddress2() : 'Not provided',
-            'address3' => $deputy->getAddress3() !== null ? $deputy->getAddress3() : 'Not provided',
-            'postcode' =>$deputy->getAddressPostcode(),
+            'address2' => null !== $deputy->getAddress2() ? $deputy->getAddress2() : 'Not provided',
+            'address3' => null !== $deputy->getAddress3() ? $deputy->getAddress3() : 'Not provided',
+            'postcode' => $deputy->getAddressPostcode(),
             'countryName' => $countryName,
             'phone' => $deputy->getPhoneMain(),
-            'altPhoneNumber' => $deputy->getPhoneAlternative() !== null ? $deputy->getPhoneAlternative() : 'Not provided',
+            'altPhoneNumber' => null !== $deputy->getPhoneAlternative() ? $deputy->getPhoneAlternative() : 'Not provided',
             'email' => $deputy->getEmail(),
         ];
 
@@ -344,11 +334,8 @@ class MailFactory
     }
 
     /**
-     * @param User $user
-     * @param EntityDir\ReportInterface $submittedReport
-     * @param EntityDir\Report\Report $newReport
-     *
      * @return ModelDir\Email
+     *
      * @throws \Exception
      */
     public function createReportSubmissionConfirmationEmail(User $user, EntityDir\ReportInterface $submittedReport, EntityDir\Report\Report $newReport)
@@ -368,15 +355,15 @@ class MailFactory
         $notifyParams = [
             'clientFullname' => $submittedReport->getClient()->getFullname(),
             'deputyFullname' => $user->getFullName(),
-            'orgIntro' => self::getRecipientRole($user) == 'default' ? '' : $this->buildOrgIntroText($submittedReport->getClient()),
+            'orgIntro' => 'default' == self::getRecipientRole($user) ? '' : $this->buildOrgIntroText($submittedReport->getClient()),
             'startDate' => $submittedReport->getStartDate()->format(self::DATE_FORMAT),
             'endDate' => $submittedReport->getEndDate()->format(self::DATE_FORMAT),
             'homepageURL' => $this->generateAbsoluteLink(self::AREA_DEPUTY, 'homepage'),
             'newStartDate' => $newReport->getStartDate()->format(self::DATE_FORMAT),
             'newEndDate' => $newReport->getEndDate()->format(self::DATE_FORMAT),
             'EndDatePlus1' => $dateSubmittableFrom->format(self::DATE_FORMAT),
-            'PFA' => substr($submittedReport->getType(), 0, 3) === '104' ? 'no' : 'yes',
-            'lay' => $user->isLayDeputy() ? 'yes' : 'no'
+            'PFA' => '104' === substr($submittedReport->getType(), 0, 3) ? 'no' : 'yes',
+            'lay' => $user->isLayDeputy() ? 'yes' : 'no',
         ];
 
         $email->setParameters($notifyParams);
@@ -384,10 +371,6 @@ class MailFactory
         return $email;
     }
 
-    /**
-     * @param EntityDir\Client $client
-     * @return string
-     */
     private function buildOrgIntroText(EntityDir\Client $client): string
     {
         return $this->translator->trans(
@@ -398,10 +381,8 @@ class MailFactory
     }
 
     /**
-     * @param User $user
-     * @param EntityDir\Ndr\Ndr $ndr
-     * @param Report $report
      * @return ModelDir\Email
+     *
      * @throws \Exception
      */
     public function createNdrSubmissionConfirmationEmail(User $user, EntityDir\Ndr\Ndr $ndr, Report $report)
@@ -414,7 +395,6 @@ class MailFactory
             ->setTemplate(self::NDR_SUBMITTED_CONFIRMATION_TEMPLATE_ID);
 
         /** @var \DateTime $dateSubmittableFrom */
-
         $dateSubmittableFrom = clone $report->getEndDate();
         $dateSubmittableFrom->add(new \DateInterval('P1D'));
 
@@ -436,7 +416,7 @@ class MailFactory
 
     /**
      * @param string $key
-     * @param array $params
+     * @param array  $params
      *
      * @return string
      */

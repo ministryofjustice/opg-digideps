@@ -25,8 +25,6 @@ class RequestIdLoggerProcessor
 
     /**
      * RequestIdLoggerProcessor constructor.
-     *
-     * @param ContainerInterface $container
      */
     public function __construct(ContainerInterface $container)
     {
@@ -37,13 +35,12 @@ class RequestIdLoggerProcessor
      * Add request header 'x-request-id' into ['extra']['request_id']
      * Does not change the record if the scope is not active, or the request is not found or doesn't contain the header.
      *
-     * @param array $record
-     *
      * @return array same record with extra info
      */
     public function processRecord(array $record)
     {
-        if (!$this->container->has('request_stack')
+        if (
+            !$this->container->has('request_stack')
             || !($request = $this->container->get('request_stack')->getCurrentRequest())
             || !$request->headers->has('x-request-id')
         ) {

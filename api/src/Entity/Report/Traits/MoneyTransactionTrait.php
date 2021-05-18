@@ -1,4 +1,5 @@
 <?php
+
 namespace App\Entity\Report\Traits;
 
 use App\Entity\Report\MoneyTransaction;
@@ -6,7 +7,6 @@ use App\Entity\Report\MoneyTransactionInterface;
 
 trait MoneyTransactionTrait
 {
-
     /**
      * @var MoneyTransaction[]
      *
@@ -17,7 +17,6 @@ trait MoneyTransactionTrait
     private $moneyTransactions;
 
     /**
-     *
      * @JMS\VirtualProperty
      * @JMS\SerializedName("money_transactions_in")
      * @JMS\Groups({"transactionsIn"})
@@ -27,12 +26,11 @@ trait MoneyTransactionTrait
     public function getMoneyTransactionsIn()
     {
         return $this->moneyTransactions->filter(function ($t) {
-            return $t->getType() == 'in';
+            return 'in' == $t->getType();
         });
     }
 
     /**
-     *
      * @JMS\VirtualProperty
      * @JMS\SerializedName("money_transactions_out")
      * @JMS\Groups({"transactionsOut"})
@@ -42,7 +40,7 @@ trait MoneyTransactionTrait
     public function getMoneyTransactionsOut()
     {
         return $this->moneyTransactions->filter(function ($t) {
-            return $t->getType() == 'out';
+            return 'out' == $t->getType();
         });
     }
 
@@ -107,7 +105,7 @@ trait MoneyTransactionTrait
 
         $ret = 0;
 
-        if ($this->type === self::TYPE_103) {
+        if (self::TYPE_103 === $this->type) {
             $transactions = $this->getMoneyTransactionsShort();
         } else {
             $transactions = $this->getMoneyTransactions();

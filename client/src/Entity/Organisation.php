@@ -2,13 +2,12 @@
 
 namespace App\Entity;
 
+use Doctrine\Common\Collections\ArrayCollection;
 use JMS\Serializer\Annotation as JMS;
 use Symfony\Component\Validator\Constraints as Assert;
-use App\Entity\User;
-use Doctrine\Common\Collections\ArrayCollection;
 
 /**
- * Organisation
+ * Organisation.
  */
 class Organisation
 {
@@ -73,6 +72,7 @@ class Organisation
     public function setId($id)
     {
         $this->id = $id;
+
         return $this;
     }
 
@@ -92,6 +92,7 @@ class Organisation
     public function setName($name)
     {
         $this->name = $name;
+
         return $this;
     }
 
@@ -106,7 +107,7 @@ class Organisation
     public function getEmailIdentifierDisplay()
     {
         if ($this->getIsDomainIdentifier()) {
-            return '*@' . $this->emailIdentifier;
+            return '*@'.$this->emailIdentifier;
         } else {
             return $this->emailIdentifier;
         }
@@ -120,15 +121,16 @@ class Organisation
     public function setEmailIdentifier($emailIdentifier)
     {
         $this->emailIdentifier = $emailIdentifier;
+
         return $this;
     }
 
     /**
-     * @return boolean
+     * @return bool
      */
     public function getIsDomainIdentifier()
     {
-        return strpos($this->emailIdentifier, '@') === false;
+        return false === strpos($this->emailIdentifier, '@');
     }
 
     /**
@@ -147,6 +149,7 @@ class Organisation
     public function setEmailAddress($emailIdentifier)
     {
         $this->emailIdentifier = $emailIdentifier;
+
         return $this;
     }
 
@@ -166,6 +169,7 @@ class Organisation
     public function setEmailDomain($emailIdentifier)
     {
         $this->emailIdentifier = $emailIdentifier;
+
         return $this;
     }
 
@@ -185,6 +189,7 @@ class Organisation
     public function setIsActivated($isActivated)
     {
         $this->isActivated = $isActivated;
+
         return $this;
     }
 
@@ -197,15 +202,16 @@ class Organisation
     }
 
     /**
-     * @param User $user
      * @return bool
      */
     public function hasUser(User $user)
     {
-        foreach ($this->users?:[] as $currentUser) {
-            if ($user->getId()
+        foreach ($this->users ?: [] as $currentUser) {
+            if (
+                $user->getId()
                 && $currentUser instanceof User && $currentUser->getId()
-                && $user->getId() == $currentUser->getId()) {
+                && $user->getId() == $currentUser->getId()
+            ) {
                 return true;
             }
         }
@@ -214,7 +220,6 @@ class Organisation
     }
 
     /**
-     * @param int $userId
      * @return User|null
      */
     public function getUserById(int $userId)
@@ -230,6 +235,7 @@ class Organisation
 
     /**
      * @param User[] $users
+     *
      * @return $this
      */
     public function setUsers($users)
@@ -241,6 +247,7 @@ class Organisation
 
     /**
      * @param User $user
+     *
      * @return $this
      */
     public function addUser($user)
@@ -260,6 +267,7 @@ class Organisation
 
     /**
      * @param Client[] $clients
+     *
      * @return $this
      */
     public function setClients($clients)

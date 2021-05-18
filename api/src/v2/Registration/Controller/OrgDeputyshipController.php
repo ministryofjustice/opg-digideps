@@ -1,5 +1,6 @@
-<?php declare(strict_types=1);
+<?php
 
+declare(strict_types=1);
 
 namespace App\v2\Registration\Controller;
 
@@ -9,21 +10,18 @@ use App\v2\Registration\Assembler\CasRecToOrgDeputyshipDtoAssembler;
 use App\v2\Registration\Uploader\OrgDeputyshipUploader;
 use Sensio\Bundle\FrameworkExtraBundle\Configuration\Security;
 use Symfony\Bundle\FrameworkBundle\Controller\AbstractController;
-use Symfony\Component\HttpFoundation\JsonResponse;
 use Symfony\Component\HttpFoundation\Request;
-use Symfony\Component\HttpFoundation\Response;
 use Symfony\Component\Routing\Annotation\Route;
 
 class OrgDeputyshipController extends AbstractController
 {
-    const MAX_UPLOAD_BATCH_SIZE = 10000;
-
     use ControllerTrait;
+    const MAX_UPLOAD_BATCH_SIZE = 10000;
 
     /** @var OrgDeputyshipUploader */
     private $uploader;
 
-    /**  @var CasRecToOrgDeputyshipDtoAssembler */
+    /** @var CasRecToOrgDeputyshipDtoAssembler */
     private $assembler;
 
     /** @var DataCompression */
@@ -31,7 +29,6 @@ class OrgDeputyshipController extends AbstractController
 
     /**
      * OrgDeputyshipController constructor.
-     * @param OrgDeputyshipUploader $orgDeputyshipUploader
      */
     public function __construct(
         OrgDeputyshipUploader $orgDeputyshipUploader,

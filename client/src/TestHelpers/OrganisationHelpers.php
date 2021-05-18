@@ -1,5 +1,6 @@
-<?php declare(strict_types=1);
+<?php
 
+declare(strict_types=1);
 
 namespace App\TestHelpers;
 
@@ -9,9 +10,6 @@ use Faker\Factory;
 
 class OrganisationHelpers
 {
-    /**
-     * @return Organisation
-     */
     public static function createActivatedOrganisation(): Organisation
     {
         $faker = Factory::create();
@@ -26,12 +24,12 @@ class OrganisationHelpers
 
         $orgUsers = [
             (UserHelpers::createUser())->setOrganisations(new ArrayCollection([$organisation])),
-            (UserHelpers::createUser())->setOrganisations(new ArrayCollection([$organisation]))
+            (UserHelpers::createUser())->setOrganisations(new ArrayCollection([$organisation])),
         ];
 
         $orgClients = [
             (ClientHelpers::createClient())->addUser($orgUsers[0]),
-            (ClientHelpers::createClient())->addUser($orgUsers[1])
+            (ClientHelpers::createClient())->addUser($orgUsers[1]),
         ];
 
         return $organisation

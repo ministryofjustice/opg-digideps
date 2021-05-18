@@ -65,7 +65,7 @@ class User implements UserInterface
         25 => CasRec::REALM_PROF,
         27 => CasRec::REALM_PROF,
         29 => CasRec::REALM_PROF,
-        50 => CasRec::REALM_PROF
+        50 => CasRec::REALM_PROF,
     ];
 
     /**
@@ -443,6 +443,7 @@ class User implements UserInterface
      * Set registrationToken.
      *
      * @return User
+     *
      * @throws \Exception
      */
     public function recreateRegistrationToken()
@@ -528,8 +529,6 @@ class User implements UserInterface
     /**
      * Add clients.
      *
-     * @param Client $client
-     *
      * @return User
      */
     public function addClient(Client $client)
@@ -544,8 +543,6 @@ class User implements UserInterface
 
     /**
      * Remove clients.
-     *
-     * @param Client $clients
      */
     public function removeClient(Client $clients)
     {
@@ -585,7 +582,6 @@ class User implements UserInterface
     }
 
     /**
-     * @param Organisation $organisation
      * @return User
      */
     public function addOrganisation(Organisation $organisation)
@@ -597,9 +593,6 @@ class User implements UserInterface
         return $this;
     }
 
-    /**
-     * @return array
-     */
     public function getOrganisationIds(): array
     {
         $organisationIds = [];
@@ -611,7 +604,6 @@ class User implements UserInterface
     }
 
     /**
-     * @param Organisation $organisation
      * @return User
      */
     public function removeOrganisation(Organisation $organisation)
@@ -686,7 +678,7 @@ class User implements UserInterface
      */
     public function getFullName()
     {
-        return $this->firstname . ' ' . $this->lastname;
+        return $this->firstname.' '.$this->lastname;
     }
 
     /**
@@ -796,7 +788,7 @@ class User implements UserInterface
     }
 
     /**
-     * convert 7 into 00000007
+     * convert 7 into 00000007.
      *
      * @param $deputyNo
      *
@@ -818,7 +810,7 @@ class User implements UserInterface
     }
 
     /**
-     * Return Id of the client (if it has details)
+     * Return Id of the client (if it has details).
      *
      * @JMS\VirtualProperty
      * @JMS\SerializedName("id_of_client_with_details")
@@ -845,7 +837,7 @@ class User implements UserInterface
             return;
         }
 
-        if ($client->getUnsubmittedReports()->count() === 1) {
+        if (1 === $client->getUnsubmittedReports()->count()) {
             return $client->getUnsubmittedReports()->first()->getId();
         }
 
@@ -888,12 +880,12 @@ class User implements UserInterface
     }
 
     /**
-     * @return null|Client
+     * @return Client|null
      */
     public function getFirstClient()
     {
         $clients = $this->getClients();
-        if (count($clients) === 0) {
+        if (0 === count($clients)) {
             return;
         }
 
@@ -993,11 +985,12 @@ class User implements UserInterface
     public function setCoDeputyClientConfirmed($coDeputyClientConfirmed = false)
     {
         $this->coDeputyClientConfirmed = $coDeputyClientConfirmed;
+
         return $this;
     }
 
     /**
-     * Return true if the client has other users
+     * Return true if the client has other users.
      *
      * @JMS\VirtualProperty
      * @JMS\Type("boolean")
@@ -1015,6 +1008,7 @@ class User implements UserInterface
                 $isCoDeputy = count($client->getUsers()) > 1;
             }
         }
+
         return $isCoDeputy;
     }
 
@@ -1025,7 +1019,7 @@ class User implements UserInterface
      */
     public function isPaDeputy()
     {
-        return $this->isPaNamedDeputy() ||$this->isPaAdministrator() || $this->isPaTeamMember() || $this->isPaTopRole();
+        return $this->isPaNamedDeputy() || $this->isPaAdministrator() || $this->isPaTeamMember() || $this->isPaTopRole();
     }
 
     /**
@@ -1055,7 +1049,7 @@ class User implements UserInterface
      */
     public function isPaNamedDeputy()
     {
-        return $this->getRoleName() === self::ROLE_PA_NAMED;
+        return self::ROLE_PA_NAMED === $this->getRoleName();
     }
 
     /**
@@ -1065,7 +1059,7 @@ class User implements UserInterface
      */
     public function isProfNamedDeputy()
     {
-        return $this->getRoleName() === self::ROLE_PROF_NAMED;
+        return self::ROLE_PROF_NAMED === $this->getRoleName();
     }
 
     /**
@@ -1073,7 +1067,7 @@ class User implements UserInterface
      */
     public function isLayDeputy()
     {
-        return $this->getRoleName() === self::ROLE_LAY_DEPUTY;
+        return self::ROLE_LAY_DEPUTY === $this->getRoleName();
     }
 
     /**
@@ -1113,7 +1107,7 @@ class User implements UserInterface
      */
     public function isPaTeamMember()
     {
-        return $this->getRoleName() === self::ROLE_PA_TEAM_MEMBER;
+        return self::ROLE_PA_TEAM_MEMBER === $this->getRoleName();
     }
 
     /**
@@ -1123,7 +1117,7 @@ class User implements UserInterface
      */
     public function isProfTeamMember()
     {
-        return $this->getRoleName() === self::ROLE_PROF_TEAM_MEMBER;
+        return self::ROLE_PROF_TEAM_MEMBER === $this->getRoleName();
     }
 
     /**
@@ -1131,7 +1125,7 @@ class User implements UserInterface
      */
     public function isPaTopRole()
     {
-        return $this->getRoleName() === self::ROLE_PA;
+        return self::ROLE_PA === $this->getRoleName();
     }
 
     /**
@@ -1139,7 +1133,7 @@ class User implements UserInterface
      */
     public function isProfTopRole()
     {
-        return $this->getRoleName() === self::ROLE_PROF;
+        return self::ROLE_PROF === $this->getRoleName();
     }
 
     /**
@@ -1170,40 +1164,28 @@ class User implements UserInterface
         return $this->isOrgNamedDeputy() || $this->isOrgAdministrator() || $this->isOrgTeamMember();
     }
 
-    /**
-     * @return bool
-     */
     public function isAdmin(): bool
     {
-        return $this->getRoleName() === self::ROLE_ADMIN;
+        return self::ROLE_ADMIN === $this->getRoleName();
     }
 
-    /**
-     * @return bool
-     */
     public function isSuperAdmin(): bool
     {
-        return $this->getRoleName() === self::ROLE_SUPER_ADMIN;
+        return self::ROLE_SUPER_ADMIN === $this->getRoleName();
     }
 
-    /**
-     * @return bool
-     */
     public function isElevatedAdmin(): bool
     {
-        return $this->getRoleName() === self::ROLE_ELEVATED_ADMIN;
+        return self::ROLE_ELEVATED_ADMIN === $this->getRoleName();
     }
 
-    /**
-     * @return bool
-     */
     public function hasAdminRole(): bool
     {
         return $this->isAdmin() || $this->isSuperAdmin() || $this->isElevatedAdmin();
     }
 
     /**
-     * Set role to team member
+     * Set role to team member.
      */
     public function setDefaultRoleIfEmpty()
     {
@@ -1218,7 +1200,7 @@ class User implements UserInterface
 
     public function hasReports()
     {
-        if (count($this->clients) === 0) {
+        if (0 === count($this->clients)) {
             return false;
         }
 
@@ -1231,10 +1213,6 @@ class User implements UserInterface
         return false;
     }
 
-    /**
-     * @param User $coDeputy
-     * @return bool
-     */
     public function isCoDeputyWith(User $coDeputy): bool
     {
         foreach ($coDeputy->getClients() as $coDeputyClient) {
@@ -1248,21 +1226,15 @@ class User implements UserInterface
         return false;
     }
 
-    /**
-     * @return UserResearchResponse|null
-     */
     public function getUserResearchResponse(): ?UserResearchResponse
     {
         return $this->userResearchResponse;
     }
 
-    /**
-     * @param UserResearchResponse|null $userResearchResponse
-     * @return User
-     */
     public function setUserResearchResponse(?UserResearchResponse $userResearchResponse): User
     {
         $this->userResearchResponse = $userResearchResponse;
+
         return $this;
     }
 }

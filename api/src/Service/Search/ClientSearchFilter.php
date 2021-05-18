@@ -7,11 +7,6 @@ use Doctrine\ORM\QueryBuilder;
 
 class ClientSearchFilter
 {
-    /**
-     * @param string $searchTerm
-     * @param QueryBuilder $qb
-     * @param string $alias
-     */
     public function handleSearchTermFilter(string $searchTerm, QueryBuilder $qb, string $alias): void
     {
         if (Client::isValidCaseNumber($searchTerm)) {
@@ -20,7 +15,7 @@ class ClientSearchFilter
         } else {
             $searchTerms = explode(' ', $searchTerm);
 
-            if (count($searchTerms) === 1) {
+            if (1 === count($searchTerms)) {
                 $this->addBroadMatchFilter($searchTerm, $qb, $alias);
             } else {
                 $this->addFullNameExactMatchFilter($searchTerms[0], $searchTerms[1], $qb, $alias);
@@ -28,23 +23,12 @@ class ClientSearchFilter
         }
     }
 
-    /**
-     * @param string $query
-     * @param QueryBuilder $qb
-     * @param string $alias
-     */
     private function addBroadMatchFilter(string $query, QueryBuilder $qb, string $alias): void
     {
         $qb->andWhere('lower('.$alias.'.firstname) LIKE :qLike OR lower('.$alias.'.lastname) LIKE :qLike');
-        $qb->setParameter('qLike', '%' . strtolower($query) . '%');
+        $qb->setParameter('qLike', '%'.strtolower($query).'%');
     }
 
-    /**
-     * @param string $firstName
-     * @param string $lastname
-     * @param QueryBuilder $qb
-     * @param string $alias
-     */
     private function addFullNameExactMatchFilter(string $firstName, string $lastname, QueryBuilder $qb, string $alias): void
     {
         $qb->andWhere('(lower('.$alias.'.firstname) = :firstname AND lower('.$alias.'.lastname) = :lastname)');

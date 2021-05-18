@@ -179,7 +179,8 @@ class Lifestyle
      */
     public function missingInfo()
     {
-        if (empty($this->doesClientUndertakeSocialActivities) ||
+        if (
+            empty($this->doesClientUndertakeSocialActivities) ||
             empty($this->careAppointments) ||
             empty($this->activityDetails)
         ) {

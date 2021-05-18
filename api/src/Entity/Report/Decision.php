@@ -89,7 +89,7 @@ class Decision
      */
     public function setClientInvolvedBoolean($clientInvolvedBoolean)
     {
-        $this->clientInvolvedBoolean = (boolean) $clientInvolvedBoolean;
+        $this->clientInvolvedBoolean = (bool) $clientInvolvedBoolean;
     }
 
     /*
@@ -130,9 +130,6 @@ class Decision
         return $this;
     }
 
-    /**
-     * @param Report $report
-     */
     public function setReport(Report $report)
     {
         $this->report = $report;

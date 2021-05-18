@@ -1,4 +1,6 @@
-<?php declare(strict_types=1);
+<?php
+
+declare(strict_types=1);
 
 namespace App\Mapper\ReportSatisfaction;
 
@@ -13,16 +15,12 @@ class ReportSatisfactionSummaryMapper
     /** @var string */
     const API_ENDPOINT = '/satisfaction/satisfaction_data';
 
-    /**
-     * @param RestClient $restClient
-     */
     public function __construct(RestClient $restClient)
     {
         $this->restClient = $restClient;
     }
 
     /**
-     * @param DateRangeQuery $query
      * @return mixed
      */
     public function getBy(DateRangeQuery $query)
@@ -31,14 +29,13 @@ class ReportSatisfactionSummaryMapper
     }
 
     /**
-     * @param DateRangeQuery $query
      * @return string
      */
     private function generateApiUrl(DateRangeQuery $query)
     {
         $queryArray = [
             'orderBy' => $query->getOrderBy(),
-            'order' => $query->getSortOrder()
+            'order' => $query->getSortOrder(),
         ];
 
         if ($query->getStartDate()) {

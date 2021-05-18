@@ -1,6 +1,5 @@
 <?php
 
-
 namespace App\TestHelpers;
 
 use App\Entity\Organisation;

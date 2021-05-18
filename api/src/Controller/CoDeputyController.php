@@ -7,9 +7,9 @@ use App\Service\CsvUploader;
 use App\Service\Formatter\RestFormatter;
 use App\Service\UserService;
 use Doctrine\ORM\EntityManagerInterface;
-use Symfony\Component\Routing\Annotation\Route;
 use Sensio\Bundle\FrameworkExtraBundle\Configuration\Security;
 use Symfony\Component\HttpFoundation\Request;
+use Symfony\Component\Routing\Annotation\Route;
 
 /**
  * @Route("/codeputy/")
@@ -77,9 +77,11 @@ class CoDeputyController extends RestController
     {
         $user = $this->findEntityBy(User::class, $id, 'User not found'); /* @var $user User */
 
-        if (!$user->isCoDeputy()
+        if (
+            !$user->isCoDeputy()
             || !$this->getUser()->isCoDeputy()
-            || ($this->getUser()->getIdOfClientWithDetails() != $user->getIdOfClientWithDetails())) {
+            || ($this->getUser()->getIdOfClientWithDetails() != $user->getIdOfClientWithDetails())
+        ) {
             throw $this->createAccessDeniedException("User not authorised to update other user's data");
         }
 
@@ -96,7 +98,7 @@ class CoDeputyController extends RestController
     /**
      * Bulk upgrade of codeputy_client_confirmed flag
      * Max 10k otherwise failing (memory reach 128M).
-     * Borrows heavily from CasRecController:addBulk
+     * Borrows heavily from CasRecController:addBulk.
      *
      * @Route("{mldupgrade}", methods={"POST"})
      * @Security("is_granted('ROLE_ADMIN')")
@@ -128,7 +130,7 @@ class CoDeputyController extends RestController
         $conn = $this->em->getConnection();
         $affected = 0;
         foreach (array_chunk($deputyNumbers, 500) as $chunk) {
-            $sql = "UPDATE dd_user SET codeputy_client_confirmed = TRUE WHERE deputy_no IN ('" . implode("','", $chunk) . "')";
+            $sql = "UPDATE dd_user SET codeputy_client_confirmed = TRUE WHERE deputy_no IN ('".implode("','", $chunk)."')";
             $affected += $conn->exec($sql);
         }
 

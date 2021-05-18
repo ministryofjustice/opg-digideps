@@ -1,4 +1,5 @@
 <?php
+
 namespace App\Service;
 
 use Symfony\Component\HttpFoundation\Request;
@@ -18,25 +19,25 @@ class CssClassCollector extends DataCollector
 
         foreach ($matches[2] as $classList) {
             foreach (explode(' ', $classList) as $className) {
-                if ($className === '') {
+                if ('' === $className) {
                     continue;
                 }
 
-                if (substr($className, 0, 6) === 'behat-') {
+                if ('behat-' === substr($className, 0, 6)) {
                     // Ignore behat classes
                     continue;
-                } elseif (substr($className, 0, 4) === 'opg-') {
+                } elseif ('opg-' === substr($className, 0, 4)) {
                     $counter = &$appClasses;
-                } elseif (substr($className, 0, 6) === 'govuk-') {
+                } elseif ('govuk-' === substr($className, 0, 6)) {
                     $counter = &$govukClasses;
-                } elseif (substr($className, 0, 4) === 'moj-') {
+                } elseif ('moj-' === substr($className, 0, 4)) {
                     $counter = &$mojClasses;
                 } else {
                     $counter = &$otherClasses;
                 }
 
                 if (array_key_exists($className, $counter)) {
-                    $counter[$className]++;
+                    ++$counter[$className];
                 } else {
                     $counter[$className] = 1;
                 }

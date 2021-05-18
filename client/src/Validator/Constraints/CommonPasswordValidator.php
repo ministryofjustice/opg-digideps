@@ -1,4 +1,5 @@
 <?php
+
 namespace App\Validator\Constraints;
 
 use RuntimeException;
@@ -10,25 +11,20 @@ class CommonPasswordValidator extends ConstraintValidator
     const TMP_ROOT_PATH = '/tmp/';
     const PWNED_PW_URL = 'https://www.ncsc.gov.uk/static-assets/documents/PwnedPasswordsTop100k.txt';
 
-    /**
-     * @var string
-     */
     private string $filePathCommonPasswords;
-    /**
-     * @var string
-     */
+
     private string $pwnedPasswordsUrl;
 
     public function __construct()
     {
-        $this->filePathCommonPasswords = self::TMP_ROOT_PATH . 'commonpasswords.txt';
+        $this->filePathCommonPasswords = self::TMP_ROOT_PATH.'commonpasswords.txt';
         $this->pwnedPasswordsUrl = self::PWNED_PW_URL;
     }
+
     /**
-     * Validates a password is not in list of pwned passwords
+     * Validates a password is not in list of pwned passwords.
      *
      * @param mixed $password
-     * @param Constraint $constraint
      */
     public function validate($password, Constraint $constraint)
     {
@@ -43,12 +39,12 @@ class CommonPasswordValidator extends ConstraintValidator
 
     protected function passwordMatchesCommonPasswords(string $searchTerm, string $filePath)
     {
-        $matches = array();
-        $handle = @fopen($filePath, "r");
+        $matches = [];
+        $handle = @fopen($filePath, 'r');
         if ($handle && strlen($searchTerm) > 0) {
             while (!feof($handle)) {
                 $buffer = fgets($handle);
-                if (strpos($buffer, $searchTerm) !== false) {
+                if (false !== strpos($buffer, $searchTerm)) {
                     $matches[] = $buffer;
                 }
             }
@@ -64,16 +60,16 @@ class CommonPasswordValidator extends ConstraintValidator
 
     protected function checkCommonPasswordsFileExists(string $filePath)
     {
-        if (file_exists($filePath) & (time()-filemtime($filePath) < 24 * 3600)) {
+        if (file_exists($filePath) & (time() - filemtime($filePath) < 24 * 3600)) {
             return;
         } else {
-            $fp = fopen($this->pwnedPasswordsUrl, "r");
-            if ($fp !== false) {
+            $fp = fopen($this->pwnedPasswordsUrl, 'r');
+            if (false !== $fp) {
                 $written = file_put_contents(
                     "$filePath",
                     $fp
                 );
-                if ($written === false) {
+                if (false === $written) {
                     throw new RuntimeException(sprintf('Unable to download or write common password file to disk'));
                 }
             }
