@@ -12,6 +12,7 @@ use App\Service\Client\RestClient;
 use App\Service\DeputyProvider;
 use App\Service\Redirector;
 use Psr\Log\LoggerInterface;
+use Sensio\Bundle\FrameworkExtraBundle\Configuration\Security;
 use Sensio\Bundle\FrameworkExtraBundle\Configuration\Template;
 use Symfony\Component\Form\FormError;
 use Symfony\Component\HttpFoundation\Request;
@@ -344,13 +345,7 @@ class UserController extends AbstractController
         if ($form->isSubmitted() && $form->isValid()) {
             $this->userApi->agreeTermsUse($token);
 
-            if (!$user->getActive()) {
-                return $this->redirectToRoute('user_activate', ['token' => $token, 'action' => 'activate']);
-            }
-
-            $redirectRoute = $user->isLayDeputy() ? 'lay_home' : 'org_dashboard';
-
-            return $this->redirectToRoute($redirectRoute);
+            return $this->redirectToRoute('org_dashboard');
         }
 
         if (EntityDir\User::ROLE_PA_NAMED == $user->getRoleName()) {
@@ -369,19 +364,16 @@ class UserController extends AbstractController
 
     /**
      * @Route("/user/update-terms-use/{token}", name="user_updated_terms_use")
+     * @Security("is_granted('ROLE_ORG')")
      */
     public function updatedTermsUseAction(Request $request, string $token): Response
     {
         $user = $this->restClient->loadUserByToken($token);
 
-        $form = $this->createForm(FormDir\User\AgreeTermsType::class, $user);
+        $form = $this->createForm(FormDir\User\UpdateTermsType::class, $user);
         $form->handleRequest($request);
         if ($form->isSubmitted() && $form->isValid()) {
             $this->userApi->agreeTermsUse($token);
-
-            if (!$user->getActive()) {
-                return $this->redirectToRoute('user_activate', ['token' => $token, 'action' => 'activate']);
-            }
 
             return $this->redirectToRoute('org_dashboard');
         }

@@ -15,12 +15,12 @@
 
     <div class="text">
         <p class="govuk-body">{{ 'section01.para01' | trans(transOptions) }}</p>
-        <p class="govuk-body">{{ 'section01.para02' | trans(transOptions) }}</p>
+        <p class="govuk-body">Read the updated <a href="{{path('terms')}}">terms of use</a></p>
     </div>
 
     {{ form_start(form, {attr: {novalidate: 'novalidate', class: 'push--bottom' }}) }}
 
-    {{ form_checkbox(form.agreeTermsUse, 'form.updatedTermsUse', { 'labelClass': 'required' }) }}
+    {{ form_checkbox(form.agreeTermsUse, 'form.agreeTermsUse', { 'labelClass': 'required' }) }}
 
     <div class="govuk-form-group">
         {{ form_submit(form.save, 'form.save') }}

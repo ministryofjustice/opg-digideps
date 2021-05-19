@@ -10,20 +10,15 @@ use Symfony\Component\Security\Core\Encoder\UserPasswordEncoderInterface;
 
 class UserFactory
 {
-    /** @var UserPasswordEncoderInterface  */
+    /** @var UserPasswordEncoderInterface */
     private $encoder;
 
-    /**
-     * @param UserPasswordEncoderInterface $encoder
-     */
     public function __construct(UserPasswordEncoderInterface $encoder)
     {
         $this->encoder = $encoder;
     }
 
     /**
-     * @param array $data
-     * @return User
      * @throws \Exception
      */
     public function create(array $data): User
@@ -31,15 +26,15 @@ class UserFactory
         $roleName = $this->convertRoleName($data['deputyType']);
 
         if (isset($data['ndr'])) {
-            $ndrEnabled = strtolower($data['ndr']) === 'enabled' ? true : false;
+            $ndrEnabled = 'enabled' === strtolower($data['ndr']) ? true : false;
         } else {
             $ndrEnabled = false;
         }
 
         $user = (new User())
-            ->setFirstname(isset($data['firstName']) ? $data['firstName'] : ucfirst($data['deputyType']) . ' Deputy ' . $data['id'])
+            ->setFirstname(isset($data['firstName']) ? $data['firstName'] : ucfirst($data['deputyType']).' Deputy '.$data['id'])
             ->setLastname(isset($data['lastName']) ? $data['lastName'] : 'User')
-            ->setEmail(isset($data['email']) ? $data['email'] : 'behat-' . strtolower($data['deputyType']) .  '-deputy-' . $data['id'] . '@publicguardian.gov.uk')
+            ->setEmail(isset($data['email']) ? $data['email'] : 'behat-'.strtolower($data['deputyType']).'-deputy-'.$data['id'].'@publicguardian.gov.uk')
             ->setActive(true)
             ->setRegistrationDate(new \DateTime())
             ->setNdrEnabled($ndrEnabled)
@@ -51,7 +46,7 @@ class UserFactory
             ->setRoleName($roleName)
             ->setAgreeTermsUse(true);
 
-        if ($data['activated'] === 'true' || $data['activated'] === true) {
+        if ('true' === $data['activated'] || true === $data['activated']) {
             $user->setPassword($this->encoder->encodePassword($user, 'DigidepsPass1234'));
         } else {
             $user->setActive(false);
@@ -61,20 +56,18 @@ class UserFactory
     }
 
     /**
-     * @param array $data
-     * @return User
      * @throws \Exception
      */
     public function createAdmin(array $data): User
     {
         $user = (new User())
-            ->setFirstname(isset($data['firstName']) ? $data['firstName'] : ucfirst($data['adminType']) . ' Admin ' . $data['email'])
+            ->setFirstname(isset($data['firstName']) ? $data['firstName'] : ucfirst($data['adminType']).' Admin '.$data['email'])
             ->setLastname(isset($data['lastName']) ? $data['lastName'] : 'User')
             ->setEmail($data['email'])
             ->setRegistrationDate(new \DateTime())
             ->setRoleName($data['adminType']);
 
-        if ($data['activated'] === 'true') {
+        if ('true' === $data['activated']) {
             $user->setPassword($this->encoder->encodePassword($user, 'DigidepsPass1234'))->setActive(true);
         }
 
@@ -82,7 +75,6 @@ class UserFactory
     }
 
     /**
-     * @param Organisation $organisation
      * @return User|void
      */
     public function createGenericOrgUser(Organisation $organisation)
@@ -128,14 +120,14 @@ class UserFactory
             case 'PROF_ADMIN':
                 return 'ROLE_PROF_ADMIN';
             default:
-                return 'ROLE_' . $roleName . '_NAMED';
+                return 'ROLE_'.$roleName.'_NAMED';
         }
     }
 
     public function createCoDeputy(User $originalDeputy, Client $client, array $data)
     {
         $user2 = clone $originalDeputy;
-        $user2->setLastname($user2->getLastname() . '-2')
+        $user2->setLastname($user2->getLastname().'-2')
             ->setEmail(
                 sprintf(
                     'co-%s-deputy-%d@fixture.com',
@@ -149,7 +141,7 @@ class UserFactory
             ->setCoDeputyClientConfirmed(true)
             ->setActive(true);
 
-        if ($data['activated'] === 'true' || $data['activated'] === true) {
+        if ('true' === $data['activated'] || true === $data['activated']) {
             $user2->setPassword($this->encoder->encodePassword($user2, 'DigidepsPass1234'));
         } else {
             $user2->setActive(false);
