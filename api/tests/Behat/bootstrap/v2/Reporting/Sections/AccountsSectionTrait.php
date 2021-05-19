@@ -13,7 +13,7 @@ trait AccountsSectionTrait
      */
     public function iViewAndStartAccountsSection()
     {
-        $this->iViewAccountsSection();
+        $this->iVisitAccountsSection();
         $this->clickLink('Start accounts');
     }
 

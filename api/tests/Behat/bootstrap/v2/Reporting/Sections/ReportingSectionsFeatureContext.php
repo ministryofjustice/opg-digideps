@@ -13,10 +13,11 @@ class ReportingSectionsFeatureContext extends BaseFeatureContext
     use AdditionalInformationSectionTrait;
     use ContactsSectionTrait;
     use DocumentsSectionTrait;
+    use DeputyExpensesSectionTrait;
     use GiftsSectionTrait;
+    use MoneyInHighAssetsTrait;
     use MoneyOutShortSectionTrait;
     use VisitsCareSectionTrait;
-    use MoneyInHighAssetsTrait;
 
     public const REPORT_SECTION_ENDPOINT = '/%s/%s/%s';
 
