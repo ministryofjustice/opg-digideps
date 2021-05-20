@@ -345,7 +345,7 @@ class UserController extends AbstractController
         if ($form->isSubmitted() && $form->isValid()) {
             $this->userApi->agreeTermsUse($token);
 
-            return $this->redirectToRoute('org_dashboard');
+            return $this->redirectToRoute('user_activate', ['token' => $token, 'action' => 'activate']);
         }
 
         if (EntityDir\User::ROLE_PA_NAMED == $user->getRoleName()) {
