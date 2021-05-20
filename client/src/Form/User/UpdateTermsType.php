@@ -30,6 +30,6 @@ class UpdateTermsType extends AbstractType
 
     public function getBlockPrefix()
     {
-        return 'updated_terms';
+        return 'agree_terms';
     }
 }
