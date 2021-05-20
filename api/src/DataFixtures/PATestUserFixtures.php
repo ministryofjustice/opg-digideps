@@ -60,7 +60,7 @@ class PATestUserFixtures extends AbstractDataFixture
             'Dep Adrs4' => 'ADD4',
             'Dep Adrs5' => 'ADD5',
             'Phone Main' => '+4410000000001',
-            'Agree Terms Use' => true,
+            'Agree Terms Use' => false,
             'clients' => [
                 [
                     'firstname' => 'CLY1',
