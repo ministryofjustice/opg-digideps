@@ -75,7 +75,7 @@ trait DeputyExpensesSectionTrait
     public function iEnterValidExpenses()
     {
         $this->fillInField('expenses_single[explanation]', $this->faker->sentence(12), 'expenseDetails');
-        $this->fillInField('expenses_single[amount]', $this->faker->numberBetween(1, 500), 'expenseDetails');
+        $this->fillInField('expenses_single[amount]', 123.12, 'expenseDetails');
         $this->pressButton('Save and continue');
     }
 
@@ -93,7 +93,7 @@ trait DeputyExpensesSectionTrait
      */
     public function expensesSummaryPageContainsEnteredDetails()
     {
-        $this->expectedResultsDisplayed('anyExpensesClaimed', 'Deputy expenses summary');
-        $this->expectedResultsDisplayed('expenseDetails', 'Deputy expenses details');
+        $this->expectedResultsDisplayedSimplified('anyExpensesClaimed');
+        $this->expectedResultsDisplayedSimplified('expenseDetails');
     }
 }

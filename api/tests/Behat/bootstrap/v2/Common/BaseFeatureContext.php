@@ -112,7 +112,7 @@ class BaseFeatureContext extends MinkContext
     {
         $this->loggedInUserDetails = null;
         $this->interactingWithUserDetails = null;
-        $this->formSectionsAndAnswers = [];
+        $this->submittedAnswersByFormSections = [];
     }
 
     public function getAdminUrl(): string

@@ -4,36 +4,149 @@ declare(strict_types=1);
 
 namespace App\Tests\Behat\v2\Common;
 
+use App\Tests\Behat\BehatException;
+
 trait ExpectedResultsTrait
 {
+    private string $tableHtml = '';
     private array $summarySectionItemsFound = [];
+
+    public function expectedResultsDisplayedSimplified(string $sectionName)
+    {
+        $this->tableHtml = '';
+        $this->summarySectionItemsFound = [];
+
+        $xpath = '//dl|//tbody';
+        $summarySectionElements = $this->getSession()->getPage()->findAll('xpath', $xpath);
+
+        foreach ($summarySectionElements as $summarySectionElement) {
+            $this->tableHtml .= $summarySectionElement->getHtml();
+
+            if ('dl' == $summarySectionElement->getTagName()) {
+                $xpath = '//dd';
+                $descriptionTermElements = $summarySectionElement->findAll('xpath', $xpath);
+
+                foreach ($descriptionTermElements as $dd) {
+                    $this->summarySectionItemsFound[] = strtolower($dd->getText());
+                }
+            } elseif ('tbody' == $summarySectionElement->getTagName()) {
+                $xpath = '//th';
+                $tableHeadElements = $summarySectionElement->findAll('xpath', $xpath);
+
+                foreach ($tableHeadElements as $th) {
+                    $this->summarySectionItemsFound[] = strtolower($th->getText());
+                }
+
+                $xpath = '//td';
+                $tableDataElements = $summarySectionElement->findAll('xpath', $xpath);
+
+                foreach ($tableDataElements as $td) {
+                    $this->summarySectionItemsFound[] = strtolower($td->getText());
+                }
+            }
+        }
+
+        $this->checkSectionContainsExpectedResultsSimplified($sectionName);
+    }
+
+    private function checkSectionContainsExpectedResultsSimplified(string $sectionName)
+    {
+        $foundAnswers = [];
+        $missingAnswers = [];
+
+        foreach ($this->submittedAnswersByFormSections[$sectionName] as $sectionAnswers) {
+            foreach ($sectionAnswers as $fieldName => $fieldValue) {
+                $fieldValue = $this->normalizeFieldValue($fieldValue);
+
+                $sectionAnswerFound = in_array($fieldValue, $this->summarySectionItemsFound);
+
+                if ($sectionAnswerFound) {
+                    $foundAnswers[$fieldName] = $fieldValue;
+
+                    $key = array_search($fieldValue, $this->summarySectionItemsFound);
+
+                    if ($key) {
+                        // Remove the found answer so sections with multiple questions won't get a false positive
+                        unset($this->summarySectionItemsFound[$key]);
+                    }
+
+                    break;
+                } else {
+                    $missingAnswers[$fieldName] = $fieldValue;
+                }
+            }
+        }
+
+        if (!empty($missingAnswers)) {
+            $this->throwMissingAnswersException($missingAnswers, $foundAnswers);
+        }
+    }
+
+    private function throwMissingAnswersException(array $missingAnswers, array $foundAnswers)
+    {
+        $foundText = !empty($foundAnswers) ? json_encode($foundAnswers) : 'No form values found';
+        $missingText = json_encode($missingAnswers);
+
+        $failureMessage = <<<MSG
+The following form answers were found on the page:
+$foundText
+
+But these were missing:
+$missingText
+
+(shown with associated field name the value was entered in)
+
+Table HTML:
+$this->tableHtml
+MSG;
+
+        throw new BehatException($failureMessage);
+    }
+
+    private function normalizeFieldValue($fieldValue)
+    {
+        if (is_numeric($fieldValue)) {
+            $fieldValue = $this->normalizeIntToCurrencyString($fieldValue);
+        } else {
+            $fieldValue = strtolower(strval($fieldValue));
+        }
+
+        return $fieldValue;
+    }
+
+    private function normalizeIntToCurrencyString($fieldValue)
+    {
+        if (is_int($fieldValue)) {
+            return sprintf('£%s.00', $fieldValue);
+        }
+
+        if (is_float($fieldValue)) {
+            return sprintf('£%s', $fieldValue);
+        }
+
+        return $fieldValue;
+    }
 
     /*
      * Adds the contents of each summary section (identified by dl or tbody) to an array
      * then compares the results of the specified section contents to an array of expected contents.
-     *
-     * $summarySectionName - which occurrence of tbody or dl to search in in the order they appear on summary page.
-     *
+     * $summarySectionNumber - which occurrence of tbody or dl to search in in the order they appear on summary page.
+     * $expectedResults - must be an array of arrays of strings. The outer array specifies the 'row' and the
+     * inner array specifies the 'fields'. The 'rows' and 'fields' in this case are dependent on what type of
+     * elements you are searching through and are found automatically by the logic in the function.
      * $context - a description of what the section is or does.
-     *
      * $debug - set to true to output all the sections to screen for development purposes.
      * Very useful when creating the tests! It will debug on the expected results you are checking.
      */
-    public function expectedResultsDisplayed(string $summarySectionName, string $context, bool $debug = false)
+    public function expectedResultsDisplayed(int $summarySectionNumber, array $expectedResults, string $context, bool $debug = false)
     {
-//        $this->formSectionsAndAnswers = array_reverse($this->formSectionsAndAnswers);
-//        var_dump(array_reverse($this->formSectionsAndAnswers));
-//        var_dump($this->formSectionsAndAnswers);
-
-        $expectedResults = $this->formSectionsAndAnswers;
-        $this->checkExpectedResultsCorrectFormat($summarySectionName);
+        $this->checkExpectedResultsCorrectFormat($expectedResults);
 
         $xpath = '//dl|//tbody';
         $summarySectionElements = $this->getSession()->getPage()->findAll('xpath', $xpath);
 
         $sections = [];
         foreach ($summarySectionElements as $summarySectionElement) {
-            $this->summarySectionItemsFound = [];
             if ('dl' == $summarySectionElement->getTagName()) {
                 $this->addSummarySectionItemsFoundFromDescriptionList($summarySectionElement);
             } elseif ('tbody' == $summarySectionElement->getTagName()) {
@@ -41,21 +154,15 @@ trait ExpectedResultsTrait
             } else {
                 $this->throwContextualException('Element must be either dl or tbody');
             }
-            $sections[$summarySectionName] = $this->summarySectionItemsFound;
+            $sections[] = $this->summarySectionItemsFound;
         }
 
         if ($debug) {
-            $this->debugExpectedResultsDisplayed($sections, $summarySectionName, $expectedResults);
+            $this->debugExpectedResultsDisplayed($sections, $summarySectionNumber, $expectedResults);
         }
 
-        foreach ($sections[$summarySectionName] as $foundResultKey => $foundResults) {
-            var_dump($summarySectionName.':');
-            var_dump($sections);
-
-            var_dump($foundResultKey.':');
-            var_dump($expectedResults[$summarySectionName][$foundResultKey]);
-
-            $this->checkContainsExpectedResults($expectedResults[$summarySectionName][$foundResultKey], $foundResults, $summarySectionName, $context);
+        foreach ($sections[$summarySectionNumber] as $foundResultKey => $foundResults) {
+            $this->checkContainsExpectedResults($expectedResults[$foundResultKey], $foundResults, $summarySectionNumber, $context);
         }
     }
 
@@ -112,21 +219,15 @@ trait ExpectedResultsTrait
     {
         $tableValues = [];
         foreach ($items as $item) {
-            $tableValues[] = trim(strval($item->getText()));
+            $this->summarySectionItemsFound[] = trim(strval($item->getHtml()));
         }
         $this->summarySectionItemsFound[] = $tableValues;
     }
 
-    private function checkContainsExpectedResults($expectedItems, $foundItems, $sectionName, $context)
+    private function checkContainsExpectedResults($expectedItems, $foundItems, $sectionNumber, $context)
     {
         $foundInElemPrevious = 0;
         $raiseException = false;
-
-        var_dump('Expected:');
-        var_dump($expectedItems);
-
-        var_dump('Found:');
-        var_dump($foundItems);
         foreach ($expectedItems as $expectedItem) {
             $found = false;
             foreach (array_slice($foundItems, $foundInElemPrevious) as $foundItemKey => $foundItem) {
@@ -148,14 +249,14 @@ trait ExpectedResultsTrait
                 $this->raiseExpectedResultsException(
                     $expectedItems,
                     $foundItems,
-                    $sectionName,
+                    $sectionNumber,
                     $context
                     )
             );
         }
     }
 
-    private function raiseExpectedResultsException($expectedItems, $foundItems, $sectionName, $context)
+    private function raiseExpectedResultsException($expectedItems, $foundItems, $sectionNumber, $context)
     {
         $expected = implode(PHP_EOL, $expectedItems);
         $found = implode(PHP_EOL, $foundItems);
@@ -177,7 +278,7 @@ Note: There may be extra values in found section. This is fine as long as order 
 
 %s
 
-Section name: %s
+Section number: %s
 Context of test: %s
 Page URL: %s
 ============================
@@ -188,17 +289,17 @@ MESSAGE;
             $message,
             $expected,
             $found,
-            strval($sectionName),
+            strval($sectionNumber),
             $context,
             $this->getCurrentUrl()
         );
     }
 
-    private function debugExpectedResultsDisplayed($sections, $summarySectionName, $expectedResults)
+    private function debugExpectedResultsDisplayed($sections, $summarySectionNumber, $expectedResults)
     {
         $summarySectionsText = '';
         foreach ($sections as $sectionKey => $section) {
-            $summarySectionsText = $summarySectionsText."\n\nSection Name: ".strval($sectionKey)."\n";
+            $summarySectionsText = $summarySectionsText."\n\nSection Number: ".strval($sectionKey)."\n";
             foreach ($section as $rowNumber => $row) {
                 $summarySectionsText = $summarySectionsText."\tRow Number: ".strval($rowNumber)."\n";
                 foreach ($row as $fieldNumber => $field) {
@@ -207,8 +308,8 @@ MESSAGE;
             }
         }
 
-        $expectedText = "\n\nThe input to this function is specifically looking at section: ".strval($summarySectionName)."\n";
-        $expectedText = $expectedText."\n\nSection Name: ".strval($summarySectionName)."\n";
+        $expectedText = "\n\nThe input to this function is specifically looking at section: ".strval($summarySectionNumber)."\n";
+        $expectedText = $expectedText."\n\nSection Number: ".strval($summarySectionNumber)."\n";
         foreach ($expectedResults as $rowNumber => $row) {
             $expectedText = $expectedText."\tRow Number: ".strval($rowNumber)."\n";
             foreach ($row as $fieldNumber => $field) {
@@ -251,15 +352,9 @@ MESSAGE;
         ));
     }
 
-    private function checkExpectedResultsCorrectFormat(string $summarySectionName)
+    private function checkExpectedResultsCorrectFormat($expectedResults)
     {
-        if (empty($this->formSectionsAndAnswers[$summarySectionName])) {
-            $this->throwContextualException(
-                "\nForm values not set - \n\$formSectionsAndAnswers[$summarySectionName] is empty. Make sure the form is filled in using functions in FormTrait"
-            );
-        }
-
-        foreach ($this->formSectionsAndAnswers[$summarySectionName] as $expectedResult) {
+        foreach ($expectedResults as $expectedResult) {
             if (!is_array($expectedResult)) {
                 $this->throwContextualException(
                     "\nIncorrect data types - \nexpectedResults must be an array of array of strings ([][]string) to represent rows and fields on summary page"
