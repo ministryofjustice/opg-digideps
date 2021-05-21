@@ -254,8 +254,8 @@ v2-tests-goutte:
             contexts:
                 - App\Tests\Behat\v2\ClientManagement\ClientManagementFeatureContext
 
-        section-money-out:
-            description: Covering the 'Money Out' section of the report
+        section-money-out-short:
+            description: Covering the 'Money Out Short' section of the report
             paths: [ "%paths.base%/features-v2/reporting/sections/money-out" ]
             contexts:
                 - App\Tests\Behat\v2\Reporting\Sections\ReportingSectionsFeatureContext

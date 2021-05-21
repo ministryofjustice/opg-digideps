@@ -46,6 +46,22 @@ trait IVisitFrontendTrait
     }
 
     /**
+     * @When I visit the money out report section
+     */
+    public function iVisitMoneyOutSection()
+    {
+        $this->visitPath($this->getMoneyOutSectionUrl($this->loggedInUserDetails->getCurrentReportId()));
+    }
+
+    /**
+     * @When I visit the money out summary section
+     */
+    public function iVisitMoneyOutSummarySection()
+    {
+        $this->visitPath($this->getMoneyOutShortSectionSummaryUrl($this->loggedInUserDetails->getCurrentReportId()));
+    }
+
+    /**
      * @When I visit the accounts report section
      */
     public function iViewAccountsSection()

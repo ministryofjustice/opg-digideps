@@ -11,7 +11,7 @@ trait MoneyOutShortSectionTrait
     private float $oneOffPaymentsTotal = 0.0;
 
     /**
-     * @When I view and start the money out report section
+     * @When I view and start the money out short report section
      */
     public function iViewAndStartMoneyOutShortSection()
     {
@@ -296,10 +296,10 @@ trait MoneyOutShortSectionTrait
         $this->iClickBasedOnAttributeTypeAndValue('button', 'id', 'add_another_save');
     }
 
-    private function moneyFormat($value)
-    {
-        return number_format(floatval($value), 2, '.', ',');
-    }
+//    private function moneyFormat($value)
+//    {
+//        return number_format(floatval($value), 2, '.', ',');
+//    }
 
     private function insertArrayAtPosition($array, $insert, $position)
     {

@@ -15,6 +15,7 @@ class ReportingSectionsFeatureContext extends BaseFeatureContext
     use DocumentsSectionTrait;
     use GiftsSectionTrait;
     use MoneyOutShortSectionTrait;
+    use MoneyOutSectionTrait;
     use VisitsCareSectionTrait;
     use MoneyInHighAssetsTrait;
 
@@ -176,5 +177,10 @@ class ReportingSectionsFeatureContext extends BaseFeatureContext
     public function iChooseToSaveAndContinue()
     {
         $this->pressButton('Save and continue');
+    }
+
+    public function moneyFormat($value)
+    {
+        return number_format(floatval($value), 2, '.', ',');
     }
 }
