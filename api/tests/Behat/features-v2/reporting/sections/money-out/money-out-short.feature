@@ -31,12 +31,12 @@ Feature: Money Out Short
 
   Scenario: A user removes a one off payment
     Given a Lay Deputy has completed a Pfa Low Assets report
-    When I remove an existing money out payment
+    When I remove an existing money out short payment
     Then I should see the expected money out section summary
 
   Scenario: A user edits a one off payment
     Given a Lay Deputy has completed a Pfa Low Assets report
-    When I edit an existing money out payment
+    When I edit an existing money out short payment
     Then I should see the expected money out section summary
 
   Scenario: A user adds an additional one off payment

@@ -6,9 +6,10 @@ namespace App\Tests\Behat\v2\Reporting\Sections;
 
 trait MoneyOutSectionTrait
 {
+    // this page has a special sub section layout which means we need to nest one more level than usual
     private array $paymentsList = [];
     private array $paymentsListForFills = [];
-    private float $oneOffPaymentsTotal = 0.0;
+    private int $totalMoneyOut = 0;
 
     /**
      * @When I view and start the money out report section
@@ -25,7 +26,7 @@ trait MoneyOutSectionTrait
     public function iSaveAndContinueWithoutAddingPayment()
     {
         $this->iAmOnMoneyOutAddPaymentPage();
-        $this->clickLink('Save and continue');
+        $this->pressButton('Save and continue');
     }
 
     /**
@@ -68,19 +69,19 @@ trait MoneyOutSectionTrait
                     ];
                 $this->paymentsListForFills[] = $paymentObject;
 
+                // because each section has sub total the element is actually element * 2
                 $this->paymentsList[$fieldSetKey * 2][] = $this->formatPaymentObject($paymentObject);
 
                 $total += $amount;
             }
 
+            // this references the sub total section for each sub section
             $this->paymentsList[$fieldSetKey * 2 + 1][] =
                 [
                     'label' => 'total amount',
                     'total' => $this->moneyFormat($total),
                 ];
         }
-
-//        var_dump($this->paymentsListForFills);
 
         foreach ($this->paymentsListForFills as $paymentKey => $payment) {
             if ($paymentKey >= (count($this->paymentsListForFills) - 1)) {
@@ -91,12 +92,107 @@ trait MoneyOutSectionTrait
         }
     }
 
-    private function formatPaymentObject($paymentObject)
+    /**
+     * @When I remove an existing money out payment
+     */
+    public function iRemoveAnExistingMoneyOutPayment()
     {
-        $paymentObject['amount'] = $this->moneyFormat($paymentObject['amount']);
-        unset($paymentObject['selectValue']);
+        $this->iAmOnMoneyOutSummaryPage();
+        $this->setPaymentListToMoneyOutCompleteDefault();
+        $this->removeMoneyOutPayment(2, 0, 1);
+    }
 
-        return array_values($paymentObject);
+    /**
+     * @When I edit an existing money out payment
+     */
+    public function iEditExistingMoneyOutPayment()
+    {
+        $this->iAmOnMoneyOutSummaryPage();
+        $this->setPaymentListToMoneyOutCompleteDefault();
+
+        $urlRegex = sprintf('/%s\/.*\/money-out\/step2\/.*$/', $this->reportUrlPrefix);
+        $this->iClickOnNthElementBasedOnRegex($urlRegex, 1);
+
+        $newAmount = 2000;
+
+        $this->paymentsList[2][0]['description'] = $this->faker->text(100);
+        $this->totalMoneyOut = $this->totalMoneyOut - intval($this->paymentsList[2][0]['amount']) + $newAmount;
+        $this->paymentsList[3][0]['amount'] = strval(intval($this->paymentsList[3][0]['amount']) - intval($this->paymentsList[2][0]['amount']) + $newAmount);
+        $this->paymentsList[2][0]['amount'] = strval($newAmount);
+
+        $this->fillInPaymentDetails($this->paymentsList[2][0]);
+
+        $this->paymentsList[0][0] = $this->formatPaymentObject($this->paymentsList[0][0]);
+        $this->paymentsList[1][0]['amount'] = $this->moneyFormat($this->paymentsList[1][0]['amount']);
+        $this->paymentsList[2][0] = $this->formatPaymentObject($this->paymentsList[2][0]);
+        $this->paymentsList[3][0]['amount'] = $this->moneyFormat($this->paymentsList[3][0]['amount']);
+    }
+
+    /**
+     * @When I add another money out payment from an existing account
+     */
+    public function iAddAnotherMoneyOutPaymentExistingAccount()
+    {
+        $this->iAmOnMoneyOutSummaryPage();
+        $this->setPaymentListToMoneyOutCompleteDefault();
+
+        $urlRegex = sprintf('/%s\/.*\/money-out\/step1.*$/', $this->reportUrlPrefix);
+        $this->iClickOnNthElementBasedOnRegex($urlRegex, 0);
+        $this->iAmOnMoneyOutAddPaymentPage();
+
+        $newPaymentAmount = 250;
+
+        // test account works as well as we don't have this on iAddOneOfEachTypeOfMoneyOutPayment section
+        $paymentObject =
+            [
+                'paymentName' => 'care fees',
+                'description' => $this->faker->text(100),
+                'account' => '(****)',
+                'amount' => strval($newPaymentAmount),
+                'selectValue' => 'care-fees',
+            ];
+
+        $this->addPayment($paymentObject, 'no');
+        // as this is care fees it goes in same section as previous care fees
+        $this->paymentsList[0][] = $this->formatPaymentObject($paymentObject);
+        $this->paymentsList[1][0]['amount'] = $this->moneyFormat(intval($this->paymentsList[1][0]['amount']) + $newPaymentAmount);
+        $this->totalMoneyOut += $newPaymentAmount;
+    }
+
+    /**
+     * @When I add a payment without filling in description
+     */
+    public function iAddPaymentWithoutFillingInDescription()
+    {
+        $this->selectOption('account[category]', 'purchase-over-1000');
+        $this->pressButton('Save and continue');
+        $payment = ['amount' => '200', 'description' => ''];
+        $this->fillInPaymentDetails($payment);
+    }
+
+    /**
+     * @When I should see correct money out description validation message
+     */
+    public function iSeeMoneyOutDescriptionValidationMessage()
+    {
+        $this->assertOnAlertMessage('Please give us some more information about this amount');
+    }
+
+    /**
+     * @When I add a payment without filling in amount
+     */
+    public function iAddPaymentWithoutFillingInAmount()
+    {
+        $payment = ['amount' => '', 'description' => 'some text'];
+        $this->fillInPaymentDetails($payment);
+    }
+
+    /**
+     * @When I should see correct money out amount validation message
+     */
+    public function iSeeMoneyOutAmountValidationMessage()
+    {
+        $this->assertOnAlertMessage('Please enter an amount');
     }
 
     /**
@@ -106,27 +202,113 @@ trait MoneyOutSectionTrait
     {
         $this->iAmOnMoneyOutSummaryPage();
 
-//        $this->expectedResultsDisplayed(2, $this->paymentsList[2], 'Money Out Payments', true);
-
         foreach ($this->paymentsList as $entryKey => $entry) {
             $this->expectedResultsDisplayed($entryKey, $this->paymentsList[$entryKey], 'Money Out Payments');
         }
+
+        $this->checkTotalAmountOnSummary();
     }
 
-    public function addPayment($payment, $anotherFlag)
+    private function checkTotalAmountOnSummary()
+    {
+        $divs = $this->getSession()->getPage()->findAll('xpath', '//div');
+        $total = strval($this->moneyFormat($this->totalMoneyOut));
+        $totalExists = false;
+        foreach ($divs as $div) {
+            if (str_contains($div->getText(), 'Total money out')) {
+                if (str_contains($div->getText(), $total)) {
+                    $totalExists = true;
+                }
+            }
+        }
+
+        if (!$totalExists) {
+            $this->throwContextualException(sprintf('total amount of %s not found on page', $total));
+        }
+    }
+
+    private function setPaymentListToMoneyOutCompleteDefault()
+    {
+        // starting payments for a fixture of completed report
+        $this->paymentsList = [
+            [[
+                'paymentName' => 'care fees',
+                'description' => '',
+                'amount' => '200',
+            ]],
+            [[
+                'amount' => '200',
+            ]],
+            [[
+                'paymentName' => 'electricity',
+                'description' => '',
+                'amount' => '100',
+            ]],
+            [[
+                'amount' => '100',
+            ]],
+        ];
+
+        $this->totalMoneyOut = 300;
+    }
+
+    // due to sub groups the occurrence on screen can be different to how we have to manipulate the paymentsList entry
+    private function removeMoneyOutPayment($paymentSectionNumber, $paymentNumber, $occurenceOnSummary)
+    {
+        $urlRegex = sprintf('/%s\/.*\/money-out\/.*\/delete.*$/', $this->reportUrlPrefix);
+        $this->iClickOnNthElementBasedOnRegex($urlRegex, $occurenceOnSummary);
+        $this->iAmOnMoneyOutDeletePage();
+        $this->iClickBasedOnAttributeTypeAndValue('button', 'id', 'confirm_delete_confirm');
+
+        $this->removeFromList($paymentSectionNumber, $paymentNumber);
+    }
+
+    private function removeFromList($paymentSectionNumber, $paymentNumber)
+    {
+        $amountToRemove = intval($this->paymentsList[$paymentSectionNumber][$paymentNumber]['amount']);
+        $sectionTotal = intval($this->paymentsList[$paymentSectionNumber + 1][0]['amount']);
+
+        // this is the sub total section for each sub section
+        $this->paymentsList[$paymentSectionNumber + 1][0]['amount'] = strval($sectionTotal - $amountToRemove);
+        $this->totalMoneyOut -= $amountToRemove;
+        unset($this->paymentsList[$paymentSectionNumber][$paymentNumber]);
+
+        // if last remaining payment in the section is removed then unset the section and section total
+        if (intval($this->paymentsList[$paymentSectionNumber + 1][0]['amount']) <= 0) {
+            unset($this->paymentsList[$paymentSectionNumber + 1]);
+            unset($this->paymentsList[$paymentSectionNumber]);
+        }
+
+        $this->paymentsList = array_values($this->paymentsList);
+    }
+
+    private function addPayment($payment, $anotherFlag)
     {
         $this->selectOption('account[category]', $payment['selectValue']);
         $this->pressButton('Save and continue');
+        $this->fillInPaymentDetails($payment);
+        $this->addAnother($anotherFlag);
+    }
+
+    private function fillInPaymentDetails($payment)
+    {
         $this->iAmOnMoneyOutAddPaymentDetailsPage();
         $this->fillField('account[description]', $payment['description']);
         $this->fillField('account[amount]', $payment['amount']);
+        if (array_key_exists('account', $payment)) {
+            $this->iSelectBasedOnChoiceNumber('select', 'id', 'account_bankAccountId', 1);
+        }
         $this->pressButton('Save and continue');
+    }
+
+    private function addAnother($anotherFlag)
+    {
         $this->iAmOnMoneyOutAddAnotherPaymentPage();
         $this->selectOption('add_another[addAnother]', $anotherFlag);
         $this->pressButton('Save and continue');
     }
 
-    public function getStringBetween($string, $start, $end)
+    private function getStringBetween($string, $start, $end)
     {
         $string = ' '.$string;
         $ini = strpos($string, $start);
@@ -139,308 +321,11 @@ trait MoneyOutSectionTrait
         return substr($string, $ini, $len);
     }
 
-//            $payment =
-//                [
-//                    'paymentName' => $this->getStringBetween($radioBox->getOuterHtml(), 'value="', '"'),
-//                    'description' => $this->faker->text(100),
-//                    'amount' => strval(1000 + $radioBoxKey)
-//                ];
-//
-//            $this->fill
-//$fullstring = 'this is my [tag]dog[/tag]';
-//$parsed = get_string_between($fullstring, '[tag]', '[/tag]');
-//
-//echo $parsed; // (result = dog)
+    private function formatPaymentObject($paymentObject)
+    {
+        $paymentObject['amount'] = $this->moneyFormat($paymentObject['amount']);
+        unset($paymentObject['selectValue']);
 
-//    /**
-//     * @When I have made no payments out
-//     */
-//    public function iHaveMadeNoPaymentsOut()
-//    {
-//        $this->iAmOnMoneyOutShortCategoryPage();
-//        $this->iClickBasedOnAttributeTypeAndValue('button', 'id', 'money_short_save');
-//        $this->iAnswerNoOneOffPaymentsOver1k();
-//    }
-//
-//    /**
-//     * @When I add some categories of money paid out
-//     */
-//    public function iAddSomeCategoriesOfMoneyOut()
-//    {
-//        $this->iAmOnMoneyOutShortCategoryPage();
-//        $this->getSession()->getPage()->selectFieldOption('money_short[moneyShortCategoriesOut][0][present]', '1');
-//        $this->categoryList[] = 'accommodation costs';
-//        $this->getSession()->getPage()->selectFieldOption('money_short[moneyShortCategoriesOut][3][present]', '1');
-//        $this->categoryList[] = 'household bills';
-//        $this->iClickBasedOnAttributeTypeAndValue('button', 'id', 'money_short_save');
-//    }
-//
-//    /**
-//     * @When I answer that there are no one-off payments over £1k
-//     */
-//    public function iAnswerNoOneOffPaymentsOver1k()
-//    {
-//        $this->oneOffPaymentOver1kExists('no');
-//    }
-//
-//    /**
-//     * @When I add all the categories of money paid out
-//     */
-//    public function iAddAllTheCategoriesOfMoneyPaidOut()
-//    {
-//        $this->iAmOnMoneyOutShortCategoryPage();
-//        $this->getSession()->getPage()->selectFieldOption('money_short[moneyShortCategoriesOut][0][present]', '1');
-//        $this->categoryList[] = 'accommodation costs';
-//        $this->getSession()->getPage()->selectFieldOption('money_short[moneyShortCategoriesOut][1][present]', '1');
-//        $this->categoryList[] = 'care fees';
-//        $this->getSession()->getPage()->selectFieldOption('money_short[moneyShortCategoriesOut][2][present]', '1');
-//        $this->categoryList[] = 'holidays and trips';
-//        $this->getSession()->getPage()->selectFieldOption('money_short[moneyShortCategoriesOut][3][present]', '1');
-//        $this->categoryList[] = 'household bills';
-//        $this->getSession()->getPage()->selectFieldOption('money_short[moneyShortCategoriesOut][4][present]', '1');
-//        $this->categoryList[] = 'personal allowance';
-//        $this->getSession()->getPage()->selectFieldOption('money_short[moneyShortCategoriesOut][5][present]', '1');
-//        $this->categoryList[] = 'professional fees';
-//        $this->getSession()->getPage()->selectFieldOption('money_short[moneyShortCategoriesOut][6][present]', '1');
-//        $this->categoryList[] = 'new investments';
-//        $this->getSession()->getPage()->selectFieldOption('money_short[moneyShortCategoriesOut][7][present]', '1');
-//        $this->categoryList[] = 'travel costs';
-//        $this->iClickBasedOnAttributeTypeAndValue('button', 'id', 'money_short_save');
-//    }
-//
-//    /**
-//     * @When I answer that there are a couple of one-off payments over £1k
-//     */
-//    public function iAnswerTwoOneOffPaymentsOver1k()
-//    {
-//        $this->oneOffPaymentOver1kExists('yes');
-//        $this->addAMoneyOutPayment('test_payment_1', '1001', '01', '02', '2019');
-//        $this->addAnotherMoneyOutPayment('yes');
-//        $this->addAMoneyOutPayment('test_payment_2', '1002', '03', '04', '2020');
-//        $this->addAnotherMoneyOutPayment('no');
-//        $this->iAmOnMoneyOutShortSummaryPage();
-//    }
-//
-//    /**
-//     * @When I remove an existing money out payment
-//     */
-//    public function iRemoveOneOffPayment()
-//    {
-//        $this->iVisitMoneyOutShortSummarySection();
-//        $this->iAmOnMoneyOutShortSummaryPage();
-//        $urlRegex = sprintf('/%s\/.*\/money-out-short\/exist.*$/', $this->reportUrlPrefix);
-//        $this->iClickOnNthElementBasedOnRegex($urlRegex, 0);
-//        $this->oneOffPaymentOver1kExists('yes');
-//        $this->addAMoneyOutPayment('to_remove_1', '1003', '10', '11', '2019');
-//        $this->addAnotherMoneyOutPayment('yes');
-//        $this->addAMoneyOutPayment('to_remove_2', '1004', '11', '12', '2020');
-//        $this->addAnotherMoneyOutPayment('no');
-//        $this->iAmOnMoneyOutShortSummaryPage();
-//        $this->iRemoveAOneOffPayment(0);
-//        $this->iAmOnMoneyOutShortSummaryPage();
-//    }
-//
-//    /**
-//     * @When I edit an existing money out payment
-//     */
-//    public function iEditOneOffPayment()
-//    {
-//        $this->iVisitMoneyOutShortSummarySection();
-//        $this->iAmOnMoneyOutShortSummaryPage();
-//        $urlRegex = sprintf('/%s\/.*\/money-out-short\/exist.*$/', $this->reportUrlPrefix);
-//        $this->iClickOnNthElementBasedOnRegex($urlRegex, 0);
-//        $this->oneOffPaymentOver1kExists('yes');
-//        $this->addAMoneyOutPayment('to_edit_1', '1004', '08', '10', '2019');
-//        $this->addAnotherMoneyOutPayment('no');
-//        $this->iAmOnMoneyOutShortSummaryPage();
-//        $this->iEditAOneOffPayment(0, 'to_edit_2', '1005', '09', '11', '2020');
-//        $this->iAmOnMoneyOutShortSummaryPage();
-//    }
-//
-//    /**
-//     * @When I add a payment and state no further payments
-//     */
-//    public function iAddAPaymentAndStateNoFurtherPayments()
-//    {
-//        $this->iVisitMoneyOutShortSummarySection();
-//        $this->iAmOnMoneyOutShortSummaryPage();
-//        $urlRegex = sprintf('/%s\/.*\/money-out-short\/exist.*$/', $this->reportUrlPrefix);
-//        $this->iClickOnNthElementBasedOnRegex($urlRegex, 0);
-//        $this->oneOffPaymentOver1kExists('yes');
-//        $this->addAMoneyOutPayment('payment_1', '1006', '01', '01', '2018');
-//        $this->addAnotherMoneyOutPayment('no');
-//    }
-//
-//    /**
-//     * @When I change my mind and add another payment
-//     */
-//    public function iChangeMyMindAndAddAnotherPayment()
-//    {
-//        $this->iAmOnMoneyOutShortSummaryPage();
-//        $urlRegex = sprintf('/%s\/.*\/money-out-short\/add.*$/', $this->reportUrlPrefix);
-//        $this->iClickOnNthElementBasedOnRegex($urlRegex, 0);
-//        $this->addAMoneyOutPayment('payment_1', '1006', '01', '01', '2018');
-//        $this->addAnotherMoneyOutPayment('no');
-//        $this->iAmOnMoneyOutShortSummaryPage();
-//    }
-//
-//    /**
-//     * @When I add a one off payment of less than £1k
-//     */
-//    public function iAddAOneOffPaymentOfLessThan1k()
-//    {
-//        $this->iVisitMoneyOutShortSummarySection();
-//        $this->iAmOnMoneyOutShortSummaryPage();
-//        $urlRegex = sprintf('/%s\/.*\/money-out-short\/exist.*$/', $this->reportUrlPrefix);
-//        $this->iClickOnNthElementBasedOnRegex($urlRegex, 0);
-//        $this->oneOffPaymentOver1kExists('yes');
-//        $this->addAMoneyOutPayment('payment_1', '10', '01', '01', '2018');
-//    }
-//
-//    /**
-//     * @Then I should see correct validation message
-//     */
-//    public function iShouldSeeCorrectValidationMessage()
-//    {
-//        $this->assertOnAlertMessage('Please input a value of at least £1,000');
-//    }
-//
-//    /**
-//     * @Then I should see the expected money out section summary
-//     */
-//    public function iShouldSeeTheExpectedMoneyOutSummary()
-//    {
-//        $this->iAmOnMoneyOutShortSummaryPage();
-//
-//        if (count($this->categoryList) > 0) {
-//            $categoryWrapper[] = $this->categoryList;
-//        } else {
-//            $categoryWrapper[] = ['none'];
-//        }
-//
-//        $this->expectedResultsDisplayed(0, $categoryWrapper, 'Categories Entered');
-//
-//        if (count($this->oneOffPaymentsList) > 0) {
-//            $oneOffExistsWrapper[] = ['yes'];
-//        } else {
-//            $oneOffExistsWrapper[] = ['no'];
-//        }
-//
-//        // Check the one off payments exist response
-//        $this->expectedResultsDisplayed(1, $oneOffExistsWrapper, 'Answers for "One off payments exist"');
-//
-//        // Only check if we have one off payments
-//        if (count($this->oneOffPaymentsList) > 0) {
-//            // get one of payments nested array into the correct format to compare
-//            $expectedOneOffPayments = $this->oneOffPaymentsList;
-//            foreach ($expectedOneOffPayments as $oneOffPaymentKey => $oneOffPayment) {
-//                $expectedOneOffPayments[$oneOffPaymentKey]['amount'] = $this->moneyFormat($this->oneOffPaymentsList[$oneOffPaymentKey]['amount']);
-//                $dateTimestamp = sprintf(
-//                    '%s-%s-%s 00:00',
-//                    $expectedOneOffPayments[$oneOffPaymentKey]['year'],
-//                    $expectedOneOffPayments[$oneOffPaymentKey]['month'],
-//                    $expectedOneOffPayments[$oneOffPaymentKey]['day']
-//                );
-//                $date = date('j F Y', strtotime($dateTimestamp));
-//                //            $expectedOneOffPayments[$oneOffPaymentKey]['date'] = $date;
-//                unset($expectedOneOffPayments[$oneOffPaymentKey]['day']);
-//                unset($expectedOneOffPayments[$oneOffPaymentKey]['month']);
-//                unset($expectedOneOffPayments[$oneOffPaymentKey]['year']);
-//                $expectedOneOffPayments[$oneOffPaymentKey] = $this->insertArrayAtPosition($expectedOneOffPayments[$oneOffPaymentKey], ['date' => $date], 1);
-//                $this->oneOffPaymentsTotal += floatval($this->oneOffPaymentsList[$oneOffPaymentKey]['amount']);
-//            }
-//            $expectedOneOffPayments = array_values($expectedOneOffPayments);
-//
-//            // Check the individual one off payments
-//            $this->expectedResultsDisplayed(2, $expectedOneOffPayments, 'One of payments details');
-//            // Check the total
-//            $this->expectedResultsDisplayed(3, [[$this->moneyFormat($this->oneOffPaymentsTotal)]], 'One of payments total');
-//        }
-//    }
-//
-//    private function iEditAOneOffPayment($paymentOccurrence, $description, $amount, $day, $month, $year)
-//    {
-//        // Click on the nth row to delete
-//        $urlRegex = sprintf('/%s\/.*\/money-out-short\/edit\/[0-9].*$/', $this->reportUrlPrefix);
-//        $this->iClickOnNthElementBasedOnRegex($urlRegex, $paymentOccurrence);
-//        $this->iAmOnMoneyOutShortEditPage();
-//
-//        // Remove the payment from our array
-//        $this->oneOffPaymentsList[$paymentOccurrence]['description'] = $description;
-//        $this->oneOffPaymentsList[$paymentOccurrence]['amount'] = $amount;
-//        $this->oneOffPaymentsList[$paymentOccurrence]['day'] = $day;
-//        $this->oneOffPaymentsList[$paymentOccurrence]['month'] = $month;
-//        $this->oneOffPaymentsList[$paymentOccurrence]['year'] = $year;
-//        $this->oneOffPaymentsList = array_values($this->oneOffPaymentsList);
-//
-//        $this->fillField('money_short_transaction[description]', $description);
-//        $this->fillField('money_short_transaction[amount]', $amount);
-//        $this->fillField('money_short_transaction[date][day]', $day);
-//        $this->fillField('money_short_transaction[date][month]', $month);
-//        $this->fillField('money_short_transaction[date][year]', $year);
-//        $this->iClickBasedOnAttributeTypeAndValue('button', 'id', 'money_short_transaction_save');
-//    }
-//
-//    private function iRemoveAOneOffPayment($paymentOccurrence)
-//    {
-//        // Click on the nth row to delete
-//        $urlRegex = sprintf('/%s\/.*\/money-out-short\/.*\/delete$/', $this->reportUrlPrefix);
-//        $this->iClickOnNthElementBasedOnRegex($urlRegex, $paymentOccurrence);
-//
-//        // Remove the payment from our array
-//        unset($this->oneOffPaymentsList[$paymentOccurrence]);
-//        $this->oneOffPaymentsList = array_values($this->oneOffPaymentsList);
-//
-//        $this->iClickBasedOnAttributeTypeAndValue('button', 'id', 'confirm_delete_confirm');
-//    }
-//
-//    private function oneOffPaymentOver1kExists($selection)
-//    {
-//        $this->iAmOnMoneyOutShortExistsPage();
-//        $this->selectOption('yes_no[moneyTransactionsShortOutExist]', $selection);
-//        $this->iClickBasedOnAttributeTypeAndValue('button', 'id', 'yes_no_save');
-//    }
-//
-//    private function addAMoneyOutPayment($description, $amount, $day, $month, $year)
-//    {
-//        $oneOffPayment = [
-//            'description' => $description,
-//            'amount' => $amount,
-//            'day' => $day,
-//            'month' => $month,
-//            'year' => $year,
-//        ];
-//
-//        $this->oneOffPaymentsList[] = $oneOffPayment;
-//
-//        $this->iAmOnMoneyOutShortAddPage();
-//        $this->fillField('money_short_transaction[description]', $description);
-//        $this->fillField('money_short_transaction[amount]', $amount);
-//        $this->fillField('money_short_transaction[date][day]', $day);
-//        $this->fillField('money_short_transaction[date][month]', $month);
-//        $this->fillField('money_short_transaction[date][year]', $year);
-//        $this->iClickBasedOnAttributeTypeAndValue('button', 'id', 'money_short_transaction_save');
-//    }
-//
-//    private function addAnotherMoneyOutPayment($selection)
-//    {
-//        $this->iAmOnMoneyOutShortAddAnotherPage();
-//        $this->selectOption('add_another[addAnother]', $selection);
-//        $this->iClickBasedOnAttributeTypeAndValue('button', 'id', 'add_another_save');
-//    }
-//
-//    private function moneyFormat($value)
-//    {
-//        return number_format(floatval($value), 2, '.', ',');
-//    }
-//
-//    private function insertArrayAtPosition($array, $insert, $position)
-//    {
-//        /*
-//        $array : The initial array i want to modify
-//        $insert : the new array i want to add, eg array('key' => 'value') or array('value')
-//        $position : the position where the new array will be inserted into. Please mind that arrays start at 0
-//        */
-//        return array_slice($array, 0, $position, true) + $insert + array_slice($array, $position, null, true);
-//    }
+        return array_values($paymentObject);
+    }
 }

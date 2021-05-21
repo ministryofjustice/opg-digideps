@@ -371,6 +371,14 @@ trait IShouldBeOnTrait
     }
 
     /**
+     * @Then I should be on the money out delete page
+     */
+    public function iAmOnMoneyOutDeletePage()
+    {
+        return $this->iAmOnPage(sprintf('/%s\/.*\/money-out\/.*\/delete.*$/', $this->reportUrlPrefix));
+    }
+
+    /**
      * @Then I should be on the any other info summary page
      */
     public function iAmOnAnyOtherInfoSummaryPage()

@@ -58,7 +58,7 @@ trait IVisitFrontendTrait
      */
     public function iVisitMoneyOutSummarySection()
     {
-        $this->visitPath($this->getMoneyOutShortSectionSummaryUrl($this->loggedInUserDetails->getCurrentReportId()));
+        $this->visitPath($this->getMoneyOutSectionSummaryUrl($this->loggedInUserDetails->getCurrentReportId()));
     }
 
     /**
