@@ -28,7 +28,9 @@ Feature: Health and Lifestyle (Lay / PA / Prof share same functionality)
     Scenario: A user edits existing answers
         Given a Lay Deputy has completed a Health and Welfare report
         And I visit the health and lifestyle summary section
-        When I edit the existing lifestyle section answers
+        When I edit the lifestyle section answers as client takes part in activities
+        Then I should see the expected lifestyle section summary
+        When I edit the lifestyle section answers as client doesn't take part in activities
         Then I should see the expected lifestyle section summary
 
     Scenario: A user tries to get through sections without filling in relevant fields
