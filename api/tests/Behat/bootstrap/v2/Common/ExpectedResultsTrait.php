@@ -55,7 +55,10 @@ trait ExpectedResultsTrait
         $missingAnswers = [];
 
         foreach ($this->submittedAnswersByFormSections[$sectionName] as $sectionAnswers) {
+            var_dump($sectionAnswers);
             foreach ($sectionAnswers as $fieldName => $fieldValue) {
+//                var_dump($fieldName);
+//                var_dump($fieldValue);
                 $fieldValue = $this->normalizeFieldValue($fieldValue);
 
                 $sectionAnswerFound = in_array($fieldValue, $this->summarySectionItemsFound);

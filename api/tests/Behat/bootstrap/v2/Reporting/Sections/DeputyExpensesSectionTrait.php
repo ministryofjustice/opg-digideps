@@ -6,6 +6,11 @@ namespace App\Tests\Behat\v2\Reporting\Sections;
 
 trait DeputyExpensesSectionTrait
 {
+    private string $notANumberError = 'Enter the amount of the expense in numbers';
+    private string $outOfRangeError = 'The amount must be between £0.01 and £100,000,000,000';
+    private string $missingDescriptionError = 'Please enter a description';
+    private string $missingAmountError = 'Please enter an amount';
+
     /**
      * @When I navigate to the deputy expenses report section
      */
@@ -75,8 +80,19 @@ trait DeputyExpensesSectionTrait
     public function iEnterValidExpenses()
     {
         $this->fillInField('expenses_single[explanation]', $this->faker->sentence(12), 'expenseDetails');
-        $this->fillInField('expenses_single[amount]', 123.12, 'expenseDetails');
+        $this->fillInField('expenses_single[amount]', $this->faker->numberBetween(1, 1000), 'expenseDetails');
         $this->pressButton('Save and continue');
+    }
+
+    /**
+     * @When I declare another expense
+     */
+    public function iDeclareAnotherExpenses()
+    {
+        $this->chooseOption('add_another[addAnother]', 'yes');
+        $this->pressButton('Continue');
+
+        $this->iEnterValidExpenses();
     }
 
     /**
@@ -95,5 +111,79 @@ trait DeputyExpensesSectionTrait
     {
         $this->expectedResultsDisplayedSimplified('anyExpensesClaimed');
         $this->expectedResultsDisplayedSimplified('expenseDetails');
+    }
+
+    /**
+     * @When I enter the wrong type of values
+     */
+    public function iEnterWrongValueTypes()
+    {
+        $this->fillInField('expenses_single[explanation]', $this->faker->numberBetween(1, 1000), 'expenseDetails');
+        $this->fillInField('expenses_single[amount]', $this->faker->sentence(12), 'expenseDetails');
+        $this->pressButton('Save and continue');
+    }
+
+    /**
+     * @Then I should see 'type validation' errors
+     */
+    public function iShouldSeeTypeValidationError()
+    {
+        $this->assertOnErrorMessage($this->notANumberError);
+    }
+
+    /**
+     * @When I don't enter any values
+     */
+    public function iDoNotEnterValues()
+    {
+        $this->pressButton('Save and continue');
+    }
+
+    /**
+     * @Then I should see 'missing values' errors
+     */
+    public function iShouldSeeMissingValuesErrors()
+    {
+        $this->assertOnErrorMessage($this->missingAmountError);
+        $this->assertOnErrorMessage($this->missingDescriptionError);
+    }
+
+    /**
+     * @When I enter an expense amount that is too high
+     */
+    public function iEnterValueToHigh()
+    {
+        $this->fillInField('expenses_single[explanation]', $this->faker->sentence(12), 'expenseDetails');
+        $this->fillInField('expenses_single[amount]', 100000000000.01, 'expenseDetails');
+
+        $this->pressButton('Save and continue');
+    }
+
+    /**
+     * @When I enter an expense amount that is too low
+     */
+    public function iEnterValueToLow()
+    {
+        $this->fillInField('expenses_single[explanation]', $this->faker->sentence(12), 'expenseDetails');
+        $this->fillInField('expenses_single[amount]', 0, 'expenseDetails');
+
+        $this->pressButton('Save and continue');
+    }
+
+    /**
+     * @Then I should see an 'amount out of range' error
+     */
+    public function iShouldSeeAmountOutOfRangeError()
+    {
+        $this->assertOnErrorMessage($this->outOfRangeError);
+    }
+
+    /**
+     * @Then I edit the expense details
+     */
+    public function iEditTheExpense()
+    {
+        $answers = $this->getSectionAnswers('expenseDetails');
+        var_dump($answers);
     }
 }

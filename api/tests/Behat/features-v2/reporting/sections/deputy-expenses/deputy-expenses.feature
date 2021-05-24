@@ -7,7 +7,6 @@ Feature: Deputy expenses - Applies to Lays with combined/PFA reports only
         And I have no expenses to declare
         Then the expenses summary page should contain the details I entered
 
-    @acs
     Scenario: A user has a single expense to declare
         Given a Lay Deputy has not started a report
         When I view and start the deputy expenses report section
@@ -16,7 +15,7 @@ Feature: Deputy expenses - Applies to Lays with combined/PFA reports only
         And there are no further expenses to add
         Then the expenses summary page should contain the details I entered
 
-    Scenario: A user has a multiple expenses to declare
+    Scenario: A user has multiple expenses to declare
         Given a Lay Deputy has not started a report
         When I view and start the deputy expenses report section
         And I have expenses to declare
@@ -29,14 +28,22 @@ Feature: Deputy expenses - Applies to Lays with combined/PFA reports only
         Given a Lay Deputy has not started a report
         When I view and start the deputy expenses report section
         And I have expenses to declare
-        And I enter invalid expense details
-        Then I should see an invalid field error
+        And I don't enter any values
+        Then I should see 'missing values' errors
+        And I enter the wrong type of values
+        Then I should see 'type validation' errors
+        And I enter an expense amount that is too high
+        Then I should see an 'amount out of range' error
+        And I enter an expense amount that is too low
+        Then I should see an 'amount out of range' error
 
+    @acs
     Scenario: A user edits expense data they have submitted
         Given a Lay Deputy has not started a report
         When I view and start the deputy expenses report section
         And I have expenses to declare
         And I enter valid expense details
+        And I declare another expense
         And there are no further expenses to add
         And I edit the expense details
         Then the expenses summary page should contain the details I entered
