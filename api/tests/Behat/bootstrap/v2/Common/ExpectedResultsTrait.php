@@ -147,6 +147,7 @@ MSG;
 
         $sections = [];
         foreach ($summarySectionElements as $summarySectionElement) {
+            $this->summarySectionItemsFound = [];
             if ('dl' == $summarySectionElement->getTagName()) {
                 $this->addSummarySectionItemsFoundFromDescriptionList($summarySectionElement);
             } elseif ('tbody' == $summarySectionElement->getTagName()) {
@@ -219,7 +220,7 @@ MSG;
     {
         $tableValues = [];
         foreach ($items as $item) {
-            $this->summarySectionItemsFound[] = trim(strval($item->getHtml()));
+            $this->summarySectionItemsFound[] = trim(strval($item->getText()));
         }
         $this->summarySectionItemsFound[] = $tableValues;
     }
