@@ -3,7 +3,7 @@ Feature: Deputy expenses - Applies to Lays with combined/PFA reports only
 
     Scenario: A user has no supporting expenses to declare
         Given a Lay Deputy has not started a report
-        When I navigate to the deputy expenses report section
+        When I navigate to and start the deputy expenses report section
         And I have no expenses to declare
         Then the expenses summary page should contain the details I entered
 
@@ -30,14 +30,13 @@ Feature: Deputy expenses - Applies to Lays with combined/PFA reports only
         And I have expenses to declare
         And I don't enter any values
         Then I should see 'missing values' errors
-        And I enter the wrong type of values
+        When I enter the wrong type of values
         Then I should see 'type validation' errors
-        And I enter an expense amount that is too high
+        When I enter an expense amount that is too high
         Then I should see an 'amount out of range' error
-        And I enter an expense amount that is too low
+        When I enter an expense amount that is too low
         Then I should see an 'amount out of range' error
 
-    @acs
     Scenario: A user edits expense data they have submitted
         Given a Lay Deputy has not started a report
         When I view and start the deputy expenses report section
@@ -66,6 +65,7 @@ Feature: Deputy expenses - Applies to Lays with combined/PFA reports only
         And I declare another expense
         And there are no further expenses to add
         And I add an expense from the expense summary page
+        And there are no further expenses to add
         Then the expenses summary page should contain the details I entered
 
     Scenario: A user adds expense data and then changes their mind

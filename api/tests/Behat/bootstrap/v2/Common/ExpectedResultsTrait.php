@@ -54,11 +54,8 @@ trait ExpectedResultsTrait
         $foundAnswers = [];
         $missingAnswers = [];
 
-        foreach ($this->submittedAnswersByFormSections[$sectionName] as $sectionAnswers) {
-            var_dump($sectionAnswers);
+        foreach ($this->getSectionAnswers($sectionName) as $sectionAnswers) {
             foreach ($sectionAnswers as $fieldName => $fieldValue) {
-//                var_dump($fieldName);
-//                var_dump($fieldValue);
                 $fieldValue = $this->normalizeFieldValue($fieldValue);
 
                 $sectionAnswerFound = in_array($fieldValue, $this->summarySectionItemsFound);
@@ -97,7 +94,7 @@ $foundText
 But these were missing:
 $missingText
 
-(shown with associated field name the value was entered in)
+(shown with the field name the value was entered in)
 
 Table HTML:
 $this->tableHtml

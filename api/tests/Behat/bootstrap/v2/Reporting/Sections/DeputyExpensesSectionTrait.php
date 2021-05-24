@@ -6,15 +6,17 @@ namespace App\Tests\Behat\v2\Reporting\Sections;
 
 trait DeputyExpensesSectionTrait
 {
+    private string $sectionStartText = 'Have you claimed any deputy expenses during this reporting period?';
+
     private string $notANumberError = 'Enter the amount of the expense in numbers';
     private string $outOfRangeError = 'The amount must be between £0.01 and £100,000,000,000';
     private string $missingDescriptionError = 'Please enter a description';
     private string $missingAmountError = 'Please enter an amount';
 
     /**
-     * @When I navigate to the deputy expenses report section
+     * @When I navigate to and start the deputy expenses report section
      */
-    public function iNavigateToDeputyExpensesSection()
+    public function iNavigateToAndStartDeputyExpensesSection()
     {
         $this->iVisitLayStartPage();
         $this->clickLink('Start now');
@@ -26,6 +28,8 @@ trait DeputyExpensesSectionTrait
         if (!$onSectionPage) {
             $this->throwContextualException('Not on deputy expenses section page');
         }
+
+        $this->clickLink('Start deputy expenses');
     }
 
     /**
@@ -60,7 +64,6 @@ trait DeputyExpensesSectionTrait
      */
     public function iHaveNoExpenses()
     {
-        $this->clickLink('Start deputy expenses');
         $this->chooseOption('yes_no[paidForAnything]', 'no', 'anyExpensesClaimed');
         $this->pressButton('Save and continue');
     }
@@ -79,8 +82,8 @@ trait DeputyExpensesSectionTrait
      */
     public function iEnterValidExpenses()
     {
-        $this->fillInField('expenses_single[explanation]', $this->faker->sentence(12), 'expenseDetails');
-        $this->fillInField('expenses_single[amount]', $this->faker->numberBetween(1, 1000), 'expenseDetails');
+        $this->fillInField('expenses_single[explanation]', $this->faker->sentence(12), 'expenseDetails', 0);
+        $this->fillInField('expenses_single[amount]', $this->faker->numberBetween(1, 1000), 'expenseDetails', 0);
         $this->pressButton('Save and continue');
     }
 
@@ -92,7 +95,9 @@ trait DeputyExpensesSectionTrait
         $this->chooseOption('add_another[addAnother]', 'yes');
         $this->pressButton('Continue');
 
-        $this->iEnterValidExpenses();
+        $this->fillInField('expenses_single[explanation]', $this->faker->sentence(12), 'expenseDetails', 1);
+        $this->fillInField('expenses_single[amount]', $this->faker->numberBetween(1, 1000), 'expenseDetails', 1);
+        $this->pressButton('Save and continue');
     }
 
     /**
@@ -110,7 +115,10 @@ trait DeputyExpensesSectionTrait
     public function expensesSummaryPageContainsEnteredDetails()
     {
         $this->expectedResultsDisplayedSimplified('anyExpensesClaimed');
-        $this->expectedResultsDisplayedSimplified('expenseDetails');
+
+        if (!is_null($this->getSectionAnswers('expenseDetails'))) {
+            $this->expectedResultsDisplayedSimplified('expenseDetails');
+        }
     }
 
     /**
@@ -179,11 +187,58 @@ trait DeputyExpensesSectionTrait
     }
 
     /**
-     * @Then I edit the expense details
+     * @When I edit the expense details
      */
     public function iEditTheExpense()
     {
-        $answers = $this->getSectionAnswers('expenseDetails');
-        var_dump($answers);
+        $answers = $this->getSectionAnswers('expenseDetails')[0];
+
+        $rowSelector = sprintf('//tr[th[normalize-space() ="%s"]]', $answers['expenses_single[explanation]']);
+        $descriptionTableRow = $this->getSession()->getPage()->find('xpath', $rowSelector);
+        $descriptionTableRow->clickLink('Edit');
+
+        $this->iEnterValidExpenses();
+    }
+
+    /**
+     * @When I remove an expense I declared
+     */
+    public function iRemoveAnExpense()
+    {
+        $this->removeAnswerFromSection(
+            0,
+            'expenses_single[explanation]',
+            'expenseDetails',
+            'Yes, remove expense'
+        );
+    }
+
+    /**
+     * @When I add an expense from the expense summary page
+     */
+    public function iAddExpenseFromSummaryPage()
+    {
+        $this->clickLink('Add a deputy expense');
+
+        $this->fillInField('expenses_single[explanation]', $this->faker->sentence(12), 'expenseDetails', 1);
+        $this->fillInField('expenses_single[amount]', $this->faker->numberBetween(1, 1000), 'expenseDetails', 1);
+        $this->pressButton('Save and continue');
+    }
+
+    /**
+     * @When I change my mind and answer no to expenses to declare
+     */
+    public function iChangeMindAnswerNoToExpensesToDeclare()
+    {
+        $rowSelector = sprintf(
+            '//div[dt[normalize-space() ="%s"]]',
+            $this->sectionStartText
+        );
+
+        $descriptionTableRow = $this->getSession()->getPage()->find('xpath', $rowSelector);
+        $descriptionTableRow->clickLink('Edit');
+
+        $this->removeAllAnswers();
+        $this->iHaveNoExpenses();
     }
 }
