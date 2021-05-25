@@ -51,6 +51,7 @@ trait ReportTrait
 
     /**
      * @Given a Lay Deputy has a completed report
+     * @Given a Lay Deputy has completed a Pfa High Assets report
      *
      * @throws Exception
      */

@@ -11,7 +11,7 @@ trait MoneyOutShortSectionTrait
     private float $oneOffPaymentsTotal = 0.0;
 
     /**
-     * @When I view and start the money out report section
+     * @When I view and start the money out short report section
      */
     public function iViewAndStartMoneyOutShortSection()
     {
@@ -89,7 +89,7 @@ trait MoneyOutShortSectionTrait
     }
 
     /**
-     * @When I remove an existing money out payment
+     * @When I remove an existing money out short payment
      */
     public function iRemoveOneOffPayment()
     {
@@ -108,9 +108,9 @@ trait MoneyOutShortSectionTrait
     }
 
     /**
-     * @When I edit an existing money out payment
+     * @When I edit an existing money out short payment
      */
-    public function iEditOneOffPayment()
+    public function iEditOneOffShortPayment()
     {
         $this->iVisitMoneyOutShortSummarySection();
         $this->iAmOnMoneyOutShortSummaryPage();
@@ -120,7 +120,7 @@ trait MoneyOutShortSectionTrait
         $this->addAMoneyOutPayment('to_edit_1', '1004', '08', '10', '2019');
         $this->addAnotherMoneyOutPayment('no');
         $this->iAmOnMoneyOutShortSummaryPage();
-        $this->iEditAOneOffPayment(0, 'to_edit_2', '1005', '09', '11', '2020');
+        $this->iEditAOneOffShortPayment(0, 'to_edit_2', '1005', '09', '11', '2020');
         $this->iAmOnMoneyOutShortSummaryPage();
     }
 
@@ -225,7 +225,7 @@ trait MoneyOutShortSectionTrait
         }
     }
 
-    private function iEditAOneOffPayment($paymentOccurrence, $description, $amount, $day, $month, $year)
+    private function iEditAOneOffShortPayment($paymentOccurrence, $description, $amount, $day, $month, $year)
     {
         // Click on the nth row to delete
         $urlRegex = sprintf('/%s\/.*\/money-out-short\/edit\/[0-9].*$/', $this->reportUrlPrefix);
@@ -294,11 +294,6 @@ trait MoneyOutShortSectionTrait
         $this->iAmOnMoneyOutShortAddAnotherPage();
         $this->selectOption('add_another[addAnother]', $selection);
         $this->iClickBasedOnAttributeTypeAndValue('button', 'id', 'add_another_save');
-    }
-
-    private function moneyFormat($value)
-    {
-        return number_format(floatval($value), 2, '.', ',');
     }
 
     private function insertArrayAtPosition($array, $insert, $position)
