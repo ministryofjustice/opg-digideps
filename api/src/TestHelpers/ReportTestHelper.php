@@ -202,6 +202,8 @@ class ReportTestHelper
     {
         $mt = (new MoneyTransaction($report))->setCategory('care-fees')->setAmount(200);
         $report->addMoneyTransaction($mt);
+        $mt2 = (new MoneyTransaction($report))->setCategory('electricity')->setAmount(100);
+        $report->addMoneyTransaction($mt2);
     }
 
     private function completeAssets(ReportInterface $report): void

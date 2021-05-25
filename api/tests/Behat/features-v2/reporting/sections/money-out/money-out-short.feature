@@ -1,11 +1,11 @@
-@v2 @money-out
-Feature: Money Out
+@v2 @money-out-short
+Feature: Money Out Short
 
   Scenario: A user has had no money go out
     Given a Lay Deputy has not started a Pfa Low Assets report
     And I visit the report overview page
     Then I should see "money-out-short" as "not started"
-    When I view and start the money out report section
+    When I view and start the money out short report section
     And I have made no payments out
     Then I should see the expected money out section summary
     When I follow link back to report overview page
@@ -13,7 +13,7 @@ Feature: Money Out
 
   Scenario: A user has had some money go out but nothing over £1k
     Given a Lay Deputy has not started a Pfa Low Assets report
-    When I view and start the money out report section
+    When I view and start the money out short report section
     And I add some categories of money paid out
     And I answer that there are no one-off payments over £1k
     Then I should see the expected money out section summary
@@ -22,7 +22,7 @@ Feature: Money Out
 
   Scenario: A user has had some money go out including payments over £1k
     Given a Lay Deputy has not started a Pfa Low Assets report
-    When I view and start the money out report section
+    When I view and start the money out short report section
     And I add all the categories of money paid out
     And I answer that there are a couple of one-off payments over £1k
     Then I should see the expected money out section summary
@@ -31,12 +31,12 @@ Feature: Money Out
 
   Scenario: A user removes a one off payment
     Given a Lay Deputy has completed a Pfa Low Assets report
-    When I remove an existing money out payment
+    When I remove an existing money out short payment
     Then I should see the expected money out section summary
 
   Scenario: A user edits a one off payment
     Given a Lay Deputy has completed a Pfa Low Assets report
-    When I edit an existing money out payment
+    When I edit an existing money out short payment
     Then I should see the expected money out section summary
 
   Scenario: A user adds an additional one off payment
