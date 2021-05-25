@@ -15,7 +15,7 @@ trait DebtsSectionTrait
     public function iViewAndStartDebtsSection()
     {
         $this->iVisitDebtsSection();
-        $this->clickLink('Starts debts');
+        $this->pressButton('Start debts');
     }
 
     /**
@@ -33,7 +33,7 @@ trait DebtsSectionTrait
      */
     public function iAddADebt()
     {
-        $this->iAmOnDebtsExistsPage();
+        $this->iAmOnDebtsExistPage();
         $this->selectOption('yes_no[hasDebts]', 'yes');
         $this->pressButton('Save and continue');
     }
@@ -44,7 +44,7 @@ trait DebtsSectionTrait
     public function iAddSomeDebtValues()
     {
         $this->hasDebts = true;
-        $this->debtLists[] = 'Credit cards';
+        $this->debtLists[] = ['Credit cards'];
         $this->fillField('debt[debts][1][amount]', '1500');
         $this->pressButton('Save and continue');
     }
@@ -65,26 +65,13 @@ trait DebtsSectionTrait
     public function iShouldSeeTheExpectedDebtsSummary()
     {
         $this->iAmOnDebtsSummaryPage();
-        $descriptionListItems = $this->findAllCssElements('dl');
-        $debts = $descriptionListItems[0];
-        $this->checkDebts($debts);
-    }
-
-    private function checkDebts($debts)
-    {
-        $debtsRows = $debts->findAll('css', 'div.govuk-summary-list__row');
-
-        if (!$debtsRows) {
-            $this->throwContextualException('A div element was not found on the page');
-        }
 
         if (!$this->hasDebts) {
-            $this->assertStringContainsString('No', $debtsRows[1]->getHtml(), 'Debts list');
+            $haveDebts[] = ['no'];
         } else {
-            $debtsListItems = $debtsRows[1]->findAll('css', 'li');
-            foreach ($this->debtLists as $expectedDebtKey => $expectedDebt) {
-                $this->assertStringContainsString($expectedDebt, $debtsListItems[$expectedDebtKey]->getHtml(), 'Debts list');
-            }
+            $haveDebts[] = ['yes'];
         }
+
+        $this->expectedResultsDisplayed(0, $haveDebts, 'Answer for "Does user have any debts?"');
     }
 }
