@@ -203,7 +203,7 @@ trait MoneyOutSectionTrait
         $this->iAmOnMoneyOutSummaryPage();
 
         foreach ($this->paymentsList as $entryKey => $entry) {
-            $this->expectedResultsDisplayed($entryKey, $this->paymentsList[$entryKey], 'Money Out Payments');
+            $this->expectedResultsDisplayed($entryKey, $this->paymentsList[$entryKey], 'Money Out Payments', true);
         }
 
         $this->checkTotalAmountOnSummary();
