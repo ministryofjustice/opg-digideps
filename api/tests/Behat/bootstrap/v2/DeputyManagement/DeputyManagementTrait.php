@@ -153,14 +153,14 @@ trait DeputyManagementTrait
     {
         $rolesAdminManagersCanUpdateEmail = [
             User::ROLE_LAY_DEPUTY,
-            USER::ROLE_PROF,
-            USER::ROLE_PROF_ADMIN,
-            USER::ROLE_PROF_NAMED,
-            USER::ROLE_PROF_TEAM_MEMBER,
-            USER::ROLE_PA,
-            USER::ROLE_PA_ADMIN,
-            USER::ROLE_PA_NAMED,
-            USER::ROLE_PA_TEAM_MEMBER,
+            User::ROLE_PROF,
+            User::ROLE_PROF_ADMIN,
+            User::ROLE_PROF_NAMED,
+            User::ROLE_PROF_TEAM_MEMBER,
+            User::ROLE_PA,
+            User::ROLE_PA_ADMIN,
+            User::ROLE_PA_NAMED,
+            User::ROLE_PA_TEAM_MEMBER,
         ];
 
         $isSuperAdmin = User::ROLE_SUPER_ADMIN === $loggedInUserRole;
