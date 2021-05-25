@@ -403,4 +403,73 @@ class FixtureHelper
         $this->em->persist($client);
         $this->em->flush();
     }
+
+    public function createLayPfaHighAssetsNotStarted(string $testRunId)
+    {
+        $this->layPfaHighAssetsNotStarted = $this->createClientAndReport(
+            $testRunId,
+            'lay-pfa-high-assets-not-started',
+            Report::TYPE_102,
+            false,
+            false
+        );
+
+        return self::buildUserDetails($this->layPfaHighAssetsNotStarted);
+    }
+
+    public function createLayPfaHighAssetsCompleted(string $testRunId)
+    {
+        $this->layPfaHighAssetsCompleted = $this->createClientAndReport(
+            $testRunId,
+            'lay-pfa-high-assets-completed',
+            Report::TYPE_102,
+            true,
+            false
+        );
+
+        return self::buildUserDetails($this->layPfaHighAssetsCompleted);
+    }
+
+    public function createLayPfaLowAssetsNotStarted(string $testRunId)
+    {
+        $this->layPfaHighAssetsNotStarted = $this->createClientAndReport(
+            $testRunId,
+            'lay-pfa-low-assets-not-started',
+            Report::TYPE_103,
+            false,
+            false
+        );
+
+        return self::buildUserDetails($this->layPfaLowAssetsNotStarted);
+    }
+
+    public function createLayPfaLowAssetsCompleted(string $testRunId)
+    {
+        $this->layPfaHighAssetsNotStarted = $this->createClientAndReport(
+            $testRunId,
+            'lay-pfa-low-assets-completed',
+            Report::TYPE_103,
+            true,
+            false
+        );
+
+        return self::buildUserDetails($this->layPfaHighAssetsCompleted);
+    }
+
+    private function createClientAndReport(string $testRunId, $emailPrefix, $reportType, $completed, $submitted)
+    {
+        if ('prod' === $this->symfonyEnvironment) {
+            throw new Exception('Prod mode enabled - cannot purge database');
+        }
+        $this->testRunId = $testRunId;
+
+        $client = $this->userTestHelper
+            ->createUser(null, User::ROLE_LAY_DEPUTY, sprintf('%s-%s@t.uk', $emailPrefix, $this->testRunId));
+        $this->addClientsAndReportsToLayDeputy($client, $completed, $submitted, $reportType);
+        $client->setPassword($this->encoder->encodePassword($client, $this->fixtureParams['account_password']));
+        $this->em->persist($client);
+        $this->em->flush();
+
+        return $client;
+    }
 }

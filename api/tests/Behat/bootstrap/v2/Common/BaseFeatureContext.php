@@ -78,32 +78,88 @@ class BaseFeatureContext extends MinkContext
         $this->fixtureHelper = $fixtureHelper;
     }
 
+//    /**
+//     * @BeforeScenario
+//     */
+//    public function resetFixturesAndDropDatabase()
+//    {
+//        $this->faker = Factory::create('en_GB');
+//
+//        $this->testRunId = (string) (time() + rand());
+//        $userDetails = $this->fixtureHelper->loadFixtures($this->testRunId);
+//
+//        $this->fixtureUsers[] = $this->adminDetails = new UserDetails($userDetails['admin-users']['admin']);
+//        $this->fixtureUsers[] = $this->elevatedAdminDetails = new UserDetails($userDetails['admin-users']['elevated-admin']);
+//        $this->fixtureUsers[] = $this->superAdminDetails = new UserDetails($userDetails['admin-users']['super-admin']);
+//        $this->fixtureUsers[] = $this->layDeputyNotStartedDetails = new UserDetails($userDetails['lays']['pfa-high-assets']['not-started']);
+//        $this->fixtureUsers[] = $this->layDeputyCompletedDetails = new UserDetails($userDetails['lays']['pfa-high-assets']['completed']);
+//        $this->fixtureUsers[] = $this->layDeputySubmittedDetails = new UserDetails($userDetails['lays']['pfa-high-assets']['submitted']);
+//        $this->fixtureUsers[] = $this->layDeputyNotStartedPfaLowAssetsDetails = new UserDetails($userDetails['lays']['pfa-low-assets']['not-started']);
+//        $this->fixtureUsers[] = $this->layDeputyCompletedPfaLowAssetsDetails = new UserDetails($userDetails['lays']['pfa-low-assets']['completed']);
+//        $this->fixtureUsers[] = $this->layDeputySubmittedPfaLowAssetsDetails = new UserDetails($userDetails['lays']['pfa-low-assets']['submitted']);
+//        $this->fixtureUsers[] = $this->ndrLayDeputyNotStartedDetails = new UserDetails($userDetails['lays-ndr']['not-started']);
+//        $this->fixtureUsers[] = $this->ndrLayDeputyCompletedDetails = new UserDetails($userDetails['lays-ndr']['completed']);
+//        $this->fixtureUsers[] = $this->ndrLayDeputySubmittedDetails = new UserDetails($userDetails['lays-ndr']['submitted']);
+//        $this->fixtureUsers[] = $this->profAdminDeputyNotStartedDetails = new UserDetails($userDetails['professionals']['admin']['not-started']);
+//        $this->fixtureUsers[] = $this->profAdminDeputyCompletedDetails = new UserDetails($userDetails['professionals']['admin']['completed']);
+//        $this->fixtureUsers[] = $this->profAdminDeputySubmittedDetails = new UserDetails($userDetails['professionals']['admin']['submitted']);
+//
+//        $this->loggedInUserDetails = null;
+//        $this->interactingWithUserDetails = null;
+//    }
+
     /**
-     * @BeforeScenario
+     * @BeforeScenario @pfa-high-not-started
      */
-    public function resetFixturesAndDropDatabase()
+    public function resetPfaHighNotStarted()
     {
         $this->faker = Factory::create('en_GB');
 
         $this->testRunId = (string) (time() + rand());
-        $userDetails = $this->fixtureHelper->loadFixtures($this->testRunId);
+        $userDetails = $this->fixtureHelper->createLayPfaHighAssetsNotStarted($this->testRunId);
+        $this->fixtureUsers[] = $this->layDeputyNotStartedDetails = new UserDetails($userDetails);
+        $this->loggedInUserDetails = null;
+        $this->interactingWithUserDetails = null;
+    }
 
-        $this->fixtureUsers[] = $this->adminDetails = new UserDetails($userDetails['admin-users']['admin']);
-        $this->fixtureUsers[] = $this->elevatedAdminDetails = new UserDetails($userDetails['admin-users']['elevated-admin']);
-        $this->fixtureUsers[] = $this->superAdminDetails = new UserDetails($userDetails['admin-users']['super-admin']);
-        $this->fixtureUsers[] = $this->layDeputyNotStartedDetails = new UserDetails($userDetails['lays']['pfa-high-assets']['not-started']);
-        $this->fixtureUsers[] = $this->layDeputyCompletedDetails = new UserDetails($userDetails['lays']['pfa-high-assets']['completed']);
-        $this->fixtureUsers[] = $this->layDeputySubmittedDetails = new UserDetails($userDetails['lays']['pfa-high-assets']['submitted']);
-        $this->fixtureUsers[] = $this->layDeputyNotStartedPfaLowAssetsDetails = new UserDetails($userDetails['lays']['pfa-low-assets']['not-started']);
-        $this->fixtureUsers[] = $this->layDeputyCompletedPfaLowAssetsDetails = new UserDetails($userDetails['lays']['pfa-low-assets']['completed']);
-        $this->fixtureUsers[] = $this->layDeputySubmittedPfaLowAssetsDetails = new UserDetails($userDetails['lays']['pfa-low-assets']['submitted']);
-        $this->fixtureUsers[] = $this->ndrLayDeputyNotStartedDetails = new UserDetails($userDetails['lays-ndr']['not-started']);
-        $this->fixtureUsers[] = $this->ndrLayDeputyCompletedDetails = new UserDetails($userDetails['lays-ndr']['completed']);
-        $this->fixtureUsers[] = $this->ndrLayDeputySubmittedDetails = new UserDetails($userDetails['lays-ndr']['submitted']);
-        $this->fixtureUsers[] = $this->profAdminDeputyNotStartedDetails = new UserDetails($userDetails['professionals']['admin']['not-started']);
-        $this->fixtureUsers[] = $this->profAdminDeputyCompletedDetails = new UserDetails($userDetails['professionals']['admin']['completed']);
-        $this->fixtureUsers[] = $this->profAdminDeputySubmittedDetails = new UserDetails($userDetails['professionals']['admin']['submitted']);
+    /**
+     * @BeforeScenario @pfa-high-completed
+     */
+    public function resetPfaHighCompleted()
+    {
+        $this->faker = Factory::create('en_GB');
 
+        $this->testRunId = (string) (time() + rand());
+        $userDetails = $this->fixtureHelper->createLayPfaHighAssetsCompleted($this->testRunId);
+        $this->fixtureUsers[] = $this->layDeputyCompletedDetails = new UserDetails($userDetails);
+        $this->loggedInUserDetails = null;
+        $this->interactingWithUserDetails = null;
+    }
+
+    /**
+     * @BeforeScenario @pfa-low-not-started
+     */
+    public function resetPfaLowNotStarted()
+    {
+        $this->faker = Factory::create('en_GB');
+
+        $this->testRunId = (string) (time() + rand());
+        $userDetails = $this->fixtureHelper->createLayPfaLowAssetsNotStarted($this->testRunId);
+        $this->fixtureUsers[] = $this->layDeputyNotStartedPfaLowAssetsDetails = new UserDetails($userDetails);
+        $this->loggedInUserDetails = null;
+        $this->interactingWithUserDetails = null;
+    }
+
+    /**
+     * @BeforeScenario @pfa-low-completed
+     */
+    public function resetPfaLowCompleted()
+    {
+        $this->faker = Factory::create('en_GB');
+
+        $this->testRunId = (string) (time() + rand());
+        $userDetails = $this->fixtureHelper->createLayPfaLowAssetsCompleted($this->testRunId);
+        $this->fixtureUsers[] = $this->layDeputyCompletedPfaLowAssetsDetails = new UserDetails($userDetails);
         $this->loggedInUserDetails = null;
         $this->interactingWithUserDetails = null;
     }
