@@ -44,6 +44,10 @@ class BaseFeatureContext extends MinkContext
     public UserDetails $layDeputyCompletedPfaLowAssetsDetails;
     public UserDetails $layDeputySubmittedPfaLowAssetsDetails;
 
+    public UserDetails $layDeputyNotStartedHealthWelfareDetails;
+    public UserDetails $layDeputyCompletedHealthWelfareDetails;
+    public UserDetails $layDeputySubmittedHealthWelfareDetails;
+
     public UserDetails $profAdminDeputyNotStartedDetails;
     public UserDetails $profAdminDeputyCompletedDetails;
     public UserDetails $profAdminDeputySubmittedDetails;
@@ -97,6 +101,9 @@ class BaseFeatureContext extends MinkContext
         $this->fixtureUsers[] = $this->layDeputyNotStartedPfaLowAssetsDetails = new UserDetails($userDetails['lays']['pfa-low-assets']['not-started']);
         $this->fixtureUsers[] = $this->layDeputyCompletedPfaLowAssetsDetails = new UserDetails($userDetails['lays']['pfa-low-assets']['completed']);
         $this->fixtureUsers[] = $this->layDeputySubmittedPfaLowAssetsDetails = new UserDetails($userDetails['lays']['pfa-low-assets']['submitted']);
+        $this->fixtureUsers[] = $this->layDeputyNotStartedHealthWelfareDetails = new UserDetails($userDetails['lays']['health-welfare']['not-started']);
+        $this->fixtureUsers[] = $this->layDeputyCompletedHealthWelfareDetails = new UserDetails($userDetails['lays']['health-welfare']['completed']);
+        $this->fixtureUsers[] = $this->layDeputySubmittedHealthWelfareDetails = new UserDetails($userDetails['lays']['health-welfare']['submitted']);
         $this->fixtureUsers[] = $this->ndrLayDeputyNotStartedDetails = new UserDetails($userDetails['lays-ndr']['not-started']);
         $this->fixtureUsers[] = $this->ndrLayDeputyCompletedDetails = new UserDetails($userDetails['lays-ndr']['completed']);
         $this->fixtureUsers[] = $this->ndrLayDeputySubmittedDetails = new UserDetails($userDetails['lays-ndr']['submitted']);
