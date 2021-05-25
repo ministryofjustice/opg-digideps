@@ -23,7 +23,7 @@ trait PageUrlsTrait
     private string $moneyOutSectionSummaryUrl = '%s/%s/money-out/summary';
     private string $healthAndLifestyleSectionUrl = '%s/%s/lifestyle';
     private string $healthAndLifestyleSummaryUrl = '%s/%s/lifestyle/summary';
-    private string $debtsSectionUrl = '%s/%s/debts/summary';
+    private string $debtsSectionUrl = '%s/%s/debts';
     private string $debtsSectionSummaryUrl = '%s/%s/debts/summary';
 
     // Admin

@@ -8,10 +8,10 @@ trait ExpectedResultsTrait
 {
     private array $summarySectionItemsFound = [];
 
-    /*
+    /**
      * Adds the contents of each summary section (identified by dl or tbody) to an array
      * then compares the results of the specified section contents to an array of expected contents.
-     * $summarySectionNumber - which occurrence of tbody or dl to search in in the order they appear on summary page.
+     * $summarySectionNumber - which occurrence of tbody or dl to search in, in the order they appear on summary page.
      * $expectedResults - must be an array of arrays of strings. The outer array specifies the 'row' and the
      * inner array specifies the 'fields'. The 'rows' and 'fields' in this case are dependent on what type of
      * elements you are searching through and are found automatically by the logic in the function.

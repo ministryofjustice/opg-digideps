@@ -53,7 +53,7 @@ up-app-xdebug-api-cachegrind: ## Brings the app up, rebuilds containers and enab
 
 
 up-app-integration-tests: ## Brings the app up using test env vars (see test.env)
-	REQUIRE_XDEBUG_FRONTEND=false REQUIRE_XDEBUG_API=false docker-compose -f docker-compose.yml -f docker-compose.dev.yml build frontend admin api
+	REQUIRE_XDEBUG_FRONTEND=false REQUIRE_XDEBUG_API=false docker-compose -f docker-compose.yml -f docker-compose.dev.yml build frontend admin api test
 	APP_ENV=dev APP_DEBUG=0 docker-compose -f docker-compose.yml -f docker-compose.dev.yml up -d --remove-orphans
 
 down-app: ### Tears down the app

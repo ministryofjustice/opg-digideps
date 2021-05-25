@@ -416,9 +416,9 @@ trait IShouldBeOnTrait
     }
 
     /**
-     * @Then I should be on the debts exists page
+     * @Then I should be on the debts exist page
      */
-    public function iAmOnDebtsExistsPage()
+    public function iAmOnDebtsExistPage()
     {
         return $this->iAmOnPage(sprintf('/%s\/.*\/debts\/exist.*$/', $this->reportUrlPrefix));
     }
