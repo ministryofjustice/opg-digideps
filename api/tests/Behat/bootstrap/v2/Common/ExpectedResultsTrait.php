@@ -5,6 +5,7 @@ declare(strict_types=1);
 namespace App\Tests\Behat\v2\Common;
 
 use App\Tests\Behat\BehatException;
+use Behat\Mink\Element\NodeElement;
 
 trait ExpectedResultsTrait
 {
@@ -22,31 +23,49 @@ trait ExpectedResultsTrait
         foreach ($summarySectionElements as $summarySectionElement) {
             $this->tableHtml .= $summarySectionElement->getHtml();
 
-            if ('dl' == $summarySectionElement->getTagName()) {
-                $xpath = '//dd';
-                $descriptionTermElements = $summarySectionElement->findAll('xpath', $xpath);
-
-                foreach ($descriptionTermElements as $dd) {
-                    $this->summarySectionItemsFound[] = strtolower($dd->getText());
-                }
-            } elseif ('tbody' == $summarySectionElement->getTagName()) {
-                $xpath = '//th';
-                $tableHeadElements = $summarySectionElement->findAll('xpath', $xpath);
-
-                foreach ($tableHeadElements as $th) {
-                    $this->summarySectionItemsFound[] = strtolower($th->getText());
-                }
-
-                $xpath = '//td';
-                $tableDataElements = $summarySectionElement->findAll('xpath', $xpath);
-
-                foreach ($tableDataElements as $td) {
-                    $this->summarySectionItemsFound[] = strtolower($td->getText());
-                }
-            }
+            $this->extractDescriptionListContents($summarySectionElement);
+            $this->extractTableBodyContents($summarySectionElement);
         }
 
         $this->checkSectionContainsExpectedResultsSimplified($sectionName);
+    }
+
+    private function extractDescriptionListContents(NodeElement $element)
+    {
+        if ('dl' == $element->getTagName()) {
+            $xpath = '//dd';
+            $descriptionTermElements = $element->findAll('xpath', $xpath);
+
+            foreach ($descriptionTermElements as $dd) {
+                $this->summarySectionItemsFound[] = strtolower($dd->getText());
+            }
+        }
+    }
+
+    private function extractTableBodyContents(NodeElement $element)
+    {
+        if ('tbody' == $element->getTagName()) {
+            $xpath = '//th';
+            $tableHeadElements = $element->findAll('xpath', $xpath);
+
+            foreach ($tableHeadElements as $th) {
+                $this->summarySectionItemsFound[] = strtolower($th->getText());
+            }
+
+            $xpath = '//td';
+            $tableDataElements = $element->findAll('xpath', $xpath);
+
+            foreach ($tableDataElements as $td) {
+                $this->summarySectionItemsFound[] = strtolower($td->getText());
+            }
+
+            $xpath = '//p';
+            $paragraphElements = $element->findAll('xpath', $xpath);
+
+            foreach ($paragraphElements as $td) {
+                $this->summarySectionItemsFound[] = strtolower($td->getText());
+            }
+        }
     }
 
     private function checkSectionContainsExpectedResultsSimplified(string $sectionName)

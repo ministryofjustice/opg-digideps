@@ -37,17 +37,16 @@
         <tr class="govuk-table__row behat-region-account-{{ account.accountNumber | behat_namify }}">
             <th scope="row" class="govuk-table__header">
                 {% if account.requiresBankName %}
-                    {{ account.bank }}<br/>
+                    <p class="govuk-!-font-weight-bold">{{ account.bank }}</p>
                 {% endif %}
-                <p class="govuk-!-font-size-16">
-                    {{ account.accountTypeText }}<br/>
+
+                <p class="govuk-!-margin-0 govuk-!-font-size-16">{{ account.accountTypeText }}</p>
                     {% if account.requiresSortCode %}
-                        Sort code: {{ account.sortCode }}<br/>
+                        <p class="govuk-!-margin-0 govuk-!-font-size-16">Sort code: {{ account.sortCode }}</p>
                     {% endif %}
-                    Account number: ****{{ account.accountNumber }}<br/>
-                    Joint account: {{ account.isJointAccount | capitalize }}<br/>
-                    Closed: {{ account.isClosed ? 'Yes' : 'No' }}
-                </p>
+                <p class="govuk-!-margin-0 govuk-!-font-size-16">Account number: ****{{ account.accountNumber }}</p>
+                <p class="govuk-!-margin-0 govuk-!-font-size-16">Joint account: {{ account.isJointAccount | capitalize }}</p>
+                <p class="govuk-!-margin-0 govuk-!-font-size-16">Closed: {{ account.isClosed ? 'Yes' : 'No' }}</p>
             </th>
             <td class="govuk-table__cell govuk-table__cell--numeric">
                 £{{ account.openingBalance | money_format }}
