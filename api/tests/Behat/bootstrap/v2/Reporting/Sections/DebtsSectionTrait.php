@@ -7,7 +7,38 @@ namespace App\Tests\Behat\v2\Reporting\Sections;
 trait DebtsSectionTrait
 {
     private bool $hasDebts = false;
-    private array $debtLists = [];
+    private array $debtManagement = [];
+    private array $debtList = [];
+    private float $totalAmount = 0.00;
+
+    /**
+     * The order of these has to corresponds to the order
+     * of the inputs on the debts page when adding a debt
+     * otherwise the addADebtsPayment() function will not
+     * function correctly.
+     */
+    private array $debtTypes = [
+        'care-fees' => [
+            'name' => 'Outstanding care home fees',
+            'amount' => '£0.00',
+        ],
+        'credit-cards' => [
+            'name' => 'Credit cards',
+            'amount' => '£0.00',
+        ],
+        'loans' => [
+            'name' => 'Loans',
+            'amount' => '£0.00',
+        ],
+        'other' => [
+            'name' => 'Other',
+            'amount' => '£0.00',
+        ],
+        'total-amount' => [
+            'name' => 'Total amount',
+            'amount' => '£0.00',
+        ],
+    ];
 
     /**
      * @When I view and start the debts report section
@@ -44,8 +75,7 @@ trait DebtsSectionTrait
     public function iAddSomeDebtValues()
     {
         $this->hasDebts = true;
-        $this->debtLists[] = ['Credit cards'];
-        $this->fillField('debt[debts][1][amount]', '1500');
+        $this->addADebtsPayment('credit-cards', '1500');
         $this->pressButton('Save and continue');
     }
 
@@ -55,6 +85,7 @@ trait DebtsSectionTrait
     public function iSayHowTheDebtsAreBeingManaged()
     {
         $this->iAmOnDebtsManagementPage();
+        $this->debtManagement[] = ['Lorem ipsum'];
         $this->fillField('debtManagement[debtManagement]', 'Lorem ipsum');
         $this->pressButton('Save and continue');
     }
@@ -73,5 +104,46 @@ trait DebtsSectionTrait
         }
 
         $this->expectedResultsDisplayed(0, $haveDebts, 'Answer for "Does user have any debts?"');
+
+        if ($this->hasDebts) {
+            // Convert the debts list amount into the correct format for comparison
+            $expectedDebtsList = [];
+            foreach ($this->debtTypes as $debtListKey => $debtList) {
+                // If it's not the total amount type then
+                // format the money correctly without needing to cast it
+                if ('total-amount' !== $debtListKey) {
+                    foreach ($debtList as $debtItemKey => $debtItem) {
+                        if ('amount' === $debtItemKey) {
+                            $debtList['amount'] = '£'.$this->moneyFormat($debtItem);
+                        }
+                    }
+                } else {
+                    foreach ($debtList as $debtItemKey => $debtItem) {
+                        if ('amount' === $debtItemKey) {
+                            $debtList['amount'] = '£'.$this->moneyFormat((string) $this->totalAmount);
+                        }
+                    }
+                }
+
+                $expectedDebtsList[] = [$debtList['name'], $debtList['amount']];
+            }
+
+            $expectedDebtsList = array_values($expectedDebtsList);
+            $this->expectedResultsDisplayed(1, $expectedDebtsList, 'List of debts and their amount');
+            $this->expectedResultsDisplayed(2, $this->debtManagement, 'Answer for "How is the debt being managed or reduced?"');
+        }
+    }
+
+    public function addADebtsPayment(string $type, string $amount)
+    {
+        $this->debtTypes[$type]['amount'] = $amount;
+        $this->totalAmount += (float) $amount;
+
+        /**
+         * the index of the debtType lines up with the
+         * input index on the debts page.
+         */
+        $typeIndex = array_search($type, array_keys($this->debtTypes));
+        $this->fillField("debt[debts][{$typeIndex}][amount]", $amount);
     }
 }
