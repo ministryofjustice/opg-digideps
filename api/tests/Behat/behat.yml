@@ -206,6 +206,12 @@ v2-tests-goutte:
             contexts:
                 - App\Tests\Behat\v2\Feedback\FeedbackFeatureContext
 
+        client-management:
+            description: Covering the client management features of the app (frontend and admin)
+            paths: [ "%paths.base%/features-v2/client-management" ]
+            contexts:
+                - App\Tests\Behat\v2\ClientManagement\ClientManagementFeatureContext
+
         section-accounts:
             description: Covering the 'Accounts' section of the report
             paths: [ "%paths.base%/features-v2/reporting/sections/accounts" ]
@@ -242,20 +248,14 @@ v2-tests-goutte:
             contexts:
                 - App\Tests\Behat\v2\Reporting\Sections\ReportingSectionsFeatureContext
 
-        section-visit-care:
-            description: Covering the 'Visits and Care' section of the report
-            paths: [ "%paths.base%/features-v2/reporting/sections/visits-care" ]
+        section-health-lifestyle:
+            description: Covering the 'Health and Lifestyle' section of the report
+            paths: [ "%paths.base%/features-v2/reporting/sections/health-lifestyle" ]
             contexts:
                 - App\Tests\Behat\v2\Reporting\Sections\ReportingSectionsFeatureContext
 
-        client-management:
-            description: Covering the client management features of the app (frontend and admin)
-            paths: [ "%paths.base%/features-v2/client-management" ]
-            contexts:
-                - App\Tests\Behat\v2\ClientManagement\ClientManagementFeatureContext
-
-        section-money-out-short:
-            description: Covering the 'Money Out Short' section of the report
+        section-money-out:
+            description: Covering the 'Money Out' section of the report
             paths: [ "%paths.base%/features-v2/reporting/sections/money-out" ]
             contexts:
                 - App\Tests\Behat\v2\Reporting\Sections\ReportingSectionsFeatureContext
@@ -263,6 +263,12 @@ v2-tests-goutte:
         section-money-in-high-assets:
             description: Covering the 'Money in High Assets' section of the report
             paths: [ "%paths.base%/features-v2/reporting/sections/money-in-high-assets" ]
+            contexts:
+                - App\Tests\Behat\v2\Reporting\Sections\ReportingSectionsFeatureContext
+
+        section-visit-care:
+            description: Covering the 'Visits and Care' section of the report
+            paths: [ "%paths.base%/features-v2/reporting/sections/visits-care" ]
             contexts:
                 - App\Tests\Behat\v2\Reporting\Sections\ReportingSectionsFeatureContext
 
@@ -278,6 +284,7 @@ v2-tests-goutte:
             kernel:
                 path: '%paths.base%/../../src/Kernel.php'
                 class: App\Kernel
+        Liuggio\Fastest\Behat\ListFeaturesExtension\Extension: ~
 
 v2-tests-browserstack:
     suites:

@@ -21,6 +21,8 @@ trait PageUrlsTrait
     private string $moneyOutShortSectionSummaryUrl = '%s/%s/money-out-short/summary';
     private string $moneyOutSectionUrl = '%s/%s/money-out';
     private string $moneyOutSectionSummaryUrl = '%s/%s/money-out/summary';
+    private string $healthAndLifestyleSectionUrl = '%s/%s/lifestyle';
+    private string $healthAndLifestyleSummaryUrl = '%s/%s/lifestyle/summary';
 
     // Admin
     private string $adminClientSearchUrl = '/admin/client/search';
@@ -112,5 +114,15 @@ trait PageUrlsTrait
     public function getCourtOrdersFixtureUrl(string $queryString): string
     {
         return sprintf($this->courtOrdersFixtureUrl, $queryString);
+    }
+
+    public function getHealthAndLifestyleSectionUrl(int $reportId): string
+    {
+        return sprintf($this->healthAndLifestyleSectionUrl, $this->reportUrlPrefix, $reportId);
+    }
+
+    public function getHealthAndLifestyleSummaryUrl(int $reportId): string
+    {
+        return sprintf($this->healthAndLifestyleSummaryUrl, $this->reportUrlPrefix, $reportId);
     }
 }

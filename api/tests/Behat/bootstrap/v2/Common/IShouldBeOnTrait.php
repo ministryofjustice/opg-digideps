@@ -386,6 +386,30 @@ trait IShouldBeOnTrait
         return $this->iAmOnPage(sprintf('/%s\/.*\/any-other-info\/summary.*$/', $this->reportUrlPrefix));
     }
 
+    /**
+     * @Then I should be on the lifestyle details page
+     */
+    public function iAmOnLifestyleDetailsPage()
+    {
+        return $this->iAmOnPage(sprintf('/%s\/.*\/lifestyle\/step\/1.*$/', $this->reportUrlPrefix));
+    }
+
+    /**
+     * @Then I should be on the lifestyle activities page
+     */
+    public function iAmOnLifestyleActivitiesPage()
+    {
+        return $this->iAmOnPage(sprintf('/%s\/.*\/lifestyle\/step\/2.*$/', $this->reportUrlPrefix));
+    }
+
+    /**
+     * @Then I should be on the lifestyle summary page
+     */
+    public function iAmOnLifestyleSummaryPage()
+    {
+        return $this->iAmOnPage(sprintf('/%s\/.*\/lifestyle\/summary.*$/', $this->reportUrlPrefix));
+    }
+
     public function iAmOnSpecifiedPage($specifiedUrlRegex)
     {
         return $this->iAmOnPage(sprintf('/%s\/.*\/%s$/', $this->reportUrlPrefix, $specifiedUrlRegex));

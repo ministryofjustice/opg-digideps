@@ -15,8 +15,8 @@ trait ReportTrait
      */
     public function iSubmitTheReport()
     {
-        $ndrOrReport = $this->layDeputyCompletedDetails->getCurrentReportNdrOrReport();
-        $reportId = $this->layDeputyCompletedDetails->getCurrentReportId();
+        $ndrOrReport = $this->layDeputyCompletedPfaHighAssetsDetails->getCurrentReportNdrOrReport();
+        $reportId = $this->layDeputyCompletedPfaHighAssetsDetails->getCurrentReportId();
 
         $this->visit("$ndrOrReport/$reportId/overview");
 
@@ -42,11 +42,80 @@ trait ReportTrait
      */
     public function aLayDeputyHasNotStartedAReport()
     {
-        if (empty($this->layDeputyNotStartedDetails)) {
-            throw new Exception('It looks like fixtures are not loaded - missing $layDeputyNotStartedDetails');
+        if (empty($this->layDeputyNotStartedPfaHighAssetsDetails)) {
+            throw new Exception('It looks like fixtures are not loaded - missing $layDeputyNotStartedPfaHighAssetsDetails');
         }
 
-        $this->loginToFrontendAs($this->layDeputyNotStartedDetails->getUserEmail());
+        $this->loginToFrontendAs($this->layDeputyNotStartedPfaHighAssetsDetails->getUserEmail());
+    }
+
+    /**
+     * @Given a Lay Deputy has a completed report
+     * @Given a Lay Deputy has completed a Pfa High Assets report
+     *
+     * @throws Exception
+     */
+    public function aLayDeputyHasCompletedReport()
+    {
+        if (empty($this->layDeputyCompletedPfaHighAssetsDetails)) {
+            throw new Exception('It looks like fixtures are not loaded - missing $layDeputyCompletedPfaHighAssetsDetails');
+        }
+
+        $this->loginToFrontendAs($this->layDeputyCompletedPfaHighAssetsDetails->getUserEmail());
+    }
+
+    /**
+     * @Given a Lay Deputy has not started an NDR report
+     */
+    public function aNdrLayDeputyHasNotStartedAReport()
+    {
+        if (empty($this->layNdrDeputyNotStartedDetails)) {
+            throw new Exception('It looks like fixtures are not loaded - missing $layNdrDeputyNotStartedDetails');
+        }
+
+        $this->loginToFrontendAs($this->layNdrDeputyNotStartedDetails->getUserEmail());
+        $this->reportUrlPrefix = $this->layNdrDeputyNotStartedDetails->getCurrentReportNdrOrReport();
+    }
+
+    /**
+     * @Given a Lay Deputy has a completed NDR report
+     *
+     * @throws Exception
+     */
+    public function aNdrLayDeputyHasCompletedReport()
+    {
+        if (empty($this->layNdrDeputyCompletedDetails)) {
+            throw new Exception('It looks like fixtures are not loaded - missing $layNdrDeputyCompletedDetails');
+        }
+
+        $this->loginToFrontendAs($this->layNdrDeputyCompletedDetails->getUserEmail());
+        $this->reportUrlPrefix = $this->layNdrDeputyCompletedDetails->getCurrentReportNdrOrReport();
+    }
+
+    /**
+     * @Given a Lay Deputy has submitted a report
+     *
+     * @throws Exception
+     */
+    public function aLayDeputyHasSubmittedAReport()
+    {
+        if (empty($this->layDeputySubmittedPfaHighAssetsDetails)) {
+            throw new Exception('It looks like fixtures are not loaded - missing $layDeputySubmittedPfaHighAssetsDetails');
+        }
+
+        $this->loginToFrontendAs($this->layDeputySubmittedPfaHighAssetsDetails->getUserEmail());
+    }
+
+    /**
+     * @Given a Professional Admin Deputy has not started a report
+     */
+    public function aProfessionalAdminDeputyHasNotStartedAReport()
+    {
+        if (empty($this->profAdminDeputyNotStartedDetails)) {
+            throw new Exception('It looks like fixtures are not loaded - missing $profAdminDeputyNotStartedDetails');
+        }
+
+        $this->loginToFrontendAs($this->profAdminDeputyNotStartedDetails->getUserEmail());
     }
 
     /**
@@ -74,71 +143,26 @@ trait ReportTrait
     }
 
     /**
-     * @Given a Lay Deputy has a completed report
-     * @Given a Lay Deputy has completed a Pfa High Assets report
-     *
-     * @throws Exception
+     * @Given a Lay Deputy has not started a Health and Welfare report
      */
-    public function aLayDeputyHasCompletedReport()
+    public function aLayDeputyHasNotStartedAHealthWelfareReport()
     {
-        if (empty($this->layDeputyCompletedDetails)) {
-            throw new Exception('It looks like fixtures are not loaded - missing $layDeputyCompletedDetails');
+        if (empty($this->layDeputyNotStartedHealthWelfareDetails)) {
+            throw new Exception('It looks like fixtures are not loaded - missing $layDeputyNotStartedHealthWelfareDetails');
         }
 
-        $this->loginToFrontendAs($this->layDeputyCompletedDetails->getUserEmail());
+        $this->loginToFrontendAs($this->layDeputyNotStartedHealthWelfareDetails->getUserEmail());
     }
 
     /**
-     * @Given a Lay Deputy has not started an NDR report
+     * @Given a Lay Deputy has completed a Health and Welfare report
      */
-    public function aNdrLayDeputyHasNotStartedAReport()
+    public function aLayDeputyHasCompletedAHealthWelfareReport()
     {
-        if (empty($this->ndrLayDeputyNotStartedDetails)) {
-            throw new Exception('It looks like fixtures are not loaded - missing $ndrLayDeputyNotStartedDetails');
+        if (empty($this->layDeputyCompletedHealthWelfareDetails)) {
+            throw new Exception('It looks like fixtures are not loaded - missing $layDeputyCompletedHealthWelfareDetails');
         }
 
-        $this->loginToFrontendAs($this->ndrLayDeputyNotStartedDetails->getUserEmail());
-        $this->reportUrlPrefix = $this->ndrLayDeputyNotStartedDetails->getCurrentReportNdrOrReport();
-    }
-
-    /**
-     * @Given a Lay Deputy has a completed NDR report
-     *
-     * @throws Exception
-     */
-    public function aNdrLayDeputyHasCompletedReport()
-    {
-        if (empty($this->ndrLayDeputyCompletedDetails)) {
-            throw new Exception('It looks like fixtures are not loaded - missing $ndrLayDeputyCompletedDetails');
-        }
-
-        $this->loginToFrontendAs($this->ndrLayDeputyCompletedDetails->getUserEmail());
-        $this->reportUrlPrefix = $this->ndrLayDeputyCompletedDetails->getCurrentReportNdrOrReport();
-    }
-
-    /**
-     * @Given a Lay Deputy has submitted a report
-     *
-     * @throws Exception
-     */
-    public function aLayDeputyHasSubmittedAReport()
-    {
-        if (empty($this->layDeputySubmittedDetails)) {
-            throw new Exception('It looks like fixtures are not loaded - missing $layDeputySubmittedDetails');
-        }
-
-        $this->loginToFrontendAs($this->layDeputySubmittedDetails->getUserEmail());
-    }
-
-    /**
-     * @Given a Professional Admin Deputy has not started a report
-     */
-    public function aProfessionalAdminDeputyHasNotStartedAReport()
-    {
-        if (empty($this->profAdminDeputyNotStartedDetails)) {
-            throw new Exception('It looks like fixtures are not loaded - missing $profAdminDeputyNotStartedDetails');
-        }
-
-        $this->loginToFrontendAs($this->profAdminDeputyNotStartedDetails->getUserEmail());
+        $this->loginToFrontendAs($this->layDeputyCompletedHealthWelfareDetails->getUserEmail());
     }
 }

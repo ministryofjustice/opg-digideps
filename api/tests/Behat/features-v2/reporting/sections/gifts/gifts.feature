@@ -1,4 +1,4 @@
-@v2 @gifts
+@v2 @gifts @parallel-scenario
 Feature: Gifts
 
 @pfa-high-not-started

@@ -78,4 +78,20 @@ trait IVisitFrontendTrait
     {
         $this->visitPath($this->getAccountsSummaryUrl($this->loggedInUserDetails->getCurrentReportId()));
     }
+
+    /**
+     * @When I visit the health and lifestyle report section
+     */
+    public function iVisitHealthAndLifestyleSection()
+    {
+        $this->visitPath($this->getHealthAndLifestyleSectionUrl($this->loggedInUserDetails->getCurrentReportId()));
+    }
+
+    /**
+     * @When I visit the health and lifestyle summary section
+     */
+    public function iVisitHealthAndLifestyleSummarySection()
+    {
+        $this->visitPath($this->getHealthAndLifestyleSummaryUrl($this->loggedInUserDetails->getCurrentReportId()));
+    }
 }
