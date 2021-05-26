@@ -12,7 +12,11 @@ trait PageUrlsTrait
     private string $contactsAddUrl = '/report/%s/contacts/add';
     private string $contactsAddAnotherUrl = '/report/%s/contacts/add_another';
     private string $contactsSummaryUrl = '/report/%s/contacts/summary';
+    private string $healthAndLifestyleSectionUrl = '%s/%s/lifestyle';
+    private string $healthAndLifestyleSummaryUrl = '%s/%s/lifestyle/summary';
     private string $layStartPageUrl = '/lay';
+    private string $moneyOutSectionUrl = '%s/%s/money-out';
+    private string $moneyOutSectionSummaryUrl = '%s/%s/money-out/summary';
     private string $moneyOutShortSectionUrl = '%s/%s/money-out-short';
     private string $moneyOutShortSectionSummaryUrl = '%s/%s/money-out-short/summary';
     private string $postSubmissionUserResearchUrl = '/report/%s/post_submission_user_research';
@@ -55,6 +59,16 @@ trait PageUrlsTrait
     public function getMoneyOutShortSectionSummaryUrl(int $reportId): string
     {
         return sprintf($this->moneyOutShortSectionSummaryUrl, $this->reportUrlPrefix, $reportId);
+    }
+
+    public function getMoneyOutSectionUrl(int $reportId): string
+    {
+        return sprintf($this->moneyOutSectionUrl, $this->reportUrlPrefix, $reportId);
+    }
+
+    public function getMoneyOutSectionSummaryUrl(int $reportId): string
+    {
+        return sprintf($this->moneyOutSectionSummaryUrl, $this->reportUrlPrefix, $reportId);
     }
 
     public function getPostSubmissionUserResearchUrl(int $reportId): string
@@ -100,5 +114,15 @@ trait PageUrlsTrait
     public function getCourtOrdersFixtureUrl(string $queryString): string
     {
         return sprintf($this->courtOrdersFixtureUrl, $queryString);
+    }
+
+    public function getHealthAndLifestyleSectionUrl(int $reportId): string
+    {
+        return sprintf($this->healthAndLifestyleSectionUrl, $this->reportUrlPrefix, $reportId);
+    }
+
+    public function getHealthAndLifestyleSummaryUrl(int $reportId): string
+    {
+        return sprintf($this->healthAndLifestyleSummaryUrl, $this->reportUrlPrefix, $reportId);
     }
 }

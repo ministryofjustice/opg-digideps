@@ -254,11 +254,15 @@ v2-tests-goutte:
             contexts:
                 - App\Tests\Behat\v2\Reporting\Sections\ReportingSectionsFeatureContext
 
+        section-health-lifestyle:
+            description: Covering the 'Health and Lifestyle' section of the report
+            paths: [ "%paths.base%/features-v2/reporting/sections/health-lifestyle" ]
+            contexts:
+                - App\Tests\Behat\v2\Reporting\Sections\ReportingSectionsFeatureContext
+
         section-money-in-high-assets:
             description: Covering the 'Money in High Assets' section of the report
             paths: [ "%paths.base%/features-v2/reporting/sections/money-in-high-assets" ]
-            contexts:
-                - App\Tests\Behat\v2\Reporting\Sections\ReportingSectionsFeatureContext
 
         section-money-out:
             description: Covering the 'Money Out' section of the report
@@ -271,8 +275,6 @@ v2-tests-goutte:
             paths: [ "%paths.base%/features-v2/reporting/sections/visits-care" ]
             contexts:
                 - App\Tests\Behat\v2\Reporting\Sections\ReportingSectionsFeatureContext
-
-
 
     extensions:
         Behat\MinkExtension:

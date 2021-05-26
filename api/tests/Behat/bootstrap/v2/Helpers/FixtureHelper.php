@@ -42,6 +42,10 @@ class FixtureHelper
     private User $layPfaLowAssetsCompleted;
     private User $layPfaLowAssetsSubmitted;
 
+    private User $layHealthWelfareNotStarted;
+    private User $layHealthWelfareCompleted;
+    private User $layHealthWelfareSubmitted;
+
     private User $ndrLayNotStarted;
     private User $ndrLayCompleted;
     private User $ndrLaySubmitted;
@@ -106,6 +110,11 @@ class FixtureHelper
                     'not-started' => self::buildUserDetails($this->layPfaLowAssetsNotStarted),
                     'completed' => self::buildUserDetails($this->layPfaLowAssetsCompleted),
                     'submitted' => self::buildUserDetails($this->layPfaLowAssetsSubmitted),
+                ],
+                'health-welfare' => [
+                    'not-started' => self::buildUserDetails($this->layHealthWelfareNotStarted),
+                    'completed' => self::buildUserDetails($this->layHealthWelfareCompleted),
+                    'submitted' => self::buildUserDetails($this->layHealthWelfareSubmitted),
                 ],
             ],
             'lays-ndr' => [
@@ -206,6 +215,9 @@ class FixtureHelper
             $this->admin,
             $this->elevatedAdmin,
             $this->superAdmin,
+            $this->layHealthWelfareNotStarted,
+            $this->layHealthWelfareCompleted,
+            $this->layHealthWelfareSubmitted,
             $this->layPfaHighAssetsNotStarted,
             $this->layPfaHighAssetsCompleted,
             $this->layPfaHighAssetsSubmitted,
@@ -244,6 +256,7 @@ class FixtureHelper
     {
         $this->createLaysPfaHighAssets();
         $this->createLaysPfaLowAssets();
+        $this->createLaysHealthWelfare();
         $this->createNdrLays();
         $this->createProfs();
     }
@@ -276,6 +289,21 @@ class FixtureHelper
         $this->layPfaLowAssetsSubmitted = $this->userTestHelper
             ->createUser(null, User::ROLE_LAY_DEPUTY, sprintf('lay-pfa-low-assets-submitted-%s@t.uk', $this->testRunId));
         $this->addClientsAndReportsToLayDeputy($this->layPfaLowAssetsSubmitted, true, true, Report::TYPE_103);
+    }
+
+    private function createLaysHealthWelfare()
+    {
+        $this->layHealthWelfareNotStarted = $this->userTestHelper
+            ->createUser(null, User::ROLE_LAY_DEPUTY, sprintf('lay-health-welfare-not-started-%s@t.uk', $this->testRunId));
+        $this->addClientsAndReportsToLayDeputy($this->layHealthWelfareNotStarted, false, false, Report::TYPE_104);
+
+        $this->layHealthWelfareCompleted = $this->userTestHelper
+            ->createUser(null, User::ROLE_LAY_DEPUTY, sprintf('lay-health-welfare-completed-%s@t.uk', $this->testRunId));
+        $this->addClientsAndReportsToLayDeputy($this->layHealthWelfareCompleted, true, false, Report::TYPE_104);
+
+        $this->layHealthWelfareSubmitted = $this->userTestHelper
+            ->createUser(null, User::ROLE_LAY_DEPUTY, sprintf('lay-health-welfare-submitted-%s@t.uk', $this->testRunId));
+        $this->addClientsAndReportsToLayDeputy($this->layHealthWelfareSubmitted, true, true, Report::TYPE_104);
     }
 
     private function createNdrLays()

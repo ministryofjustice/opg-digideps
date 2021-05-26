@@ -339,11 +339,75 @@ trait IShouldBeOnTrait
     }
 
     /**
+     * @Then I should be on the money out add payment page
+     */
+    public function iAmOnMoneyOutAddPaymentPage()
+    {
+        return $this->iAmOnPage(sprintf('/%s\/.*\/money-out\/step1.*/', $this->reportUrlPrefix));
+    }
+
+    /**
+     * @Then I should be on the money out add payment details page
+     */
+    public function iAmOnMoneyOutAddPaymentDetailsPage()
+    {
+        return $this->iAmOnPage(sprintf('/%s\/.*\/money-out\/step2.*$/', $this->reportUrlPrefix));
+    }
+
+    /**
+     * @Then I should be on the money out add another payment page
+     */
+    public function iAmOnMoneyOutAddAnotherPaymentPage()
+    {
+        return $this->iAmOnPage(sprintf('/%s\/.*\/money-out\/add_another.*$/', $this->reportUrlPrefix));
+    }
+
+    /**
+     * @Then I should be on the money out summary page
+     */
+    public function iAmOnMoneyOutSummaryPage()
+    {
+        return $this->iAmOnPage(sprintf('/%s\/.*\/money-out\/summary.*$/', $this->reportUrlPrefix));
+    }
+
+    /**
+     * @Then I should be on the money out delete page
+     */
+    public function iAmOnMoneyOutDeletePage()
+    {
+        return $this->iAmOnPage(sprintf('/%s\/.*\/money-out\/.*\/delete.*$/', $this->reportUrlPrefix));
+    }
+
+    /**
      * @Then I should be on the any other info summary page
      */
     public function iAmOnAnyOtherInfoSummaryPage()
     {
         return $this->iAmOnPage(sprintf('/%s\/.*\/any-other-info\/summary.*$/', $this->reportUrlPrefix));
+    }
+
+    /**
+     * @Then I should be on the lifestyle details page
+     */
+    public function iAmOnLifestyleDetailsPage()
+    {
+        return $this->iAmOnPage(sprintf('/%s\/.*\/lifestyle\/step\/1.*$/', $this->reportUrlPrefix));
+    }
+
+    /**
+     * @Then I should be on the lifestyle activities page
+     */
+    public function iAmOnLifestyleActivitiesPage()
+    {
+        return $this->iAmOnPage(sprintf('/%s\/.*\/lifestyle\/step\/2.*$/', $this->reportUrlPrefix));
+    }
+
+    /**
+     * @Then I should be on the lifestyle summary page
+     */
+    public function iAmOnLifestyleSummaryPage()
+    {
+        return $this->iAmOnPage(sprintf('/%s\/.*\/lifestyle\/summary.*$/', $this->reportUrlPrefix));
     }
 
     public function iAmOnSpecifiedPage($specifiedUrlRegex)
