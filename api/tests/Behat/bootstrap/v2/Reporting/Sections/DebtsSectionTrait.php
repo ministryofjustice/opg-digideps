@@ -109,19 +109,17 @@ trait DebtsSectionTrait
             // Convert the debts list amount into the correct format for comparison
             $expectedDebtsList = [];
             foreach ($this->debtTypes as $debtListKey => $debtList) {
-                // If it's not the total amount type then
-                // format the money correctly without needing to cast it
-                if ('total-amount' !== $debtListKey) {
-                    foreach ($debtList as $debtItemKey => $debtItem) {
-                        if ('amount' === $debtItemKey) {
-                            $debtList['amount'] = '£'.$this->moneyFormat($debtItem);
-                        }
-                    }
-                } else {
-                    foreach ($debtList as $debtItemKey => $debtItem) {
-                        if ('amount' === $debtItemKey) {
-                            $debtList['amount'] = '£'.$this->moneyFormat((string) $this->totalAmount);
-                        }
+                /*
+                 * The total amount part of the debtTypes will have a small
+                 * difference when formatting the amount as it $this->totalAmount variable
+                 * is a float by default so we will have to cast it as a string before passing it
+                 * to the moneyFormat() function.
+                 */
+                foreach ($debtList as $debtItemKey => $debtItem) {
+                    if ('amount' === $debtItemKey && 'total-amount' === $debtListKey) {
+                        $debtList['amount'] = '£'.$this->moneyFormat((string) $this->totalAmount);
+                    } elseif ('amount' === $debtItem) {
+                        $debtList['amount'] = '£'.$this->moneyFormat($debtItem);
                     }
                 }
 
@@ -137,6 +135,7 @@ trait DebtsSectionTrait
     public function addADebtsPayment(string $type, string $amount)
     {
         $this->debtTypes[$type]['amount'] = $amount;
+        // $amount is passed in as a string so we need to cast it as a float here
         $this->totalAmount += (float) $amount;
 
         /**
