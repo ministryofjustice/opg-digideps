@@ -60,6 +60,7 @@ class ProfTestUserFixtures extends AbstractDataFixture
             'Dep Adrs4' => 'ADD4',
             'Dep Adrs5' => 'ADD5',
             'Phone Main' => '10000000001',
+            'Agree Terms Use' => false,
             'clients' => [
                 [
                     'firstname' => 'CLY1',
@@ -320,6 +321,7 @@ class ProfTestUserFixtures extends AbstractDataFixture
             'Dep Adrs4' => 'ADD4',
             'Dep Adrs5' => 'ADD5',
             'Phone Main' => '10000000002',
+            'Agree Terms Use' => false,
             'clients' => [
                 [
                     'firstname' => 'CLY201',
@@ -384,6 +386,7 @@ class ProfTestUserFixtures extends AbstractDataFixture
             'Dep Adrs4' => 'ADD4',
             'Dep Adrs5' => 'ADD5',
             'Phone Main' => '10000000003',
+            'Agree Terms Use' => false,
             'clients' => [
                 [
                     'firstname' => 'CLY301',
@@ -448,6 +451,7 @@ class ProfTestUserFixtures extends AbstractDataFixture
             'Dep Adrs4' => 'ADD4',
             'Dep Adrs5' => 'ADD5',
             'Phone Main' => '10000000004',
+            'Agree Terms Use' => false,
             'clients' => [
                 [
                     'firstname' => 'CLY401',
@@ -540,7 +544,8 @@ class ProfTestUserFixtures extends AbstractDataFixture
             ->setAddressPostcode(isset($data['Dep Postcode']) ? $data['Dep Postcode'] : 'SW1')
             ->setAddressCountry('GB')
             ->setDeputyNo(isset($data['Deputy No']) ? $data['Deputy No'] : null)
-            ->setRoleName($data['roleName']);
+            ->setRoleName($data['roleName'])
+            ->setAgreeTermsUse(isset($data['Agree Terms Use']) ? $data['Agree Terms Use'] : true);
 
         $manager->persist($user);
 

@@ -17,51 +17,51 @@ class User implements UserInterface, DeputyInterface
 {
     use LoginInfoTrait;
 
-    const ROLE_ADMIN = 'ROLE_ADMIN';
-    const ROLE_SUPER_ADMIN = 'ROLE_SUPER_ADMIN';
-    const ROLE_ELEVATED_ADMIN = 'ROLE_ELEVATED_ADMIN';
+    public const ROLE_ADMIN = 'ROLE_ADMIN';
+    public const ROLE_SUPER_ADMIN = 'ROLE_SUPER_ADMIN';
+    public const ROLE_ELEVATED_ADMIN = 'ROLE_ELEVATED_ADMIN';
 
-    const ROLE_LAY_DEPUTY = 'ROLE_LAY_DEPUTY';
-    const ROLE_AD = 'ROLE_AD';
+    public const ROLE_LAY_DEPUTY = 'ROLE_LAY_DEPUTY';
+    public const ROLE_AD = 'ROLE_AD';
 
-    const ROLE_PA = 'ROLE_PA';
-    const ROLE_PA_NAMED = 'ROLE_PA_NAMED';
-    const ROLE_PA_ADMIN = 'ROLE_PA_ADMIN';
-    const ROLE_PA_TEAM_MEMBER = 'ROLE_PA_TEAM_MEMBER';
+    public const ROLE_PA = 'ROLE_PA';
+    public const ROLE_PA_NAMED = 'ROLE_PA_NAMED';
+    public const ROLE_PA_ADMIN = 'ROLE_PA_ADMIN';
+    public const ROLE_PA_TEAM_MEMBER = 'ROLE_PA_TEAM_MEMBER';
 
-    const ROLE_PROF = 'ROLE_PROF';
-    const ROLE_PROF_NAMED = 'ROLE_PROF_NAMED';
-    const ROLE_PROF_ADMIN = 'ROLE_PROF_ADMIN';
-    const ROLE_PROF_TEAM_MEMBER = 'ROLE_PROF_TEAM_MEMBER';
+    public const ROLE_PROF = 'ROLE_PROF';
+    public const ROLE_PROF_NAMED = 'ROLE_PROF_NAMED';
+    public const ROLE_PROF_ADMIN = 'ROLE_PROF_ADMIN';
+    public const ROLE_PROF_TEAM_MEMBER = 'ROLE_PROF_TEAM_MEMBER';
 
-    const ROLE_ORG_NAMED = 'ROLE_ORG_NAMED';
-    const ROLE_ORG_ADMIN = 'ROLE_ORG_ADMIN';
+    public const ROLE_ORG_NAMED = 'ROLE_ORG_NAMED';
+    public const ROLE_ORG_ADMIN = 'ROLE_ORG_ADMIN';
 
-    const ROLE_ORG = 'ROLE_ORG';
+    public const ROLE_ORG = 'ROLE_ORG';
 
-    const TYPE_LAY = 'LAY';
-    const TYPE_PA = 'PA';
-    const TYPE_PROF = 'PROF';
+    public const TYPE_LAY = 'LAY';
+    public const TYPE_PA = 'PA';
+    public const TYPE_PROF = 'PROF';
 
     /**
      * @JMS\Exclude
      */
     private static $allowedRoles = [
-        self::ROLE_ADMIN          => 'Admin',
-        self::ROLE_SUPER_ADMIN    => 'Super admin',
-        self::ROLE_LAY_DEPUTY     => 'Lay Deputy',
-        self::ROLE_AD             => 'Assisted Digital',
+        self::ROLE_ADMIN => 'Admin',
+        self::ROLE_SUPER_ADMIN => 'Super admin',
+        self::ROLE_LAY_DEPUTY => 'Lay Deputy',
+        self::ROLE_AD => 'Assisted Digital',
         // pa
-        self::ROLE_PA_NAMED       => 'Public Authority (named)',
-        self::ROLE_PA_ADMIN       => 'Public Authority admin',
+        self::ROLE_PA_NAMED => 'Public Authority (named)',
+        self::ROLE_PA_ADMIN => 'Public Authority admin',
         self::ROLE_PA_TEAM_MEMBER => 'Public Authority team member',
         // prof
-        self::ROLE_PROF_NAMED       => 'Professional Deputy (named)',
-        self::ROLE_PROF_ADMIN       => 'Professional Deputy admin',
+        self::ROLE_PROF_NAMED => 'Professional Deputy (named)',
+        self::ROLE_PROF_ADMIN => 'Professional Deputy admin',
         self::ROLE_PROF_TEAM_MEMBER => 'Professional Deputy team member',
     ];
 
-    const TOKEN_EXPIRE_HOURS = 48;
+    public const TOKEN_EXPIRE_HOURS = 48;
 
     /**
      * @JMS\Type("integer")
@@ -292,11 +292,10 @@ class User implements UserInterface, DeputyInterface
      */
     private $jobTitle;
 
-
     /**
      * @var bool
      * @JMS\Type("boolean")
-     * @JMS\Groups({"agree_terms_use"})
+     * @JMS\Groups({"agree_terms_use", "update_terms_use"})
      *
      * @Assert\NotBlank( message="user.agreeTermsUse.notBlank", groups={"agree-terms-use"} )
      */
@@ -599,6 +598,7 @@ class User implements UserInterface, DeputyInterface
 
     /**
      * @param bool $isCoDeputyClientConfirmed
+     *
      * @return User
      */
     public function setCoDeputyClientConfirmed($isCoDeputyClientConfirmed): self
@@ -637,7 +637,7 @@ class User implements UserInterface, DeputyInterface
      */
     public function getFullName()
     {
-        return $this->firstname . ' ' . $this->lastname;
+        return $this->firstname.' '.$this->lastname;
     }
 
     /**
@@ -792,11 +792,13 @@ class User implements UserInterface, DeputyInterface
 
     /**
      * @param mixed $deputyNo
+     *
      * @return $this
      */
     public function setDeputyNo($deputyNo)
     {
         $this->deputyNo = $deputyNo;
+
         return $this;
     }
 
@@ -805,7 +807,7 @@ class User implements UserInterface, DeputyInterface
      */
     public function hasAddressDetails()
     {
-        return  !empty($this->getAddress1())
+        return !empty($this->getAddress1())
               && !empty($this->getAddressCountry())
               && !empty($this->getAddressPostcode())
               && !empty($this->getPhoneMain())
@@ -826,7 +828,7 @@ class User implements UserInterface, DeputyInterface
 
     public function hasReports()
     {
-        if (count($this->clients) === 0) {
+        if (0 === count($this->clients)) {
             return false;
         }
 
@@ -880,7 +882,8 @@ class User implements UserInterface, DeputyInterface
     }
 
     /**
-     * @param  string $jobTitle
+     * @param string $jobTitle
+     *
      * @return User
      */
     public function setJobTitle($jobTitle)
@@ -899,7 +902,8 @@ class User implements UserInterface, DeputyInterface
     }
 
     /**
-     * @param  bool $agreeTermsUse
+     * @param bool $agreeTermsUse
+     *
      * @return User
      */
     public function setAgreeTermsUse($agreeTermsUse)
@@ -916,7 +920,7 @@ class User implements UserInterface, DeputyInterface
      */
     public function isPaTeamMember()
     {
-        return $this->roleName === self::ROLE_PA_TEAM_MEMBER;
+        return self::ROLE_PA_TEAM_MEMBER === $this->roleName;
     }
 
     /**
@@ -926,7 +930,7 @@ class User implements UserInterface, DeputyInterface
      */
     public function isProfTeamMember()
     {
-        return $this->roleName === self::ROLE_PROF_TEAM_MEMBER;
+        return self::ROLE_PROF_TEAM_MEMBER === $this->roleName;
     }
 
     /**
@@ -938,7 +942,7 @@ class User implements UserInterface, DeputyInterface
     {
         return in_array($this->roleName, [
             self::ROLE_PA_TEAM_MEMBER,
-            self::ROLE_PROF_TEAM_MEMBER
+            self::ROLE_PROF_TEAM_MEMBER,
         ]);
     }
 
@@ -953,7 +957,7 @@ class User implements UserInterface, DeputyInterface
             self::ROLE_PA,
             self::ROLE_PA_NAMED,
             self::ROLE_PA_ADMIN,
-            self::ROLE_PA_TEAM_MEMBER
+            self::ROLE_PA_TEAM_MEMBER,
         ]);
     }
 
@@ -968,7 +972,7 @@ class User implements UserInterface, DeputyInterface
             self::ROLE_PROF,
             self::ROLE_PROF_NAMED,
             self::ROLE_PROF_ADMIN,
-            self::ROLE_PROF_TEAM_MEMBER
+            self::ROLE_PROF_TEAM_MEMBER,
         ]);
     }
 
@@ -999,7 +1003,7 @@ class User implements UserInterface, DeputyInterface
      */
     public function isOrgAdministrator()
     {
-        return in_array($this->roleName, [self::ROLE_PA_ADMIN,self::ROLE_PROF_ADMIN]);
+        return in_array($this->roleName, [self::ROLE_PA_ADMIN, self::ROLE_PROF_ADMIN]);
     }
 
     /**
@@ -1047,7 +1051,7 @@ class User implements UserInterface, DeputyInterface
      */
     public function isLayDeputy()
     {
-        return $this->roleName === self::ROLE_LAY_DEPUTY;
+        return self::ROLE_LAY_DEPUTY === $this->roleName;
     }
 
     /**
@@ -1073,7 +1077,7 @@ class User implements UserInterface, DeputyInterface
             self::ROLE_PA_TEAM_MEMBER,
             self::ROLE_PROF_NAMED,
             self::ROLE_PROF_ADMIN,
-            self::ROLE_PROF_TEAM_MEMBER
+            self::ROLE_PROF_TEAM_MEMBER,
         ]);
     }
 
@@ -1102,7 +1106,7 @@ class User implements UserInterface, DeputyInterface
      */
     public function isPaTopRole()
     {
-        return $this->getRoleName() === self::ROLE_PA;
+        return self::ROLE_PA === $this->getRoleName();
     }
 
     /**
@@ -1110,43 +1114,31 @@ class User implements UserInterface, DeputyInterface
      */
     public function isProfTopRole()
     {
-        return $this->getRoleName() === self::ROLE_PROF;
+        return self::ROLE_PROF === $this->getRoleName();
     }
 
-    /**
-     * @return bool
-     */
     public function isAdmin(): bool
     {
-        return $this->getRoleName() === self::ROLE_ADMIN;
+        return self::ROLE_ADMIN === $this->getRoleName();
     }
 
-    /**
-     * @return bool
-     */
     public function isSuperAdmin(): bool
     {
-        return $this->getRoleName() === self::ROLE_SUPER_ADMIN;
+        return self::ROLE_SUPER_ADMIN === $this->getRoleName();
     }
 
-    /**
-     * @return bool
-     */
     public function isElevatedAdmin(): bool
     {
-        return $this->getRoleName() === self::ROLE_ELEVATED_ADMIN;
+        return self::ROLE_ELEVATED_ADMIN === $this->getRoleName();
     }
 
-    /**
-     * @return bool
-     */
     public function hasAdminRole(): bool
     {
         return $this->isAdmin() || $this->isSuperAdmin() || $this->isElevatedAdmin();
     }
 
     /**
-     * Get a generic role output to append to translation keys (ie transkey-PROF)
+     * Get a generic role output to append to translation keys (ie transkey-PROF).
      *
      * @return string
      */
@@ -1171,7 +1163,7 @@ class User implements UserInterface, DeputyInterface
             $this->address2,
             $this->address3,
             $this->addressPostcode,
-            $this->addressCountry
+            $this->addressCountry,
         ]);
     }
 
@@ -1185,6 +1177,7 @@ class User implements UserInterface, DeputyInterface
 
     /**
      * @param ArrayCollection $organisations
+     *
      * @return User
      */
     public function setOrganisations($organisations): self
@@ -1194,9 +1187,6 @@ class User implements UserInterface, DeputyInterface
         return $this;
     }
 
-    /**
-     * @return bool
-     */
     public function belongsToActiveOrganisation(): bool
     {
         foreach ($this->getOrganisations() as $organisation) {
@@ -1213,21 +1203,28 @@ class User implements UserInterface, DeputyInterface
         return count($this->getClients()) > 0 ? $this->getClients()[0] : null;
     }
 
-    /**
-     * @return int
-     */
     public function getNumberOfSubmittedReports(): int
     {
         return $this->numberOfSubmittedReports;
     }
 
     /**
-     * @param int $numberOfSubmittedReports
      * @return User
      */
     public function setNumberOfSubmittedReports(int $numberOfSubmittedReports)
     {
         $this->numberOfSubmittedReports = $numberOfSubmittedReports;
+
         return $this;
+    }
+
+    /**
+     * Check if a user registration was before today.
+     *
+     * @param $user
+     */
+    public function regBeforeToday(User $user): bool
+    {
+        return $user->getRegistrationDate() < (new \DateTime())->setTime(00, 00, 00);
     }
 }
