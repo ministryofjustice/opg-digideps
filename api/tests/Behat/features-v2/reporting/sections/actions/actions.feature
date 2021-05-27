@@ -1,4 +1,4 @@
-@v2 @actions @parallel-scenario
+@v2 @actions
 Feature: Actions
 
 @pfa-high-not-started

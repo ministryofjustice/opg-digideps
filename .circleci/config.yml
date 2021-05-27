@@ -46,15 +46,15 @@ workflows:
           requires: [ lint terraform ]
           filters: { branches: { ignore: [ main ] } }
 
-#      - client-unit-test:
-#          name: client unit test
-#          requires: [ build pr ]
-#          filters: { branches: { ignore: [ main ] } }
-#
-#      - api-unit-tests:
-#          name: api unit test
-#          requires: [ build pr ]
-#          filters: { branches: { ignore: [ main ] } }
+      - client-unit-test:
+          name: client unit test
+          requires: [ build pr ]
+          filters: { branches: { ignore: [ main ] } }
+
+      - api-unit-tests:
+          name: api unit test
+          requires: [ build pr ]
+          filters: { branches: { ignore: [ main ] } }
 
       - terraform-command:
           name: terraform apply
@@ -77,18 +77,18 @@ workflows:
 #          filters: { branches: { ignore: [ main ] } }
 
       - run-task:
-          name: reset environment for testing
-          requires: [ terraform apply ]
+          name: integration tests v2
+          requires: [ protect branch workspace ]
           filters: { branches: { ignore: [ main ] } }
-          task_name: reset_database
-          timeout: 180
+          task_name: integration_test_v2
+          timeout: 1200
 
       - approve:
           name: approval for further testing
           type: approval
           requires: [
-            protect branch workspace,
-            reset environment for testing
+            integration tests v2,
+            protect branch workspace
           ]
           filters: { branches: { ignore: [ main ] } }
 
@@ -99,71 +99,55 @@ workflows:
           task_name: integration_test
           timeout: 3000
 
-      - run-task:
-          name: integration tests v2
-          requires: [ integration tests ]
-          filters: { branches: { ignore: [ main ] } }
-          task_name: integration_test_v2
-          timeout: 3000
-
-      - run-task:
-          name: smoke tests
+      - terraform-plan-all:
+          name: plan all terraform environments
           requires: [ approval for further testing ]
           filters: { branches: { ignore: [ main ] } }
-          task_name: smoke_test
-          tf_workspace: development
-          timeout: 600
+          tf_tier: environment
 
+      - terraform-plan-all:
+          name: plan all shared terraform environments
+          requires: [ approval for further testing ]
+          filters: { branches: { ignore: [ main ] } }
+          tf_tier: shared
 
-#      - terraform-plan-all:
-#          name: plan all terraform environments
-#          requires: [ approval for further testing ]
-#          filters: { branches: { ignore: [ main ] } }
-#          tf_tier: environment
-#
-#      - terraform-plan-all:
-#          name: plan all shared terraform environments
-#          requires: [ approval for further testing ]
-#          filters: { branches: { ignore: [ main ] } }
-#          tf_tier: shared
-#
-#      - slack/approval-notification:
-#          name: branch complete notification
-#          message: Your branch << pipeline.git.branch >> has completed
-#          channel: opg-digicop-builds
-#          requires: [
-#            integration tests,
-#            plan all terraform environments,
-#            plan all shared terraform environments,
-#            api unit test,
-#            client unit test,
-#            unprotect environment
-#          ]
-#          filters: { branches: { ignore: [ main ] } }
-#
-#      - cleanup:
-#          name: unprotect environment approval
-#          type: approval
-#          requires: [ terraform apply ]
-#          filters: { branches: { ignore: [ main ] } }
-#
-#      - workspace-protection:
-#          name: unprotect environment
-#          requires: [ unprotect environment approval ]
-#          filters: { branches: { ignore: [ main ] } }
-#          protect_time: "0"
-#      # Optional manual destruction of environment
-#      - cleanup:
-#          name: optional destroy environment approval
-#          type: approval
-#          requires: [ cancel redundant builds ]
-#          filters: { branches: { ignore: [ main ] } }
-#
-#      - terraform-command:
-#          name: destroy environment
-#          requires: [ optional destroy environment approval ]
-#          filters: { branches: { ignore: [ main ] } }
-#          tf_command: destroy
+      - slack/approval-notification:
+          name: branch complete notification
+          message: Your branch << pipeline.git.branch >> has completed
+          channel: opg-digicop-builds
+          requires: [
+            integration tests,
+            plan all terraform environments,
+            plan all shared terraform environments,
+            api unit test,
+            client unit test,
+            unprotect environment
+          ]
+          filters: { branches: { ignore: [ main ] } }
+
+      - cleanup:
+          name: unprotect environment approval
+          type: approval
+          requires: [ terraform apply ]
+          filters: { branches: { ignore: [ main ] } }
+
+      - workspace-protection:
+          name: unprotect environment
+          requires: [ unprotect environment approval ]
+          filters: { branches: { ignore: [ main ] } }
+          protect_time: "0"
+      # Optional manual destruction of environment
+      - cleanup:
+          name: optional destroy environment approval
+          type: approval
+          requires: [ cancel redundant builds ]
+          filters: { branches: { ignore: [ main ] } }
+
+      - terraform-command:
+          name: destroy environment
+          requires: [ optional destroy environment approval ]
+          filters: { branches: { ignore: [ main ] } }
+          tf_command: destroy
 
   integration:
     jobs:
