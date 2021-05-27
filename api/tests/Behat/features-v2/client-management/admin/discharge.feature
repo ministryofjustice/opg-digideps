@@ -11,7 +11,7 @@ Feature: Admin - Client Discharge
     Given an admin manager user accesses the admin app
     When I visit the admin client details page for an existing client linked to a Lay deputy
     And I attempt to discharge the client
-    Then the client should not be discharged
+    Then the client should be discharged
 
   Scenario: An admin user cannot discharge a client
     Given an admin user accesses the admin app
