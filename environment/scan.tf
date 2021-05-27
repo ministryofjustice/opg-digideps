@@ -50,6 +50,7 @@ resource "aws_ecs_service" "scan" {
   platform_version        = "1.4.0"
   enable_ecs_managed_tags = true
   propagate_tags          = "SERVICE"
+  wait_for_steady_state   = true
 
   network_configuration {
     security_groups  = [module.scan_security_group.id]
