@@ -62,14 +62,26 @@ locals {
     },
     "secrets": [
       { "name": "PGPASSWORD", "valueFrom": "${data.aws_secretsmanager_secret.database_password.arn}" },
-      { "name": "SECRET", "valueFrom": "${data.aws_secretsmanager_secret.front_frontend_secret.arn}" }
+      { "name": "SECRET", "valueFrom": "${data.aws_secretsmanager_secret.front_frontend_secret.arn}" },
+      { "name": "DATABASE_PASSWORD", "valueFrom": "${data.aws_secretsmanager_secret.database_password.arn}" },
+      { "name": "SECRETS_ADMIN_KEY", "valueFrom": "${data.aws_secretsmanager_secret.admin_api_client_secret.arn}" },
+      { "name": "SECRETS_FRONT_KEY", "valueFrom": "${data.aws_secretsmanager_secret.front_api_client_secret.arn}" }
     ],
     "environment": [
       { "name": "PGHOST", "value": "${local.db.endpoint}" },
       { "name": "PGDATABASE", "value": "${local.db.name}" },
       { "name": "PGUSER", "value": "${local.db.username}" },
       { "name": "ADMIN_HOST", "value": "https://${aws_route53_record.admin.fqdn}" },
-      { "name": "NONADMIN_HOST", "value": "https://${aws_route53_record.front.fqdn}" }
+      { "name": "NONADMIN_HOST", "value": "https://${aws_route53_record.front.fqdn}" },
+      { "name": "AUDIT_LOG_GROUP_NAME", "value": "audit-${local.environment}" },
+      { "name": "DATABASE_HOSTNAME", "value": "${local.db.endpoint}" },
+      { "name": "DATABASE_NAME", "value": "${local.db.name}" },
+      { "name": "DATABASE_PORT", "value": "${local.db.port}" },
+      { "name": "DATABASE_USERNAME", "value": "${local.db.username}" },
+      { "name": "FIXTURES_ACCOUNTPASSWORD", "value": "DigidepsPass1234" },
+      { "name": "NGINX_APP_NAME", "value": "api" },
+      { "name": "OPG_DOCKER_TAG", "value": "${var.OPG_DOCKER_TAG}" },
+      { "name": "REDIS_DSN", "value": "redis://${aws_route53_record.api_redis.fqdn}" }
     ]
   }
 EOF

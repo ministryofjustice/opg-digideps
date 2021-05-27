@@ -14,7 +14,6 @@ use App\TestHelpers\NamedDeputyTestHelper;
 use App\TestHelpers\OrganisationTestHelper;
 use App\TestHelpers\ReportTestHelper;
 use App\TestHelpers\UserTestHelper;
-use Doctrine\Common\DataFixtures\Purger\ORMPurger;
 use Doctrine\ORM\EntityManagerInterface;
 use Symfony\Component\Security\Core\Encoder\UserPasswordEncoderInterface;
 
@@ -75,200 +74,6 @@ class FixtureHelper
         $this->organisationTestHelper = new OrganisationTestHelper();
         $this->namedDeputyTestHelper = new NamedDeputyTestHelper();
     }
-
-    /**
-     * @return array
-     *
-     * @throws Exception
-     */
-    public function loadFixtures(string $testRunId)
-    {
-        if ('prod' === $this->symfonyEnvironment) {
-            throw new Exception('Prod mode enabled - cannot purge database');
-        }
-
-        $purger = new ORMPurger($this->em);
-        $purger->purge();
-
-        $this->testRunId = $testRunId;
-
-        $this->createUserFixtures();
-
-        return [
-            'admin-users' => [
-                'admin' => self::buildAdminUserDetails($this->admin),
-                'elevated-admin' => self::buildAdminUserDetails($this->elevatedAdmin),
-                'super-admin' => self::buildAdminUserDetails($this->superAdmin),
-            ],
-            'lays' => [
-                'pfa-high-assets' => [
-                    'not-started' => self::buildUserDetails($this->layPfaHighAssetsNotStarted),
-                    'completed' => self::buildUserDetails($this->layPfaHighAssetsCompleted),
-                    'submitted' => self::buildUserDetails($this->layPfaHighAssetsSubmitted),
-                ],
-                'pfa-low-assets' => [
-                    'not-started' => self::buildUserDetails($this->layPfaLowAssetsNotStarted),
-                    'completed' => self::buildUserDetails($this->layPfaLowAssetsCompleted),
-                    'submitted' => self::buildUserDetails($this->layPfaLowAssetsSubmitted),
-                ],
-                'health-welfare' => [
-                    'not-started' => self::buildUserDetails($this->layHealthWelfareNotStarted),
-                    'completed' => self::buildUserDetails($this->layHealthWelfareCompleted),
-                    'submitted' => self::buildUserDetails($this->layHealthWelfareSubmitted),
-                ],
-            ],
-            'lays-ndr' => [
-                'not-started' => self::buildUserDetails($this->ndrLayNotStarted),
-                'completed' => self::buildUserDetails($this->ndrLayCompleted),
-                'submitted' => self::buildUserDetails($this->ndrLaySubmitted),
-            ],
-            'professionals' => [
-                'admin' => [
-                    'not-started' => self::buildOrgUserDetails($this->profAdminNotStarted),
-                    'completed' => self::buildOrgUserDetails($this->profAdminCompleted),
-                    'submitted' => self::buildOrgUserDetails($this->profAdminSubmitted),
-                ],
-            ],
-        ];
-    }
-
-    private function createUserFixtures()
-    {
-        $this->createAdminUsers();
-        $this->createDeputies();
-
-        $users = [
-            $this->admin,
-            $this->elevatedAdmin,
-            $this->superAdmin,
-            $this->layHealthWelfareNotStarted,
-            $this->layHealthWelfareCompleted,
-            $this->layHealthWelfareSubmitted,
-            $this->layPfaHighAssetsNotStarted,
-            $this->layPfaHighAssetsCompleted,
-            $this->layPfaHighAssetsSubmitted,
-            $this->layPfaLowAssetsNotStarted,
-            $this->layPfaLowAssetsCompleted,
-            $this->layPfaLowAssetsSubmitted,
-            $this->ndrLayNotStarted,
-            $this->ndrLayCompleted,
-            $this->ndrLaySubmitted,
-            $this->profAdminNotStarted,
-            $this->profAdminCompleted,
-            $this->profAdminSubmitted,
-        ];
-
-        foreach ($users as $user) {
-            $user->setPassword($this->encoder->encodePassword($user, $this->fixtureParams['account_password']));
-            $this->em->persist($user);
-        }
-
-        $this->em->flush();
-    }
-
-    private function createDeputies()
-    {
-        $this->createLaysPfaHighAssets();
-        $this->createLaysPfaLowAssets();
-        $this->createLaysHealthWelfare();
-        $this->createNdrLays();
-        $this->createProfs();
-    }
-
-    private function createAdminUsers()
-    {
-        $this->admin = $this->userTestHelper
-            ->createUser(null, User::ROLE_ADMIN, sprintf('admin-%s@t.uk', $this->testRunId));
-
-        $this->elevatedAdmin = $this->userTestHelper
-            ->createUser(null, User::ROLE_ELEVATED_ADMIN, sprintf('elevated-admin-%s@t.uk', $this->testRunId));
-
-        $this->superAdmin = $this->userTestHelper
-            ->createUser(null, User::ROLE_SUPER_ADMIN, sprintf('super-admin-%s@t.uk', $this->testRunId));
-    }
-
-    private function createLaysPfaHighAssets()
-    {
-        $this->layPfaHighAssetsNotStarted = $this->userTestHelper
-            ->createUser(null, User::ROLE_LAY_DEPUTY, sprintf('lay-pfa-high-assets-not-started-%s@t.uk', $this->testRunId));
-        $this->addClientsAndReportsToLayDeputy($this->layPfaHighAssetsNotStarted, false, false, Report::TYPE_102);
-
-        $this->layPfaHighAssetsCompleted = $this->userTestHelper
-            ->createUser(null, User::ROLE_LAY_DEPUTY, sprintf('lay-pfa-high-assets-completed-%s@t.uk', $this->testRunId));
-        $this->addClientsAndReportsToLayDeputy($this->layPfaHighAssetsCompleted, true, false, Report::TYPE_102);
-
-        $this->layPfaHighAssetsSubmitted = $this->userTestHelper
-            ->createUser(null, User::ROLE_LAY_DEPUTY, sprintf('lay-pfa-high-assets-submitted-%s@t.uk', $this->testRunId));
-        $this->addClientsAndReportsToLayDeputy($this->layPfaHighAssetsSubmitted, true, true, Report::TYPE_102);
-    }
-
-    private function createLaysPfaLowAssets()
-    {
-        $this->layPfaLowAssetsNotStarted = $this->userTestHelper
-            ->createUser(null, User::ROLE_LAY_DEPUTY, sprintf('lay-pfa-low-assets-not-started-%s@t.uk', $this->testRunId));
-        $this->addClientsAndReportsToLayDeputy($this->layPfaLowAssetsNotStarted, false, false, Report::TYPE_103);
-
-        $this->layPfaLowAssetsCompleted = $this->userTestHelper
-            ->createUser(null, User::ROLE_LAY_DEPUTY, sprintf('lay-pfa-low-assets-completed-%s@t.uk', $this->testRunId));
-        $this->addClientsAndReportsToLayDeputy($this->layPfaLowAssetsCompleted, true, false, Report::TYPE_103);
-
-        $this->layPfaLowAssetsSubmitted = $this->userTestHelper
-            ->createUser(null, User::ROLE_LAY_DEPUTY, sprintf('lay-pfa-low-assets-submitted-%s@t.uk', $this->testRunId));
-        $this->addClientsAndReportsToLayDeputy($this->layPfaLowAssetsSubmitted, true, true, Report::TYPE_103);
-    }
-
-    private function createLaysHealthWelfare()
-    {
-        $this->layHealthWelfareNotStarted = $this->userTestHelper
-            ->createUser(null, User::ROLE_LAY_DEPUTY, sprintf('lay-health-welfare-not-started-%s@t.uk', $this->testRunId));
-        $this->addClientsAndReportsToLayDeputy($this->layHealthWelfareNotStarted, false, false, Report::TYPE_104);
-
-        $this->layHealthWelfareCompleted = $this->userTestHelper
-            ->createUser(null, User::ROLE_LAY_DEPUTY, sprintf('lay-health-welfare-completed-%s@t.uk', $this->testRunId));
-        $this->addClientsAndReportsToLayDeputy($this->layHealthWelfareCompleted, true, false, Report::TYPE_104);
-
-        $this->layHealthWelfareSubmitted = $this->userTestHelper
-            ->createUser(null, User::ROLE_LAY_DEPUTY, sprintf('lay-health-welfare-submitted-%s@t.uk', $this->testRunId));
-        $this->addClientsAndReportsToLayDeputy($this->layHealthWelfareSubmitted, true, true, Report::TYPE_104);
-    }
-
-    private function createNdrLays()
-    {
-        $this->ndrLayNotStarted = $this->userTestHelper
-            ->createUser(null, User::ROLE_LAY_DEPUTY, sprintf('lay-ndr-not-started-%s@t.uk', $this->testRunId));
-        $this->addClientsAndReportsToNdrLayDeputy($this->ndrLayNotStarted, false, false);
-
-        $this->ndrLayCompleted = $this->userTestHelper
-            ->createUser(null, User::ROLE_LAY_DEPUTY, sprintf('lay-ndr-completed-%s@t.uk', $this->testRunId));
-        $this->addClientsAndReportsToNdrLayDeputy($this->ndrLayCompleted, true, false);
-
-        $this->ndrLaySubmitted = $this->userTestHelper
-            ->createUser(null, User::ROLE_LAY_DEPUTY, sprintf('lay-ndr-submitted-%s@t.uk', $this->testRunId));
-        $this->addClientsAndReportsToNdrLayDeputy($this->ndrLaySubmitted, true, true);
-    }
-
-    private function createProfs()
-    {
-        $orgName = sprintf('prof-%s-%s', $this->orgName, $this->testRunId);
-        $emailIdentifier = sprintf('prof-%s-%s', $this->orgEmailIdentifier, $this->testRunId);
-
-        $organisation = $this->organisationTestHelper->createOrganisation($orgName, $emailIdentifier);
-        $this->em->persist($organisation);
-
-        $this->profAdminNotStarted = $this->userTestHelper
-            ->createUser(null, User::ROLE_PROF_ADMIN, sprintf('prof-admin-not-started-%s@t.uk', $this->testRunId));
-        $this->addOrgClientsNamedDeputyAndReportsToOrgDeputy($this->profAdminNotStarted, $organisation, false, false);
-
-        $this->profAdminCompleted = $this->userTestHelper
-            ->createUser(null, User::ROLE_PROF_ADMIN, sprintf('prof-admin-completed-%s@t.uk', $this->testRunId));
-        $this->addOrgClientsNamedDeputyAndReportsToOrgDeputy($this->profAdminCompleted, $organisation, true, false);
-
-        $this->profAdminSubmitted = $this->userTestHelper
-            ->createUser(null, User::ROLE_PROF_ADMIN, sprintf('prof-admin-submitted-%s@t.uk', $this->testRunId));
-        $this->addOrgClientsNamedDeputyAndReportsToOrgDeputy($this->profAdminSubmitted, $organisation, true, true);
-    }
-
-//    NEW STUFF
 
     public static function buildUserDetails(User $user)
     {
@@ -504,6 +309,20 @@ class FixtureHelper
         return self::buildUserDetails($this->layPfaLowAssetsCompleted);
     }
 
+    public function createLayPfaLowAssetsSubmitted(string $testRunId)
+    {
+        $this->layPfaLowAssetsSubmitted = $this->createClientAndReport(
+            $testRunId,
+            User::ROLE_LAY_DEPUTY,
+            'lay-pfa-low-assets-submitted',
+            Report::TYPE_103,
+            true,
+            true
+        );
+
+        return self::buildUserDetails($this->layPfaLowAssetsSubmitted);
+    }
+
     public function createLayHealthWelfareNotStarted(string $testRunId)
     {
         $this->layHealthWelfareNotStarted = $this->createClientAndReport(
@@ -530,6 +349,20 @@ class FixtureHelper
         );
 
         return self::buildUserDetails($this->layHealthWelfareCompleted);
+    }
+
+    public function createLayHealthWelfareSubmitted(string $testRunId)
+    {
+        $this->layHealthWelfareSubmitted = $this->createClientAndReport(
+            $testRunId,
+            User::ROLE_LAY_DEPUTY,
+            'lay-health-welfare-submitted',
+            Report::TYPE_104,
+            true,
+            true
+        );
+
+        return self::buildUserDetails($this->layHealthWelfareSubmitted);
     }
 
     public function createLayNdrNotStarted(string $testRunId)
@@ -560,6 +393,21 @@ class FixtureHelper
         );
 
         return self::buildUserDetails($this->layNdrCompleted);
+    }
+
+    public function createLayNdrSubmitted(string $testRunId)
+    {
+        $this->layNdrSubmitted = $this->createClientAndReport(
+            $testRunId,
+            User::ROLE_LAY_DEPUTY,
+            'lay-ndr-submitted',
+            Report::TYPE_104,
+            true,
+            false,
+            true
+        );
+
+        return self::buildUserDetails($this->layNdrSubmitted);
     }
 
     public function createProfAdminNotStarted(string $testRunId)

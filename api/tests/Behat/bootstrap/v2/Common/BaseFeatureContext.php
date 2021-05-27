@@ -82,40 +82,10 @@ class BaseFeatureContext extends MinkContext
         $this->fixtureHelper = $fixtureHelper;
     }
 
-//    /**
-//     * @BeforeScenario
-//     */
-//    public function resetFixturesAndDropDatabase()
-//    {
-//        $this->faker = Factory::create('en_GB');
-//
-//        $this->testRunId = (string) (time() + rand());
-//        $userDetails = $this->fixtureHelper->loadFixtures($this->testRunId);
-//
-//        $this->fixtureUsers[] = $this->adminDetails = new UserDetails($userDetails['admin-users']['admin']);
-//        $this->fixtureUsers[] = $this->elevatedAdminDetails = new UserDetails($userDetails['admin-users']['elevated-admin']);
-//        $this->fixtureUsers[] = $this->superAdminDetails = new UserDetails($userDetails['admin-users']['super-admin']);
-//        $this->fixtureUsers[] = $this->layDeputyNotStartedPfaHighAssetsDetails = new UserDetails($userDetails['lays']['pfa-high-assets']['not-started']);
-//        $this->fixtureUsers[] = $this->layDeputyCompletedPfaHighAssetsDetails = new UserDetails($userDetails['lays']['pfa-high-assets']['completed']);
-//        $this->fixtureUsers[] = $this->layDeputySubmittedPfaHighAssetsDetails = new UserDetails($userDetails['lays']['pfa-high-assets']['submitted']);
-//        $this->fixtureUsers[] = $this->layDeputyNotStartedPfaLowAssetsDetails = new UserDetails($userDetails['lays']['pfa-low-assets']['not-started']);
-//        $this->fixtureUsers[] = $this->layDeputyCompletedPfaLowAssetsDetails = new UserDetails($userDetails['lays']['pfa-low-assets']['completed']);
-//        $this->fixtureUsers[] = $this->layDeputySubmittedPfaLowAssetsDetails = new UserDetails($userDetails['lays']['pfa-low-assets']['submitted']);
-//        $this->fixtureUsers[] = $this->layNdrDeputyNotStartedDetails = new UserDetails($userDetails['lays-ndr']['not-started']);
-//        $this->fixtureUsers[] = $this->layNdrDeputyCompletedDetails = new UserDetails($userDetails['lays-ndr']['completed']);
-//        $this->fixtureUsers[] = $this->layNdrDeputySubmittedDetails = new UserDetails($userDetails['lays-ndr']['submitted']);
-//        $this->fixtureUsers[] = $this->profAdminDeputyNotStartedDetails = new UserDetails($userDetails['professionals']['admin']['not-started']);
-//        $this->fixtureUsers[] = $this->profAdminDeputyCompletedDetails = new UserDetails($userDetails['professionals']['admin']['completed']);
-//        $this->fixtureUsers[] = $this->profAdminDeputySubmittedDetails = new UserDetails($userDetails['professionals']['admin']['submitted']);
-//
-//        $this->loggedInUserDetails = null;
-//        $this->interactingWithUserDetails = null;
-//    }
-
     /**
      * @BeforeScenario
      */
-    public function resetFixturesAndDropDatabase()
+    public function initialiseFixtureDetails()
     {
         $this->faker = Factory::create('en_GB');
         $this->testRunId = (string) (time() + rand());
