@@ -6,13 +6,6 @@ namespace App\Tests\Behat\v2\Reporting\Sections;
 
 trait VisitsCareSectionTrait
 {
-    private int $answeredYes = 0;
-    private int $answeredNo = 0;
-    private int $careFundedChoice = 0;
-    private array $additionalInfo = [];
-
-    private array $questionResponses = [];
-
     /**
      * @Given I view the visits and care report section
      */
@@ -42,9 +35,7 @@ trait VisitsCareSectionTrait
      */
     public function iChooseYesOnLiveWithTheClientSection()
     {
-        $this->selectOption('visits_care[doYouLiveWithClient]', 'yes');
-        ++$this->answeredYes;
-        $this->questionResponses[0][] = 'do you live';
+        $this->chooseOption('visits_care[doYouLiveWithClient]', 'yes', 'LiveWithClient');
         $this->pressButton('Save and continue');
         $this->iAmOnVisitsCarePage2();
     }
@@ -61,13 +52,9 @@ trait VisitsCareSectionTrait
             $this->iFillFieldForCrossBrowser('visits_care_doYouLiveWithClient_1', 'no');
             $this->iFillFieldForCrossBrowser('visits_care_howOftenDoYouContactClient', $info);
         } else {
-            $this->selectOption('visits_care[doYouLiveWithClient]', 'no');
-            $this->fillField('visits_care[howOftenDoYouContactClient]', $info);
+            $this->chooseOption('visits_care[doYouLiveWithClient]', 'no', 'LiveWithClient');
+            $this->fillInField('visits_care[howOftenDoYouContactClient]', $info, 'LiveWithClient');
         }
-
-        ++$this->answeredNo;
-        $this->questionResponses[0][] = 'do you live';
-        array_push($this->additionalInfo, $info);
 
         $this->pressButton('Save and continue');
         $this->iAmOnVisitsCarePage2();
@@ -78,9 +65,8 @@ trait VisitsCareSectionTrait
      */
     public function iChooseNoOnReceivePaidCareSection()
     {
-        $this->selectOption('visits_care[doesClientReceivePaidCare]', 'no');
-        ++$this->answeredNo;
-        $this->questionResponses[0][] = 'care that is paid for';
+        $this->chooseOption('visits_care[doesClientReceivePaidCare]', 'no', 'DoesClientReceiveCare');
+
         $this->pressButton('Save and continue');
         $this->iAmOnVisitsCarePage3();
     }
@@ -91,16 +77,18 @@ trait VisitsCareSectionTrait
     public function iChooseYesOnReceivePaidCareSection()
     {
         $fromSummaryPage = false;
+
         if ($this->iAmOnPage(sprintf('/%s\/.*\/visits-care\/step\/[0-9]\?from=summary$/', $this->reportUrlPrefix))) {
             $fromSummaryPage = true;
         }
 
-        $this->selectOption('visits_care[doesClientReceivePaidCare]', 'yes');
-        ++$this->answeredYes;
-        $this->questionResponses[0][] = 'care that is paid for';
-
-        $this->selectOption('visits_care[howIsCareFunded]', 'client_pays_for_all');
-        $this->careFundedChoice = 1;
+        $this->chooseOption('visits_care[doesClientReceivePaidCare]', 'yes', 'DoesClientReceiveCare');
+        $this->chooseOption(
+            'visits_care[howIsCareFunded]',
+            'client_pays_for_all',
+            'DoesClientReceiveCare',
+            'pays for all the care'
+        );
 
         $this->pressButton('Save and continue');
 
@@ -112,11 +100,13 @@ trait VisitsCareSectionTrait
      */
     public function iChooseYesAndOptionTwoOnReceivePaidCareSection()
     {
-        $this->selectOption('visits_care[doesClientReceivePaidCare]', 'yes');
-        ++$this->answeredYes;
-        $this->questionResponses[0][] = 'how is the care funded';
-        $this->selectOption('visits_care[howIsCareFunded]', 'client_gets_financial_help');
-        $this->careFundedChoice = 2;
+        $this->chooseOption('visits_care[doesClientReceivePaidCare]', 'yes', 'DoesClientReceiveCare');
+        $this->chooseOption(
+            'visits_care[howIsCareFunded]',
+            'client_gets_financial_help',
+            'DoesClientReceiveCare',
+            'gets some financial help'
+        );
 
         $this->pressButton('Save and continue');
         $this->iAmOnVisitsCarePage3();
@@ -127,11 +117,13 @@ trait VisitsCareSectionTrait
      */
     public function iChooseYesAndOptionThreeOnReceivePaidCareSection()
     {
-        $this->selectOption('visits_care[doesClientReceivePaidCare]', 'yes');
-        ++$this->answeredYes;
-        $this->questionResponses[0][] = 'paid for by someone else';
-        $this->selectOption('visits_care[howIsCareFunded]', 'all_care_is_paid_by_someone_else');
-        $this->careFundedChoice = 3;
+        $this->chooseOption('visits_care[doesClientReceivePaidCare]', 'yes', 'DoesClientReceiveCare');
+        $this->chooseOption(
+            'visits_care[howIsCareFunded]',
+            'all_care_is_paid_by_someone_else',
+            'DoesClientReceiveCare',
+            'care is paid for by someone else'
+        );
 
         $this->pressButton('Save and continue');
         $this->iAmOnVisitsCarePage3();
@@ -142,11 +134,13 @@ trait VisitsCareSectionTrait
      */
     public function iFillOutWhoIsDoingCaringSection()
     {
-        $info = 'Information on who is doing the caring';
-        $this->fillField('visits_care[whoIsDoingTheCaring]', $info);
-        array_push($this->additionalInfo, $info);
+        $this->fillInField('visits_care[whoIsDoingTheCaring]',
+            'Information on who is doing the caring',
+            'WhoIsGivingCare'
+        );
 
         $this->pressButton('Save and continue');
+
         $this->iAmOnVisitsCarePage4();
     }
 
@@ -155,9 +149,7 @@ trait VisitsCareSectionTrait
      */
     public function iChooseNoOnHasCarePlanSection()
     {
-        $this->selectOption('visits_care[doesClientHaveACarePlan]', 'no');
-        ++$this->answeredNo;
-        $this->questionResponses[0][] = 'have a care plan';
+        $this->chooseOption('visits_care[doesClientHaveACarePlan]', 'no', 'HasCarePlan');
         $this->pressButton('Save and continue');
 
         if ('ndr' == $this->reportUrlPrefix) {
@@ -172,17 +164,14 @@ trait VisitsCareSectionTrait
      */
     public function iChooseYesOnHasCarePlanSection()
     {
-        $this->selectOption('visits_care[doesClientHaveACarePlan]', 'yes');
-        ++$this->answeredYes;
-        $this->questionResponses[0][] = 'have a care plan';
-        $monthNumber = '12';
-        $monthName = 'December';
-        $this->fillField('visits_care[whenWasCarePlanLastReviewed][month]', $monthNumber);
-        array_push($this->additionalInfo, $monthName);
-
-        $year = '2015';
-        $this->fillField('visits_care[whenWasCarePlanLastReviewed][year]', $year);
-        array_push($this->additionalInfo, $year);
+        $this->chooseOption('visits_care[doesClientHaveACarePlan]', 'yes', 'HasCarePlan');
+        $this->fillInDateFields(
+            'visits_care[whenWasCarePlanLastReviewed]',
+            null,
+            12,
+            2015,
+            'HasCarePlan'
+        );
 
         $this->pressButton('Save and continue');
 
@@ -198,9 +187,9 @@ trait VisitsCareSectionTrait
      */
     public function iChooseNoOnPlansToMoveClient()
     {
-        $this->selectOption('visits_care[planMoveNewResidence]', 'no');
-        ++$this->answeredNo;
+        $this->chooseOption('visits_care[planMoveNewResidence]', 'no', 'MoveResidence');
         $this->pressButton('Save and continue');
+
         $this->iAmOnVisitsCareSummaryPage();
     }
 
@@ -209,14 +198,14 @@ trait VisitsCareSectionTrait
      */
     public function iChooseYesOnPlansToMoveClient()
     {
-        $this->selectOption('visits_care[planMoveNewResidence]', 'yes');
-        ++$this->answeredYes;
-
-        $info = 'Information on plans to move the client';
-        $this->fillField('visits_care[planMoveNewResidenceDetails]', $info);
-        array_push($this->additionalInfo, $info);
+        $this->chooseOption('visits_care[planMoveNewResidence]', 'yes', 'MoveResidence');
+        $this->fillInField('visits_care[planMoveNewResidenceDetails]',
+            'Information on plans to move the client',
+            'MoveResidence'
+        );
 
         $this->pressButton('Save and continue');
+
         $this->iAmOnVisitsCareSummaryPage();
     }
 
@@ -226,58 +215,14 @@ trait VisitsCareSectionTrait
     public function iSeeExpectedVisitCareSectionResponses()
     {
         $this->iAmOnVisitsCareSummaryPage();
-        $this->expectedResultsDisplayed(0, $this->questionResponses, 'Correct questions displayed');
 
-        $table = $this->getSession()->getPage()->find('css', 'dl');
+        $this->expectedResultsDisplayedSimplified('LiveWithClient');
+        $this->expectedResultsDisplayedSimplified('DoesClientReceiveCare', true);
+        $this->expectedResultsDisplayedSimplified('WhoIsGivingCare');
+        $this->expectedResultsDisplayedSimplified('HasCarePlan');
 
-        if (!$table) {
-            $this->throwContextualException('A dl element was not found on the page');
-        }
-
-        $tableEntry = $table->findAll('css', 'dd');
-
-        if (!$tableEntry) {
-            $this->throwContextualException('A dd element was not found on the page');
-        }
-
-        $countNegativeResponse = 0;
-        $countPositiveResponse = 0;
-        $comparisonSubject = 'Care funding explanation';
-        foreach ($tableEntry as $entry) {
-            if (1 == $this->careFundedChoice) {
-                $this->assertStringContainsString('pays for all the care', $entry, $comparisonSubject);
-            } elseif (1 == $this->careFundedChoice) {
-                $this->assertStringContainsString('gets some financial help', $entry, $comparisonSubject);
-            } elseif (1 == $this->careFundedChoice) {
-                $this->assertStringContainsString('care is paid for by someone else', $entry, $comparisonSubject);
-            }
-
-            if ('no' === strtolower(trim($entry->getHtml()))) {
-                ++$countNegativeResponse;
-            } elseif ('yes' === strtolower(trim($entry->getHtml()))) {
-                ++$countPositiveResponse;
-            }
-        }
-
-        $this->assertIntEqualsInt($this->answeredNo, $countNegativeResponse, 'Number of Yes Responses');
-        $this->assertIntEqualsInt($this->answeredYes, $countPositiveResponse, 'Number of No Responses');
-
-        $this->iShouldSeeTheExpectedVisitCareAdditionalInfo();
-    }
-
-    /**
-     * @Then I should see all the additional information I gave for visit and care
-     */
-    public function iShouldSeeTheExpectedVisitCareAdditionalInfo()
-    {
-        $table = $this->getSession()->getPage()->find('css', 'dl');
-
-        if (!$table) {
-            $this->throwContextualException('A dl element was not found on the page');
-        }
-
-        foreach ($this->additionalInfo as $info) {
-            $this->assertStringContainsString($info, $table->getHtml(), 'Written responses');
+        if (!is_null($this->getSectionAnswers('MoveResidence'))) {
+            $this->expectedResultsDisplayedSimplified('MoveResidence');
         }
     }
 

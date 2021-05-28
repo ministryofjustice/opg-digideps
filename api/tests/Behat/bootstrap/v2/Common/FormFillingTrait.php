@@ -4,6 +4,11 @@ declare(strict_types=1);
 
 namespace App\Tests\Behat\v2\Common;
 
+use App\Tests\Behat\BehatException;
+use Behat\Mink\Element\NodeElement;
+use Behat\Mink\Exception\ElementNotFoundException;
+use DateTime;
+
 trait FormFillingTrait
 {
     public array $submittedAnswersByFormSections = [];
@@ -13,33 +18,112 @@ trait FormFillingTrait
      * @param mixed       $value           field value to enter
      * @param string|null $formSectionName define with any name you like - only include if you want to assert on the
      *                                     value entered on a summary page at the end of the form flow
-     * @param int         $answerGroup     set to a value greater than 0 if form answers are grouped together to enable
-     *                                     removing all associated answers when required
+     * @param bool|null   $isMonth         If $value is a number corresponding to a month, set this to true to
+     *                                     store the value in submittedAnswersByFormSections as the equivalent month
+     *                                     string (e.g. 11 becomes 'November)'
      */
-    public function fillInField(string $field, $value, ?string $formSectionName = null, int $answerGroup = 0)
+    public function fillInField(string $field, $value, ?string $formSectionName = null, ?bool $isMonth = false)
     {
         if ($formSectionName) {
-            $this->submittedAnswersByFormSections[$formSectionName][$answerGroup][$field] = $value;
+            $answerGroup = $this->determineAnswerGroup($formSectionName, $field);
+            $storedValue = $isMonth ? DateTime::createFromFormat('!m', $value)->format('F') : $value;
+            $this->submittedAnswersByFormSections[$formSectionName][$answerGroup][$field] = $storedValue;
         }
 
         $this->fillField($field, $value);
     }
 
     /**
-     * @param string      $select          select id|name|label|value
-     * @param mixed       $option          option value to choose
-     * @param string|null $formSectionName define with any name you like - only include if you want to assert on
-     *                                     the value entered on a summary page at the end of the form flow
-     * @param int         $answerGroup     set to a value greater than 0 if form answers are grouped together to enable
-     *                                     removing all associated answers when required
+     * @param string      $fieldName       The field name minus the date portion e.g. made instead of made['month']
+     * @param int|null    $day             The day of the date in number format (leave null if not required) e.g. 25
+     * @param int|null    $month           The month of the date in number format (leave null if not required) e.g. 11
+     * @param int|null    $year            The year of the date in 4 digit format (leave null if not required) e.g. 2021
+     * @param string|null $formSectionName define with any name you like - only include if you want to assert on the
+     *                                     value entered on a summary page at the end of the form flow
      */
-    public function chooseOption(string $select, $option, ?string $formSectionName = null, int $answerGroup = 0)
+    public function fillInDateFields(string $fieldName, ?int $day, ?int $month, ?int $year, ?string $formSectionName = null)
     {
-        if ($formSectionName) {
-            $this->submittedAnswersByFormSections[$formSectionName][$answerGroup][$select] = $option;
+        $fullDate = '';
+
+        if ($day) {
+            $dayField = sprintf('%s[day]', $fieldName);
+            $this->fillField($dayField, $day);
+            $fullDate = $day;
         }
 
+        if ($month) {
+            $monthField = sprintf('%s[month]', $fieldName);
+            $this->fillField($monthField, $month);
+            $monthName = DateTime::createFromFormat('!m', strval($month))->format('F');
+
+            $fullDate .= " $monthName";
+        }
+
+        if ($year) {
+            $yearField = sprintf('%s[year]', $fieldName);
+            $this->fillField($yearField, $year);
+            $fullDate .= " $year";
+        }
+
+        if ($formSectionName) {
+            $answerGroup = $this->determineAnswerGroup($formSectionName, $fieldName);
+            $this->submittedAnswersByFormSections[$formSectionName][$answerGroup][$fieldName] = trim($fullDate);
+        }
+    }
+
+    /**
+     * Keeps a running total of the int values entered in the field stored against each formSectionName in
+     * $submittedAnswersByFormSections.
+     *
+     * @param string      $field           field id|name|label|value
+     * @param int         $value           field value to enter (to be added to a running total)
+     * @param string|null $formSectionName define with any name you like - only include if you want to assert on the
+     *                                     value entered on a summary page at the end of the form flow
+     */
+    public function fillInFieldTrackTotal(string $field, int $value, ?string $formSectionName = null)
+    {
+        $this->fillInField($field, $value, $formSectionName);
+        $this->submittedAnswersByFormSections[$formSectionName]['total'] += $value;
+    }
+
+    /**
+     * @param string      $select           select id|name|label|value
+     * @param mixed       $option           option value to choose
+     * @param string|null $formSectionName  define with any name you like - only include if you want to assert on
+     *                                      the value entered on a summary page at the end of the form flow
+     * @param string|null $translatedOption The full or partial string the option is translated to on the front end
+     *                                      e.g. all_care_is_paid_by_someone_else could be:
+     *
+     *                                      'All John's care is paid for by someone else (for example, by the local authority, council or NHS)'
+     *                                      or
+     *                                      'paid for by someone else'
+     *
+     *                                      Only provide this if you are asserting on the translation on the summary page.
+     */
+    public function chooseOption(string $select, $option, ?string $formSectionName = null, ?string $translatedOption = null)
+    {
         $this->selectOption($select, $option);
+
+        if ($formSectionName) {
+            $answerGroup = $this->determineAnswerGroup($formSectionName, $select);
+            $option = $translatedOption ?: $option;
+            $this->submittedAnswersByFormSections[$formSectionName][$answerGroup][$select] = $option;
+        }
+    }
+
+    private function determineAnswerGroup(string $formSectionName, string $inputLabel)
+    {
+        $lastMatchingIndex = 0;
+
+        if (!empty($this->submittedAnswersByFormSections[$formSectionName])) {
+            foreach ($this->submittedAnswersByFormSections[$formSectionName] as $answerGroup) {
+                if (is_array($answerGroup) && array_key_exists($inputLabel, $answerGroup)) {
+                    ++$lastMatchingIndex;
+                }
+            }
+        }
+
+        return $lastMatchingIndex;
     }
 
     /**
@@ -57,31 +141,84 @@ trait FormFillingTrait
      * [ 'sectionName' => [ 0 => ['field1' => 'abc, 'field2' => 123 ], 1 => ['field1' => 'def, 'field2' => 123 ] ] ] ),
      * provide the group number as the fourth argument to remove grouped answers under that group number.
      *
-     * @param string $fieldInAnswerGroupToRemove The field/option id|name|label|value as set in fillInField() or
-     *                                           chooseOption() to match on
-     * @param string $formSectionName            The name given to the section of the form being completed as set in
-     *                                           fillInField() or chooseOption()
-     * @param string $removeButtonText           Text value of the remove button on confirmation page
-     * @param int    $answerGroupNumber          The number used to associate field/option answers when filling the
-     *                                           form in (see fillInField() and chooseOption())
+     * @param string      $fieldInAnswerGroupToRemove The field/option id|name|label|value as set in fillInField() or
+     *                                                chooseOption() to match on
+     * @param string      $formSectionName            The name given to the section of the form being completed as set in
+     *                                                fillInField() or chooseOption()
+     * @param string|null $removeButtonText           Text value of the remove button on confirmation page. If null,
+     *                                                the value will be removed from $submittedAnswersByFormSections
+     *                                                but no attempt is made to click a button
      *
-     * @throws \Behat\Mink\Exception\ElementNotFoundException
+     * @throws ElementNotFoundException
      */
     public function removeAnswerFromSection(
         string $fieldInAnswerGroupToRemove,
         string $formSectionName,
-        string $removeButtonText,
-        int $answerGroupNumber = 0
+        ?string $removeButtonText = null
     ) {
         $answers = $this->getSectionAnswers($formSectionName);
 
-        $rowSelector = sprintf('//tr[th[normalize-space() ="%s"]]', $answers[$answerGroupNumber][$fieldInAnswerGroupToRemove]);
-        $descriptionTableRow = $this->getSession()->getPage()->find('xpath', $rowSelector);
+        $answerGroupToRemove = null;
 
-        $descriptionTableRow->clickLink('Remove');
-        $this->pressButton($removeButtonText);
+        foreach ($answers as $index => $answerGroup) {
+            if (is_array($answerGroup) && in_array($fieldInAnswerGroupToRemove, array_keys($answerGroup))) {
+                $answerGroupToRemove = $index;
+            }
+        }
 
-        unset($this->submittedAnswersByFormSections[$formSectionName][$answerGroupNumber]);
+        if (is_null($answerGroupToRemove)) {
+            throw new BehatException(sprintf('Tried to remove an answer but could not find submitted answers that contained the request field name \'%s\'', $fieldInAnswerGroupToRemove));
+        }
+
+        if (!is_null($removeButtonText)) {
+            $rowSelector = sprintf('//tr[th[normalize-space() ="%s"]]', $answers[$answerGroupToRemove][$fieldInAnswerGroupToRemove]);
+            $descriptionTableRow = $this->getSession()->getPage()->find('xpath', $rowSelector);
+            $descriptionTableRow->clickLink('Remove');
+            $this->pressButton($removeButtonText);
+        }
+
+        if (!is_null($this->submittedAnswersByFormSections[$formSectionName]['total'])) {
+            foreach ($this->submittedAnswersByFormSections[$formSectionName][$answerGroupToRemove] as $value) {
+                if (is_int($value)) {
+                    $this->submittedAnswersByFormSections[$formSectionName]['total'] -= $value;
+                }
+            }
+        }
+
+        unset($this->submittedAnswersByFormSections[$formSectionName][$answerGroupToRemove]);
+    }
+
+    /**
+     * @param NodeElement $summaryRowToEdit The NodeElement of the item row on a summary page to edit
+     * @param string      $fieldName        The name of the form field add a new value to
+     * @param string      $formSectionName  Which section name in $submittedAnswersByFormSections the item to
+     *                                      edit belongs to
+     *
+     * @return array Returns a list, not array, of the old and new value so the variables
+     *               can be accessed directly rather than accessing via an array
+     *
+     * @throws ElementNotFoundException
+     */
+    public function editAnswerInSectionTrackTotal(NodeElement $summaryRowToEdit, string $fieldName, string $formSectionName): array
+    {
+        $currentValueString = $summaryRowToEdit->find('xpath', '//td[text()[contains(.,"£")]]')->getText();
+        $currentValueInt = intval(str_replace([',', '£'], '', $currentValueString));
+
+        $this->removeAnswerFromSection('account[amount]', $formSectionName);
+
+        $summaryRowToEdit->clickLink('Edit');
+
+        $newValue = $this->faker->numberBetween(1, 10000);
+
+        $this->fillInFieldTrackTotal(
+            $fieldName,
+            $newValue,
+            $formSectionName
+        );
+
+        $this->pressButton('Save and continue');
+
+        return list($currentValueInt, $newValue) = [$currentValueInt, $newValue];
     }
 
     public function removeAllAnswers()

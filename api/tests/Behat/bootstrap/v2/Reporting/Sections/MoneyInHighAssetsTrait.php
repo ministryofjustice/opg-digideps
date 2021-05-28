@@ -4,6 +4,8 @@ declare(strict_types=1);
 
 namespace App\Tests\Behat\v2\Reporting\Sections;
 
+use App\Tests\Behat\BehatException;
+
 trait MoneyInHighAssetsTrait
 {
     // Expected valudation errors
@@ -11,10 +13,38 @@ trait MoneyInHighAssetsTrait
     private string $enterAmountError = 'Please enter an amount';
     private string $invalidAmountError = 'The amount must be between £0.01 and £100,000,000,000';
 
-    // Values
-    private string $amountValue = '£1.00';
-    private string $updatedAmountValue = '£2.00';
-    private string $totalAmountText = 'Total money in: £2.00';
+    private string $currentMoneyTypeReportingOn = '';
+
+    private array $moneyTypeDictionary = [
+        'Salary or wages' => 'salary-or-wages',
+        'Interest on savings and other accounts' => 'account-interest',
+        'Dividends' => 'dividends',
+        'Income from property rental' => 'income-from-property-rental',
+        'Private pension' => 'personal-pension',
+        'State pension' => 'state-pension',
+        'Attendance Allowance' => 'attendance-allowance',
+        'Disability Living Allowance' => 'disability-living-allowance',
+        'Employment Support Allowance' => 'employment-support-allowance',
+        'Housing Benefit' => 'housing-benefit',
+        'Incapacity Benefit' => 'incapacity-benefit',
+        'Income Support' => 'income-support',
+        'Pension Credit' => 'pension-credit',
+        'Severe Disablement Allowance' => 'severe-disablement-allowance',
+        'Universal Credit' => 'universal-credit',
+        'Winter Fuel/Cold Weather Payment' => 'winter-fuel-cold-weather-payment',
+        'Other benefits' => 'other-benefits',
+        'Compensation or damages award' => 'compensation-or-damages-award',
+        'Bequest or inheritance' => 'bequest-or-inheritance',
+        'Cash gift received' => 'cash-gift-received',
+        'Refund' => 'refunds',
+        'Sale of asset' => 'sale-of-asset',
+        'Sale of investment' => 'sale-of-investment',
+        'Anything else' => 'anything-else',
+    ];
+
+    private array $moneyTypeCategoriesCompleted = [];
+
+    private int $totalToAssertOn = 0;
 
     /**
      * @When I view the money in report section
@@ -52,12 +82,35 @@ trait MoneyInHighAssetsTrait
     }
 
     /**
-     * @Given I have a dividend to report on
+     * @Given I have :moneyType to report on
+     * @Given I have a/an :moneyType to report on
      */
-    public function iHaveADividendToReportOn()
+    public function iHaveMoneyTypeToReportOn(string $moneyType)
     {
-        $this->selectOption('account[category]', 'dividends');
+        $option = $this->translateMoneyType($moneyType);
+        $this->chooseOption('account[category]', $option, $moneyType, $moneyType);
         $this->pressButton('Save and continue');
+        $this->currentMoneyTypeReportingOn = $moneyType;
+    }
+
+    /**
+     * @param string $moneyTypeLabel The user facing money type translation e.g. Interest on savings and other accounts
+     *                               rather than account-interest
+     *
+     * @return mixed|string
+     *
+     * @throws BehatException
+     */
+    private function translateMoneyType(string $moneyTypeLabel)
+    {
+        $categories = array_keys($this->moneyTypeDictionary);
+
+        if (!in_array($moneyTypeLabel, $categories)) {
+            $validCategories = implode($categories);
+            throw new BehatException(sprintf('The money in category label you used doesn\'t exist. Valid categories are: %s', $validCategories));
+        }
+
+        return $this->moneyTypeDictionary[$moneyTypeLabel];
     }
 
     /**
@@ -81,7 +134,7 @@ trait MoneyInHighAssetsTrait
      */
     public function iTryToSubmitAnInvalidAmount()
     {
-        $this->fillField('account[amount]', '0');
+        $this->fillInField('account[amount]', '0');
 
         $this->pressButton('Save and continue');
     }
@@ -99,9 +152,17 @@ trait MoneyInHighAssetsTrait
      */
     public function iEnterAValidAmount()
     {
-        $this->fillField('account[amount]', '1');
+        $value = $this->faker->numberBetween(1, 10000);
+
+        $this->fillInFieldTrackTotal(
+            'account[amount]',
+            $value,
+            $this->currentMoneyTypeReportingOn
+        );
 
         $this->pressButton('Save and continue');
+
+        $this->totalToAssertOn += $value;
     }
 
     /**
@@ -109,8 +170,9 @@ trait MoneyInHighAssetsTrait
      */
     public function iDontAddAnotherItem()
     {
-        $this->selectOption('add_another[addAnother]', 'no');
+        $this->chooseOption('add_another[addAnother]', 'no');
         $this->pressButton('Save and continue');
+        $this->moneyTypeCategoriesCompleted[] = $this->currentMoneyTypeReportingOn;
     }
 
     /**
@@ -126,17 +188,9 @@ trait MoneyInHighAssetsTrait
      */
     public function iAddAnotherItem()
     {
-        $this->selectOption('add_another[addAnother]', 'yes');
+        $this->chooseOption('add_another[addAnother]', 'yes');
         $this->pressButton('Save and continue');
-    }
-
-    /**
-     * @Given I have a state pension to report on
-     */
-    public function iHaveAStatePensionToReportOn()
-    {
-        $this->selectOption('account[category]', 'state-pension');
-        $this->pressButton('Save and continue');
+        $this->moneyTypeCategoriesCompleted[] = $this->currentMoneyTypeReportingOn;
     }
 
     /**
@@ -146,9 +200,8 @@ trait MoneyInHighAssetsTrait
     {
         assert($this->iShouldSeeTheMoneyInSummary());
 
-        $descriptionLists = $this->getSession()->getPage()->findAll('css', 'td');
-        if (0 === count($descriptionLists)) {
-            $this->throwContextualException('A td element was not found on the page - make sure the current url is as expected');
+        foreach (array_unique($this->moneyTypeCategoriesCompleted) as $completedCategory) {
+            $this->expectedResultsDisplayedSimplified($completedCategory);
         }
     }
 
@@ -184,9 +237,19 @@ trait MoneyInHighAssetsTrait
      */
     public function iEditTheMoneyInValue()
     {
-        $this->clickLink('Edit');
-        $this->fillField('account[amount]', '2');
-        $this->pressButton('Save and continue');
+        $xpath = sprintf('//tr[th[text()[contains(.,"%s")]]]', $this->currentMoneyTypeReportingOn);
+        $moneyTypeRow = $this->getSession()->getPage()->find(
+            'xpath',
+            $xpath
+        );
+
+        [$oldValue, $newValue] = $this->editAnswerInSectionTrackTotal(
+            $moneyTypeRow,
+            'account[amount]',
+            $this->currentMoneyTypeReportingOn);
+
+        $this->totalToAssertOn -= $oldValue;
+        $this->totalToAssertOn += $newValue;
     }
 
     /**
@@ -194,37 +257,7 @@ trait MoneyInHighAssetsTrait
      */
     public function theMoneyInSummaryPageShouldContainTheEditedValue()
     {
-        assert($this->iShouldSeeTheMoneyInSummary());
-
-        $tableData = $this->getSession()->getPage()->findAll('css', 'td');
-        if (0 === count($tableData)) {
-            $this->throwContextualException('A td element was not found on the page - make sure the current url is as expected');
-        }
-
-        $invalidAmount = false;
-        $editedAmount = '';
-        foreach ($tableData as $data) {
-            $text = $data->getText();
-
-            if ($text !== $this->updatedAmountValue) {
-                $editedAmount = $text;
-                $invalidAmount = true;
-            } else {
-                $invalidAmount = false;
-                break;
-            }
-        }
-
-        if ($invalidAmount) {
-            $this->throwContextualException(
-                sprintf(
-                    'A td was found but the row with the expected text was not found. Missing text: %s. Text found: %s',
-                    $this->updatedAmountValue,
-                    $editedAmount,
-                    $text
-                )
-            );
-        }
+        $this->theMoneyInSummaryPageShouldContainTheMoneyInValuesIAdded();
     }
 
     /**
@@ -232,16 +265,15 @@ trait MoneyInHighAssetsTrait
      */
     public function iAddAnotherSingleItemOfIncome()
     {
-        // Add another item of income
         $this->clickLink('Add item of income');
 
-        // Select the category as state-pension
-        $this->selectOption('account[category]', 'state-pension');
+        $moneyTypeLabel = 'State pension';
+        $option = $this->translateMoneyType($moneyTypeLabel);
+
+        $this->chooseOption('account[category]', $option, $moneyTypeLabel);
         $this->pressButton('Save and continue');
 
-        // Enter amount
-        $this->fillField('account[amount]', '1');
-        $this->pressButton('Save and continue');
+        $this->iEnterAValidAmount();
     }
 
     /**
@@ -249,21 +281,6 @@ trait MoneyInHighAssetsTrait
      */
     public function theMoneyInSummaryPageShouldContainTheAddedValue()
     {
-        assert($this->iShouldSeeTheMoneyInSummary());
-
-        $totalAmount = $this->getSession()->getPage()->find('css', '.behat-region-total-amount');
-        if (!$totalAmount) {
-            $this->throwContextualException('The .behat-region-total-amount css selector was not found on the page - make sure the current url is as expected');
-        }
-
-        $totalAmountText = $totalAmount->getText();
-        if ($totalAmountText !== $this->totalAmountText) {
-            $this->throwContextualException(
-                sprintf('The total amount does != the expected total amount. Total Amount: %s. Expected Amount: %s',
-                    $totalAmountText,
-                    $this->totalAmountText
-                )
-            );
-        }
+        $this->theMoneyInSummaryPageShouldContainTheMoneyInValuesIAdded();
     }
 }
