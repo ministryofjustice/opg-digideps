@@ -44,6 +44,9 @@ trait ExpectedResultsTrait
         }
 
         foreach ($sections[$summarySectionNumber] as $foundResultKey => $foundResults) {
+            if (null === $expectedResults[$foundResultKey]) {
+                $this->throwContextualException('Found more rows than expected');
+            }
             $this->checkContainsExpectedResults($expectedResults[$foundResultKey], $foundResults, $summarySectionNumber, $context);
         }
     }
