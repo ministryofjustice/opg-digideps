@@ -33,6 +33,20 @@ trait ExpectedResultsTrait
 
         $this->assertSectionContainsExpectedResultsSimplified($sectionName, $partialMatch);
         $this->assertSectionTotal($sectionName);
+        $this->assertGrandTotal();
+    }
+
+    private function assertGrandTotal()
+    {
+        if (!is_null($grandTotal = $this->getGrandTotal())) {
+            $normalizedTotal = $this->normalizeIntToCurrencyString($grandTotal);
+            $sectionAnswerFound = in_array($normalizedTotal, $this->summarySectionItemsFound);
+
+            if (!$sectionAnswerFound) {
+                $failureMessage = sprintf('Grand total value of %s was not found on the page', $normalizedTotal);
+                throw new BehatException($failureMessage);
+            }
+        }
     }
 
     private function assertSectionTotal(string $sectionName)
@@ -42,7 +56,12 @@ trait ExpectedResultsTrait
             $sectionAnswerFound = in_array($normalizedTotal, $this->summarySectionItemsFound);
 
             if (!$sectionAnswerFound) {
-                $failureMessage = sprintf('Total value of %s was not found on the page');
+                $failureMessage = sprintf(
+                    'Section "%s" total value of %s was not found on the page',
+                    $sectionName,
+                    $normalizedTotal
+                );
+
                 throw new BehatException($failureMessage);
             }
 

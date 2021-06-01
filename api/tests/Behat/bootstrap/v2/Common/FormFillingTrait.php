@@ -135,12 +135,14 @@ trait FormFillingTrait
         return $this->submittedAnswersByFormSections[$formSectionName];
     }
 
-    /**
-     * @return mixed
-     */
-    public function getSectionTotal(string $formSectionName)
+    public function getSectionTotal(string $formSectionName): int
     {
         return $this->submittedAnswersByFormSections['totals'][$formSectionName];
+    }
+
+    public function getGrandTotal(): int
+    {
+        return $this->submittedAnswersByFormSections['totals']['grandTotal'];
     }
 
     /**
