@@ -1,4 +1,4 @@
-@v2 @money-in-high-assets @acs2
+@v2 @money-in-high-assets
 Feature: Money in High Assets
 
   Scenario: A user saves and continues without selecting a valid money in option
@@ -21,6 +21,7 @@ Feature: Money in High Assets
     And I try to submit an invalid amount
     Then I should see an invalid field error
 
+  @acs2
   Scenario: A user submits a single item of income form with valid values
     Given a Lay Deputy has not started a report
     When I view and start the money in report section
@@ -52,6 +53,7 @@ Feature: Money in High Assets
     When I add another single item of income
     And I dont add another item
     Then the money in summary page should contain the added value
+
 
   Scenario: A user submits multiple items of income forms with valid values
     Given a Lay Deputy has not started a report

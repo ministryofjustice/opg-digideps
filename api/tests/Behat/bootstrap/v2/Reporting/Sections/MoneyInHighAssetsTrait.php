@@ -201,6 +201,7 @@ trait MoneyInHighAssetsTrait
         assert($this->iShouldSeeTheMoneyInSummary());
 
         foreach (array_unique($this->moneyTypeCategoriesCompleted) as $completedCategory) {
+            var_dump($completedCategory);
             $this->expectedResultsDisplayedSimplified($completedCategory);
         }
     }

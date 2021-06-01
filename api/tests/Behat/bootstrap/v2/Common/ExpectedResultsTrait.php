@@ -28,9 +28,36 @@ trait ExpectedResultsTrait
             $this->extractTableBodyContents($summarySectionElement);
         }
 
-        $this->extractMonetaryTotal();
+        $this->extractMonetaryTotals();
+        $this->removeEmptyElements();
 
-        $this->checkSectionContainsExpectedResultsSimplified($sectionName, $partialMatch);
+        $this->assertSectionContainsExpectedResultsSimplified($sectionName, $partialMatch);
+        $this->assertSectionTotal($sectionName);
+    }
+
+    private function assertSectionTotal(string $sectionName)
+    {
+        if (!is_null($sectionTotal = $this->getSectionTotal($sectionName))) {
+            $normalizedTotal = $this->normalizeIntToCurrencyString($sectionTotal);
+            $sectionAnswerFound = in_array($normalizedTotal, $this->summarySectionItemsFound);
+
+            if (!$sectionAnswerFound) {
+                $failureMessage = sprintf('Total value of %s was not found on the page');
+                throw new BehatException($failureMessage);
+            }
+
+            // Remove the found total so sections with multiple questions/totals won't get a false positive
+            $key = array_search($normalizedTotal, $this->summarySectionItemsFound);
+            unset($this->summarySectionItemsFound[$key]);
+        }
+    }
+
+    private function removeEmptyElements()
+    {
+        $this->summarySectionItemsFound = array_filter(
+            $this->summarySectionItemsFound,
+            fn ($value) => !is_null($value) && '' !== $value
+        );
     }
 
     private function extractDescriptionListContents(NodeElement $element)
@@ -78,70 +105,62 @@ trait ExpectedResultsTrait
         }
     }
 
-    private function extractMonetaryTotal()
+    private function extractMonetaryTotals()
     {
-        $xpath = '//div[text()[contains(.,"Total")] and text()[contains(.,"£")]]';
-        $monetaryTotalDivs = $this->getSession()->getPage()->findAll('xpath', $xpath);
+        $totalElements = [];
 
-        if (!empty($monetaryTotalDivs)) {
-            foreach ($monetaryTotalDivs as $div) {
-                $text = strtolower($div->getText());
+        $divXpath = '//div[text()[contains(.,"Total")] and text()[contains(.,"£")]]';
+        $totalElements = array_merge($totalElements, $this->getSession()->getPage()->findAll('xpath', $divXpath));
 
-                preg_match('/\$([0-9]+[\.,0-9]*)/', $text, $match);
-                $totalValue = $match[1];
+        if (!empty($totalElements)) {
+            foreach ($totalElements as $element) {
+                $text = strtolower($element->getText());
+
+                preg_match('/£([0-9]+[\.,0-9]*)/', $text, $match);
+                $totalValue = $match[0];
 
                 $this->summarySectionItemsFound[] = $totalValue;
             }
         }
     }
 
-    private function checkSectionContainsExpectedResultsSimplified(string $sectionName, bool $partialMatch = false)
+    private function assertSectionContainsExpectedResultsSimplified(string $sectionName, bool $partialMatch = false)
     {
+        if (empty($this->getSectionAnswers($sectionName))) {
+            throw new BehatException(sprintf('The section specified (%s) is not in $this->submittedAnswersByFormSections', $sectionName));
+        }
+
         $foundAnswers = [];
         $missingAnswers = [];
 
-//        var_dump($this->submittedAnswersByFormSections);
-//        var_dump($sectionName);
-//        var_dump($this->getSectionAnswers($sectionName));
-//        var_dump($this->summarySectionItemsFound);
+        foreach ($this->getSectionAnswers($sectionName) as $index => $sectionAnswers) {
+            foreach ($sectionAnswers as $fieldName => $fieldValue) {
+                $fieldValue = $this->normalizeValue($fieldValue);
 
-        if (!empty($this->getSectionAnswers($sectionName))) {
-            foreach ($this->getSectionAnswers($sectionName) as $index => $sectionAnswers) {
-                if (is_array($sectionAnswers)) {
-                    foreach ($sectionAnswers as $fieldName => $fieldValue) {
-                        $fieldValue = $this->normalizeFieldValue($fieldValue);
+                if ($partialMatch) {
+                    $matches = array_filter($this->summarySectionItemsFound, function ($item) use ($fieldValue) {
+                        return false !== strpos($item, $fieldValue);
+                    });
 
-                        if ($partialMatch) {
-                            $matches = array_filter($this->summarySectionItemsFound, function ($item) use ($fieldValue) {
-                                return false !== strpos($item, $fieldValue);
-                            });
+                    $sectionAnswerFound = !empty($matches);
+                } else {
+                    $sectionAnswerFound = in_array($fieldValue, $this->summarySectionItemsFound);
+                }
 
-                            $sectionAnswerFound = !empty($matches);
-                        } else {
-                            $sectionAnswerFound = in_array($fieldValue, $this->summarySectionItemsFound);
-                        }
+                if ($sectionAnswerFound) {
+                    $foundAnswers[$fieldName] = $fieldValue;
 
-                        if ($sectionAnswerFound) {
-                            $foundAnswers[$fieldName] = $fieldValue;
+                    $key = array_search($fieldValue, $this->summarySectionItemsFound);
 
-                            $key = array_search($fieldValue, $this->summarySectionItemsFound);
-
-                            if ($key) {
-                                // Remove the found answer so sections with multiple questions won't get a false positive
-                                unset($this->summarySectionItemsFound[$key]);
-                            }
-                        } else {
-                            $missingAnswers[$fieldName] = $fieldValue;
-                        }
+                    if ($key) {
+                        // Remove the found answer so sections with multiple questions won't get a false positive
+                        unset($this->summarySectionItemsFound[$key]);
                     }
+                } else {
+                    $missingAnswers[$fieldName] = $fieldValue;
                 }
             }
-        } else {
-            throw new BehatException(sprintf('The section specific (%s) is not in $this->submittedAnswersByFormSections', $this->submittedAnswersByFormSections));
         }
-
-//        var_dump($this->submittedAnswersByFormSections);
-//        var_dump($this->summarySectionItemsFound);
 
         if (!empty($missingAnswers)) {
             $this->throwMissingAnswersException($missingAnswers, $foundAnswers);
@@ -169,15 +188,15 @@ MSG;
         throw new BehatException($failureMessage);
     }
 
-    private function normalizeFieldValue($fieldValue)
+    private function normalizeValue($value)
     {
-        if (is_numeric($fieldValue)) {
-            $fieldValue = $this->normalizeIntToCurrencyString($fieldValue);
+        if (is_numeric($value)) {
+            $value = $this->normalizeIntToCurrencyString($value);
         } else {
-            $fieldValue = strtolower(strval($fieldValue));
+            $value = strtolower(strval($value));
         }
 
-        return $fieldValue;
+        return $value;
     }
 
     private function normalizeIntToCurrencyString($fieldValue)

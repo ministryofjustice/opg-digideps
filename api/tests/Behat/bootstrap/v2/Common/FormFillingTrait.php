@@ -73,7 +73,7 @@ trait FormFillingTrait
 
     /**
      * Keeps a running total of the int values entered in the field stored against each formSectionName in
-     * $submittedAnswersByFormSections.
+     * $submittedAnswersByFormSections and a grand total to assert on.
      *
      * @param string      $field           field id|name|label|value
      * @param int         $value           field value to enter (to be added to a running total)
@@ -83,7 +83,8 @@ trait FormFillingTrait
     public function fillInFieldTrackTotal(string $field, int $value, ?string $formSectionName = null)
     {
         $this->fillInField($field, $value, $formSectionName);
-        $this->submittedAnswersByFormSections[$formSectionName]['total'] += $value;
+        $this->submittedAnswersByFormSections['totals'][$formSectionName] += $value;
+        $this->submittedAnswersByFormSections['totals']['grandTotal'] += $value;
     }
 
     /**
@@ -132,6 +133,14 @@ trait FormFillingTrait
     public function getSectionAnswers(string $formSectionName)
     {
         return $this->submittedAnswersByFormSections[$formSectionName];
+    }
+
+    /**
+     * @return mixed
+     */
+    public function getSectionTotal(string $formSectionName)
+    {
+        return $this->submittedAnswersByFormSections['totals'][$formSectionName];
     }
 
     /**
