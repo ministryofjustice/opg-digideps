@@ -82,8 +82,8 @@ trait DeputyExpensesSectionTrait
      */
     public function iEnterValidExpenses()
     {
-        $this->fillInField('expenses_single[explanation]', $this->faker->sentence(12), 'expenseDetails', 0);
-        $this->fillInField('expenses_single[amount]', $this->faker->numberBetween(1, 1000), 'expenseDetails', 0);
+        $this->fillInField('expenses_single[explanation]', $this->faker->sentence(12), 'expenseDetails');
+        $this->fillInFieldTrackTotal('expenses_single[amount]', $this->faker->numberBetween(1, 1000), 'expenseDetails');
         $this->pressButton('Save and continue');
     }
 
@@ -95,8 +95,8 @@ trait DeputyExpensesSectionTrait
         $this->chooseOption('add_another[addAnother]', 'yes');
         $this->pressButton('Continue');
 
-        $this->fillInField('expenses_single[explanation]', $this->faker->sentence(12), 'expenseDetails', 1);
-        $this->fillInField('expenses_single[amount]', $this->faker->numberBetween(1, 1000), 'expenseDetails', 1);
+        $this->fillInField('expenses_single[explanation]', $this->faker->sentence(12), 'expenseDetails');
+        $this->fillInFieldTrackTotal('expenses_single[amount]', $this->faker->numberBetween(1, 1000), 'expenseDetails');
         $this->pressButton('Save and continue');
     }
 
@@ -117,7 +117,7 @@ trait DeputyExpensesSectionTrait
         $this->expectedResultsDisplayedSimplified('anyExpensesClaimed');
 
         if (!is_null($this->getSectionAnswers('expenseDetails'))) {
-            $this->expectedResultsDisplayedSimplified('expenseDetails');
+            $this->expectedResultsDisplayedSimplified('expenseDetails', false, false);
         }
     }
 
@@ -195,9 +195,8 @@ trait DeputyExpensesSectionTrait
 
         $rowSelector = sprintf('//tr[th[normalize-space() ="%s"]]', $answers['expenses_single[explanation]']);
         $descriptionTableRow = $this->getSession()->getPage()->find('xpath', $rowSelector);
-        $descriptionTableRow->clickLink('Edit');
 
-        $this->iEnterValidExpenses();
+        $this->editAnswerInSectionTrackTotal($descriptionTableRow, 'expenses_single[amount]', 'expenseDetails');
     }
 
     /**
@@ -219,8 +218,8 @@ trait DeputyExpensesSectionTrait
     {
         $this->clickLink('Add a deputy expense');
 
-        $this->fillInField('expenses_single[explanation]', $this->faker->sentence(12), 'expenseDetails', 1);
-        $this->fillInField('expenses_single[amount]', $this->faker->numberBetween(1, 1000), 'expenseDetails', 1);
+        $this->fillInField('expenses_single[explanation]', $this->faker->sentence(12), 'expenseDetails');
+        $this->fillInFieldTrackTotal('expenses_single[amount]', $this->faker->numberBetween(1, 1000), 'expenseDetails');
         $this->pressButton('Save and continue');
     }
 

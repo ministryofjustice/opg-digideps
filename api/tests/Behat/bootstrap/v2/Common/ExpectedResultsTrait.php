@@ -12,7 +12,7 @@ trait ExpectedResultsTrait
     private string $tableHtml = '';
     private array $summarySectionItemsFound = [];
 
-    public function expectedResultsDisplayedSimplified(string $sectionName, bool $partialMatch = false)
+    public function expectedResultsDisplayedSimplified(string $sectionName, bool $partialMatch = false, bool $sectionsHaveTotals = false)
     {
         // Add assertion for checking on section totals and overall total
         $this->tableHtml = '';
@@ -30,9 +30,15 @@ trait ExpectedResultsTrait
 
         $this->extractMonetaryTotals();
         $this->removeEmptyElements();
+        var_dump($this->summarySectionItemsFound);
+        var_dump($this->submittedAnswersByFormSections['totals']);
 
         $this->assertSectionContainsExpectedResultsSimplified($sectionName, $partialMatch);
-        $this->assertSectionTotal($sectionName);
+
+        if ($sectionsHaveTotals) {
+            $this->assertSectionTotal($sectionName);
+        }
+
         $this->assertGrandTotal();
     }
 
@@ -130,6 +136,9 @@ trait ExpectedResultsTrait
 
         $divXpath = '//div[text()[contains(.,"Total")] and text()[contains(.,"£")]]';
         $totalElements = array_merge($totalElements, $this->getSession()->getPage()->findAll('xpath', $divXpath));
+
+        $tableRowXpath = '//tr/th[text()[contains(.,"Total")]]/parent::*';
+        $totalElements = array_merge($totalElements, $this->getSession()->getPage()->findAll('xpath', $tableRowXpath));
 
         if (!empty($totalElements)) {
             foreach ($totalElements as $element) {
@@ -324,7 +333,7 @@ MSG;
     {
         $tableValues = [];
         foreach ($items as $item) {
-            $this->summarySectionItemsFound[] = trim(strval($item->getText()));
+            $tableValues[] = trim(strval($item->getText()));
         }
         $this->summarySectionItemsFound[] = $tableValues;
     }

@@ -44,8 +44,6 @@ trait MoneyInHighAssetsTrait
 
     private array $moneyTypeCategoriesCompleted = [];
 
-    private int $totalToAssertOn = 0;
-
     /**
      * @When I view the money in report section
      */
@@ -161,8 +159,6 @@ trait MoneyInHighAssetsTrait
         );
 
         $this->pressButton('Save and continue');
-
-        $this->totalToAssertOn += $value;
     }
 
     /**
@@ -243,13 +239,10 @@ trait MoneyInHighAssetsTrait
             $xpath
         );
 
-        [$oldValue, $newValue] = $this->editAnswerInSectionTrackTotal(
+        $this->editAnswerInSectionTrackTotal(
             $moneyTypeRow,
             'account[amount]',
             $this->currentMoneyTypeReportingOn);
-
-        $this->totalToAssertOn -= $oldValue;
-        $this->totalToAssertOn += $newValue;
     }
 
     /**

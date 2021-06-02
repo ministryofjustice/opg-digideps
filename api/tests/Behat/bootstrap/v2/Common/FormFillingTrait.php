@@ -18,16 +18,12 @@ trait FormFillingTrait
      * @param mixed       $value           field value to enter
      * @param string|null $formSectionName define with any name you like - only include if you want to assert on the
      *                                     value entered on a summary page at the end of the form flow
-     * @param bool|null   $isMonth         If $value is a number corresponding to a month, set this to true to
-     *                                     store the value in submittedAnswersByFormSections as the equivalent month
-     *                                     string (e.g. 11 becomes 'November)'
      */
-    public function fillInField(string $field, $value, ?string $formSectionName = null, ?bool $isMonth = false)
+    public function fillInField(string $field, $value, ?string $formSectionName = null)
     {
         if ($formSectionName) {
             $answerGroup = $this->determineAnswerGroup($formSectionName, $field);
-            $storedValue = $isMonth ? DateTime::createFromFormat('!m', $value)->format('F') : $value;
-            $this->submittedAnswersByFormSections[$formSectionName][$answerGroup][$field] = $storedValue;
+            $this->submittedAnswersByFormSections[$formSectionName][$answerGroup][$field] = $value;
         }
 
         $this->fillField($field, $value);
@@ -135,22 +131,65 @@ trait FormFillingTrait
         return $this->submittedAnswersByFormSections[$formSectionName];
     }
 
-    public function getSectionTotal(string $formSectionName): int
+    public function getSectionTotal(string $formSectionName): ?int
     {
         return $this->submittedAnswersByFormSections['totals'][$formSectionName];
     }
 
-    public function getGrandTotal(): int
+    public function getGrandTotal(): ?int
     {
         return $this->submittedAnswersByFormSections['totals']['grandTotal'];
+    }
+
+    public function removeSection(string $formSectionName)
+    {
+        unset($this->submittedAnswersByFormSections[$formSectionName]);
+    }
+
+    public function removeSectionAnswerGroup(string $formSectionName, int $answerGroupToRemove)
+    {
+        unset($this->submittedAnswersByFormSections[$formSectionName][$answerGroupToRemove]);
+    }
+
+    /**
+     * @param string $answerGroupToRemove
+     */
+    public function removeSectionTotal(string $formSectionName)
+    {
+        unset($this->submittedAnswersByFormSections['totals'][$formSectionName]);
+    }
+
+    public function addToSectionTotal(string $formSectionName, int $amountToAdd)
+    {
+        $this->submittedAnswersByFormSections['totals'][$formSectionName] += $amountToAdd;
+    }
+
+    /**
+     * @param string $formSectionName
+     */
+    public function addToGrandTotal(int $amountToAdd)
+    {
+        $this->submittedAnswersByFormSections['totals']['grandTotal'] += $amountToAdd;
+    }
+
+    public function subtractFromSectionTotal(string $formSectionName, int $amountToSubtract)
+    {
+        $this->submittedAnswersByFormSections['totals'][$formSectionName] -= $amountToSubtract;
+    }
+
+    /**
+     * @param string $formSectionName
+     */
+    public function subtractFromGrandTotal(int $amountToSubtract)
+    {
+        $this->submittedAnswersByFormSections['totals']['grandTotal'] -= $amountToSubtract;
     }
 
     /**
      * Removes an answer from a section of the form being completed - via the interface and the
      * submitted field values in $this->submittedAnswersByFormSections. If multiple fields form one answer
      * and were grouped using a number (e.g.
-     * [ 'sectionName' => [ 0 => ['field1' => 'abc, 'field2' => 123 ], 1 => ['field1' => 'def, 'field2' => 123 ] ] ] ),
-     * provide the group number as the fourth argument to remove grouped answers under that group number.
+     * [ 'sectionName' => [ 0 => ['field1' => 'abc, 'field2' => 123 ], 1 => ['field1' => 'def, 'field2' => 123 ] ] ] ).
      *
      * @param string      $fieldInAnswerGroupToRemove The field/option id|name|label|value as set in fillInField() or
      *                                                chooseOption() to match on
@@ -174,11 +213,12 @@ trait FormFillingTrait
         foreach ($answers as $index => $answerGroup) {
             if (is_array($answerGroup) && in_array($fieldInAnswerGroupToRemove, array_keys($answerGroup))) {
                 $answerGroupToRemove = $index;
+                break;
             }
         }
 
         if (is_null($answerGroupToRemove)) {
-            throw new BehatException(sprintf('Tried to remove an answer but could not find submitted answers that contained the request field name \'%s\'', $fieldInAnswerGroupToRemove));
+            throw new BehatException(sprintf('Tried to remove an answer but could not find submitted answers that contained the requested field name \'%s\'', $fieldInAnswerGroupToRemove));
         }
 
         if (!is_null($removeButtonText)) {
@@ -188,15 +228,16 @@ trait FormFillingTrait
             $this->pressButton($removeButtonText);
         }
 
-        if (!is_null($this->submittedAnswersByFormSections[$formSectionName]['total'])) {
+        if (!is_null($this->getSectionTotal($formSectionName))) {
             foreach ($this->submittedAnswersByFormSections[$formSectionName][$answerGroupToRemove] as $value) {
                 if (is_int($value)) {
-                    $this->submittedAnswersByFormSections[$formSectionName]['total'] -= $value;
+                    $this->subtractFromSectionTotal($formSectionName, $value);
+                    $this->subtractFromGrandTotal($value);
                 }
             }
         }
 
-        unset($this->submittedAnswersByFormSections[$formSectionName][$answerGroupToRemove]);
+        $this->removeSectionAnswerGroup($formSectionName, $answerGroupToRemove);
     }
 
     /**
@@ -215,7 +256,7 @@ trait FormFillingTrait
         $currentValueString = $summaryRowToEdit->find('xpath', '//td[text()[contains(.,"£")]]')->getText();
         $currentValueInt = intval(str_replace([',', '£'], '', $currentValueString));
 
-        $this->removeAnswerFromSection('account[amount]', $formSectionName);
+        $this->removeAnswerFromSection($fieldName, $formSectionName);
 
         $summaryRowToEdit->clickLink('Edit');
 

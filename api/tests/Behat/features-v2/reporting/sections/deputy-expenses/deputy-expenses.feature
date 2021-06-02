@@ -7,6 +7,7 @@ Feature: Deputy expenses - Applies to Lays with combined/PFA reports only
         And I have no expenses to declare
         Then the expenses summary page should contain the details I entered
 
+
     Scenario: A user has a single expense to declare
         Given a Lay Deputy has not started a report
         When I view and start the deputy expenses report section
@@ -37,6 +38,7 @@ Feature: Deputy expenses - Applies to Lays with combined/PFA reports only
         When I enter an expense amount that is too low
         Then I should see an 'amount out of range' error
 
+    @acs2
     Scenario: A user edits expense data they have submitted
         Given a Lay Deputy has not started a report
         When I view and start the deputy expenses report section

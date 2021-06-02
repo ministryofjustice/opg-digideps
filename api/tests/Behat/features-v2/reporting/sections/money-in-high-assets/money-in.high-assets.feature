@@ -21,7 +21,6 @@ Feature: Money in High Assets
     And I try to submit an invalid amount
     Then I should see an invalid field error
 
-  @acs2
   Scenario: A user submits a single item of income form with valid values
     Given a Lay Deputy has not started a report
     When I view and start the money in report section
