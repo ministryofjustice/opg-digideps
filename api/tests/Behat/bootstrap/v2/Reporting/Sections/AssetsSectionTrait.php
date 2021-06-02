@@ -69,10 +69,6 @@ trait AssetsSectionTrait
         $this->iSelectRadioBasedOnChoiceNumber('div', 'data-module', 'govuk-radios', $this->assetType - 1);
         $this->pressButton('Save and continue');
 
-        //Fill out asset value and description
-        //TODO if property -> fillOutPropertyDetails
-        //
-        //TODO else -> fillOutAssetDetails
         $this->iFillAssetDescriptionAndValue($this->assetId, $this->assetType);
         $this->selectOption('add_another[addAnother]', 'no');
         $this->pressButton('Continue');
@@ -96,7 +92,7 @@ trait AssetsSectionTrait
             if (null === $this->assetDetails[0]) {
                 $this->assetDetails[0][] = $formFields;
             } else {
-                array_push($this->assetDetails[0][], $formFields);
+                array_push($this->assetDetails[0], $formFields);
             }
         } else {
             if (null === $this->assetDetails[$assetType - 1]) {
@@ -105,6 +101,33 @@ trait AssetsSectionTrait
                 array_push($this->assetDetails[$assetType - 1], $formFields);
             }
         }
+    }
+
+    /**
+     * @When I add multiple assets
+     */
+    public function iAddMultipleAssets()
+    {
+        while ($this->assetType <= 11) {
+            ++$this->assetId;
+            ++$this->assetType;
+
+            if (1 != $this->assetType) {
+                $this->selectOption('add_another[addAnother]', 'yes');
+                $this->pressButton('Continue');
+            }
+
+            $this->iSelectRadioBasedOnChoiceNumber('div', 'data-module', 'govuk-radios', $this->assetType - 1);
+            $this->pressButton('Save and continue');
+
+            if ($this->assetType == $this->PROPERTY_ASSET_TYPE) {
+                $this->iFillPropertyDetailsAndValue($this->assetId);
+            } else {
+                $this->iFillAssetDescriptionAndValue($this->assetId, $this->assetType);
+            }
+        }
+        $this->selectOption('add_another[addAnother]', 'no');
+        $this->pressButton('Continue');
     }
 
     /**
@@ -212,10 +235,11 @@ trait AssetsSectionTrait
     {
         $sectionNumber = 0;
         if ($this->assetResponse[0] == ['yes']) {
-            $this->calculateAssetTotalsForSections();
+            $sortedResults = $this->sortAssetsAndSections();
+            $sortedResults = $this->calculateAssetTotalsForSections($sortedResults);
             $this->expectedResultsDisplayed($sectionNumber, $this->assetResponse, 'Asset Answers to Questions');
             ++$sectionNumber;
-            foreach ($this->assetDetails as $index => $sectionAssets) {
+            foreach ($sortedResults as $index => $sectionAssets) {
                 if ($index == $this->PROPERTY_ASSET_TYPE - 1) {
                     $this->expectedResultsDisplayed($sectionNumber, $sectionAssets[0], 'Asset Details');
                 } else {
@@ -228,9 +252,9 @@ trait AssetsSectionTrait
         }
     }
 
-    private function calculateAssetTotalsForSections()
+    private function calculateAssetTotalsForSections(array $sortedAssetDetails)
     {
-        foreach ($this->assetDetails as $index => $assetSection) {
+        foreach ($sortedAssetDetails as $index => $assetSection) {
             $total = 0;
             if ($index == $this->PROPERTY_ASSET_TYPE - 1) {
 //                foreach ($assetSection as $property) {
@@ -252,8 +276,42 @@ trait AssetsSectionTrait
                 }
             }
             if ($total > 0) {
-                array_push($this->assetDetails[$index], ['£'.number_format($total, 2, '.', ',')]);
+                array_push($sortedAssetDetails[$index], ['£'.number_format($total, 2, '.', ',')]);
             }
         }
+
+        return $sortedAssetDetails;
+    }
+
+    private function sortAssetsAndSections()
+    {
+        $sortedResults = $this->assetDetails;
+
+        var_dump('------------------------------------------------------Pre Sort------------------------------------------------------');
+        var_dump($sortedResults);
+
+        if (null != $sortedResults[0]) {
+            $sortedResults[0] = array_reverse($sortedResults[0]);
+        }
+        if (null != $sortedResults[10]) {
+            $sortedResults[1] = $sortedResults[10];
+            unset($sortedResults[10]);
+        }
+        if (null != $sortedResults[11]) {
+            if (null != $sortedResults[4]) {
+                $sortedResults[3] = $sortedResults[4];
+                $sortedResults[4] = $sortedResults[11];
+                unset($sortedResults[11]);
+            } else {
+                $sortedResults[3] = $sortedResults[11];
+                unset($sortedResults[11]);
+            }
+        }
+        ksort($sortedResults);
+
+        var_dump('------------------------------------------------------Post Sort------------------------------------------------------');
+        var_dump($sortedResults);
+
+        return $sortedResults;
     }
 }
