@@ -444,6 +444,6 @@ trait IShouldBeOnTrait
      */
     public function iAmOnDebtsSummaryPage()
     {
-        return $this->iAmOnPage(sprintf('/%s\/.*\/debts\/summary$/', $this->reportUrlPrefix));
+        return $this->iAmOnPage(sprintf('/%s\/.*\/debts\/summary.*$/', $this->reportUrlPrefix));
     }
 }

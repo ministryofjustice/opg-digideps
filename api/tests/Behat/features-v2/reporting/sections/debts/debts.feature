@@ -20,3 +20,13 @@ Feature: Report debts
     Then I should see the expected debts section summary
     When I follow link back to report overview page
     Then I should see "debts" as "finished"
+
+  Scenario: A user edits a debt
+    Given a Lay Deputy has completed a Pfa Low Assets report
+    When I edit an existing debt payment
+    Then I should see the expected debts section summary
+
+  Scenario: A user tries to add a debt with invalid amount
+    Given a Lay Deputy has completed a Pfa Low Assets report
+    When I add a debt with invalid amount
+    Then I should see the validation message

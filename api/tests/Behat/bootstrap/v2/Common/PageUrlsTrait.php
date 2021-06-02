@@ -24,7 +24,7 @@ trait PageUrlsTrait
     private string $healthAndLifestyleSectionUrl = '%s/%s/lifestyle';
     private string $healthAndLifestyleSummaryUrl = '%s/%s/lifestyle/summary';
     private string $debtsSectionUrl = '%s/%s/debts';
-    private string $debtsSectionSummaryUrl = '%s/%s/debts/summary';
+    private string $debtsSummarySectionUrl = '%s/%s/debts/summary';
 
     // Admin
     private string $adminClientSearchUrl = '/admin/client/search';
