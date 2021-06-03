@@ -59,7 +59,7 @@ locals {
         "awslogs-stream-prefix": "${aws_iam_role.test.name}"
       }
     },
-    "entryPoint": [ "sh", "./tests/Behat/run-smoke-tests.sh", "-d" ],
+    "entryPoint": [ "sh", "./tests/Behat/run-tests-smoke.sh" ],
     "secrets": [
       { "name": "PGPASSWORD", "valueFrom": "${data.aws_secretsmanager_secret.database_password.arn}" },
       { "name": "SECRET", "valueFrom": "${data.aws_secretsmanager_secret.front_frontend_secret.arn}" }

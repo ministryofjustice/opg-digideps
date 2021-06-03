@@ -1,6 +1,7 @@
 @v2 @admin-client-view
 Feature: Admin - View client details
 
+  @admin @pfa-high-submitted
   Scenario: An admin user views client details associated with a Lay deputy
     Given an admin user accesses the admin app
     When I visit the client details page for an existing client linked to a Lay deputy
@@ -9,6 +10,7 @@ Feature: Admin - View client details
     And I should see the reports associated with the client
     And I should not see "Discharge deputy"
 
+  @admin @prof-admin-submitted
   Scenario: An admin user views client details associated with an Org deputy
     Given an admin user accesses the admin app
     When I visit the client details page for an existing client linked to a deputy in an Organisation
@@ -17,6 +19,7 @@ Feature: Admin - View client details
     And I should see the name and email of the named deputy
     And I should see the reports associated with the client
 
+  @super-admin @pfa-high-submitted
   Scenario: A super admin user views client details associated with a Lay deputy
     Given a super admin user accesses the admin app
     When I visit the client details page for an existing client linked to a Lay deputy

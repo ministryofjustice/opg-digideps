@@ -4,6 +4,16 @@ set -e
 export BEHAT_PARAMS="{\"extensions\": {\"Behat\\\\MinkExtension\": {\"base_url\": \"$NONADMIN_HOST\", \"browser_stack\": { \"username\": \"$BROWSERSTACK_USERNAME\", \"access_key\": \"$BROWSERSTACK_KEY\"}}}}"
 export APP_ENV=dev
 
+start=`date +%s`
+
 confd -onetime -backend env
+
 su-exec www-data php app/console doctrine:fixtures:load --no-interaction
-./vendor/bin/behat --config=./tests/Behat/behat.yml  --stop-on-failure $@
+
+./vendor/bin/behat --config=./tests/Behat/behat.yml --stop-on-failure --profile v2-tests-goutte --tags @v2 --list-features | ./vendor/liuggio/fastest/fastest "./vendor/bin/behat --profile v2-tests-goutte --config=./tests/Behat/behat.yml {}"
+
+end=`date +%s`
+
+runtime=$((end-start))
+
+echo "Time take: ${runtime} secs"

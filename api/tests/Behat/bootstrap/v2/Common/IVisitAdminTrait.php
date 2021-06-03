@@ -29,10 +29,10 @@ trait IVisitAdminTrait
             );
         }
 
-        $clientDetailsUrl = $this->getAdminClientDetailsUrl($this->layDeputySubmittedDetails->getClientId());
+        $clientDetailsUrl = $this->getAdminClientDetailsUrl($this->layDeputySubmittedPfaHighAssetsDetails->getClientId());
         $this->visitAdminPath($clientDetailsUrl);
 
-        $this->interactingWithUserDetails = $this->layDeputySubmittedDetails;
+        $this->interactingWithUserDetails = $this->layDeputySubmittedPfaHighAssetsDetails;
     }
 
     /**
