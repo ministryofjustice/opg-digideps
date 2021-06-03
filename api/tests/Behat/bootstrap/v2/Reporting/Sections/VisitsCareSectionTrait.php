@@ -43,8 +43,10 @@ trait VisitsCareSectionTrait
     public function iChooseYesOnLiveWithTheClientSection()
     {
         $this->selectOption('visits_care[doYouLiveWithClient]', 'yes');
+        if ('ndr' != $this->reportUrlPrefix) {
+            $this->questionResponses[] = ['do you live', 'yes'];
+        }
         ++$this->answeredYes;
-        $this->questionResponses[0][] = 'do you live';
         $this->pressButton('Save and continue');
         $this->iAmOnVisitsCarePage2();
     }
@@ -62,11 +64,14 @@ trait VisitsCareSectionTrait
             $this->iFillFieldForCrossBrowser('visits_care_howOftenDoYouContactClient', $info);
         } else {
             $this->selectOption('visits_care[doYouLiveWithClient]', 'no');
+            if ('ndr' != $this->reportUrlPrefix) {
+                $this->questionResponses[] = ['do you live', 'no'];
+            }
             $this->fillField('visits_care[howOftenDoYouContactClient]', $info);
+            $this->questionResponses[] = ['you have contact', $info];
         }
 
         ++$this->answeredNo;
-        $this->questionResponses[0][] = 'do you live';
         array_push($this->additionalInfo, $info);
 
         $this->pressButton('Save and continue');
@@ -79,8 +84,8 @@ trait VisitsCareSectionTrait
     public function iChooseNoOnReceivePaidCareSection()
     {
         $this->selectOption('visits_care[doesClientReceivePaidCare]', 'no');
+        $this->questionResponses[] = ['care that is paid for', 'no'];
         ++$this->answeredNo;
-        $this->questionResponses[0][] = 'care that is paid for';
         $this->pressButton('Save and continue');
         $this->iAmOnVisitsCarePage3();
     }
@@ -96,10 +101,11 @@ trait VisitsCareSectionTrait
         }
 
         $this->selectOption('visits_care[doesClientReceivePaidCare]', 'yes');
+        $this->questionResponses[] = ['care that is paid for', 'yes'];
         ++$this->answeredYes;
-        $this->questionResponses[0][] = 'care that is paid for';
 
         $this->selectOption('visits_care[howIsCareFunded]', 'client_pays_for_all');
+        $this->questionResponses[] = ['how is the care funded', 'care is paid for by someone else'];
         $this->careFundedChoice = 1;
 
         $this->pressButton('Save and continue');
@@ -113,9 +119,10 @@ trait VisitsCareSectionTrait
     public function iChooseYesAndOptionTwoOnReceivePaidCareSection()
     {
         $this->selectOption('visits_care[doesClientReceivePaidCare]', 'yes');
+        $this->questionResponses[] = ['care that is paid for', 'yes'];
         ++$this->answeredYes;
-        $this->questionResponses[0][] = 'how is the care funded';
         $this->selectOption('visits_care[howIsCareFunded]', 'client_gets_financial_help');
+        $this->questionResponses[] = ['how is the care funded', 'care is paid for by someone else'];
         $this->careFundedChoice = 2;
 
         $this->pressButton('Save and continue');
@@ -128,9 +135,10 @@ trait VisitsCareSectionTrait
     public function iChooseYesAndOptionThreeOnReceivePaidCareSection()
     {
         $this->selectOption('visits_care[doesClientReceivePaidCare]', 'yes');
+        $this->questionResponses[] = ['care that is paid for', 'yes'];
         ++$this->answeredYes;
-        $this->questionResponses[0][] = 'paid for by someone else';
         $this->selectOption('visits_care[howIsCareFunded]', 'all_care_is_paid_by_someone_else');
+        $this->questionResponses[] = ['how is the care funded', 'care is paid for by someone else'];
         $this->careFundedChoice = 3;
 
         $this->pressButton('Save and continue');
@@ -144,8 +152,9 @@ trait VisitsCareSectionTrait
     {
         $info = 'Information on who is doing the caring';
         $this->fillField('visits_care[whoIsDoingTheCaring]', $info);
-        array_push($this->additionalInfo, $info);
+        $this->questionResponses[] = ['who is doing the caring', $info];
 
+        array_push($this->additionalInfo, $info);
         $this->pressButton('Save and continue');
         $this->iAmOnVisitsCarePage4();
     }
@@ -157,7 +166,7 @@ trait VisitsCareSectionTrait
     {
         $this->selectOption('visits_care[doesClientHaveACarePlan]', 'no');
         ++$this->answeredNo;
-        $this->questionResponses[0][] = 'have a care plan';
+        $this->questionResponses[] = ['have a care plan', 'no'];
         $this->pressButton('Save and continue');
 
         if ('ndr' == $this->reportUrlPrefix) {
@@ -174,13 +183,14 @@ trait VisitsCareSectionTrait
     {
         $this->selectOption('visits_care[doesClientHaveACarePlan]', 'yes');
         ++$this->answeredYes;
-        $this->questionResponses[0][] = 'have a care plan';
+        $this->questionResponses[] = ['have a care plan', 'yes'];
         $monthNumber = '12';
         $monthName = 'December';
+        $year = '2015';
         $this->fillField('visits_care[whenWasCarePlanLastReviewed][month]', $monthNumber);
+        $this->questionResponses[] = ['last reviewed', $monthName.' '.$year];
         array_push($this->additionalInfo, $monthName);
 
-        $year = '2015';
         $this->fillField('visits_care[whenWasCarePlanLastReviewed][year]', $year);
         array_push($this->additionalInfo, $year);
 
@@ -199,6 +209,7 @@ trait VisitsCareSectionTrait
     public function iChooseNoOnPlansToMoveClient()
     {
         $this->selectOption('visits_care[planMoveNewResidence]', 'no');
+        $this->questionResponses[] = ['new residence', 'no'];
         ++$this->answeredNo;
         $this->pressButton('Save and continue');
         $this->iAmOnVisitsCareSummaryPage();
@@ -210,10 +221,12 @@ trait VisitsCareSectionTrait
     public function iChooseYesOnPlansToMoveClient()
     {
         $this->selectOption('visits_care[planMoveNewResidence]', 'yes');
+        $this->questionResponses[] = ['new residence', 'yes'];
         ++$this->answeredYes;
 
         $info = 'Information on plans to move the client';
         $this->fillField('visits_care[planMoveNewResidenceDetails]', $info);
+        $this->questionResponses[] = ['plans to move', $info];
         array_push($this->additionalInfo, $info);
 
         $this->pressButton('Save and continue');

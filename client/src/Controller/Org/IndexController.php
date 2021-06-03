@@ -74,6 +74,14 @@ class IndexController extends AbstractController
         /** @var User $user */
         $user = $this->getUser();
 
+        if ($user->hasRoleOrgNamed()
+            && !$user->getAgreeTermsUse()
+            && $user->regBeforeToday($user)) {
+            $token = $this->restClient->get('/user/get-reg-token', 'array');
+
+            return $this->redirectToRoute('user_updated_terms_use', ['token' => $token]);
+        }
+
         $endpoint = sprintf(
             '%s?%s',
             $user->belongsToActiveOrganisation() ? '/report/get-all-by-orgs' : 'report/get-all-by-user',

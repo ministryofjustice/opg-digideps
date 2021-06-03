@@ -1,6 +1,7 @@
 @v2 @admin-management
 Feature: Admin - Admin users delete admin users
 
+  @super-admin @admin-manager @admin
   Scenario: A super admin user deletes other admin users
     Given a super admin user accesses the admin app
     And another super admin user exists
@@ -11,7 +12,7 @@ Feature: Admin - Admin users delete admin users
     When I attempt to delete an existing "admin" user
     Then the user should be deleted
 
-  @acs
+  @super-admin @admin-manager @admin
   Scenario: An admin manager user deletes other admin users
     Given an admin manager user accesses the admin app
     And another admin manager user exists
@@ -22,6 +23,7 @@ Feature: Admin - Admin users delete admin users
     When I attempt to delete an existing "admin" user
     Then the user should be deleted
 
+  @super-admin @admin-manager @admin
   Scenario: An admin user deletes other admin users
     Given an admin user accesses the admin app
     And another admin user exists

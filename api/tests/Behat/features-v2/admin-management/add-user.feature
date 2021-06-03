@@ -1,6 +1,7 @@
 @v2 @admin-management
 Feature: Admin - An admin user adds an admin user
 
+  @super-admin
   Scenario: A super admin user adds other admin users
     Given a super admin user accesses the admin app
     When I navigate to the admin add user page
@@ -14,6 +15,7 @@ Feature: Admin - An admin user adds an admin user
     And I submit the form
     Then the new user should be added
 
+  @admin-manager
   Scenario: An admin manager user adds other admin users
     Given an admin manager user accesses the admin app
     When I visit the admin Add Users page
@@ -24,6 +26,7 @@ Feature: Admin - An admin user adds an admin user
     And I submit the form
     Then the new user should be added
 
+  @admin
   Scenario: An admin user adds other admin users
     Given an admin user accesses the admin app
     When I visit the admin Add Users page

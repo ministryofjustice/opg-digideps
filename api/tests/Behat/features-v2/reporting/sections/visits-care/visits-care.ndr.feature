@@ -1,6 +1,7 @@
 @v2 @visits-care.ndr
 Feature: Visits and Care (NDR)
 
+@ndr-not-started
   Scenario: A user lives with a client that doesn't receive paid care, doesn't have a care plan and has no plans to move.
     Given a Lay Deputy has not started an NDR report
     And I view and start the visits and care report section
@@ -14,6 +15,7 @@ Feature: Visits and Care (NDR)
     Then I should be on the Lay reports overview page
     And I should see "visits-care" as "finished"
 
+@ndr-not-started
   Scenario: A user does not live with a client that receives paid care, has a care plan and has plans to move.
     Given a Lay Deputy has not started an NDR report
     And I view and start the visits and care report section
@@ -27,6 +29,7 @@ Feature: Visits and Care (NDR)
     Then I should be on the Lay reports overview page
     And I should see "visits-care" as "finished"
 
+@ndr-not-started
   Scenario: A user partially completes the section and then edits their responses
     Given a Lay Deputy has not started an NDR report
     And I view the report overview page

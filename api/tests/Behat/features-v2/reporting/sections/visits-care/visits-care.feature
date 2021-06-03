@@ -1,6 +1,7 @@
 @v2 @visits-care
 Feature: Visits and Care
 
+@lay-pfa-high-not-started
   Scenario: A user lives with a client that doesn't receive paid care and doesn't have a care plan.
     Given a Lay Deputy has not started a report
     And I view and start the visits and care report section
@@ -13,6 +14,7 @@ Feature: Visits and Care
     Then I should be on the Lay reports overview page
     And I should see "visits-care" as "finished"
 
+@lay-pfa-high-not-started
   Scenario: A user does not live with a client that receives paid care and has a care plan.
     Given a Lay Deputy has not started a report
     And I view and start the visits and care report section
@@ -25,6 +27,7 @@ Feature: Visits and Care
     Then I should be on the Lay reports overview page
     And I should see "visits-care" as "finished"
 
+@lay-pfa-high-not-started
   Scenario: A user partially completes the section and then edits their responses
     Given a Lay Deputy has not started a report
     And I view the report overview page

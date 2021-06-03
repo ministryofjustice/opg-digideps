@@ -194,7 +194,8 @@ class UserFixtures extends AbstractDataFixture
             ->setAddress1('Victoria Road')
             ->setAddressPostcode('SW1')
             ->setAddressCountry('GB')
-            ->setRoleName('LAY' === $data['deputyType'] ? 'ROLE_LAY_DEPUTY' : 'ROLE_'.$data['deputyType'].'_NAMED');
+            ->setRoleName('LAY' === $data['deputyType'] ? 'ROLE_LAY_DEPUTY' : 'ROLE_'.$data['deputyType'].'_NAMED')
+            ->setAgreeTermsUse(true);
 
         $manager->persist($user);
 

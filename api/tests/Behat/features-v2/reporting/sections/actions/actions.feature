@@ -1,6 +1,7 @@
 @v2 @actions
 Feature: Actions
 
+@lay-pfa-high-not-started
   Scenario: A user has made no financial decisions and has no concerns
     Given a Lay Deputy has not started a report
     And I view and start the actions report section
@@ -16,6 +17,7 @@ Feature: Actions
     Then I should be on the Lay reports overview page
     And I should see "actions" as "finished"
 
+@lay-pfa-high-not-started
   Scenario: A user has made financial decisions and has concerns
     Given a Lay Deputy has not started a report
     And I view and start the actions report section
@@ -26,6 +28,7 @@ Feature: Actions
     Then I should be on the actions report summary page
     And I should see the expected action report section responses
 
+@lay-pfa-high-not-started
   Scenario: A user partially completes the section and then edits their responses
     Given a Lay Deputy has not started a report
     And I view the report overview page

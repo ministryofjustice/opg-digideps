@@ -1,0 +1,31 @@
+{% extends '@App/Layouts/application.html.twig' %}
+
+{% import '@App/Macros/macros.html.twig' as macros %}
+
+{% set translationDomain = "updated-terms-use" %}
+{% trans_default_domain translationDomain %}
+{% set transOptions = {'%userFirstname%': user.firstname}  %}
+
+{% block htmlTitle %}{{ 'htmlTitle' | trans }}{% endblock %}
+{% block pageTitle %}{{ 'pageTitle' | trans }}{% endblock %}
+
+{% block breadcrumbs %}{% endblock %}
+
+{% block pageContent %}
+
+    <div class="text">
+        <p class="govuk-body">{{ 'section01.para01' | trans(transOptions) }}</p>
+        <p class="govuk-body">Read the updated <a href="{{path('terms')}}">terms of use</a></p>
+    </div>
+
+    {{ form_start(form, {attr: {novalidate: 'novalidate', class: 'push--bottom' }}) }}
+
+    {{ form_checkbox(form.agreeTermsUse, 'form.agreeTermsUse', { 'labelClass': 'required' }) }}
+
+    <div class="govuk-form-group">
+        {{ form_submit(form.save, 'form.save') }}
+    </div>
+
+    {{ form_end(form) }}
+
+{% endblock %}

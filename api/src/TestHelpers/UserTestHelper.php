@@ -43,7 +43,8 @@ class UserTestHelper extends TestCase
             ->setActive(true)
             ->setAddress1($faker->streetAddress)
             ->setAddressCountry('GB')
-            ->setAddressPostcode($faker->postcode);
+            ->setAddressPostcode($faker->postcode)
+            ->setAgreeTermsUse(true);
 
         if (!is_null($client)) {
             $user->addClient($client);

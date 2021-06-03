@@ -1,6 +1,7 @@
 @v2 @money-out-short
 Feature: Money Out Short
 
+@lay-pfa-low-not-started
   Scenario: A user has had no money go out
     Given a Lay Deputy has not started a Pfa Low Assets report
     And I visit the report overview page
@@ -11,6 +12,7 @@ Feature: Money Out Short
     When I follow link back to report overview page
     Then I should see "money-out-short" as "no items"
 
+@lay-pfa-low-not-started
   Scenario: A user has had some money go out but nothing over £1k
     Given a Lay Deputy has not started a Pfa Low Assets report
     When I view and start the money out short report section
@@ -20,6 +22,7 @@ Feature: Money Out Short
     When I follow link back to report overview page
     Then I should see "money-out-short" as "no items"
 
+@lay-pfa-low-not-started
   Scenario: A user has had some money go out including payments over £1k
     Given a Lay Deputy has not started a Pfa Low Assets report
     When I view and start the money out short report section
@@ -29,22 +32,26 @@ Feature: Money Out Short
     When I follow link back to report overview page
     Then I should see "money-out-short" as "2 items"
 
+@lay-pfa-low-completed
   Scenario: A user removes a one off payment
     Given a Lay Deputy has completed a Pfa Low Assets report
     When I remove an existing money out short payment
     Then I should see the expected money out section summary
 
+@lay-pfa-low-completed
   Scenario: A user edits a one off payment
     Given a Lay Deputy has completed a Pfa Low Assets report
     When I edit an existing money out short payment
     Then I should see the expected money out section summary
 
+@lay-pfa-low-completed
   Scenario: A user adds an additional one off payment
     Given a Lay Deputy has completed a Pfa Low Assets report
     When I add a payment and state no further payments
     When I change my mind and add another payment
     Then I should see the expected money out section summary
 
+@lay-pfa-low-completed
   Scenario: A user tries to add a one off payment of less than £1k
     Given a Lay Deputy has completed a Pfa Low Assets report
     When I add a one off payment of less than £1k
