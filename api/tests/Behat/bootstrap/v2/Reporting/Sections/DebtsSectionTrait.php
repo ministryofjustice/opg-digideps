@@ -76,6 +76,7 @@ trait DebtsSectionTrait
     {
         $this->hasDebts = true;
         $this->addADebtsPayment('credit-cards', '1500');
+        $this->addADebtsPayment('loans', '2000');
         $this->pressButton('Save and continue');
     }
 
