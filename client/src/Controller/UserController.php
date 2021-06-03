@@ -12,6 +12,7 @@ use App\Service\Client\RestClient;
 use App\Service\DeputyProvider;
 use App\Service\Redirector;
 use Psr\Log\LoggerInterface;
+use Sensio\Bundle\FrameworkExtraBundle\Configuration\Security;
 use Sensio\Bundle\FrameworkExtraBundle\Configuration\Template;
 use Symfony\Component\Form\FormError;
 use Symfony\Component\HttpFoundation\Request;
@@ -67,8 +68,8 @@ class UserController extends AbstractController
 
         // check $token is correct
         try {
-            $user = $this->restClient->loadUserByToken($token);
             /* @var $user EntityDir\User */
+            $user = $this->restClient->loadUserByToken($token);
         } catch (\Throwable $e) {
             return $this->renderError('This link is not working or has already been used', $e->getCode());
         }
@@ -125,6 +126,9 @@ class UserController extends AbstractController
 
             // set password for user
             $this->restClient->put('user/'.$user->getId().'/set-password', $data);
+
+            // set agree terms for user
+            $this->userApi->agreeTermsUse($token);
 
             // log in
             $clientToken = new UsernamePasswordToken($user, null, 'secured_area', $user->getRoles());
@@ -339,7 +343,7 @@ class UserController extends AbstractController
         $form = $this->createForm(FormDir\User\AgreeTermsType::class, $user);
         $form->handleRequest($request);
         if ($form->isSubmitted() && $form->isValid()) {
-            $this->restClient->agreeTermsUse($token);
+            $this->userApi->agreeTermsUse($token);
 
             return $this->redirectToRoute('user_activate', ['token' => $token, 'action' => 'activate']);
         }
@@ -353,6 +357,28 @@ class UserController extends AbstractController
         }
 
         return $this->render($view, [
+            'user' => $user,
+            'form' => $form->createView(),
+        ]);
+    }
+
+    /**
+     * @Route("/user/update-terms-use/{token}", name="user_updated_terms_use")
+     * @Security("is_granted('ROLE_ORG')")
+     */
+    public function updatedTermsUseAction(Request $request, string $token): Response
+    {
+        $user = $this->restClient->loadUserByToken($token);
+
+        $form = $this->createForm(FormDir\User\UpdateTermsType::class, $user);
+        $form->handleRequest($request);
+        if ($form->isSubmitted() && $form->isValid()) {
+            $this->userApi->agreeTermsUse($token);
+
+            return $this->redirectToRoute('org_dashboard');
+        }
+
+        return $this->render('@App/User/updatedTermsUse.html.twig', [
             'user' => $user,
             'form' => $form->createView(),
         ]);

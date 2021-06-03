@@ -6,7 +6,7 @@ WORKDIR /app
 COPY composer.json .
 COPY composer.lock .
 # Remove '--ignore-platform-req=php' when we move to php 8
-RUN composer install --prefer-dist --no-interaction --no-scripts --ignore-platform-req=php
+RUN composer install --prefer-dist --no-interaction --no-scripts --ignore-platform-reqs
 
 COPY app app
 COPY config config
@@ -94,10 +94,12 @@ COPY phpstan.neon .
 RUN mkdir -p /tmp/html
 RUN mkdir -p /tmp/sql
 
-RUN chown www-data /var/www/tests/Behat/run-smoke-tests.sh
-RUN chmod 544 /var/www/tests/Behat/run-smoke-tests.sh
+RUN chown www-data /var/www/tests/Behat/run-tests-smoke.sh
+RUN chmod 544 /var/www/tests/Behat/run-tests-smoke.sh
 RUN chown www-data /var/www/tests/Behat/run-tests.sh
 RUN chmod 544 /var/www/tests/Behat/run-tests.sh
+RUN chown www-data /var/www/tests/Behat/run-tests-v2.sh
+RUN chmod 544 /var/www/tests/Behat/run-tests-v2.sh
 
 # Prebuild cache
 RUN su-exec www-data php -d memory_limit=-1 app/console cache:warmup

@@ -290,6 +290,7 @@ v2-tests-goutte:
             kernel:
                 path: '%paths.base%/../../src/Kernel.php'
                 class: App\Kernel
+        Liuggio\Fastest\Behat\ListFeaturesExtension\Extension: ~
 
 v2-tests-browserstack:
     suites:

@@ -7,7 +7,6 @@ Feature: Deputy expenses - Applies to Lays with combined/PFA reports only
         And I have no expenses to declare
         Then the expenses summary page should contain the details I entered
 
-
     Scenario: A user has a single expense to declare
         Given a Lay Deputy has not started a report
         When I view and start the deputy expenses report section

@@ -67,7 +67,66 @@ There are however 6 older suites which are much larger and have a lot of complic
 
 See behat/tests/behat.yml for suite descriptions.
 
-## Emails in non-production environments
+### Notable helper functions
+
+A common pattern in our application is completing a section of the report by using a form and then having the responses summarised on one page. Summary pages are not uniform in design and use a number of different HTML elements to display data and any monetary values entered are summed up with totals displayed (in some instances subtotals are displayed as well). To try to streamline and simplify how we assert on the summary page there are some wrappers around the standard behat form filling functions that track form values ready to be asserted on summary pages. Form values are stored in associative arrays with the field name as a key and the entered value as the array value (e.g. '["yes_no[paidForAnything]"]' => "yes" ). [FormFillingTrait](../api/tests/Behat/bootstrap/v2/Common/FormFillingTrait.php) contains the functions, and the array used to store responses.
+
+To use this system make sure you use the following functions when filling in forms:
+
+Text fields:
+- `fillInField()` - tracks text input
+- `fillInFieldTrackTotal()` - tracks text input that relates to a cumulative value that is summed on the summary page
+- `fillInDateFields()` - tracks and then converts numerical values to the apps standard date format (e.g. 1, 1, 2020 becomes 1 January 2020 when asserting on summary page)
+
+Select fields:
+- `chooseOption()` - tracks selected option and converts to a partial or full text representation if provided as an optional argument ready to assert on summary pages
+
+Removing from summary pages
+- `removeAnswerFromSection()` - removes a response via the summary page (and updates any associated tracked monetary values)
+
+Editing from summary pages
+- `editAnswerInSection()` - edits an answer via the summary page
+- `editAnswerInSectionTrackTotal()`  - edits an answer via the summary page (and updates any associated tracked monetary values)
+
+#### Form Sections
+As a common pattern in our domain is related to a form having sections, we have adopted this terminology in the helper functions to give some meaningful structure to responses. For example, when completing a multi-page form that deals with visits and care you could name each 'section' after the type of question being asked. By splitting up responses in to sections it gives greater freedom to assert on specific sections being completed (or not, if required), but if the logic is fairly simple you can assign a single section name when filling in fields, and the responses will be under one section name - see below for how this looks in practice:
+
+```
+array(2) {
+      │   ["anyExpensesClaimed"]=>
+      │   array(1) {
+      │     [0]=>
+      │     array(1) {
+      │       ["yes_no[paidForAnything]"]=>
+      │       string(3) "yes"
+      │     }
+      │   }
+      │   ["expenseDetails"]=>
+      │   array(2) {
+      │     [0]=>
+      │     array(2) {
+      │       ["expenses_single[explanation]"]=>
+      │       string(94) "Fugit sit nemo sit quia aspernatur eligendi soluta cumque perferendis deserunt incidunt autem."
+      │       ["expenses_single[amount]"]=>
+      │       int(789)
+      │     }
+      │     [1]=>
+      │     array(2) {
+      │       ["expenses_single[explanation]"]=>
+      │       string(90) "Earum possimus qui ut inventore tempora ratione voluptatem aut perferendis illo vitae eum."
+      │       ["expenses_single[amount]"]=>
+      │       int(782)
+      │     }
+      │   }
+      │ }
+```
+
+#### Form Section Answer Groups and Removing Responses
+Some parts of our forms have values that are directly related to each other. In the above example this can be seen under the `expenseDetails` section. When testing remove functionality we would always want to remove both items, so they are grouped together and referred to in code as 'answer groups'. This allows the entries to be easily removed when required to ensure we don't try to assert on them on summary pages.
+
+To remove an item use the `removeAnswerFromSection()` function providing a single field name contained in answer group to be removed, and they will both be removed.
+
+##Emails in non-production environments
 
 Non-production environments don't send emails to avoid data leakage, confusion and embarrassment. This is achieved with a GOV.UK Notify "test" key, which causes Notify to behave as usual but not send the email out. Test emails can then be inspected through Notify's [admin interface][govuk-notify].
 

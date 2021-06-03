@@ -261,6 +261,10 @@ trait AccountsSectionTrait
                 $account['closingBalance'],
             );
         }
+
+        if ('ndr' == $this->reportUrlPrefix) {
+            $this->accountList = array_reverse($this->accountList);
+        }
         $this->iAmOnAccountsAddAnotherPage();
         $this->selectOption('add_another[addAnother]', 'no');
         $this->pressButton('Continue');
@@ -329,6 +333,9 @@ trait AccountsSectionTrait
             );
         }
 
+        if ('ndr' == $this->reportUrlPrefix) {
+            $this->accountList = array_reverse($this->accountList);
+        }
         $this->iAmOnAccountsAddAnotherPage();
         $this->selectOption('add_another[addAnother]', 'no');
         $this->pressButton('Continue');

@@ -242,7 +242,7 @@ trait FormFillingTrait
 
     /**
      * @param NodeElement $summaryRowToEdit The NodeElement of the item row on a summary page to edit
-     * @param string      $fieldName        The name of the form field add a new value to
+     * @param string      $fieldName        The name of the form field to add a new value to
      * @param string      $formSectionName  Which section name in $submittedAnswersByFormSections the item to
      *                                      edit belongs to
      *
@@ -271,6 +271,30 @@ trait FormFillingTrait
         $this->pressButton('Save and continue');
 
         return list($currentValueInt, $newValue) = [$currentValueInt, $newValue];
+    }
+
+    /**
+     * @param NodeElement $summaryRowToEdit The NodeElement of the item row on a summary page to edit
+     * @param string      $fieldName        The name of the form field to add a new value to
+     * @param string      $newValue         The new value
+     * @param string      $formSectionName  Which section name in $submittedAnswersByFormSections the item to
+     *                                      edit belongs to
+     *
+     * @throws ElementNotFoundException
+     */
+    public function editAnswerInSection(NodeElement $summaryRowToEdit, string $fieldName, string $newValue, string $formSectionName): array
+    {
+        $this->removeAnswerFromSection($fieldName, $formSectionName);
+
+        $summaryRowToEdit->clickLink('Edit');
+
+        $this->fillInField(
+            $fieldName,
+            $newValue,
+            $formSectionName
+        );
+
+        $this->pressButton('Save and continue');
     }
 
     public function removeAllAnswers()

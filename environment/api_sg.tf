@@ -103,6 +103,13 @@ locals {
       target_type = "security_group_id"
       target      = module.integration_test.security_group_id
     }
+    integration_test_v2 = {
+      port        = 5432
+      type        = "ingress"
+      protocol    = "tcp"
+      target_type = "security_group_id"
+      target      = module.integration_test_v2.security_group_id
+    }
     smoke_test = {
       port        = 5432
       type        = "ingress"

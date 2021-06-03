@@ -291,6 +291,7 @@ MESSAGE;
         $this->assertInteractingWithUserIsSet();
 
         $xpathSelector = sprintf("//a[text() = '%s']", $this->interactingWithUserDetails->getOrganisationName());
+
         $linkHtml = $this->getSession()->getPage()->find('xpath', $xpathSelector)->getHtml();
 
         $orgNameLinkVisible = str_contains($linkHtml, $this->interactingWithUserDetails->getOrganisationName());

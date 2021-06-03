@@ -498,7 +498,7 @@ class UserControllerTest extends AbstractTestController
         $this->assertEquals('deputy@example.org', $data['email']);
     }
 
-    public function testAgreeTermsUSe()
+    public function testAgreeTermsUse()
     {
         // recreate reg token
         $deputy = self::fixtures()->clear()->getRepo('User')->findOneByEmail('deputy@example.org');
