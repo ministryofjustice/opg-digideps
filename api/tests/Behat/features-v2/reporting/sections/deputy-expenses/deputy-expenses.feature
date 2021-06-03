@@ -38,7 +38,6 @@ Feature: Deputy expenses - Applies to Lays with combined/PFA reports only
         When I enter an expense amount that is too low
         Then I should see an 'amount out of range' error
 
-    @acs2
     Scenario: A user edits expense data they have submitted
         Given a Lay Deputy has not started a report
         When I view and start the deputy expenses report section

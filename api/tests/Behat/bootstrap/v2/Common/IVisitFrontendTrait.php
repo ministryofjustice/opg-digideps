@@ -58,7 +58,7 @@ trait IVisitFrontendTrait
      */
     public function iVisitMoneyOutSection()
     {
-        $this->visitPath($this->getMoneyOutSectionUrl($this->loggedInUserDetails->getCurrentReportId()));
+        $this->visitFrontendPath($this->getMoneyOutSectionUrl($this->loggedInUserDetails->getCurrentReportId()));
     }
 
     /**
@@ -66,7 +66,7 @@ trait IVisitFrontendTrait
      */
     public function iVisitMoneyOutSummarySection()
     {
-        $this->visitPath($this->getMoneyOutSectionSummaryUrl($this->loggedInUserDetails->getCurrentReportId()));
+        $this->visitFrontendPath($this->getMoneyOutSectionSummaryUrl($this->loggedInUserDetails->getCurrentReportId()));
     }
 
     /**
@@ -92,7 +92,7 @@ trait IVisitFrontendTrait
      */
     public function iVisitHealthAndLifestyleSection()
     {
-        $this->visitPath($this->getHealthAndLifestyleSectionUrl($this->loggedInUserDetails->getCurrentReportId()));
+        $this->visitFrontendPath($this->getHealthAndLifestyleSectionUrl($this->loggedInUserDetails->getCurrentReportId()));
     }
 
     /**
@@ -100,6 +100,6 @@ trait IVisitFrontendTrait
      */
     public function iVisitHealthAndLifestyleSummarySection()
     {
-        $this->visitPath($this->getHealthAndLifestyleSummaryUrl($this->loggedInUserDetails->getCurrentReportId()));
+        $this->visitFrontendPath($this->getHealthAndLifestyleSummaryUrl($this->loggedInUserDetails->getCurrentReportId()));
     }
 }
