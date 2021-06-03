@@ -11,7 +11,7 @@ Feature: Report debts
     When I follow link back to report overview page
     Then I should see "debts" as "finished"
 
-  Scenario: A user has some debts
+  Scenario: A user has a debt
     Given a Lay Deputy has not started a Pfa Low Assets report
     When I view and start the debts report section
     And I have a debt to add
