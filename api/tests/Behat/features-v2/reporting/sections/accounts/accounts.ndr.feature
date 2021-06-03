@@ -1,6 +1,8 @@
-@v2 @accounts.ndr
+#@v2 add back in when fixed. inconsistent test
+@accounts.ndr
 Feature: Accounts (NDR)
 
+@ndr-not-started
   Scenario: A user adds one of each account type
     Given a Lay Deputy has not started an NDR report
     And I view the NDR overview page
@@ -11,6 +13,7 @@ Feature: Accounts (NDR)
     When I follow link back to report overview page
     Then I should see "bank-accounts" as "7 accounts"
 
+@ndr-not-started
   Scenario: A user incorrectly enters an account before correctly entering it
     Given a Lay Deputy has not started an NDR report
     When I go to add a new current account
@@ -21,6 +24,7 @@ Feature: Accounts (NDR)
     When I correctly enter account details
     Then I should see the expected accounts on the summary page
 
+@ndr-completed
   Scenario: A user edits an existing account
     Given a Lay Deputy has a completed NDR report
     And I visit the accounts report section
@@ -28,6 +32,7 @@ Feature: Accounts (NDR)
     When I update my current account to a different one
     Then I should see the expected accounts on the summary page
 
+@ndr-not-started
   Scenario: A user adds accounts and then changes their mind and deletes them
     Given a Lay Deputy has not started an NDR report
     When I view and start the accounts report section
