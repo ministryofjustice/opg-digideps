@@ -30,8 +30,6 @@ trait ExpectedResultsTrait
 
         $this->extractMonetaryTotals();
         $this->removeEmptyElements();
-        var_dump($this->summarySectionItemsFound);
-        var_dump($this->submittedAnswersByFormSections['totals']);
 
         $this->assertSectionContainsExpectedResultsSimplified($sectionName, $partialMatch);
 
