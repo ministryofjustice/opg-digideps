@@ -60,15 +60,16 @@ trait AssetsSectionTrait
     /**
      * @When I add a single asset
      */
-    public function iChooseAssetTypeSection()
+    public function iAddSingleAsset()
     {
         ++$this->assetId;
 
-        //Select Asset Type
+        //Select type of asset
         ++$this->assetType;
         $this->iSelectRadioBasedOnChoiceNumber('div', 'data-module', 'govuk-radios', $this->assetType - 1);
         $this->pressButton('Save and continue');
 
+        //Fill out details about asset
         $this->iFillAssetDescriptionAndValue($this->assetId, $this->assetType);
         $this->selectOption('add_another[addAnother]', 'no');
         $this->pressButton('Continue');
@@ -87,7 +88,7 @@ trait AssetsSectionTrait
 
         $this->pressButton('Save and continue');
 
-        //Antiques, artwork & jewellery are grouped into one summary list
+        //Antiques, artwork & jewellery assets are grouped into one summary list
         if (in_array($assetType, [$this->ANTIQUE_ASSET_TYPE, $this->ARTWORK_ASSET_TYPE, $this->JEWELLERY_ASSET_TYPE])) {
             if (null === $this->assetDetails[0]) {
                 $this->assetDetails[0][] = $formFields;
@@ -104,19 +105,23 @@ trait AssetsSectionTrait
     }
 
     /**
-     * @When I add multiple assets
+     * @When I add multiple assets and a property
      */
     public function iAddMultipleAssets()
     {
+        $this->assetType = 0;
+        //Adding one of each type of asset
         while ($this->assetType <= 11) {
             ++$this->assetId;
             ++$this->assetType;
 
-            if (1 != $this->assetType) {
+            //After adding the first asset, confirm you want to add more assets
+            if ($this->assetType > 1) {
                 $this->selectOption('add_another[addAnother]', 'yes');
                 $this->pressButton('Continue');
             }
 
+            //Select type of asset
             $this->iSelectRadioBasedOnChoiceNumber('div', 'data-module', 'govuk-radios', $this->assetType - 1);
             $this->pressButton('Save and continue');
 
@@ -133,11 +138,11 @@ trait AssetsSectionTrait
     /**
      * @When I add a single property asset
      */
-    public function iChoosePropertyAsset()
+    public function iAddPropertyAsset()
     {
         ++$this->assetId;
 
-        //Select Property Asset Type
+        //Select Property asset type
         $this->assetType = $this->PROPERTY_ASSET_TYPE;
         $this->iSelectRadioBasedOnChoiceNumber('div', 'data-module', 'govuk-radios', $this->assetType - 1);
         $this->pressButton('Save and continue');
@@ -154,7 +159,8 @@ trait AssetsSectionTrait
         // fill address fields
         $streetAddress = $this->faker->streetAddress;
         $postcode = $this->faker->postcode;
-        //array_push($formFields, $streetAddress.','.$postcode);
+        //Need to find solution ExpectedResultsTrait, it current ignores first row of summary lists
+        //array_push($formFields, [$streetAddress.','.$postcode]);
 
         $this->fillField('asset[address]', $streetAddress);
         $this->fillField('asset[postcode]', $postcode);
@@ -222,9 +228,35 @@ trait AssetsSectionTrait
 
         // save fields
         if (null === $this->assetDetails[$this->PROPERTY_ASSET_TYPE - 1]) {
+            var_dump('1');
             $this->assetDetails[$this->PROPERTY_ASSET_TYPE - 1][] = $formFields;
         } else {
-            array_push($this->assetDetails[$this->PROPERTY_ASSET_TYPE - 1][], $formFields);
+            var_dump('2');
+            array_push($this->assetDetails[$this->PROPERTY_ASSET_TYPE - 1], $formFields);
+        }
+    }
+
+    /**
+     * @When I add multiple property assets
+     */
+    public function iAddMultiplePropertyAssets()
+    {
+        ++$this->assetId;
+
+        //Select Property asset type
+        $this->assetType = $this->PROPERTY_ASSET_TYPE;
+        for ($i = 0; $i <= 2; ++$i) {
+            $this->iSelectRadioBasedOnChoiceNumber('div', 'data-module', 'govuk-radios', $this->assetType - 1);
+            $this->pressButton('Save and continue');
+            $this->iFillPropertyDetailsAndValue($this->assetId);
+
+            if (2 == $i) {
+                $this->selectOption('add_another[addAnother]', 'no');
+                $this->pressButton('Continue');
+            } else {
+                $this->selectOption('add_another[addAnother]', 'yes');
+                $this->pressButton('Continue');
+            }
         }
     }
 
@@ -235,17 +267,41 @@ trait AssetsSectionTrait
     {
         $sectionNumber = 0;
         if ($this->assetResponse[0] == ['yes']) {
-            $sortedResults = $this->sortAssetsAndSections();
-            $sortedResults = $this->calculateAssetTotalsForSections($sortedResults);
             $this->expectedResultsDisplayed($sectionNumber, $this->assetResponse, 'Asset Answers to Questions');
             ++$sectionNumber;
+
+            //Sort asset sections into the order they appear on the summary page
+            $sortedResults = $this->sortAssetsAndSections();
+            //Calculate the total value of assets for each asset section
+            $sortedResults = $this->calculateAssetTotalsForSections($sortedResults);
+
+            //Loop through each asset section
             foreach ($sortedResults as $index => $sectionAssets) {
                 if ($index == $this->PROPERTY_ASSET_TYPE - 1) {
+                    var_dump('properties:');
+                    var_dump($sectionAssets);
                     $this->expectedResultsDisplayed($sectionNumber, $sectionAssets[0], 'Asset Details');
                 } else {
                     $this->expectedResultsDisplayed($sectionNumber, $sectionAssets, 'Asset Details');
                 }
                 ++$sectionNumber;
+            }
+
+            //Calculate total value of all assets
+            $expectedTotalValue = $this->calculateTotalValueOfAssets($sortedResults);
+            $formattedExpectedTotalValue = '£'.number_format($expectedTotalValue, 2, '.', ',');
+
+            $xpath = sprintf('//div[contains(text(),"Total value of assets:")]');
+            $foundTotalValue = $this->getSession()->getPage()->find('xpath', $xpath)->getHtml();
+
+            //Assert expected total value of all assets matches found total value of all assets
+            $validTotal = str_contains($foundTotalValue, strval($formattedExpectedTotalValue));
+
+            if (!$validTotal) {
+                $this->throwContextualException(
+                    sprintf('Total value of assets does not match. Found Total Value: %s but expected Total Value is %s',
+                            $foundTotalValue,
+                            $formattedExpectedTotalValue));
             }
         } else {
             $this->expectedResultsDisplayed(0, $this->assetResponse, 'Asset Answers to Questions');
@@ -256,16 +312,8 @@ trait AssetsSectionTrait
     {
         foreach ($sortedAssetDetails as $index => $assetSection) {
             $total = 0;
-            if ($index == $this->PROPERTY_ASSET_TYPE - 1) {
-//                foreach ($assetSection as $property) {
-//                    $ownership = '100';
-//                    if ($property[2] == 'Partly owned') {
-//                        $ownership = floatval(mb_substr($property[3], 0, 2));
-//                    }
-//                    $value = floatval(mb_substr($property[6], 1));
-//                    $total += $value * $ownership /  100;
-//                }
-            } else {
+            //Property summary list does not contain total value of all properties
+            if ($index != $this->PROPERTY_ASSET_TYPE - 1) {
                 foreach ($assetSection as $asset) {
                     foreach ($asset as $value) {
                         if (str_starts_with($value, '£')) {
@@ -283,20 +331,45 @@ trait AssetsSectionTrait
         return $sortedAssetDetails;
     }
 
+    private function calculateTotalValueOfAssets(array $sortedAssetDetails)
+    {
+        $total = 0;
+        foreach ($sortedAssetDetails as $index => $assetSection) {
+            if ($index == $this->PROPERTY_ASSET_TYPE - 1) {
+                //Total value of properties is based on the clients share in the property
+                foreach ($assetSection as $property) {
+                    $ownership = '100';
+                    if ('Partly owned' == $property[1][0]) {
+                        $ownership = floatval(mb_substr($property[2][0], 0, 2));
+                    }
+                    $propertyValue = mb_substr($property[5][0], 1);
+                    $value = (float) str_replace(',', '', $propertyValue);
+                    $total += $value * $ownership / 100;
+                }
+            } else {
+                $sectionTotalString = end(end($assetSection));
+                $sectionTotal = mb_substr($sectionTotalString, 1);
+                $total += (float) str_replace(',', '', $sectionTotal);
+            }
+        }
+
+        return $total;
+    }
+
     private function sortAssetsAndSections()
     {
         $sortedResults = $this->assetDetails;
 
-        var_dump('------------------------------------------------------Pre Sort------------------------------------------------------');
-        var_dump($sortedResults);
-
+        //Only sorting assets where multiple assets have been added
         if (null != $sortedResults[0]) {
             $sortedResults[0] = array_reverse($sortedResults[0]);
         }
+        //Assets outside of England & Wales section appears 2nd
         if (null != $sortedResults[10]) {
             $sortedResults[1] = $sortedResults[10];
             unset($sortedResults[10]);
         }
+        //This section appears between the other two sections
         if (null != $sortedResults[11]) {
             if (null != $sortedResults[4]) {
                 $sortedResults[3] = $sortedResults[4];
@@ -308,9 +381,6 @@ trait AssetsSectionTrait
             }
         }
         ksort($sortedResults);
-
-        var_dump('------------------------------------------------------Post Sort------------------------------------------------------');
-        var_dump($sortedResults);
 
         return $sortedResults;
     }
