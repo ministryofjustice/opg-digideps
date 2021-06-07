@@ -199,8 +199,9 @@ trait ExpectedResultsTrait
         $foundAnswers = [];
         $missingAnswers = [];
 
-        // Loop over the values inputted to forms via FormFillingTrait functions for a specific section
+        // Loop over the collection of values inputted to forms via FormFillingTrait functions for a specific section
         foreach ($this->getSectionAnswers($sectionName) as $sectionAnswers) {
+            // Loop over each field value to assert against summary page values
             foreach ($sectionAnswers as $fieldName => $fieldValue) {
                 $fieldValue = $this->normalizeValue($fieldValue);
 
