@@ -414,4 +414,36 @@ trait IShouldBeOnTrait
     {
         return $this->iAmOnPage(sprintf('/%s\/.*\/%s$/', $this->reportUrlPrefix, $specifiedUrlRegex));
     }
+
+    /**
+     * @Then I should be on the debts exist page
+     */
+    public function iAmOnDebtsExistPage()
+    {
+        return $this->iAmOnPage(sprintf('/%s\/.*\/debts\/exist.*$/', $this->reportUrlPrefix));
+    }
+
+    /**
+     * @Then I should be on the debts management page
+     */
+    public function iAmOnDebtsManagementPage()
+    {
+        return $this->iAmOnPage(sprintf('/%s\/.*\/debts\/management.*$/', $this->reportUrlPrefix));
+    }
+
+    /**
+     * @Then I should be on the debts edit page
+     */
+    public function iAmOnDebtsEditPage()
+    {
+        return $this->iAmOnPage(sprintf('/%s\/.*\/debts\/edit.*$/', $this->reportUrlPrefix));
+    }
+
+    /**
+     * @Then I should be on the debts summary page
+     */
+    public function iAmOnDebtsSummaryPage()
+    {
+        return $this->iAmOnPage(sprintf('/%s\/.*\/debts\/summary.*$/', $this->reportUrlPrefix));
+    }
 }
