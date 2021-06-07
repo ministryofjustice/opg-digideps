@@ -67,6 +67,29 @@ There are however 6 older suites which are much larger and have a lot of complic
 
 See behat/tests/behat.yml for suite descriptions.
 
+### Fixture data
+
+To support running tests in isolation, and parallelisation, any data required for a test should be created at the beginning of each test. To streamline this process you can tag tests with report or user types to automate the fixture creation:
+
+| Tag | Data created |
+|---- |----|
+| `@pfa-high-*` | Lay Deputy User, Client associated with User and a Property & Finances - High Assets report (102) |
+| `@pfa-low-*` | Lay Deputy User, Client associated with User and a Property & Finances - Low Assets report (103) |
+| `@health-welfare-*` | Lay Deputy User, Client associated with User and a Health & Welfare report (104) |
+| `@ndr-*` | Lay Deputy User, Client associated with User and a New Deputy Report - Health & Welfare (104) |
+| `@prof-admin-*` | Professional Admin User, Client associated with User, Organisation, Named Deputy and a Property & Finances - High Assets report (102) |
+| `@admin` | Admin User |
+| `@admin-manager` | Admin Manager User |
+| `@super-admin` | Super Admin User |
+
+Any tag above that ends with a `*` needs to have one of `not-started`, `completed` or `submitted` appended. This will determine the status of the report and if the report sections are completed:
+
+| Tag | Data created |
+|---- |----|
+| `*-not-started` | A new report |
+| `*-completed` | A completed report with dummy data added to required sections |
+| `*-submitted` | A completed and submitted report and a report submission |
+
 ### Notable helper functions
 
 A common pattern in our application is completing a section of the report by using a form and then having the responses summarised on one page. Summary pages are not uniform in design and use a number of different HTML elements to display data and any monetary values entered are summed up with totals displayed (in some instances subtotals are displayed as well). To try to streamline and simplify how we assert on the summary page there are some wrappers around the standard behat form filling functions that track form values ready to be asserted on summary pages. Form values are stored in associative arrays with the field name as a key and the entered value as the array value (e.g. '["yes_no[paidForAnything]"]' => "yes" ). [FormFillingTrait](../api/tests/Behat/bootstrap/v2/Common/FormFillingTrait.php) contains the functions, and the array used to store responses.
