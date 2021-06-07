@@ -9,6 +9,9 @@ use Behat\Mink\Element\NodeElement;
 use Behat\Mink\Exception\ElementNotFoundException;
 use DateTime;
 
+/**
+ * Trait FormFillingTrait.
+ */
 trait FormFillingTrait
 {
     public array $submittedAnswersByFormSections = [];
