@@ -159,6 +159,7 @@ trait AssetsSectionTrait
         // fill address fields
         $streetAddress = $this->faker->streetAddress;
         $postcode = $this->faker->postcode;
+        //TODO:
         //Need to find solution ExpectedResultsTrait, it current ignores first row of summary lists
         //array_push($formFields, [$streetAddress.','.$postcode]);
 
@@ -369,7 +370,7 @@ trait AssetsSectionTrait
             $sortedResults[1] = $sortedResults[10];
             unset($sortedResults[10]);
         }
-        //This section appears between the other two sections
+        //Other valuable assets section appears between National Savings certificates & Premium Bonds Sections
         if (null != $sortedResults[11]) {
             if (null != $sortedResults[4]) {
                 $sortedResults[3] = $sortedResults[4];
