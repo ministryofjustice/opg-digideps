@@ -83,24 +83,22 @@
         {% for contact in report.contacts %}
             <tr class="govuk-table__row behat-region-contact-{{ contact.postcode | behat_namify }}">
                 <td class="govuk-table__cell">
-                    {{ contact.contactName }}<br/>
-                        <p class="govuk-body-s flush--ends">
-                            {% if contact.address %}
-                                {{ contact.address }}<br/>
-                            {% endif %}
-                            {% if contact.address2 %}
-                                {{ contact.address2 }}<br/>
-                            {% endif %}
-                            {% if contact.county %}
-                                {{ contact.county }}<br/>
-                            {% endif %}
-                            {% if contact.postcode %}
-                                {{ contact.postcode }}<br/>
-                            {% endif %}
-                            {% if contact.country %}
-                                {{ contact.country | country_name }}<br/>
-                            {% endif %}
-                        </p>
+                    <p class="govuk-!-font-weight-bold">{{ contact.contactName }}</p>
+                    {% if contact.address %}
+                        <p class="govuk-!-margin-0 govuk-!-font-size-16">{{ contact.address }}</p>
+                    {% endif %}
+                    {% if contact.address2 %}
+                        <p class="govuk-!-margin-0 govuk-!-font-size-16">{{ contact.address2 }}</p>
+                    {% endif %}
+                    {% if contact.county %}
+                        <p class="govuk-!-margin-0 govuk-!-font-size-16">{{ contact.county }}</p>
+                    {% endif %}
+                    {% if contact.postcode %}
+                        <p class="govuk-!-margin-0 govuk-!-font-size-16">{{ contact.postcode }}</p>
+                    {% endif %}
+                    {% if contact.country %}
+                        <p class="govuk-!-margin-0 govuk-!-font-size-16">{{ contact.country | country_name }}</p>
+                    {% endif %}
                 </td>
                 <td class="govuk-table__cell">
                         {{ contact.relationship }}
