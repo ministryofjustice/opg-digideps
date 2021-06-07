@@ -12,9 +12,16 @@ trait ExpectedResultsTrait
     private string $tableHtml = '';
     private array $summarySectionItemsFound = [];
 
+    /**
+     * @param string $sectionName        The name given to the portion of the form being tested as defined in
+     *                                   FormFillingTrait
+     * @param bool   $partialMatch       If assertions should match on a full or partial string (defaults to false)
+     * @param bool   $sectionsHaveTotals If assertions should match on a section subtotal (defaults to false)
+     *
+     * @throws BehatException
+     */
     public function expectedResultsDisplayedSimplified(string $sectionName, bool $partialMatch = false, bool $sectionsHaveTotals = false)
     {
-        // Add assertion for checking on section totals and overall total
         $this->tableHtml = '';
         $this->summarySectionItemsFound = [];
 
@@ -40,6 +47,12 @@ trait ExpectedResultsTrait
         $this->assertGrandTotal();
     }
 
+    /**
+     * Asserts on there being a grand total visible on the page that matches
+     * submittedAnswersByFormSections['totals']['grandTotal'].
+     *
+     * @throws BehatException
+     */
     private function assertGrandTotal()
     {
         if (!is_null($grandTotal = $this->getGrandTotal())) {
@@ -53,6 +66,14 @@ trait ExpectedResultsTrait
         }
     }
 
+    /**
+     * Asserts on there being a section total visible on the page that matches
+     * submittedAnswersByFormSections['totals'][<$sectionName>].
+     *
+     * @param string $sectionName The name given to the portion of the form being tested as defined in FormFillingTrait
+     *
+     * @throws BehatException
+     */
     private function assertSectionTotal(string $sectionName)
     {
         if (!is_null($sectionTotal = $this->getSectionTotal($sectionName))) {
@@ -75,6 +96,9 @@ trait ExpectedResultsTrait
         }
     }
 
+    /**
+     * Removes blank elements from the summary section items array to help with debugging and skip empty loops.
+     */
     private function removeEmptyElements()
     {
         $this->summarySectionItemsFound = array_filter(
@@ -83,6 +107,9 @@ trait ExpectedResultsTrait
         );
     }
 
+    /**
+     * Extracts text from elements contained under a description list (dl) element on the page.
+     */
     private function extractDescriptionListContents(NodeElement $element)
     {
         if ('dl' == $element->getTagName()) {
@@ -102,6 +129,9 @@ trait ExpectedResultsTrait
         }
     }
 
+    /**
+     * Extracts text from elements contained under a table body (tbody) element on the page.
+     */
     private function extractTableBodyContents(NodeElement $element)
     {
         if ('tbody' == $element->getTagName()) {
@@ -128,6 +158,10 @@ trait ExpectedResultsTrait
         }
     }
 
+    /**
+     * Extracts monetary values from div or tr > th elements that contain the strings 'Total' and '£' (for divs)
+     * and 'Total' (for tr > th). This covers section totals and grand totals on summary pages.
+     */
     private function extractMonetaryTotals()
     {
         $totalElements = [];
@@ -150,6 +184,12 @@ trait ExpectedResultsTrait
         }
     }
 
+    /**
+     * @param string $sectionName  The name given to the portion of the form being tested as defined in FormFillingTrait
+     * @param bool   $partialMatch If assertions should match on a full or partial string (defaults to false)
+     *
+     * @throws BehatException
+     */
     private function assertSectionContainsExpectedResultsSimplified(string $sectionName, bool $partialMatch = false)
     {
         if (empty($this->getSectionAnswers($sectionName))) {
@@ -159,7 +199,8 @@ trait ExpectedResultsTrait
         $foundAnswers = [];
         $missingAnswers = [];
 
-        foreach ($this->getSectionAnswers($sectionName) as $index => $sectionAnswers) {
+        // Loop over the values inputted to forms via FormFillingTrait functions for a specific section
+        foreach ($this->getSectionAnswers($sectionName) as $sectionAnswers) {
             foreach ($sectionAnswers as $fieldName => $fieldValue) {
                 $fieldValue = $this->normalizeValue($fieldValue);
 
@@ -214,6 +255,14 @@ MSG;
         throw new BehatException($failureMessage);
     }
 
+    /**
+     * When entering form values in FormFillingTrait there is no formatting applied (e.g. 12345 rather than £12,345.00).
+     * This adds the apps standard currency formatting of £, commas and decimal points.
+     *
+     * @param $value
+     *
+     * @return mixed|string
+     */
     private function normalizeValue($value)
     {
         if (is_numeric($value)) {
