@@ -43,7 +43,7 @@ trait AssetsSectionTrait
         $this->selectOption('yes_no[noAssetToAdd]', '1');
         $this->pressButton('Save and continue');
 
-        array_push($this->assetResponse, ['no']);
+        $this->assetResponse[] = ['no'];
     }
 
     /**
@@ -54,7 +54,7 @@ trait AssetsSectionTrait
         $this->selectOption('yes_no[noAssetToAdd]', '0');
         $this->pressButton('Save and continue');
 
-        array_push($this->assetResponse, ['yes']);
+        $this->assetResponse[] = ['yes'];
     }
 
     /**
@@ -82,9 +82,9 @@ trait AssetsSectionTrait
         $this->fillField('asset[value]', $this->assetId + 100);
         $this->fillField('asset[description]', 'asset-'.$this->assetId);
 
-        array_push($formFields, 'asset-'.$this->assetId);
-        array_push($formFields, '-');
-        array_push($formFields, '£'.number_format($assetId + 100, 2, '.', ','));
+        $formFields[] = 'asset-'.$this->assetId;
+        $formFields[] = '-';
+        $formFields[] = '£'.number_format($assetId + 100, 2, '.', ',');
 
         $this->pressButton('Save and continue');
 
@@ -93,13 +93,13 @@ trait AssetsSectionTrait
             if (null === $this->assetDetails[0]) {
                 $this->assetDetails[0][] = $formFields;
             } else {
-                array_push($this->assetDetails[0], $formFields);
+                array_unshift($this->assetDetails[0], $formFields);
             }
         } else {
             if (null === $this->assetDetails[$assetType - 1]) {
                 $this->assetDetails[$assetType - 1][] = $formFields;
             } else {
-                array_push($this->assetDetails[$assetType - 1], $formFields);
+                array_unshift($this->assetDetails[$assetType - 1], $formFields);
             }
         }
     }
@@ -158,10 +158,9 @@ trait AssetsSectionTrait
 
         // fill address fields
         $streetAddress = $this->faker->streetAddress;
+        $streetAddress = str_replace(["\n", "\r"], ' ', $streetAddress);
         $postcode = $this->faker->postcode;
-        //TODO:
-        //Need to find solution ExpectedResultsTrait, it current ignores first row of summary lists
-        //array_push($formFields, [$streetAddress.','.$postcode]);
+        $formFields[] = [$streetAddress.', '.$postcode];
 
         $this->fillField('asset[address]', $streetAddress);
         $this->fillField('asset[postcode]', $postcode);
@@ -169,15 +168,15 @@ trait AssetsSectionTrait
 
         // fill occupancy text box
         $occupants = $this->faker->text(50);
-        array_push($formFields, [$occupants]);
+        $formFields[] = [$occupants];
 
         $this->fillField('asset[occupants]', $occupants);
         $this->pressButton('Save and continue');
 
         // select partial ownership radio option & fill owned percentage field
         $ownedPercentage = $this->faker->numberBetween(1, 99);
-        array_push($formFields, ['Partly owned']);
-        array_push($formFields, [$ownedPercentage.'%']);
+        $formFields[] = ['Partly owned'];
+        $formFields[] = [$ownedPercentage.'%'];
 
         $this->selectOption('asset[owned]', 'partly');
         $this->fillField('asset[ownedPercentage]', $ownedPercentage);
@@ -185,8 +184,8 @@ trait AssetsSectionTrait
 
         // select has mortgage radio option & fill mortgage value field
         $mortgageValue = $this->faker->numberBetween(1000, 10000);
-        array_push($formFields, ['Yes']);
-        array_push($formFields, ['£'.number_format($mortgageValue, 2, '.', ',')]);
+        $formFields[] = ['Yes'];
+        $formFields[] = ['£'.number_format($mortgageValue, 2, '.', ',')];
 
         $this->selectOption('asset[hasMortgage]', 'yes');
         $this->fillField('asset[mortgageOutstandingAmount]', $mortgageValue);
@@ -194,19 +193,19 @@ trait AssetsSectionTrait
 
         // fill asset value field
         $assetValue = $this->faker->numberBetween(1000, 10000);
-        array_push($formFields, ['£'.number_format($assetValue, 2, '.', ',')]);
+        $formFields[] = ['£'.number_format($assetValue, 2, '.', ',')];
 
         $this->fillField('asset[value]', $assetValue);
         $this->pressButton('Save and continue');
 
         // select no equity release scheme radio option
-        array_push($formFields, ['No']);
+        $formFields[] = ['No'];
 
         $this->selectOption('asset_isSubjectToEquityRelease_1', 'no');
         $this->pressButton('Save and continue');
 
         // select no charges radio option
-        array_push($formFields, ['No']);
+        $formFields[] = ['No'];
 
         $this->selectOption('asset[hasCharges]', 'no');
         $this->pressButton('Save and continue');
@@ -216,10 +215,10 @@ trait AssetsSectionTrait
         $endYear = $this->faker->numberBetween(2000, 2050);
         $rent = $this->faker->numberBetween(100, 1000);
 
-        array_push($formFields, ['Yes']);
+        $formFields[] = ['Yes'];
         $month_name = date('F', mktime(0, 0, 0, $endMonth, 10));
-        array_push($formFields, [$month_name.' '.$endYear]);
-        array_push($formFields, ['£'.number_format($rent, 2, '.', ',')]);
+        $formFields[] = [$month_name.' '.$endYear];
+        $formFields[] = ['£'.number_format($rent, 2, '.', ',')];
 
         $this->selectOption('asset[isRentedOut]', 'yes');
         $this->fillField('asset[rentAgreementEndDate][month]', $endMonth);
@@ -229,11 +228,9 @@ trait AssetsSectionTrait
 
         // save fields
         if (null === $this->assetDetails[$this->PROPERTY_ASSET_TYPE - 1]) {
-            var_dump('1');
             $this->assetDetails[$this->PROPERTY_ASSET_TYPE - 1][] = $formFields;
         } else {
-            var_dump('2');
-            array_push($this->assetDetails[$this->PROPERTY_ASSET_TYPE - 1], $formFields);
+            array_unshift($this->assetDetails[$this->PROPERTY_ASSET_TYPE - 1], $formFields);
         }
     }
 
@@ -279,8 +276,6 @@ trait AssetsSectionTrait
             //Loop through each asset section
             foreach ($sortedResults as $index => $sectionAssets) {
                 if ($index == $this->PROPERTY_ASSET_TYPE - 1) {
-                    var_dump('properties:');
-                    var_dump($sectionAssets);
                     $this->expectedResultsDisplayed($sectionNumber, $sectionAssets[0], 'Asset Details');
                 } else {
                     $this->expectedResultsDisplayed($sectionNumber, $sectionAssets, 'Asset Details');
@@ -340,10 +335,10 @@ trait AssetsSectionTrait
                 //Total value of properties is based on the clients share in the property
                 foreach ($assetSection as $property) {
                     $ownership = '100';
-                    if ('Partly owned' == $property[1][0]) {
-                        $ownership = floatval(mb_substr($property[2][0], 0, 2));
+                    if ('Partly owned' == $property[2][0]) {
+                        $ownership = floatval($property[3][0]);
                     }
-                    $propertyValue = mb_substr($property[5][0], 1);
+                    $propertyValue = mb_substr($property[6][0], 1);
                     $value = (float) str_replace(',', '', $propertyValue);
                     $total += $value * $ownership / 100;
                 }
@@ -361,10 +356,6 @@ trait AssetsSectionTrait
     {
         $sortedResults = $this->assetDetails;
 
-        //Only sorting assets where multiple assets have been added
-        if (null != $sortedResults[0]) {
-            $sortedResults[0] = array_reverse($sortedResults[0]);
-        }
         //Assets outside of England & Wales section appears 2nd
         if (null != $sortedResults[10]) {
             $sortedResults[1] = $sortedResults[10];

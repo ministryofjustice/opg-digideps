@@ -30,15 +30,15 @@ Feature: Assets
     When I follow link back to report overview page
     Then I should see "assets" as "1 asset"
 
-#@pfa-high-not-started
-#  Scenario: A user adds multiple properties
-#    Given a Lay Deputy has not started a report
-#    When I view and start the assets report section
-#    And I confirm the client has assets
-#    And I add multiple property assets
-#    Then I should see the expected assets report section responses
-#    When I follow link back to report overview page
-#    Then I should see "assets" as "2 assets"
+@pfa-high-not-started
+  Scenario: A user adds multiple properties
+    Given a Lay Deputy has not started a report
+    When I view and start the assets report section
+    And I confirm the client has assets
+    And I add multiple property assets
+    Then I should see the expected assets report section responses
+    When I follow link back to report overview page
+    Then I should see "assets" as "3 assets"
 
 @pfa-high-not-started
   Scenario: A user adds multiple assets and a property
