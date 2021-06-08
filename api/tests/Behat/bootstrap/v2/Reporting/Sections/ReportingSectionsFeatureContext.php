@@ -22,7 +22,6 @@ class ReportingSectionsFeatureContext extends BaseFeatureContext
     use DebtsSectionTrait;
     use AssetsSectionTrait;
 
-
     public const REPORT_SECTION_ENDPOINT = '/%s/%s/%s';
 
     /**
