@@ -8,15 +8,21 @@ trait ExpectedResultsTrait
 {
     private array $summarySectionItemsFound = [];
 
-    /*
+    /**
      * Adds the contents of each summary section (identified by dl or tbody) to an array
      * then compares the results of the specified section contents to an array of expected contents.
-     * $summarySectionNumber - which occurrence of tbody or dl to search in in the order they appear on summary page.
+     *
+     * $summarySectionNumber - which occurrence of tbody or dl to search in, in the order they appear on summary page.
+     * Like an array starts counting from 0
+     *
      * $expectedResults - must be an array of arrays of strings. The outer array specifies the 'row' and the
      * inner array specifies the 'fields'. The 'rows' and 'fields' in this case are dependent on what type of
      * elements you are searching through and are found automatically by the logic in the function.
+     *
      * $context - a description of what the section is or does.
+     *
      * $debug - set to true to output all the sections to screen for development purposes.
+     *
      * Very useful when creating the tests! It will debug on the expected results you are checking.
      */
     public function expectedResultsDisplayed(int $summarySectionNumber, array $expectedResults, string $context, bool $debug = false)
@@ -27,8 +33,10 @@ trait ExpectedResultsTrait
         $summarySectionElements = $this->getSession()->getPage()->findAll('xpath', $xpath);
 
         $sections = [];
+
         foreach ($summarySectionElements as $summarySectionElement) {
             $this->summarySectionItemsFound = [];
+
             if ('dl' == $summarySectionElement->getTagName()) {
                 $this->addSummarySectionItemsFoundFromDescriptionList($summarySectionElement);
             } elseif ('tbody' == $summarySectionElement->getTagName()) {
@@ -78,6 +86,7 @@ trait ExpectedResultsTrait
         } else {
             $xpath = '//dt|//dd';
             $descriptionDataItems = $descriptionList->findAll('xpath', $xpath);
+
             $this->addSummarySectionItemsFound($descriptionDataItems);
         }
     }
@@ -91,11 +100,13 @@ trait ExpectedResultsTrait
             foreach ($tableRowItems as $tableRowItem) {
                 $xpath = '//td|//th';
                 $tableDataItems = $tableRowItem->findAll('xpath', $xpath);
+
                 $this->addSummarySectionItemsFound($tableDataItems);
             }
         } else {
             $xpath = '//td|//th';
             $tableDataItems = $table->findAll('xpath', $xpath);
+
             $this->addSummarySectionItemsFound($tableDataItems);
         }
     }
@@ -103,9 +114,11 @@ trait ExpectedResultsTrait
     private function addSummarySectionItemsFound($items)
     {
         $tableValues = [];
+
         foreach ($items as $item) {
             $tableValues[] = trim(strval($item->getText()));
         }
+
         $this->summarySectionItemsFound[] = $tableValues;
     }
 
@@ -113,8 +126,10 @@ trait ExpectedResultsTrait
     {
         $foundInElemPrevious = 0;
         $raiseException = false;
+
         foreach ($expectedItems as $expectedItem) {
             $found = false;
+
             foreach (array_slice($foundItems, $foundInElemPrevious) as $foundItemKey => $foundItem) {
                 if (str_contains(strval(trim(strtolower($foundItem))), strval(trim(strtolower($expectedItem))))) {
                     $found = true;
@@ -122,6 +137,7 @@ trait ExpectedResultsTrait
                     break;
                 }
             }
+
             if ($found and $foundInElem >= $foundInElemPrevious) {
                 $foundInElemPrevious = $foundInElem;
             } else {
@@ -183,10 +199,13 @@ MESSAGE;
     private function debugExpectedResultsDisplayed($sections, $summarySectionNumber, $expectedResults)
     {
         $summarySectionsText = '';
+
         foreach ($sections as $sectionKey => $section) {
             $summarySectionsText = $summarySectionsText."\n\nSection Number: ".strval($sectionKey)."\n";
+
             foreach ($section as $rowNumber => $row) {
                 $summarySectionsText = $summarySectionsText."\tRow Number: ".strval($rowNumber)."\n";
+
                 foreach ($row as $fieldNumber => $field) {
                     $summarySectionsText = $summarySectionsText."\t\t".strtolower(strval($field))."\n";
                 }
@@ -195,6 +214,7 @@ MESSAGE;
 
         $expectedText = "\n\nThe input to this function is specifically looking at section: ".strval($summarySectionNumber)."\n";
         $expectedText = $expectedText."\n\nSection Number: ".strval($summarySectionNumber)."\n";
+
         foreach ($expectedResults as $rowNumber => $row) {
             $expectedText = $expectedText."\tRow Number: ".strval($rowNumber)."\n";
             foreach ($row as $fieldNumber => $field) {
