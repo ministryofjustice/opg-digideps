@@ -760,6 +760,21 @@ jobs:
       - run:
           name: Docker login
           command: eval $(aws ecr get-login --region $AWS_REGION --no-include-email --profile digideps-ci)
+      - restore_cache:
+          keys:
+            - builds-cache
+      - run:
+          name: load docker image
+          command: |
+            ls -alt
+            if [ `ls | grep READMEss.md | wc -l` -gt 0 ]
+            then
+              docker load -i client.tar
+              docker load -i api.tar
+              docker load -i wkhtmltopdf.tar
+            else
+              echo "No previous images in cache to extract"
+            fi
       - run:
           name: Build images
           command: docker-compose -f docker-compose.ci.yml build --parallel
@@ -793,6 +808,12 @@ jobs:
             docker save -o api.tar api:latest
             docker save -o wkhtmltopdf.tar wkhtmltopdf:latest
           background: true
+      - save_cache:
+          key: builds-cache
+          paths:
+            - client.tar
+            - api.tar
+            - wkhtmltopdf.tar
       - run:
           name: Push images
           command: docker-compose -f docker-compose.ci.yml push

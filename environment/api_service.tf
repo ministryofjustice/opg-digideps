@@ -21,6 +21,8 @@ resource "aws_service_discovery_service" "api" {
   }
 
   tags = local.default_tags
+
+  depends_on = [aws_service_discovery_private_dns_namespace.private]
 }
 
 resource "aws_ecs_task_definition" "api" {
