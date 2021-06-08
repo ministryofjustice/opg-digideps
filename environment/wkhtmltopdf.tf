@@ -62,6 +62,8 @@ resource "aws_ecs_service" "wkhtmltopdf" {
     registry_arn = aws_service_discovery_service.wkhtmltopdf.arn
   }
 
+  depends_on = [aws_service_discovery_service.wkhtmltopdf]
+
   tags = local.default_tags
 }
 

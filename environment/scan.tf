@@ -62,6 +62,8 @@ resource "aws_ecs_service" "scan" {
     registry_arn = aws_service_discovery_service.scan.arn
   }
 
+  depends_on = [aws_service_discovery_service.scan]
+
   tags = local.default_tags
 }
 

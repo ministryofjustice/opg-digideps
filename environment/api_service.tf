@@ -56,6 +56,8 @@ resource "aws_ecs_service" "api" {
   service_registries {
     registry_arn = aws_service_discovery_service.api.arn
   }
+
+  depends_on = [aws_service_discovery_service.api]
 }
 
 locals {
