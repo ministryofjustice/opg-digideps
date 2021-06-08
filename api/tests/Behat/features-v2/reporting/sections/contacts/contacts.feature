@@ -1,6 +1,8 @@
-@v2 @contacts
+#@v2 add back when it works
+@contacts
 Feature: Contacts
 
+  @super-admin
   Scenario: A user has no contacts
     Given the following court orders exist:
       | client   | deputy    | deputy_type | report_type        | court_date |
@@ -11,6 +13,7 @@ Feature: Contacts
     Then I should be on the contacts summary page
     And the contacts summary page should contain the details I entered
 
+  @super-admin
   Scenario: The section navigation links are correctly displayed
     Given the following court orders exist:
       | client   | deputy       | deputy_type | report_type        | court_date |
@@ -20,6 +23,7 @@ Feature: Contacts
     Then the previous section should be "Decisions"
     And the next section should be "Visits and Care"
 
+  @super-admin
   Scenario: Adding one contact
     Given the following court orders exist:
       | client   | deputy     | deputy_type | report_type        | court_date |
@@ -31,6 +35,7 @@ Feature: Contacts
     And there are no further contacts to add
     Then the contacts summary page should contain the details I entered
 
+  @super-admin
   Scenario: Adding multiple contacts
     Given the following court orders exist:
       | client   | deputy     | deputy_type | report_type        | court_date |

@@ -100,7 +100,7 @@ trait AuthTrait
         $filteredUser = reset($filteredUsers);
 
         // We didn't filter the list - the user wasn't found
-        if ($filteredUsers === $this->fixtureUsers || !$filteredUser) {
+        if (!$filteredUser) {
             throw new \Exception(sprintf('User details for email %s not found in $this->fixturesUsers', $email));
         }
 

@@ -68,8 +68,8 @@ trait FixturesTrait
      */
     public function twoClientsHaveSameNames()
     {
-        $this->fixtureHelper->duplicateClient($this->layDeputyNotStartedDetails->getClientId());
-        $this->interactingWithUserDetails = $this->layDeputyNotStartedDetails;
+        $this->fixtureHelper->duplicateClient($this->layDeputyNotStartedPfaHighAssetsDetails->getClientId());
+        $this->interactingWithUserDetails = $this->layDeputyNotStartedPfaHighAssetsDetails;
     }
 
     public function assertInteractingWithUserIsSet()

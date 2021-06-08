@@ -15,8 +15,8 @@ trait ReportTrait
      */
     public function iSubmitTheReport()
     {
-        $ndrOrReport = $this->layDeputyCompletedDetails->getCurrentReportNdrOrReport();
-        $reportId = $this->layDeputyCompletedDetails->getCurrentReportId();
+        $ndrOrReport = $this->layDeputyCompletedPfaHighAssetsDetails->getCurrentReportNdrOrReport();
+        $reportId = $this->layDeputyCompletedPfaHighAssetsDetails->getCurrentReportId();
 
         $this->visit("$ndrOrReport/$reportId/overview");
 
@@ -42,11 +42,11 @@ trait ReportTrait
      */
     public function aLayDeputyHasNotStartedAReport()
     {
-        if (empty($this->layDeputyNotStartedDetails)) {
-            throw new Exception('It looks like fixtures are not loaded - missing $layDeputyNotStartedDetails');
+        if (empty($this->layDeputyNotStartedPfaHighAssetsDetails)) {
+            throw new Exception('It looks like fixtures are not loaded - missing $layDeputyNotStartedPfaHighAssetsDetails');
         }
 
-        $this->loginToFrontendAs($this->layDeputyNotStartedDetails->getUserEmail());
+        $this->loginToFrontendAs($this->layDeputyNotStartedPfaHighAssetsDetails->getUserEmail());
     }
 
     /**
@@ -57,11 +57,11 @@ trait ReportTrait
      */
     public function aLayDeputyHasCompletedReport()
     {
-        if (empty($this->layDeputyCompletedDetails)) {
-            throw new Exception('It looks like fixtures are not loaded - missing $layDeputyCompletedDetails');
+        if (empty($this->layDeputyCompletedPfaHighAssetsDetails)) {
+            throw new Exception('It looks like fixtures are not loaded - missing $layDeputyCompletedPfaHighAssetsDetails');
         }
 
-        $this->loginToFrontendAs($this->layDeputyCompletedDetails->getUserEmail());
+        $this->loginToFrontendAs($this->layDeputyCompletedPfaHighAssetsDetails->getUserEmail());
     }
 
     /**
@@ -69,12 +69,12 @@ trait ReportTrait
      */
     public function aNdrLayDeputyHasNotStartedAReport()
     {
-        if (empty($this->ndrLayDeputyNotStartedDetails)) {
-            throw new Exception('It looks like fixtures are not loaded - missing $ndrLayDeputyNotStartedDetails');
+        if (empty($this->layNdrDeputyNotStartedDetails)) {
+            throw new Exception('It looks like fixtures are not loaded - missing $layNdrDeputyNotStartedDetails');
         }
 
-        $this->loginToFrontendAs($this->ndrLayDeputyNotStartedDetails->getUserEmail());
-        $this->reportUrlPrefix = $this->ndrLayDeputyNotStartedDetails->getCurrentReportNdrOrReport();
+        $this->loginToFrontendAs($this->layNdrDeputyNotStartedDetails->getUserEmail());
+        $this->reportUrlPrefix = $this->layNdrDeputyNotStartedDetails->getCurrentReportNdrOrReport();
     }
 
     /**
@@ -84,12 +84,12 @@ trait ReportTrait
      */
     public function aNdrLayDeputyHasCompletedReport()
     {
-        if (empty($this->ndrLayDeputyCompletedDetails)) {
-            throw new Exception('It looks like fixtures are not loaded - missing $ndrLayDeputyCompletedDetails');
+        if (empty($this->layNdrDeputyCompletedDetails)) {
+            throw new Exception('It looks like fixtures are not loaded - missing $layNdrDeputyCompletedDetails');
         }
 
-        $this->loginToFrontendAs($this->ndrLayDeputyCompletedDetails->getUserEmail());
-        $this->reportUrlPrefix = $this->ndrLayDeputyCompletedDetails->getCurrentReportNdrOrReport();
+        $this->loginToFrontendAs($this->layNdrDeputyCompletedDetails->getUserEmail());
+        $this->reportUrlPrefix = $this->layNdrDeputyCompletedDetails->getCurrentReportNdrOrReport();
     }
 
     /**
@@ -99,11 +99,11 @@ trait ReportTrait
      */
     public function aLayDeputyHasSubmittedAReport()
     {
-        if (empty($this->layDeputySubmittedDetails)) {
-            throw new Exception('It looks like fixtures are not loaded - missing $layDeputySubmittedDetails');
+        if (empty($this->layDeputySubmittedPfaHighAssetsDetails)) {
+            throw new Exception('It looks like fixtures are not loaded - missing $layDeputySubmittedPfaHighAssetsDetails');
         }
 
-        $this->loginToFrontendAs($this->layDeputySubmittedDetails->getUserEmail());
+        $this->loginToFrontendAs($this->layDeputySubmittedPfaHighAssetsDetails->getUserEmail());
     }
 
     /**

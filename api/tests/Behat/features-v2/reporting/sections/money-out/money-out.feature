@@ -1,6 +1,7 @@
 @v2 @money-out
 Feature: Money Out
 
+@pfa-high-not-started
   Scenario: A user attempts to not enter any payments
     Given a Lay Deputy has not started a Pfa High Assets report
     And I visit the report overview page
@@ -9,6 +10,7 @@ Feature: Money Out
     And I try to save and continue without adding a payment
     Then I should see correct money out validation message
 
+@pfa-high-not-started
   Scenario: A user adds one of each payment type
     Given a Lay Deputy has not started a Pfa High Assets report
     When I view and start the money out report section
@@ -17,24 +19,28 @@ Feature: Money Out
     When I follow link back to report overview page
     Then I should see "money-out" as "39 items"
 
+@pfa-high-completed
   Scenario: A user removes a payment
     Given a Lay Deputy has completed a Pfa High Assets report
     When I visit the money out summary section
     And I remove an existing money out payment
     Then I should see the expected results on money out summary page
 
+@pfa-high-completed
   Scenario: A user edits an existing payment
     Given a Lay Deputy has completed a Pfa High Assets report
     When I visit the money out summary section
     And I edit an existing money out payment
     Then I should see the expected results on money out summary page
 
+@pfa-high-completed
   Scenario: A user adds an additional payment
     Given a Lay Deputy has completed a Pfa High Assets report
     When I visit the money out summary section
     When I add another money out payment from an existing account
     Then I should see the expected results on money out summary page
 
+@pfa-high-not-started
   Scenario: A user tries to add a one off payment of less than £1k
     Given a Lay Deputy has not started a Pfa High Assets report
     When I view and start the money out report section

@@ -18,7 +18,7 @@ workflows:
       - terraform-command:
           name: plan shared-development
           requires: [ cancel redundant builds ]
-          filters: { branches: { only: [ main ] } }
+          filters: { branches: { ignore: [ main ] } }
           tf_tier: shared
           tf_workspace: development
           tf_command: plan
@@ -26,7 +26,7 @@ workflows:
       - terraform-command:
           name: plan branch env
           requires: [ cancel redundant builds ]
-          filters: { branches: { only: [ main ] } }
+          filters: { branches: { ignore: [ main ] } }
           tf_command: plan
 
       - terraform-command:
@@ -77,25 +77,25 @@ workflows:
 #          filters: { branches: { ignore: [ main ] } }
 
       - run-task:
-          name: reset environment for testing
-          requires: [ terraform apply ]
+          name: integration tests v2
+          requires: [ protect branch workspace ]
           filters: { branches: { ignore: [ main ] } }
-          task_name: reset_database
-          timeout: 180
+          task_name: integration_test_v2
+          timeout: 1200
 
       - approve:
           name: approval for further testing
           type: approval
           requires: [
-            protect branch workspace,
-            reset environment for testing
+            integration tests v2,
+            protect branch workspace
           ]
-          filters: { branches: { ignore: [ master ] } }
+          filters: { branches: { ignore: [ main ] } }
 
       - run-task:
           name: integration tests
           requires: [ approval for further testing ]
-          filters: { branches: { ignore: [ master ] } }
+          filters: { branches: { ignore: [ main ] } }
           task_name: integration_test
           timeout: 3000
 
@@ -257,14 +257,6 @@ workflows:
           filters: { branches: { only: [ main ] } }
           tf_workspace: preproduction
           tf_command: apply
-
-      - run-task:
-          name: smoke tests
-          requires: [ apply preproduction ]
-          filters: { branches: { ignore: [ master ] } }
-          task_name: smoke_test
-          tf_workspace: preproduction
-          timeout: 600
 
       - terraform-command:
           name: plan production
@@ -767,7 +759,7 @@ jobs:
           name: load docker image
           command: |
             ls -alt
-            if [ `ls | grep READMEss.md | wc -l` -gt 0 ]
+            if [ `ls | client.tar | wc -l` -gt 0 ]
             then
               docker load -i client.tar
               docker load -i api.tar

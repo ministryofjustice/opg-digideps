@@ -6,8 +6,7 @@ terraform {
     }
     aws = {
       source  = "hashicorp/aws"
-      version = "3.42.0"
-
+      version = "3.44.0"
     }
     local = {
       source = "hashicorp/local"
