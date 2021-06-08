@@ -17,11 +17,17 @@ trait ExpectedResultsTrait
      *                                   FormFillingTrait
      * @param bool   $partialMatch       If assertions should match on a full or partial string (defaults to false)
      * @param bool   $sectionsHaveTotals If assertions should match on a section subtotal (defaults to false)
+     * @param bool   $debug              Set to true to output a list of user inputs and data extracted from
+     *                                   the summary page
      *
      * @throws BehatException
      */
-    public function expectedResultsDisplayedSimplified(string $sectionName, bool $partialMatch = false, bool $sectionsHaveTotals = false)
-    {
+    public function expectedResultsDisplayedSimplified(
+        string $sectionName,
+        bool $partialMatch = false,
+        bool $sectionsHaveTotals = false,
+        bool $debug = false
+    ) {
         $this->tableHtml = '';
         $this->summarySectionItemsFound = [];
 
@@ -37,6 +43,10 @@ trait ExpectedResultsTrait
 
         $this->extractMonetaryTotals();
         $this->removeEmptyElements();
+
+        if ($debug) {
+            $this->throwDebugException($sectionName);
+        }
 
         $this->assertSectionContainsExpectedResultsSimplified($sectionName, $partialMatch);
 
@@ -237,23 +247,50 @@ trait ExpectedResultsTrait
 
     private function throwMissingAnswersException(array $missingAnswers, array $foundAnswers)
     {
-        $foundText = !empty($foundAnswers) ? json_encode($foundAnswers) : 'No form values found';
-        $missingText = json_encode($missingAnswers);
+        $foundText = !empty($foundAnswers) ? json_encode($foundAnswers, JSON_PRETTY_PRINT) : 'No form values found';
+        $missingText = json_encode($missingAnswers, JSON_PRETTY_PRINT);
 
         $failureMessage = <<<MSG
 The following form answers were found on the page:
+
 $foundText
 
 But these were missing:
+
 $missingText
 
 (shown with the field name the value was entered in)
 
-Table HTML:
+Summary page table HTML:
+
 $this->tableHtml
 MSG;
 
         throw new BehatException($failureMessage);
+    }
+
+    private function throwDebugException(string $sectionName)
+    {
+        $userInput = json_encode($this->submittedAnswersByFormSections, JSON_PRETTY_PRINT);
+        $summaryExtract = json_encode($this->summarySectionItemsFound, JSON_PRETTY_PRINT);
+
+        $debugMessage = <<<MSG
+====================== DEBUG ======================
+
+Tracked user input for section '$sectionName' was:
+
+$userInput
+
+Data extracted from the summary page was:
+
+$summaryExtract
+
+Summary page table HTML:
+
+$this->tableHtml
+MSG;
+
+        throw new BehatException($debugMessage);
     }
 
     /**
