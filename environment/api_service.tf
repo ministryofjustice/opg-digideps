@@ -21,6 +21,8 @@ resource "aws_service_discovery_service" "api" {
   }
 
   tags = local.default_tags
+
+  depends_on = [aws_service_discovery_private_dns_namespace.private]
 }
 
 resource "aws_ecs_task_definition" "api" {
@@ -44,6 +46,7 @@ resource "aws_ecs_service" "api" {
   platform_version        = "1.4.0"
   enable_ecs_managed_tags = true
   propagate_tags          = "SERVICE"
+  wait_for_steady_state   = true
   tags                    = local.default_tags
 
   network_configuration {
@@ -55,6 +58,8 @@ resource "aws_ecs_service" "api" {
   service_registries {
     registry_arn = aws_service_discovery_service.api.arn
   }
+
+  depends_on = [aws_service_discovery_service.api]
 }
 
 locals {
