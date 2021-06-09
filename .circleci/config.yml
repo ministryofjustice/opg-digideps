@@ -407,6 +407,8 @@ orbs:
               name: Install pact_tags
               working_directory: ~/project/ecs_helper
               command: go install -mod vendor ./cmd/pact_tags
+      build:
+        steps:
           - run:
               name: Build redeployer
               working_directory: ~/project/shared/go_redeployer
@@ -504,6 +506,12 @@ jobs:
           path: ~/project
       - terraform/install
       - ecs_helper/install
+      - when:
+          condition:
+            and:
+              - equal: [ shared, << parameters.tf_tier >> ]
+          steps:
+            - ecs_helper/build
       - run:
           name: Initialize
           command: terraform init
@@ -579,6 +587,12 @@ jobs:
           path: ~/project
       - terraform/install
       - ecs_helper/install
+      - when:
+          condition:
+            and:
+              - equal: [ shared, << parameters.tf_tier >> ]
+          steps:
+            - ecs_helper/build
       - attach_workspace: { at: ~/project }
       - run:
           name: Initialize
@@ -618,18 +632,6 @@ jobs:
             - run:
                 name: Run << parameters.tf_command >>
                 command: terraform << parameters.tf_command >>
-      - when:
-          condition:
-            and:
-              - equal: [ apply, << parameters.tf_command >> ]
-              - equal: [ false, << parameters.tf_initial_apply >> ]
-          steps:
-            - run:
-                name: Output
-                command: terraform output -json > terraform.output.json
-            - run:
-                name: Stabilize
-                command: stabilizer
       - when:
           condition: << parameters.pact_tag >>
           steps:
