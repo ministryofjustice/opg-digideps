@@ -199,6 +199,20 @@ cross-browser-android-chrome:
                     build: 'Android'
 
 v2-tests-goutte:
+    formatters:
+        pretty:
+            output_styles:
+                passed: [ white, green, [ bold ] ]
+                passed_param: [ white, green, [ underscore, bold ] ]
+                undefined: [ yellow, null, [ underscore, bold ] ]
+                pending: [ yellow, null, [ underscore ] ]
+                pending_param: [ yellow, null, [ underscore, bold ] ]
+                failed: [ white, red, [ bold ] ]
+                failed_param: [ white, red, [ underscore, bold ] ]
+                skipped: [ cyan ]
+                skipped_param: [ cyan, null, [ bold ] ]
+                comment: [ cyan ]
+                tag: [ cyan ]
     suites:
         feedback:
             description: Covering features that allow users to give us feedback
