@@ -118,4 +118,12 @@ trait IVisitFrontendTrait
     {
         $this->visitFrontendPath($this->getDebtsSummarySectionUrl($this->loggedInUserDetails->getCurrentReportId()));
     }
+
+    /**
+     * @When I visit the org dashboard page
+     */
+    public function iVisitOrgDashboard()
+    {
+        $this->visitFrontendPath($this->getOrgDashboardUrl());
+    }
 }

@@ -195,7 +195,7 @@ class FixtureHelper
     private function addOrgClientsNamedDeputyAndReportsToOrgDeputy(User $deputy, Organisation $organisation, bool $completed = false, bool $submitted = false)
     {
         $client = $this->clientTestHelper->generateClient($this->em, $deputy, $organisation);
-        $report = $this->reportTestHelper->generateReport($this->em, $client);
+        $report = $this->reportTestHelper->generateReport($this->em, $client, Report::TYPE_102_5);
         $namedDeputy = $this->namedDeputyTestHelper->generatenamedDeputy();
 
         $client->addReport($report);

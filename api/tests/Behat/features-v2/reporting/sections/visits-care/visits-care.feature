@@ -1,7 +1,7 @@
 @v2 @visits-care
 Feature: Visits and Care
 
-@pfa-high-not-started @acs2
+@pfa-high-not-started
   Scenario: A user lives with a client that doesn't receive paid care and doesn't have a care plan.
     Given a Lay Deputy has not started a report
     And I view and start the visits and care report section

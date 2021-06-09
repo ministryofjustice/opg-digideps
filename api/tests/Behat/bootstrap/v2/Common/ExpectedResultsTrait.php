@@ -13,17 +13,18 @@ trait ExpectedResultsTrait
     private array $summarySectionItemsFound = [];
 
     /**
-     * @param string $sectionName        The name given to the portion of the form being tested as defined in
-     *                                   FormFillingTrait
-     * @param bool   $partialMatch       If assertions should match on a full or partial string (defaults to false)
-     * @param bool   $sectionsHaveTotals If assertions should match on a section subtotal (defaults to false)
-     * @param bool   $debug              Set to true to output a list of user inputs and data extracted from
-     *                                   the summary page
+     * @param string|null $sectionName        The name given to the portion of the form being tested as defined in
+     *                                        FormFillingTrait. Set to null to check all sections completed using
+     *                                        keys of $summarySectionItemsFound
+     * @param bool        $partialMatch       If assertions should match on a full or partial string (defaults to false)
+     * @param bool        $sectionsHaveTotals If assertions should match on a section subtotal (defaults to false)
+     * @param bool        $debug              Set to true to output a list of user inputs and data extracted from
+     *                                        the summary page
      *
      * @throws BehatException
      */
     public function expectedResultsDisplayedSimplified(
-        string $sectionName,
+        ?string $sectionName = null,
         bool $partialMatch = false,
         bool $sectionsHaveTotals = false,
         bool $debug = false
@@ -45,10 +46,26 @@ trait ExpectedResultsTrait
         $this->removeEmptyElements();
 
         if ($debug) {
-            $this->throwDebugException($sectionName);
+            $this->throwDebugException(is_null($sectionName) ? 'Section not set' : $sectionName);
         }
 
-        $this->assertSectionContainsExpectedResultsSimplified($sectionName, $partialMatch);
+        // Assert on all sections completed by user
+        if (is_null($sectionName)) {
+            $completedSections = array_keys($this->submittedAnswersByFormSections);
+            $key = array_search('totals', $completedSections);
+
+            if ($key) {
+                unset($completedSections[$key]);
+            }
+
+            foreach ($completedSections as $section) {
+                $this->assertSectionContainsExpectedResultsSimplified($section, $partialMatch);
+            }
+
+            // Assert on specific section
+        } else {
+            $this->assertSectionContainsExpectedResultsSimplified($sectionName, $partialMatch);
+        }
 
         if ($sectionsHaveTotals) {
             $this->assertSectionTotal($sectionName);

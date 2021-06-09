@@ -21,6 +21,7 @@ trait PageUrlsTrait
     private string $moneyOutSectionSummaryUrl = '/%s/%s/money-out/summary';
     private string $moneyOutShortSectionUrl = '/%s/%s/money-out-short';
     private string $moneyOutShortSectionSummaryUrl = '/%s/%s/money-out-short/summary';
+    private string $orgDashboardUrl = '/org';
     private string $postSubmissionUserResearchUrl = '/report/%s/post_submission_user_research';
     private string $reportOverviewUrl = '/%s/%s/overview';
     private string $reportSubmittedUrl = '/report/%s/submitted';
@@ -136,5 +137,10 @@ trait PageUrlsTrait
     public function getDebtsSummarySectionUrl(int $reportId): string
     {
         return sprintf($this->debtsSummarySectionUrl, $this->reportUrlPrefix, $reportId);
+    }
+
+    public function getOrgDashboardUrl(): string
+    {
+        return $this->orgDashboardUrl;
     }
 }

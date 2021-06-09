@@ -14,6 +14,7 @@ class ReportingSectionsFeatureContext extends BaseFeatureContext
     use ContactsSectionTrait;
     use DocumentsSectionTrait;
     use DebtsSectionTrait;
+    use DeputyCostsSectionTrait;
     use DeputyExpensesSectionTrait;
     use GiftsSectionTrait;
     use HealthAndLifestyleTrait;
