@@ -7,11 +7,19 @@ namespace App\Tests\Behat\v2\Common;
 trait IVisitFrontendTrait
 {
     /**
+     * @When I visit the lay start page
+     */
+    public function iVisitLayStartPage()
+    {
+        $this->visitFrontendPath($this->getLayStartPageUrl());
+    }
+
+    /**
      * @When I visit the report overview page
      */
-    public function iViewReportOverviewPage()
+    public function iVisitReportOverviewPage()
     {
-        $this->visitPath($this->getReportOverviewUrl($this->loggedInUserDetails->getCurrentReportId()));
+        $this->visitFrontendPath($this->getReportOverviewUrl($this->loggedInUserDetails->getCurrentReportId()));
     }
 
     /**
@@ -34,7 +42,7 @@ trait IVisitFrontendTrait
      */
     public function iVisitMoneyOutShortSection()
     {
-        $this->visitPath($this->getMoneyOutShortSectionUrl($this->loggedInUserDetails->getCurrentReportId()));
+        $this->visitFrontendPath($this->getMoneyOutShortSectionUrl($this->loggedInUserDetails->getCurrentReportId()));
     }
 
     /**
@@ -42,7 +50,7 @@ trait IVisitFrontendTrait
      */
     public function iVisitMoneyOutShortSummarySection()
     {
-        $this->visitPath($this->getMoneyOutShortSectionSummaryUrl($this->loggedInUserDetails->getCurrentReportId()));
+        $this->visitFrontendPath($this->getMoneyOutShortSectionSummaryUrl($this->loggedInUserDetails->getCurrentReportId()));
     }
 
     /**
@@ -50,7 +58,7 @@ trait IVisitFrontendTrait
      */
     public function iVisitMoneyOutSection()
     {
-        $this->visitPath($this->getMoneyOutSectionUrl($this->loggedInUserDetails->getCurrentReportId()));
+        $this->visitFrontendPath($this->getMoneyOutSectionUrl($this->loggedInUserDetails->getCurrentReportId()));
     }
 
     /**
@@ -58,25 +66,25 @@ trait IVisitFrontendTrait
      */
     public function iVisitMoneyOutSummarySection()
     {
-        $this->visitPath($this->getMoneyOutSectionSummaryUrl($this->loggedInUserDetails->getCurrentReportId()));
+        $this->visitFrontendPath($this->getMoneyOutSectionSummaryUrl($this->loggedInUserDetails->getCurrentReportId()));
     }
 
     /**
      * @When I visit the accounts report section
      */
-    public function iViewAccountsSection()
+    public function iVisitAccountsSection()
     {
         $activeReportId = $this->loggedInUserDetails->getCurrentReportId();
         $reportSectionUrl = sprintf(self::REPORT_SECTION_ENDPOINT, $this->reportUrlPrefix, $activeReportId, 'bank-accounts');
-        $this->visitPath($reportSectionUrl);
+        $this->visitFrontendPath($reportSectionUrl);
     }
 
     /**
      * @When I visit the accounts summary section
      */
-    public function iViewAccountsSummarySection()
+    public function iVisitAccountsSummarySection()
     {
-        $this->visitPath($this->getAccountsSummaryUrl($this->loggedInUserDetails->getCurrentReportId()));
+        $this->visitFrontendPath($this->getAccountsSummaryUrl($this->loggedInUserDetails->getCurrentReportId()));
     }
 
     /**
@@ -84,7 +92,7 @@ trait IVisitFrontendTrait
      */
     public function iVisitHealthAndLifestyleSection()
     {
-        $this->visitPath($this->getHealthAndLifestyleSectionUrl($this->loggedInUserDetails->getCurrentReportId()));
+        $this->visitFrontendPath($this->getHealthAndLifestyleSectionUrl($this->loggedInUserDetails->getCurrentReportId()));
     }
 
     /**
@@ -92,7 +100,7 @@ trait IVisitFrontendTrait
      */
     public function iVisitHealthAndLifestyleSummarySection()
     {
-        $this->visitPath($this->getHealthAndLifestyleSummaryUrl($this->loggedInUserDetails->getCurrentReportId()));
+        $this->visitFrontendPath($this->getHealthAndLifestyleSummaryUrl($this->loggedInUserDetails->getCurrentReportId()));
     }
 
     /**
@@ -100,7 +108,7 @@ trait IVisitFrontendTrait
      */
     public function iVisitDebtsSection()
     {
-        $this->visitPath($this->getDebtsSectionUrl($this->loggedInUserDetails->getCurrentReportId()));
+        $this->visitFrontendPath($this->getDebtsSectionUrl($this->loggedInUserDetails->getCurrentReportId()));
     }
 
     /**
@@ -108,6 +116,6 @@ trait IVisitFrontendTrait
      */
     public function iVisitDebtsSummarySection()
     {
-        $this->visitPath($this->getDebtsSummarySectionUrl($this->loggedInUserDetails->getCurrentReportId()));
+        $this->visitFrontendPath($this->getDebtsSummarySectionUrl($this->loggedInUserDetails->getCurrentReportId()));
     }
 }

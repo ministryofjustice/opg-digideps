@@ -73,9 +73,20 @@ trait DebugTrait
         $bytes = file_put_contents($filename, $data);
         $file = basename($filename);
 
-        echo "** Test failed **\n";
-        echo 'Url: '.$session->getCurrentUrl()."\n";
-        echo "Response saved ({$bytes} bytes):\n";
-        echo "$file";
+        $loggedInEmail = !isset($this->loggedInUserDetails) ? 'Not logged in' : $this->loggedInUserDetails->getUserEmail();
+        $interactingWithEmail = !isset($this->interactingWithUserDetails) ? 'Not interacting with a user' : $this->interactingWithUserDetails->getUserEmail();
+        $currentUrl = $session->getCurrentUrl();
+
+        $message = <<<CONTEXT
+Logged in user: $loggedInEmail
+Interacting with user: $interactingWithEmail
+Test run ID: $this->testRunId
+Current URL: $currentUrl
+
+Response saved ($bytes bytes):
+$file
+CONTEXT;
+
+        echo $message;
     }
 }

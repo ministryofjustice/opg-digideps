@@ -412,7 +412,7 @@ class FixtureHelper
 
     public function createProfAdminNotStarted(string $testRunId)
     {
-        $this->profAdminNotStarted = $this->createOrgClientAndReport(
+        $this->profAdminNotStarted = $this->createOrgUserClientNamedDeputyAndReport(
             $testRunId,
             User::ROLE_PROF_ADMIN,
             'prof-admin-not-started',
@@ -425,7 +425,7 @@ class FixtureHelper
 
     public function createProfAdminCompleted(string $testRunId)
     {
-        $this->profAdminCompleted = $this->createOrgClientAndReport(
+        $this->profAdminCompleted = $this->createOrgUserClientNamedDeputyAndReport(
             $testRunId,
             User::ROLE_PROF_ADMIN,
             'prof-admin-completed',
@@ -438,7 +438,7 @@ class FixtureHelper
 
     public function createProfAdminSubmitted(string $testRunId)
     {
-        $this->profAdminSubmitted = $this->createOrgClientAndReport(
+        $this->profAdminSubmitted = $this->createOrgUserClientNamedDeputyAndReport(
             $testRunId,
             User::ROLE_PROF_ADMIN,
             'prof-admin-completed',
@@ -529,7 +529,7 @@ class FixtureHelper
         return $client;
     }
 
-    private function createOrgClientAndReport(string $testRunId, $userRole, $emailPrefix, $completed, $submitted)
+    private function createOrgUserClientNamedDeputyAndReport(string $testRunId, $userRole, $emailPrefix, $completed, $submitted)
     {
         if ('prod' === $this->symfonyEnvironment) {
             throw new Exception('Prod mode enabled - cannot create fixture users');
@@ -537,13 +537,13 @@ class FixtureHelper
         $this->testRunId = $testRunId;
         $organisation = $this->createOrganisation($this->testRunId);
 
-        $client = $this->userTestHelper
+        $user = $this->userTestHelper
             ->createUser(null, $userRole, sprintf('%s-%s@t.uk', $emailPrefix, $this->testRunId));
-        $this->addOrgClientsNamedDeputyAndReportsToOrgDeputy($client, $organisation, $completed, $submitted);
+        $this->addOrgClientsNamedDeputyAndReportsToOrgDeputy($user, $organisation, $completed, $submitted);
 
-        $this->setClientPassword($client);
+        $this->setClientPassword($user);
 
-        return $client;
+        return $user;
     }
 
     private function setClientPassword($client)

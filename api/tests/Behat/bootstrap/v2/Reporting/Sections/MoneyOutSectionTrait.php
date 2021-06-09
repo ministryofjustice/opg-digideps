@@ -196,7 +196,7 @@ trait MoneyOutSectionTrait
     }
 
     /**
-     * @When I should see the expected results on money out summary page
+     * @Then I should see the expected results on money out summary page
      */
     public function iShouldSeeExpectedResultsOnMoneyOutPage()
     {
