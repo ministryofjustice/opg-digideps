@@ -34,7 +34,7 @@
                 Costs for interim {{ loop.index }}
             </dt>
             <dd class="govuk-summary-list__value">
-                £{{ ic.amount | money_format }}, paid {{  ic.date | date('d/m/Y') }}
+                £{{ ic.amount | money_format }}, paid {{  ic.date | date('j F Y') }}
             </dd>
             {% if not hideEditLink  %}
                 <dd class="govuk-summary-list__actions">

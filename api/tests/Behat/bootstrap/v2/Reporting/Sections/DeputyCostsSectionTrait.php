@@ -8,8 +8,6 @@ use App\Tests\Behat\BehatException;
 
 trait DeputyCostsSectionTrait
 {
-    private array $completedSections = [];
-
     /**
      * @When I navigate to and start the deputy costs report section for an existing client
      */
@@ -43,8 +41,6 @@ trait DeputyCostsSectionTrait
             'TypeOfCosts',
             'Fixed costs'
         );
-
-        $this->completedSections[] = 'TypeOfCosts';
 
         $this->pressButton('Save and continue');
     }
@@ -90,6 +86,128 @@ trait DeputyCostsSectionTrait
      */
     public function iShouldSeeExpectedDeputyCostsOnSummary()
     {
-        $this->expectedResultsDisplayedSimplified();
+        $this->expectedResultsDisplayedSimplified(null, true);
+    }
+
+    /**
+     * @When I visit and start the deputy costs report section for an existing client
+     */
+    public function visitAndStartDeputyCosts()
+    {
+        $this->iVisitDeputyCostsSection();
+        $this->clickLink('Start');
+    }
+
+    /**
+     * @When I have assessed deputy costs to declare
+     */
+    public function iHaveAssessedDeputyCosts()
+    {
+        $this->chooseOption(
+            'deputy_costs[profDeputyCostsHowCharged]',
+            'assessed',
+            'TypeOfCosts',
+            'Assessed costs'
+        );
+
+        $this->pressButton('Save and continue');
+    }
+
+    /**
+     * @When I do not have interim deputy costs to declare
+     */
+    public function iDoNotHaveInterimDeputyCosts()
+    {
+        $this->chooseOption(
+            'yes_no[profDeputyCostsHasInterim]',
+            'no',
+            'HaveInterimCosts'
+        );
+
+        $this->pressButton('Save and continue');
+    }
+
+    /**
+     * @When I enter a valid amount and description that I am submitting to SCCO for assessment
+     */
+    public function iEnterValidSCCOAssessmentAmountAndDescription()
+    {
+        $this->fillInField(
+            'deputy_costs_scco[profDeputyCostsAmountToScco]',
+            $this->faker->numberBetween(10, 10000),
+            'SCCOAssessment'
+        );
+
+        $this->fillInField(
+            'deputy_costs_scco[profDeputyCostsReasonBeyondEstimate]',
+            $this->faker->sentence(16),
+            'SCCOAssessment'
+        );
+
+        $this->pressButton('Save and continue');
+    }
+
+    /**
+     * @When I have charged in line with interim billing under Practice Direction 19B
+     */
+    public function iHaveChargedInterimCostsInlineWith19B()
+    {
+        $this->chooseOption(
+            'yes_no[profDeputyCostsHasInterim]',
+            'yes',
+            'HaveInterimCosts'
+        );
+
+        $this->pressButton('Save and continue');
+    }
+
+    /**
+     * @When I have provided valid interim costs and dates for all three periods
+     */
+    public function iProvideValidInterimCosts()
+    {
+        $this->fillInFieldTrackTotal(
+            'costs_interims[profDeputyInterimCosts][0][amount]',
+            $this->faker->numberBetween(10, 10000),
+            'CurrentPeriodInterimCosts'
+        );
+
+        $this->fillInDateFields(
+            'costs_interims[profDeputyInterimCosts][0][date]',
+            $this->faker->numberBetween(1, 27),
+            $this->faker->numberBetween(1, 3),
+            2020,
+            'CurrentPeriodInterimCosts'
+        );
+
+        $this->fillInFieldTrackTotal(
+            'costs_interims[profDeputyInterimCosts][1][amount]',
+            $this->faker->numberBetween(10, 10000),
+            'CurrentPeriodInterimCosts'
+        );
+
+        $this->fillInDateFields(
+            'costs_interims[profDeputyInterimCosts][1][date]',
+            $this->faker->numberBetween(1, 27),
+            $this->faker->numberBetween(4, 8),
+            2020,
+            'CurrentPeriodInterimCosts'
+        );
+
+        $this->fillInFieldTrackTotal(
+            'costs_interims[profDeputyInterimCosts][2][amount]',
+            $this->faker->numberBetween(10, 10000),
+            'CurrentPeriodInterimCosts'
+        );
+
+        $this->fillInDateFields(
+            'costs_interims[profDeputyInterimCosts][2][date]',
+            $this->faker->numberBetween(1, 27),
+            $this->faker->numberBetween(9, 12),
+            2020,
+            'CurrentPeriodInterimCosts'
+        );
+
+        $this->pressButton('Save and continue');
     }
 }

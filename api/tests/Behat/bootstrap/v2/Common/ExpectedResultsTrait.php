@@ -267,6 +267,9 @@ trait ExpectedResultsTrait
         $foundText = !empty($foundAnswers) ? json_encode($foundAnswers, JSON_PRETTY_PRINT) : 'No form values found';
         $missingText = json_encode($missingAnswers, JSON_PRETTY_PRINT);
 
+        $foundText = str_replace('\u00a3', '£', $foundText);
+        $missingText = str_replace('\u00a3', '£', $missingText);
+
         $failureMessage = <<<MSG
 The following form answers were found on the page:
 

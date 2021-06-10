@@ -126,4 +126,12 @@ trait IVisitFrontendTrait
     {
         $this->visitFrontendPath($this->getOrgDashboardUrl());
     }
+
+    /**
+     * @When I visit the deputy costs report section
+     */
+    public function iVisitDeputyCostsSection()
+    {
+        $this->visitFrontendPath($this->getDeputyCostsUrl($this->loggedInUserDetails->getCurrentReportId()));
+    }
 }

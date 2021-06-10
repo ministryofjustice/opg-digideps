@@ -14,6 +14,7 @@ trait PageUrlsTrait
     private string $contactsSummaryUrl = '/report/%s/contacts/summary';
     private string $debtsSectionUrl = '/%s/%s/debts';
     private string $debtsSummarySectionUrl = '/%s/%s/debts/summary';
+    private string $deputyCostsUrl = '/report/%s/prof-deputy-costs';
     private string $healthAndLifestyleSectionUrl = '/%s/%s/lifestyle';
     private string $healthAndLifestyleSummaryUrl = '/%s/%s/lifestyle/summary';
     private string $layStartPageUrl = '/lay';
@@ -142,5 +143,10 @@ trait PageUrlsTrait
     public function getOrgDashboardUrl(): string
     {
         return $this->orgDashboardUrl;
+    }
+
+    public function getDeputyCostsUrl(int $reportId): string
+    {
+        return sprintf($this->deputyCostsUrl, $reportId);
     }
 }
