@@ -7,22 +7,24 @@ namespace App\Tests\Behat\v2\Common;
 trait PageUrlsTrait
 {
     // Frontend
-    private string $reportSubmittedUrl = '/report/%s/submitted';
-    private string $postSubmissionUserResearchUrl = '/report/%s/post_submission_user_research';
-    private string $userResearchSubmittedUrl = '/report/%s/post_submission_user_research/submitted';
-    private string $contactsSummaryUrl = '/report/%s/contacts/summary';
+    private string $accountsAddAnAccountUrl = '/%s/%s/bank-account/step1';
+    private string $accountsSummaryUrl = '/%s/%s/bank-account/summary';
     private string $contactsAddUrl = '/report/%s/contacts/add';
     private string $contactsAddAnotherUrl = '/report/%s/contacts/add_another';
-    private string $accountsAddAnAccountUrl = '%s/%s/bank-account/step1';
-    private string $accountsSummaryUrl = '%s/%s/bank-account/summary';
+    private string $contactsSummaryUrl = '/report/%s/contacts/summary';
+    private string $debtsSectionUrl = '/%s/%s/debts';
+    private string $debtsSummarySectionUrl = '/%s/%s/debts/summary';
+    private string $healthAndLifestyleSectionUrl = '/%s/%s/lifestyle';
+    private string $healthAndLifestyleSummaryUrl = '/%s/%s/lifestyle/summary';
     private string $layStartPageUrl = '/lay';
+    private string $moneyOutSectionUrl = '/%s/%s/money-out';
+    private string $moneyOutSectionSummaryUrl = '/%s/%s/money-out/summary';
+    private string $moneyOutShortSectionUrl = '/%s/%s/money-out-short';
+    private string $moneyOutShortSectionSummaryUrl = '/%s/%s/money-out-short/summary';
+    private string $postSubmissionUserResearchUrl = '/report/%s/post_submission_user_research';
     private string $reportOverviewUrl = '/%s/%s/overview';
-    private string $moneyOutShortSectionUrl = '%s/%s/money-out-short';
-    private string $moneyOutShortSectionSummaryUrl = '%s/%s/money-out-short/summary';
-    private string $moneyOutSectionUrl = '%s/%s/money-out';
-    private string $moneyOutSectionSummaryUrl = '%s/%s/money-out/summary';
-    private string $healthAndLifestyleSectionUrl = '%s/%s/lifestyle';
-    private string $healthAndLifestyleSummaryUrl = '%s/%s/lifestyle/summary';
+    private string $reportSubmittedUrl = '/report/%s/submitted';
+    private string $userResearchSubmittedUrl = '/report/%s/post_submission_user_research/submitted';
 
     // Admin
     private string $adminClientSearchUrl = '/admin/client/search';
@@ -184,5 +186,15 @@ trait PageUrlsTrait
     public function getAdminAnalyticsUrl(): string
     {
         return $this->adminAnalyticsUrl;
+    }
+
+    public function getDebtsSectionUrl(int $reportId): string
+    {
+        return sprintf($this->debtsSectionUrl, $this->reportUrlPrefix, $reportId);
+    }
+
+    public function getDebtsSummarySectionUrl(int $reportId): string
+    {
+        return sprintf($this->debtsSummarySectionUrl, $this->reportUrlPrefix, $reportId);
     }
 }

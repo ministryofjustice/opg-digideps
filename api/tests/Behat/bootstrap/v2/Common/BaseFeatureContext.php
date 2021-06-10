@@ -24,6 +24,7 @@ class BaseFeatureContext extends MinkContext
     use ErrorsTrait;
     use ExpectedResultsTrait;
     use FixturesTrait;
+    use FormFillingTrait;
     use INavigateToAdminTrait;
     use IShouldBeOnAdminTrait;
     use IShouldBeOnFrontendTrait;
@@ -95,8 +96,14 @@ class BaseFeatureContext extends MinkContext
     {
         $this->faker = Factory::create('en_GB');
         $this->testRunId = (string) (time() + rand());
+        $this->resetCommonProperties();
+    }
+
+    private function resetCommonProperties()
+    {
         $this->loggedInUserDetails = null;
         $this->interactingWithUserDetails = null;
+        $this->submittedAnswersByFormSections = [];
     }
 
     /**
@@ -239,7 +246,7 @@ class BaseFeatureContext extends MinkContext
         return getenv('ADMIN_HOST');
     }
 
-    public function getSiteUrl()
+    public function getSiteUrl(): string
     {
         return getenv('NONADMIN_HOST');
     }
@@ -256,7 +263,7 @@ class BaseFeatureContext extends MinkContext
         $this->visitPath($adminUrl.$path);
     }
 
-    public function getPageContent()
+    public function getPageContent(): string
     {
         if ($this->getSession()->getDriver() instanceof GoutteDriver) {
             return $this->getSession()->getPage()->getContent();
@@ -267,19 +274,10 @@ class BaseFeatureContext extends MinkContext
 
     public function throwContextualException(string $message)
     {
-        $loggedInEmail = !isset($this->loggedInUserDetails) ? 'Not logged in' : $this->loggedInUserDetails->getUserEmail();
-
-        $contextMessage = <<<CONTEXT
-$message
-
-Logged in user is: $loggedInEmail
-Test run ID is: $this->testRunId
-CONTEXT;
-
-        throw new BehatException($contextMessage);
+        throw new BehatException($message);
     }
 
-    public function getCurrentUrl()
+    public function getCurrentUrl(): string
     {
         return $this->getSession()->getCurrentUrl();
     }
