@@ -11,4 +11,30 @@ trait INavigateToAdminTrait
     {
         $this->clickLink('Clients');
     }
+
+    /**
+     * @When I navigate to the admin add user page
+     */
+    public function iNavigateToAdminAddUserPage()
+    {
+        $this->pressButton('Add new user');
+    }
+
+    /**
+     * @When I navigate to my admin user profile page
+     */
+    public function iNavigateToAdminUserProfilePage()
+    {
+        $this->clickLink('Your details');
+        $mainElement = $this->getSession()->getPage()->find('xpath', '//main');
+        $mainElement->clickLink('Your details');
+    }
+
+    /**
+     * @When I navigate to the admin analytics page
+     */
+    public function iNavigateToAdminAnalyticsSearchPage()
+    {
+        $this->clickLink('Analytics');
+    }
 }

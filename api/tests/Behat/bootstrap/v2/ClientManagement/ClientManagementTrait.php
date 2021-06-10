@@ -362,7 +362,7 @@ MESSAGE;
     {
         $this->assertInteractingWithUserIsSet();
 
-        $this->iVisitLayClientDetailsPage();
+        $this->iVisitAdminLayClientDetailsPage();
 
         $dischargedOnSelector = "//dt[normalize-space() = 'Discharged on']/..";
         $clientDtHtml = $this->getSession()->getPage()->find('xpath', $dischargedOnSelector)->getHtml();
@@ -384,7 +384,7 @@ MESSAGE;
     {
         $this->assertInteractingWithUserIsSet();
 
-        $this->iVisitLayClientDetailsPage();
+        $this->iVisitAdminLayClientDetailsPage();
 
         $dischargedOnSelector = "//dt[normalize-space() = 'Discharged on']/..";
         $dischargedOnVisible = $this->getSession()->getPage()->find('xpath', $dischargedOnSelector);

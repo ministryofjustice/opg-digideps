@@ -6,10 +6,10 @@ use App\Controller\AbstractController;
 use App\Service\Audit\AuditEvents;
 use App\Service\Client\Internal\ClientApi;
 use App\Service\Client\RestClient;
-use Symfony\Component\HttpFoundation\RedirectResponse;
-use Symfony\Component\Routing\Annotation\Route;
 use Sensio\Bundle\FrameworkExtraBundle\Configuration\Security;
 use Sensio\Bundle\FrameworkExtraBundle\Configuration\Template;
+use Symfony\Component\HttpFoundation\RedirectResponse;
+use Symfony\Component\Routing\Annotation\Route;
 
 /**
  * @Route("/admin/client")
@@ -34,6 +34,7 @@ class ClientController extends AbstractController
      * @Route("/{id}/details", name="admin_client_details", requirements={"id":"\d+"})
      * //TODO define Security group (AD to remove?)
      * @Security("is_granted('ROLE_ADMIN') or has_role('ROLE_AD')")
+     *
      * @param string $id
      *
      * @Template("@App/Admin/Client/Client/details.html.twig")
@@ -45,15 +46,14 @@ class ClientController extends AbstractController
         $client = $this->clientApi->getWithUsersV2($id);
 
         return [
-            'client'      => $client,
-            'namedDeputy' => $client->getDeputy()
+            'client' => $client,
+            'namedDeputy' => $client->getDeputy(),
         ];
     }
 
     /**
      * @Route("/case-number/{caseNumber}/details", name="admin_client_by_case_number_details")
      * @Security("is_granted('ROLE_ADMIN') or has_role('ROLE_AD')")
-     * @param string $caseNumber
      *
      * @return RedirectResponse
      */
@@ -66,7 +66,8 @@ class ClientController extends AbstractController
 
     /**
      * @Route("/{id}/discharge", name="admin_client_discharge", requirements={"id":"\d+"})
-     * @Security("is_granted('ROLE_SUPER_ADMIN')")
+     * @Security("is_granted('ROLE_ADMIN_MANAGER')")
+     *
      * @param $id
      *
      * @Template("@App/Admin/Client/Client/discharge.html.twig")
@@ -79,23 +80,25 @@ class ClientController extends AbstractController
 
         return [
             'client' => $client,
-            'namedDeputy' => $client->getDeputy()
+            'namedDeputy' => $client->getDeputy(),
         ];
     }
 
     /**
      * @Route("/{id}/discharge-confirm", name="admin_client_discharge_confirm", requirements={"id":"\d+"})
-     * @Security("is_granted('ROLE_SUPER_ADMIN')")
+     * @Security("is_granted('ROLE_ADMIN_MANAGER')")
      *
      * @param $id
      * @param AuditEvents $auditEvents
      *
      * @return RedirectResponse
+     *
      * @throws \Exception
      */
     public function dischargeConfirmAction($id)
     {
         $this->clientApi->delete($id, AuditEvents::TRIGGER_ADMIN_BUTTON);
+
         return $this->redirectToRoute('admin_client_search');
     }
 }

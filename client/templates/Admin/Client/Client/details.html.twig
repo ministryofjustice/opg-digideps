@@ -105,7 +105,7 @@
                 {{ 'alternativeEmail' | trans({}, 'common') }}: {{ namedDeputy.email3 }}<br>
             {% endif %}
         </p>
-        {% if is_granted('ROLE_SUPER_ADMIN') %}
+        {% if is_granted('ROLE_ADMIN_MANAGER') %}
             {% if not client.isDeleted %}
                 <a href="{{ path('admin_client_discharge', {id: client.id}) }}" role="button" data-module="govuk-button" class="govuk-button govuk-button--secondary">
                     Discharge deputy

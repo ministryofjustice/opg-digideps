@@ -1,7 +1,7 @@
 @v2 @accounts
 Feature: Accounts (Lay / PA / Prof share same functionality)
 
-@pfa-high-not-started
+@lay-pfa-high-not-started
   Scenario: A user adds one of each account type
     Given a Lay Deputy has not started a report
     And I view the report overview page
@@ -12,7 +12,7 @@ Feature: Accounts (Lay / PA / Prof share same functionality)
     When I follow link back to report overview page
     Then I should see "bank-accounts" as "7 accounts"
 
-@pfa-high-not-started
+@lay-pfa-high-not-started
   Scenario: A user incorrectly enters an account before correctly entering it
     Given a Lay Deputy has not started a report
     When I go to add a new current account
@@ -23,7 +23,7 @@ Feature: Accounts (Lay / PA / Prof share same functionality)
     When I correctly enter account details
     Then I should see the expected accounts on the summary page
 
-@pfa-high-completed
+@lay-pfa-high-completed
   Scenario: A user edits an existing account
     Given a Lay Deputy has a completed report
     And I visit the accounts report section
@@ -31,7 +31,7 @@ Feature: Accounts (Lay / PA / Prof share same functionality)
     When I update my current account to a different one
     Then I should see the expected accounts on the summary page
 
-@pfa-high-not-started
+@lay-pfa-high-not-started
   Scenario: A user adds accounts and then changes their mind and deletes them
     Given a Lay Deputy has not started a report
     When I view and start the accounts report section

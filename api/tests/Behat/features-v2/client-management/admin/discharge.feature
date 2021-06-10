@@ -1,23 +1,23 @@
 @v2 @admin-client-discharge
 Feature: Admin - Client Discharge
 
-@super-admin @pfa-high-submitted
+@super-admin @lay-pfa-high-submitted
   Scenario: A super admin user discharges a client
     Given a super admin user accesses the admin app
-    When I visit the client details page for an existing client linked to a Lay deputy
+    When I visit the admin client details page for an existing client linked to a Lay deputy
     And I attempt to discharge the client
     Then the client should be discharged
 
-@elevated-admin @pfa-high-submitted
-  Scenario: An elevated admin user cannot discharge a client
-    Given an elevated admin user accesses the admin app
-    When I visit the client details page for an existing client linked to a Lay deputy
+@admin-manager @lay-pfa-high-submitted
+  Scenario: An admin manager user can discharge a client
+    Given an admin manager user accesses the admin app
+    When I visit the admin client details page for an existing client linked to a Lay deputy
     And I attempt to discharge the client
-    Then the client should not be discharged
+    Then the client should be discharged
 
-@admin @prof-admin-submitted @pfa-high-submitted
+@admin @prof-admin-submitted @lay-pfa-high-submitted
   Scenario: An admin user cannot discharge a client
     Given an admin user accesses the admin app
-    When I visit the client details page for an existing client linked to a deputy in an Organisation
+    When I visit the admin client details page for an existing client linked to a deputy in an Organisation
     And I attempt to discharge the client
     Then the client should not be discharged

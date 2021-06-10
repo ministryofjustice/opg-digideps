@@ -4,6 +4,8 @@ declare(strict_types=1);
 
 namespace App\Tests\Behat\v2\Common;
 
+use App\Tests\Behat\BehatException;
+
 trait AuthTrait
 {
     /**
@@ -46,22 +48,22 @@ trait AuthTrait
     public function adminUsersAccessesAdmin()
     {
         if (empty($this->adminDetails)) {
-            throw new Exception('It looks like fixtures are not loaded - missing $this->adminDetails');
+            throw new BehatException('It looks like fixtures are not loaded - missing $this->adminDetails');
         }
 
         $this->loginToAdminAs($this->adminDetails->getUserEmail());
     }
 
     /**
-     * @Given an elevated admin user accesses the admin app
+     * @Given an admin manager user accesses the admin app
      */
-    public function elevatedAdminUsersAccessesAdmin()
+    public function adminManagerUserAccessesAdmin()
     {
-        if (empty($this->elevatedAdminDetails)) {
-            throw new Exception('It looks like fixtures are not loaded - missing $this->elevatedAdminDetails');
+        if (empty($this->adminManagerDetails)) {
+            throw new BehatException('It looks like fixtures are not loaded - missing $this->adminManagerDetails');
         }
 
-        $this->loginToAdminAs($this->elevatedAdminDetails->getUserEmail());
+        $this->loginToAdminAs($this->adminManagerDetails->getUserEmail());
     }
 
     /**
@@ -70,7 +72,7 @@ trait AuthTrait
     public function superAdminUsersAccessesAdmin()
     {
         if (empty($this->superAdminDetails)) {
-            throw new Exception('It looks like fixtures are not loaded - missing $this->superAdminDetails');
+            throw new BehatException('It looks like fixtures are not loaded - missing $this->superAdminDetails');
         }
 
         $this->loginToAdminAs($this->superAdminDetails->getUserEmail());
@@ -101,7 +103,7 @@ trait AuthTrait
 
         // We didn't filter the list - the user wasn't found
         if (!$filteredUser) {
-            throw new \Exception(sprintf('User details for email %s not found in $this->fixturesUsers', $email));
+            throw new BehatException(sprintf('User details for email %s not found in $this->fixturesUsers', $email));
         }
 
         return $filteredUser;

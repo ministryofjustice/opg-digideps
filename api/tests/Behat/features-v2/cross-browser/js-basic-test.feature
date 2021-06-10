@@ -1,7 +1,7 @@
 @v2 @js-basic-check @js
 Feature: Javascript basic checks
 
-  @pfa-high-not-started
+  @lay-pfa-high-not-started
   Scenario: A user checks some basic java script functionality
     Given a Lay Deputy has not started a report
     When I view and start visits and care section

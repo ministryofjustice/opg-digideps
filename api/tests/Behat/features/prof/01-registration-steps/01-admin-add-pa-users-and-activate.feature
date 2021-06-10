@@ -177,7 +177,7 @@ Feature: Add PROF users and activate PROF user (journey)
     Given I save the application status into "prof-users-uploaded"
     When I am logged in to admin as "admin@publicguardian.gov.uk" with password "DigidepsPass1234"
     And I click on "user-behat-prof2publicguardiangovuk" in the "user-behat-prof2publicguardiangovuk" region
-    And I press "Edit user"
+    And I follow "Edit user"
     Then the following fields should have the corresponding values:
       | admin_firstname      | Pa User                           |
       | admin_lastname       | Two                               |

@@ -1,7 +1,7 @@
 @v2 @gifts
 Feature: Gifts
 
-@pfa-high-not-started
+@lay-pfa-high-not-started
   Scenario: A user has not donated any gifts
     Given a Lay Deputy has not started a report
     When I view and start the gifts report section
@@ -10,7 +10,7 @@ Feature: Gifts
     When I follow link back to report overview page
     Then I should see "gifts" as "no gifts"
 
-@pfa-high-not-started
+@lay-pfa-high-not-started
   Scenario: A user has donated multiple gifts
     Given a Lay Deputy has not started a report
     When I view and start the gifts report section
@@ -19,7 +19,7 @@ Feature: Gifts
     When I follow link back to report overview page
     Then I should see "gifts" as "2 gifts"
 
-@pfa-high-completed
+@lay-pfa-high-completed
   Scenario: A user changes their mind and declares a gift
     Given a Lay Deputy has a completed report
     And I view the report overview page
@@ -29,13 +29,13 @@ Feature: Gifts
     When I follow link back to report overview page
     Then I should see "gifts" as "1 gift"
 
-@pfa-high-completed
+@lay-pfa-high-completed
   Scenario: A user edits a gift
     Given a Lay Deputy has a completed report
     When I edit an existing gift
     Then I should see the expected gifts report section responses
 
-@pfa-high-not-started
+@lay-pfa-high-not-started
   Scenario: A user adds and deletes gifts
     Given a Lay Deputy has not started a report
     When I view and start the gifts report section

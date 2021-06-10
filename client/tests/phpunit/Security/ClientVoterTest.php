@@ -1,4 +1,6 @@
-<?php declare(strict_types=1);
+<?php
+
+declare(strict_types=1);
 
 namespace App\Security;
 
@@ -18,7 +20,7 @@ class ClientVoterTest extends KernelTestCase
      */
     public function determineDeletePermission(User $user, Client $client, int $expectedPermission)
     {
-        $security =  self::prophesize(Security::class);
+        $security = self::prophesize(Security::class);
 
         /** @var ClientVoter() $sut */
         $sut = new ClientVoter($security->reveal());
@@ -34,7 +36,7 @@ class ClientVoterTest extends KernelTestCase
 
         $admin = UserHelpers::createAdminUser();
         $superAdmin = UserHelpers::createSuperAdminUser();
-        $elevatedAdmin = UserHelpers::createElevatedAdminUser();
+        $adminManager = UserHelpers::createAdminManager();
 
         $lay = UserHelpers::createLayUser();
 
@@ -59,7 +61,7 @@ class ClientVoterTest extends KernelTestCase
             'Prof Named Deputy deletes Client' => [$profNamed, $client, -1],
             'Prof Admin Deputy deletes Client' => [$profAdmin, $client, -1],
             'Admin deletes Client' => [$admin, $client, -1],
-            'Elevated Admin deletes Client' => [$elevatedAdmin, $client, 1],
+            'Admin Manager deletes Client' => [$adminManager, $client, 1],
             'Super Admin deletes Client' => [$superAdmin, $client, 1],
         ];
     }

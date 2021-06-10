@@ -287,7 +287,7 @@ class ClientVoterTest extends KernelTestCase
 
         $admin = $userTestHelper->createAndPersistUser($em, null, User::ROLE_ADMIN);
         $superAdmin = $userTestHelper->createAndPersistUser($em, null, User::ROLE_SUPER_ADMIN);
-        $elevatedAdmin = $userTestHelper->createAndPersistUser($em, null, User::ROLE_ELEVATED_ADMIN);
+        $adminManager = $userTestHelper->createAndPersistUser($em, null, User::ROLE_ADMIN_MANAGER);
 
         $pa = $userTestHelper->createAndPersistUser($em, null, User::ROLE_PA);
         $paNamed = $userTestHelper->createAndPersistUser($em, null, User::ROLE_PA_NAMED);
@@ -310,7 +310,7 @@ class ClientVoterTest extends KernelTestCase
             'Prof Named Deputy deletes Client' => [$profNamed, $client, -1],
             'Prof Admin Deputy deletes Client' => [$profAdmin, $client, -1],
             'Admin deletes Client' => [$admin, $client, -1],
-            'Elevated Admin deletes Client' => [$elevatedAdmin, $client, 1],
+            'Admin Manager deletes Client' => [$adminManager, $client, 1],
             'Super Admin deletes Client' => [$superAdmin, $client, 1],
         ];
     }
