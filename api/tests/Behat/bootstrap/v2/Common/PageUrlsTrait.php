@@ -15,6 +15,7 @@ trait PageUrlsTrait
     private string $debtsSectionUrl = '/%s/%s/debts';
     private string $debtsSummarySectionUrl = '/%s/%s/debts/summary';
     private string $deputyCostsUrl = '/report/%s/prof-deputy-costs';
+    private string $deputyCostsSCCOAssessmentUrl = '/report/%s/prof-deputy-costs/amount-scco';
     private string $healthAndLifestyleSectionUrl = '/%s/%s/lifestyle';
     private string $healthAndLifestyleSummaryUrl = '/%s/%s/lifestyle/summary';
     private string $layStartPageUrl = '/lay';
@@ -148,5 +149,10 @@ trait PageUrlsTrait
     public function getDeputyCostsUrl(int $reportId): string
     {
         return sprintf($this->deputyCostsUrl, $reportId);
+    }
+
+    public function getDeputyCostsSCCOAssessmentUrl(int $reportId): string
+    {
+        return sprintf($this->deputyCostsSCCOAssessmentUrl, $reportId);
     }
 }

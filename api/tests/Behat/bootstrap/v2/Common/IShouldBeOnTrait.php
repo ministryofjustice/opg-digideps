@@ -446,4 +446,49 @@ trait IShouldBeOnTrait
     {
         return $this->iAmOnPage(sprintf('/%s\/.*\/debts\/summary.*$/', $this->reportUrlPrefix));
     }
+
+    public function iAmOnDeputyCostsHowChargedPage()
+    {
+        return $this->iAmOnPage(sprintf('/%s\/.*\/prof-deputy-costs\/how-charged.*$/', $this->reportUrlPrefix));
+    }
+
+    public function iAmOnDeputyCostsPreviousReceivedExistsPage()
+    {
+        return $this->iAmOnPage(sprintf('/%s\/.*\/prof-deputy-costs\/previous-received-exists.*$/', $this->reportUrlPrefix));
+    }
+
+    public function iAmOnDeputyCostsPreviousReceivedPage()
+    {
+        return $this->iAmOnPage(sprintf('/%s\/.*\/prof-deputy-costs\/previous-received.*$/', $this->reportUrlPrefix));
+    }
+
+    public function iAmOnDeputyCostsCostsReceievedPage()
+    {
+        return $this->iAmOnPage(sprintf('/%s\/.*\/prof-deputy-costs\/costs-received.*$/', $this->reportUrlPrefix));
+    }
+
+    public function iAmOnDeputyCostsInterimExistsPage()
+    {
+        return $this->iAmOnPage(sprintf('/%s\/.*\/prof-deputy-costs\/interim-exists.*$/', $this->reportUrlPrefix));
+    }
+
+    public function iAmOnDeputyCostsInterimPage()
+    {
+        return $this->iAmOnPage(sprintf('/%s\/.*\/prof-deputy-costs\/interim.*$/', $this->reportUrlPrefix));
+    }
+
+    public function iAmOnDeputyCostsAmountSccoPage()
+    {
+        return $this->iAmOnPage(sprintf('/%s\/.*\/prof-deputy-costs\/amount-scco.*$/', $this->reportUrlPrefix));
+    }
+
+    public function iAmOnDeputyCostsBreakdownPage()
+    {
+        return $this->iAmOnPage(sprintf('/%s\/.*\/prof-deputy-costs\/breakdown.*$/', $this->reportUrlPrefix));
+    }
+
+    public function iAmOnDeputyCostsSummaryPage()
+    {
+        return $this->iAmOnPage(sprintf('/%s\/.*\/prof-deputy-costs\/summary.*$/', $this->reportUrlPrefix));
+    }
 }

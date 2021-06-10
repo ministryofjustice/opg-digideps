@@ -25,7 +25,7 @@
 {% for pc in report.profDeputyPreviousCosts %}
     <div class="govuk-summary-list__row behat-region-prev-cost-{{ loop.index }}">
         <dt class="govuk-summary-list__key">
-            Received for {{ pc.startDate | date('d/m/Y') }} - {{ pc.endDate | date('d/m/Y') }}
+            Received for <br/> {{ pc.startDate | date('j F Y') }} - {{ pc.endDate | date('j F Y') }}
             {#{{ 'previousReceivedExists.form.profDeputyCostsHasPrevious.label' | trans(transOptions) }}#}
         </dt>
         <dd class="govuk-summary-list__value">

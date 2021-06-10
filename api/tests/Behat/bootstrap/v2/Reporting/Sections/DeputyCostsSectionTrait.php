@@ -35,6 +35,8 @@ trait DeputyCostsSectionTrait
      */
     public function iHaveFixedDeputyCosts()
     {
+        $this->iAmOnDeputyCostsHowChargedPage();
+
         $this->chooseOption(
             'deputy_costs[profDeputyCostsHowCharged]',
             'fixed',
@@ -50,9 +52,27 @@ trait DeputyCostsSectionTrait
      */
     public function clientHasNotPaidPreviousCostsInCurrentPeriod()
     {
+        $this->iAmOnDeputyCostsPreviousReceivedExistsPage();
+
         $this->chooseOption(
             'yes_no[profDeputyCostsHasPrevious]',
             'no',
+            'HasPreviousCosts'
+        );
+
+        $this->pressButton('Save and continue');
+    }
+
+    /**
+     * @When my client has paid me in the current reporting period for work from a previous period
+     */
+    public function clientHasPaidPreviousCostsInCurrentPeriod()
+    {
+        $this->iAmOnDeputyCostsPreviousReceivedExistsPage();
+
+        $this->chooseOption(
+            'yes_no[profDeputyCostsHasPrevious]',
+            'yes',
             'HasPreviousCosts'
         );
 
@@ -64,6 +84,8 @@ trait DeputyCostsSectionTrait
      */
     public function iEnterValidCurrentCosts()
     {
+        $this->iAmOnDeputyCostsCostsReceievedPage();
+
         $this->fillInFieldTrackTotal(
             'deputy_costs_received[profDeputyFixedCost]',
             $this->faker->numberBetween(10, 10000),
@@ -78,6 +100,9 @@ trait DeputyCostsSectionTrait
      */
     public function iHaveNoAdditionalCosts()
     {
+        $this->iAmOnDeputyCostsBreakdownPage();
+
+//        throw new BehatException();
         $this->pressButton('Save and continue');
     }
 
@@ -86,6 +111,9 @@ trait DeputyCostsSectionTrait
      */
     public function iShouldSeeExpectedDeputyCostsOnSummary()
     {
+        throw new BehatException();
+        $this->iAmOnDeputyCostsSummaryPage();
+
         $this->expectedResultsDisplayedSimplified(null, true);
     }
 
@@ -132,6 +160,8 @@ trait DeputyCostsSectionTrait
      */
     public function iEnterValidSCCOAssessmentAmountAndDescription()
     {
+        $this->iAmOnDeputyCostsAmountSccoPage();
+
         $this->fillInField(
             'deputy_costs_scco[profDeputyCostsAmountToScco]',
             $this->faker->numberBetween(10, 10000),
@@ -152,9 +182,27 @@ trait DeputyCostsSectionTrait
      */
     public function iHaveChargedInterimCostsInlineWith19B()
     {
+        $this->iAmOnDeputyCostsInterimExistsPage();
+
         $this->chooseOption(
             'yes_no[profDeputyCostsHasInterim]',
             'yes',
+            'HaveInterimCosts'
+        );
+
+        $this->pressButton('Save and continue');
+    }
+
+    /**
+     * @When I have not charged in line with interim billing under Practice Direction 19B
+     */
+    public function iHaveNotChargedInterimCostsInlineWith19B()
+    {
+        $this->iAmOnDeputyCostsInterimExistsPage();
+
+        $this->chooseOption(
+            'yes_no[profDeputyCostsHasInterim]',
+            'no',
             'HaveInterimCosts'
         );
 
@@ -166,6 +214,8 @@ trait DeputyCostsSectionTrait
      */
     public function iProvideValidInterimCosts()
     {
+        $this->iAmOnDeputyCostsInterimPage();
+
         $this->fillInFieldTrackTotal(
             'costs_interims[profDeputyInterimCosts][0][amount]',
             $this->faker->numberBetween(10, 10000),
@@ -209,5 +259,64 @@ trait DeputyCostsSectionTrait
         );
 
         $this->pressButton('Save and continue');
+    }
+
+    /**
+     * @When I have fixed and assessed deputy costs to declare
+     */
+    public function iHaveFixedAndAssessedDeputyCosts()
+    {
+        $this->iAmOnDeputyCostsHowChargedPage();
+
+        $this->chooseOption(
+            'deputy_costs[profDeputyCostsHowCharged]',
+            'both',
+            'TypeOfCosts',
+            'Both fixed and assessed costs'
+        );
+
+        $this->pressButton('Save and continue');
+    }
+
+    /**
+     * @When I declare two previous costs with valid dates and amounts
+     */
+    public function iDeclareTwoPreviousCostsAndDates()
+    {
+        $this->iAmOnDeputyCostsPreviousReceivedPage();
+
+        $this->fillInPreviousReceivedFields(2018);
+        $this->pressButton('Save and add another');
+
+        $this->iAmOnDeputyCostsPreviousReceivedPage();
+        $this->assertOnAlertMessage('Cost added');
+
+        $this->fillInPreviousReceivedFields(2019);
+        $this->pressButton('Save and continue');
+    }
+
+    private function fillInPreviousReceivedFields(int $year)
+    {
+        $this->fillInDateFields(
+            'deputy_costs_previous[startDate]',
+            $this->faker->numberBetween(1, 27),
+            $this->faker->numberBetween(1, 5),
+            $year,
+            'PreviousReceived'
+        );
+
+        $this->fillInDateFields(
+            'deputy_costs_previous[endDate]',
+            $this->faker->numberBetween(1, 27),
+            $this->faker->numberBetween(6, 12),
+            $year,
+            'PreviousReceived'
+        );
+
+        $this->fillInFieldTrackTotal(
+            'deputy_costs_previous[amount]',
+            $this->faker->numberBetween(10, 1000),
+            'PreviousReceived'
+        );
     }
 }
