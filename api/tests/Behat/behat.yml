@@ -199,18 +199,32 @@ cross-browser-android-chrome:
                     build: 'Android'
 
 v2-tests-goutte:
+    formatters:
+        pretty:
+            output_styles:
+                passed: [ white, green, [ bold ] ]
+                passed_param: [ white, green, [ underscore, bold ] ]
+                undefined: [ yellow, null, [ underscore, bold ] ]
+                pending: [ yellow, null, [ underscore ] ]
+                pending_param: [ yellow, null, [ underscore, bold ] ]
+                failed: [ white, red, [ bold ] ]
+                failed_param: [ white, red, [ underscore, bold ] ]
+                skipped: [ cyan ]
+                skipped_param: [ cyan, null, [ bold ] ]
+                comment: [ cyan ]
+                tag: [ cyan ]
     suites:
-        feedback:
-            description: Covering features that allow users to give us feedback
-            paths: [ "%paths.base%/features-v2/feedback" ]
-            contexts:
-                - App\Tests\Behat\v2\Feedback\FeedbackFeatureContext
-
         client-management:
             description: Covering the client management features of the app (frontend and admin)
             paths: [ "%paths.base%/features-v2/client-management" ]
             contexts:
                 - App\Tests\Behat\v2\ClientManagement\ClientManagementFeatureContext
+
+        feedback:
+            description: Covering features that allow users to give us feedback
+            paths: [ "%paths.base%/features-v2/feedback" ]
+            contexts:
+                - App\Tests\Behat\v2\Feedback\FeedbackFeatureContext
 
         section-accounts:
             description: Covering the 'Accounts' section of the report
@@ -242,6 +256,12 @@ v2-tests-goutte:
             contexts:
                 - App\Tests\Behat\v2\Reporting\Sections\ReportingSectionsFeatureContext
 
+        section-expenses:
+            description: Covering the 'Expenses' section of the report
+            paths: [ "%paths.base%/features-v2/reporting/sections/deputy-expenses" ]
+            contexts:
+                - App\Tests\Behat\v2\Reporting\Sections\ReportingSectionsFeatureContext
+
         section-gifts:
             description: Covering the 'Gifts' section of the report
             paths: [ "%paths.base%/features-v2/reporting/sections/gifts" ]
@@ -254,15 +274,15 @@ v2-tests-goutte:
             contexts:
                 - App\Tests\Behat\v2\Reporting\Sections\ReportingSectionsFeatureContext
 
-        section-money-out:
-            description: Covering the 'Money Out' section of the report
-            paths: [ "%paths.base%/features-v2/reporting/sections/money-out" ]
-            contexts:
-                - App\Tests\Behat\v2\Reporting\Sections\ReportingSectionsFeatureContext
-
         section-money-in-high-assets:
             description: Covering the 'Money in High Assets' section of the report
             paths: [ "%paths.base%/features-v2/reporting/sections/money-in-high-assets" ]
+            contexts:
+                - App\Tests\Behat\v2\Reporting\Sections\ReportingSectionsFeatureContext
+
+        section-money-out:
+            description: Covering the 'Money Out' section of the report
+            paths: [ "%paths.base%/features-v2/reporting/sections/money-out" ]
             contexts:
                 - App\Tests\Behat\v2\Reporting\Sections\ReportingSectionsFeatureContext
 
@@ -277,7 +297,7 @@ v2-tests-goutte:
             paths: [ "%paths.base%/features-v2/reporting/sections/debts" ]
             contexts:
                 - App\Tests\Behat\v2\Reporting\Sections\ReportingSectionsFeatureContext
-                
+
         section-assets:
             description: Covering the 'Assets' section of the report
             paths: [ "%paths.base%/features-v2/reporting/sections/assets" ]

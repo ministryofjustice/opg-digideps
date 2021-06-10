@@ -18,7 +18,7 @@ Feature: Admin report checklist
       | December 2015 | care-plan-last-reviewed |
       | Yes           | has-assets              |
       | Impressionist painting | asset-impressionist-painting |
-      | 13 gold house, mortimer road, westminster, SW11 6TF | property-sw11-6tf-address    |
+      | 13 gold house mortimer road westminster SW11 6TF | property-sw11-6tf-address    |
       | 163,010                                             | asset-total                  |
       | £3.00                                               | debt-loans                   |
       | 200 per month payment plan                          | debt-management-details      |
