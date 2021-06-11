@@ -108,7 +108,8 @@ Removing from summary pages
 - `removeAnswerFromSection()` - removes a response via the summary page (and updates any associated tracked monetary values)
 
 Editing from summary pages
-- `editAnswerInSection()` - edits an answer via the summary page
+- `editSelectAnswerInSection()` - edits an answer submitted in a select via the summary page
+- `editFieldAnswerInSection()` - edits an answer submitted in a field via the summary page
 - `editAnswerInSectionTrackTotal()`  - edits an answer via the summary page (and updates any associated tracked monetary values)
 
 #### Form Sections

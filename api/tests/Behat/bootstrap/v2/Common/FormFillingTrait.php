@@ -256,7 +256,7 @@ trait FormFillingTrait
      */
     public function editAnswerInSectionTrackTotal(NodeElement $summaryRowToEdit, string $fieldName, string $formSectionName): array
     {
-        $currentValueString = $summaryRowToEdit->find('xpath', '//td[text()[contains(.,"£")]]')->getText();
+        $currentValueString = $summaryRowToEdit->find('xpath', '//td[contains(.,"£")] | //dd[contains(.,"£")]')->getText();
         $currentValueInt = intval(str_replace([',', '£'], '', $currentValueString));
 
         $this->removeAnswerFromSection($fieldName, $formSectionName);
@@ -285,7 +285,7 @@ trait FormFillingTrait
      *
      * @throws ElementNotFoundException
      */
-    public function editAnswerInSection(NodeElement $summaryRowToEdit, string $fieldName, string $newValue, string $formSectionName): array
+    public function editFieldAnswerInSection(NodeElement $summaryRowToEdit, string $fieldName, string $newValue, string $formSectionName)
     {
         $this->removeAnswerFromSection($fieldName, $formSectionName);
 
@@ -294,6 +294,31 @@ trait FormFillingTrait
         $this->fillInField(
             $fieldName,
             $newValue,
+            $formSectionName
+        );
+
+        $this->pressButton('Save and continue');
+    }
+
+    /**
+     * @param NodeElement $summaryRowToEdit The NodeElement of the item row on a summary page to edit
+     * @param string      $selectName       The name of the form select to add a new value to
+     * @param string      $newSelectOption  The new option
+     * @param string      $formSectionName  Which section name in $submittedAnswersByFormSections the item to
+     *                                      edit belongs to
+     * @param string|null $translatedValue  The translated string of the option selected (optional)
+     *
+     * @throws ElementNotFoundException
+     */
+    public function editSelectAnswerInSection(NodeElement $summaryRowToEdit, string $selectName, string $newSelectOption, string $formSectionName, ?string $translatedValue = null)
+    {
+        $this->removeAnswerFromSection($selectName, $formSectionName);
+
+        $summaryRowToEdit->clickLink('Edit');
+
+        $this->chooseOption(
+            $selectName,
+            $newSelectOption,
             $formSectionName
         );
 

@@ -294,6 +294,9 @@ MSG;
         $userInput = json_encode($this->submittedAnswersByFormSections, JSON_PRETTY_PRINT);
         $summaryExtract = json_encode($this->summarySectionItemsFound, JSON_PRETTY_PRINT);
 
+        $userInput = str_replace('\u00a3', '£', $userInput);
+        $summaryExtract = str_replace('\u00a3', '£', $summaryExtract);
+
         $debugMessage = <<<MSG
 ====================== DEBUG ======================
 

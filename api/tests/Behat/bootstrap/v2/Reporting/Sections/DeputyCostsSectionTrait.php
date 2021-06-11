@@ -102,7 +102,6 @@ trait DeputyCostsSectionTrait
     {
         $this->iAmOnDeputyCostsBreakdownPage();
 
-//        throw new BehatException();
         $this->pressButton('Save and continue');
     }
 
@@ -330,15 +329,113 @@ trait DeputyCostsSectionTrait
             $this->fillInFieldTrackTotal(
                 "deputy_other_costs[profDeputyOtherCosts][$index][amount]",
                 $this->faker->numberBetween(10, 10000),
-                'AdditionalCosts'
+                "AdditionalCosts$index"
             );
         }
 
         $this->fillInField(
             'deputy_other_costs[profDeputyOtherCosts][6][moreDetails]',
-            $this->faker->sentence(20)
+            $this->faker->sentence(20),
+            'AdditionalCosts6'
         );
 
         $this->pressButton('Save and continue');
+    }
+
+    /**
+     * @When I provide all required information for fixed costs with previous period and additional costs
+     */
+    public function iProvideAllRequiredInfoForFixedCosts()
+    {
+        $this->iHaveFixedDeputyCosts();
+        $this->clientHasPaidPreviousCostsInCurrentPeriod();
+        $this->iDeclareTwoPreviousCostsAndDates();
+        $this->iEnterValidCurrentCosts();
+        $this->iHaveAllAdditionalCostsToDeclare();
+    }
+
+    /**
+     * @When I edit the details of a cost incurred in a previous period
+     */
+    public function iEditTheDetailsOfPreviousPeriodCost()
+    {
+        $locator = '//dt[contains(., "Received for")]/..';
+        $previousPeriodCostRow = $this->getSession()->getPage()->find('xpath', $locator);
+
+        $this->editAnswerInSectionTrackTotal(
+            $previousPeriodCostRow,
+            'deputy_costs_previous[amount]',
+            'PreviousReceived'
+        );
+
+        $this->iAmOnDeputyCostsSummaryPage();
+    }
+
+    /**
+     * @When I edit the amount of costs incurred in the current period
+     */
+    public function iEditTheDetailsOfCurrentPeriodCost()
+    {
+        $locator = '//dt[contains(., "Paid for this reporting period")]/..';
+        $currentPeriodCostRow = $this->getSession()->getPage()->find('xpath', $locator);
+
+        $this->editAnswerInSectionTrackTotal(
+            $currentPeriodCostRow,
+            'deputy_costs_received[profDeputyFixedCost]',
+            'CurrentPeriodFixedCosts'
+        );
+
+        $this->iAmOnDeputyCostsSummaryPage();
+    }
+
+    /**
+     * @When I edit the amount of an additional cost incurred in the current period
+     */
+    public function iEditTheDetailsOfAdditionalCostCurrentPeriod()
+    {
+        $locator = '//dt[contains(., "Appointment")]/..';
+        $additionalCostRow = $this->getSession()->getPage()->find('xpath', $locator);
+
+        $this->editAnswerInSectionTrackTotal(
+            $additionalCostRow,
+            'deputy_other_costs[profDeputyOtherCosts][0][amount]',
+            'AdditionalCosts0'
+        );
+
+        $this->iAmOnDeputyCostsSummaryPage();
+    }
+
+    /**
+     * @When I change the type of costs incurred to 'Assessed costs'
+     */
+    public function iChangeTypeOfCostsIncurredToAssessed()
+    {
+        $locator = '//dt[contains(., "How did you charge for the services")]/..';
+        $additionalCostRow = $this->getSession()->getPage()->find('xpath', $locator);
+
+        $this->editSelectAnswerInSection(
+            $additionalCostRow,
+            'deputy_costs[profDeputyCostsHowCharged]',
+            'assessed',
+            'TypeOfCosts',
+            'Assessed costs'
+        );
+
+        $this->iAmOnDeputyCostsSummaryPage();
+    }
+
+    /**
+     * @When there should be two new questions to answer
+     */
+    public function thereShouldBeTwoNewQuestionsToAnswer()
+    {
+        $locator = '//dd[contains(., "Please answer this question")]/..';
+        $additionalCostRow = $this->getSession()->getPage()->findAll('xpath', $locator);
+
+        $this->assertIntEqualsInt(
+            2,
+            count($additionalCostRow),
+            'Summary page rows with text "Please answer this question"'
+        );
     }
 }

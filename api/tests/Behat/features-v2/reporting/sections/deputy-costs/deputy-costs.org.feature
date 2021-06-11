@@ -58,7 +58,7 @@ Feature: Deputy costs - Applies to Org users only
         And I have no additional costs to declare for the current reporting period
         Then I should see the expected responses on the deputy costs summary page
 
-    @prof-admin-not-started @acs2
+    @prof-admin-not-started
     Scenario: A professional deputy has additional costs to declare
         Given a Professional Admin Deputy has not started a report
         When I visit and start the deputy costs report section for an existing client
@@ -68,3 +68,15 @@ Feature: Deputy costs - Applies to Org users only
         And I enter a valid amount for the current reporting period costs
         And I have additional costs in all seven categories to declare for the current reporting period
         Then I should see the expected responses on the deputy costs summary page
+
+    @prof-admin-not-started @acs2
+    Scenario: A professional deputy edits all available questions from the summary page
+        Given a Professional Admin Deputy has not started a report
+        When I visit and start the deputy costs report section for an existing client
+        And I provide all required information for fixed costs with previous period and additional costs
+        And I edit the details of a cost incurred in a previous period
+        And I edit the amount of costs incurred in the current period
+        And I edit the amount of an additional cost incurred in the current period
+        Then I should see the expected responses on the deputy costs summary page
+        When I change the type of costs incurred to 'Assessed costs'
+        Then there should be two new questions to answer
