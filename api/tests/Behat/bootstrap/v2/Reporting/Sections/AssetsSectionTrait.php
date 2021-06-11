@@ -170,7 +170,7 @@ trait AssetsSectionTrait
         $streetAddress = $this->faker->streetAddress;
         $streetAddress = str_replace(["\n", "\r"], ' ', $streetAddress);
         $postcode = $this->faker->postcode;
-        $formFields[] = [$streetAddress.', '.$postcode];
+        $formFields[] = [$streetAddress.' '.$postcode];
 
         $this->fillField('asset[address]', $streetAddress);
         $this->fillField('asset[postcode]', $postcode);
