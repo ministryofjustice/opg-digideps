@@ -217,7 +217,7 @@ trait DeputyCostsSectionTrait
         $this->fillInFieldTrackTotal(
             'costs_interims[profDeputyInterimCosts][0][amount]',
             $this->faker->numberBetween(10, 10000),
-            'CurrentPeriodInterimCosts'
+            'CurrentPeriodInterimCosts0'
         );
 
         $this->fillInDateFields(
@@ -225,13 +225,13 @@ trait DeputyCostsSectionTrait
             $this->faker->numberBetween(1, 27),
             $this->faker->numberBetween(1, 3),
             2020,
-            'CurrentPeriodInterimCosts'
+            'CurrentPeriodInterimCosts0'
         );
 
         $this->fillInFieldTrackTotal(
             'costs_interims[profDeputyInterimCosts][1][amount]',
             $this->faker->numberBetween(10, 10000),
-            'CurrentPeriodInterimCosts'
+            'CurrentPeriodInterimCosts1'
         );
 
         $this->fillInDateFields(
@@ -239,13 +239,13 @@ trait DeputyCostsSectionTrait
             $this->faker->numberBetween(1, 27),
             $this->faker->numberBetween(4, 8),
             2020,
-            'CurrentPeriodInterimCosts'
+            'CurrentPeriodInterimCosts1'
         );
 
         $this->fillInFieldTrackTotal(
             'costs_interims[profDeputyInterimCosts][2][amount]',
             $this->faker->numberBetween(10, 10000),
-            'CurrentPeriodInterimCosts'
+            'CurrentPeriodInterimCosts2'
         );
 
         $this->fillInDateFields(
@@ -253,7 +253,7 @@ trait DeputyCostsSectionTrait
             $this->faker->numberBetween(1, 27),
             $this->faker->numberBetween(9, 12),
             2020,
-            'CurrentPeriodInterimCosts'
+            'CurrentPeriodInterimCosts2'
         );
 
         $this->pressButton('Save and continue');
@@ -355,6 +355,19 @@ trait DeputyCostsSectionTrait
     }
 
     /**
+     * @When I provide all required information for assessed costs without previous period and additional costs
+     */
+    public function iProvideAllRequiredInfoForAssessedCosts()
+    {
+        $this->iHaveAssessedDeputyCosts();
+        $this->clientHasNotPaidPreviousCostsInCurrentPeriod();
+        $this->iHaveChargedInterimCostsInlineWith19B();
+        $this->iProvideValidInterimCosts();
+        $this->iEnterValidSCCOAssessmentAmountAndDescription();
+        $this->iHaveNoAdditionalCosts();
+    }
+
+    /**
      * @When I edit the details of a cost incurred in a previous period
      */
     public function iEditTheDetailsOfPreviousPeriodCost()
@@ -406,9 +419,9 @@ trait DeputyCostsSectionTrait
     }
 
     /**
-     * @When I change the type of costs incurred to 'Assessed costs'
+     * @When I change the type of costs incurred to :typeOfCost costs
      */
-    public function iChangeTypeOfCostsIncurredToAssessed()
+    public function iChangeTypeOfCostsIncurredToAssessed(string $typeOfCost)
     {
         $locator = '//dt[contains(., "How did you charge for the services")]/..';
         $additionalCostRow = $this->getSession()->getPage()->find('xpath', $locator);
@@ -416,7 +429,7 @@ trait DeputyCostsSectionTrait
         $this->editSelectAnswerInSection(
             $additionalCostRow,
             'deputy_costs[profDeputyCostsHowCharged]',
-            'assessed',
+            strtolower($typeOfCost),
             'TypeOfCosts',
             'Assessed costs'
         );
@@ -425,17 +438,70 @@ trait DeputyCostsSectionTrait
     }
 
     /**
-     * @When there should be two new questions to answer
+     * @When there should be :numberOfQuestions new questions to answer
      */
-    public function thereShouldBeTwoNewQuestionsToAnswer()
+    public function thereShouldBeTwoNewQuestionsToAnswer(string $numberOfQuestions)
     {
         $locator = '//dd[contains(., "Please answer this question")]/..';
         $additionalCostRow = $this->getSession()->getPage()->findAll('xpath', $locator);
 
         $this->assertIntEqualsInt(
-            2,
+            intval($numberOfQuestions),
             count($additionalCostRow),
             'Summary page rows with text "Please answer this question"'
         );
+    }
+
+    /**
+     * @When I edit the amount of one of the interim interim billing under Practice Direction 19B
+     */
+    public function iEditOne19BInterimCost()
+    {
+        $locator = '//dt[contains(., "Costs for interim 1")]/..';
+        $interim19BCostsRow = $this->getSession()->getPage()->find('xpath', $locator);
+
+        $this->editAnswerInSectionTrackTotal(
+            $interim19BCostsRow,
+            'costs_interims[profDeputyInterimCosts][0][amount]',
+            'CurrentPeriodInterimCosts0'
+        );
+
+        $this->iAmOnDeputyCostsSummaryPage();
+    }
+
+    /**
+     * @When I edit the amount being submitted to SCCO for assessment
+     */
+    public function iEditAmountBeingSubmittedToSCCO()
+    {
+        $locator = '//dt[contains(., "What amount is being submitted to SCCO")]/..';
+        $sccoEstimateRow = $this->getSession()->getPage()->find('xpath', $locator);
+
+        $this->editFieldAnswerInSection(
+            $sccoEstimateRow,
+            'deputy_costs_scco[profDeputyCostsAmountToScco]',
+            $this->faker->numberBetween(10, 10000),
+            'SCCOAssessment'
+        );
+
+        $this->iAmOnDeputyCostsSummaryPage();
+    }
+
+    /**
+     * @When I change my response to charged in line with interim billing under Practice Direction 19B to no
+     */
+    public function iChangeDirection19BInterimCostsToNo()
+    {
+        $locator = '//dt[contains(., "Practice Direction 19B")]/..';
+        $additionalCostRow = $this->getSession()->getPage()->find('xpath', $locator);
+
+        $this->editSelectAnswerInSection(
+            $additionalCostRow,
+            'yes_no[profDeputyCostsHasInterim]',
+            'no',
+            'HaveInterimCosts'
+        );
+
+        $this->iAmOnDeputyCostsSummaryPage();
     }
 }

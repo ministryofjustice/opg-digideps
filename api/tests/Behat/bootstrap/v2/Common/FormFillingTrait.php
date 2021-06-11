@@ -279,13 +279,13 @@ trait FormFillingTrait
     /**
      * @param NodeElement $summaryRowToEdit The NodeElement of the item row on a summary page to edit
      * @param string      $fieldName        The name of the form field to add a new value to
-     * @param string      $newValue         The new value
+     * @param mixed       $newValue         The new value
      * @param string      $formSectionName  Which section name in $submittedAnswersByFormSections the item to
      *                                      edit belongs to
      *
      * @throws ElementNotFoundException
      */
-    public function editFieldAnswerInSection(NodeElement $summaryRowToEdit, string $fieldName, string $newValue, string $formSectionName)
+    public function editFieldAnswerInSection(NodeElement $summaryRowToEdit, string $fieldName, $newValue, string $formSectionName)
     {
         $this->removeAnswerFromSection($fieldName, $formSectionName);
 
