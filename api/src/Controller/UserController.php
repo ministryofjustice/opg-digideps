@@ -120,7 +120,7 @@ class UserController extends RestController
         // check if rolename in data - if so add audit log
         $this->userService->editUser($originalUser, $requestedUser);
 
-        if ($requestedUser->getRegistrationToken() !== NULL) {
+        if (null !== $requestedUser->getRegistrationToken()) {
             $requestedUser->setRegistrationToken(null);
             $this->em->persist($requestedUser);
             $this->em->flush();
@@ -275,7 +275,7 @@ class UserController extends RestController
      * Delete user with clients.
      *
      * @Route("/{id}", methods={"DELETE"})
-     * @Security("is_granted('ROLE_SUPER_ADMIN')")
+     * @Security("is_granted('ROLE_ADMIN_MANAGER')")
      *
      * @param int $id
      *
@@ -482,7 +482,7 @@ class UserController extends RestController
     }
 
     /**
-     * Endpoint for getting a reg token for user
+     * Endpoint for getting a reg token for user.
      *
      * @Route("/get-reg-token", methods={"GET"})
      *

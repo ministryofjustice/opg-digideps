@@ -3,6 +3,7 @@
 namespace App\Service;
 
 use App\Entity as EntityDir;
+use App\Entity\User;
 use Symfony\Component\HttpFoundation\Session\Session;
 use Symfony\Component\HttpFoundation\Session\SessionInterface;
 use Symfony\Component\Routing\Exception\ResourceNotFoundException;
@@ -58,10 +59,7 @@ class Redirector
 
     /**
      * Redirector constructor.
-     * @param TokenStorageInterface         $tokenStorage
-     * @param AuthorizationCheckerInterface $authChecker
-     * @param RouterInterface               $router
-     * @param Session                       $session
+     *
      * @param $env
      */
     public function __construct(
@@ -98,7 +96,7 @@ class Redirector
         } elseif ($this->authChecker->isGranted(EntityDir\User::ROLE_AD)) {
             return $this->router->generate('ad_homepage');
         } elseif ($user->isDeputyOrg()) {
-            if ($session->has('login-context') && $session->get('login-context') === 'password-create') {
+            if ($session->has('login-context') && 'password-create' === $session->get('login-context')) {
                 return $this->router->generate('user_details');
             } else {
                 return $this->router->generate('org_dashboard');
@@ -111,20 +109,21 @@ class Redirector
     }
 
     /**
-     * //TODO refactor remove. seeem overcomplicated
-     * @param  EntityDir\User $user
-     * @param  string         $currentRoute
+     * //TODO refactor remove. seeem overcomplicated.
+     *
+     * @param string $currentRoute
+     *
      * @return bool|string
      */
     public function getCorrectRouteIfDifferent(EntityDir\User $user, $currentRoute)
     {
         // Redirect to appropriate homepage
-        if (in_array($currentRoute, ['lay_home','ndr_index'])) {
+        if (in_array($currentRoute, ['lay_home', 'ndr_index'])) {
             $route = $user->isNdrEnabled() ? 'ndr_index' : 'lay_home';
         }
 
         //none of these corrections apply to admin
-        if (!in_array($user->getRoleName(), [EntityDir\User::ROLE_ADMIN, EntityDir\User::ROLE_SUPER_ADMIN])) {
+        if (!$user->hasAdminRole()) {
             if ($user->getIsCoDeputy()) {
                 // already verified - shouldn't be on verification page
                 if ('codep_verification' == $currentRoute && $user->getCoDeputyClientConfirmed()) {
@@ -214,7 +213,7 @@ class Redirector
      */
     public function getHomepageRedirect()
     {
-        if ($this->env === 'admin') {
+        if ('admin' === $this->env) {
             // admin domain: redirect to specific admin/ad homepage, or login page (if not logged)
             if ($this->authChecker->isGranted(EntityDir\User::ROLE_ADMIN)) {
                 return $this->router->generate('admin_homepage');

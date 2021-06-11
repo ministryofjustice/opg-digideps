@@ -56,6 +56,7 @@ addUserForm:
     defaultOption: Please select ...
     options:
       ROLE_ADMIN: Admin
+      ROLE_ADMIN_MANAGER: Admin Manager
       ROLE_SUPER_ADMIN: Super admin
       ROLE_LAY_DEPUTY: Lay Deputy
       ROLE_PA_NAMED: Public Authority (named)

@@ -38,8 +38,9 @@ class AddUserType extends AbstractType
         $staffRoles = [User::ROLE_ADMIN];
 
         $loggedInUser = $this->tokenStorage->getToken()->getUser();
-        if ($loggedInUser->getRoleName() === User::ROLE_SUPER_ADMIN) {
+        if (User::ROLE_SUPER_ADMIN === $loggedInUser->getRoleName()) {
             $staffRoles[] = User::ROLE_SUPER_ADMIN;
+            $staffRoles[] = User::ROLE_ADMIN_MANAGER;
         }
 
         $builder->add('email', FormTypes\TextType::class)
@@ -58,7 +59,7 @@ class AddUserType extends AbstractType
             ->add('roleNameDeputy', FormTypes\ChoiceType::class, [
                 'choices' => $deputyRoles,
                 'choice_label' => function ($choice) {
-                    return 'addUserForm.roleName.options.' . $choice;
+                    return 'addUserForm.roleName.options.'.$choice;
                 },
                 'placeholder' => 'addUserForm.roleName.defaultOption',
                 'mapped' => false,
@@ -66,7 +67,7 @@ class AddUserType extends AbstractType
             ->add('roleNameStaff', FormTypes\ChoiceType::class, [
                 'choices' => $staffRoles,
                 'choice_label' => function ($choice) {
-                    return 'addUserForm.roleName.options.' . $choice;
+                    return 'addUserForm.roleName.options.'.$choice;
                 },
                 'placeholder' => 'addUserForm.roleName.defaultOption',
                 'mapped' => false,
@@ -78,7 +79,7 @@ class AddUserType extends AbstractType
             $user = $event->getData();
             $form = $event->getForm();
 
-            if (in_array($user->getRoleName(), $staffRoles) || $user->getRoleName() === 'ROLE_AD') {
+            if (in_array($user->getRoleName(), $staffRoles) || 'ROLE_AD' === $user->getRoleName()) {
                 $form->get('roleType')->setData('staff');
                 $form->get('roleNameStaff')->setData($user->getRoleName());
             } else {
@@ -91,7 +92,7 @@ class AddUserType extends AbstractType
             $data = $event->getData();
 
             if (isset($data['roleType'])) {
-                $field = 'roleName' . ucfirst($data['roleType']);
+                $field = 'roleName'.ucfirst($data['roleType']);
                 $data['roleName'] = $data[$field];
             }
 

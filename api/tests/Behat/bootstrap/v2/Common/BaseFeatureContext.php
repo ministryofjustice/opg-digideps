@@ -8,6 +8,7 @@ use App\Tests\Behat\BehatException;
 use App\Tests\Behat\v2\Helpers\FixtureHelper;
 use Behat\Mink\Driver\GoutteDriver;
 use Behat\MinkExtension\Context\MinkContext;
+use Doctrine\ORM\EntityManagerInterface;
 use Exception;
 use Faker\Factory;
 use Faker\Generator;
@@ -25,16 +26,18 @@ class BaseFeatureContext extends MinkContext
     use FixturesTrait;
     use FormFillingTrait;
     use INavigateToAdminTrait;
-    use IShouldBeOnTrait;
+    use IShouldBeOnAdminTrait;
+    use IShouldBeOnFrontendTrait;
     use IVisitAdminTrait;
     use IVisitFrontendTrait;
     use PageUrlsTrait;
     use ReportTrait;
+    use UserExistsTrait;
 
     public const REPORT_SECTION_ENDPOINT = '/%s/%s/%s';
 
     public UserDetails $adminDetails;
-    public UserDetails $elevatedAdminDetails;
+    public UserDetails $adminManagerDetails;
     public UserDetails $superAdminDetails;
 
     public UserDetails $layDeputyNotStartedPfaHighAssetsDetails;
@@ -69,10 +72,12 @@ class BaseFeatureContext extends MinkContext
     private KernelInterface $symfonyKernel;
 
     private FixtureHelper $fixtureHelper;
+    public EntityManagerInterface $em;
 
     public function __construct(
         FixtureHelper $fixtureHelper,
-        KernelInterface $symfonyKernel
+        KernelInterface $symfonyKernel,
+        EntityManagerInterface $em
     ) {
         $this->symfonyKernel = $symfonyKernel;
 
@@ -81,6 +86,7 @@ class BaseFeatureContext extends MinkContext
         }
 
         $this->fixtureHelper = $fixtureHelper;
+        $this->em = $em;
     }
 
     /**
@@ -101,7 +107,7 @@ class BaseFeatureContext extends MinkContext
     }
 
     /**
-     * @BeforeScenario @pfa-high-not-started
+     * @BeforeScenario @lay-pfa-high-not-started
      */
     public function createPfaHighNotStarted()
     {
@@ -110,7 +116,7 @@ class BaseFeatureContext extends MinkContext
     }
 
     /**
-     * @BeforeScenario @pfa-high-completed
+     * @BeforeScenario @lay-pfa-high-completed
      */
     public function createPfaHighCompleted()
     {
@@ -119,7 +125,7 @@ class BaseFeatureContext extends MinkContext
     }
 
     /**
-     * @BeforeScenario @pfa-high-submitted
+     * @BeforeScenario @lay-pfa-high-submitted
      */
     public function createPfaHighSubmitted()
     {
@@ -128,7 +134,7 @@ class BaseFeatureContext extends MinkContext
     }
 
     /**
-     * @BeforeScenario @pfa-low-not-started
+     * @BeforeScenario @lay-pfa-low-not-started
      */
     public function createPfaLowNotStarted()
     {
@@ -137,7 +143,7 @@ class BaseFeatureContext extends MinkContext
     }
 
     /**
-     * @BeforeScenario @pfa-low-completed
+     * @BeforeScenario @lay-pfa-low-completed
      */
     public function createPfaLowCompleted()
     {
@@ -146,7 +152,7 @@ class BaseFeatureContext extends MinkContext
     }
 
     /**
-     * @BeforeScenario @health-welfare-not-started
+     * @BeforeScenario @lay-health-welfare-not-started
      */
     public function createHealthWelfareNotStarted()
     {
@@ -155,7 +161,7 @@ class BaseFeatureContext extends MinkContext
     }
 
     /**
-     * @BeforeScenario @health-welfare-completed
+     * @BeforeScenario @lay-health-welfare-completed
      */
     public function createHealthWelfareCompleted()
     {
@@ -218,12 +224,12 @@ class BaseFeatureContext extends MinkContext
     }
 
     /**
-     * @BeforeScenario @elevated-admin
+     * @BeforeScenario @admin-manager
      */
-    public function createElevatedAdmin()
+    public function createAdminManager()
     {
-        $userDetails = $this->fixtureHelper->createElevatedAdmin($this->testRunId);
-        $this->fixtureUsers[] = $this->elevatedAdminDetails = new UserDetails($userDetails);
+        $userDetails = $this->fixtureHelper->createAdminManager($this->testRunId);
+        $this->fixtureUsers[] = $this->adminManagerDetails = new UserDetails($userDetails);
     }
 
     /**

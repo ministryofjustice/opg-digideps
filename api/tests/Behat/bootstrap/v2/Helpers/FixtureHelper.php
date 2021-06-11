@@ -30,7 +30,7 @@ class FixtureHelper
     private NamedDeputyTestHelper $namedDeputyTestHelper;
 
     private User $admin;
-    private User $elevatedAdmin;
+    private User $adminManager;
     private User $superAdmin;
 
     private User $layPfaHighAssetsNotStarted;
@@ -84,18 +84,13 @@ class FixtureHelper
         $previousReport = $user->getNdrEnabled() ? null : $client->getReports()[0];
 
         $userDetails = [
+            'userId' => $user->getId(),
             'userEmail' => $user->getEmail(),
             'userRole' => $user->getRoleName(),
             'userFirstName' => $user->getFirstname(),
             'userLastName' => $user->getLastname(),
             'userFullName' => $user->getFullName(),
-            'userFullAddressArray' => array_filter([
-                $user->getAddress1(),
-                $user->getAddress2(),
-                $user->getAddress3(),
-                $user->getAddressPostcode(),
-                $user->getAddressCountry(),
-            ]),
+            'userFullAddressArray' => self::buildAddressArray($user),
             'userPhone' => $user->getPhoneMain(),
             'courtOrderNumber' => $client->getCaseNumber(),
             'clientId' => $client->getId(),
@@ -144,9 +139,181 @@ class FixtureHelper
     public static function buildAdminUserDetails(User $user)
     {
         return [
+            'userId' => $user->getId(),
             'userEmail' => $user->getEmail(),
             'userRole' => $user->getRoleName(),
+            'userFirstName' => $user->getFirstname(),
+            'userLastName' => $user->getLastname(),
+            'userFullName' => $user->getFullName(),
+            'userFullAddressArray' => self::buildAddressArray($user),
         ];
+    }
+
+    private static function buildAddressArray(User $user): array
+    {
+        return array_filter(
+            [
+                'address1' => $user->getAddress1(),
+                'address2' => $user->getAddress2(),
+                'address3' => $user->getAddress3(),
+                'addressPostcode' => $user->getAddressPostcode(),
+                'addressCountry' => $user->getAddressCountry(),
+            ],
+            function ($value, $key) {
+                return !is_null($value);
+            },
+            ARRAY_FILTER_USE_BOTH
+        );
+    }
+
+    private function createUserFixtures()
+    {
+        $this->createAdminUsers();
+        $this->createDeputies();
+
+        $users = [
+            $this->admin,
+            $this->adminManager,
+            $this->superAdmin,
+            $this->layHealthWelfareNotStarted,
+            $this->layHealthWelfareCompleted,
+            $this->layHealthWelfareSubmitted,
+            $this->layPfaHighAssetsNotStarted,
+            $this->layPfaHighAssetsCompleted,
+            $this->layPfaHighAssetsSubmitted,
+            $this->layPfaLowAssetsNotStarted,
+            $this->layPfaLowAssetsCompleted,
+            $this->layPfaLowAssetsSubmitted,
+            $this->layNdrNotStarted,
+            $this->layNdrCompleted,
+            $this->layNdrSubmitted,
+            $this->profAdminNotStarted,
+            $this->profAdminCompleted,
+            $this->profAdminSubmitted,
+        ];
+
+        foreach ($users as $user) {
+            $user->setPassword($this->encoder->encodePassword($user, $this->fixtureParams['account_password']));
+            $this->em->persist($user);
+        }
+
+        $this->em->flush();
+    }
+
+    private function createAdminUsers()
+    {
+        $this->admin = $this->createUser(User::ROLE_ADMIN);
+        $this->adminManager = $this->createUser(User::ROLE_ADMIN_MANAGER);
+        $this->superAdmin = $this->createUser(User::ROLE_SUPER_ADMIN);
+    }
+
+    public function createUser(string $roleName, ?string $email = null)
+    {
+        if (is_null($email)) {
+            $email = sprintf('%s-%s@t.uk', substr($roleName, 5), $this->testRunId);
+        }
+
+        return $this->userTestHelper->createUser(null, $roleName, $email);
+    }
+
+    public function createAndPersistUser(string $roleName, ?string $email = null)
+    {
+        $user = $this->createUser($roleName, $email);
+
+        $this->em->persist($user);
+        $this->em->flush();
+
+        return $user;
+    }
+
+    private function createDeputies()
+    {
+        $this->createLaysPfaHighAssets();
+        $this->createLaysPfaLowAssets();
+        $this->createLaysHealthWelfare();
+        $this->createNdrLays();
+        $this->createProfs();
+    }
+
+    private function createLaysPfaHighAssets()
+    {
+        $this->layPfaHighAssetsNotStarted = $this->userTestHelper
+            ->createUser(null, User::ROLE_LAY_DEPUTY, sprintf('lay-pfa-high-assets-not-started-%s@t.uk', $this->testRunId));
+        $this->addClientsAndReportsToLayDeputy($this->layPfaHighAssetsNotStarted, false, false, Report::TYPE_102);
+
+        $this->layPfaHighAssetsCompleted = $this->userTestHelper
+            ->createUser(null, User::ROLE_LAY_DEPUTY, sprintf('lay-pfa-high-assets-completed-%s@t.uk', $this->testRunId));
+        $this->addClientsAndReportsToLayDeputy($this->layPfaHighAssetsCompleted, true, false, Report::TYPE_102);
+
+        $this->layPfaHighAssetsSubmitted = $this->userTestHelper
+            ->createUser(null, User::ROLE_LAY_DEPUTY, sprintf('lay-pfa-high-assets-submitted-%s@t.uk', $this->testRunId));
+        $this->addClientsAndReportsToLayDeputy($this->layPfaHighAssetsSubmitted, true, true, Report::TYPE_102);
+    }
+
+    private function createLaysPfaLowAssets()
+    {
+        $this->layPfaLowAssetsNotStarted = $this->userTestHelper
+            ->createUser(null, User::ROLE_LAY_DEPUTY, sprintf('lay-pfa-low-assets-not-started-%s@t.uk', $this->testRunId));
+        $this->addClientsAndReportsToLayDeputy($this->layPfaLowAssetsNotStarted, false, false, Report::TYPE_103);
+
+        $this->layPfaLowAssetsCompleted = $this->userTestHelper
+            ->createUser(null, User::ROLE_LAY_DEPUTY, sprintf('lay-pfa-low-assets-completed-%s@t.uk', $this->testRunId));
+        $this->addClientsAndReportsToLayDeputy($this->layPfaLowAssetsCompleted, true, false, Report::TYPE_103);
+
+        $this->layPfaLowAssetsSubmitted = $this->userTestHelper
+            ->createUser(null, User::ROLE_LAY_DEPUTY, sprintf('lay-pfa-low-assets-submitted-%s@t.uk', $this->testRunId));
+        $this->addClientsAndReportsToLayDeputy($this->layPfaLowAssetsSubmitted, true, true, Report::TYPE_103);
+    }
+
+    private function createLaysHealthWelfare()
+    {
+        $this->layHealthWelfareNotStarted = $this->userTestHelper
+            ->createUser(null, User::ROLE_LAY_DEPUTY, sprintf('lay-health-welfare-not-started-%s@t.uk', $this->testRunId));
+        $this->addClientsAndReportsToLayDeputy($this->layHealthWelfareNotStarted, false, false, Report::TYPE_104);
+
+        $this->layHealthWelfareCompleted = $this->userTestHelper
+            ->createUser(null, User::ROLE_LAY_DEPUTY, sprintf('lay-health-welfare-completed-%s@t.uk', $this->testRunId));
+        $this->addClientsAndReportsToLayDeputy($this->layHealthWelfareCompleted, true, false, Report::TYPE_104);
+
+        $this->layHealthWelfareSubmitted = $this->userTestHelper
+            ->createUser(null, User::ROLE_LAY_DEPUTY, sprintf('lay-health-welfare-submitted-%s@t.uk', $this->testRunId));
+        $this->addClientsAndReportsToLayDeputy($this->layHealthWelfareSubmitted, true, true, Report::TYPE_104);
+    }
+
+    private function createNdrLays()
+    {
+        $this->ndrLayNotStarted = $this->userTestHelper
+            ->createUser(null, User::ROLE_LAY_DEPUTY, sprintf('lay-ndr-not-started-%s@t.uk', $this->testRunId));
+        $this->addClientsAndReportsToNdrLayDeputy($this->ndrLayNotStarted, false, false);
+
+        $this->ndrLayCompleted = $this->userTestHelper
+            ->createUser(null, User::ROLE_LAY_DEPUTY, sprintf('lay-ndr-completed-%s@t.uk', $this->testRunId));
+        $this->addClientsAndReportsToNdrLayDeputy($this->ndrLayCompleted, true, false);
+
+        $this->ndrLaySubmitted = $this->userTestHelper
+            ->createUser(null, User::ROLE_LAY_DEPUTY, sprintf('lay-ndr-submitted-%s@t.uk', $this->testRunId));
+        $this->addClientsAndReportsToNdrLayDeputy($this->ndrLaySubmitted, true, true);
+    }
+
+    private function createProfs()
+    {
+        $orgName = sprintf('prof-%s-%s', $this->orgName, $this->testRunId);
+        $emailIdentifier = sprintf('prof-%s-%s', $this->orgEmailIdentifier, $this->testRunId);
+
+        $organisation = $this->organisationTestHelper->createOrganisation($orgName, $emailIdentifier);
+        $this->em->persist($organisation);
+
+        $this->profAdminNotStarted = $this->userTestHelper
+            ->createUser(null, User::ROLE_PROF_ADMIN, sprintf('prof-admin-not-started-%s@t.uk', $this->testRunId));
+        $this->addOrgClientsNamedDeputyAndReportsToOrgDeputy($this->profAdminNotStarted, $organisation, false, false);
+
+        $this->profAdminCompleted = $this->userTestHelper
+            ->createUser(null, User::ROLE_PROF_ADMIN, sprintf('prof-admin-completed-%s@t.uk', $this->testRunId));
+        $this->addOrgClientsNamedDeputyAndReportsToOrgDeputy($this->profAdminCompleted, $organisation, true, false);
+
+        $this->profAdminSubmitted = $this->userTestHelper
+            ->createUser(null, User::ROLE_PROF_ADMIN, sprintf('prof-admin-submitted-%s@t.uk', $this->testRunId));
+        $this->addOrgClientsNamedDeputyAndReportsToOrgDeputy($this->profAdminSubmitted, $organisation, true, true);
     }
 
     private function addClientsAndReportsToLayDeputy(User $deputy, bool $completed = false, bool $submitted = false, ?string $type = null)
@@ -460,15 +627,15 @@ class FixtureHelper
         return self::buildAdminUserDetails($this->admin);
     }
 
-    public function createElevatedAdmin(string $testRunId)
+    public function createAdminManager(string $testRunId)
     {
-        $this->elevatedAdmin = $this->createAdminUser(
+        $this->adminManager = $this->createAdminUser(
             $testRunId,
-            User::ROLE_ELEVATED_ADMIN,
+            User::ROLE_ADMIN_MANAGER,
             'elevated-admin'
         );
 
-        return self::buildAdminUserDetails($this->elevatedAdmin);
+        return self::buildAdminUserDetails($this->adminManager);
     }
 
     public function createSuperAdmin(string $testRunId)

@@ -23,7 +23,7 @@ class User implements UserInterface
     public const TOKEN_EXPIRE_HOURS = 48;
 
     public const ROLE_ADMIN = 'ROLE_ADMIN';
-    public const ROLE_ELEVATED_ADMIN = 'ROLE_ELEVATED_ADMIN';
+    public const ROLE_ADMIN_MANAGER = 'ROLE_ADMIN_MANAGER';
     public const ROLE_SUPER_ADMIN = 'ROLE_SUPER_ADMIN';
 
     public const ROLE_DEPUTY = 'ROLE_DEPUTY';
@@ -51,6 +51,7 @@ class User implements UserInterface
     public static $adminRoles = [
         self::ROLE_ADMIN,
         self::ROLE_SUPER_ADMIN,
+        self::ROLE_ADMIN_MANAGER,
     ];
 
     public static $depTypeIdToRealm = [
@@ -1175,14 +1176,14 @@ class User implements UserInterface
         return self::ROLE_SUPER_ADMIN === $this->getRoleName();
     }
 
-    public function isElevatedAdmin(): bool
+    public function isAdminManager(): bool
     {
-        return self::ROLE_ELEVATED_ADMIN === $this->getRoleName();
+        return self::ROLE_ADMIN_MANAGER === $this->getRoleName();
     }
 
     public function hasAdminRole(): bool
     {
-        return $this->isAdmin() || $this->isSuperAdmin() || $this->isElevatedAdmin();
+        return $this->isAdmin() || $this->isSuperAdmin() || $this->isAdminManager();
     }
 
     /**

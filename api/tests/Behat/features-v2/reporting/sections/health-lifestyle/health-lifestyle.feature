@@ -1,7 +1,7 @@
 @v2 @lifestyle
 Feature: Health and Lifestyle (Lay / PA / Prof share same functionality)
 
-    @health-welfare-not-started
+    @lay-health-welfare-not-started
     Scenario: A user skips both sections
         Given a Lay Deputy has not started a Health and Welfare report
         And I view and start the health and lifestyle report section
@@ -10,7 +10,7 @@ Feature: Health and Lifestyle (Lay / PA / Prof share same functionality)
         When I visit the report overview page
         Then I should see "lifestyle" as "not started"
 
-    @health-welfare-not-started
+    @lay-health-welfare-not-started
     Scenario: A user states client takes no part in social or leisure activities
         Given a Lay Deputy has not started a Health and Welfare report
         And I view and start the health and lifestyle report section
@@ -18,7 +18,7 @@ Feature: Health and Lifestyle (Lay / PA / Prof share same functionality)
         And I confirm that client takes part in no leisure or social activities
         Then I should see the expected lifestyle section summary
 
-    @health-welfare-not-started
+    @lay-health-welfare-not-started
     Scenario: A user states client takes part in social or leisure activities
         Given a Lay Deputy has not started a Health and Welfare report
         And I view and start the health and lifestyle report section
@@ -28,7 +28,7 @@ Feature: Health and Lifestyle (Lay / PA / Prof share same functionality)
         When I visit the report overview page
         Then I should see "lifestyle" as "finished"
 
-    @health-welfare-completed
+    @lay-health-welfare-completed
     Scenario: A user edits existing answers
         Given a Lay Deputy has completed a Health and Welfare report
         And I visit the health and lifestyle summary section
@@ -37,7 +37,7 @@ Feature: Health and Lifestyle (Lay / PA / Prof share same functionality)
         When I edit the lifestyle section answers as client doesn't take part in activities
         Then I should see the expected lifestyle section summary
 
-    @health-welfare-not-started
+    @lay-health-welfare-not-started
     Scenario: A user tries to get through sections without filling in relevant fields
         Given a Lay Deputy has not started a Health and Welfare report
         And I view and start the health and lifestyle report section

@@ -1,4 +1,6 @@
-<?php declare(strict_types=1);
+<?php
+
+declare(strict_types=1);
 
 namespace App\Security;
 
@@ -30,45 +32,44 @@ class UserVoterTest extends TestCase
         self::assertEquals($expectedPermission, $sut->vote($token, $deletee, [UserVoter::DELETE_USER]));
     }
 
-
     public function deleteUserProvider()
     {
         $clientNoReports = new Client();
         $clientWithReport = (new Client())->setReports([new Report()]);
 
-        $layNoReportsOrClients = (new User)->setRoleName('ROLE_LAY_DEPUTY')->setId(1);
-        $layNoReportsOneClient = (new User)->setRoleName('ROLE_LAY_DEPUTY')->setClients([$clientNoReports])->setId(2);
-        $layReportOneClient = (new User)->setRoleName('ROLE_LAY_DEPUTY')->setClients([$clientWithReport])->setId(3);
+        $layNoReportsOrClients = (new User())->setRoleName('ROLE_LAY_DEPUTY')->setId(1);
+        $layNoReportsOneClient = (new User())->setRoleName('ROLE_LAY_DEPUTY')->setClients([$clientNoReports])->setId(2);
+        $layReportOneClient = (new User())->setRoleName('ROLE_LAY_DEPUTY')->setClients([$clientWithReport])->setId(3);
 
-        $pa = (new User)->setRoleName('ROLE_PA')->setId(4);
-        $paTwo = (new User)->setRoleName('ROLE_PA')->setId(5);
+        $pa = (new User())->setRoleName('ROLE_PA')->setId(4);
+        $paTwo = (new User())->setRoleName('ROLE_PA')->setId(5);
 
-        $paTeamMember = (new User)->setRoleName('ROLE_PA_TEAM_MEMBER')->setId(6);
-        $paTeamMemberTwo = (new User)->setRoleName('ROLE_PA_TEAM_MEMBER')->setId(7);
+        $paTeamMember = (new User())->setRoleName('ROLE_PA_TEAM_MEMBER')->setId(6);
+        $paTeamMemberTwo = (new User())->setRoleName('ROLE_PA_TEAM_MEMBER')->setId(7);
 
-        $paNamed = (new User)->setRoleName('ROLE_PA_NAMED')->setId(8);
-        $paNamedTwo = (new User)->setRoleName('ROLE_PA_NAMED')->setId(9);
+        $paNamed = (new User())->setRoleName('ROLE_PA_NAMED')->setId(8);
+        $paNamedTwo = (new User())->setRoleName('ROLE_PA_NAMED')->setId(9);
 
-        $paAdmin = (new User)->setRoleName('ROLE_PA_ADMIN')->setId(10);
-        $paAdminTwo = (new User)->setRoleName('ROLE_PA_ADMIN')->setId(11);
+        $paAdmin = (new User())->setRoleName('ROLE_PA_ADMIN')->setId(10);
+        $paAdminTwo = (new User())->setRoleName('ROLE_PA_ADMIN')->setId(11);
 
-        $prof = (new User)->setRoleName('ROLE_PROF')->setId(12);
-        $profTwo = (new User)->setRoleName('ROLE_PROF')->setId(13);
+        $prof = (new User())->setRoleName('ROLE_PROF')->setId(12);
+        $profTwo = (new User())->setRoleName('ROLE_PROF')->setId(13);
 
-        $profTeamMember = (new User)->setRoleName('ROLE_PROF_TEAM_MEMBER')->setId(14);
-        $profTeamMemberTwo = (new User)->setRoleName('ROLE_PROF_TEAM_MEMBER')->setId(15);
+        $profTeamMember = (new User())->setRoleName('ROLE_PROF_TEAM_MEMBER')->setId(14);
+        $profTeamMemberTwo = (new User())->setRoleName('ROLE_PROF_TEAM_MEMBER')->setId(15);
 
-        $profNamed = (new User)->setRoleName('ROLE_PROF_NAMED')->setId(16);
-        $profNamedTwo = (new User)->setRoleName('ROLE_PROF_NAMED')->setId(17);
+        $profNamed = (new User())->setRoleName('ROLE_PROF_NAMED')->setId(16);
+        $profNamedTwo = (new User())->setRoleName('ROLE_PROF_NAMED')->setId(17);
 
-        $profAdmin = (new User)->setRoleName('ROLE_PROF_ADMIN')->setId(18);
-        $profAdminTwo = (new User)->setRoleName('ROLE_PROF_ADMIN')->setId(19);
+        $profAdmin = (new User())->setRoleName('ROLE_PROF_ADMIN')->setId(18);
+        $profAdminTwo = (new User())->setRoleName('ROLE_PROF_ADMIN')->setId(19);
 
-        $admin = (new User)->setRoleName('ROLE_ADMIN')->setId(20);
-        $adminTwo = (new User)->setRoleName('ROLE_ADMIN')->setId(21);
+        $admin = (new User())->setRoleName('ROLE_ADMIN')->setId(20);
+        $adminTwo = (new User())->setRoleName('ROLE_ADMIN')->setId(21);
 
-        $superAdmin = (new User)->setRoleName('ROLE_SUPER_ADMIN')->setId(22);
-        $superAdminTwo = (new User)->setRoleName('ROLE_SUPER_ADMIN')->setId(23);
+        $superAdmin = (new User())->setRoleName('ROLE_SUPER_ADMIN')->setId(22);
+        $superAdminTwo = (new User())->setRoleName('ROLE_SUPER_ADMIN')->setId(23);
 
         return [
             'Lay Deputy deletes Lay Deputy' => [$layNoReportsOrClients, $layNoReportsOneClient, -1],
@@ -241,8 +242,8 @@ class UserVoterTest extends TestCase
         $admin2 = UserHelpers::createAdminUser();
         $superAdmin = UserHelpers::createSuperAdminUser();
         $superAdmin2 = UserHelpers::createSuperAdminUser();
-        $elevatedAdmin = UserHelpers::createElevatedAdminUser();
-        $elevatedAdmin2 = UserHelpers::createElevatedAdminUser();
+        $adminManager = UserHelpers::createAdminManager();
+        $adminManager2 = UserHelpers::createAdminManager();
 
         $lay = UserHelpers::createLayUser();
         $lay2 = UserHelpers::createLayUser();
@@ -277,22 +278,22 @@ class UserVoterTest extends TestCase
             'Super Admin adds/edits Prof Team Member' => [$superAdmin, $profTeamMember, 1],
             'Super Admin adds/edits Admin user' => [$superAdmin, $admin, 1],
             'Super Admin adds/edits Super Admin user' => [$superAdmin, $superAdmin2, 1],
-            'Super Admin adds/edits Elevated Admin user' => [$superAdmin, $elevatedAdmin, 1],
+            'Super Admin adds/edits Admin Manager user' => [$superAdmin, $adminManager, 1],
             'Super Admin adds/edits self' => [$superAdmin, $superAdmin, 1],
 
-            'Elevated Admin adds/edits Lay Deputy' => [$elevatedAdmin, $lay, 1],
-            'Elevated Admin adds/edits PA Deputy' => [$elevatedAdmin, $pa, 1],
-            'Elevated Admin adds/edits PA Named Deputy' => [$elevatedAdmin, $paNamed, 1],
-            'Elevated Admin adds/edits PA Admin Deputy' => [$elevatedAdmin, $paAdmin, 1],
-            'Elevated Admin adds/edits PA Team Member' => [$elevatedAdmin, $paTeamMember, 1],
-            'Elevated Admin adds/edits Prof Deputy' => [$elevatedAdmin, $prof, 1],
-            'Elevated Admin adds/edits Prof Named Deputy' => [$elevatedAdmin, $profNamed, 1],
-            'Elevated Admin adds/edits Prof Admin Deputy' => [$elevatedAdmin, $profAdmin, 1],
-            'Elevated Admin adds/edits Admin user' => [$elevatedAdmin, $admin, 1],
-            'Elevated Admin adds/edits Super Admin user' => [$elevatedAdmin, $superAdmin, -1],
-            'Elevated Admin adds/edits Prof Team Member' => [$elevatedAdmin, $profTeamMember, 1],
-            'Elevated Admin adds/edits Elevated Admin user' => [$elevatedAdmin, $elevatedAdmin2, -1],
-            'Elevated Admin adds/edits self' => [$elevatedAdmin, $elevatedAdmin, 1],
+            'Admin Manager adds/edits Lay Deputy' => [$adminManager, $lay, 1],
+            'Admin Manager adds/edits PA Deputy' => [$adminManager, $pa, 1],
+            'Admin Manager adds/edits PA Named Deputy' => [$adminManager, $paNamed, 1],
+            'Admin Manager adds/edits PA Admin Deputy' => [$adminManager, $paAdmin, 1],
+            'Admin Manager adds/edits PA Team Member' => [$adminManager, $paTeamMember, 1],
+            'Admin Manager adds/edits Prof Deputy' => [$adminManager, $prof, 1],
+            'Admin Manager adds/edits Prof Named Deputy' => [$adminManager, $profNamed, 1],
+            'Admin Manager adds/edits Prof Admin Deputy' => [$adminManager, $profAdmin, 1],
+            'Admin Manager adds/edits Admin user' => [$adminManager, $admin, 1],
+            'Admin Manager adds/edits Super Admin user' => [$adminManager, $superAdmin, -1],
+            'Admin Manager adds/edits Prof Team Member' => [$adminManager, $profTeamMember, 1],
+            'Admin Manager adds/edits Admin Manager user' => [$adminManager, $adminManager2, -1],
+            'Admin Manager adds/edits self' => [$adminManager, $adminManager, 1],
 
             'Admin adds/edits Lay Deputy' => [$admin, $lay, 1],
             'Admin adds/edits PA Deputy' => [$admin, $pa, 1],
@@ -305,7 +306,7 @@ class UserVoterTest extends TestCase
             'Admin adds/edits Prof Team Member' => [$admin, $profTeamMember, 1],
             'Admin adds/edits Admin user' => [$admin, $admin2, 1],
             'Admin adds/edits Super Admin user' => [$admin, $superAdmin, -1],
-            'Admin adds/edits Elevated Admin user' => [$admin, $elevatedAdmin, -1],
+            'Admin adds/edits Admin Manager user' => [$admin, $adminManager, -1],
             'Admin adds/edits self' => [$admin, $admin, 1],
 
             'Lay adds/edits Lay Deputy' => [$lay, $lay2, -1],
@@ -319,7 +320,7 @@ class UserVoterTest extends TestCase
             'Lay adds/edits Prof Team Member' => [$lay, $profTeamMember, -1],
             'Lay adds/edits Admin user' => [$lay, $admin, -1],
             'Lay adds/edits Super Admin user' => [$lay, $superAdmin, -1],
-            'Lay adds/edits Elevated Admin user' => [$lay, $elevatedAdmin, -1],
+            'Lay adds/edits Admin Manager user' => [$lay, $adminManager, -1],
             'Lay adds/edits self' => [$lay, $lay, 1],
 
             'PA Deputy adds/edits Lay Deputy' => [$pa, $lay, -1],
@@ -333,7 +334,7 @@ class UserVoterTest extends TestCase
             'PA Deputy adds/edits Prof Team Member' => [$pa, $profTeamMember, -1],
             'PA Deputy adds/edits Admin user' => [$pa, $admin, -1],
             'PA Deputy adds/edits Super Admin user' => [$pa, $superAdmin, -1],
-            'PA Deputy adds/edits Elevated Admin user' => [$pa, $elevatedAdmin, -1],
+            'PA Deputy adds/edits Admin Manager user' => [$pa, $adminManager, -1],
             'PA Deputy adds/edits self' => [$pa, $pa, 1],
 
             'PA Named Deputy adds/edits Lay Deputy' => [$paNamed, $lay, -1],
@@ -347,7 +348,7 @@ class UserVoterTest extends TestCase
             'PA Named Deputy adds/edits Prof Team Member' => [$paNamed, $profTeamMember, -1],
             'PA Named Deputy adds/edits Admin user' => [$paNamed, $admin, -1],
             'PA Named Deputy adds/edits Super Admin user' => [$paNamed, $superAdmin, -1],
-            'PA Named Deputy adds/edits Elevated Admin user' => [$paNamed, $elevatedAdmin, -1],
+            'PA Named Deputy adds/edits Admin Manager user' => [$paNamed, $adminManager, -1],
             'PA Named Deputy adds/edits self' => [$paNamed, $paNamed, 1],
 
             'PA Admin adds/edits Lay Deputy' => [$paAdmin, $lay, -1],
@@ -361,7 +362,7 @@ class UserVoterTest extends TestCase
             'PA Admin adds/edits Prof Team Member' => [$paAdmin, $profTeamMember, -1],
             'PA Admin adds/edits Admin user' => [$paAdmin, $admin, -1],
             'PA Admin adds/edits Super Admin user' => [$paAdmin, $superAdmin, -1],
-            'PA Admin adds/edits Elevated Admin user' => [$paAdmin, $elevatedAdmin, -1],
+            'PA Admin adds/edits Admin Manager user' => [$paAdmin, $adminManager, -1],
             'PA Admin adds/edits self' => [$paAdmin, $paAdmin, 1],
 
             'PA Team Member adds/edits Lay Deputy' => [$paTeamMember, $lay, -1],
@@ -375,7 +376,7 @@ class UserVoterTest extends TestCase
             'PA Team Member adds/edits Prof Team Member' => [$paTeamMember, $profTeamMember, -1],
             'PA Team Member adds/edits Admin user' => [$paTeamMember, $admin, -1],
             'PA Team Member adds/edits Super Admin user' => [$paTeamMember, $superAdmin, -1],
-            'PA Team Member adds/edits Elevated Admin user' => [$paTeamMember, $elevatedAdmin, -1],
+            'PA Team Member adds/edits Admin Manager user' => [$paTeamMember, $adminManager, -1],
             'PA Team Member adds/edits self' => [$paTeamMember, $paTeamMember, 1],
 
             'Prof Deputy adds/edits Lay Deputy' => [$prof, $lay, -1],
@@ -389,7 +390,7 @@ class UserVoterTest extends TestCase
             'Prof Deputy adds/edits Prof Team Member' => [$prof, $profTeamMember, 1],
             'Prof Deputy adds/edits Admin user' => [$prof, $admin, -1],
             'Prof Deputy adds/edits Super Admin user' => [$prof, $superAdmin, -1],
-            'Prof Deputy adds/edits Elevated Admin user' => [$prof, $elevatedAdmin, -1],
+            'Prof Deputy adds/edits Admin Manager user' => [$prof, $adminManager, -1],
             'Prof Deputy adds/edits self' => [$prof, $prof, 1],
 
             'Prof Named Deputy adds/edits Lay Deputy' => [$profNamed, $lay, -1],
@@ -403,7 +404,7 @@ class UserVoterTest extends TestCase
             'Prof Named Deputy adds/edits Prof Team Member' => [$profNamed, $profTeamMember, 1],
             'Prof Named Deputy adds/edits Admin user' => [$profNamed, $admin, -1],
             'Prof Named Deputy adds/edits Super Admin user' => [$profNamed, $superAdmin, -1],
-            'Prof Named Deputy adds/edits Elevated Admin user' => [$profNamed, $elevatedAdmin, -1],
+            'Prof Named Deputy adds/edits Admin Manager user' => [$profNamed, $adminManager, -1],
             'Prof Named Deputy adds/edits self' => [$profNamed, $profNamed, 1],
 
             'Prof Admin adds/edits Lay Deputy' => [$profAdmin, $lay, -1],
@@ -417,7 +418,7 @@ class UserVoterTest extends TestCase
             'Prof Admin adds/edits Prof Team Member' => [$profAdmin, $profTeamMember, 1],
             'Prof Admin adds/edits Admin user' => [$profAdmin, $admin, -1],
             'Prof Admin adds/edits Super Admin user' => [$profAdmin, $superAdmin, -1],
-            'Prof Admin adds/edits Elevated Admin user' => [$profAdmin, $elevatedAdmin, -1],
+            'Prof Admin adds/edits Admin Manager user' => [$profAdmin, $adminManager, -1],
             'Prof Admin adds/edits self' => [$profAdmin, $profAdmin, 1],
 
             'Prof Team Member adds/edits Lay Deputy' => [$profTeamMember, $lay, -1],
@@ -431,7 +432,7 @@ class UserVoterTest extends TestCase
             'Prof Team Member adds/edits Prof Team Member' => [$profTeamMember, $profTeamMember2, -1],
             'Prof Team Member adds/edits Admin user' => [$profTeamMember, $admin, -1],
             'Prof Team Member adds/edits Super Admin user' => [$profTeamMember, $superAdmin, -1],
-            'Prof Team Member adds/edits Elevated Admin user' => [$profTeamMember, $elevatedAdmin, -1],
+            'Prof Team Member adds/edits Admin Manager user' => [$profTeamMember, $adminManager, -1],
             'Prof Team Member adds/edits self' => [$profTeamMember, $profTeamMember, 1],
         ];
     }
@@ -454,7 +455,7 @@ class UserVoterTest extends TestCase
     {
         $admin = UserHelpers::createAdminUser();
         $superAdmin = UserHelpers::createSuperAdminUser();
-        $elevatedAdmin = UserHelpers::createElevatedAdminUser();
+        $adminManager = UserHelpers::createAdminManager();
 
         $lay = UserHelpers::createLayUser();
 
@@ -470,7 +471,7 @@ class UserVoterTest extends TestCase
 
         return [
             'Super Admin checks if they can add a user' => [$superAdmin, 1],
-            'Elevated Admin checks if they can add a user' => [$elevatedAdmin, 1],
+            'Admin manager checks if they can add a user' => [$adminManager, 1],
             'Admin checks if they can add a user' => [$admin, 1],
             'Lay checks if they can add a user' => [$lay, -1],
             'PA Deputy checks if they can add a user' => [$pa, 1],

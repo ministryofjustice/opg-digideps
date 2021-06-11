@@ -164,9 +164,13 @@ class IndexController extends AbstractController
             return $this->renderNotFound();
         }
 
-        if (EntityDir\User::ROLE_ADMIN == $user->getRoleName() && !$this->isGranted(EntityDir\User::ROLE_ADMIN)) {
+        try {
+            $this->denyAccessUnlessGranted('edit-user', $user);
+        } catch (\Throwable $e) {
+            $accessErrorMessage = 'You do not have permission to edit this user';
+
             return $this->render('@App/Admin/Index/error.html.twig', [
-                'error' => 'Non-admin cannot edit admin users',
+                'error' => $accessErrorMessage,
             ]);
         }
 

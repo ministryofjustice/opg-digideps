@@ -10,9 +10,11 @@
 {% block pageTitle %}{{ user.fullName }}{% endblock %}
 
 {% block actions %}
-    <a href="{{ path('admin_editUser', {'filter': user.id}) }}" role="button" data-module="govuk-button" class="govuk-button govuk-button--secondary">
-        {{ (page ~ '.summary.editUser') | trans }}
-    </a>
+    {% if is_granted('edit-user', user) %}
+        <a href="{{ path('admin_editUser', {'filter': user.id}) }}" data-module="govuk-button" class="govuk-button govuk-button--secondary">
+            {{ (page ~ '.summary.editUser') | trans }}
+        </a>
+    {% endif %}
 {% endblock %}
 
 {% block supportTitleTop %}
@@ -28,7 +30,6 @@
 {% endblock %}
 
 {% block pageContent %}
-
     {% if 'ROLE_LAY_DEPUTY' == user.roleName %}
         {% set numberOfClients = user.clients | length %}
         {% set firstClient = numberOfClients > 0 ? (user.clients | first) : null %}
@@ -108,4 +109,18 @@
             {{ (page ~ '.organisationsTable.noOrganisations') | trans }}
         {% endif %}
     {% endif %}
+
+    <div class="govuk-grid-row">
+        <div class="govuk-grid-column-full govuk-!-padding-top-3">
+{#            Admin Managers can delete but not edit other admin managers so need a delete button on the view page #}
+            {% if is_granted('delete-user', user) and not is_granted('edit-user', user) %}
+                <a href="{{ path('admin_delete_confirm', { id: user.id }) }}" data-module="govuk-button" class="govuk-button govuk-button--warning">
+                    {{ user.getClients|length > 0 ? 'Delete User and Client' : 'Delete user' }}
+                </a>
+            {% endif %}
+        </div>
+    </div>
+
+
+
 {% endblock %}
