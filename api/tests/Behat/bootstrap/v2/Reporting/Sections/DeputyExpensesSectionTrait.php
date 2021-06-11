@@ -207,6 +207,7 @@ trait DeputyExpensesSectionTrait
         $this->removeAnswerFromSection(
             'expenses_single[explanation]',
             'expenseDetails',
+            true,
             'Yes, remove expense'
         );
     }

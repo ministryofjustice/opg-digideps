@@ -446,4 +446,44 @@ trait IShouldBeOnTrait
     {
         return $this->iAmOnPage(sprintf('/%s\/.*\/debts\/summary.*$/', $this->reportUrlPrefix));
     }
+
+    /**
+     * @Then I should be on the deputy costs estimate start page
+     */
+    public function iAmOnDeputyCostsEstimateStartPage()
+    {
+        return $this->iAmOnPage(sprintf('/%s\/.*\/prof-deputy-costs-estimate$/', $this->reportUrlPrefix));
+    }
+
+    /**
+     * @Then I should be on the deputy costs estimate charges page
+     */
+    public function iAmOnDeputyCostsEstimateChargesPage()
+    {
+        return $this->iAmOnPage(sprintf('/%s\/.*\/prof-deputy-costs-estimate\/how-charged.*$/', $this->reportUrlPrefix));
+    }
+
+    /**
+     * @Then I should be on the deputy costs estimate breakdown page
+     */
+    public function iAmOnDeputyCostsEstimateBreakdownPage()
+    {
+        return $this->iAmOnPage(sprintf('/%s\/.*\/prof-deputy-costs-estimate\/breakdown.*$/', $this->reportUrlPrefix));
+    }
+
+    /**
+     * @Then I should be on the deputy costs estimate more info page
+     */
+    public function iAmOnDeputyCostsEstimateMoreInfoPage()
+    {
+        return $this->iAmOnPage(sprintf('/%s\/.*\/prof-deputy-costs-estimate\/more-info.*$/', $this->reportUrlPrefix));
+    }
+
+    /**
+     * @Then I should be on the deputy costs estimate summary page
+     */
+    public function iAmOnDeputyCostsEstimateSummaryPage()
+    {
+        return $this->iAmOnPage(sprintf('/%s\/.*\/prof-deputy-costs-estimate\/summary.*$/', $this->reportUrlPrefix));
+    }
 }
