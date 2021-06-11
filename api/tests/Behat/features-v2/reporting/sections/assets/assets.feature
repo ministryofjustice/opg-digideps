@@ -1,7 +1,7 @@
 @v2 @assets
 Feature: Assets
 
-@pfa-high-not-started
+@lay-pfa-high-not-started
   Scenario: A user has no assets to add
     Given a Lay Deputy has not started a report
     When I visit and start the assets report section
@@ -10,7 +10,7 @@ Feature: Assets
     When I follow link back to report overview page
     Then I should see "assets" as "no assets"
 
-@pfa-high-not-started
+@lay-pfa-high-not-started
   Scenario: A user adds a single asset
     Given a Lay Deputy has not started a report
     When I visit and start the assets report section
@@ -20,7 +20,7 @@ Feature: Assets
     When I follow link back to report overview page
     Then I should see "assets" as "1 asset"
 
-@pfa-high-not-started
+@lay-pfa-high-not-started
   Scenario: A user adds a single property asset
     Given a Lay Deputy has not started a report
     When I visit and start the assets report section
@@ -30,7 +30,7 @@ Feature: Assets
     When I follow link back to report overview page
     Then I should see "assets" as "1 asset"
 
-@pfa-high-not-started
+@lay-pfa-high-not-started
   Scenario: A user adds multiple properties
     Given a Lay Deputy has not started a report
     When I visit and start the assets report section
@@ -40,7 +40,7 @@ Feature: Assets
     When I follow link back to report overview page
     Then I should see "assets" as "3 assets"
 
-@pfa-high-not-started
+@lay-pfa-high-not-started
   Scenario: A user adds multiple assets and a property
     Given a Lay Deputy has not started a report
     When I visit and start the assets report section
