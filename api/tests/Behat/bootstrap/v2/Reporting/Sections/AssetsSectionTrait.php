@@ -17,21 +17,11 @@ trait AssetsSectionTrait
     private int $PROPERTY_ASSET_TYPE = 7;
 
     /**
-     * @When I view the assets report section
-     */
-    public function iViewAssetsSection()
-    {
-        $activeReportId = $this->loggedInUserDetails->getCurrentReportId();
-        $reportSectionUrl = sprintf(self::REPORT_SECTION_ENDPOINT, $this->reportUrlPrefix, $activeReportId, 'assets');
-        $this->visitPath($reportSectionUrl);
-    }
-
-    /**
-     * @When I view and start the assets report section
+     * @When I visit and start the assets report section
      */
     public function iViewAndStartAssetsSection()
     {
-        $this->iViewAssetsSection();
+        $this->iVisitAssetsSection();
         $this->clickLink('Start assets');
     }
 
@@ -40,6 +30,8 @@ trait AssetsSectionTrait
      */
     public function iChooseNoOnAssetsExistSection()
     {
+        $this->iAmOnAssetsExistPage();
+
         $this->selectOption('yes_no[noAssetToAdd]', '1');
         $this->pressButton('Save and continue');
 
@@ -51,6 +43,8 @@ trait AssetsSectionTrait
      */
     public function iChooseYesOnAssetsExistSection()
     {
+        $this->iAmOnAssetsExistPage();
+
         $this->selectOption('yes_no[noAssetToAdd]', '0');
         $this->pressButton('Save and continue');
 
@@ -62,6 +56,8 @@ trait AssetsSectionTrait
      */
     public function iAddSingleAsset()
     {
+        $this->iAmOnAssetTypePage();
+
         ++$this->assetId;
 
         //Select type of asset
@@ -71,6 +67,9 @@ trait AssetsSectionTrait
 
         //Fill out details about asset
         $this->iFillAssetDescriptionAndValue($this->assetId, $this->assetType);
+
+        $this->iAmOnAddAnotherAssetPage();
+
         $this->selectOption('add_another[addAnother]', 'no');
         $this->pressButton('Continue');
     }
@@ -105,10 +104,12 @@ trait AssetsSectionTrait
     }
 
     /**
-     * @When I add multiple assets and a property
+     * @When I add 12 assets including a property
      */
     public function iAddMultipleAssets()
     {
+        $this->iAmOnAssetTypePage();
+
         $this->assetType = 0;
         //Adding one of each type of asset
         while ($this->assetType <= 11) {
@@ -117,6 +118,7 @@ trait AssetsSectionTrait
 
             //After adding the first asset, confirm you want to add more assets
             if ($this->assetType > 1) {
+                $this->iAmOnAddAnotherAssetPage();
                 $this->selectOption('add_another[addAnother]', 'yes');
                 $this->pressButton('Continue');
             }
@@ -131,6 +133,9 @@ trait AssetsSectionTrait
                 $this->iFillAssetDescriptionAndValue($this->assetId, $this->assetType);
             }
         }
+
+        $this->iAmOnAddAnotherAssetPage();
+
         $this->selectOption('add_another[addAnother]', 'no');
         $this->pressButton('Continue');
     }
@@ -140,6 +145,8 @@ trait AssetsSectionTrait
      */
     public function iAddPropertyAsset()
     {
+        $this->iAmOnAssetTypePage();
+
         ++$this->assetId;
 
         //Select Property asset type
@@ -148,6 +155,9 @@ trait AssetsSectionTrait
         $this->pressButton('Save and continue');
 
         $this->iFillPropertyDetailsAndValue($this->assetId);
+
+        $this->iAmOnAddAnotherAssetPage();
+
         $this->selectOption('add_another[addAnother]', 'no');
         $this->pressButton('Continue');
     }
@@ -235,7 +245,7 @@ trait AssetsSectionTrait
     }
 
     /**
-     * @When I add multiple property assets
+     * @When I add 3 property assets
      */
     public function iAddMultiplePropertyAssets()
     {
@@ -244,14 +254,17 @@ trait AssetsSectionTrait
         //Select Property asset type
         $this->assetType = $this->PROPERTY_ASSET_TYPE;
         for ($i = 0; $i <= 2; ++$i) {
+            $this->iAmOnAssetTypePage();
             $this->iSelectRadioBasedOnChoiceNumber('div', 'data-module', 'govuk-radios', $this->assetType - 1);
             $this->pressButton('Save and continue');
             $this->iFillPropertyDetailsAndValue($this->assetId);
 
             if (2 == $i) {
+                $this->iAmOnAddAnotherAssetPage();
                 $this->selectOption('add_another[addAnother]', 'no');
                 $this->pressButton('Continue');
             } else {
+                $this->iAmOnAddAnotherAssetPage();
                 $this->selectOption('add_another[addAnother]', 'yes');
                 $this->pressButton('Continue');
             }
@@ -263,6 +276,8 @@ trait AssetsSectionTrait
      */
     public function iSeeExpectedAssetsSectionResponses()
     {
+        $this->iAmOnAssetsSummaryPage();
+
         $sectionNumber = 0;
         if ($this->assetResponse[0] == ['yes']) {
             $this->expectedResultsDisplayed($sectionNumber, $this->assetResponse, 'Asset Answers to Questions');
