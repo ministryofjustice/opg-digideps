@@ -111,7 +111,6 @@ trait DeputyCostsSectionTrait
      */
     public function iShouldSeeExpectedDeputyCostsOnSummary()
     {
-        throw new BehatException();
         $this->iAmOnDeputyCostsSummaryPage();
 
         $this->expectedResultsDisplayedSimplified(null, true);
@@ -318,5 +317,28 @@ trait DeputyCostsSectionTrait
             $this->faker->numberBetween(10, 1000),
             'PreviousReceived'
         );
+    }
+
+    /**
+     * @When I have additional costs in all seven categories to declare for the current reporting period
+     */
+    public function iHaveAllAdditionalCostsToDeclare()
+    {
+        $this->iAmOnDeputyCostsBreakdownPage();
+
+        foreach (range(0, 6) as $index) {
+            $this->fillInFieldTrackTotal(
+                "deputy_other_costs[profDeputyOtherCosts][$index][amount]",
+                $this->faker->numberBetween(10, 10000),
+                'AdditionalCosts'
+            );
+        }
+
+        $this->fillInField(
+            'deputy_other_costs[profDeputyOtherCosts][6][moreDetails]',
+            $this->faker->sentence(20)
+        );
+
+        $this->pressButton('Save and continue');
     }
 }
