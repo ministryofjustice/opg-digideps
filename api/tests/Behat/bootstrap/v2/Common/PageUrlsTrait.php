@@ -9,6 +9,8 @@ trait PageUrlsTrait
     // Frontend
     private string $accountsAddAnAccountUrl = '/%s/%s/bank-account/step1';
     private string $accountsSummaryUrl = '/%s/%s/bank-account/summary';
+    private string $assetsSectionUrl = '/%s/%s/assets';
+    private string $assetsSummarySectionUrl = '/%s/%s/assets/summary';
     private string $contactsAddUrl = '/report/%s/contacts/add';
     private string $contactsAddAnotherUrl = '/report/%s/contacts/add_another';
     private string $contactsSummaryUrl = '/report/%s/contacts/summary';
@@ -196,5 +198,15 @@ trait PageUrlsTrait
     public function getDebtsSummarySectionUrl(int $reportId): string
     {
         return sprintf($this->debtsSummarySectionUrl, $this->reportUrlPrefix, $reportId);
+    }
+
+    public function getAssetsSectionUrl(int $reportId): string
+    {
+        return sprintf($this->assetsSectionUrl, $this->reportUrlPrefix, $reportId);
+    }
+
+    public function getAssetsSummarySectionUrl(int $reportId): string
+    {
+        return sprintf($this->assetsSummarySectionUrl, $this->reportUrlPrefix, $reportId);
     }
 }

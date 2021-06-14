@@ -422,4 +422,36 @@ trait IShouldBeOnFrontendTrait
     {
         return $this->iAmOnPage(sprintf('/%s\/.*\/debts\/summary.*$/', $this->reportUrlPrefix));
     }
+
+    /**
+     * @Then I should be on the assets exist page
+     */
+    public function iAmOnAssetsExistPage()
+    {
+        return $this->iAmOnPage(sprintf('/%s\/.*\/assets\/exist.*$/', $this->reportUrlPrefix));
+    }
+
+    /**
+     * @Then I should be on the assets type page
+     */
+    public function iAmOnAssetTypePage()
+    {
+        return $this->iAmOnPage(sprintf('/%s\/.*\/assets\/step-type/', $this->reportUrlPrefix));
+    }
+
+    /**
+     * @Then I should be on the add another asset page
+     */
+    public function iAmOnAddAnotherAssetPage()
+    {
+        return $this->iAmOnPage(sprintf('/%s\/.*\/assets\/add_another/', $this->reportUrlPrefix));
+    }
+
+    /**
+     * @Then I should be on the assets summary page
+     */
+    public function iAmOnAssetsSummaryPage()
+    {
+        return $this->iAmOnPage(sprintf('/%s\/.*\/assets\/summary.*$/', $this->reportUrlPrefix));
+    }
 }

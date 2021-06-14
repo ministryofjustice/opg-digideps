@@ -298,6 +298,12 @@ v2-tests-goutte:
             contexts:
                 - App\Tests\Behat\v2\Reporting\Sections\ReportingSectionsFeatureContext
 
+        section-assets:
+            description: Covering the 'Assets' section of the report
+            paths: [ "%paths.base%/features-v2/reporting/sections/assets" ]
+            contexts:
+                - App\Tests\Behat\v2\Reporting\Sections\ReportingSectionsFeatureContext
+
     extensions:
         Behat\MinkExtension:
             files_path: '%paths.base%/fixtures/'

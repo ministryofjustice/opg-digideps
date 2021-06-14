@@ -118,4 +118,20 @@ trait IVisitFrontendTrait
     {
         $this->visitFrontendPath($this->getDebtsSummarySectionUrl($this->loggedInUserDetails->getCurrentReportId()));
     }
+
+    /**
+     * @When I visit the assets report section
+     */
+    public function iVisitAssetsSection()
+    {
+        $this->visitFrontendPath($this->getAssetsSectionUrl($this->loggedInUserDetails->getCurrentReportId()));
+    }
+
+    /**
+     * @When I visit the assets summary report section
+     */
+    public function iVisitAssetsSummarySection()
+    {
+        $this->visitFrontendPath($this->getAssetsSummarySectionUrl($this->loggedInUserDetails->getCurrentReportId()));
+    }
 }
