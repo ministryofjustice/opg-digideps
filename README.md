@@ -76,9 +76,9 @@ _See [deployment documentation](docs/DEPLOYMENT.md)_
 
 ## Built with
 
-- Terraform 0.12
-- PHP 7.3
-- Symfony 3.4
+- Terraform 0.14
+- PHP 7.4
+- Symfony 4.4
 - Doctrine 2.0
 - Twig
 - Behat 3

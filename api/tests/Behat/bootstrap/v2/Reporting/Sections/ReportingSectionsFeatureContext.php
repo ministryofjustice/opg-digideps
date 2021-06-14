@@ -11,6 +11,7 @@ class ReportingSectionsFeatureContext extends BaseFeatureContext
     use AccountsSectionTrait;
     use ActionsSectionTrait;
     use AdditionalInformationSectionTrait;
+    use AssetsSectionTrait;
     use ContactsSectionTrait;
     use DocumentsSectionTrait;
     use DebtsSectionTrait;

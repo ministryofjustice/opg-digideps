@@ -294,31 +294,49 @@ trait FormFillingTrait
      * @param string      $newValue         The new value
      * @param string      $formSectionName  Which section name in $submittedAnswersByFormSections the item to
      *                                      edit belongs to
-     * @param string      $type             Whether it's a option or a field that needs changing
-     * @param string|null $translatedValue  The translated value if option. If field leave blank
+     * @param bool        $fullGroup        Whether to use full group or the individual row
      *
      * @throws BehatException
      */
-    public function editAnswerInSection(NodeElement $summaryRowToEdit, string $fieldName, $newValue, string $formSectionName, bool $fullGroup = true, string $type = 'field', string $translatedValue = null)
+    public function editAnswerInSection(NodeElement $summaryRowToEdit, string $fieldName, $newValue, string $formSectionName, bool $fullGroup = true)
     {
         $this->removeAnswerFromSection($fieldName, $formSectionName, $fullGroup);
 
         $summaryRowToEdit->click();
 
-        if ('field' == $type) {
-            $this->fillInField(
-                $fieldName,
-                $newValue,
-                $formSectionName
-            );
-        } elseif ('option' == $type) {
-            $this->chooseOption(
-                $fieldName,
-                $newValue,
-                $formSectionName,
-                $translatedValue
-            );
-        }
+        $this->fillInField(
+            $fieldName,
+            $newValue,
+            $formSectionName
+        );
+
+        $this->pressButton('Save and continue');
+    }
+
+    /**
+     * @param NodeElement $summaryRowToEdit The NodeElement of the item row on a summary page to edit
+     * @param string      $selectName       The name of the form select to add a new value to
+     * @param string      $newSelectOption  The new option
+     * @param string      $formSectionName  Which section name in $submittedAnswersByFormSections the item to
+     *                                      edit belongs to
+     * @param string|null $translatedValue  The translated string of the option selected (optional)
+     * @param bool        $fullGroup        Whether to use full group or the individual row
+     *
+     * @throws BehatException
+     */
+    public function editSelectAnswerInSection(NodeElement $summaryRowToEdit, string $selectName, string $newSelectOption, string $formSectionName, ?string $translatedValue = null, bool $fullGroup = true)
+    {
+        $this->removeAnswerFromSection($selectName, $formSectionName, $fullGroup);
+
+        $summaryRowToEdit->click();
+
+        $this->chooseOption(
+            $selectName,
+            $newSelectOption,
+            $formSectionName,
+            $translatedValue
+        );
+
         $this->pressButton('Save and continue');
     }
 

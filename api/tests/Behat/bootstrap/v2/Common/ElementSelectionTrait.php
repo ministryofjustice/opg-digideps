@@ -170,6 +170,26 @@ trait ElementSelectionTrait
         $this->getSession()->getPage()->selectFieldOption($select, $option);
     }
 
+    // Select radio dialogue based on choice number
+    public function iSelectRadioBasedOnChoiceNumber(string $elementType, string $attributeType, string $attributeValue, int $choiceNumber)
+    {
+        $xpath = sprintf("//%s[@%s='%s']//input", $elementType, $attributeType, $attributeValue);
+        $session = $this->getSession();
+        $values = $session->getPage()->findAll(
+            'xpath',
+            $session->getSelectorsHandler()->selectorToXpath('xpath', $xpath)
+        );
+
+        if (null === $values) {
+            throw new \InvalidArgumentException(sprintf('Could not evaluate XPath: "%s"', $xpath));
+        }
+
+        $select = trim($values[$choiceNumber]->getAttribute('name'));
+        $option = trim($values[$choiceNumber]->getAttribute('value'));
+
+        $this->getSession()->getPage()->selectFieldOption($select, $option);
+    }
+
     // Sets fields in a way that we can use in our cross browser tests
     public function iFillFieldForCrossBrowser($field, $value)
     {

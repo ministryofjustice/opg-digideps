@@ -193,7 +193,7 @@ trait DeputyCostsEstimateSectionTrait
 
         $selector = $this->getLinkBasedOnResponse($this->getSectionAnswers($formSectionName)[0][$field], 'edit');
 
-        $this->editAnswerInSection($selector, $field, 'both', $formSectionName, false, 'option', 'both fixed and assessed costs');
+        $this->editSelectAnswerInSection($selector, $field, 'both', $formSectionName, 'both fixed and assessed costs');
         $this->iFillInEstimatedAssessedCostsCorrectly();
         $this->iHaveInformationThatWouldExplainEstimatedCosts();
     }
@@ -235,8 +235,7 @@ trait DeputyCostsEstimateSectionTrait
         $field = 'deputy_estimate_costs[profDeputyEstimateCosts][0][amount]';
         $answer = $this->moneyFormat($this->getSectionAnswers($formSectionName)[0][$field]);
         $selector = $this->getLinkBasedOnResponse($answer, 'edit');
-        $this->editAnswerInSection($selector, $field, 222, $formSectionName);
-//        $this->expectedResultsDisplayedSimplified('managementCosts', false, false, true);
+        $this->editAnswerInSection($selector, $field, 222, $formSectionName, false);
     }
 
     /**
