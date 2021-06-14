@@ -1,7 +1,7 @@
 @v2 @documents
 Feature: Documents - All User Roles
 
-@pfa-high-not-started
+@lay-pfa-high-not-started
   Scenario: A user has no supporting documents to add
     Given a Lay Deputy has not started a report
     When I view and start the documents report section
@@ -9,7 +9,7 @@ Feature: Documents - All User Roles
     Then I should be on the documents summary page
     And the documents summary page should not contain any documents
 
-@pfa-high-not-started
+@lay-pfa-high-not-started
   Scenario: A user uploads one supporting document that has a valid file type
     Given a Lay Deputy has not started a report
     When I view and start the documents report section
@@ -20,7 +20,7 @@ Feature: Documents - All User Roles
     Then I should be on the documents summary page
     And the documents summary page should contain the documents I uploaded
 
-@pfa-high-not-started
+@lay-pfa-high-not-started
   Scenario: A user uploads multiple supporting document that have valid file types
     Given a Lay Deputy has not started a report
     When I view and start the documents report section
@@ -31,7 +31,7 @@ Feature: Documents - All User Roles
     Then I should be on the documents summary page
     And the documents summary page should contain the documents I uploaded
 
-@pfa-high-not-started
+@lay-pfa-high-not-started
   Scenario: A user deletes one supporting document they uploaded from the uploads page
     Given a Lay Deputy has not started a report
     When I view and start the documents report section
@@ -42,7 +42,7 @@ Feature: Documents - All User Roles
     Then I should be on the documents summary page
     And the documents summary page should contain the documents I uploaded
 
-@pfa-high-not-started
+@lay-pfa-high-not-started
   Scenario: A user deletes one supporting document they uploaded from the summary page
     Given a Lay Deputy has not started a report
     When I view and start the documents report section
@@ -53,7 +53,7 @@ Feature: Documents - All User Roles
     When I remove one document I uploaded
     Then the documents summary page should contain the documents I uploaded
 
-@pfa-high-not-started
+@lay-pfa-high-not-started
   Scenario: A user uploads one supporting document that has an invalid file type
     Given a Lay Deputy has not started a report
     When I view and start the documents report section
@@ -61,7 +61,7 @@ Feature: Documents - All User Roles
     And I upload one document with an unsupported file type
     Then I should see an 'invalid file type' error
 
-@pfa-high-not-started
+@lay-pfa-high-not-started
   Scenario: A user uploads one supporting document that has a valid file type but is too large
     Given a Lay Deputy has not started a report
     When I view and start the documents report section
@@ -69,7 +69,7 @@ Feature: Documents - All User Roles
     And I upload one document that is too large
     Then I should see a 'file too large' error
 
-@pfa-high-not-started
+@lay-pfa-high-not-started
   Scenario: A user uploads one supporting document that has a valid file type then confirms they have no files to upload
     Given a Lay Deputy has not started a report
     When I view and start the documents report section

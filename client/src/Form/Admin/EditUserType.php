@@ -24,10 +24,6 @@ class EditUserType extends AbstractType
         $builder->addEventListener(FormEvents::PRE_SET_DATA, $listener);
     }
 
-    /**
-     * @param User $operatingUser
-     * @return \Closure
-     */
     private function getEventListener(User $operatingUser): \Closure
     {
         return function (FormEvent $event) use ($operatingUser) {
@@ -38,7 +34,9 @@ class EditUserType extends AbstractType
                 $form->add('ndrEnabled', FormTypes\CheckboxType::class);
             }
 
-            if ($operatingUser->getRoleName() === User::ROLE_SUPER_ADMIN) {
+            $adminManagerCanEdit = $operatingUser->isAdminManager() && $user->isLayDeputy();
+
+            if ($operatingUser->isSuperAdmin() || $adminManagerCanEdit) {
                 $form->add('email', FormTypes\EmailType::class);
             }
         };

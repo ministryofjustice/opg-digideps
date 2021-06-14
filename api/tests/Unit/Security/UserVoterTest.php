@@ -52,8 +52,8 @@ class UserVoterTest extends KernelTestCase
         $admin2 = $userTestHelper->createAndPersistUser($em, null, User::ROLE_ADMIN);
         $superAdmin = $userTestHelper->createAndPersistUser($em, null, User::ROLE_SUPER_ADMIN);
         $superAdmin2 = $userTestHelper->createAndPersistUser($em, null, User::ROLE_SUPER_ADMIN);
-        $elevatedAdmin = $userTestHelper->createAndPersistUser($em, null, User::ROLE_ELEVATED_ADMIN);
-        $elevatedAdmin2 = $userTestHelper->createAndPersistUser($em, null, User::ROLE_ELEVATED_ADMIN);
+        $adminManager = $userTestHelper->createAndPersistUser($em, null, User::ROLE_ADMIN_MANAGER);
+        $adminManager2 = $userTestHelper->createAndPersistUser($em, null, User::ROLE_ADMIN_MANAGER);
 
         $pa = $userTestHelper->createAndPersistUser($em, null, User::ROLE_PA);
         $pa2 = $userTestHelper->createAndPersistUser($em, null, User::ROLE_PA);
@@ -85,7 +85,7 @@ class UserVoterTest extends KernelTestCase
             'Lay Deputy deletes Prof Admin Deputy' => [$layNoReportsOrClients, $profAdmin, -1],
             'Lay Deputy deletes Admin user' => [$layNoReportsOrClients, $admin, -1],
             'Lay Deputy deletes Super Admin user' => [$layNoReportsOrClients, $superAdmin, -1],
-            'Lay Deputy deletes Elevated Admin user' => [$layNoReportsOrClients, $elevatedAdmin, -1],
+            'Lay Deputy deletes d Admin user' => [$layNoReportsOrClients, $adminManager, -1],
             'Lay Deputy deletes self' => [$layNoReportsOrClients, $layNoReportsOrClients, -1],
 
             'PA Deputy deletes Lay Deputy' => [$pa, $layNoReportsOneClient, -1],
@@ -99,7 +99,7 @@ class UserVoterTest extends KernelTestCase
             'PA Deputy deletes Prof Admin Deputy' => [$pa, $profAdmin, -1],
             'PA Deputy deletes Admin user' => [$pa, $admin, -1],
             'PA Deputy deletes Super Admin user' => [$pa, $superAdmin, -1],
-            'PA Deputy deletes Elevated Admin user' => [$pa, $elevatedAdmin, -1],
+            'PA Deputy deletes Admin Manager user' => [$pa, $adminManager, -1],
             'PA Deputy deletes self' => [$pa, $pa, -1],
 
             'PA Team Member deletes Lay Deputy' => [$paTeamMember, $layNoReportsOneClient, -1],
@@ -113,7 +113,7 @@ class UserVoterTest extends KernelTestCase
             'PA Team Member deletes Prof Admin Deputy' => [$paTeamMember, $profAdmin, -1],
             'PA Team Member deletes Admin user' => [$paTeamMember, $admin, -1],
             'PA Team Member deletes Super Admin user' => [$paTeamMember, $superAdmin, -1],
-            'PA Team Member deletes Elevated Admin user' => [$paTeamMember, $elevatedAdmin, -1],
+            'PA Team Member deletes Admin Manager user' => [$paTeamMember, $adminManager, -1],
             'PA Team Member deletes self' => [$paTeamMember, $paTeamMember, -1],
 
             'PA Named Deputy deletes Lay Deputy' => [$paNamed, $layNoReportsOneClient, -1],
@@ -127,7 +127,7 @@ class UserVoterTest extends KernelTestCase
             'PA Named Deputy deletes Prof Admin Deputy' => [$paNamed, $profAdmin, 1],
             'PA Named Deputy deletes Admin user' => [$paNamed, $admin, -1],
             'PA Named Deputy deletes Super Admin user' => [$paNamed, $superAdmin, -1],
-            'PA Named Deputy deletes Elevated Admin user' => [$paNamed, $elevatedAdmin, -1],
+            'PA Named Deputy deletes Admin Manager user' => [$paNamed, $adminManager, -1],
             'PA Named Deputy deletes self' => [$paNamed, $paNamed, -1],
 
             'PA Admin Deputy deletes Lay Deputy' => [$paAdmin, $layNoReportsOneClient, -1],
@@ -141,7 +141,7 @@ class UserVoterTest extends KernelTestCase
             'PA Admin Deputy deletes Prof Admin Deputy' => [$paAdmin, $profAdmin, 1],
             'PA Admin Deputy deletes Admin user' => [$paAdmin, $admin, -1],
             'PA Admin Deputy deletes Super Admin user' => [$paAdmin, $superAdmin, -1],
-            'PA Admin Deputy deletes Elevated Admin user' => [$paAdmin, $elevatedAdmin, -1],
+            'PA Admin Deputy deletes Admin Manager user' => [$paAdmin, $adminManager, -1],
             'PA Admin Deputy deletes self' => [$paAdmin, $paAdmin, -1],
 
             'Prof Deputy deletes Lay Deputy' => [$prof, $layNoReportsOneClient, -1],
@@ -155,7 +155,7 @@ class UserVoterTest extends KernelTestCase
             'Prof Deputy deletes Prof Admin Deputy' => [$prof, $profAdmin, -1],
             'Prof Deputy deletes Admin user' => [$prof, $admin, -1],
             'Prof Deputy deletes Super Admin user' => [$prof, $superAdmin, -1],
-            'Prof Deputy deletes Elevated Admin user' => [$prof, $elevatedAdmin, -1],
+            'Prof Deputy deletes Admin Manager user' => [$prof, $adminManager, -1],
             'Prof Deputy deletes self' => [$prof, $prof, -1],
 
             'Prof Team Member deletes Lay Deputy' => [$profTeamMember, $layNoReportsOneClient, -1],
@@ -169,7 +169,7 @@ class UserVoterTest extends KernelTestCase
             'Prof Team Member deletes Prof Admin Deputy' => [$profTeamMember, $profAdmin, -1],
             'Prof Team Member deletes Admin user' => [$profTeamMember, $admin, -1],
             'Prof Team Member deletes Super Admin user' => [$profTeamMember, $superAdmin, -1],
-            'Prof Team Member deletes Elevated Admin user' => [$profTeamMember, $elevatedAdmin, -1],
+            'Prof Team Member deletes Admin Manager user' => [$profTeamMember, $adminManager, -1],
             'Prof Team Member deletes self' => [$profTeamMember, $profTeamMember, -1],
 
             'Prof Named Deputy deletes Lay Deputy' => [$profNamed, $layNoReportsOneClient, -1],
@@ -183,7 +183,7 @@ class UserVoterTest extends KernelTestCase
             'Prof Named Deputy deletes Prof Admin Deputy' => [$profNamed, $profAdmin, 1],
             'Prof Named Deputy deletes Admin user' => [$profNamed, $admin, -1],
             'Prof Named Deputy deletes Super Admin user' => [$profNamed, $superAdmin, -1],
-            'Prof Named Deputy deletes Elevated Admin user' => [$profNamed, $elevatedAdmin, -1],
+            'Prof Named Deputy deletes Admin Manager user' => [$profNamed, $adminManager, -1],
             'Prof Named Deputy deletes self' => [$profNamed, $profNamed, -1],
 
             'Prof Admin Deputy deletes Lay Deputy' => [$profAdmin, $layNoReportsOneClient, -1],
@@ -197,7 +197,7 @@ class UserVoterTest extends KernelTestCase
             'Prof Admin Deputy deletes Prof Admin Deputy' => [$profAdmin, $profAdmin2, 1],
             'Prof Admin Deputy deletes Admin user' => [$profAdmin, $admin, -1],
             'Prof Admin Deputy deletes Super Admin user' => [$profAdmin, $superAdmin, -1],
-            'Prof Admin deletes Elevated Admin user' => [$profAdmin, $elevatedAdmin, -1],
+            'Prof Admin deletes Admin Manager user' => [$profAdmin, $adminManager, -1],
             'Prof Admin Deputy deletes self' => [$profAdmin, $profAdmin, -1],
 
             'Admin deletes Lay Deputy with no reports or clients' => [$admin, $layNoReportsOrClients, -1],
@@ -213,24 +213,24 @@ class UserVoterTest extends KernelTestCase
             'Admin deletes Prof Admin Deputy' => [$admin, $profAdmin, -1],
             'Admin deletes Admin user' => [$admin, $admin2, -1],
             'Admin deletes Super Admin user' => [$admin, $superAdmin, -1],
-            'Admin deletes Elevated Admin user' => [$admin, $elevatedAdmin, -1],
+            'Admin deletes Admin Manager user' => [$admin, $adminManager, -1],
             'Admin deletes self' => [$admin, $admin, -1],
 
-            'Elevated Admin deletes Lay Deputy with no reports or clients' => [$elevatedAdmin, $layNoReportsOrClients, -1],
-            'Elevated Admin deletes Lay Deputy with no reports, one client' => [$elevatedAdmin, $layNoReportsOneClient, -1],
-            'Elevated Admin deletes Lay Deputy with one report and client' => [$elevatedAdmin, $layReportOneClient, -1],
-            'Elevated Admin deleted PA Deputy' => [$elevatedAdmin, $pa, -1],
-            'Elevated Admin deleted PA Named Deputy' => [$elevatedAdmin, $paNamed, -1],
-            'Elevated Admin deleted PA Admin Deputy' => [$elevatedAdmin, $paAdmin, -1],
-            'Elevated Admin deleted PA Team Member' => [$elevatedAdmin, $paTeamMember, -1],
-            'Elevated Admin deleted Prof Deputy' => [$elevatedAdmin, $prof, -1],
-            'Elevated Admin deleted Prof Named Deputy' => [$elevatedAdmin, $profNamed, -1],
-            'Elevated Admin deleted Prof Admin Deputy' => [$elevatedAdmin, $profAdmin, -1],
-            'Elevated Admin deletes Prof Team Member' => [$elevatedAdmin, $profTeamMember, -1],
-            'Elevated Admin deleted Admin user' => [$elevatedAdmin, $admin, -1],
-            'Elevated Admin deletes Super Admin user' => [$elevatedAdmin, $superAdmin, -1],
-            'Elevated Admin deletes Elevated Admin user' => [$elevatedAdmin, $elevatedAdmin2, 1],
-            'Elevated Admin deletes self' => [$elevatedAdmin, $elevatedAdmin, -1],
+            'Admin Manager deletes Lay Deputy with no reports or clients' => [$adminManager, $layNoReportsOrClients, -1],
+            'Admin Manager deletes Lay Deputy with no reports, one client' => [$adminManager, $layNoReportsOneClient, -1],
+            'Admin Manager deletes Lay Deputy with one report and client' => [$adminManager, $layReportOneClient, -1],
+            'Admin Manager deleted PA Deputy' => [$adminManager, $pa, -1],
+            'Admin Manager deleted PA Named Deputy' => [$adminManager, $paNamed, -1],
+            'Admin Manager deleted PA Admin Deputy' => [$adminManager, $paAdmin, -1],
+            'Admin Manager deleted PA Team Member' => [$adminManager, $paTeamMember, -1],
+            'Admin Manager deleted Prof Deputy' => [$adminManager, $prof, -1],
+            'Admin Manager deleted Prof Named Deputy' => [$adminManager, $profNamed, -1],
+            'Admin Manager deleted Prof Admin Deputy' => [$adminManager, $profAdmin, -1],
+            'Admin Manager deletes Prof Team Member' => [$adminManager, $profTeamMember, -1],
+            'Admin Manager deleted Admin user' => [$adminManager, $admin, -1],
+            'Admin Manager deletes Super Admin user' => [$adminManager, $superAdmin, -1],
+            'Admin Manager deletes Admin Manager user' => [$adminManager, $adminManager2, 1],
+            'Admin Manager deletes self' => [$adminManager, $adminManager, -1],
 
             'Super Admin deletes Lay Deputy with no reports or clients' => [$superAdmin, $layNoReportsOrClients, 1],
             'Super Admin deletes Lay Deputy with no reports, one client' => [$superAdmin, $layNoReportsOneClient, 1],
@@ -245,7 +245,7 @@ class UserVoterTest extends KernelTestCase
             'Super Admin deletes Prof Admin Deputy' => [$superAdmin, $profAdmin, 1],
             'Super Admin deletes Admin user' => [$superAdmin, $admin, 1],
             'Super Admin deletes Super Admin user' => [$superAdmin, $superAdmin2, 1],
-            'Super Admin deletes Elevated Admin user' => [$superAdmin, $elevatedAdmin, 1],
+            'Super Admin deletes Admin Manager user' => [$superAdmin, $adminManager, 1],
             'Super Admin deletes self' => [$superAdmin, $superAdmin, -1],
         ];
     }
@@ -276,8 +276,8 @@ class UserVoterTest extends KernelTestCase
         $admin2 = $userTestHelper->createAndPersistUser($em, null, User::ROLE_ADMIN);
         $superAdmin = $userTestHelper->createAndPersistUser($em, null, User::ROLE_SUPER_ADMIN);
         $superAdmin2 = $userTestHelper->createAndPersistUser($em, null, User::ROLE_SUPER_ADMIN);
-        $elevatedAdmin = $userTestHelper->createAndPersistUser($em, null, User::ROLE_ELEVATED_ADMIN);
-        $elevatedAdmin2 = $userTestHelper->createAndPersistUser($em, null, User::ROLE_ELEVATED_ADMIN);
+        $adminManager = $userTestHelper->createAndPersistUser($em, null, User::ROLE_ADMIN_MANAGER);
+        $adminManager2 = $userTestHelper->createAndPersistUser($em, null, User::ROLE_ADMIN_MANAGER);
 
         $lay = $userTestHelper->createAndPersistUser($em, null, User::ROLE_LAY_DEPUTY);
         $lay2 = $userTestHelper->createAndPersistUser($em, null, User::ROLE_LAY_DEPUTY);
@@ -312,22 +312,22 @@ class UserVoterTest extends KernelTestCase
             'Super Admin adds/edits Prof Team Member' => [$superAdmin, $profTeamMember, 1],
             'Super Admin adds/edits Admin user' => [$superAdmin, $admin, 1],
             'Super Admin adds/edits Super Admin user' => [$superAdmin, $superAdmin2, 1],
-            'Super Admin adds/edits Elevated Admin user' => [$superAdmin, $elevatedAdmin, 1],
+            'Super Admin adds/edits Admin Manager user' => [$superAdmin, $adminManager, 1],
             'Super Admin adds/edits self' => [$superAdmin, $superAdmin, 1],
 
-            'Elevated Admin adds/edits Lay Deputy' => [$elevatedAdmin, $lay, 1],
-            'Elevated Admin adds/edits PA Deputy' => [$elevatedAdmin, $pa, 1],
-            'Elevated Admin adds/edits PA Named Deputy' => [$elevatedAdmin, $paNamed, 1],
-            'Elevated Admin adds/edits PA Admin Deputy' => [$elevatedAdmin, $paAdmin, 1],
-            'Elevated Admin adds/edits PA Team Member' => [$elevatedAdmin, $paTeamMember, 1],
-            'Elevated Admin adds/edits Prof Deputy' => [$elevatedAdmin, $prof, 1],
-            'Elevated Admin adds/edits Prof Named Deputy' => [$elevatedAdmin, $profNamed, 1],
-            'Elevated Admin adds/edits Prof Admin Deputy' => [$elevatedAdmin, $profAdmin, 1],
-            'Elevated Admin adds/edits Admin user' => [$elevatedAdmin, $admin, 1],
-            'Elevated Admin adds/edits Super Admin user' => [$elevatedAdmin, $superAdmin, -1],
-            'Elevated Admin adds/edits Prof Team Member' => [$elevatedAdmin, $profTeamMember, 1],
-            'Elevated Admin adds/edits Elevated Admin user' => [$elevatedAdmin, $elevatedAdmin2, -1],
-            'Elevated Admin adds/edits self' => [$elevatedAdmin, $elevatedAdmin, 1],
+            'Admin Manager adds/edits Lay Deputy' => [$adminManager, $lay, 1],
+            'Admin Manager adds/edits PA Deputy' => [$adminManager, $pa, 1],
+            'Admin Manager adds/edits PA Named Deputy' => [$adminManager, $paNamed, 1],
+            'Admin Manager adds/edits PA Admin Deputy' => [$adminManager, $paAdmin, 1],
+            'Admin Manager adds/edits PA Team Member' => [$adminManager, $paTeamMember, 1],
+            'Admin Manager adds/edits Prof Deputy' => [$adminManager, $prof, 1],
+            'Admin Manager adds/edits Prof Named Deputy' => [$adminManager, $profNamed, 1],
+            'Admin Manager adds/edits Prof Admin Deputy' => [$adminManager, $profAdmin, 1],
+            'Admin Manager adds/edits Admin user' => [$adminManager, $admin, 1],
+            'Admin Manager adds/edits Super Admin user' => [$adminManager, $superAdmin, -1],
+            'Admin Manager adds/edits Prof Team Member' => [$adminManager, $profTeamMember, 1],
+            'Admin Manager adds/edits Admin Manager user' => [$adminManager, $adminManager2, -1],
+            'Admin Manager adds/edits self' => [$adminManager, $adminManager, 1],
 
             'Admin adds/edits Lay Deputy' => [$admin, $lay, 1],
             'Admin adds/edits PA Deputy' => [$admin, $pa, 1],
@@ -340,7 +340,7 @@ class UserVoterTest extends KernelTestCase
             'Admin adds/edits Prof Team Member' => [$admin, $profTeamMember, 1],
             'Admin adds/edits Admin user' => [$admin, $admin2, 1],
             'Admin adds/edits Super Admin user' => [$admin, $superAdmin, -1],
-            'Admin adds/edits Elevated Admin user' => [$admin, $elevatedAdmin, -1],
+            'Admin adds/edits Admin Manager user' => [$admin, $adminManager, -1],
             'Admin adds/edits self' => [$admin, $admin, 1],
 
             'Lay adds/edits Lay Deputy' => [$lay, $lay2, -1],
@@ -354,7 +354,7 @@ class UserVoterTest extends KernelTestCase
             'Lay adds/edits Prof Team Member' => [$lay, $profTeamMember, -1],
             'Lay adds/edits Admin user' => [$lay, $admin, -1],
             'Lay adds/edits Super Admin user' => [$lay, $superAdmin, -1],
-            'Lay adds/edits Elevated Admin user' => [$lay, $elevatedAdmin, -1],
+            'Lay adds/edits Admin Manager user' => [$lay, $adminManager, -1],
             'Lay adds/edits self' => [$lay, $lay, 1],
 
             'PA Deputy adds/edits Lay Deputy' => [$pa, $lay, -1],
@@ -368,7 +368,7 @@ class UserVoterTest extends KernelTestCase
             'PA Deputy adds/edits Prof Team Member' => [$pa, $profTeamMember, -1],
             'PA Deputy adds/edits Admin user' => [$pa, $admin, -1],
             'PA Deputy adds/edits Super Admin user' => [$pa, $superAdmin, -1],
-            'PA Deputy adds/edits Elevated Admin user' => [$pa, $elevatedAdmin, -1],
+            'PA Deputy adds/edits Admin Manager user' => [$pa, $adminManager, -1],
             'PA Deputy adds/edits self' => [$pa, $pa, 1],
 
             'PA Named Deputy adds/edits Lay Deputy' => [$paNamed, $lay, -1],
@@ -382,7 +382,7 @@ class UserVoterTest extends KernelTestCase
             'PA Named Deputy adds/edits Prof Team Member' => [$paNamed, $profTeamMember, -1],
             'PA Named Deputy adds/edits Admin user' => [$paNamed, $admin, -1],
             'PA Named Deputy adds/edits Super Admin user' => [$paNamed, $superAdmin, -1],
-            'PA Named Deputy adds/edits Elevated Admin user' => [$paNamed, $elevatedAdmin, -1],
+            'PA Named Deputy adds/edits Admin Manager user' => [$paNamed, $adminManager, -1],
             'PA Named Deputy adds/edits self' => [$paNamed, $paNamed, 1],
 
             'PA Admin adds/edits Lay Deputy' => [$paAdmin, $lay, -1],
@@ -396,7 +396,7 @@ class UserVoterTest extends KernelTestCase
             'PA Admin adds/edits Prof Team Member' => [$paAdmin, $profTeamMember, -1],
             'PA Admin adds/edits Admin user' => [$paAdmin, $admin, -1],
             'PA Admin adds/edits Super Admin user' => [$paAdmin, $superAdmin, -1],
-            'PA Admin adds/edits Elevated Admin user' => [$paAdmin, $elevatedAdmin, -1],
+            'PA Admin adds/edits Admin Manager user' => [$paAdmin, $adminManager, -1],
             'PA Admin adds/edits self' => [$paAdmin, $paAdmin, 1],
 
             'PA Team Member adds/edits Lay Deputy' => [$paTeamMember, $lay, -1],
@@ -410,7 +410,7 @@ class UserVoterTest extends KernelTestCase
             'PA Team Member adds/edits Prof Team Member' => [$paTeamMember, $profTeamMember, -1],
             'PA Team Member adds/edits Admin user' => [$paTeamMember, $admin, -1],
             'PA Team Member adds/edits Super Admin user' => [$paTeamMember, $superAdmin, -1],
-            'PA Team Member adds/edits Elevated Admin user' => [$paTeamMember, $elevatedAdmin, -1],
+            'PA Team Member adds/edits Admin Manager user' => [$paTeamMember, $adminManager, -1],
             'PA Team Member adds/edits self' => [$paTeamMember, $paTeamMember, 1],
 
             'Prof Deputy adds/edits Lay Deputy' => [$prof, $lay, -1],
@@ -424,7 +424,7 @@ class UserVoterTest extends KernelTestCase
             'Prof Deputy adds/edits Prof Team Member' => [$prof, $profTeamMember, 1],
             'Prof Deputy adds/edits Admin user' => [$prof, $admin, -1],
             'Prof Deputy adds/edits Super Admin user' => [$prof, $superAdmin, -1],
-            'Prof Deputy adds/edits Elevated Admin user' => [$prof, $elevatedAdmin, -1],
+            'Prof Deputy adds/edits Admin Manager user' => [$prof, $adminManager, -1],
             'Prof Deputy adds/edits self' => [$prof, $prof, 1],
 
             'Prof Named Deputy adds/edits Lay Deputy' => [$profNamed, $lay, -1],
@@ -438,7 +438,7 @@ class UserVoterTest extends KernelTestCase
             'Prof Named Deputy adds/edits Prof Team Member' => [$profNamed, $profTeamMember, 1],
             'Prof Named Deputy adds/edits Admin user' => [$profNamed, $admin, -1],
             'Prof Named Deputy adds/edits Super Admin user' => [$profNamed, $superAdmin, -1],
-            'Prof Named Deputy adds/edits Elevated Admin user' => [$profNamed, $elevatedAdmin, -1],
+            'Prof Named Deputy adds/edits Admin Manager user' => [$profNamed, $adminManager, -1],
             'Prof Named Deputy adds/edits self' => [$profNamed, $profNamed, 1],
 
             'Prof Admin adds/edits Lay Deputy' => [$profAdmin, $lay, -1],
@@ -452,7 +452,7 @@ class UserVoterTest extends KernelTestCase
             'Prof Admin adds/edits Prof Team Member' => [$profAdmin, $profTeamMember, 1],
             'Prof Admin adds/edits Admin user' => [$profAdmin, $admin, -1],
             'Prof Admin adds/edits Super Admin user' => [$profAdmin, $superAdmin, -1],
-            'Prof Admin adds/edits Elevated Admin user' => [$profAdmin, $elevatedAdmin, -1],
+            'Prof Admin adds/edits Admin Manager user' => [$profAdmin, $adminManager, -1],
             'Prof Admin adds/edits self' => [$profAdmin, $profAdmin, 1],
 
             'Prof Team Member adds/edits Lay Deputy' => [$profTeamMember, $lay, -1],
@@ -466,7 +466,7 @@ class UserVoterTest extends KernelTestCase
             'Prof Team Member adds/edits Prof Team Member' => [$profTeamMember, $profTeamMember2, -1],
             'Prof Team Member adds/edits Admin user' => [$profTeamMember, $admin, -1],
             'Prof Team Member adds/edits Super Admin user' => [$profTeamMember, $superAdmin, -1],
-            'Prof Team Member adds/edits Elevated Admin user' => [$profTeamMember, $elevatedAdmin, -1],
+            'Prof Team Member adds/edits Admin Manager user' => [$profTeamMember, $adminManager, -1],
             'Prof Team Member adds/edits self' => [$profTeamMember, $profTeamMember, 1],
         ];
     }

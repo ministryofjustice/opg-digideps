@@ -1,7 +1,7 @@
 @v2 @debts
 Feature: Report debts
 
-@pfa-low-not-started
+@lay-pfa-low-not-started
   Scenario: A user has no debts
     Given a Lay Deputy has not started a Pfa Low Assets report
     And I visit the report overview page
@@ -12,7 +12,7 @@ Feature: Report debts
     When I follow link back to report overview page
     Then I should see "debts" as "finished"
 
-@pfa-low-not-started
+@lay-pfa-low-not-started
   Scenario: A user has some debts
     Given a Lay Deputy has not started a Pfa Low Assets report
     When I view and start the debts report section
@@ -23,13 +23,13 @@ Feature: Report debts
     When I follow link back to report overview page
     Then I should see "debts" as "finished"
 
-@pfa-low-completed
+@lay-pfa-low-completed
   Scenario: A user edits a debt
     Given a Lay Deputy has completed a Pfa Low Assets report
     When I edit an existing debt payment
     Then I should see the expected debts section summary
 
-@pfa-low-completed
+@lay-pfa-low-completed
   Scenario: A user tries to add a debt with invalid amount
     Given a Lay Deputy has completed a Pfa Low Assets report
     When I add a debt with invalid amount
