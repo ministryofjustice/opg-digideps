@@ -18,6 +18,18 @@ trait ElementSelectionTrait
         return $listOfElements;
     }
 
+    // Bring back list of items based on xpath selector with error handling
+    public function findAllXpathElements($xpath)
+    {
+        $listOfElements = $this->getSession()->getPage()->findAll('xpath', $xpath);
+
+        if (!$listOfElements) {
+            $this->throwContextualException("A '$xpath' element was not found on the page");
+        }
+
+        return $listOfElements;
+    }
+
     // Click on a specified occurrence of an href based on a regex you specify
     public function iClickOnNthElementBasedOnRegex(string $regex, int $elementIndex)
     {
@@ -47,6 +59,30 @@ trait ElementSelectionTrait
         }
 
         $element->click();
+    }
+
+    // Returns a selector for a link such as a remove or edit link
+    public function getLinkBasedOnResponse(string $sectionText, string $linkText)
+    {
+        $xpath = "//div[contains(@class, 'govuk-summary-list__row')]";
+        $session = $this->getSession();
+        $elements = $session->getPage()->findAll('xpath', $xpath);
+
+        foreach ($elements as $element) {
+            if (str_contains(strtolower(trim($element->getHtml())), strtolower(trim($sectionText)))) {
+                $elementToSelect = $element;
+            }
+        }
+
+        $hrefs = $elementToSelect->findAll('xpath', '//a');
+
+        foreach ($hrefs as $href) {
+            if (strtolower(trim($href->getHtml())) == strtolower($linkText)) {
+                $selector = $href;
+            }
+        }
+
+        return $selector;
     }
 
     // Click on a link (a or button css ref for example) based on the value of it's attribute type.

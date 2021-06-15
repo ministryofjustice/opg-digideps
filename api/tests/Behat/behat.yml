@@ -250,6 +250,12 @@ v2-tests-goutte:
             contexts:
                 - App\Tests\Behat\v2\Reporting\Sections\ReportingSectionsFeatureContext
 
+        section-deputy-costs-estimate:
+            description: Covering the 'Deputy Costs Estimate' section of the report
+            paths: [ "%paths.base%/features-v2/reporting/sections/deputy-costs-estimate" ]
+            contexts:
+                - App\Tests\Behat\v2\Reporting\Sections\ReportingSectionsFeatureContext
+
         section-documents:
             description: Covering the 'Documents' section of the report
             paths: [ "%paths.base%/features-v2/reporting/sections/documents" ]

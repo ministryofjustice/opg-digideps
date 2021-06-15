@@ -45,6 +45,14 @@ class FixtureHelper
     private User $layHealthWelfareCompleted;
     private User $layHealthWelfareSubmitted;
 
+    private User $profNamedHealthWelfareNotStarted;
+    private User $profNamedHealthWelfareCompleted;
+    private User $profNamedHealthWelfareSubmitted;
+
+    private User $profTeamHealthWelfareNotStarted;
+    private User $profTeamHealthWelfareCompleted;
+    private User $profTeamHealthWelfareSubmitted;
+
     private User $layNdrNotStarted;
     private User $layNdrCompleted;
     private User $layNdrSubmitted;
@@ -359,10 +367,10 @@ class FixtureHelper
         $this->em->persist($client);
     }
 
-    private function addOrgClientsNamedDeputyAndReportsToOrgDeputy(User $deputy, Organisation $organisation, bool $completed = false, bool $submitted = false)
+    private function addOrgClientsNamedDeputyAndReportsToOrgDeputy(User $deputy, Organisation $organisation, bool $completed = false, bool $submitted = false, $reportType = Report::TYPE_102)
     {
         $client = $this->clientTestHelper->generateClient($this->em, $deputy, $organisation);
-        $report = $this->reportTestHelper->generateReport($this->em, $client);
+        $report = $this->reportTestHelper->generateReport($this->em, $client, $reportType);
         $namedDeputy = $this->namedDeputyTestHelper->generatenamedDeputy();
 
         $client->addReport($report);
@@ -532,6 +540,90 @@ class FixtureHelper
         return self::buildUserDetails($this->layHealthWelfareSubmitted);
     }
 
+    public function createProfNamedHealthWelfareNotStarted(string $testRunId)
+    {
+        $this->profNamedHealthWelfareNotStarted = $this->createOrgUserClientNamedDeputyAndReport(
+            $testRunId,
+            User::ROLE_PROF_NAMED,
+            'prof-named-health-welfare-not-started',
+            Report::TYPE_104_5,
+            false,
+            false
+        );
+
+        return self::buildOrgUserDetails($this->profNamedHealthWelfareNotStarted);
+    }
+
+    public function createProfNamedHealthWelfareCompleted(string $testRunId)
+    {
+        $this->profNamedHealthWelfareCompleted = $this->createOrgUserClientNamedDeputyAndReport(
+            $testRunId,
+            User::ROLE_PROF_NAMED,
+            'prof-named-health-welfare-completed',
+            Report::TYPE_104_5,
+            true,
+            false
+        );
+
+        return self::buildOrgUserDetails($this->profNamedHealthWelfareCompleted);
+    }
+
+    public function createProfNamedHealthWelfareSubmitted(string $testRunId)
+    {
+        $this->profNamedHealthWelfareSubmitted = $this->createOrgUserClientNamedDeputyAndReport(
+            $testRunId,
+            User::ROLE_PROF_NAMED,
+            'prof-named-health-welfare-submitted',
+            Report::TYPE_104_5,
+            true,
+            true
+        );
+
+        return self::buildOrgUserDetails($this->profNamedHealthWelfareSubmitted);
+    }
+
+    public function createProfTeamHealthWelfareNotStarted(string $testRunId)
+    {
+        $this->profTeamHealthWelfareNotStarted = $this->createOrgUserClientNamedDeputyAndReport(
+            $testRunId,
+            User::ROLE_PROF_TEAM_MEMBER,
+            'prof-team-health-welfare-not-started',
+            Report::TYPE_104_5,
+            false,
+            false
+        );
+
+        return self::buildOrgUserDetails($this->profTeamHealthWelfareNotStarted);
+    }
+
+    public function createProfTeamHealthWelfareCompleted(string $testRunId)
+    {
+        $this->profTeamHealthWelfareCompleted = $this->createOrgUserClientNamedDeputyAndReport(
+            $testRunId,
+            User::ROLE_PROF_TEAM_MEMBER,
+            'prof-team-health-welfare-completed',
+            Report::TYPE_104_5,
+            true,
+            false
+        );
+
+        return self::buildOrgUserDetails($this->profTeamHealthWelfareCompleted);
+    }
+
+    public function createProfTeamHealthWelfareSubmitted(string $testRunId)
+    {
+        $this->profTeamHealthWelfareSubmitted = $this->createOrgUserClientNamedDeputyAndReport(
+            $testRunId,
+            User::ROLE_PROF_TEAM_MEMBER,
+            'prof-team-health-welfare-submitted',
+            Report::TYPE_104_5,
+            true,
+            true
+        );
+
+        return self::buildOrgUserDetails($this->profTeamHealthWelfareSubmitted);
+    }
+
     public function createLayNdrNotStarted(string $testRunId)
     {
         $this->layNdrNotStarted = $this->createClientAndReport(
@@ -583,6 +675,7 @@ class FixtureHelper
             $testRunId,
             User::ROLE_PROF_ADMIN,
             'prof-admin-not-started',
+            Report::TYPE_104_5,
             false,
             false
         );
@@ -596,6 +689,7 @@ class FixtureHelper
             $testRunId,
             User::ROLE_PROF_ADMIN,
             'prof-admin-completed',
+            Report::TYPE_104_5,
             true,
             false
         );
@@ -609,6 +703,7 @@ class FixtureHelper
             $testRunId,
             User::ROLE_PROF_ADMIN,
             'prof-admin-completed',
+            Report::TYPE_104_5,
             true,
             true
         );
@@ -696,7 +791,7 @@ class FixtureHelper
         return $client;
     }
 
-    private function createOrgUserClientNamedDeputyAndReport(string $testRunId, $userRole, $emailPrefix, $completed, $submitted)
+    private function createOrgUserClientNamedDeputyAndReport(string $testRunId, $userRole, $emailPrefix, $reportType, $completed, $submitted)
     {
         if ('prod' === $this->symfonyEnvironment) {
             throw new Exception('Prod mode enabled - cannot create fixture users');
@@ -706,7 +801,7 @@ class FixtureHelper
 
         $user = $this->userTestHelper
             ->createUser(null, $userRole, sprintf('%s-%s@t.uk', $emailPrefix, $this->testRunId));
-        $this->addOrgClientsNamedDeputyAndReportsToOrgDeputy($user, $organisation, $completed, $submitted);
+        $this->addOrgClientsNamedDeputyAndReportsToOrgDeputy($user, $organisation, $completed, $submitted, $reportType);
 
         $this->setClientPassword($user);
 
