@@ -225,14 +225,19 @@ trait FormFillingTrait
         }
 
         if (!is_null($removeButtonText)) {
-            $rowSelector = sprintf('//tr[th[normalize-space() ="%s"]]', $answers[$answerGroupToRemove][$fieldInAnswerGroupToRemove]);
+            $rowSelector = sprintf(
+                '//tr[th[contains(.,"%s")]]  | //div[contains(.,"%s")]',
+                $answers[$answerGroupToRemove][$fieldInAnswerGroupToRemove],
+                $answers[$answerGroupToRemove][$fieldInAnswerGroupToRemove]
+            );
+
             $descriptionTableRow = $this->getSession()->getPage()->find('xpath', $rowSelector);
             $descriptionTableRow->clickLink('Remove');
             $this->pressButton($removeButtonText);
         }
 
         if (!is_null($this->getSectionTotal($formSectionName))) {
-            foreach ($this->submittedAnswersByFormSections[$formSectionName][$answerGroupToRemove] as $value) {
+            foreach ($answers[$answerGroupToRemove] as $value) {
                 if (is_int($value)) {
                     $this->subtractFromSectionTotal($formSectionName, $value);
                     $this->subtractFromGrandTotal($value);

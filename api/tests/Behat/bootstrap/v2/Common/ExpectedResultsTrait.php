@@ -219,8 +219,14 @@ trait ExpectedResultsTrait
      */
     private function assertSectionContainsExpectedResultsSimplified(string $sectionName, bool $partialMatch = false)
     {
-        if (empty($this->getSectionAnswers($sectionName))) {
+        $sectionExists = array_key_exists($sectionName, $this->submittedAnswersByFormSections);
+
+        if (!$sectionExists) {
             throw new BehatException(sprintf('The section specified (%s) is not in $this->submittedAnswersByFormSections', $sectionName));
+        }
+
+        if (empty($this->getSectionAnswers($sectionName))) {
+            return;
         }
 
         $foundAnswers = [];

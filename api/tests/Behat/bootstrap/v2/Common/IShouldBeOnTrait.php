@@ -462,6 +462,9 @@ trait IShouldBeOnTrait
         return $this->iAmOnPage(sprintf('/%s\/.*\/prof-deputy-costs\/previous-received.*$/', $this->reportUrlPrefix));
     }
 
+    /**
+     * @Then I should be on the deputy costs - costs received page
+     */
     public function iAmOnDeputyCostsCostsReceievedPage()
     {
         return $this->iAmOnPage(sprintf('/%s\/.*\/prof-deputy-costs\/costs-received.*$/', $this->reportUrlPrefix));
@@ -477,11 +480,17 @@ trait IShouldBeOnTrait
         return $this->iAmOnPage(sprintf('/%s\/.*\/prof-deputy-costs\/interim.*$/', $this->reportUrlPrefix));
     }
 
+    /**
+     * @Then I should be on the deputy costs - SCCO amount page
+     */
     public function iAmOnDeputyCostsAmountSccoPage()
     {
         return $this->iAmOnPage(sprintf('/%s\/.*\/prof-deputy-costs\/amount-scco.*$/', $this->reportUrlPrefix));
     }
 
+    /**
+     * @Then I should be on the deputy costs - breakdown page
+     */
     public function iAmOnDeputyCostsBreakdownPage()
     {
         return $this->iAmOnPage(sprintf('/%s\/.*\/prof-deputy-costs\/breakdown.*$/', $this->reportUrlPrefix));

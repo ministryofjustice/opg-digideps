@@ -8,6 +8,22 @@ use App\Tests\Behat\BehatException;
 
 trait DeputyCostsSectionTrait
 {
+    private string $missingCostTypeError = 'Please select an option';
+    private string $missingPreviousCostsIncurredError = 'Please select either \'Yes\' or \'No\'';
+    private string $emptyPreviousCostStartDateError = 'Please enter the start date';
+    private string $emptyPreviousCostEndDateError = 'Please enter the end date';
+    private string $missingValueError = 'Please enter a value';
+    private string $endDateBeforeStartDateError = 'Check the end date: it cannot be before the start date';
+    private string $amountRangeLimitError = 'The amount must be between £0.01 and £100,000,000,000';
+    private string $missingFixedCostAmountError = 'Please enter an amount. Enter 0 if you have not received any payments for this reporting period';
+    private string $missingDateError = 'Please enter a date';
+    private string $missingSccoAssessedCostError = 'Please enter an amount. Enter 0 if you are not requesting an SCCO assessment';
+    private string $negativeSccoAssessedCostError = 'Please enter a positive amount';
+    private string $additionalCostNegativeAmountError = 'The amount must be positive';
+    private string $additionalCostTooLargeAmountError = 'The amount must be less than £100,000,000,000';
+    private string $additionalCostMissingOtherDescriptionError = 'Please give us some more information';
+    private string $missingInterimCostError = 'Add at least one interim cost';
+
     /**
      * @When I navigate to and start the deputy costs report section for an existing client
      */
@@ -144,6 +160,8 @@ trait DeputyCostsSectionTrait
      */
     public function iDoNotHaveInterimDeputyCosts()
     {
+        $this->iAmOnDeputyCostsInterimExistsPage();
+
         $this->chooseOption(
             'yes_no[profDeputyCostsHasInterim]',
             'no',
@@ -277,20 +295,26 @@ trait DeputyCostsSectionTrait
     }
 
     /**
-     * @When I declare two previous costs with valid dates and amounts
+     * @When I declare :numberOfCosts previous cost(s) with valid dates and amounts
      */
-    public function iDeclareTwoPreviousCostsAndDates()
+    public function iDeclarePreviousCostsAndDates(int $numberOfCosts)
     {
         $this->iAmOnDeputyCostsPreviousReceivedPage();
 
-        $this->fillInPreviousReceivedFields(2018);
-        $this->pressButton('Save and add another');
+        $year = 2017;
 
-        $this->iAmOnDeputyCostsPreviousReceivedPage();
-        $this->assertOnAlertMessage('Cost added');
+        foreach (range(1, $numberOfCosts) as $index) {
+            $this->fillInPreviousReceivedFields($year);
+            $allCostsAdded = $index === $numberOfCosts;
 
-        $this->fillInPreviousReceivedFields(2019);
-        $this->pressButton('Save and continue');
+            $buttonText = $allCostsAdded ? 'Save and continue' : 'Save and add another';
+            $this->pressButton($buttonText);
+
+            if (!$allCostsAdded) {
+                $this->assertOnAlertMessage('Cost added');
+                ++$year;
+            }
+        }
     }
 
     private function fillInPreviousReceivedFields(int $year)
@@ -349,7 +373,7 @@ trait DeputyCostsSectionTrait
     {
         $this->iHaveFixedDeputyCosts();
         $this->clientHasPaidPreviousCostsInCurrentPeriod();
-        $this->iDeclareTwoPreviousCostsAndDates();
+        $this->iDeclarePreviousCostsAndDates(2);
         $this->iEnterValidCurrentCosts();
         $this->iHaveAllAdditionalCostsToDeclare();
     }
@@ -438,15 +462,15 @@ trait DeputyCostsSectionTrait
     }
 
     /**
-     * @When there should be :numberOfQuestions new questions to answer
+     * @When there should be :numberOfQuestions new question(s) to answer
      */
-    public function thereShouldBeTwoNewQuestionsToAnswer(string $numberOfQuestions)
+    public function thereShouldBeTwoNewQuestionsToAnswer(int $numberOfQuestions)
     {
         $locator = '//dd[contains(., "Please answer this question")]/..';
         $additionalCostRow = $this->getSession()->getPage()->findAll('xpath', $locator);
 
         $this->assertIntEqualsInt(
-            intval($numberOfQuestions),
+            $numberOfQuestions,
             count($additionalCostRow),
             'Summary page rows with text "Please answer this question"'
         );
@@ -503,5 +527,323 @@ trait DeputyCostsSectionTrait
         );
 
         $this->iAmOnDeputyCostsSummaryPage();
+    }
+
+    /**
+     * @When I add an additional cost for a previous period from the summary page
+     */
+    public function iAddPreviousCostFromSummaryPage()
+    {
+        $this->clickLink('Add another');
+
+        $this->iAmOnDeputyCostsPreviousReceivedPage();
+
+        $this->fillInPreviousReceivedFields(2017);
+        $this->pressButton('Save and continue');
+
+        $this->iAmOnDeputyCostsSummaryPage();
+    }
+
+    /**
+     * @When I remove an additional cost for a previous period from the summary page
+     */
+    public function iRemovePreviousCostFromSummaryPage()
+    {
+        $this->removeAnswerFromSection(
+            'deputy_costs_previous[amount]',
+            'PreviousReceived',
+            'Yes, remove previous cost'
+        );
+
+        $this->iAmOnDeputyCostsSummaryPage();
+    }
+
+    /**
+     * @When I don't provide details of the costs I've incurred
+     */
+    public function iDontProvideFixedCosts()
+    {
+        $this->iAmOnDeputyCostsHowChargedPage();
+        $this->pressButton('Save and continue');
+        $this->iAmOnDeputyCostsHowChargedPage();
+    }
+
+    /**
+     * @When I don't provide a value for current reporting period fixed costs
+     */
+    public function iDontProvideFixedCostValue()
+    {
+        $this->iAmOnDeputyCostsCostsReceievedPage();
+        $this->pressButton('Save and continue');
+        $this->iAmOnDeputyCostsCostsReceievedPage();
+    }
+
+    /**
+     * @When I don't choose a response for previous costs
+     */
+    public function iDontChoosePreviousCostsResponse()
+    {
+        $this->iAmOnDeputyCostsPreviousReceivedExistsPage();
+        $this->pressButton('Save and continue');
+        $this->iAmOnDeputyCostsPreviousReceivedExistsPage();
+    }
+
+    /**
+     * @When I don't provide any details on the previous costs
+     */
+    public function iProvideNoPreviousCostDetails()
+    {
+        $this->iAmOnDeputyCostsPreviousReceivedPage();
+        $this->pressButton('Save and continue');
+        $this->iAmOnDeputyCostsPreviousReceivedPage();
+    }
+
+    /**
+     * @When I provide an end date that is before the start date
+     */
+    public function iProvideEndDateBeforeStartDate()
+    {
+        $this->iAmOnDeputyCostsPreviousReceivedPage();
+
+        $this->fillInDateFields(
+            'deputy_costs_previous[startDate]',
+            $this->faker->numberBetween(1, 27),
+            $this->faker->numberBetween(1, 3),
+            2020
+        );
+
+        $this->fillInDateFields(
+            'deputy_costs_previous[endDate]',
+            $this->faker->numberBetween(1, 27),
+            $this->faker->numberBetween(1, 3),
+            2019
+        );
+
+        $this->pressButton('Save and continue');
+
+        $this->iAmOnDeputyCostsPreviousReceivedPage();
+    }
+
+    /**
+     * @When I provide a negative amount value
+     */
+    public function iProvideNegativeAmount()
+    {
+        $this->iAmOnDeputyCostsPreviousReceivedPage();
+
+        $this->fillInField('deputy_costs_previous[amount]', $this->faker->numberBetween(-10000, -1));
+        $this->pressButton('Save and continue');
+
+        $this->iAmOnDeputyCostsPreviousReceivedPage();
+    }
+
+    /**
+     * @When I don't provide any interim cost details
+     */
+    public function iDontProvideAnyInterimCostDetails()
+    {
+        $this->iAmOnDeputyCostsInterimPage();
+
+        $this->pressButton('Save and continue');
+
+        $this->iAmOnDeputyCostsInterimPage();
+    }
+
+    /**
+     * @When I provide a valid interim cost amount with a missing date
+     */
+    public function iProvideAValidAmountAndAMissingDate()
+    {
+        $this->iAmOnDeputyCostsInterimPage();
+
+        $this->fillInField(
+            'costs_interims[profDeputyInterimCosts][0][amount]',
+            $this->faker->numberBetween(10, 10000),
+            'CurrentPeriodInterimCosts0'
+        );
+
+        $this->pressButton('Save and continue');
+
+        $this->iAmOnDeputyCostsInterimPage();
+    }
+
+    /**
+     * @When I provide a valid interim cost date and a missing amount
+     */
+    public function iProvideAValidDateAndAMissingAmount()
+    {
+        $this->iAmOnDeputyCostsInterimPage();
+
+        $this->fillInDateFields(
+            'costs_interims[profDeputyInterimCosts][0][date]',
+            $this->faker->numberBetween(1, 27),
+            $this->faker->numberBetween(1, 3),
+            2020,
+            'CurrentPeriodInterimCosts0'
+        );
+
+        $this->fillInField(
+            'costs_interims[profDeputyInterimCosts][0][amount]',
+            null,
+            'CurrentPeriodInterimCosts0'
+        );
+
+        $this->pressButton('Save and continue');
+
+        $this->iAmOnDeputyCostsInterimPage();
+    }
+
+    /**
+     * @When I provide a valid interim cost date and an amount outside the amount limit
+     */
+    public function iProvideAValidDateAndAnAmountOutsideTheAmountLimit()
+    {
+        $this->iAmOnDeputyCostsInterimPage();
+
+        $this->fillInDateFields(
+            'costs_interims[profDeputyInterimCosts][0][date]',
+            $this->faker->numberBetween(1, 27),
+            $this->faker->numberBetween(1, 3),
+            2020,
+        );
+
+        $this->fillInField(
+            'costs_interims[profDeputyInterimCosts][0][amount]',
+            $this->faker->randomElement([-0.01, 100000000000.1]),
+            'CurrentPeriodInterimCosts0'
+        );
+
+        $this->pressButton('Save and continue');
+
+        $this->iAmOnDeputyCostsInterimPage();
+    }
+
+    /**
+     * @When I don't enter an SCCO assessed cost amount
+     */
+    public function iDontEnterAnSccoAssessedCostAmount()
+    {
+        $this->iAmOnDeputyCostsAmountSccoPage();
+
+        $this->pressButton('Save and continue');
+
+        $this->iAmOnDeputyCostsAmountSccoPage();
+    }
+
+    /**
+     * @When I enter a negative SCCO assessed cost amount
+     */
+    public function iEnterANegativeSccoAssessedCostAmount()
+    {
+        $this->iAmOnDeputyCostsAmountSccoPage();
+
+        $this->fillInField(
+            'deputy_costs_scco[profDeputyCostsAmountToScco]',
+            $this->faker->numberBetween(-10000, -0.01),
+            'SCCOAssessment'
+        );
+
+        $this->pressButton('Save and continue');
+
+        $this->iAmOnDeputyCostsAmountSccoPage();
+    }
+
+    /**
+     * @When I provide 6 negative and 1 too large amounts for all seven additional cost types
+     */
+    public function iProvideNegativeAndTooLargeAmountsForAllSevenAdditionalCostTypes()
+    {
+        $this->iAmOnDeputyCostsBreakdownPage();
+
+        foreach (range(0, 5) as $index) {
+            $this->fillInField(
+                "deputy_other_costs[profDeputyOtherCosts][$index][amount]",
+                $this->faker->numberBetween(-10000, -1)
+            );
+        }
+
+        $this->fillInField(
+            'deputy_other_costs[profDeputyOtherCosts][6][amount]',
+            $this->faker->numberBetween(1000000000000.1, 2000000000000)
+        );
+
+        $this->pressButton('Save and continue');
+
+        $this->iAmOnDeputyCostsBreakdownPage();
+    }
+
+    /**
+     * @Then I provide a valid 'Other' cost but no description
+     */
+    public function iProvideAValidCostButNoDescription()
+    {
+        $this->iAmOnDeputyCostsBreakdownPage();
+
+        $this->fillInField(
+            'deputy_other_costs[profDeputyOtherCosts][6][amount]',
+            $this->faker->numberBetween(10, 10000)
+        );
+
+        $this->pressButton('Save and continue');
+
+        $this->iAmOnDeputyCostsBreakdownPage();
+    }
+
+    /**
+     * @Then I should see a(n) :errorType deputy costs error
+     * @Then I should see :errorType deputy costs errors
+     */
+    public function iShouldSeeADeputyCostsError(string $errorType)
+    {
+        switch (strtolower($errorType)) {
+            case 'amount limit':
+            case 'amount outside of limit':
+                $this->assertOnErrorMessage($this->amountRangeLimitError);
+                break;
+            case 'missing cost type':
+                $this->assertOnErrorMessage($this->missingCostTypeError);
+                break;
+            case 'please choose yes or no':
+                $this->assertOnErrorMessage($this->missingPreviousCostsIncurredError);
+                break;
+            case 'empty dates and value':
+                $this->assertOnErrorMessage($this->emptyPreviousCostStartDateError);
+                $this->assertOnErrorMessage($this->emptyPreviousCostEndDateError);
+                $this->assertOnErrorMessage($this->missingValueError);
+                break;
+            case 'end date before start date':
+                $this->assertOnErrorMessage($this->endDateBeforeStartDateError);
+                break;
+            case 'at least one cost required':
+                $this->assertOnErrorMessage($this->missingInterimCostError);
+                break;
+            case 'date required':
+                $this->assertOnErrorMessage($this->missingDateError);
+                break;
+            case 'missing fixed cost amount':
+                $this->assertOnErrorMessage($this->missingFixedCostAmountError);
+                break;
+            case 'amount required':
+                $this->assertOnErrorMessage($this->missingValueError);
+                break;
+            case 'missing scco assesssed cost amount':
+                $this->assertOnErrorMessage($this->missingSccoAssessedCostError);
+                break;
+            case 'negative scco assessed cost amount':
+                $this->assertOnErrorMessage($this->negativeSccoAssessedCostError);
+                break;
+            case '6 negative and 1 too large amounts':
+                foreach (range(0, 5) as $index) {
+                    $this->assertOnErrorMessage($this->additionalCostNegativeAmountError);
+                }
+
+                $this->assertOnErrorMessage($this->additionalCostTooLargeAmountError);
+                break;
+            case 'missing other cost description':
+                $this->assertOnErrorMessage($this->additionalCostMissingOtherDescriptionError);
+                break;
+            default:
+                throw new BehatException(sprintf('Error type "%s" not recognised. See DeputyCostsSectionTrait::iShouldSeeAError() for types', $errorType));
+        }
     }
 }
