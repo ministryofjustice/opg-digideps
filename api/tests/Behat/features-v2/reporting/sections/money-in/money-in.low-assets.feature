@@ -47,3 +47,9 @@ Feature: Money in Low Assets
     Given a Lay Deputy has completed a Pfa Low Assets report
     When I edit an existing money in short payment
     Then I should see the expected money in section summary
+
+@pfa-low-completed
+  Scenario: A user tries to add a one off payment of less than £1k
+    Given a Lay Deputy has completed a Pfa Low Assets report
+    When I add a one off money in payment that is less than £1k
+    Then I should the see correct validation message

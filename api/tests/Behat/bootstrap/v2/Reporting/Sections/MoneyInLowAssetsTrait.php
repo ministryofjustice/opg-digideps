@@ -57,7 +57,7 @@ trait MoneyInLowAssetsTrait
     }
 
     /**
-     * @When I don't select an one off payment option
+     * @When I don't select a one off payment option
      */
     public function iDontSelectOneOffPayment()
     {
@@ -138,6 +138,30 @@ trait MoneyInLowAssetsTrait
         $this->iClickBasedOnAttributeTypeAndValue('button', 'id', 'add_another_save');
 
         $this->iAmOnMoneyInShortSummaryPage();
+    }
+
+    /**
+     * @When I add a one off money in payment that is less than £1k
+     */
+    public function iAddAOneOffMoneyInPaymentThatIsLessThan1k()
+    {
+        $this->iVisitMoneyInShortSummarySection();
+        $this->iAmOnMoneyInShortSummaryPage();
+        $urlRegex = sprintf('/%s\/.*\/money-in-short\/exist.*$/', $this->reportUrlPrefix);
+        $this->iClickOnNthElementBasedOnRegex($urlRegex, 0);
+
+        $this->selectOption('yes_no[moneyTransactionsShortInExist]', 'yes');
+        $this->iClickBasedOnAttributeTypeAndValue('button', 'id', 'yes_no_save');
+
+        $this->addMoneyOutPayment('Lorem upsum', '10', '05/05/2015');
+    }
+
+    /**
+     * @Then I should the see correct validation message
+     */
+    public function iShouldSeeTheCorrectValidationMessage()
+    {
+        $this->assertOnAlertMessage('Please input a value of at least £1,000');
     }
 
     /**
