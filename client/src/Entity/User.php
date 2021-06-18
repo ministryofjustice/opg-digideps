@@ -19,7 +19,7 @@ class User implements UserInterface, DeputyInterface
 
     public const ROLE_ADMIN = 'ROLE_ADMIN';
     public const ROLE_SUPER_ADMIN = 'ROLE_SUPER_ADMIN';
-    public const ROLE_ELEVATED_ADMIN = 'ROLE_ELEVATED_ADMIN';
+    public const ROLE_ADMIN_MANAGER = 'ROLE_ADMIN_MANAGER';
 
     public const ROLE_LAY_DEPUTY = 'ROLE_LAY_DEPUTY';
     public const ROLE_AD = 'ROLE_AD';
@@ -43,11 +43,18 @@ class User implements UserInterface, DeputyInterface
     public const TYPE_PA = 'PA';
     public const TYPE_PROF = 'PROF';
 
+    public static array $adminRoles = [
+        self::ROLE_ADMIN,
+        self::ROLE_SUPER_ADMIN,
+        self::ROLE_ADMIN_MANAGER,
+    ];
+
     /**
      * @JMS\Exclude
      */
     private static $allowedRoles = [
         self::ROLE_ADMIN => 'Admin',
+        self::ROLE_ADMIN_MANAGER => 'Admin Manager',
         self::ROLE_SUPER_ADMIN => 'Super admin',
         self::ROLE_LAY_DEPUTY => 'Lay Deputy',
         self::ROLE_AD => 'Assisted Digital',
@@ -1127,14 +1134,14 @@ class User implements UserInterface, DeputyInterface
         return self::ROLE_SUPER_ADMIN === $this->getRoleName();
     }
 
-    public function isElevatedAdmin(): bool
+    public function isAdminManager(): bool
     {
-        return self::ROLE_ELEVATED_ADMIN === $this->getRoleName();
+        return self::ROLE_ADMIN_MANAGER === $this->getRoleName();
     }
 
     public function hasAdminRole(): bool
     {
-        return $this->isAdmin() || $this->isSuperAdmin() || $this->isElevatedAdmin();
+        return $this->isAdmin() || $this->isSuperAdmin() || $this->isAdminManager();
     }
 
     /**

@@ -24,7 +24,7 @@ class ObservableEventDispatcher
 
     public function dispatch(Event $event, string $eventName)
     {
-        $this->dispatcher->dispatch($eventName, $event);
+        $this->dispatcher->dispatch($event, $eventName);
         $this->dispatchedEvents[] = $event;
     }
 

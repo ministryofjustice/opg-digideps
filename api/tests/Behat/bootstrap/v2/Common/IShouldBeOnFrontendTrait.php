@@ -4,7 +4,7 @@ declare(strict_types=1);
 
 namespace App\Tests\Behat\v2\Common;
 
-trait IShouldBeOnTrait
+trait IShouldBeOnFrontendTrait
 {
     public function iAmOnPage(string $urlRegex)
     {
@@ -267,30 +267,6 @@ trait IShouldBeOnTrait
     }
 
     /**
-     * @Then I should be on the admin clients search page
-     */
-    public function iAmOnAdminClientsSearchPage()
-    {
-        return $this->iAmOnPage('/admin\/client\/se\arch$/');
-    }
-
-    /**
-     * @Then I should be on the admin client details page
-     */
-    public function iAmOnAdminClientDetailsPage()
-    {
-        return $this->iAmOnPage('/admin\/client\/.*\/details$/');
-    }
-
-    /**
-     * @Then I should be on the admin client discharge page
-     */
-    public function iAmOnAdminClientDischargePage()
-    {
-        return $this->iAmOnPage('/admin\/client\/.*\/discharge/');
-    }
-
-    /**
      * @Then I should be on the money out short category page
      */
     public function iAmOnMoneyOutShortCategoryPage()
@@ -499,5 +475,77 @@ trait IShouldBeOnTrait
     public function iAmOnDeputyCostsSummaryPage()
     {
         return $this->iAmOnPage(sprintf('/%s\/.*\/prof-deputy-costs\/summary.*$/', $this->reportUrlPrefix));
+    }
+
+    /**
+     * @Then I should be on the deputy costs estimate start page
+     */
+    public function iAmOnDeputyCostsEstimateStartPage()
+    {
+        return $this->iAmOnPage(sprintf('/%s\/.*\/prof-deputy-costs-estimate$/', $this->reportUrlPrefix));
+    }
+
+    /**
+     * @Then I should be on the deputy costs estimate charges page
+     */
+    public function iAmOnDeputyCostsEstimateChargesPage()
+    {
+        return $this->iAmOnPage(sprintf('/%s\/.*\/prof-deputy-costs-estimate\/how-charged.*$/', $this->reportUrlPrefix));
+    }
+
+    /**
+     * @Then I should be on the deputy costs estimate breakdown page
+     */
+    public function iAmOnDeputyCostsEstimateBreakdownPage()
+    {
+        return $this->iAmOnPage(sprintf('/%s\/.*\/prof-deputy-costs-estimate\/breakdown.*$/', $this->reportUrlPrefix));
+    }
+
+    /**
+     * @Then I should be on the deputy costs estimate more info page
+     */
+    public function iAmOnDeputyCostsEstimateMoreInfoPage()
+    {
+        return $this->iAmOnPage(sprintf('/%s\/.*\/prof-deputy-costs-estimate\/more-info.*$/', $this->reportUrlPrefix));
+    }
+
+    /**
+     * @Then I should be on the deputy costs estimate summary page
+     */
+    public function iAmOnDeputyCostsEstimateSummaryPage()
+    {
+        return $this->iAmOnPage(sprintf('/%s\/.*\/prof-deputy-costs-estimate\/summary.*$/', $this->reportUrlPrefix));
+    }
+
+    /**
+     * @Then I should be on the assets exist page
+     */
+    public function iAmOnAssetsExistPage()
+    {
+        return $this->iAmOnPage(sprintf('/%s\/.*\/assets\/exist.*$/', $this->reportUrlPrefix));
+    }
+
+    /**
+     * @Then I should be on the assets type page
+     */
+    public function iAmOnAssetTypePage()
+    {
+        return $this->iAmOnPage(sprintf('/%s\/.*\/assets\/step-type/', $this->reportUrlPrefix));
+    }
+
+    /**
+     * @Then I should be on the add another asset page
+     */
+    public function iAmOnAddAnotherAssetPage()
+    {
+        return $this->iAmOnPage(sprintf('/%s\/.*\/assets\/add_another/', $this->reportUrlPrefix));
+    }
+
+    /**
+     * @Then I should be on the assets summary page
+     */
+    public function iAmOnAssetsSummaryPage()
+    {
+        return $this->iAmOnPage(sprintf('/%s\/.*\/assets\/summary.*$/', $this->reportUrlPrefix));
     }
 }

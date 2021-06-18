@@ -67,12 +67,6 @@ default:
             contexts:
                 - App\Tests\Behat\CourtOrderManagement\CourtOrderManagementFeatureContext
 
-        acl:
-            description: Coverage of Access Control
-            paths: [ "%paths.base%/features/v2/acl" ]
-            contexts:
-                - App\Tests\Behat\ACL\ACLFeatureContext
-
         authentication:
             description: Coverage of authentication
             paths: [ "%paths.base%/features/v2/authentication" ]
@@ -103,24 +97,12 @@ default:
             contexts:
                 - App\Tests\Behat\DocumentSynchronisation\DocumentSynchronisationFeatureContext
 
-        acl-v2:
-            description: Coverage of Access Control
-            paths: [ "%paths.base%/features-v2/acl" ]
-            contexts:
-                - App\Tests\Behat\ACL\ACLFeatureContext
-
         # features-v2
         reporting-preview:
             description: Coverage of report preview functionality
             paths: [ "%paths.base%/features-v2/reporting/preview" ]
             contexts:
                 - App\Tests\Behat\Reporting\ReportingFeatureContext
-
-        deputy-management:
-            description: Coverage of deputy management features - adding, deleting, editing
-            paths: [ "%paths.base%/features-v2/deputy-management" ]
-            contexts:
-                - App\Tests\Behat\DeputyManagement\DeputyManagementFeatureContext
 
         contact-details:
             description: Coverage of displaying contact details based on user role
@@ -214,11 +196,29 @@ v2-tests-goutte:
                 comment: [ cyan ]
                 tag: [ cyan ]
     suites:
+        acl-v2:
+            description: Coverage of Access Control
+            paths: [ "%paths.base%/features-v2/acl" ]
+            contexts:
+                - App\Tests\Behat\v2\ACL\ACLFeatureContext
+
+        admin-management:
+            description: Covering the admin user management features of the app
+            paths: [ "%paths.base%/features-v2/admin-management" ]
+            contexts:
+                - App\Tests\Behat\v2\AdminManagement\AdminManagementFeatureContext
+
         client-management:
             description: Covering the client management features of the app (frontend and admin)
             paths: [ "%paths.base%/features-v2/client-management" ]
             contexts:
                 - App\Tests\Behat\v2\ClientManagement\ClientManagementFeatureContext
+
+        deputy-management:
+            description: Coverage of deputy management features - adding, deleting, editing
+            paths: [ "%paths.base%/features-v2/deputy-management" ]
+            contexts:
+                - App\Tests\Behat\v2\DeputyManagement\DeputyManagementFeatureContext
 
         feedback:
             description: Covering features that allow users to give us feedback
@@ -244,9 +244,21 @@ v2-tests-goutte:
             contexts:
                 - App\Tests\Behat\v2\Reporting\Sections\ReportingSectionsFeatureContext
 
+        section-assets:
+            description: Covering the 'Assets' section of the report
+            paths: [ "%paths.base%/features-v2/reporting/sections/assets" ]
+            contexts:
+                - App\Tests\Behat\v2\Reporting\Sections\ReportingSectionsFeatureContext
+
         section-contacts:
             description: Covering the 'Contacts' section of the report
             paths: [ "%paths.base%/features-v2/reporting/sections/contacts" ]
+            contexts:
+                - App\Tests\Behat\v2\Reporting\Sections\ReportingSectionsFeatureContext
+
+        section-deputy-costs-estimate:
+            description: Covering the 'Deputy Costs Estimate' section of the report
+            paths: [ "%paths.base%/features-v2/reporting/sections/deputy-costs-estimate" ]
             contexts:
                 - App\Tests\Behat\v2\Reporting\Sections\ReportingSectionsFeatureContext
 

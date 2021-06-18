@@ -20,6 +20,7 @@
     </div>
 
     <dl class="govuk-summary-list behat-region-list-properties">
+        {{ macros.summaryListHeaderQA(hideEditLink) }}
         {# address #}
         <div class="govuk-summary-list__row behat-region-property-{{ asset.postcode | behat_namify }}-address">
             <dt class="govuk-summary-list__key">

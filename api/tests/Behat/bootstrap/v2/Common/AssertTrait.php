@@ -56,16 +56,139 @@ Found: %s
 
 Subject of Comparison: %s
 Page URL: %s
+Logged in User: %s
 ============================
 
 MESSAGE;
+
+        $loggedInUser =
+            is_null($this->loggedInUserDetails) ? 'User not logged in' : $this->loggedInUserDetails->getUserEmail();
 
         return sprintf(
             $message,
             $expected,
             $found,
             $comparisonSubject,
-            $this->getCurrentUrl()
+            $this->getCurrentUrl(),
+            $loggedInUser
         );
+    }
+
+    public function assertValueIsInSelect(string $expectedValue, string $selectNameAttributeValue)
+    {
+        $values = $this->getValuesFromSelect($selectNameAttributeValue);
+        $roleSelectable = in_array($expectedValue, $values);
+
+        assert(
+            $roleSelectable,
+            $this->getAssertMessage(
+                $expectedValue,
+                implode(',', $values),
+                sprintf('Select element with name attribute value \'%s\'', $selectNameAttributeValue)
+            )
+        );
+    }
+
+    public function assertValueIsNotInSelect(string $expectedMissingValue, string $selectNameAttributeValue)
+    {
+        $values = $this->getValuesFromSelect($selectNameAttributeValue);
+        $roleSelectable = !in_array($expectedMissingValue, $values);
+
+        assert(
+            $roleSelectable,
+            $this->getAssertMessage(
+                sprintf('\'%s\' not to appear', $expectedMissingValue),
+                implode(',', $values),
+                sprintf('Select element with name attribute value \'%s\'', $selectNameAttributeValue)
+            )
+        );
+    }
+
+    private function getValuesFromSelect(string $selectNameValue): array
+    {
+        $selectElement = $this->getSession()->getPage()->find(
+            'xpath',
+            "//select[@name='$selectNameValue']"
+        );
+
+        $options = $selectElement->findAll('xpath', '//option');
+
+        $values = [];
+        foreach ($options as $option) {
+            $values[] = $option->getValue();
+        }
+
+        return $values;
+    }
+
+    public function assertIsClass(
+        $expectedClassName,
+        $actual,
+        string $comparisonSubject
+    ) {
+        if (is_null($actual)) {
+            assert(
+                false,
+                $this->getAssertMessage($expectedClassName, 'null', $comparisonSubject)
+            );
+        }
+
+        $actualClass = get_class($actual);
+        $isExpectedClass = $actualClass === $expectedClassName;
+
+        assert(
+            $isExpectedClass,
+            $this->getAssertMessage($expectedClassName, $actualClass, $comparisonSubject)
+        );
+    }
+
+    public function assertIsNull(
+        $actual,
+        string $comparisonSubject
+    ) {
+        assert(
+            is_null($actual),
+            $this->getAssertMessage('null', gettype($actual), $comparisonSubject)
+        );
+    }
+
+    public function assertLinkWithTextIsOnPage(string $linkText)
+    {
+        $linkElement = $this->getSession()->getPage()->find(
+            'xpath',
+            "//a[normalize-space() = '$linkText']"
+        );
+
+        if (is_null($linkElement)) {
+            $expected = sprintf('Anchor element with text value \'%s\'', $linkText);
+
+            $message = $this->getAssertMessage(
+                $expected,
+                'Could not find specified anchor element',
+                $this->getSession()->getPage()->getHtml()
+            );
+
+            assert(false, $message);
+        }
+    }
+
+    public function assertLinkWithTextIsNotOnPage(string $linkText)
+    {
+        $linkElement = $this->getSession()->getPage()->find(
+            'xpath',
+            "//a[text() = '$linkText']"
+        );
+
+        if (!is_null($linkElement)) {
+            $expected = sprintf('Not to find anchor element with text value \'%s\'', $linkText);
+
+            $message = $this->getAssertMessage(
+                $expected,
+                'The element appeared on the page',
+                $this->getSession()->getPage()->getHtml()
+            );
+
+            assert(false, $message);
+        }
     }
 }

@@ -119,6 +119,30 @@ trait ReportTrait
     }
 
     /**
+     * @Given a Professional Team Deputy has not started a health and welfare report
+     */
+    public function aProfessionalHealthWelfareDeputyHasNotStartedAReport()
+    {
+        if (empty($this->profTeamDeputyNotStartedHealthWelfareDetails)) {
+            throw new Exception('It looks like fixtures are not loaded - missing $profTeamDeputyNotStartedHealthWelfareDetails');
+        }
+
+        $this->loginToFrontendAs($this->profTeamDeputyNotStartedHealthWelfareDetails->getUserEmail());
+    }
+
+    /**
+     * @Given a Professional Team Deputy has completed a health and welfare report
+     */
+    public function aProfessionalHealthWelfareDeputyHasCompletedAReport()
+    {
+        if (empty($this->profTeamDeputyCompletedHealthWelfareDetails)) {
+            throw new Exception('It looks like fixtures are not loaded - missing $profTeamDeputyCompletedHealthWelfareDetails');
+        }
+
+        $this->loginToFrontendAs($this->profTeamDeputyCompletedHealthWelfareDetails->getUserEmail());
+    }
+
+    /**
      * @Given a Lay Deputy has not started a Pfa Low Assets report
      */
     public function aLayDeputyHasNotStartedAPfaLowAssetsReport()

@@ -93,7 +93,7 @@ class ClientVoter extends Voter
 
     private function canDelete(User $user): bool
     {
-        if ($user->isElevatedAdmin() || $user->isSuperAdmin()) {
+        if ($user->isAdminManager() || $user->isSuperAdmin()) {
             return true;
         }
 

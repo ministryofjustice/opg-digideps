@@ -73,9 +73,9 @@ To support running tests in isolation, and parallelisation, any data required fo
 
 | Tag | Data created |
 |---- |----|
-| `@pfa-high-*` | Lay Deputy User, Client associated with User and a Property & Finances - High Assets report (102) |
-| `@pfa-low-*` | Lay Deputy User, Client associated with User and a Property & Finances - Low Assets report (103) |
-| `@health-welfare-*` | Lay Deputy User, Client associated with User and a Health & Welfare report (104) |
+| `@lay-pfa-high-*` | Lay Deputy User, Client associated with User and a Property & Finances - High Assets report (102) |
+| `@lay-pfa-low-*` | Lay Deputy User, Client associated with User and a Property & Finances - Low Assets report (103) |
+| `@lay-health-welfare-*` | Lay Deputy User, Client associated with User and a Health & Welfare report (104) |
 | `@ndr-*` | Lay Deputy User, Client associated with User and a New Deputy Report - Health & Welfare (104) |
 | `@prof-admin-*` | Professional Admin User, Client associated with User, Organisation, Named Deputy and a Property & Finances - High Assets report (102) |
 | `@admin` | Admin User |

@@ -11,10 +11,12 @@ class ReportingSectionsFeatureContext extends BaseFeatureContext
     use AccountsSectionTrait;
     use ActionsSectionTrait;
     use AdditionalInformationSectionTrait;
+    use AssetsSectionTrait;
     use ContactsSectionTrait;
     use DocumentsSectionTrait;
-    use DebtsSectionTrait;
     use DeputyCostsSectionTrait;
+    use DeputyCostsEstimateSectionTrait;
+    use DebtsSectionTrait;
     use DeputyExpensesSectionTrait;
     use GiftsSectionTrait;
     use HealthAndLifestyleTrait;
@@ -115,7 +117,9 @@ class ReportingSectionsFeatureContext extends BaseFeatureContext
         $sectionFormatted = sprintf('/%s/%s/%s', $this->reportUrlPrefix, $this->loggedInUserDetails->getCurrentReportId(), $section);
         $statusCorrect = false;
         $sectionExists = false;
-        $divs = $this->findAllCssElements('div.opg-overview-section');
+        $xpath = "//div[normalize-space(@class)='opg-overview-section']|//li[contains(@class, 'opg-overview-section')]";
+
+        $divs = $this->findAllXpathElements($xpath);
 
         foreach ($divs as $div) {
             if ($div->find('css', 'a')->getAttribute('href') === $sectionFormatted) {
