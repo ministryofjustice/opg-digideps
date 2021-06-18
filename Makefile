@@ -72,7 +72,7 @@ behat-tests: up-app-integration-tests reset-fixtures
 
 behat-tests-v2-goutte: up-app-integration-tests reset-fixtures disable-debug  ## Pass in suite name as arg e.g. make behat-suite suite=<SUITE NAME>
 ifdef suite
-	docker-compose -f docker-compose.yml -f docker-compose.dev.yml run --rm test sh ./tests/Behat/run-tests.sh --profile v2-tests-goutte --tags '@v2,@money-in-low-assets' --suite $(suite)
+	docker-compose -f docker-compose.yml -f docker-compose.dev.yml run --rm test sh ./tests/Behat/run-tests.sh --profile v2-tests-goutte --tags @v2 --suite $(suite)
 else
 	docker-compose -f docker-compose.yml -f docker-compose.dev.yml run --rm test sh ./tests/Behat/run-tests.sh --profile v2-tests-goutte --tags @v2
 endif
