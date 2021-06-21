@@ -196,7 +196,7 @@ trait DeputyExpensesSectionTrait
         $rowSelector = sprintf('//tr[th[normalize-space() ="%s"]]', $answers['expenses_single[explanation]']);
         $descriptionTableRow = $this->getSession()->getPage()->find('xpath', $rowSelector);
 
-        $this->editAnswerInSectionTrackTotal($descriptionTableRow, 'expenses_single[amount]', 'expenseDetails');
+        $this->editFieldAnswerInSectionTrackTotal($descriptionTableRow, 'expenses_single[amount]', 'expenseDetails');
     }
 
     /**

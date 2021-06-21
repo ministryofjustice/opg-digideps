@@ -237,10 +237,11 @@ trait FormFillingTrait
         }
 
         if (!is_null($removeButtonText)) {
+            $normalizedAnswer = $this->normalizeIntToCurrencyString($answers[$answerGroupToRemove][$fieldInAnswerGroupToRemove]);
             $rowSelector = sprintf(
-                '//tr[th[contains(.,"%s")]]  | //div[contains(.,"%s")]',
-                $answers[$answerGroupToRemove][$fieldInAnswerGroupToRemove],
-                $answers[$answerGroupToRemove][$fieldInAnswerGroupToRemove]
+                '//tr[th[contains(.,"%s")]] | //dd[contains(.,"%s")]/..',
+                $normalizedAnswer,
+                $normalizedAnswer
             );
 
             $descriptionTableRow = $this->getSession()->getPage()->find('xpath', $rowSelector);
@@ -274,7 +275,7 @@ trait FormFillingTrait
      * @throws BehatException
      * @throws ElementNotFoundException
      */
-    public function editAnswerInSectionTrackTotal(NodeElement $summaryRowToEdit, string $fieldName, string $formSectionName, bool $fullGroup = true): array
+    public function editFieldAnswerInSectionTrackTotal(NodeElement $summaryRowToEdit, string $fieldName, string $formSectionName, bool $fullGroup = true): array
     {
         $currentValueString = $summaryRowToEdit->find('xpath', '//td[contains(.,"£")] | //dd[contains(.,"£")]')->getText();
         $currentValueInt = intval(str_replace([',', '£'], '', $currentValueString));
@@ -306,7 +307,7 @@ trait FormFillingTrait
      *
      * @throws BehatException
      */
-    public function editAnswerInSection(NodeElement $summaryRowToEdit, string $fieldName, $newValue, string $formSectionName, bool $fullGroup = true)
+    public function editFieldAnswerInSection(NodeElement $summaryRowToEdit, string $fieldName, $newValue, string $formSectionName, bool $fullGroup = true)
     {
         $this->removeAnswerFromSection($fieldName, $formSectionName, $fullGroup);
 
@@ -322,7 +323,7 @@ trait FormFillingTrait
     }
 
     /**
-     * @param NodeElement $summaryRowToEdit The NodeElement of the item row on a summary page to edit
+     * @param NodeElement $summaryRowToEdit The NodeElement of the edit link in the item row on a summary page to edit
      * @param string      $selectName       The name of the form select to add a new value to
      * @param string      $newSelectOption  The new option
      * @param string      $formSectionName  Which section name in $submittedAnswersByFormSections the item to

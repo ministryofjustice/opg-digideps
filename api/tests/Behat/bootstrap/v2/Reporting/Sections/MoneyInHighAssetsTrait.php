@@ -239,7 +239,7 @@ trait MoneyInHighAssetsTrait
             $xpath
         );
 
-        $this->editAnswerInSectionTrackTotal(
+        $this->editFieldAnswerInSectionTrackTotal(
             $moneyTypeRow,
             'account[amount]',
             $this->currentMoneyTypeReportingOn);

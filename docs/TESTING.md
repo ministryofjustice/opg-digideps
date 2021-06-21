@@ -110,7 +110,7 @@ Removing from summary pages
 Editing from summary pages
 - `editSelectAnswerInSection()` - edits an answer submitted in a select via the summary page
 - `editFieldAnswerInSection()` - edits an answer submitted in a field via the summary page
-- `editAnswerInSectionTrackTotal()`  - edits an answer via the summary page (and updates any associated tracked monetary values)
+- `editFieldAnswerInSectionTrackTotal()`  - edits an answer via the summary page (and updates any associated tracked monetary values)
 
 #### Form Sections
 As a common pattern in our domain is related to a form having sections, we have adopted this terminology in the helper functions to give some meaningful structure to responses. For example, when completing a multi-page form that deals with visits and care you could name each 'section' after the type of question being asked. By splitting up responses in to sections it gives greater freedom to assert on specific sections being completed (or not, if required), but if the logic is fairly simple you can assign a single section name when filling in fields, and the responses will be under one section name - see below for how this looks in practice:

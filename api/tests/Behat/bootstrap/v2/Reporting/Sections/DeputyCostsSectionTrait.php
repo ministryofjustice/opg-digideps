@@ -399,7 +399,7 @@ trait DeputyCostsSectionTrait
         $locator = '//dt[contains(., "Received for")]/..';
         $previousPeriodCostRow = $this->getSession()->getPage()->find('xpath', $locator);
 
-        $this->editAnswerInSectionTrackTotal(
+        $this->editFieldAnswerInSectionTrackTotal(
             $previousPeriodCostRow,
             'deputy_costs_previous[amount]',
             'PreviousReceived'
@@ -416,7 +416,7 @@ trait DeputyCostsSectionTrait
         $locator = '//dt[contains(., "Paid for this reporting period")]/..';
         $currentPeriodCostRow = $this->getSession()->getPage()->find('xpath', $locator);
 
-        $this->editAnswerInSectionTrackTotal(
+        $this->editFieldAnswerInSectionTrackTotal(
             $currentPeriodCostRow,
             'deputy_costs_received[profDeputyFixedCost]',
             'CurrentPeriodFixedCosts'
@@ -433,7 +433,7 @@ trait DeputyCostsSectionTrait
         $locator = '//dt[contains(., "Appointment")]/..';
         $additionalCostRow = $this->getSession()->getPage()->find('xpath', $locator);
 
-        $this->editAnswerInSectionTrackTotal(
+        $this->editFieldAnswerInSectionTrackTotal(
             $additionalCostRow,
             'deputy_other_costs[profDeputyOtherCosts][0][amount]',
             'AdditionalCosts0'
@@ -484,7 +484,7 @@ trait DeputyCostsSectionTrait
         $locator = '//dt[contains(., "Costs for interim 1")]/..';
         $interim19BCostsRow = $this->getSession()->getPage()->find('xpath', $locator);
 
-        $this->editAnswerInSectionTrackTotal(
+        $this->editFieldAnswerInSectionTrackTotal(
             $interim19BCostsRow,
             'costs_interims[profDeputyInterimCosts][0][amount]',
             'CurrentPeriodInterimCosts0'
@@ -552,6 +552,7 @@ trait DeputyCostsSectionTrait
         $this->removeAnswerFromSection(
             'deputy_costs_previous[amount]',
             'PreviousReceived',
+            true,
             'Yes, remove previous cost'
         );
 

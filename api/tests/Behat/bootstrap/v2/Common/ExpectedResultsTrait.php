@@ -341,7 +341,15 @@ MSG;
         return $value;
     }
 
-    private function normalizeIntToCurrencyString($fieldValue)
+    /**
+     * Adds the apps standard currency formatting of £, commas and decimal points to ints. Returns $fieldValue
+     * unchanged if its not an int or float.
+     *
+     * @param $fieldValue
+     *
+     * @return mixed|string
+     */
+    public function normalizeIntToCurrencyString($fieldValue)
     {
         if (is_int($fieldValue)) {
             return sprintf('£%s.00', number_format($fieldValue));
