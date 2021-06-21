@@ -83,7 +83,7 @@ trait DeputyExpensesSectionTrait
     public function iEnterValidExpenses()
     {
         $this->fillInField('expenses_single[explanation]', $this->faker->sentence(12), 'expenseDetails');
-        $this->fillInFieldTrackTotal('expenses_single[amount]', $this->faker->numberBetween(1, 1000), 'expenseDetails');
+        $this->fillInFieldTrackTotal('expenses_single[amount]', 981, 'expenseDetails');
         $this->pressButton('Save and continue');
     }
 
@@ -96,7 +96,7 @@ trait DeputyExpensesSectionTrait
         $this->pressButton('Continue');
 
         $this->fillInField('expenses_single[explanation]', $this->faker->sentence(12), 'expenseDetails');
-        $this->fillInFieldTrackTotal('expenses_single[amount]', $this->faker->numberBetween(1, 1000), 'expenseDetails');
+        $this->fillInFieldTrackTotal('expenses_single[amount]', 22, 'expenseDetails');
         $this->pressButton('Save and continue');
     }
 
@@ -126,7 +126,7 @@ trait DeputyExpensesSectionTrait
      */
     public function iEnterWrongValueTypes()
     {
-        $this->fillInField('expenses_single[explanation]', $this->faker->numberBetween(1, 1000), 'expenseDetails');
+        $this->fillInField('expenses_single[explanation]', 764.98, 'expenseDetails');
         $this->fillInField('expenses_single[amount]', $this->faker->sentence(12), 'expenseDetails');
         $this->pressButton('Save and continue');
     }
@@ -220,7 +220,7 @@ trait DeputyExpensesSectionTrait
         $this->clickLink('Add a deputy expense');
 
         $this->fillInField('expenses_single[explanation]', $this->faker->sentence(12), 'expenseDetails');
-        $this->fillInFieldTrackTotal('expenses_single[amount]', $this->faker->numberBetween(1, 1000), 'expenseDetails');
+        $this->fillInFieldTrackTotal('expenses_single[amount]', 578, 'expenseDetails');
         $this->pressButton('Save and continue');
     }
 
