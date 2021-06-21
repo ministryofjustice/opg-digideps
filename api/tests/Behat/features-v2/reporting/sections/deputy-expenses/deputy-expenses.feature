@@ -52,7 +52,7 @@ Feature: Deputy expenses - Applies to Lays with combined/PFA reports only
         And I edit the expense details
         Then the expenses summary page should contain the details I entered
 
-    @lay-pfa-high-not-started @acs2
+    @lay-pfa-high-not-started
     Scenario: A user removes expense data they have submitted
         Given a Lay Deputy has not started a report
         When I view and start the deputy expenses report section
