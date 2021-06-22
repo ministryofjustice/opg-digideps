@@ -134,4 +134,20 @@ trait IVisitFrontendTrait
     {
         $this->visitFrontendPath($this->getAssetsSummarySectionUrl($this->loggedInUserDetails->getCurrentReportId()));
     }
+
+    /**
+     * @When I visit the money in report section
+     */
+    public function iVisitMoneyInShortSection()
+    {
+        $this->visitFrontendPath($this->getMoneyInShortSectionUrl($this->loggedInUserDetails->getCurrentReportId()));
+    }
+
+    /**
+     * @When I visit the short money in summary section
+     */
+    public function iVisitMoneyInShortSummarySection()
+    {
+        $this->visitFrontendPath($this->getMoneyInShortSectionSummaryUrl($this->loggedInUserDetails->getCurrentReportId()));
+    }
 }

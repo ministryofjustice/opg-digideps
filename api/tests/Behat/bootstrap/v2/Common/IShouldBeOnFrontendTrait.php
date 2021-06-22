@@ -494,4 +494,28 @@ trait IShouldBeOnFrontendTrait
     {
         return $this->iAmOnPage(sprintf('/%s\/.*\/assets\/summary.*$/', $this->reportUrlPrefix));
     }
+
+    /**
+     * @Then I should be on the money in short summary page
+     */
+    public function iAmOnMoneyInShortSummaryPage()
+    {
+        return $this->iAmOnPage(sprintf('/%s\/.*\/money-in-short\/summary.*$/', $this->reportUrlPrefix));
+    }
+
+    /**
+     * @Then I should be on the money in short category page
+     */
+    public function iAmOnMoneyInShortCategoryPage()
+    {
+        return $this->iAmOnPage(sprintf('/%s\/.*\/money-in-short\/category.*$/', $this->reportUrlPrefix));
+    }
+
+    /**
+     * @Then I should be on the money in short add page
+     */
+    public function iAmOnMoneyInShortAddPage()
+    {
+        return $this->iAmOnPage(sprintf('/%s\/.*\/money-in-short\/add.*$/', $this->reportUrlPrefix));
+    }
 }

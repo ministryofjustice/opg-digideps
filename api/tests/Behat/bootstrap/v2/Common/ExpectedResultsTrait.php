@@ -325,7 +325,6 @@ MSG;
         return $fieldValue;
     }
 
-    /*
     /**
      * Adds the contents of each summary section (identified by dl or tbody) to an array
      * then compares the results of the specified section contents to an array of expected contents.
@@ -470,7 +469,7 @@ MSG;
                     $foundItems,
                     $sectionNumber,
                     $context
-                    )
+                )
             );
         }
     }
