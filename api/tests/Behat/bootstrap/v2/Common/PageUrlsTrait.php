@@ -30,6 +30,8 @@ trait PageUrlsTrait
     private string $reportOverviewUrl = '/%s/%s/overview';
     private string $reportSubmittedUrl = '/report/%s/submitted';
     private string $userResearchSubmittedUrl = '/report/%s/post_submission_user_research/submitted';
+    private string $moneyInShortSectionUrl = '/%s/%s/money-in-short';
+    private string $moneyInShortSectionSummaryUrl = '/%s/%s/money-in-short/summary';
 
     // Admin
     private string $adminClientSearchUrl = '/admin/client/search';
@@ -226,5 +228,15 @@ trait PageUrlsTrait
     public function getAssetsSummarySectionUrl(int $reportId): string
     {
         return sprintf($this->assetsSummarySectionUrl, $this->reportUrlPrefix, $reportId);
+    }
+
+    public function getMoneyInShortSectionUrl(int $reportId): string
+    {
+        return sprintf($this->moneyInShortSectionUrl, $this->reportUrlPrefix, $reportId);
+    }
+
+    public function getMoneyInShortSectionSummaryUrl(int $reportId): string
+    {
+        return sprintf($this->moneyInShortSectionSummaryUrl, $this->reportUrlPrefix, $reportId);
     }
 }

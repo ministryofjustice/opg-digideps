@@ -4,7 +4,6 @@
 
 {% set translationDomain = "report-money-short" %}
 {% trans_default_domain translationDomain %}
-{% set transOptions = {'%client%': report.client.firstname | e } %}
 
 {% block htmlTitle %}{{ 'addPage.moneyIn.htmlTitle' | trans }}{% endblock %}
 {% block pageTitle %}{{ 'addPage.moneyIn.pageTitle' | trans }}{% endblock %}
@@ -20,9 +19,11 @@
 
 {% block pageContent %}
 
-    <p class="govuk-heading-s">{{ 'addPage.moneyIn.pageSectionDescription1' | trans(transOptions) }}</p>
-    <p class="govuk-body">{{ 'addPage.moneyIn.pageSectionDescription2' | trans(transOptions) }}</p>
-    <p class="govuk-body">{{ 'addPage.moneyIn.pageSectionDescription3' | trans(transOptions) }}</p>
+    <p class="govuk-heading-s">{{ 'addPage.moneyIn.pageSectionDescription1' | trans }}</p>
+    <p class="govuk-body">
+        {{ 'addPage.moneyIn.pageSectionDescription2.beforeMarkupText' | trans }}{{ report.client.firstname }}{{ 'addPage.moneyIn.pageSectionDescription2.afterMarkupText' | trans }}
+    </p>
+    <p class="govuk-body">{{ 'addPage.moneyIn.pageSectionDescription3' | trans }}</p>
 
     {% include '@App/Report/MoneyInShort/_form.html.twig' with {
     'translationDomain': translationDomain,

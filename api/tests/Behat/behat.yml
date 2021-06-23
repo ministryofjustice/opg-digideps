@@ -292,9 +292,9 @@ v2-tests-goutte:
             contexts:
                 - App\Tests\Behat\v2\Reporting\Sections\ReportingSectionsFeatureContext
 
-        section-money-in-high-assets:
-            description: Covering the 'Money in High Assets' section of the report
-            paths: [ "%paths.base%/features-v2/reporting/sections/money-in-high-assets" ]
+        section-money-in:
+            description: Covering the 'Money In' section of the report
+            paths: [ "%paths.base%/features-v2/reporting/sections/money-in" ]
             contexts:
                 - App\Tests\Behat\v2\Reporting\Sections\ReportingSectionsFeatureContext
 
