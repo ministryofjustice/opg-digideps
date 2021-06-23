@@ -104,7 +104,7 @@ trait DeputyCostsSectionTrait
 
         $this->fillInFieldTrackTotal(
             'deputy_costs_received[profDeputyFixedCost]',
-            $this->faker->numberBetween(10, 10000),
+            588,
             'CurrentPeriodFixedCosts'
         );
 
@@ -180,7 +180,7 @@ trait DeputyCostsSectionTrait
 
         $this->fillInField(
             'deputy_costs_scco[profDeputyCostsAmountToScco]',
-            $this->faker->numberBetween(10, 10000),
+            1250.44,
             'SCCOAssessment'
         );
 
@@ -234,7 +234,7 @@ trait DeputyCostsSectionTrait
 
         $this->fillInFieldTrackTotal(
             'costs_interims[profDeputyInterimCosts][0][amount]',
-            $this->faker->numberBetween(10, 10000),
+            5411,
             'CurrentPeriodInterimCosts0'
         );
 
@@ -248,7 +248,7 @@ trait DeputyCostsSectionTrait
 
         $this->fillInFieldTrackTotal(
             'costs_interims[profDeputyInterimCosts][1][amount]',
-            $this->faker->numberBetween(10, 10000),
+            74,
             'CurrentPeriodInterimCosts1'
         );
 
@@ -262,7 +262,7 @@ trait DeputyCostsSectionTrait
 
         $this->fillInFieldTrackTotal(
             'costs_interims[profDeputyInterimCosts][2][amount]',
-            $this->faker->numberBetween(10, 10000),
+            945,
             'CurrentPeriodInterimCosts2'
         );
 
@@ -337,7 +337,7 @@ trait DeputyCostsSectionTrait
 
         $this->fillInFieldTrackTotal(
             'deputy_costs_previous[amount]',
-            $this->faker->numberBetween(10, 1000),
+            1000,
             'PreviousReceived'
         );
     }
@@ -352,7 +352,7 @@ trait DeputyCostsSectionTrait
         foreach (range(0, 6) as $index) {
             $this->fillInFieldTrackTotal(
                 "deputy_other_costs[profDeputyOtherCosts][$index][amount]",
-                $this->faker->numberBetween(10, 10000),
+                22,
                 "AdditionalCosts$index"
             );
         }
@@ -504,7 +504,7 @@ trait DeputyCostsSectionTrait
         $this->editFieldAnswerInSection(
             $sccoEstimateRow,
             'deputy_costs_scco[profDeputyCostsAmountToScco]',
-            $this->faker->numberBetween(10, 10000),
+           998,
             'SCCOAssessment'
         );
 
@@ -632,7 +632,7 @@ trait DeputyCostsSectionTrait
     {
         $this->iAmOnDeputyCostsPreviousReceivedPage();
 
-        $this->fillInField('deputy_costs_previous[amount]', $this->faker->numberBetween(-10000, -1));
+        $this->fillInField('deputy_costs_previous[amount]', -5);
         $this->pressButton('Save and continue');
 
         $this->iAmOnDeputyCostsPreviousReceivedPage();
@@ -659,7 +659,7 @@ trait DeputyCostsSectionTrait
 
         $this->fillInField(
             'costs_interims[profDeputyInterimCosts][0][amount]',
-            $this->faker->numberBetween(10, 10000),
+            1075.98,
             'CurrentPeriodInterimCosts0'
         );
 
@@ -740,7 +740,7 @@ trait DeputyCostsSectionTrait
 
         $this->fillInField(
             'deputy_costs_scco[profDeputyCostsAmountToScco]',
-            $this->faker->numberBetween(-10000, -0.01),
+            -0.01,
             'SCCOAssessment'
         );
 
@@ -759,13 +759,13 @@ trait DeputyCostsSectionTrait
         foreach (range(0, 5) as $index) {
             $this->fillInField(
                 "deputy_other_costs[profDeputyOtherCosts][$index][amount]",
-                $this->faker->numberBetween(-10000, -1)
+                -500
             );
         }
 
         $this->fillInField(
             'deputy_other_costs[profDeputyOtherCosts][6][amount]',
-            $this->faker->numberBetween(1000000000000.1, 2000000000000)
+            1000000000000.1
         );
 
         $this->pressButton('Save and continue');
@@ -782,7 +782,7 @@ trait DeputyCostsSectionTrait
 
         $this->fillInField(
             'deputy_other_costs[profDeputyOtherCosts][6][amount]',
-            $this->faker->numberBetween(10, 10000)
+            22.98
         );
 
         $this->pressButton('Save and continue');
