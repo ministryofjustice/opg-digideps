@@ -8,6 +8,7 @@ use App\Entity\Client;
 use App\Entity\NamedDeputy;
 use App\Entity\Organisation;
 use App\Entity\Report\Report;
+use App\Entity\User;
 use App\Factory\OrganisationFactory;
 use App\Service\OrgService;
 use App\v2\Assembler\ClientAssembler;
@@ -42,6 +43,9 @@ class OrgDeputyshipUploader
     /** @var Client|null */
     private $client;
 
+    /** @var array[] */
+    private $updated;
+
     public function __construct(
         EntityManagerInterface $em,
         OrganisationFactory $orgFactory,
@@ -54,6 +58,8 @@ class OrgDeputyshipUploader
         $this->namedDeputyAssembler = $namedDeputyAssembler;
 
         $this->added = ['clients' => [], 'named_deputies' => [], 'reports' => [], 'organisations' => []];
+        $this->updated = ['named_deputies' => []];
+
         $this->namedDeputy = null;
         $this->client = null;
     }
@@ -86,6 +92,7 @@ class OrgDeputyshipUploader
         }
 
         $uploadResults['added'] = $this->added;
+        $uploadResults['updated'] = $this->updated;
 
         return $uploadResults;
     }
@@ -94,13 +101,7 @@ class OrgDeputyshipUploader
     {
         $namedDeputy = ($this->em->getRepository(NamedDeputy::class))->findOneBy(
             [
-                'email1' => $dto->getDeputyEmail(),
-                'deputyNo' => $dto->getDeputyNumber(),
-                // We accept blank firstnames for trust corps
-                'firstname' => $dto->getDeputyFirstname(),
-                'lastname' => $dto->getDeputyLastname(),
-                'address1' => $dto->getDeputyAddress1(),
-                'addressPostcode' => $dto->getDeputyPostCode(),
+                'deputyNo' => User::padDeputyNumber($dto->getDeputyNumber()),
             ]
         );
 
@@ -111,6 +112,8 @@ class OrgDeputyshipUploader
             $this->em->flush();
 
             $this->added['named_deputies'][] = $namedDeputy->getId();
+        } else {
+            // Update deputy with address and telephone details here
         }
 
         $this->namedDeputy = $namedDeputy;

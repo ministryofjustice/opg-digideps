@@ -265,7 +265,7 @@ class FixtureController extends AbstractController
             ->setFirstname($deputy->getFirstname())
             ->setLastname($deputy->getLastname())
             ->setEmail1($deputy->getEmail())
-            ->setDeputyNo($deputy->getDeputyNo())
+            ->setDeputyNo($fromRequest['caseNumber'].mt_rand(1, 100))
             ->setDeputyType('PA' === $fromRequest['deputyType'] ? 23 : 21);
 
         $this->em->persist($namedDeputy);
