@@ -116,4 +116,16 @@ trait FixturesTrait
             );
         }
     }
+
+    public function createAdditionalProfAdminUsers(int $numberOfUsers)
+    {
+        $users = [];
+
+        for ($i = 0; $i < $numberOfUsers; ++$i) {
+            $userDetails = $this->fixtureHelper->createProfAdminNotStarted($this->testRunId.'-f'.$i);
+            $users[] = new UserDetails($userDetails);
+        }
+
+        return $users;
+    }
 }

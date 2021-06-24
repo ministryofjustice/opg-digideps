@@ -59,4 +59,12 @@ trait IShouldBeOnAdminTrait
     {
         return $this->iAmOnPage('/admin\/organisations\/.*$/');
     }
+
+    /**
+     * @Then I should be on the add user to organisation page
+     */
+    public function iAmOnAddUserToOrganisationPage()
+    {
+        return $this->iAmOnPage('/admin\/organisations\/.*\/add-user$/');
+    }
 }

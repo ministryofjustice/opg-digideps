@@ -6,22 +6,26 @@ namespace App\Tests\Behat\v2\OrganisationManagement;
 
 trait OrganisationManagementTrait
 {
-    private string $organisationName;
-    private string $emailDomain;
+    private array $organisations;
+    private int $orgId = 0;
 
     /**
-     * @Then I add an active organisation
+     * @Then I add an organisation
      */
     public function iAddAnActiveOrganisation()
     {
-        $this->organisationName = $this->faker->company;
+        ++$this->orgId;
+
+        $orgName = $this->orgId.$this->faker->company;
 
         $email = $this->faker->companyEmail;
-        $this->emailDomain = substr($email, strpos($email, '@') + 1);
+        $domain = $this->orgId.substr($email, strpos($email, '@') + 1);
 
-        $this->fillField('organisation[name]', $this->organisationName);
+        $this->organisations[] = ['Name' => $orgName, 'Email' => $domain, 'Active' => true];
+
+        $this->fillField('organisation[name]', $orgName);
         $this->selectOption('organisation[emailIdentifierType]', 'domain');
-        $this->fillField('organisation[emailDomain]', $this->emailDomain);
+        $this->fillField('organisation[emailDomain]', $domain);
         $this->selectOption('organisation[isActivated]', '1');
         $this->pressButton('Save organisation');
     }
@@ -36,25 +40,23 @@ trait OrganisationManagementTrait
         $xpath = '//td';
         $tableDataElements = $this->getSession()->getPage()->findAll('xpath', $xpath);
 
-        $foundOrgName = false;
-        $foundOrgEmail = false;
-        $foundActive = false;
+        $formattedDataElements = [];
+
         foreach ($tableDataElements as $td) {
-            if (strtolower($td->getText()) == strtolower($this->organisationName)) {
-                $foundOrgName = true;
-            } elseif (strtolower($td->getText()) == '*@'.strtolower($this->emailDomain)) {
-                $foundOrgEmail = true;
-            } elseif ('active' == strtolower($td->getText())) {
-                $foundActive = true;
-            }
+            $formattedDataElements[] = strtolower($td->getText());
         }
 
-        if (!$foundOrgName) {
-            $this->throwContextualException(sprintf('Could not find Organisation Name. Expected name is %s', $this->organisationName));
-        } elseif (!$foundOrgEmail) {
-            $this->throwContextualException(sprintf('Could not find Organisation Email Domain. Expected Email Domain name is %s', $this->emailDomain));
-        } elseif (!$foundActive) {
-            $this->throwContextualException('Could not find Active flag');
+        foreach ($this->organisations as $org) {
+            if (!in_array(strtolower($org['Name']), $formattedDataElements)) {
+                $this->throwContextualException(
+                    sprintf('Could not find Organisation Name. Expected name is %s', $orgName)
+                );
+            }
+            if (!in_array(strtolower('*@'.$org['Email']), $formattedDataElements)) {
+                $this->throwContextualException(
+                    sprintf('Could not find Organisation Email Domain. Expected Email Domain name is %s', $email)
+                );
+            }
         }
     }
 
@@ -65,7 +67,16 @@ trait OrganisationManagementTrait
     {
         $this->iAmOnAdminOrganisationSearchPage();
 
-        $this->clickLink($this->organisationName);
+        $org = array_pop($this->organisations);
+
+        $this->clickLink($org['Name']);
+
+        $matches = [];
+        preg_match('/[^\/]+$/', $this->getCurrentUrl(), $matches);
+        $orgId = $matches[0];
+
+        $org['Id'] = $orgId;
+        $this->organisations[] = $org;
 
         $this->iAmOnAdminOrganisationOverviewPage();
     }
@@ -75,10 +86,68 @@ trait OrganisationManagementTrait
      */
     public function iSeeEmptyOrganisation()
     {
+        $this->assertOverviewPage(0, 0);
+    }
+
+    /**
+     * @When I add :number professional users to the organisation
+     */
+    public function iAddProfUsersToOrganisation($numberOfUsers)
+    {
+        $users = $this->createAdditionalProfAdminUsers(intval($numberOfUsers));
+
+        foreach ($users as $user) {
+            $this->iAmOnAdminOrganisationOverviewPage();
+            $this->pressButton('Add user');
+
+            $this->iAmOnAddUserToOrganisationPage();
+            $this->fillField('organisation_add_user[email]', $user->getUserEmail());
+
+            $this->pressButton('Find user');
+            $this->pressButton('Add user to organisation');
+        }
+    }
+
+    /**
+     * @When I add a lay user to the organisation
+     */
+    public function iAddLayUserToOrganisation()
+    {
+        $this->iAmOnAdminOrganisationOverviewPage();
+        $this->pressButton('Add user');
+
+        $this->iAmOnAddUserToOrganisationPage();
+        $this->fillField('organisation_add_user[email]', $this->layDeputyNotStartedPfaHighAssetsDetails->getUserEmail());
+
+        $this->pressButton('Find user');
+    }
+
+    /**
+     *@Then I should see an unsuitable role error
+     */
+    public function iShouldSeeUnsuitableRoleError()
+    {
+        $this->assertPageContainsText('User has unsuitable role to be in this organisation');
+        $this->clickLink('Back');
+    }
+
+    /**
+     *@Then I should see the organisation has :number users
+     */
+    public function iShouldSeeUsersInOrganisation($numberOfUsers)
+    {
+        $this->iAmOnAdminOrganisationOverviewPage();
+        $this->assertOverviewPage(intval($numberOfUsers), 0);
+    }
+
+    private function assertOverviewPage(int $users, int $clients)
+    {
         $this->iAmOnAdminOrganisationOverviewPage();
 
-        $text = 'This organisation does not have any members';
-        $this->assertPageContainsText($text);
+        if (0 == $users) {
+            $text = 'This organisation does not have any members';
+            $this->assertPageContainsText($text);
+        }
 
         $xpath = "//div[contains(@class, 'govuk-summary-list__row')]";
         $listSummaryRowItems = $this->getSession()->getPage()->findAll('xpath', $xpath);
@@ -94,8 +163,90 @@ trait OrganisationManagementTrait
                 }
             }
         }
-        $this->assertStringEqualsString($this->emailDomain, $tableValues[1], 'Asserting Email Domain found on Overview page');
-        $this->assertStringEqualsString('0', $tableValues[3], 'Asserting Zero Users found Overview page');
-        $this->assertStringEqualsString('0', $tableValues[5], 'Asserting Zero Clients found on Overview page');
+
+        $this->assertStringEqualsString(strval($users), $tableValues[3], 'Asserting Users found on Overview page');
+        $this->assertStringEqualsString(strval($clients), $tableValues[5], 'Asserting Clients found on Overview page');
+    }
+
+    /**
+     * @Then I should not see the organisation
+     */
+    public function iDoNotSeeOrganisationInSearch()
+    {
+        $this->iAmOnAdminOrganisationSearchPage();
+
+        $xpath = '//td';
+        $tableDataElements = $this->getSession()->getPage()->findAll('xpath', $xpath);
+
+        $formattedDataElements = [];
+
+        foreach ($tableDataElements as $td) {
+            $formattedDataElements[] = strtolower($td->getText());
+        }
+
+        $orgName = end($this->organisations)['Name'];
+
+        if (in_array(strtolower($orgName), $formattedDataElements)) {
+            $this->throwContextualException(
+                sprintf('Found Organisation Name: %s. Expected organisation to be deleted.', $orgName)
+            );
+        }
+
+        $email = end($this->organisations)['Email'];
+
+        if (in_array(strtolower('*@'.$email), $formattedDataElements)) {
+            $this->throwContextualException(
+                sprintf('Found Organisation Email Domain: %s. Expected organisation to be deleted.', $email)
+            );
+        }
+    }
+
+    /**
+     * @When I delete the organisation
+     */
+    public function iDeleteTheOrganisation()
+    {
+        $this->iAmOnAdminOrganisationSearchPage();
+
+        $orgId = end($this->organisations)['Id'];
+        $deleteLink = sprintf('https://admin.digideps.local/admin/organisations/%s/delete', $orgId);
+
+        $links = $this->getSession()->getPage()->findAll('css', 'a');
+        $foundLink = false;
+
+        foreach ($links as $link) {
+            if (!$foundLink) {
+                if ($link->getAttribute('href') == $deleteLink) {
+                    $foundLink = true;
+                    $link->click();
+                    $this->pressButton('Yes, remove organisation');
+                    var_dump('Deleted');
+                }
+            }
+        }
+
+        if (!$foundLink) {
+            $this->throwContextualException(
+                sprintf('Could not find link to delete organisation. Organisation Id: %s', $orgId)
+            );
+        }
+    }
+
+    /**
+     * @Then I should not be able to delete the organisation
+     */
+    public function iShouldNotBeAbleToDeleteTheOrganisation()
+    {
+        $this->iAmOnAdminOrganisationSearchPage();
+
+        $links = $this->getSession()->getPage()->findAll('css', 'a');
+
+        foreach ($links as $link) {
+            if (str_ends_with($link->getAttribute('href'), '/delete')) {
+                $this->throwContextualException(
+                    sprintf('Found unexpected delete link on Organisation Search Page')
+                );
+            }
+        }
     }
 }
