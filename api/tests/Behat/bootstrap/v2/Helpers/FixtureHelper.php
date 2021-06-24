@@ -367,7 +367,7 @@ class FixtureHelper
         $this->em->persist($client);
     }
 
-    private function addOrgClientsNamedDeputyAndReportsToOrgDeputy(User $deputy, Organisation $organisation, bool $completed = false, bool $submitted = false, $reportType = Report::TYPE_102)
+    private function addOrgClientsNamedDeputyAndReportsToOrgDeputy(User $deputy, Organisation $organisation, bool $completed = false, bool $submitted = false, $reportType = Report::TYPE_102_5)
     {
         $client = $this->clientTestHelper->generateClient($this->em, $deputy, $organisation);
         $report = $this->reportTestHelper->generateReport($this->em, $client, $reportType);
@@ -727,7 +727,7 @@ class FixtureHelper
         $this->adminManager = $this->createAdminUser(
             $testRunId,
             User::ROLE_ADMIN_MANAGER,
-            'elevated-admin'
+            'admin-manager'
         );
 
         return self::buildAdminUserDetails($this->adminManager);

@@ -136,6 +136,22 @@ trait IVisitFrontendTrait
     }
 
     /**
+     * @When I visit the org dashboard page
+     */
+    public function iVisitOrgDashboard()
+    {
+        $this->visitFrontendPath($this->getOrgDashboardUrl());
+    }
+
+    /**
+     * @When I visit the deputy costs report section
+     */
+    public function iVisitDeputyCostsSection()
+    {
+        $this->visitFrontendPath($this->getDeputyCostsUrl($this->loggedInUserDetails->getCurrentReportId()));
+    }
+
+    /**
      * @When I visit the money in report section
      */
     public function iVisitMoneyInShortSection()

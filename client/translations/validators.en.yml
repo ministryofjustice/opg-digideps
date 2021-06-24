@@ -478,8 +478,7 @@ profDeputyPreviousCost:
     notValid: End date not valid
   amount:
     notBlank: Please enter a value
-    minMessage: The amount must be more than £{{ limit }}
-    maxMessage: The amount must be less than £100,000,000,000
+    notInRangeMessage: The amount must be between £{{ min }} and £100,000,000,000
 
 profDeputyFixedCost:
   amount:

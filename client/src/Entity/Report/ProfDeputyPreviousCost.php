@@ -2,11 +2,11 @@
 
 namespace App\Entity\Report;
 
+use App\Validator\Constraints as AppAssert;
 use App\Validator\Constraints\StartEndDateComparableInterface;
+use DateTime;
 use JMS\Serializer\Annotation as JMS;
 use Symfony\Component\Validator\Constraints as Assert;
-use App\Validator\Constraints as AppAssert;
-use DateTime;
 
 /**
  * @AppAssert\EndDateNotBeforeStartDate(groups={"prof-deputy-prev-costs"})
@@ -32,7 +32,6 @@ class ProfDeputyPreviousCost implements StartEndDateComparableInterface
      */
     private $startDate;
 
-
     /**
      * @var DateTime
      *
@@ -44,7 +43,6 @@ class ProfDeputyPreviousCost implements StartEndDateComparableInterface
      */
     private $endDate;
 
-
     /**
      * @var string
      *
@@ -52,7 +50,7 @@ class ProfDeputyPreviousCost implements StartEndDateComparableInterface
      * @JMS\Groups({"profDeputyPrevCosts"})
      *
      * @Assert\NotBlank(message="profDeputyPreviousCost.amount.notBlank", groups={"prof-deputy-prev-costs"})
-     * @Assert\Range(min=0.01, max=10000000, minMessage = "profDeputyPreviousCost.amount.minMessage", maxMessage = "profDeputyPreviousCost.amount.maxMessage", groups={"prof-deputy-prev-costs"})
+     * @Assert\Range(min=0.01, max=10000000, notInRangeMessage="profDeputyPreviousCost.amount.notInRangeMessage", groups={"prof-deputy-prev-costs"})
      */
     private $amount;
 
@@ -82,11 +80,13 @@ class ProfDeputyPreviousCost implements StartEndDateComparableInterface
 
     /**
      * @param DateTime $startDate
+     *
      * @return ProfDeputyPreviousCost
      */
     public function setStartDate($startDate)
     {
         $this->startDate = $startDate;
+
         return $this;
     }
 
@@ -100,11 +100,13 @@ class ProfDeputyPreviousCost implements StartEndDateComparableInterface
 
     /**
      * @param DateTime $endDate
+     *
      * @return ProfDeputyPreviousCost
      */
     public function setEndDate($endDate)
     {
         $this->endDate = $endDate;
+
         return $this;
     }
 
@@ -118,11 +120,13 @@ class ProfDeputyPreviousCost implements StartEndDateComparableInterface
 
     /**
      * @param string $amount
+     *
      * @return ProfDeputyPreviousCost
      */
     public function setAmount($amount)
     {
         $this->amount = $amount;
+
         return $this;
     }
 }
