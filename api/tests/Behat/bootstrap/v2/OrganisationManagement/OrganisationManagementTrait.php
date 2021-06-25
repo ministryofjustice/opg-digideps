@@ -49,12 +49,12 @@ trait OrganisationManagementTrait
         foreach ($this->organisations as $org) {
             if (!in_array(strtolower($org['Name']), $formattedDataElements)) {
                 $this->throwContextualException(
-                    sprintf('Could not find Organisation Name. Expected name is %s', $orgName)
+                    sprintf('Could not find Organisation Name. Expected name is %s', $org['Name'])
                 );
             }
             if (!in_array(strtolower('*@'.$org['Email']), $formattedDataElements)) {
                 $this->throwContextualException(
-                    sprintf('Could not find Organisation Email Domain. Expected Email Domain name is %s', $email)
+                    sprintf('Could not find Organisation Email Domain. Expected Email Domain name is %s', '*@'.$org['Email'])
                 );
             }
         }
