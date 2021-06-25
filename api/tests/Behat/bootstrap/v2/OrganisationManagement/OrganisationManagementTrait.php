@@ -10,7 +10,7 @@ trait OrganisationManagementTrait
     private int $orgId = 0;
 
     /**
-     * @Then I add an organisation
+     * @When I add an organisation
      */
     public function iAddAnActiveOrganisation()
     {
@@ -220,7 +220,6 @@ trait OrganisationManagementTrait
                     $foundLink = true;
                     $link->click();
                     $this->pressButton('Yes, remove organisation');
-                    var_dump('Deleted');
                 }
             }
         }
@@ -248,5 +247,25 @@ trait OrganisationManagementTrait
                 );
             }
         }
+    }
+
+    /**
+     * @When I edit the organisation name
+     */
+    public function iEditOrganisationName()
+    {
+        $this->iAmOnAdminOrganisationOverviewPage();
+
+        $this->pressButton('Edit organisation');
+
+        $organisation = array_pop($this->organisations);
+
+        $organisation['Name'] = $organisation['Name'].' Edit';
+
+        $this->organisations[] = $organisation;
+
+        $this->fillField('organisation[name]', $organisation['Name']);
+
+        $this->pressButton('Save organisation');
     }
 }

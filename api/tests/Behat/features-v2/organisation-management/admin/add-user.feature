@@ -6,8 +6,8 @@ Feature: Organisation - Adding a user to the organisation
         Given a super admin user accesses the admin app
         When I navigate to the organisations page
         And I navigate to the add organisation page
-        Then I add an organisation
-        And I should see the organisation
+        When I add an organisation
+        Then I should see the organisation
         When I view the organisation
         Then I should see the organisation is empty
         When I add 1 professional users to the organisation
@@ -18,8 +18,8 @@ Feature: Organisation - Adding a user to the organisation
         Given an admin user accesses the admin app
         When I navigate to the organisations page
         And I navigate to the add organisation page
-        Then I add an organisation
-        And I should see the organisation
+        When I add an organisation
+        Then I should see the organisation
         When I view the organisation
         Then I should see the organisation is empty
         When I add 2 professional users to the organisation
@@ -30,8 +30,8 @@ Feature: Organisation - Adding a user to the organisation
         Given a super admin user accesses the admin app
         When I navigate to the organisations page
         And I navigate to the add organisation page
-        Then I add an organisation
-        And I should see the organisation
+        When I add an organisation
+        Then I should see the organisation
         When I view the organisation
         Then I should see the organisation is empty
         When I add a lay user to the organisation
