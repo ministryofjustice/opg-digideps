@@ -37,4 +37,12 @@ trait INavigateToAdminTrait
     {
         $this->clickLink('Analytics');
     }
+
+    /**
+     * @When I navigate to the upload users page
+     */
+    public function iNavigateToAdminUploadUsersPage()
+    {
+        $this->clickLink('Upload users');
+    }
 }

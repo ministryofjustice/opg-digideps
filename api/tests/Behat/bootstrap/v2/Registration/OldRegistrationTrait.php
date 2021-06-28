@@ -1,12 +1,13 @@
 <?php
 
-namespace App\Tests\Behat\Registration;
+declare(strict_types=1);
 
-use App\Tests\Behat\Common\BaseFeatureContext;
+namespace App\Tests\Behat\v2\Registration;
+
 use App\Tests\Behat\Common\LinksTrait;
 use Behat\Gherkin\Node\TableNode;
 
-class RegistrationFeatureContext extends BaseFeatureContext
+trait OldRegistrationTrait
 {
     use LinksTrait;
 

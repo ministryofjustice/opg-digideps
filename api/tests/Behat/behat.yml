@@ -226,6 +226,12 @@ v2-tests-goutte:
             contexts:
                 - App\Tests\Behat\v2\Feedback\FeedbackFeatureContext
 
+        registration:
+            description: Covering the registration flows (CSV ingest, self-register and activation)
+            paths: [ "%paths.base%/features-v2/registration" ]
+            contexts:
+                - App\Tests\Behat\v2\Registration\RegistrationFeatureContext
+
         section-accounts:
             description: Covering the 'Accounts' section of the report
             paths: [ "%paths.base%/features-v2/reporting/sections/accounts" ]

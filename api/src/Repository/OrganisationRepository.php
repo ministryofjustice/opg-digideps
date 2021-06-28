@@ -13,9 +13,6 @@ class OrganisationRepository extends ServiceEntityRepository
         parent::__construct($registry, Organisation::class);
     }
 
-    /**
-     * @return array
-     */
     public function getAllArray(): array
     {
         $filter = $this->_em->getFilters()->getFilter('softdeleteable');
@@ -28,9 +25,6 @@ class OrganisationRepository extends ServiceEntityRepository
         return $query->getArrayResult();
     }
 
-    /**
-     * @return array
-     */
     public function getNonDeletedArray(): array
     {
         $query = $this
@@ -40,9 +34,6 @@ class OrganisationRepository extends ServiceEntityRepository
         return $query->getArrayResult();
     }
 
-    /**
-     * @return array
-     */
     public function getOrgIdAndNames(): array
     {
         $filter = $this->_em->getFilters()->getFilter('softdeleteable');
@@ -55,10 +46,6 @@ class OrganisationRepository extends ServiceEntityRepository
         return $query->getArrayResult();
     }
 
-    /**
-     * @param int $id
-     * @return array|null
-     */
     public function findArrayById(int $id): ?array
     {
         $query = $this
@@ -68,13 +55,9 @@ class OrganisationRepository extends ServiceEntityRepository
 
         $result = $query->getArrayResult();
 
-        return count($result) === 0 ? null : $result[0];
+        return 0 === count($result) ? null : $result[0];
     }
 
-    /**
-     * @param int $id
-     * @return bool
-     */
     public function hasActiveEntities(int $id): bool
     {
         $query = $this
@@ -109,8 +92,6 @@ class OrganisationRepository extends ServiceEntityRepository
     }
 
     /**
-     * @param string $email
-     * @return bool
      * @throws \Doctrine\ORM\NonUniqueResultException
      */
     public function organisationExists(string $email): bool
@@ -138,10 +119,6 @@ class OrganisationRepository extends ServiceEntityRepository
         return $count >= 1;
     }
 
-    /**
-     * @param string $email
-     * @return Organisation|null
-     */
     public function findByEmailIdentifier(string $email): ?Organisation
     {
         $filter = $this->_em->getFilters()->getFilter('softdeleteable');
@@ -164,6 +141,14 @@ class OrganisationRepository extends ServiceEntityRepository
 
         $result = $query->getResult();
 
-        return count($result) === 0 ? null : $result[0];
+        return 0 === count($result) ? null : $result[0];
+    }
+
+    public function countAllEntities()
+    {
+        return $this
+            ->getEntityManager()
+            ->createQuery('SELECT COUNT(o.id) FROM App\Entity\Organisation o')
+            ->getSingleScalarResult();
     }
 }
