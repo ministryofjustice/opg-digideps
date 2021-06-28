@@ -139,4 +139,20 @@ trait IVisitAdminTrait
     {
         $this->visitAdminPath($this->getAdminAnalyticsUrl());
     }
+
+    /**
+     * @When I visit the admin upload users page
+     */
+    public function iVisitAdminUploadUsersPage()
+    {
+        $this->visitAdminPath($this->getAdminUploadUsersUrl());
+    }
+
+    /**
+     * @When I visit the admin upload org users page
+     */
+    public function iVisitAdminUploadOrgUsersPage()
+    {
+        $this->visitAdminPath($this->getAdminUploadOrgUsersUrl());
+    }
 }

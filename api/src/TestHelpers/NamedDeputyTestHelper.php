@@ -9,14 +9,17 @@ use Faker\Factory;
 
 class NamedDeputyTestHelper
 {
-    public function generateNamedDeputy()
+    /**
+     * @return NamedDeputy
+     */
+    public function generateNamedDeputy(?string $email = null)
     {
         $faker = Factory::create('en_GB');
 
         return (new NamedDeputy())
             ->setFirstname($faker->firstName)
             ->setLastname($faker->lastName)
-            ->setEmail1($faker->safeEmail.rand(1, 100000))
+            ->setEmail1($email ?: $faker->safeEmail.rand(1, 100000))
             ->setAddress1($faker->streetAddress)
             ->setAddress2($faker->city)
             ->setAddress3($faker->county)

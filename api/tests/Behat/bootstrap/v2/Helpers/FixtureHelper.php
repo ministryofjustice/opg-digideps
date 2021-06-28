@@ -14,6 +14,7 @@ use App\TestHelpers\NamedDeputyTestHelper;
 use App\TestHelpers\OrganisationTestHelper;
 use App\TestHelpers\ReportTestHelper;
 use App\TestHelpers\UserTestHelper;
+use App\Tests\Behat\BehatException;
 use Doctrine\ORM\EntityManagerInterface;
 use Symfony\Component\Security\Core\Encoder\UserPasswordEncoderInterface;
 
@@ -100,7 +101,6 @@ class FixtureHelper
             'userFullName' => $user->getFullName(),
             'userFullAddressArray' => self::buildAddressArray($user),
             'userPhone' => $user->getPhoneMain(),
-            'courtOrderNumber' => $client->getCaseNumber(),
             'clientId' => $client->getId(),
             'clientFirstName' => $client->getFirstname(),
             'clientLastName' => $client->getLastname(),
@@ -109,6 +109,7 @@ class FixtureHelper
             'currentReportType' => $currentReportType,
             'currentReportNdrOrReport' => $currentReport instanceof Ndr ? 'ndr' : 'report',
             'currentReportDueDate' => $currentReport->getDueDate()->format('j F Y'),
+            'courtDate' => $client->getCourtDate()->format('j F Y'),
         ];
 
         if ($previousReport && $previousReport->getId() !== $currentReport->getId()) {
@@ -133,6 +134,7 @@ class FixtureHelper
 
         $details = [
             'organisationName' => $organisation->getName(),
+            'organisationEmailIdentifier' => $organisation->getEmailIdentifier(),
             'namedDeputyName' => sprintf(
                 '%s %s',
                 $namedDeputy->getFirstname(),
@@ -226,6 +228,10 @@ class FixtureHelper
 
     public function createAndPersistUser(string $roleName, ?string $email = null)
     {
+        if ('prod' === $this->symfonyEnvironment) {
+            throw new BehatException('Prod mode enabled - cannot create fixture users');
+        }
+
         $user = $this->createUser($roleName, $email);
 
         $this->em->persist($user);
@@ -236,6 +242,10 @@ class FixtureHelper
 
     private function createDeputies()
     {
+        if ('prod' === $this->symfonyEnvironment) {
+            throw new BehatException('Prod mode enabled - cannot create fixture users');
+        }
+
         $this->createLaysPfaHighAssets();
         $this->createLaysPfaLowAssets();
         $this->createLaysHealthWelfare();
@@ -367,11 +377,18 @@ class FixtureHelper
         $this->em->persist($client);
     }
 
-    private function addOrgClientsNamedDeputyAndReportsToOrgDeputy(User $deputy, Organisation $organisation, bool $completed = false, bool $submitted = false, $reportType = Report::TYPE_102)
-    {
-        $client = $this->clientTestHelper->generateClient($this->em, $deputy, $organisation);
+    private function addOrgClientsNamedDeputyAndReportsToOrgDeputy(
+        User $deputy,
+        Organisation $organisation,
+        bool $completed = false,
+        bool $submitted = false,
+        string $reportType = Report::TYPE_102,
+        ?string $namedDeputyEmail = null,
+        ?string $caseNumber = null
+    ) {
+        $client = $this->clientTestHelper->generateClient($this->em, $deputy, $organisation, $caseNumber);
         $report = $this->reportTestHelper->generateReport($this->em, $client, $reportType);
-        $namedDeputy = $this->namedDeputyTestHelper->generatenamedDeputy();
+        $namedDeputy = $this->namedDeputyTestHelper->generatenamedDeputy($namedDeputyEmail);
 
         $client->addReport($report);
         $client->setOrganisation($organisation);
@@ -669,7 +686,7 @@ class FixtureHelper
         return self::buildUserDetails($this->layNdrSubmitted);
     }
 
-    public function createProfAdminNotStarted(string $testRunId)
+    public function createProfAdminNotStarted(string $testRunId, ?string $namedDeputyEmail = null, ?string $caseNumber = null)
     {
         $this->profAdminNotStarted = $this->createOrgUserClientNamedDeputyAndReport(
             $testRunId,
@@ -677,13 +694,15 @@ class FixtureHelper
             'prof-admin-not-started',
             Report::TYPE_104_5,
             false,
-            false
+            false,
+            $namedDeputyEmail,
+            $caseNumber
         );
 
         return self::buildOrgUserDetails($this->profAdminNotStarted);
     }
 
-    public function createProfAdminCompleted(string $testRunId)
+    public function createProfAdminCompleted(string $testRunId, ?string $namedDeputyEmail = null, ?string $caseNumber = null)
     {
         $this->profAdminCompleted = $this->createOrgUserClientNamedDeputyAndReport(
             $testRunId,
@@ -691,13 +710,15 @@ class FixtureHelper
             'prof-admin-completed',
             Report::TYPE_104_5,
             true,
-            false
+            false,
+            $namedDeputyEmail,
+            $caseNumber
         );
 
         return self::buildOrgUserDetails($this->profAdminCompleted);
     }
 
-    public function createProfAdminSubmitted(string $testRunId)
+    public function createProfAdminSubmitted(string $testRunId, ?string $namedDeputyEmail = null, ?string $caseNumber = null)
     {
         $this->profAdminSubmitted = $this->createOrgUserClientNamedDeputyAndReport(
             $testRunId,
@@ -705,7 +726,9 @@ class FixtureHelper
             'prof-admin-completed',
             Report::TYPE_104_5,
             true,
-            true
+            true,
+            $namedDeputyEmail,
+            $caseNumber
         );
 
         return self::buildOrgUserDetails($this->profAdminSubmitted);
@@ -744,10 +767,14 @@ class FixtureHelper
         return self::buildAdminUserDetails($this->superAdmin);
     }
 
-    private function createOrganisation($testRunId)
+    private function createOrganisation(string $testRunId, ?string $emailIdentifier = null)
     {
+        if ('prod' === $this->symfonyEnvironment) {
+            throw new BehatException('Prod mode enabled - cannot create fixture users');
+        }
+
         $orgName = sprintf('prof-%s-%s', $this->orgName, $testRunId);
-        $emailIdentifier = sprintf('prof-%s-%s', $this->orgEmailIdentifier, $this->testRunId);
+        $emailIdentifier = $emailIdentifier ?: sprintf('prof-%s-%s', $this->orgEmailIdentifier, $this->testRunId);
 
         $organisation = $this->organisationTestHelper->createOrganisation($orgName, $emailIdentifier);
         $this->em->persist($organisation);
@@ -758,8 +785,9 @@ class FixtureHelper
     private function createClientAndReport(string $testRunId, $userRole, $emailPrefix, $reportType, $completed, $submitted, bool $ndr = false)
     {
         if ('prod' === $this->symfonyEnvironment) {
-            throw new Exception('Prod mode enabled - cannot create fixture users');
+            throw new BehatException('Prod mode enabled - cannot create fixture users');
         }
+
         $this->testRunId = $testRunId;
 
         $client = $this->userTestHelper
@@ -779,7 +807,7 @@ class FixtureHelper
     private function createAdminUser(string $testRunId, $userRole, $emailPrefix)
     {
         if ('prod' === $this->symfonyEnvironment) {
-            throw new Exception('Prod mode enabled - cannot create fixture users');
+            throw new BehatException('Prod mode enabled - cannot create fixture users');
         }
         $this->testRunId = $testRunId;
 
@@ -791,17 +819,30 @@ class FixtureHelper
         return $client;
     }
 
-    private function createOrgUserClientNamedDeputyAndReport(string $testRunId, $userRole, $emailPrefix, $reportType, $completed, $submitted)
+    private function createOrgUserClientNamedDeputyAndReport(
+        string $testRunId,
+        $userRole,
+        $emailPrefix,
+        $reportType,
+        $completed,
+        $submitted,
+        ?string $namedDeputyEmail = null,
+        ?string $caseNumber = null)
     {
         if ('prod' === $this->symfonyEnvironment) {
-            throw new Exception('Prod mode enabled - cannot create fixture users');
+            throw new BehatException('Prod mode enabled - cannot create fixture users');
         }
         $this->testRunId = $testRunId;
-        $organisation = $this->createOrganisation($this->testRunId);
+        $domain = $namedDeputyEmail ? substr(strstr($namedDeputyEmail, '@'), 1) : 't.uk';
+
+        $organisation = $this->createOrganisation($this->testRunId, $domain);
+
+        $userEmail = sprintf('%s-%s@%s', $emailPrefix, $this->testRunId, $domain);
 
         $user = $this->userTestHelper
-            ->createUser(null, $userRole, sprintf('%s-%s@t.uk', $emailPrefix, $this->testRunId));
-        $this->addOrgClientsNamedDeputyAndReportsToOrgDeputy($user, $organisation, $completed, $submitted, $reportType);
+            ->createUser(null, $userRole, $userEmail);
+
+        $this->addOrgClientsNamedDeputyAndReportsToOrgDeputy($user, $organisation, $completed, $submitted, $reportType, $namedDeputyEmail, $caseNumber);
 
         $this->setClientPassword($user);
 

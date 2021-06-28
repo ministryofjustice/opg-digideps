@@ -79,7 +79,7 @@ class BaseFeatureContext extends MinkContext
 
     private KernelInterface $symfonyKernel;
 
-    private FixtureHelper $fixtureHelper;
+    protected FixtureHelper $fixtureHelper;
     public EntityManagerInterface $em;
 
     public function __construct(
@@ -234,27 +234,27 @@ class BaseFeatureContext extends MinkContext
     /**
      * @BeforeScenario @prof-admin-not-started
      */
-    public function createProfAdminNotStarted()
+    public function createProfAdminNotStarted(?string $namedDeputyEmail = null, ?string $caseNumber)
     {
-        $userDetails = $this->fixtureHelper->createProfAdminNotStarted($this->testRunId);
+        $userDetails = $this->fixtureHelper->createProfAdminNotStarted($this->testRunId, $namedDeputyEmail, $caseNumber);
         $this->fixtureUsers[] = $this->profAdminDeputyNotStartedDetails = new UserDetails($userDetails);
     }
 
     /**
      * @BeforeScenario @prof-admin-completed
      */
-    public function createProfAdminCompleted()
+    public function createProfAdminCompleted(?string $namedDeputyEmail = null, ?string $caseNumber)
     {
-        $userDetails = $this->fixtureHelper->createProfAdminCompleted($this->testRunId);
+        $userDetails = $this->fixtureHelper->createProfAdminCompleted($this->testRunId, $namedDeputyEmail, $caseNumber);
         $this->fixtureUsers[] = $this->profAdminDeputyCompletedDetails = new UserDetails($userDetails);
     }
 
     /**
      * @BeforeScenario @prof-admin-submitted
      */
-    public function createProfAdminSubmitted()
+    public function createProfAdminSubmitted(?string $namedDeputyEmail = null, ?string $caseNumber)
     {
-        $userDetails = $this->fixtureHelper->createProfAdminSubmitted($this->testRunId);
+        $userDetails = $this->fixtureHelper->createProfAdminSubmitted($this->testRunId, $namedDeputyEmail, $caseNumber);
         $this->fixtureUsers[] = $this->profAdminDeputySubmittedDetails = new UserDetails($userDetails);
     }
 

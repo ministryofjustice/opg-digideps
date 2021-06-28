@@ -19,6 +19,8 @@ trait PageUrlsTrait
     private string $healthAndLifestyleSectionUrl = '/%s/%s/lifestyle';
     private string $healthAndLifestyleSummaryUrl = '/%s/%s/lifestyle/summary';
     private string $layStartPageUrl = '/lay';
+    private string $moneyInShortSectionUrl = '/%s/%s/money-in-short';
+    private string $moneyInShortSectionSummaryUrl = '/%s/%s/money-in-short/summary';
     private string $moneyOutSectionUrl = '/%s/%s/money-out';
     private string $moneyOutSectionSummaryUrl = '/%s/%s/money-out/summary';
     private string $moneyOutShortSectionUrl = '/%s/%s/money-out-short';
@@ -27,22 +29,22 @@ trait PageUrlsTrait
     private string $reportOverviewUrl = '/%s/%s/overview';
     private string $reportSubmittedUrl = '/report/%s/submitted';
     private string $userResearchSubmittedUrl = '/report/%s/post_submission_user_research/submitted';
-    private string $moneyInShortSectionUrl = '/%s/%s/money-in-short';
-    private string $moneyInShortSectionSummaryUrl = '/%s/%s/money-in-short/summary';
 
     // Admin
-    private string $adminClientSearchUrl = '/admin/client/search';
-    private string $adminClientDetailsUrl = '/admin/client/%s/details';
+    private string $adminActiveLaysReportUrl = '/admin/stats/downloadActiveLaysCsv';
     private string $adminAddUserUrl = '/admin/user-add';
-    private string $adminViewUserUrl = '/admin/user/%s';
-    private string $adminEditUserUrl = '/admin/edit-user?filter=%s';
-    private string $adminMyUserProfileUrl = '/deputyship-details/your-details';
     private string $adminAnalyticsUrl = '/admin/stats/metrics';
+    private string $adminClientDetailsUrl = '/admin/client/%s/details';
+    private string $adminClientSearchUrl = '/admin/client/search';
     private string $adminDATReportUrl = '/admin/stats';
+    private string $adminEditUserUrl = '/admin/edit-user?filter=%s';
+    private string $adminFixturesUrl = '/admin/fixtures';
+    private string $adminMyUserProfileUrl = '/deputyship-details/your-details';
     private string $adminSatisfactionReportUrl = '/admin/stats/satisfaction';
     private string $adminUserResearchReportUrl = '/admin/stats/user-research';
-    private string $adminActiveLaysReportUrl = '/admin/stats/downloadActiveLaysCsv';
-    private string $adminFixturesUrl = '/admin/fixtures';
+    private string $adminUploadUsersUrl = '/admin/upload';
+    private string $adminUploadOrgUsersUrl = '/admin/org-csv-upload';
+    private string $adminViewUserUrl = '/admin/user/%s';
 
     // Fixtures
     private string $courtOrdersFixtureUrl = '/admin/fixtures/court-orders?%s';
@@ -220,5 +222,15 @@ trait PageUrlsTrait
     public function getMoneyInShortSectionSummaryUrl(int $reportId): string
     {
         return sprintf($this->moneyInShortSectionSummaryUrl, $this->reportUrlPrefix, $reportId);
+    }
+
+    public function getAdminUploadUsersUrl(): string
+    {
+        return $this->adminUploadUsersUrl;
+    }
+
+    public function getAdminUploadOrgUsersUrl(): string
+    {
+        return $this->adminUploadOrgUsersUrl;
     }
 }

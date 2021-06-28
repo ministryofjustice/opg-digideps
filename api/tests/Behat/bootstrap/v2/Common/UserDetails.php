@@ -23,7 +23,6 @@ class UserDetails
     private ?string $namedDeputyName = null;
     private ?string $namedDeputyEmail = null;
     private ?string $organisationName = null;
-    private ?string $courtOrderNumber = null;
     private ?int $clientId = null;
     private ?string $clientFirstName = null;
     private ?string $clientLastName = null;
@@ -36,6 +35,8 @@ class UserDetails
     private ?string $previousReportType = null;
     private ?string $previousReportNdrOrReport = null;
     private ?string $previousReportDueDate = null;
+    private ?string $courtDate = null;
+    private ?string $organisationEmailIdentifier = null;
 
     public function __construct(array $userDetails)
     {
@@ -75,7 +76,8 @@ class UserDetails
         $this->setNamedDeputyName($userDetails['namedDeputyName']);
         $this->setNamedDeputyEmail($userDetails['namedDeputyEmail']);
         $this->setOrganisationName($userDetails['organisationName']);
-        $this->setCourtOrderNumber($userDetails['courtOrderNumber']);
+        $this->setOrganisationEmailIdentifier($userDetails['organisationEmailIdentifier']);
+        $this->setCourtDate($userDetails['courtDate']);
 
         $this->setClientId($userDetails['clientId']);
         $this->setClientFirstName($userDetails['clientFirstName']);
@@ -252,18 +254,6 @@ class UserDetails
         return $this;
     }
 
-    public function getCourtOrderNumber(): ?string
-    {
-        return $this->courtOrderNumber;
-    }
-
-    public function setCourtOrderNumber(?string $courtOrderNumber): UserDetails
-    {
-        $this->courtOrderNumber = $courtOrderNumber;
-
-        return $this;
-    }
-
     public function getUserFirstName(): ?string
     {
         return $this->userFirstName;
@@ -392,6 +382,30 @@ class UserDetails
     public function setUserId(?int $userId): UserDetails
     {
         $this->userId = $userId;
+
+        return $this;
+    }
+
+    public function getCourtDate(): ?string
+    {
+        return $this->courtDate;
+    }
+
+    public function setCourtDate(?string $courtDate): UserDetails
+    {
+        $this->courtDate = $courtDate;
+
+        return $this;
+    }
+
+    public function getOrganisationEmailIdentifier(): ?string
+    {
+        return $this->organisationEmailIdentifier;
+    }
+
+    public function setOrganisationEmailIdentifier(?string $organisationEmailIdentifier): UserDetails
+    {
+        $this->organisationEmailIdentifier = $organisationEmailIdentifier;
 
         return $this;
     }

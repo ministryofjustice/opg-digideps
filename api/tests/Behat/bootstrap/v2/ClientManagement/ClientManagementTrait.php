@@ -191,14 +191,14 @@ MESSAGE;
         $this->assertInteractingWithUserIsSet();
 
         $pageContent = $this->getSession()->getPage()->find('css', 'main#main-content')->getHtml();
-        $courtOrderNumber = $this->interactingWithUserDetails->getCourtOrderNumber();
-        $courtOrderNumberPresent = str_contains($pageContent, $courtOrderNumber);
+        $caseNumber = $this->interactingWithUserDetails->getClientCaseNumber();
+        $caseNumberPresent = str_contains($pageContent, $caseNumber);
 
-        if (!$courtOrderNumberPresent) {
+        if (!$caseNumberPresent) {
             $this->throwContextualException(
                 sprintf(
                     'Expected court order number not found. Wanted: %s, got (full HTML): %s',
-                    $courtOrderNumber,
+                    $caseNumber,
                     $pageContent
                 )
             );

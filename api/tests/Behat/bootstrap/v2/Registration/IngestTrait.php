@@ -11,6 +11,7 @@ use App\Entity\Report\Report;
 use App\Tests\Behat\BehatException;
 use Behat\Behat\Tester\Exception\PendingException;
 use Behat\Gherkin\Node\TableNode;
+use DateTime;
 
 trait IngestTrait
 {
@@ -18,6 +19,9 @@ trait IngestTrait
     private array $namedDeputies = ['expected' => 0, 'preUpdate' => 0, 'postUpdate' => 0];
     private array $organisations = ['expected' => 0, 'preUpdate' => 0, 'postUpdate' => 0];
     private array $reports = ['expected' => 0, 'preUpdate' => 0, 'postUpdate' => 0];
+
+    private ?DateTime $expectedClientCourtDate = null;
+    private string $expectedNamedDeputyName = '';
 
     /**
      * @When I upload a :source CSV that contains the following new entities:
@@ -95,19 +99,20 @@ trait IngestTrait
     }
 
     /**
-     * @When I visit the upload users page
+     * @When I upload a :source CSV that has a new made date :newMadeDate and named deputy :newNamedDeputy within the same org as the clients existing name deputy
      */
-    public function iVisitTheUploadUsersPage()
+    public function iUploadACsvThatHasANewMadeDateAndNamedDeputyWithinTheSameOrgAsTheClientsExistingNameDeputy(string $source, string $newMadeDate, string $newNamedDeputy)
     {
-        throw new PendingException();
-    }
+        $this->iAmOnAdminOrgCsvUploadPage();
 
-    /**
-     * @When I upload a :arg1 CSV that has a new made date and named deputy within the same org as the clients existing name deputy
-     */
-    public function iUploadACsvThatHasANewMadeDateAndNamedDeputyWithinTheSameOrgAsTheClientsExistingNameDeputy($arg1)
-    {
-        throw new PendingException();
+        $this->expectedClientCourtDate = new DateTime($newMadeDate);
+        $this->expectedNamedDeputyName = $newNamedDeputy;
+
+        $this->createProfAdminNotStarted('professor@mccracken.com', '40000000');
+
+        $this->attachFileToField('admin_upload[file]', 'org-1-updated-made-date-and-named-deputy.csv');
+        $this->pressButton('Upload PA/Prof users');
+        $this->waitForAjaxAndRefresh();
     }
 
     /**
@@ -115,7 +120,22 @@ trait IngestTrait
      */
     public function theClientsMadeDateAndNamedDeputyShouldBeUpdated()
     {
-        throw new PendingException();
+        $this->iAmOnAdminOrgCsvUploadPage();
+
+        $this->em->clear();
+        $client = $this->em->getRepository(Client::class)->find($this->profAdminDeputyNotStartedDetails->getClientId());
+
+        $this->assertStringEqualsString(
+            $this->expectedClientCourtDate->format('j F Y'),
+            $client->getCourtDate()->format('j F Y'),
+            'Comparing expected court date to client court date'
+        );
+
+        $this->assertStringEqualsString(
+            $this->expectedNamedDeputyName,
+            sprintf('%s %s', $client->getNamedDeputy()->getFirstName(), $client->getNamedDeputy()->getLastName()),
+            'Comparing expected named deputy full name to client named deputy full name'
+        );
     }
 
     /**
