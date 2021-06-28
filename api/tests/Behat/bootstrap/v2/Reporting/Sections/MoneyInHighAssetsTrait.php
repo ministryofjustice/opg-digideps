@@ -8,7 +8,7 @@ use App\Tests\Behat\BehatException;
 
 trait MoneyInHighAssetsTrait
 {
-    // Expected valudation errors
+    // Expected validation errors
     private string $invalidSelectOptionError = 'Please choose an option';
     private string $enterAmountError = 'Please enter an amount';
     private string $invalidAmountError = 'The amount must be between £0.01 and £100,000,000,000';
@@ -239,7 +239,7 @@ trait MoneyInHighAssetsTrait
             $xpath
         );
 
-        $this->editAnswerInSectionTrackTotal(
+        $this->editFieldAnswerInSectionTrackTotal(
             $moneyTypeRow,
             'account[amount]',
             $this->currentMoneyTypeReportingOn);

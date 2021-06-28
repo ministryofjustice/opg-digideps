@@ -250,21 +250,39 @@ v2-tests-goutte:
             contexts:
                 - App\Tests\Behat\v2\Reporting\Sections\ReportingSectionsFeatureContext
 
+        section-assets:
+            description: Covering the 'Assets' section of the report
+            paths: [ "%paths.base%/features-v2/reporting/sections/assets" ]
+            contexts:
+                - App\Tests\Behat\v2\Reporting\Sections\ReportingSectionsFeatureContext
+
         section-contacts:
             description: Covering the 'Contacts' section of the report
             paths: [ "%paths.base%/features-v2/reporting/sections/contacts" ]
             contexts:
                 - App\Tests\Behat\v2\Reporting\Sections\ReportingSectionsFeatureContext
 
-        section-documents:
-            description: Covering the 'Documents' section of the report
-            paths: [ "%paths.base%/features-v2/reporting/sections/documents" ]
+        section-deputy-costs-estimate:
+            description: Covering the 'Deputy Costs Estimate' section of the report
+            paths: [ "%paths.base%/features-v2/reporting/sections/deputy-costs-estimate" ]
             contexts:
                 - App\Tests\Behat\v2\Reporting\Sections\ReportingSectionsFeatureContext
 
-        section-expenses:
-            description: Covering the 'Expenses' section of the report
+        section-deputy-costs:
+            description: Covering the 'Deputy Costs' section of the report
+            paths: [ "%paths.base%/features-v2/reporting/sections/deputy-costs" ]
+            contexts:
+                - App\Tests\Behat\v2\Reporting\Sections\ReportingSectionsFeatureContext
+
+        section-deputy-expenses:
+            description: Covering the 'Deputy Expenses' section of the report
             paths: [ "%paths.base%/features-v2/reporting/sections/deputy-expenses" ]
+            contexts:
+                - App\Tests\Behat\v2\Reporting\Sections\ReportingSectionsFeatureContext
+
+        section-documents:
+            description: Covering the 'Documents' section of the report
+            paths: [ "%paths.base%/features-v2/reporting/sections/documents" ]
             contexts:
                 - App\Tests\Behat\v2\Reporting\Sections\ReportingSectionsFeatureContext
 
@@ -280,9 +298,9 @@ v2-tests-goutte:
             contexts:
                 - App\Tests\Behat\v2\Reporting\Sections\ReportingSectionsFeatureContext
 
-        section-money-in-high-assets:
-            description: Covering the 'Money in High Assets' section of the report
-            paths: [ "%paths.base%/features-v2/reporting/sections/money-in-high-assets" ]
+        section-money-in:
+            description: Covering the 'Money In' section of the report
+            paths: [ "%paths.base%/features-v2/reporting/sections/money-in" ]
             contexts:
                 - App\Tests\Behat\v2\Reporting\Sections\ReportingSectionsFeatureContext
 
@@ -301,12 +319,6 @@ v2-tests-goutte:
         section-debts:
             description: Covering the 'Debts' section of the report
             paths: [ "%paths.base%/features-v2/reporting/sections/debts" ]
-            contexts:
-                - App\Tests\Behat\v2\Reporting\Sections\ReportingSectionsFeatureContext
-
-        section-assets:
-            description: Covering the 'Assets' section of the report
-            paths: [ "%paths.base%/features-v2/reporting/sections/assets" ]
             contexts:
                 - App\Tests\Behat\v2\Reporting\Sections\ReportingSectionsFeatureContext
 

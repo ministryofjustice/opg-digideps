@@ -16,6 +16,8 @@ trait PageUrlsTrait
     private string $contactsSummaryUrl = '/report/%s/contacts/summary';
     private string $debtsSectionUrl = '/%s/%s/debts';
     private string $debtsSummarySectionUrl = '/%s/%s/debts/summary';
+    private string $deputyCostsUrl = '/report/%s/prof-deputy-costs';
+    private string $deputyCostsSCCOAssessmentUrl = '/report/%s/prof-deputy-costs/amount-scco';
     private string $healthAndLifestyleSectionUrl = '/%s/%s/lifestyle';
     private string $healthAndLifestyleSummaryUrl = '/%s/%s/lifestyle/summary';
     private string $layStartPageUrl = '/lay';
@@ -23,10 +25,13 @@ trait PageUrlsTrait
     private string $moneyOutSectionSummaryUrl = '/%s/%s/money-out/summary';
     private string $moneyOutShortSectionUrl = '/%s/%s/money-out-short';
     private string $moneyOutShortSectionSummaryUrl = '/%s/%s/money-out-short/summary';
+    private string $orgDashboardUrl = '/org';
     private string $postSubmissionUserResearchUrl = '/report/%s/post_submission_user_research';
     private string $reportOverviewUrl = '/%s/%s/overview';
     private string $reportSubmittedUrl = '/report/%s/submitted';
     private string $userResearchSubmittedUrl = '/report/%s/post_submission_user_research/submitted';
+    private string $moneyInShortSectionUrl = '/%s/%s/money-in-short';
+    private string $moneyInShortSectionSummaryUrl = '/%s/%s/money-in-short/summary';
 
     // Admin
     private string $adminClientSearchUrl = '/admin/client/search';
@@ -200,6 +205,21 @@ trait PageUrlsTrait
         return sprintf($this->debtsSummarySectionUrl, $this->reportUrlPrefix, $reportId);
     }
 
+    public function getOrgDashboardUrl(): string
+    {
+        return $this->orgDashboardUrl;
+    }
+
+    public function getDeputyCostsUrl(int $reportId): string
+    {
+        return sprintf($this->deputyCostsUrl, $reportId);
+    }
+
+    public function getDeputyCostsSCCOAssessmentUrl(int $reportId): string
+    {
+        return sprintf($this->deputyCostsSCCOAssessmentUrl, $reportId);
+    }
+
     public function getAssetsSectionUrl(int $reportId): string
     {
         return sprintf($this->assetsSectionUrl, $this->reportUrlPrefix, $reportId);
@@ -208,5 +228,15 @@ trait PageUrlsTrait
     public function getAssetsSummarySectionUrl(int $reportId): string
     {
         return sprintf($this->assetsSummarySectionUrl, $this->reportUrlPrefix, $reportId);
+    }
+
+    public function getMoneyInShortSectionUrl(int $reportId): string
+    {
+        return sprintf($this->moneyInShortSectionUrl, $this->reportUrlPrefix, $reportId);
+    }
+
+    public function getMoneyInShortSectionSummaryUrl(int $reportId): string
+    {
+        return sprintf($this->moneyInShortSectionSummaryUrl, $this->reportUrlPrefix, $reportId);
     }
 }

@@ -4,6 +4,9 @@ declare(strict_types=1);
 
 namespace App\Tests\Behat\v2\Common;
 
+use App\Tests\Behat\BehatException;
+use Behat\Mink\Element\NodeElement;
+
 trait ElementSelectionTrait
 {
     // Bring back list of items based on css selector with error handling
@@ -13,6 +16,18 @@ trait ElementSelectionTrait
 
         if (!$listOfElements) {
             $this->throwContextualException("A $elementType element was not found on the page");
+        }
+
+        return $listOfElements;
+    }
+
+    // Bring back list of items based on xpath selector with error handling
+    public function findAllXpathElements($xpath)
+    {
+        $listOfElements = $this->getSession()->getPage()->findAll('xpath', $xpath);
+
+        if (!$listOfElements) {
+            $this->throwContextualException("A '$xpath' element was not found on the page");
         }
 
         return $listOfElements;
@@ -47,6 +62,40 @@ trait ElementSelectionTrait
         }
 
         $element->click();
+    }
+
+    /**
+     * @param string $sectionText Text that appears in the row/container element with the link you want to select
+     * @param string $linkText    Text of the link you want to select
+     */
+    public function getLinkNodeBySectionAndLinkText(string $sectionText, string $linkText): NodeElement
+    {
+        $sectionLocator = sprintf("//*[text()[contains(., '%s')]]", $sectionText);
+        $foundElements = $this->getSession()->getPage()->findAll('xpath', $sectionLocator);
+
+        if (0 === count($foundElements)) {
+            throw new BehatException(sprintf('No elements found on the page that contain the text "%s"', $sectionText));
+        }
+
+        $nodeElements = [];
+
+        foreach ($foundElements as $foundElement) {
+            $found = $foundElement->findLink($linkText);
+
+            if ($found) {
+                $nodeElements[] = $found;
+            }
+        }
+
+        if (0 === count($nodeElements)) {
+            throw new BehatException(sprintf('No links found on the page that have the text "%s"', $linkText));
+        }
+
+        if (count($nodeElements) > 1) {
+            throw new BehatException(sprintf('Found multiple links on the page that have the text "%s". Try to narrow down $sectionText to be more specific.', $linkText));
+        }
+
+        return $nodeElements[0];
     }
 
     // Click on a link (a or button css ref for example) based on the value of it's attribute type.

@@ -52,6 +52,14 @@ class BaseFeatureContext extends MinkContext
     public UserDetails $layDeputyCompletedHealthWelfareDetails;
     public UserDetails $layDeputySubmittedHealthWelfareDetails;
 
+    public UserDetails $profNamedDeputyNotStartedHealthWelfareDetails;
+    public UserDetails $profNamedDeputyCompletedHealthWelfareDetails;
+    public UserDetails $profNamedDeputySubmittedHealthWelfareDetails;
+
+    public UserDetails $profTeamDeputyNotStartedHealthWelfareDetails;
+    public UserDetails $profTeamDeputyCompletedHealthWelfareDetails;
+    public UserDetails $profTeamDeputySubmittedHealthWelfareDetails;
+
     public UserDetails $profAdminDeputyNotStartedDetails;
     public UserDetails $profAdminDeputyCompletedDetails;
     public UserDetails $profAdminDeputySubmittedDetails;
@@ -167,6 +175,42 @@ class BaseFeatureContext extends MinkContext
     {
         $userDetails = $this->fixtureHelper->createLayHealthWelfareCompleted($this->testRunId);
         $this->fixtureUsers[] = $this->layDeputyCompletedHealthWelfareDetails = new UserDetails($userDetails);
+    }
+
+    /**
+     * @BeforeScenario @prof-named-hw-not-started
+     */
+    public function createProfNamedHealthWelfareNotStarted()
+    {
+        $userDetails = $this->fixtureHelper->createProfNamedHealthWelfareNotStarted($this->testRunId);
+        $this->fixtureUsers[] = $this->profNamedDeputyNotStartedHealthWelfareDetails = new UserDetails($userDetails);
+    }
+
+    /**
+     * @BeforeScenario @prof-named-hw-completed
+     */
+    public function createProfNamedHealthWelfareCompleted()
+    {
+        $userDetails = $this->fixtureHelper->createProfNamedHealthWelfareCompleted($this->testRunId);
+        $this->fixtureUsers[] = $this->profNamedDeputyCompletedHealthWelfareDetails = new UserDetails($userDetails);
+    }
+
+    /**
+     * @BeforeScenario @prof-team-hw-not-started
+     */
+    public function createProfTeamHealthWelfareNotStarted()
+    {
+        $userDetails = $this->fixtureHelper->createProfTeamHealthWelfareNotStarted($this->testRunId);
+        $this->fixtureUsers[] = $this->profTeamDeputyNotStartedHealthWelfareDetails = new UserDetails($userDetails);
+    }
+
+    /**
+     * @BeforeScenario @prof-team-hw-completed
+     */
+    public function createProfTeamHealthWelfareCompleted()
+    {
+        $userDetails = $this->fixtureHelper->createProfTeamHealthWelfareCompleted($this->testRunId);
+        $this->fixtureUsers[] = $this->profTeamDeputyCompletedHealthWelfareDetails = new UserDetails($userDetails);
     }
 
     /**

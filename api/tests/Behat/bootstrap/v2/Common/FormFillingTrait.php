@@ -25,8 +25,7 @@ trait FormFillingTrait
     public function fillInField(string $field, $value, ?string $formSectionName = null)
     {
         if ($formSectionName) {
-            $answerGroup = $this->determineAnswerGroup($formSectionName, $field);
-            $this->submittedAnswersByFormSections[$formSectionName][$answerGroup][$field] = $value;
+            $this->addToSubmittedAnswersByFormSections($formSectionName, $field, $value);
         }
 
         $this->fillField($field, $value);
@@ -149,9 +148,13 @@ trait FormFillingTrait
         unset($this->submittedAnswersByFormSections[$formSectionName]);
     }
 
-    public function removeSectionAnswerGroup(string $formSectionName, int $answerGroupToRemove)
+    public function removeSectionAnswerGroup(string $formSectionName, int $answerGroupToRemove, string $fieldToRemove, bool $fullGroup = true)
     {
-        unset($this->submittedAnswersByFormSections[$formSectionName][$answerGroupToRemove]);
+        if ($fullGroup) {
+            unset($this->submittedAnswersByFormSections[$formSectionName][$answerGroupToRemove]);
+        } else {
+            unset($this->submittedAnswersByFormSections[$formSectionName][$answerGroupToRemove][$fieldToRemove]);
+        }
     }
 
     /**
@@ -180,6 +183,12 @@ trait FormFillingTrait
         $this->submittedAnswersByFormSections['totals'][$formSectionName] -= $amountToSubtract;
     }
 
+    public function addToSubmittedAnswersByFormSections($formSectionName, $field, $value)
+    {
+        $answerGroup = $this->determineAnswerGroup($formSectionName, $field);
+        $this->submittedAnswersByFormSections[$formSectionName][$answerGroup][$field] = $value;
+    }
+
     /**
      * @param string $formSectionName
      */
@@ -198,15 +207,18 @@ trait FormFillingTrait
      *                                                chooseOption() to match on
      * @param string      $formSectionName            The name given to the section of the form being completed as set in
      *                                                fillInField() or chooseOption()
+     * @param bool        $fullGroup                  whether to remove the entire group or specific row denoted by
+     *                                                $fieldInAnswerGroupToRemove
      * @param string|null $removeButtonText           Text value of the remove button on confirmation page. If null,
      *                                                the value will be removed from $submittedAnswersByFormSections
      *                                                but no attempt is made to click a button
      *
-     * @throws ElementNotFoundException
+     * @throws BehatException
      */
     public function removeAnswerFromSection(
         string $fieldInAnswerGroupToRemove,
         string $formSectionName,
+        bool $fullGroup = true,
         ?string $removeButtonText = null
     ) {
         $answers = $this->getSectionAnswers($formSectionName);
@@ -225,14 +237,20 @@ trait FormFillingTrait
         }
 
         if (!is_null($removeButtonText)) {
-            $rowSelector = sprintf('//tr[th[normalize-space() ="%s"]]', $answers[$answerGroupToRemove][$fieldInAnswerGroupToRemove]);
+            $normalizedAnswer = $this->normalizeIntToCurrencyString($answers[$answerGroupToRemove][$fieldInAnswerGroupToRemove]);
+            $rowSelector = sprintf(
+                '//tr[th[contains(.,"%s")]] | //dd[contains(.,"%s")]/..',
+                $normalizedAnswer,
+                $normalizedAnswer
+            );
+
             $descriptionTableRow = $this->getSession()->getPage()->find('xpath', $rowSelector);
             $descriptionTableRow->clickLink('Remove');
             $this->pressButton($removeButtonText);
         }
 
         if (!is_null($this->getSectionTotal($formSectionName))) {
-            foreach ($this->submittedAnswersByFormSections[$formSectionName][$answerGroupToRemove] as $value) {
+            foreach ($answers[$answerGroupToRemove] as $value) {
                 if (is_int($value)) {
                     $this->subtractFromSectionTotal($formSectionName, $value);
                     $this->subtractFromGrandTotal($value);
@@ -240,7 +258,7 @@ trait FormFillingTrait
             }
         }
 
-        $this->removeSectionAnswerGroup($formSectionName, $answerGroupToRemove);
+        $this->removeSectionAnswerGroup($formSectionName, $answerGroupToRemove, $fieldInAnswerGroupToRemove, $fullGroup);
     }
 
     /**
@@ -248,18 +266,21 @@ trait FormFillingTrait
      * @param string      $fieldName        The name of the form field to add a new value to
      * @param string      $formSectionName  Which section name in $submittedAnswersByFormSections the item to
      *                                      edit belongs to
+     * @param bool        $fullGroup        Whether to remove the entire group or specific row denoted by
+     *                                      $fieldInAnswerGroupToRemove
      *
      * @return array Returns a list, not array, of the old and new value so the variables
      *               can be accessed directly rather than accessing via an array
      *
+     * @throws BehatException
      * @throws ElementNotFoundException
      */
-    public function editAnswerInSectionTrackTotal(NodeElement $summaryRowToEdit, string $fieldName, string $formSectionName): array
+    public function editFieldAnswerInSectionTrackTotal(NodeElement $summaryRowToEdit, string $fieldName, string $formSectionName, bool $fullGroup = true): array
     {
-        $currentValueString = $summaryRowToEdit->find('xpath', '//td[text()[contains(.,"£")]]')->getText();
+        $currentValueString = $summaryRowToEdit->find('xpath', '//td[contains(.,"£")] | //dd[contains(.,"£")]')->getText();
         $currentValueInt = intval(str_replace([',', '£'], '', $currentValueString));
 
-        $this->removeAnswerFromSection($fieldName, $formSectionName);
+        $this->removeAnswerFromSection($fieldName, $formSectionName, $fullGroup);
 
         $summaryRowToEdit->clickLink('Edit');
 
@@ -279,15 +300,16 @@ trait FormFillingTrait
     /**
      * @param NodeElement $summaryRowToEdit The NodeElement of the item row on a summary page to edit
      * @param string      $fieldName        The name of the form field to add a new value to
-     * @param string      $newValue         The new value
+     * @param mixed       $newValue         The new value
      * @param string      $formSectionName  Which section name in $submittedAnswersByFormSections the item to
      *                                      edit belongs to
+     * @param bool        $fullGroup        Whether to use full group or the individual row
      *
-     * @throws ElementNotFoundException
+     * @throws BehatException
      */
-    public function editAnswerInSection(NodeElement $summaryRowToEdit, string $fieldName, string $newValue, string $formSectionName): array
+    public function editFieldAnswerInSection(NodeElement $summaryRowToEdit, string $fieldName, $newValue, string $formSectionName, bool $fullGroup = true)
     {
-        $this->removeAnswerFromSection($fieldName, $formSectionName);
+        $this->removeAnswerFromSection($fieldName, $formSectionName, $fullGroup);
 
         $summaryRowToEdit->clickLink('Edit');
 
@@ -295,6 +317,33 @@ trait FormFillingTrait
             $fieldName,
             $newValue,
             $formSectionName
+        );
+
+        $this->pressButton('Save and continue');
+    }
+
+    /**
+     * @param NodeElement $summaryRowToEdit The NodeElement of the edit link in the item row on a summary page to edit
+     * @param string      $selectName       The name of the form select to add a new value to
+     * @param string      $newSelectOption  The new option
+     * @param string      $formSectionName  Which section name in $submittedAnswersByFormSections the item to
+     *                                      edit belongs to
+     * @param string|null $translatedValue  The translated string of the option selected (optional)
+     * @param bool        $fullGroup        Whether to use full group or the individual row
+     *
+     * @throws ElementNotFoundException
+     */
+    public function editSelectAnswerInSection(NodeElement $summaryRowToEdit, string $selectName, string $newSelectOption, string $formSectionName, ?string $translatedValue = null, bool $fullGroup = true)
+    {
+        $this->removeAnswerFromSection($selectName, $formSectionName, $fullGroup);
+
+        $summaryRowToEdit->clickLink('Edit');
+
+        $this->chooseOption(
+            $selectName,
+            $newSelectOption,
+            $formSectionName,
+            $translatedValue
         );
 
         $this->pressButton('Save and continue');
