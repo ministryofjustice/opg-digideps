@@ -205,14 +205,14 @@ trait OrganisationManagementTrait
         $this->iAmOnAdminOrganisationSearchPage();
 
         $orgId = end($this->organisations)['Id'];
-        $deleteLink = sprintf('https://admin.digideps.local/admin/organisations/%s/delete', $orgId);
+        $deleteLink = sprintf('/admin/organisations/%s/delete', $orgId);
 
         $links = $this->getSession()->getPage()->findAll('css', 'a');
         $foundLink = false;
 
         foreach ($links as $link) {
             if (!$foundLink) {
-                if ($link->getAttribute('href') == $deleteLink) {
+                if (str_ends_with($link->getAttribute('href'), $deleteLink)) {
                     $foundLink = true;
                     $link->click();
                     $this->pressButton('Yes, remove organisation');
