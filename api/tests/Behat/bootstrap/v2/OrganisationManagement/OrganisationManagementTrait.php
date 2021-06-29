@@ -7,19 +7,15 @@ namespace App\Tests\Behat\v2\OrganisationManagement;
 trait OrganisationManagementTrait
 {
     private array $organisations;
-    private int $orgId = 0;
 
     /**
      * @When I add an organisation
      */
     public function iAddAnActiveOrganisation()
     {
-        ++$this->orgId;
+        $orgName = 'My Organisation '.$this->testRunId;
 
-        $orgName = $this->orgId.$this->faker->company;
-
-        $email = $this->faker->companyEmail;
-        $domain = $this->orgId.substr($email, strpos($email, '@') + 1);
+        $domain = $this->testRunId.'.com';
 
         $this->organisations[] = ['Name' => $orgName, 'Email' => $domain, 'Active' => true];
 
@@ -94,7 +90,7 @@ trait OrganisationManagementTrait
      */
     public function iAddProfUsersToOrganisation($numberOfUsers)
     {
-        $users = $this->createAdditionalProfAdminUsers(intval($numberOfUsers));
+        $users = $this->createAdditionalProfHealthWelfareUsers(intval($numberOfUsers));
 
         foreach ($users as $user) {
             $this->iAmOnAdminOrganisationOverviewPage();
