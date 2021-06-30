@@ -189,11 +189,13 @@ trait DeputyCostsEstimateSectionTrait
         $formSectionName = 'deputyCostType';
         $field = 'deputy_costs_estimate[profDeputyCostsEstimateHowCharged]';
         $value = 'fixed costs';
+
         $this->addToSubmittedAnswersByFormSections($formSectionName, $field, $value);
 
-        $selector = $this->getLinkBasedOnResponse($this->getSectionAnswers($formSectionName)[0][$field], 'edit');
+        $locator = sprintf('//dt[contains(., "%s")]/..', 'How will you be charging for your services?');
+        $fixedCostsRow = $this->getSession()->getPage()->find('xpath', $locator);
 
-        $this->editSelectAnswerInSection($selector, $field, 'both', $formSectionName, 'both fixed and assessed costs');
+        $this->editSelectAnswerInSection($fixedCostsRow, $field, 'both', $formSectionName, 'both fixed and assessed costs');
         $this->iFillInEstimatedAssessedCostsCorrectly();
         $this->iHaveInformationThatWouldExplainEstimatedCosts();
     }
@@ -209,8 +211,10 @@ trait DeputyCostsEstimateSectionTrait
 
         $answer = $this->moneyFormat($this->getSectionAnswers($formSectionName)[0][$field]);
 
-        $selector = $this->getLinkBasedOnResponse($answer, 'edit');
-        $this->editAnswerInSection($selector, $field, 2789, $formSectionName);
+        $locator = sprintf('//dd[contains(., "%s")]/..', $answer);
+        $expectedCostsRow = $this->getSession()->getPage()->find('xpath', $locator);
+
+        $this->editFieldAnswerInSection($expectedCostsRow, $field, 2789, $formSectionName);
     }
 
     /**
@@ -221,8 +225,11 @@ trait DeputyCostsEstimateSectionTrait
         $this->iAmOnDeputyCostsEstimateSummaryPage();
         $formSectionName = 'moreInfo';
         $field = 'deputy_costs_estimate[profDeputyCostsEstimateMoreInfoDetails]';
-        $selector = $this->getLinkBasedOnResponse($this->getSectionAnswers($formSectionName)[0][$field], 'edit');
-        $this->editAnswerInSection($selector, $field, 'edited details', $formSectionName);
+
+        $locator = sprintf('//dd[contains(., "%s")]/..', $this->getSectionAnswers($formSectionName)[0][$field]);
+        $expectedCostsDescriptionRow = $this->getSession()->getPage()->find('xpath', $locator);
+
+        $this->editFieldAnswerInSection($expectedCostsDescriptionRow, $field, 'edited details', $formSectionName);
     }
 
     /**
@@ -233,9 +240,12 @@ trait DeputyCostsEstimateSectionTrait
         $this->iAmOnDeputyCostsEstimateSummaryPage();
         $formSectionName = 'managementCosts';
         $field = 'deputy_estimate_costs[profDeputyEstimateCosts][0][amount]';
+
         $answer = $this->moneyFormat($this->getSectionAnswers($formSectionName)[0][$field]);
-        $selector = $this->getLinkBasedOnResponse($answer, 'edit');
-        $this->editAnswerInSection($selector, $field, 222, $formSectionName, false);
+        $locator = sprintf('//dd[contains(., "%s")]/..', $answer);
+        $costBreakdownRow = $this->getSession()->getPage()->find('xpath', $locator);
+
+        $this->editFieldAnswerInSection($costBreakdownRow, $field, 222, $formSectionName, false);
     }
 
     /**

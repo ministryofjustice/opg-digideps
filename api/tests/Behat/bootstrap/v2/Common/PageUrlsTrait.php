@@ -16,6 +16,8 @@ trait PageUrlsTrait
     private string $contactsSummaryUrl = '/report/%s/contacts/summary';
     private string $debtsSectionUrl = '/%s/%s/debts';
     private string $debtsSummarySectionUrl = '/%s/%s/debts/summary';
+    private string $deputyCostsUrl = '/report/%s/prof-deputy-costs';
+    private string $deputyCostsSCCOAssessmentUrl = '/report/%s/prof-deputy-costs/amount-scco';
     private string $healthAndLifestyleSectionUrl = '/%s/%s/lifestyle';
     private string $healthAndLifestyleSummaryUrl = '/%s/%s/lifestyle/summary';
     private string $layStartPageUrl = '/lay';
@@ -25,6 +27,7 @@ trait PageUrlsTrait
     private string $moneyOutSectionSummaryUrl = '/%s/%s/money-out/summary';
     private string $moneyOutShortSectionUrl = '/%s/%s/money-out-short';
     private string $moneyOutShortSectionSummaryUrl = '/%s/%s/money-out-short/summary';
+    private string $orgDashboardUrl = '/org';
     private string $postSubmissionUserResearchUrl = '/report/%s/post_submission_user_research';
     private string $reportOverviewUrl = '/%s/%s/overview';
     private string $reportSubmittedUrl = '/report/%s/submitted';
@@ -202,6 +205,21 @@ trait PageUrlsTrait
     public function getDebtsSummarySectionUrl(int $reportId): string
     {
         return sprintf($this->debtsSummarySectionUrl, $this->reportUrlPrefix, $reportId);
+    }
+
+    public function getOrgDashboardUrl(): string
+    {
+        return $this->orgDashboardUrl;
+    }
+
+    public function getDeputyCostsUrl(int $reportId): string
+    {
+        return sprintf($this->deputyCostsUrl, $reportId);
+    }
+
+    public function getDeputyCostsSCCOAssessmentUrl(int $reportId): string
+    {
+        return sprintf($this->deputyCostsSCCOAssessmentUrl, $reportId);
     }
 
     public function getAssetsSectionUrl(int $reportId): string

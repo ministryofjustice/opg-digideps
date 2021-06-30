@@ -6,6 +6,8 @@ namespace App\Tests\Behat\v2\Common;
 
 use App\Tests\Behat\BehatException;
 use App\Tests\Behat\v2\Helpers\FixtureHelper;
+use Behat\Behat\Hook\Call\BeforeScenario;
+use Behat\Behat\Hook\Scope\BeforeScenarioScope;
 use Behat\Mink\Driver\GoutteDriver;
 use Behat\MinkExtension\Context\MinkContext;
 use Doctrine\ORM\EntityManagerInterface;
@@ -234,7 +236,7 @@ class BaseFeatureContext extends MinkContext
     /**
      * @BeforeScenario @prof-admin-not-started
      */
-    public function createProfAdminNotStarted(?string $namedDeputyEmail = null, ?string $caseNumber = null, ?string $deputyNumber = null)
+    public function createProfAdminNotStarted(?BeforeScenarioScope $scenario = null, ?string $namedDeputyEmail = null, ?string $caseNumber = null, ?string $deputyNumber = null)
     {
         $userDetails = $this->fixtureHelper->createProfAdminNotStarted($this->testRunId, $namedDeputyEmail, $caseNumber, $deputyNumber);
         $this->fixtureUsers[] = $this->profAdminDeputyNotStartedDetails = new UserDetails($userDetails);
@@ -243,7 +245,7 @@ class BaseFeatureContext extends MinkContext
     /**
      * @BeforeScenario @prof-admin-completed
      */
-    public function createProfAdminCompleted(?string $namedDeputyEmail = null, ?string $caseNumber = null, ?string $deputyNumber = null)
+    public function createProfAdminCompleted(?BeforeScenarioScope $scenario = null, ?string $namedDeputyEmail = null, ?string $caseNumber = null, ?string $deputyNumber = null)
     {
         $userDetails = $this->fixtureHelper->createProfAdminCompleted($this->testRunId, $namedDeputyEmail, $caseNumber, $deputyNumber);
         $this->fixtureUsers[] = $this->profAdminDeputyCompletedDetails = new UserDetails($userDetails);
@@ -252,7 +254,7 @@ class BaseFeatureContext extends MinkContext
     /**
      * @BeforeScenario @prof-admin-submitted
      */
-    public function createProfAdminSubmitted(?string $namedDeputyEmail = null, ?string $caseNumber = null, ?string $deputyNumber = null)
+    public function createProfAdminSubmitted(?BeforeScenarioScope $scenario = null, ?string $namedDeputyEmail = null, ?string $caseNumber = null, ?string $deputyNumber = null)
     {
         $userDetails = $this->fixtureHelper->createProfAdminSubmitted($this->testRunId, $namedDeputyEmail, $caseNumber, $deputyNumber);
         $this->fixtureUsers[] = $this->profAdminDeputySubmittedDetails = new UserDetails($userDetails);

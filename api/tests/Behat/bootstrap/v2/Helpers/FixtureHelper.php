@@ -382,7 +382,7 @@ class FixtureHelper
         Organisation $organisation,
         bool $completed = false,
         bool $submitted = false,
-        string $reportType = Report::TYPE_102,
+        string $reportType = Report::TYPE_102_5,
         ?string $namedDeputyEmail = null,
         ?string $caseNumber = null,
         ?string $deputyNumber = null
@@ -766,7 +766,7 @@ class FixtureHelper
         $this->adminManager = $this->createAdminUser(
             $testRunId,
             User::ROLE_ADMIN_MANAGER,
-            'elevated-admin'
+            'admin-manager'
         );
 
         return self::buildAdminUserDetails($this->adminManager);
@@ -783,14 +783,19 @@ class FixtureHelper
         return self::buildAdminUserDetails($this->superAdmin);
     }
 
-    private function createOrganisation(string $testRunId, ?string $emailIdentifier = null)
+    private function createOrganisation(string $testRunId, string $emailIdentifier)
     {
         if ('prod' === $this->symfonyEnvironment) {
             throw new BehatException('Prod mode enabled - cannot create fixture users');
         }
 
+        $organisation = $this->em->getRepository(Organisation::class)->findByEmailIdentifier($emailIdentifier);
+
+        if ($organisation instanceof Organisation) {
+            return $organisation;
+        }
+
         $orgName = sprintf('prof-%s-%s', $this->orgName, $testRunId);
-        $emailIdentifier = $emailIdentifier ?: sprintf('prof-%s-%s', $this->orgEmailIdentifier, $this->testRunId);
 
         $organisation = $this->organisationTestHelper->createOrganisation($orgName, $emailIdentifier);
         $this->em->persist($organisation);
@@ -849,10 +854,12 @@ class FixtureHelper
         if ('prod' === $this->symfonyEnvironment) {
             throw new BehatException('Prod mode enabled - cannot create fixture users');
         }
+
         $this->testRunId = $testRunId;
         $domain = $namedDeputyEmail ? substr(strstr($namedDeputyEmail, '@'), 1) : 't.uk';
+        $emailIdentifier = 't.uk' !== $domain ? $domain : sprintf('prof-%s-%s', $this->orgEmailIdentifier, $this->testRunId);
 
-        $organisation = $this->createOrganisation($this->testRunId, $domain);
+        $organisation = $this->createOrganisation($this->testRunId, $emailIdentifier);
 
         $userEmail = sprintf('%s-%s@%s', $emailPrefix, $this->testRunId, $domain);
 

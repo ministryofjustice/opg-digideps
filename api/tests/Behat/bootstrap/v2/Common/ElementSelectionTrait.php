@@ -4,6 +4,9 @@ declare(strict_types=1);
 
 namespace App\Tests\Behat\v2\Common;
 
+use App\Tests\Behat\BehatException;
+use Behat\Mink\Element\NodeElement;
+
 trait ElementSelectionTrait
 {
     // Bring back list of items based on css selector with error handling
@@ -61,28 +64,38 @@ trait ElementSelectionTrait
         $element->click();
     }
 
-    // Returns a selector for a link such as a remove or edit link
-    public function getLinkBasedOnResponse(string $sectionText, string $linkText)
+    /**
+     * @param string $sectionText Text that appears in the row/container element with the link you want to select
+     * @param string $linkText    Text of the link you want to select
+     */
+    public function getLinkNodeBySectionAndLinkText(string $sectionText, string $linkText): NodeElement
     {
-        $xpath = "//div[contains(@class, 'govuk-summary-list__row')]";
-        $session = $this->getSession();
-        $elements = $session->getPage()->findAll('xpath', $xpath);
+        $sectionLocator = sprintf("//*[text()[contains(., '%s')]]", $sectionText);
+        $foundElements = $this->getSession()->getPage()->findAll('xpath', $sectionLocator);
 
-        foreach ($elements as $element) {
-            if (str_contains(strtolower(trim($element->getHtml())), strtolower(trim($sectionText)))) {
-                $elementToSelect = $element;
+        if (0 === count($foundElements)) {
+            throw new BehatException(sprintf('No elements found on the page that contain the text "%s"', $sectionText));
+        }
+
+        $nodeElements = [];
+
+        foreach ($foundElements as $foundElement) {
+            $found = $foundElement->findLink($linkText);
+
+            if ($found) {
+                $nodeElements[] = $found;
             }
         }
 
-        $hrefs = $elementToSelect->findAll('xpath', '//a');
-
-        foreach ($hrefs as $href) {
-            if (strtolower(trim($href->getHtml())) == strtolower($linkText)) {
-                $selector = $href;
-            }
+        if (0 === count($nodeElements)) {
+            throw new BehatException(sprintf('No links found on the page that have the text "%s"', $linkText));
         }
 
-        return $selector;
+        if (count($nodeElements) > 1) {
+            throw new BehatException(sprintf('Found multiple links on the page that have the text "%s". Try to narrow down $sectionText to be more specific.', $linkText));
+        }
+
+        return $nodeElements[0];
     }
 
     // Click on a link (a or button css ref for example) based on the value of it's attribute type.

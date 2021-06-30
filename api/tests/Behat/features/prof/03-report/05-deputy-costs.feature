@@ -250,16 +250,16 @@ Feature: PROF deputy costs
       | deputy_other_costs_profDeputyOtherCosts_6_moreDetails | breakdown other details |
     # check summary page
     And each text should be present in the corresponding region:
-      | Both fixed and assessed costs         | how-charged             |
-      | Yes                                  | has-previous            |
-      | Received for 01/01/2015 - 01/01/2015 | prev-cost-1             |
-      | £100                                 | prev-cost-1             |
-      | £200                                 | prev-cost-2             |
-      | Yes                                  | has-interim             |
-      | £50.00, paid 01/01/2015              | interim-cost-1          |
-      | £60.00, paid 02/01/2015              | interim-cost-2          |
-      | £10.00                               | breakdown-appointments  |
-      | £55.50                               | breakdown-other         |
-      | breakdown other details              | breakdown-other-details |
-      | £475.50                              | total-cost-taken-from-client |
+      | Both fixed and assessed costs                | how-charged             |
+      | Yes                                          | has-previous            |
+      | Received for 1 January 2015 - 1 January 2015 | prev-cost-1             |
+      | £100                                         | prev-cost-1             |
+      | £200                                         | prev-cost-2             |
+      | Yes                                          | has-interim             |
+      | £50.00, paid 1 January 2015                  | interim-cost-1          |
+      | £60.00, paid 2 January 2015                  | interim-cost-2          |
+      | £10.00                                       | breakdown-appointments  |
+      | £55.50                                       | breakdown-other         |
+      | breakdown other details                      | breakdown-other-details |
+      | £475.50                                      | total-cost-taken-from-client |
     And I should not see the "fixed-cost-amount" region

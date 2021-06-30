@@ -108,7 +108,7 @@ trait IngestTrait
         $this->expectedClientCourtDate = new DateTime($newMadeDate);
         $this->expectedNamedDeputyName = $newNamedDeputy;
 
-        $this->createProfAdminNotStarted('professor@mccracken4.com', '40000000');
+        $this->createProfAdminNotStarted(null, 'professor@mccracken4.com', '40000000');
 
         $this->attachFileToField('admin_upload[file]', 'org-1-updated-row-made-date-and-named-deputy.csv');
         $this->pressButton('Upload PA/Prof users');
@@ -147,7 +147,7 @@ trait IngestTrait
 
         $this->expectedNamedDeputyAddress = $address;
 
-        $this->createProfAdminNotStarted('him@jojo5.com', '50000000', '66648');
+        $this->createProfAdminNotStarted(null, 'him@jojo5.com', '50000000', '66648');
 
         $this->attachFileToField('admin_upload[file]', 'org-1-updated-row-named-deputy-address.csv');
         $this->pressButton('Upload PA/Prof users');
@@ -194,7 +194,7 @@ trait IngestTrait
 
         $this->expectedReportType = $reportTypeNumber;
 
-        $this->createProfAdminNotStarted('fuzzy.lumpkins@jojo6.com', '60000000', '112233');
+        $this->createProfAdminNotStarted(null, 'fuzzy.lumpkins@jojo6.com', '60000000', '112233');
 
         $this->attachFileToField('admin_upload[file]', 'org-1-updated-row-report-type.csv');
         $this->pressButton('Upload PA/Prof users');
