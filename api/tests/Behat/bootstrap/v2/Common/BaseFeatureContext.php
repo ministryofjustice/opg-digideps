@@ -234,27 +234,27 @@ class BaseFeatureContext extends MinkContext
     /**
      * @BeforeScenario @prof-admin-not-started
      */
-    public function createProfAdminNotStarted(?string $namedDeputyEmail = null, ?string $caseNumber)
+    public function createProfAdminNotStarted(?string $namedDeputyEmail = null, ?string $caseNumber = null, ?string $deputyNumber = null)
     {
-        $userDetails = $this->fixtureHelper->createProfAdminNotStarted($this->testRunId, $namedDeputyEmail, $caseNumber);
+        $userDetails = $this->fixtureHelper->createProfAdminNotStarted($this->testRunId, $namedDeputyEmail, $caseNumber, $deputyNumber);
         $this->fixtureUsers[] = $this->profAdminDeputyNotStartedDetails = new UserDetails($userDetails);
     }
 
     /**
      * @BeforeScenario @prof-admin-completed
      */
-    public function createProfAdminCompleted(?string $namedDeputyEmail = null, ?string $caseNumber)
+    public function createProfAdminCompleted(?string $namedDeputyEmail = null, ?string $caseNumber = null, ?string $deputyNumber = null)
     {
-        $userDetails = $this->fixtureHelper->createProfAdminCompleted($this->testRunId, $namedDeputyEmail, $caseNumber);
+        $userDetails = $this->fixtureHelper->createProfAdminCompleted($this->testRunId, $namedDeputyEmail, $caseNumber, $deputyNumber);
         $this->fixtureUsers[] = $this->profAdminDeputyCompletedDetails = new UserDetails($userDetails);
     }
 
     /**
      * @BeforeScenario @prof-admin-submitted
      */
-    public function createProfAdminSubmitted(?string $namedDeputyEmail = null, ?string $caseNumber)
+    public function createProfAdminSubmitted(?string $namedDeputyEmail = null, ?string $caseNumber = null, ?string $deputyNumber = null)
     {
-        $userDetails = $this->fixtureHelper->createProfAdminSubmitted($this->testRunId, $namedDeputyEmail, $caseNumber);
+        $userDetails = $this->fixtureHelper->createProfAdminSubmitted($this->testRunId, $namedDeputyEmail, $caseNumber, $deputyNumber);
         $this->fixtureUsers[] = $this->profAdminDeputySubmittedDetails = new UserDetails($userDetails);
     }
 

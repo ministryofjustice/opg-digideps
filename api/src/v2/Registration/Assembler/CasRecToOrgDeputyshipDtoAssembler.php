@@ -45,6 +45,7 @@ class CasRecToOrgDeputyshipDtoAssembler
         $reportStartDate = $reportEndDate ? $this->reportUtils->generateReportStartDateFromEndDate($reportEndDate) : null;
         $caseNumber = $this->reportUtils->padCasRecNumber(strtolower($row['Case']));
         $deputyNumber = $this->reportUtils->padCasRecNumber(strtolower($row['Deputy No']));
+        $courtDate = empty($row['Made Date']) ? null : new DateTime($row['Made Date']);
 
         return (new OrgDeputyshipDto())
             ->setDeputyEmail($row['Email'])
@@ -65,7 +66,7 @@ class CasRecToOrgDeputyshipDtoAssembler
             ->setClientCounty($row['Client Adrs3'])
             ->setClientPostCode($row['Client Postcode'])
             ->setClientDateOfBirth($clientDateOfBirth)
-            ->setCourtDate(new DateTime($row['Made Date']))
+            ->setCourtDate($courtDate)
             ->setReportType($reportType)
             ->setReportStartDate($reportStartDate)
             ->setReportEndDate($reportEndDate);

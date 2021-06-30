@@ -12,7 +12,7 @@ class NamedDeputyTestHelper
     /**
      * @return NamedDeputy
      */
-    public function generateNamedDeputy(?string $email = null)
+    public function generateNamedDeputy(?string $email = null, ?string $deputyNumber = null)
     {
         $faker = Factory::create('en_GB');
 
@@ -24,6 +24,6 @@ class NamedDeputyTestHelper
             ->setAddress2($faker->city)
             ->setAddress3($faker->county)
             ->setAddressPostcode($faker->postcode)
-            ->setDeputyNo($faker->randomNumber(8));
+            ->setDeputyNo($deputyNumber ?: $faker->randomNumber(8));
     }
 }

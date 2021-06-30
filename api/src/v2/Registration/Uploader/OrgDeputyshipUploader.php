@@ -8,7 +8,6 @@ use App\Entity\Client;
 use App\Entity\NamedDeputy;
 use App\Entity\Organisation;
 use App\Entity\Report\Report;
-use App\Entity\User;
 use App\Factory\OrganisationFactory;
 use App\Service\OrgService;
 use App\v2\Assembler\ClientAssembler;
@@ -99,9 +98,10 @@ class OrgDeputyshipUploader
 
     private function handleNamedDeputy(OrgDeputyshipDto $dto)
     {
+        /** @var NamedDeputy $namedDeputy */
         $namedDeputy = ($this->em->getRepository(NamedDeputy::class))->findOneBy(
             [
-                'deputyNo' => User::padDeputyNumber($dto->getDeputyNumber()),
+                'deputyNo' => $dto->getDeputyNumber(),
             ]
         );
 
@@ -113,7 +113,15 @@ class OrgDeputyshipUploader
 
             $this->added['named_deputies'][] = $namedDeputy->getId();
         } else {
-            // Update deputy with address and telephone details here
+            $namedDeputy
+                ->setAddress1($dto->getDeputyAddress1())
+                ->setAddress2($dto->getDeputyAddress2())
+                ->setAddress3($dto->getDeputyAddress3())
+                ->setAddress4($dto->getDeputyAddress4())
+                ->setAddress5($dto->getDeputyAddress5());
+
+            $this->em->persist($namedDeputy);
+            $this->em->flush();
         }
 
         $this->namedDeputy = $namedDeputy;

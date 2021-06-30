@@ -384,11 +384,12 @@ class FixtureHelper
         bool $submitted = false,
         string $reportType = Report::TYPE_102,
         ?string $namedDeputyEmail = null,
-        ?string $caseNumber = null
+        ?string $caseNumber = null,
+        ?string $deputyNumber = null
     ) {
         $client = $this->clientTestHelper->generateClient($this->em, $deputy, $organisation, $caseNumber);
         $report = $this->reportTestHelper->generateReport($this->em, $client, $reportType);
-        $namedDeputy = $this->namedDeputyTestHelper->generatenamedDeputy($namedDeputyEmail);
+        $namedDeputy = $this->namedDeputyTestHelper->generatenamedDeputy($namedDeputyEmail, $deputyNumber);
 
         $client->addReport($report);
         $client->setOrganisation($organisation);
@@ -686,8 +687,12 @@ class FixtureHelper
         return self::buildUserDetails($this->layNdrSubmitted);
     }
 
-    public function createProfAdminNotStarted(string $testRunId, ?string $namedDeputyEmail = null, ?string $caseNumber = null)
-    {
+    public function createProfAdminNotStarted(
+        string $testRunId,
+        ?string $namedDeputyEmail = null,
+        ?string $caseNumber = null,
+        ?string $deputyNumber = null
+    ) {
         $this->profAdminNotStarted = $this->createOrgUserClientNamedDeputyAndReport(
             $testRunId,
             User::ROLE_PROF_ADMIN,
@@ -696,14 +701,19 @@ class FixtureHelper
             false,
             false,
             $namedDeputyEmail,
-            $caseNumber
+            $caseNumber,
+            $deputyNumber
         );
 
         return self::buildOrgUserDetails($this->profAdminNotStarted);
     }
 
-    public function createProfAdminCompleted(string $testRunId, ?string $namedDeputyEmail = null, ?string $caseNumber = null)
-    {
+    public function createProfAdminCompleted(
+        string $testRunId,
+        ?string $namedDeputyEmail = null,
+        ?string $caseNumber = null,
+        ?string $deputyNumber = null
+    ) {
         $this->profAdminCompleted = $this->createOrgUserClientNamedDeputyAndReport(
             $testRunId,
             User::ROLE_PROF_ADMIN,
@@ -712,14 +722,19 @@ class FixtureHelper
             true,
             false,
             $namedDeputyEmail,
-            $caseNumber
+            $caseNumber,
+            $deputyNumber
         );
 
         return self::buildOrgUserDetails($this->profAdminCompleted);
     }
 
-    public function createProfAdminSubmitted(string $testRunId, ?string $namedDeputyEmail = null, ?string $caseNumber = null)
-    {
+    public function createProfAdminSubmitted(
+        string $testRunId,
+        ?string $namedDeputyEmail = null,
+        ?string $caseNumber = null,
+        ?string $deputyNumber = null
+    ) {
         $this->profAdminSubmitted = $this->createOrgUserClientNamedDeputyAndReport(
             $testRunId,
             User::ROLE_PROF_ADMIN,
@@ -728,7 +743,8 @@ class FixtureHelper
             true,
             true,
             $namedDeputyEmail,
-            $caseNumber
+            $caseNumber,
+            $deputyNumber
         );
 
         return self::buildOrgUserDetails($this->profAdminSubmitted);
@@ -827,8 +843,9 @@ class FixtureHelper
         $completed,
         $submitted,
         ?string $namedDeputyEmail = null,
-        ?string $caseNumber = null)
-    {
+        ?string $caseNumber = null,
+        ?string $deputyNumber = null
+    ) {
         if ('prod' === $this->symfonyEnvironment) {
             throw new BehatException('Prod mode enabled - cannot create fixture users');
         }
@@ -842,7 +859,7 @@ class FixtureHelper
         $user = $this->userTestHelper
             ->createUser(null, $userRole, $userEmail);
 
-        $this->addOrgClientsNamedDeputyAndReportsToOrgDeputy($user, $organisation, $completed, $submitted, $reportType, $namedDeputyEmail, $caseNumber);
+        $this->addOrgClientsNamedDeputyAndReportsToOrgDeputy($user, $organisation, $completed, $submitted, $reportType, $namedDeputyEmail, $caseNumber, $deputyNumber);
 
         $this->setClientPassword($user);
 
