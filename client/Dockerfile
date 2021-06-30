@@ -38,7 +38,7 @@ COPY src src
 RUN composer run-script post-install-cmd --no-interaction
 RUN composer dump-autoload --optimize
 
-FROM php:7.4.16-fpm-alpine
+FROM php:7.4.20-fpm-alpine
 WORKDIR /var/www
 EXPOSE 80
 EXPOSE 443
@@ -47,7 +47,9 @@ ENV PHP_EXT_DIR=/usr/local/lib/php/extensions/no-debug-non-zts-20190902
 
 # Install core PHP extensions
 RUN apk add --no-cache openssl nginx nginx-mod-http-headers-more su-exec postgresql-client libzip-dev unzip php7-igbinary php7-pecl-redis
-RUN docker-php-ext-install pcntl zip opcache
+RUN docker-php-ext-install pcntl
+RUN docker-php-ext-install zip
+RUN docker-php-ext-install opcache
 RUN docker-php-ext-enable opcache
 
 # Install pcov for faster coverage tooling

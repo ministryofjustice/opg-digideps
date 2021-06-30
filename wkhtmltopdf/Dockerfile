@@ -1,4 +1,4 @@
-FROM python:3.9-rc-slim-buster
+FROM python:3.10-rc-slim-buster
 
 # Download and install wkhtmltopdf and bash (because executor can't use 'sh')
 RUN apt-get update \
