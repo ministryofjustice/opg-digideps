@@ -52,6 +52,8 @@ RUN if [[ $REQUIRE_XDEBUG = true ]] ; then \
 RUN ln -sf /dev/stdout /var/log/nginx/access.log \
   && ln -sf /dev/stderr /var/log/nginx/error.log
 
+RUN ln -s /etc/nginx/http.d /etc/nginx/conf.d
+
 # Add Confd to configure parameters on start
 ENV CONFD_VERSION="0.16.0"
 RUN wget -q -O /usr/local/bin/confd "https://github.com/kelseyhightower/confd/releases/download/v${CONFD_VERSION}/confd-${CONFD_VERSION}-linux-amd64" \

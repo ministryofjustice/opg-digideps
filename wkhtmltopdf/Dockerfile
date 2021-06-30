@@ -1,12 +1,8 @@
-FROM python:3.10-rc-slim-buster
+FROM python:3.10-rc-alpine3.14
 
-# Download and install wkhtmltopdf and bash (because executor can't use 'sh')
-RUN apt-get update \
-    && apt-get -y install fontconfig libjpeg62-turbo libx11-6 libxcb1 libxext6 libxrender1 curl \
-    && apt-get -y upgrade \
-    && apt-get -y install cron wget xfonts-base xfonts-75dpi \
-    && wget https://github.com/wkhtmltopdf/packaging/releases/download/0.12.6-1/wkhtmltox_0.12.6-1.stretch_amd64.deb \
-    && dpkg -i wkhtmltox_0.12.6-1.stretch_amd64.deb
+RUN apk update
+RUN apk add bash
+RUN apk add wkhtmltopdf
 
 # Install dependencies for running web service
 RUN pip install werkzeug==1.0.1 executor==23.2 gunicorn==20.0.4
