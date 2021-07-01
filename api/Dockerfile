@@ -50,9 +50,8 @@ RUN if [[ $REQUIRE_XDEBUG = true ]] ; then \
 
 # Route NGINX logs to stdout/stderr
 RUN ln -sf /dev/stdout /var/log/nginx/access.log \
-  && ln -sf /dev/stderr /var/log/nginx/error.log
-
-RUN ln -s /etc/nginx/http.d /etc/nginx/conf.d
+  && ln -sf /dev/stderr /var/log/nginx/error.log \
+  && ln -s /etc/nginx/http.d /etc/nginx/conf.d
 
 # Add Confd to configure parameters on start
 ENV CONFD_VERSION="0.16.0"

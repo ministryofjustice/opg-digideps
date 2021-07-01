@@ -47,9 +47,7 @@ ENV PHP_EXT_DIR=/usr/local/lib/php/extensions/no-debug-non-zts-20190902
 
 # Install core PHP extensions
 RUN apk add --no-cache openssl nginx nginx-mod-http-headers-more su-exec postgresql-client libzip-dev unzip php7-igbinary php7-pecl-redis
-RUN docker-php-ext-install pcntl
-RUN docker-php-ext-install zip
-RUN docker-php-ext-install opcache
+RUN docker-php-ext-install pcntl zip opcache
 RUN docker-php-ext-enable opcache
 
 # Install pcov for faster coverage tooling
@@ -66,9 +64,8 @@ RUN if [[ $REQUIRE_XDEBUG = true ]] ; then \
 
 # Route NGINX logs to stdout/stderr
 RUN ln -sf /dev/stdout /var/log/nginx/access.log \
-  && ln -sf /dev/stderr /var/log/nginx/error.log
-
-RUN ln -s /etc/nginx/http.d /etc/nginx/conf.d
+  && ln -sf /dev/stderr /var/log/nginx/error.log \
+  && ln -s /etc/nginx/http.d /etc/nginx/conf.d
 
 # Add Confd to configure parameters on start
 ENV CONFD_VERSION="0.16.0"

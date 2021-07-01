@@ -130,12 +130,13 @@ class ECRScanChecker:
 
     def post_to_slack(self, slack_webhook):
         if self.major_sev_count > 0:
+            print(f"Sending slack message as there are {self.major_sev_count} images with flagged security vulnerabilities")
             branch_info = "*Images With Serious Issues:* {0}\n *Github Branch:* {1}\n*CircleCI Job Link:* {2}\n\n".format(
                 self.major_sev_count,
                 os.getenv('CIRCLE_BRANCH', ""),
                 os.getenv('CIRCLE_BUILD_URL', ""))
 
-            post_data = json.dumps({"text": branch_info})
+            post_data = json.dumps({"channel": "opg-digideps-devs", "text": branch_info})
             print(post_data)
             response = requests.post(
                 slack_webhook, data=post_data,
@@ -146,6 +147,8 @@ class ECRScanChecker:
                     'Request to slack returned an error %s, the response is:\n%s'
                     % (response.status_code, response.text)
                 )
+        else:
+            print(f"Not sending slack message as there are {self.major_sev_count} images with flagged security vulnerabilities")
 
 
 def main():
@@ -172,9 +175,11 @@ def main():
     work.recursive_wait(args.tag)
     work.recursive_check_make_report(args.tag)
     if args.slack_webhook is None:
-      print("No slack webhook provided, skipping post of results to slack")
-      if args.post_to_slack == "True" and args.slack_webhook is not None:
-          work.post_to_slack(args.slack_webhook)
+        print("No slack webhook provided, skipping post of results to slack")
+    elif args.post_to_slack != "True":
+        print("Post to slack flag set to false. Not sending to slack")
+    else:
+        work.post_to_slack(args.slack_webhook)
 
 
 if __name__ == "__main__":
