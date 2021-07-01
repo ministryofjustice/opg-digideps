@@ -238,6 +238,12 @@ v2-tests-goutte:
             contexts:
                 - App\Tests\Behat\v2\OrganisationManagement\OrganisationManagementFeatureContext
 
+        reporting-checklist:
+            description: Coverage of report checklist feature
+            paths: [ "%paths.base%/features-v2/reporting/admin/checklist" ]
+            contexts:
+                - App\Tests\Behat\v2\Reporting\Admin\ReportingAdminFeatureContext
+
         section-accounts:
             description: Covering the 'Accounts' section of the report
             paths: [ "%paths.base%/features-v2/reporting/sections/accounts" ]

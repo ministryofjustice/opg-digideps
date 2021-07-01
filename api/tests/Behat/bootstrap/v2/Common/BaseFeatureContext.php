@@ -180,6 +180,15 @@ class BaseFeatureContext extends MinkContext
     }
 
     /**
+     * @BeforeScenario @lay-health-welfare-submitted
+     */
+    public function createHealthWelfareSubmitted()
+    {
+        $userDetails = $this->fixtureHelper->createLayHealthWelfareSubmitted($this->testRunId);
+        $this->fixtureUsers[] = $this->layDeputySubmittedHealthWelfareDetails = new UserDetails($userDetails);
+    }
+
+    /**
      * @BeforeScenario @prof-named-hw-not-started
      */
     public function createProfNamedHealthWelfareNotStarted()
