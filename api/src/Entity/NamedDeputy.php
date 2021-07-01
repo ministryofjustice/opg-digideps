@@ -2,6 +2,7 @@
 
 namespace App\Entity;
 
+use App\v2\Registration\DTO\OrgDeputyshipDto;
 use Doctrine\Common\Collections\ArrayCollection;
 use Doctrine\ORM\Mapping as ORM;
 use JMS\Serializer\Annotation as JMS;
@@ -588,5 +589,15 @@ class NamedDeputy
         $this->corres = $corres;
 
         return $this;
+    }
+
+    public function addressHasChanged(OrgDeputyshipDto $dto)
+    {
+        return $this->getAddress1() !== $dto->getDeputyAddress1() ||
+             $this->getAddress2() !== $dto->getDeputyAddress2() ||
+             $this->getAddress3() !== $dto->getDeputyAddress3() ||
+             $this->getAddress4() !== $dto->getDeputyAddress4() ||
+             $this->getAddress5() !== $dto->getDeputyAddress5() ||
+             $this->getAddressPostcode() !== $dto->getDeputyPostcode();
     }
 }

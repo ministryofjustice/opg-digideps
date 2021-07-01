@@ -260,6 +260,10 @@ class OrgDeputyshipDTOTestHelper
             ->setFirstname($dto->getDeputyFirstname())
             ->setLastname($dto->getDeputyLastname())
             ->setAddress1($dto->getDeputyAddress1())
+            ->setAddress2($dto->getDeputyAddress2())
+            ->setAddress3($dto->getDeputyAddress3())
+            ->setAddress4($dto->getDeputyAddress4())
+            ->setAddress5($dto->getDeputyAddress5())
             ->setAddressPostcode($dto->getDeputyPostcode());
 
         $em->persist($namedDeputy);

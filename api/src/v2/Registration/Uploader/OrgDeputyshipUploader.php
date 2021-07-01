@@ -57,7 +57,7 @@ class OrgDeputyshipUploader
         $this->namedDeputyAssembler = $namedDeputyAssembler;
 
         $this->added = ['clients' => [], 'named_deputies' => [], 'reports' => [], 'organisations' => []];
-        $this->updated = ['named_deputies' => []];
+        $this->updated = ['clients' => [], 'named_deputies' => [], 'reports' => [], 'organisations' => []];
 
         $this->namedDeputy = null;
         $this->client = null;
@@ -73,6 +73,7 @@ class OrgDeputyshipUploader
     public function upload(array $deputyshipDtos)
     {
         $this->resetAdded();
+        $this->resetUpdated();
 
         $uploadResults = ['errors' => []];
 
@@ -112,16 +113,19 @@ class OrgDeputyshipUploader
             $this->em->flush();
 
             $this->added['named_deputies'][] = $namedDeputy->getId();
-        } else {
+        } elseif ($namedDeputy->addressHasChanged($dto)) {
             $namedDeputy
                 ->setAddress1($dto->getDeputyAddress1())
                 ->setAddress2($dto->getDeputyAddress2())
                 ->setAddress3($dto->getDeputyAddress3())
                 ->setAddress4($dto->getDeputyAddress4())
-                ->setAddress5($dto->getDeputyAddress5());
+                ->setAddress5($dto->getDeputyAddress5())
+                ->setAddressPostcode($dto->getDeputyPostcode());
 
             $this->em->persist($namedDeputy);
             $this->em->flush();
+
+            $this->updated['named_deputies'][] = $namedDeputy->getId();
         }
 
         $this->namedDeputy = $namedDeputy;
@@ -162,17 +166,29 @@ class OrgDeputyshipUploader
 
             $this->added['clients'][] = $dto->getCaseNumber();
         } else {
-            $client->setCourtDate($dto->getCourtDate());
+            if ($client->getCourtDate() !== $dto->getCourtDate()) {
+                $client->setCourtDate($dto->getCourtDate());
+                $this->updated['clients'][] = $client->getId();
+            }
 
             if (!$this->clientHasSwitchedOrganisation($client) && $this->clientHasNewNamedDeputy($client, $this->namedDeputy)) {
                 $client->setNamedDeputy($this->namedDeputy);
+                $this->updated['clients'][] = $client->getId();
             }
+
+            $this->updated['clients'] = array_unique($this->updated['clients']);
         }
 
         $this->em->persist($client);
         $this->em->flush();
 
         $this->client = $client;
+    }
+
+    private function clientWillBeUpdated(Client $client, OrgDeputyshipDto $dto)
+    {
+        return $client->getCourtDate() !== $dto->getCourtDate() ||
+           (!$this->clientHasSwitchedOrganisation($client) && $this->clientHasNewNamedDeputy($client, $this->namedDeputy));
     }
 
     /**
@@ -229,6 +245,11 @@ class OrgDeputyshipUploader
     private function resetAdded()
     {
         $this->added = ['clients' => [], 'named_deputies' => [], 'reports' => [], 'organisations' => []];
+    }
+
+    private function resetUpdated()
+    {
+        $this->updated = ['clients' => [], 'named_deputies' => [], 'reports' => [], 'organisations' => []];
     }
 
     private function handleDtoErrors(OrgDeputyshipDto $dto)
