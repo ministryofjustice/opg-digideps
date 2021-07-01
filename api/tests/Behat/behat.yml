@@ -226,6 +226,12 @@ v2-tests-goutte:
             contexts:
                 - App\Tests\Behat\v2\Feedback\FeedbackFeatureContext
 
+        organisation-management:
+            description: Coverage of organisation management features - adding, deleting, editing
+            paths: [ "%paths.base%/features-v2/organisation-management" ]
+            contexts:
+                - App\Tests\Behat\v2\OrganisationManagement\OrganisationManagementFeatureContext
+
         section-accounts:
             description: Covering the 'Accounts' section of the report
             paths: [ "%paths.base%/features-v2/reporting/sections/accounts" ]

@@ -37,4 +37,22 @@ trait INavigateToAdminTrait
     {
         $this->clickLink('Analytics');
     }
+
+    /**
+     * @When I navigate to the organisations page
+     */
+    public function iNavigateToOrganisationsPage()
+    {
+        $this->clickLink('Organisations');
+        $this->iAmOnAdminOrganisationSearchPage();
+    }
+
+    /**
+     * @When I navigate to the add organisation page
+     */
+    public function iNavigateToAddOrganisationPage()
+    {
+        $this->pressButton('Add a new organisation');
+        $this->iAmOnAdminAddOrganisationPage();
+    }
 }
