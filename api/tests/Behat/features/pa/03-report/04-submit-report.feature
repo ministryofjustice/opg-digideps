@@ -29,8 +29,8 @@ Feature: Report submit (client 02100014)
             | DEP1 SURNAME1                   | deputy-contact |
             | +4410000000001                  | deputy-contact |
             | behat-pa1@publicguardian.gov.uk | deputy-contact |
-            | PA OPG                          | deputy-contact |
-            | SW1                             | deputy-contact |
+            | The OPG                          | deputy-contact |
+            | SW3                             | deputy-contact |
         And I should not see the link "edit-deputy-contact"
 
 

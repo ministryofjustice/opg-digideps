@@ -38,7 +38,7 @@ Feature: Report submit (client 31000010)
             | 10000000001                       | deputy-contact |
             | behat-prof1@publicguardian.gov.uk | deputy-contact |
             | Prof OPG                          | deputy-contact |
-            | SW1                               | deputy-contact |
+            | SW3                               | deputy-contact |
         And I should not see the link "edit-deputy-contact"
 
     Scenario: 102-5 report submission

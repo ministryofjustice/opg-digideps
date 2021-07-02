@@ -79,12 +79,6 @@ default:
             contexts:
                 - App\Tests\Behat\OrganisationManagement\OrganisationManagementFeatureContext
 
-        registration:
-            description: Coverage of the self and auto registration processes
-            paths: [ "%paths.base%/features/v2/registration" ]
-            contexts:
-                - App\Tests\Behat\Registration\RegistrationFeatureContext
-
         user-management:
             description: Coverage of user management features (deleteing, editing etc)
             paths: [ "%paths.base%/features/v2/userManagement" ]
