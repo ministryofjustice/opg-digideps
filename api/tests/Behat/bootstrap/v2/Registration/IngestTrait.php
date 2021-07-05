@@ -92,6 +92,8 @@ trait IngestTrait
 
     private function updateAllEntitiesCount(string $phase)
     {
+        $this->em->clear();
+
         $this->clients[$phase] = $this->em->getRepository(Client::class)->countAllEntities();
         $this->namedDeputies[$phase] = $this->em->getRepository(NamedDeputy::class)->countAllEntities();
         $this->organisations[$phase] = $this->em->getRepository(Organisation::class)->countAllEntities();

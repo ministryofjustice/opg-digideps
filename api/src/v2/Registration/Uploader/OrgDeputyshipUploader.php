@@ -85,7 +85,7 @@ class OrgDeputyshipUploader
                 $this->handleClient($deputyshipDto);
                 $this->handleReport($deputyshipDto);
             } catch (\Throwable $e) {
-                $message = sprintf('Error for case "%s": %s', $deputyshipDto->getCaseNumber(), $e->getMessage());
+                $message = sprintf('Error for case %s: %s', $deputyshipDto->getCaseNumber(), $e->getMessage());
                 $uploadResults['errors'][] = $message;
                 continue;
             }

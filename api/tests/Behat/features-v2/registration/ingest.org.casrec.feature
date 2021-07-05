@@ -32,7 +32,7 @@ Feature: Org CSV data ingestion - casrec source data
         And I upload a 'casrec' CSV that has a new report type '103-5' for an existing report that has not been submitted or unsubmitted
         Then the report type should be updated
 
-    @super-admin
+    @super-admin @acs
     Scenario: Uploading a CSV that contains deputies with missing required information alongside valid deputy rows
         Given a super admin user accesses the admin app
         When I visit the admin upload org users page

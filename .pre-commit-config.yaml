@@ -24,8 +24,8 @@ repos:
       args: ["--rules=@PSR12,@Symfony"]
     - id: php-stan
       files: \.(php)$
--   repo: https://github.com/ministryofjustice/opg-pre-commit-hooks.git
-    rev: v0.1.0
-    hooks:
-      - id: check-for-raw-in-templates
-        args: ['-d', 'client/templates', '-c', '1']
+#-   repo: https://github.com/ministryofjustice/opg-pre-commit-hooks.git
+#    rev: v0.1.0
+#    hooks:
+#      - id: check-for-raw-in-templates
+#        args: ['-d', 'client/templates', '-c', '1']

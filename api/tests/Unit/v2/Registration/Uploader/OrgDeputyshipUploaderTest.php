@@ -386,7 +386,7 @@ class OrgDeputyshipUploaderTest extends KernelTestCase
 
         $uploadResults = $this->sut->upload($deputyships);
 
-        $errorMessage = sprintf('Error for case "%s": case number already used', $deputyships[0]->getCaseNumber());
+        $errorMessage = sprintf('Error for case %s: case number already used', $deputyships[0]->getCaseNumber());
 
         self::assertTrue(
             in_array($errorMessage, $uploadResults['errors']),
