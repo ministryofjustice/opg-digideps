@@ -51,4 +51,36 @@ trait IShouldBeOnAdminTrait
     {
         return $this->iAmOnPage('/admin\/org-csv-upload/');
     }
+
+    /**
+     * @Then I should be on the admin organisation search page
+     */
+    public function iAmOnAdminOrganisationSearchPage()
+    {
+        return $this->iAmOnPage('/admin\/organisations\//');
+    }
+
+    /**
+     * @Then I should be on the admin add organisation page
+     */
+    public function iAmOnAdminAddOrganisationPage()
+    {
+        return $this->iAmOnPage('/admin\/organisations\/add$/');
+    }
+
+    /**
+     * @Then I should be on the admin organisation overview page
+     */
+    public function iAmOnAdminOrganisationOverviewPage()
+    {
+        return $this->iAmOnPage('/admin\/organisations\/.*$/');
+    }
+
+    /**
+     * @Then I should be on the add user to organisation page
+     */
+    public function iAmOnAddUserToOrganisationPage()
+    {
+        return $this->iAmOnPage('/admin\/organisations\/.*\/add-user$/');
+    }
 }
