@@ -53,6 +53,14 @@ trait IShouldBeOnAdminTrait
     }
 
     /**
+     * @Then I should be on the admin lay csv upload page
+     */
+    public function iAmOnAdminLayCsvUploadPage()
+    {
+        return $this->iAmOnPage('/admin\/casrec-upload/');
+    }
+
+    /**
      * @Then I should be on the admin organisation search page
      */
     public function iAmOnAdminOrganisationSearchPage()

@@ -4,6 +4,7 @@ declare(strict_types=1);
 
 namespace App\Tests\Behat\v2\Registration;
 
+use App\Entity\CasRec;
 use App\Entity\Client;
 use App\Entity\NamedDeputy;
 use App\Entity\Organisation;
@@ -18,6 +19,7 @@ trait IngestTrait
     private array $namedDeputies = ['expected' => 0, 'preUpdate' => 0, 'postUpdate' => 0];
     private array $organisations = ['expected' => 0, 'preUpdate' => 0, 'postUpdate' => 0];
     private array $reports = ['expected' => 0, 'preUpdate' => 0, 'postUpdate' => 0];
+    private array $casrec = ['expected' => 0, 'preUpdate' => 0, 'postUpdate' => 0];
     private array $expectedMissingDTOProperties = [];
 
     private ?DateTime $expectedClientCourtDate = null;
@@ -27,9 +29,11 @@ trait IngestTrait
     private string $expectedReportType = '';
     private string $expectedCaseNumberAssociatedWithError = '';
     private string $expectedUnexpectedColumn = '';
+    private string $expectedCorref = '';
+    private string $expectedCaseNumber = '';
 
     /**
-     * @When I upload a :source CSV that contains the following new entities:
+     * @When I upload a :source org CSV that contains the following new entities:
      */
     public function iUploadACsvThatContainsTheFollowingNewEntities(string $source, TableNode $table)
     {
@@ -63,11 +67,11 @@ trait IngestTrait
     }
 
     /**
-     * @Then the new entities should be added to the database
+     * @Then the new :type entities should be added to the database
      */
-    public function theNewEntitiesShouldBeAddedToTheDatabase()
+    public function theNewEntitiesShouldBeAddedToTheDatabase(string $type)
     {
-        $this->iAmOnAdminOrgCsvUploadPage();
+        $this->iAmOnCorrectUploadPage($type);
 
         $this->updateAllEntitiesCount('postUpdate');
 
@@ -75,19 +79,24 @@ trait IngestTrait
         $this->assertIntEqualsInt($this->namedDeputies['expected'], $this->namedDeputies['postUpdate'] - $this->namedDeputies['preUpdate'], 'Post update minus pre update entities count - named deputies');
         $this->assertIntEqualsInt($this->organisations['expected'], $this->organisations['postUpdate'] - $this->organisations['preUpdate'], 'Post update minus pre update entities count - organisations');
         $this->assertIntEqualsInt($this->reports['expected'], $this->reports['postUpdate'] - $this->reports['preUpdate'], 'Post update minus pre update entities count - reports');
+        $this->assertIntEqualsInt($this->casrec['expected'], $this->casrec['postUpdate'] - $this->casrec['preUpdate'], 'Post update minus pre update entities count - casrec');
     }
 
     /**
-     * @Then the count of the new entities added should be displayed on the page
+     * @Then the count of the new :type entities added should be displayed on the page
      */
-    public function theNewEntitiesCountShouldBeDisplayed()
+    public function theNewEntitiesCountShouldBeDisplayed(string $type)
     {
-        $this->iAmOnAdminOrgCsvUploadPage();
+        $this->iAmOnCorrectUploadPage($type);
 
-        $this->assertOnAlertMessage(sprintf('%s clients', $this->clients['expected']));
-        $this->assertOnAlertMessage(sprintf('%s named deputies', $this->namedDeputies['expected']));
-        $this->assertOnAlertMessage(sprintf('%s organisation', $this->organisations['expected']));
-        $this->assertOnAlertMessage(sprintf('%s reports', $this->reports['expected']));
+        if ('org' === $type) {
+            $this->assertOnAlertMessage(sprintf('%s clients', $this->clients['expected']));
+            $this->assertOnAlertMessage(sprintf('%s named deputies', $this->namedDeputies['expected']));
+            $this->assertOnAlertMessage(sprintf('%s organisation', $this->organisations['expected']));
+            $this->assertOnAlertMessage(sprintf('%s reports', $this->reports['expected']));
+        } else {
+            $this->assertOnAlertMessage(sprintf('%s record uploaded', $this->casrec['expected']));
+        }
     }
 
     private function updateAllEntitiesCount(string $phase)
@@ -98,10 +107,11 @@ trait IngestTrait
         $this->namedDeputies[$phase] = $this->em->getRepository(NamedDeputy::class)->countAllEntities();
         $this->organisations[$phase] = $this->em->getRepository(Organisation::class)->countAllEntities();
         $this->reports[$phase] = $this->em->getRepository(Report::class)->countAllEntities();
+        $this->casrec[$phase] = $this->em->getRepository(CasRec::class)->countAllEntities();
     }
 
     /**
-     * @When I upload a :source CSV that has a new made date :newMadeDate and named deputy :newNamedDeputy within the same org as the clients existing name deputy
+     * @When I upload a :source org CSV that has a new made date :newMadeDate and named deputy :newNamedDeputy within the same org as the clients existing name deputy
      */
     public function iUploadACsvThatHasANewMadeDateAndNamedDeputyWithinTheSameOrgAsTheClientsExistingNameDeputy(string $source, string $newMadeDate, string $newNamedDeputy)
     {
@@ -141,7 +151,7 @@ trait IngestTrait
     }
 
     /**
-     * @When I upload a :source CSV that has a new address :address for an existing named deputy
+     * @When I upload a :source org CSV that has a new address :address for an existing named deputy
      */
     public function iUploadACsvThatHasANewAddressAndPhoneDetailsForAnExistingNamedDeputy(string $source, string $address)
     {
@@ -188,7 +198,7 @@ trait IngestTrait
     }
 
     /**
-     * @When I upload a :source CSV that has a new report type :reportTypeNumber for an existing report that has not been submitted or unsubmitted
+     * @When I upload a :source org CSV that has a new report type :reportTypeNumber for an existing report that has not been submitted or unsubmitted
      */
     public function iUploadACsvThatHasANewReportType(string $source, string $reportTypeNumber)
     {
@@ -224,7 +234,7 @@ trait IngestTrait
     }
 
     /**
-     * @When I upload a :source CSV that has 1 row with missing values 'Last Report Day, Made Date, Email' for case number :caseNumber and 1 valid row
+     * @When I upload a :source org CSV that has 1 row with missing values 'Last Report Day, Made Date, Email' for case number :caseNumber and 1 valid row
      */
     public function iUploadACsvThatHasMissingValueAndOneValidRow(string $source, string $caseNumber)
     {
@@ -248,11 +258,11 @@ trait IngestTrait
     }
 
     /**
-     * @Then I should see an error showing the problem
+     * @Then I should see an error showing the problem on the :type csv upload page
      */
-    public function iShouldSeeErrorShowingProblem()
+    public function iShouldSeeErrorShowingProblem(string $type)
     {
-        $this->iAmOnAdminOrgCsvUploadPage();
+        $this->iAmOnCorrectUploadPage($type);
 
         foreach ($this->expectedMissingDTOProperties as $expectedMissingDTOProperty) {
             $this->assertOnErrorMessage($expectedMissingDTOProperty);
@@ -262,47 +272,64 @@ trait IngestTrait
     }
 
     /**
-     * @When I upload a :source CSV that does not have any of the required columns
+     * @When I upload a :source :userType CSV that does not have any of the required columns
      */
-    public function iUploadACsvThatHasMissingDeputyNoColumn(string $source)
+    public function iUploadACsvThatHasMissingDeputyNoColumn(string $source, string $userType)
     {
-        $this->iAmOnAdminOrgCsvUploadPage();
+        $this->iAmOnCorrectUploadPage($userType);
 
-        $this->attachFileToField('admin_upload[file]', 'org-1-row-missing-all-required-columns.csv');
-        $this->pressButton('Upload PA/Prof users');
+        $csvFilename = ('org' === $userType) ? 'org-1-row-missing-all-required-columns.csv' : 'lay-1-row-missing-all-required-columns.csv';
+        $buttonText = ('org' === $userType) ? 'Upload PA/Prof users' : 'Upload Lay users';
+
+        $this->attachFileToField('admin_upload[file]', $csvFilename);
+        $this->pressButton($buttonText);
         $this->waitForAjaxAndRefresh();
     }
 
     /**
-     * @Then I should see an error showing which columns are missing
+     * @Then I should see an error showing which columns are missing on the :userType csv upload page
      */
-    public function iShouldSeeErrorShowingMissingColumns()
+    public function iShouldSeeErrorShowingMissingColumns(string $userType)
     {
-        $this->iAmOnAdminOrgCsvUploadPage();
+        $this->iAmOnCorrectUploadPage($userType);
 
-        $requiredColumns = [
-            'Deputy No',
-            'Dep Postcode',
-            'Dep Forename',
-            'Dep Surname',
-            'Dep Type',
-            'Dep Adrs1',
-            'Dep Adrs2',
-            'Dep Adrs3',
-            'Dep Adrs4',
-            'Dep Adrs5',
-            'Dep Postcode',
-            'Email',
-            'Email2',
-            'Email3',
-            'Case',
-            'Forename',
-            'Surname',
-            'Corref',
-            'Typeofrep',
-            'Last Report Day',
-            'Made Date',
-        ];
+        if ('org' === strtolower($userType)) {
+            $requiredColumns = [
+                'Deputy No',
+                'Dep Postcode',
+                'Dep Forename',
+                'Dep Surname',
+                'Dep Type',
+                'Dep Adrs1',
+                'Dep Adrs2',
+                'Dep Adrs3',
+                'Dep Adrs4',
+                'Dep Adrs5',
+                'Dep Postcode',
+                'Email',
+                'Email2',
+                'Email3',
+                'Case',
+                'Forename',
+                'Surname',
+                'Corref',
+                'Typeofrep',
+                'Last Report Day',
+                'Made Date',
+            ];
+        } else {
+            $requiredColumns = [
+                'Case',
+                'Surname',
+                'Deputy No',
+                'Dep Surname',
+                'Dep Postcode',
+                'Typeofrep',
+                'Corref',
+                'NDR',
+                'Made Date',
+            ];
+        }
 
         foreach ($requiredColumns as $requiredColumn) {
             $this->assertOnErrorMessage($requiredColumn);
@@ -310,7 +337,7 @@ trait IngestTrait
     }
 
     /**
-     * @When I upload a :source CSV that has an/a :columnName column
+     * @When I upload a :source org CSV that has an/a :columnName column
      */
     public function iUploadACsvThatHasNdrColumn(string $source, string $columnName)
     {
@@ -331,5 +358,95 @@ trait IngestTrait
         $this->iAmOnAdminOrgCsvUploadPage();
 
         $this->assertOnErrorMessage($this->expectedUnexpectedColumn);
+    }
+
+    /**
+     * @When I upload a :source lay CSV that contains :newEntitiesCount new casrec entities
+     */
+    public function iUploadCsvContaining3CasrecEntities(string $source, int $newEntitiesCount)
+    {
+        $this->iamOnAdminUploadUsersPage();
+
+        if ('casrec' === $source) {
+            $this->casrec['expected'] = $newEntitiesCount;
+
+            $this->em->getRepository(CasRec::class)->deleteAllBySource($source);
+
+            $this->updateAllEntitiesCount('preUpdate');
+
+            $this->selectOption('form[type]', 'lay');
+            $this->pressButton('Continue');
+
+            $this->attachFileToField('admin_upload[file]', 'lay-3-valid-rows.csv');
+            $this->pressButton('Upload Lay users');
+            $this->waitForAjaxAndRefresh();
+        } elseif ('sirius' === $source) {
+            // Add Sirius steps
+        } else {
+            throw new BehatException('$source should be casrec or sirius');
+        }
+    }
+
+    private function iAmOnCorrectUploadPage(string $type)
+    {
+        if (!in_array(strtolower($type), ['org', 'lay'])) {
+            throw new BehatException('$type can only be lay or org');
+        }
+
+        'org' === $type ? $this->iAmOnAdminOrgCsvUploadPage() : $this->iAmOnAdminLayCsvUploadPage();
+    }
+
+    /**
+     * @When I upload a :source lay CSV that has a new report type :reportTypeNumber and corref :corref for case number :caseNumber
+     */
+    public function iUploadLayCsvWithNewReportType(string $source, string $reportTypeNumber, string $corref, string $caseNumber)
+    {
+        $this->iAmOnAdminLayCsvUploadPage();
+
+        $this->expectedReportType = $reportTypeNumber;
+        $this->expectedCorref = $corref;
+        $this->expectedCaseNumber = $caseNumber;
+
+        $this->createPfaHighNotStarted($caseNumber);
+
+        $this->attachFileToField('admin_upload[file]', 'lay-1-row-updated-report-type.csv');
+        $this->pressButton('Upload Lay users');
+        $this->waitForAjaxAndRefresh();
+    }
+
+    /**
+     * @Then the clients report type should be updated
+     */
+    public function theClientsReportTypeShouldBeUpdated()
+    {
+        $this->iAmOnAdminLayCsvUploadPage();
+
+        $this->em->clear();
+        $client = $this->em->getRepository(Client::class)->find($this->layDeputyNotStartedPfaHighAssetsDetails->getClientId());
+
+        $this->assertStringEqualsString(
+            $this->expectedReportType,
+            $client->getCurrentReport()->getType(),
+            'Comparing expected report type to clients report type'
+        );
+    }
+
+    /**
+     * @When I upload a :source lay CSV that has 1 row with missing values for 'caseNumber, clientLastname, DeputyNo and deputySurname' and :newEntitiesCount valid row
+     */
+    public function iUploadCsvWith1ValidAnd1InvalidRow(string $source, int $newEntitiesCount)
+    {
+        $this->iAmOnAdminLayCsvUploadPage();
+
+        $this->expectedMissingDTOProperties = ['caseNumber', 'clientLastname', 'deputyNo', 'deputySurname'];
+        $this->casrec['expected'] = $newEntitiesCount;
+
+        $this->em->getRepository(CasRec::class)->deleteAllBySource($source);
+
+        $this->updateAllEntitiesCount('preUpdate');
+
+        $this->attachFileToField('admin_upload[file]', 'lay-1-row-missing-all-required-1-valid-row.csv');
+        $this->pressButton('Upload Lay users');
+        $this->waitForAjaxAndRefresh();
     }
 }
