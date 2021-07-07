@@ -30,7 +30,6 @@ trait IngestTrait
     private string $expectedCaseNumberAssociatedWithError = '';
     private string $expectedUnexpectedColumn = '';
     private string $expectedCorref = '';
-    private string $expectedCaseNumber = '';
 
     /**
      * @When I upload a :source org CSV that contains the following new entities:
@@ -56,7 +55,7 @@ trait IngestTrait
             $this->selectOption('form[type]', 'org');
             $this->pressButton('Continue');
 
-            $this->attachFileToField('admin_upload[file]', 'org-3-valid-rows.csv');
+            $this->attachFileToField('admin_upload[file]', 'casrec-csvs/org-3-valid-rows.csv');
             $this->pressButton('Upload PA/Prof users');
             $this->waitForAjaxAndRefresh();
         } elseif ('sirius' === $source) {
@@ -122,7 +121,7 @@ trait IngestTrait
 
         $this->createProfAdminNotStarted(null, 'professor@mccracken4.com', '40000000');
 
-        $this->attachFileToField('admin_upload[file]', 'org-1-updated-row-made-date-and-named-deputy.csv');
+        $this->attachFileToField('admin_upload[file]', 'casrec-csvs/org-1-updated-row-made-date-and-named-deputy.csv');
         $this->pressButton('Upload PA/Prof users');
         $this->waitForAjaxAndRefresh();
     }
@@ -161,7 +160,7 @@ trait IngestTrait
 
         $this->createProfAdminNotStarted(null, 'him@jojo5.com', '50000000', '66648');
 
-        $this->attachFileToField('admin_upload[file]', 'org-1-updated-row-named-deputy-address.csv');
+        $this->attachFileToField('admin_upload[file]', 'casrec-csvs/org-1-updated-row-named-deputy-address.csv');
         $this->pressButton('Upload PA/Prof users');
         $this->waitForAjaxAndRefresh();
     }
@@ -208,7 +207,7 @@ trait IngestTrait
 
         $this->createProfAdminNotStarted(null, 'fuzzy.lumpkins@jojo6.com', '60000000', '112233');
 
-        $this->attachFileToField('admin_upload[file]', 'org-1-updated-row-report-type.csv');
+        $this->attachFileToField('admin_upload[file]', 'casrec-csvs/org-1-updated-row-report-type.csv');
         $this->pressButton('Upload PA/Prof users');
         $this->waitForAjaxAndRefresh();
     }
@@ -252,7 +251,7 @@ trait IngestTrait
 
         $this->updateAllEntitiesCount('preUpdate');
 
-        $this->attachFileToField('admin_upload[file]', 'org-1-row-missing-last-report-date-1-valid-row.csv');
+        $this->attachFileToField('admin_upload[file]', 'casrec-csvs/org-1-row-missing-last-report-date-1-valid-row.csv');
         $this->pressButton('Upload PA/Prof users');
         $this->waitForAjaxAndRefresh();
     }
@@ -276,9 +275,18 @@ trait IngestTrait
      */
     public function iUploadACsvThatHasMissingDeputyNoColumn(string $source, string $userType)
     {
+        if (!in_array($source, ['casrec', 'sirius'])) {
+            throw new BehatException('$source should be casrec or sirius');
+        }
+
         $this->iAmOnCorrectUploadPage($userType);
 
-        $csvFilename = ('org' === $userType) ? 'org-1-row-missing-all-required-columns.csv' : 'lay-1-row-missing-all-required-columns.csv';
+        if ('casrec' === $source) {
+            $csvFilename = ('org' === $userType) ? 'casrec-csvs/org-1-row-missing-all-required-columns.csv' : 'casrec-csvs/lay-1-row-missing-all-required-columns.csv';
+        } else {
+            $csvFilename = 'sirius-csvs/lay-1-row-missing-all-required-columns.csv';
+        }
+
         $buttonText = ('org' === $userType) ? 'Upload PA/Prof users' : 'Upload Lay users';
 
         $this->attachFileToField('admin_upload[file]', $csvFilename);
@@ -287,9 +295,9 @@ trait IngestTrait
     }
 
     /**
-     * @Then I should see an error showing which columns are missing on the :userType csv upload page
+     * @Then I should see an error showing which :source columns are missing on the :userType csv upload page
      */
-    public function iShouldSeeErrorShowingMissingColumns(string $userType)
+    public function iShouldSeeErrorShowingMissingColumns(string $source, string $userType)
     {
         $this->iAmOnCorrectUploadPage($userType);
 
@@ -325,10 +333,12 @@ trait IngestTrait
                 'Dep Surname',
                 'Dep Postcode',
                 'Typeofrep',
-                'Corref',
-                'NDR',
                 'Made Date',
             ];
+
+            if ('casrec' === $source) {
+                array_push($requiredColumns, 'Corref', 'NDR');
+            }
         }
 
         foreach ($requiredColumns as $requiredColumn) {
@@ -345,7 +355,7 @@ trait IngestTrait
 
         $this->expectedUnexpectedColumn = $columnName;
 
-        $this->attachFileToField('admin_upload[file]', 'org-1-row-with-ndr-column.csv');
+        $this->attachFileToField('admin_upload[file]', 'casrec-csvs/org-1-row-with-ndr-column.csv');
         $this->pressButton('Upload PA/Prof users');
         $this->waitForAjaxAndRefresh();
     }
@@ -365,26 +375,25 @@ trait IngestTrait
      */
     public function iUploadCsvContaining3CasrecEntities(string $source, int $newEntitiesCount)
     {
-        $this->iamOnAdminUploadUsersPage();
-
-        if ('casrec' === $source) {
-            $this->casrec['expected'] = $newEntitiesCount;
-
-            $this->em->getRepository(CasRec::class)->deleteAllBySource($source);
-
-            $this->updateAllEntitiesCount('preUpdate');
-
-            $this->selectOption('form[type]', 'lay');
-            $this->pressButton('Continue');
-
-            $this->attachFileToField('admin_upload[file]', 'lay-3-valid-rows.csv');
-            $this->pressButton('Upload Lay users');
-            $this->waitForAjaxAndRefresh();
-        } elseif ('sirius' === $source) {
-            // Add Sirius steps
-        } else {
+        if (!in_array($source, ['casrec', 'sirius'])) {
             throw new BehatException('$source should be casrec or sirius');
         }
+
+        $this->iamOnAdminUploadUsersPage();
+
+        $this->casrec['expected'] = $newEntitiesCount;
+
+        $this->em->getRepository(CasRec::class)->deleteAllBySource($source);
+
+        $this->updateAllEntitiesCount('preUpdate');
+
+        $this->selectOption('form[type]', 'lay');
+        $this->pressButton('Continue');
+
+        $filePath = 'casrec' === $source ? 'casrec-csvs/lay-3-valid-rows.csv' : 'sirius-csvs/lay-3-valid-rows.csv';
+        $this->attachFileToField('admin_upload[file]', $filePath);
+        $this->pressButton('Upload Lay users');
+        $this->waitForAjaxAndRefresh();
     }
 
     private function iAmOnCorrectUploadPage(string $type)
@@ -397,19 +406,18 @@ trait IngestTrait
     }
 
     /**
-     * @When I upload a :source lay CSV that has a new report type :reportTypeNumber and corref :corref for case number :caseNumber
+     * @When I upload a :source lay CSV that has a new report type :reportTypeNumber and corref for case number :caseNumber
      */
-    public function iUploadLayCsvWithNewReportType(string $source, string $reportTypeNumber, string $corref, string $caseNumber)
+    public function iUploadLayCsvWithNewReportType(string $source, string $reportTypeNumber, string $caseNumber)
     {
         $this->iAmOnAdminLayCsvUploadPage();
 
         $this->expectedReportType = $reportTypeNumber;
-        $this->expectedCorref = $corref;
-        $this->expectedCaseNumber = $caseNumber;
 
         $this->createPfaHighNotStarted($caseNumber);
 
-        $this->attachFileToField('admin_upload[file]', 'lay-1-row-updated-report-type.csv');
+        $filePath = 'casrec' === $source ? 'casrec-csvs/lay-1-row-updated-report-type.csv' : 'sirius-csvs/lay-1-row-updated-report-type.csv';
+        $this->attachFileToField('admin_upload[file]', $filePath);
         $this->pressButton('Upload Lay users');
         $this->waitForAjaxAndRefresh();
     }
@@ -445,7 +453,8 @@ trait IngestTrait
 
         $this->updateAllEntitiesCount('preUpdate');
 
-        $this->attachFileToField('admin_upload[file]', 'lay-1-row-missing-all-required-1-valid-row.csv');
+        $filePath = 'casrec' === $source ? 'casrec-csvs/lay-1-row-missing-all-required-1-valid-row.csv' : 'sirius-csvs/lay-1-row-missing-all-required-1-valid-row.csv';
+        $this->attachFileToField('admin_upload[file]', $filePath);
         $this->pressButton('Upload Lay users');
         $this->waitForAjaxAndRefresh();
     }
