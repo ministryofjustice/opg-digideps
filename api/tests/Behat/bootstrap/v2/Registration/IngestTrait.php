@@ -29,7 +29,6 @@ trait IngestTrait
     private string $expectedReportType = '';
     private string $expectedCaseNumberAssociatedWithError = '';
     private string $expectedUnexpectedColumn = '';
-    private string $expectedCorref = '';
 
     /**
      * @When I upload a :source org CSV that contains the following new entities:
