@@ -74,11 +74,14 @@ trait IngestTrait
 
         $this->updateAllEntitiesCount('postUpdate');
 
-        $this->assertIntEqualsInt($this->clients['expected'], $this->clients['postUpdate'] - $this->clients['preUpdate'], 'Post update minus pre update entities count - clients');
-        $this->assertIntEqualsInt($this->namedDeputies['expected'], $this->namedDeputies['postUpdate'] - $this->namedDeputies['preUpdate'], 'Post update minus pre update entities count - named deputies');
-        $this->assertIntEqualsInt($this->organisations['expected'], $this->organisations['postUpdate'] - $this->organisations['preUpdate'], 'Post update minus pre update entities count - organisations');
-        $this->assertIntEqualsInt($this->reports['expected'], $this->reports['postUpdate'] - $this->reports['preUpdate'], 'Post update minus pre update entities count - reports');
-        $this->assertIntEqualsInt($this->casrec['expected'], $this->casrec['postUpdate'] - $this->casrec['preUpdate'], 'Post update minus pre update entities count - casrec');
+        if ('org' === $type) {
+            $this->assertIntEqualsInt($this->clients['expected'], $this->clients['postUpdate'] - $this->clients['preUpdate'], 'Post update minus pre update entities count - clients');
+            $this->assertIntEqualsInt($this->namedDeputies['expected'], $this->namedDeputies['postUpdate'] - $this->namedDeputies['preUpdate'], 'Post update minus pre update entities count - named deputies');
+            $this->assertIntEqualsInt($this->organisations['expected'], $this->organisations['postUpdate'] - $this->organisations['preUpdate'], 'Post update minus pre update entities count - organisations');
+            $this->assertIntEqualsInt($this->reports['expected'], $this->reports['postUpdate'] - $this->reports['preUpdate'], 'Post update minus pre update entities count - reports');
+        } else {
+            $this->assertIntEqualsInt($this->casrec['expected'], $this->casrec['postUpdate'] - $this->casrec['preUpdate'], 'Post update minus pre update entities count - casrec');
+        }
     }
 
     /**
