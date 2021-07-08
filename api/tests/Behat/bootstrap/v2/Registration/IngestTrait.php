@@ -15,12 +15,18 @@ use DateTime;
 
 trait IngestTrait
 {
-    private array $clients = ['expected' => 0, 'preUpdate' => 0, 'postUpdate' => 0];
-    private array $namedDeputies = ['expected' => 0, 'preUpdate' => 0, 'postUpdate' => 0];
-    private array $organisations = ['expected' => 0, 'preUpdate' => 0, 'postUpdate' => 0];
-    private array $reports = ['expected' => 0, 'preUpdate' => 0, 'postUpdate' => 0];
-    private array $casrec = ['expected' => 0, 'preUpdate' => 0, 'postUpdate' => 0];
+    private array $clients = ['expected' => 0, 'found' => 0];
+    private array $namedDeputies = ['expected' => 0, 'found' => 0];
+    private array $organisations = ['expected' => 0, 'found' => 0];
+    private array $reports = ['expected' => 0, 'found' => 0];
+    private array $casrec = ['expected' => 0, 'found' => 0];
     private array $expectedMissingDTOProperties = [];
+    private array $entityUids = [
+        'client_case_numbers' => [],
+        'named_deputy_numbers' => [],
+        'org_email_identifiers' => [],
+        'casrec_case_numbers' => [],
+    ];
 
     private ?DateTime $expectedClientCourtDate = null;
 
@@ -49,14 +55,16 @@ trait IngestTrait
             $this->organisations['expected'] = intval($hash[0]['organisations']);
             $this->reports['expected'] = intval($hash[0]['reports']);
 
-            $this->updateAllEntitiesCount('preUpdate');
-
             $this->selectOption('form[type]', 'org');
             $this->pressButton('Continue');
 
-            $this->attachFileToField('admin_upload[file]', 'casrec-csvs/org-3-valid-rows.csv');
+            $csvFilepath = 'casrec-csvs/org-3-valid-rows.csv';
+            $this->attachFileToField('admin_upload[file]', $csvFilepath);
             $this->pressButton('Upload PA/Prof users');
             $this->waitForAjaxAndRefresh();
+
+            $this->extractUidsFromCsv($csvFilepath);
+            $this->getCreatedEntities();
         } elseif ('sirius' === $source) {
             // Add Sirius steps
         } else {
@@ -71,15 +79,13 @@ trait IngestTrait
     {
         $this->iAmOnCorrectUploadPage($type);
 
-        $this->updateAllEntitiesCount('postUpdate');
-
         if ('org' === $type) {
-            $this->assertIntEqualsInt($this->clients['expected'], $this->clients['postUpdate'] - $this->clients['preUpdate'], 'Post update minus pre update entities count - clients');
-            $this->assertIntEqualsInt($this->namedDeputies['expected'], $this->namedDeputies['postUpdate'] - $this->namedDeputies['preUpdate'], 'Post update minus pre update entities count - named deputies');
-            $this->assertIntEqualsInt($this->organisations['expected'], $this->organisations['postUpdate'] - $this->organisations['preUpdate'], 'Post update minus pre update entities count - organisations');
-            $this->assertIntEqualsInt($this->reports['expected'], $this->reports['postUpdate'] - $this->reports['preUpdate'], 'Post update minus pre update entities count - reports');
+            $this->assertIntEqualsInt($this->clients['expected'], count($this->clients['found']), 'Post update minus pre update entities count - clients');
+            $this->assertIntEqualsInt($this->namedDeputies['expected'], count($this->namedDeputies['found']), 'Post update minus pre update entities count - named deputies');
+            $this->assertIntEqualsInt($this->organisations['expected'], count($this->organisations['found']), 'Post update minus pre update entities count - organisations');
+            $this->assertIntEqualsInt($this->reports['expected'], count($this->reports['found']), 'Post update minus pre update entities count - reports');
         } else {
-            $this->assertIntEqualsInt($this->casrec['expected'], $this->casrec['postUpdate'] - $this->casrec['preUpdate'], 'Post update minus pre update entities count - casrec');
+            $this->assertIntEqualsInt($this->casrec['expected'], count($this->casrec['found']), 'Post update minus pre update entities count - casrec');
         }
     }
 
@@ -100,15 +106,53 @@ trait IngestTrait
         }
     }
 
-    private function updateAllEntitiesCount(string $phase)
+    private function extractUidsFromCsv($csvFilePath)
+    {
+        if ($this->getMinkParameter('files_path')) {
+            $fullPath = rtrim(realpath($this->getMinkParameter('files_path')), DIRECTORY_SEPARATOR).DIRECTORY_SEPARATOR.$csvFilePath;
+            if (is_file($fullPath)) {
+                $csvFilePath = $fullPath;
+            }
+        }
+
+        $csvRows = array_map('str_getcsv', file($csvFilePath));
+        array_walk($csvRows, function(&$a) use ($csvRows) {
+            $a = array_combine($csvRows[0], $a);
+        });
+        array_shift($csvRows); # remove column header
+
+        foreach($csvRows as $row) {
+            $this->entityUids['client_case_numbers'][] = $row['Case'];
+            $this->entityUids['named_deputy_numbers'][] = $row['Deputy No'];
+            $this->entityUids['org_email_identifiers'][] = substr(strstr($row['Email'], '@'), 1);
+
+        }
+
+        $this->entityUids['client_case_numbers'] = array_unique($this->entityUids['client_case_numbers']);
+        $this->entityUids['named_deputy_numbers'] = array_unique($this->entityUids['named_deputy_numbers']);
+        $this->entityUids['org_email_identifiers'] = array_unique($this->entityUids['org_email_identifiers']);
+
+        var_dump($this->entityUids);
+    }
+
+    private function getCreatedEntities()
     {
         $this->em->clear();
 
-        $this->clients[$phase] = $this->em->getRepository(Client::class)->countAllEntities();
-        $this->namedDeputies[$phase] = $this->em->getRepository(NamedDeputy::class)->countAllEntities();
-        $this->organisations[$phase] = $this->em->getRepository(Organisation::class)->countAllEntities();
-        $this->reports[$phase] = $this->em->getRepository(Report::class)->countAllEntities();
-        $this->casrec[$phase] = $this->em->getRepository(CasRec::class)->countAllEntities();
+        $this->clients['found'] = $this->em->getRepository(Client::class)->findBy(['caseNumber' => $this->entityUids['client_case_numbers']]);
+        $this->namedDeputies['found'] = $this->em->getRepository(NamedDeputy::class)->findBy(['deputyNo' => $this->entityUids['named_deputy_numbers']]);
+        $this->organisations['found'] = $this->em->getRepository(Organisation::class)->findBy(['emailIdentifier' => $this->entityUids['org_email_identifiers']]);
+        $this->casrec['found'] = $this->em->getRepository(CasRec::class)->findBy(['caseNumber' => $this->entityUids['casrec_case_numbers']]);
+
+        $reports = [];
+
+        foreach($this->clients['found'] as $client) {
+            foreach($client->getReports() as $report) {
+                $reports[] = $report;
+            }
+        }
+
+        $this->reports['found'] = $reports;
     }
 
     /**
@@ -127,6 +171,8 @@ trait IngestTrait
         $this->pressButton('Upload PA/Prof users');
         $this->waitForAjaxAndRefresh();
     }
+
+    private fun funtiouploadCSVAcdUpdateEnti
 
     /**
      * @Then the clients made date and named deputy should be updated
@@ -251,7 +297,7 @@ trait IngestTrait
 
         $this->createProfAdminNotStarted();
 
-        $this->updateAllEntitiesCount('preUpdate');
+        $this->getCreatedEntities('preUpdate');
 
         $this->attachFileToField('admin_upload[file]', 'casrec-csvs/org-1-row-missing-last-report-date-1-valid-row.csv');
         $this->pressButton('Upload PA/Prof users');
@@ -387,7 +433,7 @@ trait IngestTrait
 
         $this->em->getRepository(CasRec::class)->deleteAllBySource($source);
 
-        $this->updateAllEntitiesCount('preUpdate');
+        $this->getCreatedEntities('preUpdate');
 
         $this->selectOption('form[type]', 'lay');
         $this->pressButton('Continue');
@@ -453,7 +499,7 @@ trait IngestTrait
 
         $this->em->getRepository(CasRec::class)->deleteAllBySource($source);
 
-        $this->updateAllEntitiesCount('preUpdate');
+        $this->getCreatedEntities('preUpdate');
 
         $filePath = 'casrec' === $source ? 'casrec-csvs/lay-1-row-missing-all-required-1-valid-row.csv' : 'sirius-csvs/lay-1-row-missing-all-required-1-valid-row.csv';
         $this->attachFileToField('admin_upload[file]', $filePath);
