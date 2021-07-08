@@ -468,7 +468,7 @@ trait IngestTrait
 
         $this->expectedReportType = $reportTypeNumber;
 
-        $this->createPfaHighNotStarted($caseNumber);
+        $this->createPfaHighNotStarted(null, $caseNumber);
 
         $filePath = 'casrec' === $source ? 'casrec-csvs/lay-1-row-updated-report-type.csv' : 'sirius-csvs/lay-1-row-updated-report-type.csv';
 
