@@ -119,9 +119,9 @@ class BaseFeatureContext extends MinkContext
     /**
      * @BeforeScenario @lay-pfa-high-not-started
      */
-    public function createPfaHighNotStarted()
+    public function createPfaHighNotStarted(?BeforeScenarioScope $scenario = null, ?string $caseNumber = null)
     {
-        $userDetails = $this->fixtureHelper->createLayPfaHighAssetsNotStarted($this->testRunId);
+        $userDetails = $this->fixtureHelper->createLayPfaHighAssetsNotStarted($this->testRunId, $caseNumber);
         $this->fixtureUsers[] = $this->layDeputyNotStartedPfaHighAssetsDetails = new UserDetails($userDetails);
     }
 

@@ -334,9 +334,9 @@ class FixtureHelper
         $this->addOrgClientsNamedDeputyAndReportsToOrgDeputy($this->profAdminSubmitted, $organisation, true, true);
     }
 
-    private function addClientsAndReportsToLayDeputy(User $deputy, bool $completed = false, bool $submitted = false, ?string $type = null)
+    private function addClientsAndReportsToLayDeputy(User $deputy, bool $completed = false, bool $submitted = false, ?string $type = null, ?string $caseNumber = null)
     {
-        $client = $this->clientTestHelper->generateClient($this->em, $deputy);
+        $client = $this->clientTestHelper->generateClient($this->em, $deputy, null, $caseNumber);
         $report = $this->reportTestHelper->generateReport($this->em, $client, $type);
 
         $client->addReport($report);
@@ -432,7 +432,7 @@ class FixtureHelper
         $this->em->flush();
     }
 
-    public function createLayPfaHighAssetsNotStarted(string $testRunId)
+    public function createLayPfaHighAssetsNotStarted(string $testRunId, ?string $caseNumber = null)
     {
         $this->layPfaHighAssetsNotStarted = $this->createClientAndReport(
             $testRunId,
@@ -440,7 +440,9 @@ class FixtureHelper
             'lay-pfa-high-assets-not-started',
             Report::TYPE_102,
             false,
-            false
+            false,
+            false,
+            $caseNumber
         );
 
         return self::buildUserDetails($this->layPfaHighAssetsNotStarted);
@@ -803,7 +805,7 @@ class FixtureHelper
         return $organisation;
     }
 
-    private function createClientAndReport(string $testRunId, $userRole, $emailPrefix, $reportType, $completed, $submitted, bool $ndr = false)
+    private function createClientAndReport(string $testRunId, $userRole, $emailPrefix, $reportType, $completed, $submitted, bool $ndr = false, ?string $caseNumber = null)
     {
         if ('prod' === $this->symfonyEnvironment) {
             throw new BehatException('Prod mode enabled - cannot create fixture users');
@@ -817,7 +819,7 @@ class FixtureHelper
         if ($ndr) {
             $this->addClientsAndReportsToNdrLayDeputy($client, $completed, $submitted);
         } else {
-            $this->addClientsAndReportsToLayDeputy($client, $completed, $submitted, $reportType);
+            $this->addClientsAndReportsToLayDeputy($client, $completed, $submitted, $reportType, $caseNumber);
         }
 
         $this->setClientPassword($client);

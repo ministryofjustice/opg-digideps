@@ -47,6 +47,7 @@ trait PageUrlsTrait
     private string $adminUserResearchReportUrl = '/admin/stats/user-research';
     private string $adminUploadUsersUrl = '/admin/upload';
     private string $adminUploadOrgUsersUrl = '/admin/org-csv-upload';
+    private string $adminUploadLayUsersUrl = '/admin/casrec-upload';
     private string $adminViewUserUrl = '/admin/user/%s';
 
     // Fixtures
@@ -250,5 +251,10 @@ trait PageUrlsTrait
     public function getAdminUploadOrgUsersUrl(): string
     {
         return $this->adminUploadOrgUsersUrl;
+    }
+
+    public function getAdminUploadLayUsersUrl(): string
+    {
+        return $this->adminUploadLayUsersUrl;
     }
 }

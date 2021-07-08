@@ -155,4 +155,12 @@ trait IVisitAdminTrait
     {
         $this->visitAdminPath($this->getAdminUploadOrgUsersUrl());
     }
+
+    /**
+     * @When I visit the admin upload lay users page
+     */
+    public function iVisitAdminUploadLayUsersPage()
+    {
+        $this->visitAdminPath($this->getAdminUploadLayUsersUrl());
+    }
 }

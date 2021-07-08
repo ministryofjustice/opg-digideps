@@ -41,8 +41,8 @@ RUN apk add --no-cache autoconf build-base
 RUN pecl install pcov && docker-php-ext-enable pcov
 
 # Install Xdebug if directed to with build arg from docker-compose.yml
-ARG REQUIRE_XDEBUG=false
-RUN if [[ $REQUIRE_XDEBUG = true ]] ; then \
+ARG REQUIRE_XDEBUG=0
+RUN if [[ $REQUIRE_XDEBUG = 1 ]] ; then \
   apk add --no-cache $PHPIZE_DEPS; \
   pecl install xdebug-2.9.8; \
   docker-php-ext-enable $PHP_EXT_DIR/xdebug.so; \
