@@ -40,31 +40,31 @@ up-app-build: ## Brings the app up and rebuilds containers
 	COMPOSE_HTTP_TIMEOUT=90 docker-compose up -d --build --remove-orphans
 
 up-app-xdebug-frontend: ## Brings the app up, rebuilds containers and enabled xdebug in client
-	REQUIRE_XDEBUG_FRONTEND=true docker-compose up -d --build --remove-orphans
+	REQUIRE_XDEBUG_FRONTEND=1 docker-compose up -d --build --remove-orphans
 
 up-app-xdebug-frontend-cachegrind: ## Brings the app up, rebuilds containers and enabled xdebug in client with cachegrind being captured
- 	REQUIRE_XDEBUG_FRONTEND=true docker-compose -f docker-compose.yml -f docker-compose.cachegrind.yml up -d --build --remove-orphans
+ 	REQUIRE_XDEBUG_FRONTEND=1 docker-compose -f docker-compose.yml -f docker-compose.cachegrind.yml up -d --build --remove-orphans
 
 up-app-xdebug-api: ## Brings the app up, rebuilds containers and enabled xdebug in client
-	REQUIRE_XDEBUG_API=true docker-compose up -d --build --remove-orphans
+	REQUIRE_XDEBUG_API=1 docker-compose up -d --build --remove-orphans
 
 up-app-xdebug-api-cachegrind: ## Brings the app up, rebuilds containers and enabled xdebug in client with cachegrind
-	REQUIRE_XDEBUG_API=true docker-compose -f docker-compose.yml -f docker-compose.cachegrind.yml  up -d --build --remove-orphans
+	REQUIRE_XDEBUG_API=1 docker-compose -f docker-compose.yml -f docker-compose.cachegrind.yml  up -d --build --remove-orphans
 
 
 up-app-integration-tests: ## Brings the app up using test env vars (see test.env)
-	REQUIRE_XDEBUG_FRONTEND=false REQUIRE_XDEBUG_API=false docker-compose -f docker-compose.yml -f docker-compose.dev.yml build frontend admin api test
+	REQUIRE_XDEBUG_FRONTEND=0 REQUIRE_XDEBUG_API=0 docker-compose -f docker-compose.yml -f docker-compose.dev.yml build frontend admin api test
 	APP_ENV=dev APP_DEBUG=0 docker-compose -f docker-compose.yml -f docker-compose.dev.yml up -d --remove-orphans
 
 down-app: ### Tears down the app
 	docker-compose down -v --remove-orphans
 
 client-unit-tests: ## Run the client unit tests
-	REQUIRE_XDEBUG_FRONTEND=false REQUIRE_XDEBUG_API=false docker-compose build frontend admin
+	REQUIRE_XDEBUG_FRONTEND=0 REQUIRE_XDEBUG_API=0 docker-compose build frontend admin
 	docker-compose -f docker-compose.yml run -e APP_ENV=unit_test -e APP_DEBUG=0 --rm frontend vendor/bin/phpunit -c tests/phpunit
 
 api-unit-tests: reset-database reset-fixtures ## Run the api unit tests
-	REQUIRE_XDEBUG_FRONTEND=false REQUIRE_XDEBUG_API=false docker-compose build api
+	REQUIRE_XDEBUG_FRONTEND=0 REQUIRE_XDEBUG_API=0 docker-compose build api
 	docker-compose -f docker-compose.yml run --rm -e APP_ENV=test -e APP_DEBUG=0 api sh scripts/apiunittest.sh
 
 behat-tests: up-app-integration-tests reset-fixtures

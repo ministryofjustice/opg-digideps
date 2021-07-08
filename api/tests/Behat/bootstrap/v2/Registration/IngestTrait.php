@@ -58,13 +58,10 @@ trait IngestTrait
             $this->selectOption('form[type]', 'org');
             $this->pressButton('Continue');
 
-            $csvFilepath = 'casrec-csvs/org-3-valid-rows.csv';
-            $this->attachFileToField('admin_upload[file]', $csvFilepath);
-            $this->pressButton('Upload PA/Prof users');
-            $this->waitForAjaxAndRefresh();
-
-            $this->extractUidsFromCsv($csvFilepath);
-            $this->getCreatedEntities();
+            $this->uploadCsvAndCountCreatedEntities(
+                'casrec-csvs/org-3-valid-rows.csv',
+                'Upload PA/Prof users'
+            );
         } elseif ('sirius' === $source) {
             // Add Sirius steps
         } else {
@@ -80,12 +77,12 @@ trait IngestTrait
         $this->iAmOnCorrectUploadPage($type);
 
         if ('org' === $type) {
-            $this->assertIntEqualsInt($this->clients['expected'], count($this->clients['found']), 'Post update minus pre update entities count - clients');
-            $this->assertIntEqualsInt($this->namedDeputies['expected'], count($this->namedDeputies['found']), 'Post update minus pre update entities count - named deputies');
-            $this->assertIntEqualsInt($this->organisations['expected'], count($this->organisations['found']), 'Post update minus pre update entities count - organisations');
-            $this->assertIntEqualsInt($this->reports['expected'], count($this->reports['found']), 'Post update minus pre update entities count - reports');
+            $this->assertIntEqualsInt($this->clients['expected'], $this->clients['found'], 'Count of entities based on UIDs - clients');
+            $this->assertIntEqualsInt($this->namedDeputies['expected'], $this->namedDeputies['found'], 'Count of entities based on UIDs - named deputies');
+            $this->assertIntEqualsInt($this->organisations['expected'], $this->organisations['found'], 'Count of entities based on UIDs - organisations');
+            $this->assertIntEqualsInt($this->reports['expected'], $this->reports['found'], 'Count of entities based on UIDs - reports');
         } else {
-            $this->assertIntEqualsInt($this->casrec['expected'], count($this->casrec['found']), 'Post update minus pre update entities count - casrec');
+            $this->assertIntEqualsInt($this->casrec['expected'], $this->casrec['found'], 'Count of entities based on UIDs - casrec');
         }
     }
 
@@ -116,43 +113,48 @@ trait IngestTrait
         }
 
         $csvRows = array_map('str_getcsv', file($csvFilePath));
-        array_walk($csvRows, function(&$a) use ($csvRows) {
+        array_walk($csvRows, function (&$a) use ($csvRows) {
             $a = array_combine($csvRows[0], $a);
         });
-        array_shift($csvRows); # remove column header
+        array_shift($csvRows); // remove column header
 
-        foreach($csvRows as $row) {
+        foreach ($csvRows as $row) {
+            $email = empty($row['Email']) ? null : substr(strstr($row['Email'], '@'), 1);
+
             $this->entityUids['client_case_numbers'][] = $row['Case'];
+            $this->entityUids['casrec_case_numbers'][] = strtolower($row['Case'] ?: '');
             $this->entityUids['named_deputy_numbers'][] = $row['Deputy No'];
-            $this->entityUids['org_email_identifiers'][] = substr(strstr($row['Email'], '@'), 1);
-
+            $this->entityUids['org_email_identifiers'][] = $email;
         }
 
         $this->entityUids['client_case_numbers'] = array_unique($this->entityUids['client_case_numbers']);
+        $this->entityUids['casrec_case_numbers'] = array_unique($this->entityUids['casrec_case_numbers']);
         $this->entityUids['named_deputy_numbers'] = array_unique($this->entityUids['named_deputy_numbers']);
         $this->entityUids['org_email_identifiers'] = array_unique($this->entityUids['org_email_identifiers']);
-
-        var_dump($this->entityUids);
     }
 
-    private function getCreatedEntities()
+    private function countCreatedEntities()
     {
         $this->em->clear();
 
-        $this->clients['found'] = $this->em->getRepository(Client::class)->findBy(['caseNumber' => $this->entityUids['client_case_numbers']]);
-        $this->namedDeputies['found'] = $this->em->getRepository(NamedDeputy::class)->findBy(['deputyNo' => $this->entityUids['named_deputy_numbers']]);
-        $this->organisations['found'] = $this->em->getRepository(Organisation::class)->findBy(['emailIdentifier' => $this->entityUids['org_email_identifiers']]);
-        $this->casrec['found'] = $this->em->getRepository(CasRec::class)->findBy(['caseNumber' => $this->entityUids['casrec_case_numbers']]);
+        $clients = $this->em->getRepository(Client::class)->findBy(['caseNumber' => $this->entityUids['client_case_numbers']]);
+        $namedDeputies = $this->em->getRepository(NamedDeputy::class)->findBy(['deputyNo' => $this->entityUids['named_deputy_numbers']]);
+        $orgs = $this->em->getRepository(Organisation::class)->findBy(['emailIdentifier' => $this->entityUids['org_email_identifiers']]);
+        $casrecs = $this->em->getRepository(CasRec::class)->findBy(['caseNumber' => $this->entityUids['casrec_case_numbers']]);
 
         $reports = [];
 
-        foreach($this->clients['found'] as $client) {
-            foreach($client->getReports() as $report) {
+        foreach ($clients as $client) {
+            foreach ($client->getReports() as $report) {
                 $reports[] = $report;
             }
         }
 
-        $this->reports['found'] = $reports;
+        $this->clients['found'] = count($clients);
+        $this->namedDeputies['found'] = count($namedDeputies);
+        $this->organisations['found'] = count($orgs);
+        $this->casrec['found'] = count($casrecs);
+        $this->reports['found'] = count($reports);
     }
 
     /**
@@ -167,12 +169,21 @@ trait IngestTrait
 
         $this->createProfAdminNotStarted(null, 'professor@mccracken4.com', '40000000');
 
-        $this->attachFileToField('admin_upload[file]', 'casrec-csvs/org-1-updated-row-made-date-and-named-deputy.csv');
-        $this->pressButton('Upload PA/Prof users');
-        $this->waitForAjaxAndRefresh();
+        $this->uploadCsvAndCountCreatedEntities(
+            'casrec-csvs/org-1-updated-row-made-date-and-named-deputy.csv',
+            'Upload PA/Prof users'
+        );
     }
 
-    private fun funtiouploadCSVAcdUpdateEnti
+    private function uploadCsvAndCountCreatedEntities(string $csvFilepath, string $uploadButtonText)
+    {
+        $this->attachFileToField('admin_upload[file]', $csvFilepath);
+        $this->pressButton($uploadButtonText);
+        $this->waitForAjaxAndRefresh();
+
+        $this->extractUidsFromCsv($csvFilepath);
+        $this->countCreatedEntities();
+    }
 
     /**
      * @Then the clients made date and named deputy should be updated
@@ -208,9 +219,10 @@ trait IngestTrait
 
         $this->createProfAdminNotStarted(null, 'him@jojo5.com', '50000000', '66648');
 
-        $this->attachFileToField('admin_upload[file]', 'casrec-csvs/org-1-updated-row-named-deputy-address.csv');
-        $this->pressButton('Upload PA/Prof users');
-        $this->waitForAjaxAndRefresh();
+        $this->uploadCsvAndCountCreatedEntities(
+            'casrec-csvs/org-1-updated-row-named-deputy-address.csv',
+            'Upload PA/Prof users'
+        );
     }
 
     /**
@@ -255,9 +267,10 @@ trait IngestTrait
 
         $this->createProfAdminNotStarted(null, 'fuzzy.lumpkins@jojo6.com', '60000000', '112233');
 
-        $this->attachFileToField('admin_upload[file]', 'casrec-csvs/org-1-updated-row-report-type.csv');
-        $this->pressButton('Upload PA/Prof users');
-        $this->waitForAjaxAndRefresh();
+        $this->uploadCsvAndCountCreatedEntities(
+            'casrec-csvs/org-1-updated-row-report-type.csv',
+            'Upload PA/Prof users'
+        );
     }
 
     /**
@@ -297,11 +310,10 @@ trait IngestTrait
 
         $this->createProfAdminNotStarted();
 
-        $this->getCreatedEntities('preUpdate');
-
-        $this->attachFileToField('admin_upload[file]', 'casrec-csvs/org-1-row-missing-last-report-date-1-valid-row.csv');
-        $this->pressButton('Upload PA/Prof users');
-        $this->waitForAjaxAndRefresh();
+        $this->uploadCsvAndCountCreatedEntities(
+            'casrec-csvs/org-1-row-missing-last-report-date-1-valid-row.csv',
+            'Upload PA/Prof users'
+        );
     }
 
     /**
@@ -330,16 +342,14 @@ trait IngestTrait
         $this->iAmOnCorrectUploadPage($userType);
 
         if ('casrec' === $source) {
-            $csvFilename = ('org' === $userType) ? 'casrec-csvs/org-1-row-missing-all-required-columns.csv' : 'casrec-csvs/lay-1-row-missing-all-required-columns.csv';
+            $csvFilepath = ('org' === $userType) ? 'casrec-csvs/org-1-row-missing-all-required-columns.csv' : 'casrec-csvs/lay-1-row-missing-all-required-columns.csv';
         } else {
-            $csvFilename = 'sirius-csvs/lay-1-row-missing-all-required-columns.csv';
+            $csvFilepath = 'sirius-csvs/lay-1-row-missing-all-required-columns.csv';
         }
 
         $buttonText = ('org' === $userType) ? 'Upload PA/Prof users' : 'Upload Lay users';
 
-        $this->attachFileToField('admin_upload[file]', $csvFilename);
-        $this->pressButton($buttonText);
-        $this->waitForAjaxAndRefresh();
+        $this->uploadCsvAndCountCreatedEntities($csvFilepath, $buttonText);
     }
 
     /**
@@ -403,9 +413,10 @@ trait IngestTrait
 
         $this->expectedUnexpectedColumn = $columnName;
 
-        $this->attachFileToField('admin_upload[file]', 'casrec-csvs/org-1-row-with-ndr-column.csv');
-        $this->pressButton('Upload PA/Prof users');
-        $this->waitForAjaxAndRefresh();
+        $this->uploadCsvAndCountCreatedEntities(
+            'casrec-csvs/org-1-row-with-ndr-column.csv',
+            'Upload PA/Prof users'
+        );
     }
 
     /**
@@ -431,17 +442,12 @@ trait IngestTrait
 
         $this->casrec['expected'] = $newEntitiesCount;
 
-        $this->em->getRepository(CasRec::class)->deleteAllBySource($source);
-
-        $this->getCreatedEntities('preUpdate');
-
         $this->selectOption('form[type]', 'lay');
         $this->pressButton('Continue');
 
         $filePath = 'casrec' === $source ? 'casrec-csvs/lay-3-valid-rows.csv' : 'sirius-csvs/lay-3-valid-rows.csv';
-        $this->attachFileToField('admin_upload[file]', $filePath);
-        $this->pressButton('Upload Lay users');
-        $this->waitForAjaxAndRefresh();
+
+        $this->uploadCsvAndCountCreatedEntities($filePath, 'Upload Lay users');
     }
 
     private function iAmOnCorrectUploadPage(string $type)
@@ -465,9 +471,8 @@ trait IngestTrait
         $this->createPfaHighNotStarted($caseNumber);
 
         $filePath = 'casrec' === $source ? 'casrec-csvs/lay-1-row-updated-report-type.csv' : 'sirius-csvs/lay-1-row-updated-report-type.csv';
-        $this->attachFileToField('admin_upload[file]', $filePath);
-        $this->pressButton('Upload Lay users');
-        $this->waitForAjaxAndRefresh();
+
+        $this->uploadCsvAndCountCreatedEntities($filePath, 'Upload Lay users');
     }
 
     /**
@@ -497,13 +502,8 @@ trait IngestTrait
         $this->expectedMissingDTOProperties = ['caseNumber', 'clientLastname', 'deputyNo', 'deputySurname'];
         $this->casrec['expected'] = $newEntitiesCount;
 
-        $this->em->getRepository(CasRec::class)->deleteAllBySource($source);
-
-        $this->getCreatedEntities('preUpdate');
-
         $filePath = 'casrec' === $source ? 'casrec-csvs/lay-1-row-missing-all-required-1-valid-row.csv' : 'sirius-csvs/lay-1-row-missing-all-required-1-valid-row.csv';
-        $this->attachFileToField('admin_upload[file]', $filePath);
-        $this->pressButton('Upload Lay users');
-        $this->waitForAjaxAndRefresh();
+
+        $this->uploadCsvAndCountCreatedEntities($filePath, 'Upload Lay users');
     }
 }
