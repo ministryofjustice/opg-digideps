@@ -1,19 +1,23 @@
-FROM python:3.10-rc-alpine3.14
+FROM python:3.10-rc-slim-buster
 
-RUN apk update
-RUN apk add bash wkhtmltopdf curl xvfb fontconfig freetype ttf-dejavu ttf-droid ttf-freefont ttf-liberation
-RUN apk upgrade
+# Download and install wkhtmltopdf and bash (because executor can't use 'sh')
+RUN apt-get update \
+    && apt-get -y install fontconfig libjpeg62-turbo libx11-6 libxcb1 libxext6 libxrender1 curl \
+    && apt-get -y install cron wget xfonts-base xfonts-75dpi \
+    && apt-get -y upgrade \
+    && wget https://github.com/wkhtmltopdf/packaging/releases/download/0.12.6-1/wkhtmltox_0.12.6-1.stretch_amd64.deb \
+    && dpkg -i wkhtmltox_0.12.6-1.stretch_amd64.deb
 
 # Install dependencies for running web service
 RUN pip install werkzeug==1.0.1 executor==23.2 gunicorn==20.0.4
 
 ADD docker-entrypoint.sh /docker-entrypoint.sh
 ADD app.py /app.py
-ADD clean-tmp /etc/periodic/hourly/clean-tmp
+ADD clean-tmp /etc/cron.hourly/clean-tmp
 EXPOSE 80
 
 # Make commands executable
-RUN ["chmod", "+x", "/etc/periodic/hourly/clean-tmp"]
+RUN ["chmod", "+x", "/etc/cron.hourly/clean-tmp"]
 RUN ["chmod", "+x", "/docker-entrypoint.sh"]
 
 ENTRYPOINT ["/docker-entrypoint.sh"]
