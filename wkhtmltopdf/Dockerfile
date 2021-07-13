@@ -1,23 +1,25 @@
-FROM python:3.10-rc-slim-buster
+FROM python:3.10-rc-alpine3.14
 
-# Download and install wkhtmltopdf and bash (because executor can't use 'sh')
-RUN apt-get update \
-    && apt-get -y install fontconfig libjpeg62-turbo libx11-6 libxcb1 libxext6 libxrender1 curl \
-    && apt-get -y install cron wget xfonts-base xfonts-75dpi \
-    && apt-get -y upgrade \
-    && wget https://github.com/wkhtmltopdf/packaging/releases/download/0.12.6-1/wkhtmltox_0.12.6-1.stretch_amd64.deb \
-    && dpkg -i wkhtmltox_0.12.6-1.stretch_amd64.deb
+RUN apk update
 
-# Install dependencies for running web service
-RUN pip install werkzeug==1.0.1 executor==23.2 gunicorn==20.0.4
+ENV PYTHONUNBUFFERED 1
+
+RUN apk --update --upgrade --no-cache add \
+    cairo-dev pango-dev gdk-pixbuf
+
+RUN set -ex \
+    && apk add --no-cache --virtual .build-deps \
+        musl-dev gcc jpeg-dev zlib-dev libffi-dev \
+    && pip3 install --no-cache-dir werkzeug==1.0.1 executor==23.2 gunicorn==20.0.4 weasyprint \
+    && apk del .build-deps
 
 ADD docker-entrypoint.sh /docker-entrypoint.sh
 ADD app.py /app.py
-ADD clean-tmp /etc/cron.hourly/clean-tmp
+ADD clean-tmp /etc/periodic/hourly/clean-tmp
 EXPOSE 80
 
 # Make commands executable
-RUN ["chmod", "+x", "/etc/cron.hourly/clean-tmp"]
+RUN ["chmod", "+x", "/etc/periodic/hourly/clean-tmp"]
 RUN ["chmod", "+x", "/docker-entrypoint.sh"]
 
 ENTRYPOINT ["/docker-entrypoint.sh"]

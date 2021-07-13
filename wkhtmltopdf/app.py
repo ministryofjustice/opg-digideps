@@ -43,7 +43,7 @@ def application(request):
         source_file.flush()
 
         # Evaluate argument to run with subprocess
-        args = ['wkhtmltopdf']
+        args = ['weasyprint']
 
         # Add Global Options
         if options:
@@ -57,6 +57,7 @@ def application(request):
         args += [file_name, file_name + ".pdf"]
 
         # Execute the command using executor
+        print(' '.join(args))
         execute(' '.join(args))
 
         return Response(
