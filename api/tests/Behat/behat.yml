@@ -232,6 +232,12 @@ v2-tests-goutte:
             contexts:
                 - App\Tests\Behat\v2\OrganisationManagement\OrganisationManagementFeatureContext
 
+        report-overiew:
+            description: Coverage of the report overview page
+            paths: [ "%paths.base%/features-v2/reporting/report-overview" ]
+            contexts:
+                - App\Tests\Behat\v2\Reporting\Sections\ReportingSectionsFeatureContext
+
         section-accounts:
             description: Covering the 'Accounts' section of the report
             paths: [ "%paths.base%/features-v2/reporting/sections/accounts" ]

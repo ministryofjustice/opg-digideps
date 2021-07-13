@@ -21,12 +21,18 @@ class UserDetails
     private ?array $userFullAddressArray = null;
     private ?string $userPhone = null;
     private ?string $namedDeputyName = null;
+    private ?array $namedDeputyFullAddressArray = null;
+    private ?string $namedDeputyPhone = null;
+    private ?string $namedDeputyPhoneAlt = null;
     private ?string $namedDeputyEmail = null;
+    private ?string $namedDeputyEmailAlt = null;
     private ?string $organisationName = null;
     private ?string $courtOrderNumber = null;
     private ?int $clientId = null;
     private ?string $clientFirstName = null;
     private ?string $clientLastName = null;
+    private ?array $clientFullAddressArray = null;
+    private ?string $clientEmail = null;
     private ?string $clientCaseNumber = null;
     private ?int $currentReportId = null;
     private ?string $currentReportType = null;
@@ -73,13 +79,20 @@ class UserDetails
         $this->setUserEmail($userDetails['userEmail']);
 
         $this->setNamedDeputyName($userDetails['namedDeputyName']);
+        $this->setNamedDeputyFullAddressArray($userDetails['namedDeputyFullAddressArray']);
+        $this->setNamedDeputyPhone($userDetails['namedDeputyPhone']);
+        $this->setNamedDeputyEmail($userDetails['namedDeputyPhoneAlt']);
         $this->setNamedDeputyEmail($userDetails['namedDeputyEmail']);
+        $this->setNamedDeputyEmail($userDetails['namedDeputyEmailAlt']);
+
         $this->setOrganisationName($userDetails['organisationName']);
         $this->setCourtOrderNumber($userDetails['courtOrderNumber']);
 
         $this->setClientId($userDetails['clientId']);
         $this->setClientFirstName($userDetails['clientFirstName']);
         $this->setClientLastName($userDetails['clientLastName']);
+        $this->setClientFullAddressArray($userDetails['clientFullAddressArray']);
+        $this->setClientEmail($userDetails['clientEmail']);
         $this->setClientCaseNumber($userDetails['clientCaseNumber']);
 
         $this->setCurrentReportId($userDetails['currentReportId']);
@@ -228,6 +241,18 @@ class UserDetails
         return $this;
     }
 
+    public function getClientFullAddressArray(): ?array
+    {
+        return $this->clientFullAddressArray;
+    }
+
+    public function setClientFullAddressArray(?array $clientFullAddressArray): UserDetails
+    {
+        $this->clientFullAddressArray = $clientFullAddressArray;
+
+        return $this;
+    }
+
     public function getUserRole(): ?string
     {
         return $this->userRole;
@@ -236,6 +261,18 @@ class UserDetails
     public function setUserRole(?string $userRole): UserDetails
     {
         $this->userRole = $userRole;
+
+        return $this;
+    }
+
+    public function getClientEmail(): ?string
+    {
+        return $this->clientEmail;
+    }
+
+    public function setClientEmail(?string $clientEmail): UserDetails
+    {
+        $this->clientEmail = $clientEmail;
 
         return $this;
     }
@@ -372,6 +409,42 @@ class UserDetails
         return $this;
     }
 
+    public function getNamedDeputyFullAddressArray(): ?array
+    {
+        return $this->namedDeputyFullAddressArray;
+    }
+
+    public function setNamedDeputyFullAddressArray(?array $namedDeputyFullAddressArray): UserDetails
+    {
+        $this->namedDeputyFullAddressArray = $namedDeputyFullAddressArray;
+
+        return $this;
+    }
+
+    public function getNamedDeputyPhone(): ?string
+    {
+        return $this->namedDeputyPhone;
+    }
+
+    public function setNamedDeputyPhone(?string $namedDeputyPhone): UserDetails
+    {
+        $this->namedDeputyPhone = $namedDeputyPhone;
+
+        return $this;
+    }
+
+    public function getNamedDeputyPhoneAlt(): ?string
+    {
+        return $this->namedDeputyPhoneAlt;
+    }
+
+    public function setNamedDeputyPhoneAlt(?string $namedDeputyPhoneAlt): UserDetails
+    {
+        $this->namedDeputyPhoneAlt = $namedDeputyPhoneAlt;
+
+        return $this;
+    }
+
     public function getNamedDeputyEmail(): ?string
     {
         return $this->namedDeputyEmail;
@@ -380,6 +453,18 @@ class UserDetails
     public function setNamedDeputyEmail(?string $namedDeputyEmail): UserDetails
     {
         $this->namedDeputyEmail = $namedDeputyEmail;
+
+        return $this;
+    }
+
+    public function getNamedDeputyEmailAlt(): ?string
+    {
+        return $this->namedDeputyEmailAlt;
+    }
+
+    public function setNamedDeputyEmailAlt(?string $namedDeputyEmailAlt): UserDetails
+    {
+        $this->namedDeputyEmailAlt = $namedDeputyEmailAlt;
 
         return $this;
     }
