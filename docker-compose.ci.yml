@@ -15,6 +15,3 @@ services:
   drbackup:
     image: ${AWS_REGISTRY}/digideps/dr-backup:${VERSION}
     build: ./dr_backup
-  file-scanner-server:
-    image: ${AWS_REGISTRY}/digideps/file-scanner:${VERSION}
-    build: ./file_scanner
