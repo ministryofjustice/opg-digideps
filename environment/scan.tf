@@ -109,13 +109,13 @@ EOF
       "name": "server",
       "essential": true,
       "cpu": 0,
-      "image": "mkodockx/docker-clamav:1.0.1-alpine",
+      "image": "${local.images.scan}",
       "mountPoints": [],
       "volumesFrom": [],
       "healthCheck": {
         "command": [
           "CMD-SHELL",
-          "cat  /etc/clamav/clamd.conf | grep Self"
+          "wget --quiet --tries=1 --spider http://localhost:3310/"
         ],
         "interval": 30,
         "retries": 5,
