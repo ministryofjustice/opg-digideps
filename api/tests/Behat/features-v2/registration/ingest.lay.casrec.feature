@@ -1,4 +1,4 @@
-@v2 @registration @ingest @acs
+@v2 @registration @ingest
 Feature: Lay CSV data ingestion - casrec source data
 
     @super-admin

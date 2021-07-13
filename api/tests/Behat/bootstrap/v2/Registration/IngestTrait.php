@@ -36,6 +36,8 @@ trait IngestTrait
     private string $expectedCaseNumberAssociatedWithError = '';
     private string $expectedUnexpectedColumn = '';
 
+    private $existingReport;
+
     /**
      * @When I upload a :source org CSV that contains the following new entities:
      */
@@ -505,5 +507,128 @@ trait IngestTrait
         $filePath = 'casrec' === $source ? 'casrec-csvs/lay-1-row-missing-all-required-1-valid-row.csv' : 'sirius-csvs/lay-1-row-missing-all-required-1-valid-row.csv';
 
         $this->uploadCsvAndCountCreatedEntities($filePath, 'Upload Lay users');
+    }
+
+    /**
+     * @When I upload a :source org CSV that has a new named deputy in a new organisation for an existing client
+     */
+    public function iUploadCsvThatHasNewNamedDeputyAndOrgForExistingClient()
+    {
+        $this->iAmOnAdminOrgCsvUploadPage();
+
+        $this->createProfAdminNotStarted(null, 'david@byrne.com', '1919191t', '9191919t');
+
+        $this->em->clear();
+
+        $existingClient = $this->em
+            ->getRepository(Client::class)
+            ->findOneBy(['caseNumber' => '1919191t']);
+
+        if (is_null($existingClient)) {
+            throw new BehatException('Existing Client not found with case number "1919191t"');
+        }
+
+        $this->existingReport = $existingClient->getCurrentReport();
+
+        $filePath = 'casrec-csvs/org-1-row-new-named-deputy-and-org-existing-client.csv';
+        $this->uploadCsvAndCountCreatedEntities($filePath, 'Upload PA/Prof users');
+
+        var_dump($this->entityUids);
+    }
+
+    /**
+     * @Then the named deputy associated with the client should be updated to the new named deputy
+     */
+    public function namedDeputyAssociatedWitClientShouldBeUpdatedToNewNamedDeputy()
+    {
+        $this->iAmOnAdminOrgCsvUploadPage();
+
+        $this->em->clear();
+
+        $newNamedDeputy = $this->em
+            ->getRepository(NamedDeputy::class)
+            ->findOneBy(['deputyNo' => $this->entityUids['named_deputy_numbers'][0]]);
+
+        if (is_null($newNamedDeputy)) {
+            throw new BehatException('Named Deputy not found with deputy no. "%s"', $this->entityUids['named_deputy_numbers'][0]);
+        }
+
+        $client = $this->em
+            ->getRepository(Client::class)
+            ->findOneBy(['caseNumber' => $this->entityUids['client_case_numbers'][0]]);
+
+        if (is_null($client)) {
+            throw new BehatException('Client not found with case number "%s"', $this->entityUids['client_case_numbers'][0]);
+        }
+
+        $this->assertEntitiesAreTheSame(
+            $newNamedDeputy,
+            $client->getNamedDeputy(),
+            'Comparing expected named deputy against named deputy associated with client'
+        );
+    }
+
+    /**
+     * @Then the organisation associated with the client should be updated to the new organisation
+     */
+    public function organisationAssociatedWitClientShouldBeUpdatedToNewOrganisation()
+    {
+        $this->iAmOnAdminOrgCsvUploadPage();
+
+        $this->em->clear();
+
+        $newOrganisation = $this->em
+            ->getRepository(Organisation::class)
+            ->findOneBy(['emailIdentifier' => $this->entityUids['org_email_identifiers'][0]]);
+
+        if (is_null($newOrganisation)) {
+            throw new BehatException('Organisation not found with email identifier "%s"', $this->entityUids['org_email_identifiers'][0]);
+        }
+
+        $client = $this->em
+            ->getRepository(Client::class)
+            ->findOneBy(['caseNumber' => $this->entityUids['client_case_numbers'][0]]);
+
+        if (is_null($client)) {
+            throw new BehatException('Client not found with case number "%s"', $this->entityUids['client_case_numbers'][0]);
+        }
+
+        $this->assertEntitiesAreTheSame(
+            $newOrganisation,
+            $client->getOrganisation(),
+            'Comparing expected organisation against organisation associated with client'
+        );
+    }
+
+    /**
+     * @Then a new report should be generated for the client
+     */
+    public function newReportGeneratedForClient()
+    {
+        $this->iAmOnAdminOrgCsvUploadPage();
+
+        $this->em->clear();
+
+        $client = $this->em
+            ->getRepository(Client::class)
+            ->findOneBy(['caseNumber' => $this->entityUids['client_case_numbers'][0]]);
+
+        if (is_null($client)) {
+            throw new BehatException('Client not found with case number "%s"', $this->entityUids['client_case_numbers'][0]);
+        }
+
+        if (is_null($client->getReport())) {
+            throw new BehatException('There is no Report associated with the client with case number "%s"', $this->entityUids['client_case_numbers'][0]);
+        }
+
+        $newReport = $this->em
+            ->getRepository(Report::class)
+            ->find($client->getCurrentReport()->getId());
+
+        $this->assertEntitiesAreNotTheSame(
+            $this->existingReport,
+            $newReport,
+            'Comparing existing clients report against report associated with client'
+        );
     }
 }

@@ -191,4 +191,60 @@ MESSAGE;
             assert(false, $message);
         }
     }
+
+    public function assertEntitiesAreTheSame(
+        $expectedEntity,
+        $actualEntity,
+        string $comparisonSubject
+    ) {
+        if (is_null($actualEntity)) {
+            assert(
+                false,
+                $this->getAssertMessage(
+                    sprintf('id: %s', $expectedEntity->getId()),
+                    'null',
+                    $comparisonSubject
+                )
+            );
+        }
+
+        $objectsAreTheSame = $expectedEntity->getId() === $actualEntity->getId();
+
+        assert(
+            $objectsAreTheSame,
+            $this->getAssertMessage(
+                sprintf('Expected %s id: %s', get_class($expectedEntity), $expectedEntity->getId()),
+                sprintf('Actual %s id: %s', get_class($actualEntity), $actualEntity->getId()),
+                $comparisonSubject
+            )
+        );
+    }
+
+    public function assertEntitiesAreNotTheSame(
+        $expectedEntity,
+        $actualEntity,
+        string $comparisonSubject
+    ) {
+        if (is_null($actualEntity)) {
+            assert(
+                false,
+                $this->getAssertMessage(
+                    sprintf('id: %s', $expectedEntity->getId()),
+                    'null',
+                    $comparisonSubject
+                )
+            );
+        }
+
+        $objectsAreNotTheSame = $expectedEntity->getId() !== $actualEntity->getId();
+
+        assert(
+            $objectsAreNotTheSame,
+            $this->getAssertMessage(
+                sprintf('Expected %s id: %s', get_class($expectedEntity), $expectedEntity->getId()),
+                sprintf('Actual %s id: %s', get_class($actualEntity), $actualEntity->getId()),
+                $comparisonSubject
+            )
+        );
+    }
 }
