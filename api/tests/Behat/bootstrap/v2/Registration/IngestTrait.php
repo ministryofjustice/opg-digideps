@@ -36,7 +36,10 @@ trait IngestTrait
     private string $expectedCaseNumberAssociatedWithError = '';
     private string $expectedUnexpectedColumn = '';
 
+    private $existingClient;
     private $existingReport;
+    private $existingNamedDeputy;
+    private $existingOrganisation;
 
     /**
      * @When I upload a :source org CSV that contains the following new entities:
@@ -516,7 +519,7 @@ trait IngestTrait
     {
         $this->iAmOnAdminOrgCsvUploadPage();
 
-        $this->createProfAdminNotStarted(null, 'david@byrne.com', '1919191t', '9191919t');
+        $this->createProfAdminNotStarted(null, 'david@byrne.com', '1919191t', '3636363t');
 
         $this->em->clear();
 
@@ -528,12 +531,21 @@ trait IngestTrait
             throw new BehatException('Existing Client not found with case number "1919191t"');
         }
 
+        if (is_null($existingClient->getNamedDeputy())) {
+            throw new BehatException('Existing client has no associated Named Deputy');
+        }
+
+        if (is_null($existingClient->getOrganisation())) {
+            throw new BehatException('Existing client has no associated Organisation');
+        }
+
+        $this->existingClient = $existingClient;
         $this->existingReport = $existingClient->getCurrentReport();
+        $this->existingNamedDeputy = $existingClient->getNamedDeputy();
+        $this->existingOrganisation = $existingClient->getOrganisation();
 
         $filePath = 'casrec-csvs/org-1-row-new-named-deputy-and-org-existing-client.csv';
         $this->uploadCsvAndCountCreatedEntities($filePath, 'Upload PA/Prof users');
-
-        var_dump($this->entityUids);
     }
 
     /**
@@ -550,7 +562,7 @@ trait IngestTrait
             ->findOneBy(['deputyNo' => $this->entityUids['named_deputy_numbers'][0]]);
 
         if (is_null($newNamedDeputy)) {
-            throw new BehatException('Named Deputy not found with deputy no. "%s"', $this->entityUids['named_deputy_numbers'][0]);
+            throw new BehatException(sprintf('Named Deputy not found with deputy no. "%s"', $this->entityUids['named_deputy_numbers'][0]));
         }
 
         $client = $this->em
@@ -558,7 +570,7 @@ trait IngestTrait
             ->findOneBy(['caseNumber' => $this->entityUids['client_case_numbers'][0]]);
 
         if (is_null($client)) {
-            throw new BehatException('Client not found with case number "%s"', $this->entityUids['client_case_numbers'][0]);
+            throw new BehatException(sprintf('Client not found with case number "%s"', $this->entityUids['client_case_numbers'][0]));
         }
 
         $this->assertEntitiesAreTheSame(
@@ -582,7 +594,7 @@ trait IngestTrait
             ->findOneBy(['emailIdentifier' => $this->entityUids['org_email_identifiers'][0]]);
 
         if (is_null($newOrganisation)) {
-            throw new BehatException('Organisation not found with email identifier "%s"', $this->entityUids['org_email_identifiers'][0]);
+            throw new BehatException(sprintf('Organisation not found with email identifier "%s"', $this->entityUids['org_email_identifiers'][0]));
         }
 
         $client = $this->em
@@ -590,7 +602,7 @@ trait IngestTrait
             ->findOneBy(['caseNumber' => $this->entityUids['client_case_numbers'][0]]);
 
         if (is_null($client)) {
-            throw new BehatException('Client not found with case number "%s"', $this->entityUids['client_case_numbers'][0]);
+            throw new BehatException(sprintf('Client not found with case number "%s"', $this->entityUids['client_case_numbers'][0]));
         }
 
         $this->assertEntitiesAreTheSame(
@@ -614,11 +626,11 @@ trait IngestTrait
             ->findOneBy(['caseNumber' => $this->entityUids['client_case_numbers'][0]]);
 
         if (is_null($client)) {
-            throw new BehatException('Client not found with case number "%s"', $this->entityUids['client_case_numbers'][0]);
+            throw new BehatException(sprintf('Client not found with case number "%s"', $this->entityUids['client_case_numbers'][0]));
         }
 
-        if (is_null($client->getReport())) {
-            throw new BehatException('There is no Report associated with the client with case number "%s"', $this->entityUids['client_case_numbers'][0]);
+        if (is_null($client->getCurrentReport())) {
+            throw new BehatException(sprintf('There is no Report associated with the client with case number "%s"', $this->entityUids['client_case_numbers'][0]));
         }
 
         $newReport = $this->em

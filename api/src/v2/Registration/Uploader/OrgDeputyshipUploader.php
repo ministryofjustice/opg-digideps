@@ -18,32 +18,17 @@ use RuntimeException;
 
 class OrgDeputyshipUploader
 {
-    /** @var EntityManagerInterface */
-    private $em;
+    private array $added = ['clients' => [], 'named_deputies' => [], 'reports' => [], 'organisations' => []];
+    private array $updated = ['clients' => [], 'named_deputies' => [], 'reports' => [], 'organisations' => []];
 
-    /** @var OrganisationFactory */
-    private $orgFactory;
+    private ?Organisation $currentOrganisation = null;
+    private ?NamedDeputy $namedDeputy = null;
+    private ?Client $client = null;
 
-    /** @var Organisation|null */
-    private $currentOrganisation;
-
-    /** @var ClientAssembler */
-    private $clientAssembler;
-
-    /** @var NamedDeputyAssembler */
-    private $namedDeputyAssembler;
-
-    /** @var array[] */
-    private $added;
-
-    /** @var NamedDeputy|null */
-    private $namedDeputy;
-
-    /** @var Client|null */
-    private $client;
-
-    /** @var array[] */
-    private $updated;
+    private EntityManagerInterface $em;
+    private OrganisationFactory $orgFactory;
+    private NamedDeputyAssembler $namedDeputyAssembler;
+    private ClientAssembler $clientAssembler;
 
     public function __construct(
         EntityManagerInterface $em,
@@ -55,12 +40,6 @@ class OrgDeputyshipUploader
         $this->orgFactory = $orgFactory;
         $this->clientAssembler = $clientAssembler;
         $this->namedDeputyAssembler = $namedDeputyAssembler;
-
-        $this->added = ['clients' => [], 'named_deputies' => [], 'reports' => [], 'organisations' => []];
-        $this->updated = ['clients' => [], 'named_deputies' => [], 'reports' => [], 'organisations' => []];
-
-        $this->namedDeputy = null;
-        $this->client = null;
     }
 
     /**
@@ -171,8 +150,18 @@ class OrgDeputyshipUploader
                 $this->updated['clients'][] = $client->getId();
             }
 
-            if (!$this->clientHasSwitchedOrganisation($client) && $this->clientHasNewNamedDeputy($client, $this->namedDeputy)) {
+            if ($this->clientHasNewOrgAndNamedDeputy($client, $this->namedDeputy)) {
+                // Look at adding audit logging to API side of app
+                $client->setDeletedAt(new \DateTime());
+                $this->em->persist($client);
+                $this->em->flush();
+
+                $client = $this->clientAssembler->assembleFromOrgDeputyshipDto($dto);
+
                 $client->setNamedDeputy($this->namedDeputy);
+                $this->currentOrganisation->addClient($client);
+                $client->setOrganisation($this->currentOrganisation);
+
                 $this->updated['clients'][] = $client->getId();
             }
 
@@ -185,18 +174,15 @@ class OrgDeputyshipUploader
         $this->client = $client;
     }
 
-    private function clientWillBeUpdated(Client $client, OrgDeputyshipDto $dto)
+    private function clientHasNewOrgAndNamedDeputy(Client $client, NamedDeputy $namedDeputy): bool
     {
-        return $client->getCourtDate() !== $dto->getCourtDate() ||
-           (!$this->clientHasSwitchedOrganisation($client) && $this->clientHasNewNamedDeputy($client, $this->namedDeputy));
+        return $this->clientHasSwitchedOrganisation($client) && $this->clientHasNewNamedDeputy($client, $namedDeputy);
     }
 
     /**
      * Returns true if clients organisation has changed.
-     *
-     * @return bool
      */
-    private function clientHasSwitchedOrganisation(Client $client)
+    private function clientHasSwitchedOrganisation(Client $client): bool
     {
         if (
             $client->getOrganisation() instanceof Organisation
@@ -224,6 +210,19 @@ class OrgDeputyshipUploader
             if (!$report->getSubmitted() && empty($report->getUnSubmitDate())) {
                 // Add audit logging for report type changing
                 $report->setType($dto->getReportType());
+            }
+
+            if ($this->clientHasNewOrgAndNamedDeputy($this->client, $this->namedDeputy)) {
+                $report = new Report(
+                    $this->client,
+                    $dto->getReportType(),
+                    $dto->getReportStartDate(),
+                    $dto->getReportEndDate()
+                );
+
+                $this->client->addReport($report);
+
+                $this->added['reports'][] = $this->client->getCaseNumber().'-'.$dto->getReportEndDate()->format('Y-m-d');
             }
         } else {
             $report = new Report(
