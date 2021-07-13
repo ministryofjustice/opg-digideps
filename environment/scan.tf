@@ -115,7 +115,7 @@ EOF
       "healthCheck": {
         "command": [
           "CMD-SHELL",
-          "wget --quiet --tries=3 --spider http://localhost:3310/"
+          "cat  /etc/clamav/clamd.conf | grep Self"
         ],
         "interval": 30,
         "retries": 5,
