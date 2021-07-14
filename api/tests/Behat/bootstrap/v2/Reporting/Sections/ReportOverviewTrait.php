@@ -49,5 +49,15 @@ trait ReportOverviewTrait
         $this->assertPageContainsText($deputy->getNamedDeputyPhone());
 
         $this->assertPageContainsText($deputy->getNamedDeputyEmail());
+
+        $role = $deputy->getUserRole();
+
+        if (str_starts_with($role, 'ROLE_PROF')) {
+            $email = 'opg.pro@publicguardian.gov.uk';
+        } else {
+            $email = 'OPG.publicauthorityteam@publicguardian.gov.uk';
+        }
+
+        $this->assertLinkWithTextIsOnPage($email);
     }
 }

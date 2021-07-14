@@ -62,6 +62,10 @@ class FixtureHelper
     private User $profAdminCompleted;
     private User $profAdminSubmitted;
 
+    private User $paAdminNotStarted;
+    private User $paAdminCompleted;
+    private User $paAdminSubmitted;
+
     private string $testRunId = '';
     private string $orgName = 'Test Org';
     private string $orgEmailIdentifier = 'test-org.uk';
@@ -752,6 +756,48 @@ class FixtureHelper
         );
 
         return self::buildOrgUserDetails($this->profAdminSubmitted);
+    }
+
+    public function createPAAdminNotStarted(string $testRunId)
+    {
+        $this->paAdminNotStarted = $this->createOrgUserClientNamedDeputyAndReport(
+            $testRunId,
+            User::ROLE_PA_ADMIN,
+            'pa-admin-not-started',
+            Report::TYPE_104_5,
+            false,
+            false
+        );
+
+        return self::buildOrgUserDetails($this->paAdminNotStarted);
+    }
+
+    public function createPAAdminCompleted(string $testRunId)
+    {
+        $this->paAdminCompleted = $this->createOrgUserClientNamedDeputyAndReport(
+            $testRunId,
+            User::ROLE_PA_ADMIN,
+            'pa-admin-completed',
+            Report::TYPE_104_5,
+            true,
+            false
+        );
+
+        return self::buildOrgUserDetails($this->paAdminCompleted);
+    }
+
+    public function createPAAdminSubmitted(string $testRunId)
+    {
+        $this->paAdminSubmitted = $this->createOrgUserClientNamedDeputyAndReport(
+            $testRunId,
+            User::ROLE_PA_ADMIN,
+            'pa-admin-completed',
+            Report::TYPE_104_5,
+            true,
+            true
+        );
+
+        return self::buildOrgUserDetails($this->paAdminSubmitted);
     }
 
     public function createAdmin(string $testRunId)

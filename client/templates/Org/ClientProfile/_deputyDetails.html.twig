@@ -21,7 +21,8 @@
                         <strong class="govuk-!-font-weight-bold">{{ (page ~ '.name') | trans }}</strong>
                     </dt>
                     <dd class="push--bottom">
-                        {{ namedDeputy.firstname ~ " " ~ namedDeputy.lastname }}
+                        {% set namedDeputyName = namedDeputy.firstname ~ " " ~ namedDeputy.lastname %}
+                        {{ namedDeputyName }}
                     </dd>
 
                     <dt>
@@ -82,7 +83,7 @@
             {{ macros.icon('information', 'moj-banner__icon') }}
             <div class="moj-banner__message">
                 <span class="moj-banner__assistive">information</span>
-                {{ contactMessage }} <a href="mailto:{{ email }}">{{email}}</a>
+                {{ contactMessage }} <a href="mailto:{{ email }}?subject=Update deputy details: {{ namedDeputyName }}">{{email}}</a>
             </div>
         </div>
 

@@ -64,6 +64,10 @@ class BaseFeatureContext extends MinkContext
     public UserDetails $profAdminDeputyCompletedDetails;
     public UserDetails $profAdminDeputySubmittedDetails;
 
+    public UserDetails $paAdminDeputyNotStartedDetails;
+    public UserDetails $paAdminDeputyCompletedDetails;
+    public UserDetails $paAdminDeputySubmittedDetails;
+
     public UserDetails $layNdrDeputyNotStartedDetails;
     public UserDetails $layNdrDeputyCompletedDetails;
     public UserDetails $layNdrDeputySubmittedDetails;
@@ -256,6 +260,33 @@ class BaseFeatureContext extends MinkContext
     {
         $userDetails = $this->fixtureHelper->createProfAdminSubmitted($this->testRunId);
         $this->fixtureUsers[] = $this->profAdminDeputySubmittedDetails = new UserDetails($userDetails);
+    }
+
+    /**
+     * @BeforeScenario @pa-admin-not-started
+     */
+    public function createPAAdminNotStarted()
+    {
+        $userDetails = $this->fixtureHelper->createPAAdminNotStarted($this->testRunId);
+        $this->fixtureUsers[] = $this->paAdminDeputyNotStartedDetails = new UserDetails($userDetails);
+    }
+
+    /**
+     * @BeforeScenario @pa-admin-completed
+     */
+    public function createPAAdminCompleted()
+    {
+        $userDetails = $this->fixtureHelper->createPAAdminCompleted($this->testRunId);
+        $this->fixtureUsers[] = $this->paAdminDeputyCompletedDetails = new UserDetails($userDetails);
+    }
+
+    /**
+     * @BeforeScenario @pa-admin-submitted
+     */
+    public function createPAAdminSubmitted()
+    {
+        $userDetails = $this->fixtureHelper->createPAAdminSubmitted($this->testRunId);
+        $this->fixtureUsers[] = $this->paAdminDeputySubmittedDetails = new UserDetails($userDetails);
     }
 
     /**

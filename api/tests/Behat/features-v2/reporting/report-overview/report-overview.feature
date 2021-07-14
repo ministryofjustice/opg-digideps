@@ -8,9 +8,9 @@ Feature: Report Overview - All User Roles
     Then I should see the correct client details
     And I should see the correct deputy details
 
-@prof-team-hw-not-started
-  Scenario: A user uploads multiple supporting document that have valid file types
-    Given a Professional Team Deputy has not started a health and welfare report
+@pa-admin-not-started
+  Scenario: A Public Authority User can see client and deputy details
+    Given a Public Authority Admin Deputy has not started a report
     When I view the report overview page
     Then I should see the correct client details
     And I should see the correct deputy details
