@@ -107,4 +107,22 @@ trait ReportingChecklistTrait
 
         assert('Lodging checklist saved' == $savedText);
     }
+
+    /**
+     * @Then I cannot see the deputy costs section
+     */
+    public function ICannotSeeTheDeputyCostsSection()
+    {
+        $deputyCost = $this->getSession()->getPage()->find('xpath', '//a[@href="#profDeputyCosts"]');
+        assert(null === $deputyCost);
+    }
+
+    /**
+     * @When I can see the estimated cost section
+     */
+    public function ICanSeeTheEstimatedCostSection()
+    {
+        $estimatedCost = $this->getSession()->getPage()->find('xpath', '//a[@href="#profDeputyCostsEstimate"]');
+        assert(null !== $estimatedCost);
+    }
 }

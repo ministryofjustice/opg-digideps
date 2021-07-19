@@ -20,3 +20,12 @@ Feature: Reporting Checklists - Reporting checklist
         When I navigate to the clients report checklist page
         And I submit the checklist without filling it in
         Then I should see all the validation errors
+
+    @admin @lay-health-welfare-submitted
+    Scenario: An lay hw checklist cannot see deputy costs which prof hw can - applies to all admin roles
+        Given an admin user accesses the admin app
+        When I navigate to the clients search page
+        And I search for the client
+        And I click the clients details page link
+        When I navigate to the clients report checklist page
+        Then I cannot see the deputy costs section
