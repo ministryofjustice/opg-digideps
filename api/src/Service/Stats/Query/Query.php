@@ -2,9 +2,9 @@
 
 namespace App\Service\Stats\Query;
 
-use Doctrine\ORM\Query\ResultSetMapping;
 use App\Service\Stats\StatsQueryParameters;
 use Doctrine\ORM\EntityManagerInterface;
+use Doctrine\ORM\Query\ResultSetMapping;
 
 abstract class Query
 {
@@ -12,20 +12,19 @@ abstract class Query
     private $em;
 
     abstract protected function getAggregation(): string;
+
     abstract protected function getSupportedDimensions(): array;
+
     abstract protected function getSubquery(): string;
 
-    /**
-     * @param EntityManagerInterface $em
-     */
     public function __construct(EntityManagerInterface $em)
     {
         $this->em = $em;
     }
 
     /**
-     * @param StatsQueryParameters $sq
      * @return array
+     *
      * @throws \Exception
      */
     public function execute(StatsQueryParameters $sq)
@@ -57,8 +56,8 @@ abstract class Query
     }
 
     /**
-     * Check all requested are supported by the requested metric
-     * @param array $dimensions
+     * Check all requested are supported by the requested metric.
+     *
      * @throws \Exception
      */
     protected function checkDimensions(array $dimensions)
@@ -71,14 +70,14 @@ abstract class Query
     }
 
     /**
-     * Build an SQL query
-     * @param StatsQueryParameters $sq
+     * Build an SQL query.
+     *
      * @return string
      */
     protected function constructQuery(StatsQueryParameters $sq)
     {
         $columns = [
-            $this->getAggregation() . ' amount'
+            $this->getAggregation().' amount',
         ];
 
         if (is_array($sq->getDimensions())) {
@@ -92,12 +91,11 @@ abstract class Query
         $sql = "SELECT $select FROM ({$this->getSubquery()}) t";
 
         if ($sq->queryHasDateConstraint()) {
-            $sql .= " WHERE t.date >= :startDate AND t.date <= :endDate";
+            $sql .= ' WHERE t.date >= :startDate AND t.date <= :endDate';
         }
 
-
         if (is_array($sq->getDimensions())) {
-            $sql .= " GROUP BY " . implode(', ', $sq->getDimensions());
+            $sql .= ' GROUP BY '.implode(', ', $sq->getDimensions());
         }
 
         return $sql;
