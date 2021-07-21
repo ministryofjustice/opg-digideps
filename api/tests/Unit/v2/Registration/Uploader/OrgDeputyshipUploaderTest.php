@@ -225,45 +225,7 @@ class OrgDeputyshipUploaderTest extends KernelTestCase
     }
 
     /** @test  */
-    public function uploadClientAndNamedDeputyAreNotAssociatedWhenClientHasSwitchedOrgsAndNamedDeputyHasChanged()
-    {
-        $deputyships = OrgDeputyshipDTOTestHelper::generateOrgDeputyshipDtos(1, 0);
-
-        $originalNamedDeputy = OrgDeputyshipDTOTestHelper::ensureNamedDeputyInUploadExists($deputyships[0], $this->em);
-        $originalNamedDeputy->setEmail1(sprintf('different.deputy@different-domain.com'));
-
-        $orgIdentifier = explode('@', $deputyships[0]->getDeputyEmail())[1];
-        $organisation = OrgDeputyshipDTOTestHelper::ensureOrgInUploadExists($orgIdentifier, $this->em);
-        $organisation->setEmailIdentifier('different-domain.com');
-
-        $client = OrgDeputyshipDTOTestHelper::ensureClientInUploadExists($deputyships[0], $this->em);
-        $client->setNamedDeputy($originalNamedDeputy)->setOrganisation($organisation);
-        $client->setCourtDate($deputyships[0]->getCourtDate());
-
-        $this->em->persist($client);
-        $this->em->flush();
-
-        $actualUploadResults = $this->sut->upload($deputyships);
-
-        self::assertTrue(
-            OrgDeputyshipDTOTestHelper::clientAndNamedDeputyAreNotAssociated(
-                $deputyships[0],
-                $this->clientRepository,
-                $this->namedDeputyRepository
-            ),
-            sprintf(
-                'Client with case number "%s" and named deputy with email "%s" are associated when they shouldnt be',
-                $deputyships[0]->getCaseNumber(),
-                $deputyships[0]->getDeputyEmail()
-            )
-        );
-
-        self::assertCount(0, $actualUploadResults['added']['clients']);
-        self::assertCount(0, $actualUploadResults['updated']['clients']);
-    }
-
-    /** @test  */
-    public function uploadClientAndNamedDeputyAreAssociatedWhenClientHasNotSwitchedOrgsAndNamedDeputyHasChanged()
+    public function uploadClientAndNamedDeputyAreAssociatedWhenClientHasSwitchedOrgsAndNamedDeputyHasChanged()
     {
         $deputyships = OrgDeputyshipDTOTestHelper::generateOrgDeputyshipDtos(1, 0);
 
