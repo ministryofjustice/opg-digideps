@@ -158,9 +158,29 @@ class OrgDeputyshipUploader
 
                 $client = $this->clientAssembler->assembleFromOrgDeputyshipDto($dto);
 
-                $client->setNamedDeputy($this->namedDeputy);
                 $this->currentOrganisation->addClient($client);
                 $client->setOrganisation($this->currentOrganisation);
+                $client->setNamedDeputy($this->namedDeputy);
+
+                $this->em->persist($client);
+                $this->em->flush();
+
+                $this->client = $client;
+
+                $this->added['clients'][] = $client->getId();
+
+                return;
+            }
+
+            if ($this->clientHasSwitchedOrganisation($client)) {
+                $this->currentOrganisation->addClient($client);
+                $client->setOrganisation($this->currentOrganisation);
+
+                $this->updated['clients'][] = $client->getId();
+            }
+
+            if ($this->clientHasNewNamedDeputy($client, $this->namedDeputy)) {
+                $client->setNamedDeputy($this->namedDeputy);
 
                 $this->updated['clients'][] = $client->getId();
             }

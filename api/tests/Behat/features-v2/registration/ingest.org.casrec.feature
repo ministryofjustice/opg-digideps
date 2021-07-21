@@ -32,7 +32,7 @@ Feature: Org CSV data ingestion - casrec source data
         And I upload a 'casrec' org CSV that has a new report type '103-5' for an existing report that has not been submitted or unsubmitted
         Then the report type should be updated
 
-    @super-admin @acs
+    @super-admin
     Scenario: Uploading a CSV that contains a new named deputy in a new organisation for an existing client
         Given a super admin user accesses the admin app
         When I visit the admin upload org users page
@@ -47,7 +47,8 @@ Feature: Org CSV data ingestion - casrec source data
         When I visit the admin upload org users page
         And I upload a 'casrec' org CSV that contains a new org email and street address but the same deputy number for an existing clients named deputy
         Then the organisation associated with the client should be updated to the new organisation
-        And the named deputies address should be updated to the named deputies new street address
+        And the named deputy's address should be updated to '88 BROAD WALK, ALINGHAM, CORK, VALE, TOWNSVILLE, TW8 R55'
+        And the named deputy associated with the client should remain the same
         And the report associated with the client should remain the same
 
     @super-admin

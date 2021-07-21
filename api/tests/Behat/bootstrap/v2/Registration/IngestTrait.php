@@ -36,10 +36,8 @@ trait IngestTrait
     private string $expectedCaseNumberAssociatedWithError = '';
     private string $expectedUnexpectedColumn = '';
 
-    private $existingClient;
-    private $existingReport;
-    private $existingNamedDeputy;
-    private $existingOrganisation;
+    private $clientBeforeCsvUpload;
+    private $clientAfterCsvUpload;
 
     /**
      * @When I upload a :source org CSV that contains the following new entities:
@@ -539,13 +537,20 @@ trait IngestTrait
             throw new BehatException('Existing client has no associated Organisation');
         }
 
-        $this->existingClient = $existingClient;
-        $this->existingReport = $existingClient->getCurrentReport();
-        $this->existingNamedDeputy = $existingClient->getNamedDeputy();
-        $this->existingOrganisation = $existingClient->getOrganisation();
+        $this->clientBeforeCsvUpload = $existingClient;
 
         $filePath = 'casrec-csvs/org-1-row-new-named-deputy-and-org-existing-client.csv';
         $this->uploadCsvAndCountCreatedEntities($filePath, 'Upload PA/Prof users');
+
+        $this->em->clear();
+
+        $this->clientAfterCsvUpload = $this->em
+            ->getRepository(Client::class)
+            ->findOneBy(['caseNumber' => $this->entityUids['client_case_numbers'][0]]);
+
+        if (is_null($this->clientAfterCsvUpload)) {
+            throw new BehatException(sprintf('Client not found with case number "%s"', $this->entityUids['client_case_numbers'][0]));
+        }
     }
 
     /**
@@ -555,28 +560,26 @@ trait IngestTrait
     {
         $this->iAmOnAdminOrgCsvUploadPage();
 
-        $this->em->clear();
+        $namedDeputyAfterUpload = $this->clientAfterCsvUpload->getNamedDeputy();
 
-        $newNamedDeputy = $this->em
-            ->getRepository(NamedDeputy::class)
-            ->findOneBy(['deputyNo' => $this->entityUids['named_deputy_numbers'][0]]);
-
-        if (is_null($newNamedDeputy)) {
-            throw new BehatException(sprintf('Named Deputy not found with deputy no. "%s"', $this->entityUids['named_deputy_numbers'][0]));
+        if (is_null($namedDeputyAfterUpload)) {
+            throw new BehatException('A named deputy is not associated with client after CSV upload');
         }
 
-        $client = $this->em
-            ->getRepository(Client::class)
-            ->findOneBy(['caseNumber' => $this->entityUids['client_case_numbers'][0]]);
+        $deputyNo = $this->entityUids['named_deputy_numbers'][0];
 
-        if (is_null($client)) {
-            throw new BehatException(sprintf('Client not found with case number "%s"', $this->entityUids['client_case_numbers'][0]));
+        $namedDeputyWithCsvDeputyNo = $this->em
+            ->getRepository(NamedDeputy::class)
+            ->findOneBy(['deputyNo' => $deputyNo]);
+
+        if (is_null($namedDeputyWithCsvDeputyNo)) {
+            throw new BehatException(sprintf('Named deputy with case number "%s" not found', $deputyNo));
         }
 
         $this->assertEntitiesAreTheSame(
-            $newNamedDeputy,
-            $client->getNamedDeputy(),
-            'Comparing expected named deputy against named deputy associated with client'
+            $namedDeputyWithCsvDeputyNo,
+            $namedDeputyAfterUpload,
+            'Comparing named deputy with deputy no from CSV against named deputy associated with client after CSV upload'
         );
     }
 
@@ -587,28 +590,16 @@ trait IngestTrait
     {
         $this->iAmOnAdminOrgCsvUploadPage();
 
-        $this->em->clear();
-
-        $newOrganisation = $this->em
-            ->getRepository(Organisation::class)
-            ->findOneBy(['emailIdentifier' => $this->entityUids['org_email_identifiers'][0]]);
+        $newOrganisation = $this->clientAfterCsvUpload->getOrganisation();
 
         if (is_null($newOrganisation)) {
-            throw new BehatException(sprintf('Organisation not found with email identifier "%s"', $this->entityUids['org_email_identifiers'][0]));
+            throw new BehatException('An organisation is not associated with client after CSV upload');
         }
 
-        $client = $this->em
-            ->getRepository(Client::class)
-            ->findOneBy(['caseNumber' => $this->entityUids['client_case_numbers'][0]]);
-
-        if (is_null($client)) {
-            throw new BehatException(sprintf('Client not found with case number "%s"', $this->entityUids['client_case_numbers'][0]));
-        }
-
-        $this->assertEntitiesAreTheSame(
-            $newOrganisation,
-            $client->getOrganisation(),
-            'Comparing expected organisation against organisation associated with client'
+        $this->assertStringEqualsString(
+            $this->entityUids['org_email_identifiers'][0],
+            $newOrganisation->getEmailIdentifier(),
+            'Comparing organisation email identifier in CSV against organisation associated with client after CSV upload'
         );
     }
 
@@ -619,28 +610,123 @@ trait IngestTrait
     {
         $this->iAmOnAdminOrgCsvUploadPage();
 
-        $this->em->clear();
+        $reportAfterCsvUpload = $this->clientAfterCsvUpload->getCurrentReport();
 
-        $client = $this->em
-            ->getRepository(Client::class)
-            ->findOneBy(['caseNumber' => $this->entityUids['client_case_numbers'][0]]);
-
-        if (is_null($client)) {
-            throw new BehatException(sprintf('Client not found with case number "%s"', $this->entityUids['client_case_numbers'][0]));
+        if (is_null($reportAfterCsvUpload)) {
+            throw new BehatException('A report is not associated with client after CSV upload');
         }
-
-        if (is_null($client->getCurrentReport())) {
-            throw new BehatException(sprintf('There is no Report associated with the client with case number "%s"', $this->entityUids['client_case_numbers'][0]));
-        }
-
-        $newReport = $this->em
-            ->getRepository(Report::class)
-            ->find($client->getCurrentReport()->getId());
 
         $this->assertEntitiesAreNotTheSame(
-            $this->existingReport,
-            $newReport,
-            'Comparing existing clients report against report associated with client'
+            $this->clientBeforeCsvUpload->getCurrentReport(),
+            $reportAfterCsvUpload,
+            'Comparing report associated with client before CSV upload against report associated with client after CSV upload'
+        );
+    }
+
+    /**
+     * @When I upload a :source org CSV that contains a new org email and street address but the same deputy number for an existing clients named deputy
+     */
+    public function iUploadCsvThatHasOrgEmailAndStreetAddressButSameDepNoForExistingClient()
+    {
+        $this->iAmOnAdminOrgCsvUploadPage();
+
+        $this->createProfAdminNotStarted(null, 'sufjan@stevens.com', '2828282t', '20082008');
+
+        $this->em->clear();
+
+        $existingClient = $this->em
+            ->getRepository(Client::class)
+            ->findOneBy(['caseNumber' => '2828282t']);
+
+        if (is_null($existingClient)) {
+            throw new BehatException('Existing Client not found with case number "2828282t"');
+        }
+
+        $this->clientBeforeCsvUpload = $existingClient;
+
+        $filePath = 'casrec-csvs/org-1-row-existing-named-deputy-and-client-new-org-and-street-address.csv';
+        $this->uploadCsvAndCountCreatedEntities($filePath, 'Upload PA/Prof users');
+
+        $this->em->clear();
+
+        $this->clientAfterCsvUpload = $this->em
+            ->getRepository(Client::class)
+            ->findOneBy(['caseNumber' => $this->entityUids['client_case_numbers'][0], 'deletedAt' => null]);
+
+        if (is_null($this->clientAfterCsvUpload)) {
+            throw new BehatException(sprintf('Client not found with case number "%s"', $this->entityUids['client_case_numbers'][0]));
+        }
+    }
+
+    /**
+     * @Then the named deputy's address should be updated to :address
+     */
+    public function theNamedDeputiesAddressShouldBeUpdatedTo(string $address)
+    {
+        $this->iAmOnAdminOrgCsvUploadPage();
+
+        $namedDeputyAfterCsvUpload = $this->clientAfterCsvUpload->getNamedDeputy();
+
+        if (is_null($namedDeputyAfterCsvUpload)) {
+            throw new BehatException('A named deputy is not associated with client after CSV upload');
+        }
+
+        $actualNamedDeputiesAddress = sprintf(
+            '%s, %s, %s, %s, %s, %s',
+            $namedDeputyAfterCsvUpload->getAddress1(),
+            $namedDeputyAfterCsvUpload->getAddress2(),
+            $namedDeputyAfterCsvUpload->getAddress3(),
+            $namedDeputyAfterCsvUpload->getAddress4(),
+            $namedDeputyAfterCsvUpload->getAddress5(),
+            $namedDeputyAfterCsvUpload->getAddressPostcode()
+        );
+
+        $this->assertStringEqualsString(
+            $address,
+            $actualNamedDeputiesAddress,
+            'Comparing named deputy address associated with client after CSV upload against step address'
+        );
+    }
+
+    /**
+     * @Then the named deputy associated with the client should remain the same
+     */
+    public function namedDeputyAssociatedWitClientShouldRemainTheSame()
+    {
+        $this->iAmOnAdminOrgCsvUploadPage();
+
+        $this->em->clear();
+
+        $namedDeputyAfterCsvUpload = $this->clientAfterCsvUpload->getNamedDeputy();
+
+        if (is_null($namedDeputyAfterCsvUpload)) {
+            throw new BehatException('A named deputy is not associated with client after CSV upload');
+        }
+
+        $this->assertEntitiesAreTheSame(
+            $this->clientBeforeCsvUpload->getNamedDeputy(),
+            $namedDeputyAfterCsvUpload,
+            'Comparing named deputy associated with client before CSV upload against named deputy associated with client after CSV upload'
+        );
+    }
+
+    /**
+     * @Then the report associated with the client should remain the same
+     */
+    public function reportAssociatedWithClientShouldRemainTheSame()
+    {
+        $this->iAmOnAdminOrgCsvUploadPage();
+
+        $reportAfterCsvUpload = $this->clientAfterCsvUpload->getCurrentReport();
+
+        if (is_null($reportAfterCsvUpload)) {
+            throw new BehatException('A report is not associated with client after CSV upload');
+        }
+
+        $this->assertEntitiesAreTheSame(
+            $this->clientBeforeCsvUpload->getCurrentReport(),
+            $reportAfterCsvUpload,
+            'Comparing report associated with client before CSV upload against report associated with client after CSV upload'
         );
     }
 }
