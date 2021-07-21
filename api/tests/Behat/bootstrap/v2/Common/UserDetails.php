@@ -81,9 +81,9 @@ class UserDetails
         $this->setNamedDeputyName($userDetails['namedDeputyName']);
         $this->setNamedDeputyFullAddressArray($userDetails['namedDeputyFullAddressArray']);
         $this->setNamedDeputyPhone($userDetails['namedDeputyPhone']);
-        $this->setNamedDeputyEmail($userDetails['namedDeputyPhoneAlt']);
+        $this->setNamedDeputyPhoneAlt($userDetails['namedDeputyPhoneAlt']);
         $this->setNamedDeputyEmail($userDetails['namedDeputyEmail']);
-        $this->setNamedDeputyEmail($userDetails['namedDeputyEmailAlt']);
+        $this->setNamedDeputyEmailAlt($userDetails['namedDeputyEmailAlt']);
 
         $this->setOrganisationName($userDetails['organisationName']);
         $this->setCourtOrderNumber($userDetails['courtOrderNumber']);

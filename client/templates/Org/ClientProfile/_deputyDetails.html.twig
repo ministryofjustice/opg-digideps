@@ -82,7 +82,7 @@
             {{ macros.icon('information', 'moj-banner__icon') }}
             <div class="moj-banner__message">
                 <span class="moj-banner__assistive">information</span>
-                {{ contactMessage }} <a href="mailto:{{ email }}?subject=Update deputy details: {{ client.getFullname }} ({{ client.caseNumber }})">{{email}}</a>
+                {{ contactMessage }} <a href="mailto:{{ email }}?subject=Update deputy details&body=Change details for: {{ client.getFullname }} ({{ client.caseNumber }})">{{email}}</a>
             </div>
         </div>
 
