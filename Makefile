@@ -77,8 +77,8 @@ else
 	docker-compose -f docker-compose.yml -f docker-compose.dev.yml run --rm test sh ./tests/Behat/run-tests.sh --profile v2-tests-goutte --tags @v2
 endif
 
-behat-tests-v2-goutte: up-app-integration-tests reset-fixtures disable-debug
-	docker-compose -f docker-compose.yml -f docker-compose.dev.yml run --rm test sh ./tests/Behat/run-tests-v2.sh
+behat-tests-v2-goutte-parallel: up-app-integration-tests reset-fixtures disable-debug
+	docker-compose -f docker-compose.yml -f docker-compose.dev.yml run --rm test sh ./tests/Behat/run-tests-parallel.sh
 
 behat-tests-v2-browserstack: up-app-integration-tests reset-fixtures disable-debug
 	docker-compose -f docker-compose.yml -f docker-compose.dev.yml run --rm test sh ./tests/Behat/run-tests.sh --profile v2-tests-browserstack --tags @v2

@@ -38,7 +38,7 @@ trait AnalyticsTrait
     }
 
     /**
-     * @When I add more clients, deputies are reports
+     * @When I add more clients, deputies and reports
      */
     public function iAddMoreClientsDeputiesReports()
     {
@@ -84,11 +84,11 @@ trait AnalyticsTrait
             'profSatisfaction' => 0,
             'profSubmitted' => 0,
             'profDeputies' => 15,
-            'profClients' => 26,
+            'profClients' => 27,
             'paSatisfaction' => 0,
             'paSubmitted' => 0,
             'paDeputies' => 8,
-            'paClients' => 22,
+            'paClients' => 21,
         ];
     }
 
@@ -116,11 +116,11 @@ trait AnalyticsTrait
             'profSatisfaction' => 100,
             'profSubmitted' => 1,
             'profDeputies' => 16,
-            'profClients' => 26,
+            'profClients' => 27,
             'paSatisfaction' => 100,
             'paSubmitted' => 1,
             'paDeputies' => 9,
-            'paClients' => 22,
+            'paClients' => 21,
         ];
     }
 
@@ -145,11 +145,11 @@ trait AnalyticsTrait
             'profSatisfaction' => 50,
             'profSubmitted' => 2,
             'profDeputies' => 17,
-            'profClients' => 26,
+            'profClients' => 28,
             'paSatisfaction' => 50,
             'paSubmitted' => 2,
             'paDeputies' => 10,
-            'paClients' => 24,
+            'paClients' => 22,
         ];
     }
 
@@ -205,11 +205,11 @@ trait AnalyticsTrait
             'profSatisfaction' => 100,
             'profSubmitted' => 1,
             'profDeputies' => 15,
-            'profClients' => 26,
+            'profClients' => 27,
             'paSatisfaction' => 100,
             'paSubmitted' => 1,
             'paDeputies' => 8,
-            'paClients' => 22,
+            'paClients' => 21,
         ];
     }
 
@@ -247,11 +247,11 @@ trait AnalyticsTrait
             'profSatisfaction' => 100,
             'profSubmitted' => 1,
             'profDeputies' => 1,
-            'profClients' => 26,
+            'profClients' => 27,
             'paSatisfaction' => 100,
             'paSubmitted' => 1,
             'paDeputies' => 1,
-            'paClients' => 22,
+            'paClients' => 21,
         ];
     }
 

@@ -830,7 +830,7 @@ class FixtureHelper
             $testRunId.'_1',
             User::ROLE_PROF_NAMED,
             'analytics-prof-submitted',
-            Report::TYPE_104_6,
+            Report::TYPE_104_5,
             true,
             true,
             $startDate,

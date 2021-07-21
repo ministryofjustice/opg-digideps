@@ -14,7 +14,7 @@ Feature: Analytics - view and download analytics
         Then I should see the correct metric values displayed
         When I change reporting period to apply only to our generated data
         Then I should see the correct metric values displayed
-        When I add more clients, deputies are reports
+        When I add more clients, deputies and reports
         And I change reporting period to be all time again
         Then I should see the correct metric values displayed
 
