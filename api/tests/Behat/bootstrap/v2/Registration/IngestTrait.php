@@ -126,7 +126,7 @@ trait IngestTrait
 
             $this->entityUids['client_case_numbers'][] = $row['Case'];
             $this->entityUids['casrec_case_numbers'][] = strtolower($row['Case'] ?: '');
-            $this->entityUids['named_deputy_numbers'][] = $row['Deputy No'];
+            $this->entityUids['named_deputy_numbers'][] = sprintf('%s-%s', $row['Deputy No'], $row['DepAddr No']);
             $this->entityUids['org_email_identifiers'][] = $email;
         }
 
@@ -630,7 +630,7 @@ trait IngestTrait
     {
         $this->iAmOnAdminOrgCsvUploadPage();
 
-        $this->createProfAdminNotStarted(null, 'sufjan@stevens.com', '2828282t', '20082008');
+        $this->createProfAdminNotStarted(null, 'sufjan@stevens.com', '2828282t', '20082008-999');
 
         $this->em->clear();
 

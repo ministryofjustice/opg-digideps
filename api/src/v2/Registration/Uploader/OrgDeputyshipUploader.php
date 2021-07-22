@@ -80,10 +80,12 @@ class OrgDeputyshipUploader
 
     private function handleNamedDeputy(OrgDeputyshipDto $dto)
     {
+        $deputyNumber = sprintf('%s-%s', $dto->getDeputyNumber(), $dto->getDeputyAddressNumber());
+
         /** @var NamedDeputy $namedDeputy */
         $namedDeputy = ($this->em->getRepository(NamedDeputy::class))->findOneBy(
             [
-                'deputyNo' => $dto->getDeputyNumber(),
+                'deputyNo' => $deputyNumber,
             ]
         );
 

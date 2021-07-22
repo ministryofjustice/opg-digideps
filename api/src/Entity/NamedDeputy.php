@@ -43,7 +43,7 @@ class NamedDeputy
      *
      * @JMS\Type("string")
      * @JMS\Groups({"report-submitted-by", "named-deputy"})
-     * @ORM\Column(name="deputy_no", type="string", length=15, nullable=false, unique=true)
+     * @ORM\Column(name="deputy_no", type="string", length=20, nullable=false, unique=true)
      */
     private $deputyNo;
 
