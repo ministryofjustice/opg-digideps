@@ -67,4 +67,28 @@ trait IShouldBeOnAdminTrait
     {
         return $this->iAmOnPage('/admin\/organisations\/.*\/add-user$/');
     }
+
+    /**
+     * @Then I should be on the admin stats page
+     */
+    public function iAmOnAdminStatsPage()
+    {
+        return $this->iAmOnPage('/admin\/stats$/');
+    }
+
+    /**
+     * @Then I should be on the admin stats user research page
+     */
+    public function iAmOnAdminStatsUserResearchPage()
+    {
+        return $this->iAmOnPage('/admin\/stats\/user-research$/');
+    }
+
+    /**
+     * @Then I should be on the admin stats satisfaction page
+     */
+    public function iAmOnAdminStatsSatisfactionPage()
+    {
+        return $this->iAmOnPage('/admin\/stats\/satisfaction$/');
+    }
 }

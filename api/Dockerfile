@@ -99,8 +99,8 @@ RUN chown www-data /var/www/tests/Behat/run-tests-smoke.sh
 RUN chmod 544 /var/www/tests/Behat/run-tests-smoke.sh
 RUN chown www-data /var/www/tests/Behat/run-tests.sh
 RUN chmod 544 /var/www/tests/Behat/run-tests.sh
-RUN chown www-data /var/www/tests/Behat/run-tests-v2.sh
-RUN chmod 544 /var/www/tests/Behat/run-tests-v2.sh
+RUN chown www-data /var/www/tests/Behat/run-tests-parallel.sh
+RUN chmod 544 /var/www/tests/Behat/run-tests-parallel.sh
 
 # Prebuild cache
 RUN su-exec www-data php -d memory_limit=-1 app/console cache:warmup
