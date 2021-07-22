@@ -22,10 +22,19 @@ Feature: Reporting Checklists - Reporting checklist
         Then I should see all the validation errors
 
     @admin @lay-health-welfare-submitted
-    Scenario: An lay hw checklist cannot see deputy costs which prof hw can - applies to all admin roles
+    Scenario: An lay hw checklist cannot see the pub auth specific sections - applies to all admin roles
         Given an admin user accesses the admin app
         When I navigate to the clients search page
         And I search for the client
         And I click the clients details page link
         When I navigate to the clients report checklist page
-        Then I cannot see the deputy costs section
+        Then I cannot see the pub auth specific section
+
+    @admin @prof-named-pfa-high-submitted
+    Scenario: An prof high assets checklist cannot see lay specific sections - applies to all admin roles
+        Given an admin user accesses the admin app
+        When I navigate to the clients search page
+        And I search for the client
+        And I click the clients details page link
+        When I navigate to the clients report checklist page
+        Then I cannot see the lay hw specific section

@@ -23,6 +23,25 @@ trait ReportingChecklistTrait
         'Please choose an option',
     ];
 
+    // Sidebar items
+    private array $xPathItems = [
+        'deputyClient' => "//a[@href='#profDeputyCostsEstimate']", // lay, pa, prof
+        'decisionsMade' => "//a[@href='#decisionsMade']", // lay, pa, prof
+        'peopleConsulted' => "//a[@href='#peopleConsulted']", // lay, pa, prof
+        'visitsAndCare' => "//a[@href='#visitsAndCare']", // lay, pa, prof
+        'lifestyle' => "//a[@href='#lifestyle']", // lay-hw
+        'assetsAndDebts' => "//a[@href='#assetsAndDebts']", // lay-assets, pa-assets, prof-assets
+        'moneyInOut' => "//a[@href='#moneyInOut']", // lay-assets, pa-assets, prof-assets
+        'bonds' => "//a[@href='#bonds']", // lay-assets, pa-assets, prof-assets
+        'profDeputyCosts' => "//a[@href='#profDeputyCosts']", // prof
+        'profDeputyCostsEstimate' => "//a[@href='#profDeputyCostsEstimate']", // prof
+        'paFeesExpenses' => "//a[@href='#paFeesExpenses']", // pa
+        'nextReportingPeriod' => "//a[@href='#nextReportingPeriod']", // lay, pa, prof
+        'declaration' => "//a[@href='#declaration']", // lay, pa, prof
+        'anchorLodgingSummary' => "//a[@href='#anchor-lodging-summary']", // lay, pa, prof
+        'anchorFurtherInformation' => "//a[@href='#anchor-further-information']", // lay, pa, prof
+    ];
+
     /**
      * @When I navigate to the clients search page
      */
@@ -118,9 +137,9 @@ trait ReportingChecklistTrait
     }
 
     /**
-     * @When I can see the estimated cost section
+     * @Then I cannot see the prof specific costs section
      */
-    public function ICanSeeTheEstimatedCostSection()
+    public function ICannotSeeTheProfSpecificCostsSection()
     {
         $estimatedCost = $this->getSession()->getPage()->find('xpath', '//a[@href="#profDeputyCostsEstimate"]');
         assert(null !== $estimatedCost);

@@ -54,9 +54,9 @@ class BaseFeatureContext extends MinkContext
     public UserDetails $layDeputyCompletedHealthWelfareDetails;
     public UserDetails $layDeputySubmittedHealthWelfareDetails;
 
-    public UserDetails $profNamedDeputyNotStartedHealthWelfareDetails;
-    public UserDetails $profNamedDeputyCompletedHealthWelfareDetails;
-    public UserDetails $profNamedDeputySubmittedHealthWelfareDetails;
+    public UserDetails $profNamedDeputyNotStartedPfaHighDetails;
+    public UserDetails $profNamedDeputyCompletedPfaHighDetails;
+    public UserDetails $profNamedDeputySubmittedPfaHighDetails;
 
     public UserDetails $profTeamDeputyNotStartedHealthWelfareDetails;
     public UserDetails $profTeamDeputyCompletedHealthWelfareDetails;
@@ -213,6 +213,15 @@ class BaseFeatureContext extends MinkContext
     {
         $userDetails = $this->fixtureHelper->createProfNamedHealthWelfareSubmitted($this->testRunId);
         $this->fixtureUsers[] = $this->profNamedDeputySubmittedHealthWelfareDetails = new UserDetails($userDetails);
+    }
+
+    /**
+     * @BeforeScenario @prof-named-pfa-high-submitted
+     */
+    public function createProfNamedPfaHighSubmitted()
+    {
+        $userDetails = $this->fixtureHelper->createProfNamedPfaHighSubmitted($this->testRunId);
+        $this->fixtureUsers[] = $this->profNamedDeputySubmittedPfaHighDetails = new UserDetails($userDetails);
     }
 
     /**
