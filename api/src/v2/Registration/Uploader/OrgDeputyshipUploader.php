@@ -70,6 +70,8 @@ class OrgDeputyshipUploader
             }
         }
 
+        $this->removeDuplicateIds();
+
         $uploadResults['added'] = $this->added;
         $uploadResults['updated'] = $this->updated;
 
@@ -184,8 +186,6 @@ class OrgDeputyshipUploader
 
                 $this->updated['clients'][] = $client->getId();
             }
-
-            $this->updated['clients'] = array_unique($this->updated['clients']);
         }
 
         $this->em->persist($client);
@@ -295,5 +295,18 @@ class OrgDeputyshipUploader
             $errorMessage = sprintf('Missing data to upload row: %s', implode(', ', $missingDataTypes));
             throw new RuntimeException($errorMessage);
         }
+    }
+
+    private function removeDuplicateIds()
+    {
+        $this->added['named_deputies'] = array_unique($this->added['named_deputies']);
+        $this->added['organisations'] = array_unique($this->added['organisations']);
+        $this->added['clients'] = array_unique($this->added['clients']);
+        $this->added['reports'] = array_unique($this->added['reports']);
+
+        $this->updated['named_deputies'] = array_unique($this->updated['named_deputies']);
+        $this->updated['organisations'] = array_unique($this->updated['organisations']);
+        $this->updated['clients'] = array_unique($this->updated['clients']);
+        $this->updated['reports'] = array_unique($this->updated['reports']);
     }
 }
