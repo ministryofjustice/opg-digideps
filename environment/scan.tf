@@ -109,13 +109,13 @@ EOF
       "name": "server",
       "essential": true,
       "cpu": 0,
-      "image": "mkodockx/docker-clamav:1.0.1-alpine",
+      "image": "mkodockx/docker-clamav:1.0.3-alpine",
       "mountPoints": [],
       "volumesFrom": [],
       "healthCheck": {
         "command": [
           "CMD-SHELL",
-          "wget --quiet --tries=1 --spider http://localhost:3310/"
+          "./check.sh"
         ],
         "interval": 30,
         "retries": 5,
@@ -130,7 +130,7 @@ EOF
         }
       },
       "environment": [
-        { "name": "CLAMD_CONF_SelfCheck", "value": "0" },
+        { "name": "CLAMD_CONF_SelfCheck", "value": "100000" },
         { "name": "FRESHCLAM_CONF_NotifyClamd", "value": "no" }
       ]
   }

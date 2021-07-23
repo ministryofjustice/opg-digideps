@@ -1,4 +1,4 @@
 #!/bin/sh
-service cron restart
+crond -l 2
 
 usr/local/bin/gunicorn $@

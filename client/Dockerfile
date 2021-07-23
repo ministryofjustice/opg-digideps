@@ -38,7 +38,7 @@ COPY src src
 RUN composer run-script post-install-cmd --no-interaction
 RUN composer dump-autoload --optimize
 
-FROM php:7.4.16-fpm-alpine
+FROM php:7.4.20-fpm-alpine
 WORKDIR /var/www
 EXPOSE 80
 EXPOSE 443
@@ -64,7 +64,8 @@ RUN if [[ $REQUIRE_XDEBUG = 1 ]] ; then \
 
 # Route NGINX logs to stdout/stderr
 RUN ln -sf /dev/stdout /var/log/nginx/access.log \
-  && ln -sf /dev/stderr /var/log/nginx/error.log
+  && ln -sf /dev/stderr /var/log/nginx/error.log \
+  && ln -s /etc/nginx/http.d /etc/nginx/conf.d
 
 # Add Confd to configure parameters on start
 ENV CONFD_VERSION="0.16.0"

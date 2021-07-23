@@ -5,6 +5,7 @@ declare(strict_types=1);
 namespace App\Tests\Behat\v2\Common;
 
 use App\Tests\Behat\BehatException;
+use App\Tests\Behat\v2\Analytics\AnalyticsTrait;
 use App\Tests\Behat\v2\Helpers\FixtureHelper;
 use Behat\Behat\Hook\Call\BeforeScenario;
 use Behat\Behat\Hook\Scope\BeforeScenarioScope;
@@ -19,6 +20,7 @@ use Symfony\Component\HttpKernel\KernelInterface;
 class BaseFeatureContext extends MinkContext
 {
     use AlertsTrait;
+    use AnalyticsTrait;
     use AuthTrait;
     use AssertTrait;
     use DebugTrait;
@@ -326,5 +328,11 @@ class BaseFeatureContext extends MinkContext
     public function getCurrentUrl(): string
     {
         return $this->getSession()->getCurrentUrl();
+    }
+
+    public function createAdditionalDataForAnalytics(string $timeAgo, int $runNumber, int $satisfactionScore)
+    {
+        $rndKey = rand(0, 99999);
+        $this->fixtureHelper->createDataForAnalytics('a_'.'_'.strval($rndKey).strval($runNumber), $timeAgo, $satisfactionScore);
     }
 }

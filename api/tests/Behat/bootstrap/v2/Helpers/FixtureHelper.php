@@ -8,6 +8,7 @@ use App\Entity\Client;
 use App\Entity\Ndr\Ndr;
 use App\Entity\Organisation;
 use App\Entity\Report\Report;
+use App\Entity\Satisfaction;
 use App\Entity\User;
 use App\TestHelpers\ClientTestHelper;
 use App\TestHelpers\NamedDeputyTestHelper;
@@ -15,6 +16,7 @@ use App\TestHelpers\OrganisationTestHelper;
 use App\TestHelpers\ReportTestHelper;
 use App\TestHelpers\UserTestHelper;
 use App\Tests\Behat\BehatException;
+use DateTime;
 use Doctrine\ORM\EntityManagerInterface;
 use Symfony\Component\Security\Core\Encoder\UserPasswordEncoderInterface;
 
@@ -49,6 +51,10 @@ class FixtureHelper
     private User $profNamedHealthWelfareNotStarted;
     private User $profNamedHealthWelfareCompleted;
     private User $profNamedHealthWelfareSubmitted;
+
+    private User $paNamedHealthWelfareNotStarted;
+    private User $paNamedHealthWelfareCompleted;
+    private User $paNamedHealthWelfareSubmitted;
 
     private User $profTeamHealthWelfareNotStarted;
     private User $profTeamHealthWelfareCompleted;
@@ -334,14 +340,22 @@ class FixtureHelper
         $this->addOrgClientsNamedDeputyAndReportsToOrgDeputy($this->profAdminSubmitted, $organisation, true, true);
     }
 
-    private function addClientsAndReportsToLayDeputy(User $deputy, bool $completed = false, bool $submitted = false, ?string $type = null, ?string $caseNumber = null)
-    {
+    private function addClientsAndReportsToLayDeputy(
+        User $deputy,
+        bool $completed = false,
+        bool $submitted = false,
+        ?string $type = null,
+        ?DateTime $startDate = null,
+        int $satisfactionScore = null,
+        ?string $caseNumber = null
+    ) {
         $client = $this->clientTestHelper->generateClient($this->em, $deputy, null, $caseNumber);
-        $report = $this->reportTestHelper->generateReport($this->em, $client, $type);
+        $report = $this->reportTestHelper->generateReport($this->em, $client, $type, $startDate);
 
         $client->addReport($report);
         $report->setClient($client);
         $deputy->addClient($client);
+        $deputy->setRegistrationDate($startDate);
 
         if ($completed) {
             $this->reportTestHelper->completeLayReport($report, $this->em);
@@ -353,6 +367,26 @@ class FixtureHelper
 
         $this->em->persist($client);
         $this->em->persist($report);
+
+        if ($submitted and isset($satisfactionScore)) {
+            $satisfaction = $this->setSatisfaction($report, $deputy, $satisfactionScore);
+            $this->em->persist($satisfaction);
+        }
+    }
+
+    private function setSatisfaction(Report $report, User $deputy, int $satisfactionScore)
+    {
+        $submitDate = clone $report->getStartDate();
+        $submitDate->modify('+365 day');
+        $satisfaction = new Satisfaction();
+        $satisfaction->setScore($satisfactionScore);
+        $satisfaction->setComments('random comment');
+        $satisfaction->setReport($report);
+        $satisfaction->setReporttype($report->getType());
+        $satisfaction->setDeputyrole($deputy->getRoleName());
+        $satisfaction->setCreated($submitDate);
+
+        return $satisfaction;
     }
 
     private function addClientsAndReportsToNdrLayDeputy(User $deputy, bool $completed = false, bool $submitted = false)
@@ -383,6 +417,8 @@ class FixtureHelper
         bool $completed = false,
         bool $submitted = false,
         string $reportType = Report::TYPE_102_5,
+        ?DateTime $startDate = null,
+        int $satisfactionScore = null,
         ?string $namedDeputyEmail = null,
         ?string $caseNumber = null,
         ?string $deputyNumber = null
@@ -401,6 +437,7 @@ class FixtureHelper
         $report->setClient($client);
 
         $deputy->addOrganisation($organisation);
+        $deputy->setRegistrationDate($startDate);
 
         if ($completed) {
             $this->reportTestHelper->completeLayReport($report, $this->em);
@@ -414,6 +451,11 @@ class FixtureHelper
         $this->em->persist($deputy);
         $this->em->persist($client);
         $this->em->persist($report);
+
+        if ($submitted and isset($satisfactionScore)) {
+            $satisfaction = $this->setSatisfaction($report, $deputy, $satisfactionScore);
+            $this->em->persist($satisfaction);
+        }
     }
 
     public function getLoggedInUserDetails(string $email)
@@ -442,6 +484,8 @@ class FixtureHelper
             false,
             false,
             false,
+            null,
+            null,
             $caseNumber
         );
 
@@ -600,6 +644,48 @@ class FixtureHelper
         );
 
         return self::buildOrgUserDetails($this->profNamedHealthWelfareSubmitted);
+    }
+
+    public function createPaNamedHealthWelfareNotStarted(string $testRunId)
+    {
+        $this->paNamedHealthWelfareNotStarted = $this->createOrgUserClientNamedDeputyAndReport(
+            $testRunId,
+            User::ROLE_PA_NAMED,
+            'pa-named-health-welfare-not-started',
+            Report::TYPE_104_6,
+            false,
+            false
+        );
+
+        return self::buildOrgUserDetails($this->paNamedHealthWelfareNotStarted);
+    }
+
+    public function createPaNamedHealthWelfareCompleted(string $testRunId)
+    {
+        $this->paNamedHealthWelfareCompleted = $this->createOrgUserClientNamedDeputyAndReport(
+            $testRunId,
+            User::ROLE_PA_NAMED,
+            'pa-named-health-welfare-completed',
+            Report::TYPE_104_6,
+            true,
+            false
+        );
+
+        return self::buildOrgUserDetails($this->paNamedHealthWelfareCompleted);
+    }
+
+    public function createPaNamedHealthWelfareSubmitted(string $testRunId)
+    {
+        $this->paNamedHealthWelfareSubmitted = $this->createOrgUserClientNamedDeputyAndReport(
+            $testRunId,
+            User::ROLE_PA_NAMED,
+            'pa-named-health-welfare-submitted',
+            Report::TYPE_104_6,
+            true,
+            true
+        );
+
+        return self::buildOrgUserDetails($this->paNamedHealthWelfareSubmitted);
     }
 
     public function createProfTeamHealthWelfareNotStarted(string $testRunId)
@@ -785,6 +871,45 @@ class FixtureHelper
         return self::buildAdminUserDetails($this->superAdmin);
     }
 
+    public function createDataForAnalytics(string $testRunId, $timeAgo, $satisfactionScore)
+    {
+        $startDate = new \DateTime($timeAgo);
+
+        $this->createOrgUserClientNamedDeputyAndReport(
+            $testRunId.'_1',
+            User::ROLE_PROF_NAMED,
+            'analytics-prof-submitted',
+            Report::TYPE_104_5,
+            true,
+            true,
+            $startDate,
+            $satisfactionScore
+        );
+
+        $this->createOrgUserClientNamedDeputyAndReport(
+            $testRunId.'_2',
+            User::ROLE_PA_NAMED,
+            'analytics-pa-submitted',
+            Report::TYPE_104_6,
+            true,
+            true,
+            $startDate,
+            $satisfactionScore
+        );
+
+        $this->createClientAndReport(
+            $testRunId.'_3',
+            User::ROLE_LAY_DEPUTY,
+            'analytics-lay-submitted',
+            Report::TYPE_104,
+            true,
+            true,
+            false,
+            $startDate,
+            $satisfactionScore
+        );
+    }
+
     private function createOrganisation(string $testRunId, string $emailIdentifier)
     {
         if ('prod' === $this->symfonyEnvironment) {
@@ -805,7 +930,16 @@ class FixtureHelper
         return $organisation;
     }
 
-    private function createClientAndReport(string $testRunId, $userRole, $emailPrefix, $reportType, $completed, $submitted, bool $ndr = false, ?string $caseNumber = null)
+    private function createClientAndReport(
+        string $testRunId,
+        $userRole,
+        $emailPrefix,
+        $reportType,
+        $completed,
+        $submitted, bool $ndr = false,
+        ?DateTime $startDate = null,
+        int $satisfactionScore = null,
+        ?string $caseNumber = null)
     {
         if ('prod' === $this->symfonyEnvironment) {
             throw new BehatException('Prod mode enabled - cannot create fixture users');
@@ -819,7 +953,7 @@ class FixtureHelper
         if ($ndr) {
             $this->addClientsAndReportsToNdrLayDeputy($client, $completed, $submitted);
         } else {
-            $this->addClientsAndReportsToLayDeputy($client, $completed, $submitted, $reportType, $caseNumber);
+            $this->addClientsAndReportsToLayDeputy($client, $completed, $submitted, $reportType, $startDate, $satisfactionScore, $caseNumber);
         }
 
         $this->setClientPassword($client);
@@ -851,7 +985,9 @@ class FixtureHelper
         $submitted,
         ?string $namedDeputyEmail = null,
         ?string $caseNumber = null,
-        ?string $deputyNumber = null
+        ?string $deputyNumber = null,
+        ?DateTime $startDate = null,
+        int $satisfactionScore = null
     ) {
         if ('prod' === $this->symfonyEnvironment) {
             throw new BehatException('Prod mode enabled - cannot create fixture users');
@@ -868,7 +1004,7 @@ class FixtureHelper
         $user = $this->userTestHelper
             ->createUser(null, $userRole, $userEmail);
 
-        $this->addOrgClientsNamedDeputyAndReportsToOrgDeputy($user, $organisation, $completed, $submitted, $reportType, $namedDeputyEmail, $caseNumber, $deputyNumber);
+        $this->addOrgClientsNamedDeputyAndReportsToOrgDeputy($user, $organisation, $completed, $submitted, $reportType, $startDate, $satisfactionScore, $namedDeputyEmail, $caseNumber, $deputyNumber);
 
         $this->setClientPassword($user);
 

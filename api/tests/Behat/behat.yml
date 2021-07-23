@@ -202,6 +202,12 @@ v2-tests-goutte:
             contexts:
                 - App\Tests\Behat\v2\AdminManagement\AdminManagementFeatureContext
 
+        analytics:
+            description: Covering the admin analytics feature
+            paths: [ "%paths.base%/features-v2/analytics" ]
+            contexts:
+                - App\Tests\Behat\v2\Analytics\AnalyticsFeatureContext
+
         client-management:
             description: Covering the client management features of the app (frontend and admin)
             paths: [ "%paths.base%/features-v2/client-management" ]
