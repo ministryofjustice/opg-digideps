@@ -52,6 +52,15 @@ Feature: Org CSV data ingestion - casrec source data
         And the report associated with the client should remain the same
 
     @super-admin
+    Scenario: Uploading a CSV where the same named deputy appears with two addresses
+        Given a super admin user accesses the admin app
+        When I visit the admin upload org users page
+        And I upload a 'casrec' org CSV that contains two rows with the same named deputy number but different address numbers
+        Then there should be two named deputies created
+        And the named deputy for '97864531' should have the address '6 MAYFIELD AVENUE, WYLDE GREEN, SUTTON COLDFIELD, WEST MIDLANDS, WARWICKSHIRE, B73 5QQ'
+        And the named deputy for '64597832' should have the address '21 NIGEL ROAD, NORTHFIELD, BIRMINGHAM, WEST MIDLANDS, WARWICKSHIRE, B31 1LL'
+
+    @super-admin
     Scenario: Uploading a CSV that contains deputies with missing required information alongside valid deputy rows
         Given a super admin user accesses the admin app
         When I visit the admin upload org users page

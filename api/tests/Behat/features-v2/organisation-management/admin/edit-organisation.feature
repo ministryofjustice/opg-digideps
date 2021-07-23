@@ -1,7 +1,7 @@
 @v2 @organisation-management
 Feature: Organisation - Editing an organisation
 
-    @super-admin @acs
+    @super-admin
     Scenario: A super admin edits an organisation's name
         Given a super admin user accesses the admin app
         When I navigate to the organisations page

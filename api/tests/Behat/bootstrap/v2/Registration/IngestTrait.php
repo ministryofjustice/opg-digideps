@@ -729,4 +729,75 @@ trait IngestTrait
             'Comparing report associated with client before CSV upload against report associated with client after CSV upload'
         );
     }
+
+    /**
+     * @When I upload a :source org CSV that contains two rows with the same named deputy number but different address numbers
+     */
+    public function iUploadCsvWithOneNamedDeputyOnTwoLinesWithDifferentAddresses(string $source)
+    {
+        $this->iAmOnAdminOrgCsvUploadPage();
+
+        $filePath = 'casrec-csvs/org-2-rows-1-named-deputy-with-different-addresses.csv';
+        $this->uploadCsvAndCountCreatedEntities($filePath, 'Upload PA/Prof users');
+
+        $this->em->clear();
+    }
+
+    /**
+     * @Then there should be two named deputies created
+     */
+    public function shouldBeTwoNamedDeputiesWithSeparateAddresses()
+    {
+        $client1 = $this->em
+            ->getRepository(Client::class)
+            ->findOneBy(['caseNumber' => $this->entityUids['client_case_numbers'][0]]);
+
+        if (is_null($client1)) {
+            throw new BehatException(sprintf('Client not found with case number "%s"', $this->entityUids['client_case_numbers'][0]));
+        }
+
+        $client2 = $this->em
+            ->getRepository(Client::class)
+            ->findOneBy(['caseNumber' => $this->entityUids['client_case_numbers'][1]]);
+
+        if (is_null($client2)) {
+            throw new BehatException(sprintf('Client not found with case number "%s"', $this->entityUids['client_case_numbers'][1]));
+        }
+
+        $this->assertEntitiesAreNotTheSame(
+            $client1->getNamedDeputy(),
+            $client2->getNamedDeputy(),
+            'Comparing named deputies of clients created during CSV upload'
+        );
+    }
+
+    /**
+     * @Then the named deputy for :caseNumber should have the address :fullAddress
+     */
+    public function namedDeputyForCaseNumberShouldHaveAddress(string $caseNumber, string $fullAddress)
+    {
+        $client = $this->em
+            ->getRepository(Client::class)
+            ->findOneBy(['caseNumber' => $caseNumber]);
+
+        if (is_null($client)) {
+            throw new BehatException(sprintf('Client not found with case number "%s"', $caseNumber));
+        }
+
+        $actualNamedDeputiesAddress = sprintf(
+            '%s, %s, %s, %s, %s, %s',
+            $client->getNamedDeputy()->getAddress1(),
+            $client->getNamedDeputy()->getAddress2(),
+            $client->getNamedDeputy()->getAddress3(),
+            $client->getNamedDeputy()->getAddress4(),
+            $client->getNamedDeputy()->getAddress5(),
+            $client->getNamedDeputy()->getAddressPostcode()
+        );
+
+        $this->assertStringEqualsString(
+            $fullAddress,
+            $actualNamedDeputiesAddress,
+            'Comparing address defined in step against actual named deputy address'
+            );
+    }
 }
