@@ -694,7 +694,7 @@ class FixtureHelper
 
     public function createPublicAuthNamedPfaHighSubmitted(string $testRunId)
     {
-        $this->profNamedPfaHighSubmitted = $this->createOrgUserClientNamedDeputyAndReport(
+        $this->publicAuthNamedPfaHighSubmitted = $this->createOrgUserClientNamedDeputyAndReport(
             $testRunId,
             User::ROLE_PA_NAMED,
             'public-auth-named-pfa-high-assets-submitted',
