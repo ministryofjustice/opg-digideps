@@ -936,7 +936,8 @@ class FixtureHelper
         $emailPrefix,
         $reportType,
         $completed,
-        $submitted, bool $ndr = false,
+        $submitted,
+        bool $ndr = false,
         ?DateTime $startDate = null,
         int $satisfactionScore = null,
         ?string $caseNumber = null)
