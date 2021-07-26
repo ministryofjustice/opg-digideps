@@ -39,7 +39,7 @@ Feature: Reporting Checklists - Reporting checklist
         When I navigate to the clients report checklist page
         Then I can only see the 'prof pfa high' specific section
 
-    @admin @public-auth-named-pfa-high-submitted
+    @admin @pa-named-pfa-high-submitted
     Scenario: An lay hw checklist cannot see prof high assets specific sections - applies to all admin roles
         Given an admin user accesses the admin app
         When I navigate to the clients search page

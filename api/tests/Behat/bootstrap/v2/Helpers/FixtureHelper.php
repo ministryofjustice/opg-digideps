@@ -59,9 +59,9 @@ class FixtureHelper
     private User $profNamedPfaHighCompleted;
     private User $profNamedPfaHighSubmitted;
 
-    private User $publicAuthNamedPfaHighNotStarted;
-    private User $publicAuthNamedPfaHighCompleted;
-    private User $publicAuthNamedPfaHighSubmitted;
+    private User $paNamedPfaHighNotStarted;
+    private User $paNamedPfaHighCompleted;
+    private User $paNamedPfaHighSubmitted;
 
     private User $profTeamHealthWelfareNotStarted;
     private User $profTeamHealthWelfareCompleted;
@@ -692,18 +692,18 @@ class FixtureHelper
         return self::buildOrgUserDetails($this->profNamedPfaHighSubmitted);
     }
 
-    public function createPublicAuthNamedPfaHighSubmitted(string $testRunId)
+    public function createPaNamedPfaHighSubmitted(string $testRunId)
     {
-        $this->publicAuthNamedPfaHighSubmitted = $this->createOrgUserClientNamedDeputyAndReport(
+        $this->paNamedPfaHighSubmitted = $this->createOrgUserClientNamedDeputyAndReport(
             $testRunId,
             User::ROLE_PA_NAMED,
-            'public-auth-named-pfa-high-assets-submitted',
+            'pa-named-pfa-high-assets-submitted',
             Report::TYPE_102_6,
             true,
             true
         );
 
-        return self::buildOrgUserDetails($this->publicAuthNamedPfaHighSubmitted);
+        return self::buildOrgUserDetails($this->paNamedPfaHighSubmitted);
     }
 
     public function createProfTeamHealthWelfareNotStarted(string $testRunId)

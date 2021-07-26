@@ -229,11 +229,11 @@ class BaseFeatureContext extends MinkContext
     }
 
     /**
-     * @BeforeScenario @public-auth-named-pfa-high-submitted
+     * @BeforeScenario @pa-named-pfa-high-submitted
      */
-    public function createPublicAuthNamedPfaHighSubmitted()
+    public function createPaNamedPfaHighSubmitted()
     {
-        $userDetails = $this->fixtureHelper->createPublicAuthNamedPfaHighSubmitted($this->testRunId);
+        $userDetails = $this->fixtureHelper->createPaNamedPfaHighSubmitted($this->testRunId);
         $this->fixtureUsers[] = $this->publicAuthNamedSubmittedPfaHighDetails = new UserDetails($userDetails);
     }
 
