@@ -5,7 +5,7 @@ Feature: Reporting Checklists - Reporting checklist
     Scenario: An admin submits the checklist form - applies to all admin roles
         Given an admin user accesses the admin app
         When I navigate to the clients search page
-        And I search for the client
+        And I search for the client 'lay'
         And I click the clients details page link
         When I navigate to the clients report checklist page
         And I submit the checklist with the form filled in
@@ -15,7 +15,7 @@ Feature: Reporting Checklists - Reporting checklist
     Scenario: An admin submits the checklist form with errors - applies to all admin roles
         Given an admin user accesses the admin app
         When I navigate to the clients search page
-        And I search for the client
+        And I search for the client 'lay'
         And I click the clients details page link
         When I navigate to the clients report checklist page
         And I submit the checklist without filling it in
@@ -25,7 +25,7 @@ Feature: Reporting Checklists - Reporting checklist
     Scenario: An lay hw checklist cannot see the pub auth specific sections - applies to all admin roles
         Given an admin user accesses the admin app
         When I navigate to the clients search page
-        And I search for the client
+        And I search for the client 'lay'
         And I click the clients details page link
         When I navigate to the clients report checklist page
         Then I can only see the 'lay hw' specific section
@@ -34,7 +34,7 @@ Feature: Reporting Checklists - Reporting checklist
     Scenario: An prof high assets checklist cannot see lay specific sections - applies to all admin roles
         Given an admin user accesses the admin app
         When I navigate to the clients search page
-        And I search for the client
+        And I search for the client 'prof'
         And I click the clients details page link
         When I navigate to the clients report checklist page
         Then I can only see the 'prof pfa high' specific section
@@ -43,7 +43,7 @@ Feature: Reporting Checklists - Reporting checklist
     Scenario: An lay hw checklist cannot see prof high assets specific sections - applies to all admin roles
         Given an admin user accesses the admin app
         When I navigate to the clients search page
-        And I search for the client
+        And I search for the client 'pa'
         And I click the clients details page link
         When I navigate to the clients report checklist page
         Then I can only see the 'pub auth pfa high' specific section

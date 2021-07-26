@@ -52,12 +52,23 @@ trait ReportingChecklistTrait
     }
 
     /**
-     * @When I search for the client
+     * @When I search for the client :deputyType
      */
-    public function iSearchForTheClient()
+    public function iSearchForTheClient(string $deputyType)
     {
-        $user = is_null($this->interactingWithUserDetails) ? $this->layDeputySubmittedHealthWelfareDetails : $this->interactingWithUserDetails;
-        $this->searchAdminForClientWithTerm($user->getClientCaseNumber());
+        if (null !== $deputyType) {
+            $deputy = '';
+            if ('lay' === $deputyType) {
+                $deputy = $this->layDeputySubmittedHealthWelfareDetails;
+            } elseif ('prof' === $deputyType) {
+                $deputy = $this->profNamedDeputySubmittedPfaHighDetails;
+            } elseif ('pa' === $deputyType) {
+                $deputy = $this->publicAuthNamedSubmittedPfaHighDetails;
+            }
+
+            $user = is_null($this->interactingWithUserDetails) ? $deputy : $this->interactingWithUserDetails;
+            $this->searchAdminForClientWithTerm($user->getClientCaseNumber());
+        }
     }
 
     /**
@@ -128,7 +139,7 @@ trait ReportingChecklistTrait
     }
 
     /**
-     * @Then I cannot see the :deputyType specific section
+     * @Then I can only see the :deputyType specific section
      */
     public function ICannotSeeTheProfSpecificCostsSection(string $deputyType)
     {
