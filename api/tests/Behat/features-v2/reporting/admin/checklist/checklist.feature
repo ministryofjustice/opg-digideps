@@ -28,7 +28,7 @@ Feature: Reporting Checklists - Reporting checklist
         And I search for the client
         And I click the clients details page link
         When I navigate to the clients report checklist page
-        Then I cannot see the pub auth specific section
+        Then I can only see the 'lay hw' specific section
 
     @admin @prof-named-pfa-high-submitted
     Scenario: An prof high assets checklist cannot see lay specific sections - applies to all admin roles
@@ -37,4 +37,13 @@ Feature: Reporting Checklists - Reporting checklist
         And I search for the client
         And I click the clients details page link
         When I navigate to the clients report checklist page
-        Then I cannot see the lay hw specific section
+        Then I can only see the 'prof pfa high' specific section
+
+    @admin @public-auth-named-pfa-high-submitted
+    Scenario: An lay hw checklist cannot see prof high assets specific sections - applies to all admin roles
+        Given an admin user accesses the admin app
+        When I navigate to the clients search page
+        And I search for the client
+        And I click the clients details page link
+        When I navigate to the clients report checklist page
+        Then I can only see the 'pub auth pfa high' specific section

@@ -59,6 +59,10 @@ class FixtureHelper
     private User $profNamedPfaHighCompleted;
     private User $profNamedPfaHighSubmitted;
 
+    private User $publicAuthNamedPfaHighNotStarted;
+    private User $publicAuthNamedPfaHighCompleted;
+    private User $publicAuthNamedPfaHighSubmitted;
+
     private User $profTeamHealthWelfareNotStarted;
     private User $profTeamHealthWelfareCompleted;
     private User $profTeamHealthWelfareSubmitted;
@@ -686,6 +690,20 @@ class FixtureHelper
         );
 
         return self::buildOrgUserDetails($this->profNamedPfaHighSubmitted);
+    }
+
+    public function createPublicAuthNamedPfaHighSubmitted(string $testRunId)
+    {
+        $this->profNamedPfaHighSubmitted = $this->createOrgUserClientNamedDeputyAndReport(
+            $testRunId,
+            User::ROLE_PA_NAMED,
+            'public-auth-named-pfa-high-assets-submitted',
+            Report::TYPE_102_6,
+            true,
+            true
+        );
+
+        return self::buildOrgUserDetails($this->publicAuthNamedPfaHighSubmitted);
     }
 
     public function createProfTeamHealthWelfareNotStarted(string $testRunId)

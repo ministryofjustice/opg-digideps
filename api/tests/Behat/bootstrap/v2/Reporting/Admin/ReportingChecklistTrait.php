@@ -128,20 +128,57 @@ trait ReportingChecklistTrait
     }
 
     /**
-     * @Then I cannot see the deputy costs section
+     * @Then I cannot see the :deputyType specific section
      */
-    public function ICannotSeeTheDeputyCostsSection()
+    public function ICannotSeeTheProfSpecificCostsSection(string $deputyType)
     {
-        $deputyCost = $this->getSession()->getPage()->find('xpath', '//a[@href="#profDeputyCosts"]');
-        assert(null === $deputyCost);
-    }
+        if ('pub auth pfa high' === $deputyType) {
+            $hiddenItems = [
+                'lifestyle',
+                'profDeputyCosts',
+                'profDeputyCostsEstimate',
+            ];
 
-    /**
-     * @Then I cannot see the prof specific costs section
-     */
-    public function ICannotSeeTheProfSpecificCostsSection()
-    {
-        $estimatedCost = $this->getSession()->getPage()->find('xpath', '//a[@href="#profDeputyCostsEstimate"]');
-        assert(null !== $estimatedCost);
+            foreach ($this->xPathItems as $xPathitem) {
+                foreach ($hiddenItems as $hiddenItem) {
+                    if ($hiddenItem === $xPathitem) {
+                        $link = $this->getSession()->getPage()->find('xpath', $xPathitem);
+                        assert(null === $link);
+                    }
+                }
+            }
+        } elseif ('lay hw' === $deputyType) {
+            $hiddenItems = [
+                'assetsAndDebts',
+                'moneyInOut',
+                'bonds',
+                'profDeputyCosts',
+                'profDeputyCostsEstimate',
+                'paFeesExpenses',
+            ];
+
+            foreach ($this->xPathItems as $xPathitem) {
+                foreach ($hiddenItems as $hiddenItem) {
+                    if ($hiddenItem === $xPathitem) {
+                        $link = $this->getSession()->getPage()->find('xpath', $xPathitem);
+                        assert(null === $link);
+                    }
+                }
+            }
+        } elseif ('prof pfa high' === $deputyType) {
+            $hiddenItems = [
+                'lifestyle',
+                'paFeesExpenses',
+            ];
+
+            foreach ($this->xPathItems as $xPathitem) {
+                foreach ($hiddenItems as $hiddenItem) {
+                    if ($hiddenItem === $xPathitem) {
+                        $link = $this->getSession()->getPage()->find('xpath', $xPathitem);
+                        assert(null === $link);
+                    }
+                }
+            }
+        }
     }
 }
