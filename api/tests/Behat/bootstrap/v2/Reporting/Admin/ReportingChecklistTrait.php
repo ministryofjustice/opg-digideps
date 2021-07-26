@@ -52,23 +52,21 @@ trait ReportingChecklistTrait
     }
 
     /**
-     * @When I search for the client :deputyType
+     * @When I search for the :deputyType client
      */
     public function iSearchForTheClient(string $deputyType)
     {
-        if (null !== $deputyType) {
-            $deputy = '';
-            if ('lay' === $deputyType) {
-                $deputy = $this->layDeputySubmittedHealthWelfareDetails;
-            } elseif ('prof' === $deputyType) {
-                $deputy = $this->profNamedDeputySubmittedPfaHighDetails;
-            } elseif ('pa' === $deputyType) {
-                $deputy = $this->publicAuthNamedSubmittedPfaHighDetails;
-            }
-
-            $user = is_null($this->interactingWithUserDetails) ? $deputy : $this->interactingWithUserDetails;
-            $this->searchAdminForClientWithTerm($user->getClientCaseNumber());
+        $deputy = '';
+        if ('lay' === $deputyType) {
+            $deputy = $this->layDeputySubmittedHealthWelfareDetails;
+        } elseif ('prof' === $deputyType) {
+            $deputy = $this->profNamedDeputySubmittedPfaHighDetails;
+        } elseif ('pa' === $deputyType) {
+            $deputy = $this->publicAuthNamedSubmittedPfaHighDetails;
         }
+
+        $user = is_null($this->interactingWithUserDetails) ? $deputy : $this->interactingWithUserDetails;
+        $this->searchAdminForClientWithTerm($user->getClientCaseNumber());
     }
 
     /**
