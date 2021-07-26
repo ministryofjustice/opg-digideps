@@ -333,6 +333,6 @@ class BaseFeatureContext extends MinkContext
     public function createAdditionalDataForAnalytics(string $timeAgo, int $runNumber, int $satisfactionScore)
     {
         $rndKey = rand(0, 99999);
-        $this->fixtureHelper->createDataForAnalytics('a_'.'_'.strval($rndKey).strval($runNumber), $timeAgo, $satisfactionScore);
+        $this->fixtureHelper->createDataForAnalytics('a_'.'_'.$rndKey.$runNumber, $timeAgo, $satisfactionScore);
     }
 }

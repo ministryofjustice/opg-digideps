@@ -424,7 +424,7 @@ class FixtureHelper
         ?string $deputyNumber = null
     ) {
         $client = $this->clientTestHelper->generateClient($this->em, $deputy, $organisation, $caseNumber);
-        $report = $this->reportTestHelper->generateReport($this->em, $client, $reportType);
+        $report = $this->reportTestHelper->generateReport($this->em, $client, $reportType, $startDate);
         $namedDeputy = $this->namedDeputyTestHelper->generatenamedDeputy($namedDeputyEmail, $deputyNumber);
 
         $client->addReport($report);
@@ -882,6 +882,9 @@ class FixtureHelper
             Report::TYPE_104_5,
             true,
             true,
+            null,
+            null,
+            null,
             $startDate,
             $satisfactionScore
         );
@@ -893,6 +896,9 @@ class FixtureHelper
             Report::TYPE_104_6,
             true,
             true,
+            null,
+            null,
+            null,
             $startDate,
             $satisfactionScore
         );
