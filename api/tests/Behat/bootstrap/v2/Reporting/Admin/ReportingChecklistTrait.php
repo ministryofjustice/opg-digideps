@@ -141,7 +141,7 @@ trait ReportingChecklistTrait
      */
     public function ICannotSeeTheProfSpecificCostsSection(string $deputyType)
     {
-        if ('pub auth pfa high' === $deputyType) {
+        if ('public authority pfa high' === $deputyType) {
             $hiddenItems = [
                 'lifestyle',
                 'profDeputyCosts',

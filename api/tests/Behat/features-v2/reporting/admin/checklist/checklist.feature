@@ -46,4 +46,4 @@ Feature: Reporting Checklists - Reporting checklist
         And I search for the 'pa' client
         And I click the clients details page link
         When I navigate to the clients report checklist page
-        Then I can only see the 'pub auth pfa high' specific section
+        Then I can only see the 'public authority pfa high' specific section
