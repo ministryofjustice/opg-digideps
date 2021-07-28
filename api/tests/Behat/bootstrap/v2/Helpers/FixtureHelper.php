@@ -55,6 +55,14 @@ class FixtureHelper
     private User $paNamedHealthWelfareCompleted;
     private User $paNamedHealthWelfareSubmitted;
 
+    private User $profNamedPfaHighNotStarted;
+    private User $profNamedPfaHighCompleted;
+    private User $profNamedPfaHighSubmitted;
+
+    private User $paNamedPfaHighNotStarted;
+    private User $paNamedPfaHighCompleted;
+    private User $paNamedPfaHighSubmitted;
+
     private User $profTeamHealthWelfareNotStarted;
     private User $profTeamHealthWelfareCompleted;
     private User $profTeamHealthWelfareSubmitted;
@@ -330,9 +338,14 @@ class FixtureHelper
         $this->addOrgClientsNamedDeputyAndReportsToOrgDeputy($this->profAdminSubmitted, $organisation, true, true);
     }
 
-    private function addClientsAndReportsToLayDeputy(User $deputy, bool $completed = false, bool $submitted = false,
-                                                     ?string $type = null, ?DateTime $startDate = null, int $satisfactionScore = null)
-    {
+    private function addClientsAndReportsToLayDeputy(
+        User $deputy,
+        bool $completed = false,
+        bool $submitted = false,
+        ?string $type = null,
+        ?DateTime $startDate = null,
+        int $satisfactionScore = null
+    ) {
         $client = $this->clientTestHelper->generateClient($this->em, $deputy);
         $report = $this->reportTestHelper->generateReport($this->em, $client, $type, $startDate);
 
@@ -396,8 +409,13 @@ class FixtureHelper
     }
 
     private function addOrgClientsNamedDeputyAndReportsToOrgDeputy(
-        User $deputy, Organisation $organisation, bool $completed = false, bool $submitted = false,
-        $reportType = Report::TYPE_102_5, ?DateTime $startDate = null, int $satisfactionScore = null
+        User $deputy,
+        Organisation $organisation,
+        bool $completed = false,
+        bool $submitted = false,
+        $reportType = Report::TYPE_102_5,
+        ?DateTime $startDate = null,
+        int $satisfactionScore = null
     ) {
         $client = $this->clientTestHelper->generateClient($this->em, $deputy, $organisation);
         $report = $this->reportTestHelper->generateReport($this->em, $client, $reportType, $startDate);
@@ -660,6 +678,34 @@ class FixtureHelper
         return self::buildOrgUserDetails($this->paNamedHealthWelfareSubmitted);
     }
 
+    public function createProfNamedPfaHighSubmitted(string $testRunId)
+    {
+        $this->profNamedPfaHighSubmitted = $this->createOrgUserClientNamedDeputyAndReport(
+            $testRunId,
+            User::ROLE_PROF_NAMED,
+            'prof-named-pfa-high-assets-submitted',
+            Report::TYPE_102_5,
+            true,
+            true
+        );
+
+        return self::buildOrgUserDetails($this->profNamedPfaHighSubmitted);
+    }
+
+    public function createPaNamedPfaHighSubmitted(string $testRunId)
+    {
+        $this->paNamedPfaHighSubmitted = $this->createOrgUserClientNamedDeputyAndReport(
+            $testRunId,
+            User::ROLE_PA_NAMED,
+            'pa-named-pfa-high-assets-submitted',
+            Report::TYPE_102_6,
+            true,
+            true
+        );
+
+        return self::buildOrgUserDetails($this->paNamedPfaHighSubmitted);
+    }
+
     public function createProfTeamHealthWelfareNotStarted(string $testRunId)
     {
         $this->profTeamHealthWelfareNotStarted = $this->createOrgUserClientNamedDeputyAndReport(
@@ -872,9 +918,17 @@ class FixtureHelper
         return $organisation;
     }
 
-    private function createClientAndReport(string $testRunId, $userRole, $emailPrefix, $reportType, $completed, $submitted,
-                                           bool $ndr = false, ?DateTime $startDate = null, int $satisfactionScore = null)
-    {
+    private function createClientAndReport(
+        string $testRunId,
+        $userRole,
+        $emailPrefix,
+        $reportType,
+        $completed,
+        $submitted,
+        bool $ndr = false,
+        ?DateTime $startDate = null,
+        int $satisfactionScore = null
+    ) {
         if ('prod' === $this->symfonyEnvironment) {
             throw new Exception('Prod mode enabled - cannot create fixture users');
         }
@@ -910,8 +964,14 @@ class FixtureHelper
     }
 
     private function createOrgUserClientNamedDeputyAndReport(
-        string $testRunId, $userRole, $emailPrefix, $reportType, $completed,
-        $submitted, ?DateTime $startDate = null, int $satisfactionScore = null
+        string $testRunId,
+        $userRole,
+        $emailPrefix,
+        $reportType,
+        $completed,
+        $submitted,
+        ?DateTime $startDate = null,
+        int $satisfactionScore = null
     ) {
         if ('prod' === $this->symfonyEnvironment) {
             throw new Exception('Prod mode enabled - cannot create fixture users');
@@ -922,7 +982,13 @@ class FixtureHelper
         $user = $this->userTestHelper
             ->createUser(null, $userRole, sprintf('%s-%s@t.uk', $emailPrefix, $this->testRunId));
         $this->addOrgClientsNamedDeputyAndReportsToOrgDeputy(
-            $user, $organisation, $completed, $submitted, $reportType, $startDate, $satisfactionScore
+            $user,
+            $organisation,
+            $completed,
+            $submitted,
+            $reportType,
+            $startDate,
+            $satisfactionScore
         );
 
         $this->setClientPassword($user);
