@@ -4,6 +4,7 @@ declare(strict_types=1);
 
 namespace App\Tests\Behat\v2\Common;
 
+use App\Tests\Behat\BehatException;
 use Exception;
 
 trait ReportTrait
@@ -188,5 +189,47 @@ trait ReportTrait
         }
 
         $this->loginToFrontendAs($this->layDeputyCompletedHealthWelfareDetails->getUserEmail());
+    }
+
+    /**
+     * @Given a Professional Deputy has submitted a Health and Welfare report
+     * @Given a Professional Deputy has submitted a report
+     *
+     * @throws BehatException
+     */
+    public function aProfessionalDeputyHasSubmittedAReport()
+    {
+        if (empty($this->profAdminDeputySubmittedDetails)) {
+            throw new BehatException('It looks like fixtures are not loaded - missing $profAdminDeputySubmittedDetails');
+        }
+
+        $this->interactingWithUserDetails = $this->profAdminDeputySubmittedDetails;
+    }
+
+    /**
+     * @Given a Public Authority Deputy has submitted a Health and Welfare report
+     *
+     * @throws BehatException
+     */
+    public function aPublicAuthorityDeputyHasSubmittedAReport()
+    {
+        if (empty($this->publicAuthorityNamedDeputySubmittedDetails)) {
+            throw new BehatException('It looks like fixtures are not loaded - missing $publicAuthorityNamedDeputySubmittedDetails');
+        }
+
+        $this->interactingWithUserDetails = $this->publicAuthorityNamedDeputySubmittedDetails;
+    }
+
+    /**
+     * @Given a Professional Deputy has completed a Pfa Low Assets report
+     * @Given a Professional Deputy has completed a report
+     */
+    public function aProfDeputyHasCompletedAPfaLowAssetsReport()
+    {
+        if (empty($this->profAdminDeputyCompletedDetails)) {
+            throw new Exception('It looks like fixtures are not loaded - missing $profAdminDeputyCompletedDetails');
+        }
+
+        $this->interactingWithUserDetails = $this->profAdminDeputyCompletedDetails;
     }
 }

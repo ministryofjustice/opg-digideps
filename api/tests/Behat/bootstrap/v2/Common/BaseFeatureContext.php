@@ -66,6 +66,10 @@ class BaseFeatureContext extends MinkContext
     public UserDetails $profAdminDeputyCompletedDetails;
     public UserDetails $profAdminDeputySubmittedDetails;
 
+    public UserDetails $publicAuthorityNamedDeputyNotStartedDetails;
+    public UserDetails $publicAuthorityNamedDeputyCompletedDetails;
+    public UserDetails $publicAuthorityNamedDeputySubmittedDetails;
+
     public UserDetails $layNdrDeputyNotStartedDetails;
     public UserDetails $layNdrDeputyCompletedDetails;
     public UserDetails $layNdrDeputySubmittedDetails;
@@ -258,6 +262,33 @@ class BaseFeatureContext extends MinkContext
     {
         $userDetails = $this->fixtureHelper->createProfAdminSubmitted($this->testRunId);
         $this->fixtureUsers[] = $this->profAdminDeputySubmittedDetails = new UserDetails($userDetails);
+    }
+
+    /**
+     * @BeforeScenario @pa-named-not-started
+     */
+    public function createPaNamedNotStarted()
+    {
+        $userDetails = $this->fixtureHelper->createPaNamedHealthWelfareNotStarted($this->testRunId);
+        $this->fixtureUsers[] = $this->publicAuthorityNamedDeputyNotStartedDetails = new UserDetails($userDetails);
+    }
+
+    /**
+     * @BeforeScenario @pa-named-completed
+     */
+    public function createPaNamedCompleted()
+    {
+        $userDetails = $this->fixtureHelper->createPaNamedHealthWelfareCompleted($this->testRunId);
+        $this->fixtureUsers[] = $this->publicAuthorityNamedDeputyCompletedDetails = new UserDetails($userDetails);
+    }
+
+    /**
+     * @BeforeScenario @pa-named-submitted
+     */
+    public function createPaNamedSubmitted()
+    {
+        $userDetails = $this->fixtureHelper->createPaNamedHealthWelfareSubmitted($this->testRunId);
+        $this->fixtureUsers[] = $this->publicAuthorityNamedDeputySubmittedDetails = new UserDetails($userDetails);
     }
 
     /**

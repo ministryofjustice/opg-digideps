@@ -238,6 +238,12 @@ v2-tests-goutte:
             contexts:
                 - App\Tests\Behat\v2\OrganisationManagement\OrganisationManagementFeatureContext
 
+        report-management:
+            description: Coverage of report management features in the admin side of the app
+            paths: [ "%paths.base%/features-v2/report-management" ]
+            contexts:
+                - App\Tests\Behat\v2\ReportManagement\ReportManagementFeatureContext
+
         section-accounts:
             description: Covering the 'Accounts' section of the report
             paths: [ "%paths.base%/features-v2/reporting/sections/accounts" ]

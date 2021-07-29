@@ -115,6 +115,13 @@ class FixtureHelper
             'currentReportType' => $currentReportType,
             'currentReportNdrOrReport' => $currentReport instanceof Ndr ? 'ndr' : 'report',
             'currentReportDueDate' => $currentReport->getDueDate()->format('j F Y'),
+            'currentReportStartDate' => $currentReport->getStartDate()->format('j F Y'),
+            'currentReportEndDate' => $currentReport instanceof Ndr ? null : $currentReport->getEndDate()->format('j F Y'),
+            'currentReportPeriod' => $currentReport instanceof Ndr ? null : sprintf(
+                '%s-%s',
+                $currentReport->getStartDate()->format('Y'),
+                $currentReport->getEndDate()->format('Y')
+            ),
         ];
 
         if ($previousReport && $previousReport->getId() !== $currentReport->getId()) {
@@ -125,6 +132,13 @@ class FixtureHelper
                     'previousReportType' => $previousReport->getType(),
                     'previousReportNdrOrReport' => $previousReport instanceof Ndr ? 'ndr' : 'report',
                     'previousReportDueDate' => $previousReport->getDueDate()->format('j F Y'),
+                    'previousReportStartDate' => $previousReport->getStartDate()->format('j F Y'),
+                    'previousReportEndDate' => $previousReport->getEndDate()->format('j F Y'),
+                    'previousReportPeriod' => sprintf(
+                        '%s-%s',
+                        $previousReport->getStartDate()->format('Y'),
+                        $previousReport->getEndDate()->format('Y')
+                    ),
                 ]
             );
         }
@@ -180,56 +194,6 @@ class FixtureHelper
         );
     }
 
-    private function createUserFixtures()
-    {
-        $this->createAdminUsers();
-        $this->createDeputies();
-
-        $users = [
-            $this->admin,
-            $this->adminManager,
-            $this->superAdmin,
-            $this->layHealthWelfareNotStarted,
-            $this->layHealthWelfareCompleted,
-            $this->layHealthWelfareSubmitted,
-            $this->layPfaHighAssetsNotStarted,
-            $this->layPfaHighAssetsCompleted,
-            $this->layPfaHighAssetsSubmitted,
-            $this->layPfaLowAssetsNotStarted,
-            $this->layPfaLowAssetsCompleted,
-            $this->layPfaLowAssetsSubmitted,
-            $this->layNdrNotStarted,
-            $this->layNdrCompleted,
-            $this->layNdrSubmitted,
-            $this->profAdminNotStarted,
-            $this->profAdminCompleted,
-            $this->profAdminSubmitted,
-        ];
-
-        foreach ($users as $user) {
-            $user->setPassword($this->encoder->encodePassword($user, $this->fixtureParams['account_password']));
-            $this->em->persist($user);
-        }
-
-        $this->em->flush();
-    }
-
-    private function createAdminUsers()
-    {
-        $this->admin = $this->createUser(User::ROLE_ADMIN);
-        $this->adminManager = $this->createUser(User::ROLE_ADMIN_MANAGER);
-        $this->superAdmin = $this->createUser(User::ROLE_SUPER_ADMIN);
-    }
-
-    public function createUser(string $roleName, ?string $email = null)
-    {
-        if (is_null($email)) {
-            $email = sprintf('%s-%s@t.uk', substr($roleName, 5), $this->testRunId);
-        }
-
-        return $this->userTestHelper->createUser(null, $roleName, $email);
-    }
-
     public function createAndPersistUser(string $roleName, ?string $email = null)
     {
         $user = $this->createUser($roleName, $email);
@@ -240,94 +204,13 @@ class FixtureHelper
         return $user;
     }
 
-    private function createDeputies()
+    public function createUser(string $roleName, ?string $email = null)
     {
-        $this->createLaysPfaHighAssets();
-        $this->createLaysPfaLowAssets();
-        $this->createLaysHealthWelfare();
-        $this->createNdrLays();
-        $this->createProfs();
-    }
+        if (is_null($email)) {
+            $email = sprintf('%s-%s@t.uk', substr($roleName, 5), $this->testRunId);
+        }
 
-    private function createLaysPfaHighAssets()
-    {
-        $this->layPfaHighAssetsNotStarted = $this->userTestHelper
-            ->createUser(null, User::ROLE_LAY_DEPUTY, sprintf('lay-pfa-high-assets-not-started-%s@t.uk', $this->testRunId));
-        $this->addClientsAndReportsToLayDeputy($this->layPfaHighAssetsNotStarted, false, false, Report::TYPE_102);
-
-        $this->layPfaHighAssetsCompleted = $this->userTestHelper
-            ->createUser(null, User::ROLE_LAY_DEPUTY, sprintf('lay-pfa-high-assets-completed-%s@t.uk', $this->testRunId));
-        $this->addClientsAndReportsToLayDeputy($this->layPfaHighAssetsCompleted, true, false, Report::TYPE_102);
-
-        $this->layPfaHighAssetsSubmitted = $this->userTestHelper
-            ->createUser(null, User::ROLE_LAY_DEPUTY, sprintf('lay-pfa-high-assets-submitted-%s@t.uk', $this->testRunId));
-        $this->addClientsAndReportsToLayDeputy($this->layPfaHighAssetsSubmitted, true, true, Report::TYPE_102);
-    }
-
-    private function createLaysPfaLowAssets()
-    {
-        $this->layPfaLowAssetsNotStarted = $this->userTestHelper
-            ->createUser(null, User::ROLE_LAY_DEPUTY, sprintf('lay-pfa-low-assets-not-started-%s@t.uk', $this->testRunId));
-        $this->addClientsAndReportsToLayDeputy($this->layPfaLowAssetsNotStarted, false, false, Report::TYPE_103);
-
-        $this->layPfaLowAssetsCompleted = $this->userTestHelper
-            ->createUser(null, User::ROLE_LAY_DEPUTY, sprintf('lay-pfa-low-assets-completed-%s@t.uk', $this->testRunId));
-        $this->addClientsAndReportsToLayDeputy($this->layPfaLowAssetsCompleted, true, false, Report::TYPE_103);
-
-        $this->layPfaLowAssetsSubmitted = $this->userTestHelper
-            ->createUser(null, User::ROLE_LAY_DEPUTY, sprintf('lay-pfa-low-assets-submitted-%s@t.uk', $this->testRunId));
-        $this->addClientsAndReportsToLayDeputy($this->layPfaLowAssetsSubmitted, true, true, Report::TYPE_103);
-    }
-
-    private function createLaysHealthWelfare()
-    {
-        $this->layHealthWelfareNotStarted = $this->userTestHelper
-            ->createUser(null, User::ROLE_LAY_DEPUTY, sprintf('lay-health-welfare-not-started-%s@t.uk', $this->testRunId));
-        $this->addClientsAndReportsToLayDeputy($this->layHealthWelfareNotStarted, false, false, Report::TYPE_104);
-
-        $this->layHealthWelfareCompleted = $this->userTestHelper
-            ->createUser(null, User::ROLE_LAY_DEPUTY, sprintf('lay-health-welfare-completed-%s@t.uk', $this->testRunId));
-        $this->addClientsAndReportsToLayDeputy($this->layHealthWelfareCompleted, true, false, Report::TYPE_104);
-
-        $this->layHealthWelfareSubmitted = $this->userTestHelper
-            ->createUser(null, User::ROLE_LAY_DEPUTY, sprintf('lay-health-welfare-submitted-%s@t.uk', $this->testRunId));
-        $this->addClientsAndReportsToLayDeputy($this->layHealthWelfareSubmitted, true, true, Report::TYPE_104);
-    }
-
-    private function createNdrLays()
-    {
-        $this->ndrLayNotStarted = $this->userTestHelper
-            ->createUser(null, User::ROLE_LAY_DEPUTY, sprintf('lay-ndr-not-started-%s@t.uk', $this->testRunId));
-        $this->addClientsAndReportsToNdrLayDeputy($this->ndrLayNotStarted, false, false);
-
-        $this->ndrLayCompleted = $this->userTestHelper
-            ->createUser(null, User::ROLE_LAY_DEPUTY, sprintf('lay-ndr-completed-%s@t.uk', $this->testRunId));
-        $this->addClientsAndReportsToNdrLayDeputy($this->ndrLayCompleted, true, false);
-
-        $this->ndrLaySubmitted = $this->userTestHelper
-            ->createUser(null, User::ROLE_LAY_DEPUTY, sprintf('lay-ndr-submitted-%s@t.uk', $this->testRunId));
-        $this->addClientsAndReportsToNdrLayDeputy($this->ndrLaySubmitted, true, true);
-    }
-
-    private function createProfs()
-    {
-        $orgName = sprintf('prof-%s-%s', $this->orgName, $this->testRunId);
-        $emailIdentifier = sprintf('prof-%s-%s', $this->orgEmailIdentifier, $this->testRunId);
-
-        $organisation = $this->organisationTestHelper->createOrganisation($orgName, $emailIdentifier);
-        $this->em->persist($organisation);
-
-        $this->profAdminNotStarted = $this->userTestHelper
-            ->createUser(null, User::ROLE_PROF_ADMIN, sprintf('prof-admin-not-started-%s@t.uk', $this->testRunId));
-        $this->addOrgClientsNamedDeputyAndReportsToOrgDeputy($this->profAdminNotStarted, $organisation, false, false);
-
-        $this->profAdminCompleted = $this->userTestHelper
-            ->createUser(null, User::ROLE_PROF_ADMIN, sprintf('prof-admin-completed-%s@t.uk', $this->testRunId));
-        $this->addOrgClientsNamedDeputyAndReportsToOrgDeputy($this->profAdminCompleted, $organisation, true, false);
-
-        $this->profAdminSubmitted = $this->userTestHelper
-            ->createUser(null, User::ROLE_PROF_ADMIN, sprintf('prof-admin-submitted-%s@t.uk', $this->testRunId));
-        $this->addOrgClientsNamedDeputyAndReportsToOrgDeputy($this->profAdminSubmitted, $organisation, true, true);
+        return $this->userTestHelper->createUser(null, $roleName, $email);
     }
 
     private function addClientsAndReportsToLayDeputy(User $deputy, bool $completed = false, bool $submitted = false,
@@ -434,7 +317,7 @@ class FixtureHelper
         }
     }
 
-    public function getLoggedInUserDetails(string $email)
+    public function getLoggedInUserDetails(string $email): array
     {
         $user = $this->em->getRepository(User::class)->findOneBy(['email' => strtolower($email)]);
 
@@ -450,7 +333,7 @@ class FixtureHelper
         $this->em->flush();
     }
 
-    public function createLayPfaHighAssetsNotStarted(string $testRunId)
+    public function createLayPfaHighAssetsNotStarted(string $testRunId): array
     {
         $this->layPfaHighAssetsNotStarted = $this->createClientAndReport(
             $testRunId,
@@ -464,7 +347,7 @@ class FixtureHelper
         return self::buildUserDetails($this->layPfaHighAssetsNotStarted);
     }
 
-    public function createLayPfaHighAssetsCompleted(string $testRunId)
+    public function createLayPfaHighAssetsCompleted(string $testRunId): array
     {
         $this->layPfaHighAssetsCompleted = $this->createClientAndReport(
             $testRunId,
@@ -478,7 +361,7 @@ class FixtureHelper
         return self::buildUserDetails($this->layPfaHighAssetsCompleted);
     }
 
-    public function createLayPfaHighAssetsSubmitted(string $testRunId)
+    public function createLayPfaHighAssetsSubmitted(string $testRunId): array
     {
         $this->layPfaHighAssetsSubmitted = $this->createClientAndReport(
             $testRunId,
@@ -492,7 +375,7 @@ class FixtureHelper
         return self::buildUserDetails($this->layPfaHighAssetsSubmitted);
     }
 
-    public function createLayPfaLowAssetsNotStarted(string $testRunId)
+    public function createLayPfaLowAssetsNotStarted(string $testRunId): array
     {
         $this->layPfaLowAssetsNotStarted = $this->createClientAndReport(
             $testRunId,
@@ -506,7 +389,7 @@ class FixtureHelper
         return self::buildUserDetails($this->layPfaLowAssetsNotStarted);
     }
 
-    public function createLayPfaLowAssetsCompleted(string $testRunId)
+    public function createLayPfaLowAssetsCompleted(string $testRunId): array
     {
         $this->layPfaLowAssetsCompleted = $this->createClientAndReport(
             $testRunId,
@@ -520,7 +403,7 @@ class FixtureHelper
         return self::buildUserDetails($this->layPfaLowAssetsCompleted);
     }
 
-    public function createLayPfaLowAssetsSubmitted(string $testRunId)
+    public function createLayPfaLowAssetsSubmitted(string $testRunId): array
     {
         $this->layPfaLowAssetsSubmitted = $this->createClientAndReport(
             $testRunId,
@@ -534,7 +417,7 @@ class FixtureHelper
         return self::buildUserDetails($this->layPfaLowAssetsSubmitted);
     }
 
-    public function createLayHealthWelfareNotStarted(string $testRunId)
+    public function createLayHealthWelfareNotStarted(string $testRunId): array
     {
         $this->layHealthWelfareNotStarted = $this->createClientAndReport(
             $testRunId,
@@ -548,7 +431,7 @@ class FixtureHelper
         return self::buildUserDetails($this->layHealthWelfareNotStarted);
     }
 
-    public function createLayHealthWelfareCompleted(string $testRunId)
+    public function createLayHealthWelfareCompleted(string $testRunId): array
     {
         $this->layHealthWelfareCompleted = $this->createClientAndReport(
             $testRunId,
@@ -562,7 +445,7 @@ class FixtureHelper
         return self::buildUserDetails($this->layHealthWelfareCompleted);
     }
 
-    public function createLayHealthWelfareSubmitted(string $testRunId)
+    public function createLayHealthWelfareSubmitted(string $testRunId): array
     {
         $this->layHealthWelfareSubmitted = $this->createClientAndReport(
             $testRunId,
@@ -576,7 +459,7 @@ class FixtureHelper
         return self::buildUserDetails($this->layHealthWelfareSubmitted);
     }
 
-    public function createProfNamedHealthWelfareNotStarted(string $testRunId)
+    public function createProfNamedHealthWelfareNotStarted(string $testRunId): array
     {
         $this->profNamedHealthWelfareNotStarted = $this->createOrgUserClientNamedDeputyAndReport(
             $testRunId,
@@ -590,7 +473,7 @@ class FixtureHelper
         return self::buildOrgUserDetails($this->profNamedHealthWelfareNotStarted);
     }
 
-    public function createProfNamedHealthWelfareCompleted(string $testRunId)
+    public function createProfNamedHealthWelfareCompleted(string $testRunId): array
     {
         $this->profNamedHealthWelfareCompleted = $this->createOrgUserClientNamedDeputyAndReport(
             $testRunId,
@@ -604,7 +487,7 @@ class FixtureHelper
         return self::buildOrgUserDetails($this->profNamedHealthWelfareCompleted);
     }
 
-    public function createProfNamedHealthWelfareSubmitted(string $testRunId)
+    public function createProfNamedHealthWelfareSubmitted(string $testRunId): array
     {
         $this->profNamedHealthWelfareSubmitted = $this->createOrgUserClientNamedDeputyAndReport(
             $testRunId,
@@ -618,7 +501,7 @@ class FixtureHelper
         return self::buildOrgUserDetails($this->profNamedHealthWelfareSubmitted);
     }
 
-    public function createPaNamedHealthWelfareNotStarted(string $testRunId)
+    public function createPaNamedHealthWelfareNotStarted(string $testRunId): array
     {
         $this->paNamedHealthWelfareNotStarted = $this->createOrgUserClientNamedDeputyAndReport(
             $testRunId,
@@ -632,7 +515,7 @@ class FixtureHelper
         return self::buildOrgUserDetails($this->paNamedHealthWelfareNotStarted);
     }
 
-    public function createPaNamedHealthWelfareCompleted(string $testRunId)
+    public function createPaNamedHealthWelfareCompleted(string $testRunId): array
     {
         $this->paNamedHealthWelfareCompleted = $this->createOrgUserClientNamedDeputyAndReport(
             $testRunId,
@@ -646,7 +529,7 @@ class FixtureHelper
         return self::buildOrgUserDetails($this->paNamedHealthWelfareCompleted);
     }
 
-    public function createPaNamedHealthWelfareSubmitted(string $testRunId)
+    public function createPaNamedHealthWelfareSubmitted(string $testRunId): array
     {
         $this->paNamedHealthWelfareSubmitted = $this->createOrgUserClientNamedDeputyAndReport(
             $testRunId,
@@ -660,7 +543,7 @@ class FixtureHelper
         return self::buildOrgUserDetails($this->paNamedHealthWelfareSubmitted);
     }
 
-    public function createProfTeamHealthWelfareNotStarted(string $testRunId)
+    public function createProfTeamHealthWelfareNotStarted(string $testRunId): array
     {
         $this->profTeamHealthWelfareNotStarted = $this->createOrgUserClientNamedDeputyAndReport(
             $testRunId,
@@ -674,7 +557,7 @@ class FixtureHelper
         return self::buildOrgUserDetails($this->profTeamHealthWelfareNotStarted);
     }
 
-    public function createProfTeamHealthWelfareCompleted(string $testRunId)
+    public function createProfTeamHealthWelfareCompleted(string $testRunId): array
     {
         $this->profTeamHealthWelfareCompleted = $this->createOrgUserClientNamedDeputyAndReport(
             $testRunId,
@@ -688,7 +571,7 @@ class FixtureHelper
         return self::buildOrgUserDetails($this->profTeamHealthWelfareCompleted);
     }
 
-    public function createProfTeamHealthWelfareSubmitted(string $testRunId)
+    public function createProfTeamHealthWelfareSubmitted(string $testRunId): array
     {
         $this->profTeamHealthWelfareSubmitted = $this->createOrgUserClientNamedDeputyAndReport(
             $testRunId,
@@ -702,7 +585,7 @@ class FixtureHelper
         return self::buildOrgUserDetails($this->profTeamHealthWelfareSubmitted);
     }
 
-    public function createLayNdrNotStarted(string $testRunId)
+    public function createLayNdrNotStarted(string $testRunId): array
     {
         $this->layNdrNotStarted = $this->createClientAndReport(
             $testRunId,
@@ -717,7 +600,7 @@ class FixtureHelper
         return self::buildUserDetails($this->layNdrNotStarted);
     }
 
-    public function createLayNdrCompleted(string $testRunId)
+    public function createLayNdrCompleted(string $testRunId): array
     {
         $this->layNdrCompleted = $this->createClientAndReport(
             $testRunId,
@@ -732,7 +615,7 @@ class FixtureHelper
         return self::buildUserDetails($this->layNdrCompleted);
     }
 
-    public function createLayNdrSubmitted(string $testRunId)
+    public function createLayNdrSubmitted(string $testRunId): array
     {
         $this->layNdrSubmitted = $this->createClientAndReport(
             $testRunId,
@@ -747,7 +630,7 @@ class FixtureHelper
         return self::buildUserDetails($this->layNdrSubmitted);
     }
 
-    public function createProfAdminNotStarted(string $testRunId)
+    public function createProfAdminNotStarted(string $testRunId): array
     {
         $this->profAdminNotStarted = $this->createOrgUserClientNamedDeputyAndReport(
             $testRunId,
@@ -761,7 +644,7 @@ class FixtureHelper
         return self::buildOrgUserDetails($this->profAdminNotStarted);
     }
 
-    public function createProfAdminCompleted(string $testRunId)
+    public function createProfAdminCompleted(string $testRunId): array
     {
         $this->profAdminCompleted = $this->createOrgUserClientNamedDeputyAndReport(
             $testRunId,
@@ -775,7 +658,7 @@ class FixtureHelper
         return self::buildOrgUserDetails($this->profAdminCompleted);
     }
 
-    public function createProfAdminSubmitted(string $testRunId)
+    public function createProfAdminSubmitted(string $testRunId): array
     {
         $this->profAdminSubmitted = $this->createOrgUserClientNamedDeputyAndReport(
             $testRunId,
@@ -789,7 +672,7 @@ class FixtureHelper
         return self::buildOrgUserDetails($this->profAdminSubmitted);
     }
 
-    public function createAdmin(string $testRunId)
+    public function createAdmin(string $testRunId): array
     {
         $this->admin = $this->createAdminUser(
             $testRunId,
@@ -800,7 +683,7 @@ class FixtureHelper
         return self::buildAdminUserDetails($this->admin);
     }
 
-    public function createAdminManager(string $testRunId)
+    public function createAdminManager(string $testRunId): array
     {
         $this->adminManager = $this->createAdminUser(
             $testRunId,
@@ -811,7 +694,7 @@ class FixtureHelper
         return self::buildAdminUserDetails($this->adminManager);
     }
 
-    public function createSuperAdmin(string $testRunId)
+    public function createSuperAdmin(string $testRunId): array
     {
         $this->superAdmin = $this->createAdminUser(
             $testRunId,
@@ -861,7 +744,7 @@ class FixtureHelper
         );
     }
 
-    private function createOrganisation($testRunId)
+    private function createOrganisation($testRunId): Organisation
     {
         $orgName = sprintf('prof-%s-%s', $this->orgName, $testRunId);
         $emailIdentifier = sprintf('prof-%s-%s', $this->orgEmailIdentifier, $this->testRunId);

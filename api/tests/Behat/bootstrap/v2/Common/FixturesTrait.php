@@ -117,7 +117,7 @@ trait FixturesTrait
         }
     }
 
-    public function createAdditionalProfHealthWelfareUsers(int $numberOfUsers)
+    public function createAdditionalProfHealthWelfareUsers(int $numberOfUsers): array
     {
         $users = [];
 

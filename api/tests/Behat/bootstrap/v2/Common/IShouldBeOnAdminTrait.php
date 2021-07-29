@@ -91,4 +91,14 @@ trait IShouldBeOnAdminTrait
     {
         return $this->iAmOnPage('/admin\/stats\/satisfaction$/');
     }
+
+    public function iAmOnAdminManageReportPage()
+    {
+        return $this->iAmOnPage('/admin\/report\/.*\/manage$/');
+    }
+
+    public function iAmOnAdminManageReportConfirmPage()
+    {
+        return $this->iAmOnPage('/admin\/report\/.*\/manage-confirm$/');
+    }
 }

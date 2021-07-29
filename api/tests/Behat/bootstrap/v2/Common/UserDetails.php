@@ -32,10 +32,16 @@ class UserDetails
     private ?string $currentReportType = null;
     private ?string $currentReportNdrOrReport = null;
     private ?string $currentReportDueDate = null;
+    private ?string $currentReportStartDate = null;
+    private ?string $currentReportEndDate = null;
+    private ?string $currentReportPeriod = null;
     private ?int $previousReportId = null;
     private ?string $previousReportType = null;
     private ?string $previousReportNdrOrReport = null;
     private ?string $previousReportDueDate = null;
+    private ?string $previousReportStartDate = null;
+    private ?string $previousReportEndDate = null;
+    private ?string $previousReportPeriod = null;
 
     public function __construct(array $userDetails)
     {
@@ -86,12 +92,18 @@ class UserDetails
         $this->setCurrentReportType($userDetails['currentReportType']);
         $this->setCurrentReportNdrOrReport($userDetails['currentReportNdrOrReport']);
         $this->setCurrentReportDueDate($userDetails['currentReportDueDate']);
+        $this->setCurrentReportStartDate($userDetails['currentReportStartDate']);
+        $this->setCurrentReportEndDate($userDetails['currentReportEndDate']);
+        $this->setCurrentReportPeriod($userDetails['currentReportPeriod']);
 
         if ($userDetails['currentReportId'] !== $userDetails['previousReportId']) {
             $this->setPreviousReportId($userDetails['previousReportId']);
             $this->setPreviousReportType($userDetails['previousReportType']);
             $this->setPreviousReportNdrOrReport($userDetails['previousReportNdrOrReport']);
             $this->setPreviousReportDueDate($userDetails['previousReportDueDate']);
+            $this->setPreviousReportStartDate($userDetails['previousReportStartDate']);
+            $this->setPreviousReportEndDate($userDetails['previousReportEndDate']);
+            $this->setPreviousReportPeriod($userDetails['previousReportPeriod']);
         }
     }
 
@@ -392,6 +404,78 @@ class UserDetails
     public function setUserId(?int $userId): UserDetails
     {
         $this->userId = $userId;
+
+        return $this;
+    }
+
+    public function getCurrentReportStartDate(): ?string
+    {
+        return $this->currentReportStartDate;
+    }
+
+    public function setCurrentReportStartDate(?string $currentReportStartDate): UserDetails
+    {
+        $this->currentReportStartDate = $currentReportStartDate;
+
+        return $this;
+    }
+
+    public function getCurrentReportEndDate(): ?string
+    {
+        return $this->currentReportEndDate;
+    }
+
+    public function setCurrentReportEndDate(?string $currentReportEndDate): UserDetails
+    {
+        $this->currentReportEndDate = $currentReportEndDate;
+
+        return $this;
+    }
+
+    public function getPreviousReportStartDate(): ?string
+    {
+        return $this->previousReportStartDate;
+    }
+
+    public function setPreviousReportStartDate(?string $previousReportStartDate): UserDetails
+    {
+        $this->previousReportStartDate = $previousReportStartDate;
+
+        return $this;
+    }
+
+    public function getPreviousReportEndDate(): ?string
+    {
+        return $this->previousReportEndDate;
+    }
+
+    public function setPreviousReportEndDate(?string $previousReportEndDate): UserDetails
+    {
+        $this->previousReportEndDate = $previousReportEndDate;
+
+        return $this;
+    }
+
+    public function getCurrentReportPeriod(): ?string
+    {
+        return $this->currentReportPeriod;
+    }
+
+    public function setCurrentReportPeriod(?string $currentReportPeriod): UserDetails
+    {
+        $this->currentReportPeriod = $currentReportPeriod;
+
+        return $this;
+    }
+
+    public function getPreviousReportPeriod(): ?string
+    {
+        return $this->previousReportPeriod;
+    }
+
+    public function setPreviousReportPeriod(?string $previousReportPeriod): UserDetails
+    {
+        $this->previousReportPeriod = $previousReportPeriod;
 
         return $this;
     }
