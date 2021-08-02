@@ -102,10 +102,10 @@ trait ElementSelectionTrait
     public function iClickBasedOnAttributeTypeAndValue(string $elementType, string $attributeType, string $attributeValue)
     {
         $xpath = sprintf("//%s[@%s='%s']", $elementType, $attributeType, $attributeValue);
-        $session = $this->getSession();
-        $element = $session->getPage()->find(
+
+        $element = $this->getSession()->getPage()->find(
             'xpath',
-            $session->getSelectorsHandler()->selectorToXpath('xpath', $xpath)
+            $xpath
         );
 
         if (null === $element) {
