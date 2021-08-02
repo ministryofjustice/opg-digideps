@@ -54,6 +54,10 @@ class BaseFeatureContext extends MinkContext
     public UserDetails $layDeputyCompletedHealthWelfareDetails;
     public UserDetails $layDeputySubmittedHealthWelfareDetails;
 
+    public UserDetails $layDeputyNotStartedCombinedHighDetails;
+    public UserDetails $layDeputyCompletedCombinedHighDetails;
+    public UserDetails $layDeputySubmittedCombinedHighDetails;
+
     public UserDetails $profNamedDeputyNotStartedHealthWelfareDetails;
     public UserDetails $profNamedDeputyCompletedHealthWelfareDetails;
     public UserDetails $profNamedDeputySubmittedHealthWelfareDetails;
@@ -181,6 +185,33 @@ class BaseFeatureContext extends MinkContext
     {
         $userDetails = $this->fixtureHelper->createLayHealthWelfareCompleted($this->testRunId);
         $this->fixtureUsers[] = $this->layDeputyCompletedHealthWelfareDetails = new UserDetails($userDetails);
+    }
+
+    /**
+     * @BeforeScenario @lay-combined-high-not-started
+     */
+    public function createLayCombinedHighNotStarted()
+    {
+        $userDetails = $this->fixtureHelper->createLayCombinedHighAssetsNotStarted($this->testRunId);
+        $this->fixtureUsers[] = $this->layDeputyNotStartedCombinedHighDetails = new UserDetails($userDetails);
+    }
+
+    /**
+     * @BeforeScenario @lay-combined-high-completed
+     */
+    public function createLayCombinedHighCompleted()
+    {
+        $userDetails = $this->fixtureHelper->createLayCombinedHighAssetsCompleted($this->testRunId);
+        $this->fixtureUsers[] = $this->layDeputyCompletedCombinedHighDetails = new UserDetails($userDetails);
+    }
+
+    /**
+     * @BeforeScenario @lay-combined-high-submitted
+     */
+    public function createLayCombinedHighSubmitted()
+    {
+        $userDetails = $this->fixtureHelper->createLayCombinedHighAssetsSubmitted($this->testRunId);
+        $this->fixtureUsers[] = $this->layDeputySubmittedCombinedHighDetails = new UserDetails($userDetails);
     }
 
     /**

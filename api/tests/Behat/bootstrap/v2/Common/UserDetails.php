@@ -4,6 +4,7 @@ declare(strict_types=1);
 
 namespace App\Tests\Behat\v2\Common;
 
+use DateTime;
 use Exception;
 use ReflectionClass;
 use ReflectionProperty;
@@ -31,17 +32,15 @@ class UserDetails
     private ?int $currentReportId = null;
     private ?string $currentReportType = null;
     private ?string $currentReportNdrOrReport = null;
-    private ?string $currentReportDueDate = null;
-    private ?string $currentReportStartDate = null;
-    private ?string $currentReportEndDate = null;
-    private ?string $currentReportPeriod = null;
+    private ?DateTime $currentReportDueDate = null;
+    private ?DateTime $currentReportStartDate = null;
+    private ?DateTime $currentReportEndDate = null;
     private ?int $previousReportId = null;
     private ?string $previousReportType = null;
     private ?string $previousReportNdrOrReport = null;
-    private ?string $previousReportDueDate = null;
-    private ?string $previousReportStartDate = null;
-    private ?string $previousReportEndDate = null;
-    private ?string $previousReportPeriod = null;
+    private ?DateTime $previousReportDueDate = null;
+    private ?DateTime $previousReportStartDate = null;
+    private ?DateTime $previousReportEndDate = null;
 
     public function __construct(array $userDetails)
     {
@@ -94,7 +93,6 @@ class UserDetails
         $this->setCurrentReportDueDate($userDetails['currentReportDueDate']);
         $this->setCurrentReportStartDate($userDetails['currentReportStartDate']);
         $this->setCurrentReportEndDate($userDetails['currentReportEndDate']);
-        $this->setCurrentReportPeriod($userDetails['currentReportPeriod']);
 
         if ($userDetails['currentReportId'] !== $userDetails['previousReportId']) {
             $this->setPreviousReportId($userDetails['previousReportId']);
@@ -103,7 +101,6 @@ class UserDetails
             $this->setPreviousReportDueDate($userDetails['previousReportDueDate']);
             $this->setPreviousReportStartDate($userDetails['previousReportStartDate']);
             $this->setPreviousReportEndDate($userDetails['previousReportEndDate']);
-            $this->setPreviousReportPeriod($userDetails['previousReportPeriod']);
         }
     }
 
@@ -336,24 +333,24 @@ class UserDetails
         return $this;
     }
 
-    public function getCurrentReportDueDate(): ?string
+    public function getCurrentReportDueDate(): ?DateTime
     {
         return $this->currentReportDueDate;
     }
 
-    public function setCurrentReportDueDate(?string $currentReportDueDate): UserDetails
+    public function setCurrentReportDueDate(?DateTime $currentReportDueDate): UserDetails
     {
         $this->currentReportDueDate = $currentReportDueDate;
 
         return $this;
     }
 
-    public function getPreviousReportDueDate(): ?string
+    public function getPreviousReportDueDate(): ?DateTime
     {
         return $this->previousReportDueDate;
     }
 
-    public function setPreviousReportDueDate(?string $previousReportDueDate): UserDetails
+    public function setPreviousReportDueDate(?DateTime $previousReportDueDate): UserDetails
     {
         $this->previousReportDueDate = $previousReportDueDate;
 
@@ -408,48 +405,48 @@ class UserDetails
         return $this;
     }
 
-    public function getCurrentReportStartDate(): ?string
+    public function getCurrentReportStartDate(): ?DateTime
     {
         return $this->currentReportStartDate;
     }
 
-    public function setCurrentReportStartDate(?string $currentReportStartDate): UserDetails
+    public function setCurrentReportStartDate(?DateTime $currentReportStartDate): UserDetails
     {
         $this->currentReportStartDate = $currentReportStartDate;
 
         return $this;
     }
 
-    public function getCurrentReportEndDate(): ?string
+    public function getCurrentReportEndDate(): ?DateTime
     {
         return $this->currentReportEndDate;
     }
 
-    public function setCurrentReportEndDate(?string $currentReportEndDate): UserDetails
+    public function setCurrentReportEndDate(?DateTime $currentReportEndDate): UserDetails
     {
         $this->currentReportEndDate = $currentReportEndDate;
 
         return $this;
     }
 
-    public function getPreviousReportStartDate(): ?string
+    public function getPreviousReportStartDate(): ?DateTime
     {
         return $this->previousReportStartDate;
     }
 
-    public function setPreviousReportStartDate(?string $previousReportStartDate): UserDetails
+    public function setPreviousReportStartDate(?DateTime $previousReportStartDate): UserDetails
     {
         $this->previousReportStartDate = $previousReportStartDate;
 
         return $this;
     }
 
-    public function getPreviousReportEndDate(): ?string
+    public function getPreviousReportEndDate(): ?DateTime
     {
         return $this->previousReportEndDate;
     }
 
-    public function setPreviousReportEndDate(?string $previousReportEndDate): UserDetails
+    public function setPreviousReportEndDate(?DateTime $previousReportEndDate): UserDetails
     {
         $this->previousReportEndDate = $previousReportEndDate;
 
@@ -458,25 +455,19 @@ class UserDetails
 
     public function getCurrentReportPeriod(): ?string
     {
-        return $this->currentReportPeriod;
-    }
-
-    public function setCurrentReportPeriod(?string $currentReportPeriod): UserDetails
-    {
-        $this->currentReportPeriod = $currentReportPeriod;
-
-        return $this;
+        return sprintf(
+            '%s-%s',
+            $this->getCurrentReportStartDate()->format('Y'),
+            $this->getCurrentReportEndDate()->format('Y'),
+        );
     }
 
     public function getPreviousReportPeriod(): ?string
     {
-        return $this->previousReportPeriod;
-    }
-
-    public function setPreviousReportPeriod(?string $previousReportPeriod): UserDetails
-    {
-        $this->previousReportPeriod = $previousReportPeriod;
-
-        return $this;
+        return sprintf(
+            '%s-%s',
+            $this->getPreviousReportStartDate()->format('Y'),
+            $this->getPreviousReportEndDate()->format('Y'),
+        );
     }
 }

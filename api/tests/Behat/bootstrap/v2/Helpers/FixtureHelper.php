@@ -47,6 +47,10 @@ class FixtureHelper
     private User $layHealthWelfareCompleted;
     private User $layHealthWelfareSubmitted;
 
+    private User $layCombinedHighAssetsNotStarted;
+    private User $layCombinedHighAssetsCompleted;
+    private User $layCombinedHighAssetsSubmitted;
+
     private User $profNamedHealthWelfareNotStarted;
     private User $profNamedHealthWelfareCompleted;
     private User $profNamedHealthWelfareSubmitted;
@@ -114,14 +118,9 @@ class FixtureHelper
             'currentReportId' => $currentReport->getId(),
             'currentReportType' => $currentReportType,
             'currentReportNdrOrReport' => $currentReport instanceof Ndr ? 'ndr' : 'report',
-            'currentReportDueDate' => $currentReport->getDueDate()->format('j F Y'),
-            'currentReportStartDate' => $currentReport->getStartDate()->format('j F Y'),
-            'currentReportEndDate' => $currentReport instanceof Ndr ? null : $currentReport->getEndDate()->format('j F Y'),
-            'currentReportPeriod' => $currentReport instanceof Ndr ? null : sprintf(
-                '%s-%s',
-                $currentReport->getStartDate()->format('Y'),
-                $currentReport->getEndDate()->format('Y')
-            ),
+            'currentReportDueDate' => $currentReport->getDueDate(),
+            'currentReportStartDate' => $currentReport->getStartDate(),
+            'currentReportEndDate' => $currentReport instanceof Ndr ? null : $currentReport->getEndDate(),
         ];
 
         if ($previousReport && $previousReport->getId() !== $currentReport->getId()) {
@@ -131,14 +130,9 @@ class FixtureHelper
                     'previousReportId' => $previousReport->getId(),
                     'previousReportType' => $previousReport->getType(),
                     'previousReportNdrOrReport' => $previousReport instanceof Ndr ? 'ndr' : 'report',
-                    'previousReportDueDate' => $previousReport->getDueDate()->format('j F Y'),
-                    'previousReportStartDate' => $previousReport->getStartDate()->format('j F Y'),
-                    'previousReportEndDate' => $previousReport->getEndDate()->format('j F Y'),
-                    'previousReportPeriod' => sprintf(
-                        '%s-%s',
-                        $previousReport->getStartDate()->format('Y'),
-                        $previousReport->getEndDate()->format('Y')
-                    ),
+                    'previousReportDueDate' => $previousReport->getDueDate(),
+                    'previousReportStartDate' => $previousReport->getStartDate(),
+                    'previousReportEndDate' => $previousReport->getEndDate(),
                 ]
             );
         }
@@ -335,7 +329,7 @@ class FixtureHelper
 
     public function createLayPfaHighAssetsNotStarted(string $testRunId): array
     {
-        $this->layPfaHighAssetsNotStarted = $this->createClientAndReport(
+        $this->layPfaHighAssetsNotStarted = $this->createDeputyClientAndReport(
             $testRunId,
             User::ROLE_LAY_DEPUTY,
             'lay-pfa-high-assets-not-started',
@@ -349,7 +343,7 @@ class FixtureHelper
 
     public function createLayPfaHighAssetsCompleted(string $testRunId): array
     {
-        $this->layPfaHighAssetsCompleted = $this->createClientAndReport(
+        $this->layPfaHighAssetsCompleted = $this->createDeputyClientAndReport(
             $testRunId,
             User::ROLE_LAY_DEPUTY,
             'lay-pfa-high-assets-completed',
@@ -363,7 +357,7 @@ class FixtureHelper
 
     public function createLayPfaHighAssetsSubmitted(string $testRunId): array
     {
-        $this->layPfaHighAssetsSubmitted = $this->createClientAndReport(
+        $this->layPfaHighAssetsSubmitted = $this->createDeputyClientAndReport(
             $testRunId,
             User::ROLE_LAY_DEPUTY,
             'lay-pfa-high-assets-submitted',
@@ -377,7 +371,7 @@ class FixtureHelper
 
     public function createLayPfaLowAssetsNotStarted(string $testRunId): array
     {
-        $this->layPfaLowAssetsNotStarted = $this->createClientAndReport(
+        $this->layPfaLowAssetsNotStarted = $this->createDeputyClientAndReport(
             $testRunId,
             User::ROLE_LAY_DEPUTY,
             'lay-pfa-low-assets-not-started',
@@ -391,7 +385,7 @@ class FixtureHelper
 
     public function createLayPfaLowAssetsCompleted(string $testRunId): array
     {
-        $this->layPfaLowAssetsCompleted = $this->createClientAndReport(
+        $this->layPfaLowAssetsCompleted = $this->createDeputyClientAndReport(
             $testRunId,
             User::ROLE_LAY_DEPUTY,
             'lay-pfa-low-assets-completed',
@@ -405,7 +399,7 @@ class FixtureHelper
 
     public function createLayPfaLowAssetsSubmitted(string $testRunId): array
     {
-        $this->layPfaLowAssetsSubmitted = $this->createClientAndReport(
+        $this->layPfaLowAssetsSubmitted = $this->createDeputyClientAndReport(
             $testRunId,
             User::ROLE_LAY_DEPUTY,
             'lay-pfa-low-assets-submitted',
@@ -419,7 +413,7 @@ class FixtureHelper
 
     public function createLayHealthWelfareNotStarted(string $testRunId): array
     {
-        $this->layHealthWelfareNotStarted = $this->createClientAndReport(
+        $this->layHealthWelfareNotStarted = $this->createDeputyClientAndReport(
             $testRunId,
             User::ROLE_LAY_DEPUTY,
             'lay-health-welfare-not-started',
@@ -433,7 +427,7 @@ class FixtureHelper
 
     public function createLayHealthWelfareCompleted(string $testRunId): array
     {
-        $this->layHealthWelfareCompleted = $this->createClientAndReport(
+        $this->layHealthWelfareCompleted = $this->createDeputyClientAndReport(
             $testRunId,
             User::ROLE_LAY_DEPUTY,
             'lay-health-welfare-completed',
@@ -447,7 +441,7 @@ class FixtureHelper
 
     public function createLayHealthWelfareSubmitted(string $testRunId): array
     {
-        $this->layHealthWelfareSubmitted = $this->createClientAndReport(
+        $this->layHealthWelfareSubmitted = $this->createDeputyClientAndReport(
             $testRunId,
             User::ROLE_LAY_DEPUTY,
             'lay-health-welfare-submitted',
@@ -457,6 +451,48 @@ class FixtureHelper
         );
 
         return self::buildUserDetails($this->layHealthWelfareSubmitted);
+    }
+
+    public function createLayCombinedHighAssetsNotStarted(string $testRunId): array
+    {
+        $this->layCombinedHighAssetsNotStarted = $this->createDeputyClientAndReport(
+            $testRunId,
+            User::ROLE_LAY_DEPUTY,
+            'lay-combined-high-not-started',
+            Report::TYPE_102_4,
+            false,
+            false
+        );
+
+        return self::buildUserDetails($this->layCombinedHighAssetsNotStarted);
+    }
+
+    public function createLayCombinedHighAssetsCompleted(string $testRunId): array
+    {
+        $this->layCombinedHighAssetsCompleted = $this->createDeputyClientAndReport(
+            $testRunId,
+            User::ROLE_LAY_DEPUTY,
+            'lay-combined-high-completed',
+            Report::TYPE_102_4,
+            true,
+            false
+        );
+
+        return self::buildUserDetails($this->layCombinedHighAssetsCompleted);
+    }
+
+    public function createLayCombinedHighAssetsSubmitted(string $testRunId): array
+    {
+        $this->layCombinedHighAssetsSubmitted = $this->createDeputyClientAndReport(
+            $testRunId,
+            User::ROLE_LAY_DEPUTY,
+            'lay-combined-high-submitted',
+            Report::TYPE_102_4,
+            true,
+            true
+        );
+
+        return self::buildUserDetails($this->layCombinedHighAssetsSubmitted);
     }
 
     public function createProfNamedHealthWelfareNotStarted(string $testRunId): array
@@ -587,7 +623,7 @@ class FixtureHelper
 
     public function createLayNdrNotStarted(string $testRunId): array
     {
-        $this->layNdrNotStarted = $this->createClientAndReport(
+        $this->layNdrNotStarted = $this->createDeputyClientAndReport(
             $testRunId,
             User::ROLE_LAY_DEPUTY,
             'lay-ndr-not-started',
@@ -602,7 +638,7 @@ class FixtureHelper
 
     public function createLayNdrCompleted(string $testRunId): array
     {
-        $this->layNdrCompleted = $this->createClientAndReport(
+        $this->layNdrCompleted = $this->createDeputyClientAndReport(
             $testRunId,
             User::ROLE_LAY_DEPUTY,
             'lay-ndr-completed',
@@ -617,7 +653,7 @@ class FixtureHelper
 
     public function createLayNdrSubmitted(string $testRunId): array
     {
-        $this->layNdrSubmitted = $this->createClientAndReport(
+        $this->layNdrSubmitted = $this->createDeputyClientAndReport(
             $testRunId,
             User::ROLE_LAY_DEPUTY,
             'lay-ndr-submitted',
@@ -663,7 +699,7 @@ class FixtureHelper
         $this->profAdminSubmitted = $this->createOrgUserClientNamedDeputyAndReport(
             $testRunId,
             User::ROLE_PROF_ADMIN,
-            'prof-admin-completed',
+            'prof-admin-submitted',
             Report::TYPE_104_5,
             true,
             true
@@ -731,7 +767,7 @@ class FixtureHelper
             $satisfactionScore
         );
 
-        $this->createClientAndReport(
+        $this->createDeputyClientAndReport(
             $testRunId.'_3',
             User::ROLE_LAY_DEPUTY,
             'analytics-lay-submitted',
@@ -755,26 +791,26 @@ class FixtureHelper
         return $organisation;
     }
 
-    private function createClientAndReport(string $testRunId, $userRole, $emailPrefix, $reportType, $completed, $submitted,
-                                           bool $ndr = false, ?DateTime $startDate = null, int $satisfactionScore = null)
+    private function createDeputyClientAndReport(string $testRunId, $userRole, $emailPrefix, $reportType, $completed, $submitted,
+                                                 bool $ndr = false, ?DateTime $startDate = null, int $satisfactionScore = null)
     {
         if ('prod' === $this->symfonyEnvironment) {
             throw new Exception('Prod mode enabled - cannot create fixture users');
         }
         $this->testRunId = $testRunId;
 
-        $client = $this->userTestHelper
+        $deputy = $this->userTestHelper
             ->createUser(null, $userRole, sprintf('%s-%s@t.uk', $emailPrefix, $this->testRunId));
 
         if ($ndr) {
-            $this->addClientsAndReportsToNdrLayDeputy($client, $completed, $submitted);
+            $this->addClientsAndReportsToNdrLayDeputy($deputy, $completed, $submitted);
         } else {
-            $this->addClientsAndReportsToLayDeputy($client, $completed, $submitted, $reportType, $startDate, $satisfactionScore);
+            $this->addClientsAndReportsToLayDeputy($deputy, $completed, $submitted, $reportType, $startDate, $satisfactionScore);
         }
 
-        $this->setClientPassword($client);
+        $this->setClientPassword($deputy);
 
-        return $client;
+        return $deputy;
     }
 
     private function createAdminUser(string $testRunId, $userRole, $emailPrefix)
