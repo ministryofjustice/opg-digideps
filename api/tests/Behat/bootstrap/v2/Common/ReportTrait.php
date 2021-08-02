@@ -112,11 +112,11 @@ trait ReportTrait
      */
     public function aProfessionalAdminDeputyHasNotStartedAReport()
     {
-        if (empty($this->profAdminDeputyNotStartedDetails)) {
+        if (empty($this->profAdminDeputyHealthWelfareNotStartedDetails)) {
             throw new Exception('It looks like fixtures are not loaded - missing $profAdminDeputyNotStartedDetails');
         }
 
-        $this->loginToFrontendAs($this->profAdminDeputyNotStartedDetails->getUserEmail());
+        $this->loginToFrontendAs($this->profAdminDeputyHealthWelfareNotStartedDetails->getUserEmail());
     }
 
     /**
@@ -211,11 +211,11 @@ trait ReportTrait
      */
     public function aProfessionalDeputyHasSubmittedAReport()
     {
-        if (empty($this->profAdminDeputySubmittedDetails)) {
+        if (empty($this->profAdminDeputyHealthWelfareSubmittedDetails)) {
             throw new BehatException('It looks like fixtures are not loaded - missing $profAdminDeputySubmittedDetails');
         }
 
-        $this->interactingWithUserDetails = $this->profAdminDeputySubmittedDetails;
+        $this->interactingWithUserDetails = $this->profAdminDeputyHealthWelfareSubmittedDetails;
     }
 
     /**
@@ -238,10 +238,22 @@ trait ReportTrait
      */
     public function aProfDeputyHasCompletedAPfaLowAssetsReport()
     {
-        if (empty($this->profAdminDeputyCompletedDetails)) {
+        if (empty($this->profAdminDeputyHealthWelfareCompletedDetails)) {
             throw new Exception('It looks like fixtures are not loaded - missing $profAdminDeputyCompletedDetails');
         }
 
-        $this->interactingWithUserDetails = $this->profAdminDeputyCompletedDetails;
+        $this->interactingWithUserDetails = $this->profAdminDeputyHealthWelfareCompletedDetails;
+    }
+
+    /**
+     * @Given a Public Authority Deputy has submitted a Combined High Assets report
+     */
+    public function aProfessionalDeputyHasSubmittedACombinedHighAssetsReport()
+    {
+        if (empty($this->publicAuthorityAdminCombinedHighSubmittedDetails)) {
+            throw new Exception('It looks like fixtures are not loaded - missing $publicAuthorityAdminCombinedHighSubmittedDetails');
+        }
+
+        $this->interactingWithUserDetails = $this->publicAuthorityAdminCombinedHighSubmittedDetails;
     }
 }

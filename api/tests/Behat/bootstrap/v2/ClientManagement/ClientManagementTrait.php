@@ -16,7 +16,7 @@ trait ClientManagementTrait
      */
     public function iSearchForExistingClientByFirstName()
     {
-        $user = is_null($this->interactingWithUserDetails) ? $this->profAdminDeputyNotStartedDetails : $this->interactingWithUserDetails;
+        $user = is_null($this->interactingWithUserDetails) ? $this->profAdminDeputyHealthWelfareNotStartedDetails : $this->interactingWithUserDetails;
         $this->searchForClientBy($user->getClientFirstName(), $user);
     }
 
@@ -25,7 +25,7 @@ trait ClientManagementTrait
      */
     public function iSearchForExistingClientByLastName()
     {
-        $user = is_null($this->interactingWithUserDetails) ? $this->profAdminDeputyNotStartedDetails : $this->interactingWithUserDetails;
+        $user = is_null($this->interactingWithUserDetails) ? $this->profAdminDeputyHealthWelfareNotStartedDetails : $this->interactingWithUserDetails;
         $this->searchForClientBy($user->getClientLastName(), $user);
     }
 
@@ -34,7 +34,7 @@ trait ClientManagementTrait
      */
     public function iSearchForExistingClientByFullName()
     {
-        $user = is_null($this->interactingWithUserDetails) ? $this->profAdminDeputyNotStartedDetails : $this->interactingWithUserDetails;
+        $user = is_null($this->interactingWithUserDetails) ? $this->profAdminDeputyHealthWelfareNotStartedDetails : $this->interactingWithUserDetails;
         $fullName = sprintf('%s %s', $user->getClientFirstName(), $user->getClientLastName());
         $this->searchForClientBy($fullName, $user);
     }
@@ -44,7 +44,7 @@ trait ClientManagementTrait
      */
     public function iSearchForExistingClientByCaseNumber()
     {
-        $user = is_null($this->interactingWithUserDetails) ? $this->profAdminDeputyNotStartedDetails : $this->interactingWithUserDetails;
+        $user = is_null($this->interactingWithUserDetails) ? $this->profAdminDeputyHealthWelfareNotStartedDetails : $this->interactingWithUserDetails;
         $this->searchForClientBy($user->getClientCaseNumber(), $user);
     }
 

@@ -101,4 +101,9 @@ trait IShouldBeOnAdminTrait
     {
         return $this->iAmOnPage('/admin\/report\/.*\/manage-confirm$/');
     }
+
+    public function iAmOnAdminManageCloseReportConfirmPage()
+    {
+        return $this->iAmOnPage('/admin\/report\/.*\/manage-close-report-confirm$/');
+    }
 }

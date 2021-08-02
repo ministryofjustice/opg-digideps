@@ -9,7 +9,7 @@ use DateTime;
 
 trait ReportManagementTrait
 {
-    private array $baseReportCheckboxValuesAndTranslations = [
+    private array $baseCombinedHighReportCheckboxValuesAndTranslations = [
         'decisions' => 'Decisions',
         'contacts' => 'Contacts',
         'visitsCare' => 'Visits and care',
@@ -27,14 +27,16 @@ trait ReportManagementTrait
         'documents' => 'Supporting documents',
     ];
 
-    private array $orgExtraCheckboxes = [
+    private array $orgCombinedHighExtraCheckboxes = [
         'profDeputyCosts' => 'Deputy costs',
         'profDeputyCostsEstimate' => 'Deputy costs estimate',
     ];
 
-    private array $layExtraCheckboxes = [
+    private array $layCombinedHighExtraCheckboxes = [
         'deputyExpenses' => 'Deputy expenses',
     ];
+
+    protected string $reportStatus = '';
 
     /**
      * @When I manage the deputies :reportStatus report
@@ -42,6 +44,7 @@ trait ReportManagementTrait
     public function iManageTheDeputiesSubmittedReport(string $reportStatus)
     {
         $this->iAmOnAdminClientDetailsPage();
+        $this->reportStatus = $reportStatus;
 
         $reportId = 'completed' === $reportStatus ? $this->interactingWithUserDetails->getCurrentReportId() : $this->interactingWithUserDetails->getPreviousReportId();
 
@@ -110,7 +113,13 @@ trait ReportManagementTrait
         $this->pressButton('Continue');
 
         $this->iAmOnAdminManageReportConfirmPage();
-        $this->selectOption('manage_report_confirm[confirm]', 'yes');
+
+        $confirmRadio = $this->getSession()->getPage()->find('xpath', '//input[@name="manage_report_confirm[confirm]"]');
+
+        if (!is_null($confirmRadio)) {
+            $this->selectOption('manage_report_confirm[confirm]', 'yes');
+        }
+
         $this->pressButton('Confirm');
     }
 
@@ -121,7 +130,7 @@ trait ReportManagementTrait
     {
         $this->iAmOnAdminClientDetailsPage();
 
-        $reportPeriod = $this->interactingWithUserDetails->getCurrentReportPeriod();
+        $reportPeriod = 'completed' === $this->reportStatus ? $this->interactingWithUserDetails->getCurrentReportPeriod() : $this->interactingWithUserDetails->getPreviousReportPeriod();
         $locator = sprintf(
             "//td[normalize-space()='%s']/..",
             $reportPeriod
@@ -156,8 +165,8 @@ trait ReportManagementTrait
         $isLay = is_null($this->interactingWithUserDetails->getOrganisationName);
 
         $checkboxValuesAndTranslations = array_merge(
-            $this->baseReportCheckboxValuesAndTranslations,
-            $isLay ? $this->layExtraCheckboxes : $this->orgExtraCheckboxes
+            $this->baseCombinedHighReportCheckboxValuesAndTranslations,
+            $isLay ? $this->layCombinedHighExtraCheckboxes : $this->orgCombinedHighExtraCheckboxes
         );
 
         foreach ($checkboxValuesAndTranslations as $value => $translation) {
@@ -233,6 +242,100 @@ trait ReportManagementTrait
                 $sectionListItem->getHtml(),
                 'Searching for "Changes needed" in list item that contains incomplete section name'
             );
+        }
+    }
+
+    /**
+     * @When I close the un-submitted report
+     */
+    public function iCloseUnsubmittedReport()
+    {
+        $this->iAmOnAdminClientDetailsPage();
+
+        $reportPeriod = 'completed' === $this->reportStatus ? $this->interactingWithUserDetails->getCurrentReportPeriod() : $this->interactingWithUserDetails->getPreviousReportPeriod();
+        $locator = sprintf(
+            "//td[normalize-space()='%s']/..",
+            $reportPeriod
+        );
+
+        $reportRow = $this->getSession()->getPage()->find('xpath', $locator);
+
+        if (is_null($reportRow)) {
+            throw new BehatException(sprintf('Could not find a table data element with text %s on the page. HTML of page: %s', $reportPeriod, $this->getSession()->getPage()->find('xpath', '//main')->getHtml()));
+        }
+
+        $reportRow->clickLink('Manage');
+
+        $this->iAmOnAdminManageReportPage();
+
+        $this->checkOption('manage_report_close[agreeCloseReport]');
+        $this->pressButton('Close report');
+
+        $this->iAmOnAdminManageCloseReportConfirmPage();
+        $this->pressButton('Confirm close report');
+    }
+
+    /**
+     * @Then the report should should show as submitted
+     */
+    public function theReportShouldShouldShowAsSubmitted()
+    {
+        $this->iAmOnAdminClientDetailsPage();
+
+        $reportPeriod = 'completed' === $this->reportStatus ? $this->interactingWithUserDetails->getCurrentReportPeriod() : $this->interactingWithUserDetails->getPreviousReportPeriod();
+        $locator = sprintf(
+            "//td[normalize-space()='%s']/../../..",
+            $reportPeriod
+        );
+
+        $reportRow = $this->getSession()->getPage()->find('xpath', $locator);
+
+        if (is_null($reportRow)) {
+            throw new BehatException(sprintf('Could not find a table data element with text %s on the page. HTML of page: %s', $reportPeriod, $this->getSession()->getPage()->find('xpath', '//main')->getHtml()));
+        }
+
+        $submittedStatus = $reportRow->find('xpath', '//span[normalize-space()="submitted"]');
+
+        if (is_null($submittedStatus)) {
+            throw new BehatException(sprintf('Could not find a span element with the text "submitted" in the report row for "%s". HTML of page: %s', $reportPeriod, $this->getSession()->getPage()->find('xpath', '//main')->getHtml()));
+        }
+    }
+
+    /**
+     * @Then the link to download the submitted report should be visible
+     */
+    public function theLinkToDownloadTheSubmittedReportShouldBeVisible()
+    {
+        $this->iAmOnAdminClientDetailsPage();
+
+        $xpathLocator = sprintf(
+            "//a[contains(@href,'/report/deputyreport-%s.pdf')]",
+            $this->interactingWithUserDetails->getPreviousReportId()
+        );
+
+        $reportPdfLink = $this->getSession()->getPage()->find('xpath', $xpathLocator);
+
+        if (is_null($reportPdfLink)) {
+            throw new BehatException('Could not find download link for the report');
+        }
+    }
+
+    /**
+     * @Then the link to download the submitted report should not be visible
+     */
+    public function theLinkToDownloadTheSubmittedReportShouldNotBeVisible()
+    {
+        $this->iAmOnAdminClientDetailsPage();
+
+        $xpathLocator = sprintf(
+            "//a[contains(@href,'/report/deputyreport-%s.pdf')]",
+            $this->interactingWithUserDetails->getPreviousReportId()
+        );
+
+        $reportPdfLink = $this->getSession()->getPage()->find('xpath', $xpathLocator);
+
+        if (!is_null($reportPdfLink)) {
+            throw new BehatException('Download link for the report is visible when it should not be');
         }
     }
 }

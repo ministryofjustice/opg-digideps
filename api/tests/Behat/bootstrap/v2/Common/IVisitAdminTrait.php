@@ -57,10 +57,10 @@ trait IVisitAdminTrait
             );
         }
 
-        $clientDetailsUrl = $this->getAdminClientDetailsUrl($this->profAdminDeputySubmittedDetails->getClientId());
+        $clientDetailsUrl = $this->getAdminClientDetailsUrl($this->profAdminDeputyHealthWelfareSubmittedDetails->getClientId());
         $this->visitAdminPath($clientDetailsUrl);
 
-        $this->interactingWithUserDetails = $this->profAdminDeputySubmittedDetails;
+        $this->interactingWithUserDetails = $this->profAdminDeputyHealthWelfareSubmittedDetails;
     }
 
     /**

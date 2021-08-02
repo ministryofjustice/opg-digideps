@@ -12,7 +12,7 @@ Feature: Report Management (applies to all admin roles)
         And I submit the new report details
         Then the report details should be updated
 
-    @admin-manager @lay-combined-high-submitted @acs
+    @admin-manager @lay-combined-high-submitted
     Scenario: An admin user un-submits a submitted report
         Given an admin manager user accesses the admin app
         And a Lay Deputy has submitted a Combined High Assets report
@@ -26,16 +26,45 @@ Feature: Report Management (applies to all admin roles)
         Then the report details should be updated
         When the user I'm interacting with logs in to the frontend of the app
         Then I should see the report sections the admin ticked as incomplete labelled as changes needed
-#        And I should not be able to re-submit until I have confirmed I have completed the sections labelled as changes needed
 
-    @admin
+    @admin @pa-admin-combined-high-submitted
     Scenario: An admin user changes report type and due date for an un-submitted report
-        Given
+        Given an admin user accesses the admin app
+        And a Public Authority Deputy has submitted a Combined High Assets report
+        When I visit the admin client details page associated with the deputy I'm interacting with
+        And I manage the deputies 'submitted' report
+        And I confirm all report sections are incomplete
+        And I submit the new report details
+        And I manage the deputies 'un-submitted' report
+        And I change the report due date to '5' weeks from now
+        And I change the report type to 'Health and welfare'
+        And I submit the new report details
+        Then the report details should be updated
 
-    @admin
+    @admin @pa-admin-combined-high-submitted
     Scenario: An admin user closes an un-submitted report
-        Given
+        Given an admin user accesses the admin app
+        And a Public Authority Deputy has submitted a Combined High Assets report
+        When I visit the admin client details page associated with the deputy I'm interacting with
+        And I manage the deputies 'submitted' report
+        And I confirm all report sections are incomplete
+        And I submit the new report details
+        And I close the un-submitted report
+        Then the report should should show as submitted
 
-    @admin
-    Scenario: An admin user downloads a submitted report
-        Given
+    @super-admin @pa-admin-combined-high-submitted
+    Scenario: A super admin can download a submitted report PDF
+        Given a super admin user accesses the admin app
+        And a Public Authority Deputy has submitted a Combined High Assets report
+        When I visit the admin client details page associated with the deputy I'm interacting with
+        Then the link to download the submitted report should be visible
+
+    @admin @admin-manager @pa-admin-combined-high-submitted
+    Scenario: Non-super admin cannot download a submitted report PDF
+        Given an admin user accesses the admin app
+        And a Public Authority Deputy has submitted a Combined High Assets report
+        When I visit the admin client details page associated with the deputy I'm interacting with
+        Then the link to download the submitted report should not be visible
+        Given an admin manager user accesses the admin app
+        When I visit the admin client details page associated with the deputy I'm interacting with
+        Then the link to download the submitted report should not be visible
