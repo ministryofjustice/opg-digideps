@@ -55,4 +55,13 @@ trait INavigateToAdminTrait
         $this->pressButton('Add a new organisation');
         $this->iAmOnAdminAddOrganisationPage();
     }
+
+    /**
+     * @When I navigate to the report checklist page
+     */
+    public function iNavigateToTheReportChecklistPage()
+    {
+        $this->clickLink('Checklist');
+        $this->iAmOnAdminReportChecklistPage();
+    }
 }

@@ -237,18 +237,6 @@ class UserDetails
         return $this;
     }
 
-    public function getUserRole(): ?string
-    {
-        return $this->userRole;
-    }
-
-    public function setUserRole(?string $userRole): UserDetails
-    {
-        $this->userRole = $userRole;
-
-        return $this;
-    }
-
     public function getClientCaseNumber(): ?string
     {
         return $this->clientCaseNumber;
@@ -257,6 +245,18 @@ class UserDetails
     public function setClientCaseNumber(?string $clientCaseNumber): UserDetails
     {
         $this->clientCaseNumber = $clientCaseNumber;
+
+        return $this;
+    }
+
+    public function getUserRole(): ?string
+    {
+        return $this->userRole;
+    }
+
+    public function setUserRole(?string $userRole): UserDetails
+    {
+        $this->userRole = $userRole;
 
         return $this;
     }

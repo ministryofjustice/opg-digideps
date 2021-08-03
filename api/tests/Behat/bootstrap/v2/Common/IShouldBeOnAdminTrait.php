@@ -106,4 +106,20 @@ trait IShouldBeOnAdminTrait
     {
         return $this->iAmOnPage('/admin\/report\/.*\/manage-close-report-confirm$/');
     }
+
+    /**
+     * @Then I should be on the admin report checklist page
+     */
+    public function iAmOnAdminReportChecklistPage()
+    {
+        return $this->iAmOnPage('/admin\/report\/.*\/checklist$/');
+    }
+
+    /**
+     * @Then I should be on the admin report checklist submitted page
+     */
+    public function iAmOnAdminReportChecklistSubmittedPage()
+    {
+        return $this->iAmOnPage('/admin\/report\/.*\/checklist-submitted$/');
+    }
 }
