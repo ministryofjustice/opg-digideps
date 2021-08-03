@@ -48,7 +48,7 @@ trait AssertTrait
         string $comparisonSubject
     ) {
         assert(
-            true == $expected,
+            true === $expected,
             $this->getAssertMessage($expected, 'false', $comparisonSubject)
         );
     }

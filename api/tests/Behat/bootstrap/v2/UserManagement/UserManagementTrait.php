@@ -52,7 +52,7 @@ trait UserManagementTrait
     {
         $xpath = '//h2[@id="users-list-title"]/parent::div/p[@class="govuk-body"]';
         $userText = $this->getSession()->getPage()->find('xpath', $xpath)->getHtml();
-        $pluralUsers = 1 == $this->userCount ? 'user' : 'users';
+        $pluralUsers = 1 === $this->userCount ? 'user' : 'users';
         $userMessage = sprintf('found %s %s', strval($this->userCount), $pluralUsers);
         $this->assertStringEqualsString($userMessage, $userText, 'Users Found');
         $xpath = '//table[@class="table-govuk-body-s"]/tbody/tr';
@@ -222,7 +222,7 @@ trait UserManagementTrait
     }
 
     /**
-     * @When I can see the user as non active in search results
+     * @Then I can see the user as non active in search results
      */
     public function iCanSeeTheUserAsNonActiveInSearchResults()
     {
@@ -349,7 +349,7 @@ trait UserManagementTrait
     }
 
     /**
-     * @When I add each of the appropriate user types for a super admin
+     * @When I add each of the available user types for a super admin
      */
     public function iAddEachUserTypeForSuperAdmin()
     {

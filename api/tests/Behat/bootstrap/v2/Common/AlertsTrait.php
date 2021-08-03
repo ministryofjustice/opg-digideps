@@ -8,7 +8,7 @@ trait AlertsTrait
 {
     public function assertOnAlertMessage(string $alertMessage)
     {
-        $xpath = '//div[contains(@class, \'opg-alert__message\')]|//div[contains(@class, \'opg-alert--info\')]|//div[contains(@class, \'govuk-error-summary\')]';
+        $xpath = '//div[contains(@class, "opg-alert__message")]|//div[contains(@class, "opg-alert--info")]|//div[contains(@class, "govuk-error-summary")]';
         $alertDiv = $this->getSession()->getPage()->find('xpath', $xpath);
 
         $alertHtml = $alertDiv->getHtml();

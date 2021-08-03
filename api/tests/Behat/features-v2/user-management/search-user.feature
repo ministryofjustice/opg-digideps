@@ -1,5 +1,5 @@
 @v2 @admin-user-search @admin-user
-Feature: Admin - User Search
+Feature: Admin - User Search (same functionality for all admin types)
 
     @super-admin
     Scenario: A super admin user searches for a user

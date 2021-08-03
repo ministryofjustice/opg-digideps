@@ -14,7 +14,7 @@ Feature: Admin - User Create
 @super-admin
 Scenario: A super admin creates admin users
     Given a super admin user accesses the admin app
-    When I add each of the appropriate user types for a super admin
+    When I add each of the available user types for a super admin
     Then I should see each created users in the search window
 
 @admin-manager
