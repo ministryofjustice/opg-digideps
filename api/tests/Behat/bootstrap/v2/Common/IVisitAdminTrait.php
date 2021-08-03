@@ -36,6 +36,17 @@ trait IVisitAdminTrait
     }
 
     /**
+     * @When I visit the admin client details page associated with the deputy I'm interacting with
+     */
+    public function iVisitAdminClientDetailsPageForDeputyInteractingWith()
+    {
+        $this->assertInteractingWithUserIsSet();
+
+        $clientDetailsUrl = $this->getAdminClientDetailsUrl($this->interactingWithUserDetails->getClientId());
+        $this->visitAdminPath($clientDetailsUrl);
+    }
+
+    /**
      * @When I visit the admin client details page for an existing client linked to a deputy in an Organisation
      */
     public function iVisitAdminOrgClientDetailsPage()
@@ -46,10 +57,10 @@ trait IVisitAdminTrait
             );
         }
 
-        $clientDetailsUrl = $this->getAdminClientDetailsUrl($this->profAdminDeputySubmittedDetails->getClientId());
+        $clientDetailsUrl = $this->getAdminClientDetailsUrl($this->profAdminDeputyHealthWelfareSubmittedDetails->getClientId());
         $this->visitAdminPath($clientDetailsUrl);
 
-        $this->interactingWithUserDetails = $this->profAdminDeputySubmittedDetails;
+        $this->interactingWithUserDetails = $this->profAdminDeputyHealthWelfareSubmittedDetails;
     }
 
     /**
