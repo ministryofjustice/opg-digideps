@@ -4,6 +4,8 @@ declare(strict_types=1);
 
 namespace App\Tests\Behat\v2\ReportManagement;
 
+use App\Entity\Report\Report;
+use App\Entity\User;
 use App\Tests\Behat\BehatException;
 use DateTime;
 
@@ -27,9 +29,13 @@ trait ReportManagementTrait
         'documents' => 'Supporting documents',
     ];
 
-    private array $orgCombinedHighExtraCheckboxes = [
+    private array $profCombinedHighExtraCheckboxes = [
         'profDeputyCosts' => 'Deputy costs',
         'profDeputyCostsEstimate' => 'Deputy costs estimate',
+    ];
+
+    private array $paCombinedHighExtraCheckboxes = [
+        'paDeputyExpenses' => 'Deputy fees and expenses',
     ];
 
     private array $layCombinedHighExtraCheckboxes = [
@@ -65,29 +71,57 @@ trait ReportManagementTrait
         $this->iAmOnAdminManageReportPage();
         $this->assertInteractingWithUserIsSet();
 
-        $isLay = is_null($this->interactingWithUserDetails->getOrganisationName);
+        $roleType = $this->translateDeputyRole($this->interactingWithUserDetails->getUserRole());
+
+        var_dump($roleType);
+        var_dump($this->interactingWithUserDetails->getUserRole());
+
+        $reportTypes = [
+            'Health and welfare' => [User::TYPE_PA => Report::TYPE_104_6, User::TYPE_PROF => Report::TYPE_104_5, User::TYPE_LAY => Report::TYPE_104],
+            'PFA high assets' => [User::TYPE_PA => Report::TYPE_102_6, User::TYPE_PROF => Report::TYPE_102_5, User::TYPE_LAY => Report::TYPE_102],
+            'PFA low assets' => [User::TYPE_PA => Report::TYPE_103_6, User::TYPE_PROF => Report::TYPE_103_5, User::TYPE_LAY => Report::TYPE_103],
+            'Combined high assets' => [User::TYPE_PA => Report::TYPE_102_4_6, User::TYPE_PROF => Report::TYPE_102_4_5, User::TYPE_LAY => Report::TYPE_102_4],
+            'Combined low assets' => [User::TYPE_PA => Report::TYPE_103_4_6, User::TYPE_PROF => Report::TYPE_103_4_5, User::TYPE_LAY => Report::TYPE_103_4],
+        ];
 
         switch ($reportType) {
             case 'Health and welfare':
-                $option = $isLay ? '104' : '104-5';
+                $option = $reportTypes['Health and welfare'][$roleType];
                 break;
             case 'PFA high assets':
-                $option = $isLay ? '102' : '102-5';
+                $option = $reportTypes['PFA high assets'][$roleType];
                 break;
             case 'PFA low assets':
-                $option = $isLay ? '103' : '103-5';
+                $option = $reportTypes['PFA low assets'][$roleType];
                 break;
             case 'Combined high assets':
-                $option = $isLay ? '102-4' : '102-4-5';
+                $option = $reportTypes['Combined high assets'][$roleType];
                 break;
             case 'Combined low assets':
-                $option = $isLay ? '103-4' : '103-4-5';
+                $option = $reportTypes['Combined low assets'][$roleType];
                 break;
             default:
                 throw new BehatException('Invalid report type - see options in ReportManagementTrait::iChangeReportTypeTo()');
         }
 
         $this->chooseOption('manage_report[type]', $option, 'manage-report');
+    }
+
+    private function translateDeputyRole(string $role): string
+    {
+        if (str_contains($role, User::TYPE_PROF)) {
+            return User::TYPE_PROF;
+        }
+
+        if (str_contains($role, User::TYPE_PA)) {
+            return User::TYPE_PA;
+        }
+
+        if (str_contains($role, User::TYPE_LAY)) {
+            return User::TYPE_LAY;
+        }
+
+        throw new BehatException('Unrecognised role - valid deputy roles must contain LAY, PROF or PA');
     }
 
     /**
@@ -162,11 +196,19 @@ trait ReportManagementTrait
     public function confirmAllReportSectionsIncomplete()
     {
         $this->iAmOnAdminManageReportPage();
-        $isLay = is_null($this->interactingWithUserDetails->getOrganisationName);
+        $roleType = $this->translateDeputyRole($this->interactingWithUserDetails->getUserRole());
+
+        if (User::TYPE_LAY === $roleType) {
+            $extraFields = $this->layCombinedHighExtraCheckboxes;
+        } elseif (User::TYPE_PA === $roleType) {
+            $extraFields = $this->paCombinedHighExtraCheckboxes;
+        } else {
+            $extraFields = $this->profCombinedHighExtraCheckboxes;
+        }
 
         $checkboxValuesAndTranslations = array_merge(
             $this->baseCombinedHighReportCheckboxValuesAndTranslations,
-            $isLay ? $this->layCombinedHighExtraCheckboxes : $this->orgCombinedHighExtraCheckboxes
+            $extraFields
         );
 
         foreach ($checkboxValuesAndTranslations as $value => $translation) {

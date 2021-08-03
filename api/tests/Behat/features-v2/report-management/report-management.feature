@@ -1,4 +1,4 @@
-@v2 @report-management
+@v2 @report-management @acs
 Feature: Report Management (applies to all admin roles)
 
     @super-admin @prof-admin-completed
@@ -12,7 +12,7 @@ Feature: Report Management (applies to all admin roles)
         And I submit the new report details
         Then the report details should be updated
 
-    @admin-manager @lay-combined-high-submitted @acs
+    @admin-manager @lay-combined-high-submitted
     Scenario: An admin user un-submits a submitted report
         Given an admin manager user accesses the admin app
         And a Lay Deputy has submitted a Combined High Assets report
