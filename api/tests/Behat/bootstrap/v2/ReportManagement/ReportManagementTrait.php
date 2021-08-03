@@ -208,9 +208,17 @@ trait ReportManagementTrait
         );
 
         if ('start' === $event) {
-            $this->interactingWithUserDetails->setCurrentReportStartDate($dateObject);
+            if ('completed' === $this->reportStatus) {
+                $this->interactingWithUserDetails->setCurrentReportStartDate($dateObject);
+            } else {
+                $this->interactingWithUserDetails->setPreviousReportStartDate($dateObject);
+            }
         } else {
-            $this->interactingWithUserDetails->setCurrentReportEndDate($dateObject);
+            if ('completed' === $this->reportStatus) {
+                $this->interactingWithUserDetails->setCurrentReportEndDate($dateObject);
+            } else {
+                $this->interactingWithUserDetails->setPreviousReportEndDate($dateObject);
+            }
         }
     }
 
@@ -219,13 +227,21 @@ trait ReportManagementTrait
      */
     public function iShouldSeeReportSectionsLabelledAsChangesNeeded()
     {
-        $this->clickLink(
-            sprintf(
+        if ('completed' === $this->reportStatus) {
+            $reportPeriod = sprintf(
                 '%s to %s report',
                 $this->interactingWithUserDetails->getCurrentReportStartDate()->format('Y'),
                 $this->interactingWithUserDetails->getCurrentReportEndDate()->format('Y')
-            )
-        );
+            );
+        } else {
+            $reportPeriod = sprintf(
+                '%s to %s report',
+                $this->interactingWithUserDetails->getPreviousReportStartDate()->format('Y'),
+                $this->interactingWithUserDetails->getPreviousReportEndDate()->format('Y')
+            );
+        }
+
+        $this->clickLink($reportPeriod);
 
         $sectionsMarkedIncomplete = $this->getSectionAnswers('manage-report')[0]['incompleteSectionsForm'];
 
