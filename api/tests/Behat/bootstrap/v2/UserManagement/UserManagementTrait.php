@@ -287,15 +287,6 @@ trait UserManagementTrait
     }
 
     /**
-     * @When I navigate to the add a new user page
-     */
-    public function iNavigateToAddNewUser()
-    {
-        $this->iAmOnAdminUsersSearchPage();
-        $this->clickBasedOnText('Add new user');
-    }
-
-    /**
      * @When I add invalid details in each of the fields
      */
     public function iAddInvalidDetailsInEachField()
@@ -666,12 +657,5 @@ trait UserManagementTrait
     private function iClickOnFirstUserReturnedBySearch()
     {
         $this->iClickOnNthElementBasedOnRegex('/admin\/user\/[0-9].*$/', 0);
-    }
-
-    private function clickBasedOnText($text)
-    {
-        $xpath = sprintf('//a[text()[contains(., \'%s\')]]', $text);
-        $link = $this->getSession()->getPage()->find('xpath', $xpath);
-        $link->click();
     }
 }

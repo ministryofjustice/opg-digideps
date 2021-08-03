@@ -64,6 +64,13 @@ trait ElementSelectionTrait
         $element->click();
     }
 
+    public function clickBasedOnText($text)
+    {
+        $xpath = sprintf('//a[text()[contains(., \'%s\')]]', $text);
+        $link = $this->getSession()->getPage()->find('xpath', $xpath);
+        $link->click();
+    }
+
     /**
      * @param string $sectionText Text that appears in the row/container element with the link you want to select
      * @param string $linkText    Text of the link you want to select
