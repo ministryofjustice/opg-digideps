@@ -72,6 +72,14 @@ trait IVisitAdminTrait
     }
 
     /**
+     * @When I visit the admin Search Users page
+     */
+    public function iVisitAdminSearchUserPage()
+    {
+        $this->visitAdminPath($this->getAdminSearchUserPage());
+    }
+
+    /**
      * @When I visit the admin View User page for the user I'm interacting with
      */
     public function iVisitAdminViewUserPageForInteractingWithUser()

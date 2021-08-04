@@ -815,6 +815,37 @@ class FixtureHelper
         );
     }
 
+    public function createDataForAdminUserTests(string $testPurpose)
+    {
+        $userRoles = [
+            ['typeSuffix' => 'lay', 'role' => User::ROLE_LAY_DEPUTY],
+            ['typeSuffix' => 'pa-n', 'role' => User::ROLE_PA_NAMED],
+            ['typeSuffix' => 'pa', 'role' => User::ROLE_PA],
+            ['typeSuffix' => 'prof-n', 'role' => User::ROLE_PROF_NAMED],
+            ['typeSuffix' => 'prof', 'role' => User::ROLE_PROF],
+            ['typeSuffix' => 'admin', 'role' => User::ROLE_ADMIN],
+            ['typeSuffix' => 'manager', 'role' => User::ROLE_ADMIN_MANAGER],
+            ['typeSuffix' => 'super', 'role' => User::ROLE_SUPER_ADMIN],
+            ['typeSuffix' => 'ad', 'role' => User::ROLE_AD],
+        ];
+
+        foreach ($userRoles as $userRole) {
+            $user = $this->userTestHelper
+                ->createUser(null, $userRole['role'], sprintf('%s-%s@t.uk', $testPurpose.'-test-'.$userRole['typeSuffix'], $this->testRunId));
+            $this->setClientPassword($user);
+        }
+
+        $this->createDeputyClientAndReport(
+            $this->testRunId,
+            User::ROLE_LAY_DEPUTY,
+            $testPurpose.'-test-ndr',
+            Report::TYPE_104,
+            false,
+            false,
+            true
+        );
+    }
+
     private function createOrganisation($testRunId): Organisation
     {
         $orgName = sprintf('prof-%s-%s', $this->orgName, $testRunId);
