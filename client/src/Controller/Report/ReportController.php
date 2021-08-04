@@ -21,6 +21,7 @@ use App\Service\Client\Internal\SatisfactionApi;
 use App\Service\Client\Internal\UserApi;
 use App\Service\Client\RestClient;
 use App\Service\Csv\TransactionsCsvGenerator;
+use App\Service\ParameterStoreService;
 use App\Service\Redirector;
 use App\Service\ReportSubmissionService;
 use DateTime;
@@ -257,7 +258,7 @@ class ReportController extends AbstractController
      *
      * @return RedirectResponse|Response|null
      */
-    public function overviewAction(Redirector $redirector, $reportId)
+    public function overviewAction(Redirector $redirector, $reportId, ParameterStoreService $parameterStore)
     {
         $reportJmsGroup = ['status', 'balance', 'user', 'client', 'client-reports', 'balance-state'];
         // redirect if user has missing details or is on wrong page
@@ -296,11 +297,22 @@ class ReportController extends AbstractController
         $report = $this->reportApi->getReportIfNotSubmitted($reportId, $reportJmsGroup);
         $activeReport = $activeReportId ? $this->reportApi->getReportIfNotSubmitted($activeReportId, $reportJmsGroup) : null;
 
+        $additionalBenefitsQuestions = false;
+        $dateTimeFormat = 'd-m-Y H:i:s';
+
+        $flagDate = DateTime::createFromFormat($dateTimeFormat, $parameterStore->getFeatureFlag(ParameterStoreService::FLAG_BENEFITS_QUESTIONS));
+        $currentDate = DateTime::createFromFormat($dateTimeFormat, date($dateTimeFormat));
+
+        if ($flagDate <= $currentDate) {
+            $additionalBenefitsQuestions = true;
+        }
+
         return $this->render($template, [
             'user' => $user,
             'client' => $client,
             'report' => $report,
             'activeReport' => $activeReport,
+            'additionalBenefitsQuestions' => $additionalBenefitsQuestions,
         ]);
     }
 
