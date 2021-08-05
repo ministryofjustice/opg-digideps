@@ -32,7 +32,7 @@
             <div class="govuk-grid-row">
                 <div class="govuk-grid-column-one-third govuk-form-group">
                     <label for="search" class="govuk-label">{{ 'page.searchForm.search.label' | trans }}</label>
-                    <input type="text" id="search" name="q" value="{{ filters.q }}" class="govuk-input">
+                    <input type="text" id="search" name="q" value="{{ filters.q }}" class="govuk-input" />
                     <input type="hidden" name="status" value="{{ filters.status }}" />
                 </div>
                 <div class="govuk-grid-column-one-third govuk-form-group">
@@ -49,7 +49,7 @@
                     </select>
                 </div>
             </div>
-            <input id="search_submit" class="govuk-button behat-link-search" type="submit" value="Search">
+            <input id="search_submit" class="govuk-button behat-link-search" type="submit" value="Search" />
             {% if filters.q or filters.created_by_role %}
                 <a href="{{ path(baseRoute, {'status': filters.status}) }}" class="govuk-button govuk-button--secondary">Clear filters</a>
             {% endif %}
@@ -112,7 +112,7 @@
                     {% if nOfdownloadableSubmissions > 0 %}
                       <th scope="col" class="govuk-table__header govuk-!-padding-left-4 govuk-!-padding-top-0 govuk-!-padding-bottom-0">
                         <div class="govuk-checkboxes__item">
-                            <input type="checkbox" id="select-all" name="select-all" value="all" class="govuk-checkboxes__input" data-js="multiselect-checkbox-all">
+                            <input type="checkbox" id="select-all" name="select-all" value="all" class="govuk-checkboxes__input" data-js="multiselect-checkbox-all" />
                             <label for="select-all" class="govuk-label govuk-checkboxes__label">
                                 &nbsp;
                                 <span class="govuk-visually-hidden">
@@ -144,7 +144,7 @@
                             {% if reportSubmission.isDownloadable %}
                             <div class="govuk-checkboxes__item">
                                 <input type="checkbox" id="cb{{ reportSubmission.id }}" name="checkboxes[{{ reportSubmission.id }}]"
-                                       class="govuk-checkboxes__input" data-js="multiselect-checkbox">
+                                       class="govuk-checkboxes__input" data-js="multiselect-checkbox" />
                                 <label for="cb{{ reportSubmission.id }}" class="govuk-label govuk-checkboxes__label">
                                     <span class="govuk-visually-hidden">
                                         Select {{ client.caseNumber }}

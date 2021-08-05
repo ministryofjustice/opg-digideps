@@ -317,7 +317,7 @@ class BaseFeatureContext extends MinkContext
     }
 
     /**
-     * @BeforeScenario @prof-admin-not-started
+     * @BeforeScenario @prof-admin-health-welfare-not-started
      */
     public function createProfAdminNotStarted()
     {
@@ -326,7 +326,7 @@ class BaseFeatureContext extends MinkContext
     }
 
     /**
-     * @BeforeScenario @prof-admin-completed
+     * @BeforeScenario @prof-admin-health-welfare-completed
      */
     public function createProfAdminCompleted()
     {
@@ -335,7 +335,7 @@ class BaseFeatureContext extends MinkContext
     }
 
     /**
-     * @BeforeScenario @prof-admin-submitted
+     * @BeforeScenario @prof-admin-health-welfare-submitted
      */
     public function createProfAdminSubmitted()
     {
@@ -344,7 +344,7 @@ class BaseFeatureContext extends MinkContext
     }
 
     /**
-     * @BeforeScenario @pa-named-not-started
+     * @BeforeScenario @pa-named-health-welfare-not-started
      */
     public function createPaNamedNotStarted()
     {
@@ -353,7 +353,7 @@ class BaseFeatureContext extends MinkContext
     }
 
     /**
-     * @BeforeScenario @pa-named-completed
+     * @BeforeScenario @pa-named-health-welfare-completed
      */
     public function createPaNamedCompleted()
     {
@@ -362,7 +362,7 @@ class BaseFeatureContext extends MinkContext
     }
 
     /**
-     * @BeforeScenario @pa-named-submitted
+     * @BeforeScenario @pa-named-health-welfare-submitted
      */
     public function createPaNamedSubmitted()
     {

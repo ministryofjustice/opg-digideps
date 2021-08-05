@@ -8,6 +8,7 @@ use App\Entity\Client;
 use App\Entity\Ndr as Ndr;
 use App\Entity\Report\Action;
 use App\Entity\Report\BankAccount;
+use App\Entity\Report\Document;
 use App\Entity\Report\Lifestyle;
 use App\Entity\Report\MentalCapacity;
 use App\Entity\Report\MoneyTransaction;
@@ -43,7 +44,7 @@ class ReportTestHelper
         $this->completeVisitsCare($report);
         $this->completeActions($report);
         $this->completeOtherInfo($report);
-        $this->completeDocuments($report);
+        $this->completeDocuments($report, $em);
         $this->completeDeputyExpenses($report);
         $this->completeGifts($report);
         $this->completeBankAccounts($report, $em);
@@ -79,14 +80,37 @@ class ReportTestHelper
         $submitDate = clone $report->getStartDate();
         $submitDate->modify('+365 day');
 
+        $reportPdf = new Document($report);
+        $reportPdf->setFileName('DigiRep-2020-2021-12-34_12345678');
+        $reportPdf->setStorageReference('dd_doc_1234_9876543219876');
+        $reportPdf->setIsReportPdf(true);
+        $reportPdf->setCreatedOn(new DateTime());
+        $reportPdf->setCreatedBy($submittedBy);
+        $reportPdf->setSynchronisationStatus(Document::SYNC_STATUS_QUEUED);
+
+        $supportingDocument = new Document($report);
+        $supportingDocument->setFileName('fake-file');
+        $supportingDocument->setStorageReference('dd_doc_1234_123456789123456');
+        $supportingDocument->setIsReportPdf(false);
+        $supportingDocument->setCreatedOn(new DateTime());
+        $supportingDocument->setCreatedBy($submittedBy);
+        $supportingDocument->setSynchronisationStatus(Document::SYNC_STATUS_QUEUED);
+
         $submission = (new ReportSubmission($report, $submittedBy))
             ->setCreatedBy($submittedBy)
-            ->setCreatedOn($submitDate);
+            ->setCreatedOn($submitDate)
+            ->addDocument($reportPdf)
+            ->addDocument($supportingDocument);
+
+        $reportPdf->setReportSubmission($submission);
+        $supportingDocument->setReportSubmission($submission);
 
         $report
             ->setSubmitDate($submitDate)
             ->setSubmitted(true);
 
+        $em->persist($reportPdf);
+        $em->persist($supportingDocument);
         $em->persist($submission);
         $em->persist($report);
 
@@ -169,9 +193,9 @@ class ReportTestHelper
         $report->setLifestyle($ls);
     }
 
-    private function completeDocuments(ReportInterface $report): void
+    private function completeDocuments(ReportInterface $report, EntityManager $em): void
     {
-        $report->setWishToProvideDocumentation('no');
+        $report->setWishToProvideDocumentation('yes');
     }
 
     private function completeGifts(ReportInterface $report): void

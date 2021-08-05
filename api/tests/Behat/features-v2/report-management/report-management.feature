@@ -1,7 +1,7 @@
-@v2 @report-management @acs
+@v2 @report-management
 Feature: Report Management (applies to all admin roles)
 
-    @super-admin @prof-admin-completed
+    @super-admin @prof-admin-health-welfare-completed
     Scenario: An admin user changes report type and due date for a in progress report
         Given a super admin user accesses the admin app
         And a Professional Deputy has completed a Pfa Low Assets report

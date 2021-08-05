@@ -16,18 +16,15 @@ trait ReportTrait
      */
     public function iSubmitTheReport()
     {
-        $ndrOrReport = $this->layDeputyCompletedPfaHighAssetsDetails->getCurrentReportNdrOrReport();
-        $reportId = $this->layDeputyCompletedPfaHighAssetsDetails->getCurrentReportId();
+        $ndrOrReport = $this->loggedInUserDetails->getCurrentReportNdrOrReport();
+        $reportId = $this->loggedInUserDetails->getCurrentReportId();
 
         $this->visit("$ndrOrReport/$reportId/overview");
 
         try {
             $this->clickLink('Preview and check report');
         } catch (Exception $e) {
-            // Convert once we start to look at NDRs
-            $this->throwContextualException("Couldn't find link with text 'Preview and check report'");
-//            $link = $reportType === 'ndr' ? 'edit-report-review' : 'edit-report_submit';
-//            $this->clickOnBehatLink($link);
+            $this->clickLink('Continue');
         }
 
         $this->clickLink('Continue');
@@ -48,6 +45,7 @@ trait ReportTrait
         }
 
         $this->loginToFrontendAs($this->layDeputyNotStartedPfaHighAssetsDetails->getUserEmail());
+        $this->interactingWithUserDetails = $this->layDeputyNotStartedPfaHighAssetsDetails;
     }
 
     /**
@@ -63,6 +61,7 @@ trait ReportTrait
         }
 
         $this->loginToFrontendAs($this->layDeputyCompletedPfaHighAssetsDetails->getUserEmail());
+        $this->interactingWithUserDetails = $this->layDeputyCompletedPfaHighAssetsDetails;
     }
 
     /**
@@ -75,6 +74,7 @@ trait ReportTrait
         }
 
         $this->loginToFrontendAs($this->layNdrDeputyNotStartedDetails->getUserEmail());
+        $this->interactingWithUserDetails = $this->layNdrDeputyNotStartedDetails;
         $this->reportUrlPrefix = $this->layNdrDeputyNotStartedDetails->getCurrentReportNdrOrReport();
     }
 
@@ -90,6 +90,7 @@ trait ReportTrait
         }
 
         $this->loginToFrontendAs($this->layNdrDeputyCompletedDetails->getUserEmail());
+        $this->interactingWithUserDetails = $this->layNdrDeputyCompletedDetails;
         $this->reportUrlPrefix = $this->layNdrDeputyCompletedDetails->getCurrentReportNdrOrReport();
     }
 
@@ -105,6 +106,7 @@ trait ReportTrait
         }
 
         $this->loginToFrontendAs($this->layDeputySubmittedPfaHighAssetsDetails->getUserEmail());
+        $this->interactingWithUserDetails = $this->layDeputySubmittedPfaHighAssetsDetails;
     }
 
     /**
@@ -117,6 +119,7 @@ trait ReportTrait
         }
 
         $this->loginToFrontendAs($this->profAdminDeputyHealthWelfareNotStartedDetails->getUserEmail());
+        $this->interactingWithUserDetails = $this->profAdminDeputyHealthWelfareNotStartedDetails;
     }
 
     /**
@@ -129,6 +132,7 @@ trait ReportTrait
         }
 
         $this->loginToFrontendAs($this->profTeamDeputyNotStartedHealthWelfareDetails->getUserEmail());
+        $this->interactingWithUserDetails = $this->profTeamDeputyNotStartedHealthWelfareDetails;
     }
 
     /**
@@ -141,6 +145,7 @@ trait ReportTrait
         }
 
         $this->loginToFrontendAs($this->profTeamDeputyCompletedHealthWelfareDetails->getUserEmail());
+        $this->interactingWithUserDetails = $this->profTeamDeputyCompletedHealthWelfareDetails;
     }
 
     /**
@@ -153,6 +158,7 @@ trait ReportTrait
         }
 
         $this->loginToFrontendAs($this->layDeputyNotStartedPfaLowAssetsDetails->getUserEmail());
+        $this->interactingWithUserDetails = $this->layDeputyNotStartedPfaLowAssetsDetails;
     }
 
     /**
@@ -165,6 +171,7 @@ trait ReportTrait
         }
 
         $this->loginToFrontendAs($this->layDeputyCompletedPfaLowAssetsDetails->getUserEmail());
+        $this->interactingWithUserDetails = $this->layDeputyCompletedPfaLowAssetsDetails;
     }
 
     /**
@@ -177,6 +184,7 @@ trait ReportTrait
         }
 
         $this->loginToFrontendAs($this->layDeputyNotStartedHealthWelfareDetails->getUserEmail());
+        $this->interactingWithUserDetails = $this->layDeputyNotStartedHealthWelfareDetails;
     }
 
     /**
@@ -189,6 +197,7 @@ trait ReportTrait
         }
 
         $this->loginToFrontendAs($this->layDeputyCompletedHealthWelfareDetails->getUserEmail());
+        $this->interactingWithUserDetails = $this->layDeputyCompletedHealthWelfareDetails;
     }
 
     /**
@@ -200,6 +209,7 @@ trait ReportTrait
             throw new Exception('It looks like fixtures are not loaded - missing $layDeputySubmittedCombinedHighDetails');
         }
 
+        $this->loginToFrontendAs($this->layDeputySubmittedCombinedHighDetails->getUserEmail());
         $this->interactingWithUserDetails = $this->layDeputySubmittedCombinedHighDetails;
     }
 
@@ -215,6 +225,7 @@ trait ReportTrait
             throw new BehatException('It looks like fixtures are not loaded - missing $profAdminDeputySubmittedDetails');
         }
 
+        $this->loginToFrontendAs($this->profAdminDeputyHealthWelfareSubmittedDetails->getUserEmail());
         $this->interactingWithUserDetails = $this->profAdminDeputyHealthWelfareSubmittedDetails;
     }
 
@@ -229,6 +240,7 @@ trait ReportTrait
             throw new BehatException('It looks like fixtures are not loaded - missing $publicAuthorityNamedDeputySubmittedDetails');
         }
 
+        $this->loginToFrontendAs($this->publicAuthorityNamedDeputySubmittedDetails->getUserEmail());
         $this->interactingWithUserDetails = $this->publicAuthorityNamedDeputySubmittedDetails;
     }
 
@@ -242,6 +254,7 @@ trait ReportTrait
             throw new Exception('It looks like fixtures are not loaded - missing $profAdminDeputyCompletedDetails');
         }
 
+        $this->loginToFrontendAs($this->profAdminDeputyHealthWelfareCompletedDetails->getUserEmail());
         $this->interactingWithUserDetails = $this->profAdminDeputyHealthWelfareCompletedDetails;
     }
 
@@ -254,6 +267,7 @@ trait ReportTrait
             throw new Exception('It looks like fixtures are not loaded - missing $publicAuthorityAdminCombinedHighSubmittedDetails');
         }
 
+        $this->loginToFrontendAs($this->publicAuthorityAdminCombinedHighSubmittedDetails->getUserEmail());
         $this->interactingWithUserDetails = $this->publicAuthorityAdminCombinedHighSubmittedDetails;
     }
 }

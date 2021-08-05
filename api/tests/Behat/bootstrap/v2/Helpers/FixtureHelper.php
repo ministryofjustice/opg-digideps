@@ -706,7 +706,7 @@ class FixtureHelper
         $user = $this->createOrgUserClientNamedDeputyAndReport(
             $testRunId,
             User::ROLE_PROF_ADMIN,
-            'prof-admin-not-started',
+            'prof-admin-health-welfare-not-started',
             Report::TYPE_104_5,
             false,
             false
@@ -720,7 +720,7 @@ class FixtureHelper
         $user = $this->createOrgUserClientNamedDeputyAndReport(
             $testRunId,
             User::ROLE_PROF_ADMIN,
-            'prof-admin-completed',
+            'prof-admin-health-welfare-completed',
             Report::TYPE_104_5,
             true,
             false
@@ -734,7 +734,7 @@ class FixtureHelper
         $user = $this->createOrgUserClientNamedDeputyAndReport(
             $testRunId,
             User::ROLE_PROF_ADMIN,
-            'prof-admin-submitted',
+            'prof-admin-health-welfare-submitted',
             Report::TYPE_104_5,
             true,
             true

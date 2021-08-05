@@ -250,6 +250,12 @@ v2-tests-goutte:
             contexts:
                 - App\Tests\Behat\v2\ReportManagement\ReportManagementFeatureContext
 
+        report-submission:
+            description: Coverage of report submission and document sync features in the admin side of the app
+            paths: [ "%paths.base%/features-v2/report-submission" ]
+            contexts:
+                - App\Tests\Behat\v2\ReportSubmission\ReportSubmissionFeatureContext
+
         section-accounts:
             description: Covering the 'Accounts' section of the report
             paths: [ "%paths.base%/features-v2/reporting/sections/accounts" ]

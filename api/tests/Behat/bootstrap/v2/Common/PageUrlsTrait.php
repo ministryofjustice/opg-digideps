@@ -46,6 +46,7 @@ trait PageUrlsTrait
     private string $adminUserResearchReportUrl = '/admin/stats/user-research';
     private string $adminActiveLaysReportUrl = '/admin/stats/downloadActiveLaysCsv';
     private string $adminFixturesUrl = '/admin/fixtures';
+    private string $adminSubmissionsPage = '/admin/documents/list';
 
     // Fixtures
     private string $courtOrdersFixtureUrl = '/admin/fixtures/court-orders?%s';
@@ -238,5 +239,10 @@ trait PageUrlsTrait
     public function getMoneyInShortSectionSummaryUrl(int $reportId): string
     {
         return sprintf($this->moneyInShortSectionSummaryUrl, $this->reportUrlPrefix, $reportId);
+    }
+
+    public function getAdminSubmissionsPage(): string
+    {
+        return $this->adminSubmissionsPage;
     }
 }

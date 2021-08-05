@@ -51,6 +51,7 @@ trait AuthTrait
             throw new BehatException('It looks like fixtures are not loaded - missing $this->adminDetails');
         }
 
+        $this->interactingWithUserDetails = $this->loggedInUserDetails;
         $this->loginToAdminAs($this->adminDetails->getUserEmail());
     }
 
@@ -63,6 +64,7 @@ trait AuthTrait
             throw new BehatException('It looks like fixtures are not loaded - missing $this->adminManagerDetails');
         }
 
+        $this->interactingWithUserDetails = $this->loggedInUserDetails;
         $this->loginToAdminAs($this->adminManagerDetails->getUserEmail());
     }
 
@@ -75,6 +77,7 @@ trait AuthTrait
             throw new BehatException('It looks like fixtures are not loaded - missing $this->superAdminDetails');
         }
 
+        $this->interactingWithUserDetails = $this->loggedInUserDetails;
         $this->loginToAdminAs($this->superAdminDetails->getUserEmail());
     }
 
