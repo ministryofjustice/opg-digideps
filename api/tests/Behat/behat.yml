@@ -244,6 +244,12 @@ v2-tests-goutte:
             contexts:
                 - App\Tests\Behat\v2\Reporting\Admin\ReportingAdminFeatureContext
 
+        report-management:
+            description: Coverage of report management features in the admin side of the app
+            paths: [ "%paths.base%/features-v2/report-management" ]
+            contexts:
+                - App\Tests\Behat\v2\ReportManagement\ReportManagementFeatureContext
+
         section-accounts:
             description: Covering the 'Accounts' section of the report
             paths: [ "%paths.base%/features-v2/reporting/sections/accounts" ]
@@ -334,6 +340,11 @@ v2-tests-goutte:
             contexts:
                 - App\Tests\Behat\v2\Reporting\Sections\ReportingSectionsFeatureContext
 
+        user-management:
+            description: Covering the user management features of the app (admin)
+            paths: [ "%paths.base%/features-v2/user-management" ]
+            contexts:
+                - App\Tests\Behat\v2\UserManagement\UserManagementFeatureContext
     extensions:
         Behat\MinkExtension:
             files_path: '%paths.base%/fixtures/'

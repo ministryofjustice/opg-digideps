@@ -54,7 +54,7 @@
             {% if not client.organisation.isActivated %}
                 {{ (page ~ '.organisationInactive') | trans }}
             {% endif %}
-            <br>
+            <br />
         </dd>
     {% endif %}
 
@@ -84,7 +84,7 @@
             </h3>
             <p class="govuk-body">
                 {% for addressPart in namedDeputy.addressNotEmptyParts %}
-                    {{ addressPart }}<br/>
+                    {{ addressPart }}<br />
                 {% endfor %}
             </p>
         {% endif %}
@@ -93,16 +93,16 @@
         </h3>
         <p class="govuk-body">
             {% if namedDeputy.phoneMain %}
-                {{ 'phone' | trans({}, 'common') }}: {{ namedDeputy.phoneMain }}<br>
+                {{ 'phone' | trans({}, 'common') }}: {{ namedDeputy.phoneMain }}<br />
             {% endif %}
             {% if namedDeputy.email %}
-                {{ 'email' | trans({}, 'common') }}: {{ namedDeputy.email }}<br>
+                {{ 'email' | trans({}, 'common') }}: {{ namedDeputy.email }}<br />
             {% endif %}
             {% if namedDeputy.email2 is defined and namedDeputy.email2 %}
-                {{ 'alternativeEmail' | trans({}, 'common') }}: {{ namedDeputy.email2 }}<br>
+                {{ 'alternativeEmail' | trans({}, 'common') }}: {{ namedDeputy.email2 }}<br />
             {% endif %}
             {% if namedDeputy.email3 is defined and namedDeputy.email3 %}
-                {{ 'alternativeEmail' | trans({}, 'common') }}: {{ namedDeputy.email3 }}<br>
+                {{ 'alternativeEmail' | trans({}, 'common') }}: {{ namedDeputy.email3 }}<br />
             {% endif %}
         </p>
         {% if is_granted('ROLE_ADMIN_MANAGER') %}
@@ -168,7 +168,7 @@
                         {% if report.type == 'ndr' %}
                             NDR
                         {% else %}
-                            {{ report.period | replace({' to ': '–'}) }}
+                            {{ report.period | replace({' to ': '-'}) }}
                         {% endif %}
                     </td>
                     <td class="govuk-table__cell">
