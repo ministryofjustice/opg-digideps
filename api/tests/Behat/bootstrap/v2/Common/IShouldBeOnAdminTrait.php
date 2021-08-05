@@ -37,6 +37,38 @@ trait IShouldBeOnAdminTrait
     }
 
     /**
+     * @Then I should be on the admin view user page
+     */
+    public function iAmOnAdminViewUserPage()
+    {
+        return $this->iAmOnPage('/admin\/user\/[0-9].*/');
+    }
+
+    /**
+     * @Then I should be on the admin add user page
+     */
+    public function iAmOnAdminAddUserPage()
+    {
+        return $this->iAmOnPage('/admin\/user-add$/');
+    }
+
+    /**
+     * @Then I should be on the admin edit user page
+     */
+    public function iAmOnAdminEditUserPage()
+    {
+        return $this->iAmOnPage('/admin\/edit-user.*$/');
+    }
+
+    /**
+     * @Then I should be on the admin delete confirm user page
+     */
+    public function iAmOnAdminDeleteConfirmUserPage()
+    {
+        return $this->iAmOnPage('/admin\/delete-confirm\/[0-9].*$/');
+    }
+
+    /**
      * @Then I should be on the admin organisation search page
      */
     public function iAmOnAdminOrganisationSearchPage()
@@ -66,5 +98,60 @@ trait IShouldBeOnAdminTrait
     public function iAmOnAddUserToOrganisationPage()
     {
         return $this->iAmOnPage('/admin\/organisations\/.*\/add-user$/');
+    }
+
+    /**
+     * @Then I should be on the admin stats page
+     */
+    public function iAmOnAdminStatsPage()
+    {
+        return $this->iAmOnPage('/admin\/stats$/');
+    }
+
+    /**
+     * @Then I should be on the admin stats user research page
+     */
+    public function iAmOnAdminStatsUserResearchPage()
+    {
+        return $this->iAmOnPage('/admin\/stats\/user-research$/');
+    }
+
+    /**
+     * @Then I should be on the admin stats satisfaction page
+     */
+    public function iAmOnAdminStatsSatisfactionPage()
+    {
+        return $this->iAmOnPage('/admin\/stats\/satisfaction$/');
+    }
+
+    public function iAmOnAdminManageReportPage()
+    {
+        return $this->iAmOnPage('/admin\/report\/.*\/manage$/');
+    }
+
+    public function iAmOnAdminManageReportConfirmPage()
+    {
+        return $this->iAmOnPage('/admin\/report\/.*\/manage-confirm$/');
+    }
+
+    public function iAmOnAdminManageCloseReportConfirmPage()
+    {
+        return $this->iAmOnPage('/admin\/report\/.*\/manage-close-report-confirm$/');
+    }
+
+    /**
+     * @Then I should be on the admin report checklist page
+     */
+    public function iAmOnAdminReportChecklistPage()
+    {
+        return $this->iAmOnPage('/admin\/report\/.*\/checklist$/');
+    }
+
+    /**
+     * @Then I should be on the admin report checklist submitted page
+     */
+    public function iAmOnAdminReportChecklistSubmittedPage()
+    {
+        return $this->iAmOnPage('/admin\/report\/.*\/checklist-submitted$/');
     }
 }

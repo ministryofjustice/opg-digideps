@@ -108,4 +108,14 @@ trait AuthTrait
 
         return $filteredUser;
     }
+
+    /**
+     * @When the user I'm interacting with logs in to the frontend of the app
+     */
+    public function interactingWithUserLogsInToFrontend()
+    {
+        $this->assertInteractingWithUserIsSet();
+
+        $this->loginToFrontendAs($this->interactingWithUserDetails->getUserEmail());
+    }
 }

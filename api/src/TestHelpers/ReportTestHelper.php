@@ -76,12 +76,12 @@ class ReportTestHelper
             $submittedBy = $report->getClient()->getUsers()->first();
         }
 
-        $submission = (new ReportSubmission($report, $submittedBy))
-            ->setCreatedBy($submittedBy)
-            ->setCreatedOn(new DateTime());
-
         $submitDate = clone $report->getStartDate();
         $submitDate->modify('+365 day');
+
+        $submission = (new ReportSubmission($report, $submittedBy))
+            ->setCreatedBy($submittedBy)
+            ->setCreatedOn($submitDate);
 
         $report
             ->setSubmitDate($submitDate)

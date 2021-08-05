@@ -67,7 +67,7 @@
                     </p>
                 {% else %}
                     <p class="govuk-body">
-                        Found {{ users | length }} users
+                        {% if (users | length) == 1 %}Found 1 user{% else %}Found {{ users | length }} users{% endif %}
                     </p>
                 {% endif %}
             </div>
