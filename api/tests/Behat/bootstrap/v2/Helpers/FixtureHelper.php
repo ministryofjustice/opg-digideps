@@ -32,42 +32,6 @@ class FixtureHelper
     private OrganisationTestHelper $organisationTestHelper;
     private NamedDeputyTestHelper $namedDeputyTestHelper;
 
-    private User $admin;
-    private User $adminManager;
-    private User $superAdmin;
-
-    private User $layPfaHighAssetsNotStarted;
-    private User $layPfaHighAssetsCompleted;
-    private User $layPfaHighAssetsSubmitted;
-
-    private User $layPfaLowAssetsNotStarted;
-    private User $layPfaLowAssetsCompleted;
-    private User $layPfaLowAssetsSubmitted;
-
-    private User $layHealthWelfareNotStarted;
-    private User $layHealthWelfareCompleted;
-    private User $layHealthWelfareSubmitted;
-
-    private User $profNamedHealthWelfareNotStarted;
-    private User $profNamedHealthWelfareCompleted;
-    private User $profNamedHealthWelfareSubmitted;
-
-    private User $profTeamHealthWelfareNotStarted;
-    private User $profTeamHealthWelfareCompleted;
-    private User $profTeamHealthWelfareSubmitted;
-
-    private User $layNdrNotStarted;
-    private User $layNdrCompleted;
-    private User $layNdrSubmitted;
-
-    private User $profAdminNotStarted;
-    private User $profAdminCompleted;
-    private User $profAdminSubmitted;
-
-    private User $paAdminNotStarted;
-    private User $paAdminCompleted;
-    private User $paAdminSubmitted;
-
     private string $testRunId = '';
     private string $orgName = 'Test Org';
     private string $orgEmailIdentifier = 'test-org.uk';
@@ -225,47 +189,6 @@ class FixtureHelper
             },
             ARRAY_FILTER_USE_BOTH
         );
-    }
-
-    private function createUserFixtures()
-    {
-        $this->createAdminUsers();
-        $this->createDeputies();
-
-        $users = [
-            $this->admin,
-            $this->adminManager,
-            $this->superAdmin,
-            $this->layHealthWelfareNotStarted,
-            $this->layHealthWelfareCompleted,
-            $this->layHealthWelfareSubmitted,
-            $this->layPfaHighAssetsNotStarted,
-            $this->layPfaHighAssetsCompleted,
-            $this->layPfaHighAssetsSubmitted,
-            $this->layPfaLowAssetsNotStarted,
-            $this->layPfaLowAssetsCompleted,
-            $this->layPfaLowAssetsSubmitted,
-            $this->layNdrNotStarted,
-            $this->layNdrCompleted,
-            $this->layNdrSubmitted,
-            $this->profAdminNotStarted,
-            $this->profAdminCompleted,
-            $this->profAdminSubmitted,
-        ];
-
-        foreach ($users as $user) {
-            $user->setPassword($this->encoder->encodePassword($user, $this->fixtureParams['account_password']));
-            $this->em->persist($user);
-        }
-
-        $this->em->flush();
-    }
-
-    private function createAdminUsers()
-    {
-        $this->admin = $this->createUser(User::ROLE_ADMIN);
-        $this->adminManager = $this->createUser(User::ROLE_ADMIN_MANAGER);
-        $this->superAdmin = $this->createUser(User::ROLE_SUPER_ADMIN);
     }
 
     public function createUser(string $roleName, ?string $email = null)
@@ -865,7 +788,7 @@ class FixtureHelper
 
     public function createPAAdminNotStarted(string $testRunId)
     {
-        $this->paAdminNotStarted = $this->createOrgUserClientNamedDeputyAndReport(
+        $user = $this->createOrgUserClientNamedDeputyAndReport(
             $testRunId,
             User::ROLE_PA_ADMIN,
             'pa-admin-not-started',
@@ -874,12 +797,12 @@ class FixtureHelper
             false
         );
 
-        return self::buildOrgUserDetails($this->paAdminNotStarted);
+        return self::buildOrgUserDetails($user);
     }
 
     public function createPAAdminCompleted(string $testRunId)
     {
-        $this->paAdminCompleted = $this->createOrgUserClientNamedDeputyAndReport(
+        $user = $this->createOrgUserClientNamedDeputyAndReport(
             $testRunId,
             User::ROLE_PA_ADMIN,
             'pa-admin-completed',
@@ -888,12 +811,12 @@ class FixtureHelper
             false
         );
 
-        return self::buildOrgUserDetails($this->paAdminCompleted);
+        return self::buildOrgUserDetails($user);
     }
 
     public function createPAAdminSubmitted(string $testRunId)
     {
-        $this->paAdminSubmitted = $this->createOrgUserClientNamedDeputyAndReport(
+        $user = $this->createOrgUserClientNamedDeputyAndReport(
             $testRunId,
             User::ROLE_PA_ADMIN,
             'pa-admin-completed',
@@ -902,7 +825,7 @@ class FixtureHelper
             true
         );
 
-        return self::buildOrgUserDetails($this->paAdminSubmitted);
+        return self::buildOrgUserDetails($user);
     }
 
     public function createAdmin(string $testRunId): array
