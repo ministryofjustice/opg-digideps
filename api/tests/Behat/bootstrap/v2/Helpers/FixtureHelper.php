@@ -283,13 +283,23 @@ class FixtureHelper
         return self::buildUserDetails($user);
     }
 
-    public function duplicateClient(int $clientId)
+    public function duplicateClient(int $clientId, ?bool $sameFirstName = true, ?bool $sameLastName = true)
     {
         $client = clone $this->em->getRepository(Client::class)->find($clientId);
         $client->setCaseNumber(ClientTestHelper::createValidCaseNumber());
 
+        if (!$sameFirstName) {
+            $client->setFirstName($client->getFirstName().'ABC');
+        }
+
+        if (!$sameLastName) {
+            $client->setFirstName($client->getFirstName().'ABC');
+        }
+
         $this->em->persist($client);
         $this->em->flush();
+
+        return $client;
     }
 
     public function createLayPfaHighAssetsNotStarted(string $testRunId): array

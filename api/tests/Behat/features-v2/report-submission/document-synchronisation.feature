@@ -35,8 +35,8 @@ Feature: Synchronising Documents with Sirius
         Then I should see the case number of the user I'm interacting with
         And the document "test-image.png" should be queued
 
-    @super-admin @prof-admin-health-welfare-submitted @acs
-    Scenario: Running the document-sync command syncs queued Report PDF documents with Sirius
+    @super-admin @prof-admin-health-welfare-submitted
+    Scenario: Running the document-sync command syncs queued documents with Sirius
         Given a Professional Deputy has submitted a Health and Welfare report
         And I attached a supporting document "test-image.png" to the submitted report
         When a super admin user accesses the admin app
@@ -45,12 +45,9 @@ Feature: Synchronising Documents with Sirius
         And I view the pending submissions
         Then I should see the case number of the user I'm interacting with
         And the report PDF document should be synced
+#       Supporting documents can only sync after report PDF has synced
         And the document "test-image.png" should be queued
-
-    Scenario: Running the document-sync command syncs queued supporting documents with Sirius when the related report PDF document has been synced
-        Given I am logged in to admin as "admin@publicguardian.gov.uk" with password "DigidepsPass1234"
         And I run the document-sync command
-        When I view the submissions page
-        And I click on "tab-archived"
-        Then I should see "12121212"
+        And I visit the admin submissions page
+        And I view the pending submissions
         And the document "test-image.png" should be synced

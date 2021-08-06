@@ -81,36 +81,40 @@ class ReportTestHelper
         $submitDate->modify('+365 day');
 
         $reportPdf = new Document($report);
-        $reportPdf->setFileName('DigiRep-2020-2021-12-34_12345678');
+        $reportPdf->setFileName('DigiRep-2020-2021-12-34_12345678.pdf');
         $reportPdf->setStorageReference('dd_doc_1234_9876543219876');
         $reportPdf->setIsReportPdf(true);
         $reportPdf->setCreatedOn(new DateTime());
         $reportPdf->setCreatedBy($submittedBy);
         $reportPdf->setSynchronisationStatus(Document::SYNC_STATUS_QUEUED);
 
-        $supportingDocument = new Document($report);
-        $supportingDocument->setFileName('fake-file');
-        $supportingDocument->setStorageReference('dd_doc_1234_123456789123456');
-        $supportingDocument->setIsReportPdf(false);
-        $supportingDocument->setCreatedOn(new DateTime());
-        $supportingDocument->setCreatedBy($submittedBy);
-        $supportingDocument->setSynchronisationStatus(Document::SYNC_STATUS_QUEUED);
-
         $submission = (new ReportSubmission($report, $submittedBy))
             ->setCreatedBy($submittedBy)
             ->setCreatedOn($submitDate)
-            ->addDocument($reportPdf)
-            ->addDocument($supportingDocument);
+            ->addDocument($reportPdf);
+
+        if (!($report instanceof Ndr\Ndr)) {
+            $supportingDocument = new Document($report);
+            $supportingDocument->setFileName('fake-file.pdf');
+            $supportingDocument->setStorageReference('dd_doc_1234_123456789123456');
+            $supportingDocument->setIsReportPdf(false);
+            $supportingDocument->setCreatedOn(new DateTime());
+            $supportingDocument->setCreatedBy($submittedBy);
+            $supportingDocument->setSynchronisationStatus(Document::SYNC_STATUS_QUEUED);
+
+            $submission->addDocument($supportingDocument);
+            $supportingDocument->setReportSubmission($submission);
+
+            $em->persist($supportingDocument);
+        }
 
         $reportPdf->setReportSubmission($submission);
-        $supportingDocument->setReportSubmission($submission);
 
         $report
             ->setSubmitDate($submitDate)
             ->setSubmitted(true);
 
         $em->persist($reportPdf);
-        $em->persist($supportingDocument);
         $em->persist($submission);
         $em->persist($report);
 

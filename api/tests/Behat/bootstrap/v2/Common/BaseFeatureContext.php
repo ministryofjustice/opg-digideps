@@ -4,9 +4,11 @@ declare(strict_types=1);
 
 namespace App\Tests\Behat\v2\Common;
 
+use App\TestHelpers\ReportTestHelper;
 use App\Tests\Behat\BehatException;
 use App\Tests\Behat\v2\Analytics\AnalyticsTrait;
 use App\Tests\Behat\v2\Helpers\FixtureHelper;
+use Behat\Behat\Hook\Scope\BeforeScenarioScope;
 use Behat\Mink\Driver\GoutteDriver;
 use Behat\MinkExtension\Context\MinkContext;
 use Doctrine\ORM\EntityManagerInterface;
@@ -96,27 +98,32 @@ class BaseFeatureContext extends MinkContext
     public array $fixtureUsers = [];
 
     public string $testRunId = '';
+    public string $appEnvironment = '';
 
     public Generator $faker;
 
-    private KernelInterface $symfonyKernel;
+    public KernelInterface $symfonyKernel;
 
     private FixtureHelper $fixtureHelper;
     public EntityManagerInterface $em;
+    private ReportTestHelper $reportTestHelper;
 
     public function __construct(
         FixtureHelper $fixtureHelper,
         KernelInterface $symfonyKernel,
-        EntityManagerInterface $em
+        EntityManagerInterface $em,
+        ReportTestHelper $reportTestHelper
     ) {
         $this->symfonyKernel = $symfonyKernel;
+        $this->appEnvironment = $this->symfonyKernel->getEnvironment();
 
-        if ('prod' === $this->symfonyKernel->getEnvironment()) {
+        if ('prod' === $this->appEnvironment) {
             throw new Exception('Unable to run behat tests in prod mode. Change the apps mode to dev or test and try again');
         }
 
         $this->fixtureHelper = $fixtureHelper;
         $this->em = $em;
+        $this->reportTestHelper = $reportTestHelper;
     }
 
     /**
@@ -220,10 +227,12 @@ class BaseFeatureContext extends MinkContext
     /**
      * @BeforeScenario @lay-combined-high-submitted
      */
-    public function createLayCombinedHighSubmitted()
+    public function createLayCombinedHighSubmitted(?BeforeScenarioScope $obj, ?string $testRunId = null)
     {
-        $userDetails = $this->fixtureHelper->createLayCombinedHighAssetsSubmitted($this->testRunId);
-        $this->fixtureUsers[] = $this->layDeputySubmittedCombinedHighDetails = new UserDetails($userDetails);
+        $userDetails = new UserDetails($this->fixtureHelper->createLayCombinedHighAssetsSubmitted($testRunId ?: $this->testRunId));
+        $this->fixtureUsers[] = $this->layDeputySubmittedCombinedHighDetails = $userDetails;
+
+        return $userDetails;
     }
 
     /**

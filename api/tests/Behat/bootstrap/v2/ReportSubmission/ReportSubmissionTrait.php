@@ -16,10 +16,7 @@ trait ReportSubmissionTrait
         $this->assertInteractingWithUserIsSet();
 
         $caseNumber = $this->interactingWithUserDetails->getCourtOrderNumber();
-        var_dump($caseNumber);
         $locator = sprintf('//td[normalize-space()="%s"]/..', $caseNumber);
-        var_dump($locator);
-
         $submissionRow = $this->getSession()->getPage()->find('xpath', $locator);
 
         if (is_null($submissionRow)) {
@@ -91,14 +88,16 @@ trait ReportSubmissionTrait
      */
     public function documentShouldBeSynced(string $fileName)
     {
+        $this->clickLink('Synchronised');
+
         $reportPdfRow = $this->getSession()->getPage()->find('css', "table tr:contains('$fileName')");
 
         if (is_null($reportPdfRow)) {
-            throw new \Exception("Cannot find a table row that contains the document with filename $fileName");
+            throw new BehatException("Cannot find a table row that contains the document with filename $fileName");
         }
 
         if (false === strpos($reportPdfRow->getHtml(), 'Success')) {
-            throw new \Exception('The document does not appear to be queued');
+            throw new BehatException('The document does not appear to be queued');
         }
     }
 
@@ -110,7 +109,7 @@ trait ReportSubmissionTrait
         $this->visitAdminPath('/admin/behat/run-document-sync-command');
 
         if ($this->getSession()->getStatusCode() > 299) {
-            throw new \Exception('There was an non successful response when running the document-sync command');
+            throw new BehatException('There was an non successful response when running the document-sync command');
         }
 
         sleep(2);
@@ -124,11 +123,11 @@ trait ReportSubmissionTrait
         $reportPdfRow = $this->getSession()->getPage()->find('css', 'table tr:contains("DigiRep-")');
 
         if (is_null($reportPdfRow)) {
-            throw new \Exception('Cannot find a table row that contains the report PDF');
+            throw new BehatException('Cannot find a table row that contains the report PDF');
         }
 
         if (false === strpos($reportPdfRow->getHtml(), 'Success')) {
-            throw new \Exception('The document has not been synced');
+            throw new BehatException('The document has not been synced');
         }
     }
 
@@ -144,5 +143,139 @@ trait ReportSubmissionTrait
         $this->clickLink('Continue to send documents');
 
         $this->clickLink('Send documents');
+    }
+
+    /**
+     * @When I search for submissions using the :whichNameSearched name of the clients with the same :whichNamesAreSame name
+     */
+    public function iSearchForSubmissionsUsingTheFirstNameOfTheClientsWithTheSameFirstName(
+        string $whichNameSearched,
+        string $whichNamesAreSame
+    ) {
+        $userDetails = 'first' === $whichNamesAreSame ? $this->sameFirstNameUserDetails[0] : $this->sameLastNameUserDetails[0];
+        $nameToSearchOn = 'first' === $whichNameSearched ? $userDetails->getClientFirstName() : $userDetails->getClientLastName();
+
+        $this->fillInField('q', $nameToSearchOn);
+        $this->pressButton('Search');
+        $this->clickLink('Pending');
+    }
+
+    /**
+     * @Then I should see the clients with the same :whichName names in the search results
+     */
+    public function iShouldSeeBothClientsInTheSearchResults(string $whichName)
+    {
+        $usersToSearchOn = 'first' === $whichName ? $this->sameFirstNameUserDetails : $this->sameLastNameUserDetails;
+        $locator = sprintf(
+            '//td[normalize-space()="%s"]|//td[normalize-space()="%s"]',
+            $usersToSearchOn[0]->getCourtOrderNumber(),
+            $usersToSearchOn[1]->getCourtOrderNumber(),
+        );
+
+        $clientRows = $this->getSession()->getPage()->findAll('xpath', $locator);
+
+        $this->assertIntEqualsInt(
+            2,
+            count($clientRows),
+            sprintf('Count rows that contain case numbers of clients that have the same %s name', $whichName)
+        );
+    }
+
+    /**
+     * @Then I should not see the two clients with different :whichName names
+     */
+    public function iShouldNotSeeTheOtherTwoClientsWithDifferentNames(string $whichName)
+    {
+        $usersToSearchOn = 'first' === $whichName ? $this->sameFirstNameUserDetails : $this->sameLastNameUserDetails;
+        $locator = sprintf(
+            '//td[normalize-space()="%s"]|//td[normalize-space()="%s"]',
+            $usersToSearchOn[0]->getCourtOrderNumber(),
+            $usersToSearchOn[1]->getCourtOrderNumber(),
+        );
+
+        $clientRows = $this->getSession()->getPage()->findAll('xpath', $locator);
+
+        $this->assertIntEqualsInt(
+            0,
+            count($clientRows),
+            sprintf('Count rows that contain case numbers of clients that have the same %s name', $whichName)
+        );
+    }
+
+    /**
+     * @When I search for submissions using the court order number of the client with :numberReports report(s)
+     */
+    public function iSearchForSubmissionsUsingTheCourtOrderNumberOfTheClientWithNumberReports(string $numberReports)
+    {
+        $userToSearchOn = 'one' === $numberReports ? $this->oneReportsUserDetails : $this->twoReportsUserDetails;
+        $this->fillInField('q', $userToSearchOn->getCourtOrderNumber());
+        $this->pressButton('Search');
+        $this->clickLink('Pending');
+    }
+
+    /**
+     * @Then I should see :numberRows rows for the client with :numberReports report submissions in the search results
+     */
+    public function iShouldSeeNumberRowsForClientWithNumberReports(string $numberRows, string $numberReports)
+    {
+        $userToSearchOn = 'one' === $numberReports ? $this->oneReportsUserDetails : $this->twoReportsUserDetails;
+        $locator = sprintf(
+            '//td[normalize-space()="%s"]',
+            $userToSearchOn->getCourtOrderNumber()
+        );
+
+        $clientRows = $this->getSession()->getPage()->findAll('xpath', $locator);
+
+        $expectedRows = 'one' === $numberRows ? 1 : 2;
+        $this->assertIntEqualsInt(
+            $expectedRows,
+            count($clientRows),
+            sprintf('Count rows that contain case numbers of clients that has submitted %s reports', $numberReports)
+        );
+    }
+
+    /**
+     * @Then I should not see the client with :numberReports report submission(s) in the search results
+     */
+    public function iShouldNotSeeTheClientWithSubmissionsInResults(string $numberReports)
+    {
+        $userToSearchOn = 'one' === $numberReports ? $this->oneReportsUserDetails : $this->twoReportsUserDetails;
+
+        $locator = sprintf(
+            '//td[normalize-space()="%s"]',
+            $userToSearchOn->getCourtOrderNumber()
+        );
+
+        $clientRows = $this->getSession()->getPage()->findAll('xpath', $locator);
+
+        $this->assertIntEqualsInt(
+            0,
+            count($clientRows),
+            sprintf('Count rows that contain case numbers of clients that has submitted %s reports', $numberReports)
+        );
+    }
+
+    /**
+     * @When I manually archive the client that has one submitted report
+     */
+    public function iManuallyArchiveTheClientThatHasOneSubmittedReport()
+    {
+        $locator = sprintf(
+            '//td[normalize-space()="%s"]/..//input',
+            $this->oneReportsUserDetails->getCourtOrderNumber()
+        );
+
+        $clientRowCheckBox = $this->getSession()->getPage()->find('xpath', $locator);
+        $clientRowCheckBox->check();
+        $this->pressButton('Archive');
+    }
+
+    /**
+     * @Then I should see the client row under the Synchronised tab
+     */
+    public function iShouldSeeTheClientRowUnderTheSynchronisedTab()
+    {
+        $this->clickLink('Synchronised');
+        $this->iShouldSeeNumberRowsForClientWithNumberReports('one', 'one');
     }
 }

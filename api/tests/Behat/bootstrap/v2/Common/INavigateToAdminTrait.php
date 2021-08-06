@@ -64,4 +64,12 @@ trait INavigateToAdminTrait
         $this->clickLink('Checklist');
         $this->iAmOnAdminReportChecklistPage();
     }
+
+    /**
+     * @When I navigate to the admin report submissions page
+     */
+    public function iNavigateToAdminReportSubmissionsPage()
+    {
+        $this->clickLink('Submissions');
+    }
 }
