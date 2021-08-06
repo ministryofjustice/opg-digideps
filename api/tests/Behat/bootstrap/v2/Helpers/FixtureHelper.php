@@ -5,6 +5,7 @@ declare(strict_types=1);
 namespace App\Tests\Behat\v2\Helpers;
 
 use App\Entity\Client;
+use App\Entity\NamedDeputy;
 use App\Entity\Ndr\Ndr;
 use App\Entity\Organisation;
 use App\Entity\Report\Report;
@@ -68,12 +69,14 @@ class FixtureHelper
             'userFirstName' => $user->getFirstname(),
             'userLastName' => $user->getLastname(),
             'userFullName' => $user->getFullName(),
-            'userFullAddressArray' => self::buildAddressArray($user),
+            'userFullAddressArray' => self::buildUserAddressArray($user),
             'userPhone' => $user->getPhoneMain(),
             'courtOrderNumber' => $client->getCaseNumber(),
             'clientId' => $client->getId(),
             'clientFirstName' => $client->getFirstname(),
             'clientLastName' => $client->getLastname(),
+            'clientFullAddressArray' => self::buildClientAddressArray($client),
+            'clientEmail' => $client->getEmail(),
             'clientCaseNumber' => $client->getCaseNumber(),
             'currentReportId' => $currentReport->getId(),
             'currentReportType' => $currentReportType,
@@ -112,7 +115,11 @@ class FixtureHelper
                 $namedDeputy->getFirstname(),
                 $namedDeputy->getLastName()
             ),
+            'namedDeputyFullAddressArray' => self::buildNamedDeputyAddressArray($namedDeputy),
+            'namedDeputyPhone' => $namedDeputy->getPhoneMain(),
+            'namedDeputyPhoneAlt' => $namedDeputy->getPhoneAlternative(),
             'namedDeputyEmail' => $namedDeputy->getEmail1(),
+            'namedDeputyEmailAlt' => $namedDeputy->getEmail2(),
         ];
 
         return array_merge(self::buildUserDetails($user), $details);
@@ -127,11 +134,11 @@ class FixtureHelper
             'userFirstName' => $user->getFirstname(),
             'userLastName' => $user->getLastname(),
             'userFullName' => $user->getFullName(),
-            'userFullAddressArray' => self::buildAddressArray($user),
+            'userFullAddressArray' => self::buildUserAddressArray($user),
         ];
     }
 
-    private static function buildAddressArray(User $user): array
+    private static function buildUserAddressArray(User $user): array
     {
         return array_filter(
             [
@@ -148,14 +155,40 @@ class FixtureHelper
         );
     }
 
-    public function createAndPersistUser(string $roleName, ?string $email = null)
+    private static function buildClientAddressArray(Client $client): array
     {
-        $user = $this->createUser($roleName, $email);
+        return array_filter(
+            [
+                'address1' => $client->getAddress(),
+                'address2' => $client->getAddress2(),
+                'address3' => $client->getCounty(),
+                'addressPostcode' => $client->getPostcode(),
+                'addressCountry' => $client->getCountry(),
+            ],
+            function ($value, $key) {
+                return !is_null($value);
+            },
+            ARRAY_FILTER_USE_BOTH
+        );
+    }
 
-        $this->em->persist($user);
-        $this->em->flush();
-
-        return $user;
+    private static function buildNamedDeputyAddressArray(NamedDeputy $namedDeputy): array
+    {
+        return array_filter(
+            [
+                'address1' => $namedDeputy->getAddress1(),
+                'address2' => $namedDeputy->getAddress2(),
+                'address3' => $namedDeputy->getAddress3(),
+                'address4' => $namedDeputy->getAddress4(),
+                'address5' => $namedDeputy->getAddress5(),
+                'addressPostcode' => $namedDeputy->getAddressPostcode(),
+                'addressCountry' => $namedDeputy->getAddressCountry(),
+            ],
+            function ($value, $key) {
+                return !is_null($value);
+            },
+            ARRAY_FILTER_USE_BOTH
+        );
     }
 
     public function createUser(string $roleName, ?string $email = null)
@@ -165,6 +198,16 @@ class FixtureHelper
         }
 
         return $this->userTestHelper->createUser(null, $roleName, $email);
+    }
+
+    public function createAndPersistUser(string $roleName, ?string $email = null)
+    {
+        $user = $this->createUser($roleName, $email);
+
+        $this->em->persist($user);
+        $this->em->flush();
+
+        return $user;
     }
 
     private function addClientsAndReportsToLayDeputy(User $deputy, bool $completed = false, bool $submitted = false,
@@ -735,6 +778,48 @@ class FixtureHelper
             $testRunId,
             User::ROLE_PROF_ADMIN,
             'prof-admin-submitted',
+            Report::TYPE_104_5,
+            true,
+            true
+        );
+
+        return self::buildOrgUserDetails($user);
+    }
+
+    public function createPAAdminNotStarted(string $testRunId)
+    {
+        $user = $this->createOrgUserClientNamedDeputyAndReport(
+            $testRunId,
+            User::ROLE_PA_ADMIN,
+            'pa-admin-not-started',
+            Report::TYPE_104_5,
+            false,
+            false
+        );
+
+        return self::buildOrgUserDetails($user);
+    }
+
+    public function createPAAdminCompleted(string $testRunId)
+    {
+        $user = $this->createOrgUserClientNamedDeputyAndReport(
+            $testRunId,
+            User::ROLE_PA_ADMIN,
+            'pa-admin-completed',
+            Report::TYPE_104_5,
+            true,
+            false
+        );
+
+        return self::buildOrgUserDetails($user);
+    }
+
+    public function createPAAdminSubmitted(string $testRunId)
+    {
+        $user = $this->createOrgUserClientNamedDeputyAndReport(
+            $testRunId,
+            User::ROLE_PA_ADMIN,
+            'pa-admin-completed',
             Report::TYPE_104_5,
             true,
             true
