@@ -4,10 +4,14 @@ declare(strict_types=1);
 
 namespace App\Tests\Behat\v2\ReportSubmission;
 
+use App\Entity\Report\Document;
+use App\Entity\Report\ReportSubmission;
 use App\Tests\Behat\BehatException;
 
 trait ReportSubmissionTrait
 {
+    private array $documentFileNames = [];
+
     /**
      * @Then I should see the case number of the user I'm interacting with
      */
@@ -214,7 +218,7 @@ trait ReportSubmissionTrait
     }
 
     /**
-     * @Then I should see :numberRows rows for the client with :numberReports report submissions in the search results
+     * @Then I should see :numberRows rows for the client with :numberReports report submission(s) in the search results
      */
     public function iShouldSeeNumberRowsForClientWithNumberReports(string $numberRows, string $numberReports)
     {
@@ -256,9 +260,9 @@ trait ReportSubmissionTrait
     }
 
     /**
-     * @When I manually archive the client that has one submitted report
+     * @When I manually :action the client that has one submitted report
      */
-    public function iManuallyArchiveTheClientThatHasOneSubmittedReport()
+    public function iManuallyArchiveTheClientThatHasOneSubmittedReport(string $action)
     {
         $locator = sprintf(
             '//td[normalize-space()="%s"]/..//input',
@@ -267,7 +271,7 @@ trait ReportSubmissionTrait
 
         $clientRowCheckBox = $this->getSession()->getPage()->find('xpath', $locator);
         $clientRowCheckBox->check();
-        $this->pressButton('Archive');
+        $this->pressButton('archive' === $action ? 'Archive' : 'Synchronise');
     }
 
     /**
@@ -277,5 +281,61 @@ trait ReportSubmissionTrait
     {
         $this->clickLink('Synchronised');
         $this->iShouldSeeNumberRowsForClientWithNumberReports('one', 'one');
+    }
+
+    /**
+     * @Given there was an error during synchronisation
+     */
+    public function thereWasAnErrorDuringSync()
+    {
+        $submittedReportId = $this->oneReportsUserDetails->getPreviousReportId();
+        $submission = $this->em->getRepository(ReportSubmission::class)->findOneBy(['report' => $submittedReportId]);
+
+        foreach ($submission->getDocuments() as $document) {
+            $document->setSynchronisationStatus(Document::SYNC_STATUS_PERMANENT_ERROR);
+            $this->documentFileNames[] = $document->getFilename();
+            $this->em->persist($document);
+        }
+
+        $this->em->flush();
+    }
+
+    /**
+     * @Then the status of the documents for the client with one report submission should be :status
+     */
+    public function statusOfSubmissionDocumentsShouldBe(string $status)
+    {
+        $locator = sprintf(
+            '//td[normalize-space()="%s"]/../..',
+            $this->oneReportsUserDetails->getCourtOrderNumber()
+        );
+
+        $submissionRowTableBody = $this->getSession()->getPage()->find('xpath', $locator);
+
+        foreach ($this->documentFileNames as $documentFileName) {
+            $locator = sprintf(
+                '//td[normalize-space()="%s"]/..',
+                $documentFileName
+            );
+
+            $documentRow = $submissionRowTableBody->find('xpath', $locator);
+
+            if (is_null($documentRow)) {
+                $errorMessage = sprintf(
+                    'Could not find a row that contained the status "%s" for submission with court order number "%s". Table HTML: %s',
+                    $status,
+                    $this->oneReportsUserDetails->getCourtOrderNumber(),
+                    $submissionRowTableBody->getHtml()
+                );
+
+                throw new BehatException($errorMessage);
+            }
+
+            $this->assertStringContainsString(
+                $status,
+                $documentRow->getHtml(),
+                'Comparing expected status against status in table row that contains an expected filename'
+            );
+        }
     }
 }

@@ -24,18 +24,25 @@ Feature: Report submissions dashboard
         Then I should see 'two' rows for the client with 'two' report submissions in the search results
         And I should not see the client with 'one' report submission in the search results
         When I search for submissions using the court order number of the client with 'one' report
-        Then I should see 'one' rows for the client with 'one' report submissions in the search results
+        Then I should see 'one' rows for the client with 'one' report submission in the search results
         And I should not see the client with 'two' report submissions in the search results
 
-    @super-admin @acs
+    @super-admin
     Scenario: Manual submission archive
         Given a client has submitted one report
         And a super admin user accesses the admin app
         When I navigate to the admin report submissions page
         And I search for submissions using the court order number of the client with 'one' report
-        And I manually archive the client that has one submitted report
+        And I manually 'archive' the client that has one submitted report
         Then I should see the client row under the Synchronised tab
 
-    @super-admin @acs
+    @super-admin
     Scenario: Manually trigger synchronisation
-#TODO
+        Given a client has submitted one report
+        And there was an error during synchronisation
+        And a super admin user accesses the admin app
+        When I navigate to the admin report submissions page
+        And I search for submissions using the court order number of the client with 'one' report
+        Then the status of the documents for the client with one report submission should be 'Permanent Fail'
+        And I manually 'synchronise' the client that has one submitted report
+        Then the status of the documents for the client with one report submission should be 'Queued'
