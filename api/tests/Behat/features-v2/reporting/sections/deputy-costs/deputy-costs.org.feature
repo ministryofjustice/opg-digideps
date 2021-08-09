@@ -10,6 +10,8 @@ Feature: Deputy costs - Applies to Org users only
         And I enter a valid amount for the current reporting period costs
         And I have no additional costs to declare for the current reporting period
         Then I should see the expected responses on the deputy costs summary page
+        When I follow link back to report overview page
+        Then I should see "prof-deputy-costs" as "finished"
 
     @prof-admin-not-started
     Scenario: A professional deputy has assessed deputy costs only
@@ -34,6 +36,8 @@ Feature: Deputy costs - Applies to Org users only
         And I enter a valid amount and description that I am submitting to SCCO for assessment
         And I have no additional costs to declare for the current reporting period
         Then I should see the expected responses on the deputy costs summary page
+        When I follow link back to report overview page
+        Then I should see "prof-deputy-costs" as "finished"
 
     @prof-admin-not-started
     Scenario: A professional deputy has both fixed and assessed deputy costs - not in line with Practice Direction 19B
@@ -80,6 +84,8 @@ Feature: Deputy costs - Applies to Org users only
         Then I should see the expected responses on the deputy costs summary page
         When I change the type of costs incurred to 'Assessed' costs
         Then there should be 2 new questions to answer
+        When I follow link back to report overview page
+        Then I should see "prof-deputy-costs" as "not finished"
 
     @prof-admin-not-started
     Scenario: A professional deputy edits all available questions from the summary page - assessed costs
