@@ -6,7 +6,7 @@ namespace App\Tests\Behat\v2\AppNotification;
 
 trait AppNotificationTrait
 {
-    private $validationMsg string = 'Please enter a message';
+    private string $validationMsg = 'Please enter a message';
 
     /**
      * @When I visit the notification page
