@@ -5,6 +5,7 @@ namespace App\Controller\Report;
 use App\Controller\AbstractController;
 use App\Entity\Client;
 use App\Entity\DeputyInterface;
+use App\Entity\NamedDeputy;
 use App\Entity\Report\Report;
 use App\Entity\User;
 use App\Exception\DisplayableException;
@@ -275,6 +276,9 @@ class ReportController extends AbstractController
         /** @var Client */
         $client = $this->generateClient($user, $clientId);
 
+        /** @var NamedDeputy */
+        $namedDeputy = $client->getNamedDeputy();
+
         $activeReportId = null;
         if ($user->isDeputyOrg()) {
             // PR and PROF: unsubmitted at the top (if exists), active below (
@@ -310,6 +314,7 @@ class ReportController extends AbstractController
         return $this->render($template, [
             'user' => $user,
             'client' => $client,
+            'namedDeputy' => $namedDeputy,
             'report' => $report,
             'activeReport' => $activeReport,
             'additionalBenefitsQuestions' => $additionalBenefitsQuestions,
@@ -363,6 +368,9 @@ class ReportController extends AbstractController
 
         if ($user->isLayDeputy()) {
             $jms[] = 'client-users';
+        } elseif ($user->isDeputyOrg()) {
+            $jms[] = 'client-named-deputy';
+            $jms[] = 'named-deputy';
         }
 
         return $jms;

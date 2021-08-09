@@ -253,6 +253,7 @@ class FixtureController extends AbstractController
             }
         }
 
+        $this->em->persist($client);
         $this->em->persist($organisation);
     }
 
@@ -266,7 +267,10 @@ class FixtureController extends AbstractController
             ->setLastname($deputy->getLastname())
             ->setEmail1($deputy->getEmail())
             ->setDeputyNo($deputy->getDeputyNo())
-            ->setDeputyType('PA' === $fromRequest['deputyType'] ? 23 : 21);
+            ->setDeputyType('PA' === $fromRequest['deputyType'] ? 23 : 21)
+            ->setAddress1($deputy->getAddress1())
+            ->setAddressPostcode($deputy->getAddressPostcode())
+            ->setPhoneMain($deputy->getPhoneMain());
 
         $this->em->persist($namedDeputy);
 
