@@ -39,8 +39,8 @@ trait AppNotificationTrait
         $this->iVisitTheClientLoginPage();
         $this->iAmOnClientLoginPage();
 
-        $notification = $this->getSession()->getPage()->find('css', '.behat-region-alert-message > p')->getText();
-        assert('Lorem ipsum' === $notification);
+        $notification = $this->getSession()->getPage()->find('css', '.behat-region-service-notification > .behat-region-alert-message > p')->getText();
+        assert('Lorem ipsum' == $notification);
     }
 
     /**
@@ -60,8 +60,9 @@ trait AppNotificationTrait
         $this->iVisitTheClientLoginPage();
         $this->iAmOnClientLoginPage();
 
-        $notification = $this->getSession()->getPage()->find('css', '.behat-region-alert-message > p')->getText();
-        assert('Lorem ipsum' === $notification);
+        $notification = $this->getSession()->getPage()->find('css', '.behat-region-service-notification > .behat-region-alert-message > p')->getText();
+        var_dump($notification);
+        assert('Lorem ipsum' == $notification);
     }
 
     /**
