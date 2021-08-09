@@ -28,7 +28,7 @@ trait AppNotificationTrait
     }
 
     /**
-     * @When I set a service notification and see it on the client page
+     * @When I set a service notification and see it on the client login page
      */
     public function iSetAServiceNotificationAndSeeItOnTheClientPage()
     {
@@ -39,7 +39,7 @@ trait AppNotificationTrait
         $this->iVisitTheClientLoginPage();
         $this->iAmOnClientLoginPage();
 
-        $notification = $this->getSession()->getPage()->find('css', '.behat-region-service-notification > .behat-region-alert-message > p')->getText();
+        $notification = $this->getSession()->getPage()->find('css', '.behat-region-service-notification > .opg-alert > .behat-region-alert-message > p')->getText();
         assert('Lorem ipsum' == $notification);
     }
 
@@ -48,6 +48,7 @@ trait AppNotificationTrait
      */
     public function iSetAServiceNotificationWithoutAMessage()
     {
+        $this->fillField('setting[content]', '');
         $this->selectOption('setting[enabled]', '1');
         $this->pressButton('setting[save]');
     }
@@ -60,8 +61,7 @@ trait AppNotificationTrait
         $this->iVisitTheClientLoginPage();
         $this->iAmOnClientLoginPage();
 
-        $notification = $this->getSession()->getPage()->find('css', '.behat-region-service-notification > .behat-region-alert-message > p')->getText();
-        var_dump($notification);
+        $notification = $this->getSession()->getPage()->find('css', '.behat-region-service-notification > .opg-alert > .behat-region-alert-message > p')->getText();
         assert('Lorem ipsum' == $notification);
     }
 
@@ -70,16 +70,17 @@ trait AppNotificationTrait
      */
     public function iTurnOffTheServiceNotificationAndCanNoLongerSeeItOnTheClientLoginPage()
     {
+        $this->loginToAdminAs($this->adminDetails->getUserEmail());
         $this->iVisitTheNotificationPage();
         $this->iAmOnAdminNotificationPage();
 
-        $this->selectOption('setting[enabled]', '1');
+        $this->selectOption('setting[enabled]', '0');
         $this->pressButton('setting[save]');
 
         $this->iVisitTheClientLoginPage();
         $this->iAmOnClientLoginPage();
 
-        $el = $this->getSession()->getPage()->find('css', '.behat-region-alert-message');
+        $el = $this->getSession()->getPage()->find('css', '.behat-region-service-notification');
         assert(null == $el);
     }
 
