@@ -304,12 +304,23 @@ class ReportController extends AbstractController
         $additionalBenefitsQuestions = false;
         $dateTimeFormat = 'd-m-Y H:i:s';
 
-        $flagDate = DateTime::createFromFormat($dateTimeFormat, $parameterStore->getFeatureFlag(ParameterStoreService::FLAG_BENEFITS_QUESTIONS));
+        var_dump('Phase 1');
+
+        $date = $parameterStore->getFeatureFlag(ParameterStoreService::FLAG_BENEFITS_QUESTIONS);
+
+        var_dump('Phase 2');
+        var_dump($date);
+
+        $flagDate = DateTime::createFromFormat($dateTimeFormat, $date);
         $currentDate = DateTime::createFromFormat($dateTimeFormat, date($dateTimeFormat));
+
+        var_dump('Phase 3');
 
         if ($flagDate <= $currentDate) {
             $additionalBenefitsQuestions = true;
         }
+
+        var_dump('Phase 4');
 
         return $this->render($template, [
             'user' => $user,
