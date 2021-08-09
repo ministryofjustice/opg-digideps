@@ -87,19 +87,25 @@ trait FixturesTrait
     public function twoClientsExistWithTheSameFirstName(string $whichName)
     {
         $userDetails1 = $this->createLayCombinedHighSubmitted(null, $this->testRunId.rand(1, 10000));
+        $client1 = $this->em->getRepository(Client::class)->find($userDetails1->getClientId());
+        $client1->setFirstname($client1->getFirstname().$this->testRunId);
+
         $userDetails2 = $this->createLayCombinedHighSubmitted(null, $this->testRunId.rand(1, 10000));
         $client2 = $this->em->getRepository(Client::class)->find($userDetails2->getClientId());
 
         if ('first' === $whichName) {
+            $userDetails1->setClientFirstName($client1->getFirstname());
             $userDetails2->setClientFirstName($userDetails1->getClientFirstName());
             $client2->setFirstname($userDetails2->getClientFirstName());
             array_push($this->sameFirstNameUserDetails, $userDetails1, $userDetails2);
         } else {
+            $userDetails1->setClientLastName($client1->getLastname());
             $userDetails2->setClientLastName($userDetails1->getClientLastName());
             $client2->setLastname($userDetails2->getClientLastName());
             array_push($this->sameLastNameUserDetails, $userDetails1, $userDetails2);
         }
 
+        $this->em->persist($client1);
         $this->em->persist($client2);
         $this->em->flush();
     }
