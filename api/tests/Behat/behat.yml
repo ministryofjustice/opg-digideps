@@ -246,7 +246,7 @@ v2-tests-goutte:
 
         reporting-checklist:
             description: Coverage of report checklist feature
-            paths: [ "%paths.base%/features-v2/reporting/admin/checklist" ]
+            paths: [ "%paths.base%/features-v2/reporting/report-checklist" ]
             contexts:
                 - App\Tests\Behat\v2\Reporting\Admin\ReportingAdminFeatureContext
 
