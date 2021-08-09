@@ -1,4 +1,4 @@
-@v2 @report-management @acs
+@v2 @report-management
 Feature: Report Management (applies to all admin roles)
 
     @super-admin @prof-admin-completed
