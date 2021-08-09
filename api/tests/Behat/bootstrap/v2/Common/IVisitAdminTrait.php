@@ -166,4 +166,12 @@ trait IVisitAdminTrait
     {
         $this->visitAdminPath($this->getAdminSubmissionsPage());
     }
+
+    /**
+     * @When I visit the notification page
+     */
+    public function iVisitTheNotificationPage()
+    {
+        $this->visitAdminPath($this->getAdminNotificationUrl());
+    }
 }

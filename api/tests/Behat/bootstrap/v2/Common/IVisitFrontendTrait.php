@@ -166,4 +166,12 @@ trait IVisitFrontendTrait
     {
         $this->visitFrontendPath($this->getMoneyInShortSectionSummaryUrl($this->loggedInUserDetails->getCurrentReportId()));
     }
+
+    /**
+     * @When I visit the client login page
+     */
+    public function iVisitTheClientLoginPage()
+    {
+        $this->visitFrontendPath($this->getClientLoginPageUrl());
+    }
 }

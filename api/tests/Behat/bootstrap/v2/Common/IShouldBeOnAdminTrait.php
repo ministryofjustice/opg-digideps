@@ -164,4 +164,9 @@ trait IShouldBeOnAdminTrait
     {
         return $this->iAmOnPage('/admin\/stats\/metrics$/');
     }
+
+    public function iAmOnAdminNotificationPage()
+    {
+        return $this->iAmOnPage('/admin\/settings\/service-notification$/');
+    }
 }
