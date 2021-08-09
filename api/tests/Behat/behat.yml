@@ -242,7 +242,7 @@ v2-tests-goutte:
             description: Coverage of service notification message
             paths: [ "%paths.base%/features-v2/app-notification" ]
             contexts:
-                - App\Tests\Behat\v2\AppNotifications\AppNotificationFeatureContext
+                - App\Tests\Behat\v2\AppNotification\AppNotificationFeatureContext
 
         reporting-checklist:
             description: Coverage of report checklist feature
