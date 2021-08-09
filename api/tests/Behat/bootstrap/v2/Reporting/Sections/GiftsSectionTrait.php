@@ -259,6 +259,7 @@ trait GiftsSectionTrait
     public function iSeeExpectedGiftsSectionResponses()
     {
         if (count($this->giftDetails) > 0) {
+            $this->giftDetails = array_reverse($this->giftDetails);
             $this->giftResponse[0] = ['yes'];
             $this->expectedResultsDisplayed(0, $this->giftResponse, 'Gift Answers to Questions');
             $this->expectedResultsDisplayed(1, $this->giftDetails, 'Gift Details');

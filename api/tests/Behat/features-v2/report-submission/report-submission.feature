@@ -1,4 +1,4 @@
-@report-submissions @v2 @acs
+@report-submissions @v2
 Feature: Report submissions dashboard
 
     @super-admin

@@ -796,12 +796,12 @@ class FixtureHelper
         return self::buildOrgUserDetails($user);
     }
 
-    public function createPAAdminNotStarted(string $testRunId)
+    public function createPAAdminHealthWelfareNotStarted(string $testRunId): array
     {
         $user = $this->createOrgUserClientNamedDeputyAndReport(
             $testRunId,
             User::ROLE_PA_ADMIN,
-            'pa-admin-not-started',
+            'pa-admin-health-welfare-not-started',
             Report::TYPE_104_5,
             false,
             false
@@ -810,12 +810,12 @@ class FixtureHelper
         return self::buildOrgUserDetails($user);
     }
 
-    public function createPAAdminCompleted(string $testRunId)
+    public function createPAAdminHealthWelfareCompleted(string $testRunId): array
     {
         $user = $this->createOrgUserClientNamedDeputyAndReport(
             $testRunId,
             User::ROLE_PA_ADMIN,
-            'pa-admin-completed',
+            'pa-admin-health-welfare-completed',
             Report::TYPE_104_5,
             true,
             false
@@ -824,12 +824,12 @@ class FixtureHelper
         return self::buildOrgUserDetails($user);
     }
 
-    public function createPAAdminSubmitted(string $testRunId)
+    public function createPAAdminHealthWelfareSubmitted(string $testRunId): array
     {
         $user = $this->createOrgUserClientNamedDeputyAndReport(
             $testRunId,
             User::ROLE_PA_ADMIN,
-            'pa-admin-completed',
+            'pa-admin-health-welfare-completed',
             Report::TYPE_104_5,
             true,
             true

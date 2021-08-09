@@ -411,29 +411,29 @@ class BaseFeatureContext extends MinkContext
     }
 
     /**
-     * @BeforeScenario @pa-admin-not-started
+     * @BeforeScenario @pa-admin-health-welfare-not-started
      */
     public function createPAAdminNotStarted()
     {
-        $userDetails = $this->fixtureHelper->createPAAdminNotStarted($this->testRunId);
+        $userDetails = $this->fixtureHelper->createPAAdminHealthWelfareNotStarted($this->testRunId);
         $this->fixtureUsers[] = $this->paAdminDeputyNotStartedDetails = new UserDetails($userDetails);
     }
 
     /**
-     * @BeforeScenario @pa-admin-completed
+     * @BeforeScenario @pa-admin-health-welfare-completed
      */
     public function createPAAdminCompleted()
     {
-        $userDetails = $this->fixtureHelper->createPAAdminCompleted($this->testRunId);
+        $userDetails = $this->fixtureHelper->createPAAdminHealthWelfareCompleted($this->testRunId);
         $this->fixtureUsers[] = $this->paAdminDeputyCompletedDetails = new UserDetails($userDetails);
     }
 
     /**
-     * @BeforeScenario @pa-admin-submitted
+     * @BeforeScenario @pa-admin-health-welfare-submitted
      */
     public function createPAAdminSubmitted()
     {
-        $userDetails = $this->fixtureHelper->createPAAdminSubmitted($this->testRunId);
+        $userDetails = $this->fixtureHelper->createPAAdminHealthWelfareSubmitted($this->testRunId);
         $this->fixtureUsers[] = $this->paAdminDeputySubmittedDetails = new UserDetails($userDetails);
     }
 
