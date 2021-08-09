@@ -70,6 +70,34 @@ trait FormFillingTrait
     }
 
     /**
+     * @param string      $fieldName       The field name minus the date portion e.g. account[sortCode] account[sortCode][sort_code_part_1]
+     * @param string      $fullSortCode    The full sort code in the format 01-02-03
+     * @param string|null $formSectionName Define with any name you like - only include if you want to assert on the
+     *                                     value entered on a summary page at the end of the form flow
+     */
+    public function fillInSortCodeFields(
+        string $fieldName,
+        string $fullSortCode,
+        ?string $formSectionName = null
+    ) {
+        $sortCodeParts = explode('-', $fullSortCode);
+
+        $firstDigitsField = sprintf('%s[sort_code_part_1]', $fieldName);
+        $this->fillField($firstDigitsField, $sortCodeParts[0]);
+
+        $secondDigitsField = sprintf('%s[sort_code_part_2]', $fieldName);
+        $this->fillField($secondDigitsField, $sortCodeParts[1]);
+
+        $thirdDigitsField = sprintf('%s[sort_code_part_3]', $fieldName);
+        $this->fillField($thirdDigitsField, $sortCodeParts[2]);
+
+        if ($formSectionName && is_numeric(str_replace('-', '', $fullSortCode))) {
+            $answerGroup = $this->determineAnswerGroup($formSectionName, $fieldName);
+            $this->submittedAnswersByFormSections[$formSectionName][$answerGroup][$fieldName] = str_replace('-', '', $fullSortCode);
+        }
+    }
+
+    /**
      * Keeps a running total of the int values entered in the field stored against each formSectionName in
      * $submittedAnswersByFormSections and a grand total to assert on.
      *

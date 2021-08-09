@@ -1,4 +1,4 @@
-@v2 @accounts
+@v2 @accounts @acs
 Feature: Accounts (Lay / PA / Prof share same functionality)
 
 @lay-pfa-high-not-started

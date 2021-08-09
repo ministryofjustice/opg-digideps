@@ -240,7 +240,7 @@ trait ExpectedResultsTrait
 
                 if ($partialMatch) {
                     $matches = array_filter($this->summarySectionItemsFound, function ($item) use ($fieldValue) {
-                        return false !== strpos($item, $fieldValue);
+                        return empty($fieldValue) || false !== strpos($item, $fieldValue);
                     });
 
                     $sectionAnswerFound = !empty($matches);

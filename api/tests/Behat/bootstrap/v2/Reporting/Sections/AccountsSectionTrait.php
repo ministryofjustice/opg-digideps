@@ -7,6 +7,7 @@ namespace App\Tests\Behat\v2\Reporting\Sections;
 trait AccountsSectionTrait
 {
     private array $accountList = [];
+    private int $countOfAccountsAdded = 1;
 
     /**
      * @When I view and start the accounts report section
@@ -34,9 +35,10 @@ trait AccountsSectionTrait
         ];
 
         $this->accountList[] = $account;
+
         $this->visitPath($this->getAccountsAddAnAccountUrl($this->loggedInUserDetails->getCurrentReportId()));
         $this->iAmOnAccountsAddInitialPage();
-        $this->iChooseAccountType('current');
+        $this->iChooseAccountType('current', 'current account');
     }
 
     /**
@@ -135,6 +137,7 @@ trait AccountsSectionTrait
         );
 
         $this->iAmOnAccountsAddAnotherPage();
+
         $this->selectOption('add_another[addAnother]', 'no');
         $this->pressButton('Continue');
     }
@@ -158,9 +161,12 @@ trait AccountsSectionTrait
 
         $urlRegex = sprintf('/%s\/.*\/bank-account\/step1\/[0-9].*$/', $this->reportUrlPrefix);
         $this->iClickOnNthElementBasedOnRegex($urlRegex, 0);
+
         $this->iAmOnAccountsAddInitialPage();
+
         $this->iAddAnAccount(
             $this->accountList[0]['account'],
+            $this->accountList[0]['accountType'],
             $this->accountList[0]['name'],
             $this->accountList[0]['accountNumber'],
             $this->accountList[0]['sortCode'],
@@ -168,6 +174,7 @@ trait AccountsSectionTrait
             $this->accountList[0]['openingBalance'],
             $this->accountList[0]['closingBalance'],
         );
+
         $this->iAmOnAccountsSummaryPage();
     }
 
@@ -253,6 +260,7 @@ trait AccountsSectionTrait
             $this->visitPath($this->getAccountsAddAnAccountUrl($this->loggedInUserDetails->getCurrentReportId()));
             $this->iAddAnAccount(
                 $account['account'],
+                $account['accountType'],
                 $account['name'],
                 $account['accountNumber'],
                 $account['sortCode'],
@@ -265,7 +273,9 @@ trait AccountsSectionTrait
         if ('ndr' == $this->reportUrlPrefix) {
             $this->accountList = array_reverse($this->accountList);
         }
+
         $this->iAmOnAccountsAddAnotherPage();
+
         $this->selectOption('add_another[addAnother]', 'no');
         $this->pressButton('Continue');
     }
@@ -275,22 +285,7 @@ trait AccountsSectionTrait
      */
     public function iShouldSeeTheExpectedAccountsOnSummaryPage()
     {
-        $expectedList = $this->accountList;
-
-        foreach ($expectedList as $expectedItemKey => $expectedItem) {
-            $expectedList[$expectedItemKey]['sortCode'] = str_replace('-', '', $expectedList[$expectedItemKey]['sortCode']);
-            unset($expectedList[$expectedItemKey]['account']);
-            if ('ndr' == $this->reportUrlPrefix) {
-                unset($expectedList[$expectedItemKey]['closingBalance']);
-            }
-        }
-        $expectedList = array_values($expectedList);
-
-        $this->expectedResultsDisplayed(
-            0,
-            $expectedList,
-            'Accounts Details'
-        );
+        $this->expectedResultsDisplayedSimplified(null, true);
     }
 
     /**
@@ -324,6 +319,7 @@ trait AccountsSectionTrait
             $this->visitPath($this->getAccountsAddAnAccountUrl($this->loggedInUserDetails->getCurrentReportId()));
             $this->iAddAnAccount(
                 $account['account'],
+                $account['accountType'],
                 $account['name'],
                 $account['accountNumber'],
                 $account['sortCode'],
@@ -336,7 +332,9 @@ trait AccountsSectionTrait
         if ('ndr' == $this->reportUrlPrefix) {
             $this->accountList = array_reverse($this->accountList);
         }
+
         $this->iAmOnAccountsAddAnotherPage();
+
         $this->selectOption('add_another[addAnother]', 'no');
         $this->pressButton('Continue');
     }
@@ -359,6 +357,7 @@ trait AccountsSectionTrait
 
     public function iAddAnAccount(
         string $account,
+        string $translatedAccountType,
         string $name,
         string $accountNumber,
         string $sortCode,
@@ -366,33 +365,43 @@ trait AccountsSectionTrait
         string $openingBalance,
         string $closingBalance
     ) {
-        $this->iChooseAccountType($account);
+        $this->iChooseAccountType($account, $translatedAccountType);
         $this->iFillInAccountDetails($accountNumber, $sortCode, $joint, $name);
         $this->iFillInAccountBalance($openingBalance, $closingBalance);
+
+        ++$this->countOfAccountsAdded;
     }
 
-    public function iChooseAccountType(string $account)
+    public function iChooseAccountType(string $account, string $translatedOption)
     {
-        $this->iSelectRadioBasedOnName('div', 'data-module', 'govuk-radios', $account);
+        $formSectionName = 'other_no_sortcode' === $account ? null : 'account'.$this->countOfAccountsAdded;
+
+        $this->chooseOption(
+            'account[accountType]',
+            $account,
+            $formSectionName,
+            $translatedOption
+        );
+
         $this->pressButton('Save and continue');
     }
 
     public function iFillInAccountDetails(string $accountNumber, string $sortCode, string $joint, string $name)
     {
+        $formSectionName = 'account'.$this->countOfAccountsAdded;
+
         if ($this->elementExistsOnPage('input', 'name', 'account[bank]')) {
-            $this->fillField('account[bank]', $name);
+            $this->fillInField('account[bank]', $name, $formSectionName);
         }
 
-        $this->fillField('account[accountNumber]', $accountNumber);
+        $this->fillInField('account[accountNumber]', $accountNumber, $formSectionName);
 
         if ($this->elementExistsOnPage('input', 'name', 'account[sortCode][sort_code_part_1]')) {
-            $this->fillField('account[sortCode][sort_code_part_1]', explode('-', $sortCode)[0]);
-            $this->fillField('account[sortCode][sort_code_part_2]', explode('-', $sortCode)[1]);
-            $this->fillField('account[sortCode][sort_code_part_3]', explode('-', $sortCode)[2]);
+            $this->fillInSortCodeFields('account[sortCode]', $sortCode, $formSectionName);
         }
 
         if (strlen($joint) > 0) {
-            $this->iSelectRadioBasedOnName('div', 'data-module', 'govuk-radios', $joint);
+            $this->chooseOption('account[isJointAccount]', $joint, $formSectionName);
         }
 
         $this->pressButton('Save and continue');
@@ -400,11 +409,13 @@ trait AccountsSectionTrait
 
     public function iFillInAccountBalance(string $openingBalance, string $closingBalance)
     {
+        $formSectionName = 'account'.$this->countOfAccountsAdded;
+
         if ('ndr' == $this->reportUrlPrefix) {
-            $this->fillField('account[balanceOnCourtOrderDate]', $openingBalance);
+            $this->fillInField('account[balanceOnCourtOrderDate]', $openingBalance, $formSectionName);
         } else {
-            $this->fillField('account[openingBalance]', $openingBalance);
-            $this->fillField('account[closingBalance]', $closingBalance);
+            $this->fillInField('account[openingBalance]', $openingBalance, $formSectionName);
+            $this->fillInField('account[closingBalance]', $closingBalance, $formSectionName);
         }
 
         $this->pressButton('Save and continue');
@@ -414,15 +425,13 @@ trait AccountsSectionTrait
     {
         $this->iAmOnAccountsSummaryPage();
 
-        // Remove the account from our array
-        unset($this->accountList[$accountOccurrence]);
-        $this->accountList = array_values($this->accountList);
-
         // Remove the account from the app
         $urlRegex = sprintf('/%s\/.*\/bank-account\/.*\/delete$/', $this->reportUrlPrefix);
         $this->iClickOnNthElementBasedOnRegex($urlRegex, $accountOccurrence);
 
         $this->iAmOnAccountsDeletePage();
         $this->pressButton('Yes, remove account');
+
+        $this->removeAnswerFromSection('account[bank]', 'account'.($accountOccurrence + 1), true);
     }
 }
