@@ -25,7 +25,7 @@ Feature: Money in High Assets
     Then I should see an invalid field error
 
 @lay-pfa-high-not-started
-  Scenario: A user submits a single item of income form with valid values
+  Scenario: A user submits a two items of income form with valid values
     Given a Lay Deputy has not started a report
     When I view and start the money in report section
     And I have 'Dividends' to report on
@@ -35,6 +35,8 @@ Feature: Money in High Assets
     And I enter a valid amount
     And I dont add another item
     Then the money in summary page should contain the money in values I added
+    When I follow link back to report overview page
+    Then I should see "money-in" as "2 items"
 
 @lay-pfa-high-not-started
   Scenario: A user submits a single item of income form with valid values and then edits it
@@ -46,6 +48,8 @@ Feature: Money in High Assets
     Then the money in summary page should contain the money in values I added
     When I edit the money in value
     Then the money in summary page should contain the edited value
+    When I follow link back to report overview page
+    Then I should see "money-in" as "1 item"
 
 @lay-pfa-high-not-started
   Scenario: A user adds a single item of income form with valid values from the summary page
@@ -80,3 +84,5 @@ Feature: Money in High Assets
     And I dont add another item
     And I remove the dividends item
     Then I should be on the money in summary page and see entry deleted
+    When I follow link back to report overview page
+    Then I should see "money-in" as "not started"
