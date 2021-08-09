@@ -91,12 +91,6 @@ default:
             contexts:
                 - App\Tests\Behat\UserManagement\UserManagementFeatureContext
 
-        report-synchronisation:
-            description: Coverage of report and document synchronisation features
-            paths: [ "%paths.base%/features-v2/report-syncing" ]
-            contexts:
-                - App\Tests\Behat\DocumentSynchronisation\DocumentSynchronisationFeatureContext
-
         # features-v2
         reporting-preview:
             description: Coverage of report preview functionality
