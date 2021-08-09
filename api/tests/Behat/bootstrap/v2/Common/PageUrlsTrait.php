@@ -37,6 +37,7 @@ trait PageUrlsTrait
     private string $adminClientSearchUrl = '/admin/client/search';
     private string $adminClientDetailsUrl = '/admin/client/%s/details';
     private string $adminAddUserUrl = '/admin/user-add';
+    private string $adminUserSearchUrl = '/admin';
     private string $adminViewUserUrl = '/admin/user/%s';
     private string $adminEditUserUrl = '/admin/edit-user?filter=%s';
     private string $adminMyUserProfileUrl = '/deputyship-details/your-details';
@@ -149,6 +150,11 @@ trait PageUrlsTrait
     public function getAdminAddUserPage(): string
     {
         return $this->adminAddUserUrl;
+    }
+
+    public function getAdminSearchUserPage(): string
+    {
+        return $this->adminUserSearchUrl;
     }
 
     public function getAdminViewUserPage(int $userId): string

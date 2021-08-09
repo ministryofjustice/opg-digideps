@@ -123,6 +123,18 @@ trait ReportTrait
     }
 
     /**
+     * @Given a Public Authority Admin Deputy has not started a report
+     */
+    public function aPublicAuthorityAdminDeputyHasNotStartedAReport()
+    {
+        if (empty($this->paAdminDeputyNotStartedDetails)) {
+            throw new Exception('It looks like fixtures are not loaded - missing $paAdminDeputyNotStartedDetails');
+        }
+
+        $this->loginToFrontendAs($this->paAdminDeputyNotStartedDetails->getUserEmail());
+    }
+
+    /**
      * @Given a Professional Team Deputy has not started a health and welfare report
      */
     public function aProfessionalHealthWelfareDeputyHasNotStartedAReport()

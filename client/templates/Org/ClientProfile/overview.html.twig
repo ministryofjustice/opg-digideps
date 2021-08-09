@@ -23,7 +23,12 @@
     {# Use a random ID to ensure that changes to open sections don't persist #}
     <div class="govuk-accordion" data-module="govuk-accordion" id="overview-accordion">
         {% include '@App/Org/ClientProfile/_client.html.twig' with {
-        '   client': client
+            'client': client
+        } %}
+
+        {% include '@App/Org/ClientProfile/_deputyDetails.html.twig' with {
+            'namedDeputy': namedDeputy,
+            'client': client
         } %}
 
         <div class="govuk-accordion__section govuk-accordion__section--expanded">

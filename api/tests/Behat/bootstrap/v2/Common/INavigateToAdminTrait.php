@@ -31,6 +31,15 @@ trait INavigateToAdminTrait
     }
 
     /**
+     * @When I navigate to the add a new user page
+     */
+    public function iNavigateToAddNewUser()
+    {
+        $this->iAmOnAdminUsersSearchPage();
+        $this->clickBasedOnText('Add new user');
+    }
+
+    /**
      * @When I navigate to the admin analytics page
      */
     public function iNavigateToAdminAnalyticsSearchPage()

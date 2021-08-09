@@ -43,6 +43,29 @@ trait AssertTrait
         );
     }
 
+    public function assertBoolIsTrue(
+        $expected,
+        string $comparisonSubject
+    ) {
+        assert(
+            true === $expected,
+            $this->getAssertMessage($expected, 'false', $comparisonSubject)
+        );
+    }
+
+    public function assertStringDoesNotContainString(
+        $notExpected,
+        $found,
+        string $comparisonSubject
+    ) {
+        $foundFormatted = strval(trim(strtolower($found)));
+        $notExpectedFormatted = strval(trim(strtolower($notExpected)));
+        assert(
+            !str_contains($foundFormatted, $notExpectedFormatted),
+            $this->getAssertMessage('\''.$notExpectedFormatted.'\' should not exist in searched element!', $foundFormatted, $comparisonSubject)
+        );
+    }
+
     private function getAssertMessage(
         $expected,
         $found,

@@ -88,6 +88,10 @@ class BaseFeatureContext extends MinkContext
     public UserDetails $publicAuthorityAdminCombinedHighCompletedDetails;
     public UserDetails $publicAuthorityAdminCombinedHighSubmittedDetails;
 
+    public UserDetails $paAdminDeputyNotStartedDetails;
+    public UserDetails $paAdminDeputyCompletedDetails;
+    public UserDetails $paAdminDeputySubmittedDetails;
+
     public UserDetails $layNdrDeputyNotStartedDetails;
     public UserDetails $layNdrDeputyCompletedDetails;
     public UserDetails $layNdrDeputySubmittedDetails;
@@ -407,6 +411,33 @@ class BaseFeatureContext extends MinkContext
     }
 
     /**
+     * @BeforeScenario @pa-admin-not-started
+     */
+    public function createPAAdminNotStarted()
+    {
+        $userDetails = $this->fixtureHelper->createPAAdminNotStarted($this->testRunId);
+        $this->fixtureUsers[] = $this->paAdminDeputyNotStartedDetails = new UserDetails($userDetails);
+    }
+
+    /**
+     * @BeforeScenario @pa-admin-completed
+     */
+    public function createPAAdminCompleted()
+    {
+        $userDetails = $this->fixtureHelper->createPAAdminCompleted($this->testRunId);
+        $this->fixtureUsers[] = $this->paAdminDeputyCompletedDetails = new UserDetails($userDetails);
+    }
+
+    /**
+     * @BeforeScenario @pa-admin-submitted
+     */
+    public function createPAAdminSubmitted()
+    {
+        $userDetails = $this->fixtureHelper->createPAAdminSubmitted($this->testRunId);
+        $this->fixtureUsers[] = $this->paAdminDeputySubmittedDetails = new UserDetails($userDetails);
+    }
+
+    /**
      * @BeforeScenario @admin
      */
     public function createAdmin()
@@ -478,5 +509,15 @@ class BaseFeatureContext extends MinkContext
     {
         $rndKey = rand(0, 99999);
         $this->fixtureHelper->createDataForAnalytics('a_'.'_'.strval($rndKey).strval($runNumber), $timeAgo, $satisfactionScore);
+    }
+
+    public function createAdditionalDataForUserSearchTests()
+    {
+        $this->fixtureHelper->createDataForAdminUserTests('search');
+    }
+
+    public function createAdditionalDataForUserEditTests()
+    {
+        $this->fixtureHelper->createDataForAdminUserTests('edit');
     }
 }
