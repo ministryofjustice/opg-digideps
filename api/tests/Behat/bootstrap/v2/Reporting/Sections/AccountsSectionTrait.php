@@ -315,6 +315,7 @@ trait AccountsSectionTrait
                 'closingBalance' => '202',
             ],
         ];
+
         foreach ($this->accountList as $account) {
             $this->visitPath($this->getAccountsAddAnAccountUrl($this->loggedInUserDetails->getCurrentReportId()));
             $this->iAddAnAccount(
@@ -327,10 +328,6 @@ trait AccountsSectionTrait
                 $account['openingBalance'],
                 $account['closingBalance'],
             );
-        }
-
-        if ('ndr' == $this->reportUrlPrefix) {
-            $this->accountList = array_reverse($this->accountList);
         }
 
         $this->iAmOnAccountsAddAnotherPage();
