@@ -9,7 +9,7 @@ trait AppNotificationTrait
     private string $validationMsg = 'Please enter a message';
 
     /**
-     * @When I visit the notification page
+     * @When I visit the service notification page
      */
     public function iNavigateToTheClientsSearchPage()
     {
