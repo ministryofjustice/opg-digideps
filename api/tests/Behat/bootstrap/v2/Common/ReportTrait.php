@@ -4,6 +4,7 @@ declare(strict_types=1);
 
 namespace App\Tests\Behat\v2\Common;
 
+use App\Tests\Behat\BehatException;
 use Exception;
 
 trait ReportTrait
@@ -111,11 +112,23 @@ trait ReportTrait
      */
     public function aProfessionalAdminDeputyHasNotStartedAReport()
     {
-        if (empty($this->profAdminDeputyNotStartedDetails)) {
+        if (empty($this->profAdminDeputyHealthWelfareNotStartedDetails)) {
             throw new Exception('It looks like fixtures are not loaded - missing $profAdminDeputyNotStartedDetails');
         }
 
-        $this->loginToFrontendAs($this->profAdminDeputyNotStartedDetails->getUserEmail());
+        $this->loginToFrontendAs($this->profAdminDeputyHealthWelfareNotStartedDetails->getUserEmail());
+    }
+
+    /**
+     * @Given a Public Authority Admin Deputy has not started a report
+     */
+    public function aPublicAuthorityAdminDeputyHasNotStartedAReport()
+    {
+        if (empty($this->paAdminDeputyNotStartedDetails)) {
+            throw new Exception('It looks like fixtures are not loaded - missing $paAdminDeputyNotStartedDetails');
+        }
+
+        $this->loginToFrontendAs($this->paAdminDeputyNotStartedDetails->getUserEmail());
     }
 
     /**
@@ -188,5 +201,71 @@ trait ReportTrait
         }
 
         $this->loginToFrontendAs($this->layDeputyCompletedHealthWelfareDetails->getUserEmail());
+    }
+
+    /**
+     * @Given a Lay Deputy has submitted a Combined High Assets report
+     */
+    public function aLayDeputyHasSubmittedACombinedHighAssetsReport()
+    {
+        if (empty($this->layDeputySubmittedCombinedHighDetails)) {
+            throw new Exception('It looks like fixtures are not loaded - missing $layDeputySubmittedCombinedHighDetails');
+        }
+
+        $this->interactingWithUserDetails = $this->layDeputySubmittedCombinedHighDetails;
+    }
+
+    /**
+     * @Given a Professional Deputy has submitted a Health and Welfare report
+     * @Given a Professional Deputy has submitted a report
+     *
+     * @throws BehatException
+     */
+    public function aProfessionalDeputyHasSubmittedAReport()
+    {
+        if (empty($this->profAdminDeputyHealthWelfareSubmittedDetails)) {
+            throw new BehatException('It looks like fixtures are not loaded - missing $profAdminDeputySubmittedDetails');
+        }
+
+        $this->interactingWithUserDetails = $this->profAdminDeputyHealthWelfareSubmittedDetails;
+    }
+
+    /**
+     * @Given a Public Authority Deputy has submitted a Health and Welfare report
+     *
+     * @throws BehatException
+     */
+    public function aPublicAuthorityDeputyHasSubmittedAReport()
+    {
+        if (empty($this->publicAuthorityNamedDeputySubmittedDetails)) {
+            throw new BehatException('It looks like fixtures are not loaded - missing $publicAuthorityNamedDeputySubmittedDetails');
+        }
+
+        $this->interactingWithUserDetails = $this->publicAuthorityNamedDeputySubmittedDetails;
+    }
+
+    /**
+     * @Given a Professional Deputy has completed a Pfa Low Assets report
+     * @Given a Professional Deputy has completed a report
+     */
+    public function aProfDeputyHasCompletedAPfaLowAssetsReport()
+    {
+        if (empty($this->profAdminDeputyHealthWelfareCompletedDetails)) {
+            throw new Exception('It looks like fixtures are not loaded - missing $profAdminDeputyCompletedDetails');
+        }
+
+        $this->interactingWithUserDetails = $this->profAdminDeputyHealthWelfareCompletedDetails;
+    }
+
+    /**
+     * @Given a Public Authority Deputy has submitted a Combined High Assets report
+     */
+    public function aProfessionalDeputyHasSubmittedACombinedHighAssetsReport()
+    {
+        if (empty($this->publicAuthorityAdminCombinedHighSubmittedDetails)) {
+            throw new Exception('It looks like fixtures are not loaded - missing $publicAuthorityAdminCombinedHighSubmittedDetails');
+        }
+
+        $this->interactingWithUserDetails = $this->publicAuthorityAdminCombinedHighSubmittedDetails;
     }
 }
