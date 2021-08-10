@@ -1,4 +1,4 @@
-@v2 @gifts @acs
+@v2 @gifts
 Feature: Gifts
 
 @lay-pfa-high-not-started

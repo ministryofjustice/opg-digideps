@@ -89,6 +89,7 @@ trait FixturesTrait
         $userDetails1 = $this->createLayCombinedHighSubmitted(null, $this->testRunId.rand(1, 10000));
         $client1 = $this->em->getRepository(Client::class)->find($userDetails1->getClientId());
         $client1->setFirstname($client1->getFirstname().$this->testRunId);
+        $client1->setLastname($client1->getLastname().$this->testRunId);
 
         $userDetails2 = $this->createLayCombinedHighSubmitted(null, $this->testRunId.rand(1, 10000));
         $client2 = $this->em->getRepository(Client::class)->find($userDetails2->getClientId());
