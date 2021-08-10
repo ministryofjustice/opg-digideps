@@ -10,6 +10,7 @@ trait INavigateToAdminTrait
     public function iNavigateToAdminClientsSearchPage()
     {
         $this->clickLink('Clients');
+        $this->iAmOnAdminClientsSearchPage();
     }
 
     /**
@@ -18,6 +19,7 @@ trait INavigateToAdminTrait
     public function iNavigateToAdminAddUserPage()
     {
         $this->pressButton('Add new user');
+        $this->iAmOnAdminAddUserPage();
     }
 
     /**
@@ -45,6 +47,7 @@ trait INavigateToAdminTrait
     public function iNavigateToAdminAnalyticsSearchPage()
     {
         $this->clickLink('Analytics');
+        $this->iAmOnAdminAnalyticsPage();
     }
 
     /**
@@ -80,5 +83,6 @@ trait INavigateToAdminTrait
     public function iNavigateToAdminReportSubmissionsPage()
     {
         $this->clickLink('Submissions');
+        $this->iAmOnAdminReportSubmissionsPage();
     }
 }
