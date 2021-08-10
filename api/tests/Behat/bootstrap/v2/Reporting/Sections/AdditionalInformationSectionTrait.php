@@ -6,21 +6,6 @@ namespace App\Tests\Behat\v2\Reporting\Sections;
 
 trait AdditionalInformationSectionTrait
 {
-    private string $hasAdditionalInformation;
-    private string $additionalInformation;
-
-    private array $formValuesEntered = [];
-
-    private function setAdditionalInformationFormValues(bool $hasAdditionalInformation)
-    {
-        if ($hasAdditionalInformation) {
-            $this->formValuesEntered[0][] = $this->$hasAdditionalInformation = 'Yes';
-            $this->formValuesEntered[1][] = $this->additionalInformation = $this->faker->text(200);
-        } else {
-            $this->formValuesEntered[0][] = $this->$hasAdditionalInformation = 'No';
-        }
-    }
-
     /**
      * @Given I view the additional information report section
      */
@@ -54,10 +39,8 @@ trait AdditionalInformationSectionTrait
      */
     public function thereIsAdditionalInformationToAdd()
     {
-        $this->setAdditionalInformationFormValues(true);
-
-        $this->selectOption('more_info[actionMoreInfo]', 'yes');
-        $this->fillField('more_info_actionMoreInfoDetails', $this->additionalInformation);
+        $this->chooseOption('more_info[actionMoreInfo]', 'yes', 'additionalInfo');
+        $this->fillInField('more_info_actionMoreInfoDetails', $this->faker->text(200), 'additionalInfo');
 
         $this->pressButton('Save and continue');
     }
@@ -67,8 +50,7 @@ trait AdditionalInformationSectionTrait
      */
     public function thereIsNoAdditionalInformationToAdd()
     {
-        $this->setAdditionalInformationFormValues(false);
-        $this->selectOption('more_info[actionMoreInfo]', 'no');
+        $this->chooseOption('more_info[actionMoreInfo]', 'no', 'additionalInfo');
         $this->pressButton('Save and continue');
     }
 
@@ -78,10 +60,6 @@ trait AdditionalInformationSectionTrait
     public function additionalInformationSummaryPageContainsExpectedText()
     {
         $this->iAmOnAnyOtherInfoSummaryPage();
-        $this->expectedResultsDisplayed(
-            0,
-            $this->formValuesEntered,
-            'Additional Information Answers and Info'
-        );
+        $this->expectedResultsDisplayedSimplified();
     }
 }
