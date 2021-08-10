@@ -11,7 +11,7 @@ trait AppNotificationTrait
     /**
      * @When I visit the service notification page
      */
-    public function iNavigateToTheClientsSearchPage()
+    public function iVisitTheServiceNotificationPage()
     {
         $this->iVisitTheNotificationPage();
         $this->iAmOnAdminNotificationPage();
@@ -40,7 +40,7 @@ trait AppNotificationTrait
         $this->iAmOnClientLoginPage();
 
         $notification = $this->getSession()->getPage()->find('css', '.behat-region-service-notification > .opg-alert > .behat-region-alert-message > p')->getText();
-        assert('Lorem ipsum' == $notification);
+        $this->assertStringEqualsString('Lorem ipsum', $notification, 'Service notification message');
     }
 
     /**
@@ -62,7 +62,7 @@ trait AppNotificationTrait
         $this->iAmOnClientLoginPage();
 
         $notification = $this->getSession()->getPage()->find('css', '.behat-region-service-notification > .opg-alert > .behat-region-alert-message > p')->getText();
-        assert('Lorem ipsum' == $notification);
+        $this->assertStringEqualsString('Lorem ipsum', $notification, 'Service notification message');
     }
 
     /**
@@ -81,7 +81,7 @@ trait AppNotificationTrait
         $this->iAmOnClientLoginPage();
 
         $el = $this->getSession()->getPage()->find('css', '.behat-region-service-notification');
-        assert(null == $el);
+        $this->assertIsNull($el, 'Service notification message does not exist');
     }
 
     /**
