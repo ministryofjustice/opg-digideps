@@ -66,6 +66,7 @@ trait ExpectedResultsTrait
         } else {
             $this->assertSectionContainsExpectedResultsSimplified($sectionName, $partialMatch);
         }
+        var_dump($this->summarySectionItemsFound);
 
         if ($sectionsHaveTotals) {
             $this->assertSectionTotal($sectionName);

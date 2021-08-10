@@ -5,9 +5,11 @@ declare(strict_types=1);
 namespace App\TestHelpers;
 
 use App\Entity\Client;
-use App\Entity\Ndr as Ndr;
+use App\Entity\Ndr\Debt as NdrDebt;
+use App\Entity\Ndr\Ndr;
 use App\Entity\Report\Action;
 use App\Entity\Report\BankAccount;
+use App\Entity\Report\Debt as ReportDebt;
 use App\Entity\Report\Lifestyle;
 use App\Entity\Report\MentalCapacity;
 use App\Entity\Report\MoneyTransaction;
@@ -52,7 +54,7 @@ class ReportTestHelper
         $this->completeMoneyInShort($report);
         $this->completeMoneyOutShort($report);
         $this->completeAssets($report);
-        $this->completeDebts($report);
+        $this->completeDebts($report, $em);
         $this->completeLifestyle($report);
     }
 
@@ -211,9 +213,31 @@ class ReportTestHelper
         $report->setNoAssetToAdd(true);
     }
 
-    private function completeDebts(ReportInterface $report): void
+    private function completeDebts(ReportInterface $report, EntityManager $em): void
     {
-        $report->setHasDebts('no');
+        $report->setHasDebts('yes');
+
+        if ($report instanceof Ndr) {
+            $debt = new NdrDebt(
+                $report,
+                'care-fees',
+                false,
+                10.0
+            );
+        } else {
+            $debt = new ReportDebt(
+                $report,
+                'care-fees',
+                false,
+                10.0
+            );
+        }
+
+        $report->setDebtManagement('Slowly paying it off');
+        $report->addDebt($debt);
+
+        $em->persist($debt);
+        $em->persist($report);
     }
 
     private function completeMoneyInShort(ReportInterface $report): void
