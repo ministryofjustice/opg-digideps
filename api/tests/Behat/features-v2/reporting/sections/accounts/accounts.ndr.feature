@@ -1,5 +1,4 @@
-#@v2 add back in when fixed. inconsistent test
-@accounts.ndr @acs
+@accounts.ndr @v2
 Feature: Accounts (NDR)
 
 @ndr-not-started
