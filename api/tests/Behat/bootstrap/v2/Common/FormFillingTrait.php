@@ -291,8 +291,10 @@ trait FormFillingTrait
 
         if (!is_null($removeButtonText)) {
             $normalizedAnswer = $this->normalizeIntToCurrencyString($answers[$answerGroupToRemove][$fieldInAnswerGroupToRemove]);
+
             $rowSelector = sprintf(
-                '//tr[th[contains(.,"%s")]] | //dd[contains(.,"%s")]/..',
+                '//tr[th[contains(.,"%s")]] | //td[contains(.,"%s")]/.. | //dd[contains(.,"%s")]/..',
+                $normalizedAnswer,
                 $normalizedAnswer,
                 $normalizedAnswer
             );
@@ -303,8 +305,8 @@ trait FormFillingTrait
         }
 
         if (!is_null($this->getSectionTotal($formSectionName))) {
-            foreach ($answers[$answerGroupToRemove] as $value) {
-                if (is_int($value)) {
+            foreach ($answers[$answerGroupToRemove] as $fieldName => $value) {
+                if (is_int($value) && $fieldName === $fieldInAnswerGroupToRemove) {
                     $this->subtractFromSectionTotal($formSectionName, $value);
                     $this->subtractFromGrandTotal($value);
                 }

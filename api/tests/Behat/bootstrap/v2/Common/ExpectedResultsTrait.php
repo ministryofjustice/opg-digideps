@@ -18,6 +18,7 @@ trait ExpectedResultsTrait
      *                                        keys of $summarySectionItemsFound
      * @param bool        $partialMatch       If assertions should match on a full or partial string (defaults to false)
      * @param bool        $sectionsHaveTotals If assertions should match on a section subtotal (defaults to false)
+     * @param bool        $hasGrandTotal      If assertions should match on a grand total (defaults to true)
      * @param bool        $debug              Set to true to output a list of user inputs and data extracted from
      *                                        the summary page
      *
@@ -27,6 +28,7 @@ trait ExpectedResultsTrait
         ?string $sectionName = null,
         bool $partialMatch = false,
         bool $sectionsHaveTotals = false,
+        bool $hasGrandTotal = true,
         bool $debug = false
     ) {
         $this->tableHtml = '';
@@ -66,13 +68,14 @@ trait ExpectedResultsTrait
         } else {
             $this->assertSectionContainsExpectedResultsSimplified($sectionName, $partialMatch);
         }
-        var_dump($this->summarySectionItemsFound);
 
-        if ($sectionsHaveTotals) {
+        if ($sectionsHaveTotals && $sectionName) {
             $this->assertSectionTotal($sectionName);
         }
 
-        $this->assertGrandTotal();
+        if ($hasGrandTotal) {
+            $this->assertGrandTotal();
+        }
     }
 
     /**
