@@ -158,4 +158,12 @@ trait IVisitAdminTrait
     {
         $this->visitAdminPath($this->getAdminAnalyticsUrl());
     }
+
+    /**
+     * @Given I visit the admin submissions page
+     */
+    public function iVisitAdminSubmissionsPage()
+    {
+        $this->visitAdminPath($this->getAdminSubmissionsPage());
+    }
 }

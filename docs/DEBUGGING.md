@@ -3,8 +3,8 @@
 To use Xdebug in the `frontend` and/or `admin` app, it must be installed on the client image. To install, you will need to create a `.env` file in the top-level of this repo, and add the following:
 
 ```
-REQUIRE_XDEBUG_API=false
-REQUIRE_XDEBUG_FRONTEND=true
+REQUIRE_XDEBUG_API=0
+REQUIRE_XDEBUG_FRONTEND=1
 ```
 Then add the following to `client/docker/env/admin.env` and `client/docker/env/frontend.env`:
 ```
