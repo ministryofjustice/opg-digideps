@@ -6,8 +6,6 @@ namespace App\Tests\Behat\v2\Reporting\Sections;
 
 trait HealthAndLifestyleTrait
 {
-    private array $lifestyleAnswers = [];
-
     /**
      * @When I view and start the health and lifestyle report section
      */
@@ -23,12 +21,9 @@ trait HealthAndLifestyleTrait
     public function iSkipBothLifeStyleSections()
     {
         $this->iAmOnLifestyleDetailsPage();
-        $this->lifestyleAnswers[0][0] = 'details of any care appointments';
-        $this->lifestyleAnswers[0][1] = 'Please answer this question';
         $this->clickLink('Skip this question for now');
+
         $this->iAmOnLifestyleActivitiesPage();
-        $this->lifestyleAnswers[1][0] = 'leisure or social activities';
-        $this->lifestyleAnswers[1][1] = 'Please answer this question';
         $this->clickLink('Skip this question for now');
     }
 
@@ -37,11 +32,9 @@ trait HealthAndLifestyleTrait
      */
     public function iFillInDetailsHealthCareAppointments()
     {
-        $appointmentText = $this->faker->text(200);
         $this->iAmOnLifestyleDetailsPage();
-        $this->lifestyleAnswers[0][0] = 'details of any care appointments';
-        $this->lifestyleAnswers[0][1] = $appointmentText;
-        $this->fillField('lifestyle[careAppointments]', $appointmentText);
+
+        $this->fillInField('lifestyle[careAppointments]', $this->faker->text(200), 'health-lifestyle-care');
         $this->pressButton('Save and continue');
     }
 
@@ -50,7 +43,7 @@ trait HealthAndLifestyleTrait
      */
     public function iConfirmClientTakesPartNoLeisureOrSocialActivities()
     {
-        $this->takesPartLeisureSocial('no', 'does not take part in any leisure or social activities');
+        $this->takesPartLeisureSocial('no');
     }
 
     /**
@@ -58,7 +51,7 @@ trait HealthAndLifestyleTrait
      */
     public function iConfirmClientTakesPartLeisureAndSocialActivities()
     {
-        $this->takesPartLeisureSocial('yes', 'takes part in and how often');
+        $this->takesPartLeisureSocial('yes');
     }
 
     /**
@@ -66,14 +59,20 @@ trait HealthAndLifestyleTrait
      */
     public function iEditLifestyleSectionAnswersYes()
     {
-        $this->iAmOnLifestyleSummaryPage();
-        $urlRegex = '/report\/.*\/lifestyle\/step\/1.*/';
-        $this->iClickOnNthElementBasedOnRegex($urlRegex, 0);
-        $this->iFillInDetailsHealthCareAppointments();
-        $this->iAmOnLifestyleSummaryPage();
-        $urlRegex = '/report\/.*\/lifestyle\/step\/2.*/';
-        $this->iClickOnNthElementBasedOnRegex($urlRegex, 0);
-        $this->iConfirmClientTakesPartLeisureAndSocialActivities();
+        $this->removeAnswerFromSection(
+            'lifestyle[doesClientUndertakeSocialActivities]',
+            'health-lifestyle-leisure',
+        );
+
+        $locator = sprintf(
+            "//dd[a[contains(@href,'/report/%s/lifestyle/step/2')]]/..",
+            $this->loggedInUserDetails->getCurrentReportId()
+        );
+
+        $careAppointmentsRow = $this->getSession()->getPage()->find('xpath', $locator);
+        $careAppointmentsRow->clickLink('Edit');
+
+        $this->takesPartLeisureSocial('no');
     }
 
     /**
@@ -81,14 +80,20 @@ trait HealthAndLifestyleTrait
      */
     public function iEditLifestyleSectionAnswersNo()
     {
-        $this->iAmOnLifestyleSummaryPage();
-        $urlRegex = '/report\/.*\/lifestyle\/step\/1.*/';
-        $this->iClickOnNthElementBasedOnRegex($urlRegex, 0);
-        $this->iFillInDetailsHealthCareAppointments();
-        $this->iAmOnLifestyleSummaryPage();
-        $urlRegex = '/report\/.*\/lifestyle\/step\/2.*/';
-        $this->iClickOnNthElementBasedOnRegex($urlRegex, 0);
-        $this->iConfirmClientTakesPartNoLeisureOrSocialActivities();
+        $this->removeAnswerFromSection(
+            'lifestyle[doesClientUndertakeSocialActivities]',
+            'health-lifestyle-leisure'
+        );
+
+        $locator = sprintf(
+            "//dd[a[contains(@href,'/report/%s/lifestyle/step/2')]]/..",
+            $this->loggedInUserDetails->getCurrentReportId()
+        );
+
+        $leisureActivityRow = $this->getSession()->getPage()->find('xpath', $locator);
+        $leisureActivityRow->clickLink('Edit');
+
+        $this->takesPartLeisureSocial('no');
     }
 
     /**
@@ -116,11 +121,13 @@ trait HealthAndLifestyleTrait
     {
         $expectedMessage = "Please select either 'Yes' or 'No'";
         $this->assertOnAlertMessage($expectedMessage);
-        $this->selectOption('lifestyle[doesClientUndertakeSocialActivities]', 'no');
+
+        $this->chooseOption('lifestyle[doesClientUndertakeSocialActivities]', 'no');
         $this->pressButton('Save and continue');
         $expectedMessage = 'Give us more information about why the client does not take part in any activity';
         $this->assertOnAlertMessage($expectedMessage);
-        $this->selectOption('lifestyle[doesClientUndertakeSocialActivities]', 'yes');
+
+        $this->chooseOption('lifestyle[doesClientUndertakeSocialActivities]', 'yes');
         $this->pressButton('Save and continue');
         $expectedMessage = 'Give us more details about the different types of activities client takes part in and how often';
         $this->assertOnAlertMessage($expectedMessage);
@@ -142,25 +149,26 @@ trait HealthAndLifestyleTrait
     public function iShouldSeeTheExpectedLifestyleSummary()
     {
         $this->iAmOnLifestyleSummaryPage();
-        $this->expectedResultsDisplayed(
-            0,
-            $this->lifestyleAnswers,
-            'Health and Lifestyle details'
-        );
+
+        $this->expectedResultsDisplayedSimplified();
     }
 
-    private function takesPartLeisureSocial($takesPart, $expectedQuestionText)
+    private function takesPartLeisureSocial($takesPart)
     {
-        $leisureText = $this->faker->text(200);
         $this->iAmOnLifestyleActivitiesPage();
-        $this->lifestyleAnswers[1][0] = 'leisure or social activities';
-        $this->lifestyleAnswers[1][1] = $takesPart;
-        $this->selectOption('lifestyle[doesClientUndertakeSocialActivities]', $takesPart);
-        $this->lifestyleAnswers[2][0] = $expectedQuestionText;
-        $this->lifestyleAnswers[2][1] = $leisureText;
-        $this->fillField(
-            'yes' == $takesPart ? 'lifestyle[activityDetailsYes]' : 'lifestyle[activityDetailsNo]', $leisureText
+
+        $this->chooseOption(
+            'lifestyle[doesClientUndertakeSocialActivities]',
+            $takesPart,
+            'health-lifestyle-leisure'
         );
+
+        $this->fillInField(
+            'yes' == $takesPart ? 'lifestyle[activityDetailsYes]' : 'lifestyle[activityDetailsNo]',
+            $this->faker->text(200),
+            'health-lifestyle-leisure'
+        );
+
         $this->pressButton('Save and continue');
     }
 }
