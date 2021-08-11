@@ -11,6 +11,8 @@ trait ExpectedResultsTrait
 {
     private string $tableHtml = '';
     private array $summarySectionItemsFound = [];
+    private array $foundAnswers = [];
+    private array $missingAnswers = [];
 
     /**
      * @param string|null $sectionName        The name given to the portion of the form being tested as defined in
@@ -148,14 +150,26 @@ trait ExpectedResultsTrait
             $descriptionDetailsElements = $element->findAll('xpath', $xpath);
 
             foreach ($descriptionDetailsElements as $dd) {
-                $this->summarySectionItemsFound[] = strtolower($dd->getText());
+                if ($listItemElements = $dd->findAll('xpath', '//li')) {
+                    foreach ($listItemElements as $li) {
+                        $this->summarySectionItemsFound[] = strtolower($li->getText());
+                    }
+                } else {
+                    $this->summarySectionItemsFound[] = strtolower($dd->getText());
+                }
             }
 
             $xpath = '//dt';
             $descriptionTermElements = $element->findAll('xpath', $xpath);
 
-            foreach ($descriptionTermElements as $dd) {
-                $this->summarySectionItemsFound[] = strtolower($dd->getText());
+            foreach ($descriptionTermElements as $dt) {
+                if ($listItemElements = $dt->findAll('xpath', '//li')) {
+                    foreach ($listItemElements as $li) {
+                        $this->summarySectionItemsFound[] = strtolower($li->getText());
+                    }
+                } else {
+                    $this->summarySectionItemsFound[] = strtolower($dt->getText());
+                }
             }
         }
     }
@@ -233,49 +247,60 @@ trait ExpectedResultsTrait
             return;
         }
 
-        $foundAnswers = [];
-        $missingAnswers = [];
-
         // Loop over the collection of values inputted to forms via FormFillingTrait functions for a specific section
         foreach ($this->getSectionAnswers($sectionName) as $sectionAnswers) {
             // Loop over each field value to assert against summary page values
             foreach ($sectionAnswers as $fieldName => $fieldValue) {
-                $fieldValue = $this->normalizeValue($fieldValue);
-
-                if ($partialMatch) {
-                    $matches = array_filter($this->summarySectionItemsFound, function ($item) use ($fieldValue) {
-                        return empty($fieldValue) || false !== strpos($item, $fieldValue);
-                    });
-
-                    $sectionAnswerFound = !empty($matches);
-                } else {
-                    $sectionAnswerFound = in_array($fieldValue, $this->summarySectionItemsFound);
+                if (is_string($fieldValue) || is_int($fieldValue)) {
+                    $fieldValue = $this->normalizeValue($fieldValue);
                 }
 
-                if ($sectionAnswerFound) {
-                    $foundAnswers[$fieldName] = $fieldValue;
-
-                    $key = array_search($fieldValue, $this->summarySectionItemsFound);
-
-                    if ($key) {
-                        // Remove the found answer so sections with multiple questions won't get a false positive
-                        unset($this->summarySectionItemsFound[$key]);
+                if (is_array($fieldValue)) {
+                    foreach ($fieldValue as $value) {
+                        $value = $this->normalizeValue($value);
+                        $this->matchOnValue($partialMatch, $value, $fieldName);
                     }
                 } else {
-                    $missingAnswers[$fieldName] = $fieldValue;
+                    $this->matchOnValue($partialMatch, $fieldValue, $fieldName);
                 }
             }
         }
 
-        if (!empty($missingAnswers)) {
-            $this->throwMissingAnswersException($missingAnswers, $foundAnswers);
+        if (!empty($this->missingAnswers)) {
+            $this->throwMissingAnswersException();
         }
     }
 
-    private function throwMissingAnswersException(array $missingAnswers, array $foundAnswers)
+    private function matchOnValue(bool $partialMatch, $fieldValue, $fieldName)
     {
-        $foundText = !empty($foundAnswers) ? json_encode($foundAnswers, JSON_PRETTY_PRINT) : 'No form values found';
-        $missingText = json_encode($missingAnswers, JSON_PRETTY_PRINT);
+        if ($partialMatch) {
+            $matches = array_filter($this->summarySectionItemsFound, function ($item) use ($fieldValue) {
+                return empty($fieldValue) || false !== strpos($item, $fieldValue);
+            });
+
+            $sectionAnswerFound = !empty($matches);
+        } else {
+            $sectionAnswerFound = in_array($fieldValue, $this->summarySectionItemsFound);
+        }
+
+        if ($sectionAnswerFound) {
+            $this->foundAnswers[$fieldName][] = $fieldValue;
+
+            $key = array_search($fieldValue, $this->summarySectionItemsFound);
+
+            if ($key) {
+                // Remove the found answer so sections with multiple questions won't get a false positive
+                unset($this->summarySectionItemsFound[$key]);
+            }
+        } else {
+            $this->missingAnswers[$fieldName][] = $fieldValue;
+        }
+    }
+
+    private function throwMissingAnswersException()
+    {
+        $foundText = !empty($this->foundAnswers) ? json_encode($this->foundAnswers, JSON_PRETTY_PRINT) : 'No form values found';
+        $missingText = json_encode($this->missingAnswers, JSON_PRETTY_PRINT);
 
         $foundText = str_replace('\u00a3', '£', $foundText);
         $missingText = str_replace('\u00a3', '£', $missingText);

@@ -22,11 +22,19 @@ Feature: Money in Low Assets
     When I follow link back to report overview page
     Then I should see "money-in-short" as "no items"
 
-@lay-pfa-low-not-started
+@lay-pfa-low-not-started @acs
   Scenario: A user has had a multiple items of money go in but nothing over £1k
     Given a Lay Deputy has not started a Pfa Low Assets report
     When I view and start the money in short report section
-    And I am reporting on 'State pension and benefits, Salary or wages'
+    And I am reporting on:
+    | Benefit Type                                         |
+    |  State pension and benefits                          |
+    |  Bequests - for example, inheritance, gifts received |
+    |  Income from investments, dividends, property rental |
+    |  Sale of investments, property or assets             |
+    |  Salary or wages                                     |
+    |  Compensations and damages awards                    |
+    |  Personal pension                                    |
     And I have no one-off payments over £1k
     Then I should see the expected money in section summary
     When I follow link back to report overview page
