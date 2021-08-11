@@ -65,7 +65,7 @@ resource "aws_ssm_parameter" "flag_checklist_sync" {
 resource "aws_ssm_parameter" "flag_benefits_questions" {
   name  = "${local.feature_flag_prefix}benefits-questions"
   type  = "String"
-  value = "03-08-2021 14:00:00"
+  value = "31-12-2030 00:00:00"
 
   tags = local.default_tags
 

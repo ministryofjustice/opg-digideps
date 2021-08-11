@@ -43,9 +43,7 @@ class ParameterStoreService
 
     public function getFeatureFlag(string $flagKey)
     {
-        var_dump($this->flagPrefix);
         $flagName = $this->flagPrefix.$flagKey;
-        var_dump($flagName);
         $flag = $this->ssmClient->getParameter(['Name' => $flagName]);
 
         return $flag['Parameter']['Value'];

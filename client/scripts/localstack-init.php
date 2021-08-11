@@ -72,7 +72,7 @@ $ssmClient->putParameter([
 $ssmClient->putParameter([
      'Name' => '/default/parameter/benefits-questions',
      'Type' => 'String',
-     'Value' => '03-08-2021 14:00:00',
+     'Value' => '31-12-2030 00:00:00',
      'Overwrite' => true,
 ]);
 
