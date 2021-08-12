@@ -1,4 +1,4 @@
-@v2 @money-out @acs
+@v2 @money-out
 Feature: Money Out
 
     @lay-pfa-high-not-started

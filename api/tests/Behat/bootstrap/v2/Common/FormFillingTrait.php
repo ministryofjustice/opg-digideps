@@ -327,6 +327,7 @@ trait FormFillingTrait
      *                                      edit belongs to
      * @param bool        $fullGroup        Whether to remove the entire group or specific row denoted by
      *                                      $fieldInAnswerGroupToRemove
+     * @param int|null    $value            Value to edit the field to
      *
      * @return array Returns a list, not array, of the old and new value so the variables
      *               can be accessed directly rather than accessing via an array
@@ -334,7 +335,7 @@ trait FormFillingTrait
      * @throws BehatException
      * @throws ElementNotFoundException
      */
-    public function editFieldAnswerInSectionTrackTotal(NodeElement $summaryRowToEdit, string $fieldName, string $formSectionName, bool $fullGroup = true): array
+    public function editFieldAnswerInSectionTrackTotal(NodeElement $summaryRowToEdit, string $fieldName, string $formSectionName, bool $fullGroup = true, ?int $value = null): array
     {
         $currentValueString = $summaryRowToEdit->find('xpath', '//td[contains(.,"£")] | //dd[contains(.,"£")]')->getText();
         $currentValueInt = intval(str_replace([',', '£'], '', $currentValueString));
@@ -343,7 +344,7 @@ trait FormFillingTrait
 
         $summaryRowToEdit->clickLink('Edit');
 
-        $newValue = $this->faker->numberBetween(1, 10000);
+        $newValue = $value ?: $this->faker->numberBetween(1, 10000);
 
         $this->fillInFieldTrackTotal(
             $fieldName,
