@@ -5,6 +5,7 @@ declare(strict_types=1);
 namespace App\TestHelpers;
 
 use App\Entity\Client;
+use App\Entity\Ndr\BankAccount as NdrBankAccount;
 use App\Entity\Ndr\Debt as NdrDebt;
 use App\Entity\Ndr\Ndr;
 use App\Entity\Report\Action;
@@ -18,6 +19,7 @@ use App\Entity\Report\Report;
 use App\Entity\Report\ReportSubmission;
 use App\Entity\Report\VisitsCare;
 use App\Entity\ReportInterface;
+use App\Entity\User;
 use DateInterval;
 use DateTime;
 use Doctrine\Common\Collections\ArrayCollection;
@@ -35,7 +37,23 @@ class ReportTestHelper
         $startDate = $startDate ? $startDate : new \DateTime('2 years ago');
         $endDate = $endDate ? $endDate : (clone $startDate)->add(new DateInterval('P1Y'));
 
-        return new Report($client, $type, $startDate, $endDate);
+        $report = new Report($client, $type, $startDate, $endDate);
+        $this->completeBankAccounts($report, $em);
+
+        return $report;
+    }
+
+    public function generateNdr(EntityManager $em, ?Client $client = null, User $deputy): Ndr
+    {
+        $ndr = new Ndr($client);
+        $deputy->setNdrEnabled(true);
+        $client->setNdr($ndr);
+
+        $deputy->addClient($client);
+
+        $this->completeBankAccounts($ndr, $em);
+
+        return $ndr;
     }
 
     public function completeLayReport(ReportInterface $report, EntityManager $em): void
@@ -48,7 +66,6 @@ class ReportTestHelper
         $this->completeDocuments($report);
         $this->completeDeputyExpenses($report);
         $this->completeGifts($report);
-        $this->completeBankAccounts($report, $em);
         $this->completeMoneyIn($report);
         $this->completeMoneyOut($report);
         $this->completeMoneyInShort($report);
@@ -58,14 +75,13 @@ class ReportTestHelper
         $this->completeLifestyle($report);
     }
 
-    public function completeNdrLayReport(ReportInterface $report, EntityManager $em): void
+    public function completeNdrLayReport(ReportInterface $report): void
     {
         $this->completeVisitsCare($report);
         $this->completeActions($report);
         $this->completeOtherInfo($report);
         $this->completeDeputyExpenses($report);
         $this->completeIncomeBenefits($report);
-        $this->completeBankAccounts($report, $em);
         $this->completeAssets($report);
         $this->completeDebts($report);
     }
@@ -184,11 +200,18 @@ class ReportTestHelper
     private function completeBankAccounts(ReportInterface $report, EntityManager $em): void
     {
         if ($report instanceof Ndr\Ndr) {
-            $ba = (new Ndr\BankAccount())->setNdr($report);
+            $ba = (new NdrBankAccount())
+                ->setNdr($report)
+                ->setAccountNumber('1234');
+
             $report->addAccount($ba);
             $em->persist($ba);
         } else {
-            $ba = (new BankAccount())->setReport($report)->setClosingBalance(1000);
+            $ba = (new BankAccount())
+                ->setReport($report)
+                ->setClosingBalance(1000)
+                ->setAccountNumber('1234');
+
             $report->addAccount($ba);
             $report->setBalanceMismatchExplanation('no reason');
         }

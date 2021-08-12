@@ -84,6 +84,7 @@ class FixtureHelper
             'currentReportDueDate' => $currentReport->getDueDate(),
             'currentReportStartDate' => $currentReport->getStartDate(),
             'currentReportEndDate' => $currentReport instanceof Ndr ? null : $currentReport->getEndDate(),
+            'currentReportBankAccountId' => $currentReport->getBankAccounts()[0]->getId(),
         ];
 
         if ($previousReport && $previousReport->getId() !== $currentReport->getId()) {
@@ -96,6 +97,7 @@ class FixtureHelper
                     'previousReportDueDate' => $previousReport->getDueDate(),
                     'previousReportStartDate' => $previousReport->getStartDate(),
                     'previousReportEndDate' => $previousReport->getEndDate(),
+                    'previousReportBankAccountId' => $previousReport->getBankAccounts()[0]->getId(),
                 ]
             );
         }
@@ -256,15 +258,10 @@ class FixtureHelper
     private function addClientsAndReportsToNdrLayDeputy(User $deputy, bool $completed = false, bool $submitted = false)
     {
         $client = $this->clientTestHelper->generateClient($this->em, $deputy);
-
-        $ndr = new Ndr($client);
-        $deputy->setNdrEnabled(true);
-        $client->setNdr($ndr);
-
-        $deputy->addClient($client);
+        $ndr = $this->reportTestHelper->generateNdr($this->em, $client);
 
         if ($completed) {
-            $this->reportTestHelper->completeNdrLayReport($ndr, $this->em);
+            $this->reportTestHelper->completeNdrLayReport($ndr);
         }
 
 //        if ($submitted) {

@@ -278,6 +278,10 @@ trait FormFillingTrait
 
         $answerGroupToRemove = null;
 
+        if (!is_array($answers)) {
+            throw new BehatException(sprintf('Section answers for "%s" could not be found', $formSectionName));
+        }
+
         foreach ($answers as $index => $answerGroup) {
             if (is_array($answerGroup) && in_array($fieldInAnswerGroupToRemove, array_keys($answerGroup))) {
                 $answerGroupToRemove = $index;
