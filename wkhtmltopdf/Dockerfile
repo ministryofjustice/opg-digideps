@@ -1,17 +1,20 @@
-FROM python:3.10-rc-alpine3.14
+FROM python:3.6-alpine3.14
 
 RUN apk update
 
 ENV PYTHONUNBUFFERED 1
 
 RUN apk --update --upgrade --no-cache add \
-    cairo-dev pango-dev gdk-pixbuf
+    cairo-dev pango-dev gdk-pixbuf bash jpeg-dev
+
+RUN apk --update --upgrade --no-cache add fontconfig ttf-freefont font-noto terminus-font \
+    && fc-cache -f \
+    && fc-list | sort
 
 RUN set -ex \
-    && apk add --no-cache --virtual .build-deps \
-        musl-dev gcc jpeg-dev zlib-dev libffi-dev \
-    && pip3 install --no-cache-dir werkzeug==1.0.1 executor==23.2 gunicorn==20.0.4 weasyprint \
-    && apk del .build-deps
+&& apk add --no-cache --virtual .build-deps musl-dev gcc g++ zlib-dev libffi-dev \
+&& pip3 install --no-cache-dir werkzeug==1.0.1 executor==23.2 gunicorn==20.0.4 weasyprint==52.5 \
+&& apk del .build-deps
 
 ADD docker-entrypoint.sh /docker-entrypoint.sh
 ADD app.py /app.py

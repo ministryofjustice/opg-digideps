@@ -8,6 +8,7 @@
 import base64
 import json
 import tempfile
+import shutil
 
 from werkzeug.wsgi import wrap_file
 from werkzeug.wrappers import Request, Response
@@ -39,6 +40,9 @@ def application(request):
             source_file.write(request.files['file'].read())
             # Load any options that may have been provided in options
             options = json.loads(request.form.get('options', '{}'))
+
+        file_name = source_file.name
+        shutil.copy(file_name, '/tmp/jimmy.html')
 
         source_file.flush()
 
