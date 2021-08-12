@@ -87,8 +87,7 @@ trait MoneyInLowAssetsTrait
     {
         foreach ($moneyInTypes as $moneyInType) {
             $optionIndex = array_search($moneyInType['Benefit Type'], $this->moneyInShortTypeDictionary);
-            var_dump($optionIndex);
-            var_dump($moneyInType['Benefit Type']);
+
             $this->tickCheckbox(
                 'money-types',
                 "money_short[moneyShortCategoriesIn][$optionIndex][present]",
