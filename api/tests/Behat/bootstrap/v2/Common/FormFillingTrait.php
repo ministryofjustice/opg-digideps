@@ -239,7 +239,7 @@ trait FormFillingTrait
         $this->submittedAnswersByFormSections['totals'][$formSectionName] -= $amountToSubtract;
     }
 
-    public function addToSubmittedAnswersByFormSections($formSectionName, $field, $value, ?string $formattedValue)
+    public function addToSubmittedAnswersByFormSections($formSectionName, $field, $value, ?string $formattedValue = null)
     {
         $answerGroup = $this->determineAnswerGroup($formSectionName, $field);
         $this->submittedAnswersByFormSections[$formSectionName][$answerGroup][$field] = $formattedValue ?: $value;
@@ -310,7 +310,7 @@ trait FormFillingTrait
 
         if (!is_null($this->getSectionTotal($formSectionName))) {
             foreach ($answers[$answerGroupToRemove] as $fieldName => $value) {
-                if (is_int($value) && $fieldName === $fieldInAnswerGroupToRemove) {
+                if ((is_int($value) || is_float($value)) && $fieldName === $fieldInAnswerGroupToRemove) {
                     $this->subtractFromSectionTotal($formSectionName, $value);
                     $this->subtractFromGrandTotal($value);
                 }

@@ -8,6 +8,7 @@ use App\Entity\Client;
 use App\Entity\Ndr\BankAccount as NdrBankAccount;
 use App\Entity\Ndr\Debt as NdrDebt;
 use App\Entity\Ndr\Ndr;
+use App\Entity\Ndr\VisitsCare as NdrVisitsCare;
 use App\Entity\Report\Action;
 use App\Entity\Report\BankAccount;
 use App\Entity\Report\Debt as ReportDebt;
@@ -75,7 +76,7 @@ class ReportTestHelper
         $this->completeLifestyle($report);
     }
 
-    public function completeNdrLayReport(ReportInterface $report): void
+    public function completeNdrLayReport(ReportInterface $report, EntityManager $em): void
     {
         $this->completeVisitsCare($report);
         $this->completeActions($report);
@@ -83,7 +84,7 @@ class ReportTestHelper
         $this->completeDeputyExpenses($report);
         $this->completeIncomeBenefits($report);
         $this->completeAssets($report);
-        $this->completeDebts($report);
+        $this->completeDebts($report, $em);
     }
 
     public function submitReport(ReportInterface $report, EntityManager $em): void
@@ -140,8 +141,8 @@ class ReportTestHelper
 
     private function completeVisitsCare(ReportInterface $report): void
     {
-        if ($report instanceof Ndr\Ndr) {
-            $vc = (new Ndr\VisitsCare())
+        if ($report instanceof Ndr) {
+            $vc = (new NdrVisitsCare())
                 ->setNdr($report)
                 ->setPlanMoveNewResidence('no');
         } else {
@@ -159,7 +160,7 @@ class ReportTestHelper
 
     private function completeActions(ReportInterface $report): void
     {
-        if ($report instanceof Ndr\Ndr) {
+        if ($report instanceof Ndr) {
             $report
                 ->setActionGiveGiftsToClient('no')
                 ->setActionPropertyMaintenance('no')
@@ -199,7 +200,7 @@ class ReportTestHelper
 
     private function completeBankAccounts(ReportInterface $report, EntityManager $em): void
     {
-        if ($report instanceof Ndr\Ndr) {
+        if ($report instanceof Ndr) {
             $ba = (new NdrBankAccount())
                 ->setNdr($report)
                 ->setAccountNumber('1234');
@@ -278,7 +279,7 @@ class ReportTestHelper
 
     private function completeDeputyExpenses(ReportInterface $report): void
     {
-        if ($report instanceof Ndr\Ndr || $report->isLayReport()) {
+        if ($report instanceof Ndr || $report->isLayReport()) {
             $report->setPaidForAnything('no');
         } elseif ($report->isPAreport()) {
             $report->setReasonForNoFees('No reason for no fees');
@@ -303,7 +304,7 @@ class ReportTestHelper
 
     private function completeIncomeBenefits(ReportInterface $report)
     {
-        if (!$report instanceof Ndr\Ndr) {
+        if (!$report instanceof Ndr) {
             return;
         }
 
@@ -315,7 +316,7 @@ class ReportTestHelper
 
     private function completeMoneyTransfers(ReportInterface $report)
     {
-        if (!$report instanceof Ndr\Ndr) {
+        if (!$report instanceof Ndr) {
             return;
         }
 
@@ -324,7 +325,7 @@ class ReportTestHelper
 
     private function completeBalance(ReportInterface $report)
     {
-        if (!$report instanceof Ndr\Ndr) {
+        if (!$report instanceof Ndr) {
             return;
         }
 

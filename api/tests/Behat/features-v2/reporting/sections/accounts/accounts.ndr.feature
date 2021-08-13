@@ -5,12 +5,12 @@ Feature: Accounts (NDR)
     Scenario: A user adds one of each account type
         Given a Lay Deputy has not started an NDR report
         And I view the NDR overview page
-        Then I should see "bank-accounts" as "not started"
-        When I view and start the accounts report section
+        Then I should see "bank-accounts" as "1 account"
+        And I visit the accounts report section
         And I add one of each account type with valid details
         Then I should see the expected accounts on the summary page
         When I follow link back to report overview page
-        Then I should see "bank-accounts" as "7 accounts"
+        Then I should see "bank-accounts" as "8 accounts"
 
     @ndr-not-started
     Scenario: A user incorrectly enters an account before correctly entering it
@@ -34,12 +34,12 @@ Feature: Accounts (NDR)
     @ndr-not-started
     Scenario: A user adds accounts and then changes their mind and deletes them
         Given a Lay Deputy has not started an NDR report
-        When I view and start the accounts report section
+        And I visit the accounts report section
         And I add a couple of new accounts
         Then I should see the expected accounts on the summary page
         When I remove the second account
         Then I should see the expected accounts on the summary page
         When I remove the remaining account
-        Then I should be on account start page
+        Then I should be on the accounts summary page
         When I follow link back to report overview page
-        Then I should see "bank-accounts" as "not started"
+        Then I should see "bank-accounts" as "1 account"

@@ -269,7 +269,7 @@ trait ExpectedResultsTrait
         foreach ($this->getSectionAnswers($sectionName) as $sectionAnswers) {
             // Loop over each field value to assert against summary page values
             foreach ($sectionAnswers as $fieldName => $fieldValue) {
-                if (is_string($fieldValue) || is_int($fieldValue)) {
+                if (is_string($fieldValue) || is_int($fieldValue) || is_float($fieldValue)) {
                     $fieldValue = $this->normalizeValue($fieldValue);
                 }
 

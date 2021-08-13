@@ -18,8 +18,7 @@ trait DeputyExpensesSectionTrait
      */
     public function iNavigateToAndStartDeputyExpensesSection()
     {
-        $this->iVisitLayStartPage();
-        $this->clickLink('Start now');
+        $this->iVisitReportOverviewPage();
         $this->clickLink('edit-deputy_expenses');
 
         $currentUrl = $this->getCurrentUrl();
@@ -205,7 +204,7 @@ trait DeputyExpensesSectionTrait
     public function iRemoveAnExpense()
     {
         $this->removeAnswerFromSection(
-            'expenses_single[explanation]',
+            'expenses_single[amount]',
             'expenseDetails',
             true,
             'Yes, remove expense'

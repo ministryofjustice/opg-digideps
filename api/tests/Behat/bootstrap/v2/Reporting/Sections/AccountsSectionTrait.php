@@ -50,7 +50,8 @@ trait AccountsSectionTrait
             '1111',
             '01-01-01',
             '',
-            'account-1'
+            'account-1',
+            false
         );
 
         $this->assertOnErrorMessage('Please select either \'Yes\' or \'No\'');
@@ -59,7 +60,8 @@ trait AccountsSectionTrait
             '',
             '01-01-01',
             'no',
-            'account-1'
+            'account-1',
+            false
         );
 
         $this->assertOnErrorMessage('Enter the last 4 digits of the account number');
@@ -68,7 +70,8 @@ trait AccountsSectionTrait
             '1111',
             '',
             'no',
-            'account-1'
+            'account-1',
+            false
         );
 
         $this->assertOnErrorMessage('The sort code should only contain numbers');
@@ -78,7 +81,8 @@ trait AccountsSectionTrait
             '1111',
             '01-01-01',
             'no',
-            ''
+            '',
+            false
         );
 
         $this->assertOnErrorMessage('Enter the bank or building society name');
@@ -101,7 +105,8 @@ trait AccountsSectionTrait
             '1111',
             'AA-BB-CC',
             'no',
-            'account-1'
+            'account-1',
+            false
         );
 
         $this->assertOnErrorMessage('The sort code should only contain numbers');
@@ -383,36 +388,36 @@ trait AccountsSectionTrait
         $this->pressButton('Save and continue');
     }
 
-    public function iFillInAccountDetails(string $accountNumber, string $sortCode, string $joint, string $name)
+    public function iFillInAccountDetails(string $accountNumber, string $sortCode, string $joint, string $name, bool $trackFromEntry = true)
     {
         $formSectionName = 'account'.$this->countOfAccountsAdded;
 
         if ($this->elementExistsOnPage('input', 'name', 'account[bank]')) {
-            $this->fillInField('account[bank]', $name, $formSectionName);
+            $this->fillInField('account[bank]', $name, $trackFromEntry ? $formSectionName : null);
         }
 
-        $this->fillInField('account[accountNumber]', $accountNumber, $formSectionName);
+        $this->fillInField('account[accountNumber]', $accountNumber, $trackFromEntry ? $formSectionName : null);
 
         if ($this->elementExistsOnPage('input', 'name', 'account[sortCode][sort_code_part_1]')) {
-            $this->fillInSortCodeFields('account[sortCode]', $sortCode, $formSectionName);
+            $this->fillInSortCodeFields('account[sortCode]', $sortCode, $trackFromEntry ? $formSectionName : null);
         }
 
         if (strlen($joint) > 0) {
-            $this->chooseOption('account[isJointAccount]', $joint, $formSectionName);
+            $this->chooseOption('account[isJointAccount]', $joint, $trackFromEntry ? $formSectionName : null);
         }
 
         $this->pressButton('Save and continue');
     }
 
-    public function iFillInAccountBalance(string $openingBalance, string $closingBalance)
+    public function iFillInAccountBalance(string $openingBalance, string $closingBalance, $trackFromEntry = true)
     {
         $formSectionName = 'account'.$this->countOfAccountsAdded;
 
         if ('ndr' == $this->reportUrlPrefix) {
-            $this->fillInField('account[balanceOnCourtOrderDate]', $openingBalance, $formSectionName);
+            $this->fillInField('account[balanceOnCourtOrderDate]', $openingBalance, $trackFromEntry ? $formSectionName : null);
         } else {
-            $this->fillInField('account[openingBalance]', $openingBalance, $formSectionName);
-            $this->fillInField('account[closingBalance]', $closingBalance, $formSectionName);
+            $this->fillInField('account[openingBalance]', $openingBalance, $trackFromEntry ? $formSectionName : null);
+            $this->fillInField('account[closingBalance]', $closingBalance, $trackFromEntry ? $formSectionName : null);
         }
 
         $this->pressButton('Save and continue');
@@ -422,13 +427,11 @@ trait AccountsSectionTrait
     {
         $this->iAmOnAccountsSummaryPage();
 
-        // Remove the account from the app
-        $urlRegex = sprintf('/%s\/.*\/bank-account\/.*\/delete$/', $this->reportUrlPrefix);
-        $this->iClickOnNthElementBasedOnRegex($urlRegex, $accountOccurrence);
-
-        $this->iAmOnAccountsDeletePage();
-        $this->pressButton('Yes, remove account');
-
-        $this->removeAnswerFromSection('account[bank]', 'account'.($accountOccurrence + 1), true);
+        $this->removeAnswerFromSection(
+            'ndr' == $this->reportUrlPrefix ? 'account[balanceOnCourtOrderDate]' : 'account[openingBalance]',
+            'account'.($accountOccurrence + 1),
+            true,
+            'Yes, remove account'
+        );
     }
 }

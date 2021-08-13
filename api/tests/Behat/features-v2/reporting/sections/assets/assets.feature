@@ -1,4 +1,4 @@
-@v2 @assets @acs
+@v2 @assets
 Feature: Assets
 
     @lay-pfa-high-not-started
