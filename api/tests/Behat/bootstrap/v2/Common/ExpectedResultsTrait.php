@@ -46,6 +46,7 @@ trait ExpectedResultsTrait
             $this->extractTableBodyContents($summarySectionElement);
         }
 
+        $this->extractH3Contents();
         $this->extractMonetaryTotals();
         $this->removeEmptyElements();
 
@@ -77,6 +78,15 @@ trait ExpectedResultsTrait
 
         if ($hasGrandTotal) {
             $this->assertGrandTotal();
+        }
+    }
+
+    private function extractH3Contents()
+    {
+        $h3s = $this->getSession()->getPage()->findAll('xpath', '//h3');
+
+        foreach ($h3s as $h3) {
+            $this->summarySectionItemsFound[] = strtolower($h3->getText());
         }
     }
 
@@ -154,6 +164,10 @@ trait ExpectedResultsTrait
                     foreach ($listItemElements as $li) {
                         $this->summarySectionItemsFound[] = strtolower($li->getText());
                     }
+                } elseif ($paragraphElements = $dd->findAll('xpath', '//p')) {
+                    foreach ($paragraphElements as $p) {
+                        $this->summarySectionItemsFound[] = strtolower($p->getText());
+                    }
                 } else {
                     $this->summarySectionItemsFound[] = strtolower($dd->getText());
                 }
@@ -166,6 +180,10 @@ trait ExpectedResultsTrait
                 if ($listItemElements = $dt->findAll('xpath', '//li')) {
                     foreach ($listItemElements as $li) {
                         $this->summarySectionItemsFound[] = strtolower($li->getText());
+                    }
+                } elseif ($paragraphElements = $dt->findAll('xpath', '//p')) {
+                    foreach ($paragraphElements as $p) {
+                        $this->summarySectionItemsFound[] = strtolower($p->getText());
                     }
                 } else {
                     $this->summarySectionItemsFound[] = strtolower($dt->getText());
@@ -385,7 +403,7 @@ MSG;
         }
 
         if (is_float($fieldValue)) {
-            return sprintf('£%s', number_format($fieldValue));
+            return sprintf('£%s', number_format($fieldValue, 2));
         }
 
         return $fieldValue;

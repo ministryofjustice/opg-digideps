@@ -1,4 +1,4 @@
-@v2 @money-out-short @acs
+@v2 @money-out-short
 Feature: Money Out Short
 
     @lay-pfa-low-not-started

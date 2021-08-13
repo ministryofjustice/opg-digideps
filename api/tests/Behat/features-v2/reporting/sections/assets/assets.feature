@@ -20,7 +20,7 @@ Feature: Assets
         When I follow link back to report overview page
         Then I should see "assets" as "1 asset"
 
-    @lay-pfa-high-not-started
+    @lay-pfa-high-not-started @acs
     Scenario: A user adds a single property asset
         Given a Lay Deputy has not started a report
         When I visit and start the assets report section

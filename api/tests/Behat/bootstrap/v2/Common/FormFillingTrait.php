@@ -21,11 +21,14 @@ trait FormFillingTrait
      * @param mixed       $value           field value to enter
      * @param string|null $formSectionName define with any name you like - only include if you want to assert on the
      *                                     value entered on a summary page at the end of the form flow
+     * @param string|null $formattedValue  int values are automatically formatted into currency strings (e.g 21
+     *                                     becomes £21.00). To override this, or add any other formatting, pass this
+     *                                     argument tot he function
      */
-    public function fillInField(string $field, $value, ?string $formSectionName = null)
+    public function fillInField(string $field, $value, ?string $formSectionName = null, ?string $formattedValue = null)
     {
         if ($formSectionName) {
-            $this->addToSubmittedAnswersByFormSections($formSectionName, $field, $value);
+            $this->addToSubmittedAnswersByFormSections($formSectionName, $field, $value, $formattedValue);
         }
 
         $this->fillField($field, $value);
@@ -191,7 +194,10 @@ trait FormFillingTrait
         return $this->submittedAnswersByFormSections['totals'][$formSectionName];
     }
 
-    public function getGrandTotal(): ?int
+    /**
+     * @return int|float|null
+     */
+    public function getGrandTotal()
     {
         return $this->submittedAnswersByFormSections['totals']['grandTotal'];
     }
@@ -218,34 +224,28 @@ trait FormFillingTrait
         unset($this->submittedAnswersByFormSections['totals'][$formSectionName]);
     }
 
-    public function addToSectionTotal(string $formSectionName, int $amountToAdd)
+    public function addToSectionTotal(string $formSectionName, $amountToAdd)
     {
         $this->submittedAnswersByFormSections['totals'][$formSectionName] += $amountToAdd;
     }
 
-    /**
-     * @param string $formSectionName
-     */
-    public function addToGrandTotal(int $amountToAdd)
+    public function addToGrandTotal($amountToAdd)
     {
         $this->submittedAnswersByFormSections['totals']['grandTotal'] += $amountToAdd;
     }
 
-    public function subtractFromSectionTotal(string $formSectionName, int $amountToSubtract)
+    public function subtractFromSectionTotal(string $formSectionName, $amountToSubtract)
     {
         $this->submittedAnswersByFormSections['totals'][$formSectionName] -= $amountToSubtract;
     }
 
-    public function addToSubmittedAnswersByFormSections($formSectionName, $field, $value)
+    public function addToSubmittedAnswersByFormSections($formSectionName, $field, $value, ?string $formattedValue)
     {
         $answerGroup = $this->determineAnswerGroup($formSectionName, $field);
-        $this->submittedAnswersByFormSections[$formSectionName][$answerGroup][$field] = $value;
+        $this->submittedAnswersByFormSections[$formSectionName][$answerGroup][$field] = $formattedValue ?: $value;
     }
 
-    /**
-     * @param string $formSectionName
-     */
-    public function subtractFromGrandTotal(int $amountToSubtract)
+    public function subtractFromGrandTotal($amountToSubtract)
     {
         $this->submittedAnswersByFormSections['totals']['grandTotal'] -= $amountToSubtract;
     }

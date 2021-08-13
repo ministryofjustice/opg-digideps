@@ -16,6 +16,23 @@ trait AssetsSectionTrait
     private int $JEWELLERY_ASSET_TYPE = 4;
     private int $PROPERTY_ASSET_TYPE = 7;
 
+    private array $combinedAssetTypes = ['Antiques', 'Artwork', 'Jewellery'];
+
+    private array $assetDictionary = [
+        0 => 'Antiques',
+        1 => 'Artwork',
+        2 => 'Investment bonds',
+        3 => 'Jewellery',
+        4 => 'National Savings certificates',
+        5 => 'Premium Bonds',
+        6 => 'Property',
+        7 => 'Stocks and shares',
+        8 => 'Unit trusts',
+        9 => 'Vehicles',
+        10 => 'Assets held outside England and Wales',
+        11 => 'Other valuable assets',
+    ];
+
     /**
      * @When I visit and start the assets report section
      */
@@ -32,10 +49,8 @@ trait AssetsSectionTrait
     {
         $this->iAmOnAssetsExistPage();
 
-        $this->selectOption('yes_no[noAssetToAdd]', '1');
+        $this->chooseOption('yes_no[noAssetToAdd]', '1', 'assetsToAdd', 'No');
         $this->pressButton('Save and continue');
-
-        $this->assetResponse[] = ['no'];
     }
 
     /**
@@ -45,10 +60,8 @@ trait AssetsSectionTrait
     {
         $this->iAmOnAssetsExistPage();
 
-        $this->selectOption('yes_no[noAssetToAdd]', '0');
+        $this->chooseOption('yes_no[noAssetToAdd]', '0', 'assetsToAdd', 'Yes');
         $this->pressButton('Save and continue');
-
-        $this->assetResponse[] = ['yes'];
     }
 
     /**
@@ -58,15 +71,14 @@ trait AssetsSectionTrait
     {
         $this->iAmOnAssetTypePage();
 
-        ++$this->assetId;
+        $assetType = $this->assetDictionary[0];
+        $translation = !in_array($assetType, $this->combinedAssetTypes) ?: 'Artwork, antiques and jewellery';
 
-        //Select type of asset
-        ++$this->assetType;
-        $this->iSelectRadioBasedOnChoiceNumber('div', 'data-module', 'govuk-radios', $this->assetType - 1);
+        $this->chooseOption('asset_title[title]', $assetType, 'assetType'.$assetType, $translation);
         $this->pressButton('Save and continue');
 
         //Fill out details about asset
-        $this->iFillAssetDescriptionAndValue($this->assetId, $this->assetType);
+        $this->iFillAssetDescriptionAndValue($assetType);
 
         $this->iAmOnAddAnotherAssetPage();
 
@@ -74,33 +86,31 @@ trait AssetsSectionTrait
         $this->pressButton('Continue');
     }
 
-    private function iFillAssetDescriptionAndValue(int $assetId, int $assetType)
+    private function iFillAssetDescriptionAndValue(string $assetType)
     {
-        $formFields = [];
+        $this->fillInFieldTrackTotal('asset[value]', mt_rand(5, 2000), 'asset-'.$assetType);
+        $this->fillInField('asset[description]', $this->faker->sentence(5, 25), 'asset-'.$assetType);
 
-        $this->fillField('asset[value]', $this->assetId + 100);
-        $this->fillField('asset[description]', 'asset-'.$this->assetId);
-
-        $formFields[] = 'asset-'.$this->assetId;
-        $formFields[] = '-';
-        $formFields[] = '£'.number_format($assetId + 100, 2, '.', ',');
+//        $formFields[] = 'asset-'.$this->assetId;
+//        $formFields[] = '-';
+//        $formFields[] = '£'.number_format($assetId + 100, 2, '.', ',');
 
         $this->pressButton('Save and continue');
 
-        //Antiques, artwork & jewellery assets are grouped into one summary list
-        if (in_array($assetType, [$this->ANTIQUE_ASSET_TYPE, $this->ARTWORK_ASSET_TYPE, $this->JEWELLERY_ASSET_TYPE])) {
-            if (null === $this->assetDetails[0]) {
-                $this->assetDetails[0][] = $formFields;
-            } else {
-                array_unshift($this->assetDetails[0], $formFields);
-            }
-        } else {
-            if (null === $this->assetDetails[$assetType - 1]) {
-                $this->assetDetails[$assetType - 1][] = $formFields;
-            } else {
-                array_unshift($this->assetDetails[$assetType - 1], $formFields);
-            }
-        }
+//        //Antiques, artwork & jewellery assets are grouped into one summary list
+//        if (in_array($assetType, [$this->ANTIQUE_ASSET_TYPE, $this->ARTWORK_ASSET_TYPE, $this->JEWELLERY_ASSET_TYPE])) {
+//            if (null === $this->assetDetails[0]) {
+//                $this->assetDetails[0][] = $formFields;
+//            } else {
+//                array_unshift($this->assetDetails[0], $formFields);
+//            }
+//        } else {
+//            if (null === $this->assetDetails[$assetType - 1]) {
+//                $this->assetDetails[$assetType - 1][] = $formFields;
+//            } else {
+//                array_unshift($this->assetDetails[$assetType - 1], $formFields);
+//            }
+//        }
     }
 
     /**
@@ -147,14 +157,12 @@ trait AssetsSectionTrait
     {
         $this->iAmOnAssetTypePage();
 
-        ++$this->assetId;
+        $assetType = $this->assetDictionary[6];
 
-        //Select Property asset type
-        $this->assetType = $this->PROPERTY_ASSET_TYPE;
-        $this->iSelectRadioBasedOnChoiceNumber('div', 'data-module', 'govuk-radios', $this->assetType - 1);
+        $this->chooseOption('asset_title[title]', $assetType, 'assetType'.$assetType, $assetType.' 1');
         $this->pressButton('Save and continue');
 
-        $this->iFillPropertyDetailsAndValue($this->assetId);
+        $this->iFillPropertyDetailsAndValue();
 
         $this->iAmOnAddAnotherAssetPage();
 
@@ -162,86 +170,43 @@ trait AssetsSectionTrait
         $this->pressButton('Continue');
     }
 
-    private function iFillPropertyDetailsAndValue(int $assetId)
+    private function iFillPropertyDetailsAndValue()
     {
-        $formFields = [];
-
-        // fill address fields
         $streetAddress = $this->faker->streetAddress;
         $streetAddress = str_replace(["\n", "\r"], ' ', $streetAddress);
         $postcode = $this->faker->postcode;
-        $formFields[] = [$streetAddress.' '.$postcode];
 
-        $this->fillField('asset[address]', $streetAddress);
-        $this->fillField('asset[postcode]', $postcode);
+        $this->fillInField('asset[address]', $streetAddress, 'assetDetailsPropertyAddress');
+        $this->fillInField('asset[postcode]', $postcode, 'assetDetailsPropertyAddress');
         $this->pressButton('Save and continue');
 
-        // fill occupancy text box
-        $occupants = $this->faker->text(50);
-        $formFields[] = [$occupants];
-
-        $this->fillField('asset[occupants]', $occupants);
+        $this->fillInField('asset[occupants]', $this->faker->text(50), 'assetDetailsPropertyOccupants');
         $this->pressButton('Save and continue');
 
-        // select partial ownership radio option & fill owned percentage field
-        $ownedPercentage = $this->faker->numberBetween(1, 99);
-        $formFields[] = ['Partly owned'];
-        $formFields[] = [$ownedPercentage.'%'];
+        $this->chooseOption('asset[owned]', 'partly', 'assetDetailsPropertyPercentage', 'Partly owned');
 
-        $this->selectOption('asset[owned]', 'partly');
-        $this->fillField('asset[ownedPercentage]', $ownedPercentage);
+        $percentage = mt_rand(1, 99);
+        $this->fillInField('asset[ownedPercentage]', $percentage, 'assetDetailsPropertyPercentage', $percentage.'%');
+
         $this->pressButton('Save and continue');
 
-        // select has mortgage radio option & fill mortgage value field
-        $mortgageValue = $this->faker->numberBetween(1000, 10000);
-        $formFields[] = ['Yes'];
-        $formFields[] = ['£'.number_format($mortgageValue, 2, '.', ',')];
-
-        $this->selectOption('asset[hasMortgage]', 'yes');
-        $this->fillField('asset[mortgageOutstandingAmount]', $mortgageValue);
+        $this->ChooseOption('asset[hasMortgage]', 'yes', 'assetDetailsPropertyMortgage');
+        $this->fillInField('asset[mortgageOutstandingAmount]', mt_rand(10000, 100000));
         $this->pressButton('Save and continue');
 
-        // fill asset value field
-        $assetValue = $this->faker->numberBetween(1000, 10000);
-        $formFields[] = ['£'.number_format($assetValue, 2, '.', ',')];
-
-        $this->fillField('asset[value]', $assetValue);
+        $this->fillInFieldTrackTotal('asset[value]', mt_rand(100000, 200000), 'assetDetailsPropertyValue');
         $this->pressButton('Save and continue');
 
-        // select no equity release scheme radio option
-        $formFields[] = ['No'];
-
-        $this->selectOption('asset_isSubjectToEquityRelease_1', 'no');
+        $this->chooseOption('asset_isSubjectToEquityRelease_1', 'no', 'assetDetailsPropertyEquityRelease');
         $this->pressButton('Save and continue');
 
-        // select no charges radio option
-        $formFields[] = ['No'];
-
-        $this->selectOption('asset[hasCharges]', 'no');
+        $this->chooseOption('asset[hasCharges]', 'no', 'assetDetailsPropertyCharges');
         $this->pressButton('Save and continue');
 
-        // select property rented out option & fill additional fields
-        $endMonth = $this->faker->numberBetween(1, 12);
-        $endYear = $this->faker->numberBetween(2000, 2050);
-        $rent = $this->faker->numberBetween(100, 1000);
-
-        $formFields[] = ['Yes'];
-        $month_name = date('F', mktime(0, 0, 0, $endMonth, 10));
-        $formFields[] = [$month_name.' '.$endYear];
-        $formFields[] = ['£'.number_format($rent, 2, '.', ',')];
-
-        $this->selectOption('asset[isRentedOut]', 'yes');
-        $this->fillField('asset[rentAgreementEndDate][month]', $endMonth);
-        $this->fillField('asset[rentAgreementEndDate][year]', $endYear);
-        $this->fillField('asset_rentIncomeMonth', $rent);
+        $this->chooseOption('asset[isRentedOut]', 'yes', 'assetDetailsPropertyRented');
+        $this->fillInDateFields('asset[rentAgreementEndDate]', null, mt_rand(1, 12), mt_rand(2018, 2028), 'assetDetailsPropertyRented');
+        $this->fillInField('asset_rentIncomeMonth', mt_rand(100, 1000), 'assetDetailsPropertyRented');
         $this->pressButton('Save and continue');
-
-        // save fields
-        if (null === $this->assetDetails[$this->PROPERTY_ASSET_TYPE - 1]) {
-            $this->assetDetails[$this->PROPERTY_ASSET_TYPE - 1][] = $formFields;
-        } else {
-            array_unshift($this->assetDetails[$this->PROPERTY_ASSET_TYPE - 1], $formFields);
-        }
     }
 
     /**
@@ -278,45 +243,61 @@ trait AssetsSectionTrait
     {
         $this->iAmOnAssetsSummaryPage();
 
-        $sectionNumber = 0;
-        if ($this->assetResponse[0] == ['yes']) {
-            $this->expectedResultsDisplayed($sectionNumber, $this->assetResponse, 'Asset Answers to Questions');
-            ++$sectionNumber;
+        $properties = $this->getSectionAnswers('assetDetailsPropertyPercentage') ?: [];
 
-            //Sort asset sections into the order they appear on the summary page
-            $sortedResults = $this->sortAssetsAndSections();
-            //Calculate the total value of assets for each asset section
-            $sortedResults = $this->calculateAssetTotalsForSections($sortedResults);
+        foreach ($properties as $index => $propertyPercentageAnswers) {
+            if ('Partly owned' === $this->getSectionAnswers('assetDetailsPropertyPercentage')[$index]['asset[owned]']) {
+                $propertyValue = $this->getSectionTotal('assetDetailsPropertyValue');
+                $ownedPercentage = $this->getSectionAnswers('assetDetailsPropertyPercentage')[$index]['asset[ownedPercentage]'];
 
-            //Loop through each asset section
-            foreach ($sortedResults as $index => $sectionAssets) {
-                if ($index == $this->PROPERTY_ASSET_TYPE - 1) {
-                    $this->expectedResultsDisplayed($sectionNumber, $sectionAssets[0], 'Asset Details');
-                } else {
-                    $this->expectedResultsDisplayed($sectionNumber, $sectionAssets, 'Asset Details');
-                }
-                ++$sectionNumber;
+                $this->subtractFromGrandTotal($propertyValue);
+
+                $this->addToGrandTotal($propertyValue * intval($ownedPercentage) / 100);
             }
-
-            //Calculate total value of all assets
-            $expectedTotalValue = $this->calculateTotalValueOfAssets($sortedResults);
-            $formattedExpectedTotalValue = '£'.number_format($expectedTotalValue, 2, '.', ',');
-
-            $xpath = sprintf('//div[contains(text(),"Total value of assets:")]');
-            $foundTotalValue = $this->getSession()->getPage()->find('xpath', $xpath)->getHtml();
-
-            //Assert expected total value of all assets matches found total value of all assets
-            $validTotal = str_contains($foundTotalValue, strval($formattedExpectedTotalValue));
-
-            if (!$validTotal) {
-                $this->throwContextualException(
-                    sprintf('Total value of assets does not match. Found Total Value: %s but expected Total Value is %s',
-                            $foundTotalValue,
-                            $formattedExpectedTotalValue));
-            }
-        } else {
-            $this->expectedResultsDisplayed(0, $this->assetResponse, 'Asset Answers to Questions');
         }
+
+        var_dump($this->submittedAnswersByFormSections);
+        $this->expectedResultsDisplayedSimplified();
+
+//        $sectionNumber = 0;
+//        if ($this->assetResponse[0] == ['yes']) {
+//            $this->expectedResultsDisplayed($sectionNumber, $this->assetResponse, 'Asset Answers to Questions');
+//            ++$sectionNumber;
+//
+//            //Sort asset sections into the order they appear on the summary page
+//            $sortedResults = $this->sortAssetsAndSections();
+//            //Calculate the total value of assets for each asset section
+//            $sortedResults = $this->calculateAssetTotalsForSections($sortedResults);
+//
+//            //Loop through each asset section
+//            foreach ($sortedResults as $index => $sectionAssets) {
+//                if ($index == $this->PROPERTY_ASSET_TYPE - 1) {
+//                    $this->expectedResultsDisplayed($sectionNumber, $sectionAssets[0], 'Asset Details');
+//                } else {
+//                    $this->expectedResultsDisplayed($sectionNumber, $sectionAssets, 'Asset Details');
+//                }
+//                ++$sectionNumber;
+//            }
+//
+//            //Calculate total value of all assets
+//            $expectedTotalValue = $this->calculateTotalValueOfAssets($sortedResults);
+//            $formattedExpectedTotalValue = '£'.number_format($expectedTotalValue, 2, '.', ',');
+//
+//            $xpath = sprintf('//div[contains(text(),"Total value of assets:")]');
+//            $foundTotalValue = $this->getSession()->getPage()->find('xpath', $xpath)->getHtml();
+//
+//            //Assert expected total value of all assets matches found total value of all assets
+//            $validTotal = str_contains($foundTotalValue, strval($formattedExpectedTotalValue));
+//
+//            if (!$validTotal) {
+//                $this->throwContextualException(
+//                    sprintf('Total value of assets does not match. Found Total Value: %s but expected Total Value is %s',
+//                            $foundTotalValue,
+//                            $formattedExpectedTotalValue));
+//            }
+//        } else {
+//            $this->expectedResultsDisplayed(0, $this->assetResponse, 'Asset Answers to Questions');
+//        }
     }
 
     private function calculateAssetTotalsForSections(array $sortedAssetDetails)
