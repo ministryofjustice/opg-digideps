@@ -97,19 +97,6 @@ default:
             contexts:
                 - App\Tests\Behat\DocumentSynchronisation\DocumentSynchronisationFeatureContext
 
-        # features-v2
-        reporting-preview:
-            description: Coverage of report preview functionality
-            paths: [ "%paths.base%/features-v2/reporting/preview" ]
-            contexts:
-                - App\Tests\Behat\Reporting\ReportingFeatureContext
-
-        contact-details:
-            description: Coverage of displaying contact details based on user role
-            paths: [ "%paths.base%/features-v2/contact-details" ]
-            contexts:
-                - App\Tests\Behat\ContactDetails\ContactDetailsFeatureContext
-
     extensions:
         Behat\MinkExtension:
             goutte:
@@ -219,6 +206,12 @@ v2-tests-goutte:
             paths: [ "%paths.base%/features-v2/client-management" ]
             contexts:
                 - App\Tests\Behat\v2\ClientManagement\ClientManagementFeatureContext
+
+        contact-details:
+            description: Coverage of displaying contact details based on user role
+            paths: [ "%paths.base%/features-v2/contact-details" ]
+            contexts:
+                - App\Tests\Behat\v2\ContactDetails\ContactDetailsFeatureContext
 
         deputy-management:
             description: Coverage of deputy management features - adding, deleting, editing
