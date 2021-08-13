@@ -1,4 +1,4 @@
-@v2 @assets
+@v2 @assets @acs
 Feature: Assets
 
     @lay-pfa-high-not-started
@@ -15,17 +15,17 @@ Feature: Assets
         Given a Lay Deputy has not started a report
         When I visit and start the assets report section
         And I confirm the client has assets
-        And I add a single asset
+        And I add 1 asset
         Then I should see the expected assets report section responses
         When I follow link back to report overview page
         Then I should see "assets" as "1 asset"
 
-    @lay-pfa-high-not-started @acs
+    @lay-pfa-high-not-started
     Scenario: A user adds a single property asset
         Given a Lay Deputy has not started a report
         When I visit and start the assets report section
         And I confirm the client has assets
-        And I add a single property asset
+        And I add 1 property asset
         Then I should see the expected assets report section responses
         When I follow link back to report overview page
         Then I should see "assets" as "1 asset"
@@ -45,7 +45,8 @@ Feature: Assets
         Given a Lay Deputy has not started a report
         When I visit and start the assets report section
         And I confirm the client has assets
-        And I add 12 assets including a property
+        And I add 12 assets
+        And I add 1 property asset
         Then I should see the expected assets report section responses
         When I follow link back to report overview page
         Then I should see "assets" as "12 assets"
