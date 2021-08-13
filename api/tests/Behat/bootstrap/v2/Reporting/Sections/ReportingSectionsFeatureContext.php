@@ -4,6 +4,7 @@ declare(strict_types=1);
 
 namespace App\Tests\Behat\v2\Reporting\Sections;
 
+use App\Tests\Behat\BehatException;
 use App\Tests\Behat\v2\Common\BaseFeatureContext;
 
 class ReportingSectionsFeatureContext extends BaseFeatureContext
@@ -37,17 +38,13 @@ class ReportingSectionsFeatureContext extends BaseFeatureContext
         $anchor = $this->getSession()->getPage()->find('named', ['link', 'Navigate to previous part']);
 
         if (!$anchor) {
-            $this->throwContextualException(
-                'Previous section link is not visible on the page (searched by title = "Navigate to previous part")'
-            );
+            throw new BehatException('Previous section link is not visible on the page (searched by title = "Navigate to previous part")');
         }
 
         $linkTextContainsSectionName = str_contains($anchor->getText(), $sectionName);
 
         if (!$linkTextContainsSectionName) {
-            $this->throwContextualException(
-                sprintf('Link contained unexpected text. Wanted: %s. Got: %s ', $sectionName, $anchor->getText())
-            );
+            throw new BehatException(sprintf('Link contained unexpected text. Wanted: %s. Got: %s ', $sectionName, $anchor->getText()));
         }
     }
 
@@ -59,17 +56,13 @@ class ReportingSectionsFeatureContext extends BaseFeatureContext
         $anchor = $this->getSession()->getPage()->find('named', ['link', 'Navigate to next part']);
 
         if (!$anchor) {
-            $this->throwContextualException(
-                'Next section link is not visible on the page (searched by title = "Navigate to next part")'
-            );
+            throw new BehatException('Next section link is not visible on the page (searched by title = "Navigate to next part")');
         }
 
         $linkTextContainsSectionName = str_contains(strtolower($anchor->getText()), strtolower($sectionName));
 
         if (!$linkTextContainsSectionName) {
-            $this->throwContextualException(
-                sprintf('Link contained unexpected text. Wanted: %s. Got: %s ', $sectionName, $anchor->getText())
-            );
+            throw new BehatException(sprintf('Link contained unexpected text. Wanted: %s. Got: %s ', $sectionName, $anchor->getText()));
         }
     }
 
@@ -138,15 +131,11 @@ class ReportingSectionsFeatureContext extends BaseFeatureContext
         }
 
         if (!$sectionExists) {
-            $this->throwContextualException(
-                sprintf('href matching "%s" not found on %s.', $sectionFormatted, $this->getCurrentUrl())
-            );
+            throw new BehatException(sprintf('href matching "%s" not found on %s.', $sectionFormatted, $this->getCurrentUrl()));
         }
 
         if (!$statusCorrect) {
-            $this->throwContextualException(
-                sprintf('Report section status not as expected. Status "%s" not found. Found: %s.', $status, $foundHtml)
-            );
+            throw new BehatException(sprintf('Report section status not as expected. Status "%s" not found. Found: %s.', $status, $foundHtml));
         }
     }
 
@@ -158,13 +147,13 @@ class ReportingSectionsFeatureContext extends BaseFeatureContext
         $table = $this->getSession()->getPage()->find('css', 'dl');
 
         if (!$table) {
-            $this->throwContextualException('A dl element was not found on the page');
+            throw new BehatException('A dl element was not found on the page');
         }
 
         $tableEntry = $table->findAll('css', 'dd');
 
         if (!$tableEntry) {
-            $this->throwContextualException('A dd element was not found on the page');
+            throw new BehatException('A dd element was not found on the page');
         }
 
         $furtherInfoNeeded = false;

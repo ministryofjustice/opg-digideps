@@ -21,13 +21,7 @@ trait AlertsTrait
         $alertMessageFound = str_contains($alertHtml, $alertMessage);
 
         if (!$alertMessageFound) {
-            $this->throwContextualException(
-                sprintf(
-                    'The alert element did not contain the expected message. Expected: "%s", got (full HTML): %s',
-                    $alertMessage,
-                    $alertHtml
-                )
-            );
+            throw new BehatException(sprintf('The alert element did not contain the expected message. Expected: "%s", got (full HTML): %s', $alertMessage, $alertHtml));
         }
     }
 }

@@ -4,6 +4,8 @@ declare(strict_types=1);
 
 namespace App\Tests\Behat\v2\Reporting\Sections;
 
+use App\Tests\Behat\BehatException;
+
 trait AdditionalInformationSectionTrait
 {
     /**
@@ -20,7 +22,7 @@ trait AdditionalInformationSectionTrait
         $onSummaryPage = preg_match('/report\/.*\/any-other-info$/', $currentUrl);
 
         if (!$onSummaryPage) {
-            $this->throwContextualException(sprintf('Not on additional information start page. Current URL is: %s', $currentUrl));
+            throw new BehatException(sprintf('Not on additional information start page. Current URL is: %s', $currentUrl));
         }
     }
 

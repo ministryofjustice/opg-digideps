@@ -4,6 +4,8 @@ declare(strict_types=1);
 
 namespace App\Tests\Behat\v2\OrganisationManagement;
 
+use App\Tests\Behat\BehatException;
+
 trait OrganisationManagementTrait
 {
     private array $organisations;
@@ -44,14 +46,10 @@ trait OrganisationManagementTrait
 
         foreach ($this->organisations as $org) {
             if (!in_array(strtolower($org['Name']), $formattedDataElements)) {
-                $this->throwContextualException(
-                    sprintf('Could not find Organisation Name. Expected name is %s', $org['Name'])
-                );
+                throw new BehatException(sprintf('Could not find Organisation Name. Expected name is %s', $org['Name']));
             }
             if (!in_array(strtolower('*@'.$org['Email']), $formattedDataElements)) {
-                $this->throwContextualException(
-                    sprintf('Could not find Organisation Email Domain. Expected Email Domain name is %s', '*@'.$org['Email'])
-                );
+                throw new BehatException(sprintf('Could not find Organisation Email Domain. Expected Email Domain name is %s', '*@'.$org['Email']));
             }
         }
     }
@@ -183,17 +181,13 @@ trait OrganisationManagementTrait
         $orgName = end($this->organisations)['Name'];
 
         if (in_array(strtolower($orgName), $formattedDataElements)) {
-            $this->throwContextualException(
-                sprintf('Found Organisation Name: %s. Expected organisation to be deleted.', $orgName)
-            );
+            throw new BehatException(sprintf('Found Organisation Name: %s. Expected organisation to be deleted.', $orgName));
         }
 
         $email = end($this->organisations)['Email'];
 
         if (in_array(strtolower('*@'.$email), $formattedDataElements)) {
-            $this->throwContextualException(
-                sprintf('Found Organisation Email Domain: %s. Expected organisation to be deleted.', $email)
-            );
+            throw new BehatException(sprintf('Found Organisation Email Domain: %s. Expected organisation to be deleted.', $email));
         }
     }
 
@@ -221,9 +215,7 @@ trait OrganisationManagementTrait
         }
 
         if (!$foundLink) {
-            $this->throwContextualException(
-                sprintf('Could not find link to delete organisation. Organisation Id: %s', $orgId)
-            );
+            throw new BehatException(sprintf('Could not find link to delete organisation. Organisation Id: %s', $orgId));
         }
     }
 
@@ -238,9 +230,7 @@ trait OrganisationManagementTrait
 
         foreach ($links as $link) {
             if (str_ends_with($link->getAttribute('href'), '/delete')) {
-                $this->throwContextualException(
-                    sprintf('Found unexpected delete link on Organisation Search Page')
-                );
+                throw new BehatException(sprintf('Found unexpected delete link on Organisation Search Page'));
             }
         }
     }

@@ -2,6 +2,8 @@
 
 namespace App\Tests\Behat\v2\Common;
 
+use App\Tests\Behat\BehatException;
+
 trait IVisitAdminTrait
 {
     /**
@@ -10,9 +12,7 @@ trait IVisitAdminTrait
     public function iVisitAdminClientSearchPage()
     {
         if (!in_array($this->loggedInUserDetails->getUserRole(), $this->loggedInUserDetails::ADMIN_ROLES)) {
-            $this->throwContextualException(
-                'Attempting to access an admin page as a non-admin user. Try logging in as an admin user instead'
-            );
+            throw new BehatException('Attempting to access an admin page as a non-admin user. Try logging in as an admin user instead');
         }
 
         $this->visitAdminPath($this->getAdminClientSearchUrl());
@@ -24,9 +24,7 @@ trait IVisitAdminTrait
     public function iVisitAdminLayClientDetailsPage()
     {
         if (!in_array($this->loggedInUserDetails->getUserRole(), $this->loggedInUserDetails::ADMIN_ROLES)) {
-            $this->throwContextualException(
-                'Attempting to access an admin page as a non-admin user. Try logging in as an admin user instead'
-            );
+            throw new BehatException('Attempting to access an admin page as a non-admin user. Try logging in as an admin user instead');
         }
 
         $clientDetailsUrl = $this->getAdminClientDetailsUrl($this->layDeputySubmittedPfaHighAssetsDetails->getClientId());
@@ -52,9 +50,7 @@ trait IVisitAdminTrait
     public function iVisitAdminOrgClientDetailsPage()
     {
         if (!in_array($this->loggedInUserDetails->getUserRole(), $this->loggedInUserDetails::ADMIN_ROLES)) {
-            $this->throwContextualException(
-                'Attempting to access an admin page as a non-admin user. Try logging in as an admin user instead'
-            );
+            throw new BehatException('Attempting to access an admin page as a non-admin user. Try logging in as an admin user instead');
         }
 
         $clientDetailsUrl = $this->getAdminClientDetailsUrl($this->profAdminDeputyHealthWelfareSubmittedDetails->getClientId());

@@ -4,6 +4,8 @@ declare(strict_types=1);
 
 namespace App\Tests\Behat\v2\Reporting\Sections;
 
+use App\Tests\Behat\BehatException;
+
 trait ContactsSectionTrait
 {
     private bool $hasContacts = false;
@@ -22,7 +24,7 @@ trait ContactsSectionTrait
         $onSummaryPage = preg_match('/report\/.*\/contacts$/', $currentUrl);
 
         if (!$onSummaryPage) {
-            $this->throwContextualException(sprintf('Not on contacts start page. Current URL is: %s', $currentUrl));
+            throw new BehatException(sprintf('Not on contacts start page. Current URL is: %s', $currentUrl));
         }
     }
 

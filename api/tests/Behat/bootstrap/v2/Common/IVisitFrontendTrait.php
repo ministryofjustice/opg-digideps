@@ -4,6 +4,8 @@ declare(strict_types=1);
 
 namespace App\Tests\Behat\v2\Common;
 
+use App\Tests\Behat\BehatException;
+
 trait IVisitFrontendTrait
 {
     /**
@@ -28,9 +30,7 @@ trait IVisitFrontendTrait
     public function iVisitReportSubmissionPage()
     {
         if (is_null($this->loggedInUserDetails->getPreviousReportId())) {
-            $this->throwContextualException(
-                "Logged in user doesn't have a previous report ID associated with them. Try using a user that has submitted a report instead."
-            );
+            throw new BehatException("Logged in user doesn't have a previous report ID associated with them. Try using a user that has submitted a report instead.");
         }
 
         $submittedReportUrl = $this->getReportSubmittedUrl($this->loggedInUserDetails->getPreviousReportId());

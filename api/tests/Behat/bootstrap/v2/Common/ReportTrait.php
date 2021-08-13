@@ -25,7 +25,7 @@ trait ReportTrait
             $this->clickLink('Preview and check report');
         } catch (Exception $e) {
             // Convert once we start to look at NDRs
-            $this->throwContextualException("Couldn't find link with text 'Preview and check report'");
+            throw new BehatException("Couldn't find link with text 'Preview and check report'");
 //            $link = $reportType === 'ndr' ? 'edit-report-review' : 'edit-report_submit';
 //            $this->clickOnBehatLink($link);
         }

@@ -5,6 +5,7 @@ declare(strict_types=1);
 namespace App\Tests\Behat\v2\Common;
 
 use App\Entity\User;
+use App\Tests\Behat\BehatException;
 use App\Tests\Behat\v2\Helpers\FixtureHelper;
 use Behat\Gherkin\Node\TableNode;
 
@@ -111,9 +112,7 @@ trait FixturesTrait
     public function assertInteractingWithUserIsSet()
     {
         if (is_null($this->interactingWithUserDetails)) {
-            $this->throwContextualException(
-                'An interacting with User has not been set. Ensure a previous step in the scenario has set this User and try again.'
-            );
+            throw new BehatException('An interacting with User has not been set. Ensure a previous step in the scenario has set this User and try again.');
         }
     }
 

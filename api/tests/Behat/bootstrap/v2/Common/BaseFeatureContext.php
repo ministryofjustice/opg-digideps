@@ -4,7 +4,6 @@ declare(strict_types=1);
 
 namespace App\Tests\Behat\v2\Common;
 
-use App\Tests\Behat\BehatException;
 use App\Tests\Behat\v2\Analytics\AnalyticsTrait;
 use App\Tests\Behat\v2\Helpers\FixtureHelper;
 use Behat\Mink\Driver\GoutteDriver;
@@ -484,11 +483,6 @@ class BaseFeatureContext extends MinkContext
         } else {
             return $this->getSession()->getPage()->getText();
         }
-    }
-
-    public function throwContextualException(string $message)
-    {
-        throw new BehatException($message);
     }
 
     public function getCurrentUrl(): string

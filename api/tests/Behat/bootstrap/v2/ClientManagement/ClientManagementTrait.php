@@ -4,6 +4,7 @@ declare(strict_types=1);
 
 namespace App\Tests\Behat\v2\ClientManagement;
 
+use App\Tests\Behat\BehatException;
 use App\Tests\Behat\v2\Common\UserDetails;
 use DateTime;
 
@@ -98,14 +99,7 @@ trait ClientManagementTrait
         $clientNameFoundCount = substr_count($searchResultsHtml, $fullClientName);
 
         if ($clientNameFoundCount < $this->clientCount) {
-            $this->throwContextualException(
-                sprintf(
-                    'The client search results list did not contain the required occurrences of the clients full name. Expected: "%s" (at least %s times), got (full HTML): %s',
-                    $fullClientName,
-                    $this->clientCount,
-                    $searchResultsHtml
-                )
-            );
+            throw new BehatException(sprintf('The client search results list did not contain the required occurrences of the clients full name. Expected: "%s" (at least %s times), got (full HTML): %s', $fullClientName, $this->clientCount, $searchResultsHtml));
         }
     }
 
@@ -122,24 +116,14 @@ trait ClientManagementTrait
         $foundNClients = str_contains($searchResultsHtml, $searchString);
 
         if (!$foundNClients) {
-            $this->throwContextualException(
-                sprintf(
-                    'The client search results list did not count the correct number of clients found. Expected: "%s", got (full HTML): %s',
-                    $searchString,
-                    $searchResultsHtml
-                )
-            );
+            throw new BehatException(sprintf('The client search results list did not count the correct number of clients found. Expected: "%s", got (full HTML): %s', $searchString, $searchResultsHtml));
         }
     }
 
     private function assertClientCountSet()
     {
         if (is_null($this->clientCount)) {
-            $this->throwContextualException(
-                sprintf(
-                    "You're attempting to run a step definition that requires this->clientCount to be set but its null. Set it and try again."
-                )
-            );
+            throw new BehatException(sprintf("You're attempting to run a step definition that requires this->clientCount to be set but its null. Set it and try again."));
         }
     }
 
@@ -152,12 +136,7 @@ trait ClientManagementTrait
         $noClientsFound = str_contains($searchResultsHtml, 'No clients found');
 
         if (!$noClientsFound) {
-            $this->throwContextualException(
-                sprintf(
-                    'The client search results list did not display "No clients found". Expected: "No clients found", got (full HTML): %s',
-                    $searchResultsHtml
-                )
-            );
+            throw new BehatException(sprintf('The client search results list did not display "No clients found". Expected: "No clients found", got (full HTML): %s', $searchResultsHtml));
         }
     }
 
@@ -177,7 +156,7 @@ This suggests one of the following:
 - the class of the search results div has been changed
 MESSAGE;
 
-            $this->throwContextualException($missingDivMessage);
+            throw new BehatException($missingDivMessage);
         }
 
         return $searchResultsDiv->getHtml();
@@ -195,13 +174,7 @@ MESSAGE;
         $courtOrderNumberPresent = str_contains($pageContent, $courtOrderNumber);
 
         if (!$courtOrderNumberPresent) {
-            $this->throwContextualException(
-                sprintf(
-                    'Expected court order number not found. Wanted: %s, got (full HTML): %s',
-                    $courtOrderNumber,
-                    $pageContent
-                )
-            );
+            throw new BehatException(sprintf('Expected court order number not found. Wanted: %s, got (full HTML): %s', $courtOrderNumber, $pageContent));
         }
     }
 
@@ -236,14 +209,7 @@ MESSAGE;
             $missingDetailsString = implode(', ', $missingDetails);
             $detailsToAssertOnString = implode(', ', $detailsToAssertOn);
 
-            $this->throwContextualException(
-                sprintf(
-                    'Some client details were missing: %s. Wanted: %s, got (full HTML): %s',
-                    $missingDetailsString,
-                    $detailsToAssertOnString,
-                    $pageContent
-                )
-            );
+            throw new BehatException(sprintf('Some client details were missing: %s. Wanted: %s, got (full HTML): %s', $missingDetailsString, $detailsToAssertOnString, $pageContent));
         }
     }
 
@@ -260,13 +226,7 @@ MESSAGE;
         $currentReportDueDateVisible = str_contains($pageContent, $currentReportDateString);
 
         if (!$currentReportDueDateVisible) {
-            $this->throwContextualException(
-                sprintf(
-                    'Expected to find report with a due date of "%s" visible but it does not appear on the page. Got (full HTML): %s',
-                    $currentReportDateString,
-                    $pageContent
-                )
-            );
+            throw new BehatException(sprintf('Expected to find report with a due date of "%s" visible but it does not appear on the page. Got (full HTML): %s', $currentReportDateString, $pageContent));
         }
 
         if (!is_null($this->interactingWithUserDetails->getPreviousReportDueDate())) {
@@ -274,13 +234,7 @@ MESSAGE;
             $previousReportDueDateVisible = str_contains($pageContent, $previousReportDateString);
 
             if (!$previousReportDueDateVisible) {
-                $this->throwContextualException(
-                    sprintf(
-                        'Expected to find report with a due date of "%s" visible but it does not appear on the page. Got (full HTML): %s',
-                        $previousReportDateString,
-                        $pageContent
-                    )
-                );
+                throw new BehatException(sprintf('Expected to find report with a due date of "%s" visible but it does not appear on the page. Got (full HTML): %s', $previousReportDateString, $pageContent));
             }
         }
     }
@@ -299,13 +253,7 @@ MESSAGE;
         $orgNameLinkVisible = str_contains($linkHtml, $this->interactingWithUserDetails->getOrganisationName());
 
         if (!$orgNameLinkVisible) {
-            $this->throwContextualException(
-                sprintf(
-                    'Expected to find a link with the text "%s" visible but it does not appear on the page. Got (full HTML): %s',
-                    $this->interactingWithUserDetails->getCurrentReportDueDate(),
-                    $this->getSession()->getPage()->find('css', 'main#main-content')->getHtml()
-                )
-            );
+            throw new BehatException(sprintf('Expected to find a link with the text "%s" visible but it does not appear on the page. Got (full HTML): %s', $this->interactingWithUserDetails->getCurrentReportDueDate(), $this->getSession()->getPage()->find('css', 'main#main-content')->getHtml()));
         }
     }
 
@@ -330,14 +278,7 @@ MESSAGE;
         $namedDeputyEmailVisible = str_contains($namedDeputyNameDivHtml, $namedDeputyEmail);
 
         if (!$namedDeputyNameVisible || !$namedDeputyEmailVisible) {
-            $this->throwContextualException(
-                sprintf(
-                    'Expected to find the named deputy details (Name: "%s", Email: "%s") but they do not appear on the page. Got (full HTML): %s',
-                    $namedDeputyName,
-                    $namedDeputyEmail,
-                    $this->getSession()->getPage()->find('css', 'main#main-content')->getHtml()
-                )
-            );
+            throw new BehatException(sprintf('Expected to find the named deputy details (Name: "%s", Email: "%s") but they do not appear on the page. Got (full HTML): %s', $namedDeputyName, $namedDeputyEmail, $this->getSession()->getPage()->find('css', 'main#main-content')->getHtml()));
         }
     }
 
@@ -373,9 +314,7 @@ MESSAGE;
         $clientIsDischarged = str_contains($clientDtHtml, $todayString);
 
         if (!$clientIsDischarged) {
-            $this->throwContextualException(
-                sprintf('The client does not appear to be discharged. Expected: %s, got (HTML of discharged dt): %s', $todayString, $clientDtHtml)
-            );
+            throw new BehatException(sprintf('The client does not appear to be discharged. Expected: %s, got (HTML of discharged dt): %s', $todayString, $clientDtHtml));
         }
     }
 
@@ -394,9 +333,7 @@ MESSAGE;
         if (!is_null($dischargedOnVisible)) {
             $clientDtHtml = $this->getSession()->getPage()->find('xpath', $dischargedOnSelector)->getHtml();
 
-            $this->throwContextualException(
-                sprintf('The client appears to be discharged. Expected "Discharged on" not to appear, got (HTML of discharged dt): %s', $clientDtHtml)
-            );
+            throw new BehatException(sprintf('The client appears to be discharged. Expected "Discharged on" not to appear, got (HTML of discharged dt): %s', $clientDtHtml));
         }
     }
 }
