@@ -44,6 +44,6 @@ services:
       - ./client/phpstan.neon:/var/www/phpstan.neon
       - ./client/bin:/var/www/vendor/bin
 
-  wkhtmltopdf:
+  htmltopdf:
     volumes:
-      - ./wkhtmltopdf/app.py:/app.py
+      - ./htmltopdf/app.py:/app.py

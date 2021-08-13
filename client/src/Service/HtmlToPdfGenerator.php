@@ -3,10 +3,10 @@
 namespace App\Service;
 
 /**
- * Client to connect to docker-wkhtmltopdf-aas
- * https://github.com/openlabs/docker-wkhtmltopdf-aas.
+ * Client to connect to docker-htmltopdf-aas
+ * https://github.com/openlabs/docker-htmltopdf-aas.
  */
-class WkHtmlToPdfGenerator
+class HtmlToPdfGenerator
 {
     /**
      * @var string
@@ -39,17 +39,17 @@ class WkHtmlToPdfGenerator
      */
     public function getPdfFromHtml($html)
     {
-        //Example from https://github.com/openlabs/docker-wkhtmltopdf-aas/issues/18
+        //Example from https://github.com/openlabs/docker-htmltopdf-aas/issues/18
         $data = [
             'contents' => base64_encode($html),
             'options' => [
-                'encoding' => 'utf-8'
+                'encoding' => 'utf-8',
             ],
         ];
         $dataString = json_encode($data);
         $headers = [
             'Content-Type: application/json',
-            'Content-Length: ' . strlen($dataString),
+            'Content-Length: '.strlen($dataString),
         ];
 
         $ch = curl_init();

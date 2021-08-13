@@ -4,14 +4,13 @@ namespace App\Controller;
 
 use App\Service\Availability\ApiAvailability;
 use App\Service\Availability\ClamAvAvailability;
+use App\Service\Availability\HtmlToPdfAvailability;
 use App\Service\Availability\NotifyAvailability;
 use App\Service\Availability\RedisAvailability;
 use App\Service\Availability\SiriusApiAvailability;
-use App\Service\Availability\WkHtmlToPdfAvailability;
-use Psr\Container\ContainerInterface;
+use Sensio\Bundle\FrameworkExtraBundle\Configuration\Template;
 use Symfony\Component\HttpFoundation\Response;
 use Symfony\Component\Routing\Annotation\Route;
-use Sensio\Bundle\FrameworkExtraBundle\Configuration\Template;
 
 /**
  * @Route("/manage")
@@ -35,12 +34,6 @@ class ManageController extends AbstractController
     /**
      * @Route("/availability", methods={"GET"})
      *
-     * @param ApiAvailability $apiAvailability
-     * @param NotifyAvailability $notifyAvailability
-     * @param RedisAvailability $redisAvailability
-     * @param SiriusApiAvailability $siriusAvailability
-     * @param ClamAvAvailability $clamAvailability
-     * @param WkHtmlToPdfAvailability $wkHtmlAvailability
      * @return Response|null
      */
     public function availabilityAction(
@@ -49,15 +42,15 @@ class ManageController extends AbstractController
         RedisAvailability $redisAvailability,
         SiriusApiAvailability $siriusAvailability,
         ClamAvAvailability $clamAvailability,
-        WkHtmlToPdfAvailability $wkHtmlAvailability
+        HtmlToPdfAvailability $wkHtmlAvailability
     ) {
         $services = [
             $apiAvailability,
             $redisAvailability,
-            $notifyAvailability
+            $notifyAvailability,
         ];
 
-        if ($this->environment !== 'admin') {
+        if ('admin' !== $this->environment) {
             $services[] = $siriusAvailability;
             $services[] = $clamAvailability;
             $services[] = $wkHtmlAvailability;
@@ -69,7 +62,7 @@ class ManageController extends AbstractController
             'services' => $services,
             'errors' => $errors,
             'environment' => $this->symfonyEnvironment,
-            'debug' => $this->symfonyDebug
+            'debug' => $this->symfonyDebug,
         ]);
 
         $response->setStatusCode($healthy ? 200 : 500);
@@ -79,10 +72,6 @@ class ManageController extends AbstractController
 
     /**
      * @Route("/availability/pingdom", methods={"GET"})
-     *
-     * @param ApiAvailability $apiAvailability
-     * @param NotifyAvailability $notifyAvailability
-     * @param RedisAvailability $redisAvailability
      *
      * @return Response|null
      */
@@ -94,7 +83,7 @@ class ManageController extends AbstractController
         $services = [
             $apiAvailability,
             $redisAvailability,
-            $notifyAvailability
+            $notifyAvailability,
         ];
         list($healthy, $services, $errors, $time) = $this->servicesHealth($services);
 
@@ -131,7 +120,7 @@ class ManageController extends AbstractController
             $service->ping();
 
             if (!$service->isHealthy()) {
-                if ($service->getName() != 'Sirius') {
+                if ('Sirius' != $service->getName()) {
                     $healthy = false;
                 }
                 $errors[] = $service->getErrors();

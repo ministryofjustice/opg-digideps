@@ -92,7 +92,7 @@ locals {
       { "name": "SESSION_PREFIX", "value": "dd_session_front" },
       { "name": "APP_ENV", "value": "${local.account.app_env}" },
       { "name": "OPG_DOCKER_TAG", "value": "${var.OPG_DOCKER_TAG}" },
-      { "name": "WKHTMLTOPDF_ADDRESS", "value": "http://${local.wkhtmltopdf_service_fqdn}" },
+      { "name": "HTMLTOPDF_ADDRESS", "value": "http://${local.htmltopdf_service_fqdn}" },
       { "name": "ENVIRONMENT", "value": "${local.environment}" },
       { "name": "NGINX_APP_NAME", "value": "frontend" }
     ]

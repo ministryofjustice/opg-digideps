@@ -16,8 +16,8 @@ use Twig\Environment;
 
 class ReportSubmissionService
 {
-    const MSG_NOT_DOWNLOADABLE = 'This report is not downloadable';
-    const MSG_NO_DOCUMENTS = 'No documents found for downloading';
+    public const MSG_NOT_DOWNLOADABLE = 'This report is not downloadable';
+    public const MSG_NO_DOCUMENTS = 'No documents found for downloading';
 
     /**
      * @var S3FileUploader
@@ -35,9 +35,9 @@ class ReportSubmissionService
     private $templating;
 
     /**
-     * @var WkHtmlToPdfGenerator
+     * @var HtmlToPdfGenerator
      */
-    private $wkhtmltopdf;
+    private $htmltopdf;
 
     /**
      * @var MailSenderInterface
@@ -72,14 +72,14 @@ class ReportSubmissionService
         LoggerInterface $logger,
         MailFactory $mailFactory,
         MailSenderInterface $mailSender,
-        WkHtmlToPdfGenerator $wkhtmltopdf
+        HtmlToPdfGenerator $htmltopdf
     ) {
         $this->fileUploader = $fileUploader;
         $this->restClient = $restClient;
         $this->mailSender = $mailSender;
         $this->mailFactory = $mailFactory;
         $this->templating = $templating;
-        $this->wkhtmltopdf = $wkhtmltopdf;
+        $this->htmltopdf = $htmltopdf;
         $this->logger = $logger;
         $this->csvGenerator = $csvGenerator;
     }
@@ -136,7 +136,7 @@ class ReportSubmissionService
             'showSummary' => $showSummary,
         ]);
 
-        return $this->wkhtmltopdf->getPdfFromHtml($html);
+        return $this->htmltopdf->getPdfFromHtml($html);
     }
 
     /**
@@ -163,7 +163,7 @@ class ReportSubmissionService
             'reviewChecklist' => $reviewChecklist,
         ]);
 
-        return $this->wkhtmltopdf->getPdfFromHtml($html);
+        return $this->htmltopdf->getPdfFromHtml($html);
     }
 
     /**
