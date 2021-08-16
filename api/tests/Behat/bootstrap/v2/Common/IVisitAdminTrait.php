@@ -154,4 +154,12 @@ trait IVisitAdminTrait
     {
         $this->visitAdminPath($this->getAdminAnalyticsUrl());
     }
+
+    /**
+     * @When I visit the admin login page
+     */
+    public function iVisitAdminLoginPage()
+    {
+        $this->visitAdminPath('/');
+    }
 }

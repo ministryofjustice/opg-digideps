@@ -262,4 +262,12 @@ trait IVisitFrontendTrait
     {
         $this->visitFrontendPath($this->getDeputyCostsEstimateSectionUrl($this->loggedInUserDetails->getCurrentReportId()));
     }
+
+    /**
+     * @When I visit the frontend login page
+     */
+    public function iVisitFrontLoginPage()
+    {
+        $this->visitFrontendPath('/');
+    }
 }
