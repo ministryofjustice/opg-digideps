@@ -237,17 +237,23 @@ v2-tests-goutte:
             contexts:
                 - App\Tests\Behat\v2\Reporting\Sections\ReportingSectionsFeatureContext
 
-        reporting-checklist:
-            description: Coverage of report checklist feature
-            paths: [ "%paths.base%/features-v2/reporting/report-checklist" ]
-            contexts:
-                - App\Tests\Behat\v2\Reporting\Admin\ReportingAdminFeatureContext
-
         report-management:
             description: Coverage of report management features in the admin side of the app
             paths: [ "%paths.base%/features-v2/report-management" ]
             contexts:
                 - App\Tests\Behat\v2\ReportManagement\ReportManagementFeatureContext
+
+        report-section-navigation:
+            description: Coverage of next and previous links in report sections
+            paths: [ "%paths.base%/features-v2/reporting/section-navigation" ]
+            contexts:
+                - App\Tests\Behat\v2\ReportSectionNavigation\ReportSectionNavigationFeatureContext
+
+        reporting-checklist:
+            description: Coverage of report checklist feature
+            paths: [ "%paths.base%/features-v2/reporting/report-checklist" ]
+            contexts:
+                - App\Tests\Behat\v2\Reporting\Admin\ReportingAdminFeatureContext
 
         section-accounts:
             description: Covering the 'Accounts' section of the report

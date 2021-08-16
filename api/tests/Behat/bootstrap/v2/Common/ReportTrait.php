@@ -66,6 +66,21 @@ trait ReportTrait
     }
 
     /**
+     * @Given a Lay Deputy has submitted a report
+     * @Given a Lay Deputy has submitted a Pfa High Assets report
+     *
+     * @throws Exception
+     */
+    public function aLayDeputyHasSubmittedAReport()
+    {
+        if (empty($this->layDeputySubmittedPfaHighAssetsDetails)) {
+            throw new Exception('It looks like fixtures are not loaded - missing $layDeputySubmittedPfaHighAssetsDetails');
+        }
+
+        $this->loginToFrontendAs($this->layDeputySubmittedPfaHighAssetsDetails->getUserEmail());
+    }
+
+    /**
      * @Given a Lay Deputy has not started an NDR report
      */
     public function aNdrLayDeputyHasNotStartedAReport()
@@ -91,20 +106,6 @@ trait ReportTrait
 
         $this->loginToFrontendAs($this->layNdrDeputyCompletedDetails->getUserEmail());
         $this->reportUrlPrefix = $this->layNdrDeputyCompletedDetails->getCurrentReportNdrOrReport();
-    }
-
-    /**
-     * @Given a Lay Deputy has submitted a report
-     *
-     * @throws Exception
-     */
-    public function aLayDeputyHasSubmittedAReport()
-    {
-        if (empty($this->layDeputySubmittedPfaHighAssetsDetails)) {
-            throw new Exception('It looks like fixtures are not loaded - missing $layDeputySubmittedPfaHighAssetsDetails');
-        }
-
-        $this->loginToFrontendAs($this->layDeputySubmittedPfaHighAssetsDetails->getUserEmail());
     }
 
     /**
@@ -201,6 +202,20 @@ trait ReportTrait
         }
 
         $this->loginToFrontendAs($this->layDeputyCompletedHealthWelfareDetails->getUserEmail());
+    }
+
+    /**
+     * @Given a Lay Deputy has not started a Combined High Assets report
+     */
+    public function aLayDeputyHasNotStartedACombinedHighAssetsReport()
+    {
+        if (empty($this->layDeputyNotStartedCombinedHighDetails)) {
+            throw new Exception('It looks like fixtures are not loaded - missing $layDeputyNotStartedCombinedHighDetails');
+        }
+
+        $this->interactingWithUserDetails = $this->layDeputyNotStartedCombinedHighDetails;
+
+        $this->loginToFrontendAs($this->layDeputyNotStartedCombinedHighDetails->getUserEmail());
     }
 
     /**

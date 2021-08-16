@@ -12,13 +12,6 @@ Feature: Contacts
         Then I should see "contacts" as "no contacts"
 
     @super-admin @lay-health-welfare-not-started
-    Scenario: The section navigation links are correctly displayed
-        Given a Lay Deputy has not started a Health and Welfare report
-        When I view the contacts report section
-        Then the previous section should be "Decisions"
-        And the next section should be "Visits and Care"
-
-    @super-admin @lay-health-welfare-not-started
     Scenario: Adding one contact
         Given a Lay Deputy has not started a Health and Welfare report
         When I view and start the contacts report section

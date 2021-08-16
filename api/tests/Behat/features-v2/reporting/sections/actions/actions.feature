@@ -11,8 +11,6 @@ Feature: Actions
         When I choose no and save on concerns actions section
         Then I should be on the actions report summary page
         And I should see the expected action report section responses
-        And the previous section should be "Debts"
-        And the next section should be "Any other information"
         When I follow link back to report overview page
         Then I should be on the Lay reports overview page
         And I should see "actions" as "finished"

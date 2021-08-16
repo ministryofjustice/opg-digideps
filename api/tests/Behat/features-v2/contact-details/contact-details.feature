@@ -1,4 +1,4 @@
-@contact-details @v2 @acs
+@contact-details @v2
 Feature: Contact details
 
 

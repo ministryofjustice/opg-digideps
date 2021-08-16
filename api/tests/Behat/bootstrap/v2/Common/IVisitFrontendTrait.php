@@ -152,7 +152,7 @@ trait IVisitFrontendTrait
     }
 
     /**
-     * @When I visit the money in report section
+     * @When I visit the money in short report section
      */
     public function iVisitMoneyInShortSection()
     {
@@ -165,5 +165,85 @@ trait IVisitFrontendTrait
     public function iVisitMoneyInShortSummarySection()
     {
         $this->visitFrontendPath($this->getMoneyInShortSectionSummaryUrl($this->loggedInUserDetails->getCurrentReportId()));
+    }
+
+    /**
+     * @When I visit the any other information report section
+     */
+    public function iVisitAnyOtherInfoSection()
+    {
+        $this->visitFrontendPath($this->getAnyOtherInfoUrl($this->loggedInUserDetails->getCurrentReportId()));
+    }
+
+    /**
+     * @When I visit the actions report section
+     */
+    public function iVisitActionsSection()
+    {
+        $this->visitFrontendPath($this->getActionsSectionUrl($this->loggedInUserDetails->getCurrentReportId()));
+    }
+
+    /**
+     * @When I visit the contacts report section
+     */
+    public function iVisitContactsSection()
+    {
+        $this->visitFrontendPath($this->getContactsSectionUrl($this->loggedInUserDetails->getCurrentReportId()));
+    }
+
+    /**
+     * @When I visit the decisions report section
+     */
+    public function iVisitDecisionsSection()
+    {
+        $this->visitFrontendPath($this->getDecisionsSectionUrl($this->loggedInUserDetails->getCurrentReportId()));
+    }
+
+    /**
+     * @When I visit the deputy expenses report section
+     */
+    public function iVisitDeputyExpensesSection()
+    {
+        $this->visitFrontendPath($this->getDeputyExpensesSectionUrl($this->loggedInUserDetails->getCurrentReportId()));
+    }
+
+    /**
+     * @When I visit the documents report section
+     */
+    public function iVisitDocumentsSection()
+    {
+        $this->visitFrontendPath($this->getDocumentsSectionUrl($this->loggedInUserDetails->getCurrentReportId()));
+    }
+
+    /**
+     * @When I visit the gifts report section
+     */
+    public function iVisitGiftsSection()
+    {
+        $this->visitFrontendPath($this->getGiftsSectionUrl($this->loggedInUserDetails->getCurrentReportId()));
+    }
+
+    /**
+     * @When I visit the money transfers report section
+     */
+    public function iVisitMoneyTransfersSection()
+    {
+        $this->visitFrontendPath($this->getMoneyTransfersSectionUrl($this->loggedInUserDetails->getCurrentReportId()));
+    }
+
+    /**
+     * @When I visit the visits and care report section
+     */
+    public function iVisitVisitsAndCareSection()
+    {
+        $this->visitFrontendPath($this->getVisitsAndCareSectionUrl($this->loggedInUserDetails->getCurrentReportId()));
+    }
+
+    /**
+     * @When I visit the money in report section
+     */
+    public function iVisitMoneyInSection()
+    {
+        $this->visitFrontendPath($this->getMoneyInSectionUrl($this->loggedInUserDetails->getCurrentReportId()));
     }
 }
