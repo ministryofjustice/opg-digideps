@@ -1,4 +1,4 @@
-@v2 @section-navigation @acs
+@v2 @section-navigation
 Feature: Section navigation - Lay combined
 #
     @lay-combined-high-not-started

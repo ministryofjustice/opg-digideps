@@ -626,6 +626,20 @@ class FixtureHelper
         return self::buildOrgUserDetails($user);
     }
 
+    public function createProfNamedPfaHighNotStarted(string $testRunId)
+    {
+        $user = $this->createOrgUserClientNamedDeputyAndReport(
+            $testRunId,
+            User::ROLE_PROF_NAMED,
+            'prof-named-pfa-high-assets-not-started',
+            Report::TYPE_102_5,
+            false,
+            false
+        );
+
+        return self::buildOrgUserDetails($user);
+    }
+
     public function createProfNamedPfaHighSubmitted(string $testRunId)
     {
         $user = $this->createOrgUserClientNamedDeputyAndReport(

@@ -246,4 +246,20 @@ trait IVisitFrontendTrait
     {
         $this->visitFrontendPath($this->getMoneyInSectionUrl($this->loggedInUserDetails->getCurrentReportId()));
     }
+
+    /**
+     * @When I visit the deputy fees and expenses section
+     */
+    public function iVisitDeputyFeesAndExpensesSection()
+    {
+        $this->visitFrontendPath($this->getDeputyFeesAndExpensesSectionUrl($this->loggedInUserDetails->getCurrentReportId()));
+    }
+
+    /**
+     * @When I visit the deputy costs estimate report section
+     */
+    public function iVisitDeputyCostsEstimateSection()
+    {
+        $this->visitFrontendPath($this->getDeputyCostsEstimateSectionUrl($this->loggedInUserDetails->getCurrentReportId()));
+    }
 }

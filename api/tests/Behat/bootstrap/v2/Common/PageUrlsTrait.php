@@ -21,8 +21,10 @@ trait PageUrlsTrait
     private string $debtsSummarySectionUrl = '/%s/%s/debts/summary';
     private string $decisionsSectionUrl = '/%s/%s/decisions';
     private string $deputyCostsUrl = '/report/%s/prof-deputy-costs';
+    private string $deputyCostsEstimateSectionUrl = '/%s/%s/prof-deputy-costs-estimate';
     private string $deputyCostsSCCOAssessmentUrl = '/report/%s/prof-deputy-costs/amount-scco';
     private string $deputyExpensesSectionUrl = '/%s/%s/deputy-expenses';
+    private string $deputyFeesExpensesSectionUrl = '/report/%s/pa-fee-expense';
     private string $documentsSectionUrl = '/report/%s/documents';
     private string $giftsSectionUrl = '/%s/%s/gifts';
     private string $healthAndLifestyleSectionUrl = '/%s/%s/lifestyle';
@@ -304,5 +306,15 @@ trait PageUrlsTrait
     public function getMoneyInSectionUrl(int $reportId): string
     {
         return sprintf($this->moneyInSectionUrl, $this->reportUrlPrefix, $reportId);
+    }
+
+    public function getDeputyFeesAndExpensesSectionUrl(int $reportId): string
+    {
+        return sprintf($this->deputyFeesExpensesSectionUrl, $reportId);
+    }
+
+    public function getDeputyCostsEstimateSectionUrl(int $reportId): string
+    {
+        return sprintf($this->deputyCostsEstimateSectionUrl, $this->reportUrlPrefix, $reportId);
     }
 }

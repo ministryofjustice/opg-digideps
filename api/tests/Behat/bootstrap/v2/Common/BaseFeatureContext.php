@@ -266,6 +266,15 @@ class BaseFeatureContext extends MinkContext
     }
 
     /**
+     * @BeforeScenario @prof-named-pfa-high-not-started
+     */
+    public function createProfNamedPfaHighNotStarted()
+    {
+        $userDetails = $this->fixtureHelper->createProfNamedPfaHighNotStarted($this->testRunId);
+        $this->fixtureUsers[] = $this->profNamedDeputyNotStartedPfaHighDetails = new UserDetails($userDetails);
+    }
+
+    /**
      * @BeforeScenario @prof-named-pfa-high-submitted
      */
     public function createProfNamedPfaHighSubmitted()
