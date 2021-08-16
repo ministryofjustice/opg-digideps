@@ -237,4 +237,14 @@ trait VisitsCareSectionTrait
 
         $this->iAmOnVisitsCarePage2();
     }
+
+    /**
+     * @When I can fill in a text box with how often I visit client
+     */
+    public function iCanFillInVisitsTextBox()
+    {
+        $this->iFillFieldForCrossBrowser('visits_care_howOftenDoYouContactClient', 'daily');
+        $this->pressButton('Save and continue');
+//        $this->iAmOnVisitsAndCareStep2Page();
+    }
 }
