@@ -24,6 +24,7 @@ class NamedDeputyTestHelper
             ->setAddress2($faker->city)
             ->setAddress3($faker->county)
             ->setAddressPostcode($faker->postcode)
-            ->setDeputyNo($deputyNumber ?: $faker->randomNumber(8));
+            ->setDeputyNo($deputyNumber ?: $faker->randomNumber(8))
+            ->setPhoneMain($faker->phoneNumber);
     }
 }

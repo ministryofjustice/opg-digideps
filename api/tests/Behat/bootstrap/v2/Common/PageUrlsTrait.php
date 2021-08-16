@@ -44,6 +44,8 @@ trait PageUrlsTrait
     private string $adminFixturesUrl = '/admin/fixtures';
     private string $adminMyUserProfileUrl = '/deputyship-details/your-details';
     private string $adminSatisfactionReportUrl = '/admin/stats/satisfaction';
+    private string $adminSubmissionsPage = '/admin/documents/list';
+    private string $adminUserSearchUrl = '/admin';
     private string $adminUserResearchReportUrl = '/admin/stats/user-research';
     private string $adminUploadUsersUrl = '/admin/upload';
     private string $adminUploadOrgUsersUrl = '/admin/org-csv-upload';
@@ -153,6 +155,11 @@ trait PageUrlsTrait
         return $this->adminAddUserUrl;
     }
 
+    public function getAdminSearchUserPage(): string
+    {
+        return $this->adminUserSearchUrl;
+    }
+
     public function getAdminViewUserPage(int $userId): string
     {
         return sprintf($this->adminViewUserUrl, $userId);
@@ -256,5 +263,10 @@ trait PageUrlsTrait
     public function getAdminUploadLayUsersUrl(): string
     {
         return $this->adminUploadLayUsersUrl;
+    }
+
+    public function getAdminSubmissionsPage(): string
+    {
+        return $this->adminSubmissionsPage;
     }
 }

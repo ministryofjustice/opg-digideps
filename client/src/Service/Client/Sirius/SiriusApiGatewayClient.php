@@ -14,11 +14,11 @@ use Symfony\Component\Serializer\Serializer;
 
 class SiriusApiGatewayClient
 {
-    const SIRIUS_API_GATEWAY_VERSION = 'v2';
-    const SIRIUS_REPORT_ENDPOINT = 'clients/%s/reports';
-    const SIRIUS_SUPPORTING_DOCUMENTS_ENDPOINT = 'clients/%s/reports/%s/supportingdocuments';
-    const SIRIUS_CHECKLIST_POST_ENDPOINT = 'clients/%s/reports/%s/checklists';
-    const SIRIUS_CHECKLIST_PUT_ENDPOINT = 'clients/%s/reports/%s/checklists/%s';
+    public const SIRIUS_API_GATEWAY_VERSION = 'v2';
+    public const SIRIUS_REPORT_ENDPOINT = 'clients/%s/reports';
+    public const SIRIUS_SUPPORTING_DOCUMENTS_ENDPOINT = 'clients/%s/reports/%s/supportingdocuments';
+    public const SIRIUS_CHECKLIST_POST_ENDPOINT = 'clients/%s/reports/%s/checklists';
+    public const SIRIUS_CHECKLIST_PUT_ENDPOINT = 'clients/%s/reports/%s/checklists/%s';
 
     /** @var Client */
     private $httpClient;
@@ -60,7 +60,7 @@ class SiriusApiGatewayClient
     {
         $signedRequest = $this->buildSignedRequest($endpoint, 'GET');
 
-        return $this->httpClient->send($signedRequest, ['connect_timeout' => 2, 'timeout' => 3]);
+        return $this->httpClient->send($signedRequest, ['connect_timeout' => 1, 'timeout' => 1.5]);
     }
 
     /**

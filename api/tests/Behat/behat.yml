@@ -85,12 +85,6 @@ default:
             contexts:
                 - App\Tests\Behat\UserManagement\UserManagementFeatureContext
 
-        report-synchronisation:
-            description: Coverage of report and document synchronisation features
-            paths: [ "%paths.base%/features-v2/report-syncing" ]
-            contexts:
-                - App\Tests\Behat\DocumentSynchronisation\DocumentSynchronisationFeatureContext
-
         # features-v2
         reporting-preview:
             description: Coverage of report preview functionality
@@ -238,6 +232,30 @@ v2-tests-goutte:
             contexts:
                 - App\Tests\Behat\v2\Registration\RegistrationFeatureContext
 
+        report-overiew:
+            description: Coverage of the report overview page
+            paths: [ "%paths.base%/features-v2/reporting/report-overview" ]
+            contexts:
+                - App\Tests\Behat\v2\Reporting\Sections\ReportingSectionsFeatureContext
+
+        reporting-checklist:
+            description: Coverage of report checklist feature
+            paths: [ "%paths.base%/features-v2/reporting/admin/checklist" ]
+            contexts:
+                - App\Tests\Behat\v2\Reporting\Admin\ReportingAdminFeatureContext
+
+        report-management:
+            description: Coverage of report management features in the admin side of the app
+            paths: [ "%paths.base%/features-v2/report-management" ]
+            contexts:
+                - App\Tests\Behat\v2\ReportManagement\ReportManagementFeatureContext
+
+        report-submission:
+            description: Coverage of report submission and document sync features in the admin side of the app
+            paths: [ "%paths.base%/features-v2/report-submission" ]
+            contexts:
+                - App\Tests\Behat\v2\ReportSubmission\ReportSubmissionFeatureContext
+
         section-accounts:
             description: Covering the 'Accounts' section of the report
             paths: [ "%paths.base%/features-v2/reporting/sections/accounts" ]
@@ -327,6 +345,12 @@ v2-tests-goutte:
             paths: [ "%paths.base%/features-v2/reporting/sections/debts" ]
             contexts:
                 - App\Tests\Behat\v2\Reporting\Sections\ReportingSectionsFeatureContext
+
+        user-management:
+            description: Covering the user management features of the app (admin)
+            paths: [ "%paths.base%/features-v2/user-management" ]
+            contexts:
+                - App\Tests\Behat\v2\UserManagement\UserManagementFeatureContext
 
     extensions:
         Behat\MinkExtension:

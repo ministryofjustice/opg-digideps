@@ -110,7 +110,32 @@ trait FormFillingTrait
         }
     }
 
-    private function determineAnswerGroup(string $formSectionName, string $inputLabel)
+    /**
+     * @param string      $checkboxGroupName define with a name that describes the checkbox group - keep consistent with
+     *                                       all checkboxes in the group that are ticked
+     * @param mixed       $option            option value to check
+     * @param string|null $formSectionName   define with any name you like - only include if you want to assert on
+     *                                       the value entered on a summary page at the end of the form flow
+     * @param string|null $translatedOption  The full or partial string the option is translated to on the front end
+     *                                       e.g. all_care_is_paid_by_someone_else could be:
+     *
+     *                                       'All John's care is paid for by someone else (for example, by the local authority, council or NHS)'
+     *                                       or
+     *                                       'paid for by someone else'
+     *
+     *                                       Only provide this if you are asserting on the translation on the summary page.
+     */
+    public function tickCheckbox(string $checkboxGroupName, $option, ?string $formSectionName = null, ?string $translatedOption = null)
+    {
+        $this->checkOption($option);
+
+        if ($formSectionName) {
+            $option = $translatedOption ?: $option;
+            $this->submittedAnswersByFormSections[$formSectionName][0][$checkboxGroupName][] = $option;
+        }
+    }
+
+    private function determineAnswerGroup(string $formSectionName, string $inputLabel): int
     {
         $lastMatchingIndex = 0;
 

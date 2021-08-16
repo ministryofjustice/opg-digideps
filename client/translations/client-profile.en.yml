@@ -13,6 +13,20 @@ clientDetails:
   editClient: Edit client details
   archiveClient: Archive client
 
+namedDeputyDetails:
+    heading: Deputy details
+    name: Full Name
+    mainEmail: Email address
+    altEmail: Alternative email address
+    address: Address
+    mainPhone: Phone
+    altPhone: Alternative phone number
+    contactMessage: "Contact us if you need to update these details:"
+    profEmail: opg.pro@publicguardian.gov.uk
+    paEmail: OPG.publicauthorityteam@publicguardian.gov.uk
+
+
+
 clientReports:
   heading: Submitted reports
   noReports: No submitted reports

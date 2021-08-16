@@ -15,7 +15,7 @@ Feature: Admin - Client Discharge
     And I attempt to discharge the client
     Then the client should be discharged
 
-@admin @prof-admin-submitted @lay-pfa-high-submitted
+@admin @prof-admin-health-welfare-submitted @lay-pfa-high-submitted
   Scenario: An admin user cannot discharge a client
     Given an admin user accesses the admin app
     When I visit the admin client details page for an existing client linked to a deputy in an Organisation

@@ -196,7 +196,7 @@ trait IngestTrait
         $this->iAmOnAdminOrgCsvUploadPage();
 
         $this->em->clear();
-        $client = $this->em->getRepository(Client::class)->find($this->profAdminDeputyNotStartedDetails->getClientId());
+        $client = $this->em->getRepository(Client::class)->find($this->profAdminDeputyHealthWelfareNotStartedDetails->getClientId());
 
         $this->assertStringEqualsString(
             $this->expectedClientCourtDate->format('j F Y'),
@@ -239,7 +239,7 @@ trait IngestTrait
 
         $namedDeputy = ($this->em
             ->getRepository(Client::class)
-            ->find($this->profAdminDeputyNotStartedDetails->getClientId()))
+            ->find($this->profAdminDeputyHealthWelfareNotStartedDetails->getClientId()))
             ->getNamedDeputy();
 
         $actualNamedDeputiesAddress = sprintf(
@@ -287,7 +287,7 @@ trait IngestTrait
 
         $currentReport = $this->em
             ->getRepository(Report::class)
-            ->find($this->profAdminDeputyNotStartedDetails->getCurrentReportId());
+            ->find($this->profAdminDeputyHealthWelfareNotStartedDetails->getCurrentReportId());
 
         $this->assertStringEqualsString(
             $this->expectedReportType,

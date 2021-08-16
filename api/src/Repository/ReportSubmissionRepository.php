@@ -53,6 +53,7 @@ class ReportSubmissionRepository extends ServiceEntityRepository
             ->leftJoin('r.client', 'c')
             ->leftJoin('ndr.client', 'nc')
         ;
+
         // search filter
         if ($q) {
             $qb->andWhere(implode(' OR ', [
@@ -70,6 +71,7 @@ class ReportSubmissionRepository extends ServiceEntityRepository
                 // separate clause to check ndrs
                 'nc.caseNumber = :q',
             ]));
+
             $qb->setParameter('qLike', '%'.strtolower($q).'%');
             $qb->setParameter('q', strtolower($q));
         }
