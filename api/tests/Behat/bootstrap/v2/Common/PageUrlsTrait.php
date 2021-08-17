@@ -32,6 +32,7 @@ trait PageUrlsTrait
     private string $userResearchSubmittedUrl = '/report/%s/post_submission_user_research/submitted';
     private string $moneyInShortSectionUrl = '/%s/%s/money-in-short';
     private string $moneyInShortSectionSummaryUrl = '/%s/%s/money-in-short/summary';
+    private string $clientLoginPageUrl = '/login';
 
     // Admin
     private string $adminClientSearchUrl = '/admin/client/search';
@@ -48,6 +49,7 @@ trait PageUrlsTrait
     private string $adminActiveLaysReportUrl = '/admin/stats/downloadActiveLaysCsv';
     private string $adminFixturesUrl = '/admin/fixtures';
     private string $adminSubmissionsPage = '/admin/documents/list';
+    private string $adminNotificationUrl = '/admin/settings/service-notification';
 
     // Fixtures
     private string $courtOrdersFixtureUrl = '/admin/fixtures/court-orders?%s';
@@ -250,5 +252,15 @@ trait PageUrlsTrait
     public function getAdminSubmissionsPage(): string
     {
         return $this->adminSubmissionsPage;
+    }
+
+    public function getAdminNotificationUrl(): string
+    {
+        return $this->adminNotificationUrl;
+    }
+
+    public function getClientLoginPageUrl(): string
+    {
+        return $this->clientLoginPageUrl;
     }
 }
