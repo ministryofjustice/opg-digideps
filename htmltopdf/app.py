@@ -48,6 +48,7 @@ def application(request):
         file_name = source_file.name
 
         try:
+            # Split out additional CSS into a file if we need more in the future...
             HTML(file_name, media_type='screen', encoding="utf-8").write_pdf(file_name + ".pdf",
                stylesheets=[CSS(
                string='@page {size: Letter;margin: 0.2in 0.44in 0.2in 0.44in;}')])
