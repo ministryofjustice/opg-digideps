@@ -32,16 +32,9 @@ trait DocumentsSectionTrait
     public function iViewDocumentsSection()
     {
         $activeReportId = $this->loggedInUserDetails->getCurrentReportId();
-        $reportSectionUrl = sprintf(self::REPORT_SECTION_ENDPOINT, $this->reportUrlPrefix, $activeReportId, 'documents');
+        $documentsUrl = sprintf(self::REPORT_SECTION_ENDPOINT, $this->reportUrlPrefix, $activeReportId, 'documents');
 
-        $this->visitPath($reportSectionUrl);
-
-        $currentUrl = $this->getCurrentUrl();
-        $onSectionPage = preg_match('/report\/.*\/documents$/', $currentUrl);
-
-        if (!$onSectionPage) {
-            throw new BehatException(sprintf('Not on documents section page. Current URL is: %s', $currentUrl));
-        }
+        $this->visitPath($documentsUrl);
     }
 
     /**
@@ -69,8 +62,11 @@ trait DocumentsSectionTrait
      */
     public function iHaveDocumentsToUpload()
     {
-        $this->fillField('document_wishToProvideDocumentation_0', 'yes');
+        if (str_contains($this->getSession()->getCurrentUrl(), 'documents/summary')) {
+            $this->clickLink('Edit');
+        }
 
+        $this->fillField('document_wishToProvideDocumentation_0', 'yes');
         $this->pressButton('Save and continue');
     }
 

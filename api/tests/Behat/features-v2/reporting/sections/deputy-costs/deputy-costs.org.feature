@@ -1,7 +1,7 @@
 @v2 @deputy-costs
 Feature: Deputy costs - Applies to Org users only
 
-    @prof-admin-not-started
+    @prof-admin-health-welfare-not-started
     Scenario: A professional deputy has fixed deputy costs only
         Given a Professional Admin Deputy has not started a report
         When I navigate to and start the deputy costs report section for an existing client
@@ -13,7 +13,7 @@ Feature: Deputy costs - Applies to Org users only
         When I follow link back to report overview page
         Then I should see "prof-deputy-costs" as "finished"
 
-    @prof-admin-not-started
+    @prof-admin-health-welfare-not-started
     Scenario: A professional deputy has assessed deputy costs only
         Given a Professional Admin Deputy has not started a report
         When I visit and start the deputy costs report section for an existing client
@@ -25,7 +25,7 @@ Feature: Deputy costs - Applies to Org users only
         And I have no additional costs to declare for the current reporting period
         Then I should see the expected responses on the deputy costs summary page
 
-    @prof-admin-not-started
+    @prof-admin-health-welfare-not-started
     Scenario: A professional deputy has both fixed and assessed deputy costs - in line with Practice Direction 19B
         Given a Professional Admin Deputy has not started a report
         When I visit and start the deputy costs report section for an existing client
@@ -39,7 +39,7 @@ Feature: Deputy costs - Applies to Org users only
         When I follow link back to report overview page
         Then I should see "prof-deputy-costs" as "finished"
 
-    @prof-admin-not-started
+    @prof-admin-health-welfare-not-started
     Scenario: A professional deputy has both fixed and assessed deputy costs - not in line with Practice Direction 19B
         Given a Professional Admin Deputy has not started a report
         When I visit and start the deputy costs report section for an existing client
@@ -51,7 +51,7 @@ Feature: Deputy costs - Applies to Org users only
         And I have no additional costs to declare for the current reporting period
         Then I should see the expected responses on the deputy costs summary page
 
-    @prof-admin-not-started
+    @prof-admin-health-welfare-not-started
     Scenario: A professional deputy has charged for previous periods in this period
         Given a Professional Admin Deputy has not started a report
         When I visit and start the deputy costs report section for an existing client
@@ -62,7 +62,7 @@ Feature: Deputy costs - Applies to Org users only
         And I have no additional costs to declare for the current reporting period
         Then I should see the expected responses on the deputy costs summary page
 
-    @prof-admin-not-started
+    @prof-admin-health-welfare-not-started
     Scenario: A professional deputy has additional costs to declare
         Given a Professional Admin Deputy has not started a report
         When I visit and start the deputy costs report section for an existing client
@@ -73,7 +73,7 @@ Feature: Deputy costs - Applies to Org users only
         And I have additional costs in all seven categories to declare for the current reporting period
         Then I should see the expected responses on the deputy costs summary page
 
-    @prof-admin-not-started
+    @prof-admin-health-welfare-not-started
     Scenario: A professional deputy edits all available questions from the summary page - fixed costs
         Given a Professional Admin Deputy has not started a report
         When I visit and start the deputy costs report section for an existing client
@@ -87,7 +87,7 @@ Feature: Deputy costs - Applies to Org users only
         When I follow link back to report overview page
         Then I should see "prof-deputy-costs" as "not finished"
 
-    @prof-admin-not-started
+    @prof-admin-health-welfare-not-started
     Scenario: A professional deputy edits all available questions from the summary page - assessed costs
         Given a Professional Admin Deputy has not started a report
         When I visit and start the deputy costs report section for an existing client
@@ -100,7 +100,7 @@ Feature: Deputy costs - Applies to Org users only
         When I change the type of costs incurred to 'Fixed' costs
         Then there should be 1 new question to answer
 
-    @prof-admin-not-started
+    @prof-admin-health-welfare-not-started
     Scenario: A professional deputy adds a previous period cost from the summary page
         Given a Professional Admin Deputy has not started a report
         When I visit and start the deputy costs report section for an existing client
@@ -108,7 +108,7 @@ Feature: Deputy costs - Applies to Org users only
         And I add an additional cost for a previous period from the summary page
         Then I should see the expected responses on the deputy costs summary page
 
-    @prof-admin-not-started
+    @prof-admin-health-welfare-not-started
     Scenario: A professional deputy removes a previous period cost from the summary page
         Given a Professional Admin Deputy has not started a report
         When I visit and start the deputy costs report section for an existing client
@@ -116,7 +116,7 @@ Feature: Deputy costs - Applies to Org users only
         And I remove an additional cost for a previous period from the summary page
         Then I should see the expected responses on the deputy costs summary page
 
-    @prof-admin-not-started
+    @prof-admin-health-welfare-not-started
     Scenario: A professional deputy provides invalid information - fixed costs
         Given a Professional Admin Deputy has not started a report
         When I visit and start the deputy costs report section for an existing client
@@ -129,7 +129,7 @@ Feature: Deputy costs - Applies to Org users only
         When I enter a valid amount for the current reporting period costs
         Then I should be on the deputy costs - breakdown page
 
-    @prof-admin-not-started
+    @prof-admin-health-welfare-not-started
     Scenario: A professional deputy provides invalid information - previous reporting costs
         Given a Professional Admin Deputy has not started a report
         When I visit and start the deputy costs report section for an existing client
@@ -146,7 +146,7 @@ Feature: Deputy costs - Applies to Org users only
         When I declare 1 previous cost with valid dates and amounts
         Then I should be on the deputy costs - costs received page
 
-    @prof-admin-not-started
+    @prof-admin-health-welfare-not-started
     Scenario: A professional deputy provides invalid information - assessed costs
         Given a Professional Admin Deputy has not started a report
         When I visit and start the deputy costs report section for an existing client
@@ -164,7 +164,7 @@ Feature: Deputy costs - Applies to Org users only
         When I have provided valid interim costs and dates for all three periods
         Then I should be on the deputy costs - SCCO amount page
 
-    @prof-admin-not-started
+    @prof-admin-health-welfare-not-started
     Scenario: A professional deputy provides invalid information - SCCO assessed costs
         Given a Professional Admin Deputy has not started a report
         When I visit and start the deputy costs report section for an existing client
@@ -179,7 +179,7 @@ Feature: Deputy costs - Applies to Org users only
         And I enter a valid amount and description that I am submitting to SCCO for assessment
         Then I should be on the deputy costs - breakdown page
 
-    @prof-admin-not-started
+    @prof-admin-health-welfare-not-started
     Scenario: A professional deputy provides invalid information - additional costs
         Given a Professional Admin Deputy has not started a report
         When I visit and start the deputy costs report section for an existing client

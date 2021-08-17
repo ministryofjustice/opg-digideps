@@ -1,4 +1,4 @@
-@contact-details @v2 @acs
+@contact-details @v2
 Feature: Contact details
     Scenario: Home screen should show lay deputy email address
         When I visit the frontend login page
@@ -29,7 +29,7 @@ Feature: Contact details
         When I visit the report overview page
         Then the support footer should show "opg.pro@publicguardian.gov.uk"
 
-    @pa-admin-not-started
+    @pa-admin-health-welfare-not-started
     Scenario: Public authority deputy should see professional helpline
         Given a Public Authority Admin Deputy has not started a report
         When I visit the report overview page

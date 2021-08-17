@@ -91,12 +91,6 @@ default:
             contexts:
                 - App\Tests\Behat\UserManagement\UserManagementFeatureContext
 
-        report-synchronisation:
-            description: Coverage of report and document synchronisation features
-            paths: [ "%paths.base%/features-v2/report-syncing" ]
-            contexts:
-                - App\Tests\Behat\DocumentSynchronisation\DocumentSynchronisationFeatureContext
-
     extensions:
         Behat\MinkExtension:
             goutte:
@@ -254,6 +248,12 @@ v2-tests-goutte:
             paths: [ "%paths.base%/features-v2/reporting/report-checklist" ]
             contexts:
                 - App\Tests\Behat\v2\Reporting\Admin\ReportingAdminFeatureContext
+
+        report-submission:
+            description: Coverage of report submission and document sync features in the admin side of the app
+            paths: [ "%paths.base%/features-v2/report-submission" ]
+            contexts:
+                - App\Tests\Behat\v2\ReportSubmission\ReportSubmissionFeatureContext
 
         section-accounts:
             description: Covering the 'Accounts' section of the report

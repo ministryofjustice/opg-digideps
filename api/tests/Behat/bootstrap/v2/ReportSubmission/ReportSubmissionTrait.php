@@ -1,0 +1,341 @@
+<?php
+
+declare(strict_types=1);
+
+namespace App\Tests\Behat\v2\ReportSubmission;
+
+use App\Entity\Report\Document;
+use App\Entity\Report\ReportSubmission;
+use App\Tests\Behat\BehatException;
+
+trait ReportSubmissionTrait
+{
+    private array $documentFileNames = [];
+
+    /**
+     * @Then I should see the case number of the user I'm interacting with
+     */
+    public function iShouldSeeInteractingWithCaseNumber()
+    {
+        $this->assertInteractingWithUserIsSet();
+
+        $caseNumber = $this->interactingWithUserDetails->getCourtOrderNumber();
+        $locator = sprintf('//td[normalize-space()="%s"]/..', $caseNumber);
+        $submissionRow = $this->getSession()->getPage()->find('xpath', $locator);
+
+        if (is_null($submissionRow)) {
+            throw new BehatException('Could not find a submission row that contained case number "%s"', $caseNumber);
+        }
+    }
+
+    /**
+     * @When I attach a supporting document :imageName to the report
+     */
+    public function iAttachedASupportingDocumentToTheCompletedReport(string $imageName)
+    {
+        $this->iAmOnUploadDocumentPage();
+        $this->attachDocument($imageName);
+    }
+
+    private function attachDocument(string $imageName)
+    {
+        $this->attachFileToField('report_document_upload_files', $imageName);
+        $this->pressButton('Upload');
+    }
+
+    /**
+     * @When I view the pending submissions
+     */
+    public function iViewPendingSubmissions()
+    {
+        $this->clickLink('Pending');
+    }
+
+    /**
+     * @Then the report PDF document should be queued
+     */
+    public function documentsAreSetToQueued()
+    {
+        $reportPrefix = 'ndr' === $this->interactingWithUserDetails->getCurrentReportNdrOrReport() ? 'NdrRep' : 'DigiRep';
+        $reportPdfRow = $this->getSession()->getPage()->find(
+            'css',
+            sprintf('table tr:contains("%s-")', $reportPrefix)
+        );
+
+        if (is_null($reportPdfRow)) {
+            throw new BehatException('Cannot find a table row that contains the report PDF');
+        }
+
+        if (false === strpos($reportPdfRow->getHtml(), 'Queued')) {
+            throw new BehatException('The document does not appear to be queued');
+        }
+    }
+
+    /**
+     * @Then the document :filename should be queued
+     */
+    public function documentShouldBeQueued(string $fileName)
+    {
+        $reportPdfRow = $this->getSession()->getPage()->find('css', "table tr:contains('$fileName')");
+
+        if (is_null($reportPdfRow)) {
+            throw new BehatException("Cannot find a table row that contains the document with filename $fileName");
+        }
+
+        if (false === strpos($reportPdfRow->getHtml(), 'Queued')) {
+            throw new BehatException('The document does not appear to be queued');
+        }
+    }
+
+    /**
+     * @Then the document :filename should be synced
+     */
+    public function documentShouldBeSynced(string $fileName)
+    {
+        $this->clickLink('Synchronised');
+
+        $reportPdfRow = $this->getSession()->getPage()->find('css', "table tr:contains('$fileName')");
+
+        if (is_null($reportPdfRow)) {
+            throw new BehatException("Cannot find a table row that contains the document with filename $fileName");
+        }
+
+        if (false === strpos($reportPdfRow->getHtml(), 'Success')) {
+            throw new BehatException('The document does not appear to be queued');
+        }
+    }
+
+    /**
+     * @Given /^I run the document\-sync command$/
+     */
+    public function iRunTheDocumentSyncCommand()
+    {
+        $this->visitAdminPath('/admin/behat/run-document-sync-command');
+
+        if ($this->getSession()->getStatusCode() > 299) {
+            throw new BehatException('There was an non successful response when running the document-sync command');
+        }
+
+        sleep(2);
+    }
+
+    /**
+     * @Given /^the report PDF document should be synced$/
+     */
+    public function theReportPDFDocumentShouldBeSynced()
+    {
+        $reportPdfRow = $this->getSession()->getPage()->find('css', 'table tr:contains("DigiRep-")');
+
+        if (is_null($reportPdfRow)) {
+            throw new BehatException('Cannot find a table row that contains the report PDF');
+        }
+
+        if (false === strpos($reportPdfRow->getHtml(), 'Success')) {
+            throw new BehatException('The document has not been synced');
+        }
+    }
+
+    /**
+     * @When I attached a supporting document :imageName to the submitted report
+     */
+    public function attachSupportingDocumentToSubmittedReport(string $imageName)
+    {
+        $reportId = $this->interactingWithUserDetails->getPreviousReportId();
+        $this->visit(sprintf('/report/%s/documents/step/2', $reportId));
+        $this->attachDocument($imageName);
+
+        $this->clickLink('Continue to send documents');
+
+        $this->clickLink('Send documents');
+    }
+
+    /**
+     * @When I search for submissions using the :whichNameSearched name of the clients with the same :whichNamesAreSame name
+     */
+    public function iSearchForSubmissionsUsingTheFirstNameOfTheClientsWithTheSameFirstName(
+        string $whichNameSearched,
+        string $whichNamesAreSame
+    ) {
+        $userDetails = 'first' === $whichNamesAreSame ? $this->sameFirstNameUserDetails[0] : $this->sameLastNameUserDetails[0];
+        $nameToSearchOn = 'first' === $whichNameSearched ? $userDetails->getClientFirstName() : $userDetails->getClientLastName();
+
+        $this->fillInField('q', $nameToSearchOn);
+        $this->pressButton('Search');
+        $this->clickLink('Pending');
+    }
+
+    /**
+     * @Then I should see the clients with the same :whichName names in the search results
+     */
+    public function iShouldSeeBothClientsInTheSearchResults(string $whichName)
+    {
+        $usersToSearchOn = 'first' === $whichName ? $this->sameFirstNameUserDetails : $this->sameLastNameUserDetails;
+        $locator = sprintf(
+            '//td[normalize-space()="%s"]|//td[normalize-space()="%s"]',
+            $usersToSearchOn[0]->getCourtOrderNumber(),
+            $usersToSearchOn[1]->getCourtOrderNumber(),
+        );
+
+        $clientRows = $this->getSession()->getPage()->findAll('xpath', $locator);
+
+        $this->assertIntEqualsInt(
+            2,
+            count($clientRows),
+            sprintf('Count rows that contain case numbers of clients that have the same %s name', $whichName)
+        );
+    }
+
+    /**
+     * @Then I should not see the two clients with different :whichName names
+     */
+    public function iShouldNotSeeTheOtherTwoClientsWithDifferentNames(string $whichName)
+    {
+        $usersToSearchOn = 'first' === $whichName ? $this->sameFirstNameUserDetails : $this->sameLastNameUserDetails;
+        $locator = sprintf(
+            '//td[normalize-space()="%s"]|//td[normalize-space()="%s"]',
+            $usersToSearchOn[0]->getCourtOrderNumber(),
+            $usersToSearchOn[1]->getCourtOrderNumber(),
+        );
+
+        $clientRows = $this->getSession()->getPage()->findAll('xpath', $locator);
+
+        $this->assertIntEqualsInt(
+            0,
+            count($clientRows),
+            sprintf('Count rows that contain case numbers of clients that have the same %s name', $whichName)
+        );
+    }
+
+    /**
+     * @When I search for submissions using the court order number of the client with :numberReports report(s)
+     */
+    public function iSearchForSubmissionsUsingTheCourtOrderNumberOfTheClientWithNumberReports(string $numberReports)
+    {
+        $userToSearchOn = 'one' === $numberReports ? $this->oneReportsUserDetails : $this->twoReportsUserDetails;
+        $this->fillInField('q', $userToSearchOn->getCourtOrderNumber());
+        $this->pressButton('Search');
+        $this->clickLink('Pending');
+    }
+
+    /**
+     * @Then I should see :numberRows rows for the client with :numberReports report submission(s) in the search results
+     */
+    public function iShouldSeeNumberRowsForClientWithNumberReports(string $numberRows, string $numberReports)
+    {
+        $userToSearchOn = 'one' === $numberReports ? $this->oneReportsUserDetails : $this->twoReportsUserDetails;
+        $locator = sprintf(
+            '//td[normalize-space()="%s"]',
+            $userToSearchOn->getCourtOrderNumber()
+        );
+
+        $clientRows = $this->getSession()->getPage()->findAll('xpath', $locator);
+
+        $expectedRows = 'one' === $numberRows ? 1 : 2;
+        $this->assertIntEqualsInt(
+            $expectedRows,
+            count($clientRows),
+            sprintf('Count rows that contain case numbers of clients that has submitted %s reports', $numberReports)
+        );
+    }
+
+    /**
+     * @Then I should not see the client with :numberReports report submission(s) in the search results
+     */
+    public function iShouldNotSeeTheClientWithSubmissionsInResults(string $numberReports)
+    {
+        $userToSearchOn = 'one' === $numberReports ? $this->oneReportsUserDetails : $this->twoReportsUserDetails;
+
+        $locator = sprintf(
+            '//td[normalize-space()="%s"]',
+            $userToSearchOn->getCourtOrderNumber()
+        );
+
+        $clientRows = $this->getSession()->getPage()->findAll('xpath', $locator);
+
+        $this->assertIntEqualsInt(
+            0,
+            count($clientRows),
+            sprintf('Count rows that contain case numbers of clients that has submitted %s reports', $numberReports)
+        );
+    }
+
+    /**
+     * @When I manually :action the client that has one submitted report
+     */
+    public function iManuallyArchiveTheClientThatHasOneSubmittedReport(string $action)
+    {
+        $locator = sprintf(
+            '//td[normalize-space()="%s"]/..//input',
+            $this->oneReportsUserDetails->getCourtOrderNumber()
+        );
+
+        $clientRowCheckBox = $this->getSession()->getPage()->find('xpath', $locator);
+        $clientRowCheckBox->check();
+        $this->pressButton('archive' === $action ? 'Archive' : 'Synchronise');
+    }
+
+    /**
+     * @Then I should see the client row under the Synchronised tab
+     */
+    public function iShouldSeeTheClientRowUnderTheSynchronisedTab()
+    {
+        $this->clickLink('Synchronised');
+        $this->iShouldSeeNumberRowsForClientWithNumberReports('one', 'one');
+    }
+
+    /**
+     * @Given there was an error during synchronisation
+     */
+    public function thereWasAnErrorDuringSync()
+    {
+        $submittedReportId = $this->oneReportsUserDetails->getPreviousReportId();
+        $submission = $this->em->getRepository(ReportSubmission::class)->findOneBy(['report' => $submittedReportId]);
+
+        foreach ($submission->getDocuments() as $document) {
+            $document->setSynchronisationStatus(Document::SYNC_STATUS_PERMANENT_ERROR);
+            $this->documentFileNames[] = $document->getFilename();
+            $this->em->persist($document);
+        }
+
+        $this->em->flush();
+    }
+
+    /**
+     * @Then the status of the documents for the client with one report submission should be :status
+     */
+    public function statusOfSubmissionDocumentsShouldBe(string $status)
+    {
+        $locator = sprintf(
+            '//td[normalize-space()="%s"]/../..',
+            $this->oneReportsUserDetails->getCourtOrderNumber()
+        );
+
+        $submissionRowTableBody = $this->getSession()->getPage()->find('xpath', $locator);
+
+        foreach ($this->documentFileNames as $documentFileName) {
+            $locator = sprintf(
+                '//td[normalize-space()="%s"]/..',
+                $documentFileName
+            );
+
+            $documentRow = $submissionRowTableBody->find('xpath', $locator);
+
+            if (is_null($documentRow)) {
+                $errorMessage = sprintf(
+                    'Could not find a row that contained the status "%s" for submission with court order number "%s". Table HTML: %s',
+                    $status,
+                    $this->oneReportsUserDetails->getCourtOrderNumber(),
+                    $submissionRowTableBody->getHtml()
+                );
+
+                throw new BehatException($errorMessage);
+            }
+
+            $this->assertStringContainsString(
+                $status,
+                $documentRow->getHtml(),
+                'Comparing expected status against status in table row that contains an expected filename'
+            );
+        }
+    }
+}

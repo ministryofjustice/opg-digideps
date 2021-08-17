@@ -4,6 +4,8 @@ declare(strict_types=1);
 
 namespace App\Tests\Behat\v2\Common;
 
+use App\Entity\Client;
+use App\Entity\Report\Report;
 use App\Entity\User;
 use App\Tests\Behat\BehatException;
 use App\Tests\Behat\v2\Helpers\FixtureHelper;
@@ -11,6 +13,11 @@ use Behat\Gherkin\Node\TableNode;
 
 trait FixturesTrait
 {
+    public array $sameFirstNameUserDetails = [];
+    public array $sameLastNameUserDetails = [];
+    public ?UserDetails $twoReportsUserDetails = null;
+    public ?UserDetails $oneReportsUserDetails = null;
+
     /**
      * @Given the following court orders exist:
      */
@@ -73,6 +80,54 @@ trait FixturesTrait
     {
         $this->fixtureHelper->duplicateClient($this->layDeputyNotStartedPfaHighAssetsDetails->getClientId());
         $this->interactingWithUserDetails = $this->layDeputyNotStartedPfaHighAssetsDetails;
+    }
+
+    /**
+     * @Given two submitted reports with clients sharing the same :whichName name exist
+     */
+    public function twoClientsExistWithTheSameFirstName(string $whichName)
+    {
+        $userDetails1 = $this->createLayCombinedHighSubmitted(null, $this->testRunId.rand(1, 10000));
+        $client1 = $this->em->getRepository(Client::class)->find($userDetails1->getClientId());
+        $client1->setFirstname($client1->getFirstname().$this->testRunId);
+        $client1->setLastname($client1->getLastname().$this->testRunId);
+
+        $userDetails2 = $this->createLayCombinedHighSubmitted(null, $this->testRunId.rand(1, 10000));
+        $client2 = $this->em->getRepository(Client::class)->find($userDetails2->getClientId());
+
+        if ('first' === $whichName) {
+            $userDetails1->setClientFirstName($client1->getFirstname());
+            $userDetails2->setClientFirstName($userDetails1->getClientFirstName());
+            $client2->setFirstname($userDetails2->getClientFirstName());
+            array_push($this->sameFirstNameUserDetails, $userDetails1, $userDetails2);
+        } else {
+            $userDetails1->setClientLastName($client1->getLastname());
+            $userDetails2->setClientLastName($userDetails1->getClientLastName());
+            $client2->setLastname($userDetails2->getClientLastName());
+            array_push($this->sameLastNameUserDetails, $userDetails1, $userDetails2);
+        }
+
+        $this->em->persist($client1);
+        $this->em->persist($client2);
+        $this->em->flush();
+    }
+
+    /**
+     * @Given a client has submitted two reports
+     */
+    public function aClientHasSubmittedTwoReports()
+    {
+        $userDetails = $this->twoReportsUserDetails = $this->createLayCombinedHighSubmitted(null, $this->testRunId.'A');
+        $newReport = $this->em->getRepository(Report::class)->find($userDetails->getCurrentReportId());
+        $this->reportTestHelper->submitReport($newReport, $this->em);
+    }
+
+    /**
+     * @Given another/a client has submitted one report
+     */
+    public function anotherClientHasSubmittedOneReport()
+    {
+        $this->oneReportsUserDetails = $this->createLayCombinedHighSubmitted(null, $this->testRunId.'B');
     }
 
     /**
