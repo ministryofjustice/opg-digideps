@@ -4,7 +4,7 @@ clientSearch:
   searchBy: Search by client surname or case number
   clientTable:
     heading: Client list
-    results: Found %numberOfClients% clients jim
+    results: Found %numberOfClients% clients
     resultsLimited:
       line01: Results limited to 100 clients.
       line02: Use search to filter the wanted clients.

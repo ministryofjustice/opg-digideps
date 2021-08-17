@@ -37,6 +37,7 @@ trait PageUrlsTrait
     private string $adminClientSearchUrl = '/admin/client/search';
     private string $adminClientDetailsUrl = '/admin/client/%s/details';
     private string $adminAddUserUrl = '/admin/user-add';
+    private string $adminUserSearchUrl = '/admin';
     private string $adminViewUserUrl = '/admin/user/%s';
     private string $adminEditUserUrl = '/admin/edit-user?filter=%s';
     private string $adminMyUserProfileUrl = '/deputyship-details/your-details';
@@ -46,6 +47,7 @@ trait PageUrlsTrait
     private string $adminUserResearchReportUrl = '/admin/stats/user-research';
     private string $adminActiveLaysReportUrl = '/admin/stats/downloadActiveLaysCsv';
     private string $adminFixturesUrl = '/admin/fixtures';
+    private string $adminSubmissionsPage = '/admin/documents/list';
 
     // Fixtures
     private string $courtOrdersFixtureUrl = '/admin/fixtures/court-orders?%s';
@@ -150,6 +152,11 @@ trait PageUrlsTrait
         return $this->adminAddUserUrl;
     }
 
+    public function getAdminSearchUserPage(): string
+    {
+        return $this->adminUserSearchUrl;
+    }
+
     public function getAdminViewUserPage(int $userId): string
     {
         return sprintf($this->adminViewUserUrl, $userId);
@@ -238,5 +245,10 @@ trait PageUrlsTrait
     public function getMoneyInShortSectionSummaryUrl(int $reportId): string
     {
         return sprintf($this->moneyInShortSectionSummaryUrl, $this->reportUrlPrefix, $reportId);
+    }
+
+    public function getAdminSubmissionsPage(): string
+    {
+        return $this->adminSubmissionsPage;
     }
 }

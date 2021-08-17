@@ -21,7 +21,7 @@ trait IShouldBeOnFrontendTrait
     /**
      * @Then I should be on the report submitted page
      */
-    public function iAmOnReportSubmittedPage()
+    public function iAmOnReportSubmittedPage(): bool
     {
         return $this->iAmOnPage('/report\/.*\/submitted$/');
     }
@@ -29,7 +29,7 @@ trait IShouldBeOnFrontendTrait
     /**
      * @Then I should be on the post-submission user research page
      */
-    public function iAmOnPostSubmissionUserResearchPage()
+    public function iAmOnPostSubmissionUserResearchPage(): bool
     {
         return $this->iAmOnPage('/report\/.*\/post_submission_user_research/');
     }
@@ -37,7 +37,7 @@ trait IShouldBeOnFrontendTrait
     /**
      * @Then I should be on the user research feedback submitted page
      */
-    public function iAmOnUserResearchSubmittedPage()
+    public function iAmOnUserResearchSubmittedPage(): bool
     {
         return $this->iAmOnPage('/report\/.*\/post_submission_user_research\/submitted$/');
     }
@@ -45,7 +45,7 @@ trait IShouldBeOnFrontendTrait
     /**
      * @Then I should be on the contacts summary page
      */
-    public function iAmOnContactsSummaryPage()
+    public function iAmOnContactsSummaryPage(): bool
     {
         return $this->iAmOnPage('/report\/.*\/contacts\/summary$/');
     }
@@ -53,7 +53,7 @@ trait IShouldBeOnFrontendTrait
     /**
      * @Then I should be on the add a contact page
      */
-    public function iAmOnAddAContactPage()
+    public function iAmOnAddAContactPage(): bool
     {
         return $this->iAmOnPage('/report\/.*\/contacts\/add/');
     }
@@ -61,7 +61,7 @@ trait IShouldBeOnFrontendTrait
     /**
      * @Then I should be on the contacts add another page
      */
-    public function iAmOnContactsAddAnotherPage()
+    public function iAmOnContactsAddAnotherPage(): bool
     {
         return $this->iAmOnPage('/report\/.*\/contacts\/add_another$/');
     }
@@ -69,7 +69,7 @@ trait IShouldBeOnFrontendTrait
     /**
      * @Then I should be on the additional information summary page
      */
-    public function iAmOnAdditionalInformationSummaryPage()
+    public function iAmOnAdditionalInformationSummaryPage(): bool
     {
         return $this->iAmOnPage('/report\/.*\/any-other-info\/summary\?from=last-step/');
     }
@@ -77,31 +77,31 @@ trait IShouldBeOnFrontendTrait
     /**
      * @Then I should be on the financial decision actions page
      */
-    public function iAmOnActionsPage1()
+    public function iAmOnActionsPage1(): bool
     {
-        $this->iAmOnPage('/report\/.*\/actions\/step\/1$/');
+        return $this->iAmOnPage('/report\/.*\/actions\/step\/1$/');
     }
 
     /**
      * @Then I should be on the concerns actions page
      */
-    public function iAmOnActionsPage2()
+    public function iAmOnActionsPage2(): bool
     {
-        $this->iAmOnPage('/report\/.*\/actions\/step\/2$/');
+        return $this->iAmOnPage('/report\/.*\/actions\/step\/2$/');
     }
 
     /**
      * @Then I should be on the actions report summary page
      */
-    public function iAmOnActionsSummaryPage()
+    public function iAmOnActionsSummaryPage(): bool
     {
-        $this->iAmOnPage('/report\/.*\/actions\/summary.*/');
+        return $this->iAmOnPage('/report\/.*\/actions\/summary.*/');
     }
 
     /**
      * @Then I should be on the Lay homepage
      */
-    public function iAmOnLayMainPage()
+    public function iAmOnLayMainPage(): bool
     {
         return $this->iAmOnPage('/lay$/');
     }
@@ -109,7 +109,7 @@ trait IShouldBeOnFrontendTrait
     /**
      * @Then I should be on the Lay reports overview page
      */
-    public function iAmOnReportsOverviewPage()
+    public function iAmOnReportsOverviewPage(): bool
     {
         return $this->iAmOnPage(sprintf('/%s\/.*\/overview$/', $this->reportUrlPrefix));
     }
@@ -117,7 +117,7 @@ trait IShouldBeOnFrontendTrait
     /**
      * @Then I should be on the documents summary page
      */
-    public function iAmOnDocumentsSummaryPage()
+    public function iAmOnDocumentsSummaryPage(): bool
     {
         return $this->iAmOnPage('/report\/.*\/documents\/summary/');
     }
@@ -125,7 +125,7 @@ trait IShouldBeOnFrontendTrait
     /**
      * @Then I should be on the gifts exist page
      */
-    public function iAmOnGiftsExistPage()
+    public function iAmOnGiftsExistPage(): bool
     {
         return $this->iAmOnPage('/report\/.*\/gifts\/exist.*$/');
     }
@@ -133,7 +133,7 @@ trait IShouldBeOnFrontendTrait
     /**
      * @Then I should be on the gifts summary page
      */
-    public function iAmOnGiftsSummaryPage()
+    public function iAmOnGiftsSummaryPage(): bool
     {
         return $this->iAmOnPage('/report\/.*\/gifts\/summary$/');
     }
@@ -141,7 +141,7 @@ trait IShouldBeOnFrontendTrait
     /**
      * @Then I should be on the add a gift page
      */
-    public function iAmOnGiftsAddPage()
+    public function iAmOnGiftsAddPage(): bool
     {
         return $this->iAmOnPage('/report\/.*\/gifts\/add.*$/');
     }
@@ -149,7 +149,7 @@ trait IShouldBeOnFrontendTrait
     /**
      * @Then I should be on the edit a gift page
      */
-    public function iAmOnGiftsEditPage()
+    public function iAmOnGiftsEditPage(): bool
     {
         return $this->iAmOnPage('/report\/.*\/gifts\/edit\/.*$/');
     }
@@ -157,7 +157,7 @@ trait IShouldBeOnFrontendTrait
     /**
      * @Then I should be on the delete a gift page
      */
-    public function iAmOnGiftsDeletionPage()
+    public function iAmOnGiftsDeletionPage(): bool
     {
         return $this->iAmOnPage('/report\/.*\/gifts\/.*\/delete$/');
     }
@@ -165,7 +165,7 @@ trait IShouldBeOnFrontendTrait
     /**
      * @Then I should be on the gifts start page
      */
-    public function iAmOnGiftsStartPage()
+    public function iAmOnGiftsStartPage(): bool
     {
         return $this->iAmOnPage('/report\/.*\/gifts$/');
     }
@@ -173,7 +173,7 @@ trait IShouldBeOnFrontendTrait
     /**
      * @Then I should be on the live with client page
      */
-    public function iAmOnVisitsCarePage1()
+    public function iAmOnVisitsCarePage1(): bool
     {
         return $this->iAmOnPage(sprintf('/%s\/.*\/visits-care\/step\/1.*$/', $this->reportUrlPrefix));
     }
@@ -181,7 +181,7 @@ trait IShouldBeOnFrontendTrait
     /**
      * @Then I should be on the client receive paid care page
      */
-    public function iAmOnVisitsCarePage2()
+    public function iAmOnVisitsCarePage2(): bool
     {
         return $this->iAmOnPage(sprintf('/%s\/.*\/visits-care\/step\/2.*$/', $this->reportUrlPrefix));
     }
@@ -189,7 +189,7 @@ trait IShouldBeOnFrontendTrait
     /**
      * @Then I should be on the who is doing the caring page
      */
-    public function iAmOnVisitsCarePage3()
+    public function iAmOnVisitsCarePage3(): bool
     {
         return $this->iAmOnPage(sprintf('/%s\/.*\/visits-care\/step\/3.*$/', $this->reportUrlPrefix));
     }
@@ -197,7 +197,7 @@ trait IShouldBeOnFrontendTrait
     /**
      * @Then I should be on the does the client have a care plan page
      */
-    public function iAmOnVisitsCarePage4()
+    public function iAmOnVisitsCarePage4(): bool
     {
         return $this->iAmOnPage(sprintf('/%s\/.*\/visits-care\/step\/4.*$/', $this->reportUrlPrefix));
     }
@@ -205,7 +205,7 @@ trait IShouldBeOnFrontendTrait
     /**
      * @Then I should be on the plans to move client page
      */
-    public function iAmOnVisitsCarePage5()
+    public function iAmOnVisitsCarePage5(): bool
     {
         return $this->iAmOnPage(sprintf('/%s\/.*\/visits-care\/step\/5.*$/', $this->reportUrlPrefix));
     }
@@ -213,7 +213,7 @@ trait IShouldBeOnFrontendTrait
     /**
      * @Then I should be on the visits and care report summary page
      */
-    public function iAmOnVisitsCareSummaryPage()
+    public function iAmOnVisitsCareSummaryPage(): bool
     {
         return $this->iAmOnPage(sprintf('/%s\/.*\/visits-care\/summary.*$/', $this->reportUrlPrefix));
     }
@@ -221,7 +221,7 @@ trait IShouldBeOnFrontendTrait
     /**
      * @Then I should be on the accounts summary page
      */
-    public function iAmOnAccountsSummaryPage()
+    public function iAmOnAccountsSummaryPage(): bool
     {
         return $this->iAmOnPage(sprintf('/%s\/.*\/bank-account.*\/summary.*$/', $this->reportUrlPrefix));
     }
@@ -229,7 +229,7 @@ trait IShouldBeOnFrontendTrait
     /**
      * @Then I should be on the add another accounts page
      */
-    public function iAmOnAccountsAddAnotherPage()
+    public function iAmOnAccountsAddAnotherPage(): bool
     {
         return $this->iAmOnPage(sprintf('/%s\/.*\/bank-account.*\/add_another$/', $this->reportUrlPrefix));
     }
@@ -237,7 +237,7 @@ trait IShouldBeOnFrontendTrait
     /**
      * @Then I should be on add initial account page
      */
-    public function iAmOnAccountsAddInitialPage()
+    public function iAmOnAccountsAddInitialPage(): bool
     {
         return $this->iAmOnPage(sprintf('/%s\/.*\/bank-account\/step1.*$/', $this->reportUrlPrefix));
     }
@@ -245,7 +245,7 @@ trait IShouldBeOnFrontendTrait
     /**
      * @Then I should be on add account details page
      */
-    public function iAmOnAccountsDetailsPage()
+    public function iAmOnAccountsDetailsPage(): bool
     {
         return $this->iAmOnPage(sprintf('/%s\/.*\/bank-account\/step2.*$/', $this->reportUrlPrefix));
     }
@@ -253,7 +253,7 @@ trait IShouldBeOnFrontendTrait
     /**
      * @Then I should be on delete account details page
      */
-    public function iAmOnAccountsDeletePage()
+    public function iAmOnAccountsDeletePage(): bool
     {
         return $this->iAmOnPage(sprintf('/%s\/.*\/bank-account\/.*\/delete$/', $this->reportUrlPrefix));
     }
@@ -261,7 +261,7 @@ trait IShouldBeOnFrontendTrait
     /**
      * @Then I should be on account start page
      */
-    public function iAmOnAccountsStartPage()
+    public function iAmOnAccountsStartPage(): bool
     {
         return $this->iAmOnPage(sprintf('/%s\/.*\/bank-accounts$/', $this->reportUrlPrefix));
     }
@@ -269,7 +269,7 @@ trait IShouldBeOnFrontendTrait
     /**
      * @Then I should be on the money out short category page
      */
-    public function iAmOnMoneyOutShortCategoryPage()
+    public function iAmOnMoneyOutShortCategoryPage(): bool
     {
         return $this->iAmOnPage(sprintf('/%s\/.*\/money-out-short\/category$/', $this->reportUrlPrefix));
     }
@@ -277,7 +277,7 @@ trait IShouldBeOnFrontendTrait
     /**
      * @Then I should be on the money out short exists page
      */
-    public function iAmOnMoneyOutShortExistsPage()
+    public function iAmOnMoneyOutShortExistsPage(): bool
     {
         return $this->iAmOnPage(sprintf('/%s\/.*\/money-out-short\/exist.*$/', $this->reportUrlPrefix));
     }
@@ -285,7 +285,7 @@ trait IShouldBeOnFrontendTrait
     /**
      * @Then I should be on the money out short add page
      */
-    public function iAmOnMoneyOutShortAddPage()
+    public function iAmOnMoneyOutShortAddPage(): bool
     {
         return $this->iAmOnPage(sprintf('/%s\/.*\/money-out-short\/add.*$/', $this->reportUrlPrefix));
     }
@@ -293,7 +293,7 @@ trait IShouldBeOnFrontendTrait
     /**
      * @Then I should be on the money out short edit page
      */
-    public function iAmOnMoneyOutShortEditPage()
+    public function iAmOnMoneyOutShortEditPage(): bool
     {
         return $this->iAmOnPage(sprintf('/%s\/.*\/money-out-short\/edit.*$/', $this->reportUrlPrefix));
     }
@@ -301,7 +301,7 @@ trait IShouldBeOnFrontendTrait
     /**
      * @Then I should be on the money out short add another page
      */
-    public function iAmOnMoneyOutShortAddAnotherPage()
+    public function iAmOnMoneyOutShortAddAnotherPage(): bool
     {
         return $this->iAmOnPage(sprintf('/%s\/.*\/money-out-short\/add_another.*$/', $this->reportUrlPrefix));
     }
@@ -309,7 +309,7 @@ trait IShouldBeOnFrontendTrait
     /**
      * @Then I should be on the money out short summary page
      */
-    public function iAmOnMoneyOutShortSummaryPage()
+    public function iAmOnMoneyOutShortSummaryPage(): bool
     {
         return $this->iAmOnPage(sprintf('/%s\/.*\/money-out-short\/summary$/', $this->reportUrlPrefix));
     }
@@ -317,7 +317,7 @@ trait IShouldBeOnFrontendTrait
     /**
      * @Then I should be on the money out add payment page
      */
-    public function iAmOnMoneyOutAddPaymentPage()
+    public function iAmOnMoneyOutAddPaymentPage(): bool
     {
         return $this->iAmOnPage(sprintf('/%s\/.*\/money-out\/step1.*/', $this->reportUrlPrefix));
     }
@@ -325,7 +325,7 @@ trait IShouldBeOnFrontendTrait
     /**
      * @Then I should be on the money out add payment details page
      */
-    public function iAmOnMoneyOutAddPaymentDetailsPage()
+    public function iAmOnMoneyOutAddPaymentDetailsPage(): bool
     {
         return $this->iAmOnPage(sprintf('/%s\/.*\/money-out\/step2.*$/', $this->reportUrlPrefix));
     }
@@ -333,7 +333,7 @@ trait IShouldBeOnFrontendTrait
     /**
      * @Then I should be on the money out add another payment page
      */
-    public function iAmOnMoneyOutAddAnotherPaymentPage()
+    public function iAmOnMoneyOutAddAnotherPaymentPage(): bool
     {
         return $this->iAmOnPage(sprintf('/%s\/.*\/money-out\/add_another.*$/', $this->reportUrlPrefix));
     }
@@ -341,7 +341,7 @@ trait IShouldBeOnFrontendTrait
     /**
      * @Then I should be on the money out summary page
      */
-    public function iAmOnMoneyOutSummaryPage()
+    public function iAmOnMoneyOutSummaryPage(): bool
     {
         return $this->iAmOnPage(sprintf('/%s\/.*\/money-out\/summary.*$/', $this->reportUrlPrefix));
     }
@@ -349,7 +349,7 @@ trait IShouldBeOnFrontendTrait
     /**
      * @Then I should be on the money out delete page
      */
-    public function iAmOnMoneyOutDeletePage()
+    public function iAmOnMoneyOutDeletePage(): bool
     {
         return $this->iAmOnPage(sprintf('/%s\/.*\/money-out\/.*\/delete.*$/', $this->reportUrlPrefix));
     }
@@ -357,7 +357,7 @@ trait IShouldBeOnFrontendTrait
     /**
      * @Then I should be on the any other info summary page
      */
-    public function iAmOnAnyOtherInfoSummaryPage()
+    public function iAmOnAnyOtherInfoSummaryPage(): bool
     {
         return $this->iAmOnPage(sprintf('/%s\/.*\/any-other-info\/summary.*$/', $this->reportUrlPrefix));
     }
@@ -365,7 +365,7 @@ trait IShouldBeOnFrontendTrait
     /**
      * @Then I should be on the lifestyle details page
      */
-    public function iAmOnLifestyleDetailsPage()
+    public function iAmOnLifestyleDetailsPage(): bool
     {
         return $this->iAmOnPage(sprintf('/%s\/.*\/lifestyle\/step\/1.*$/', $this->reportUrlPrefix));
     }
@@ -373,7 +373,7 @@ trait IShouldBeOnFrontendTrait
     /**
      * @Then I should be on the lifestyle activities page
      */
-    public function iAmOnLifestyleActivitiesPage()
+    public function iAmOnLifestyleActivitiesPage(): bool
     {
         return $this->iAmOnPage(sprintf('/%s\/.*\/lifestyle\/step\/2.*$/', $this->reportUrlPrefix));
     }
@@ -381,12 +381,12 @@ trait IShouldBeOnFrontendTrait
     /**
      * @Then I should be on the lifestyle summary page
      */
-    public function iAmOnLifestyleSummaryPage()
+    public function iAmOnLifestyleSummaryPage(): bool
     {
         return $this->iAmOnPage(sprintf('/%s\/.*\/lifestyle\/summary.*$/', $this->reportUrlPrefix));
     }
 
-    public function iAmOnSpecifiedPage($specifiedUrlRegex)
+    public function iAmOnSpecifiedPage($specifiedUrlRegex): bool
     {
         return $this->iAmOnPage(sprintf('/%s\/.*\/%s$/', $this->reportUrlPrefix, $specifiedUrlRegex));
     }
@@ -394,7 +394,7 @@ trait IShouldBeOnFrontendTrait
     /**
      * @Then I should be on the debts exist page
      */
-    public function iAmOnDebtsExistPage()
+    public function iAmOnDebtsExistPage(): bool
     {
         return $this->iAmOnPage(sprintf('/%s\/.*\/debts\/exist.*$/', $this->reportUrlPrefix));
     }
@@ -402,7 +402,7 @@ trait IShouldBeOnFrontendTrait
     /**
      * @Then I should be on the debts management page
      */
-    public function iAmOnDebtsManagementPage()
+    public function iAmOnDebtsManagementPage(): bool
     {
         return $this->iAmOnPage(sprintf('/%s\/.*\/debts\/management.*$/', $this->reportUrlPrefix));
     }
@@ -410,7 +410,7 @@ trait IShouldBeOnFrontendTrait
     /**
      * @Then I should be on the debts edit page
      */
-    public function iAmOnDebtsEditPage()
+    public function iAmOnDebtsEditPage(): bool
     {
         return $this->iAmOnPage(sprintf('/%s\/.*\/debts\/edit.*$/', $this->reportUrlPrefix));
     }
@@ -418,22 +418,22 @@ trait IShouldBeOnFrontendTrait
     /**
      * @Then I should be on the debts summary page
      */
-    public function iAmOnDebtsSummaryPage()
+    public function iAmOnDebtsSummaryPage(): bool
     {
         return $this->iAmOnPage(sprintf('/%s\/.*\/debts\/summary.*$/', $this->reportUrlPrefix));
     }
 
-    public function iAmOnDeputyCostsHowChargedPage()
+    public function iAmOnDeputyCostsHowChargedPage(): bool
     {
         return $this->iAmOnPage(sprintf('/%s\/.*\/prof-deputy-costs\/how-charged.*$/', $this->reportUrlPrefix));
     }
 
-    public function iAmOnDeputyCostsPreviousReceivedExistsPage()
+    public function iAmOnDeputyCostsPreviousReceivedExistsPage(): bool
     {
         return $this->iAmOnPage(sprintf('/%s\/.*\/prof-deputy-costs\/previous-received-exists.*$/', $this->reportUrlPrefix));
     }
 
-    public function iAmOnDeputyCostsPreviousReceivedPage()
+    public function iAmOnDeputyCostsPreviousReceivedPage(): bool
     {
         return $this->iAmOnPage(sprintf('/%s\/.*\/prof-deputy-costs\/previous-received.*$/', $this->reportUrlPrefix));
     }
@@ -441,17 +441,17 @@ trait IShouldBeOnFrontendTrait
     /**
      * @Then I should be on the deputy costs - costs received page
      */
-    public function iAmOnDeputyCostsCostsReceievedPage()
+    public function iAmOnDeputyCostsCostsReceievedPage(): bool
     {
         return $this->iAmOnPage(sprintf('/%s\/.*\/prof-deputy-costs\/costs-received.*$/', $this->reportUrlPrefix));
     }
 
-    public function iAmOnDeputyCostsInterimExistsPage()
+    public function iAmOnDeputyCostsInterimExistsPage(): bool
     {
         return $this->iAmOnPage(sprintf('/%s\/.*\/prof-deputy-costs\/interim-exists.*$/', $this->reportUrlPrefix));
     }
 
-    public function iAmOnDeputyCostsInterimPage()
+    public function iAmOnDeputyCostsInterimPage(): bool
     {
         return $this->iAmOnPage(sprintf('/%s\/.*\/prof-deputy-costs\/interim.*$/', $this->reportUrlPrefix));
     }
@@ -459,7 +459,7 @@ trait IShouldBeOnFrontendTrait
     /**
      * @Then I should be on the deputy costs - SCCO amount page
      */
-    public function iAmOnDeputyCostsAmountSccoPage()
+    public function iAmOnDeputyCostsAmountSccoPage(): bool
     {
         return $this->iAmOnPage(sprintf('/%s\/.*\/prof-deputy-costs\/amount-scco.*$/', $this->reportUrlPrefix));
     }
@@ -467,12 +467,12 @@ trait IShouldBeOnFrontendTrait
     /**
      * @Then I should be on the deputy costs - breakdown page
      */
-    public function iAmOnDeputyCostsBreakdownPage()
+    public function iAmOnDeputyCostsBreakdownPage(): bool
     {
         return $this->iAmOnPage(sprintf('/%s\/.*\/prof-deputy-costs\/breakdown.*$/', $this->reportUrlPrefix));
     }
 
-    public function iAmOnDeputyCostsSummaryPage()
+    public function iAmOnDeputyCostsSummaryPage(): bool
     {
         return $this->iAmOnPage(sprintf('/%s\/.*\/prof-deputy-costs\/summary.*$/', $this->reportUrlPrefix));
     }
@@ -480,7 +480,7 @@ trait IShouldBeOnFrontendTrait
     /**
      * @Then I should be on the deputy costs estimate start page
      */
-    public function iAmOnDeputyCostsEstimateStartPage()
+    public function iAmOnDeputyCostsEstimateStartPage(): bool
     {
         return $this->iAmOnPage(sprintf('/%s\/.*\/prof-deputy-costs-estimate$/', $this->reportUrlPrefix));
     }
@@ -488,7 +488,7 @@ trait IShouldBeOnFrontendTrait
     /**
      * @Then I should be on the deputy costs estimate charges page
      */
-    public function iAmOnDeputyCostsEstimateChargesPage()
+    public function iAmOnDeputyCostsEstimateChargesPage(): bool
     {
         return $this->iAmOnPage(sprintf('/%s\/.*\/prof-deputy-costs-estimate\/how-charged.*$/', $this->reportUrlPrefix));
     }
@@ -496,7 +496,7 @@ trait IShouldBeOnFrontendTrait
     /**
      * @Then I should be on the deputy costs estimate breakdown page
      */
-    public function iAmOnDeputyCostsEstimateBreakdownPage()
+    public function iAmOnDeputyCostsEstimateBreakdownPage(): bool
     {
         return $this->iAmOnPage(sprintf('/%s\/.*\/prof-deputy-costs-estimate\/breakdown.*$/', $this->reportUrlPrefix));
     }
@@ -504,7 +504,7 @@ trait IShouldBeOnFrontendTrait
     /**
      * @Then I should be on the deputy costs estimate more info page
      */
-    public function iAmOnDeputyCostsEstimateMoreInfoPage()
+    public function iAmOnDeputyCostsEstimateMoreInfoPage(): bool
     {
         return $this->iAmOnPage(sprintf('/%s\/.*\/prof-deputy-costs-estimate\/more-info.*$/', $this->reportUrlPrefix));
     }
@@ -512,7 +512,7 @@ trait IShouldBeOnFrontendTrait
     /**
      * @Then I should be on the deputy costs estimate summary page
      */
-    public function iAmOnDeputyCostsEstimateSummaryPage()
+    public function iAmOnDeputyCostsEstimateSummaryPage(): bool
     {
         return $this->iAmOnPage(sprintf('/%s\/.*\/prof-deputy-costs-estimate\/summary.*$/', $this->reportUrlPrefix));
     }
@@ -520,7 +520,7 @@ trait IShouldBeOnFrontendTrait
     /**
      * @Then I should be on the assets exist page
      */
-    public function iAmOnAssetsExistPage()
+    public function iAmOnAssetsExistPage(): bool
     {
         return $this->iAmOnPage(sprintf('/%s\/.*\/assets\/exist.*$/', $this->reportUrlPrefix));
     }
@@ -528,7 +528,7 @@ trait IShouldBeOnFrontendTrait
     /**
      * @Then I should be on the assets type page
      */
-    public function iAmOnAssetTypePage()
+    public function iAmOnAssetTypePage(): bool
     {
         return $this->iAmOnPage(sprintf('/%s\/.*\/assets\/step-type/', $this->reportUrlPrefix));
     }
@@ -536,7 +536,7 @@ trait IShouldBeOnFrontendTrait
     /**
      * @Then I should be on the add another asset page
      */
-    public function iAmOnAddAnotherAssetPage()
+    public function iAmOnAddAnotherAssetPage(): bool
     {
         return $this->iAmOnPage(sprintf('/%s\/.*\/assets\/add_another/', $this->reportUrlPrefix));
     }
@@ -544,7 +544,7 @@ trait IShouldBeOnFrontendTrait
     /**
      * @Then I should be on the assets summary page
      */
-    public function iAmOnAssetsSummaryPage()
+    public function iAmOnAssetsSummaryPage(): bool
     {
         return $this->iAmOnPage(sprintf('/%s\/.*\/assets\/summary.*$/', $this->reportUrlPrefix));
     }
@@ -552,7 +552,7 @@ trait IShouldBeOnFrontendTrait
     /**
      * @Then I should be on the money in short summary page
      */
-    public function iAmOnMoneyInShortSummaryPage()
+    public function iAmOnMoneyInShortSummaryPage(): bool
     {
         return $this->iAmOnPage(sprintf('/%s\/.*\/money-in-short\/summary.*$/', $this->reportUrlPrefix));
     }
@@ -560,7 +560,7 @@ trait IShouldBeOnFrontendTrait
     /**
      * @Then I should be on the money in short category page
      */
-    public function iAmOnMoneyInShortCategoryPage()
+    public function iAmOnMoneyInShortCategoryPage(): bool
     {
         return $this->iAmOnPage(sprintf('/%s\/.*\/money-in-short\/category.*$/', $this->reportUrlPrefix));
     }
@@ -568,8 +568,16 @@ trait IShouldBeOnFrontendTrait
     /**
      * @Then I should be on the money in short add page
      */
-    public function iAmOnMoneyInShortAddPage()
+    public function iAmOnMoneyInShortAddPage(): bool
     {
         return $this->iAmOnPage(sprintf('/%s\/.*\/money-in-short\/add.*$/', $this->reportUrlPrefix));
+    }
+
+    /**
+     * @Then I should be on the document upload page
+     */
+    public function iAmOnUploadDocumentPage(): bool
+    {
+        return $this->iAmOnPage(sprintf('/%s\/.*\/documents\/step\/2$/', $this->reportUrlPrefix));
     }
 }

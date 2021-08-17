@@ -16,7 +16,7 @@ trait ClientManagementTrait
      */
     public function iSearchForExistingClientByFirstName()
     {
-        $user = is_null($this->interactingWithUserDetails) ? $this->profAdminDeputyNotStartedDetails : $this->interactingWithUserDetails;
+        $user = is_null($this->interactingWithUserDetails) ? $this->profAdminDeputyHealthWelfareNotStartedDetails : $this->interactingWithUserDetails;
         $this->searchForClientBy($user->getClientFirstName(), $user);
     }
 
@@ -25,7 +25,7 @@ trait ClientManagementTrait
      */
     public function iSearchForExistingClientByLastName()
     {
-        $user = is_null($this->interactingWithUserDetails) ? $this->profAdminDeputyNotStartedDetails : $this->interactingWithUserDetails;
+        $user = is_null($this->interactingWithUserDetails) ? $this->profAdminDeputyHealthWelfareNotStartedDetails : $this->interactingWithUserDetails;
         $this->searchForClientBy($user->getClientLastName(), $user);
     }
 
@@ -34,7 +34,7 @@ trait ClientManagementTrait
      */
     public function iSearchForExistingClientByFullName()
     {
-        $user = is_null($this->interactingWithUserDetails) ? $this->profAdminDeputyNotStartedDetails : $this->interactingWithUserDetails;
+        $user = is_null($this->interactingWithUserDetails) ? $this->profAdminDeputyHealthWelfareNotStartedDetails : $this->interactingWithUserDetails;
         $fullName = sprintf('%s %s', $user->getClientFirstName(), $user->getClientLastName());
         $this->searchForClientBy($fullName, $user);
     }
@@ -44,7 +44,7 @@ trait ClientManagementTrait
      */
     public function iSearchForExistingClientByCaseNumber()
     {
-        $user = is_null($this->interactingWithUserDetails) ? $this->profAdminDeputyNotStartedDetails : $this->interactingWithUserDetails;
+        $user = is_null($this->interactingWithUserDetails) ? $this->profAdminDeputyHealthWelfareNotStartedDetails : $this->interactingWithUserDetails;
         $this->searchForClientBy($user->getClientCaseNumber(), $user);
     }
 
@@ -256,26 +256,28 @@ MESSAGE;
 
         $pageContent = $this->getSession()->getPage()->find('css', 'main#main-content')->getHtml();
 
-        $currentReportDueDateVisible = str_contains($pageContent, $this->interactingWithUserDetails->getCurrentReportDueDate());
+        $currentReportDateString = $this->interactingWithUserDetails->getCurrentReportDueDate()->format('j F Y');
+        $currentReportDueDateVisible = str_contains($pageContent, $currentReportDateString);
 
         if (!$currentReportDueDateVisible) {
             $this->throwContextualException(
                 sprintf(
                     'Expected to find report with a due date of "%s" visible but it does not appear on the page. Got (full HTML): %s',
-                    $this->interactingWithUserDetails->getCurrentReportDueDate(),
+                    $currentReportDateString,
                     $pageContent
                 )
             );
         }
 
         if (!is_null($this->interactingWithUserDetails->getPreviousReportDueDate())) {
-            $previousReportDueDateVisible = str_contains($pageContent, $this->interactingWithUserDetails->getPreviousReportDueDate());
+            $previousReportDateString = $this->interactingWithUserDetails->getPreviousReportDueDate()->format('j F Y');
+            $previousReportDueDateVisible = str_contains($pageContent, $previousReportDateString);
 
             if (!$previousReportDueDateVisible) {
                 $this->throwContextualException(
                     sprintf(
                         'Expected to find report with a due date of "%s" visible but it does not appear on the page. Got (full HTML): %s',
-                        $this->interactingWithUserDetails->getPreviousReportDueDate(),
+                        $previousReportDateString,
                         $pageContent
                     )
                 );

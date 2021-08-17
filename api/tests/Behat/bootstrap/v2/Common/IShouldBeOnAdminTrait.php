@@ -37,6 +37,38 @@ trait IShouldBeOnAdminTrait
     }
 
     /**
+     * @Then I should be on the admin view user page
+     */
+    public function iAmOnAdminViewUserPage()
+    {
+        return $this->iAmOnPage('/admin\/user\/[0-9].*/');
+    }
+
+    /**
+     * @Then I should be on the admin add user page
+     */
+    public function iAmOnAdminAddUserPage()
+    {
+        return $this->iAmOnPage('/admin\/user-add$/');
+    }
+
+    /**
+     * @Then I should be on the admin edit user page
+     */
+    public function iAmOnAdminEditUserPage()
+    {
+        return $this->iAmOnPage('/admin\/edit-user.*$/');
+    }
+
+    /**
+     * @Then I should be on the admin delete confirm user page
+     */
+    public function iAmOnAdminDeleteConfirmUserPage()
+    {
+        return $this->iAmOnPage('/admin\/delete-confirm\/[0-9].*$/');
+    }
+
+    /**
      * @Then I should be on the admin organisation search page
      */
     public function iAmOnAdminOrganisationSearchPage()
@@ -92,6 +124,21 @@ trait IShouldBeOnAdminTrait
         return $this->iAmOnPage('/admin\/stats\/satisfaction$/');
     }
 
+    public function iAmOnAdminManageReportPage()
+    {
+        return $this->iAmOnPage('/admin\/report\/.*\/manage$/');
+    }
+
+    public function iAmOnAdminManageReportConfirmPage()
+    {
+        return $this->iAmOnPage('/admin\/report\/.*\/manage-confirm$/');
+    }
+
+    public function iAmOnAdminManageCloseReportConfirmPage()
+    {
+        return $this->iAmOnPage('/admin\/report\/.*\/manage-close-report-confirm$/');
+    }
+
     /**
      * @Then I should be on the admin report checklist page
      */
@@ -106,5 +153,15 @@ trait IShouldBeOnAdminTrait
     public function iAmOnAdminReportChecklistSubmittedPage()
     {
         return $this->iAmOnPage('/admin\/report\/.*\/checklist-submitted$/');
+    }
+
+    public function iAmOnAdminReportSubmissionsPage()
+    {
+        return $this->iAmOnPage('/admin\/documents\/list/');
+    }
+
+    public function iAmOnAdminAnalyticsPage()
+    {
+        return $this->iAmOnPage('/admin\/stats\/metrics$/');
     }
 }
