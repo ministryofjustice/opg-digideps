@@ -83,31 +83,15 @@ workflows:
           task_name: integration_test_v2
           timeout: 1200
 
-      - approve:
-          name: approval for further testing
-          type: approval
-          requires: [
-            integration tests v2,
-            protect branch workspace
-          ]
-          filters: { branches: { ignore: [ main ] } }
-
-      - run-task:
-          name: integration tests
-          requires: [ approval for further testing ]
-          filters: { branches: { ignore: [ main ] } }
-          task_name: integration_test
-          timeout: 3000
-
       - terraform-plan-all:
           name: plan all terraform environments
-          requires: [ approval for further testing ]
+          requires: [ integration tests v2 ]
           filters: { branches: { ignore: [ main ] } }
           tf_tier: environment
 
       - terraform-plan-all:
           name: plan all shared terraform environments
-          requires: [ approval for further testing ]
+          requires: [ integration tests v2 ]
           filters: { branches: { ignore: [ main ] } }
           tf_tier: shared
 
@@ -116,7 +100,7 @@ workflows:
           message: Your branch << pipeline.git.branch >> has completed
           channel: opg-digicop-builds
           requires: [
-            integration tests,
+            integration tests v2,
             plan all terraform environments,
             plan all shared terraform environments,
             api unit test,
@@ -236,9 +220,9 @@ workflows:
           name: integration test
           requires: [ reset integration ]
           filters: { branches: { only: [ main ] } }
-          task_name: integration_test
+          task_name: integration_test_v2
           tf_workspace: integration
-          timeout: 3000
+          timeout: 1200
 
       - terraform-command:
           name: plan preproduction
@@ -363,10 +347,10 @@ workflows:
           name: integration test
           requires: [ reset integration ]
           filters: { branches: { only: [ main ] } }
-          task_name: integration_test
+          task_name: integration_test_v2
           tf_workspace: integration
           notify_slack: true
-          timeout: 3000
+          timeout: 1200
 
   nightly_workspace_deletion:
     triggers:
