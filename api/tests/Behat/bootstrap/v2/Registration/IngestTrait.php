@@ -161,13 +161,12 @@ trait IngestTrait
     }
 
     /**
-     * @When I upload a :source org CSV that has a new made date :newMadeDate and named deputy :newNamedDeputy within the same org as the clients existing name deputy
+     * @When I upload a :source org CSV that has a new named deputy :newNamedDeputy within the same org as the clients existing name deputy
      */
-    public function iUploadACsvThatHasANewMadeDateAndNamedDeputyWithinTheSameOrgAsTheClientsExistingNameDeputy(string $source, string $newMadeDate, string $newNamedDeputy)
+    public function iUploadACsvThatHasANewMadeDateAndNamedDeputyWithinTheSameOrgAsTheClientsExistingNameDeputy(string $source, string $newNamedDeputy)
     {
         $this->iAmOnAdminOrgCsvUploadPage();
 
-        $this->expectedClientCourtDate = new DateTime($newMadeDate);
         $this->expectedNamedDeputyName = $newNamedDeputy;
 
         $this->createProfAdminNotStarted(null, 'professor@mccracken4.com', '40000000');
@@ -189,20 +188,14 @@ trait IngestTrait
     }
 
     /**
-     * @Then the clients made date and named deputy should be updated
+     * @Then the clients named deputy should be updated
      */
-    public function theClientsMadeDateAndNamedDeputyShouldBeUpdated()
+    public function theClientsNamedDeputyShouldBeUpdated()
     {
         $this->iAmOnAdminOrgCsvUploadPage();
 
         $this->em->clear();
         $client = $this->em->getRepository(Client::class)->find($this->profAdminDeputyHealthWelfareNotStartedDetails->getClientId());
-
-        $this->assertStringEqualsString(
-            $this->expectedClientCourtDate->format('j F Y'),
-            $client->getCourtDate()->format('j F Y'),
-            'Comparing expected court date to client court date'
-        );
 
         $this->assertStringEqualsString(
             $this->expectedNamedDeputyName,
@@ -645,6 +638,41 @@ trait IngestTrait
         $this->clientBeforeCsvUpload = $existingClient;
 
         $filePath = 'casrec-csvs/org-1-row-existing-named-deputy-and-client-new-org-and-street-address.csv';
+        $this->uploadCsvAndCountCreatedEntities($filePath, 'Upload PA/Prof users');
+
+        $this->em->clear();
+
+        $this->clientAfterCsvUpload = $this->em
+            ->getRepository(Client::class)
+            ->findOneBy(['caseNumber' => $this->entityUids['client_case_numbers'][0], 'deletedAt' => null]);
+
+        if (is_null($this->clientAfterCsvUpload)) {
+            throw new BehatException(sprintf('Client not found with case number "%s"', $this->entityUids['client_case_numbers'][0]));
+        }
+    }
+
+    /**
+     * @When I upload a :source org CSV that has a an existing case number and new made date for an existing client
+     */
+    public function iUploadCsvThatHasExistingCaseNumberNewMadeDateForExistingClient()
+    {
+        $this->iAmOnAdminOrgCsvUploadPage();
+
+        $this->createProfAdminNotStarted(null, 'sufjan@stevens.com', '16431643');
+
+        $this->em->clear();
+
+        $existingClient = $this->em
+            ->getRepository(Client::class)
+            ->findOneBy(['caseNumber' => '16431643']);
+
+        if (is_null($existingClient)) {
+            throw new BehatException('Existing Client not found with case number "16431643"');
+        }
+
+        $this->clientBeforeCsvUpload = $existingClient;
+
+        $filePath = 'casrec-csvs/org-1-updated-row-existing-case-number-new-made-date.csv';
         $this->uploadCsvAndCountCreatedEntities($filePath, 'Upload PA/Prof users');
 
         $this->em->clear();

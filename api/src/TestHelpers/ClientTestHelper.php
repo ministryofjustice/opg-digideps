@@ -34,7 +34,7 @@ class ClientTestHelper extends TestCase
             ->setLastname($faker->lastName)
             ->setCaseNumber($caseNumber ?: self::createValidCaseNumber())
             ->setEmail($faker->safeEmail.mt_rand(1, 100000))
-            ->setCourtDate(new \DateTime())
+            ->setCourtDate(new \DateTime('09-Aug-2018'))
             ->setAddress($faker->streetAddress)
             ->setPostcode($faker->postcode);
 

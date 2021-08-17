@@ -149,18 +149,16 @@ class OrgDeputyshipUploader
 
             $this->added['clients'][] = $dto->getCaseNumber();
         } else {
-            if ($client->getCourtDate() !== $dto->getCourtDate()) {
-                $client->setCourtDate($dto->getCourtDate());
-                $this->updated['clients'][] = $client->getId();
-            }
-
             if ($this->clientHasNewOrgAndNamedDeputy($client, $this->namedDeputy)) {
-                // Look at adding audit logging to API side of app
-                $client->setDeletedAt(new \DateTime());
-                $this->em->persist($client);
-                $this->em->flush();
+                if ($this->clientHasNewCourtOrder($client, $dto)) {
+                    // Discharge clients with a new court order
+                    // Look at adding audit logging for discharge to API side of app
+                    $client->setDeletedAt(new \DateTime());
+                    $this->em->persist($client);
+                    $this->em->flush();
 
-                $client = $this->clientAssembler->assembleFromOrgDeputyshipDto($dto);
+                    $client = $this->clientAssembler->assembleFromOrgDeputyshipDto($dto);
+                }
 
                 $this->currentOrganisation->addClient($client);
                 $client->setOrganisation($this->currentOrganisation);
@@ -194,6 +192,12 @@ class OrgDeputyshipUploader
         $this->em->flush();
 
         $this->client = $client;
+    }
+
+    private function clientHasNewCourtOrder(Client $client, OrgDeputyshipDto $dto)
+    {
+        return $client->getCaseNumber() === $dto->getCaseNumber() &&
+            $client->getCourtDate()->format('Ymd') !== $dto->getCourtDate()->format('Ymd');
     }
 
     private function clientHasNewOrgAndNamedDeputy(Client $client, NamedDeputy $namedDeputy): bool
