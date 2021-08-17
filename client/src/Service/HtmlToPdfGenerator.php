@@ -29,7 +29,7 @@ class HtmlToPdfGenerator
     {
         $pdf = $this->getPdfFromHtml('test');
 
-        return strlen($pdf) > 5000 && preg_match('/PDF-\d/', $pdf);
+        return strlen($pdf) > 800 && preg_match('/PDF-\d/', $pdf);
     }
 
     /**
