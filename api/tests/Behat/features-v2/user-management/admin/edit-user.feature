@@ -1,43 +1,37 @@
-@v2 @admin-user-edit @admin-user
-Feature: Admin - User Edit
+@v2 @admin-deputy-management
+Feature: Admin - Edit deputy users
 
-    @super-admin
-    Scenario: A super admin user edits each user
+    @super-admin @lay-health-welfare-not-started
+    Scenario: A super admin user edits a deputy users details
         Given a super admin user accesses the admin app
-        And I have created the appropriate test users to edit
-        When I edit each of the test users
-        Then I should see the users have been correctly updated
-        When I navigate to the lay user for edit tests
-        Then I see user details are displayed correctly
+        And a Lay Deputy exists
+        Then I should be able to update the deputies firstname, lastname, postcode and email address
+        When I update the details of the deputy available to me
+        Then the deputies details should be updated
 
-    @super-admin
-    Scenario: A super admin user tries to delete users
-        Given a super admin user accesses the admin app
-        And I have created the appropriate test users to edit
-        When I delete the admin manager
-        Then I no longer see the admin manager in search results
-        When I delete the admin
-        Then I no longer see the admin in search results
-
-    @admin-manager
-    Scenario: A admin manager user edits other admins
+    @admin-manager @lay-health-welfare-not-started
+    Scenario: An admin manager user edits a deputy users details
         Given an admin manager user accesses the admin app
-        And I have created the appropriate test users to edit
-        When I view the super admin user
-        Then I should not be able to edit that user
-        When I view the admin manager user
-        Then I should not be able to edit that user
-        But I should be able to delete that user
-        When I view the admin user
-        Then I should be able to edit that user
+        And a Lay Deputy exists
+        Then I should be able to update the deputies firstname, lastname, postcode and email address
+        When I update the details of the deputy available to me
+        Then the deputies details should be updated
 
-    @admin
-    Scenario: A admin user edits a super admin
+    @admin @lay-health-welfare-not-started
+    Scenario: An admin user edits a deputy users details
         Given an admin user accesses the admin app
-        And I have created the appropriate test users to edit
-        When I view the super admin user
-        Then I should not be able to edit that user
-        When I view the admin manager user
-        Then I should not be able to edit that user
-        When I view the admin user
-        Then I should be able to edit that user
+        And a Lay Deputy exists
+        Then I should be able to update the deputies firstname, lastname and postcode
+        And I should not be able to update the deputies email address
+        When I update the details of the deputy available to me
+        Then the deputies details should be updated
+
+    @super-admin @lay-health-welfare-not-started
+    Scenario: A super admin user enters invalid data
+        Given a super admin user accesses the admin app
+        And a Lay Deputy exists
+        When I visit the admin Edit User page for the user I'm interacting with
+        And I enter empty values
+        Then I should see 'missing values' errors
+        When I enter the wrong type of values
+        Then I should see 'type validation' errors
