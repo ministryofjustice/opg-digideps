@@ -172,7 +172,7 @@ trait IngestTrait
         $this->createProfAdminNotStarted(null, 'professor@mccracken4.com', '40000000');
 
         $this->uploadCsvAndCountCreatedEntities(
-            'casrec-csvs/org-1-updated-row-made-date-and-named-deputy.csv',
+            'casrec-csvs/org-1-updated-row-new-named-deputy.csv',
             'Upload PA/Prof users'
         );
     }

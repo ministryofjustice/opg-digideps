@@ -296,7 +296,7 @@ class OrgDeputyshipDTOTestHelper
             ->setCaseNumber($dto->getCaseNumber())
             ->setFirstname($dto->getClientFirstname())
             ->setLastname($dto->getClientLastname())
-            ->setCourtDate(new DateTime());
+            ->setCourtDate($dto->getCourtDate());
 
         $em->persist($client);
         $em->flush();

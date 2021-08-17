@@ -175,12 +175,14 @@ class OrgDeputyshipUploaderTest extends KernelTestCase
      * @dataProvider existingClientProvider
      * @test
      */
-    public function uploadExistingClientsMadeDateIsUpdated(DateTime $existingCourtDate, DateTime $uploadCourtDate)
+    public function uploadExistingClientsWithNewMadeDateCreatesNewReport(DateTime $existingCourtDate, DateTime $uploadCourtDate)
     {
         $deputyships = OrgDeputyshipDTOTestHelper::generateOrgDeputyshipDtos(1, 0);
         $deputyships[0]->setCourtDate($uploadCourtDate);
 
         $client = OrgDeputyshipDTOTestHelper::ensureClientInUploadExists($deputyships[0], $this->em);
+        $existingReport = OrgDeputyshipDTOTestHelper::ensureAReportExistsAndIsAssociatedWithClient($client, $this->em);
+
         $client->setCourtDate($existingCourtDate);
 
         $this->em->persist($client);
@@ -190,18 +192,17 @@ class OrgDeputyshipUploaderTest extends KernelTestCase
 
         $client = $this->clientRepository->findOneBy(['caseNumber' => $deputyships[0]->getCaseNumber()]);
 
-        self::assertEquals($uploadCourtDate, $client->getCourtDate());
+        self::assertNotEquals($existingReport->getId(), $client->getCurrentReport()->getId());
     }
 
     public function existingClientProvider()
     {
         return [
-            'Same court date' => [new DateTime('Today'), new DateTime('Today')],
             'Updated court date' => [new DateTime('Today'), new DateTime('Tomorrow')],
         ];
     }
 
-    /** @test  */
+    /** @test */
     public function uploadClientAndOrgAreAssociated()
     {
         $deputyships = OrgDeputyshipDTOTestHelper::generateOrgDeputyshipDtos(1, 0);
@@ -240,7 +241,6 @@ class OrgDeputyshipUploaderTest extends KernelTestCase
 
         $client = OrgDeputyshipDTOTestHelper::ensureClientInUploadExists($deputyships[0], $this->em);
         $client->setNamedDeputy($originalNamedDeputy)->setOrganisation($organisation);
-        $client->setCourtDate(new DateTime('Tomorrow'));
 
         $this->em->persist($client);
         $this->em->flush();
@@ -307,7 +307,7 @@ class OrgDeputyshipUploaderTest extends KernelTestCase
 
     /**
      * @test
-     *@dataProvider errorProvider
+     * @dataProvider errorProvider
      */
     public function uploadErrorsAreAddedToErrorArray(OrgDeputyshipDto $dto, array $expectedErrorStrings)
     {

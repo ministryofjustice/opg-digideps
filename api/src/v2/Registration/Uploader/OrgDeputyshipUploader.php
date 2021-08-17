@@ -139,39 +139,19 @@ class OrgDeputyshipUploader
         }
 
         if (is_null($client)) {
-            $client = $this->clientAssembler->assembleFromOrgDeputyshipDto($dto);
-            $client->setNamedDeputy($this->namedDeputy);
-
-            if (!is_null($this->currentOrganisation)) {
-                $this->currentOrganisation->addClient($client);
-                $client->setOrganisation($this->currentOrganisation);
-            }
+            $client = $this->buildClientAndAssociateWithDeputyAndOrg($dto);
 
             $this->added['clients'][] = $dto->getCaseNumber();
         } else {
-            if ($this->clientHasNewOrgAndNamedDeputy($client, $this->namedDeputy)) {
-                if ($this->clientHasNewCourtOrder($client, $dto)) {
-                    // Discharge clients with a new court order
-                    // Look at adding audit logging for discharge to API side of app
-                    $client->setDeletedAt(new \DateTime());
-                    $this->em->persist($client);
-                    $this->em->flush();
-
-                    $client = $this->clientAssembler->assembleFromOrgDeputyshipDto($dto);
-                }
-
-                $this->currentOrganisation->addClient($client);
-                $client->setOrganisation($this->currentOrganisation);
-                $client->setNamedDeputy($this->namedDeputy);
-
+            if ($this->clientHasNewCourtOrder($client, $dto)) {
+                // Discharge clients with a new court order
+                // Look at adding audit logging for discharge to API side of app
+                $client->setDeletedAt(new \DateTime());
                 $this->em->persist($client);
                 $this->em->flush();
 
-                $this->client = $client;
-
-                $this->added['clients'][] = $client->getId();
-
-                return;
+                $client = $this->buildClientAndAssociateWithDeputyAndOrg($dto);
+                $this->added['clients'][] = $dto->getCaseNumber();
             }
 
             if ($this->clientHasSwitchedOrganisation($client)) {
@@ -194,7 +174,21 @@ class OrgDeputyshipUploader
         $this->client = $client;
     }
 
-    private function clientHasNewCourtOrder(Client $client, OrgDeputyshipDto $dto)
+    private function buildClientAndAssociateWithDeputyAndOrg(OrgDeputyshipDto $dto): Client
+    {
+        $client = $this->clientAssembler->assembleFromOrgDeputyshipDto($dto);
+
+        $client->setNamedDeputy($this->namedDeputy);
+
+        if (!is_null($this->currentOrganisation)) {
+            $this->currentOrganisation->addClient($client);
+            $client->setOrganisation($this->currentOrganisation);
+        }
+
+        return $client;
+    }
+
+    private function clientHasNewCourtOrder(Client $client, OrgDeputyshipDto $dto): bool
     {
         return $client->getCaseNumber() === $dto->getCaseNumber() &&
             $client->getCourtDate()->format('Ymd') !== $dto->getCourtDate()->format('Ymd');
