@@ -582,4 +582,12 @@ trait IShouldBeOnFrontendTrait
     {
         return $this->iAmOnPage(sprintf('/%s\/.*\/documents\/step\/2$/', $this->reportUrlPrefix));
     }
+
+    /**
+     * @Then I should be on client login page
+     */
+    public function iAmOnClientLoginPage()
+    {
+        return $this->iAmOnPage('/login$/');
+    }
 }

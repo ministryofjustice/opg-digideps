@@ -1,7 +1,7 @@
 @contact-details @v2
 Feature: Contact details
     Scenario: Home screen should show lay deputy email address
-        When I visit the frontend login page
+        When I visit the client login page
         Then the support footer should show "laydeputysupport@publicguardian.gov.uk"
 
     @admin

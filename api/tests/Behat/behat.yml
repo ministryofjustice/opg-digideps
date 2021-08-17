@@ -231,6 +231,18 @@ v2-tests-goutte:
             contexts:
                 - App\Tests\Behat\v2\Reporting\Sections\ReportingSectionsFeatureContext
 
+        app-notification:
+            description: Coverage of service notifications of the app
+            paths: [ "%paths.base%/features-v2/app-notification" ]
+            contexts:
+                - App\Tests\Behat\v2\AppNotification\AppNotificationFeatureContext
+
+        reporting-checklist:
+            description: Coverage of report checklist feature
+            paths: [ "%paths.base%/features-v2/reporting/admin/checklist" ]
+            contexts:
+                - App\Tests\Behat\v2\Reporting\Admin\ReportingAdminFeatureContext
+
         report-management:
             description: Coverage of report management features in the admin side of the app
             paths: [ "%paths.base%/features-v2/report-management" ]
@@ -242,12 +254,6 @@ v2-tests-goutte:
             paths: [ "%paths.base%/features-v2/reporting/section-navigation" ]
             contexts:
                 - App\Tests\Behat\v2\ReportSectionNavigation\ReportSectionNavigationFeatureContext
-
-        reporting-checklist:
-            description: Coverage of report checklist feature
-            paths: [ "%paths.base%/features-v2/reporting/report-checklist" ]
-            contexts:
-                - App\Tests\Behat\v2\Reporting\Admin\ReportingAdminFeatureContext
 
         report-submission:
             description: Coverage of report submission and document sync features in the admin side of the app

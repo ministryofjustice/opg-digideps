@@ -264,10 +264,10 @@ trait IVisitFrontendTrait
     }
 
     /**
-     * @When I visit the frontend login page
+     * @When I visit the client login page
      */
-    public function iVisitFrontLoginPage()
+    public function iVisitTheClientLoginPage()
     {
-        $this->visitFrontendPath('/');
+        $this->visitFrontendPath($this->getClientLoginPageUrl());
     }
 }

@@ -13,6 +13,7 @@ trait PageUrlsTrait
     private string $anyOtherInfoUrl = '/%s/%s/any-other-info';
     private string $assetsSectionUrl = '/%s/%s/assets';
     private string $assetsSummarySectionUrl = '/%s/%s/assets/summary';
+    private string $clientLoginPageUrl = '/login';
     private string $contactsAddUrl = '/report/%s/contacts/add';
     private string $contactsAddAnotherUrl = '/report/%s/contacts/add_another';
     private string $contactsSectionUrl = '/%s/%s/contacts';
@@ -46,20 +47,21 @@ trait PageUrlsTrait
     private string $visitsAndCareSectionUrl = '/%s/%s/visits-care';
 
     // Admin
+    private string $adminActiveLaysReportUrl = '/admin/stats/downloadActiveLaysCsv';
+    private string $adminAddUserUrl = '/admin/user-add';
+    private string $adminAnalyticsUrl = '/admin/stats/metrics';
     private string $adminClientSearchUrl = '/admin/client/search';
     private string $adminClientDetailsUrl = '/admin/client/%s/details';
-    private string $adminAddUserUrl = '/admin/user-add';
+    private string $adminDATReportUrl = '/admin/stats';
+    private string $adminEditUserUrl = '/admin/edit-user?filter=%s';
+    private string $adminFixturesUrl = '/admin/fixtures';
+    private string $adminMyUserProfileUrl = '/deputyship-details/your-details';
+    private string $adminNotificationUrl = '/admin/settings/service-notification';
+    private string $adminSatisfactionReportUrl = '/admin/stats/satisfaction';
+    private string $adminSubmissionsPage = '/admin/documents/list';
+    private string $adminUserResearchReportUrl = '/admin/stats/user-research';
     private string $adminUserSearchUrl = '/admin';
     private string $adminViewUserUrl = '/admin/user/%s';
-    private string $adminEditUserUrl = '/admin/edit-user?filter=%s';
-    private string $adminMyUserProfileUrl = '/deputyship-details/your-details';
-    private string $adminAnalyticsUrl = '/admin/stats/metrics';
-    private string $adminDATReportUrl = '/admin/stats';
-    private string $adminSatisfactionReportUrl = '/admin/stats/satisfaction';
-    private string $adminUserResearchReportUrl = '/admin/stats/user-research';
-    private string $adminActiveLaysReportUrl = '/admin/stats/downloadActiveLaysCsv';
-    private string $adminFixturesUrl = '/admin/fixtures';
-    private string $adminSubmissionsPage = '/admin/documents/list';
 
     // Fixtures
     private string $courtOrdersFixtureUrl = '/admin/fixtures/court-orders?%s';
@@ -322,5 +324,15 @@ trait PageUrlsTrait
     public function getAdminSubmissionsPage(): string
     {
         return $this->adminSubmissionsPage;
+    }
+
+    public function getAdminNotificationUrl(): string
+    {
+        return $this->adminNotificationUrl;
+    }
+
+    public function getClientLoginPageUrl(): string
+    {
+        return $this->clientLoginPageUrl;
     }
 }
