@@ -5,14 +5,15 @@ use Aws\S3\S3Client;
 use Aws\Ssm\SsmClient;
 use GuzzleHttp\Client;
 
-require __DIR__ . '/../vendor/autoload.php';
+require __DIR__.'/../vendor/autoload.php';
 
 function isLocalstackAvailable()
 {
     try {
         $client = new Client();
         $response = $client->request('GET', 'http://localstack:8080');
-        return $response->getStatusCode() === 200;
+
+        return 200 === $response->getStatusCode();
     } catch (Throwable $e) {
         return false;
     }
@@ -20,14 +21,14 @@ function isLocalstackAvailable()
 
 do {
     sleep(1);
-} while (isLocalstackAvailable() === false);
+} while (false === isLocalstackAvailable());
 
 $ssmClient = new SsmClient([
-    'version'  => 'latest',
-    'region'  => 'eu-west-1',
-    'endpoint'  => 'http://localstack:4583',
-    'validate'  => false,
-    'credentials'  => [
+    'version' => 'latest',
+    'region' => 'eu-west-1',
+    'endpoint' => 'http://localstack:4583',
+    'validate' => false,
+    'credentials' => [
         'key' => 'FAKE_ID',
         'secret' => 'FAKE_KEY',
     ],
@@ -37,73 +38,73 @@ $ssmClient->putParameter([
     'Name' => '/default/flag/document-sync',
     'Type' => 'String',
     'Value' => '1',
-    'Overwrite' => true
+    'Overwrite' => true,
 ]);
 
 $ssmClient->putParameter([
     'Name' => '/default/parameter/document-sync-row-limit',
     'Type' => 'String',
     'Value' => '100',
-    'Overwrite' => true
+    'Overwrite' => true,
 ]);
 
 $ssmClient->putParameter([
     'Name' => '/default/parameter/document-sync-interval-minutes',
     'Type' => 'String',
     'Value' => '4.5',
-    'Overwrite' => true
+    'Overwrite' => true,
 ]);
 
 $ssmClient->putParameter([
     'Name' => '/default/flag/checklist-sync',
     'Type' => 'String',
     'Value' => '1',
-    'Overwrite' => true
+    'Overwrite' => true,
 ]);
 
 $ssmClient->putParameter([
     'Name' => '/default/parameter/checklist-sync-row-limit',
     'Type' => 'String',
     'Value' => '100',
-    'Overwrite' => true
+    'Overwrite' => true,
 ]);
 
 $cloudwatchLogsClient = new CloudWatchLogsClient([
-    'version'  => 'latest',
-    'region'  => 'eu-west-1',
-    'endpoint'  => 'http://localstack:4586',
-    'validate'  => false,
-    'credentials'  => [
+    'version' => 'latest',
+    'region' => 'eu-west-1',
+    'endpoint' => 'http://localstack:4586',
+    'validate' => false,
+    'credentials' => [
         'key' => 'FAKE_ID',
         'secret' => 'FAKE_KEY',
     ],
 ]);
 
-$logsResult = $cloudwatchLogsClient->describeLogGroups(['logGroupNamePrefix' => 'audit-local',]);
+$logsResult = $cloudwatchLogsClient->describeLogGroups(['logGroupNamePrefix' => 'audit-local']);
 
 if (empty($logsResult->get('logGroups'))) {
     $cloudwatchLogsClient->createLogGroup([
-        'logGroupName' => 'audit-local'
+        'logGroupName' => 'audit-local',
     ]);
 }
 
 $s3Client = new S3Client([
-    'version'  => 'latest',
-    'region'  => 'eu-west-1',
-    'endpoint'  => 'http://localstack:4572',
-    'validate'  => false,
+    'version' => 'latest',
+    'region' => 'eu-west-1',
+    'endpoint' => 'http://localstack:4572',
+    'validate' => false,
     'use_path_style_endpoint' => true,
-    'credentials'  => [
+    'credentials' => [
         'key' => 'FAKE_ID',
         'secret' => 'FAKE_KEY',
     ],
 ]);
 
-$s3Result = $s3Client->listBuckets(['logGroupNamePrefix' => 'audit-local',]);
+$s3Result = $s3Client->listBuckets(['logGroupNamePrefix' => 'audit-local']);
 
 if (empty($s3Result->get('Buckets'))) {
     $s3Client->createBucket([
-        'Bucket' => 'pa-uploads-local'
+        'Bucket' => 'pa-uploads-local',
     ]);
 
     $s3Client->putBucketVersioning([

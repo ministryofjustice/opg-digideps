@@ -15,6 +15,8 @@ class ParameterStoreService
     public const FLAG_CHECKLIST_SYNC = 'checklist-sync';
     public const PARAMETER_CHECKLIST_SYNC_ROW_LIMIT = 'checklist-sync-row-limit';
 
+    public const FLAG_BENEFITS_QUESTIONS = 'benefits-questions';
+
     /** @var SsmClient */
     private $ssmClient;
 

@@ -17,8 +17,10 @@ use App\Service\Client\Internal\UserApi;
 use App\Service\Client\RestClient;
 use App\Service\File\S3FileUploader;
 use App\Service\NdrStatusService;
+use App\Service\ParameterStoreService;
 use App\Service\Redirector;
 use App\Service\WkHtmlToPdfGenerator;
+use DateTime;
 use Sensio\Bundle\FrameworkExtraBundle\Configuration\Template;
 use Symfony\Component\HttpFoundation\RedirectResponse;
 use Symfony\Component\HttpFoundation\Request;
@@ -131,7 +133,7 @@ class NdrController extends AbstractController
      *
      * @return array|RedirectResponse
      */
-    public function overviewAction(Redirector $redirector)
+    public function overviewAction(Redirector $redirector, ParameterStoreService $parameterStore)
     {
         // redirect if user has missing details or is on wrong page
         $user = $this->userApi->getUserWithData();
@@ -153,10 +155,23 @@ class NdrController extends AbstractController
         }
         $ndrStatus = new NdrStatusService($ndr);
 
+        $benefitsSection = false;
+        $dateTimeFormat = 'd-m-Y H:i:s';
+
+        $featureFlag = $parameterStore->getFeatureFlag(ParameterStoreService::FLAG_BENEFITS_QUESTIONS);
+
+        $featureFlagDate = DateTime::createFromFormat($dateTimeFormat, $featureFlag);
+        $currentDate = DateTime::createFromFormat($dateTimeFormat, date($dateTimeFormat));
+
+        if ($currentDate >= $featureFlagDate) {
+            $benefitsSection = true;
+        }
+
         return [
             'client' => $client,
             'ndr' => $ndr,
             'ndrStatus' => $ndrStatus,
+            'benefitsSection' => $benefitsSection,
         ];
     }
 
