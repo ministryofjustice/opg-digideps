@@ -91,19 +91,6 @@ default:
             contexts:
                 - App\Tests\Behat\UserManagement\UserManagementFeatureContext
 
-        # features-v2
-        reporting-preview:
-            description: Coverage of report preview functionality
-            paths: [ "%paths.base%/features-v2/reporting/preview" ]
-            contexts:
-                - App\Tests\Behat\Reporting\ReportingFeatureContext
-
-        contact-details:
-            description: Coverage of displaying contact details based on user role
-            paths: [ "%paths.base%/features-v2/contact-details" ]
-            contexts:
-                - App\Tests\Behat\ContactDetails\ContactDetailsFeatureContext
-
     extensions:
         Behat\MinkExtension:
             goutte:
@@ -214,6 +201,12 @@ v2-tests-goutte:
             contexts:
                 - App\Tests\Behat\v2\ClientManagement\ClientManagementFeatureContext
 
+        contact-details:
+            description: Coverage of displaying contact details based on user role
+            paths: [ "%paths.base%/features-v2/contact-details" ]
+            contexts:
+                - App\Tests\Behat\v2\ContactDetails\ContactDetailsFeatureContext
+
         deputy-management:
             description: Coverage of deputy management features - adding, deleting, editing
             paths: [ "%paths.base%/features-v2/deputy-management" ]
@@ -255,6 +248,12 @@ v2-tests-goutte:
             paths: [ "%paths.base%/features-v2/report-management" ]
             contexts:
                 - App\Tests\Behat\v2\ReportManagement\ReportManagementFeatureContext
+
+        report-section-navigation:
+            description: Coverage of next and previous links in report sections
+            paths: [ "%paths.base%/features-v2/reporting/section-navigation" ]
+            contexts:
+                - App\Tests\Behat\v2\ReportSectionNavigation\ReportSectionNavigationFeatureContext
 
         report-submission:
             description: Coverage of report submission and document sync features in the admin side of the app

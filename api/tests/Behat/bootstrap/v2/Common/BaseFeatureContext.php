@@ -5,7 +5,6 @@ declare(strict_types=1);
 namespace App\Tests\Behat\v2\Common;
 
 use App\TestHelpers\ReportTestHelper;
-use App\Tests\Behat\BehatException;
 use App\Tests\Behat\v2\Analytics\AnalyticsTrait;
 use App\Tests\Behat\v2\Helpers\FixtureHelper;
 use Behat\Behat\Hook\Scope\BeforeScenarioScope;
@@ -276,6 +275,15 @@ class BaseFeatureContext extends MinkContext
     }
 
     /**
+     * @BeforeScenario @prof-named-pfa-high-not-started
+     */
+    public function createProfNamedPfaHighNotStarted()
+    {
+        $userDetails = $this->fixtureHelper->createProfNamedPfaHighNotStarted($this->testRunId);
+        $this->fixtureUsers[] = $this->profNamedDeputyNotStartedPfaHighDetails = new UserDetails($userDetails);
+    }
+
+    /**
      * @BeforeScenario @prof-named-pfa-high-submitted
      */
     public function createProfNamedPfaHighSubmitted()
@@ -493,11 +501,6 @@ class BaseFeatureContext extends MinkContext
         } else {
             return $this->getSession()->getPage()->getText();
         }
-    }
-
-    public function throwContextualException(string $message)
-    {
-        throw new BehatException($message);
     }
 
     public function getCurrentUrl(): string

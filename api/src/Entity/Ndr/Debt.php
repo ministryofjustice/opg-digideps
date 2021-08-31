@@ -85,9 +85,8 @@ class Debt
     /**
      * Debt constructor.
      *
-     * @param Ndr    $ndr
      * @param string $debtTypeId
-     * @param boole  $hasMoreDetails
+     * @param bool   $hasMoreDetails
      * @param float  $amount
      */
     public function __construct(Ndr $ndr, $debtTypeId, $hasMoreDetails, $amount)

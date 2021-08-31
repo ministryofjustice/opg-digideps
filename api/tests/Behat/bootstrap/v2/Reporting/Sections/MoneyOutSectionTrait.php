@@ -6,10 +6,47 @@ namespace App\Tests\Behat\v2\Reporting\Sections;
 
 trait MoneyOutSectionTrait
 {
-    // this page has a special sub section layout which means we need to nest one more level than usual
-    private array $paymentsList = [];
-    private array $paymentsListForFills = [];
-    private int $totalMoneyOut = 0;
+    private array $paymentTypeDictionary = [
+        'care-fees' => 'Care fees',
+        'local-authority-charges-for-care' => 'Local authority charges for care',
+        'medical-expenses' => 'Medical expenses',
+        'medical-insurance' => 'Medical insurance',
+        'broadband' => 'Broadband',
+        'council-tax' => 'Council tax',
+        'dual-fuel' => 'Dual fuel (Combined electricity & gas)',
+        'electricity' => 'Electricity',
+        'food' => 'Food',
+        'gas' => 'Gas',
+        'insurance-eg-life-home-contents' => 'Insurance (for example, life, home and contents)',
+        'property-maintenance-improvement' => 'Property maintenance/improvement',
+        'telephone' => 'Phone',
+        'tv-services' => 'TV services',
+        'water' => 'Water',
+        'accommodation-service-charge' => 'Accommodation service charge',
+        'mortgage' => 'Mortgage',
+        'rent' => 'Rent',
+        'client-transport-bus-train-taxi-fares' => 'Transport (for example, bus, train, taxi fares)',
+        'clothes' => 'Clothes',
+        'day-trips' => 'Day trips',
+        'holidays' => 'Holidays',
+        'personal-allowance-pocket-money' => 'Personal allowance or pocket money',
+        'toiletries' => 'Toiletries',
+        'deputy-security-bond' => 'Deputy security bond',
+        'opg-fees' => 'OPG\'s fees',
+        'professional-fees-eg-solicitor-accountant' => 'Fees charged by a solicitor, accountant or other professional',
+        'investment-bonds-purchased' => 'Investment bond',
+        'investment-account-purchased' => 'Investment fund account',
+        'stocks-and-shares-purchased' => 'Stocks and shares',
+        'purchase-over-1000' => 'Other purchase over £1,000',
+        'bank-charges' => 'Bank charge',
+        'credit-cards-charges' => 'Credit card charge',
+        'loans' => 'Loan repayment',
+        'tax-payments-to-hmrc' => 'Tax payment to HMRC',
+        'unpaid-care-fees' => 'Unpaid care fee',
+        'cash-withdrawn' => 'Cash withdrawn from %s\'s account',
+        'transfers-out-to-other-accounts' => 'Transfers from %s\'s account to other accounts',
+        'anything-else-paid-out' => 'Anything else paid out',
+    ];
 
     /**
      * @When I view and start the money out report section
@@ -18,6 +55,16 @@ trait MoneyOutSectionTrait
     {
         $this->iVisitMoneyOutSection();
         $this->clickLink('Start money out');
+
+        $this->paymentTypeDictionary['cash-withdrawn'] = sprintf(
+            $this->paymentTypeDictionary['cash-withdrawn'],
+            $this->loggedInUserDetails->getClientFirstName()
+        );
+
+        $this->paymentTypeDictionary['transfers-out-to-other-accounts'] = sprintf(
+            $this->paymentTypeDictionary['transfers-out-to-other-accounts'],
+            $this->loggedInUserDetails->getClientFirstName()
+        );
     }
 
     /**
@@ -38,57 +85,27 @@ trait MoneyOutSectionTrait
     }
 
     /**
+     * @When I add one money out payment
+     */
+    public function iAddOneMoneyOutPayment()
+    {
+        $this->iAmOnMoneyOutAddPaymentPage();
+        $this->addPayment('care-fees', 'Care fees');
+    }
+
+    /**
      * @When I add one of each type of money out payment
      */
     public function iAddOneOfEachTypeOfMoneyOutPayment()
     {
         $this->iAmOnMoneyOutAddPaymentPage();
 
-        $xpath = "//form[@name='account']//fieldset";
-        $fieldSets = $this->getSession()->getPage()->findAll('xpath', $xpath);
+        $radioCount = 0;
 
-        foreach ($fieldSets as $fieldSetKey => $fieldset) {
-            $total = 0;
-            $xpath = "//div[contains(@class, 'govuk-radios__item')]";
-            $divs = $fieldset->findAll('xpath', $xpath);
-
-            foreach ($divs as $divKey => $div) {
-                $xpath = "//label[contains(@class, 'govuk-radios__label')]";
-                $label = $div->find('xpath', $xpath);
-                $xpath = "//input[contains(@name, 'account[category]')]";
-                $radioBox = $div->find('xpath', $xpath);
-
-                $amount = (1000 + $divKey);
-
-                $paymentObject =
-                    [
-                        'paymentName' => trim($label->getText()),
-                        'description' => $this->faker->text(100),
-                        'amount' => strval($amount),
-                        'selectValue' => $this->getStringBetween($radioBox->getOuterHtml(), 'value="', '"'),
-                    ];
-                $this->paymentsListForFills[] = $paymentObject;
-
-                // because each section has sub total the element is actually element * 2
-                $this->paymentsList[$fieldSetKey * 2][] = $this->formatPaymentObject($paymentObject);
-
-                $total += $amount;
-            }
-
-            // this references the sub total section for each sub section
-            $this->paymentsList[$fieldSetKey * 2 + 1][] =
-                [
-                    'label' => 'total amount',
-                    'total' => $this->moneyFormat($total),
-                ];
-        }
-
-        foreach ($this->paymentsListForFills as $paymentKey => $payment) {
-            if ($paymentKey >= (count($this->paymentsListForFills) - 1)) {
-                $this->addPayment($payment, 'no');
-            } else {
-                $this->addPayment($payment, 'yes');
-            }
+        foreach ($this->paymentTypeDictionary as $radioPaymentValue => $translatedPaymentValue) {
+            $addAnother = ($radioCount !== count($this->paymentTypeDictionary) - 1);
+            $this->addPayment($radioPaymentValue, $translatedPaymentValue, $addAnother);
+            ++$radioCount;
         }
     }
 
@@ -98,8 +115,8 @@ trait MoneyOutSectionTrait
     public function iRemoveAnExistingMoneyOutPayment()
     {
         $this->iAmOnMoneyOutSummaryPage();
-        $this->setPaymentListToMoneyOutCompleteDefault();
-        $this->removeMoneyOutPayment(2, 0, 1);
+
+        $this->removeAnswerFromSection('account[amount]', 'addPayment-Care fees', true, 'Yes, remove payment');
     }
 
     /**
@@ -108,24 +125,10 @@ trait MoneyOutSectionTrait
     public function iEditExistingMoneyOutPayment()
     {
         $this->iAmOnMoneyOutSummaryPage();
-        $this->setPaymentListToMoneyOutCompleteDefault();
 
-        $urlRegex = sprintf('/%s\/.*\/money-out\/step2\/.*$/', $this->reportUrlPrefix);
-        $this->iClickOnNthElementBasedOnRegex($urlRegex, 1);
+        $this->getSession()->getPage()->find('xpath', '//th[contains(., "Care fees")]/..')->clickLink('Edit');
 
-        $newAmount = 2000;
-
-        $this->paymentsList[2][0]['description'] = $this->faker->text(100);
-        $this->totalMoneyOut = $this->totalMoneyOut - intval($this->paymentsList[2][0]['amount']) + $newAmount;
-        $this->paymentsList[3][0]['amount'] = strval(intval($this->paymentsList[3][0]['amount']) - intval($this->paymentsList[2][0]['amount']) + $newAmount);
-        $this->paymentsList[2][0]['amount'] = strval($newAmount);
-
-        $this->fillInPaymentDetails($this->paymentsList[2][0]);
-
-        $this->paymentsList[0][0] = $this->formatPaymentObject($this->paymentsList[0][0]);
-        $this->paymentsList[1][0]['amount'] = $this->moneyFormat($this->paymentsList[1][0]['amount']);
-        $this->paymentsList[2][0] = $this->formatPaymentObject($this->paymentsList[2][0]);
-        $this->paymentsList[3][0]['amount'] = $this->moneyFormat($this->paymentsList[3][0]['amount']);
+        $this->fillInPaymentDetails('Care fees', $this->faker->sentence(rand(5, 50)), mt_rand(1, 999));
     }
 
     /**
@@ -134,64 +137,33 @@ trait MoneyOutSectionTrait
     public function iAddAnotherMoneyOutPaymentExistingAccount()
     {
         $this->iAmOnMoneyOutSummaryPage();
-        $this->setPaymentListToMoneyOutCompleteDefault();
 
-        $urlRegex = sprintf('/%s\/.*\/money-out\/step1.*$/', $this->reportUrlPrefix);
-        $this->iClickOnNthElementBasedOnRegex($urlRegex, 0);
+        $this->clickLink('Add a payment');
+
         $this->iAmOnMoneyOutAddPaymentPage();
 
-        $newPaymentAmount = 250;
+        $translatedPaymentValue = 'Water';
+        $radioPaymentValue = array_search($translatedPaymentValue, $this->paymentTypeDictionary);
 
-        // test account works as well as we don't have this on iAddOneOfEachTypeOfMoneyOutPayment section
-        $paymentObject =
-            [
-                'paymentName' => 'care fees',
-                'description' => $this->faker->text(100),
-                'account' => '(****)',
-                'amount' => strval($newPaymentAmount),
-                'selectValue' => 'care-fees',
-            ];
-
-        $this->addPayment($paymentObject, 'no');
-        // as this is care fees it goes in same section as previous care fees
-        $this->paymentsList[0][] = $this->formatPaymentObject($paymentObject);
-        $this->paymentsList[1][0]['amount'] = $this->moneyFormat(intval($this->paymentsList[1][0]['amount']) + $newPaymentAmount);
-        $this->totalMoneyOut += $newPaymentAmount;
+        $this->addPayment($radioPaymentValue, $translatedPaymentValue);
     }
 
     /**
-     * @When I add a payment without filling in description
+     * @When I add a payment without filling in description and amount
      */
-    public function iAddPaymentWithoutFillingInDescription()
+    public function iAddPaymentWithoutFillingInDescriptionAndAmount()
     {
-        $this->selectOption('account[category]', 'purchase-over-1000');
+        $this->chooseOption('account[category]', 'purchase-over-1000', 'addPayment');
         $this->pressButton('Save and continue');
-        $payment = ['amount' => '200', 'description' => ''];
-        $this->fillInPaymentDetails($payment);
+        $this->fillInPaymentDetails('Other purchase over £1,000', null, null);
     }
 
     /**
-     * @When I should see correct money out description validation message
+     * @When I should see correct money out description and amount validation message
      */
     public function iSeeMoneyOutDescriptionValidationMessage()
     {
         $this->assertOnAlertMessage('Please give us some more information about this amount');
-    }
-
-    /**
-     * @When I add a payment without filling in amount
-     */
-    public function iAddPaymentWithoutFillingInAmount()
-    {
-        $payment = ['amount' => '', 'description' => 'some text'];
-        $this->fillInPaymentDetails($payment);
-    }
-
-    /**
-     * @When I should see correct money out amount validation message
-     */
-    public function iSeeMoneyOutAmountValidationMessage()
-    {
         $this->assertOnAlertMessage('Please enter an amount');
     }
 
@@ -202,130 +174,48 @@ trait MoneyOutSectionTrait
     {
         $this->iAmOnMoneyOutSummaryPage();
 
-        foreach ($this->paymentsList as $entryKey => $entry) {
-            $this->expectedResultsDisplayed($entryKey, $this->paymentsList[$entryKey], 'Money Out Payments');
-        }
-
-        $this->checkTotalAmountOnSummary();
+        $this->expectedResultsDisplayedSimplified(null, false, true);
     }
 
-    private function checkTotalAmountOnSummary()
+    private function addPayment(string $radioPaymentValue, string $translatedPaymentValue, ?bool $addAnother = false)
     {
-        $divs = $this->getSession()->getPage()->findAll('xpath', '//div');
-        $total = strval($this->moneyFormat($this->totalMoneyOut));
-        $totalExists = false;
-        foreach ($divs as $div) {
-            if (str_contains($div->getText(), 'Total money out')) {
-                if (str_contains($div->getText(), $total)) {
-                    $totalExists = true;
-                }
-            }
-        }
-
-        if (!$totalExists) {
-            $this->throwContextualException(sprintf('total amount of %s not found on page', $total));
-        }
-    }
-
-    private function setPaymentListToMoneyOutCompleteDefault()
-    {
-        // starting payments for a fixture of completed report
-        $this->paymentsList = [
-            [[
-                'paymentName' => 'care fees',
-                'description' => '',
-                'amount' => '200',
-            ]],
-            [[
-                'amount' => '200',
-            ]],
-            [[
-                'paymentName' => 'electricity',
-                'description' => '',
-                'amount' => '100',
-            ]],
-            [[
-                'amount' => '100',
-            ]],
-        ];
-
-        $this->totalMoneyOut = 300;
-    }
-
-    // due to sub groups the occurrence on screen can be different to how we have to manipulate the paymentsList entry
-    private function removeMoneyOutPayment($paymentSectionNumber, $paymentNumber, $occurenceOnSummary)
-    {
-        $urlRegex = sprintf('/%s\/.*\/money-out\/.*\/delete.*$/', $this->reportUrlPrefix);
-        $this->iClickOnNthElementBasedOnRegex($urlRegex, $occurenceOnSummary);
-        $this->iAmOnMoneyOutDeletePage();
-        $this->iClickBasedOnAttributeTypeAndValue('button', 'id', 'confirm_delete_confirm');
-
-        $this->removeFromList($paymentSectionNumber, $paymentNumber);
-    }
-
-    private function removeFromList($paymentSectionNumber, $paymentNumber)
-    {
-        $amountToRemove = intval($this->paymentsList[$paymentSectionNumber][$paymentNumber]['amount']);
-        $sectionTotal = intval($this->paymentsList[$paymentSectionNumber + 1][0]['amount']);
-
-        // this is the sub total section for each sub section
-        $this->paymentsList[$paymentSectionNumber + 1][0]['amount'] = strval($sectionTotal - $amountToRemove);
-        $this->totalMoneyOut -= $amountToRemove;
-        unset($this->paymentsList[$paymentSectionNumber][$paymentNumber]);
-
-        // if last remaining payment in the section is removed then unset the section and section total
-        if (intval($this->paymentsList[$paymentSectionNumber + 1][0]['amount']) <= 0) {
-            unset($this->paymentsList[$paymentSectionNumber + 1]);
-            unset($this->paymentsList[$paymentSectionNumber]);
-        }
-
-        $this->paymentsList = array_values($this->paymentsList);
-    }
-
-    private function addPayment($payment, $anotherFlag)
-    {
-        $this->selectOption('account[category]', $payment['selectValue']);
+        $this->chooseOption('account[category]', $radioPaymentValue, 'addPayment-'.$translatedPaymentValue, $translatedPaymentValue);
         $this->pressButton('Save and continue');
-        $this->fillInPaymentDetails($payment);
-        $this->addAnother($anotherFlag);
+
+        $this->fillInPaymentDetails($translatedPaymentValue, $this->faker->sentence(rand(5, 50)), mt_rand(0, 999));
+
+        $this->addAnother($addAnother ? 'yes' : 'no');
     }
 
-    private function fillInPaymentDetails($payment)
+    private function fillInPaymentDetails(string $translatedPaymentValue, ?string $paymentDescription = null, ?int $paymentAmount = null)
     {
         $this->iAmOnMoneyOutAddPaymentDetailsPage();
-        $this->fillField('account[description]', $payment['description']);
-        $this->fillField('account[amount]', $payment['amount']);
-        if (array_key_exists('account', $payment)) {
-            $this->iSelectBasedOnChoiceNumber('select', 'id', 'account_bankAccountId', 1);
+
+        if ($paymentDescription) {
+            $this->fillInField('account[description]', $paymentDescription, 'addPayment-'.$translatedPaymentValue);
         }
+
+        if ($paymentAmount) {
+            $this->fillInFieldTrackTotal('account[amount]', $paymentAmount, 'addPayment-'.$translatedPaymentValue);
+        }
+
+        if ('Care fees' === $translatedPaymentValue) {
+            $this->chooseOption(
+                'account[bankAccountId]',
+                $this->loggedInUserDetails->getCurrentReportBankAccountId(),
+                'addPayment-'.$translatedPaymentValue,
+                '(****1234)'
+            );
+        }
+
         $this->pressButton('Save and continue');
     }
 
     private function addAnother($anotherFlag)
     {
         $this->iAmOnMoneyOutAddAnotherPaymentPage();
-        $this->selectOption('add_another[addAnother]', $anotherFlag);
+
+        $this->chooseOption('add_another[addAnother]', $anotherFlag);
         $this->pressButton('Save and continue');
-    }
-
-    private function getStringBetween($string, $start, $end)
-    {
-        $string = ' '.$string;
-        $ini = strpos($string, $start);
-        if (0 == $ini) {
-            return '';
-        }
-        $ini += strlen($start);
-        $len = strpos($string, $end, $ini) - $ini;
-
-        return substr($string, $ini, $len);
-    }
-
-    private function formatPaymentObject($paymentObject)
-    {
-        $paymentObject['amount'] = $this->moneyFormat($paymentObject['amount']);
-        unset($paymentObject['selectValue']);
-
-        return array_values($paymentObject);
     }
 }

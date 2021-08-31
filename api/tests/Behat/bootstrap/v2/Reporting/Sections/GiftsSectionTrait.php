@@ -7,8 +7,6 @@ namespace App\Tests\Behat\v2\Reporting\Sections;
 trait GiftsSectionTrait
 {
     private int $giftId = 0;
-    private array $giftDetails = [];
-    private array $giftResponse = [];
 
     /**
      * @When I view the gifts report section
@@ -34,7 +32,7 @@ trait GiftsSectionTrait
      */
     public function iChooseNoOnGiftsExistSection()
     {
-        $this->selectOption('yes_no[giftsExist]', 'no');
+        $this->chooseOption('yes_no[giftsExist]', 'no', 'gifts');
         $this->pressButton('Save and continue');
     }
 
@@ -43,7 +41,7 @@ trait GiftsSectionTrait
      */
     public function iChooseYesOnGiftsExistSection()
     {
-        $this->selectOption('yes_no[giftsExist]', 'yes');
+        $this->chooseOption('yes_no[giftsExist]', 'yes', 'gifts');
         $this->pressButton('Save and continue');
     }
 
@@ -52,24 +50,10 @@ trait GiftsSectionTrait
      */
     public function iFillGiftDescriptionAndAmount()
     {
-        $formFields = [];
         ++$this->giftId;
 
-        $this->fillField('gifts_single[explanation]', 'random-gift-'.$this->giftId);
-        array_push($formFields, 'random-gift-'.$this->giftId);
-
-        if ($this->elementExistsOnPage('select', 'id', 'gifts_single_bankAccountId')) {
-            $choiceMade = $this->iSelectBasedOnChoiceNumber('select', 'id', 'gifts_single_bankAccountId', 1);
-            array_push($formFields, $choiceMade);
-        } else {
-            array_push($formFields, '-');
-        }
-
-        $this->fillField('gifts_single[amount]', $this->giftId + 100);
-        array_push($formFields, '£'.($this->giftId + 100).'.00');
-
-        // Add gifts to giftDetails array
-        array_push($this->giftDetails, $formFields);
+        $this->fillInField('gifts_single[explanation]', 'random-gift-'.$this->giftId, 'gifts'.$this->giftId);
+        $this->fillInFieldTrackTotal('gifts_single[amount]', $this->giftId + 100, 'gifts'.$this->giftId);
     }
 
     /**
@@ -77,22 +61,11 @@ trait GiftsSectionTrait
      */
     public function iEditGiftDescriptionAndAmount()
     {
-        $formFields = [];
-        ++$this->giftId;
+        $locator = "//th[normalize-space()='random-gift-1']/..";
+        $giftRow = $this->getSession()->getPage()->find('xpath', $locator);
 
-        $this->fillField('gifts_single[explanation]', 'random-gift-'.$this->giftId);
-        array_push($formFields, 'random-gift-'.$this->giftId);
-        if ($this->elementExistsOnPage('select', 'id', 'gifts_single_bankAccountId')) {
-            $choiceMade = $this->iSelectBasedOnChoiceNumber('select', 'id', 'gifts_single_bankAccountId', 1);
-            array_push($formFields, $choiceMade);
-        } else {
-            array_push($formFields, '-');
-        }
-        $this->fillField('gifts_single[amount]', $this->giftId + 100);
-        array_push($formFields, '£'.($this->giftId + 100).'.00');
-
-        // Update first gift in giftDetails array
-        $this->giftDetails[0] = $formFields;
+        $this->editFieldAnswerInSectionTrackTotal($giftRow, 'gifts_single[amount]', 'gifts1', false);
+        $this->editFieldAnswerInSection($giftRow, 'gifts_single[explanation]', $this->faker->sentence(4), 'gifts1', false);
     }
 
     /**
@@ -104,58 +77,12 @@ trait GiftsSectionTrait
     }
 
     /**
-     * @When I follow edit link on first gift
-     */
-    public function iFollowEditLinkOnFirstGift()
-    {
-        $urlRegex = '/report\/.*\/gifts\/edit\/.*/';
-        $this->iClickOnNthElementBasedOnRegex($urlRegex, 0);
-    }
-
-    /**
-     * @When I follow add a gift link
-     */
-    public function iFollowAddAGiftLink()
-    {
-        $urlRegex = '/report\/.*\/gifts\/add\?from\=summary$/';
-        $this->iClickOnNthElementBasedOnRegex($urlRegex, 0);
-    }
-
-    /**
-     * @When I follow remove a gift link on first gift
-     */
-    public function iFollowRemoveAGiftLinkOnFirstGift()
-    {
-        $urlRegex = '/report\/.*\/gifts\/.*\/delete$/';
-        $this->iClickOnNthElementBasedOnRegex($urlRegex, 0);
-        $this->removeAGift(0);
-    }
-
-    /**
-     * @When I follow remove a gift link on second gift
-     */
-    public function iFollowRemoveAGiftLinkOnSecondGift()
-    {
-        $urlRegex = '/report\/.*\/gifts\/.*\/delete$/';
-        $this->iClickOnNthElementBasedOnRegex($urlRegex, 1);
-        $this->removeAGift(1);
-    }
-
-    /**
      * @When I follow the edit link for whether gifts exist
      */
     public function iFollowEditExistsLink()
     {
         $urlRegex = '/report\/.*\/gifts\/exist\?from\=summary$/';
         $this->iClickOnNthElementBasedOnRegex($urlRegex, 0);
-    }
-
-    /**
-     * @When I confirm to remove gift
-     */
-    public function iChooseToRemoveGift()
-    {
-        $this->iClickBasedOnAttributeTypeAndValue('button', 'id', 'confirm_delete_confirm');
     }
 
     /**
@@ -225,10 +152,7 @@ trait GiftsSectionTrait
         $this->iGoToReportOverviewUrl();
         $this->iFollowEditLinkForGifts();
         $this->iAmOnGiftsSummaryPage();
-        $this->iFollowEditLinkOnFirstGift();
-        $this->iAmOnGiftsEditPage();
         $this->iEditGiftDescriptionAndAmount();
-        $this->iChooseToSaveAndContinue();
     }
 
     /**
@@ -236,9 +160,8 @@ trait GiftsSectionTrait
      */
     public function iRemoveTheSecondGift()
     {
-        $this->iFollowRemoveAGiftLinkOnSecondGift();
-        $this->iAmOnGiftsDeletionPage();
-        $this->iChooseToRemoveGift();
+        $this->removeAnswerFromSection('gifts_single[amount]', 'gifts2', true, 'Yes, remove gift');
+
         $this->iAmOnGiftsSummaryPage();
     }
 
@@ -247,9 +170,8 @@ trait GiftsSectionTrait
      */
     public function iRemoveTheFirstGift()
     {
-        $this->iFollowRemoveAGiftLinkOnFirstGift();
-        $this->iAmOnGiftsDeletionPage();
-        $this->iChooseToRemoveGift();
+        $this->removeAnswerFromSection('gifts_single[amount]', 'gifts1', true, 'Yes, remove gift');
+
         $this->iAmOnGiftsStartPage();
     }
 
@@ -258,19 +180,6 @@ trait GiftsSectionTrait
      */
     public function iSeeExpectedGiftsSectionResponses()
     {
-        if (count($this->giftDetails) > 0) {
-            $this->giftResponse[0] = ['yes'];
-            $this->expectedResultsDisplayed(0, $this->giftResponse, 'Gift Answers to Questions');
-            $this->expectedResultsDisplayed(1, $this->giftDetails, 'Gift Details');
-        } else {
-            $this->giftResponse[0] = ['no'];
-            $this->expectedResultsDisplayed(0, $this->giftResponse, 'Gift Answers to Questions');
-        }
-    }
-
-    public function removeAGift(int $giftNumber)
-    {
-        unset($this->giftDetails[$giftNumber]);
-        $this->giftDetails = array_values($this->giftDetails);
+        $this->expectedResultsDisplayedSimplified(null, false, true, false);
     }
 }

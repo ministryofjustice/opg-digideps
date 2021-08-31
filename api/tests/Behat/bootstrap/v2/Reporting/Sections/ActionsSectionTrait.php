@@ -6,10 +6,6 @@ namespace App\Tests\Behat\v2\Reporting\Sections;
 
 trait ActionsSectionTrait
 {
-    private int $answeredYes = 0;
-    private int $answeredNo = 0;
-    private array $commentsAndAnswers = [];
-
     /**
      * @Given I view the actions report section
      */
@@ -79,12 +75,10 @@ trait ActionsSectionTrait
 
     public function fillInActionsForm($answer, $actionName, $comment = null, $commentName = null)
     {
-        $this->selectOption($actionName, $answer);
-        $this->commentsAndAnswers[] = [$answer];
+        $this->chooseOption($actionName, $answer, 'actions');
 
         if (null != $comment) {
-            $this->fillField($commentName, $comment);
-            $this->commentsAndAnswers[] = [$comment];
+            $this->fillInField($commentName, $comment, 'actions');
         }
 
         $this->pressButton('Save and continue');
@@ -95,12 +89,7 @@ trait ActionsSectionTrait
      */
     public function iSeeExpectedActionSectionResponses()
     {
-        $this->commentsAndAnswers;
-        $this->expectedResultsDisplayed(
-            0,
-            $this->commentsAndAnswers,
-            'Comments and Answers'
-        );
+        $this->expectedResultsDisplayedSimplified();
     }
 
     /**

@@ -8,6 +8,8 @@ Feature: Documents - All User Roles
     And I have no documents to upload
     Then I should be on the documents summary page
     And the documents summary page should not contain any documents
+    When I follow link back to report overview page
+    Then I should see "documents" as "no documents"
 
 @lay-pfa-high-not-started
   Scenario: A user uploads one supporting document that has a valid file type
@@ -19,6 +21,8 @@ Feature: Documents - All User Roles
     When I have no further documents to upload
     Then I should be on the documents summary page
     And the documents summary page should contain the documents I uploaded
+    When I follow link back to report overview page
+    Then I should see "documents" as "1 document"
 
 @lay-pfa-high-not-started
   Scenario: A user uploads multiple supporting document that have valid file types
@@ -30,6 +34,8 @@ Feature: Documents - All User Roles
     When I have no further documents to upload
     Then I should be on the documents summary page
     And the documents summary page should contain the documents I uploaded
+    When I follow link back to report overview page
+    Then I should see "documents" as "3 documents"
 
 @lay-pfa-high-not-started
   Scenario: A user deletes one supporting document they uploaded from the uploads page
@@ -41,6 +47,8 @@ Feature: Documents - All User Roles
     When I have no further documents to upload
     Then I should be on the documents summary page
     And the documents summary page should contain the documents I uploaded
+    When I follow link back to report overview page
+    Then I should see "documents" as "2 documents"
 
 @lay-pfa-high-not-started
   Scenario: A user deletes one supporting document they uploaded from the summary page

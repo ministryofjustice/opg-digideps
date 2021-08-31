@@ -4,6 +4,8 @@ declare(strict_types=1);
 
 namespace App\Tests\Behat\v2\Common;
 
+use App\Tests\Behat\BehatException;
+
 trait IShouldBeOnFrontendTrait
 {
     public function iAmOnPage(string $urlRegex)
@@ -12,7 +14,7 @@ trait IShouldBeOnFrontendTrait
         $onExpectedPage = preg_match($urlRegex, $currentUrl);
 
         if (!$onExpectedPage) {
-            $this->throwContextualException(sprintf('Not on expected page. Current URL is: %s but expected URL regex is %s', $currentUrl, $urlRegex));
+            throw new BehatException(sprintf('Not on expected page. Current URL is: %s but expected URL regex is %s', $currentUrl, $urlRegex));
         }
 
         return true;

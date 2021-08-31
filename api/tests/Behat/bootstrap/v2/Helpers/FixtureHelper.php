@@ -84,6 +84,7 @@ class FixtureHelper
             'currentReportDueDate' => $currentReport->getDueDate(),
             'currentReportStartDate' => $currentReport->getStartDate(),
             'currentReportEndDate' => $currentReport instanceof Ndr ? null : $currentReport->getEndDate(),
+            'currentReportBankAccountId' => $currentReport->getBankAccounts()[0]->getId(),
         ];
 
         if ($previousReport && $previousReport->getId() !== $currentReport->getId()) {
@@ -96,6 +97,7 @@ class FixtureHelper
                     'previousReportDueDate' => $previousReport->getDueDate(),
                     'previousReportStartDate' => $previousReport->getStartDate(),
                     'previousReportEndDate' => $previousReport->getEndDate(),
+                    'previousReportBankAccountId' => $previousReport->getBankAccounts()[0]->getId(),
                 ]
             );
         }
@@ -256,12 +258,7 @@ class FixtureHelper
     private function addClientsAndReportsToNdrLayDeputy(User $deputy, bool $completed = false, bool $submitted = false)
     {
         $client = $this->clientTestHelper->generateClient($this->em, $deputy);
-
-        $ndr = new Ndr($client);
-        $deputy->setNdrEnabled(true);
-        $client->setNdr($ndr);
-
-        $deputy->addClient($client);
+        $ndr = $this->reportTestHelper->generateNdr($this->em, $client, $deputy);
 
         if ($completed) {
             $this->reportTestHelper->completeNdrLayReport($ndr, $this->em);
@@ -634,6 +631,20 @@ class FixtureHelper
             Report::TYPE_102_4_6,
             true,
             true
+        );
+
+        return self::buildOrgUserDetails($user);
+    }
+
+    public function createProfNamedPfaHighNotStarted(string $testRunId)
+    {
+        $user = $this->createOrgUserClientNamedDeputyAndReport(
+            $testRunId,
+            User::ROLE_PROF_NAMED,
+            'prof-named-pfa-high-assets-not-started',
+            Report::TYPE_102_5,
+            false,
+            false
         );
 
         return self::buildOrgUserDetails($user);

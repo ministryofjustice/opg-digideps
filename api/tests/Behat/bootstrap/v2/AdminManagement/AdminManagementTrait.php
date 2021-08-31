@@ -5,6 +5,7 @@ declare(strict_types=1);
 namespace App\Tests\Behat\v2\AdminManagement;
 
 use App\Entity\User;
+use App\Tests\Behat\BehatException;
 
 trait AdminManagementTrait
 {
@@ -168,8 +169,7 @@ trait AdminManagementTrait
                     $this->interactingWithUserDetails = $this->adminDetails;
                     break;
                 default:
-                    $this->throwContextualException('Admin role not recognised');
-                    break;
+                    throw new BehatException('Admin role not recognised');
             }
         }
 
@@ -261,8 +261,7 @@ trait AdminManagementTrait
                     $this->interactingWithUserDetails = $this->adminDetails;
                     break;
                 default:
-                    $this->throwContextualException('Admin role not recognised');
-                    break;
+                    throw new BehatException('Admin role not recognised');
             }
         }
 

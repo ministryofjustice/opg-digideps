@@ -4,6 +4,8 @@ declare(strict_types=1);
 
 namespace App\Tests\Behat\v2\Feedback;
 
+use App\Tests\Behat\BehatException;
+
 trait FeedbackTrait
 {
     /**
@@ -19,7 +21,7 @@ trait FeedbackTrait
             $this->visitFrontendPath($reportSubmittedUrl);
 
             if (!str_contains($this->getCurrentUrl(), $reportSubmittedUrl)) {
-                $this->throwContextualException(sprintf("Couldn't access report submitted page for current user. Current url: %s", $this->getCurrentUrl()));
+                throw new BehatException(sprintf("Couldn't access report submitted page for current user. Current url: %s", $this->getCurrentUrl()));
             }
         }
 
@@ -42,7 +44,7 @@ trait FeedbackTrait
             $this->visitFrontendPath($postSubmissionURUrl);
 
             if (!str_contains($this->getCurrentUrl(), $postSubmissionURUrl)) {
-                $this->throwContextualException(sprintf("Couldn't access post submission user research page for current user. Current url: %s", $this->getCurrentUrl()));
+                throw new BehatException(sprintf("Couldn't access post submission user research page for current user. Current url: %s", $this->getCurrentUrl()));
             }
         }
 
