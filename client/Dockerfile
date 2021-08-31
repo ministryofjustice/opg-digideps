@@ -38,7 +38,7 @@ COPY src src
 RUN composer run-script post-install-cmd --no-interaction
 RUN composer dump-autoload --optimize
 
-FROM php:7.4.20-fpm-alpine
+FROM php:7.4.23-fpm-alpine
 WORKDIR /var/www
 EXPOSE 80
 EXPOSE 443
