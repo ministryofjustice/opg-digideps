@@ -10,7 +10,7 @@ confd -onetime -backend env
 
 su-exec www-data php app/console doctrine:fixtures:load --no-interaction
 
-./vendor/bin/behat --config=./tests/Behat/behat.yml --stop-on-failure --profile v2-tests-goutte --tags @v2_standalone
+#./vendor/bin/behat --config=./tests/Behat/behat.yml --stop-on-failure --profile v2-tests-goutte --tags @v2_standalone
 ./vendor/bin/behat --config=./tests/Behat/behat.yml --stop-on-failure --profile v2-tests-goutte --tags @v2 --list-features | ./vendor/liuggio/fastest/fastest "./vendor/bin/behat --profile v2-tests-goutte --config=./tests/Behat/behat.yml {}"
 
 end=`date +%s`
