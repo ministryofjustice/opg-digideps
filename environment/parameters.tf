@@ -61,3 +61,15 @@ resource "aws_ssm_parameter" "flag_checklist_sync" {
     ignore_changes = [value]
   }
 }
+
+resource "aws_ssm_parameter" "flag_benefits_questions" {
+  name  = "${local.feature_flag_prefix}benefits-questions"
+  type  = "String"
+  value = "31-12-2030 00:00:00"
+
+  tags = local.default_tags
+
+  lifecycle {
+    ignore_changes = [value]
+  }
+}

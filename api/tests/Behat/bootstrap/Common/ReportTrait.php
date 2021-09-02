@@ -296,16 +296,6 @@ trait ReportTrait
     }
 
     /**
-     * @When I attached a supporting document :imageName to the submitted report
-     */
-    public function attachSupportingDocumentToSubmittedReport(string $imageName)
-    {
-        $reportId = self::$currentReportCache['reportId'];
-        $this->visit(sprintf('/report/%s/documents/step/2', $reportId));
-        $this->attachDocument($imageName);
-    }
-
-    /**
      * @When I attached a supporting document :imageName to the completed report
      */
     public function iAttachedASupportingDocumentToTheCompletedReport(string $imageName)

@@ -4,6 +4,8 @@ declare(strict_types=1);
 
 namespace App\Tests\Behat\v2\Common;
 
+use App\Tests\Behat\BehatException;
+
 trait ErrorsTrait
 {
     public function assertOnErrorMessage(string $errorMessage)
@@ -21,20 +23,14 @@ This suggests one of the following:
 - the flash error element is not using macro.notification.
 MESSAGE;
 
-            $this->throwContextualException($missingDivMessage);
+            throw new BehatException($missingDivMessage);
         }
 
         $errorHtml = $errorDiv ? $errorDiv->getHtml() : $flashDiv->getHtml();
         $errorMessageFound = str_contains($errorHtml, $errorMessage);
 
         if (!$errorMessageFound) {
-            $this->throwContextualException(
-                sprintf(
-                    'The error summary did not contain the expected error message. Expected: "%s", got (full HTML): %s',
-                    $errorMessage,
-                    $errorHtml
-                )
-            );
+            throw new BehatException(sprintf('The error summary did not contain the expected error message. Expected: "%s", got (full HTML): %s', $errorMessage, $errorHtml));
         }
     }
 }

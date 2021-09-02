@@ -8,6 +8,7 @@ use App\Service\Availability\HtmlToPdfAvailability;
 use App\Service\Availability\NotifyAvailability;
 use App\Service\Availability\RedisAvailability;
 use App\Service\Availability\SiriusApiAvailability;
+use Psr\Log\LoggerInterface;
 use Sensio\Bundle\FrameworkExtraBundle\Configuration\Template;
 use Symfony\Component\HttpFoundation\Response;
 use Symfony\Component\Routing\Annotation\Route;
@@ -20,15 +21,18 @@ class ManageController extends AbstractController
     private string $symfonyEnvironment;
     private string $symfonyDebug;
     private string $environment;
+    private LoggerInterface $logger;
 
     public function __construct(
         string $symfonyEnvironment,
         string $symfonyDebug,
-        string $environment
+        string $environment,
+        LoggerInterface $logger
     ) {
         $this->symfonyEnvironment = $symfonyEnvironment;
         $this->symfonyDebug = $symfonyDebug;
         $this->environment = $environment;
+        $this->logger = $logger;
     }
 
     /**
@@ -42,7 +46,7 @@ class ManageController extends AbstractController
         RedisAvailability $redisAvailability,
         SiriusApiAvailability $siriusAvailability,
         ClamAvAvailability $clamAvailability,
-        HtmlToPdfAvailability $wkHtmlAvailability
+        HtmlToPdfAvailability $htmlAvailability
     ) {
         $services = [
             $apiAvailability,
@@ -53,7 +57,7 @@ class ManageController extends AbstractController
         if ('admin' !== $this->environment) {
             $services[] = $siriusAvailability;
             $services[] = $clamAvailability;
-            $services[] = $wkHtmlAvailability;
+            $services[] = $htmlAvailability;
         }
 
         list($healthy, $services, $errors) = $this->servicesHealth($services);
@@ -114,17 +118,33 @@ class ManageController extends AbstractController
         $start = microtime(true);
 
         $healthy = true;
+        $logResponses = false;
         $errors = [];
+        $logObject = 'Availability Warning - {[';
 
         foreach ($services as $service) {
+            $startServiceTime = microtime(true);
+
             $service->ping();
 
             if (!$service->isHealthy()) {
+                $logResponses = true;
                 if ('Sirius' != $service->getName()) {
                     $healthy = false;
                 }
                 $errors[] = $service->getErrors();
             }
+            $serviceTimeTaken = (microtime(true) - $startServiceTime);
+            $logObject = $logObject.sprintf(
+                '["service": "%s", "time": "%s", error: "%s"],',
+                $service->getName(),
+                round($serviceTimeTaken, 3),
+                $service->getErrors()
+            );
+        }
+
+        if ($logResponses) {
+            $this->logger->warning(strval(rtrim($logObject, ',').']}'));
         }
 
         return [$healthy, $services, $errors, microtime(true) - $start];

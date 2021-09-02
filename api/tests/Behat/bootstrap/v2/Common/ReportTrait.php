@@ -16,18 +16,15 @@ trait ReportTrait
      */
     public function iSubmitTheReport()
     {
-        $ndrOrReport = $this->layDeputyCompletedPfaHighAssetsDetails->getCurrentReportNdrOrReport();
-        $reportId = $this->layDeputyCompletedPfaHighAssetsDetails->getCurrentReportId();
+        $ndrOrReport = $this->loggedInUserDetails->getCurrentReportNdrOrReport();
+        $reportId = $this->loggedInUserDetails->getCurrentReportId();
 
         $this->visit("$ndrOrReport/$reportId/overview");
 
         try {
             $this->clickLink('Preview and check report');
         } catch (Exception $e) {
-            // Convert once we start to look at NDRs
-            $this->throwContextualException("Couldn't find link with text 'Preview and check report'");
-//            $link = $reportType === 'ndr' ? 'edit-report-review' : 'edit-report_submit';
-//            $this->clickOnBehatLink($link);
+            $this->clickLink('Continue');
         }
 
         $this->clickLink('Continue');
@@ -48,6 +45,7 @@ trait ReportTrait
         }
 
         $this->loginToFrontendAs($this->layDeputyNotStartedPfaHighAssetsDetails->getUserEmail());
+        $this->interactingWithUserDetails = $this->layDeputyNotStartedPfaHighAssetsDetails;
     }
 
     /**
@@ -63,6 +61,23 @@ trait ReportTrait
         }
 
         $this->loginToFrontendAs($this->layDeputyCompletedPfaHighAssetsDetails->getUserEmail());
+        $this->interactingWithUserDetails = $this->layDeputyCompletedPfaHighAssetsDetails;
+    }
+
+    /**
+     * @Given a Lay Deputy has submitted a report
+     * @Given a Lay Deputy has submitted a Pfa High Assets report
+     *
+     * @throws Exception
+     */
+    public function aLayDeputyHasSubmittedAReport()
+    {
+        if (empty($this->layDeputySubmittedPfaHighAssetsDetails)) {
+            throw new Exception('It looks like fixtures are not loaded - missing $layDeputySubmittedPfaHighAssetsDetails');
+        }
+
+        $this->loginToFrontendAs($this->layDeputySubmittedPfaHighAssetsDetails->getUserEmail());
+        $this->interactingWithUserDetails = $this->layDeputySubmittedPfaHighAssetsDetails;
     }
 
     /**
@@ -75,6 +90,7 @@ trait ReportTrait
         }
 
         $this->loginToFrontendAs($this->layNdrDeputyNotStartedDetails->getUserEmail());
+        $this->interactingWithUserDetails = $this->layNdrDeputyNotStartedDetails;
         $this->reportUrlPrefix = $this->layNdrDeputyNotStartedDetails->getCurrentReportNdrOrReport();
     }
 
@@ -90,21 +106,8 @@ trait ReportTrait
         }
 
         $this->loginToFrontendAs($this->layNdrDeputyCompletedDetails->getUserEmail());
+        $this->interactingWithUserDetails = $this->layNdrDeputyCompletedDetails;
         $this->reportUrlPrefix = $this->layNdrDeputyCompletedDetails->getCurrentReportNdrOrReport();
-    }
-
-    /**
-     * @Given a Lay Deputy has submitted a report
-     *
-     * @throws Exception
-     */
-    public function aLayDeputyHasSubmittedAReport()
-    {
-        if (empty($this->layDeputySubmittedPfaHighAssetsDetails)) {
-            throw new Exception('It looks like fixtures are not loaded - missing $layDeputySubmittedPfaHighAssetsDetails');
-        }
-
-        $this->loginToFrontendAs($this->layDeputySubmittedPfaHighAssetsDetails->getUserEmail());
     }
 
     /**
@@ -117,6 +120,7 @@ trait ReportTrait
         }
 
         $this->loginToFrontendAs($this->profAdminDeputyHealthWelfareNotStartedDetails->getUserEmail());
+        $this->interactingWithUserDetails = $this->profAdminDeputyHealthWelfareNotStartedDetails;
     }
 
     /**
@@ -141,6 +145,7 @@ trait ReportTrait
         }
 
         $this->loginToFrontendAs($this->profTeamDeputyNotStartedHealthWelfareDetails->getUserEmail());
+        $this->interactingWithUserDetails = $this->profTeamDeputyNotStartedHealthWelfareDetails;
     }
 
     /**
@@ -153,6 +158,7 @@ trait ReportTrait
         }
 
         $this->loginToFrontendAs($this->profTeamDeputyCompletedHealthWelfareDetails->getUserEmail());
+        $this->interactingWithUserDetails = $this->profTeamDeputyCompletedHealthWelfareDetails;
     }
 
     /**
@@ -165,6 +171,7 @@ trait ReportTrait
         }
 
         $this->loginToFrontendAs($this->layDeputyNotStartedPfaLowAssetsDetails->getUserEmail());
+        $this->interactingWithUserDetails = $this->layDeputyNotStartedPfaLowAssetsDetails;
     }
 
     /**
@@ -177,6 +184,7 @@ trait ReportTrait
         }
 
         $this->loginToFrontendAs($this->layDeputyCompletedPfaLowAssetsDetails->getUserEmail());
+        $this->interactingWithUserDetails = $this->layDeputyCompletedPfaLowAssetsDetails;
     }
 
     /**
@@ -189,6 +197,7 @@ trait ReportTrait
         }
 
         $this->loginToFrontendAs($this->layDeputyNotStartedHealthWelfareDetails->getUserEmail());
+        $this->interactingWithUserDetails = $this->layDeputyNotStartedHealthWelfareDetails;
     }
 
     /**
@@ -201,6 +210,20 @@ trait ReportTrait
         }
 
         $this->loginToFrontendAs($this->layDeputyCompletedHealthWelfareDetails->getUserEmail());
+        $this->interactingWithUserDetails = $this->layDeputyCompletedHealthWelfareDetails;
+    }
+
+    /**
+     * @Given a Lay Deputy has not started a Combined High Assets report
+     */
+    public function aLayDeputyHasNotStartedACombinedHighAssetsReport()
+    {
+        if (empty($this->layDeputyNotStartedCombinedHighDetails)) {
+            throw new Exception('It looks like fixtures are not loaded - missing $layDeputyNotStartedCombinedHighDetails');
+        }
+
+        $this->interactingWithUserDetails = $this->layDeputyNotStartedCombinedHighDetails;
+        $this->loginToFrontendAs($this->layDeputyNotStartedCombinedHighDetails->getUserEmail());
     }
 
     /**
@@ -212,6 +235,7 @@ trait ReportTrait
             throw new Exception('It looks like fixtures are not loaded - missing $layDeputySubmittedCombinedHighDetails');
         }
 
+        $this->loginToFrontendAs($this->layDeputySubmittedCombinedHighDetails->getUserEmail());
         $this->interactingWithUserDetails = $this->layDeputySubmittedCombinedHighDetails;
     }
 
@@ -227,6 +251,7 @@ trait ReportTrait
             throw new BehatException('It looks like fixtures are not loaded - missing $profAdminDeputySubmittedDetails');
         }
 
+        $this->loginToFrontendAs($this->profAdminDeputyHealthWelfareSubmittedDetails->getUserEmail());
         $this->interactingWithUserDetails = $this->profAdminDeputyHealthWelfareSubmittedDetails;
     }
 
@@ -241,6 +266,7 @@ trait ReportTrait
             throw new BehatException('It looks like fixtures are not loaded - missing $publicAuthorityNamedDeputySubmittedDetails');
         }
 
+        $this->loginToFrontendAs($this->publicAuthorityNamedDeputySubmittedDetails->getUserEmail());
         $this->interactingWithUserDetails = $this->publicAuthorityNamedDeputySubmittedDetails;
     }
 
@@ -254,18 +280,48 @@ trait ReportTrait
             throw new Exception('It looks like fixtures are not loaded - missing $profAdminDeputyCompletedDetails');
         }
 
+        $this->loginToFrontendAs($this->profAdminDeputyHealthWelfareCompletedDetails->getUserEmail());
         $this->interactingWithUserDetails = $this->profAdminDeputyHealthWelfareCompletedDetails;
+    }
+
+    /**
+     * @Given a Professional Deputy has not started a Pfa High Assets report
+     */
+    public function aProfDeputyHasNotStartedAPfaHighAssetsReport()
+    {
+        if (empty($this->profNamedDeputyNotStartedPfaHighDetails)) {
+            throw new Exception('It looks like fixtures are not loaded - missing $profNamedDeputyNotStartedPfaHighDetails');
+        }
+
+        $this->loginToFrontendAs($this->profNamedDeputyNotStartedPfaHighDetails->getUserEmail());
+
+        $this->interactingWithUserDetails = $this->profNamedDeputyNotStartedPfaHighDetails;
+    }
+
+    /**
+     * @Given a Public Authority Deputy has not started a Combined High Assets report
+     */
+    public function aPublicAuthorityDeputyHasNotStartedACombinedHighAssetsReport()
+    {
+        if (empty($this->publicAuthorityAdminCombinedHighNotStartedDetails)) {
+            throw new Exception('It looks like fixtures are not loaded - missing $publicAuthorityAdminCombinedHighNotStartedDetails');
+        }
+
+        $this->loginToFrontendAs($this->publicAuthorityAdminCombinedHighNotStartedDetails->getUserEmail());
+
+        $this->interactingWithUserDetails = $this->publicAuthorityAdminCombinedHighNotStartedDetails;
     }
 
     /**
      * @Given a Public Authority Deputy has submitted a Combined High Assets report
      */
-    public function aProfessionalDeputyHasSubmittedACombinedHighAssetsReport()
+    public function aPublicAuthorityDeputyHasSubmittedACombinedHighAssetsReport()
     {
         if (empty($this->publicAuthorityAdminCombinedHighSubmittedDetails)) {
             throw new Exception('It looks like fixtures are not loaded - missing $publicAuthorityAdminCombinedHighSubmittedDetails');
         }
 
+        $this->loginToFrontendAs($this->publicAuthorityAdminCombinedHighSubmittedDetails->getUserEmail());
         $this->interactingWithUserDetails = $this->publicAuthorityAdminCombinedHighSubmittedDetails;
     }
 }

@@ -4,6 +4,8 @@ declare(strict_types=1);
 
 namespace App\Tests\Behat\v2\Reporting\Sections;
 
+use App\Tests\Behat\BehatException;
+
 trait DeputyExpensesSectionTrait
 {
     private string $sectionStartText = 'Have you claimed any deputy expenses during this reporting period?';
@@ -18,15 +20,14 @@ trait DeputyExpensesSectionTrait
      */
     public function iNavigateToAndStartDeputyExpensesSection()
     {
-        $this->iVisitLayStartPage();
-        $this->clickLink('Start now');
+        $this->iVisitReportOverviewPage();
         $this->clickLink('edit-deputy_expenses');
 
         $currentUrl = $this->getCurrentUrl();
         $onSectionPage = preg_match('/report\/.*\/deputy-expenses$/', $currentUrl);
 
         if (!$onSectionPage) {
-            $this->throwContextualException('Not on deputy expenses section page');
+            throw new BehatException('Not on deputy expenses section page');
         }
 
         $this->clickLink('Start deputy expenses');
@@ -46,7 +47,7 @@ trait DeputyExpensesSectionTrait
         $onSectionPage = preg_match('/report\/.*\/deputy-expenses$/', $currentUrl);
 
         if (!$onSectionPage) {
-            $this->throwContextualException('Not on deputy expenses section page');
+            throw new BehatException('Not on deputy expenses section page');
         }
     }
 
@@ -205,7 +206,7 @@ trait DeputyExpensesSectionTrait
     public function iRemoveAnExpense()
     {
         $this->removeAnswerFromSection(
-            'expenses_single[explanation]',
+            'expenses_single[amount]',
             'expenseDetails',
             true,
             'Yes, remove expense'

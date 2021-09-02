@@ -10,7 +10,7 @@ Feature: Admin - View client details
     And I should see the reports associated with the client
     And I should not see "Discharge deputy"
 
-  @admin @prof-admin-submitted
+  @admin @prof-admin-health-welfare-submitted
   Scenario: An admin user views client details associated with an Org deputy
     Given an admin user accesses the admin app
     When I visit the admin client details page for an existing client linked to a deputy in an Organisation

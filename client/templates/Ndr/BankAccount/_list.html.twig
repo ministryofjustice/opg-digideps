@@ -32,19 +32,18 @@
     <div class="govuk-summary-list__row behat-region-account-{{ account.accountNumber | behat_namify }}">
         <dt class="govuk-summary-list__key">
             {% if account.requiresBankName %}
-                {{ account.bank }}
+                <p class="govuk-!-font-weight-bold">{{ account.bank }}</p>
             {% endif %}
-            <p class="govuk-!-font-size-16">
-                {{ account.accountTypeText }}<br/>
+            <p class="govuk-!-margin-0 govuk-!-font-size-16">{{ account.accountTypeText }}</p>
                 {% if account.requiresSortCode %}
-                    Sort code: {{ account.sortCode }}<br/>
+                    <p class="govuk-!-margin-0 govuk-!-font-size-16">Sort code: {{ account.sortCode }}</p>
                 {% endif %}
-                Account number: ****{{ account.accountNumber }}<br/>
+            <p class="govuk-!-margin-0 govuk-!-font-size-16">Account number: ****{{ account.accountNumber }}</p>
                 {# property added later, so it could be null. remove the "if" from 2018 #}
                 {% if account.isJointAccount != '' %}
-                    Joint account: {{ account.isJointAccount | capitalize }}<br/>
+                    <p class="govuk-!-margin-0 govuk-!-font-size-16">Joint account: {{ account.isJointAccount | capitalize }}</p>
                 {% endif %}
-            </p>
+
         </dt>
         <dd class="govuk-summary-list__value">
             £{{ account.balanceOnCourtOrderDate | money_format }}

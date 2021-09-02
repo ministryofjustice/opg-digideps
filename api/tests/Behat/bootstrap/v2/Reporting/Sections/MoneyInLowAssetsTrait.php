@@ -4,16 +4,19 @@ declare(strict_types=1);
 
 namespace App\Tests\Behat\v2\Reporting\Sections;
 
+use Behat\Gherkin\Node\TableNode;
+
 trait MoneyInLowAssetsTrait
 {
+    private int $moneyOutPaymentCount = 0;
     private array $moneyInShortTypeDictionary = [
-        'State pension and benefits',
-        'Bequests – for example, inheritance, gifts received',
-        'Income from investments, dividends, property rental',
-        'Sale of investments, property or assets',
-        'Salary or wages',
-        'Compensations and damages awards',
-        'Personal pension',
+        0 => 'State pension and benefits',
+        1 => 'Bequests - for example, inheritance, gifts received',
+        2 => 'Income from investments, dividends, property rental',
+        3 => 'Sale of investments, property or assets',
+        4 => 'Salary or wages',
+        5 => 'Compensations and damages awards',
+        6 => 'Personal pension',
     ];
 
     private array $moneyInShortList = [];
@@ -44,7 +47,12 @@ trait MoneyInLowAssetsTrait
      */
     public function iHaveNoOneOffPayments()
     {
-        $this->selectOption('yes_no[moneyTransactionsShortInExist]', 'no');
+        $this->chooseOption(
+            'yes_no[moneyTransactionsShortInExist]',
+            'no',
+            'one-off-payments'
+        );
+
         $this->pressButton('Save and continue');
     }
 
@@ -73,24 +81,19 @@ trait MoneyInLowAssetsTrait
     }
 
     /**
-     * @Given I am reporting on :moneyInType
+     * @Given I am reporting on:
      */
-    public function iAmReportingOnMoneyInType(string $moneyInType)
+    public function iAmReportingOnMoneyInType(TableNode $moneyInTypes)
     {
-        if (false !== strpos($moneyInType, ',')) {
-            $moneyInTypeArray = explode(', ', $moneyInType);
-        }
+        foreach ($moneyInTypes as $moneyInType) {
+            $optionIndex = array_search($moneyInType['Benefit Type'], $this->moneyInShortTypeDictionary);
 
-        if (empty($moneyInTypeArray)) {
-            $optionIndex = array_search($moneyInType, $this->moneyInShortTypeDictionary);
-            $this->moneyInShortList[] = $this->moneyInShortTypeDictionary[$optionIndex];
-            $this->checkOption("money_short[moneyShortCategoriesIn][{$optionIndex}][present]");
-        } else {
-            foreach ($moneyInTypeArray as $moneyInTypeValue) {
-                $optionIndex = array_search($moneyInTypeValue, $this->moneyInShortTypeDictionary);
-                $this->moneyInShortList[] = $this->moneyInShortTypeDictionary[$optionIndex];
-                $this->checkOption("money_short[moneyShortCategoriesIn][{$optionIndex}][present]");
-            }
+            $this->tickCheckbox(
+                'money-types',
+                "money_short[moneyShortCategoriesIn][$optionIndex][present]",
+                'money-types',
+                $this->moneyInShortTypeDictionary[$optionIndex]
+            );
         }
 
         $this->pressButton('Save and continue');
@@ -101,7 +104,12 @@ trait MoneyInLowAssetsTrait
      */
     public function iDontHaveAOneOffPayment()
     {
-        $this->selectOption('yes_no[moneyTransactionsShortInExist]', 'no');
+        $this->chooseOption(
+            'yes_no[moneyTransactionsShortInExist]',
+            'no',
+            'one-off-payments'
+        );
+
         $this->pressButton('Save and continue');
     }
 
@@ -110,12 +118,17 @@ trait MoneyInLowAssetsTrait
      */
     public function iHaveASingleOneOffPaymentOver1k()
     {
-        $this->selectOption('yes_no[moneyTransactionsShortInExist]', 'yes');
+        $this->chooseOption(
+            'yes_no[moneyTransactionsShortInExist]',
+            'yes',
+            'one-off-payments'
+        );
+
         $this->iClickBasedOnAttributeTypeAndValue('button', 'id', 'yes_no_save');
 
-        $this->addMoneyOutPayment('Lorem ipsum', '1500');
+        $this->addMoneyOutPayment('Lorem ipsum', 1500);
 
-        $this->selectOption('add_another[addAnother]', 'no');
+        $this->chooseOption('add_another[addAnother]', 'no');
         $this->iClickBasedOnAttributeTypeAndValue('button', 'id', 'add_another_save');
     }
 
@@ -129,12 +142,12 @@ trait MoneyInLowAssetsTrait
         $urlRegex = sprintf('/%s\/.*\/money-in-short\/exist.*$/', $this->reportUrlPrefix);
         $this->iClickOnNthElementBasedOnRegex($urlRegex, 0);
 
-        $this->selectOption('yes_no[moneyTransactionsShortInExist]', 'yes');
+        $this->chooseOption('yes_no[moneyTransactionsShortInExist]', 'yes', 'one-off-payments');
         $this->iClickBasedOnAttributeTypeAndValue('button', 'id', 'yes_no_save');
 
-        $this->addMoneyOutPayment('Lorem ipsum', '1500', '08/12/2021');
+        $this->addMoneyOutPayment('Lorem ipsum', 1500, '08/12/2021');
 
-        $this->selectOption('add_another[addAnother]', 'no');
+        $this->chooseOption('add_another[addAnother]', 'no');
         $this->iClickBasedOnAttributeTypeAndValue('button', 'id', 'add_another_save');
 
         $this->iAmOnMoneyInShortSummaryPage();
@@ -150,10 +163,10 @@ trait MoneyInLowAssetsTrait
         $urlRegex = sprintf('/%s\/.*\/money-in-short\/exist.*$/', $this->reportUrlPrefix);
         $this->iClickOnNthElementBasedOnRegex($urlRegex, 0);
 
-        $this->selectOption('yes_no[moneyTransactionsShortInExist]', 'yes');
+        $this->chooseOption('yes_no[moneyTransactionsShortInExist]', 'yes', 'one-off-payments');
         $this->iClickBasedOnAttributeTypeAndValue('button', 'id', 'yes_no_save');
 
-        $this->addMoneyOutPayment('Lorem upsum', '10', '05/05/2015');
+        $this->addMoneyOutPayment('Lorem upsum', 10, '05/05/2015');
     }
 
     /**
@@ -165,34 +178,31 @@ trait MoneyInLowAssetsTrait
     }
 
     /**
-     * @param string $description description of the pne off payment
-     * @param string $amount      amount for the one off payment
-     * @param string $date        date the money came in (optional) format: DD/MM/YYYY
+     * @param string      $description description of the pne off payment
+     * @param int         $amount      amount for the one off payment
+     * @param string|null $date        date the money came in (optional) format: DD/MM/YYYY
      */
-    private function addMoneyOutPayment(string $description, string $amount, string $date = null)
+    private function addMoneyOutPayment(string $description, int $amount, ?string $date = null)
     {
+        ++$this->moneyOutPaymentCount;
+
         $this->iAmOnMoneyInShortAddPage();
 
-        $oneOffPayment = [
-            'description' => $description,
-            'amount' => $amount,
-        ];
-
-        $this->fillField('money_short_transaction[description]', $description);
-        $this->fillField('money_short_transaction[amount]', $amount);
+        $this->fillInField('money_short_transaction[description]', $description, 'payment'.$this->moneyOutPaymentCount);
+        $this->fillInFieldTrackTotal('money_short_transaction[amount]', $amount, 'payment'.$this->moneyOutPaymentCount);
 
         if (null !== $date) {
             $explodedDate = explode('/', $date);
-            $this->fillField('money_short_transaction[date][day]', $explodedDate[0]);
-            $this->fillField('money_short_transaction[date][month]', $explodedDate[1]);
-            $this->fillField('money_short_transaction[date][year]', $explodedDate[2]);
 
-            $oneOffPayment['day'] = $explodedDate[0];
-            $oneOffPayment['month'] = $explodedDate[1];
-            $oneOffPayment['year'] = $explodedDate[2];
+            $this->fillInDateFields(
+                'money_short_transaction[date]',
+                intval($explodedDate[0]),
+                intval($explodedDate[1]),
+                intval($explodedDate[2]),
+                'payment'.$this->moneyOutPaymentCount
+            );
         }
 
-        $this->moneyInShortOneOff[] = $oneOffPayment;
         $this->iClickBasedOnAttributeTypeAndValue('button', 'id', 'money_short_transaction_save');
     }
 
@@ -203,52 +213,6 @@ trait MoneyInLowAssetsTrait
     {
         $this->iAmOnMoneyInShortSummaryPage();
 
-        if (count($this->moneyInShortList) > 0) {
-            $moneyInShortListWrapper[] = $this->moneyInShortList;
-        } else {
-            $moneyInShortListWrapper[] = ['none'];
-        }
-
-        $this->expectedResultsDisplayed(0, $moneyInShortListWrapper, 'Money in categories entered');
-
-        if (count($this->moneyInShortOneOff) > 0) {
-            $oneOffPaymentsWrapper[] = ['yes'];
-        } else {
-            $oneOffPaymentsWrapper[] = ['no'];
-        }
-
-        $this->expectedResultsDisplayed(1, $oneOffPaymentsWrapper, 'Answers for "One off payments"');
-
-        if (count($this->moneyInShortOneOff) > 0) {
-            $expectedOneOffPayments = $this->moneyInShortOneOff;
-            foreach ($expectedOneOffPayments as $key => $oneOffPayment) {
-                $expectedOneOffPayments[$key]['amount'] = '£'.$this->moneyFormat($this->moneyInShortOneOff[$key]['amount']);
-
-                if (null !== $expectedOneOffPayments[$key]['day'] && null !== $expectedOneOffPayments[$key]['month'] && null !== $expectedOneOffPayments[$key]['year']) {
-                    $dateTimestamp = sprintf(
-                        '%s-%s-%s 00:00',
-                        $expectedOneOffPayments[$key]['year'],
-                        $expectedOneOffPayments[$key]['month'],
-                        $expectedOneOffPayments[$key]['day'],
-                    );
-
-                    $date = date('j F Y', strtotime($dateTimestamp));
-                    array_splice($expectedOneOffPayments[$key], 1, 0, $date);
-                }
-
-                // unset values
-                unset($expectedOneOffPayments[$key]['day']);
-                unset($expectedOneOffPayments[$key]['month']);
-                unset($expectedOneOffPayments[$key]['year']);
-
-                $this->moneyInShortTotal += floatval($this->moneyInShortOneOff[$key]['amount']);
-            }
-
-            // Check the individual one off payments
-            $expectedOneOffPayments = array_values($expectedOneOffPayments);
-            $this->expectedResultsDisplayed(2, $expectedOneOffPayments, 'One of payments details');
-            // Check the total
-            $this->expectedResultsDisplayed(3, [['£'.$this->moneyFormat($this->moneyInShortTotal)]], 'One of payments total');
-        }
+        $this->expectedResultsDisplayedSimplified();
     }
 }

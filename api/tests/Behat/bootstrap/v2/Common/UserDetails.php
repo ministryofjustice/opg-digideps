@@ -41,12 +41,14 @@ class UserDetails
     private ?DateTime $currentReportDueDate = null;
     private ?DateTime $currentReportStartDate = null;
     private ?DateTime $currentReportEndDate = null;
+    private ?int $currentReportBankAccountId = null;
     private ?int $previousReportId = null;
     private ?string $previousReportType = null;
     private ?string $previousReportNdrOrReport = null;
     private ?DateTime $previousReportDueDate = null;
     private ?DateTime $previousReportStartDate = null;
     private ?DateTime $previousReportEndDate = null;
+    private ?int $previousReportBankAccountId = null;
 
     public function __construct(array $userDetails)
     {
@@ -106,6 +108,7 @@ class UserDetails
         $this->setCurrentReportDueDate($userDetails['currentReportDueDate']);
         $this->setCurrentReportStartDate($userDetails['currentReportStartDate']);
         $this->setCurrentReportEndDate($userDetails['currentReportEndDate']);
+        $this->setCurrentReportBankAccountId($userDetails['currentReportBankAccountId']);
 
         if ($userDetails['currentReportId'] !== $userDetails['previousReportId']) {
             $this->setPreviousReportId($userDetails['previousReportId']);
@@ -114,6 +117,8 @@ class UserDetails
             $this->setPreviousReportDueDate($userDetails['previousReportDueDate']);
             $this->setPreviousReportStartDate($userDetails['previousReportStartDate']);
             $this->setPreviousReportEndDate($userDetails['previousReportEndDate']);
+            $this->setPreviousReportEndDate($userDetails['previousReportEndDate']);
+            $this->setPreviousReportBankAccountId($userDetails['previousReportBankAccountId']);
         }
     }
 
@@ -554,5 +559,29 @@ class UserDetails
             $this->getPreviousReportStartDate()->format('Y'),
             $this->getPreviousReportEndDate()->format('Y'),
         );
+    }
+
+    public function getCurrentReportBankAccountId(): ?int
+    {
+        return $this->currentReportBankAccountId;
+    }
+
+    public function setCurrentReportBankAccountId(?int $currentReportBankAccountId): UserDetails
+    {
+        $this->currentReportBankAccountId = $currentReportBankAccountId;
+
+        return $this;
+    }
+
+    public function getPreviousReportBankAccountId(): ?int
+    {
+        return $this->previousReportBankAccountId;
+    }
+
+    public function setPreviousReportBankAccountId(?int $previousReportBankAccountId): UserDetails
+    {
+        $this->previousReportBankAccountId = $previousReportBankAccountId;
+
+        return $this;
     }
 }

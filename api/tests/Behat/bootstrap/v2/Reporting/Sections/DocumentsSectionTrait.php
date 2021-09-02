@@ -4,6 +4,8 @@ declare(strict_types=1);
 
 namespace App\Tests\Behat\v2\Reporting\Sections;
 
+use BehatException;
+
 trait DocumentsSectionTrait
 {
     // Valid files
@@ -30,16 +32,9 @@ trait DocumentsSectionTrait
     public function iViewDocumentsSection()
     {
         $activeReportId = $this->loggedInUserDetails->getCurrentReportId();
-        $reportSectionUrl = sprintf(self::REPORT_SECTION_ENDPOINT, $this->reportUrlPrefix, $activeReportId, 'documents');
+        $documentsUrl = sprintf(self::REPORT_SECTION_ENDPOINT, $this->reportUrlPrefix, $activeReportId, 'documents');
 
-        $this->visitPath($reportSectionUrl);
-
-        $currentUrl = $this->getCurrentUrl();
-        $onSectionPage = preg_match('/report\/.*\/documents$/', $currentUrl);
-
-        if (!$onSectionPage) {
-            $this->throwContextualException(sprintf('Not on documents section page. Current URL is: %s', $currentUrl));
-        }
+        $this->visitPath($documentsUrl);
     }
 
     /**
@@ -67,8 +62,11 @@ trait DocumentsSectionTrait
      */
     public function iHaveDocumentsToUpload()
     {
-        $this->fillField('document_wishToProvideDocumentation_0', 'yes');
+        if (str_contains($this->getSession()->getCurrentUrl(), 'documents/summary')) {
+            $this->clickLink('Edit');
+        }
 
+        $this->fillField('document_wishToProvideDocumentation_0', 'yes');
         $this->pressButton('Save and continue');
     }
 
@@ -80,7 +78,7 @@ trait DocumentsSectionTrait
         $descriptionLists = $this->getSession()->getPage()->findAll('css', 'dl');
 
         if (count($descriptionLists) > 1) {
-            $this->throwContextualException('Multiple dl elements found on the page - this suggests documents have been uploaded');
+            throw new BehatException('Multiple dl elements found on the page - this suggests documents have been uploaded');
         }
     }
 
@@ -91,9 +89,7 @@ trait DocumentsSectionTrait
     public function theDocumentsSummaryPageShouldContainDocumentsIUploaded()
     {
         if (empty($this->uploadedDocumentFilenames)) {
-            $this->throwContextualException(
-                '$this->uploadedDocumentFilenames is empty. This suggests no documents were uploaded.'
-            );
+            throw new BehatException('$this->uploadedDocumentFilenames is empty. This suggests no documents were uploaded.');
         }
 
         $descriptionLists = $this->findAllCssElements('dl');
@@ -127,13 +123,7 @@ trait DocumentsSectionTrait
         }
 
         if (!empty($missingFilenames)) {
-            $this->throwContextualException(
-                sprintf(
-                    'A dl was found but the row with the expected text was not found. Missing text: %s. HTML found: %s',
-                    implode(', ', array_unique($missingFilenames)),
-                    $html
-                )
-            );
+            throw new BehatException(sprintf('A dl was found but the row with the expected text was not found. Missing text: %s. HTML found: %s', implode(', ', array_unique($missingFilenames)), $html));
         }
     }
 
@@ -200,16 +190,14 @@ trait DocumentsSectionTrait
         $documentRowDiv = $this->getSession()->getPage()->find('xpath', $parentOfDtWithTextSelector);
 
         if (is_null($documentRowDiv)) {
-            $this->throwContextualException(
-                sprintf('An element containing a dt with the text %s was not found', $documentToPop)
-            );
+            throw new BehatException(sprintf('An element containing a dt with the text %s was not found', $documentToPop));
         }
 
         $removeLinkSelector = '//a[contains(text(),"Remove")]';
         $removeLink = $documentRowDiv->find('xpath', $removeLinkSelector);
 
         if (is_null($removeLink)) {
-            $this->throwContextualException('A link with the text remove was not found in the document row');
+            throw new BehatException('A link with the text remove was not found in the document row');
         }
 
         $removeLink->click();

@@ -21,11 +21,14 @@ trait FormFillingTrait
      * @param mixed       $value           field value to enter
      * @param string|null $formSectionName define with any name you like - only include if you want to assert on the
      *                                     value entered on a summary page at the end of the form flow
+     * @param string|null $formattedValue  int values are automatically formatted into currency strings (e.g 21
+     *                                     becomes £21.00). To override this, or add any other formatting, pass this
+     *                                     argument tot he function
      */
-    public function fillInField(string $field, $value, ?string $formSectionName = null)
+    public function fillInField(string $field, $value, ?string $formSectionName = null, ?string $formattedValue = null)
     {
         if ($formSectionName) {
-            $this->addToSubmittedAnswersByFormSections($formSectionName, $field, $value);
+            $this->addToSubmittedAnswersByFormSections($formSectionName, $field, $value, $formattedValue);
         }
 
         $this->fillField($field, $value);
@@ -66,6 +69,34 @@ trait FormFillingTrait
         if ($formSectionName) {
             $answerGroup = $this->determineAnswerGroup($formSectionName, $fieldName);
             $this->submittedAnswersByFormSections[$formSectionName][$answerGroup][$fieldName] = trim($fullDate);
+        }
+    }
+
+    /**
+     * @param string      $fieldName       The field name minus the date portion e.g. account[sortCode] account[sortCode][sort_code_part_1]
+     * @param string      $fullSortCode    The full sort code in the format 01-02-03
+     * @param string|null $formSectionName Define with any name you like - only include if you want to assert on the
+     *                                     value entered on a summary page at the end of the form flow
+     */
+    public function fillInSortCodeFields(
+        string $fieldName,
+        string $fullSortCode,
+        ?string $formSectionName = null
+    ) {
+        $sortCodeParts = explode('-', $fullSortCode);
+
+        $firstDigitsField = sprintf('%s[sort_code_part_1]', $fieldName);
+        $this->fillField($firstDigitsField, $sortCodeParts[0]);
+
+        $secondDigitsField = sprintf('%s[sort_code_part_2]', $fieldName);
+        $this->fillField($secondDigitsField, $sortCodeParts[1]);
+
+        $thirdDigitsField = sprintf('%s[sort_code_part_3]', $fieldName);
+        $this->fillField($thirdDigitsField, $sortCodeParts[2]);
+
+        if ($formSectionName && is_numeric(str_replace('-', '', $fullSortCode))) {
+            $answerGroup = $this->determineAnswerGroup($formSectionName, $fieldName);
+            $this->submittedAnswersByFormSections[$formSectionName][$answerGroup][$fieldName] = str_replace('-', '', $fullSortCode);
         }
     }
 
@@ -163,7 +194,10 @@ trait FormFillingTrait
         return $this->submittedAnswersByFormSections['totals'][$formSectionName];
     }
 
-    public function getGrandTotal(): ?int
+    /**
+     * @return int|float|null
+     */
+    public function getGrandTotal()
     {
         return $this->submittedAnswersByFormSections['totals']['grandTotal'];
     }
@@ -190,34 +224,28 @@ trait FormFillingTrait
         unset($this->submittedAnswersByFormSections['totals'][$formSectionName]);
     }
 
-    public function addToSectionTotal(string $formSectionName, int $amountToAdd)
+    public function addToSectionTotal(string $formSectionName, $amountToAdd)
     {
         $this->submittedAnswersByFormSections['totals'][$formSectionName] += $amountToAdd;
     }
 
-    /**
-     * @param string $formSectionName
-     */
-    public function addToGrandTotal(int $amountToAdd)
+    public function addToGrandTotal($amountToAdd)
     {
         $this->submittedAnswersByFormSections['totals']['grandTotal'] += $amountToAdd;
     }
 
-    public function subtractFromSectionTotal(string $formSectionName, int $amountToSubtract)
+    public function subtractFromSectionTotal(string $formSectionName, $amountToSubtract)
     {
         $this->submittedAnswersByFormSections['totals'][$formSectionName] -= $amountToSubtract;
     }
 
-    public function addToSubmittedAnswersByFormSections($formSectionName, $field, $value)
+    public function addToSubmittedAnswersByFormSections($formSectionName, $field, $value, ?string $formattedValue = null)
     {
         $answerGroup = $this->determineAnswerGroup($formSectionName, $field);
-        $this->submittedAnswersByFormSections[$formSectionName][$answerGroup][$field] = $value;
+        $this->submittedAnswersByFormSections[$formSectionName][$answerGroup][$field] = $formattedValue ?: $value;
     }
 
-    /**
-     * @param string $formSectionName
-     */
-    public function subtractFromGrandTotal(int $amountToSubtract)
+    public function subtractFromGrandTotal($amountToSubtract)
     {
         $this->submittedAnswersByFormSections['totals']['grandTotal'] -= $amountToSubtract;
     }
@@ -250,6 +278,10 @@ trait FormFillingTrait
 
         $answerGroupToRemove = null;
 
+        if (!is_array($answers)) {
+            throw new BehatException(sprintf('Section answers for "%s" could not be found', $formSectionName));
+        }
+
         foreach ($answers as $index => $answerGroup) {
             if (is_array($answerGroup) && in_array($fieldInAnswerGroupToRemove, array_keys($answerGroup))) {
                 $answerGroupToRemove = $index;
@@ -263,8 +295,10 @@ trait FormFillingTrait
 
         if (!is_null($removeButtonText)) {
             $normalizedAnswer = $this->normalizeIntToCurrencyString($answers[$answerGroupToRemove][$fieldInAnswerGroupToRemove]);
+
             $rowSelector = sprintf(
-                '//tr[th[contains(.,"%s")]] | //dd[contains(.,"%s")]/..',
+                '//tr[th[contains(.,"%s")]] | //td[contains(.,"%s")]/.. | //dd[contains(.,"%s")]/..',
+                $normalizedAnswer,
                 $normalizedAnswer,
                 $normalizedAnswer
             );
@@ -275,8 +309,8 @@ trait FormFillingTrait
         }
 
         if (!is_null($this->getSectionTotal($formSectionName))) {
-            foreach ($answers[$answerGroupToRemove] as $value) {
-                if (is_int($value)) {
+            foreach ($answers[$answerGroupToRemove] as $fieldName => $value) {
+                if ((is_int($value) || is_float($value)) && $fieldName === $fieldInAnswerGroupToRemove) {
                     $this->subtractFromSectionTotal($formSectionName, $value);
                     $this->subtractFromGrandTotal($value);
                 }
@@ -293,6 +327,7 @@ trait FormFillingTrait
      *                                      edit belongs to
      * @param bool        $fullGroup        Whether to remove the entire group or specific row denoted by
      *                                      $fieldInAnswerGroupToRemove
+     * @param int|null    $value            Value to edit the field to
      *
      * @return array Returns a list, not array, of the old and new value so the variables
      *               can be accessed directly rather than accessing via an array
@@ -300,7 +335,7 @@ trait FormFillingTrait
      * @throws BehatException
      * @throws ElementNotFoundException
      */
-    public function editFieldAnswerInSectionTrackTotal(NodeElement $summaryRowToEdit, string $fieldName, string $formSectionName, bool $fullGroup = true): array
+    public function editFieldAnswerInSectionTrackTotal(NodeElement $summaryRowToEdit, string $fieldName, string $formSectionName, bool $fullGroup = true, ?int $value = null): array
     {
         $currentValueString = $summaryRowToEdit->find('xpath', '//td[contains(.,"£")] | //dd[contains(.,"£")]')->getText();
         $currentValueInt = intval(str_replace([',', '£'], '', $currentValueString));
@@ -309,7 +344,7 @@ trait FormFillingTrait
 
         $summaryRowToEdit->clickLink('Edit');
 
-        $newValue = $this->faker->numberBetween(1, 10000);
+        $newValue = $value ?: $this->faker->numberBetween(1, 10000);
 
         $this->fillInFieldTrackTotal(
             $fieldName,

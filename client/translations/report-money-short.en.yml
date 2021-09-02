@@ -123,7 +123,7 @@ form:
   categoriesEntries:
     # in
     state_pension_and_benefit.label: State pension and benefits
-    bequests.label: Bequests – for example, inheritance, gifts received
+    bequests.label: Bequests - for example, inheritance, gifts received
     income_from_invesments_dividends_rental.label: Income from investments, dividends, property rental
     sale_of_investments_property_assets.label: Sale of investments, property or assets
     salary_or_wages.label: Salary or wages

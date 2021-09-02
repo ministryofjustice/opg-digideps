@@ -63,7 +63,7 @@ services:
         build:
             context: ./client
             args:
-                REQUIRE_XDEBUG: ${REQUIRE_XDEBUG_FRONTEND} # set REQUIRE_XDEBUG_FRONTEND=true in .env to install Xdebug
+                REQUIRE_XDEBUG: ${REQUIRE_XDEBUG_FRONTEND} # set REQUIRE_XDEBUG_FRONTEND=1 in .env to install Xdebug
         ports:
             - 8070:443
         depends_on:
@@ -90,7 +90,7 @@ services:
         build:
             context: ./client
             args:
-                REQUIRE_XDEBUG: ${REQUIRE_XDEBUG_FRONTEND} # set REQUIRE_XDEBUG_FRONTEND=true in .env to install Xdebug
+                REQUIRE_XDEBUG: ${REQUIRE_XDEBUG_FRONTEND} # set REQUIRE_XDEBUG_FRONTEND=1 in .env to install Xdebug
         ports:
             - 8082:443
         depends_on:
@@ -115,7 +115,7 @@ services:
         build:
             context: ./api
             args:
-                REQUIRE_XDEBUG: ${REQUIRE_XDEBUG_API} # set REQUIRE_XDEBUG_API=true in .env to install Xdebug
+                REQUIRE_XDEBUG: ${REQUIRE_XDEBUG_API} # set REQUIRE_XDEBUG_API=1 in .env to install Xdebug
         ports:
             - 8090:443
         depends_on:

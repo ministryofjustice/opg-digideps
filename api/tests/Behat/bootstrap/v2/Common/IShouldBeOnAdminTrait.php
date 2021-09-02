@@ -154,4 +154,19 @@ trait IShouldBeOnAdminTrait
     {
         return $this->iAmOnPage('/admin\/report\/.*\/checklist-submitted$/');
     }
+
+    public function iAmOnAdminReportSubmissionsPage()
+    {
+        return $this->iAmOnPage('/admin\/documents\/list/');
+    }
+
+    public function iAmOnAdminAnalyticsPage()
+    {
+        return $this->iAmOnPage('/admin\/stats\/metrics$/');
+    }
+
+    public function iAmOnAdminNotificationPage()
+    {
+        return $this->iAmOnPage('/admin\/settings\/service-notification$/');
+    }
 }

@@ -28,10 +28,12 @@ Feature: Health and Lifestyle (Lay / PA / Prof share same functionality)
         When I visit the report overview page
         Then I should see "lifestyle" as "finished"
 
-    @lay-health-welfare-completed
+    @lay-health-welfare-not-started
     Scenario: A user edits existing answers
-        Given a Lay Deputy has completed a Health and Welfare report
-        And I visit the health and lifestyle summary section
+        Given a Lay Deputy has not started a Health and Welfare report
+        And I view and start the health and lifestyle report section
+        When I fill in details about clients health and care appointments
+        And I confirm that client takes part in leisure and social activities
         When I edit the lifestyle section answers as client takes part in activities
         Then I should see the expected lifestyle section summary
         When I edit the lifestyle section answers as client doesn't take part in activities

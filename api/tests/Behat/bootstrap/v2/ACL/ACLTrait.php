@@ -4,6 +4,8 @@ declare(strict_types=1);
 
 namespace App\Tests\Behat\v2\ACL;
 
+use App\Tests\Behat\BehatException;
+
 trait ACLTrait
 {
     /**
@@ -72,7 +74,7 @@ trait ACLTrait
                 $this->iVisitAdminUserResearchReportPage();
                 break;
             default:
-                $this->throwContextualException(sprintf('Analytics page "%s" unrecognised', $lowercasePageName));
+                throw new BehatException(sprintf('Analytics page "%s" unrecognised', $lowercasePageName));
                 break;
         }
     }

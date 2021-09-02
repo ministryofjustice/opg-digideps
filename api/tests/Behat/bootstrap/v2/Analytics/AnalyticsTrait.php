@@ -4,6 +4,8 @@ declare(strict_types=1);
 
 namespace App\Tests\Behat\v2\Analytics;
 
+use App\Tests\Behat\BehatException;
+
 trait AnalyticsTrait
 {
     private int $runNumber = 0;
@@ -68,7 +70,7 @@ trait AnalyticsTrait
         $this->pressButton('Update date range');
         $header = $this->getSession()->getPage()->find('xpath', '//h2[contains(.,"Last 30 days")]');
         if (is_null($header)) {
-            $this->throwContextualException(sprintf('Missing correct text.'));
+            throw new BehatException(sprintf('Missing correct text.'));
         }
         // Reports, Deputies and Feedback are affected by date constraints.
         // Clients will always be total clients as no date constraints exist.
@@ -101,7 +103,7 @@ trait AnalyticsTrait
         $this->pressButton('Update date range');
         $header = $this->getSession()->getPage()->find('xpath', '//h2[contains(.,"All time")]');
         if (is_null($header)) {
-            $this->throwContextualException(sprintf('Missing correct text.'));
+            throw new BehatException(sprintf('Missing correct text.'));
         }
         // This should show all the reports
         $this->expectedMetrics = [
@@ -130,7 +132,7 @@ trait AnalyticsTrait
         $this->pressButton('Update date range');
         $header = $this->getSession()->getPage()->find('xpath', '//h2[contains(.,"All time")]');
         if (is_null($header)) {
-            $this->throwContextualException(sprintf('Missing correct text.'));
+            throw new BehatException(sprintf('Missing correct text.'));
         }
         // This should show all the reports
         $this->expectedMetrics = [
@@ -190,7 +192,7 @@ trait AnalyticsTrait
         $this->pressButton('Update date range');
         $header = $this->getSession()->getPage()->find('xpath', '//h2[contains(.,"This year")]');
         if (is_null($header)) {
-            $this->throwContextualException(sprintf('Missing correct text.'));
+            throw new BehatException(sprintf('Missing correct text.'));
         }
         // Deputies registration date is same as start date of report so less should show up
         $this->expectedMetrics = [
@@ -232,7 +234,7 @@ trait AnalyticsTrait
 
         $header = $this->getSession()->getPage()->find('xpath', '//h2[contains(.,"Custom")]');
         if (is_null($header)) {
-            $this->throwContextualException(sprintf('Missing correct text.'));
+            throw new BehatException(sprintf('Missing correct text.'));
         }
         // We should only get back our generated reports
         $this->expectedMetrics = [
@@ -270,7 +272,7 @@ trait AnalyticsTrait
             $xpath = sprintf('//a[contains(.,"%s")]', $linkText);
             $downloadLink = $this->getSession()->getPage()->find('xpath', $xpath);
             if (is_null($downloadLink)) {
-                $this->throwContextualException(sprintf('Missing the following text: %s', $linkText));
+                throw new BehatException(sprintf('Missing the following text: %s', $linkText));
             }
         }
     }
@@ -284,13 +286,13 @@ trait AnalyticsTrait
         $downloadLinks = $this->getSession()->getPage()->findAll('xpath', $xpath);
 
         if (1 != count($downloadLinks)) {
-            $this->throwContextualException(sprintf('Number of download file option should be 1. Currently: %s', strval(count($downloadLinks))));
+            throw new BehatException(sprintf('Number of download file option should be 1. Currently: %s', strval(count($downloadLinks))));
         }
 
         $xpath = '//a[contains(.,"Download DAT file")]';
         $downloadLink = $this->getSession()->getPage()->find('xpath', $xpath);
         if (is_null($downloadLink)) {
-            $this->throwContextualException('Link to DAT file does not exist on page');
+            throw new BehatException('Link to DAT file does not exist on page');
         }
     }
 
@@ -318,7 +320,7 @@ trait AnalyticsTrait
         $xpath = sprintf('//a[contains(.,"%s")]', $this->currentLinkText);
         $downloadLink = $this->getSession()->getPage()->find('xpath', $xpath);
         if (is_null($downloadLink)) {
-            $this->throwContextualException(sprintf('Missing the following text: %s', $this->currentLinkText));
+            throw new BehatException(sprintf('Missing the following text: %s', $this->currentLinkText));
         }
         $downloadLink->click();
         $this->iAmOnAdminStatsSatisfactionPage();
@@ -337,7 +339,7 @@ trait AnalyticsTrait
         $xpath = sprintf('//a[contains(.,"%s")]', $this->currentLinkText);
         $downloadLink = $this->getSession()->getPage()->find('xpath', $xpath);
         if (is_null($downloadLink)) {
-            $this->throwContextualException(sprintf('Missing the following text: %s', $this->currentLinkText));
+            throw new BehatException(sprintf('Missing the following text: %s', $this->currentLinkText));
         }
         $downloadLink->click();
         $this->iAmOnAdminStatsUserResearchPage();
@@ -356,7 +358,7 @@ trait AnalyticsTrait
         $xpath = sprintf('//a[contains(.,"%s")]', $this->currentLinkText);
         $downloadLink = $this->getSession()->getPage()->find('xpath', $xpath);
         if (is_null($downloadLink)) {
-            $this->throwContextualException(sprintf('Missing the following text: %s', $this->currentLinkText));
+            throw new BehatException(sprintf('Missing the following text: %s', $this->currentLinkText));
         }
         $downloadLink->click();
     }
@@ -372,7 +374,7 @@ trait AnalyticsTrait
         $xpath = sprintf('//a[contains(.,"%s")]', $this->currentLinkText);
         $downloadLink = $this->getSession()->getPage()->find('xpath', $xpath);
         if (is_null($downloadLink)) {
-            $this->throwContextualException(sprintf('Missing the following text: %s', $this->currentLinkText));
+            throw new BehatException(sprintf('Missing the following text: %s', $this->currentLinkText));
         }
         $downloadLink->click();
         $this->iAmOnAdminStatsPage();
@@ -387,7 +389,7 @@ trait AnalyticsTrait
     {
         $responseStatus = $this->getSession()->getStatusCode();
         if (200 != $responseStatus) {
-            $this->throwContextualException(sprintf('%s, returned a %s response', $this->currentLinkText, strval($responseStatus)));
+            throw new BehatException(sprintf('%s, returned a %s response', $this->currentLinkText, strval($responseStatus)));
         }
     }
 }

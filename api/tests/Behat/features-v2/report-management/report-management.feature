@@ -1,10 +1,10 @@
-@v2 @report-management @acs
+@v2 @report-management
 Feature: Report Management (applies to all admin roles)
 
-    @super-admin @prof-admin-completed
+    @super-admin @prof-admin-health-welfare-completed
     Scenario: An admin user changes report type and due date for a in progress report
-        Given a super admin user accesses the admin app
-        And a Professional Deputy has completed a Pfa Low Assets report
+        Given a Professional Deputy has completed a Pfa Low Assets report
+        And a super admin user accesses the admin app
         When I visit the admin client details page associated with the deputy I'm interacting with
         And I manage the deputies 'completed' report
         And I change the report type to 'Health and welfare'
@@ -14,8 +14,8 @@ Feature: Report Management (applies to all admin roles)
 
     @admin-manager @lay-combined-high-submitted
     Scenario: An admin user un-submits a submitted report
-        Given an admin manager user accesses the admin app
-        And a Lay Deputy has submitted a Combined High Assets report
+        Given a Lay Deputy has submitted a Combined High Assets report
+        And an admin manager user accesses the admin app
         When I visit the admin client details page associated with the deputy I'm interacting with
         And I manage the deputies 'submitted' report
         And I change the report 'start' date to '29 June 2021'
@@ -29,8 +29,8 @@ Feature: Report Management (applies to all admin roles)
 
     @admin @pa-admin-combined-high-submitted
     Scenario: An admin user changes report type and due date for an un-submitted report
-        Given an admin user accesses the admin app
-        And a Public Authority Deputy has submitted a Combined High Assets report
+        Given a Public Authority Deputy has submitted a Combined High Assets report
+        And an admin user accesses the admin app
         When I visit the admin client details page associated with the deputy I'm interacting with
         And I manage the deputies 'submitted' report
         And I confirm all report sections are incomplete
@@ -43,8 +43,8 @@ Feature: Report Management (applies to all admin roles)
 
     @admin @pa-admin-combined-high-submitted
     Scenario: An admin user closes an un-submitted report
-        Given an admin user accesses the admin app
-        And a Public Authority Deputy has submitted a Combined High Assets report
+        Given a Public Authority Deputy has submitted a Combined High Assets report
+        And an admin user accesses the admin app
         When I visit the admin client details page associated with the deputy I'm interacting with
         And I manage the deputies 'submitted' report
         And I confirm all report sections are incomplete
@@ -54,17 +54,21 @@ Feature: Report Management (applies to all admin roles)
 
     @super-admin @pa-admin-combined-high-submitted
     Scenario: A super admin can download a submitted report PDF
-        Given a super admin user accesses the admin app
-        And a Public Authority Deputy has submitted a Combined High Assets report
+        Given a Public Authority Deputy has submitted a Combined High Assets report
+        And a super admin user accesses the admin app
         When I visit the admin client details page associated with the deputy I'm interacting with
         Then the link to download the submitted report should be visible
 
     @admin @admin-manager @pa-admin-combined-high-submitted
-    Scenario: Non-super admin cannot download a submitted report PDF
-        Given an admin user accesses the admin app
-        And a Public Authority Deputy has submitted a Combined High Assets report
+    Scenario: An admin manager cannot download a submitted report PDF
+        Given a Public Authority Deputy has submitted a Combined High Assets report
+        Given an admin manager user accesses the admin app
         When I visit the admin client details page associated with the deputy I'm interacting with
         Then the link to download the submitted report should not be visible
+
+    @admin @admin-manager @pa-admin-combined-high-submitted
+    Scenario:An admin cannot download a submitted report PDF
+        Given a Public Authority Deputy has submitted a Combined High Assets report
         Given an admin manager user accesses the admin app
         When I visit the admin client details page associated with the deputy I'm interacting with
         Then the link to download the submitted report should not be visible

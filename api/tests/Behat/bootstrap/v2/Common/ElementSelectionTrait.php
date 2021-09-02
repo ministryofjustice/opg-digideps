@@ -15,7 +15,7 @@ trait ElementSelectionTrait
         $listOfElements = $this->getSession()->getPage()->findAll('css', $elementType);
 
         if (!$listOfElements) {
-            $this->throwContextualException("A $elementType element was not found on the page");
+            throw new BehatException("A $elementType element was not found on the page");
         }
 
         return $listOfElements;
@@ -27,7 +27,7 @@ trait ElementSelectionTrait
         $listOfElements = $this->getSession()->getPage()->findAll('xpath', $xpath);
 
         if (!$listOfElements) {
-            $this->throwContextualException("A '$xpath' element was not found on the page");
+            throw new BehatException("A '$xpath' element was not found on the page");
         }
 
         return $listOfElements;
@@ -40,7 +40,7 @@ trait ElementSelectionTrait
         $links = $this->getSession()->getPage()->findAll('css', 'a');
 
         if (!$links) {
-            $this->throwContextualException('A link element was not found on the page');
+            throw new BehatException('A link element was not found on the page');
         }
 
         foreach ($links as $link) {
