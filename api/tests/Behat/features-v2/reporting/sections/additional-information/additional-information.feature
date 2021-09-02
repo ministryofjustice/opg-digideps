@@ -1,4 +1,4 @@
-@v2 @v2_reporting_1 @additional-information
+@v2 @v2_reporting @additional-information
 Feature: Additional Information
 
     @lay-pfa-high-not-started

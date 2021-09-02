@@ -85,60 +85,42 @@ workflows:
           timeout: 1200
 
       - run-task:
-          name: integration tests v2 reports 1
+          name: integration tests v2 reports
           requires: [ integration tests v2 standalone ]
           filters: { branches: { ignore: [ main ] } }
           task_name: integration_test_v2
-          override: "sh,./tests/Behat/run-tests-parallel.sh,--tags,@v2_reporting_1"
+          override: "sh,./tests/Behat/run-tests-parallel.sh,--tags,@v2_reporting"
           timeout: 1200
 
       - run-task:
-          name: integration tests v2 reports 2
+          name: integration tests v2 admin
           requires: [ integration tests v2 standalone ]
           filters: { branches: { ignore: [ main ] } }
           task_name: integration_test_v2
-          override: "sh,./tests/Behat/run-tests-parallel.sh,--tags,@v2_reporting_2"
+          override: "sh,./tests/Behat/run-tests-parallel.sh,--tags,@v2_admin"
           timeout: 1200
 
-      - run-task:
-          name: integration tests v2 admin 1
-          requires: [ integration tests v2 standalone ]
-          filters: { branches: { ignore: [ main ] } }
-          task_name: integration_test_v2
-          override: "sh,./tests/Behat/run-tests-parallel.sh,--tags,@v2_admin_1"
-          timeout: 1200
-
-      - run-task:
-          name: integration tests v2 admin 2
-          requires: [ integration tests v2 standalone ]
-          filters: { branches: { ignore: [ main ] } }
-          task_name: integration_test_v2
-          override: "sh,./tests/Behat/run-tests-parallel.sh,--tags,@v2_admin_2"
-          timeout: 1200
-
-      - terraform-plan-all:
-          name: plan all terraform environments
-          requires: [ integration tests v2 standalone ]
-          filters: { branches: { ignore: [ main ] } }
-          tf_tier: environment
-
-      - terraform-plan-all:
-          name: plan all shared terraform environments
-          requires: [ integration tests v2 standalone ]
-          filters: { branches: { ignore: [ main ] } }
-          tf_tier: shared
+#      - terraform-plan-all:
+#          name: plan all terraform environments
+#          requires: [ integration tests v2 standalone ]
+#          filters: { branches: { ignore: [ main ] } }
+#          tf_tier: environment
+#
+#      - terraform-plan-all:
+#          name: plan all shared terraform environments
+#          requires: [ integration tests v2 standalone ]
+#          filters: { branches: { ignore: [ main ] } }
+#          tf_tier: shared
 
       - slack/approval-notification:
           name: branch complete notification
           message: Your branch << pipeline.git.branch >> has completed
           channel: opg-digicop-builds
           requires: [
-            integration tests v2 reports 1,
-            integration tests v2 reports 2,
-            integration tests v2 admin 1,
-            integration tests v2 admin 2,
-            plan all terraform environments,
-            plan all shared terraform environments,
+            integration tests v2 reports,
+            integration tests v2 admin,
+#            plan all terraform environments,
+#            plan all shared terraform environments,
             api unit test,
             client unit test,
             unprotect environment

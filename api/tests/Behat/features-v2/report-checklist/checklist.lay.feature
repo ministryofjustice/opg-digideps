@@ -1,4 +1,4 @@
-@v2 @v2_admin_1 @reporting-checklist-lay
+@v2 @v2_admin @reporting-checklist-lay
 Feature: Reporting Checklists - Lay reporting checklist
 
     @admin @lay-health-welfare-submitted

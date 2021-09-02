@@ -1,4 +1,4 @@
-@v2 @v2_admin_2 @admin-management
+@v2 @v2_admin @admin-management
 Feature: Admin - An admin user adds an admin user
 
   @super-admin

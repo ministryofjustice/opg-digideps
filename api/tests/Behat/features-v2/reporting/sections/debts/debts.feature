@@ -1,4 +1,4 @@
-@v2 @v2_reporting_1 @debts
+@v2 @v2_reporting @debts
 Feature: Report debts
 
     @lay-pfa-low-not-started

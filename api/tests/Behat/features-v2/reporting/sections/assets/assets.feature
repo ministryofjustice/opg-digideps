@@ -1,4 +1,4 @@
-@v2 @v2_reporting_1 @assets
+@v2 @v2_reporting @assets
 Feature: Assets
 
     @lay-pfa-high-not-started

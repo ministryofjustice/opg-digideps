@@ -1,4 +1,4 @@
-@v2 @v2_reporting_1 @report-overview
+@v2 @v2_reporting @report-overview
 Feature: Report Overview - All User Roles
 
     @prof-admin-health-welfare-not-started
