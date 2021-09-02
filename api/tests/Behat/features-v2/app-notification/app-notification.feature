@@ -1,4 +1,4 @@
-@v2 @app-notification
+@v2 @v2_admin @app-notification
 Feature: App Notificaiton - An admin can add and remove app notification for deputies
 
 @admin

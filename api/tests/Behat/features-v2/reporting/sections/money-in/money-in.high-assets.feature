@@ -1,4 +1,4 @@
-@v2 @money-in-high-assets
+@v2 @v2_reporting @money-in-high-assets
 Feature: Money in High Assets
 
 @lay-pfa-high-not-started

@@ -1,4 +1,4 @@
-@v2 @deputy-expenses
+@v2 @v2_reporting @deputy-expenses
 Feature: Deputy expenses - Applies to Lays with combined/PFA reports only
 
     @lay-pfa-high-not-started

@@ -1,4 +1,4 @@
-@v2 @actions
+@v2 @v2_reporting @actions
 Feature: Actions
 
     @lay-pfa-high-not-started

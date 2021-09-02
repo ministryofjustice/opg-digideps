@@ -1,4 +1,4 @@
-@v2 @section-navigation
+@v2 @v2_reporting @section-navigation
 Feature: Section navigation - Professional (see section-navigation.lay.combined.feature for other shared sections)
 
     @prof-named-pfa-high-not-started

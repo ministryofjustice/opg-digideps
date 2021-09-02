@@ -4,6 +4,7 @@ import (
 	"context"
 	"flag"
 	"fmt"
+	"strings"
 	"github.com/aws/aws-sdk-go/aws"
 	"github.com/aws/aws-sdk-go/aws/awserr"
 	"github.com/aws/aws-sdk-go/aws/credentials/stscreds"
@@ -25,19 +26,33 @@ func main() {
 	var taskName string
 	var timeout int
 	var configFile string
+    var override string
 
 	flag.String("help", "", "this help information")
 	flag.StringVar(&taskName, "task", "", "task to run")
+	flag.StringVar(&override, "override", "", "override to run")
 	flag.IntVar(&timeout, "timeout", 120, "timeout for the task")
 	flag.StringVar(&configFile, "config", "terraform.output.json", "config file for tasks")
 
 	flag.Parse()
+
 	if taskName == "" {
 		fmt.Println("Error: task name not set")
 		flag.Usage()
 	}
 
-	config := LoadConfig(configFile)
+    config := LoadConfig(configFile)
+
+    if override != "" {
+        commandList := strings.Split(override, ",")
+        commandListPointers := []*string{}
+        for k, _ := range commandList {
+            commandListPointers = append(commandListPointers, &commandList[k])
+        }
+
+        config.Tasks.Value[taskName].Overrides.ContainerOverrides[0].Command = commandListPointers
+    }
+
 	sess, err := session.NewSession()
 	if err != nil {
 		log.Fatalln(err)

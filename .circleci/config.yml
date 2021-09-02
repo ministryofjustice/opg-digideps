@@ -77,21 +77,46 @@ workflows:
 #          filters: { branches: { ignore: [ main ] } }
 
       - run-task:
-          name: integration tests v2
+          name: integration tests v2 standalone
           requires: [ protect branch workspace ]
           filters: { branches: { ignore: [ main ] } }
           task_name: integration_test_v2
+          override: "sh,./tests/Behat/run-tests.sh,--profile,v2-tests-goutte,--tags,@v2_standalone"
+          timeout: 1200
+
+      - run-task:
+          name: integration tests v2 reports
+          requires: [ integration tests v2 standalone ]
+          filters: { branches: { ignore: [ main ] } }
+          task_name: integration_test_v2
+          override: "sh,./tests/Behat/run-tests-parallel.sh,--tags,@v2_reports"
+          timeout: 1200
+
+      - run-task:
+          name: integration tests v2 admin
+          requires: [ integration tests v2 standalone ]
+          filters: { branches: { ignore: [ main ] } }
+          task_name: integration_test_v2
+          override: "sh,./tests/Behat/run-tests-parallel.sh,--tags,@v2_admin"
           timeout: 1200
 
       - terraform-plan-all:
           name: plan all terraform environments
-          requires: [ integration tests v2 ]
+          requires: [
+            integration tests v2 standalone,
+            integration tests v2 reports,
+            integration tests v2 admin
+          ]
           filters: { branches: { ignore: [ main ] } }
           tf_tier: environment
 
       - terraform-plan-all:
           name: plan all shared terraform environments
-          requires: [ integration tests v2 ]
+          requires: [
+            integration tests v2 standalone,
+            integration tests v2 reports,
+            integration tests v2 admin
+          ]
           filters: { branches: { ignore: [ main ] } }
           tf_tier: shared
 
@@ -100,7 +125,9 @@ workflows:
           message: Your branch << pipeline.git.branch >> has completed
           channel: opg-digicop-builds
           requires: [
-            integration tests v2,
+            integration tests v2 standalone,
+            integration tests v2 reports,
+            integration tests v2 admin,
             plan all terraform environments,
             plan all shared terraform environments,
             api unit test,
@@ -1043,6 +1070,10 @@ jobs:
         description: whether to notify specific task failure
         type: boolean
         default: false
+      override:
+        description: override value where task is overridable
+        type: string
+        default: ""
     environment:
       WORKSPACE: << parameters.tf_workspace >>
     working_directory: ~/project/environment
@@ -1062,7 +1093,7 @@ jobs:
           command: terraform output -json > terraform.output.json
       - run:
           name: Run task
-          command: runner -task << parameters.task_name >> -timeout << parameters.timeout >>
+          command: runner -task << parameters.task_name >> -timeout << parameters.timeout >> -override << parameters.override >>
       - when:
           condition: << parameters.notify_slack >>
           steps:

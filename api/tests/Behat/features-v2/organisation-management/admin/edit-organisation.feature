@@ -1,4 +1,4 @@
-@v2 @organisation-management
+@v2 @v2_admin @organisation-management
 Feature: Organisation - Editing an organisation
 
     @super-admin

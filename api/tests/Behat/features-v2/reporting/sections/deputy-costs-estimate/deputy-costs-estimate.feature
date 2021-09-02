@@ -1,4 +1,4 @@
-@v2 @deputy-costs-estimate
+@v2 @v2_reporting @deputy-costs-estimate
 Feature: Deputy costs estimates - Applies to Professionals with deputies of all report types
 
     @prof-team-hw-not-started

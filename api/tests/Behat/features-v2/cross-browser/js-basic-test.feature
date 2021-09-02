@@ -1,4 +1,4 @@
-@v2 @js-basic-check @js
+@v2 @v2_admin @js-basic-check @js
 Feature: Javascript basic checks
 
   @lay-pfa-high-not-started

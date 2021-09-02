@@ -42,6 +42,13 @@ $ssmClient->putParameter([
 ]);
 
 $ssmClient->putParameter([
+    'Name' => '/default/flag/benefits-questions',
+    'Type' => 'String',
+    'Value' => '31-12-2030 00:00:00',
+    'Overwrite' => true,
+]);
+
+$ssmClient->putParameter([
     'Name' => '/default/parameter/document-sync-row-limit',
     'Type' => 'String',
     'Value' => '100',

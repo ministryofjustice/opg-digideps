@@ -101,7 +101,7 @@ RUN chown www-data /var/www/tests/Behat/run-tests-parallel.sh
 RUN chmod 544 /var/www/tests/Behat/run-tests-parallel.sh
 
 # Prebuild cache
-RUN su-exec www-data php -d memory_limit=-1 app/console cache:warmup
+#RUN su-exec www-data php -d memory_limit=-1 app/console cache:warmup
 
 # Check for security issues
 RUN wget -q -O local-php-security-checker https://github.com/fabpot/local-php-security-checker/releases/download/v1.0.0/local-php-security-checker_1.0.0_linux_arm64 \
