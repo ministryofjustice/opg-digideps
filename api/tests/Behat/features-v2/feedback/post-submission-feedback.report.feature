@@ -1,4 +1,4 @@
-@v2 @v2_admin @feedback
+@v2 @v2_admin_1 @feedback
 Feature: Providing feedback after submitting a report
 
 @lay-pfa-high-submitted

@@ -1,4 +1,4 @@
-@v2 @v2_admin @reporting-checklist-org
+@v2 @v2_admin_1 @reporting-checklist-org
 Feature: Reporting Checklists - Org reporting checklist
 
     @admin @prof-named-pfa-high-submitted

@@ -1,4 +1,4 @@
-@v2 @v2_admin @admin-user-search @admin-user
+@v2 @v2_admin_2 @admin-user-search @admin-user
 Feature: Admin - User Search (same functionality for all admin types)
 
     @super-admin

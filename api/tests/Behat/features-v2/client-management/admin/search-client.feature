@@ -1,4 +1,4 @@
-@v2 @v2_admin @admin-client-search
+@v2 @v2_admin_1 @admin-client-search
 Feature: Admin - Client Search
 
   @admin @prof-admin-health-welfare-not-started

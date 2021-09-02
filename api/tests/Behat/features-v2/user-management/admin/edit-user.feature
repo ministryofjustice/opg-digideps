@@ -1,4 +1,4 @@
-@v2 @v2_admin @admin-deputy-management
+@v2 @v2_admin_2 @admin-deputy-management
 Feature: Admin - Edit deputy users
 
     @super-admin @lay-health-welfare-not-started

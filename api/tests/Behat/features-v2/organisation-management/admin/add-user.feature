@@ -1,4 +1,4 @@
-@v2 @v2_admin @organisation-management
+@v2 @v2_admin_1 @organisation-management
 Feature: Organisation - Adding a user to the organisation
 
     @super-admin

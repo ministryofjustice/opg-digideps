@@ -1,4 +1,4 @@
-@v2 @v2_admin @admin-client-view
+@v2 @v2_admin_1 @admin-client-view
 Feature: Admin - View client details
 
   @admin @lay-pfa-high-submitted
