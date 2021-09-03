@@ -1,4 +1,4 @@
-@v2 @v2_reporting @section-navigation
+@v2 @v2_reporting_1 @section-navigation
 Feature: Section navigation - Public Authority (see section-navigation.lay.combined.feature for other shared sections)
 
     @pa-admin-combined-high-not-started

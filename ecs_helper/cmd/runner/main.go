@@ -41,17 +41,17 @@ func main() {
 		flag.Usage()
 	}
 
-    config := LoadConfig(configFile)
+	config := LoadConfig(configFile)
 
-    if override != "" {
-        commandList := strings.Split(override, ",")
-        commandListPointers := []*string{}
-        for k, _ := range commandList {
-            commandListPointers = append(commandListPointers, &commandList[k])
-        }
+	if override != "" {
+		commandList := strings.Split(override, ",")
+		commandListPointers := []*string{}
+		for k, _ := range commandList {
+			commandListPointers = append(commandListPointers, &commandList[k])
+		}
 
-        config.Tasks.Value[taskName].Overrides.ContainerOverrides[0].Command = commandListPointers
-    }
+		config.Tasks.Value[taskName].Overrides.ContainerOverrides[0].Command = commandListPointers
+	}
 
 	sess, err := session.NewSession()
 	if err != nil {

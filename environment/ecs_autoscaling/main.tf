@@ -37,7 +37,7 @@ resource "aws_appautoscaling_policy" "down" {
 
   step_scaling_policy_configuration {
     adjustment_type         = "ChangeInCapacity"
-    cooldown                = 600
+    cooldown                = 60
     metric_aggregation_type = "Maximum"
 
     step_adjustment {
@@ -122,7 +122,7 @@ resource "aws_cloudwatch_metric_alarm" "scale_up" {
 resource "aws_cloudwatch_metric_alarm" "scale_down" {
   alarm_name                = "${var.environment}-${var.aws_ecs_service_name}-scale-down"
   comparison_operator       = "GreaterThanOrEqualToThreshold"
-  evaluation_periods        = "2"
+  evaluation_periods        = "10"
   threshold                 = "1"
   alarm_description         = "Scale down based on Mem, Cpu and Task Count"
   insufficient_data_actions = []

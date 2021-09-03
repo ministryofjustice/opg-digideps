@@ -73,7 +73,7 @@ workflows:
 
       - scale-services:
           name: scale up services for integration tests
-          replicas: "3"
+          replicas: "5"
           requires: [ terraform apply ]
           filters: { branches: { ignore: [ main ] } }
 
@@ -84,18 +84,29 @@ workflows:
 
       - run-task:
           name: integration tests v2 standalone
-          requires: [ protect branch workspace ]
+          requires: [
+            protect branch workspace,
+            scale up services for integration tests
+          ]
           filters: { branches: { ignore: [ main ] } }
           task_name: integration_test_v2
           override: "sh,./tests/Behat/run-tests.sh,--profile,v2-tests-goutte,--tags,@v2_standalone"
           timeout: 1200
 
       - run-task:
-          name: integration tests v2 reports
+          name: integration tests v2 reports 1
           requires: [ integration tests v2 standalone ]
           filters: { branches: { ignore: [ main ] } }
           task_name: integration_test_v2
-          override: "sh,./tests/Behat/run-tests-parallel.sh,--tags,@v2_reporting"
+          override: "sh,./tests/Behat/run-tests-parallel.sh,--tags,@v2_reporting_1"
+          timeout: 1200
+
+      - run-task:
+          name: integration tests v2 reports 2
+          requires: [ integration tests v2 standalone ]
+          filters: { branches: { ignore: [ main ] } }
+          task_name: integration_test_v2
+          override: "sh,./tests/Behat/run-tests-parallel.sh,--tags,@v2_reporting_2"
           timeout: 1200
 
       - run-task:
@@ -106,37 +117,42 @@ workflows:
           override: "sh,./tests/Behat/run-tests-parallel.sh,--tags,@v2_admin"
           timeout: 1200
 
-#      - terraform-plan-all:
-#          name: plan all terraform environments
-#          requires: [ integration tests v2 standalone ]
-#          filters: { branches: { ignore: [ main ] } }
-#          tf_tier: environment
-#
-#      - terraform-plan-all:
-#          name: plan all shared terraform environments
-#          requires: [ integration tests v2 standalone ]
-#          filters: { branches: { ignore: [ main ] } }
-#          tf_tier: shared
+      - terraform-plan-all:
+          name: plan all terraform environments
+          requires: [ integration tests v2 standalone ]
+          filters: { branches: { ignore: [ main ] } }
+          tf_tier: environment
+
+      - terraform-plan-all:
+          name: plan all shared terraform environments
+          requires: [ integration tests v2 standalone ]
+          filters: { branches: { ignore: [ main ] } }
+          tf_tier: shared
+
+      - scale-services:
+          name: scale down services for integration tests
+          replicas: "1"
+          requires: [
+            integration tests v2 reports 1,
+            integration tests v2 reports 2,
+            integration tests v2 admin
+          ]
+          filters: { branches: { ignore: [ main ] } }
 
       - slack/approval-notification:
           name: branch complete notification
           message: Your branch << pipeline.git.branch >> has completed
           channel: opg-digicop-builds
           requires: [
-            integration tests v2 reports,
+            integration tests v2 reports 1,
+            integration tests v2 reports 2,
             integration tests v2 admin,
-#            plan all terraform environments,
-#            plan all shared terraform environments,
+            plan all terraform environments,
+            plan all shared terraform environments,
             api unit test,
             client unit test,
             unprotect environment
           ]
-          filters: { branches: { ignore: [ main ] } }
-
-      - scale-services:
-          name: scale down services for integration tests
-          replicas: "1"
-          requires: [ branch complete notification ]
           filters: { branches: { ignore: [ main ] } }
 
       - cleanup:
@@ -706,7 +722,6 @@ jobs:
           name: scale services
           command: |
             aws ecs update-service --service front-${TF_WORKSPACE} --cluster ${TF_WORKSPACE} --desired-count << parameters.replicas >> --profile digideps-ci-dev
-            aws ecs update-service --service admin-${TF_WORKSPACE} --cluster ${TF_WORKSPACE} --desired-count << parameters.replicas >> --profile digideps-ci-dev
             aws ecs update-service --service api-${TF_WORKSPACE} --cluster ${TF_WORKSPACE} --desired-count << parameters.replicas >> --profile digideps-ci-dev
 
   destroy-workspaces:
