@@ -71,6 +71,12 @@ workflows:
           requires: [ terraform apply ]
           filters: { branches: { ignore: [ main ] } }
 
+      - scale-services:
+          name: scale up services for integration tests
+          replicas: "3"
+          requires: [ terraform apply ]
+          filters: { branches: { ignore: [ main ] } }
+
 #      - pa11y-ci:
 #          name: accessibility test
 #          requires: [ apply environment ]
@@ -125,6 +131,12 @@ workflows:
             client unit test,
             unprotect environment
           ]
+          filters: { branches: { ignore: [ main ] } }
+
+      - scale-services:
+          name: scale down services for integration tests
+          replicas: "1"
+          requires: [ branch complete notification ]
           filters: { branches: { ignore: [ main ] } }
 
       - cleanup:
@@ -667,6 +679,35 @@ jobs:
       - run:
           name: Add workspace to protected list
           command: terraform-workspace-manager -register-workspace="${TF_WORKSPACE}" -time-to-protect="${PROTECT_TIME}" -aws-account-id=248804316466 -aws-iam-role=digideps-ci
+
+  scale-services:
+    docker:
+      - image: circleci/python:3
+        auth:
+          username: $DOCKER_USER
+          password: $DOCKER_ACCESS_TOKEN
+    resource_class: small
+    working_directory: ~/project/environment
+    parameters:
+      replicas:
+        description: number of replicas
+        type: string
+        default: "1"
+    environment:
+      AWS_CONFIG_FILE: ~/project/aws_config
+    steps:
+      - checkout:
+          path: ~/project
+      - aws-cli/install
+      - run:
+          name: Set environment
+          command: ~/project/.circleci/set_env.sh >> $BASH_ENV
+      - run:
+          name: scale services
+          command: |
+            aws ecs update-service --service front-${TF_WORKSPACE} --cluster ${TF_WORKSPACE} --desired-count << parameters.replicas >> --profile digideps-ci-dev
+            aws ecs update-service --service admin-${TF_WORKSPACE} --cluster ${TF_WORKSPACE} --desired-count << parameters.replicas >> --profile digideps-ci-dev
+            aws ecs update-service --service api-${TF_WORKSPACE} --cluster ${TF_WORKSPACE} --desired-count << parameters.replicas >> --profile digideps-ci-dev
 
   destroy-workspaces:
     executor: terraform/terraform
