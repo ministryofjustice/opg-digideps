@@ -115,7 +115,7 @@ resource "aws_cloudwatch_dashboard" "main" {
             ["ECS/ContainerInsights", "RunningTaskCount", "ServiceName", aws_ecs_service.admin.name, "ClusterName", aws_ecs_cluster.main.name, { "label" : "Admin" }],
             ["ECS/ContainerInsights", "RunningTaskCount", "ServiceName", aws_ecs_service.api.name, "ClusterName", aws_ecs_cluster.main.name, { "label" : "API" }],
             ["ECS/ContainerInsights", "RunningTaskCount", "ServiceName", aws_ecs_service.scan.name, "ClusterName", aws_ecs_cluster.main.name, { "label" : "Scan Service" }],
-            ["ECS/ContainerInsights", "RunningTaskCount", "ServiceName", aws_ecs_service.wkhtmltopdf.name, "ClusterName", aws_ecs_cluster.main.name, { "label" : "HTML to PDF" }],
+            ["ECS/ContainerInsights", "RunningTaskCount", "ServiceName", aws_ecs_service.htmltopdf.name, "ClusterName", aws_ecs_cluster.main.name, { "label" : "HTML to PDF" }],
             ["ECS/ContainerInsights", "RunningTaskCount", "ServiceName", aws_ecs_service.mock_sirius_integration.name, "ClusterName", aws_ecs_cluster.main.name, { "label" : "Mock Sirius Integration" }]
           ],
           "view" : "singleValue",
@@ -162,12 +162,12 @@ resource "aws_cloudwatch_dashboard" "main" {
             ["AWS/ECS", "CPUUtilization", "ServiceName", aws_ecs_service.front.name, "ClusterName", aws_ecs_cluster.main.name, { "label" : "Frontend CPU" }],
             ["AWS/ECS", "CPUUtilization", "ServiceName", aws_ecs_service.admin.name, "ClusterName", aws_ecs_cluster.main.name, { "label" : "Admin CPU" }],
             ["AWS/ECS", "CPUUtilization", "ServiceName", aws_ecs_service.api.name, "ClusterName", aws_ecs_cluster.main.name, { "label" : "API CPU" }],
-            ["AWS/ECS", "CPUUtilization", "ServiceName", aws_ecs_service.wkhtmltopdf.name, "ClusterName", aws_ecs_cluster.main.name, { "label" : "HTML2PDF CPU" }],
+            ["AWS/ECS", "CPUUtilization", "ServiceName", aws_ecs_service.htmltopdf.name, "ClusterName", aws_ecs_cluster.main.name, { "label" : "HTML2PDF CPU" }],
             ["AWS/ECS", "CPUUtilization", "ServiceName", aws_ecs_service.scan.name, "ClusterName", aws_ecs_cluster.main.name, { "label" : "AV Scan CPU" }],
             ["AWS/ECS", "MemoryUtilization", "ServiceName", aws_ecs_service.front.name, "ClusterName", aws_ecs_cluster.main.name, { "yAxis" : "right", "label" : "Frontend Memory" }],
             ["AWS/ECS", "MemoryUtilization", "ServiceName", aws_ecs_service.admin.name, "ClusterName", aws_ecs_cluster.main.name, { "yAxis" : "right", "label" : "Admin Memory" }],
             ["AWS/ECS", "MemoryUtilization", "ServiceName", aws_ecs_service.api.name, "ClusterName", aws_ecs_cluster.main.name, { "yAxis" : "right", "label" : "API Memory" }],
-            ["AWS/ECS", "MemoryUtilization", "ServiceName", aws_ecs_service.wkhtmltopdf.name, "ClusterName", aws_ecs_cluster.main.name, { "yAxis" : "right", "label" : "HTML2PDF Memory" }],
+            ["AWS/ECS", "MemoryUtilization", "ServiceName", aws_ecs_service.htmltopdf.name, "ClusterName", aws_ecs_cluster.main.name, { "yAxis" : "right", "label" : "HTML2PDF Memory" }],
             ["AWS/ECS", "MemoryUtilization", "ServiceName", aws_ecs_service.scan.name, "ClusterName", aws_ecs_cluster.main.name, { "yAxis" : "right", "label" : "AV Scan Memory" }]
           ],
           "view" : "timeSeries",

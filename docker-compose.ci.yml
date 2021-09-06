@@ -9,9 +9,9 @@ services:
   sync:
     image: ${AWS_REGISTRY}/digideps/sync:${VERSION}
     build: ./sync
-  wkhtmltopdf:
-    image: ${AWS_REGISTRY}/digideps/wkhtmltopdf:${VERSION}
-    build: ./wkhtmltopdf
+  htmltopdf:
+    image: ${AWS_REGISTRY}/digideps/htmltopdf:${VERSION}
+    build: ./htmltopdf
   drbackup:
     image: ${AWS_REGISTRY}/digideps/dr-backup:${VERSION}
     build: ./dr_backup

@@ -69,7 +69,7 @@ services:
         depends_on:
             - api
             - redis-frontend
-            - wkhtmltopdf
+            - htmltopdf
             - router
             - localstack
         environment:
@@ -129,8 +129,8 @@ services:
             - ./api/tests/Behat/test.env
         restart: always
 
-    wkhtmltopdf:
-        build: ./wkhtmltopdf
+    htmltopdf:
+        build: ./htmltopdf
         restart: always
 
     postgres:

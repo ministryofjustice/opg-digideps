@@ -52,11 +52,11 @@ services:
         class: App\Service\Redirector
         arguments: [ "@security.token_storage", "@security.authorization_checker", "@router", "@session", '%env(ROLE)%' ]
 
-    App\Service\WkHtmlToPdfGenerator:
-        arguments: [ "%wkhtmltopdf_address%", 30]
+    App\Service\HtmlToPdfGenerator:
+        arguments: [ "%htmltopdf_address%", 30]
 
-    wkhtmltopdf:
-        alias: App\Service\WkHtmlToPdfGenerator
+    htmltopdf:
+        alias: App\Service\HtmlToPdfGenerator
 
     # Disable autowiring
     App\Model\EmailAttachment: ~
@@ -110,8 +110,8 @@ services:
     App\Service\Availability\SiriusApiAvailability:
         arguments: ['@App\Service\Client\Sirius\SiriusApiGatewayClient']
 
-    App\Service\Availability\WkHtmlToPdfAvailability:
-        arguments: ['@App\Service\WkHtmlToPdfGenerator']
+    App\Service\Availability\HtmlToPdfAvailability:
+        arguments: ['@App\Service\HtmlToPdfGenerator']
 
     App\Service\Availability\NotifyAvailability:
          arguments:

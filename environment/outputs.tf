@@ -10,7 +10,7 @@ output "Services" {
       aws_ecs_service.api.name,
       aws_ecs_service.front.name,
       aws_ecs_service.scan.name,
-      aws_ecs_service.wkhtmltopdf.name,
+      aws_ecs_service.htmltopdf.name,
     ]
   }
 }
