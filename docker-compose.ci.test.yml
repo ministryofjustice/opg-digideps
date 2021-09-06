@@ -10,5 +10,5 @@ services:
         image: api:latest
     localstack-init:
         image: localstack-init:latest
-    wkhtmltopdf:
-        image: wkhtmltopdf:latest
+    htmltopdf:
+        image: htmltopdf:latest

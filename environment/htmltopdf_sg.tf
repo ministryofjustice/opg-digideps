@@ -1,5 +1,5 @@
 locals {
-  wkhtmltopdf_sg_rules = {
+  htmltopdf_sg_rules = {
     ecr     = local.common_sg_rules.ecr
     logs    = local.common_sg_rules.logs
     s3      = local.common_sg_rules.s3
@@ -28,10 +28,10 @@ locals {
   }
 }
 
-module "wkhtmltopdf_security_group" {
+module "htmltopdf_security_group" {
   source = "./security_group"
-  rules  = local.wkhtmltopdf_sg_rules
-  name   = "wkhtmltopdf"
+  rules  = local.htmltopdf_sg_rules
+  name   = "htmltopdf"
   tags   = local.default_tags
   vpc_id = data.aws_vpc.vpc.id
 }

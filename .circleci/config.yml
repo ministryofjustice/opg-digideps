@@ -777,10 +777,10 @@ jobs:
           command: |
             docker tag ${AWS_REGISTRY}/digideps/client:${VERSION} client:latest
             docker tag ${AWS_REGISTRY}/digideps/api:${VERSION} api:latest
-            docker tag ${AWS_REGISTRY}/digideps/wkhtmltopdf:${VERSION} wkhtmltopdf:latest
+            docker tag ${AWS_REGISTRY}/digideps/htmltopdf:${VERSION} htmltopdf:latest
             docker save -o client.tar client:latest
             docker save -o api.tar api:latest
-            docker save -o wkhtmltopdf.tar wkhtmltopdf:latest
+            docker save -o htmltopdf.tar htmltopdf:latest
           background: true
       - run:
           name: Push images
@@ -809,7 +809,7 @@ jobs:
           paths:
             - ./client.tar
             - ./api.tar
-            - ./wkhtmltopdf.tar
+            - ./htmltopdf.tar
 
   lambda-unit-test:
     docker:
@@ -860,7 +860,7 @@ jobs:
           command: |
             docker load -i ~/project/client.tar
             docker load -i ~/project/api.tar
-            docker load -i ~/project/wkhtmltopdf.tar
+            docker load -i ~/project/htmltopdf.tar
             docker tag client:latest admin:latest
             docker tag client:latest frontend:latest
       - run:
@@ -909,7 +909,7 @@ jobs:
           command: |
             docker load -i ~/project/client.tar
             docker load -i ~/project/api.tar
-            docker load -i ~/project/wkhtmltopdf.tar
+            docker load -i ~/project/htmltopdf.tar
             docker tag client:latest admin:latest
             docker tag client:latest frontend:latest
             docker tag client:latest localstack-init:latest

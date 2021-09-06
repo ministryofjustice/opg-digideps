@@ -18,7 +18,7 @@ locals {
       type        = "egress"
       protocol    = "tcp"
       target_type = "security_group_id"
-      target      = module.wkhtmltopdf_security_group.id
+      target      = module.htmltopdf_security_group.id
     }
     api = {
       port        = 443

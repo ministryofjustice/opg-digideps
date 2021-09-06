@@ -4,10 +4,10 @@ namespace App\Controller;
 
 use App\Service\Availability\ApiAvailability;
 use App\Service\Availability\ClamAvAvailability;
+use App\Service\Availability\HtmlToPdfAvailability;
 use App\Service\Availability\NotifyAvailability;
 use App\Service\Availability\RedisAvailability;
 use App\Service\Availability\SiriusApiAvailability;
-use App\Service\Availability\WkHtmlToPdfAvailability;
 use Psr\Log\LoggerInterface;
 use Sensio\Bundle\FrameworkExtraBundle\Configuration\Template;
 use Symfony\Component\HttpFoundation\Response;
@@ -46,7 +46,7 @@ class ManageController extends AbstractController
         RedisAvailability $redisAvailability,
         SiriusApiAvailability $siriusAvailability,
         ClamAvAvailability $clamAvailability,
-        WkHtmlToPdfAvailability $wkHtmlAvailability
+        HtmlToPdfAvailability $htmlAvailability
     ) {
         $services = [
             $apiAvailability,
@@ -57,7 +57,7 @@ class ManageController extends AbstractController
         if ('admin' !== $this->environment) {
             $services[] = $siriusAvailability;
             $services[] = $clamAvailability;
-            $services[] = $wkHtmlAvailability;
+            $services[] = $htmlAvailability;
         }
 
         list($healthy, $services, $errors) = $this->servicesHealth($services);

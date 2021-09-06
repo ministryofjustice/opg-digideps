@@ -68,4 +68,4 @@ parameters:
       validate: true
     file_scanner_url: http://file-scanner-rest:8080
     file_scanner_sslverify: false
-    wkhtmltopdf_address: "http://wkhtmltopdf:80"
+    htmltopdf_address: "http://htmltopdf:80"

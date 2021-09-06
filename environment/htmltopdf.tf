@@ -1,9 +1,9 @@
 locals {
-  wkhtmltopdf_service_fqdn = "wkhtmltopdf.${aws_service_discovery_private_dns_namespace.private.name}"
+  htmltopdf_service_fqdn = "htmltopdf.${aws_service_discovery_private_dns_namespace.private.name}"
 }
 
-resource "aws_service_discovery_service" "wkhtmltopdf" {
-  name = "wkhtmltopdf"
+resource "aws_service_discovery_service" "htmltopdf" {
+  name = "htmltopdf"
 
   dns_config {
     namespace_id = aws_service_discovery_private_dns_namespace.private.id
@@ -25,28 +25,28 @@ resource "aws_service_discovery_service" "wkhtmltopdf" {
   depends_on = [aws_service_discovery_private_dns_namespace.private]
 }
 
-resource "aws_iam_role" "wkhtmltopdf" {
+resource "aws_iam_role" "htmltopdf" {
   assume_role_policy = data.aws_iam_policy_document.task_role_assume_policy.json
-  name               = "wkhtmltopdf.${local.environment}"
+  name               = "htmltopdf.${local.environment}"
   tags               = local.default_tags
 }
 
-resource "aws_ecs_task_definition" "wkhtmltopdf" {
-  family                   = "wkhtmltopdf-${local.environment}"
+resource "aws_ecs_task_definition" "htmltopdf" {
+  family                   = "htmltopdf-${local.environment}"
   requires_compatibilities = ["FARGATE"]
   network_mode             = "awsvpc"
   cpu                      = local.account.cpu_low
   memory                   = local.account.memory_low
-  container_definitions    = "[${local.wkhtmltopdf_container}]"
-  task_role_arn            = aws_iam_role.wkhtmltopdf.arn
+  container_definitions    = "[${local.htmltopdf_container}]"
+  task_role_arn            = aws_iam_role.htmltopdf.arn
   execution_role_arn       = aws_iam_role.execution_role.arn
   tags                     = local.default_tags
 }
 
-resource "aws_ecs_service" "wkhtmltopdf" {
-  name                    = aws_ecs_task_definition.wkhtmltopdf.family
+resource "aws_ecs_service" "htmltopdf" {
+  name                    = aws_ecs_task_definition.htmltopdf.family
   cluster                 = aws_ecs_cluster.main.id
-  task_definition         = aws_ecs_task_definition.wkhtmltopdf.arn
+  task_definition         = aws_ecs_task_definition.htmltopdf.arn
   desired_count           = 1
   launch_type             = "FARGATE"
   platform_version        = "1.4.0"
@@ -55,28 +55,28 @@ resource "aws_ecs_service" "wkhtmltopdf" {
   wait_for_steady_state   = true
 
   network_configuration {
-    security_groups  = [module.wkhtmltopdf_security_group.id]
+    security_groups  = [module.htmltopdf_security_group.id]
     subnets          = data.aws_subnet.private.*.id
     assign_public_ip = false
   }
 
   service_registries {
-    registry_arn = aws_service_discovery_service.wkhtmltopdf.arn
+    registry_arn = aws_service_discovery_service.htmltopdf.arn
   }
 
-  depends_on = [aws_service_discovery_service.wkhtmltopdf]
+  depends_on = [aws_service_discovery_service.htmltopdf]
 
   tags = local.default_tags
 }
 
 locals {
-  wkhtmltopdf_container = <<EOF
+  htmltopdf_container = <<EOF
   {
       "cpu": 0,
       "essential": true,
-      "image": "${local.images.wkhtmltopdf}",
+      "image": "${local.images.htmltopdf}",
       "mountPoints": [],
-      "name": "wkhtmltopdf",
+      "name": "htmltopdf",
       "volumesFrom": [],
       "healthCheck": {
         "command": [
@@ -92,7 +92,7 @@ locals {
         "options": {
           "awslogs-group": "${aws_cloudwatch_log_group.opg_digi_deps.name}",
           "awslogs-region": "eu-west-1",
-          "awslogs-stream-prefix": "${aws_iam_role.wkhtmltopdf.name}"
+          "awslogs-stream-prefix": "${aws_iam_role.htmltopdf.name}"
         }
       }
   }

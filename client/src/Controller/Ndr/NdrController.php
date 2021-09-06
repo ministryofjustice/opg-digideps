@@ -16,10 +16,10 @@ use App\Service\Client\Internal\SatisfactionApi;
 use App\Service\Client\Internal\UserApi;
 use App\Service\Client\RestClient;
 use App\Service\File\S3FileUploader;
+use App\Service\HtmlToPdfGenerator;
 use App\Service\NdrStatusService;
 use App\Service\ParameterStoreService;
 use App\Service\Redirector;
-use App\Service\WkHtmlToPdfGenerator;
 use DateTime;
 use Sensio\Bundle\FrameworkExtraBundle\Configuration\Template;
 use Symfony\Component\HttpFoundation\RedirectResponse;
@@ -53,7 +53,7 @@ class NdrController extends AbstractController
         'ndr-action-more-info',
     ];
 
-    /** @var WkHtmlToPdfGenerator */
+    /** @var HtmlToPdfGenerator */
     private $htmlToPdf;
 
     /** @var UserApi */
@@ -74,7 +74,7 @@ class NdrController extends AbstractController
     private CasrecApi $casrecApi;
 
     public function __construct(
-        WkHtmlToPdfGenerator $wkHtmlToPdfGenerator,
+        HtmlToPdfGenerator $htmlToPdfGenerator,
         UserApi $userApi,
         ClientApi $clientApi,
         RestClient $restClient,
@@ -82,7 +82,7 @@ class NdrController extends AbstractController
         SatisfactionApi $satisfactionApi,
         NdrApi $ndrApi
     ) {
-        $this->htmlToPdf = $wkHtmlToPdfGenerator;
+        $this->htmlToPdf = $htmlToPdfGenerator;
         $this->userApi = $userApi;
         $this->clientApi = $clientApi;
         $this->restClient = $restClient;

@@ -25,7 +25,7 @@ locals {
       type        = "egress"
       protocol    = "tcp"
       target_type = "security_group_id"
-      target      = module.wkhtmltopdf_security_group.id
+      target      = module.htmltopdf_security_group.id
     }
     mock_sirius_integration = {
       port        = 8080
@@ -133,7 +133,7 @@ locals {
       { "name": "GA_GDS", "value": "${local.account.ga_gds}" },
       { "name": "FEATURE_FLAG_PREFIX", "value": "${local.feature_flag_prefix}" },
       { "name": "PARAMETER_PREFIX", "value": "${local.parameter_prefix}" },
-      { "name": "WKHTMLTOPDF_ADDRESS", "value": "http://${local.wkhtmltopdf_service_fqdn}" }
+      { "name": "HTMLTOPDF_ADDRESS", "value": "http://${local.htmltopdf_service_fqdn}" }
     ]
   }
 

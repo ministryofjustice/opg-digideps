@@ -14,4 +14,4 @@ Feature: pre checks
       And I should see "Redis: OK"
       And I should see "Notify: OK"
       And I should see "ClamAV: OK"
-      And I should see "wkHtmlToPDf: OK"
+      And I should see "htmlToPdf: OK"

@@ -15,18 +15,18 @@ class ChecklistPdfGenerator
     /** @var Environment container */
     private $templating;
 
-    /** @var WkHtmlToPdfGenerator */
-    private $wkhtmltopdf;
+    /** @var HtmlToPdfGenerator */
+    private $htmltopdf;
 
     /** @var LoggerInterface */
     private $logger;
 
-    const TEMPLATE_FILE = '@App/Admin/Client/Report/Formatted/checklist_formatted_standalone.html.twig';
+    public const TEMPLATE_FILE = '@App/Admin/Client/Report/Formatted/checklist_formatted_standalone.html.twig';
 
-    public function __construct(Environment $templating, WkHtmlToPdfGenerator $wkhtmltopdf, LoggerInterface $logger)
+    public function __construct(Environment $templating, HtmlToPdfGenerator $htmltopdf, LoggerInterface $logger)
     {
         $this->templating = $templating;
-        $this->wkhtmltopdf = $wkhtmltopdf;
+        $this->htmltopdf = $htmltopdf;
         $this->logger = $logger;
     }
 
@@ -42,8 +42,8 @@ class ChecklistPdfGenerator
                 'reviewChecklist' => $report->getReviewChecklist(),
             ]);
 
-            if (false === ($pdf = $this->wkhtmltopdf->getPdfFromHtml($html))) {
-                throw new PdfGenerationFailedException('Unable to generate PDF using wkhtmltopdf service');
+            if (false === ($pdf = $this->htmltopdf->getPdfFromHtml($html))) {
+                throw new PdfGenerationFailedException('Unable to generate PDF using htmltopdf service');
             }
 
             return $pdf;

@@ -1,4 +1,6 @@
-<?php declare(strict_types=1);
+<?php
+
+declare(strict_types=1);
 
 namespace App\Service;
 
@@ -6,9 +8,7 @@ use App\Entity\Report\Document;
 use App\Entity\Report\Report;
 use App\Entity\Report\ReportSubmission;
 use App\Entity\ReportInterface;
-use App\Entity\User;
 use App\Exception\ReportSubmissionDocumentsNotDownloadableException;
-use App\Model\Email;
 use App\Service\Client\RestClient;
 use App\Service\Csv\TransactionsCsvGenerator;
 use App\Service\File\S3FileUploader;
@@ -49,7 +49,7 @@ class ReportSubmissionServiceTest extends TestCase
     private $mailFactory;
     /** @var ObjectProphecy&Environment */
     private $twig;
-    /** @var ObjectProphecy&WkHtmlToPdfGenerator */
+    /** @var ObjectProphecy&HtmlToPdfGenerator */
     private $pdfGenerator;
     /** @var ObjectProphecy&Logger */
     private $logger;
@@ -57,7 +57,7 @@ class ReportSubmissionServiceTest extends TestCase
     private $csvGenerator;
 
     /**
-     * Set up the mockservies
+     * Set up the mockservies.
      */
     public function setUp(): void
     {
@@ -66,7 +66,7 @@ class ReportSubmissionServiceTest extends TestCase
         $this->mockMailSender = m::mock(MailSender::class);
         $this->mockMailFactory = m::mock(MailFactory::class);
         $this->mockTemplatingEngine = m::mock(Environment::class);
-        $this->mockPdfGenerator = m::mock(WkHtmlToPdfGenerator::class);
+        $this->mockPdfGenerator = m::mock(HtmlToPdfGenerator::class);
         $this->mockLogger = m::mock(Logger::class);
         $this->mockCsvGenerator = m::mock(TransactionsCsvGenerator::class);
 
@@ -77,13 +77,13 @@ class ReportSubmissionServiceTest extends TestCase
         $this->mailSender = self::prophesize(MailSender::class);
         $this->mailFactory = self::prophesize(MailFactory::class);
         $this->twig = self::prophesize(Environment::class);
-        $this->pdfGenerator = self::prophesize(WkHtmlToPdfGenerator::class);
+        $this->pdfGenerator = self::prophesize(HtmlToPdfGenerator::class);
         $this->logger = self::prophesize(Logger::class);
         $this->csvGenerator = self::prophesize(TransactionsCsvGenerator::class);
     }
 
     /**
-     * Generates System Under Test
+     * Generates System Under Test.
      *
      * @return ReportSubmissionService
      */
@@ -129,7 +129,7 @@ class ReportSubmissionServiceTest extends TestCase
      * @test
      * @dataProvider lowOrNoAssetsReportTypeProvider
      */
-    public function generateReportDocuments_without_transaction_csv(string $reportType)
+    public function generateReportDocumentsWithoutTransactionCsv(string $reportType)
     {
         $report = self::prophesize(Report::class);
         $report->getType()->willReturn($reportType);
@@ -161,7 +161,7 @@ class ReportSubmissionServiceTest extends TestCase
      * @test
      * @dataProvider HighAssetsReportTypeProvider
      */
-    public function generateReportDocuments_with_transaction_csv(string $reportType)
+    public function generateReportDocumentsWithTransactionCsv(string $reportType)
     {
         $report = self::prophesize(Report::class);
         $report->getType()->willReturn($reportType);
@@ -198,7 +198,7 @@ class ReportSubmissionServiceTest extends TestCase
                 '@App/Report/Formatted/formatted_standalone.html.twig',
                 [
                     'report' => $this->mockReport,
-                    'showSummary' => true
+                    'showSummary' => true,
                 ]
             )
             ->andReturn('Report HTML');
@@ -226,7 +226,6 @@ class ReportSubmissionServiceTest extends TestCase
         $this->sut->getReportSubmissionById($id);
     }
 
-
     public function testGetReportSubmissionByIds()
     {
         $ids = ['123', '456'];
@@ -238,12 +237,12 @@ class ReportSubmissionServiceTest extends TestCase
         $reportSubmission2->setId(456);
 
         $this->mockRestClient->shouldReceive('get')->with(
-            "report-submission/123",
+            'report-submission/123',
             'Report\\ReportSubmission'
         )->andReturn($reportSubmission1);
 
         $this->mockRestClient->shouldReceive('get')->with(
-            "report-submission/456",
+            'report-submission/456',
             'Report\\ReportSubmission'
         )->andReturn($reportSubmission2);
 
