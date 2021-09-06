@@ -83,11 +83,19 @@ workflows:
 #          filters: { branches: { ignore: [ main ] } }
 
       - run-task:
-          name: integration tests v2 reports 1
+          name: integration tests reset DB
           requires: [
               protect branch workspace,
               scale up services for integration tests
           ]
+          filters: { branches: { ignore: [ main ] } }
+          task_name: integration_test_v2
+          override: "sh,./tests/Behat/reset-db.sh"
+          timeout: 500
+
+      - run-task:
+          name: integration tests v2 reports 1
+          requires: [ integration tests reset DB ]
           filters: { branches: { ignore: [ main ] } }
           task_name: integration_test_v2
           override: "sh,./tests/Behat/run-tests-parallel.sh,--tags,@v2_reporting_1"
@@ -95,10 +103,7 @@ workflows:
 
       - run-task:
           name: integration tests v2 reports 2
-          requires: [
-              protect branch workspace,
-              scale up services for integration tests
-          ]
+          requires: [ integration tests reset DB ]
           filters: { branches: { ignore: [ main ] } }
           task_name: integration_test_v2
           override: "sh,./tests/Behat/run-tests-parallel.sh,--tags,@v2_reporting_2"
@@ -106,10 +111,7 @@ workflows:
 
       - run-task:
           name: integration tests v2 admin
-          requires: [
-              protect branch workspace,
-              scale up services for integration tests
-          ]
+          requires: [ integration tests reset DB ]
           filters: { branches: { ignore: [ main ] } }
           task_name: integration_test_v2
           override: "sh,./tests/Behat/run-tests-parallel.sh,--tags,@v2_admin"
