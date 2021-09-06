@@ -510,8 +510,8 @@ class BaseFeatureContext extends MinkContext
 
     public function createAdditionalDataForAnalytics(string $timeAgo, int $runNumber, int $satisfactionScore)
     {
-        $rndKey = rand(0, 99999);
-        $this->fixtureHelper->createDataForAnalytics('a_'.'_'.strval($rndKey).strval($runNumber), $timeAgo, $satisfactionScore);
+        $rndKey = mt_rand(0, 99999);
+        $this->fixtureHelper->createDataForAnalytics('a_'.$rndKey.$runNumber, $timeAgo, $satisfactionScore);
     }
 
     public function createAdditionalDataForUserSearchTests()

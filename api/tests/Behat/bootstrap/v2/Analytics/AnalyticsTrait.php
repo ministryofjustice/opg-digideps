@@ -15,19 +15,15 @@ trait AnalyticsTrait
         'feedBack' => '//span[@aria-labelledby=\'metric-satisfaction-total-label\']',
         'totalReports' => '//span[@aria-labelledby=\'metric-reportsSubmitted-total-label\']',
         'totalRegistered' => '//span[@aria-labelledby=\'metric-registeredDeputies-total-label\']',
-        'totalClients' => '//span[@aria-labelledby=\'metric-clients-total-label\']',
         'laySatisfaction' => '//span[@aria-labelledby=\'metric-satisfaction-deputyType-lay-label\']',
         'laySubmitted' => '//span[@aria-labelledby=\'metric-reportsSubmitted-deputyType-lay-label\']',
         'layDeputies' => '//span[@aria-labelledby=\'metric-registeredDeputies-deputyType-lay-label\']',
-        'layClients' => '//span[@aria-labelledby=\'metric-clients-deputyType-lay-label\']',
         'profSatisfaction' => '//span[@aria-labelledby=\'metric-satisfaction-deputyType-prof-label\']',
         'profSubmitted' => '//span[@aria-labelledby=\'metric-reportsSubmitted-deputyType-prof-label\']',
         'profDeputies' => '//span[@aria-labelledby=\'metric-registeredDeputies-deputyType-prof-label\']',
-        'profClients' => '//span[@aria-labelledby=\'metric-clients-deputyType-prof-label\']',
         'paSatisfaction' => '//span[@aria-labelledby=\'metric-satisfaction-deputyType-pa-label\']',
         'paSubmitted' => '//span[@aria-labelledby=\'metric-reportsSubmitted-deputyType-pa-label\']',
         'paDeputies' => '//span[@aria-labelledby=\'metric-registeredDeputies-deputyType-pa-label\']',
-        'paClients' => '//span[@aria-labelledby=\'metric-clients-deputyType-pa-label\']',
     ];
 
     /**
@@ -36,7 +32,22 @@ trait AnalyticsTrait
     public function reportsExistThatWereSubmittedDifferentTimes()
     {
         ++$this->runNumber;
-        $this->createAdditionalDataForAnalytics('14 months ago', $this->runNumber, 5);
+        $this->createAdditionalDataForAnalytics('20 years ago', $this->runNumber, 5);
+
+        $this->expectedMetrics = [
+            'feedBack' => 100,
+            'totalReports' => 3,
+            'totalRegistered' => 3,
+            'laySatisfaction' => 100,
+            'laySubmitted' => 1,
+            'layDeputies' => 1,
+            'profSatisfaction' => 100,
+            'profSubmitted' => 1,
+            'profDeputies' => 1,
+            'paSatisfaction' => 100,
+            'paSubmitted' => 1,
+            'paDeputies' => 1,
+        ];
     }
 
     /**
@@ -45,7 +56,22 @@ trait AnalyticsTrait
     public function iAddMoreClientsDeputiesReports()
     {
         ++$this->runNumber;
-        $this->createAdditionalDataForAnalytics('2 years ago', $this->runNumber, 1);
+        $this->createAdditionalDataForAnalytics('21 years ago', $this->runNumber, 1);
+
+        $this->expectedMetrics = [
+            'feedBack' => 50,
+            'totalReports' => 6,
+            'totalRegistered' => 3,
+            'laySatisfaction' => 50,
+            'laySubmitted' => 2,
+            'layDeputies' => 1,
+            'profSatisfaction' => 50,
+            'profSubmitted' => 2,
+            'profDeputies' => 1,
+            'paSatisfaction' => 50,
+            'paSubmitted' => 2,
+            'paDeputies' => 1,
+        ];
     }
 
     /**
@@ -62,35 +88,23 @@ trait AnalyticsTrait
     }
 
     /**
-     * @When I change reporting period to be last 30 days
+     * @When there are existing reports submitted
      */
-    public function iChangeReportingPeriodToLast30Days()
+    public function thereAreExistingReportsSubmitted()
     {
-        $this->selectOption('admin[period]', 'last-30');
-        $this->pressButton('Update date range');
-        $header = $this->getSession()->getPage()->find('xpath', '//h2[contains(.,"Last 30 days")]');
-        if (is_null($header)) {
-            throw new BehatException(sprintf('Missing correct text.'));
-        }
-        // Reports, Deputies and Feedback are affected by date constraints.
-        // Clients will always be total clients as no date constraints exist.
         $this->expectedMetrics = [
-            'feedBack' => 0,
-            'totalReports' => 0,
-            'totalRegistered' => 32,
-            'totalClients' => 71,
-            'laySatisfaction' => 0,
-            'laySubmitted' => 0,
-            'layDeputies' => 9,
-            'layClients' => 23,
-            'profSatisfaction' => 0,
-            'profSubmitted' => 0,
-            'profDeputies' => 15,
-            'profClients' => 27,
-            'paSatisfaction' => 0,
-            'paSubmitted' => 0,
-            'paDeputies' => 8,
-            'paClients' => 21,
+            'feedBack' => 50,
+            'totalReports' => 6,
+            'totalRegistered' => 3,
+            'laySatisfaction' => 50,
+            'laySubmitted' => 2,
+            'layDeputies' => 1,
+            'profSatisfaction' => 50,
+            'profSubmitted' => 2,
+            'profDeputies' => 1,
+            'paSatisfaction' => 50,
+            'paSubmitted' => 2,
+            'paDeputies' => 1,
         ];
     }
 
@@ -126,102 +140,13 @@ trait AnalyticsTrait
         ];
     }
 
-    public function setupAllTimeAgain()
-    {
-        $this->selectOption('admin[period]', 'all-time');
-        $this->pressButton('Update date range');
-        $header = $this->getSession()->getPage()->find('xpath', '//h2[contains(.,"All time")]');
-        if (is_null($header)) {
-            throw new BehatException(sprintf('Missing correct text.'));
-        }
-        // This should show all the reports
-        $this->expectedMetrics = [
-            'feedBack' => 50,
-            'totalReports' => 6,
-            'totalRegistered' => 38,
-            'totalClients' => 74,
-            'laySatisfaction' => 50,
-            'laySubmitted' => 2,
-            'layDeputies' => 11,
-            'layClients' => 24,
-            'profSatisfaction' => 50,
-            'profSubmitted' => 2,
-            'profDeputies' => 17,
-            'profClients' => 28,
-            'paSatisfaction' => 50,
-            'paSubmitted' => 2,
-            'paDeputies' => 10,
-            'paClients' => 22,
-        ];
-    }
-
-    /**
-     * @When I change reporting period to be all time again
-     */
-    public function iChangeReportingPeriodToAllTimeAgain()
-    {
-        $this->setupAllTimeAgain();
-    }
-
-    /**
-     * @When I change reporting period to be all time again for admin manager
-     */
-    public function iChangeReportingPeriodToAllTimeAgainAdminManager()
-    {
-        $this->setupAllTimeAgain();
-        $this->expectedMetrics['totalRegistered'] = 39;
-        $this->expectedMetrics['layDeputies'] = 12;
-    }
-
-    /**
-     * @When I change reporting period to be all time again for admin user
-     */
-    public function iChangeReportingPeriodToAllTimeAgainAdminUser()
-    {
-        $this->setupAllTimeAgain();
-        $this->expectedMetrics['totalRegistered'] = 40;
-        $this->expectedMetrics['layDeputies'] = 13;
-    }
-
-    /**
-     * @When I change reporting period to be this year
-     */
-    public function iChangeReportingPeriodToThisYear()
-    {
-        $this->selectOption('admin[period]', 'this-year');
-        $this->pressButton('Update date range');
-        $header = $this->getSession()->getPage()->find('xpath', '//h2[contains(.,"This year")]');
-        if (is_null($header)) {
-            throw new BehatException(sprintf('Missing correct text.'));
-        }
-        // Deputies registration date is same as start date of report so less should show up
-        $this->expectedMetrics = [
-            'feedBack' => 100,
-            'totalReports' => 3,
-            'totalRegistered' => 32,
-            'totalClients' => 71,
-            'laySatisfaction' => 100,
-            'laySubmitted' => 1,
-            'layDeputies' => 9,
-            'layClients' => 23,
-            'profSatisfaction' => 100,
-            'profSubmitted' => 1,
-            'profDeputies' => 15,
-            'profClients' => 27,
-            'paSatisfaction' => 100,
-            'paSubmitted' => 1,
-            'paDeputies' => 8,
-            'paClients' => 21,
-        ];
-    }
-
     /**
      * @When I change reporting period to apply only to our generated data
      */
     public function iChangeReportingPeriodToApplyOnlyToOurGeneratedData()
     {
-        $fromDate = explode('-', strval(date('d-m-Y', strtotime('-2 year'))));
-        $toDate = explode('-', strval(date('d-m-Y', strtotime('-7 day'))));
+        $fromDate = explode('-', strval(date('d-m-Y', strtotime('-20 years'))));
+        $toDate = explode('-', strval(date('d-m-Y', strtotime('-19 years'))));
 
         $this->selectOption('admin[period]', 'custom');
         $this->fillField('admin[startDate][day]', $fromDate[0]);
@@ -233,28 +158,10 @@ trait AnalyticsTrait
         $this->pressButton('Update date range');
 
         $header = $this->getSession()->getPage()->find('xpath', '//h2[contains(.,"Custom")]');
+
         if (is_null($header)) {
             throw new BehatException(sprintf('Missing correct text.'));
         }
-        // We should only get back our generated reports
-        $this->expectedMetrics = [
-            'feedBack' => 100,
-            'totalReports' => 3,
-            'totalRegistered' => 3,
-            'totalClients' => 71,
-            'laySatisfaction' => 100,
-            'laySubmitted' => 1,
-            'layDeputies' => 1,
-            'layClients' => 23,
-            'profSatisfaction' => 100,
-            'profSubmitted' => 1,
-            'profDeputies' => 1,
-            'profClients' => 27,
-            'paSatisfaction' => 100,
-            'paSubmitted' => 1,
-            'paDeputies' => 1,
-            'paClients' => 21,
-        ];
     }
 
     /**

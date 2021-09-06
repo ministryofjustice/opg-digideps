@@ -83,19 +83,11 @@ workflows:
 #          filters: { branches: { ignore: [ main ] } }
 
       - run-task:
-          name: integration tests v2 standalone
-          requires: [
-            protect branch workspace,
-            scale up services for integration tests
-          ]
-          filters: { branches: { ignore: [ main ] } }
-          task_name: integration_test_v2
-          override: "sh,./tests/Behat/run-tests.sh,--profile,v2-tests-goutte,--tags,@v2_standalone"
-          timeout: 1200
-
-      - run-task:
           name: integration tests v2 reports 1
-          requires: [ integration tests v2 standalone ]
+          requires: [
+              protect branch workspace,
+              scale up services for integration tests
+          ]
           filters: { branches: { ignore: [ main ] } }
           task_name: integration_test_v2
           override: "sh,./tests/Behat/run-tests-parallel.sh,--tags,@v2_reporting_1"
@@ -103,7 +95,10 @@ workflows:
 
       - run-task:
           name: integration tests v2 reports 2
-          requires: [ integration tests v2 standalone ]
+          requires: [
+              protect branch workspace,
+              scale up services for integration tests
+          ]
           filters: { branches: { ignore: [ main ] } }
           task_name: integration_test_v2
           override: "sh,./tests/Behat/run-tests-parallel.sh,--tags,@v2_reporting_2"
@@ -111,7 +106,10 @@ workflows:
 
       - run-task:
           name: integration tests v2 admin
-          requires: [ integration tests v2 standalone ]
+          requires: [
+              protect branch workspace,
+              scale up services for integration tests
+          ]
           filters: { branches: { ignore: [ main ] } }
           task_name: integration_test_v2
           override: "sh,./tests/Behat/run-tests-parallel.sh,--tags,@v2_admin"
@@ -119,13 +117,13 @@ workflows:
 
       - terraform-plan-all:
           name: plan all terraform environments
-          requires: [ integration tests v2 standalone ]
+          requires: [ integration tests v2 admin ]
           filters: { branches: { ignore: [ main ] } }
           tf_tier: environment
 
       - terraform-plan-all:
           name: plan all shared terraform environments
-          requires: [ integration tests v2 standalone ]
+          requires: [ integration tests v2 admin ]
           filters: { branches: { ignore: [ main ] } }
           tf_tier: shared
 
