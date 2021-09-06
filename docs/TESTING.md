@@ -156,7 +156,7 @@ Each container is a high specced container that has 4 processors (this is the ma
 
 The next level is at the container level. As we can get further speed improvements, we split out similar themed tests across containers with tags.
 
-There is a a built in timer that ensures a tagged group of tests do not exceed 240 seconds total. If they do then you should split them into a new container.
+There is a built-in timer that ensures a tagged group of tests does not exceed 300 seconds total. If they do then you should split them into a new container.
 
 To do this, we have added a override flag to the go runner task. You can add the tag to each feature file and use the override command in the circleci config
 to spin up a new parallel task.
