@@ -227,6 +227,19 @@ trait ReportTrait
     }
 
     /**
+     * @Given a Lay Deputy has completed a Combined High Assets report
+     */
+    public function aLayDeputyHasCompletedACombinedHighAssetsReport()
+    {
+        if (empty($this->layDeputyCompletedCombinedHighDetails)) {
+            throw new Exception('It looks like fixtures are not loaded - missing $layDeputyCompletedCombinedHighDetails');
+        }
+
+        $this->interactingWithUserDetails = $this->layDeputyCompletedCombinedHighDetails;
+        $this->loginToFrontendAs($this->layDeputyCompletedCombinedHighDetails->getUserEmail());
+    }
+
+    /**
      * @Given a Lay Deputy has submitted a Combined High Assets report
      */
     public function aLayDeputyHasSubmittedACombinedHighAssetsReport()
