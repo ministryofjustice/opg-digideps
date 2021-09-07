@@ -1185,7 +1185,13 @@ jobs:
           command: terraform output -json > terraform.output.json
       - run:
           name: Run task
-          command: runner -task << parameters.task_name >> -timeout << parameters.timeout >> -override << parameters.override >>
+          command: |
+            if [ << parameters.override >> -eq "" ]
+            then
+              runner -task << parameters.task_name >> -timeout << parameters.timeout >>
+            else
+              runner -task << parameters.task_name >> -timeout << parameters.timeout >> -override << parameters.override >>
+            fi
       - when:
           condition: << parameters.notify_slack >>
           steps:
