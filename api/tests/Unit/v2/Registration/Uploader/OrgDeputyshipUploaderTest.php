@@ -381,4 +381,30 @@ class OrgDeputyshipUploaderTest extends KernelTestCase
             );
         }
     }
+
+    /** @test */
+    public function uploadExistingClientsWithMissingCourtDateHaveCourtDateAdded()
+    {
+        $deputyships = OrgDeputyshipDTOTestHelper::generateOrgDeputyshipDtos(1, 0);
+        $client = OrgDeputyshipDTOTestHelper::ensureClientInUploadExists($deputyships[0], $this->em);
+        $client->setCourtDate(null);
+
+        $this->em->persist($client);
+        $this->em->flush();
+
+        $uploadResults = $this->sut->upload($deputyships);
+
+        self::assertCount(
+            1,
+            $uploadResults['updated']['clients'],
+            sprintf('Expecting 1, got %d', count($uploadResults['updated']['clients']))
+        );
+
+        $updatedClient = $this->em->getRepository(Client::class)->find($client);
+
+        self::assertEquals(
+            $deputyships[0]->getCourtDate(),
+            $updatedClient->getCourtDate()
+        );
+    }
 }

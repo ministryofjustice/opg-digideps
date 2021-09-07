@@ -143,6 +143,11 @@ class OrgDeputyshipUploader
 
             $this->added['clients'][] = $dto->getCaseNumber();
         } else {
+            if (is_null($client->getCourtDate())) {
+                $client->setCourtDate($dto->getCourtDate());
+                $this->updated['clients'][] = $client->getId();
+            }
+
             if ($this->clientHasNewCourtOrder($client, $dto)) {
                 // Discharge clients with a new court order
                 // Look at adding audit logging for discharge to API side of app
@@ -190,7 +195,8 @@ class OrgDeputyshipUploader
 
     private function clientHasNewCourtOrder(Client $client, OrgDeputyshipDto $dto): bool
     {
-        return $client->getCaseNumber() === $dto->getCaseNumber() &&
+        return $client->getCourtDate() &&
+            $client->getCaseNumber() === $dto->getCaseNumber() &&
             $client->getCourtDate()->format('Ymd') !== $dto->getCourtDate()->format('Ymd');
     }
 
