@@ -4,6 +4,8 @@ declare(strict_types=1);
 
 namespace App\Tests\Behat\v2\Reporting\Sections;
 
+use App\Tests\Behat\BehatException;
+
 trait BenefitsCheckSectionTrait
 {
     /**
@@ -11,6 +13,7 @@ trait BenefitsCheckSectionTrait
      */
     public function iNavigateToBenefitsCheckSection()
     {
+        $this->clickLink('Benefits check and income other people receive');
     }
 
     /**
@@ -18,6 +21,9 @@ trait BenefitsCheckSectionTrait
      */
     public function iNavigateToAndStartBenefitsCheckSection()
     {
+        $this->iNavigateToBenefitsCheckSection();
+        // May be a button
+        $this->clickLink('Start');
     }
 
     /**
@@ -25,6 +31,19 @@ trait BenefitsCheckSectionTrait
      */
     public function iConfirmCheckedBenefitsOnDate(string $dateString)
     {
+        $explodedDate = explode('/', $dateString);
+
+        $this->chooseOption('addSelectName', 'haveCheckedBenefits', 'add translation');
+
+        $this->fillInDateFields(
+            'addFieldName',
+            null,
+            intval($explodedDate[0]),
+            intval($explodedDate[1]),
+            'haveCheckedBenefits'
+        );
+
+        $this->pressButton('Save and continue');
     }
 
     /**
@@ -32,6 +51,9 @@ trait BenefitsCheckSectionTrait
      */
     public function iConfirmCurrentlyCheckingBenefits()
     {
+        $this->chooseOption('addSelectName', 'addOption', 'haveCheckedBenefits', 'add translation');
+
+        $this->pressButton('Save and continue');
     }
 
     /**
@@ -39,6 +61,9 @@ trait BenefitsCheckSectionTrait
      */
     public function iConfirmHaveNeverCheckedBenefits()
     {
+        $this->chooseOption('addSelectName', 'addOption', 'haveCheckedBenefits', 'add translation');
+
+        $this->pressButton('Save and continue');
     }
 
     /**
@@ -46,6 +71,9 @@ trait BenefitsCheckSectionTrait
      */
     public function iConfirmOthersReceiveIncomeOnClientsBehalf()
     {
+        $this->chooseOption('addSelectName', 'addOption', 'haveOthersReceivedIncome', 'add translation');
+
+        $this->pressButton('Save and continue');
     }
 
     /**
@@ -53,13 +81,44 @@ trait BenefitsCheckSectionTrait
      */
     public function iConfirmOthersDoNotReceiveIncomeOnClientsBehalf()
     {
+        $this->chooseOption('addSelectName', 'addOption', 'haveOthersReceivedIncome', 'add translation');
+
+        $this->pressButton('Save and continue');
     }
 
     /**
-     * @When I add :numOfIncomeTypes type(s) of income
+     * @When I add :numOfIncomeTypes type(s) of income with values
      */
     public function iAddNumberOfIncomeTypes(int $numOfIncomeTypes)
     {
+        foreach (range(0, $numOfIncomeTypes) as $index) {
+            $this->fillInField('addFieldName', $this->faker->words(2), 'incomeType');
+            $this->fillInFieldTrackTotal('addFieldName', $this->faker->numberBetween(10, 2000), 'incomeType');
+
+            if ($index === $numOfIncomeTypes) {
+                break;
+            }
+
+            $this->pressButton('Add another');
+        }
+
+        $this->pressButton('Save and continue');
+    }
+
+    /**
+     * @When I add a type of income where I don't know the value
+     */
+    public function iAddIncomeTypeWithNoValue()
+    {
+        $this->fillInField('addFieldName', $this->faker->words(2), 'incomeType');
+        $this->tickCheckbox(
+            'addGroupName',
+            'addOptionName',
+            'incomeType',
+            'I don\'t know the amount'
+        );
+
+        $this->pressButton('Save and continue');
     }
 
     /**
@@ -67,6 +126,14 @@ trait BenefitsCheckSectionTrait
      */
     public function iAddIncomeTypeFromSummaryPage(int $numOfIncomeTypes)
     {
+        $this->iAmOnDeputyBenefitsCheckSummaryPage();
+
+        $this->pressButton('Add income');
+
+        $this->fillInField('addFieldName', $this->faker->words(2), 'incomeType');
+        $this->fillInFieldTrackTotal('addFieldName', $this->faker->numberBetween(10, 2000), 'incomeType');
+
+        $this->pressButton('Save and continue');
     }
 
     /**
@@ -74,6 +141,11 @@ trait BenefitsCheckSectionTrait
      */
     public function iActionIncomeTypeIAdded(string $action)
     {
+        if ('edit' === strtolower($action)) {
+        } elseif ('remove' === strtolower($action)) {
+        } else {
+            throw new BehatException('This step definition only supports "edit" and "remove"');
+        }
     }
 
     /**
@@ -81,5 +153,6 @@ trait BenefitsCheckSectionTrait
      */
     public function benefitCheckSummaryPageContainsEnteredDetails()
     {
+        $this->expectedResultsDisplayedSimplified();
     }
 }

@@ -4,9 +4,10 @@ Feature: Benefits check
     Scenario: A deputy has checked the clients benefit entitlement on a specific date
         Given a Lay Deputy has not started a Combined High Assets report
         When I navigate to and start the client benefits check report section
-        And I confirm I checked the clients benefit entitlement on '1 January 2021'
+        And I confirm I checked the clients benefit entitlement on '01/01/2021'
         And I confirm others receive income on the clients behalf
-        And I add 2 types of income
+        And I add 2 types of income with values
+        And I add a type of income where I don't know the value
         Then the client benefits check summary page should contain the details I entered
 
     Scenario: A deputy is currently checking the clients benefit entitlement
@@ -32,17 +33,17 @@ Feature: Benefits check
     Scenario: A deputy edits details of an income other people receive on the client's behalf
         Given a Lay Deputy has not started a Combined High Assets report
         When I navigate to and start the client benefits check report section
-        And I confirm I checked the clients benefit entitlement on '1 January 2021'
+        And I confirm I checked the clients benefit entitlement on '01/2021'
         And I confirm others receive income on the clients behalf
-        And I add 1 type of income
+        And I add 1 type of income with values
         And I 'edit' the last type of income I added
         Then the client benefits check summary page should contain the details I entered
 
     Scenario: A deputy removes details of an income other people receive on the client's behalf
         Given a Lay Deputy has not started a Combined High Assets report
         When I navigate to and start the client benefits check report section
-        And I confirm I checked the clients benefit entitlement on '1 January 2021'
+        And I confirm I checked the clients benefit entitlement on '01/2021'
         And I confirm others receive income on the clients behalf
-        And I add 2 types of income
+        And I add 2 types of income with values
         And I 'remove' the last type of income I added
         Then the client benefits check summary page should contain the details I entered
