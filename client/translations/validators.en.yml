@@ -669,7 +669,17 @@ ndr:
           notBlank: Please tick this box as more information are given
       moreDetails:
           notBlank: Please give us some more information
-
+  expenses:
+      paidForAnything.notBlank: Please select either 'Yes' or 'No'
+      addAnother.notBlank: Please specify if you want to add another expense
+      singleExpense:
+        notNumeric: Enter the amount of the expense in numbers
+      explanation:
+        notBlank: Please enter a description
+      amount:
+        notBlank: Please enter an amount
+        type: Enter a valid amount
+        notInRangeMessage: The amount must be between £{{ min }} and £100,000,000,000
   action:
     actionGiveGiftsToClient:
       notBlank: Please select either 'Yes' or 'No'
