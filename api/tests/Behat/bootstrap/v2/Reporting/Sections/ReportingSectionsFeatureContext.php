@@ -27,6 +27,7 @@ class ReportingSectionsFeatureContext extends BaseFeatureContext
     use MoneyOutShortSectionTrait;
     use ReportOverviewTrait;
     use VisitsCareSectionTrait;
+    use IncomeBenefitsSectionTrait;
 
     public const REPORT_SECTION_ENDPOINT = '/%s/%s/%s';
 

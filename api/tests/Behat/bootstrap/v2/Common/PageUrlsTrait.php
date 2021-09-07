@@ -45,6 +45,8 @@ trait PageUrlsTrait
     private string $reportSubmittedUrl = '/report/%s/submitted';
     private string $userResearchSubmittedUrl = '/report/%s/post_submission_user_research/submitted';
     private string $visitsAndCareSectionUrl = '/%s/%s/visits-care';
+    private string $incomeBenefitsSectionUrl = '/%s/%s/income-benefits';
+    private string $incomeBenefitsSectionSummaryUrl = '/%s/%s/income-benefits/summary';
 
     // Admin
     private string $adminActiveLaysReportUrl = '/admin/stats/downloadActiveLaysCsv';
@@ -334,5 +336,15 @@ trait PageUrlsTrait
     public function getClientLoginPageUrl(): string
     {
         return $this->clientLoginPageUrl;
+    }
+
+    public function getIncomeBenefitsSectionUrl(int $reportId): string
+    {
+        return sprintf($this->incomeBenefitsSectionUrl, $this->reportUrlPrefix, $reportId);
+    }
+
+    public function getIncomeBenefitsSummaryUrl(int $reportId): string
+    {
+        return sprintf($this->incomeBenefitsSectionSummaryUrl, $this->reportUrlPrefix, $reportId);
     }
 }

@@ -270,4 +270,20 @@ trait IVisitFrontendTrait
     {
         $this->visitFrontendPath($this->getClientLoginPageUrl());
     }
+
+    /**
+     * @When I visit the income benefits report section
+     */
+    public function iVisitIncomeBenefitsSection()
+    {
+        $this->visitFrontendPath($this->getIncomeBenefitsSectionUrl($this->loggedInUserDetails->getCurrentReportId()));
+    }
+
+    /**
+     * @When I visit the income benefits summary section
+     */
+    public function iVisitIncomeBenefitsSummarySection()
+    {
+        $this->visitFrontendPath($this->getIncomeBenefitsSummaryUrl($this->loggedInUserDetails->getCurrentReportId()));
+    }
 }

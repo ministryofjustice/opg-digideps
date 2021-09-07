@@ -590,4 +590,52 @@ trait IShouldBeOnFrontendTrait
     {
         return $this->iAmOnPage('/login$/');
     }
+
+    /**
+     * @Then I am on state benefits page
+     */
+    public function iAmOnStateBenefitsPage()
+    {
+        return $this->iAmOnPage(sprintf('/%s\/.*\/income-benefits\/step\/1.*$/', $this->reportUrlPrefix));
+    }
+
+    /**
+     * @Then I am on pensions and other income page
+     */
+    public function iAmOnStatePensionPage()
+    {
+        return $this->iAmOnPage(sprintf('/%s\/.*\/income-benefits\/step\/2.*$/', $this->reportUrlPrefix));
+    }
+
+    /**
+     * @Then I am on other regular income page
+     */
+    public function iAmOnOtherRegularIncomePage()
+    {
+        return $this->iAmOnPage(sprintf('/%s\/.*\/income-benefits\/step\/3.*$/', $this->reportUrlPrefix));
+    }
+
+    /**
+     * @Then I am on damages and compensation page
+     */
+    public function iAmOnDamagesAndCompensationPage()
+    {
+        return $this->iAmOnPage(sprintf('/%s\/.*\/income-benefits\/step\/4.*$/', $this->reportUrlPrefix));
+    }
+
+    /**
+     * @Then I am on one off payments page
+     */
+    public function iAmOnOneOffPaymentsPage()
+    {
+        return $this->iAmOnPage(sprintf('/%s\/.*\/income-benefits\/step\/5.*$/', $this->reportUrlPrefix));
+    }
+
+    /**
+     * @Then I should be on the income benefits summary page
+     */
+    public function iAmOnIncomeBenefitsSummaryPage(): bool
+    {
+        return $this->iAmOnPage(sprintf('/%s\/.*\/income-benefits\/summary.*$/', $this->reportUrlPrefix));
+    }
 }
