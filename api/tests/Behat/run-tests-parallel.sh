@@ -7,14 +7,17 @@ export APP_ENV=dev
 start=`date +%s`
 
 confd -onetime -backend env
-
-su-exec www-data php app/console doctrine:fixtures:load --no-interaction
-
-./vendor/bin/behat --config=./tests/Behat/behat.yml --stop-on-failure --profile v2-tests-goutte --tags @v2_standalone
-./vendor/bin/behat --config=./tests/Behat/behat.yml --stop-on-failure --profile v2-tests-goutte --tags @v2 --list-features | ./vendor/liuggio/fastest/fastest "./vendor/bin/behat --profile v2-tests-goutte --config=./tests/Behat/behat.yml {}"
+./vendor/bin/behat --config=./tests/Behat/behat.yml --stop-on-failure --profile v2-tests-goutte --list-features $@ | ./vendor/liuggio/fastest/fastest "./vendor/bin/behat --profile v2-tests-goutte --tags @v2 --config=./tests/Behat/behat.yml {}"
 
 end=`date +%s`
 
 runtime=$((end-start))
 
 echo "Time take: ${runtime} secs"
+
+if [ runtime -gt 300 ]
+then
+    echo "Stage taking too long. Failing the build!"
+    echo "Please split out your tests to a new container"
+    exit 1
+fi

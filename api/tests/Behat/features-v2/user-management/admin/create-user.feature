@@ -1,4 +1,4 @@
-@v2 @admin-user-create @admin-user
+@v2 @v2_admin @admin-user-create @admin-user
 Feature: Admin - User Create
 
 @super-admin

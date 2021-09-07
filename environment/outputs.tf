@@ -22,7 +22,7 @@ output "Tasks" {
     restore                 = module.restore.render
     restore_from_production = module.restore_from_production.render
     integration_test        = module.integration_test.render
-    integration_test_v2     = module.integration_test_v2.render
+    integration_test_v2     = module.integration_test_v2.render_with_override
     smoke_test              = module.smoke_test.render
   }
 }

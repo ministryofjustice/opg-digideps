@@ -2,3 +2,8 @@
 region=eu-west-1
 role_arn=arn:aws:iam::311462405659:role/digideps-ci
 credential_source=Environment
+
+[profile digideps-ci-dev]
+region=eu-west-1
+role_arn=arn:aws:iam::248804316466:role/digideps-ci
+credential_source=Environment

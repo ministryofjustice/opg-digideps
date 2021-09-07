@@ -8,6 +8,14 @@ variable "cluster_name" { type = string }
 variable "subnet_ids" { type = list(string) }
 variable "task_role_arn" { type = string }
 variable "security_group_id" { type = string }
+variable "override" {
+  type    = list(string)
+  default = []
+}
+variable "service_name" {
+  type    = string
+  default = ""
+}
 
 variable "memory" {
   type    = number

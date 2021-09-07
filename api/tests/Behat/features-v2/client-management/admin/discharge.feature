@@ -1,4 +1,4 @@
-@v2 @admin-client-discharge
+@v2 @v2_admin @admin-client-discharge
 Feature: Admin - Client Discharge
 
 @super-admin @lay-pfa-high-submitted

@@ -1,4 +1,4 @@
-@v2_standalone @analytics
+@v2 @v2_admin @analytics
 Feature: Analytics - view and download analytics
 
     @super-admin
@@ -6,30 +6,26 @@ Feature: Analytics - view and download analytics
         Given a super admin user accesses the admin app
         And reports exist that were submitted at different times
         When I visit the admin analytics page
-        And I change reporting period to be all time
-        Then I should see the correct metric values displayed
-        When I change reporting period to be last 30 days
-        Then I should see the correct metric values displayed
-        When I change reporting period to be this year
-        Then I should see the correct metric values displayed
         When I change reporting period to apply only to our generated data
         Then I should see the correct metric values displayed
         When I add more clients, deputies and reports
-        And I change reporting period to be all time again
+        And I change reporting period to apply only to our generated data
         Then I should see the correct metric values displayed
 
     @admin-manager
     Scenario: An admin manager accesses the analytics page
         Given an admin manager user accesses the admin app
         When I visit the admin analytics page
-        And I change reporting period to be all time again for admin manager
+        And there are existing reports submitted
+        When I change reporting period to apply only to our generated data
         Then I should see the correct metric values displayed
 
     @admin
     Scenario: An admin user accesses the analytics page
         Given an admin user accesses the admin app
         When I visit the admin analytics page
-        And I change reporting period to be all time again for admin user
+        And there are existing reports submitted
+        When I change reporting period to apply only to our generated data
         Then I should see the correct metric values displayed
 
     @super-admin

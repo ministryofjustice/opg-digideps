@@ -70,7 +70,7 @@ api-unit-tests: reset-database reset-fixtures ## Run the api unit tests
 behat-tests: up-app-integration-tests reset-fixtures
 	docker-compose -f docker-compose.yml -f docker-compose.dev.yml run --rm test sh ./tests/Behat/run-tests.sh
 
-behat-tests-v2-goutte: up-app-integration-tests reset-fixtures disable-debug  ## Pass in suite name as arg e.g. make behat-suite suite=<SUITE NAME>
+behat-tests-v2-goutte: up-app-integration-tests reset-fixtures disable-debug  ## Pass in suite name as arg e.g. make behat-tests-v2-goutte suite=<SUITE NAME>
 ifdef suite
 	docker-compose -f docker-compose.yml -f docker-compose.dev.yml run --rm test sh ./tests/Behat/run-tests.sh --profile v2-tests-goutte --tags @v2 --suite $(suite)
 else
@@ -78,7 +78,7 @@ else
 endif
 
 behat-tests-v2-goutte-parallel: up-app-integration-tests reset-fixtures disable-debug
-	docker-compose -f docker-compose.yml -f docker-compose.dev.yml run --rm test sh ./tests/Behat/run-tests-parallel.sh
+	docker-compose -f docker-compose.yml -f docker-compose.dev.yml run --rm test sh ./tests/Behat/run-tests-parallel.sh --tags @v2
 
 behat-tests-v2-browserstack: up-app-integration-tests reset-fixtures disable-debug
 	docker-compose -f docker-compose.yml -f docker-compose.dev.yml run --rm test sh ./tests/Behat/run-tests.sh --profile v2-tests-browserstack --tags @v2

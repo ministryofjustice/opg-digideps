@@ -71,36 +71,85 @@ workflows:
           requires: [ terraform apply ]
           filters: { branches: { ignore: [ main ] } }
 
+      - scale-services:
+          name: scale up services for integration tests
+          replicas: "5"
+          requires: [ terraform apply ]
+          filters: { branches: { ignore: [ main ] } }
+
 #      - pa11y-ci:
 #          name: accessibility test
 #          requires: [ apply environment ]
 #          filters: { branches: { ignore: [ main ] } }
 
       - run-task:
-          name: integration tests v2
-          requires: [ protect branch workspace ]
+          name: integration tests reset DB
+          requires: [ terraform apply ]
           filters: { branches: { ignore: [ main ] } }
           task_name: integration_test_v2
+          override: "sh,./tests/Behat/reset-db.sh"
+          timeout: 500
+
+      - run-task:
+          name: integration tests v2 reports 1
+          requires: [ integration tests reset DB, scale up services for integration tests ]
+          filters: { branches: { ignore: [ main ] } }
+          task_name: integration_test_v2
+          override: "sh,./tests/Behat/run-tests-parallel.sh,--tags,@v2_reporting_1"
+          timeout: 1200
+
+      - run-task:
+          name: integration tests v2 reports 2
+          requires: [ integration tests reset DB, scale up services for integration tests ]
+          filters: { branches: { ignore: [ main ] } }
+          task_name: integration_test_v2
+          override: "sh,./tests/Behat/run-tests-parallel.sh,--tags,@v2_reporting_2"
+          timeout: 1200
+
+      - run-task:
+          name: integration tests v2 admin
+          requires: [ integration tests reset DB, scale up services for integration tests ]
+          filters: { branches: { ignore: [ main ] } }
+          task_name: integration_test_v2
+          override: "sh,./tests/Behat/run-tests-parallel.sh,--tags,@v2_admin"
           timeout: 1200
 
       - terraform-plan-all:
           name: plan all terraform environments
-          requires: [ integration tests v2 ]
+          requires: [
+              protect branch workspace,
+              scale up services for integration tests
+          ]
           filters: { branches: { ignore: [ main ] } }
           tf_tier: environment
 
       - terraform-plan-all:
           name: plan all shared terraform environments
-          requires: [ integration tests v2 ]
+          requires: [
+              protect branch workspace,
+              scale up services for integration tests
+          ]
           filters: { branches: { ignore: [ main ] } }
           tf_tier: shared
+
+      - scale-services:
+          name: scale down services for integration tests
+          replicas: "1"
+          requires: [
+            integration tests v2 reports 1,
+            integration tests v2 reports 2,
+            integration tests v2 admin
+          ]
+          filters: { branches: { ignore: [ main ] } }
 
       - slack/approval-notification:
           name: branch complete notification
           message: Your branch << pipeline.git.branch >> has completed
           channel: opg-digicop-builds
           requires: [
-            integration tests v2,
+            integration tests v2 reports 1,
+            integration tests v2 reports 2,
+            integration tests v2 admin,
             plan all terraform environments,
             plan all shared terraform environments,
             api unit test,
@@ -650,6 +699,34 @@ jobs:
           name: Add workspace to protected list
           command: terraform-workspace-manager -register-workspace="${TF_WORKSPACE}" -time-to-protect="${PROTECT_TIME}" -aws-account-id=248804316466 -aws-iam-role=digideps-ci
 
+  scale-services:
+    docker:
+      - image: circleci/python:3
+        auth:
+          username: $DOCKER_USER
+          password: $DOCKER_ACCESS_TOKEN
+    resource_class: small
+    working_directory: ~/project/environment
+    parameters:
+      replicas:
+        description: number of replicas
+        type: string
+        default: "1"
+    environment:
+      AWS_CONFIG_FILE: ~/project/aws_config
+    steps:
+      - checkout:
+          path: ~/project
+      - aws-cli/install
+      - run:
+          name: Set environment
+          command: ~/project/.circleci/set_env.sh >> $BASH_ENV
+      - run:
+          name: scale services
+          command: |
+            aws ecs update-service --service front-${TF_WORKSPACE} --cluster ${TF_WORKSPACE} --desired-count << parameters.replicas >> --profile digideps-ci-dev
+            aws ecs update-service --service api-${TF_WORKSPACE} --cluster ${TF_WORKSPACE} --desired-count << parameters.replicas >> --profile digideps-ci-dev
+
   destroy-workspaces:
     executor: terraform/terraform
     resource_class: small
@@ -1043,6 +1120,10 @@ jobs:
         description: whether to notify specific task failure
         type: boolean
         default: false
+      override:
+        description: override value where task is overridable
+        type: string
+        default: ""
     environment:
       WORKSPACE: << parameters.tf_workspace >>
     working_directory: ~/project/environment
@@ -1062,7 +1143,7 @@ jobs:
           command: terraform output -json > terraform.output.json
       - run:
           name: Run task
-          command: runner -task << parameters.task_name >> -timeout << parameters.timeout >>
+          command: runner -task << parameters.task_name >> -timeout << parameters.timeout >> -override << parameters.override >>
       - when:
           condition: << parameters.notify_slack >>
           steps:

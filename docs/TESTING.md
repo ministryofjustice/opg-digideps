@@ -150,6 +150,17 @@ Some parts of our forms have values that are directly related to each other. In 
 
 To remove an item use the `removeAnswerFromSection()` function providing a single field name contained in answer group to be removed, and they will both be removed.
 
+#### Parallelisation
+There are two levels of parallelisation involved with the behat tests. Firstly we have the processor level and then the container level.
+Each container is a high specced container that has 4 processors (this is the maximum). We use `liuggio/fastest/` to parallelise our tests across processors.
+
+The next level is at the container level. As we can get further speed improvements, we split out similar themed tests across containers with tags.
+
+There is a built-in timer that ensures a tagged group of tests does not exceed 300 seconds total. If they do then you should split them into a new container.
+
+To do this, we have added a override flag to the go runner task. You can add the tag to each feature file and use the override command in the circleci config
+to spin up a new parallel task.
+
 ##Emails in non-production environments
 
 Non-production environments don't send emails to avoid data leakage, confusion and embarrassment. This is achieved with a GOV.UK Notify "test" key, which causes Notify to behave as usual but not send the email out. Test emails can then be inspected through Notify's [admin interface][govuk-notify].

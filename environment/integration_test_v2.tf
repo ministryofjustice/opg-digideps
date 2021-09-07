@@ -13,6 +13,8 @@ module "integration_test_v2" {
   security_group_id     = module.integration_test_v2_security_group.id
   cpu                   = 4096
   memory                = 8192
+  override              = ["sh", "./tests/Behat/run-tests-parallel.sh"]
+  service_name          = "integration-test-v2"
 }
 
 locals {
@@ -61,7 +63,6 @@ locals {
         "awslogs-stream-prefix": "${aws_iam_role.test.name}"
       }
     },
-    "entryPoint": [ "sh", "./tests/Behat/run-tests-parallel.sh" ],
     "secrets": [
       { "name": "PGPASSWORD", "valueFrom": "${data.aws_secretsmanager_secret.database_password.arn}" },
       { "name": "SECRET", "valueFrom": "${data.aws_secretsmanager_secret.front_frontend_secret.arn}" },

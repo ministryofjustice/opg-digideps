@@ -1,4 +1,4 @@
-@v2 @documents
+@v2 @v2_reporting_1 @documents
 Feature: Documents - Org User Roles
 
 @prof-admin-health-welfare-not-started
