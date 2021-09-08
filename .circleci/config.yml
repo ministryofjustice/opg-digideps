@@ -260,6 +260,7 @@ workflows:
       - scale-services:
           name: scale up services for integration tests
           replicas: "5"
+          profile: digideps-ci-pre
           requires: [ apply integration ]
           filters: { branches: { only: [ main ] } }
 
@@ -294,6 +295,17 @@ workflows:
           task_name: integration_test_v2
           override: "sh,./tests/Behat/run-tests-parallel.sh,--tags,@v2_admin"
           timeout: 1200
+
+      - scale-services:
+          name: scale down services for integration tests
+          replicas: "1"
+          profile: digideps-ci-pre
+          requires: [
+            integration tests v2 reports 1,
+            integration tests v2 reports 2,
+            integration tests v2 admin
+          ]
+          filters: { branches: { only: [ main ] } }
 
       - terraform-command:
           name: plan preproduction
@@ -754,6 +766,10 @@ jobs:
         description: number of replicas
         type: string
         default: "1"
+      profile:
+        description: profile to use
+        type: string
+        default: "digideps-ci-dev"
     environment:
       AWS_CONFIG_FILE: ~/project/aws_config
     steps:
@@ -766,8 +782,8 @@ jobs:
       - run:
           name: scale services
           command: |
-            aws ecs update-service --service front-${TF_WORKSPACE} --cluster ${TF_WORKSPACE} --desired-count << parameters.replicas >> --profile digideps-ci-dev
-            aws ecs update-service --service api-${TF_WORKSPACE} --cluster ${TF_WORKSPACE} --desired-count << parameters.replicas >> --profile digideps-ci-dev
+            aws ecs update-service --service front-${TF_WORKSPACE} --cluster ${TF_WORKSPACE} --desired-count << parameters.replicas >> --profile << parameters.profile >>
+            aws ecs update-service --service api-${TF_WORKSPACE} --cluster ${TF_WORKSPACE} --desired-count << parameters.replicas >> --profile << parameters.profile >>
 
   destroy-workspaces:
     executor: terraform/terraform
@@ -1166,6 +1182,10 @@ jobs:
         description: override value where task is overridable
         type: string
         default: ""
+      testing:
+        description: checking somthing
+        type: string
+        default: ""
     environment:
       WORKSPACE: << parameters.tf_workspace >>
     working_directory: ~/project/environment
@@ -1184,9 +1204,19 @@ jobs:
           name: Output
           command: terraform output -json > terraform.output.json
       - run:
+          name: check param
+          command: |
+            echo << parameters.testing >>
+            if [ "<< parameters.testing >>" == "" ]
+            then
+              echo "yep"
+            else
+              echo "nope"
+            fi
+      - run:
           name: Run task
           command: |
-            if [ << parameters.override >> -eq "" ]
+            if [ "<< parameters.override >>" == "" ]
             then
               runner -task << parameters.task_name >> -timeout << parameters.timeout >>
             else
