@@ -261,6 +261,7 @@ workflows:
           name: scale up services for integration tests
           replicas: "5"
           profile: digideps-ci-pre
+          tf_workspace: integration
           requires: [ apply integration ]
           filters: { branches: { only: [ main ] } }
 
@@ -269,6 +270,7 @@ workflows:
           requires: [ apply integration ]
           filters: { branches: { only: [ main ] } }
           task_name: integration_test_v2
+          tf_workspace: integration
           override: "sh,./tests/Behat/reset-db.sh"
           timeout: 500
 
@@ -277,6 +279,7 @@ workflows:
           requires: [ integration tests reset DB, scale up services for integration tests ]
           filters: { branches: { only: [ main ] } }
           task_name: integration_test_v2
+          tf_workspace: integration
           override: "sh,./tests/Behat/run-tests-parallel.sh,--tags,@v2_reporting_1"
           timeout: 1200
 
@@ -285,6 +288,7 @@ workflows:
           requires: [ integration tests reset DB, scale up services for integration tests ]
           filters: { branches: { only: [ main ] } }
           task_name: integration_test_v2
+          tf_workspace: integration
           override: "sh,./tests/Behat/run-tests-parallel.sh,--tags,@v2_reporting_2"
           timeout: 1200
 
@@ -293,6 +297,7 @@ workflows:
           requires: [ integration tests reset DB, scale up services for integration tests ]
           filters: { branches: { only: [ main ] } }
           task_name: integration_test_v2
+          tf_workspace: integration
           override: "sh,./tests/Behat/run-tests-parallel.sh,--tags,@v2_admin"
           timeout: 1200
 
@@ -300,6 +305,7 @@ workflows:
           name: scale down services for integration tests
           replicas: "1"
           profile: digideps-ci-pre
+          tf_workspace: integration
           requires: [
             integration tests v2 reports 1,
             integration tests v2 reports 2,
@@ -412,6 +418,8 @@ workflows:
       - scale-services:
           name: scale up services for integration tests
           replicas: "5"
+          profile: digideps-ci-pre
+          tf_workspace: integration
           requires: [ apply integration ]
           filters: { branches: { only: [ main ] } }
       - run-task:
@@ -419,6 +427,7 @@ workflows:
           requires: [ apply integration ]
           filters: { branches: { only: [ main ] } }
           task_name: integration_test_v2
+          tf_workspace: integration
           override: "sh,./tests/Behat/reset-db.sh"
           timeout: 500
       - run-task:
@@ -426,6 +435,7 @@ workflows:
           requires: [ integration tests reset DB, scale up services for integration tests ]
           filters: { branches: { only: [ main ] } }
           task_name: integration_test_v2
+          tf_workspace: integration
           override: "sh,./tests/Behat/run-tests-parallel.sh,--tags,@v2_reporting_1"
           timeout: 1200
       - run-task:
@@ -433,6 +443,7 @@ workflows:
           requires: [ integration tests reset DB, scale up services for integration tests ]
           filters: { branches: { only: [ main ] } }
           task_name: integration_test_v2
+          tf_workspace: integration
           override: "sh,./tests/Behat/run-tests-parallel.sh,--tags,@v2_reporting_2"
           timeout: 1200
       - run-task:
@@ -440,8 +451,20 @@ workflows:
           requires: [ integration tests reset DB, scale up services for integration tests ]
           filters: { branches: { only: [ main ] } }
           task_name: integration_test_v2
+          tf_workspace: integration
           override: "sh,./tests/Behat/run-tests-parallel.sh,--tags,@v2_admin"
           timeout: 1200
+      - scale-services:
+          name: scale down services for integration tests
+          replicas: "1"
+          profile: digideps-ci-pre
+          tf_workspace: integration
+          requires: [
+            integration tests v2 reports 1,
+            integration tests v2 reports 2,
+            integration tests v2 admin
+          ]
+          filters: { branches: { only: [ main ] } }
       - client-unit-test:
           name: client unit test
           requires: [ apply integration ]
@@ -770,8 +793,13 @@ jobs:
         description: profile to use
         type: string
         default: "digideps-ci-dev"
+      tf_workspace:
+        description: terraform workspace
+        type: string
+        default: ""
     environment:
       AWS_CONFIG_FILE: ~/project/aws_config
+      WORKSPACE: << parameters.tf_workspace >>
     steps:
       - checkout:
           path: ~/project
@@ -1182,10 +1210,6 @@ jobs:
         description: override value where task is overridable
         type: string
         default: ""
-      testing:
-        description: checking somthing
-        type: string
-        default: ""
     environment:
       WORKSPACE: << parameters.tf_workspace >>
     working_directory: ~/project/environment
@@ -1203,16 +1227,6 @@ jobs:
       - run:
           name: Output
           command: terraform output -json > terraform.output.json
-      - run:
-          name: check param
-          command: |
-            echo << parameters.testing >>
-            if [ "<< parameters.testing >>" == "" ]
-            then
-              echo "yep"
-            else
-              echo "nope"
-            fi
       - run:
           name: Run task
           command: |
