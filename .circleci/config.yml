@@ -495,12 +495,6 @@ orbs:
               name: Install pact_tags
               working_directory: ~/project/ecs_helper
               command: go install -mod vendor ./cmd/pact_tags
-      build:
-        steps:
-          - run:
-              name: Build redeployer
-              working_directory: ~/project/shared/go_redeployer
-              command: GOARCH=amd64 GOOS=linux go build -o main ./main.go
   terraform:
     executors:
       terraform:
@@ -594,12 +588,6 @@ jobs:
           path: ~/project
       - terraform/install
       - ecs_helper/install
-      - when:
-          condition:
-            and:
-              - equal: [ shared, << parameters.tf_tier >> ]
-          steps:
-            - ecs_helper/build
       - run:
           name: Initialize
           command: terraform init
@@ -675,12 +663,6 @@ jobs:
           path: ~/project
       - terraform/install
       - ecs_helper/install
-      - when:
-          condition:
-            and:
-              - equal: [ shared, << parameters.tf_tier >> ]
-          steps:
-            - ecs_helper/build
       - attach_workspace: { at: ~/project }
       - run:
           name: Initialize
@@ -1182,10 +1164,6 @@ jobs:
         description: override value where task is overridable
         type: string
         default: ""
-      testing:
-        description: checking somthing
-        type: string
-        default: ""
     environment:
       WORKSPACE: << parameters.tf_workspace >>
     working_directory: ~/project/environment
@@ -1203,16 +1181,6 @@ jobs:
       - run:
           name: Output
           command: terraform output -json > terraform.output.json
-      - run:
-          name: check param
-          command: |
-            echo << parameters.testing >>
-            if [ "<< parameters.testing >>" == "" ]
-            then
-              echo "yep"
-            else
-              echo "nope"
-            fi
       - run:
           name: Run task
           command: |
