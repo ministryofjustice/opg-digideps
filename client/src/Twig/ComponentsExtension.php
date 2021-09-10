@@ -5,9 +5,9 @@ namespace App\Twig;
 use App\Entity\User;
 use App\Service\ReportSectionsLinkService;
 use Symfony\Contracts\Translation\TranslatorInterface;
+use Twig\Environment;
 use Twig\Extension\AbstractExtension;
 use Twig\TwigFunction;
-use Twig_Environment;
 
 class ComponentsExtension extends AbstractExtension
 {
@@ -21,28 +21,33 @@ class ComponentsExtension extends AbstractExtension
      */
     private $reportSectionsLinkService;
 
+    private Environment $environment;
+
     /**
      * ComponentsExtension constructor.
-     * @param TranslatorInterface       $translator
-     * @param ReportSectionsLinkService $reportSectionsLinkService
      */
-    public function __construct(TranslatorInterface $translator, ReportSectionsLinkService $reportSectionsLinkService)
-    {
+    public function __construct(
+        TranslatorInterface $translator,
+        ReportSectionsLinkService $reportSectionsLinkService,
+        Environment $environment
+    ) {
         $this->translator = $translator;
         $this->reportSectionsLinkService = $reportSectionsLinkService;
+        $this->environment = $environment;
     }
 
     public function getFunctions()
     {
         return [
-            new \Twig_SimpleFunction('progress_bar_registration', [$this, 'progressBarRegistration'], ['needs_environment' => true]),
-            new \Twig_SimpleFunction('accordionLinks', [$this, 'renderAccordionLinks']),
-            new \Twig_SimpleFunction('section_link_params', function ($report, $sectionId, $offset) {
+            new TwigFunction('progress_bar_registration', [$this, 'progressBarRegistration'], ['needs_environment' => true]),
+            new TwigFunction('accordionLinks', [$this, 'renderAccordionLinks']),
+            new TwigFunction('section_link_params', function ($report, $sectionId, $offset) {
                 return $this->reportSectionsLinkService->getSectionParams($report, $sectionId, $offset);
             }),
             new TwigFunction('class_const', function ($className, $constant) {
                 return constant("$className::$constant");
             }),
+            new TwigFunction('hidden_ga_event', [$this, 'renderHiddenGaEvent']),
         ];
     }
 
@@ -65,7 +70,7 @@ class ComponentsExtension extends AbstractExtension
             }),
             'pad_day_month' => new \Twig_SimpleFilter('pad_day_month', function ($value) {
                 if ($value && (int) $value >= 1 && (int) $value <= 9) {
-                    return '0' . (int) $value;
+                    return '0'.(int) $value;
                 }
 
                 return $value;
@@ -137,22 +142,22 @@ class ComponentsExtension extends AbstractExtension
         $secondsDiff = $to->getTimestamp() - $from->getTimestamp();
 
         if ($secondsDiff < 60) {
-            return $this->translator->trans($translationPrefix . 'lessThenAMinuteAgo', [], $translationDomain);
+            return $this->translator->trans($translationPrefix.'lessThenAMinuteAgo', [], $translationDomain);
         }
 
         if ($secondsDiff < 3600) {
             $minutes = (int) round($secondsDiff / 60, 0);
 
-            return $this->translator->transChoice($translationPrefix . 'minutesAgo', $minutes, ['%count%' => $minutes], $translationDomain);
+            return $this->translator->transChoice($translationPrefix.'minutesAgo', $minutes, ['%count%' => $minutes], $translationDomain);
         }
 
         if ($secondsDiff < 86400) {
             $hours = (int) round($secondsDiff / 3600, 0);
 
-            return $this->translator->transChoice($translationPrefix . 'hoursAgo', $hours, ['%count%' => $hours], $translationDomain);
+            return $this->translator->transChoice($translationPrefix.'hoursAgo', $hours, ['%count%' => $hours], $translationDomain);
         }
 
-        return $this->translator->trans($translationPrefix . 'exactDate', ['%date%' => $from->format($defaultDateFormat)], $translationDomain);
+        return $this->translator->trans($translationPrefix.'exactDate', ['%date%' => $from->format($defaultDateFormat)], $translationDomain);
     }
 
     /**
@@ -209,7 +214,7 @@ class ComponentsExtension extends AbstractExtension
      * @param string $barName
      * @param int    $activeStepNumber
      */
-    public function progressBarRegistration(Twig_Environment $env, User $user, $selectedStepId)
+    public function progressBarRegistration(Environment $env, User $user, $selectedStepId)
     {
         if ($user->isDeputyOrg() || in_array($user->getRoleName(), [User::ROLE_ADMIN, User::ROLE_AD, User::ROLE_SUPER_ADMIN])) {
             $availableStepIds = ['password', 'user_details'];
@@ -227,14 +232,19 @@ class ComponentsExtension extends AbstractExtension
         foreach ($availableStepIds as $currentStepNumber => $availableStepId) {
             $progressSteps[$availableStepId] = [
                 'class' => (($selectedStepNumber == $currentStepNumber) ? ' opg-progress-bar__item--active ' : '')
-                    . (($currentStepNumber < $selectedStepNumber) ? ' opg-progress-bar__item--completed ' : '')
-                    . (($currentStepNumber == $selectedStepNumber - 1) ? ' opg-progress-bar__item--previous ' : ''),
+                    .(($currentStepNumber < $selectedStepNumber) ? ' opg-progress-bar__item--completed ' : '')
+                    .(($currentStepNumber == $selectedStepNumber - 1) ? ' opg-progress-bar__item--previous ' : ''),
             ];
         }
 
         echo $env->render('@App/Components/Navigation/_progress-indicator.html.twig', [
             'progressSteps' => $progressSteps,
         ]);
+    }
+
+    public function renderHiddenGaEvent(string $documentTitle)
+    {
+        echo $this->environment->render('@App/Components/GoogleAnalytics/hiddenEvent.html.twig', ['dt' => urlencode($documentTitle)]);
     }
 
     public function getName()
