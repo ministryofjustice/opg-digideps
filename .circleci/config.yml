@@ -257,21 +257,61 @@ workflows:
           tf_workspace: integration
           tf_command: apply
 
-      - run-task:
-          name: reset integration
+      - scale-services:
+          name: scale up services for integration tests
+          replicas: "5"
+          profile: digideps-ci-pre
+          tf_workspace: integration
           requires: [ apply integration ]
           filters: { branches: { only: [ main ] } }
-          task_name: reset_database
-          tf_workspace: integration
-          timeout: 250
 
       - run-task:
-          name: integration test
-          requires: [ reset integration ]
+          name: integration tests reset DB
+          requires: [ apply integration ]
           filters: { branches: { only: [ main ] } }
           task_name: integration_test_v2
           tf_workspace: integration
+          override: "sh,./tests/Behat/reset-db.sh"
+          timeout: 500
+
+      - run-task:
+          name: integration tests v2 reports 1
+          requires: [ integration tests reset DB, scale up services for integration tests ]
+          filters: { branches: { only: [ main ] } }
+          task_name: integration_test_v2
+          tf_workspace: integration
+          override: "sh,./tests/Behat/run-tests-parallel.sh,--tags,@v2_reporting_1"
           timeout: 1200
+
+      - run-task:
+          name: integration tests v2 reports 2
+          requires: [ integration tests reset DB, scale up services for integration tests ]
+          filters: { branches: { only: [ main ] } }
+          task_name: integration_test_v2
+          tf_workspace: integration
+          override: "sh,./tests/Behat/run-tests-parallel.sh,--tags,@v2_reporting_2"
+          timeout: 1200
+
+      - run-task:
+          name: integration tests v2 admin
+          requires: [ integration tests reset DB, scale up services for integration tests ]
+          filters: { branches: { only: [ main ] } }
+          task_name: integration_test_v2
+          tf_workspace: integration
+          override: "sh,./tests/Behat/run-tests-parallel.sh,--tags,@v2_admin"
+          timeout: 1200
+
+      - scale-services:
+          name: scale down services for integration tests
+          replicas: "1"
+          profile: digideps-ci-pre
+          tf_workspace: integration
+          requires: [
+            integration tests v2 reports 1,
+            integration tests v2 reports 2,
+            integration tests v2 admin
+          ]
+          filters: { branches: { only: [ main ] } }
 
       - terraform-command:
           name: plan preproduction
@@ -285,7 +325,9 @@ workflows:
           requires: [
             api unit test,
             client unit test,
-            integration test,
+            integration tests v2 reports 1,
+            integration tests v2 reports 2,
+            integration tests v2 admin,
             apply shared-preproduction
           ]
           filters: { branches: { only: [ main ] } }
@@ -373,13 +415,56 @@ workflows:
           filters: { branches: { only: [ main ] } }
           tf_workspace: integration
           tf_command: apply
-      - run-task:
-          name: reset integration
+      - scale-services:
+          name: scale up services for integration tests
+          replicas: "5"
+          profile: digideps-ci-pre
+          tf_workspace: integration
           requires: [ apply integration ]
           filters: { branches: { only: [ main ] } }
-          task_name: reset_database
+      - run-task:
+          name: integration tests reset DB
+          requires: [ apply integration ]
+          filters: { branches: { only: [ main ] } }
+          task_name: integration_test_v2
           tf_workspace: integration
-          timeout: 250
+          override: "sh,./tests/Behat/reset-db.sh"
+          timeout: 500
+      - run-task:
+          name: integration tests v2 reports 1
+          requires: [ integration tests reset DB, scale up services for integration tests ]
+          filters: { branches: { only: [ main ] } }
+          task_name: integration_test_v2
+          tf_workspace: integration
+          override: "sh,./tests/Behat/run-tests-parallel.sh,--tags,@v2_reporting_1"
+          timeout: 1200
+      - run-task:
+          name: integration tests v2 reports 2
+          requires: [ integration tests reset DB, scale up services for integration tests ]
+          filters: { branches: { only: [ main ] } }
+          task_name: integration_test_v2
+          tf_workspace: integration
+          override: "sh,./tests/Behat/run-tests-parallel.sh,--tags,@v2_reporting_2"
+          timeout: 1200
+      - run-task:
+          name: integration tests v2 admin
+          requires: [ integration tests reset DB, scale up services for integration tests ]
+          filters: { branches: { only: [ main ] } }
+          task_name: integration_test_v2
+          tf_workspace: integration
+          override: "sh,./tests/Behat/run-tests-parallel.sh,--tags,@v2_admin"
+          timeout: 1200
+      - scale-services:
+          name: scale down services for integration tests
+          replicas: "1"
+          profile: digideps-ci-pre
+          tf_workspace: integration
+          requires: [
+            integration tests v2 reports 1,
+            integration tests v2 reports 2,
+            integration tests v2 admin
+          ]
+          filters: { branches: { only: [ main ] } }
       - client-unit-test:
           name: client unit test
           requires: [ apply integration ]
@@ -392,14 +477,6 @@ workflows:
           name: cross browser test
           requires: [ apply integration ]
           filters: { branches: { only: [ main ] } }
-      - run-task:
-          name: integration test
-          requires: [ reset integration ]
-          filters: { branches: { only: [ main ] } }
-          task_name: integration_test_v2
-          tf_workspace: integration
-          notify_slack: true
-          timeout: 1200
 
   nightly_workspace_deletion:
     triggers:
@@ -712,8 +789,17 @@ jobs:
         description: number of replicas
         type: string
         default: "1"
+      profile:
+        description: profile to use
+        type: string
+        default: "digideps-ci-dev"
+      tf_workspace:
+        description: terraform workspace
+        type: string
+        default: ""
     environment:
       AWS_CONFIG_FILE: ~/project/aws_config
+      WORKSPACE: << parameters.tf_workspace >>
     steps:
       - checkout:
           path: ~/project
@@ -724,8 +810,8 @@ jobs:
       - run:
           name: scale services
           command: |
-            aws ecs update-service --service front-${TF_WORKSPACE} --cluster ${TF_WORKSPACE} --desired-count << parameters.replicas >> --profile digideps-ci-dev
-            aws ecs update-service --service api-${TF_WORKSPACE} --cluster ${TF_WORKSPACE} --desired-count << parameters.replicas >> --profile digideps-ci-dev
+            aws ecs update-service --service front-${TF_WORKSPACE} --cluster ${TF_WORKSPACE} --desired-count << parameters.replicas >> --profile << parameters.profile >>
+            aws ecs update-service --service api-${TF_WORKSPACE} --cluster ${TF_WORKSPACE} --desired-count << parameters.replicas >> --profile << parameters.profile >>
 
   destroy-workspaces:
     executor: terraform/terraform
@@ -1143,7 +1229,13 @@ jobs:
           command: terraform output -json > terraform.output.json
       - run:
           name: Run task
-          command: runner -task << parameters.task_name >> -timeout << parameters.timeout >> -override << parameters.override >>
+          command: |
+            if [ "<< parameters.override >>" == "" ]
+            then
+              runner -task << parameters.task_name >> -timeout << parameters.timeout >>
+            else
+              runner -task << parameters.task_name >> -timeout << parameters.timeout >> -override << parameters.override >>
+            fi
       - when:
           condition: << parameters.notify_slack >>
           steps:

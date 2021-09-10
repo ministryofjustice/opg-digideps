@@ -79,7 +79,6 @@ class UserResearchResponse
     private DateTime $created;
 
     /**
-     * @var DateTime
      * @JMS\Type("App\Entity\Satisfaction")
      * @JMS\Groups({"user-research", "satisfaction"})
      *
