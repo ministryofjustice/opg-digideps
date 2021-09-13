@@ -1,7 +1,7 @@
 @v2 @debts
 Feature: Report debts (NDR)
 
-@ndr-not-started
+    @ndr-not-started
     Scenario: A user has no debts
         Given a Lay Deputy has not started an NDR report
         And I visit the report overview page
@@ -12,7 +12,7 @@ Feature: Report debts (NDR)
         When I follow link back to report overview page
         Then I should see "debts" as "finished"
 
-@ndr-not-started
+    @ndr-not-started
     Scenario: A user has some debts
         Given a Lay Deputy has not started an NDR report
         When I view and start the debts report section
@@ -23,13 +23,13 @@ Feature: Report debts (NDR)
         When I follow link back to report overview page
         Then I should see "debts" as "finished"
 
-@ndr-not-started
+    @ndr-not-started
     Scenario: A user edits a debt
         Given a Lay Deputy has not started an NDR report
         When I edit an existing debt payment
         Then I should see the expected debts section summary
 
-@ndr-not-started
+    @ndr-not-started
     Scenario: A user tries to add a debt with invalid amount
         Given a Lay Deputy has not started an NDR report
         When I view and start the debts report section

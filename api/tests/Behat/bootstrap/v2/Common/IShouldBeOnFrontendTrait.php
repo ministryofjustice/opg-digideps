@@ -81,7 +81,7 @@ trait IShouldBeOnFrontendTrait
      */
     public function iAmOnActionsPage1(): bool
     {
-        return $this->iAmOnPage('/report\/.*\/actions\/step\/1$/');
+        return $this->iAmOnPage(sprintf('/%s\/.*\/actions\/step\/1$/', $this->reportUrlPrefix));
     }
 
     /**
@@ -89,7 +89,7 @@ trait IShouldBeOnFrontendTrait
      */
     public function iAmOnActionsPage2(): bool
     {
-        return $this->iAmOnPage('/report\/.*\/actions\/step\/2$/');
+        return $this->iAmOnPage(sprintf('/%s\/.*\/actions\/step\/2$/', $this->reportUrlPrefix));
     }
 
     /**
@@ -97,7 +97,7 @@ trait IShouldBeOnFrontendTrait
      */
     public function iAmOnActionsSummaryPage(): bool
     {
-        return $this->iAmOnPage('/report\/.*\/actions\/summary.*/');
+        return $this->iAmOnPage(sprintf('/%s\/.*\/actions\/summary.*/', $this->reportUrlPrefix));
     }
 
     /**

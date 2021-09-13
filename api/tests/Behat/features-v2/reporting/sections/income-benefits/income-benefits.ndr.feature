@@ -1,7 +1,7 @@
 @v2 @income-benefits
 Feature: Income Benefits (NDR)
 
-@ndr-not-started
+    @ndr-not-started
     Scenario: A user has no other incomes or benefits
         Given a Lay Deputy has not started an NDR report
         And I visit the report overview page
@@ -12,7 +12,7 @@ Feature: Income Benefits (NDR)
         When I follow link back to report overview page
         Then I should see "income-benefits" as "finished"
 
-@ndr-not-started
+    @ndr-not-started
     Scenario: A user has state benefits, no other regular income or compensation and a one-off payment
         Given a Lay Deputy has not started an NDR report
         When I view and start the income benefits report section
@@ -23,7 +23,7 @@ Feature: Income Benefits (NDR)
         But I have a one-off payment
         Then I should see the expected income benefits section summary
 
-@ndr-completed
+    @ndr-completed
     Scenario: A user edits the income benefits to say they receive a state pension and other regular income
         Given a Lay Deputy has a completed NDR report
         And I visit the report overview page
