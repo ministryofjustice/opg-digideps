@@ -331,7 +331,7 @@ class FormFieldsExtension extends AbstractExtension
             $gaTrackingAction,
             $gaTrackingLabel,
             $gaTrackingValue,
-            $vars['attr']
+            $vars['attr'] ?? []
         );
 
         return $this->renderFormSubmit($element, $elementName, $vars);

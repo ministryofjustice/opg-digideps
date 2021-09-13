@@ -12,7 +12,8 @@ class ComponentsExtensionTest extends TestCase
     {
         $this->translator = m::mock('Symfony\Contracts\Translation\TranslatorInterface');
         $this->reportSectionsLinkService = m::mock('App\Service\ReportSectionsLinkService');
-        $this->object = new \App\Twig\ComponentsExtension($this->translator, $this->reportSectionsLinkService);
+        $this->twigEnvironment = m::mock('Twig\Environment');
+        $this->object = new \App\Twig\ComponentsExtension($this->translator, $this->reportSectionsLinkService, $this->twigEnvironment);
     }
 
     public static function accordionLinksProvider()
@@ -123,7 +124,7 @@ class ComponentsExtensionTest extends TestCase
      * @test
      * @dataProvider pad_day_monthProvider
      */
-    public function pad_day_month($input, $expected)
+    public function padDayMonth($input, $expected)
     {
         $f = $this->object->getFilters()['pad_day_month']->getCallable();
 
@@ -144,7 +145,7 @@ class ComponentsExtensionTest extends TestCase
      * @test
      * @dataProvider behat_namifyProvider
      */
-    public function behat_namify($input, $expected)
+    public function behatNamify($input, $expected)
     {
         $f = $this->object->getFilters()['behat_namify']->getCallable();
 
@@ -164,7 +165,7 @@ class ComponentsExtensionTest extends TestCase
      * @test
      * @dataProvider money_formatProvider
      */
-    public function money_format($input, $expected)
+    public function moneyFormat($input, $expected)
     {
         $f = $this->object->getFilters()['money_format']->getCallable();
 
@@ -184,7 +185,7 @@ class ComponentsExtensionTest extends TestCase
     /**
      * @test
      */
-    public function class_name()
+    public function className()
     {
         $f = $this->object->getFilters()['class_name']->getCallable();
 
