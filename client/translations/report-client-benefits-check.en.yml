@@ -1,28 +1,35 @@
 startPage:
-  htmlTitle: "Client benefits check - Complete the deputy report | GOV.UK"
-  pageTitle: Client benefits check
-  pageSectionDescription1: |
-    ADD DESC
-  startButton: Start client benefits check
+    htmlTitle: "Client benefits check - Complete the deputy report | GOV.UK"
+    pageTitle: Benefits check and income other people receive
+    pageSectionDescription1: |
+        In this section we ask you when you last checked what benefits %client% is entitled to, and about any income other people receive directly on %client%’s behalf.
+    startButton: Start
 
 stepPage:
-  htmlTitle: "ADD TITLE - Complete the deputy report | GOV.UK"
-  pageTitle:
-    add: ADD TITLE
-    edit: ADD TITLE
-  supportTitle: Client benefits check
-  pageSectionDescription:
-    step1: ADD DESC
-  backLink: Back
+    htmlTitle: "ADD TITLE - Complete the deputy report | GOV.UK"
+    pageTitle:
+        add: ADD TITLE
+        edit: ADD TITLE
+    supportTitle: Benefits check and income other people receive
+    pageSectionDescription:
+        step1: ADD DESC
+    backLink: Back
 
 summaryPage:
-  htmlTitle: "Client benefits check - Complete the deputy report | GOV.UK"
-  pageTitle: ADD TITLE
-  weAskAbout: |
-    In this section, we ask you about %client%'s ADD DESC
+    htmlTitle: "Client benefits check - Complete the deputy report | GOV.UK"
+    pageTitle: ADD TITLE
+    weAskAbout: |
+        In this section, we ask you about %client%'s ADD DESC
 
 form:
-  save:
-    label: Save and continue
-  cancel:
-    label: Cancel
+    whenLastChecked:
+        choices:
+            haveChecked: I have checked this
+            currentlyChecking: I’m currently checking this
+            neverChecked: I’ve never checked this
+        checkedDateHint: Date checked
+
+    save:
+        label: Save and continue
+    cancel:
+        label: Cancel

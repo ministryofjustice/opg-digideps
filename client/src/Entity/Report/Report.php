@@ -1305,7 +1305,7 @@ class Report implements ReportInterface, StartEndDateComparableInterface
         }
     }
 
-    public function getClientBenefitsCheck(): ClientBenefitsCheck
+    public function getClientBenefitsCheck(): ?ClientBenefitsCheck
     {
         return $this->clientBenefitsCheck;
     }

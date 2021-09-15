@@ -1,0 +1,46 @@
+{% extends '@App/Layouts/application.html.twig' %}
+
+{% import '@App/Macros/macros.html.twig' as macros %}
+
+{% set translationDomain = "report-client-benefits-check" %}
+{% trans_default_domain translationDomain %}
+
+{% set transOptions = {
+    '%client%': report.client.firstname | e,
+} %}
+
+{% block htmlTitle %}{{ 'stepPage.htmlTitle' | trans(transOptions) }}{% endblock %}
+{% block pageTitle %}{{ 'stepPage.pageTitle' | trans(transOptions) }}{% endblock %}
+
+
+{% block breadcrumbs %}{{ macros.breadcrumbs(report) }}{% endblock %}
+
+{% block pageContent %}
+
+    {{ form_start(form, {attr: {novalidate: 'novalidate' }}) }}
+
+    {% if step == 1 %}
+        {% set conditionalDateChecked %}
+            {{ form_input(form.dateLastCheckedEntitlement, (page ~ '.form.whenLastChecked'), {
+                'labelClass': 'required',
+                'labelParameters': transOptions,
+                'hintText' : (page ~ '.form.whenLastChecked.checkedDateHint') | trans(transOptions, 'report-client-benefits-check')
+            }) }}
+        {% endset %}
+
+        {{ form_checkbox_group(form.whenLastCheckedEntitlement, 'form.clientBenefitsCheck', {
+            'useFormGroup': false,
+            'labelText': ('form.clientBenefitsCheck.label') | trans(transOptions),
+            label: {
+                isPageHeading: true,
+                caption: 'stepPage.supportTitle' | trans
+            },
+            'items': [{'conditional': conditionalDateChecked}]
+        }) }}
+
+        {{ macros.saveAndContinueButton(form.save) }}
+    {% endif %}
+
+    {{ form_end(form) }}
+
+{% endblock %}

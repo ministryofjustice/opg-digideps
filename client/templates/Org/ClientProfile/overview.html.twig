@@ -20,9 +20,6 @@
 
 {% block pageContent %}
 
-<h1>Benefits check is</h1>
-{{ report.clientBenefitsCheck.whenLastCheckedEntitlement }}
-
     {# Use a random ID to ensure that changes to open sections don't persist #}
     <div class="govuk-accordion" data-module="govuk-accordion" id="overview-accordion">
         {% include '@App/Org/ClientProfile/_client.html.twig' with {

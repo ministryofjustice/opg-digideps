@@ -240,8 +240,6 @@
                                 state: reportStatus.cleintBenefitsCheckState,
                                 description: true
                             } %}
-
-                            {{ report.clientBenefitsCheck.whenLastCheckedEntitlement }}
                         {% endif %}
                         {% if report.hasSection('bankAccounts') %}
                             {% include '@App/Org/ClientProfile/_subsection.html.twig' with {

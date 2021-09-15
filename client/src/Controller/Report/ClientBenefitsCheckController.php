@@ -29,7 +29,7 @@ class ClientBenefitsCheckController extends AbstractController
      *
      * @return array|RedirectResponse
      */
-    public function startAction(int $reportId)
+    public function start(int $reportId)
     {
         $report = $this->reportApi->getReportIfNotSubmitted($reportId, self::$jmsGroups);
 
@@ -43,12 +43,28 @@ class ClientBenefitsCheckController extends AbstractController
     }
 
     /**
+     * @Route("/report/{reportId}/client-benefits-check-step", name="client_benefits_check_step")
+     * @Template("@App/Report/ClientBenefitsCheck/step.html.twig")
+     *
+     * @return array|RedirectResponse
+     */
+    public function step(int $reportId)
+    {
+        $report = $this->reportApi->getReportIfNotSubmitted($reportId, self::$jmsGroups);
+        $form = new ClientBenefitsCheckType();
+
+        return [
+            'report' => $report,
+        ];
+    }
+
+    /**
      * @Route("/report/{reportId}/client-benefits-check-summary", name="client_benefits_check_summary")
      * @Template("@App/Report/ClientBenefitsCheck/summary.html.twig")
      *
      * @return array|RedirectResponse
      */
-    public function summaryAction(int $reportId)
+    public function summary(int $reportId)
     {
         $report = $this->reportApi->getReportIfNotSubmitted($reportId, self::$jmsGroups);
 

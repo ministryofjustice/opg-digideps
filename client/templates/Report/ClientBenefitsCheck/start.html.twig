@@ -17,7 +17,11 @@
 
 {% block pageContent %}
 
-    {# Content #}
+    <div class="govuk-grid-row">
+        <div class="govuk-grid-column-three-quarters">
+            <p class="govuk-body">{{ 'startPage.pageSectionDescription1' | trans(transOptions) }}</p>
+        </div>
+    </div>
 
     {{ macros.startSectionButton(path('client_benefits_check_step', { 'reportId': report.id, 'step': 1 }), 'startPage.startButton' | trans) }}
 

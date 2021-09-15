@@ -32,9 +32,6 @@
         </div>
     {% endif %}
 
-    <h1>Benefits check is</h1>
-    {{ report.clientBenefitsCheck.whenLastCheckedEntitlement }}
-
     <ul id="overview-sections" class="push--bottom">
 
         <li>
@@ -101,8 +98,6 @@
                         state: reportStatus.clientBenefitsCheckState,
                         description: true
                     } %}
-
-                    {{ report.clientBenefitsCheck.whenLastCheckedEntitlement }}
                 {% endif %}
 
                 {% if report.hasSection('bankAccounts') %}
