@@ -11,11 +11,12 @@ final class Version255 extends AbstractMigration
 {
     public function getDescription(): string
     {
-        return 'Switch to one-to-one relationship for ClientBenefitCheck -> Report and add underscores to foreign key column on income_received_on_clients_behalf';
+        return 'Switch to one-to-one relationship for ClientBenefitCheck -> Report, add underscores to foreign key column on income_received_on_clients_behalf, break date checked question into two columns';
     }
 
     public function up(Schema $schema): void
     {
+        $this->addSql('ALTER TABLE client_benefits_check ADD date_last_checked_entitlement TIMESTAMP(0) WITHOUT TIME ZONE DEFAULT NULL');
         $this->addSql('DROP INDEX idx_b0206bd54bd2a4c0');
         $this->addSql('CREATE UNIQUE INDEX UNIQ_B0206BD54BD2A4C0 ON client_benefits_check (report_id)');
         $this->addSql('ALTER TABLE income_received_on_clients_behalf DROP CONSTRAINT fk_2f551ca35606e920');
@@ -27,6 +28,7 @@ final class Version255 extends AbstractMigration
 
     public function down(Schema $schema): void
     {
+        $this->addSql('ALTER TABLE client_benefits_check DROP date_last_checked_entitlement');
         $this->addSql('DROP INDEX UNIQ_B0206BD54BD2A4C0');
         $this->addSql('CREATE INDEX idx_b0206bd54bd2a4c0 ON client_benefits_check (report_id)');
         $this->addSql('ALTER TABLE income_received_on_clients_behalf DROP CONSTRAINT FK_2F551CA35064A0FF');

@@ -53,7 +53,7 @@ class ClientBenefitsCheck
     private Report $report;
 
     /**
-     * @var string one of either [date in format MM/YYYY, currentlyChecking, neverChecked]
+     * @var string one of either [haveChecked, currentlyChecking, neverChecked]
      *
      * @ORM\Column(name="when_last_checked_entitlement", type="string", nullable=false)
      *
@@ -61,6 +61,16 @@ class ClientBenefitsCheck
      * @JMS\Type("string")
      */
     private $whenLastCheckedEntitlement;
+
+    /**
+     * @var DateTime
+     *
+     * @ORM\Column(name="date_last_checked_entitlement", type="datetime", nullable=true)
+     *
+     * @JMS\Groups({"client-benefits-check"})
+     * @JMS\Type("DateTime<'Y-m-d'>")
+     */
+    private $dateLastCheckedEntitlement;
 
     /**
      * @var string one of either [yes, no, doNotKnow]
@@ -144,6 +154,18 @@ class ClientBenefitsCheck
     public function setCreated(DateTime $created): ClientBenefitsCheck
     {
         $this->created = $created;
+
+        return $this;
+    }
+
+    public function getDateLastCheckedEntitlement(): DateTime
+    {
+        return $this->dateLastCheckedEntitlement;
+    }
+
+    public function setDateLastCheckedEntitlement(DateTime $dateLastCheckedEntitlement): ClientBenefitsCheck
+    {
+        $this->dateLastCheckedEntitlement = $dateLastCheckedEntitlement;
 
         return $this;
     }
