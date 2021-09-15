@@ -3,13 +3,13 @@
 namespace App\Entity\Report;
 
 use App\Entity\Client;
-use App\Entity\User;
 use App\Entity\Report\Traits as ReportTraits;
 use App\Entity\ReportInterface;
+use App\Entity\User;
+use App\Validator\Constraints as AppAssert;
 use App\Validator\Constraints\StartEndDateComparableInterface;
 use JMS\Serializer\Annotation as JMS;
 use Symfony\Component\Validator\Constraints as Assert;
-use App\Validator\Constraints as AppAssert;
 
 /**
  * @AppAssert\EndDateNotGreaterThanTwelveMonths(groups={"start-end-dates"})
@@ -132,7 +132,6 @@ class Report implements ReportInterface, StartEndDateComparableInterface
      */
     private $submitDate;
 
-
     /**
      * @var \DateTime|null
      *
@@ -212,6 +211,13 @@ class Report implements ReportInterface, StartEndDateComparableInterface
     private $mentalCapacity;
 
     /**
+     * @JMS\Type("App\Entity\Report\ClientBenefitsCheck")
+     *
+     * @var ClientBenefitsCheck
+     */
+    private $clientBenefitsCheck;
+
+    /**
      * @JMS\Type("string")
      * @JMS\Groups({"reasonForNoContacts"})
      *
@@ -238,7 +244,6 @@ class Report implements ReportInterface, StartEndDateComparableInterface
      * @var bool
      */
     private $noAssetToAdd;
-
 
     /**
      * @JMS\Type("boolean")
@@ -386,7 +391,8 @@ class Report implements ReportInterface, StartEndDateComparableInterface
     }
 
     /**
-     * @param  string $type
+     * @param string $type
+     *
      * @return $this
      */
     public function setType($type)
@@ -421,8 +427,6 @@ class Report implements ReportInterface, StartEndDateComparableInterface
     }
 
     /**
-     * @param \DateTime|null $startDate
-     *
      * @return Report
      */
     public function setStartDate(\DateTime $startDate = null)
@@ -444,7 +448,6 @@ class Report implements ReportInterface, StartEndDateComparableInterface
     }
 
     /**
-     * @param \DateTime|null $dueDate
      * @return Report
      */
     public function setDueDate(\DateTime $dueDate = null): self
@@ -455,7 +458,7 @@ class Report implements ReportInterface, StartEndDateComparableInterface
     }
 
     /**
-     * Due date
+     * Due date.
      *
      * as a default, 8 weeks after the end date
      *
@@ -470,9 +473,8 @@ class Report implements ReportInterface, StartEndDateComparableInterface
      * Returns the days left to the due report
      * 0 = same day
      * -1 = overdue by 1 day
-     * 1 = 1 day
+     * 1 = 1 day.
      *
-     * @param  \DateTime|null $currentDate
      * @return int|void
      */
     public function getDueDateDiffDays(\DateTime $currentDate = null)
@@ -505,8 +507,6 @@ class Report implements ReportInterface, StartEndDateComparableInterface
     }
 
     /**
-     * @param \DateTime|null $submitDate
-     *
      * @return Report
      */
     public function setSubmitDate(\DateTime $submitDate = null)
@@ -545,7 +545,6 @@ class Report implements ReportInterface, StartEndDateComparableInterface
     }
 
     /**
-     * @param User|null $submittedBy
      * @return Report
      */
     public function setSubmittedBy(?User $submittedBy): self
@@ -571,7 +570,7 @@ class Report implements ReportInterface, StartEndDateComparableInterface
     }
 
     /**
-     * Generates next reporting period's start date
+     * Generates next reporting period's start date.
      *
      * @return \DateTime|null
      */
@@ -584,17 +583,18 @@ class Report implements ReportInterface, StartEndDateComparableInterface
         $reportingPeriodInDays = $this->calculateReportingPeriod('%a');
         if (!empty($reportingPeriodInDays)) {
             $nextStart = clone $this->getStartDate();
-            $nextStart = $nextStart->modify('+ ' . (intval($reportingPeriodInDays) + 1) . ' days');
+            $nextStart = $nextStart->modify('+ '.(intval($reportingPeriodInDays) + 1).' days');
             $nextStart->setTime(0, 0, 0);
 
             return $nextStart;
         }
+
         return null;
     }
 
     /**
      * Generates next reporting period's end date.
-     * Note: Date diff returns 'difference' and so 1 day needs to be added
+     * Note: Date diff returns 'difference' and so 1 day needs to be added.
      *
      * @return \DateTime|null
      */
@@ -607,18 +607,21 @@ class Report implements ReportInterface, StartEndDateComparableInterface
         $reportingPeriodInDays = $this->calculateReportingPeriod('%a');
         if (!empty($reportingPeriodInDays)) {
             $nextEnd = clone $this->getEndDate();
-            $nextEnd = $nextEnd->modify('+ ' . (intval($reportingPeriodInDays) + 1) . ' days');
+            $nextEnd = $nextEnd->modify('+ '.(intval($reportingPeriodInDays) + 1).' days');
 
             $nextEnd->setTime(0, 0, 0);
+
             return $nextEnd;
         }
+
         return null;
     }
 
     /**
-     * Calculates the Reporting period according to $format
+     * Calculates the Reporting period according to $format.
      *
      * @param string $format recognised by \DateTime
+     *
      * @return string|null
      */
     private function calculateReportingPeriod($format = '%a')
@@ -627,6 +630,7 @@ class Report implements ReportInterface, StartEndDateComparableInterface
             // add one day because difference doesn't include end date itself
             return $this->getStartDate()->diff($this->getEndDate())->format($format);
         }
+
         return null;
     }
 
@@ -650,7 +654,7 @@ class Report implements ReportInterface, StartEndDateComparableInterface
         $endDateStr = $this->endDate->format('Y');
 
         if ($startDateStr != $endDateStr) {
-            $this->period = $startDateStr . ' to ' . $endDateStr;
+            $this->period = $startDateStr.' to '.$endDateStr;
 
             return $this->period;
         }
@@ -668,8 +672,6 @@ class Report implements ReportInterface, StartEndDateComparableInterface
     }
 
     /**
-     * @param Client $client
-     *
      * @return Report
      */
     public function setClient(Client $client)
@@ -727,10 +729,9 @@ class Report implements ReportInterface, StartEndDateComparableInterface
         return $this->isDue;
     }
 
-
     public function hasContacts()
     {
-        if (empty($this->getContacts()) && $this->getReasonForNoContacts() === null) {
+        if (empty($this->getContacts()) && null === $this->getReasonForNoContacts()) {
             return null;
         }
 
@@ -839,8 +840,6 @@ class Report implements ReportInterface, StartEndDateComparableInterface
     }
 
     /**
-     * @param Action $action
-     *
      * @return Report
      */
     public function setAction(Action $action)
@@ -858,9 +857,6 @@ class Report implements ReportInterface, StartEndDateComparableInterface
         return $this->mentalCapacity;
     }
 
-    /**
-     * @param MentalCapacity $mentalCapacity
-     */
     public function setMentalCapacity(MentalCapacity $mentalCapacity)
     {
         $this->mentalCapacity = $mentalCapacity;
@@ -996,6 +992,7 @@ class Report implements ReportInterface, StartEndDateComparableInterface
 
     /**
      * @param Document[] $submittedDocuments
+     *
      * @return Report
      */
     public function setSubmittedDocuments(array $submittedDocuments): self
@@ -1015,7 +1012,8 @@ class Report implements ReportInterface, StartEndDateComparableInterface
 
     /**
      * Returns a list of deputy only documents. Those that should be visible to deputies only.
-     * Excludes Report PDF and transactions PDF
+     * Excludes Report PDF and transactions PDF.
+     *
      * @return Document[]
      */
     public function getDeputyDocuments()
@@ -1026,6 +1024,7 @@ class Report implements ReportInterface, StartEndDateComparableInterface
                 return !($document->isAdminDocument() || $document->isReportPdf());
             });
         }
+
         return [];
     }
 
@@ -1065,6 +1064,7 @@ class Report implements ReportInterface, StartEndDateComparableInterface
 
     /**
      * @param string $wishToProvideDocumentation
+     *
      * @return $this
      */
     public function setWishToProvideDocumentation($wishToProvideDocumentation)
@@ -1076,6 +1076,7 @@ class Report implements ReportInterface, StartEndDateComparableInterface
 
     /**
      * @param string $format string where %s are endDate (Y), submitDate Y-m-d, case number
+     *
      * @return string
      */
     public function createAttachmentName($format)
@@ -1106,7 +1107,8 @@ class Report implements ReportInterface, StartEndDateComparableInterface
     }
 
     /**
-     * @param  array  $availableSections
+     * @param array $availableSections
+     *
      * @return Report
      */
     public function setAvailableSections($availableSections)
@@ -1117,7 +1119,8 @@ class Report implements ReportInterface, StartEndDateComparableInterface
     }
 
     /**
-     * @param  string $section
+     * @param string $section
+     *
      * @return bool
      */
     public function hasSection($section)
@@ -1136,7 +1139,7 @@ class Report implements ReportInterface, StartEndDateComparableInterface
     }
 
     /**
-     * Generates the translation suffic to use depending on report type,
+     * Generates the translation suffic to use depending on report type,.
      *
      * 10x followed by "-104" for HW, "-4" for hybrid report and nothing for PF report
      *
@@ -1147,7 +1150,7 @@ class Report implements ReportInterface, StartEndDateComparableInterface
         return (strpos($this->getType(), '-4') > 0) ?
             '-4' :
             (
-                $this->getType() === '104' || $this->getType() === '104-6' ?
+                '104' === $this->getType() || '104-6' === $this->getType() ?
                 '-104' : ''
             );
     }
@@ -1162,11 +1165,13 @@ class Report implements ReportInterface, StartEndDateComparableInterface
 
     /**
      * @param Checklist $checklist
+     *
      * @return $this
      */
     public function setChecklist($checklist)
     {
         $this->checklist = $checklist;
+
         return $this;
     }
 
@@ -1196,11 +1201,13 @@ class Report implements ReportInterface, StartEndDateComparableInterface
 
     /**
      * @param array $previousReportData
+     *
      * @return $this
      */
     public function setPreviousReportData($previousReportData)
     {
         $this->previousReportData = $previousReportData;
+
         return $this;
     }
 
@@ -1222,11 +1229,13 @@ class Report implements ReportInterface, StartEndDateComparableInterface
 
     /**
      * @param string $reportTitle
+     *
      * @return $this
      */
     public function setReportTitle($reportTitle)
     {
         $this->reportTitle = $reportTitle;
+
         return $this;
     }
 
@@ -1243,7 +1252,7 @@ class Report implements ReportInterface, StartEndDateComparableInterface
                 Report::TYPE_102_5,
                 Report::TYPE_102_4_5,
                 Report::TYPE_102_6,
-                Report::TYPE_102_4_6
+                Report::TYPE_102_4_6,
             ]
         );
     }
@@ -1273,6 +1282,7 @@ class Report implements ReportInterface, StartEndDateComparableInterface
 
     /**
      * @param ReportSubmission[] $reportSubmissions
+     *
      * @return Report
      */
     public function setReportSubmissions(array $reportSubmissions): self
@@ -1293,5 +1303,17 @@ class Report implements ReportInterface, StartEndDateComparableInterface
             default:
                 return self::TYPE_ABBREVIATION_COMBINED;
         }
+    }
+
+    public function getClientBenefitsCheck(): ClientBenefitsCheck
+    {
+        return $this->clientBenefitsCheck;
+    }
+
+    public function setClientBenefitsCheck(ClientBenefitsCheck $clientBenefitsCheck): Report
+    {
+        $this->clientBenefitsCheck = $clientBenefitsCheck;
+
+        return $this;
     }
 }

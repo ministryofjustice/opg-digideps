@@ -47,6 +47,13 @@ class Status
      *
      * @var array
      */
+    private $clientBenefitsCheckState = [];
+
+    /**
+     * @JMS\Type("array")
+     *
+     * @var array
+     */
     private $bankAccountsState = [];
 
     /**
@@ -167,7 +174,6 @@ class Status
      * @var array
      */
     private $status;
-
 
     /**
      * @JMS\Type("array")
@@ -430,7 +436,6 @@ class Status
         $this->otherInfoState = $otherInfoState;
     }
 
-
     /**
      * @return mixed
      */
@@ -593,5 +598,17 @@ class Status
             case 'readyToSubmit':
                 return Status::STATE_DONE;
         }
+    }
+
+    public function getClientBenefitsCheckState(): array
+    {
+        return $this->clientBenefitsCheckState;
+    }
+
+    public function setClientBenefitsCheckState(array $clientBenefitsCheckState): Status
+    {
+        $this->clientBenefitsCheckState = $clientBenefitsCheckState;
+
+        return $this;
     }
 }
