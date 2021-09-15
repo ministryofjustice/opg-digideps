@@ -46,9 +46,36 @@ class Lifestyle
 
 * Inspect the database to ensure the new tables and changes are as expected
 
+* Add a new `SECTION_` constant to the Report entity with the name of the section and add to `Report::getSectionsSettings()` assigning which report types the section should appear in
+
+* Add a getter for the section state to `ReportStatusService` including relevant JMS tags. The name of the getter function will be transformed as the state name when returned from the API:
+
+```phpt
+    /**
+     * @JMS\VirtualProperty
+     * @JMS\Type("array")
+     * @JMS\Groups({"status", "lifestyle-state"})
+     *
+     * @return array
+     */
+    public function getLifestyleState()
+    {
+        ...
+    }
+```
+
+becomes:
+
+```phpt
+    [lifestyle_state] => [
+        [state] => done
+        [nOfRecords] => 0
+    ]
+```
+
 ##Client
 
-* Create a representation of the `api` report section entity in `client` including all the properties and link to the `Report` entity. Ensure the entity includes the `HasReportTrait` added to it:
+* Create a representation of the `api` report section entity in `client` including all the properties. Ensure the entity includes the `HasReportTrait` added to it:
 
 ```phpt
 class Lifestyle
@@ -57,6 +84,21 @@ class Lifestyle
     ...
 }
 ```
+
+* Add the newly created entity as a property to the `Report` entity:
+
+```phpt
+    /**
+     * @JMS\Type("App\Entity\Report\Lifestyle")
+     *
+     * @var Lifestyle|null
+     */
+    private $lifestyle;
+```
+
+* Add a section status property to Report/Status following the same naming convention used in API `ReportStatusService`
+
+* If there are going to be multiple instances of the report section entity associated with the report then add a trait in Entity/Report/Traits to store the entities in an ArrayCollection and define any functions that will interact with the entities collection
 
 * Create a new form class and map the report section entity properties to the form questions as required (see examples in `client/src/Form/Report`)
 
