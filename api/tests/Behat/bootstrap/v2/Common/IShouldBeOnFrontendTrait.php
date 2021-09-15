@@ -73,7 +73,7 @@ trait IShouldBeOnFrontendTrait
      */
     public function iAmOnAdditionalInformationSummaryPage(): bool
     {
-        return $this->iAmOnPage('/report\/.*\/any-other-info\/summary\?from=last-step/');
+        return $this->iAmOnPage(sprintf('/%s\/.*\/any-other-info\/summary\?from=last-step/', $this->reportUrlPrefix));
     }
 
     /**
