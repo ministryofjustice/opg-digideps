@@ -1,0 +1,28 @@
+startPage:
+  htmlTitle: "Client benefits check - Complete the deputy report | GOV.UK"
+  pageTitle: Client benefits check
+  pageSectionDescription1: |
+    ADD DESC
+  startButton: Start client benefits check
+
+stepPage:
+  htmlTitle: "ADD TITLE - Complete the deputy report | GOV.UK"
+  pageTitle:
+    add: ADD TITLE
+    edit: ADD TITLE
+  supportTitle: Client benefits check
+  pageSectionDescription:
+    step1: ADD DESC
+  backLink: Back
+
+summaryPage:
+  htmlTitle: "Client benefits check - Complete the deputy report | GOV.UK"
+  pageTitle: ADD TITLE
+  weAskAbout: |
+    In this section, we ask you about %client%'s ADD DESC
+
+form:
+  save:
+    label: Save and continue
+  cancel:
+    label: Cancel
