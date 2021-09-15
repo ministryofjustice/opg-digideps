@@ -586,7 +586,7 @@ ndr:
           notBlank: Please select either 'Yes' or 'No'
   debt:
       noDebtsChoice.notBlank: Please select either 'Yes' or 'No'
-      mustHaveAtLeastOneDebt: Please tell us the amount and type of at least one debt
+      mustHaveAtLeastOneDebt: Enter at least one debt
       debts-management:
           notBlank: Please tell us how the debt is being managed or reduced
       amount:

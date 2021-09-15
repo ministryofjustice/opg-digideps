@@ -23,9 +23,9 @@ Feature: Report debts (NDR)
         When I follow link back to report overview page
         Then I should see "debts" as "finished"
 
-    @ndr-not-started
+    @ndr-completed
     Scenario: A user edits a debt
-        Given a Lay Deputy has not started an NDR report
+        Given a Lay Deputy has a completed NDR report
         When I edit an existing debt payment
         Then I should see the expected debts section summary
 
