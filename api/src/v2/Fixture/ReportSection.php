@@ -257,7 +257,8 @@ class ReportSection
 
         $clientBenefitsCheck = (new ClientBenefitsCheck())
             ->setReport($report)
-            ->setWhenLastCheckedEntitlement('01/2020')
+            ->setWhenLastCheckedEntitlement('haveChecked')
+            ->setDateLastCheckedEntitlement(new DateTime())
             ->setCreated(new DateTime())
             ->setDoOthersReceiveIncomeOnClientsBehalf('yes')
             ->addTypesOfIncomeReceivedOnClientsBehalf($typeOfIncome)
