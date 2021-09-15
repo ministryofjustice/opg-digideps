@@ -1,4 +1,4 @@
-@v2 @assets
+@v2 @v2_reporting_1 @assets
 Feature: Assets (NDR)
 
     @ndr-not-started

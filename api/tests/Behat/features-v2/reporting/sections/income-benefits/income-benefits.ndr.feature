@@ -1,4 +1,4 @@
-@v2 @income-benefits
+@v2 @v2_reporting_2 @income-benefits
 Feature: Income Benefits (NDR)
 
     @ndr-not-started

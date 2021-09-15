@@ -1,4 +1,4 @@
-@v2 @actions
+@v2 @v2_reporting_1 @actions
 Feature: Actions (NDR)
 
     @ndr-not-started

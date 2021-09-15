@@ -1,4 +1,4 @@
-@v2 @deputy-expenses.ndr
+@v2 @v2_reporting_2 @deputy-expenses.ndr
 Feature: Deputy expenses (NDR)
 
     @ndr-not-started
