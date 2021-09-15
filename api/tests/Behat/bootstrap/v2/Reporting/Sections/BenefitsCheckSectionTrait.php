@@ -21,6 +21,7 @@ trait BenefitsCheckSectionTrait
      */
     public function iNavigateToAndStartBenefitsCheckSection()
     {
+        $this->iVisitReportOverviewPage();
         $this->iNavigateToBenefitsCheckSection();
         // May be a button
         $this->clickLink('Start');
@@ -57,11 +58,12 @@ trait BenefitsCheckSectionTrait
     }
 
     /**
-     * @When I confirm I have never checked the benefits the client is entitled to
+     * @When I confirm I have never checked the benefits the client is entitled to and provide a reason
      */
     public function iConfirmHaveNeverCheckedBenefits()
     {
         $this->chooseOption('addSelectName', 'addOption', 'haveCheckedBenefits', 'add translation');
+        $this->fillInField('addFieldName', 'addValue', 'haveCheckedBenefits');
 
         $this->pressButton('Save and continue');
     }
