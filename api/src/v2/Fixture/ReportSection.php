@@ -5,6 +5,8 @@ namespace App\v2\Fixture;
 use App\Entity\Ndr as Ndr;
 use App\Entity\Report\Action;
 use App\Entity\Report\BankAccount;
+use App\Entity\Report\ClientBenefitsCheck;
+use App\Entity\Report\IncomeReceivedOnClientsBehalf;
 use App\Entity\Report\Lifestyle;
 use App\Entity\Report\MentalCapacity;
 use App\Entity\Report\MoneyTransaction;
@@ -12,6 +14,7 @@ use App\Entity\Report\ProfDeputyOtherCost;
 use App\Entity\Report\Report;
 use App\Entity\Report\VisitsCare;
 use App\Entity\ReportInterface;
+use DateTime;
 use Doctrine\Common\Collections\ArrayCollection;
 use Doctrine\ORM\EntityManagerInterface;
 
@@ -43,12 +46,9 @@ class ReportSection
         $this->completeAssets($report);
         $this->completeDebts($report);
         $this->completeLifestyle($report);
+        $this->completeClientBenefitsCheck($report);
     }
 
-    /**
-     * @param ReportInterface $report
-     * @param string $section
-     */
     public function completeSection(ReportInterface $report, string $section): void
     {
         // Convert visits_care to VisitsCare, for example.
@@ -60,26 +60,19 @@ class ReportSection
     }
 
     /**
-     * @param ReportInterface $report
      * @throws \Exception
      */
     private function completeDecisions(ReportInterface $report): void
     {
         $report->setReasonForNoDecisions('No need for decisions');
-        (new MentalCapacity($report))->setHasCapacityChanged('no')->setMentalAssessmentDate(new \DateTime());
+        (new MentalCapacity($report))->setHasCapacityChanged('no')->setMentalAssessmentDate(new DateTime());
     }
 
-    /**
-     * @param ReportInterface $report
-     */
     private function completeContacts(ReportInterface $report): void
     {
         $report->setReasonForNoContacts('No need for contacts');
     }
 
-    /**
-     * @param ReportInterface $report
-     */
     private function completeVisitsCare(ReportInterface $report): void
     {
         if ($report instanceof Ndr\Ndr) {
@@ -99,9 +92,6 @@ class ReportSection
         $report->setVisitsCare($vc);
     }
 
-    /**
-     * @param ReportInterface $report
-     */
     private function completeActions(ReportInterface $report): void
     {
         if ($report instanceof Ndr\Ndr) {
@@ -118,17 +108,11 @@ class ReportSection
         }
     }
 
-    /**
-     * @param ReportInterface $report
-     */
     private function completeOtherInfo(ReportInterface $report): void
     {
         $report->setActionMoreInfo('no');
     }
 
-    /**
-     * @param ReportInterface $report
-     */
     private function completeLifestyle(ReportInterface $report): void
     {
         $ls = (new Lifestyle())
@@ -138,25 +122,16 @@ class ReportSection
         $report->setLifestyle($ls);
     }
 
-    /**
-     * @param ReportInterface $report
-     */
     private function completeDocuments(ReportInterface $report): void
     {
         $report->setWishToProvideDocumentation('no');
     }
 
-    /**
-     * @param ReportInterface $report
-     */
     private function completeGifts(ReportInterface $report): void
     {
         $report->setGiftsExist('no');
     }
 
-    /**
-     * @param ReportInterface $report
-     */
     private function completeBankAccounts(ReportInterface $report): void
     {
         if ($report instanceof Ndr\Ndr) {
@@ -169,59 +144,38 @@ class ReportSection
         }
     }
 
-    /**
-     * @param ReportInterface $report
-     */
     private function completeMoneyIn(ReportInterface $report): void
     {
         $mt = (new MoneyTransaction($report))->setCategory('salary-or-wages')->setAmount(200);
         $report->addMoneyTransaction($mt);
     }
 
-    /**
-     * @param ReportInterface $report
-     */
     private function completeMoneyOut(ReportInterface $report): void
     {
         $mt = (new MoneyTransaction($report))->setCategory('care-fees')->setAmount(200);
         $report->addMoneyTransaction($mt);
     }
 
-    /**
-     * @param ReportInterface $report
-     */
     private function completeAssets(ReportInterface $report): void
     {
         $report->setNoAssetToAdd(true);
     }
 
-    /**
-     * @param ReportInterface $report
-     */
     private function completeDebts(ReportInterface $report): void
     {
         $report->setHasDebts('no');
     }
 
-    /**
-     * @param ReportInterface $report
-     */
     private function completeMoneyInShort(ReportInterface $report): void
     {
         $report->setMoneyTransactionsShortInExist('no');
     }
 
-    /**
-     * @param ReportInterface $report
-     */
     private function completeMoneyOutShort(ReportInterface $report): void
     {
         $report->setMoneyTransactionsShortOutExist('no');
     }
 
-    /**
-     * @param ReportInterface $report
-     */
     private function completeDeputyExpenses(ReportInterface $report): void
     {
         if ($report instanceof Ndr\Ndr || $report->isLayReport()) {
@@ -242,17 +196,11 @@ class ReportSection
         }
     }
 
-    /**
-     * @param ReportInterface $report
-     */
     private function completeExpenses(ReportInterface $report): void
     {
         $this->completeDeputyExpenses($report);
     }
 
-    /**
-     * @param ReportInterface $report
-     */
     private function completeIncomeBenefits(ReportInterface $report)
     {
         if (!$report instanceof Ndr\Ndr) {
@@ -265,9 +213,6 @@ class ReportSection
             ->setExpectCompensationDamages('no');
     }
 
-    /**
-     * @param ReportInterface $report
-     */
     private function completeMoneyTransfers(ReportInterface $report)
     {
         if (!$report instanceof Ndr\Ndr) {
@@ -301,5 +246,25 @@ class ReportSection
     private function completePaFeeExpense(ReportInterface $report)
     {
         $this->completeDeputyExpenses($report);
+    }
+
+    private function completeClientBenefitsCheck(ReportInterface $report): void
+    {
+        $typeOfIncome = (new IncomeReceivedOnClientsBehalf())
+            ->setCreated(new DateTime())
+            ->setAmount(100.50)
+            ->setIncomeType('Universal Credit');
+
+        $clientBenefitsCheck = (new ClientBenefitsCheck())
+            ->setReport($report)
+            ->setWhenLastCheckedEntitlement('01/2020')
+            ->setCreated(new DateTime())
+            ->setDoOthersReceiveIncomeOnClientsBehalf('yes')
+            ->addTypesOfIncomeReceivedOnClientsBehalf($typeOfIncome)
+        ;
+
+        $typeOfIncome->setClientBenefitsCheck($clientBenefitsCheck);
+
+        $report->setClientBenefitsCheck($clientBenefitsCheck);
     }
 }
