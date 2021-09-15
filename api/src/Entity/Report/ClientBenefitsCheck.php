@@ -8,6 +8,7 @@ use DateTime;
 use Doctrine\Common\Collections\ArrayCollection;
 use Doctrine\ORM\Mapping as ORM;
 use Gedmo\Mapping\Annotation as Gedmo;
+use JMS\Serializer\Annotation as JMS;
 use Ramsey\Uuid\Doctrine\UuidGenerator;
 use Ramsey\Uuid\Uuid;
 use Ramsey\Uuid\UuidInterface;
@@ -22,6 +23,7 @@ class ClientBenefitsCheck
     {
         $this->id = $id ?? Uuid::uuid4();
         $this->created = new DateTime();
+        $this->typesOfIncomeReceivedOnClientsBehalf = new ArrayCollection();
     }
 
     /**
@@ -29,17 +31,23 @@ class ClientBenefitsCheck
      * @ORM\Column(name="id", type="uuid")
      * @ORM\GeneratedValue(strategy="NONE")
      * @ORM\CustomIdGenerator(class=UuidGenerator::class)
+     *
+     * @JMS\Groups({"client-benefits-check"})
+     * @JMS\Type("string")
      */
     private UuidInterface $id;
 
     /**
      * @ORM\Column(name="created_at", type="datetime",nullable=true)
      * @Gedmo\Timestampable(on="create")
+     *
+     * @JMS\Groups({"client-benefits-check"})
+     * @JMS\Type("DateTime<'Y-m-d'>")
      */
     private DateTime $created;
 
     /**
-     * @ORM\ManyToOne(targetEntity="App\Entity\Report\Report", inversedBy="clientBenefitsCheck")
+     * @ORM\OneToOne (targetEntity="App\Entity\Report\Report", inversedBy="clientBenefitsCheck")
      * @ORM\JoinColumn(name="report_id", referencedColumnName="id", onDelete="CASCADE")
      */
     private Report $report;
@@ -48,6 +56,9 @@ class ClientBenefitsCheck
      * @var string one of either [date in format MM/YYYY, currentlyChecking, neverChecked]
      *
      * @ORM\Column(name="when_last_checked_entitlement", type="string", nullable=false)
+     *
+     * @JMS\Groups({"client-benefits-check"})
+     * @JMS\Type("string")
      */
     private $whenLastCheckedEntitlement;
 
@@ -61,7 +72,7 @@ class ClientBenefitsCheck
     /**
      * @ORM\OneToMany(targetEntity="App\Entity\Report\IncomeReceivedOnClientsBehalf", mappedBy="clientBenefitsCheck", cascade={"persist", "remove"}, fetch="EXTRA_LAZY")
      */
-    private ArrayCollection $typesOfIncomeReceivedOnClientsBehalf;
+    private $typesOfIncomeReceivedOnClientsBehalf;
 
     public function getId(): UuidInterface
     {
@@ -116,9 +127,6 @@ class ClientBenefitsCheck
         return $this->typesOfIncomeReceivedOnClientsBehalf;
     }
 
-    /**
-     * @param ArrayCollection $typesOfIncomeReceivedOnClientsBehalf
-     */
     public function addTypesOfIncomeReceivedOnClientsBehalf(IncomeReceivedOnClientsBehalf $incomeReceivedOnClientsBehalf): ClientBenefitsCheck
     {
         if (!$this->typesOfIncomeReceivedOnClientsBehalf->contains($incomeReceivedOnClientsBehalf)) {
