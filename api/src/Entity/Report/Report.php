@@ -1363,7 +1363,7 @@ class Report implements ReportInterface
         return $this;
     }
 
-    public function getClientBenefitsCheck(): ClientBenefitsCheck
+    public function getClientBenefitsCheck(): ?ClientBenefitsCheck
     {
         return $this->clientBenefitsCheck;
     }
