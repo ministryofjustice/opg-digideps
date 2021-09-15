@@ -30,6 +30,12 @@ class ClientBenefitsCheck
      */
     private string $whenLastCheckedEntitlement = '';
 
+    /**
+     * @JMS\Type("DateTime<'Y-m-d'>")
+     * @JMS\Groups({"report", "client-benefits-check"})
+     */
+    private ?DateTime $dateLastCheckedEntitlement = null;
+
     public function getId(): string
     {
         return $this->id;
