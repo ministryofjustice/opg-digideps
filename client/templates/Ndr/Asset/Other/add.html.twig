@@ -13,7 +13,7 @@
 
 {% set transOptions = {'%client%': ndr.client.firstname | e, '%assetTitle%': assetTitle } %}
 
-{% block htmlTitle %}{{ 'addPage.htmlTitle' | trans }}{% endblock %}
+{% block htmlTitle %}{{ 'addPage.htmlTitle' | trans(transOptions) }}{% endblock %}
 {% block pageTitle %}{{ 'addPage.pageTitle' | trans(transOptions) }}{% endblock %}
 
 

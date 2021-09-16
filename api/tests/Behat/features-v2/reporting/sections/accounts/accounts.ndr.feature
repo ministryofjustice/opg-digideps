@@ -1,4 +1,4 @@
-@accounts.ndr @v2
+@accounts.ndr @v2_reporting_1 @v2
 Feature: Accounts (NDR)
 
     @ndr-not-started

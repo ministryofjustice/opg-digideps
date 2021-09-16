@@ -76,10 +76,19 @@ trait AssetsSectionTrait
 
             if (in_array($assetType, $this->combinedAssetTypes)) {
                 $formSectionName = 'assetTypeArtworkAntiquesJewellery';
+
+                if ('ndr' == $this->reportUrlPrefix) {
+                    $this->chooseOption('ndr_asset_title[title]', $assetType, $formSectionName, 'Artwork, antiques and jewellery');
+                } else {
+                    $this->chooseOption('asset_title[title]', $assetType, $formSectionName, 'Artwork, antiques and jewellery');
+                }
                 // Artwork, antiques and jewellery are grouped under one section on summary page
-                $this->chooseOption('asset_title[title]', $assetType, $formSectionName, 'Artwork, antiques and jewellery');
             } else {
-                $this->chooseOption('asset_title[title]', $assetType, $formSectionName);
+                if ('ndr' == $this->reportUrlPrefix) {
+                    $this->chooseOption('ndr_asset_title[title]', $assetType, $formSectionName);
+                } else {
+                    $this->chooseOption('asset_title[title]', $assetType, $formSectionName);
+                }
             }
 
             $this->pressButton('Save and continue');
@@ -100,8 +109,13 @@ trait AssetsSectionTrait
 
     private function iFillAssetDescriptionAndValue(string $assetType)
     {
-        $this->fillInFieldTrackTotal('asset[value]', mt_rand(5, 2000), 'asset-'.$assetType);
-        $this->fillInField('asset[description]', $this->faker->sentence(5, 25), 'asset-'.$assetType);
+        if ('ndr' == $this->reportUrlPrefix) {
+            $this->fillInFieldTrackTotal('ndr_asset[value]', mt_rand(5, 2000), 'asset-'.$assetType);
+            $this->fillInField('ndr_asset[description]', $this->faker->sentence(5, 25), 'asset-'.$assetType);
+        } else {
+            $this->fillInFieldTrackTotal('asset[value]', mt_rand(5, 2000), 'asset-'.$assetType);
+            $this->fillInField('asset[description]', $this->faker->sentence(5, 25), 'asset-'.$assetType);
+        }
 
         $this->pressButton('Save and continue');
     }
@@ -123,7 +137,12 @@ trait AssetsSectionTrait
         foreach ($propertyRange as $propertyNumber) {
             $assetType = $this->assetDictionary[7];
 
-            $this->chooseOption('asset_title[title]', $assetType, 'assetType'.$assetType, $assetType.' '.$propertyNumber);
+            if ('ndr' == $this->reportUrlPrefix) {
+                $this->chooseOption('ndr_asset_title[title]', $assetType, 'assetType'.$assetType, $assetType.' '.$propertyNumber);
+            } else {
+                $this->chooseOption('asset_title[title]', $assetType, 'assetType'.$assetType, $assetType.' '.$propertyNumber);
+            }
+
             $this->pressButton('Save and continue');
 
             $this->iFillPropertyDetailsAndValue();
@@ -141,36 +160,75 @@ trait AssetsSectionTrait
         $streetAddress = str_replace(["\n", "\r"], ' ', $streetAddress);
         $postcode = $this->faker->postcode;
 
-        $this->fillInField('asset[address]', $streetAddress, 'assetDetailsPropertyAddress');
-        $this->fillInField('asset[postcode]', $postcode, 'assetDetailsPropertyAddress');
+        if ('ndr' == $this->reportUrlPrefix) {
+            $this->fillInField('ndr_asset[address]', $streetAddress, 'assetDetailsPropertyAddress');
+            $this->fillInField('ndr_asset[postcode]', $postcode, 'assetDetailsPropertyAddress');
+        } else {
+            $this->fillInField('asset[address]', $streetAddress, 'assetDetailsPropertyAddress');
+            $this->fillInField('asset[postcode]', $postcode, 'assetDetailsPropertyAddress');
+        }
         $this->pressButton('Save and continue');
 
-        $this->fillInField('asset[occupants]', $this->faker->text(50), 'assetDetailsPropertyOccupants');
-        $this->pressButton('Save and continue');
-
-        $this->chooseOption('asset[owned]', 'partly', 'assetDetailsPropertyPercentage', 'Partly owned');
-
-        $percentage = mt_rand(1, 99);
-        $this->fillInField('asset[ownedPercentage]', $percentage, 'assetDetailsPropertyPercentage', $percentage.'%');
+        if ('ndr' == $this->reportUrlPrefix) {
+            $this->fillInField('ndr_asset[occupants]', $this->faker->text(50), 'assetDetailsPropertyOccupants');
+        } else {
+            $this->fillInField('asset[occupants]', $this->faker->text(50), 'assetDetailsPropertyOccupants');
+        }
 
         $this->pressButton('Save and continue');
 
-        $this->ChooseOption('asset[hasMortgage]', 'yes', 'assetDetailsPropertyMortgage');
-        $this->fillInField('asset[mortgageOutstandingAmount]', mt_rand(10000, 100000));
+        if ('ndr' == $this->reportUrlPrefix) {
+            $this->chooseOption('ndr_asset[owned]', 'partly', 'assetDetailsPropertyPercentage', 'Partly owned');
+            $percentage = mt_rand(1, 99);
+            $this->fillInField('ndr_asset[ownedPercentage]', $percentage, 'assetDetailsPropertyPercentage', $percentage.'%');
+        } else {
+            $this->chooseOption('asset[owned]', 'partly', 'assetDetailsPropertyPercentage', 'Partly owned');
+            $percentage = mt_rand(1, 99);
+            $this->fillInField('asset[ownedPercentage]', $percentage, 'assetDetailsPropertyPercentage', $percentage.'%');
+        }
+
         $this->pressButton('Save and continue');
 
-        $this->fillInFieldTrackTotal('asset[value]', mt_rand(100000, 200000), 'assetDetailsPropertyValue');
+        if ('ndr' == $this->reportUrlPrefix) {
+            $this->ChooseOption('ndr_asset[hasMortgage]', 'yes', 'assetDetailsPropertyMortgage');
+            $this->fillInField('ndr_asset[mortgageOutstandingAmount]', mt_rand(10000, 100000));
+        } else {
+            $this->ChooseOption('asset[hasMortgage]', 'yes', 'assetDetailsPropertyMortgage');
+            $this->fillInField('asset[mortgageOutstandingAmount]', mt_rand(10000, 100000));
+        }
         $this->pressButton('Save and continue');
 
-        $this->chooseOption('asset_isSubjectToEquityRelease_1', 'no', 'assetDetailsPropertyEquityRelease');
+        if ('ndr' == $this->reportUrlPrefix) {
+            $this->fillInFieldTrackTotal('ndr_asset[value]', mt_rand(100000, 200000), 'assetDetailsPropertyValue');
+        } else {
+            $this->fillInFieldTrackTotal('asset[value]', mt_rand(100000, 200000), 'assetDetailsPropertyValue');
+        }
         $this->pressButton('Save and continue');
 
-        $this->chooseOption('asset[hasCharges]', 'no', 'assetDetailsPropertyCharges');
+        if ('ndr' == $this->reportUrlPrefix) {
+            $this->chooseOption('ndr_asset_isSubjectToEquityRelease_1', 'no', 'assetDetailsPropertyEquityRelease');
+        } else {
+            $this->chooseOption('asset_isSubjectToEquityRelease_1', 'no', 'assetDetailsPropertyEquityRelease');
+        }
         $this->pressButton('Save and continue');
 
-        $this->chooseOption('asset[isRentedOut]', 'yes', 'assetDetailsPropertyRented');
-        $this->fillInDateFields('asset[rentAgreementEndDate]', null, mt_rand(1, 12), mt_rand(2018, 2028), 'assetDetailsPropertyRented');
-        $this->fillInField('asset_rentIncomeMonth', mt_rand(100, 1000), 'assetDetailsPropertyRented');
+        if ('ndr' == $this->reportUrlPrefix) {
+            $this->chooseOption('ndr_asset[hasCharges]', 'no', 'assetDetailsPropertyCharges');
+        } else {
+            $this->chooseOption('asset[hasCharges]', 'no', 'assetDetailsPropertyCharges');
+        }
+        $this->pressButton('Save and continue');
+
+        if ('ndr' == $this->reportUrlPrefix) {
+            $this->chooseOption('ndr_asset[isRentedOut]', 'yes', 'assetDetailsPropertyRented');
+            $this->fillInDateFields('ndr_asset[rentAgreementEndDate]', null, mt_rand(1, 12), mt_rand(2018, 2028), 'assetDetailsPropertyRented');
+            $this->fillInField('ndr_asset_rentIncomeMonth', mt_rand(100, 1000), 'assetDetailsPropertyRented');
+        } else {
+            $this->chooseOption('asset[isRentedOut]', 'yes', 'assetDetailsPropertyRented');
+            $this->fillInDateFields('asset[rentAgreementEndDate]', null, mt_rand(1, 12), mt_rand(2018, 2028), 'assetDetailsPropertyRented');
+            $this->fillInField('asset_rentIncomeMonth', mt_rand(100, 1000), 'assetDetailsPropertyRented');
+        }
+
         $this->pressButton('Save and continue');
     }
 
