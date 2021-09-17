@@ -34,13 +34,13 @@ trait BenefitsCheckSectionTrait
     {
         $explodedDate = explode('/', $dateString);
 
-        $this->chooseOption('addSelectName', 'haveCheckedBenefits', 'add translation');
+        $this->chooseOption('report-client-benefits-check[whenLastCheckedEntitlement]', 'haveChecked');
 
         $this->fillInDateFields(
-            'addFieldName',
+            'report-client-benefits-check[dateLastCheckedEntitlement]',
             null,
-            intval($explodedDate[0]),
             intval($explodedDate[1]),
+            intval($explodedDate[2]),
             'haveCheckedBenefits'
         );
 
