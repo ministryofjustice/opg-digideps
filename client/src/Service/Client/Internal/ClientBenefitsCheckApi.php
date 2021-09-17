@@ -7,7 +7,7 @@ namespace App\Service\Client\Internal;
 use App\Entity\Report\ClientBenefitsCheck;
 use App\Service\Client\RestClient;
 
-class ClientBenefitCheckApi
+class ClientBenefitsCheckApi
 {
     const CREATE_ENDPOINT = '/client-benefits-check';
     const EXISTING_ENDPOINT = '/client-benefits-check/%s';

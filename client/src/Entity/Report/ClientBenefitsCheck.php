@@ -7,7 +7,6 @@ namespace App\Entity\Report;
 use App\Entity\Report\Traits\HasReportTrait;
 use DateTime;
 use JMS\Serializer\Annotation as JMS;
-use Ramsey\Uuid\UuidInterface;
 
 class ClientBenefitsCheck
 {
@@ -21,7 +20,7 @@ class ClientBenefitsCheck
      * @JMS\Type("string")
      * @JMS\Groups({"report", "client-benefits-check"})
      */
-    private ?UuidInterface $id = null;
+    private ?string $id = null;
 
     /**
      * @JMS\Type("DateTime<'Y-m-d'>")
@@ -95,12 +94,12 @@ class ClientBenefitsCheck
         return $this;
     }
 
-    public function getId(): ?UuidInterface
+    public function getId(): ?string
     {
         return $this->id;
     }
 
-    public function setId(?UuidInterface $id): ClientBenefitsCheck
+    public function setId(?string $id): ClientBenefitsCheck
     {
         $this->id = $id;
 

@@ -264,7 +264,7 @@ class Report implements ReportInterface
     /**
      * @var ClientBenefitsCheck
      *
-     * @JMS\Groups({ "report", "client-benefits-check"})
+     * @JMS\Groups({"client-benefits-check"})
      * @JMS\Type("App\Entity\Report\ClientBenefitsCheck")
      * @ORM\OneToOne(targetEntity="App\Entity\Report\ClientBenefitsCheck", mappedBy="report", cascade={"persist", "remove"})
      **/

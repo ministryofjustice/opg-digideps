@@ -8,7 +8,7 @@ use App\Controller\AbstractController;
 use App\Entity\Report\ClientBenefitsCheck;
 use App\Entity\Report\Status;
 use App\Form\Report\ClientBenefitsCheckType;
-use App\Service\Client\Internal\ClientBenefitCheckApi;
+use App\Service\Client\Internal\ClientBenefitsCheckApi;
 use App\Service\Client\Internal\ReportApi;
 use Sensio\Bundle\FrameworkExtraBundle\Configuration\Template;
 use Symfony\Component\HttpFoundation\RedirectResponse;
@@ -23,9 +23,9 @@ class ClientBenefitsCheckController extends AbstractController
     ];
 
     private ReportApi $reportApi;
-    private ClientBenefitCheckApi $benefitCheckApi;
+    private ClientBenefitsCheckApi $benefitCheckApi;
 
-    public function __construct(ReportApi $reportApi, ClientBenefitCheckApi $benefitCheckApi)
+    public function __construct(ReportApi $reportApi, ClientBenefitsCheckApi $benefitCheckApi)
     {
         $this->reportApi = $reportApi;
         $this->benefitCheckApi = $benefitCheckApi;
@@ -70,7 +70,10 @@ class ClientBenefitsCheckController extends AbstractController
         $form->handleRequest($request);
 
         if ($form->isSubmitted() && $form->isValid()) {
-            $this->benefitCheckApi->post($form->getData());
+            $formData = $form->getData();
+            $formData->setReport($report);
+
+            $this->benefitCheckApi->post($formData);
 
             return $this->redirectToRoute('client_benefits_check_summary', ['reportId' => $report->getId()]);
         }
