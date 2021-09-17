@@ -1,5 +1,5 @@
-@benefits_check @v2 @v2_reporting_1
-Feature: Benefits check
+@client_benefits_check @v2 @v2_reporting_1
+Feature: Client benefits check
 
     @lay-combined-high-not-started
     Scenario: A deputy has checked the clients benefit entitlement on a specific date
