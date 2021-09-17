@@ -34,8 +34,8 @@ form:
     whenLastChecked:
         choices:
             haveChecked: I have checked this
-            currentlyChecking: I’m currently checking this
-            neverChecked: I’ve never checked this
+            currentlyChecking: I'm currently checking this
+            neverChecked: I've never checked this
         dateCheckedHint: Date checked
         neverCheckedHint: Please tell us why you have never checked this
 

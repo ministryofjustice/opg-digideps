@@ -1,7 +1,7 @@
 @benefits_check @v2 @v2_reporting_1
 Feature: Benefits check
 
-    @lay-combined-high-not-started @acs
+    @lay-combined-high-not-started
     Scenario: A deputy has checked the clients benefit entitlement on a specific date
         Given a Lay Deputy has not started a Combined High Assets report
         When I navigate to and start the client benefits check report section
@@ -11,6 +11,7 @@ Feature: Benefits check
 #        And I add a type of income where I don't know the value
         Then the client benefits check summary page should contain the details I entered
 
+    @lay-combined-high-not-started
     Scenario: A deputy is currently checking the clients benefit entitlement
         Given a Lay Deputy has not started a Combined High Assets report
         When I navigate to and start the client benefits check report section
@@ -18,6 +19,7 @@ Feature: Benefits check
 #        And I confirm others do not receive income on the clients behalf
         Then the client benefits check summary page should contain the details I entered
 
+    @lay-combined-high-not-started @acs
     Scenario: A deputy has never checked the clients benefits entitlement
         Given a Lay Deputy has not started a Combined High Assets report
         When I navigate to and start the client benefits check report section

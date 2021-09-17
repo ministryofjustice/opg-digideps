@@ -52,7 +52,12 @@ trait BenefitsCheckSectionTrait
      */
     public function iConfirmCurrentlyCheckingBenefits()
     {
-        $this->chooseOption('addSelectName', 'addOption', 'haveCheckedBenefits', 'add translation');
+        $this->chooseOption(
+            'report-client-benefits-check[whenLastCheckedEntitlement]',
+            'currentlyChecking',
+            'haveCheckedBenefits',
+            'I\'m currently checking this'
+        );
 
         $this->pressButton('Save and continue');
     }
@@ -62,8 +67,18 @@ trait BenefitsCheckSectionTrait
      */
     public function iConfirmHaveNeverCheckedBenefits()
     {
-        $this->chooseOption('addSelectName', 'addOption', 'haveCheckedBenefits', 'add translation');
-        $this->fillInField('addFieldName', 'addValue', 'haveCheckedBenefits');
+        $this->chooseOption(
+            'report-client-benefits-check[whenLastCheckedEntitlement]',
+            'neverChecked',
+            'haveCheckedBenefits',
+            'I\'ve never checked this'
+        );
+
+        $this->fillInField(
+            'report-client-benefits-check[neverCheckedExplanation]',
+            $this->faker->sentence(280),
+            'haveCheckedBenefits'
+        );
 
         $this->pressButton('Save and continue');
     }
