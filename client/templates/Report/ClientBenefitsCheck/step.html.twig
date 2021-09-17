@@ -9,37 +9,50 @@
     '%client%': report.client.firstname | e,
 } %}
 
-{% block htmlTitle %}{{ 'stepPage.htmlTitle' | trans(transOptions) }}{% endblock %}
-{% block pageTitle %}{{ 'stepPage.pageTitle' | trans(transOptions) }}{% endblock %}
-
+{% block htmlTitle %}{{ 'common.htmlTitle' | trans(transOptions, translationDomain) }}{% endblock %}
+{% block supportTitleTop %}{{ 'stepPage.supportTitle' | trans(transOptions, translationDomain)  }}{% endblock %}
+{% block pageTitle %}{{ 'stepPage.pageTitle' | trans(transOptions, translationDomain) }}{% endblock %}
 
 {% block breadcrumbs %}{{ macros.breadcrumbs(report) }}{% endblock %}
 
 {% block pageContent %}
+    {{ form_start(form, { attr: {novalidate: 'novalidate' } }) }}
 
-    {{ form_start(form, {attr: {novalidate: 'novalidate' }}) }}
+        {% if step == 1 %}
+            {% set conditionalDateChecked %}
+                {{ form_known_date(form.dateLastCheckedEntitlement, 'form.whenLastChecked', {
+                    'hintText' : 'form.whenLastChecked.dateCheckedHint' | trans(transOptions, translationDomain),
+                    'showDay' : 'false'
+                }) }}
+            {% endset %}
 
-    {% if step == 1 %}
-        {% set conditionalDateChecked %}
-            {{ form_input(form.dateLastCheckedEntitlement, (page ~ '.form.whenLastChecked'), {
-                'labelClass': 'required',
-                'labelParameters': transOptions,
-                'hintText' : (page ~ '.form.whenLastChecked.checkedDateHint') | trans(transOptions, 'report-client-benefits-check')
+            {% set conditionalNeverChecked %}
+                {{ form_input(form.neverCheckedExplanation, 'form.whenLastChecked', {
+                    'hintText' : 'form.whenLastChecked.neverCheckedHint' | trans(transOptions, translationDomain),
+                    'label' : { 'text': '' }
+                }) }}
+            {% endset %}
+
+            {{ form_checkbox_group(form.whenLastCheckedEntitlement, 'form.clientBenefitsCheck', {
+                'useFormGroup': false,
+                'labelText': ('form.clientBenefitsCheck.label') | trans(transOptions, translationDomain),
+                label: {
+                    isPageHeading: true,
+                    caption: 'stepPage.supportTitle' | trans
+                },
+                'items': [
+                    {
+                        conditional: conditionalDateChecked
+                    },
+                    {},
+                    {
+                        conditional: conditionalNeverChecked
+                    }
+                ]
             }) }}
-        {% endset %}
-
-        {{ form_checkbox_group(form.whenLastCheckedEntitlement, 'form.clientBenefitsCheck', {
-            'useFormGroup': false,
-            'labelText': ('form.clientBenefitsCheck.label') | trans(transOptions),
-            label: {
-                isPageHeading: true,
-                caption: 'stepPage.supportTitle' | trans
-            },
-            'items': [{'conditional': conditionalDateChecked}]
-        }) }}
+        {% endif %}
 
         {{ macros.saveAndContinueButton(form.save) }}
-    {% endif %}
 
     {{ form_end(form) }}
 

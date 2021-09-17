@@ -24,6 +24,8 @@ final class Version255 extends AbstractMigration
         $this->addSql('ALTER TABLE income_received_on_clients_behalf RENAME COLUMN clientbenefitscheck_id TO client_benefits_check_id');
         $this->addSql('ALTER TABLE income_received_on_clients_behalf ADD CONSTRAINT FK_2F551CA35064A0FF FOREIGN KEY (client_benefits_check_id) REFERENCES client_benefits_check (id) NOT DEFERRABLE INITIALLY IMMEDIATE');
         $this->addSql('CREATE UNIQUE INDEX UNIQ_2F551CA35064A0FF ON income_received_on_clients_behalf (client_benefits_check_id)');
+        $this->addSql('ALTER TABLE client_benefits_check ADD never_checked_explanation TEXT');
+        $this->addSql('ALTER TABLE client_benefits_check ALTER do_others_receive_income_on_clients_behalf DROP NOT NULL');
     }
 
     public function down(Schema $schema): void
@@ -36,5 +38,7 @@ final class Version255 extends AbstractMigration
         $this->addSql('ALTER TABLE income_received_on_clients_behalf RENAME COLUMN client_benefits_check_id TO clientbenefitscheck_id');
         $this->addSql('ALTER TABLE income_received_on_clients_behalf ADD CONSTRAINT fk_2f551ca35606e920 FOREIGN KEY (clientbenefitscheck_id) REFERENCES client_benefits_check (id) NOT DEFERRABLE INITIALLY IMMEDIATE');
         $this->addSql('CREATE UNIQUE INDEX uniq_2f551ca35606e920 ON income_received_on_clients_behalf (clientbenefitscheck_id)');
+        $this->addSql('ALTER TABLE client_benefits_check DROP never_checked_explanation');
+        $this->addSql('ALTER TABLE client_benefits_check ALTER do_others_receive_income_on_clients_behalf SET NOT NULL');
     }
 }

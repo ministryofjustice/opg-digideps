@@ -7,26 +7,16 @@ namespace App\Form\Report;
 use App\Form\DateType;
 use Symfony\Component\Form\AbstractType;
 use Symfony\Component\Form\Extension\Core\Type\ChoiceType;
+use Symfony\Component\Form\Extension\Core\Type\SubmitType;
+use Symfony\Component\Form\Extension\Core\Type\TextareaType;
 use Symfony\Component\Form\FormBuilderInterface;
+use Symfony\Component\Form\FormEvent;
+use Symfony\Component\Form\FormEvents;
 use Symfony\Component\OptionsResolver\OptionsResolver;
-use Symfony\Contracts\Translation\TranslatorInterface;
 
 class ClientBenefitsCheckType extends AbstractType
 {
-    /**
-     * @var Translator
-     */
-    protected $translator;
-
-    public function __construct(TranslatorInterface $translator)
-    {
-        $this->translator = $translator;
-    }
-
-    /**
-     * @var int
-     */
-    private $step;
+    private int $step = 1;
 
     public function buildForm(FormBuilderInterface $builder, array $options)
     {
@@ -34,22 +24,31 @@ class ClientBenefitsCheckType extends AbstractType
 
         if (1 === $this->step) {
             $builder->add('whenLastCheckedEntitlement', ChoiceType::class, [
-                'choices' => $this->getChoices(),
+                'choices' => [
+                    'form.whenLastChecked.choices.haveChecked' => 'haveChecked',
+                    'form.whenLastChecked.choices.currentlyChecking' => 'currentlyChecking',
+                    'form.whenLastChecked.choices.neverChecked' => 'neverChecked',
+                ],
                 'expanded' => true,
             ]);
-            $builder->add('dateLastCheckedEntitlement', DateType::class);
+            $builder->add('dateLastCheckedEntitlement', DateType::class, [
+                'widget' => 'text',
+                'input' => 'datetime',
+                'invalid_message' => 'Enter a valid date',
+            ]);
+            $builder->add('neverCheckedExplanation', TextareaType::class);
         }
 
-        $builder->add('save', FormTypes\SubmitType::class);
-    }
+        $builder->add('save', SubmitType::class);
 
-    private function getChoices()
-    {
-        return [
-            $this->translator->trans('form.whenLastChecked.choices.haveChecked', [], 'report-client-benefits-check') => 'haveChecked',
-            $this->translator->trans('form.whenLastChecked.choices.currentlyChecking', [], 'report-client-benefits-check') => 'currentlyChecking',
-            $this->translator->trans('form.whenLastChecked.choices.neverChecked', [], 'report-client-benefits-check') => 'neverChecked',
-        ];
+        $builder->addEventListener(FormEvents::PRE_SUBMIT, function (FormEvent $event) {
+            $data = $event->getData();
+
+            if (!empty($data['dateLastCheckedEntitlement']['month']) && !empty($data['dateLastCheckedEntitlement']['year'])) {
+                $data['dateLastCheckedEntitlement']['day'] = '01';
+                $event->setData($data);
+            }
+        });
     }
 
     public function configureOptions(OptionsResolver $resolver)
@@ -68,6 +67,6 @@ class ClientBenefitsCheckType extends AbstractType
 
     public function getBlockPrefix()
     {
-        return 'client-benefits-check';
+        return 'report-client-benefits-check';
     }
 }

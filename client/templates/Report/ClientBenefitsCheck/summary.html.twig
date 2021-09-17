@@ -1,0 +1,27 @@
+{% extends '@App/Layouts/application.html.twig' %}
+
+{% import '@App/Macros/macros.html.twig' as macros %}
+
+{% set translationDomain = "report-client-benefits-check" %}
+{% trans_default_domain translationDomain %}
+
+{% set transOptions = {
+    '%client%': report.client.firstname | e,
+} %}
+
+{% block htmlTitle %}{{ 'common.htmlTitle' | trans(transOptions, translationDomain) }}{% endblock %}
+{% block pageTitle %}{{ 'common.pageTitle' | trans(transOptions, translationDomain) }}{% endblock %}
+
+{% block breadcrumbs %}{{ macros.breadcrumbs(report) }}{% endblock %}
+
+{% block pageContent %}
+
+    <div class="govuk-grid-row">
+        <div class="govuk-grid-column-three-quarters">
+            <p class="govuk-body">{{ 'common.weAskAbout' | trans(transOptions) }}</p>
+            <p class="govuk-body govuk-!-font-weight-bold">{{ 'summaryPage.listedAnswers' | trans(transOptions) }}</p>
+            <p class="govuk-body">{{ 'summaryPage.checkAnswers' | trans(transOptions) }}</p>
+        </div>
+    </div>
+
+{% endblock %}

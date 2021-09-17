@@ -1,6 +1,6 @@
 <?php
 
- declare(strict_types=1);
+declare(strict_types=1);
 
 namespace App\Entity\Report;
 
@@ -8,6 +8,7 @@ use DateTime;
 use Doctrine\Common\Collections\ArrayCollection;
 use Doctrine\ORM\Mapping as ORM;
 use Gedmo\Mapping\Annotation as Gedmo;
+use InvalidArgumentException;
 use JMS\Serializer\Annotation as JMS;
 use Ramsey\Uuid\Doctrine\UuidGenerator;
 use Ramsey\Uuid\Uuid;
@@ -19,6 +20,10 @@ use Ramsey\Uuid\UuidInterface;
  */
 class ClientBenefitsCheck
 {
+    const I_HAVE_CHECKED = 'haveChecked';
+    const IM_CURRENTLY_CHECKING = 'currentlyChecking';
+    const IVE_NEVER_CHECKED = 'neverChecked';
+
     public function __construct(?UuidInterface $id = null)
     {
         $this->id = $id ?? Uuid::uuid4();
@@ -73,14 +78,24 @@ class ClientBenefitsCheck
     private $dateLastCheckedEntitlement;
 
     /**
+     * @var string
+     *
+     * @ORM\Column(name="never_checked_explanation", type="text", nullable=true)
+     *
+     * @JMS\Groups({"client-benefits-check"})
+     * @JMS\Type("string")
+     */
+    private $neverCheckedExplanation;
+
+    /**
      * @var string one of either [yes, no, doNotKnow]
      *
-     * @ORM\Column(name="do_others_receive_income_on_clients_behalf", type="string", nullable=false)
+     * @ORM\Column(name="do_others_receive_income_on_clients_behalf", type="string", nullable=true)
      */
     private $doOthersReceiveIncomeOnClientsBehalf;
 
     /**
-     * @ORM\OneToMany(targetEntity="App\Entity\Report\IncomeReceivedOnClientsBehalf", mappedBy="clientBenefitsCheck", cascade={"persist", "remove"}, fetch="EXTRA_LAZY")
+     * @ORM\OneToMany(targetEntity="App\Entity\Report\IncomeReceivedOnClientsBehalf", mappedBy="clientBenefitsCheck", cascade={"persist", "remove"}, fetch="EXTRA_LAZY" )
      */
     private $typesOfIncomeReceivedOnClientsBehalf;
 
@@ -113,7 +128,7 @@ class ClientBenefitsCheck
         return $this->whenLastCheckedEntitlement;
     }
 
-    public function setWhenLastCheckedEntitlement(string $whenLastCheckedEntitlement): ClientBenefitsCheck
+    public function setWhenLastCheckedEntitlement(?string $whenLastCheckedEntitlement): ClientBenefitsCheck
     {
         $this->whenLastCheckedEntitlement = $whenLastCheckedEntitlement;
 
@@ -125,7 +140,7 @@ class ClientBenefitsCheck
         return $this->doOthersReceiveIncomeOnClientsBehalf;
     }
 
-    public function setDoOthersReceiveIncomeOnClientsBehalf(string $doOthersReceiveIncomeOnClientsBehalf): ClientBenefitsCheck
+    public function setDoOthersReceiveIncomeOnClientsBehalf(?string $doOthersReceiveIncomeOnClientsBehalf): ClientBenefitsCheck
     {
         $this->doOthersReceiveIncomeOnClientsBehalf = $doOthersReceiveIncomeOnClientsBehalf;
 
@@ -137,7 +152,7 @@ class ClientBenefitsCheck
         return $this->typesOfIncomeReceivedOnClientsBehalf;
     }
 
-    public function addTypesOfIncomeReceivedOnClientsBehalf(IncomeReceivedOnClientsBehalf $incomeReceivedOnClientsBehalf): ClientBenefitsCheck
+    public function addTypesOfIncomeReceivedOnClientsBehalf(?IncomeReceivedOnClientsBehalf $incomeReceivedOnClientsBehalf): ClientBenefitsCheck
     {
         if (!$this->typesOfIncomeReceivedOnClientsBehalf->contains($incomeReceivedOnClientsBehalf)) {
             $this->typesOfIncomeReceivedOnClientsBehalf->add($incomeReceivedOnClientsBehalf);
@@ -163,9 +178,25 @@ class ClientBenefitsCheck
         return $this->dateLastCheckedEntitlement;
     }
 
-    public function setDateLastCheckedEntitlement(DateTime $dateLastCheckedEntitlement): ClientBenefitsCheck
+    public function setDateLastCheckedEntitlement(?DateTime $dateLastCheckedEntitlement): ClientBenefitsCheck
     {
         $this->dateLastCheckedEntitlement = $dateLastCheckedEntitlement;
+
+        return $this;
+    }
+
+    public function getNeverCheckedExplanation(): string
+    {
+        return $this->neverCheckedExplanation;
+    }
+
+    public function setNeverCheckedExplanation(?string $neverCheckedExplanation): ClientBenefitsCheck
+    {
+        if (!is_null($neverCheckedExplanation) && self::IVE_NEVER_CHECKED !== $this->getWhenLastCheckedEntitlement()) {
+            throw new InvalidArgumentException('Explanation can only be set if the user has never checked entitlements');
+        }
+
+        $this->neverCheckedExplanation = $neverCheckedExplanation;
 
         return $this;
     }

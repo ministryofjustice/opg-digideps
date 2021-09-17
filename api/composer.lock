@@ -4,7 +4,7 @@
         "Read more about it at https://getcomposer.org/doc/01-basic-usage.md#installing-dependencies",
         "This file is @generated automatically"
     ],
-    "content-hash": "e43b7c84f1ee1bcb79e7d0dac12c9986",
+    "content-hash": "b85abb3b710e29697ca05117e4d259dd",
     "packages": [
         {
             "name": "aws/aws-sdk-php",
@@ -1697,6 +1697,52 @@
                 }
             ],
             "time": "2021-01-14T21:52:44+00:00"
+        },
+        {
+            "name": "gbprod/uuid-normalizer",
+            "version": "v1.2.1",
+            "source": {
+                "type": "git",
+                "url": "https://github.com/gbprod/uuid-normalizer.git",
+                "reference": "5acb53a765690c8dfc94e174029f45bd3f1b34c2"
+            },
+            "dist": {
+                "type": "zip",
+                "url": "https://api.github.com/repos/gbprod/uuid-normalizer/zipball/5acb53a765690c8dfc94e174029f45bd3f1b34c2",
+                "reference": "5acb53a765690c8dfc94e174029f45bd3f1b34c2",
+                "shasum": ""
+            },
+            "require": {
+                "php": "^5.6|^7.0|^8.0",
+                "ramsey/uuid": "^3.0|^4.0",
+                "symfony/serializer": "^2.3|^3.0|^4.0|^5.0"
+            },
+            "require-dev": {
+                "phpunit/phpunit": "^5.7|^6.0",
+                "symfony/property-access": "^2.3|^3.0|^4.0|^5.0"
+            },
+            "type": "library",
+            "autoload": {
+                "psr-4": {
+                    "GBProd\\UuidNormalizer\\": "src/"
+                }
+            },
+            "notification-url": "https://packagist.org/downloads/",
+            "license": [
+                "WTFPL"
+            ],
+            "authors": [
+                {
+                    "name": "GBProd",
+                    "email": "contact@gb-prod.fr"
+                }
+            ],
+            "description": "Normalizer to serialize Ramsey Uuid with Symfony Serializer",
+            "support": {
+                "issues": "https://github.com/gbprod/uuid-normalizer/issues",
+                "source": "https://github.com/gbprod/uuid-normalizer/tree/master"
+            },
+            "time": "2020-07-22T12:12:59+00:00"
         },
         {
             "name": "gedmo/doctrine-extensions",
@@ -8159,7 +8205,7 @@
     "prefer-stable": false,
     "prefer-lowest": false,
     "platform": {
-        "php": "7.4.16"
+        "php": "7.4.19"
     },
     "platform-dev": [],
     "plugin-api-version": "2.0.0"

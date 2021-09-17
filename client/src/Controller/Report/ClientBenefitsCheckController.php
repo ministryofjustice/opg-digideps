@@ -1,12 +1,18 @@
 <?php
 
+declare(strict_types=1);
+
 namespace App\Controller\Report;
 
 use App\Controller\AbstractController;
+use App\Entity\Report\ClientBenefitsCheck;
 use App\Entity\Report\Status;
+use App\Form\Report\ClientBenefitsCheckType;
+use App\Service\Client\Internal\ClientBenefitCheckApi;
 use App\Service\Client\Internal\ReportApi;
 use Sensio\Bundle\FrameworkExtraBundle\Configuration\Template;
 use Symfony\Component\HttpFoundation\RedirectResponse;
+use Symfony\Component\HttpFoundation\Request;
 use Symfony\Component\Routing\Annotation\Route;
 
 class ClientBenefitsCheckController extends AbstractController
@@ -17,10 +23,12 @@ class ClientBenefitsCheckController extends AbstractController
     ];
 
     private ReportApi $reportApi;
+    private ClientBenefitCheckApi $benefitCheckApi;
 
-    public function __construct(ReportApi $reportApi)
+    public function __construct(ReportApi $reportApi, ClientBenefitCheckApi $benefitCheckApi)
     {
         $this->reportApi = $reportApi;
+        $this->benefitCheckApi = $benefitCheckApi;
     }
 
     /**
@@ -43,18 +51,35 @@ class ClientBenefitsCheckController extends AbstractController
     }
 
     /**
-     * @Route("/report/{reportId}/client-benefits-check-step", name="client_benefits_check_step")
+     * @Route("/report/{reportId}/client-benefits-check/step/{step}", name="client_benefits_check_step")
      * @Template("@App/Report/ClientBenefitsCheck/step.html.twig")
      *
      * @return array|RedirectResponse
      */
-    public function step(int $reportId)
+    public function step(Request $request, int $reportId, int $step)
     {
         $report = $this->reportApi->getReportIfNotSubmitted($reportId, self::$jmsGroups);
-        $form = new ClientBenefitsCheckType();
+        $clientBenefitsCheck = $report->getClientBenefitsCheck() ?: new ClientBenefitsCheck();
+
+        $form = $this->createForm(
+            ClientBenefitsCheckType::class,
+            $clientBenefitsCheck,
+            ['step' => $step]
+        );
+
+        $form->handleRequest($request);
+
+        if ($form->isSubmitted() && $form->isValid()) {
+            $this->benefitCheckApi->post($form->getData());
+
+            return $this->redirectToRoute('client_benefits_check_summary', ['reportId' => $report->getId()]);
+        }
 
         return [
             'report' => $report,
+            'form' => $form->createView(),
+            'step' => $step,
+            'formAction' => is_null($report->getClientBenefitsCheck()) ? 'add' : 'edit',
         ];
     }
 

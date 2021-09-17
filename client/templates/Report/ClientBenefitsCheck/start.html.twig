@@ -9,8 +9,8 @@
     '%client%': report.client.firstname | e,
 } %}
 
-{% block htmlTitle %}{{ 'startPage.htmlTitle' | trans(transOptions) }}{% endblock %}
-{% block pageTitle %}{{ 'startPage.pageTitle' | trans(transOptions) }}{% endblock %}
+{% block htmlTitle %}{{ 'common.htmlTitle' | trans(transOptions) }}{% endblock %}
+{% block pageTitle %}{{ 'common.pageTitle' | trans(transOptions) }}{% endblock %}
 
 
 {% block breadcrumbs %}{{ macros.breadcrumbs(report) }}{% endblock %}
@@ -19,7 +19,7 @@
 
     <div class="govuk-grid-row">
         <div class="govuk-grid-column-three-quarters">
-            <p class="govuk-body">{{ 'startPage.pageSectionDescription1' | trans(transOptions) }}</p>
+            <p class="govuk-body">{{ 'common.weAskAbout' | trans(transOptions) }}</p>
         </div>
     </div>
 
