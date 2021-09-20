@@ -255,9 +255,9 @@ class ReportTest extends TestCase
     public static function sectionsSettingsProvider()
     {
         return [
-            [Report::TYPE_102, ['bankAccounts', 'moneyIn', 'balance', 'benefitsCheck'], ['moneyInShort', 'lifestyle']],
-            [Report::TYPE_103, ['bankAccounts', 'moneyInShort', 'benefitsCheck'], ['moneyIn', 'lifestyle', 'balance']],
-            [Report::TYPE_104, ['lifestyle'], ['bankAccounts', 'moneyIn', 'moneyInShort', 'gifts', 'balance', 'benefitsCheck']],
+            [Report::TYPE_102, ['bankAccounts', 'moneyIn', 'balance', 'clientBenefitsCheck'], ['moneyInShort', 'lifestyle']],
+            [Report::TYPE_103, ['bankAccounts', 'moneyInShort', 'clientBenefitsCheck'], ['moneyIn', 'lifestyle', 'balance']],
+            [Report::TYPE_104, ['lifestyle'], ['bankAccounts', 'moneyIn', 'moneyInShort', 'gifts', 'balance', 'clientBenefitsCheck']],
         ];
     }
 
