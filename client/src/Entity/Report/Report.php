@@ -8,6 +8,7 @@ use App\Entity\ReportInterface;
 use App\Entity\User;
 use App\Validator\Constraints as AppAssert;
 use App\Validator\Constraints\StartEndDateComparableInterface;
+use DateTime;
 use JMS\Serializer\Annotation as JMS;
 use Symfony\Component\Validator\Constraints as Assert;
 
@@ -62,6 +63,8 @@ class Report implements ReportInterface, StartEndDateComparableInterface
         self::TYPE_COMBINED_HIGH_ASSETS,
     ];
 
+    const BENEFITS_CHECK_SECTION_REQUIRED_GRACE_PERIOD_DAYS = 60;
+
     /**
      * @JMS\Type("integer")
      * @JMS\Groups({"visits-care", "report-id"})
@@ -94,7 +97,7 @@ class Report implements ReportInterface, StartEndDateComparableInterface
      * @Assert\NotBlank( message="report.startDate.notBlank", groups={"start-end-dates"} )
      * @Assert\Date( message="report.startDate.invalidMessage", groups={"start-end-dates"} )
      *
-     * @var \DateTime|null
+     * @var DateTime|null
      */
     private $startDate;
 
@@ -105,7 +108,7 @@ class Report implements ReportInterface, StartEndDateComparableInterface
      * @Assert\NotBlank( message="report.endDate.notBlank", groups={"start-end-dates"} )
      * @Assert\Date( message="report.endDate.invalidMessage", groups={"start-end-dates"} )
      *
-     * @var \DateTime|null
+     * @var DateTime|null
      */
     private $endDate;
 
@@ -120,12 +123,12 @@ class Report implements ReportInterface, StartEndDateComparableInterface
      * @JMS\Type("DateTime<'Y-m-d'>")
      * @JMS\Groups({"report_due_date"})
      *
-     * @var \DateTime|null
+     * @var DateTime|null
      */
     private $dueDate;
 
     /**
-     * @var \DateTime|null
+     * @var DateTime|null
      *
      * @JMS\Type("DateTime")
      * @JMS\Groups({"submit"})
@@ -133,7 +136,7 @@ class Report implements ReportInterface, StartEndDateComparableInterface
     private $submitDate;
 
     /**
-     * @var \DateTime|null
+     * @var DateTime|null
      *
      * @JMS\Type("DateTime<'Y-m-d'>")
      * @JMS\Groups({"unsubmit_date"})
@@ -419,7 +422,7 @@ class Report implements ReportInterface, StartEndDateComparableInterface
     }
 
     /**
-     * @return \DateTime|null
+     * @return DateTime|null
      */
     public function getStartDate()
     {
@@ -429,9 +432,9 @@ class Report implements ReportInterface, StartEndDateComparableInterface
     /**
      * @return Report
      */
-    public function setStartDate(\DateTime $startDate = null)
+    public function setStartDate(DateTime $startDate = null)
     {
-        if ($startDate instanceof \DateTime) {
+        if ($startDate instanceof DateTime) {
             $startDate->setTime(0, 0, 0);
         }
         $this->startDate = $startDate;
@@ -440,7 +443,7 @@ class Report implements ReportInterface, StartEndDateComparableInterface
     }
 
     /**
-     * @return \DateTime|null $endDate
+     * @return DateTime|null $endDate
      */
     public function getEndDate()
     {
@@ -450,7 +453,7 @@ class Report implements ReportInterface, StartEndDateComparableInterface
     /**
      * @return Report
      */
-    public function setDueDate(\DateTime $dueDate = null): self
+    public function setDueDate(DateTime $dueDate = null): self
     {
         $this->dueDate = $dueDate;
 
@@ -462,7 +465,7 @@ class Report implements ReportInterface, StartEndDateComparableInterface
      *
      * as a default, 8 weeks after the end date
      *
-     * @return \DateTime|null $dueDate
+     * @return DateTime|null $dueDate
      */
     public function getDueDate()
     {
@@ -477,13 +480,13 @@ class Report implements ReportInterface, StartEndDateComparableInterface
      *
      * @return int|void
      */
-    public function getDueDateDiffDays(\DateTime $currentDate = null)
+    public function getDueDateDiffDays(DateTime $currentDate = null)
     {
         if (is_null($this->getDueDate())) {
             return;
         }
 
-        $currentDate = $currentDate ? $currentDate : new \DateTime();
+        $currentDate = $currentDate ? $currentDate : new DateTime();
 
         // clone and set time to 0,0,0 (might not be needed)
         $currentDate = clone $currentDate;
@@ -499,7 +502,7 @@ class Report implements ReportInterface, StartEndDateComparableInterface
     /**
      * Get submitDate.
      *
-     * @return \DateTime|null
+     * @return DateTime|null
      */
     public function getSubmitDate()
     {
@@ -509,7 +512,7 @@ class Report implements ReportInterface, StartEndDateComparableInterface
     /**
      * @return Report
      */
-    public function setSubmitDate(\DateTime $submitDate = null)
+    public function setSubmitDate(DateTime $submitDate = null)
     {
         $this->submitDate = $submitDate;
 
@@ -517,7 +520,7 @@ class Report implements ReportInterface, StartEndDateComparableInterface
     }
 
     /**
-     * @return \DateTime|null
+     * @return DateTime|null
      */
     public function getUnSubmitDate()
     {
@@ -525,11 +528,11 @@ class Report implements ReportInterface, StartEndDateComparableInterface
     }
 
     /**
-     * @param \DateTime $unSubmitDate
+     * @param DateTime $unSubmitDate
      *
      * @return Report
      */
-    public function setUnSubmitDate(?\DateTime $unSubmitDate)
+    public function setUnSubmitDate(?DateTime $unSubmitDate)
     {
         $this->unSubmitDate = $unSubmitDate;
 
@@ -555,13 +558,13 @@ class Report implements ReportInterface, StartEndDateComparableInterface
     }
 
     /**
-     * @param \DateTime $endDate
+     * @param DateTime $endDate
      *
      * @return Report
      */
-    public function setEndDate(\DateTime $endDate = null)
+    public function setEndDate(DateTime $endDate = null)
     {
-        if ($endDate instanceof \DateTime) {
+        if ($endDate instanceof DateTime) {
             $endDate->setTime(23, 59, 59);
         }
         $this->endDate = $endDate;
@@ -572,7 +575,7 @@ class Report implements ReportInterface, StartEndDateComparableInterface
     /**
      * Generates next reporting period's start date.
      *
-     * @return \DateTime|null
+     * @return DateTime|null
      */
     public function getNextStartDate()
     {
@@ -596,7 +599,7 @@ class Report implements ReportInterface, StartEndDateComparableInterface
      * Generates next reporting period's end date.
      * Note: Date diff returns 'difference' and so 1 day needs to be added.
      *
-     * @return \DateTime|null
+     * @return DateTime|null
      */
     public function getNextEndDate()
     {
@@ -626,7 +629,7 @@ class Report implements ReportInterface, StartEndDateComparableInterface
      */
     private function calculateReportingPeriod($format = '%a')
     {
-        if ($this->getStartDate() instanceof \DateTime && $this->getEndDate() instanceof \DateTime) {
+        if ($this->getStartDate() instanceof DateTime && $this->getEndDate() instanceof DateTime) {
             // add one day because difference doesn't include end date itself
             return $this->getStartDate()->diff($this->getEndDate())->format($format);
         }
@@ -646,7 +649,7 @@ class Report implements ReportInterface, StartEndDateComparableInterface
             return $this->period;
         }
 
-        if (!$this->startDate instanceof \DateTime || !$this->endDate instanceof \DateTime) {
+        if (!$this->startDate instanceof DateTime || !$this->endDate instanceof DateTime) {
             return $this->period;
         }
 
@@ -1091,7 +1094,7 @@ class Report implements ReportInterface, StartEndDateComparableInterface
         $attachmentName = sprintf(
             $format,
             $endDate->format('Y'),
-            $submitDate instanceof \DateTime ? $submitDate->format('Y-m-d') : 'n-a-', //some old reports have no submission date
+            $submitDate instanceof DateTime ? $submitDate->format('Y-m-d') : 'n-a-', //some old reports have no submission date
             $this->getClient()->getCaseNumber()
         );
 
@@ -1310,10 +1313,25 @@ class Report implements ReportInterface, StartEndDateComparableInterface
         return $this->clientBenefitsCheck;
     }
 
-    public function setClientBenefitsCheck(ClientBenefitsCheck $clientBenefitsCheck): Report
+    public function setClientBenefitsCheck(?ClientBenefitsCheck $clientBenefitsCheck): Report
     {
         $this->clientBenefitsCheck = $clientBenefitsCheck;
 
         return $this;
+    }
+
+    /**
+     * The client benefits check section of the report should be required for:.
+     *
+     * Reports with an unsubmit date that had not originally completed the section
+     * Reports without an unsubmit date and a due date more than 60 days after the client benefits section release date
+     */
+    public function requiresBenefitsCheckSection(DateTime $featureLaunchDate): bool
+    {
+        if ($this->getUnSubmitDate()) {
+            return $this->getClientBenefitsCheck() instanceof ClientBenefitsCheck;
+        } else {
+            return $featureLaunchDate->diff($this->getDueDate())->days > self::BENEFITS_CHECK_SECTION_REQUIRED_GRACE_PERIOD_DAYS;
+        }
     }
 }
