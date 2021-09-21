@@ -19,6 +19,7 @@ use App\Repository\ReportRepository;
 use App\Repository\UserRepository;
 use App\v2\Controller\ControllerTrait;
 use App\v2\Fixture\ReportSection;
+use DateTime;
 use Doctrine\ORM\EntityManagerInterface;
 use Sensio\Bundle\FrameworkExtraBundle\Configuration\Security;
 use Symfony\Bundle\FrameworkBundle\Controller\AbstractController;
@@ -94,6 +95,10 @@ class FixtureController extends AbstractController
         }
 
         $fromRequest = json_decode($request->getContent(), true);
+
+        if (Report::STATUS_READY_TO_SUBMIT === $fromRequest['reportStatus']) {
+            $fromRequest['courtDate'] = (new DateTime('-366 days'))->format('Y-m-d');
+        }
 
         $client = $this->createClient($fromRequest);
 
@@ -246,7 +251,7 @@ class FixtureController extends AbstractController
 
         if ($fromRequest['orgSizeUsers'] > 1 && !empty($fromRequest['orgSizeUsers'])) {
             foreach (range(1, $fromRequest['orgSizeClients']) as $number) {
-                $orgClient = $this->clientFactory->createGenericOrgClient($namedDeputy, $organisation);
+                $orgClient = $this->clientFactory->createGenericOrgClient($namedDeputy, $organisation, $fromRequest['courtDate']);
                 $this->em->persist($orgClient);
 
                 $this->createReport($fromRequest, $orgClient);
