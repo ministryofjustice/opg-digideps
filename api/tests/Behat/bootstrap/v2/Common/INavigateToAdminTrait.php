@@ -51,6 +51,14 @@ trait INavigateToAdminTrait
     }
 
     /**
+     * @When I navigate to the upload users page
+     */
+    public function iNavigateToAdminUploadUsersPage()
+    {
+        $this->clickLink('Upload users');
+    }
+
+    /**
      * @When I navigate to the organisations page
      */
     public function iNavigateToOrganisationsPage()

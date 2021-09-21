@@ -91,15 +91,16 @@ class OrgDeputyshipUploaderTest extends KernelTestCase
         $actualUploadResults = $this->sut->upload($deputyships);
 
         self::assertCount(0, $actualUploadResults['added']['named_deputies']);
+        self::assertCount(0, $actualUploadResults['updated']['named_deputies']);
         self::assertTrue(empty($actualUploadResults['errors']));
     }
 
     /** @test */
-    public function uploadNamedDeputyWithPartialDetailsMatchCreatesNewDeputy()
+    public function uploadNamedDeputyWithSameDetailsButNewDeputyNoCreatesNewDeputy()
     {
         $deputyships = OrgDeputyshipDTOTestHelper::generateOrgDeputyshipDtos(1, 0);
         $namedDeputy = OrgDeputyshipDTOTestHelper::ensureNamedDeputyInUploadExists($deputyships[0], $this->em);
-        $namedDeputy->setFirstname('Notmatch');
+        $namedDeputy->setDeputyNo('123456');
 
         $this->em->persist($namedDeputy);
         $this->em->flush();
@@ -107,6 +108,24 @@ class OrgDeputyshipUploaderTest extends KernelTestCase
         $actualUploadResults = $this->sut->upload($deputyships);
 
         self::assertCount(1, $actualUploadResults['added']['named_deputies']);
+        self::assertCount(0, $actualUploadResults['updated']['named_deputies']);
+        self::assertTrue(empty($actualUploadResults['errors']));
+    }
+
+    /** @test */
+    public function uploadExistingNamedDeputiesWithNewAddressDetailsAreUpdated()
+    {
+        $deputyships = OrgDeputyshipDTOTestHelper::generateOrgDeputyshipDtos(1, 0);
+        $namedDeputy = OrgDeputyshipDTOTestHelper::ensureNamedDeputyInUploadExists($deputyships[0], $this->em);
+        $namedDeputy->setAddress1('10 New Road');
+
+        $this->em->persist($namedDeputy);
+        $this->em->flush();
+
+        $actualUploadResults = $this->sut->upload($deputyships);
+
+        self::assertCount(0, $actualUploadResults['added']['named_deputies']);
+        self::assertCount(1, $actualUploadResults['updated']['named_deputies']);
         self::assertTrue(empty($actualUploadResults['errors']));
     }
 
@@ -156,12 +175,14 @@ class OrgDeputyshipUploaderTest extends KernelTestCase
      * @dataProvider existingClientProvider
      * @test
      */
-    public function uploadExistingClientsMadeDateIsUpdated(DateTime $existingCourtDate, DateTime $uploadCourtDate)
+    public function uploadExistingClientsWithNewMadeDateCreatesNewReport(DateTime $existingCourtDate, DateTime $uploadCourtDate)
     {
         $deputyships = OrgDeputyshipDTOTestHelper::generateOrgDeputyshipDtos(1, 0);
         $deputyships[0]->setCourtDate($uploadCourtDate);
 
         $client = OrgDeputyshipDTOTestHelper::ensureClientInUploadExists($deputyships[0], $this->em);
+        $existingReport = OrgDeputyshipDTOTestHelper::ensureAReportExistsAndIsAssociatedWithClient($client, $this->em);
+
         $client->setCourtDate($existingCourtDate);
 
         $this->em->persist($client);
@@ -171,18 +192,17 @@ class OrgDeputyshipUploaderTest extends KernelTestCase
 
         $client = $this->clientRepository->findOneBy(['caseNumber' => $deputyships[0]->getCaseNumber()]);
 
-        self::assertEquals($uploadCourtDate, $client->getCourtDate());
+        self::assertNotEquals($existingReport->getId(), $client->getCurrentReport()->getId());
     }
 
     public function existingClientProvider()
     {
         return [
-            'Same court date' => [new DateTime('Today'), new DateTime('Today')],
             'Updated court date' => [new DateTime('Today'), new DateTime('Tomorrow')],
         ];
     }
 
-    /** @test  */
+    /** @test */
     public function uploadClientAndOrgAreAssociated()
     {
         $deputyships = OrgDeputyshipDTOTestHelper::generateOrgDeputyshipDtos(1, 0);
@@ -206,41 +226,7 @@ class OrgDeputyshipUploaderTest extends KernelTestCase
     }
 
     /** @test  */
-    public function uploadClientAndNamedDeputyAreNotAssociatedWhenClientHasSwitchedOrgsAndNamedDeputyHasChanged()
-    {
-        $deputyships = OrgDeputyshipDTOTestHelper::generateOrgDeputyshipDtos(1, 0);
-
-        $originalNamedDeputy = OrgDeputyshipDTOTestHelper::ensureNamedDeputyInUploadExists($deputyships[0], $this->em);
-        $originalNamedDeputy->setEmail1(sprintf('different.deputy@different-domain.com'));
-
-        $orgIdentifier = explode('@', $deputyships[0]->getDeputyEmail())[1];
-        $organisation = OrgDeputyshipDTOTestHelper::ensureOrgInUploadExists($orgIdentifier, $this->em);
-        $organisation->setEmailIdentifier('different-domain.com');
-
-        $client = OrgDeputyshipDTOTestHelper::ensureClientInUploadExists($deputyships[0], $this->em);
-        $client->setNamedDeputy($originalNamedDeputy)->setOrganisation($organisation);
-
-        $this->em->persist($client);
-        $this->em->flush();
-
-        $this->sut->upload($deputyships);
-
-        self::assertTrue(
-            OrgDeputyshipDTOTestHelper::clientAndNamedDeputyAreNotAssociated(
-                $deputyships[0],
-                $this->clientRepository,
-                $this->namedDeputyRepository
-            ),
-            sprintf(
-                'Client with case number "%s" and named deputy with email "%s" are associated when they shouldnt be',
-                $deputyships[0]->getCaseNumber(),
-                $deputyships[0]->getDeputyEmail()
-            )
-        );
-    }
-
-    /** @test  */
-    public function uploadClientAndNamedDeputyAreAssociatedWhenClientHasNotSwitchedOrgsAndNamedDeputyHasChanged()
+    public function uploadClientAndNamedDeputyAreAssociatedWhenClientHasSwitchedOrgsAndNamedDeputyHasChanged()
     {
         $deputyships = OrgDeputyshipDTOTestHelper::generateOrgDeputyshipDtos(1, 0);
 
@@ -259,7 +245,7 @@ class OrgDeputyshipUploaderTest extends KernelTestCase
         $this->em->persist($client);
         $this->em->flush();
 
-        $this->sut->upload($deputyships);
+        $actualUploadResults = $this->sut->upload($deputyships);
 
         self::assertTrue(
             OrgDeputyshipDTOTestHelper::clientAndNamedDeputyAreAssociated(
@@ -273,6 +259,9 @@ class OrgDeputyshipUploaderTest extends KernelTestCase
                 $deputyships[0]->getDeputyEmail()
             )
         );
+
+        self::assertCount(0, $actualUploadResults['added']['clients']);
+        self::assertCount(1, $actualUploadResults['updated']['clients']);
     }
 
     /** @test */
@@ -318,7 +307,7 @@ class OrgDeputyshipUploaderTest extends KernelTestCase
 
     /**
      * @test
-     *@dataProvider errorProvider
+     * @dataProvider errorProvider
      */
     public function uploadErrorsAreAddedToErrorArray(OrgDeputyshipDto $dto, array $expectedErrorStrings)
     {
@@ -359,7 +348,7 @@ class OrgDeputyshipUploaderTest extends KernelTestCase
 
         $uploadResults = $this->sut->upload($deputyships);
 
-        $errorMessage = sprintf('Error for case "%s": case number already used', $deputyships[0]->getCaseNumber());
+        $errorMessage = sprintf('Error for case %s: case number already used', $deputyships[0]->getCaseNumber());
 
         self::assertTrue(
             in_array($errorMessage, $uploadResults['errors']),
@@ -391,5 +380,31 @@ class OrgDeputyshipUploaderTest extends KernelTestCase
                 sprintf('Expecting 0, got %d', count($result))
             );
         }
+    }
+
+    /** @test */
+    public function uploadExistingClientsWithMissingCourtDateHaveCourtDateAdded()
+    {
+        $deputyships = OrgDeputyshipDTOTestHelper::generateOrgDeputyshipDtos(1, 0);
+        $client = OrgDeputyshipDTOTestHelper::ensureClientInUploadExists($deputyships[0], $this->em);
+        $client->setCourtDate(null);
+
+        $this->em->persist($client);
+        $this->em->flush();
+
+        $uploadResults = $this->sut->upload($deputyships);
+
+        self::assertCount(
+            1,
+            $uploadResults['updated']['clients'],
+            sprintf('Expecting 1, got %d', count($uploadResults['updated']['clients']))
+        );
+
+        $updatedClient = $this->em->getRepository(Client::class)->find($client);
+
+        self::assertEquals(
+            $deputyships[0]->getCourtDate(),
+            $updatedClient->getCourtDate()
+        );
     }
 }

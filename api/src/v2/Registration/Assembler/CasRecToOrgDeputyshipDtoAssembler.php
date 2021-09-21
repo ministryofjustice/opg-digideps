@@ -44,14 +44,18 @@ class CasRecToOrgDeputyshipDtoAssembler
         $reportEndDate = $this->reportUtils->parseCsvDate($row['Last Report Day'], '20');
         $reportStartDate = $reportEndDate ? $this->reportUtils->generateReportStartDateFromEndDate($reportEndDate) : null;
         $caseNumber = $this->reportUtils->padCasRecNumber(strtolower($row['Case']));
-        $deputyNumber = $this->reportUtils->padCasRecNumber(strtolower($row['Deputy No']));
+        $courtDate = empty($row['Made Date']) ? null : new DateTime($row['Made Date']);
 
         return (new OrgDeputyshipDto())
             ->setDeputyEmail($row['Email'])
-            ->setDeputyNumber($deputyNumber)
+            ->setDeputyNumber($row['Deputy No'])
             ->setDeputyFirstname($row['Dep Forename'])
             ->setDeputyLastname($row['Dep Surname'])
             ->setDeputyAddress1($row['Dep Adrs1'])
+            ->setDeputyAddress2($row['Dep Adrs2'])
+            ->setDeputyAddress3($row['Dep Adrs3'])
+            ->setDeputyAddress4($row['Dep Adrs4'])
+            ->setDeputyAddress5($row['Dep Adrs5'])
             ->setDeputyPostcode($row['Dep Postcode'])
             ->setCaseNumber($caseNumber)
             ->setClientFirstname(trim($row['Forename']))
@@ -61,9 +65,10 @@ class CasRecToOrgDeputyshipDtoAssembler
             ->setClientCounty($row['Client Adrs3'])
             ->setClientPostCode($row['Client Postcode'])
             ->setClientDateOfBirth($clientDateOfBirth)
-            ->setCourtDate(new DateTime($row['Made Date']))
+            ->setCourtDate($courtDate)
             ->setReportType($reportType)
             ->setReportStartDate($reportStartDate)
-            ->setReportEndDate($reportEndDate);
+            ->setReportEndDate($reportEndDate)
+            ->setDeputyAddressNumber($row['DepAddr No']);
     }
 }

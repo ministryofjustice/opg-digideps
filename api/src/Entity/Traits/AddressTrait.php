@@ -36,6 +36,24 @@ trait AddressTrait
      *
      * @JMS\Type("string")
      * @JMS\Groups({"user", "team", "report-submitted-by"})
+     * @ORM\Column(name="address4", type="string", length=200, nullable=true)
+     */
+    private $address4;
+
+    /**
+     * @var string
+     *
+     * @JMS\Type("string")
+     * @JMS\Groups({"user", "team", "report-submitted-by"})
+     * @ORM\Column(name="address5", type="string", length=200, nullable=true)
+     */
+    private $address5;
+
+    /**
+     * @var string
+     *
+     * @JMS\Type("string")
+     * @JMS\Groups({"user", "team", "report-submitted-by"})
      * @ORM\Column(name="address_postcode", type="string", length=10, nullable=true)
      */
     private $addressPostcode;
@@ -145,6 +163,36 @@ trait AddressTrait
     public function setAddressCountry($addressCountry)
     {
         $this->addressCountry = $addressCountry;
+
+        return $this;
+    }
+
+    public function getAddress4(): string
+    {
+        return $this->address4;
+    }
+
+    /**
+     * @return $this
+     */
+    public function setAddress4(string $address4)
+    {
+        $this->address4 = $address4;
+
+        return $this;
+    }
+
+    public function getAddress5(): string
+    {
+        return $this->address5;
+    }
+
+    /**
+     * @return $this
+     */
+    public function setAddress5(string $address5)
+    {
+        $this->address5 = $address5;
 
         return $this;
     }

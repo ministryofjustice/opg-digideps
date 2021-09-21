@@ -37,6 +37,30 @@ trait IShouldBeOnAdminTrait
     }
 
     /**
+     * @Then I should be on the admin upload users page
+     */
+    public function iAmOnAdminUploadUsersPage()
+    {
+        return $this->iAmOnPage('/admin\/upload/');
+    }
+
+    /**
+     * @Then I should be on the admin org csv upload page
+     */
+    public function iAmOnAdminOrgCsvUploadPage()
+    {
+        return $this->iAmOnPage('/admin\/org-csv-upload/');
+    }
+
+    /**
+     * @Then I should be on the admin lay csv upload page
+     */
+    public function iAmOnAdminLayCsvUploadPage()
+    {
+        return $this->iAmOnPage('/admin\/casrec-upload/');
+    }
+
+    /**
      * @Then I should be on the admin view user page
      */
     public function iAmOnAdminViewUserPage()

@@ -14,4 +14,12 @@ class NamedDeputyRepository extends ServiceEntityRepository
     {
         parent::__construct($registry, NamedDeputy::class);
     }
+
+    public function countAllEntities()
+    {
+        return $this
+            ->getEntityManager()
+            ->createQuery('SELECT COUNT(nd.id) FROM App\Entity\NamedDeputy nd')
+            ->getSingleScalarResult();
+    }
 }

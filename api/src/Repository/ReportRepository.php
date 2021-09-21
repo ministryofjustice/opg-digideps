@@ -222,4 +222,12 @@ DQL;
 
         return array_column($result, 'report_id');
     }
+
+    public function countAllEntities()
+    {
+        return $this
+            ->getEntityManager()
+            ->createQuery('SELECT COUNT(r.id) FROM App\Entity\Report\Report r')
+            ->getSingleScalarResult();
+    }
 }

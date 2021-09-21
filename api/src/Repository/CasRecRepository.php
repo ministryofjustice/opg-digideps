@@ -15,8 +15,8 @@ class CasRecRepository extends ServiceEntityRepository
     }
 
     /**
-     * @param string $source
      * @return mixed
+     *
      * @throws \Doctrine\ORM\NonUniqueResultException
      */
     public function deleteAllBySource(string $source)
@@ -30,5 +30,13 @@ class CasRecRepository extends ServiceEntityRepository
             ->setParameter('source', $source);
 
         return $qb->getQuery()->getOneOrNullResult();
+    }
+
+    public function countAllEntities()
+    {
+        return $this
+            ->getEntityManager()
+            ->createQuery('SELECT COUNT(c.id) FROM App\Entity\Casrec c')
+            ->getSingleScalarResult();
     }
 }

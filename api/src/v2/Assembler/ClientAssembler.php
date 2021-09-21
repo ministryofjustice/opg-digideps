@@ -127,10 +127,11 @@ class ClientAssembler
             ->setCaseNumber($dto->getCaseNumber())
             ->setFirstname($dto->getClientFirstname())
             ->setLastname($dto->getClientLastname())
-            ->setAddress($dto->getClientAddress1() ? $dto->getClientAddress1() : null)
-            ->setAddress2($dto->getClientAddress2() ? $dto->getClientAddress2() : null)
-            ->setCounty($dto->getClientCounty() ? $dto->getClientCounty() : null)
-            ->setDateOfBirth($dto->getClientDateOfBirth() ? $dto->getClientDateOfBirth() : null);
+            ->setAddress($dto->getClientAddress1() ?: null)
+            ->setAddress2($dto->getClientAddress2() ?: null)
+            ->setCounty($dto->getClientCounty() ?: null)
+            ->setDateOfBirth($dto->getClientDateOfBirth() ?: null)
+            ->setCourtDate($dto->getCourtDate() ?: null);
 
         if (!empty($dto->getClientPostCode())) {
             $client->setPostcode($dto->getClientPostCode());

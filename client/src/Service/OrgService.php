@@ -3,7 +3,6 @@
 namespace App\Service;
 
 use App\Service\Client\RestClient;
-use App\Service\CsvUploader;
 use Symfony\Component\HttpFoundation\Session\SessionInterface;
 use Symfony\Component\HttpFoundation\StreamedResponse;
 use Twig\Environment;
@@ -39,7 +38,13 @@ class OrgService
             'clients' => 0,
             'named_deputies' => 0,
             'reports' => 0,
-            'organisations' => 0
+            'organisations' => 0,
+        ],
+        'updated' => [
+            'clients' => 0,
+            'named_deputies' => 0,
+            'reports' => 0,
+            'organisations' => 0,
         ],
     ];
 
@@ -48,9 +53,6 @@ class OrgService
     /** @var DataCompression */
     private $dataCompression;
 
-    /**
-     * @param RestClient $restClient
-     */
     public function __construct(
         RestClient $restClient,
         Environment $twig,
@@ -62,17 +64,17 @@ class OrgService
     }
 
     /**
-     * @param bool $outputLogging
      * @return $this
      */
     public function setLogging(bool $outputLogging)
     {
         $this->outputLogging = $outputLogging;
+
         return $this;
     }
 
     /**
-     * Generate a streamed response
+     * Generate a streamed response.
      *
      * @return StreamedResponse
      */
@@ -94,14 +96,12 @@ class OrgService
     }
 
     /**
-     * Push some output to the buffer, if enabled
-     *
-     * @param string $output
+     * Push some output to the buffer, if enabled.
      */
     protected function log(string $output)
     {
         if ($this->outputLogging) {
-            echo $output . "\n";
+            echo $output."\n";
         } else {
             echo ' ';
         }
@@ -119,7 +119,7 @@ class OrgService
     }
 
     /**
-     * Force a redirect and terminate the stream
+     * Force a redirect and terminate the stream.
      *
      * @param string $redirectUrl
      */
@@ -134,9 +134,7 @@ class OrgService
     }
 
     /**
-     * Add the output of a chunk to service collectorss
-     *
-     * @param array $output
+     * Add the output of a chunk to service collectorss.
      */
     protected function storeChunkOutput(array $output)
     {
@@ -149,10 +147,16 @@ class OrgService
                 $this->output['added'][$group] += count($items);
             }
         }
+
+        if (!empty($output['updated'])) {
+            foreach ($output['updated'] as $group => $items) {
+                $this->output['updated'][$group] += count($items);
+            }
+        }
     }
 
     /**
-     * Set flash messages about results of upload
+     * Set flash messages about results of upload.
      */
     protected function addFlashMessages()
     {
@@ -167,15 +171,30 @@ class OrgService
             $flashBag->add('error', $flash);
         }
 
+        $flashAddedMessage = sprintf(
+            'Added %d clients, %d named deputies, %d reports and %d organisations. Go to users tab to enable them.',
+            $this->output['added']['clients'],
+            $this->output['added']['named_deputies'],
+            $this->output['added']['reports'],
+            $this->output['added']['organisations'],
+        );
+
         $flashBag->add(
             'notice',
-            sprintf(
-                'Added %d clients, %d named deputies, %d reports and %d organisations. Go to users tab to enable them',
-                $this->output['added']['clients'],
-                $this->output['added']['named_deputies'],
-                $this->output['added']['reports'],
-                $this->output['added']['organisations']
-            )
+            $flashAddedMessage
+        );
+
+        $flashUpdatedMessage = sprintf(
+            'Updated details for %d clients, %d named deputies, %d reports and %d organisations.',
+            $this->output['updated']['clients'],
+            $this->output['updated']['named_deputies'],
+            $this->output['updated']['reports'],
+            $this->output['updated']['organisations']
+        );
+
+        $flashBag->add(
+            'notice',
+            $flashUpdatedMessage
         );
     }
 
@@ -198,8 +217,9 @@ class OrgService
     }
 
     /**
-     * @param mixed $data
+     * @param mixed  $data
      * @param string $redirectUrl
+     *
      * @return StreamedResponse
      */
     public function process($data, $redirectUrl)

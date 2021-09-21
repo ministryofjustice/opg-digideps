@@ -224,6 +224,24 @@ class User implements UserInterface, DeputyInterface
 
     /**
      * @JMS\Type("string")
+     * @JMS\Groups({"user_details_full", "profile_org"})
+     * @Assert\Length( max=200, maxMessage="user.address1.maxMessage", groups={"user_details_full", "profile_org"} )
+     *
+     * @var string
+     */
+    private $address4;
+
+    /**
+     * @JMS\Type("string")
+     * @JMS\Groups({"user_details_full", "profile_org"})
+     * @Assert\Length( max=200, maxMessage="user.address1.maxMessage", groups={"user_details_full", "profile_org"} )
+     *
+     * @var string
+     */
+    private $address5;
+
+    /**
+     * @JMS\Type("string")
      * @JMS\Groups({"user_details_full", "profile_org", "admin_add_user", "ad_add_user", "admin_edit_user"})
      * @Assert\NotBlank( message="user.addressPostcode.notBlank", groups={"user_details_full", "verify-codeputy", "admin_edit_user"} )
      * @Assert\Length(min=2, max=10, minMessage="user.addressPostcode.minLength", maxMessage="user.addressPostcode.maxLength", groups={"user_details_full", "profile_org", "verify-codeputy", "admin_edit_user", "admin_add_user"} )
@@ -1233,5 +1251,29 @@ class User implements UserInterface, DeputyInterface
     public function regBeforeToday(User $user): bool
     {
         return $user->getRegistrationDate() < (new \DateTime())->setTime(00, 00, 00);
+    }
+
+    public function getAddress4()
+    {
+        return $this->address4;
+    }
+
+    public function setAddress4($address4): User
+    {
+        $this->address4 = $address4;
+
+        return $this;
+    }
+
+    public function getAddress5()
+    {
+        return $this->address5;
+    }
+
+    public function setAddress5($address5): User
+    {
+        $this->address5 = $address5;
+
+        return $this;
     }
 }

@@ -4,7 +4,6 @@ namespace App\v2\Assembler;
 
 use App\Entity\NamedDeputy;
 use App\v2\DTO\DtoPropertySetterTrait;
-use App\Entity\User;
 use App\v2\DTO\NamedDeputyDto;
 use App\v2\Registration\DTO\OrgDeputyshipDto;
 
@@ -13,7 +12,6 @@ class NamedDeputyAssembler
     use DtoPropertySetterTrait;
 
     /**
-     * @param array $data
      * @return NamedDeputyDto
      */
     public function assembleFromArray(array $data)
@@ -29,10 +27,14 @@ class NamedDeputyAssembler
     {
         return (new NamedDeputy())
             ->setEmail1($dto->getDeputyEmail())
-            ->setDeputyNo($dto->getDeputyNumber())
-            ->setFirstname($dto->getDeputyFirstname() ? $dto->getDeputyFirstname() : null)
+            ->setDeputyNo(sprintf('%s-%s', $dto->getDeputyNumber(), $dto->getDeputyAddressNumber()))
+            ->setFirstname($dto->getDeputyFirstname() ?: null)
             ->setLastname($dto->getDeputyLastname())
             ->setAddress1($dto->getDeputyAddress1())
+            ->setAddress2($dto->getDeputyAddress2())
+            ->setAddress3($dto->getDeputyAddress3())
+            ->setAddress4($dto->getDeputyAddress4())
+            ->setAddress5($dto->getDeputyAddress5())
             ->setAddressPostcode($dto->getDeputyPostcode());
     }
 }

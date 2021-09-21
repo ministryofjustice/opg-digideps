@@ -50,7 +50,7 @@ class PATestUserFixtures extends AbstractDataFixture
             'Dep Surname' => 'SURNAME1',
             'Email' => 'behat-pa1@publicguardian.gov.uk',
             'active' => false,
-            'Deputy No' => '1000001',
+            'Deputy No' => '9000001',
             'Dep Type' => 23,
             'roleName' => 'ROLE_PA_NAMED',
             'Dep Adrs1' => 'PA OPG',
