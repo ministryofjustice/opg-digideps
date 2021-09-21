@@ -211,7 +211,7 @@ class FixtureController extends AbstractController
         $this->em->persist($ndr);
 
         if (isset($fromRequest['reportStatus']) && Report::STATUS_READY_TO_SUBMIT === $fromRequest['reportStatus']) {
-            foreach (['visits_care', 'expenses', 'income_benefits', 'bank_accounts', 'assets', 'debts', 'actions', 'other_info'] as $section) {
+            foreach (['visits_care', 'expenses', 'income_benefits', 'bank_accounts', 'assets', 'debts', 'actions', 'other_info', 'client_benefits_check'] as $section) {
                 $this->reportSection->completeSection($ndr, $section);
             }
         }

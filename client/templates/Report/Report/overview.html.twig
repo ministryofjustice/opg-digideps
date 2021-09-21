@@ -89,7 +89,7 @@
         {% if report.hasSection('deputyExpenses') or report.hasSection('bankAccounts') %}
             <li>
                 <h2 class="govuk-heading-m opg-overview-section__divider">{{ 'heading.propFinance' | trans(transOptions) }}</h2>
-                {% if report.hasSection('clientBenefitsCheck') %}
+                {% if report.hasSection('clientBenefitsCheck') and clientBenefitsSectionRequired %}
                     {% include '@App/Report/Report/_subsection.html.twig' with {
                         transDomain: translationDomain,
                         subSection: 'client_benefits_check',

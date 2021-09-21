@@ -300,18 +300,9 @@ class ReportController extends AbstractController
 
         $report = $this->reportApi->getReportIfNotSubmitted($reportId, $reportJmsGroup);
         $activeReport = $activeReportId ? $this->reportApi->getReportIfNotSubmitted($activeReportId, $reportJmsGroup) : null;
-
-        $benefitsSection = false;
         $dateTimeFormat = 'd-m-Y H:i:s';
-
         $featureFlag = $parameterStore->getFeatureFlag(ParameterStoreService::FLAG_BENEFITS_QUESTIONS);
-
         $featureFlagDate = DateTime::createFromFormat($dateTimeFormat, $featureFlag);
-        $currentDate = DateTime::createFromFormat($dateTimeFormat, date($dateTimeFormat));
-
-        if ($currentDate >= $featureFlagDate) {
-            $benefitsSection = true;
-        }
 
         return $this->render($template, [
             'user' => $user,
@@ -319,7 +310,7 @@ class ReportController extends AbstractController
             'namedDeputy' => $namedDeputy,
             'report' => $report,
             'activeReport' => $activeReport,
-            'benefitsSection' => $benefitsSection,
+            'clientBenefitsSectionRequired' => $report->requiresBenefitsCheckSection($featureFlagDate),
         ]);
     }
 

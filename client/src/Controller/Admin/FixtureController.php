@@ -13,6 +13,7 @@ use App\Service\Client\RestClient;
 use App\Service\Client\TokenStorage\TokenStorageInterface;
 use App\Service\DeputyProvider;
 use App\TestHelpers\ClientHelpers;
+use DateTime;
 use Sensio\Bundle\FrameworkExtraBundle\Configuration\Security;
 use Sensio\Bundle\FrameworkExtraBundle\Configuration\Template;
 use Symfony\Component\HttpFoundation\JsonResponse;
@@ -91,7 +92,7 @@ class FixtureController extends AbstractController
         $form->handleRequest($request);
         if ($form->isSubmitted() && $form->isValid()) {
             $submitted = $form->getData();
-            $courtDate = $request->get('court-date') ? new \DateTime($request->get('court-date')) : new \DateTime('2017-02-01');
+            $courtDate = $request->get('court-date') ? new DateTime($request->get('court-date')) : new DateTime();
             $deputyEmail = $request->query->get('deputy-email', sprintf('original-%s-deputy-%s@fixture.com', strtolower($submitted['deputyType']), mt_rand(1000, 9999)));
             $caseNumber = $request->get('case-number', ClientHelpers::createValidCaseNumber());
 

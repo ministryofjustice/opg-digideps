@@ -1331,7 +1331,7 @@ class Report implements ReportInterface, StartEndDateComparableInterface
         if ($this->getUnSubmitDate()) {
             return $this->getClientBenefitsCheck() instanceof ClientBenefitsCheck;
         } else {
-            return $featureLaunchDate->diff($this->getDueDate())->days > self::BENEFITS_CHECK_SECTION_REQUIRED_GRACE_PERIOD_DAYS;
+            return intval($featureLaunchDate->diff($this->getDueDate())->format('%R%a')) > self::BENEFITS_CHECK_SECTION_REQUIRED_GRACE_PERIOD_DAYS;
         }
     }
 }
