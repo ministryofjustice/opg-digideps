@@ -9,8 +9,8 @@ class ReportStatusServiceFactory
     /**
      * @return ReportStatusService
      */
-    public function create(Report $report, array $excludeSections = [])
+    public function create(Report $report)
     {
-        return new ReportStatusService($report, $excludeSections);
+        return new ReportStatusService($report);
     }
 }

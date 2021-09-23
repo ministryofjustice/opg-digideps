@@ -1,5 +1,5 @@
-@client_benefits_check @v2 @v2_reporting_1 @acs
-Feature: Client benefits check - NDR
+#@client_benefits_check @v2 @v2_reporting_1 @acs
+#Feature: Client benefits check - NDR
 
 #    @ndr-not-started
 #    Scenario: A deputy has checked the clients benefit entitlement on a specific date

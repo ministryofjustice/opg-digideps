@@ -1,4 +1,4 @@
-{
+23{
   "name": "digideps/api",
   "license": "MIT",
   "type": "project",
@@ -15,7 +15,7 @@
     }
   },
   "require": {
-    "php": "7.4.19",
+    "php": "7.4.23",
     "aws/aws-sdk-php": "^3.100.9",
     "doctrine/doctrine-bundle": "^2.2",
     "doctrine/doctrine-migrations-bundle": "^3.0",
