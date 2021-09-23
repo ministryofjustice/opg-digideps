@@ -231,13 +231,13 @@
 
                 <div class="govuk-grid-column-one-half">
                     <ul>
-                        {% if report.hasSection('clientBenefitsCheck') and clientBenefitsSectionRequired %}
+                        {% if report.hasSection('clientBenefitsCheck') %}
                             {% include '@App/Org/ClientProfile/_subsection.html.twig' with {
                                 transDomain: translationDomain,
                                 subSection: 'client_benefits_check',
                                 sectionId: 'clientBenefitsCheck',
                                 report: report,
-                                state: reportStatus.cleintBenefitsCheckState,
+                                state: reportStatus.clientBenefitsCheckState,
                                 description: true
                             } %}
                         {% endif %}

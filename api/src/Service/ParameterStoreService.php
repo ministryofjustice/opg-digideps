@@ -8,13 +8,7 @@ use Aws\Ssm\SsmClient;
 
 class ParameterStoreService
 {
-    public const PARAMETER_CHECKLIST_SYNC_ROW_LIMIT = 'checklist-sync-row-limit';
-    public const PARAMETER_DOCUMENT_SYNC_ROW_LIMIT = 'document-sync-row-limit';
-    public const PARAMETER_DOCUMENT_SYNC_INTERVAL_MINUTES = 'document-sync-interval-minutes';
-
     public const FLAG_BENEFITS_QUESTIONS = 'client-benefits-questions';
-    public const FLAG_CHECKLIST_SYNC = 'checklist-sync';
-    public const FLAG_DOCUMENT_SYNC = 'document-sync';
 
     /** @var SsmClient */
     private $ssmClient;

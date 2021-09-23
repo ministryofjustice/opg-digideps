@@ -76,6 +76,13 @@ trait StatusTrait
     public function updateSectionsStatusCache(array $sectionIds)
     {
         $currentSectionStatus = $this->getSectionStatusesCached();
+
+        foreach ($currentSectionStatus as $statusKey => $statusValues) {
+            if (in_array($statusKey, $this->getExcludeSections())) {
+                unset($currentSectionStatus[$statusKey]);
+            }
+        }
+
         $currentReportStatus = $this->getStatus();
 
         $sectionIds[] = Report::SECTION_MONEY_TRANSFERS;
@@ -86,6 +93,7 @@ trait StatusTrait
                 $currentSectionStatus[$sectionId] = $currentReportStatus->getSectionStateNotCached($sectionId);
             }
         }
+
         $this->setSectionStatusesCached($currentSectionStatus);
 
         // update report status, using the cached version of the section statuses

@@ -7,11 +7,10 @@ use App\Entity\Report\Report;
 class ReportStatusServiceFactory
 {
     /**
-     * @param Report $report
      * @return ReportStatusService
      */
-    public function create(Report $report)
+    public function create(Report $report, array $excludeSections = [])
     {
-        return new ReportStatusService($report);
+        return new ReportStatusService($report, $excludeSections);
     }
 }

@@ -636,6 +636,48 @@ class FixtureHelper
         return self::buildOrgUserDetails($user);
     }
 
+    public function createProfAdminCombinedHighNotStarted(string $testRunId): array
+    {
+        $user = $this->createOrgUserClientNamedDeputyAndReport(
+            $testRunId,
+            User::ROLE_PROF_ADMIN,
+            'prof-admin-combined-high-not-started',
+            Report::TYPE_102_4_5,
+            false,
+            false
+        );
+
+        return self::buildOrgUserDetails($user);
+    }
+
+    public function createProfAdminCombinedHighCompleted(string $testRunId): array
+    {
+        $user = $this->createOrgUserClientNamedDeputyAndReport(
+            $testRunId,
+            User::ROLE_PROF_ADMIN,
+            'prof-admin-combined-high-completed',
+            Report::TYPE_102_4_5,
+            true,
+            false
+        );
+
+        return self::buildOrgUserDetails($user);
+    }
+
+    public function createProfAdminCombinedHighSubmitted(string $testRunId): array
+    {
+        $user = $this->createOrgUserClientNamedDeputyAndReport(
+            $testRunId,
+            User::ROLE_PROF_ADMIN,
+            'prof-admin-combined-high-submitted',
+            Report::TYPE_102_4_5,
+            true,
+            true
+        );
+
+        return self::buildOrgUserDetails($user);
+    }
+
     public function createProfNamedPfaHighNotStarted(string $testRunId)
     {
         $user = $this->createOrgUserClientNamedDeputyAndReport(

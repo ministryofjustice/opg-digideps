@@ -13,7 +13,7 @@ class ReportingSectionsFeatureContext extends BaseFeatureContext
     use ActionsSectionTrait;
     use AdditionalInformationSectionTrait;
     use AssetsSectionTrait;
-    use BenefitsCheckSectionTrait;
+    use ClientBenefitsCheckSectionTrait;
     use ContactsSectionTrait;
     use DocumentsSectionTrait;
     use DeputyCostsSectionTrait;
@@ -77,15 +77,14 @@ class ReportingSectionsFeatureContext extends BaseFeatureContext
         $sectionFormatted = sprintf('/%s/%s/%s', $this->reportUrlPrefix, $this->loggedInUserDetails->getCurrentReportId(), $section);
         $statusCorrect = false;
         $sectionExists = false;
-        $xpath = "//div[normalize-space(@class)='opg-overview-section']|//li[contains(@class, 'opg-overview-section')]";
 
-        $divs = $this->findAllXpathElements($xpath);
+        $reportSections = $this->getAllReportSections();
 
-        foreach ($divs as $div) {
-            if ($div->find('css', 'a')->getAttribute('href') === $sectionFormatted) {
+        foreach ($reportSections as $reportSection) {
+            if ($reportSection->find('css', 'a')->getAttribute('href') === $sectionFormatted) {
                 $sectionExists = true;
-                $foundHtml = $div->getHtml();
-                $statuses = $div->findAll('css', 'span');
+                $foundHtml = $reportSection->getHtml();
+                $statuses = $reportSection->findAll('css', 'span');
 
                 foreach ($statuses as $sts) {
                     if (str_contains(strtolower($sts->getHtml()), $status)) {
@@ -102,6 +101,35 @@ class ReportingSectionsFeatureContext extends BaseFeatureContext
         if (!$statusCorrect) {
             throw new BehatException(sprintf('Report section status not as expected. Status "%s" not found. Found: %s.', $status, $foundHtml));
         }
+    }
+
+    /**
+     * @When I should not see :sectionName report section
+     */
+    public function iShouldNotSeeSection(string $sectionName)
+    {
+        $this->iAmOnReportsOverviewPage();
+        $sectionFormatted = sprintf('/%s/%s/%s', $this->reportUrlPrefix, $this->loggedInUserDetails->getCurrentReportId(), $sectionName);
+        $sectionExists = false;
+
+        $reportSections = $this->getAllReportSections();
+
+        foreach ($reportSections as $reportSection) {
+            if ($reportSection->find('css', 'a')->getAttribute('href') === $sectionFormatted) {
+                $sectionExists = true;
+            }
+        }
+
+        if ($sectionExists) {
+            throw new BehatException(sprintf('href matching "%s" was found on %s.', $sectionFormatted, $this->getCurrentUrl()));
+        }
+    }
+
+    private function getAllReportSections()
+    {
+        $xpath = "//div[normalize-space(@class)='opg-overview-section']|//li[contains(@class, 'opg-overview-section')]";
+
+        return $this->findAllXpathElements($xpath);
     }
 
     /**

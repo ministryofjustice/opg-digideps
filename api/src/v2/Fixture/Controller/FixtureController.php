@@ -21,6 +21,7 @@ use App\v2\Controller\ControllerTrait;
 use App\v2\Fixture\ReportSection;
 use DateTime;
 use Doctrine\ORM\EntityManagerInterface;
+use Exception;
 use Sensio\Bundle\FrameworkExtraBundle\Configuration\Security;
 use Symfony\Bundle\FrameworkBundle\Controller\AbstractController;
 use Symfony\Component\HttpFoundation\JsonResponse;
@@ -86,7 +87,7 @@ class FixtureController extends AbstractController
      *
      * @return JsonResponse
      *
-     * @throws \Exception
+     * @throws Exception
      */
     public function createCourtOrderAction(Request $request)
     {
@@ -95,10 +96,7 @@ class FixtureController extends AbstractController
         }
 
         $fromRequest = json_decode($request->getContent(), true);
-
-        if (Report::STATUS_READY_TO_SUBMIT === $fromRequest['reportStatus']) {
-            $fromRequest['courtDate'] = (new DateTime('-366 days'))->format('Y-m-d');
-        }
+        $fromRequest['courtDate'] = (new DateTime('-366 days'))->format('Y-m-d');
 
         $client = $this->createClient($fromRequest);
 
@@ -176,7 +174,7 @@ class FixtureController extends AbstractController
     /**
      * @param $fromRequest
      *
-     * @throws \Exception
+     * @throws Exception
      */
     private function createDeputy($fromRequest): User
     {
@@ -196,7 +194,7 @@ class FixtureController extends AbstractController
     /**
      * @param $fromRequest
      *
-     * @throws \Exception
+     * @throws Exception
      */
     private function createReport($fromRequest, Client $client): void
     {
@@ -290,7 +288,7 @@ class FixtureController extends AbstractController
      *
      * @return JsonResponse
      *
-     * @throws \Exception
+     * @throws Exception
      */
     public function completeReportSectionsAction(Request $request, string $reportType, $reportId)
     {

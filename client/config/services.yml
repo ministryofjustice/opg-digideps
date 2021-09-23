@@ -94,9 +94,6 @@ services:
     Aws\Ssm\SsmClient:
         arguments: ["%ssm_client_params%"]
 
-    App\Service\FeatureFlagService:
-        arguments: ['@Aws\Ssm\SsmClient', '%env(FEATURE_FLAG_PREFIX)%']
-
     App\Service\ParameterStoreService:
         arguments: ['@Aws\Ssm\SsmClient', '%env(PARAMETER_PREFIX)%', '%env(FEATURE_FLAG_PREFIX)%']
 

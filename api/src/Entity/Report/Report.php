@@ -132,6 +132,8 @@ class Report implements ReportInterface
     const PROF_DEPUTY_COSTS_TYPE_ASSESSED = 'assessed';
     const PROF_DEPUTY_COSTS_TYPE_BOTH = 'both';
 
+    const BENEFITS_CHECK_SECTION_REQUIRED_GRACE_PERIOD_DAYS = 60;
+
     /**
      * https://opgtransform.atlassian.net/wiki/spaces/DEPDS/pages/135266255/Report+variations.
      *
@@ -262,7 +264,7 @@ class Report implements ReportInterface
     private $mentalCapacity;
 
     /**
-     * @var ClientBenefitsCheck
+     * @var ClientBenefitsCheck|null
      *
      * @JMS\Groups({"client-benefits-check"})
      * @JMS\Type("App\Entity\Report\ClientBenefitsCheck")
@@ -460,6 +462,8 @@ class Report implements ReportInterface
      */
     private Satisfaction $satisfaction;
 
+    private array $excludeSections = [];
+
     /**
      * Report constructor.
      *
@@ -576,6 +580,10 @@ class Report implements ReportInterface
     {
         $ret = [];
         foreach (self::getSectionsSettings() as $sectionId => $reportTypes) {
+            if (in_array($sectionId, $this->getExcludeSections())) {
+                continue;
+            }
+
             if (in_array($this->getType(), $reportTypes)) {
                 $ret[] = $sectionId;
             }
@@ -1368,9 +1376,36 @@ class Report implements ReportInterface
         return $this->clientBenefitsCheck;
     }
 
-    public function setClientBenefitsCheck(ClientBenefitsCheck $clientBenefitsCheck): Report
+    public function setClientBenefitsCheck(?ClientBenefitsCheck $clientBenefitsCheck): Report
     {
         $this->clientBenefitsCheck = $clientBenefitsCheck;
+
+        return $this;
+    }
+
+    /**
+     * The client benefits check section of the report should be required for:.
+     *
+     * Reports with an unsubmit date that had not originally completed the section
+     * Reports without an unsubmit date and a due date more than 60 days after the client benefits section release date
+     */
+    public function requiresBenefitsCheckSection(DateTime $featureLaunchDate): bool
+    {
+        if ($this->getUnSubmitDate()) {
+            return $this->getClientBenefitsCheck() instanceof ClientBenefitsCheck;
+        } else {
+            return intval($featureLaunchDate->diff($this->getDueDate())->format('%R%a')) > self::BENEFITS_CHECK_SECTION_REQUIRED_GRACE_PERIOD_DAYS;
+        }
+    }
+
+    public function getExcludeSections(): array
+    {
+        return $this->excludeSections;
+    }
+
+    public function setExcludeSections(array $excludeSections): Report
+    {
+        $this->excludeSections = $excludeSections;
 
         return $this;
     }

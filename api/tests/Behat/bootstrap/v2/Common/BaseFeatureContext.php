@@ -79,6 +79,10 @@ class BaseFeatureContext extends MinkContext
     public UserDetails $profAdminDeputyHealthWelfareCompletedDetails;
     public UserDetails $profAdminDeputyHealthWelfareSubmittedDetails;
 
+    public UserDetails $profAdminCombinedHighNotStartedDetails;
+    public UserDetails $profAdminCombinedHighCompletedDetails;
+    public UserDetails $profAdminCombinedHighSubmittedDetails;
+
     public UserDetails $publicAuthorityNamedDeputyNotStartedDetails;
     public UserDetails $publicAuthorityNamedDeputyCompletedDetails;
     public UserDetails $publicAuthorityNamedDeputySubmittedDetails;
@@ -416,6 +420,33 @@ class BaseFeatureContext extends MinkContext
     {
         $userDetails = $this->fixtureHelper->createPaAdminCombinedHighSubmitted($this->testRunId);
         $this->fixtureUsers[] = $this->publicAuthorityAdminCombinedHighSubmittedDetails = new UserDetails($userDetails);
+    }
+
+    /**
+     * @BeforeScenario @prof-admin-combined-high-not-started
+     */
+    public function createProfAdminCombinedHighNotStarted()
+    {
+        $userDetails = $this->fixtureHelper->createProfAdminCombinedHighNotStarted($this->testRunId);
+        $this->fixtureUsers[] = $this->profAdminCombinedHighNotStartedDetails = new UserDetails($userDetails);
+    }
+
+    /**
+     * @BeforeScenario @prof-admin-combined-high-completed
+     */
+    public function createProfAdminCombinedHighCompleted()
+    {
+        $userDetails = $this->fixtureHelper->createProfAdminCombinedHighCompleted($this->testRunId);
+        $this->fixtureUsers[] = $this->profAdminCombinedHighCompletedDetails = new UserDetails($userDetails);
+    }
+
+    /**
+     * @BeforeScenario @prof-admin-combined-high-submitted
+     */
+    public function createProfAdminCombinedHighSubmitted()
+    {
+        $userDetails = $this->fixtureHelper->createProfAdminCombinedHighSubmitted($this->testRunId);
+        $this->fixtureUsers[] = $this->profAdminCombinedHighSubmittedDetails = new UserDetails($userDetails);
     }
 
     /**

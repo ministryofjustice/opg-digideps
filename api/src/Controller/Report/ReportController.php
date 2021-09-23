@@ -10,7 +10,9 @@ use App\Exception\UnauthorisedException;
 use App\Repository\ReportRepository;
 use App\Service\Auth\AuthService;
 use App\Service\Formatter\RestFormatter;
+use App\Service\ParameterStoreService;
 use App\Service\ReportService;
+use DateTime;
 use Doctrine\ORM\EntityManagerInterface;
 use Gedmo\SoftDeleteable\Filter\SoftDeleteableFilter;
 use Sensio\Bundle\FrameworkExtraBundle\Configuration\Security;
@@ -50,13 +52,16 @@ class ReportController extends RestController
         'report-submission-id',
     ];
 
+    private ParameterStoreService $parameterStoreService;
+
     public function __construct(
         array $updateHandlers,
         ReportRepository $repository,
         ReportService $reportService,
         EntityManagerInterface $em,
         AuthService $authService,
-        RestFormatter $formatter
+        RestFormatter $formatter,
+        ParameterStoreService $parameterStoreService
     ) {
         $this->updateHandlers = $updateHandlers;
         $this->repository = $repository;
@@ -64,6 +69,7 @@ class ReportController extends RestController
         $this->em = $em;
         $this->authService = $authService;
         $this->formatter = $formatter;
+        $this->parameterStoreService = $parameterStoreService;
     }
 
     /**
@@ -91,8 +97,14 @@ class ReportController extends RestController
 
         // report type is taken from CASREC. In case that's not available (shouldn't happen unless casrec table is dropped), use a 102
         $reportType = $this->reportService->getReportTypeBasedOnCasrec($client) ?: Report::TYPE_102;
-        $report = new Report($client, $reportType, new \DateTime($reportData['start_date']), new \DateTime($reportData['end_date']));
+        $report = new Report($client, $reportType, new DateTime($reportData['start_date']), new DateTime($reportData['end_date']));
         $report->setReportSeen(true);
+
+        $benefitsFeatureFlagDate = new DateTime($this->parameterStoreService->getFeatureFlag(ParameterStoreService::FLAG_BENEFITS_QUESTIONS));
+
+        if (!$report->requiresBenefitsCheckSection($benefitsFeatureFlagDate)) {
+            $report->setExcludeSections([Report::SECTION_CLIENT_BENEFITS_CHECK]);
+        }
 
         $report->updateSectionsStatusCache($report->getAvailableSections());
 
@@ -128,6 +140,12 @@ class ReportController extends RestController
         } else {
             $report = $this->findEntityBy(EntityDir\Report\Report::class, $id);
             $this->denyAccessIfReportDoesNotBelongToUser($report);
+        }
+
+        $benefitsFeatureFlagDate = new DateTime($this->parameterStoreService->getFeatureFlag(ParameterStoreService::FLAG_BENEFITS_QUESTIONS));
+
+        if (!$report->requiresBenefitsCheckSection($benefitsFeatureFlagDate)) {
+            $report->setExcludeSections([Report::SECTION_CLIENT_BENEFITS_CHECK]);
         }
 
         return $report;
@@ -168,7 +186,7 @@ class ReportController extends RestController
         $user = $this->getUser();
 
         /** @var Report|null $nextYearReport */
-        $nextYearReport = $this->reportService->submit($currentReport, $user, new \DateTime($data['submit_date']));
+        $nextYearReport = $this->reportService->submit($currentReport, $user, new DateTime($data['submit_date']));
 
         return $nextYearReport ? $nextYearReport->getId() : null;
     }
@@ -185,6 +203,12 @@ class ReportController extends RestController
         // deputies can only edit their own reports
         if (!$this->isGranted(EntityDir\User::ROLE_ADMIN)) {
             $this->denyAccessIfReportDoesNotBelongToUser($report);
+        }
+
+        $benefitsFeatureFlagDate = new DateTime($this->parameterStoreService->getFeatureFlag(ParameterStoreService::FLAG_BENEFITS_QUESTIONS));
+
+        if (!$report->requiresBenefitsCheckSection($benefitsFeatureFlagDate)) {
+            $report->setExcludeSections([Report::SECTION_CLIENT_BENEFITS_CHECK]);
         }
 
         $data = $this->formatter->deserializeBodyContent($request);
@@ -324,15 +348,15 @@ class ReportController extends RestController
         }
 
         if (array_key_exists('due_date', $data)) {
-            $report->setDueDate(new \DateTime($data['due_date']));
+            $report->setDueDate(new DateTime($data['due_date']));
         }
 
         if (array_key_exists('start_date', $data)) {
-            $report->setStartDate(new \DateTime($data['start_date']));
+            $report->setStartDate(new DateTime($data['start_date']));
         }
 
         if (array_key_exists('end_date', $data)) {
-            $report->setEndDate(new \DateTime($data['end_date']));
+            $report->setEndDate(new DateTime($data['end_date']));
             //end date could be updated automatically with a listener, but better not to overload
             // the default behaviour until the logic is 100% clear
             $report->updateDueDateBasedOnEndDate();
@@ -539,10 +563,10 @@ class ReportController extends RestController
 
         $this->reportService->unSubmit(
             $report,
-            new \DateTime($data['un_submit_date']),
-            new \DateTime($data['due_date']),
-            new \DateTime($data['start_date']),
-            new \DateTime($data['end_date']),
+            new DateTime($data['un_submit_date']),
+            new DateTime($data['due_date']),
+            new DateTime($data['start_date']),
+            new DateTime($data['end_date']),
             $data['unsubmitted_sections_list']
         );
 
@@ -561,6 +585,7 @@ class ReportController extends RestController
     {
         /** @var ReportRepository $repo */
         $repo = $this->em->getRepository(Report::class);
+        $benefitsFeatureFlagDate = new DateTime($this->parameterStoreService->getFeatureFlag(ParameterStoreService::FLAG_BENEFITS_QUESTIONS));
 
         while (
             ($reports = $repo
@@ -576,6 +601,10 @@ class ReportController extends RestController
                 ->getResult()) && count($reports)
         ) {
             foreach ($reports as $report) {
+                if (!$report->requiresBenefitsCheckSection($benefitsFeatureFlagDate)) {
+                    $report->setExcludeSections([Report::SECTION_CLIENT_BENEFITS_CHECK]);
+                }
+
                 /* @var $report Report */
                 $report->updateSectionsStatusCache($report->getAvailableSections());
             }
@@ -649,7 +678,7 @@ class ReportController extends RestController
             $reports[] = [
                 'id' => $reportDatum['id'],
                 'type' => $reportDatum['type'],
-                'un_submit_date' => $reportDatum['unSubmitDate'] instanceof \DateTime ?
+                'un_submit_date' => $reportDatum['unSubmitDate'] instanceof DateTime ?
                     $reportDatum['unSubmitDate']->format('Y-m-d') : null,
                 'status' => [
                     // adjust report status cached using end date
@@ -716,7 +745,7 @@ class ReportController extends RestController
         /** @var User $user */
         $user = $this->getUser();
 
-        $this->reportService->submitAdditionalDocuments($currentReport, $user, new \DateTime());
+        $this->reportService->submitAdditionalDocuments($currentReport, $user, new DateTime());
 
         return ['reportId' => $currentReport->getId()];
     }
@@ -749,7 +778,7 @@ class ReportController extends RestController
 
         if ('submitAndContinue' == $checklistData['button_clicked']) {
             $checklist->setSubmittedBy($user);
-            $checklist->setSubmittedOn(new \DateTime());
+            $checklist->setSubmittedOn(new DateTime());
         }
         $checklist->setLastModifiedBy($user);
 
@@ -788,7 +817,7 @@ class ReportController extends RestController
 
         if ('submitAndContinue' == $checklistData['button_clicked']) {
             $checklist->setSubmittedBy($user);
-            $checklist->setSubmittedOn(new \DateTime());
+            $checklist->setSubmittedOn(new DateTime());
         }
 
         $checklist->setLastModifiedBy($user);
@@ -882,7 +911,7 @@ class ReportController extends RestController
 
         if ($checklistData['is_submitted']) {
             $checklist->setSubmittedBy($user);
-            $checklist->setSubmittedOn(new \DateTime());
+            $checklist->setSubmittedOn(new DateTime());
         }
 
         $checklist->setLastModifiedBy($user);

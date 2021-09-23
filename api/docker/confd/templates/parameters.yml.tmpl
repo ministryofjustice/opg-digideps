@@ -7,7 +7,7 @@ parameters:
        version: 'latest'
        region: 'eu-west-1'
 {{ if exists "/cloudwatch/logs/localstack" }}
-       endpoint: 'http://localstack:4586'
+       endpoint: 'http://localstack:4566'
        validate: false
        credentials:
            key: 'FAKE_ID'
@@ -15,6 +15,19 @@ parameters:
 {{ else }}
        validate: true
 {{ end }}
+    ssm_client_params:
+      version: 'latest'
+      region: 'eu-west-1'
+{{ if exists "/ssm/localstack" }}
+      endpoint: 'http://localstack:4566'
+      validate: false
+      credentials:
+        key: 'FAKE_ID'
+        secret: 'FAKE_KEY'
+{{ else }}
+      validate: true
+{{ end }}
+
     database_driver: pdo_pgsql
     database_host: {{ getv "/database/hostname" }}
     database_port: {{ getv "/database/port" }}
