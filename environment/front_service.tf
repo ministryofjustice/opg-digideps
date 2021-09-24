@@ -87,7 +87,7 @@ locals {
       { "name": "GA_DEFAULT", "value": "${local.account.ga_default}" },
       { "name": "GA_GDS", "value": "${local.account.ga_gds}" },
       { "name": "HTMLTOPDF_ADDRESS", "value": "http://${local.htmltopdf_service_fqdn}" },
-      { "name": "NGINX_APP_NAME", "value": "frontend" }
+      { "name": "NGINX_APP_NAME", "value": "frontend" },
       { "name": "NONADMIN_HOST", "value": "https://${aws_route53_record.front.fqdn}" },
       { "name": "OPG_DOCKER_TAG", "value": "${var.OPG_DOCKER_TAG}" },
       { "name": "PARAMETER_PREFIX", "value": "${local.parameter_prefix}" },
