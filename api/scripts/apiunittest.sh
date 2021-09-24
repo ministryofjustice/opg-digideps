@@ -5,6 +5,13 @@ set -e
 # Generate config files so test bootstrap can address the DB
 confd -onetime -backend env
 
+while curl -s http://localstack:4566/health | grep -v "\"initScripts\": \"initialized\""; do
+  printf 'localstack initialisation scripts are still running\n'
+  sleep 1s
+done
+
+printf '\n---localstack initialized---\n\n'
+
 # Export unit test DB config so it can be used in tests
 export PGHOST=${DATABASE_HOSTNAME:=postgres}
 export PGPASSWORD=${DATABASE_PASSWORD:=api}
