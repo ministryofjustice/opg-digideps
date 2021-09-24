@@ -94,7 +94,7 @@ locals {
       { "name": "ROLE", "value": "front" },
       { "name": "S3_BUCKETNAME", "value": "pa-uploads-${local.environment}" },
       { "name": "SESSION_REDIS_DSN", "value": "redis://${aws_route53_record.frontend_redis.fqdn}" },
-      { "name": "SESSION_PREFIX", "value": "dd_session_front" },
+      { "name": "SESSION_PREFIX", "value": "dd_session_front" }
     ]
   }
 
