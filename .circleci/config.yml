@@ -1086,7 +1086,6 @@ jobs:
             docker-compose -f docker-compose.yml -f docker-compose.ci.test.yml --project-name api-unit-tests run api sh scripts/reset_db_structure_local.sh
             APP_ENV=test APP_DEBUG=0 docker-compose -f docker-compose.yml -f docker-compose.ci.test.yml --project-name api-unit-tests up -d api
             docker-compose -f docker-compose.yml -f docker-compose.ci.test.yml --project-name api-unit-tests exec api chmod -R 777 var
-            docker-compose -f docker-compose.yml -f docker-compose.ci.test.yml --project-name api-unit-tests up -d localstack
             docker-compose -f docker-compose.yml -f docker-compose.ci.test.yml --project-name api-unit-tests run --rm wait-for-it -address localstack:4566 --timeout=25 -debug
             docker-compose -f docker-compose.yml -f docker-compose.ci.test.yml --project-name api-unit-tests exec api sh scripts/apiunittest.sh
 
