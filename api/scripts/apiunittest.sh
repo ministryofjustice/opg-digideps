@@ -5,16 +5,16 @@ set -e
 # Generate config files so test bootstrap can address the DB
 confd -onetime -backend env
 
-attempts=0
+ATTEMPTS=0
 
 while curl -s http://localstack:4566/health | grep -v "\"initScripts\": \"initialized\""; do
   printf 'localstack initialisation scripts are still running\n'
 
-  ((attempts++))
+  ATTEMPTS=$((ATTEMPTS+1))
 
-  if [[ $attempts -eq 20 ]]; then
+  if [[ "$ATTEMPTS" -eq 20 ]]; then
       printf 'localstack failed to initialize\n'
-      break
+      exit 1
   fi
 
   sleep 1s
