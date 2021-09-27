@@ -30,8 +30,6 @@ services:
         build:
             context: .
             dockerfile: ./localstack.Dockerfile
-        volumes:
-            - ./docker/localstack-init.sh:/docker-entrypoint-initaws.d/init.sh
         ports:
             - '4566-4583:4566-4583'
         environment:
