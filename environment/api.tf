@@ -13,7 +13,7 @@ resource "aws_iam_role_policy" "api_task_logs" {
 resource "aws_iam_role_policy" "api_query_ssm" {
   name   = "api-query-ssm.${local.environment}"
   policy = data.aws_iam_policy_document.api_query_ssm.json
-  role   = aws_iam_role.front.id
+  role   = aws_iam_role.api.id
 }
 
 data "aws_iam_policy_document" "api_query_ssm" {
