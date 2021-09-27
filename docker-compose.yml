@@ -27,9 +27,11 @@ services:
             - .:/app
 
     localstack:
-        image: localstack/localstack:0.12.17.5
-        volumes:
-            - ./docker/localstack-s3-init.sh:/docker-entrypoint-initaws.d/s3-init.sh
+        build:
+            context: .
+            dockerfile: ./localstack.Dockerfile
+#        volumes:
+#            - ./docker/localstack-init.sh:/docker-entrypoint-initaws.d/init.sh
         ports:
             - '4566-4583:4566-4583'
         environment:
