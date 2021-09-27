@@ -1,4 +1,4 @@
-@v2 @v2_admin @report-management @acs
+@v2 @v2_admin @report-management
 Feature: Report Management (applies to all admin roles)
 
     @super-admin @prof-admin-health-welfare-completed

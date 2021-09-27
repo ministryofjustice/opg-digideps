@@ -1,4 +1,4 @@
-@client_benefits_check @v2 @v2_reporting_1 @acs
+@client_benefits_check @v2 @v2_reporting_1
 Feature: Client benefits check - Lay users
 
     @lay-combined-high-not-started
