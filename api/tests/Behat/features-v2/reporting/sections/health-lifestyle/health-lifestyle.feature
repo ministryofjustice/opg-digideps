@@ -1,4 +1,4 @@
-@v2 @v2_reporting_2 @lifestyle
+@v2 @v2_reporting_1 @lifestyle
 Feature: Health and Lifestyle (Lay / PA / Prof share same functionality)
 
     @lay-health-welfare-not-started
