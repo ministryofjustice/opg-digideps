@@ -49,13 +49,13 @@ data "aws_iam_policy_document" "invoke_dep_rep_api" {
   }
 }
 
-resource "aws_iam_role_policy" "query_ssm" {
+resource "aws_iam_role_policy" "front_query_ssm" {
   name   = "front-query-ssm.${local.environment}"
-  policy = data.aws_iam_policy_document.query_ssm.json
+  policy = data.aws_iam_policy_document.front_query_ssm.json
   role   = aws_iam_role.front.id
 }
 
-data "aws_iam_policy_document" "query_ssm" {
+data "aws_iam_policy_document" "front_query_ssm" {
   statement {
     sid    = "AllowQuerySSMParameters"
     effect = "Allow"
