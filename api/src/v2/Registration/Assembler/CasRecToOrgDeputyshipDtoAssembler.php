@@ -45,6 +45,8 @@ class CasRecToOrgDeputyshipDtoAssembler
         $reportStartDate = $reportEndDate ? $this->reportUtils->generateReportStartDateFromEndDate($reportEndDate) : null;
         $caseNumber = $this->reportUtils->padCasRecNumber(strtolower($row['Case']));
         $courtDate = empty($row['Made Date']) ? null : new DateTime($row['Made Date']);
+        // DepAddr No column is missinf from PA uploads
+        $deputyAddressNumber = !isset($row['DepAddr No']) ? null : $row['DepAddr No'];
 
         return (new OrgDeputyshipDto())
             ->setDeputyEmail($row['Email'])
@@ -69,6 +71,6 @@ class CasRecToOrgDeputyshipDtoAssembler
             ->setReportType($reportType)
             ->setReportStartDate($reportStartDate)
             ->setReportEndDate($reportEndDate)
-            ->setDeputyAddressNumber($row['DepAddr No']);
+            ->setDeputyAddressNumber($deputyAddressNumber);
     }
 }

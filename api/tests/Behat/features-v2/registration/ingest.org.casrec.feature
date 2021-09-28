@@ -5,7 +5,7 @@ Feature: Org CSV data ingestion - casrec source data
     Scenario: Uploading a CSV that contains new clients and named deputies only
         Given a super admin user accesses the admin app
         When I navigate to the upload users page
-        And I upload a 'casrec' org CSV that contains the following new entities:
+        And I upload a 'casrec' 'org' CSV that contains the following new entities:
             | clients | named_deputies | organisations | reports |
             | 3       | 2              | 2             | 3       |
         Then the new 'org' entities should be added to the database

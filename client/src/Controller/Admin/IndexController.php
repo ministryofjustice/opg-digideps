@@ -512,7 +512,6 @@ class IndexController extends AbstractController
                         'Typeofrep',
                         'Last Report Day',
                         'Made Date',
-                        'DepAddr No',
                     ])
                     ->setOptionalColumns([
                         'Client Adrs1',
@@ -526,6 +525,7 @@ class IndexController extends AbstractController
                         'Phone Alternative',
                         'Fee Payer',
                         'Corres',
+                        'DepAddr No',
                     ])
                     ->setUnexpectedColumns([
                         'NDR',

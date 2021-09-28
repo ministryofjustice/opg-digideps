@@ -11,7 +11,6 @@ class OrgDeputyshipDto
     /** @var string */
     private $deputyNumber;
     private $deputyLastname;
-    private $deputyAddressNumber;
     private $deputyAddress1;
     private $deputyAddress2;
     private $caseNumber;
@@ -28,6 +27,7 @@ class OrgDeputyshipDto
     private $deputyAddress3;
     private $deputyAddress4;
     private $deputyAddress5;
+    private $deputyAddressNumber;
     private $deputyPostcode;
     private $deputyFirstname;
 
@@ -316,12 +316,12 @@ class OrgDeputyshipDto
         return $this;
     }
 
-    public function getDeputyAddressNumber(): string
+    public function getDeputyAddressNumber(): ?string
     {
         return $this->deputyAddressNumber;
     }
 
-    public function setDeputyAddressNumber(string $deputyAddressNumber): OrgDeputyshipDto
+    public function setDeputyAddressNumber(?string $deputyAddressNumber): OrgDeputyshipDto
     {
         $this->deputyAddressNumber = $deputyAddressNumber;
 

@@ -40,10 +40,14 @@ trait IngestTrait
     private $clientAfterCsvUpload;
 
     /**
-     * @When I upload a :source org CSV that contains the following new entities:
+     * @When I upload a :source :type CSV that contains the following new entities:
      */
-    public function iUploadACsvThatContainsTheFollowingNewEntities(string $source, TableNode $table)
+    public function iUploadACsvThatContainsTheFollowingNewEntities(string $source, string $type, TableNode $table)
     {
+        if (!in_array(strtolower($type), ['org', 'pa'])) {
+            throw new BehatException('This step only supports type being "org" or "pa". Retry the step or add further options in the step code.');
+        }
+
         $this->iamOnAdminUploadUsersPage();
 
         if ('casrec' === $source) {
@@ -61,8 +65,12 @@ trait IngestTrait
             $this->selectOption('form[type]', 'org');
             $this->pressButton('Continue');
 
+            $csvFilePath = 'org' === strtolower($type) ?
+                'casrec-csvs/org-3-valid-rows.csv' :
+                'casrec-csvs/org-1-row-pa-missing-deputy-address-number-column.csv';
+
             $this->uploadCsvAndCountCreatedEntities(
-                'casrec-csvs/org-3-valid-rows.csv',
+                $csvFilePath,
                 'Upload PA/Prof users'
             );
         } elseif ('sirius' === $source) {
@@ -79,7 +87,7 @@ trait IngestTrait
     {
         $this->iAmOnCorrectUploadPage($type);
 
-        if ('org' === $type) {
+        if (in_array(strtolower($type), ['org', 'pa'])) {
             $this->assertIntEqualsInt($this->clients['expected'], $this->clients['found'], 'Count of entities based on UIDs - clients');
             $this->assertIntEqualsInt($this->namedDeputies['expected'], $this->namedDeputies['found'], 'Count of entities based on UIDs - named deputies');
             $this->assertIntEqualsInt($this->organisations['expected'], $this->organisations['found'], 'Count of entities based on UIDs - organisations');
@@ -96,7 +104,7 @@ trait IngestTrait
     {
         $this->iAmOnCorrectUploadPage($type);
 
-        if ('org' === $type) {
+        if (in_array(strtolower($type), ['org', 'pa'])) {
             $this->assertOnAlertMessage(sprintf('%s clients', $this->clients['expected']));
             $this->assertOnAlertMessage(sprintf('%s named deputies', $this->namedDeputies['expected']));
             $this->assertOnAlertMessage(sprintf('%s organisation', $this->organisations['expected']));
@@ -126,7 +134,7 @@ trait IngestTrait
 
             $this->entityUids['client_case_numbers'][] = $row['Case'];
             $this->entityUids['casrec_case_numbers'][] = strtolower($row['Case'] ?: '');
-            $this->entityUids['named_deputy_numbers'][] = sprintf('%s-%s', $row['Deputy No'], $row['DepAddr No']);
+            $this->entityUids['named_deputy_numbers'][] = isset($row['DepAddr No']) ? sprintf('%s-%s', $row['Deputy No'], $row['DepAddr No']) : $row['Deputy No'];
             $this->entityUids['org_email_identifiers'][] = $email;
         }
 
@@ -448,11 +456,11 @@ trait IngestTrait
 
     private function iAmOnCorrectUploadPage(string $type)
     {
-        if (!in_array(strtolower($type), ['org', 'lay'])) {
-            throw new BehatException('$type can only be lay or org');
+        if (!in_array(strtolower($type), ['org', 'lay', 'pa'])) {
+            throw new BehatException('$type can only be lay, pa or org');
         }
 
-        'org' === $type ? $this->iAmOnAdminOrgCsvUploadPage() : $this->iAmOnAdminLayCsvUploadPage();
+        in_array(strtolower($type), ['org', 'pa']) ? $this->iAmOnAdminOrgCsvUploadPage() : $this->iAmOnAdminLayCsvUploadPage();
     }
 
     /**
