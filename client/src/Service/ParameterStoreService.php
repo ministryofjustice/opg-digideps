@@ -17,6 +17,8 @@ class ParameterStoreService
 
     public const FLAG_BENEFITS_QUESTIONS = 'benefits-questions';
 
+    public const FLAG_PAPER_REPORTS = 'paper-reports';
+
     /** @var SsmClient */
     private $ssmClient;
 

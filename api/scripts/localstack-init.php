@@ -76,6 +76,20 @@ $ssmClient->putParameter([
     'Overwrite' => true,
 ]);
 
+$ssmClient->putParameter([
+     'Name' => '/default/flag/benefits-questions',
+     'Type' => 'String',
+     'Value' => '31-12-2030 00:00:00',
+     'Overwrite' => true,
+]);
+
+$ssmClient->putParameter([
+     'Name' => '/default/flag/paper-reports',
+     'Type' => 'String',
+     'Value' => '1',
+     'Overwrite' => true,
+]);
+
 $cloudwatchLogsClient = new CloudWatchLogsClient([
     'version' => 'latest',
     'region' => 'eu-west-1',
