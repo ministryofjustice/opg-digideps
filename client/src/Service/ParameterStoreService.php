@@ -14,6 +14,7 @@ class ParameterStoreService
 
     public const FLAG_CHECKLIST_SYNC = 'checklist-sync';
     public const FLAG_DOCUMENT_SYNC = 'document-sync';
+    public const FLAG_PAPER_REPORTS = 'paper-reports';
 
     /** @var SsmClient */
     private $ssmClient;

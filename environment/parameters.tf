@@ -61,3 +61,15 @@ resource "aws_ssm_parameter" "flag_checklist_sync" {
     ignore_changes = [value]
   }
 }
+
+resource "aws_ssm_parameter" "flag_paper_reports" {
+  name  = "${local.feature_flag_prefix}paper-reports"
+  type  = "String"
+  value = "0"
+
+  tags = local.default_tags
+
+  lifecycle {
+    ignore_changes = [value]
+  }
+}

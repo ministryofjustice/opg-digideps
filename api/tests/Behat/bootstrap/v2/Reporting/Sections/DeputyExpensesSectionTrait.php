@@ -4,6 +4,7 @@ declare(strict_types=1);
 
 namespace App\Tests\Behat\v2\Reporting\Sections;
 
+use App\Entity\User;
 use App\Tests\Behat\BehatException;
 
 trait DeputyExpensesSectionTrait
@@ -24,7 +25,8 @@ trait DeputyExpensesSectionTrait
         $this->clickLink('edit-deputy_expenses');
 
         $currentUrl = $this->getCurrentUrl();
-        $onSectionPage = preg_match('/report\/.*\/deputy-expenses$/', $currentUrl);
+        $reportPrefix = $this->loggedInUserDetails->getCurrentReportNdrOrReport();
+        $onSectionPage = preg_match("/${reportPrefix}\/.*\/deputy-expenses$/", $currentUrl);
 
         if (!$onSectionPage) {
             throw new BehatException('Not on deputy expenses section page');
@@ -44,7 +46,8 @@ trait DeputyExpensesSectionTrait
         $this->visitPath($reportSectionUrl);
 
         $currentUrl = $this->getCurrentUrl();
-        $onSectionPage = preg_match('/report\/.*\/deputy-expenses$/', $currentUrl);
+        $reportPrefix = $this->loggedInUserDetails->getCurrentReportNdrOrReport();
+        $onSectionPage = preg_match("/${reportPrefix}\/.*\/deputy-expenses$/", $currentUrl);
 
         if (!$onSectionPage) {
             throw new BehatException('Not on deputy expenses section page');
@@ -194,7 +197,11 @@ trait DeputyExpensesSectionTrait
     {
         $answers = $this->getSectionAnswers('expenseDetails')[0];
 
-        $rowSelector = sprintf('//tr[th[normalize-space() ="%s"]]', $answers['expenses_single[explanation]']);
+        if ('ndr' == $this->reportUrlPrefix) {
+            $rowSelector = sprintf('//div[dt[normalize-space() ="%s"]]', $answers['expenses_single[explanation]']);
+        } else {
+            $rowSelector = sprintf('//tr[th[normalize-space() ="%s"]]', $answers['expenses_single[explanation]']);
+        }
         $descriptionTableRow = $this->getSession()->getPage()->find('xpath', $rowSelector);
 
         $this->editFieldAnswerInSectionTrackTotal($descriptionTableRow, 'expenses_single[amount]', 'expenseDetails');
@@ -230,13 +237,20 @@ trait DeputyExpensesSectionTrait
      */
     public function iChangeMindAnswerNoToExpensesToDeclare()
     {
+        if ('ndr' == $this->reportUrlPrefix) {
+            $id = $this->interactingWithUserDetails->getUserId();
+            $user = $this->em->getRepository(User::class)->find($id);
+
+            $this->sectionStartText = sprintf('Did you pay for anything for %s before you got your court order?', $user->getFirstname());
+        }
+
         $rowSelector = sprintf(
             '//div[dt[normalize-space() ="%s"]]',
             $this->sectionStartText
         );
 
-        $descriptionTableRow = $this->getSession()->getPage()->find('xpath', $rowSelector);
-        $descriptionTableRow->clickLink('Edit');
+        $descriptionTableRow = $this->getSession()->getPage()->find('css', '.behat-region-paid-for-anything .behat-link-edit');
+        $descriptionTableRow->click();
 
         $this->removeAllAnswers();
         $this->iHaveNoExpenses();

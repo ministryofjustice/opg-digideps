@@ -19,7 +19,7 @@ trait AdditionalInformationSectionTrait
         $this->visitPath($reportSectionUrl);
 
         $currentUrl = $this->getCurrentUrl();
-        $onSummaryPage = preg_match('/report\/.*\/any-other-info$/', $currentUrl);
+        $onSummaryPage = preg_match('/\/(ndr|report)\/.*\/any-other-info$/', $currentUrl);
 
         if (!$onSummaryPage) {
             throw new BehatException(sprintf('Not on additional information start page. Current URL is: %s', $currentUrl));
