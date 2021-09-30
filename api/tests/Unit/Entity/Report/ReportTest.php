@@ -276,7 +276,8 @@ class ReportTest extends KernelTestCase
      */
     public function testAvailableSectionsAndHasSection($type, array $expectedSections, array $unExpectedSections)
     {
-        $this->report = new Report($this->client, $type, new \DateTime('2017-06-23'), new \DateTime('2018-06-22'));
+        $this->report = (new Report($this->client, $type, new \DateTime('2017-06-23'), new \DateTime('2018-06-22')))
+            ->setBenefitsSectionReleaseDate(new DateTime('2016-01-01'));
 
         foreach ($expectedSections as $section) {
             $this->assertContains($section, $this->report->getAvailableSections());

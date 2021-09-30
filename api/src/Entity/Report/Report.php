@@ -580,12 +580,14 @@ class Report implements ReportInterface
     public function getAvailableSections()
     {
         if (!$this->requiresBenefitsCheckSection()) {
-            $this->setExcludeSections([Report::SECTION_CLIENT_BENEFITS_CHECK]);
+            $this->excludeSections = [Report::SECTION_CLIENT_BENEFITS_CHECK];
+        } else {
+            $this->excludeSections = [];
         }
 
         $ret = [];
         foreach (self::getSectionsSettings() as $sectionId => $reportTypes) {
-            if (in_array($sectionId, $this->getExcludeSections())) {
+            if (in_array($sectionId, $this->excludeSections)) {
                 continue;
             }
 
