@@ -100,12 +100,6 @@ class ReportController extends RestController
         $report = new Report($client, $reportType, new DateTime($reportData['start_date']), new DateTime($reportData['end_date']));
         $report->setReportSeen(true);
 
-        $benefitsFeatureFlagDate = new DateTime($this->parameterStoreService->getFeatureFlag(ParameterStoreService::FLAG_BENEFITS_QUESTIONS));
-
-        if (!$report->requiresBenefitsCheckSection($benefitsFeatureFlagDate)) {
-            $report->setExcludeSections([Report::SECTION_CLIENT_BENEFITS_CHECK]);
-        }
-
         $report->updateSectionsStatusCache($report->getAvailableSections());
 
         $this->em->persist($report);
@@ -140,12 +134,6 @@ class ReportController extends RestController
         } else {
             $report = $this->findEntityBy(EntityDir\Report\Report::class, $id);
             $this->denyAccessIfReportDoesNotBelongToUser($report);
-        }
-
-        $benefitsFeatureFlagDate = new DateTime($this->parameterStoreService->getFeatureFlag(ParameterStoreService::FLAG_BENEFITS_QUESTIONS));
-
-        if (!$report->requiresBenefitsCheckSection($benefitsFeatureFlagDate)) {
-            $report->setExcludeSections([Report::SECTION_CLIENT_BENEFITS_CHECK]);
         }
 
         return $report;
@@ -203,12 +191,6 @@ class ReportController extends RestController
         // deputies can only edit their own reports
         if (!$this->isGranted(EntityDir\User::ROLE_ADMIN)) {
             $this->denyAccessIfReportDoesNotBelongToUser($report);
-        }
-
-        $benefitsFeatureFlagDate = new DateTime($this->parameterStoreService->getFeatureFlag(ParameterStoreService::FLAG_BENEFITS_QUESTIONS));
-
-        if (!$report->requiresBenefitsCheckSection($benefitsFeatureFlagDate)) {
-            $report->setExcludeSections([Report::SECTION_CLIENT_BENEFITS_CHECK]);
         }
 
         $data = $this->formatter->deserializeBodyContent($request);
@@ -585,7 +567,6 @@ class ReportController extends RestController
     {
         /** @var ReportRepository $repo */
         $repo = $this->em->getRepository(Report::class);
-        $benefitsFeatureFlagDate = new DateTime($this->parameterStoreService->getFeatureFlag(ParameterStoreService::FLAG_BENEFITS_QUESTIONS));
 
         while (
             ($reports = $repo
@@ -601,13 +582,10 @@ class ReportController extends RestController
                 ->getResult()) && count($reports)
         ) {
             foreach ($reports as $report) {
-                if (!$report->requiresBenefitsCheckSection($benefitsFeatureFlagDate)) {
-                    $report->setExcludeSections([Report::SECTION_CLIENT_BENEFITS_CHECK]);
-                }
-
                 /* @var $report Report */
                 $report->updateSectionsStatusCache($report->getAvailableSections());
             }
+
             $this->em->flush();
         }
     }

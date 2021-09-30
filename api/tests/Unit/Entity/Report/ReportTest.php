@@ -525,11 +525,12 @@ class ReportTest extends KernelTestCase
         $report = ($reportTestHelper->generateReport($this->em))
             ->setDueDate($dueDate)
             ->setClientBenefitsCheck($clientBenefitSection)
-            ->setUnSubmitDate($unsubmitDate);
+            ->setUnSubmitDate($unsubmitDate)
+            ->setBenefitsSectionReleaseDate($featureFlagDate);
 
         self::assertEquals(
             $expectedResult,
-            $report->requiresBenefitsCheckSection($featureFlagDate)
+            $report->requiresBenefitsCheckSection()
         );
     }
 

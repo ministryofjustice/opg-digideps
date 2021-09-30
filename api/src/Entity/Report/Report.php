@@ -463,6 +463,7 @@ class Report implements ReportInterface
     private Satisfaction $satisfaction;
 
     private array $excludeSections = [];
+    private ?DateTime $benefitsSectionReleaseDate = null;
 
     /**
      * Report constructor.
@@ -578,6 +579,10 @@ class Report implements ReportInterface
      */
     public function getAvailableSections()
     {
+        if (!$this->requiresBenefitsCheckSection()) {
+            $this->setExcludeSections([Report::SECTION_CLIENT_BENEFITS_CHECK]);
+        }
+
         $ret = [];
         foreach (self::getSectionsSettings() as $sectionId => $reportTypes) {
             if (in_array($sectionId, $this->getExcludeSections())) {
@@ -1389,12 +1394,12 @@ class Report implements ReportInterface
      * Reports with an unsubmit date that had not originally completed the section
      * Reports without an unsubmit date and a due date more than 60 days after the client benefits section release date
      */
-    public function requiresBenefitsCheckSection(DateTime $featureLaunchDate): bool
+    public function requiresBenefitsCheckSection(): bool
     {
         if ($this->getUnSubmitDate()) {
             return $this->getClientBenefitsCheck() instanceof ClientBenefitsCheck;
         } else {
-            return intval($featureLaunchDate->diff($this->getDueDate())->format('%R%a')) > self::BENEFITS_CHECK_SECTION_REQUIRED_GRACE_PERIOD_DAYS;
+            return intval($this->getBenefitsSectionReleaseDate()->diff($this->getDueDate())->format('%R%a')) > self::BENEFITS_CHECK_SECTION_REQUIRED_GRACE_PERIOD_DAYS;
         }
     }
 
@@ -1406,6 +1411,21 @@ class Report implements ReportInterface
     public function setExcludeSections(array $excludeSections): Report
     {
         $this->excludeSections = $excludeSections;
+
+        return $this;
+    }
+
+    public function getBenefitsSectionReleaseDate(): ?DateTime
+    {
+        return $this->benefitsSectionReleaseDate ?: new DateTime('31-12-2030 00:00:00');
+    }
+
+    /**
+     * @param DateTime |null $benefitsSectionReleaseDate
+     */
+    public function setBenefitsSectionReleaseDate(?DateTime $benefitsSectionReleaseDate): Report
+    {
+        $this->benefitsSectionReleaseDate = $benefitsSectionReleaseDate;
 
         return $this;
     }

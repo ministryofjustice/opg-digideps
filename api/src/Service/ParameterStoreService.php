@@ -8,8 +8,6 @@ use Aws\Ssm\SsmClient;
 
 class ParameterStoreService
 {
-    public const FLAG_BENEFITS_QUESTIONS = 'client-benefits-questions';
-
     /** @var SsmClient */
     private $ssmClient;
 
