@@ -64,6 +64,9 @@ trait PageUrlsTrait
     private string $adminUserResearchReportUrl = '/admin/stats/user-research';
     private string $adminUserSearchUrl = '/admin';
     private string $adminViewUserUrl = '/admin/user/%s';
+    private string $adminUploadUsersUrl = '/admin/upload';
+    private string $adminUploadOrgUsersUrl = '/admin/org-csv-upload';
+    private string $adminUploadLayUsersUrl = '/admin/casrec-upload';
 
     // Fixtures
     private string $courtOrdersFixtureUrl = '/admin/fixtures/court-orders?%s';
@@ -321,6 +324,21 @@ trait PageUrlsTrait
     public function getDeputyCostsEstimateSectionUrl(int $reportId): string
     {
         return sprintf($this->deputyCostsEstimateSectionUrl, $this->reportUrlPrefix, $reportId);
+    }
+
+    public function getAdminUploadUsersUrl(): string
+    {
+        return $this->adminUploadUsersUrl;
+    }
+
+    public function getAdminUploadOrgUsersUrl(): string
+    {
+        return $this->adminUploadOrgUsersUrl;
+    }
+
+    public function getAdminUploadLayUsersUrl(): string
+    {
+        return $this->adminUploadLayUsersUrl;
     }
 
     public function getAdminSubmissionsPage(): string

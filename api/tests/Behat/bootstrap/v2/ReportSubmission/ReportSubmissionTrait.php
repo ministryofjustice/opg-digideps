@@ -19,7 +19,7 @@ trait ReportSubmissionTrait
     {
         $this->assertInteractingWithUserIsSet();
 
-        $caseNumber = $this->interactingWithUserDetails->getCourtOrderNumber();
+        $caseNumber = $this->interactingWithUserDetails->getClientCaseNumber();
         $locator = sprintf('//td[normalize-space()="%s"]/..', $caseNumber);
         $submissionRow = $this->getSession()->getPage()->find('xpath', $locator);
 
@@ -172,8 +172,8 @@ trait ReportSubmissionTrait
         $usersToSearchOn = 'first' === $whichName ? $this->sameFirstNameUserDetails : $this->sameLastNameUserDetails;
         $locator = sprintf(
             '//td[normalize-space()="%s"]|//td[normalize-space()="%s"]',
-            $usersToSearchOn[0]->getCourtOrderNumber(),
-            $usersToSearchOn[1]->getCourtOrderNumber(),
+            $usersToSearchOn[0]->getClientCaseNumber(),
+            $usersToSearchOn[1]->getClientCaseNumber(),
         );
 
         $clientRows = $this->getSession()->getPage()->findAll('xpath', $locator);
@@ -193,8 +193,8 @@ trait ReportSubmissionTrait
         $usersToSearchOn = 'first' === $whichName ? $this->sameFirstNameUserDetails : $this->sameLastNameUserDetails;
         $locator = sprintf(
             '//td[normalize-space()="%s"]|//td[normalize-space()="%s"]',
-            $usersToSearchOn[0]->getCourtOrderNumber(),
-            $usersToSearchOn[1]->getCourtOrderNumber(),
+            $usersToSearchOn[0]->getClientCaseNumber(),
+            $usersToSearchOn[1]->getClientCaseNumber(),
         );
 
         $clientRows = $this->getSession()->getPage()->findAll('xpath', $locator);
@@ -212,7 +212,7 @@ trait ReportSubmissionTrait
     public function iSearchForSubmissionsUsingTheCourtOrderNumberOfTheClientWithNumberReports(string $numberReports)
     {
         $userToSearchOn = 'one' === $numberReports ? $this->oneReportsUserDetails : $this->twoReportsUserDetails;
-        $this->fillInField('q', $userToSearchOn->getCourtOrderNumber());
+        $this->fillInField('q', $userToSearchOn->getClientCaseNumber());
         $this->pressButton('Search');
         $this->clickLink('Pending');
     }
@@ -225,7 +225,7 @@ trait ReportSubmissionTrait
         $userToSearchOn = 'one' === $numberReports ? $this->oneReportsUserDetails : $this->twoReportsUserDetails;
         $locator = sprintf(
             '//td[normalize-space()="%s"]',
-            $userToSearchOn->getCourtOrderNumber()
+            $userToSearchOn->getClientCaseNumber()
         );
 
         $clientRows = $this->getSession()->getPage()->findAll('xpath', $locator);
@@ -247,7 +247,7 @@ trait ReportSubmissionTrait
 
         $locator = sprintf(
             '//td[normalize-space()="%s"]',
-            $userToSearchOn->getCourtOrderNumber()
+            $userToSearchOn->getClientCaseNumber()
         );
 
         $clientRows = $this->getSession()->getPage()->findAll('xpath', $locator);
@@ -266,7 +266,7 @@ trait ReportSubmissionTrait
     {
         $locator = sprintf(
             '//td[normalize-space()="%s"]/..//input',
-            $this->oneReportsUserDetails->getCourtOrderNumber()
+            $this->oneReportsUserDetails->getClientCaseNumber()
         );
 
         $clientRowCheckBox = $this->getSession()->getPage()->find('xpath', $locator);
@@ -307,7 +307,7 @@ trait ReportSubmissionTrait
     {
         $locator = sprintf(
             '//td[normalize-space()="%s"]/../..',
-            $this->oneReportsUserDetails->getCourtOrderNumber()
+            $this->oneReportsUserDetails->getClientCaseNumber()
         );
 
         $submissionRowTableBody = $this->getSession()->getPage()->find('xpath', $locator);
@@ -324,7 +324,7 @@ trait ReportSubmissionTrait
                 $errorMessage = sprintf(
                     'Could not find a row that contained the status "%s" for submission with court order number "%s". Table HTML: %s',
                     $status,
-                    $this->oneReportsUserDetails->getCourtOrderNumber(),
+                    $this->oneReportsUserDetails->getClientCaseNumber(),
                     $submissionRowTableBody->getHtml()
                 );
 

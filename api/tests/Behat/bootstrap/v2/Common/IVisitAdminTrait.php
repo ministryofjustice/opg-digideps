@@ -172,6 +172,30 @@ trait IVisitAdminTrait
     }
 
     /**
+     * @When I visit the admin upload users page
+     */
+    public function iVisitAdminUploadUsersPage()
+    {
+        $this->visitAdminPath($this->getAdminUploadUsersUrl());
+    }
+
+    /**
+     * @When I visit the admin upload org users page
+     */
+    public function iVisitAdminUploadOrgUsersPage()
+    {
+        $this->visitAdminPath($this->getAdminUploadOrgUsersUrl());
+    }
+
+    /**
+     * @When I visit the admin upload lay users page
+     */
+    public function iVisitAdminUploadLayUsersPage()
+    {
+        $this->visitAdminPath($this->getAdminUploadLayUsersUrl());
+    }
+
+    /**
      * @When I visit the notification page
      */
     public function iVisitTheNotificationPage()

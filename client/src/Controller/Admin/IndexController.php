@@ -525,6 +525,7 @@ class IndexController extends AbstractController
                         'Phone Alternative',
                         'Fee Payer',
                         'Corres',
+                        'DepAddr No',
                     ])
                     ->setUnexpectedColumns([
                         'NDR',

@@ -40,9 +40,6 @@ class CasRecToOrgDeputyshipDtoAssemblerTest extends TestCase
         $reportUtils->padCasRecNumber('abcd12')
             ->shouldBeCalled()
             ->willReturn('00abcd12');
-        $reportUtils->padCasRecNumber('1234567')
-            ->shouldBeCalled()
-            ->willReturn('01234567');
 
         $sut = new CasRecToOrgDeputyshipDtoAssembler($reportUtils->reveal());
         $dto = $sut->assembleSingleDtoFromArray($casrecArray);

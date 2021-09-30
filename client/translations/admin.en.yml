@@ -204,6 +204,7 @@ uploadPA:
   uploadError: An error occured whilst uploading. Some records may not have been updated. Please try again.
   upload:
     label: Select CSV file
+    hint: Max upload size is 64M
   submit:
     label: Upload PA/Prof users
 
