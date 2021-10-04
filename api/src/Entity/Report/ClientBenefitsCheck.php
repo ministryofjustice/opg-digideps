@@ -95,6 +95,16 @@ class ClientBenefitsCheck
     private $doOthersReceiveIncomeOnClientsBehalf;
 
     /**
+     * @var string
+     *
+     * @ORM\Column(name="dont_know_income_explanation", type="text", nullable=true)
+     *
+     * @JMS\Groups({"client-benefits-check"})
+     * @JMS\Type("string")
+     */
+    private $dontKnowIncomeExplanation;
+
+    /**
      * @ORM\OneToMany(targetEntity="App\Entity\Report\IncomeReceivedOnClientsBehalf", mappedBy="clientBenefitsCheck", cascade={"persist", "remove"}, fetch="EXTRA_LAZY" )
      */
     private $typesOfIncomeReceivedOnClientsBehalf;
@@ -197,6 +207,18 @@ class ClientBenefitsCheck
         }
 
         $this->neverCheckedExplanation = $neverCheckedExplanation;
+
+        return $this;
+    }
+
+    public function getDontKnowIncomeExplanation(): string
+    {
+        return $this->dontKnowIncomeExplanation;
+    }
+
+    public function setDontKnowIncomeExplanation(string $dontKnowIncomeExplanation): ClientBenefitsCheck
+    {
+        $this->dontKnowIncomeExplanation = $dontKnowIncomeExplanation;
 
         return $this;
     }
