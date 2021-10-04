@@ -39,6 +39,14 @@ form:
         dateCheckedHint: Date checked
         neverCheckedHint: Please tell us why you have never checked this
 
+    incomeOnClientsBehalf:
+        choices:
+            yes: Yes
+            no: No
+            dontKnow: I don't know
+        dontKnowLabel: Tell us why you don’t know about this income.
+        dontKnowHint: For example, is this something you’ve never checked, don’t know how to check, or have been unable to find out.
+
     save:
         label: Save and continue
     cancel:

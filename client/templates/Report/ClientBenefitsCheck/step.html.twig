@@ -52,6 +52,31 @@
             }) }}
         {% endif %}
 
+    {% if step == 2 %}
+        {% set conditionalIncomeDontKnowChecked %}
+            {{ form_input(form.doOthersReceiveIncomeOnClientsBehalf, 'form.incomeOnClientsBehalf', {
+                'hintText' : 'form.incomeOnClientsBehalf.dontKnowHint' | trans(transOptions, translationDomain),
+                'label' : { 'text': 'form.incomeOnClientsBehalf.dontKnowLabel' | trans(transOptions, translationDomain) }
+            }) }}
+        {% endset %}
+
+        {{ form_checkbox_group(form.doOthersReceiveIncomeOnClientsBehalf, 'form.incomeOnClientsBehalf', {
+            'useFormGroup': false,
+            'labelText': ('form.clientBenefitsCheck.label') | trans(transOptions, translationDomain),
+            label: {
+                isPageHeading: true,
+                caption: 'stepPage.supportTitle' | trans
+            },
+            'items': [
+                {},
+                {},
+                {
+                    conditional: conditionalIncomeDontKnowChecked
+                }
+            ]
+        }) }}
+    {% endif %}
+
         {{ macros.saveAndContinueButton(form.save) }}
 
     {{ form_end(form) }}

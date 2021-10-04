@@ -1,15 +1,15 @@
 @client_benefits_check @v2 @v2_reporting_1
 Feature: Client benefits check - Lay users
 
-    @lay-combined-high-not-started
+    @lay-combined-high-not-started @acs
     Scenario: A deputy has checked the clients benefit entitlement on a specific date
         Given a Lay Deputy has not started a Combined High Assets report
         And the deputies report ends and is due 'more' than 60 days after the client benefits check feature flag date
         When I navigate to and start the client benefits check report section
         And I confirm I checked the clients benefit entitlement on '01/01/2021'
-#        And I confirm others receive income on the clients behalf
-#        And I add 2 types of income with values
-#        And I add a type of income where I don't know the value
+        And I confirm others receive income on the clients behalf
+        And I add 2 types of income with values
+        And I add a type of income where I don't know the value
         Then the client benefits check summary page should contain the details I entered
 
     @lay-combined-high-not-started

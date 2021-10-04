@@ -4,6 +4,7 @@ declare(strict_types=1);
 
 namespace App\Form\Report;
 
+use App\Entity\Report\ClientBenefitsCheck;
 use App\Form\DateType;
 use Symfony\Component\Form\AbstractType;
 use Symfony\Component\Form\Extension\Core\Type\ChoiceType;
@@ -25,18 +26,33 @@ class ClientBenefitsCheckType extends AbstractType
         if (1 === $this->step) {
             $builder->add('whenLastCheckedEntitlement', ChoiceType::class, [
                 'choices' => [
-                    'form.whenLastChecked.choices.haveChecked' => 'haveChecked',
-                    'form.whenLastChecked.choices.currentlyChecking' => 'currentlyChecking',
-                    'form.whenLastChecked.choices.neverChecked' => 'neverChecked',
+                    'form.whenLastChecked.choices.haveChecked' => ClientBenefitsCheck::WHEN_CHECKED_I_HAVE_CHECKED,
+                    'form.whenLastChecked.choices.currentlyChecking' => ClientBenefitsCheck::WHEN_CHECKED_IM_CURRENTLY_CHECKING,
+                    'form.whenLastChecked.choices.neverChecked' => ClientBenefitsCheck::WHEN_CHECKED_IVE_NEVER_CHECKED,
                 ],
                 'expanded' => true,
             ]);
+
             $builder->add('dateLastCheckedEntitlement', DateType::class, [
                 'widget' => 'text',
                 'input' => 'datetime',
                 'invalid_message' => 'Enter a valid date',
             ]);
+
             $builder->add('neverCheckedExplanation', TextareaType::class);
+        }
+
+        if (2 === $this->step) {
+            $builder->add('doOthersReceiveIncomeOnClientsBehalf', ChoiceType::class, [
+                'choices' => [
+                    'form.incomeOnClientsBehalf.choices.yes' => ClientBenefitsCheck::OTHER_INCOME_YES,
+                    'form.incomeOnClientsBehalf.choices.no' => ClientBenefitsCheck::OTHER_INCOME_NO,
+                    'form.incomeOnClientsBehalf.choices.dontKnow' => ClientBenefitsCheck::OTHER_INCOME_DONT_KNOW,
+                ],
+                'expanded' => true,
+            ]);
+
+            $builder->add('dontKnowIncomeExplanation', TextareaType::class);
         }
 
         $builder->add('save', SubmitType::class);

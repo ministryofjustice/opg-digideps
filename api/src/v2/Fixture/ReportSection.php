@@ -257,7 +257,7 @@ class ReportSection
 
         $clientBenefitsCheck = (new ClientBenefitsCheck())
             ->setReport($report)
-            ->setWhenLastCheckedEntitlement(ClientBenefitsCheck::I_HAVE_CHECKED)
+            ->setWhenLastCheckedEntitlement(ClientBenefitsCheck::WHEN_CHECKED_I_HAVE_CHECKED)
             ->setDateLastCheckedEntitlement(new DateTime())
             ->setCreated(new DateTime())
             ->setDoOthersReceiveIncomeOnClientsBehalf('yes')

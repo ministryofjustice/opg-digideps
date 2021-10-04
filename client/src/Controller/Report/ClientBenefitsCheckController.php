@@ -10,6 +10,7 @@ use App\Entity\Report\Status;
 use App\Form\Report\ClientBenefitsCheckType;
 use App\Service\Client\Internal\ClientBenefitsCheckApi;
 use App\Service\Client\Internal\ReportApi;
+use App\Service\StepRedirector;
 use Sensio\Bundle\FrameworkExtraBundle\Configuration\Template;
 use Symfony\Component\HttpFoundation\RedirectResponse;
 use Symfony\Component\HttpFoundation\Request;
@@ -24,11 +25,13 @@ class ClientBenefitsCheckController extends AbstractController
 
     private ReportApi $reportApi;
     private ClientBenefitsCheckApi $benefitCheckApi;
+    private StepRedirector $stepRedirector;
 
-    public function __construct(ReportApi $reportApi, ClientBenefitsCheckApi $benefitCheckApi)
+    public function __construct(ReportApi $reportApi, ClientBenefitsCheckApi $benefitCheckApi, StepRedirector $stepRedirector)
     {
         $this->reportApi = $reportApi;
         $this->benefitCheckApi = $benefitCheckApi;
+        $this->stepRedirector = $stepRedirector;
     }
 
     /**
@@ -58,6 +61,21 @@ class ClientBenefitsCheckController extends AbstractController
      */
     public function step(Request $request, int $reportId, int $step)
     {
+        $totalSteps = 2;
+
+        if ($step < 1 || $step > $totalSteps) {
+            return $this->redirectToRoute('client_benefits_check_summary', ['reportId' => $reportId]);
+        }
+
+        $fromPage = $request->get('from');
+
+        $stepRedirector = $this->stepRedirector
+            ->setRoutes('client_benefits_check', 'client_benefits_check_step', 'client_benefits_check_summary')
+            ->setFromPage($fromPage)
+            ->setCurrentStep($step)
+            ->setTotalSteps($totalSteps)
+            ->setRouteBaseParams(['reportId' => $reportId]);
+
         $report = $this->reportApi->getReportIfNotSubmitted($reportId, self::$jmsGroups);
         $clientBenefitsCheck = $report->getClientBenefitsCheck() ?: new ClientBenefitsCheck();
 
@@ -75,7 +93,7 @@ class ClientBenefitsCheckController extends AbstractController
 
             $this->benefitCheckApi->post($formData);
 
-            return $this->redirectToRoute('client_benefits_check_summary', ['reportId' => $report->getId()]);
+            return $this->redirectToRoute($stepRedirector->getRedirectLinkAfterSaving());
         }
 
         return [
