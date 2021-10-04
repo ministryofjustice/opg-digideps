@@ -528,7 +528,7 @@ orbs:
     executors:
       terraform:
         docker:
-          - image: circleci/golang:1.12
+          - image: circleci/golang:1.16
             auth:
               username: $DOCKER_USER
               password: $DOCKER_ACCESS_TOKEN

@@ -2,6 +2,7 @@
 
 namespace App\Entity;
 
+use App\v2\Registration\DTO\OrgDeputyshipDto;
 use Doctrine\Common\Collections\ArrayCollection;
 use Doctrine\ORM\Mapping as ORM;
 use JMS\Serializer\Annotation as JMS;
@@ -14,7 +15,6 @@ use JMS\Serializer\Annotation as JMS;
  */
 class NamedDeputy
 {
-
     /**
      * @var int
      * @JMS\Type("integer")
@@ -29,7 +29,7 @@ class NamedDeputy
 
     /**
      * Holds the named deputy the client belongs to
-     * Loaded from the CSV upload
+     * Loaded from the CSV upload.
      *
      * @JMS\Exclude
      *
@@ -43,7 +43,7 @@ class NamedDeputy
      *
      * @JMS\Type("string")
      * @JMS\Groups({"report-submitted-by", "named-deputy"})
-     * @ORM\Column(name="deputy_no", type="string", length=15, nullable=false)
+     * @ORM\Column(name="deputy_no", type="string", length=20, nullable=false, unique=true)
      */
     private $deputyNo;
 
@@ -222,6 +222,7 @@ class NamedDeputy
     public function setId($id)
     {
         $this->id = $id;
+
         return $this;
     }
 
@@ -249,23 +250,19 @@ class NamedDeputy
     public function setDeputyNo($deputyNo)
     {
         $this->deputyNo = User::padDeputyNumber($deputyNo);
+
         return $this;
     }
 
-    /**
-     * @return string
-     */
     public function getDeputyType(): string
     {
         return $this->deputyType;
     }
 
-    /**
-     * @param string $deputyType
-     */
     public function setDeputyType(string $deputyType)
     {
         $this->deputyType = $deputyType;
+
         return $this;
     }
 
@@ -285,6 +282,7 @@ class NamedDeputy
     public function setFirstname($firstname)
     {
         $this->firstname = trim($firstname);
+
         return $this;
     }
 
@@ -304,12 +302,12 @@ class NamedDeputy
     public function setLastname($lastname)
     {
         $this->lastname = trim($lastname);
+
         return $this;
     }
 
     /**
      * @return string
-     *
      * @return $this
      */
     public function getEmail1()
@@ -325,6 +323,7 @@ class NamedDeputy
     public function setEmail1($email1)
     {
         $this->email1 = trim($email1);
+
         return $this;
     }
 
@@ -344,6 +343,7 @@ class NamedDeputy
     public function setEmail2($email2)
     {
         $this->email2 = trim($email2);
+
         return $this;
     }
 
@@ -363,6 +363,7 @@ class NamedDeputy
     public function setEmail3($email3)
     {
         $this->email3 = trim($email3);
+
         return $this;
     }
 
@@ -382,9 +383,9 @@ class NamedDeputy
     public function setDepAddrNo($depAddrNo)
     {
         $this->depAddrNo = User::padDeputyNumber($depAddrNo);
+
         return $this;
     }
-
 
     /**
      * @return string
@@ -396,11 +397,13 @@ class NamedDeputy
 
     /**
      * @param string $address1
+     *
      * @return $this
      */
     public function setAddress1($address1)
     {
         $this->address1 = trim($address1);
+
         return $this;
     }
 
@@ -414,11 +417,13 @@ class NamedDeputy
 
     /**
      * @param string $address2
+     *
      * @return $this
      */
     public function setAddress2($address2)
     {
         $this->address2 = trim($address2);
+
         return $this;
     }
 
@@ -432,11 +437,13 @@ class NamedDeputy
 
     /**
      * @param string $address3
+     *
      * @return $this
      */
     public function setAddress3($address3)
     {
         $this->address3 = trim($address3);
+
         return $this;
     }
 
@@ -450,11 +457,13 @@ class NamedDeputy
 
     /**
      * @param string $address4
+     *
      * @return $this
      */
     public function setAddress4($address4)
     {
         $this->address4 = trim($address4);
+
         return $this;
     }
 
@@ -468,11 +477,13 @@ class NamedDeputy
 
     /**
      * @param string $address5
+     *
      * @return $this
      */
     public function setAddress5($address5)
     {
         $this->address5 = trim($address5);
+
         return $this;
     }
 
@@ -486,11 +497,13 @@ class NamedDeputy
 
     /**
      * @param string $addressPostcode
+     *
      * @return $this
      */
     public function setAddressPostcode($addressPostcode)
     {
         $this->addressPostcode = trim($addressPostcode);
+
         return $this;
     }
 
@@ -504,11 +517,13 @@ class NamedDeputy
 
     /**
      * @param $addressCountry
+     *
      * @return $this
      */
     public function setAddressCountry($addressCountry)
     {
         $this->addressCountry = trim($addressCountry);
+
         return $this;
     }
 
@@ -528,6 +543,7 @@ class NamedDeputy
     public function setPhoneMain($phoneMain)
     {
         $this->phoneMain = trim($phoneMain);
+
         return $this;
     }
 
@@ -547,26 +563,41 @@ class NamedDeputy
     public function setPhoneAlternative($phoneAlternative)
     {
         $this->phoneAlternative = trim($phoneAlternative);
+
         return $this;
     }
 
     /**
      * @param bool $feePayer
+     *
      * @return $this
      */
     public function setFeePayer($feePayer)
     {
         $this->feePayer = $feePayer;
+
         return $this;
     }
 
     /**
      * @param bool $corres
+     *
      * @return $this
      */
     public function setCorres($corres)
     {
         $this->corres = $corres;
+
         return $this;
+    }
+
+    public function addressHasChanged(OrgDeputyshipDto $dto)
+    {
+        return $this->getAddress1() !== $dto->getDeputyAddress1() ||
+             $this->getAddress2() !== $dto->getDeputyAddress2() ||
+             $this->getAddress3() !== $dto->getDeputyAddress3() ||
+             $this->getAddress4() !== $dto->getDeputyAddress4() ||
+             $this->getAddress5() !== $dto->getDeputyAddress5() ||
+             $this->getAddressPostcode() !== $dto->getDeputyPostcode();
     }
 }

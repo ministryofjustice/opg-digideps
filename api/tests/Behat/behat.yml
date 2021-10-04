@@ -79,12 +79,6 @@ default:
             contexts:
                 - App\Tests\Behat\OrganisationManagement\OrganisationManagementFeatureContext
 
-        registration:
-            description: Coverage of the self and auto registration processes
-            paths: [ "%paths.base%/features/v2/registration" ]
-            contexts:
-                - App\Tests\Behat\Registration\RegistrationFeatureContext
-
         user-management:
             description: Coverage of user management features (deleteing, editing etc)
             paths: [ "%paths.base%/features/v2/userManagement" ]
@@ -224,6 +218,12 @@ v2-tests-goutte:
             paths: [ "%paths.base%/features-v2/organisation-management" ]
             contexts:
                 - App\Tests\Behat\v2\OrganisationManagement\OrganisationManagementFeatureContext
+
+        registration:
+            description: Covering the registration flows (CSV ingest, self-register and activation)
+            paths: [ "%paths.base%/features-v2/registration" ]
+            contexts:
+                - App\Tests\Behat\v2\Registration\RegistrationFeatureContext
 
         report-overiew:
             description: Coverage of the report overview page
@@ -368,6 +368,7 @@ v2-tests-goutte:
             paths: [ "%paths.base%/features-v2/user-management" ]
             contexts:
                 - App\Tests\Behat\v2\UserManagement\UserManagementFeatureContext
+
     extensions:
         Behat\MinkExtension:
             files_path: '%paths.base%/fixtures/'

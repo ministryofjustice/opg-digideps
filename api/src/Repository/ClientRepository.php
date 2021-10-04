@@ -21,13 +21,13 @@ class ClientRepository extends ServiceEntityRepository
     }
 
     /**
-     * Search Clients
+     * Search Clients.
      *
      * @param string $query     Search query
      * @param string $orderBy   field to order by
      * @param string $sortOrder order of field order ASC|DESC
      * @param int    $limit     number of results to return
-     * @param int $offset
+     * @param int    $offset
      *
      * @return Client[]|array
      */
@@ -46,8 +46,8 @@ class ClientRepository extends ServiceEntityRepository
 
         $limit = ($limit <= 100) ? $limit : 100;
         $qb->setMaxResults($limit);
-        $qb->setFirstResult((int)$offset);
-        $qb->orderBy($alias . '.' . $orderBy, $sortOrder);
+        $qb->setFirstResult((int) $offset);
+        $qb->orderBy($alias.'.'.$orderBy, $sortOrder);
 
         $this->_em->getFilters()->enable('softdeleteable');
 
@@ -55,8 +55,8 @@ class ClientRepository extends ServiceEntityRepository
     }
 
     /**
-     * @param User $user
      * @return array
+     *
      * @throws \Doctrine\DBAL\DBALException
      */
     public function findAllClientIdsByUser(User $user)
@@ -71,8 +71,8 @@ class ClientRepository extends ServiceEntityRepository
     }
 
     /**
-     * @param User $user
      * @param int $clientId
+     *
      * @throws \Doctrine\DBAL\DBALException
      */
     public function saveUserToClient(User $user, $clientId)
@@ -87,6 +87,7 @@ class ClientRepository extends ServiceEntityRepository
 
     /**
      * @param int $id
+     *
      * @return null
      */
     public function getArrayById($id)
@@ -103,11 +104,12 @@ class ClientRepository extends ServiceEntityRepository
         $result = $query->getArrayResult();
         $this->_em->getFilters()->enable('softdeleteable');
 
-        return count($result) === 0 ? null : $result[0];
+        return 0 === count($result) ? null : $result[0];
     }
 
     /**
      * @param $caseNumber
+     *
      * @return array<mixed>|null
      */
     public function getArrayByCaseNumber($caseNumber)
@@ -119,6 +121,14 @@ class ClientRepository extends ServiceEntityRepository
 
         $result = $query->getArrayResult();
 
-        return count($result) === 0 ? null : $result[0];
+        return 0 === count($result) ? null : $result[0];
+    }
+
+    public function countAllEntities()
+    {
+        return $this
+            ->getEntityManager()
+            ->createQuery('SELECT COUNT(c.id) FROM App\Entity\Client c')
+            ->getSingleScalarResult();
     }
 }

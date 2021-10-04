@@ -123,7 +123,7 @@ trait ReportTrait
     public function aProfessionalAdminDeputyHasNotStartedAReport()
     {
         if (empty($this->profAdminDeputyHealthWelfareNotStartedDetails)) {
-            throw new Exception('It looks like fixtures are not loaded - missing $profAdminDeputyNotStartedDetails');
+            throw new Exception('It looks like fixtures are not loaded - missing $profAdminDeputyHealthWelfareNotStartedDetails');
         }
 
         $this->loginToFrontendAs($this->profAdminDeputyHealthWelfareNotStartedDetails->getUserEmail());
