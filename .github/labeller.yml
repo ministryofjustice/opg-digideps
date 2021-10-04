@@ -1,6 +1,10 @@
 repo:
   - any: ["./*"]
 
+pipelines:
+  - any: [".circleci/**/*"]
+  - any: [".github/workflows/*"]
+
 api:
   - any: ["api/**/*"]
 
