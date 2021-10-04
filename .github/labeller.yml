@@ -1,0 +1,27 @@
+repo:
+  - any: ["./*"]
+
+api:
+  - any: ["api/**/*"]
+
+client:
+  - any: ["client/**/*"]
+
+documentation:
+  - any: ["docs/**/*"]
+
+ecs-helper:
+  - any: ["ecs_helper/**/*"]
+
+infrastructure:
+  - any: ["environment/**/*"]
+  - any: ["shared/**/*"]
+
+lambdas:
+  - any: ["lambda_functions/**/*"]
+
+pa11y:
+  - any: ["pa11y/**/*"]
+
+sync-scripts:
+  - any: ["sync/**/*"]
