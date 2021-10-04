@@ -11,6 +11,19 @@ clientSearch:
     noResults: No clients found
     activeFrom: Active from
     discharged: Discharged
+caseSearch:
+    htmlTitle: Administration - Cases
+    pageTitle: Cases
+    searchBy: Search by client surname or case number
+    caseTable:
+        caseNumber: Case Number
+        clientSurname: Client Surname
+        heading: Case list
+        results: Found %numberOfCases% cases
+        resultsLimited:
+            line01: Results limited to 100 cases.
+            line02: Use search to filter the wanted cases.
+        noResults: No cases found
 clientDetails:
   htmlTitle: Administration - Clients
   supportTitle: Clients

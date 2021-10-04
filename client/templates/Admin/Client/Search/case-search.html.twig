@@ -1,0 +1,78 @@
+{% extends '@App/Layouts/application.html.twig' %}
+
+{% trans_default_domain "admin-clients" %}
+{% set page = 'caseSearch' %}
+
+{% set navSection = 'clients' %}
+
+{% block htmlTitle %}{{ (page ~ '.htmlTitle') | trans }}{% endblock %}
+{% block pageTitle %}{{ (page ~ '.pageTitle') | trans }}{% endblock %}
+
+{% block helpline %}{% endblock %}
+
+{% block pageContent %}
+
+    {{ form_start(form, {attr: {class: 'search', novalidate: 'novalidate' }}) }}
+
+    {{ form_input(form.q, 'Search', {
+        'labelText': (page ~ '.searchBy') | trans,
+        'inputClass': '' })
+    }}
+    {{ form_submit(form.search, '', { 'labelText': 'Search' }) }}
+
+    {{ form_end(form) }}
+
+    <hr>
+
+    {# LIST #}
+    {% if app.request.get('search_clients') is not null %}
+
+    <div class="behat-region-clients case-list">
+
+        <h2 id="case-list-title" class="govuk-heading-m flush--ends">{{ (page ~ '.caseTable.heading') | trans }}</h2>
+        {% if cases | length  == filters.limit %}
+            <p class="govuk-body">
+                {{ (page ~ '.caseTable.resultsLimited.line01') | trans }}<br>
+                {{ (page ~ '.caseTable.resultsLimited.line02') | trans }}
+            </p>
+        {% else %}
+            <p class="behat-region-client-search-count">
+                Found {{ cases | length }} cases
+            </p>
+        {% endif %}
+
+
+        {# cases list #}
+        <table class="width-two-thirds">
+            <thead>
+                <tr>
+                    <th scope="col">{{ (page ~ '.caseTable.caseNumber') | trans }}</th>
+                    <th scope="col">{{ (page ~ '.caseTable.clientSurname') | trans }}</th>
+                </tr>
+            </thead>
+            <tbody>
+                {% if cases | length %}
+                    {% for case in cases %}
+                        {% set discharged = "" %}
+                        <tr class="behat-region-client-row behat-region-{{ discharged }}client-{{ case.caseNumber }}">
+                            <td>
+                                <a class="behat-link-client-details behat-link-{{ discharged }}client-detail-{{ case.caseNumber }} govuk-!-font-weight-bold" href="NA">
+                                    {{ case.caseNumber }}
+                                </a>
+                            </td>
+                            <td>
+                                {{ case.clientSurname }}
+                            </td>
+                        </tr>
+                    {% endfor %}
+                {% else %}
+                    <tr>
+                        <td colspan="2">{{ (page ~ '.clientTable.noResults') | trans  }}</td>
+                    </tr>
+                {% endif %}
+            </tbody>
+        </table>
+    </div>
+    {% endif %}
+
+{% endblock %}
