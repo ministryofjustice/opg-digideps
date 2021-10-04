@@ -1,6 +1,6 @@
 module github.com/ministryofjustice/opg-digideps/shared/go_redeployer
 
-go 1.13
+go 1.16
 
 require (
 	github.com/aws/aws-lambda-go v1.27.0
