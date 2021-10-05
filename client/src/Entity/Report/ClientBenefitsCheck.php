@@ -12,9 +12,13 @@ class ClientBenefitsCheck
 {
     use HasReportTrait;
 
-    const I_HAVE_CHECKED = 'haveChecked';
-    const IM_CURRENTLY_CHECKING = 'currentlyChecking';
-    const IVE_NEVER_CHECKED = 'neverChecked';
+    const WHEN_CHECKED_I_HAVE_CHECKED = 'haveChecked';
+    const WHEN_CHECKED_IM_CURRENTLY_CHECKING = 'currentlyChecking';
+    const WHEN_CHECKED_IVE_NEVER_CHECKED = 'neverChecked';
+
+    const OTHER_INCOME_YES = 'yes';
+    const OTHER_INCOME_NO = 'no';
+    const OTHER_INCOME_DONT_KNOW = 'dontKnow';
 
     /**
      * @JMS\Type("string")

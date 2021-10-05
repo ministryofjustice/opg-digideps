@@ -48,7 +48,7 @@ class ClientBenefitsCheck
 
     /**
      * @ORM\Column(name="created_at", type="datetime",nullable=true)
-     * @Gedmo\Timestampable(on="create")
+     * @Gedmo\Timestampable(on="persist")
      *
      * @JMS\Groups({"client-benefits-check"})
      * @JMS\Type("DateTime<'Y-m-d'>")

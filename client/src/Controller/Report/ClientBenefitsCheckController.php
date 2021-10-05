@@ -91,9 +91,9 @@ class ClientBenefitsCheckController extends AbstractController
             $formData = $form->getData();
             $formData->setReport($report);
 
-            $this->benefitCheckApi->post($formData);
+            $this->benefitCheckApi->put($formData);
 
-            return $this->redirectToRoute($stepRedirector->getRedirectLinkAfterSaving());
+            return $this->redirect($stepRedirector->getRedirectLinkAfterSaving());
         }
 
         return [

@@ -5,23 +5,22 @@ declare(strict_types=1);
 namespace App\Factory;
 
 use App\Entity\Report\ClientBenefitsCheck;
-use App\Entity\Report\Report;
+use App\Repository\ReportRepository;
 use DateTime;
-use Doctrine\ORM\EntityManagerInterface;
 use Ramsey\Uuid\Uuid;
 
 class ClientBenefitsCheckFactory
 {
-    private EntityManagerInterface $em;
+    private ReportRepository $repository;
 
-    public function __construct(EntityManagerInterface $em)
+    public function __construct(ReportRepository $repository)
     {
-        $this->em = $em;
+        $this->repository = $repository;
     }
 
     public function createFromFormData(array $formData)
     {
-        $report = $this->em->find(Report::class, $formData['report_id']);
+        $report = $this->repository->find($formData['report_id']);
         $dateLastChecked = isset($formData['date_last_checked_entitlement']) ? new DateTime($formData['date_last_checked_entitlement']) : null;
 
         return (new ClientBenefitsCheck(Uuid::uuid4()))
