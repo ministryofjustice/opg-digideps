@@ -9,6 +9,7 @@ use App\Entity\Client;
 use App\Entity\NamedDeputy;
 use App\Entity\Organisation;
 use App\Entity\Report\Report;
+use App\Entity\User;
 use App\Tests\Behat\BehatException;
 use Behat\Gherkin\Node\TableNode;
 use DateTime;
@@ -67,7 +68,7 @@ trait IngestTrait
 
             $csvFilePath = 'org' === strtolower($type) ?
                 'casrec-csvs/org-3-valid-rows.csv' :
-                'casrec-csvs/org-1-row-pa-missing-deputy-address-number-column.csv';
+                'casrec-csvs/org-3-row-pa-missing-deputy-address-number-column.csv';
 
             $this->uploadCsvAndCountCreatedEntities(
                 $csvFilePath,
@@ -131,10 +132,13 @@ trait IngestTrait
 
         foreach ($csvRows as $row) {
             $email = empty($row['Email']) ? null : substr(strstr($row['Email'], '@'), 1);
+            // Required as we pad all dep nos and dep addr nos to make them 8 chars if below 8 chars. See User::padDeputyNumber.
+            $deputyNumber = isset($row['Deputy No']) ? User::padDeputyNumber($row['Deputy No']) : null;
+            $deputyAddressNumber = isset($row['DepAddr No']) ? User::padDeputyNumber($row['DepAddr No']) : null;
 
             $this->entityUids['client_case_numbers'][] = $row['Case'];
             $this->entityUids['casrec_case_numbers'][] = strtolower($row['Case'] ?: '');
-            $this->entityUids['named_deputy_numbers'][] = isset($row['DepAddr No']) ? sprintf('%s-%s', $row['Deputy No'], $row['DepAddr No']) : $row['Deputy No'];
+            $this->entityUids['named_deputy_numbers'][] = $deputyAddressNumber ? sprintf('%s-%s', $deputyNumber, $deputyAddressNumber) : $deputyNumber;
             $this->entityUids['org_email_identifiers'][] = $email;
         }
 
@@ -631,7 +635,7 @@ trait IngestTrait
     {
         $this->iAmOnAdminOrgCsvUploadPage();
 
-        $this->createProfAdminNotStarted(null, 'sufjan@stevens.com', '2828282t', '20082008-999');
+        $this->createProfAdminNotStarted(null, 'sufjan@stevens.com', '2828282t', '20082008-00000999');
 
         $this->em->clear();
 
