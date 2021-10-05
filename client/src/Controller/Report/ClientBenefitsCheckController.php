@@ -88,10 +88,15 @@ class ClientBenefitsCheckController extends AbstractController
         $form->handleRequest($request);
 
         if ($form->isSubmitted() && $form->isValid()) {
-            $formData = $form->getData();
-            $formData->setReport($report);
+            /** @var ClientBenefitsCheck $formData */
+            $clientBenefitsCheck = $form->getData();
+            $clientBenefitsCheck->setReport($report);
 
-            $this->benefitCheckApi->put($formData);
+            if (is_null($clientBenefitsCheck->getId())) {
+                $this->benefitCheckApi->post($clientBenefitsCheck);
+            } else {
+                $this->benefitCheckApi->put($clientBenefitsCheck);
+            }
 
             return $this->redirect($stepRedirector->getRedirectLinkAfterSaving());
         }
