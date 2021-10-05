@@ -1,5 +1,3 @@
-import 'whatwg-fetch'
-
 export const CookieBanner = function () {
   var cookieBanner = document.querySelector('[data-module="opg-cookie-banner"]')
 
