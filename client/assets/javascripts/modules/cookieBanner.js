@@ -1,18 +1,57 @@
-/* globals $ */
-module.exports = function cookieBanner () {
-  var $banner = $('[data-module="opg-cookie-banner"]')
-  var $acceptAll = $banner.find('[data-js="accept-all"]')
+import 'whatwg-fetch'
 
-  $acceptAll.on('click', function (event) {
-    var days = 365
-    var expires = new Date(Date.now() + days * 864e5).toUTCString()
-    var policy = {
-      essential: true,
-      usage: true
-    }
+export const CookieBanner = function () {
+  var cookieBanner = document.querySelector('[data-module="opg-cookie-banner"]')
 
-    document.cookie = 'cookie_policy=' + JSON.stringify(policy) + '; path=/; expires=' + expires + '; secure'
-    $banner.addClass('hidden')
-    event.preventDefault()
+  if (cookieBanner === null) {
+    return
+  }
+
+  // inner cookie banner
+  var cookieInnerBanner = cookieBanner.querySelector('[data-module="opg-cookie-inner-banner"]')
+
+  // accept or reject cookie messages
+  var cookieAcceptBanner = cookieBanner.querySelector('[data-cookie="accept-message"]')
+  var cookieRejectBanner = cookieBanner.querySelector('[data-cookie="reject-message"]')
+
+  var cookieBtns = cookieBanner.querySelectorAll('.opg-cookies-btn')
+  cookieBtns.forEach(function (button) {
+    button.addEventListener('click', function (event) {
+      // get the button that was targeted
+      var btn = event.target
+
+      if (btn.value === 'hide') {
+        cookieBanner.setAttribute('hidden', '')
+        return
+      }
+
+      var expires = new Date(new Date().getTime() + 1000 * 60 * 60 * 24 * 365).toUTCString()
+      var policy = {
+        essential: true
+      }
+
+      /**
+       * if the button value is accept send a value to the cookieUrl
+       * to accept the cookie for the users and then set an
+       * local cookie to hide the cookie message
+       *
+       * if the button value is reject send a value to the cookieUrl
+       * to reject the cookie for the users and then set an
+       * local cookie to hide the cookie message
+       */
+      if (btn.value === 'accept') {
+        cookieInnerBanner.setAttribute('hidden', '')
+        cookieAcceptBanner.removeAttribute('hidden')
+
+        policy.usage = true
+        document.cookie = `cookie_policy=${JSON.stringify(policy)}; path=/; expires=${expires}; secure`
+      } else if (btn.value === 'reject') {
+        cookieInnerBanner.setAttribute('hidden', '')
+        cookieRejectBanner.removeAttribute('hidden')
+
+        policy.usage = false
+        document.cookie = `cookie_policy=${JSON.stringify(policy)}; path=/; expires=${expires}; secure`
+      }
+    })
   })
 }
