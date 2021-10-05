@@ -29,13 +29,11 @@ export const CookieBanner = function () {
       }
 
       /**
-       * if the button value is accept send a value to the cookieUrl
-       * to accept the cookie for the users and then set an
-       * local cookie to hide the cookie message
+       * if the button value is accept then set a cookie_policy cookie
+       * with essential value as true and the usage value as true
        *
-       * if the button value is reject send a value to the cookieUrl
-       * to reject the cookie for the users and then set an
-       * local cookie to hide the cookie message
+       * if the button value is reject then set a cookie_policy cookie
+       * with essential value as true and the usage value as false
        */
       if (btn.value === 'accept') {
         cookieInnerBanner.setAttribute('hidden', '')
