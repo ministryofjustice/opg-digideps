@@ -24,7 +24,7 @@ resource "aws_service_discovery_service" "api" {
 
   depends_on = [aws_service_discovery_private_dns_namespace.private]
 
-  force_destroy = true
+  force_destroy = local.account.deletion_protection ? false : true
 }
 
 resource "aws_ecs_task_definition" "api" {
