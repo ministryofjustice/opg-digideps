@@ -11,6 +11,7 @@ use DateTime;
 trait ClientManagementTrait
 {
     private ?int $clientCount = null;
+    private ?int $caseCount = null;
 
     /**
      * @When I search for an existing client by their first name
@@ -50,11 +51,20 @@ trait ClientManagementTrait
     }
 
     /**
-     * @When I search for an non-existent client
+     * @When I search for a non-existent client
      */
     public function iSearchForNonExistentClient()
     {
         $user = $this->adminDetails;
+        $this->searchForClientBy('Björk Guðmundsdóttir', $user);
+    }
+
+    /**
+     * @When I search for a non-existent case
+     */
+    public function iSearchForNonExistentCase()
+    {
+        $user = $this->behatTestUserDetails;
         $this->searchForClientBy('Björk Guðmundsdóttir', $user);
     }
 
@@ -76,6 +86,15 @@ trait ClientManagementTrait
     }
 
     /**
+     * @Then I should see the case details in the case list results
+     */
+    public function iShouldSeeCaseDetailsInResults()
+    {
+        $this->caseCount = 1;
+        $this->iShouldSeeNCasesWithSameDetails();
+    }
+
+    /**
      * @Then I should see both the clients details in the client list results
      */
     public function iShouldSeeBothClientDetailsInResults()
@@ -84,11 +103,20 @@ trait ClientManagementTrait
         $this->iShouldSeeNClientsWithSameName();
     }
 
+    /**
+     * @Then I should see both case details in the case list results
+     */
+    public function iShouldSeeBothCaseDetailsInResults()
+    {
+        $this->caseCount = 2;
+        $this->iShouldSeeNCasesWithSameDetails();
+    }
+
     private function iShouldSeeNClientsWithSameName()
     {
         $this->assertClientCountSet();
 
-        $searchResultsHtml = $this->getSearchResultHtml();
+        $searchResultsHtml = $this->getClientSearchResultHtml();
 
         $fullClientName = sprintf(
             '%s %s',
@@ -103,6 +131,29 @@ trait ClientManagementTrait
         }
     }
 
+    private function iShouldSeeNCasesWithSameDetails()
+    {
+        $this->assertCaseCountSet();
+
+        $searchResultsHtml = $this->getCasesSearchResultHtml();
+
+        $clientLastName = $this->interactingWithUserDetails->getClientLastName();
+
+        $clientNameFoundCount = substr_count($searchResultsHtml, $clientLastName);
+
+        if ($clientNameFoundCount < $this->caseCount) {
+            throw new BehatException(sprintf('The case search results list did not contain the required occurrences of the clients last name. Expected: "%s" (at least %s times), got (full HTML): %s', $clientLastName, $this->caseCount, $searchResultsHtml));
+        }
+
+        $caseNumber = $this->interactingWithUserDetails->getClientCaseNumber();
+
+        $caseNumberFoundCount = substr_count($searchResultsHtml, $caseNumber);
+
+        if (1 != $caseNumberFoundCount) {
+            throw new BehatException(sprintf('The case search results list did not contain a single entry for the clients case number. Expected: "%s" (to appear once), got (full HTML): %s', $caseNumber, $searchResultsHtml));
+        }
+    }
+
     /**
      * @Then I should see the correct count of clients in the client list results
      */
@@ -110,7 +161,7 @@ trait ClientManagementTrait
     {
         $this->assertClientCountSet();
 
-        $searchResultsHtml = $this->getSearchResultHtml();
+        $searchResultsHtml = $this->getClientSearchResultHtml();
 
         $searchString = $this->clientCount > 1 ? sprintf('Found %d clients', $this->clientCount) : 'Found 1 client';
         $foundNClients = str_contains($searchResultsHtml, $searchString);
@@ -127,12 +178,19 @@ trait ClientManagementTrait
         }
     }
 
+    private function assertCaseCountSet()
+    {
+        if (is_null($this->caseCount)) {
+            throw new BehatException(sprintf("You're attempting to run a step definition that requires this->caseCount to be set but its null. Set it and try again."));
+        }
+    }
+
     /**
      * @Then I should see No Clients Found in the client list results
      */
     public function iShouldSeeNoClientsFound()
     {
-        $searchResultsHtml = $this->getSearchResultHtml();
+        $searchResultsHtml = $this->getClientSearchResultHtml();
         $noClientsFound = str_contains($searchResultsHtml, 'No clients found');
 
         if (!$noClientsFound) {
@@ -141,9 +199,22 @@ trait ClientManagementTrait
     }
 
     /**
+     * @Then I should see No Cases Found in the cases list results
+     */
+    public function iShouldSeeNoCasesFound()
+    {
+        $searchResultsHtml = $this->getCasesSearchResultHtml();
+        $noClientsFound = str_contains($searchResultsHtml, 'No cases found');
+
+        if (!$noClientsFound) {
+            throw new BehatException(sprintf('The case search results list did not display "No cases found". Expected: "No cases found", got (full HTML): %s', $searchResultsHtml));
+        }
+    }
+
+    /**
      * @return mixed
      */
-    private function getSearchResultHtml()
+    private function getClientSearchResultHtml()
     {
         $searchResultsDiv = $this->getSession()->getPage()->find('css', 'div.client-list');
 
@@ -153,6 +224,30 @@ A div with the class client-list was not found.
 This suggests one of the following:
 
 - a search has not been completed on client search page
+- the search was done on the case search page instead
+- the class of the search results div has been changed
+MESSAGE;
+
+            throw new BehatException($missingDivMessage);
+        }
+
+        return $searchResultsDiv->getHtml();
+    }
+
+    /**
+     * @return mixed
+     */
+    private function getCasesSearchResultHtml()
+    {
+        $searchResultsDiv = $this->getSession()->getPage()->find('css', 'div.case-list');
+
+        if (is_null($searchResultsDiv)) {
+            $missingDivMessage = <<<MESSAGE
+A div with the class case-list was not found.
+This suggests one of the following:
+
+- a search has not been completed on case search page
+- the search was done on the client search page instead
 - the class of the search results div has been changed
 MESSAGE;
 

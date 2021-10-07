@@ -37,9 +37,7 @@ class SearchController extends AbstractController
     public function searchAction(Request $request, ParameterStoreService $parameterStore)
     {
         var_dump('Landing');
-        //$featureFlag = $parameterStore->getFeatureFlag(ParameterStoreService::FLAG_PAPER_REPORTS);
-
-        $featureFlag = '1';
+        $featureFlag = $parameterStore->getFeatureFlag(ParameterStoreService::FLAG_PAPER_REPORTS);
 
         /** @var EntityDir\User $user */
         $user = $this->getUser();
@@ -56,18 +54,19 @@ class SearchController extends AbstractController
             $filters = $form->getData() + $this->getDefaultFilters($request);
         }
 
-        if ('1' === $featureFlag && EntityDir\User::ROLE_SUPER_ADMIN === $user->getRoleName()) {
+        if (('1' === $featureFlag && EntityDir\User::ROLE_SUPER_ADMIN === $user->getRoleName())
+            || EntityDir\User::ROLE_BEHAT_TEST === $user->getRoleName()) {
             var_dump('Feature');
 
             //var_dump($filters);
             $cases = $this->restClient->get('case/search-all?'.http_build_query($filters), 'array');
             var_dump('Searched');
 
-            var_dump($cases);
+            $filteredResults = array_unique($cases, SORT_REGULAR);
 
             return $this->render(
                 '@App/Admin/Client/Search/case-search.html.twig',
-                $this->buildCaseViewParams($form, $cases, $filters)
+                $this->buildCaseViewParams($form, $filteredResults, $filters)
             );
         } else {
             var_dump('Original');

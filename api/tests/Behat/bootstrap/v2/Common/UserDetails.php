@@ -11,7 +11,7 @@ use ReflectionProperty;
 
 class UserDetails
 {
-    public const ADMIN_ROLES = ['ROLE_ADMIN', 'ROLE_SUPER_ADMIN', 'ROLE_ADMIN_MANAGER'];
+    public const ADMIN_ROLES = ['ROLE_ADMIN', 'ROLE_SUPER_ADMIN', 'ROLE_ADMIN_MANAGER', 'ROLE_BEHAT_TEST'];
 
     private ?int $userId = null;
     private ?string $userEmail = null;

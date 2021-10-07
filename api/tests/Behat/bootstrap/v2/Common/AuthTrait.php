@@ -59,6 +59,22 @@ trait AuthTrait
     }
 
     /**
+     * @Given a behat test admin accesses the admin app
+     */
+    public function behatTestUserAccessesAdmin()
+    {
+        if (empty($this->behatTestUserDetails)) {
+            throw new BehatException('It looks like fixtures are not loaded - missing $this->behatTestUserDetails');
+        }
+
+        if ($this->loggedInUserDetails) {
+            $this->interactingWithUserDetails = $this->loggedInUserDetails;
+        }
+
+        $this->loginToAdminAs($this->behatTestUserDetails->getUserEmail());
+    }
+
+    /**
      * @Given an admin manager user accesses the admin app
      */
     public function adminManagerUserAccessesAdmin()

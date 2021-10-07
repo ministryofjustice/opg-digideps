@@ -27,7 +27,7 @@ Feature: Admin - Client Search
   Scenario: An admin user searches for a non-existent client
     Given an admin user accesses the admin app
     When I visit the admin clients search page
-    And I search for an non-existent client
+    And I search for a non-existent client
     Then I should see No Clients Found in the client list results
 
   @admin @prof-admin-health-welfare-not-started @lay-pfa-high-not-started

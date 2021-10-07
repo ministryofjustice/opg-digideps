@@ -882,6 +882,17 @@ class FixtureHelper
         return self::buildAdminUserDetails($user);
     }
 
+    public function createBehatTestUser(string $testRunId): array
+    {
+        $user = $this->createAdminUser(
+            $testRunId,
+            User::ROLE_BEHAT_TEST,
+            'behat-test'
+        );
+
+        return self::buildAdminUserDetails($user);
+    }
+
     public function createDataForAnalytics(string $testRunId, $timeAgo, $satisfactionScore)
     {
         $startDate = new \DateTime($timeAgo);

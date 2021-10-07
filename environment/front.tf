@@ -60,7 +60,8 @@ data "aws_iam_policy_document" "query_ssm" {
     sid    = "AllowQuerySSMParameters"
     effect = "Allow"
     actions = [
-      "ssm:GetParameter"
+      "ssm:GetParameter",
+      "ssm:PutParameter"
     ]
     resources = [
       aws_ssm_parameter.flag_document_sync.arn,

@@ -48,6 +48,8 @@ class User implements UserInterface
     public const TYPE_PA = 'PA';
     public const TYPE_PROF = 'PROF';
 
+    public const ROLE_BEHAT_TEST = 'ROLE_BEHAT_TEST';
+
     public static $adminRoles = [
         self::ROLE_ADMIN,
         self::ROLE_SUPER_ADMIN,

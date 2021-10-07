@@ -30,7 +30,7 @@ class CaseController extends RestController
 
     /**
      * @Route("/search-all", methods={"GET"})
-     * @Security("is_granted('ROLE_SUPER_ADMIN')")
+     * @Security("is_granted('ROLE_ADMIN')")
      */
     public function searchAllAction(Request $request)
     {

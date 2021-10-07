@@ -92,6 +92,7 @@ security:
     # https://opgtransform.atlassian.net/wiki/spaces/DEPDS/pages/191299647/User+roles
     role_hierarchy:
         ROLE_SUPER_ADMIN:     [ ROLE_ADMIN, ROLE_ADMIN_MANAGER ]
+        ROLE_BEHAT_TEST:      [ ROLE_ADMIN, ROLE_ADMIN_MANAGER ]
         ROLE_ADMIN_MANAGER:  [ ROLE_ADMIN ]
 
         ROLE_LAY_DEPUTY:      ROLE_DEPUTY

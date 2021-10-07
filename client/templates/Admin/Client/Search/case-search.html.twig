@@ -27,7 +27,7 @@
     {# LIST #}
     {% if app.request.get('search_clients') is not null %}
 
-    <div class="behat-region-clients case-list">
+    <div class="case-list">
 
         <h2 id="case-list-title" class="govuk-heading-m flush--ends">{{ (page ~ '.caseTable.heading') | trans }}</h2>
         {% if cases | length  == filters.limit %}
@@ -36,7 +36,7 @@
                 {{ (page ~ '.caseTable.resultsLimited.line02') | trans }}
             </p>
         {% else %}
-            <p class="behat-region-client-search-count">
+            <p>
                 Found {{ cases | length }} cases
             </p>
         {% endif %}
@@ -54,9 +54,9 @@
                 {% if cases | length %}
                     {% for case in cases %}
                         {% set discharged = "" %}
-                        <tr class="behat-region-client-row behat-region-{{ discharged }}client-{{ case.caseNumber }}">
+                        <tr>
                             <td>
-                                <a class="behat-link-client-details behat-link-{{ discharged }}client-detail-{{ case.caseNumber }} govuk-!-font-weight-bold" href="NA">
+                                <a class="govuk-!-font-weight-bold" href="NA">
                                     {{ case.caseNumber }}
                                 </a>
                             </td>
@@ -67,7 +67,7 @@
                     {% endfor %}
                 {% else %}
                     <tr>
-                        <td colspan="2">{{ (page ~ '.clientTable.noResults') | trans  }}</td>
+                        <td colspan="2">{{ (page ~ '.caseTable.noResults') | trans  }}</td>
                     </tr>
                 {% endif %}
             </tbody>

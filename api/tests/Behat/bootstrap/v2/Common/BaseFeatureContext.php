@@ -43,6 +43,8 @@ class BaseFeatureContext extends MinkContext
     public UserDetails $adminManagerDetails;
     public UserDetails $superAdminDetails;
 
+    public UserDetails $behatTestUserDetails;
+
     public UserDetails $layDeputyNotStartedPfaHighAssetsDetails;
     public UserDetails $layDeputyCompletedPfaHighAssetsDetails;
     public UserDetails $layDeputySubmittedPfaHighAssetsDetails;
@@ -470,6 +472,15 @@ class BaseFeatureContext extends MinkContext
     {
         $userDetails = $this->fixtureHelper->createSuperAdmin($this->testRunId);
         $this->fixtureUsers[] = $this->superAdminDetails = new UserDetails($userDetails);
+    }
+
+    /**
+     * @BeforeScenario @behat-test-user
+     */
+    public function createBehatTestUser()
+    {
+        $userDetails = $this->fixtureHelper->createBehatTestUser($this->testRunId);
+        $this->fixtureUsers[] = $this->behatTestUserDetails = new UserDetails($userDetails);
     }
 
     public function getAdminUrl(): string
