@@ -109,6 +109,10 @@
                 <h1 class="govuk-heading-xl">
                     {% block pageTitle %} Deputy report {% endblock %}
                 </h1>
+
+                {% if block("supportTitleBottom") is defined and block("supportTitleBottom") != "" %}
+                    <span class="govuk-caption-xl">{% block supportTitleBottom %}{% endblock %}</span>
+                {% endif %}
             </div>
 
             <div class="moj-page-header-actions__actions">

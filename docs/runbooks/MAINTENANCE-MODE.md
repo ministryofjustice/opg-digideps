@@ -9,8 +9,7 @@ Every load balancer is set up with two actions. The default action is to forward
 - Then click **EC2** (make sure you are on the **breakglass role**)
 - Next go to **Load Balancers**
 - Select the relevant environment we want to change the **Load Balancer** for
-- Hit the **Listeners** tab and then update the HTTPS setting
+- Hit the **Listeners** tab and then update the HTTPS setting rule
 - Change `dd-maintenance` to `*`
 
 That should be it. To disable maintenance mode, return to the same load balancer and edit the same listener and change the rule back to `/dd-maintenance` from `*`.
-

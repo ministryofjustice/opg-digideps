@@ -95,6 +95,9 @@ class ClientBenefitsCheck
      * @var string one of either [yes, no, doNotKnow]
      *
      * @ORM\Column(name="do_others_receive_income_on_clients_behalf", type="string", nullable=true)
+     *
+     * @JMS\Groups({"client-benefits-check"})
+     * @JMS\Type("string")
      */
     private $doOthersReceiveIncomeOnClientsBehalf;
 
@@ -110,6 +113,8 @@ class ClientBenefitsCheck
 
     /**
      * @ORM\OneToMany(targetEntity="App\Entity\Report\IncomeReceivedOnClientsBehalf", mappedBy="clientBenefitsCheck", cascade={"persist", "remove"}, fetch="EXTRA_LAZY" )
+     * @JMS\Groups({"client-benefits-check"})
+     * @JMS\Type("ArrayCollection<App\Entity\Report\IncomeReceivedOnClientsBehalf>")
      */
     private $typesOfIncomeReceivedOnClientsBehalf;
 
@@ -161,12 +166,12 @@ class ClientBenefitsCheck
         return $this;
     }
 
-    public function getTypesOfIncomeReceivedOnClientsBehalf(): ArrayCollection
+    public function getTypesOfIncomeReceivedOnClientsBehalf(): array
     {
         return $this->typesOfIncomeReceivedOnClientsBehalf;
     }
 
-    public function addTypesOfIncomeReceivedOnClientsBehalf(?IncomeReceivedOnClientsBehalf $incomeReceivedOnClientsBehalf): ClientBenefitsCheck
+    public function addTypeOfIncomeReceivedOnClientsBehalf(?IncomeReceivedOnClientsBehalf $incomeReceivedOnClientsBehalf): ClientBenefitsCheck
     {
         if (!$this->typesOfIncomeReceivedOnClientsBehalf->contains($incomeReceivedOnClientsBehalf)) {
             $this->typesOfIncomeReceivedOnClientsBehalf->add($incomeReceivedOnClientsBehalf);

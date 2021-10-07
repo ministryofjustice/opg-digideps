@@ -136,10 +136,14 @@
     </div>
 {% endmacro %}
 
-{% macro addAnotherSaveButton(button) %}
+{% macro addAnotherSaveButton(button, labelText) %}
+    {% if labelText is null %}
+        {% set labelText = 'continue' %}
+    {% endif %}
+
     <div style="clear:both;display:inline-block;height:0px;" data-module="opg-toggleable-submit">
         {{ form_submit(button, '', {
-            'labelText': 'continue',
+            'labelText': labelText,
             'labelTranslationDomain': 'common',
             'buttonClass': 'govuk-button govuk-!-margin-right-1 behat-link-save-and-continue',
         }) }}

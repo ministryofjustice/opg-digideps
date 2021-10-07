@@ -261,7 +261,7 @@ class ReportSection
             ->setDateLastCheckedEntitlement(new DateTime())
             ->setCreated(new DateTime())
             ->setDoOthersReceiveIncomeOnClientsBehalf('yes')
-            ->addTypesOfIncomeReceivedOnClientsBehalf($typeOfIncome)
+            ->addTypeOfIncomeReceivedOnClientsBehalf($typeOfIncome)
         ;
 
         $typeOfIncome->setClientBenefitsCheck($clientBenefitsCheck);

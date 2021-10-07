@@ -8,7 +8,15 @@ startPage:
     startButton: Start
 
 stepPage:
-    pageTitle: When did you last check that %client% gets all the benefits they’re entitled to?
+    pageTitle:
+        1:
+            mainTitle: When did you last check that %client% gets all the benefits they’re entitled to?
+        2:
+            mainTitle: Does anyone other than you receive income  on %client%’s behalf?
+            subTitle: For example, benefits paid directly to a care home or family member
+        3:
+            mainTitle: Tell us about the income other people receive on %client%'s behalf
+            subTitle: For example, benefits paid directly to a care home or family member
     supportTitle: Benefits check and income other people receive
     pageDescription:
         step1:
@@ -46,6 +54,15 @@ form:
             dontKnow: I don't know
         dontKnowLabel: Tell us why you don’t know about this income.
         dontKnowHint: For example, is this something you’ve never checked, don’t know how to check, or have been unable to find out.
+
+    incomeDetails:
+        titleHint: For example, benefits paid directly to a care home or family member
+        incomeTypeLabel: Type of income
+        amountLabel: Amount
+        dontKnowCheckboxLabel: I don’t know the amount
+        button:
+            saveAndContinue: Save and continue
+            addAnother: Add another
 
     save:
         label: Save and continue

@@ -89,7 +89,11 @@ trait ClientBenefitsCheckSectionTrait
      */
     public function iConfirmOthersReceiveIncomeOnClientsBehalf()
     {
-        $this->chooseOption('addSelectName', 'addOption', 'haveOthersReceivedIncome', 'add translation');
+        $this->chooseOption(
+            'report-client-benefits-check[doOthersReceiveIncomeOnClientsBehalf]',
+            'yes',
+            'haveOthersReceivedIncome'
+        );
 
         $this->pressButton('Save and continue');
     }
@@ -110,8 +114,16 @@ trait ClientBenefitsCheckSectionTrait
     public function iAddNumberOfIncomeTypes(int $numOfIncomeTypes)
     {
         foreach (range(0, $numOfIncomeTypes) as $index) {
-            $this->fillInField('addFieldName', $this->faker->words(2), 'incomeType');
-            $this->fillInFieldTrackTotal('addFieldName', $this->faker->numberBetween(10, 2000), 'incomeType');
+            $this->fillInField(
+                'report-client-benefits-check_incomeReceivedOnClientsBehalf_0_incomeType',
+                $this->faker->words(2),
+                'incomeType'
+            );
+            $this->fillInFieldTrackTotal(
+                'report-client-benefits-check[incomeReceivedOnClientsBehalf][0][amount]',
+                $this->faker->numberBetween(10, 2000),
+                'incomeType'
+            );
 
             if ($index === $numOfIncomeTypes) {
                 break;

@@ -8,6 +8,7 @@ use App\Entity\Report\ClientBenefitsCheck;
 use App\Form\DateType;
 use Symfony\Component\Form\AbstractType;
 use Symfony\Component\Form\Extension\Core\Type\ChoiceType;
+use Symfony\Component\Form\Extension\Core\Type\CollectionType;
 use Symfony\Component\Form\Extension\Core\Type\SubmitType;
 use Symfony\Component\Form\Extension\Core\Type\TextareaType;
 use Symfony\Component\Form\FormBuilderInterface;
@@ -55,6 +56,14 @@ class ClientBenefitsCheckType extends AbstractType
             $builder->add('dontKnowIncomeExplanation', TextareaType::class);
         }
 
+        if (3 === $this->step) {
+            $builder->add('typesOfIncomeReceivedOnClientsBehalf', CollectionType::class, [
+                'entry_type' => IncomeReceivedOnClientsBehalfType::class,
+                'entry_options' => ['label' => false],
+            ]);
+            $builder->add('addAnother', SubmitType::class);
+        }
+
         $builder->add('save', SubmitType::class);
 
         $builder->addEventListener(FormEvents::PRE_SUBMIT, function (FormEvent $event) {
@@ -75,7 +84,9 @@ class ClientBenefitsCheckType extends AbstractType
                 'validation_groups' => [
                     1 => ['client-benefits-check'],
                     2 => [],
+                    3 => [],
                 ][$this->step],
+                'data_class' => ClientBenefitsCheck::class,
             ]
         )
             ->setRequired(['step']);

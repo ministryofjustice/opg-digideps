@@ -20,9 +20,9 @@
             {{ 'stepPage.pageTitle' | trans(transOptions, translationDomain) }}
         </dt>
         <dd class="govuk-summary-list__value">
-            {% if report.clientBenefitsCheck.whenLastCheckedEntitlement == constant('App\\Entity\\Report\\ClientBenefitsCheck::I_HAVE_CHECKED') %}
+            {% if report.clientBenefitsCheck.whenLastCheckedEntitlement == constant('App\\Entity\\Report\\ClientBenefitsCheck::WHEN_CHECKED_I_HAVE_CHECKED') %}
                 {{ report.clientBenefitsCheck.dateLastCheckedEntitlement | date('F Y') }}
-            {% elseif report.clientBenefitsCheck.whenLastCheckedEntitlement == constant('App\\Entity\\Report\\ClientBenefitsCheck::IVE_NEVER_CHECKED') %}
+            {% elseif report.clientBenefitsCheck.whenLastCheckedEntitlement == constant('App\\Entity\\Report\\ClientBenefitsCheck::WHEN_CHECKED_IVE_NEVER_CHECKED') %}
                 <p class="govuk-body">{{ ('form.whenLastChecked.choices.' ~ report.clientBenefitsCheck.whenLastCheckedEntitlement) | trans(transOptions, translationDomain) }}</p>
                 <p class="govuk-body">{{ report.clientBenefitsCheck.neverCheckedExplanation}}</p>
             {% else %}

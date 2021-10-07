@@ -6,11 +6,13 @@ namespace App\Controller\Report;
 
 use App\Controller\AbstractController;
 use App\Entity\Report\ClientBenefitsCheck;
+use App\Entity\Report\IncomeReceivedOnClientsBehalf;
 use App\Entity\Report\Status;
 use App\Form\Report\ClientBenefitsCheckType;
 use App\Service\Client\Internal\ClientBenefitsCheckApi;
 use App\Service\Client\Internal\ReportApi;
 use App\Service\StepRedirector;
+use Doctrine\Common\Collections\ArrayCollection;
 use Sensio\Bundle\FrameworkExtraBundle\Configuration\Template;
 use Symfony\Component\HttpFoundation\RedirectResponse;
 use Symfony\Component\HttpFoundation\Request;
@@ -61,7 +63,7 @@ class ClientBenefitsCheckController extends AbstractController
      */
     public function step(Request $request, int $reportId, int $step)
     {
-        $totalSteps = 2;
+        $totalSteps = 3;
 
         if ($step < 1 || $step > $totalSteps) {
             return $this->redirectToRoute('client_benefits_check_summary', ['reportId' => $reportId]);
@@ -79,6 +81,11 @@ class ClientBenefitsCheckController extends AbstractController
         $report = $this->reportApi->getReportIfNotSubmitted($reportId, self::$jmsGroups);
         $clientBenefitsCheck = $report->getClientBenefitsCheck() ?: new ClientBenefitsCheck();
 
+        if (3 === $step && empty($clientBenefitsCheck->getTypesOfIncomeReceivedOnClientsBehalf())) {
+            $clientBenefitsCheck->setTypesOfIncomeReceivedOnClientsBehalf(new ArrayCollection());
+            $clientBenefitsCheck->addTypeOfIncomeReceivedOnClientsBehalf(new IncomeReceivedOnClientsBehalf());
+        }
+
         $form = $this->createForm(
             ClientBenefitsCheckType::class,
             $clientBenefitsCheck,
@@ -92,13 +99,22 @@ class ClientBenefitsCheckController extends AbstractController
             $clientBenefitsCheck = $form->getData();
             $clientBenefitsCheck->setReport($report);
 
-            if (is_null($clientBenefitsCheck->getId())) {
-                $this->benefitCheckApi->post($clientBenefitsCheck);
+            if ($form->get('addAnother')->isClicked()) {
+                $clientBenefitsCheck->addTypeOfIncomeReceivedOnClientsBehalf(new IncomeReceivedOnClientsBehalf());
+                $redirectRoute = $request->getUri();
             } else {
-                $this->benefitCheckApi->put($clientBenefitsCheck);
+                $redirectRoute = $stepRedirector->getRedirectLinkAfterSaving();
             }
 
-            return $this->redirect($stepRedirector->getRedirectLinkAfterSaving());
+            if ($step === $totalSteps) {
+                if (is_null($clientBenefitsCheck->getId())) {
+                    $this->benefitCheckApi->post($clientBenefitsCheck);
+                } else {
+                    $this->benefitCheckApi->put($clientBenefitsCheck);
+                }
+            }
+
+            return $this->redirect($redirectRoute);
         }
 
         return [

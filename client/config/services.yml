@@ -346,3 +346,6 @@ services:
         class: GBProd\UuidNormalizer\UuidDenormalizer
         tags:
             - { name: serializer.denormalizer }
+
+    App\EventListener\AtLeastOneRequiredListener:
+        autoconfigure: false

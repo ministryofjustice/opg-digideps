@@ -11,7 +11,15 @@
 
 {% block htmlTitle %}{{ 'common.htmlTitle' | trans(transOptions, translationDomain) }}{% endblock %}
 {% block supportTitleTop %}{{ 'stepPage.supportTitle' | trans(transOptions, translationDomain)  }}{% endblock %}
-{% block pageTitle %}{{ 'stepPage.pageTitle' | trans(transOptions, translationDomain) }}{% endblock %}
+{% block pageTitle %}{{ ('stepPage.pageTitle.' ~ step ~ '.mainTitle') | trans(transOptions, translationDomain) }}{% endblock %}
+
+
+
+{% block supportTitleBottom %}
+    {% if step != 1 %}
+        {{ ('stepPage.pageTitle.'  ~ step ~ '.subTitle') | trans(transOptions, translationDomain) }}
+    {% endif %}
+{% endblock %}
 
 {% block breadcrumbs %}{{ macros.breadcrumbs(report) }}{% endblock %}
 
@@ -50,6 +58,8 @@
                     }
                 ]
             }) }}
+
+            {{ macros.saveAndContinueButton(form.save) }}
         {% endif %}
 
     {% if step == 2 %}
@@ -75,9 +85,29 @@
                 }
             ]
         }) }}
-    {% endif %}
 
         {{ macros.saveAndContinueButton(form.save) }}
+    {% endif %}
+
+    {% if step == 3 %}
+        {% for typeOfIncomeReceivedOnClientsBehalf in form.typesOfIncomeReceivedOnClientsBehalf %}
+            {{ form_input(typeOfIncomeReceivedOnClientsBehalf.incomeType, '', {
+                'hintText' : '',
+                'label' : { 'text': 'form.incomeDetails.incomeTypeLabel' | trans(transOptions, translationDomain) }
+            }) }}
+
+            {{ form_input(typeOfIncomeReceivedOnClientsBehalf.amount, '', {
+                'hintText' : '',
+                'label' : { 'text': 'form.incomeDetails.amountLabel' | trans(transOptions, translationDomain) },
+                'inputPrefix' : '£'
+            }) }}
+
+
+        {% endfor %}
+
+        {{ macros.saveAndContinueButton(form.save) }}
+        {{ macros.addAnotherSaveButton(form.addAnother, 'addAnother') }}
+    {% endif %}
 
     {{ form_end(form) }}
 

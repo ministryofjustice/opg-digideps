@@ -6,6 +6,7 @@ namespace App\Entity\Report;
 
 use App\Entity\Report\Traits\HasReportTrait;
 use DateTime;
+use Doctrine\Common\Collections\ArrayCollection;
 use JMS\Serializer\Annotation as JMS;
 
 class ClientBenefitsCheck
@@ -49,6 +50,24 @@ class ClientBenefitsCheck
      * @JMS\Groups({"report", "client-benefits-check"})
      */
     private ?string $neverCheckedExplanation = null;
+
+    /**
+     * @JMS\Type("string")
+     * @JMS\Groups({"report", "client-benefits-check"})
+     */
+    private ?string $doOthersReceiveIncomeOnClientsBehalf = '';
+
+    /**
+     * @JMS\Type("string")
+     * @JMS\Groups({"report", "client-benefits-check"})
+     */
+    private ?string $dontKnowIncomeExplanation = null;
+
+    /**
+     * @JMS\Type("ArrayCollection<App\Entity\Report\IncomeReceivedOnClientsBehalf>")
+     * @JMS\Groups({"report", "client-benefits-check"})
+     */
+    private ?ArrayCollection $typesOfIncomeReceivedOnClientsBehalf = null;
 
     public function getWhenLastCheckedEntitlement(): string
     {
@@ -106,6 +125,49 @@ class ClientBenefitsCheck
     public function setId(?string $id): ClientBenefitsCheck
     {
         $this->id = $id;
+
+        return $this;
+    }
+
+    public function getDoOthersReceiveIncomeOnClientsBehalf(): ?string
+    {
+        return $this->doOthersReceiveIncomeOnClientsBehalf;
+    }
+
+    public function setDoOthersReceiveIncomeOnClientsBehalf(?string $doOthersReceiveIncomeOnClientsBehalf): ClientBenefitsCheck
+    {
+        $this->doOthersReceiveIncomeOnClientsBehalf = $doOthersReceiveIncomeOnClientsBehalf;
+
+        return $this;
+    }
+
+    public function getDontKnowIncomeExplanation(): ?string
+    {
+        return $this->dontKnowIncomeExplanation;
+    }
+
+    public function setDontKnowIncomeExplanation(?string $dontKnowIncomeExplanation): ClientBenefitsCheck
+    {
+        $this->dontKnowIncomeExplanation = $dontKnowIncomeExplanation;
+
+        return $this;
+    }
+
+    public function getTypesOfIncomeReceivedOnClientsBehalf(): ?ArrayCollection
+    {
+        return $this->typesOfIncomeReceivedOnClientsBehalf;
+    }
+
+    public function setTypesOfIncomeReceivedOnClientsBehalf(?ArrayCollection $typesOfIncomeReceivedOnClientsBehalf): ClientBenefitsCheck
+    {
+        $this->typesOfIncomeReceivedOnClientsBehalf = $typesOfIncomeReceivedOnClientsBehalf;
+
+        return $this;
+    }
+
+    public function addTypeOfIncomeReceivedOnClientsBehalf(IncomeReceivedOnClientsBehalf $incomeReceivedOnClientsBehalf): ClientBenefitsCheck
+    {
+        $this->typesOfIncomeReceivedOnClientsBehalf->add($incomeReceivedOnClientsBehalf);
 
         return $this;
     }
