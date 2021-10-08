@@ -36,7 +36,6 @@ class SearchController extends AbstractController
      */
     public function searchAction(Request $request, ParameterStoreService $parameterStore)
     {
-        var_dump('Landing');
         $featureFlag = $parameterStore->getFeatureFlag(ParameterStoreService::FLAG_PAPER_REPORTS);
 
         /** @var EntityDir\User $user */
@@ -56,11 +55,7 @@ class SearchController extends AbstractController
 
         if (('1' === $featureFlag && EntityDir\User::ROLE_SUPER_ADMIN === $user->getRoleName())
             || EntityDir\User::ROLE_BEHAT_TEST === $user->getRoleName()) {
-            var_dump('Feature');
-
-            //var_dump($filters);
             $cases = $this->restClient->get('case/search-all?'.http_build_query($filters), 'array');
-            var_dump('Searched');
 
             $filteredResults = array_unique($cases, SORT_REGULAR);
 
@@ -69,7 +64,6 @@ class SearchController extends AbstractController
                 $this->buildCaseViewParams($form, $filteredResults, $filters)
             );
         } else {
-            var_dump('Original');
             $clients = $this->restClient->get('client/get-all?'.http_build_query($filters), 'Client[]');
 
             return $this->buildClientViewParams($form, $clients, $filters);

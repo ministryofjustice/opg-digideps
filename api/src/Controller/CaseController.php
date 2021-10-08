@@ -44,13 +44,26 @@ class CaseController extends RestController
             $request->get('offset')
         );
 
-        $formattedClients = [];
+        $formattedCases = [];
 
         foreach ($clients as $client) {
-            $formattedClients[] =
+            $formattedCases[] =
                 ['caseNumber' => $client->getCaseNumber(), 'clientSurname' => $client->getLastname()];
         }
 
-        return $formattedClients;
+        $cases = $this->casrecRepository->searchCases(
+            $request->get('q'),
+            $request->get('order_by'),
+            $request->get('sort_order'),
+            $request->get('limit'),
+            $request->get('offset')
+        );
+
+        foreach ($cases as $case) {
+            $formattedCases[] =
+                ['caseNumber' => $case->getCaseNumber(), 'clientSurname' => $case->getClientLastname()];
+        }
+
+        return $formattedCases;
     }
 }
