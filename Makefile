@@ -51,7 +51,6 @@ up-app-xdebug-api: ## Brings the app up, rebuilds containers and enabled xdebug 
 up-app-xdebug-api-cachegrind: ## Brings the app up, rebuilds containers and enabled xdebug in client with cachegrind
 	REQUIRE_XDEBUG_API=1 docker-compose -f docker-compose.yml -f docker-compose.cachegrind.yml  up -d --build --remove-orphans
 
-
 up-app-integration-tests: ## Brings the app up using test env vars (see test.env)
 	REQUIRE_XDEBUG_FRONTEND=0 REQUIRE_XDEBUG_API=0 docker-compose -f docker-compose.yml -f docker-compose.dev.yml build frontend admin api test
 	APP_ENV=dev APP_DEBUG=0 docker-compose -f docker-compose.yml -f docker-compose.dev.yml up -d --remove-orphans

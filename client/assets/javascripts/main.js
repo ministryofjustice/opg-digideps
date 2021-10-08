@@ -2,11 +2,11 @@
 import { ButtonToggler } from './modules/buttonToggler.js'
 import { MOJButtonMenu } from './modules/buttonMenu'
 import { GoogleAnalyticsEvents } from './modules/googleAnalyticsEvents'
+import { CookieBanner } from './modules/cookieBanner'
 
 require('../scss/application.scss')
 require('./modules/bind.js')
 
-const cookieBanner = require('./modules/cookieBanner.js')
 const detailsExpander = require('./modules/detailsExpander.js')
 const DetachedDetails = require('./modules/detached-details.js')
 const formatCurrency = require('./modules/formatcurrency.js')
@@ -58,7 +58,7 @@ $(document).ready(function () {
   textAreaAutoSize('form')
 
   // Cookie banner
-  cookieBanner()
+  CookieBanner()
 
   // Details expander
   detailsExpander('.js-details-expander')
