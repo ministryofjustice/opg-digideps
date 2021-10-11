@@ -76,7 +76,7 @@ _See [deployment documentation](docs/DEPLOYMENT.md)_
 
 ## Built with
 
-- Terraform 0.14
+- Terraform 1.0.0
 - PHP 7.4
 - Symfony 4.4
 - Doctrine 2.0
