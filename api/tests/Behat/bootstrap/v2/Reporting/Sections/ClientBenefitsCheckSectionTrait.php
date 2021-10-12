@@ -113,14 +113,17 @@ trait ClientBenefitsCheckSectionTrait
      */
     public function iAddNumberOfIncomeTypes(int $numOfIncomeTypes)
     {
+        $numOfIncomeTypes = $numOfIncomeTypes - 1;
+
         foreach (range(0, $numOfIncomeTypes) as $index) {
             $this->fillInField(
-                'report-client-benefits-check_incomeReceivedOnClientsBehalf_0_incomeType',
-                $this->faker->words(2),
+                "report-client-benefits-check[typesOfIncomeReceivedOnClientsBehalf][$index][incomeType]",
+                $this->faker->sentence(3),
                 'incomeType'
             );
+
             $this->fillInFieldTrackTotal(
-                'report-client-benefits-check[incomeReceivedOnClientsBehalf][0][amount]',
+                "report-client-benefits-check[typesOfIncomeReceivedOnClientsBehalf][$index][amount]",
                 $this->faker->numberBetween(10, 2000),
                 'incomeType'
             );

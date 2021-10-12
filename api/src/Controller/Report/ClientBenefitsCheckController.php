@@ -51,14 +51,15 @@ class ClientBenefitsCheckController extends RestController
     {
         $this->setJmsGroups($request);
 
-        $clientBenefitsCheck = $this->repository->find($id);
+        $existingEntity = $this->repository->find($id);
+        $clientBenefitsCheck = $this->factory->createFromFormData(json_decode($request->getContent(), true), $existingEntity);
 
         return $this->processEntity($clientBenefitsCheck);
     }
 
     private function processEntity(ClientBenefitsCheck $clientBenefitsCheck)
     {
-        $this->repository->persist($clientBenefitsCheck);
+        $this->repository->persistAndFlush($clientBenefitsCheck);
         $clientBenefitsCheck->getReport()->updateSectionsStatusCache([Report::SECTION_CLIENT_BENEFITS_CHECK]);
 
         return $clientBenefitsCheck;

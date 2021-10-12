@@ -6,6 +6,7 @@ namespace App\Entity\Report;
 
 use DateTime;
 use Doctrine\Common\Collections\ArrayCollection;
+use Doctrine\Common\Collections\Collection;
 use Doctrine\ORM\Mapping as ORM;
 use Gedmo\Mapping\Annotation as Gedmo;
 use InvalidArgumentException;
@@ -113,6 +114,7 @@ class ClientBenefitsCheck
 
     /**
      * @ORM\OneToMany(targetEntity="App\Entity\Report\IncomeReceivedOnClientsBehalf", mappedBy="clientBenefitsCheck", cascade={"persist", "remove"}, fetch="EXTRA_LAZY" )
+     *
      * @JMS\Groups({"client-benefits-check"})
      * @JMS\Type("ArrayCollection<App\Entity\Report\IncomeReceivedOnClientsBehalf>")
      */
@@ -166,7 +168,7 @@ class ClientBenefitsCheck
         return $this;
     }
 
-    public function getTypesOfIncomeReceivedOnClientsBehalf(): array
+    public function getTypesOfIncomeReceivedOnClientsBehalf(): Collection
     {
         return $this->typesOfIncomeReceivedOnClientsBehalf;
     }
@@ -175,6 +177,7 @@ class ClientBenefitsCheck
     {
         if (!$this->typesOfIncomeReceivedOnClientsBehalf->contains($incomeReceivedOnClientsBehalf)) {
             $this->typesOfIncomeReceivedOnClientsBehalf->add($incomeReceivedOnClientsBehalf);
+            $incomeReceivedOnClientsBehalf->setClientBenefitsCheck($this);
         }
 
         return $this;

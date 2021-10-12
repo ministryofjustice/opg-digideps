@@ -81,8 +81,11 @@ class ClientBenefitsCheckController extends AbstractController
         $report = $this->reportApi->getReportIfNotSubmitted($reportId, self::$jmsGroups);
         $clientBenefitsCheck = $report->getClientBenefitsCheck() ?: new ClientBenefitsCheck();
 
-        if (3 === $step && empty($clientBenefitsCheck->getTypesOfIncomeReceivedOnClientsBehalf())) {
-            $clientBenefitsCheck->setTypesOfIncomeReceivedOnClientsBehalf(new ArrayCollection());
+        if (3 === $step) {
+            if (empty($clientBenefitsCheck->getTypesOfIncomeReceivedOnClientsBehalf())) {
+                $clientBenefitsCheck->setTypesOfIncomeReceivedOnClientsBehalf(new ArrayCollection());
+            }
+
             $clientBenefitsCheck->addTypeOfIncomeReceivedOnClientsBehalf(new IncomeReceivedOnClientsBehalf());
         }
 
@@ -99,19 +102,16 @@ class ClientBenefitsCheckController extends AbstractController
             $clientBenefitsCheck = $form->getData();
             $clientBenefitsCheck->setReport($report);
 
-            if ($form->get('addAnother')->isClicked()) {
-                $clientBenefitsCheck->addTypeOfIncomeReceivedOnClientsBehalf(new IncomeReceivedOnClientsBehalf());
+            if ($form->has('addAnother') && $form->get('addAnother')->isClicked()) {
                 $redirectRoute = $request->getUri();
             } else {
                 $redirectRoute = $stepRedirector->getRedirectLinkAfterSaving();
             }
 
-            if ($step === $totalSteps) {
-                if (is_null($clientBenefitsCheck->getId())) {
-                    $this->benefitCheckApi->post($clientBenefitsCheck);
-                } else {
-                    $this->benefitCheckApi->put($clientBenefitsCheck);
-                }
+            if (is_null($clientBenefitsCheck->getId())) {
+                $this->benefitCheckApi->post($clientBenefitsCheck);
+            } else {
+                $this->benefitCheckApi->put($clientBenefitsCheck);
             }
 
             return $this->redirect($redirectRoute);

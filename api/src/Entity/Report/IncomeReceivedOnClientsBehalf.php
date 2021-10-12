@@ -8,6 +8,7 @@ use DateTime;
 use Doctrine\ORM\Mapping as ORM;
 use Doctrine\ORM\Mapping\JoinColumn;
 use Gedmo\Mapping\Annotation as Gedmo;
+use JMS\Serializer\Annotation as JMS;
 use Ramsey\Uuid\Uuid;
 use Ramsey\Uuid\UuidInterface;
 
@@ -28,28 +29,43 @@ class IncomeReceivedOnClientsBehalf
      * @ORM\Column(name="id", type="uuid")
      * @ORM\GeneratedValue(strategy="NONE")
      * @ORM\CustomIdGenerator(class=UuidGenerator::class)
+     *
+     * @JMS\Groups({"client-benefits-check"})
+     * @JMS\Type("string")
      */
     private UuidInterface $id;
 
     /**
      * @ORM\Column(name="created_at", type="datetime",nullable=true)
      * @Gedmo\Timestampable(on="create")
+     *
+     * @JMS\Groups({"client-benefits-check"})
+     * @JMS\Type("DateTime<'Y-m-d'>")
      */
     private DateTime $created;
 
     /**
-     * @ORM\OneToOne(targetEntity="App\Entity\Report\ClientBenefitsCheck", inversedBy="incomeReceivedOnClientsBehalf", cascade={"persist", "remove"})
+     * @ORM\ManyToOne(targetEntity="App\Entity\Report\ClientBenefitsCheck", inversedBy="incomeReceivedOnClientsBehalf", cascade={"persist", "remove"})
      * @JoinColumn(name="client_benefits_check_id", referencedColumnName="id")
+     *
+     * @JMS\Groups({"client-benefits-check"})
+     * @JMS\Type("App\Entity\Report\ClientBenefitsCheck")
      */
     private ClientBenefitsCheck $clientBenefitsCheck;
 
     /**
      * @ORM\Column(name="income_type", type="string", nullable=false)
+     *
+     * @JMS\Groups({"client-benefits-check"})
+     * @JMS\Type("string")
      */
     private string $incomeType;
 
     /**
      * @ORM\Column(name="amount", type="decimal", precision=14, scale=2, nullable=true)
+     *
+     * @JMS\Groups({"client-benefits-check"})
+     * @JMS\Type("float")
      */
     private float $amount;
 

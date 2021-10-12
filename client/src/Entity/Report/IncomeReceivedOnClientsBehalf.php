@@ -40,12 +40,11 @@ class IncomeReceivedOnClientsBehalf
     private ?float $amount = null;
 
     /**
-     * THIS I BREAKING JMS - FIND A WAY TO HAVE TICK BOX WITHOUT BREAKING IT :(.
-     *
-     * @JMS\Exclude()
+     * @JMS\Type("bool")
+     * @JMS\Groups({"report", "client-benefits-check"})
      *
      * @var bool|null
-     *                This will never be sent to API - this property exists to enable a checkbox in the form
+     *                This will not be persisted - it exists to enable a checkbox in the form
      */
     private ?bool $amountDontKnow = null;
 
