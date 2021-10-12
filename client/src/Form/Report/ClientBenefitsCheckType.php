@@ -61,6 +61,7 @@ class ClientBenefitsCheckType extends AbstractType
                 'entry_type' => IncomeReceivedOnClientsBehalfType::class,
                 'entry_options' => ['label' => false],
             ]);
+
             $builder->add('addAnother', SubmitType::class);
         }
 

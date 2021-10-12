@@ -67,7 +67,7 @@ class IncomeReceivedOnClientsBehalf
      * @JMS\Groups({"client-benefits-check"})
      * @JMS\Type("float")
      */
-    private float $amount;
+    private ?float $amount;
 
     public function getClientBenefitsCheck(): ClientBenefitsCheck
     {
@@ -93,18 +93,6 @@ class IncomeReceivedOnClientsBehalf
         return $this;
     }
 
-    public function getAmount(): float
-    {
-        return $this->amount;
-    }
-
-    public function setAmount(float $amount): IncomeReceivedOnClientsBehalf
-    {
-        $this->amount = $amount;
-
-        return $this;
-    }
-
     public function getId(): UuidInterface
     {
         return $this->id;
@@ -125,6 +113,18 @@ class IncomeReceivedOnClientsBehalf
     public function setCreated(DateTime $created): IncomeReceivedOnClientsBehalf
     {
         $this->created = $created;
+
+        return $this;
+    }
+
+    public function getAmount(): ?float
+    {
+        return $this->amount;
+    }
+
+    public function setAmount(?float $amount): IncomeReceivedOnClientsBehalf
+    {
+        $this->amount = $amount;
 
         return $this;
     }

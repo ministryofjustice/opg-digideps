@@ -134,8 +134,6 @@ trait ClientBenefitsCheckSectionTrait
 
             $this->pressButton('Add another');
         }
-
-        $this->pressButton('Save and continue');
     }
 
     /**
@@ -143,6 +141,8 @@ trait ClientBenefitsCheckSectionTrait
      */
     public function iAddIncomeTypeWithNoValue()
     {
+        // Add the forms into a div or form group in template then find the last element and fill in below.
+
         $this->fillInField('addFieldName', $this->faker->words(2), 'incomeType');
         $this->tickCheckbox(
             'addGroupName',
@@ -151,6 +151,14 @@ trait ClientBenefitsCheckSectionTrait
             'I don\'t know the amount'
         );
 
+        $this->pressButton('Save and continue');
+    }
+
+    /**
+     * @When I have no further types of income to add
+     */
+    public function iHaveNoFurtherTypesOfIncomeToAdd()
+    {
         $this->pressButton('Save and continue');
     }
 

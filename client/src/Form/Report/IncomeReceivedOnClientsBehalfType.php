@@ -21,7 +21,9 @@ class IncomeReceivedOnClientsBehalfType extends AbstractType
     {
         $builder->add('incomeType', TextType::class, ['required' => true]);
         $builder->add('amount', NumberType::class, ['required' => false]);
-        $builder->add('amountDontKnow', CheckboxType::class, ['required' => false]);
+        $builder->add('amountDontKnow', CheckboxType::class, [
+            'required' => false,
+        ]);
 
         $builder->addEventSubscriber(
             new AtLeastOneRequiredListener(
@@ -29,8 +31,7 @@ class IncomeReceivedOnClientsBehalfType extends AbstractType
             'amountDontKnow')
         );
 
-        // amountDontKnow is not a property of IncomeReceivedOnClientsBehalf. If ticked, set amount to null and
-        // always unset amountDontKnow before submission
+        // amountDontKnow is not a property of IncomeReceivedOnClientsBehalf in API. If ticked, set amount to null.
         $builder->addEventListener(FormEvents::PRE_SUBMIT, [$this, 'onPreSubmit']);
     }
 

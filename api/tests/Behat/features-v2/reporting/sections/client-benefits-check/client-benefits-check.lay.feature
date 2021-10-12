@@ -10,6 +10,7 @@ Feature: Client benefits check - Lay users
         And I confirm others receive income on the clients behalf
         And I add 2 types of income with values
         And I add a type of income where I don't know the value
+        And I have no further types of income to add
         Then the client benefits check summary page should contain the details I entered
 
     @lay-combined-high-not-started

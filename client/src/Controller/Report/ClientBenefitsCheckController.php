@@ -92,7 +92,9 @@ class ClientBenefitsCheckController extends AbstractController
         $form = $this->createForm(
             ClientBenefitsCheckType::class,
             $clientBenefitsCheck,
-            ['step' => $step]
+            [
+                'step' => $step,
+            ]
         );
 
         $form->handleRequest($request);

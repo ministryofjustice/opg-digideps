@@ -41,6 +41,7 @@
                 }) }}
             {% endset %}
 
+{#            See if this can be changed to form_checkbox#}
             {{ form_checkbox_group(form.whenLastCheckedEntitlement, 'form.clientBenefitsCheck', {
                 'useFormGroup': false,
                 'labelText': ('form.clientBenefitsCheck.label') | trans(transOptions, translationDomain),
@@ -70,6 +71,7 @@
             }) }}
         {% endset %}
 
+{#        See if this can be changed to form_checkbox#}
         {{ form_checkbox_group(form.doOthersReceiveIncomeOnClientsBehalf, 'form.incomeOnClientsBehalf', {
             'useFormGroup': false,
             'labelText': ('form.clientBenefitsCheck.label') | trans(transOptions, translationDomain),
@@ -102,7 +104,9 @@
                 'inputPrefix' : '£'
             }) }}
 
-
+            {{ form_checkbox(typeOfIncomeReceivedOnClientsBehalf.amountDontKnow, 'form.incomeDetails', {
+                'labelText': ('form.incomeDetails.dontKnowCheckboxLabel') | trans(transOptions, translationDomain)
+            }) }}
         {% endfor %}
 
         {{ macros.saveAndContinueButton(form.save) }}

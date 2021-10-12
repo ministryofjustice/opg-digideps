@@ -110,7 +110,7 @@ class IncomeReceivedOnClientsBehalf
 
     public function getAmountDontKnow(): ?bool
     {
-        return $this->amountDontKnow;
+        return is_null($this->getAmount()) && !is_null($this->getIncomeType());
     }
 
     public function setAmountDontKnow(?bool $amountDontKnow): IncomeReceivedOnClientsBehalf
