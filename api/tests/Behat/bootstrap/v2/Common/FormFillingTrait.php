@@ -297,13 +297,15 @@ trait FormFillingTrait
             $normalizedAnswer = $this->normalizeIntToCurrencyString($answers[$answerGroupToRemove][$fieldInAnswerGroupToRemove]);
 
             $rowSelector = sprintf(
-                '//tr[th[contains(.,"%s")]] | //td[contains(.,"%s")]/.. | //dd[contains(.,"%s")]/..',
+                '//tr[th[contains(.,"%s")]] | //td[contains(.,"%s")]/.. | //dd[contains(.,"%s")] | //dt[contains(.,"%s")] /..',
                 $normalizedAnswer,
                 $normalizedAnswer,
-                $normalizedAnswer
+                $normalizedAnswer,
+                $normalizedAnswer,
             );
 
             $descriptionTableRow = $this->getSession()->getPage()->find('xpath', $rowSelector);
+
             $descriptionTableRow->clickLink('Remove');
             $this->pressButton($removeButtonText);
         }

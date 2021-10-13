@@ -69,3 +69,6 @@ form:
         label: Save and continue
     cancel:
         label: Cancel
+
+deletePage:
+    subject: income type

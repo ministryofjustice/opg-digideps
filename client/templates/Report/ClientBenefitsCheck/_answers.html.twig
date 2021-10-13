@@ -63,7 +63,7 @@
             </dd>
             <dd class="govuk-summary-list__value">
                 <span><a href="{{ path('client_benefits_check_step', { 'reportId': report.id, 'step': 3 }) }}" class="govuk-link">Edit</a></span>
-                <span><a href="#" class="govuk-link">Remove</a></span>
+                <span><a href="{{ path('client_benefits_check_remove_income_type', { 'reportId': report.id, 'incomeTypeId': income.id }) }}" class="govuk-link">Remove</a></span>
             </dd>
         </div>
     {% endfor %}

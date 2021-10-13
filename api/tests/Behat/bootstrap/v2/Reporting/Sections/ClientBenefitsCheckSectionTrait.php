@@ -195,13 +195,13 @@ trait ClientBenefitsCheckSectionTrait
      */
     public function iActionIncomeTypeIAdded(string $action)
     {
+        $incomeTypeAnswers = $this->getSectionAnswers('incomeType')[0];
+        $incomeTypeDescription = $incomeTypeAnswers[array_key_first($incomeTypeAnswers)];
+
+        $incomeTypeRowXpath = sprintf('//dt[contains(.,"%s")]/..', $incomeTypeDescription);
+        $incomeTypeRow = $this->getSession()->getPage()->find('xpath', $incomeTypeRowXpath);
+
         if ('edit' === strtolower($action)) {
-            $incomeTypeAnswers = $this->getSectionAnswers('incomeType')[0];
-            $incomeTypeDescription = $incomeTypeAnswers[array_key_first($incomeTypeAnswers)];
-
-            $incomeTypeRowXpath = sprintf('//dt[contains(.,"%s")]/..', $incomeTypeDescription);
-            $incomeTypeRow = $this->getSession()->getPage()->find('xpath', $incomeTypeRowXpath);
-
             $this->editFieldAnswerInSection(
                 $incomeTypeRow,
                 array_key_first($incomeTypeAnswers),
@@ -209,6 +209,12 @@ trait ClientBenefitsCheckSectionTrait
                 'incomeType'
             );
         } elseif ('remove' === strtolower($action)) {
+            $this->removeAnswerFromSection(
+                array_key_first($incomeTypeAnswers),
+                'incomeType',
+                true,
+                'Yes, remove income type'
+            );
         } else {
             throw new BehatException('This step definition only supports "edit" and "remove"');
         }

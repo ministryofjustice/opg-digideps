@@ -8,8 +8,10 @@ use App\Controller\AbstractController;
 use App\Entity\Report\ClientBenefitsCheck;
 use App\Entity\Report\IncomeReceivedOnClientsBehalf;
 use App\Entity\Report\Status;
+use App\Form\ConfirmDeleteType;
 use App\Form\Report\ClientBenefitsCheckType;
 use App\Service\Client\Internal\ClientBenefitsCheckApi;
+use App\Service\Client\Internal\IncomeReceivedOnClientsBehalfApi;
 use App\Service\Client\Internal\ReportApi;
 use App\Service\StepRedirector;
 use Doctrine\Common\Collections\ArrayCollection;
@@ -29,12 +31,18 @@ class ClientBenefitsCheckController extends AbstractController
     private ReportApi $reportApi;
     private ClientBenefitsCheckApi $benefitCheckApi;
     private StepRedirector $stepRedirector;
+    private IncomeReceivedOnClientsBehalfApi $incomeTypeApi;
 
-    public function __construct(ReportApi $reportApi, ClientBenefitsCheckApi $benefitCheckApi, StepRedirector $stepRedirector)
-    {
+    public function __construct(
+        ReportApi $reportApi,
+        ClientBenefitsCheckApi $benefitCheckApi,
+        StepRedirector $stepRedirector,
+        IncomeReceivedOnClientsBehalfApi $incomeTypeApi
+    ) {
         $this->reportApi = $reportApi;
         $this->benefitCheckApi = $benefitCheckApi;
         $this->stepRedirector = $stepRedirector;
+        $this->incomeTypeApi = $incomeTypeApi;
     }
 
     /**
@@ -79,7 +87,7 @@ class ClientBenefitsCheckController extends AbstractController
             ->setTotalSteps($totalSteps)
             ->setRouteBaseParams(['reportId' => $reportId]);
 
-        $report = $this->reportApi->getReport($reportId, self::$jmsGroups);
+        $report = $this->reportApi->getReportIfNotSubmitted($reportId, self::$jmsGroups);
         $clientBenefitsCheck = $report->getClientBenefitsCheck() ?: new ClientBenefitsCheck();
 
         if (3 === $step) {
@@ -149,6 +157,55 @@ class ClientBenefitsCheckController extends AbstractController
 
         return [
             'report' => $report,
+        ];
+    }
+
+    /**
+     * @Route("/report/{reportId}/client-benefits-check/remove/income-type/{incomeTypeId}", name="client_benefits_check_remove_income_type")
+     * @Template("@App/Common/confirmDelete.html.twig")
+     *
+     * @return array|RedirectResponse
+     */
+    public function removeIncomeType(Request $request, int $reportId, string $incomeTypeId)
+    {
+        $report = $this->reportApi->getReportIfNotSubmitted($reportId, self::$jmsGroups);
+
+        foreach ($report->getClientBenefitsCheck()->getTypesOfIncomeReceivedOnClientsBehalf() as $incomeType) {
+            if ($incomeType->getId() === $incomeTypeId) {
+                $incomeTypeToDelete = $incomeType;
+                break;
+            }
+        }
+
+        if (!isset($incomeTypeToDelete)) {
+            throw $this->createNotFoundException('Income type not found');
+        }
+
+        $form = $this->createForm(ConfirmDeleteType::class);
+        $form->handleRequest($request);
+
+        if ($form->isSubmitted() && $form->isValid()) {
+            $this->incomeTypeApi->deleteIncomeType($incomeTypeId);
+
+            $this->addFlash(
+                'notice',
+                'Income type deleted'
+            );
+
+            return $this->redirect($this->generateUrl('client_benefits_check_summary', ['reportId' => $reportId]));
+        }
+
+        $summary = [
+            ['label' => 'summaryPage.table.incomeOtherPeopleReceive.column1Title', 'value' => $incomeTypeToDelete->getIncomeType()],
+            ['label' => 'summaryPage.table.incomeOtherPeopleReceive.column2Title', 'value' => $incomeTypeToDelete->getAmount()],
+        ];
+
+        return [
+            'translationDomain' => 'report-client-benefits-check',
+            'report' => $report,
+            'form' => $form->createView(),
+            'summary' => $summary,
+            'backLink' => $this->generateUrl('client_benefits_check_summary', ['reportId' => $reportId]),
         ];
     }
 }

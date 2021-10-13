@@ -45,7 +45,7 @@ class IncomeReceivedOnClientsBehalf
     private DateTime $created;
 
     /**
-     * @ORM\ManyToOne(targetEntity="App\Entity\Report\ClientBenefitsCheck", inversedBy="incomeReceivedOnClientsBehalf", cascade={"persist", "remove"})
+     * @ORM\ManyToOne(targetEntity="App\Entity\Report\ClientBenefitsCheck", inversedBy="incomeReceivedOnClientsBehalf", cascade={"persist"})
      * @JoinColumn(name="client_benefits_check_id", referencedColumnName="id")
      *
      * @JMS\Groups({"client-benefits-check"})
