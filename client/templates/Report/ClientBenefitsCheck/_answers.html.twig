@@ -45,6 +45,9 @@
         <dd class="govuk-summary-list__value">
             {{ 'summaryPage.table.incomeOtherPeopleReceive.column2Title' | trans(transOptions, translationDomain) }}
         </dd>
+        <dd class="govuk-summary-list__value">
+
+        </dd>
     </div>
     {% for income in report.clientBenefitsCheck.typesOfIncomeReceivedOnClientsBehalf %}
         <div class="govuk-summary-list__row ">
@@ -57,6 +60,10 @@
                 {% else %}
                     {{ income.amount | format_currency('GBP') }}
                 {% endif %}
+            </dd>
+            <dd class="govuk-summary-list__value">
+                <span><a href="{{ path('client_benefits_check_step', { 'reportId': report.id, 'step': 3 }) }}" class="govuk-link">Edit</a></span>
+                <span><a href="#" class="govuk-link">Remove</a></span>
             </dd>
         </div>
     {% endfor %}
