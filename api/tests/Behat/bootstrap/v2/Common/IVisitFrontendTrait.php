@@ -286,4 +286,12 @@ trait IVisitFrontendTrait
     {
         $this->visitFrontendPath($this->getIncomeBenefitsSummaryUrl($this->loggedInUserDetails->getCurrentReportId()));
     }
+
+    /**
+     * @When I visit the client benefits check summary page
+     */
+    public function iVisitClientBenefitsCheckSummaryPage()
+    {
+        $this->visitFrontendPath($this->getClientBenefitsCheckSummaryUrl($this->loggedInUserDetails->getCurrentReportId()));
+    }
 }

@@ -11,8 +11,10 @@ use App\Entity\Ndr\Ndr;
 use App\Entity\Ndr\VisitsCare as NdrVisitsCare;
 use App\Entity\Report\Action;
 use App\Entity\Report\BankAccount;
+use App\Entity\Report\ClientBenefitsCheck;
 use App\Entity\Report\Debt as ReportDebt;
 use App\Entity\Report\Document;
+use App\Entity\Report\IncomeReceivedOnClientsBehalf;
 use App\Entity\Report\Lifestyle;
 use App\Entity\Report\MentalCapacity;
 use App\Entity\Report\MoneyTransaction;
@@ -75,6 +77,7 @@ class ReportTestHelper
         $this->completeAssets($report);
         $this->completeDebts($report, $em);
         $this->completeLifestyle($report);
+        $this->completeClientBenefitsCheck($report);
     }
 
     public function completeNdrLayReport(ReportInterface $report, EntityManager $em): void
@@ -376,5 +379,26 @@ class ReportTestHelper
     private function completePaFeeExpense(ReportInterface $report)
     {
         $this->completeDeputyExpenses($report);
+    }
+
+    private function completeClientBenefitsCheck(ReportInterface $report): void
+    {
+        $typeOfIncome = (new IncomeReceivedOnClientsBehalf())
+            ->setCreated(new DateTime())
+            ->setAmount(100.50)
+            ->setIncomeType('Universal Credit');
+
+        $clientBenefitsCheck = (new ClientBenefitsCheck())
+            ->setReport($report)
+            ->setWhenLastCheckedEntitlement(ClientBenefitsCheck::WHEN_CHECKED_I_HAVE_CHECKED)
+            ->setDateLastCheckedEntitlement(new DateTime())
+            ->setCreated(new DateTime())
+            ->setDoOthersReceiveIncomeOnClientsBehalf('yes')
+            ->addTypeOfIncomeReceivedOnClientsBehalf($typeOfIncome)
+        ;
+
+        $typeOfIncome->setClientBenefitsCheck($clientBenefitsCheck);
+
+        $report->setClientBenefitsCheck($clientBenefitsCheck);
     }
 }

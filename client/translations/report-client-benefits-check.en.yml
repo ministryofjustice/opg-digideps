@@ -25,6 +25,7 @@ stepPage:
 summaryPage:
     listedAnswers: We've listed your saved answers below.
     checkAnswers: Check they're correct and edit them where necessary
+    addIncomeButtonText: Add income
     table:
         benefitsCheck:
             title: Benefits check

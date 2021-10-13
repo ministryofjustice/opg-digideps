@@ -79,7 +79,7 @@ class ClientBenefitsCheckController extends AbstractController
             ->setTotalSteps($totalSteps)
             ->setRouteBaseParams(['reportId' => $reportId]);
 
-        $report = $this->reportApi->getReportIfNotSubmitted($reportId, self::$jmsGroups);
+        $report = $this->reportApi->getReport($reportId, self::$jmsGroups);
         $clientBenefitsCheck = $report->getClientBenefitsCheck() ?: new ClientBenefitsCheck();
 
         if (3 === $step) {

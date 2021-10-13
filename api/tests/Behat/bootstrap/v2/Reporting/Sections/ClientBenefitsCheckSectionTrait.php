@@ -178,18 +178,16 @@ trait ClientBenefitsCheckSectionTrait
     }
 
     /**
-     * @When I add an income type from the summary page
+     * @When I add :numOfIncomeTypes income types from the summary page
      */
-    public function iAddIncomeTypeFromSummaryPage(int $numOfIncomeTypes)
+    public function iAddIncomeTypesFromSummaryPage(int $numOfIncomeTypes)
     {
-        $this->iAmOnDeputyBenefitsCheckSummaryPage();
+        $this->iAmOnClientBenefitsCheckSummaryPage();
 
         $this->pressButton('Add income');
 
-        $this->fillInField('addFieldName', $this->faker->sentence(2), 'incomeType');
-        $this->fillInFieldTrackTotal('addFieldName', $this->faker->numberBetween(10, 2000), 'incomeType');
-
-        $this->pressButton('Save and continue');
+        $this->iAddNumberOfIncomeTypes($numOfIncomeTypes);
+        $this->iHaveNoFurtherTypesOfIncomeToAdd();
     }
 
     /**
@@ -211,7 +209,9 @@ trait ClientBenefitsCheckSectionTrait
     {
         $this->iAmOnClientBenefitsCheckSummaryPage();
 
-        $this->expectedResultsDisplayedSimplified('haveCheckedBenefits');
+        if (!is_null($this->getSectionAnswers('haveCheckedBenefits'))) {
+            $this->expectedResultsDisplayedSimplified('haveCheckedBenefits');
+        }
 
         if (!is_null($this->getSectionAnswers('incomeType'))) {
             $this->expectedResultsDisplayedSimplified('incomeType');
