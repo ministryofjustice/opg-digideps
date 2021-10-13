@@ -102,7 +102,10 @@ trait ClientBenefitsCheckSectionTrait
      */
     public function iConfirmOthersDoNotReceiveIncomeOnClientsBehalf()
     {
-        $this->chooseOption('addSelectName', 'addOption', 'haveOthersReceivedIncome', 'add translation');
+        $this->chooseOption(
+            'report-client-benefits-check[doOthersReceiveIncomeOnClientsBehalf]',
+            'no'
+        );
 
         $this->pressButton('Save and continue');
     }
@@ -183,7 +186,7 @@ trait ClientBenefitsCheckSectionTrait
 
         $this->pressButton('Add income');
 
-        $this->fillInField('addFieldName', $this->faker->words(2), 'incomeType');
+        $this->fillInField('addFieldName', $this->faker->sentence(2), 'incomeType');
         $this->fillInFieldTrackTotal('addFieldName', $this->faker->numberBetween(10, 2000), 'incomeType');
 
         $this->pressButton('Save and continue');
@@ -206,8 +209,13 @@ trait ClientBenefitsCheckSectionTrait
      */
     public function benefitCheckSummaryPageContainsEnteredDetails()
     {
+        $this->iAmOnClientBenefitsCheckSummaryPage();
+
         $this->expectedResultsDisplayedSimplified('haveCheckedBenefits');
-        $this->expectedResultsDisplayedSimplified('incomeType');
+
+        if (!is_null($this->getSectionAnswers('incomeType'))) {
+            $this->expectedResultsDisplayedSimplified('incomeType');
+        }
     }
 
     /**

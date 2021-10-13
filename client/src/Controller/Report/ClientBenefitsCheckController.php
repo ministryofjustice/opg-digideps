@@ -14,6 +14,7 @@ use App\Service\Client\Internal\ReportApi;
 use App\Service\StepRedirector;
 use Doctrine\Common\Collections\ArrayCollection;
 use Sensio\Bundle\FrameworkExtraBundle\Configuration\Template;
+use Symfony\Component\Form\FormInterface;
 use Symfony\Component\HttpFoundation\RedirectResponse;
 use Symfony\Component\HttpFoundation\Request;
 use Symfony\Component\Routing\Annotation\Route;
@@ -107,7 +108,8 @@ class ClientBenefitsCheckController extends AbstractController
             if ($form->has('addAnother') && $form->get('addAnother')->isClicked()) {
                 $redirectRoute = $request->getUri();
             } else {
-                $redirectRoute = $stepRedirector->getRedirectLinkAfterSaving();
+                $stepToRedirectFrom = $this->incomeNotReceivedByOthers($form) ? $step + 1 : $step;
+                $redirectRoute = $stepRedirector->setCurrentStep($stepToRedirectFrom)->getRedirectLinkAfterSaving();
             }
 
             if (is_null($clientBenefitsCheck->getId())) {
@@ -127,8 +129,16 @@ class ClientBenefitsCheckController extends AbstractController
         ];
     }
 
+    private function incomeNotReceivedByOthers(FormInterface $form)
+    {
+        $notYesStatuses = [ClientBenefitsCheck::OTHER_INCOME_NO, ClientBenefitsCheck::OTHER_INCOME_DONT_KNOW];
+
+        return $form->has('doOthersReceiveIncomeOnClientsBehalf') &&
+            in_array($form->get('doOthersReceiveIncomeOnClientsBehalf')->getData(), $notYesStatuses);
+    }
+
     /**
-     * @Route("/report/{reportId}/client-benefits-check-summary", name="client_benefits_check_summary")
+     * @Route("/report/{reportId}/client-benefits-check/summary", name="client_benefits_check_summary")
      * @Template("@App/Report/ClientBenefitsCheck/summary.html.twig")
      *
      * @return array|RedirectResponse

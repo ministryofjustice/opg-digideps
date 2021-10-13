@@ -90,8 +90,8 @@ class ClientBenefitsCheckType extends AbstractType
                 'translation_domain' => 'report-client-benefits-check',
                 'validation_groups' => [
                     1 => ['client-benefits-check'],
-                    2 => [],
-                    3 => [],
+                    2 => ['client-benefits-check'],
+                    3 => ['client-benefits-check'],
                 ][$this->step],
                 'data_class' => ClientBenefitsCheck::class,
             ]

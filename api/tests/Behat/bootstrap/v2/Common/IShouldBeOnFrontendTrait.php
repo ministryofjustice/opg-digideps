@@ -638,4 +638,12 @@ trait IShouldBeOnFrontendTrait
     {
         return $this->iAmOnPage(sprintf('/%s\/.*\/income-benefits\/summary.*$/', $this->reportUrlPrefix));
     }
+
+    /**
+     * @Then I should be on the client benefits check summary page
+     */
+    public function iAmOnClientBenefitsCheckSummaryPage(): bool
+    {
+        return $this->iAmOnPage(sprintf('/%s\/.*\/client-benefits-check\/summary.*$/', $this->reportUrlPrefix));
+    }
 }

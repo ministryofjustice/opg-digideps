@@ -1,7 +1,7 @@
 @client_benefits_check @v2 @v2_reporting_1
 Feature: Client benefits check - Lay users
 
-    @lay-combined-high-not-started @acs
+    @lay-combined-high-not-started
     Scenario: A deputy has checked the clients benefit entitlement on a specific date
         Given a Lay Deputy has not started a Combined High Assets report
         And the deputies report ends and is due 'more' than 60 days after the client benefits check feature flag date
@@ -13,13 +13,13 @@ Feature: Client benefits check - Lay users
         And I have no further types of income to add
         Then the client benefits check summary page should contain the details I entered
 
-    @lay-combined-high-not-started
+    @lay-combined-high-not-started @acs
     Scenario: A deputy is currently checking the clients benefit entitlement
         Given a Lay Deputy has not started a Combined High Assets report
         And the deputies report ends and is due 'more' than 60 days after the client benefits check feature flag date
         When I navigate to and start the client benefits check report section
         And I confirm I am currently checking the benefits the client is entitled to
-#        And I confirm others do not receive income on the clients behalf
+        And I confirm others do not receive income on the clients behalf
         Then the client benefits check summary page should contain the details I entered
 
     @lay-combined-high-not-started

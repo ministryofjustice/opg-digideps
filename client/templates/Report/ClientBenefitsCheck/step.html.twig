@@ -37,7 +37,7 @@
             {% set conditionalNeverChecked %}
                 {{ form_input(form.neverCheckedExplanation, 'form.whenLastChecked', {
                     'hintText' : 'form.whenLastChecked.neverCheckedHint' | trans(transOptions, translationDomain),
-                    'label' : { 'text': '' }
+                    'labelText' : ' '
                 }) }}
             {% endset %}
 
@@ -65,13 +65,12 @@
 
     {% if step == 2 %}
         {% set conditionalIncomeDontKnowChecked %}
-            {{ form_input(form.doOthersReceiveIncomeOnClientsBehalf, 'form.incomeOnClientsBehalf', {
+            {{ form_input(form.dontKnowIncomeExplanation, 'form.incomeOnClientsBehalf', {
                 'hintText' : 'form.incomeOnClientsBehalf.dontKnowHint' | trans(transOptions, translationDomain),
-                'label' : { 'text': 'form.incomeOnClientsBehalf.dontKnowLabel' | trans(transOptions, translationDomain) }
+                'labelText' : 'form.incomeOnClientsBehalf.dontKnowLabel' | trans(transOptions, translationDomain)
             }) }}
         {% endset %}
 
-{#        See if this can be changed to form_checkbox#}
         {{ form_checkbox_group(form.doOthersReceiveIncomeOnClientsBehalf, 'form.incomeOnClientsBehalf', {
             'useFormGroup': false,
             'labelText': ('form.clientBenefitsCheck.label') | trans(transOptions, translationDomain),
