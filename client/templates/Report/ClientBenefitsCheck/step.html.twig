@@ -93,20 +93,24 @@
 
     {% if step == 3 %}
         {% for typeOfIncomeReceivedOnClientsBehalf in form.typesOfIncomeReceivedOnClientsBehalf %}
-            {{ form_input(typeOfIncomeReceivedOnClientsBehalf.incomeType, '', {
-                'hintText' : '',
-                'label' : { 'text': 'form.incomeDetails.incomeTypeLabel' | trans(transOptions, translationDomain) }
-            }) }}
+            <fieldset class="add-another__item">
+                {{ form_input(typeOfIncomeReceivedOnClientsBehalf.incomeType, '', {
+                    'hintText' : '',
+                    'label' : { 'text': 'form.incomeDetails.incomeTypeLabel' | trans(transOptions, translationDomain) }
+                }) }}
 
-            {{ form_input(typeOfIncomeReceivedOnClientsBehalf.amount, '', {
-                'hintText' : '',
-                'label' : { 'text': 'form.incomeDetails.amountLabel' | trans(transOptions, translationDomain) },
-                'inputPrefix' : '£'
-            }) }}
+                {{ form_input(typeOfIncomeReceivedOnClientsBehalf.amount, '', {
+                    'hintText' : '',
+                    'label' : { 'text': 'form.incomeDetails.amountLabel' | trans(transOptions, translationDomain) },
+                    'inputPrefix' : '£'
+                }) }}
 
-            {{ form_checkbox(typeOfIncomeReceivedOnClientsBehalf.amountDontKnow, 'form.incomeDetails', {
-                'labelText': ('form.incomeDetails.dontKnowCheckboxLabel') | trans(transOptions, translationDomain)
-            }) }}
+                {{ form_checkbox(typeOfIncomeReceivedOnClientsBehalf.amountDontKnow, 'form.incomeDetails', {
+                    'labelText': ('form.incomeDetails.dontKnowCheckboxLabel') | trans(transOptions, translationDomain)
+                }) }}
+            </fieldset>
+
+            <hr class="govuk-section-break govuk-section-break--m govuk-section-break--visible">
         {% endfor %}
 
         {{ macros.saveAndContinueButton(form.save) }}

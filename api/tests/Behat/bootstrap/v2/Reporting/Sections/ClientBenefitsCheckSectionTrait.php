@@ -91,8 +91,7 @@ trait ClientBenefitsCheckSectionTrait
     {
         $this->chooseOption(
             'report-client-benefits-check[doOthersReceiveIncomeOnClientsBehalf]',
-            'yes',
-            'haveOthersReceivedIncome'
+            'yes'
         );
 
         $this->pressButton('Save and continue');
@@ -122,15 +121,11 @@ trait ClientBenefitsCheckSectionTrait
                 'incomeType'
             );
 
-            $this->fillInFieldTrackTotal(
+            $this->fillInField(
                 "report-client-benefits-check[typesOfIncomeReceivedOnClientsBehalf][$index][amount]",
                 $this->faker->numberBetween(10, 2000),
                 'incomeType'
             );
-
-            if ($index === $numOfIncomeTypes) {
-                break;
-            }
 
             $this->pressButton('Add another');
         }
@@ -143,15 +138,32 @@ trait ClientBenefitsCheckSectionTrait
     {
         // Add the forms into a div or form group in template then find the last element and fill in below.
 
-        $this->fillInField('addFieldName', $this->faker->words(2), 'incomeType');
+        $incomeTypesXpath = "//fieldset[contains(@class, 'add-another__item')]";
+        $incomeTypes = $this->getSession()->getPage()->findAll('xpath', $incomeTypesXpath);
+
+        $emptyIncomeType = null;
+
+        foreach ($incomeTypes as $incomeType) {
+            $emptyInputValueGrandparentXpath = '//input[not(@value)]/../..';
+            $emptyIncomeType = $incomeType->find('xpath', $emptyInputValueGrandparentXpath) ?: null;
+        }
+
+        $incomeTypeByNameXpath = "//input[contains(@name, 'incomeType')]";
+        $incomeTypeName = ($emptyIncomeType->find('xpath', $incomeTypeByNameXpath))->getAttribute('name');
+
+        $this->fillInField($incomeTypeName, $this->faker->sentence(2), 'incomeType');
+
+        $checkboxByNameXpath = "//input[contains(@type, 'checkbox')]";
+        $checkboxName = ($emptyIncomeType->find('xpath', $checkboxByNameXpath))->getAttribute('name');
+
         $this->tickCheckbox(
-            'addGroupName',
-            'addOptionName',
+            'incomeTypeCheckbox',
+            $checkboxName,
             'incomeType',
-            'I don\'t know the amount'
+            'I don\'t know'
         );
 
-        $this->pressButton('Save and continue');
+        $this->pressButton('Add another');
     }
 
     /**
@@ -194,7 +206,8 @@ trait ClientBenefitsCheckSectionTrait
      */
     public function benefitCheckSummaryPageContainsEnteredDetails()
     {
-        $this->expectedResultsDisplayedSimplified();
+        $this->expectedResultsDisplayedSimplified('haveCheckedBenefits');
+        $this->expectedResultsDisplayedSimplified('incomeType');
     }
 
     /**

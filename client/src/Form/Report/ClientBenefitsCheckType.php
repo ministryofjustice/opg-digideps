@@ -5,6 +5,7 @@ declare(strict_types=1);
 namespace App\Form\Report;
 
 use App\Entity\Report\ClientBenefitsCheck;
+use App\Entity\Report\IncomeReceivedOnClientsBehalf;
 use App\Form\DateType;
 use Symfony\Component\Form\AbstractType;
 use Symfony\Component\Form\Extension\Core\Type\ChoiceType;
@@ -59,7 +60,11 @@ class ClientBenefitsCheckType extends AbstractType
         if (3 === $this->step) {
             $builder->add('typesOfIncomeReceivedOnClientsBehalf', CollectionType::class, [
                 'entry_type' => IncomeReceivedOnClientsBehalfType::class,
-                'entry_options' => ['label' => false],
+                'entry_options' => ['label' => false, 'empty_data' => null],
+                'delete_empty' => function (IncomeReceivedOnClientsBehalf $income) {
+                    return null === $income->getAmount() && null === $income->getIncomeType();
+                },
+                'allow_delete' => true,
             ]);
 
             $builder->add('addAnother', SubmitType::class);
@@ -72,8 +77,9 @@ class ClientBenefitsCheckType extends AbstractType
 
             if (!empty($data['dateLastCheckedEntitlement']['month']) && !empty($data['dateLastCheckedEntitlement']['year'])) {
                 $data['dateLastCheckedEntitlement']['day'] = '01';
-                $event->setData($data);
             }
+
+            $event->setData($data);
         });
     }
 
