@@ -285,6 +285,12 @@ v2-tests-goutte:
             contexts:
                 - App\Tests\Behat\v2\Reporting\Sections\ReportingSectionsFeatureContext
 
+        section-client-benefits-check:
+            description: Covering the 'Client benefits check' section of the report
+            paths: [ "%paths.base%/features-v2/reporting/sections/client-benefits-check" ]
+            contexts:
+                - App\Tests\Behat\v2\Reporting\Sections\ReportingSectionsFeatureContext
+
         section-contacts:
             description: Covering the 'Contacts' section of the report
             paths: [ "%paths.base%/features-v2/reporting/sections/contacts" ]

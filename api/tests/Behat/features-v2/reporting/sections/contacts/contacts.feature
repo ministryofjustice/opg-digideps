@@ -1,4 +1,4 @@
-@contacts @v2
+@contacts @v2 @v2_reporting_1
 Feature: Contacts
 
     @super-admin @lay-health-welfare-not-started

@@ -42,56 +42,56 @@ class ReportController extends AbstractController
      * @var array
      */
     private static $reportGroupsAll = [
-        'report',
-        'client',
         'account',
+        'action-more-info',
+        'action',
+        'asset',
+        'balance',
+        'balance-state',
+        'client',
+        'client-benefit-check',
+        'client-named-deputy',
+        'contact',
+        'debt',
+        'debts',
+        'decision',
+        'debt-management',
+        'documents',
         'expenses',
         'fee',
         'gifts',
-        'prof-deputy-other-costs',
-        'prof-deputy-costs-how-charged',
-        'report-prof-deputy-costs',
-        'report-prof-deputy-costs-prev', 'prof-deputy-costs-prev',
-        'report-prof-deputy-costs-interim', 'prof-deputy-costs-interim',
-        'report-prof-deputy-costs-scco',
-        'report-prof-deputy-fixed-cost',
-        'prof-deputy-costs-estimate-how-charged',
-        'prof-deputy-estimate-costs',
-        'prof-deputy-costs-estimate-more-info',
-        'prof-deputy-estimate-management-costs',
-        'action',
-        'action-more-info',
-        'asset',
-        'debt',
-        'debt-management',
-        'fee',
-        'balance',
-        'client',
-        'contact',
-        'debts',
-        'decision',
-        'visits-care',
         'lifestyle',
-        'mental-capacity',
-        'money-transfer',
-        'transaction',
-        'transactionsIn',
-        'transactionsOut',
         'moneyShortCategoriesIn',
         'moneyShortCategoriesOut',
         'moneyTransactionsShortIn',
         'moneyTransactionsShortOut',
-        'status',
-        'report-submitted-by',
-        'client-named-deputy',
-        'wish-to-provide-documentation',
-        'report-documents',
-        'balance-state',
-        'documents',
-        'report-prof-service-fees',
+        'mental-capacity',
+        'money-transfer',
+        'prof-deputy-costs-estimate-how-charged',
+        'prof-deputy-costs-estimate-more-info',
+        'prof-deputy-costs-how-charged',
+        'prof-deputy-costs-interim',
+        'prof-deputy-costs-prev',
+        'prof-deputy-estimate-costs',
+        'prof-deputy-estimate-management-costs',
+        'prof-deputy-other-costs',
         'prof-service-fees',
-        'client-named-deputy',
+        'report',
+        'report-documents',
+        'report-prof-deputy-costs',
+        'report-prof-deputy-costs-interim',
+        'report-prof-deputy-costs-prev',
+        'report-prof-deputy-costs-scco',
+        'report-prof-deputy-fixed-cost',
+        'report-prof-service-fees',
+        'report-submitted-by',
+        'status',
+        'transaction',
+        'transactionsIn',
+        'transactionsOut',
         'unsubmitted-reports-count',
+        'visits-care',
+        'wish-to-provide-documentation',
     ];
 
     private RestClient $restClient;
@@ -298,20 +298,12 @@ class ReportController extends AbstractController
             $template = '@App/Report/Report/overview.html.twig';
         }
 
-        $report = $this->reportApi->getReportIfNotSubmitted($reportId, $reportJmsGroup);
+        $report = $this->reportApi->getReportIfNotSubmitted(
+            $reportId,
+            $reportJmsGroup,
+        );
+
         $activeReport = $activeReportId ? $this->reportApi->getReportIfNotSubmitted($activeReportId, $reportJmsGroup) : null;
-
-        $benefitsSection = false;
-        $dateTimeFormat = 'd-m-Y H:i:s';
-
-        $featureFlag = $parameterStore->getFeatureFlag(ParameterStoreService::FLAG_BENEFITS_QUESTIONS);
-
-        $featureFlagDate = DateTime::createFromFormat($dateTimeFormat, $featureFlag);
-        $currentDate = DateTime::createFromFormat($dateTimeFormat, date($dateTimeFormat));
-
-        if ($currentDate >= $featureFlagDate) {
-            $benefitsSection = true;
-        }
 
         return $this->render($template, [
             'user' => $user,
@@ -319,7 +311,6 @@ class ReportController extends AbstractController
             'namedDeputy' => $namedDeputy,
             'report' => $report,
             'activeReport' => $activeReport,
-            'benefitsSection' => $benefitsSection,
         ]);
     }
 

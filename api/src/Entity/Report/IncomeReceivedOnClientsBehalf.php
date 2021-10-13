@@ -6,6 +6,7 @@ namespace App\Entity\Report;
 
 use DateTime;
 use Doctrine\ORM\Mapping as ORM;
+use Doctrine\ORM\Mapping\JoinColumn;
 use Gedmo\Mapping\Annotation as Gedmo;
 use Ramsey\Uuid\Uuid;
 use Ramsey\Uuid\UuidInterface;
@@ -38,6 +39,7 @@ class IncomeReceivedOnClientsBehalf
 
     /**
      * @ORM\OneToOne(targetEntity="App\Entity\Report\ClientBenefitsCheck", inversedBy="incomeReceivedOnClientsBehalf", cascade={"persist", "remove"})
+     * @JoinColumn(name="client_benefits_check_id", referencedColumnName="id")
      */
     private ClientBenefitsCheck $clientBenefitsCheck;
 

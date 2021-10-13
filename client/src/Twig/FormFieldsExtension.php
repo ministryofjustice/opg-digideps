@@ -199,12 +199,11 @@ class FormFieldsExtension extends AbstractExtension
 
     public function renderFormKnownDate($element, $elementName, array $vars = [], $transIndex = null)
     {
-        //lets get the translation for class and labelText
-        $translationKey = (!is_null($transIndex)) ? $transIndex.'.'.$elementName : $elementName;
         // read domain from Form ption 'translation_domain'
         $domain = $element->parent->vars['translation_domain'];
 
         $translationKey = (!is_null($transIndex)) ? $transIndex.'.'.$elementName : $elementName;
+
         if (isset($vars['showDay'])) {
             $showDay = $vars['showDay'];
         } else {
@@ -213,7 +212,9 @@ class FormFieldsExtension extends AbstractExtension
 
         //sort hint text translation
         $hintTextTrans = $this->translator->trans($translationKey.'.hint', [], $domain);
-        if ($hintTextTrans !== $translationKey.'.hint') {
+        if (isset($vars['hintText']) && !empty($vars['hintText'])) {
+            $hintText = $vars['hintText'];
+        } elseif ($hintTextTrans !== $translationKey.'.hint') {
             $hintText = $hintTextTrans;
         } else {
             $hintText = $this->translator->trans('defaultDateHintText', [], 'common');

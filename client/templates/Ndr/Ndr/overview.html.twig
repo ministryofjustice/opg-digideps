@@ -69,6 +69,18 @@
                 linkToSubSection: path('ndr_deputy_expenses', {ndrId: ndr.id}),
                 description: true
             } %}
+
+{#            {% if ndr.hasSection('clientBenefitsCheck') %}#}
+{#                {% include '@App/Report/Report/_subsection.html.twig' with {#}
+{#                    transDomain: translationDomain,#}
+{#                    subSection: 'client_benefits_check',#}
+{#                    ndr: ndr,#}
+{#                    state: ndrStatus.clientBenefitsCheckState,#}
+{#                    linkToSubSection: path('ndr_client_benefits_check', {ndrId: ndr.id}),#}
+{#                    description: true#}
+{#                } %}#}
+{#            {% endif %}#}
+
             {% include '@App/Ndr/Ndr/_subsection.html.twig' with {
                 transDomain: translationDomain,
                 subSection: 'income_benefits',

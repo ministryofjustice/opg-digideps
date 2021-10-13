@@ -27,28 +27,17 @@ services:
             - .:/app
 
     localstack:
-        image: localstack/localstack:0.10.9
+        build:
+            context: .
+            dockerfile: ./localstack.Dockerfile
         ports:
-            - "4572:4572"
-            - "4583:4583"
-            - "4586:4586"
+            - '4566-4583:4566-4583'
         environment:
-            - SERVICES=s3:4572,ssm:4583,logs:4586
+            - SERVICES=s3,ssm,logs
             - DATA_DIR=/tmp/localstack/data
             - DEFAULT_REGION=eu-west-1
+            - USE_SINGLE_REGION=1
             - DEBUG=1
-
-    # Need to populate localstack SSM from PHP to ensure parameters are accessible from client
-    # https://github.com/localstack/localstack/issues/1184
-    localstack-init:
-        build: ./client
-        depends_on:
-            - localstack
-        command:
-            - php
-            - scripts/localstack-init.php
-        volumes:
-            - ./client/scripts:/var/www/scripts
 
     wait-for-it:
         build: ./wait_for_it
@@ -86,6 +75,7 @@ services:
                 aliases:
                     - www.digideps.local
                     - digideps.local
+
     admin:
         build:
             context: ./client
@@ -111,6 +101,7 @@ services:
             default:
                 aliases:
                     - admin.digideps.local
+
     api:
         build:
             context: ./api
@@ -121,6 +112,7 @@ services:
         depends_on:
             - postgres
             - redis-api
+            - localstack
         environment:
             APP_ENV: ${APP_ENV:-dev}
             APP_DEBUG: ${APP_DEBUG:-0}

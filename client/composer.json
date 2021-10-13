@@ -10,12 +10,13 @@
         }
     },
     "require": {
-        "php": "7.4.16",
+        "php": "7.4.23",
         "ext-gd": "*",
         "alphagov/notifications-php-client": "^2.1",
         "aws/aws-sdk-php": "^3.100.9",
         "egulias/email-validator": "^2.0.0",
         "fzaninotto/faker": "^1.9",
+        "gbprod/uuid-normalizer": "^1.2",
         "guzzlehttp/guzzle": "^6.3.3",
         "incenteev/composer-parameter-handler": "^2.1.3",
         "jms/serializer-bundle": "3.3.0",
@@ -25,6 +26,7 @@
         "php-http/guzzle6-adapter": "^2.0",
         "phpunit/phpunit": "^8.0.0",
         "predis/predis": "^1.1.1",
+        "ramsey/uuid": "^4.2",
         "sensio/framework-extra-bundle": "^6.0",
         "snc/redis-bundle": "^2.1.9",
         "symfony/monolog-bundle": "^3.0.0",

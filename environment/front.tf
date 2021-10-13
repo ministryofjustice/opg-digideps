@@ -49,13 +49,13 @@ data "aws_iam_policy_document" "invoke_dep_rep_api" {
   }
 }
 
-resource "aws_iam_role_policy" "query_ssm" {
+resource "aws_iam_role_policy" "front_query_ssm" {
   name   = "front-query-ssm.${local.environment}"
-  policy = data.aws_iam_policy_document.query_ssm.json
+  policy = data.aws_iam_policy_document.front_query_ssm.json
   role   = aws_iam_role.front.id
 }
 
-data "aws_iam_policy_document" "query_ssm" {
+data "aws_iam_policy_document" "front_query_ssm" {
   statement {
     sid    = "AllowQuerySSMParameters"
     effect = "Allow"
@@ -63,11 +63,10 @@ data "aws_iam_policy_document" "query_ssm" {
       "ssm:GetParameter"
     ]
     resources = [
-      aws_ssm_parameter.flag_document_sync.arn,
+      aws_ssm_parameter.checklist_sync_row_limit.arn,
       aws_ssm_parameter.document_sync_row_limit.arn,
       aws_ssm_parameter.flag_checklist_sync.arn,
-      aws_ssm_parameter.checklist_sync_row_limit.arn,
-      aws_ssm_parameter.flag_benefits_questions.arn,
+      aws_ssm_parameter.flag_document_sync.arn,
       aws_ssm_parameter.flag_paper_reports.arn
     ]
   }

@@ -35,7 +35,7 @@ parameters:
       version: 'latest'
       region: 'eu-west-1'
   {{ if exists "/s3/localstack" }}
-      endpoint: 'http://localstack:4572'
+      endpoint: 'http://localstack:4566'
       use_path_style_endpoint: true
       validate: false
       credentials:
@@ -48,7 +48,7 @@ parameters:
       version: 'latest'
       region: 'eu-west-1'
   {{ if exists "/ssm/localstack" }}
-      endpoint: 'http://localstack:4583'
+      endpoint: 'http://localstack:4566'
       validate: false
       credentials:
         key: 'FAKE_ID'
@@ -60,7 +60,7 @@ parameters:
       version: 'latest'
       region: 'eu-west-1'
   {{ if exists "/cloudwatch/logs/localstack" }}
-      endpoint: 'http://localstack:4586'
+      endpoint: 'http://localstack:4566'
       validate: false
       credentials:
         key: 'FAKE_ID'

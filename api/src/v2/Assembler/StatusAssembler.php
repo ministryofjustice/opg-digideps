@@ -11,16 +11,12 @@ class StatusAssembler
     /** @var ReportStatusServiceFactory */
     private $statusServiceFactory;
 
-    /**
-     * @param ReportStatusServiceFactory $statusServiceFactory
-     */
     public function __construct(ReportStatusServiceFactory $statusServiceFactory)
     {
         $this->statusServiceFactory = $statusServiceFactory;
     }
 
     /**
-     * @param Report $report
      * @return StatusDto
      */
     public function assembleFromReport(Report $report)
