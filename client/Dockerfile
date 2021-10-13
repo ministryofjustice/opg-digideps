@@ -57,35 +57,35 @@ RUN pecl install pcov && docker-php-ext-enable pcov
 # Install Xdebug if directed to with build arg from docker-compose.yml
 ARG REQUIRE_XDEBUG=0
 RUN if [[ $REQUIRE_XDEBUG = 1 ]] ; then \
-  apk add --no-cache $PHPIZE_DEPS; \
-  pecl install xdebug-2.9.8; \
-  docker-php-ext-enable $PHP_EXT_DIR/xdebug.so; \
-  fi ;
+    apk add --no-cache $PHPIZE_DEPS; \
+    pecl install xdebug-2.9.8; \
+    docker-php-ext-enable $PHP_EXT_DIR/xdebug.so; \
+    fi ;
 
 # Route NGINX logs to stdout/stderr
 RUN ln -sf /dev/stdout /var/log/nginx/access.log \
-  && ln -sf /dev/stderr /var/log/nginx/error.log \
-  && ln -s /etc/nginx/http.d /etc/nginx/conf.d
+    && ln -sf /dev/stderr /var/log/nginx/error.log \
+    && ln -s /etc/nginx/http.d /etc/nginx/conf.d
 
 # Add Confd to configure parameters on start
 ENV CONFD_VERSION="0.16.0"
 RUN wget -q -O /usr/local/bin/confd "https://github.com/kelseyhightower/confd/releases/download/v${CONFD_VERSION}/confd-${CONFD_VERSION}-linux-amd64" \
-  && chmod +x /usr/local/bin/confd
+    && chmod +x /usr/local/bin/confd
 
 # Add Waitforit to wait on API starting
 ENV WAITFORIT_VERSION="v2.4.1"
 RUN wget -q -O /usr/local/bin/waitforit https://github.com/maxcnunes/waitforit/releases/download/$WAITFORIT_VERSION/waitforit-linux_amd64 \
-  && chmod +x /usr/local/bin/waitforit
+    && chmod +x /usr/local/bin/waitforit
 
 # Generate certificate
 RUN mkdir -p /etc/nginx/certs
 RUN openssl req -newkey rsa:4096 -x509 -nodes -keyout /etc/nginx/certs/app.key -new -out /etc/nginx/certs/app.crt -subj "/C=GB/ST=GB/L=London/O=OPG/OU=Digital/CN=default" -sha256 -days "3650"
 
 RUN mkdir -p var/cache \
-  && mkdir -p var/logs \
-  && mkdir -p /var/log/app \
-  && chown -R www-data var \
-  && chown -R www-data /var/log/app
+    && mkdir -p var/logs \
+    && mkdir -p /var/log/app \
+    && chown -R www-data var \
+    && chown -R www-data /var/log/app
 
 COPY --from=composer /app/app app
 COPY --from=composer /app/vendor/bin bin
@@ -112,18 +112,18 @@ RUN chown -R www-data scripts
 # Add common passwords file. Two options to combat flakey responses from site.
 COPY docker/extra/commonpasswords.txt /tmp/commonpasswords.txt
 RUN wget -q -O /tmp/commonpasswords.txt "https://www.ncsc.gov.uk/static-assets/documents/PwnedPasswordsTop100k.txt" \
-  || echo 'using local copy of pwnedpasswords' \
-  && chown www-data /tmp/commonpasswords.txt
+    || echo 'using local copy of pwnedpasswords' \
+    && chown www-data /tmp/commonpasswords.txt
 
 #Check for security issues
 RUN wget -q -O local-php-security-checker https://github.com/fabpot/local-php-security-checker/releases/download/v1.0.0/local-php-security-checker_1.0.0_linux_arm64 \
-  && chmod +x local-php-security-checker \
-  && su-exec local-php-security-checker
+    && chmod +x local-php-security-checker \
+    && su-exec local-php-security-checker
 
 # Prebuild cache
 RUN su-exec www-data php -d memory_limit=-1 app/console cache:warmup
 
 CMD confd -onetime -backend env \
-  && waitforit -address=$API_URL/manage/availability -timeout=$TIMEOUT -insecure \
-  && php-fpm -D \
-  && nginx
+    && waitforit -address=$API_URL/manage/availability -timeout=$TIMEOUT -insecure \
+    && php-fpm -D \
+    && nginx

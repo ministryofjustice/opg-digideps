@@ -23,6 +23,8 @@ resource "aws_service_discovery_service" "htmltopdf" {
   tags = local.default_tags
 
   depends_on = [aws_service_discovery_private_dns_namespace.private]
+
+  force_destroy = local.account.deletion_protection ? false : true
 }
 
 resource "aws_iam_role" "htmltopdf" {
