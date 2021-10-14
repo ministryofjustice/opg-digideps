@@ -20,7 +20,6 @@ use App\Service\HtmlToPdfGenerator;
 use App\Service\NdrStatusService;
 use App\Service\ParameterStoreService;
 use App\Service\Redirector;
-use DateTime;
 use Sensio\Bundle\FrameworkExtraBundle\Configuration\Template;
 use Symfony\Component\HttpFoundation\RedirectResponse;
 use Symfony\Component\HttpFoundation\Request;
@@ -150,28 +149,17 @@ class NdrController extends AbstractController
         }
 
         $ndr = $client->getNdr();
+
         if ($ndr->getSubmitted()) {
             throw new ReportSubmittedException();
         }
+
         $ndrStatus = new NdrStatusService($ndr);
-
-        $benefitsSection = false;
-        $dateTimeFormat = 'd-m-Y H:i:s';
-
-        $featureFlag = $parameterStore->getFeatureFlag(ParameterStoreService::FLAG_BENEFITS_QUESTIONS);
-
-        $featureFlagDate = DateTime::createFromFormat($dateTimeFormat, $featureFlag);
-        $currentDate = DateTime::createFromFormat($dateTimeFormat, date($dateTimeFormat));
-
-        if ($currentDate >= $featureFlagDate) {
-            $benefitsSection = true;
-        }
 
         return [
             'client' => $client,
             'ndr' => $ndr,
             'ndrStatus' => $ndrStatus,
-            'benefitsSection' => $benefitsSection,
         ];
     }
 

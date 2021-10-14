@@ -7,6 +7,7 @@ use App\Entity\Ndr\Ndr;
 use App\Entity\Report\AssetOther;
 use App\Entity\Report\AssetProperty;
 use App\Entity\Report\BankAccount;
+use App\Entity\Report\ClientBenefitsCheck;
 use App\Entity\Report\Expense;
 use App\Entity\Report\Fee;
 use App\Entity\Report\Gift;
@@ -17,16 +18,20 @@ use App\Entity\Report\ProfDeputyInterimCost;
 use App\Entity\Report\ProfDeputyOtherCost;
 use App\Entity\Report\ProfDeputyPreviousCost;
 use App\Entity\Report\Report;
+use App\TestHelpers\ReportTestHelper;
+use DateTime;
+use DateTimeImmutable;
 use Doctrine\Common\Collections\ArrayCollection;
 use MockeryStub as m;
-use PHPUnit\Framework\TestCase;
+use Symfony\Bundle\FrameworkBundle\Test\KernelTestCase;
 
-class ReportTest extends TestCase
+class ReportTest extends KernelTestCase
 {
     /**
      * @var Report
      */
     private $report;
+    private $em;
 
     public function setUp(): void
     {
@@ -38,6 +43,9 @@ class ReportTest extends TestCase
         $this->gift2 = m::mock(Gift::class, ['getAmount' => 10]);
         $this->expense1 = m::mock(Expense::class, ['getAmount' => 2]);
         $this->expense2 = m::mock(Expense::class, ['getAmount' => 20]);
+
+        $kernel = self::bootKernel();
+        $this->em = $kernel->getContainer()->get('doctrine')->getManager();
     }
 
     public function testDueDate()
@@ -255,9 +263,9 @@ class ReportTest extends TestCase
     public static function sectionsSettingsProvider()
     {
         return [
-            [Report::TYPE_102, ['bankAccounts', 'moneyIn', 'balance'], ['moneyInShort', 'lifestyle']],
-            [Report::TYPE_103, ['bankAccounts', 'moneyInShort'], ['moneyIn', 'lifestyle', 'balance']],
-            [Report::TYPE_104, ['lifestyle'], ['bankAccounts', 'moneyIn', 'moneyInShort', 'gifts', 'balance']],
+            [Report::TYPE_102, ['bankAccounts', 'moneyIn', 'balance', 'clientBenefitsCheck'], ['moneyInShort', 'lifestyle']],
+            [Report::TYPE_103, ['bankAccounts', 'moneyInShort', 'clientBenefitsCheck'], ['moneyIn', 'lifestyle', 'balance']],
+            [Report::TYPE_104, ['lifestyle'], ['bankAccounts', 'moneyIn', 'moneyInShort', 'gifts', 'balance', 'clientBenefitsCheck']],
         ];
     }
 
@@ -268,7 +276,8 @@ class ReportTest extends TestCase
      */
     public function testAvailableSectionsAndHasSection($type, array $expectedSections, array $unExpectedSections)
     {
-        $this->report = new Report($this->client, $type, new \DateTime('2017-06-23'), new \DateTime('2018-06-22'));
+        $this->report = (new Report($this->client, $type, new \DateTime('2017-06-23'), new \DateTime('2018-06-22')))
+            ->setBenefitsSectionReleaseDate(new DateTime('2016-01-01'));
 
         foreach ($expectedSections as $section) {
             $this->assertContains($section, $this->report->getAvailableSections());
@@ -499,5 +508,81 @@ class ReportTest extends TestCase
         $this->assertEquals($expectedDueDate, $report->getDueDate()->format('Y-m-d'));
         $this->assertEquals($endDate, $report->getEndDate());
         $this->assertEquals($startDate, $report->getStartDate());
+    }
+
+    /**
+     * @test
+     * @dataProvider benefitsCheckSectionRequiredProvider
+     */
+    public function requiresBenefitsCheckSection(
+        DateTime $featureFlagDate,
+        DateTime $dueDate,
+        ?ClientBenefitsCheck $clientBenefitSection,
+        ?DateTime $unsubmitDate,
+        bool $expectedResult
+    ) {
+        $reportTestHelper = new ReportTestHelper();
+
+        $report = ($reportTestHelper->generateReport($this->em))
+            ->setDueDate($dueDate)
+            ->setClientBenefitsCheck($clientBenefitSection)
+            ->setUnSubmitDate($unsubmitDate)
+            ->setBenefitsSectionReleaseDate($featureFlagDate);
+
+        self::assertEquals(
+            $expectedResult,
+            $report->requiresBenefitsCheckSection()
+        );
+    }
+
+    public function benefitsCheckSectionRequiredProvider(): array
+    {
+        $featureFlagDate = new DateTimeImmutable('01/01/2021');
+        $unsubmitDate = new DateTime();
+
+        return [
+            'Due date 61 days after feature launch date' => [
+                DateTime::createFromImmutable($featureFlagDate),
+                DateTime::createFromImmutable($featureFlagDate->modify('+61 days')),
+                null,
+                null,
+                true,
+            ],
+            'Due date 60 days after feature launch date' => [
+                DateTime::createFromImmutable($featureFlagDate),
+                DateTime::createFromImmutable($featureFlagDate->modify('+60 days')),
+                null,
+                null,
+                false,
+            ],
+            'Due date 1 day before feature launch date' => [
+                DateTime::createFromImmutable($featureFlagDate),
+                DateTime::createFromImmutable($featureFlagDate->modify('-1 day')),
+                null,
+                null,
+                false,
+            ],
+            'Due date 61 days after feature launch date, report unsubmitted but section not previously completed' => [
+                DateTime::createFromImmutable($featureFlagDate),
+                DateTime::createFromImmutable($featureFlagDate->modify('+61 days')),
+                null,
+                $unsubmitDate,
+                false,
+            ],
+            'Due date 61 days after feature launch date, report unsubmitted but section previously completed' => [
+                DateTime::createFromImmutable($featureFlagDate),
+                DateTime::createFromImmutable($featureFlagDate->modify('+61 days')),
+                new ClientBenefitsCheck(),
+                $unsubmitDate,
+                true,
+            ],
+            'Due date 1 day before feature launch date, report unsubmitted but section previously completed' => [
+                DateTime::createFromImmutable($featureFlagDate),
+                DateTime::createFromImmutable($featureFlagDate->modify('-1 days')),
+                new ClientBenefitsCheck(),
+                $unsubmitDate,
+                true,
+            ],
+        ];
     }
 }

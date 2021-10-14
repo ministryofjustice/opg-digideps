@@ -94,9 +94,6 @@ services:
     Aws\Ssm\SsmClient:
         arguments: ["%ssm_client_params%"]
 
-    App\Service\FeatureFlagService:
-        arguments: ['@Aws\Ssm\SsmClient', '%env(FEATURE_FLAG_PREFIX)%']
-
     App\Service\ParameterStoreService:
         arguments: ['@Aws\Ssm\SsmClient', '%env(PARAMETER_PREFIX)%', '%env(FEATURE_FLAG_PREFIX)%']
 
@@ -339,3 +336,13 @@ services:
 
     line_formatter:
         class: Monolog\Formatter\LineFormatter
+
+    uuid_normalizer:
+        class: GBProd\UuidNormalizer\UuidNormalizer
+        tags:
+            - { name: serializer.normalizer }
+
+    uuid_denormalizer:
+        class: GBProd\UuidNormalizer\UuidDenormalizer
+        tags:
+            - { name: serializer.denormalizer }

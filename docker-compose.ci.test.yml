@@ -8,7 +8,5 @@ services:
         image: admin:latest
     api:
         image: api:latest
-    localstack-init:
-        image: localstack-init:latest
     htmltopdf:
         image: htmltopdf:latest

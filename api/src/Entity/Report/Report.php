@@ -48,7 +48,7 @@ class Report implements ReportInterface
 
     /**
      * Reports with total amount of assets
-     * Threshold under which reports should be 103, and not 102
+     * Threshold under which reports should be 103, and not 102.
      */
     const ASSETS_TOTAL_VALUE_103_THRESHOLD = 21000;
 
@@ -91,7 +91,7 @@ class Report implements ReportInterface
     private static $reportTypes = [
         self::TYPE_103, self::TYPE_102, self::TYPE_104, self::TYPE_103_4, self::TYPE_102_4,
         self::TYPE_103_6, self::TYPE_102_6, self::TYPE_104_6, self::TYPE_103_4_6, self::TYPE_102_4_6,
-        self::TYPE_103_5, self::TYPE_102_5, self::TYPE_104_5, self::TYPE_103_4_5, self::TYPE_102_4_5
+        self::TYPE_103_5, self::TYPE_102_5, self::TYPE_104_5, self::TYPE_103_4_5, self::TYPE_102_4_5,
     ];
 
     const SECTION_DECISIONS = 'decisions';
@@ -110,6 +110,7 @@ class Report implements ReportInterface
     const SECTION_ASSETS = 'assets';
     const SECTION_DEBTS = 'debts';
     const SECTION_GIFTS = 'gifts';
+    const SECTION_CLIENT_BENEFITS_CHECK = 'clientBenefitsCheck';
     // end money
 
     const SECTION_ACTIONS = 'actions';
@@ -131,8 +132,10 @@ class Report implements ReportInterface
     const PROF_DEPUTY_COSTS_TYPE_ASSESSED = 'assessed';
     const PROF_DEPUTY_COSTS_TYPE_BOTH = 'both';
 
+    const BENEFITS_CHECK_SECTION_REQUIRED_GRACE_PERIOD_DAYS = 60;
+
     /**
-     * https://opgtransform.atlassian.net/wiki/spaces/DEPDS/pages/135266255/Report+variations
+     * https://opgtransform.atlassian.net/wiki/spaces/DEPDS/pages/135266255/Report+variations.
      *
      * @return array
      */
@@ -143,42 +146,43 @@ class Report implements ReportInterface
             self::TYPE_103_6, self::TYPE_102_6, self::TYPE_104_6, self::TYPE_103_4_6, self::TYPE_102_4_6, // PA
             self::TYPE_103_5, self::TYPE_102_5, self::TYPE_104_5, self::TYPE_103_4_5, self::TYPE_102_4_5, // Prof
         ];
-        $r102n103 = [
+        $pfaAndCombined = [
             self::TYPE_103, self::TYPE_102, self::TYPE_103_4, self::TYPE_102_4, //Lay
             self::TYPE_103_6, self::TYPE_102_6, self::TYPE_103_4_6, self::TYPE_102_4_6, // PA
-            self::TYPE_103_5, self::TYPE_102_5, self::TYPE_103_4_5, self::TYPE_102_4_5 // Prof
+            self::TYPE_103_5, self::TYPE_102_5, self::TYPE_103_4_5, self::TYPE_102_4_5, // Prof
         ];
-        $r104 = [
+        $hw = [
             self::TYPE_104, self::TYPE_103_4, self::TYPE_102_4, // Lay
             self::TYPE_104_6, self::TYPE_103_4_6, self::TYPE_102_4_6, // PA
-            self::TYPE_104_5, self::TYPE_103_4_5, self::TYPE_102_4_5 // PA
+            self::TYPE_104_5, self::TYPE_103_4_5, self::TYPE_102_4_5, // PA
         ];
 
         $allProfReports = [
             self::TYPE_103_5, self::TYPE_102_5, self::TYPE_104_5,
-            self::TYPE_103_4_5, self::TYPE_102_4_5
+            self::TYPE_103_4_5, self::TYPE_102_4_5,
         ];
 
         return [
-            self::SECTION_DECISIONS          => $allReports,
-            self::SECTION_CONTACTS           => $allReports,
-            self::SECTION_VISITS_CARE        => $allReports,
-            self::SECTION_LIFESTYLE          => $r104,
+            self::SECTION_DECISIONS => $allReports,
+            self::SECTION_CONTACTS => $allReports,
+            self::SECTION_VISITS_CARE => $allReports,
+            self::SECTION_LIFESTYLE => $hw,
             // money
-            self::SECTION_BANK_ACCOUNTS      => $r102n103,
-            self::SECTION_MONEY_TRANSFERS    => [self::TYPE_102, self::TYPE_102_4, self::TYPE_102_6, self::TYPE_102_4_6, self::TYPE_102_5, self::TYPE_102_4_5],
-            self::SECTION_MONEY_IN           => [self::TYPE_102, self::TYPE_102_4, self::TYPE_102_6, self::TYPE_102_4_6, self::TYPE_102_5, self::TYPE_102_4_5],
-            self::SECTION_MONEY_OUT          => [self::TYPE_102, self::TYPE_102_4, self::TYPE_102_6, self::TYPE_102_4_6, self::TYPE_102_5, self::TYPE_102_4_5],
-            self::SECTION_MONEY_IN_SHORT     => [self::TYPE_103, self::TYPE_103_4, self::TYPE_103_6, self::TYPE_103_4_6, self::TYPE_103_5, self::TYPE_103_4_5],
-            self::SECTION_MONEY_OUT_SHORT    => [self::TYPE_103, self::TYPE_103_4, self::TYPE_103_6, self::TYPE_103_4_6, self::TYPE_103_5, self::TYPE_103_4_5],
-            self::SECTION_ASSETS             => $r102n103,
-            self::SECTION_DEBTS              => $r102n103,
-            self::SECTION_GIFTS              => $r102n103,
-            self::SECTION_BALANCE            => [self::TYPE_102, self::TYPE_102_4, self::TYPE_102_6, self::TYPE_102_4_6, self::TYPE_102_5, self::TYPE_102_4_5],
+            self::SECTION_BANK_ACCOUNTS => $pfaAndCombined,
+            self::SECTION_MONEY_TRANSFERS => [self::TYPE_102, self::TYPE_102_4, self::TYPE_102_6, self::TYPE_102_4_6, self::TYPE_102_5, self::TYPE_102_4_5],
+            self::SECTION_MONEY_IN => [self::TYPE_102, self::TYPE_102_4, self::TYPE_102_6, self::TYPE_102_4_6, self::TYPE_102_5, self::TYPE_102_4_5],
+            self::SECTION_MONEY_OUT => [self::TYPE_102, self::TYPE_102_4, self::TYPE_102_6, self::TYPE_102_4_6, self::TYPE_102_5, self::TYPE_102_4_5],
+            self::SECTION_MONEY_IN_SHORT => [self::TYPE_103, self::TYPE_103_4, self::TYPE_103_6, self::TYPE_103_4_6, self::TYPE_103_5, self::TYPE_103_4_5],
+            self::SECTION_MONEY_OUT_SHORT => [self::TYPE_103, self::TYPE_103_4, self::TYPE_103_6, self::TYPE_103_4_6, self::TYPE_103_5, self::TYPE_103_4_5],
+            self::SECTION_ASSETS => $pfaAndCombined,
+            self::SECTION_DEBTS => $pfaAndCombined,
+            self::SECTION_GIFTS => $pfaAndCombined,
+            self::SECTION_BALANCE => [self::TYPE_102, self::TYPE_102_4, self::TYPE_102_6, self::TYPE_102_4_6, self::TYPE_102_5, self::TYPE_102_4_5],
+            self::SECTION_CLIENT_BENEFITS_CHECK => $pfaAndCombined,
             // end money
-            self::SECTION_ACTIONS            => $allReports,
-            self::SECTION_OTHER_INFO         => $allReports,
-            self::SECTION_DEPUTY_EXPENSES    => [self::TYPE_103, self::TYPE_102, self::TYPE_103_4, self::TYPE_102_4], // Lay except 104
+            self::SECTION_ACTIONS => $allReports,
+            self::SECTION_OTHER_INFO => $allReports,
+            self::SECTION_DEPUTY_EXPENSES => [self::TYPE_103, self::TYPE_102, self::TYPE_103_4, self::TYPE_102_4], // Lay except 104
             self::SECTION_PA_DEPUTY_EXPENSES => [
                 self::TYPE_103_6, self::TYPE_102_6, self::TYPE_103_4_6, self::TYPE_102_4_6, // PA except 104-6
             ],
@@ -188,7 +192,7 @@ class Report implements ReportInterface
             self::SECTION_PROF_DEPUTY_COSTS => $allProfReports,
             // add when ready
             self::SECTION_PROF_DEPUTY_COSTS_ESTIMATE => $allProfReports,
-            self::SECTION_DOCUMENTS          => $allReports,
+            self::SECTION_DOCUMENTS => $allReports,
         ];
     }
 
@@ -258,6 +262,15 @@ class Report implements ReportInterface
      * @ORM\OneToOne(targetEntity="App\Entity\Report\MentalCapacity", mappedBy="report", cascade={"persist", "remove"})
      **/
     private $mentalCapacity;
+
+    /**
+     * @var ClientBenefitsCheck|null
+     *
+     * @JMS\Groups({"client-benefits-check"})
+     * @JMS\Type("App\Entity\Report\ClientBenefitsCheck")
+     * @ORM\OneToOne(targetEntity="App\Entity\Report\ClientBenefitsCheck", mappedBy="report", cascade={"persist", "remove"})
+     **/
+    private $clientBenefitsCheck;
 
     /**
      * @var DateTime
@@ -423,7 +436,6 @@ class Report implements ReportInterface
      */
     private $unsubmittedSectionsList;
 
-
     /**
      * @var Checklist
      *
@@ -450,14 +462,14 @@ class Report implements ReportInterface
      */
     private Satisfaction $satisfaction;
 
+    private array $excludeSections = [];
+    private ?DateTime $benefitsSectionReleaseDate = null;
+
     /**
      * Report constructor.
      *
-     * @param Client $client
      * @param $type
-     * @param DateTime $startDate
-     * @param DateTime $endDate
-     * @param bool      $dateChecks if true, perform checks around multiple reports and dates. Useful for PA upload
+     * @param bool $dateChecks if true, perform checks around multiple reports and dates. Useful for PA upload
      */
     public function __construct(Client $client, $type, DateTime $startDate, DateTime $endDate, $dateChecks = true)
     {
@@ -471,7 +483,7 @@ class Report implements ReportInterface
         $this->updateDueDateBasedOnEndDate();
 
         if ($dateChecks && count($client->getUnsubmittedReports()) > 0) {
-            throw new \RuntimeException('Client ' . $client->getId() . ' already has an unsubmitted report. Cannot create another one');
+            throw new \RuntimeException('Client '.$client->getId().' already has an unsubmitted report. Cannot create another one');
         }
 
         // check date interval overlapping other reports
@@ -484,14 +496,8 @@ class Report implements ReportInterface
             $expectedStartDate = clone $endDateLastReport;
             $expectedStartDate->modify('+1 day');
             $daysDiff = (int) $expectedStartDate->diff($this->startDate)->format('%a');
-            if ($daysDiff !== 0) {
-                throw new \RuntimeException(sprintf(
-                    'Incorrect start date. Last submitted report was on %s, '
-                    . 'therefore the new report is expected to start on %s, not on %s',
-                    $endDateLastReport->format('d/m/Y'),
-                    $expectedStartDate->format('d/m/Y'),
-                    $this->startDate->format('d/m/Y')
-                ));
+            if (0 !== $daysDiff) {
+                throw new \RuntimeException(sprintf('Incorrect start date. Last submitted report was on %s, '.'therefore the new report is expected to start on %s, not on %s', $endDateLastReport->format('d/m/Y'), $expectedStartDate->format('d/m/Y'), $this->startDate->format('d/m/Y')));
             }
         }
 
@@ -550,7 +556,7 @@ class Report implements ReportInterface
     }
 
     /**
-     * set Due date to +21 days after end date (Lay reports) if end date before 13/11/19 otherwise +56 days
+     * set Due date to +21 days after end date (Lay reports) if end date before 13/11/19 otherwise +56 days.
      */
     public function updateDueDateBasedOnEndDate()
     {
@@ -565,7 +571,7 @@ class Report implements ReportInterface
     }
 
     /**
-     * Get sections based on the report type
+     * Get sections based on the report type.
      *
      * @JMS\VirtualProperty
      * @JMS\Groups({"report", "report-sections"})
@@ -573,8 +579,18 @@ class Report implements ReportInterface
      */
     public function getAvailableSections()
     {
+        if (!$this->requiresBenefitsCheckSection()) {
+            $this->excludeSections = [Report::SECTION_CLIENT_BENEFITS_CHECK];
+        } else {
+            $this->excludeSections = [];
+        }
+
         $ret = [];
         foreach (self::getSectionsSettings() as $sectionId => $reportTypes) {
+            if (in_array($sectionId, $this->excludeSections)) {
+                continue;
+            }
+
             if (in_array($this->getType(), $reportTypes)) {
                 $ret[] = $sectionId;
             }
@@ -606,8 +622,6 @@ class Report implements ReportInterface
     /**
      * Set startDate.
      *
-     * @param DateTime $startDate
-     *
      * @return Report
      */
     public function setStartDate(DateTime $startDate)
@@ -630,8 +644,6 @@ class Report implements ReportInterface
     /**
      * Set endDate.
      *
-     * @param DateTime $endDate
-     *
      * @return Report
      */
     public function setEndDate(DateTime $endDate)
@@ -652,7 +664,7 @@ class Report implements ReportInterface
     }
 
     /**
-     * For check reasons
+     * For check reasons.
      *
      * @return string
      */
@@ -708,8 +720,6 @@ class Report implements ReportInterface
 
     /**
      * Set lastedit.
-     *
-     * @param DateTime $lastedit
      *
      * @return Report
      */
@@ -867,9 +877,6 @@ class Report implements ReportInterface
         return $this->mentalCapacity;
     }
 
-    /**
-     * @param MentalCapacity $mentalCapacity
-     */
     public function setMentalCapacity(MentalCapacity $mentalCapacity)
     {
         $this->mentalCapacity = $mentalCapacity;
@@ -902,8 +909,6 @@ class Report implements ReportInterface
     }
 
     /**
-     * @param User $user
-     *
      * @return bool
      */
     public function belongsToUser(User $user)
@@ -921,7 +926,7 @@ class Report implements ReportInterface
         $acceptedValues = ['not_deputy', 'only_deputy', 'more_deputies_behalf', 'more_deputies_not_behalf'];
 
         if ($agreeBehalfDeputy && !in_array($agreeBehalfDeputy, $acceptedValues)) {
-            throw new \InvalidArgumentException(__METHOD__ . " {$agreeBehalfDeputy} given. Expected value: " . implode(' or ', $acceptedValues));
+            throw new \InvalidArgumentException(__METHOD__." {$agreeBehalfDeputy} given. Expected value: ".implode(' or ', $acceptedValues));
         }
 
         $this->agreedBehalfDeputy = $agreeBehalfDeputy;
@@ -952,8 +957,6 @@ class Report implements ReportInterface
     }
 
     /**
-     * @param DateTime $dueDate
-     *
      * @return Report
      */
     public function setDueDate(DateTime $dueDate)
@@ -986,7 +989,7 @@ class Report implements ReportInterface
      * Temporary until specs gets more clear around report types
      * This value could be set at creation time if needed in the future.
      * Until now, 106 is for all the PAs, so we get this value from the (only) user accessing the report.
-     * Not sure if convenient to implement a 106 separate report, as 106 is also both an 102 AND an 103
+     * Not sure if convenient to implement a 106 separate report, as 106 is also both an 102 AND an 103.
      *
      * if it has the 106 flag, the deputy expense section is replaced with a more detailed "PA deputy expense" section
      * //TODO remove from mocks
@@ -995,11 +998,10 @@ class Report implements ReportInterface
      * @JMS\Type("boolean")
      * @JMS\SerializedName("has106flag")
      * @JMS\Groups({"report", "report-106-flag"})
-     *
      */
     public function has106Flag()
     {
-        return substr($this->type, -2) === '-6';
+        return '-6' === substr($this->type, -2);
     }
 
     /**
@@ -1011,7 +1013,7 @@ class Report implements ReportInterface
     }
 
     /**
-     * Unsubmitted Reports
+     * Unsubmitted Reports.
      *
      * @JMS\VirtualProperty
      * @JMS\SerializedName("unsubmitted_documents")
@@ -1027,7 +1029,7 @@ class Report implements ReportInterface
     }
 
     /**
-     * Submitted reports
+     * Submitted reports.
      *
      * @JMS\VirtualProperty("submittedDocuments")
      * @JMS\SerializedName("submitted_documents")
@@ -1043,9 +1045,6 @@ class Report implements ReportInterface
         });
     }
 
-    /**
-     * @param Document $document
-     */
     public function addDocument(Document $document)
     {
         if (!$this->documents->contains($document)) {
@@ -1055,6 +1054,7 @@ class Report implements ReportInterface
 
     /**
      * @JMS\SerializedName("report_submissions")
+     *
      * @return mixed
      */
     public function getReportSubmissions()
@@ -1075,7 +1075,7 @@ class Report implements ReportInterface
     }
 
     /**
-     * @return null|string
+     * @return string|null
      */
     public function getWishToProvideDocumentation()
     {
@@ -1126,6 +1126,7 @@ class Report implements ReportInterface
     public function setPreviousProfFeesEstimateGiven($previousProfFeesEstimateGiven)
     {
         $this->previousProfFeesEstimateGiven = $previousProfFeesEstimateGiven;
+
         return $this;
     }
 
@@ -1167,7 +1168,7 @@ class Report implements ReportInterface
 
     /**
      * Returns a list of deputy only documents. Those that should be visible to deputies only.
-     * Excludes Report PDF and transactions PDF
+     * Excludes Report PDF and transactions PDF.
      *
      * @return Document[]
      */
@@ -1212,7 +1213,7 @@ class Report implements ReportInterface
     }
 
     /**
-     * Previous report data. Just return id and type for second api call to allo new JMS groups
+     * Previous report data. Just return id and type for second api call to allo new JMS groups.
      *
      * @JMS\VirtualProperty
      * @JMS\SerializedName("previous_report_data")
@@ -1231,7 +1232,7 @@ class Report implements ReportInterface
 
         return [
                 'report-summary' => $previousReport->getReportSummary(),
-                'financial-summary' => $previousReport->getFinancialSummary()
+                'financial-summary' => $previousReport->getFinancialSummary(),
             ];
     }
 
@@ -1271,7 +1272,7 @@ class Report implements ReportInterface
     }
 
     /**
-     * Report financial summary, contains bank accounts and balance information
+     * Report financial summary, contains bank accounts and balance information.
      *
      * @return array
      */
@@ -1295,7 +1296,7 @@ class Report implements ReportInterface
         return [
             'accounts' => $accounts,
             'opening-balance-total' => $openingBalanceTotal,
-            'closing-balance-total' => $this->getAccountsClosingBalanceTotal()
+            'closing-balance-total' => $this->getAccountsClosingBalanceTotal(),
         ];
     }
 
@@ -1314,11 +1315,12 @@ class Report implements ReportInterface
 
     /**
      * Returns the translation key relating to the type of report. Hybrids identified to determine any suffix required
-     * for the translation keys (translations are in 'report' domain)
+     * for the translation keys (translations are in 'report' domain).
      *
      * @JMS\VirtualProperty
      * @JMS\Groups({"report"})
      * @JMS\Type("string")
+     *
      * @return string
      */
     public function getReportTitle()
@@ -1364,21 +1366,69 @@ class Report implements ReportInterface
         return in_array($this->getType(), [self::TYPE_102_5, self::TYPE_103_5, self::TYPE_104_5, self::TYPE_102_4_5, self::TYPE_103_4_5]);
     }
 
-    /**
-     * @return Satisfaction
-     */
     public function getSatisfaction(): Satisfaction
     {
         return $this->satisfaction;
     }
 
-    /**
-     * @param Satisfaction $satisfaction
-     * @return Report
-     */
     public function setSatisfaction(Satisfaction $satisfaction): Report
     {
         $this->satisfaction = $satisfaction;
+
+        return $this;
+    }
+
+    public function getClientBenefitsCheck(): ?ClientBenefitsCheck
+    {
+        return $this->clientBenefitsCheck;
+    }
+
+    public function setClientBenefitsCheck(?ClientBenefitsCheck $clientBenefitsCheck): Report
+    {
+        $this->clientBenefitsCheck = $clientBenefitsCheck;
+
+        return $this;
+    }
+
+    /**
+     * The client benefits check section of the report should be required for:.
+     *
+     * Reports with an unsubmit date that had not originally completed the section
+     * Reports without an unsubmit date and a due date more than 60 days after the client benefits section release date
+     */
+    public function requiresBenefitsCheckSection(): bool
+    {
+        if ($this->getUnSubmitDate()) {
+            return $this->getClientBenefitsCheck() instanceof ClientBenefitsCheck;
+        } else {
+            return intval($this->getBenefitsSectionReleaseDate()->diff($this->getDueDate())->format('%R%a')) > self::BENEFITS_CHECK_SECTION_REQUIRED_GRACE_PERIOD_DAYS;
+        }
+    }
+
+    public function getExcludeSections(): array
+    {
+        return $this->excludeSections;
+    }
+
+    public function setExcludeSections(array $excludeSections): Report
+    {
+        $this->excludeSections = $excludeSections;
+
+        return $this;
+    }
+
+    public function getBenefitsSectionReleaseDate(): ?DateTime
+    {
+        return $this->benefitsSectionReleaseDate ?: new DateTime('31-12-2030 00:00:00');
+    }
+
+    /**
+     * @param DateTime |null $benefitsSectionReleaseDate
+     */
+    public function setBenefitsSectionReleaseDate(?DateTime $benefitsSectionReleaseDate): Report
+    {
+        $this->benefitsSectionReleaseDate = $benefitsSectionReleaseDate;
+
         return $this;
     }
 }

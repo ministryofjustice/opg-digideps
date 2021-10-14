@@ -1,0 +1,33 @@
+{% import '@App/Macros/macros.html.twig' as macros %}
+
+{% set translationDomain = "report-client-benefits-check" %}
+{% trans_default_domain translationDomain %}
+{% set transOptions = {'%client%': report.client.firstname | e } %}
+
+<h2 class="govuk-heading-m"> {{ 'summaryPage.table.benefitsCheck.title' | trans(transOptions, translationDomain) }}</h2>
+
+<dl class="govuk-summary-list">
+    <div class="govuk-summary-list__row">
+        <dt class="govuk-summary-list__key">
+            {{ 'summaryPage.table.benefitsCheck.column1Title' | trans(transOptions, translationDomain) }}
+        </dt>
+        <dd class="govuk-summary-list__value">
+            {{ 'summaryPage.table.benefitsCheck.column2Title' | trans(transOptions, translationDomain) }}
+        </dd>
+    </div>
+    <div class="govuk-summary-list__row ">
+        <dt class="govuk-summary-list__key">
+            {{ 'stepPage.pageTitle' | trans(transOptions, translationDomain) }}
+        </dt>
+        <dd class="govuk-summary-list__value">
+            {% if report.clientBenefitsCheck.whenLastCheckedEntitlement == constant('App\\Entity\\Report\\ClientBenefitsCheck::I_HAVE_CHECKED') %}
+                {{ report.clientBenefitsCheck.dateLastCheckedEntitlement | date('F Y') }}
+            {% elseif report.clientBenefitsCheck.whenLastCheckedEntitlement == constant('App\\Entity\\Report\\ClientBenefitsCheck::IVE_NEVER_CHECKED') %}
+                <p class="govuk-body">{{ ('form.whenLastChecked.choices.' ~ report.clientBenefitsCheck.whenLastCheckedEntitlement) | trans(transOptions, translationDomain) }}</p>
+                <p class="govuk-body">{{ report.clientBenefitsCheck.neverCheckedExplanation}}</p>
+            {% else %}
+                {{ ('form.whenLastChecked.choices.' ~ report.clientBenefitsCheck.whenLastCheckedEntitlement) | trans(transOptions, translationDomain) }}
+            {% endif %}
+        </dd>
+    </div>
+</dl>

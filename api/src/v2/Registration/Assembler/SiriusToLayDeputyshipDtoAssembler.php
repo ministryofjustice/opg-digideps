@@ -8,14 +8,32 @@ use App\v2\Registration\DTO\LayDeputyshipDto;
 
 class SiriusToLayDeputyshipDtoAssembler implements LayDeputyshipDtoAssemblerInterface
 {
+    private array $requiredColumns = [
+        'Case',
+        'Surname',
+        'Deputy No',
+        'Dep Surname',
+        'Dep Postcode',
+        'Typeofrep',
+        'Made Date',
+    ];
+
+    private array $missingColumns = [];
+
     /**
-     * @param array $data
      * @return LayDeputyshipDto
      */
     public function assembleFromArray(array $data)
     {
-        if (!$this->canAssemble($data)) {
-            throw new \InvalidArgumentException('Cannot assemble LayDeputyshipDto: Missing expected data');
+        $this->collectMissingColumns($data);
+
+        if (!empty($this->missingColumns)) {
+            $message = sprintf(
+                'Cannot assemble LayDeputyshipDto. Missing columns in CSV: %s ',
+                implode(', ', $this->missingColumns)
+            );
+
+            throw new \InvalidArgumentException($message);
         }
 
         try {
@@ -25,10 +43,6 @@ class SiriusToLayDeputyshipDtoAssembler implements LayDeputyshipDtoAssemblerInte
         }
     }
 
-    /**
-     * @param array $data
-     * @return LayDeputyshipDto
-     */
     private function buildDto(array $data): LayDeputyshipDto
     {
         return
@@ -45,8 +59,16 @@ class SiriusToLayDeputyshipDtoAssembler implements LayDeputyshipDtoAssemblerInte
                 ->setOrderDate(new \DateTime($data['Made Date']));
     }
 
+    private function collectMissingColumns(array $data)
+    {
+        foreach ($this->requiredColumns as $requiredColumn) {
+            $this->missingColumns[] = array_key_exists($requiredColumn, $data) ? null : $requiredColumn;
+        }
+
+        $this->missingColumns = array_filter($this->missingColumns);
+    }
+
     /**
-     * @param array $data
      * @return bool
      */
     private function canAssemble(array $data)
@@ -61,10 +83,6 @@ class SiriusToLayDeputyshipDtoAssembler implements LayDeputyshipDtoAssemblerInte
             array_key_exists('Made Date', $data);
     }
 
-    /**
-     * @param string $reportType
-     * @return string
-     */
     private function determineCorref(string $reportType): string
     {
         switch ($reportType) {

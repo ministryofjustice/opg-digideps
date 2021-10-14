@@ -1,11 +1,7 @@
 {% trans_default_domain "admin" %}
 
-<p class="govuk-!-margin-top-0">{{ 'uploadUsers.incidentsOccurred' | trans({'%type%': type, '%count%': errors | length}) }}</p>
-<details class="govuk-details govuk-!-margin-bottom-0">
-    <summary class="govuk-details__summary">
-        <span class="govuk-details__summary-text">{{ 'uploadUsers.moreDetails' | trans }}</span>
-    </summary>
-    <div class="govuk-details__text">
-        {{ errors | join('\n') | nl2br }}
-    </div>
-</details>
+{{ 'uploadUsers.incidentsOccurred' | trans({'%type%': type, '%count%': errors | length}) }}
+
+{{ 'uploadUsers.moreDetails' | trans }}:
+
+{{ errors | join('\n') | nl2br }}

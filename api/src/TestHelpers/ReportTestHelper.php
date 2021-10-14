@@ -131,7 +131,8 @@ class ReportTestHelper
 
         $report
             ->setSubmitDate($submitDate)
-            ->setSubmitted(true);
+            ->setSubmitted(true)
+            ->setWishToProvideDocumentation('yes');
 
         $em->persist($reportPdf);
         $em->persist($submission);
@@ -218,7 +219,7 @@ class ReportTestHelper
 
     private function completeDocuments(ReportInterface $report, EntityManager $em): void
     {
-        $report->setWishToProvideDocumentation('yes');
+        $report->setWishToProvideDocumentation('no');
     }
 
     private function completeGifts(ReportInterface $report): void

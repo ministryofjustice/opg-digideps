@@ -2,15 +2,16 @@
 src = "parameters.yml.tmpl"
 dest = "/var/www/config/parameters.yml"
 keys = [
+    "/cloudwatch/logs/localstack",
     "/database",
-    "/smtp",
-    "/secret",
-    "/security",
+    "/fixtures",
     "/email",
     "/email_settings",
     "/redis",
-    "/url",
-    "/fixtures",
+    "/secret",
     "/secrets",
-    "/cloudwatch/logs/localstack",
+    "/security",
+    "/smtp",
+    "/ssm/localstack",
+    "/url",
 ]

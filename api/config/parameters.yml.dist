@@ -148,3 +148,8 @@ parameters:
         version: 'latest'
         region: 'eu-west-1'
         validate: true
+
+    ssm_client_params:
+        version: 'latest'
+        region: 'eu-west-1'
+        validate: true

@@ -64,4 +64,12 @@ class CasRecRepository extends ServiceEntityRepository
 
         return $qb->getQuery()->getResult();
     }
+
+    public function countAllEntities()
+    {
+        return $this
+            ->getEntityManager()
+            ->createQuery('SELECT COUNT(c.id) FROM App\Entity\Casrec c')
+            ->getSingleScalarResult();
+    }
 }

@@ -1,0 +1,45 @@
+common:
+    weAskAbout: |
+        In this section we ask you when you last checked what benefits %client% is entitled to, and about any income other people receive directly on %client%’s behalf.
+    htmlTitle: Benefits check and income other people receive - Complete the deputy report | GOV.UK
+    pageTitle: Benefits check and income other people receive
+
+startPage:
+    startButton: Start
+
+stepPage:
+    pageTitle: When did you last check that %client% gets all the benefits they’re entitled to?
+    supportTitle: Benefits check and income other people receive
+    pageDescription:
+        step1:
+    backLink: Back
+
+summaryPage:
+    listedAnswers: We've listed your saved answers below.
+    checkAnswers: Check they're correct and edit them where necessary
+    table:
+        benefitsCheck:
+            title: Benefits check
+            column1Title: Question
+            column2Title: Answer
+            edit: Edit
+        incomeOtherPeopleReceive:
+            title: Income other people receive
+            column1Title: Type of income
+            column2Title: Amount
+            edit: Edit
+            remove: Remove
+
+form:
+    whenLastChecked:
+        choices:
+            haveChecked: I have checked this
+            currentlyChecking: I'm currently checking this
+            neverChecked: I've never checked this
+        dateCheckedHint: Date checked
+        neverCheckedHint: Please tell us why you have never checked this
+
+    save:
+        label: Save and continue
+    cancel:
+        label: Cancel

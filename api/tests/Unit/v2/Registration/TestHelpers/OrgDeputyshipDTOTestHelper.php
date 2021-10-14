@@ -256,10 +256,14 @@ class OrgDeputyshipDTOTestHelper
     {
         $namedDeputy = (new NamedDeputy())
             ->setEmail1($dto->getDeputyEmail())
-            ->setDeputyNo($dto->getDeputyNumber())
+            ->setDeputyNo(sprintf('%s-%s', $dto->getDeputyNumber(), $dto->getDeputyAddressNumber()))
             ->setFirstname($dto->getDeputyFirstname())
             ->setLastname($dto->getDeputyLastname())
             ->setAddress1($dto->getDeputyAddress1())
+            ->setAddress2($dto->getDeputyAddress2())
+            ->setAddress3($dto->getDeputyAddress3())
+            ->setAddress4($dto->getDeputyAddress4())
+            ->setAddress5($dto->getDeputyAddress5())
             ->setAddressPostcode($dto->getDeputyPostcode());
 
         $em->persist($namedDeputy);
@@ -292,7 +296,7 @@ class OrgDeputyshipDTOTestHelper
             ->setCaseNumber($dto->getCaseNumber())
             ->setFirstname($dto->getClientFirstname())
             ->setLastname($dto->getClientLastname())
-            ->setCourtDate(new DateTime());
+            ->setCourtDate($dto->getCourtDate());
 
         $em->persist($client);
         $em->flush();

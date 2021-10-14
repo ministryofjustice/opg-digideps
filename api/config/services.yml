@@ -275,3 +275,19 @@ services:
 
     App\v2\Registration\Assembler\CasRecToLayDeputyshipDtoAssembler: ~
     App\v2\Registration\Assembler\LayDeputyshipDtoAssemblerInterface: '@App\v2\Registration\Assembler\CasRecToLayDeputyshipDtoAssembler'
+
+    uuid_normalizer:
+        class: GBProd\UuidNormalizer\UuidNormalizer
+        tags:
+            - { name: serializer.normalizer }
+
+    uuid_denormalizer:
+        class: GBProd\UuidNormalizer\UuidDenormalizer
+        tags:
+            - { name: serializer.denormalizer }
+
+    Aws\Ssm\SsmClient:
+        arguments: [ "%ssm_client_params%" ]
+
+    App\Service\ParameterStoreService:
+        arguments: [ '@Aws\Ssm\SsmClient', '%env(PARAMETER_PREFIX)%', '%env(FEATURE_FLAG_PREFIX)%' ]

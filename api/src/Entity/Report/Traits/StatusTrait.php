@@ -12,7 +12,7 @@ trait StatusTrait
     /**
      * Holds a copy of result of the ReportStatusService results in the form
      * [sectionId => [state=>, nOfRecords=>] ]
-     * returned by the ReportStatusSevice::get<section>State
+     * returned by the ReportStatusSevice::get<section>State.
      *
      * Set by endpoints hooks on section CRUD operations that call `updateSectionsStatusCache` below
      *
@@ -41,7 +41,7 @@ trait StatusTrait
     private $reportStatusCached;
 
     /**
-     * Holds a copy of the [sectionId => [state=>, nOfRecords=>]
+     * Holds a copy of the [sectionId => [state=>, nOfRecords=>].
      *
      * @JMS\Exclude
      *
@@ -52,16 +52,13 @@ trait StatusTrait
         return $this->sectionStatusesCached ? json_decode($this->sectionStatusesCached, true) : [];
     }
 
-    /**
-     * @param array $status
-     */
     public function setSectionStatusesCached(array $status)
     {
         $this->sectionStatusesCached = json_encode($status);
     }
 
     /**
-     * //TODO remove adn check test passing
+     * //TODO remove adn check test passing.
      *
      * @return string
      */
@@ -70,18 +67,22 @@ trait StatusTrait
         return $this->reportStatusCached;
     }
 
-
     /**
      * Update the status cache of the given sections,
-     * and also the report.reportStatusCached using the cache
+     * and also the report.reportStatusCached using the cache.
      *
      * using the `ReportService::getSectionStateNotCached`
-     *
-     * @param array $sectionIds
      */
     public function updateSectionsStatusCache(array $sectionIds)
     {
         $currentSectionStatus = $this->getSectionStatusesCached();
+
+        foreach ($currentSectionStatus as $statusKey => $statusValues) {
+            if (in_array($statusKey, $this->getExcludeSections())) {
+                unset($currentSectionStatus[$statusKey]);
+            }
+        }
+
         $currentReportStatus = $this->getStatus();
 
         $sectionIds[] = Report::SECTION_MONEY_TRANSFERS;
@@ -92,6 +93,7 @@ trait StatusTrait
                 $currentSectionStatus[$sectionId] = $currentReportStatus->getSectionStateNotCached($sectionId);
             }
         }
+
         $this->setSectionStatusesCached($currentSectionStatus);
 
         // update report status, using the cached version of the section statuses
@@ -125,6 +127,7 @@ trait StatusTrait
      *     "fee-state",
      *     "documents-state",
      *     "lifestyle-state",
+     *     "client-benefits-check-state",
      * })
      *
      * @return ReportStatusService

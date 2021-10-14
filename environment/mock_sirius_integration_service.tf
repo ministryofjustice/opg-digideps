@@ -23,6 +23,8 @@ resource "aws_service_discovery_service" "mock_sirius_integration" {
   tags = local.default_tags
 
   depends_on = [aws_service_discovery_private_dns_namespace.private]
+
+  force_destroy = local.account.deletion_protection ? false : true
 }
 
 resource "aws_ecs_task_definition" "mock_sirius_integration" {

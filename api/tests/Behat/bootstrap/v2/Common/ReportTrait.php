@@ -4,7 +4,9 @@ declare(strict_types=1);
 
 namespace App\Tests\Behat\v2\Common;
 
+use App\Entity\Report\Report;
 use App\Tests\Behat\BehatException;
+use DateTime;
 use Exception;
 
 trait ReportTrait
@@ -12,7 +14,8 @@ trait ReportTrait
     public string $reportUrlPrefix = 'report';
 
     /**
-     * @Given /^I submit the report$/
+     * @Then I should be able to submit my report without completing the section
+     * @Given I submit the report
      */
     public function iSubmitTheReport()
     {
@@ -24,7 +27,11 @@ trait ReportTrait
         try {
             $this->clickLink('Preview and check report');
         } catch (Exception $e) {
-            $this->clickLink('Continue');
+            try {
+                $this->clickLink('Review and submit');
+            } catch (Exception $e) {
+                $this->clickLink('Continue');
+            }
         }
 
         $this->clickLink('Continue');
@@ -116,7 +123,7 @@ trait ReportTrait
     public function aProfessionalAdminDeputyHasNotStartedAReport()
     {
         if (empty($this->profAdminDeputyHealthWelfareNotStartedDetails)) {
-            throw new Exception('It looks like fixtures are not loaded - missing $profAdminDeputyNotStartedDetails');
+            throw new Exception('It looks like fixtures are not loaded - missing $profAdminDeputyHealthWelfareNotStartedDetails');
         }
 
         $this->loginToFrontendAs($this->profAdminDeputyHealthWelfareNotStartedDetails->getUserEmail());
@@ -227,6 +234,19 @@ trait ReportTrait
     }
 
     /**
+     * @Given a Lay Deputy has completed a Combined High Assets report
+     */
+    public function aLayDeputyHasCompletedACombinedHighAssetsReport()
+    {
+        if (empty($this->layDeputyCompletedCombinedHighDetails)) {
+            throw new Exception('It looks like fixtures are not loaded - missing $layDeputyCompletedCombinedHighDetails');
+        }
+
+        $this->interactingWithUserDetails = $this->layDeputyCompletedCombinedHighDetails;
+        $this->loginToFrontendAs($this->layDeputyCompletedCombinedHighDetails->getUserEmail());
+    }
+
+    /**
      * @Given a Lay Deputy has submitted a Combined High Assets report
      */
     public function aLayDeputyHasSubmittedACombinedHighAssetsReport()
@@ -323,5 +343,67 @@ trait ReportTrait
 
         $this->loginToFrontendAs($this->publicAuthorityAdminCombinedHighSubmittedDetails->getUserEmail());
         $this->interactingWithUserDetails = $this->publicAuthorityAdminCombinedHighSubmittedDetails;
+    }
+
+    /**
+     * @Given a Professional Admin Deputy has not Started a Combined High Assets report
+     */
+    public function aProfAdminHasNotStartedACombinedHighAssetsReport()
+    {
+        if (empty($this->profAdminCombinedHighNotStartedDetails)) {
+            throw new Exception('It looks like fixtures are not loaded - missing $profAdminCombinedHighNotStartedDetails');
+        }
+
+        $this->interactingWithUserDetails = $this->profAdminCombinedHighNotStartedDetails;
+        $this->loginToFrontendAs($this->profAdminCombinedHighNotStartedDetails->getUserEmail());
+    }
+
+    /**
+     * @Given a Professional Admin Deputy has completed a Combined High Assets report
+     */
+    public function aProfAdminHasCompletedStartedACombinedHighAssetsReport()
+    {
+        if (empty($this->profAdminCombinedHighCompletedDetails)) {
+            throw new Exception('It looks like fixtures are not loaded - missing $profAdminCombinedHighCompletedDetails');
+        }
+
+        $this->interactingWithUserDetails = $this->profAdminCombinedHighCompletedDetails;
+        $this->loginToFrontendAs($this->profAdminCombinedHighCompletedDetails->getUserEmail());
+    }
+
+    /**
+     * @Given a Professional Admin Deputy has submitted a Combined High Assets report
+     */
+    public function aProfAdminHasSubmittedACombinedHighAssetsReport()
+    {
+        if (empty($this->profAdminCombinedHighSubmittedDetails)) {
+            throw new Exception('It looks like fixtures are not loaded - missing $profAdminCombinedHighSubmittedDetails');
+        }
+
+        $this->interactingWithUserDetails = $this->profAdminCombinedHighSubmittedDetails;
+        $this->loginToFrontendAs($this->profAdminCombinedHighSubmittedDetails->getUserEmail());
+    }
+
+    /**
+     * @Given the end date and due date of the logged in users current report is set to :dateString
+     */
+    public function endDateAndDueDateLoggedInUsersCurrentReportSetToDate(string $dateString)
+    {
+        if (empty($this->loggedInUserDetails) && empty($this->loggedInUserDetails->getCurrentReportId())) {
+            throw new Exception('The logged in user does not have a report. Ensure a user with a report has logged in before using this step.');
+        }
+
+        $newDate = new DateTime($dateString);
+
+        /** @var Report $currentReport */
+        $currentReport = $this->em->getRepository(Report::class)->find($this->loggedInUserDetails->getCurrentReportId());
+        $currentReport->setEndDate($newDate);
+        $currentReport->setDueDate($newDate);
+
+        $this->em->persist($currentReport);
+        $this->em->flush();
+
+        $this->loggedInUserDetails->setCurrentReportDueDate($newDate);
+        $this->loggedInUserDetails->setCurrentReportEndDate($newDate);
     }
 }

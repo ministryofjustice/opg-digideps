@@ -43,8 +43,14 @@ class CasRecToOrgDeputyshipDtoAssembler
         $clientDateOfBirth = $this->reportUtils->parseCsvDate($row['Client Date of Birth'], '19');
         $reportEndDate = $this->reportUtils->parseCsvDate($row['Last Report Day'], '20');
         $reportStartDate = $reportEndDate ? $this->reportUtils->generateReportStartDateFromEndDate($reportEndDate) : null;
+
+        // Adding padding as entities that use DTO data pad case number, deputy number and deputy address number - needs to match for DB lookups on these values
         $caseNumber = $this->reportUtils->padCasRecNumber(strtolower($row['Case']));
-        $deputyNumber = $this->reportUtils->padCasRecNumber(strtolower($row['Deputy No']));
+        $deputyNumber = User::padDeputyNumber(strtolower($row['Deputy No']));
+        // DepAddr No column is missing from PA CSV uploads
+        $deputyAddressNumber = !isset($row['DepAddr No']) ? null : User::padDeputyNumber(strtolower($row['DepAddr No']));
+
+        $courtDate = empty($row['Made Date']) ? null : new DateTime($row['Made Date']);
 
         return (new OrgDeputyshipDto())
             ->setDeputyEmail($row['Email'])
@@ -52,6 +58,10 @@ class CasRecToOrgDeputyshipDtoAssembler
             ->setDeputyFirstname($row['Dep Forename'])
             ->setDeputyLastname($row['Dep Surname'])
             ->setDeputyAddress1($row['Dep Adrs1'])
+            ->setDeputyAddress2($row['Dep Adrs2'])
+            ->setDeputyAddress3($row['Dep Adrs3'])
+            ->setDeputyAddress4($row['Dep Adrs4'])
+            ->setDeputyAddress5($row['Dep Adrs5'])
             ->setDeputyPostcode($row['Dep Postcode'])
             ->setCaseNumber($caseNumber)
             ->setClientFirstname(trim($row['Forename']))
@@ -61,9 +71,10 @@ class CasRecToOrgDeputyshipDtoAssembler
             ->setClientCounty($row['Client Adrs3'])
             ->setClientPostCode($row['Client Postcode'])
             ->setClientDateOfBirth($clientDateOfBirth)
-            ->setCourtDate(new DateTime($row['Made Date']))
+            ->setCourtDate($courtDate)
             ->setReportType($reportType)
             ->setReportStartDate($reportStartDate)
-            ->setReportEndDate($reportEndDate);
+            ->setReportEndDate($reportEndDate)
+            ->setDeputyAddressNumber($deputyAddressNumber);
     }
 }

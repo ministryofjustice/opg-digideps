@@ -1,0 +1,34 @@
+{% extends '@App/Layouts/application.html.twig' %}
+
+{% import '@App/Macros/macros.html.twig' as macros %}
+
+{% set translationDomain = "report-client-benefits-check" %}
+{% trans_default_domain translationDomain %}
+
+{% set transOptions = {
+    '%client%': report.client.firstname | e,
+} %}
+
+{% block htmlTitle %}{{ 'common.htmlTitle' | trans(transOptions) }}{% endblock %}
+{% block pageTitle %}{{ 'common.pageTitle' | trans(transOptions) }}{% endblock %}
+
+
+{% block breadcrumbs %}{{ macros.breadcrumbs(report) }}{% endblock %}
+
+{% block pageContent %}
+
+    <div class="govuk-grid-row">
+        <div class="govuk-grid-column-three-quarters">
+            <p class="govuk-body">{{ 'common.weAskAbout' | trans(transOptions) }}</p>
+        </div>
+    </div>
+
+    {{ macros.startSectionButton(path('client_benefits_check_step', { 'reportId': report.id, 'step': 1 }), 'startPage.startButton' | trans) }}
+
+    {# Pagination #}
+    {% include '@App/Report/_nextprevious.html.twig' with {
+        'report': report,
+        'sectionId': 'bankAccounts',
+    } %}
+
+{% endblock %}

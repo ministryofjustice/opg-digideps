@@ -528,14 +528,14 @@ orbs:
     executors:
       terraform:
         docker:
-          - image: circleci/golang:1.12
+          - image: circleci/golang:1.16
             auth:
               username: $DOCKER_USER
               password: $DOCKER_ACCESS_TOKEN
         resource_class: small
         environment:
-          TF_VERSION: 0.14.11
-          TF_SHA256SUM: 171ef5a4691b6f86eab524feaf9a52d5221c875478bd63dd7e55fef3939f7fd4
+          TF_VERSION: 1.0.0
+          TF_SHA256SUM: 8be33cc3be8089019d95eb8f546f35d41926e7c1e5deff15792e969dde573eb5
           TF_CLI_ARGS_plan: -input=false -lock=false
           TF_CLI_ARGS_apply: -input=false -auto-approve
           TF_CLI_ARGS_destroy: -input=false -auto-approve
@@ -1075,7 +1075,6 @@ jobs:
             docker load -i ~/project/htmltopdf.tar
             docker tag client:latest admin:latest
             docker tag client:latest frontend:latest
-            docker tag client:latest localstack-init:latest
       - run:
           name: Set environment
           command: |
@@ -1087,10 +1086,7 @@ jobs:
             docker-compose -f docker-compose.yml -f docker-compose.ci.test.yml --project-name api-unit-tests run api sh scripts/reset_db_structure_local.sh
             APP_ENV=test APP_DEBUG=0 docker-compose -f docker-compose.yml -f docker-compose.ci.test.yml --project-name api-unit-tests up -d api
             docker-compose -f docker-compose.yml -f docker-compose.ci.test.yml --project-name api-unit-tests exec api chmod -R 777 var
-            docker-compose -f docker-compose.yml -f docker-compose.ci.test.yml --project-name api-unit-tests up -d localstack
-            docker-compose -f docker-compose.yml -f docker-compose.ci.test.yml --project-name api-unit-tests run --rm wait-for-it -address localstack:4583 --timeout=20 -debug
-            docker-compose -f docker-compose.yml -f docker-compose.ci.test.yml --project-name api-unit-tests run --rm wait-for-it -address localstack:4586 --timeout=20 -debug
-            docker-compose -f docker-compose.yml -f docker-compose.ci.test.yml --project-name api-unit-tests up -d localstack-init
+            docker-compose -f docker-compose.yml -f docker-compose.ci.test.yml --project-name api-unit-tests run --rm wait-for-it -address localstack:4566 --timeout=25 -debug
             docker-compose -f docker-compose.yml -f docker-compose.ci.test.yml --project-name api-unit-tests exec api sh scripts/apiunittest.sh
 
             docker-compose -f docker-compose.yml -f docker-compose.ci.test.yml --project-name api-unit-tests exec api chmod -R 777 tests/coverage/api-unit-tests.xml

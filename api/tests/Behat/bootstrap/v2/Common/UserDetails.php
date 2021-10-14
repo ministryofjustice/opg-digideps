@@ -4,8 +4,8 @@ declare(strict_types=1);
 
 namespace App\Tests\Behat\v2\Common;
 
+use App\Tests\Behat\BehatException;
 use DateTime;
-use Exception;
 use ReflectionClass;
 use ReflectionProperty;
 
@@ -13,42 +13,43 @@ class UserDetails
 {
     public const ADMIN_ROLES = ['ROLE_ADMIN', 'ROLE_SUPER_ADMIN', 'ROLE_ADMIN_MANAGER', 'ROLE_BEHAT_TEST'];
 
-    private ?int $userId = null;
-    private ?string $userEmail = null;
-    private ?string $userRole = null;
-    private ?string $userFirstName = null;
-    private ?string $userLastName = null;
-    private ?string $userFullName = null;
-    private ?array $userFullAddressArray = null;
-    private ?string $userPhone = null;
-    private ?string $namedDeputyName = null;
-    private ?array $namedDeputyFullAddressArray = null;
-    private ?string $namedDeputyPhone = null;
-    private ?string $namedDeputyPhoneAlt = null;
+    private ?string $clientCaseNumber = null;
+    private ?string $clientEmail = null;
+    private ?string $clientFirstName = null;
+    private ?array $clientFullAddressArray = null;
+    private ?int $clientId = null;
+    private ?string $clientLastName = null;
+    private ?string $courtDate = null;
+    private ?int $currentReportBankAccountId = null;
+    private ?DateTime $currentReportDueDate = null;
+    private ?DateTime $currentReportEndDate = null;
+    private ?int $currentReportId = null;
+    private ?string $currentReportNdrOrReport = null;
+    private ?DateTime $currentReportStartDate = null;
+    private ?string $currentReportType = null;
     private ?string $namedDeputyEmail = null;
     private ?string $namedDeputyEmailAlt = null;
+    private ?array $namedDeputyFullAddressArray = null;
+    private ?string $namedDeputyName = null;
+    private ?string $namedDeputyPhone = null;
+    private ?string $namedDeputyPhoneAlt = null;
+    private ?string $organisationEmailIdentifier = null;
     private ?string $organisationName = null;
-    private ?string $courtOrderNumber = null;
-    private ?int $clientId = null;
-    private ?string $clientFirstName = null;
-    private ?string $clientLastName = null;
-    private ?array $clientFullAddressArray = null;
-    private ?string $clientEmail = null;
-    private ?string $clientCaseNumber = null;
-    private ?int $currentReportId = null;
-    private ?string $currentReportType = null;
-    private ?string $currentReportNdrOrReport = null;
-    private ?DateTime $currentReportDueDate = null;
-    private ?DateTime $currentReportStartDate = null;
-    private ?DateTime $currentReportEndDate = null;
-    private ?int $currentReportBankAccountId = null;
-    private ?int $previousReportId = null;
-    private ?string $previousReportType = null;
-    private ?string $previousReportNdrOrReport = null;
-    private ?DateTime $previousReportDueDate = null;
-    private ?DateTime $previousReportStartDate = null;
-    private ?DateTime $previousReportEndDate = null;
     private ?int $previousReportBankAccountId = null;
+    private ?DateTime $previousReportDueDate = null;
+    private ?DateTime $previousReportEndDate = null;
+    private ?int $previousReportId = null;
+    private ?string $previousReportNdrOrReport = null;
+    private ?DateTime $previousReportStartDate = null;
+    private ?string $previousReportType = null;
+    private ?string $userEmail = null;
+    private ?string $userFirstName = null;
+    private ?string $userFullName = null;
+    private ?array $userFullAddressArray = null;
+    private ?string $userLastName = null;
+    private ?int $userId = null;
+    private ?string $userPhone = null;
+    private ?string $userRole = null;
 
     public function __construct(array $userDetails)
     {
@@ -72,7 +73,7 @@ class UserDetails
             $unexpectedKeysList = implode(', ', $unexpectedKeys);
             $supportedKeysList = implode(', ', $supportedArrayKeys);
 
-            throw new Exception(sprintf('Unexpected keys encountered when trying to initialize UserDetails: %s. Supported keys are: %s', $unexpectedKeysList, $supportedKeysList));
+            throw new BehatException(sprintf('Unexpected keys encountered when trying to initialize UserDetails: %s. Supported keys are: %s', $unexpectedKeysList, $supportedKeysList));
         }
 
         $this->setUserId($userDetails['userId']);
@@ -91,9 +92,9 @@ class UserDetails
         $this->setNamedDeputyPhoneAlt($userDetails['namedDeputyPhoneAlt']);
         $this->setNamedDeputyEmail($userDetails['namedDeputyEmail']);
         $this->setNamedDeputyEmailAlt($userDetails['namedDeputyEmailAlt']);
-
         $this->setOrganisationName($userDetails['organisationName']);
-        $this->setCourtOrderNumber($userDetails['courtOrderNumber']);
+        $this->setOrganisationEmailIdentifier($userDetails['organisationEmailIdentifier']);
+        $this->setCourtDate($userDetails['courtDate']);
 
         $this->setClientId($userDetails['clientId']);
         $this->setClientFirstName($userDetails['clientFirstName']);
@@ -303,18 +304,6 @@ class UserDetails
         return $this;
     }
 
-    public function getCourtOrderNumber(): ?string
-    {
-        return $this->courtOrderNumber;
-    }
-
-    public function setCourtOrderNumber(?string $courtOrderNumber): UserDetails
-    {
-        $this->courtOrderNumber = $courtOrderNumber;
-
-        return $this;
-    }
-
     public function getUserFirstName(): ?string
     {
         return $this->userFirstName;
@@ -491,6 +480,30 @@ class UserDetails
     public function setUserId(?int $userId): UserDetails
     {
         $this->userId = $userId;
+
+        return $this;
+    }
+
+    public function getCourtDate(): ?string
+    {
+        return $this->courtDate;
+    }
+
+    public function setCourtDate(?string $courtDate): UserDetails
+    {
+        $this->courtDate = $courtDate;
+
+        return $this;
+    }
+
+    public function getOrganisationEmailIdentifier(): ?string
+    {
+        return $this->organisationEmailIdentifier;
+    }
+
+    public function setOrganisationEmailIdentifier(?string $organisationEmailIdentifier): UserDetails
+    {
+        $this->organisationEmailIdentifier = $organisationEmailIdentifier;
 
         return $this;
     }

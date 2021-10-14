@@ -588,6 +588,8 @@ class ReportStatusService
             case Report::SECTION_LIFESTYLE:
                 return $this->getLifestyleState();
             // money
+            case Report::SECTION_CLIENT_BENEFITS_CHECK:
+                return $this->getClientBenefitsCheckState();
             case Report::SECTION_BALANCE:
                 return $this->getBalanceState();
             case Report::SECTION_BANK_ACCOUNTS:
@@ -753,5 +755,28 @@ class ReportStatusService
         }
 
         return $this->isReadyToSubmit() ? Report::STATUS_READY_TO_SUBMIT : Report::STATUS_NOT_FINISHED;
+    }
+
+    /**
+     * @JMS\VirtualProperty
+     * @JMS\Type("array")
+     * @JMS\Groups({"status", "client-benefits-check-state"})
+     */
+    public function getClientBenefitsCheckState(): array
+    {
+        $benefitsCheck = $this->report->getClientBenefitsCheck();
+
+        $answers = $benefitsCheck ? [
+            $benefitsCheck->getWhenLastCheckedEntitlement(),
+        ] : [];
+
+        switch (count(array_filter($answers))) {
+            case 0:
+                return ['state' => self::STATE_NOT_STARTED, 'nOfRecords' => 0];
+            case 1:
+                return ['state' => self::STATE_DONE, 'nOfRecords' => 0];
+            default:
+                return ['state' => self::STATE_INCOMPLETE, 'nOfRecords' => 0];
+        }
     }
 }

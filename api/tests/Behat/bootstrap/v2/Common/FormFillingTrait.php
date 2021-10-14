@@ -413,4 +413,17 @@ trait FormFillingTrait
     {
         unset($this->submittedAnswersByFormSections);
     }
+
+    /**
+     * Call this function after executing a step that triggers an ajax request to refresh the page.
+     */
+    public function waitForAjaxAndRefresh()
+    {
+        while ($refresh = $this->getSession()->getPage()->find('css', 'meta[http-equiv="refresh"]')) {
+            $content = $refresh->getAttribute('content');
+            $url = preg_replace('/^\d+;\s*URL=/i', '', $content);
+
+            $this->getSession()->visit($url);
+        }
+    }
 }
