@@ -13,10 +13,8 @@ class CaseSearchFilter
             $qb->andWhere('lower('.$alias.'.caseNumber) = :cn');
             $qb->setParameter('cn', strtolower($searchTerm));
         } else {
-            $searchTerms = explode(' ', $searchTerm);
-
             $qb->andWhere('lower('.$alias.'.clientLastname) LIKE :qLike');
-            $qb->setParameter('qLike', '%'.strtolower($searchTerm[0]).'%');
+            $qb->setParameter('qLike', '%'.strtolower($searchTerm).'%');
         }
     }
 }

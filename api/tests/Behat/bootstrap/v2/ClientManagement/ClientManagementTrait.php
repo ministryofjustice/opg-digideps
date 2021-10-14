@@ -4,6 +4,7 @@ declare(strict_types=1);
 
 namespace App\Tests\Behat\v2\ClientManagement;
 
+use App\Entity\CasRec;
 use App\Tests\Behat\BehatException;
 use App\Tests\Behat\v2\Common\UserDetails;
 use DateTime;
@@ -12,6 +13,8 @@ trait ClientManagementTrait
 {
     private ?int $clientCount = null;
     private ?int $caseCount = null;
+
+    private CasRec $paperDetails;
 
     /**
      * @When I search for an existing client by their first name
@@ -68,12 +71,36 @@ trait ClientManagementTrait
         $this->searchForClientBy('Björk Guðmundsdóttir', $user);
     }
 
+    /**
+     * @When I search for a paper reporting case by their last name
+     */
+    public function iSearchForPaperReportingCaseByLastName()
+    {
+        $this->paperDetails = $this->createPaperPfaHigh();
+        $this->searchForCaseBy($this->paperDetails->getClientLastname());
+    }
+
+    /**
+     * @When I search for a paper reporting case by their case number
+     */
+    public function iSearchForPaperReportingCaseByCaseNumber()
+    {
+        $this->paperDetails = $this->createPaperPfaHigh();
+        $this->searchForCaseBy($this->paperDetails->getCaseNumber());
+    }
+
     private function searchForClientBy(string $searchTerm, UserDetails $userDetailsInteractingWith)
     {
         $this->fillField('search_clients_q', $searchTerm);
         $this->pressButton('Search');
 
         $this->interactingWithUserDetails = $userDetailsInteractingWith;
+    }
+
+    private function searchForCaseBy(string $searchTerm)
+    {
+        $this->fillField('search_clients_q', $searchTerm);
+        $this->pressButton('Search');
     }
 
     /**
@@ -91,7 +118,7 @@ trait ClientManagementTrait
     public function iShouldSeeCaseDetailsInResults()
     {
         $this->caseCount = 1;
-        $this->iShouldSeeNCasesWithSameDetails();
+        $this->iShouldSeeNCasesWithSameDetails($this->interactingWithUserDetails->getClientCaseNumber(), $this->interactingWithUserDetails->getClientLastName());
     }
 
     /**
@@ -109,7 +136,16 @@ trait ClientManagementTrait
     public function iShouldSeeBothCaseDetailsInResults()
     {
         $this->caseCount = 2;
-        $this->iShouldSeeNCasesWithSameDetails();
+        $this->iShouldSeeNCasesWithSameDetails($this->interactingWithUserDetails->getClientCaseNumber(), $this->interactingWithUserDetails->getClientLastName());
+    }
+
+    /**
+     * @Then I should see the paper case details in the case list results
+     */
+    public function iShouldSeePaperCaseDetailsInResults()
+    {
+        $this->caseCount = 1;
+        $this->iShouldSeeNCasesWithSameDetails($this->paperDetails->getCaseNumber(), $this->paperDetails->getClientLastName());
     }
 
     private function iShouldSeeNClientsWithSameName()
@@ -131,26 +167,24 @@ trait ClientManagementTrait
         }
     }
 
-    private function iShouldSeeNCasesWithSameDetails()
+    private function iShouldSeeNCasesWithSameDetails(string $expectedCaseNumber, $expectedLastName)
     {
         $this->assertCaseCountSet();
 
         $searchResultsHtml = $this->getCasesSearchResultHtml();
 
-        $clientLastName = $this->interactingWithUserDetails->getClientLastName();
-
-        $clientNameFoundCount = substr_count($searchResultsHtml, $clientLastName);
+        $clientNameFoundCount = substr_count($searchResultsHtml, $expectedLastName);
 
         if ($clientNameFoundCount < $this->caseCount) {
-            throw new BehatException(sprintf('The case search results list did not contain the required occurrences of the clients last name. Expected: "%s" (at least %s times), got (full HTML): %s', $clientLastName, $this->caseCount, $searchResultsHtml));
+            throw new BehatException(sprintf('The case search results list did not contain the required occurrences of the clients last name. Expected: "%s" (at least %s times), got (full HTML): %s', $expectedLastName, $this->caseCount, $searchResultsHtml));
         }
 
-        $caseNumber = $this->interactingWithUserDetails->getClientCaseNumber();
+        $caseLink = '/admin/case/'.$expectedCaseNumber.'/details';
 
-        $caseNumberFoundCount = substr_count($searchResultsHtml, $caseNumber);
+        $caseNumberFoundCount = substr_count($searchResultsHtml, $caseLink);
 
         if (1 != $caseNumberFoundCount) {
-            throw new BehatException(sprintf('The case search results list did not contain a single entry for the clients case number. Expected: "%s" (to appear once), got (full HTML): %s', $caseNumber, $searchResultsHtml));
+            throw new BehatException(sprintf('The case search results list did not contain a single link for the clients case number. Expected: "%s" (to appear once), got (full HTML): %s', $caseLink, $searchResultsHtml));
         }
     }
 

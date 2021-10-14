@@ -57,11 +57,11 @@ class SearchController extends AbstractController
             || EntityDir\User::ROLE_BEHAT_TEST === $user->getRoleName()) {
             $cases = $this->restClient->get('case/search-all?'.http_build_query($filters), 'array');
 
-            $filteredResults = array_unique($cases, SORT_REGULAR);
+            $formattedResults = $this->formatAndSortResults($cases);
 
             return $this->render(
                 '@App/Admin/Client/Search/case-search.html.twig',
-                $this->buildCaseViewParams($form, $filteredResults, $filters)
+                $this->buildCaseViewParams($form, $formattedResults, $filters)
             );
         } else {
             $clients = $this->restClient->get('client/get-all?'.http_build_query($filters), 'Client[]');
@@ -103,5 +103,19 @@ class SearchController extends AbstractController
             'order_by' => 'id',
             'sort_order' => 'DESC',
         ];
+    }
+
+    private function formatAndSortResults(array $results)
+    {
+        //Filter out non-unique values (case insensitive)
+        $serialized = array_map('serialize', $results);
+        $unique = array_intersect_key($serialized, array_unique(array_map('strtolower', $serialized)));
+        $filteredResults = array_intersect_key($results, $unique);
+
+        //Sort alphabetically (case insensitive)
+        $column = array_column($filteredResults, 'clientSurname');
+        array_multisort($column, SORT_ASC, SORT_NATURAL | SORT_FLAG_CASE, $filteredResults);
+
+        return $filteredResults;
     }
 }

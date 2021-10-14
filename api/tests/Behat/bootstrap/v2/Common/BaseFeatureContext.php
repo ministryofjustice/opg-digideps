@@ -483,6 +483,11 @@ class BaseFeatureContext extends MinkContext
         $this->fixtureUsers[] = $this->behatTestUserDetails = new UserDetails($userDetails);
     }
 
+    public function createPaperPfaHigh()
+    {
+        return $this->fixtureHelper->createPaperLayPfaHighAssets();
+    }
+
     public function getAdminUrl(): string
     {
         return getenv('ADMIN_HOST');

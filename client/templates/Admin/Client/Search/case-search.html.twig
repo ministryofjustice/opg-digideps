@@ -56,7 +56,7 @@
                         {% set discharged = "" %}
                         <tr>
                             <td>
-                                <a class="govuk-!-font-weight-bold" href="NA">
+                                <a class="govuk-!-font-weight-bold" href="{{ path('admin_case_details', {'caseNumber' : case.caseNumber}) }}">
                                     {{ case.caseNumber }}
                                 </a>
                             </td>

@@ -20,9 +20,6 @@ class CasRecFactory
         $this->casRecFactory = $casRecFactory;
     }
 
-    /**
-     * @return Client
-     */
     public function create(array $data): CasRec
     {
         $caseNumber = str_pad((string) rand(1, 99999999), 8, '0', STR_PAD_LEFT);
@@ -33,7 +30,7 @@ class CasRecFactory
             ->setSource('casrec')
             ->setClientSurname($data['clientLastName'] ? $data['clientLastName'] : 'Smith')
             ->setCorref($this->determineCorref($data['reportType']))
-            ->setDeputyNumber($deputyNumber)
+            ->setDeputyNumber($data['deputyNumber'] ? $data['deputyNumber'] : $deputyNumber)
             ->setDeputyPostcode($data['deputyPostCode'] ? $data['deputyPostCode'] : 'SW1')
             ->setDeputySurname($data['deputyLastName'] ? $data['deputyLastName'] : 'Jones')
             ->setIsNdrEnabled(false)

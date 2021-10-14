@@ -4,6 +4,7 @@ declare(strict_types=1);
 
 namespace App\Tests\Behat\v2\Helpers;
 
+use App\Entity\CasRec;
 use App\Entity\Client;
 use App\Entity\NamedDeputy;
 use App\Entity\Ndr\Ndr;
@@ -11,6 +12,7 @@ use App\Entity\Organisation;
 use App\Entity\Report\Report;
 use App\Entity\Satisfaction;
 use App\Entity\User;
+use App\TestHelpers\CaseTestHelper;
 use App\TestHelpers\ClientTestHelper;
 use App\TestHelpers\NamedDeputyTestHelper;
 use App\TestHelpers\OrganisationTestHelper;
@@ -29,6 +31,7 @@ class FixtureHelper
     private UserTestHelper $userTestHelper;
     private ReportTestHelper $reportTestHelper;
     private ClientTestHelper $clientTestHelper;
+    private CaseTestHelper $caseTestHelper;
     private OrganisationTestHelper $organisationTestHelper;
     private NamedDeputyTestHelper $namedDeputyTestHelper;
 
@@ -50,6 +53,7 @@ class FixtureHelper
         $this->userTestHelper = new UserTestHelper();
         $this->reportTestHelper = new ReportTestHelper();
         $this->clientTestHelper = new ClientTestHelper();
+        $this->caseTestHelper = new CaseTestHelper();
         $this->organisationTestHelper = new OrganisationTestHelper();
         $this->namedDeputyTestHelper = new NamedDeputyTestHelper();
     }
@@ -217,6 +221,7 @@ class FixtureHelper
     {
         $client = $this->clientTestHelper->generateClient($this->em, $deputy);
         $report = $this->reportTestHelper->generateReport($this->em, $client, $type, $startDate);
+        $case = $this->caseTestHelper->generateCaseFromClientAndUser($this->em, $client, $deputy, $type);
 
         $client->addReport($report);
         $report->setClient($client);
@@ -233,6 +238,7 @@ class FixtureHelper
 
         $this->em->persist($client);
         $this->em->persist($report);
+        $this->em->persist($case);
 
         if ($submitted and isset($satisfactionScore)) {
             $satisfaction = $this->setSatisfaction($report, $deputy, $satisfactionScore);
@@ -259,6 +265,7 @@ class FixtureHelper
     {
         $client = $this->clientTestHelper->generateClient($this->em, $deputy);
         $ndr = $this->reportTestHelper->generateNdr($this->em, $client, $deputy);
+        $case = $this->caseTestHelper->generateCaseFromClientAndUser($this->em, $client, $deputy, Report::TYPE_102);
 
         if ($completed) {
             $this->reportTestHelper->completeNdrLayReport($ndr, $this->em);
@@ -270,6 +277,7 @@ class FixtureHelper
 
         $this->em->persist($ndr);
         $this->em->persist($client);
+        $this->em->persist($case);
     }
 
     private function addOrgClientsNamedDeputyAndReportsToOrgDeputy(
@@ -284,6 +292,7 @@ class FixtureHelper
         $client = $this->clientTestHelper->generateClient($this->em, $deputy, $organisation);
         $report = $this->reportTestHelper->generateReport($this->em, $client, $reportType, $startDate);
         $namedDeputy = $this->namedDeputyTestHelper->generatenamedDeputy();
+        $case = $this->caseTestHelper->generateCaseFromClientAndUser($this->em, $client, $deputy, $reportType, $namedDeputy);
 
         $client->addReport($report);
         $client->setOrganisation($organisation);
@@ -309,6 +318,7 @@ class FixtureHelper
         $this->em->persist($deputy);
         $this->em->persist($client);
         $this->em->persist($report);
+        $this->em->persist($case);
 
         if ($submitted and isset($satisfactionScore)) {
             $satisfaction = $this->setSatisfaction($report, $deputy, $satisfactionScore);
@@ -891,6 +901,16 @@ class FixtureHelper
         );
 
         return self::buildAdminUserDetails($user);
+    }
+
+    public function createPaperLayPfaHighAssets(): CasRec
+    {
+        $case = $this->caseTestHelper->generateCase($this->em, Report::TYPE_102);
+
+        $this->em->persist($case);
+        $this->em->flush();
+
+        return $case;
     }
 
     public function createDataForAnalytics(string $testRunId, $timeAgo, $satisfactionScore)
