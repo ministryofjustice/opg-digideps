@@ -79,6 +79,8 @@ class ClientBenefitsCheckType extends AbstractType
                 $data['dateLastCheckedEntitlement']['day'] = '01';
             }
 
+            $data = array_reverse($data);
+
             $event->setData($data);
         });
     }

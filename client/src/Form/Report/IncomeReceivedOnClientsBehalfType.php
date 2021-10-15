@@ -11,8 +11,6 @@ use Symfony\Component\Form\Extension\Core\Type\CheckboxType;
 use Symfony\Component\Form\Extension\Core\Type\NumberType;
 use Symfony\Component\Form\Extension\Core\Type\TextType;
 use Symfony\Component\Form\FormBuilderInterface;
-use Symfony\Component\Form\FormEvent;
-use Symfony\Component\Form\FormEvents;
 use Symfony\Component\OptionsResolver\OptionsResolver;
 
 class IncomeReceivedOnClientsBehalfType extends AbstractType
@@ -20,7 +18,11 @@ class IncomeReceivedOnClientsBehalfType extends AbstractType
     public function buildForm(FormBuilderInterface $builder, array $options): void
     {
         $builder->add('incomeType', TextType::class, ['required' => true]);
-        $builder->add('amount', NumberType::class, ['required' => false]);
+        $builder->add('amount', NumberType::class, [
+                'required' => false,
+                'invalid_message' => 'The amount value must be in numbers',
+            ]
+        ); //Add validation error message here
         $builder->add('amountDontKnow', CheckboxType::class, [
             'required' => false,
         ]);
@@ -30,20 +32,6 @@ class IncomeReceivedOnClientsBehalfType extends AbstractType
             'amount',
             'amountDontKnow')
         );
-
-        // amountDontKnow is not a property of IncomeReceivedOnClientsBehalf in API. If ticked, set amount to null.
-        $builder->addEventListener(FormEvents::PRE_SUBMIT, [$this, 'onPreSubmit']);
-    }
-
-    public function onPreSubmit(FormEvent $event): void
-    {
-        $data = $event->getData();
-
-        if (isset($data['amountDontKnow']) && $data['amountDontKnow']) {
-            $data['amount'] = null;
-        }
-
-        $event->setData($data);
     }
 
     public function configureOptions(OptionsResolver $resolver): void
@@ -52,6 +40,7 @@ class IncomeReceivedOnClientsBehalfType extends AbstractType
             'data_class' => IncomeReceivedOnClientsBehalf::class,
             'allow_add' => true,
             'allow_extra_fields' => true,
+            'validation_groups' => ['client-benefits-check', 'client-benefits-check'],
         ]);
     }
 }

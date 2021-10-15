@@ -4,67 +4,77 @@
 {% trans_default_domain translationDomain %}
 {% set transOptions = {'%client%': report.client.firstname | e } %}
 
-<h2 class="govuk-heading-l"> {{ 'summaryPage.table.benefitsCheck.title' | trans(transOptions, translationDomain) }}</h2>
+<div class="govuk-grid-row" id="benefits-check">
+    <div class="govuk-grid-column-full">
+        <h2 class="govuk-heading-l"> {{ 'summaryPage.table.benefitsCheck.title' | trans(transOptions, translationDomain) }}</h2>
 
-<dl class="govuk-summary-list">
-    <div class="govuk-summary-list__row">
-        <dt class="govuk-summary-list__key">
-            {{ 'summaryPage.table.benefitsCheck.column1Title' | trans(transOptions, translationDomain) }}
-        </dt>
-        <dd class="govuk-summary-list__value">
-            {{ 'summaryPage.table.benefitsCheck.column2Title' | trans(transOptions, translationDomain) }}
-        </dd>
+        <dl class="govuk-summary-list">
+            <div class="govuk-summary-list__row">
+                <dt class="govuk-summary-list__key">
+                    {{ 'summaryPage.table.benefitsCheck.column1Title' | trans(transOptions, translationDomain) }}
+                </dt>
+                <dd class="govuk-summary-list__value">
+                    {{ 'summaryPage.table.benefitsCheck.column2Title' | trans(transOptions, translationDomain) }}
+                </dd>
+            </div>
+            <div class="govuk-summary-list__row ">
+                <dt class="govuk-summary-list__key">
+                    {{ 'stepPage.pageTitle.1.mainTitle' | trans(transOptions, translationDomain) }}
+                </dt>
+                <dd class="govuk-summary-list__value">
+                    {% if report.clientBenefitsCheck.whenLastCheckedEntitlement == constant('App\\Entity\\Report\\ClientBenefitsCheck::WHEN_CHECKED_I_HAVE_CHECKED') %}
+                        {{ report.clientBenefitsCheck.dateLastCheckedEntitlement | date('F Y') }}
+                    {% elseif report.clientBenefitsCheck.whenLastCheckedEntitlement == constant('App\\Entity\\Report\\ClientBenefitsCheck::WHEN_CHECKED_IVE_NEVER_CHECKED') %}
+                        <p class="govuk-body">{{ ('form.whenLastChecked.choices.' ~ report.clientBenefitsCheck.whenLastCheckedEntitlement) | trans(transOptions, translationDomain) }}</p>
+                        <p class="govuk-body">{{ report.clientBenefitsCheck.neverCheckedExplanation }}</p>
+                    {% else %}
+                        {{ ('form.whenLastChecked.choices.' ~ report.clientBenefitsCheck.whenLastCheckedEntitlement) | trans(transOptions, translationDomain) }}
+                    {% endif %}
+                </dd>
+            </div>
+        </dl>
     </div>
-    <div class="govuk-summary-list__row ">
-        <dt class="govuk-summary-list__key">
-            {{ 'stepPage.pageTitle.1.mainTitle' | trans(transOptions, translationDomain) }}
-        </dt>
-        <dd class="govuk-summary-list__value">
-            {% if report.clientBenefitsCheck.whenLastCheckedEntitlement == constant('App\\Entity\\Report\\ClientBenefitsCheck::WHEN_CHECKED_I_HAVE_CHECKED') %}
-                {{ report.clientBenefitsCheck.dateLastCheckedEntitlement | date('F Y') }}
-            {% elseif report.clientBenefitsCheck.whenLastCheckedEntitlement == constant('App\\Entity\\Report\\ClientBenefitsCheck::WHEN_CHECKED_IVE_NEVER_CHECKED') %}
-                <p class="govuk-body">{{ ('form.whenLastChecked.choices.' ~ report.clientBenefitsCheck.whenLastCheckedEntitlement) | trans(transOptions, translationDomain) }}</p>
-                <p class="govuk-body">{{ report.clientBenefitsCheck.neverCheckedExplanation }}</p>
-            {% else %}
-                {{ ('form.whenLastChecked.choices.' ~ report.clientBenefitsCheck.whenLastCheckedEntitlement) | trans(transOptions, translationDomain) }}
-            {% endif %}
-        </dd>
-    </div>
-</dl>
+</div>
 
-<h2 class="govuk-heading-l"> {{ 'summaryPage.table.incomeOtherPeopleReceive.title' | trans(transOptions, translationDomain) }}</h2>
-<a href="{{ path('client_benefits_check_step', { 'reportId': report.id, 'step': 3 }) }}" role="button" class="govuk-button govuk-button--secondary" data-module="govuk-button">
-    {{ ('summaryPage.addIncomeButtonText') | trans }}
-</a>
+{% if report.clientBenefitsCheck.typesOfIncomeReceivedOnClientsBehalf | length > 0 %}
+    <div class="govuk-grid-row" id="income-received">
+        <div class="govuk-grid-column-full">
+            <h2 class="govuk-heading-l"> {{ 'summaryPage.table.incomeOtherPeopleReceive.title' | trans(transOptions, translationDomain) }}</h2>
+            <a href="{{ path('client_benefits_check_step', { 'reportId': report.id, 'step': 3 }) }}" role="button" class="govuk-button govuk-button--secondary" data-module="govuk-button">
+                {{ ('summaryPage.addIncomeButtonText') | trans }}
+            </a>
 
-<dl class="govuk-summary-list">
-    <div class="govuk-summary-list__row">
-        <dt class="govuk-summary-list__key">
-            {{ 'summaryPage.table.incomeOtherPeopleReceive.column1Title' | trans(transOptions, translationDomain) }}
-        </dt>
-        <dd class="govuk-summary-list__value">
-            {{ 'summaryPage.table.incomeOtherPeopleReceive.column2Title' | trans(transOptions, translationDomain) }}
-        </dd>
-        <dd class="govuk-summary-list__value">
+            <dl class="govuk-summary-list">
+                <div class="govuk-summary-list__row">
+                    <dt class="govuk-summary-list__key">
+                        {{ 'summaryPage.table.incomeOtherPeopleReceive.column1Title' | trans(transOptions, translationDomain) }}
+                    </dt>
+                    <dd class="govuk-summary-list__value">
+                        {{ 'summaryPage.table.incomeOtherPeopleReceive.column2Title' | trans(transOptions, translationDomain) }}
+                    </dd>
+                    <dd class="govuk-summary-list__value">
 
-        </dd>
-    </div>
-    {% for income in report.clientBenefitsCheck.typesOfIncomeReceivedOnClientsBehalf %}
-        <div class="govuk-summary-list__row ">
-            <dt class="govuk-summary-list__key">
-                {{ income.incomeType }}
-            </dt>
-            <dd class="govuk-summary-list__value">
-                {% if income.amount is null %}
-                    {{ 'form.incomeOnClientsBehalf.choices.dontKnow' | trans(transOptions, translationDomain) }}
-                {% else %}
-                    {{ income.amount | format_currency('GBP') }}
-                {% endif %}
-            </dd>
-            <dd class="govuk-summary-list__value">
-                <span><a href="{{ path('client_benefits_check_step', { 'reportId': report.id, 'step': 3 }) }}" class="govuk-link">Edit</a></span>
-                <span><a href="{{ path('client_benefits_check_remove_income_type', { 'reportId': report.id, 'incomeTypeId': income.id }) }}" class="govuk-link">Remove</a></span>
-            </dd>
+                    </dd>
+                </div>
+                {% for income in report.clientBenefitsCheck.typesOfIncomeReceivedOnClientsBehalf %}
+                    <div class="govuk-summary-list__row ">
+                        <dt class="govuk-summary-list__key">
+                            {{ income.incomeType }}
+                        </dt>
+                        <dd class="govuk-summary-list__value">
+                            {% if income.amount is null %}
+                                {{ 'form.incomeOnClientsBehalf.choices.dontKnow' | trans(transOptions, translationDomain) }}
+                            {% else %}
+                                {{ income.amount | format_currency('GBP') }}
+                            {% endif %}
+                        </dd>
+                        <dd class="govuk-summary-list__value">
+                            <span><a href="{{ path('client_benefits_check_step', { 'reportId': report.id, 'step': 3 }) }}" class="govuk-link">Edit</a></span>
+                            <span><a href="{{ path('client_benefits_check_remove_income_type', { 'reportId': report.id, 'incomeTypeId': income.id }) }}" class="govuk-link">Remove</a></span>
+                        </dd>
+                    </div>
+                {% endfor %}
+            </dl>
         </div>
-    {% endfor %}
-</dl>
+    </div>
+{% endif %}

@@ -44,6 +44,17 @@ class ClientBenefitsCheckController extends RestController
     }
 
     /**
+     * @Route("/client-benefits-check/{id}", methods={"GET"}, name="read")
+     * @Security("is_granted('ROLE_DEPUTY')")
+     */
+    public function read(Request $request, string $id)
+    {
+        $this->setJmsGroups($request);
+
+        return $this->repository->findBy(['id' => $id], ['created' => 'ASC']);
+    }
+
+    /**
      * @Route("/client-benefits-check/{id}", methods={"PUT"}, name="update")
      * @Security("is_granted('ROLE_DEPUTY')")
      */

@@ -646,4 +646,28 @@ trait IShouldBeOnFrontendTrait
     {
         return $this->iAmOnPage(sprintf('/%s\/.*\/client-benefits-check\/summary.*$/', $this->reportUrlPrefix));
     }
+
+    /**
+     * @Then I should be on the client benefits check step 1 page
+     */
+    public function iAmOnClientBenefitsCheckStep1Page(): bool
+    {
+        return $this->iAmOnPage(sprintf('/%s\/.*\/client-benefits-check\/step\/1.*$/', $this->reportUrlPrefix));
+    }
+
+    /**
+     * @Then I should be on the client benefits check step 2 page
+     */
+    public function iAmOnClientBenefitsCheckStep2Page(): bool
+    {
+        return $this->iAmOnPage(sprintf('/%s\/.*\/client-benefits-check\/step\/2.*$/', $this->reportUrlPrefix));
+    }
+
+    /**
+     * @Then I should be on the client benefits check step 3 page
+     */
+    public function iAmOnClientBenefitsCheckStep3Page(): bool
+    {
+        return $this->iAmOnPage(sprintf('/%s\/.*\/client-benefits-check\/step\/3.*$/', $this->reportUrlPrefix));
+    }
 }

@@ -4,8 +4,10 @@ declare(strict_types=1);
 
 namespace App\Entity\Report;
 
+use App\Validator\Constraints\ClientBenefitsCheck as CustomAssert;
 use DateTime;
 use JMS\Serializer\Annotation as JMS;
+use Symfony\Component\Validator\Constraints as Assert;
 
 class IncomeReceivedOnClientsBehalf
 {
@@ -30,12 +32,16 @@ class IncomeReceivedOnClientsBehalf
     /**
      * @JMS\Type("string")
      * @JMS\Groups({"report", "client-benefits-check"})
+     *
+     * @Assert\NotNull(message="Please provide an income type", groups={"client-benefits-check"})
      */
     private ?string $incomeType = null;
 
     /**
      * @JMS\Type("float")
      * @JMS\Groups({"report", "client-benefits-check"})
+     *
+     * @CustomAssert\IncomeReceivedOnClientsBehalf(groups={"client-benefits-check"})
      */
     private ?float $amount = null;
 
@@ -43,8 +49,9 @@ class IncomeReceivedOnClientsBehalf
      * @JMS\Type("bool")
      * @JMS\Groups({"report", "client-benefits-check"})
      *
-     * @var bool|null
-     *                This will not be persisted - it exists to enable a checkbox in the form
+     * @CustomAssert\IncomeReceivedOnClientsBehalf(groups={"client-benefits-check"})
+     *
+     * This will not be persisted - it exists to enable a checkbox in the form
      */
     private ?bool $amountDontKnow = null;
 

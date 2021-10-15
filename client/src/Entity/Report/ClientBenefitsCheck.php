@@ -5,9 +5,11 @@ declare(strict_types=1);
 namespace App\Entity\Report;
 
 use App\Entity\Report\Traits\HasReportTrait;
+use App\Validator\Constraints\ClientBenefitsCheck as CustomAssert;
 use DateTime;
 use Doctrine\Common\Collections\ArrayCollection;
 use JMS\Serializer\Annotation as JMS;
+use Symfony\Component\Validator\Constraints as Assert;
 
 class ClientBenefitsCheck
 {
@@ -36,18 +38,24 @@ class ClientBenefitsCheck
     /**
      * @JMS\Type("string")
      * @JMS\Groups({"report", "client-benefits-check"})
+     *
+     * @CustomAssert\ClientBenefitsCheck(groups={"client-benefits-check"})
      */
     private string $whenLastCheckedEntitlement = '';
 
     /**
      * @JMS\Type("DateTime<'Y-m-d'>")
      * @JMS\Groups({"report", "client-benefits-check"})
+     *
+     * @CustomAssert\ClientBenefitsCheck(groups={"client-benefits-check"})
      */
     private ?DateTime $dateLastCheckedEntitlement = null;
 
     /**
      * @JMS\Type("string")
      * @JMS\Groups({"report", "client-benefits-check"})
+     *
+     * @CustomAssert\ClientBenefitsCheck(groups={"client-benefits-check"})
      */
     private ?string $neverCheckedExplanation = null;
 
@@ -60,12 +68,16 @@ class ClientBenefitsCheck
     /**
      * @JMS\Type("string")
      * @JMS\Groups({"report", "client-benefits-check"})
+     *
+     * @CustomAssert\ClientBenefitsCheck(groups={"client-benefits-check"})
      */
     private ?string $dontKnowIncomeExplanation = null;
 
     /**
      * @JMS\Type("ArrayCollection<App\Entity\Report\IncomeReceivedOnClientsBehalf>")
      * @JMS\Groups({"report", "client-benefits-check"})
+     *
+     * @Assert\Valid(groups={"client-benefits-check"})
      */
     private ?ArrayCollection $typesOfIncomeReceivedOnClientsBehalf = null;
 

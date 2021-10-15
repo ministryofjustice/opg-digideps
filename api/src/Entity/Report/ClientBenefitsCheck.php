@@ -8,6 +8,7 @@ use DateTime;
 use Doctrine\Common\Collections\ArrayCollection;
 use Doctrine\Common\Collections\Collection;
 use Doctrine\ORM\Mapping as ORM;
+use Doctrine\ORM\Mapping\OrderBy;
 use Gedmo\Mapping\Annotation as Gedmo;
 use InvalidArgumentException;
 use JMS\Serializer\Annotation as JMS;
@@ -117,6 +118,7 @@ class ClientBenefitsCheck
      *
      * @JMS\Groups({"client-benefits-check"})
      * @JMS\Type("ArrayCollection<App\Entity\Report\IncomeReceivedOnClientsBehalf>")
+     * @OrderBy({"created" = "ASC"})
      */
     private $typesOfIncomeReceivedOnClientsBehalf;
 
@@ -144,7 +146,7 @@ class ClientBenefitsCheck
         return $this;
     }
 
-    public function getWhenLastCheckedEntitlement(): string
+    public function getWhenLastCheckedEntitlement(): ?string
     {
         return $this->whenLastCheckedEntitlement;
     }
@@ -156,7 +158,7 @@ class ClientBenefitsCheck
         return $this;
     }
 
-    public function getDoOthersReceiveIncomeOnClientsBehalf(): string
+    public function getDoOthersReceiveIncomeOnClientsBehalf(): ?string
     {
         return $this->doOthersReceiveIncomeOnClientsBehalf;
     }
