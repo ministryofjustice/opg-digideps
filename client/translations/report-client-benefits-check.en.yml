@@ -32,6 +32,11 @@ summaryPage:
             column1Title: Question
             column2Title: Answer
             edit: Edit
+        doOthersReceiveIncome:
+            title: Do others receive income on %client%'s behalf
+            column1Title: Question
+            column2Title: Answer
+            edit: Edit
         incomeOtherPeopleReceive:
             title: Income other people receive
             column1Title: Type of income

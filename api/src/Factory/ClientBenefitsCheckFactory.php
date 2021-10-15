@@ -31,7 +31,9 @@ class ClientBenefitsCheckFactory
             ->setCreated(new DateTime())
             ->setWhenLastCheckedEntitlement($formData['when_last_checked_entitlement'])
             ->setDateLastCheckedEntitlement($dateLastChecked)
-            ->setNeverCheckedExplanation($formData['never_checked_explanation']);
+            ->setNeverCheckedExplanation($formData['never_checked_explanation'])
+            ->setDoOthersReceiveIncomeOnClientsBehalf($formData['do_others_receive_income_on_clients_behalf'])
+            ->setDontKnowIncomeExplanation($formData['dont_know_income_explanation']);
 
         if (is_array($formData['types_of_income_received_on_clients_behalf'])) {
             foreach ($formData['types_of_income_received_on_clients_behalf'] as $incomeTypeData) {

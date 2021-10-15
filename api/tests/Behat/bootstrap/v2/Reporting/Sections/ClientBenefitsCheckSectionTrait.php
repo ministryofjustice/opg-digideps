@@ -12,6 +12,7 @@ trait ClientBenefitsCheckSectionTrait
     private string $missingDateErrorText = 'Must provide a date when have checked entitlement';
     private string $missingExplanationErrorText = 'Must provide an explanation when you don\'t know if anyone else received income on clients behalf';
     private string $missingIncomeTypeErrorText = 'Please provide an income type';
+    private string $atLeastOneIncomeTypeRequiredErrorText = 'Must add at least one type of income received by others if answering "yes" to "Do others receive income ion clients behalf". Use the back link if you do not have any income to declare.';
 
     /**
      * @When I navigate to the client benefits check report section
@@ -102,7 +103,8 @@ trait ClientBenefitsCheckSectionTrait
 
         $this->chooseOption(
             'report-client-benefits-check[doOthersReceiveIncomeOnClientsBehalf]',
-            'yes'
+            'yes',
+            'doOthersReceiveIncome'
         );
 
         $this->pressButton('Save and continue');
@@ -117,7 +119,31 @@ trait ClientBenefitsCheckSectionTrait
 
         $this->chooseOption(
             'report-client-benefits-check[doOthersReceiveIncomeOnClientsBehalf]',
-            'no'
+            'no',
+            'doOthersReceiveIncome'
+        );
+
+        $this->pressButton('Save and continue');
+    }
+
+    /**
+     * @Given /^I confirm I do not know if others receive income on the clients behalf and provide an explanation$/
+     */
+    public function iConfirmIDoNotKnowIfOthersReceiveIncomeOnTheClientsBehalfAndProvideAnExplanation()
+    {
+        $this->iAmOnClientBenefitsCheckStep2Page();
+
+        $this->chooseOption(
+            'report-client-benefits-check[doOthersReceiveIncomeOnClientsBehalf]',
+            'dontKnow',
+            'doOthersReceiveIncome',
+            'I don\'t know'
+        );
+
+        $this->fillInField(
+            'report-client-benefits-check[dontKnowIncomeExplanation]',
+            $this->faker->sentence(20),
+            'doOthersReceiveIncome',
         );
 
         $this->pressButton('Save and continue');
@@ -250,6 +276,10 @@ trait ClientBenefitsCheckSectionTrait
             $this->expectedResultsDisplayedSimplified('haveCheckedBenefits');
         }
 
+        if (!is_null($this->getSectionAnswers('doOthersReceiveIncome'))) {
+            $this->expectedResultsDisplayedSimplified('doOthersReceiveIncome');
+        }
+
         if (!is_null($this->getSectionAnswers('incomeType'))) {
             $this->expectedResultsDisplayedSimplified('incomeType');
         }
@@ -331,8 +361,11 @@ trait ClientBenefitsCheckSectionTrait
             case 'missing income type':
                 $this->assertOnErrorMessage($this->missingIncomeTypeErrorText);
                 break;
+            case 'at least one income type required':
+                $this->assertOnErrorMessage($this->atLeastOneIncomeTypeRequiredErrorText);
+                break;
             default:
-                throw new BehatException('This step only supports "missing date|explanation|income type". Either add a new case or update the argument.');
+                throw new BehatException('This step only supports "missing date|missing explanation|missing income type|at least one income type required". Either add a new case or update the argument.');
         }
     }
 
@@ -345,7 +378,8 @@ trait ClientBenefitsCheckSectionTrait
 
         $this->chooseOption(
             'report-client-benefits-check[doOthersReceiveIncomeOnClientsBehalf]',
-            'dontKnow'
+            'dontKnow',
+            'doOthersReceiveIncome'
         );
 
         $this->pressButton('Save and continue');
@@ -363,6 +397,31 @@ trait ClientBenefitsCheckSectionTrait
             $this->faker->numberBetween(10, 2000),
             'incomeType'
         );
+
+        $this->pressButton('Add another');
+    }
+
+    /**
+     * @Given /^I change my mind and go back to the previous page$/
+     */
+    public function iChangeMyMindAndGoBackToThePreviousPage()
+    {
+        $this->iAmOnClientBenefitsCheckStep3Page();
+
+        $this->clickLink('Back');
+
+        $this->removeAnswerFromSection(
+            'report-client-benefits-check[doOthersReceiveIncomeOnClientsBehalf]',
+            'doOthersReceiveIncome'
+        );
+    }
+
+    /**
+     * @Given /^I attempt to submit an empty income type$/
+     */
+    public function iAttemptToSubmitAnEmptyIncomeType()
+    {
+        $this->iAmOnClientBenefitsCheckStep3Page();
 
         $this->pressButton('Add another');
     }

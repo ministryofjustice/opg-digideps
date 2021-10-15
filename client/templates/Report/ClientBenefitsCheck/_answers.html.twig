@@ -36,6 +36,36 @@
     </div>
 </div>
 
+<div class="govuk-grid-row" id="do-others-receive-income">
+    <div class="govuk-grid-column-full">
+        <h2 class="govuk-heading-l"> {{ 'summaryPage.table.doOthersReceiveIncome.title' | trans(transOptions, translationDomain) }}</h2>
+
+        <dl class="govuk-summary-list">
+            <div class="govuk-summary-list__row">
+                <dt class="govuk-summary-list__key">
+                    {{ 'summaryPage.table.doOthersReceiveIncome.column1Title' | trans(transOptions, translationDomain) }}
+                </dt>
+                <dd class="govuk-summary-list__value">
+                    {{ 'summaryPage.table.doOthersReceiveIncome.column2Title' | trans(transOptions, translationDomain) }}
+                </dd>
+            </div>
+            <div class="govuk-summary-list__row ">
+                <dt class="govuk-summary-list__key">
+                    {{ 'stepPage.pageTitle.2.mainTitle' | trans(transOptions, translationDomain) }}
+                </dt>
+                <dd class="govuk-summary-list__value">
+                    {% if report.clientBenefitsCheck.doOthersReceiveIncomeOnClientsBehalf == constant('App\\Entity\\Report\\ClientBenefitsCheck::OTHER_INCOME_DONT_KNOW') %}
+                        <p class="govuk-body">{{ ('form.incomeOnClientsBehalf.choices.' ~ report.clientBenefitsCheck.doOthersReceiveIncomeOnClientsBehalf) | trans(transOptions, translationDomain) }}</p>
+                        <p class="govuk-body">{{ report.clientBenefitsCheck.dontKnowIncomeExplanation }}</p>
+                    {% else %}
+                        {{ ('form.incomeOnClientsBehalf.choices.' ~ report.clientBenefitsCheck.doOthersReceiveIncomeOnClientsBehalf) | trans(transOptions, translationDomain) }}
+                    {% endif %}
+                </dd>
+            </div>
+        </dl>
+    </div>
+</div>
+
 {% if report.clientBenefitsCheck.typesOfIncomeReceivedOnClientsBehalf | length > 0 %}
     <div class="govuk-grid-row" id="income-received">
         <div class="govuk-grid-column-full">

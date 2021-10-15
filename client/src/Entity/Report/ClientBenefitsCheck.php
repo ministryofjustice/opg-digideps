@@ -77,6 +77,7 @@ class ClientBenefitsCheck
      * @JMS\Type("ArrayCollection<App\Entity\Report\IncomeReceivedOnClientsBehalf>")
      * @JMS\Groups({"report", "client-benefits-check"})
      *
+     * @CustomAssert\ClientBenefitsCheck(groups={"client-benefits-check"})
      * @Assert\Valid(groups={"client-benefits-check"})
      */
     private ?ArrayCollection $typesOfIncomeReceivedOnClientsBehalf = null;

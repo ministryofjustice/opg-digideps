@@ -104,7 +104,7 @@ class ClientBenefitsCheck
     private $doOthersReceiveIncomeOnClientsBehalf;
 
     /**
-     * @var string
+     * @var string|null
      *
      * @ORM\Column(name="dont_know_income_explanation", type="text", nullable=true)
      *
@@ -197,7 +197,7 @@ class ClientBenefitsCheck
         return $this;
     }
 
-    public function getDateLastCheckedEntitlement(): DateTime
+    public function getDateLastCheckedEntitlement(): ?DateTime
     {
         return $this->dateLastCheckedEntitlement;
     }
@@ -209,7 +209,7 @@ class ClientBenefitsCheck
         return $this;
     }
 
-    public function getNeverCheckedExplanation(): string
+    public function getNeverCheckedExplanation(): ?string
     {
         return $this->neverCheckedExplanation;
     }
@@ -225,12 +225,12 @@ class ClientBenefitsCheck
         return $this;
     }
 
-    public function getDontKnowIncomeExplanation(): string
+    public function getDontKnowIncomeExplanation(): ?string
     {
         return $this->dontKnowIncomeExplanation;
     }
 
-    public function setDontKnowIncomeExplanation(string $dontKnowIncomeExplanation): ClientBenefitsCheck
+    public function setDontKnowIncomeExplanation(?string $dontKnowIncomeExplanation): ClientBenefitsCheck
     {
         $this->dontKnowIncomeExplanation = $dontKnowIncomeExplanation;
 

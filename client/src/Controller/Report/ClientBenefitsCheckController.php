@@ -98,11 +98,15 @@ class ClientBenefitsCheckController extends AbstractController
             $clientBenefitsCheck->addTypeOfIncomeReceivedOnClientsBehalf(new IncomeReceivedOnClientsBehalf());
         }
 
+        $allowDeleteEmpty = $clientBenefitsCheck->getTypesOfIncomeReceivedOnClientsBehalf() instanceof ArrayCollection &&
+            count($clientBenefitsCheck->getTypesOfIncomeReceivedOnClientsBehalf()) >= 2;
+
         $form = $this->createForm(
             ClientBenefitsCheckType::class,
             $clientBenefitsCheck,
             [
                 'step' => $step,
+                'allow_delete_empty' => $allowDeleteEmpty,
             ]
         );
 
@@ -134,6 +138,7 @@ class ClientBenefitsCheckController extends AbstractController
             'form' => $form->createView(),
             'step' => $step,
             'formAction' => is_null($report->getClientBenefitsCheck()) ? 'add' : 'edit',
+            'backLink' => $this->stepRedirector->getBackLink(),
         ];
     }
 

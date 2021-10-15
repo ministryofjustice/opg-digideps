@@ -61,8 +61,8 @@ class ClientBenefitsCheckType extends AbstractType
             $builder->add('typesOfIncomeReceivedOnClientsBehalf', CollectionType::class, [
                 'entry_type' => IncomeReceivedOnClientsBehalfType::class,
                 'entry_options' => ['label' => false, 'empty_data' => null],
-                'delete_empty' => function (IncomeReceivedOnClientsBehalf $income) {
-                    return null === $income->getAmount() && null === $income->getIncomeType();
+                'delete_empty' => function (IncomeReceivedOnClientsBehalf $income) use ($options) {
+                    return null === $income->getAmount() && null === $income->getIncomeType() && false === $income->getAmountDontKnow() && $options['allow_delete_empty'];
                 },
                 'allow_delete' => true,
             ]);
@@ -78,8 +78,6 @@ class ClientBenefitsCheckType extends AbstractType
             if (!empty($data['dateLastCheckedEntitlement']['month']) && !empty($data['dateLastCheckedEntitlement']['year'])) {
                 $data['dateLastCheckedEntitlement']['day'] = '01';
             }
-
-            $data = array_reverse($data);
 
             $event->setData($data);
         });
@@ -98,7 +96,7 @@ class ClientBenefitsCheckType extends AbstractType
                 'data_class' => ClientBenefitsCheck::class,
             ]
         )
-            ->setRequired(['step']);
+            ->setRequired(['step', 'allow_delete_empty']);
     }
 
     public function getBlockPrefix()

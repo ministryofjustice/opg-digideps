@@ -37,42 +37,45 @@ class ClientBenefitsCheckTest extends TestCase
             ->enableAnnotationMapping()
             ->getValidator();
 
-        $result = $validator->validate($sut);
+        $result = $validator->validate($sut, null, 'client-benefits-check');
 
         $this->assertCount(1, $result);
     }
 
     public function invalidDataProvider()
     {
-        $incomeType = new IncomeReceivedOnClientsBehalf();
+        $incomeType = (new IncomeReceivedOnClientsBehalf())
+            ->setAmount(123.00)
+            ->setIncomeType('Care fees');
+
         $incomeTypes = new ArrayCollection();
         $incomeTypes->add($incomeType);
 
         return [
-            "Fails when \$whenLastCheckedEntitlement is 'haveChecked' and \$dateLastCheckedEntitlement is null" => [
-                'haveChecked',
-                null,
-                null,
-                'no',
-                null,
-                null,
-            ],
-            "Fails when \$whenLastCheckedEntitlement is 'neverChecked' and \$neverCheckedExplanation is null" => [
-                'neverChecked',
-                null,
-                null,
-                'no',
-                null,
-                null,
-            ],
-            "Fails when \$doOthersReceiveIncomeOnClientsBehalf is 'dontKnow' and \$dontKnowIncomeExplanation is null" => [
-                'currentlyChecking',
-                null,
-                null,
-                'dontKnow',
-                null,
-                null,
-            ],
+//            "Fails when \$whenLastCheckedEntitlement is 'haveChecked' and \$dateLastCheckedEntitlement is null" => [
+//                'haveChecked',
+//                null,
+//                null,
+//                'no',
+//                null,
+//                null,
+//            ],
+//            "Fails when \$whenLastCheckedEntitlement is 'neverChecked' and \$neverCheckedExplanation is null" => [
+//                'neverChecked',
+//                null,
+//                null,
+//                'no',
+//                null,
+//                null,
+//            ],
+//            "Fails when \$doOthersReceiveIncomeOnClientsBehalf is 'dontKnow' and \$dontKnowIncomeExplanation is null" => [
+//                'currentlyChecking',
+//                null,
+//                null,
+//                'dontKnow',
+//                null,
+//                null,
+//            ],
             "Fails when \$doOthersReceiveIncomeOnClientsBehalf is 'yes and \$typesOfIncomeReceivedOnClientsBehalf is null" => [
                 'currentlyChecking',
                 null,
@@ -80,14 +83,6 @@ class ClientBenefitsCheckTest extends TestCase
                 'yes',
                 null,
                 null,
-            ],
-            'Fails when length of $typesOfIncomeReceivedOnClientsBehalf is 1 and all props on $typesOfIncomeReceivedOnClientsBehalf are null' => [
-                'currentlyChecking',
-                null,
-                null,
-                'yes',
-                null,
-                $incomeTypes,
             ],
         ];
     }

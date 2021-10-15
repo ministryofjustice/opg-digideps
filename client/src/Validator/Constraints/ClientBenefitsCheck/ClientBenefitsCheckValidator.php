@@ -91,26 +91,13 @@ class ClientBenefitsCheckValidator extends ConstraintValidator
 
     private function typesOfIncomeReceivedOnClientsBehalfValid($value, ClientBenefitsCheck $object)
     {
-        if (ClientBenefitsCheck::OTHER_INCOME_YES === $object->getDoOthersReceiveIncomeOnClientsBehalf()) {
-            if (is_null($value)) {
+        if ($object->getTypesOfIncomeReceivedOnClientsBehalf() instanceof ArrayCollection && 1 === $object->getTypesOfIncomeReceivedOnClientsBehalf()->count()) {
+            $income = $object->getTypesOfIncomeReceivedOnClientsBehalf()->first();
+
+            if (is_null($income->getAmount()) && is_null($income->getIncomeType()) && false === $income->getAmountDontKnow()) {
                 $this->context
-                    ->buildViolation('Must add at least one type of income received by others if answering "yes" to "Do others receive income ion clients behalf"')
+                    ->buildViolation('Must add at least one type of income received by others if answering "yes" to "Do others receive income ion clients behalf". Use the back link if you do not have any income to declare.')
                     ->addViolation();
-            }
-
-            if ($value instanceof ArrayCollection &&
-                1 === count($value)
-            ) {
-                $value = $value->first();
-
-                if (empty($value->getAmountDontKnow()) &&
-                    empty($value->getAmount()) &&
-                    empty($value->getIncomeType())
-                ) {
-                    $this->context
-                        ->buildViolation('Must add at least one type of income received by others if answering "yes" to "Do others receive income ion clients behalf"')
-                        ->addViolation();
-                }
             }
         }
     }
