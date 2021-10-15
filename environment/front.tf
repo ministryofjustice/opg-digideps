@@ -60,8 +60,7 @@ data "aws_iam_policy_document" "front_query_ssm" {
     sid    = "AllowQuerySSMParameters"
     effect = "Allow"
     actions = [
-      "ssm:GetParameter",
-      "ssm:PutParameter"
+      "ssm:GetParameter"
     ]
     resources = [
       aws_ssm_parameter.checklist_sync_row_limit.arn,
