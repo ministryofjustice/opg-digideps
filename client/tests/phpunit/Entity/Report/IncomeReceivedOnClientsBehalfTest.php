@@ -20,7 +20,6 @@ class IncomeReceivedOnClientsBehalfTest extends TestCase
             ->setIncomeType($incomeType)
             ->setAmount($amount)
             ->setAmountDontKnow($amountDontKnow);
-//            ->setClientBenefitsCheck(new ClientBenefitsCheck());
 
         $validator = Validation::createValidatorBuilder()
             ->enableAnnotationMapping()
