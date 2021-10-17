@@ -10,32 +10,50 @@ use Symfony\Component\Validator\Validation;
 
 class IncomeReceivedOnClientsBehalfTest extends TestCase
 {
-    public function testValidation($city, $state, $expected)
+    /**
+     * @test
+     * @dataProvider invalidDataProvider
+     */
+    public function testValidation($incomeType, $amount, $amountDontKnow)
     {
-        // Arrange
         $sut = (new IncomeReceivedOnClientsBehalf())
-            ->setAmount()
-            ->setAmountDontKnow()
-            ->setIncomeType()
-            ->setClientBenefitsCheck();
+            ->setIncomeType($incomeType)
+            ->setAmount($amount)
+            ->setAmountDontKnow($amountDontKnow);
+//            ->setClientBenefitsCheck(new ClientBenefitsCheck());
 
         $validator = Validation::createValidatorBuilder()
             ->enableAnnotationMapping()
             ->getValidator();
 
-        // Act
-        $result = $validator->validate($sut);
+        $result = $validator->validate($sut, null, 'client-benefits-check');
 
-        // Assert
-        $this->assertEquals($expected, 0 == count($result));
+        $this->assertCount(1, $result);
     }
 
     public function invalidDataProvider()
     {
         return [
-            'Fails when $amountDontKnow is true and $incomeType is null' => [],
-            'Fails when $incomeType is a non-empty string and $amount is null' => [],
-            'Fails when $amount is a non-empty string and $incomeType is null' => [],
+            'Fails when $amountDontKnow is true and $incomeType and $amount is null' => [
+                null,
+                null,
+                true,
+            ],
+            'Fails when $incomeType is a non-empty string and $amount is null and $amountDontKnow is false' => [
+                'A type of income',
+                null,
+                false,
+            ],
+            'Fails when $amount is a number, $incomeType is null and $amountDontKnow is false' => [
+                null,
+                20,
+                false,
+            ],
+            'Fails when $amount is a number, $incomeType is a non-empty string and $amountDontKnow is true' => [
+                'Some income type',
+                20,
+                true,
+            ],
         ];
     }
 }

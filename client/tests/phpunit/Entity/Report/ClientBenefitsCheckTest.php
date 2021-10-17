@@ -23,7 +23,8 @@ class ClientBenefitsCheckTest extends TestCase
         ?string $neverCheckedExplanation,
         ?string $doOthersReceiveIncome,
         ?string $incomeExplanation,
-        ?ArrayCollection $incomeTypes
+        ?ArrayCollection $incomeTypes,
+        int $expectedValidationErrorsCount
     ) {
         $sut = (new ClientBenefitsCheck())
             ->setWhenLastCheckedEntitlement($whenLastChecked)
@@ -39,50 +40,53 @@ class ClientBenefitsCheckTest extends TestCase
 
         $result = $validator->validate($sut, null, 'client-benefits-check');
 
-        $this->assertCount(1, $result);
+        $this->assertCount($expectedValidationErrorsCount, $result);
     }
 
     public function invalidDataProvider()
     {
         $incomeType = (new IncomeReceivedOnClientsBehalf())
-            ->setAmount(123.00)
-            ->setIncomeType('Care fees');
+        ->setAmountDontKnow(false);
 
         $incomeTypes = new ArrayCollection();
         $incomeTypes->add($incomeType);
 
         return [
-//            "Fails when \$whenLastCheckedEntitlement is 'haveChecked' and \$dateLastCheckedEntitlement is null" => [
-//                'haveChecked',
-//                null,
-//                null,
-//                'no',
-//                null,
-//                null,
-//            ],
-//            "Fails when \$whenLastCheckedEntitlement is 'neverChecked' and \$neverCheckedExplanation is null" => [
-//                'neverChecked',
-//                null,
-//                null,
-//                'no',
-//                null,
-//                null,
-//            ],
-//            "Fails when \$doOthersReceiveIncomeOnClientsBehalf is 'dontKnow' and \$dontKnowIncomeExplanation is null" => [
-//                'currentlyChecking',
-//                null,
-//                null,
-//                'dontKnow',
-//                null,
-//                null,
-//            ],
-            "Fails when \$doOthersReceiveIncomeOnClientsBehalf is 'yes and \$typesOfIncomeReceivedOnClientsBehalf is null" => [
+            "Fails when \$whenLastCheckedEntitlement is 'haveChecked' and \$dateLastCheckedEntitlement is null" => [
+                'haveChecked',
+                null,
+                null,
+                'no',
+                null,
+                null,
+                1,
+            ],
+            "Fails when \$whenLastCheckedEntitlement is 'neverChecked' and \$neverCheckedExplanation is null" => [
+                'neverChecked',
+                null,
+                null,
+                'no',
+                null,
+                null,
+                1,
+            ],
+            "Fails when \$doOthersReceiveIncomeOnClientsBehalf is 'dontKnow' and \$dontKnowIncomeExplanation is null" => [
+                'currentlyChecking',
+                null,
+                null,
+                'dontKnow',
+                null,
+                null,
+                1,
+            ],
+            'Fails when one income type exists in $typesOfIncomeReceivedOnClientsBehalf but income amount and type are null and amountDontKnow is false' => [
                 'currentlyChecking',
                 null,
                 null,
                 'yes',
                 null,
-                null,
+                $incomeTypes,
+                2,
             ],
         ];
     }

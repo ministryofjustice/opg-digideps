@@ -98,6 +98,7 @@ class ClientBenefitsCheckController extends AbstractController
             $clientBenefitsCheck->addTypeOfIncomeReceivedOnClientsBehalf(new IncomeReceivedOnClientsBehalf());
         }
 
+        // We only want to support deleting empty income types when there is at least one saved income type - otherwise validate the fields
         $allowDeleteEmpty = $clientBenefitsCheck->getTypesOfIncomeReceivedOnClientsBehalf() instanceof ArrayCollection &&
             count($clientBenefitsCheck->getTypesOfIncomeReceivedOnClientsBehalf()) >= 2;
 
