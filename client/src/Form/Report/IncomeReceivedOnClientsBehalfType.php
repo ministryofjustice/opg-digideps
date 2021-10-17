@@ -5,7 +5,6 @@ declare(strict_types=1);
 namespace App\Form\Report;
 
 use App\Entity\Report\IncomeReceivedOnClientsBehalf;
-use App\EventListener\AtLeastOneRequiredListener;
 use Symfony\Component\Form\AbstractType;
 use Symfony\Component\Form\Extension\Core\Type\CheckboxType;
 use Symfony\Component\Form\Extension\Core\Type\NumberType;
@@ -22,16 +21,11 @@ class IncomeReceivedOnClientsBehalfType extends AbstractType
                 'required' => false,
                 'invalid_message' => 'The amount value must be in numbers',
             ]
-        ); //Add validation error message here
+        );
+
         $builder->add('amountDontKnow', CheckboxType::class, [
             'required' => false,
         ]);
-
-        $builder->addEventSubscriber(
-            new AtLeastOneRequiredListener(
-            'amount',
-            'amountDontKnow')
-        );
     }
 
     public function configureOptions(OptionsResolver $resolver): void
