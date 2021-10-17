@@ -347,9 +347,9 @@ trait ClientBenefitsCheckSectionTrait
     }
 
     /**
-     * @Then /^I should see a \'([^\']*)\' error$/
+     * @Then /^I should see a :typeOfError error$/
      */
-    public function iShouldSeeAError($errorType)
+    public function iShouldSeeAError(string $errorType)
     {
         switch ($errorType) {
             case 'missing date':

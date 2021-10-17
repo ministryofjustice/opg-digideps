@@ -26,4 +26,9 @@
 
     {% include '@App/Report/ClientBenefitsCheck/_answers.html.twig' %}
 
+    {% include '@App/Report/_nextprevious.html.twig' with {
+        'report': report,
+        'sectionId': 'clientBenefitsCheck',
+    } %}
+
 {% endblock %}

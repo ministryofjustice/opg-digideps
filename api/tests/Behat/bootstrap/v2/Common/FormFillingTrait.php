@@ -297,7 +297,7 @@ trait FormFillingTrait
             $normalizedAnswer = $this->normalizeIntToCurrencyString($answers[$answerGroupToRemove][$fieldInAnswerGroupToRemove]);
 
             $rowSelector = sprintf(
-                '//tr[th[contains(.,"%s")]] | //td[contains(.,"%s")]/.. | //dd[contains(.,"%s")] | //dt[contains(.,"%s")] /..',
+                '//tr[th[contains(.,"%s")]] | //td[contains(.,"%s")]/.. | //dd[contains(.,"%s")]/.. | //dt[contains(.,"%s")]/..',
                 $normalizedAnswer,
                 $normalizedAnswer,
                 $normalizedAnswer,
