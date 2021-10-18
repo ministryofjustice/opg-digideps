@@ -101,13 +101,13 @@ Feature: Client benefits check - Lay users
         And the deputies report ends and is due 'more' than 60 days after the client benefits check feature flag date
         When I navigate to and start the client benefits check report section
         And I confirm I checked the clients benefit entitlement but dont provide a date
-        Then I should see a 'missing date' error
+        Then I should see a 'missing date' error on client benefits check summary page
         Given I confirm I checked the clients benefit entitlement on '01/01/2021'
         And I confirm I dont know if anyone else receives income on the clients behalf and dont provide an explanation
-        Then I should see a 'missing explanation' error
+        Then I should see a 'missing explanation' error on client benefits check summary page
         Given I confirm others receive income on the clients behalf
         And I confirm the amount but don't provide an income type
-        Then I should see a 'missing income type' error
+        Then I should see a 'missing income type' error on client benefits check summary page
         When I visit the report overview page
         Then I should see "client-benefits-check" as "not finished"
 
@@ -119,7 +119,7 @@ Feature: Client benefits check - Lay users
         And I confirm I checked the clients benefit entitlement on '01/01/2021'
         And I confirm others receive income on the clients behalf
         And I attempt to submit an empty income type
-        Then I should see a 'at least one income type required' error
+        Then I should see a 'at least one income type required' error on client benefits check summary page
         And I change my mind and go back to the previous page
         And I confirm others do not receive income on the clients behalf
         Then the client benefits check summary page should contain the details I entered
