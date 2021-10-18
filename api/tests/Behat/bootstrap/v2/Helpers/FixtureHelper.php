@@ -348,7 +348,7 @@ class FixtureHelper
         }
 
         if (!$sameLastName) {
-            $client->setFirstName($client->getFirstName().'ABC');
+            $client->setLastname($client->getLastName().'ABC');
         }
 
         $this->em->persist($client);

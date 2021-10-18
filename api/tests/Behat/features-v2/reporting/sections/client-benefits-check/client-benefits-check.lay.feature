@@ -1,4 +1,4 @@
-@client_benefits_check @v2 @v2_reporting_1
+@client_benefits_check @v2 @v2_reporting_1 @acs
 Feature: Client benefits check - Lay users
 
     @lay-combined-high-not-started
@@ -95,7 +95,7 @@ Feature: Client benefits check - Lay users
         Then the client benefits check summary page should contain the details I entered
 
 #    (Testing forms have some validation. Full validation tests are in the individual validator or entity unit tests.)
-    @lay-combined-high-not-started @acs
+    @lay-combined-high-not-started
     Scenario: A deputy attempts to submit invalid data during the form steps
         Given a Lay Deputy has not started a Combined High Assets report
         And the deputies report ends and is due 'more' than 60 days after the client benefits check feature flag date
@@ -111,7 +111,7 @@ Feature: Client benefits check - Lay users
         When I visit the report overview page
         Then I should see "client-benefits-check" as "not finished"
 
-    @lay-combined-high-not-started @acs
+    @lay-combined-high-not-started
     Scenario: A deputy confirms others receive income on client's behalf and then changes their mind
         Given a Lay Deputy has not started a Combined High Assets report
         And the deputies report ends and is due 'more' than 60 days after the client benefits check feature flag date

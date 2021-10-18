@@ -347,7 +347,7 @@ trait ClientBenefitsCheckSectionTrait
     }
 
     /**
-     * @Then /^I should see a :typeOfError error$/
+     * @Then I should see a :typeOfError error
      */
     public function iShouldSeeAError(string $errorType)
     {
