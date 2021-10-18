@@ -12,8 +12,8 @@ use App\Entity\Organisation;
 use App\Entity\Report\Report;
 use App\Entity\Satisfaction;
 use App\Entity\User;
-use App\TestHelpers\CaseTestHelper;
 use App\TestHelpers\ClientTestHelper;
+use App\TestHelpers\CourtOrderTestHelper;
 use App\TestHelpers\NamedDeputyTestHelper;
 use App\TestHelpers\OrganisationTestHelper;
 use App\TestHelpers\ReportTestHelper;
@@ -32,7 +32,7 @@ class FixtureHelper
     private UserTestHelper $userTestHelper;
     private ReportTestHelper $reportTestHelper;
     private ClientTestHelper $clientTestHelper;
-    private CaseTestHelper $caseTestHelper;
+    private CourtOrderTestHelper $caseTestHelper;
     private OrganisationTestHelper $organisationTestHelper;
     private NamedDeputyTestHelper $namedDeputyTestHelper;
 
@@ -54,7 +54,7 @@ class FixtureHelper
         $this->userTestHelper = new UserTestHelper();
         $this->reportTestHelper = new ReportTestHelper();
         $this->clientTestHelper = new ClientTestHelper();
-        $this->caseTestHelper = new CaseTestHelper();
+        $this->caseTestHelper = new CourtOrderTestHelper();
         $this->organisationTestHelper = new OrganisationTestHelper();
         $this->namedDeputyTestHelper = new NamedDeputyTestHelper();
     }
@@ -233,7 +233,7 @@ class FixtureHelper
     ) {
         $client = $this->clientTestHelper->generateClient($this->em, $deputy, null, $caseNumber);
         $report = $this->reportTestHelper->generateReport($this->em, $client, $type, $startDate);
-        $case = $this->caseTestHelper->generateCaseFromClientAndUser($this->em, $client, $deputy, $type);
+        $case = $this->caseTestHelper->generateCourtOrderFromClientAndUser($this->em, $client, $deputy, $type);
 
         $client->addReport($report);
         $report->setClient($client);
@@ -277,7 +277,7 @@ class FixtureHelper
     {
         $client = $this->clientTestHelper->generateClient($this->em, $deputy);
         $ndr = $this->reportTestHelper->generateNdr($this->em, $client, $deputy);
-        $case = $this->caseTestHelper->generateCaseFromClientAndUser($this->em, $client, $deputy, Report::TYPE_102);
+        $case = $this->caseTestHelper->generateCourtOrderFromClientAndUser($this->em, $client, $deputy, Report::TYPE_102);
 
         if ($completed) {
             $this->reportTestHelper->completeNdrLayReport($ndr, $this->em);
@@ -308,7 +308,7 @@ class FixtureHelper
         $report = $this->reportTestHelper->generateReport($this->em, $client, $reportType, $startDate);
 
         $namedDeputy = $this->namedDeputyTestHelper->generatenamedDeputy($namedDeputyEmail, $deputyNumber);
-        $case = $this->caseTestHelper->generateCaseFromClientAndUser($this->em, $client, $deputy, $reportType, $namedDeputy);
+        $case = $this->caseTestHelper->generateCourtOrderFromClientAndUser($this->em, $client, $deputy, $reportType, $namedDeputy);
 
         $client->addReport($report);
         $client->setOrganisation($organisation);
@@ -988,7 +988,7 @@ class FixtureHelper
 
     public function createPaperLayPfaHighAssets(): CasRec
     {
-        $case = $this->caseTestHelper->generateCase($this->em, Report::TYPE_102);
+        $case = $this->caseTestHelper->generateCourtOrder($this->em, Report::TYPE_102);
 
         $this->em->persist($case);
         $this->em->flush();

@@ -1,5 +1,5 @@
-@v2 @v2_admin @admin-case-search
-Feature: Admin - Case Search
+@v2 @v2_admin @admin-court-order-search
+Feature: Admin - Court Order Search
 
   @behat-test-user @prof-admin-health-welfare-not-started
   Scenario: An admin user searches for an existing case by first name

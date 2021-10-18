@@ -1,7 +1,7 @@
 {% extends '@App/Layouts/application.html.twig' %}
 
 {% trans_default_domain "admin-clients" %}
-{% set page = 'caseSearch' %}
+{% set page = 'courtOrderSearch' %}
 
 {% set navSection = 'clients' %}
 
@@ -27,47 +27,47 @@
     {# LIST #}
     {% if app.request.get('search_clients') is not null %}
 
-    <div class="case-list">
+    <div class="court-order-list">
 
-        <h2 id="case-list-title" class="govuk-heading-m flush--ends">{{ (page ~ '.caseTable.heading') | trans }}</h2>
-        {% if cases | length  == filters.limit %}
+        <h2 id="court-order-list-title" class="govuk-heading-m flush--ends">{{ (page ~ '.courtOrderTable.heading') | trans }}</h2>
+        {% if courtOrders | length  == filters.limit %}
             <p class="govuk-body">
-                {{ (page ~ '.caseTable.resultsLimited.line01') | trans }}<br>
-                {{ (page ~ '.caseTable.resultsLimited.line02') | trans }}
+                {{ (page ~ '.courtOrderTable.resultsLimited.line01') | trans }}<br>
+                {{ (page ~ '.courtOrderTable.resultsLimited.line02') | trans }}
             </p>
         {% else %}
             <p>
-                Found {{ cases | length }} cases
+                Found {{ courtOrders | length }} Court Orders
             </p>
         {% endif %}
 
 
-        {# cases list #}
+        {# Court Order list #}
         <table class="width-two-thirds">
             <thead>
                 <tr>
-                    <th scope="col">{{ (page ~ '.caseTable.caseNumber') | trans }}</th>
-                    <th scope="col">{{ (page ~ '.caseTable.clientSurname') | trans }}</th>
+                    <th scope="col">{{ (page ~ '.courtOrderTable.caseNumber') | trans }}</th>
+                    <th scope="col">{{ (page ~ '.courtOrderTable.clientSurname') | trans }}</th>
                 </tr>
             </thead>
             <tbody>
-                {% if cases | length %}
-                    {% for case in cases %}
+                {% if courtOrders | length %}
+                    {% for courtOrder in courtOrders %}
                         {% set discharged = "" %}
                         <tr>
                             <td>
-                                <a class="govuk-!-font-weight-bold" href="{{ path('admin_case_details', {'caseNumber' : case.caseNumber}) }}">
-                                    {{ case.caseNumber }}
+                                <a class="govuk-!-font-weight-bold" href="{{ path('admin_court_order_details', {'caseNumber' : courtOrder.caseNumber}) }}">
+                                    {{ courtOrder.caseNumber }}
                                 </a>
                             </td>
                             <td>
-                                {{ case.clientSurname }}
+                                {{ courtOrder.clientSurname }}
                             </td>
                         </tr>
                     {% endfor %}
                 {% else %}
                     <tr>
-                        <td colspan="2">{{ (page ~ '.caseTable.noResults') | trans  }}</td>
+                        <td colspan="2">{{ (page ~ '.courtOrderTable.noResults') | trans  }}</td>
                     </tr>
                 {% endif %}
             </tbody>

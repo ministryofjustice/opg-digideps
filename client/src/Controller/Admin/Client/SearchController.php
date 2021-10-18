@@ -55,13 +55,13 @@ class SearchController extends AbstractController
 
         if (('1' === $featureFlag && EntityDir\User::ROLE_SUPER_ADMIN === $user->getRoleName())
             || EntityDir\User::ROLE_BEHAT_TEST === $user->getRoleName()) {
-            $cases = $this->restClient->get('case/search-all?'.http_build_query($filters), 'array');
+            $courtOrders = $this->restClient->get('court-order/search-all?'.http_build_query($filters), 'array');
 
-            $formattedResults = $this->formatAndSortResults($cases);
+            $formattedResults = $this->formatAndSortResults($courtOrders);
 
             return $this->render(
-                '@App/Admin/Client/Search/case-search.html.twig',
-                $this->buildCaseViewParams($form, $formattedResults, $filters)
+                '@App/Admin/CourtOrder/Search/court-order-search.html.twig',
+                $this->buildCourtOrderViewParams($form, $formattedResults, $filters)
             );
         } else {
             $clients = $this->restClient->get('client/get-all?'.http_build_query($filters), 'Client[]');
@@ -85,11 +85,11 @@ class SearchController extends AbstractController
     /**
      * @return array|string
      */
-    private function buildCaseViewParams(FormInterface $form, array $cases = [], array $filters = []): array
+    private function buildCourtOrderViewParams(FormInterface $form, array $courtOrders = [], array $filters = []): array
     {
         return [
             'form' => $form->createView(),
-            'cases' => $cases,
+            'courtOrders' => $courtOrders,
             'filters' => $filters,
         ];
     }

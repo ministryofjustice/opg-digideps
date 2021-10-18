@@ -3,17 +3,17 @@
 namespace App\Repository;
 
 use App\Entity\CasRec;
-use App\Service\Search\CaseSearchFilter;
+use App\Service\Search\CourtOrderSearchFilter;
 use Doctrine\Bundle\DoctrineBundle\Repository\ServiceEntityRepository;
 use Doctrine\ORM\QueryBuilder;
 use Doctrine\Persistence\ManagerRegistry;
 
 class CasRecRepository extends ServiceEntityRepository
 {
-    /** @var CaseSearchFilter */
+    /** @var CourtOrderSearchFilter */
     private $filter;
 
-    public function __construct(ManagerRegistry $registry, CaseSearchFilter $filter)
+    public function __construct(ManagerRegistry $registry, CourtOrderSearchFilter $filter)
     {
         parent::__construct($registry, CasRec::class);
         $this->filter = $filter;
@@ -44,7 +44,7 @@ class CasRecRepository extends ServiceEntityRepository
      * @param string $orderBy   field to order by
      * @param string $sortOrder order of field order ASC|DESC
      * @param int    $limit     number of results to return
-     * @param int    $offset
+     * @param int    $offset    the position of the first result to retrieve
      *
      * @return CasRec[]|array
      */

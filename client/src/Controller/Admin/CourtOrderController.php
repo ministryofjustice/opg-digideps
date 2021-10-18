@@ -7,10 +7,7 @@ use App\Service\Client\RestClient;
 use Sensio\Bundle\FrameworkExtraBundle\Configuration\Security;
 use Symfony\Component\Routing\Annotation\Route;
 
-/**
- * @Route("/admin/case")
- */
-class CaseController extends AbstractController
+class CourtOrderController extends AbstractController
 {
     /** @var RestClient */
     private $restClient;
@@ -22,7 +19,7 @@ class CaseController extends AbstractController
     }
 
     /**
-     * @Route("/{caseNumber}/details", name="admin_case_details")
+     * @Route("admin/court-order/{caseNumber}/details", name="admin_court_order_details")
      * @Security("is_granted('ROLE_ADMIN')")
      *
      * @param string $caseNumber

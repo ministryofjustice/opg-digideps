@@ -1,5 +1,7 @@
 <?php
 
+declare(strict_types=1);
+
 namespace App\Controller;
 
 use App\Repository\CasRecRepository;
@@ -10,10 +12,7 @@ use Sensio\Bundle\FrameworkExtraBundle\Configuration\Security;
 use Symfony\Component\HttpFoundation\Request;
 use Symfony\Component\Routing\Annotation\Route;
 
-/**
- * @Route("/case")
- */
-class CaseController extends RestController
+class CourtOrderController extends RestController
 {
     private ClientRepository $clientRepository;
     private CasRecRepository $casrecRepository;
@@ -29,7 +28,7 @@ class CaseController extends RestController
     }
 
     /**
-     * @Route("/search-all", methods={"GET"})
+     * @Route("court-order/search-all", methods={"GET"})
      * @Security("is_granted('ROLE_ADMIN')")
      */
     public function searchAllAction(Request $request)

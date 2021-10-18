@@ -27,7 +27,7 @@ class ClientRepository extends ServiceEntityRepository
      * @param string $orderBy   field to order by
      * @param string $sortOrder order of field order ASC|DESC
      * @param int    $limit     number of results to return
-     * @param int    $offset
+     * @param int    $offset    the position of the first result to retrieve
      *
      * @return Client[]|array
      */

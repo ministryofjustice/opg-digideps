@@ -1,11 +1,13 @@
 <?php
 
+declare(strict_types=1);
+
 namespace App\Service\Search;
 
 use App\Entity\Client;
 use Doctrine\ORM\QueryBuilder;
 
-class CaseSearchFilter
+class CourtOrderSearchFilter
 {
     public function handleSearchTermFilter(string $searchTerm, QueryBuilder $qb, string $alias): void
     {

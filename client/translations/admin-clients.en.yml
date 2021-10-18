@@ -11,19 +11,19 @@ clientSearch:
     noResults: No clients found
     activeFrom: Active from
     discharged: Discharged
-caseSearch:
-    htmlTitle: Administration - Cases
-    pageTitle: Cases
+courtOrderSearch:
+    htmlTitle: Administration - Court Orders
+    pageTitle: Court Orders
     searchBy: Search by client surname or case number
-    caseTable:
+    courtOrderTable:
         caseNumber: Case Number
         clientSurname: Client Surname
-        heading: Case list
-        results: Found %numberOfCases% cases
+        heading: Court Order list
+        results: Found %numberOfCourtOrders% Court Orders
         resultsLimited:
-            line01: Results limited to 100 cases.
-            line02: Use search to filter the wanted cases.
-        noResults: No cases found
+            line01: Results limited to 100 Court Orders.
+            line02: Use search to filter the wanted Court Orders.
+        noResults: No court orders found
 clientDetails:
   htmlTitle: Administration - Clients
   supportTitle: Clients

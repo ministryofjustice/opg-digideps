@@ -15,16 +15,16 @@ use PHPUnit\Framework\TestCase;
 use Symfony\Component\Validator\ConstraintViolationList;
 use Symfony\Component\Validator\Validator\ValidatorInterface;
 
-class CaseTestHelper extends TestCase
+class CourtOrderTestHelper extends TestCase
 {
     private $casRecFactory;
 
-    public function generateCase(EntityManager $em, string $reportType)
+    public function generateCourtOrder(EntityManager $em, string $reportType)
     {
         $faker = Factory::create('en_GB');
 
         $casrecData = [
-            'caseNumber' => self::createValidCaseNumber(),
+            'caseNumber' => ClientTestHelper::createValidCaseNumber(),
             'clientLastName' => $faker->lastName,
             'reportType' => $reportType,
             'deputyPostCode' => $faker->postcode,
@@ -34,7 +34,7 @@ class CaseTestHelper extends TestCase
         return $this->getFactory()->create($casrecData);
     }
 
-    public function generateCaseFromClientAndUser(EntityManager $em, Client $client, User $deputy, string $reportType, ?NamedDeputy $namedDeputy = null)
+    public function generateCourtOrderFromClientAndUser(EntityManager $em, Client $client, User $deputy, string $reportType, ?NamedDeputy $namedDeputy = null)
     {
         $casrecData = [
             'caseNumber' => $client->getCaseNumber(),
@@ -49,30 +49,6 @@ class CaseTestHelper extends TestCase
         }
 
         return $this->getFactory()->create($casrecData);
-    }
-
-    /**
-     * Sirius has a modulus 11 validation check on case references (because casrec.) which we should adhere to
-     * to make sure integration tests create data that is in the correct format.
-     */
-    public static function createValidCaseNumber()
-    {
-        $ref = '';
-        $sum = 0;
-
-        foreach ([3, 4, 7, 5, 8, 2, 4] as $constant) {
-            $value = mt_rand(0, 9);
-            $ref .= $value;
-            $sum += $value * $constant;
-        }
-
-        $checkbit = (11 - ($sum % 11)) % 11;
-
-        if (10 === $checkbit) {
-            $checkbit = 'T';
-        }
-
-        return $ref.$checkbit;
     }
 
     private function getFactory()
