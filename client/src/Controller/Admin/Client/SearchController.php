@@ -41,11 +41,25 @@ class SearchController extends AbstractController
         /** @var EntityDir\User $user */
         $user = $this->getUser();
 
+        if (('1' === $featureFlag && EntityDir\User::ROLE_SUPER_ADMIN === $user->getRoleName())
+            || EntityDir\User::ROLE_BEHAT_TEST === $user->getRoleName()) {
+            $courtOrderSearchEnabled = true;
+        } else {
+            $courtOrderSearchEnabled = false;
+        }
+
         $searchQuery = $request->query->get('search_clients');
         $form = $this->createForm(SearchClientType::class, null, ['method' => 'GET']);
 
         if (null === $searchQuery) {
-            return $this->buildClientViewParams($form);
+            if ($courtOrderSearchEnabled) {
+                return $this->render(
+                    '@App/Admin/CourtOrder/Search/court-order-search.html.twig',
+                    $this->buildCourtOrderViewParams($form)
+                );
+            } else {
+                return $this->buildClientViewParams($form);
+            }
         }
 
         $form->handleRequest($request);
@@ -53,8 +67,7 @@ class SearchController extends AbstractController
             $filters = $form->getData() + $this->getDefaultFilters($request);
         }
 
-        if (('1' === $featureFlag && EntityDir\User::ROLE_SUPER_ADMIN === $user->getRoleName())
-            || EntityDir\User::ROLE_BEHAT_TEST === $user->getRoleName()) {
+        if ($courtOrderSearchEnabled) {
             $courtOrders = $this->courtOrderApi->searchForCourtOrders($filters);
 
             return $this->render(
