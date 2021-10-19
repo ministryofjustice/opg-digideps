@@ -33,36 +33,11 @@ class CourtOrderController extends RestController
      */
     public function searchAllAction(Request $request)
     {
-        $this->formatter->setJmsSerialiserGroups(['client']);
-
-        $clients = $this->clientRepository->searchClients(
+        $courtOrders = $this->casrecRepository->searchForCourtOrders(
             $request->get('q'),
-            $request->get('order_by'),
-            $request->get('sort_order'),
             $request->get('limit'),
-            $request->get('offset')
         );
 
-        $formattedCases = [];
-
-        foreach ($clients as $client) {
-            $formattedCases[] =
-                ['caseNumber' => $client->getCaseNumber(), 'clientSurname' => $client->getLastname()];
-        }
-
-        $cases = $this->casrecRepository->searchCases(
-            $request->get('q'),
-            $request->get('order_by'),
-            $request->get('sort_order'),
-            $request->get('limit'),
-            $request->get('offset')
-        );
-
-        foreach ($cases as $case) {
-            $formattedCases[] =
-                ['caseNumber' => $case->getCaseNumber(), 'clientSurname' => $case->getClientLastname()];
-        }
-
-        return $formattedCases;
+        return $courtOrders;
     }
 }

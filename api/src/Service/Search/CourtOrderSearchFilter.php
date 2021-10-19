@@ -5,18 +5,15 @@ declare(strict_types=1);
 namespace App\Service\Search;
 
 use App\Entity\Client;
-use Doctrine\ORM\QueryBuilder;
 
 class CourtOrderSearchFilter
 {
-    public function handleSearchTermFilter(string $searchTerm, QueryBuilder $qb, string $alias): void
+    public function handleSearchTermFilter(string $searchTerm): string
     {
         if (Client::isValidCaseNumber($searchTerm)) {
-            $qb->andWhere('lower('.$alias.'.caseNumber) = :cn');
-            $qb->setParameter('cn', strtolower($searchTerm));
+            return sprintf('WHERE cl.case_number = %1$s or ca.client_case_number = %1$s', $searchTerm);
         } else {
-            $qb->andWhere('lower('.$alias.'.clientLastname) LIKE :qLike');
-            $qb->setParameter('qLike', '%'.strtolower($searchTerm).'%');
+            return sprintf('WHERE LOWER(cl.lastname) LIKE LOWER(\'%1$s\') or LOWER(ca.client_lastname) LIKE LOWER(\'%1$s\')', '%'.$searchTerm.'%');
         }
     }
 }

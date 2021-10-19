@@ -56,12 +56,12 @@
                         {% set discharged = "" %}
                         <tr>
                             <td>
-                                <a class="govuk-!-font-weight-bold" href="{{ path('admin_court_order_details', {'caseNumber' : courtOrder.caseNumber}) }}">
-                                    {{ courtOrder.caseNumber }}
+                                <a class="govuk-!-font-weight-bold" href="{{ path('admin_court_order_details', {'caseNumber' : courtOrder.casenumber}) }}">
+                                    {{ courtOrder.casenumber }}
                                 </a>
                             </td>
                             <td>
-                                {{ courtOrder.clientSurname }}
+                                {{ courtOrder.clientsurname }}
                             </td>
                         </tr>
                     {% endfor %}

@@ -37,32 +37,29 @@ class CasRecRepository extends ServiceEntityRepository
         return $qb->getQuery()->getOneOrNullResult();
     }
 
-    /**
-     * Search Cases.
-     *
-     * @param string $query     Search query
-     * @param string $orderBy   field to order by
-     * @param string $sortOrder order of field order ASC|DESC
-     * @param int    $limit     number of results to return
-     * @param int    $offset    the position of the first result to retrieve
-     *
-     * @return CasRec[]|array
-     */
-    public function searchCases($query = '', $orderBy = 'clientLastname', $sortOrder = 'ASC', $limit = 100, $offset = 0)
+    public function searchForCourtOrders($searchTerm = '', $limit = 100)
     {
-        $alias = 'c';
-        $qb = $this->createQueryBuilder($alias);
-
-        if ($query) {
-            $this->filter->handleSearchTermFilter($query, $qb, $alias);
+        if ($searchTerm) {
+            $filter = $this->filter->handleSearchTermFilter($searchTerm);
+        } else {
+            $filter = '';
         }
 
-        $limit = ($limit <= 100) ? $limit : 100;
-        $qb->setMaxResults($limit);
-        $qb->setFirstResult((int) $offset);
-        $qb->orderBy($alias.'.'.$orderBy, $sortOrder);
+        $statement = sprintf('
+SELECT coalesce(cl.case_number, ca.client_case_number) AS casenumber, INITCAP(coalesce (cl.lastname, ca.client_lastname)) as clientsurname
+FROM client as cl
+FULL join casrec as ca on cl.case_number = ca.client_case_number
+%s
+ORDER BY clientsurname ASC
+LIMIT %d;',
+        $filter, $limit);
 
-        return $qb->getQuery()->getResult();
+        $conn = $this->getEntityManager()->getConnection();
+
+        $courtOrderStmt = $conn->prepare($statement);
+        $courtOrderStmt->execute();
+
+        return $courtOrderStmt->fetchAll();
     }
 
     public function countAllEntities()

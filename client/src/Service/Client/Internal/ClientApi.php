@@ -189,4 +189,12 @@ class ClientApi
     {
         return $this->restClient->get(sprintf(self::GET_CLIENT_BY_CASE_NUMBER_V2, $caseNumber), 'Client');
     }
+
+    /**
+     * @return Client[]
+     */
+    public function searchForClients(array $filters)
+    {
+        return $this->restClient->get('client/get-all?'.http_build_query($filters), 'Client[]');
+    }
 }

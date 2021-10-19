@@ -5,7 +5,8 @@ namespace App\Controller\Admin\Client;
 use App\Controller\AbstractController;
 use App\Entity as EntityDir;
 use App\Form\Admin\SearchClientType;
-use App\Service\Client\RestClient;
+use App\Service\Client\Internal\ClientApi;
+use App\Service\Client\Internal\CourtOrderApi;
 use App\Service\ParameterStoreService;
 use Sensio\Bundle\FrameworkExtraBundle\Configuration\Security;
 use Sensio\Bundle\FrameworkExtraBundle\Configuration\Template;
@@ -13,22 +14,21 @@ use Symfony\Component\Form\FormInterface;
 use Symfony\Component\HttpFoundation\Request;
 use Symfony\Component\Routing\Annotation\Route;
 
-/**
- * @Route("/admin/client")
- */
 class SearchController extends AbstractController
 {
-    /** @var RestClient */
-    private $restClient;
+    private $clientApi;
+    private $courtOrderApi;
 
     public function __construct(
-        RestClient $restClient
+        ClientApi $clientApi,
+        CourtOrderApi $courtOrderApi
     ) {
-        $this->restClient = $restClient;
+        $this->clientApi = $clientApi;
+        $this->courtOrderApi = $courtOrderApi;
     }
 
     /**
-     * @Route("/search", name="admin_client_search")
+     * @Route("/admin/client/search", name="admin_client_search")
      * @Security("is_granted('ROLE_ADMIN') or has_role('ROLE_AD')")
      * @Template("@App/Admin/Client/Search/search.html.twig")
      *
@@ -55,16 +55,14 @@ class SearchController extends AbstractController
 
         if (('1' === $featureFlag && EntityDir\User::ROLE_SUPER_ADMIN === $user->getRoleName())
             || EntityDir\User::ROLE_BEHAT_TEST === $user->getRoleName()) {
-            $courtOrders = $this->restClient->get('court-order/search-all?'.http_build_query($filters), 'array');
-
-            $formattedResults = $this->formatAndSortResults($courtOrders);
+            $courtOrders = $this->courtOrderApi->searchForCourtOrders($filters);
 
             return $this->render(
                 '@App/Admin/CourtOrder/Search/court-order-search.html.twig',
-                $this->buildCourtOrderViewParams($form, $formattedResults, $filters)
+                $this->buildCourtOrderViewParams($form, $courtOrders, $filters)
             );
         } else {
-            $clients = $this->restClient->get('client/get-all?'.http_build_query($filters), 'Client[]');
+            $clients = $this->clientApi->searchForClients($filters);
 
             return $this->buildClientViewParams($form, $clients, $filters);
         }
@@ -103,19 +101,5 @@ class SearchController extends AbstractController
             'order_by' => 'id',
             'sort_order' => 'DESC',
         ];
-    }
-
-    private function formatAndSortResults(array $results)
-    {
-        //Filter out non-unique values (case insensitive)
-        $serialized = array_map('serialize', $results);
-        $unique = array_intersect_key($serialized, array_unique(array_map('strtolower', $serialized)));
-        $filteredResults = array_intersect_key($results, $unique);
-
-        //Sort alphabetically (case insensitive)
-        $column = array_column($filteredResults, 'clientSurname');
-        array_multisort($column, SORT_ASC, SORT_NATURAL | SORT_FLAG_CASE, $filteredResults);
-
-        return $filteredResults;
     }
 }
