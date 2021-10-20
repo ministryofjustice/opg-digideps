@@ -22,7 +22,7 @@ Feature: Client benefits check - NDR users
         When I visit the report overview page
         Then I should see "client-benefits-check" as "not finished"
 
-    @ndr-completed @acs
+    @ndr-completed
     Scenario: Completed reports can be submitted with new section
         Given a Lay Deputy has a completed NDR report
         When I visit the report overview page
