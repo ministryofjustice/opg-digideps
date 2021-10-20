@@ -35,7 +35,7 @@ class ClientBenefitsCheckController extends RestController
     }
 
     /**
-     * @Route("/client-benefits-check/{reportOrNdr}", methods={"POST"}, name="persist"), requirements={
+     * @Route("/{reportOrNdr}/client-benefits-check", methods={"POST"}, name="persist"), requirements={
      *   "reportOrNdr" = "(report|ndr)"
      * })))
      * @Security("is_granted('ROLE_DEPUTY')")
@@ -50,7 +50,7 @@ class ClientBenefitsCheckController extends RestController
     }
 
     /**
-     * @Route("/client-benefits-check/{reportOrNdr}/{id}", methods={"GET"}, name="read", requirements={
+     * @Route("/{reportOrNdr}/client-benefits-check/{id}", methods={"GET"}, name="read", requirements={
      *   "reportOrNdr" = "(report|ndr)"
      * })))
      * @Security("is_granted('ROLE_DEPUTY')")
@@ -64,7 +64,7 @@ class ClientBenefitsCheckController extends RestController
     }
 
     /**
-     * @Route("/client-benefits-check/{reportOrNdr}/{id}", methods={"PUT"}, name="update", requirements={
+     * @Route("/{reportOrNdr}/client-benefits-check/{id}", methods={"PUT"}, name="update", requirements={
      *   "reportOrNdr" = "(report|ndr)"
      * }))))
      * @Security("is_granted('ROLE_DEPUTY')")
