@@ -12,7 +12,7 @@ use DateTime;
 trait ClientManagementTrait
 {
     private ?int $clientCount = null;
-    private ?int $caseCount = null;
+    private ?int $courtOrderCount = null;
 
     private CasRec $paperDetails;
 
@@ -63,30 +63,30 @@ trait ClientManagementTrait
     }
 
     /**
-     * @When I search for a non-existent case
+     * @When I search for a non-existent court order
      */
-    public function iSearchForNonExistentCase()
+    public function iSearchForNonExistentCourtOrder()
     {
         $user = $this->behatTestUserDetails;
         $this->searchForClientBy('Björk Guðmundsdóttir', $user);
     }
 
     /**
-     * @When I search for a paper reporting case by their last name
+     * @When I search for a paper reporting court order by their last name
      */
-    public function iSearchForPaperReportingCaseByLastName()
+    public function iSearchForPaperReportingCourtOrderByLastName()
     {
         $this->paperDetails = $this->createPaperPfaHigh();
-        $this->searchForCaseBy($this->paperDetails->getClientLastname());
+        $this->searchForCourtOrderBy($this->paperDetails->getClientLastname());
     }
 
     /**
-     * @When I search for a paper reporting case by their case number
+     * @When I search for a paper reporting court order by their case number
      */
-    public function iSearchForPaperReportingCaseByCaseNumber()
+    public function iSearchForPaperReportingCourtOrderByCaseNumber()
     {
         $this->paperDetails = $this->createPaperPfaHigh();
-        $this->searchForCaseBy($this->paperDetails->getCaseNumber());
+        $this->searchForCourtOrderBy($this->paperDetails->getCaseNumber());
     }
 
     private function searchForClientBy(string $searchTerm, UserDetails $userDetailsInteractingWith)
@@ -97,7 +97,7 @@ trait ClientManagementTrait
         $this->interactingWithUserDetails = $userDetailsInteractingWith;
     }
 
-    private function searchForCaseBy(string $searchTerm)
+    private function searchForCourtOrderBy(string $searchTerm)
     {
         $this->fillField('search_clients_q', $searchTerm);
         $this->pressButton('Search');
@@ -113,12 +113,12 @@ trait ClientManagementTrait
     }
 
     /**
-     * @Then I should see the case details in the case list results
+     * @Then I should see the court order details in the court order list results
      */
-    public function iShouldSeeCaseDetailsInResults()
+    public function iShouldSeeCourtOrderDetailsInResults()
     {
-        $this->caseCount = 1;
-        $this->iShouldSeeNCasesWithSameDetails($this->interactingWithUserDetails->getClientCaseNumber(), $this->interactingWithUserDetails->getClientLastName());
+        $this->courtOrderCount = 1;
+        $this->iShouldSeeNCourtOrdersWithSameDetails($this->interactingWithUserDetails->getClientCaseNumber(), $this->interactingWithUserDetails->getClientLastName());
     }
 
     /**
@@ -131,21 +131,21 @@ trait ClientManagementTrait
     }
 
     /**
-     * @Then I should see both case details in the case list results
+     * @Then I should see both court order details in the court order list results
      */
-    public function iShouldSeeBothCaseDetailsInResults()
+    public function iShouldSeeBothCourtOrderDetailsInResults()
     {
-        $this->caseCount = 2;
-        $this->iShouldSeeNCasesWithSameDetails($this->interactingWithUserDetails->getClientCaseNumber(), $this->interactingWithUserDetails->getClientLastName());
+        $this->courtOrderCount = 2;
+        $this->iShouldSeeNCourtOrdersWithSameDetails($this->interactingWithUserDetails->getClientCaseNumber(), $this->interactingWithUserDetails->getClientLastName());
     }
 
     /**
-     * @Then I should see the paper case details in the case list results
+     * @Then I should see the paper court order details in the court order list results
      */
-    public function iShouldSeePaperCaseDetailsInResults()
+    public function iShouldSeePaperCourtOrderDetailsInResults()
     {
-        $this->caseCount = 1;
-        $this->iShouldSeeNCasesWithSameDetails($this->paperDetails->getCaseNumber(), $this->paperDetails->getClientLastName());
+        $this->courtOrderCount = 1;
+        $this->iShouldSeeNCourtOrdersWithSameDetails($this->paperDetails->getCaseNumber(), $this->paperDetails->getClientLastName());
     }
 
     private function iShouldSeeNClientsWithSameName()
@@ -167,24 +167,24 @@ trait ClientManagementTrait
         }
     }
 
-    private function iShouldSeeNCasesWithSameDetails(string $expectedCaseNumber, $expectedLastName)
+    private function iShouldSeeNCourtOrdersWithSameDetails(string $expectedCaseNumber, $expectedLastName)
     {
-        $this->assertCaseCountSet();
+        $this->assertCourtOrderCountSet();
 
-        $searchResultsHtml = $this->getCasesSearchResultHtml();
+        $searchResultsHtml = $this->getCourtOrdersSearchResultHtml();
 
-        $clientNameFoundCount = substr_count($searchResultsHtml, $expectedLastName);
+        $clientNameFoundCount = substr_count($searchResultsHtml, ucfirst($expectedLastName));
 
-        if ($clientNameFoundCount < $this->caseCount) {
-            throw new BehatException(sprintf('The case search results list did not contain the required occurrences of the clients last name. Expected: "%s" (at least %s times), got (full HTML): %s', $expectedLastName, $this->caseCount, $searchResultsHtml));
+        if ($clientNameFoundCount < $this->courtOrderCount) {
+            throw new BehatException(sprintf('The court order search results list did not contain the required occurrences of the clients last name. Expected: "%s" (at least %s times), got (full HTML): %s', $expectedLastName, $this->courtOrderCount, $searchResultsHtml));
         }
 
-        $caseLink = '/admin/case/'.$expectedCaseNumber.'/details';
+        $courtOrderLink = '/admin/court-order/'.$expectedCaseNumber.'/details';
 
-        $caseNumberFoundCount = substr_count($searchResultsHtml, $caseLink);
+        $caseNumberFoundCount = substr_count($searchResultsHtml, $courtOrderLink);
 
         if (1 != $caseNumberFoundCount) {
-            throw new BehatException(sprintf('The case search results list did not contain a single link for the clients case number. Expected: "%s" (to appear once), got (full HTML): %s', $caseLink, $searchResultsHtml));
+            throw new BehatException(sprintf('The court order search results list did not contain a single link for the clients case number. Expected: "%s" (to appear once), got (full HTML): %s', $courtOrderLink, $searchResultsHtml));
         }
     }
 
@@ -212,10 +212,10 @@ trait ClientManagementTrait
         }
     }
 
-    private function assertCaseCountSet()
+    private function assertCourtOrderCountSet()
     {
-        if (is_null($this->caseCount)) {
-            throw new BehatException(sprintf("You're attempting to run a step definition that requires this->caseCount to be set but its null. Set it and try again."));
+        if (is_null($this->courtOrderCount)) {
+            throw new BehatException(sprintf("You're attempting to run a step definition that requires this->courtOrderCount to be set but its null. Set it and try again."));
         }
     }
 
@@ -233,15 +233,15 @@ trait ClientManagementTrait
     }
 
     /**
-     * @Then I should see No Cases Found in the cases list results
+     * @Then I should see No Court Orders Found in the court order list results
      */
-    public function iShouldSeeNoCasesFound()
+    public function iShouldSeeNoCourtOrdersFound()
     {
-        $searchResultsHtml = $this->getCasesSearchResultHtml();
-        $noClientsFound = str_contains($searchResultsHtml, 'No cases found');
+        $searchResultsHtml = $this->getCourtOrdersSearchResultHtml();
+        $noClientsFound = str_contains($searchResultsHtml, 'No court orders found');
 
         if (!$noClientsFound) {
-            throw new BehatException(sprintf('The case search results list did not display "No cases found". Expected: "No cases found", got (full HTML): %s', $searchResultsHtml));
+            throw new BehatException(sprintf('The court order search results list did not display "No court orders found". Expected: "No court orders found", got (full HTML): %s', $searchResultsHtml));
         }
     }
 
@@ -258,7 +258,7 @@ A div with the class client-list was not found.
 This suggests one of the following:
 
 - a search has not been completed on client search page
-- the search was done on the case search page instead
+- the search was done on the court order search page instead
 - the class of the search results div has been changed
 MESSAGE;
 
@@ -271,16 +271,16 @@ MESSAGE;
     /**
      * @return mixed
      */
-    private function getCasesSearchResultHtml()
+    private function getCourtOrdersSearchResultHtml()
     {
-        $searchResultsDiv = $this->getSession()->getPage()->find('css', 'div.case-list');
+        $searchResultsDiv = $this->getSession()->getPage()->find('css', 'div.court-order-list');
 
         if (is_null($searchResultsDiv)) {
             $missingDivMessage = <<<MESSAGE
-A div with the class case-list was not found.
+A div with the class court-order-list was not found.
 This suggests one of the following:
 
-- a search has not been completed on case search page
+- a search has not been completed on court order search page
 - the search was done on the client search page instead
 - the class of the search results div has been changed
 MESSAGE;

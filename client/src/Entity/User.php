@@ -68,6 +68,8 @@ class User implements UserInterface, DeputyInterface
         self::ROLE_PROF_NAMED => 'Professional Deputy (named)',
         self::ROLE_PROF_ADMIN => 'Professional Deputy admin',
         self::ROLE_PROF_TEAM_MEMBER => 'Professional Deputy team member',
+        // behat
+        self::ROLE_BEHAT_TEST => 'Behat Test User',
     ];
 
     public const TOKEN_EXPIRE_HOURS = 48;

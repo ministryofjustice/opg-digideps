@@ -11,7 +11,7 @@ class CourtOrderSearchFilter
     public function handleSearchTermFilter(string $searchTerm): string
     {
         if (Client::isValidCaseNumber($searchTerm)) {
-            return sprintf('WHERE cl.case_number = %1$s or ca.client_case_number = %1$s', $searchTerm);
+            return sprintf('WHERE cl.case_number = LOWER(\'%1$s\') or ca.client_case_number = LOWER(\'%1$s\')', $searchTerm);
         } else {
             return sprintf('WHERE LOWER(cl.lastname) LIKE LOWER(\'%1$s\') or LOWER(ca.client_lastname) LIKE LOWER(\'%1$s\')', '%'.$searchTerm.'%');
         }
