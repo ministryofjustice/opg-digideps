@@ -25,6 +25,8 @@ class ClientApi
     private const GET_CLIENT_BY_ID_V2 = 'v2/client/%s';
     private const GET_CLIENT_BY_CASE_NUMBER_V2 = 'v2/client/case-number/%s';
 
+    private const SEARCH_CLIENTS = 'client/get-all?';
+
     /** @var RestClient */
     private $restClient;
 
@@ -195,6 +197,6 @@ class ClientApi
      */
     public function searchForClients(array $filters)
     {
-        return $this->restClient->get('client/get-all?'.http_build_query($filters), 'Client[]');
+        return $this->restClient->get(self::SEARCH_CLIENTS.http_build_query($filters), 'Client[]');
     }
 }

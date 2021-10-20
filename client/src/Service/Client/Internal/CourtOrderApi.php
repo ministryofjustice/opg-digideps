@@ -8,6 +8,8 @@ use App\Service\Client\RestClient;
 
 class CourtOrderApi
 {
+    private const SEARCH_COURT_ORDERS = 'court-order/search-all?';
+
     /**
      * @var RestClient
      */
@@ -23,6 +25,6 @@ class CourtOrderApi
      */
     public function searchForCourtOrders(array $filters)
     {
-        return $this->restClient->get('court-order/search-all?'.http_build_query($filters), 'array');
+        return $this->restClient->get(self::SEARCH_COURT_ORDERS.http_build_query($filters), 'array');
     }
 }
