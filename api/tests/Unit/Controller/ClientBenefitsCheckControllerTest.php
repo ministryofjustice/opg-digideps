@@ -51,7 +51,8 @@ class ClientBenefitsCheckControllerTest extends AbstractTestController
         ];
     }
 
-    public function testCreateHasSuitablePermissionsAllowed()
+    /** @test */
+    public function createHasSuitablePermissionsAllowed()
     {
         $deputyTokens = [self::$tokenDeputy, self::$tokenPa, self::$tokenProf];
         $url = '/report/client-benefits-check';
@@ -64,7 +65,8 @@ class ClientBenefitsCheckControllerTest extends AbstractTestController
         }
     }
 
-    public function testCreateHasSuitablePermissionsNotAllowed()
+    /** @test */
+    public function createHasSuitablePermissionsNotAllowed()
     {
         $url = '/report/client-benefits-check';
 
@@ -74,7 +76,8 @@ class ClientBenefitsCheckControllerTest extends AbstractTestController
         $this->assertEndpointNotAllowedFor('POST', $url, self::$tokenAdmin, $this->okayData);
     }
 
-    public function testReadHasSuitablePermissionsAllowed()
+    /** @test */
+    public function readHasSuitablePermissionsAllowed()
     {
         $deputyTokens = [self::$tokenDeputy, self::$tokenPa, self::$tokenProf];
 
@@ -86,7 +89,8 @@ class ClientBenefitsCheckControllerTest extends AbstractTestController
         }
     }
 
-    public function testReadHasSuitablePermissionsNotAllowed()
+    /** @test */
+    public function readHasSuitablePermissionsNotAllowed()
     {
         $report = $this->prepareReport(true);
 
@@ -94,7 +98,8 @@ class ClientBenefitsCheckControllerTest extends AbstractTestController
         $this->assertEndpointNotAllowedFor('GET', $url, self::$tokenAdmin);
     }
 
-    public function testUpdateHasSuitablePermissionsAllowed()
+    /** @test */
+    public function updateHasSuitablePermissionsAllowed()
     {
         $deputyTokens = [self::$tokenDeputy, self::$tokenPa, self::$tokenProf];
 
@@ -117,7 +122,8 @@ class ClientBenefitsCheckControllerTest extends AbstractTestController
         }
     }
 
-    public function testUpdateHasSuitablePermissionsNotAllowed()
+    /** @test */
+    public function updateHasSuitablePermissionsNotAllowed()
     {
         $report = $this->prepareReport(true);
         $url = sprintf('/report/client-benefits-check/%s', $report->getClientBenefitsCheck()->getId());
