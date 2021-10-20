@@ -9,10 +9,6 @@ use DateTime;
 class OrgDeputyshipDto
 {
     /** @var string */
-    private $deputyNumber;
-    private $deputyLastname;
-    private $deputyAddress1;
-    private $deputyAddress2;
     private $caseNumber;
     private $clientFirstname;
     private $clientLastname;
@@ -20,6 +16,11 @@ class OrgDeputyshipDto
     private $clientAddress2;
     private $clientCounty;
     private $clientPostCode;
+    private $deputyAddress1;
+    private $deputyAddress2;
+    private $deputyLastname;
+    private $deputyNumber;
+    private $deputyType;
     private $reportType;
 
     /** @var string|null */
@@ -372,6 +373,21 @@ class OrgDeputyshipDto
     public function setDeputyAddress5(?string $deputyAddress5): OrgDeputyshipDto
     {
         $this->deputyAddress5 = $deputyAddress5;
+
+        return $this;
+    }
+
+    /**
+     * @return mixed
+     */
+    public function getDeputyType(): string
+    {
+        return $this->deputyType;
+    }
+
+    public function setDeputyType(string $deputyType)
+    {
+        $this->deputyType = $deputyType;
 
         return $this;
     }
