@@ -75,6 +75,7 @@ class CasRecToOrgDeputyshipDtoAssembler
             ->setReportType($reportType)
             ->setReportStartDate($reportStartDate)
             ->setReportEndDate($reportEndDate)
-            ->setDeputyAddressNumber($deputyAddressNumber);
+            ->setDeputyAddressNumber($deputyAddressNumber)
+            ->setDeputyType($row['Dep Type']);
     }
 }
