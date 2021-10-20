@@ -42,7 +42,7 @@ class ClientBenefitsCheckValidator extends ConstraintValidator
         }
     }
 
-    private function whenLastCheckedEntitlementValid($value, ClientBenefitsCheck $object)
+    private function whenLastCheckedEntitlementValid($value, $object)
     {
         $expectedValues = [
             ClientBenefitsCheck::WHEN_CHECKED_I_HAVE_CHECKED,
@@ -52,17 +52,16 @@ class ClientBenefitsCheckValidator extends ConstraintValidator
 
         if (!in_array($value, $expectedValues)) {
             $unexpectedValueMessage = sprintf(
-                '$whenLastCheckedEntitlementValid must be one of %s',
-                implode(',', $expectedValues)
+                '$whenLastCheckedEntitlementValid must be one of %s. %s provided.',
+                implode(',', $expectedValues),
+                $value
             );
 
-            $this->context
-                ->buildViolation($unexpectedValueMessage)
-                ->addViolation();
+            throw new \RuntimeException($unexpectedValueMessage);
         }
     }
 
-    private function dateLastCheckedEntitlementValid($value, ClientBenefitsCheck $object)
+    private function dateLastCheckedEntitlementValid($value, $object)
     {
         if (is_null($value) && ClientBenefitsCheck::WHEN_CHECKED_I_HAVE_CHECKED === $object->getWhenLastCheckedEntitlement()) {
             $this->context
@@ -71,7 +70,7 @@ class ClientBenefitsCheckValidator extends ConstraintValidator
         }
     }
 
-    private function neverCheckedExplanationValid($value, ClientBenefitsCheck $object)
+    private function neverCheckedExplanationValid($value, $object)
     {
         if (is_null($value) && ClientBenefitsCheck::WHEN_CHECKED_IVE_NEVER_CHECKED === $object->getWhenLastCheckedEntitlement()) {
             $this->context
@@ -80,7 +79,7 @@ class ClientBenefitsCheckValidator extends ConstraintValidator
         }
     }
 
-    private function dontKnowIncomeExplanationValid($value, ClientBenefitsCheck $object)
+    private function dontKnowIncomeExplanationValid($value, $object)
     {
         if (is_null($value) && ClientBenefitsCheck::OTHER_INCOME_DONT_KNOW === $object->getDoOthersReceiveIncomeOnClientsBehalf()) {
             $this->context
@@ -89,7 +88,7 @@ class ClientBenefitsCheckValidator extends ConstraintValidator
         }
     }
 
-    private function typesOfIncomeReceivedOnClientsBehalfValid($value, ClientBenefitsCheck $object)
+    private function typesOfIncomeReceivedOnClientsBehalfValid($value, $object)
     {
         if ($object->getTypesOfIncomeReceivedOnClientsBehalf() instanceof ArrayCollection && 1 === $object->getTypesOfIncomeReceivedOnClientsBehalf()->count()) {
             $income = $object->getTypesOfIncomeReceivedOnClientsBehalf()->first();

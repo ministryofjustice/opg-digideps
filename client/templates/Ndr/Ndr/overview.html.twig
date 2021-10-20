@@ -70,16 +70,14 @@
                 description: true
             } %}
 
-{#            {% if ndr.hasSection('clientBenefitsCheck') %}#}
-{#                {% include '@App/Report/Report/_subsection.html.twig' with {#}
-{#                    transDomain: translationDomain,#}
-{#                    subSection: 'client_benefits_check',#}
-{#                    ndr: ndr,#}
-{#                    state: ndrStatus.clientBenefitsCheckState,#}
-{#                    linkToSubSection: path('ndr_client_benefits_check', {ndrId: ndr.id}),#}
-{#                    description: true#}
-{#                } %}#}
-{#            {% endif %}#}
+            {% include '@App/Ndr/Ndr/_subsection.html.twig' with {
+                transDomain: translationDomain,
+                subSection: 'client_benefits_check',
+                ndr: ndr,
+                state: ndrStatus.clientBenefitsCheckState,
+                linkToSubSection: path('client_benefits_check', {reportId: ndr.id, reportOrNdr: 'ndr'}),
+                description: true
+            } %}
 
             {% include '@App/Ndr/Ndr/_subsection.html.twig' with {
                 transDomain: translationDomain,

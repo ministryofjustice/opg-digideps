@@ -41,7 +41,7 @@ class ReportSectionsLinkService
             ];
         }
 
-        $routeParams = ['reportId' => $report->getId()];
+        $routeParams = ['reportId' => $report->getId(), 'reportOrNdr' => 'report'];
 
         // define sections and links (not following the order with which are presented in the dashboards)
         $allSectionsAvailable = [

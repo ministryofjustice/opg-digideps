@@ -99,6 +99,14 @@ other_info:
   start: "Start"
   label:
     done: "Finished"
+client_benefits_check:
+    subSectionTitle: "Benefits check and income other people receive"
+    subSectionDescription: "Tell us when you last checked what benefits %client% is entitled to, and about any income other people receive directly on %client%’s behalf."
+    edit: "Edit"
+    start: "Start"
+    label:
+        done: "Finished"
+
 ndr_submit:
   subSectionTitle: "Submit report"
   edit: "Submit report"

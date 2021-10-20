@@ -216,6 +216,7 @@ class Report implements ReportInterface, StartEndDateComparableInterface
     /**
      * @JMS\Type("App\Entity\Report\ClientBenefitsCheck")
      * @Assert\Valid(groups={"client-benefits-check"})
+     * @JMS\Groups({"client-benefits-check"})
      *
      * @var ClientBenefitsCheck
      */

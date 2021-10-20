@@ -2,7 +2,7 @@
 
 declare(strict_types=1);
 
-namespace App\Entity\Report;
+namespace App\Entity\Ndr;
 
 use App\Entity\IncomeReceivedOnClientsBehalfInterface;
 use DateTime;
@@ -14,7 +14,7 @@ use Ramsey\Uuid\Uuid;
 use Ramsey\Uuid\UuidInterface;
 
 /**
- * @ORM\Table(name="income_received_on_clients_behalf")
+ * @ORM\Table(name="odr_income_received_on_clients_behalf")
  * @ORM\Entity
  */
 class IncomeReceivedOnClientsBehalf implements IncomeReceivedOnClientsBehalfInterface
@@ -46,11 +46,11 @@ class IncomeReceivedOnClientsBehalf implements IncomeReceivedOnClientsBehalfInte
     private DateTime $created;
 
     /**
-     * @ORM\ManyToOne(targetEntity="App\Entity\Report\ClientBenefitsCheck", inversedBy="incomeReceivedOnClientsBehalf", cascade={"persist"})
+     * @ORM\ManyToOne(targetEntity="App\Entity\Ndr\ClientBenefitsCheck", inversedBy="incomeReceivedOnClientsBehalf", cascade={"persist"})
      * @JoinColumn(name="client_benefits_check_id", referencedColumnName="id")
      *
      * @JMS\Groups({"client-benefits-check"})
-     * @JMS\Type("App\Entity\Report\ClientBenefitsCheck")
+     * @JMS\Type("App\Entity\Ndr\ClientBenefitsCheck")
      */
     private ClientBenefitsCheck $clientBenefitsCheck;
 

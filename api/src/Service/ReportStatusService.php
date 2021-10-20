@@ -769,7 +769,7 @@ class ReportStatusService
 
         $answers = $benefitsCheck ? [
             'whenChecked' => $benefitsCheck->getWhenLastCheckedEntitlement(),
-            'doOthersReceieveIncome' => $benefitsCheck->getDoOthersReceiveIncomeOnClientsBehalf(),
+            'doOthersReceiveIncome' => $benefitsCheck->getDoOthersReceiveIncomeOnClientsBehalf(),
             'incomeTypes' => $benefitsCheck->getTypesOfIncomeReceivedOnClientsBehalf()->count() > 0 ? true : null,
         ] : [];
 
@@ -777,7 +777,7 @@ class ReportStatusService
             case 0:
                 return ['state' => self::STATE_NOT_STARTED, 'nOfRecords' => 0];
             case 2:
-                if (in_array($answers['doOthersReceieveIncome'], [ClientBenefitsCheck::OTHER_INCOME_DONT_KNOW, ClientBenefitsCheck::OTHER_INCOME_NO])) {
+                if (in_array($answers['doOthersReceiveIncome'], [ClientBenefitsCheck::OTHER_INCOME_DONT_KNOW, ClientBenefitsCheck::OTHER_INCOME_NO])) {
                     return ['state' => self::STATE_DONE, 'nOfRecords' => 0];
                 } else {
                     return ['state' => self::STATE_INCOMPLETE, 'nOfRecords' => 0];

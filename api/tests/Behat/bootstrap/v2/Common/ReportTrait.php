@@ -16,6 +16,7 @@ trait ReportTrait
     /**
      * @Then I should be able to submit my report without completing the section
      * @Given I submit the report
+     * @Given I should be able to submit the report
      */
     public function iSubmitTheReport()
     {

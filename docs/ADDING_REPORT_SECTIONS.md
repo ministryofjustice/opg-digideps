@@ -106,4 +106,4 @@ class Lifestyle
 
 * Create a corresponding controller and implement the form logic as required using the newly created form type
 
-* Add an entry for the new section to `ReportSectionsLinkService` and then include the `_nextprevious.html.twig` partial on the first and last page of the section
+* Add an entry for the new section \to `ReportSectionsLinkService` and then include the `_nextprevious.html.twig` partial on the first and last page of the section

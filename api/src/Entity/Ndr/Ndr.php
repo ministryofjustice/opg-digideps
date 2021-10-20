@@ -22,12 +22,11 @@ use JMS\Serializer\Annotation as JMS;
  */
 class Ndr implements ReportInterface
 {
-    const TYPE_NDR = 'ndr';
-
     use NdrTraits\IncomeBenefitTrait;
     use NdrTraits\ExpensesTrait;
     use NdrTraits\ActionTrait;
     use NdrTraits\MoreInfoTrait;
+    const TYPE_NDR = 'ndr';
 
     const PROPERTY_AND_AFFAIRS = 2;
 
@@ -146,7 +145,6 @@ class Ndr implements ReportInterface
      */
     private $submitDate;
 
-
     /**
      * @var string
      *
@@ -184,9 +182,16 @@ class Ndr implements ReportInterface
     private Satisfaction $satisfaction;
 
     /**
-     * Ndr constructor.
+     * @var ClientBenefitsCheck|null
      *
-     * @param Client $client
+     * @JMS\Groups({"client-benefits-check"})
+     * @JMS\Type("App\Entity\Ndr\ClientBenefitsCheck")
+     * @ORM\OneToOne(targetEntity="App\Entity\Ndr\ClientBenefitsCheck", mappedBy="report", cascade={"persist", "remove"})
+     **/
+    private $clientBenefitsCheck;
+
+    /**
+     * Ndr constructor.
      */
     public function __construct(Client $client)
     {
@@ -224,9 +229,6 @@ class Ndr implements ReportInterface
         return $this->client;
     }
 
-    /**
-     * @param Client $client
-     */
     public function setClient(Client $client)
     {
         $this->client = $client;
@@ -293,6 +295,7 @@ class Ndr implements ReportInterface
 
     /**
      * @param $startDate
+     *
      * @return DateTime
      */
     public static function getDueDateBasedOnStartDate(DateTime $startDate = null)
@@ -313,9 +316,6 @@ class Ndr implements ReportInterface
         return $this->submitDate;
     }
 
-    /**
-     * @param DateTime|null $submitDate
-     */
     public function setSubmitDate(?DateTime $submitDate = null)
     {
         $this->submitDate = $submitDate;
@@ -371,9 +371,6 @@ class Ndr implements ReportInterface
         $this->hasDebts = $hasDebts;
     }
 
-    /**
-     * @param Debt $debt
-     */
     public function addDebt(Debt $debt)
     {
         if (!$this->debts->contains($debt)) {
@@ -434,8 +431,6 @@ class Ndr implements ReportInterface
     /**
      * Add assets.
      *
-     * @param Asset $assets
-     *
      * @return Ndr
      */
     public function addAsset(Asset $assets)
@@ -448,8 +443,6 @@ class Ndr implements ReportInterface
     /**
      * Add accounts.
      *
-     * @param BankAccount $accounts
-     *
      * @return Ndr
      */
     public function addAccount(BankAccount $accounts)
@@ -461,8 +454,6 @@ class Ndr implements ReportInterface
 
     /**
      * Remove assets.
-     *
-     * @param Asset $assets
      */
     public function removeAsset(Asset $assets)
     {
@@ -520,10 +511,11 @@ class Ndr implements ReportInterface
     {
         $acceptedValues = ['only_deputy', 'more_deputies_behalf', 'more_deputies_not_behalf'];
         if ($agreedBehalfDeputy && !in_array($agreedBehalfDeputy, $acceptedValues)) {
-            throw new \InvalidArgumentException(__METHOD__ . " {$agreedBehalfDeputy} given. Expected value: " . implode(' or ', $acceptedValues));
+            throw new \InvalidArgumentException(__METHOD__." {$agreedBehalfDeputy} given. Expected value: ".implode(' or ', $acceptedValues));
         }
 
         $this->agreedBehalfDeputy = $agreedBehalfDeputy;
+
         return $this;
     }
 
@@ -543,6 +535,7 @@ class Ndr implements ReportInterface
     public function setAgreedBehalfDeputyExplanation($agreedBehalfDeputyExplanation)
     {
         $this->agreedBehalfDeputyExplanation = $agreedBehalfDeputyExplanation;
+
         return $this;
     }
 
@@ -560,7 +553,7 @@ class Ndr implements ReportInterface
     }
 
     /**
-     * Previous report data. Just return id and type for second api call to allo new JMS groups
+     * Previous report data. Just return id and type for second api call to allo new JMS groups.
      *
      * @JMS\VirtualProperty
      * @JMS\SerializedName("previous_report_data")
@@ -575,7 +568,7 @@ class Ndr implements ReportInterface
     }
 
     /**
-     * NDR financial summary, contains bank accounts and balance information
+     * NDR financial summary, contains bank accounts and balance information.
      *
      * @return array
      */
@@ -593,10 +586,11 @@ class Ndr implements ReportInterface
             $accounts[$ba->getId()]['isClosed'] = $ba->getIsClosed();
             $accounts[$ba->getId()]['isJointAccount'] = $ba->getIsJointAccount();
         }
+
         return [
             'accounts' => $accounts,
             'opening-balance-total' => $this->getBalanceOnCourtOrderDateTotal(),
-            'closing-balance-total' => $this->getBalanceOnCourtOrderDateTotal()
+            'closing-balance-total' => $this->getBalanceOnCourtOrderDateTotal(),
         ];
     }
 
@@ -620,11 +614,12 @@ class Ndr implements ReportInterface
 
     /**
      * Returns the translation key relating to the type of report. Hybrids identified to determine any suffix required
-     * for the translation keys (translations are in 'report' domain)
+     * for the translation keys (translations are in 'report' domain).
      *
      * @JMS\VirtualProperty
      * @JMS\Groups({"ndr"})
      * @JMS\Type("string")
+     *
      * @return string
      */
     public function getReportTitle()
@@ -652,21 +647,27 @@ class Ndr implements ReportInterface
         return $this;
     }
 
-    /**
-     * @return Satisfaction
-     */
     public function getSatisfaction(): Satisfaction
     {
         return $this->satisfaction;
     }
 
-    /**
-     * @param Satisfaction $satisfaction
-     * @return Ndr
-     */
     public function setSatisfaction(Satisfaction $satisfaction): Ndr
     {
         $this->satisfaction = $satisfaction;
+
+        return $this;
+    }
+
+    public function getClientBenefitsCheck(): ?ClientBenefitsCheck
+    {
+        return $this->clientBenefitsCheck;
+    }
+
+    public function setClientBenefitsCheck(?ClientBenefitsCheck $clientBenefitsCheck): Ndr
+    {
+        $this->clientBenefitsCheck = $clientBenefitsCheck;
+
         return $this;
     }
 }
