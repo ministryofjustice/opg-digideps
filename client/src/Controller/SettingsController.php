@@ -3,7 +3,6 @@
 namespace App\Controller;
 
 use App\Entity as EntityDir;
-use App\Event\UserUpdatedEvent;
 use App\Form as FormDir;
 use App\Service\Audit\AuditEvents;
 use App\Service\Client\Internal\UserApi;
@@ -13,12 +12,12 @@ use App\Service\Mailer\MailFactory;
 use App\Service\Mailer\MailSender;
 use App\Service\Redirector;
 use App\Service\Time\DateTimeProvider;
-use Symfony\Component\EventDispatcher\EventDispatcherInterface;
-use Symfony\Component\Routing\Annotation\Route;
 use Sensio\Bundle\FrameworkExtraBundle\Configuration\Template;
+use Symfony\Component\EventDispatcher\EventDispatcherInterface;
 use Symfony\Component\Form\FormError;
 use Symfony\Component\HttpFoundation\File\Exception\AccessDeniedException;
 use Symfony\Component\HttpFoundation\Request;
+use Symfony\Component\Routing\Annotation\Route;
 use Symfony\Contracts\Translation\TranslatorInterface;
 
 class SettingsController extends AbstractController
@@ -94,6 +93,7 @@ class SettingsController extends AbstractController
 
         $clients = $user->getClients();
         $client = !empty($clients) ? $clients[0] : null;
+
         return [
             'client' => $client,
         ];
@@ -110,18 +110,19 @@ class SettingsController extends AbstractController
 
         $form = $this->createForm(FormDir\ChangePasswordType::class, $user, [
             'mapped' => true,
-            'error_bubbling' => true
+            'error_bubbling' => true,
         ]);
         $form->handleRequest($request);
 
         if ($form->isSubmitted() && $form->isValid()) {
             $plainPassword = $request->request->get('change_password')['password']['first'];
-            $this->restClient->put('user/' . $user->getId() . '/set-password', json_encode([
+            $this->restClient->put('user/'.$user->getId().'/set-password', json_encode([
                 'password_plain' => $plainPassword,
             ]));
             $request->getSession()->set('login-context', 'password-update');
 
             $successRoute = $this->getUser()->isDeputyOrg() ? 'org_settings' : 'account_settings';
+
             return $this->redirect($this->generateUrl($successRoute));
         }
 
@@ -131,7 +132,39 @@ class SettingsController extends AbstractController
     }
 
     /**
-     * - display the Your details page
+     * @Route("/org/settings/your-details/change-email", name="org_profile_email_edit")
+     * @Template("@App/Settings/emailEdit.html.twig")
+     */
+    public function emailEditAction(Request $request)
+    {
+        $user = $this->userApi->getUserWithData();
+
+        $form = $this->createForm(FormDir\ChangeEmailType::class, $user, [
+            'mapped' => true,
+            'error_bubbling' => true,
+        ]);
+        $form->handleRequest($request);
+
+        if ($form->isSubmitted() && $form->isValid()) {
+            $updatedEmail = $request->request->get('change_email')['new_email']['first'];
+            $password = $request->request->get('change_email')['password'];
+
+            $this->restClient->put('user/'.$user->getId().'/update-email', json_encode([
+                'updated_email' => $updatedEmail,
+            ]));
+
+            $successRoute = $this->getUser()->isDeputyOrg() ? 'org_settings' : 'account_settings';
+
+            return $this->redirect($this->generateUrl($successRoute));
+        }
+
+        return [
+            'form' => $form->createView(),
+        ];
+    }
+
+    /**
+     * - display the Your details page.
      *
      * @Route("/deputyship-details/your-details", name="user_show")
      * @Route("/org/settings/your-details", name="org_profile_show")
@@ -140,12 +173,12 @@ class SettingsController extends AbstractController
     public function profileAction()
     {
         return [
-            'user' => $this->getUser()
+            'user' => $this->getUser(),
         ];
     }
 
     /**
-     * Change your own detials
+     * Change your own detials.
      *
      * @Route("/deputyship-details/your-details/edit", name="user_edit")
      * @Route("/org/settings/your-details/edit", name="org_profile_edit")
@@ -195,18 +228,19 @@ class SettingsController extends AbstractController
 
             try {
                 $this->userApi->update($preUpdateDeputy, $postUpdateDeputy, AuditEvents::TRIGGER_DEPUTY_USER_EDIT_SELF, $jmsPutGroups);
+
                 return $this->redirect($redirectRoute);
             } catch (\Throwable $e) {
-                if ($e->getCode() == 422 && $form->get('email')) {
+                if (422 == $e->getCode() && $form->get('email')) {
                     $form->get('email')->addError(new FormError($this->translator->trans('user.email.alreadyUsed', [], 'validators')));
                 }
             }
         }
 
         return [
-            'user'   => $preUpdateDeputy,
-            'form'   => $form->createView(),
-            'client_validated' => false // to allow change of name/postcode/email
+            'user' => $preUpdateDeputy,
+            'form' => $form->createView(),
+            'client_validated' => false, // to allow change of name/postcode/email
         ];
     }
 
@@ -215,6 +249,7 @@ class SettingsController extends AbstractController
      * becoming Professional team members.
      *
      * @throws AccessDeniedException
+     *
      * @return string
      */
     private function determineNoAdminRole()

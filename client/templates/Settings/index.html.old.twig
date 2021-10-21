@@ -1,0 +1,63 @@
+{% extends '@App/Layouts/application.html.twig' %}
+
+{% import '@App/Macros/macros.html.twig' as macros %}
+
+{% set translationDomain = "settings" %}
+{% trans_default_domain translationDomain %}
+
+{% block htmlTitle %}{{ (app.user.isDeputyOrg() ? 'htmlTitle.pa-settings-page' : 'htmlTitle.settings-page') | trans }}{% endblock %}
+{% block pageTitle %}{{ (app.user.isDeputyOrg() ? 'pageTitle.pa-settings-page'   : 'pageTitle.settings-page')   | trans }}{% endblock %}
+
+{% block breadcrumbs %}
+    {{ macros.breadcrumbsSettings('settings') }}
+{% endblock %}
+
+{% block pageContent %}
+
+    {% if 'ROLE_LAY_DEPUTY' == app.user.roleName %}
+        {% set transOptions = {'%client%': client.firstname} %}
+        <h2 class="govuk-heading-m">
+            <a href="{{ path('client_show') }}" class="govuk-link behat-link-client-show">
+                {{ 'settings-page.links.client.title' | trans(transOptions) }}
+            </a>
+        </h2>
+        <p class="text text-info">{{ 'settings-page.links.client.description' | trans(transOptions) }}</p>
+    {% elseif hasOrganisations is defined and hasOrganisations %}
+        <h2 class="govuk-heading-m">
+            <a href="{{ path('org_organisation_list') }}" class="govuk-link behat-link-org-accounts">
+                {{ 'settings-page.links.organisation.title' | trans }}
+            </a>
+        </h2>
+        <p class="text text-info">{{ 'settings-page.links.organisation.description' | trans }}</p>
+    {# Check on orgs length is accounting for users directly navigating to page #}
+    {% elseif app.user.isDeputyOrg() and app.user.organisations|length > 0 %}
+        {% set transOptions = {} %}
+        <h2 class="govuk-heading-m">
+            <a href="{{ path('org_team') }}" class="govuk-link behat-link-user-accounts">
+                {{ 'settings-page.links.team.title' | trans }}
+            </a>
+        </h2>
+        <p class="text text-info">
+            {% if app.user.roleOrgAdmin() or app.user.roleOrgNamed() %}
+                {{ 'settings-page.links.team.admin-description' | trans }}
+            {% else %}
+                {{ 'settings-page.links.team.description' | trans }}
+            {% endif %}
+        </p>
+    {% endif %}
+
+    <h2 class="govuk-heading-m">
+        <a href="{{ path(app.user.isDeputyOrg() ? 'org_profile_show' : 'user_show') }}" class="govuk-link behat-link-profile-show">
+            {{ 'settings-page.links.profile.title' | trans }}
+        </a>
+    </h2>
+    <p class="text text-info">{{ (app.user.isDeputyOrg() ? 'settings-page.links.profile.pa-description' : 'settings-page.links.profile.description') | trans }}</p>
+
+    <h2 class="govuk-heading-m">
+        <a href="{{ path(app.user.isDeputyOrg() ? 'org_profile_password_edit' : 'user_password_edit') }}" class="govuk-link behat-link-password-edit">
+            {{ 'settings-page.links.password.title' | trans }}
+        </a>
+    </h2>
+    <p class="text text-info">{{ 'settings-page.links.password.description' | trans }}</p>
+
+{% endblock %}
