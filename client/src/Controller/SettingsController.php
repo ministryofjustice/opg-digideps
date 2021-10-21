@@ -140,7 +140,7 @@ class SettingsController extends AbstractController
         $user = $this->userApi->getUserWithData();
 
         $form = $this->createForm(FormDir\ChangeEmailType::class, $user, [
-            'mapped' => false,
+            'mapped' => true,
             'error_bubbling' => true,
         ]);
         $form->handleRequest($request);
