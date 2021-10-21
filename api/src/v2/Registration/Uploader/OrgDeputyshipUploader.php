@@ -91,6 +91,11 @@ class OrgDeputyshipUploader
             ]
         );
 
+        // Temporary fix to generate dep types for all existing named deps - remove once CSVs have been uploaded
+        if (!is_null($namedDeputy)) {
+            $namedDeputy->setDeputyType($dto->getDeputyType());
+        }
+
         if (is_null($namedDeputy)) {
             $namedDeputy = $this->namedDeputyAssembler->assembleFromOrgDeputyshipDto($dto);
 

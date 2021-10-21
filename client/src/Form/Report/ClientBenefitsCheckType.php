@@ -23,11 +23,6 @@ class ClientBenefitsCheckType extends AbstractType
 
     public function buildForm(FormBuilderInterface $builder, array $options)
     {
-//        $resolver = (new OptionsResolver())
-//            ->setDefault('data_class', $options['data_class']);
-//
-//        $this->configureOptions($resolver);
-
         $this->step = (int) $options['step'];
 
         if (1 === $this->step) {
