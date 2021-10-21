@@ -3,23 +3,24 @@
 namespace App\Service;
 
 use App\Entity\Ndr\BankAccount;
+use App\Entity\Ndr\ClientBenefitsCheck;
 use App\Entity\Ndr\Debt;
 use App\Entity\Ndr\Expense;
 use App\Entity\Ndr\IncomeBenefit;
+use App\Entity\Ndr\IncomeReceivedOnClientsBehalf;
 use App\Entity\Ndr\Ndr;
 use App\Entity\Ndr\VisitsCare;
 use App\Service\NdrStatusService as StatusService;
+use Doctrine\Common\Collections\ArrayCollection;
 use Mockery as m;
 use PHPUnit\Framework\TestCase;
 
 /**
- * //TODO consider using traits to re-use logic in ReportStatusServiceTest for common sections
+ * //TODO consider using traits to re-use logic in ReportStatusServiceTest for common sections.
  */
 class NdrStatusServiceTest extends TestCase
 {
     /**
-     * @param array $ndrMethods
-     *
      * @return StatusService
      */
     private function getStatusServiceWithReportMocked(array $ndrMethods)
@@ -30,7 +31,7 @@ class NdrStatusServiceTest extends TestCase
                     'getDoesClientHaveACarePlan' => null,
                     'getWhoIsDoingTheCaring' => null,
                     'getDoesClientHaveACarePlan' => null,
-                    'getPlanMoveNewResidence' => null
+                    'getPlanMoveNewResidence' => null,
                 ]),
                 'getExpenses' => [],
                 'getPaidForAnything' => null,
@@ -52,6 +53,7 @@ class NdrStatusServiceTest extends TestCase
                 'getActionPropertyMaintenance' => null,
                 'getActionPropertySellingRent' => null,
                 'getActionMoreInfo' => null,
+                'getClientBenefitsCheck' => null,
             ]);
 
         return new StatusService($ndr);
@@ -64,21 +66,21 @@ class NdrStatusServiceTest extends TestCase
             'getDoesClientHaveACarePlan' => null,
             'getWhoIsDoingTheCaring' => null,
             'getDoesClientHaveACarePlan' => null,
-            'getPlanMoveNewResidence' => null
+            'getPlanMoveNewResidence' => null,
         ]);
         $incomplete = m::mock(VisitsCare::class, [
             'getDoYouLiveWithClient' => 'yes',
             'getDoesClientHaveACarePlan' => null,
             'getWhoIsDoingTheCaring' => null,
             'getDoesClientHaveACarePlan' => null,
-            'getPlanMoveNewResidence' => null
+            'getPlanMoveNewResidence' => null,
         ]);
         $done = m::mock(VisitsCare::class, [
             'getDoYouLiveWithClient' => 'yes',
             'getDoesClientHaveACarePlan' => 'yes',
             'getWhoIsDoingTheCaring' => 'xxx',
             'getDoesClientHaveACarePlan' => 'yes',
-            'getPlanMoveNewResidence' => 'no'
+            'getPlanMoveNewResidence' => 'no',
         ]);
 
         return [
@@ -128,12 +130,12 @@ class NdrStatusServiceTest extends TestCase
         return [
             [[], StatusService::STATE_NOT_STARTED],
             [[
-                'getExpectCompensationDamages'=>true, //only this one complete
+                'getExpectCompensationDamages' => true, //only this one complete
                 ], StatusService::STATE_INCOMPLETE],
             [[
-                'getReceiveStatePension'=>true,
-                'getReceiveOtherIncome'=>false,
-                'getExpectCompensationDamages'=>false], StatusService::STATE_DONE],
+                'getReceiveStatePension' => true,
+                'getReceiveOtherIncome' => false,
+                'getExpectCompensationDamages' => false, ], StatusService::STATE_DONE],
         ];
     }
 
@@ -156,9 +158,9 @@ class NdrStatusServiceTest extends TestCase
             [['getHasDebts' => null], StatusService::STATE_NOT_STARTED],
             [['getHasDebts' => false], StatusService::STATE_NOT_STARTED],
             [['getHasDebts' => 'yes'], StatusService::STATE_INCOMPLETE],
-            [['getHasDebts' => 'yes', 'getDebtsWithValidAmount'=>[$debt]], StatusService::STATE_INCOMPLETE],
-            [['getHasDebts' => 'yes', 'getDebtsWithValidAmount'=>[$debt], 'getDebtManagement'=>''], StatusService::STATE_INCOMPLETE],
-            [['getHasDebts' => 'yes', 'getDebtsWithValidAmount'=>[$debt], 'getDebtManagement'=>'Payment plan'], StatusService::STATE_DONE],
+            [['getHasDebts' => 'yes', 'getDebtsWithValidAmount' => [$debt]], StatusService::STATE_INCOMPLETE],
+            [['getHasDebts' => 'yes', 'getDebtsWithValidAmount' => [$debt], 'getDebtManagement' => ''], StatusService::STATE_INCOMPLETE],
+            [['getHasDebts' => 'yes', 'getDebtsWithValidAmount' => [$debt], 'getDebtManagement' => 'Payment plan'], StatusService::STATE_DONE],
         ];
     }
 
@@ -264,6 +266,48 @@ class NdrStatusServiceTest extends TestCase
         $this->assertEquals($state, $object->getOtherInfoState()['state']);
     }
 
+    public function clientBenefitsCheckProvider()
+    {
+        $clientBenefitsCheck = new ClientBenefitsCheck();
+        $income = new ArrayCollection();
+        $income->add(new IncomeReceivedOnClientsBehalf());
+
+        $incomplete = [
+            'getClientBenefitsCheck' => ($clientBenefitsCheck)
+                ->setWhenLastCheckedEntitlement(ClientBenefitsCheck::WHEN_CHECKED_IM_CURRENTLY_CHECKING),
+        ];
+        $doneDontKnowIncome = [
+            'getClientBenefitsCheck' => ($clientBenefitsCheck)
+                ->setWhenLastCheckedEntitlement(ClientBenefitsCheck::WHEN_CHECKED_IM_CURRENTLY_CHECKING)
+                ->setDoOthersReceiveIncomeOnClientsBehalf(ClientBenefitsCheck::OTHER_INCOME_DONT_KNOW),
+        ];
+        $doneNoIncomeToAdd = [
+            'getClientBenefitsCheck' => ($clientBenefitsCheck)
+                ->setWhenLastCheckedEntitlement(ClientBenefitsCheck::WHEN_CHECKED_IM_CURRENTLY_CHECKING)
+                ->setDoOthersReceiveIncomeOnClientsBehalf(ClientBenefitsCheck::OTHER_INCOME_NO),
+        ];
+        $incompleteMissingIncome = [
+            'getClientBenefitsCheck' => ($clientBenefitsCheck)
+                ->setWhenLastCheckedEntitlement(ClientBenefitsCheck::WHEN_CHECKED_IM_CURRENTLY_CHECKING)
+                ->setDoOthersReceiveIncomeOnClientsBehalf(ClientBenefitsCheck::OTHER_INCOME_YES),
+        ];
+        $doneIncomeAdded = [
+            'getClientBenefitsCheck' => ($clientBenefitsCheck)
+                ->setWhenLastCheckedEntitlement(ClientBenefitsCheck::WHEN_CHECKED_IM_CURRENTLY_CHECKING)
+                ->setDoOthersReceiveIncomeOnClientsBehalf(ClientBenefitsCheck::OTHER_INCOME_YES)
+                ->setTypesOfIncomeReceivedOnClientsBehalf($income),
+        ];
+
+        return [
+            'Nothing started' => [[], StatusService::STATE_NOT_STARTED],
+            'Incomplete' => [$incomplete, StatusService::STATE_INCOMPLETE],
+            'No income to add - dont know' => [$doneDontKnowIncome, StatusService::STATE_DONE],
+            'No income to add - no income received' => [$doneNoIncomeToAdd, StatusService::STATE_DONE],
+            'Income to add - no income added' => [$incompleteMissingIncome, StatusService::STATE_INCOMPLETE],
+            'Income to add - income added' => [$doneIncomeAdded, StatusService::STATE_DONE],
+        ];
+    }
+
     /**
      * @test
      */
@@ -279,6 +323,7 @@ class NdrStatusServiceTest extends TestCase
         $this->assertEquals('not-started', $rs['debts']);
         $this->assertEquals('not-started', $rs['actions']);
         $this->assertEquals('not-started', $rs['otherInfo']);
+        $this->assertEquals('not-started', $rs['clientBenefitsCheck']);
 
         $this->assertEquals('notStarted', $object->getStatus());
     }
@@ -294,7 +339,7 @@ class NdrStatusServiceTest extends TestCase
             [array_pop($this->debtsProvider())[0], 'debts'],
             [array_pop($this->actionProvider())[0], 'actions'],
             [array_pop($this->otherInfoProvider())[0], 'otherInfo'],
-
+            [array_pop($this->clientBenefitsCheckProvider())[0], 'clientBenefitsCheck'],
         ];
     }
 
@@ -306,7 +351,7 @@ class NdrStatusServiceTest extends TestCase
     {
         $object = $this->getStatusServiceWithReportMocked($provider);
         $this->assertArrayNotHasKey($keyRemoved, $object->getRemainingSections());
-        $this->assertFalse($object->isReadyToSubmit());// enable when other sections are added
+        $this->assertFalse($object->isReadyToSubmit()); // enable when other sections are added
         $this->assertEquals('notFinished', $object->getStatus());
     }
 
@@ -326,6 +371,7 @@ class NdrStatusServiceTest extends TestCase
             + array_pop($this->debtsProvider())[0]
             + array_pop($this->actionProvider())[0]
             + array_pop($this->otherInfoProvider())[0]
+            + array_pop($this->clientBenefitsCheckProvider())[0]
         );
 
         $this->assertEquals([], $object->getRemainingSections());

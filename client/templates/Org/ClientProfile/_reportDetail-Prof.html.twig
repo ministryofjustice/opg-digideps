@@ -144,6 +144,7 @@
                                 sectionId: 'clientBenefitsCheck',
                                 report: report,
                                 state: reportStatus.clientBenefitsCheckState,
+                                linkToSubSection: path('client_benefits_check', {'reportId': report.id, 'reportOrNdr': 'report'}),
                                 description: true
                             } %}
                         {% endif %}
