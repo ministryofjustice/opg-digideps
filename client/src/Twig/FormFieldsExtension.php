@@ -448,7 +448,6 @@ class FormFieldsExtension extends AbstractExtension
             // label is translated directly here
             if ('' != $translationKey) {
                 $labelText = $this->translator->trans($translationKey.'.label', $labelParams, $domain);
-                $hintText = $this->translator->trans($translationKey.'.hint', $labelParams, $domain);
             } else {
                 $labelText = '';
             }

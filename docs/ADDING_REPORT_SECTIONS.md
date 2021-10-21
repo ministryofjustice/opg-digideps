@@ -105,3 +105,5 @@ class Lifestyle
 * Add a new section to the report overview template (`App/Report/Report/overview.html.twig`) by including a new `App/Report/Report/_subsection.html.twig` partial. If required for NDR reports also include in `App/Ndr/Ndr/overview.html.twig`
 
 * Create a corresponding controller and implement the form logic as required using the newly created form type
+
+* Add an entry for the new section to `ReportSectionsLinkService` and then include the `_nextprevious.html.twig` partial on the first and last page of the section

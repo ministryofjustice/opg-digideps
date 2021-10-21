@@ -14,6 +14,7 @@ trait PageUrlsTrait
     private string $assetsSectionUrl = '/%s/%s/assets';
     private string $assetsSummarySectionUrl = '/%s/%s/assets/summary';
     private string $clientLoginPageUrl = '/login';
+    private string $clientBenefitCheckSummaryPageUrl = '/%s/%s/client-benefits-check/summary';
     private string $contactsAddUrl = '/report/%s/contacts/add';
     private string $contactsAddAnotherUrl = '/report/%s/contacts/add_another';
     private string $contactsSectionUrl = '/%s/%s/contacts';
@@ -30,6 +31,8 @@ trait PageUrlsTrait
     private string $giftsSectionUrl = '/%s/%s/gifts';
     private string $healthAndLifestyleSectionUrl = '/%s/%s/lifestyle';
     private string $healthAndLifestyleSummaryUrl = '/%s/%s/lifestyle/summary';
+    private string $incomeBenefitsSectionUrl = '/%s/%s/income-benefits';
+    private string $incomeBenefitsSectionSummaryUrl = '/%s/%s/income-benefits/summary';
     private string $layStartPageUrl = '/lay';
     private string $moneyInSectionUrl = '/%s/%s/money-in';
     private string $moneyInShortSectionUrl = '/%s/%s/money-in-short';
@@ -45,8 +48,6 @@ trait PageUrlsTrait
     private string $reportSubmittedUrl = '/report/%s/submitted';
     private string $userResearchSubmittedUrl = '/report/%s/post_submission_user_research/submitted';
     private string $visitsAndCareSectionUrl = '/%s/%s/visits-care';
-    private string $incomeBenefitsSectionUrl = '/%s/%s/income-benefits';
-    private string $incomeBenefitsSectionSummaryUrl = '/%s/%s/income-benefits/summary';
 
     // Admin
     private string $adminActiveLaysReportUrl = '/admin/stats/downloadActiveLaysCsv';
@@ -364,5 +365,10 @@ trait PageUrlsTrait
     public function getIncomeBenefitsSummaryUrl(int $reportId): string
     {
         return sprintf($this->incomeBenefitsSectionSummaryUrl, $this->reportUrlPrefix, $reportId);
+    }
+
+    public function getClientBenefitsCheckSummaryUrl(int $reportId): string
+    {
+        return sprintf($this->clientBenefitCheckSummaryPageUrl, $this->reportUrlPrefix, $reportId);
     }
 }

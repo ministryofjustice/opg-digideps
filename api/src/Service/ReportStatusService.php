@@ -2,6 +2,7 @@
 
 namespace App\Service;
 
+use App\Entity\Report\ClientBenefitsCheck;
 use App\Entity\Report\Report;
 use JMS\Serializer\Annotation as JMS;
 
@@ -767,13 +768,22 @@ class ReportStatusService
         $benefitsCheck = $this->report->getClientBenefitsCheck();
 
         $answers = $benefitsCheck ? [
-            $benefitsCheck->getWhenLastCheckedEntitlement(),
+            'whenChecked' => $benefitsCheck->getWhenLastCheckedEntitlement(),
+            'doOthersReceieveIncome' => $benefitsCheck->getDoOthersReceiveIncomeOnClientsBehalf(),
+            'incomeTypes' => $benefitsCheck->getTypesOfIncomeReceivedOnClientsBehalf()->count() > 0 ? true : null,
         ] : [];
 
         switch (count(array_filter($answers))) {
             case 0:
                 return ['state' => self::STATE_NOT_STARTED, 'nOfRecords' => 0];
-            case 1:
+            case 2:
+                if (in_array($answers['doOthersReceieveIncome'], [ClientBenefitsCheck::OTHER_INCOME_DONT_KNOW, ClientBenefitsCheck::OTHER_INCOME_NO])) {
+                    return ['state' => self::STATE_DONE, 'nOfRecords' => 0];
+                } else {
+                    return ['state' => self::STATE_INCOMPLETE, 'nOfRecords' => 0];
+                }
+                // no break
+            case 3:
                 return ['state' => self::STATE_DONE, 'nOfRecords' => 0];
             default:
                 return ['state' => self::STATE_INCOMPLETE, 'nOfRecords' => 0];

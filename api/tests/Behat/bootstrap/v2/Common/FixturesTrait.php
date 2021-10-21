@@ -73,12 +73,14 @@ trait FixturesTrait
     }
 
     /**
-     * @Given two clients have the same first name
-     * @Given two clients have the same last name
+     * @Given two clients have the same :whichName name
      */
-    public function twoClientsHaveSameNames()
+    public function twoClientsHaveSameNames(string $whichName)
     {
-        $this->fixtureHelper->duplicateClient($this->layDeputyNotStartedPfaHighAssetsDetails->getClientId());
+        $sameFirstname = in_array(strtolower($whichName), ['first', 'full']);
+        $sameLastname = in_array(strtolower($whichName), ['last', 'full']);
+
+        $this->fixtureHelper->duplicateClient($this->layDeputyNotStartedPfaHighAssetsDetails->getClientId(), $sameFirstname, $sameLastname);
         $this->interactingWithUserDetails = $this->layDeputyNotStartedPfaHighAssetsDetails;
     }
 
