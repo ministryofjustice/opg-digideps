@@ -44,6 +44,18 @@ trait MoneyInHighAssetsTrait
 
     private array $moneyTypeCategoriesCompleted = [];
 
+    public function fillInMoneyInHighAssetsSection()
+    {
+        $this->iViewAndStartMoneyInSection();
+        $this->iHaveMoneyTypeToReportOn('Salary or wages');
+        $this->iEnterAValidAmount();
+        $this->iAddAnotherItem();
+        $this->iHaveMoneyTypeToReportOn('Winter Fuel/Cold Weather Payment');
+        $this->iEnterAValidAmount();
+        $this->iDontAddAnotherItem();
+        $this->theMoneyInSummaryPageShouldContainTheMoneyInValuesIAdded();
+    }
+
     /**
      * @When I view the money in report section
      */

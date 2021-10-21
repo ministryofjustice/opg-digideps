@@ -6,6 +6,20 @@ namespace App\Tests\Behat\v2\Reporting\Sections;
 
 trait ActionsSectionTrait
 {
+    public function fillInActionsSection()
+    {
+        $this->iViewAndStartActionsSection();
+        $this->iChooseYesOnFinancialDecisionActionsSection1();
+        $this->iChooseYesOnDoYouHaveConcernsActionsSection();
+
+        // NDR
+        if (false) {
+            $this->actionGiveGiftsToClient();
+        }
+
+        $this->iSeeExpectedActionSectionResponses();
+    }
+
     /**
      * @Given I view the actions report section
      */

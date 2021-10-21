@@ -9,6 +9,11 @@ trait AccountsSectionTrait
     private array $accountList = [];
     private int $countOfAccountsAdded = 1;
 
+    public function fillInAccountsSection()
+    {
+        $this->iAddACoupleOfNewAccounts();
+    }
+
     /**
      * @When I view and start the accounts report section
      */

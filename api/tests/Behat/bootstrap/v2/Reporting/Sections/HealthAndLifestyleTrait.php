@@ -6,6 +6,14 @@ namespace App\Tests\Behat\v2\Reporting\Sections;
 
 trait HealthAndLifestyleTrait
 {
+    public function fillInHealthAndLifeStyle()
+    {
+        $this->iViewAndStartHealthLifestyleSection();
+        $this->iFillInDetailsHealthCareAppointments();
+        $this->iConfirmClientTakesPartLeisureAndSocialActivities();
+        $this->iShouldSeeTheExpectedLifestyleSummary();
+    }
+
     /**
      * @When I view and start the health and lifestyle report section
      */

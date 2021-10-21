@@ -14,6 +14,18 @@ trait ClientBenefitsCheckSectionTrait
     private string $missingIncomeTypeErrorText = 'Please provide an income type';
     private string $atLeastOneIncomeTypeRequiredErrorText = 'Must add at least one type of income received by others if answering "yes" to "Do others receive income ion clients behalf". Use the back link if you do not have any income to declare.';
 
+    public function fillInClientBenefitsCheckSection()
+    {
+        $this->reportIsDueAfterClientBenefitCheckFeatureFlagDate('more');
+        $this->iNavigateToAndStartBenefitsCheckSection();
+        $this->iConfirmCheckedBenefitsOnDate('01/01/2021');
+        $this->iConfirmOthersReceiveIncomeOnClientsBehalf();
+        $this->iAddNumberOfIncomeTypes(2);
+        $this->iAddIncomeTypeWithNoValue();
+        $this->iHaveNoFurtherTypesOfIncomeToAdd();
+        $this->benefitCheckSummaryPageContainsEnteredDetails();
+    }
+
     /**
      * @When I navigate to the client benefits check report section
      */

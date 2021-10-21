@@ -13,6 +13,15 @@ trait DebtsSectionTrait
         'other' => 3,
     ];
 
+    public function fillInDebtsSection()
+    {
+        $this->iViewAndStartDebtsSection();
+        $this->iHaveADebtToAdd();
+        $this->iAddSomeDebtValues();
+        $this->iSayHowTheDebtsAreBeingManaged();
+        $this->iShouldSeeTheExpectedDebtsSummary();
+    }
+
     /**
      * @When I view and start the debts report section
      */

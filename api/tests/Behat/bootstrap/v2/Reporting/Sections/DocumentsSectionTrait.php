@@ -26,6 +26,14 @@ trait DocumentsSectionTrait
 
     private array $uploadedDocumentFilenames = [];
 
+    public function fillInDocumentsSection()
+    {
+        $this->iViewAndStartDocumentsSection();
+        $this->iHaveDocumentsToUpload();
+        $this->iUploadMultipleValidDocuments();
+        $this->theDocumentsSummaryPageShouldContainDocumentsIUploaded();
+    }
+
     /**
      * @Given I view the documents report section
      */

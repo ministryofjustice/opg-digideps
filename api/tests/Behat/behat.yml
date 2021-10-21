@@ -207,6 +207,12 @@ v2-tests-goutte:
             contexts:
                 - App\Tests\Behat\v2\DeputyManagement\DeputyManagementFeatureContext
 
+        end-to-end:
+            description: An end to end journey to replicate all aspects of data ingestion and completing/submitting the report as closely as possible
+            paths: [ "%paths.base%/features-v2/end-to-end" ]
+            contexts:
+                - App\Tests\Behat\v2\EndToEnd\EndToEndFeatureContext
+
         feedback:
             description: Covering features that allow users to give us feedback
             paths: [ "%paths.base%/features-v2/feedback" ]

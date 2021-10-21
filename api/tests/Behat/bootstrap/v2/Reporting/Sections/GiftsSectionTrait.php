@@ -8,6 +8,13 @@ trait GiftsSectionTrait
 {
     private int $giftId = 0;
 
+    public function fillInGiftsSection()
+    {
+        $this->iViewAndStartGiftsSection();
+        $this->iHaveGivenMultipleGifts();
+        $this->iSeeExpectedGiftsSectionResponses();
+    }
+
     /**
      * @When I view the gifts report section
      */

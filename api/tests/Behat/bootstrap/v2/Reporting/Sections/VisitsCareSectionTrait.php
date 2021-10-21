@@ -6,6 +6,16 @@ namespace App\Tests\Behat\v2\Reporting\Sections;
 
 trait VisitsCareSectionTrait
 {
+    public function fillInVisitsCareSection()
+    {
+        $this->iViewAndStartVisitsCareSection();
+        $this->iChooseYesOnLiveWithTheClientSection();
+        $this->iChooseYesAndOptionTwoOnReceivePaidCareSection();
+        $this->iFillOutWhoIsDoingCaringSection();
+        $this->iChooseYesOnHasCarePlanSection();
+        $this->iSeeExpectedVisitCareSectionResponses();
+    }
+
     /**
      * @Given I view the visits and care report section
      */

@@ -10,6 +10,15 @@ trait ContactsSectionTrait
 {
     private bool $hasContacts = false;
 
+    public function fillInContactsSections()
+    {
+        $this->iViewAndStartContactsSection();
+        $this->thereAreContactsToAdd();
+        $this->iEnterValidContactDetails();
+        $this->thereAreNoFurtherContactsToAdd();
+        $this->contactSummaryPageContainsExpectedText();
+    }
+
     /**
      * @Given I view the contacts report section
      */

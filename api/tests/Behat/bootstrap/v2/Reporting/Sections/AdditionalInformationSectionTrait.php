@@ -8,6 +8,13 @@ use App\Tests\Behat\BehatException;
 
 trait AdditionalInformationSectionTrait
 {
+    public function fillInAdditionalInfoSection()
+    {
+        $this->iViewAndStartAdditionalInformationSection();
+        $this->thereIsAdditionalInformationToAdd();
+        $this->additionalInformationSummaryPageContainsExpectedText();
+    }
+
     /**
      * @Given I view the additional information report section
      */

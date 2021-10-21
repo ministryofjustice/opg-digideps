@@ -25,6 +25,16 @@ trait AssetsSectionTrait
         12 => 'Other valuable assets',
     ];
 
+    public function fillInAssetsSection()
+    {
+        $this->iViewAndStartAssetsSection();
+        $this->iChooseYesOnAssetsExistSection();
+        // Check if any other assets than property use a diff interface. If so, change to only target them or if not reduce to 2.
+        $this->iAddNumberOfAssets(2);
+        $this->iAddNumberOfPropertyAsset(1);
+        $this->iSeeExpectedAssetsSectionResponses();
+    }
+
     /**
      * @When I visit and start the assets report section
      */

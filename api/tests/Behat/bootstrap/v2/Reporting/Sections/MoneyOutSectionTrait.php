@@ -48,6 +48,13 @@ trait MoneyOutSectionTrait
         'anything-else-paid-out' => 'Anything else paid out',
     ];
 
+    public function fillInMoneyOutSection()
+    {
+        $this->iViewAndStartMoneyOutSection();
+        $this->iAddOneMoneyOutPayment();
+        $this->iShouldSeeExpectedResultsOnMoneyOutPage();
+    }
+
     /**
      * @When I view and start the money out report section
      */
