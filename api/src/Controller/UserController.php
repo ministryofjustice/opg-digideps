@@ -239,6 +239,38 @@ class UserController extends RestController
     }
 
     /**
+     * change email.
+     *
+     * @Route("/{id}/update-email", methods={"PUT"})
+     */
+    public function changeEmail(Request $request, $id)
+    {
+        /** @var User $loggedInUser */
+        $loggedInUser = $this->getUser();
+
+        /** @var User $requestedUser */
+        $requestedUser = $this->findEntityBy(User::class, $id, 'User not found');
+
+        if ($loggedInUser->getId() != $requestedUser->getId()) {
+            throw $this->createAccessDeniedException("Not authorised to change other user's data");
+        }
+
+        $data = $this->formatter->deserializeBodyContent($request, [
+            'updated_email' => 'notEmpty',
+        ]);
+
+        $requestedUser->setEmail($data['updated_email']);
+
+        if (array_key_exists('set_active', $data)) {
+            $requestedUser->setActive($data['set_active']);
+        }
+
+        $this->em->flush();
+
+        return $requestedUser->getId();
+    }
+
+    /**
      * @Route("/{id}", requirements={"id":"\d+"}, methods={"GET"})
      */
     public function getOneById(Request $request, $id)

@@ -121,7 +121,41 @@ class SettingsController extends AbstractController
             ]));
             $request->getSession()->set('login-context', 'password-update');
 
-            return $this->redirect('/logout');
+            $successRoute = $this->getUser()->isDeputyOrg() ? 'org_settings' : 'account_settings';
+
+            return $this->redirect($this->generateUrl($successRoute));
+        }
+
+        return [
+            'form' => $form->createView(),
+        ];
+    }
+
+    /**
+     * @Route("/org/settings/your-details/change-email", name="org_profile_email_edit")
+     * @Template("@App/Settings/emailEdit.html.twig")
+     */
+    public function emailEditAction(Request $request)
+    {
+        $user = $this->userApi->getUserWithData();
+
+        $form = $this->createForm(FormDir\ChangeEmailType::class, $user, [
+            'mapped' => true,
+            'error_bubbling' => true,
+        ]);
+        $form->handleRequest($request);
+
+        if ($form->isSubmitted() && $form->isValid()) {
+            $updatedEmail = $request->request->get('change_email')['new_email']['first'];
+            $password = $request->request->get('change_email')['password'];
+
+            $this->restClient->put('user/'.$user->getId().'/update-email', json_encode([
+                'updated_email' => $updatedEmail,
+            ]));
+
+            $successRoute = $this->getUser()->isDeputyOrg() ? 'org_settings' : 'account_settings';
+
+            return $this->redirect($this->generateUrl($successRoute));
         }
 
         return [
