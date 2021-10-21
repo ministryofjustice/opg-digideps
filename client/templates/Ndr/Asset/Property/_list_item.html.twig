@@ -1,10 +1,11 @@
+{% import '@App/Macros/macros.html.twig' as macros %}
+
 {% set translationDomain = "ndr-assets" %}
 {% trans_default_domain translationDomain %}
 {% set transOptions = {'%client%': ndr.client.firstname | e } %}
 {% set hideEditLink = hideEditLink | default(false) %}
 
 {% for asset in assetsInGroup.items %}
-{# @var asset \App\Entity\Report\AssetProperty #}
 
     <div class="govuk-grid-row behat-region-property-{{ asset.postcode | behat_namify }}">
         <div class="govuk-grid-column-one-half">

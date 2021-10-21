@@ -109,7 +109,7 @@ trait ClientManagementTrait
     public function iShouldSeeClientDetailsInResults()
     {
         $this->clientCount = 1;
-        $this->iShouldSeeNClientsWithSameName();
+        $this->iShouldSeeNClientsWithSameName('full');
     }
 
     /**
@@ -122,12 +122,12 @@ trait ClientManagementTrait
     }
 
     /**
-     * @Then I should see both the clients details in the client list results
+     * @Then I should see :occurances clients details in the client list results with the same :whichName name
      */
-    public function iShouldSeeBothClientDetailsInResults()
+    public function iShouldSeeBothClientDetailsInResults(int $occurances, string $whichname)
     {
-        $this->clientCount = 2;
-        $this->iShouldSeeNClientsWithSameName();
+        $this->clientCount = $occurances;
+        $this->iShouldSeeNClientsWithSameName($whichname);
     }
 
     /**
@@ -148,22 +148,34 @@ trait ClientManagementTrait
         $this->iShouldSeeNCourtOrdersWithSameDetails($this->paperDetails->getCaseNumber(), $this->paperDetails->getClientLastName());
     }
 
-    private function iShouldSeeNClientsWithSameName()
+    private function iShouldSeeNClientsWithSameName(string $whichName)
     {
         $this->assertClientCountSet();
 
         $searchResultsHtml = $this->getClientSearchResultHtml();
 
-        $fullClientName = sprintf(
-            '%s %s',
-            $this->interactingWithUserDetails->getClientFirstName(),
-            $this->interactingWithUserDetails->getClientLastName()
-        );
+        switch (strtolower($whichName)) {
+            case 'first':
+                $searchName = $this->interactingWithUserDetails->getClientFirstName();
+                break;
+            case 'last':
+                $searchName = $this->interactingWithUserDetails->getClientLastName();
+                break;
+            case 'full':
+                $searchName = sprintf(
+                    '%s %s',
+                    $this->interactingWithUserDetails->getClientFirstName(),
+                    $this->interactingWithUserDetails->getClientLastName()
+                );
+                break;
+            default:
+                throw new BehatException('This step only supports "first|last|full" as a search term. Either update step argument or add a case statement.');
+        }
 
-        $clientNameFoundCount = substr_count($searchResultsHtml, $fullClientName);
+        $clientNameFoundCount = substr_count($searchResultsHtml, $searchName);
 
         if ($clientNameFoundCount < $this->clientCount) {
-            throw new BehatException(sprintf('The client search results list did not contain the required occurrences of the clients full name. Expected: "%s" (at least %s times), got (full HTML): %s', $fullClientName, $this->clientCount, $searchResultsHtml));
+            throw new BehatException(sprintf('The client search results list did not contain the required occurrences of the clients full name. Expected: "%s" (at least %s times), got (full HTML): %s', $searchName, $this->clientCount, $searchResultsHtml));
         }
     }
 

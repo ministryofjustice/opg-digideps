@@ -15,7 +15,6 @@ class ReportSectionsLinkService
 
     /**
      * ReportSectionsLinkService constructor.
-     * @param RouterInterface $router
      */
     public function __construct(RouterInterface $router)
     {
@@ -23,13 +22,13 @@ class ReportSectionsLinkService
     }
 
     /**
-     * @param  ReportInterface $report
      * @return array
      */
     private function getOptions(ReportInterface $report)
     {
         if ($report instanceof Ndr) {
             $routeParams = ['ndrId' => $report->getId()];
+
             return [
                 ['section' => 'visitsCare', 'link' => $this->router->generate('ndr_visits_care', $routeParams)],
                 ['section' => 'deputyExpenses', 'link' => $this->router->generate('ndr_deputy_expenses', $routeParams)],
@@ -49,6 +48,7 @@ class ReportSectionsLinkService
             'actions' => ['section' => 'actions', 'link' => $this->router->generate('actions', $routeParams)],
             'assets' => ['section' => 'assets', 'link' => $this->router->generate('assets', $routeParams)],
             'bankAccounts' => ['section' => 'bankAccounts', 'link' => $this->router->generate('bank_accounts', $routeParams)],
+            'clientBenefitsCheck' => ['section' => 'clientBenefitsCheck', 'link' => $this->router->generate('client_benefits_check', $routeParams)],
             'contacts' => ['section' => 'contacts', 'link' => $this->router->generate('contacts', $routeParams)],
             'debts' => ['section' => 'debts', 'link' => $this->router->generate('debts', $routeParams)],
             'deputyExpenses' => ['section' => 'deputyExpenses', 'link' => $this->router->generate('deputy_expenses', $routeParams)],
@@ -71,7 +71,6 @@ class ReportSectionsLinkService
 
         //TODO ask the business if links can follow a single order
 
-
         // defined order for Client profile page (PROF or PA)
         if ($report->hasSection('paDeputyExpenses')) { // PAs
             // PAs
@@ -82,17 +81,19 @@ class ReportSectionsLinkService
                 'actions', 'otherInfo',
                 'profDeputyCosts',
                 'profDeputyCostsEstimate',
+                'clientBenefitsCheck',
                 'bankAccounts',
                 'moneyTransfers', 'moneyIn', 'moneyOut',
                 'moneyInShort', 'moneyOutShort',
                 'assets', 'debts',
-                'documents'
+                'documents',
             ];
         } elseif ($report->hasSection('profDeputyCosts')) { // Professionals
             $sectionIdOrder = [
                 'decisions', 'contacts', 'visitsCare',
+                'clientBenefitsCheck',
                 'bankAccounts',
-                'moneyIn', 'moneyInShort', 'moneyTransfers', 'moneyOut','moneyOutShort',
+                'moneyIn', 'moneyInShort', 'moneyTransfers', 'moneyOut', 'moneyOutShort',
                 'lifestyle',
                 'gifts',
                 'assets', 'debts',
@@ -100,18 +101,19 @@ class ReportSectionsLinkService
                 'profDeputyCosts',
                 'profDeputyCostsEstimate',
                 'actions', 'otherInfo',
-                'documents'
+                'documents',
                 ];
         } else { // Lay
             $sectionIdOrder = [
                 'decisions', 'contacts', 'visitsCare', 'lifestyle',
+                'clientBenefitsCheck',
                 'bankAccounts',
                 'deputyExpenses', // Lay
                 'gifts',
                 'moneyTransfers', 'moneyIn', 'moneyOut', 'moneyInShort', 'moneyOutShort',
                 'assets', 'debts',
                 'actions', 'otherInfo',
-                'documents'
+                'documents',
             ];
         }
 
@@ -128,9 +130,9 @@ class ReportSectionsLinkService
     }
 
     /**
-     * @param ReportInterface $report
      * @param $sectionId
-     * @param  int   $offset
+     * @param int $offset
+     *
      * @return array empty if it's the last or first section
      */
     public function getSectionParams(ReportInterface $report, $sectionId, $offset = 0)

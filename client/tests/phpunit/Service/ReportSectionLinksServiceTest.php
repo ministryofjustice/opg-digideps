@@ -16,13 +16,13 @@ class ReportSectionLinksServiceTest extends TestCase
     protected $sut;
 
     /**
-     * Set up the mockservies
+     * Set up the mockservies.
      */
     public function setUp(): void
     {
         $this->router = m::mock(RouterInterface::class);
         $this->router->shouldReceive('generate')->withAnyArgs()->andReturnUsing(function ($a, $b) {
-            return $a . http_build_query($b);
+            return $a.http_build_query($b);
         });
         $this->report = m::mock(ReportInterface::class);
 
@@ -36,6 +36,7 @@ class ReportSectionLinksServiceTest extends TestCase
             ->shouldReceive('hasSection')->with('actions')->andReturn(true)
             ->shouldReceive('hasSection')->with('otherInfo')->andReturn(true)
             ->shouldReceive('hasSection')->with('gifts')->andReturn(true)
+            ->shouldReceive('hasSection')->with('clientBenefitsCheck')->andReturn(true)
             ->shouldReceive('hasSection')->with('bankAccounts')->andReturn(true)
             ->shouldReceive('hasSection')->with('moneyTransfers')->andReturn(true)
             ->shouldReceive('hasSection')->with('moneyIn')->andReturn(true)
