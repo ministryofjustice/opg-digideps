@@ -147,7 +147,6 @@ class SettingsController extends AbstractController
 
         if ($form->isSubmitted() && $form->isValid()) {
             $updatedEmail = $request->request->get('change_email')['new_email']['first'];
-            $password = $request->request->get('change_email')['password'];
 
             $this->restClient->put('user/'.$user->getId().'/update-email', json_encode([
                 'updated_email' => $updatedEmail,
