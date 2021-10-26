@@ -15,6 +15,7 @@ class ReportingSectionsFeatureContext extends BaseFeatureContext
     use AssetsSectionTrait;
     use ClientBenefitsCheckSectionTrait;
     use ContactsSectionTrait;
+    use DecisionsSectionTrait;
     use DocumentsSectionTrait;
     use DeputyCostsSectionTrait;
     use DeputyCostsEstimateSectionTrait;
@@ -22,13 +23,13 @@ class ReportingSectionsFeatureContext extends BaseFeatureContext
     use DeputyExpensesSectionTrait;
     use GiftsSectionTrait;
     use HealthAndLifestyleTrait;
+    use IncomeBenefitsSectionTrait;
     use MoneyInHighAssetsTrait;
     use MoneyInLowAssetsTrait;
     use MoneyOutSectionTrait;
     use MoneyOutShortSectionTrait;
     use ReportOverviewTrait;
     use VisitsCareSectionTrait;
-    use IncomeBenefitsSectionTrait;
 
     public const REPORT_SECTION_ENDPOINT = '/%s/%s/%s';
 

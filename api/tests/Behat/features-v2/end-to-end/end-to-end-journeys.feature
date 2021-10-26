@@ -4,8 +4,9 @@ Feature: An end to end journey from data ingestion to report submission
     @super-admin @lay-combined-high-not-started
     Scenario: CSV is uploaded and report is manually filled in and submitted - Lay
         Given a super admin user accesses the admin app
-        And I upload a lay csv that contains a row with deputy email 'aaa@bbb.com'
-        When 'aaa@bbb.com' logs in
+        And I upload a lay csv that contains a row with 'lay' deputy email 'elmhurst@example.org'
+        And the deputy included in the CSV self registers and sets report period to '02/01/2020' - '01/01/2021'
+        When 'elmhurst@example.org' logs in
         And I fill in the accounts section
         And I fill in the actions section
         And I fill in the additional information section
@@ -20,3 +21,5 @@ Feature: An end to end journey from data ingestion to report submission
         And I fill in the money out section
         And I fill in the visits and care section
         Then I submit the report
+        When I visit the report overview page
+        Then I should see next years report details

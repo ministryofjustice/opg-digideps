@@ -211,7 +211,7 @@ trait MoneyOutSectionTrait
                 'account[bankAccountId]',
                 $this->loggedInUserDetails->getCurrentReportBankAccountId(),
                 'addPayment-'.$translatedPaymentValue,
-                '(****1234)'
+                is_null($this->loggedInUserDetails->getCurrentReportBankAccountId()) ? '-' : '(****1234)'
             );
         }
 

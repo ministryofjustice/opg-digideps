@@ -117,18 +117,7 @@ trait IngestTrait
 
     private function extractUidsFromCsv($csvFilePath)
     {
-        if ($this->getMinkParameter('files_path')) {
-            $fullPath = rtrim(realpath($this->getMinkParameter('files_path')), DIRECTORY_SEPARATOR).DIRECTORY_SEPARATOR.$csvFilePath;
-            if (is_file($fullPath)) {
-                $csvFilePath = $fullPath;
-            }
-        }
-
-        $csvRows = array_map('str_getcsv', file($csvFilePath));
-        array_walk($csvRows, function (&$a) use ($csvRows) {
-            $a = array_combine($csvRows[0], $a);
-        });
-        array_shift($csvRows); // remove column header
+        $csvRows = $this->transformCsvRowsToArray($csvFilePath);
 
         foreach ($csvRows as $row) {
             $email = empty($row['Email']) ? null : substr(strstr($row['Email'], '@'), 1);

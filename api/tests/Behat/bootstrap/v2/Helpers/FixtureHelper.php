@@ -84,7 +84,7 @@ class FixtureHelper
             'currentReportDueDate' => $currentReport->getDueDate(),
             'currentReportStartDate' => $currentReport->getStartDate(),
             'currentReportEndDate' => $currentReport instanceof Ndr ? null : $currentReport->getEndDate(),
-            'currentReportBankAccountId' => $currentReport->getBankAccounts()[0]->getId(),
+            'currentReportBankAccountId' => count($currentReport->getBankAccounts()) >= 1 ? $currentReport->getBankAccounts()[0]->getId() : null,
             'courtDate' => $client->getCourtDate()->format('j F Y'),
         ];
 
@@ -334,6 +334,11 @@ class FixtureHelper
     public function getLoggedInUserDetails(string $email): array
     {
         $user = $this->em->getRepository(User::class)->findOneBy(['email' => strtolower($email)]);
+
+        if (is_null($user)) {
+            $message = sprintf('User with email "%s" not found', $email);
+            throw new BehatException($message);
+        }
 
         return self::buildUserDetails($user);
     }

@@ -23,6 +23,7 @@ class BaseFeatureContext extends MinkContext
     use AnalyticsTrait;
     use AuthTrait;
     use AssertTrait;
+    use CsvTrait;
     use DebugTrait;
     use ElementSelectionTrait;
     use ErrorsTrait;

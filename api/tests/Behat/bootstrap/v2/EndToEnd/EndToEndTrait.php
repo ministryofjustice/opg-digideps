@@ -4,9 +4,12 @@ declare(strict_types=1);
 
 namespace App\Tests\Behat\v2\EndToEnd;
 
+use App\Entity\User;
+use App\Tests\Behat\BehatException;
+
 trait EndToEndTrait
 {
-    private string $uploadedUserEmail = '';
+    private array $csvRows = [];
 
     /**
      * @Given /^I fill in the accounts section$/
@@ -72,6 +75,15 @@ trait EndToEndTrait
     }
 
     /**
+     * @Given /^I fill in the decisions section$/
+     */
+    public function iFillInTheDecisionsSection()
+    {
+        $this->fillInDecisionsSection();
+        $this->submittedAnswersByFormSections = [];
+    }
+
+    /**
      * @Given /^I fill in the documents section$/
      */
     public function iFillInTheDocumentsSection()
@@ -126,16 +138,38 @@ trait EndToEndTrait
     }
 
     /**
-     * @Given /^I upload a lay csv that contains a row with deputy email \'([^\']*)\'$/
+     * @Then /^I should see next years report details$/
      */
-    public function iUploadALayCsvThatContainsARowWithDeputyEmail(string $email)
+    public function iShouldSeeNextYearsReportDetails()
     {
-        $this->iNavigateToAdminUploadUsersPage();
+        $nextYearStartDate = (clone $this->registrationReportStartDate)->modify('+1 year')->format('Y m d');
+        $nextYearEndDate = (clone $this->registrationReportEndDate)->modify('+1 year')->format('Y m d');
 
-        $this->uploadedUserEmail = $email;
+        if (!str_contains($this->getSession()->getPage()->getContent(), $nextYearStartDate)) {
+            $message = sprintf('Next years expected start date (%s) not visible on page', $nextYearStartDate);
+            throw new BehatException($message);
+        }
 
-        $this->attachFileToField('admin_upload[file]', 'add/path/for/csv.file');
-        $this->pressButton('Upload Lay users');
-        $this->waitForAjaxAndRefresh();
+        if (!str_contains($this->getSession()->getPage()->getContent(), $nextYearEndDate->format('Y m d'))) {
+            $message = sprintf('Next years expected end date (%s) not visible on page', $nextYearEndDate);
+            throw new BehatException($message);
+        }
+    }
+
+    /**
+     * @When /^I open the (admin |)(activation|password reset) page for "(.+)"$/
+     */
+    public function openActivationOrPasswordResetPage($admin, $pageType, $email)
+    {
+        $token = $this->em->getRepository(User::class)->findOneBy(['email' => $this->uploadedUserEmail])->getRegistrationToken();
+        $this->visitAdminPath('/logout');
+
+        $page = 'activation' === $pageType ? 'activate' : 'password-reset';
+
+        if ('' === $admin || false === $admin) {
+            $this->visitPath("/user/$page/$token");
+        } else {
+            $this->visitAdminPath("/user/$page/$token");
+        }
     }
 }
