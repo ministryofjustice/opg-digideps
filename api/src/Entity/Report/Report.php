@@ -141,47 +141,31 @@ class Report implements ReportInterface
      */
     public static function getSectionsSettings()
     {
-        $allReports = [
-            self::TYPE_103, self::TYPE_102, self::TYPE_104, self::TYPE_103_4, self::TYPE_102_4, //Lay
-            self::TYPE_103_6, self::TYPE_102_6, self::TYPE_104_6, self::TYPE_103_4_6, self::TYPE_102_4_6, // PA
-            self::TYPE_103_5, self::TYPE_102_5, self::TYPE_104_5, self::TYPE_103_4_5, self::TYPE_102_4_5, // Prof
-        ];
-        $pfaAndCombined = [
-            self::TYPE_103, self::TYPE_102, self::TYPE_103_4, self::TYPE_102_4, //Lay
-            self::TYPE_103_6, self::TYPE_102_6, self::TYPE_103_4_6, self::TYPE_102_4_6, // PA
-            self::TYPE_103_5, self::TYPE_102_5, self::TYPE_103_4_5, self::TYPE_102_4_5, // Prof
-        ];
-        $hw = [
-            self::TYPE_104, self::TYPE_103_4, self::TYPE_102_4, // Lay
-            self::TYPE_104_6, self::TYPE_103_4_6, self::TYPE_102_4_6, // PA
-            self::TYPE_104_5, self::TYPE_103_4_5, self::TYPE_102_4_5, // PA
-        ];
-
         $allProfReports = [
             self::TYPE_103_5, self::TYPE_102_5, self::TYPE_104_5,
             self::TYPE_103_4_5, self::TYPE_102_4_5,
         ];
 
         return [
-            self::SECTION_DECISIONS => $allReports,
-            self::SECTION_CONTACTS => $allReports,
-            self::SECTION_VISITS_CARE => $allReports,
-            self::SECTION_LIFESTYLE => $hw,
+            self::SECTION_DECISIONS => self::getAllReportTypes(),
+            self::SECTION_CONTACTS => self::getAllReportTypes(),
+            self::SECTION_VISITS_CARE => self::getAllReportTypes(),
+            self::SECTION_LIFESTYLE => self::getAllHwReportTypes(),
             // money
-            self::SECTION_BANK_ACCOUNTS => $pfaAndCombined,
+            self::SECTION_BANK_ACCOUNTS => self::getAllPfasAndCombinedReportTypes(),
             self::SECTION_MONEY_TRANSFERS => [self::TYPE_102, self::TYPE_102_4, self::TYPE_102_6, self::TYPE_102_4_6, self::TYPE_102_5, self::TYPE_102_4_5],
             self::SECTION_MONEY_IN => [self::TYPE_102, self::TYPE_102_4, self::TYPE_102_6, self::TYPE_102_4_6, self::TYPE_102_5, self::TYPE_102_4_5],
             self::SECTION_MONEY_OUT => [self::TYPE_102, self::TYPE_102_4, self::TYPE_102_6, self::TYPE_102_4_6, self::TYPE_102_5, self::TYPE_102_4_5],
             self::SECTION_MONEY_IN_SHORT => [self::TYPE_103, self::TYPE_103_4, self::TYPE_103_6, self::TYPE_103_4_6, self::TYPE_103_5, self::TYPE_103_4_5],
             self::SECTION_MONEY_OUT_SHORT => [self::TYPE_103, self::TYPE_103_4, self::TYPE_103_6, self::TYPE_103_4_6, self::TYPE_103_5, self::TYPE_103_4_5],
-            self::SECTION_ASSETS => $pfaAndCombined,
-            self::SECTION_DEBTS => $pfaAndCombined,
-            self::SECTION_GIFTS => $pfaAndCombined,
+            self::SECTION_ASSETS => self::getAllPfasAndCombinedReportTypes(),
+            self::SECTION_DEBTS => self::getAllPfasAndCombinedReportTypes(),
+            self::SECTION_GIFTS => self::getAllPfasAndCombinedReportTypes(),
             self::SECTION_BALANCE => [self::TYPE_102, self::TYPE_102_4, self::TYPE_102_6, self::TYPE_102_4_6, self::TYPE_102_5, self::TYPE_102_4_5],
-            self::SECTION_CLIENT_BENEFITS_CHECK => $pfaAndCombined,
+            self::SECTION_CLIENT_BENEFITS_CHECK => self::getAllPfasAndCombinedReportTypes(),
             // end money
-            self::SECTION_ACTIONS => $allReports,
-            self::SECTION_OTHER_INFO => $allReports,
+            self::SECTION_ACTIONS => self::getAllReportTypes(),
+            self::SECTION_OTHER_INFO => self::getAllReportTypes(),
             self::SECTION_DEPUTY_EXPENSES => [self::TYPE_103, self::TYPE_102, self::TYPE_103_4, self::TYPE_102_4], // Lay except 104
             self::SECTION_PA_DEPUTY_EXPENSES => [
                 self::TYPE_103_6, self::TYPE_102_6, self::TYPE_103_4_6, self::TYPE_102_4_6, // PA except 104-6
@@ -192,7 +176,7 @@ class Report implements ReportInterface
             self::SECTION_PROF_DEPUTY_COSTS => $allProfReports,
             // add when ready
             self::SECTION_PROF_DEPUTY_COSTS_ESTIMATE => $allProfReports,
-            self::SECTION_DOCUMENTS => $allReports,
+            self::SECTION_DOCUMENTS => self::getAllReportTypes(),
         ];
     }
 
@@ -1430,5 +1414,32 @@ class Report implements ReportInterface
         $this->benefitsSectionReleaseDate = $benefitsSectionReleaseDate;
 
         return $this;
+    }
+
+    public static function getAllReportTypes()
+    {
+        return [
+            self::TYPE_103, self::TYPE_102, self::TYPE_104, self::TYPE_103_4, self::TYPE_102_4, //Lay
+            self::TYPE_103_6, self::TYPE_102_6, self::TYPE_104_6, self::TYPE_103_4_6, self::TYPE_102_4_6, // PA
+            self::TYPE_103_5, self::TYPE_102_5, self::TYPE_104_5, self::TYPE_103_4_5, self::TYPE_102_4_5, // Prof
+        ];
+    }
+
+    public static function getAllHwReportTypes()
+    {
+        return [
+            self::TYPE_104, self::TYPE_103_4, self::TYPE_102_4, // Lay
+            self::TYPE_104_6, self::TYPE_103_4_6, self::TYPE_102_4_6, // PA
+            self::TYPE_104_5, self::TYPE_103_4_5, self::TYPE_102_4_5, // PA
+        ];
+    }
+
+    public static function getAllPfasAndCombinedReportTypes()
+    {
+        return [
+            self::TYPE_103, self::TYPE_102, self::TYPE_103_4, self::TYPE_102_4, //Lay
+            self::TYPE_103_6, self::TYPE_102_6, self::TYPE_103_4_6, self::TYPE_102_4_6, // PA
+            self::TYPE_103_5, self::TYPE_102_5, self::TYPE_103_4_5, self::TYPE_102_4_5, // Prof
+        ];
     }
 }

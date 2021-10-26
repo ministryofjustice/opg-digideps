@@ -7,7 +7,7 @@ Feature: Reporting Checklists - Lay reporting checklist
         When I navigate to the clients search page
         And I search for the 'lay' client
         And I click the clients details page link
-        When I navigate to the clients report checklist page
+        And I navigate to the clients report checklist page
         And I submit the checklist with the form filled in
         Then I should be redirected to the checklist submitted page
 
@@ -17,7 +17,7 @@ Feature: Reporting Checklists - Lay reporting checklist
         When I navigate to the clients search page
         And I search for the 'lay' client
         And I click the clients details page link
-        When I navigate to the clients report checklist page
+        And I navigate to the clients report checklist page
         And I submit the checklist without filling it in
         Then I should see all the validation errors
 
@@ -27,5 +27,5 @@ Feature: Reporting Checklists - Lay reporting checklist
         When I navigate to the clients search page
         And I search for the 'lay' client
         And I click the clients details page link
-        When I navigate to the clients report checklist page
+        And I navigate to the clients report checklist page
         Then I can only see the 'lay hw' specific section

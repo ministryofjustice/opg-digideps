@@ -4,6 +4,8 @@ declare(strict_types=1);
 
 namespace App\Tests\Behat\v2\Reporting\Admin;
 
+use App\Entity\Report\Report;
+
 trait ReportingChecklistTrait
 {
     // Amount of required checklist fields
@@ -109,9 +111,15 @@ trait ReportingChecklistTrait
         $this->selectOption('report_checklist[satisfiedWithHealthAndLifestyle]', 'yes');
         $this->selectOption('report_checklist[futureSignificantDecisions]', 'yes');
         $this->selectOption('report_checklist[hasDeputyRaisedConcerns]', 'yes');
+
+        if (in_array($this->loggedInUserDetails->getCurrentReportType(), Report::getAllPfasAndCombinedReportTypes())) {
+            $this->selectOption('report_checklist[clientBenefitsCheck]', 'satisfied');
+        }
+
         $this->selectOption('report_checklist[caseWorkerSatisified]', 'yes');
         $this->fillField('report_checklist[lodgingSummary]', 'Lorem ipsum');
         $this->selectOption('report_checklist[finalDecision]', 'satisfied');
+
         $this->pressButton('report_checklist[submitAndContinue]');
     }
 
@@ -139,7 +147,7 @@ trait ReportingChecklistTrait
     /**
      * @Then I can only see the :deputyType specific section
      */
-    public function ICannotSeeTheProfSpecificCostsSection(string $deputyType)
+    public function ICannotSeeTheSpecificCostsSection(string $deputyType)
     {
         if ('public authority pfa high' === $deputyType) {
             $hiddenItems = [
