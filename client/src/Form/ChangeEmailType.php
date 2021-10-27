@@ -39,7 +39,7 @@ class ChangeEmailType extends AbstractType
             'invalid_message' => 'user.email.new.doesntMatch',
         ])
         ->add('password', FormTypes\PasswordType::class, [
-            'mapped' => true,
+            'mapped' => false,
             'constraints' => [
                 new Assert\NotBlank(['message' => 'user.password.existing.notBlank', 'groups' => [self::VALIDATION_GROUP]]),
                 new DUserPassword(['message' => 'user.password.existing.notCorrect', 'groups' => [self::VALIDATION_GROUP]]),

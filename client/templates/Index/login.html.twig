@@ -15,6 +15,8 @@
         {{ (page ~ '.pageTitleNewPassword') | trans }}
     {% elseif app.session.get('login-context') == 'password-update' %}
         {{ (page ~ '.pageTitleUpdatedPassword') | trans }}
+    {% elseif app.session.get('login-context') == 'email-update' %}
+        {{ (page ~ '.pageTitleUpdatedEmail') | trans }}
     {% else %}
         {{ (page ~ '.pageTitle') | trans }}
     {% endif %}

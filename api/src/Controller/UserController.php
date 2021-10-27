@@ -210,10 +210,6 @@ class UserController extends RestController
 
         $requestedUser->setEmail($data['updated_email']);
 
-        if (array_key_exists('set_active', $data)) {
-            $requestedUser->setActive($data['set_active']);
-        }
-
         $this->em->flush();
 
         return $requestedUser->getId();
