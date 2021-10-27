@@ -36,49 +36,49 @@
     {% endif %}
 
     {% if app.user.isDeputyOrg() %}
-    <h2 class="govuk-heading-m">{{ 'settings-page.subtitle' | trans }}</h2>
-    <dl class="govuk-summary-list">
-        <div class="govuk-summary-list__row">
-            <dt class="govuk-summary-list__key">
-                Email
-            </dt>
-            <dd class="govuk-summary-list__value">
-                {{ app.user.email }}
-            </dd>
-            <dd class="govuk-summary-list__actions">
-                <a class="govuk-link" href="{{ path('org_profile_email_edit') }}">
-                    Edit<span class="govuk-visually-hidden"> email</span>
+        <h2 class="govuk-heading-m">{{ 'settings-page.subtitle' | trans }}</h2>
+        <dl class="govuk-summary-list">
+            <div class="govuk-summary-list__row">
+                <dt class="govuk-summary-list__key">
+                    Email
+                </dt>
+                <dd class="govuk-summary-list__value">
+                    {{ app.user.email }}
+                </dd>
+                <dd class="govuk-summary-list__actions">
+                    <a class="govuk-link" href="{{ path('org_profile_email_edit') }}">
+                        Edit<span class="govuk-visually-hidden"> email</span>
+                    </a>
+                </dd>
+            </div>
+            <div class="govuk-summary-list__row">
+                <dt class="govuk-summary-list__key">
+                    Password
+                </dt>
+                <dd class="govuk-summary-list__value">
+                    ********
+                </dd>
+                <dd class="govuk-summary-list__actions">
+                <a class="govuk-link" href="{{ path('org_profile_password_edit') }}">
+                    Edit<span class="govuk-visually-hidden"> password</span>
                 </a>
-            </dd>
-        </div>
-        <div class="govuk-summary-list__row">
-            <dt class="govuk-summary-list__key">
-                Password
-            </dt>
-            <dd class="govuk-summary-list__value">
-                ********
-            </dd>
-            <dd class="govuk-summary-list__actions">
-            <a class="govuk-link" href="{{ path('org_profile_password_edit') }}">
-                Edit<span class="govuk-visually-hidden"> password</span>
-            </a>
-            </dd>
-        </div>
-    </dl>
+                </dd>
+            </div>
+        </dl>
     {% else %}
-    <h2 class="govuk-heading-m">
-        <a href="{{ path(app.user.isDeputyOrg() ? 'org_profile_show' : 'user_show') }}" class="govuk-link behat-link-profile-show">
-            {{ 'settings-page.links.profile.title' | trans }}
-        </a>
-    </h2>
-    <p class="text text-info">{{ (app.user.isDeputyOrg() ? 'settings-page.links.profile.pa-description' : 'settings-page.links.profile.description') | trans }}</p>
+        <h2 class="govuk-heading-m">
+            <a href="{{ path(app.user.isDeputyOrg() ? 'org_profile_show' : 'user_show') }}" class="govuk-link behat-link-profile-show">
+                {{ 'settings-page.links.profile.title' | trans }}
+            </a>
+        </h2>
+        <p class="text text-info">{{ (app.user.isDeputyOrg() ? 'settings-page.links.profile.pa-description' : 'settings-page.links.profile.description') | trans }}</p>
 
-    <h2 class="govuk-heading-m">
-        <a href="{{ path(app.user.isDeputyOrg() ? 'org_profile_password_edit' : 'user_password_edit') }}" class="govuk-link behat-link-password-edit">
-            {{ 'settings-page.links.password.title' | trans }}
-        </a>
-    </h2>
-    <p class="text text-info">{{ 'settings-page.links.password.description' | trans }}</p>
+        <h2 class="govuk-heading-m">
+            <a href="{{ path(app.user.isDeputyOrg() ? 'org_profile_password_edit' : 'user_password_edit') }}" class="govuk-link behat-link-password-edit">
+                {{ 'settings-page.links.password.title' | trans }}
+            </a>
+        </h2>
+        <p class="text text-info">{{ 'settings-page.links.password.description' | trans }}</p>
     {% endif %}
 
 {% endblock %}
