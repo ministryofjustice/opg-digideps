@@ -88,12 +88,6 @@ class Report implements ReportInterface
 
     const ENABLE_FEE_SECTIONS = false;
 
-    private static $reportTypes = [
-        self::TYPE_103, self::TYPE_102, self::TYPE_104, self::TYPE_103_4, self::TYPE_102_4,
-        self::TYPE_103_6, self::TYPE_102_6, self::TYPE_104_6, self::TYPE_103_4_6, self::TYPE_102_4_6,
-        self::TYPE_103_5, self::TYPE_102_5, self::TYPE_104_5, self::TYPE_103_4_5, self::TYPE_102_4_5,
-    ];
-
     const SECTION_DECISIONS = 'decisions';
     const SECTION_CONTACTS = 'contacts';
     const SECTION_VISITS_CARE = 'visitsCare';
@@ -141,42 +135,33 @@ class Report implements ReportInterface
      */
     public static function getSectionsSettings()
     {
-        $allProfReports = [
-            self::TYPE_103_5, self::TYPE_102_5, self::TYPE_104_5,
-            self::TYPE_103_4_5, self::TYPE_102_4_5,
-        ];
-
         return [
-            self::SECTION_DECISIONS => self::getAllReportTypes(),
-            self::SECTION_CONTACTS => self::getAllReportTypes(),
-            self::SECTION_VISITS_CARE => self::getAllReportTypes(),
-            self::SECTION_LIFESTYLE => self::getAllHwReportTypes(),
+            self::SECTION_DECISIONS => self::allRolesReportTypes(),
+            self::SECTION_CONTACTS => self::allRolesReportTypes(),
+            self::SECTION_VISITS_CARE => self::allRolesReportTypes(),
+            self::SECTION_LIFESTYLE => self::allRolesHwAndCombinedReportTypes(),
             // money
-            self::SECTION_BANK_ACCOUNTS => self::getAllPfasAndCombinedReportTypes(),
-            self::SECTION_MONEY_TRANSFERS => [self::TYPE_102, self::TYPE_102_4, self::TYPE_102_6, self::TYPE_102_4_6, self::TYPE_102_5, self::TYPE_102_4_5],
-            self::SECTION_MONEY_IN => [self::TYPE_102, self::TYPE_102_4, self::TYPE_102_6, self::TYPE_102_4_6, self::TYPE_102_5, self::TYPE_102_4_5],
-            self::SECTION_MONEY_OUT => [self::TYPE_102, self::TYPE_102_4, self::TYPE_102_6, self::TYPE_102_4_6, self::TYPE_102_5, self::TYPE_102_4_5],
-            self::SECTION_MONEY_IN_SHORT => [self::TYPE_103, self::TYPE_103_4, self::TYPE_103_6, self::TYPE_103_4_6, self::TYPE_103_5, self::TYPE_103_4_5],
-            self::SECTION_MONEY_OUT_SHORT => [self::TYPE_103, self::TYPE_103_4, self::TYPE_103_6, self::TYPE_103_4_6, self::TYPE_103_5, self::TYPE_103_4_5],
-            self::SECTION_ASSETS => self::getAllPfasAndCombinedReportTypes(),
-            self::SECTION_DEBTS => self::getAllPfasAndCombinedReportTypes(),
-            self::SECTION_GIFTS => self::getAllPfasAndCombinedReportTypes(),
-            self::SECTION_BALANCE => [self::TYPE_102, self::TYPE_102_4, self::TYPE_102_6, self::TYPE_102_4_6, self::TYPE_102_5, self::TYPE_102_4_5],
-            self::SECTION_CLIENT_BENEFITS_CHECK => self::getAllPfasAndCombinedReportTypes(),
+            self::SECTION_BANK_ACCOUNTS => self::allRolesPfasAndCombinedReportTypes(),
+            self::SECTION_MONEY_TRANSFERS => self::allRolesPfaAndCombinedHighAssets(),
+            self::SECTION_MONEY_IN => self::allRolesPfaAndCombinedHighAssets(),
+            self::SECTION_MONEY_OUT => self::allRolesPfaAndCombinedHighAssets(),
+            self::SECTION_MONEY_IN_SHORT => self::allRolesPfaAndCombinedLowAssets(),
+            self::SECTION_MONEY_OUT_SHORT => self::allRolesPfaAndCombinedLowAssets(),
+            self::SECTION_ASSETS => self::allRolesPfasAndCombinedReportTypes(),
+            self::SECTION_DEBTS => self::allRolesPfasAndCombinedReportTypes(),
+            self::SECTION_GIFTS => self::allRolesPfasAndCombinedReportTypes(),
+            self::SECTION_BALANCE => self::allRolesPfaAndCombinedHighAssets(),
+            self::SECTION_CLIENT_BENEFITS_CHECK => self::allRolesPfasAndCombinedReportTypes(),
             // end money
-            self::SECTION_ACTIONS => self::getAllReportTypes(),
-            self::SECTION_OTHER_INFO => self::getAllReportTypes(),
-            self::SECTION_DEPUTY_EXPENSES => [self::TYPE_103, self::TYPE_102, self::TYPE_103_4, self::TYPE_102_4], // Lay except 104
-            self::SECTION_PA_DEPUTY_EXPENSES => [
-                self::TYPE_103_6, self::TYPE_102_6, self::TYPE_103_4_6, self::TYPE_102_4_6, // PA except 104-6
-            ],
-            self::SECTION_PROF_CURRENT_FEES => self::ENABLE_FEE_SECTIONS ? [
-                self::TYPE_103_5, self::TYPE_102_5, self::TYPE_103_4_5, self::TYPE_102_4_5, // Prof except 104-6
-            ] : [],
-            self::SECTION_PROF_DEPUTY_COSTS => $allProfReports,
+            self::SECTION_ACTIONS => self::allRolesReportTypes(),
+            self::SECTION_OTHER_INFO => self::allRolesReportTypes(),
+            self::SECTION_DEPUTY_EXPENSES => self::layPfaAndCombined(),
+            self::SECTION_PA_DEPUTY_EXPENSES => self::paPfaAndCombined(),
+            self::SECTION_PROF_CURRENT_FEES => self::ENABLE_FEE_SECTIONS ? self::profPfaAndCombined() : [],
+            self::SECTION_PROF_DEPUTY_COSTS => self::allProfReportTypes(),
             // add when ready
-            self::SECTION_PROF_DEPUTY_COSTS_ESTIMATE => $allProfReports,
-            self::SECTION_DOCUMENTS => self::getAllReportTypes(),
+            self::SECTION_PROF_DEPUTY_COSTS_ESTIMATE => self::allProfReportTypes(),
+            self::SECTION_DOCUMENTS => self::allRolesReportTypes(),
         ];
     }
 
@@ -457,7 +442,7 @@ class Report implements ReportInterface
      */
     public function __construct(Client $client, $type, DateTime $startDate, DateTime $endDate, $dateChecks = true)
     {
-        if (!in_array($type, self::$reportTypes)) {
+        if (!in_array($type, self::allRolesReportTypes())) {
             throw new \InvalidArgumentException("$type not a valid report type");
         }
         $this->type = $type;
@@ -1416,7 +1401,7 @@ class Report implements ReportInterface
         return $this;
     }
 
-    public static function getAllReportTypes()
+    public static function allRolesReportTypes(): array
     {
         return [
             self::TYPE_103, self::TYPE_102, self::TYPE_104, self::TYPE_103_4, self::TYPE_102_4, //Lay
@@ -1425,7 +1410,7 @@ class Report implements ReportInterface
         ];
     }
 
-    public static function getAllHwReportTypes()
+    public static function allRolesHwAndCombinedReportTypes(): array
     {
         return [
             self::TYPE_104, self::TYPE_103_4, self::TYPE_102_4, // Lay
@@ -1434,11 +1419,57 @@ class Report implements ReportInterface
         ];
     }
 
-    public static function getAllPfasAndCombinedReportTypes()
+    public static function allRolesPfasAndCombinedReportTypes(): array
     {
         return [
             self::TYPE_103, self::TYPE_102, self::TYPE_103_4, self::TYPE_102_4, //Lay
             self::TYPE_103_6, self::TYPE_102_6, self::TYPE_103_4_6, self::TYPE_102_4_6, // PA
+            self::TYPE_103_5, self::TYPE_102_5, self::TYPE_103_4_5, self::TYPE_102_4_5, // Prof
+        ];
+    }
+
+    public static function allProfReportTypes(): array
+    {
+        return [
+            self::TYPE_103_5, self::TYPE_102_5, self::TYPE_104_5, self::TYPE_103_4_5, self::TYPE_102_4_5, // Prof
+        ];
+    }
+
+    public static function allRolesPfaAndCombinedHighAssets(): array
+    {
+        return [
+            self::TYPE_102, self::TYPE_102_4, // Lay
+            self::TYPE_102_6, self::TYPE_102_4_6, // PA
+            self::TYPE_102_5, self::TYPE_102_4_5, // Prof
+        ];
+    }
+
+    public static function allRolesPfaAndCombinedLowAssets(): array
+    {
+        return [
+            self::TYPE_103, self::TYPE_103_4, // Lay
+            self::TYPE_103_6, self::TYPE_103_4_6, // PA
+            self::TYPE_103_5, self::TYPE_103_4_5, // Prof
+        ];
+    }
+
+    public static function layPfaAndCombined(): array
+    {
+        return [
+            self::TYPE_103, self::TYPE_102, self::TYPE_103_4, self::TYPE_102_4,  // Lay
+        ];
+    }
+
+    public static function paPfaAndCombined(): array
+    {
+        return [
+            self::TYPE_103_6, self::TYPE_102_6, self::TYPE_103_4_6, self::TYPE_102_4_6, // PA
+        ];
+    }
+
+    public static function profPfaAndCombined(): array
+    {
+        return [
             self::TYPE_103_5, self::TYPE_102_5, self::TYPE_103_4_5, self::TYPE_102_4_5, // Prof
         ];
     }
