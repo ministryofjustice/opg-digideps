@@ -7,6 +7,7 @@ RESET  := $(shell tput -Txterm sgr0)
 # Add the following 'help' target to your Makefile
 # And add help text after each target name starting with '\#\#'
 # A category can be added with @category
+# This was made possible by https://gist.github.com/prwhite/8168133#gistcomment-1727513
 HELP_FUN = \
     %help; \
     while(<>) { push @{$$help{$$2 // 'options'}}, [$$1, $$3] if /^([a-zA-Z0-9\-]+)\s*:.*\#\#(?:@([a-zA-Z\-]+))?\s(.*)$$/ }; \
