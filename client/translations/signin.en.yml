@@ -3,6 +3,7 @@ signIn:
   pageTitle: Sign in
   pageTitleNewPassword: Sign in to your new account
   pageTitleUpdatedPassword: Sign in with your new password
+  pageTitleUpdatedEmail: Sign in with your new email address
 
 signedOut:
   pageTitle: You are now signed out
@@ -14,7 +15,6 @@ signInAdmin:
   pageTitle: OPG user sign in
   pageTitleNewPassword: Sign in to your new account
   pageTitleUpdatedPassword: Sign in with your new password
-  pageTitleUpdatedEmail: Sign in with your new email address
 
 forgottenPassword: Forgotten your password?
 sessionTimeoutOutWarning: There's a problem with your connection to this service. You've been signed out because you've not used the service for more than %time%.
