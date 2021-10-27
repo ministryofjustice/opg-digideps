@@ -54,21 +54,12 @@ trait ReportingChecklistTrait
     }
 
     /**
-     * @When I search for the :deputyType client
+     * @When I search for the client I'm interacting with
      */
-    public function iSearchForTheClient(string $deputyType)
+    public function iSearchForTheClient()
     {
-        $deputy = '';
-        if ('lay' === $deputyType) {
-            $deputy = $this->layDeputySubmittedHealthWelfareDetails;
-        } elseif ('prof' === $deputyType) {
-            $deputy = $this->profNamedDeputySubmittedPfaHighDetails;
-        } elseif ('pa' === $deputyType) {
-            $deputy = $this->publicAuthNamedSubmittedPfaHighDetails;
-        }
-
-        $user = is_null($this->interactingWithUserDetails) ? $deputy : $this->interactingWithUserDetails;
-        $this->searchAdminForClientWithTerm($user->getClientCaseNumber());
+        $this->assertInteractingWithUserIsSet();
+        $this->searchAdminForClientWithTerm($this->interactingWithUserDetails->getClientCaseNumber());
     }
 
     /**
@@ -102,18 +93,30 @@ trait ReportingChecklistTrait
      */
     public function iSubmitTheChecklistWithTheFormFilledIn()
     {
+        $reportType = $this->interactingWithUserDetails->getCurrentReportType();
+
         $this->selectOption('report_checklist[reportingPeriodAccurate]', 'yes');
         $this->checkOption('report_checklist[contactDetailsUptoDate]');
         $this->checkOption('report_checklist[deputyFullNameAccurateInCasrec]');
-        $this->selectOption('report_checklist[decisionsSatisfactory]', 'yes');
-        $this->selectOption('report_checklist[consultationsSatisfactory]', 'yes');
-        $this->selectOption('report_checklist[careArrangements]', 'yes');
-        $this->selectOption('report_checklist[satisfiedWithHealthAndLifestyle]', 'yes');
-        $this->selectOption('report_checklist[futureSignificantDecisions]', 'yes');
-        $this->selectOption('report_checklist[hasDeputyRaisedConcerns]', 'yes');
 
-        if (in_array($this->loggedInUserDetails->getCurrentReportType(), Report::getAllPfasAndCombinedReportTypes())) {
-            $this->selectOption('report_checklist[clientBenefitsCheck]', 'satisfied');
+        if (in_array($reportType, Report::allRolesHwAndCombinedReportTypes())) {
+            $this->selectOption('report_checklist[decisionsSatisfactory]', 'yes');
+            $this->selectOption('report_checklist[consultationsSatisfactory]', 'yes');
+            $this->selectOption('report_checklist[careArrangements]', 'yes');
+            $this->selectOption('report_checklist[satisfiedWithHealthAndLifestyle]', 'yes');
+            $this->selectOption('report_checklist[futureSignificantDecisions]', 'yes');
+            $this->selectOption('report_checklist[hasDeputyRaisedConcerns]', 'yes');
+        }
+
+        if (in_array($reportType, Report::allRolesPfasAndCombinedReportTypes())) {
+            $this->selectOption('report_checklist[clientBenefitsCheck]', 'yes');
+            $this->selectOption('report_checklist[assetsDeclaredAndManaged]', 'yes');
+            $this->selectOption('report_checklist[debtsManaged]', 'yes');
+            $this->selectOption('report_checklist[openClosingBalancesMatch]', 'yes');
+            $this->selectOption('report_checklist[accountsBalance]', 'yes');
+            $this->selectOption('report_checklist[moneyMovementsAcceptable]', 'yes');
+            $this->selectOption('report_checklist[bondAdequate]', 'yes');
+            $this->selectOption('report_checklist[bondOrderMatchCasrec]', 'yes');
         }
 
         $this->selectOption('report_checklist[caseWorkerSatisified]', 'yes');

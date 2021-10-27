@@ -135,6 +135,7 @@ class ReportTestHelper
         $report
             ->setSubmitDate($submitDate)
             ->setSubmitted(true)
+            ->setSubmittedBy($submittedBy)
             ->setWishToProvideDocumentation('yes');
 
         $em->persist($reportPdf);

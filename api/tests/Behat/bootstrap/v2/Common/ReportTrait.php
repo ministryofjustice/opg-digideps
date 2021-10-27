@@ -88,6 +88,21 @@ trait ReportTrait
     }
 
     /**
+     * @Given a Lay Deputy has submitted a health and welfare report
+     *
+     * @throws Exception
+     */
+    public function aLayDeputyHasSubmittedAHealthAndWelfareReport()
+    {
+        if (empty($this->layDeputySubmittedHealthWelfareDetails)) {
+            throw new Exception('It looks like fixtures are not loaded - missing $layDeputySubmittedHealthWelfareDetails');
+        }
+
+        $this->loginToFrontendAs($this->layDeputySubmittedHealthWelfareDetails->getUserEmail());
+        $this->interactingWithUserDetails = $this->layDeputySubmittedHealthWelfareDetails;
+    }
+
+    /**
      * @Given a Lay Deputy has not started an NDR report
      */
     public function aNdrLayDeputyHasNotStartedAReport()
