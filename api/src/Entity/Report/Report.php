@@ -136,9 +136,9 @@ class Report implements ReportInterface
     public static function getSectionsSettings()
     {
         return [
-            self::SECTION_DECISIONS => self::allRolesReportTypes(),
-            self::SECTION_CONTACTS => self::allRolesReportTypes(),
-            self::SECTION_VISITS_CARE => self::allRolesReportTypes(),
+            self::SECTION_DECISIONS => self::allRolesAllReportTypes(),
+            self::SECTION_CONTACTS => self::allRolesAllReportTypes(),
+            self::SECTION_VISITS_CARE => self::allRolesAllReportTypes(),
             self::SECTION_LIFESTYLE => self::allRolesHwAndCombinedReportTypes(),
             // money
             self::SECTION_BANK_ACCOUNTS => self::allRolesPfasAndCombinedReportTypes(),
@@ -153,15 +153,15 @@ class Report implements ReportInterface
             self::SECTION_BALANCE => self::allRolesPfaAndCombinedHighAssets(),
             self::SECTION_CLIENT_BENEFITS_CHECK => self::allRolesPfasAndCombinedReportTypes(),
             // end money
-            self::SECTION_ACTIONS => self::allRolesReportTypes(),
-            self::SECTION_OTHER_INFO => self::allRolesReportTypes(),
+            self::SECTION_ACTIONS => self::allRolesAllReportTypes(),
+            self::SECTION_OTHER_INFO => self::allRolesAllReportTypes(),
             self::SECTION_DEPUTY_EXPENSES => self::layPfaAndCombined(),
             self::SECTION_PA_DEPUTY_EXPENSES => self::paPfaAndCombined(),
             self::SECTION_PROF_CURRENT_FEES => self::ENABLE_FEE_SECTIONS ? self::profPfaAndCombined() : [],
             self::SECTION_PROF_DEPUTY_COSTS => self::allProfReportTypes(),
             // add when ready
             self::SECTION_PROF_DEPUTY_COSTS_ESTIMATE => self::allProfReportTypes(),
-            self::SECTION_DOCUMENTS => self::allRolesReportTypes(),
+            self::SECTION_DOCUMENTS => self::allRolesAllReportTypes(),
         ];
     }
 
@@ -442,7 +442,7 @@ class Report implements ReportInterface
      */
     public function __construct(Client $client, $type, DateTime $startDate, DateTime $endDate, $dateChecks = true)
     {
-        if (!in_array($type, self::allRolesReportTypes())) {
+        if (!in_array($type, self::allRolesAllReportTypes())) {
             throw new \InvalidArgumentException("$type not a valid report type");
         }
         $this->type = $type;
@@ -1401,7 +1401,7 @@ class Report implements ReportInterface
         return $this;
     }
 
-    public static function allRolesReportTypes(): array
+    public static function allRolesAllReportTypes(): array
     {
         return [
             self::TYPE_103, self::TYPE_102, self::TYPE_104, self::TYPE_103_4, self::TYPE_102_4, //Lay
