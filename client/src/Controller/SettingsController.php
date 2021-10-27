@@ -140,7 +140,7 @@ class SettingsController extends AbstractController
         $user = $this->userApi->getUserWithData();
 
         $form = $this->createForm(FormDir\ChangeEmailType::class, $user, [
-            'mapped' => true,
+            'mapped' => false,
             'error_bubbling' => true,
         ]);
         $form->handleRequest($request);
@@ -151,6 +151,8 @@ class SettingsController extends AbstractController
             $this->restClient->put('user/'.$user->getId().'/update-email', json_encode([
                 'updated_email' => $updatedEmail,
             ]));
+
+            $request->getSession()->set('login-context', 'email-update');
 
             $successRoute = $this->getUser()->isDeputyOrg() ? 'org_settings' : 'account_settings';
 
