@@ -4,6 +4,10 @@
 {% trans_default_domain translationDomain %}
 {% set transOptions = {'%client%': report.client.firstname | e } %}
 
+{% if showActions is not defined %}
+    {% set showActions = false %}
+{% endif %}
+
 <div class="govuk-grid-row" id="benefits-check">
     <div class="govuk-grid-column-full">
         <h2 class="govuk-heading-l"> {{ 'summaryPage.table.benefitsCheck.title' | trans(transOptions, translationDomain) }}</h2>

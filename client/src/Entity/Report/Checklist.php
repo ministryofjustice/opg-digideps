@@ -101,6 +101,14 @@ class Checklist implements SynchronisableInterface
     private $debtsManaged;
 
     /**
+     * @var string|null
+     * @JMS\Type("string")
+     * @JMS\Groups({"report-checklist"})
+     * @Assert\NotBlank(message="checklist.yesNoNa", groups={"submit-clientBenefitsCheck-checklist"})
+     */
+    private $clientBenefitsChecked;
+
+    /**
      * @var string
      *
      * @JMS\Groups({"report-checklist"})
@@ -302,13 +310,6 @@ class Checklist implements SynchronisableInterface
      * @JMS\Groups({"report-checklist-uuid"})
      */
     private $uuid;
-
-    /**
-     * @var string|null
-     * @JMS\Type("string")
-     * @JMS\Groups({"report-checklist"})
-     */
-    private $clientBenefitsChecked;
 
     /**
      * Checklist constructor.

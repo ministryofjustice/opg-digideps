@@ -9,6 +9,7 @@ checklistPage:
         contacts: L3. People consulted
         visitsAndCare: L4. Contact with client, care arrangements and care plan
         healthAndLifestyle: L5. Health and lifestyle
+        clientBenefitsCheck: Benefits check and income other people receive
         assetsAndDebts: L6. Assets and debts
         money: L7. Money in and money out
         bonds: L8. Bonds
@@ -52,6 +53,7 @@ checklistPage:
     deputysResponses: View deputy's responses
     assetsSummary: View assets summary
     debtsSummary: View debts summary
+    clientBenefitsCheckSummary: View client benefits check summary
     accountsBalances: View accounts balances
     accountsBalanceSummary: View accounts balance summary
     moneyTransfersSummary: View money transfers summary
@@ -108,6 +110,9 @@ checklistPage:
         If the client has any debt, are you satisfied that the debt is appropriate and/or is it
         being managed by the deputy in an appropriate manner?
       qid: L6.2
+    clientBenefitsChecked:
+        label: Have satisfactory responses been provided by the deputy?
+        qid: L6.3
     openClosingBalancesMatch:
       label: Does the opening balances(s) match last year's closing balance?
       qid: L7.1

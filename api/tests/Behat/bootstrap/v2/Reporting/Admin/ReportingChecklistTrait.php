@@ -5,6 +5,7 @@ declare(strict_types=1);
 namespace App\Tests\Behat\v2\Reporting\Admin;
 
 use App\Entity\Report\Report;
+use App\Tests\Behat\BehatException;
 
 trait ReportingChecklistTrait
 {
@@ -94,6 +95,7 @@ trait ReportingChecklistTrait
      */
     public function iSubmitTheChecklistWithTheFormFilledIn()
     {
+        throw new BehatException();
         $reportType = $this->interactingWithUserDetails->getCurrentReportType();
 
         $this->selectOption('report_checklist[reportingPeriodAccurate]', 'yes');
