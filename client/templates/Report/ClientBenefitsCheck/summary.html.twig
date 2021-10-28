@@ -9,6 +9,10 @@
     '%client%': report.client.firstname | e,
 } %}
 
+{% if showActions is not defined %}
+    {% set showActions = false %}
+{% endif %}
+
 {% block htmlTitle %}{{ 'common.htmlTitle' | trans(transOptions, translationDomain) }}{% endblock %}
 {% block pageTitle %}{{ 'common.pageTitle' | trans(transOptions, translationDomain) }}{% endblock %}
 

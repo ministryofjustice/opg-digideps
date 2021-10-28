@@ -33,6 +33,7 @@ trait ReportingChecklistTrait
         'visitsAndCare' => "//a[@href='#visitsAndCare']", // lay, pa, prof
         'lifestyle' => "//a[@href='#lifestyle']", // lay-hw
         'assetsAndDebts' => "//a[@href='#assetsAndDebts']", // lay-assets, pa-assets, prof-assets
+        'clientBenefitsCheck' => "//a[@href='#clientBenefitsCheck']",
         'moneyInOut' => "//a[@href='#moneyInOut']", // lay-assets, pa-assets, prof-assets
         'bonds' => "//a[@href='#bonds']", // lay-assets, pa-assets, prof-assets
         'profDeputyCosts' => "//a[@href='#profDeputyCosts']", // prof
@@ -109,7 +110,7 @@ trait ReportingChecklistTrait
         }
 
         if (in_array($reportType, Report::allRolesPfasAndCombinedReportTypes())) {
-            $this->selectOption('report_checklist[clientBenefitsCheck]', 'yes');
+            $this->selectOption('report_checklist[clientBenefitsChecked]', 'yes');
             $this->selectOption('report_checklist[assetsDeclaredAndManaged]', 'yes');
             $this->selectOption('report_checklist[debtsManaged]', 'yes');
             $this->selectOption('report_checklist[openClosingBalancesMatch]', 'yes');
@@ -175,6 +176,7 @@ trait ReportingChecklistTrait
                 'profDeputyCosts',
                 'profDeputyCostsEstimate',
                 'paFeesExpenses',
+                'clientBenefitsCheck',
             ];
 
             foreach ($this->xPathItems as $xPathitem) {
