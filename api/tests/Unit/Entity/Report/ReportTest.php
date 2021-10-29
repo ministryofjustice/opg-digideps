@@ -36,7 +36,7 @@ class ReportTest extends KernelTestCase
     public function setUp(): void
     {
         $this->client = m::mock(Client::class, ['getUnsubmittedReports' => new ArrayCollection(), 'getSubmittedReports' => new ArrayCollection()]);
-        $this->validReportCtorArgs = [$this->client, Report::TYPE_102, new \DateTime('2017-06-23'), new \DateTime('2018-06-22')];
+        $this->validReportCtorArgs = [$this->client, Report::LAY_PFA_HIGH_ASSETS_TYPE, new \DateTime('2017-06-23'), new \DateTime('2018-06-22')];
         $this->report = m::mock(Report::class.'[has106Flag]', $this->validReportCtorArgs);
 
         $this->gift1 = m::mock(Gift::class, ['getAmount' => 1]);
@@ -53,7 +53,7 @@ class ReportTest extends KernelTestCase
         $startDate = new \Datetime('2017-01-01');
         $endDate = new \Datetime('2018-12-31');
 
-        $report = new Report($this->client, Report::TYPE_102, $startDate, $endDate, false);
+        $report = new Report($this->client, Report::LAY_PFA_HIGH_ASSETS_TYPE, $startDate, $endDate, false);
         $this->assertEquals('2019-02-25', $report->getDueDate()->format('Y-m-d'));
     }
 
@@ -74,13 +74,13 @@ class ReportTest extends KernelTestCase
     {
         $client = new Client();
         foreach ($clientReports as $rep) {
-            $report = (new Report($this->client, Report::TYPE_102, new \DateTime($rep[0]), new \DateTime($rep[1])))->setSubmitted(($rep[2]));
+            $report = (new Report($this->client, Report::LAY_PFA_HIGH_ASSETS_TYPE, new \DateTime($rep[0]), new \DateTime($rep[1])))->setSubmitted(($rep[2]));
             $client->addReport($report);
         }
 
         $this->expectException(\RuntimeException::class);
 
-        new Report($client, Report::TYPE_102, new \DateTime($startDate), new \DateTime($endDate));
+        new Report($client, Report::LAY_PFA_HIGH_ASSETS_TYPE, new \DateTime($startDate), new \DateTime($endDate));
     }
 
     public function testGetMoneyTotal()
@@ -263,7 +263,7 @@ class ReportTest extends KernelTestCase
     public static function sectionsSettingsProvider()
     {
         return [
-            [Report::TYPE_102, ['bankAccounts', 'moneyIn', 'balance', 'clientBenefitsCheck'], ['moneyInShort', 'lifestyle']],
+            [Report::LAY_PFA_HIGH_ASSETS_TYPE, ['bankAccounts', 'moneyIn', 'balance', 'clientBenefitsCheck'], ['moneyInShort', 'lifestyle']],
             [Report::LAY_PFA_LOW_ASSETS_TYPE, ['bankAccounts', 'moneyInShort', 'clientBenefitsCheck'], ['moneyIn', 'lifestyle', 'balance']],
             [Report::TYPE_104, ['lifestyle'], ['bankAccounts', 'moneyIn', 'moneyInShort', 'gifts', 'balance', 'clientBenefitsCheck']],
         ];

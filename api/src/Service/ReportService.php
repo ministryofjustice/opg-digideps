@@ -122,7 +122,7 @@ class ReportService
             /** @var DateTime $startDate */
             $startDate = $oldReport->getClient()->getExpectedReportStartDate();
             // set default type as oldReport is ndr
-            $newReportType = $this->getReportTypeBasedOnCasrec($client) ?: Report::TYPE_102;
+            $newReportType = $this->getReportTypeBasedOnCasrec($client) ?: Report::LAY_PFA_HIGH_ASSETS_TYPE;
         } else {
             throw new \RuntimeException('createNextYearReport() only supports Report and Ndr');
         }

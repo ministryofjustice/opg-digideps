@@ -39,7 +39,7 @@ class ReportTypeChoicesSubscriber implements EventSubscriberInterface
     private function resolveReportTypeOptions(Report $report): array
     {
         $options = [
-            $this->translator->trans('propertyAffairsGeneral', [], 'common') => Report::TYPE_102,
+            $this->translator->trans('propertyAffairsGeneral', [], 'common') => Report::LAY_PFA_HIGH_ASSETS_TYPE,
             $this->translator->trans('propertyAffairsMinimal', [], 'common') => Report::LAY_PFA_LOW_ASSETS_TYPE,
             $this->translator->trans('healthWelfare', [], 'common') => Report::TYPE_104,
             $this->translator->trans('propertyAffairsGeneralHealthWelfare', [], 'common') => Report::TYPE_102_4,

@@ -1251,7 +1251,7 @@ class Report implements ReportInterface, StartEndDateComparableInterface
         return in_array(
             $this->getType(),
             [
-                Report::TYPE_102,
+                Report::LAY_PFA_HIGH_ASSETS_TYPE,
                 Report::TYPE_102_4,
                 Report::TYPE_102_5,
                 Report::TYPE_102_4_5,
@@ -1263,7 +1263,7 @@ class Report implements ReportInterface, StartEndDateComparableInterface
 
     public function isLayReport(): bool
     {
-        return in_array($this->getType(), [self::TYPE_102, self::LAY_PFA_LOW_ASSETS_TYPE, self::TYPE_104, self::TYPE_102_4, self::TYPE_103_4]);
+        return in_array($this->getType(), [self::LAY_PFA_HIGH_ASSETS_TYPE, self::LAY_PFA_LOW_ASSETS_TYPE, self::TYPE_104, self::TYPE_102_4, self::TYPE_103_4]);
     }
 
     public function isPAreport(): bool

@@ -31,9 +31,9 @@ class CasRec
         [true, self::REALM_LAY, ['p3', 'p3g', 'l3', 'l3g'], 'opg103', Report::LAY_PFA_LOW_ASSETS_TYPE],
         // @deprecated (DDPB-2044)
         [true, self::REALM_LAY, ['l3', 'l3g', 'a3'], 'opg103', Report::LAY_PFA_LOW_ASSETS_TYPE],
-        [true, self::REALM_LAY, ['p2', 'p2a', 'l2a', 'l2'], 'opg102', Report::TYPE_102],
+        [true, self::REALM_LAY, ['p2', 'p2a', 'l2a', 'l2'], 'opg102', Report::LAY_PFA_HIGH_ASSETS_TYPE],
         // @deprecated (DDPB-2044)
-        [true, self::REALM_LAY, ['l3', 'l3g', 'a3'], 'opg102', Report::TYPE_102],
+        [true, self::REALM_LAY, ['l3', 'l3g', 'a3'], 'opg102', Report::LAY_PFA_HIGH_ASSETS_TYPE],
         [true, self::REALM_LAY, ['hw'], '', Report::TYPE_104],
         [true, self::REALM_LAY, ['hw'], 'opg103', Report::TYPE_103_4],
         [true, self::REALM_LAY, ['hw'], 'opg102', Report::TYPE_102_4],
@@ -338,7 +338,7 @@ class CasRec
         // default report type if no entry mached above
         switch ($realm) {
             case self::REALM_LAY:
-                return Report::TYPE_102;
+                return Report::LAY_PFA_HIGH_ASSETS_TYPE;
             case self::REALM_PA:
                 return Report::TYPE_102_6;
             case self::REALM_PROF:

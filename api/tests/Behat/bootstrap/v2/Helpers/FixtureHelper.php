@@ -363,7 +363,7 @@ class FixtureHelper
             $testRunId,
             User::ROLE_LAY_DEPUTY,
             'lay-pfa-high-assets-not-started',
-            Report::TYPE_102,
+            Report::LAY_PFA_HIGH_ASSETS_TYPE,
             false,
             false,
             false,
@@ -381,7 +381,7 @@ class FixtureHelper
             $testRunId,
             User::ROLE_LAY_DEPUTY,
             'lay-pfa-high-assets-completed',
-            Report::TYPE_102,
+            Report::LAY_PFA_HIGH_ASSETS_TYPE,
             true,
             false
         );
@@ -395,7 +395,7 @@ class FixtureHelper
             $testRunId,
             User::ROLE_LAY_DEPUTY,
             'lay-pfa-high-assets-submitted',
-            Report::TYPE_102,
+            Report::LAY_PFA_HIGH_ASSETS_TYPE,
             true,
             true
         );

@@ -61,7 +61,7 @@ class Report implements ReportInterface
 
     // https://opgtransform.atlassian.net/wiki/spaces/DEPDS/pages/135266255/Report+variations
     const LAY_PFA_LOW_ASSETS_TYPE = '103';
-    const TYPE_102 = '102';
+    const LAY_PFA_HIGH_ASSETS_TYPE = '102';
     const TYPE_104 = '104';
     const TYPE_103_4 = '103-4';
     const TYPE_102_4 = '102-4';
@@ -89,7 +89,7 @@ class Report implements ReportInterface
     const ENABLE_FEE_SECTIONS = false;
 
     private static $reportTypes = [
-        self::LAY_PFA_LOW_ASSETS_TYPE, self::TYPE_102, self::TYPE_104, self::TYPE_103_4, self::TYPE_102_4,
+        self::LAY_PFA_LOW_ASSETS_TYPE, self::LAY_PFA_HIGH_ASSETS_TYPE, self::TYPE_104, self::TYPE_103_4, self::TYPE_102_4,
         self::TYPE_103_6, self::TYPE_102_6, self::TYPE_104_6, self::TYPE_103_4_6, self::TYPE_102_4_6,
         self::TYPE_103_5, self::TYPE_102_5, self::TYPE_104_5, self::TYPE_103_4_5, self::TYPE_102_4_5,
     ];
@@ -142,12 +142,12 @@ class Report implements ReportInterface
     public static function getSectionsSettings()
     {
         $allReports = [
-            self::LAY_PFA_LOW_ASSETS_TYPE, self::TYPE_102, self::TYPE_104, self::TYPE_103_4, self::TYPE_102_4, //Lay
+            self::LAY_PFA_LOW_ASSETS_TYPE, self::LAY_PFA_HIGH_ASSETS_TYPE, self::TYPE_104, self::TYPE_103_4, self::TYPE_102_4, //Lay
             self::TYPE_103_6, self::TYPE_102_6, self::TYPE_104_6, self::TYPE_103_4_6, self::TYPE_102_4_6, // PA
             self::TYPE_103_5, self::TYPE_102_5, self::TYPE_104_5, self::TYPE_103_4_5, self::TYPE_102_4_5, // Prof
         ];
         $pfaAndCombined = [
-            self::LAY_PFA_LOW_ASSETS_TYPE, self::TYPE_102, self::TYPE_103_4, self::TYPE_102_4, //Lay
+            self::LAY_PFA_LOW_ASSETS_TYPE, self::LAY_PFA_HIGH_ASSETS_TYPE, self::TYPE_103_4, self::TYPE_102_4, //Lay
             self::TYPE_103_6, self::TYPE_102_6, self::TYPE_103_4_6, self::TYPE_102_4_6, // PA
             self::TYPE_103_5, self::TYPE_102_5, self::TYPE_103_4_5, self::TYPE_102_4_5, // Prof
         ];
@@ -169,20 +169,20 @@ class Report implements ReportInterface
             self::SECTION_LIFESTYLE => $hw,
             // money
             self::SECTION_BANK_ACCOUNTS => $pfaAndCombined,
-            self::SECTION_MONEY_TRANSFERS => [self::TYPE_102, self::TYPE_102_4, self::TYPE_102_6, self::TYPE_102_4_6, self::TYPE_102_5, self::TYPE_102_4_5],
-            self::SECTION_MONEY_IN => [self::TYPE_102, self::TYPE_102_4, self::TYPE_102_6, self::TYPE_102_4_6, self::TYPE_102_5, self::TYPE_102_4_5],
-            self::SECTION_MONEY_OUT => [self::TYPE_102, self::TYPE_102_4, self::TYPE_102_6, self::TYPE_102_4_6, self::TYPE_102_5, self::TYPE_102_4_5],
+            self::SECTION_MONEY_TRANSFERS => [self::LAY_PFA_HIGH_ASSETS_TYPE, self::TYPE_102_4, self::TYPE_102_6, self::TYPE_102_4_6, self::TYPE_102_5, self::TYPE_102_4_5],
+            self::SECTION_MONEY_IN => [self::LAY_PFA_HIGH_ASSETS_TYPE, self::TYPE_102_4, self::TYPE_102_6, self::TYPE_102_4_6, self::TYPE_102_5, self::TYPE_102_4_5],
+            self::SECTION_MONEY_OUT => [self::LAY_PFA_HIGH_ASSETS_TYPE, self::TYPE_102_4, self::TYPE_102_6, self::TYPE_102_4_6, self::TYPE_102_5, self::TYPE_102_4_5],
             self::SECTION_MONEY_IN_SHORT => [self::LAY_PFA_LOW_ASSETS_TYPE, self::TYPE_103_4, self::TYPE_103_6, self::TYPE_103_4_6, self::TYPE_103_5, self::TYPE_103_4_5],
             self::SECTION_MONEY_OUT_SHORT => [self::LAY_PFA_LOW_ASSETS_TYPE, self::TYPE_103_4, self::TYPE_103_6, self::TYPE_103_4_6, self::TYPE_103_5, self::TYPE_103_4_5],
             self::SECTION_ASSETS => $pfaAndCombined,
             self::SECTION_DEBTS => $pfaAndCombined,
             self::SECTION_GIFTS => $pfaAndCombined,
-            self::SECTION_BALANCE => [self::TYPE_102, self::TYPE_102_4, self::TYPE_102_6, self::TYPE_102_4_6, self::TYPE_102_5, self::TYPE_102_4_5],
+            self::SECTION_BALANCE => [self::LAY_PFA_HIGH_ASSETS_TYPE, self::TYPE_102_4, self::TYPE_102_6, self::TYPE_102_4_6, self::TYPE_102_5, self::TYPE_102_4_5],
             self::SECTION_CLIENT_BENEFITS_CHECK => $pfaAndCombined,
             // end money
             self::SECTION_ACTIONS => $allReports,
             self::SECTION_OTHER_INFO => $allReports,
-            self::SECTION_DEPUTY_EXPENSES => [self::LAY_PFA_LOW_ASSETS_TYPE, self::TYPE_102, self::TYPE_103_4, self::TYPE_102_4], // Lay except 104
+            self::SECTION_DEPUTY_EXPENSES => [self::LAY_PFA_LOW_ASSETS_TYPE, self::LAY_PFA_HIGH_ASSETS_TYPE, self::TYPE_103_4, self::TYPE_102_4], // Lay except 104
             self::SECTION_PA_DEPUTY_EXPENSES => [
                 self::TYPE_103_6, self::TYPE_102_6, self::TYPE_103_4_6, self::TYPE_102_4_6, // PA except 104-6
             ],
@@ -1327,7 +1327,7 @@ class Report implements ReportInterface
     {
         $titleTranslationKeys = [
             self::LAY_PFA_LOW_ASSETS_TYPE => 'propertyAffairsMinimal',
-            self::TYPE_102 => 'propertyAffairsGeneral',
+            self::LAY_PFA_HIGH_ASSETS_TYPE => 'propertyAffairsGeneral',
             self::TYPE_104 => 'healthWelfare',
             self::TYPE_103_4 => 'propertyAffairsMinimalHealthWelfare',
             self::TYPE_102_4 => 'propertyAffairsGeneralHealthWelfare',
@@ -1353,7 +1353,7 @@ class Report implements ReportInterface
      */
     public function isLayReport()
     {
-        return in_array($this->getType(), [self::TYPE_102, self::LAY_PFA_LOW_ASSETS_TYPE, self::TYPE_104, self::TYPE_102_4, self::TYPE_103_4]);
+        return in_array($this->getType(), [self::LAY_PFA_HIGH_ASSETS_TYPE, self::LAY_PFA_LOW_ASSETS_TYPE, self::TYPE_104, self::TYPE_102_4, self::TYPE_103_4]);
     }
 
     public function isPAreport()

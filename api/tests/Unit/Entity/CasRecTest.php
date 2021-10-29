@@ -68,13 +68,13 @@ class CasRecTest extends TestCase
             ['a3', 'opg103', CasRec::REALM_LAY,  Report::LAY_PFA_LOW_ASSETS_TYPE],
 
             // 102
-            [null, null, CasRec::REALM_LAY, Report::TYPE_102],
-            [null, 'opg103', CasRec::REALM_LAY, Report::TYPE_102],
-            [null, 'opg103', CasRec::REALM_LAY, Report::TYPE_102],
-            ['p2', 'opg102', CasRec::REALM_LAY, Report::TYPE_102],
-            ['p2a', 'opg102', CasRec::REALM_LAY, Report::TYPE_102],
-            ['l2a', 'opg102', CasRec::REALM_LAY, Report::TYPE_102],
-            ['l2', 'opg102', CasRec::REALM_LAY, Report::TYPE_102],
+            [null, null, CasRec::REALM_LAY, Report::LAY_PFA_HIGH_ASSETS_TYPE],
+            [null, 'opg103', CasRec::REALM_LAY, Report::LAY_PFA_HIGH_ASSETS_TYPE],
+            [null, 'opg103', CasRec::REALM_LAY, Report::LAY_PFA_HIGH_ASSETS_TYPE],
+            ['p2', 'opg102', CasRec::REALM_LAY, Report::LAY_PFA_HIGH_ASSETS_TYPE],
+            ['p2a', 'opg102', CasRec::REALM_LAY, Report::LAY_PFA_HIGH_ASSETS_TYPE],
+            ['l2a', 'opg102', CasRec::REALM_LAY, Report::LAY_PFA_HIGH_ASSETS_TYPE],
+            ['l2', 'opg102', CasRec::REALM_LAY, Report::LAY_PFA_HIGH_ASSETS_TYPE],
 
             // 104
             ['hw', '', CasRec::REALM_LAY, Report::TYPE_104],
