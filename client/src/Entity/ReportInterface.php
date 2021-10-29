@@ -25,7 +25,7 @@ interface ReportInterface
     const PROF_PFA_LOW_ASSETS_TYPE = '103-5';
     const PROF_PFA_HIGH_ASSETS_TYPE = '102-5';
     const PROF_HW_TYPE = '104-5';
-    const TYPE_103_4_5 = '103-4-5';
+    const PROF_COMBINED_LOW_ASSETS = '103-4-5';
     const TYPE_102_4_5 = '102-4-5';
 
     public function getId();
