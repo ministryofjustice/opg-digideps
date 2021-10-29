@@ -86,11 +86,11 @@ class ReportControllerTest extends AbstractTestController
         // pa 1
         self::$pa1 = self::fixtures()->getRepo('User')->findOneByEmail('pa@example.org');
         self::$pa1Client1 = self::fixtures()->createClient(self::$pa1, ['setFirstname' => 'pa1Client1', 'setCaseNumber' => '11111111']);
-        self::$pa1Client1Report1 = self::fixtures()->createReport(self::$pa1Client1, ['setType' => Report::TYPE_102_6]);
+        self::$pa1Client1Report1 = self::fixtures()->createReport(self::$pa1Client1, ['setType' => Report::PA_PFA_HIGH_ASSETS_TYPE]);
         self::$pa1Client2 = self::fixtures()->createClient(self::$pa1, ['setFirstname' => 'pa1Client2', 'setCaseNumber' => '22222222']);
-        self::$pa1Client2Report1 = self::fixtures()->createReport(self::$pa1Client2, ['setType' => Report::TYPE_102_6]);
+        self::$pa1Client2Report1 = self::fixtures()->createReport(self::$pa1Client2, ['setType' => Report::PA_PFA_HIGH_ASSETS_TYPE]);
         self::$pa1Client3 = self::fixtures()->createClient(self::$pa1, ['setFirstname' => 'pa1Client3', 'setCaseNumber' => '33333333']);
-        self::$pa1Client3Report1 = self::fixtures()->createReport(self::$pa1Client3, ['setType' => Report::TYPE_102_6]);
+        self::$pa1Client3Report1 = self::fixtures()->createReport(self::$pa1Client3, ['setType' => Report::PA_PFA_HIGH_ASSETS_TYPE]);
 
         // pa 2
         self::$pa2Admin = self::fixtures()->getRepo('User')->findOneByEmail('pa_admin@example.org');

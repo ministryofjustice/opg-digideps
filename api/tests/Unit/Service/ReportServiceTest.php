@@ -496,7 +496,7 @@ class ReportServiceTest extends TestCase
             'noNamedDeputyNoUser' => [null, false, false, false, RuntimeException::class],
             'invalidNamedDeputyNoUser' => [400, false, false, false, RuntimeException::class],
             'invalidNamedDeputyLayUser' => [400, true, false, false, RuntimeException::class],
-            'paNamedDeputy' => [23, false, false, false, Report::TYPE_102_6],
+            'paNamedDeputy' => [23, false, false, false, Report::PA_PFA_HIGH_ASSETS_TYPE],
             'profNamedDeputy' => [21, false, false, false, Report::TYPE_102_5],
             'otherProfNamedDeputy' => [26, false, false, false, Report::TYPE_102_5],
             'profNamedDeputyAndLayUser' => [26, true, false, false, Report::TYPE_102_5],

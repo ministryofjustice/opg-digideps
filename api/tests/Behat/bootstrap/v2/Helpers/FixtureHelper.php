@@ -731,7 +731,7 @@ class FixtureHelper
             $testRunId,
             User::ROLE_PA_NAMED,
             'pa-named-pfa-high-assets-submitted',
-            Report::TYPE_102_6,
+            Report::PA_PFA_HIGH_ASSETS_TYPE,
             true,
             true
         );
