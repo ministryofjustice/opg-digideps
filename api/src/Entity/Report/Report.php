@@ -88,12 +88,6 @@ class Report implements ReportInterface
 
     const ENABLE_FEE_SECTIONS = false;
 
-    private static $reportTypes = [
-        self::LAY_PFA_LOW_ASSETS_TYPE, self::LAY_PFA_HIGH_ASSETS_TYPE, self::LAY_HW_TYPE, self::LAY_COMBINED_LOW_ASSETS_TYPE, self::LAY_COMBINED_HIGH_ASSETS_TYPE,
-        self::PA_PFA_LOW_ASSETS_TYPE, self::PA_PFA_HIGH_ASSETS_TYPE, self::PA_HW_TYPE, self::PA_COMBINED_LOW_ASSETS_TYPE, self::PA_COMBINED_HIGH_ASSETS_TYPE,
-        self::PROF_PFA_LOW_ASSETS_TYPE, self::PROF_PFA_HIGH_ASSETS_TYPE, self::PROF_HW_TYPE, self::PROF_COMBINED_LOW_ASSETS, self::PROF_COMBINED_HIGH_ASSETS,
-    ];
-
     const SECTION_DECISIONS = 'decisions';
     const SECTION_CONTACTS = 'contacts';
     const SECTION_VISITS_CARE = 'visitsCare';
@@ -141,58 +135,33 @@ class Report implements ReportInterface
      */
     public static function getSectionsSettings()
     {
-        $allReports = [
-            self::LAY_PFA_LOW_ASSETS_TYPE, self::LAY_PFA_HIGH_ASSETS_TYPE, self::LAY_HW_TYPE, self::LAY_COMBINED_LOW_ASSETS_TYPE, self::LAY_COMBINED_HIGH_ASSETS_TYPE, //Lay
-            self::PA_PFA_LOW_ASSETS_TYPE, self::PA_PFA_HIGH_ASSETS_TYPE, self::PA_HW_TYPE, self::PA_COMBINED_LOW_ASSETS_TYPE, self::PA_COMBINED_HIGH_ASSETS_TYPE, // PA
-            self::PROF_PFA_LOW_ASSETS_TYPE, self::PROF_PFA_HIGH_ASSETS_TYPE, self::PROF_HW_TYPE, self::PROF_COMBINED_LOW_ASSETS, self::PROF_COMBINED_HIGH_ASSETS, // Prof
-        ];
-        $pfaAndCombined = [
-            self::LAY_PFA_LOW_ASSETS_TYPE, self::LAY_PFA_HIGH_ASSETS_TYPE, self::LAY_COMBINED_LOW_ASSETS_TYPE, self::LAY_COMBINED_HIGH_ASSETS_TYPE, //Lay
-            self::PA_PFA_LOW_ASSETS_TYPE, self::PA_PFA_HIGH_ASSETS_TYPE, self::PA_COMBINED_LOW_ASSETS_TYPE, self::PA_COMBINED_HIGH_ASSETS_TYPE, // PA
-            self::PROF_PFA_LOW_ASSETS_TYPE, self::PROF_PFA_HIGH_ASSETS_TYPE, self::PROF_COMBINED_LOW_ASSETS, self::PROF_COMBINED_HIGH_ASSETS, // Prof
-        ];
-        $hw = [
-            self::LAY_HW_TYPE, self::LAY_COMBINED_LOW_ASSETS_TYPE, self::LAY_COMBINED_HIGH_ASSETS_TYPE, // Lay
-            self::PA_HW_TYPE, self::PA_COMBINED_LOW_ASSETS_TYPE, self::PA_COMBINED_HIGH_ASSETS_TYPE, // PA
-            self::PROF_HW_TYPE, self::PROF_COMBINED_LOW_ASSETS, self::PROF_COMBINED_HIGH_ASSETS, // PA
-        ];
-
-        $allProfReports = [
-            self::PROF_PFA_LOW_ASSETS_TYPE, self::PROF_PFA_HIGH_ASSETS_TYPE, self::PROF_HW_TYPE,
-            self::PROF_COMBINED_LOW_ASSETS, self::PROF_COMBINED_HIGH_ASSETS,
-        ];
-
         return [
-            self::SECTION_DECISIONS => $allReports,
-            self::SECTION_CONTACTS => $allReports,
-            self::SECTION_VISITS_CARE => $allReports,
-            self::SECTION_LIFESTYLE => $hw,
+            self::SECTION_DECISIONS => self::allRolesAllReportTypes(),
+            self::SECTION_CONTACTS => self::allRolesAllReportTypes(),
+            self::SECTION_VISITS_CARE => self::allRolesAllReportTypes(),
+            self::SECTION_LIFESTYLE => self::allRolesHwAndCombinedReportTypes(),
             // money
-            self::SECTION_BANK_ACCOUNTS => $pfaAndCombined,
-            self::SECTION_MONEY_TRANSFERS => [self::LAY_PFA_HIGH_ASSETS_TYPE, self::LAY_COMBINED_HIGH_ASSETS_TYPE, self::PA_PFA_HIGH_ASSETS_TYPE, self::PA_COMBINED_HIGH_ASSETS_TYPE, self::PROF_PFA_HIGH_ASSETS_TYPE, self::PROF_COMBINED_HIGH_ASSETS],
-            self::SECTION_MONEY_IN => [self::LAY_PFA_HIGH_ASSETS_TYPE, self::LAY_COMBINED_HIGH_ASSETS_TYPE, self::PA_PFA_HIGH_ASSETS_TYPE, self::PA_COMBINED_HIGH_ASSETS_TYPE, self::PROF_PFA_HIGH_ASSETS_TYPE, self::PROF_COMBINED_HIGH_ASSETS],
-            self::SECTION_MONEY_OUT => [self::LAY_PFA_HIGH_ASSETS_TYPE, self::LAY_COMBINED_HIGH_ASSETS_TYPE, self::PA_PFA_HIGH_ASSETS_TYPE, self::PA_COMBINED_HIGH_ASSETS_TYPE, self::PROF_PFA_HIGH_ASSETS_TYPE, self::PROF_COMBINED_HIGH_ASSETS],
-            self::SECTION_MONEY_IN_SHORT => [self::LAY_PFA_LOW_ASSETS_TYPE, self::LAY_COMBINED_LOW_ASSETS_TYPE, self::PA_PFA_LOW_ASSETS_TYPE, self::PA_COMBINED_LOW_ASSETS_TYPE, self::PROF_PFA_LOW_ASSETS_TYPE, self::PROF_COMBINED_LOW_ASSETS],
-            self::SECTION_MONEY_OUT_SHORT => [self::LAY_PFA_LOW_ASSETS_TYPE, self::LAY_COMBINED_LOW_ASSETS_TYPE, self::PA_PFA_LOW_ASSETS_TYPE, self::PA_COMBINED_LOW_ASSETS_TYPE, self::PROF_PFA_LOW_ASSETS_TYPE, self::PROF_COMBINED_LOW_ASSETS],
-            self::SECTION_ASSETS => $pfaAndCombined,
-            self::SECTION_DEBTS => $pfaAndCombined,
-            self::SECTION_GIFTS => $pfaAndCombined,
-            self::SECTION_BALANCE => [self::LAY_PFA_HIGH_ASSETS_TYPE, self::LAY_COMBINED_HIGH_ASSETS_TYPE, self::PA_PFA_HIGH_ASSETS_TYPE, self::PA_COMBINED_HIGH_ASSETS_TYPE, self::PROF_PFA_HIGH_ASSETS_TYPE, self::PROF_COMBINED_HIGH_ASSETS],
-            self::SECTION_CLIENT_BENEFITS_CHECK => $pfaAndCombined,
+            self::SECTION_BANK_ACCOUNTS => self::allRolesPfasAndCombinedReportTypes(),
+            self::SECTION_MONEY_TRANSFERS => self::allRolesPfaAndCombinedHighAssetsReportTypes(),
+            self::SECTION_MONEY_IN => self::allRolesPfaAndCombinedHighAssetsReportTypes(),
+            self::SECTION_MONEY_OUT => self::allRolesPfaAndCombinedHighAssetsReportTypes(),
+            self::SECTION_MONEY_IN_SHORT => self::allRolesPfaAndCombinedLowAssetsReportTypes(),
+            self::SECTION_MONEY_OUT_SHORT => self::allRolesPfaAndCombinedLowAssetsReportTypes(),
+            self::SECTION_ASSETS => self::allRolesPfasAndCombinedReportTypes(),
+            self::SECTION_DEBTS => self::allRolesPfasAndCombinedReportTypes(),
+            self::SECTION_GIFTS => self::allRolesPfasAndCombinedReportTypes(),
+            self::SECTION_BALANCE => self::allRolesPfaAndCombinedHighAssetsReportTypes(),
+            self::SECTION_CLIENT_BENEFITS_CHECK => self::allRolesPfasAndCombinedReportTypes(),
             // end money
-            self::SECTION_ACTIONS => $allReports,
-            self::SECTION_OTHER_INFO => $allReports,
-            self::SECTION_DEPUTY_EXPENSES => [self::LAY_PFA_LOW_ASSETS_TYPE, self::LAY_PFA_HIGH_ASSETS_TYPE, self::LAY_COMBINED_LOW_ASSETS_TYPE, self::LAY_COMBINED_HIGH_ASSETS_TYPE], // Lay except 104
-            self::SECTION_PA_DEPUTY_EXPENSES => [
-                self::PA_PFA_LOW_ASSETS_TYPE, self::PA_PFA_HIGH_ASSETS_TYPE, self::PA_COMBINED_LOW_ASSETS_TYPE, self::PA_COMBINED_HIGH_ASSETS_TYPE, // PA except 104-6
-            ],
-            self::SECTION_PROF_CURRENT_FEES => self::ENABLE_FEE_SECTIONS ? [
-                self::PROF_PFA_LOW_ASSETS_TYPE, self::PROF_PFA_HIGH_ASSETS_TYPE, self::PROF_COMBINED_LOW_ASSETS, self::PROF_COMBINED_HIGH_ASSETS, // Prof except 104-6
-            ] : [],
-            self::SECTION_PROF_DEPUTY_COSTS => $allProfReports,
+            self::SECTION_ACTIONS => self::allRolesAllReportTypes(),
+            self::SECTION_OTHER_INFO => self::allRolesAllReportTypes(),
+            self::SECTION_DEPUTY_EXPENSES => self::layPfaAndCombinedReportTypes(),
+            self::SECTION_PA_DEPUTY_EXPENSES => self::paPfaAndCombinedReportTypes(),
+            self::SECTION_PROF_CURRENT_FEES => self::ENABLE_FEE_SECTIONS ? self::profPfaAndCombinedReportTypes() : [],
+            self::SECTION_PROF_DEPUTY_COSTS => self::allProfReportTypes(),
             // add when ready
-            self::SECTION_PROF_DEPUTY_COSTS_ESTIMATE => $allProfReports,
-            self::SECTION_DOCUMENTS => $allReports,
+            self::SECTION_PROF_DEPUTY_COSTS_ESTIMATE => self::allProfReportTypes(),
+            self::SECTION_DOCUMENTS => self::allRolesAllReportTypes(),
         ];
     }
 
@@ -473,7 +442,7 @@ class Report implements ReportInterface
      */
     public function __construct(Client $client, $type, DateTime $startDate, DateTime $endDate, $dateChecks = true)
     {
-        if (!in_array($type, self::$reportTypes)) {
+        if (!in_array($type, self::allRolesAllReportTypes())) {
             throw new \InvalidArgumentException("$type not a valid report type");
         }
         $this->type = $type;
@@ -1430,5 +1399,82 @@ class Report implements ReportInterface
         $this->benefitsSectionReleaseDate = $benefitsSectionReleaseDate;
 
         return $this;
+    }
+
+    public static function allRolesAllReportTypes(): array
+    {
+        return [
+            self::LAY_PFA_LOW_ASSETS_TYPE, self::LAY_PFA_HIGH_ASSETS_TYPE, self::LAY_HW_TYPE, self::LAY_COMBINED_LOW_ASSETS_TYPE, self::LAY_COMBINED_HIGH_ASSETS_TYPE,
+            self::PA_PFA_LOW_ASSETS_TYPE, self::PA_PFA_HIGH_ASSETS_TYPE, self::PA_HW_TYPE, self::PA_COMBINED_LOW_ASSETS_TYPE, self::PA_COMBINED_HIGH_ASSETS_TYPE,
+            self::PROF_PFA_LOW_ASSETS_TYPE, self::PROF_PFA_HIGH_ASSETS_TYPE, self::PROF_HW_TYPE, self::PROF_COMBINED_LOW_ASSETS, self::PROF_COMBINED_HIGH_ASSETS,
+        ];
+    }
+
+    public static function allRolesHwAndCombinedReportTypes(): array
+    {
+        return [
+            self::LAY_HW_TYPE, self::LAY_COMBINED_LOW_ASSETS_TYPE, self::LAY_COMBINED_HIGH_ASSETS_TYPE,
+            self::PA_HW_TYPE, self::PA_COMBINED_LOW_ASSETS_TYPE, self::PA_COMBINED_HIGH_ASSETS_TYPE,
+            self::PROF_HW_TYPE, self::PROF_COMBINED_LOW_ASSETS, self::PROF_COMBINED_HIGH_ASSETS,
+        ];
+    }
+
+    public static function allRolesPfasAndCombinedReportTypes(): array
+    {
+        return [
+            self::LAY_PFA_LOW_ASSETS_TYPE, self::LAY_PFA_HIGH_ASSETS_TYPE, self::LAY_COMBINED_LOW_ASSETS_TYPE, self::LAY_COMBINED_HIGH_ASSETS_TYPE,
+            self::PA_PFA_LOW_ASSETS_TYPE, self::PA_PFA_HIGH_ASSETS_TYPE, self::PA_COMBINED_LOW_ASSETS_TYPE, self::PA_COMBINED_HIGH_ASSETS_TYPE,
+            self::PROF_PFA_LOW_ASSETS_TYPE, self::PROF_PFA_HIGH_ASSETS_TYPE, self::PROF_COMBINED_LOW_ASSETS, self::PROF_COMBINED_HIGH_ASSETS,
+        ];
+    }
+
+    public static function allProfReportTypes(): array
+    {
+        return [
+            self::PROF_PFA_LOW_ASSETS_TYPE, self::PROF_PFA_HIGH_ASSETS_TYPE, self::PROF_HW_TYPE, self::PROF_COMBINED_LOW_ASSETS, self::PROF_COMBINED_HIGH_ASSETS,
+        ];
+    }
+
+    public static function allRolesPfaAndCombinedHighAssetsReportTypes(): array
+    {
+        return [
+            self::LAY_PFA_HIGH_ASSETS_TYPE, self::LAY_COMBINED_HIGH_ASSETS_TYPE,
+            self::PA_PFA_HIGH_ASSETS_TYPE, self::PA_COMBINED_HIGH_ASSETS_TYPE,
+            self::PROF_PFA_HIGH_ASSETS_TYPE, self::PROF_COMBINED_HIGH_ASSETS,
+        ];
+    }
+
+    public static function allRolesPfaAndCombinedLowAssetsReportTypes(): array
+    {
+        return [
+            self::LAY_PFA_LOW_ASSETS_TYPE, self::LAY_COMBINED_LOW_ASSETS_TYPE,
+            self::PA_PFA_LOW_ASSETS_TYPE, self::PA_COMBINED_LOW_ASSETS_TYPE,
+            self::PROF_PFA_LOW_ASSETS_TYPE, self::PROF_COMBINED_LOW_ASSETS,
+        ];
+    }
+
+    public static function layPfaAndCombinedReportTypes(): array
+    {
+        return [
+            self::LAY_PFA_LOW_ASSETS_TYPE, self::LAY_PFA_HIGH_ASSETS_TYPE, self::LAY_COMBINED_LOW_ASSETS_TYPE, self::LAY_COMBINED_HIGH_ASSETS_TYPE,
+        ];
+    }
+
+    public static function paPfaAndCombinedReportTypes(): array
+    {
+        return [
+            self::PA_PFA_LOW_ASSETS_TYPE, self::PA_PFA_HIGH_ASSETS_TYPE, self::PA_COMBINED_LOW_ASSETS_TYPE, self::PA_COMBINED_HIGH_ASSETS_TYPE,
+        ];
+    }
+
+    public static function profPfaAndCombinedReportTypes(): array
+    {
+        return [
+            self::PROF_PFA_LOW_ASSETS_TYPE, self::PROF_PFA_HIGH_ASSETS_TYPE, self::PROF_COMBINED_LOW_ASSETS, self::PROF_COMBINED_HIGH_ASSETS,
+        ];
+    }
+
+    public static function allRolesLowAssetsReportTypes(): array
+    {
     }
 }
