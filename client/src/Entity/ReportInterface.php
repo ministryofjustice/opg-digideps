@@ -11,7 +11,7 @@ interface ReportInterface
     const LAY_PFA_LOW_ASSETS_TYPE = '103';
     const LAY_PFA_HIGH_ASSETS_TYPE = '102';
     const LAY_HW_TYPE = '104';
-    const TYPE_103_4 = '103-4';
+    const LAY_COMBINED_LOW_ASSETS_TYPE = '103-4';
     const TYPE_102_4 = '102-4';
 
     // PA

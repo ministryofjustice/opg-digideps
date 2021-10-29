@@ -43,7 +43,7 @@ class ReportTypeChoicesSubscriber implements EventSubscriberInterface
             $this->translator->trans('propertyAffairsMinimal', [], 'common') => Report::LAY_PFA_LOW_ASSETS_TYPE,
             $this->translator->trans('healthWelfare', [], 'common') => Report::LAY_HW_TYPE,
             $this->translator->trans('propertyAffairsGeneralHealthWelfare', [], 'common') => Report::TYPE_102_4,
-            $this->translator->trans('propertyAffairsMinimalHealthWelfare', [], 'common') => Report::TYPE_103_4,
+            $this->translator->trans('propertyAffairsMinimalHealthWelfare', [], 'common') => Report::LAY_COMBINED_LOW_ASSETS_TYPE,
         ];
 
         if (!$report->isLayReport()) {
