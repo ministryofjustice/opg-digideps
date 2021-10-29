@@ -661,7 +661,7 @@ class FixtureHelper
             $testRunId,
             User::ROLE_PROF_ADMIN,
             'prof-admin-combined-high-not-started',
-            Report::TYPE_102_4_5,
+            Report::PROF_COMBINED_HIGH_ASSETS,
             false,
             false
         );
@@ -675,7 +675,7 @@ class FixtureHelper
             $testRunId,
             User::ROLE_PROF_ADMIN,
             'prof-admin-combined-high-completed',
-            Report::TYPE_102_4_5,
+            Report::PROF_COMBINED_HIGH_ASSETS,
             true,
             false
         );
@@ -689,7 +689,7 @@ class FixtureHelper
             $testRunId,
             User::ROLE_PROF_ADMIN,
             'prof-admin-combined-high-submitted',
-            Report::TYPE_102_4_5,
+            Report::PROF_COMBINED_HIGH_ASSETS,
             true,
             true
         );

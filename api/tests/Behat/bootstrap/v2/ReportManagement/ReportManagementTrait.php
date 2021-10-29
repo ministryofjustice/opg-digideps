@@ -77,7 +77,7 @@ trait ReportManagementTrait
             'Health and welfare' => [User::TYPE_PA => Report::PA_HW_TYPE, User::TYPE_PROF => Report::PROF_HW_TYPE, User::TYPE_LAY => Report::LAY_HW_TYPE],
             'PFA high assets' => [User::TYPE_PA => Report::PA_PFA_HIGH_ASSETS_TYPE, User::TYPE_PROF => Report::PROF_PFA_HIGH_ASSETS_TYPE, User::TYPE_LAY => Report::LAY_PFA_HIGH_ASSETS_TYPE],
             'PFA low assets' => [User::TYPE_PA => Report::PA_PFA_LOW_ASSETS_TYPE, User::TYPE_PROF => Report::PROF_PFA_LOW_ASSETS_TYPE, User::TYPE_LAY => Report::LAY_PFA_LOW_ASSETS_TYPE],
-            'Combined high assets' => [User::TYPE_PA => Report::PA_COMBINED_HIGH_ASSETS_TYPE, User::TYPE_PROF => Report::TYPE_102_4_5, User::TYPE_LAY => Report::LAY_COMBINED_HIGH_ASSETS_TYPE],
+            'Combined high assets' => [User::TYPE_PA => Report::PA_COMBINED_HIGH_ASSETS_TYPE, User::TYPE_PROF => Report::PROF_COMBINED_HIGH_ASSETS, User::TYPE_LAY => Report::LAY_COMBINED_HIGH_ASSETS_TYPE],
             'Combined low assets' => [User::TYPE_PA => Report::PA_COMBINED_LOW_ASSETS_TYPE, User::TYPE_PROF => Report::PROF_COMBINED_LOW_ASSETS, User::TYPE_LAY => Report::LAY_COMBINED_LOW_ASSETS_TYPE],
         ];
 
