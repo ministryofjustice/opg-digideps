@@ -98,7 +98,7 @@ class ReportTest extends KernelTestCase
         $this->assertEquals(3 + 4, $this->report->getMoneyOutTotal());
 
         // 103
-        $this->report->setType(Report::TYPE_103);
+        $this->report->setType(Report::LAY_PFA_LOW_ASSETS_TYPE);
         $this->assertEquals(0, $this->report->getMoneyInTotal());
         $this->assertEquals(0, $this->report->getMoneyOutTotal());
         $this->report->setMoneyTransactionsShort(new ArrayCollection([
@@ -264,7 +264,7 @@ class ReportTest extends KernelTestCase
     {
         return [
             [Report::TYPE_102, ['bankAccounts', 'moneyIn', 'balance', 'clientBenefitsCheck'], ['moneyInShort', 'lifestyle']],
-            [Report::TYPE_103, ['bankAccounts', 'moneyInShort', 'clientBenefitsCheck'], ['moneyIn', 'lifestyle', 'balance']],
+            [Report::LAY_PFA_LOW_ASSETS_TYPE, ['bankAccounts', 'moneyInShort', 'clientBenefitsCheck'], ['moneyIn', 'lifestyle', 'balance']],
             [Report::TYPE_104, ['lifestyle'], ['bankAccounts', 'moneyIn', 'moneyInShort', 'gifts', 'balance', 'clientBenefitsCheck']],
         ];
     }

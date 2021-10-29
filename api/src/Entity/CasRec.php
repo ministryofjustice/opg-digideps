@@ -22,15 +22,15 @@ class CasRec
 
     /**
      * Holds the mapping rules to define the report type based on the CSV file (CASREC)
-     * Used by both PA and Lay
+     * Used by both PA and Lay.
      *
      * @var array
      */
     private static $csvToReportTypeMap = [
         // Lay
-        [true, self::REALM_LAY, ['p3', 'p3g', 'l3', 'l3g'], 'opg103', Report::TYPE_103],
+        [true, self::REALM_LAY, ['p3', 'p3g', 'l3', 'l3g'], 'opg103', Report::LAY_PFA_LOW_ASSETS_TYPE],
         // @deprecated (DDPB-2044)
-        [true, self::REALM_LAY, ['l3', 'l3g', 'a3'], 'opg103', Report::TYPE_103],
+        [true, self::REALM_LAY, ['l3', 'l3g', 'a3'], 'opg103', Report::LAY_PFA_LOW_ASSETS_TYPE],
         [true, self::REALM_LAY, ['p2', 'p2a', 'l2a', 'l2'], 'opg102', Report::TYPE_102],
         // @deprecated (DDPB-2044)
         [true, self::REALM_LAY, ['l3', 'l3g', 'a3'], 'opg102', Report::TYPE_102],
@@ -181,9 +181,10 @@ class CasRec
     private $orderDate;
 
     /**
-     * Filled from cron
+     * Filled from cron.
      *
      * @var array
+     *
      * @deprecated use App\Service\DataNormaliser
      */
     private static $normalizeChars = [
@@ -312,11 +313,11 @@ class CasRec
      * Determine type of report based on 'Typeofrep' and 'Corref' columns in the Casrec CSV
      * 103: when corref = l3/l3g and typeofRep = opg103
      * 104: when corref == hw and typeofRep empty (104 CURRENTLY DISABLED)
-     * 103: all the other cases;
+     * 103: all the other cases;.
      *
-     * @param string $typeOfRep    e.g. opg103
-     * @param string $corref       e.g. l3, l3g
-     * @param string $realm        e.g. REALM_PROF
+     * @param string $typeOfRep e.g. opg103
+     * @param string $corref    e.g. l3, l3g
+     * @param string $realm     e.g. REALM_PROF
      *
      * @return string Report::TYPE_*
      */
@@ -344,7 +345,7 @@ class CasRec
                 return Report::TYPE_102_5;
         }
 
-        throw new \Exception(__METHOD__ . ': realm not recognised to determine report type');
+        throw new \Exception(__METHOD__.': realm not recognised to determine report type');
     }
 
     /**
@@ -397,6 +398,7 @@ class CasRec
 
     /**
      * @param mixed $source
+     *
      * @return CasRec
      */
     public function setSource($source)
@@ -407,6 +409,7 @@ class CasRec
         }
 
         $this->source = $source;
+
         return $this;
     }
 
@@ -417,7 +420,7 @@ class CasRec
     {
         return [
             self::CASREC_SOURCE,
-            self::SIRIUS_SOURCE
+            self::SIRIUS_SOURCE,
         ];
     }
 
@@ -430,12 +433,12 @@ class CasRec
     }
 
     /**
-     * @param \DateTime $orderDate
      * @return CasRec
      */
     public function setOrderDate(\DateTime $orderDate)
     {
         $this->orderDate = $orderDate;
+
         return $this;
     }
 }

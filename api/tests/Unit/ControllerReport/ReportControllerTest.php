@@ -73,7 +73,7 @@ class ReportControllerTest extends AbstractTestController
         self::$report103 = self::fixtures()->createReport(self::$client1, [
             'setStartDate' => new \DateTime('2015-01-01'),
             'setEndDate' => new \DateTime('2015-12-31'),
-            'setType' => Report::TYPE_103,
+            'setType' => Report::LAY_PFA_LOW_ASSETS_TYPE,
             'setSubmitted' => true,
             'setSubmittedBy' => self::$deputy1,
         ]);

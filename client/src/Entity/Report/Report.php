@@ -1263,7 +1263,7 @@ class Report implements ReportInterface, StartEndDateComparableInterface
 
     public function isLayReport(): bool
     {
-        return in_array($this->getType(), [self::TYPE_102, self::TYPE_103, self::TYPE_104, self::TYPE_102_4, self::TYPE_103_4]);
+        return in_array($this->getType(), [self::TYPE_102, self::LAY_PFA_LOW_ASSETS_TYPE, self::TYPE_104, self::TYPE_102_4, self::TYPE_103_4]);
     }
 
     public function isPAreport(): bool

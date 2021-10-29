@@ -3,12 +3,12 @@
 namespace App\Entity;
 
 /**
- * Common functionalities among Report and NDR
+ * Common functionalities among Report and NDR.
  */
 interface ReportInterface
 {
     // https://opgtransform.atlassian.net/wiki/spaces/DEPDS/pages/135266255/Report+variations
-    const TYPE_103 = '103';
+    const LAY_PFA_LOW_ASSETS_TYPE = '103';
     const TYPE_102 = '102';
     const TYPE_104 = '104';
     const TYPE_103_4 = '103-4';

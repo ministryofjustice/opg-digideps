@@ -409,7 +409,7 @@ class FixtureHelper
             $testRunId,
             User::ROLE_LAY_DEPUTY,
             'lay-pfa-low-assets-not-started',
-            Report::TYPE_103,
+            Report::LAY_PFA_LOW_ASSETS_TYPE,
             false,
             false
         );
@@ -423,7 +423,7 @@ class FixtureHelper
             $testRunId,
             User::ROLE_LAY_DEPUTY,
             'lay-pfa-low-assets-completed',
-            Report::TYPE_103,
+            Report::LAY_PFA_LOW_ASSETS_TYPE,
             true,
             false
         );
@@ -437,7 +437,7 @@ class FixtureHelper
             $testRunId,
             User::ROLE_LAY_DEPUTY,
             'lay-pfa-low-assets-submitted',
-            Report::TYPE_103,
+            Report::LAY_PFA_LOW_ASSETS_TYPE,
             true,
             true
         );

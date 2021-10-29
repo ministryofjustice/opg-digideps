@@ -61,11 +61,11 @@ class CasRecTest extends TestCase
         // follow order in https://opgtransform.atlassian.net/wiki/spaces/DEPDS/pages/135266255/Report+variations
         return [
             // 103
-            ['p3', 'opg103', CasRec::REALM_LAY,  Report::TYPE_103],
-            ['p3g', 'opg103', CasRec::REALM_LAY,  Report::TYPE_103],
-            ['l3', 'opg103', CasRec::REALM_LAY,  Report::TYPE_103],
-            ['l3g', 'opg103', CasRec::REALM_LAY,  Report::TYPE_103],
-            ['a3', 'opg103', CasRec::REALM_LAY,  Report::TYPE_103],
+            ['p3', 'opg103', CasRec::REALM_LAY,  Report::LAY_PFA_LOW_ASSETS_TYPE],
+            ['p3g', 'opg103', CasRec::REALM_LAY,  Report::LAY_PFA_LOW_ASSETS_TYPE],
+            ['l3', 'opg103', CasRec::REALM_LAY,  Report::LAY_PFA_LOW_ASSETS_TYPE],
+            ['l3g', 'opg103', CasRec::REALM_LAY,  Report::LAY_PFA_LOW_ASSETS_TYPE],
+            ['a3', 'opg103', CasRec::REALM_LAY,  Report::LAY_PFA_LOW_ASSETS_TYPE],
 
             // 102
             [null, null, CasRec::REALM_LAY, Report::TYPE_102],
