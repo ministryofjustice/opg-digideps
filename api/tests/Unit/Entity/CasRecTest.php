@@ -87,7 +87,7 @@ class CasRecTest extends TestCase
 
             // ============ PA =============
             // 103-6
-            ['a3', 'opg103', CasRec::REALM_PA, Report::TYPE_103_6],
+            ['a3', 'opg103', CasRec::REALM_PA, Report::PA_PFA_LOW_ASSETS_TYPE],
             // 102-6
             [null, null, CasRec::REALM_PA, Report::TYPE_102_6],
             [null, 'opg103', CasRec::REALM_PA, Report::TYPE_102_6],
