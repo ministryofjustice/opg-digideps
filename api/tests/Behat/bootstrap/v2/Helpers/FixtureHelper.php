@@ -535,7 +535,7 @@ class FixtureHelper
             $testRunId,
             User::ROLE_PROF_NAMED,
             'prof-named-hw-not-started',
-            Report::TYPE_104_5,
+            Report::PROF_HW_TYPE,
             false,
             false
         );
@@ -549,7 +549,7 @@ class FixtureHelper
             $testRunId,
             User::ROLE_PROF_NAMED,
             'prof-named-hw-completed',
-            Report::TYPE_104_5,
+            Report::PROF_HW_TYPE,
             true,
             false
         );
@@ -563,7 +563,7 @@ class FixtureHelper
             $testRunId,
             User::ROLE_PROF_NAMED,
             'prof-named-hw-submitted',
-            Report::TYPE_104_5,
+            Report::PROF_HW_TYPE,
             true,
             true
         );
@@ -745,7 +745,7 @@ class FixtureHelper
             $testRunId,
             User::ROLE_PROF_TEAM_MEMBER,
             'prof-team-hw-not-started',
-            Report::TYPE_104_5,
+            Report::PROF_HW_TYPE,
             false,
             false
         );
@@ -759,7 +759,7 @@ class FixtureHelper
             $testRunId,
             User::ROLE_PROF_TEAM_MEMBER,
             'prof-team-hw-completed',
-            Report::TYPE_104_5,
+            Report::PROF_HW_TYPE,
             true,
             false
         );
@@ -773,7 +773,7 @@ class FixtureHelper
             $testRunId,
             User::ROLE_PROF_TEAM_MEMBER,
             'prof-team-hw-submitted',
-            Report::TYPE_104_5,
+            Report::PROF_HW_TYPE,
             true,
             true
         );
@@ -836,7 +836,7 @@ class FixtureHelper
             $testRunId,
             User::ROLE_PROF_ADMIN,
             'prof-admin-hw-not-started',
-            Report::TYPE_104_5,
+            Report::PROF_HW_TYPE,
             false,
             false,
             $namedDeputyEmail,
@@ -857,7 +857,7 @@ class FixtureHelper
             $testRunId,
             User::ROLE_PROF_ADMIN,
             'prof-admin-hw-completed',
-            Report::TYPE_104_5,
+            Report::PROF_HW_TYPE,
             true,
             false,
             $namedDeputyEmail,
@@ -878,7 +878,7 @@ class FixtureHelper
             $testRunId,
             User::ROLE_PROF_ADMIN,
             'prof-admin-hw-submitted',
-            Report::TYPE_104_5,
+            Report::PROF_HW_TYPE,
             true,
             true
         );
@@ -892,7 +892,7 @@ class FixtureHelper
             $testRunId,
             User::ROLE_PA_ADMIN,
             'pa-admin-hw-not-started',
-            Report::TYPE_104_5,
+            Report::PROF_HW_TYPE,
             false,
             false
         );
@@ -906,7 +906,7 @@ class FixtureHelper
             $testRunId,
             User::ROLE_PA_ADMIN,
             'pa-admin-hw-completed',
-            Report::TYPE_104_5,
+            Report::PROF_HW_TYPE,
             true,
             false
         );
@@ -920,7 +920,7 @@ class FixtureHelper
             $testRunId,
             User::ROLE_PA_ADMIN,
             'pa-admin-hw-completed',
-            Report::TYPE_104_5,
+            Report::PROF_HW_TYPE,
             true,
             true,
             $namedDeputyEmail,
@@ -972,7 +972,7 @@ class FixtureHelper
             $testRunId.'_1',
             User::ROLE_PROF_NAMED,
             'analytics-prof-submitted',
-            Report::TYPE_104_5,
+            Report::PROF_HW_TYPE,
             true,
             true,
             null,
