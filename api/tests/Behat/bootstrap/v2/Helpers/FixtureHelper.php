@@ -493,7 +493,7 @@ class FixtureHelper
             $testRunId,
             User::ROLE_LAY_DEPUTY,
             'lay-combined-high-not-started',
-            Report::TYPE_102_4,
+            Report::LAY_COMBINED_HIGH_ASSETS_TYPE,
             false,
             false
         );
@@ -507,7 +507,7 @@ class FixtureHelper
             $testRunId,
             User::ROLE_LAY_DEPUTY,
             'lay-combined-high-completed',
-            Report::TYPE_102_4,
+            Report::LAY_COMBINED_HIGH_ASSETS_TYPE,
             true,
             false
         );
@@ -521,7 +521,7 @@ class FixtureHelper
             $testRunId,
             User::ROLE_LAY_DEPUTY,
             'lay-combined-high-submitted',
-            Report::TYPE_102_4,
+            Report::LAY_COMBINED_HIGH_ASSETS_TYPE,
             true,
             true
         );

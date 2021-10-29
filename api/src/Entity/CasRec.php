@@ -36,7 +36,7 @@ class CasRec
         [true, self::REALM_LAY, ['l3', 'l3g', 'a3'], 'opg102', Report::LAY_PFA_HIGH_ASSETS_TYPE],
         [true, self::REALM_LAY, ['hw'], '', Report::LAY_HW_TYPE],
         [true, self::REALM_LAY, ['hw'], 'opg103', Report::LAY_COMBINED_LOW_ASSETS_TYPE],
-        [true, self::REALM_LAY, ['hw'], 'opg102', Report::TYPE_102_4],
+        [true, self::REALM_LAY, ['hw'], 'opg102', Report::LAY_COMBINED_HIGH_ASSETS_TYPE],
         // PA
         [true, self::REALM_PA, ['a3'], 'opg103', Report::TYPE_103_6],
         // @deprecated (DDPB-2044)
