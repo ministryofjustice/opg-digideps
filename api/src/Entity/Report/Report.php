@@ -74,7 +74,7 @@ class Report implements ReportInterface
     const PA_COMBINED_HIGH_ASSETS_TYPE = '102-4-6';
 
     // PROF
-    const TYPE_103_5 = '103-5';
+    const PROF_PFA_LOW_ASSETS_TYPE = '103-5';
     const TYPE_102_5 = '102-5';
     const TYPE_104_5 = '104-5';
     const TYPE_103_4_5 = '103-4-5';
@@ -91,7 +91,7 @@ class Report implements ReportInterface
     private static $reportTypes = [
         self::LAY_PFA_LOW_ASSETS_TYPE, self::LAY_PFA_HIGH_ASSETS_TYPE, self::LAY_HW_TYPE, self::LAY_COMBINED_LOW_ASSETS_TYPE, self::LAY_COMBINED_HIGH_ASSETS_TYPE,
         self::PA_PFA_LOW_ASSETS_TYPE, self::PA_PFA_HIGH_ASSETS_TYPE, self::PA_HW_TYPE, self::PA_COMBINED_LOW_ASSETS_TYPE, self::PA_COMBINED_HIGH_ASSETS_TYPE,
-        self::TYPE_103_5, self::TYPE_102_5, self::TYPE_104_5, self::TYPE_103_4_5, self::TYPE_102_4_5,
+        self::PROF_PFA_LOW_ASSETS_TYPE, self::TYPE_102_5, self::TYPE_104_5, self::TYPE_103_4_5, self::TYPE_102_4_5,
     ];
 
     const SECTION_DECISIONS = 'decisions';
@@ -144,12 +144,12 @@ class Report implements ReportInterface
         $allReports = [
             self::LAY_PFA_LOW_ASSETS_TYPE, self::LAY_PFA_HIGH_ASSETS_TYPE, self::LAY_HW_TYPE, self::LAY_COMBINED_LOW_ASSETS_TYPE, self::LAY_COMBINED_HIGH_ASSETS_TYPE, //Lay
             self::PA_PFA_LOW_ASSETS_TYPE, self::PA_PFA_HIGH_ASSETS_TYPE, self::PA_HW_TYPE, self::PA_COMBINED_LOW_ASSETS_TYPE, self::PA_COMBINED_HIGH_ASSETS_TYPE, // PA
-            self::TYPE_103_5, self::TYPE_102_5, self::TYPE_104_5, self::TYPE_103_4_5, self::TYPE_102_4_5, // Prof
+            self::PROF_PFA_LOW_ASSETS_TYPE, self::TYPE_102_5, self::TYPE_104_5, self::TYPE_103_4_5, self::TYPE_102_4_5, // Prof
         ];
         $pfaAndCombined = [
             self::LAY_PFA_LOW_ASSETS_TYPE, self::LAY_PFA_HIGH_ASSETS_TYPE, self::LAY_COMBINED_LOW_ASSETS_TYPE, self::LAY_COMBINED_HIGH_ASSETS_TYPE, //Lay
             self::PA_PFA_LOW_ASSETS_TYPE, self::PA_PFA_HIGH_ASSETS_TYPE, self::PA_COMBINED_LOW_ASSETS_TYPE, self::PA_COMBINED_HIGH_ASSETS_TYPE, // PA
-            self::TYPE_103_5, self::TYPE_102_5, self::TYPE_103_4_5, self::TYPE_102_4_5, // Prof
+            self::PROF_PFA_LOW_ASSETS_TYPE, self::TYPE_102_5, self::TYPE_103_4_5, self::TYPE_102_4_5, // Prof
         ];
         $hw = [
             self::LAY_HW_TYPE, self::LAY_COMBINED_LOW_ASSETS_TYPE, self::LAY_COMBINED_HIGH_ASSETS_TYPE, // Lay
@@ -158,7 +158,7 @@ class Report implements ReportInterface
         ];
 
         $allProfReports = [
-            self::TYPE_103_5, self::TYPE_102_5, self::TYPE_104_5,
+            self::PROF_PFA_LOW_ASSETS_TYPE, self::TYPE_102_5, self::TYPE_104_5,
             self::TYPE_103_4_5, self::TYPE_102_4_5,
         ];
 
@@ -172,8 +172,8 @@ class Report implements ReportInterface
             self::SECTION_MONEY_TRANSFERS => [self::LAY_PFA_HIGH_ASSETS_TYPE, self::LAY_COMBINED_HIGH_ASSETS_TYPE, self::PA_PFA_HIGH_ASSETS_TYPE, self::PA_COMBINED_HIGH_ASSETS_TYPE, self::TYPE_102_5, self::TYPE_102_4_5],
             self::SECTION_MONEY_IN => [self::LAY_PFA_HIGH_ASSETS_TYPE, self::LAY_COMBINED_HIGH_ASSETS_TYPE, self::PA_PFA_HIGH_ASSETS_TYPE, self::PA_COMBINED_HIGH_ASSETS_TYPE, self::TYPE_102_5, self::TYPE_102_4_5],
             self::SECTION_MONEY_OUT => [self::LAY_PFA_HIGH_ASSETS_TYPE, self::LAY_COMBINED_HIGH_ASSETS_TYPE, self::PA_PFA_HIGH_ASSETS_TYPE, self::PA_COMBINED_HIGH_ASSETS_TYPE, self::TYPE_102_5, self::TYPE_102_4_5],
-            self::SECTION_MONEY_IN_SHORT => [self::LAY_PFA_LOW_ASSETS_TYPE, self::LAY_COMBINED_LOW_ASSETS_TYPE, self::PA_PFA_LOW_ASSETS_TYPE, self::PA_COMBINED_LOW_ASSETS_TYPE, self::TYPE_103_5, self::TYPE_103_4_5],
-            self::SECTION_MONEY_OUT_SHORT => [self::LAY_PFA_LOW_ASSETS_TYPE, self::LAY_COMBINED_LOW_ASSETS_TYPE, self::PA_PFA_LOW_ASSETS_TYPE, self::PA_COMBINED_LOW_ASSETS_TYPE, self::TYPE_103_5, self::TYPE_103_4_5],
+            self::SECTION_MONEY_IN_SHORT => [self::LAY_PFA_LOW_ASSETS_TYPE, self::LAY_COMBINED_LOW_ASSETS_TYPE, self::PA_PFA_LOW_ASSETS_TYPE, self::PA_COMBINED_LOW_ASSETS_TYPE, self::PROF_PFA_LOW_ASSETS_TYPE, self::TYPE_103_4_5],
+            self::SECTION_MONEY_OUT_SHORT => [self::LAY_PFA_LOW_ASSETS_TYPE, self::LAY_COMBINED_LOW_ASSETS_TYPE, self::PA_PFA_LOW_ASSETS_TYPE, self::PA_COMBINED_LOW_ASSETS_TYPE, self::PROF_PFA_LOW_ASSETS_TYPE, self::TYPE_103_4_5],
             self::SECTION_ASSETS => $pfaAndCombined,
             self::SECTION_DEBTS => $pfaAndCombined,
             self::SECTION_GIFTS => $pfaAndCombined,
@@ -187,7 +187,7 @@ class Report implements ReportInterface
                 self::PA_PFA_LOW_ASSETS_TYPE, self::PA_PFA_HIGH_ASSETS_TYPE, self::PA_COMBINED_LOW_ASSETS_TYPE, self::PA_COMBINED_HIGH_ASSETS_TYPE, // PA except 104-6
             ],
             self::SECTION_PROF_CURRENT_FEES => self::ENABLE_FEE_SECTIONS ? [
-                self::TYPE_103_5, self::TYPE_102_5, self::TYPE_103_4_5, self::TYPE_102_4_5, // Prof except 104-6
+                self::PROF_PFA_LOW_ASSETS_TYPE, self::TYPE_102_5, self::TYPE_103_4_5, self::TYPE_102_4_5, // Prof except 104-6
             ] : [],
             self::SECTION_PROF_DEPUTY_COSTS => $allProfReports,
             // add when ready
@@ -1338,7 +1338,7 @@ class Report implements ReportInterface
             self::PA_COMBINED_LOW_ASSETS_TYPE => 'propertyAffairsMinimalHealthWelfare',
             self::PA_COMBINED_HIGH_ASSETS_TYPE => 'propertyAffairsGeneralHealthWelfare',
 
-            self::TYPE_103_5 => 'propertyAffairsMinimal',
+            self::PROF_PFA_LOW_ASSETS_TYPE => 'propertyAffairsMinimal',
             self::TYPE_102_5 => 'propertyAffairsGeneral',
             self::TYPE_104_5 => 'healthWelfare',
             self::TYPE_103_4_5 => 'propertyAffairsMinimalHealthWelfare',
@@ -1363,7 +1363,7 @@ class Report implements ReportInterface
 
     public function isProfReport()
     {
-        return in_array($this->getType(), [self::TYPE_102_5, self::TYPE_103_5, self::TYPE_104_5, self::TYPE_102_4_5, self::TYPE_103_4_5]);
+        return in_array($this->getType(), [self::TYPE_102_5, self::PROF_PFA_LOW_ASSETS_TYPE, self::TYPE_104_5, self::TYPE_102_4_5, self::TYPE_103_4_5]);
     }
 
     public function getSatisfaction(): Satisfaction

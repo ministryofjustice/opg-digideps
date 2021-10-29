@@ -1273,7 +1273,7 @@ class Report implements ReportInterface, StartEndDateComparableInterface
 
     public function isProfReport(): bool
     {
-        return in_array($this->getType(), [self::TYPE_102_5, self::TYPE_103_5, self::TYPE_104_5, self::TYPE_102_4_5, self::TYPE_103_4_5]);
+        return in_array($this->getType(), [self::TYPE_102_5, self::PROF_PFA_LOW_ASSETS_TYPE, self::TYPE_104_5, self::TYPE_102_4_5, self::TYPE_103_4_5]);
     }
 
     /**

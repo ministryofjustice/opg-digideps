@@ -103,8 +103,8 @@ class CasRecTest extends TestCase
 
             // ============ Prof =============
             // 103-5
-            ['p3', 'opg103', CasRec::REALM_PROF, Report::TYPE_103_5],
-            ['p3g', 'opg103', CasRec::REALM_PROF, Report::TYPE_103_5],
+            ['p3', 'opg103', CasRec::REALM_PROF, Report::PROF_PFA_LOW_ASSETS_TYPE],
+            ['p3g', 'opg103', CasRec::REALM_PROF, Report::PROF_PFA_LOW_ASSETS_TYPE],
             // 102-5
             [null, null, CasRec::REALM_PROF, Report::TYPE_102_5],
             [null, 'opg103', CasRec::REALM_PROF, Report::TYPE_102_5],
