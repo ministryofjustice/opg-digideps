@@ -1256,7 +1256,7 @@ class Report implements ReportInterface, StartEndDateComparableInterface
                 Report::TYPE_102_5,
                 Report::TYPE_102_4_5,
                 Report::PA_PFA_HIGH_ASSETS_TYPE,
-                Report::TYPE_102_4_6,
+                Report::PA_COMBINED_HIGH_ASSETS_TYPE,
             ]
         );
     }
@@ -1268,7 +1268,7 @@ class Report implements ReportInterface, StartEndDateComparableInterface
 
     public function isPAreport(): bool
     {
-        return in_array($this->getType(), [self::PA_PFA_HIGH_ASSETS_TYPE, self::PA_PFA_LOW_ASSETS_TYPE, self::PA_HW_TYPE, self::TYPE_102_4_6, self::PA_COMBINED_LOW_ASSETS_TYPE]);
+        return in_array($this->getType(), [self::PA_PFA_HIGH_ASSETS_TYPE, self::PA_PFA_LOW_ASSETS_TYPE, self::PA_HW_TYPE, self::PA_COMBINED_HIGH_ASSETS_TYPE, self::PA_COMBINED_LOW_ASSETS_TYPE]);
     }
 
     public function isProfReport(): bool

@@ -619,7 +619,7 @@ class FixtureHelper
             $testRunId,
             User::ROLE_PA_ADMIN,
             'pa-admin-combined-high-not-started',
-            Report::TYPE_102_4_6,
+            Report::PA_COMBINED_HIGH_ASSETS_TYPE,
             false,
             false
         );
@@ -633,7 +633,7 @@ class FixtureHelper
             $testRunId,
             User::ROLE_PA_ADMIN,
             'pa-admin-combined-high-completed',
-            Report::TYPE_102_4_6,
+            Report::PA_COMBINED_HIGH_ASSETS_TYPE,
             true,
             false
         );
@@ -647,7 +647,7 @@ class FixtureHelper
             $testRunId,
             User::ROLE_PA_ADMIN,
             'pa-admin-combined-high-submitted',
-            Report::TYPE_102_4_6,
+            Report::PA_COMBINED_HIGH_ASSETS_TYPE,
             true,
             true
         );

@@ -99,7 +99,7 @@ class CasRecTest extends TestCase
             // 103-4-6
             ['hw', 'opg103', CasRec::REALM_PA, Report::PA_COMBINED_LOW_ASSETS_TYPE],
             // 102-4-6
-            ['hw', 'opg102', CasRec::REALM_PA, Report::TYPE_102_4_6],
+            ['hw', 'opg102', CasRec::REALM_PA, Report::PA_COMBINED_HIGH_ASSETS_TYPE],
 
             // ============ Prof =============
             // 103-5
