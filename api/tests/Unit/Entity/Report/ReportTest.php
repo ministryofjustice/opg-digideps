@@ -265,7 +265,7 @@ class ReportTest extends KernelTestCase
         return [
             [Report::LAY_PFA_HIGH_ASSETS_TYPE, ['bankAccounts', 'moneyIn', 'balance', 'clientBenefitsCheck'], ['moneyInShort', 'lifestyle']],
             [Report::LAY_PFA_LOW_ASSETS_TYPE, ['bankAccounts', 'moneyInShort', 'clientBenefitsCheck'], ['moneyIn', 'lifestyle', 'balance']],
-            [Report::TYPE_104, ['lifestyle'], ['bankAccounts', 'moneyIn', 'moneyInShort', 'gifts', 'balance', 'clientBenefitsCheck']],
+            [Report::LAY_HW_TYPE, ['lifestyle'], ['bankAccounts', 'moneyIn', 'moneyInShort', 'gifts', 'balance', 'clientBenefitsCheck']],
         ];
     }
 

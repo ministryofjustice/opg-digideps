@@ -451,7 +451,7 @@ class FixtureHelper
             $testRunId,
             User::ROLE_LAY_DEPUTY,
             'lay-hw-not-started',
-            Report::TYPE_104,
+            Report::LAY_HW_TYPE,
             false,
             false
         );
@@ -465,7 +465,7 @@ class FixtureHelper
             $testRunId,
             User::ROLE_LAY_DEPUTY,
             'lay-hw-completed',
-            Report::TYPE_104,
+            Report::LAY_HW_TYPE,
             true,
             false
         );
@@ -479,7 +479,7 @@ class FixtureHelper
             $testRunId,
             User::ROLE_LAY_DEPUTY,
             'lay-hw-submitted',
-            Report::TYPE_104,
+            Report::LAY_HW_TYPE,
             true,
             true
         );
@@ -787,7 +787,7 @@ class FixtureHelper
             $testRunId,
             User::ROLE_LAY_DEPUTY,
             'lay-ndr-not-started',
-            Report::TYPE_104,
+            Report::LAY_HW_TYPE,
             false,
             false,
             true
@@ -802,7 +802,7 @@ class FixtureHelper
             $testRunId,
             User::ROLE_LAY_DEPUTY,
             'lay-ndr-completed',
-            Report::TYPE_104,
+            Report::LAY_HW_TYPE,
             true,
             false,
             true
@@ -817,7 +817,7 @@ class FixtureHelper
             $testRunId,
             User::ROLE_LAY_DEPUTY,
             'lay-ndr-submitted',
-            Report::TYPE_104,
+            Report::LAY_HW_TYPE,
             true,
             false,
             true
@@ -1000,7 +1000,7 @@ class FixtureHelper
             $testRunId.'_3',
             User::ROLE_LAY_DEPUTY,
             'analytics-lay-submitted',
-            Report::TYPE_104,
+            Report::LAY_HW_TYPE,
             true,
             true,
             false,
@@ -1053,7 +1053,7 @@ class FixtureHelper
             $this->testRunId,
             User::ROLE_LAY_DEPUTY,
             $testPurpose.'-test-ndr',
-            Report::TYPE_104,
+            Report::LAY_HW_TYPE,
             false,
             false,
             true

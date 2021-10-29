@@ -74,7 +74,7 @@ trait ReportManagementTrait
         $roleType = $this->translateDeputyRole($this->interactingWithUserDetails->getUserRole());
 
         $reportTypes = [
-            'Health and welfare' => [User::TYPE_PA => Report::TYPE_104_6, User::TYPE_PROF => Report::TYPE_104_5, User::TYPE_LAY => Report::TYPE_104],
+            'Health and welfare' => [User::TYPE_PA => Report::TYPE_104_6, User::TYPE_PROF => Report::TYPE_104_5, User::TYPE_LAY => Report::LAY_HW_TYPE],
             'PFA high assets' => [User::TYPE_PA => Report::TYPE_102_6, User::TYPE_PROF => Report::TYPE_102_5, User::TYPE_LAY => Report::LAY_PFA_HIGH_ASSETS_TYPE],
             'PFA low assets' => [User::TYPE_PA => Report::TYPE_103_6, User::TYPE_PROF => Report::TYPE_103_5, User::TYPE_LAY => Report::LAY_PFA_LOW_ASSETS_TYPE],
             'Combined high assets' => [User::TYPE_PA => Report::TYPE_102_4_6, User::TYPE_PROF => Report::TYPE_102_4_5, User::TYPE_LAY => Report::TYPE_102_4],
