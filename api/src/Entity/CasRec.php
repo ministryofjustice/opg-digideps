@@ -51,9 +51,9 @@ class CasRec
         [true, self::REALM_PROF, ['p3', 'p3g'], 'opg103', Report::PROF_PFA_LOW_ASSETS_TYPE],
         // @deprecated (DDPB-2044)
         [true, self::REALM_PROF, ['l3', 'l3g', 'a3'], 'opg103', Report::PROF_PFA_LOW_ASSETS_TYPE],
-        [true, self::REALM_PROF, ['p2', 'p2a'], 'opg102', Report::TYPE_102_5],
+        [true, self::REALM_PROF, ['p2', 'p2a'], 'opg102', Report::PROF_PFA_HIGH_ASSETS_TYPE],
         // @deprecated (DDPB-2044)
-        [true, self::REALM_PROF, ['l3', 'l3g', 'a3'], 'opg102', Report::TYPE_102_5],
+        [true, self::REALM_PROF, ['l3', 'l3g', 'a3'], 'opg102', Report::PROF_PFA_HIGH_ASSETS_TYPE],
         [true, self::REALM_PROF, ['hw'], '', Report::TYPE_104_5],
         [true, self::REALM_PROF, ['hw'], 'opg103', Report::TYPE_103_4_5],
         [true, self::REALM_PROF, ['hw'], 'opg102', Report::TYPE_102_4_5],
@@ -342,7 +342,7 @@ class CasRec
             case self::REALM_PA:
                 return Report::PA_PFA_HIGH_ASSETS_TYPE;
             case self::REALM_PROF:
-                return Report::TYPE_102_5;
+                return Report::PROF_PFA_HIGH_ASSETS_TYPE;
         }
 
         throw new \Exception(__METHOD__.': realm not recognised to determine report type');

@@ -23,7 +23,7 @@ interface ReportInterface
 
     // PROF
     const PROF_PFA_LOW_ASSETS_TYPE = '103-5';
-    const TYPE_102_5 = '102-5';
+    const PROF_PFA_HIGH_ASSETS_TYPE = '102-5';
     const TYPE_104_5 = '104-5';
     const TYPE_103_4_5 = '103-4-5';
     const TYPE_102_4_5 = '102-4-5';

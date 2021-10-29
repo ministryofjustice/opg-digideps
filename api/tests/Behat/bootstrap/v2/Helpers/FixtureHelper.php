@@ -289,7 +289,7 @@ class FixtureHelper
         Organisation $organisation,
         bool $completed = false,
         bool $submitted = false,
-        string $reportType = Report::TYPE_102_5,
+        string $reportType = Report::PROF_PFA_HIGH_ASSETS_TYPE,
         ?DateTime $startDate = null,
         int $satisfactionScore = null,
         ?string $namedDeputyEmail = null,
@@ -703,7 +703,7 @@ class FixtureHelper
             $testRunId,
             User::ROLE_PROF_NAMED,
             'prof-named-pfa-high-assets-not-started',
-            Report::TYPE_102_5,
+            Report::PROF_PFA_HIGH_ASSETS_TYPE,
             false,
             false
         );
@@ -717,7 +717,7 @@ class FixtureHelper
             $testRunId,
             User::ROLE_PROF_NAMED,
             'prof-named-pfa-high-assets-submitted',
-            Report::TYPE_102_5,
+            Report::PROF_PFA_HIGH_ASSETS_TYPE,
             true,
             true
         );

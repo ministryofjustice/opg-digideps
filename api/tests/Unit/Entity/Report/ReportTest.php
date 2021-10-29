@@ -138,7 +138,7 @@ class ReportTest extends KernelTestCase
 
     public function testGetCalculatedBalance()
     {
-        $this->validReportCtorArgs = [$this->client, Report::TYPE_102_5, new \DateTime('2017-06-23'), new \DateTime('2018-06-22')];
+        $this->validReportCtorArgs = [$this->client, Report::PROF_PFA_HIGH_ASSETS_TYPE, new \DateTime('2017-06-23'), new \DateTime('2018-06-22')];
         $this->report = m::mock(Report::class.'[has106Flag]', $this->validReportCtorArgs);
 
         $this->report->shouldReceive('has106Flag')->andReturn(false);
@@ -163,7 +163,7 @@ class ReportTest extends KernelTestCase
 
     public function testGetCalculatedBalanceProfDeputy()
     {
-        $this->validReportCtorArgs = [$this->client, Report::TYPE_102_5, new \DateTime('2017-06-23'), new \DateTime('2018-06-22')];
+        $this->validReportCtorArgs = [$this->client, Report::PROF_PFA_HIGH_ASSETS_TYPE, new \DateTime('2017-06-23'), new \DateTime('2018-06-22')];
         $this->report = m::mock(Report::class.'[has106Flag]', $this->validReportCtorArgs);
 
         $this->report->shouldReceive('has106Flag')->andReturn(false);
