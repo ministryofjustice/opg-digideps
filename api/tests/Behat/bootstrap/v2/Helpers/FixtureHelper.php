@@ -577,7 +577,7 @@ class FixtureHelper
             $testRunId,
             User::ROLE_PA_NAMED,
             'pa-named-hw-not-started',
-            Report::TYPE_104_6,
+            Report::PA_HW_TYPE,
             false,
             false
         );
@@ -591,7 +591,7 @@ class FixtureHelper
             $testRunId,
             User::ROLE_PA_NAMED,
             'pa-named-hw-completed',
-            Report::TYPE_104_6,
+            Report::PA_HW_TYPE,
             true,
             false
         );
@@ -605,7 +605,7 @@ class FixtureHelper
             $testRunId,
             User::ROLE_PA_NAMED,
             'pa-named-hw-submitted',
-            Report::TYPE_104_6,
+            Report::PA_HW_TYPE,
             true,
             true
         );
@@ -986,7 +986,7 @@ class FixtureHelper
             $testRunId.'_2',
             User::ROLE_PA_NAMED,
             'analytics-pa-submitted',
-            Report::TYPE_104_6,
+            Report::PA_HW_TYPE,
             true,
             true,
             null,

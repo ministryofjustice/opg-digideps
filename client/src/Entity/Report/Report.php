@@ -1268,7 +1268,7 @@ class Report implements ReportInterface, StartEndDateComparableInterface
 
     public function isPAreport(): bool
     {
-        return in_array($this->getType(), [self::PA_PFA_HIGH_ASSETS_TYPE, self::PA_PFA_LOW_ASSETS_TYPE, self::TYPE_104_6, self::TYPE_102_4_6, self::TYPE_103_4_6]);
+        return in_array($this->getType(), [self::PA_PFA_HIGH_ASSETS_TYPE, self::PA_PFA_LOW_ASSETS_TYPE, self::PA_HW_TYPE, self::TYPE_102_4_6, self::TYPE_103_4_6]);
     }
 
     public function isProfReport(): bool

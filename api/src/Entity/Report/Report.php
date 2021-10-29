@@ -69,7 +69,7 @@ class Report implements ReportInterface
     // PA
     const PA_PFA_LOW_ASSETS_TYPE = '103-6';
     const PA_PFA_HIGH_ASSETS_TYPE = '102-6';
-    const TYPE_104_6 = '104-6';
+    const PA_HW_TYPE = '104-6';
     const TYPE_103_4_6 = '103-4-6';
     const TYPE_102_4_6 = '102-4-6';
 
@@ -90,7 +90,7 @@ class Report implements ReportInterface
 
     private static $reportTypes = [
         self::LAY_PFA_LOW_ASSETS_TYPE, self::LAY_PFA_HIGH_ASSETS_TYPE, self::LAY_HW_TYPE, self::LAY_COMBINED_LOW_ASSETS_TYPE, self::LAY_COMBINED_HIGH_ASSETS_TYPE,
-        self::PA_PFA_LOW_ASSETS_TYPE, self::PA_PFA_HIGH_ASSETS_TYPE, self::TYPE_104_6, self::TYPE_103_4_6, self::TYPE_102_4_6,
+        self::PA_PFA_LOW_ASSETS_TYPE, self::PA_PFA_HIGH_ASSETS_TYPE, self::PA_HW_TYPE, self::TYPE_103_4_6, self::TYPE_102_4_6,
         self::TYPE_103_5, self::TYPE_102_5, self::TYPE_104_5, self::TYPE_103_4_5, self::TYPE_102_4_5,
     ];
 
@@ -143,7 +143,7 @@ class Report implements ReportInterface
     {
         $allReports = [
             self::LAY_PFA_LOW_ASSETS_TYPE, self::LAY_PFA_HIGH_ASSETS_TYPE, self::LAY_HW_TYPE, self::LAY_COMBINED_LOW_ASSETS_TYPE, self::LAY_COMBINED_HIGH_ASSETS_TYPE, //Lay
-            self::PA_PFA_LOW_ASSETS_TYPE, self::PA_PFA_HIGH_ASSETS_TYPE, self::TYPE_104_6, self::TYPE_103_4_6, self::TYPE_102_4_6, // PA
+            self::PA_PFA_LOW_ASSETS_TYPE, self::PA_PFA_HIGH_ASSETS_TYPE, self::PA_HW_TYPE, self::TYPE_103_4_6, self::TYPE_102_4_6, // PA
             self::TYPE_103_5, self::TYPE_102_5, self::TYPE_104_5, self::TYPE_103_4_5, self::TYPE_102_4_5, // Prof
         ];
         $pfaAndCombined = [
@@ -153,7 +153,7 @@ class Report implements ReportInterface
         ];
         $hw = [
             self::LAY_HW_TYPE, self::LAY_COMBINED_LOW_ASSETS_TYPE, self::LAY_COMBINED_HIGH_ASSETS_TYPE, // Lay
-            self::TYPE_104_6, self::TYPE_103_4_6, self::TYPE_102_4_6, // PA
+            self::PA_HW_TYPE, self::TYPE_103_4_6, self::TYPE_102_4_6, // PA
             self::TYPE_104_5, self::TYPE_103_4_5, self::TYPE_102_4_5, // PA
         ];
 
@@ -1334,7 +1334,7 @@ class Report implements ReportInterface
 
             self::PA_PFA_LOW_ASSETS_TYPE => 'propertyAffairsMinimal',
             self::PA_PFA_HIGH_ASSETS_TYPE => 'propertyAffairsGeneral',
-            self::TYPE_104_6 => 'healthWelfare',
+            self::PA_HW_TYPE => 'healthWelfare',
             self::TYPE_103_4_6 => 'propertyAffairsMinimalHealthWelfare',
             self::TYPE_102_4_6 => 'propertyAffairsGeneralHealthWelfare',
 
@@ -1358,7 +1358,7 @@ class Report implements ReportInterface
 
     public function isPAreport()
     {
-        return in_array($this->getType(), [self::PA_PFA_HIGH_ASSETS_TYPE, self::PA_PFA_LOW_ASSETS_TYPE, self::TYPE_104_6, self::TYPE_102_4_6, self::TYPE_103_4_6]);
+        return in_array($this->getType(), [self::PA_PFA_HIGH_ASSETS_TYPE, self::PA_PFA_LOW_ASSETS_TYPE, self::PA_HW_TYPE, self::TYPE_102_4_6, self::TYPE_103_4_6]);
     }
 
     public function isProfReport()

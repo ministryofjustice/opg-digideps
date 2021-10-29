@@ -95,7 +95,7 @@ class CasRecTest extends TestCase
             ['a2', 'opg102', CasRec::REALM_PA, Report::PA_PFA_HIGH_ASSETS_TYPE],
             ['a2a', 'opg102', CasRec::REALM_PA, Report::PA_PFA_HIGH_ASSETS_TYPE],
             // 104-6
-            ['hw', '', CasRec::REALM_PA, Report::TYPE_104_6],
+            ['hw', '', CasRec::REALM_PA, Report::PA_HW_TYPE],
             // 103-4-6
             ['hw', 'opg103', CasRec::REALM_PA, Report::TYPE_103_4_6],
             // 102-4-6
