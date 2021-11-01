@@ -406,6 +406,9 @@ workflows:
           cron: "00 05 * * 0"
           filters: { branches: { only: [ main ] } }
     jobs:
+      - lambda-unit-test:
+            name: lambda unit test
+            filters: { branches: { only: [ main ] } }
       - build:
           name: build integration
           filters: { branches: { only: [ main ] } }
