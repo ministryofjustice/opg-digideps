@@ -64,9 +64,9 @@ class BaseFeatureContext extends MinkContext
     public UserDetails $profNamedDeputyCompletedHealthWelfareDetails;
     public UserDetails $profNamedDeputySubmittedHealthWelfareDetails;
 
-    public UserDetails $publicAuthNamedNotStartedPfaHighDetails;
-    public UserDetails $publicAuthNamedCompletedPfaHighDetails;
-    public UserDetails $publicAuthNamedSubmittedPfaHighDetails;
+    public UserDetails $publicAuthorityNamedNotStartedPfaHighDetails;
+    public UserDetails $publicAuthorityNamedCompletedPfaHighDetails;
+    public UserDetails $publicAuthorityNamedSubmittedPfaHighDetails;
 
     public UserDetails $profNamedDeputyNotStartedPfaHighDetails;
     public UserDetails $profNamedDeputyCompletedPfaHighDetails;
@@ -303,7 +303,7 @@ class BaseFeatureContext extends MinkContext
     public function createPaNamedPfaHighSubmitted()
     {
         $userDetails = $this->fixtureHelper->createPaNamedPfaHighSubmitted($this->testRunId);
-        $this->fixtureUsers[] = $this->publicAuthNamedSubmittedPfaHighDetails = new UserDetails($userDetails);
+        $this->fixtureUsers[] = $this->publicAuthorityNamedSubmittedPfaHighDetails = new UserDetails($userDetails);
     }
 
     /**
@@ -543,7 +543,8 @@ class BaseFeatureContext extends MinkContext
     public function createAdditionalDataForAnalytics(string $timeAgo, int $runNumber, int $satisfactionScore)
     {
         $rndKey = mt_rand(0, 99999);
-        $this->fixtureHelper->createDataForAnalytics('a_'.$rndKey.$runNumber, $timeAgo, $satisfactionScore);
+
+        return $this->fixtureHelper->createDataForAnalytics('a_'.$rndKey.$runNumber, $timeAgo, $satisfactionScore);
     }
 
     public function createAdditionalDataForUserSearchTests()

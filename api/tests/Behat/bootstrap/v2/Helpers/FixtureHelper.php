@@ -967,8 +967,9 @@ class FixtureHelper
     public function createDataForAnalytics(string $testRunId, $timeAgo, $satisfactionScore)
     {
         $startDate = new \DateTime($timeAgo);
+        $deputies = [];
 
-        $this->createOrgUserClientNamedDeputyAndReport(
+        $deputies[] = $this->createOrgUserClientNamedDeputyAndReport(
             $testRunId.'_1',
             User::ROLE_PROF_NAMED,
             'analytics-prof-submitted',
@@ -982,7 +983,7 @@ class FixtureHelper
             $satisfactionScore
         );
 
-        $this->createOrgUserClientNamedDeputyAndReport(
+        $deputies[] = $this->createOrgUserClientNamedDeputyAndReport(
             $testRunId.'_2',
             User::ROLE_PA_NAMED,
             'analytics-pa-submitted',
@@ -996,7 +997,7 @@ class FixtureHelper
             $satisfactionScore
         );
 
-        $this->createDeputyClientAndReport(
+        $deputies[] = $this->createDeputyClientAndReport(
             $testRunId.'_3',
             User::ROLE_LAY_DEPUTY,
             'analytics-lay-submitted',
@@ -1007,6 +1008,8 @@ class FixtureHelper
             $startDate,
             $satisfactionScore
         );
+
+        return $deputies;
     }
 
     private function createOrganisation(string $testRunId, string $emailIdentifier)

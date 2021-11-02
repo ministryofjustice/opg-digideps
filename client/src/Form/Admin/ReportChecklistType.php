@@ -53,6 +53,10 @@ class ReportChecklistType extends AbstractType
             ->add('consultationsSatisfactory', FormTypes\ChoiceType::class, $yesNoOptions)
             ->add('careArrangements', FormTypes\ChoiceType::class, $yesNoOptions);
 
+        if ($this->report->hasSection('clientBenefitsCheck')) {
+            $builder->add('clientBenefitsChecked', FormTypes\ChoiceType::class, $yesNoNaOptions);
+        }
+
         if ($this->report->hasSection('bankAccounts')) {
             // Client Assets and Debt
             $builder
@@ -103,12 +107,12 @@ class ReportChecklistType extends AbstractType
             ->add('lodgingSummary', FormTypes\TextareaType::class)
             ->add('finalDecision', FormTypes\ChoiceType::class, [
                 'choices' => [
-                    $finalDecisionTransPrefix . 'forReview' => 'for-review',
-                    $finalDecisionTransPrefix . 'incomplete' =>  'incomplete',
-                    $finalDecisionTransPrefix . 'furtherCaseworkRequired' => 'further-casework-required',
-                    $finalDecisionTransPrefix . 'satisfied' => 'satisfied'
+                    $finalDecisionTransPrefix.'forReview' => 'for-review',
+                    $finalDecisionTransPrefix.'incomplete' => 'incomplete',
+                    $finalDecisionTransPrefix.'furtherCaseworkRequired' => 'further-casework-required',
+                    $finalDecisionTransPrefix.'satisfied' => 'satisfied',
                 ],
-                'expanded' => true
+                'expanded' => true,
             ])
             ->add('furtherInformationReceived', FormTypes\TextareaType::class)
             ->add('saveFurtherInformation', FormTypes\SubmitType::class)
@@ -121,8 +125,8 @@ class ReportChecklistType extends AbstractType
         $resolver->setDefaults([
             'translation_domain' => 'admin-checklist',
             'data-class' => Checklist::class,
-            'name'               => 'checklist',
-            'validation_groups'  => function (Form $form) {
+            'name' => 'checklist',
+            'validation_groups' => function (Form $form) {
                 $ret = [];
 
                 /** @var SubmitButton $button */
@@ -136,7 +140,7 @@ class ReportChecklistType extends AbstractType
                     $hasFinanceInfo = $this->report->hasSection('bankAccounts');
 
                     foreach ($sectionsToValidate as $section_id) {
-                        $ret[] = 'submit-' . $section_id . '-checklist';
+                        $ret[] = 'submit-'.$section_id.'-checklist';
                     }
 
                     // DDPB-2293 question not relevant for PA
@@ -149,6 +153,7 @@ class ReportChecklistType extends AbstractType
                         $ret[] = 'submit-bonds-checklist';
                     }
                 }
+
                 return $ret;
             },
         ])

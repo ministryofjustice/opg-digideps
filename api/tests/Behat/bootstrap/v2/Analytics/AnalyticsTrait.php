@@ -4,6 +4,7 @@ declare(strict_types=1);
 
 namespace App\Tests\Behat\v2\Analytics;
 
+use App\Entity\User;
 use App\Tests\Behat\BehatException;
 
 trait AnalyticsTrait
@@ -26,13 +27,20 @@ trait AnalyticsTrait
         'paDeputies' => '//span[@aria-labelledby=\'metric-registeredDeputies-deputyType-pa-label\']',
     ];
 
+    private array $dateRangeOfFixtures = ['from' => null, 'to' => null];
+    /** @var User[] */
+    private array $fixtureUsersCreated = [];
+
     /**
-     * @When reports exist that were submitted at different times
+     * @When reports exist that were submitted :numOfYears years ago
      */
-    public function reportsExistThatWereSubmittedDifferentTimes()
+    public function reportsExistThatWereSubmittedYearsAgo(int $numOfYears)
     {
+        $this->dateRangeOfFixtures['from'] = $numOfYears;
+        $this->dateRangeOfFixtures['to'] = $numOfYears - 1;
+
         ++$this->runNumber;
-        $this->createAdditionalDataForAnalytics('20 years ago', $this->runNumber, 5);
+        $this->fixtureUsersCreated = $this->createAdditionalDataForAnalytics("$numOfYears years ago", $this->runNumber, 5);
 
         $this->expectedMetrics = [
             'feedBack' => 100,
@@ -55,8 +63,10 @@ trait AnalyticsTrait
      */
     public function iAddMoreClientsDeputiesReports()
     {
+        $fromYearsAgo = $this->dateRangeOfFixtures['from'] + 1;
+
         ++$this->runNumber;
-        $this->createAdditionalDataForAnalytics('21 years ago', $this->runNumber, 1);
+        $this->createAdditionalDataForAnalytics("$fromYearsAgo years ago", $this->runNumber, 1);
 
         $this->expectedMetrics = [
             'feedBack' => 50,
@@ -109,44 +119,15 @@ trait AnalyticsTrait
     }
 
     /**
-     * @When I change reporting period to be all time
-     */
-    public function iChangeReportingPeriodToAllTime()
-    {
-        $this->selectOption('admin[period]', 'all-time');
-        $this->pressButton('Update date range');
-        $header = $this->getSession()->getPage()->find('xpath', '//h2[contains(.,"All time")]');
-        if (is_null($header)) {
-            throw new BehatException(sprintf('Missing correct text.'));
-        }
-        // This should show all the reports
-        $this->expectedMetrics = [
-            'feedBack' => 100,
-            'totalReports' => 3,
-            'totalRegistered' => 35,
-            'totalClients' => 71,
-            'laySatisfaction' => 100,
-            'laySubmitted' => 1,
-            'layDeputies' => 10,
-            'layClients' => 23,
-            'profSatisfaction' => 100,
-            'profSubmitted' => 1,
-            'profDeputies' => 16,
-            'profClients' => 27,
-            'paSatisfaction' => 100,
-            'paSubmitted' => 1,
-            'paDeputies' => 9,
-            'paClients' => 21,
-        ];
-    }
-
-    /**
      * @When I change reporting period to apply only to our generated data
      */
     public function iChangeReportingPeriodToApplyOnlyToOurGeneratedData()
     {
-        $fromDate = explode('-', strval(date('d-m-Y', strtotime('-20 years'))));
-        $toDate = explode('-', strval(date('d-m-Y', strtotime('-19 years'))));
+        $fromYears = $this->dateRangeOfFixtures['from'];
+        $toYears = $this->dateRangeOfFixtures['to'];
+
+        $fromDate = explode('-', strval(date('d-m-Y', strtotime("-$fromYears years"))));
+        $toDate = explode('-', strval(date('d-m-Y', strtotime("-$toYears years"))));
 
         $this->selectOption('admin[period]', 'custom');
         $this->fillField('admin[startDate][day]', $fromDate[0]);

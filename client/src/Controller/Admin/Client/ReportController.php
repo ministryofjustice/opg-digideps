@@ -89,6 +89,8 @@ class ReportController extends AbstractController
         'report-prof-service-fees',
         'prof-service-fees',
         'client-named-deputy',
+        'client-benefits-check',
+        'client-benefits-check-state',
     ];
 
     /** @var RestClient */
@@ -126,7 +128,7 @@ class ReportController extends AbstractController
             array_merge(
                 self::$reportGroupsAll,
                 [
-                    'report-checklist', 'checklist-information', 'last-modified', 'user', 'previous-report-data', 'action',
+                    'report-checklist', 'checklist-information', 'last-modified', 'user', 'previous-report-data', 'action', 'report-submitted-by',
                 ]
             )
         );

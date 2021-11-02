@@ -15,6 +15,9 @@
     {% if form.assetsDeclaredAndManaged is defined %}
         <li><a href="#assetsAndDebts" class="govuk-link govuk-!-font-size-16">{{ (page ~ '.heading.lodging.assetsAndDebts') | trans }}</a></li>
     {% endif %}
+    {% if form.clientBenefitsChecked is defined %}
+        <li><a href="#clientBenefitsCheck" class="govuk-link govuk-!-font-size-16">{{ (page ~ '.heading.lodging.clientBenefitsCheck') | trans }}</a></li>
+    {% endif %}
     {% if form.openClosingBalancesMatch is defined %}
         <li><a href="#moneyInOut" class="govuk-link govuk-!-font-size-16">{{ (page ~ '.heading.lodging.money') | trans }}</a></li>
     {% endif %}
