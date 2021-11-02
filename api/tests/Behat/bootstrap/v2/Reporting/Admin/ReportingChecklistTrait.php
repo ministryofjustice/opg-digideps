@@ -4,6 +4,8 @@ declare(strict_types=1);
 
 namespace App\Tests\Behat\v2\Reporting\Admin;
 
+use App\Entity\Report\Report;
+
 trait ReportingChecklistTrait
 {
     // Amount of required checklist fields
@@ -31,6 +33,7 @@ trait ReportingChecklistTrait
         'visitsAndCare' => "//a[@href='#visitsAndCare']", // lay, pa, prof
         'lifestyle' => "//a[@href='#lifestyle']", // lay-hw
         'assetsAndDebts' => "//a[@href='#assetsAndDebts']", // lay-assets, pa-assets, prof-assets
+        'clientBenefitsCheck' => "//a[@href='#clientBenefitsCheck']",
         'moneyInOut' => "//a[@href='#moneyInOut']", // lay-assets, pa-assets, prof-assets
         'bonds' => "//a[@href='#bonds']", // lay-assets, pa-assets, prof-assets
         'profDeputyCosts' => "//a[@href='#profDeputyCosts']", // prof
@@ -52,21 +55,12 @@ trait ReportingChecklistTrait
     }
 
     /**
-     * @When I search for the :deputyType client
+     * @When I search for the client I'm interacting with
      */
-    public function iSearchForTheClient(string $deputyType)
+    public function iSearchForTheClient()
     {
-        $deputy = '';
-        if ('lay' === $deputyType) {
-            $deputy = $this->layDeputySubmittedHealthWelfareDetails;
-        } elseif ('prof' === $deputyType) {
-            $deputy = $this->profNamedDeputySubmittedPfaHighDetails;
-        } elseif ('pa' === $deputyType) {
-            $deputy = $this->publicAuthNamedSubmittedPfaHighDetails;
-        }
-
-        $user = is_null($this->interactingWithUserDetails) ? $deputy : $this->interactingWithUserDetails;
-        $this->searchAdminForClientWithTerm($user->getClientCaseNumber());
+        $this->assertInteractingWithUserIsSet();
+        $this->searchAdminForClientWithTerm($this->interactingWithUserDetails->getClientCaseNumber());
     }
 
     /**
@@ -100,18 +94,36 @@ trait ReportingChecklistTrait
      */
     public function iSubmitTheChecklistWithTheFormFilledIn()
     {
+        $reportType = $this->interactingWithUserDetails->getCurrentReportType();
+
         $this->selectOption('report_checklist[reportingPeriodAccurate]', 'yes');
         $this->checkOption('report_checklist[contactDetailsUptoDate]');
         $this->checkOption('report_checklist[deputyFullNameAccurateInCasrec]');
-        $this->selectOption('report_checklist[decisionsSatisfactory]', 'yes');
-        $this->selectOption('report_checklist[consultationsSatisfactory]', 'yes');
-        $this->selectOption('report_checklist[careArrangements]', 'yes');
-        $this->selectOption('report_checklist[satisfiedWithHealthAndLifestyle]', 'yes');
-        $this->selectOption('report_checklist[futureSignificantDecisions]', 'yes');
-        $this->selectOption('report_checklist[hasDeputyRaisedConcerns]', 'yes');
+
+        if (in_array($reportType, Report::allRolesHwAndCombinedReportTypes())) {
+            $this->selectOption('report_checklist[decisionsSatisfactory]', 'yes');
+            $this->selectOption('report_checklist[consultationsSatisfactory]', 'yes');
+            $this->selectOption('report_checklist[careArrangements]', 'yes');
+            $this->selectOption('report_checklist[satisfiedWithHealthAndLifestyle]', 'yes');
+            $this->selectOption('report_checklist[futureSignificantDecisions]', 'yes');
+            $this->selectOption('report_checklist[hasDeputyRaisedConcerns]', 'yes');
+        }
+
+        if (in_array($reportType, Report::allRolesPfasAndCombinedReportTypes())) {
+            $this->selectOption('report_checklist[clientBenefitsChecked]', 'yes');
+            $this->selectOption('report_checklist[assetsDeclaredAndManaged]', 'yes');
+            $this->selectOption('report_checklist[debtsManaged]', 'yes');
+            $this->selectOption('report_checklist[openClosingBalancesMatch]', 'yes');
+            $this->selectOption('report_checklist[accountsBalance]', 'yes');
+            $this->selectOption('report_checklist[moneyMovementsAcceptable]', 'yes');
+            $this->selectOption('report_checklist[bondAdequate]', 'yes');
+            $this->selectOption('report_checklist[bondOrderMatchCasrec]', 'yes');
+        }
+
         $this->selectOption('report_checklist[caseWorkerSatisified]', 'yes');
         $this->fillField('report_checklist[lodgingSummary]', 'Lorem ipsum');
         $this->selectOption('report_checklist[finalDecision]', 'satisfied');
+
         $this->pressButton('report_checklist[submitAndContinue]');
     }
 
@@ -139,7 +151,7 @@ trait ReportingChecklistTrait
     /**
      * @Then I can only see the :deputyType specific section
      */
-    public function ICannotSeeTheProfSpecificCostsSection(string $deputyType)
+    public function ICannotSeeTheSpecificCostsSection(string $deputyType)
     {
         if ('public authority pfa high' === $deputyType) {
             $hiddenItems = [
@@ -164,6 +176,7 @@ trait ReportingChecklistTrait
                 'profDeputyCosts',
                 'profDeputyCostsEstimate',
                 'paFeesExpenses',
+                'clientBenefitsCheck',
             ];
 
             foreach ($this->xPathItems as $xPathitem) {

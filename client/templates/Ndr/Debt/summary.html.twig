@@ -127,7 +127,7 @@
             </div>
 
             {% set debtOther = ndr.getDebtById('other') %}
-            {% if debtOther.moreDetails %}
+            {% if debtOther is not null and debtOther.moreDetails %}
                 <div class="govuk-summary-list__row behat-region-debt-other-more-details">
                     <dt class="govuk-summary-list__key">
                         {{ 'summaryPage.moreAbout' | trans(transOptions | merge({'%amount%': debtOther.amount })) }}
