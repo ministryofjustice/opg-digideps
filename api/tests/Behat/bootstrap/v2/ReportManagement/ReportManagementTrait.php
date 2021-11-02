@@ -393,4 +393,13 @@ trait ReportManagementTrait
             throw new BehatException('Download link for the report is visible when it should not be');
         }
     }
+
+    /**
+     * @Given /^I should not see the client benefits check section in the checklist group$/
+     */
+    public function iShouldNotSeeTheClientBenefitsCheckSectionInTheChecklistGroup()
+    {
+        $this->getSession()->getPage()->find('xpath', 'addCheckboxXpath');
+        throw new BehatException();
+    }
 }

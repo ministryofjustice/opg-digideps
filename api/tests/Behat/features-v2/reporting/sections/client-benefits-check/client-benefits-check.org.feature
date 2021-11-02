@@ -8,7 +8,7 @@ Feature: Client benefits check - Org users (only overview pages differ - flow is
         And the deputies 'current' report ends and is due 'less' than 60 days after the client benefits check feature flag date
         When I visit the report overview page
         Then I should not see 'client-benefits-check' report section
-        And I should be able to submit my report without completing the section
+        And I should be able to submit my report without completing the client benefits check section
 
     @pa-admin-combined-high-not-started
     Scenario: Reports due at least 60 days after the new question feature flag see the new report section

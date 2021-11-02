@@ -14,7 +14,7 @@ trait ReportTrait
     public string $reportUrlPrefix = 'report';
 
     /**
-     * @Then I should be able to submit my report without completing the section
+     * @Then I should be able to submit my report without completing the client benefits check section
      * @Given I submit the report
      */
     public function iSubmitTheReport()
@@ -431,7 +431,7 @@ trait ReportTrait
         if (empty($this->loggedInUserDetails) ||
            (empty($this->loggedInUserDetails->getCurrentReportId()) && empty($this->loggedInUserDetails->getPreviousReportId()))
         ) {
-            throw new Exception('The logged in user does not have a report. Ensure a user with a report has logged in before using this step.');
+            throw new BehatException('The logged in user does not have a report. Ensure a user with a report has logged in before using this step.');
         }
 
         if (!in_array($currentOrPrevious, ['current', 'previous'])) {

@@ -309,7 +309,7 @@ trait ClientBenefitsCheckSectionTrait
     public function haveNotCompletedBenefitsSection()
     {
         if (empty($this->loggedInUserDetails) && empty($this->loggedInUserDetails->getCurrentReportId())) {
-            throw new Exception('The logged in user does not have a report. Ensure a user with a report has logged in before using this step.');
+            throw new BehatException('The logged in user does not have a report. Ensure a user with a report has logged in before using this step.');
         }
 
         /** @var Report $currentReport */
