@@ -109,7 +109,7 @@ trait ReportingChecklistTrait
             $this->selectOption('report_checklist[hasDeputyRaisedConcerns]', 'yes');
         }
 
-        if (in_array($reportType, Report::allRolesPfasAndCombinedReportTypes())) {
+        if (in_array($reportType, Report::allRolesPfaAndCombinedReportTypes())) {
             $this->selectOption('report_checklist[clientBenefitsChecked]', 'yes');
             $this->selectOption('report_checklist[assetsDeclaredAndManaged]', 'yes');
             $this->selectOption('report_checklist[debtsManaged]', 'yes');

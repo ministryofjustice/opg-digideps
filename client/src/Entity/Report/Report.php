@@ -1251,29 +1251,29 @@ class Report implements ReportInterface, StartEndDateComparableInterface
         return in_array(
             $this->getType(),
             [
-                Report::TYPE_102,
-                Report::TYPE_102_4,
-                Report::TYPE_102_5,
-                Report::TYPE_102_4_5,
-                Report::TYPE_102_6,
-                Report::TYPE_102_4_6,
+                Report::LAY_PFA_HIGH_ASSETS_TYPE,
+                Report::LAY_COMBINED_HIGH_ASSETS_TYPE,
+                Report::PROF_PFA_HIGH_ASSETS_TYPE,
+                Report::PROF_COMBINED_HIGH_ASSETS,
+                Report::PA_PFA_HIGH_ASSETS_TYPE,
+                Report::PA_COMBINED_HIGH_ASSETS_TYPE,
             ]
         );
     }
 
     public function isLayReport(): bool
     {
-        return in_array($this->getType(), [self::TYPE_102, self::TYPE_103, self::TYPE_104, self::TYPE_102_4, self::TYPE_103_4]);
+        return in_array($this->getType(), [self::LAY_PFA_HIGH_ASSETS_TYPE, self::LAY_PFA_LOW_ASSETS_TYPE, self::LAY_HW_TYPE, self::LAY_COMBINED_HIGH_ASSETS_TYPE, self::LAY_COMBINED_LOW_ASSETS_TYPE]);
     }
 
     public function isPAreport(): bool
     {
-        return in_array($this->getType(), [self::TYPE_102_6, self::TYPE_103_6, self::TYPE_104_6, self::TYPE_102_4_6, self::TYPE_103_4_6]);
+        return in_array($this->getType(), [self::PA_PFA_HIGH_ASSETS_TYPE, self::PA_PFA_LOW_ASSETS_TYPE, self::PA_HW_TYPE, self::PA_COMBINED_HIGH_ASSETS_TYPE, self::PA_COMBINED_LOW_ASSETS_TYPE]);
     }
 
     public function isProfReport(): bool
     {
-        return in_array($this->getType(), [self::TYPE_102_5, self::TYPE_103_5, self::TYPE_104_5, self::TYPE_102_4_5, self::TYPE_103_4_5]);
+        return in_array($this->getType(), [self::PROF_PFA_HIGH_ASSETS_TYPE, self::PROF_PFA_LOW_ASSETS_TYPE, self::PROF_HW_TYPE, self::PROF_COMBINED_HIGH_ASSETS, self::PROF_COMBINED_LOW_ASSETS]);
     }
 
     /**

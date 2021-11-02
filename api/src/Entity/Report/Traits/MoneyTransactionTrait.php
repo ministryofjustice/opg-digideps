@@ -105,7 +105,7 @@ trait MoneyTransactionTrait
 
         $ret = 0;
 
-        if (self::TYPE_103 === $this->type) {
+        if (self::LAY_PFA_LOW_ASSETS_TYPE === $this->type) {
             $transactions = $this->getMoneyTransactionsShort();
         } else {
             $transactions = $this->getMoneyTransactions();

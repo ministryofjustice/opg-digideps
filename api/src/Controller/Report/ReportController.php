@@ -96,7 +96,7 @@ class ReportController extends RestController
         ]);
 
         // report type is taken from CASREC. In case that's not available (shouldn't happen unless casrec table is dropped), use a 102
-        $reportType = $this->reportService->getReportTypeBasedOnCasrec($client) ?: Report::TYPE_102;
+        $reportType = $this->reportService->getReportTypeBasedOnCasrec($client) ?: Report::LAY_PFA_HIGH_ASSETS_TYPE;
         $report = new Report($client, $reportType, new DateTime($reportData['start_date']), new DateTime($reportData['end_date']));
         $report->setReportSeen(true);
 

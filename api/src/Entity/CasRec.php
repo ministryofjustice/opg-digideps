@@ -22,41 +22,41 @@ class CasRec
 
     /**
      * Holds the mapping rules to define the report type based on the CSV file (CASREC)
-     * Used by both PA and Lay
+     * Used by both PA and Lay.
      *
      * @var array
      */
     private static $csvToReportTypeMap = [
         // Lay
-        [true, self::REALM_LAY, ['p3', 'p3g', 'l3', 'l3g'], 'opg103', Report::TYPE_103],
+        [true, self::REALM_LAY, ['p3', 'p3g', 'l3', 'l3g'], 'opg103', Report::LAY_PFA_LOW_ASSETS_TYPE],
         // @deprecated (DDPB-2044)
-        [true, self::REALM_LAY, ['l3', 'l3g', 'a3'], 'opg103', Report::TYPE_103],
-        [true, self::REALM_LAY, ['p2', 'p2a', 'l2a', 'l2'], 'opg102', Report::TYPE_102],
+        [true, self::REALM_LAY, ['l3', 'l3g', 'a3'], 'opg103', Report::LAY_PFA_LOW_ASSETS_TYPE],
+        [true, self::REALM_LAY, ['p2', 'p2a', 'l2a', 'l2'], 'opg102', Report::LAY_PFA_HIGH_ASSETS_TYPE],
         // @deprecated (DDPB-2044)
-        [true, self::REALM_LAY, ['l3', 'l3g', 'a3'], 'opg102', Report::TYPE_102],
-        [true, self::REALM_LAY, ['hw'], '', Report::TYPE_104],
-        [true, self::REALM_LAY, ['hw'], 'opg103', Report::TYPE_103_4],
-        [true, self::REALM_LAY, ['hw'], 'opg102', Report::TYPE_102_4],
+        [true, self::REALM_LAY, ['l3', 'l3g', 'a3'], 'opg102', Report::LAY_PFA_HIGH_ASSETS_TYPE],
+        [true, self::REALM_LAY, ['hw'], '', Report::LAY_HW_TYPE],
+        [true, self::REALM_LAY, ['hw'], 'opg103', Report::LAY_COMBINED_LOW_ASSETS_TYPE],
+        [true, self::REALM_LAY, ['hw'], 'opg102', Report::LAY_COMBINED_HIGH_ASSETS_TYPE],
         // PA
-        [true, self::REALM_PA, ['a3'], 'opg103', Report::TYPE_103_6],
+        [true, self::REALM_PA, ['a3'], 'opg103', Report::PA_PFA_LOW_ASSETS_TYPE],
         // @deprecated (DDPB-2044)
-        [true, self::REALM_PA, ['l3', 'l3g', 'a3'], 'opg103', Report::TYPE_103_6],
-        [true, self::REALM_PA, ['a2', 'a2a'], 'opg102', Report::TYPE_102_6],
+        [true, self::REALM_PA, ['l3', 'l3g', 'a3'], 'opg103', Report::PA_PFA_LOW_ASSETS_TYPE],
+        [true, self::REALM_PA, ['a2', 'a2a'], 'opg102', Report::PA_PFA_HIGH_ASSETS_TYPE],
         // @deprecated (DDPB-2044)
-        [true, self::REALM_PA, ['l3', 'l3g', 'a3'], 'opg102', Report::TYPE_102_6],
-        [true, self::REALM_PA, ['hw'], '', Report::TYPE_104_6],
-        [true, self::REALM_PA, ['hw'], 'opg103', Report::TYPE_103_4_6],
-        [true, self::REALM_PA, ['hw'], 'opg102', Report::TYPE_102_4_6],
+        [true, self::REALM_PA, ['l3', 'l3g', 'a3'], 'opg102', Report::PA_PFA_HIGH_ASSETS_TYPE],
+        [true, self::REALM_PA, ['hw'], '', Report::PA_HW_TYPE],
+        [true, self::REALM_PA, ['hw'], 'opg103', Report::PA_COMBINED_LOW_ASSETS_TYPE],
+        [true, self::REALM_PA, ['hw'], 'opg102', Report::PA_COMBINED_HIGH_ASSETS_TYPE],
         // Prof
-        [true, self::REALM_PROF, ['p3', 'p3g'], 'opg103', Report::TYPE_103_5],
+        [true, self::REALM_PROF, ['p3', 'p3g'], 'opg103', Report::PROF_PFA_LOW_ASSETS_TYPE],
         // @deprecated (DDPB-2044)
-        [true, self::REALM_PROF, ['l3', 'l3g', 'a3'], 'opg103', Report::TYPE_103_5],
-        [true, self::REALM_PROF, ['p2', 'p2a'], 'opg102', Report::TYPE_102_5],
+        [true, self::REALM_PROF, ['l3', 'l3g', 'a3'], 'opg103', Report::PROF_PFA_LOW_ASSETS_TYPE],
+        [true, self::REALM_PROF, ['p2', 'p2a'], 'opg102', Report::PROF_PFA_HIGH_ASSETS_TYPE],
         // @deprecated (DDPB-2044)
-        [true, self::REALM_PROF, ['l3', 'l3g', 'a3'], 'opg102', Report::TYPE_102_5],
-        [true, self::REALM_PROF, ['hw'], '', Report::TYPE_104_5],
-        [true, self::REALM_PROF, ['hw'], 'opg103', Report::TYPE_103_4_5],
-        [true, self::REALM_PROF, ['hw'], 'opg102', Report::TYPE_102_4_5],
+        [true, self::REALM_PROF, ['l3', 'l3g', 'a3'], 'opg102', Report::PROF_PFA_HIGH_ASSETS_TYPE],
+        [true, self::REALM_PROF, ['hw'], '', Report::PROF_HW_TYPE],
+        [true, self::REALM_PROF, ['hw'], 'opg103', Report::PROF_COMBINED_LOW_ASSETS],
+        [true, self::REALM_PROF, ['hw'], 'opg102', Report::PROF_COMBINED_HIGH_ASSETS],
     ];
 
     /**
@@ -181,9 +181,10 @@ class CasRec
     private $orderDate;
 
     /**
-     * Filled from cron
+     * Filled from cron.
      *
      * @var array
+     *
      * @deprecated use App\Service\DataNormaliser
      */
     private static $normalizeChars = [
@@ -312,11 +313,11 @@ class CasRec
      * Determine type of report based on 'Typeofrep' and 'Corref' columns in the Casrec CSV
      * 103: when corref = l3/l3g and typeofRep = opg103
      * 104: when corref == hw and typeofRep empty (104 CURRENTLY DISABLED)
-     * 103: all the other cases;
+     * 103: all the other cases;.
      *
-     * @param string $typeOfRep    e.g. opg103
-     * @param string $corref       e.g. l3, l3g
-     * @param string $realm        e.g. REALM_PROF
+     * @param string $typeOfRep e.g. opg103
+     * @param string $corref    e.g. l3, l3g
+     * @param string $realm     e.g. REALM_PROF
      *
      * @return string Report::TYPE_*
      */
@@ -337,14 +338,14 @@ class CasRec
         // default report type if no entry mached above
         switch ($realm) {
             case self::REALM_LAY:
-                return Report::TYPE_102;
+                return Report::LAY_PFA_HIGH_ASSETS_TYPE;
             case self::REALM_PA:
-                return Report::TYPE_102_6;
+                return Report::PA_PFA_HIGH_ASSETS_TYPE;
             case self::REALM_PROF:
-                return Report::TYPE_102_5;
+                return Report::PROF_PFA_HIGH_ASSETS_TYPE;
         }
 
-        throw new \Exception(__METHOD__ . ': realm not recognised to determine report type');
+        throw new \Exception(__METHOD__.': realm not recognised to determine report type');
     }
 
     /**
@@ -397,6 +398,7 @@ class CasRec
 
     /**
      * @param mixed $source
+     *
      * @return CasRec
      */
     public function setSource($source)
@@ -407,6 +409,7 @@ class CasRec
         }
 
         $this->source = $source;
+
         return $this;
     }
 
@@ -417,7 +420,7 @@ class CasRec
     {
         return [
             self::CASREC_SOURCE,
-            self::SIRIUS_SOURCE
+            self::SIRIUS_SOURCE,
         ];
     }
 
@@ -430,12 +433,12 @@ class CasRec
     }
 
     /**
-     * @param \DateTime $orderDate
      * @return CasRec
      */
     public function setOrderDate(\DateTime $orderDate)
     {
         $this->orderDate = $orderDate;
+
         return $this;
     }
 }

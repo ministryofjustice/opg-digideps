@@ -26,7 +26,7 @@ class DeputyCostsReportUpdateHandlerTest extends TestCase
     {
         $date = new \DateTime('now', new \DateTimeZone('Europe/London'));
         $this->report = $this->getMockBuilder(Report::class)
-            ->setConstructorArgs([new Client(), Report::TYPE_102, $date, $date])
+            ->setConstructorArgs([new Client(), Report::LAY_PFA_HIGH_ASSETS_TYPE, $date, $date])
             ->setMethods(['updateSectionsStatusCache'])
             ->getMock();
 

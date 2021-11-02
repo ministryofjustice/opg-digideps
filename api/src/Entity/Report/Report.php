@@ -60,25 +60,25 @@ class Report implements ReportInterface
     const STATUS_NOT_FINISHED = 'notFinished';
 
     // https://opgtransform.atlassian.net/wiki/spaces/DEPDS/pages/135266255/Report+variations
-    const TYPE_103 = '103';
-    const TYPE_102 = '102';
-    const TYPE_104 = '104';
-    const TYPE_103_4 = '103-4';
-    const TYPE_102_4 = '102-4';
+    const LAY_PFA_LOW_ASSETS_TYPE = '103';
+    const LAY_PFA_HIGH_ASSETS_TYPE = '102';
+    const LAY_HW_TYPE = '104';
+    const LAY_COMBINED_LOW_ASSETS_TYPE = '103-4';
+    const LAY_COMBINED_HIGH_ASSETS_TYPE = '102-4';
 
     // PA
-    const TYPE_103_6 = '103-6';
-    const TYPE_102_6 = '102-6';
-    const TYPE_104_6 = '104-6';
-    const TYPE_103_4_6 = '103-4-6';
-    const TYPE_102_4_6 = '102-4-6';
+    const PA_PFA_LOW_ASSETS_TYPE = '103-6';
+    const PA_PFA_HIGH_ASSETS_TYPE = '102-6';
+    const PA_HW_TYPE = '104-6';
+    const PA_COMBINED_LOW_ASSETS_TYPE = '103-4-6';
+    const PA_COMBINED_HIGH_ASSETS_TYPE = '102-4-6';
 
     // PROF
-    const TYPE_103_5 = '103-5';
-    const TYPE_102_5 = '102-5';
-    const TYPE_104_5 = '104-5';
-    const TYPE_103_4_5 = '103-4-5';
-    const TYPE_102_4_5 = '102-4-5';
+    const PROF_PFA_LOW_ASSETS_TYPE = '103-5';
+    const PROF_PFA_HIGH_ASSETS_TYPE = '102-5';
+    const PROF_HW_TYPE = '104-5';
+    const PROF_COMBINED_LOW_ASSETS = '103-4-5';
+    const PROF_COMBINED_HIGH_ASSETS = '102-4-5';
 
     const TYPE_HEALTH_WELFARE = '104';
     const TYPE_PROPERTY_AND_AFFAIRS_HIGH_ASSETS = '102';
@@ -141,23 +141,23 @@ class Report implements ReportInterface
             self::SECTION_VISITS_CARE => self::allRolesAllReportTypes(),
             self::SECTION_LIFESTYLE => self::allRolesHwAndCombinedReportTypes(),
             // money
-            self::SECTION_BANK_ACCOUNTS => self::allRolesPfasAndCombinedReportTypes(),
-            self::SECTION_MONEY_TRANSFERS => self::allRolesPfaAndCombinedHighAssets(),
-            self::SECTION_MONEY_IN => self::allRolesPfaAndCombinedHighAssets(),
-            self::SECTION_MONEY_OUT => self::allRolesPfaAndCombinedHighAssets(),
-            self::SECTION_MONEY_IN_SHORT => self::allRolesPfaAndCombinedLowAssets(),
-            self::SECTION_MONEY_OUT_SHORT => self::allRolesPfaAndCombinedLowAssets(),
-            self::SECTION_ASSETS => self::allRolesPfasAndCombinedReportTypes(),
-            self::SECTION_DEBTS => self::allRolesPfasAndCombinedReportTypes(),
-            self::SECTION_GIFTS => self::allRolesPfasAndCombinedReportTypes(),
-            self::SECTION_BALANCE => self::allRolesPfaAndCombinedHighAssets(),
-            self::SECTION_CLIENT_BENEFITS_CHECK => self::allRolesPfasAndCombinedReportTypes(),
+            self::SECTION_BANK_ACCOUNTS => self::allRolesPfaAndCombinedReportTypes(),
+            self::SECTION_MONEY_TRANSFERS => self::allRolesPfaAndCombinedHighAssetsReportTypes(),
+            self::SECTION_MONEY_IN => self::allRolesPfaAndCombinedHighAssetsReportTypes(),
+            self::SECTION_MONEY_OUT => self::allRolesPfaAndCombinedHighAssetsReportTypes(),
+            self::SECTION_MONEY_IN_SHORT => self::allRolesPfaAndCombinedLowAssetsReportTypes(),
+            self::SECTION_MONEY_OUT_SHORT => self::allRolesPfaAndCombinedLowAssetsReportTypes(),
+            self::SECTION_ASSETS => self::allRolesPfaAndCombinedReportTypes(),
+            self::SECTION_DEBTS => self::allRolesPfaAndCombinedReportTypes(),
+            self::SECTION_GIFTS => self::allRolesPfaAndCombinedReportTypes(),
+            self::SECTION_BALANCE => self::allRolesPfaAndCombinedHighAssetsReportTypes(),
+            self::SECTION_CLIENT_BENEFITS_CHECK => self::allRolesPfaAndCombinedReportTypes(),
             // end money
             self::SECTION_ACTIONS => self::allRolesAllReportTypes(),
             self::SECTION_OTHER_INFO => self::allRolesAllReportTypes(),
-            self::SECTION_DEPUTY_EXPENSES => self::layPfaAndCombined(),
-            self::SECTION_PA_DEPUTY_EXPENSES => self::paPfaAndCombined(),
-            self::SECTION_PROF_CURRENT_FEES => self::ENABLE_FEE_SECTIONS ? self::profPfaAndCombined() : [],
+            self::SECTION_DEPUTY_EXPENSES => self::layPfaAndCombinedReportTypes(),
+            self::SECTION_PA_DEPUTY_EXPENSES => self::paPfaAndCombinedReportTypes(),
+            self::SECTION_PROF_CURRENT_FEES => self::ENABLE_FEE_SECTIONS ? self::profPfaAndCombinedReportTypes() : [],
             self::SECTION_PROF_DEPUTY_COSTS => self::allProfReportTypes(),
             // add when ready
             self::SECTION_PROF_DEPUTY_COSTS_ESTIMATE => self::allProfReportTypes(),
@@ -1295,23 +1295,23 @@ class Report implements ReportInterface
     public function getReportTitle()
     {
         $titleTranslationKeys = [
-            self::TYPE_103 => 'propertyAffairsMinimal',
-            self::TYPE_102 => 'propertyAffairsGeneral',
-            self::TYPE_104 => 'healthWelfare',
-            self::TYPE_103_4 => 'propertyAffairsMinimalHealthWelfare',
-            self::TYPE_102_4 => 'propertyAffairsGeneralHealthWelfare',
+            self::LAY_PFA_LOW_ASSETS_TYPE => 'propertyAffairsMinimal',
+            self::LAY_PFA_HIGH_ASSETS_TYPE => 'propertyAffairsGeneral',
+            self::LAY_HW_TYPE => 'healthWelfare',
+            self::LAY_COMBINED_LOW_ASSETS_TYPE => 'propertyAffairsMinimalHealthWelfare',
+            self::LAY_COMBINED_HIGH_ASSETS_TYPE => 'propertyAffairsGeneralHealthWelfare',
 
-            self::TYPE_103_6 => 'propertyAffairsMinimal',
-            self::TYPE_102_6 => 'propertyAffairsGeneral',
-            self::TYPE_104_6 => 'healthWelfare',
-            self::TYPE_103_4_6 => 'propertyAffairsMinimalHealthWelfare',
-            self::TYPE_102_4_6 => 'propertyAffairsGeneralHealthWelfare',
+            self::PA_PFA_LOW_ASSETS_TYPE => 'propertyAffairsMinimal',
+            self::PA_PFA_HIGH_ASSETS_TYPE => 'propertyAffairsGeneral',
+            self::PA_HW_TYPE => 'healthWelfare',
+            self::PA_COMBINED_LOW_ASSETS_TYPE => 'propertyAffairsMinimalHealthWelfare',
+            self::PA_COMBINED_HIGH_ASSETS_TYPE => 'propertyAffairsGeneralHealthWelfare',
 
-            self::TYPE_103_5 => 'propertyAffairsMinimal',
-            self::TYPE_102_5 => 'propertyAffairsGeneral',
-            self::TYPE_104_5 => 'healthWelfare',
-            self::TYPE_103_4_5 => 'propertyAffairsMinimalHealthWelfare',
-            self::TYPE_102_4_5 => 'propertyAffairsGeneralHealthWelfare',
+            self::PROF_PFA_LOW_ASSETS_TYPE => 'propertyAffairsMinimal',
+            self::PROF_PFA_HIGH_ASSETS_TYPE => 'propertyAffairsGeneral',
+            self::PROF_HW_TYPE => 'healthWelfare',
+            self::PROF_COMBINED_LOW_ASSETS => 'propertyAffairsMinimalHealthWelfare',
+            self::PROF_COMBINED_HIGH_ASSETS => 'propertyAffairsGeneralHealthWelfare',
         ];
 
         return $titleTranslationKeys[$this->getType()];
@@ -1322,17 +1322,17 @@ class Report implements ReportInterface
      */
     public function isLayReport()
     {
-        return in_array($this->getType(), [self::TYPE_102, self::TYPE_103, self::TYPE_104, self::TYPE_102_4, self::TYPE_103_4]);
+        return in_array($this->getType(), [self::LAY_PFA_HIGH_ASSETS_TYPE, self::LAY_PFA_LOW_ASSETS_TYPE, self::LAY_HW_TYPE, self::LAY_COMBINED_HIGH_ASSETS_TYPE, self::LAY_COMBINED_LOW_ASSETS_TYPE]);
     }
 
     public function isPAreport()
     {
-        return in_array($this->getType(), [self::TYPE_102_6, self::TYPE_103_6, self::TYPE_104_6, self::TYPE_102_4_6, self::TYPE_103_4_6]);
+        return in_array($this->getType(), [self::PA_PFA_HIGH_ASSETS_TYPE, self::PA_PFA_LOW_ASSETS_TYPE, self::PA_HW_TYPE, self::PA_COMBINED_HIGH_ASSETS_TYPE, self::PA_COMBINED_LOW_ASSETS_TYPE]);
     }
 
     public function isProfReport()
     {
-        return in_array($this->getType(), [self::TYPE_102_5, self::TYPE_103_5, self::TYPE_104_5, self::TYPE_102_4_5, self::TYPE_103_4_5]);
+        return in_array($this->getType(), [self::PROF_PFA_HIGH_ASSETS_TYPE, self::PROF_PFA_LOW_ASSETS_TYPE, self::PROF_HW_TYPE, self::PROF_COMBINED_HIGH_ASSETS, self::PROF_COMBINED_LOW_ASSETS]);
     }
 
     public function getSatisfaction(): Satisfaction
@@ -1404,73 +1404,73 @@ class Report implements ReportInterface
     public static function allRolesAllReportTypes(): array
     {
         return [
-            self::TYPE_103, self::TYPE_102, self::TYPE_104, self::TYPE_103_4, self::TYPE_102_4, //Lay
-            self::TYPE_103_6, self::TYPE_102_6, self::TYPE_104_6, self::TYPE_103_4_6, self::TYPE_102_4_6, // PA
-            self::TYPE_103_5, self::TYPE_102_5, self::TYPE_104_5, self::TYPE_103_4_5, self::TYPE_102_4_5, // Prof
+            self::LAY_PFA_LOW_ASSETS_TYPE, self::LAY_PFA_HIGH_ASSETS_TYPE, self::LAY_HW_TYPE, self::LAY_COMBINED_LOW_ASSETS_TYPE, self::LAY_COMBINED_HIGH_ASSETS_TYPE,
+            self::PA_PFA_LOW_ASSETS_TYPE, self::PA_PFA_HIGH_ASSETS_TYPE, self::PA_HW_TYPE, self::PA_COMBINED_LOW_ASSETS_TYPE, self::PA_COMBINED_HIGH_ASSETS_TYPE,
+            self::PROF_PFA_LOW_ASSETS_TYPE, self::PROF_PFA_HIGH_ASSETS_TYPE, self::PROF_HW_TYPE, self::PROF_COMBINED_LOW_ASSETS, self::PROF_COMBINED_HIGH_ASSETS,
         ];
     }
 
     public static function allRolesHwAndCombinedReportTypes(): array
     {
         return [
-            self::TYPE_104, self::TYPE_103_4, self::TYPE_102_4, // Lay
-            self::TYPE_104_6, self::TYPE_103_4_6, self::TYPE_102_4_6, // PA
-            self::TYPE_104_5, self::TYPE_103_4_5, self::TYPE_102_4_5, // PA
+            self::LAY_HW_TYPE, self::LAY_COMBINED_LOW_ASSETS_TYPE, self::LAY_COMBINED_HIGH_ASSETS_TYPE,
+            self::PA_HW_TYPE, self::PA_COMBINED_LOW_ASSETS_TYPE, self::PA_COMBINED_HIGH_ASSETS_TYPE,
+            self::PROF_HW_TYPE, self::PROF_COMBINED_LOW_ASSETS, self::PROF_COMBINED_HIGH_ASSETS,
         ];
     }
 
-    public static function allRolesPfasAndCombinedReportTypes(): array
+    public static function allRolesPfaAndCombinedReportTypes(): array
     {
         return [
-            self::TYPE_103, self::TYPE_102, self::TYPE_103_4, self::TYPE_102_4, //Lay
-            self::TYPE_103_6, self::TYPE_102_6, self::TYPE_103_4_6, self::TYPE_102_4_6, // PA
-            self::TYPE_103_5, self::TYPE_102_5, self::TYPE_103_4_5, self::TYPE_102_4_5, // Prof
+            self::LAY_PFA_LOW_ASSETS_TYPE, self::LAY_PFA_HIGH_ASSETS_TYPE, self::LAY_COMBINED_LOW_ASSETS_TYPE, self::LAY_COMBINED_HIGH_ASSETS_TYPE,
+            self::PA_PFA_LOW_ASSETS_TYPE, self::PA_PFA_HIGH_ASSETS_TYPE, self::PA_COMBINED_LOW_ASSETS_TYPE, self::PA_COMBINED_HIGH_ASSETS_TYPE,
+            self::PROF_PFA_LOW_ASSETS_TYPE, self::PROF_PFA_HIGH_ASSETS_TYPE, self::PROF_COMBINED_LOW_ASSETS, self::PROF_COMBINED_HIGH_ASSETS,
         ];
     }
 
     public static function allProfReportTypes(): array
     {
         return [
-            self::TYPE_103_5, self::TYPE_102_5, self::TYPE_104_5, self::TYPE_103_4_5, self::TYPE_102_4_5, // Prof
+            self::PROF_PFA_LOW_ASSETS_TYPE, self::PROF_PFA_HIGH_ASSETS_TYPE, self::PROF_HW_TYPE, self::PROF_COMBINED_LOW_ASSETS, self::PROF_COMBINED_HIGH_ASSETS,
         ];
     }
 
-    public static function allRolesPfaAndCombinedHighAssets(): array
+    public static function allRolesPfaAndCombinedHighAssetsReportTypes(): array
     {
         return [
-            self::TYPE_102, self::TYPE_102_4, // Lay
-            self::TYPE_102_6, self::TYPE_102_4_6, // PA
-            self::TYPE_102_5, self::TYPE_102_4_5, // Prof
+            self::LAY_PFA_HIGH_ASSETS_TYPE, self::LAY_COMBINED_HIGH_ASSETS_TYPE,
+            self::PA_PFA_HIGH_ASSETS_TYPE, self::PA_COMBINED_HIGH_ASSETS_TYPE,
+            self::PROF_PFA_HIGH_ASSETS_TYPE, self::PROF_COMBINED_HIGH_ASSETS,
         ];
     }
 
-    public static function allRolesPfaAndCombinedLowAssets(): array
+    public static function allRolesPfaAndCombinedLowAssetsReportTypes(): array
     {
         return [
-            self::TYPE_103, self::TYPE_103_4, // Lay
-            self::TYPE_103_6, self::TYPE_103_4_6, // PA
-            self::TYPE_103_5, self::TYPE_103_4_5, // Prof
+            self::LAY_PFA_LOW_ASSETS_TYPE, self::LAY_COMBINED_LOW_ASSETS_TYPE,
+            self::PA_PFA_LOW_ASSETS_TYPE, self::PA_COMBINED_LOW_ASSETS_TYPE,
+            self::PROF_PFA_LOW_ASSETS_TYPE, self::PROF_COMBINED_LOW_ASSETS,
         ];
     }
 
-    public static function layPfaAndCombined(): array
+    public static function layPfaAndCombinedReportTypes(): array
     {
         return [
-            self::TYPE_103, self::TYPE_102, self::TYPE_103_4, self::TYPE_102_4,  // Lay
+            self::LAY_PFA_LOW_ASSETS_TYPE, self::LAY_PFA_HIGH_ASSETS_TYPE, self::LAY_COMBINED_LOW_ASSETS_TYPE, self::LAY_COMBINED_HIGH_ASSETS_TYPE,
         ];
     }
 
-    public static function paPfaAndCombined(): array
+    public static function paPfaAndCombinedReportTypes(): array
     {
         return [
-            self::TYPE_103_6, self::TYPE_102_6, self::TYPE_103_4_6, self::TYPE_102_4_6, // PA
+            self::PA_PFA_LOW_ASSETS_TYPE, self::PA_PFA_HIGH_ASSETS_TYPE, self::PA_COMBINED_LOW_ASSETS_TYPE, self::PA_COMBINED_HIGH_ASSETS_TYPE,
         ];
     }
 
-    public static function profPfaAndCombined(): array
+    public static function profPfaAndCombinedReportTypes(): array
     {
         return [
-            self::TYPE_103_5, self::TYPE_102_5, self::TYPE_103_4_5, self::TYPE_102_4_5, // Prof
+            self::PROF_PFA_LOW_ASSETS_TYPE, self::PROF_PFA_HIGH_ASSETS_TYPE, self::PROF_COMBINED_LOW_ASSETS, self::PROF_COMBINED_HIGH_ASSETS,
         ];
     }
 }
