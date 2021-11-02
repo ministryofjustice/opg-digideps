@@ -141,17 +141,17 @@ class Report implements ReportInterface
             self::SECTION_VISITS_CARE => self::allRolesAllReportTypes(),
             self::SECTION_LIFESTYLE => self::allRolesHwAndCombinedReportTypes(),
             // money
-            self::SECTION_BANK_ACCOUNTS => self::allRolesPfasAndCombinedReportTypes(),
+            self::SECTION_BANK_ACCOUNTS => self::allRolesPfaAndCombinedReportTypes(),
             self::SECTION_MONEY_TRANSFERS => self::allRolesPfaAndCombinedHighAssetsReportTypes(),
             self::SECTION_MONEY_IN => self::allRolesPfaAndCombinedHighAssetsReportTypes(),
             self::SECTION_MONEY_OUT => self::allRolesPfaAndCombinedHighAssetsReportTypes(),
             self::SECTION_MONEY_IN_SHORT => self::allRolesPfaAndCombinedLowAssetsReportTypes(),
             self::SECTION_MONEY_OUT_SHORT => self::allRolesPfaAndCombinedLowAssetsReportTypes(),
-            self::SECTION_ASSETS => self::allRolesPfasAndCombinedReportTypes(),
-            self::SECTION_DEBTS => self::allRolesPfasAndCombinedReportTypes(),
-            self::SECTION_GIFTS => self::allRolesPfasAndCombinedReportTypes(),
+            self::SECTION_ASSETS => self::allRolesPfaAndCombinedReportTypes(),
+            self::SECTION_DEBTS => self::allRolesPfaAndCombinedReportTypes(),
+            self::SECTION_GIFTS => self::allRolesPfaAndCombinedReportTypes(),
             self::SECTION_BALANCE => self::allRolesPfaAndCombinedHighAssetsReportTypes(),
-            self::SECTION_CLIENT_BENEFITS_CHECK => self::allRolesPfasAndCombinedReportTypes(),
+            self::SECTION_CLIENT_BENEFITS_CHECK => self::allRolesPfaAndCombinedReportTypes(),
             // end money
             self::SECTION_ACTIONS => self::allRolesAllReportTypes(),
             self::SECTION_OTHER_INFO => self::allRolesAllReportTypes(),
@@ -1419,7 +1419,7 @@ class Report implements ReportInterface
         ];
     }
 
-    public static function allRolesPfasAndCombinedReportTypes(): array
+    public static function allRolesPfaAndCombinedReportTypes(): array
     {
         return [
             self::LAY_PFA_LOW_ASSETS_TYPE, self::LAY_PFA_HIGH_ASSETS_TYPE, self::LAY_COMBINED_LOW_ASSETS_TYPE, self::LAY_COMBINED_HIGH_ASSETS_TYPE,
@@ -1472,9 +1472,5 @@ class Report implements ReportInterface
         return [
             self::PROF_PFA_LOW_ASSETS_TYPE, self::PROF_PFA_HIGH_ASSETS_TYPE, self::PROF_COMBINED_LOW_ASSETS, self::PROF_COMBINED_HIGH_ASSETS,
         ];
-    }
-
-    public static function allRolesLowAssetsReportTypes(): array
-    {
     }
 }
