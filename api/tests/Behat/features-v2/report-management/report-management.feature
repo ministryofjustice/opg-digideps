@@ -76,7 +76,7 @@ Feature: Report Management (applies to all admin roles)
     @admin-manager @lay-combined-high-submitted @acs
     Scenario: An admin manager un-submits a report that did not have a completed client benefits check section
         Given a Lay Deputy has submitted a Combined High Assets report
-        But they have not completed the client benefits section
+        But they have not completed the client benefits section for their 'previous' report
         And the deputies 'previous' report ends and is due 'more' than 60 days after the client benefits check feature flag date
         And an admin manager user accesses the admin app
         When I visit the admin client details page associated with the deputy I'm interacting with

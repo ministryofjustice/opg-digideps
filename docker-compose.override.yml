@@ -27,7 +27,6 @@ services:
       - ./api/postgres.env:/var/www/postgres.env
       - ./api/phpstan.neon:/var/www/phpstan.neon
       - ./api/bin:/var/www/vendor/bin
-      - ./api/tests/Behat:/var/www/vendor/tests/Behat
 
   frontend:
     volumes:

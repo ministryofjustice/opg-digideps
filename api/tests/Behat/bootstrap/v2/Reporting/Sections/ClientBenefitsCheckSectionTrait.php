@@ -304,16 +304,24 @@ trait ClientBenefitsCheckSectionTrait
     }
 
     /**
-     * @Given they have not completed the client benefits section
+     * @Given they have not completed the client benefits section for their :currentOrPrevious report
      */
-    public function haveNotCompletedBenefitsSection()
+    public function haveNotCompletedBenefitsSection(string $currentOrPrevious)
     {
-        if (empty($this->loggedInUserDetails) && empty($this->loggedInUserDetails->getCurrentReportId())) {
-            throw new BehatException('The logged in user does not have a report. Ensure a user with a report has logged in before using this step.');
+        $reportId = 'current' === $currentOrPrevious ? $this->loggedInUserDetails->getCurrentReportId() : $this->loggedInUserDetails->getPreviousReportId();
+
+        if (empty($this->loggedInUserDetails) && empty($reportId)) {
+            $message = sprintf(
+                'The logged in user does not have a %s report. Ensure a user with a %s report has logged in before using this step.',
+                $currentOrPrevious,
+                $currentOrPrevious
+            );
+
+            throw new BehatException($message);
         }
 
         /** @var Report $currentReport */
-        $currentReport = $this->em->getRepository(Report::class)->find($this->loggedInUserDetails->getCurrentReportId());
+        $currentReport = $this->em->getRepository(Report::class)->find($reportId);
         $currentReport->setClientBenefitsCheck(null);
 
         $this->em->persist($currentReport);
