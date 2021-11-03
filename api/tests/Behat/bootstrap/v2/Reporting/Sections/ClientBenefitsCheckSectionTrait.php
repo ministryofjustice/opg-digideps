@@ -2,7 +2,7 @@
 
 declare(strict_types=1);
 
-namespace App\Tests\Behat\bootstrap\v2\Reporting\Sections;
+namespace App\Tests\Behat\v2\Reporting\Sections;
 
 use App\Entity\Report\Report;
 use App\Tests\Behat\bootstrap\BehatException;
