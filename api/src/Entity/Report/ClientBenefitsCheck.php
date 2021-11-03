@@ -61,7 +61,7 @@ class ClientBenefitsCheck
      * @ORM\OneToOne (targetEntity="App\Entity\Report\Report", inversedBy="clientBenefitsCheck")
      * @ORM\JoinColumn(name="report_id", referencedColumnName="id", onDelete="CASCADE")
      */
-    private Report $report;
+    private ?Report $report;
 
     /**
      * @var string one of either [haveChecked, currentlyChecking, neverChecked]
@@ -139,7 +139,7 @@ class ClientBenefitsCheck
         return $this->report;
     }
 
-    public function setReport(Report $report): ClientBenefitsCheck
+    public function setReport(?Report $report): ClientBenefitsCheck
     {
         $this->report = $report;
 

@@ -23,6 +23,7 @@ services:
       - ./api/scripts:/var/www/scripts
       - ./api/src:/var/www/src
       - ./api/tests:/var/www/tests
+      - ./api/tests/Behat:/var/www/tests/Behat
       - ./api/api.env:/var/www/api.env
       - ./api/postgres.env:/var/www/postgres.env
       - ./api/phpstan.neon:/var/www/phpstan.neon

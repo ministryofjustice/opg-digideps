@@ -2,10 +2,10 @@
 
 declare(strict_types=1);
 
-namespace App\Tests\Behat\v2\Reporting\Sections;
+namespace App\Tests\Behat\bootstrap\v2\Reporting\Sections;
 
 use App\Entity\Report\Report;
-use App\Tests\Behat\BehatException;
+use App\Tests\Behat\bootstrap\BehatException;
 
 trait ClientBenefitsCheckSectionTrait
 {
@@ -309,6 +309,8 @@ trait ClientBenefitsCheckSectionTrait
     public function haveNotCompletedBenefitsSection(string $currentOrPrevious)
     {
         $reportId = 'current' === $currentOrPrevious ? $this->loggedInUserDetails->getCurrentReportId() : $this->loggedInUserDetails->getPreviousReportId();
+        var_dump($reportId);
+        var_dump($this->loggedInUserDetails->getCurrentReportId());
 
         if (empty($this->loggedInUserDetails) && empty($reportId)) {
             $message = sprintf(
@@ -320,11 +322,16 @@ trait ClientBenefitsCheckSectionTrait
             throw new BehatException($message);
         }
 
-        /** @var Report $currentReport */
-        $currentReport = $this->em->getRepository(Report::class)->find($reportId);
-        $currentReport->setClientBenefitsCheck(null);
+        /** @var Report $report */
+        $report = $this->em->getRepository(Report::class)->find($reportId);
 
-        $this->em->persist($currentReport);
+        $clientBenefitsCheck = $report->getClientBenefitsCheck();
+        $clientBenefitsCheck->setReport(null);
+
+        $report->setClientBenefitsCheck(null);
+
+        $this->em->persist($clientBenefitsCheck);
+        $this->em->persist($report);
         $this->em->flush();
     }
 
