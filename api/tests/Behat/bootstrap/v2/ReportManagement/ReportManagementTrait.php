@@ -215,6 +215,12 @@ trait ReportManagementTrait
             $extraFields = $this->profCombinedHighExtraCheckboxes;
         }
 
+        if ($this->clientBenefitsSectionAvailable) {
+            $extraFields['clientBenefitsCheck'] = 'Benefits check and income other people receive';
+        }
+
+        var_dump($extraFields);
+
         $checkboxValuesAndTranslations = array_merge(
             $this->baseCombinedHighReportCheckboxValuesAndTranslations,
             $extraFields
@@ -411,17 +417,43 @@ trait ReportManagementTrait
      */
     public function iShouldNotSeeTheClientBenefitsCheckSectionInTheChecklistGroup()
     {
+        $this->assertClientBenefitsCheckboxVisible(false);
+    }
+
+    /**
+     * @Given /^I should see the client benefits check section in the checklist group$/
+     */
+    public function iShouldSeeTheClientBenefitsCheckSectionInTheChecklistGroup()
+    {
+        $this->assertClientBenefitsCheckboxVisible(true);
+    }
+
+    private function assertClientBenefitsCheckboxVisible(bool $shouldBeVisible)
+    {
         $benefitsCheckXpath = './/label[text()[contains(.,"Client benefits check")]]/..';
 
         $checkboxDiv = $this->getSession()->getPage()->find('xpath', $benefitsCheckXpath);
 
-        if (!is_null($checkboxDiv)) {
-            $message = sprintf(
-                'The checkbox for "Client benefits check" appearred on the page when it shouldn\'t have: %s',
-                $checkboxDiv->getHtml()
-            );
+        $checkboxIsVisible = !is_null($checkboxDiv);
 
-            throw new BehatException($message);
+        if ($shouldBeVisible) {
+            if (!$checkboxIsVisible) {
+                $message = sprintf(
+                    'The checkbox for "Client benefits check" appeared on the page when it shouldn\'t have: %s',
+                    $checkboxDiv->getHtml()
+                );
+
+                throw new BehatException($message);
+            }
+        } else {
+            if ($checkboxIsVisible) {
+                $message = sprintf(
+                    'The checkbox for "Client benefits check" did not appear on the page when it should have: %s',
+                    $this->getSession()->getPage()->find('xpath', '//main')->getHtml()
+                );
+
+                throw new BehatException($message);
+            }
         }
     }
 }

@@ -23,6 +23,15 @@ trait ReportTrait
     }
 
     /**
+     * @Then I should be able to submit my previous report
+     */
+    public function iShouldBeAbleToSubmitMyPreviousReport()
+    {
+        [$ndrOrReport, $reportId] = $this->getCorrectReport('previous');
+        $this->submitSteps($ndrOrReport, $reportId);
+    }
+
+    /**
      * @Then I should be able to submit my :currentOrPrevious report without completing the client benefits check section
      */
     public function iSubmitCurrentOrPreviousTheReport(string $currentOrPrevious)

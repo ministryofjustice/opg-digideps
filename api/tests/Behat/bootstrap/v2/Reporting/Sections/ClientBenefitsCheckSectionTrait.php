@@ -14,6 +14,8 @@ trait ClientBenefitsCheckSectionTrait
     private string $missingIncomeTypeErrorText = 'Please provide an income type';
     private string $atLeastOneIncomeTypeRequiredErrorText = 'Must add at least one type of income received by others if answering "yes" to "Do others receive income ion clients behalf". Use the back link if you do not have any income to declare.';
 
+    public bool $clientBenefitsSectionAvailable = false;
+
     /**
      * @When I navigate to the client benefits check report section
      */
@@ -298,8 +300,10 @@ trait ClientBenefitsCheckSectionTrait
 
         if ('more' === $moreOrLess) {
             $this->endDateAndDueDateLoggedInUsersCurrentReportSetToDate('2040-01-01', $currentOrPrevious);
+            $this->clientBenefitsSectionAvailable = true;
         } else {
             $this->endDateAndDueDateLoggedInUsersCurrentReportSetToDate('2020-01-01', $currentOrPrevious);
+            $this->clientBenefitsSectionAvailable = false;
         }
     }
 
