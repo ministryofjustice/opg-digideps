@@ -1,12 +1,23 @@
 ## Xdebug
 
-To use Xdebug in the `frontend` and/or `admin` app, it must be installed on the client image. To install, you will need to either manually pass `REQUIRE_XDEBUG_FRONTEND=1` as an env var when bringing up the app or run the make command `up-app-xdebug-frontend`
+To use Xdebug in the `frontend` and/or `admin` app, it must be installed on the client image. To install, you will need to create a `.env` file in the top-level of this repo, and add the following:
 
-To install Xdebug on the API, either manually pass `REQUIRE_XDEBUG_API=1` as an env var when bringing up the app or run the make command `up-app-xdebug-api`.
+```
+REQUIRE_XDEBUG_API=0
+REQUIRE_XDEBUG_FRONTEND=1
+```
+Then add the following to `client/docker/env/admin.env` and `client/docker/env/frontend.env`:
+```
+OPG_PHP_XDEBUG_ENABLED=true
+OPG_PHP_XDEBUG_REMOTE_HOST=docker.for.mac.localhost
+OPG_PHP_XDEBUG_REMOTE_PORT=9001
+OPG_PHP_XDEBUG_IDEKEY=PHPSTORM
+```
+**Note** the above is an example for PHP Storm using a Mac. You will need to configure your IDE, ensuring that the same port is used in the IDE as that set above.
 
-You can confirm installation by running `php -v` in the container and seeing that it reports the Xdebug version.
+Now build the image and run the container. You can confirm installation by running `php -v` in the container and seeing that it reports the Xdebug version.
 
-Since v3 performance with Xdebug enabled is only slightly slower than without so leaving Xdebug enabled shouldn't be a huge performance hit compared with previous versions.
+To install Xdebug on the API, set the flag to true in the `.env` file (see above), and add the same config as above to `api/docker/env/api.env`. **Note** that this impacts local performance dramatically and often times out when hitting the application through the frontend, so API debugging is best done in isolation by hitting endpoints via Postman, and uninstalling Xdebug when finished by setting the flag in `.env` to false
 
 ## PHPStorm PHPUnit XDebug setup
 
@@ -19,7 +30,7 @@ Go to Settings > Languages & Frameworks > PHP > Click `...` next to CLI Interpre
 
 Add a new interpreter with `+` and select `From Docker, Vagrant, Vm, Remote...`. Choose `Docker Compose`, ensure the root docker-compose.yml file is selected for Configuration file. Give this a sensible name that includes `api`.
 
-Back in Languages & Frameworks > PHP > Debug ensure the port in the Xdebug section is set to `9003`.
+Back in Languages & Frameworks > PHP > Debug ensure the port in the Xdebug section matches the value of `OPG_PHP_XDEBUG_REMOTE_PORT` in `api/docker/env/api.env`.
 
 In Languages & Frameworks > PHP > Test Frameworks add a new configuration type and select `PHP Unit by Remote Interpreter` and select the CLI Interpreter that was just created for Docker api. PHP Unit Library > select `Use Composer Autoloader` and enter `/var/www/vendor/autoload.php` in `Path to script`. Click the refresh symbol and confirm a version of PHP Unit is displayed here - if not then recheck the path mappings set up above. For `Default Configuration File` enter `/var/www/tests/phpunit/phpunit.xml` and  `Default Bootstrap File` enter `/var/www/tests/phpunit/bootstrap.php`.
 
