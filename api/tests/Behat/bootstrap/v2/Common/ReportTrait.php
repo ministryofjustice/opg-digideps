@@ -14,14 +14,33 @@ trait ReportTrait
     public string $reportUrlPrefix = 'report';
 
     /**
-     * @Then I should be able to submit my report without completing the client benefits check section
      * @Given I submit the report
      */
     public function iSubmitTheReport()
     {
-        $ndrOrReport = $this->loggedInUserDetails->getCurrentReportNdrOrReport();
-        $reportId = $this->loggedInUserDetails->getCurrentReportId();
+        [$ndrOrReport, $reportId] = $this->getCorrectReport('current');
+        $this->submitSteps($ndrOrReport, $reportId);
+    }
 
+    /**
+     * @Then I should be able to submit my :currentOrPrevious report without completing the client benefits check section
+     */
+    public function iSubmitCurrentOrPreviousTheReport(string $currentOrPrevious)
+    {
+        [$ndrOrReport, $reportId] = $this->getCorrectReport($currentOrPrevious);
+        $this->submitSteps($ndrOrReport, $reportId);
+    }
+
+    private function getCorrectReport(string $currentOrPrevious): array
+    {
+        return [
+            'current' === $currentOrPrevious ? $this->loggedInUserDetails->getCurrentReportNdrOrReport() : $this->loggedInUserDetails->getPreviousReportNdrOrReport(),
+            'current' === $currentOrPrevious ? $this->loggedInUserDetails->getCurrentReportId() : $this->loggedInUserDetails->getPreviousReportId(),
+        ];
+    }
+
+    private function submitSteps(string $ndrOrReport, int $reportId)
+    {
         $this->visit("$ndrOrReport/$reportId/overview");
 
         try {

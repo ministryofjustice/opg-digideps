@@ -1362,7 +1362,7 @@ class Report implements ReportInterface
     /**
      * The client benefits check section of the report should be required for:.
      *
-     * Reports with an unsubmit date that had not originally completed the section
+     * Reports with an unsubmit date that had originally completed the section
      * Reports without an unsubmit date and a due date more than 60 days after the client benefits section release date
      */
     public function requiresBenefitsCheckSection(): bool
@@ -1370,7 +1370,10 @@ class Report implements ReportInterface
         if ($this->getUnSubmitDate()) {
             return $this->getClientBenefitsCheck() instanceof ClientBenefitsCheck;
         } else {
-            return intval($this->getBenefitsSectionReleaseDate()->diff($this->getDueDate())->format('%R%a')) > self::BENEFITS_CHECK_SECTION_REQUIRED_GRACE_PERIOD_DAYS;
+            // Provides a positive or negative string showing days between feature flag and due date
+            $diffInDays = $this->getBenefitsSectionReleaseDate()->diff($this->getDueDate())->format('%R%a');
+
+            return intval($diffInDays) > self::BENEFITS_CHECK_SECTION_REQUIRED_GRACE_PERIOD_DAYS;
         }
     }
 

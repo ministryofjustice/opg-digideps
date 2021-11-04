@@ -52,12 +52,11 @@ Feature: Client benefits check - Lay users
         And the deputies 'current' report ends and is due 'less' than 60 days after the client benefits check feature flag date
         When I visit the report overview page
         Then I should not see 'client-benefits-check' report section
-        And I should be able to submit my report without completing the client benefits check section
+        And I should be able to submit my 'current' report without completing the client benefits check section
 
     @lay-combined-high-completed
     Scenario: Reports due at least 60 days after the new question feature flag see the new report section
         Given a Lay Deputy has completed a Combined High Assets report
-        But they have not completed the client benefits section for their 'current' report
         And the deputies 'current' report ends and is due 'more' than 60 days after the client benefits check feature flag date
         When I visit the report overview page
         Then I should see "client-benefits-check" as "finished"

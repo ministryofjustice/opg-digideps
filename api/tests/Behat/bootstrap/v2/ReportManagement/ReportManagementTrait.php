@@ -161,7 +161,14 @@ trait ReportManagementTrait
     {
         $this->iAmOnAdminClientDetailsPage();
 
-        $reportPeriod = 'completed' === $this->reportStatus ? $this->interactingWithUserDetails->getCurrentReportPeriod() : $this->interactingWithUserDetails->getPreviousReportPeriod();
+        if ('completed' === $this->reportStatus) {
+            $reportPeriod = $this->interactingWithUserDetails->getCurrentReportPeriod();
+            $reportDueDate = $this->interactingWithUserDetails->getCurrentReportDueDate();
+        } else {
+            $reportPeriod = $this->interactingWithUserDetails->getPreviousReportPeriod();
+            $reportDueDate = $this->interactingWithUserDetails->getPreviousReportDueDate();
+        }
+
         $locator = sprintf(
             "//td[normalize-space()='%s']/..",
             $reportPeriod
@@ -174,11 +181,16 @@ trait ReportManagementTrait
         }
 
         $numberWeeksExtended = $this->getSectionAnswers('manage-report')[0]['manage_report[dueDateChoice]'];
-        $expectedDueDate = (new DateTime())
-            ->modify(
-                sprintf('+ %s weeks', $numberWeeksExtended)
-            )
-            ->format('j F Y');
+
+        if ($numberWeeksExtended) {
+            $expectedDueDate = (new DateTime())
+                ->modify(
+                    sprintf('+ %s weeks', $numberWeeksExtended)
+                )
+                ->format('j F Y');
+        } else {
+            $expectedDueDate = $reportDueDate->format('j F Y');
+        }
 
         $this->assertStringContainsString(
             $expectedDueDate,
@@ -399,7 +411,17 @@ trait ReportManagementTrait
      */
     public function iShouldNotSeeTheClientBenefitsCheckSectionInTheChecklistGroup()
     {
-        $this->getSession()->getPage()->find('xpath', 'addCheckboxXpath');
-        throw new BehatException();
+        $benefitsCheckXpath = './/label[text()[contains(.,"Client benefits check")]]/..';
+
+        $checkboxDiv = $this->getSession()->getPage()->find('xpath', $benefitsCheckXpath);
+
+        if (!is_null($checkboxDiv)) {
+            $message = sprintf(
+                'The checkbox for "Client benefits check" appearred on the page when it shouldn\'t have: %s',
+                $checkboxDiv->getHtml()
+            );
+
+            throw new BehatException($message);
+        }
     }
 }
