@@ -571,7 +571,7 @@ class Client implements ClientInterface
     /**
      * Get reports.
      *
-     * @return ArrayCollection<Report>
+     * @return ArrayCollection<Report>|Report[]
      */
     public function getReports()
     {

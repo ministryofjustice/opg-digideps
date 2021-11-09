@@ -39,7 +39,7 @@ class ReportTestHelper
     public function generateReport(EntityManager $em, ?Client $client = null, ?string $type = null, ?DateTime $startDate = null, ?DateTime $endDate = null)
     {
         $client = $client ? $client : (new ClientTestHelper())->generateClient($em);
-        $type = $type ? $type : Report::TYPE_102;
+        $type = $type ? $type : Report::LAY_PFA_HIGH_ASSETS_TYPE;
         $startDate = $startDate ? $startDate : new \DateTime('2 years ago');
         $endDate = $endDate ? $endDate : (clone $startDate)->add(new DateInterval('P1Y'));
 
@@ -138,6 +138,7 @@ class ReportTestHelper
         $report
             ->setSubmitDate($submitDate)
             ->setSubmitted(true)
+            ->setSubmittedBy($submittedBy)
             ->setWishToProvideDocumentation('yes');
 
         $em->persist($reportPdf);

@@ -289,7 +289,7 @@ class FixtureHelper
         Organisation $organisation,
         bool $completed = false,
         bool $submitted = false,
-        string $reportType = Report::TYPE_102_5,
+        string $reportType = Report::PROF_PFA_HIGH_ASSETS_TYPE,
         ?DateTime $startDate = null,
         int $satisfactionScore = null,
         ?string $namedDeputyEmail = null,
@@ -363,7 +363,7 @@ class FixtureHelper
             $testRunId,
             User::ROLE_LAY_DEPUTY,
             'lay-pfa-high-assets-not-started',
-            Report::TYPE_102,
+            Report::LAY_PFA_HIGH_ASSETS_TYPE,
             false,
             false,
             false,
@@ -381,7 +381,7 @@ class FixtureHelper
             $testRunId,
             User::ROLE_LAY_DEPUTY,
             'lay-pfa-high-assets-completed',
-            Report::TYPE_102,
+            Report::LAY_PFA_HIGH_ASSETS_TYPE,
             true,
             false
         );
@@ -395,7 +395,7 @@ class FixtureHelper
             $testRunId,
             User::ROLE_LAY_DEPUTY,
             'lay-pfa-high-assets-submitted',
-            Report::TYPE_102,
+            Report::LAY_PFA_HIGH_ASSETS_TYPE,
             true,
             true
         );
@@ -409,7 +409,7 @@ class FixtureHelper
             $testRunId,
             User::ROLE_LAY_DEPUTY,
             'lay-pfa-low-assets-not-started',
-            Report::TYPE_103,
+            Report::LAY_PFA_LOW_ASSETS_TYPE,
             false,
             false
         );
@@ -423,7 +423,7 @@ class FixtureHelper
             $testRunId,
             User::ROLE_LAY_DEPUTY,
             'lay-pfa-low-assets-completed',
-            Report::TYPE_103,
+            Report::LAY_PFA_LOW_ASSETS_TYPE,
             true,
             false
         );
@@ -437,7 +437,7 @@ class FixtureHelper
             $testRunId,
             User::ROLE_LAY_DEPUTY,
             'lay-pfa-low-assets-submitted',
-            Report::TYPE_103,
+            Report::LAY_PFA_LOW_ASSETS_TYPE,
             true,
             true
         );
@@ -451,7 +451,7 @@ class FixtureHelper
             $testRunId,
             User::ROLE_LAY_DEPUTY,
             'lay-hw-not-started',
-            Report::TYPE_104,
+            Report::LAY_HW_TYPE,
             false,
             false
         );
@@ -465,7 +465,7 @@ class FixtureHelper
             $testRunId,
             User::ROLE_LAY_DEPUTY,
             'lay-hw-completed',
-            Report::TYPE_104,
+            Report::LAY_HW_TYPE,
             true,
             false
         );
@@ -479,7 +479,7 @@ class FixtureHelper
             $testRunId,
             User::ROLE_LAY_DEPUTY,
             'lay-hw-submitted',
-            Report::TYPE_104,
+            Report::LAY_HW_TYPE,
             true,
             true
         );
@@ -493,7 +493,7 @@ class FixtureHelper
             $testRunId,
             User::ROLE_LAY_DEPUTY,
             'lay-combined-high-not-started',
-            Report::TYPE_102_4,
+            Report::LAY_COMBINED_HIGH_ASSETS_TYPE,
             false,
             false
         );
@@ -507,7 +507,7 @@ class FixtureHelper
             $testRunId,
             User::ROLE_LAY_DEPUTY,
             'lay-combined-high-completed',
-            Report::TYPE_102_4,
+            Report::LAY_COMBINED_HIGH_ASSETS_TYPE,
             true,
             false
         );
@@ -521,7 +521,7 @@ class FixtureHelper
             $testRunId,
             User::ROLE_LAY_DEPUTY,
             'lay-combined-high-submitted',
-            Report::TYPE_102_4,
+            Report::LAY_COMBINED_HIGH_ASSETS_TYPE,
             true,
             true
         );
@@ -535,7 +535,7 @@ class FixtureHelper
             $testRunId,
             User::ROLE_PROF_NAMED,
             'prof-named-hw-not-started',
-            Report::TYPE_104_5,
+            Report::PROF_HW_TYPE,
             false,
             false
         );
@@ -549,7 +549,7 @@ class FixtureHelper
             $testRunId,
             User::ROLE_PROF_NAMED,
             'prof-named-hw-completed',
-            Report::TYPE_104_5,
+            Report::PROF_HW_TYPE,
             true,
             false
         );
@@ -563,7 +563,7 @@ class FixtureHelper
             $testRunId,
             User::ROLE_PROF_NAMED,
             'prof-named-hw-submitted',
-            Report::TYPE_104_5,
+            Report::PROF_HW_TYPE,
             true,
             true
         );
@@ -577,7 +577,7 @@ class FixtureHelper
             $testRunId,
             User::ROLE_PA_NAMED,
             'pa-named-hw-not-started',
-            Report::TYPE_104_6,
+            Report::PA_HW_TYPE,
             false,
             false
         );
@@ -591,7 +591,7 @@ class FixtureHelper
             $testRunId,
             User::ROLE_PA_NAMED,
             'pa-named-hw-completed',
-            Report::TYPE_104_6,
+            Report::PA_HW_TYPE,
             true,
             false
         );
@@ -605,7 +605,7 @@ class FixtureHelper
             $testRunId,
             User::ROLE_PA_NAMED,
             'pa-named-hw-submitted',
-            Report::TYPE_104_6,
+            Report::PA_HW_TYPE,
             true,
             true
         );
@@ -619,7 +619,7 @@ class FixtureHelper
             $testRunId,
             User::ROLE_PA_ADMIN,
             'pa-admin-combined-high-not-started',
-            Report::TYPE_102_4_6,
+            Report::PA_COMBINED_HIGH_ASSETS_TYPE,
             false,
             false
         );
@@ -633,7 +633,7 @@ class FixtureHelper
             $testRunId,
             User::ROLE_PA_ADMIN,
             'pa-admin-combined-high-completed',
-            Report::TYPE_102_4_6,
+            Report::PA_COMBINED_HIGH_ASSETS_TYPE,
             true,
             false
         );
@@ -647,7 +647,7 @@ class FixtureHelper
             $testRunId,
             User::ROLE_PA_ADMIN,
             'pa-admin-combined-high-submitted',
-            Report::TYPE_102_4_6,
+            Report::PA_COMBINED_HIGH_ASSETS_TYPE,
             true,
             true
         );
@@ -661,7 +661,7 @@ class FixtureHelper
             $testRunId,
             User::ROLE_PROF_ADMIN,
             'prof-admin-combined-high-not-started',
-            Report::TYPE_102_4_5,
+            Report::PROF_COMBINED_HIGH_ASSETS,
             false,
             false
         );
@@ -675,7 +675,7 @@ class FixtureHelper
             $testRunId,
             User::ROLE_PROF_ADMIN,
             'prof-admin-combined-high-completed',
-            Report::TYPE_102_4_5,
+            Report::PROF_COMBINED_HIGH_ASSETS,
             true,
             false
         );
@@ -689,7 +689,7 @@ class FixtureHelper
             $testRunId,
             User::ROLE_PROF_ADMIN,
             'prof-admin-combined-high-submitted',
-            Report::TYPE_102_4_5,
+            Report::PROF_COMBINED_HIGH_ASSETS,
             true,
             true
         );
@@ -703,7 +703,7 @@ class FixtureHelper
             $testRunId,
             User::ROLE_PROF_NAMED,
             'prof-named-pfa-high-assets-not-started',
-            Report::TYPE_102_5,
+            Report::PROF_PFA_HIGH_ASSETS_TYPE,
             false,
             false
         );
@@ -717,7 +717,7 @@ class FixtureHelper
             $testRunId,
             User::ROLE_PROF_NAMED,
             'prof-named-pfa-high-assets-submitted',
-            Report::TYPE_102_5,
+            Report::PROF_PFA_HIGH_ASSETS_TYPE,
             true,
             true
         );
@@ -731,7 +731,7 @@ class FixtureHelper
             $testRunId,
             User::ROLE_PA_NAMED,
             'pa-named-pfa-high-assets-submitted',
-            Report::TYPE_102_6,
+            Report::PA_PFA_HIGH_ASSETS_TYPE,
             true,
             true
         );
@@ -745,7 +745,7 @@ class FixtureHelper
             $testRunId,
             User::ROLE_PROF_TEAM_MEMBER,
             'prof-team-hw-not-started',
-            Report::TYPE_104_5,
+            Report::PROF_HW_TYPE,
             false,
             false
         );
@@ -759,7 +759,7 @@ class FixtureHelper
             $testRunId,
             User::ROLE_PROF_TEAM_MEMBER,
             'prof-team-hw-completed',
-            Report::TYPE_104_5,
+            Report::PROF_HW_TYPE,
             true,
             false
         );
@@ -773,7 +773,7 @@ class FixtureHelper
             $testRunId,
             User::ROLE_PROF_TEAM_MEMBER,
             'prof-team-hw-submitted',
-            Report::TYPE_104_5,
+            Report::PROF_HW_TYPE,
             true,
             true
         );
@@ -787,7 +787,7 @@ class FixtureHelper
             $testRunId,
             User::ROLE_LAY_DEPUTY,
             'lay-ndr-not-started',
-            Report::TYPE_104,
+            Report::LAY_HW_TYPE,
             false,
             false,
             true
@@ -802,7 +802,7 @@ class FixtureHelper
             $testRunId,
             User::ROLE_LAY_DEPUTY,
             'lay-ndr-completed',
-            Report::TYPE_104,
+            Report::LAY_HW_TYPE,
             true,
             false,
             true
@@ -817,7 +817,7 @@ class FixtureHelper
             $testRunId,
             User::ROLE_LAY_DEPUTY,
             'lay-ndr-submitted',
-            Report::TYPE_104,
+            Report::LAY_HW_TYPE,
             true,
             false,
             true
@@ -836,7 +836,7 @@ class FixtureHelper
             $testRunId,
             User::ROLE_PROF_ADMIN,
             'prof-admin-hw-not-started',
-            Report::TYPE_104_5,
+            Report::PROF_HW_TYPE,
             false,
             false,
             $namedDeputyEmail,
@@ -857,7 +857,7 @@ class FixtureHelper
             $testRunId,
             User::ROLE_PROF_ADMIN,
             'prof-admin-hw-completed',
-            Report::TYPE_104_5,
+            Report::PROF_HW_TYPE,
             true,
             false,
             $namedDeputyEmail,
@@ -878,7 +878,7 @@ class FixtureHelper
             $testRunId,
             User::ROLE_PROF_ADMIN,
             'prof-admin-hw-submitted',
-            Report::TYPE_104_5,
+            Report::PROF_HW_TYPE,
             true,
             true
         );
@@ -892,7 +892,7 @@ class FixtureHelper
             $testRunId,
             User::ROLE_PA_ADMIN,
             'pa-admin-hw-not-started',
-            Report::TYPE_104_5,
+            Report::PROF_HW_TYPE,
             false,
             false
         );
@@ -906,7 +906,7 @@ class FixtureHelper
             $testRunId,
             User::ROLE_PA_ADMIN,
             'pa-admin-hw-completed',
-            Report::TYPE_104_5,
+            Report::PROF_HW_TYPE,
             true,
             false
         );
@@ -920,7 +920,7 @@ class FixtureHelper
             $testRunId,
             User::ROLE_PA_ADMIN,
             'pa-admin-hw-completed',
-            Report::TYPE_104_5,
+            Report::PROF_HW_TYPE,
             true,
             true,
             $namedDeputyEmail,
@@ -967,12 +967,13 @@ class FixtureHelper
     public function createDataForAnalytics(string $testRunId, $timeAgo, $satisfactionScore)
     {
         $startDate = new \DateTime($timeAgo);
+        $deputies = [];
 
-        $this->createOrgUserClientNamedDeputyAndReport(
+        $deputies[] = $this->createOrgUserClientNamedDeputyAndReport(
             $testRunId.'_1',
             User::ROLE_PROF_NAMED,
             'analytics-prof-submitted',
-            Report::TYPE_104_5,
+            Report::PROF_HW_TYPE,
             true,
             true,
             null,
@@ -982,11 +983,11 @@ class FixtureHelper
             $satisfactionScore
         );
 
-        $this->createOrgUserClientNamedDeputyAndReport(
+        $deputies[] = $this->createOrgUserClientNamedDeputyAndReport(
             $testRunId.'_2',
             User::ROLE_PA_NAMED,
             'analytics-pa-submitted',
-            Report::TYPE_104_6,
+            Report::PA_HW_TYPE,
             true,
             true,
             null,
@@ -996,17 +997,19 @@ class FixtureHelper
             $satisfactionScore
         );
 
-        $this->createDeputyClientAndReport(
+        $deputies[] = $this->createDeputyClientAndReport(
             $testRunId.'_3',
             User::ROLE_LAY_DEPUTY,
             'analytics-lay-submitted',
-            Report::TYPE_104,
+            Report::LAY_HW_TYPE,
             true,
             true,
             false,
             $startDate,
             $satisfactionScore
         );
+
+        return $deputies;
     }
 
     private function createOrganisation(string $testRunId, string $emailIdentifier)
@@ -1053,7 +1056,7 @@ class FixtureHelper
             $this->testRunId,
             User::ROLE_LAY_DEPUTY,
             $testPurpose.'-test-ndr',
-            Report::TYPE_104,
+            Report::LAY_HW_TYPE,
             false,
             false,
             true

@@ -160,7 +160,7 @@ class Fixtures
         //should be created via ReportService, but this is a fixture, so better to keep it simple
         $report = new EntityDir\Report\Report(
             $client,
-            empty($settersMap['setType']) ? EntityDir\Report\Report::TYPE_102 : $settersMap['setType'],
+            empty($settersMap['setType']) ? EntityDir\Report\Report::LAY_PFA_HIGH_ASSETS_TYPE : $settersMap['setType'],
             empty($settersMap['setStartDate']) ? new \DateTime('now') : $settersMap['setStartDate'],
             empty($settersMap['setEndDate']) ? new \DateTime('+12 months -1 day') : $settersMap['setEndDate']
         );

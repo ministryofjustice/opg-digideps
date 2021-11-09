@@ -80,7 +80,7 @@ class ReportStatusServiceTest extends TestCase
                 'getMoneyShortCategoriesOutPresent' => [],
                 'getMoneyTransactionsShortOutExist' => null,
                 'getMoneyTransactionsShortOut' => [],
-                'getType' => Report::TYPE_102,
+                'getType' => Report::LAY_PFA_HIGH_ASSETS_TYPE,
                 // 106
                 'has106Flag' => false,
 //                'getFeesWithValidAmount'                           => [],
@@ -552,7 +552,7 @@ class ReportStatusServiceTest extends TestCase
     private function initReport()
     {
         $this->report = $this->getMockBuilder(Report::class)
-            ->setConstructorArgs([new Client(), Report::TYPE_102, new \DateTime(), new \DateTime()])
+            ->setConstructorArgs([new Client(), Report::LAY_PFA_HIGH_ASSETS_TYPE, new \DateTime(), new \DateTime()])
             ->setMethods(['hasSection'])
             ->getMock();
 
@@ -793,7 +793,7 @@ class ReportStatusServiceTest extends TestCase
     public function testGetRemainingSectionsAndStatus()
     {
         $this->markTestSkipped('not easily testable after use of cache');
-        $mocksCompletingReport = ['getType' => Report::TYPE_102]
+        $mocksCompletingReport = ['getType' => Report::LAY_PFA_HIGH_ASSETS_TYPE]
             + array_pop($this->decisionsProvider())[0]
             + array_pop($this->contactsProvider())[0]
             + array_pop($this->visitsCareProvider())[0]
@@ -820,7 +820,7 @@ class ReportStatusServiceTest extends TestCase
 
         // due, half complete
         $dp = $this->decisionsProvider();
-        $retPartial = ['getType' => Report::TYPE_102]
+        $retPartial = ['getType' => Report::LAY_PFA_HIGH_ASSETS_TYPE]
             + array_pop($dp)[0];
         $report = $this->getReportMocked($retPartial);
         $report->shouldReceive('hasSection')->with(Report::SECTION_DEPUTY_EXPENSES)->andReturn(false);

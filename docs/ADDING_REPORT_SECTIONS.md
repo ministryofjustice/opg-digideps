@@ -107,3 +107,21 @@ class Lifestyle
 * Create a corresponding controller and implement the form logic as required using the newly created form type
 
 * Add an entry for the new section \to `ReportSectionsLinkService` and then include the `_nextprevious.html.twig` partial on the first and last page of the section
+
+# Adding new section to report checklist
+
+When a deputy submits a report an OPG case manager will read through the responses and complete a checklist on the admin side of the app to confirm if they are satisfied with the deputies responses.
+
+To add the new question to the checklist follow the steps below:
+
+##API
+- Add a property to the `Checklist` entity that corresponds to the new section added to the form along with JMS groups and types. The number of properties could either correspond directly with the number of questions in the section, or it could be one property that encompasses all the questions in the section. For example, health and lifestyle has a single response despite multiple questions whereas Money in and money out has three questions the case manager neeeds to answer.
+- Generate a migration to add the required new column/s to the `checklist` table
+
+##Client
+- Mirror the properties that were added to `Checklist` in the API app ensuring the JMS groups and types match
+- Add either relevant validation the property to ensure the form can't be submitted without providing an answer
+- Add the new property/properties as children to `ReportChecklistType`
+- Create a new partial in `templates/Admin/Client/Report/partials` to render the new option in the form and add it to `checklist.html.twig`. At this point you may need to update the `qid` values for the questions on the checklist (e.g. `L3.1` etc) - seek guidance from the product owner on the numbering.
+- Add the new section to the sidebar anchor links in `templates/Admin/Client/Report/sidebar`
+- Add translations to `admin-checklist.en.yml` to correspond to the translation values added to the form and template

@@ -55,7 +55,7 @@ class ReportServiceTest extends TestCase
         $this->asset1 = (new AssetProperty())
             ->setAddress('SW1')
             ->setOwned(AssetProperty::OWNED_FULLY);
-        $this->report = new Report($client, Report::TYPE_102, new \DateTime('2015-01-01'), new \DateTime('2015-12-31'));
+        $this->report = new Report($client, Report::LAY_PFA_HIGH_ASSETS_TYPE, new \DateTime('2015-01-01'), new \DateTime('2015-12-31'));
         $this->report
             ->setNoAssetToAdd(false)
             ->addAsset($this->asset1)
@@ -154,7 +154,7 @@ class ReportServiceTest extends TestCase
 
         // A report for the next report period should already exist
         $client = $this->report->getClient();
-        $nextReport = new Report($client, Report::TYPE_102, new \DateTime('2016-01-01'), new \DateTime('2016-12-31'));
+        $nextReport = new Report($client, Report::LAY_PFA_HIGH_ASSETS_TYPE, new \DateTime('2016-01-01'), new \DateTime('2016-12-31'));
         $client->addReport($nextReport);
 
         // Create partial mock of ReportService
@@ -255,7 +255,7 @@ class ReportServiceTest extends TestCase
         $this->assertTrue($ndr->getSubmitted());
 
         //assert new year report
-        $this->assertEquals(Report::TYPE_102, $newYearReport->getType());
+        $this->assertEquals(Report::LAY_PFA_HIGH_ASSETS_TYPE, $newYearReport->getType());
         $this->assertEquals('06-06', $newYearReport->getStartDate()->format('m-d'));
         $this->assertEquals('06-05', $newYearReport->getEndDate()->format('m-d'));
 
@@ -273,7 +273,7 @@ class ReportServiceTest extends TestCase
     {
         $ndr = $this->getFilledInNdr();
 
-        $report = new Report($ndr->getClient(), Report::TYPE_102, new \DateTime('2018-06-06'), new \DateTime('2019-06-05'));
+        $report = new Report($ndr->getClient(), Report::LAY_PFA_HIGH_ASSETS_TYPE, new \DateTime('2018-06-06'), new \DateTime('2019-06-05'));
         $ndr->getClient()->addReport($report);
 
         $submitDate = new \DateTime('2018-04-05');
@@ -333,7 +333,7 @@ class ReportServiceTest extends TestCase
 
         // Submit a report where next year's dates don't match
         $client = $this->report->getClient();
-        $nextReport = new Report($client, Report::TYPE_102, new \DateTime('2016-01-17'), new \DateTime('2017-01-16'));
+        $nextReport = new Report($client, Report::LAY_PFA_HIGH_ASSETS_TYPE, new \DateTime('2016-01-17'), new \DateTime('2017-01-16'));
         $client->addReport($nextReport);
 
         $report->setUnSubmitDate(new \DateTime('2018-02-14'));
@@ -348,7 +348,7 @@ class ReportServiceTest extends TestCase
     public function testPersistentResourcesCloned()
     {
         $client = $this->report->getClient();
-        $newReport = new Report($client, Report::TYPE_102, new \DateTime('2016-01-01'), new \DateTime('2016-12-31'));
+        $newReport = new Report($client, Report::LAY_PFA_HIGH_ASSETS_TYPE, new \DateTime('2016-01-01'), new \DateTime('2016-12-31'));
 
         // Assert asset is cloned
         $this->em->shouldReceive('detach')->once();
@@ -376,7 +376,7 @@ class ReportServiceTest extends TestCase
     public function testDuplicateResourcesNotPersisted()
     {
         $client = $this->report->getClient();
-        $newReport = new Report($client, Report::TYPE_102, new \DateTime('2016-01-01'), new \DateTime('2016-12-31'));
+        $newReport = new Report($client, Report::LAY_PFA_HIGH_ASSETS_TYPE, new \DateTime('2016-01-01'), new \DateTime('2016-12-31'));
 
         $newAsset = clone $this->report->getAssets()[0];
         $newReport->addAsset($newAsset);
@@ -489,17 +489,17 @@ class ReportServiceTest extends TestCase
     public function getReportTypeOptions()
     {
         return [
-            'layUserAttached' => [null, true, false, false, Report::TYPE_102],
+            'layUserAttached' => [null, true, false, false, Report::LAY_PFA_HIGH_ASSETS_TYPE],
             'profUserAttached' => [null, false, true, false, RuntimeException::class],
             'paUserAttached' => [null, false, false, true, RuntimeException::class],
-            'multipleUsersAttached' => [null, true, true, true, Report::TYPE_102],
+            'multipleUsersAttached' => [null, true, true, true, Report::LAY_PFA_HIGH_ASSETS_TYPE],
             'noNamedDeputyNoUser' => [null, false, false, false, RuntimeException::class],
             'invalidNamedDeputyNoUser' => [400, false, false, false, RuntimeException::class],
             'invalidNamedDeputyLayUser' => [400, true, false, false, RuntimeException::class],
-            'paNamedDeputy' => [23, false, false, false, Report::TYPE_102_6],
-            'profNamedDeputy' => [21, false, false, false, Report::TYPE_102_5],
-            'otherProfNamedDeputy' => [26, false, false, false, Report::TYPE_102_5],
-            'profNamedDeputyAndLayUser' => [26, true, false, false, Report::TYPE_102_5],
+            'paNamedDeputy' => [23, false, false, false, Report::PA_PFA_HIGH_ASSETS_TYPE],
+            'profNamedDeputy' => [21, false, false, false, Report::PROF_PFA_HIGH_ASSETS_TYPE],
+            'otherProfNamedDeputy' => [26, false, false, false, Report::PROF_PFA_HIGH_ASSETS_TYPE],
+            'profNamedDeputyAndLayUser' => [26, true, false, false, Report::PROF_PFA_HIGH_ASSETS_TYPE],
         ];
     }
 

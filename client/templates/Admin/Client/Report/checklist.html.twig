@@ -86,12 +86,17 @@
                 {% include '@App/Admin/Client/Report/partials/_assets-and-debts.html.twig' %}
             {% endif %}
 
+            {# Client benefits check #}
+            {% if form.clientBenefitsChecked is defined %}
+                {% include '@App/Admin/Client/Report/partials/_client-benefits-check.html.twig' %}
+            {% endif %}
+
             {# Money transfers, Money in and money out #}
             {% if form.openClosingBalancesMatch is defined %}
                 {% include '@App/Admin/Client/Report/partials/_money-in-and-out.html.twig' %}
             {% endif %}
 
-            {# PA fees and expenses #}
+            {# PA fees and expenses #}
             {% if form.satisfiedWithPaExpenses is defined %}
                 {% include '@App/Admin/Client/Report/partials/_pa-fee-expenses.html.twig' %}
             {% endif %}

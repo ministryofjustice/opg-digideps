@@ -286,9 +286,9 @@ trait ClientBenefitsCheckSectionTrait
     }
 
     /**
-     * @Given the deputies report ends and is due :moreOrLess than 60 days after the client benefits check feature flag date
+     * @Given the deputies :currentOrPrevious report ends and is due :moreOrLess than 60 days after the client benefits check feature flag date
      */
-    public function reportIsDueAfterClientBenefitCheckFeatureFlagDate(string $moreOrLess)
+    public function reportIsDueAfterClientBenefitCheckFeatureFlagDate(string $currentOrPrevious, string $moreOrLess)
     {
         $moreOrLess = strtolower($moreOrLess);
 
@@ -297,9 +297,9 @@ trait ClientBenefitsCheckSectionTrait
         }
 
         if ('more' === $moreOrLess) {
-            $this->endDateAndDueDateLoggedInUsersCurrentReportSetToDate('2040-01-01');
+            $this->endDateAndDueDateLoggedInUsersCurrentReportSetToDate('2040-01-01', $currentOrPrevious);
         } else {
-            $this->endDateAndDueDateLoggedInUsersCurrentReportSetToDate('2020-01-01');
+            $this->endDateAndDueDateLoggedInUsersCurrentReportSetToDate('2020-01-01', $currentOrPrevious);
         }
     }
 

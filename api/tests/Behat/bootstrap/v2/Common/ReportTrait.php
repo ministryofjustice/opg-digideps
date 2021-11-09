@@ -89,6 +89,21 @@ trait ReportTrait
     }
 
     /**
+     * @Given a Lay Deputy has submitted a health and welfare report
+     *
+     * @throws Exception
+     */
+    public function aLayDeputyHasSubmittedAHealthAndWelfareReport()
+    {
+        if (empty($this->layDeputySubmittedHealthWelfareDetails)) {
+            throw new Exception('It looks like fixtures are not loaded - missing $layDeputySubmittedHealthWelfareDetails');
+        }
+
+        $this->loginToFrontendAs($this->layDeputySubmittedHealthWelfareDetails->getUserEmail());
+        $this->interactingWithUserDetails = $this->layDeputySubmittedHealthWelfareDetails;
+    }
+
+    /**
      * @Given a Lay Deputy has not started an NDR report
      */
     public function aNdrLayDeputyHasNotStartedAReport()
@@ -315,8 +330,20 @@ trait ReportTrait
         }
 
         $this->loginToFrontendAs($this->profNamedDeputyNotStartedPfaHighDetails->getUserEmail());
-
         $this->interactingWithUserDetails = $this->profNamedDeputyNotStartedPfaHighDetails;
+    }
+
+    /**
+     * @Given a Professional Deputy has submitted a Pfa High Assets report
+     */
+    public function aProfDeputyHasSubmittedAPfaHighAssetsReport()
+    {
+        if (empty($this->profNamedDeputySubmittedPfaHighDetails)) {
+            throw new Exception('It looks like fixtures are not loaded - missing $profNamedDeputySubmittedPfaHighDetails');
+        }
+
+        $this->loginToFrontendAs($this->profNamedDeputySubmittedPfaHighDetails->getUserEmail());
+        $this->interactingWithUserDetails = $this->profNamedDeputySubmittedPfaHighDetails;
     }
 
     /**
@@ -329,7 +356,6 @@ trait ReportTrait
         }
 
         $this->loginToFrontendAs($this->publicAuthorityAdminCombinedHighNotStartedDetails->getUserEmail());
-
         $this->interactingWithUserDetails = $this->publicAuthorityAdminCombinedHighNotStartedDetails;
     }
 
@@ -344,6 +370,19 @@ trait ReportTrait
 
         $this->loginToFrontendAs($this->publicAuthorityAdminCombinedHighSubmittedDetails->getUserEmail());
         $this->interactingWithUserDetails = $this->publicAuthorityAdminCombinedHighSubmittedDetails;
+    }
+
+    /**
+     * @Given a Public Authority Named Deputy has submitted a Pfa High Assets report
+     */
+    public function aPublicAuthorityNamedDeputyHasSubmittedAPfaHighAssetsReport()
+    {
+        if (empty($this->publicAuthorityNamedSubmittedPfaHighDetails)) {
+            throw new Exception('It looks like fixtures are not loaded - missing $publicAuthorityNamedSubmittedPfaHighDetails');
+        }
+
+        $this->loginToFrontendAs($this->publicAuthorityNamedSubmittedPfaHighDetails->getUserEmail());
+        $this->interactingWithUserDetails = $this->publicAuthorityNamedSubmittedPfaHighDetails;
     }
 
     /**
@@ -386,25 +425,38 @@ trait ReportTrait
     }
 
     /**
-     * @Given the end date and due date of the logged in users current report is set to :dateString
+     * @Given the end date and due date of the logged in users :currentOrPrevious report is set to :dateString
      */
-    public function endDateAndDueDateLoggedInUsersCurrentReportSetToDate(string $dateString)
+    public function endDateAndDueDateLoggedInUsersCurrentReportSetToDate(string $dateString, string $currentOrPrevious)
     {
-        if (empty($this->loggedInUserDetails) && empty($this->loggedInUserDetails->getCurrentReportId())) {
+        if (empty($this->loggedInUserDetails) ||
+           (empty($this->loggedInUserDetails->getCurrentReportId()) && empty($this->loggedInUserDetails->getPreviousReportId()))
+        ) {
             throw new Exception('The logged in user does not have a report. Ensure a user with a report has logged in before using this step.');
+        }
+
+        if (!in_array($currentOrPrevious, ['current', 'previous'])) {
+            throw new BehatException('This step only supports "current" and "previous" as arguments for $currentOrPrevious. Either add to the step or use an available option.');
         }
 
         $newDate = new DateTime($dateString);
 
-        /** @var Report $currentReport */
-        $currentReport = $this->em->getRepository(Report::class)->find($this->loggedInUserDetails->getCurrentReportId());
-        $currentReport->setEndDate($newDate);
-        $currentReport->setDueDate($newDate);
+        $reportIdToUpdate = 'current' === $currentOrPrevious ? $this->loggedInUserDetails->getCurrentReportId() : $this->loggedInUserDetails->getPreviousReportId();
 
-        $this->em->persist($currentReport);
+        /** @var Report $reportToUpdate */
+        $reportToUpdate = $this->em->getRepository(Report::class)->find($reportIdToUpdate);
+        $reportToUpdate->setEndDate($newDate);
+        $reportToUpdate->setDueDate($newDate);
+
+        $this->em->persist($reportToUpdate);
         $this->em->flush();
 
-        $this->loggedInUserDetails->setCurrentReportDueDate($newDate);
-        $this->loggedInUserDetails->setCurrentReportEndDate($newDate);
+        if ('current' === $currentOrPrevious) {
+            $this->loggedInUserDetails->setCurrentReportDueDate($newDate);
+            $this->loggedInUserDetails->setCurrentReportEndDate($newDate);
+        } else {
+            $this->loggedInUserDetails->setPreviousReportDueDate($newDate);
+            $this->loggedInUserDetails->setPreviousReportEndDate($newDate);
+        }
     }
 }

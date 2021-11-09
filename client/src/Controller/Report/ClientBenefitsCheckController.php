@@ -196,6 +196,7 @@ class ClientBenefitsCheckController extends AbstractController
         return [
             'report' => $report,
             'reportOrNdr' => $reportOrNdr,
+            'showActions' => true,
         ];
     }
 

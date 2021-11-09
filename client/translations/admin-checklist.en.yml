@@ -10,13 +10,14 @@ checklistPage:
         visitsAndCare: L4. Contact with client, care arrangements and care plan
         healthAndLifestyle: L5. Health and lifestyle
         assetsAndDebts: L6. Assets and debts
-        money: L7. Money in and money out
-        bonds: L8. Bonds
-        profDeputyCosts: L9. Deputy costs
-        profDeputyCostsEstimate: L10. Estimated costs for next reporting period
-        paFeeExpenses: L11. Deputy fees and expenses
-        nextPeriod: L12. Next reporting period
-        declaration: L13. Declaration
+        clientBenefitsCheck: L7. Benefits check and income other people receive
+        money: L8. Money in and money out
+        bonds: L9. Bonds
+        profDeputyCosts: L10. Deputy costs
+        profDeputyCostsEstimate: L11. Estimated costs for next reporting period
+        paFeeExpenses: L12. Deputy fees and expenses
+        nextPeriod: L13. Next reporting period
+        declaration: L14. Declaration
         summary: Lodging summary
         furtherInfo: Further information
     fullReview:
@@ -52,6 +53,7 @@ checklistPage:
     deputysResponses: View deputy's responses
     assetsSummary: View assets summary
     debtsSummary: View debts summary
+    clientBenefitsCheckSummary: View client benefits check summary
     accountsBalances: View accounts balances
     accountsBalanceSummary: View accounts balance summary
     moneyTransfersSummary: View money transfers summary
@@ -108,73 +110,76 @@ checklistPage:
         If the client has any debt, are you satisfied that the debt is appropriate and/or is it
         being managed by the deputy in an appropriate manner?
       qid: L6.2
+    clientBenefitsChecked:
+        label: Have satisfactory responses been provided by the deputy?
+        qid: L7.1
     openClosingBalancesMatch:
       label: Does the opening balances(s) match last year's closing balance?
-      qid: L7.1
+      qid: L8.1
     accountsBalance:
       label: |
         Do the accounts balance and match bank statements, where provided? Allow up to £250
         leeway for lay deputies.
-      qid: L7.2
+      qid: L8.2
     accountsBalanceNonLay:
       label: |
         Do the accounts balance and match bank statements, where provided?
-      qid: L7.2
+      qid: L8.2
     moneyMovementsAcceptable:
       label: |
         Are you satisfied that the money in and money out entries (including transfers), along
         with any comments, are acceptable, appear reasonable, and are inline with the terms of
         the court order?
-      qid: L7.3
+      qid: L8.3
     bondAdequate:
       label: |
         Is the bond adequate protection for the client's assets? If ‘No’, refer to the Security
         Bonds Discrepancy Resolution Job Card.
-      qid: L8.1
+      qid: L9.1
     bondOrderMatchCasrec:
       label: |
         Does the bond amount on CASREC match that on the order? If ‘No’, refer to the Security
         Bonds Discrepancy Resolution Job Card.
-      qid: L8.2
+      qid: L9.2
     paymentsMatchCostCertificate:
       label: |
         Do the payments received for previous billing periods (a billing period started during an earlier reporting
         period), plus interim payments made during this reporting period from the same billing period, match the
         figure on the cost certificate for that billing period?
-      qid: L9.1
+      qid: L10.1
     profCostsReasonableAndProportionate:
       label: |
         Do the total costs for work carried out during the current billing period (The new billing period started
         during this reporting period) appear to be reasonable and proportionate compared to the client's assets?
-      qid: L9.2
+      qid: L10.2
     hasDeputyOverchargedFromPreviousEstimates:
       label: |
         Has the deputy charged 20% or more than last years estimated costs for this billing period?
-      qid: L9.3
+      qid: L10.3
     nextBillingEstimatesSatisfactory:
       label: |
         Are you satisfied with the deputy’s estimated costs for the next billing period?
-      qid: L10.1
+      qid: L11.1
     deputyChargeAllowedByCourt:
       label: Does the court order allow the deputy to charge for their services?
-      qid: L11.1
+      qid: L12.1
     satisfiedWithPaExpenses:
       label: |
         Are you satisfied that responses have been provided that are in line with the terms of
         the practice direction (including any explanation of non-claiming of fees)?
-      qid: L11.2
+      qid: L12.2
     futureSignificantDecisions:
       label: Are there any significant financial decision(s) in the next reporting period?
-      qid: L12.1
+      qid: L13.1
     futureSignificantChanges:
       label: Are there any significant changes in the next reporting period?
-      qid: L12.1
+      qid: L13.1
     hasDeputyRaisedConcerns:
       label: Does the deputy raise any concerns about their deputyship?
-      qid: L12.2
+      qid: L13.2
     caseWorkerSatisified:
       label: Are you satisfied with the deputy's declaration?
-      qid: L13.1
+      qid: L14.1
     totalEstimatedCosts:
       label: Total estimated costs
     lodgingSummary:

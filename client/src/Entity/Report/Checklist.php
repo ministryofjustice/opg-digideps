@@ -13,7 +13,6 @@ use Symfony\Component\Validator\Constraints as Assert;
 
 /**
  * Checklist.
- *
  */
 class Checklist implements SynchronisableInterface
 {
@@ -28,7 +27,6 @@ class Checklist implements SynchronisableInterface
      * @JMS\Type("integer")
      */
     private $id;
-
 
     /**
      * @var string
@@ -101,6 +99,14 @@ class Checklist implements SynchronisableInterface
      * @Assert\NotBlank(message="checklist.debtsManaged.notBlank", groups={"submit-debts-checklist"})
      */
     private $debtsManaged;
+
+    /**
+     * @var string|null
+     * @JMS\Type("string")
+     * @JMS\Groups({"report-checklist"})
+     * @Assert\NotBlank(message="checklist.yesNoNa", groups={"submit-clientBenefitsCheck-checklist"})
+     */
+    private $clientBenefitsChecked;
 
     /**
      * @var string
@@ -273,22 +279,21 @@ class Checklist implements SynchronisableInterface
     private $furtherInformationReceived;
 
     /**
-     * Submitted by
+     * Submitted by.
      *
      * @JMS\Type("App\Entity\User")
      * @JMS\Groups({"checklist-information"})
-     * @var \App\Entity\User
      *
+     * @var \App\Entity\User
      */
     protected $submittedBy;
 
     /**
-     * Submitted on
+     * Submitted on.
      *
      * @JMS\Type("DateTime")
      *
      * @var \DateTime
-     *
      */
     protected $submittedOn;
 
@@ -308,9 +313,6 @@ class Checklist implements SynchronisableInterface
 
     /**
      * Checklist constructor.
-     *
-     * @param ReportInterface $report
-     *
      */
     public function __construct(ReportInterface $report)
     {
@@ -337,12 +339,14 @@ class Checklist implements SynchronisableInterface
     }
 
     /**
-     * @param  int   $id
+     * @param int $id
+     *
      * @return $this
      */
     public function setId($id)
     {
         $this->id = $id;
+
         return $this;
     }
 
@@ -355,12 +359,14 @@ class Checklist implements SynchronisableInterface
     }
 
     /**
-     * @param  string $reportingPeriodAccurate
+     * @param string $reportingPeriodAccurate
+     *
      * @return $this
      */
     public function setReportingPeriodAccurate($reportingPeriodAccurate)
     {
         $this->reportingPeriodAccurate = $reportingPeriodAccurate;
+
         return $this;
     }
 
@@ -373,12 +379,14 @@ class Checklist implements SynchronisableInterface
     }
 
     /**
-     * @param  string $contactDetailsUptoDate
+     * @param string $contactDetailsUptoDate
+     *
      * @return $this
      */
     public function setContactDetailsUptoDate($contactDetailsUptoDate)
     {
         $this->contactDetailsUptoDate = $contactDetailsUptoDate;
+
         return $this;
     }
 
@@ -391,12 +399,14 @@ class Checklist implements SynchronisableInterface
     }
 
     /**
-     * @param  string $deputyFullNameAccurateInCasrec
+     * @param string $deputyFullNameAccurateInCasrec
+     *
      * @return $this
      */
     public function setDeputyFullNameAccurateInCasrec($deputyFullNameAccurateInCasrec)
     {
         $this->deputyFullNameAccurateInCasrec = $deputyFullNameAccurateInCasrec;
+
         return $this;
     }
 
@@ -409,12 +419,14 @@ class Checklist implements SynchronisableInterface
     }
 
     /**
-     * @param  string $decisionsSatisfactory
+     * @param string $decisionsSatisfactory
+     *
      * @return $this
      */
     public function setDecisionsSatisfactory($decisionsSatisfactory)
     {
         $this->decisionsSatisfactory = $decisionsSatisfactory;
+
         return $this;
     }
 
@@ -427,12 +439,14 @@ class Checklist implements SynchronisableInterface
     }
 
     /**
-     * @param  string $consultationsSatisfactory
+     * @param string $consultationsSatisfactory
+     *
      * @return $this
      */
     public function setConsultationsSatisfactory($consultationsSatisfactory)
     {
         $this->consultationsSatisfactory = $consultationsSatisfactory;
+
         return $this;
     }
 
@@ -445,12 +459,14 @@ class Checklist implements SynchronisableInterface
     }
 
     /**
-     * @param  string $careArrangements
+     * @param string $careArrangements
+     *
      * @return $this
      */
     public function setCareArrangements($careArrangements)
     {
         $this->careArrangements = $careArrangements;
+
         return $this;
     }
 
@@ -463,12 +479,14 @@ class Checklist implements SynchronisableInterface
     }
 
     /**
-     * @param  string $assetsDeclaredAndManaged
+     * @param string $assetsDeclaredAndManaged
+     *
      * @return $this
      */
     public function setAssetsDeclaredAndManaged($assetsDeclaredAndManaged)
     {
         $this->assetsDeclaredAndManaged = $assetsDeclaredAndManaged;
+
         return $this;
     }
 
@@ -481,12 +499,14 @@ class Checklist implements SynchronisableInterface
     }
 
     /**
-     * @param  string $debtsManaged
+     * @param string $debtsManaged
+     *
      * @return $this
      */
     public function setDebtsManaged($debtsManaged)
     {
         $this->debtsManaged = $debtsManaged;
+
         return $this;
     }
 
@@ -499,12 +519,14 @@ class Checklist implements SynchronisableInterface
     }
 
     /**
-     * @param  string $openClosingBalancesMatch
+     * @param string $openClosingBalancesMatch
+     *
      * @return $this
      */
     public function setOpenClosingBalancesMatch($openClosingBalancesMatch)
     {
         $this->openClosingBalancesMatch = $openClosingBalancesMatch;
+
         return $this;
     }
 
@@ -517,12 +539,14 @@ class Checklist implements SynchronisableInterface
     }
 
     /**
-     * @param  string $accountsBalance
+     * @param string $accountsBalance
+     *
      * @return $this
      */
     public function setAccountsBalance($accountsBalance)
     {
         $this->accountsBalance = $accountsBalance;
+
         return $this;
     }
 
@@ -535,12 +559,14 @@ class Checklist implements SynchronisableInterface
     }
 
     /**
-     * @param  string $moneyMovementsAcceptable
+     * @param string $moneyMovementsAcceptable
+     *
      * @return $this
      */
     public function setMoneyMovementsAcceptable($moneyMovementsAcceptable)
     {
         $this->moneyMovementsAcceptable = $moneyMovementsAcceptable;
+
         return $this;
     }
 
@@ -554,11 +580,13 @@ class Checklist implements SynchronisableInterface
 
     /**
      * @param string $deputyChargeAllowedByCourt
+     *
      * @return $this
      */
     public function setDeputyChargeAllowedByCourt($deputyChargeAllowedByCourt)
     {
         $this->deputyChargeAllowedByCourt = $deputyChargeAllowedByCourt;
+
         return $this;
     }
 
@@ -572,11 +600,13 @@ class Checklist implements SynchronisableInterface
 
     /**
      * @param string $satisfiedWithPaExpenses
+     *
      * @return $this
      */
     public function setSatisfiedWithPaExpenses($satisfiedWithPaExpenses)
     {
         $this->satisfiedWithPaExpenses = $satisfiedWithPaExpenses;
+
         return $this;
     }
 
@@ -590,11 +620,13 @@ class Checklist implements SynchronisableInterface
 
     /**
      * @param string $satisfiedWithHealthAndLifestyle
+     *
      * @return $this
      */
     public function setSatisfiedWithHealthAndLifestyle($satisfiedWithHealthAndLifestyle)
     {
         $this->satisfiedWithHealthAndLifestyle = $satisfiedWithHealthAndLifestyle;
+
         return $this;
     }
 
@@ -607,12 +639,14 @@ class Checklist implements SynchronisableInterface
     }
 
     /**
-     * @param  string $bondAdequate
+     * @param string $bondAdequate
+     *
      * @return $this
      */
     public function setBondAdequate($bondAdequate)
     {
         $this->bondAdequate = $bondAdequate;
+
         return $this;
     }
 
@@ -625,12 +659,14 @@ class Checklist implements SynchronisableInterface
     }
 
     /**
-     * @param  string $bondOrderMatchCasrec
+     * @param string $bondOrderMatchCasrec
+     *
      * @return $this
      */
     public function setBondOrderMatchCasrec($bondOrderMatchCasrec)
     {
         $this->bondOrderMatchCasrec = $bondOrderMatchCasrec;
+
         return $this;
     }
 
@@ -643,12 +679,14 @@ class Checklist implements SynchronisableInterface
     }
 
     /**
-     * @param  string $futureSignificantDecisions
+     * @param string $futureSignificantDecisions
+     *
      * @return $this
      */
     public function setFutureSignificantDecisions($futureSignificantDecisions)
     {
         $this->futureSignificantDecisions = $futureSignificantDecisions;
+
         return $this;
     }
 
@@ -661,12 +699,14 @@ class Checklist implements SynchronisableInterface
     }
 
     /**
-     * @param  string $hasDeputyRaisedConcerns
+     * @param string $hasDeputyRaisedConcerns
+     *
      * @return $this
      */
     public function setHasDeputyRaisedConcerns($hasDeputyRaisedConcerns)
     {
         $this->hasDeputyRaisedConcerns = $hasDeputyRaisedConcerns;
+
         return $this;
     }
 
@@ -679,12 +719,14 @@ class Checklist implements SynchronisableInterface
     }
 
     /**
-     * @param  string $caseWorkerSatisified
+     * @param string $caseWorkerSatisified
+     *
      * @return $this
      */
     public function setCaseWorkerSatisified($caseWorkerSatisified)
     {
         $this->caseWorkerSatisified = $caseWorkerSatisified;
+
         return $this;
     }
 
@@ -698,11 +740,13 @@ class Checklist implements SynchronisableInterface
 
     /**
      * @param string $paymentsMatchCostCertificate
+     *
      * @return $this
      */
     public function setPaymentsMatchCostCertificate($paymentsMatchCostCertificate)
     {
         $this->paymentsMatchCostCertificate = $paymentsMatchCostCertificate;
+
         return $this;
     }
 
@@ -716,11 +760,13 @@ class Checklist implements SynchronisableInterface
 
     /**
      * @param $profCostsReasonableAndProportionate
+     *
      * @return $this
      */
     public function setProfCostsReasonableAndProportionate($profCostsReasonableAndProportionate)
     {
         $this->profCostsReasonableAndProportionate = $profCostsReasonableAndProportionate;
+
         return $this;
     }
 
@@ -734,12 +780,14 @@ class Checklist implements SynchronisableInterface
 
     /**
      * @param $hasDeputyOverchargedFromPreviousEstimates
+     *
      * @return $this
      */
     public function setHasDeputyOverchargedFromPreviousEstimates(
         $hasDeputyOverchargedFromPreviousEstimates
     ) {
         $this->hasDeputyOverchargedFromPreviousEstimates = $hasDeputyOverchargedFromPreviousEstimates;
+
         return $this;
     }
 
@@ -753,12 +801,14 @@ class Checklist implements SynchronisableInterface
 
     /**
      * @param $nextBillingEstimatesSatisfactory
+     *
      * @return $this
      */
     public function setNextBillingEstimatesSatisfactory(
         $nextBillingEstimatesSatisfactory
     ) {
         $this->nextBillingEstimatesSatisfactory = $nextBillingEstimatesSatisfactory;
+
         return $this;
     }
 
@@ -771,12 +821,14 @@ class Checklist implements SynchronisableInterface
     }
 
     /**
-     * @param  string $decision
+     * @param string $decision
+     *
      * @return $this
      */
     public function setDecision($decision)
     {
         $this->decision = $decision;
+
         return $this;
     }
 
@@ -789,12 +841,14 @@ class Checklist implements SynchronisableInterface
     }
 
     /**
-     * @param  string $caseManagerName
+     * @param string $caseManagerName
+     *
      * @return $this
      */
     public function setCaseManagerName($caseManagerName)
     {
         $this->caseManagerName = $caseManagerName;
+
         return $this;
     }
 
@@ -807,12 +861,14 @@ class Checklist implements SynchronisableInterface
     }
 
     /**
-     * @param  string $lodgingSummary
+     * @param string $lodgingSummary
+     *
      * @return $this
      */
     public function setLodgingSummary($lodgingSummary)
     {
         $this->lodgingSummary = $lodgingSummary;
+
         return $this;
     }
 
@@ -825,12 +881,14 @@ class Checklist implements SynchronisableInterface
     }
 
     /**
-     * @param  string $finalDecision
+     * @param string $finalDecision
+     *
      * @return $this
      */
     public function setFinalDecision($finalDecision)
     {
         $this->finalDecision = $finalDecision;
+
         return $this;
     }
 
@@ -875,12 +933,14 @@ class Checklist implements SynchronisableInterface
     }
 
     /**
-     * @param  \App\Entity\User $submittedBy
+     * @param \App\Entity\User $submittedBy
+     *
      * @return $this
      */
     public function setSubmittedBy($submittedBy)
     {
         $this->submittedBy = $submittedBy;
+
         return $this;
     }
 
@@ -893,12 +953,14 @@ class Checklist implements SynchronisableInterface
     }
 
     /**
-     * @param  \DateTime $submittedOn
+     * @param \DateTime $submittedOn
+     *
      * @return $this
      */
     public function setSubmittedOn($submittedOn)
     {
         $this->submittedOn = $submittedOn;
+
         return $this;
     }
 
@@ -911,12 +973,14 @@ class Checklist implements SynchronisableInterface
     }
 
     /**
-     * @param  string $buttonClicked
+     * @param string $buttonClicked
+     *
      * @return $this
      */
     public function setButtonClicked($buttonClicked)
     {
         $this->buttonClicked = $buttonClicked;
+
         return $this;
     }
 
@@ -929,13 +993,23 @@ class Checklist implements SynchronisableInterface
     }
 
     /**
-     * @param string|null $uuid
-     *
      * @return $this
      */
     public function setUuid(?string $uuid)
     {
         $this->uuid = $uuid;
+
+        return $this;
+    }
+
+    public function getClientBenefitsChecked(): ?string
+    {
+        return $this->clientBenefitsChecked;
+    }
+
+    public function setClientBenefitsChecked(?string $clientBenefitsChecked): Checklist
+    {
+        $this->clientBenefitsChecked = $clientBenefitsChecked;
 
         return $this;
     }

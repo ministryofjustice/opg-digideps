@@ -1,0 +1,19 @@
+{% from '@App/Admin/Client/Report/macros.html.twig' import checklist_radios %}
+{% from '@App/Macros/macros.html.twig' import details %}
+
+{% set translationDomain = "admin-checklist" %}
+{% trans_default_domain translationDomain %}
+{% set page = 'checklistPage' %}
+{% set hideEditLink = true %}
+<h3 class="govuk-heading-m" id="clientBenefitsCheck">{{ (page ~ '.heading.lodging.clientBenefitsCheck') | trans }}</h3>
+
+{{ checklist_radios(form.clientBenefitsChecked) }}
+
+<details class="govuk-details" data-module="govuk-details">
+    <summary class="govuk-details__summary">
+        <span class="govuk-details__summary-text">{{ (page ~ '.revealTitle.clientBenefitsCheckSummary') | trans }}</span>
+    </summary>
+    <div class="govuk-details__text">
+        {% include '@App/Report/ClientBenefitsCheck/_answers.html.twig' %}
+    </div>
+</details>
