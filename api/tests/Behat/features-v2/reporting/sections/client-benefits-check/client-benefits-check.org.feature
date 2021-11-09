@@ -13,7 +13,6 @@ Feature: Client benefits check - Org users (only overview pages differ - flow is
     @pa-admin-combined-high-not-started @acs
     Scenario: Reports due at least 60 days after the new question feature flag see the new report section
         Given a Public Authority Deputy has not started a Combined High Assets report
-        But they have not completed the client benefits section for their 'current' report
         And the deputies 'current' report ends and is due 'more' than 60 days after the client benefits check feature flag date
         When I visit the report overview page
         Then I should see "client-benefits-check" as "not started"
