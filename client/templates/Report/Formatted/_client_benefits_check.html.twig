@@ -34,16 +34,17 @@
             </table>
 
             {% if clientBenefitsCheck.doOthersReceiveIncomeOnClientsBehalf == 'yes' %}
-                <table class="labelvalue push--top">
+                <table class="labelvalue money push--top">
                     {% for income in clientBenefitsCheck.typesOfIncomeReceivedOnClientsBehalf %}
                         <tr>
                             <td class="label noborder">{{ income.incomeType }}</td>
-                            <td class="value text--right width-fifth">&pound;{{ income.amount | money_format }}</td>
+                            <td class="value text--right width-fifth">
+                                {% if income.amount is null %} I don’t know the amount {% else %}&pound;{{ income.amount | money_format }}&nbsp;{% endif %}
+                            </td>
                         </tr>
                     {% endfor %}
                 </table>
             {% endif %}
-
 
             {% if clientBenefitsCheck.doOthersReceiveIncomeOnClientsBehalf == 'dontKnow' %}
                 <div class="labelvalue push--top">
@@ -51,9 +52,6 @@
                     <div class="value">{{ clientBenefitsCheck.dontKnowIncomeExplanation | nl2br }}</div>
                 </div>
             {% endif %}
-
-
-
         </div>
     </div>
 </div>
