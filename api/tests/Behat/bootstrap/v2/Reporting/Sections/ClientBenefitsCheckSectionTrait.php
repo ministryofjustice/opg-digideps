@@ -313,8 +313,6 @@ trait ClientBenefitsCheckSectionTrait
     public function haveNotCompletedBenefitsSection(string $currentOrPrevious)
     {
         $reportId = 'current' === $currentOrPrevious ? $this->loggedInUserDetails->getCurrentReportId() : $this->loggedInUserDetails->getPreviousReportId();
-        var_dump($reportId);
-        var_dump($this->loggedInUserDetails->getCurrentReportId());
 
         if (empty($this->loggedInUserDetails) && empty($reportId)) {
             $message = sprintf(

@@ -10,7 +10,7 @@ Feature: Client benefits check - Org users (only overview pages differ - flow is
         Then I should not see 'client-benefits-check' report section
         And I should be able to submit my 'current' report without completing the client benefits check section
 
-    @pa-admin-combined-high-not-started
+    @pa-admin-combined-high-not-started @acs
     Scenario: Reports due at least 60 days after the new question feature flag see the new report section
         Given a Public Authority Deputy has not started a Combined High Assets report
         But they have not completed the client benefits section for their 'current' report

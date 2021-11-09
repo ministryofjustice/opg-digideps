@@ -219,8 +219,6 @@ trait ReportManagementTrait
             $extraFields['clientBenefitsCheck'] = 'Benefits check and income other people receive';
         }
 
-        var_dump($extraFields);
-
         $checkboxValuesAndTranslations = array_merge(
             $this->baseCombinedHighReportCheckboxValuesAndTranslations,
             $extraFields
