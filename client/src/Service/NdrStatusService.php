@@ -4,6 +4,7 @@ namespace App\Service;
 
 use App\Entity\Ndr\Ndr;
 use App\Entity\Ndr\VisitsCare;
+use App\Entity\Report\ClientBenefitsCheck;
 
 class NdrStatusService
 {
@@ -17,6 +18,24 @@ class NdrStatusService
     public function __construct(Ndr $ndr)
     {
         $this->ndr = $ndr;
+    }
+
+    /**
+     * @return array
+     */
+    private function getSectionStatus()
+    {
+        return [
+            'visitsCare' => $this->getVisitsCareState()['state'],
+            'expenses' => $this->getExpensesState()['state'],
+            'incomeBenefits' => $this->getIncomeBenefitsState()['state'],
+            'assets' => $this->getAssetsState()['state'],
+            'bankAccounts' => $this->getBankAccountsState()['state'],
+            'debts' => $this->getDebtsState()['state'],
+            'actions' => $this->getActionsState()['state'],
+            'otherInfo' => $this->getOtherInfoState()['state'],
+            'clientBenefitsCheck' => $this->getClientBenefitsCheckState()['state'],
+        ];
     }
 
     /** @return string */
@@ -160,23 +179,6 @@ class NdrStatusService
     /**
      * @return array
      */
-    private function getSectionStatus()
-    {
-        return [
-            'visitsCare' => $this->getVisitsCareState()['state'],
-            'expenses' => $this->getExpensesState()['state'],
-            'incomeBenefits' => $this->getIncomeBenefitsState()['state'],
-            'assets' => $this->getAssetsState()['state'],
-            'bankAccounts' => $this->getBankAccountsState()['state'],
-            'debts' => $this->getDebtsState()['state'],
-            'actions' => $this->getActionsState()['state'],
-            'otherInfo' => $this->getOtherInfoState()['state'],
-        ];
-    }
-
-    /**
-     * @return array
-     */
     public function getRemainingSections()
     {
         return array_filter($this->getSectionStatus(), function ($e) {
@@ -218,6 +220,33 @@ class NdrStatusService
             return 'readyToSubmit';
         } else {
             return 'notFinished';
+        }
+    }
+
+    public function getClientBenefitsCheckState(): array
+    {
+        $benefitsCheck = $this->ndr->getClientBenefitsCheck();
+
+        $answers = $benefitsCheck ? [
+            'whenChecked' => $benefitsCheck->getWhenLastCheckedEntitlement(),
+            'doOthersReceiveIncome' => $benefitsCheck->getDoOthersReceiveIncomeOnClientsBehalf(),
+            'incomeTypes' => $benefitsCheck->getTypesOfIncomeReceivedOnClientsBehalf()->count() > 0 ? true : null,
+        ] : [];
+
+        switch (count(array_filter($answers))) {
+            case 0:
+                return ['state' => self::STATE_NOT_STARTED, 'nOfRecords' => 0];
+            case 2:
+                if (in_array($answers['doOthersReceiveIncome'], [ClientBenefitsCheck::OTHER_INCOME_DONT_KNOW, ClientBenefitsCheck::OTHER_INCOME_NO])) {
+                    return ['state' => self::STATE_DONE, 'nOfRecords' => 0];
+                } else {
+                    return ['state' => self::STATE_INCOMPLETE, 'nOfRecords' => 0];
+                }
+                // no break
+            case 3:
+                return ['state' => self::STATE_DONE, 'nOfRecords' => 0];
+            default:
+                return ['state' => self::STATE_INCOMPLETE, 'nOfRecords' => 0];
         }
     }
 }

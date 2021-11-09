@@ -137,7 +137,7 @@ class StepRedirector
         return $this;
     }
 
-    public function getRedirectLinkAfterSaving()
+    public function getRedirectLinkAfterSaving(array $extraParams = [])
     {
         // return to summary if coming from there, or it's the last step
         if ('summary' === $this->fromPage) {
@@ -146,7 +146,7 @@ class StepRedirector
             ]);
         }
         if ($this->currentStep === $this->totalSteps) {
-            return $this->generateUrl($this->routeSummary, ['from' => 'last-step']);
+            return $this->generateUrl($this->routeSummary, ['from' => 'last-step'] + $extraParams);
         }
 
         return $this->generateUrl($this->routeStep, [

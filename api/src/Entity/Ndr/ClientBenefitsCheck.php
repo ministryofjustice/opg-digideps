@@ -2,7 +2,7 @@
 
 declare(strict_types=1);
 
-namespace App\Entity\Report;
+namespace App\Entity\Ndr;
 
 use App\Entity\ClientBenefitsCheckInterface;
 use DateTime;
@@ -18,7 +18,7 @@ use Ramsey\Uuid\Uuid;
 use Ramsey\Uuid\UuidInterface;
 
 /**
- * @ORM\Table(name="client_benefits_check")
+ * @ORM\Table(name="odr_client_benefits_check")
  * @ORM\Entity
  */
 class ClientBenefitsCheck implements ClientBenefitsCheckInterface
@@ -59,10 +59,10 @@ class ClientBenefitsCheck implements ClientBenefitsCheckInterface
     private DateTime $created;
 
     /**
-     * @ORM\OneToOne (targetEntity="App\Entity\Report\Report", inversedBy="clientBenefitsCheck")
-     * @ORM\JoinColumn(name="report_id", referencedColumnName="id", onDelete="CASCADE",nullable=true)
+     * @ORM\OneToOne (targetEntity="App\Entity\Ndr\Ndr", inversedBy="clientBenefitsCheck")
+     * @ORM\JoinColumn(name="ndr_id", referencedColumnName="id", onDelete="CASCADE", nullable=true)
      */
-    private Report $report;
+    private ?Ndr $report;
 
     /**
      * @var string one of either [haveChecked, currentlyChecking, neverChecked]
@@ -115,10 +115,10 @@ class ClientBenefitsCheck implements ClientBenefitsCheckInterface
     private $dontKnowIncomeExplanation;
 
     /**
-     * @ORM\OneToMany(targetEntity="App\Entity\Report\IncomeReceivedOnClientsBehalf", mappedBy="clientBenefitsCheck", cascade={"persist", "remove"}, fetch="EXTRA_LAZY" )
+     * @ORM\OneToMany(targetEntity="App\Entity\Ndr\IncomeReceivedOnClientsBehalf", mappedBy="clientBenefitsCheck", cascade={"persist", "remove"}, fetch="EXTRA_LAZY" )
      *
      * @JMS\Groups({"client-benefits-check"})
-     * @JMS\Type("ArrayCollection<App\Entity\Report\IncomeReceivedOnClientsBehalf>")
+     * @JMS\Type("ArrayCollection<App\Entity\Ndr\IncomeReceivedOnClientsBehalf>")
      * @OrderBy({"created" = "ASC"})
      */
     private $typesOfIncomeReceivedOnClientsBehalf;
@@ -131,18 +131,6 @@ class ClientBenefitsCheck implements ClientBenefitsCheckInterface
     public function setId(UuidInterface $id): ClientBenefitsCheck
     {
         $this->id = $id;
-
-        return $this;
-    }
-
-    public function getReport(): ?Report
-    {
-        return $this->report;
-    }
-
-    public function setReport(?Report $report): ClientBenefitsCheck
-    {
-        $this->report = $report;
 
         return $this;
     }
@@ -234,6 +222,18 @@ class ClientBenefitsCheck implements ClientBenefitsCheckInterface
     public function setDontKnowIncomeExplanation(?string $dontKnowIncomeExplanation): ClientBenefitsCheck
     {
         $this->dontKnowIncomeExplanation = $dontKnowIncomeExplanation;
+
+        return $this;
+    }
+
+    public function getReport(): ?Ndr
+    {
+        return $this->report;
+    }
+
+    public function setReport(?Ndr $report): ClientBenefitsCheck
+    {
+        $this->report = $report;
 
         return $this;
     }

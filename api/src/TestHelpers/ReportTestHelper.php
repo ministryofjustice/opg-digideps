@@ -6,7 +6,9 @@ namespace App\TestHelpers;
 
 use App\Entity\Client;
 use App\Entity\Ndr\BankAccount as NdrBankAccount;
+use App\Entity\Ndr\ClientBenefitsCheck as NdrClientBenefitsCheck;
 use App\Entity\Ndr\Debt as NdrDebt;
+use App\Entity\Ndr\IncomeReceivedOnClientsBehalf as NdrIncomeReceivedOnClientsBehalf;
 use App\Entity\Ndr\Ndr;
 use App\Entity\Ndr\VisitsCare as NdrVisitsCare;
 use App\Entity\Report\Action;
@@ -89,6 +91,7 @@ class ReportTestHelper
         $this->completeIncomeBenefits($report);
         $this->completeAssets($report);
         $this->completeDebts($report, $em);
+        $this->completeClientBenefitsCheck($report);
     }
 
     public function submitReport(ReportInterface $report, EntityManager $em): void
@@ -384,13 +387,14 @@ class ReportTestHelper
 
     private function completeClientBenefitsCheck(ReportInterface $report): void
     {
-        $typeOfIncome = (new IncomeReceivedOnClientsBehalf())
-            ->setCreated(new DateTime())
+        $typeOfIncome = $report instanceof Ndr ? new NdrIncomeReceivedOnClientsBehalf() : new IncomeReceivedOnClientsBehalf();
+        $clientBenefitsCheck = $report instanceof Ndr ? new NdrClientBenefitsCheck() : new ClientBenefitsCheck();
+
+        $typeOfIncome->setCreated(new DateTime())
             ->setAmount(100.50)
             ->setIncomeType('Universal Credit');
 
-        $clientBenefitsCheck = (new ClientBenefitsCheck())
-            ->setReport($report)
+        $clientBenefitsCheck->setReport($report)
             ->setWhenLastCheckedEntitlement(ClientBenefitsCheck::WHEN_CHECKED_I_HAVE_CHECKED)
             ->setDateLastCheckedEntitlement(new DateTime())
             ->setCreated(new DateTime())

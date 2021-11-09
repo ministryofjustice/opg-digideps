@@ -3,6 +3,7 @@
 namespace App\Controller\Admin\Client;
 
 use App\Controller\AbstractController;
+use App\Entity\Ndr\Ndr;
 use App\Entity\Report\Checklist;
 use App\Entity\Report\Report;
 use App\Exception\ReportNotSubmittedException;
@@ -225,6 +226,7 @@ class ReportController extends AbstractController
             'checklist' => $checklist,
             'reviewChecklist' => $reviewChecklist,
             'previousReportData' => $report->getPreviousReportData(),
+            'reportOrNdr' => $report instanceof Ndr ? 'ndr' : 'report',
         ];
     }
 

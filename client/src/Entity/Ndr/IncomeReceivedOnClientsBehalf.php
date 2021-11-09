@@ -2,7 +2,7 @@
 
 declare(strict_types=1);
 
-namespace App\Entity\Report;
+namespace App\Entity\Ndr;
 
 use App\Entity\IncomeReceivedOnClientsBehalfInterface;
 use App\Validator\Constraints\ClientBenefitsCheck as CustomAssert;
@@ -25,7 +25,7 @@ class IncomeReceivedOnClientsBehalf implements IncomeReceivedOnClientsBehalfInte
     private ?DateTime $created = null;
 
     /**
-     * @JMS\Type("App\Entity\Report\ClientBenefitsCheck")
+     * @JMS\Type("App\Entity\Ndr\ClientBenefitsCheck")
      * @JMS\Groups({"report", "client-benefits-check"})
      */
     private ?ClientBenefitsCheck $clientBenefitsCheck = null;

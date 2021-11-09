@@ -52,10 +52,7 @@ class NdrApi
         $this->eventDispatcher->dispatch($ndrSubmittedEvent, NdrSubmittedEvent::NAME);
     }
 
-    /**
-     * @return Report
-     */
-    public function getNdr(int $reportId, array $groups = [])
+    public function getNdr(int $ndrId, array $groups = []): Ndr
     {
         $groups[] = 'ndr';
 
@@ -64,7 +61,7 @@ class NdrApi
 
         try {
             $ndr = $this->restClient->get(
-                sprintf(self::GET_NDR_ENDPOINT, $reportId),
+                sprintf(self::GET_NDR_ENDPOINT, $ndrId),
                 'Ndr\\Ndr',
                 $groups
             );

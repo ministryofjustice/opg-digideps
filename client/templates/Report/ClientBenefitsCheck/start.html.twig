@@ -23,7 +23,7 @@
         </div>
     </div>
 
-    {{ macros.startSectionButton(path('client_benefits_check_step', { 'reportId': report.id, 'step': 1 }), 'startPage.startButton' | trans) }}
+    {{ macros.startSectionButton(path('client_benefits_check_step', { 'reportId': report.id, 'step': 1, 'reportOrNdr': reportOrNdr }), 'startPage.startButton' | trans) }}
 
     {% include '@App/Report/_nextprevious.html.twig' with {
         'report': report,

@@ -24,6 +24,7 @@ class Ndr implements ReportInterface
 
     /**
      * @JMS\Type("integer")
+     * @JMS\Groups({"ndr", "ndr_id"})
      *
      * @var int
      */
@@ -130,7 +131,16 @@ class Ndr implements ReportInterface
     private $reportTitle;
 
     /**
-     * Currently used only for bottom navigator
+     * @JMS\Type("App\Entity\Ndr\ClientBenefitsCheck")
+     * @Assert\Valid(groups={"client-benefits-check"})
+     * @JMS\Groups({"client-benefits-check"})
+     *
+     * @var ?ClientBenefitsCheck
+     */
+    private $clientBenefitsCheck;
+
+    /**
+     * Currently used only for bottom navigator.
      *
      * @return string
      */
@@ -162,6 +172,7 @@ class Ndr implements ReportInterface
 
     /**
      * @param int $id
+     *
      * @return Ndr
      */
     public function setId($id): self
@@ -181,6 +192,7 @@ class Ndr implements ReportInterface
 
     /**
      * @param DateTime $startDate
+     *
      * @return Ndr
      */
     public function setStartDate($startDate): self
@@ -200,6 +212,7 @@ class Ndr implements ReportInterface
 
     /**
      * @param DateTime $submitDate
+     *
      * @return Ndr
      */
     public function setSubmitDate($submitDate): self
@@ -429,12 +442,9 @@ class Ndr implements ReportInterface
         return $this;
     }
 
-    /**
-     * @param ExecutionContextInterface $context
-     */
     public function debtsValid(ExecutionContextInterface $context)
     {
-        if ($this->getHasDebts() == 'yes'  && count($this->getDebtsWithValidAmount()) === 0) {
+        if ('yes' == $this->getHasDebts() && 0 === count($this->getDebtsWithValidAmount())) {
             $context->addViolation('ndr.debt.mustHaveAtLeastOneDebt');
         }
     }
@@ -573,6 +583,7 @@ class Ndr implements ReportInterface
 
     /**
      * @param string $format string where %s are submitDate Y-m-d, case number
+     *
      * @return string
      */
     public function createAttachmentName($format)
@@ -604,11 +615,25 @@ class Ndr implements ReportInterface
 
     /**
      * @param string $reportTitle
+     *
      * @return $this
      */
     public function setReportTitle($reportTitle)
     {
         $this->reportTitle = $reportTitle;
+
+        return $this;
+    }
+
+    public function getClientBenefitsCheck(): ?ClientBenefitsCheck
+    {
+        return $this->clientBenefitsCheck;
+    }
+
+    public function setClientBenefitsCheck(?ClientBenefitsCheck $clientBenefitsCheck): Ndr
+    {
+        $this->clientBenefitsCheck = $clientBenefitsCheck;
+
         return $this;
     }
 }

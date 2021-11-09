@@ -5,10 +5,11 @@ declare(strict_types=1);
 namespace App\Controller\Report;
 
 use App\Controller\RestController;
-use App\Entity\Report\ClientBenefitsCheck;
+use App\Entity\ClientBenefitsCheckInterface;
 use App\Entity\Report\Report;
 use App\Factory\ClientBenefitsCheckFactory;
 use App\Repository\ClientBenefitsCheckRepository;
+use App\Repository\NdrClientBenefitsCheckRepository;
 use App\Service\Formatter\RestFormatter;
 use Sensio\Bundle\FrameworkExtraBundle\Configuration\Security;
 use Symfony\Component\HttpFoundation\Request;
@@ -16,69 +17,91 @@ use Symfony\Component\Routing\Annotation\Route;
 
 class ClientBenefitsCheckController extends RestController
 {
-    private ClientBenefitsCheckRepository $repository;
+    private ClientBenefitsCheckRepository $clientBenefitsCheckRepository;
+    private NdrClientBenefitsCheckRepository $ndrClientBenefitsCheckRepository;
     private ClientBenefitsCheckFactory $factory;
     private RestFormatter $formatter;
 
     public function __construct(
-        ClientBenefitsCheckRepository $repository,
+        ClientBenefitsCheckRepository $clientBenefitsCheckRepository,
+        NdrClientBenefitsCheckRepository $ndrClientBenefitsCheckRepository,
         ClientBenefitsCheckFactory $factory,
         RestFormatter $formatter
     ) {
-        $this->repository = $repository;
+        $this->clientBenefitsCheckRepository = $clientBenefitsCheckRepository;
         $this->factory = $factory;
         $this->formatter = $formatter;
+        $this->ndrClientBenefitsCheckRepository = $ndrClientBenefitsCheckRepository;
     }
 
     /**
-     * @Route("/client-benefits-check", methods={"POST"}, name="persist")
+     * @Route("/{reportOrNdr}/client-benefits-check", methods={"POST"}, name="persist"), requirements={
+     *   "reportOrNdr" = "(report|ndr)"
+     * })))
      * @Security("is_granted('ROLE_DEPUTY')")
      */
-    public function create(Request $request)
+    public function create(Request $request, string $reportOrNdr)
     {
         $this->setJmsGroups($request);
 
-        $clientBenefitsCheck = $this->factory->createFromFormData(json_decode($request->getContent(), true));
+        $clientBenefitsCheck = $this->factory->createFromFormData(json_decode($request->getContent(), true), $reportOrNdr);
 
-        return $this->processEntity($clientBenefitsCheck);
+        return $this->processEntity($clientBenefitsCheck, $reportOrNdr);
     }
 
     /**
-     * @Route("/client-benefits-check/{id}", methods={"GET"}, name="read")
+     * @Route("/{reportOrNdr}/client-benefits-check/{id}", methods={"GET"}, name="read", requirements={
+     *   "reportOrNdr" = "(report|ndr)"
+     * })))
      * @Security("is_granted('ROLE_DEPUTY')")
      */
-    public function read(Request $request, string $id)
+    public function read(Request $request, string $id, string $reportOrNdr)
     {
         $this->setJmsGroups($request);
 
-        return $this->repository->findBy(['id' => $id], ['created' => 'ASC']);
+        return 'ndr' === $reportOrNdr ? $this->ndrClientBenefitsCheckRepository->findBy(['id' => $id], ['created' => 'ASC']) :
+            $this->clientBenefitsCheckRepository->findBy(['id' => $id], ['created' => 'ASC']);
     }
 
     /**
-     * @Route("/client-benefits-check/{id}", methods={"PUT"}, name="update")
+     * @Route("/{reportOrNdr}/client-benefits-check/{id}", methods={"PUT"}, name="update", requirements={
+     *   "reportOrNdr" = "(report|ndr)"
+     * }))))
      * @Security("is_granted('ROLE_DEPUTY')")
      */
-    public function update(Request $request, $id)
+    public function update(Request $request, $id, string $reportOrNdr)
     {
         $this->setJmsGroups($request);
 
-        $existingEntity = $this->repository->find($id);
-        $clientBenefitsCheck = $this->factory->createFromFormData(json_decode($request->getContent(), true), $existingEntity);
+        $existingEntity = $this->getCorrectRepository($reportOrNdr)->find($id);
+        $clientBenefitsCheck = $this->factory->createFromFormData(
+            json_decode($request->getContent(), true),
+            $reportOrNdr,
+            $existingEntity
+        );
 
-        return $this->processEntity($clientBenefitsCheck);
+        return $this->processEntity($clientBenefitsCheck, $reportOrNdr);
     }
 
-    private function processEntity(ClientBenefitsCheck $clientBenefitsCheck)
+    private function processEntity(ClientBenefitsCheckInterface $clientBenefitsCheck, string $reportOrNdr)
     {
-        $this->repository->persistAndFlush($clientBenefitsCheck);
-        $clientBenefitsCheck->getReport()->updateSectionsStatusCache([Report::SECTION_CLIENT_BENEFITS_CHECK]);
+        $this->getCorrectRepository($reportOrNdr)->persistAndFlush($clientBenefitsCheck);
+
+        if ($clientBenefitsCheck->getReport()) {
+            $clientBenefitsCheck->getReport()->updateSectionsStatusCache([Report::SECTION_CLIENT_BENEFITS_CHECK]);
+        }
 
         return $clientBenefitsCheck;
     }
 
     private function setJmsGroups(Request $request)
     {
-        $groups = $request->get('groups') ? $request->get('groups') : ['client-benefits-check', 'report'];
+        $groups = $request->get('groups') ? $request->get('groups') : ['client-benefits-check', 'report', 'ndr-client', 'ndr'];
         $this->formatter->setJmsSerialiserGroups($groups);
+    }
+
+    private function getCorrectRepository(string $reportOrNdr)
+    {
+        return 'ndr' === $reportOrNdr ? $this->ndrClientBenefitsCheckRepository : $this->clientBenefitsCheckRepository;
     }
 }

@@ -2,10 +2,10 @@
 
 declare(strict_types=1);
 
-namespace App\Entity\Report;
+namespace App\Entity\Ndr;
 
 use App\Entity\ClientBenefitsCheckInterface;
-use App\Entity\Report\Traits\HasReportTrait;
+use App\Entity\Ndr\Traits\HasNdrTrait;
 use App\Validator\Constraints\ClientBenefitsCheck as CustomAssert;
 use DateTime;
 use Doctrine\Common\Collections\ArrayCollection;
@@ -14,7 +14,7 @@ use Symfony\Component\Validator\Constraints as Assert;
 
 class ClientBenefitsCheck implements ClientBenefitsCheckInterface
 {
-    use HasReportTrait;
+    use HasNdrTrait;
 
     const WHEN_CHECKED_I_HAVE_CHECKED = 'haveChecked';
     const WHEN_CHECKED_IM_CURRENTLY_CHECKING = 'currentlyChecking';
@@ -26,19 +26,19 @@ class ClientBenefitsCheck implements ClientBenefitsCheckInterface
 
     /**
      * @JMS\Type("string")
-     * @JMS\Groups({"report", "client-benefits-check"})
+     * @JMS\Groups({"report", "ndr", "client-benefits-check"})
      */
     private ?string $id = null;
 
     /**
      * @JMS\Type("DateTime<'Y-m-d'>")
-     * @JMS\Groups({"report", "client-benefits-check"})
+     * @JMS\Groups({"report", "ndr", "client-benefits-check"})
      */
     private ?DateTime $created = null;
 
     /**
      * @JMS\Type("string")
-     * @JMS\Groups({"report", "client-benefits-check"})
+     * @JMS\Groups({"report", "ndr", "client-benefits-check"})
      *
      * @CustomAssert\ClientBenefitsCheck(groups={"client-benefits-check"})
      */
@@ -46,7 +46,7 @@ class ClientBenefitsCheck implements ClientBenefitsCheckInterface
 
     /**
      * @JMS\Type("DateTime<'Y-m-d'>")
-     * @JMS\Groups({"report", "client-benefits-check"})
+     * @JMS\Groups({"report", "ndr", "client-benefits-check"})
      *
      * @CustomAssert\ClientBenefitsCheck(groups={"client-benefits-check"})
      */
@@ -54,7 +54,7 @@ class ClientBenefitsCheck implements ClientBenefitsCheckInterface
 
     /**
      * @JMS\Type("string")
-     * @JMS\Groups({"report", "client-benefits-check"})
+     * @JMS\Groups({"report", "ndr", "client-benefits-check"})
      *
      * @CustomAssert\ClientBenefitsCheck(groups={"client-benefits-check"})
      */
@@ -62,21 +62,21 @@ class ClientBenefitsCheck implements ClientBenefitsCheckInterface
 
     /**
      * @JMS\Type("string")
-     * @JMS\Groups({"report", "client-benefits-check"})
+     * @JMS\Groups({"report", "ndr", "client-benefits-check"})
      */
     private ?string $doOthersReceiveIncomeOnClientsBehalf = '';
 
     /**
      * @JMS\Type("string")
-     * @JMS\Groups({"report", "client-benefits-check"})
+     * @JMS\Groups({"report", "ndr", "client-benefits-check"})
      *
      * @CustomAssert\ClientBenefitsCheck(groups={"client-benefits-check"})
      */
     private ?string $dontKnowIncomeExplanation = null;
 
     /**
-     * @JMS\Type("ArrayCollection<App\Entity\Report\IncomeReceivedOnClientsBehalf>")
-     * @JMS\Groups({"report", "client-benefits-check"})
+     * @JMS\Type("ArrayCollection<App\Entity\Ndr\IncomeReceivedOnClientsBehalf>")
+     * @JMS\Groups({"report", "ndr", "client-benefits-check"})
      *
      * @CustomAssert\ClientBenefitsCheck(groups={"client-benefits-check"})
      * @Assert\Valid(groups={"client-benefits-check"})
