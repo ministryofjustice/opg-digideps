@@ -793,7 +793,7 @@ class ReportController extends RestController
             $this->em->persist($info);
         }
 
-        if ('submitAndContinue' == $checklistData['button_clicked']) {
+        if (isset($checklistData['button_clicked']) && 'submitAndContinue' == $checklistData['button_clicked']) {
             $checklist->setSubmittedBy($user);
             $checklist->setSubmittedOn(new DateTime());
         }
