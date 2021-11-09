@@ -78,6 +78,7 @@ typeOfAccount: Type of account
 sortCode: Sort code
 accountNumber: Account number
 bankAccount: Bank account
+joint: Joint
 notApplicable: Not applicable
 savedBy: Saved by
 date: Date

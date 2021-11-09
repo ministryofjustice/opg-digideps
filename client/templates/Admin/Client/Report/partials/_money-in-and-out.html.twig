@@ -59,6 +59,7 @@
                 <thead class="govuk-table__head">
                     <tr class="govuk-table__row">
                         <th scope="col" class="govuk-table__header">{{ 'bankAccount' | trans({}, 'common') }}</th>
+                        <th scope="col" class="govuk-table__header">{{ 'joint' | trans({}, 'common') }}</th>
                         <th scope="col" class="govuk-table__header govuk-table__header--numeric">{{ 'amount' | trans({}, 'common') }}</th>
                     </tr>
                 </thead>
@@ -66,11 +67,12 @@
                     {% for account in report.bankAccounts %}
                         <tr class="govuk-table__row">
                             <td class="govuk-table__cell">{{ account.getNameOneLine() }}</td>
+                            <td class="govuk-table__cell">{{ account.getIsJointAccount() == 'yes' ? 'Yes' : 'No'}}</td>
                             <td class="govuk-table__cell govuk-table__cell--numeric">£{{ account.openingBalance | money_format }}</td>
                         </tr>
                     {% endfor %}
                     <tr class="govuk-table__row">
-                        <th scope="row" class="govuk-table__header">{{ 'totalAmount' | trans({}, 'common') }}</th>
+                        <th scope="row" colspan='2' class="govuk-table__header">{{ 'totalAmount' | trans({}, 'common') }}</th>
                         <td class="govuk-table__cell govuk-table__cell--numeric">
                             <strong class="behat-region-checklist-accounts-opening-total">
                                 £{{ report.accountsOpeningBalanceTotal | money_format }}
@@ -99,6 +101,7 @@
                 <thead class="govuk-table__head">
                     <tr class="govuk-table__row">
                         <th class="govuk-table__header">{{ 'bankAccount' | trans({}, 'common') }}</th>
+                        <th class="govuk-table__header">{{ 'joint' | trans({}, 'common') }}</th>
                         <th class="govuk-table__header govuk-table__header--numeric">{{ 'amount' | trans({}, 'common') }}</th>
                     </tr>
                 </thead>
@@ -106,11 +109,12 @@
                     {% for account in report.bankAccounts %}
                         <tr class="govuk-table__row">
                             <td class="govuk-table__cell">{{ account.getNameOneLine() }}</td>
+                            <td class="govuk-table__cell">{{ account.getIsJointAccount() == 'yes' ? 'Yes' : 'No'}}</td>
                             <td class="govuk-table__cell govuk-table__cell--numeric">£{{ account.closingBalance | money_format }}</td>
                         </tr>
                     {% endfor %}
                     <tr class="govuk-table__row">
-                        <th scope="row" class="govuk-table__header">{{ 'totalAmount' | trans({}, 'common') }}</th>
+                        <th scope="row" colspan='2' class="govuk-table__header">{{ 'totalAmount' | trans({}, 'common') }}</th>
                         <td class="govuk-table__cell govuk-table__cell--numeric">
                             <strong class="behat-region-checklist-accounts-closing-total">£{{ report.accountsClosingBalanceTotal | money_format }}</strong>
                         </td>
