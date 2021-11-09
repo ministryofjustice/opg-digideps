@@ -1,0 +1,59 @@
+<div class="section break-before" id="client-benefits-check-section">
+    <h2 class="section-heading">Benefits check and income other people receive</h2>
+
+    <div class="box">
+
+        <div class="labelvalue push-half--top">
+            <h3 class="label question bold">When did you last check that {{ client.firstName }} gets all the benefits they’re entitled to?</h3>
+            <div class="value">
+                {{ clientBenefitsCheck.dateLastCheckedEntitlement ? clientBenefitsCheck.dateLastCheckedEntitlement  | date("m/Y") : clientBenefitsCheck.whenLastCheckedEntitlement }}
+            </div>
+
+            {% if clientBenefitsCheck.whenLastCheckedEntitlement == 'neverChecked' %}
+                <div class="labelvalue push--top">
+                    <div class="label">Explanation for never checking if {{ client.firstName }} gets all the benefits they’re entitled to</div>
+                    <div class="value">{{ clientBenefitsCheck.neverCheckedExplanation | nl2br }}</div>
+                </div>
+            {% endif %}
+        </div>
+    </div>
+
+    <div class="box">
+        <div class="labelvalue push-half--top">
+            <h3 class="label question bold">Does anyone other than you receive income on {{ client.firstName }}’s behalf?</h3>
+
+            <table class="checkboxes labelvalue inline">
+                <tr>
+                    <td class="value checkbox"{% if clientBenefitsCheck.doOthersReceiveIncomeOnClientsBehalf == 'yes' %} aria-label=”Selected”>X{% else %}>&nbsp;{% endif %}</td>
+                    <td class="label">{{ 'yes' | trans({}, 'common' ) }}</td>
+                    <td class="value checkbox"{% if clientBenefitsCheck.doOthersReceiveIncomeOnClientsBehalf == 'no' %} aria-label=”Selected”>X{% else %}>&nbsp;{% endif %}</td>
+                    <td class="label">{{ 'no' | trans({}, 'common' ) }}</td>
+                    <td class="value checkbox"{% if clientBenefitsCheck.doOthersReceiveIncomeOnClientsBehalf == 'dontKnow' %} aria-label=”Selected”>X{% else %}>&nbsp;{% endif %}</td>
+                    <td class="label">{{ 'dontKnow' | trans({}, 'common' ) }}</td>
+                </tr>
+            </table>
+
+            {% if clientBenefitsCheck.doOthersReceiveIncomeOnClientsBehalf == 'yes' %}
+                <table class="labelvalue push--top">
+                    {% for income in clientBenefitsCheck.typesOfIncomeReceivedOnClientsBehalf %}
+                        <tr>
+                            <td class="label noborder">{{ income.incomeType }}</td>
+                            <td class="value text--right width-fifth">&pound;{{ income.amount | money_format }}</td>
+                        </tr>
+                    {% endfor %}
+                </table>
+            {% endif %}
+
+
+            {% if clientBenefitsCheck.doOthersReceiveIncomeOnClientsBehalf == 'dontKnow' %}
+                <div class="labelvalue push--top">
+                    <div class="label">Explanation for not knowing if others receive income on {{ client.firstName }}'s behalf</div>
+                    <div class="value">{{ clientBenefitsCheck.dontKnowIncomeExplanation | nl2br }}</div>
+                </div>
+            {% endif %}
+
+
+
+        </div>
+    </div>
+</div>

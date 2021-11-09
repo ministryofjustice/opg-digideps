@@ -5,6 +5,7 @@ view: View
 remove: Remove
 yes: Yes
 no: No
+dontKnow: I don't know
 ok: OK
 signOut: Sign out
 continue: Continue
