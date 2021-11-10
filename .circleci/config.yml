@@ -169,18 +169,6 @@ workflows:
           requires: [ unprotect environment approval ]
           filters: { branches: { ignore: [ main ] } }
           protect_time: "0"
-      # Optional manual destruction of environment
-      - cleanup:
-          name: optional destroy environment approval
-          type: approval
-          requires: [ cancel redundant builds ]
-          filters: { branches: { ignore: [ main ] } }
-
-      - terraform-command:
-          name: destroy environment
-          requires: [ optional destroy environment approval ]
-          filters: { branches: { ignore: [ main ] } }
-          tf_command: destroy
 
   integration:
     jobs:
