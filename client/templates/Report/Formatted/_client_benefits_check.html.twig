@@ -1,17 +1,24 @@
+{% set translationDomain = "report-client-benefits-check" %}
+{% trans_default_domain translationDomain %}
+
+{% set transOptions = {
+    '%client%': report.client.firstname | e,
+} %}
+
 <div class="section break-before" id="client-benefits-check-section">
-    <h2 class="section-heading">Benefits check and income other people receive</h2>
+    <h2 class="section-heading">{{ 'common.pageTitle' | trans(transOptions) }}</h2>
 
     <div class="box">
 
         <div class="labelvalue push-half--top">
-            <h3 class="label question bold">When did you last check that {{ client.firstName }} gets all the benefits they’re entitled to?</h3>
+            <h3 class="label question bold">{{ 'stepPage.pageTitle.1.mainTitle' | trans(transOptions) }}</h3>
             <div class="value">
                 {{ clientBenefitsCheck.dateLastCheckedEntitlement ? clientBenefitsCheck.dateLastCheckedEntitlement  | date("m/Y") : clientBenefitsCheck.whenLastCheckedEntitlement }}
             </div>
 
             {% if clientBenefitsCheck.whenLastCheckedEntitlement == 'neverChecked' %}
                 <div class="labelvalue push--top">
-                    <div class="label">Explanation for never checking if {{ client.firstName }} gets all the benefits they’re entitled to</div>
+                    <div class="label">{{ 'reportReview.neverCheckedEntitlementTitle' | trans(transOptions)}}</div>
                     <div class="value">{{ clientBenefitsCheck.neverCheckedExplanation | nl2br }}</div>
                 </div>
             {% endif %}
@@ -20,7 +27,7 @@
 
     <div class="box">
         <div class="labelvalue push-half--top">
-            <h3 class="label question bold">Does anyone other than you receive income on {{ client.firstName }}’s behalf?</h3>
+            <h3 class="label question bold">{{ 'stepPage.pageTitle.2.mainTitle' | trans(transOptions) }}</h3>
 
             <table class="checkboxes labelvalue inline">
                 <tr>
@@ -39,7 +46,7 @@
                         <tr>
                             <td class="label noborder">{{ income.incomeType }}</td>
                             <td class="value text--right width-fifth">
-                                {% if income.amount is null %} I don’t know the amount {% else %}&pound;{{ income.amount | money_format }}&nbsp;{% endif %}
+                                {% if income.amount is null %} {{ 'form.incomeDetails.dontKnowCheckboxLabel' | trans(transOptions) }} {% else %}&pound;{{ income.amount | money_format }}&nbsp;{% endif %}
                             </td>
                         </tr>
                     {% endfor %}
@@ -48,7 +55,7 @@
 
             {% if clientBenefitsCheck.doOthersReceiveIncomeOnClientsBehalf == 'dontKnow' %}
                 <div class="labelvalue push--top">
-                    <div class="label">Explanation for not knowing if others receive income on {{ client.firstName }}'s behalf</div>
+                    <div class="label">{{ 'reportReview.dontKnowIncomeTitle' | trans(transOptions)}}</div>
                     <div class="value">{{ clientBenefitsCheck.dontKnowIncomeExplanation | nl2br }}</div>
                 </div>
             {% endif %}
