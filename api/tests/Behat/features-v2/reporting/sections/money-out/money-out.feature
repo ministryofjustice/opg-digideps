@@ -10,7 +10,7 @@ Feature: Money Out
         And I try to save and continue without adding a payment
         Then I should see correct money out validation message
 
-    @lay-pfa-high-not-started
+    @lay-pfa-high-not-started @acs
     Scenario: A user adds one of each payment type
         Given a Lay Deputy has not started a Pfa High Assets report
         When I view and start the money out report section

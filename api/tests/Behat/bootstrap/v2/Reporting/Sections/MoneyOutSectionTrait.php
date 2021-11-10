@@ -91,6 +91,7 @@ trait MoneyOutSectionTrait
     {
         $this->iAmOnMoneyOutAddPaymentPage();
         $this->addPayment('care-fees', 'Care fees');
+        $this->addAnother('no');
     }
 
     /**
@@ -100,13 +101,12 @@ trait MoneyOutSectionTrait
     {
         $this->iAmOnMoneyOutAddPaymentPage();
 
-        $radioCount = 0;
-
         foreach ($this->paymentTypeDictionary as $radioPaymentValue => $translatedPaymentValue) {
-            $addAnother = ($radioCount !== count($this->paymentTypeDictionary) - 1);
-            $this->addPayment($radioPaymentValue, $translatedPaymentValue, $addAnother);
-            ++$radioCount;
+            $this->addPayment($radioPaymentValue, $translatedPaymentValue);
+            $this->addAnother('yes');
         }
+
+        $this->clickLink('Back');
     }
 
     /**
@@ -146,6 +146,8 @@ trait MoneyOutSectionTrait
         $radioPaymentValue = array_search($translatedPaymentValue, $this->paymentTypeDictionary);
 
         $this->addPayment($radioPaymentValue, $translatedPaymentValue);
+
+        $this->addAnother('no');
     }
 
     /**
@@ -177,14 +179,12 @@ trait MoneyOutSectionTrait
         $this->expectedResultsDisplayedSimplified(null, false, true);
     }
 
-    private function addPayment(string $radioPaymentValue, string $translatedPaymentValue, ?bool $addAnother = false)
+    private function addPayment(string $radioPaymentValue, string $translatedPaymentValue)
     {
         $this->chooseOption('account[category]', $radioPaymentValue, 'addPayment-'.$translatedPaymentValue, $translatedPaymentValue);
         $this->pressButton('Save and continue');
 
         $this->fillInPaymentDetails($translatedPaymentValue, $this->faker->sentence(rand(5, 50)), mt_rand(0, 999));
-
-        $this->addAnother($addAnother ? 'yes' : 'no');
     }
 
     private function fillInPaymentDetails(string $translatedPaymentValue, ?string $paymentDescription = null, ?int $paymentAmount = null)
