@@ -59,7 +59,8 @@ class ClientBenefitsCheckFactory
                     $incomeType = 'report' === $reportOrNdr ? new IncomeReceivedOnClientsBehalf() :
                         new NdrIncomeReceivedOnClientsBehalf();
 
-                    $incomeType->setIncomeType($incomeTypeData['income_type'])
+                    $incomeType
+                        ->setIncomeType($incomeTypeData['income_type'])
                         ->setAmount($incomeTypeData['amount']);
                 } else {
                     $incomeType = $clientBenefitsCheck->getTypesOfIncomeReceivedOnClientsBehalf()->filter(function (IncomeReceivedOnClientsBehalfInterface $income) use ($incomeTypeData) {
