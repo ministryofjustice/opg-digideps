@@ -14,6 +14,7 @@ use App\Repository\NdrRepository;
 use App\Repository\ReportRepository;
 use DateTime;
 use Ramsey\Uuid\Uuid;
+use RuntimeException;
 
 class ClientBenefitsCheckFactory
 {
@@ -66,6 +67,15 @@ class ClientBenefitsCheckFactory
                     $incomeType = $clientBenefitsCheck->getTypesOfIncomeReceivedOnClientsBehalf()->filter(function (IncomeReceivedOnClientsBehalfInterface $income) use ($incomeTypeData) {
                         return $income->getId()->toString() === $incomeTypeData['id'];
                     })->first();
+
+                    if (false === $incomeType) {
+                        $message = sprintf(
+                            'IncomeReceivedOnClientsBehalf with id "%s" was not associated with the ClientBenefitsCheck - cannot build entity',
+                            $incomeTypeData['id']
+                        );
+
+                        throw new RuntimeException($message);
+                    }
 
                     $incomeType
                         ->setIncomeType($incomeTypeData['income_type'])
