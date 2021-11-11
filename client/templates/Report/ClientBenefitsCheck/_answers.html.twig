@@ -20,6 +20,11 @@
                 <dd class="govuk-summary-list__value">
                     {{ 'summaryPage.table.benefitsCheck.column2Title' | trans(transOptions, translationDomain) }}
                 </dd>
+                {% if showActions %}
+                    <dd class="govuk-summary-list__value">
+                        {#                        No title for actions column#}
+                    </dd>
+                {% endif %}
             </div>
             <div class="govuk-summary-list__row ">
                 <dt class="govuk-summary-list__key">
@@ -35,6 +40,18 @@
                         {{ ('form.whenLastChecked.choices.' ~ report.clientBenefitsCheck.whenLastCheckedEntitlement) | trans(transOptions, translationDomain) }}
                     {% endif %}
                 </dd>
+                {% if showActions %}
+                    <dd class="govuk-summary-list__value govuk-!-text-align-right">
+                        <span>
+                            <a
+                                href="{{ path('client_benefits_check_step', { 'reportId': report.id, 'step': 1, 'reportOrNdr': reportOrNdr }) }}?from=summary"
+                                class="govuk-link"
+                            >
+                                {{ 'edit' | trans({}, 'common' ) }} <span class="govuk-visually-hidden">response to the question '{{ "stepPage.pageTitle.1.mainTitle" | trans(transOptions, translationDomain) }}'</span>
+                            </a>
+                        </span>
+                    </dd>
+                {% endif %}
             </div>
         </dl>
     </div>
@@ -52,6 +69,11 @@
                 <dd class="govuk-summary-list__value">
                     {{ 'summaryPage.table.doOthersReceiveIncome.column2Title' | trans(transOptions, translationDomain) }}
                 </dd>
+                {% if showActions %}
+                    <dd class="govuk-summary-list__value">
+                        {#                        No title for actions column#}
+                    </dd>
+                {% endif %}
             </div>
             <div class="govuk-summary-list__row ">
                 <dt class="govuk-summary-list__key">
@@ -65,6 +87,18 @@
                         {{ ('form.incomeOnClientsBehalf.choices.' ~ report.clientBenefitsCheck.doOthersReceiveIncomeOnClientsBehalf) | trans(transOptions, translationDomain) }}
                     {% endif %}
                 </dd>
+                {% if showActions %}
+                    <dd class="govuk-summary-list__value govuk-!-text-align-right">
+                        <span>
+                            <a
+                                href="{{ path('client_benefits_check_step', { 'reportId': report.id, 'step': 2, 'reportOrNdr': reportOrNdr }) }}?from=summary"
+                                class="govuk-link"
+                            >
+                                {{ 'edit' | trans({}, 'common' ) }} <span class="govuk-visually-hidden">response to the question '{{ "stepPage.pageTitle.2.mainTitle" | trans(transOptions, translationDomain) }}'</span>
+                            </a>
+                        </span>
+                    </dd>
+                {% endif %}
             </div>
         </dl>
     </div>
@@ -81,7 +115,11 @@
                     <div class="moj-page-header-actions__actions">
                         <div class="moj-button-menu">
                             <div class="moj-button-menu__wrapper">
-                                <a href="{{ path('client_benefits_check_step', { 'reportId': report.id, 'step': 3, 'reportOrNdr': reportOrNdr }) }}" role="button" class="govuk-button moj-button-menu__item govuk-button--secondary moj-page-header-actions__action" data-module="govuk-button">
+                                <a
+                                    href="{{ path('client_benefits_check_step', { 'reportId': report.id, 'step': 3, 'reportOrNdr': reportOrNdr }) }}?from=summary"
+                                    role="button"
+                                    class="govuk-button moj-button-menu__item govuk-button--secondary moj-page-header-actions__action" data-module="govuk-button"
+                                >
                                     {{ ('summaryPage.addIncomeButtonText') | trans }}
                                 </a>
                             </div>
@@ -117,10 +155,26 @@
                                 {{ income.amount | format_currency('GBP') }}
                             {% endif %}
                         </dd>
-                        <dd class="govuk-summary-list__value">
-                            <span><a href="{{ path('client_benefits_check_step', { 'reportId': report.id, 'step': 3, 'reportOrNdr': reportOrNdr }) }}" class="govuk-link">Edit</a></span>
-                            <span><a href="{{ path('client_benefits_check_remove_income_type', { 'reportId': report.id, 'incomeTypeId': income.id, 'reportOrNdr': reportOrNdr }) }}" class="govuk-link">Remove</a></span>
-                        </dd>
+                        {% if showActions %}
+                            <dd class="govuk-summary-list__value govuk-!-text-align-right">
+                                <span>
+                                    <a
+                                        href="{{ path('client_benefits_check_step', { 'reportId': report.id, 'step': 3, 'reportOrNdr': reportOrNdr }) }}"
+                                        class="govuk-link"
+                                    >
+                                        {{ 'edit' | trans({}, 'common' ) }} <span class="govuk-visually-hidden">income type with description '{{ income.incomeType }}'</span>
+                                    </a>
+                                </span>
+                                    <span>
+                                    <a
+                                        href="{{ path('client_benefits_check_remove_income_type', { 'reportId': report.id, 'incomeTypeId': income.id, 'reportOrNdr': reportOrNdr }) }}"
+                                        class="govuk-link"
+                                    >
+                                        {{ 'remove' | trans({}, 'common' ) }} <span class="govuk-visually-hidden">income type with description '{{ income.incomeType }}'</span>
+                                    </a>
+                                </span>
+                            </dd>
+                        {% endif %}
                     </div>
                 {% endfor %}
             </dl>
