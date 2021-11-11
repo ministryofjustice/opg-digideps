@@ -13,6 +13,7 @@ use App\Entity\Report\IncomeReceivedOnClientsBehalf;
 use App\Repository\NdrRepository;
 use App\Repository\ReportRepository;
 use DateTime;
+use Doctrine\ORM\EntityManagerInterface;
 use Ramsey\Uuid\Uuid;
 use RuntimeException;
 
@@ -20,11 +21,13 @@ class ClientBenefitsCheckFactory
 {
     private ReportRepository $reportRepository;
     private NdrRepository $ndrRepository;
+    private EntityManagerInterface $em;
 
-    public function __construct(ReportRepository $reportRepository, NdrRepository $ndrRepository)
+    public function __construct(ReportRepository $reportRepository, NdrRepository $ndrRepository, EntityManagerInterface $em)
     {
         $this->reportRepository = $reportRepository;
         $this->ndrRepository = $ndrRepository;
+        $this->em = $em;
     }
 
     public function createFromFormData(array $formData, string $reportOrNdr, ?ClientBenefitsCheckInterface $existingEntity = null)
@@ -84,6 +87,18 @@ class ClientBenefitsCheckFactory
 
                 $clientBenefitsCheck->addTypeOfIncomeReceivedOnClientsBehalf($incomeType);
             }
+        }
+
+        // Remove any existing incomes in case user has changed the form response after adding income
+        if ('yes' !== $formData['do_others_receive_income_on_clients_behalf'] &&
+            !empty($clientBenefitsCheck->getTypesOfIncomeReceivedOnClientsBehalf())) {
+            foreach ($clientBenefitsCheck->getTypesOfIncomeReceivedOnClientsBehalf() as $incomeType) {
+                $this->em->remove($incomeType);
+            }
+
+            $this->em->flush();
+
+            $clientBenefitsCheck->emptyTypeOfIncomeReceivedOnClientsBehalf();
         }
 
         return $clientBenefitsCheck;

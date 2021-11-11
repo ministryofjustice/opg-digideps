@@ -186,6 +186,13 @@ class ClientBenefitsCheck implements ClientBenefitsCheckInterface
         return $this;
     }
 
+    public function emptyTypeOfIncomeReceivedOnClientsBehalf(): ClientBenefitsCheck
+    {
+        $this->typesOfIncomeReceivedOnClientsBehalf = new ArrayCollection();
+
+        return $this;
+    }
+
     public function getCreated(): DateTime
     {
         return $this->created;
