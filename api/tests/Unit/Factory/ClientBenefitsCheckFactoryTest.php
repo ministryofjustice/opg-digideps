@@ -21,66 +21,67 @@ use ReflectionClass;
 
 class ClientBenefitsCheckFactoryTest extends TestCase
 {
+    private ?ClientBenefitsCheck $incomeClientBenefitsCheck;
+
+    private ?float $incomeAmount;
+
+    private ?int $reportId;
+
+    private ?string $id;
+    private ?string $created;
+    private ?string $whenLastCheckedEntitlement;
+    private ?string $dateLastCheckedEntitlement;
+    private ?string $neverCheckedExplanation;
+    private ?string $doOthersReceiveIncomeOnClientsBehalf;
+    private ?string $dontKnowIncomeExplanation;
+    private ?string $incomeId;
+    private ?string $incomeCreated;
+    private ?string $incomeType;
+    private ?string $incomeAmountDontKnow;
+
+    public function setUp(): void
+    {
+        $this->reportId = 1436;
+        $this->id = '8e3aaf2c-3145-4e07-b64b-37702323c6f9';
+        $this->created = (new DateTime())->format('Y-m-d');
+        $this->whenLastCheckedEntitlement = 'haveChecked';
+        $this->dateLastCheckedEntitlement = (new DateTime())->format('Y-m-d');
+        $this->neverCheckedExplanation = null;
+        $this->doOthersReceiveIncomeOnClientsBehalf = 'yes';
+        $this->dontKnowIncomeExplanation = null;
+
+        $this->incomeId = '5d80a2f3-4f2c-4e0f-9709-2d201102cb13';
+        $this->incomeCreated = (new DateTime())->format('Y-m-d');
+        $this->incomeClientBenefitsCheck = null;
+        $this->incomeType = 'Universal Credit';
+        $this->incomeAmount = 100.5;
+        $this->incomeAmountDontKnow = null;
+    }
+
     /** @test */
     public function createFromFormDataExistingEntity()
     {
-        $reportId = 1436;
-        $id = '8e3aaf2c-3145-4e07-b64b-37702323c6f9';
-        $created = '2021-11-11';
-        $whenLastCheckedEntitlement = 'haveChecked';
-        $dateLastCheckedEntitlement = '2021-11-11';
-        $neverCheckedExplanation = null;
-        $doOthersReceiveIncomeOnClientsBehalf = 'yes';
-        $dontKnowIncomeExplanation = null;
-
-        $incomeId = '5d80a2f3-4f2c-4e0f-9709-2d201102cb13';
-        $incomeCreated = '2021-11-11';
-        $incomeClientBenefitsCheck = null;
-        $incomeType = 'Universal Credit';
-        $incomeAmount = 100.5;
-        $incomeAmountDontKnow = null;
-
-        $validData = [
-            'report_id' => $reportId,
-            'id' => $id,
-            'created' => $created,
-            'when_last_checked_entitlement' => $whenLastCheckedEntitlement,
-            'date_last_checked_entitlement' => $dateLastCheckedEntitlement,
-            'never_checked_explanation' => $neverCheckedExplanation,
-            'do_others_receive_income_on_clients_behalf' => $doOthersReceiveIncomeOnClientsBehalf,
-            'dont_know_income_explanation' => $dontKnowIncomeExplanation,
-            'types_of_income_received_on_clients_behalf' => [
-                0 => [
-                    'id' => $incomeId,
-                    'created' => $incomeCreated,
-                    'client_benefits_check' => $incomeClientBenefitsCheck,
-                    'income_type' => $incomeType,
-                    'amount' => $incomeAmount,
-                    'amount_dont_know' => $incomeAmountDontKnow,
-                ],
-            ],
-            'report' => [],
-        ];
+        $existingEntity = true;
+        $validData = $this->generateValidFormData($existingEntity);
 
         $report = new Report(new Client(), Report::LAY_PFA_HIGH_ASSETS_TYPE, new DateTime(), new DateTime());
-        $this->set($report, $reportId);
+        $this->set($report, $this->reportId);
 
         /** @var ObjectProphecy|ReportRepository $reportRepo */
         $reportRepo = self::prophesize(ReportRepository::class);
-        $reportRepo->find($reportId)->shouldBeCalled()->willReturn($report);
-
         $ndrRepo = self::prophesize(NdrRepository::class);
-
         $em = self::prophesize(EntityManagerInterface::class);
+
+        $reportRepo->find($this->reportId)->shouldBeCalled()->willReturn($report);
 
         $sut = new ClientBenefitsCheckFactory($reportRepo->reveal(), $ndrRepo->reveal(), $em->reveal());
 
         $existingIncome = (new IncomeReceivedOnClientsBehalf())
-            ->setId(Uuid::fromString($incomeId));
+            ->setId(Uuid::fromString($this->incomeId));
 
         $existingClientBenefitsCheck = (new ClientBenefitsCheck())
             ->addTypeOfIncomeReceivedOnClientsBehalf($existingIncome)
-            ->setId(Uuid::fromString($id));
+            ->setId(Uuid::fromString($this->id));
 
         $processedClientBenefitsCheck = $sut->createFromFormData(
             $validData,
@@ -88,71 +89,37 @@ class ClientBenefitsCheckFactoryTest extends TestCase
             $existingClientBenefitsCheck
         );
 
-        self::assertEquals($reportId, $processedClientBenefitsCheck->getReport()->getId());
-        self::assertEquals($id, $processedClientBenefitsCheck->getId()->toString());
-        self::assertEquals($created, $processedClientBenefitsCheck->getCreated()->format('Y-m-d'));
-        self::assertEquals($whenLastCheckedEntitlement, $processedClientBenefitsCheck->getWhenLastCheckedEntitlement());
-        self::assertEquals($dateLastCheckedEntitlement, $processedClientBenefitsCheck->getDateLastCheckedEntitlement()->format('Y-m-d'));
-        self::assertEquals($neverCheckedExplanation, $processedClientBenefitsCheck->getNeverCheckedExplanation());
-        self::assertEquals($doOthersReceiveIncomeOnClientsBehalf, $processedClientBenefitsCheck->getDoOthersReceiveIncomeOnClientsBehalf());
-        self::assertEquals($dontKnowIncomeExplanation, $processedClientBenefitsCheck->getDontKnowIncomeExplanation());
+        self::assertEquals($this->reportId, $processedClientBenefitsCheck->getReport()->getId());
+        self::assertEquals($this->id, $processedClientBenefitsCheck->getId()->toString());
+        self::assertEquals($this->created, $processedClientBenefitsCheck->getCreated()->format('Y-m-d'));
+        self::assertEquals($this->whenLastCheckedEntitlement, $processedClientBenefitsCheck->getWhenLastCheckedEntitlement());
+        self::assertEquals($this->dateLastCheckedEntitlement, $processedClientBenefitsCheck->getDateLastCheckedEntitlement()->format('Y-m-d'));
+        self::assertEquals($this->neverCheckedExplanation, $processedClientBenefitsCheck->getNeverCheckedExplanation());
+        self::assertEquals($this->doOthersReceiveIncomeOnClientsBehalf, $processedClientBenefitsCheck->getDoOthersReceiveIncomeOnClientsBehalf());
+        self::assertEquals($this->dontKnowIncomeExplanation, $processedClientBenefitsCheck->getDontKnowIncomeExplanation());
 
         /** @var IncomeReceivedOnClientsBehalf $income */
         $income = $processedClientBenefitsCheck->getTypesOfIncomeReceivedOnClientsBehalf()->first();
-        self::assertEquals($incomeId, $income->getId()->toString());
-        self::assertEquals($incomeCreated, $income->getCreated()->format('Y-m-d'));
+
+        self::assertEquals($this->incomeId, $income->getId()->toString());
+        self::assertEquals($this->incomeCreated, $income->getCreated()->format('Y-m-d'));
         self::assertEquals($existingClientBenefitsCheck, $income->getClientBenefitsCheck());
-        self::assertEquals($incomeType, $income->getIncomeType());
-        self::assertEquals($incomeAmount, $income->getAmount());
+        self::assertEquals($this->incomeType, $income->getIncomeType());
+        self::assertEquals($this->incomeAmount, $income->getAmount());
     }
 
     /** @test */
     public function createFromFormDataNewEntity()
     {
-        $reportId = 1436;
-        $id = null;
-        $created = '2021-11-11';
-        $whenLastCheckedEntitlement = 'haveChecked';
-        $dateLastCheckedEntitlement = '2021-11-11';
-        $neverCheckedExplanation = null;
-        $doOthersReceiveIncomeOnClientsBehalf = 'yes';
-        $dontKnowIncomeExplanation = null;
-
-        $incomeId = null;
-        $incomeCreated = '2021-11-11';
-        $incomeClientBenefitsCheck = null;
-        $incomeType = 'Universal Credit';
-        $incomeAmount = 100.5;
-        $incomeAmountDontKnow = null;
-
-        $validData = [
-            'report_id' => $reportId,
-            'id' => $id,
-            'created' => $created,
-            'when_last_checked_entitlement' => $whenLastCheckedEntitlement,
-            'date_last_checked_entitlement' => $dateLastCheckedEntitlement,
-            'never_checked_explanation' => $neverCheckedExplanation,
-            'do_others_receive_income_on_clients_behalf' => $doOthersReceiveIncomeOnClientsBehalf,
-            'dont_know_income_explanation' => $dontKnowIncomeExplanation,
-            'types_of_income_received_on_clients_behalf' => [
-                0 => [
-                    'id' => $incomeId,
-                    'created' => $incomeCreated,
-                    'client_benefits_check' => $incomeClientBenefitsCheck,
-                    'income_type' => $incomeType,
-                    'amount' => $incomeAmount,
-                    'amount_dont_know' => $incomeAmountDontKnow,
-                ],
-            ],
-            'report' => [],
-        ];
+        $existingEntity = false;
+        $validData = $this->generateValidFormData($existingEntity);
 
         $report = new Report(new Client(), Report::LAY_PFA_HIGH_ASSETS_TYPE, new DateTime(), new DateTime());
-        $this->set($report, $reportId);
+        $this->set($report, $this->reportId);
 
         /** @var ObjectProphecy|ReportRepository $reportRepo */
         $reportRepo = self::prophesize(ReportRepository::class);
-        $reportRepo->find($reportId)->shouldBeCalled()->willReturn($report);
+        $reportRepo->find($this->reportId)->shouldBeCalled()->willReturn($report);
 
         $ndrRepo = self::prophesize(NdrRepository::class);
 
@@ -165,83 +132,48 @@ class ClientBenefitsCheckFactoryTest extends TestCase
             'report'
         );
 
-        self::assertEquals($reportId, $processedClientBenefitsCheck->getReport()->getId());
+        self::assertEquals($this->reportId, $processedClientBenefitsCheck->getReport()->getId());
         self::assertEquals(true, $processedClientBenefitsCheck->getId() instanceof UuidInterface);
-        self::assertEquals($created, $processedClientBenefitsCheck->getCreated()->format('Y-m-d'));
-        self::assertEquals($whenLastCheckedEntitlement, $processedClientBenefitsCheck->getWhenLastCheckedEntitlement());
-        self::assertEquals($dateLastCheckedEntitlement, $processedClientBenefitsCheck->getDateLastCheckedEntitlement()->format('Y-m-d'));
-        self::assertEquals($neverCheckedExplanation, $processedClientBenefitsCheck->getNeverCheckedExplanation());
-        self::assertEquals($doOthersReceiveIncomeOnClientsBehalf, $processedClientBenefitsCheck->getDoOthersReceiveIncomeOnClientsBehalf());
-        self::assertEquals($dontKnowIncomeExplanation, $processedClientBenefitsCheck->getDontKnowIncomeExplanation());
+        self::assertEquals($this->created, $processedClientBenefitsCheck->getCreated()->format('Y-m-d'));
+        self::assertEquals($this->whenLastCheckedEntitlement, $processedClientBenefitsCheck->getWhenLastCheckedEntitlement());
+        self::assertEquals($this->dateLastCheckedEntitlement, $processedClientBenefitsCheck->getDateLastCheckedEntitlement()->format('Y-m-d'));
+        self::assertEquals($this->neverCheckedExplanation, $processedClientBenefitsCheck->getNeverCheckedExplanation());
+        self::assertEquals($this->doOthersReceiveIncomeOnClientsBehalf, $processedClientBenefitsCheck->getDoOthersReceiveIncomeOnClientsBehalf());
+        self::assertEquals($this->dontKnowIncomeExplanation, $processedClientBenefitsCheck->getDontKnowIncomeExplanation());
 
         /** @var IncomeReceivedOnClientsBehalf $income */
         $income = $processedClientBenefitsCheck->getTypesOfIncomeReceivedOnClientsBehalf()->first();
+
         self::assertEquals(true, $income->getId() instanceof UuidInterface);
-        self::assertEquals($incomeCreated, $income->getCreated()->format('Y-m-d'));
+        self::assertEquals($this->incomeCreated, $income->getCreated()->format('Y-m-d'));
         self::assertEquals(true, $income->getClientBenefitsCheck() instanceof ClientBenefitsCheck);
-        self::assertEquals($incomeType, $income->getIncomeType());
-        self::assertEquals($incomeAmount, $income->getAmount());
+        self::assertEquals($this->incomeType, $income->getIncomeType());
+        self::assertEquals($this->incomeAmount, $income->getAmount());
     }
 
     /** @test */
     public function createFromFormDataExistingEntityNonYesDoOthersGetIncomeRemovesAllIncomeTypes()
     {
-        $reportId = 1436;
-        $id = '8e3aaf2c-3145-4e07-b64b-37702323c6f9';
-        $created = '2021-11-11';
-        $whenLastCheckedEntitlement = 'haveChecked';
-        $dateLastCheckedEntitlement = '2021-11-11';
-        $neverCheckedExplanation = null;
-        $doOthersReceiveIncomeOnClientsBehalf = 'no';
-        $dontKnowIncomeExplanation = null;
-
-        $incomeId = '5d80a2f3-4f2c-4e0f-9709-2d201102cb13';
-        $incomeCreated = '2021-11-11';
-        $incomeClientBenefitsCheck = null;
-        $incomeType = 'Universal Credit';
-        $incomeAmount = 100.5;
-        $incomeAmountDontKnow = null;
-
-        $validData = [
-            'report_id' => $reportId,
-            'id' => $id,
-            'created' => $created,
-            'when_last_checked_entitlement' => $whenLastCheckedEntitlement,
-            'date_last_checked_entitlement' => $dateLastCheckedEntitlement,
-            'never_checked_explanation' => $neverCheckedExplanation,
-            'do_others_receive_income_on_clients_behalf' => $doOthersReceiveIncomeOnClientsBehalf,
-            'dont_know_income_explanation' => $dontKnowIncomeExplanation,
-            'types_of_income_received_on_clients_behalf' => [
-                0 => [
-                    'id' => $incomeId,
-                    'created' => $incomeCreated,
-                    'client_benefits_check' => $incomeClientBenefitsCheck,
-                    'income_type' => $incomeType,
-                    'amount' => $incomeAmount,
-                    'amount_dont_know' => $incomeAmountDontKnow,
-                ],
-            ],
-            'report' => [],
-        ];
+        $validData = $this->generateValidFormDataRemoveIncomes();
 
         $report = new Report(new Client(), Report::LAY_PFA_HIGH_ASSETS_TYPE, new DateTime(), new DateTime());
-        $this->set($report, $reportId);
+        $this->set($report, $this->reportId);
 
         /** @var ObjectProphecy|ReportRepository $reportRepo */
         $reportRepo = self::prophesize(ReportRepository::class);
-        $reportRepo->find($reportId)->shouldBeCalled()->willReturn($report);
+        $reportRepo->find($this->reportId)->shouldBeCalled()->willReturn($report);
 
         $ndrRepo = self::prophesize(NdrRepository::class);
 
         $existingIncome = (new IncomeReceivedOnClientsBehalf())
-            ->setId(Uuid::fromString($incomeId))
-            ->setCreated(new DateTime($incomeCreated))
-            ->setAmount($incomeAmount)
-            ->setIncomeType($incomeType);
+            ->setId(Uuid::fromString($this->incomeId))
+            ->setCreated(new DateTime($this->incomeCreated))
+            ->setAmount($this->incomeAmount)
+            ->setIncomeType($this->incomeType);
 
         $existingClientBenefitsCheck = (new ClientBenefitsCheck())
             ->addTypeOfIncomeReceivedOnClientsBehalf($existingIncome)
-            ->setId(Uuid::fromString($id));
+            ->setId(Uuid::fromString($this->id));
 
         $existingIncome->setClientBenefitsCheck($existingClientBenefitsCheck);
 
@@ -260,6 +192,39 @@ class ClientBenefitsCheckFactoryTest extends TestCase
 
         self::assertEquals(true, $processedClientBenefitsCheck instanceof ClientBenefitsCheck);
         self::assertEquals(0, $processedClientBenefitsCheck->getTypesOfIncomeReceivedOnClientsBehalf()->count());
+    }
+
+    private function generateValidFormData(bool $existingEntity): array
+    {
+        return [
+            'report_id' => $this->reportId,
+            'id' => $existingEntity ? $this->id : null,
+            'created' => $this->created,
+            'when_last_checked_entitlement' => $this->whenLastCheckedEntitlement,
+            'date_last_checked_entitlement' => $this->dateLastCheckedEntitlement,
+            'never_checked_explanation' => $this->neverCheckedExplanation,
+            'do_others_receive_income_on_clients_behalf' => $this->doOthersReceiveIncomeOnClientsBehalf,
+            'dont_know_income_explanation' => $this->dontKnowIncomeExplanation,
+            'types_of_income_received_on_clients_behalf' => [
+                0 => [
+                    'id' => $existingEntity ? $this->incomeId : null,
+                    'created' => $this->incomeCreated,
+                    'client_benefits_check' => $this->incomeClientBenefitsCheck,
+                    'income_type' => $this->incomeType,
+                    'amount' => $this->incomeAmount,
+                    'amount_dont_know' => $this->incomeAmountDontKnow,
+                ],
+            ],
+            'report' => [],
+        ];
+    }
+
+    private function generateValidFormDataRemoveIncomes()
+    {
+        $data = $this->generateValidFormData(true);
+        $data['do_others_receive_income_on_clients_behalf'] = 'no';
+
+        return $data;
     }
 
     private function set($entity, $value, $propertyName = 'id')

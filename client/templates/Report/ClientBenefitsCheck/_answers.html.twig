@@ -91,7 +91,7 @@
                     <dd class="govuk-summary-list__value govuk-!-text-align-right">
                         <span>
                             <a
-                                href="{{ path('client_benefits_check_step', { 'reportId': report.id, 'step': 2, 'reportOrNdr': reportOrNdr }) }}?from=summary"
+                                href="{{ path('client_benefits_check_step', { 'reportId': report.id, 'step': 2, 'reportOrNdr': reportOrNdr }) }}"
                                 class="govuk-link"
                             >
                                 {{ 'edit' | trans({}, 'common' ) }} <span class="govuk-visually-hidden">response to the question '{{ "stepPage.pageTitle.2.mainTitle" | trans(transOptions, translationDomain) }}'</span>
