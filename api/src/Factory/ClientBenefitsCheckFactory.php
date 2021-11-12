@@ -89,7 +89,6 @@ class ClientBenefitsCheckFactory
 
         return $clientBenefitsCheck
             ->setReport($report)
-            ->setCreated(new DateTime())
             ->setDateLastCheckedEntitlement($dateLastChecked)
             ->setNeverCheckedExplanation($formData['never_checked_explanation'])
             ->setDontKnowIncomeExplanation($formData['dont_know_income_explanation'])

@@ -11,7 +11,6 @@ use Doctrine\Common\Collections\Collection;
 use Doctrine\ORM\Mapping as ORM;
 use Doctrine\ORM\Mapping\OrderBy;
 use Gedmo\Mapping\Annotation as Gedmo;
-use InvalidArgumentException;
 use JMS\Serializer\Annotation as JMS;
 use Ramsey\Uuid\Doctrine\UuidGenerator;
 use Ramsey\Uuid\Uuid;
@@ -224,10 +223,6 @@ class ClientBenefitsCheck implements ClientBenefitsCheckInterface
 
     public function setNeverCheckedExplanation(?string $neverCheckedExplanation): ClientBenefitsCheck
     {
-        if (!is_null($neverCheckedExplanation) && self::WHEN_CHECKED_IVE_NEVER_CHECKED !== $this->getWhenLastCheckedEntitlement()) {
-            throw new InvalidArgumentException('Explanation can only be set if the user has never checked entitlements');
-        }
-
         $this->neverCheckedExplanation = $neverCheckedExplanation;
 
         return $this;
