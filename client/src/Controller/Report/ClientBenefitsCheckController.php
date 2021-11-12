@@ -29,6 +29,7 @@ class ClientBenefitsCheckController extends AbstractController
     private static array $jmsGroups = [
         'client-benefits-check',
         'client-benefits-check-state',
+        'client-name',
     ];
 
     private ReportApi $reportApi;
