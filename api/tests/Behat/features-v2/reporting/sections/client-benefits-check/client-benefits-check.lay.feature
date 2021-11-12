@@ -70,7 +70,7 @@ Feature: Client benefits check - Lay users
         And I add 3 income types from the summary page
         Then the client benefits check summary page should contain the details I entered
 
-    @lay-combined-high-not-started @acs
+    @lay-combined-high-not-started
     Scenario: A deputy edits details of a completed form
         Given a Lay Deputy has not started a Combined High Assets report
         And the deputies 'current' report ends and is due 'more' than 60 days after the client benefits check feature flag date
