@@ -50,7 +50,7 @@ class ClientBenefitsCheckFactory
      * If a user has entered income types but then changes the answer to the question on if others receive
      * income on clients' behalf we should remove the income details provided as they are no longer relevant.
      */
-    private function removeIncomesIfUserChangesMind(array $formData, ClientBenefitsCheck $clientBenefitsCheck)
+    private function removeIncomesIfUserChangesMind(array $formData, ClientBenefitsCheckInterface $clientBenefitsCheck)
     {
         if ('yes' !== $formData['do_others_receive_income_on_clients_behalf'] &&
             !empty($clientBenefitsCheck->getTypesOfIncomeReceivedOnClientsBehalf())) {
@@ -90,11 +90,11 @@ class ClientBenefitsCheckFactory
         return $clientBenefitsCheck
             ->setReport($report)
             ->setCreated(new DateTime())
-            ->setWhenLastCheckedEntitlement($formData['when_last_checked_entitlement'])
             ->setDateLastCheckedEntitlement($dateLastChecked)
             ->setNeverCheckedExplanation($formData['never_checked_explanation'])
-            ->setDoOthersReceiveIncomeOnClientsBehalf($formData['do_others_receive_income_on_clients_behalf'])
-            ->setDontKnowIncomeExplanation($formData['dont_know_income_explanation']);
+            ->setDontKnowIncomeExplanation($formData['dont_know_income_explanation'])
+            ->setWhenLastCheckedEntitlement($formData['when_last_checked_entitlement'])
+            ->setDoOthersReceiveIncomeOnClientsBehalf($formData['do_others_receive_income_on_clients_behalf']);
     }
 
     private function hydrateIncomeReceivedOnClientsBehalf(

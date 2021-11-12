@@ -144,6 +144,14 @@ class ClientBenefitsCheck implements ClientBenefitsCheckInterface
     {
         $this->whenLastCheckedEntitlement = $whenLastCheckedEntitlement;
 
+        if (self::WHEN_CHECKED_IVE_NEVER_CHECKED !== $whenLastCheckedEntitlement) {
+            $this->setNeverCheckedExplanation(null);
+        }
+
+        if (self::WHEN_CHECKED_I_HAVE_CHECKED !== $whenLastCheckedEntitlement) {
+            $this->setDateLastCheckedEntitlement(null);
+        }
+
         return $this;
     }
 
@@ -155,6 +163,10 @@ class ClientBenefitsCheck implements ClientBenefitsCheckInterface
     public function setDoOthersReceiveIncomeOnClientsBehalf(?string $doOthersReceiveIncomeOnClientsBehalf): ClientBenefitsCheck
     {
         $this->doOthersReceiveIncomeOnClientsBehalf = $doOthersReceiveIncomeOnClientsBehalf;
+
+        if (self::OTHER_INCOME_DONT_KNOW !== $doOthersReceiveIncomeOnClientsBehalf) {
+            $this->setDontKnowIncomeExplanation(null);
+        }
 
         return $this;
     }
@@ -170,6 +182,13 @@ class ClientBenefitsCheck implements ClientBenefitsCheckInterface
             $this->typesOfIncomeReceivedOnClientsBehalf->add($incomeReceivedOnClientsBehalf);
             $incomeReceivedOnClientsBehalf->setClientBenefitsCheck($this);
         }
+
+        return $this;
+    }
+
+    public function emptyTypeOfIncomeReceivedOnClientsBehalf(): ClientBenefitsCheck
+    {
+        $this->typesOfIncomeReceivedOnClientsBehalf = new ArrayCollection();
 
         return $this;
     }
