@@ -211,7 +211,7 @@ class ClientBenefitsCheckController extends AbstractController
      */
     public function removeIncomeType(Request $request, int $reportId, string $incomeTypeId, string $reportOrNdr)
     {
-        $report = ('ndr' === $reportOrNdr) ? $this->ndrApi->getNdr($reportId) :
+        $report = ('ndr' === $reportOrNdr) ? $this->ndrApi->getNdr($reportId, self::$jmsGroups) :
             $this->reportApi->getReportIfNotSubmitted($reportId, self::$jmsGroups);
 
         foreach ($report->getClientBenefitsCheck()->getTypesOfIncomeReceivedOnClientsBehalf() as $incomeType) {
@@ -229,7 +229,7 @@ class ClientBenefitsCheckController extends AbstractController
         $form->handleRequest($request);
 
         if ($form->isSubmitted() && $form->isValid()) {
-            $this->incomeTypeApi->deleteIncomeType($incomeTypeId);
+            $this->incomeTypeApi->deleteIncomeType($reportOrNdr, $incomeTypeId);
 
             $this->addFlash(
                 'notice',
