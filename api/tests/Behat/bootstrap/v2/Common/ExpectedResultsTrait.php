@@ -317,11 +317,7 @@ trait ExpectedResultsTrait
 
     private function throwMissingAnswersException()
     {
-        $foundText = !empty($this->foundAnswers) ? json_encode($this->foundAnswers, JSON_PRETTY_PRINT) : 'No form values found';
-        $missingText = json_encode($this->missingAnswers, JSON_PRETTY_PRINT);
-
-        $foundText = str_replace('\u00a3', '£', $foundText);
-        $missingText = str_replace('\u00a3', '£', $missingText);
+        [$foundText, $missingText] = $this->formatFoundAndMissingAnswers();
 
         $failureMessage = <<<MSG
 The following form answers were found on the page:
@@ -340,6 +336,17 @@ $this->tableHtml
 MSG;
 
         throw new BehatException($failureMessage);
+    }
+
+    private function formatFoundAndMissingAnswers()
+    {
+        $foundText = !empty($this->foundAnswers) ? json_encode($this->foundAnswers, JSON_PRETTY_PRINT) : 'No form values found';
+        $missingText = json_encode($this->missingAnswers, JSON_PRETTY_PRINT);
+
+        $foundText = str_replace('\u00a3', '£', $foundText);
+        $missingText = str_replace('\u00a3', '£', $missingText);
+
+        return [$foundText, $missingText];
     }
 
     private function throwDebugException(string $sectionName)

@@ -70,16 +70,20 @@ Feature: Client benefits check - Lay users
         And I add 3 income types from the summary page
         Then the client benefits check summary page should contain the details I entered
 
-    @lay-combined-high-not-started
-    Scenario: A deputy edits details of an income other people receive on the client's behalf
+    @lay-combined-high-not-started @acs
+    Scenario: A deputy edits details of a completed form
         Given a Lay Deputy has not started a Combined High Assets report
         And the deputies 'current' report ends and is due 'more' than 60 days after the client benefits check feature flag date
         When I navigate to and start the client benefits check report section
-        And I confirm I checked the clients benefit entitlement on '01/01/2021'
+        And I confirm I have never checked the benefits the client is entitled to and provide a reason
         And I confirm others receive income on the clients behalf
         And I add 1 type of income with values
         And I have no further types of income to add
         And I 'edit' the last type of income I added
+        Then the client benefits check summary page should contain the details I entered
+        Given I edit my response to do others receive income on a clients behalf to 'no'
+        Then the client benefits check summary page should contain my updated response and no income types
+        Given I edit my response to when I last checked the clients benefit entitlement to currently checking
         Then the client benefits check summary page should contain the details I entered
 
     @lay-combined-high-not-started
