@@ -327,7 +327,7 @@ class UserController extends AbstractController
                 $failureData = json_decode($e->getData()['message'], true);
 
                 // If response from API is not valid json just log the message
-                $failureData = $failureData ?: ['failure_message' => $e->getMessage()];
+                $failureData = is_array($failureData) ?: ['failure_message' => $failureData];
 
                 $this->logger->notice('', (new AuditEvents($this->dateTimeProvider))->selfRegistrationFailed($failureData));
             }

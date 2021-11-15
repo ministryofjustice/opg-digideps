@@ -52,7 +52,7 @@ class UserRegistrationService
         // Check the user doesn't already exist
         $existingUser = $this->em->getRepository('App\Entity\User')->findOneByEmail($selfRegisterData->getEmail());
         if ($existingUser) {
-            throw new \RuntimeException(json_encode("User with email {$existingUser->getEmail()} already exists."), 422);
+            throw new \RuntimeException(json_encode(sprintf('User with email %s already exists.', $existingUser->getEmail())), 422);
         }
 
         // Check the client is unique and has no deputies attached

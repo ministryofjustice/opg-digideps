@@ -238,7 +238,7 @@ final class AuditEvents
             'trigger' => AuditEvents::TRIGGER_DEPUTY_USER_SELF_REGISTER_ATTEMPT,
         ] + $failureData;
 
-        return $event + $this->baseEvent(AuditEvents::EVENT_REPORT_RESUBMITTED);
+        return $event + $this->baseEvent(AuditEvents::EVENT_USER_SELF_REGISTER_FAILED);
     }
 
     private function baseEvent(string $eventName): array
