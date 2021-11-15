@@ -17,6 +17,7 @@ final class AuditEvents
     const EVENT_CLIENT_EMAIL_CHANGED = 'CLIENT_EMAIL_CHANGED';
     const EVENT_CLIENT_DELETED = 'CLIENT_DELETED';
     const EVENT_DEPUTY_DELETED = 'DEPUTY_DELETED';
+    const EVENT_USER_SELF_REGISTER_FAILED = 'USER_SELF_REGISTER_FAILED';
     const EVENT_ADMIN_DELETED = 'ADMIN_DELETED';
     const EVENT_REPORT_UNSUBMITTED = 'REPORT_UNSUBMITTED';
     const EVENT_REPORT_RESUBMITTED = 'REPORT_RESUBMITTED';
@@ -231,7 +232,7 @@ final class AuditEvents
         return $event + $this->baseEvent(AuditEvents::EVENT_REPORT_RESUBMITTED);
     }
 
-    public function selfRegistrationFailed(array $failureData)
+    public function selfRegistrationFailed(array $failureData): array
     {
         $event = [
             'trigger' => AuditEvents::TRIGGER_DEPUTY_USER_SELF_REGISTER_ATTEMPT,
