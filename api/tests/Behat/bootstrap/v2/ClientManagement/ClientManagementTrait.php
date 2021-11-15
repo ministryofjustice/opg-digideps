@@ -5,7 +5,6 @@ declare(strict_types=1);
 namespace App\Tests\Behat\v2\ClientManagement;
 
 use App\Entity\Client;
-use App\Entity\NamedDeputy;
 use App\Tests\Behat\BehatException;
 use App\Tests\Behat\v2\Common\UserDetails;
 use DateTime;
@@ -364,9 +363,7 @@ MESSAGE;
     {
         $this->assertInteractingWithUserIsSet();
 
-//        $namedDeputy = $this->em->getRepository(NamedDeputy::class)->findBy(['email1' => $this->interactingWithUserDetails->getNamedDeputyEmail()]);
         $client = $this->em->find(Client::class, $this->interactingWithUserDetails->getClientId());
-
         $client->setNamedDeputy(null);
 
         $this->em->persist($client);
