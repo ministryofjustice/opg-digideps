@@ -1,16 +1,16 @@
-<?php declare(strict_types=1);
+<?php
 
+declare(strict_types=1);
 
+use App\Event\AdminUserCreatedEvent;
 use App\Event\CoDeputyCreatedEvent;
 use App\Event\CoDeputyInvitedEvent;
 use App\Event\DeputyInvitedEvent;
 use App\Event\DeputySelfRegisteredEvent;
 use App\Event\OrgUserCreatedEvent;
-use App\Event\UserPasswordResetEvent;
-use App\Event\AdminUserCreatedEvent;
 use App\Event\UserDeletedEvent;
+use App\Event\UserPasswordResetEvent;
 use App\Event\UserUpdatedEvent;
-use App\EventDispatcher\EventDispatcherMock;
 use App\EventDispatcher\ObservableEventDispatcher;
 use App\Model\SelfRegisterData;
 use App\Service\Client\Internal\UserApi;
@@ -96,7 +96,7 @@ class UserApiTest extends TestCase
     {
         $userToCreate = UserHelpers::createUser();
 
-        $this->restClient->post('user', $userToCreate, ["admin_add_user"], 'User')->shouldBeCalled()->willReturn($userToCreate);
+        $this->restClient->post('user', $userToCreate, ['admin_add_user'], 'User')->shouldBeCalled()->willReturn($userToCreate);
 
         $userCreatedEvent = new AdminUserCreatedEvent($userToCreate);
         $this->eventDispatcher->dispatch($userCreatedEvent, 'admin.user.created')->shouldBeCalled();
@@ -218,7 +218,7 @@ class UserApiTest extends TestCase
     {
         $userToCreate = UserHelpers::createUser();
 
-        $this->restClient->post('user', $userToCreate, ["org_team_add"], 'User')->shouldBeCalled()->willReturn($userToCreate);
+        $this->restClient->post('user', $userToCreate, ['org_team_add'], 'User')->shouldBeCalled()->willReturn($userToCreate);
 
         $userCreatedEvent = new OrgUserCreatedEvent($userToCreate);
         $this->eventDispatcher->dispatch($userCreatedEvent, 'org.user.created')->shouldBeCalled();
