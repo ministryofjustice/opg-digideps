@@ -120,7 +120,17 @@ class SelfRegisterControllerTest extends AbstractTestController
             'ClientSecret' => API_TOKEN_DEPUTY,
         ]);
 
-        $this->assertStringContainsString('no matching record in casrec', $responseArray['message']);
+        $expectedErrorJson = json_encode([
+            'search_terms' => [
+                'caseNumber' => '12345600',
+                'clientLastname' => 'cl',
+                'deputySurname' => 'test',
+                'deputyPostcode' => 'sw2',
+            ],
+            'case_number_matches' => [],
+        ]);
+
+        $this->assertStringContainsString($expectedErrorJson, $responseArray['message']);
     }
 
     /**
@@ -179,5 +189,67 @@ class SelfRegisterControllerTest extends AbstractTestController
             ],
             'ClientSecret' => API_TOKEN_DEPUTY,
         ]);
+    }
+
+    /**
+     * @test
+     */
+    public function throwErrorForValidCaseNumberButDetailsNotMatching()
+    {
+        $casRec = new CasRec([
+            'Case' => '97643164',
+            'Surname' => 'Douglas',
+            'Deputy No' => 'DEP00199',
+            'Dep Surname' => 'Murphy',
+            'Dep Postcode' => 'SW1',
+            'Typeofrep' => 'OPG102',
+            'Corref' => 'L2',
+            'NDR' => 1,
+        ]);
+
+        $this->fixtures()->persist($casRec);
+        $this->fixtures()->flush();
+
+        $token = $this->login('deputy@example.org', 'DigidepsPass1234', API_TOKEN_DEPUTY);
+
+        $responseArray = $this->assertJsonRequest('POST', '/selfregister', [
+            'mustFail' => true,
+            'AuthToken' => $token,
+            'data' => [
+                'firstname' => 'Zac',
+                'lastname' => 'Tolley',
+                'email' => 'wrong@email.com',
+                'postcode' => 'SW1',
+                'client_firstname' => 'John',
+                'client_lastname' => 'Cross-Tolley',
+                'case_number' => '97643164',
+            ],
+            'ClientSecret' => API_TOKEN_DEPUTY,
+        ]);
+
+        $expectedErrorJson = json_encode([
+            'search_terms' => [
+                'caseNumber' => '97643164',
+                'clientLastname' => 'crosstolley',
+                'deputySurname' => 'tolley',
+                'deputyPostcode' => 'sw1',
+            ],
+            'case_number_matches' => [
+                 [
+                    'case_number' => '97643164',
+                    'client_lastname' => 'douglas',
+                    'deputy_no' => 'dep00199',
+                    'deputy_surname' => 'murphy',
+                    'deputy_post_code' => 'sw1',
+                    'type_of_report' => 'opg102',
+                    'corref' => 'l2',
+                    'updated_at' => null,
+                    'source' => 'casrec',
+                    'order_date' => null,
+                ],
+            ],
+        ]);
+
+        $this->assertStringContainsString($expectedErrorJson, $responseArray['message']);
     }
 }

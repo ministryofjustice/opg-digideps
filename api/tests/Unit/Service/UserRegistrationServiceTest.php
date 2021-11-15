@@ -287,6 +287,7 @@ class UserRegistrationServiceTest extends TestCase
         $client = m::mock(Client::class)
             ->shouldReceive('hasDeputies')->andReturn(true)
             ->shouldReceive('getOrganisation')->andReturn(null)
+            ->shouldReceive('getCaseNumber')->andReturn('12341234')
             ->getMock();
 
         $clientRepo = m::mock(ClientRepository::class)
@@ -307,7 +308,7 @@ class UserRegistrationServiceTest extends TestCase
             ->getMock();
 
         self::expectException(RuntimeException::class);
-        self::expectExceptionMessage('User registration: Case number already used');
+        self::expectExceptionMessage('User registration: Case number 12341234 already used');
 
         $this->userRegistrationService = new UserRegistrationService($em, $casrecVerificationService);
         $this->userRegistrationService->selfRegisterUser($data);
@@ -325,6 +326,7 @@ class UserRegistrationServiceTest extends TestCase
         $client = m::mock(Client::class)
             ->shouldReceive('hasDeputies')->andReturn(false)
             ->shouldReceive('getOrganisation')->andReturn(new Organisation())
+            ->shouldReceive('getCaseNumber')->andReturn('12341234')
             ->getMock();
 
         $clientRepo = m::mock(ClientRepository::class)
@@ -345,7 +347,7 @@ class UserRegistrationServiceTest extends TestCase
             ->getMock();
 
         self::expectException(RuntimeException::class);
-        self::expectExceptionMessage('User registration: Case number already used');
+        self::expectExceptionMessage('User registration: Case number 12341234 already used');
 
         $this->userRegistrationService = new UserRegistrationService($em, $casrecVerificationService);
         $this->userRegistrationService->selfRegisterUser($data);

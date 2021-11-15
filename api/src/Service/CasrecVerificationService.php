@@ -5,6 +5,8 @@ namespace App\Service;
 use App\Entity\CasRec;
 use Doctrine\Common\Persistence\ObjectRepository;
 use Doctrine\ORM\EntityManagerInterface;
+use Symfony\Component\Serializer\Normalizer\AbstractNormalizer;
+use Symfony\Component\Serializer\SerializerInterface;
 
 class CasrecVerificationService
 {
@@ -18,12 +20,14 @@ class CasrecVerificationService
      * @var CasRec[]
      */
     private $lastMatchedCasrecUsers;
+    private SerializerInterface $serializer;
 
-    public function __construct(EntityManagerInterface $em)
+    public function __construct(EntityManagerInterface $em, SerializerInterface $serializer)
     {
         $this->em = $em;
         $this->casRecRepo = $this->em->getRepository('App\Entity\CasRec');
         $this->lastMatchedCasrecUsers = [];
+        $this->serializer = $serializer;
     }
 
     /**
@@ -61,9 +65,14 @@ class CasrecVerificationService
         if (0 == count($this->lastMatchedCasrecUsers)) {
             $detailsToMatchOn['deputyPostcode'] = $normalisedDeputyPostcode;
 
+            $caseNumberMatches = json_decode(
+                $this->serializer->serialize($caseNumberMatches, 'json', [AbstractNormalizer::IGNORED_ATTRIBUTES => ['otherColumns']]),
+                true
+            );
+
             $errorJson = json_encode([
-                'case_number_matches' => $caseNumberMatches,
                 'search_terms' => $detailsToMatchOn,
+                'case_number_matches' => $caseNumberMatches,
             ]);
 
             throw new \RuntimeException($errorJson, 400);
