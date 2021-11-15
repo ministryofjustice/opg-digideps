@@ -6,11 +6,13 @@ use App\Entity as EntityDir;
 use App\Exception\RestClientException;
 use App\Form as FormDir;
 use App\Model\SelfRegisterData;
+use App\Service\Audit\AuditEvents;
 use App\Service\Client\Internal\ClientApi;
 use App\Service\Client\Internal\UserApi;
 use App\Service\Client\RestClient;
 use App\Service\DeputyProvider;
 use App\Service\Redirector;
+use App\Service\Time\DateTimeProvider;
 use Psr\Log\LoggerInterface;
 use Sensio\Bundle\FrameworkExtraBundle\Configuration\Security;
 use Sensio\Bundle\FrameworkExtraBundle\Configuration\Template;
@@ -31,19 +33,22 @@ class UserController extends AbstractController
     private ClientApi $clientApi;
     private TranslatorInterface $translator;
     private LoggerInterface $logger;
+    private DateTimeProvider $dateTimeProvider;
 
     public function __construct(
         RestClient $restClient,
         UserApi $userApi,
         ClientApi $clientApi,
         TranslatorInterface $translator,
-        LoggerInterface $logger
+        LoggerInterface $logger,
+        DateTimeProvider $dateTimeProvider
     ) {
         $this->restClient = $restClient;
         $this->userApi = $userApi;
         $this->clientApi = $clientApi;
         $this->translator = $translator;
         $this->logger = $logger;
+        $this->dateTimeProvider = $dateTimeProvider;
     }
 
     /**
@@ -319,7 +324,12 @@ class UserController extends AbstractController
                         $form->addError(new FormError($this->translator->trans('formErrors.generic', [], 'register')));
                 }
 
-                $this->logger->error(__METHOD__.': '.$e->getMessage().', code: '.$e->getCode());
+                $failureData = json_decode($e->getData()['message'], true);
+
+                // If response from API is not valid json just log the message
+                $failureData = $failureData ?: ['failure_message' => $e->getMessage()];
+
+                $this->logger->notice('', (new AuditEvents($this->dateTimeProvider))->selfRegistrationFailed($failureData));
             }
         }
 

@@ -28,6 +28,7 @@ final class AuditEvents
     const TRIGGER_CSV_UPLOAD = 'CSV_UPLOAD';
     const TRIGGER_DEPUTY_USER_EDIT_SELF = 'DEPUTY_USER_EDIT_SELF';
     const TRIGGER_DEPUTY_USER_EDIT = 'DEPUTY_USER_EDIT';
+    const TRIGGER_DEPUTY_USER_SELF_REGISTER_ATTEMPT = 'DEPUTY_USER_SELF_REGISTER_ATTEMPT';
     const TRIGGER_CODEPUTY_CREATED = 'CODEPUTY_CREATED';
     const TRIGGER_ORG_USER_MANAGE_ORG_MEMBER = 'ORG_USER_MANAGE_ORG_MEMBER';
     const TRIGGER_ADMIN_USER_MANAGE_ORG_MEMBER = 'ADMIN_USER_MANAGE_ORG_USER';
@@ -226,6 +227,15 @@ final class AuditEvents
             'report_id' => $resubmittedReport->getId(),
             'date_resubmitted' => $resubmittedReport->getSubmitDate(),
         ];
+
+        return $event + $this->baseEvent(AuditEvents::EVENT_REPORT_RESUBMITTED);
+    }
+
+    public function selfRegistrationFailed(array $failureData)
+    {
+        $event = [
+            'trigger' => AuditEvents::TRIGGER_DEPUTY_USER_SELF_REGISTER_ATTEMPT,
+        ] + $failureData;
 
         return $event + $this->baseEvent(AuditEvents::EVENT_REPORT_RESUBMITTED);
     }
