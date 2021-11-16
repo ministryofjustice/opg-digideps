@@ -2,5 +2,4 @@ jms_serializer:
     metadata:
         # not clear if loaded (buggy library ?)
         # cache: jms_redis_cache_doctrine_adapter
-        cache: file
         debug: "%kernel.debug%"
