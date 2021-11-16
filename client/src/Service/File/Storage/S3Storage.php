@@ -199,8 +199,8 @@ class S3Storage implements StorageInterface
                             Key: '.$s3Error['Key'].', VersionId: '.
                     $s3Error['VersionId'].', Code: '.$s3Error['Code'].', Message: '.$s3Error['Message']);
             }
-            $this->log('error', 'Unable to remove key: '.$s3Result['Errors'].'  from S3: '.json_encode($s3Result['Errors']));
-            throw new \RuntimeException('Could not remove file: '.$s3Result['Errors']['Message']);
+            $this->log('error', 'Unable to remove key from S3: '.json_encode($s3Result['Errors']));
+            throw new \RuntimeException('Could not remove files: '.json_encode($s3Result['Errors']));
         }
     }
 

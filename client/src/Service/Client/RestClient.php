@@ -405,7 +405,7 @@ class RestClient implements RestClientInterface
         }
 
         if (empty($data['success'])) {
-            throw new Exception\NoSuccess(sprintf(self::ERROR_NO_SUCCESS, $data['message']));
+            throw new Exception\NoSuccess(sprintf(self::ERROR_NO_SUCCESS, $data['message'] ?? 'no message received'));
         }
 
         return $data['data'];
