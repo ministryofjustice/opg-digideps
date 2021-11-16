@@ -11,8 +11,12 @@ class OrgUserCreatedEvent extends Event
 {
     public const NAME = 'org.user.created';
 
-    public function __construct(private User $createdUser)
+    /** @var User */
+    private $createdUser;
+
+    public function __construct(User $createdUser)
     {
+        $this->createdUser = $createdUser;
     }
 
     public function getCreatedUser(): User

@@ -9,8 +9,14 @@ use Symfony\Component\Serializer\SerializerInterface;
 
 class SiriusApiErrorTranslator
 {
-    public function __construct(private SerializerInterface $serializer)
+    /**
+     * @var SerializerInterface
+     */
+    private $serializer;
+
+    public function __construct(SerializerInterface $serializer)
     {
+        $this->serializer = $serializer;
     }
 
     public function translateApiError(string $errorString)
@@ -51,7 +57,10 @@ class SiriusApiErrorTranslator
         }
     }
 
-    private function deserializeError(string $errorString): \App\Model\Sirius\SiriusApiError|string
+    /**
+     * @return SiriusApiError|string
+     */
+    private function deserializeError(string $errorString)
     {
         $decodedJson = json_decode($errorString, true)['body']['error'];
 

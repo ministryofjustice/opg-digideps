@@ -9,8 +9,11 @@ use Symfony\Component\HttpFoundation\File\UploadedFile;
 
 class FileNameFixer
 {
-    public function __construct(private FinfoMimeTypeDetector $mimeTypeDetector)
+    private FinfoMimeTypeDetector $mimeTypeDetector;
+
+    public function __construct(FinfoMimeTypeDetector $mimeTypeDetector)
     {
+        $this->mimeTypeDetector = $mimeTypeDetector;
     }
 
     /**
@@ -43,8 +46,10 @@ class FileNameFixer
      * Courtesy of this gem of a comment - https://gist.github.com/alexcorvi/df8faecb59e86bee93411f6a7967df2c#gistcomment-2722664.
      *
      * @param $mime
+     *
+     * @return false|string
      */
-    private function mimeToExtension($mime): string|false
+    private function mimeToExtension($mime)
     {
         $mime_map = [
             'video/3gpp2' => '3g2',

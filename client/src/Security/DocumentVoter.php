@@ -40,19 +40,30 @@ class DocumentVoter extends Voter
     {
         /** @var User $loggedInUser */
         $loggedInUser = $token->getUser();
-        return match ($attribute) {
-            self::ADD_DOCUMENT => $subject instanceof Report &&
-            (
-                $subject->getClient()->hasUser($loggedInUser) ||
-                $subject->getClient()->userBelongsToClientsOrganisation($loggedInUser)
-            ),
-            self::DELETE_DOCUMENT => $subject instanceof Document &&
-            $subject->getReport() instanceof Report &&
-            (
-                $subject->getReport()->getClient()->hasUser($loggedInUser) ||
-                $subject->getReport()->getClient()->userBelongsToClientsOrganisation($loggedInUser)
-            ),
-            default => false,
-        };
+
+        if (!$loggedInUser instanceof User) {
+            return false;
+        }
+
+        switch ($attribute) {
+            case self::ADD_DOCUMENT:
+                return
+                    $subject instanceof Report &&
+                    (
+                        $subject->getClient()->hasUser($loggedInUser) ||
+                        $subject->getClient()->userBelongsToClientsOrganisation($loggedInUser)
+                    );
+
+            case self::DELETE_DOCUMENT:
+                return
+                    $subject instanceof Document &&
+                    $subject->getReport() instanceof Report &&
+                    (
+                        $subject->getReport()->getClient()->hasUser($loggedInUser) ||
+                        $subject->getReport()->getClient()->userBelongsToClientsOrganisation($loggedInUser)
+                    );
+            default:
+                return false;
+        }
     }
 }

@@ -10,8 +10,12 @@ use Symfony\Component\EventDispatcher\EventSubscriberInterface;
 
 class OrgUserCreatedSubscriber implements EventSubscriberInterface
 {
-    public function __construct(private Mailer $mailer)
+    /** @var Mailer */
+    private $mailer;
+
+    public function __construct(Mailer $mailer)
     {
+        $this->mailer = $mailer;
     }
 
     public static function getSubscribedEvents()

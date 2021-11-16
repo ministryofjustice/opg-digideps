@@ -10,8 +10,11 @@ class IncomeReceivedOnClientsBehalfApi
 {
     const DELETE_ENDPOINT = '/income-type/delete/%s';
 
-    public function __construct(private RestClient $restClient)
+    private RestClient $restClient;
+
+    public function __construct(RestClient $restClient)
     {
+        $this->restClient = $restClient;
     }
 
     public function deleteIncomeType(string $incomeTypeId)

@@ -13,11 +13,23 @@ use Symfony\Component\HttpFoundation\File\UploadedFile;
 
 class ClamFileScanner
 {
+    /** @var ClientInterface */
+    private $client;
+
+    /** @var LoggerInterface */
+    private $logger;
+
+    /** @var array */
+    private $badPdfKeywords;
+
     /** @var int */
     const MAX_SCAN_ATTEMPTS = 90;
 
-    public function __construct(private ClientInterface $client, private LoggerInterface $logger, private array $badPdfKeywords)
+    public function __construct(ClientInterface $client, LoggerInterface $logger, array $badPdfKeywords)
     {
+        $this->client = $client;
+        $this->logger = $logger;
+        $this->badPdfKeywords = $badPdfKeywords;
     }
 
     /**
@@ -33,7 +45,7 @@ class ClamFileScanner
         $attempts = 0;
         while ($attempts < self::MAX_SCAN_ATTEMPTS) {
             try {
-                $attempts += 1;
+                ++$attempts;
                 $response = $this->attemptScan($file);
                 break;
             } catch (ServerException $e) {
@@ -69,6 +81,7 @@ class ClamFileScanner
 
     /**
      * @return mixed|\Psr\Http\Message\ResponseInterface
+     *
      * @throws \GuzzleHttp\Exception\GuzzleException
      */
     private function attemptScan(UploadedFile $file): ResponseInterface
@@ -80,8 +93,8 @@ class ClamFileScanner
                 [
                     'name' => 'file',
                     'contents' => fopen($file->getPathName(), 'r'),
-                ]
-            ]
+                ],
+            ],
         ]);
     }
 
@@ -89,6 +102,6 @@ class ClamFileScanner
     {
         $result = explode(':', trim($response->getBody()->getContents()));
 
-        return trim(end($result)) === 'true' ?: false;
+        return 'true' === trim(end($result)) ?: false;
     }
 }

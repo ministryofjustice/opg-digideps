@@ -23,7 +23,7 @@ class DeputyExpenseType extends AbstractType
                 'invalid_message' => 'expenses.singleExpense.notNumeric',
             ]);
 
-        $options['report']->getType();
+        $reportType = $options['report']->getType();
 
         if (!empty($options['report']->getBankAccountOptions()) && $options['report']->canLinkToBankAccounts()) {
             $builder->add('bankAccountId', FormTypes\ChoiceType::class, [

@@ -14,8 +14,25 @@ use Symfony\Component\HttpFoundation\File\UploadedFile;
 
 class S3FileUploader
 {
-    public function __construct(private StorageInterface $storage, private RestClient $restClient, private FileNameFixer $fileNameFixer, private DateTimeProvider $dateTimeProvider)
-    {
+    private StorageInterface $storage;
+    private RestClient $restClient;
+    private array $options;
+    private FileNameFixer $fileNameFixer;
+
+    private DateTimeProvider $dateTimeProvider;
+
+    public function __construct(
+        StorageInterface $s3Storage,
+        RestClient $restClient,
+        FileNameFixer $fileNameFixer,
+        DateTimeProvider $dateTimeProvider,
+        array $options = []
+    ) {
+        $this->storage = $s3Storage;
+        $this->restClient = $restClient;
+        $this->fileNameFixer = $fileNameFixer;
+        $this->options = $options;
+        $this->dateTimeProvider = $dateTimeProvider;
     }
 
     /**

@@ -9,11 +9,15 @@ use App\Service\Client\RestClient;
 
 class ReportSatisfactionSummaryMapper
 {
+    /** @var RestClient */
+    private $restClient;
+
     /** @var string */
     const API_ENDPOINT = '/satisfaction/satisfaction_data';
 
-    public function __construct(private RestClient $restClient)
+    public function __construct(RestClient $restClient)
     {
+        $this->restClient = $restClient;
     }
 
     /**

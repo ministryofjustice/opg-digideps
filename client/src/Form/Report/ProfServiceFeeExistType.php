@@ -25,7 +25,9 @@ class ProfServiceFeeExistType extends AbstractType
         $resolver->setDefaults([
             'translation_domain' => 'report-prof-current-fees',
             'validation_groups' => function (FormInterface $form) {
-                return ['current-prof-payments-received'];
+                $validationGroups = ['current-prof-payments-received'];
+
+                return $validationGroups;
             },
         ]);
     }

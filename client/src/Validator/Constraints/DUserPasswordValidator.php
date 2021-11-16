@@ -11,8 +11,20 @@ use Symfony\Component\Validator\Exception\ConstraintDefinitionException;
 
 class DUserPasswordValidator extends UserPasswordValidator
 {
-    public function __construct(private TokenStorageInterface $tokenStorage, private RestClient $restClient)
+    /**
+     * @var RestClient
+     */
+    private $restClient;
+
+    /**
+     * @var TokenStorageInterface
+     */
+    private $tokenStorage;
+
+    public function __construct(TokenStorageInterface $tokenStorage, RestClient $restClient)
     {
+        $this->restClient = $restClient;
+        $this->tokenStorage = $tokenStorage;
     }
 
     public function validate($password, Constraint $constraint)
@@ -32,7 +44,7 @@ class DUserPasswordValidator extends UserPasswordValidator
 
     private function isOldPasswordValid($user, $password)
     {
-        return $this->restClient->post('user/' . $user->getId() . '/is-password-correct', [
+        return $this->restClient->post('user/'.$user->getId().'/is-password-correct', [
             'password' => $password,
         ]);
     }

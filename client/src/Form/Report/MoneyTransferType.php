@@ -55,7 +55,7 @@ class MoneyTransferType extends AbstractType
         $resolver->setDefaults([
             'translation_domain' => 'report-money-transfer',
             'validation_groups' => function (FormInterface $form) {
-                $form->getData();
+                $data = $form->getData();
                 /* @var $data \App\Entity\Report\MoneyTransfer */
 
                 $validationGroups = [];

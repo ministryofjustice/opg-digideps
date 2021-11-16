@@ -25,8 +25,43 @@ class ClientApi
     private const GET_CLIENT_BY_ID_V2 = 'v2/client/%s';
     private const GET_CLIENT_BY_CASE_NUMBER_V2 = 'v2/client/case-number/%s';
 
-    public function __construct(private RestClientInterface $restClient, private RouterInterface $router, private UserApi $userApi, private TokenStorageInterface $tokenStorage, private ObservableEventDispatcher $eventDispatcher)
-    {
+    /** @var RestClient */
+    private $restClient;
+
+    /** @var RouterInterface */
+    private $router;
+
+    /** @var LoggerInterface */
+    private $logger;
+
+    /** @var UserApi */
+    private $userApi;
+
+    /** @var DateTimeProvider */
+    private $dateTimeProvider;
+
+    /** @var TokenStorageInterface */
+    private $tokenStorage;
+
+    /** @var ObservableEventDispatcher */
+    private $eventDispatcher;
+
+    public function __construct(
+        RestClientInterface $restClient,
+        RouterInterface $router,
+        LoggerInterface $logger,
+        UserApi $userApi,
+        DateTimeProvider $dateTimeProvider,
+        TokenStorageInterface $tokenStorage,
+        ObservableEventDispatcher $eventDispatcher
+    ) {
+        $this->restClient = $restClient;
+        $this->router = $router;
+        $this->logger = $logger;
+        $this->userApi = $userApi;
+        $this->dateTimeProvider = $dateTimeProvider;
+        $this->tokenStorage = $tokenStorage;
+        $this->eventDispatcher = $eventDispatcher;
     }
 
     /**
@@ -61,8 +96,18 @@ class ClientApi
         );
 
         $report = $client->getCurrentReport();
-        // generate link
-        return $this->router->generate('report_overview', ['reportId' => $report->getId()]);
+
+        if ($report instanceof Report) {
+            // generate link
+            return $this->router->generate('report_overview', ['reportId' => $report->getId()]);
+        }
+
+        $this->logger->log(
+            'warning',
+            'Client entity missing current report when trying to generate client profile link'
+        );
+
+        throw new \Exception('Unable to generate client profile link.');
     }
 
     /**

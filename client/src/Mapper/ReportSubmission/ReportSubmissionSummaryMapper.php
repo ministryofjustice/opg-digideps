@@ -7,11 +7,15 @@ use App\Service\Client\RestClient;
 
 class ReportSubmissionSummaryMapper
 {
+    /** @var RestClient */
+    private $restClient;
+
     /** @var string */
     const API_ENDPOINT = '/report-submission/casrec_data';
 
-    public function __construct(private RestClient $restClient)
+    public function __construct(RestClient $restClient)
     {
+        $this->restClient = $restClient;
     }
 
     /**
@@ -29,7 +33,7 @@ class ReportSubmissionSummaryMapper
     {
         $queryStringArray = [
             'orderBy' => $query->getOrderBy(),
-            'order' => $query->getSortOrder()
+            'order' => $query->getSortOrder(),
         ];
 
         if ($query->getStartDate()) {

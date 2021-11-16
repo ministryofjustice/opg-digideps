@@ -10,8 +10,11 @@ class StatsApi
 {
     protected const GET_ACTIVE_LAY_REPORT_DATA_ENDPOINT = 'stats/deputies/lay/active';
 
-    public function __construct(private RestClientInterface $restClient)
+    private RestClientInterface $restClient;
+
+    public function __construct(RestClientInterface $restClient)
     {
+        $this->restClient = $restClient;
     }
 
     /**

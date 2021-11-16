@@ -12,8 +12,18 @@ use Symfony\Component\Routing\Annotation\Route;
 
 class BehatController extends AbstractController
 {
-    public function __construct(private UserApi $userApi, private string $symfonyEnvironment)
-    {
+    private UserApi $userApi;
+    private string $symfonyEnvironment;
+    private RestClient $restClient;
+
+    public function __construct(
+        UserApi $userApi,
+        string $symfonyEnvironment,
+        RestClient $restClient
+    ) {
+        $this->userApi = $userApi;
+        $this->symfonyEnvironment = $symfonyEnvironment;
+        $this->restClient = $restClient;
     }
 
     /**

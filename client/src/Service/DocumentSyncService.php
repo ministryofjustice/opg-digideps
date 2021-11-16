@@ -31,20 +31,40 @@ class DocumentSyncService
     const MISSING_FILE_EXTENSION_ERROR =
         'File extension is missing from filename. This file will need to be manually synced with Sirius';
 
+    /** @var S3Storage */
+    private $storage;
+
+    /** @var SiriusApiGatewayClient */
+    private $siriusApiGatewayClient;
+
+    /** @var RestClient */
+    private $restClient;
+
+    /** @var SiriusApiErrorTranslator */
+    private $errorTranslator;
+
     /** @var int[] */
     private $syncErrorSubmissionIds;
 
     /** @var int */
     private $docsNotSyncedCount;
 
+    private FileNameFixer $fileNameFixer;
+
     public function __construct(
-        private SiriusApiGatewayClient $siriusApiGatewayClient,
-        private RestClient $restClient,
-        private SiriusApiErrorTranslator $errorTranslator,
-        private FileNameFixer $fileNameFixer
+        S3Storage $storage,
+        SiriusApiGatewayClient $siriusApiGatewayClient,
+        RestClient $restClient,
+        SiriusApiErrorTranslator $errorTranslator,
+        FileNameFixer $fileNameFixer
     ) {
+        $this->storage = $storage;
+        $this->siriusApiGatewayClient = $siriusApiGatewayClient;
+        $this->restClient = $restClient;
         $this->syncErrorSubmissionIds = [];
         $this->docsNotSyncedCount = 0;
+        $this->errorTranslator = $errorTranslator;
+        $this->fileNameFixer = $fileNameFixer;
     }
 
     /**
@@ -184,6 +204,14 @@ class DocumentSyncService
     }
 
     /**
+     * @return string
+     */
+    private function retrieveDocumentContentFromS3(QueuedDocumentData $documentData)
+    {
+        return (string) $this->storage->retrieve($documentData->getStorageReference());
+    }
+
+    /**
      * @return mixed|ResponseInterface
      *
      * @throws \GuzzleHttp\Exception\GuzzleException
@@ -264,7 +292,7 @@ class DocumentSyncService
         if (method_exists($e, 'getResponse') && method_exists($e->getResponse(), 'getBody')) {
             $errorMessage = $this->errorTranslator->translateApiError((string) $e->getResponse()->getBody());
         } else {
-            $errorMessage = $e->getMessage();
+            $errorMessage = (string) $e->getMessage();
         }
 
         if (method_exists($e, 'getCode')) {

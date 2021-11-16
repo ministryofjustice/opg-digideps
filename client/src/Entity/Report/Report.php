@@ -452,6 +452,9 @@ class Report implements ReportInterface, StartEndDateComparableInterface
         return $this->endDate;
     }
 
+    /**
+     * @return Report
+     */
     public function setDueDate(DateTime $dueDate = null): self
     {
         $this->dueDate = $dueDate;
@@ -493,7 +496,9 @@ class Report implements ReportInterface, StartEndDateComparableInterface
         $dueDate = clone $this->getDueDate();
         $dueDate->setTime(0, 0, 0);
 
-        return (int) $currentDate->diff($dueDate)->format('%R%a');
+        $days = (int) $currentDate->diff($dueDate)->format('%R%a');
+
+        return $days;
     }
 
     /**
@@ -544,6 +549,9 @@ class Report implements ReportInterface, StartEndDateComparableInterface
         return $this->submittedBy;
     }
 
+    /**
+     * @return Report
+     */
     public function setSubmittedBy(?User $submittedBy): self
     {
         $this->submittedBy = $submittedBy;
@@ -552,6 +560,8 @@ class Report implements ReportInterface, StartEndDateComparableInterface
     }
 
     /**
+     * @param DateTime $endDate
+     *
      * @return Report
      */
     public function setEndDate(DateTime $endDate = null)
@@ -987,6 +997,8 @@ class Report implements ReportInterface, StartEndDateComparableInterface
 
     /**
      * @param Document[] $submittedDocuments
+     *
+     * @return Report
      */
     public function setSubmittedDocuments(array $submittedDocuments): self
     {
@@ -1081,12 +1093,14 @@ class Report implements ReportInterface, StartEndDateComparableInterface
             throw new \RuntimeException('Cannot create an attachment for a report with no end date');
         }
 
-        return sprintf(
+        $attachmentName = sprintf(
             $format,
             $endDate->format('Y'),
             $submitDate instanceof DateTime ? $submitDate->format('Y-m-d') : 'n-a-', //some old reports have no submission date
             $this->getClient()->getCaseNumber()
         );
+
+        return $attachmentName;
     }
 
     /**
@@ -1126,7 +1140,7 @@ class Report implements ReportInterface, StartEndDateComparableInterface
      */
     public function isSubmitted()
     {
-        return $this->getSubmitted();
+        return (bool) $this->getSubmitted();
     }
 
     /**
@@ -1273,6 +1287,8 @@ class Report implements ReportInterface, StartEndDateComparableInterface
 
     /**
      * @param ReportSubmission[] $reportSubmissions
+     *
+     * @return Report
      */
     public function setReportSubmissions(array $reportSubmissions): self
     {
@@ -1283,11 +1299,15 @@ class Report implements ReportInterface, StartEndDateComparableInterface
 
     public function determineReportType()
     {
-        return match ($this->getType()) {
-            self::TYPE_HEALTH_WELFARE => self::TYPE_ABBREVIATION_HW,
-            self::TYPE_PROPERTY_AND_AFFAIRS_HIGH_ASSETS, self::TYPE_PROPERTY_AND_AFFAIRS_LOW_ASSETS => self::TYPE_ABBREVIATION_PF,
-            default => self::TYPE_ABBREVIATION_COMBINED,
-        };
+        switch ($this->getType()) {
+            case self::TYPE_HEALTH_WELFARE:
+                return self::TYPE_ABBREVIATION_HW;
+            case self::TYPE_PROPERTY_AND_AFFAIRS_HIGH_ASSETS:
+            case self::TYPE_PROPERTY_AND_AFFAIRS_LOW_ASSETS:
+                return self::TYPE_ABBREVIATION_PF;
+            default:
+                return self::TYPE_ABBREVIATION_COMBINED;
+        }
     }
 
     public function getClientBenefitsCheck(): ?ClientBenefitsCheck

@@ -13,8 +13,20 @@ class NdrSubmittedEvent extends Event
 {
     public const NAME = 'ndr.submitted';
 
-    public function __construct(private User $submittedBy, private Ndr $submittedNdr, private Report $newReport)
+    /** @var User */
+    private $submittedBy;
+
+    /** @var Ndr */
+    private $submittedNdr;
+
+    /** @var Report */
+    private $newReport;
+
+    public function __construct(User $submittedBy, Ndr $submittedNdr, Report $newReport)
     {
+        $this->submittedBy = $submittedBy;
+        $this->submittedNdr = $submittedNdr;
+        $this->newReport = $newReport;
     }
 
     public function getSubmittedBy(): User

@@ -14,6 +14,11 @@ use Symfony\Component\Routing\RouterInterface;
 class StepRedirector
 {
     /**
+     * @var RouterInterface
+     */
+    protected $router;
+
+    /**
      * @var string
      */
     private $step1BackLink;
@@ -54,8 +59,9 @@ class StepRedirector
     /**
      * StepRedirector constructor.
      */
-    public function __construct(protected RouterInterface $router)
+    public function __construct(RouterInterface $router)
     {
+        $this->router = $router;
         $this->stepUrlAdditionalParams = [];
     }
 

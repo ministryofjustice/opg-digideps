@@ -6,8 +6,11 @@ namespace App\Service\Csv;
 
 class ActiveLaysCsvGenerator
 {
-    public function __construct(private CsvBuilder $csvBuilder)
+    private CsvBuilder $csvBuilder;
+
+    public function __construct(CsvBuilder $csvBuilder)
     {
+        $this->csvBuilder = $csvBuilder;
     }
 
     /**

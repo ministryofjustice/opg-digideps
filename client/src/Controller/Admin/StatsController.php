@@ -30,8 +30,24 @@ use Symfony\Component\Routing\Annotation\Route;
  */
 class StatsController extends AbstractController
 {
-    public function __construct(private RestClient $restClient, private SatisfactionCsvGenerator $satisfactionCsvGenerator, private StatsApi $statsApi, private ActiveLaysCsvGenerator $activeLaysCsvGenerator, private UserResearchResponseCsvGenerator $userResearchResponseCsvGenerator)
-    {
+    private RestClient $restClient;
+    private SatisfactionCsvGenerator $satisfactionCsvGenerator;
+    private StatsApi $statsApi;
+    private ActiveLaysCsvGenerator $activeLaysCsvGenerator;
+    private UserResearchResponseCsvGenerator $userResearchResponseCsvGenerator;
+
+    public function __construct(
+        RestClient $restClient,
+        SatisfactionCsvGenerator $satisfactionCsvGenerator,
+        StatsApi $statsApi,
+        ActiveLaysCsvGenerator $activeLaysCsvGenerator,
+        UserResearchResponseCsvGenerator $userResearchResponseCsvGenerator
+    ) {
+        $this->restClient = $restClient;
+        $this->satisfactionCsvGenerator = $satisfactionCsvGenerator;
+        $this->statsApi = $statsApi;
+        $this->activeLaysCsvGenerator = $activeLaysCsvGenerator;
+        $this->userResearchResponseCsvGenerator = $userResearchResponseCsvGenerator;
     }
 
     /**
@@ -39,9 +55,9 @@ class StatsController extends AbstractController
      * @Security("is_granted('ROLE_ADMIN') or has_role('ROLE_AD')")
      * @Template("@App/Admin/Stats/stats.html.twig")
      *
-     *
+     * @return array|Response
      */
-    public function stats(Request $request, ReportSubmissionSummaryMapper $mapper, ReportSubmissionBurFixedWidthTransformer $transformer): array|\Symfony\Component\HttpFoundation\Response
+    public function stats(Request $request, ReportSubmissionSummaryMapper $mapper, ReportSubmissionBurFixedWidthTransformer $transformer)
     {
         $form = $this->createForm(ReportSubmissionDownloadFilterType::class, new DateRangeQuery());
         $form->handleRequest($request);
@@ -58,7 +74,7 @@ class StatsController extends AbstractController
         }
 
         return [
-            'form' => $form->createView()
+            'form' => $form->createView(),
         ];
     }
 
@@ -66,8 +82,10 @@ class StatsController extends AbstractController
      * @Route("/satisfaction", name="admin_satisfaction")
      * @Security("is_granted('ROLE_SUPER_ADMIN')")
      * @Template("@App/Admin/Stats/satisfaction.html.twig")
+     *
+     * @return array|Response
      */
-    public function satisfaction(Request $request, ReportSatisfactionSummaryMapper $mapper): array|\Symfony\Component\HttpFoundation\Response
+    public function satisfaction(Request $request, ReportSatisfactionSummaryMapper $mapper)
     {
         $form = $this->createForm(SatisfactionFilterType::class, new DateRangeQuery());
         $form->handleRequest($request);
@@ -86,6 +104,7 @@ class StatsController extends AbstractController
                 );
 
                 $response->headers->set('Content-Disposition', $disposition);
+
                 return $response;
             } catch (\Throwable $e) {
                 throw new DisplayableException($e);
@@ -93,7 +112,7 @@ class StatsController extends AbstractController
         }
 
         return [
-            'form' => $form->createView()
+            'form' => $form->createView(),
         ];
     }
 
@@ -101,8 +120,10 @@ class StatsController extends AbstractController
      * @Route("/user-research", name="admin_user_research")
      * @Security("is_granted('ROLE_SUPER_ADMIN')")
      * @Template("@App/Admin/Stats/urResponses.html.twig")
+     *
+     * @return array|Response
      */
-    public function userResearchResponses(Request $request, UserResearchResponseSummaryMapper $mapper): array|\Symfony\Component\HttpFoundation\Response
+    public function userResearchResponses(Request $request, UserResearchResponseSummaryMapper $mapper)
     {
         $form = $this->createForm(UserResearchResponseFilterType::class, new DateRangeQuery());
         $form->handleRequest($request);
@@ -121,6 +142,7 @@ class StatsController extends AbstractController
                 );
 
                 $response->headers->set('Content-Disposition', $disposition);
+
                 return $response;
             } catch (\Throwable $e) {
                 throw new DisplayableException($e);
@@ -128,12 +150,13 @@ class StatsController extends AbstractController
         }
 
         return [
-            'form' => $form->createView()
+            'form' => $form->createView(),
         ];
     }
 
     /**
      * @param $csvContent
+     *
      * @return Response
      */
     private function buildResponse($csvContent)
@@ -142,7 +165,7 @@ class StatsController extends AbstractController
         $response->headers->set('Content-Type', 'application/octet-stream');
 
         $attachmentName = sprintf('cwsdigidepsopg00001%s.dat', date('YmdHi'));
-        $response->headers->set('Content-Disposition', 'attachment; filename="' . $attachmentName . '"');
+        $response->headers->set('Content-Disposition', 'attachment; filename="'.$attachmentName.'"');
 
         $response->sendHeaders();
 
@@ -153,8 +176,10 @@ class StatsController extends AbstractController
      * @Route("/metrics", name="admin_metrics")
      * @Security("is_granted('ROLE_ADMIN') or has_role('ROLE_AD')")
      * @Template("@App/Admin/Stats/metrics.html.twig")
+     *
+     * @return array|Response
      */
-    public function metricsAction(Request $request): array|\Symfony\Component\HttpFoundation\Response
+    public function metricsAction(Request $request)
     {
         $form = $this->createForm(StatPeriodType::class);
         $form->handleRequest($request);
@@ -170,8 +195,8 @@ class StatsController extends AbstractController
         $metrics = ['satisfaction', 'reportsSubmitted', 'clients', 'registeredDeputies'];
 
         foreach ($metrics as $metric) {
-            $all = $this->restClient->get('stats?metric=' . $metric . $append, 'array');
-            $byRole = $this->restClient->get('stats?metric=' . $metric . '&dimension[]=deputyType' . $append, 'array');
+            $all = $this->restClient->get('stats?metric='.$metric.$append, 'array');
+            $byRole = $this->restClient->get('stats?metric='.$metric.'&dimension[]=deputyType'.$append, 'array');
 
             $stats[$metric] = array_merge(
                 ['all' => $all[0]['amount']],
@@ -181,14 +206,12 @@ class StatsController extends AbstractController
 
         return [
             'stats' => $stats,
-            'form' => $form->createView()
+            'form' => $form->createView(),
         ];
     }
 
     /**
-     * Map an array of metric responses to be addressible by deputyType
-     *
-     *
+     * Map an array of metric responses to be addressible by deputyType.
      */
     private function mapToDeputyType(array $result): array
     {
@@ -221,6 +244,7 @@ class StatsController extends AbstractController
         );
 
         $response->headers->set('Content-Disposition', $disposition);
+
         return $response;
     }
 }

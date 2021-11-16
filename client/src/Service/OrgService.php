@@ -10,6 +10,21 @@ use Twig\Environment;
 class OrgService
 {
     /**
+     * @var RestClient
+     */
+    private $restClient;
+
+    /**
+     * @var Environment
+     */
+    private $twig;
+
+    /**
+     * @var SessionInterface
+     */
+    private $session;
+
+    /**
      * @var bool
      */
     private $outputLogging = false;
@@ -35,8 +50,17 @@ class OrgService
 
     const CHUNK_SIZE = 50;
 
-    public function __construct(private RestClient $restClient, private Environment $twig, private SessionInterface $session)
-    {
+    /** @var DataCompression */
+    private $dataCompression;
+
+    public function __construct(
+        RestClient $restClient,
+        Environment $twig,
+        SessionInterface $session
+    ) {
+        $this->restClient = $restClient;
+        $this->twig = $twig;
+        $this->session = $session;
     }
 
     /**

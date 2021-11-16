@@ -172,6 +172,8 @@ class Ndr implements ReportInterface
 
     /**
      * @param int $id
+     *
+     * @return Ndr
      */
     public function setId($id): self
     {
@@ -190,6 +192,8 @@ class Ndr implements ReportInterface
 
     /**
      * @param DateTime $startDate
+     *
+     * @return Ndr
      */
     public function setStartDate($startDate): self
     {
@@ -208,6 +212,8 @@ class Ndr implements ReportInterface
 
     /**
      * @param DateTime $submitDate
+     *
+     * @return Ndr
      */
     public function setSubmitDate($submitDate): self
     {
@@ -383,9 +389,11 @@ class Ndr implements ReportInterface
      */
     public function getDebtsWithValidAmount()
     {
-        return array_filter($this->debts, function ($debt) {
+        $debtsWithAValidAmount = array_filter($this->debts, function ($debt) {
             return !empty($debt->getAmount());
         });
+
+        return $debtsWithAValidAmount;
     }
 
     /**
@@ -580,11 +588,13 @@ class Ndr implements ReportInterface
      */
     public function createAttachmentName($format)
     {
-        return sprintf(
+        $attachmentName = sprintf(
             $format,
             is_null($this->getSubmitDate()) ? 'n-a-' : $this->getSubmitDate()->format('Y-m-d'),
             $this->getClient()->getCaseNumber()
         );
+
+        return $attachmentName;
     }
 
     /**

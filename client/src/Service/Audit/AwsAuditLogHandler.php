@@ -8,6 +8,12 @@ use Monolog\Logger;
 
 class AwsAuditLogHandler extends AbstractAuditLogHandler
 {
+    /** @var CloudWatchLogsClient */
+    private $client;
+
+    /** @var string */
+    private $group;
+
     /** @var string */
     private $stream;
 
@@ -22,11 +28,14 @@ class AwsAuditLogHandler extends AbstractAuditLogHandler
 
     /**
      * @param $group
-     * @param int $level
+     * @param int  $level
      * @param bool $bubble
      */
-    public function __construct(private CloudWatchLogsClient $client, private $group, $level = Logger::NOTICE, $bubble = true)
+    public function __construct(CloudWatchLogsClient $client, $group, $level = Logger::NOTICE, $bubble = true)
     {
+        $this->client = $client;
+        $this->group = $group;
+
         parent::__construct($level, $bubble);
     }
 
@@ -49,7 +58,7 @@ class AwsAuditLogHandler extends AbstractAuditLogHandler
         // send items, retry once with a fresh sequence token
         try {
             $this->send($entry);
-        } catch (CloudWatchLogsException) {
+        } catch (CloudWatchLogsException $e) {
             $this->determineSequenceToken($refresh = true);
             $this->send($entry);
         }
@@ -60,11 +69,10 @@ class AwsAuditLogHandler extends AbstractAuditLogHandler
         return [
             [
                 'message' => $entry['formatted'],
-                'timestamp' => $entry['datetime']->format('U.u') * 1000
-            ]
+                'timestamp' => $entry['datetime']->format('U.u') * 1000,
+            ],
         ];
     }
-
 
     private function initialize(): void
     {
@@ -109,7 +117,7 @@ class AwsAuditLogHandler extends AbstractAuditLogHandler
             ->createLogStream(
                 [
                     'logGroupName' => $this->group,
-                    'logStreamName' => $this->stream
+                    'logStreamName' => $this->stream,
                 ]
             );
     }
@@ -133,7 +141,7 @@ class AwsAuditLogHandler extends AbstractAuditLogHandler
         $data = [
             'logGroupName' => $this->group,
             'logStreamName' => $this->stream,
-            'logEvents' => $entry
+            'logEvents' => $entry,
         ];
 
         if (!empty($this->sequenceToken)) {

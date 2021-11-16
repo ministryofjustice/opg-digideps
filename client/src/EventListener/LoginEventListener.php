@@ -15,10 +15,21 @@ use Symfony\Component\Security\Http\Event\InteractiveLoginEvent;
 class LoginEventListener
 {
     /**
+     * @var EventDispatcherInterface
+     */
+    protected $dispatcher;
+    /**
+     * @var Redirector
+     */
+    protected $redirector;
+
+    /**
      * @param EventDispatcher $dispatcher
      */
-    public function __construct(protected EventDispatcherInterface $dispatcher, protected Redirector $redirector)
+    public function __construct(EventDispatcherInterface $dispatcher, Redirector $Redirector)
     {
+        $this->dispatcher = $dispatcher;
+        $this->redirector = $Redirector;
     }
 
     public function onSecurityInteractiveLogin(InteractiveLoginEvent $event)

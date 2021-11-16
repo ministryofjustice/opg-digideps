@@ -12,10 +12,14 @@ use Symfony\Contracts\Translation\TranslatorInterface;
 
 class TransactionsCsvGenerator
 {
+    private TranslatorInterface $translator;
+    private CsvBuilder $csvBuilder;
     private array $rows = [];
 
-    public function __construct(private TranslatorInterface $translator, private CsvBuilder $csvBuilder)
+    public function __construct(TranslatorInterface $translator, CsvBuilder $csvBuilder)
     {
+        $this->translator = $translator;
+        $this->csvBuilder = $csvBuilder;
     }
 
     /**
@@ -64,10 +68,11 @@ class TransactionsCsvGenerator
      * Generates a description. Expenses and Gifts have an 'explanation' property,
      * Money transactions have a description property.
      *
+     * @param Gift|Expense|MoneyTransaction $transaction
      *
      * @return string
      */
-    private function generateDescription(\App\Entity\Report\Expense|\App\Entity\Report\Gift|\App\Entity\Report\MoneyTransaction $transaction)
+    private function generateDescription($transaction)
     {
         if (method_exists($transaction, 'getDescription')) {
             return $transaction->getDescription();
@@ -81,9 +86,11 @@ class TransactionsCsvGenerator
     }
 
     /**
+     * @param Gift|Expense|MoneyTransaction $transaction
+     *
      * @return string
      */
-    private function generateCategory(\App\Entity\Report\Expense|\App\Entity\Report\Gift|\App\Entity\Report\MoneyTransaction $transaction)
+    private function generateCategory($transaction)
     {
         if (property_exists($transaction, 'category')) {
             return $this->translator
@@ -98,17 +105,21 @@ class TransactionsCsvGenerator
     }
 
     /**
+     * @param Gift|Expense|MoneyTransaction $transaction
+     *
      * @return string
      */
-    private function generateBankName(\App\Entity\Report\Expense|\App\Entity\Report\Gift|\App\Entity\Report\MoneyTransaction $transaction)
+    private function generateBankName($transaction)
     {
         return !empty($transaction->getBankAccount()) ? $transaction->getBankAccount()->getBank() : '';
     }
 
     /**
+     * @param Gift|Expense|MoneyTransaction $transaction
+     *
      * @return string
      */
-    private function generateBankAccountDetails(\App\Entity\Report\Expense|\App\Entity\Report\Gift|\App\Entity\Report\MoneyTransaction $transaction)
+    private function generateBankAccountDetails($transaction)
     {
         return !empty($transaction->getBankAccount()) ? $transaction->getBankAccount()->getDisplayName() : '';
     }

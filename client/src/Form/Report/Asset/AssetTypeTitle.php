@@ -10,8 +10,26 @@ use Symfony\Contracts\Translation\TranslatorInterface;
 
 class AssetTypeTitle extends AbstractType
 {
-    public function __construct(protected array $assetDropdownKeys, protected TranslatorInterface $translator, protected $translatorDomain)
+    /**
+     * @var array
+     */
+    protected $assetDropdownKeys;
+
+    /**
+     * @var Translator
+     */
+    protected $translator;
+
+    /**
+     * @var string
+     */
+    protected $translatorDomain;
+
+    public function __construct(array $assetDropdownKeys, TranslatorInterface $translator, $translatorDomain)
     {
+        $this->assetDropdownKeys = $assetDropdownKeys;
+        $this->translator = $translator;
+        $this->translatorDomain = $translatorDomain;
     }
 
     /**
@@ -27,7 +45,7 @@ class AssetTypeTitle extends AbstractType
 
         // translate keys and order by name
         foreach ($this->assetDropdownKeys as $key) {
-            $translation = $this->translator->trans('form.title.choices.' . $key, [], $this->translatorDomain);
+            $translation = $this->translator->trans('form.title.choices.'.$key, [], $this->translatorDomain);
             $ret[$translation] = $translation;
         }
 
@@ -38,7 +56,7 @@ class AssetTypeTitle extends AbstractType
     {
         $builder->add('title', FormTypes\ChoiceType::class, [
                 'choices' => $this->getTitleChoices(),
-                'expanded' => true])
+                'expanded' => true, ])
             ->add('save', FormTypes\SubmitType::class);
     }
 

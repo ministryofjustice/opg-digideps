@@ -74,12 +74,19 @@ trait ReportProfServiceFeesTrait
      */
     public function getFilteredFees($feeTypeId, $fixedOrAssessed)
     {
-        $fees = match ($feeTypeId) {
-            ProfServiceFee::TYPE_CURRENT_FEE => $this->getProfServiceFeesByType(ProfServiceFee::TYPE_CURRENT_FEE),
-            ProfServiceFee::TYPE_ESTIMATED_FEE => $this->getProfServiceFeesByType(ProfServiceFee::TYPE_ESTIMATED_FEE),
-            ProfServiceFee::TYPE_PREVIOUS_FEE => $this->getProfServiceFeesByType(ProfServiceFee::TYPE_PREVIOUS_FEE),
-            default => throw new \Exception('Invalid Fee type Id:'.$feeTypeId),
-        };
+        switch ($feeTypeId) {
+            case ProfServiceFee::TYPE_CURRENT_FEE:
+                $fees = $this->getProfServiceFeesByType(ProfServiceFee::TYPE_CURRENT_FEE);
+                break;
+            case ProfServiceFee::TYPE_ESTIMATED_FEE:
+                $fees = $this->getProfServiceFeesByType(ProfServiceFee::TYPE_ESTIMATED_FEE);
+                break;
+            case ProfServiceFee::TYPE_PREVIOUS_FEE:
+                $fees = $this->getProfServiceFeesByType(ProfServiceFee::TYPE_PREVIOUS_FEE);
+                break;
+            default:
+                throw new \Exception('Invalid Fee type Id:'.$feeTypeId);
+        }
 
         return array_filter($fees, function ($profServiceFee) use ($fixedOrAssessed) {
             /* @var $profServiceFee ProfServiceFee */

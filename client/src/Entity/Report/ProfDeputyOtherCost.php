@@ -12,6 +12,36 @@ use Symfony\Component\Validator\Context\ExecutionContextInterface;
 class ProfDeputyOtherCost
 {
     /**
+     * @JMS\Type("string")
+     * @JMS\Groups({"prof-deputy-other-costs"})
+     */
+    private $profDeputyOtherCostTypeId;
+
+    /**
+     * @var decimal
+     *
+     * @JMS\Type("string")
+     * @JMS\Groups({"prof-deputy-other-costs"})
+     * @Assert\Type(type="numeric", message="profDeputyOtherCost.amount.notNumeric", groups={"prof-deputy-other-costs"})
+     * @Assert\Range(min=0, max=100000000000, minMessage = "profDeputyOtherCost.amount.minMessage", maxMessage = "profDeputyOtherCost.amount.maxMessage", groups={"prof-deputy-other-costs"})
+     */
+    private $amount;
+
+    /**
+     * @var string
+     * @JMS\Groups({"prof-deputy-other-costs"})
+     * @JMS\Type("boolean")
+     */
+    private $hasMoreDetails;
+
+    /**
+     * @var string
+     * @JMS\Groups({"prof-deputy-other-costs"})
+     * @JMS\Type("string")
+     */
+    private $moreDetails;
+
+    /**
      * ProfDeputyOtherCost constructor.
      *
      * @param $profDeputyOtherCostTypeId
@@ -19,32 +49,12 @@ class ProfDeputyOtherCost
      * @param string  $hasMoreDetails
      * @param string  $moreDetails
      */
-    public function __construct(
-        /**
-         * @JMS\Type("string")
-         * @JMS\Groups({"prof-deputy-other-costs"})
-         */
-        private $profDeputyOtherCostTypeId,
-        /**
-         *
-         * @JMS\Type("string")
-         * @JMS\Groups({"prof-deputy-other-costs"})
-         * @Assert\Type(type="numeric", message="profDeputyOtherCost.amount.notNumeric", groups={"prof-deputy-other-costs"})
-         * @Assert\Range(min=0, max=100000000000, minMessage = "profDeputyOtherCost.amount.minMessage", maxMessage = "profDeputyOtherCost.amount.maxMessage", groups={"prof-deputy-other-costs"})
-         */
-        private $amount,
-        /**
-         * @JMS\Groups({"prof-deputy-other-costs"})
-         * @JMS\Type("boolean")
-         */
-        private $hasMoreDetails,
-        /**
-         * @JMS\Groups({"prof-deputy-other-costs"})
-         * @JMS\Type("string")
-         */
-        private $moreDetails
-    )
+    public function __construct($profDeputyOtherCostTypeId, $amount, $hasMoreDetails, $moreDetails)
     {
+        $this->profDeputyOtherCostTypeId = $profDeputyOtherCostTypeId;
+        $this->amount = $amount;
+        $this->hasMoreDetails = $hasMoreDetails;
+        $this->moreDetails = $moreDetails;
     }
 
     /**

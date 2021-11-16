@@ -171,8 +171,10 @@ trait ReportDebtsTrait
      */
     public function getDebtsWithValidAmount()
     {
-        return array_filter($this->debts, function ($debt) {
+        $debtsWithAValidAmount = array_filter($this->debts, function ($debt) {
             return !empty($debt->getAmount());
         });
+
+        return $debtsWithAValidAmount;
     }
 }

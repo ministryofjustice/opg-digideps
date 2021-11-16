@@ -9,8 +9,14 @@ use Alphagov\Notifications\Exception\NotifyException;
 
 class NotifyAvailability extends ServiceAvailabilityAbstract
 {
-    public function __construct(private NotifyClient $notifyClient)
+    /**
+     * @var NotifyClient
+     */
+    private $notifyClient;
+
+    public function __construct(NotifyClient $notifyClient)
     {
+        $this->notifyClient = $notifyClient;
         $this->isHealthy = true;
     }
 

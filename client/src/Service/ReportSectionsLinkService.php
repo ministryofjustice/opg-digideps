@@ -9,10 +9,16 @@ use Symfony\Component\Routing\RouterInterface;
 class ReportSectionsLinkService
 {
     /**
+     * @var RouterInterface
+     */
+    protected $router;
+
+    /**
      * ReportSectionsLinkService constructor.
      */
-    public function __construct(protected RouterInterface $router)
+    public function __construct(RouterInterface $router)
     {
+        $this->router = $router;
     }
 
     /**

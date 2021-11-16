@@ -21,16 +21,28 @@ class SessionListener
     private $idleTimeout;
 
     /**
+     * @var RouterInterface
+     */
+    private $router;
+
+    /**
+     * @var LoggerInterface
+     */
+    private $logger;
+
+    /**
      * @param array $options keys: idleTimeout (seconds)
      *
      * @throws \InvalidArgumentException
      */
-    public function __construct(private RouterInterface $router, private LoggerInterface $logger, array $options)
+    public function __construct(RouterInterface $router, LoggerInterface $logger, array $options)
     {
+        $this->router = $router;
+        $this->logger = $logger;
         $this->idleTimeout = (int) $options['idleTimeout'];
 
         if ($this->idleTimeout < 5) {
-            throw new \InvalidArgumentException(__CLASS__ . ' :session timeout cannot be lower than 5 seconds');
+            throw new \InvalidArgumentException(__CLASS__.' :session timeout cannot be lower than 5 seconds');
         }
     }
 
@@ -56,7 +68,7 @@ class SessionListener
     private function hasReachedTimeout(RequestEvent $event)
     {
         $session = $event->getRequest()->getSession();
-        $lastUsed = $session->getMetadataBag()->getLastUsed();
+        $lastUsed = (int) $session->getMetadataBag()->getLastUsed();
         if (!$lastUsed) {
             return false;
         }

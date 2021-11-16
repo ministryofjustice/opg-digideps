@@ -60,6 +60,11 @@ abstract class ProfServiceFee
     private $assessedOrFixed;
 
     /**
+     * @JMS\Exclude
+     */
+    private $feeTypeId;
+
+    /**
      * @JMS\Type("string")
      * @JMS\Groups({"prof-service-fees"})
      *

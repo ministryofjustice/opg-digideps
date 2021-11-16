@@ -20,12 +20,19 @@ class UserResearchResponseHelpers
 
         $satisfaction = SatisfactionHelpers::createSatisfaction();
 
-        $user = match ($satisfaction->getDeputyRole()) {
-            User::ROLE_LAY_DEPUTY => UserHelpers::createLayUser(),
-            User::ROLE_PROF_ADMIN => UserHelpers::createProfAdminUser(),
-            User::ROLE_PA_NAMED => UserHelpers::createPaNamedDeputyUser(),
-            default => UserHelpers::createLayUser(),
-        };
+        switch ($satisfaction->getDeputyRole()) {
+            case User::ROLE_LAY_DEPUTY:
+                $user = UserHelpers::createLayUser();
+                break;
+            case User::ROLE_PROF_ADMIN:
+                $user = UserHelpers::createProfAdminUser();
+                break;
+            case User::ROLE_PA_NAMED:
+                $user = UserHelpers::createPaNamedDeputyUser();
+                break;
+            default:
+                $user = UserHelpers::createLayUser();
+        }
 
         return (new UserResearchResponse())
             ->setSatisfaction($satisfaction)

@@ -6,9 +6,12 @@ use App\Service\Client\Sirius\SiriusApiGatewayClient;
 
 class SiriusApiAvailability extends ServiceAvailabilityAbstract
 {
-    public function __construct(private SiriusApiGatewayClient $client)
+    private SiriusApiGatewayClient $client;
+
+    public function __construct(SiriusApiGatewayClient $client)
     {
         $this->isHealthy = true;
+        $this->client = $client;
     }
 
     public function ping()
@@ -17,7 +20,7 @@ class SiriusApiAvailability extends ServiceAvailabilityAbstract
             $response = $this->client->get('healthcheck');
 
             if (200 !== $response->getStatusCode()) {
-                throw new \RuntimeException('returned HTTP code ' . $response->getStatusCode());
+                throw new \RuntimeException('returned HTTP code '.$response->getStatusCode());
             }
         } catch (\Throwable $e) {
             $this->customMessage = $e->getMessage();

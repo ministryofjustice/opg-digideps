@@ -11,8 +11,12 @@ class DeputySelfRegisteredEvent extends Event
 {
     public const NAME = 'deputy.self.registered';
 
-    public function __construct(private User $registeredDeputy)
+    /** @var User */
+    private $registeredDeputy;
+
+    public function __construct(User $registeredDeputy)
     {
+        $this->registeredDeputy = $registeredDeputy;
     }
 
     public function getRegisteredDeputy(): User

@@ -10,13 +10,15 @@ class Status
     const STATE_INCOMPLETE = 'incomplete';
     const STATE_DONE = 'done';
 
-    public function __construct(
-        /**
-         * @JMS\Type("App\Entity\Report\Report")
-         */
-        private Report $report
-    )
+    /**
+     * @var Report
+     * @JMS\Type("App\Entity\Report\Report")
+     */
+    private $report;
+
+    public function __construct(Report $report)
     {
+        $this->report = $report;
     }
 
     /**

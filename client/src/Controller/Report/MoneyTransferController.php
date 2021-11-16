@@ -9,11 +9,11 @@ use App\Service\Client\Internal\ReportApi;
 use App\Service\Client\RestClient;
 use App\Service\StepRedirector;
 use Sensio\Bundle\FrameworkExtraBundle\Configuration\Template;
-use Symfony\Component\Routing\Annotation\Route;
 use Symfony\Component\Form\SubmitButton;
 use Symfony\Component\HttpFoundation\RedirectResponse;
 use Symfony\Component\HttpFoundation\Request;
 use Symfony\Component\HttpFoundation\Response;
+use Symfony\Component\Routing\Annotation\Route;
 
 class MoneyTransferController extends AbstractController
 {
@@ -23,8 +23,23 @@ class MoneyTransferController extends AbstractController
         'money-transfer-state',
     ];
 
-    public function __construct(private RestClient $restClient, private ReportApi $reportApi, private StepRedirector $stepRedirector)
-    {
+    /** @var RestClient */
+    private $restClient;
+
+    /** @var ReportApi */
+    private $reportApi;
+
+    /** @var StepRedirector */
+    private $stepRedirector;
+
+    public function __construct(
+        RestClient $restClient,
+        ReportApi $reportApi,
+        StepRedirector $stepRedirector
+    ) {
+        $this->restClient = $restClient;
+        $this->reportApi = $reportApi;
+        $this->stepRedirector = $stepRedirector;
     }
 
     /**
@@ -35,7 +50,7 @@ class MoneyTransferController extends AbstractController
      *
      * @return array|Response|RedirectResponse
      */
-    public function startAction($reportId): array|\Symfony\Component\HttpFoundation\RedirectResponse|\Symfony\Component\HttpFoundation\Response
+    public function startAction($reportId)
     {
         $report = $this->reportApi->getReportIfNotSubmitted($reportId, self::$jmsGroups);
         if (!$report->enoughBankAccountForTransfers()) {
@@ -45,7 +60,7 @@ class MoneyTransferController extends AbstractController
             ]);
         }
 
-        if ($report->getStatus()->getMoneyTransferState()['state'] != EntityDir\Report\Status::STATE_NOT_STARTED) {
+        if (EntityDir\Report\Status::STATE_NOT_STARTED != $report->getStatus()->getMoneyTransferState()['state']) {
             return $this->redirectToRoute('money_transfers_summary', ['reportId' => $reportId]);
         }
 
@@ -60,14 +75,15 @@ class MoneyTransferController extends AbstractController
      *
      * @param $reportId
      *
+     * @return array|RedirectResponse
      */
-    public function existAction(Request $request, $reportId): array|\Symfony\Component\HttpFoundation\RedirectResponse
+    public function existAction(Request $request, $reportId)
     {
         $report = $this->reportApi->getReportIfNotSubmitted($reportId, self::$jmsGroups);
         $form = $this->createForm(FormDir\YesNoType::class, $report, [
-            'field'              => 'noTransfersToAdd',
+            'field' => 'noTransfersToAdd',
             'translation_domain' => 'report-money-transfer',
-            'choices'            => ['Yes' => 0, 'No' => 1]
+            'choices' => ['Yes' => 0, 'No' => 1],
         ]);
 
         $form->handleRequest($request);
@@ -76,13 +92,14 @@ class MoneyTransferController extends AbstractController
                 case 0:
                     return $this->redirectToRoute('money_transfers_step', ['reportId' => $reportId, 'step' => 1]);
                 case 1:
-                    $this->restClient->put('report/' . $reportId, $report, ['money-transfers-no-transfers']);
+                    $this->restClient->put('report/'.$reportId, $report, ['money-transfers-no-transfers']);
+
                     return $this->redirectToRoute('money_transfers_summary', ['reportId' => $reportId]);
             }
         }
 
         $backLink = $this->generateUrl('money_transfers', ['reportId' => $reportId]);
-        if ($request->get('from') == 'summary') {
+        if ('summary' == $request->get('from')) {
             $backLink = $this->generateUrl('money_transfers_summary', ['reportId' => $reportId]);
         }
 
@@ -101,8 +118,9 @@ class MoneyTransferController extends AbstractController
      * @param $step
      * @param null $transferId
      *
+     * @return array|RedirectResponse
      */
-    public function stepAction(Request $request, $reportId, $step, $transferId = null): array|\Symfony\Component\HttpFoundation\RedirectResponse
+    public function stepAction(Request $request, $reportId, $step, $transferId = null)
     {
         $totalSteps = 2;
         if ($step < 1 || $step > $totalSteps) {
@@ -120,7 +138,6 @@ class MoneyTransferController extends AbstractController
             ->setFromPage($fromPage)
             ->setCurrentStep($step)->setTotalSteps($totalSteps)
             ->setRouteBaseParams(['reportId' => $reportId, 'transferId' => $transferId]);
-
 
         // create (add mode) or load transaction (edit mode)
         if ($transferId) {
@@ -144,7 +161,7 @@ class MoneyTransferController extends AbstractController
             $transfer->setAccountTo($report->getBankAccountById($dataFromUrl['to-id']));
         }
         $stepRedirector->setStepUrlAdditionalParams([
-            'data' => $dataFromUrl
+            'data' => $dataFromUrl,
         ]);
 
         // create and handle form
@@ -155,7 +172,7 @@ class MoneyTransferController extends AbstractController
         $submitBtn = $form->get('save');
         if ($submitBtn->isClicked() && $form->isSubmitted() && $form->isValid()) {
             // decide what data in the partial form needs to be passed to next step
-            if ($step == 1) {
+            if (1 == $step) {
                 $stepUrlData['from-id'] = $transfer->getAccountFromId();
                 $stepUrlData['to-id'] = $transfer->getAccountToId();
             } elseif ($step == $totalSteps) {
@@ -164,17 +181,18 @@ class MoneyTransferController extends AbstractController
                         'notice',
                         'Entry edited'
                     );
-                    $this->restClient->put('/report/' . $reportId . '/money-transfers/' . $transferId, $transfer, ['money-transfer']);
+                    $this->restClient->put('/report/'.$reportId.'/money-transfers/'.$transferId, $transfer, ['money-transfer']);
 
                     return $this->redirectToRoute('money_transfers_summary', ['reportId' => $reportId]);
                 } else { // add
-                    $this->restClient->post('/report/' . $reportId . '/money-transfers', $transfer, ['money-transfer']);
+                    $this->restClient->post('/report/'.$reportId.'/money-transfers', $transfer, ['money-transfer']);
+
                     return $this->redirectToRoute('money_transfers_add_another', ['reportId' => $reportId]);
                 }
             }
 
             $stepRedirector->setStepUrlAdditionalParams([
-                'data' => $stepUrlData
+                'data' => $stepUrlData,
             ]);
 
             return $this->redirect($stepRedirector->getRedirectLinkAfterSaving());
@@ -197,8 +215,9 @@ class MoneyTransferController extends AbstractController
      *
      * @param $reportId
      *
+     * @return array|RedirectResponse
      */
-    public function addAnotherAction(Request $request, $reportId): array|\Symfony\Component\HttpFoundation\RedirectResponse
+    public function addAnotherAction(Request $request, $reportId)
     {
         $report = $this->reportApi->getReportIfNotSubmitted($reportId, self::$jmsGroups);
 
@@ -225,11 +244,13 @@ class MoneyTransferController extends AbstractController
      * @Template("@App/Report/MoneyTransfer/summary.html.twig")
      *
      * @param $reportId
+     *
+     * @return array|RedirectResponse
      */
-    public function summaryAction($reportId): array|\Symfony\Component\HttpFoundation\RedirectResponse
+    public function summaryAction($reportId)
     {
         $report = $this->reportApi->getReportIfNotSubmitted($reportId, self::$jmsGroups);
-        if ($report->getStatus()->getMoneyTransferState()['state'] == EntityDir\Report\Status::STATE_NOT_STARTED) {
+        if (EntityDir\Report\Status::STATE_NOT_STARTED == $report->getStatus()->getMoneyTransferState()['state']) {
             return $this->redirect($this->generateUrl('money_transfers', ['reportId' => $reportId]));
         }
 
@@ -244,8 +265,9 @@ class MoneyTransferController extends AbstractController
      *
      * @param $reportId
      *
+     * @return array|RedirectResponse
      */
-    public function deleteAction(Request $request, $reportId, int $transferId): array|\Symfony\Component\HttpFoundation\RedirectResponse
+    public function deleteAction(Request $request, $reportId, int $transferId)
     {
         $report = $this->reportApi->getReportIfNotSubmitted($reportId, self::$jmsGroups);
 

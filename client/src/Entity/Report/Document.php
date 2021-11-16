@@ -7,8 +7,6 @@ use App\Entity\Report\Traits\HasReportTrait;
 use App\Entity\SynchronisableInterface;
 use App\Entity\SynchronisableTrait;
 use App\Entity\Traits\CreationAudit;
-use App\Entity\User;
-use DateTime;
 use JMS\Serializer\Annotation as JMS;
 use Symfony\Component\HttpFoundation\File\UploadedFile;
 use Symfony\Component\Validator\Constraints as Assert;
@@ -19,12 +17,11 @@ use Symfony\Component\Validator\Context\ExecutionContextInterface;
  */
 class Document implements DocumentInterface, SynchronisableInterface
 {
-    const FILE_NAME_MAX_LENGTH = 255;
-    const MAX_UPLOAD_PER_REPORT = 100;
-
     use CreationAudit;
     use HasReportTrait;
     use SynchronisableTrait;
+    const FILE_NAME_MAX_LENGTH = 255;
+    const MAX_UPLOAD_PER_REPORT = 100;
 
     public function isValidForReport(ExecutionContextInterface $context): void
     {
@@ -41,21 +38,26 @@ class Document implements DocumentInterface, SynchronisableInterface
 
         if (is_null($fileOriginalName)) {
             $context->buildViolation('document.file.errors.invalidName')->atPath('file')->addViolation();
+
             return;
         }
 
         if (strlen($fileOriginalName) > self::FILE_NAME_MAX_LENGTH) {
             $context->buildViolation('document.file.errors.maxMessage')->atPath('file')->addViolation();
+
             return;
         }
 
         if (in_array($fileOriginalName, $fileNames)) {
             $context->buildViolation('document.file.errors.alreadyPresent')->atPath('file')->addViolation();
+
             return;
         }
 
         if (count($this->getReport()->getDocuments()) >= self::MAX_UPLOAD_PER_REPORT) {
             $context->buildViolation('document.file.errors.maxDocumentsPerReport')->atPath('file')->addViolation();
+
+            return;
         }
     }
 
@@ -69,7 +71,7 @@ class Document implements DocumentInterface, SynchronisableInterface
 
     /**
      * // add more validators here if needed
-     * http://symfony.com/doc/current/reference/constraints/File.html
+     * http://symfony.com/doc/current/reference/constraints/File.html.
      *
      * @Assert\NotBlank(message="Please choose a file", groups={"document"})
      * @Assert\File(
@@ -125,7 +127,8 @@ class Document implements DocumentInterface, SynchronisableInterface
     }
 
     /**
-     * @param  int      $id
+     * @param int $id
+     *
      * @return Document
      */
     public function setId($id)
@@ -144,7 +147,8 @@ class Document implements DocumentInterface, SynchronisableInterface
     }
 
     /**
-     * @param  string   $fileName
+     * @param string $fileName
+     *
      * @return Document
      */
     public function setFileName($fileName)
@@ -163,7 +167,8 @@ class Document implements DocumentInterface, SynchronisableInterface
     }
 
     /**
-     * @param  string   $storageReference
+     * @param string $storageReference
+     *
      * @return Document
      */
     public function setStorageReference($storageReference)
@@ -183,11 +188,13 @@ class Document implements DocumentInterface, SynchronisableInterface
 
     /**
      * @param UploadedFile $file
+     *
      * @return Document
      */
     public function setFile($file)
     {
         $this->file = $file;
+
         return $this;
     }
 
@@ -201,11 +208,13 @@ class Document implements DocumentInterface, SynchronisableInterface
 
     /**
      * @param bool $isReportPdf
+     *
      * @return $this
      */
     public function setIsReportPdf($isReportPdf)
     {
         $this->isReportPdf = $isReportPdf;
+
         return $this;
     }
 
@@ -228,7 +237,7 @@ class Document implements DocumentInterface, SynchronisableInterface
     }
 
     /**
-     * Is document for OPG admin eyes only
+     * Is document for OPG admin eyes only.
      *
      * @return bool
      */
@@ -238,10 +247,12 @@ class Document implements DocumentInterface, SynchronisableInterface
     }
 
     /**
-     * Is document a list of transaction document (admin only)
+     * Is document a list of transaction document (admin only).
+     *
+     * @return bool|int
      */
-    private function isTransactionDocument(): bool|int
+    private function isTransactionDocument()
     {
-        return str_contains($this->getFileName(), 'DigiRepTransactions');
+        return false !== strpos($this->getFileName(), 'DigiRepTransactions');
     }
 }

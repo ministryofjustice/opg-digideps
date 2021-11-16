@@ -12,14 +12,23 @@ use Symfony\Contracts\Translation\TranslatorInterface;
 
 class ActionType extends AbstractType
 {
+    private $clientFirstName;
+
     /**
      * @var int
      */
     private $step;
 
+    /**
+     * @var TranslatorInterface
+     */
+    private $translator;
+
     public function buildForm(FormBuilderInterface $builder, array $options)
     {
         $this->step = (int) $options['step'];
+        $this->translator = $options['translator'];
+        $this->clientFirstName = $options['clientFirstName'];
 
         if (1 === $this->step) {
             $builder

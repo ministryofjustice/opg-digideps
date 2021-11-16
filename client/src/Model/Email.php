@@ -120,6 +120,8 @@ class Email
 
     /**
      * @param mixed $fromEmailNotifyID
+     *
+     * @return Email
      */
     public function setFromEmailNotifyID($fromEmailNotifyID): self
     {

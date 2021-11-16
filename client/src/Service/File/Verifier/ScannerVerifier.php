@@ -10,8 +10,20 @@ use Symfony\Contracts\Translation\TranslatorInterface;
 
 class ScannerVerifier implements VerifierInterface
 {
-    public function __construct(private ClamFileScanner $scanner, private TranslatorInterface $translator, private LoggerInterface $logger)
+    /** @var ClamFileScanner */
+    private $scanner;
+
+    /** @var TranslatorInterface */
+    private $translator;
+
+    /** @var LoggerInterface */
+    private $logger;
+
+    public function __construct(ClamFileScanner $scanner, TranslatorInterface $translator, LoggerInterface $logger)
     {
+        $this->scanner = $scanner;
+        $this->translator = $translator;
+        $this->logger = $logger;
     }
 
     /**
@@ -38,7 +50,7 @@ class ScannerVerifier implements VerifierInterface
 
     private function buildErrorMessage(\Throwable $e): string
     {
-        $errorKey = ($e::class === VirusFoundException::class) ? 'virusFound' : 'generic';
+        $errorKey = (VirusFoundException::class === get_class($e)) ? 'virusFound' : 'generic';
 
         return $this
             ->translator

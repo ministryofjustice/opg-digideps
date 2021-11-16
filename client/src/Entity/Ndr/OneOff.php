@@ -7,6 +7,33 @@ use JMS\Serializer\Annotation as JMS;
 class OneOff
 {
     /**
+     * @JMS\Type("string")
+     * @JMS\Groups({"ndr-one-off"})
+     */
+    private $typeId;
+
+    /**
+     * @var bool
+     *
+     * @JMS\Type("boolean")
+     * @JMS\Groups({"ndr-one-off"})
+     */
+    private $present;
+
+    /**
+     * @var string
+     * @JMS\Type("boolean")
+     */
+    private $hasMoreDetails;
+
+    /**
+     * @var string
+     * @JMS\Groups({"ndr-one-off"})
+     * @JMS\Type("string")
+     */
+    private $moreDetails;
+
+    /**
      * IncomeBenefit constructor.
      *
      * @param $typeId
@@ -14,29 +41,12 @@ class OneOff
      * @param string $hasMoreDetails
      * @param string $moreDetails
      */
-    public function __construct(
-        /**
-         * @JMS\Type("string")
-         * @JMS\Groups({"ndr-one-off"})
-         */
-        private $typeId,
-        /**
-         *
-         * @JMS\Type("boolean")
-         * @JMS\Groups({"ndr-one-off"})
-         */
-        private $present,
-        /**
-         * @JMS\Type("boolean")
-         */
-        private $hasMoreDetails = false,
-        /**
-         * @JMS\Groups({"ndr-one-off"})
-         * @JMS\Type("string")
-         */
-        private $moreDetails = null
-    )
+    public function __construct($typeId, $present, $hasMoreDetails = false, $moreDetails = null)
     {
+        $this->typeId = $typeId;
+        $this->present = $present;
+        $this->hasMoreDetails = $hasMoreDetails;
+        $this->moreDetails = $moreDetails;
     }
 
     /**

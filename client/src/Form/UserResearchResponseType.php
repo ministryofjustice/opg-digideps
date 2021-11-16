@@ -14,8 +14,11 @@ use Symfony\Component\Translation\TranslatorInterface;
 
 class UserResearchResponseType extends AbstractType
 {
-    public function __construct(private TranslatorInterface $translator)
+    private TranslatorInterface $translator;
+
+    public function __construct(TranslatorInterface $translator)
     {
+        $this->translator = $translator;
     }
 
     public function buildForm(FormBuilderInterface $builder, array $options)

@@ -18,9 +18,21 @@ class IncomeBenefitType extends AbstractType
      */
     private $step;
 
+    /**
+     * @var TranslatorInterface
+     */
+    private $translator;
+
+    /**
+     * @var string
+     */
+    private $clientFirstName;
+
     public function buildForm(FormBuilderInterface $builder, array $options)
     {
         $this->step = (int) $options['step'];
+        $this->translator = $options['translator'];
+        $this->clientFirstName = $options['clientFirstName'];
 
         if (1 === $this->step) {
             $builder

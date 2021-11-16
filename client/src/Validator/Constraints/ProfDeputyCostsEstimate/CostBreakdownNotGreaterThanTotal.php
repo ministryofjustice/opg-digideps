@@ -14,7 +14,10 @@ class CostBreakdownNotGreaterThanTotal extends Constraint
      */
     public $message = 'profDeputyEstimateCost.profDeputyManagementCostAmount.breakdownGreaterThanTotal';
 
-    public function getTargets(): array|string
+    /**
+     * @return array|string
+     */
+    public function getTargets()
     {
         return self::CLASS_CONSTRAINT;
     }

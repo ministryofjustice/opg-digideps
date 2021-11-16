@@ -94,8 +94,22 @@ class ReportController extends AbstractController
         'client-benefits-check-state',
     ];
 
-    public function __construct(private RestClient $restClient, private ReportApi $reportApi)
-    {
+    /** @var RestClient */
+    private $restClient;
+
+    /** @var ReportApi */
+    private $reportApi;
+
+    private LoggerInterface $logger;
+
+    public function __construct(
+        RestClient $restClient,
+        ReportApi $reportApi,
+        LoggerInterface $logger
+    ) {
+        $this->restClient = $restClient;
+        $this->reportApi = $reportApi;
+        $this->logger = $logger;
     }
 
     /**
@@ -108,7 +122,7 @@ class ReportController extends AbstractController
      *
      * @return array|RedirectResponse|Response
      */
-    public function checklistAction(Request $request, $id): array|\Symfony\Component\HttpFoundation\RedirectResponse|\Symfony\Component\HttpFoundation\Response
+    public function checklistAction(Request $request, $id)
     {
         $report = $this->reportApi->getReport(
             intval($id),
@@ -161,7 +175,9 @@ class ReportController extends AbstractController
             }
         }
 
-        $checklist->setButtonClicked($buttonClicked->getName());
+        if ($buttonClicked instanceof SubmitButton) {
+            $checklist->setButtonClicked($buttonClicked->getName());
+        }
 
         if ($form->isSubmitted() && $form->isValid()) {
             if (!empty($checklist->getId())) {
@@ -290,7 +306,7 @@ class ReportController extends AbstractController
      *
      * @throws \Exception
      */
-    public function manageAction(Request $request, $id): array|\Symfony\Component\HttpFoundation\RedirectResponse|\Symfony\Component\HttpFoundation\Response
+    public function manageAction(Request $request, $id)
     {
         $report = $this->reportApi->getReport(intval($id), ['report-checklist', 'action']);
 
@@ -402,7 +418,7 @@ class ReportController extends AbstractController
      * @throws \Exception
      * @Template("@App/Admin/Client/Report/manageConfirm.html.twig")
      */
-    public function manageConfirmAction(Request $request, $id): array|\Symfony\Component\HttpFoundation\RedirectResponse|\Symfony\Component\HttpFoundation\Response
+    public function manageConfirmAction(Request $request, $id)
     {
         $report = $this->reportApi->getReport(intval($id), ['report-checklist', 'action']);
 
@@ -482,10 +498,12 @@ class ReportController extends AbstractController
      *
      * @param $id
      *
+     * @return array|RedirectResponse
      * @Template("@App/Admin/Client/Report/manageCloseReportConfirm.html.twig")
+     *
      * @throws \Exception
      */
-    public function manageCloseReportConfirmAction(Request $request, $id): array|\Symfony\Component\HttpFoundation\RedirectResponse
+    public function manageCloseReportConfirmAction(Request $request, $id)
     {
         $form = $this->createForm(CloseReportConfirmType::class);
         $form->handleRequest($request);

@@ -8,8 +8,14 @@ use App\Service\Client\RestClient;
 
 class CasrecApi
 {
-    public function __construct(private RestClient $restClient)
+    /**
+     * @var RestClient
+     */
+    private $restClient;
+
+    public function __construct(RestClient $restClient)
     {
+        $this->restClient = $restClient;
     }
 
     /**

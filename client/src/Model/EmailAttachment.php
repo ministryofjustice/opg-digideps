@@ -4,8 +4,17 @@ namespace App\Model;
 
 class EmailAttachment
 {
-    public function __construct(private $filename, private $contentType, private $content)
+    private $filename;
+
+    private $contentType;
+
+    private $content;
+
+    public function __construct($filename, $contentType, $content)
     {
+        $this->filename = $filename;
+        $this->contentType = $contentType;
+        $this->content = $content;
     }
 
     public function getFilename()

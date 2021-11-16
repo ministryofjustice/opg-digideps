@@ -16,6 +16,9 @@ class SiriusApiError
         return $this->title;
     }
 
+    /**
+     * @return SiriusApiError
+     */
     public function setTitle(?string $title): self
     {
         $this->title = $title;
@@ -28,6 +31,9 @@ class SiriusApiError
         return $this->code;
     }
 
+    /**
+     * @return SiriusApiError
+     */
     public function setCode(?string $code): self
     {
         $this->code = $code;
@@ -40,6 +46,9 @@ class SiriusApiError
         return $this->description;
     }
 
+    /**
+     * @return SiriusApiError
+     */
     public function setDescription(?string $description): self
     {
         $this->description = $description;

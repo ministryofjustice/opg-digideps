@@ -12,8 +12,17 @@ class UserRemovedFromOrganisationEvent extends Event
 {
     const NAME = 'user.removed.from.organisation';
 
-    public function __construct(private Organisation $organisation, private User $removedUser, private User $currentUser, private string $trigger)
+    private Organisation $organisation;
+    private User $removedUser;
+    private User $currentUser;
+    private string $trigger;
+
+    public function __construct(Organisation $organisation, User $userToRemove, User $currentUser, string $trigger)
     {
+        $this->organisation = $organisation;
+        $this->removedUser = $userToRemove;
+        $this->currentUser = $currentUser;
+        $this->trigger = $trigger;
     }
 
     public function getOrganisation(): Organisation

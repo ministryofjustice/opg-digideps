@@ -14,7 +14,10 @@ class EndDateNotBeforeStartDate extends Constraint
      */
     public $message = 'report.endDate.beforeStart';
 
-    public function getTargets(): array|string
+    /**
+     * @return array|string
+     */
+    public function getTargets()
     {
         return self::CLASS_CONSTRAINT;
     }

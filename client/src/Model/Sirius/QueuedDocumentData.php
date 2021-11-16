@@ -27,6 +27,7 @@ class QueuedDocumentData
 
     /** @var string|null */
     private $reportType;
+    private $s3Reference;
     private $reportSubmissionUuid;
 
     /** @var ReportSubmission[] */
@@ -47,6 +48,9 @@ class QueuedDocumentData
         return $this->caseNumber;
     }
 
+    /**
+     * @return QueuedDocumentData
+     */
     public function setCaseNumber(string $caseNumber): self
     {
         $this->caseNumber = $caseNumber;
@@ -59,6 +63,9 @@ class QueuedDocumentData
         return $this->documentId;
     }
 
+    /**
+     * @return QueuedDocumentData
+     */
     public function setDocumentId(int $documentId): self
     {
         $this->documentId = $documentId;
@@ -71,6 +78,9 @@ class QueuedDocumentData
         return $this->isReportPdf;
     }
 
+    /**
+     * @return QueuedDocumentData
+     */
     public function setIsReportPdf(bool $isReportPdf): self
     {
         $this->isReportPdf = $isReportPdf;
@@ -83,6 +93,9 @@ class QueuedDocumentData
         return $this->filename;
     }
 
+    /**
+     * @return QueuedDocumentData
+     */
     public function setFilename(string $filename): self
     {
         $this->filename = $filename;
@@ -95,6 +108,9 @@ class QueuedDocumentData
         return $this->storageReference;
     }
 
+    /**
+     * @return QueuedDocumentData
+     */
     public function setStorageReference(string $storageReference): self
     {
         $this->storageReference = $storageReference;
@@ -112,6 +128,8 @@ class QueuedDocumentData
 
     /**
      * @param ReportSubmission[] $reportSubmissions
+     *
+     * @return QueuedDocumentData
      */
     public function setReportSubmissions(array $reportSubmissions): self
     {
@@ -125,6 +143,9 @@ class QueuedDocumentData
         return $this->ndrId;
     }
 
+    /**
+     * @return QueuedDocumentData
+     */
     public function setNdrId(?int $ndrId): self
     {
         $this->ndrId = $ndrId;
@@ -137,6 +158,9 @@ class QueuedDocumentData
         return $this->reportStartDate;
     }
 
+    /**
+     * @return QueuedDocumentData
+     */
     public function setReportStartDate(?DateTime $reportStartDate): self
     {
         $this->reportStartDate = $reportStartDate;
@@ -149,6 +173,9 @@ class QueuedDocumentData
         return $this->reportEndDate;
     }
 
+    /**
+     * @return QueuedDocumentData
+     */
     public function setReportEndDate(?DateTime $reportEndDate): self
     {
         $this->reportEndDate = $reportEndDate;
@@ -161,6 +188,9 @@ class QueuedDocumentData
         return $this->reportSubmitDate;
     }
 
+    /**
+     * @return QueuedDocumentData
+     */
     public function setReportSubmitDate(?DateTime $reportSubmitDate): self
     {
         $this->reportSubmitDate = $reportSubmitDate;
@@ -173,6 +203,9 @@ class QueuedDocumentData
         return $this->reportType;
     }
 
+    /**
+     * @return QueuedDocumentData
+     */
     public function setReportType(?string $reportType): self
     {
         $this->reportType = $reportType;
@@ -185,6 +218,9 @@ class QueuedDocumentData
         return $this->reportSubmissionId;
     }
 
+    /**
+     * @return QueuedDocumentData
+     */
     public function setReportSubmissionId(int $reportSubmissionId): self
     {
         $this->reportSubmissionId = $reportSubmissionId;
@@ -197,6 +233,9 @@ class QueuedDocumentData
         return $this->reportSubmissionUuid;
     }
 
+    /**
+     * @return QueuedDocumentData
+     */
     public function setReportSubmissionUuid(?string $reportSubmissionUuid): self
     {
         $this->reportSubmissionUuid = $reportSubmissionUuid;
@@ -209,6 +248,9 @@ class QueuedDocumentData
         return $this->documentSyncAttempts;
     }
 
+    /**
+     * @return QueuedDocumentData
+     */
     public function setDocumentSyncAttempts(?int $documentSyncAttempts): self
     {
         $this->documentSyncAttempts = $documentSyncAttempts;

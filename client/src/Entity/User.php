@@ -522,6 +522,8 @@ class User implements UserInterface, DeputyInterface
     }
 
     /**
+     * @param \DateTime $registrationDate
+     *
      * @return \App\Entity\User
      */
     public function setRegistrationDate(\DateTime $registrationDate = null)
@@ -621,6 +623,8 @@ class User implements UserInterface, DeputyInterface
 
     /**
      * @param bool $isCoDeputyClientConfirmed
+     *
+     * @return User
      */
     public function setCoDeputyClientConfirmed($isCoDeputyClientConfirmed): self
     {
@@ -795,6 +799,9 @@ class User implements UserInterface, DeputyInterface
         return $this->lastLoggedIn;
     }
 
+    /**
+     * @param \DateTime $lastLoggedIn
+     */
     public function setLastLoggedIn(\DateTime $lastLoggedIn = null)
     {
         $this->lastLoggedIn = $lastLoggedIn;
@@ -1195,6 +1202,8 @@ class User implements UserInterface, DeputyInterface
 
     /**
      * @param ArrayCollection $organisations
+     *
+     * @return User
      */
     public function setOrganisations($organisations): self
     {

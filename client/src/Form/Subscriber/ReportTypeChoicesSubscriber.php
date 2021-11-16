@@ -11,8 +11,12 @@ use Symfony\Contracts\Translation\TranslatorInterface;
 
 class ReportTypeChoicesSubscriber implements EventSubscriberInterface
 {
-    public function __construct(private TranslatorInterface $translator)
+    /** @var TranslatorInterface */
+    private $translator;
+
+    public function __construct(TranslatorInterface $translator)
     {
+        $this->translator = $translator;
     }
 
     public static function getSubscribedEvents(): array
@@ -43,7 +47,7 @@ class ReportTypeChoicesSubscriber implements EventSubscriberInterface
         ];
 
         if (!$report->isLayReport()) {
-            foreach ($options as &$value) {
+            foreach ($options as $key => &$value) {
                 $value = ($report->isPAreport()) ? "$value-6" : "$value-5";
             }
         }

@@ -22,8 +22,18 @@ class MoneyOutShortController extends AbstractController
         'money-out-short-state',
     ];
 
-    public function __construct(private RestClient $restClient, private ReportApi $reportApi)
-    {
+    /** @var RestClient */
+    private $restClient;
+
+    /** @var ReportApi */
+    private $reportApi;
+
+    public function __construct(
+        RestClient $restClient,
+        ReportApi $reportApi
+    ) {
+        $this->restClient = $restClient;
+        $this->reportApi = $reportApi;
     }
 
     /**
@@ -31,8 +41,10 @@ class MoneyOutShortController extends AbstractController
      * @Template("@App/Report/MoneyOutShort/start.html.twig")
      *
      * @param $reportId
+     *
+     * @return array|RedirectResponse
      */
-    public function startAction(Request $request, $reportId): array|\Symfony\Component\HttpFoundation\RedirectResponse
+    public function startAction(Request $request, $reportId)
     {
         $report = $this->reportApi->getReportIfNotSubmitted($reportId, self::$jmsGroups);
 
@@ -51,8 +63,10 @@ class MoneyOutShortController extends AbstractController
      *
      * @
      * param $reportId
+     *
+     * @return array|RedirectResponse
      */
-    public function categoryAction(Request $request, $reportId): array|\Symfony\Component\HttpFoundation\RedirectResponse
+    public function categoryAction(Request $request, $reportId)
     {
         $report = $this->reportApi->getReportIfNotSubmitted($reportId, self::$jmsGroups);
         $fromSummaryPage = 'summary' == $request->get('from');
@@ -89,8 +103,10 @@ class MoneyOutShortController extends AbstractController
      * @Template("@App/Report/MoneyOutShort/exist.html.twig")
      *
      * @param $reportId
+     *
+     * @return array|RedirectResponse
      */
-    public function existAction(Request $request, $reportId): array|\Symfony\Component\HttpFoundation\RedirectResponse
+    public function existAction(Request $request, $reportId)
     {
         $report = $this->reportApi->getReportIfNotSubmitted($reportId, self::$jmsGroups);
         $form = $this->createForm(
@@ -125,8 +141,10 @@ class MoneyOutShortController extends AbstractController
      * @Template("@App/Report/MoneyOutShort/add.html.twig")
      *
      * @param $reportId
+     *
+     * @return array|RedirectResponse
      */
-    public function addAction(Request $request, $reportId): array|\Symfony\Component\HttpFoundation\RedirectResponse
+    public function addAction(Request $request, $reportId)
     {
         $report = $this->reportApi->getReportIfNotSubmitted($reportId, self::$jmsGroups);
         $record = new MoneyTransactionShort('out');
@@ -151,7 +169,7 @@ class MoneyOutShortController extends AbstractController
                 'form' => $form->createView(),
                 'report' => $report,
             ];
-        } catch (RouteNotFoundException) {
+        } catch (RouteNotFoundException $e) {
             return [
                 'backLink' => null,
                 'form' => $form->createView(),
@@ -165,8 +183,10 @@ class MoneyOutShortController extends AbstractController
      * @Template("@App/Report/MoneyOutShort/addAnother.html.twig")
      *
      * @param $reportId
+     *
+     * @return array|RedirectResponse
      */
-    public function addAnotherAction(Request $request, $reportId): array|\Symfony\Component\HttpFoundation\RedirectResponse
+    public function addAnotherAction(Request $request, $reportId)
     {
         $report = $this->reportApi->getReportIfNotSubmitted($reportId, self::$jmsGroups);
 
@@ -194,8 +214,10 @@ class MoneyOutShortController extends AbstractController
      *
      * @param $reportId
      * @param $transactionId
+     *
+     * @return array|RedirectResponse
      */
-    public function editAction(Request $request, $reportId, $transactionId): array|\Symfony\Component\HttpFoundation\RedirectResponse
+    public function editAction(Request $request, $reportId, $transactionId)
     {
         $report = $this->reportApi->getReportIfNotSubmitted($reportId, self::$jmsGroups);
         $transaction = $this->restClient->get('report/'.$report->getId().'/money-transaction-short/'.$transactionId, 'Report\MoneyTransactionShort');
@@ -225,8 +247,10 @@ class MoneyOutShortController extends AbstractController
      *
      * @param $reportId
      * @param $transactionId
+     *
+     * @return array|RedirectResponse
      */
-    public function deleteAction(Request $request, $reportId, $transactionId): array|\Symfony\Component\HttpFoundation\RedirectResponse
+    public function deleteAction(Request $request, $reportId, $transactionId)
     {
         $form = $this->createForm(FormDir\ConfirmDeleteType::class);
         $form->handleRequest($request);
@@ -266,8 +290,10 @@ class MoneyOutShortController extends AbstractController
      * @Template("@App/Report/MoneyOutShort/summary.html.twig")
      *
      * @param $reportId
+     *
+     * @return array|RedirectResponse
      */
-    public function summaryAction(Request $request, $reportId): array|\Symfony\Component\HttpFoundation\RedirectResponse
+    public function summaryAction(Request $request, $reportId)
     {
         $fromPage = $request->get('from');
         $report = $this->reportApi->getReportIfNotSubmitted($reportId, self::$jmsGroups);

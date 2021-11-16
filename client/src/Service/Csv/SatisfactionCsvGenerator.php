@@ -6,8 +6,11 @@ namespace App\Service\Csv;
 
 class SatisfactionCsvGenerator
 {
-    public function __construct(private CsvBuilder $csvBuilder)
+    private CsvBuilder $csvBuilder;
+
+    public function __construct(CsvBuilder $csvBuilder)
     {
+        $this->csvBuilder = $csvBuilder;
     }
 
     public function generateSatisfactionResponsesCsv(array $satisfactions)

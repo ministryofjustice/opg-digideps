@@ -15,8 +15,15 @@ use Symfony\Component\Routing\Annotation\Route;
  */
 class SettingController extends AbstractController
 {
-    public function __construct(private RestClient $restClient)
-    {
+    /**
+     * @var RestClient
+     */
+    private $restClient;
+
+    public function __construct(
+        RestClient $restClient
+    ) {
+        $this->restClient = $restClient;
     }
 
     /**

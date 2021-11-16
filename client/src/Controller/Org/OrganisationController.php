@@ -27,8 +27,27 @@ use Symfony\Contracts\Translation\TranslatorInterface;
  */
 class OrganisationController extends AbstractController
 {
-    public function __construct(private Logger $logger, private UserApi $userApi, private RestClient $restClient, private OrganisationApi $organisationApi, private TranslatorInterface $translator)
-    {
+    private DateTimeProvider $dateTimeProvider;
+    private Logger $logger;
+    private UserApi $userApi;
+    private RestClient $restClient;
+    private OrganisationApi $organisationApi;
+    private TranslatorInterface $translator;
+
+    public function __construct(
+        DateTimeProvider $dateTimeProvider,
+        Logger $logger,
+        UserApi $userApi,
+        RestClient $restClient,
+        OrganisationApi $organisationApi,
+        TranslatorInterface $translator
+    ) {
+        $this->dateTimeProvider = $dateTimeProvider;
+        $this->logger = $logger;
+        $this->userApi = $userApi;
+        $this->restClient = $restClient;
+        $this->organisationApi = $organisationApi;
+        $this->translator = $translator;
     }
 
     /**
@@ -60,7 +79,7 @@ class OrganisationController extends AbstractController
     {
         try {
             $organisation = $this->restClient->get('v2/organisation/'.$id, 'Organisation');
-        } catch (RestClientException) {
+        } catch (RestClientException $e) {
             throw $this->createNotFoundException('Organisation not found');
         }
 
@@ -128,6 +147,7 @@ class OrganisationController extends AbstractController
             } catch (\Throwable $e) {
                 switch ((int) $e->getCode()) {
                     case 422:
+                        /** @var TranslatorInterface */
                         $translator = $this->translator;
 
                         $form->get('email')->addError(new FormError($translator->trans('form.email.existingError', [], 'org-organisation')));
@@ -162,6 +182,7 @@ class OrganisationController extends AbstractController
             throw $this->createNotFoundException();
         }
 
+        /** @var EntityDir\User */
         $currentUser = $this->getUser();
 
         if ($currentUser->getId() === $userToEdit->getId()) {
@@ -196,6 +217,7 @@ class OrganisationController extends AbstractController
             } catch (\Throwable $e) {
                 switch ((int) $e->getCode()) {
                     case 422:
+                        /** @var TranslatorInterface */
                         $translator = $this->translator;
                         $form->get('email')->addError(new FormError($translator->trans('form.email.existingError', [], 'org-organisation')));
                         break;
@@ -277,7 +299,7 @@ class OrganisationController extends AbstractController
      *
      * @return \Symfony\Component\HttpFoundation\RedirectResponse|Response
      */
-    public function resendActivationEmailAction(Request $request, int $orgId, int $userId): \Symfony\Component\HttpFoundation\Response|\Symfony\Component\HttpFoundation\RedirectResponse
+    public function resendActivationEmailAction(Request $request, int $orgId, int $userId)
     {
         try {
             $organisation = $this->restClient->get('v2/organisation/'.$orgId, 'Organisation');

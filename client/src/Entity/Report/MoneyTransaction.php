@@ -14,7 +14,7 @@ class MoneyTransaction
     public static function getCategoriesGrouped($typeFilter)
     {
         $ret = [];
-        foreach (MoneyTransaction::$categories as $row) {
+        foreach (MoneyTransaction::$categories as $k => $row) {
             list($categoryId, $hasDetails, $groupId, $type) = $row;
             if ($type == $typeFilter) {
                 if (!isset($ret[$groupId])) {

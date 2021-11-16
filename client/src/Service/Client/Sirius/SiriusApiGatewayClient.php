@@ -20,8 +20,35 @@ class SiriusApiGatewayClient
     public const SIRIUS_CHECKLIST_POST_ENDPOINT = 'clients/%s/reports/%s/checklists';
     public const SIRIUS_CHECKLIST_PUT_ENDPOINT = 'clients/%s/reports/%s/checklists/%s';
 
-    public function __construct(private Client $httpClient, private RequestSigner $requestSigner, private string $baseUrl, private Serializer $serializer, private LoggerInterface $logger)
-    {
+    /** @var Client */
+    private $httpClient;
+
+    /** @var RequestSigner */
+    private $requestSigner;
+
+    /** @var string */
+    private $baseUrl;
+
+    /** @var Serializer */
+    private $serializer;
+    /**
+     * @var LoggerInterface
+     */
+    private $logger;
+
+    public function __construct(
+        Client $httpClient,
+        RequestSigner $requestSigner,
+        string $baseUrl,
+        Serializer $serializer,
+        LoggerInterface $logger
+    ) {
+        $this->httpClient = $httpClient;
+        $this->requestSigner = $requestSigner;
+        $this->baseUrl = $baseUrl;
+        $this->serializer = $serializer;
+
+        $this->logger = $logger;
     }
 
     /**
@@ -130,7 +157,7 @@ class SiriusApiGatewayClient
         string $body = '',
         string $accept = 'application/json',
         string $contentType = 'application/json'
-    ): \Psr\Http\Message\RequestInterface|\GuzzleHttp\Psr7\Request {
+    ) {
         $url = new Uri(sprintf('%s/%s/%s', $this->baseUrl, self::SIRIUS_API_GATEWAY_VERSION, $endpoint));
 
         $request = new Request($method, $url, [

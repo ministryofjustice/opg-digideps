@@ -9,10 +9,10 @@ use App\Service\Client\Internal\ReportApi;
 use App\Service\Client\RestClient;
 use App\Service\NdrStatusService;
 use App\Service\StepRedirector;
-use Symfony\Component\HttpFoundation\RedirectResponse;
-use Symfony\Component\Routing\Annotation\Route;
 use Sensio\Bundle\FrameworkExtraBundle\Configuration\Template;
+use Symfony\Component\HttpFoundation\RedirectResponse;
 use Symfony\Component\HttpFoundation\Request;
+use Symfony\Component\Routing\Annotation\Route;
 use Symfony\Contracts\Translation\TranslatorInterface;
 
 class IncomeBenefitController extends AbstractController
@@ -24,8 +24,29 @@ class IncomeBenefitController extends AbstractController
         'one-off',
     ];
 
-    public function __construct(private ReportApi $reportApi, private RestClient $restClient, private StepRedirector $stepRedirector)
-    {
+    /**
+     * @var ReportApi
+     */
+    private $reportApi;
+
+    /**
+     * @var RestClient
+     */
+    private $restClient;
+
+    /**
+     * @var StepRedirector
+     */
+    private $stepRedirector;
+
+    public function __construct(
+        ReportApi $reportApi,
+        RestClient $restClient,
+        StepRedirector $stepRedirector
+    ) {
+        $this->reportApi = $reportApi;
+        $this->restClient = $restClient;
+        $this->stepRedirector = $stepRedirector;
     }
 
     /**
@@ -33,11 +54,13 @@ class IncomeBenefitController extends AbstractController
      * @Template("@App/Ndr/IncomeBenefit/start.html.twig")
      *
      * @param $ndrId
+     *
+     * @return array|RedirectResponse
      */
-    public function startAction($ndrId): array|\Symfony\Component\HttpFoundation\RedirectResponse
+    public function startAction($ndrId)
     {
         $ndr = $this->reportApi->getNdrIfNotSubmitted($ndrId, self::$jmsGroups);
-        if ($ndr->getStatusService()->getIncomeBenefitsState()['state'] != NdrStatusService::STATE_NOT_STARTED) {
+        if (NdrStatusService::STATE_NOT_STARTED != $ndr->getStatusService()->getIncomeBenefitsState()['state']) {
             return $this->redirectToRoute('ndr_income_benefits_summary', ['ndrId' => $ndrId]);
         }
 
@@ -59,7 +82,6 @@ class IncomeBenefitController extends AbstractController
         $ndr = $this->reportApi->getNdrIfNotSubmitted($ndrId, self::$jmsGroups);
         $fromPage = $request->get('from');
 
-
         $stepRedirector = $this->stepRedirector
             ->setRoutes('ndr_income_benefits', 'ndr_income_benefits_step', 'ndr_income_benefits_summary')
             ->setFromPage($fromPage)
@@ -69,7 +91,7 @@ class IncomeBenefitController extends AbstractController
         $form = $this->createForm(
             FormDir\Ndr\IncomeBenefitType::class,
             $ndr,
-            [ 'step' => $step, 'translator'  => $translator, 'clientFirstName' => $ndr->getClient()->getFirstname() ]
+            ['step' => $step, 'translator' => $translator, 'clientFirstName' => $ndr->getClient()->getFirstname()]
         );
 
         $form->handleRequest($request);
@@ -85,9 +107,9 @@ class IncomeBenefitController extends AbstractController
                 5 => ['ndr-one-off'],
             ];
 
-            $this->restClient->put('ndr/' . $ndrId, $data, $stepToJmsGroup[$step]);
+            $this->restClient->put('ndr/'.$ndrId, $data, $stepToJmsGroup[$step]);
 
-            if ($fromPage == 'summary') {
+            if ('summary' == $fromPage) {
                 $request->getSession()->getFlashBag()->add(
                     'notice',
                     'Answer edited'
@@ -96,7 +118,6 @@ class IncomeBenefitController extends AbstractController
 
             return $this->redirect($stepRedirector->getRedirectLinkAfterSaving());
         }
-
 
         return [
             'ndr' => $ndr,
@@ -117,12 +138,12 @@ class IncomeBenefitController extends AbstractController
         $ndr = $this->reportApi->getNdrIfNotSubmitted($ndrId, self::$jmsGroups);
 
         // not started -> go back to start page
-        if ($ndr->getStatusService()->getIncomeBenefitsState()['state'] == NdrStatusService::STATE_NOT_STARTED && $fromPage != 'skip-step' && $fromPage != 'last-step') {
+        if (NdrStatusService::STATE_NOT_STARTED == $ndr->getStatusService()->getIncomeBenefitsState()['state'] && 'skip-step' != $fromPage && 'last-step' != $fromPage) {
             return $this->redirectToRoute('ndr_income_benefits', ['ndrId' => $ndrId]);
         }
 
         return [
-            'comingFromLastStep' => $fromPage == 'skip-step' || $fromPage == 'last-step',
+            'comingFromLastStep' => 'skip-step' == $fromPage || 'last-step' == $fromPage,
             'ndr' => $ndr,
             'status' => $ndr->getStatusService(),
         ];

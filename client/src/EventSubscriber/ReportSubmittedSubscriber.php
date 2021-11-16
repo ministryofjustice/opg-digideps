@@ -14,13 +14,28 @@ use Symfony\Component\EventDispatcher\EventSubscriberInterface;
 
 class ReportSubmittedSubscriber implements EventSubscriberInterface
 {
-    public function __construct(private ReportApi $reportApi, private Mailer $mailer, private LoggerInterface $logger, private DateTimeProvider $dateTimeProvider)
+    /** @var ReportApi */
+    private $reportApi;
+
+    /* @var Mailer */
+    private $mailer;
+
+    private LoggerInterface $logger;
+
+    private DateTimeProvider $dateTimeProvider;
+
+    public function __construct(ReportApi $reportApi, Mailer $mailer, LoggerInterface $logger, DateTimeProvider $dateTimeProvider)
     {
+        $this->reportApi = $reportApi;
+        $this->mailer = $mailer;
+        $this->logger = $logger;
+        $this->dateTimeProvider = $dateTimeProvider;
     }
 
     public static function getSubscribedEvents()
     {
         return [
+            ReportSubmittedEvent::NAME => 'logResubmittedReport',
             ReportSubmittedEvent::NAME => 'sendEmail',
         ];
     }

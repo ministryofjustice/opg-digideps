@@ -12,6 +12,36 @@ use Symfony\Component\Validator\Context\ExecutionContextInterface;
 class ProfDeputyEstimateCost
 {
     /**
+     * @JMS\Type("string")
+     * @JMS\Groups({"prof-deputy-estimate-costs"})
+     */
+    private $profDeputyEstimateCostTypeId;
+
+    /**
+     * @var decimal
+     *
+     * @JMS\Type("string")
+     * @JMS\Groups({"prof-deputy-estimate-costs"})
+     * @Assert\Type(type="numeric", message="profDeputyEstimateCost.amount.notNumeric", groups={"prof-deputy-estimate-costs"})
+     * @Assert\Range(min=0, max=100000000, notInRangeMessage = "profDeputyEstimateCost.amount.notInRangeMessage", groups={"prof-deputy-estimate-costs"})
+     */
+    private $amount;
+
+    /**
+     * @var string
+     * @JMS\Groups({"prof-deputy-estimate-costs"})
+     * @JMS\Type("boolean")
+     */
+    private $hasMoreDetails;
+
+    /**
+     * @var string
+     * @JMS\Groups({"prof-deputy-estimate-costs"})
+     * @JMS\Type("string")
+     */
+    private $moreDetails;
+
+    /**
      * ProfDeputyEstimateCost constructor.
      *
      * @param $profDeputyEstimateCostTypeId
@@ -19,32 +49,12 @@ class ProfDeputyEstimateCost
      * @param string  $hasMoreDetails
      * @param string  $moreDetails
      */
-    public function __construct(
-        /**
-         * @JMS\Type("string")
-         * @JMS\Groups({"prof-deputy-estimate-costs"})
-         */
-        private $profDeputyEstimateCostTypeId,
-        /**
-         *
-         * @JMS\Type("string")
-         * @JMS\Groups({"prof-deputy-estimate-costs"})
-         * @Assert\Type(type="numeric", message="profDeputyEstimateCost.amount.notNumeric", groups={"prof-deputy-estimate-costs"})
-         * @Assert\Range(min=0, max=100000000, notInRangeMessage = "profDeputyEstimateCost.amount.notInRangeMessage", groups={"prof-deputy-estimate-costs"})
-         */
-        private $amount,
-        /**
-         * @JMS\Groups({"prof-deputy-estimate-costs"})
-         * @JMS\Type("boolean")
-         */
-        private $hasMoreDetails,
-        /**
-         * @JMS\Groups({"prof-deputy-estimate-costs"})
-         * @JMS\Type("string")
-         */
-        private $moreDetails
-    )
+    public function __construct($profDeputyEstimateCostTypeId, $amount, $hasMoreDetails, $moreDetails)
     {
+        $this->profDeputyEstimateCostTypeId = $profDeputyEstimateCostTypeId;
+        $this->amount = $amount;
+        $this->hasMoreDetails = $hasMoreDetails;
+        $this->moreDetails = $moreDetails;
     }
 
     /**

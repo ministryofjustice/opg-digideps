@@ -15,8 +15,15 @@ use Symfony\Component\Routing\Annotation\Route;
 
 class BehatController extends AbstractController
 {
-    public function __construct(private KernelInterface $kernel, private string $symfonyEnvironment)
+    private KernelInterface $kernel;
+    private RestClient $restClient;
+    private string $symfonyEnvironment;
+
+    public function __construct(KernelInterface $kernel, RestClient $restClient, string $symfonyEnvironment)
     {
+        $this->kernel = $kernel;
+        $this->restClient = $restClient;
+        $this->symfonyEnvironment = $symfonyEnvironment;
     }
 
     /**

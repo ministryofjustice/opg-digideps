@@ -10,10 +10,24 @@ use Psr\Log\LoggerInterface;
 class MailSender implements MailSenderInterface
 {
     /**
+     * @var LoggerInterface
+     */
+    private $logger;
+
+    /**
+     * @var NotifyClient
+     */
+    private $notifyClient;
+
+    /**
      * MailSender constructor.
      */
-    public function __construct(private LoggerInterface $logger, private NotifyClient $notifyClient)
-    {
+    public function __construct(
+        LoggerInterface $logger,
+        NotifyClient $notifyClient
+    ) {
+        $this->logger = $logger;
+        $this->notifyClient = $notifyClient;
     }
 
     public function send(Email $email): bool
@@ -28,6 +42,7 @@ class MailSender implements MailSenderInterface
             );
         } catch (NotifyException $exception) {
             $this->logger->error($exception->getMessage());
+
             return false;
         }
 

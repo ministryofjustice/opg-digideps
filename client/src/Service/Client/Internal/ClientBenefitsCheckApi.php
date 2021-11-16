@@ -13,8 +13,11 @@ class ClientBenefitsCheckApi
     const CREATE_ENDPOINT = '%s/client-benefits-check';
     const EXISTING_ENDPOINT = '%s/client-benefits-check/%s';
 
-    public function __construct(private RestClient $restClient)
+    private RestClient $restClient;
+
+    public function __construct(RestClient $restClient)
     {
+        $this->restClient = $restClient;
     }
 
     public function post(ClientBenefitsCheckInterface $clientBenefitsCheck)

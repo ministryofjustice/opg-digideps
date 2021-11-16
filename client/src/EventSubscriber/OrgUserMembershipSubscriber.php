@@ -13,8 +13,13 @@ use Symfony\Component\EventDispatcher\EventSubscriberInterface;
 
 class OrgUserMembershipSubscriber implements EventSubscriberInterface
 {
-    public function __construct(private LoggerInterface $logger, private DateTimeProvider $dateTimeProvider)
+    private LoggerInterface $logger;
+    private DateTimeProvider $dateTimeProvider;
+
+    public function __construct(LoggerInterface $logger, DateTimeProvider $dateTimeProvider)
     {
+        $this->logger = $logger;
+        $this->dateTimeProvider = $dateTimeProvider;
     }
 
     /**

@@ -10,8 +10,11 @@ use Symfony\Component\EventDispatcher\EventSubscriberInterface;
 
 class DeputySelfRegisteredSubscriber implements EventSubscriberInterface
 {
-    public function __construct(private Mailer $mailer)
+    private Mailer $mailer;
+
+    public function __construct(Mailer $mailer)
     {
+        $this->mailer = $mailer;
     }
 
     public static function getSubscribedEvents()

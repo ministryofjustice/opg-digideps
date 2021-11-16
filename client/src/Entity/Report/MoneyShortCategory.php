@@ -7,25 +7,29 @@ use JMS\Serializer\Annotation as JMS;
 class MoneyShortCategory
 {
     /**
+     * @JMS\Type("string")
+     * @JMS\Groups({"moneyShortCategoriesIn", "moneyShortCategoriesOut"})
+     */
+    private $typeId;
+
+    /**
+     * @var bool
+     *
+     * @JMS\Type("boolean")
+     * @JMS\Groups({"moneyShortCategoriesIn", "moneyShortCategoriesOut"})
+     */
+    private $present;
+
+    /**
      * IncomeBenefit constructor.
      *
      * @param $typeId
      * @param bool $present
      */
-    public function __construct(
-        /**
-         * @JMS\Type("string")
-         * @JMS\Groups({"moneyShortCategoriesIn", "moneyShortCategoriesOut"})
-         */
-        private $typeId,
-        /**
-         *
-         * @JMS\Type("boolean")
-         * @JMS\Groups({"moneyShortCategoriesIn", "moneyShortCategoriesOut"})
-         */
-        private $present
-    )
+    public function __construct($typeId, $present)
     {
+        $this->typeId = $typeId;
+        $this->present = $present;
     }
 
     /**

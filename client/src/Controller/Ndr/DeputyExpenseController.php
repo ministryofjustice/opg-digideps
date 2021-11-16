@@ -21,8 +21,23 @@ class DeputyExpenseController extends AbstractController
         'ndr-expenses',
     ];
 
-    public function __construct(private ReportApi $reportApi, private RestClient $restClient, private RouterInterface $router)
-    {
+    /** @var ReportApi */
+    private $reportApi;
+
+    /** @var RestClient */
+    private $restClient;
+
+    /** @var RouterInterface */
+    private $router;
+
+    public function __construct(
+        ReportApi $reportApi,
+        RestClient $restClient,
+        RouterInterface $router
+    ) {
+        $this->reportApi = $reportApi;
+        $this->restClient = $restClient;
+        $this->router = $router;
     }
 
     /**
@@ -30,8 +45,10 @@ class DeputyExpenseController extends AbstractController
      * @Template("@App/Ndr/DeputyExpense/start.html.twig")
      *
      * @param $ndrId
+     *
+     * @return array|RedirectResponse
      */
-    public function startAction($ndrId): array|\Symfony\Component\HttpFoundation\RedirectResponse
+    public function startAction($ndrId)
     {
         $ndr = $this->reportApi->getNdrIfNotSubmitted($ndrId, self::$jmsGroups);
 
@@ -88,8 +105,10 @@ class DeputyExpenseController extends AbstractController
      * @Template("@App/Ndr/DeputyExpense/add.html.twig")
      *
      * @param $ndrId
+     *
+     * @return array|RedirectResponse
      */
-    public function addAction(Request $request, $ndrId): array|\Symfony\Component\HttpFoundation\RedirectResponse
+    public function addAction(Request $request, $ndrId)
     {
         $ndr = $this->reportApi->getNdrIfNotSubmitted($ndrId, self::$jmsGroups);
         $expense = new EntityDir\Ndr\Expense();
@@ -115,7 +134,7 @@ class DeputyExpenseController extends AbstractController
                 'form' => $form->createView(),
                 'ndr' => $ndr,
             ];
-        } catch (RouteNotFoundException) {
+        } catch (RouteNotFoundException $e) {
             return [
                 'backLink' => null,
                 'form' => $form->createView(),
@@ -183,8 +202,10 @@ class DeputyExpenseController extends AbstractController
      * @Template("@App/Ndr/DeputyExpense/summary.html.twig")
      *
      * @param $ndrId
+     *
+     * @return array|RedirectResponse
      */
-    public function summaryAction($ndrId): array|\Symfony\Component\HttpFoundation\RedirectResponse
+    public function summaryAction($ndrId)
     {
         $ndr = $this->reportApi->getNdrIfNotSubmitted($ndrId, self::$jmsGroups);
         if (NdrStatusService::STATE_NOT_STARTED == $ndr->getStatusService()->getExpensesState()['state']) {
@@ -201,8 +222,10 @@ class DeputyExpenseController extends AbstractController
      * @Template("@App/Common/confirmDelete.html.twig")
      *
      * @param int $id
+     *
+     * @return array|RedirectResponse
      */
-    public function deleteAction(Request $request, $ndrId, $expenseId): array|\Symfony\Component\HttpFoundation\RedirectResponse
+    public function deleteAction(Request $request, $ndrId, $expenseId)
     {
         $form = $this->createForm(FormDir\ConfirmDeleteType::class);
         $form->handleRequest($request);

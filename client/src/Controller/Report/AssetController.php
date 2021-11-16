@@ -21,8 +21,23 @@ class AssetController extends AbstractController
         'asset-state',
     ];
 
-    public function __construct(private RestClient $restClient, private ReportApi $reportApi, private StepRedirector $stepRedirector)
-    {
+    /** @var RestClient */
+    private $restClient;
+
+    /** @var ReportApi */
+    private $reportApi;
+
+    /** @var StepRedirector */
+    private $stepRedirector;
+
+    public function __construct(
+        RestClient $restClient,
+        ReportApi $reportApi,
+        StepRedirector $stepRedirector
+    ) {
+        $this->restClient = $restClient;
+        $this->reportApi = $reportApi;
+        $this->stepRedirector = $stepRedirector;
     }
 
     /**
@@ -30,8 +45,10 @@ class AssetController extends AbstractController
      * @Template("@App/Report/Asset/start.html.twig")
      *
      * @param $reportId
+     *
+     * @return array|RedirectResponse
      */
-    public function startAction($reportId): array|\Symfony\Component\HttpFoundation\RedirectResponse
+    public function startAction($reportId)
     {
         $report = $this->reportApi->getReportIfNotSubmitted($reportId, self::$jmsGroups);
         if (EntityDir\Report\Status::STATE_NOT_STARTED != $report->getStatus()->getAssetsState()['state']) {
@@ -97,10 +114,12 @@ class AssetController extends AbstractController
 
         if ($form->isSubmitted() && $form->isValid()) {
             $title = $form->getData()->getTitle();
-            return match ($title) {
-                'Property' => $this->redirect($this->generateUrl('assets_property_step', ['reportId' => $reportId, 'step' => 1])),
-                default => $this->redirect($this->generateUrl('asset_other_add', ['reportId' => $reportId, 'title' => $title])),
-            };
+            switch ($title) {
+                case 'Property':
+                    return $this->redirect($this->generateUrl('assets_property_step', ['reportId' => $reportId, 'step' => 1]));
+                default:
+                    return $this->redirect($this->generateUrl('asset_other_add', ['reportId' => $reportId, 'title' => $title]));
+            }
         }
 
         return [
@@ -180,8 +199,10 @@ class AssetController extends AbstractController
      * @Template("@App/Report/Asset/addAnother.html.twig")
      *
      * @param $reportId
+     *
+     * @return array|RedirectResponse
      */
-    public function addAnotherAction(Request $request, $reportId): array|\Symfony\Component\HttpFoundation\RedirectResponse
+    public function addAnotherAction(Request $request, $reportId)
     {
         $report = $this->reportApi->getReportIfNotSubmitted($reportId);
 
@@ -329,8 +350,10 @@ class AssetController extends AbstractController
      * @Template("@App/Report/Asset/summary.html.twig")
      *
      * @param $reportId
+     *
+     * @return array|RedirectResponse
      */
-    public function summaryAction($reportId): array|\Symfony\Component\HttpFoundation\RedirectResponse
+    public function summaryAction($reportId)
     {
         $report = $this->reportApi->getReportIfNotSubmitted($reportId, self::$jmsGroups);
         if (EntityDir\Report\Status::STATE_NOT_STARTED == $report->getStatus()->getAssetsState()['state']) {
@@ -348,8 +371,10 @@ class AssetController extends AbstractController
      *
      * @param $reportId
      * @param $assetId
+     *
+     * @return array|RedirectResponse
      */
-    public function deleteAction(Request $request, $reportId, $assetId): array|\Symfony\Component\HttpFoundation\RedirectResponse
+    public function deleteAction(Request $request, $reportId, $assetId)
     {
         $form = $this->createForm(FormDir\ConfirmDeleteType::class);
         $form->handleRequest($request);

@@ -21,7 +21,7 @@ class CsvToArray
 
     /**
      * Columns that we definitely dont expect.
-     * (those that are present that would indicate the wrong CSV is being used)
+     * (those that are present that would indicate the wrong CSV is being used).
      *
      * @var array
      */
@@ -32,19 +32,26 @@ class CsvToArray
      */
     private $optionalColumns = [];
 
+    /**
+     * @var bool
+     */
+    private $normaliseNewLines;
+
     private $firstRow = [];
 
     /**
      * CsvToArray constructor.
      *
      * @param string $file
-     * @param bool $normaliseNewLines
-     * @param bool $autoDetectLineEndings - setup to maintain compatibility with other code that uses this class
+     * @param bool   $normaliseNewLines
+     * @param bool   $autoDetectLineEndings - setup to maintain compatibility with other code that uses this class
      *
      * @throws \RuntimeException
      */
-    public function __construct($file, private $normaliseNewLines, $autoDetectLineEndings = false)
+    public function __construct($file, $normaliseNewLines, $autoDetectLineEndings = false)
     {
+        $this->normaliseNewLines = $normaliseNewLines;
+
         if (!file_exists($file)) {
             throw new \RuntimeException("file $file not found");
         }
@@ -54,7 +61,7 @@ class CsvToArray
         // if line endings need to be normalised, the stream is replaced with a string stream with the content replaced
         if ($this->normaliseNewLines) {
             $content = str_replace(["\r\n", "\r"], ["\n", "\n"], $fileContent);
-            $this->handle = fopen('data://text/plain,' . $content, 'r');
+            $this->handle = fopen('data://text/plain,'.$content, 'r');
         } else {
             ini_set('auto_detect_line_endings', true);
             $openMode = $autoDetectLineEndings ? 'rb' : 'r';
@@ -122,25 +129,25 @@ class CsvToArray
         }
         $missingColumns = array_diff($this->expectedColumns, $header);
         if ($missingColumns) {
-            throw new \RuntimeException('Invalid file. Cannot find expected header columns: ' . implode(', ', $missingColumns));
+            throw new \RuntimeException('Invalid file. Cannot find expected header columns: '.implode(', ', $missingColumns));
         }
 
         $rogueColumns = array_intersect($header, $this->unexpectedColumns);
         if (!empty($rogueColumns)) {
-            throw new \RuntimeException('Invalid file. File contains unexpected header columns: ' . implode(', ', $rogueColumns));
+            throw new \RuntimeException('Invalid file. File contains unexpected header columns: '.implode(', ', $rogueColumns));
         }
 
         // read rows
         $rowNumber = 1;
         while (($row = $this->getRow()) !== false) {
-            $rowNumber++;
+            ++$rowNumber;
             $rowArray = [];
             foreach ($this->expectedColumns as $expectedColumn) {
                 if (empty($header)) {
                     throw new \RuntimeException('Empty header in CSV file');
                 }
                 $index = array_search($expectedColumn, $header);
-                if ($index !== false && !empty($row)) {
+                if (false !== $index && !empty($row)) {
                     if (!array_key_exists($index, $row)) {
                         throw new \RuntimeException("Can't find $expectedColumn column in line $rowNumber");
                     }
@@ -149,7 +156,7 @@ class CsvToArray
             }
             foreach ($this->optionalColumns as $optionalColumn) {
                 $index = array_search($optionalColumn, $header);
-                if ($index !== false) {
+                if (false !== $index) {
                     // fix for CSV with last two columns being empty and not having commas
                     if (!isset($row[$index])) {
                         $row[$index] = '';
@@ -159,7 +166,6 @@ class CsvToArray
             }
             $ret[] = $rowArray;
         }
-
 
         return $ret;
     }

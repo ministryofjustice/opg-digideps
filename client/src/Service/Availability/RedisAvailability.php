@@ -8,9 +8,12 @@ class RedisAvailability extends ServiceAvailabilityAbstract
 {
     const TEST_KEY = 'RedisAvailabilityTestKey';
 
-    public function __construct(private ContainerInterface $container)
+    private ContainerInterface $container;
+
+    public function __construct(ContainerInterface $container)
     {
         $this->isHealthy = false;
+        $this->container = $container;
     }
 
     public function ping()
@@ -20,11 +23,11 @@ class RedisAvailability extends ServiceAvailabilityAbstract
             $redis = $this->container->get('snc_redis.default');
             $redis->set(self::TEST_KEY, 'valueSaved');
 
-            if ($redis->get(self::TEST_KEY) == 'valueSaved') {
+            if ('valueSaved' == $redis->get(self::TEST_KEY)) {
                 $this->isHealthy = true;
             }
         } catch (\Throwable $e) {
-            $this->errors = 'Redis Error: ' . $e->getMessage();
+            $this->errors = 'Redis Error: '.$e->getMessage();
         }
     }
 

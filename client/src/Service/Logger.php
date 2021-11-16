@@ -8,8 +8,14 @@ use Psr\Log\LoggerInterface;
 
 class Logger
 {
-    public function __construct(private LoggerInterface $logger)
+    /**
+     * @var LoggerInterface
+     */
+    private $logger;
+
+    public function __construct(LoggerInterface $logger)
     {
+        $this->logger = $logger;
     }
 
     public function notice(string $message, array $context)

@@ -12,8 +12,19 @@ class ReportUnsubmittedEvent extends Event
 {
     public const NAME = 'report.unsubmitted';
 
-    public function __construct(private Report $unsubmittedReport, private User $unsubmittedBy, private string $trigger)
+    /** @var Report */
+    private $unsubmittedReport;
+
+    /** @var User */
+    private $unsubmittedBy;
+
+    private string $trigger;
+
+    public function __construct(Report $unsubmittedReport, User $unsubmittedBy, string $trigger)
     {
+        $this->unsubmittedReport = $unsubmittedReport;
+        $this->unsubmittedBy = $unsubmittedBy;
+        $this->trigger = $trigger;
     }
 
     public function getTrigger()

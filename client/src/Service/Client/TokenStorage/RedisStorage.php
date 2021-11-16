@@ -6,23 +6,35 @@ use Predis\ClientInterface as PredisClientInterface;
 
 class RedisStorage implements TokenStorageInterface
 {
-    public function __construct(private PredisClientInterface $redis, private string $prefix)
+    /**
+     * @var PredisClientInterface
+     */
+    private $redis;
+
+    /**
+     * @var string
+     */
+    private $prefix;
+
+    public function __construct(PredisClientInterface $redis, string $prefix)
     {
+        $this->redis = $redis;
+        $this->prefix = $prefix;
     }
 
     public function get($id)
     {
-        return $this->redis->get($this->prefix . $id);
+        return $this->redis->get($this->prefix.$id);
     }
 
     public function set($id, $value)
     {
-        return $this->redis->set($this->prefix . $id, $value);
+        return $this->redis->set($this->prefix.$id, $value);
     }
 
     public function remove($id)
     {
-        $this->redis->set($this->prefix . $id, null);
-        $this->redis->expire($this->prefix . $id, 0);
+        $this->redis->set($this->prefix.$id, null);
+        $this->redis->expire($this->prefix.$id, 0);
     }
 }

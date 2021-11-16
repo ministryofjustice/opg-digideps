@@ -77,6 +77,8 @@ class SelfRegisterData
 
     /**
      * @param string $firstname
+     *
+     * @return SelfRegisterData
      */
     public function setFirstname($firstname): self
     {
@@ -95,6 +97,8 @@ class SelfRegisterData
 
     /**
      * @param string $lastname
+     *
+     * @return SelfRegisterData
      */
     public function setLastname($lastname): self
     {
@@ -113,6 +117,8 @@ class SelfRegisterData
 
     /**
      * @param string $email
+     *
+     * @return SelfRegisterData
      */
     public function setEmail($email): self
     {
@@ -131,6 +137,8 @@ class SelfRegisterData
 
     /**
      * @param string $postcode
+     *
+     * @return SelfRegisterData
      */
     public function setPostcode($postcode): self
     {
@@ -149,6 +157,8 @@ class SelfRegisterData
 
     /**
      * @param string $clientFirstname
+     *
+     * @return SelfRegisterData
      */
     public function setClientFirstname($clientFirstname): self
     {
@@ -167,6 +177,8 @@ class SelfRegisterData
 
     /**
      * @param string $clientLastname
+     *
+     * @return SelfRegisterData
      */
     public function setClientLastname($clientLastname): self
     {
@@ -185,6 +197,8 @@ class SelfRegisterData
 
     /**
      * @param string $caseNumber
+     *
+     * @return SelfRegisterData
      */
     public function setCaseNumber($caseNumber): self
     {

@@ -19,8 +19,20 @@ class NdrApi
     private const SUBMIT_NDR_ENDPOINT = 'ndr/%s/submit?documentId=%s';
     private const GET_NDR_ENDPOINT = 'ndr/%s';
 
-    public function __construct(private RestClient $restClient, private ObservableEventDispatcher $eventDispatcher, private UserApi $userApi)
+    /** @var RestClient */
+    private $restClient;
+
+    /** @var ObservableEventDispatcher */
+    private $eventDispatcher;
+
+    /** @var UserApi */
+    private $userApi;
+
+    public function __construct(RestClient $restClient, ObservableEventDispatcher $eventDispatcher, UserApi $userApi)
     {
+        $this->restClient = $restClient;
+        $this->eventDispatcher = $eventDispatcher;
+        $this->userApi = $userApi;
     }
 
     public function submit(Ndr $ndrToSubmit, Document $ndrPdfDocument)

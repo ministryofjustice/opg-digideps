@@ -8,9 +8,9 @@ use App\Form as FormDir;
 use App\Service\Client\Internal\ReportApi;
 use App\Service\Client\RestClient;
 use App\Service\StepRedirector;
-use Symfony\Component\Routing\Annotation\Route;
 use Sensio\Bundle\FrameworkExtraBundle\Configuration\Template;
 use Symfony\Component\HttpFoundation\Request;
+use Symfony\Component\Routing\Annotation\Route;
 use Symfony\Contracts\Translation\TranslatorInterface;
 
 class ActionController extends AbstractController
@@ -20,8 +20,23 @@ class ActionController extends AbstractController
         'action-state',
     ];
 
-    public function __construct(private RestClient $restClient, private ReportApi $reportApi, private StepRedirector $stepRedirector)
-    {
+    /** @var RestClient */
+    private $restClient;
+
+    /** @var ReportApi */
+    private $reportApi;
+
+    /** @var StepRedirector */
+    private $stepRedirector;
+
+    public function __construct(
+        RestClient $restClient,
+        ReportApi $reportApi,
+        StepRedirector $stepRedirector
+    ) {
+        $this->restClient = $restClient;
+        $this->reportApi = $reportApi;
+        $this->stepRedirector = $stepRedirector;
     }
 
     /**
@@ -31,7 +46,7 @@ class ActionController extends AbstractController
     public function startAction(Request $request, $reportId)
     {
         $report = $this->reportApi->getReportIfNotSubmitted($reportId, self::$jmsGroups);
-        if ($report->getStatus()->getActionsState()['state'] != EntityDir\Report\Status::STATE_NOT_STARTED) {
+        if (EntityDir\Report\Status::STATE_NOT_STARTED != $report->getStatus()->getActionsState()['state']) {
             return $this->redirectToRoute('actions_summary', ['reportId' => $reportId]);
         }
 
@@ -66,7 +81,7 @@ class ActionController extends AbstractController
             [
                 'step' => $step,
                 'translator' => $translator,
-                'clientFirstName' => $report->getClient()->getFirstname()
+                'clientFirstName' => $report->getClient()->getFirstname(),
             ]
         );
 
@@ -77,9 +92,9 @@ class ActionController extends AbstractController
             /* @var $data EntityDir\Report\Action */
             $data->setReport($report);
 
-            $this->restClient->put('report/' . $reportId . '/action', $data);
+            $this->restClient->put('report/'.$reportId.'/action', $data);
 
-            if ($fromPage == 'summary') {
+            if ('summary' == $fromPage) {
                 $request->getSession()->getFlashBag()->add(
                     'notice',
                     'Answer edited'
@@ -90,12 +105,12 @@ class ActionController extends AbstractController
         }
 
         return [
-            'report'       => $report,
-            'step'         => $step,
+            'report' => $report,
+            'step' => $step,
             'reportStatus' => $report->getStatus(),
-            'form'         => $form->createView(),
-            'backLink'     => $stepRedirector->getBackLink(),
-            'skipLink'     => $stepRedirector->getSkipLink(),
+            'form' => $form->createView(),
+            'backLink' => $stepRedirector->getBackLink(),
+            'skipLink' => $stepRedirector->getSkipLink(),
         ];
     }
 
@@ -107,14 +122,14 @@ class ActionController extends AbstractController
     {
         $fromPage = $request->get('from');
         $report = $this->reportApi->getReportIfNotSubmitted($reportId, self::$jmsGroups);
-        if ($report->getStatus()->getActionsState()['state'] == EntityDir\Report\Status::STATE_NOT_STARTED && $fromPage != 'skip-step') {
+        if (EntityDir\Report\Status::STATE_NOT_STARTED == $report->getStatus()->getActionsState()['state'] && 'skip-step' != $fromPage) {
             return $this->redirectToRoute('actions', ['reportId' => $reportId]);
         }
 
         return [
-            'comingFromLastStep' => $fromPage == 'skip-step' || $fromPage == 'last-step',
-            'report'             => $report,
-            'status'             => $report->getStatus()
+            'comingFromLastStep' => 'skip-step' == $fromPage || 'last-step' == $fromPage,
+            'report' => $report,
+            'status' => $report->getStatus(),
         ];
     }
 

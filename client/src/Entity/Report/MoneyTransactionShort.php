@@ -17,6 +17,7 @@ class MoneyTransactionShort
 
     /**
      * @JMS\Type("App\Entity\Report\Report")
+     *
      * @var Report
      */
     private $report;
@@ -30,7 +31,6 @@ class MoneyTransactionShort
      * @Assert\NotBlank(message="moneyTransactionShort.amount.notBlank", groups={"money-transaction-short"})
      * @Assert\Type(type="numeric", message="moneyTransactionShort.amount.type", groups={"money-transaction-short"})
      * @Assert\Range(min=1000, max=10000000, minMessage = "moneyTransactionShort.amount.minMessage", maxMessage = "moneyTransactionShort.amount.maxMessage", groups={"money-transaction-short"})
-     *
      */
     private $amount;
 
@@ -55,20 +55,23 @@ class MoneyTransactionShort
     private $date;
 
     /**
+     * Discriminator field.
+     *
+     * @var string
+     *
+     * @JMS\Type("string")
+     * @JMS\Groups({"moneyTransactionShort"})
+     */
+    private $type;
+
+    /**
      * MoneyTransactionShort constructor.
+     *
      * @param string $type
      */
-    public function __construct(
-        /**
-         * Discriminator field
-         *
-         *
-         * @JMS\Type("string")
-         * @JMS\Groups({"moneyTransactionShort"})
-         */
-        private $type
-    )
+    public function __construct($type)
     {
+        $this->type = $type;
     }
 
     /**

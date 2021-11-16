@@ -25,6 +25,7 @@ class ProfServicePreviousFeesEstimateType extends AbstractType
     public function configureOptions(OptionsResolver $resolver)
     {
         $resolver->setDefaults([
+            'translation_domain' => 'report-prof_service_fee',
             'validation_groups' => ['previous-prof-fees-estimate-choice'],
             'translation_domain' => 'report-prof-current-fees',
         ]);

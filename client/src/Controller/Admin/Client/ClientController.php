@@ -16,8 +16,18 @@ use Symfony\Component\Routing\Annotation\Route;
  */
 class ClientController extends AbstractController
 {
-    public function __construct(private ClientApi $clientApi)
-    {
+    /** @var RestClient */
+    private $restClient;
+
+    /** @var ClientApi */
+    private $clientApi;
+
+    public function __construct(
+        RestClient $restClient,
+        ClientApi $clientApi
+    ) {
+        $this->restClient = $restClient;
+        $this->clientApi = $clientApi;
     }
 
     /**

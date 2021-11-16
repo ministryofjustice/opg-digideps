@@ -18,14 +18,29 @@ use Throwable;
 
 class ChecklistSyncService
 {
+    /** @var RestClient */
+    private $restClient;
+
+    /** @var SiriusApiGatewayClient */
+    private $siriusApiGatewayClient;
+
+    /** @var SiriusApiErrorTranslator */
+    private $errorTranslator;
+
     /** @var int */
     const FAILED_TO_SYNC = -1;
 
     /** @var string */
     const PAPER_REPORT_UUID_FALLBACK = '99999999-9999-9999-9999-999999999999';
 
-    public function __construct(private SiriusApiGatewayClient $siriusApiGatewayClient, private SiriusApiErrorTranslator $errorTranslator)
-    {
+    public function __construct(
+        RestClient $restClient,
+        SiriusApiGatewayClient $siriusApiGatewayClient,
+        SiriusApiErrorTranslator $errorTranslator
+    ) {
+        $this->restClient = $restClient;
+        $this->siriusApiGatewayClient = $siriusApiGatewayClient;
+        $this->errorTranslator = $errorTranslator;
     }
 
     /**
@@ -133,6 +148,29 @@ class ChecklistSyncService
         return ($this->errorCanBeTranslated($e)) ?
             $this->errorTranslator->translateApiError((string) $e->getResponse()->getBody()) :
             substr($e->getMessage(), 0, 254);
+    }
+
+    private function updateChecklist(int $id, string $status, string $message = null, string $uuid = null): void
+    {
+        $data = ['syncStatus' => $status];
+
+        if (null !== $message) {
+            $errorMessage = json_decode($message, true) ? json_decode($message, true) : $message;
+            $data['syncError'] = $errorMessage;
+        }
+
+        if (null !== $uuid) {
+            $data['uuid'] = $uuid;
+        }
+
+        $this->restClient->apiCall(
+            'put',
+            sprintf('checklist/%s', $id),
+            json_encode($data),
+            'raw',
+            [],
+            false
+        );
     }
 
     private function errorCanBeTranslated(Throwable $e): bool

@@ -13,7 +13,7 @@ class UserHelpers extends KernelTestCase
     /**
      * @return User|array|object
      */
-    public static function createUser(?array $data = null): array|object|\App\Entity\User
+    public static function createUser(?array $data = null)
     {
         $container = (self::bootKernel())->getContainer();
         $serializer = $container->get('serializer');
@@ -34,7 +34,7 @@ class UserHelpers extends KernelTestCase
     /**
      * @return User|array|object
      */
-    public static function createLayUser(): array|object|\App\Entity\User
+    public static function createLayUser()
     {
         return (self::createUser())->setRoleName(User::ROLE_LAY_DEPUTY);
     }

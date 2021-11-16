@@ -10,8 +10,17 @@ use Symfony\Component\Validator\Validator\ValidatorInterface;
 
 class ValidationCommand extends Command
 {
-    public function __construct(private ValidatorInterface $validator, private string $rootDir)
+    /** @var ValidatorInterface */
+    private $validator;
+
+    /** @var string */
+    private $rootDir;
+
+    public function __construct(ValidatorInterface $validator, string $rootDir)
     {
+        $this->validator = $validator;
+        $this->rootDir = $rootDir;
+
         parent::__construct();
     }
 
@@ -40,9 +49,9 @@ class ValidationCommand extends Command
     protected function execute(InputInterface $input, OutputInterface $output)
     {
         $ret = [];
-        foreach (glob($this->rootDir . '/src/App/Entity/*.php') as $entity) {
+        foreach (glob($this->rootDir.'/src/App/Entity/*.php') as $entity) {
             if (preg_match('/([A-Z][a-z]+)\.php$/', $entity, $matches)) {
-                $className = '\\App\\Entity\\' . $matches[1];
+                $className = '\\App\\Entity\\'.$matches[1];
                 if (class_exists($className)) {
                     $ret[$className] = $this->getClassValidationRules(new $className());
                 }

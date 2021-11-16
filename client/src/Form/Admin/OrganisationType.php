@@ -92,7 +92,7 @@ class OrganisationType extends AbstractType
         $resolver->setDefaults([
             'translation_domain' => 'admin-organisations',
             'validation_groups' => function (FormInterface $form) {
-                $form->getData();
+                $data = $form->getData();
                 $type = $form->get('emailIdentifierType')->getData();
 
                 if ('domain' === $type) {

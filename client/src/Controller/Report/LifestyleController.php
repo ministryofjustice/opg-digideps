@@ -20,8 +20,23 @@ class LifestyleController extends AbstractController
         'lifestyle-state',
     ];
 
-    public function __construct(private RestClient $restClient, private ReportApi $reportApi, private StepRedirector $stepRedirector)
-    {
+    /** @var RestClient */
+    private $restClient;
+
+    /** @var ReportApi */
+    private $reportApi;
+
+    /** @var StepRedirector */
+    private $stepRedirector;
+
+    public function __construct(
+        RestClient $restClient,
+        ReportApi $reportApi,
+        StepRedirector $stepRedirector
+    ) {
+        $this->restClient = $restClient;
+        $this->reportApi = $reportApi;
+        $this->stepRedirector = $stepRedirector;
     }
 
     /**
@@ -29,8 +44,10 @@ class LifestyleController extends AbstractController
      * @Template("@App/Report/Lifestyle/start.html.twig")
      *
      * @param $reportId
+     *
+     * @return array|RedirectResponse
      */
-    public function startAction(Request $request, $reportId): array|\Symfony\Component\HttpFoundation\RedirectResponse
+    public function startAction(Request $request, $reportId)
     {
         $report = $this->reportApi->getReportIfNotSubmitted($reportId, self::$jmsGroups);
         if (EntityDir\Report\Status::STATE_NOT_STARTED != $report->getStatus()->getLifestyleState()['state']) {
@@ -48,8 +65,10 @@ class LifestyleController extends AbstractController
      *
      * @param $reportId
      * @param $step
+     *
+     * @return array|RedirectResponse
      */
-    public function stepAction(Request $request, $reportId, $step): array|\Symfony\Component\HttpFoundation\RedirectResponse
+    public function stepAction(Request $request, $reportId, $step)
     {
         $totalSteps = 2;
         if ($step < 1 || $step > $totalSteps) {
@@ -107,8 +126,10 @@ class LifestyleController extends AbstractController
      * @Template("@App/Report/Lifestyle/summary.html.twig")
      *
      * @param $reportId
+     *
+     * @return array|RedirectResponse
      */
-    public function summaryAction(Request $request, $reportId): array|\Symfony\Component\HttpFoundation\RedirectResponse
+    public function summaryAction(Request $request, $reportId)
     {
         $fromPage = $request->get('from');
         $report = $this->reportApi->getReportIfNotSubmitted($reportId, self::$jmsGroups);

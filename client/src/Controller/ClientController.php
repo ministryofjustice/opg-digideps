@@ -5,13 +5,11 @@ namespace App\Controller;
 use App\Entity\Client;
 use App\Entity\Report\Report;
 use App\Entity\User;
+use App\Form\ClientType;
 use App\Service\Audit\AuditEvents;
 use App\Service\Client\Internal\ClientApi;
 use App\Service\Client\Internal\UserApi;
-use App\Form\ClientType;
 use App\Service\Client\RestClient;
-use App\Service\Mailer\MailFactory;
-use App\Service\Mailer\MailSender;
 use App\Service\Redirector;
 use Psr\Log\LoggerInterface;
 use Sensio\Bundle\FrameworkExtraBundle\Configuration\Template;
@@ -24,8 +22,28 @@ use Symfony\Contracts\Translation\TranslatorInterface;
 
 class ClientController extends AbstractController
 {
-    public function __construct(private UserApi $userApi, private ClientApi $clientApi, private RestClient $restClient)
-    {
+    /** @var UserApi */
+    private $userApi;
+
+    /** @var ClientApi */
+    private $clientApi;
+
+    /** @var RestClient */
+    private $restClient;
+
+    /** @var RouterInterface */
+    private $router;
+
+    public function __construct(
+        UserApi $userApi,
+        ClientApi $clientApi,
+        RestClient $restClient,
+        RouterInterface $router
+    ) {
+        $this->userApi = $userApi;
+        $this->clientApi = $clientApi;
+        $this->restClient = $restClient;
+        $this->router = $router;
     }
 
     /**
@@ -54,9 +72,9 @@ class ClientController extends AbstractController
      * @Route("/deputyship-details/your-client/edit", name="client_edit")
      * @Template("@App/Client/edit.html.twig")
      *
-     *
+     * @return array|RedirectResponse
      */
-    public function editAction(Request $request): array|\Symfony\Component\HttpFoundation\RedirectResponse
+    public function editAction(Request $request)
     {
         $from = $request->get('from');
         $preUpdateClient = $this->clientApi->getFirstClient();
@@ -70,7 +88,7 @@ class ClientController extends AbstractController
 
         $form = $this->createForm(ClientType::class, clone $preUpdateClient, [
             'action' => $this->generateUrl('client_edit', ['action' => 'edit', 'from' => $from]),
-            'validation_groups' => ['lay-deputy-client-edit']
+            'validation_groups' => ['lay-deputy-client-edit'],
         ]);
 
         $form->handleRequest($request);
@@ -81,11 +99,11 @@ class ClientController extends AbstractController
             $postUpdateClient->setId($preUpdateClient->getId());
             $this->clientApi->update($preUpdateClient, $postUpdateClient, AuditEvents::TRIGGER_DEPUTY_USER_EDIT_SELF);
 
-            $this->addFlash('notice', htmlentities($postUpdateClient->getFirstname()) . "'s data edited");
+            $this->addFlash('notice', htmlentities($postUpdateClient->getFirstname())."'s data edited");
 
             $activeReport = $postUpdateClient->getActiveReport();
 
-            if ($from === 'declaration' && $activeReport instanceof Report) {
+            if ('declaration' === $from && $activeReport instanceof Report) {
                 return $this->redirect($this->generateUrl('report_declaration', ['reportId' => $activeReport->getId()]));
             }
 
@@ -101,8 +119,10 @@ class ClientController extends AbstractController
     /**
      * @Route("/client/add", name="client_add")
      * @Template("@App/Client/add.html.twig")
+     *
+     * @return array|RedirectResponse
      */
-    public function addAction(Request $request, Redirector $redirector, TranslatorInterface $translator, LoggerInterface $logger): array|\Symfony\Component\HttpFoundation\RedirectResponse
+    public function addAction(Request $request, Redirector $redirector, TranslatorInterface $translator, LoggerInterface $logger)
     {
         // redirect if user has missing details or is on wrong page
         $user = $this->userApi->getUserWithData();
@@ -116,7 +136,7 @@ class ClientController extends AbstractController
         $client = $this->clientApi->getFirstClient();
         if (!empty($client)) {
             // update existing client
-            $client = $this->restClient->get('client/' . $client->getId(), 'Client', ['client', 'report-id', 'current-report']);
+            $client = $this->restClient->get('client/'.$client->getId(), 'Client', ['client', 'report-id', 'current-report']);
             $method = 'put';
             $client_validated = true;
         } else {
@@ -135,7 +155,7 @@ class ClientController extends AbstractController
                 $this->restClient->apiCall('post', 'casrec/verify', $client, 'array', []);
 
                 // $method is set above to either post or put
-                $response =  $this->restClient->$method('client/upsert', $form->getData());
+                $response = $this->restClient->$method('client/upsert', $form->getData());
 
                 /** @var User $currentUser */
                 $currentUser = $this->getUser();
@@ -143,6 +163,7 @@ class ClientController extends AbstractController
                 $url = $currentUser->isNdrEnabled()
                     ? $this->generateUrl('ndr_index')
                     : $this->generateUrl('report_create', ['clientId' => $response['id']]);
+
                 return $this->redirect($url);
             } catch (\Throwable $e) {
                 switch ((int) $e->getCode()) {
@@ -154,14 +175,14 @@ class ClientController extends AbstractController
                         $form->addError(new FormError($translator->trans('formErrors.generic', [], 'register')));
                 }
 
-                $logger->error(__METHOD__ . ': ' . $e->getMessage() . ', code: ' . $e->getCode());
+                $logger->error(__METHOD__.': '.$e->getMessage().', code: '.$e->getCode());
             }
         }
 
         return [
             'form' => $form->createView(),
             'client_validated' => $client_validated,
-            'client' => $client
+            'client' => $client,
         ];
     }
 }

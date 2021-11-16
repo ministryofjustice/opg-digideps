@@ -7,8 +7,12 @@ use Symfony\Component\Validator\Validator\ValidatorInterface;
 
 class ConstraintVerifier implements VerifierInterface
 {
-    public function __construct(private ValidatorInterface $validator)
+    /** @var ValidatorInterface */
+    private $validator;
+
+    public function __construct(ValidatorInterface $validator)
     {
+        $this->validator = $validator;
     }
 
     /**

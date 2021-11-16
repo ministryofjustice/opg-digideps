@@ -2,7 +2,6 @@
 
 namespace App\EventListener;
 
-use App\Service\Client\RestClient;
 use App\Service\Client\RestClientInterface;
 use Symfony\Component\HttpFoundation\RedirectResponse;
 use Symfony\Component\HttpFoundation\Request;
@@ -13,8 +12,26 @@ use Symfony\Component\Security\Http\Logout\LogoutSuccessHandlerInterface;
 
 class LogoutListener implements LogoutSuccessHandlerInterface
 {
-    public function __construct(private TokenStorageInterface $tokenStorage, private RestClientInterface $restClient, private RouterInterface $router)
+    /**
+     * @var TokenStorageInterface
+     */
+    private $tokenStorage;
+
+    /**
+     * @var RouterInterface
+     */
+    private $router;
+
+    /**
+     * @var RestClientInterface
+     */
+    private $restClient;
+
+    public function __construct(TokenStorageInterface $tokenStorage, RestClientInterface $restClient, RouterInterface $router)
     {
+        $this->tokenStorage = $tokenStorage;
+        $this->restClient = $restClient;
+        $this->router = $router;
     }
 
     public function onLogoutSuccess(Request $request)
@@ -25,6 +42,8 @@ class LogoutListener implements LogoutSuccessHandlerInterface
 
         $request->getSession()->set('loggedOutFrom', 'logoutPage');
 
-        return new RedirectResponse($this->router->generate('login'));
+        $response = new RedirectResponse($this->router->generate('login'));
+
+        return $response;
     }
 }

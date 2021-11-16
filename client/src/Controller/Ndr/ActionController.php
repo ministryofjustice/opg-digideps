@@ -8,21 +8,42 @@ use App\Service\Client\Internal\ReportApi;
 use App\Service\Client\RestClient;
 use App\Service\NdrStatusService;
 use App\Service\StepRedirector;
-use Symfony\Component\HttpFoundation\RedirectResponse;
-use Symfony\Component\Routing\Annotation\Route;
 use Sensio\Bundle\FrameworkExtraBundle\Configuration\Template;
+use Symfony\Component\HttpFoundation\RedirectResponse;
 use Symfony\Component\HttpFoundation\Request;
+use Symfony\Component\Routing\Annotation\Route;
 
 class ActionController extends AbstractController
 {
+    /**
+     * @var ReportApi
+     */
+    private $reportApi;
+
+    /**
+     * @var RestClient
+     */
+    private $restClient;
+
+    /**
+     * @var StepRedirector
+     */
+    private $stepRedirector;
+
     private static $jmsGroups = [
         'ndr-action-give-gifts',
         'ndr-action-property',
         'ndr-action-more-info',
     ];
 
-    public function __construct(private ReportApi $reportApi, private RestClient $restClient, private StepRedirector $stepRedirector)
-    {
+    public function __construct(
+        ReportApi $reportApi,
+        RestClient $restClient,
+        StepRedirector $stepRedirector
+    ) {
+        $this->reportApi = $reportApi;
+        $this->restClient = $restClient;
+        $this->stepRedirector = $stepRedirector;
     }
 
     /**
@@ -31,11 +52,13 @@ class ActionController extends AbstractController
      *
      * @param Request $request
      * @param $ndrId
+     *
+     * @return array|RedirectResponse
      */
-    public function startAction($ndrId): array|\Symfony\Component\HttpFoundation\RedirectResponse
+    public function startAction($ndrId)
     {
         $ndr = $this->reportApi->getNdrIfNotSubmitted($ndrId, self::$jmsGroups);
-        if ($ndr->getStatusService()->getActionsState()['state'] != NdrStatusService::STATE_NOT_STARTED) {
+        if (NdrStatusService::STATE_NOT_STARTED != $ndr->getStatusService()->getActionsState()['state']) {
             return $this->redirectToRoute('ndr_actions_summary', ['ndrId' => $ndrId]);
         }
 
@@ -68,9 +91,9 @@ class ActionController extends AbstractController
 
         if ($form->get('save')->isClicked() && $form->isSubmitted() && $form->isValid()) {
             $data = $form->getData();
-            $this->restClient->put('ndr/' . $ndrId, $data, ['action']);
+            $this->restClient->put('ndr/'.$ndrId, $data, ['action']);
 
-            if ($fromPage == 'summary') {
+            if ('summary' == $fromPage) {
                 $request->getSession()->getFlashBag()->add(
                     'notice',
                     'Answer edited'
@@ -81,12 +104,12 @@ class ActionController extends AbstractController
         }
 
         return [
-            'ndr'       => $ndr,
-            'step'         => $step,
+            'ndr' => $ndr,
+            'step' => $step,
             'ndrStatus' => new NdrStatusService($ndr),
-            'form'         => $form->createView(),
-            'backLink'     => $stepRedirector->getBackLink(),
-            'skipLink'     => $stepRedirector->getSkipLink(),
+            'form' => $form->createView(),
+            'backLink' => $stepRedirector->getBackLink(),
+            'skipLink' => $stepRedirector->getSkipLink(),
         ];
     }
 
@@ -98,14 +121,14 @@ class ActionController extends AbstractController
     {
         $fromPage = $request->get('from');
         $ndr = $this->reportApi->getNdrIfNotSubmitted($ndrId, self::$jmsGroups);
-        if ($ndr->getStatusService()->getActionsState()['state'] == NdrStatusService::STATE_NOT_STARTED && $fromPage != 'skip-step') {
+        if (NdrStatusService::STATE_NOT_STARTED == $ndr->getStatusService()->getActionsState()['state'] && 'skip-step' != $fromPage) {
             return $this->redirectToRoute('ndr_actions', ['ndrId' => $ndrId]);
         }
 
         return [
-            'comingFromLastStep' => $fromPage == 'skip-step' || $fromPage == 'last-step',
-            'ndr'             => $ndr,
-            'status'          => $ndr->getStatusService()
+            'comingFromLastStep' => 'skip-step' == $fromPage || 'last-step' == $fromPage,
+            'ndr' => $ndr,
+            'status' => $ndr->getStatusService(),
         ];
     }
 }

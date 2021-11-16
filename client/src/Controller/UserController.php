@@ -26,8 +26,24 @@ use Symfony\Contracts\Translation\TranslatorInterface;
 
 class UserController extends AbstractController
 {
-    public function __construct(private RestClient $restClient, private UserApi $userApi, private ClientApi $clientApi, private TranslatorInterface $translator, private LoggerInterface $logger)
-    {
+    private RestClient $restClient;
+    private UserApi $userApi;
+    private ClientApi $clientApi;
+    private TranslatorInterface $translator;
+    private LoggerInterface $logger;
+
+    public function __construct(
+        RestClient $restClient,
+        UserApi $userApi,
+        ClientApi $clientApi,
+        TranslatorInterface $translator,
+        LoggerInterface $logger
+    ) {
+        $this->restClient = $restClient;
+        $this->userApi = $userApi;
+        $this->clientApi = $clientApi;
+        $this->translator = $translator;
+        $this->logger = $logger;
     }
 
     /**
@@ -98,10 +114,11 @@ class UserController extends AbstractController
             // login user into API
             try {
                 $deputyProvider->login(['token' => $token]);
-            } catch (UsernameNotFoundException) {
+            } catch (UsernameNotFoundException $e) {
                 return $this->renderError('This activation link is not working or has already been used');
             }
 
+            /** @var string */
             $data = json_encode([
                 'password_plain' => $user->getPassword(),
                 'set_active' => true,
@@ -171,10 +188,11 @@ class UserController extends AbstractController
      * - Lay
      * - PA.
      *
+     * @return array<mixed>|Response
      * @Route("/user/details", name="user_details")
      * @Template("@App/User/details.html.twig")
      */
-    public function detailsAction(Request $request, Redirector $redirector): array|\Symfony\Component\HttpFoundation\Response
+    public function detailsAction(Request $request, Redirector $redirector)
     {
         $user = $this->userApi->getUserWithData();
 
@@ -205,10 +223,11 @@ class UserController extends AbstractController
     }
 
     /**
+     * @return array<mixed>|Response
      * @Route("/password-managing/forgotten", name="password_forgotten")
      * @Template("@App/User/passwordForgotten.html.twig")
      **/
-    public function passwordForgottenAction(Request $request): array|\Symfony\Component\HttpFoundation\Response
+    public function passwordForgottenAction(Request $request)
     {
         $user = new EntityDir\User();
         $form = $this->createForm(FormDir\PasswordForgottenType::class, $user);
@@ -217,7 +236,7 @@ class UserController extends AbstractController
         if ($form->isSubmitted() && $form->isValid()) {
             try {
                 $this->userApi->resetPassword($user->getEmail());
-            } catch (RestClientException) {
+            } catch (RestClientException $e) {
                 $this->logger->warning('Email '.$user->getEmail().' not found');
             }
 
@@ -241,10 +260,11 @@ class UserController extends AbstractController
     }
 
     /**
+     * @return array<mixed>|Response
      * @Route("/register", name="register")
      * @Template("@App/User/register.html.twig")
      */
-    public function registerAction(Request $request): array|\Symfony\Component\HttpFoundation\Response
+    public function registerAction(Request $request)
     {
         $selfRegisterData = new SelfRegisterData();
         $form = $this->createForm(FormDir\SelfRegisterDataType::class, $selfRegisterData);
@@ -369,10 +389,24 @@ class UserController extends AbstractController
      */
     private function getFormAndJmsGroupBasedOnUserRole(EntityDir\User $user): array
     {
-        return match ($user->getRoleName()) {
-            EntityDir\User::ROLE_LAY_DEPUTY => [FormDir\User\UserDetailsFullType::class, ['user_details_full']],
-            EntityDir\User::ROLE_PA_NAMED, EntityDir\User::ROLE_PA_ADMIN, EntityDir\User::ROLE_PA_TEAM_MEMBER, EntityDir\User::ROLE_PROF_NAMED, EntityDir\User::ROLE_PROF_ADMIN, EntityDir\User::ROLE_PROF_TEAM_MEMBER => [FormDir\User\UserDetailsPaType::class, ['user_details_org']],
-            default => [FormDir\User\UserDetailsBasicType::class, ['user_details_basic']],
-        };
+        // define form, route, JMS groups
+        switch ($user->getRoleName()) {
+            case EntityDir\User::ROLE_LAY_DEPUTY:
+                return [FormDir\User\UserDetailsFullType::class, ['user_details_full']];
+
+            case EntityDir\User::ROLE_PA_NAMED:
+            case EntityDir\User::ROLE_PA_ADMIN:
+            case EntityDir\User::ROLE_PA_TEAM_MEMBER:
+            case EntityDir\User::ROLE_PROF_NAMED:
+            case EntityDir\User::ROLE_PROF_ADMIN:
+            case EntityDir\User::ROLE_PROF_TEAM_MEMBER:
+                return [FormDir\User\UserDetailsPaType::class, ['user_details_org']];
+
+            case EntityDir\User::ROLE_ADMIN:
+            case EntityDir\User::ROLE_AD:
+            case EntityDir\User::ROLE_SUPER_ADMIN:
+            default:
+                return [FormDir\User\UserDetailsBasicType::class, ['user_details_basic']];
+        }
     }
 }

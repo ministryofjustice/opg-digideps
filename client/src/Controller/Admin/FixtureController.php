@@ -29,8 +29,33 @@ use Twig\Environment;
  */
 class FixtureController extends AbstractController
 {
-    public function __construct(private Environment $twig, private SerializerInterface $serializer, private RestClient $restClient, private ReportApi $reportApi, private UserApi $userApi, private string $symfonyEnvironment)
-    {
+    private Environment $twig;
+    private SerializerInterface $serializer;
+    private RestClient $restClient;
+    private ReportApi $reportApi;
+    private UserApi $userApi;
+    private TokenStorageInterface $tokenStorage;
+    private DeputyProvider $deputyProvider;
+    private string $symfonyEnvironment;
+
+    public function __construct(
+        Environment $twig,
+        SerializerInterface $serializer,
+        RestClient $restClient,
+        ReportApi $reportApi,
+        UserApi $userApi,
+        TokenStorageInterface $tokenStorage,
+        DeputyProvider $deputyProvider,
+        string $symfonyEnvironment
+    ) {
+        $this->twig = $twig;
+        $this->serializer = $serializer;
+        $this->restClient = $restClient;
+        $this->reportApi = $reportApi;
+        $this->userApi = $userApi;
+        $this->tokenStorage = $tokenStorage;
+        $this->deputyProvider = $deputyProvider;
+        $this->symfonyEnvironment = $symfonyEnvironment;
     }
 
     /**
@@ -247,24 +272,28 @@ class FixtureController extends AbstractController
             throw $this->createNotFoundException();
         }
 
-        $this
-            ->restClient
-            ->post(
-                'v2/fixture/createClientAttachDeputy',
-                json_encode(
-                    [
-                        'firstName' => $request->query->get('firstName'),
-                        'lastName' => $request->query->get('lastName'),
-                        'phone' => $request->query->get('phone'),
-                        'address' => $request->query->get('address'),
-                        'address2' => $request->query->get('address2'),
-                        'county' => $request->query->get('county'),
-                        'postCode' => $request->query->get('postCode'),
-                        'caseNumber' => $request->query->get('caseNumber'),
-                        'deputyEmail' => $request->query->get('deputyEmail'),
-                    ]
-                )
-            );
+        try {
+            $this
+                ->restClient
+                ->post(
+                    'v2/fixture/createClientAttachDeputy',
+                    json_encode(
+                        [
+                            'firstName' => $request->query->get('firstName'),
+                            'lastName' => $request->query->get('lastName'),
+                            'phone' => $request->query->get('phone'),
+                            'address' => $request->query->get('address'),
+                            'address2' => $request->query->get('address2'),
+                            'county' => $request->query->get('county'),
+                            'postCode' => $request->query->get('postCode'),
+                            'caseNumber' => $request->query->get('caseNumber'),
+                            'deputyEmail' => $request->query->get('deputyEmail'),
+                        ]
+                    )
+                );
+        } catch (\Throwable $e) {
+            throw $e;
+        }
 
         return new Response();
     }
@@ -279,25 +308,29 @@ class FixtureController extends AbstractController
             throw $this->createNotFoundException();
         }
 
-        $this
-            ->restClient
-            ->post(
-                'v2/fixture/createClientAttachOrgs',
-                json_encode(
-                    [
-                        'firstName' => $request->query->get('firstName'),
-                        'lastName' => $request->query->get('lastName'),
-                        'phone' => $request->query->get('phone'),
-                        'address' => $request->query->get('address'),
-                        'address2' => $request->query->get('address2'),
-                        'county' => $request->query->get('county'),
-                        'postCode' => $request->query->get('postCode'),
-                        'caseNumber' => $request->query->get('caseNumber'),
-                        'orgEmailIdentifier' => $request->query->get('orgEmailIdentifier'),
-                        'namedDeputyEmail' => $request->query->get('namedDeputyEmail'),
-                    ]
-                )
-            );
+        try {
+            $this
+                ->restClient
+                ->post(
+                    'v2/fixture/createClientAttachOrgs',
+                    json_encode(
+                        [
+                            'firstName' => $request->query->get('firstName'),
+                            'lastName' => $request->query->get('lastName'),
+                            'phone' => $request->query->get('phone'),
+                            'address' => $request->query->get('address'),
+                            'address2' => $request->query->get('address2'),
+                            'county' => $request->query->get('county'),
+                            'postCode' => $request->query->get('postCode'),
+                            'caseNumber' => $request->query->get('caseNumber'),
+                            'orgEmailIdentifier' => $request->query->get('orgEmailIdentifier'),
+                            'namedDeputyEmail' => $request->query->get('namedDeputyEmail'),
+                        ]
+                    )
+                );
+        } catch (\Throwable $e) {
+            throw $e;
+        }
 
         return new Response();
     }
@@ -439,7 +472,7 @@ class FixtureController extends AbstractController
             }
 
             return new Response('Org activated');
-        } catch (\Throwable) {
+        } catch (\Throwable $e) {
             return new Response(sprintf('Could not activate %s org: %s', $orgName, $response->getBody()->getContents()), 500);
         }
     }

@@ -88,9 +88,11 @@ class DocumentsZipFileCreator
      */
     public function cleanUp()
     {
-        foreach ($this->zipFiles as $zipfile) {
-            if (file_exists($zipfile)) {
-                unlink($zipfile);
+        if (!empty($this->zipFiles)) {
+            foreach ($this->zipFiles as $zipfile) {
+                if (file_exists($zipfile)) {
+                    unlink($zipfile);
+                }
             }
         }
     }

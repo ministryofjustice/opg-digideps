@@ -12,6 +12,33 @@ use Symfony\Component\Validator\Context\ExecutionContextInterface;
 class StateBenefit
 {
     /**
+     * @JMS\Type("string")
+     * @JMS\Groups({"ndr-state-benefits"})
+     */
+    private $typeId;
+
+    /**
+     * @var bool
+     *
+     * @JMS\Type("boolean")
+     * @JMS\Groups({"ndr-state-benefits"})
+     */
+    private $present;
+
+    /**
+     * @var string
+     * @JMS\Type("boolean")
+     */
+    private $hasMoreDetails;
+
+    /**
+     * @var string
+     * @JMS\Groups({"ndr-state-benefits"})
+     * @JMS\Type("string")
+     */
+    private $moreDetails;
+
+    /**
      * IncomeBenefit constructor.
      *
      * @param $typeId
@@ -19,29 +46,12 @@ class StateBenefit
      * @param string $hasMoreDetails
      * @param string $moreDetails
      */
-    public function __construct(
-        /**
-         * @JMS\Type("string")
-         * @JMS\Groups({"ndr-state-benefits"})
-         */
-        private $typeId,
-        /**
-         *
-         * @JMS\Type("boolean")
-         * @JMS\Groups({"ndr-state-benefits"})
-         */
-        private $present,
-        /**
-         * @JMS\Type("boolean")
-         */
-        private $hasMoreDetails = false,
-        /**
-         * @JMS\Groups({"ndr-state-benefits"})
-         * @JMS\Type("string")
-         */
-        private $moreDetails = null
-    )
+    public function __construct($typeId, $present, $hasMoreDetails = false, $moreDetails = null)
     {
+        $this->typeId = $typeId;
+        $this->present = $present;
+        $this->hasMoreDetails = $hasMoreDetails;
+        $this->moreDetails = $moreDetails;
     }
 
     /**

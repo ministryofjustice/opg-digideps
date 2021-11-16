@@ -15,8 +15,22 @@ class DebtController extends AbstractController
 {
     private static $jmsGroups = ['ndr-debt', 'ndr-debt-management'];
 
-    public function __construct(private ReportApi $reportApi, private RestClient $restClient)
-    {
+    /**
+     * @var ReportApi
+     */
+    private $reportApi;
+
+    /**
+     * @var RestClient
+     */
+    private $restClient;
+
+    public function __construct(
+        ReportApi $reportApi,
+        RestClient $restClient
+    ) {
+        $this->reportApi = $reportApi;
+        $this->restClient = $restClient;
     }
 
     /**

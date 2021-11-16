@@ -10,11 +10,14 @@ use App\Service\Client\RestClient;
 
 class UserResearchResponseSummaryMapper
 {
+    private UserResearchApi $userResearchApi;
+
     /**
      * @param RestClient $restClient
      */
-    public function __construct(private UserResearchApi $userResearchApi)
+    public function __construct(UserResearchApi $userResearchApi)
     {
+        $this->userResearchApi = $userResearchApi;
     }
 
     /**

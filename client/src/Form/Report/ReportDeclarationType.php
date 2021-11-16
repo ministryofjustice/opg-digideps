@@ -12,8 +12,14 @@ use Symfony\Component\Validator\Constraints\NotBlank;
 
 class ReportDeclarationType extends AbstractType
 {
-    public function __construct(protected TokenStorageInterface $tokenStorage)
+    /**
+     * @var TokenStorageInterface
+     */
+    protected $tokenStorage;
+
+    public function __construct(TokenStorageInterface $tokenStorage)
     {
+        $this->tokenStorage = $tokenStorage;
     }
 
     public function buildForm(FormBuilderInterface $builder, array $options)
@@ -54,7 +60,7 @@ class ReportDeclarationType extends AbstractType
                 $data = $form->getData();
                 $validationGroups = ['declare'];
 
-                if ($data->getAgreedBehalfDeputy() == 'more_deputies_not_behalf') {
+                if ('more_deputies_not_behalf' == $data->getAgreedBehalfDeputy()) {
                     $validationGroups[] = 'declare-explanation';
                 }
 
