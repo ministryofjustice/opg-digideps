@@ -75,7 +75,6 @@ class NoteVoter extends Voter
             case self::EDIT_NOTE:
             case self::DELETE_NOTE:
                 if ($subject instanceof Note) {
-                    $client = $subject->getClient();
                     /* @var Note $subject */
                     return $subject->getClient()->hasUser($loggedInUser);
                 }
