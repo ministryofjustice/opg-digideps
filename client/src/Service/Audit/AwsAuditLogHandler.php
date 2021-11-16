@@ -104,7 +104,7 @@ class AwsAuditLogHandler extends AbstractAuditLogHandler
     {
         return array_map(
             function ($stream) {
-                return $stream['logStreamName'];
+                return $stream['logStreamName'] ?? null;
             },
             $this->existingStreams
         );
