@@ -159,6 +159,9 @@ class ReportRepositoryTest extends ApiBaseTestCase
     {
         $this->queryResult = $this->repository->getReportsIdsWithQueuedChecklistsAndSetChecklistsToInProgress(self::QUERY_LIMIT);
 
+        // Add 0.5 second buffer time to all doctrine updates and stop test from intermittently failing
+        usleep(500000);
+
         return $this;
     }
 
