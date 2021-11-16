@@ -20,68 +20,21 @@ class ReportSubmissionService
     public const MSG_NO_DOCUMENTS = 'No documents found for downloading';
 
     /**
-     * @var S3FileUploader
-     */
-    private $fileUploader;
-
-    /**
-     * @var RestClient
-     */
-    private $restClient;
-
-    /**
-     * @var Templating container
-     */
-    private $templating;
-
-    /**
-     * @var HtmlToPdfGenerator
-     */
-    private $htmltopdf;
-
-    /**
-     * @var MailSenderInterface
-     */
-    private $mailSender;
-
-    /**
-     * @var MailFactory
-     */
-    private $mailFactory;
-
-    /**
-     * @var TransactionsCsvGenerator
-     */
-    private $csvGenerator;
-
-    /**
-     * @var LoggerInterface
-     */
-    private $logger;
-
-    /**
      * ReportSubmissionService constructor.
      *
      * @throws \Exception
      */
     public function __construct(
-        TransactionsCsvGenerator $csvGenerator,
-        Environment $templating,
-        S3FileUploader $fileUploader,
-        RestClient $restClient,
-        LoggerInterface $logger,
-        MailFactory $mailFactory,
-        MailSenderInterface $mailSender,
-        HtmlToPdfGenerator $htmltopdf
-    ) {
-        $this->fileUploader = $fileUploader;
-        $this->restClient = $restClient;
-        $this->mailSender = $mailSender;
-        $this->mailFactory = $mailFactory;
-        $this->templating = $templating;
-        $this->htmltopdf = $htmltopdf;
-        $this->logger = $logger;
-        $this->csvGenerator = $csvGenerator;
+        private TransactionsCsvGenerator $csvGenerator,
+        /**
+         * @var Templating container
+         */
+        private Environment $templating,
+        private S3FileUploader $fileUploader,
+        private RestClient $restClient,
+        private HtmlToPdfGenerator $htmltopdf
+    )
+    {
     }
 
     /**

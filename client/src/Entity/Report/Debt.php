@@ -8,38 +8,6 @@ use Symfony\Component\Validator\Constraints as Assert;
 class Debt
 {
     /**
-     * @JMS\Type("string")
-     * @JMS\Groups({"debt"})
-     */
-    private $debtTypeId;
-
-    /**
-     * @var decimal
-     *
-     * @JMS\Type("string")
-     * @JMS\Groups({"debt"})
-     * @Assert\Type(type="numeric", message="debt.amount.notNumeric", groups={"debts"})
-     * @Assert\Range(min=0, max=100000000000, notInRangeMessage = "debt.amount.notInRangeMessage", groups={"debts"})
-     */
-    private $amount;
-
-    /**
-     * @var string
-     * @JMS\Groups({"debt"})
-     * @JMS\Type("boolean")
-     */
-    private $hasMoreDetails;
-
-    /**
-     * @var string
-     * @JMS\Groups({"debt"})
-     * @JMS\Type("string")
-     *
-     * @Assert\NotBlank(message="debt.moreDetails.notEmpty", groups={"debts-more-details"})
-     */
-    private $moreDetails;
-
-    /**
      * Debt constructor.
      *
      * @param $debtTypeId
@@ -47,12 +15,33 @@ class Debt
      * @param string  $hasMoreDetails
      * @param string  $moreDetails
      */
-    public function __construct($debtTypeId, $amount, $hasMoreDetails, $moreDetails)
+    public function __construct(
+        /**
+         * @JMS\Type("string")
+         * @JMS\Groups({"debt"})
+         */
+        private $debtTypeId,
+        /**
+         *
+         * @JMS\Type("string")
+         * @JMS\Groups({"debt"})
+         * @Assert\Type(type="numeric", message="debt.amount.notNumeric", groups={"debts"})
+         * @Assert\Range(min=0, max=100000000000, notInRangeMessage = "debt.amount.notInRangeMessage", groups={"debts"})
+         */
+        private $amount,
+        /**
+         * @JMS\Groups({"debt"})
+         * @JMS\Type("boolean")
+         */
+        private $hasMoreDetails,
+        /**
+         * @JMS\Groups({"debt"})
+         * @JMS\Type("string")
+         * @Assert\NotBlank(message="debt.moreDetails.notEmpty", groups={"debts-more-details"})
+         */
+        private $moreDetails
+    )
     {
-        $this->debtTypeId = $debtTypeId;
-        $this->amount = $amount;
-        $this->hasMoreDetails = $hasMoreDetails;
-        $this->moreDetails = $moreDetails;
     }
 
     /**

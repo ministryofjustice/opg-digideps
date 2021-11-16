@@ -3,7 +3,6 @@
 namespace App\Form\Report;
 
 use App\Entity\Report\Gift;
-use App\Entity\User;
 use Symfony\Component\Form\AbstractType;
 use Symfony\Component\Form\Extension\Core\Type as FormTypes;
 use Symfony\Component\Form\FormBuilderInterface;
@@ -23,12 +22,12 @@ class GiftType extends AbstractType
                 'invalid_message' => 'gifts.amount.type',
             ]);
 
-        $reportType = $options['report']->getType();
+        $options['report']->getType();
 
         if (!empty($options['report']->getBankAccountOptions()) && $options['report']->canLinkToBankAccounts()) {
             $builder->add('bankAccountId', FormTypes\ChoiceType::class, [
                 'choices' => $options['report']->getBankAccountOptions(),
-                'placeholder' => 'Please select'
+                'placeholder' => 'Please select',
             ]);
         }
 

@@ -12,20 +12,8 @@ class ReportSubmittedEvent extends Event
 {
     public const NAME = 'report.submitted';
 
-    /** @var Report */
-    private $submittedReport;
-
-    /** @var User */
-    private $submittedBy;
-
-    /** @var string|int|null */
-    private $newYearReportId;
-
-    public function __construct(Report $submittedReport, User $submittedBy, $newYearReportId)
+    public function __construct(private Report $submittedReport, private User $submittedBy, private $newYearReportId)
     {
-        $this->submittedReport = $submittedReport;
-        $this->submittedBy = $submittedBy;
-        $this->newYearReportId = $newYearReportId;
     }
 
     public function getSubmittedReport(): Report

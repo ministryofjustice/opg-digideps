@@ -23,14 +23,14 @@ class CssClassCollector extends DataCollector
                     continue;
                 }
 
-                if ('behat-' === substr($className, 0, 6)) {
+                if (str_starts_with($className, 'behat-')) {
                     // Ignore behat classes
                     continue;
-                } elseif ('opg-' === substr($className, 0, 4)) {
+                } elseif (str_starts_with($className, 'opg-')) {
                     $counter = &$appClasses;
-                } elseif ('govuk-' === substr($className, 0, 6)) {
+                } elseif (str_starts_with($className, 'govuk-')) {
                     $counter = &$govukClasses;
-                } elseif ('moj-' === substr($className, 0, 4)) {
+                } elseif (str_starts_with($className, 'moj-')) {
                     $counter = &$mojClasses;
                 } else {
                     $counter = &$otherClasses;

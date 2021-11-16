@@ -8,12 +8,6 @@ use Monolog\Logger;
 
 class AwsAuditLogHandler extends AbstractAuditLogHandler
 {
-    /** @var CloudWatchLogsClient */
-    private $client;
-
-    /** @var string */
-    private $group;
-
     /** @var string */
     private $stream;
 
@@ -27,16 +21,12 @@ class AwsAuditLogHandler extends AbstractAuditLogHandler
     private $initialized = false;
 
     /**
-     * @param CloudWatchLogsClient $client
      * @param $group
      * @param int $level
      * @param bool $bubble
      */
-    public function __construct(CloudWatchLogsClient $client, $group, $level = Logger::NOTICE, $bubble = true)
+    public function __construct(private CloudWatchLogsClient $client, private $group, $level = Logger::NOTICE, $bubble = true)
     {
-        $this->client = $client;
-        $this->group = $group;
-
         parent::__construct($level, $bubble);
     }
 
@@ -59,16 +49,12 @@ class AwsAuditLogHandler extends AbstractAuditLogHandler
         // send items, retry once with a fresh sequence token
         try {
             $this->send($entry);
-        } catch (CloudWatchLogsException $e) {
+        } catch (CloudWatchLogsException) {
             $this->determineSequenceToken($refresh = true);
             $this->send($entry);
         }
     }
 
-    /**
-     * @param array $entry
-     * @return array
-     */
     private function formatEntry(array $entry): array
     {
         return [
@@ -94,9 +80,6 @@ class AwsAuditLogHandler extends AbstractAuditLogHandler
         $this->initialized = true;
     }
 
-    /**
-     * @return array
-     */
     private function fetchExistingStreams(): array
     {
         return $this
@@ -109,9 +92,6 @@ class AwsAuditLogHandler extends AbstractAuditLogHandler
             )->get('logStreams');
     }
 
-    /**
-     * @return array
-     */
     private function extractExistingStreamNames(): array
     {
         return array_map(
@@ -134,9 +114,6 @@ class AwsAuditLogHandler extends AbstractAuditLogHandler
             );
     }
 
-    /**
-     * @param bool $refresh
-     */
     private function determineSequenceToken(bool $refresh = false): void
     {
         if ($refresh) {
@@ -151,9 +128,6 @@ class AwsAuditLogHandler extends AbstractAuditLogHandler
         }
     }
 
-    /**
-     * @param array $entry
-     */
     private function send(array $entry): void
     {
         $data = [

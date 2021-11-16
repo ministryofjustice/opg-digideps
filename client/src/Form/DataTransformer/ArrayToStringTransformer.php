@@ -6,11 +6,8 @@ use Symfony\Component\Form\DataTransformerInterface;
 
 class ArrayToStringTransformer implements DataTransformerInterface
 {
-    private $keys;
-
-    public function __construct(array $keys = [])
+    public function __construct(private array $keys = [])
     {
-        $this->keys = $keys;
     }
 
     public function transform($string)
@@ -42,8 +39,6 @@ class ArrayToStringTransformer implements DataTransformerInterface
 
     public function reverseTransform($array)
     {
-        $string = implode('', $array);
-
-        return $string;
+        return implode('', $array);
     }
 }

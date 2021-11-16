@@ -23,18 +23,8 @@ use Symfony\Contracts\Translation\TranslatorInterface;
  */
 class OrganisationController extends AbstractController
 {
-    private RestClient $restClient;
-    private LoggerInterface $logger;
-    private OrganisationApi $organisationApi;
-
-    public function __construct(
-        RestClient $restClient,
-        LoggerInterface $logger,
-        OrganisationApi $organisationApi
-    ) {
-        $this->restClient = $restClient;
-        $this->logger = $logger;
-        $this->organisationApi = $organisationApi;
+    public function __construct(private RestClient $restClient, private LoggerInterface $logger, private OrganisationApi $organisationApi)
+    {
     }
 
     /**
@@ -63,7 +53,7 @@ class OrganisationController extends AbstractController
     {
         try {
             $organisation = $this->restClient->get('v2/organisation/' . $id, 'Organisation');
-        } catch (RestClientException $e) {
+        } catch (RestClientException) {
             throw $this->createNotFoundException('Organisation not found');
         }
 
@@ -211,7 +201,7 @@ class OrganisationController extends AbstractController
                 if ($organisation->hasUser($userToAdd)) {
                     $errors[] = 'form.email.alreadyInOrgError';
                 }
-            } catch (RestClientException $e) {
+            } catch (RestClientException) {
                 $errors[] = 'form.email.notFoundError';
             }
         }

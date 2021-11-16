@@ -6,14 +6,8 @@ use App\Service\Client\RestClient;
 
 class ApiAvailability extends ServiceAvailabilityAbstract
 {
-    /**
-     * @var RestClient
-     */
-    private RestClient $restClient;
-
-    public function __construct(RestClient $restClient)
+    public function __construct(private RestClient $restClient)
     {
-        $this->restClient = $restClient;
     }
 
     public function ping()

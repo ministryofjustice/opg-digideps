@@ -94,33 +94,8 @@ class ReportController extends AbstractController
         'wish-to-provide-documentation',
     ];
 
-    private RestClient $restClient;
-    private ReportApi $reportApi;
-    private UserApi $userApi;
-    private ClientApi $clientApi;
-    private SatisfactionApi $satisfactionApi;
-    private CasrecApi $casrecApi;
-    private FormFactoryInterface $formFactory;
-    private TranslatorInterface $translator;
-
-    public function __construct(
-        RestClient $restClient,
-        ReportApi $reportApi,
-        UserApi $userApi,
-        ClientApi $clientApi,
-        SatisfactionApi $satisfactionApi,
-        CasrecApi $casrecApi,
-        FormFactoryInterface $formFactory,
-        TranslatorInterface $translator
-    ) {
-        $this->restClient = $restClient;
-        $this->reportApi = $reportApi;
-        $this->userApi = $userApi;
-        $this->clientApi = $clientApi;
-        $this->satisfactionApi = $satisfactionApi;
-        $this->casrecApi = $casrecApi;
-        $this->formFactory = $formFactory;
-        $this->translator = $translator;
+    public function __construct(private RestClient $restClient, private ReportApi $reportApi, private UserApi $userApi, private ClientApi $clientApi, private SatisfactionApi $satisfactionApi, private CasrecApi $casrecApi, private FormFactoryInterface $formFactory, private TranslatorInterface $translator)
+    {
     }
 
     /**
@@ -129,10 +104,8 @@ class ReportController extends AbstractController
      * @Route("/lay", name="lay_home")
      * //TODO we should add Security("is_granted('ROLE_LAY_DEPUTY')") here, but not sure as not clear what "getCorrectRouteIfDifferent" does
      * @Template("@App/Report/Report/index.html.twig")
-     *
-     * @return array|RedirectResponse
      */
-    public function indexAction(Redirector $redirector)
+    public function indexAction(Redirector $redirector): array|\Symfony\Component\HttpFoundation\RedirectResponse
     {
         // not ideal to specify both user-client and client-users, but can't fix this differently with DDPB-1711. Consider a separate call to get
         // due to the way
@@ -170,16 +143,14 @@ class ReportController extends AbstractController
      *
      * @param $reportId
      *
-     * @return array|RedirectResponse
      *
      * @throws \Exception
      */
-    public function editAction(Request $request, $reportId)
+    public function editAction(Request $request, $reportId): array|\Symfony\Component\HttpFoundation\RedirectResponse
     {
         $report = $this->reportApi->getReportIfNotSubmitted($reportId);
         $client = $report->getClient();
 
-        /** @var User */
         $user = $this->getUser();
 
         $editReportDatesForm = $this->formFactory->createNamed('report_edit', ReportType::class, $report, ['translation_domain' => 'report']);
@@ -214,10 +185,8 @@ class ReportController extends AbstractController
      * @Template("@App/Report/Report/create.html.twig")
      *
      * @param $clientId
-     *
-     * @return array|RedirectResponse
      */
-    public function createAction(Request $request, $clientId, $action = false)
+    public function createAction(Request $request, $clientId, $action = false): array|\Symfony\Component\HttpFoundation\RedirectResponse
     {
         $client = $this->restClient->get('client/'.$clientId, 'Client', ['client', 'client-id', 'client-reports', 'report-id']);
 
@@ -273,10 +242,8 @@ class ReportController extends AbstractController
         // get all the groups (needed by EntityDir\Report\Status
         $clientId = $this->reportApi->getReportIfNotSubmitted($reportId, $reportJmsGroup)->getClient()->getId();
 
-        /** @var Client */
         $client = $this->generateClient($user, $clientId);
 
-        /** @var NamedDeputy */
         $namedDeputy = $client->getNamedDeputy();
 
         $activeReportId = null;
@@ -374,10 +341,8 @@ class ReportController extends AbstractController
      * @Template("@App/Report/Report/declaration.html.twig")
      *
      * @param $reportId
-     *
-     * @return array|RedirectResponse
      */
-    public function declarationAction(Request $request, $reportId, ReportSubmissionService $reportSubmissionService)
+    public function declarationAction(Request $request, $reportId, ReportSubmissionService $reportSubmissionService): array|\Symfony\Component\HttpFoundation\RedirectResponse
     {
         $report = $this->reportApi->getReportIfNotSubmitted($reportId, self::$reportGroupsAll);
 
@@ -423,10 +388,8 @@ class ReportController extends AbstractController
      * @Template("@App/Report/Report/submitConfirmation.html.twig")
      *
      * @param $reportId
-     *
-     * @return array|RedirectResponse
      */
-    public function submitConfirmationAction(Request $request, $reportId)
+    public function submitConfirmationAction(Request $request, $reportId): array|\Symfony\Component\HttpFoundation\RedirectResponse
     {
         $report = $this->reportApi->getReport($reportId, ['status']);
 

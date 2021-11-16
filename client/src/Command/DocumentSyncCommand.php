@@ -18,29 +18,12 @@ class DocumentSyncCommand extends DaemonableCommand
 
     public static $defaultName = 'digideps:document-sync';
 
-    /** @var DocumentSyncService */
-    private $documentSyncService;
-
-    /** @var RestClient */
-    private $restClient;
-
-    /** @var SerializerInterface */
-    private $serializer;
-
-    /** @var ParameterStoreService */
-    private $parameterStore;
-
     public function __construct(
-        DocumentSyncService $documentSyncService,
-        RestClient $restClient,
-        SerializerInterface $serializer,
-        ParameterStoreService $parameterStore
+        private DocumentSyncService $documentSyncService,
+        private RestClient $restClient,
+        private SerializerInterface $serializer,
+        private ParameterStoreService $parameterStore
     ) {
-        $this->documentSyncService = $documentSyncService;
-        $this->restClient = $restClient;
-        $this->serializer = $serializer;
-        $this->parameterStore = $parameterStore;
-
         parent::__construct();
     }
 

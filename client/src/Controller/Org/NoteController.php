@@ -17,26 +17,8 @@ use Symfony\Component\HttpFoundation\Request;
  */
 class NoteController extends AbstractController
 {
-    private static $jmsGroups = [
-        'notes'
-    ];
-
-    /**
-     * @var ClientApi
-     */
-    private $clientApi;
-
-    /**
-     * @var RestClient
-     */
-    private $restClient;
-
-    public function __construct(
-        ClientApi $clientApi,
-        RestClient $restClient
-    ) {
-        $this->clientApi = $clientApi;
-        $this->restClient = $restClient;
+    public function __construct(private ClientApi $clientApi, private RestClient $restClient)
+    {
     }
 
     /**
@@ -127,13 +109,10 @@ class NoteController extends AbstractController
      * @Route("{noteId}/delete", name="delete_note")
      * @Template("@App/Common/confirmDelete.html.twig")
      *
-     * @param Request $request
      * @param $noteId
-     * @param LoggerInterface $logger
-     * @return array|\Symfony\Component\HttpFoundation\RedirectResponse
      * @throws \Exception
      */
-    public function deleteConfirmAction(Request $request, $noteId, LoggerInterface $logger)
+    public function deleteConfirmAction(Request $request, $noteId, LoggerInterface $logger): array|\Symfony\Component\HttpFoundation\RedirectResponse
     {
         /** @var EntityDir\Note $note */
         $note = $this->getNote($noteId);

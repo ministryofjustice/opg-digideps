@@ -27,9 +27,6 @@ class SiriusChecklistPdfDocumentMetadata implements SiriusMetadataInterface
         return $this->submissionId;
     }
 
-    /**
-     * @return SiriusChecklistPdfDocumentMetadata
-     */
     public function setSubmissionId(?int $submissionId): self
     {
         $this->submissionId = $submissionId;
@@ -42,9 +39,6 @@ class SiriusChecklistPdfDocumentMetadata implements SiriusMetadataInterface
         return $this->year;
     }
 
-    /**
-     * @return SiriusChecklistPdfDocumentMetadata
-     */
     public function setYear(int $year): self
     {
         $this->year = $year;
@@ -57,9 +51,6 @@ class SiriusChecklistPdfDocumentMetadata implements SiriusMetadataInterface
         return $this->submitterEmail;
     }
 
-    /**
-     * @return SiriusChecklistPdfDocumentMetadata
-     */
     public function setSubmitterEmail(string $submitterEmail): self
     {
         $this->submitterEmail = $submitterEmail;
@@ -72,9 +63,6 @@ class SiriusChecklistPdfDocumentMetadata implements SiriusMetadataInterface
         return $this->type;
     }
 
-    /**
-     * @return SiriusChecklistPdfDocumentMetadata
-     */
     public function setType(string $type): self
     {
         $this->type = $type;
@@ -87,9 +75,6 @@ class SiriusChecklistPdfDocumentMetadata implements SiriusMetadataInterface
         return $this->reportingPeriodFrom;
     }
 
-    /**
-     * @return SiriusChecklistPdfDocumentMetadata
-     */
     public function setReportingPeriodFrom(DateTime $reportingPeriodFrom): self
     {
         $this->reportingPeriodFrom = $reportingPeriodFrom;
@@ -102,9 +87,6 @@ class SiriusChecklistPdfDocumentMetadata implements SiriusMetadataInterface
         return $this->reportingPeriodTo;
     }
 
-    /**
-     * @return SiriusChecklistPdfDocumentMetadata
-     */
     public function setReportingPeriodTo(DateTime $reportingPeriodTo): self
     {
         $this->reportingPeriodTo = $reportingPeriodTo;

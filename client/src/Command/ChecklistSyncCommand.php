@@ -25,18 +25,6 @@ class ChecklistSyncCommand extends Command
     /** @var string */
     public static $defaultName = 'digideps:checklist-sync';
 
-    /** @var ChecklistPdfGenerator */
-    private $pdfGenerator;
-
-    /** @var ChecklistSyncService */
-    private $syncService;
-
-    /** @var RestClient */
-    private $restClient;
-
-    /** @var ParameterStoreService */
-    private $parameterStore;
-
     /** @var int */
     private $notSyncedCount = 0;
 
@@ -44,17 +32,12 @@ class ChecklistSyncCommand extends Command
      * @param null $name
      */
     public function __construct(
-        ChecklistPdfGenerator $pdfGenerator,
-        ChecklistSyncService $syncService,
-        RestClient $restClient,
-        ParameterStoreService $parameterStore,
+        private ChecklistPdfGenerator $pdfGenerator,
+        private ChecklistSyncService $syncService,
+        private RestClient $restClient,
+        private ParameterStoreService $parameterStore,
         $name = null
     ) {
-        $this->pdfGenerator = $pdfGenerator;
-        $this->syncService = $syncService;
-        $this->restClient = $restClient;
-        $this->parameterStore = $parameterStore;
-
         parent::__construct($name);
     }
 

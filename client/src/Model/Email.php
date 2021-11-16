@@ -97,6 +97,7 @@ class Email
     public function setTemplate(string $template): self
     {
         $this->template = $template;
+
         return $this;
     }
 
@@ -108,12 +109,10 @@ class Email
     public function setParameters(array $parameters): self
     {
         $this->parameters = $parameters;
+
         return $this;
     }
 
-    /**
-     * @return string|null
-     */
     public function getFromEmailNotifyID(): ?string
     {
         return $this->fromEmailNotifyID;
@@ -121,11 +120,11 @@ class Email
 
     /**
      * @param mixed $fromEmailNotifyID
-     * @return Email
      */
     public function setFromEmailNotifyID($fromEmailNotifyID): self
     {
         $this->fromEmailNotifyID = $fromEmailNotifyID;
+
         return $this;
     }
 }

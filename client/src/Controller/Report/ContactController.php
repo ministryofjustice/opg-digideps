@@ -20,18 +20,8 @@ class ContactController extends AbstractController
         'contact-status',
     ];
 
-    /** @var RestClient */
-    private $restClient;
-
-    /** @var ReportApi */
-    private $reportApi;
-
-    public function __construct(
-        RestClient $restClient,
-        ReportApi $reportApi
-    ) {
-        $this->restClient = $restClient;
-        $this->reportApi = $reportApi;
+    public function __construct(private RestClient $restClient, private ReportApi $reportApi)
+    {
     }
 
     /**
@@ -39,10 +29,8 @@ class ContactController extends AbstractController
      * @Template("@App/Report/Contact/start.html.twig")
      *
      * @param $reportId
-     *
-     * @return array|RedirectResponse
      */
-    public function startAction($reportId)
+    public function startAction($reportId): array|\Symfony\Component\HttpFoundation\RedirectResponse
     {
         $report = $this->reportApi->getReportIfNotSubmitted($reportId, self::$jmsGroups);
 
@@ -60,10 +48,8 @@ class ContactController extends AbstractController
      * @Template("@App/Report/Contact/exist.html.twig")
      *
      * @param $reportId
-     *
-     * @return array|RedirectResponse
      */
-    public function existAction(Request $request, $reportId)
+    public function existAction(Request $request, $reportId): array|\Symfony\Component\HttpFoundation\RedirectResponse
     {
         $report = $this->reportApi->getReportIfNotSubmitted($reportId, self::$jmsGroups);
         $form = $this->createForm(FormDir\Report\ContactExistType::class, $report);
@@ -100,10 +86,8 @@ class ContactController extends AbstractController
      * @Template("@App/Report/Contact/add.html.twig")
      *
      * @param $reportId
-     *
-     * @return array|RedirectResponse
      */
-    public function addAction(Request $request, $reportId)
+    public function addAction(Request $request, $reportId): array|\Symfony\Component\HttpFoundation\RedirectResponse
     {
         $report = $this->reportApi->getReportIfNotSubmitted($reportId, self::$jmsGroups);
         $contact = new EntityDir\Report\Contact();
@@ -130,7 +114,7 @@ class ContactController extends AbstractController
                 'form' => $form->createView(),
                 'report' => $report,
             ];
-        } catch (RouteNotFoundException $e) {
+        } catch (RouteNotFoundException) {
             return [
                 'backLink' => null,
                 'form' => $form->createView(),
@@ -144,10 +128,8 @@ class ContactController extends AbstractController
      * @Template("@App/Report/Contact/addAnother.html.twig")
      *
      * @param $reportId
-     *
-     * @return array|RedirectResponse
      */
-    public function addAnotherAction(Request $request, $reportId)
+    public function addAnotherAction(Request $request, $reportId): array|\Symfony\Component\HttpFoundation\RedirectResponse
     {
         $report = $this->reportApi->getReportIfNotSubmitted($reportId, self::$jmsGroups);
 
@@ -174,10 +156,8 @@ class ContactController extends AbstractController
      * @Template("@App/Report/Contact/edit.html.twig")
      *
      * @param $reportId
-     *
-     * @return array|RedirectResponse
      */
-    public function editAction(Request $request, $reportId, int $contactId)
+    public function editAction(Request $request, $reportId, int $contactId): array|\Symfony\Component\HttpFoundation\RedirectResponse
     {
         $report = $this->reportApi->getReportIfNotSubmitted($reportId, self::$jmsGroups);
         $contact = $this->restClient->get('report/contact/'.$contactId, 'Report\\Contact');
@@ -209,10 +189,8 @@ class ContactController extends AbstractController
      * @Template("@App/Report/Contact/summary.html.twig")
      *
      * @param $reportId
-     *
-     * @return array|RedirectResponse
      */
-    public function summaryAction($reportId)
+    public function summaryAction($reportId): array|\Symfony\Component\HttpFoundation\RedirectResponse
     {
         $report = $this->reportApi->getReportIfNotSubmitted($reportId, self::$jmsGroups);
 
@@ -230,10 +208,8 @@ class ContactController extends AbstractController
      * @Template("@App/Common/confirmDelete.html.twig")
      *
      * @param $reportId
-     *
-     * @return array|RedirectResponse
      */
-    public function deleteAction(Request $request, $reportId, int $contactId)
+    public function deleteAction(Request $request, $reportId, int $contactId): array|\Symfony\Component\HttpFoundation\RedirectResponse
     {
         $form = $this->createForm(FormDir\ConfirmDeleteType::class);
         $form->handleRequest($request);

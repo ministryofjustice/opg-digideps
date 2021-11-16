@@ -3,7 +3,6 @@
 namespace App\Form\Report;
 
 use App\Entity\Report\Expense;
-use App\Entity\User;
 use Symfony\Component\Form\AbstractType;
 use Symfony\Component\Form\Extension\Core\Type as FormTypes;
 use Symfony\Component\Form\FormBuilderInterface;
@@ -24,12 +23,12 @@ class DeputyExpenseType extends AbstractType
                 'invalid_message' => 'expenses.singleExpense.notNumeric',
             ]);
 
-        $reportType = $options['report']->getType();
+        $options['report']->getType();
 
         if (!empty($options['report']->getBankAccountOptions()) && $options['report']->canLinkToBankAccounts()) {
             $builder->add('bankAccountId', FormTypes\ChoiceType::class, [
                 'choices' => $options['report']->getBankAccountOptions(),
-                'placeholder' => 'Please select'
+                'placeholder' => 'Please select',
             ]);
         }
 

@@ -20,23 +20,8 @@ class ActionController extends AbstractController
         'action-state',
     ];
 
-    /** @var RestClient */
-    private $restClient;
-
-    /** @var ReportApi */
-    private $reportApi;
-
-    /** @var StepRedirector */
-    private $stepRedirector;
-
-    public function __construct(
-        RestClient $restClient,
-        ReportApi $reportApi,
-        StepRedirector $stepRedirector
-    ) {
-        $this->restClient = $restClient;
-        $this->reportApi = $reportApi;
-        $this->stepRedirector = $stepRedirector;
+    public function __construct(private RestClient $restClient, private ReportApi $reportApi, private StepRedirector $stepRedirector)
+    {
     }
 
     /**

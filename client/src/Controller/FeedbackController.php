@@ -16,37 +16,15 @@ use Symfony\Contracts\Translation\TranslatorInterface;
 
 class FeedbackController extends AbstractController
 {
-    /** @var SatisfactionApi */
-    private $satisfactionApi;
-
-    /** @var RouterInterface */
-    private $router;
-
-    /** @var TranslatorInterface */
-    private $translator;
-
-    /** @var FormFactoryInterface */
-    private $form;
-
-    public function __construct(
-        SatisfactionApi $satisfactionApi,
-        RouterInterface $router,
-        TranslatorInterface $translator,
-        FormFactoryInterface $form
-    ) {
-        $this->satisfactionApi = $satisfactionApi;
-        $this->router = $router;
-        $this->translator = $translator;
-        $this->form = $form;
+    public function __construct(private SatisfactionApi $satisfactionApi, private RouterInterface $router, private TranslatorInterface $translator, private FormFactoryInterface $form)
+    {
     }
 
     /**
      * @Route("/feedback", name="feedback")
      * @Template("@App/Feedback/index.html.twig")
-     *
-     * @return array|RedirectResponse
      */
-    public function create(Request $request)
+    public function create(Request $request): array|\Symfony\Component\HttpFoundation\RedirectResponse
     {
         $form = $this->form->create(FeedbackType::class);
 

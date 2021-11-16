@@ -17,41 +17,28 @@ class S3Storage implements StorageInterface
 {
     // If a file is deleted in S3 it will return an AccessDenied error until its permanently deleted
     const MISSING_FILE_AWS_ERROR_CODES = ['NoSuchKey', 'AccessDenied'];
-    /**
-     * @var S3ClientInterface
-     *
-     * https://github.com/aws/aws-sdk-php
-     * http://docs.aws.amazon.com/aws-sdk-php/v2/api/class-Aws.S3.S3Client.html
-     *
-     *
-     * for fake s3:
-     * https://github.com/jubos/fake-s3
-     * https://github.com/jubos/fake-s3/wiki/Supported-Clients
-     */
-    private $s3Client;
-
-    /**
-     * @var string
-     */
-    private $bucketName;
-
-    /**
-     * @var LoggerInterface
-     */
-    private $logger;
 
     /**
      * S3Storage constructor.
      *
      * @param S3ClientInterface $s3Client (Aws library)
      * @param $bucketName S3 bucket name
-     * @param LoggerInterface $logger
      */
-    public function __construct(S3ClientInterface $s3Client, string $bucketName, LoggerInterface $logger)
+    public function __construct(
+        /**
+         *
+         * https://github.com/aws/aws-sdk-php
+         * http://docs.aws.amazon.com/aws-sdk-php/v2/api/class-Aws.S3.S3Client.html
+         *
+         * for fake s3:
+         * https://github.com/jubos/fake-s3
+         * https://github.com/jubos/fake-s3/wiki/Supported-Clients
+         */
+        private S3ClientInterface $s3Client,
+        private string $bucketName,
+        private LoggerInterface $logger
+    )
     {
-        $this->s3Client = $s3Client;
-        $this->bucketName = $bucketName;
-        $this->logger = $logger;
     }
 
     /**
@@ -135,18 +122,13 @@ class S3Storage implements StorageInterface
                     $this->handleS3Errors($s3Result);
                 }
 
-                $resultsSummary = $this->logS3Results($objectVersions, $objectsToDelete, $s3Result);
-
-                return $resultsSummary;
+                return $this->logS3Results($objectVersions, $objectsToDelete, $s3Result);
             }
         }
     }
 
     /**
      * Write results information to log
-     * @param array $objectVersions
-     * @param array $objectsToDelete
-     * @param array $s3Result
      * @return array
      */
     private function logS3Results(array $objectVersions, array $objectsToDelete, array $s3Result)
@@ -167,7 +149,6 @@ class S3Storage implements StorageInterface
     /**
      * Extracts and returns new array structure from AwsResults array detailing objects to remove from S3
      *
-     * @param array $objectVersions
      * @return array
      */
     private function prepareObjectsToDelete(array $objectVersions)
@@ -192,7 +173,6 @@ class S3Storage implements StorageInterface
      * Handles any errors returned from S3 SDK. Exceptions that might have been handled by the SDK and converted to
      * an Errors array reutrned
      *
-     * @param array $s3Result
      * @throws \RuntimeException
      */
     private function handleS3Errors(array $s3Result)

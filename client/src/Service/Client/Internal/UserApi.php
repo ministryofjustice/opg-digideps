@@ -30,23 +30,8 @@ class UserApi
     protected const DEPUTY_SELF_REGISTER_ENDPOINT = 'selfregister';
     protected const CREATE_CODEPUTY_ENDPOINT = 'codeputy/add';
 
-    /** @var RestClientInterface */
-    protected $restClient;
-
-    /** @var TokenStorageInterface */
-    protected $tokenStorage;
-
-    /** @var ObservableEventDispatcher */
-    protected $eventDispatcher;
-
-    public function __construct(
-        RestClientInterface $restClient,
-        TokenStorageInterface $tokenStorage,
-        ObservableEventDispatcher $eventDispatcher
-    ) {
-        $this->restClient = $restClient;
-        $this->tokenStorage = $tokenStorage;
-        $this->eventDispatcher = $eventDispatcher;
+    public function __construct(protected RestClientInterface $restClient, protected TokenStorageInterface $tokenStorage, protected ObservableEventDispatcher $eventDispatcher)
+    {
     }
 
     public function createAdminUser(User $userToCreate, array $jmsGroups = ['admin_add_user'])
@@ -110,7 +95,6 @@ class UserApi
         $jmsGroups = array_unique($jmsGroups);
         sort($jmsGroups);
 
-        /** @var User */
         $user = $this->tokenStorage->getToken()->getUser();
 
         return $this->restClient->get(
@@ -149,7 +133,6 @@ class UserApi
     {
         $this->restClient->delete(sprintf(self::USER_BY_ID_ENDPOINT, $userToDelete->getId()));
 
-        /** @var User */
         $deletedBy = $this->tokenStorage->getToken()->getUser();
 
         $userDeletedEvent = new UserDeletedEvent($userToDelete, $deletedBy, $trigger);

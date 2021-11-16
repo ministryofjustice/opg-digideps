@@ -15,15 +15,8 @@ use Symfony\Component\Routing\Annotation\Route;
  */
 class AjaxController extends AbstractController
 {
-    /**
-     * @var RestClient
-     */
-    private $restClient;
-
-    public function __construct(
-        RestClient $restClient
-    ) {
-        $this->restClient = $restClient;
+    public function __construct(private RestClient $restClient)
+    {
     }
 
     /**

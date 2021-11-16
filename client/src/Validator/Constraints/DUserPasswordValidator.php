@@ -11,20 +11,8 @@ use Symfony\Component\Validator\Exception\ConstraintDefinitionException;
 
 class DUserPasswordValidator extends UserPasswordValidator
 {
-    /**
-     * @var RestClient
-     */
-    private $restClient;
-
-    /**
-     * @var TokenStorageInterface
-     */
-    private $tokenStorage;
-
-    public function __construct(TokenStorageInterface $tokenStorage, RestClient $restClient)
+    public function __construct(private TokenStorageInterface $tokenStorage, private RestClient $restClient)
     {
-        $this->restClient = $restClient;
-        $this->tokenStorage = $tokenStorage;
     }
 
     public function validate($password, Constraint $constraint)

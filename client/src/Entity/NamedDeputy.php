@@ -2,17 +2,13 @@
 
 namespace App\Entity;
 
-use App\Entity\Traits\AddressTrait;
-use Doctrine\ORM\Mapping as ORM;
 use JMS\Serializer\Annotation as JMS;
 
 /**
  * Named Deputy.
- *
  */
 class NamedDeputy implements DeputyInterface
 {
-
     /**
      * @var int
      * @JMS\Type("integer")
@@ -36,7 +32,6 @@ class NamedDeputy implements DeputyInterface
     /**
      * @var string
      * @JMS\Type("string")
-     *
      */
     private $firstname;
 
@@ -168,6 +163,7 @@ class NamedDeputy implements DeputyInterface
     public function setId($id)
     {
         $this->id = $id;
+
         return $this;
     }
 
@@ -187,6 +183,7 @@ class NamedDeputy implements DeputyInterface
     public function setDeputyNo($deputyNo)
     {
         $this->deputyNo = $deputyNo;
+
         return $this;
     }
 
@@ -206,6 +203,7 @@ class NamedDeputy implements DeputyInterface
     public function setFirstname($firstname)
     {
         $this->firstname = $firstname;
+
         return $this;
     }
 
@@ -225,6 +223,7 @@ class NamedDeputy implements DeputyInterface
     public function setLastname($lastname)
     {
         $this->lastname = $lastname;
+
         return $this;
     }
 
@@ -233,12 +232,11 @@ class NamedDeputy implements DeputyInterface
      */
     public function getFullName()
     {
-        return $this->firstname . ' ' . $this->lastname;
+        return $this->firstname.' '.$this->lastname;
     }
 
     /**
      * @return string
-     *
      * @return $this
      */
     public function getEmail1()
@@ -248,7 +246,6 @@ class NamedDeputy implements DeputyInterface
 
     /**
      * @return string
-     *
      * @return $this
      */
     public function getEmail()
@@ -264,6 +261,7 @@ class NamedDeputy implements DeputyInterface
     public function setEmail1($email1)
     {
         $this->email1 = $email1;
+
         return $this;
     }
 
@@ -283,6 +281,7 @@ class NamedDeputy implements DeputyInterface
     public function setEmail2($email2)
     {
         $this->email2 = $email2;
+
         return $this;
     }
 
@@ -302,6 +301,7 @@ class NamedDeputy implements DeputyInterface
     public function setEmail3($email3)
     {
         $this->email3 = $email3;
+
         return $this;
     }
 
@@ -321,6 +321,7 @@ class NamedDeputy implements DeputyInterface
     public function setDepAddrNo($depAddrNo)
     {
         $this->depAddrNo = $depAddrNo;
+
         return $this;
     }
 
@@ -334,11 +335,13 @@ class NamedDeputy implements DeputyInterface
 
     /**
      * @param string $address1
+     *
      * @return $this
      */
     public function setAddress1($address1)
     {
         $this->address1 = $address1;
+
         return $this;
     }
 
@@ -352,11 +355,13 @@ class NamedDeputy implements DeputyInterface
 
     /**
      * @param string $address2
+     *
      * @return $this
      */
     public function setAddress2($address2)
     {
         $this->address2 = $address2;
+
         return $this;
     }
 
@@ -370,11 +375,13 @@ class NamedDeputy implements DeputyInterface
 
     /**
      * @param string $address3
+     *
      * @return $this
      */
     public function setAddress3($address3)
     {
         $this->address3 = $address3;
+
         return $this;
     }
 
@@ -388,11 +395,13 @@ class NamedDeputy implements DeputyInterface
 
     /**
      * @param string $address4
+     *
      * @return $this
      */
     public function setAddress4($address4)
     {
         $this->address4 = $address4;
+
         return $this;
     }
 
@@ -406,11 +415,13 @@ class NamedDeputy implements DeputyInterface
 
     /**
      * @param string $address5
+     *
      * @return $this
      */
     public function setAddress5($address5)
     {
         $this->address5 = $address5;
+
         return $this;
     }
 
@@ -424,11 +435,13 @@ class NamedDeputy implements DeputyInterface
 
     /**
      * @param string $addressPostcode
+     *
      * @return $this
      */
     public function setAddressPostcode($addressPostcode)
     {
         $this->addressPostcode = $addressPostcode;
+
         return $this;
     }
 
@@ -442,11 +455,13 @@ class NamedDeputy implements DeputyInterface
 
     /**
      * @param string $addressCountry
+     *
      * @return $this
      */
     public function setAddressCountry($addressCountry)
     {
         $this->addressCountry = $addressCountry;
+
         return $this;
     }
 
@@ -462,7 +477,7 @@ class NamedDeputy implements DeputyInterface
             $this->address4,
             $this->address5,
             $this->addressPostcode,
-            $this->addressCountry
+            $this->addressCountry,
         ]);
     }
 
@@ -482,6 +497,7 @@ class NamedDeputy implements DeputyInterface
     public function setPhoneMain($phoneMain)
     {
         $this->phoneMain = trim($phoneMain);
+
         return $this;
     }
 
@@ -501,42 +517,37 @@ class NamedDeputy implements DeputyInterface
     public function setPhoneAlternative($phoneAlternative)
     {
         $this->phoneAlternative = trim($phoneAlternative);
+
         return $this;
     }
 
-    /**
-     * @return bool
-     */
     public function isFeePayer(): bool
     {
         return $this->feePayer;
     }
 
     /**
-     * @param bool $feePayer
      * @return $this
      */
     public function setFeePayer(bool $feePayer)
     {
         $this->feePayer = $feePayer;
+
         return $this;
     }
 
-    /**
-     * @return bool
-     */
     public function isCorres(): bool
     {
         return $this->corres;
     }
 
     /**
-     * @param bool $corres
      * @return $this
      */
     public function setCorres(bool $corres)
     {
         $this->corres = $corres;
+
         return $this;
     }
 }

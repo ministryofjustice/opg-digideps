@@ -16,13 +16,8 @@ use Symfony\Component\HttpFoundation\Request;
  */
 class SearchController extends AbstractController
 {
-    /** @var RestClient */
-    private $restClient;
-
-    public function __construct(
-        RestClient $restClient
-    ) {
-        $this->restClient = $restClient;
+    public function __construct(private RestClient $restClient)
+    {
     }
 
     /**
@@ -30,11 +25,9 @@ class SearchController extends AbstractController
      * @Security("is_granted('ROLE_ADMIN') or has_role('ROLE_AD')")
      * @Template("@App/Admin/Client/Search/search.html.twig")
      *
-     * @param Request $request
      *
-     * @return array|string
      */
-    public function searchAction(Request $request)
+    public function searchAction(Request $request): array|string
     {
         $searchQuery = $request->query->get('search_clients');
         $form = $this->createForm(SearchClientType::class, null, ['method' => 'GET']);
@@ -55,9 +48,6 @@ class SearchController extends AbstractController
     }
 
     /**
-     * @param \Symfony\Component\Form\FormInterface $form
-     * @param array $clients
-     * @param array $filters
      * @return array|string
      */
     private function buildViewParams(FormInterface $form, array $clients = [], array $filters = []): array
@@ -69,10 +59,6 @@ class SearchController extends AbstractController
         ];
     }
 
-    /**
-     * @param Request $request
-     * @return array
-     */
     private function getDefaultFilters(Request $request): array
     {
         return [

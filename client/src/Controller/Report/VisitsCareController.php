@@ -21,23 +21,8 @@ class VisitsCareController extends AbstractController
         'visits-care-state',
     ];
 
-    /** @var RestClient */
-    private $restClient;
-
-    /** @var ReportApi */
-    private $reportApi;
-
-    /** @var StepRedirector */
-    private $stepRedirector;
-
-    public function __construct(
-        RestClient $restClient,
-        ReportApi $reportApi,
-        StepRedirector $stepRedirector
-    ) {
-        $this->restClient = $restClient;
-        $this->reportApi = $reportApi;
-        $this->stepRedirector = $stepRedirector;
+    public function __construct(private RestClient $restClient, private ReportApi $reportApi, private StepRedirector $stepRedirector)
+    {
     }
 
     /**
@@ -45,10 +30,8 @@ class VisitsCareController extends AbstractController
      * @Template("@App/Report/VisitsCare/start.html.twig")
      *
      * @param $reportId
-     *
-     * @return array|RedirectResponse
      */
-    public function startAction(Request $request, $reportId)
+    public function startAction(Request $request, $reportId): array|\Symfony\Component\HttpFoundation\RedirectResponse
     {
         $report = $this->reportApi->getReportIfNotSubmitted($reportId, self::$jmsGroups);
         if (EntityDir\Report\Status::STATE_NOT_STARTED != $report->getStatus()->getVisitsCareState()['state']) {
@@ -66,10 +49,8 @@ class VisitsCareController extends AbstractController
      *
      * @param $reportId
      * @param $step
-     *
-     * @return array|RedirectResponse
      */
-    public function stepAction(Request $request, $reportId, $step, TranslatorInterface $translator)
+    public function stepAction(Request $request, $reportId, $step, TranslatorInterface $translator): array|\Symfony\Component\HttpFoundation\RedirectResponse
     {
         $totalSteps = 4;
         if ($step < 1 || $step > $totalSteps) {
@@ -135,10 +116,8 @@ class VisitsCareController extends AbstractController
      * @Template("@App/Report/VisitsCare/summary.html.twig")
      *
      * @param $reportId
-     *
-     * @return array|RedirectResponse
      */
-    public function summaryAction(Request $request, $reportId)
+    public function summaryAction(Request $request, $reportId): array|\Symfony\Component\HttpFoundation\RedirectResponse
     {
         $fromPage = $request->get('from');
         $report = $this->reportApi->getReportIfNotSubmitted($reportId, self::$jmsGroups);

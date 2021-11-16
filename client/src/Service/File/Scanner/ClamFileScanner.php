@@ -13,33 +13,14 @@ use Symfony\Component\HttpFoundation\File\UploadedFile;
 
 class ClamFileScanner
 {
-    /** @var ClientInterface */
-    private $client;
-
-    /** @var LoggerInterface */
-    private $logger;
-
-    /** @var array */
-    private $badPdfKeywords;
-
     /** @var int */
     const MAX_SCAN_ATTEMPTS = 90;
 
-    /**
-     * @param ClientInterface $client
-     * @param LoggerInterface $logger
-     * @param array $badPdfKeywords
-     */
-    public function __construct(ClientInterface $client, LoggerInterface $logger, array $badPdfKeywords)
+    public function __construct(private ClientInterface $client, private LoggerInterface $logger, private array $badPdfKeywords)
     {
-        $this->client = $client;
-        $this->logger = $logger;
-        $this->badPdfKeywords = $badPdfKeywords;
     }
 
     /**
-     * @param UploadedFile $file
-     * @return bool
      * @throws \GuzzleHttp\Exception\GuzzleException
      */
     public function scanFile(UploadedFile $file): bool
@@ -73,19 +54,11 @@ class ClamFileScanner
         return true;
     }
 
-    /**
-     * @param UploadedFile $file
-     * @return bool
-     */
     private function fileIsPdf(UploadedFile $file): bool
     {
         return 'pdf' === strtolower($file->getClientOriginalExtension());
     }
 
-    /**
-     * @param UploadedFile $file
-     * @return bool
-     */
     private function pdfContainsBadKeywords(UploadedFile $file): bool
     {
         $regex = sprintf('/<<\s*\/(%s)/', implode('|', $this->badPdfKeywords));
@@ -95,7 +68,6 @@ class ClamFileScanner
     }
 
     /**
-     * @param UploadedFile $file
      * @return mixed|\Psr\Http\Message\ResponseInterface
      * @throws \GuzzleHttp\Exception\GuzzleException
      */
@@ -113,10 +85,6 @@ class ClamFileScanner
         ]);
     }
 
-    /**
-     * @param Response $response
-     * @return bool
-     */
     private function scanResultIsPass(Response $response): bool
     {
         $result = explode(':', trim($response->getBody()->getContents()));

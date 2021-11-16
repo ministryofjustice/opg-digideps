@@ -12,28 +12,10 @@ use Twig\TwigFunction;
 class ComponentsExtension extends AbstractExtension
 {
     /**
-     * @var TranslatorInterface
-     */
-    private $translator;
-
-    /**
-     * @var ReportSectionsLinkService
-     */
-    private $reportSectionsLinkService;
-
-    private Environment $environment;
-
-    /**
      * ComponentsExtension constructor.
      */
-    public function __construct(
-        TranslatorInterface $translator,
-        ReportSectionsLinkService $reportSectionsLinkService,
-        Environment $environment
-    ) {
-        $this->translator = $translator;
-        $this->reportSectionsLinkService = $reportSectionsLinkService;
-        $this->environment = $environment;
+    public function __construct(private TranslatorInterface $translator, private ReportSectionsLinkService $reportSectionsLinkService, private Environment $environment)
+    {
     }
 
     public function getFunctions()
@@ -89,35 +71,19 @@ class ComponentsExtension extends AbstractExtension
                 return number_format($string, 2, '.', ',');
             }),
             'class_name' => new \Twig_SimpleFilter('class_name', function ($object) {
-                return is_object($object) ? get_class($object) : null;
+                return is_object($object) ? $object::class : null;
             }),
             'lcfirst' => new \Twig_SimpleFilter('lcfirst', function ($string) {
                 return lcfirst($string);
             }),
             'status_to_tag_css' => new \Twig_SimpleFilter('status_to_tag_css', function ($status) {
-                switch ($status) {
-                    case 'notStarted':
-                    case 'not-started':
-                        return 'govuk-tag--grey';
-
-                    case 'notFinished':
-                    case 'active':
-                    case 'incomplete':
-                        return 'govuk-tag--yellow';
-
-                    case 'needs-attention':
-                    case 'unsubmitted':
-                    case 'not-matching':
-                        return 'govuk-tag--red';
-
-                    case 'done':
-                    case 'submitted':
-                    case 'readyToSubmit':
-                        return 'govuk-tag--green';
-
-                    default:
-                        return '';
-                }
+                return match ($status) {
+                    'notStarted', 'not-started' => 'govuk-tag--grey',
+                    'notFinished', 'active', 'incomplete' => 'govuk-tag--yellow',
+                    'needs-attention', 'unsubmitted', 'not-matching' => 'govuk-tag--red',
+                    'done', 'submitted', 'readyToSubmit' => 'govuk-tag--green',
+                    default => '',
+                };
             }),
         ];
     }

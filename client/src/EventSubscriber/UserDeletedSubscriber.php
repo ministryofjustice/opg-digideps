@@ -12,16 +12,8 @@ use Symfony\Component\EventDispatcher\EventSubscriberInterface;
 
 class UserDeletedSubscriber implements EventSubscriberInterface
 {
-    /** @var DateTimeProvider */
-    private $dateTimeProvider;
-
-    /** @var LoggerInterface */
-    private $logger;
-
-    public function __construct(LoggerInterface $logger, DateTimeProvider $dateTimeProvider)
+    public function __construct(private LoggerInterface $logger, private DateTimeProvider $dateTimeProvider)
     {
-        $this->dateTimeProvider = $dateTimeProvider;
-        $this->logger = $logger;
     }
 
     public static function getSubscribedEvents()

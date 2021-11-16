@@ -34,34 +34,6 @@ class RestClient implements RestClientInterface
     protected static $availableOptions = ['addAuthToken', 'addClientSecret', 'deserialise_groups'];
 
     /**
-     * @var ClientInterface
-     */
-    protected $client;
-
-    /**
-     * @var SerializerInterface
-     */
-    protected $serialiser;
-
-    /**
-     * Used to keep the user auth token.
-     * UserId is used as a key.
-     *
-     * @var TokenStorageInterface
-     */
-    protected $tokenStorage;
-
-    /**
-     * @var LoggerInterface
-     */
-    protected $logger;
-
-    /**
-     * @var string
-     */
-    protected $clientSecret;
-
-    /**
      * @var array
      */
     protected $history;
@@ -70,11 +42,6 @@ class RestClient implements RestClientInterface
      * @var bool
      */
     protected $saveHistory;
-
-    /**
-     * @var ContainerInterface
-     */
-    protected $container;
 
     /**
      * @var int
@@ -104,20 +71,17 @@ class RestClient implements RestClientInterface
     const ERROR_FORMAT = 'Cannot decode endpoint response';
 
     public function __construct(
-        ContainerInterface $container,
-        ClientInterface $client,
-        TokenStorageInterface $tokenStorage,
-        SerializerInterface $serializer,
-        LoggerInterface $logger,
-        string $clientSecret
+        protected ContainerInterface $container,
+        protected ClientInterface $client,
+        /**
+         * Used to keep the user auth token.
+         * UserId is used as a key.
+         */
+        protected TokenStorageInterface $tokenStorage,
+        protected SerializerInterface $serialiser,
+        protected LoggerInterface $logger,
+        protected string $clientSecret
     ) {
-        $this->client = $client;
-        $this->container = $container;
-        $this->tokenStorage = $tokenStorage;
-        $this->serialiser = $serializer;
-        $this->logger = $logger;
-        $this->clientSecret = $clientSecret;
-
         $this->saveHistory = $container->getParameter('kernel.debug');
         $this->history = [];
     }
@@ -135,7 +99,6 @@ class RestClient implements RestClientInterface
     {
         $response = $this->apiCall('post', '/auth/login', $credentials, 'response', [], false);
 
-        /** @var User */
         $user = $this->arrayToEntity('User', $this->extractDataArray($response));
 
         // store auth token
@@ -195,10 +158,7 @@ class RestClient implements RestClientInterface
             $options['query']['groups'] = $jmsGroups;
         }
 
-        // guzzle 6 does not append query groups and params in the string.
         //TODO add $queryParams as a method param (Replace last if not used) and avoid using endpoing with query string
-
-        /** @var array */
         $url = parse_url($endpoint);
 
         if (!empty($url['query'])) {
@@ -262,7 +222,6 @@ class RestClient implements RestClientInterface
     /**
      * Call POST /selfregister passing client secret.
      *
-     * @param SelfRegisterData $selfRegData
      *
      * @return \App\Entity\User
      */
@@ -389,7 +348,6 @@ class RestClient implements RestClientInterface
     /**
      * Return the 'data' array from the response.
      *
-     * @param ResponseInterface $response
      *
      * @return array content of "data" key from response
      */
@@ -421,7 +379,6 @@ class RestClient implements RestClientInterface
     {
         $fullClassName = (str_contains($class, 'App')) ? $class : 'App\\Entity\\' . $class;
 
-        /** @var string */
         $data = json_encode($data);
         return $this->serialiser->deserialize($data, $fullClassName, 'json');
     }
@@ -455,7 +412,6 @@ class RestClient implements RestClientInterface
      * //TODO use for other calls ?
      *
      * @param mixed $mixed   json_encoded string or Doctrine Entity (it will be serialised before posting)
-     * @param array $options
      *
      * @return string
      */
@@ -487,7 +443,6 @@ class RestClient implements RestClientInterface
      * @param string            $method
      * @param float             $start
      * @param array             $options
-     * @param ResponseInterface $response
      */
     private function logRequest($url, $method, $start, $options, ResponseInterface $response = null)
     {
@@ -534,15 +489,11 @@ class RestClient implements RestClientInterface
         return $this;
     }
 
-    /**
-     * @return int|bool
-     */
-    private function getLoggedUserId()
+    private function getLoggedUserId(): bool|int
     {
         if ($this->userId) {
             return $this->userId;
         } else {
-            /** @var SecurityTokenStorage */
             $tokenStorage = $this->container->get('security.token_storage');
             $token = $tokenStorage->getToken();
 
@@ -556,10 +507,5 @@ class RestClient implements RestClientInterface
         }
 
         return false;
-    }
-
-    private function debugJsonString($jsonString)
-    {
-        echo '<pre>' . json_encode(json_decode($jsonString), JSON_PRETTY_PRINT) . '</pre>';
     }
 }

@@ -15,27 +15,12 @@ use Symfony\Component\Security\Http\Event\InteractiveLoginEvent;
 class LoginEventListener
 {
     /**
-     * @var EventDispatcherInterface
-     */
-    protected $dispatcher;
-    /**
-     * @var Redirector
-     */
-    protected $redirector;
-
-    /**
      * @param EventDispatcher $dispatcher
-     * @param Redirector      $Redirector
      */
-    public function __construct(EventDispatcherInterface $dispatcher, Redirector $Redirector)
+    public function __construct(protected EventDispatcherInterface $dispatcher, protected Redirector $redirector)
     {
-        $this->dispatcher = $dispatcher;
-        $this->redirector = $Redirector;
     }
 
-    /**
-     * @param InteractiveLoginEvent $event
-     */
     public function onSecurityInteractiveLogin(InteractiveLoginEvent $event)
     {
         $this->dispatcher->addListener(KernelEvents::RESPONSE, [$this, 'onKernelResponse']);
@@ -43,8 +28,6 @@ class LoginEventListener
 
     /**
      * On login determine user role and redirect appropiately.
-     *
-     * @param ResponseEvent $event
      */
     public function onKernelResponse(ResponseEvent $event)
     {

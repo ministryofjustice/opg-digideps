@@ -22,12 +22,8 @@ class ClientVoter extends Voter
     /** @var string */
     const DELETE = 'delete';
 
-    /** @var Security */
-    private $security;
-
-    public function __construct(Security $security)
+    public function __construct(private Security $security)
     {
-        $this->security = $security;
     }
 
     /**
@@ -56,16 +52,11 @@ class ClientVoter extends Voter
             return false;
         }
 
-        switch ($attribute) {
-            case self::VIEW:
-            case self::EDIT:
-                return $this->canManage($client, $user);
-            case self::DELETE:
-                return $this->canDelete($user);
-
-            default:
-                throw new \LogicException('This code should not be reached!');
-        }
+        return match ($attribute) {
+            self::VIEW, self::EDIT => $this->canManage($client, $user),
+            self::DELETE => $this->canDelete($user),
+            default => throw new \LogicException('This code should not be reached!'),
+        };
     }
 
     /**

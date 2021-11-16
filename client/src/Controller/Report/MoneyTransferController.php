@@ -23,23 +23,8 @@ class MoneyTransferController extends AbstractController
         'money-transfer-state',
     ];
 
-    /** @var RestClient */
-    private $restClient;
-
-    /** @var ReportApi */
-    private $reportApi;
-
-    /** @var StepRedirector */
-    private $stepRedirector;
-
-    public function __construct(
-        RestClient $restClient,
-        ReportApi $reportApi,
-        StepRedirector $stepRedirector
-    ) {
-        $this->restClient = $restClient;
-        $this->reportApi = $reportApi;
-        $this->stepRedirector = $stepRedirector;
+    public function __construct(private RestClient $restClient, private ReportApi $reportApi, private StepRedirector $stepRedirector)
+    {
     }
 
     /**
@@ -50,7 +35,7 @@ class MoneyTransferController extends AbstractController
      *
      * @return array|Response|RedirectResponse
      */
-    public function startAction($reportId)
+    public function startAction($reportId): array|\Symfony\Component\HttpFoundation\RedirectResponse|\Symfony\Component\HttpFoundation\Response
     {
         $report = $this->reportApi->getReportIfNotSubmitted($reportId, self::$jmsGroups);
         if (!$report->enoughBankAccountForTransfers()) {
@@ -73,12 +58,10 @@ class MoneyTransferController extends AbstractController
      * @Route("/report/{reportId}/money-transfers/exist", name="money_transfers_exist")
      * @Template("@App/Report/MoneyTransfer/exist.html.twig")
      *
-     * @param Request $request
      * @param $reportId
      *
-     * @return array|RedirectResponse
      */
-    public function existAction(Request $request, $reportId)
+    public function existAction(Request $request, $reportId): array|\Symfony\Component\HttpFoundation\RedirectResponse
     {
         $report = $this->reportApi->getReportIfNotSubmitted($reportId, self::$jmsGroups);
         $form = $this->createForm(FormDir\YesNoType::class, $report, [
@@ -114,14 +97,12 @@ class MoneyTransferController extends AbstractController
      * @Route("/report/{reportId}/money-transfers/step{step}/{transferId}", name="money_transfers_step", requirements={"step":"\d+"})
      * @Template("@App/Report/MoneyTransfer/step.html.twig")
      *
-     * @param Request $request
      * @param $reportId
      * @param $step
      * @param null $transferId
      *
-     * @return array|RedirectResponse
      */
-    public function stepAction(Request $request, $reportId, $step, $transferId = null)
+    public function stepAction(Request $request, $reportId, $step, $transferId = null): array|\Symfony\Component\HttpFoundation\RedirectResponse
     {
         $totalSteps = 2;
         if ($step < 1 || $step > $totalSteps) {
@@ -214,12 +195,10 @@ class MoneyTransferController extends AbstractController
      * @Route("/report/{reportId}/money-transfers/add_another", name="money_transfers_add_another")
      * @Template("@App/Report/MoneyTransfer/addAnother.html.twig")
      *
-     * @param Request $request
      * @param $reportId
      *
-     * @return array|RedirectResponse
      */
-    public function addAnotherAction(Request $request, $reportId)
+    public function addAnotherAction(Request $request, $reportId): array|\Symfony\Component\HttpFoundation\RedirectResponse
     {
         $report = $this->reportApi->getReportIfNotSubmitted($reportId, self::$jmsGroups);
 
@@ -246,10 +225,8 @@ class MoneyTransferController extends AbstractController
      * @Template("@App/Report/MoneyTransfer/summary.html.twig")
      *
      * @param $reportId
-     *
-     * @return array|RedirectResponse
      */
-    public function summaryAction($reportId)
+    public function summaryAction($reportId): array|\Symfony\Component\HttpFoundation\RedirectResponse
     {
         $report = $this->reportApi->getReportIfNotSubmitted($reportId, self::$jmsGroups);
         if ($report->getStatus()->getMoneyTransferState()['state'] == EntityDir\Report\Status::STATE_NOT_STARTED) {
@@ -266,11 +243,9 @@ class MoneyTransferController extends AbstractController
      * @Template("@App/Common/confirmDelete.html.twig")
      *
      * @param $reportId
-     * @param int $transferId
      *
-     * @return array|RedirectResponse
      */
-    public function deleteAction(Request $request, $reportId, int $transferId)
+    public function deleteAction(Request $request, $reportId, int $transferId): array|\Symfony\Component\HttpFoundation\RedirectResponse
     {
         $report = $this->reportApi->getReportIfNotSubmitted($reportId, self::$jmsGroups);
 

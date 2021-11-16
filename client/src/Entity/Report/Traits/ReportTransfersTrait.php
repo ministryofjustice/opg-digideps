@@ -14,7 +14,6 @@ trait ReportTransfersTrait
      */
     private $moneyTransfers = [];
 
-
     /**
      * @JMS\Type("boolean")
      * @JMS\Groups({"money-transfers-no-transfers"})
@@ -22,7 +21,6 @@ trait ReportTransfersTrait
      * @var bool
      */
     private $noTransfersToAdd;
-
 
     /**
      * @return MoneyTransfer[]
@@ -46,9 +44,7 @@ trait ReportTransfersTrait
         return null;
     }
 
-
     /**
-     * @param  array $transfers
      * @return $this
      */
     public function setMoneyTransfers(array $transfers)
@@ -57,7 +53,6 @@ trait ReportTransfersTrait
 
         return $this;
     }
-
 
     /**
      * @return bool
@@ -68,7 +63,8 @@ trait ReportTransfersTrait
     }
 
     /**
-     * @param  bool  $noTransfersToAdd
+     * @param bool $noTransfersToAdd
+     *
      * @return $this
      */
     public function setNoTransfersToAdd($noTransfersToAdd)
@@ -79,7 +75,7 @@ trait ReportTransfersTrait
     }
 
     /**
-     * @return boolean
+     * @return bool
      */
     public function enoughBankAccountForTransfers()
     {

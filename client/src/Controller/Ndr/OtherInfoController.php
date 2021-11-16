@@ -18,30 +18,8 @@ class OtherInfoController extends AbstractController
         'ndr-action-more-info',
     ];
 
-    /**
-     * @var ReportApi
-     */
-    private $reportApi;
-
-    /**
-     * @var RestClient
-     */
-    private $restClient;
-
-
-    /**
-     * @var StepRedirector
-     */
-    private $stepRedirector;
-
-    public function __construct(
-        ReportApi $reportApi,
-        RestClient $restClient,
-        StepRedirector $stepRedirector
-    ) {
-        $this->reportApi = $reportApi;
-        $this->restClient = $restClient;
-        $this->stepRedirector = $stepRedirector;
+    public function __construct(private ReportApi $reportApi, private RestClient $restClient, private StepRedirector $stepRedirector)
+    {
     }
 
     /**

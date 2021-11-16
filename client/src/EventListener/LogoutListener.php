@@ -13,26 +13,8 @@ use Symfony\Component\Security\Http\Logout\LogoutSuccessHandlerInterface;
 
 class LogoutListener implements LogoutSuccessHandlerInterface
 {
-    /**
-     * @var TokenStorageInterface
-     */
-    private $tokenStorage;
-
-    /**
-     * @var RouterInterface
-     */
-    private $router;
-
-    /**
-     * @var RestClientInterface
-     */
-    private $restClient;
-
-    public function __construct(TokenStorageInterface $tokenStorage, RestClientInterface $restClient, RouterInterface $router)
+    public function __construct(private TokenStorageInterface $tokenStorage, private RestClientInterface $restClient, private RouterInterface $router)
     {
-        $this->tokenStorage = $tokenStorage;
-        $this->restClient = $restClient;
-        $this->router = $router;
     }
 
     public function onLogoutSuccess(Request $request)
@@ -43,8 +25,6 @@ class LogoutListener implements LogoutSuccessHandlerInterface
 
         $request->getSession()->set('loggedOutFrom', 'logoutPage');
 
-        $response = new RedirectResponse($this->router->generate('login'));
-
-        return $response;
+        return new RedirectResponse($this->router->generate('login'));
     }
 }

@@ -21,17 +21,8 @@ use Symfony\Component\Console\Output\OutputInterface;
  */
 class DocumentRecoverCommand extends Command
 {
-    /** @var S3Client */
-    private $s3;
-
-    /** @var string */
-    private $s3BucketName;
-
-    public function __construct(S3Client $s3, string $s3BucketName)
+    public function __construct(private S3Client $s3, private string $s3BucketName)
     {
-        $this->s3 = $s3;
-        $this->s3BucketName = $s3BucketName;
-
         parent::__construct();
     }
 
@@ -53,7 +44,7 @@ class DocumentRecoverCommand extends Command
 
         foreach ($refs as $ref) {
             try {
-                $object = $this->s3->getObject([
+                $this->s3->getObject([
                     'Bucket' => $this->s3BucketName,
                     'Key'    => $ref
                 ]);

@@ -19,34 +19,10 @@ use Twig\Environment;
 class DocumentService
 {
     /**
-     * @var S3Storage
-     */
-    private $s3Storage;
-
-    /**
-     * @var RestClient
-     */
-    private $restClient;
-
-    /**
-     * @var LoggerInterface
-     */
-    private $logger;
-
-    /**
-     * @var Environment
-     */
-    private $twig;
-
-    /**
      * DocumentService constructor.
      */
-    public function __construct(S3Storage $s3Storage, RestClient $restClient, LoggerInterface $logger, Environment $twig)
+    public function __construct(private S3Storage $s3Storage, private RestClient $restClient, private LoggerInterface $logger, private Environment $twig)
     {
-        $this->s3Storage = $s3Storage;
-        $this->restClient = $restClient;
-        $this->logger = $logger;
-        $this->twig = $twig;
     }
 
     /**
@@ -140,7 +116,7 @@ class DocumentService
         foreach ($reportSubmission->getDocuments() as $document) {
             try {
                 // AWS returns a object here - typecasting to string
-                $contents = (string) $this->s3Storage->retrieve($document->getStorageReference());
+                $contents = $this->s3Storage->retrieve($document->getStorageReference());
 
                 $retrievedDocument = new RetrievedDocument();
                 $retrievedDocument->setContent($contents);
@@ -148,7 +124,7 @@ class DocumentService
                 $retrievedDocument->setReportSubmission($reportSubmission);
 
                 $retrievedDocuments[] = $retrievedDocument;
-            } catch (FileNotFoundException $e) {
+            } catch (FileNotFoundException) {
                 $missingDocument = new MissingDocument();
                 $missingDocument->setFileName($document->getFileName());
                 $missingDocument->setReportSubmission($reportSubmission);

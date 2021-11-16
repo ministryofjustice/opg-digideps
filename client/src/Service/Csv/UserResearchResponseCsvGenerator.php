@@ -8,11 +8,8 @@ use App\Entity\UserResearch\UserResearchResponse;
 
 class UserResearchResponseCsvGenerator
 {
-    private CsvBuilder $csvBuilder;
-
-    public function __construct(CsvBuilder $csvBuilder)
+    public function __construct(private CsvBuilder $csvBuilder)
     {
-        $this->csvBuilder = $csvBuilder;
     }
 
     /**
@@ -63,17 +60,12 @@ class UserResearchResponseCsvGenerator
 
     private function transformDeputyshipLength(?string $deputyshipLengthFormString)
     {
-        switch ($deputyshipLengthFormString) {
-            case UserResearchResponse::UNDER_ONE:
-                return 'Less than 1';
-            case UserResearchResponse::ONE_TO_FIVE:
-                return '1 - 5';
-            case UserResearchResponse::SIX_TO_TEN:
-                return '6 - 10';
-            case UserResearchResponse::OVER_TEN:
-                return 'More than 10';
-        }
-
-        return 'No response';
+        return match ($deputyshipLengthFormString) {
+            UserResearchResponse::UNDER_ONE => 'Less than 1',
+            UserResearchResponse::ONE_TO_FIVE => '1 - 5',
+            UserResearchResponse::SIX_TO_TEN => '6 - 10',
+            UserResearchResponse::OVER_TEN => 'More than 10',
+            default => 'No response',
+        };
     }
 }

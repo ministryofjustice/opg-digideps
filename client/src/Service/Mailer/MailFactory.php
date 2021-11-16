@@ -37,50 +37,8 @@ class MailFactory
 
     const DATE_FORMAT = 'j F Y';
 
-    /**
-     * @var TranslatorInterface
-     */
-    protected $translator;
-
-    /**
-     * @var RouterInterface
-     */
-    protected $router;
-
-    /**
-     * @var EngineInterface
-     */
-    private $templating;
-
-    /**
-     * @var array
-     */
-    private $emailParams;
-
-    /**
-     * @var array
-     */
-    private $baseURLs;
-
-    /**
-     * @var IntlService
-     */
-    private $intlService;
-
-    public function __construct(
-        TranslatorInterface $translator,
-        RouterInterface $router,
-        EngineInterface $templating,
-        IntlService $intlService,
-        array $emailParams,
-        array $baseURLs
-    ) {
-        $this->translator = $translator;
-        $this->router = $router;
-        $this->templating = $templating;
-        $this->emailParams = $emailParams;
-        $this->baseURLs = $baseURLs;
-        $this->intlService = $intlService;
+    public function __construct(protected TranslatorInterface $translator, protected RouterInterface $router, private IntlService $intlService, private array $emailParams, private array $baseURLs)
+    {
     }
 
     /**
@@ -91,14 +49,11 @@ class MailFactory
      */
     private function generateAbsoluteLink(string $area, string $routeName, array $params = [])
     {
-        switch ($area) {
-            case self::AREA_DEPUTY:
-                return $this->baseURLs['front'].$this->router->generate($routeName, $params);
-            case self::AREA_ADMIN:
-                return $this->baseURLs['admin'].$this->router->generate($routeName, $params);
-            default:
-                throw new \Exception("area $area not found");
-        }
+        return match ($area) {
+            self::AREA_DEPUTY => $this->baseURLs['front'].$this->router->generate($routeName, $params),
+            self::AREA_ADMIN => $this->baseURLs['admin'].$this->router->generate($routeName, $params),
+            default => throw new \Exception("area $area not found"),
+        };
     }
 
     private function getContactParameters(User $user): array
@@ -137,14 +92,12 @@ class MailFactory
             ]),
         ]);
 
-        $email = (new ModelDir\Email())
+        return (new ModelDir\Email())
             ->setFromEmailNotifyID(self::NOTIFY_FROM_EMAIL_ID)
             ->setFromName($this->translate('activation.fromName'))
             ->setToEmail($user->getEmail())
             ->setTemplate(self::ACTIVATION_TEMPLATE_ID)
             ->setParameters($parameters);
-
-        return $email;
     }
 
     /**
@@ -165,14 +118,12 @@ class MailFactory
             $parameters['deputyName'] = $deputyName;
         }
 
-        $email = (new ModelDir\Email())
+        return (new ModelDir\Email())
             ->setFromEmailNotifyID(self::NOTIFY_FROM_EMAIL_ID)
             ->setFromName($this->translate('activation.fromName'))
             ->setToEmail($user->getEmail())
             ->setTemplate($user->isLayDeputy() ? self::INVITATION_LAY_TEMPLATE_ID : self::INVITATION_ORG_TEMPLATE_ID)
             ->setParameters($parameters);
-
-        return $email;
     }
 
     /**
@@ -185,18 +136,10 @@ class MailFactory
      */
     public static function getRecipientRole(User $user)
     {
-        switch ($user->getRoleName()) {
-            case User::ROLE_PA_NAMED:
-            case User::ROLE_PA_ADMIN:
-            case User::ROLE_PA_TEAM_MEMBER:
-            case User::ROLE_PROF_NAMED:
-            case User::ROLE_PROF_ADMIN:
-            case User::ROLE_PROF_TEAM_MEMBER:
-                return $user->getRoleName();
-
-            default:
-                return 'default';
-        }
+        return match ($user->getRoleName()) {
+            User::ROLE_PA_NAMED, User::ROLE_PA_ADMIN, User::ROLE_PA_TEAM_MEMBER, User::ROLE_PROF_NAMED, User::ROLE_PROF_ADMIN, User::ROLE_PROF_TEAM_MEMBER => $user->getRoleName(),
+            default => 'default',
+        };
     }
 
     public function createResetPasswordEmail(User $user): Email
@@ -362,7 +305,7 @@ class MailFactory
             'newStartDate' => $newReport->getStartDate()->format(self::DATE_FORMAT),
             'newEndDate' => $newReport->getEndDate()->format(self::DATE_FORMAT),
             'EndDatePlus1' => $dateSubmittableFrom->format(self::DATE_FORMAT),
-            'PFA' => '104' === substr($submittedReport->getType(), 0, 3) ? 'no' : 'yes',
+            'PFA' => str_starts_with($submittedReport->getType(), '104') ? 'no' : 'yes',
             'lay' => $user->isLayDeputy() ? 'yes' : 'no',
         ];
 

@@ -53,42 +53,8 @@ class NdrController extends AbstractController
         'visits-care',
     ];
 
-    /** @var HtmlToPdfGenerator */
-    private $htmlToPdf;
-
-    /** @var UserApi */
-    private $userApi;
-
-    /** @var ClientApi */
-    private $clientApi;
-
-    /** @var RestClient */
-    private $restClient;
-
-    /** @var SatisfactionApi */
-    private $satisfactionApi;
-
-    /** @var NdrApi */
-    private $ndrApi;
-
-    private CasrecApi $casrecApi;
-
-    public function __construct(
-        HtmlToPdfGenerator $htmlToPdfGenerator,
-        UserApi $userApi,
-        ClientApi $clientApi,
-        RestClient $restClient,
-        CasrecApi $casrecApi,
-        SatisfactionApi $satisfactionApi,
-        NdrApi $ndrApi
-    ) {
-        $this->htmlToPdf = $htmlToPdfGenerator;
-        $this->userApi = $userApi;
-        $this->clientApi = $clientApi;
-        $this->restClient = $restClient;
-        $this->casrecApi = $casrecApi;
-        $this->satisfactionApi = $satisfactionApi;
-        $this->ndrApi = $ndrApi;
+    public function __construct(private HtmlToPdfGenerator $htmlToPdf, private UserApi $userApi, private ClientApi $clientApi, private CasrecApi $casrecApi, private SatisfactionApi $satisfactionApi, private NdrApi $ndrApi)
+    {
     }
 
     /**
@@ -96,10 +62,8 @@ class NdrController extends AbstractController
      *
      * @Route("/ndr", name="ndr_index")
      * @Template("@App/Ndr/Ndr/index.html.twig")
-     *
-     * @return array|RedirectResponse
      */
-    public function indexAction(Redirector $redirector)
+    public function indexAction(Redirector $redirector): array|\Symfony\Component\HttpFoundation\RedirectResponse
     {
         // redirect if user has missing details or is on wrong page
         $user = $this->userApi->getUserWithData(array_merge(self::$ndrGroupsForValidation, ['status']));
@@ -130,10 +94,8 @@ class NdrController extends AbstractController
     /**
      * @Route("/ndr/{ndrId}/overview", name="ndr_overview")
      * @Template("@App/Ndr/Ndr/overview.html.twig")
-     *
-     * @return array|RedirectResponse
      */
-    public function overviewAction(Redirector $redirector, ParameterStoreService $parameterStore)
+    public function overviewAction(Redirector $redirector, ParameterStoreService $parameterStore): array|\Symfony\Component\HttpFoundation\RedirectResponse
     {
         // redirect if user has missing details or is on wrong page
         $user = $this->userApi->getUserWithData();
@@ -226,7 +188,6 @@ class NdrController extends AbstractController
 
     private function getPdfBinaryContent($ndr)
     {
-        /** @var string */
         $html = $this->render('@App/Ndr/Formatted/formatted_standalone.html.twig', [
             'ndr' => $ndr, 'adLoggedAsDeputy' => $this->isGranted(User::ROLE_AD),
         ])->getContent();
@@ -238,11 +199,10 @@ class NdrController extends AbstractController
      * @Route("/ndr/{ndrId}/declaration", name="ndr_declaration")
      * @Template("@App/Ndr/Ndr/declaration.html.twig")
      *
-     * @return array|RedirectResponse
      *
      * @throws \Exception
      */
-    public function declarationAction(Request $request, $ndrId, S3FileUploader $fileUploader)
+    public function declarationAction(Request $request, $ndrId, S3FileUploader $fileUploader): array|\Symfony\Component\HttpFoundation\RedirectResponse
     {
         $client = $this->clientApi->getFirstClient(self::$ndrGroupsForValidation);
 

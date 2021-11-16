@@ -14,31 +14,6 @@ use Symfony\Component\Security\Core\Authorization\AuthorizationCheckerInterface;
 class Redirector
 {
     /**
-     * @var RouterInterface
-     */
-    protected $router;
-
-    /**
-     * @var TokenStorageInterface
-     */
-    protected $tokenStorage;
-
-    /**
-     * @var AuthorizationCheckerInterface
-     */
-    protected $authChecker;
-
-    /**
-     * @var Session
-     */
-    protected $session;
-
-    /**
-     * @var string
-     */
-    protected $env;
-
-    /**
      * Routes the user can be redirected to, if accessed before timeout.
      *
      * @var array
@@ -62,18 +37,8 @@ class Redirector
      *
      * @param $env
      */
-    public function __construct(
-        TokenStorageInterface $tokenStorage,
-        AuthorizationCheckerInterface $authChecker,
-        RouterInterface $router,
-        Session $session,
-        $env
-    ) {
-        $this->tokenStorage = $tokenStorage;
-        $this->authChecker = $authChecker;
-        $this->router = $router;
-        $this->session = $session;
-        $this->env = $env;
+    public function __construct(protected TokenStorageInterface $tokenStorage, protected AuthorizationCheckerInterface $authChecker, protected RouterInterface $router, protected Session $session, protected $env)
+    {
     }
 
     /**
@@ -112,10 +77,8 @@ class Redirector
      * //TODO refactor remove. seeem overcomplicated.
      *
      * @param string $currentRoute
-     *
-     * @return bool|string
      */
-    public function getCorrectRouteIfDifferent(EntityDir\User $user, $currentRoute)
+    public function getCorrectRouteIfDifferent(EntityDir\User $user, $currentRoute): bool|string
     {
         // Redirect to appropriate homepage
         if (in_array($currentRoute, ['lay_home', 'ndr_index'])) {
@@ -175,10 +138,7 @@ class Redirector
         return $this->router->generate('lay_home');
     }
 
-    /**
-     * @return bool|string
-     */
-    private function getLastAccessedUrl()
+    private function getLastAccessedUrl(): bool|string
     {
         $lastUsedUrl = $this->session->get('_security.secured_area.target_path');
         if (!$lastUsedUrl) {
@@ -192,7 +152,7 @@ class Redirector
 
         try {
             $route = $this->router->match($urlPieces['path'])['_route'];
-        } catch (ResourceNotFoundException $e) {
+        } catch (ResourceNotFoundException) {
             return false;
         }
 

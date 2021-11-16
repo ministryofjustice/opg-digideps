@@ -10,14 +10,8 @@ use Symfony\Component\EventDispatcher\EventSubscriberInterface;
 
 class UserPasswordResetSubscriber implements EventSubscriberInterface
 {
-    /**
-     * @var Mailer
-     */
-    private $mailer;
-
-    public function __construct(Mailer $mailer)
+    public function __construct(private Mailer $mailer)
     {
-        $this->mailer = $mailer;
     }
 
     public static function getSubscribedEvents()

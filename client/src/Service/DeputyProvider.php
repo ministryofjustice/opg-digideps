@@ -13,20 +13,8 @@ use Symfony\Component\Security\Core\User\UserProviderInterface;
 
 class DeputyProvider implements UserProviderInterface
 {
-    /**
-     * @var RestClient
-     */
-    private $restClient;
-
-    /**
-     * @var LoggerInterface
-     */
-    private $logger;
-
-    public function __construct(RestClientInterface $restClient, LoggerInterface $logger)
+    public function __construct(private RestClientInterface $restClient, private LoggerInterface $logger)
     {
-        $this->restClient = $restClient;
-        $this->logger = $logger;
     }
 
     /**
@@ -73,7 +61,6 @@ class DeputyProvider implements UserProviderInterface
     /**
      * @codeCoverageIgnore
      *
-     * @param UserInterface $user
      *
      * @return \App\Entity\User
      *
@@ -82,7 +69,7 @@ class DeputyProvider implements UserProviderInterface
      */
     public function refreshUser(UserInterface $user)
     {
-        $class = get_class($user);
+        $class = $user::class;
         if (!$this->supportsClass($class)) {
             throw new UnsupportedUserException(
                 sprintf(

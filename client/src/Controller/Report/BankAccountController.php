@@ -22,23 +22,8 @@ class BankAccountController extends AbstractController
         'account-state',
     ];
 
-    /** @var RestClient */
-    private $restClient;
-
-    /** @var ReportApi */
-    private $reportApi;
-
-    /** @var StepRedirector */
-    private $stepRedirector;
-
-    public function __construct(
-        RestClient $restClient,
-        ReportApi $reportApi,
-        StepRedirector $stepRedirector
-    ) {
-        $this->restClient = $restClient;
-        $this->reportApi = $reportApi;
-        $this->stepRedirector = $stepRedirector;
+    public function __construct(private RestClient $restClient, private ReportApi $reportApi, private StepRedirector $stepRedirector)
+    {
     }
 
     /**
@@ -46,10 +31,8 @@ class BankAccountController extends AbstractController
      * @Template("@App/Report/BankAccount/start.html.twig")
      *
      * @param $reportId
-     *
-     * @return array|RedirectResponse
      */
-    public function startAction(Request $request, $reportId)
+    public function startAction(Request $request, $reportId): array|\Symfony\Component\HttpFoundation\RedirectResponse
     {
         $report = $this->reportApi->getReportIfNotSubmitted($reportId, self::$jmsGroups);
         if (EntityDir\Report\Status::STATE_NOT_STARTED != $report->getStatus()->getBankAccountsState()['state']) {
@@ -68,10 +51,8 @@ class BankAccountController extends AbstractController
      * @param $reportId
      * @param $step
      * @param null $accountId
-     *
-     * @return array|RedirectResponse
      */
-    public function stepAction(Request $request, $reportId, $step, $accountId = null)
+    public function stepAction(Request $request, $reportId, $step, $accountId = null): array|\Symfony\Component\HttpFoundation\RedirectResponse
     {
         $totalSteps = 4;
         if ($step < 1 || $step > $totalSteps) {
@@ -181,10 +162,8 @@ class BankAccountController extends AbstractController
      * @Template("@App/Report/BankAccount/add_another.html.twig")
      *
      * @param $reportId
-     *
-     * @return array|RedirectResponse
      */
-    public function addAnotherAction(Request $request, $reportId)
+    public function addAnotherAction(Request $request, $reportId): array|\Symfony\Component\HttpFoundation\RedirectResponse
     {
         $report = $this->reportApi->getReportIfNotSubmitted($reportId);
 
@@ -211,10 +190,8 @@ class BankAccountController extends AbstractController
      *
      * @param $reportId
      * @Template("@App/Report/BankAccount/summary.html.twig")
-     *
-     * @return array|RedirectResponse
      */
-    public function summaryAction($reportId)
+    public function summaryAction($reportId): array|\Symfony\Component\HttpFoundation\RedirectResponse
     {
         $report = $this->reportApi->getReportIfNotSubmitted($reportId, self::$jmsGroups);
         if (EntityDir\Report\Status::STATE_NOT_STARTED == $report->getStatus()->getBankAccountsState()['state']) {
@@ -232,10 +209,8 @@ class BankAccountController extends AbstractController
      *
      * @param $reportId
      * @param $accountId
-     *
-     * @return array|RedirectResponse
      */
-    public function deleteConfirmAction(Request $request, $reportId, $accountId, TranslatorInterface $translator)
+    public function deleteConfirmAction(Request $request, $reportId, $accountId, TranslatorInterface $translator): array|\Symfony\Component\HttpFoundation\RedirectResponse
     {
         $report = $this->reportApi->getReportIfNotSubmitted($reportId, self::$jmsGroups);
         $summaryPageUrl = $this->generateUrl('bank_accounts_summary', ['reportId' => $reportId]);

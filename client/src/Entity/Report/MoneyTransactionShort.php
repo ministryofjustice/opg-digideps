@@ -55,22 +55,20 @@ class MoneyTransactionShort
     private $date;
 
     /**
-     * Discriminator field
-     *
-     * @var string
-     *
-     * @JMS\Type("string")
-     * @JMS\Groups({"moneyTransactionShort"})
-     */
-    private $type;
-
-    /**
      * MoneyTransactionShort constructor.
      * @param string $type
      */
-    public function __construct($type)
+    public function __construct(
+        /**
+         * Discriminator field
+         *
+         *
+         * @JMS\Type("string")
+         * @JMS\Groups({"moneyTransactionShort"})
+         */
+        private $type
+    )
     {
-        $this->type = $type;
     }
 
     /**

@@ -32,11 +32,6 @@ class CsvToArray
      */
     private $optionalColumns = [];
 
-    /**
-     * @var bool
-     */
-    private $normaliseNewLines;
-
     private $firstRow = [];
 
     /**
@@ -48,10 +43,8 @@ class CsvToArray
      *
      * @throws \RuntimeException
      */
-    public function __construct($file, $normaliseNewLines, $autoDetectLineEndings = false)
+    public function __construct($file, private $normaliseNewLines, $autoDetectLineEndings = false)
     {
-        $this->normaliseNewLines = $normaliseNewLines;
-
         if (!file_exists($file)) {
             throw new \RuntimeException("file $file not found");
         }

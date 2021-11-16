@@ -275,9 +275,6 @@ class Client
         return $this->namedDeputy;
     }
 
-    /**
-     * @return Client
-     */
     public function setNamedDeputy(NamedDeputy $namedDeputy): self
     {
         $this->namedDeputy = $namedDeputy;
@@ -390,8 +387,6 @@ class Client
 
     /**
      * @param Report $currentReport
-     *
-     * @return Client
      */
     public function setCurrentReport($currentReport): self
     {
@@ -420,13 +415,11 @@ class Client
 
     public function removeReport($report)
     {
-        if (!empty($this->reports)) {
-            foreach ($this->reports as $key => $reportObj) {
-                if ($reportObj->getId() == $report->getId()) {
-                    unset($this->reports[$key]);
+        foreach ($this->reports as $key => $reportObj) {
+            if ($reportObj->getId() == $report->getId()) {
+                unset($this->reports[$key]);
 
-                    return $this;
-                }
+                return $this;
             }
         }
 
@@ -727,8 +720,6 @@ class Client
     }
 
     /**
-     * @param DateTime $dateOfBirth
-     *
      * @return \App\Entity\Client
      */
     public function setDateOfBirth(DateTime $dateOfBirth = null)

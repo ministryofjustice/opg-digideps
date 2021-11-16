@@ -21,18 +21,8 @@ class DeputyExpenseController extends AbstractController
         'account',
     ];
 
-    /** @var RestClient */
-    private $restClient;
-
-    /** @var ReportApi */
-    private $reportApi;
-
-    public function __construct(
-        RestClient $restClient,
-        ReportApi $reportApi
-    ) {
-        $this->restClient = $restClient;
-        $this->reportApi = $reportApi;
+    public function __construct(private RestClient $restClient, private ReportApi $reportApi)
+    {
     }
 
     /**
@@ -40,10 +30,8 @@ class DeputyExpenseController extends AbstractController
      * @Template("@App/Report/DeputyExpense/start.html.twig")
      *
      * @param $reportId
-     *
-     * @return array|RedirectResponse
      */
-    public function startAction($reportId)
+    public function startAction($reportId): array|\Symfony\Component\HttpFoundation\RedirectResponse
     {
         $report = $this->reportApi->getReportIfNotSubmitted($reportId, self::$jmsGroups);
 
@@ -61,10 +49,8 @@ class DeputyExpenseController extends AbstractController
      * @Template("@App/Report/DeputyExpense/exist.html.twig")
      *
      * @param $reportId
-     *
-     * @return array|RedirectResponse
      */
-    public function existAction(Request $request, $reportId)
+    public function existAction(Request $request, $reportId): array|\Symfony\Component\HttpFoundation\RedirectResponse
     {
         $report = $this->reportApi->getReportIfNotSubmitted($reportId, self::$jmsGroups);
         $form = $this->createForm(
@@ -104,10 +90,8 @@ class DeputyExpenseController extends AbstractController
      * @Template("@App/Report/DeputyExpense/add.html.twig")
      *
      * @param $reportId
-     *
-     * @return array|RedirectResponse
      */
-    public function addAction(Request $request, $reportId)
+    public function addAction(Request $request, $reportId): array|\Symfony\Component\HttpFoundation\RedirectResponse
     {
         $report = $this->reportApi->getReportIfNotSubmitted($reportId, self::$jmsGroups);
         $expense = new EntityDir\Report\Expense();
@@ -140,7 +124,7 @@ class DeputyExpenseController extends AbstractController
                 'form' => $form->createView(),
                 'report' => $report,
             ];
-        } catch (RouteNotFoundException $e) {
+        } catch (RouteNotFoundException) {
             return [
                 'backLink' => null,
                 'form' => $form->createView(),
@@ -154,10 +138,8 @@ class DeputyExpenseController extends AbstractController
      * @Template("@App/Report/DeputyExpense/addAnother.html.twig")
      *
      * @param $reportId
-     *
-     * @return array|RedirectResponse
      */
-    public function addAnotherAction(Request $request, $reportId)
+    public function addAnotherAction(Request $request, $reportId): array|\Symfony\Component\HttpFoundation\RedirectResponse
     {
         $report = $this->reportApi->getReportIfNotSubmitted($reportId, self::$jmsGroups);
 
@@ -185,10 +167,8 @@ class DeputyExpenseController extends AbstractController
      *
      * @param $reportId
      * @param $expenseId
-     *
-     * @return array|RedirectResponse
      */
-    public function editAction(Request $request, $reportId, $expenseId)
+    public function editAction(Request $request, $reportId, $expenseId): array|\Symfony\Component\HttpFoundation\RedirectResponse
     {
         $report = $this->reportApi->getReportIfNotSubmitted($reportId, self::$jmsGroups);
         $expense = $this->restClient->get(
@@ -243,10 +223,8 @@ class DeputyExpenseController extends AbstractController
      * @Template("@App/Report/DeputyExpense/summary.html.twig")
      *
      * @param $reportId
-     *
-     * @return array|RedirectResponse
      */
-    public function summaryAction($reportId)
+    public function summaryAction($reportId): array|\Symfony\Component\HttpFoundation\RedirectResponse
     {
         $report = $this->reportApi->getReportIfNotSubmitted($reportId, self::$jmsGroups);
         if (EntityDir\Report\Status::STATE_NOT_STARTED == $report->getStatus()->getExpensesState()['state']) {
@@ -264,10 +242,8 @@ class DeputyExpenseController extends AbstractController
      *
      * @param $reportId
      * @param $expenseId
-     *
-     * @return array|RedirectResponse
      */
-    public function deleteAction(Request $request, $reportId, $expenseId)
+    public function deleteAction(Request $request, $reportId, $expenseId): array|\Symfony\Component\HttpFoundation\RedirectResponse
     {
         $report = $this->reportApi->getReportIfNotSubmitted($reportId, self::$jmsGroups);
 

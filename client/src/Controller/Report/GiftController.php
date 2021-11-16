@@ -21,18 +21,8 @@ class GiftController extends AbstractController
         'account',
     ];
 
-    /** @var RestClient */
-    private $restClient;
-
-    /** @var ReportApi */
-    private $reportApi;
-
-    public function __construct(
-        RestClient $restClient,
-        ReportApi $reportApi
-    ) {
-        $this->restClient = $restClient;
-        $this->reportApi = $reportApi;
+    public function __construct(private RestClient $restClient, private ReportApi $reportApi)
+    {
     }
 
     /**
@@ -40,10 +30,8 @@ class GiftController extends AbstractController
      * @Template("@App/Report/Gift/start.html.twig")
      *
      * @param $reportId
-     *
-     * @return array|RedirectResponse
      */
-    public function startAction($reportId)
+    public function startAction($reportId): array|\Symfony\Component\HttpFoundation\RedirectResponse
     {
         $report = $this->reportApi->getReportIfNotSubmitted($reportId, self::$jmsGroups);
 
@@ -61,10 +49,8 @@ class GiftController extends AbstractController
      * @Template("@App/Report/Gift/exist.html.twig")
      *
      * @param $reportId
-     *
-     * @return array|RedirectResponse
      */
-    public function existAction(Request $request, $reportId)
+    public function existAction(Request $request, $reportId): array|\Symfony\Component\HttpFoundation\RedirectResponse
     {
         $report = $this->reportApi->getReportIfNotSubmitted($reportId, self::$jmsGroups);
         $form = $this->createForm(
@@ -104,10 +90,8 @@ class GiftController extends AbstractController
      * @Template("@App/Report/Gift/add.html.twig")
      *
      * @param $reportId
-     *
-     * @return array|RedirectResponse
      */
-    public function addAction(Request $request, $reportId)
+    public function addAction(Request $request, $reportId): array|\Symfony\Component\HttpFoundation\RedirectResponse
     {
         $report = $this->reportApi->getReportIfNotSubmitted($reportId, self::$jmsGroups);
         $gift = new EntityDir\Report\Gift();
@@ -144,7 +128,7 @@ class GiftController extends AbstractController
                 'form' => $form->createView(),
                 'report' => $report,
             ];
-        } catch (RouteNotFoundException $e) {
+        } catch (RouteNotFoundException) {
             return [
                 'backLink' => null,
                 'form' => $form->createView(),
@@ -159,10 +143,8 @@ class GiftController extends AbstractController
      *
      * @param $reportId
      * @param $giftId
-     *
-     * @return array|RedirectResponse
      */
-    public function editAction(Request $request, $reportId, $giftId)
+    public function editAction(Request $request, $reportId, $giftId): array|\Symfony\Component\HttpFoundation\RedirectResponse
     {
         $report = $this->reportApi->getReportIfNotSubmitted($reportId, self::$jmsGroups);
         $gift = $this->restClient->get(
@@ -213,10 +195,8 @@ class GiftController extends AbstractController
      * @Template("@App/Report/Gift/summary.html.twig")
      *
      * @param $reportId
-     *
-     * @return array|RedirectResponse
      */
-    public function summaryAction($reportId)
+    public function summaryAction($reportId): array|\Symfony\Component\HttpFoundation\RedirectResponse
     {
         $report = $this->reportApi->getReportIfNotSubmitted($reportId, self::$jmsGroups);
         if (EntityDir\Report\Status::STATE_NOT_STARTED == $report->getStatus()->getGiftsState()['state']) {
@@ -234,10 +214,8 @@ class GiftController extends AbstractController
      *
      * @param $reportId
      * @param $giftId
-     *
-     * @return array|RedirectResponse
      */
-    public function deleteAction(Request $request, $reportId, $giftId)
+    public function deleteAction(Request $request, $reportId, $giftId): array|\Symfony\Component\HttpFoundation\RedirectResponse
     {
         $form = $this->createForm(FormDir\ConfirmDeleteType::class);
         $form->handleRequest($request);

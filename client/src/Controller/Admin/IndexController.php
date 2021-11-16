@@ -36,24 +36,8 @@ use Symfony\Contracts\Translation\TranslatorInterface;
  */
 class IndexController extends AbstractController
 {
-    private OrgService $orgService;
-    private UserVoter $userVoter;
-    private Logger $logger;
-    private RestClient $restClient;
-    private UserApi $userApi;
-
-    public function __construct(
-        OrgService $orgService,
-        UserVoter $userVoter,
-        Logger $logger,
-        RestClient $restClient,
-        UserApi $userApi
-    ) {
-        $this->orgService = $orgService;
-        $this->userVoter = $userVoter;
-        $this->logger = $logger;
-        $this->restClient = $restClient;
-        $this->userApi = $userApi;
+    public function __construct(private OrgService $orgService, private Logger $logger, private RestClient $restClient, private UserApi $userApi)
+    {
     }
 
     /**
@@ -93,10 +77,8 @@ class IndexController extends AbstractController
      * @Route("/user-add", name="admin_add_user")
      * @Security("is_granted('ROLE_ADMIN') or has_role('ROLE_AD')")
      * @Template("@App/Admin/Index/addUser.html.twig")
-     *
-     * @return array|RedirectResponse
      */
-    public function addUserAction(Request $request)
+    public function addUserAction(Request $request): array|\Symfony\Component\HttpFoundation\RedirectResponse
     {
         $form = $this->createForm(FormDir\Admin\AddUserType::class, new EntityDir\User());
 
@@ -135,11 +117,11 @@ class IndexController extends AbstractController
      *
      * @return User[]|Response
      */
-    public function viewAction($id)
+    public function viewAction($id): array|\Symfony\Component\HttpFoundation\Response
     {
         try {
             return ['user' => $this->getPopulatedUser($id)];
-        } catch (\Throwable $e) {
+        } catch (\Throwable) {
             return $this->renderNotFound();
         }
     }
@@ -149,11 +131,10 @@ class IndexController extends AbstractController
      * @Security("is_granted('ROLE_ADMIN') or has_role('ROLE_AD')")
      * @Template("@App/Admin/Index/editUser.html.twig")
      *
-     * @return array|Response
      *
      * @throws \Throwable
      */
-    public function editUserAction(Request $request, TranslatorInterface $translator)
+    public function editUserAction(Request $request, TranslatorInterface $translator): array|\Symfony\Component\HttpFoundation\Response
     {
         $filter = $request->get('filter');
 

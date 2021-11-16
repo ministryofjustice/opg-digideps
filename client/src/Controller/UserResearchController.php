@@ -17,24 +17,8 @@ use Symfony\Component\Translation\TranslatorInterface;
 
 class UserResearchController extends AbstractController
 {
-    private UserResearchApi $userResearchApi;
-    private ReportApi $reportApi;
-    private TranslatorInterface $translator;
-    private FormFactoryInterface $formFactory;
-    private NdrApi $ndrApi;
-
-    public function __construct(
-        UserResearchApi $userResearchApi,
-        ReportApi $reportApi,
-        TranslatorInterface $translator,
-        FormFactoryInterface $formFactory,
-        NdrApi $ndrApi
-    ) {
-        $this->userResearchApi = $userResearchApi;
-        $this->reportApi = $reportApi;
-        $this->translator = $translator;
-        $this->formFactory = $formFactory;
-        $this->ndrApi = $ndrApi;
+    public function __construct(private UserResearchApi $userResearchApi, private ReportApi $reportApi, private TranslatorInterface $translator, private FormFactoryInterface $formFactory, private NdrApi $ndrApi)
+    {
     }
 
     /**

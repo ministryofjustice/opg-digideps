@@ -22,16 +22,8 @@ class ReportApi
     private const REPORT_ENDPOINT_BY_ID = 'report/%s';
     private const NDR_ENDPOINT_BY_ID = 'ndr/%s';
 
-    /** @var RestClient */
-    private $restClient;
-
-    /** @var ObservableEventDispatcher */
-    private $eventDispatcher;
-
-    public function __construct(RestClient $restClient, ObservableEventDispatcher $eventDispatcher)
+    public function __construct(private RestClient $restClient, private ObservableEventDispatcher $eventDispatcher)
     {
-        $this->restClient = $restClient;
-        $this->eventDispatcher = $eventDispatcher;
     }
 
     /**

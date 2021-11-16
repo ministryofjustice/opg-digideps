@@ -20,9 +20,6 @@ class SiriusDocumentUpload
         return $this->type;
     }
 
-    /**
-     * @return SiriusDocumentUpload
-     */
     public function setType(string $type): self
     {
         $this->type = $type;
@@ -35,9 +32,6 @@ class SiriusDocumentUpload
         return $this->attributes;
     }
 
-    /**
-     * @return SiriusDocumentUpload
-     */
     public function setAttributes(?SiriusMetadataInterface $attributes): self
     {
         $this->attributes = $attributes;
@@ -50,9 +44,6 @@ class SiriusDocumentUpload
         return $this->file;
     }
 
-    /**
-     * @return SiriusDocumentUpload
-     */
     public function setFile(SiriusDocumentFile $file): self
     {
         $this->file = $file;

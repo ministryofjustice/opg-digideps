@@ -19,16 +19,10 @@ use Psr\Container\ContainerInterface;
 class RequestIdLoggerProcessor
 {
     /**
-     * @var ContainerInterface
-     */
-    protected $container;
-
-    /**
      * RequestIdLoggerProcessor constructor.
      */
-    public function __construct(ContainerInterface $container)
+    public function __construct(protected ContainerInterface $container)
     {
-        $this->container = $container;
     }
 
     /**

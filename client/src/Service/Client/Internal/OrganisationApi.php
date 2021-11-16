@@ -15,13 +15,8 @@ class OrganisationApi
 {
     private const MANAGE_USER_IN_ORG_ENDPOINT = 'v2/organisation/%s/user/%s';
 
-    private RestClient $restClient;
-    private ObservableEventDispatcher $eventDispatcher;
-
-    public function __construct(RestClient $restClient, ObservableEventDispatcher $eventDispatcher)
+    public function __construct(private RestClient $restClient, private ObservableEventDispatcher $eventDispatcher)
     {
-        $this->restClient = $restClient;
-        $this->eventDispatcher = $eventDispatcher;
     }
 
     public function addUserToOrganisation(Organisation $organisation, User $userToAdd, User $currentUser, string $trigger)

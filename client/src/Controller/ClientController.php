@@ -24,28 +24,8 @@ use Symfony\Contracts\Translation\TranslatorInterface;
 
 class ClientController extends AbstractController
 {
-    /** @var UserApi */
-    private $userApi;
-
-    /** @var ClientApi */
-    private $clientApi;
-
-    /** @var RestClient */
-    private $restClient;
-
-    /** @var RouterInterface */
-    private $router;
-
-    public function __construct(
-        UserApi $userApi,
-        ClientApi $clientApi,
-        RestClient $restClient,
-        RouterInterface $router
-    ) {
-        $this->userApi = $userApi;
-        $this->clientApi = $clientApi;
-        $this->restClient = $restClient;
-        $this->router = $router;
+    public function __construct(private UserApi $userApi, private ClientApi $clientApi, private RestClient $restClient)
+    {
     }
 
     /**
@@ -74,11 +54,9 @@ class ClientController extends AbstractController
      * @Route("/deputyship-details/your-client/edit", name="client_edit")
      * @Template("@App/Client/edit.html.twig")
      *
-     * @param Request $request
      *
-     * @return array|RedirectResponse
      */
-    public function editAction(Request $request)
+    public function editAction(Request $request): array|\Symfony\Component\HttpFoundation\RedirectResponse
     {
         $from = $request->get('from');
         $preUpdateClient = $this->clientApi->getFirstClient();
@@ -123,9 +101,8 @@ class ClientController extends AbstractController
     /**
      * @Route("/client/add", name="client_add")
      * @Template("@App/Client/add.html.twig")
-     * @return array|RedirectResponse
      */
-    public function addAction(Request $request, Redirector $redirector, TranslatorInterface $translator, LoggerInterface $logger)
+    public function addAction(Request $request, Redirector $redirector, TranslatorInterface $translator, LoggerInterface $logger): array|\Symfony\Component\HttpFoundation\RedirectResponse
     {
         // redirect if user has missing details or is on wrong page
         $user = $this->userApi->getUserWithData();

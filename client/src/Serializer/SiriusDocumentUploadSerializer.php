@@ -11,14 +11,8 @@ use Symfony\Component\Serializer\Normalizer\ObjectNormalizer;
 
 class SiriusDocumentUploadSerializer implements NormalizerInterface
 {
-    /**
-     * @var ObjectNormalizer
-     */
-    private $normalizer;
-
-    public function __construct(ObjectNormalizer $normalizer)
+    public function __construct(private ObjectNormalizer $normalizer)
     {
-        $this->normalizer = $normalizer;
     }
 
     /**

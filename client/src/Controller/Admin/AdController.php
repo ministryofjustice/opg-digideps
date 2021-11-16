@@ -21,26 +21,16 @@ use Symfony\Component\Routing\Annotation\Route;
  */
 class AdController extends AbstractController
 {
-    /** @var RestClient */
-    private $restClient;
-
-    /** @var UserApi */
-    private $userApi;
-
-    public function __construct(RestClient $restClient, UserApi $userApi)
+    public function __construct(private RestClient $restClient, private UserApi $userApi)
     {
-        $this->restClient = $restClient;
-        $this->userApi = $userApi;
     }
 
     /**
      * @Route("/", name="ad_homepage")
      * @Security("is_granted('ROLE_AD')")
      * @Template("@App/Admin/Ad/index.html.twig")
-     *
-     * @return array|RedirectResponse
      */
-    public function indexAction(Request $request)
+    public function indexAction(Request $request): array|\Symfony\Component\HttpFoundation\RedirectResponse
     {
         $filters = [
             'order_by' => $request->get('order_by', 'id'),
@@ -106,7 +96,7 @@ class AdController extends AbstractController
         try {
             $user = $this->restClient->get("user/get-one-by/{$what}/{$filter}", 'User', ['user', 'client', 'client-reports',
                 'report', 'ndr', ]);
-        } catch (\Throwable $e) {
+        } catch (\Throwable) {
             return $this->render('@App/Admin/Ad/error.html.twig', [
                 'error' => 'User not found',
             ]);

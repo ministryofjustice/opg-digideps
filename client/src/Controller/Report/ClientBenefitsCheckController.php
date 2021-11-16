@@ -31,24 +31,8 @@ class ClientBenefitsCheckController extends AbstractController
         'client-benefits-check-state',
     ];
 
-    private ReportApi $reportApi;
-    private ClientBenefitsCheckApi $benefitCheckApi;
-    private StepRedirector $stepRedirector;
-    private IncomeReceivedOnClientsBehalfApi $incomeTypeApi;
-    private NdrApi $ndrApi;
-
-    public function __construct(
-        ReportApi $reportApi,
-        ClientBenefitsCheckApi $benefitCheckApi,
-        StepRedirector $stepRedirector,
-        IncomeReceivedOnClientsBehalfApi $incomeTypeApi,
-        NdrApi $ndrApi
-    ) {
-        $this->reportApi = $reportApi;
-        $this->benefitCheckApi = $benefitCheckApi;
-        $this->stepRedirector = $stepRedirector;
-        $this->incomeTypeApi = $incomeTypeApi;
-        $this->ndrApi = $ndrApi;
+    public function __construct(private ReportApi $reportApi, private ClientBenefitsCheckApi $benefitCheckApi, private StepRedirector $stepRedirector, private IncomeReceivedOnClientsBehalfApi $incomeTypeApi, private NdrApi $ndrApi)
+    {
     }
 
     /**
@@ -57,9 +41,8 @@ class ClientBenefitsCheckController extends AbstractController
      * }))
      * @Template("@App/Report/ClientBenefitsCheck/start.html.twig")
      *
-     * @return array|RedirectResponse
      */
-    public function start(int $reportId, string $reportOrNdr)
+    public function start(int $reportId, string $reportOrNdr): array|\Symfony\Component\HttpFoundation\RedirectResponse
     {
         $report = ('ndr' === $reportOrNdr) ? $this->ndrApi->getNdr($reportId, array_merge(self::$jmsGroups, ['ndr-client'])) :
             $this->reportApi->getReportIfNotSubmitted($reportId, self::$jmsGroups);
@@ -86,9 +69,8 @@ class ClientBenefitsCheckController extends AbstractController
      * }))
      * @Template("@App/Report/ClientBenefitsCheck/step.html.twig")
      *
-     * @return array|RedirectResponse
      */
-    public function step(Request $request, int $reportId, int $step, string $reportOrNdr)
+    public function step(Request $request, int $reportId, int $step, string $reportOrNdr): array|\Symfony\Component\HttpFoundation\RedirectResponse
     {
         $totalSteps = 3;
 
@@ -143,7 +125,6 @@ class ClientBenefitsCheckController extends AbstractController
         $form->handleRequest($request);
 
         if ($form->isSubmitted() && $form->isValid()) {
-            /** @var ClientBenefitsCheck|NdrClientBenefitsCheck $formData */
             $clientBenefitsCheck = $form->getData();
             'ndr' === $reportOrNdr ? $clientBenefitsCheck->setNdr($report) : $clientBenefitsCheck->setReport($report);
 
@@ -186,9 +167,8 @@ class ClientBenefitsCheckController extends AbstractController
      * }))
      * @Template("@App/Report/ClientBenefitsCheck/summary.html.twig")
      *
-     * @return array|RedirectResponse
      */
-    public function summary(int $reportId, string $reportOrNdr)
+    public function summary(int $reportId, string $reportOrNdr): array|\Symfony\Component\HttpFoundation\RedirectResponse
     {
         $report = ('ndr' === $reportOrNdr) ? $this->ndrApi->getNdr($reportId, array_merge(self::$jmsGroups, ['ndr-client'])) :
             $this->reportApi->getReportIfNotSubmitted($reportId, self::$jmsGroups);
@@ -206,9 +186,8 @@ class ClientBenefitsCheckController extends AbstractController
      * })))
      * @Template("@App/Common/confirmDelete.html.twig")
      *
-     * @return array|RedirectResponse
      */
-    public function removeIncomeType(Request $request, int $reportId, string $incomeTypeId, string $reportOrNdr)
+    public function removeIncomeType(Request $request, int $reportId, string $incomeTypeId, string $reportOrNdr): array|\Symfony\Component\HttpFoundation\RedirectResponse
     {
         $report = ('ndr' === $reportOrNdr) ? $this->ndrApi->getNdr($reportId) :
             $this->reportApi->getReportIfNotSubmitted($reportId, self::$jmsGroups);

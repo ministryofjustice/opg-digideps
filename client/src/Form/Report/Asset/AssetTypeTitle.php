@@ -10,26 +10,8 @@ use Symfony\Contracts\Translation\TranslatorInterface;
 
 class AssetTypeTitle extends AbstractType
 {
-    /**
-     * @var array
-     */
-    protected $assetDropdownKeys;
-
-    /**
-     * @var Translator
-     */
-    protected $translator;
-
-    /**
-     * @var string
-     */
-    protected $translatorDomain;
-
-    public function __construct(array $assetDropdownKeys, TranslatorInterface $translator, $translatorDomain)
+    public function __construct(protected array $assetDropdownKeys, protected TranslatorInterface $translator, protected $translatorDomain)
     {
-        $this->assetDropdownKeys = $assetDropdownKeys;
-        $this->translator = $translator;
-        $this->translatorDomain = $translatorDomain;
     }
 
     /**

@@ -12,17 +12,8 @@ class UserAddedToOrganisationEvent extends Event
 {
     const NAME = 'user.added.to.organisation';
 
-    private Organisation $organisation;
-    private User $addedUser;
-    private User $currentUser;
-    private string $trigger;
-
-    public function __construct(Organisation $organisation, User $addedUser, User $currentUser, string $trigger)
+    public function __construct(private Organisation $organisation, private User $addedUser, private User $currentUser, private string $trigger)
     {
-        $this->organisation = $organisation;
-        $this->addedUser = $addedUser;
-        $this->currentUser = $currentUser;
-        $this->trigger = $trigger;
     }
 
     public function getOrganisation(): Organisation

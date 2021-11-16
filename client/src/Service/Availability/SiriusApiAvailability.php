@@ -6,15 +6,9 @@ use App\Service\Client\Sirius\SiriusApiGatewayClient;
 
 class SiriusApiAvailability extends ServiceAvailabilityAbstract
 {
-    /**
-     * @var SiriusApiGatewayClient
-     */
-    private SiriusApiGatewayClient $client;
-
-    public function __construct(SiriusApiGatewayClient $client)
+    public function __construct(private SiriusApiGatewayClient $client)
     {
         $this->isHealthy = true;
-        $this->client = $client;
     }
 
     public function ping()

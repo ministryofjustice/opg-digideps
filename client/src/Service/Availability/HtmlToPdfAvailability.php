@@ -8,11 +8,8 @@ use App\Service\HtmlToPdfGenerator;
 
 class HtmlToPdfAvailability extends ServiceAvailabilityAbstract
 {
-    private HtmlToPdfGenerator $htmlToPdfGenerator;
-
-    public function __construct(HtmlToPdfGenerator $htmlToPdfGenerator)
+    public function __construct(private HtmlToPdfGenerator $htmlToPdfGenerator)
     {
-        $this->htmlToPdfGenerator = $htmlToPdfGenerator;
     }
 
     public function ping()

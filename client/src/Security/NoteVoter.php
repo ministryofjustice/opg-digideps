@@ -6,7 +6,6 @@ use App\Entity\Client;
 use App\Entity\Note;
 use App\Entity\User;
 use Symfony\Component\Security\Core\Authentication\Token\TokenInterface;
-use Symfony\Component\Security\Core\Authorization\AccessDecisionManagerInterface;
 use Symfony\Component\Security\Core\Authorization\Voter\Voter;
 
 class NoteVoter extends Voter
@@ -16,16 +15,10 @@ class NoteVoter extends Voter
     const DELETE_NOTE = 'delete-note';
 
     /**
-     * @var AccessDecisionManagerInterface
-     */
-    private $decisionManager;
-
-    /**
      * NoteVoter constructor.
      */
-    public function __construct(AccessDecisionManagerInterface $decisionManager)
+    public function __construct()
     {
-        $this->decisionManager = $decisionManager;
     }
 
     /**
@@ -83,10 +76,8 @@ class NoteVoter extends Voter
             case self::DELETE_NOTE:
                 if ($subject instanceof Note) {
                     $client = $subject->getClient();
-                    if ($client instanceof Client) {
-                        /* @var Note $subject */
-                        return $subject->getClient()->hasUser($loggedInUser);
-                    }
+                    /* @var Note $subject */
+                    return $subject->getClient()->hasUser($loggedInUser);
                 }
 
                 return false;

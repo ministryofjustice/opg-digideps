@@ -26,33 +26,8 @@ use Symfony\Contracts\Translation\TranslatorInterface;
  */
 class IndexController extends AbstractController
 {
-    /** @var Logger */
-    private $logger;
-
-    /** @var DateTimeProvider */
-    private $dateTimeProvider;
-
-    /** @var RestClient */
-    private $restClient;
-
-    /** @var FormFactoryInterface */
-    private $form;
-
-    /** @var ClientApi */
-    private $clientApi;
-
-    public function __construct(
-        Logger $logger,
-        DateTimeProvider $dateTimeProvider,
-        RestClient $restClient,
-        FormFactoryInterface $form,
-        ClientApi $clientApi
-    ) {
-        $this->logger = $logger;
-        $this->dateTimeProvider = $dateTimeProvider;
-        $this->restClient = $restClient;
-        $this->form = $form;
-        $this->clientApi = $clientApi;
+    public function __construct(private RestClient $restClient, private FormFactoryInterface $form, private ClientApi $clientApi)
+    {
     }
 
     /**
@@ -117,7 +92,7 @@ class IndexController extends AbstractController
         try {
             /** @var Client $client */
             $client = $this->restClient->get('client/'.$clientId, 'Client', ['client', 'report-id', 'current-report']);
-        } catch (RestClientException $e) {
+        } catch (RestClientException) {
             throw $this->createNotFoundException();
         }
 

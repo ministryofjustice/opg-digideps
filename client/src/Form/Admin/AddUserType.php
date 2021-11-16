@@ -13,14 +13,8 @@ use Symfony\Component\Security\Core\Authentication\Token\Storage\TokenStorageInt
 
 class AddUserType extends AbstractType
 {
-    /**
-     * @var TokenStorageInterface
-     */
-    protected $tokenStorage;
-
-    public function __construct(TokenStorageInterface $tokenStorage)
+    public function __construct(protected TokenStorageInterface $tokenStorage)
     {
-        $this->tokenStorage = $tokenStorage;
     }
 
     public function buildForm(FormBuilderInterface $builder, array $options)

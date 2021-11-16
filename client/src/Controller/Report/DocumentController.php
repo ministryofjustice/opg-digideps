@@ -35,33 +35,8 @@ class DocumentController extends AbstractController
         'documents-state',
     ];
 
-    private S3FileUploader $fileUploader;
-    private RestClient $restClient;
-    private ReportApi $reportApi;
-    private ClientApi $clientApi;
-    private StepRedirector $stepRedirector;
-    private TranslatorInterface $translator;
-    private DocumentService $documentService;
-    private LoggerInterface $logger;
-
-    public function __construct(
-        RestClient $restClient,
-        ReportApi $reportApi,
-        S3FileUploader $fileUploader,
-        ClientApi $clientApi,
-        StepRedirector $stepRedirector,
-        TranslatorInterface $translator,
-        DocumentService $documentService,
-        LoggerInterface $logger
-    ) {
-        $this->restClient = $restClient;
-        $this->reportApi = $reportApi;
-        $this->fileUploader = $fileUploader;
-        $this->clientApi = $clientApi;
-        $this->stepRedirector = $stepRedirector;
-        $this->translator = $translator;
-        $this->documentService = $documentService;
-        $this->logger = $logger;
+    public function __construct(private RestClient $restClient, private ReportApi $reportApi, private S3FileUploader $fileUploader, private ClientApi $clientApi, private StepRedirector $stepRedirector, private TranslatorInterface $translator, private DocumentService $documentService, private LoggerInterface $logger)
+    {
     }
 
     /**
@@ -69,17 +44,15 @@ class DocumentController extends AbstractController
      * @Template("@App/Report/Document/start.html.twig")
      *
      * @param $reportId
-     *
-     * @return array|RedirectResponse
      */
-    public function startAction(Request $request, $reportId)
+    public function startAction(Request $request, $reportId): array|\Symfony\Component\HttpFoundation\RedirectResponse
     {
         $report = $this->reportApi->getReportIfNotSubmitted($reportId, self::$jmsGroups);
 
         if (EntityDir\Report\Status::STATE_NOT_STARTED !== $report->getStatus()->getDocumentsState()['state']) {
             $referer = $request->headers->get('referer');
 
-            if (is_string($referer) && false !== strpos($referer, '/step/1')) {
+            if (is_string($referer) && str_contains($referer, '/step/1')) {
                 return $this->redirectToRoute('report_overview', ['reportId' => $reportId]);
             } else {
                 return $this->redirectToRoute('report_documents_summary', ['reportId' => $reportId, 'step' => 1]);
@@ -97,10 +70,8 @@ class DocumentController extends AbstractController
      * @Template("@App/Report/Document/step1.html.twig")
      *
      * @param $reportId
-     *
-     * @return array|RedirectResponse
      */
-    public function step1Action(Request $request, $reportId)
+    public function step1Action(Request $request, $reportId): array|\Symfony\Component\HttpFoundation\RedirectResponse
     {
         $report = $this->reportApi->getReportIfNotSubmitted($reportId, self::$jmsGroups);
 
@@ -157,7 +128,6 @@ class DocumentController extends AbstractController
      *
      * @param $reportId
      *
-     * @return array|RedirectResponse
      *
      * @throws \Exception
      */
@@ -166,7 +136,7 @@ class DocumentController extends AbstractController
         MultiFileFormUploadVerifier $multiFileVerifier,
         $reportId,
         LoggerInterface $logger
-    ) {
+    ): array|\Symfony\Component\HttpFoundation\RedirectResponse {
         $report = $this->reportApi->getReport($reportId, self::$jmsGroups);
         list($nextLink, $backLink) = $this->buildNavigationLinks($report);
 
@@ -239,10 +209,8 @@ class DocumentController extends AbstractController
      * @Template("@App/Report/Document/summary.html.twig")
      *
      * @param $reportId
-     *
-     * @return array|RedirectResponse
      */
-    public function summaryAction(Request $request, $reportId)
+    public function summaryAction(Request $request, $reportId): array|\Symfony\Component\HttpFoundation\RedirectResponse
     {
         $report = $this->reportApi->getReportIfNotSubmitted($reportId, self::$jmsGroups);
         if (EntityDir\Report\Status::STATE_NOT_STARTED == $report->getStatus()->getDocumentsState()['state']) {
@@ -269,7 +237,7 @@ class DocumentController extends AbstractController
      *
      * @return array|RedirectResponse|Response
      */
-    public function deleteConfirmAction(Request $request, $documentId)
+    public function deleteConfirmAction(Request $request, $documentId): array|\Symfony\Component\HttpFoundation\RedirectResponse|\Symfony\Component\HttpFoundation\Response
     {
         $document = $this->getDocument($documentId);
 

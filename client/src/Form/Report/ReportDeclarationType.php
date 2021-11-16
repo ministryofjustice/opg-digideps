@@ -12,14 +12,8 @@ use Symfony\Component\Validator\Constraints\NotBlank;
 
 class ReportDeclarationType extends AbstractType
 {
-    /**
-     * @var TokenStorageInterface
-     */
-    protected $tokenStorage;
-
-    public function __construct(TokenStorageInterface $tokenStorage)
+    public function __construct(protected TokenStorageInterface $tokenStorage)
     {
-        $this->tokenStorage = $tokenStorage;
     }
 
     public function buildForm(FormBuilderInterface $builder, array $options)

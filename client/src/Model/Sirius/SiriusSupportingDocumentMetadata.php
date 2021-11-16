@@ -14,9 +14,6 @@ class SiriusSupportingDocumentMetadata implements SiriusMetadataInterface
         return $this->submissionId;
     }
 
-    /**
-     * @return SiriusSupportingDocumentMetadata
-     */
     public function setSubmissionId(int $submissionId): self
     {
         $this->submissionId = $submissionId;

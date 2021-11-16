@@ -26,9 +26,6 @@ class Document implements DocumentInterface, SynchronisableInterface
     use HasReportTrait;
     use SynchronisableTrait;
 
-    /**
-     * @param ExecutionContextInterface $context
-     */
     public function isValidForReport(ExecutionContextInterface $context): void
     {
         if (!($this->getFile() instanceof UploadedFile)) {
@@ -59,7 +56,6 @@ class Document implements DocumentInterface, SynchronisableInterface
 
         if (count($this->getReport()->getDocuments()) >= self::MAX_UPLOAD_PER_REPORT) {
             $context->buildViolation('document.file.errors.maxDocumentsPerReport')->atPath('file')->addViolation();
-            return;
         }
     }
 
@@ -243,10 +239,9 @@ class Document implements DocumentInterface, SynchronisableInterface
 
     /**
      * Is document a list of transaction document (admin only)
-     * @return bool|int
      */
-    private function isTransactionDocument()
+    private function isTransactionDocument(): bool|int
     {
-        return strpos($this->getFileName(), 'DigiRepTransactions') !== false;
+        return str_contains($this->getFileName(), 'DigiRepTransactions');
     }
 }

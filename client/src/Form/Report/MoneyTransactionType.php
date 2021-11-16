@@ -43,7 +43,7 @@ class MoneyTransactionType extends AbstractType
             $type = $cat[3];
             // filter by user roles (if specified)
             $allowedRoles = isset($cat[4]) ? $cat[4] : null;
-            $isCategoryAllowedForThisRole = $allowedRoles === null || $this->authorizationChecker->isGranted($allowedRoles);
+            $isCategoryAllowedForThisRole = null === $allowedRoles || $this->authorizationChecker->isGranted($allowedRoles);
             // filter by
             if ($type === $this->type && $isCategoryAllowedForThisRole) {
                 $ret[$categoryId] = $categoryId;
@@ -76,32 +76,32 @@ class MoneyTransactionType extends AbstractType
 
         $builder->add('id', FormTypes\HiddenType::class);
 
-        if ($this->step === 1) {
+        if (1 === $this->step) {
             $builder->add('category', FormTypes\ChoiceType::class, [
-                'choices'  => $this->getCategories(),
+                'choices' => $this->getCategories(),
                 'expanded' => true,
             ]);
         }
 
-        if ($this->step === 2) {
+        if (2 === $this->step) {
             $builder->add('description', FormTypes\TextareaType::class, [
                 'required' => $this->isDescriptionMandatory(),
             ]);
 
             $builder->add('amount', FormTypes\NumberType::class, [
-                'scale'       => 2,
-                'grouping'        => true,
-                'error_bubbling'  => false, // keep (and show) the error (Default behaviour). if true, error is lost
+                'scale' => 2,
+                'grouping' => true,
+                'error_bubbling' => false, // keep (and show) the error (Default behaviour). if true, error is lost
                 'invalid_message' => 'moneyTransaction.form.amount.type',
             ]);
 
-            $reportType = $options['report']->getType();
+            $options['report']->getType();
 
             if (!empty($options['report']->getBankAccountOptions()) && $options['report']->canLinkToBankAccounts()) {
                 $builder->add('bankAccountId', FormTypes\ChoiceType::class, [
                     'choices' => $options['report']->getBankAccountOptions(),
                     'placeholder' => 'Please select',
-                    'label' => 'form.bankAccount.money' . ucfirst($this->type) . '.label'
+                    'label' => 'form.bankAccount.money'.ucfirst($this->type).'.label',
                 ]);
             }
         }
@@ -117,15 +117,15 @@ class MoneyTransactionType extends AbstractType
     public function configureOptions(OptionsResolver $resolver)
     {
         $resolver->setDefaults([
-            'selectedCategory'          => null,
-            'translation_domain'        => 'report-money-transaction',
+            'selectedCategory' => null,
+            'translation_domain' => 'report-money-transaction',
             'choice_translation_domain' => 'report-money-transaction',
-            'validation_groups'         => function () {
+            'validation_groups' => function () {
                 $validationGroups = [];
-                if ($this->step === 1) {
+                if (1 === $this->step) {
                     $validationGroups[] = 'transaction-category';
                 }
-                if ($this->step === 2) {
+                if (2 === $this->step) {
                     $validationGroups[] = 'transaction-amount';
                     if ($this->isDescriptionMandatory()) {
                         $validationGroups[] = 'transaction-description';
@@ -137,6 +137,5 @@ class MoneyTransactionType extends AbstractType
         ])
         ->setRequired(['report', 'step', 'type', 'authChecker'])
         ->setAllowedTypes('authChecker', AuthorizationCheckerInterface::class);
-        ;
     }
 }

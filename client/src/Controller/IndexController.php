@@ -25,43 +25,8 @@ use Symfony\Contracts\Translation\TranslatorInterface;
 
 class IndexController extends AbstractController
 {
-    /** @var DeputyProvider */
-    private $deputyProvider;
-
-    /** @var EventDispatcherInterface */
-    private $eventDispatcher;
-
-    /** @var TokenStorageInterface */
-    private $tokenStorage;
-
-    /** @var TranslatorInterface */
-    private $translator;
-
-    /** @var string */
-    private $environment;
-
-    /** @var RestClient */
-    private $restClient;
-
-    /** @var RouterInterface */
-    private $router;
-
-    public function __construct(
-        RestClient $restClient,
-        DeputyProvider $deputyProvider,
-        EventDispatcherInterface $eventDispatcher,
-        TokenStorageInterface $tokenStorage,
-        TranslatorInterface $translator,
-        RouterInterface $router,
-        string $environment
-    ) {
-        $this->deputyProvider = $deputyProvider;
-        $this->eventDispatcher = $eventDispatcher;
-        $this->tokenStorage = $tokenStorage;
-        $this->translator = $translator;
-        $this->environment = $environment;
-        $this->restClient = $restClient;
-        $this->router = $router;
+    public function __construct(private RestClient $restClient, private DeputyProvider $deputyProvider, private EventDispatcherInterface $eventDispatcher, private TokenStorageInterface $tokenStorage, private TranslatorInterface $translator, private RouterInterface $router, private string $environment)
+    {
     }
 
     /**
@@ -125,7 +90,6 @@ class IndexController extends AbstractController
             }
         }
 
-        // different page version for timeout and manual logout
         /** @var SessionInterface */
         $session = $request->getSession();
 
@@ -191,7 +155,6 @@ class IndexController extends AbstractController
         $token = new UsernamePasswordToken($user, null, 'secured_area', $user->getRoles());
         $this->tokenStorage->setToken($token);
 
-        /** @var SessionInterface */
         $session = $request->getSession();
         $session->set('_security_secured_area', serialize($token));
         foreach ($sessionVars as $k => $v) {
@@ -234,7 +197,6 @@ class IndexController extends AbstractController
      */
     public function sessionKeepAliveAction(Request $request)
     {
-        /** @var SessionInterface */
         $session = $request->getSession();
         $session->set('refreshedAt', time());
 
@@ -286,7 +248,6 @@ class IndexController extends AbstractController
     {
         $this->tokenStorage->setToken(null);
 
-        /** @var SessionInterface */
         $session = $request->getSession();
         $session->invalidate();
 
@@ -352,7 +313,7 @@ class IndexController extends AbstractController
 
         try {
             $routeParams = $this->router->match($refererUrlPath);
-        } catch (ResourceNotFoundException $e) {
+        } catch (ResourceNotFoundException) {
             return null;
         }
         $routeName = $routeParams['_route'];

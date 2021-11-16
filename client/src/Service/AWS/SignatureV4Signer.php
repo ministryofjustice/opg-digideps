@@ -13,7 +13,7 @@ class SignatureV4Signer
     /**
      * @return Request|\Psr\Http\Message\RequestInterface
      */
-    public function signRequest(Request $request, Credentials $credentials, string $service, string $region = 'eu-west-1')
+    public function signRequest(Request $request, Credentials $credentials, string $service, string $region = 'eu-west-1'): \Psr\Http\Message\RequestInterface|\GuzzleHttp\Psr7\Request
     {
         $signer = new SignatureV4($service, $region);
 

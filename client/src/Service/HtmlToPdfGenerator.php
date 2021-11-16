@@ -9,16 +9,10 @@ namespace App\Service;
 class HtmlToPdfGenerator
 {
     /**
-     * @var string
-     */
-    private $url;
-
-    /**
      * @param string $url
      */
-    public function __construct($url, $timeoutSeconds)
+    public function __construct(private $url, $timeoutSeconds)
     {
-        $this->url = $url;
         $this->timeoutSeconds = $timeoutSeconds;
     }
 

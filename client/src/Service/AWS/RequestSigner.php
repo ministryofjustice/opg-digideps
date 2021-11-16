@@ -8,20 +8,8 @@ use GuzzleHttp\Psr7\Request;
 
 class RequestSigner
 {
-    /**
-     * @var DefaultCredentialProvider
-     */
-    private $credentialProvider;
-
-    /**
-     * @var SignatureV4Signer
-     */
-    private $signer;
-
-    public function __construct(DefaultCredentialProvider $credentialProvider, SignatureV4Signer $signer)
+    public function __construct(private DefaultCredentialProvider $credentialProvider, private SignatureV4Signer $signer)
     {
-        $this->credentialProvider = $credentialProvider;
-        $this->signer = $signer;
     }
 
     public function signRequest(Request $request, string $service)

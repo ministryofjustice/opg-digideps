@@ -10,17 +10,8 @@ use Symfony\Component\Validator\Validator\ValidatorInterface;
 
 class ValidationCommand extends Command
 {
-    /** @var ValidatorInterface */
-    private $validator;
-
-    /** @var string */
-    private $rootDir;
-
-    public function __construct(ValidatorInterface $validator, string $rootDir)
+    public function __construct(private ValidatorInterface $validator, private string $rootDir)
     {
-        $this->validator = $validator;
-        $this->rootDir = $rootDir;
-
         parent::__construct();
     }
 

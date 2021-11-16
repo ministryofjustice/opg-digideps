@@ -14,10 +14,7 @@ class EndDateNotGreaterThanTwelveMonths extends Constraint
      */
     public $message = 'report.endDate.greaterThan12Months';
 
-    /**
-     * @return array|string
-     */
-    public function getTargets()
+    public function getTargets(): array|string
     {
         return self::CLASS_CONSTRAINT;
     }

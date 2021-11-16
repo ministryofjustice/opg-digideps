@@ -15,35 +15,14 @@ use Symfony\Component\HttpFoundation\Request;
 
 class ActionController extends AbstractController
 {
-    /**
-     * @var ReportApi
-     */
-    private $reportApi;
-
-    /**
-     * @var RestClient
-     */
-    private $restClient;
-
-    /**
-     * @var StepRedirector
-     */
-    private $stepRedirector;
-
     private static $jmsGroups = [
         'ndr-action-give-gifts',
         'ndr-action-property',
         'ndr-action-more-info',
     ];
 
-    public function __construct(
-        ReportApi $reportApi,
-        RestClient $restClient,
-        StepRedirector $stepRedirector
-    ) {
-        $this->reportApi = $reportApi;
-        $this->restClient = $restClient;
-        $this->stepRedirector = $stepRedirector;
+    public function __construct(private ReportApi $reportApi, private RestClient $restClient, private StepRedirector $stepRedirector)
+    {
     }
 
     /**
@@ -52,10 +31,8 @@ class ActionController extends AbstractController
      *
      * @param Request $request
      * @param $ndrId
-     *
-     * @return array|RedirectResponse
      */
-    public function startAction($ndrId)
+    public function startAction($ndrId): array|\Symfony\Component\HttpFoundation\RedirectResponse
     {
         $ndr = $this->reportApi->getNdrIfNotSubmitted($ndrId, self::$jmsGroups);
         if ($ndr->getStatusService()->getActionsState()['state'] != NdrStatusService::STATE_NOT_STARTED) {

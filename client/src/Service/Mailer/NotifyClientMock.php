@@ -9,21 +9,14 @@ use Throwable;
 
 class NotifyClientMock extends Client
 {
-    /**
-     * @var LoggerInterface
-     */
-    private $logger;
-
     /** @var array */
     private $sentMails = [];
 
-    public function __construct(array $config, LoggerInterface $logger)
+    public function __construct(array $config, private LoggerInterface $logger)
     {
-        $this->logger = $logger;
-
         try {
             parent::__construct($config);
-        } catch (Throwable $e) {
+        } catch (Throwable) {
             // Swallow
         }
     }

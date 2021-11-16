@@ -24,14 +24,6 @@ class RestClientMock implements RestClientInterface
     }
 
     /**
-     * @return int|bool
-     */
-    private function getLoggedUserId()
-    {
-        return 1;
-    }
-
-    /**
      * @return Response|mixed
      */
     private function returnQueuedOrSuccessResponse()

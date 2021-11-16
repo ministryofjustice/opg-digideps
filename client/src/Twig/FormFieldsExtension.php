@@ -10,13 +10,8 @@ use Twig\TwigFunction;
 
 class FormFieldsExtension extends AbstractExtension
 {
-    private TranslatorInterface $translator;
-    private Environment $environment;
-
-    public function __construct(TranslatorInterface $translator, Environment $environment)
+    public function __construct(private TranslatorInterface $translator, private Environment $environment)
     {
-        $this->translator = $translator;
-        $this->environment = $environment;
     }
 
     public function getFunctions()

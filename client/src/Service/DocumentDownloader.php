@@ -14,29 +14,8 @@ class DocumentDownloader
     const ACTION_DOWNLOAD = 'download';
     const MSG_NOT_DOWNLOADABLE = 'This report is not downloadable';
 
-    /**
-     * @var DocumentService
-     */
-    private $documentService;
-
-    /**
-     * @var ReportSubmissionService
-     */
-    private $reportSubmissionService;
-
-    /**
-     * @var DocumentsZipFileCreator
-     */
-    private $zipFileCreator;
-
-    public function __construct(
-        DocumentService $documentService,
-        ReportSubmissionService $reportSubmissionService,
-        DocumentsZipFileCreator $zipFileCreator
-    ) {
-        $this->documentService = $documentService;
-        $this->reportSubmissionService = $reportSubmissionService;
-        $this->zipFileCreator = $zipFileCreator;
+    public function __construct(private DocumentService $documentService, private ReportSubmissionService $reportSubmissionService, private DocumentsZipFileCreator $zipFileCreator)
+    {
     }
 
     /**
@@ -71,9 +50,8 @@ class DocumentDownloader
     public function zipDownloadedDocuments(array $retrievedDocuments)
     {
         $zipFiles = $this->zipFileCreator->createZipFilesFromRetrievedDocuments($retrievedDocuments);
-        $fileName = $this->zipFileCreator->createMultiZipFile($zipFiles);
 
-        return $fileName;
+        return $this->zipFileCreator->createMultiZipFile($zipFiles);
     }
 
     public function generateDownloadResponse(string $fileName)

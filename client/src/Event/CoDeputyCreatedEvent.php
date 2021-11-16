@@ -11,16 +11,8 @@ class CoDeputyCreatedEvent extends Event implements CoDeputyCreationEventInterfa
 {
     public const NAME = 'codeputy.created';
 
-    /** @var User */
-    private $invitedCoDeputy;
-
-    /** @var User */
-    private $inviterDeputy;
-
-    public function __construct(User $invitedCoDeputy, User $inviterDeputy)
+    public function __construct(private User $invitedCoDeputy, private User $inviterDeputy)
     {
-        $this->invitedCoDeputy = $invitedCoDeputy;
-        $this->inviterDeputy = $inviterDeputy;
     }
 
     public function getInvitedCoDeputy(): User

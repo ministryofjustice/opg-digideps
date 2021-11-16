@@ -12,12 +12,8 @@ class NdrStatusService
     const STATE_INCOMPLETE = 'incomplete';
     const STATE_DONE = 'done';
 
-    /** @var Ndr */
-    private $ndr;
-
-    public function __construct(Ndr $ndr)
+    public function __construct(private Ndr $ndr)
     {
-        $this->ndr = $ndr;
     }
 
     /**
@@ -51,14 +47,11 @@ class NdrStatusService
             $visitsCare->getPlanMoveNewResidence(),
         ];
 
-        switch (count(array_filter($answers))) {
-            case 0:
-                return ['state' => self::STATE_NOT_STARTED, 'nOfRecords' => 0];
-            case 5:
-                return ['state' => self::STATE_DONE, 'nOfRecords' => 0];
-            default:
-                return ['state' => self::STATE_INCOMPLETE, 'nOfRecords' => 0];
-        }
+        return match (count(array_filter($answers))) {
+            0 => ['state' => self::STATE_NOT_STARTED, 'nOfRecords' => 0],
+            5 => ['state' => self::STATE_DONE, 'nOfRecords' => 0],
+            default => ['state' => self::STATE_INCOMPLETE, 'nOfRecords' => 0],
+        };
     }
 
     /**
@@ -154,14 +147,11 @@ class NdrStatusService
             $this->ndr->getActionPropertySellingRent(),
         ]));
 
-        switch ($filled) {
-            case 0:
-                return ['state' => self::STATE_NOT_STARTED, 'nOfRecords' => 0];
-            case 4:
-                return ['state' => self::STATE_DONE, 'nOfRecords' => 0];
-            default:
-                return ['state' => self::STATE_INCOMPLETE, 'nOfRecords' => 0];
-        }
+        return match ($filled) {
+            0 => ['state' => self::STATE_NOT_STARTED, 'nOfRecords' => 0],
+            4 => ['state' => self::STATE_DONE, 'nOfRecords' => 0],
+            default => ['state' => self::STATE_INCOMPLETE, 'nOfRecords' => 0],
+        };
     }
 
     /**

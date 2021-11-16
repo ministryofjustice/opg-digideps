@@ -17,26 +17,8 @@ use Symfony\Component\Routing\Annotation\Route;
  */
 class ClientContactController extends AbstractController
 {
-    private static $jmsGroups = [
-        'contacts'
-    ];
-
-    /**
-     * @var ClientApi
-     */
-    private $clientApi;
-
-    /**
-     * @var RestClient
-     */
-    private $restClient;
-
-    public function __construct(
-        ClientApi $clientApi,
-        RestClient $restClient
-    ) {
-        $this->clientApi = $clientApi;
-        $this->restClient = $restClient;
+    public function __construct(private ClientApi $clientApi, private RestClient $restClient)
+    {
     }
 
     /**
@@ -119,7 +101,7 @@ class ClientContactController extends AbstractController
      * @Template("@App/Common/confirmDelete.html.twig")
      * @throws \Exception
      */
-    public function deleteConfirmAction(Request $request, $id, $confirmed = false, LoggerInterface $logger)
+    public function deleteConfirmAction(Request $request, $id, LoggerInterface $logger, $confirmed = false)
     {
         $form = $this->createForm(FormDir\ConfirmDeleteType::class);
         $form->handleRequest($request);

@@ -4,7 +4,7 @@ namespace App\Service\File\Verifier;
 
 class VerificationStatus
 {
-    /** @var string|null  */
+    /** @var string|null */
     private $errorMessage;
 
     /** @var int */
@@ -22,17 +22,11 @@ class VerificationStatus
         $this->status = self::FAILED;
     }
 
-    /**
-     * @return int
-     */
     public function getStatus(): int
     {
-        return $this->status === self::FAILED ? self::FAILED : self::PASSED;
+        return self::FAILED === $this->status ? self::FAILED : self::PASSED;
     }
 
-    /**
-     * @return string|null
-     */
     public function getError(): ?string
     {
         return $this->errorMessage;

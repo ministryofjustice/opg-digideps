@@ -23,52 +23,8 @@ use Symfony\Contracts\Translation\TranslatorInterface;
 
 class SettingsController extends AbstractController
 {
-    /** @var MailFactory */
-    private $mailFactory;
-
-    /** @var MailSender */
-    private $mailSender;
-
-    /** @var TranslatorInterface */
-    private $translator;
-
-    /** @var Logger */
-    private $logger;
-
-    /** @var DateTimeProvider */
-    private $dateTimeProvider;
-
-    /**
-     * @var UserApi
-     */
-    private $userApi;
-
-    /**
-     * @var RestClient
-     */
-    private $restClient;
-
-    /** @var EventDispatcherInterface */
-    private $eventDispatcher;
-
-    public function __construct(
-        MailFactory $mailFactory,
-        MailSender $mailSender,
-        TranslatorInterface $translator,
-        Logger $logger,
-        DateTimeProvider $dateTimeProvider,
-        UserApi $userApi,
-        RestClient $restClient,
-        EventDispatcherInterface $eventDispatcher
-    ) {
-        $this->mailFactory = $mailFactory;
-        $this->mailSender = $mailSender;
-        $this->translator = $translator;
-        $this->logger = $logger;
-        $this->dateTimeProvider = $dateTimeProvider;
-        $this->userApi = $userApi;
-        $this->restClient = $restClient;
-        $this->eventDispatcher = $eventDispatcher;
+    public function __construct(private TranslatorInterface $translator, private UserApi $userApi, private RestClient $restClient)
+    {
     }
 
     /**

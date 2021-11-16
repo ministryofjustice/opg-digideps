@@ -21,24 +21,8 @@ use Symfony\Contracts\Translation\TranslatorInterface;
 
 class CoDeputyController extends AbstractController
 {
-    private ClientApi $clientApi;
-    private UserApi $userApi;
-    private RestClient $restClient;
-    private TranslatorInterface $translator;
-    private LoggerInterface $logger;
-
-    public function __construct(
-        ClientApi $clientApi,
-        UserApi $userApi,
-        RestClient $restClient,
-        TranslatorInterface $translator,
-        LoggerInterface $logger
-    ) {
-        $this->clientApi = $clientApi;
-        $this->userApi = $userApi;
-        $this->restClient = $restClient;
-        $this->translator = $translator;
-        $this->logger = $logger;
+    public function __construct(private ClientApi $clientApi, private UserApi $userApi, private RestClient $restClient, private TranslatorInterface $translator, private LoggerInterface $logger)
+    {
     }
 
     /**
@@ -138,11 +122,10 @@ class CoDeputyController extends AbstractController
      * @Route("/codeputy/{clientId}/add", name="add_co_deputy")
      * @Template("@App/CoDeputy/add.html.twig")
      *
-     * @return array|RedirectResponse
      *
      * @throws \Throwable
      */
-    public function addAction(Request $request, Redirector $redirector)
+    public function addAction(Request $request, Redirector $redirector): array|\Symfony\Component\HttpFoundation\RedirectResponse
     {
         $loggedInUser = $this->userApi->getUserWithData(['user-clients', 'client']);
 
@@ -198,11 +181,10 @@ class CoDeputyController extends AbstractController
      *
      * @param $email
      *
-     * @return array|RedirectResponse
      *
      * @throws \Throwable
      */
-    public function resendActivationAction(Request $request, string $email)
+    public function resendActivationAction(Request $request, string $email): array|\Symfony\Component\HttpFoundation\RedirectResponse
     {
         $loggedInUser = $this->userApi->getUserWithData(['user-clients', 'client']);
         $existingCoDeputy = $this->userApi->getByEmail($email);

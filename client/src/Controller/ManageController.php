@@ -18,21 +18,8 @@ use Symfony\Component\Routing\Annotation\Route;
  */
 class ManageController extends AbstractController
 {
-    private string $symfonyEnvironment;
-    private string $symfonyDebug;
-    private string $environment;
-    private LoggerInterface $logger;
-
-    public function __construct(
-        string $symfonyEnvironment,
-        string $symfonyDebug,
-        string $environment,
-        LoggerInterface $logger
-    ) {
-        $this->symfonyEnvironment = $symfonyEnvironment;
-        $this->symfonyDebug = $symfonyDebug;
-        $this->environment = $environment;
-        $this->logger = $logger;
+    public function __construct(private string $symfonyEnvironment, private string $symfonyDebug, private string $environment, private LoggerInterface $logger)
+    {
     }
 
     /**

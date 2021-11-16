@@ -13,26 +13,13 @@ use Symfony\Component\EventDispatcher\EventSubscriberInterface;
 
 class ClientUpdatedSubscriber implements EventSubscriberInterface
 {
-    /** @var DateTimeProvider */
-    private $dateTimeProvider;
-
-    /** @var LoggerInterface */
-    private $logger;
-
-    /** @var Mailer */
-    private $mailer;
-
-    public function __construct(LoggerInterface $logger, DateTimeProvider $dateTimeProvider, Mailer $mailer)
+    public function __construct(private LoggerInterface $logger, private DateTimeProvider $dateTimeProvider, private Mailer $mailer)
     {
-        $this->dateTimeProvider = $dateTimeProvider;
-        $this->logger = $logger;
-        $this->mailer = $mailer;
     }
 
     public static function getSubscribedEvents()
     {
         return [
-            ClientUpdatedEvent::NAME => 'logEvent',
             ClientUpdatedEvent::NAME => 'sendEmail',
         ];
     }

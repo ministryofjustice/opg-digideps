@@ -17,10 +17,6 @@ class ManageSubmittedReportType extends AbstractType
 {
     use HasTranslatorTrait;
 
-    /**
-     * @param FormBuilderInterface $builder
-     * @param array $options
-     */
     public function buildForm(FormBuilderInterface $builder, array $options): void
     {
         $builder
@@ -35,7 +31,7 @@ class ManageSubmittedReportType extends AbstractType
                 'constraints' => [
                     new Constraints\NotBlank(['message' => 'report.startDate.notBlank', 'groups' => ['startEndDates']]),
                     new Constraints\Date(['message' => 'report.startDate.invalidMessage', 'groups' => ['startEndDates ']]),
-                ]
+                ],
             ])
             ->add('endDate', DateType::class, [
                 'invalid_message' => 'report.endDate.invalidMessage',
@@ -47,8 +43,8 @@ class ManageSubmittedReportType extends AbstractType
             ->add('dueDateChoice', ReportDueDateType::class)
             ->add('dueDateCustom', DateType::class, [
                 'invalid_message' => 'report.dueDate.invalidMessage',
-                'mapped'      => false,
-                'required'    => false,
+                'mapped' => false,
+                'required' => false,
                 'constraints' => [
                     new Constraints\NotBlank(['message' => 'report.dueDate.notBlank', 'groups' => ['due_date_new']]),
                     new Constraints\Date(['message' => 'report.dueDate.invalidMessage', 'groups' => ['due_date_new']]),
@@ -57,19 +53,16 @@ class ManageSubmittedReportType extends AbstractType
             ->add('save', FormTypes\SubmitType::class);
     }
 
-    /**
-     * @param OptionsResolver $resolver
-     */
     public function configureOptions(OptionsResolver $resolver): void
     {
         $resolver->setDefaults([
             'translation_domain' => 'admin-clients',
             'name' => 'report',
             'compound' => true,
-            'validation_groups'  => function (FormInterface $form) {
+            'validation_groups' => function (FormInterface $form) {
                 $ret = ['unsubmitted_sections', 'change_due_date', 'startEndDates'];
 
-                if ($form['dueDateChoice']->getData() == 'custom') {
+                if ('custom' == $form['dueDateChoice']->getData()) {
                     $ret[] = 'due_date_new';
                 }
 
@@ -78,9 +71,6 @@ class ManageSubmittedReportType extends AbstractType
         ]);
     }
 
-    /**
-     * @return string
-     */
     public function getBlockPrefix(): string
     {
         return 'manage_report';

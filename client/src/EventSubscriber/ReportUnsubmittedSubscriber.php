@@ -12,14 +12,8 @@ use Symfony\Component\EventDispatcher\EventSubscriberInterface;
 
 class ReportUnsubmittedSubscriber implements EventSubscriberInterface
 {
-    private LoggerInterface $logger;
-
-    private DateTimeProvider $dateTimeProvider;
-
-    public function __construct(LoggerInterface $logger, DateTimeProvider $dateTimeProvider)
+    public function __construct(private LoggerInterface $logger, private DateTimeProvider $dateTimeProvider)
     {
-        $this->logger = $logger;
-        $this->dateTimeProvider = $dateTimeProvider;
     }
 
     public static function getSubscribedEvents()

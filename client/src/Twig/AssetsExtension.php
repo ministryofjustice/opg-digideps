@@ -14,15 +14,11 @@ class AssetsExtension extends AbstractExtension
     /** @var string $tag */
     private $tag;
 
-    /** @var string $rootDir */
-    private $rootDir;
-
     /**
      * @param string $rootDir
      */
-    public function __construct($rootDir)
+    public function __construct(private $rootDir)
     {
-        $this->rootDir = $rootDir;
     }
 
     /** Get the version name for assets add it to the url to give a versioned url
@@ -38,9 +34,8 @@ class AssetsExtension extends AbstractExtension
     public function assetSourceFilter($originalUrl)
     {
         $tag = $this->getTag();
-        $source = file_get_contents($this->rootDir . '/public/assets/' . $tag . '/' . $originalUrl);
 
-        return $source;
+        return file_get_contents($this->rootDir . '/public/assets/' . $tag . '/' . $originalUrl);
     }
 
     /**

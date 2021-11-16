@@ -11,12 +11,8 @@ class UserActivatedEvent extends Event
 {
     public const NAME = 'user.activated';
 
-    /** @var User */
-    private $activatedUser;
-
-    public function __construct(User $activatedUser)
+    public function __construct(private User $activatedUser)
     {
-        $this->activatedUser = $activatedUser;
     }
 
     public function getActivatedUser(): User

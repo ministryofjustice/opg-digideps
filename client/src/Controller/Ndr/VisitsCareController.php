@@ -21,29 +21,8 @@ class VisitsCareController extends AbstractController
         'visits-care',
     ];
 
-    /**
-     * @var ReportApi
-     */
-    private $reportApi;
-
-    /**
-     * @var RestClient
-     */
-    private $restClient;
-
-    /**
-     * @var StepRedirector
-     */
-    private $stepRedirector;
-
-    public function __construct(
-        ReportApi $reportApi,
-        RestClient $restClient,
-        StepRedirector $stepRedirector
-    ) {
-        $this->reportApi = $reportApi;
-        $this->restClient = $restClient;
-        $this->stepRedirector = $stepRedirector;
+    public function __construct(private ReportApi $reportApi, private RestClient $restClient, private StepRedirector $stepRedirector)
+    {
     }
 
     /**
@@ -51,10 +30,8 @@ class VisitsCareController extends AbstractController
      * @Template("@App/Ndr/VisitsCare/start.html.twig")
      *
      * @param $ndrId
-     *
-     * @return array|RedirectResponse
      */
-    public function startAction(Request $request, $ndrId)
+    public function startAction(Request $request, $ndrId): array|\Symfony\Component\HttpFoundation\RedirectResponse
     {
         $ndr = $this->reportApi->getNdrIfNotSubmitted($ndrId, self::$jmsGroups);
         if (NdrStatusService::STATE_NOT_STARTED != $ndr->getStatusService()->getVisitsCareState()['state']) {
@@ -72,10 +49,8 @@ class VisitsCareController extends AbstractController
      *
      * @param $ndrId
      * @param $step
-     *
-     * @return array|RedirectResponse
      */
-    public function stepAction(Request $request, $ndrId, $step, TranslatorInterface $translator)
+    public function stepAction(Request $request, $ndrId, $step, TranslatorInterface $translator): array|\Symfony\Component\HttpFoundation\RedirectResponse
     {
         $totalSteps = 5;
         if ($step < 1 || $step > $totalSteps) {
@@ -140,10 +115,8 @@ class VisitsCareController extends AbstractController
      * @Template("@App/Ndr/VisitsCare/summary.html.twig")
      *
      * @param $ndrId
-     *
-     * @return array|RedirectResponse
      */
-    public function summaryAction(Request $request, $ndrId)
+    public function summaryAction(Request $request, $ndrId): array|\Symfony\Component\HttpFoundation\RedirectResponse
     {
         $fromPage = $request->get('from');
         $ndr = $this->reportApi->getNdrIfNotSubmitted($ndrId, self::$jmsGroups);

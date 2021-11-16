@@ -44,7 +44,7 @@ class CommonPasswordValidator extends ConstraintValidator
         if ($handle && strlen($searchTerm) > 0) {
             while (!feof($handle)) {
                 $buffer = fgets($handle);
-                if (false !== strpos($buffer, $searchTerm)) {
+                if (str_contains($buffer, $searchTerm)) {
                     $matches[] = $buffer;
                 }
             }

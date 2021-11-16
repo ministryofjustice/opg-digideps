@@ -25,15 +25,10 @@ class UserVoter extends Voter
      */
     protected function supports($attribute, $subject)
     {
-        switch ($attribute) {
-            case self::DELETE_USER:
-            case self::EDIT_USER:
-            case self::CAN_ADD_USER:
-            case self::ADD_USER:
-                return true;
-        }
-
-        return false;
+        return match ($attribute) {
+            self::DELETE_USER, self::EDIT_USER, self::CAN_ADD_USER, self::ADD_USER => true,
+            default => false,
+        };
     }
 
     /**
@@ -52,18 +47,12 @@ class UserVoter extends Voter
             // the loggedUSer must be logged in; if not, deny access
             return false;
         }
-
-        switch ($attribute) {
-            case self::CAN_ADD_USER:
-                return $this->determineCanAddPermission($loggedInUser);
-            case self::ADD_USER:
-            case self::EDIT_USER:
-                return $this->determineAddEditPermission($loggedInUser, $subject);
-            case self::DELETE_USER:
-                return $this->determineDeletePermission($loggedInUser, $subject);
-        }
-
-        return false;
+        return match ($attribute) {
+            self::CAN_ADD_USER => $this->determineCanAddPermission($loggedInUser),
+            self::ADD_USER, self::EDIT_USER => $this->determineAddEditPermission($loggedInUser, $subject),
+            self::DELETE_USER => $this->determineDeletePermission($loggedInUser, $subject),
+            default => false,
+        };
     }
 
     /**
@@ -78,33 +67,20 @@ class UserVoter extends Voter
         if (!$deletee instanceof User || $deletor->getId() === $deletee->getId()) {
             return false;
         }
-
-        switch ($deletor->getRoleName()) {
-            case User::ROLE_PA_NAMED:
-            case User::ROLE_PA_ADMIN:
-            case User::ROLE_PROF_NAMED:
-            case User::ROLE_PROF_ADMIN:
-                return $this->paProfNamedAdminDeletePermissions($deletee);
-            case User::ROLE_ADMIN_MANAGER:
-                return $this->adminManagerDeletePermissions($deletee);
-            case User::ROLE_SUPER_ADMIN:
-                return true;
-        }
-
-        return false;
+        return match ($deletor->getRoleName()) {
+            User::ROLE_PA_NAMED, User::ROLE_PA_ADMIN, User::ROLE_PROF_NAMED, User::ROLE_PROF_ADMIN => $this->paProfNamedAdminDeletePermissions($deletee),
+            User::ROLE_ADMIN_MANAGER => $this->adminManagerDeletePermissions($deletee),
+            User::ROLE_SUPER_ADMIN => true,
+            default => false,
+        };
     }
 
     private function paProfNamedAdminDeletePermissions(User $deletee): bool
     {
-        switch ($deletee->getRoleName()) {
-            case User::ROLE_LAY_DEPUTY:
-            case User::ROLE_ADMIN:
-            case User::ROLE_ADMIN_MANAGER:
-            case User::ROLE_SUPER_ADMIN:
-                return false;
-        }
-
-        return true;
+        return match ($deletee->getRoleName()) {
+            User::ROLE_LAY_DEPUTY, User::ROLE_ADMIN, User::ROLE_ADMIN_MANAGER, User::ROLE_SUPER_ADMIN => false,
+            default => true,
+        };
     }
 
     private function adminManagerDeletePermissions(User $deletee): bool
@@ -197,20 +173,9 @@ class UserVoter extends Voter
 
     private function determineCanAddPermission(User $actor)
     {
-        switch ($actor->getRoleName()) {
-            case User::ROLE_SUPER_ADMIN:
-            case User::ROLE_ADMIN:
-            case User::ROLE_AD:
-            case User::ROLE_ADMIN_MANAGER:
-            case User::ROLE_PA:
-            case User::ROLE_PA_NAMED:
-            case User::ROLE_PROF:
-            case User::ROLE_PROF_NAMED:
-            case User::ROLE_PA_ADMIN:
-            case User::ROLE_PROF_ADMIN:
-                return true;
-            default:
-                return false;
-        }
+        return match ($actor->getRoleName()) {
+            User::ROLE_SUPER_ADMIN, User::ROLE_ADMIN, User::ROLE_AD, User::ROLE_ADMIN_MANAGER, User::ROLE_PA, User::ROLE_PA_NAMED, User::ROLE_PROF, User::ROLE_PROF_NAMED, User::ROLE_PA_ADMIN, User::ROLE_PROF_ADMIN => true,
+            default => false,
+        };
     }
 }

@@ -34,14 +34,8 @@ final class AuditEvents
     const TRIGGER_UNSUBMIT_REPORT = 'UNSUBMIT_REPORT';
     const TRIGGER_RESUBMIT_REPORT = 'RESUBMIT_REPORT';
 
-    /**
-     * @var DateTimeProvider
-     */
-    private $dateTimeProvider;
-
-    public function __construct(DateTimeProvider $dateTimeProvider)
+    public function __construct(private DateTimeProvider $dateTimeProvider)
     {
-        $this->dateTimeProvider = $dateTimeProvider;
     }
 
     /**

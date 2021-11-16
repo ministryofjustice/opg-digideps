@@ -11,12 +11,8 @@ class DeputyInvitedEvent extends Event
 {
     public const NAME = 'deputy.invited';
 
-    /** @var User */
-    private $invitedDeputy;
-
-    public function __construct(User $invitedDeputy)
+    public function __construct(private User $invitedDeputy)
     {
-        $this->invitedDeputy = $invitedDeputy;
     }
 
     public function getInvitedDeputy(): User

@@ -13,16 +13,8 @@ use App\Model\FeedbackReport;
 
 class Mailer
 {
-    /** @var MailFactory */
-    private $mailFactory;
-
-    /** @var MailSender */
-    private $mailSender;
-
-    public function __construct(MailFactory $mailFactory, MailSender $mailSender)
+    public function __construct(private MailFactory $mailFactory, private MailSender $mailSender)
     {
-        $this->mailFactory = $mailFactory;
-        $this->mailSender = $mailSender;
     }
 
     public function sendActivationEmail(User $activatedUser)

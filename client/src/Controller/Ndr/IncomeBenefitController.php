@@ -24,29 +24,8 @@ class IncomeBenefitController extends AbstractController
         'one-off',
     ];
 
-    /**
-     * @var ReportApi
-     */
-    private $reportApi;
-
-    /**
-     * @var RestClient
-     */
-    private $restClient;
-
-    /**
-     * @var StepRedirector
-     */
-    private $stepRedirector;
-
-    public function __construct(
-        ReportApi $reportApi,
-        RestClient $restClient,
-        StepRedirector $stepRedirector
-    ) {
-        $this->reportApi = $reportApi;
-        $this->restClient = $restClient;
-        $this->stepRedirector = $stepRedirector;
+    public function __construct(private ReportApi $reportApi, private RestClient $restClient, private StepRedirector $stepRedirector)
+    {
     }
 
     /**
@@ -54,10 +33,8 @@ class IncomeBenefitController extends AbstractController
      * @Template("@App/Ndr/IncomeBenefit/start.html.twig")
      *
      * @param $ndrId
-     *
-     * @return array|RedirectResponse
      */
-    public function startAction($ndrId)
+    public function startAction($ndrId): array|\Symfony\Component\HttpFoundation\RedirectResponse
     {
         $ndr = $this->reportApi->getNdrIfNotSubmitted($ndrId, self::$jmsGroups);
         if ($ndr->getStatusService()->getIncomeBenefitsState()['state'] != NdrStatusService::STATE_NOT_STARTED) {

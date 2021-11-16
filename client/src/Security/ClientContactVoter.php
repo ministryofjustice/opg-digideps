@@ -5,7 +5,6 @@ namespace App\Security;
 use App\Entity\Client as ClientEntity;
 use App\Entity\User;
 use Symfony\Component\Security\Core\Authentication\Token\TokenInterface;
-use Symfony\Component\Security\Core\Authorization\AccessDecisionManagerInterface;
 use Symfony\Component\Security\Core\Authorization\Voter\Voter;
 
 class ClientContactVoter extends Voter
@@ -15,16 +14,10 @@ class ClientContactVoter extends Voter
     const DELETE_CLIENT_CONTACT = 'delete-client-contact';
 
     /**
-     * @var AccessDecisionManagerInterface
-     */
-    private $decisionManager;
-
-    /**
      * ClientContactVoter constructor.
      */
-    public function __construct(AccessDecisionManagerInterface $decisionManager)
+    public function __construct()
     {
-        $this->decisionManager = $decisionManager;
     }
 
     /**

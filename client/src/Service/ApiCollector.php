@@ -11,14 +11,8 @@ use Symfony\Component\HttpKernel\DataCollector\DataCollectorInterface;
  */
 class ApiCollector extends DataCollector implements DataCollectorInterface
 {
-    /**
-     * @var RestClient
-     */
-    public $restClient;
-
-    public function __construct(RestClient $restClient)
+    public function __construct(public RestClient $restClient)
     {
-        $this->restClient = $restClient;
     }
 
     public function collect(\Symfony\Component\HttpFoundation\Request $request, \Symfony\Component\HttpFoundation\Response $response, \Throwable $throwable = null)

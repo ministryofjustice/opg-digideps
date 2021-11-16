@@ -6,11 +6,7 @@ use App\Entity\Report\ReportSubmissionSummary;
 
 class ReportSubmissionBurFixedWidthTransformer
 {
-    /**
-     * @param array $reportSubmissionSummaries
-     * @return array|string
-     */
-    public function transform(array $reportSubmissionSummaries)
+    public function transform(array $reportSubmissionSummaries): array|string
     {
         $transformed = [];
         foreach ($reportSubmissionSummaries as $reportSubmissionSummary) {
@@ -55,7 +51,6 @@ class ReportSubmissionBurFixedWidthTransformer
     }
 
     /**
-     * @param array $data
      * @return string
      */
     private function buildFileString(array $data)

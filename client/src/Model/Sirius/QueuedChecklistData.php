@@ -129,9 +129,6 @@ class QueuedChecklistData
         return $this->submitterEmail;
     }
 
-    /**
-     * @return QueuedChecklistData
-     */
     public function setSubmitterEmail(string $submitterEmail): self
     {
         $this->submitterEmail = $submitterEmail;
@@ -144,9 +141,6 @@ class QueuedChecklistData
         return $this->reportType;
     }
 
-    /**
-     * @return QueuedChecklistData
-     */
     public function setReportType(string $reportType): self
     {
         $this->reportType = $reportType;

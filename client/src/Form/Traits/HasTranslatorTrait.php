@@ -13,7 +13,6 @@ trait HasTranslatorTrait
     private $translator;
 
     /**
-     * @param TranslatorInterface $translator
      * @required
      */
     public function setTranslator(TranslatorInterface $translator)

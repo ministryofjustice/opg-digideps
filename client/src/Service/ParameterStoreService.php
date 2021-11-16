@@ -16,20 +16,8 @@ class ParameterStoreService
     public const FLAG_DOCUMENT_SYNC = 'document-sync';
     public const FLAG_PAPER_REPORTS = 'paper-reports';
 
-    /** @var SsmClient */
-    private $ssmClient;
-
-    /** @var string */
-    private $parameterPrefix;
-
-    /** @var string */
-    private $flagPrefix;
-
-    public function __construct(SsmClient $ssmClient, string $parameterPrefix, string $flagPrefix)
+    public function __construct(private SsmClient $ssmClient, private string $parameterPrefix, private string $flagPrefix)
     {
-        $this->ssmClient = $ssmClient;
-        $this->parameterPrefix = $parameterPrefix;
-        $this->flagPrefix = $flagPrefix;
     }
 
     public function getParameter(string $parameterKey)

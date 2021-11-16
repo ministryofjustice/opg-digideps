@@ -12,22 +12,14 @@ use Twig\Environment;
 
 class ChecklistPdfGenerator
 {
-    /** @var Environment container */
-    private $templating;
-
-    /** @var HtmlToPdfGenerator */
-    private $htmltopdf;
-
-    /** @var LoggerInterface */
-    private $logger;
-
     public const TEMPLATE_FILE = '@App/Admin/Client/Report/Formatted/checklist_formatted_standalone.html.twig';
 
-    public function __construct(Environment $templating, HtmlToPdfGenerator $htmltopdf, LoggerInterface $logger)
+    public function __construct(
+        /** @var Environment container */
+        private Environment $templating,
+        private HtmlToPdfGenerator $htmltopdf
+    )
     {
-        $this->templating = $templating;
-        $this->htmltopdf = $htmltopdf;
-        $this->logger = $logger;
     }
 
     /**

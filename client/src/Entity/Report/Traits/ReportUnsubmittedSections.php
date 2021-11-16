@@ -30,7 +30,7 @@ trait ReportUnsubmittedSections
     }
 
     /**
-     * Needed to fill form collection
+     * Needed to fill form collection.
      *
      * @return UnsubmittedSection[]
      */
@@ -76,15 +76,12 @@ trait ReportUnsubmittedSections
         }, $this->getUnsubmittedSection()));
     }
 
-    /**
-     * @param ExecutionContextInterface $context
-     */
     public function unsubmittedSectionAtLeastOnce(ExecutionContextInterface $context)
     {
         if (empty($this->getUnsubmittedSectionsIds())) {
             // add error to all the sections
             $context->buildViolation('report.unsubmissionSections.atLeastOnce')->atPath('unsubmittedSection[0].present')->addViolation();
-            for ($i = 1, $count = count($this->getUnsubmittedSection()); $i < $count; $i++) {
+            for ($i = 1, $count = count($this->getUnsubmittedSection()); $i < $count; ++$i) {
                 $context->buildViolation('')->atPath("unsubmittedSection[$i].present")->addViolation();
             }
         }
@@ -92,6 +89,7 @@ trait ReportUnsubmittedSections
 
     /**
      * @param $sectionId
+     *
      * @return bool
      */
     public function isSectionFlaggedForAttention($sectionId)

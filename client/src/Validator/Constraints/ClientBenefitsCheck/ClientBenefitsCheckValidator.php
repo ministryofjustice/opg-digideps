@@ -42,7 +42,7 @@ class ClientBenefitsCheckValidator extends ConstraintValidator
         }
     }
 
-    private function whenLastCheckedEntitlementValid($value, $object)
+    private function whenLastCheckedEntitlementValid($value)
     {
         $expectedValues = [
             ClientBenefitsCheck::WHEN_CHECKED_I_HAVE_CHECKED,

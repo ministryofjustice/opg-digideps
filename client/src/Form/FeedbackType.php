@@ -10,14 +10,8 @@ use Symfony\Contracts\Translation\TranslatorInterface;
 
 class FeedbackType extends AbstractType
 {
-    /**
-     * @var TranslatorInterface
-     */
-    private TranslatorInterface $translator;
-
-    public function __construct(TranslatorInterface $translator)
+    public function __construct(private TranslatorInterface $translator)
     {
-        $this->translator = $translator;
     }
 
     public const HONEYPOT_FIELD_NAME = 'old_question';

@@ -25,9 +25,6 @@ class SiriusDocumentFile
         return $this->name;
     }
 
-    /**
-     * @return SiriusDocumentFile
-     */
     public function setName(string $name): self
     {
         $this->name = $name;
@@ -40,9 +37,6 @@ class SiriusDocumentFile
         return $this->mimetype;
     }
 
-    /**
-     * @return SiriusDocumentFile
-     */
     public function setMimetype(string $mimetype): self
     {
         $this->mimetype = $mimetype;
@@ -55,9 +49,6 @@ class SiriusDocumentFile
         return $this->source;
     }
 
-    /**
-     * @return SiriusDocumentFile
-     */
     public function setSource(?string $source): self
     {
         if (!is_null($source)) {
@@ -77,9 +68,6 @@ class SiriusDocumentFile
         return $this->s3Reference;
     }
 
-    /**
-     * @return SiriusDocumentFile
-     */
     public function setS3Reference(?string $s3Reference): self
     {
         $this->s3Reference = $s3Reference;

@@ -17,16 +17,8 @@ class SatisfactionApi
     private const CREATE_GENERAL_FEEDBACK_ENDPOINT = 'satisfaction/public';
     private const CREATE_POST_SUBMISSION_FEEDBACK_ENDPOINT = 'satisfaction';
 
-    /** @var RestClient */
-    private $restClient;
-
-    /** @var ObservableEventDispatcher */
-    private $eventDispatcher;
-
-    public function __construct(RestClientInterface $restClient, ObservableEventDispatcher $eventDispatcher)
+    public function __construct(private RestClientInterface $restClient, private ObservableEventDispatcher $eventDispatcher)
     {
-        $this->restClient = $restClient;
-        $this->eventDispatcher = $eventDispatcher;
     }
 
     public function createGeneralFeedback(array $formResponse): void

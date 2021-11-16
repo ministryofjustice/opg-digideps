@@ -18,29 +18,8 @@ class BankAccountController extends AbstractController
 {
     private static $jmsGroups = ['ndr-account'];
 
-    /**
-     * @var ReportApi
-     */
-    private $reportApi;
-
-    /**
-     * @var RestClient
-     */
-    private $restClient;
-
-    /**
-     * @var StepRedirector
-     */
-    private $stepRedirector;
-
-    public function __construct(
-        ReportApi $reportApi,
-        RestClient $restClient,
-        StepRedirector $stepRedirector
-    ) {
-        $this->reportApi = $reportApi;
-        $this->restClient = $restClient;
-        $this->stepRedirector = $stepRedirector;
+    public function __construct(private ReportApi $reportApi, private RestClient $restClient, private StepRedirector $stepRedirector)
+    {
     }
 
     /**
@@ -48,10 +27,8 @@ class BankAccountController extends AbstractController
      * @Template("@App/Ndr/BankAccount/start.html.twig")
      *
      * @param $ndrId
-     *
-     * @return array|RedirectResponse
      */
-    public function startAction($ndrId)
+    public function startAction($ndrId): array|\Symfony\Component\HttpFoundation\RedirectResponse
     {
         $ndr = $this->reportApi->getNdrIfNotSubmitted($ndrId, self::$jmsGroups);
         if (NdrStatusService::STATE_NOT_STARTED != $ndr->getStatusService()->getBankAccountsState()['state']) {
@@ -70,10 +47,8 @@ class BankAccountController extends AbstractController
      * @param $ndrId
      * @param $step
      * @param null $accountId
-     *
-     * @return array|RedirectResponse
      */
-    public function stepAction(Request $request, $ndrId, $step, $accountId = null)
+    public function stepAction(Request $request, $ndrId, $step, $accountId = null): array|\Symfony\Component\HttpFoundation\RedirectResponse
     {
         $totalSteps = 3;
         if ($step < 1 || $step > $totalSteps) {
@@ -193,10 +168,8 @@ class BankAccountController extends AbstractController
      *
      * @param $ndrId
      * @Template("@App/Ndr/BankAccount/summary.html.twig")
-     *
-     * @return array|RedirectResponse
      */
-    public function summaryAction($ndrId)
+    public function summaryAction($ndrId): array|\Symfony\Component\HttpFoundation\RedirectResponse
     {
         $ndr = $this->reportApi->getNdrIfNotSubmitted($ndrId, self::$jmsGroups);
         if (NdrStatusService::STATE_NOT_STARTED == $ndr->getStatusService()->getBankAccountsState()['state']) {
@@ -214,10 +187,8 @@ class BankAccountController extends AbstractController
      *
      * @param $ndrId
      * @param $accountId
-     *
-     * @return array|RedirectResponse
      */
-    public function deleteAction(Request $request, $ndrId, $accountId)
+    public function deleteAction(Request $request, $ndrId, $accountId): array|\Symfony\Component\HttpFoundation\RedirectResponse
     {
         $form = $this->createForm(FormDir\ConfirmDeleteType::class);
         $form->handleRequest($request);

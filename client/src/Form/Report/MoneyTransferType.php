@@ -22,22 +22,21 @@ class MoneyTransferType extends AbstractType
             $banks[$bank->getNameOneLine()] = $bank->getId();
         }
 
-
-        if ($this->step == 1) {
+        if (1 == $this->step) {
             $builder
                 ->add(
                     'accountFromId',
                     FormTypes\ChoiceType::class,
                     [
-                        'choices' => $banks, 'placeholder' => 'Please select',]
+                        'choices' => $banks, 'placeholder' => 'Please select', ]
                 )->add(
                     'accountToId',
                     FormTypes\ChoiceType::class,
                     [
-                        'choices' => $banks, 'placeholder' => 'Please select',]
+                        'choices' => $banks, 'placeholder' => 'Please select', ]
                 );
         }
-        if ($this->step == 2) {
+        if (2 == $this->step) {
             $builder
                 ->add('amount', FormTypes\NumberType::class, [
                     'scale' => 2,
@@ -56,16 +55,16 @@ class MoneyTransferType extends AbstractType
         $resolver->setDefaults([
             'translation_domain' => 'report-money-transfer',
             'validation_groups' => function (FormInterface $form) {
-                $data = $form->getData();
+                $form->getData();
                 /* @var $data \App\Entity\Report\MoneyTransfer */
 
                 $validationGroups = [];
 
-                if ($this->step === 1) {
+                if (1 === $this->step) {
                     $validationGroups[] = 'money-transfer-account-from';
                     $validationGroups[] = 'money-transfer-account-to';
                 }
-                if ($this->step === 2) {
+                if (2 === $this->step) {
                     $validationGroups[] = 'money-transfer-amount';
                 }
 

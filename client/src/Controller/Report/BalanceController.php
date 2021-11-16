@@ -34,18 +34,8 @@ class BalanceController extends AbstractController
         'balance-state',
     ];
 
-    /** @var RestClient */
-    private $restClient;
-
-    /** @var ReportApi */
-    private $reportApi;
-
-    public function __construct(
-        RestClient $restClient,
-        ReportApi $reportApi
-    ) {
-        $this->restClient = $restClient;
-        $this->reportApi = $reportApi;
+    public function __construct(private RestClient $restClient, private ReportApi $reportApi)
+    {
     }
 
     /**
@@ -53,10 +43,8 @@ class BalanceController extends AbstractController
      *
      * @param $reportId
      * @Template("@App/Report/Balance/balance.html.twig")
-     *
-     * @return array|RedirectResponse
      */
-    public function balanceAction(Request $request, $reportId)
+    public function balanceAction(Request $request, $reportId): array|\Symfony\Component\HttpFoundation\RedirectResponse
     {
         $report = $this->reportApi->getReportIfNotSubmitted($reportId, self::$jmsGroups);
         $form = $this->createForm(FormDir\Report\ReasonForBalanceType::class, $report);

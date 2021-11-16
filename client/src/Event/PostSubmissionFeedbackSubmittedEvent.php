@@ -12,16 +12,8 @@ class PostSubmissionFeedbackSubmittedEvent extends Event
 {
     public const NAME = 'post.submission.feedback.submitted';
 
-    /** @var FeedbackReport */
-    private $formResponse;
-
-    /** @var User */
-    private $submittedByUser;
-
-    public function __construct(FeedbackReport $formResponse, User $submittedByUser)
+    public function __construct(private FeedbackReport $formResponse, private User $submittedByUser)
     {
-        $this->formResponse = $formResponse;
-        $this->submittedByUser = $submittedByUser;
     }
 
     public function getFormResponse(): FeedbackReport

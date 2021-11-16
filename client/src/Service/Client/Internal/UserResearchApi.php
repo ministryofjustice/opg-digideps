@@ -14,12 +14,8 @@ class UserResearchApi
     private const CREATE_POST_SUBMISSION_USER_RESEARCH_ENDPOINT = 'user-research';
     private const GET_USER_RESEARCH_RESPONSES = 'user-research';
 
-    /** @var RestClient */
-    private $restClient;
-
-    public function __construct(RestClientInterface $restClient)
+    public function __construct(private RestClientInterface $restClient)
     {
-        $this->restClient = $restClient;
     }
 
     public function createPostSubmissionUserResearch(array $userResearchFormData)

@@ -29,46 +29,16 @@ class ReportSubmissionController extends AbstractController
     const ACTION_ARCHIVE = 'archive';
     const ACTION_SYNCHRONISE = 'synchronise';
 
-    /**
-     * @var DocumentDownloader
-     */
-    private $documentDownloader;
-
-    /**
-     * @var S3Storage
-     */
-    private $s3Storage;
-
-    /**
-     * @var TranslatorInterface
-     */
-    private $translator;
-
-    /**
-     * @var RestClient
-     */
-    private $restClient;
-
-    public function __construct(
-        DocumentDownloader $documentDownloader,
-        S3Storage $s3Storage,
-        TranslatorInterface $translator,
-        RestClient $restClient
-    ) {
-        $this->documentDownloader = $documentDownloader;
-        $this->s3Storage = $s3Storage;
-        $this->translator = $translator;
-        $this->restClient = $restClient;
+    public function __construct(private DocumentDownloader $documentDownloader, private S3Storage $s3Storage, private TranslatorInterface $translator, private RestClient $restClient)
+    {
     }
 
     /**
      * @Route("/documents/list", name="admin_documents", methods={"GET", "POST"})
      * @Security("is_granted('ROLE_ADMIN') or has_role('ROLE_AD')")
      * @Template("@App/Admin/ReportSubmission/index.html.twig")
-     *
-     * @return array<mixed>|Response
      */
-    public function indexAction(Request $request, ParameterStoreService $parameterStoreService)
+    public function indexAction(Request $request, ParameterStoreService $parameterStoreService): array|\Symfony\Component\HttpFoundation\Response
     {
         if ($request->isMethod('POST')) {
             $ret = $this->processPost($request);

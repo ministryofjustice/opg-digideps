@@ -11,12 +11,8 @@ class AdminUserCreatedEvent extends Event
 {
     public const NAME = 'admin.user.created';
 
-    /** @var User */
-    private $createdUser;
-
-    public function __construct(User $createdUser)
+    public function __construct(private User $createdUser)
     {
-        $this->createdUser = $createdUser;
     }
 
     public function getCreatedUser(): User
