@@ -15,6 +15,7 @@
         "alphagov/notifications-php-client": "^2.1",
         "aws/aws-sdk-php": "^3.100.9",
         "egulias/email-validator": "^2.0.0",
+        "fakerphp/faker": "^1.16",
         "gbprod/uuid-normalizer": "^1.2",
         "guzzlehttp/guzzle": "^7.4.0",
         "incenteev/composer-parameter-handler": "^2.1.3",
