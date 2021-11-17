@@ -45,6 +45,12 @@
             } %}
         {% endif %}
 
+        {% if report.hasSection('moneyIn') %}
+            {% include '@App/Report/Formatted/_client_benefits_check.html.twig' with {
+                'clientBenefitsCheck': report.clientBenefitsCheck
+            } %}
+        {% endif %}
+
         {% include '@App/Report/Formatted/_assets.html.twig' %}
         {% include '@App/Report/Formatted/_debts.html.twig' %}
 
