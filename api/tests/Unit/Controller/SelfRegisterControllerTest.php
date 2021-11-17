@@ -15,7 +15,7 @@ class SelfRegisterControllerTest extends AbstractTestController
             'data' => [
                 'firstname' => 'Zac',
                 'lastname' => 'Tolley',
-                'email' => 'behat-missingdata@gov.uk',
+                'email' => 'behat-missingdata@example.org',
             ],
             'ClientSecret' => API_TOKEN_DEPUTY,
         ]);
@@ -32,7 +32,7 @@ class SelfRegisterControllerTest extends AbstractTestController
             'data' => [
                 'firstname' => 'Zac',
                 'lastname' => 'Tolley',
-                'email' => 'behat-dontsaveme@uk.gov',
+                'email' => 'behat-dontsaveme@example.org',
                 'client_firstname' => '',
                 'client_lastname' => '',
                 'case_number' => '12345678',
@@ -40,7 +40,7 @@ class SelfRegisterControllerTest extends AbstractTestController
             'ClientSecret' => API_TOKEN_DEPUTY,
         ]);
 
-        $user = self::fixtures()->getRepo('User')->findOneBy(['email' => 'behat-dontsaveme@uk.gov']);
+        $user = self::fixtures()->getRepo('User')->findOneBy(['email' => 'behat-dontsaveme@example.org']);
         $this->assertNull($user);
     }
 
@@ -71,7 +71,7 @@ class SelfRegisterControllerTest extends AbstractTestController
             'data' => [
                 'firstname' => 'Zac',
                 'lastname' => 'Tolley',
-                'email' => 'gooduser@gov.zzz',
+                'email' => 'gooduser@example.com',
                 'postcode' => 'SW1',
                 'client_firstname' => 'John',
                 'client_lastname' => 'Cross-Tolley',
@@ -86,7 +86,7 @@ class SelfRegisterControllerTest extends AbstractTestController
         $this->assertEquals('Tolley', $user->getLastname());
         $this->assertEquals('Zac', $user->getFirstname());
         $this->assertEquals('SW1', $user->getAddressPostcode());
-        $this->assertEquals('gooduser@gov.zzz', $user->getEmail());
+        $this->assertEquals('gooduser@example.com', $user->getEmail());
         $this->assertEquals(true, $user->getNdrEnabled());
 
         /** @var \App\Entity\Client $theClient */
@@ -111,7 +111,7 @@ class SelfRegisterControllerTest extends AbstractTestController
             'data' => [
                 'firstname' => 'not found',
                 'lastname' => 'test',
-                'email' => 'gooduser2@gov.zzz',
+                'email' => 'gooduser2@example.org',
                 'postcode' => 'SW2',
                 'client_firstname' => 'Cf',
                 'client_lastname' => 'Cl',
@@ -161,7 +161,7 @@ class SelfRegisterControllerTest extends AbstractTestController
             'data' => [
                 'firstname' => 'Zac',
                 'lastname' => 'Tolley',
-                'email' => 'gooduser@gov.abc',
+                'email' => 'gooduser-new@example.org',
                 'postcode' => 'SW1',
                 'client_firstname' => 'John',
                 'client_lastname' => 'Cross-Tolley',
@@ -181,7 +181,7 @@ class SelfRegisterControllerTest extends AbstractTestController
             'data' => [
                 'firstname' => 'Zac',
                 'lastname' => 'Tolley',
-                'email' => 'gooduser1@gov.abc',
+                'email' => 'gooduser1@example.org',
                 'postcode' => 'SW1',
                 'client_firstname' => 'Jonh',
                 'client_lastname' => 'Cross-Tolley',
@@ -218,7 +218,7 @@ class SelfRegisterControllerTest extends AbstractTestController
             'data' => [
                 'firstname' => 'Zac',
                 'lastname' => 'Tolley',
-                'email' => 'wrong@email.com',
+                'email' => 'wrong@example.org',
                 'postcode' => 'SW1',
                 'client_firstname' => 'John',
                 'client_lastname' => 'Cross-Tolley',
