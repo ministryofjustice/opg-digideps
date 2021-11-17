@@ -61,8 +61,6 @@ class ReviewChecklist
 
     /**
      * Checklist constructor.
-     *
-     * @param ReportInterface $report
      */
     public function __construct(ReportInterface $report)
     {
@@ -85,25 +83,22 @@ class ReviewChecklist
     public function setId($id)
     {
         $this->id = $id;
+
         return $this;
     }
 
-    /**
-     * @return ReportInterface
-     */
     public function getReport(): ReportInterface
     {
         return $this->report;
     }
 
     /**
-     * @param ReportInterface $report
-     *
      * @return $this
      */
     public function setReport(ReportInterface $report)
     {
         $this->report = $report;
+
         return $this;
     }
 
@@ -123,6 +118,7 @@ class ReviewChecklist
     public function setAnswers(FullReviewChecklist $answers)
     {
         $this->answers = $answers;
+
         return $this;
     }
 
@@ -135,13 +131,12 @@ class ReviewChecklist
     }
 
     /**
-     * @param string $decision
-     *
      * @return $this
      */
     public function setDecision(string $decision)
     {
         $this->decision = $decision;
+
         return $this;
     }
 
@@ -154,14 +149,13 @@ class ReviewChecklist
     }
 
     /**
-     * @param \App\Entity\User $submittedBy
-     *
      * @return $this
      */
     public function setSubmittedBy(User $submittedBy)
     {
         $this->submittedBy = $submittedBy;
         $this->isSubmitted = true;
+
         return $this;
     }
 
@@ -174,14 +168,13 @@ class ReviewChecklist
     }
 
     /**
-     * @param \DateTime $submittedOn
-     *
      * @return $this
      */
     public function setSubmittedOn(\DateTime $submittedOn)
     {
         $this->submittedOn = $submittedOn;
         $this->isSubmitted = true;
+
         return $this;
     }
 
@@ -194,13 +187,12 @@ class ReviewChecklist
     }
 
     /**
-     * @param bool $isSubmitted
-     *
      * @return $this
      */
     public function setIsSubmitted(bool $isSubmitted)
     {
         $this->isSubmitted = $isSubmitted;
+
         return $this;
     }
 }

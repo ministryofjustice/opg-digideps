@@ -11,9 +11,6 @@ use Faker\Factory;
 
 class UserResearchResponseHelpers
 {
-    /**
-     * @return UserResearchResponse
-     */
     public static function createUserResearchResponse(): UserResearchResponse
     {
         $faker = Factory::create('en_GB');

@@ -3,9 +3,8 @@
 namespace App\Entity\Report;
 
 use App\Entity\Ndr\Ndr;
-use App\Entity\Report\Document;
-use App\Entity\User;
 use App\Entity\Traits\CreationAudit;
+use App\Entity\User;
 use DateTime;
 use JMS\Serializer\Annotation as JMS;
 use RuntimeException;
@@ -71,7 +70,8 @@ class ReportSubmission
     }
 
     /**
-     * @param  int              $id
+     * @param int $id
+     *
      * @return ReportSubmission
      */
     public function setId($id)
@@ -90,7 +90,8 @@ class ReportSubmission
     }
 
     /**
-     * @param  Report           $report
+     * @param Report $report
+     *
      * @return ReportSubmission
      */
     public function setReport($report)
@@ -109,7 +110,8 @@ class ReportSubmission
     }
 
     /**
-     * @param  Ndr           $ndr
+     * @param Ndr $ndr
+     *
      * @return ReportSubmission
      */
     public function setNdr($ndr)
@@ -128,7 +130,8 @@ class ReportSubmission
     }
 
     /**
-     * @param  Document[] $documents
+     * @param Document[] $documents
+     *
      * @return $this
      */
     public function setDocuments($documents)
@@ -148,6 +151,7 @@ class ReportSubmission
                 return true;
             }
         }
+
         return false;
     }
 
@@ -160,7 +164,8 @@ class ReportSubmission
     }
 
     /**
-     * @param  User             $archivedBy
+     * @param User $archivedBy
+     *
      * @return ReportSubmission
      */
     public function setArchivedBy($archivedBy)
@@ -199,8 +204,6 @@ class ReportSubmission
     }
 
     /**
-     * @param string|null $uuid
-     *
      * @return $this
      */
     public function setUuid(?string $uuid)
@@ -225,10 +228,10 @@ class ReportSubmission
 
         if ($report instanceof Ndr) {
             return 'NdrReport-'
-                . $client->getCaseNumber()
-                . '_' . $report->getStartDate()->format('Y')
-                . '_' . $this->getId()
-                . '.zip';
+                .$client->getCaseNumber()
+                .'_'.$report->getStartDate()->format('Y')
+                .'_'.$this->getId()
+                .'.zip';
         } else {
             /** @var DateTime $startDate */
             $startDate = $report->getStartDate();
@@ -236,11 +239,11 @@ class ReportSubmission
             $endDate = $report->getEndDate();
 
             return 'Report_'
-                . $client->getCaseNumber()
-                . '_' . $startDate->format('Y')
-                . '_' . $endDate->format('Y')
-                . '_' . $this->getId()
-                . '.zip';
+                .$client->getCaseNumber()
+                .'_'.$startDate->format('Y')
+                .'_'.$endDate->format('Y')
+                .'_'.$this->getId()
+                .'.zip';
         }
     }
 }

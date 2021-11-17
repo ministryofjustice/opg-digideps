@@ -121,8 +121,6 @@ class StateBenefit
     /**
      * flag moreDetails invalid if amount is given and moreDetails is empty
      * flag amount invalid if moreDetails is given and amount is empty.
-     *
-     * @param ExecutionContextInterface $context
      */
     public function moreDetailsValidate(ExecutionContextInterface $context)
     {

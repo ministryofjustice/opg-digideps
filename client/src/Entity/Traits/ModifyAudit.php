@@ -5,28 +5,27 @@ namespace App\Entity\Traits;
 use App\Entity\User;
 
 /**
- * ModifyAudit Trait, usable with PHP >= 5.4
- *
+ * ModifyAudit Trait, usable with PHP >= 5.4.
  */
 trait ModifyAudit
 {
     /**
-     * Last modified by
+     * Last modified by.
      *
      * @JMS\Groups({"last-modified"})
      * @JMS\Type("App\Entity\User")
-     * @var \App\Entity\User
      *
+     * @var \App\Entity\User
      */
     protected $lastModifiedBy;
 
     /**
-     * Last modified on
+     * Last modified on.
      *
      * @JMS\Groups({"last-modified"})
      * @JMS\Type("DateTime")
-     * @var \DateTime
      *
+     * @var \DateTime
      */
     protected $lastModifiedOn;
 
@@ -39,13 +38,12 @@ trait ModifyAudit
     }
 
     /**
-     * @param \App\Entity\User $lastModifiedBy
-     *
      * @return $this
      */
     public function setLastModifiedBy(User $lastModifiedBy)
     {
         $this->lastModifiedBy = $lastModifiedBy;
+
         return $this;
     }
 
@@ -58,13 +56,12 @@ trait ModifyAudit
     }
 
     /**
-     * @param \DateTime $lastModifiedOn
-     *
      * @return $this
      */
     public function setLastModifiedOn(\DateTime $lastModifiedOn)
     {
         $this->lastModifiedOn = $lastModifiedOn;
+
         return $this;
     }
 }

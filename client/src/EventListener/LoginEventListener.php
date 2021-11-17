@@ -25,7 +25,6 @@ class LoginEventListener
 
     /**
      * @param EventDispatcher $dispatcher
-     * @param Redirector      $Redirector
      */
     public function __construct(EventDispatcherInterface $dispatcher, Redirector $Redirector)
     {
@@ -33,9 +32,6 @@ class LoginEventListener
         $this->redirector = $Redirector;
     }
 
-    /**
-     * @param InteractiveLoginEvent $event
-     */
     public function onSecurityInteractiveLogin(InteractiveLoginEvent $event)
     {
         $this->dispatcher->addListener(KernelEvents::RESPONSE, [$this, 'onKernelResponse']);
@@ -43,8 +39,6 @@ class LoginEventListener
 
     /**
      * On login determine user role and redirect appropiately.
-     *
-     * @param ResponseEvent $event
      */
     public function onKernelResponse(ResponseEvent $event)
     {

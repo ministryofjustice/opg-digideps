@@ -16,8 +16,8 @@ class ProfCostsSubSectionRouteResolver
     const BREAKDOWN_ROUTE = 'prof_deputy_costs_breakdown';
 
     /**
-     * @param Report $report
      * @param $state
+     *
      * @return string
      */
     public function resolve(Report $report, $state)
@@ -46,6 +46,7 @@ class ProfCostsSubSectionRouteResolver
 
     /**
      * @param $state
+     *
      * @return bool
      */
     private function sectionNotStarted($state)
@@ -55,6 +56,7 @@ class ProfCostsSubSectionRouteResolver
 
     /**
      * @param $state
+     *
      * @return bool
      */
     private function sectionIsComplete($state)
@@ -63,8 +65,8 @@ class ProfCostsSubSectionRouteResolver
     }
 
     /**
-     * @param Report $report
      * @param $state
+     *
      * @return bool
      */
     private function previousRecievedExistsSubsectionIsIncomplete(Report $report)
@@ -73,7 +75,6 @@ class ProfCostsSubSectionRouteResolver
     }
 
     /**
-     * @param Report $report
      * @return bool
      */
     private function routeIsFixedCosts(Report $report)
@@ -82,7 +83,6 @@ class ProfCostsSubSectionRouteResolver
     }
 
     /**
-     * @param Report $report
      * @return string
      */
     private function determineCurrentFixedCostSection(Report $report)
@@ -97,7 +97,6 @@ class ProfCostsSubSectionRouteResolver
     }
 
     /**
-     * @param Report $report
      * @return string
      */
     private function determineCurrentNonFixedCostSection(Report $report)
@@ -124,7 +123,6 @@ class ProfCostsSubSectionRouteResolver
     }
 
     /**
-     * @param Report $report
      * @return bool
      */
     private function fixedCostsSubsectionIsIncomplete(Report $report)
@@ -133,7 +131,6 @@ class ProfCostsSubSectionRouteResolver
     }
 
     /**
-     * @param Report $report
      * @return bool
      */
     private function amountSccoSubsectionIsIncomplete(Report $report)
@@ -142,7 +139,6 @@ class ProfCostsSubSectionRouteResolver
     }
 
     /**
-     * @param Report $report
      * @return bool
      */
     private function interimExistsSubsectionIsIncomplete(Report $report)
@@ -151,7 +147,6 @@ class ProfCostsSubSectionRouteResolver
     }
 
     /**
-     * @param Report $report
      * @return bool
      */
     private function interimExists(Report $report)
@@ -160,7 +155,6 @@ class ProfCostsSubSectionRouteResolver
     }
 
     /**
-     * @param Report $report
      * @return bool
      */
     private function interimSubsectionIsIncomplete(Report $report)
@@ -169,7 +163,6 @@ class ProfCostsSubSectionRouteResolver
     }
 
     /**
-     * @param Report $report
      * @return bool
      */
     private function breakdownCostsIsIncomplete(Report $report)

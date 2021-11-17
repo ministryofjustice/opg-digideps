@@ -7,9 +7,7 @@ use Symfony\Component\DependencyInjection\ContainerInterface;
 class RedisAvailability extends ServiceAvailabilityAbstract
 {
     const TEST_KEY = 'RedisAvailabilityTestKey';
-    /**
-     * @var ContainerInterface
-     */
+
     private ContainerInterface $container;
 
     public function __construct(ContainerInterface $container)
@@ -25,11 +23,11 @@ class RedisAvailability extends ServiceAvailabilityAbstract
             $redis = $this->container->get('snc_redis.default');
             $redis->set(self::TEST_KEY, 'valueSaved');
 
-            if ($redis->get(self::TEST_KEY) == 'valueSaved') {
+            if ('valueSaved' == $redis->get(self::TEST_KEY)) {
                 $this->isHealthy = true;
             }
         } catch (\Throwable $e) {
-            $this->errors = 'Redis Error: ' . $e->getMessage();
+            $this->errors = 'Redis Error: '.$e->getMessage();
         }
     }
 

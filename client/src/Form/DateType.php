@@ -8,21 +8,15 @@ use Symfony\Component\OptionsResolver\OptionsResolver;
 
 class DateType extends AbstractType
 {
-    /**
-     * @param OptionsResolver $resolver
-     */
     public function configureOptions(OptionsResolver $resolver): void
     {
         $resolver->setDefaults([
             'widget' => 'text',
             'input' => 'datetime',
-            'format' => 'yyyy-MM-dd'
+            'format' => 'yyyy-MM-dd',
         ]);
     }
 
-    /**
-     * @return string
-     */
     public function getParent(): string
     {
         return ParentDateType::class;

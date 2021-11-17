@@ -8,9 +8,9 @@ use App\Service\Client\Internal\ReportApi;
 use App\Service\Client\RestClient;
 use App\Service\NdrStatusService;
 use App\Service\StepRedirector;
-use Symfony\Component\Routing\Annotation\Route;
 use Sensio\Bundle\FrameworkExtraBundle\Configuration\Template;
 use Symfony\Component\HttpFoundation\Request;
+use Symfony\Component\Routing\Annotation\Route;
 
 class OtherInfoController extends AbstractController
 {
@@ -27,7 +27,6 @@ class OtherInfoController extends AbstractController
      * @var RestClient
      */
     private $restClient;
-
 
     /**
      * @var StepRedirector
@@ -51,7 +50,7 @@ class OtherInfoController extends AbstractController
     public function startAction(Request $request, $ndrId)
     {
         $ndr = $this->reportApi->getNdrIfNotSubmitted($ndrId, self::$jmsGroups);
-        if ($ndr->getStatusService()->getOtherInfoState()['state'] != NdrStatusService::STATE_NOT_STARTED) {
+        if (NdrStatusService::STATE_NOT_STARTED != $ndr->getStatusService()->getOtherInfoState()['state']) {
             return $this->redirectToRoute('ndr_other_info_summary', ['ndrId' => $ndrId]);
         }
 
@@ -73,7 +72,6 @@ class OtherInfoController extends AbstractController
         $ndr = $this->reportApi->getNdrIfNotSubmitted($ndrId, self::$jmsGroups);
         $fromPage = $request->get('from');
 
-
         $stepRedirector = $this->stepRedirector
             ->setRoutes('ndr_other_info', 'ndr_other_info_step', 'ndr_other_info_summary')
             ->setFromPage($fromPage)
@@ -85,9 +83,9 @@ class OtherInfoController extends AbstractController
 
         if ($form->get('save')->isClicked() && $form->isSubmitted() && $form->isValid()) {
             $data = $form->getData();
-            $this->restClient->put('ndr/' . $ndrId, $data, ['more-info']);
+            $this->restClient->put('ndr/'.$ndrId, $data, ['more-info']);
 
-            if ($fromPage == 'summary') {
+            if ('summary' == $fromPage) {
                 $request->getSession()->getFlashBag()->add(
                     'notice',
                     'Answer edited'
@@ -98,10 +96,10 @@ class OtherInfoController extends AbstractController
         }
 
         return [
-            'ndr'       => $ndr,
-            'step'         => $step,
-            'form'         => $form->createView(),
-            'backLink'     => $stepRedirector->getBackLink()
+            'ndr' => $ndr,
+            'step' => $step,
+            'form' => $form->createView(),
+            'backLink' => $stepRedirector->getBackLink(),
         ];
     }
 
@@ -113,13 +111,13 @@ class OtherInfoController extends AbstractController
     {
         $fromPage = $request->get('from');
         $ndr = $this->reportApi->getNdrIfNotSubmitted($ndrId, self::$jmsGroups);
-        if ($ndr->getStatusService()->getOtherInfoState()['state'] == NdrStatusService::STATE_NOT_STARTED && $fromPage != 'skip-step') {
+        if (NdrStatusService::STATE_NOT_STARTED == $ndr->getStatusService()->getOtherInfoState()['state'] && 'skip-step' != $fromPage) {
             return $this->redirectToRoute('ndr_other_info', ['ndrId' => $ndrId]);
         }
 
         return [
-            'comingFromLastStep' => $fromPage == 'skip-step' || $fromPage == 'last-step',
-            'ndr'             => $ndr,
+            'comingFromLastStep' => 'skip-step' == $fromPage || 'last-step' == $fromPage,
+            'ndr' => $ndr,
         ];
     }
 }

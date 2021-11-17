@@ -60,7 +60,7 @@ class ReportDeclarationType extends AbstractType
                 $data = $form->getData();
                 $validationGroups = ['declare'];
 
-                if ($data->getAgreedBehalfDeputy() == 'more_deputies_not_behalf') {
+                if ('more_deputies_not_behalf' == $data->getAgreedBehalfDeputy()) {
                     $validationGroups[] = 'declare-explanation';
                 }
 

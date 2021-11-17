@@ -22,9 +22,7 @@ class SettingType extends AbstractType
     }
 
     /**
-     * Set default form options
-     *
-     * @param OptionsResolver $resolver
+     * Set default form options.
      */
     public function configureOptions(OptionsResolver $resolver)
     {

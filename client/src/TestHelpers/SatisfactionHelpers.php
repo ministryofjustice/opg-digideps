@@ -9,9 +9,6 @@ use Faker\Factory;
 
 class SatisfactionHelpers
 {
-    /**
-     * @return Satisfaction
-     */
     public static function createSatisfaction(): Satisfaction
     {
         $faker = Factory::create('en_GB');

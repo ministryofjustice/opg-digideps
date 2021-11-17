@@ -191,19 +191,19 @@ services:
         class: Alphagov\Notifications\Client
         arguments:
             $config:
-                httpClient: '@Http\Adapter\Guzzle6\Client'
+                httpClient: '@Http\Adapter\Guzzle7\Client'
                 apiKey: '%env(NOTIFY_API_KEY)%'
 
     App\Service\Mailer\NotifyClientMock:
         class: App\Service\Mailer\NotifyClientMock
         arguments:
             $config:
-                httpClient: '@Http\Adapter\Guzzle6\Client'
+                httpClient: '@Http\Adapter\Guzzle7\Client'
                 apiKey: '%env(NOTIFY_API_KEY)%'
             $logger: '@logger'
 
-    Http\Adapter\Guzzle6\Client:
-        class: Http\Adapter\Guzzle6\Client
+    Http\Adapter\Guzzle7\Client:
+        class: Http\Adapter\Guzzle7\Client
 
     App\Form\Report\Asset\AssetTypeTitle:
         arguments: ["%asset_dropdown%", "@translator", "report-assets"]

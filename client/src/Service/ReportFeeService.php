@@ -7,9 +7,8 @@ use App\Entity\Report\ProfServiceFee;
 class ReportFeeService
 {
     /**
-     * Calculate total Received Fees
+     * Calculate total Received Fees.
      *
-     * @param  array $profFees
      * @return float
      */
     public function getTotalReceivedFees(array $profFees)
@@ -17,7 +16,7 @@ class ReportFeeService
         $total = 0.00;
 
         foreach ($profFees as $profFee) {
-            /** @var ProfServiceFee $profFee */
+            /* @var ProfServiceFee $profFee */
             $total += $profFee->getAmountReceived();
         }
 
@@ -25,9 +24,8 @@ class ReportFeeService
     }
 
     /**
-     * Calculate total Charged Fees
+     * Calculate total Charged Fees.
      *
-     * @param  array $profFees
      * @return float
      */
     public function getTotalChargedFees(array $profFees)
@@ -35,7 +33,7 @@ class ReportFeeService
         $total = 0.00;
 
         foreach ($profFees as $profFee) {
-            /** @var ProfServiceFee $profFee */
+            /* @var ProfServiceFee $profFee */
             $total += $profFee->getAmountCharged();
         }
 

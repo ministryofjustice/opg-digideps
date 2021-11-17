@@ -50,7 +50,7 @@ class SiriusApiErrorTranslator
             'OPGDATA-API-WAF_FILTERED' => 'AWS WAF filtered this request and it was not sent to Sirius',
         ];
 
-        if (is_null($apiError->getCode()) || is_null($translations[$apiError->getCode()])) {
+        if (is_null($apiError->getCode()) || is_null($translations[$apiError->getCode()] ?? null)) {
             return $errorString;
         } else {
             return sprintf('%s: %s', $apiError->getCode(), $translations[$apiError->getCode()]);

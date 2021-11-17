@@ -2,7 +2,6 @@
 
 namespace App\EventListener;
 
-use App\Service\Client\RestClient;
 use App\Service\Client\RestClientInterface;
 use Symfony\Component\HttpFoundation\RedirectResponse;
 use Symfony\Component\HttpFoundation\Request;

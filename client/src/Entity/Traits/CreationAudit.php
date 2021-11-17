@@ -5,27 +5,25 @@ namespace App\Entity\Traits;
 use App\Entity\User;
 
 /**
- * CreationAudit Trait, usable with PHP >= 5.4
- *
+ * CreationAudit Trait, usable with PHP >= 5.4.
  */
 trait CreationAudit
 {
     /**
-     * Created by
+     * Created by.
      *
      * @JMS\Type("App\Entity\User")
-     * @var \App\Entity\User
      *
+     * @var \App\Entity\User
      */
     protected $createdBy;
 
     /**
-     * Created on
+     * Created on.
      *
      * @JMS\Type("DateTime")
      *
      * @var \DateTime
-     *
      */
     protected $createdOn;
 
@@ -38,8 +36,6 @@ trait CreationAudit
     }
 
     /**
-     * @param \App\Entity\User $createdBy
-     *
      * @return $this
      */
     public function setCreatedBy(User $createdBy)
@@ -58,8 +54,6 @@ trait CreationAudit
     }
 
     /**
-     * @param \DateTime $createdOn
-     *
      * @return $this
      */
     public function setCreatedOn(\DateTime $createdOn)

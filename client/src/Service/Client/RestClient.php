@@ -139,7 +139,7 @@ class RestClient implements RestClientInterface
         $user = $this->arrayToEntity('User', $this->extractDataArray($response));
 
         // store auth token
-        $tokenVal =  $response->getHeader(self::HEADER_AUTH_TOKEN);
+        $tokenVal = $response->getHeader(self::HEADER_AUTH_TOKEN);
         $tokenVal = is_array($tokenVal) && !empty($tokenVal[0]) ? $tokenVal[0] : null;
         $this->tokenStorage->set($user->getId(), $tokenVal);
 
@@ -161,13 +161,16 @@ class RestClient implements RestClientInterface
 
     /**
      * Finds user by email.
+     *
      * @TODO consider replace this call with ->get() using the new last param
+     *
      * @param string $token
+     *
      * @return \App\Entity\User $user
      */
     public function loadUserByToken($token)
     {
-        return $this->apiCall('get', 'user/get-by-token/' . $token, null, 'User', [], false);
+        return $this->apiCall('get', 'user/get-by-token/'.$token, null, 'User', [], false);
     }
 
     /**
@@ -175,7 +178,7 @@ class RestClient implements RestClientInterface
      */
     public function agreeTermsUse($token)
     {
-        $this->apiCall('put', 'user/agree-terms-use/' . $token, null, 'raw', [], false);
+        $this->apiCall('put', 'user/agree-terms-use/'.$token, null, 'raw', [], false);
     }
 
     /**
@@ -213,9 +216,9 @@ class RestClient implements RestClientInterface
     }
 
     /**
-     * @param string $endpoint e.g. /user
-     * @param string|object|array $mixed HTTP body. json_encoded string or entity (that will JMS-serialised)
-     * @param array $jmsGroups deserialise_groups
+     * @param string              $endpoint  e.g. /user
+     * @param string|object|array $mixed     HTTP body. json_encoded string or entity (that will JMS-serialised)
+     * @param array               $jmsGroups deserialise_groups
      *
      * @return string response body
      */
@@ -262,8 +265,6 @@ class RestClient implements RestClientInterface
     /**
      * Call POST /selfregister passing client secret.
      *
-     * @param SelfRegisterData $selfRegData
-     *
      * @return \App\Entity\User
      */
     public function registerUser(SelfRegisterData $selfRegData)
@@ -292,28 +293,28 @@ class RestClient implements RestClientInterface
             'addClientSecret' => !$authenticated,
             'addAuthToken' => $authenticated,
         ]);
-        if ($expectedResponseType == 'raw') {
+        if ('raw' == $expectedResponseType) {
             return $response->getBody();
         }
 
-        if ($expectedResponseType == 'response') {
+        if ('response' == $expectedResponseType) {
             return $response;
         }
 
-        if ($response->getStatusCode() === Response::HTTP_NO_CONTENT) {
+        if (Response::HTTP_NO_CONTENT === $response->getStatusCode()) {
             return;
         }
 
         $responseArray = $this->extractDataArray($response);
 
-        if ($expectedResponseType == 'array') {
+        if ('array' == $expectedResponseType) {
             return $responseArray;
-        } elseif (substr($expectedResponseType, -2) == '[]') {
+        } elseif ('[]' == substr($expectedResponseType, -2)) {
             return $this->arrayToEntities($expectedResponseType, $responseArray);
-        } elseif (class_exists('App\\Entity\\' . $expectedResponseType)) {
+        } elseif (class_exists('App\\Entity\\'.$expectedResponseType)) {
             return $this->arrayToEntity($expectedResponseType, $responseArray ?: []);
         } else {
-            throw new \InvalidArgumentException(__METHOD__ . ": invalid type of expected response, $expectedResponseType given.");
+            throw new \InvalidArgumentException(__METHOD__.": invalid type of expected response, $expectedResponseType given.");
         }
     }
 
@@ -358,10 +359,11 @@ class RestClient implements RestClientInterface
         try {
             $response = $this->client->$method($url, $options);
             $this->logRequest($url, $method, $start, $options, $response);
+
             return $response;
         } catch (RequestException $e) {
             // request exception contains a body, that gets decoded and passed to RestClientException
-            $this->logger->warning('RestClient | RequestException | ' . $url . ' | ' . $e->getMessage());
+            $this->logger->warning('RestClient | RequestException | '.$url.' | '.$e->getMessage());
 
             $response = $e->getResponse();
 
@@ -375,12 +377,12 @@ class RestClient implements RestClientInterface
                     $data = $this->serialiser->deserialize($body, 'array', 'json');
                 }
             } catch (\Throwable $e) {
-                $this->logger->warning('RestClient |  ' . $url . ' | ' . $e->getMessage());
+                $this->logger->warning('RestClient |  '.$url.' | '.$e->getMessage());
             }
 
             throw new AppException\RestClientException($e->getMessage(), $e->getCode(), $data);
         } catch (TransferException $e) {
-            $this->logger->warning('RestClient | ' . $url . ' | ' . $e->getMessage());
+            $this->logger->warning('RestClient | '.$url.' | '.$e->getMessage());
 
             throw new AppException\RestClientException($e->getMessage(), $e->getCode());
         }
@@ -388,8 +390,6 @@ class RestClient implements RestClientInterface
 
     /**
      * Return the 'data' array from the response.
-     *
-     * @param ResponseInterface $response
      *
      * @return array content of "data" key from response
      */
@@ -400,12 +400,12 @@ class RestClient implements RestClientInterface
         try {
             $data = $this->serialiser->deserialize(strval($response->getBody()), 'array', 'json');
         } catch (\Throwable $e) {
-            $this->logger->error(__METHOD__ . ': ' . $e->getMessage() . '. Api responded with invalid JSON. [BODY START]: ' . $response->getBody() . '[END BODY]');
-            throw new Exception\JsonDecodeException(self::ERROR_FORMAT . ':' . $response->getBody());
+            $this->logger->error(__METHOD__.': '.$e->getMessage().'. Api responded with invalid JSON. [BODY START]: '.$response->getBody().'[END BODY]');
+            throw new Exception\JsonDecodeException(self::ERROR_FORMAT.':'.$response->getBody());
         }
 
         if (empty($data['success'])) {
-            throw new Exception\NoSuccess(sprintf(self::ERROR_NO_SUCCESS, $data['message']));
+            throw new Exception\NoSuccess(sprintf(self::ERROR_NO_SUCCESS, $data['message'] ?? 'no message received'));
         }
 
         return $data['data'];
@@ -419,22 +419,23 @@ class RestClient implements RestClientInterface
      */
     private function arrayToEntity($class, array $data)
     {
-        $fullClassName = (str_contains($class, 'App')) ? $class : 'App\\Entity\\' . $class;
+        $fullClassName = (str_contains($class, 'App')) ? $class : 'App\\Entity\\'.$class;
 
         /** @var string */
         $data = json_encode($data);
+
         return $this->serialiser->deserialize($data, $fullClassName, 'json');
     }
 
     /**
      * @param string $class full class name of the class to deserialise to
-     * @param array $data "data" returned from the RESTful server
+     * @param array  $data  "data" returned from the RESTful server
      *
      * @return array of type $class
      */
     public function arrayToEntities(string $class, array $data)
     {
-        $fullClassName = (str_contains($class, 'App')) ? $class : 'App\\Entity\\' . $class;
+        $fullClassName = (str_contains($class, 'App')) ? $class : 'App\\Entity\\'.$class;
 
         $expectedResponseType = substr($fullClassName, 0, -2);
         $ret = [];
@@ -454,8 +455,7 @@ class RestClient implements RestClientInterface
     /**
      * //TODO use for other calls ?
      *
-     * @param mixed $mixed   json_encoded string or Doctrine Entity (it will be serialised before posting)
-     * @param array $options
+     * @param mixed $mixed json_encoded string or Doctrine Entity (it will be serialised before posting)
      *
      * @return string
      */
@@ -560,6 +560,6 @@ class RestClient implements RestClientInterface
 
     private function debugJsonString($jsonString)
     {
-        echo '<pre>' . json_encode(json_decode($jsonString), JSON_PRETTY_PRINT) . '</pre>';
+        echo '<pre>'.json_encode(json_decode($jsonString), JSON_PRETTY_PRINT).'</pre>';
     }
 }

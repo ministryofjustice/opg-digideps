@@ -10,9 +10,7 @@ use Symfony\Component\Form\FormBuilderInterface;
 use Symfony\Component\OptionsResolver\OptionsResolver;
 
 /**
- * Class NoteType
- *
- *
+ * Class NoteType.
  */
 class NoteType extends AbstractType
 {
@@ -36,9 +34,7 @@ class NoteType extends AbstractType
     }
 
     /**
-     * Set default form options
-     *
-     * @param OptionsResolver $resolver
+     * Set default form options.
      */
     public function configureOptions(OptionsResolver $resolver)
     {
@@ -46,13 +42,13 @@ class NoteType extends AbstractType
             [
                 'validation_groups' => ['add_note'],
                 'translation_domain' => 'client-notes',
-                'data-class' => NoteEntity::class
+                'data-class' => NoteEntity::class,
             ]
         );
     }
 
     /**
-     * Return list of translated categories from the Note entity
+     * Return list of translated categories from the Note entity.
      *
      * @return array
      */
@@ -61,7 +57,7 @@ class NoteType extends AbstractType
         $ret = [];
 
         foreach (NoteEntity::$categories as $categoryId => $cagtegoryTrqnslationKey) {
-            $ret['form.category.entries.' . $cagtegoryTrqnslationKey] = $categoryId;
+            $ret['form.category.entries.'.$cagtegoryTrqnslationKey] = $categoryId;
         }
 
         return $ret;

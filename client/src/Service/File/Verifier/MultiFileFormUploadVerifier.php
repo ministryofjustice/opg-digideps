@@ -13,10 +13,6 @@ class MultiFileFormUploadVerifier
     /** @var VerifierInterface[] */
     private $verifiers;
 
-    /**
-     * @param VerifierInterface $verifier
-     * @return MultiFileFormUploadVerifier
-     */
     public function addVerifier(VerifierInterface $verifier): MultiFileFormUploadVerifier
     {
         $this->verifiers[] = $verifier;
@@ -24,16 +20,11 @@ class MultiFileFormUploadVerifier
         return $this;
     }
 
-    /**
-     * @param array $files
-     * @param FormInterface $form
-     * @param Report $report
-     * @return bool
-     */
     public function verify(array $files, FormInterface $form, Report $report): bool
     {
         if (empty($files)) {
             $form->get('files')->addError(new FormError('No documents were uploaded'));
+
             return false;
         }
 
@@ -45,14 +36,9 @@ class MultiFileFormUploadVerifier
             }
         }
 
-        return (count($form->getErrors(true)) === 0) ? true : false;
+        return (0 === count($form->getErrors(true))) ? true : false;
     }
 
-    /**
-     * @param Report $report
-     * @param UploadedFile $file
-     * @return VerificationStatus
-     */
     private function verifyFiles(Report $report, UploadedFile $file): VerificationStatus
     {
         $document = (new Document())->setFile($file)->setReport($report);

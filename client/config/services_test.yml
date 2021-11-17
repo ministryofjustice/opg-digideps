@@ -6,6 +6,6 @@ services:
         class: App\Service\Mailer\NotifyClientMock
         arguments:
             $config:
-                httpClient: '@Http\Adapter\Guzzle6\Client'
+                httpClient: '@Http\Adapter\Guzzle7\Client'
                 apiKey: '%env(NOTIFY_API_KEY)%'
             $logger: '@logger'

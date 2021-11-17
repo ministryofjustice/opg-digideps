@@ -27,7 +27,7 @@ class OrganisationType extends AbstractType
                 'expanded' => true,
                 'mapped' => false,
                 'constraints' => [
-                    new Constraints\NotBlank(['message' => 'organisation.emailIdentifierType.notBlank'])
+                    new Constraints\NotBlank(['message' => 'organisation.emailIdentifierType.notBlank']),
                 ],
             ])
             ->add('emailAddress', FormTypes\TextType::class, [
@@ -45,8 +45,8 @@ class OrganisationType extends AbstractType
                     new Constraints\Email([
                         'message' => 'organisation.emailAddress.invalid',
                         'groups' => 'email-address',
-                    ])
-                ]
+                    ]),
+                ],
             ])
             ->add('emailDomain', FormTypes\TextType::class, [
                 'mapped' => false,
@@ -65,8 +65,8 @@ class OrganisationType extends AbstractType
                         'htmlPattern' => '^[^ @]+$',
                         'message' => 'organisation.emailDomain.invalid',
                         'groups' => 'email-domain',
-                    ])
-                ]
+                    ]),
+                ],
             ])
             ->add('isActivated', FormTypes\ChoiceType::class, [
                 'choices' => ['Yes' => true, 'No' => false],
@@ -78,7 +78,7 @@ class OrganisationType extends AbstractType
             $data = $event->getData();
             $field = 'emailAddress';
 
-            if (isset($data['emailIdentifierType']) && $data['emailIdentifierType'] === 'domain') {
+            if (isset($data['emailIdentifierType']) && 'domain' === $data['emailIdentifierType']) {
                 $field = 'emailDomain';
             }
 
@@ -95,9 +95,9 @@ class OrganisationType extends AbstractType
                 $data = $form->getData();
                 $type = $form->get('emailIdentifierType')->getData();
 
-                if ($type === 'domain') {
+                if ('domain' === $type) {
                     return ['Default', 'email-domain'];
-                } elseif ($type === 'address') {
+                } elseif ('address' === $type) {
                     return ['Default', 'email-address'];
                 }
 

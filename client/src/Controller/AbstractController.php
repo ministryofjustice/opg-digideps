@@ -8,15 +8,15 @@ use Symfony\Component\HttpFoundation\Response;
 abstract class AbstractController extends Controller
 {
     /**
-     * @param string $description
      * @param int $statusCode
+     *
      * @return Response
      */
     protected function renderError(string $description, $statusCode = 500)
     {
         $text = $this->renderView('bundles/TwigBundle/Exception/template.html.twig', [
             'message' => 'Application error',
-            'description' => $description
+            'description' => $description,
         ]);
 
         return new Response($text, $statusCode);
