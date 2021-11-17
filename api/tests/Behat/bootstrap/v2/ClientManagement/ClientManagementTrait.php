@@ -344,7 +344,7 @@ MESSAGE;
     {
         $this->assertInteractingWithUserIsSet();
 
-        $this->iVisitAdminLayClientDetailsPage();
+        $this->iVisitAdminClientDetailsPageForDeputyInteractingWith();
 
         $dischargedOnSelector = "//dt[normalize-space() = 'Discharged on']/..";
         $dischargedOnVisible = $this->getSession()->getPage()->find('xpath', $dischargedOnSelector);
