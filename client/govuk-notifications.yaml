@@ -64,18 +64,31 @@ paths:
                     'application/json':
                         schema:
                             properties:
+                                email_address:
+                                    description: The email address of the recipient.
+                                    type: string
+                                    example: 'testAccount@example.org'
                                 template_id:
-                                    description: UID that refers to an existing template in Notify
+                                    description: UID that refers to an existing template in Notify.
                                     type: string
                                     example:
                                         $ref: '#/components/schemas/UUID'
                                 personalisation:
-                                    description: Metadata to personalise the email template
+                                    description: Metadata to personalise the email template.
                                     type: object
                                     example:
                                         $ref: '#/components/schemas/Personalisation'
+                                reference:
+                                    description: identifies a single notification or a batch of notifications.
+                                    type: string
+                                    example: 'ref123'
+                                email_reply_to_id:
+                                    description: The email address to receive replies from your users.
+                                    type: string
+                                    example: 'reply-only@example.org'
                             required:
-                                - status
+                                - email_address
+                                - template_id
             responses:
                 201:
                     description: Success response from client

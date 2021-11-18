@@ -193,6 +193,7 @@ services:
             $config:
                 httpClient: '@Http\Adapter\Guzzle7\Client'
                 apiKey: '%env(NOTIFY_API_KEY)%'
+                baseUrl: 'http://mock-notify-api:4010'
 
     App\Service\Mailer\NotifyClientMock:
         class: App\Service\Mailer\NotifyClientMock
@@ -200,6 +201,7 @@ services:
             $config:
                 httpClient: '@Http\Adapter\Guzzle7\Client'
                 apiKey: '%env(NOTIFY_API_KEY)%'
+                baseUrl: 'http://mock-notify-api:4010'
             $logger: '@logger'
 
     Http\Adapter\Guzzle7\Client:
