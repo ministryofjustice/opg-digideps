@@ -363,6 +363,12 @@ v2-tests-goutte:
             contexts:
                 - App\Tests\Behat\v2\Reporting\Sections\ReportingSectionsFeatureContext
 
+        service-helath:
+            description: Covering service health monitoring features of the app
+            paths: [ "%paths.base%/features-v2/service-health" ]
+            contexts:
+                - App\Tests\Behat\v2\ServiceHealth\ServiceHealthFeatureContext
+
         user-management:
             description: Covering the user management features of the app (admin)
             paths: [ "%paths.base%/features-v2/user-management" ]
