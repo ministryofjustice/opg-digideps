@@ -1,0 +1,233 @@
+---
+openapi: 3.0.0
+info:
+    version: 2.0.0
+    title: govuk-notifications
+    description: "Specifications for the v2 public endpoints used by Notify clients"
+
+tags:
+    - name: govuk-notifications
+      description: Public API operations relating used by Notify clients
+
+security:
+    - bearerAuth: []
+
+paths:
+    /v2/templates:
+        description: Get all templates
+        get:
+            summary: Get all templates
+            description: Returns the latest version of all templates.
+            tags:
+                - "templates"
+            responses:
+                200:
+                    description: Get all templates
+                    content:
+                        application/json:
+                            schema:
+                                $ref: '#/components/schemas/ArrayOfTemplates'
+                400:
+                    description: Incorrect API key or service in trial mode
+                    content:
+                        application/json:
+                            schema:
+                                $ref: '#/components/schemas/Error4XX-5XX'
+                403:
+                    description: System clock innaccurate or invalid API key
+                    content:
+                        application/json:
+                            schema:
+                                $ref: '#/components/schemas/Error4XX-5XX'
+                429:
+                    description: Too many requests
+                    content:
+                        application/json:
+                            schema:
+                                $ref: '#/components/schemas/Error4XX-5XX'
+                500:
+                    description: Something unexpected happened and it is the API's fault
+                    content:
+                        application/json:
+                            schema:
+                                $ref: '#/components/schemas/Error4XX-5XX'
+
+    /v2/notifications/email:
+        description: Send an email
+        post:
+            summary: Send an email
+            description: Sends an email with optional personalisations
+            tags:
+                - "email"
+            requestBody:
+                content:
+                    'application/json':
+                        schema:
+                            properties:
+                                email_address:
+                                    description: The email address of the recipient.
+                                    type: string
+                                    example: 'testAccount@example.org'
+                                template_id:
+                                    description: UID that refers to an existing template in Notify.
+                                    type: string
+                                    example:
+                                        $ref: '#/components/schemas/UUID'
+                                personalisation:
+                                    description: Metadata to personalise the email template.
+                                    type: object
+                                    example:
+                                        $ref: '#/components/schemas/Personalisation'
+                                reference:
+                                    description: identifies a single notification or a batch of notifications.
+                                    type: string
+                                    example: 'ref123'
+                                email_reply_to_id:
+                                    description: The email address to receive replies from your users.
+                                    type: string
+                                    example: 'reply-only@example.org'
+                            required:
+                                - email_address
+                                - template_id
+            responses:
+                201:
+                    description: Success response from client
+                    content:
+                        application/json:
+                            schema:
+                                type: object
+                                properties:
+                                    content:
+                                        type: object
+                                        properties:
+                                            body:
+                                                type: string
+                                                example: "The email body content"
+                                            from_email:
+                                                type: string
+                                                example: "complete.the.deputy.report@notifications.service.gov.uk"
+                                            subject:
+                                                type: string
+                                                example: "Reset your password"
+                                    id:
+                                        type: string
+                                        nullable: true
+                                        example:
+                                            $ref: '#/components/schemas/UUID'
+                                    reference:
+                                        type: string
+                                        format: nullable
+                                    scheduled_for:
+                                        type: string
+                                        format: nullable
+                                    template:
+                                        type: object
+                                        properties:
+                                            id:
+                                                type: string
+                                                example:
+                                                    $ref: '#/components/schemas/UUID'
+                                            uri:
+                                                type: string
+                                                example: "https://api.notifications.service.gov.uk/services/3256fbd6-df6e-43ea-862c-7120440ba955/templates/827555cc-498a-43ef-957a-63fa387065e3"
+                                            version:
+                                                type: integer
+                                                example: 11
+                                    uri:
+                                        type: string
+                                        example: "https://api.notifications.service.gov.uk/v2/notifications/baaa3c44-ff89-4943-b80d-7ceaeecc878a"
+                400:
+                    description: Incorrect API key or service in trial mode
+                    content:
+                        application/json:
+                            schema:
+                                $ref: '#/components/schemas/Error4XX-5XX'
+                403:
+                    description: System clock innaccurate or invalid API key
+                    content:
+                        application/json:
+                            schema:
+                                $ref: '#/components/schemas/Error4XX-5XX'
+                429:
+                    description: Too many requests
+                    content:
+                        application/json:
+                            schema:
+                                $ref: '#/components/schemas/Error4XX-5XX'
+                500:
+                    description: Something unexpected happened and it is the API's fault
+                    content:
+                        application/json:
+                            schema:
+                                $ref: '#/components/schemas/Error4XX-5XX'
+
+components:
+    securitySchemes:
+        bearerAuth: # arbitrary name for the security scheme
+            type: http
+            scheme: bearer
+            bearerFormat: JWT    # optional, arbitrary value for documentation purposes
+    schemas:
+        UUID:
+            type: string
+            readOnly: true
+            description: A unique identifier
+            pattern: '^[a-fA-F0-9]{8}-[a-fA-F0-9]{4}-[a-fA-F0-9]{4}-[a-fA-F0-9]{4}-[a-fA-F0-9]{12}$'
+            example: '5a8b1a26-8296-4373-ae61-f8d0b250e773'
+        Personalisation:
+            type: object
+            properties:
+                first_name:
+                    type: string
+                    pattern: '.*'
+                    example: 'Alex'
+                application_date:
+                    type: string
+                    example: "2019-12-31"
+            required: false
+        ArrayOfTemplates:
+            type: array
+            items:
+                $ref: '#components/schemas/Template'
+        Template:
+            properties:
+                body:
+                    type: string
+                created_at:
+                    type: string
+                created_by:
+                    type: string
+                id:
+                    type: string
+                letter_contact_block:
+                    type: string
+                    format: nullable
+                name:
+                    type: string
+                personalisation:
+                    type: object
+                    properties:
+                        deletionDate:
+                            type: object
+                            properties:
+                                required:
+                                    type: boolean
+                postage:
+                    type: string
+                    format: nullable
+                subject:
+                    type: string
+                type:
+                    type: string
+                updated_at:
+                    type: string
+                version:
+                    type: integer
+                    format: int32
+        Error4XX-5XX:
+            type: object
+            properties:
+                error:
+                    type: string
+                message:
+                    type: string

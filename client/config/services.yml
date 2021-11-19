@@ -29,6 +29,8 @@ parameters:
             registration: [1,2,3]
             registration_admin: [1,2]
 
+    fallback_notify_base_uri: null
+
 services:
     _defaults:
         autowire: true
@@ -193,6 +195,8 @@ services:
             $config:
                 httpClient: '@Http\Adapter\Guzzle7\Client'
                 apiKey: '%env(NOTIFY_API_KEY)%'
+#                Setting the URI to null defaults to the uri defined in the package
+                baseUrl: '%env(default:fallback_notify_base_uri:NOTIFY_API_BASE_URI)%'
 
     App\Service\Mailer\NotifyClientMock:
         class: App\Service\Mailer\NotifyClientMock
@@ -200,6 +204,8 @@ services:
             $config:
                 httpClient: '@Http\Adapter\Guzzle7\Client'
                 apiKey: '%env(NOTIFY_API_KEY)%'
+#                Setting the URI to null defaults to the uri defined in the package
+                baseUrl: '%env(default:fallback_notify_base_uri:NOTIFY_API_BASE_URI)%'
             $logger: '@logger'
 
     Http\Adapter\Guzzle7\Client:
