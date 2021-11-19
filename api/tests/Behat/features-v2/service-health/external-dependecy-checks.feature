@@ -1,4 +1,4 @@
-@service-health @v2_admin
+@v2 @service-health @v2_admin
 Feature: Overview of external dependencies the application requires to function
 
     @infra @smoke
