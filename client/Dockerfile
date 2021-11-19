@@ -82,7 +82,6 @@ COPY public public
 COPY scripts scripts
 COPY src src
 COPY templates templates
-COPY assets assets
 COPY translations translations
 COPY tests tests
 COPY phpstan.neon .
