@@ -62,6 +62,7 @@ services:
             - router
             - localstack
             - mock-notify-api
+            - assets
         environment:
             VIRTUAL_HOST: www.digideps.local,digideps.local
             VIRTUAL_PROTO: https
@@ -203,3 +204,12 @@ services:
             - -h
             - 0.0.0.0
             - --dynamic
+    assets:
+        build:
+            context: ./client
+            dockerfile: ./assets.Dockerfile
+        volumes:
+          - ./client/public:/app/public
+        environment:
+          - NODE_ENV=production
+        entrypoint: ["npm", "run", "build"]

@@ -143,3 +143,6 @@ phpstan-api:
 
 phpstan-frontend:
 	docker-compose run --rm frontend vendor/phpstan/phpstan/phpstan analyse src --memory-limit=0 --level=max
+
+build-assets:
+	docker-compose run --rm assets 

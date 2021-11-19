@@ -1,23 +1,3 @@
-FROM node:14.8.0-alpine AS webpack
-WORKDIR /app
-
-COPY package.json .
-COPY package-lock.json .
-COPY webpack.config.js .
-COPY templates templates
-COPY assets assets
-COPY translations translations
-
-# Install NPM dependencies
-RUN npm install
-
-# Check linting
-RUN npm run lint
-RUN npm audit --production
-
-#Build assets
-RUN NODE_ENV=production npm run build
-
 FROM composer:2.1.2 AS composer
 WORKDIR /app
 
@@ -99,8 +79,6 @@ COPY --from=composer /app/composer.lock composer.lock
 COPY --from=composer /app/config/parameters.yml config/parameters.yml
 COPY config config
 COPY public public
-COPY --from=webpack /app/public/assets public/assets
-COPY --from=webpack /app/public/images public/images
 COPY scripts scripts
 COPY src src
 COPY templates templates
