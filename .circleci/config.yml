@@ -907,8 +907,8 @@ jobs:
           name: Build images
           command: |
             docker-compose run assets
-            docker-compose cp assets:app/public/assets ./client/public/assets
-            docker-compose cp assets:app/public/images ./client/public/images
+            docker compose cp assets:app/public/assets ./client/public/assets
+            docker compose cp assets:app/public/images ./client/public/images
             ls ./client/public
             docker-compose -f docker-compose.ci.yml build --parallel
       - run:
