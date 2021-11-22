@@ -4,8 +4,6 @@ declare(strict_types=1);
 
 namespace App\EventSubscriber;
 
-use App\Entity\CasRec;
-use App\Entity\User;
 use App\Event\CSVUploadedEvent;
 use App\Service\Audit\AuditEvents;
 use App\Service\Time\DateTimeProvider;
@@ -31,29 +29,11 @@ class CSVUploadedSubscriber implements EventSubscriberInterface
     public static function getSubscribedEvents()
     {
         return [
-            CSVUploadedEvent::NAME => 'doSomething1',
-            CSVUploadedEvent::NAME => 'doSomething2',
+            CSVUploadedEvent::NAME => 'auditLog',
         ];
     }
 
-    public function doSomething1(CSVUploadedEvent $event)
-    {
-        if (User::TYPE_LAY == $event->getRoleType()) {
-            if (CasRec::SIRIUS_SOURCE == $event->getSource()) {
-                //Do Something
-            } elseif (CasRec::CASREC_SOURCE == $event->getSource()) {
-                //Do Something
-            }
-        } elseif (User::TYPE_PROF == $event->getRoleType()) {
-            //Do Something
-        } elseif (User::TYPE_PA == $event->getRoleType()) {
-            //Do Something
-        } else {
-            //Throw Error
-        }
-    }
-
-    public function doSomething2(CSVUploadedEvent $event)
+    public function auditLog(CSVUploadedEvent $event)
     {
         $csvUploadedEvent = (new AuditEvents($this->dateTimeProvider))
             ->csvUploaded(
