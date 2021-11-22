@@ -76,7 +76,7 @@ class OrgDeputyshipUploader
 
         $this->removeDuplicateIds();
 
-        $this->dispatchCSVUploadEvent();
+        $this->dispatchCSVUploadEvent($deputyshipDtos);
 
         $uploadResults['added'] = $this->added;
         $uploadResults['updated'] = $this->updated;
