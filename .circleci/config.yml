@@ -905,7 +905,9 @@ jobs:
           command: eval $(aws ecr get-login --region $AWS_REGION --no-include-email --profile digideps-ci)
       - run:
           name: Build images
-          command: docker-compose -f docker-compose.ci.yml build --parallel
+          command: |
+            docker-compose run --rm assets
+            docker-compose -f docker-compose.ci.yml build --parallel
       - run:
           name: List API packages
           command: docker-compose -f docker-compose.ci.yml run --rm api apk list | sort

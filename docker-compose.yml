@@ -207,7 +207,7 @@ services:
     assets:
         build:
             context: ./client
-            dockerfile: ./assets.Dockerfile
+            dockerfile: ./docker/assets/assets.Dockerfile
         volumes:
             - ./client/public:/app/public
             - ./client/package-lock.json:/app/package-lock.json
