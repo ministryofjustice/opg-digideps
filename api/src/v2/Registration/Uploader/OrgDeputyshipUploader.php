@@ -4,11 +4,15 @@ declare(strict_types=1);
 
 namespace App\v2\Registration\Uploader;
 
+use App\Entity\CasRec;
 use App\Entity\Client;
 use App\Entity\NamedDeputy;
 use App\Entity\Organisation;
 use App\Entity\Report\Report;
+use App\Entity\User;
+use App\Event\CSVUploadedEvent;
 use App\Factory\OrganisationFactory;
+use App\Service\Audit\AuditEvents;
 use App\Service\OrgService;
 use App\v2\Assembler\ClientAssembler;
 use App\v2\Assembler\NamedDeputyAssembler;
@@ -71,6 +75,8 @@ class OrgDeputyshipUploader
         }
 
         $this->removeDuplicateIds();
+
+        $this->dispatchCSVUploadEvent();
 
         $uploadResults['added'] = $this->added;
         $uploadResults['updated'] = $this->updated;
@@ -321,5 +327,29 @@ class OrgDeputyshipUploader
         $this->updated['organisations'] = array_unique($this->updated['organisations']);
         $this->updated['clients'] = array_unique($this->updated['clients']);
         $this->updated['reports'] = array_unique($this->updated['reports']);
+    }
+
+    /**
+     * @param OrgDeputyshipDto[] $deputyshipDtos
+     */
+    private function dispatchCSVUploadEvent(array $deputyshipDtos)
+    {
+        $roleType = User::ROLE_PROF;
+
+        // DepAddr No column is missing from PA CSV uploads
+        foreach ($deputyshipDtos as $deputyshipDto) {
+            if (null != $deputyshipDto->getDeputyAddressNumber()) {
+                $roleType = User::ROLE_PA;
+                break;
+            }
+        }
+
+        $csvUploadedEvent = new CSVUploadedEvent(
+            CasRec::CASREC_SOURCE,
+            $roleType,
+            AuditEvents::EVENT_CSV_UPLOADED
+        );
+
+        $this->eventDispatcher->dispatch($csvUploadedEvent, CSVUploadedEvent::NAME);
     }
 }
