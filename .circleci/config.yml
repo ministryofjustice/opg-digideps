@@ -906,8 +906,8 @@ jobs:
       - run:
           name: Build images
           command: |
-            docker-compose build assets
-            ls ./client/public/assets
+            docker-compose run --rm assets
+            ls ./client/public
             docker-compose -f docker-compose.ci.yml build --parallel
       - run:
           name: List API packages
