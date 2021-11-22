@@ -6,6 +6,14 @@ services:
   client:
     image: ${AWS_REGISTRY}/digideps/client:${VERSION}
     build: ./client
+    depends_on:
+      - assets
+  assets:
+    build:
+      context: ./client
+      dockerfile: ./assets.Dockerfile
+    volumes:
+        - ./client/public:/app/public   
   sync:
     image: ${AWS_REGISTRY}/digideps/sync:${VERSION}
     build: ./sync
