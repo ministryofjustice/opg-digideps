@@ -45,7 +45,7 @@
             } %}
         {% endif %}
 
-        {% if report.hasSection('moneyIn') %}
+        {% if report.hasSection('clientBenefitsCheck') %}
             {% include '@App/Report/Formatted/_client_benefits_check.html.twig' with {
                 'clientBenefitsCheck': report.clientBenefitsCheck
             } %}
