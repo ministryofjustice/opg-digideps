@@ -210,8 +210,6 @@ services:
             dockerfile: ./docker/assets/assets.Dockerfile
         volumes:
             - ./client/public:/app/public
-            - ./client/package-lock.json:/app/package-lock.json
-            - ./client/package.json:/app/package.json     
         environment:
           - NODE_ENV=production
         entrypoint: ["npm", "run", "build"]
