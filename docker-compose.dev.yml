@@ -15,15 +15,6 @@ services:
             - ./api/tests/Behat/test.env
             - ./api/tests/Behat/.env
 
-    npm:
-        image: node:14.8.0-alpine
-        working_dir: /app
-        volumes:
-            - ./client/:/app
-        entrypoint: npm
-        environment:
-            NODE_ENV: production
-
     composerapi:
         image: composer:2.1.2
         volumes:
@@ -37,6 +28,8 @@ services:
     frontend:
         env_file:
             - .env
+        volumes:
+            - ./client/public:/app/public
 
     admin:
         env_file:

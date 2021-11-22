@@ -144,6 +144,12 @@ phpstan-api:
 phpstan-frontend:
 	docker-compose run --rm frontend vendor/phpstan/phpstan/phpstan analyse src --memory-limit=0 --level=max
 
-#builds assets in local public/assets folder, build the client container to add to served
+#builds assets in local public/assets folder
 build-assets:
 	docker-compose run --rm assets 
+
+npm-install:
+	docker-compose run --entrypoint npm --rm assets install
+
+npm-test:
+	docker-compose run --entrypoint npm --rm assets run test
