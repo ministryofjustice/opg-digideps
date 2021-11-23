@@ -9,7 +9,6 @@ use Symfony\Component\Validator\Constraints as Assert;
 
 /**
  * Note.
- *
  */
 class Note
 {
@@ -17,7 +16,7 @@ class Note
     use ModifyAudit;
 
     /**
-     * Keep in sync with API
+     * Keep in sync with API.
      *
      * Possible refactor would be moving some entities data into a shared library
      *
@@ -31,7 +30,7 @@ class Note
         'Welfare' => 'welfare',
         'Bank' => 'bank',
         'Report' => 'report',
-        'Other' => 'other'
+        'Other' => 'other',
     ];
 
     /**
@@ -46,7 +45,6 @@ class Note
      *
      * @JMS\Type("string")
      * @JMS\Groups({"add_note"})
-     *
      */
     private $category;
 
@@ -67,7 +65,6 @@ class Note
      *
      * @JMS\Type("string")
      * @JMS\Groups({"add_note"})
-     *
      */
     private $content;
 
@@ -105,6 +102,7 @@ class Note
     public function setId($id)
     {
         $this->id = $id;
+
         return $this;
     }
 
@@ -124,6 +122,7 @@ class Note
     public function setCategory($category)
     {
         $this->category = $category;
+
         return $this;
     }
 
@@ -143,6 +142,7 @@ class Note
     public function setTitle($title)
     {
         $this->title = $title;
+
         return $this;
     }
 
@@ -162,6 +162,7 @@ class Note
     public function setContent($content)
     {
         $this->content = $content;
+
         return $this;
     }
 
@@ -174,13 +175,12 @@ class Note
     }
 
     /**
-     * @param Client $client
-     *
      * @return $this
      */
     public function setClient(Client $client)
     {
         $this->client = $client;
+
         return $this;
     }
 }

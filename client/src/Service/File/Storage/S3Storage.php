@@ -8,7 +8,7 @@ use Aws\S3\S3ClientInterface;
 use Psr\Log\LoggerInterface;
 
 /**
- * Class to upload/download/delete files from S3
+ * Class to upload/download/delete files from S3.
  *
  * Original logic
  * https://github.com/ministryofjustice/opg-av-test/blob/master/public/index.php
@@ -22,7 +22,6 @@ class S3Storage implements StorageInterface
      *
      * https://github.com/aws/aws-sdk-php
      * http://docs.aws.amazon.com/aws-sdk-php/v2/api/class-Aws.S3.S3Client.html
-     *
      *
      * for fake s3:
      * https://github.com/jubos/fake-s3
@@ -45,7 +44,6 @@ class S3Storage implements StorageInterface
      *
      * @param S3ClientInterface $s3Client (Aws library)
      * @param $bucketName S3 bucket name
-     * @param LoggerInterface $logger
      */
     public function __construct(S3ClientInterface $s3Client, string $bucketName, LoggerInterface $logger)
     {
@@ -58,7 +56,7 @@ class S3Storage implements StorageInterface
      * Gets file content
      * To download it, use
      * header('Content-Disposition: attachment; filename="' . $_GET['filename'] .'"');
-     * readfile(<this method>);
+     * readfile(<this method>);.
      *
      * @param $key
      *
@@ -71,7 +69,7 @@ class S3Storage implements StorageInterface
         try {
             $result = $this->s3Client->getObject([
                 'Bucket' => $this->bucketName,
-                'Key'    => $key
+                'Key' => $key,
             ]);
 
             return $result['Body'];
@@ -84,7 +82,8 @@ class S3Storage implements StorageInterface
     }
 
     /**
-     * @param  string      $key
+     * @param string $key
+     *
      * @return \Aws\Result
      */
     public function delete($key)
@@ -93,14 +92,15 @@ class S3Storage implements StorageInterface
 
         return $this->s3Client->deleteObject([
             'Bucket' => $this->bucketName,
-            'Key'    => $key
+            'Key' => $key,
         ]);
     }
 
     /**
      * Remove an object and all its versions from S3 completely.
      *
-     * @param  string      $key
+     * @param string $key
+     *
      * @return array
      */
     public function removeFromS3($key)
@@ -113,7 +113,7 @@ class S3Storage implements StorageInterface
              */
             $objectVersions = $this->s3Client->listObjectVersions([
                 'Bucket' => $this->bucketName,
-                'Prefix' => $key
+                'Prefix' => $key,
             ]);
 
             if (!$objectVersions instanceof ResultInterface || !($objectVersions->hasKey('Versions'))) {
@@ -128,7 +128,7 @@ class S3Storage implements StorageInterface
                 } else {
                     $s3Result = $this->s3Client->deleteObjects([
                         'Bucket' => $this->bucketName,
-                        'Delete' => ['Objects' => $objectsToDelete]
+                        'Delete' => ['Objects' => $objectsToDelete],
                     ]);
                     $s3Result = $s3Result->toArray();
 
@@ -143,10 +143,8 @@ class S3Storage implements StorageInterface
     }
 
     /**
-     * Write results information to log
-     * @param array $objectVersions
-     * @param array $objectsToDelete
-     * @param array $s3Result
+     * Write results information to log.
+     *
      * @return array
      */
     private function logS3Results(array $objectVersions, array $objectsToDelete, array $s3Result)
@@ -156,7 +154,7 @@ class S3Storage implements StorageInterface
             'objectsToDelete' => $objectsToDelete,
             'results' => [
                 's3Result' => $s3Result,
-            ]
+            ],
         ];
 
         $this->log('info', json_encode($resultsSummary));
@@ -165,9 +163,8 @@ class S3Storage implements StorageInterface
     }
 
     /**
-     * Extracts and returns new array structure from AwsResults array detailing objects to remove from S3
+     * Extracts and returns new array structure from AwsResults array detailing objects to remove from S3.
      *
-     * @param array $objectVersions
      * @return array
      */
     private function prepareObjectsToDelete(array $objectVersions)
@@ -190,9 +187,8 @@ class S3Storage implements StorageInterface
 
     /**
      * Handles any errors returned from S3 SDK. Exceptions that might have been handled by the SDK and converted to
-     * an Errors array reutrned
+     * an Errors array reutrned.
      *
-     * @param array $s3Result
      * @throws \RuntimeException
      */
     private function handleS3Errors(array $s3Result)
@@ -200,46 +196,48 @@ class S3Storage implements StorageInterface
         if (array_key_exists('Errors', $s3Result) && count($s3Result['Errors']) > 0) {
             foreach ($s3Result['Errors'] as $s3Error) {
                 $this->log('error', 'Unable to remove file from S3 -
-                            Key: ' . $s3Error['Key'] . ', VersionId: ' .
-                    $s3Error['VersionId'] . ', Code: ' . $s3Error['Code'] . ', Message: ' . $s3Error['Message']);
+                            Key: '.$s3Error['Key'].', VersionId: '.
+                    $s3Error['VersionId'].', Code: '.$s3Error['Code'].', Message: '.$s3Error['Message']);
             }
-            $this->log('error', 'Unable to remove key: ' . $s3Result['Errors'] . '  from S3: ' . json_encode($s3Result['Errors']));
-            throw new \RuntimeException('Could not remove file: ' . $s3Result['Errors']['Message']);
+            $this->log('error', 'Unable to remove key from S3: '.json_encode($s3Result['Errors']));
+            throw new \RuntimeException('Could not remove files: '.json_encode($s3Result['Errors']));
         }
     }
 
     /**
      * @param $key
      * @param $body
+     *
      * @return \Aws\Result
      */
     public function store($key, $body)
     {
         return $this->s3Client->putObject([
-            'Bucket'   => $this->bucketName,
-            'Key'      => $key,
-            'Body'     => $body,
+            'Bucket' => $this->bucketName,
+            'Key' => $key,
+            'Body' => $body,
             'ServerSideEncryption' => 'AES256',
-            'Metadata' => []
+            'Metadata' => [],
         ]);
     }
 
     /**
-     * Appends new tagset to S3 Object
+     * Appends new tagset to S3 Object.
      *
      * @param $key
      * @param $newTagset
+     *
      * @throws \Exception
      */
     public function appendTagset($key, $newTagset)
     {
         $this->log('info', "Appending Purge tag for $key to S3");
         if (empty($key)) {
-            throw new \Exception('Invalid Reference Key: ' . $key . ' when appending tag');
+            throw new \Exception('Invalid Reference Key: '.$key.' when appending tag');
         }
         foreach ($newTagset as $newTag) {
             if (!(array_key_exists('Key', $newTag) && array_key_exists('Value', $newTag))) {
-                throw new \Exception('Invalid Tagset updating: ' . $key . print_r($newTagset, true));
+                throw new \Exception('Invalid Tagset updating: '.$key.print_r($newTagset, true));
             }
         }
 
@@ -249,26 +247,26 @@ class S3Storage implements StorageInterface
         $this->log('info', "Retrieving tagset for $key from S3");
         $existingTags = $this->s3Client->getObjectTagging([
             'Bucket' => $this->bucketName,
-            'Key' => $key
+            'Key' => $key,
         ]);
 
         $newTagset = array_merge($existingTags['TagSet'], $newTagset);
-        $this->log('info', "Tagset retrieved for $key : " . print_r($existingTags, true));
-        $this->log('info', "Updating tagset for $key with " . print_r($newTagset, true));
+        $this->log('info', "Tagset retrieved for $key : ".print_r($existingTags, true));
+        $this->log('info', "Updating tagset for $key with ".print_r($newTagset, true));
 
         // Update tags in S3
         $this->s3Client->putObjectTagging([
             'Bucket' => $this->bucketName,
             'Key' => $key,
             'Tagging' => [
-                'TagSet' => $newTagset
+                'TagSet' => $newTagset,
             ],
         ]);
         $this->log('info', "Tagset Updated for $key ");
     }
 
     /**
-     * Log message using the internal logger
+     * Log message using the internal logger.
      *
      * @param $level
      * @param $message

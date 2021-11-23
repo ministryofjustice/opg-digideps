@@ -7,13 +7,13 @@ namespace App\TestHelpers;
 use App\Entity\Client;
 use App\Entity\Report\Report;
 use DateTime;
-use Faker;
+use Faker\Factory;
 
 class ClientHelpers
 {
     public static function createClient(?Report $report = null): Client
     {
-        $faker = Faker\Factory::create();
+        $faker = Factory::create();
 
         $client = (new Client())
             ->setCaseNumber(self::createValidCaseNumber())

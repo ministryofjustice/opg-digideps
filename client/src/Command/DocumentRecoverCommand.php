@@ -10,14 +10,13 @@ use Symfony\Component\Console\Input\InputInterface;
 use Symfony\Component\Console\Output\OutputInterface;
 
 /**
- * Used to compile a list of deleted files
+ * Used to compile a list of deleted files.
  *
  * To edit on admin box
  * vi /app/src/App/Command/DocumentRecoverCommand.php
  *
  * Run on admin container
  * /sbin/setuser app php app/console digideps:recover-documents <pathToFileWithOneRefPerLine>
- *
  */
 class DocumentRecoverCommand extends Command
 {
@@ -55,12 +54,12 @@ class DocumentRecoverCommand extends Command
             try {
                 $object = $this->s3->getObject([
                     'Bucket' => $this->s3BucketName,
-                    'Key'    => $ref
+                    'Key' => $ref,
                 ]);
-                $ok++;
+                ++$ok;
             } catch (S3Exception $e) {
                 $output->writeln($e->getMessage());
-                $denied++;
+                ++$denied;
             }
         }
 

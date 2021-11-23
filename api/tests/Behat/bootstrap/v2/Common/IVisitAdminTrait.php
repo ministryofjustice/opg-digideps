@@ -196,9 +196,9 @@ trait IVisitAdminTrait
     }
 
     /**
-     * @When I visit the notification page
+     * @When I visit the admin notification page
      */
-    public function iVisitTheNotificationPage()
+    public function iVisitTheAdminNotificationPage()
     {
         $this->visitAdminPath($this->getAdminNotificationUrl());
     }

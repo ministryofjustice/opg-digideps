@@ -41,7 +41,7 @@ class ClamFileScannerTest extends TestCase
     /**
      * @test
      */
-    public function scanFile_returnsGracefullyOnCleanFile()
+    public function scanFileReturnsGracefullyOnCleanFile()
     {
         $this
             ->ensureFileWillBeClean()
@@ -52,7 +52,7 @@ class ClamFileScannerTest extends TestCase
     /**
      * @test
      */
-    public function scanFile_throws_VirusFoundException_onBadKeywordsFoundInPdf()
+    public function scanFileThrowsVirusFoundExceptionOnBadKeywordsFoundInPdf()
     {
         $this->expectException(VirusFoundException::class);
 
@@ -63,7 +63,7 @@ class ClamFileScannerTest extends TestCase
     /**
      * @test
      */
-    public function scanFile_throws_VirusFoundException_onVirusFound()
+    public function scanFileThrowsVirusFoundExceptionOnVirusFound()
     {
         $this->expectException(VirusFoundException::class);
 
@@ -76,7 +76,7 @@ class ClamFileScannerTest extends TestCase
     /**
      * @test
      */
-    public function scanFile_makesMultipleReattemptsIfScanServiceIsUnavailable()
+    public function scanFileMakesMultipleReattemptsIfScanServiceIsUnavailable()
     {
         $this
             ->ensureServiceIsTemporarilyUnavailable()
@@ -87,7 +87,7 @@ class ClamFileScannerTest extends TestCase
     /**
      * @test
      */
-    public function scanFile_throws_RuntimeException_ifServiceIsForeverUnavailable()
+    public function scanFileThrowsRuntimeExceptionIfServiceIsForeverUnavailable()
     {
         $this->expectException(\RuntimeException::class);
 
@@ -97,9 +97,6 @@ class ClamFileScannerTest extends TestCase
             ->invokeTest('file.pdf');
     }
 
-    /**
-     * @return ClamFileScannerTest
-     */
     private function ensureFileWillBeClean(): ClamFileScannerTest
     {
         $response = new Response(200, [], 'Everything ok : true');
@@ -108,9 +105,6 @@ class ClamFileScannerTest extends TestCase
         return $this;
     }
 
-    /**
-     * @return ClamFileScannerTest
-     */
     private function ensureVirusWillBeFound(): ClamFileScannerTest
     {
         $response = new Response(200, [], 'Everything ok : false');
@@ -119,15 +113,12 @@ class ClamFileScannerTest extends TestCase
         return $this;
     }
 
-    /**
-     * @return ClamFileScannerTest
-     */
     private function ensureServiceIsTemporarilyUnavailable(): ClamFileScannerTest
     {
         $mockResponses = [];
         // Ensures all but the last attempt is unsuccessful
-        for ($i = 0; $i < ClamFileScanner::MAX_SCAN_ATTEMPTS - 1; $i++) {
-            $mockResponses[] = new ServerException('unavailable', new Request('get', 'test'));
+        for ($i = 0; $i < ClamFileScanner::MAX_SCAN_ATTEMPTS - 1; ++$i) {
+            $mockResponses[] = new ServerException('unavailable', new Request('get', 'test'), new Response(400));
         }
 
         // Final attempt is good.
@@ -138,18 +129,14 @@ class ClamFileScannerTest extends TestCase
         return $this;
     }
 
-    /**
-     * @return ClamFileScannerTest
-     */
     private function ensureServiceIsForeverUnavailable(): ClamFileScannerTest
     {
         $mockResponses = [];
         // Mix of both types of response exceptions
-        for ($i = 0; $i < ClamFileScanner::MAX_SCAN_ATTEMPTS / 2; $i++) {
-            $mockResponses[] = new ServerException('unavailable', new Request('get', 'test'));
+        for ($i = 0; $i < ClamFileScanner::MAX_SCAN_ATTEMPTS / 2; ++$i) {
+            $mockResponses[] = new ServerException('unavailable', new Request('get', 'test'), new Response(500));
             $mockResponses[] = new ConnectException('unavailable', new Request('get', 'test'));
         }
-
 
         // Ensure the MAX_SCAN_ATTEMPTS + 1 attempt would be good, to prove that we quit trying before this request is made.
         $mockResponses[] = new Response(200, [], 'Everything ok : true');
@@ -159,18 +146,12 @@ class ClamFileScannerTest extends TestCase
         return $this;
     }
 
-    /**
-     * @param array $mockResponses
-     */
     private function presetClientResponses(array $mockResponses): void
     {
         $handler = HandlerStack::create(new MockHandler($mockResponses));
         $this->client = new Client(['handler' => $handler]);
     }
 
-    /**
-     * @return ClamFileScannerTest
-     */
     private function ensureVirusWillBeLogged(): ClamFileScannerTest
     {
         $this
@@ -182,9 +163,6 @@ class ClamFileScannerTest extends TestCase
         return $this;
     }
 
-    /**
-     * @return ClamFileScannerTest
-     */
     private function ensureErrorWillBeLogged(): ClamFileScannerTest
     {
         $this
@@ -198,6 +176,7 @@ class ClamFileScannerTest extends TestCase
 
     /**
      * @return $this
+     *
      * @throws \GuzzleHttp\Exception\GuzzleException
      */
     private function invokeTest($filename): ClamFileScannerTest

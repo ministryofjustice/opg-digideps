@@ -6,9 +6,6 @@ use App\Service\Client\RestClient;
 
 class ApiAvailability extends ServiceAvailabilityAbstract
 {
-    /**
-     * @var RestClient
-     */
     private RestClient $restClient;
 
     public function __construct(RestClient $restClient)
@@ -21,9 +18,9 @@ class ApiAvailability extends ServiceAvailabilityAbstract
         try {
             $data = $this->restClient->get('manage/availability', 'array');
             // API not healtyh
-            if (json_last_error() !== JSON_ERROR_NONE || !isset($data['healthy'])) {
+            if (JSON_ERROR_NONE !== json_last_error() || !isset($data['healthy'])) {
                 $this->isHealthy = false;
-                $this->errors = 'Cannot read API status. ' . json_last_error_msg();
+                $this->errors = 'Cannot read API status. '.json_last_error_msg();
 
                 return;
             }
@@ -33,7 +30,7 @@ class ApiAvailability extends ServiceAvailabilityAbstract
             $this->errors = $data['errors'];
         } catch (\Throwable $e) {
             $this->isHealthy = false;
-            $this->errors = 'Error when using RestClient to connect to API . ' . $e->getMessage();
+            $this->errors = 'Error when using RestClient to connect to API . '.$e->getMessage();
         }
     }
 

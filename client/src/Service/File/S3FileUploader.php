@@ -82,7 +82,7 @@ class S3FileUploader
         $reportType = $report instanceof Report ? 'report' : 'ndr';
         $response = $this->persistDocument($reportType, intval($report->getId()), $document);
 
-        $document->setId($response['id']);
+        $document->setId($response['id'] ?? null);
 
         return $document;
     }

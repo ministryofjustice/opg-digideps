@@ -20,9 +20,6 @@ trait TokenStorageTrait
         return $this->tokenStorage;
     }
 
-    /**
-     * @param TokenStorage $tokenStorage
-     */
     public function setTokenStorage(TokenStorage $tokenStorage)
     {
         $this->tokenStorage = $tokenStorage;

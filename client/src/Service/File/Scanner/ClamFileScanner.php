@@ -25,11 +25,6 @@ class ClamFileScanner
     /** @var int */
     const MAX_SCAN_ATTEMPTS = 90;
 
-    /**
-     * @param ClientInterface $client
-     * @param LoggerInterface $logger
-     * @param array $badPdfKeywords
-     */
     public function __construct(ClientInterface $client, LoggerInterface $logger, array $badPdfKeywords)
     {
         $this->client = $client;
@@ -38,8 +33,6 @@ class ClamFileScanner
     }
 
     /**
-     * @param UploadedFile $file
-     * @return bool
      * @throws \GuzzleHttp\Exception\GuzzleException
      */
     public function scanFile(UploadedFile $file): bool
@@ -52,7 +45,7 @@ class ClamFileScanner
         $attempts = 0;
         while ($attempts < self::MAX_SCAN_ATTEMPTS) {
             try {
-                $attempts += 1;
+                ++$attempts;
                 $response = $this->attemptScan($file);
                 break;
             } catch (ServerException $e) {
@@ -60,7 +53,7 @@ class ClamFileScanner
             }
         }
 
-        if (!$response instanceof Response) {
+        if (!isset($response) || !$response instanceof Response) {
             $this->logger->error(sprintf('Scanner service down: %s', $e->getMessage()));
             throw new \RuntimeException('Scanner service not available');
         }
@@ -73,19 +66,11 @@ class ClamFileScanner
         return true;
     }
 
-    /**
-     * @param UploadedFile $file
-     * @return bool
-     */
     private function fileIsPdf(UploadedFile $file): bool
     {
         return 'pdf' === strtolower($file->getClientOriginalExtension());
     }
 
-    /**
-     * @param UploadedFile $file
-     * @return bool
-     */
     private function pdfContainsBadKeywords(UploadedFile $file): bool
     {
         $regex = sprintf('/<<\s*\/(%s)/', implode('|', $this->badPdfKeywords));
@@ -95,8 +80,8 @@ class ClamFileScanner
     }
 
     /**
-     * @param UploadedFile $file
      * @return mixed|\Psr\Http\Message\ResponseInterface
+     *
      * @throws \GuzzleHttp\Exception\GuzzleException
      */
     private function attemptScan(UploadedFile $file): ResponseInterface
@@ -108,19 +93,15 @@ class ClamFileScanner
                 [
                     'name' => 'file',
                     'contents' => fopen($file->getPathName(), 'r'),
-                ]
-            ]
+                ],
+            ],
         ]);
     }
 
-    /**
-     * @param Response $response
-     * @return bool
-     */
     private function scanResultIsPass(Response $response): bool
     {
         $result = explode(':', trim($response->getBody()->getContents()));
 
-        return trim(end($result)) === 'true' ?: false;
+        return 'true' === trim(end($result)) ?: false;
     }
 }

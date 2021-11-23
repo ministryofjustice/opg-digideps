@@ -1,69 +1,62 @@
 <?xml version="1.0" encoding="UTF-8"?>
-
 <!-- http://phpunit.de/manual/4.1/en/appendixes.configuration.html -->
-<phpunit xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance"
-         xsi:noNamespaceSchemaLocation="http://schema.phpunit.de/4.1/phpunit.xsd"
-         backupGlobals="false"
-         colors="true"
-         bootstrap="bootstrap.php"
-         convertErrorsToExceptions="true"
-         convertNoticesToExceptions="true"
-         convertWarningsToExceptions="true"
-         stopOnError="true"
-         stopOnFailure="true"
-         stopOnRisky="true"
-         stopOnWarning="true"
+<phpunit
+    xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance"
+    xsi:noNamespaceSchemaLocation="https://schema.phpunit.de/9.3/phpunit.xsd"
+    backupGlobals="false"
+    colors="true"
+    bootstrap="bootstrap.php"
+    convertErrorsToExceptions="true"
+    convertNoticesToExceptions="true"
+    convertWarningsToExceptions="true"
+    stopOnError="true"
+    stopOnFailure="true"
+    stopOnRisky="false"
+    stopOnWarning="false"
 >
-    <testsuites>
-        <testsuite name="Client unit tests">
-            <directory>./Command</directory>
-            <directory>./Controller</directory>
-            <directory>./Entity</directory>
-            <directory>./EventListener</directory>
-            <directory>./Form</directory>
-            <directory>./Mapper</directory>
-            <directory>./Model</directory>
-            <directory>./Resources</directory>
-            <directory>./Resolver</directory>
-            <directory>./Security</directory>
-            <directory>./Service</directory>
-            <directory>./Transformer</directory>
-            <directory>./Twig</directory>
-            <directory>./Validator</directory>
-        </testsuite>
-        <testsuite name="Pact contract tests">
-            <directory>./Pact</directory>
-        </testsuite>
-    </testsuites>
-
-    <php>
-        <ini name="error_log" value="/dev/stdout"/>
-        <ini name="memory_limit" value="512M" />
-
-        <env name="PACT_MOCK_SERVER_HOST" value="pact-mock"/>
-        <env name="PACT_MOCK_SERVER_PORT" value="80"/>
-        <env name="PACT_CONSUMER_NAME" value="Complete the deputy report"/>
-        <env name="PACT_PROVIDER_NAME" value="OPG Data"/>
-        <env name="KERNEL_CLASS" value="App\Kernel"/>
-
-        <env name="SYMFONY_DEPRECATIONS_HELPER" value="disabled" />
-    </php>
-
-    <filter>
-        <whitelist processUncoveredFilesFromWhitelist="true">
-            <directory suffix=".php">../../src</directory>
-        </whitelist>
-    </filter>
-
-    <listeners>
-        <listener class="App\Pact\Listener\PactTestListener" file="./Pact/Listener/PactTestListener.php">
-            <arguments>
-                <array>
-                     <element key="0">
-                        <string>Pact contract tests</string>
-                    </element>
-                </array>
-            </arguments>
-        </listener>
-    </listeners>
+  <coverage processUncoveredFiles="true">
+    <include>
+      <directory suffix=".php">../../src</directory>
+    </include>
+  </coverage>
+  <testsuites>
+    <testsuite name="Client unit tests">
+      <directory>./Command</directory>
+      <directory>./Entity</directory>
+      <directory>./EventListener</directory>
+      <directory>./Form</directory>
+      <directory>./Mapper</directory>
+      <directory>./Model</directory>
+      <directory>./Resolver</directory>
+      <directory>./Security</directory>
+      <directory>./Service</directory>
+      <directory>./Transformer</directory>
+      <directory>./Twig</directory>
+      <directory>./Validator</directory>
+    </testsuite>
+    <testsuite name="Pact contract tests">
+      <directory>./Pact</directory>
+    </testsuite>
+  </testsuites>
+  <php>
+    <ini name="error_log" value="/dev/stdout"/>
+    <ini name="memory_limit" value="512M"/>
+    <env name="PACT_MOCK_SERVER_HOST" value="pact-mock"/>
+    <env name="PACT_MOCK_SERVER_PORT" value="80"/>
+    <env name="PACT_CONSUMER_NAME" value="Complete the deputy report"/>
+    <env name="PACT_PROVIDER_NAME" value="OPG Data"/>
+    <env name="KERNEL_CLASS" value="App\Kernel"/>
+    <env name="SYMFONY_DEPRECATIONS_HELPER" value="disabled"/>
+  </php>
+  <listeners>
+    <listener class="App\Pact\Listener\PactTestListener" file="./Pact/Listener/PactTestListener.php">
+      <arguments>
+        <array>
+          <element key="0">
+            <string>Pact contract tests</string>
+          </element>
+        </array>
+      </arguments>
+    </listener>
+  </listeners>
 </phpunit>

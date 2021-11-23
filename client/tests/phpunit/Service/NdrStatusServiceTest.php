@@ -362,16 +362,26 @@ class NdrStatusServiceTest extends TestCase
     {
         $this->assertFalse($this->getStatusServiceWithReportMocked([])->isReadyToSubmit());
 
+        $visitsCare = $this->visitsCareProvider();
+        $expenses = $this->expensesProvider();
+        $incomeBenefits = $this->incomeBenefitsProvider();
+        $banks = $this->banksProvider();
+        $assets = $this->assetsProvider();
+        $debts = $this->debtsProvider();
+        $action = $this->actionProvider();
+        $otherInfo = $this->otherInfoProvider();
+        $clientBenefitsCheck = $this->clientBenefitsCheckProvider();
+
         $object = $this->getStatusServiceWithReportMocked(
-            array_pop($this->visitsCareProvider())[0]
-            + array_pop($this->expensesProvider())[0]
-            + array_pop($this->incomeBenefitsProvider())[0]
-            + array_pop($this->banksProvider())[0]
-            + array_pop($this->assetsProvider())[0]
-            + array_pop($this->debtsProvider())[0]
-            + array_pop($this->actionProvider())[0]
-            + array_pop($this->otherInfoProvider())[0]
-            + array_pop($this->clientBenefitsCheckProvider())[0]
+            array_pop($visitsCare)[0]
+            + array_pop($expenses)[0]
+            + array_pop($incomeBenefits)[0]
+            + array_pop($banks)[0]
+            + array_pop($assets)[0]
+            + array_pop($debts)[0]
+            + array_pop($action)[0]
+            + array_pop($otherInfo)[0]
+            + array_pop($clientBenefitsCheck)[0]
         );
 
         $this->assertEquals([], $object->getRemainingSections());

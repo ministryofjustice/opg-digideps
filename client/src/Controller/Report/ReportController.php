@@ -49,7 +49,7 @@ class ReportController extends AbstractController
         'balance',
         'balance-state',
         'client',
-        'client-benefit-check',
+        'client-benefits-check',
         'client-named-deputy',
         'contact',
         'debt',

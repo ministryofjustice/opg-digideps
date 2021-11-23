@@ -49,9 +49,9 @@ class ValidationCommand extends Command
     protected function execute(InputInterface $input, OutputInterface $output)
     {
         $ret = [];
-        foreach (glob($this->rootDir . '/src/App/Entity/*.php') as $entity) {
+        foreach (glob($this->rootDir.'/src/App/Entity/*.php') as $entity) {
             if (preg_match('/([A-Z][a-z]+)\.php$/', $entity, $matches)) {
-                $className = '\\App\\Entity\\' . $matches[1];
+                $className = '\\App\\Entity\\'.$matches[1];
                 if (class_exists($className)) {
                     $ret[$className] = $this->getClassValidationRules(new $className());
                 }

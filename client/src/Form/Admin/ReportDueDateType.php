@@ -9,9 +9,6 @@ use Symfony\Component\Validator\Constraints\NotBlank;
 
 class ReportDueDateType extends AbstractType
 {
-    /**
-     * @param OptionsResolver $resolver
-     */
     public function configureOptions(OptionsResolver $resolver): void
     {
         $resolver->setDefaults([
@@ -24,18 +21,15 @@ class ReportDueDateType extends AbstractType
             ]),
             'translation_domain' => 'admin-clients',
             'choices_as_values' => true,
-            'expanded'    => true,
-            'multiple'    => false,
-            'mapped'      => false,
+            'expanded' => true,
+            'multiple' => false,
+            'mapped' => false,
             'constraints' => [
-                new NotBlank(['message' => 'report.dueDateChoice.notBlank'])
-            ]
+                new NotBlank(['message' => 'report.dueDateChoice.notBlank']),
+            ],
         ]);
     }
 
-    /**
-     * @return string
-     */
     public function getParent(): string
     {
         return ChoiceType::class;

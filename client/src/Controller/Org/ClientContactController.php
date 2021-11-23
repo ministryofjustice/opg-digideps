@@ -18,7 +18,7 @@ use Symfony\Component\Routing\Annotation\Route;
 class ClientContactController extends AbstractController
 {
     private static $jmsGroups = [
-        'contacts'
+        'contacts',
     ];
 
     /**
@@ -42,6 +42,7 @@ class ClientContactController extends AbstractController
     /**
      * @Route("add", name="clientcontact_add")
      * @Template("@App/Org/ClientProfile/addContact.html.twig")
+     *
      * @throws \Exception
      */
     public function addAction(Request $request)
@@ -49,7 +50,7 @@ class ClientContactController extends AbstractController
         $clientId = $request->get('clientId');
 
         /** @var $client EntityDir\Client */
-        $client = $this->restClient->get('client/' . $clientId, 'Client', ['client', 'client-users', 'report-id', 'current-report', 'user']);
+        $client = $this->restClient->get('client/'.$clientId, 'Client', ['client', 'client-users', 'report-id', 'current-report', 'user']);
         if (!isset($clientId) || !($client instanceof EntityDir\Client)) {
             throw $this->createNotFoundException('Client not found');
         }
@@ -64,7 +65,7 @@ class ClientContactController extends AbstractController
 
         if ($form->isSubmitted() && $form->isValid()) {
             $this->restClient->post(
-                'clients/' . $client->getId() . '/clientcontacts',
+                'clients/'.$client->getId().'/clientcontacts',
                 $form->getData(),
                 ['add_clientcontact']
             );
@@ -74,10 +75,10 @@ class ClientContactController extends AbstractController
         }
 
         return [
-            'form'  => $form->createView(),
+            'form' => $form->createView(),
             'client' => $client,
             'report' => $client->getCurrentReport(),
-            'backLink' => $this->clientApi->generateClientProfileLink($client)
+            'backLink' => $this->clientApi->generateClientProfileLink($client),
         ];
     }
 
@@ -98,25 +99,27 @@ class ClientContactController extends AbstractController
 
         if ($form->isSubmitted() && $form->isValid()) {
             $this->restClient->put(
-                '/clientcontacts/' . $id,
+                '/clientcontacts/'.$id,
                 $form->getData(),
                 ['edit_clientcontact']
             );
             $request->getSession()->getFlashBag()->add('notice', 'The contact has been updated');
+
             return $this->redirect($backLink);
         }
 
         return [
-            'form'     => $form->createView(),
-            'client'   => $client,
-            'report'   => $client->getCurrentReport(),
-            'backLink' => $backLink
+            'form' => $form->createView(),
+            'client' => $client,
+            'report' => $client->getCurrentReport(),
+            'backLink' => $backLink,
         ];
     }
 
     /**
      * @Route("{id}/delete", name="clientcontact_delete")
      * @Template("@App/Common/confirmDelete.html.twig")
+     *
      * @throws \Exception
      */
     public function deleteConfirmAction(Request $request, $id, $confirmed = false, LoggerInterface $logger)
@@ -130,7 +133,7 @@ class ClientContactController extends AbstractController
 
         if ($form->isSubmitted() && $form->isValid()) {
             try {
-                $this->restClient->delete('clientcontacts/' . $id);
+                $this->restClient->delete('clientcontacts/'.$id);
                 $request->getSession()->getFlashBag()->add('notice', 'Contact has been removed');
             } catch (\Throwable $e) {
                 $logger->error($e->getMessage());
@@ -147,24 +150,25 @@ class ClientContactController extends AbstractController
 
         return [
             'translationDomain' => 'client-contacts',
-            'report'   => $client->getCurrentReport(),
+            'report' => $client->getCurrentReport(),
             'form' => $form->createView(),
             'summary' => [
-                ['label' => 'deletePage.summary.name', 'value' => $clientContact->getFirstname() . ' ' . $clientContact->getLastName()],
+                ['label' => 'deletePage.summary.name', 'value' => $clientContact->getFirstname().' '.$clientContact->getLastName()],
                 ['label' => 'deletePage.summary.orgName', 'value' => $clientContact->getOrgName()],
             ],
-            'backLink' => $this->clientApi->generateClientProfileLink($client)
+            'backLink' => $this->clientApi->generateClientProfileLink($client),
         ];
     }
 
     /**
      * @param $id
+     *
      * @return mixed
      */
     private function getContactById($id)
     {
         return $this->restClient->get(
-            'clientcontacts/' . $id,
+            'clientcontacts/'.$id,
             'ClientContact',
             ['clientcontact', 'clientcontact-client', 'client', 'client-users', 'current-report', 'report-id', 'user']
         );

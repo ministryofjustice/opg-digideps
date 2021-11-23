@@ -12,8 +12,8 @@ class ProfCostsEstimateSubSectionRouteResolver
     const MORE_INFO_ROUTE = 'prof_deputy_costs_estimate_more_info';
 
     /**
-     * @param Report $report
      * @param $state
+     *
      * @return string
      */
     public function resolve(Report $report, $state)
@@ -37,6 +37,7 @@ class ProfCostsEstimateSubSectionRouteResolver
 
     /**
      * @param $state
+     *
      * @return bool
      */
     private function sectionNotStarted($state)
@@ -46,6 +47,7 @@ class ProfCostsEstimateSubSectionRouteResolver
 
     /**
      * @param $state
+     *
      * @return bool
      */
     private function sectionIsComplete($state)
@@ -54,8 +56,8 @@ class ProfCostsEstimateSubSectionRouteResolver
     }
 
     /**
-     * @param Report $report
      * @param $state
+     *
      * @return bool
      */
     private function breakdownSubsectionIsIncomplete(Report $report, $state)
@@ -64,8 +66,8 @@ class ProfCostsEstimateSubSectionRouteResolver
     }
 
     /**
-     * @param Report $report
      * @param $state
+     *
      * @return bool
      */
     private function moreInfoSubsectionIsIncomplete(Report $report, $state)

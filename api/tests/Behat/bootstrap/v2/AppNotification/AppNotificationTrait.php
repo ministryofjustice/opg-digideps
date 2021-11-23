@@ -13,7 +13,7 @@ trait AppNotificationTrait
      */
     public function iVisitTheServiceNotificationPage()
     {
-        $this->iVisitTheNotificationPage();
+        $this->iVisitTheAdminNotificationPage();
         $this->iAmOnAdminNotificationPage();
     }
 
@@ -28,7 +28,7 @@ trait AppNotificationTrait
     }
 
     /**
-     * @When I set a service notification and see it on the client login page
+     * @When I set a service notification and see it on the login page
      */
     public function iSetAServiceNotificationAndSeeItOnTheClientPage()
     {
@@ -36,8 +36,8 @@ trait AppNotificationTrait
         $this->selectOption('setting[enabled]', '1');
         $this->pressButton('setting[save]');
 
-        $this->iVisitTheClientLoginPage();
-        $this->iAmOnClientLoginPage();
+        $this->visitAdminPath('/logout');
+        $this->iVisitAdminLoginPage();
 
         $notification = $this->getSession()->getPage()->find('css', '.behat-region-service-notification > .opg-alert > .behat-region-alert-message > p')->getText();
         $this->assertStringEqualsString('Lorem ipsum', $notification, 'Service notification message');
@@ -71,7 +71,8 @@ trait AppNotificationTrait
     public function iTurnOffTheServiceNotificationAndCanNoLongerSeeItOnTheClientLoginPage()
     {
         $this->loginToAdminAs($this->adminDetails->getUserEmail());
-        $this->iVisitTheNotificationPage();
+
+        $this->iVisitTheAdminNotificationPage();
         $this->iAmOnAdminNotificationPage();
 
         $this->selectOption('setting[enabled]', '0');

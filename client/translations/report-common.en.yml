@@ -22,30 +22,31 @@ prevNextLinks:
   next: Next section
   previous: Previous section
   sections:
-    reportOverview: Report overview
-    clientProfile: Client profile
-    decisions: Decisions
-    mentalCapacity: Mental capacity
-    contacts: Contacts
-    visitsCare: Visits and care
-    lifestyle: Health and lifestyle
+    actions: Actions
+    assets: Assets
     bankAccounts: Bank accounts
-    moneyTransfers: Money transfers
+    balance: Balance
+    clientProfile: Client profile
+    clientBenefitsCheck: Client benefits check
+    contacts: Contacts
+    debts: Debts
+    decisions: Decisions
+    deputyExpenses: Deputy expenses
+    documents: Documents
+    gifts: Gifts
+    incomeBenefits: Income and benefits
+    lifestyle: Health and lifestyle
+    mentalCapacity: Mental capacity
     moneyIn: Money in
     moneyInShort: Money in
     moneyOut: Money out
     moneyOutShort: Money out
-    assets: Assets
-    debts: Debts
-    actions: Actions
+    moneyTransfers: Money transfers
     otherInfo: Any other information
-    incomeBenefits: Income and benefits
-    deputyExpenses: Deputy expenses
     paDeputyExpenses: Deputy fees and expenses
     paFeeExpense: Deputy fees and expenses
-    gifts: Gifts
-    documents: Documents
-    balance: Balance
     profCurrentFees: Current fees and expenses
     profDeputyCosts: Deputy costs
     profDeputyCostsEstimate: Deputy costs estimate
+    reportOverview: Report overview
+    visitsCare: Visits and care

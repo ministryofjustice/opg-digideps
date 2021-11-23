@@ -62,7 +62,7 @@ class ClientBenefitsCheck implements ClientBenefitsCheckInterface
      * @ORM\OneToOne (targetEntity="App\Entity\Report\Report", inversedBy="clientBenefitsCheck")
      * @ORM\JoinColumn(name="report_id", referencedColumnName="id", onDelete="CASCADE",nullable=true)
      */
-    private Report $report;
+    private ?Report $report;
 
     /**
      * @var string one of either [haveChecked, currentlyChecking, neverChecked]

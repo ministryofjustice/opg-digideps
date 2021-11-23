@@ -13,14 +13,13 @@ use Symfony\Component\Validator\Constraints as Assert;
  */
 abstract class ProfServiceFee
 {
+    use HasReportTrait;
     const TYPE_ASSESSED_FEE = 'assessed';
     const TYPE_FIXED_FEE = 'fixed';
 
     const TYPE_PREVIOUS_FEE = 'previous';
     const TYPE_CURRENT_FEE = 'current';
     const TYPE_ESTIMATED_FEE = 'estimated';
-
-    use HasReportTrait;
 
     /**
      * @JMS\Type("integer")
@@ -31,7 +30,7 @@ abstract class ProfServiceFee
     private $id;
 
     /**
-     * Hold service type
+     * Hold service type.
      *
      * If the order or any key is added, update the ReportControllerTest, hardcoded on position and number
      *  in order to keep it simple
@@ -46,11 +45,12 @@ abstract class ProfServiceFee
         'conveyancing' => false,
         'tax-returns' => false,
         'trust-applications' => false,
-        'other-costs' => false
+        'other-costs' => false,
     ];
 
     /**
      * @JMS\Type("string")
+     *
      * @var string fixed|assessed
      *
      * @JMS\Groups({"prof-service-fees"})
@@ -74,6 +74,7 @@ abstract class ProfServiceFee
 
     /**
      * @JMS\Type("string")
+     *
      * @var string a value in self:$serviceTypeIds
      *
      * @Assert\NotBlank(message="profServiceFee.serviceType.notBlank", groups={"prof-service-fee-type"})
@@ -262,7 +263,7 @@ abstract class ProfServiceFee
      */
     public function isCurrentFee()
     {
-        return $this->getFeeTypeId() == self::TYPE_CURRENT_FEE;
+        return self::TYPE_CURRENT_FEE == $this->getFeeTypeId();
     }
 
     /**
@@ -272,7 +273,7 @@ abstract class ProfServiceFee
      */
     public function isPreviousFee()
     {
-        return $this->getFeeTypeId() == self::TYPE_PREVIOUS_FEE;
+        return self::TYPE_PREVIOUS_FEE == $this->getFeeTypeId();
     }
 
     /**
@@ -282,6 +283,6 @@ abstract class ProfServiceFee
      */
     public function isEstimatedFee()
     {
-        return $this->getFeeTypeId() == self::TYPE_ESTIMATED_FEE;
+        return self::TYPE_ESTIMATED_FEE == $this->getFeeTypeId();
     }
 }

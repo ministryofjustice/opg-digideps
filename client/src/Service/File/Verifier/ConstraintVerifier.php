@@ -10,9 +10,6 @@ class ConstraintVerifier implements VerifierInterface
     /** @var ValidatorInterface */
     private $validator;
 
-    /**
-     * @param ValidatorInterface $validator
-     */
     public function __construct(ValidatorInterface $validator)
     {
         $this->validator = $validator;

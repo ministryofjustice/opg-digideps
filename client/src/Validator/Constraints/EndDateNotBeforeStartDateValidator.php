@@ -9,7 +9,6 @@ class EndDateNotBeforeStartDateValidator extends ConstraintValidator
 {
     /**
      * @param mixed $data
-     * @param Constraint $constraint
      */
     public function validate($data, Constraint $constraint)
     {

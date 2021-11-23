@@ -7,21 +7,14 @@ use Monolog\Handler\AbstractProcessingHandler;
 
 abstract class AbstractAuditLogHandler extends AbstractProcessingHandler
 {
-    /**
-     * @param array $record
-     * @return bool
-     */
     protected function shallHandle(array $record): bool
     {
         return
             isset($record['context']['event']) &&
             isset($record['context']['type']) &&
-            $record['context']['type'] === 'audit';
+            'audit' === $record['context']['type'];
     }
 
-    /**
-     * @return JsonFormatter
-     */
     protected function getDefaultFormatter(): JsonFormatter
     {
         return new JsonFormatter();

@@ -46,14 +46,14 @@ class DeputyProvider implements UserProviderInterface
 
             return $user;
         } catch (\Throwable $e) {
-            $this->logger->info(__METHOD__ . ': ' . $e);
+            $this->logger->info(__METHOD__.': '.$e);
 
             // rethrow 423 (brute-force/locked to grab timestamp)
-            if ($e->getCode() == 423) {
+            if (423 == $e->getCode()) {
                 throw $e;
             }
 
-            throw new UsernameNotFoundException("We do not recognise your email address or password - please try again.", $e->getCode());
+            throw new UsernameNotFoundException('We do not recognise your email address or password - please try again.', $e->getCode());
         }
     }
 
@@ -67,29 +67,21 @@ class DeputyProvider implements UserProviderInterface
         return $this->restClient
             // the userId needs to be told to the RestClient, as the user is not logged in yet
             ->setLoggedUserId($id)
-            ->get('user/' . $id, 'User', ['user', 'role', 'user-login', 'team-names', 'user-teams', 'team', 'user-organisations']);
+            ->get('user/'.$id, 'User', ['user', 'role', 'user-login', 'team-names', 'user-teams', 'team', 'user-organisations']);
     }
 
     /**
      * @codeCoverageIgnore
      *
-     * @param UserInterface $user
-     *
      * @return \App\Entity\User
      *
      *@throws UnsupportedUserException
-     *
      */
     public function refreshUser(UserInterface $user)
     {
         $class = get_class($user);
         if (!$this->supportsClass($class)) {
-            throw new UnsupportedUserException(
-                sprintf(
-                    'Instances of "%s" are not supported.',
-                    $class
-                )
-            );
+            throw new UnsupportedUserException(sprintf('Instances of "%s" are not supported.', $class));
         }
 
         return $this->loadUserByUsername($user->getId());
@@ -102,6 +94,6 @@ class DeputyProvider implements UserProviderInterface
      */
     public function supportsClass($class)
     {
-        return $class === 'App\Entity\User';
+        return 'App\Entity\User' === $class;
     }
 }
