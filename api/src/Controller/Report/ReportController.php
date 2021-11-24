@@ -928,4 +928,33 @@ class ReportController extends RestController
 
         return $reports;
     }
+
+    /**
+     * @Route("/{reportId}/refresh-cache", methods={"POST"}, name="refresh_report_cache")
+     */
+    public function refreshReportCache(Request $request, int $reportId)
+    {
+        $groups = $request->query->has('deserialise_groups')
+            ? (array) $request->query->get('deserialise_groups') : ['report'];
+
+        $this->formatter->setJmsSerialiserGroups($groups);
+
+        /** @var array $data */
+        $data = $this->formatter->deserializeBodyContent($request);
+
+        if (!isset($data['sectionIds']) || empty($data['sectionIds'])) {
+            throw new \InvalidArgumentException('SectionIds are required to refresh the Report cache');
+        }
+
+        /** @var ReportRepository $reportRepo */
+        $reportRepo = $this->em->getRepository(Report::class);
+        $report = $reportRepo->find($reportId);
+
+        $report->updateSectionsStatusCache($data['sectionIds']);
+
+        $this->em->persist($report);
+        $this->em->flush();
+
+        return $report;
+    }
 }

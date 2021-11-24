@@ -10,9 +10,9 @@ use App\Service\Auth\AuthService;
 use App\Service\Formatter\RestFormatter;
 use DateTime;
 use Doctrine\ORM\EntityManagerInterface;
-use Symfony\Component\Routing\Annotation\Route;
 use Sensio\Bundle\FrameworkExtraBundle\Configuration\Security;
 use Symfony\Component\HttpFoundation\Request;
+use Symfony\Component\Routing\Annotation\Route;
 
 class DocumentController extends RestController
 {
@@ -42,9 +42,11 @@ class DocumentController extends RestController
      */
     public function add(Request $request, $reportType, $reportId)
     {
-        if ($reportType === 'report') {
+        if ('report' === $reportType) {
+            /** @var EntityDir\Report\Report $report */
             $report = $this->findEntityBy(EntityDir\Report\Report::class, $reportId);
         } else {
+            /** @var EntityDir\Report\Report $report */
             $report = $this->findEntityBy(EntityDir\Ndr\Ndr::class, $reportId);
         }
 
@@ -53,7 +55,7 @@ class DocumentController extends RestController
         // hydrate and persist
         $data = $this->formatter->deserializeBodyContent($request, [
             'file_name' => 'notEmpty',
-            'storage_reference' => 'notEmpty'
+            'storage_reference' => 'notEmpty',
         ]);
         $document = new EntityDir\Report\Document($report);
         $document->setCreatedBy($this->getUser());
@@ -73,7 +75,7 @@ class DocumentController extends RestController
     }
 
     /**
-     * GET document by id
+     * GET document by id.
      *
      * @Route("/document/{id}", requirements={"id":"\d+"}, methods={"GET"})
      * @Security("is_granted('ROLE_DEPUTY')")
@@ -94,7 +96,7 @@ class DocumentController extends RestController
 
     /**
      * Delete document.
-     * Accessible only from deputy area
+     * Accessible only from deputy area.
      *
      * @Route("/document/{id}", methods={"DELETE"})
      * @Security("is_granted('ROLE_DEPUTY')")
@@ -116,7 +118,7 @@ class DocumentController extends RestController
         $this->em->flush();
 
         // update yesno question to null if its the last document to be removed
-        if (count($report->getDeputyDocuments()) == 0) {
+        if (0 == count($report->getDeputyDocuments())) {
             $report->setWishToProvideDocumentation(null);
         }
 
@@ -127,11 +129,9 @@ class DocumentController extends RestController
     }
 
     /**
-     * Get queued documents
+     * Get queued documents.
      *
      * @Route("/document/queued", methods={"GET"})
-     *
-     * @return string
      */
     public function getQueuedDocuments(Request $request, EntityManagerInterface $em): string
     {
@@ -147,11 +147,9 @@ class DocumentController extends RestController
     }
 
     /**
-     * Get queued documents
+     * Get queued documents.
      *
      * @Route("/document/update-related-statuses", methods={"PUT"})
-     *
-     * @return string
      */
     public function updateRelatedDocumentStatuses(Request $request, EntityManagerInterface $em): string
     {
@@ -169,11 +167,9 @@ class DocumentController extends RestController
     }
 
     /**
-     * Update a Document
+     * Update a Document.
      *
      * @Route("/document/{id}", methods={"PUT"})
-     *
-     * @return Document
      */
     public function update(Request $request, int $id, EntityManagerInterface $em): Document
     {
@@ -199,12 +195,12 @@ class DocumentController extends RestController
                 $errorMessage = is_array($data['syncError']) ? json_encode($data['syncError']) : $data['syncError'];
                 $document->setSynchronisationError($errorMessage);
 
-                if ($data["syncStatus"] === Document::SYNC_STATUS_TEMPORARY_ERROR) {
+                if (Document::SYNC_STATUS_TEMPORARY_ERROR === $data['syncStatus']) {
                     $document->incrementSyncAttempts();
                     $document->setSynchronisationStatus(Document::SYNC_STATUS_QUEUED);
                 }
 
-                if ($data['syncStatus'] === Document::SYNC_STATUS_PERMANENT_ERROR && $document->getSyncAttempts() >= 3) {
+                if (Document::SYNC_STATUS_PERMANENT_ERROR === $data['syncStatus'] && $document->getSyncAttempts() >= 3) {
                     $document->setSynchronisationError(self::RETRIES_FAILED_MESSAGE);
                     $document->resetSyncAttempts();
                 }
@@ -212,7 +208,7 @@ class DocumentController extends RestController
                 $document->setSynchronisationError(null);
             }
 
-            if ($data['syncStatus'] === Document::SYNC_STATUS_SUCCESS) {
+            if (Document::SYNC_STATUS_SUCCESS === $data['syncStatus']) {
                 $document->setSynchronisationTime(new DateTime());
             }
         }
