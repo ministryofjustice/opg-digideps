@@ -4,7 +4,10 @@ namespace App\Controller\Admin;
 
 use App\Controller\AbstractController;
 use App\Entity as EntityDir;
+use App\Entity\CasRec;
 use App\Entity\User;
+use App\Event\CSVUploadedEvent;
+use App\EventDispatcher\ObservableEventDispatcher;
 use App\Exception\RestClientException;
 use App\Form as FormDir;
 use App\Security\UserVoter;
@@ -41,19 +44,22 @@ class IndexController extends AbstractController
     private Logger $logger;
     private RestClient $restClient;
     private UserApi $userApi;
+    private ObservableEventDispatcher $eventDispatcher;
 
     public function __construct(
         OrgService $orgService,
         UserVoter $userVoter,
         Logger $logger,
         RestClient $restClient,
-        UserApi $userApi
+        UserApi $userApi,
+        ObservableEventDispatcher $eventDispatcher
     ) {
         $this->orgService = $orgService;
         $this->userVoter = $userVoter;
         $this->logger = $logger;
         $this->restClient = $restClient;
         $this->userApi = $userApi;
+        $this->eventDispatcher = $eventDispatcher;
     }
 
     /**
@@ -388,6 +394,8 @@ class IndexController extends AbstractController
                         $this->addFlash('error', $err);
                     }
 
+                    $this->dispatchCSVUploadEvent($ret['source']);
+
                     return $this->redirect($this->generateUrl('casrec_upload'));
                 }
 
@@ -571,5 +579,16 @@ class IndexController extends AbstractController
         }
 
         return new Response('[Link sent]');
+    }
+
+    private function dispatchCSVUploadEvent($source)
+    {
+        $csvUploadedEvent = new CSVUploadedEvent(
+            $source,
+            User::TYPE_LAY,
+            AuditEvents::EVENT_CSV_UPLOADED
+        );
+
+        $this->eventDispatcher->dispatch($csvUploadedEvent, CSVUploadedEvent::NAME);
     }
 }
