@@ -178,7 +178,8 @@ class ReportApi
             $uri,
             ['sectionIds' => $sectionIds],
             $jmsGroups,
-            'Report\\Report'
+            'Report\\Report',
+            ['query' => ['groups' => $jmsGroups]]
         );
     }
 }

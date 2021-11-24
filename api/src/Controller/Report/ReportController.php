@@ -934,8 +934,8 @@ class ReportController extends RestController
      */
     public function refreshReportCache(Request $request, int $reportId)
     {
-        $groups = $request->query->has('deserialise_groups')
-            ? (array) $request->query->get('deserialise_groups') : ['report'];
+        $groups = $request->query->has('groups')
+            ? (array) $request->query->get('groups') : ['report', 'client', 'client-report'];
 
         $this->formatter->setJmsSerialiserGroups($groups);
 
