@@ -15,7 +15,7 @@
     }
   },
   "require": {
-    "php": "7.4.23",
+    "php": "7.4.26",
     "aws/aws-sdk-php": "^3.100.9",
     "doctrine/doctrine-bundle": "^2.2",
     "doctrine/doctrine-migrations-bundle": "^3.0",
