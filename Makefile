@@ -143,3 +143,11 @@ phpstan-api:
 
 phpstan-frontend:
 	docker-compose run --rm frontend vendor/phpstan/phpstan/phpstan analyse src --memory-limit=0 --level=max
+
+composer-api:
+	docker-compose exec api sh install-composer.sh
+	docker-compose exec api sh
+
+composer-frontend:
+	docker-compose exec frontend sh install-composer.sh
+	docker-compose exec frontend sh
