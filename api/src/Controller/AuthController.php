@@ -127,7 +127,7 @@ class AuthController extends RestController
      */
     public function getLoggedUser(TokenStorageInterface $tokenStorage)
     {
-        $this->formatter->setJmsSerialiserGroups(['user']);
+        $this->formatter->setJmsSerialiserGroups(['user', 'user-login']);
 
         return $tokenStorage->getToken()->getUser();
     }
