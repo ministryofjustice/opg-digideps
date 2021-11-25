@@ -28,3 +28,30 @@ Feature: Client benefits check - NDR users
         When I visit the report overview page
         Then I should see "client-benefits-check" as "finished"
         And I should be able to submit the report
+
+    @ndr-not-started
+    Scenario: A deputy removes an item of income they've added
+        Given a Lay Deputy has not started an NDR report
+        When I navigate to and start the client benefits check report section
+        And I confirm I checked the clients benefit entitlement on '01/01/2021'
+        And I confirm others receive income on the clients behalf
+        And I add 2 types of income with values
+        And I add a type of income where I don't know the value
+        And I have no further types of income to add
+        And I 'remove' the last type of income I added
+        Then the client benefits check summary page should contain the details I entered
+
+    @ndr-not-started
+    Scenario: A deputy edits details of a completed form
+        Given a Lay Deputy has not started an NDR report
+        When I navigate to and start the client benefits check report section
+        And I confirm I have never checked the benefits the client is entitled to and provide a reason
+        And I confirm others receive income on the clients behalf
+        And I add 1 type of income with values
+        And I have no further types of income to add
+        And I 'edit' the last type of income I added
+        Then the client benefits check summary page should contain the details I entered
+        Given I edit my response to do others receive income on a clients behalf to 'no'
+        Then the client benefits check summary page should contain my updated response and no income types
+        Given I edit my response to when I last checked the clients benefit entitlement to currently checking
+        Then the client benefits check summary page should contain the details I entered

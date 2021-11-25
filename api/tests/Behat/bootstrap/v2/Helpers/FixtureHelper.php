@@ -270,7 +270,7 @@ class FixtureHelper
     private function addClientsAndReportsToNdrLayDeputy(User $deputy, bool $completed = false, bool $submitted = false)
     {
         $client = $this->clientTestHelper->generateClient($this->em, $deputy);
-        $ndr = $this->reportTestHelper->generateNdr($this->em, $client, $deputy);
+        $ndr = $this->reportTestHelper->generateNdr($this->em, $deputy, $client);
 
         if ($completed) {
             $this->reportTestHelper->completeNdrLayReport($ndr, $this->em);

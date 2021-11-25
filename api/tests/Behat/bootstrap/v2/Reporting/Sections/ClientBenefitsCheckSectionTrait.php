@@ -43,6 +43,7 @@ trait ClientBenefitsCheckSectionTrait
 
         $explodedDate = explode('/', $dateString);
 
+        // When choosing the date only a date is show, not a translated field option response
         $this->chooseOption('report-client-benefits-check[whenLastCheckedEntitlement]', 'haveChecked');
 
         $this->fillInDateFields(
@@ -269,6 +270,7 @@ trait ClientBenefitsCheckSectionTrait
 
     /**
      * @Then the client benefits check summary page should contain the details I entered
+     * @Then the client benefits check summary page should contain my updated response and no income types
      */
     public function benefitCheckSummaryPageContainsEnteredDetails()
     {
@@ -441,5 +443,61 @@ trait ClientBenefitsCheckSectionTrait
         $this->iAmOnClientBenefitsCheckStep3Page();
 
         $this->pressButton('Add another');
+    }
+
+    /**
+     * @Given I edit my response to do others receive income on a clients behalf to :response
+     */
+    public function iEditMyResponseToDoOthersReceiveIncomeOnAClientsBehalf(string $response)
+    {
+        $this->iAmOnClientBenefitsCheckSummaryPage();
+
+        $clientFirstName = $this->loggedInUserDetails->getClientFirstName();
+        $questionText = sprintf('Does anyone other than you receive income on %s’s behalf?', $clientFirstName);
+        $questionRowXpath = sprintf("//dt[contains(., '%s')]/..", $questionText);
+        $questionRow = $this->getSession()->getPage()->find('xpath', $questionRowXpath);
+
+        if (is_null($questionRow)) {
+            $message = sprintf('A row on the page with the question "%s" could not be found', $questionText);
+            throw new BehatException($message);
+        }
+
+        $this->editFieldAnswerInSection(
+            $questionRow,
+            'report-client-benefits-check[doOthersReceiveIncomeOnClientsBehalf]',
+            $response,
+            'doOthersReceiveIncome'
+        );
+
+        $this->removeAnswerFromSection(
+            'report-client-benefits-check[typesOfIncomeReceivedOnClientsBehalf][0][incomeType]',
+            'incomeType'
+        );
+    }
+
+    /**
+     * @Given I edit my response to when I last checked the clients benefit entitlement to currently checking
+     */
+    public function iEditMyResponseToWhenILastCheckedTheClientsBenefitEntitlement()
+    {
+        $this->iAmOnClientBenefitsCheckSummaryPage();
+
+        $clientFirstName = $this->loggedInUserDetails->getClientFirstName();
+        $questionText = sprintf('Have you checked that %s gets all the benefits they should have?', $clientFirstName);
+        $questionRowXpath = sprintf("//dt[contains(., '%s')]/..", $questionText);
+        $questionRow = $this->getSession()->getPage()->find('xpath', $questionRowXpath);
+
+        if (is_null($questionRow)) {
+            $message = sprintf('A row on the page with the question "%s" could not be found', $questionText);
+            throw new BehatException($message);
+        }
+
+        $this->editSelectAnswerInSection(
+            $questionRow,
+            'report-client-benefits-check[whenLastCheckedEntitlement]',
+            'currentlyChecking',
+            'haveCheckedBenefits',
+            "I'm currently checking this"
+        );
     }
 }
