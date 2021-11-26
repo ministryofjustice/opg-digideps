@@ -74,11 +74,11 @@ class OrgDeputyshipUploader
 
         $this->removeDuplicateIds();
 
-        $roleType = User::ROLE_PROF;
+        $roleType = User::TYPE_PA;
         // DepAddr No column is missing from PA CSV uploads
         foreach ($deputyshipDtos as $deputyshipDto) {
             if (null != $deputyshipDto->getDeputyAddressNumber()) {
-                $roleType = User::ROLE_PA;
+                $roleType = User::TYPE_PROF;
                 break;
             }
         }
