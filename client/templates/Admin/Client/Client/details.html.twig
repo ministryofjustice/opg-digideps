@@ -105,15 +105,16 @@
                 {{ 'alternativeEmail' | trans({}, 'common') }}: {{ namedDeputy.email3 }}<br />
             {% endif %}
         </p>
-        {% if is_granted('ROLE_ADMIN_MANAGER') %}
-            {% if not client.isDeleted %}
-                <a href="{{ path('admin_client_discharge', {id: client.id}) }}" role="button" data-module="govuk-button" class="govuk-button govuk-button--secondary">
-                    Discharge deputy
-                </a>
-            {% endif %}
-        {% endif %}
     </div>
 </details>
+{% endif %}
+
+{% if is_granted('ROLE_ADMIN_MANAGER') %}
+    {% if not client.isDeleted %}
+        <a href="{{ path('admin_client_discharge', {id: client.id}) }}" role="button" data-module="govuk-button" class="govuk-button govuk-button--secondary">
+            Discharge deputy
+        </a>
+    {% endif %}
 {% endif %}
 
 {% set allReports = client.reports|merge([client.ndr])|filter(r => (r is not null)) %}

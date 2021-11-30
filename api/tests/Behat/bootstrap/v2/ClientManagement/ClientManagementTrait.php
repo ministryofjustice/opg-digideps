@@ -4,6 +4,7 @@ declare(strict_types=1);
 
 namespace App\Tests\Behat\v2\ClientManagement;
 
+use App\Entity\Client;
 use App\Tests\Behat\BehatException;
 use App\Tests\Behat\v2\Common\UserDetails;
 use DateTime;
@@ -317,10 +318,16 @@ MESSAGE;
     {
         $this->assertInteractingWithUserIsSet();
 
-        $this->iVisitAdminLayClientDetailsPage();
+        $this->iVisitAdminClientDetailsPageForDeputyInteractingWith();
 
         $dischargedOnSelector = "//dt[normalize-space() = 'Discharged on']/..";
-        $clientDtHtml = $this->getSession()->getPage()->find('xpath', $dischargedOnSelector)->getHtml();
+        $clientDt = $this->getSession()->getPage()->find('xpath', $dischargedOnSelector);
+
+        if (!$clientDt) {
+            throw new BehatException('Could not find a dt element on the page with text "Discharged on".');
+        }
+
+        $clientDtHtml = $clientDt->getHtml();
         $todayString = (new DateTime())->format('j M Y');
 
         $clientIsDischarged = str_contains($clientDtHtml, $todayString);
@@ -337,7 +344,7 @@ MESSAGE;
     {
         $this->assertInteractingWithUserIsSet();
 
-        $this->iVisitAdminLayClientDetailsPage();
+        $this->iVisitAdminClientDetailsPageForDeputyInteractingWith();
 
         $dischargedOnSelector = "//dt[normalize-space() = 'Discharged on']/..";
         $dischargedOnVisible = $this->getSession()->getPage()->find('xpath', $dischargedOnSelector);
@@ -347,5 +354,19 @@ MESSAGE;
 
             throw new BehatException(sprintf('The client appears to be discharged. Expected "Discharged on" not to appear, got (HTML of discharged dt): %s', $clientDtHtml));
         }
+    }
+
+    /**
+     * @Given /^the client does not have a named deputy associated with them$/
+     */
+    public function theClientDoesNotHaveANamedDeputyAssociatedWithThem()
+    {
+        $this->assertInteractingWithUserIsSet();
+
+        $client = $this->em->find(Client::class, $this->interactingWithUserDetails->getClientId());
+        $client->setNamedDeputy(null);
+
+        $this->em->persist($client);
+        $this->em->flush();
     }
 }

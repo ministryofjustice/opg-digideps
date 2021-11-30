@@ -829,7 +829,7 @@ class Client implements ClientInterface
     /**
      * @return Client
      */
-    public function setNamedDeputy(NamedDeputy $namedDeputy)
+    public function setNamedDeputy(?NamedDeputy $namedDeputy)
     {
         $this->namedDeputy = $namedDeputy;
 
