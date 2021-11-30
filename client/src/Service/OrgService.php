@@ -251,7 +251,7 @@ class OrgService
         return $response;
     }
 
-    private function dispatchCSVUploadEvent($source, $roleType)
+    private function dispatchCSVUploadEvent(string $source, string $roleType)
     {
         $csvUploadedEvent = new CSVUploadedEvent(
             $source,

@@ -60,7 +60,7 @@ class CSVUploadedEvent extends Event
         return $this;
     }
 
-    public function getRoleType()
+    public function getRoleType(): string
     {
         return $this->roleType;
     }

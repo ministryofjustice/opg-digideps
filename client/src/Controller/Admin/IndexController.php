@@ -581,7 +581,7 @@ class IndexController extends AbstractController
         return new Response('[Link sent]');
     }
 
-    private function dispatchCSVUploadEvent($source)
+    private function dispatchCSVUploadEvent(string $source)
     {
         $csvUploadedEvent = new CSVUploadedEvent(
             $source,

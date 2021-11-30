@@ -153,51 +153,42 @@ class CasRec
     {
     }
 
-    public function getCaseNumber()
+    public function getCaseNumber(): string
     {
         return $this->caseNumber;
     }
 
-    public function getClientLastname()
+    public function getClientLastname(): string
     {
         return $this->clientLastname;
     }
 
-    public function getDeputyNo()
+    public function getDeputyNo(): string
     {
         return $this->deputyNo;
     }
 
-    public function getDeputySurname()
+    public function getDeputySurname(): string
     {
         return $this->deputySurname;
     }
 
-    public function getDeputyPostCode()
+    public function getDeputyPostCode(): string
     {
         return $this->deputyPostCode;
     }
 
-    /**
-     * @return string
-     */
-    public function getTypeOfReport()
+    public function getTypeOfReport(): string
     {
         return $this->typeOfReport;
     }
 
-    /**
-     * @return string
-     */
-    public function getCorref()
+    public function getCorref(): string
     {
         return $this->corref;
     }
 
-    /**
-     * @return array
-     */
-    public function getOtherColumns()
+    public function getOtherColumns(): array
     {
         return unserialize($this->otherColumns) ?: [];
     }
@@ -214,12 +205,7 @@ class CasRec
         return isset($row[$key]) ? $row[$key] : null;
     }
 
-    /**
-     * @param \DateTime $updatedAt
-     *
-     * @return CasRec
-     */
-    public function setUpdatedAt($updatedAt)
+    public function setUpdatedAt(\DateTime $updatedAt): CasRec
     {
         $this->updatedAt = $updatedAt;
 
@@ -229,25 +215,17 @@ class CasRec
     /**
      * @return \DateTime|null
      */
-    public function getUpdatedAt()
+    public function getUpdatedAt(): \DateTime
     {
         return $this->updatedAt;
     }
 
-    /**
-     * @return mixed
-     */
-    public function getSource()
+    public function getSource(): string
     {
         return $this->source;
     }
 
-    /**
-     * @param mixed $source
-     *
-     * @return CasRec
-     */
-    public function setSource($source)
+    public function setSource(string $source): CasRec
     {
         $source = strtolower($source);
         if (!in_array($source, self::validSources())) {
@@ -259,10 +237,7 @@ class CasRec
         return $this;
     }
 
-    /**
-     * @return array
-     */
-    public static function validSources()
+    public static function validSources(): array
     {
         return [
             self::CASREC_SOURCE,
@@ -270,18 +245,12 @@ class CasRec
         ];
     }
 
-    /**
-     * @return \DateTime
-     */
-    public function getOrderDate()
+    public function getOrderDate(): \DateTime
     {
         return $this->orderDate;
     }
 
-    /**
-     * @return CasRec
-     */
-    public function setOrderDate(\DateTime $orderDate)
+    public function setOrderDate(\DateTime $orderDate): CasRec
     {
         $this->orderDate = $orderDate;
 
