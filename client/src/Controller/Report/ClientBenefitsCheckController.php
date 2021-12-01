@@ -114,8 +114,10 @@ class ClientBenefitsCheckController extends AbstractController
 
         if ('ndr' === $reportOrNdr) {
             $clientBenefitsCheck = $report->getClientBenefitsCheck() ?: new NdrClientBenefitsCheck();
+            $clientBenefitsCheck->setNdr($report);
         } else {
             $clientBenefitsCheck = $report->getClientBenefitsCheck() ?: new ClientBenefitsCheck();
+            $clientBenefitsCheck->setReport($report);
         }
 
         if (3 === $step) {

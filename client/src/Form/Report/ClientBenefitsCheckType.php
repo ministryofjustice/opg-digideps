@@ -16,10 +16,17 @@ use Symfony\Component\Form\FormBuilderInterface;
 use Symfony\Component\Form\FormEvent;
 use Symfony\Component\Form\FormEvents;
 use Symfony\Component\OptionsResolver\OptionsResolver;
+use Symfony\Contracts\Translation\TranslatorInterface;
 
 class ClientBenefitsCheckType extends AbstractType
 {
     private int $step = 1;
+    private TranslatorInterface $translator;
+
+    public function __construct(TranslatorInterface $translator)
+    {
+        $this->translator = $translator;
+    }
 
     public function buildForm(FormBuilderInterface $builder, array $options)
     {
@@ -38,7 +45,11 @@ class ClientBenefitsCheckType extends AbstractType
             $builder->add('dateLastCheckedEntitlement', DateType::class, [
                 'widget' => 'text',
                 'input' => 'datetime',
-                'invalid_message' => 'Enter a valid date',
+                'invalid_message' => $this->translator->trans(
+                    'form.whenLastChecked.errors.invalidDate',
+                    [],
+                    'report-client-benefits-check'
+                ),
             ]);
 
             $builder->add('neverCheckedExplanation', TextareaType::class);

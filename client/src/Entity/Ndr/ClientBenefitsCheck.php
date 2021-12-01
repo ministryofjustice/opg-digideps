@@ -75,6 +75,12 @@ class ClientBenefitsCheck implements ClientBenefitsCheckInterface
      */
     private ?ArrayCollection $typesOfIncomeReceivedOnClientsBehalf = null;
 
+    /**
+     * @JMS\Type("App\Entity\Ndr\Ndr")
+     * @JMS\Groups({"report", "client-benefits-check"})
+     */
+    private ?Ndr $report = null;
+
     public function getWhenLastCheckedEntitlement(): string
     {
         return $this->whenLastCheckedEntitlement;
@@ -174,6 +180,18 @@ class ClientBenefitsCheck implements ClientBenefitsCheckInterface
     public function addTypeOfIncomeReceivedOnClientsBehalf(IncomeReceivedOnClientsBehalf $incomeReceivedOnClientsBehalf): ClientBenefitsCheck
     {
         $this->typesOfIncomeReceivedOnClientsBehalf->add($incomeReceivedOnClientsBehalf);
+
+        return $this;
+    }
+
+    public function getReport(): ?Ndr
+    {
+        return $this->report;
+    }
+
+    public function setReport(?Ndr $report): ClientBenefitsCheck
+    {
+        $this->report = $report;
 
         return $this;
     }
