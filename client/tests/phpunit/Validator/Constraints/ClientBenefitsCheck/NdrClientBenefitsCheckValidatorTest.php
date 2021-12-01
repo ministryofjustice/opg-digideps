@@ -4,57 +4,58 @@ declare(strict_types=1);
 
 namespace App\Tests\Unit\Validator\Constraints;
 
-use App\Entity\Report\ClientBenefitsCheck;
-use App\Entity\Report\IncomeReceivedOnClientsBehalf;
-use App\TestHelpers\ReportHelpers;
+use App\Entity\Ndr\ClientBenefitsCheck as NdrClientBenefitsCheck;
+use App\Entity\Ndr\IncomeReceivedOnClientsBehalf as NdrIncomeReceivedOnClientsBehalf;
+use App\TestHelpers\NdrHelpers;
 use App\Validator\Constraints\ClientBenefitsCheck\ClientBenefitsCheck as ClientBenefitsCheckConstraint;
 use App\Validator\Constraints\ClientBenefitsCheck\ClientBenefitsCheckValidator;
 use Doctrine\Common\Collections\ArrayCollection;
 use PHPUnit\Framework\TestCase;
-use Symfony\Component\Validator\ConstraintValidator;
 use Symfony\Component\Validator\Context\ExecutionContextInterface;
 use Symfony\Component\Validator\Violation\ConstraintViolationBuilderInterface;
 use Symfony\Contracts\Translation\TranslatorInterface;
 
-class ClientBenefitsCheckValidatorTest extends TestCase
+class ReportClientBenefitsCheckValidatorTest extends TestCase
 {
-    /** @var ConstraintValidator */
-    private $sut;
-
-    /** @var ExecutionContextInterface | \PHPUnit_Framework_MockObject_MockObject */
-    private $context;
-
-    /** @var ClientBenefitsCheck */
-    private $object;
-
     /** @var TranslatorInterface | \PHPUnit\Framework\MockObject\MockObject */
     private $translator;
 
-    /** @var ConstraintViolationBuilderInterface | \PHPUnit\Framework\MockObject\MockObject */
-    private $violationBuilder;
+    private NdrClientBenefitsCheck $ndrClientBenefitsCheck;
+
+    /**
+     * @var ExecutionContextInterface | \PHPUnit\Framework\MockObject\MockObject
+     */
+    private $ndrContext;
+
+    /**
+     * @var ConstraintViolationBuilderInterface | \PHPUnit\Framework\MockObject\MockObject
+     */
+    private $ndrViolationBuilder;
+
+    private ClientBenefitsCheckValidator $ndrSut;
 
     /**
      * {@inheritdoc}
      */
     public function setUp(): void
     {
-        $report = ReportHelpers::createReport();
-        $this->object = (new ClientBenefitsCheck())
-            ->setReport($report)
-            ->setTypesOfIncomeReceivedOnClientsBehalf(new ArrayCollection());
-
-        $this->context = $this->createMock(ExecutionContextInterface::class);
-        $this->context
-            ->expects($this->atLeastOnce())
-            ->method('getObject')
-            ->willReturn($this->object);
-
-        $this->violationBuilder = $this->createMock(ConstraintViolationBuilderInterface::class);
-
         $this->translator = $this->createMock(TranslatorInterface::class);
 
-        $this->sut = new ClientBenefitsCheckValidator($this->translator);
-        $this->sut->initialize($this->context);
+        $ndr = NdrHelpers::createNdr();
+        $this->ndrClientBenefitsCheck = (new NdrClientBenefitsCheck())
+            ->setReport($ndr)
+            ->setTypesOfIncomeReceivedOnClientsBehalf(new ArrayCollection());
+
+        $this->ndrContext = $this->createMock(ExecutionContextInterface::class);
+        $this->ndrContext
+            ->expects($this->atLeastOnce())
+            ->method('getObject')
+            ->willReturn($this->ndrClientBenefitsCheck);
+
+        $this->ndrViolationBuilder = $this->createMock(ConstraintViolationBuilderInterface::class);
+
+        $this->ndrSut = new ClientBenefitsCheckValidator($this->translator);
+        $this->ndrSut->initialize($this->ndrContext);
     }
 
     /**
@@ -158,33 +159,33 @@ class ClientBenefitsCheckValidatorTest extends TestCase
 
     private function setWhenLastCheckedEntitlementTo(string $whenLastChecked)
     {
-        $this->object->setWhenLastCheckedEntitlement($whenLastChecked);
+        $this->ndrClientBenefitsCheck->setWhenLastCheckedEntitlement($whenLastChecked);
 
         return $this;
     }
 
     private function setDoOthersReceiveIncomeOnClientsBehalf(string $doOthersReceiveIncomeOnClientsBehalf)
     {
-        $this->object->setDoOthersReceiveIncomeOnClientsBehalf($doOthersReceiveIncomeOnClientsBehalf);
+        $this->ndrClientBenefitsCheck->setDoOthersReceiveIncomeOnClientsBehalf($doOthersReceiveIncomeOnClientsBehalf);
 
         return $this;
     }
 
     private function addEmptyIncomeTypeToClientBenefitsCheck()
     {
-        $this->object->addTypeOfIncomeReceivedOnClientsBehalf(new IncomeReceivedOnClientsBehalf());
+        $this->ndrClientBenefitsCheck->addTypeOfIncomeReceivedOnClientsBehalf(new NdrIncomeReceivedOnClientsBehalf());
 
         return $this;
     }
 
     private function invokeTest($value)
     {
-        $this->sut->validate($value, new ClientBenefitsCheckConstraint());
+        $this->ndrSut->validate($value, new ClientBenefitsCheckConstraint());
     }
 
     private function setContextPropertyName(string $propertyName)
     {
-        $this->context
+        $this->ndrContext
             ->expects($this->atLeastOnce())
             ->method('getPropertyName')
             ->willReturn($propertyName);
@@ -194,13 +195,13 @@ class ClientBenefitsCheckValidatorTest extends TestCase
 
     private function expectViolationAdded()
     {
-        $this->context
+        $this->ndrContext
             ->expects($this->atLeastOnce())
             ->method('buildViolation')
             ->with($this->equalTo('An error message'))
-            ->willReturn($this->violationBuilder);
+            ->willReturn($this->ndrViolationBuilder);
 
-        $this->violationBuilder
+        $this->ndrViolationBuilder
             ->expects($this->atLeastOnce())
             ->method('addViolation');
 
@@ -210,7 +211,7 @@ class ClientBenefitsCheckValidatorTest extends TestCase
     private function expectTranslatorCalledWith(string $transId)
     {
         $this->translator
-            ->expects($this->any())
+            ->expects($this->atLeastOnce())
             ->method('trans')
             ->with($this->equalTo($transId))
             ->willReturn('An error message');
