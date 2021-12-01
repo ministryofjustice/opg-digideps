@@ -3,8 +3,8 @@
 namespace App\v2\Registration\Uploader;
 
 use App\Entity\CasRec;
-use App\Repository\ReportRepository;
 use App\Entity\User;
+use App\Repository\ReportRepository;
 use App\v2\Registration\DTO\LayDeputyshipDto;
 use App\v2\Registration\DTO\LayDeputyshipDtoCollection;
 use App\v2\Registration\SelfRegistration\Factory\CasRecCreationException;
@@ -34,11 +34,6 @@ class LayDeputyshipUploader
     /** @var int */
     const FLUSH_EVERY = 5000;
 
-    /**
-     * @param EntityManagerInterface $em
-     * @param ReportRepository $reportRepository
-     * @param CasRecFactory $casRecFactory
-     */
     public function __construct(
         EntityManagerInterface $em,
         ReportRepository $reportRepository,
@@ -49,10 +44,6 @@ class LayDeputyshipUploader
         $this->casRecFactory = $casRecFactory;
     }
 
-    /**
-     * @param LayDeputyshipDtoCollection $collection
-     * @return array
-     */
     public function upload(LayDeputyshipDtoCollection $collection): array
     {
         $this->throwExceptionIfDataTooLarge($collection);
@@ -81,30 +72,28 @@ class LayDeputyshipUploader
             return ['added' => $added, 'errors' => [$e->getMessage()]];
         }
 
+        foreach ($collection as $layDeputyshipDto) {
+            $source = $layDeputyshipDto->getSource();
+            break;
+        }
+
         return [
             'added' => $added,
             'errors' => $errors,
             'report-update-count' => count($this->reportsUpdated),
-            'cases-with-updated-reports' => $this->reportsUpdated
+            'cases-with-updated-reports' => $this->reportsUpdated,
+            'source' => $source,
         ];
     }
 
-    /**
-     * @param LayDeputyshipDtoCollection $collection
-     */
     private function throwExceptionIfDataTooLarge(LayDeputyshipDtoCollection $collection): void
     {
         if ($collection->count() > self::MAX_UPLOAD) {
-            throw new \RuntimeException(sprintf(
-                'Max %d records allowed in a single bulk insert',
-                self::MAX_UPLOAD
-            ));
+            throw new \RuntimeException(sprintf('Max %d records allowed in a single bulk insert', self::MAX_UPLOAD));
         }
     }
 
     /**
-     * @param LayDeputyshipDto $layDeputyshipDto
-     * @return CasRec
      * @throws \Doctrine\ORM\ORMException
      */
     private function createAndPersistNewCasRecEntity(LayDeputyshipDto $layDeputyshipDto): CasRec
@@ -117,7 +106,6 @@ class LayDeputyshipUploader
     }
 
     /**
-     * @return LayDeputyshipUploader
      * @throws \Exception
      */
     private function updateReportTypes(): LayDeputyshipUploader
