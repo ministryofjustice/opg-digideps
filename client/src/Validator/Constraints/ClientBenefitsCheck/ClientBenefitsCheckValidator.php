@@ -105,8 +105,6 @@ class ClientBenefitsCheckValidator extends ConstraintValidator
         }
     }
 
-    // Add check for selecting an option to use noOptionSelected
-
     private function dontKnowIncomeExplanationValid($value, ClientBenefitsCheckInterface $object, ClientBenefitsCheckConstraint $constraint)
     {
         if (is_null($value) && ClientBenefitsCheck::OTHER_INCOME_DONT_KNOW === $object->getDoOthersReceiveIncomeOnClientsBehalf()) {
