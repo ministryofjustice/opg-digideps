@@ -35,6 +35,7 @@ class ClientBenefitsCheckTest extends TestCase
             ->setTypesOfIncomeReceivedOnClientsBehalf($incomeTypes);
 
         $validator = Validation::createValidatorBuilder()
+            ->addLoader()
             ->enableAnnotationMapping()
             ->getValidator();
 

@@ -12,17 +12,10 @@ use Doctrine\Common\Collections\ArrayCollection;
 use Symfony\Component\Validator\Constraint;
 use Symfony\Component\Validator\ConstraintValidator;
 use Symfony\Component\Validator\Exception\UnexpectedTypeException;
-use Symfony\Contracts\Translation\TranslatorInterface;
 
 class ClientBenefitsCheckValidator extends ConstraintValidator
 {
-    private TranslatorInterface $translator;
     private string $translationDomain = 'report-client-benefits-check';
-
-    public function __construct(TranslatorInterface $translator)
-    {
-        $this->translator = $translator;
-    }
 
     public function validate($value, Constraint $constraint)
     {
@@ -62,33 +55,29 @@ class ClientBenefitsCheckValidator extends ConstraintValidator
         ];
 
         if (!in_array($value, $expectedValues)) {
-            throw new \RuntimeException($this->translator->trans($constraint->whenLastCheckedNoOptionSelected, ['%client%' => $object->getReport()->getClient()->getFirstName()], $this->translationDomain));
+            $this->context
+                ->buildViolation($constraint->whenLastCheckedNoOptionSelected)
+                ->setTranslationDomain($this->translationDomain)
+                ->setParameter('%client%', $object->getReport()->getClient()->getFirstName())
+                ->addViolation();
         }
     }
 
     private function dateLastCheckedEntitlementValid($value, ClientBenefitsCheckInterface $object, ClientBenefitsCheckConstraint $constraint)
     {
         if (is_null($value) && ClientBenefitsCheck::WHEN_CHECKED_I_HAVE_CHECKED === $object->getWhenLastCheckedEntitlement()) {
-            $errorMessage = $this->translator->trans(
-                $constraint->whenLastCheckedMissingDate,
-                ['%client%' => $object->getReport()->getClient()->getFirstName()],
-                $this->translationDomain
-            );
-
             $this->context
-                ->buildViolation($errorMessage)
+                ->buildViolation($constraint->whenLastCheckedMissingDate)
+                ->setTranslationDomain($this->translationDomain)
+                ->setParameter('%client%', $object->getReport()->getClient()->getFirstName())
                 ->addViolation();
         }
 
         if (!is_null($value) && $value > new DateTime()) {
-            $errorMessage = $this->translator->trans(
-                $constraint->whenLastCheckedFutureDate,
-                ['%client%' => $object->getReport()->getClient()->getFirstName()],
-                $this->translationDomain
-            );
-
             $this->context
-                ->buildViolation($errorMessage)
+                ->buildViolation($constraint->whenLastCheckedFutureDate)
+                ->setTranslationDomain($this->translationDomain)
+                ->setParameter('%client%', $object->getReport()->getClient()->getFirstName())
                 ->addViolation();
         }
     }
@@ -96,26 +85,18 @@ class ClientBenefitsCheckValidator extends ConstraintValidator
     private function neverCheckedExplanationValid($value, ClientBenefitsCheckInterface $object, ClientBenefitsCheckConstraint $constraint)
     {
         if (is_null($value) && ClientBenefitsCheck::WHEN_CHECKED_IVE_NEVER_CHECKED === $object->getWhenLastCheckedEntitlement()) {
-            $errorMessage = $this->translator->trans(
-                $constraint->whenLastCheckedNeverCheckedEntitlementMissingExplanation,
-                ['%client%' => $object->getReport()->getClient()->getFirstName()],
-                $this->translationDomain
-            );
-
             $this->context
-                ->buildViolation($errorMessage)
+                ->buildViolation($constraint->whenLastCheckedNeverCheckedEntitlementMissingExplanation)
+                ->setTranslationDomain($this->translationDomain)
+                ->setParameter('%client%', $object->getReport()->getClient()->getFirstName())
                 ->addViolation();
         }
 
         if (!is_null($value) && strlen($value) < 4) {
-            $errorMessage = $this->translator->trans(
-                $constraint->whenLastCheckedNeverCheckedEntitlementExplanationTooShort,
-                ['%client%' => $object->getReport()->getClient()->getFirstName()],
-                $this->translationDomain
-            );
-
             $this->context
-                ->buildViolation($errorMessage)
+                ->buildViolation($constraint->whenLastCheckedNeverCheckedEntitlementExplanationTooShort)
+                ->setTranslationDomain($this->translationDomain)
+                ->setParameter('%client%', $object->getReport()->getClient()->getFirstName())
                 ->addViolation();
         }
     }
@@ -125,26 +106,18 @@ class ClientBenefitsCheckValidator extends ConstraintValidator
     private function dontKnowIncomeExplanationValid($value, ClientBenefitsCheckInterface $object, ClientBenefitsCheckConstraint $constraint)
     {
         if (is_null($value) && ClientBenefitsCheck::OTHER_INCOME_DONT_KNOW === $object->getDoOthersReceiveIncomeOnClientsBehalf()) {
-            $errorMessage = $this->translator->trans(
-                $constraint->incomeOnClientsBehalfNeverCheckedIncomeMissingExplanation,
-                ['%client%' => $object->getReport()->getClient()->getFirstName()],
-                $this->translationDomain
-            );
-
             $this->context
-                ->buildViolation($errorMessage)
+                ->buildViolation($constraint->incomeOnClientsBehalfNeverCheckedIncomeMissingExplanation)
+                ->setTranslationDomain($this->translationDomain)
+                ->setParameter('%client%', $object->getReport()->getClient()->getFirstName())
                 ->addViolation();
         }
 
         if (!is_null($value) && strlen($value) < 4) {
-            $errorMessage = $this->translator->trans(
-                $constraint->incomeOnClientsBehalfNeverCheckedIncomeExplanationTooShort,
-                ['%client%' => $object->getReport()->getClient()->getFirstName()],
-                $this->translationDomain
-            );
-
             $this->context
-                ->buildViolation($errorMessage)
+                ->buildViolation($constraint->incomeOnClientsBehalfNeverCheckedIncomeExplanationTooShort)
+                ->setTranslationDomain($this->translationDomain)
+                ->setParameter('%client%', $object->getReport()->getClient()->getFirstName())
                 ->addViolation();
         }
     }
@@ -155,14 +128,10 @@ class ClientBenefitsCheckValidator extends ConstraintValidator
             $income = $object->getTypesOfIncomeReceivedOnClientsBehalf()->first();
 
             if (is_null($income->getAmount()) && is_null($income->getIncomeType()) && false === $income->getAmountDontKnow()) {
-                $errorMessage = $this->translator->trans(
-                    $constraint->incomeOnClientsBehalfMissingIncome,
-                    ['%client%' => $object->getReport()->getClient()->getFirstName()],
-                    $this->translationDomain
-                );
-
                 $this->context
-                    ->buildViolation($errorMessage)
+                    ->buildViolation($constraint->incomeOnClientsBehalfMissingIncome)
+                    ->setTranslationDomain($this->translationDomain)
+                    ->setParameter('%client%', $object->getReport()->getClient()->getFirstName())
                     ->addViolation();
             }
         }

@@ -34,7 +34,7 @@ class ClientBenefitsCheck implements ClientBenefitsCheckInterface
      *
      * @CustomAssert\ClientBenefitsCheck(groups={"client-benefits-check"})
      */
-    private string $whenLastCheckedEntitlement = '';
+    private ?string $whenLastCheckedEntitlement = null;
 
     /**
      * @JMS\Type("DateTime<'Y-m-d'>")
@@ -75,12 +75,12 @@ class ClientBenefitsCheck implements ClientBenefitsCheckInterface
      */
     private ?ArrayCollection $typesOfIncomeReceivedOnClientsBehalf = null;
 
-    public function getWhenLastCheckedEntitlement(): string
+    public function getWhenLastCheckedEntitlement(): ?string
     {
         return $this->whenLastCheckedEntitlement;
     }
 
-    public function setWhenLastCheckedEntitlement(string $whenLastCheckedEntitlement): ClientBenefitsCheck
+    public function setWhenLastCheckedEntitlement(?string $whenLastCheckedEntitlement): ClientBenefitsCheck
     {
         $this->whenLastCheckedEntitlement = $whenLastCheckedEntitlement;
 

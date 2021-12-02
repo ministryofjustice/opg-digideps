@@ -13,13 +13,9 @@ use Doctrine\Common\Collections\ArrayCollection;
 use PHPUnit\Framework\TestCase;
 use Symfony\Component\Validator\Context\ExecutionContextInterface;
 use Symfony\Component\Validator\Violation\ConstraintViolationBuilderInterface;
-use Symfony\Contracts\Translation\TranslatorInterface;
 
 class NdrClientBenefitsCheckValidatorTest extends TestCase
 {
-    /** @var TranslatorInterface | \PHPUnit\Framework\MockObject\MockObject */
-    private $translator;
-
     private NdrClientBenefitsCheck $ndrClientBenefitsCheck;
 
     /**
@@ -39,8 +35,6 @@ class NdrClientBenefitsCheckValidatorTest extends TestCase
      */
     public function setUp(): void
     {
-        $this->translator = $this->createMock(TranslatorInterface::class);
-
         $ndr = NdrHelpers::createNdr();
         $this->ndrClientBenefitsCheck = (new NdrClientBenefitsCheck())
             ->setReport($ndr)
@@ -54,7 +48,7 @@ class NdrClientBenefitsCheckValidatorTest extends TestCase
 
         $this->ndrViolationBuilder = $this->createMock(ConstraintViolationBuilderInterface::class);
 
-        $this->ndrSut = new ClientBenefitsCheckValidator($this->translator);
+        $this->ndrSut = new ClientBenefitsCheckValidator();
         $this->ndrSut->initialize($this->ndrContext);
     }
 
@@ -64,10 +58,8 @@ class NdrClientBenefitsCheckValidatorTest extends TestCase
      */
     public function validatorAddsConstraintIfPropertyIsWhenLastCheckedEntitlement($value)
     {
-        $this->expectException(\RuntimeException::class);
-
         $this->setContextPropertyName('whenLastCheckedEntitlement')
-            ->expectTranslatorCalledWith('form.whenLastChecked.errors.noOptionSelected')
+            ->expectViolationAdded('form.whenLastChecked.errors.noOptionSelected')
             ->invokeTest($value);
     }
 
@@ -88,8 +80,7 @@ class NdrClientBenefitsCheckValidatorTest extends TestCase
     {
         $this->setContextPropertyName('dateLastCheckedEntitlement')
             ->setWhenLastCheckedEntitlementTo('haveChecked')
-            ->expectTranslatorCalledWith($transId)
-            ->expectViolationAdded()
+            ->expectViolationAdded($transId)
             ->invokeTest($value);
     }
 
@@ -109,8 +100,7 @@ class NdrClientBenefitsCheckValidatorTest extends TestCase
     {
         $this->setContextPropertyName('neverCheckedExplanation')
             ->setWhenLastCheckedEntitlementTo('neverChecked')
-            ->expectTranslatorCalledWith($transId)
-            ->expectViolationAdded()
+            ->expectViolationAdded($transId)
             ->invokeTest($value);
     }
 
@@ -130,8 +120,7 @@ class NdrClientBenefitsCheckValidatorTest extends TestCase
     {
         $this->setContextPropertyName('dontKnowIncomeExplanation')
             ->setDoOthersReceiveIncomeOnClientsBehalf('dontKnow')
-            ->expectTranslatorCalledWith($transId)
-            ->expectViolationAdded()
+            ->expectViolationAdded($transId)
             ->invokeTest($value);
     }
 
@@ -150,8 +139,7 @@ class NdrClientBenefitsCheckValidatorTest extends TestCase
     {
         $this->setContextPropertyName('typesOfIncomeReceivedOnClientsBehalf')
             ->addEmptyIncomeTypeToClientBenefitsCheck()
-            ->expectTranslatorCalledWith('form.incomeDetails.errors.missingIncome')
-            ->expectViolationAdded()
+            ->expectViolationAdded('form.incomeDetails.errors.missingIncome')
             ->invokeTest(null);
     }
 
@@ -193,28 +181,29 @@ class NdrClientBenefitsCheckValidatorTest extends TestCase
         return $this;
     }
 
-    private function expectViolationAdded()
+    private function expectViolationAdded(string $transId)
     {
         $this->ndrContext
             ->expects($this->atLeastOnce())
             ->method('buildViolation')
-            ->with($this->equalTo('An error message'))
+            ->with($this->equalTo($transId))
+            ->willReturn($this->ndrViolationBuilder);
+
+        $this->ndrViolationBuilder
+            ->expects($this->atLeastOnce())
+            ->method('setTranslationDomain')
+            ->with($this->anything())
+            ->willReturn($this->ndrViolationBuilder);
+
+        $this->ndrViolationBuilder
+            ->expects($this->atLeastOnce())
+            ->method('setParameter')
+            ->with($this->anything())
             ->willReturn($this->ndrViolationBuilder);
 
         $this->ndrViolationBuilder
             ->expects($this->atLeastOnce())
             ->method('addViolation');
-
-        return $this;
-    }
-
-    private function expectTranslatorCalledWith(string $transId)
-    {
-        $this->translator
-            ->expects($this->atLeastOnce())
-            ->method('trans')
-            ->with($this->equalTo($transId))
-            ->willReturn('An error message');
 
         return $this;
     }
