@@ -6,6 +6,7 @@ namespace Tests\App\Entity\Report;
 
 use App\Entity\Report\ClientBenefitsCheck;
 use App\Entity\Report\IncomeReceivedOnClientsBehalf;
+use App\TestHelpers\ReportHelpers;
 use DateTime;
 use Doctrine\Common\Collections\ArrayCollection;
 use PHPUnit\Framework\TestCase;
@@ -26,13 +27,16 @@ class ClientBenefitsCheckTest extends TestCase
         ?ArrayCollection $incomeTypes,
         int $expectedValidationErrorsCount
     ) {
+        $report = ReportHelpers::createReport();
+
         $sut = (new ClientBenefitsCheck())
             ->setWhenLastCheckedEntitlement($whenLastChecked)
             ->setDateLastCheckedEntitlement($dateLastChecked)
             ->setNeverCheckedExplanation($neverCheckedExplanation)
             ->setDoOthersReceiveIncomeOnClientsBehalf($doOthersReceiveIncome)
             ->setDontKnowIncomeExplanation($incomeExplanation)
-            ->setTypesOfIncomeReceivedOnClientsBehalf($incomeTypes);
+            ->setTypesOfIncomeReceivedOnClientsBehalf($incomeTypes)
+            ->setReport($report);
 
         $validator = Validation::createValidatorBuilder()
             ->enableAnnotationMapping()

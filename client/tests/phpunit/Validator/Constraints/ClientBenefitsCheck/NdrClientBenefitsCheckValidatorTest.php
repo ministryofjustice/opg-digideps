@@ -37,7 +37,7 @@ class NdrClientBenefitsCheckValidatorTest extends TestCase
     {
         $ndr = NdrHelpers::createNdr();
         $this->ndrClientBenefitsCheck = (new NdrClientBenefitsCheck())
-            ->setReport($ndr)
+            ->setNdr($ndr)
             ->setTypesOfIncomeReceivedOnClientsBehalf(new ArrayCollection());
 
         $this->ndrContext = $this->createMock(ExecutionContextInterface::class);

@@ -9,17 +9,10 @@ use App\Validator\Constraints\ClientBenefitsCheck\IncomeReceivedOnClientsBehalf 
 use Symfony\Component\Validator\Constraint;
 use Symfony\Component\Validator\ConstraintValidator;
 use Symfony\Component\Validator\Exception\UnexpectedTypeException;
-use Symfony\Contracts\Translation\TranslatorInterface;
 
 class IncomeReceivedOnClientsBehalfValidator extends ConstraintValidator
 {
-    private TranslatorInterface $translator;
     private string $translationDomain = 'report-client-benefits-check';
-
-    public function __construct(TranslatorInterface $translator)
-    {
-        $this->translator = $translator;
-    }
 
     public function validate($value, Constraint $constraint)
     {
@@ -42,26 +35,16 @@ class IncomeReceivedOnClientsBehalfValidator extends ConstraintValidator
     private function amountValid($value, IncomeReceivedOnClientsBehalfInterface $object, IncomeReceivedOnClientsBehalfConstraint $constraint)
     {
         if (!is_null($value) && true === $object->getAmountDontKnow()) {
-            $errorMessage = $this->translator->trans(
-                $constraint->incomeDetailsAmountAndDontKnowMessage,
-                [],
-                $this->translationDomain
-            );
-
             $this->context
-                ->buildViolation($errorMessage)
+                ->buildViolation($constraint->incomeDetailsAmountAndDontKnowMessage)
+                ->setTranslationDomain($this->translationDomain)
                 ->addViolation();
         }
 
         if (is_null($value) && false === $object->getAmountDontKnow() && !is_null($object->getIncomeType())) {
-            $errorMessage = $this->translator->trans(
-                $constraint->incomeDetailsMissingAmountMessage,
-                [],
-                $this->translationDomain
-            );
-
             $this->context
-                ->buildViolation($errorMessage)
+                ->buildViolation($constraint->incomeDetailsMissingAmountMessage)
+                ->setTranslationDomain($this->translationDomain)
                 ->addViolation();
         }
     }
@@ -69,26 +52,16 @@ class IncomeReceivedOnClientsBehalfValidator extends ConstraintValidator
     private function amountDontKnowValid($value, IncomeReceivedOnClientsBehalfInterface $object, IncomeReceivedOnClientsBehalfConstraint $constraint)
     {
         if (true === $value && !is_null($object->getAmount())) {
-            $errorMessage = $this->translator->trans(
-                $constraint->incomeDetailsAmountAndDontKnowMessage,
-                [],
-                $this->translationDomain
-            );
-
             $this->context
-                ->buildViolation($errorMessage)
+                ->buildViolation($constraint->incomeDetailsAmountAndDontKnowMessage)
+                ->setTranslationDomain($this->translationDomain)
                 ->addViolation();
         }
 
         if (false === $value && is_null($object->getAmount()) && !is_null($object->getIncomeType())) {
-            $errorMessage = $this->translator->trans(
-                $constraint->incomeDetailsMissingAmountMessage,
-                [],
-                $this->translationDomain
-            );
-
             $this->context
-                ->buildViolation($errorMessage)
+                ->buildViolation($constraint->incomeDetailsMissingAmountMessage)
+                ->setTranslationDomain($this->translationDomain)
                 ->addViolation();
         }
     }

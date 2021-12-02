@@ -14,7 +14,6 @@ use PHPUnit\Framework\TestCase;
 use Symfony\Component\Validator\ConstraintValidator;
 use Symfony\Component\Validator\Context\ExecutionContextInterface;
 use Symfony\Component\Validator\Violation\ConstraintViolationBuilderInterface;
-use Symfony\Contracts\Translation\TranslatorInterface;
 
 class ReportClientBenefitsCheckValidatorTest extends TestCase
 {
@@ -26,9 +25,6 @@ class ReportClientBenefitsCheckValidatorTest extends TestCase
 
     private ClientBenefitsCheck $reportClientBenefitsCheck;
 
-    /** @var TranslatorInterface | \PHPUnit\Framework\MockObject\MockObject */
-    private $translator;
-
     /** @var ConstraintViolationBuilderInterface | \PHPUnit\Framework\MockObject\MockObject */
     private $reportViolationBuilder;
 
@@ -37,8 +33,6 @@ class ReportClientBenefitsCheckValidatorTest extends TestCase
      */
     public function setUp(): void
     {
-        $this->translator = $this->createMock(TranslatorInterface::class);
-
         $report = ReportHelpers::createReport();
         $this->reportClientBenefitsCheck = (new ClientBenefitsCheck())
             ->setReport($report)
@@ -52,7 +46,7 @@ class ReportClientBenefitsCheckValidatorTest extends TestCase
 
         $this->reportViolationBuilder = $this->createMock(ConstraintViolationBuilderInterface::class);
 
-        $this->reportSut = new ClientBenefitsCheckValidator($this->translator);
+        $this->reportSut = new ClientBenefitsCheckValidator();
         $this->reportSut->initialize($this->reportContext);
     }
 
@@ -62,10 +56,8 @@ class ReportClientBenefitsCheckValidatorTest extends TestCase
      */
     public function validatorAddsConstraintIfPropertyIsWhenLastCheckedEntitlement($value)
     {
-        $this->expectException(\RuntimeException::class);
-
         $this->setContextPropertyName('whenLastCheckedEntitlement')
-            ->expectTranslatorCalledWith('form.whenLastChecked.errors.noOptionSelected')
+            ->expectViolationAdded('form.whenLastChecked.errors.noOptionSelected')
             ->invokeTest($value);
     }
 
@@ -86,8 +78,7 @@ class ReportClientBenefitsCheckValidatorTest extends TestCase
     {
         $this->setContextPropertyName('dateLastCheckedEntitlement')
             ->setWhenLastCheckedEntitlementTo('haveChecked')
-            ->expectTranslatorCalledWith($transId)
-            ->expectViolationAdded()
+            ->expectViolationAdded($transId)
             ->invokeTest($value);
     }
 
@@ -107,8 +98,7 @@ class ReportClientBenefitsCheckValidatorTest extends TestCase
     {
         $this->setContextPropertyName('neverCheckedExplanation')
             ->setWhenLastCheckedEntitlementTo('neverChecked')
-            ->expectTranslatorCalledWith($transId)
-            ->expectViolationAdded()
+            ->expectViolationAdded($transId)
             ->invokeTest($value);
     }
 
@@ -128,8 +118,7 @@ class ReportClientBenefitsCheckValidatorTest extends TestCase
     {
         $this->setContextPropertyName('dontKnowIncomeExplanation')
             ->setDoOthersReceiveIncomeOnClientsBehalf('dontKnow')
-            ->expectTranslatorCalledWith($transId)
-            ->expectViolationAdded()
+            ->expectViolationAdded($transId)
             ->invokeTest($value);
     }
 
@@ -148,8 +137,7 @@ class ReportClientBenefitsCheckValidatorTest extends TestCase
     {
         $this->setContextPropertyName('typesOfIncomeReceivedOnClientsBehalf')
             ->addEmptyIncomeTypeToClientBenefitsCheck()
-            ->expectTranslatorCalledWith('form.incomeDetails.errors.missingIncome')
-            ->expectViolationAdded()
+            ->expectViolationAdded('form.incomeDetails.errors.missingIncome')
             ->invokeTest(null);
     }
 
@@ -191,28 +179,29 @@ class ReportClientBenefitsCheckValidatorTest extends TestCase
         return $this;
     }
 
-    private function expectViolationAdded()
+    private function expectViolationAdded(string $transId)
     {
         $this->reportContext
             ->expects($this->atLeastOnce())
             ->method('buildViolation')
-            ->with($this->equalTo('An error message'))
+            ->with($this->equalTo($transId))
+            ->willReturn($this->reportViolationBuilder);
+
+        $this->reportViolationBuilder
+            ->expects($this->atLeastOnce())
+            ->method('setTranslationDomain')
+            ->with($this->anything())
+            ->willReturn($this->reportViolationBuilder);
+
+        $this->reportViolationBuilder
+            ->expects($this->atLeastOnce())
+            ->method('setParameter')
+            ->with($this->anything())
             ->willReturn($this->reportViolationBuilder);
 
         $this->reportViolationBuilder
             ->expects($this->atLeastOnce())
             ->method('addViolation');
-
-        return $this;
-    }
-
-    private function expectTranslatorCalledWith(string $transId)
-    {
-        $this->translator
-            ->expects($this->atLeastOnce())
-            ->method('trans')
-            ->with($this->equalTo($transId))
-            ->willReturn('An error message');
 
         return $this;
     }
