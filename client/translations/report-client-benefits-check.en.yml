@@ -55,12 +55,9 @@ form:
         errors:
             noOptionSelected: Tell us if you have checked %client%'s benefits entitlement
             missingDate: Enter the date you last checked %client%'s benefits
-#            Add as property constraint on class
             invalidDate: Enter a real date
-#            Add as property constraint on class
             futureDate: The date cannot be in the future
             missingExplanation: Tell us why you have never checked %client%'s benefit entitlement
-#            Add as property constraint on class
             explanationTooShort: In a few words, tell us why you have never checked %client%'s benefit entitlement
 
     incomeOnClientsBehalf:
@@ -73,7 +70,6 @@ form:
         errors:
             noOptionSelected: Tell us whether anyone other than you receives income on %client%'s behalf
             missingExplanation: Tell us why you have never checked if anyone other than you receives income on %client%'s behalf
-#            Add as property constraint on class
             explanationTooShort: In a few words, tell us why you have never checked if anyone other than you receives income on %client%'s behalf
 
     incomeDetails:

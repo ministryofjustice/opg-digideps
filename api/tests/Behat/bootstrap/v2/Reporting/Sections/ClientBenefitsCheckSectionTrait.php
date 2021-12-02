@@ -9,10 +9,10 @@ use App\Tests\Behat\bootstrap\BehatException;
 
 trait ClientBenefitsCheckSectionTrait
 {
-    private string $missingDateErrorText = 'Must provide a date when have checked entitlement';
-    private string $missingExplanationErrorText = 'Must provide an explanation when you don\'t know if anyone else received income on clients behalf';
+    private string $missingDateErrorText = 'Enter the date you last checked %s\'s benefits';
+    private string $missingExplanationErrorText = 'Tell us why you have never checked if anyone other than you receives income on %s\'s behalf';
     private string $missingIncomeTypeErrorText = 'Please provide an income type';
-    private string $atLeastOneIncomeTypeRequiredErrorText = 'Must add at least one type of income received by others if answering "yes" to "Do others receive income ion clients behalf". Use the back link if you do not have any income to declare.';
+    private string $atLeastOneIncomeTypeRequiredErrorText = 'Please provide an income type';
 
     public bool $clientBenefitsSectionAvailable = false;
 
@@ -372,10 +372,10 @@ trait ClientBenefitsCheckSectionTrait
     {
         switch ($errorType) {
             case 'missing date':
-                $this->assertOnErrorMessage($this->missingDateErrorText);
+                $this->assertOnErrorMessage(sprintf($this->missingDateErrorText, $this->loggedInUserDetails->getClientFirstName()));
                 break;
             case 'missing explanation':
-                $this->assertOnErrorMessage($this->missingExplanationErrorText);
+                $this->assertOnErrorMessage(sprintf($this->missingExplanationErrorText, $this->loggedInUserDetails->getClientFirstName()));
                 break;
             case 'missing income type':
                 $this->assertOnErrorMessage($this->missingIncomeTypeErrorText);

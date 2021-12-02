@@ -15,7 +15,7 @@ use Symfony\Component\Validator\Context\ExecutionContextInterface;
 use Symfony\Component\Validator\Violation\ConstraintViolationBuilderInterface;
 use Symfony\Contracts\Translation\TranslatorInterface;
 
-class ReportClientBenefitsCheckValidatorTest extends TestCase
+class NdrClientBenefitsCheckValidatorTest extends TestCase
 {
     /** @var TranslatorInterface | \PHPUnit\Framework\MockObject\MockObject */
     private $translator;
