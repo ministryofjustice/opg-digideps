@@ -9,7 +9,6 @@ use DateTime;
 use Doctrine\Bundle\DoctrineBundle\Repository\ServiceEntityRepository;
 use Doctrine\DBAL\Connection;
 use Doctrine\Persistence\ManagerRegistry;
-use PDO;
 
 class DocumentRepository extends ServiceEntityRepository
 {
@@ -69,12 +68,12 @@ LIMIT $limit;";
         $conn = $this->getEntityManager()->getConnection();
 
         $docStmt = $conn->prepare($queuedDocumentsQuery);
-        $docStmt->execute();
+        $result = $docStmt->executeQuery();
 
         $documents = [];
 
         // Get all queued documents
-        $results = $docStmt->fetchAllAssociative();
+        $results = $result->fetchAllAssociative();
         foreach ($results as $row) {
             $documents[$row['document_id']] = [
                 'document_id' => $row['document_id'],
@@ -105,8 +104,8 @@ LIMIT $limit;";
             );
 
             $submissionStmt = $conn->prepare($getReportSubmissionsQuery);
-            $submissionStmt->execute();
-            $submissions = $submissionStmt->fetchAll(PDO::FETCH_ASSOC);
+            $result = $submissionStmt->executeQuery();
+            $submissions = $result->fetchAllAssociative();
 
             $reportPdfFlaggedSubmissions = $this->flagSubmissionsContainingReportPdfs($submissions, $conn);
             $groupedSubmissions = $this->groupSubmissionsByReportId($reportPdfFlaggedSubmissions);
@@ -135,7 +134,7 @@ AND is_report_pdf=false";
         $conn = $this->getEntityManager()->getConnection();
         $stmt = $conn->prepare($updateStatusQuery);
 
-        return $stmt->execute();
+        return $stmt->executeQuery();
     }
 
     private function flagSubmissionsContainingReportPdfs(array $reportSubmissions, Connection $connection)
@@ -147,8 +146,8 @@ AND is_report_pdf=false";
         $submissionIdStrings = implode(',', $submissionIds);
 
         $stmt = $connection->prepare("SELECT * FROM document WHERE report_submission_id IN ($submissionIdStrings) ORDER BY created_on ASC");
-        $stmt->execute();
-        $documents = $stmt->fetchAll(PDO::FETCH_ASSOC);
+        $result = $stmt->executeQuery();
+        $documents = $result->fetchAllAssociative();
 
         foreach ($reportSubmissions as $i => $submission) {
             foreach ($documents as $document) {
