@@ -5,7 +5,7 @@ declare(strict_types=1);
 namespace App\Tests\Behat\v2\Reporting\Sections;
 
 use App\Entity\Report\Report;
-use App\Tests\Behat\bootstrap\BehatException;
+use App\Tests\Behat\BehatException;
 
 trait ClientBenefitsCheckSectionTrait
 {
