@@ -58,12 +58,22 @@ class ReportControllerTest extends AbstractTestController
             ['setFirstname' => 'cEdit1', 'setLastname' => 'l1', 'setCaseNumber' => '010101010']
         );
         self::fixtures()->flush();
+
         self::$report1 = self::fixtures()->createReport(self::$client1, [
             'setStartDate' => new \DateTime('2014-01-01'),
             'setEndDate' => new \DateTime('2014-12-31'),
             'setSubmitted' => true,
             'setSubmittedBy' => self::$deputy1,
+            'setWishToProvideDocumentation' => true,
         ]);
+
+        $document = (new Document(self::$report1))
+            ->setFileName('test.pdf')
+            ->setIsReportPdf(false);
+
+        self::fixtures()->persist($document);
+        self::fixtures()->flush();
+
         self::$reportEdit = self::fixtures()->createReport(self::$clientEdit, [
             'setStartDate' => new \DateTime('2014-01-01'),
             'setEndDate' => new \DateTime('2014-12-31'),
@@ -975,5 +985,33 @@ class ReportControllerTest extends AbstractTestController
         ]);
 
         self::assertCount(0, $return['data']);
+    }
+
+    /** @test */
+    public function refreshReportCache(): void
+    {
+        $initialCache = self::$report1->getSectionStatusesCached();
+        self::assertEquals(['state' => 'not-started', 'nOfRecords' => 0], $initialCache['documents']);
+        self::assertEquals('notStarted', self::$report1->getReportStatusCached());
+
+        $reportId = self::$report1->getId();
+        $uri = sprintf('/report/%s/refresh-cache', $reportId);
+
+        $return = $this->assertJsonRequest('POST', $uri, [
+            'mustSucceed' => true,
+            'AuthToken' => self::$tokenAdmin,
+            'data' => ['sectionIds' => ['documents']],
+        ]);
+
+        $updatedReport = self::fixtures()->getReportById(self::$report1->getId());
+
+        // We get the same report back that we updated the cache of
+        self::assertEquals($updatedReport->getId(), $return['data']['id']);
+
+        // Cache is updated
+        $updatedCache = $updatedReport->getSectionStatusesCached();
+
+        self::assertEquals(['state' => 'done', 'nOfRecords' => 1], $updatedCache['documents']);
+        self::assertEquals('notFinished', $updatedReport->getReportStatusCached());
     }
 }
