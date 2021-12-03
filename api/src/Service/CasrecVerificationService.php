@@ -5,6 +5,8 @@ namespace App\Service;
 use App\Entity\CasRec;
 use Doctrine\Common\Persistence\ObjectRepository;
 use Doctrine\ORM\EntityManagerInterface;
+use Symfony\Component\Serializer\Normalizer\AbstractNormalizer;
+use Symfony\Component\Serializer\SerializerInterface;
 
 class CasrecVerificationService
 {
@@ -18,18 +20,20 @@ class CasrecVerificationService
      * @var CasRec[]
      */
     private $lastMatchedCasrecUsers;
+    private SerializerInterface $serializer;
 
-    public function __construct(EntityManagerInterface $em)
+    public function __construct(EntityManagerInterface $em, SerializerInterface $serializer)
     {
         $this->em = $em;
         $this->casRecRepo = $this->em->getRepository('App\Entity\CasRec');
         $this->lastMatchedCasrecUsers = [];
+        $this->serializer = $serializer;
     }
 
     /**
      * CASREC checks
      * Throw error 400 if casrec has no record matching case number,
-     * client surname, deputy surname, and postcode (if set)
+     * client surname, deputy surname, and postcode (if set).
      *
      * @param string $caseNumber
      * @param string $clientSurname
@@ -40,28 +44,45 @@ class CasrecVerificationService
      */
     public function validate($caseNumber, $clientSurname, $deputySurname, $deputyPostcode)
     {
+        $normalisedCaseNumber = $this->normaliseCaseNumber($caseNumber);
+        $normalisedClientLastname = $this->normaliseSurname($clientSurname);
+        $normalisedDeputySurname = $this->normaliseSurname($deputySurname);
+        $normalisedDeputyPostcode = $this->normalisePostCode($deputyPostcode);
+
+        $caseNumberMatches = $this->casRecRepo->findBy(['caseNumber' => $normalisedCaseNumber]);
+
+        $detailsToMatchOn = [
+            'caseNumber' => $normalisedCaseNumber,
+            'clientLastname' => $normalisedClientLastname,
+            'deputySurname' => $normalisedDeputySurname,
+        ];
+
         /** @var CasRec[] $crMatches */
-        $crMatches = $this->casRecRepo->findBy([
-            'caseNumber'     => $this->normaliseCaseNumber($caseNumber),
-            'clientLastname' => $this->normaliseSurname($clientSurname),
-            'deputySurname'  => $this->normaliseSurname($deputySurname)
-        ]);
+        $allDetailsMatches = $this->casRecRepo->findBy($detailsToMatchOn);
 
-        $this->lastMatchedCasrecUsers = $this->applyPostcodeFilter($crMatches, $deputyPostcode);
+        $this->lastMatchedCasrecUsers = $this->applyPostcodeFilter($allDetailsMatches, $normalisedDeputyPostcode);
 
-        if (count($this->lastMatchedCasrecUsers) == 0) {
-            throw new \RuntimeException('User registration: no matching record in casrec. Matched: ' . count($crMatches) . ' Looking up:' .
-            ' Case Number: ' . $this->normaliseCaseNumber($caseNumber) .
-            ' Client Last name: ' . $this->normaliseSurname($clientSurname) .
-            ' Deputy surname:' . $this->normaliseSurname($deputySurname) .
-            ' Filtered by deputy postcode: ' . $deputyPostcode, 400);
+        if (0 == count($this->lastMatchedCasrecUsers)) {
+            $detailsToMatchOn['deputyPostcode'] = $normalisedDeputyPostcode;
+
+            $caseNumberMatches = json_decode(
+                $this->serializer->serialize($caseNumberMatches, 'json', [AbstractNormalizer::IGNORED_ATTRIBUTES => ['otherColumns']]),
+                true
+            );
+
+            $errorJson = json_encode([
+                'search_terms' => $detailsToMatchOn,
+                'case_number_matches' => $caseNumberMatches,
+            ]);
+
+            throw new \RuntimeException($errorJson, 400);
         }
 
         return true;
     }
 
     /**
-     * Since co-deputies, multiple deputies may be matched (eg siblings at same postcode)
+     * Since co-deputies, multiple deputies may be matched (eg siblings at same postcode).
      *
      * @return array
      */
@@ -71,6 +92,7 @@ class CasrecVerificationService
         foreach ($this->lastMatchedCasrecUsers as $casRecMatch) {
             $deputyNumbers[] = $casRecMatch->getDeputyNo();
         }
+
         return $deputyNumbers;
     }
 
@@ -84,6 +106,7 @@ class CasrecVerificationService
                 return true;
             }
         }
+
         return false;
     }
 
@@ -95,40 +118,38 @@ class CasrecVerificationService
     public function isMultiDeputyCase($caseNumber)
     {
         $crMatches = $this->casRecRepo->findByCaseNumber($this->normaliseCaseNumber($caseNumber));
+
         return count($crMatches) > 1;
     }
 
     /**
      * @param CasRec[] $crMatches
-     * @param string $deputyPostcode
+     * @param string   $deputyPostcode
      *
      * @return CasRec[]
      */
-    private function applyPostcodeFilter(array $crMatches, string $deputyPostcode)
+    private function applyPostcodeFilter(array $crMatches, string $normalisedDeputyPostcode)
     {
-        $deputyPostcode = $this->normalisePostCode($deputyPostcode);
         $crByPostcode = [];
         $crWithPostcodeCount = 0;
         foreach ($crMatches as $crMatch) {
             $crMatchPC = $this->normalisePostCode($crMatch->getDeputyPostCode());
             if (!empty($crMatchPC)) {
                 $crByPostcode[$crMatchPC][] = $crMatch;
-                $crWithPostcodeCount++;
+                ++$crWithPostcodeCount;
             }
         }
 
         if ($crWithPostcodeCount < count($crMatches)) {
             $filteredResults = $crMatches;
         } else {
-            $filteredResults = array_key_exists($deputyPostcode, $crByPostcode) ? $crByPostcode[$deputyPostcode] : [];
+            $filteredResults = array_key_exists($normalisedDeputyPostcode, $crByPostcode) ? $crByPostcode[$normalisedDeputyPostcode] : [];
         }
 
         return $filteredResults;
     }
 
     /**
-     * @param string $caseNumber
-     *
      * @return mixed|string
      */
     private function normaliseCaseNumber(string $caseNumber)
@@ -141,8 +162,6 @@ class CasrecVerificationService
     }
 
     /**
-     * @param string $postcode
-     *
      * @return string
      */
     private function normalisePostcode(string $postcode)
@@ -160,8 +179,6 @@ class CasrecVerificationService
     }
 
     /**
-     * @param string $surname
-     *
      * @return mixed|string
      */
     private function normaliseSurname(string $surname)

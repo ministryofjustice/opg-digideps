@@ -144,6 +144,9 @@ phpstan-api:
 phpstan-frontend:
 	docker-compose run --rm frontend vendor/phpstan/phpstan/phpstan analyse src --memory-limit=0 --level=max
 
+get-audit-logs: ##@localstack Get audit log groups by passing event name e.g. get-audit-logs event_name=ROLE_CHANGED (see client/Audit/src/service/Audit/AuditEvents)
+	docker-compose exec localstack awslocal logs get-log-events --log-group-name audit-local --log-stream-name $(event_name)
+
 composer-api: ##@application Drops you into the API container with composer installed
 	docker-compose exec api sh install-composer.sh
 	docker-compose exec api sh

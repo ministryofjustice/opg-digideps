@@ -46,19 +46,19 @@ class UserRegistrationService
         // ward off non-fee-paying codeps trying to self-register
         if ($isMultiDeputyCase && ($existingClient instanceof Client) && $existingClient->hasDeputies()) {
             // if client exists with case number, the first codep already registered.
-            throw new \RuntimeException('Co-deputy cannot self register.', 403);
+            throw new \RuntimeException(json_encode('Co-deputy cannot self register.'), 403);
         }
 
         // Check the user doesn't already exist
         $existingUser = $this->em->getRepository('App\Entity\User')->findOneByEmail($selfRegisterData->getEmail());
         if ($existingUser) {
-            throw new \RuntimeException("User with email {$existingUser->getEmail()} already exists.", 422);
+            throw new \RuntimeException(json_encode(sprintf('User with email %s already exists.', $existingUser->getEmail())), 422);
         }
 
         // Check the client is unique and has no deputies attached
         if ($existingClient instanceof Client) {
             if ($existingClient->hasDeputies() || $existingClient->getOrganisation() instanceof Organisation) {
-                throw new \RuntimeException('User registration: Case number already used', 425);
+                throw new \RuntimeException(json_encode(sprintf('User registration: Case number %s already used', $existingClient->getCaseNumber())), 425);
             } else {
                 // soft delete client
                 $this->em->remove($existingClient);
