@@ -5,7 +5,7 @@ declare(strict_types=1);
 namespace App\Tests\Behat\v2\Reporting\Sections;
 
 use App\Entity\Report\Report;
-use App\Tests\Behat\BehatException;
+use App\Tests\Behat\bootstrap\BehatException;
 
 trait ClientBenefitsCheckSectionTrait
 {
@@ -13,6 +13,8 @@ trait ClientBenefitsCheckSectionTrait
     private string $missingExplanationErrorText = 'Must provide an explanation when you don\'t know if anyone else received income on clients behalf';
     private string $missingIncomeTypeErrorText = 'Please provide an income type';
     private string $atLeastOneIncomeTypeRequiredErrorText = 'Must add at least one type of income received by others if answering "yes" to "Do others receive income ion clients behalf". Use the back link if you do not have any income to declare.';
+
+    public bool $clientBenefitsSectionAvailable = false;
 
     /**
      * @When I navigate to the client benefits check report section
@@ -41,6 +43,7 @@ trait ClientBenefitsCheckSectionTrait
 
         $explodedDate = explode('/', $dateString);
 
+        // When choosing the date only a date is show, not a translated field option response
         $this->chooseOption('report-client-benefits-check[whenLastCheckedEntitlement]', 'haveChecked');
 
         $this->fillInDateFields(
@@ -267,6 +270,7 @@ trait ClientBenefitsCheckSectionTrait
 
     /**
      * @Then the client benefits check summary page should contain the details I entered
+     * @Then the client benefits check summary page should contain my updated response and no income types
      */
     public function benefitCheckSummaryPageContainsEnteredDetails()
     {
@@ -298,25 +302,40 @@ trait ClientBenefitsCheckSectionTrait
 
         if ('more' === $moreOrLess) {
             $this->endDateAndDueDateLoggedInUsersCurrentReportSetToDate('2040-01-01', $currentOrPrevious);
+            $this->clientBenefitsSectionAvailable = true;
         } else {
             $this->endDateAndDueDateLoggedInUsersCurrentReportSetToDate('2020-01-01', $currentOrPrevious);
+            $this->clientBenefitsSectionAvailable = false;
         }
     }
 
     /**
-     * @Given they have not completed the client benefits section
+     * @Given they have not completed the client benefits section for their :currentOrPrevious report
      */
-    public function haveNotCompletedBenefitsSection()
+    public function haveNotCompletedBenefitsSection(string $currentOrPrevious)
     {
-        if (empty($this->loggedInUserDetails) && empty($this->loggedInUserDetails->getCurrentReportId())) {
-            throw new Exception('The logged in user does not have a report. Ensure a user with a report has logged in before using this step.');
+        $reportId = 'current' === $currentOrPrevious ? $this->loggedInUserDetails->getCurrentReportId() : $this->loggedInUserDetails->getPreviousReportId();
+
+        if (empty($this->loggedInUserDetails) && empty($reportId)) {
+            $message = sprintf(
+                'The logged in user does not have a %s report. Ensure a user with a %s report has logged in before using this step.',
+                $currentOrPrevious,
+                $currentOrPrevious
+            );
+
+            throw new BehatException($message);
         }
 
-        /** @var Report $currentReport */
-        $currentReport = $this->em->getRepository(Report::class)->find($this->loggedInUserDetails->getCurrentReportId());
-        $currentReport->setClientBenefitsCheck(null);
+        /** @var Report $report */
+        $report = $this->em->getRepository(Report::class)->find($reportId);
 
-        $this->em->persist($currentReport);
+        $clientBenefitsCheck = $report->getClientBenefitsCheck();
+        $clientBenefitsCheck->setReport(null);
+
+        $report->setClientBenefitsCheck(null);
+
+        $this->em->persist($clientBenefitsCheck);
+        $this->em->persist($report);
         $this->em->flush();
     }
 
@@ -424,5 +443,61 @@ trait ClientBenefitsCheckSectionTrait
         $this->iAmOnClientBenefitsCheckStep3Page();
 
         $this->pressButton('Add another');
+    }
+
+    /**
+     * @Given I edit my response to do others receive income on a clients behalf to :response
+     */
+    public function iEditMyResponseToDoOthersReceiveIncomeOnAClientsBehalf(string $response)
+    {
+        $this->iAmOnClientBenefitsCheckSummaryPage();
+
+        $clientFirstName = $this->loggedInUserDetails->getClientFirstName();
+        $questionText = sprintf('Does anyone other than you receive income on %s’s behalf?', $clientFirstName);
+        $questionRowXpath = sprintf("//dt[contains(., '%s')]/..", $questionText);
+        $questionRow = $this->getSession()->getPage()->find('xpath', $questionRowXpath);
+
+        if (is_null($questionRow)) {
+            $message = sprintf('A row on the page with the question "%s" could not be found', $questionText);
+            throw new BehatException($message);
+        }
+
+        $this->editFieldAnswerInSection(
+            $questionRow,
+            'report-client-benefits-check[doOthersReceiveIncomeOnClientsBehalf]',
+            $response,
+            'doOthersReceiveIncome'
+        );
+
+        $this->removeAnswerFromSection(
+            'report-client-benefits-check[typesOfIncomeReceivedOnClientsBehalf][0][incomeType]',
+            'incomeType'
+        );
+    }
+
+    /**
+     * @Given I edit my response to when I last checked the clients benefit entitlement to currently checking
+     */
+    public function iEditMyResponseToWhenILastCheckedTheClientsBenefitEntitlement()
+    {
+        $this->iAmOnClientBenefitsCheckSummaryPage();
+
+        $clientFirstName = $this->loggedInUserDetails->getClientFirstName();
+        $questionText = sprintf('Have you checked that %s gets all the benefits they should have?', $clientFirstName);
+        $questionRowXpath = sprintf("//dt[contains(., '%s')]/..", $questionText);
+        $questionRow = $this->getSession()->getPage()->find('xpath', $questionRowXpath);
+
+        if (is_null($questionRow)) {
+            $message = sprintf('A row on the page with the question "%s" could not be found', $questionText);
+            throw new BehatException($message);
+        }
+
+        $this->editSelectAnswerInSection(
+            $questionRow,
+            'report-client-benefits-check[whenLastCheckedEntitlement]',
+            'currentlyChecking',
+            'haveCheckedBenefits',
+            "I'm currently checking this"
+        );
     }
 }

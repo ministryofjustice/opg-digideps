@@ -19,11 +19,6 @@ class ScannerVerifier implements VerifierInterface
     /** @var LoggerInterface */
     private $logger;
 
-    /**
-     * @param ClamFileScanner $scanner
-     * @param TranslatorInterface $translator
-     * @param LoggerInterface $logger
-     */
     public function __construct(ClamFileScanner $scanner, TranslatorInterface $translator, LoggerInterface $logger)
     {
         $this->scanner = $scanner;
@@ -53,13 +48,9 @@ class ScannerVerifier implements VerifierInterface
         return $status;
     }
 
-    /**
-     * @param \Throwable $e
-     * @return string
-     */
     private function buildErrorMessage(\Throwable $e): string
     {
-        $errorKey = (get_class($e) === VirusFoundException::class) ? 'virusFound' : 'generic';
+        $errorKey = (VirusFoundException::class === get_class($e)) ? 'virusFound' : 'generic';
 
         return $this
             ->translator

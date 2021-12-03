@@ -252,13 +252,13 @@ class ReportSection
 
     private function completeClientBenefitsCheck(ReportInterface $report): void
     {
-        $typeOfIncome = $report instanceof Ndr ? new NdrIncomeReceivedOnClientsBehalf() : new IncomeReceivedOnClientsBehalf();
+        $typeOfIncome = $report instanceof Ndr\Ndr ? new NdrIncomeReceivedOnClientsBehalf() : new IncomeReceivedOnClientsBehalf();
 
         $typeOfIncome->setCreated(new DateTime())
             ->setAmount(100.50)
             ->setIncomeType('Universal Credit');
 
-        $clientBenefitsCheck = $report instanceof Ndr ? new NdrClientBenefitsCheck() : new ClientBenefitsCheck();
+        $clientBenefitsCheck = $report instanceof Ndr\Ndr ? new NdrClientBenefitsCheck() : new ClientBenefitsCheck();
 
         $clientBenefitsCheck->setReport($report)
             ->setWhenLastCheckedEntitlement(ClientBenefitsCheck::WHEN_CHECKED_I_HAVE_CHECKED)

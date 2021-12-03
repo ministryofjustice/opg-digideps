@@ -6,9 +6,6 @@ use App\Service\Client\Sirius\SiriusApiGatewayClient;
 
 class SiriusApiAvailability extends ServiceAvailabilityAbstract
 {
-    /**
-     * @var SiriusApiGatewayClient
-     */
     private SiriusApiGatewayClient $client;
 
     public function __construct(SiriusApiGatewayClient $client)
@@ -23,7 +20,7 @@ class SiriusApiAvailability extends ServiceAvailabilityAbstract
             $response = $this->client->get('healthcheck');
 
             if (200 !== $response->getStatusCode()) {
-                throw new \RuntimeException('returned HTTP code ' . $response->getStatusCode());
+                throw new \RuntimeException('returned HTTP code '.$response->getStatusCode());
             }
         } catch (\Throwable $e) {
             $this->customMessage = $e->getMessage();

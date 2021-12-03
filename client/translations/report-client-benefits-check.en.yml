@@ -10,9 +10,9 @@ startPage:
 stepPage:
     pageTitle:
         1:
-            mainTitle: When did you last check that %client% gets all the benefits they’re entitled to?
+            mainTitle: Have you checked that %client% gets all the benefits they should have?
         2:
-            mainTitle: Does anyone other than you receive income  on %client%’s behalf?
+            mainTitle: Does anyone other than you receive income on %client%’s behalf?
             subTitle: For example, benefits paid directly to a care home or family member
         3:
             mainTitle: Tell us about the income other people receive on %client%'s behalf
@@ -77,3 +77,7 @@ form:
 
 deletePage:
     subject: income type
+
+reportReview:
+    neverCheckedEntitlementTitle: Explanation for never checking if %client% gets all the benefits they’re entitled to
+    dontKnowIncomeTitle: Explanation for not knowing if others receive income on %client%'s behalf

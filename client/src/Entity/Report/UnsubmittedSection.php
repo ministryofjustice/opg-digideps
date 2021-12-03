@@ -5,20 +5,22 @@ namespace App\Entity\Report;
 class UnsubmittedSection
 {
     /**
-     * Store section identifier
+     * Store section identifier.
      *
      * @var string
      */
     private $id;
 
     /**
-     * Store checkbox value
+     * Store checkbox value.
+     *
      * @var bool
      */
     private $present;
 
     /**
      * UnsubmittedSection constructor.
+     *
      * @param string $id
      * @param bool   $present
      */

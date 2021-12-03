@@ -972,12 +972,12 @@ class Checklist implements SynchronisableInterface
         return $this;
     }
 
-    public function getClientBenefitsChecked(): string
+    public function getClientBenefitsChecked(): ?string
     {
         return $this->clientBenefitsChecked;
     }
 
-    public function setClientBenefitsChecked(string $clientBenefitsChecked): Checklist
+    public function setClientBenefitsChecked(?string $clientBenefitsChecked): Checklist
     {
         $this->clientBenefitsChecked = $clientBenefitsChecked;
 

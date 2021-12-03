@@ -72,3 +72,36 @@ Feature: Report Management (applies to all admin roles)
         Given an admin manager user accesses the admin app
         When I visit the admin client details page associated with the deputy I'm interacting with
         Then the link to download the submitted report should not be visible
+
+    @admin-manager @lay-combined-high-submitted
+    Scenario: An admin manager un-submits a report that did not have a completed client benefits check section
+        Given a Lay Deputy has submitted a Combined High Assets report
+        But they have not completed the client benefits section for their 'previous' report
+        And the deputies 'previous' report ends and is due 'less' than 60 days after the client benefits check feature flag date
+        And an admin manager user accesses the admin app
+        When I visit the admin client details page associated with the deputy I'm interacting with
+        And I manage the deputies 'submitted' report
+        And I should not see the client benefits check section in the checklist group
+        And I confirm all report sections are incomplete
+        And I submit the new report details
+        Then the report details should be updated
+        When the user I'm interacting with logs in to the frontend of the app
+        Then I should see the report sections the admin ticked as incomplete labelled as changes needed
+        And I should be able to submit my 'previous' report without completing the client benefits check section
+
+    @admin-manager @lay-combined-high-submitted
+    Scenario: An admin manager un-submits a report that had a completed client benefits check section
+        Given a Lay Deputy has submitted a Combined High Assets report
+        And the deputies 'previous' report ends and is due 'more' than 60 days after the client benefits check feature flag date
+        And an admin manager user accesses the admin app
+        When I visit the admin client details page associated with the deputy I'm interacting with
+        And I manage the deputies 'submitted' report
+        And I change the report 'start' date to '29 June 2015'
+        And I change the report 'end' date to '28 June 2016'
+        And I should see the client benefits check section in the checklist group
+        And I confirm all report sections are incomplete
+        And I submit the new report details
+        Then the report details should be updated
+        When the user I'm interacting with logs in to the frontend of the app
+        Then I should see the report sections the admin ticked as incomplete labelled as changes needed
+        Then I should be able to submit my previous report

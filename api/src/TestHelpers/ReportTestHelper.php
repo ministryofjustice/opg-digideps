@@ -49,7 +49,7 @@ class ReportTestHelper
         return $report;
     }
 
-    public function generateNdr(EntityManager $em, ?Client $client = null, User $deputy): Ndr
+    public function generateNdr(EntityManager $em, User $deputy, ?Client $client = null): Ndr
     {
         $ndr = new Ndr($client);
         $deputy->setNdrEnabled(true);

@@ -32,18 +32,11 @@ class FeedbackReport
         return $this;
     }
 
-    /**
-     * @return string|null
-     */
     public function getComments(): ?string
     {
         return $this->comments;
     }
 
-    /**
-     * @param string $comments
-     * @return FeedbackReport
-     */
     public function setComments(string $comments): FeedbackReport
     {
         $this->comments = $comments;

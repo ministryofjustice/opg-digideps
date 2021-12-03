@@ -96,7 +96,7 @@ else
 	docker-compose -f docker-compose.yml -f docker-compose.dev.yml run --rm test sh ./tests/Behat/run-tests.sh --profile v2-tests-goutte --tags @v2
 endif
 
-behat-tests-v2-goutte-parallel: up-app-integration-tests reset-fixtures disable-debug
+behat-tests-v2-goutte-parallel: up-app-integration-tests reset-fixtures disable-debug ##@behat Run the integration tests in parallel
 	docker-compose -f docker-compose.yml -f docker-compose.dev.yml run --rm test sh ./tests/Behat/run-tests-parallel.sh --tags @v2
 
 behat-tests-v2-browserstack: up-app-integration-tests reset-fixtures disable-debug
@@ -146,3 +146,11 @@ phpstan-frontend:
 
 get-audit-logs: ##@localstack Get audit log groups by passing event name e.g. get-audit-logs event_name=ROLE_CHANGED (see client/Audit/src/service/Audit/AuditEvents)
 	docker-compose exec localstack awslocal logs get-log-events --log-group-name audit-local --log-stream-name $(event_name)
+
+composer-api: ##@application Drops you into the API container with composer installed
+	docker-compose exec api sh install-composer.sh
+	docker-compose exec api sh
+
+composer-frontend: ##@application Drops you into the frontend container with composer installed
+	docker-compose exec frontend sh install-composer.sh
+	docker-compose exec frontend sh

@@ -13,6 +13,9 @@ services:
       - ./client/translations:/var/www/translations
       - ./client/phpstan.neon:/var/www/phpstan.neon
       - ./client/bin:/var/www/vendor/bin
+      - ./client/composer.json:/var/www/composer.json
+      - ./client/composer.lock:/var/www/composer.lock
+      - ./docker/install-composer.sh:/var/www/install-composer.sh
 
   api:
     volumes:
@@ -23,11 +26,14 @@ services:
       - ./api/scripts:/var/www/scripts
       - ./api/src:/var/www/src
       - ./api/tests:/var/www/tests
+      - ./api/tests/Behat:/var/www/tests/Behat
       - ./api/api.env:/var/www/api.env
       - ./api/postgres.env:/var/www/postgres.env
       - ./api/phpstan.neon:/var/www/phpstan.neon
       - ./api/bin:/var/www/vendor/bin
-      - ./api/tests/Behat:/var/www/vendor/tests/Behat
+      - ./api/composer.json:/var/www/composer.json
+      - ./api/composer.lock:/var/www/composer.lock
+      - ./docker/install-composer.sh:/var/www/install-composer.sh
 
   frontend:
     volumes:
@@ -39,6 +45,9 @@ services:
       - ./client/translations:/var/www/translations
       - ./client/phpstan.neon:/var/www/phpstan.neon
       - ./client/bin:/var/www/vendor/bin
+      - ./client/composer.json:/var/www/composer.json
+      - ./client/composer.lock:/var/www/composer.lock
+      - ./docker/install-composer.sh:/var/www/install-composer.sh
 
   htmltopdf:
     volumes:

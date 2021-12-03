@@ -11,7 +11,6 @@ use Doctrine\Common\Collections\Collection;
 use Doctrine\ORM\Mapping as ORM;
 use Doctrine\ORM\Mapping\OrderBy;
 use Gedmo\Mapping\Annotation as Gedmo;
-use InvalidArgumentException;
 use JMS\Serializer\Annotation as JMS;
 use Ramsey\Uuid\Doctrine\UuidGenerator;
 use Ramsey\Uuid\Uuid;
@@ -23,14 +22,6 @@ use Ramsey\Uuid\UuidInterface;
  */
 class ClientBenefitsCheck implements ClientBenefitsCheckInterface
 {
-    const WHEN_CHECKED_I_HAVE_CHECKED = 'haveChecked';
-    const WHEN_CHECKED_IM_CURRENTLY_CHECKING = 'currentlyChecking';
-    const WHEN_CHECKED_IVE_NEVER_CHECKED = 'neverChecked';
-
-    const OTHER_INCOME_YES = 'yes';
-    const OTHER_INCOME_NO = 'no';
-    const OTHER_INCOME_DONT_KNOW = 'dontKnow';
-
     public function __construct(?UuidInterface $id = null)
     {
         $this->id = $id ?? Uuid::uuid4();
@@ -62,7 +53,7 @@ class ClientBenefitsCheck implements ClientBenefitsCheckInterface
      * @ORM\OneToOne (targetEntity="App\Entity\Report\Report", inversedBy="clientBenefitsCheck")
      * @ORM\JoinColumn(name="report_id", referencedColumnName="id", onDelete="CASCADE",nullable=true)
      */
-    private Report $report;
+    private ?Report $report;
 
     /**
      * @var string one of either [haveChecked, currentlyChecking, neverChecked]
@@ -156,6 +147,14 @@ class ClientBenefitsCheck implements ClientBenefitsCheckInterface
     {
         $this->whenLastCheckedEntitlement = $whenLastCheckedEntitlement;
 
+        if (self::WHEN_CHECKED_IVE_NEVER_CHECKED !== $whenLastCheckedEntitlement) {
+            $this->setNeverCheckedExplanation(null);
+        }
+
+        if (self::WHEN_CHECKED_I_HAVE_CHECKED !== $whenLastCheckedEntitlement) {
+            $this->setDateLastCheckedEntitlement(null);
+        }
+
         return $this;
     }
 
@@ -167,6 +166,10 @@ class ClientBenefitsCheck implements ClientBenefitsCheckInterface
     public function setDoOthersReceiveIncomeOnClientsBehalf(?string $doOthersReceiveIncomeOnClientsBehalf): ClientBenefitsCheck
     {
         $this->doOthersReceiveIncomeOnClientsBehalf = $doOthersReceiveIncomeOnClientsBehalf;
+
+        if (self::OTHER_INCOME_DONT_KNOW !== $doOthersReceiveIncomeOnClientsBehalf) {
+            $this->setDontKnowIncomeExplanation(null);
+        }
 
         return $this;
     }
@@ -182,6 +185,13 @@ class ClientBenefitsCheck implements ClientBenefitsCheckInterface
             $this->typesOfIncomeReceivedOnClientsBehalf->add($incomeReceivedOnClientsBehalf);
             $incomeReceivedOnClientsBehalf->setClientBenefitsCheck($this);
         }
+
+        return $this;
+    }
+
+    public function emptyTypeOfIncomeReceivedOnClientsBehalf(): ClientBenefitsCheck
+    {
+        $this->typesOfIncomeReceivedOnClientsBehalf = new ArrayCollection();
 
         return $this;
     }
@@ -217,10 +227,6 @@ class ClientBenefitsCheck implements ClientBenefitsCheckInterface
 
     public function setNeverCheckedExplanation(?string $neverCheckedExplanation): ClientBenefitsCheck
     {
-        if (!is_null($neverCheckedExplanation) && self::WHEN_CHECKED_IVE_NEVER_CHECKED !== $this->getWhenLastCheckedEntitlement()) {
-            throw new InvalidArgumentException('Explanation can only be set if the user has never checked entitlements');
-        }
-
         $this->neverCheckedExplanation = $neverCheckedExplanation;
 
         return $this;

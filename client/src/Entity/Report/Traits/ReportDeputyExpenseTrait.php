@@ -70,8 +70,6 @@ trait ReportDeputyExpenseTrait
     }
 
     /**
-     * @param Expense $expense
-     *
      * @return NdrExpensesTrait
      */
     public function addExpense(Expense $expense)

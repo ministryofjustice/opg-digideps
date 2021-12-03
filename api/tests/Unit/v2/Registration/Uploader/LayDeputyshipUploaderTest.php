@@ -66,7 +66,7 @@ class LayDeputyshipUploaderTest extends TestCase
         $collection = new LayDeputyshipDtoCollection();
 
         for ($i = 0; $i < 3; ++$i) {
-            $collection->append($this->buildLayDeputyshipDto($i));
+            $collection->append($this->buildLayDeputyshipDto($i, CasRec::CASREC_SOURCE));
         }
 
         // Assert 3 CasRec entities will be created.
@@ -86,6 +86,7 @@ class LayDeputyshipUploaderTest extends TestCase
 
         $this->assertEquals(3, $return['added']);
         $this->assertCount(0, $return['errors']);
+        $this->assertEquals(CasRec::CASREC_SOURCE, $return['source']);
     }
 
     /**
@@ -94,7 +95,7 @@ class LayDeputyshipUploaderTest extends TestCase
     public function updatesReportTypeOfActiveReportsIfRequired()
     {
         $collection = new LayDeputyshipDtoCollection();
-        $collection->append($this->buildLayDeputyshipDto(1));
+        $collection->append($this->buildLayDeputyshipDto(1, CasRec::SIRIUS_SOURCE));
 
         $casRec = new CasRec(['Typeofrep' => 'opg103', 'Corref' => 'l3']);
 
@@ -115,6 +116,7 @@ class LayDeputyshipUploaderTest extends TestCase
         $return = $this->sut->upload($collection);
         $this->assertEquals(1, $return['added']);
         $this->assertCount(0, $return['errors']);
+        $this->assertEquals(CasRec::SIRIUS_SOURCE, $return['source']);
         $this->assertEquals('103', $activeReport->getType());
     }
 
@@ -124,7 +126,7 @@ class LayDeputyshipUploaderTest extends TestCase
     public function ignoresDeputyshipsWithInvalidDeputyshipData()
     {
         $collection = new LayDeputyshipDtoCollection();
-        $collection->append($this->buildLayDeputyshipDto(1));
+        $collection->append($this->buildLayDeputyshipDto(1, CasRec::SIRIUS_SOURCE));
 
         // Ensure factory will throw an exception
         $this
@@ -138,17 +140,19 @@ class LayDeputyshipUploaderTest extends TestCase
 
         $this->assertEquals(0, $return['added']);
         $this->assertCount(1, $return['errors']);
+        $this->assertEquals(CasRec::SIRIUS_SOURCE, $return['source']);
         $this->assertEquals('ERROR IN LINE 2: Unable to create CasRec entity', $return['errors'][0]);
     }
 
     /**
      * @param $count
      */
-    private function buildLayDeputyshipDto($count): LayDeputyshipDto
+    private function buildLayDeputyshipDto($count, $source): LayDeputyshipDto
     {
         return (new LayDeputyshipDto())
             ->setCaseNumber('case-'.$count)
-            ->setDeputyNumber('depnum-'.$count);
+            ->setDeputyNumber('depnum-'.$count)
+            ->setSource($source);
     }
 
     private function assertReportTypesWillNotBeUpdated(): void

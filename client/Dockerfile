@@ -38,12 +38,12 @@ COPY src src
 RUN composer run-script post-install-cmd --no-interaction
 RUN composer dump-autoload --optimize
 
-FROM php:7.4.23-fpm-alpine
+FROM php:8.0.12-fpm-alpine3.14
 WORKDIR /var/www
 EXPOSE 80
 EXPOSE 443
 ENV TIMEOUT=60
-ENV PHP_EXT_DIR=/usr/local/lib/php/extensions/no-debug-non-zts-20190902
+ENV PHP_EXT_DIR=/usr/local/lib/php/extensions/no-debug-non-zts-20200930/
 
 # Install core PHP extensions
 RUN apk add --no-cache openssl nginx nginx-mod-http-headers-more su-exec postgresql-client libzip-dev unzip php7-igbinary php7-pecl-redis

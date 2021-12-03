@@ -13,16 +13,12 @@ class ReportSubmissionSummaryMapper
     /** @var string */
     const API_ENDPOINT = '/report-submission/casrec_data';
 
-    /**
-     * @param RestClient $restClient
-     */
     public function __construct(RestClient $restClient)
     {
         $this->restClient = $restClient;
     }
 
     /**
-     * @param DateRangeQuery $query
      * @return mixed
      */
     public function getBy(DateRangeQuery $query)
@@ -31,14 +27,13 @@ class ReportSubmissionSummaryMapper
     }
 
     /**
-     * @param DateRangeQuery $query
      * @return string
      */
     private function generateApiUrl(DateRangeQuery $query)
     {
         $queryStringArray = [
             'orderBy' => $query->getOrderBy(),
-            'order' => $query->getSortOrder()
+            'order' => $query->getSortOrder(),
         ];
 
         if ($query->getStartDate()) {

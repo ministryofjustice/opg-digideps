@@ -10,9 +10,6 @@ use Symfony\Contracts\Translation\TranslatorInterface;
 
 class FeedbackType extends AbstractType
 {
-    /**
-     * @var TranslatorInterface
-     */
     private TranslatorInterface $translator;
 
     public function __construct(TranslatorInterface $translator)
@@ -26,14 +23,14 @@ class FeedbackType extends AbstractType
     {
         $satisfactionScores = range(5, 1);
         $satisfactionLabels = array_map(function ($score) {
-            return $this->translator->trans('form.satisfactionLevel.choices.' . $score, [], 'feedback');
+            return $this->translator->trans('form.satisfactionLevel.choices.'.$score, [], 'feedback');
         }, $satisfactionScores);
 
         $builder
             ->add('specificPage', FormTypes\ChoiceType::class, [
                 'choices' => [
                     'The whole site' => true,
-                    'A specific page' => false
+                    'A specific page' => false,
                 ],
                 'expanded' => true,
                 'multiple' => false,

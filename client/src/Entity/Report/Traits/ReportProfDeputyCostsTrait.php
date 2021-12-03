@@ -2,12 +2,12 @@
 
 namespace App\Entity\Report\Traits;
 
+use App\Entity\Report\ProfDeputyInterimCost;
 use App\Entity\Report\ProfDeputyOtherCost;
+use App\Entity\Report\ProfDeputyPreviousCost;
 use App\Entity\Report\Report;
 use JMS\Serializer\Annotation as JMS;
 use Symfony\Component\Validator\Constraints as Assert;
-use App\Entity\Report\ProfDeputyPreviousCost;
-use App\Entity\Report\ProfDeputyInterimCost;
 use Symfony\Component\Validator\Context\ExecutionContextInterface;
 
 trait ReportProfDeputyCostsTrait
@@ -107,12 +107,13 @@ trait ReportProfDeputyCostsTrait
     private $profDeputyTotalCostsTakenFromClient;
 
     /**
-     * return true if only fixed is true
-     * @return boolean
+     * return true if only fixed is true.
+     *
+     * @return bool
      */
     public function hasProfDeputyCostsHowChargedFixedOnly()
     {
-        return $this->getProfDeputyCostsHowCharged() == Report::PROF_DEPUTY_COSTS_TYPE_FIXED;
+        return Report::PROF_DEPUTY_COSTS_TYPE_FIXED == $this->getProfDeputyCostsHowCharged();
     }
 
     /**
@@ -131,11 +132,13 @@ trait ReportProfDeputyCostsTrait
 
     /**
      * @param $profDeputyOtherCostTypeIds
+     *
      * @return $this
      */
     public function setProfDeputyOtherCostTypeIds($profDeputyOtherCostTypeIds)
     {
         $this->profDeputyOtherCostTypeIds = $profDeputyOtherCostTypeIds;
+
         return $this;
     }
 
@@ -153,28 +156,26 @@ trait ReportProfDeputyCostsTrait
     public function setProfDeputyCostsHowCharged($profDeputyCostsHowCharged)
     {
         $this->profDeputyCostsHowCharged = $profDeputyCostsHowCharged;
+
         return $this;
     }
 
-    /**
-     * @param ExecutionContextInterface $context
-     */
     public function profCostsInterimAtLeastOne(ExecutionContextInterface $context)
     {
         $ics = $this->getProfDeputyInterimCosts();
         $emptyCount = 0;
 
         foreach ($ics as $index => $ic) {
-            if ($ics[$index]->getDate() === null && $ics[$index]->getAmount() === null) {
-                $emptyCount++;
+            if (null === $ics[$index]->getDate() && null === $ics[$index]->getAmount()) {
+                ++$emptyCount;
                 continue;
             }
 
-            if ($ics[$index]->getDate() === null) {
+            if (null === $ics[$index]->getDate()) {
                 $context->buildViolation('profDeputyInterimCost.date.notBlank')->atPath(sprintf('profDeputyInterimCosts[%s].date', $index))->addViolation();
             }
 
-            if ($ics[$index]->getAmount() === null) {
+            if (null === $ics[$index]->getAmount()) {
                 $context->buildViolation('profDeputyInterimCost.amount.notBlank')->atPath(sprintf('profDeputyInterimCosts[%s].amount', $index))->addViolation();
             }
         }
@@ -194,11 +195,13 @@ trait ReportProfDeputyCostsTrait
 
     /**
      * @param string $profDeputyCostsHasPrevious
+     *
      * @return $this
      */
     public function setProfDeputyCostsHasPrevious($profDeputyCostsHasPrevious)
     {
         $this->profDeputyCostsHasPrevious = $profDeputyCostsHasPrevious;
+
         return $this;
     }
 
@@ -212,11 +215,13 @@ trait ReportProfDeputyCostsTrait
 
     /**
      * @param ProfDeputyPreviousCost[] $profDeputyPreviousCosts
+     *
      * @return $this
      */
     public function setProfDeputyPreviousCosts($profDeputyPreviousCosts)
     {
         $this->profDeputyPreviousCosts = $profDeputyPreviousCosts;
+
         return $this;
     }
 
@@ -230,11 +235,13 @@ trait ReportProfDeputyCostsTrait
 
     /**
      * @param string $profDeputyCostsHasInterim
+     *
      * @return $this
      */
     public function setProfDeputyCostsHasInterim($profDeputyCostsHasInterim)
     {
         $this->profDeputyCostsHasInterim = $profDeputyCostsHasInterim;
+
         return $this;
     }
 
@@ -248,16 +255,17 @@ trait ReportProfDeputyCostsTrait
 
     /**
      * @param ProfDeputyInterimCost[] $profDeputyInterimCosts
+     *
      * @return $this
      */
     public function setProfDeputyInterimCosts($profDeputyInterimCosts)
     {
         $this->profDeputyInterimCosts = $profDeputyInterimCosts;
+
         return $this;
     }
 
     /**
-     *
      * @return ProfDeputyOtherCost[]
      */
     public function getProfDeputyOtherCosts()
@@ -267,6 +275,7 @@ trait ReportProfDeputyCostsTrait
 
     /**
      * @param $profDeputyOtherCosts
+     *
      * @return $this
      */
     public function setProfDeputyOtherCosts($profDeputyOtherCosts)
@@ -276,9 +285,6 @@ trait ReportProfDeputyCostsTrait
         return $this;
     }
 
-    /**
-     * @param ProfDeputyInterimCost $ic
-     */
     public function addProfDeputyInterimCosts(ProfDeputyInterimCost $ic)
     {
         $this->profDeputyInterimCosts[] = $ic;
@@ -294,11 +300,13 @@ trait ReportProfDeputyCostsTrait
 
     /**
      * @param float $profDeputyCostsAmountToScco
+     *
      * @return $this
      */
     public function setProfDeputyCostsAmountToScco($profDeputyCostsAmountToScco)
     {
         $this->profDeputyCostsAmountToScco = $profDeputyCostsAmountToScco;
+
         return $this;
     }
 
@@ -312,11 +320,13 @@ trait ReportProfDeputyCostsTrait
 
     /**
      * @param string $profDeputyCostsReasonBeyondEstimate
+     *
      * @return $this
      */
     public function setProfDeputyCostsReasonBeyondEstimate($profDeputyCostsReasonBeyondEstimate)
     {
         $this->profDeputyCostsReasonBeyondEstimate = $profDeputyCostsReasonBeyondEstimate;
+
         return $this;
     }
 
@@ -330,6 +340,7 @@ trait ReportProfDeputyCostsTrait
 
     /**
      * @param array $profDeputyOtherCostIds
+     *
      * @return $this
      */
     public function setProfDeputyOtherCostIds($profDeputyOtherCostIds)
@@ -347,11 +358,13 @@ trait ReportProfDeputyCostsTrait
 
     /**
      * @param float $profDeputyFixedCost
+     *
      * @return $this
      */
     public function setProfDeputyFixedCost($profDeputyFixedCost)
     {
         $this->profDeputyFixedCost = $profDeputyFixedCost;
+
         return $this;
     }
 
@@ -365,11 +378,13 @@ trait ReportProfDeputyCostsTrait
 
     /**
      * @param float $profDeputyTotalCosts
+     *
      * @return $this
      */
     public function setProfDeputyTotalCosts($profDeputyTotalCosts)
     {
         $this->profDeputyTotalCosts = $profDeputyTotalCosts;
+
         return $this;
     }
 
@@ -387,6 +402,7 @@ trait ReportProfDeputyCostsTrait
     public function setProfDeputyTotalCostsTakenFromClient($profDeputyTotalCostsTakenFromClient)
     {
         $this->profDeputyTotalCostsTakenFromClient = $profDeputyTotalCostsTakenFromClient;
+
         return $this;
     }
 

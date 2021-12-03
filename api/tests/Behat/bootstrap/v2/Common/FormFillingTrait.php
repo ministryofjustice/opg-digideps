@@ -290,7 +290,9 @@ trait FormFillingTrait
         }
 
         if (is_null($answerGroupToRemove)) {
-            throw new BehatException(sprintf('Tried to remove an answer but could not find submitted answers that contained the requested field name \'%s\'', $fieldInAnswerGroupToRemove));
+            $formattedAnswers = json_encode($this->submittedAnswersByFormSections, JSON_PRETTY_PRINT);
+
+            throw new BehatException(sprintf('Tried to remove an answer but could not find submitted answers that contained the requested field name \'%s\'. Completed fields are: %s', $fieldInAnswerGroupToRemove, $formattedAnswers));
         }
 
         if (!is_null($removeButtonText)) {

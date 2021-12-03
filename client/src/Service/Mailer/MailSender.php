@@ -21,9 +21,6 @@ class MailSender implements MailSenderInterface
 
     /**
      * MailSender constructor.
-     *
-     * @param LoggerInterface $logger
-     * @param NotifyClient $notifyClient
      */
     public function __construct(
         LoggerInterface $logger,
@@ -45,6 +42,7 @@ class MailSender implements MailSenderInterface
             );
         } catch (NotifyException $exception) {
             $this->logger->error($exception->getMessage());
+
             return false;
         }
 

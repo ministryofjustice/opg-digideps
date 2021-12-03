@@ -196,6 +196,20 @@ class AuthControllerTest extends AbstractTestController
         ]);
     }
 
+    public function testPasswordHashNotInResponse()
+    {
+        $authToken = $this->login('deputy@example.org', 'DigidepsPass1234', API_TOKEN_DEPUTY);
+
+        // assert succeed with token
+        $data = $this->assertJsonRequest('GET', '/auth/get-logged-user', [
+                'mustSucceed' => true,
+                'AuthToken' => $authToken,
+            ])['data'];
+
+        $this->assertEquals('deputy@example.org', $data['email']);
+        $this->assertNull($data['password'], 'No password is returned');
+    }
+
     public function testBruteForceSameEmail()
     {
         $this->resetAttempts('email'.'deputy@example.org');

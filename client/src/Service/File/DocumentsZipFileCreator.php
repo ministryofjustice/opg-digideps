@@ -21,6 +21,7 @@ class DocumentsZipFileCreator
 
     /**
      * @param []RetrievedDocument $retrievedDocuments
+     *
      * @return array
      */
     public function createZipFilesFromRetrievedDocuments(array $retrievedDocuments)
@@ -59,7 +60,6 @@ class DocumentsZipFileCreator
     }
 
     /**
-     * @param array $zipFiles
      * @return string
      */
     public function createMultiZipFile(array $zipFiles)
@@ -84,7 +84,7 @@ class DocumentsZipFileCreator
     }
 
     /**
-     * remove temporary files
+     * remove temporary files.
      */
     public function cleanUp()
     {
@@ -98,21 +98,21 @@ class DocumentsZipFileCreator
     }
 
     /**
-     * @param  Document $document
+     * @param Document $document
+     *
      * @return string
      */
     private static function createDocumentTmpFilePath(string $fileName)
     {
-        return self::TMP_ROOT_PATH . 'dd_temp_zip_' . $fileName . microtime(1);
+        return self::TMP_ROOT_PATH.'dd_temp_zip_'.$fileName.microtime(1);
     }
 
     /**
-     * @param string $zipFileName
      * @return string
      */
     private static function createZipFilePath(string $zipFileName)
     {
-        return self::TMP_ROOT_PATH . $zipFileName;
+        return self::TMP_ROOT_PATH.$zipFileName;
     }
 
     /**
@@ -120,7 +120,7 @@ class DocumentsZipFileCreator
      */
     private static function createMultiZipFilePath()
     {
-        return self::TMP_ROOT_PATH . 'multidownload-' . microtime(1) . '.zip';
+        return self::TMP_ROOT_PATH.'multidownload-'.microtime(1).'.zip';
     }
 
     public function __destruct()

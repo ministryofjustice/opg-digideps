@@ -10,9 +10,6 @@ use App\Service\Client\RestClient;
 
 class UserResearchResponseSummaryMapper
 {
-    /**
-     * @var UserResearchApi
-     */
     private UserResearchApi $userResearchApi;
 
     /**
@@ -24,7 +21,6 @@ class UserResearchResponseSummaryMapper
     }
 
     /**
-     * @param DateRangeQuery $query
      * @return mixed
      */
     public function getBy(DateRangeQuery $query)

@@ -14,15 +14,43 @@ trait ReportTrait
     public string $reportUrlPrefix = 'report';
 
     /**
-     * @Then I should be able to submit my report without completing the section
      * @Given I submit the report
      * @Given I should be able to submit the report
      */
     public function iSubmitTheReport()
     {
-        $ndrOrReport = $this->loggedInUserDetails->getCurrentReportNdrOrReport();
-        $reportId = $this->loggedInUserDetails->getCurrentReportId();
+        [$ndrOrReport, $reportId] = $this->getCorrectReport('current');
+        $this->submitSteps($ndrOrReport, $reportId);
+    }
 
+    /**
+     * @Then I should be able to submit my previous report
+     */
+    public function iShouldBeAbleToSubmitMyPreviousReport()
+    {
+        [$ndrOrReport, $reportId] = $this->getCorrectReport('previous');
+        $this->submitSteps($ndrOrReport, $reportId);
+    }
+
+    /**
+     * @Then I should be able to submit my :currentOrPrevious report without completing the client benefits check section
+     */
+    public function iSubmitCurrentOrPreviousTheReport(string $currentOrPrevious)
+    {
+        [$ndrOrReport, $reportId] = $this->getCorrectReport($currentOrPrevious);
+        $this->submitSteps($ndrOrReport, $reportId);
+    }
+
+    private function getCorrectReport(string $currentOrPrevious): array
+    {
+        return [
+            'current' === $currentOrPrevious ? $this->loggedInUserDetails->getCurrentReportNdrOrReport() : $this->loggedInUserDetails->getPreviousReportNdrOrReport(),
+            'current' === $currentOrPrevious ? $this->loggedInUserDetails->getCurrentReportId() : $this->loggedInUserDetails->getPreviousReportId(),
+        ];
+    }
+
+    private function submitSteps(string $ndrOrReport, int $reportId)
+    {
         $this->visit("$ndrOrReport/$reportId/overview");
 
         try {
@@ -432,7 +460,7 @@ trait ReportTrait
         if (empty($this->loggedInUserDetails) ||
            (empty($this->loggedInUserDetails->getCurrentReportId()) && empty($this->loggedInUserDetails->getPreviousReportId()))
         ) {
-            throw new Exception('The logged in user does not have a report. Ensure a user with a report has logged in before using this step.');
+            throw new BehatException('The logged in user does not have a report. Ensure a user with a report has logged in before using this step.');
         }
 
         if (!in_array($currentOrPrevious, ['current', 'previous'])) {

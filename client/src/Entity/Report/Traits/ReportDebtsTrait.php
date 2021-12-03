@@ -136,7 +136,7 @@ trait ReportDebtsTrait
     }
 
     /**
-     * Get debt management text
+     * Get debt management text.
      *
      * @return string
      */
@@ -146,7 +146,7 @@ trait ReportDebtsTrait
     }
 
     /**
-     * Set debt management text
+     * Set debt management text.
      *
      * @param string $debtManagement
      *
@@ -159,12 +159,9 @@ trait ReportDebtsTrait
         return $this;
     }
 
-    /**
-     * @param ExecutionContextInterface $context
-     */
     public function debtsValid(ExecutionContextInterface $context)
     {
-        if ($this->getHasDebts() == 'yes' && count($this->getDebtsWithValidAmount()) === 0) {
+        if ('yes' == $this->getHasDebts() && 0 === count($this->getDebtsWithValidAmount())) {
             $context->addViolation('report.hasDebts.mustHaveAtLeastOneDebt');
         }
     }

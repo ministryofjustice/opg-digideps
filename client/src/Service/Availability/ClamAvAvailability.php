@@ -6,13 +6,10 @@ use GuzzleHttp\ClientInterface;
 
 /**
  * Check if the Clam AV antivirus is running, using the PING enpoint
- * https://github.com/ministryofjustice/opg-file-scanner-service
+ * https://github.com/ministryofjustice/opg-file-scanner-service.
  */
 class ClamAvAvailability extends ServiceAvailabilityAbstract
 {
-    /**
-     * @var ClientInterface
-     */
     private ClientInterface $fileScannerClient;
 
     public function __construct(ClientInterface $fileScannerClient)
@@ -25,7 +22,7 @@ class ClamAvAvailability extends ServiceAvailabilityAbstract
         try {
             $response = $this->fileScannerClient->get('/');
             if (200 !== $response->getStatusCode()) {
-                throw new \RuntimeException('returned HTTP code ' . $response->getStatusCode());
+                throw new \RuntimeException('returned HTTP code '.$response->getStatusCode());
             }
 
             $this->isHealthy = true;

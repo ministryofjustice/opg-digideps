@@ -241,11 +241,12 @@ class UserApi
 
     /**
      * @param $token
+     *
      * @return mixed
      */
     public function agreeTermsUse($token)
     {
-        return $this->restClient->apiCall('put', 'user/agree-terms-use/' . $token, null, 'raw', [], false);
+        return $this->restClient->apiCall('put', 'user/agree-terms-use/'.$token, null, 'raw', [], false);
     }
 
     /**

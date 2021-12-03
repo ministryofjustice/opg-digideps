@@ -23,6 +23,7 @@ final class AuditEvents
     const EVENT_REPORT_RESUBMITTED = 'REPORT_RESUBMITTED';
     const EVENT_USER_ADDED_TO_ORG = 'USER_ADDED_TO_ORG';
     const EVENT_USER_REMOVED_FROM_ORG = 'USER_REMOVED_FROM_ORG';
+    const EVENT_CSV_UPLOADED = 'CSV_UPLOADED';
 
     const TRIGGER_ADMIN_USER_EDIT = 'ADMIN_USER_EDIT';
     const TRIGGER_ADMIN_BUTTON = 'ADMIN_BUTTON';
@@ -230,6 +231,24 @@ final class AuditEvents
         ];
 
         return $event + $this->baseEvent(AuditEvents::EVENT_REPORT_RESUBMITTED);
+    }
+
+    /**
+     * @throws \Exception
+     */
+    public function csvUploaded(
+        string $trigger,
+        string $source,
+        string $roleType
+    ): array {
+        $event = [
+            'trigger' => $trigger,
+            'source' => $source,
+            'role_type' => $roleType,
+            'changed_on' => $this->dateTimeProvider->getDateTime()->format(DateTime::ATOM),
+        ];
+
+        return $event + $this->baseEvent(AuditEvents::EVENT_CSV_UPLOADED);
     }
 
     public function selfRegistrationFailed(array $failureData): array

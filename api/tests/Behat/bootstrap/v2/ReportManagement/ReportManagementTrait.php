@@ -161,7 +161,14 @@ trait ReportManagementTrait
     {
         $this->iAmOnAdminClientDetailsPage();
 
-        $reportPeriod = 'completed' === $this->reportStatus ? $this->interactingWithUserDetails->getCurrentReportPeriod() : $this->interactingWithUserDetails->getPreviousReportPeriod();
+        if ('completed' === $this->reportStatus) {
+            $reportPeriod = $this->interactingWithUserDetails->getCurrentReportPeriod();
+            $reportDueDate = $this->interactingWithUserDetails->getCurrentReportDueDate();
+        } else {
+            $reportPeriod = $this->interactingWithUserDetails->getPreviousReportPeriod();
+            $reportDueDate = $this->interactingWithUserDetails->getPreviousReportDueDate();
+        }
+
         $locator = sprintf(
             "//td[normalize-space()='%s']/..",
             $reportPeriod
@@ -174,11 +181,16 @@ trait ReportManagementTrait
         }
 
         $numberWeeksExtended = $this->getSectionAnswers('manage-report')[0]['manage_report[dueDateChoice]'];
-        $expectedDueDate = (new DateTime())
-            ->modify(
-                sprintf('+ %s weeks', $numberWeeksExtended)
-            )
-            ->format('j F Y');
+
+        if ($numberWeeksExtended) {
+            $expectedDueDate = (new DateTime())
+                ->modify(
+                    sprintf('+ %s weeks', $numberWeeksExtended)
+                )
+                ->format('j F Y');
+        } else {
+            $expectedDueDate = $reportDueDate->format('j F Y');
+        }
 
         $this->assertStringContainsString(
             $expectedDueDate,
@@ -201,6 +213,10 @@ trait ReportManagementTrait
             $extraFields = $this->paCombinedHighExtraCheckboxes;
         } else {
             $extraFields = $this->profCombinedHighExtraCheckboxes;
+        }
+
+        if ($this->clientBenefitsSectionAvailable) {
+            $extraFields['clientBenefitsCheck'] = 'Benefits check and income other people receive';
         }
 
         $checkboxValuesAndTranslations = array_merge(
@@ -391,6 +407,51 @@ trait ReportManagementTrait
 
         if (!is_null($reportPdfLink)) {
             throw new BehatException('Download link for the report is visible when it should not be');
+        }
+    }
+
+    /**
+     * @Given /^I should not see the client benefits check section in the checklist group$/
+     */
+    public function iShouldNotSeeTheClientBenefitsCheckSectionInTheChecklistGroup()
+    {
+        $this->assertClientBenefitsCheckboxVisible(false);
+    }
+
+    /**
+     * @Given /^I should see the client benefits check section in the checklist group$/
+     */
+    public function iShouldSeeTheClientBenefitsCheckSectionInTheChecklistGroup()
+    {
+        $this->assertClientBenefitsCheckboxVisible(true);
+    }
+
+    private function assertClientBenefitsCheckboxVisible(bool $shouldBeVisible)
+    {
+        $benefitsCheckXpath = './/label[text()[contains(.,"Client benefits check")]]/..';
+
+        $checkboxDiv = $this->getSession()->getPage()->find('xpath', $benefitsCheckXpath);
+
+        $checkboxIsVisible = !is_null($checkboxDiv);
+
+        if ($shouldBeVisible) {
+            if (!$checkboxIsVisible) {
+                $message = sprintf(
+                    'The checkbox for "Client benefits check" appeared on the page when it shouldn\'t have: %s',
+                    $checkboxDiv->getHtml()
+                );
+
+                throw new BehatException($message);
+            }
+        } else {
+            if ($checkboxIsVisible) {
+                $message = sprintf(
+                    'The checkbox for "Client benefits check" did not appear on the page when it should have: %s',
+                    $this->getSession()->getPage()->find('xpath', '//main')->getHtml()
+                );
+
+                throw new BehatException($message);
+            }
         }
     }
 }

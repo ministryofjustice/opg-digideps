@@ -121,9 +121,6 @@ class ProfDeputyEstimateCost
         $this->moreDetails = $moreDetails;
     }
 
-    /**
-     * @param ExecutionContextInterface $context
-     */
     public function moreDetailsValidate(ExecutionContextInterface $context)
     {
         if (!$this->getHasMoreDetails()) {
