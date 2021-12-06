@@ -112,8 +112,14 @@ trait FormFillingTrait
     public function fillInFieldTrackTotal(string $field, int $value, ?string $formSectionName = null)
     {
         $this->fillInField($field, $value, $formSectionName);
-        $this->submittedAnswersByFormSections['totals'][$formSectionName] += $value;
-        $this->submittedAnswersByFormSections['totals']['grandTotal'] += $value;
+
+        if ($this->submittedAnswersByFormSections['totals'][$formSectionName] ?? null) {
+            $this->submittedAnswersByFormSections['totals'][$formSectionName] += $value;
+        }
+
+        if ($this->submittedAnswersByFormSections['totals']['grandTotal'] ?? null) {
+            $this->submittedAnswersByFormSections['totals']['grandTotal'] += $value;
+        }
     }
 
     /**
