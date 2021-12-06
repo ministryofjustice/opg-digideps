@@ -185,7 +185,7 @@ trait ReportManagementTrait
         if ($numberWeeksExtended['manage_report[dueDateChoice]'] ?? null) {
             $expectedDueDate = (new DateTime())
                 ->modify(
-                    sprintf('+ %s weeks', $numberWeeksExtended)
+                    sprintf('+ %s weeks', $numberWeeksExtended['manage_report[dueDateChoice]'])
                 )
                 ->format('j F Y');
         } else {

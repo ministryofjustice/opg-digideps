@@ -86,13 +86,13 @@ trait FormFillingTrait
         $sortCodeParts = explode('-', $fullSortCode);
 
         $firstDigitsField = sprintf('%s[sort_code_part_1]', $fieldName);
-        $this->fillField($firstDigitsField, $sortCodeParts[0]);
+        $this->fillField($firstDigitsField, $sortCodeParts[0] ?? null);
 
         $secondDigitsField = sprintf('%s[sort_code_part_2]', $fieldName);
-        $this->fillField($secondDigitsField, $sortCodeParts[1]);
+        $this->fillField($secondDigitsField, $sortCodeParts[1] ?? null);
 
         $thirdDigitsField = sprintf('%s[sort_code_part_3]', $fieldName);
-        $this->fillField($thirdDigitsField, $sortCodeParts[2]);
+        $this->fillField($thirdDigitsField, $sortCodeParts[2] ?? null);
 
         if ($formSectionName && is_numeric(str_replace('-', '', $fullSortCode))) {
             $answerGroup = $this->determineAnswerGroup($formSectionName, $fieldName);

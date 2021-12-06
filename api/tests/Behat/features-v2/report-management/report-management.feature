@@ -89,7 +89,7 @@ Feature: Report Management (applies to all admin roles)
         Then I should see the report sections the admin ticked as incomplete labelled as changes needed
         And I should be able to submit my 'previous' report without completing the client benefits check section
 
-    @admin-manager @lay-combined-high-submitted
+    @admin-manager @lay-combined-high-submitted @acs
     Scenario: An admin manager un-submits a report that had a completed client benefits check section
         Given a Lay Deputy has submitted a Combined High Assets report
         And the deputies 'previous' report ends and is due 'more' than 60 days after the client benefits check feature flag date
