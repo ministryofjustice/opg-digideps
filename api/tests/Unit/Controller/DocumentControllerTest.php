@@ -294,6 +294,6 @@ class DocumentControllerTest extends AbstractTestController
         ]
         );
 
-        self::assertEquals('{}', $response['data']);
+        self::assertEquals(1, $response['data']);
     }
 }

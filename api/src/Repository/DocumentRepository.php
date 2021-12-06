@@ -134,7 +134,7 @@ AND is_report_pdf=false";
         $conn = $this->getEntityManager()->getConnection();
         $stmt = $conn->prepare($updateStatusQuery);
 
-        return $stmt->executeQuery();
+        return $stmt->executeStatement();
     }
 
     private function flagSubmissionsContainingReportPdfs(array $reportSubmissions, Connection $connection)

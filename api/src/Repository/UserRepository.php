@@ -23,7 +23,8 @@ class UserRepository extends ServiceEntityRepository
 
     /**
      * @param int $id
-     * @return null|array
+     *
+     * @return array|null
      */
     public function findUserArrayById($id)
     {
@@ -34,13 +35,9 @@ class UserRepository extends ServiceEntityRepository
 
         $result = $query->getArrayResult();
 
-        return count($result) === 0 ? null : $result[0];
+        return 0 === count($result) ? null : $result[0];
     }
 
-    /**
-     * @param Request $request
-     * @return array|null
-     */
     public function findUsersByQueryParameters(Request $request): ?array
     {
         $this->qb = $this->createQueryBuilder('u');
@@ -57,7 +54,7 @@ class UserRepository extends ServiceEntityRepository
         $this->qb
             ->setFirstResult($request->get('offset', 0))
             ->setMaxResults($request->get('limit', 50))
-            ->orderBy('u.' . $order_by, $sort_order)
+            ->orderBy('u.'.$order_by, $sort_order)
             ->groupBy('u.id');
 
         if ($request->get('filter_by_ids')) {
@@ -67,13 +64,9 @@ class UserRepository extends ServiceEntityRepository
         return $this->qb->getQuery()->getResult();
     }
 
-    /**
-     * @param Request $request
-     * @return UserRepository
-     */
     private function handleRoleNameFilter(Request $request): UserRepository
     {
-        if (! ($roleName = $request->get('role_name'))) {
+        if (!($roleName = $request->get('role_name'))) {
             return $this;
         }
 
@@ -87,10 +80,6 @@ class UserRepository extends ServiceEntityRepository
         return $this;
     }
 
-    /**
-     * @param Request $request
-     * @return UserRepository
-     */
     private function handleAdManagedFilter(Request $request): UserRepository
     {
         if ($request->get('ad_managed')) {
@@ -100,10 +89,6 @@ class UserRepository extends ServiceEntityRepository
         return $this;
     }
 
-    /**
-     * @param Request $request
-     * @return UserRepository
-     */
     private function handleNdrEnabledFilter(Request $request): UserRepository
     {
         if ($request->get('ndr_enabled')) {
@@ -113,13 +98,9 @@ class UserRepository extends ServiceEntityRepository
         return $this;
     }
 
-    /**
-     * @param Request $request
-     * @return UserRepository
-     */
     private function handleSearchTermFilter(Request $request): UserRepository
     {
-        if (! ($searchTerm = $request->get('q'))) {
+        if (!($searchTerm = $request->get('q'))) {
             return $this;
         }
 
@@ -133,7 +114,7 @@ class UserRepository extends ServiceEntityRepository
             $searchTerms = explode(' ', $searchTerm);
             $includeClients = (bool) $request->get('include_clients');
 
-            if (count($searchTerms) === 1) {
+            if (1 === count($searchTerms)) {
                 $this->addBroadMatchFilter($searchTerm, $includeClients);
             } else {
                 $this->addFullNameExactMatchFilter($searchTerms[0], $searchTerms[1], $includeClients);
@@ -144,8 +125,6 @@ class UserRepository extends ServiceEntityRepository
     }
 
     /**
-     * @param string $searchTerm
-     * @param bool $includeClients
      * @return string
      */
     public function addBroadMatchFilter(string $searchTerm, bool $includeClients)
@@ -156,14 +135,11 @@ class UserRepository extends ServiceEntityRepository
             $nameBasedQuery .= ' OR (lower(c.firstname) LIKE :qLike OR lower(c.lastname) LIKE :qLike)';
         }
 
-        $this->qb->setParameter('qLike', '%' . strtolower($searchTerm) . '%');
+        $this->qb->setParameter('qLike', '%'.strtolower($searchTerm).'%');
         $this->qb->andWhere($nameBasedQuery);
     }
 
     /**
-     * @param string $firstName
-     * @param string $lastname
-     * @param bool $includeClients
      * @return string
      */
     public function addFullNameExactMatchFilter(string $firstName, string $lastname, bool $includeClients)
@@ -241,8 +217,8 @@ GROUP BY u.id, u.firstname, u.lastname, u.email, u.registration_date, u.last_log
 SQL;
 
         $stmt = $conn->prepare($sql);
-        $stmt->execute(['oneYearAgo' => $oneYearAgo]);
+        $result = $stmt->executeQuery(['oneYearAgo' => $oneYearAgo]);
 
-        return $stmt->fetchAllAssociative();
+        return $result->fetchAllAssociative();
     }
 }
