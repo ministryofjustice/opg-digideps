@@ -243,7 +243,6 @@ trait ClientBenefitsCheckSectionTrait
     {
         $this->iAmOnClientBenefitsCheckSummaryPage();
 
-        // Its null - fix
         $incomeTypeAnswers = $this->getSectionAnswers('incomeType')[0];
         $incomeTypeDescription = $incomeTypeAnswers[array_key_first($incomeTypeAnswers)];
 
