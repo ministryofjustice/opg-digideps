@@ -32,7 +32,7 @@ Feature: Money Out Short
         When I follow link back to report overview page
         Then I should see "money-out-short" as "4 items"
 
-    @lay-pfa-low-not-started
+    @lay-pfa-low-not-started @acs
     Scenario: A user removes a one off payment
         Given a Lay Deputy has not started a Pfa Low Assets report
         When I view and start the money out short report section

@@ -14,7 +14,7 @@ use DateTime;
  */
 trait FormFillingTrait
 {
-    public array $submittedAnswersByFormSections = [];
+    public array $submittedAnswersByFormSections = ['totals' => ['grandTotal' => 0]];
 
     /**
      * @param string      $field           field id|name|label|value
@@ -113,13 +113,13 @@ trait FormFillingTrait
     {
         $this->fillInField($field, $value, $formSectionName);
 
-        if ($this->submittedAnswersByFormSections['totals'][$formSectionName] ?? null) {
+        if (isset($this->submittedAnswersByFormSections['totals'][$formSectionName])) {
             $this->submittedAnswersByFormSections['totals'][$formSectionName] += $value;
+        } else {
+            $this->submittedAnswersByFormSections['totals'][$formSectionName] = $value;
         }
 
-        if ($this->submittedAnswersByFormSections['totals']['grandTotal'] ?? null) {
-            $this->submittedAnswersByFormSections['totals']['grandTotal'] += $value;
-        }
+        $this->submittedAnswersByFormSections['totals']['grandTotal'] += $value;
     }
 
     /**
@@ -227,12 +227,18 @@ trait FormFillingTrait
      */
     public function removeSectionTotal(string $formSectionName)
     {
-        unset($this->submittedAnswersByFormSections['totals'][$formSectionName]);
+        if ($this->submittedAnswersByFormSections['totals'][$formSectionName] ?? null) {
+            unset($this->submittedAnswersByFormSections['totals'][$formSectionName]);
+        }
     }
 
     public function addToSectionTotal(string $formSectionName, $amountToAdd)
     {
-        $this->submittedAnswersByFormSections['totals'][$formSectionName] += $amountToAdd;
+        if (isset($this->submittedAnswersByFormSections['totals'][$formSectionName])) {
+            $this->submittedAnswersByFormSections['totals'][$formSectionName] += $amountToAdd;
+        } else {
+            $this->submittedAnswersByFormSections['totals'][$formSectionName] = $amountToAdd;
+        }
     }
 
     public function addToGrandTotal($amountToAdd)
@@ -242,12 +248,17 @@ trait FormFillingTrait
 
     public function subtractFromSectionTotal(string $formSectionName, $amountToSubtract)
     {
-        $this->submittedAnswersByFormSections['totals'][$formSectionName] -= $amountToSubtract;
+        if (isset($this->submittedAnswersByFormSections['totals'][$formSectionName])) {
+            $this->submittedAnswersByFormSections['totals'][$formSectionName] -= $amountToSubtract;
+        } else {
+            $this->submittedAnswersByFormSections['totals'][$formSectionName] = $amountToSubtract;
+        }
     }
 
     public function addToSubmittedAnswersByFormSections($formSectionName, $field, $value, ?string $formattedValue = null)
     {
         $answerGroup = $this->determineAnswerGroup($formSectionName, $field);
+
         $this->submittedAnswersByFormSections[$formSectionName][$answerGroup][$field] = $formattedValue ?: $value;
     }
 

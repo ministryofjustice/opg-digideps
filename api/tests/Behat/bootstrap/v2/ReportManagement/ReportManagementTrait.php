@@ -180,9 +180,9 @@ trait ReportManagementTrait
             throw new BehatException(sprintf('Could not find a table data element with text %s on the page. HTML of page: %s', $reportPeriod, $this->getSession()->getPage()->find('xpath', '//main')->getHtml()));
         }
 
-        $numberWeeksExtended = $this->getSectionAnswers('manage-report')[0]['manage_report[dueDateChoice]'];
+        $numberWeeksExtended = $this->getSectionAnswers('manage-report')[0] ?? null;
 
-        if ($numberWeeksExtended) {
+        if ($numberWeeksExtended['manage_report[dueDateChoice]'] ?? null) {
             $expectedDueDate = (new DateTime())
                 ->modify(
                     sprintf('+ %s weeks', $numberWeeksExtended)
