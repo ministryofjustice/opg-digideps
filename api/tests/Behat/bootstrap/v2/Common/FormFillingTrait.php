@@ -186,12 +186,12 @@ trait FormFillingTrait
      */
     public function getSectionAnswers(string $formSectionName)
     {
-        return $this->submittedAnswersByFormSections[$formSectionName];
+        return $this->submittedAnswersByFormSections[$formSectionName] ?? null;
     }
 
     public function getSectionTotal(string $formSectionName): ?int
     {
-        return $this->submittedAnswersByFormSections['totals'][$formSectionName];
+        return $this->submittedAnswersByFormSections['totals'][$formSectionName] ?? null;
     }
 
     /**
@@ -199,7 +199,7 @@ trait FormFillingTrait
      */
     public function getGrandTotal()
     {
-        return $this->submittedAnswersByFormSections['totals']['grandTotal'];
+        return $this->submittedAnswersByFormSections['totals']['grandTotal'] ?? null;
     }
 
     public function removeSection(string $formSectionName)
