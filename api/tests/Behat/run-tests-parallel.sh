@@ -15,7 +15,7 @@ runtime=$(( end - start))
 
 echo "Time taken: ${runtime} secs"
 
-if [ $runtime -gt 300 ]
+if [ $runtime -gt 360 ]
 then
     echo "Stage taking too long. Failing the build!"
     echo "Please split out your tests to a new container"
