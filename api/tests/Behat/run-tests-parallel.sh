@@ -11,7 +11,7 @@ confd -onetime -backend env
 
 end=$(date +%s)
 
-runtime=$(end - start)
+runtime=$(( end - start))
 
 echo "Time taken: ${runtime} secs"
 
