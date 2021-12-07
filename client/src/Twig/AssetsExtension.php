@@ -3,6 +3,7 @@
 namespace App\Twig;
 
 use Twig\Extension\AbstractExtension;
+use Twig\TwigFilter;
 
 // todo remove assetic from config and use it's
 
@@ -63,8 +64,8 @@ class AssetsExtension extends AbstractExtension
     public function getFilters()
     {
         return [
-            new \Twig_SimpleFilter('assetUrl', [$this, 'assetUrlFilter']),
-            new \Twig_SimpleFilter('assetSource', [$this, 'assetSourceFilter']),
+            new TwigFilter('assetUrl', [$this, 'assetUrlFilter']),
+            new TwigFilter('assetSource', [$this, 'assetSourceFilter']),
         ];
     }
 
