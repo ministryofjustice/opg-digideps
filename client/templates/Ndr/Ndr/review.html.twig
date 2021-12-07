@@ -80,11 +80,4 @@
     <a class="govuk-link button-link js-trackDownloadLink" href="{{ path('ndr_pdf', {'ndrId': ndr.id}) }}">
         <i class="icon icon-pdf"></i>{{ 'downloadAsPdf' | trans() }}
     </a>
-
-    <script>
-        $(document).ready(function() {
-            var ga = new opg.Ga({'timeout': 250});
-            ga.trackDownloadableLink($('.js-trackDownloadLink'));
-        });
-    </script>
 {% endblock %}

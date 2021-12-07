@@ -128,6 +128,20 @@ $(document).ready(function () {
   }
 
   GoogleAnalyticsEvents.init()
+
+  const trackableLinks = document.querySelectorAll('.js-trackDownloadLink')
+
+  if (trackableLinks !== null) {
+    const ga = new Ga({ timeout: 250 })
+    ga.trackDownloadableLink($('.js-trackDownloadLink'))
+  }
+
+  const transactionCsvElements = document.querySelectorAll('#transactionsCsv')
+
+  if (transactionCsvElements !== null) {
+    const ga = new Ga({ timeout: 250 })
+    ga.trackDownloadableLink($('#transactionsCsv'))
+  }
 })
 
 GOVUKFrontend.initAll()
