@@ -43,7 +43,7 @@
     "behat/mink-selenium2-driver": "^1.4",
     "behatch/contexts": "^3.3",
     "doctrine/doctrine-fixtures-bundle": "^3.4",
-    "friends-of-behat/mink-extension": "^2.5",
+    "acsauk/mink-extension": "^2.5.2",
     "friends-of-behat/symfony-extension": "^2.2",
     "fakerphp/faker": "^1.16",
     "liuggio/fastest": "^1.8",
@@ -74,5 +74,11 @@
     "incenteev-parameters": {
       "file": "config/parameters.yml"
     }
-  }
+  },
+  "repositories": [
+      {
+        "url": "https://github.com/acsauk/MinkExtension.git",
+        "type": "git"
+      }
+  ]
 }
