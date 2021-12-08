@@ -76,50 +76,53 @@ class UserDetails
             throw new BehatException(sprintf('Unexpected keys encountered when trying to initialize UserDetails: %s. Supported keys are: %s', $unexpectedKeysList, $supportedKeysList));
         }
 
-        $this->setUserId($userDetails['userId']);
-        $this->setUserEmail($userDetails['userEmail']);
-        $this->setUserRole($userDetails['userRole']);
-        $this->setUserFirstName($userDetails['userFirstName']);
-        $this->setUserLastName($userDetails['userLastName']);
-        $this->setUserFullName($userDetails['userFullName']);
-        $this->setUserFullAddressArray($userDetails['userFullAddressArray']);
-        $this->setUserPhone($userDetails['userPhone']);
-        $this->setUserEmail($userDetails['userEmail']);
+        $this->setUserId($userDetails['userId'] ?? null);
+        $this->setUserEmail($userDetails['userEmail'] ?? null);
+        $this->setUserRole($userDetails['userRole'] ?? null);
+        $this->setUserFirstName($userDetails['userFirstName'] ?? null);
+        $this->setUserLastName($userDetails['userLastName'] ?? null);
+        $this->setUserFullName($userDetails['userFullName'] ?? null);
+        $this->setUserFullAddressArray($userDetails['userFullAddressArray'] ?? null);
+        $this->setUserPhone($userDetails['userPhone'] ?? null);
+        $this->setUserEmail($userDetails['userEmail'] ?? null);
 
-        $this->setNamedDeputyName($userDetails['namedDeputyName']);
-        $this->setNamedDeputyFullAddressArray($userDetails['namedDeputyFullAddressArray']);
-        $this->setNamedDeputyPhone($userDetails['namedDeputyPhone']);
-        $this->setNamedDeputyPhoneAlt($userDetails['namedDeputyPhoneAlt']);
-        $this->setNamedDeputyEmail($userDetails['namedDeputyEmail']);
-        $this->setNamedDeputyEmailAlt($userDetails['namedDeputyEmailAlt']);
-        $this->setOrganisationName($userDetails['organisationName']);
-        $this->setOrganisationEmailIdentifier($userDetails['organisationEmailIdentifier']);
-        $this->setCourtDate($userDetails['courtDate']);
+        $this->setNamedDeputyName($userDetails['namedDeputyName'] ?? null);
+        $this->setNamedDeputyFullAddressArray($userDetails['namedDeputyFullAddressArray'] ?? null);
+        $this->setNamedDeputyPhone($userDetails['namedDeputyPhone'] ?? null);
+        $this->setNamedDeputyPhoneAlt($userDetails['namedDeputyPhoneAlt'] ?? null);
+        $this->setNamedDeputyEmail($userDetails['namedDeputyEmail'] ?? null);
+        $this->setNamedDeputyEmailAlt($userDetails['namedDeputyEmailAlt'] ?? null);
+        $this->setOrganisationName($userDetails['organisationName'] ?? null);
+        $this->setOrganisationEmailIdentifier($userDetails['organisationEmailIdentifier'] ?? null);
+        $this->setCourtDate($userDetails['courtDate'] ?? null);
 
-        $this->setClientId($userDetails['clientId']);
-        $this->setClientFirstName($userDetails['clientFirstName']);
-        $this->setClientLastName($userDetails['clientLastName']);
-        $this->setClientFullAddressArray($userDetails['clientFullAddressArray']);
-        $this->setClientEmail($userDetails['clientEmail']);
-        $this->setClientCaseNumber($userDetails['clientCaseNumber']);
+        $this->setClientId($userDetails['clientId'] ?? null);
+        $this->setClientFirstName($userDetails['clientFirstName'] ?? null);
+        $this->setClientLastName($userDetails['clientLastName'] ?? null);
+        $this->setClientFullAddressArray($userDetails['clientFullAddressArray'] ?? null);
+        $this->setClientEmail($userDetails['clientEmail'] ?? null);
+        $this->setClientCaseNumber($userDetails['clientCaseNumber'] ?? null);
 
-        $this->setCurrentReportId($userDetails['currentReportId']);
-        $this->setCurrentReportType($userDetails['currentReportType']);
-        $this->setCurrentReportNdrOrReport($userDetails['currentReportNdrOrReport']);
-        $this->setCurrentReportDueDate($userDetails['currentReportDueDate']);
-        $this->setCurrentReportStartDate($userDetails['currentReportStartDate']);
-        $this->setCurrentReportEndDate($userDetails['currentReportEndDate']);
-        $this->setCurrentReportBankAccountId($userDetails['currentReportBankAccountId']);
+        $currentReportId = $userDetails['currentReportId'] ?? null;
+        $previousReportId = $userDetails['previousReportId'] ?? null;
 
-        if ($userDetails['currentReportId'] !== $userDetails['previousReportId']) {
-            $this->setPreviousReportId($userDetails['previousReportId']);
-            $this->setPreviousReportType($userDetails['previousReportType']);
-            $this->setPreviousReportNdrOrReport($userDetails['previousReportNdrOrReport']);
-            $this->setPreviousReportDueDate($userDetails['previousReportDueDate']);
-            $this->setPreviousReportStartDate($userDetails['previousReportStartDate']);
-            $this->setPreviousReportEndDate($userDetails['previousReportEndDate']);
-            $this->setPreviousReportEndDate($userDetails['previousReportEndDate']);
-            $this->setPreviousReportBankAccountId($userDetails['previousReportBankAccountId']);
+        $this->setCurrentReportId($userDetails['currentReportId'] ?? null);
+        $this->setCurrentReportType($userDetails['currentReportType'] ?? null);
+        $this->setCurrentReportNdrOrReport($userDetails['currentReportNdrOrReport'] ?? null);
+        $this->setCurrentReportDueDate($userDetails['currentReportDueDate'] ?? null);
+        $this->setCurrentReportStartDate($userDetails['currentReportStartDate'] ?? null);
+        $this->setCurrentReportEndDate($userDetails['currentReportEndDate'] ?? null);
+        $this->setCurrentReportBankAccountId($userDetails['currentReportBankAccountId'] ?? null);
+
+        if ($currentReportId !== $previousReportId) {
+            $this->setPreviousReportId($previousReportId);
+            $this->setPreviousReportType($userDetails['previousReportType'] ?? null);
+            $this->setPreviousReportNdrOrReport($userDetails['previousReportNdrOrReport'] ?? null);
+            $this->setPreviousReportDueDate($userDetails['previousReportDueDate'] ?? null);
+            $this->setPreviousReportStartDate($userDetails['previousReportStartDate'] ?? null);
+            $this->setPreviousReportEndDate($userDetails['previousReportEndDate'] ?? null);
+            $this->setPreviousReportEndDate($userDetails['previousReportEndDate'] ?? null);
+            $this->setPreviousReportBankAccountId($userDetails['previousReportBankAccountId'] ?? null);
         }
     }
 

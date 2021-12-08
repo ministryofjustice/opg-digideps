@@ -73,7 +73,7 @@ class SettingControllerTest extends AbstractTestController
     {
         $id = 'service-notification';
         $url = '/setting/'.$id;
-        $settingContent = 'snc1'.implode(range(1, 1000), ' ');
+        $settingContent = 'snc1'.implode(' ', range(1, 1000));
         Fixtures::deleteReportsData(['setting']);
 
         // assert Auth

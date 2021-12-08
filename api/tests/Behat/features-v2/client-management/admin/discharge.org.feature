@@ -22,7 +22,7 @@ Feature: Admin - Client Discharge
     And I attempt to discharge the client
     Then the client should not be discharged
 
-@admin-manager @prof-admin-health-welfare-submitted @acs
+@admin-manager @prof-admin-health-welfare-submitted
 Scenario: An admin manager user discharges an org client without a named deputy
     Given a Professional Deputy has submitted a Health and Welfare report
     And an admin manager user accesses the admin app

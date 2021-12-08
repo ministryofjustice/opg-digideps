@@ -148,7 +148,7 @@ class BaseFeatureContext extends MinkContext
     {
         $this->loggedInUserDetails = null;
         $this->interactingWithUserDetails = null;
-        $this->submittedAnswersByFormSections = [];
+        $this->submittedAnswersByFormSections = ['totals' => ['grandTotal' => 0]];
     }
 
     /**

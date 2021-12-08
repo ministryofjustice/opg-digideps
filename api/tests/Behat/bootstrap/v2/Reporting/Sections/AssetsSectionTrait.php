@@ -242,13 +242,17 @@ trait AssetsSectionTrait
         $properties = $this->getSectionAnswers('assetDetailsPropertyPercentage') ?: [];
 
         foreach ($properties as $index => $propertyPercentageAnswers) {
-            if ('Partly owned' === $this->getSectionAnswers('assetDetailsPropertyPercentage')[$index]['asset[owned]']) {
-                $propertyValue = $this->getSectionAnswers('assetDetailsPropertyValue')[$index]['asset[value]'];
-                $ownedPercentage = $this->getSectionAnswers('assetDetailsPropertyPercentage')[$index]['asset[ownedPercentage]'];
+            $propertyPercentage = $this->getSectionAnswers('assetDetailsPropertyPercentage')[$index];
 
-                $this->subtractFromGrandTotal($propertyValue);
+            if (isset($propertyPercentage['asset[owned]']) && 'Partly owned' === $propertyPercentage['asset[owned]']) {
+                if ($this->getSectionAnswers('assetDetailsPropertyValue')) {
+                    $propertyValue = $this->getSectionAnswers('assetDetailsPropertyValue')[$index]['asset[value]'];
+                    $ownedPercentage = $this->getSectionAnswers('assetDetailsPropertyPercentage')[$index]['asset[ownedPercentage]'];
 
-                $this->addToGrandTotal($propertyValue * intval($ownedPercentage) / 100);
+                    $this->subtractFromGrandTotal($propertyValue);
+
+                    $this->addToGrandTotal($propertyValue * intval($ownedPercentage) / 100);
+                }
             }
         }
     }
