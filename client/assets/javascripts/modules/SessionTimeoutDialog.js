@@ -1,4 +1,3 @@
-/* globals $ */
 // SESSION TIMEOUT POPUP LOGIC
 /**
  * @param element
@@ -6,43 +5,48 @@
  * @param sessionPopupShowAfterMs
  * @param refreshUrl
  */
-module.exports = function (options) {
-  var that = this
-  this.element = options.element
-  this.sessionExpiresMs = options.sessionExpiresMs
-  this.sessionPopupShowAfterMs = options.sessionPopupShowAfterMs
-  this.keepSessionAliveUrl = options.keepSessionAliveUrl
-  this.redirectAfterMs = 3000
+const SessionTimeoutDialog = function (options) {
+  const element = options.element
+  const sessionExpiresMs = options.sessionExpiresMs
+  const sessionPopupShowAfterMs = options.sessionPopupShowAfterMs
+  const keepSessionAliveUrl = options.keepSessionAliveUrl
+  const redirectAfterMs = 3000
+  const okBtn = options.okBtn
 
-  var $okButton = that.element.find('[data-js="ok-button"]')
+  function startCountdown () {
+    window.setInterval(() => {
+      element.style.display = 'block'
+    }, sessionPopupShowAfterMs)
 
-  // attach click event
-  $okButton.click(function (e) {
-    e.preventDefault()
-    that.hidePopupAndRestartCountdown()
-  })
-
-  this.startCountdown = function () {
-    this.countDownPopup = window.setInterval(function () {
-      that.element.css('display', 'block')
-    }, this.sessionPopupShowAfterMs)
-
-    this.countDownLogout = window.setInterval(function () {
+    window.setInterval(() => {
       window.location.reload()
-    }, this.sessionExpiresMs + this.redirectAfterMs)
+    }, sessionExpiresMs + redirectAfterMs)
   }
 
-  this.hidePopupAndRestartCountdown = function () {
-    this.element.hide()
+  // attach click event
+  okBtn.addEventListener('click', function (e) {
+    e.preventDefault()
+    hidePopupAndRestartCountdown(element)
+  })
 
-    this.keepSessionAlive()
+  function hidePopupAndRestartCountdown (element) {
+    element.style.display = 'none'
+
+    keepSessionAlive()
+
     // restart countdown
     window.clearInterval(this.countDownPopup)
     window.clearInterval(this.countDownLogout)
-    this.startCountdown()
+    startCountdown()
   }
 
-  this.keepSessionAlive = function () {
-    $.get(this.keepSessionAliveUrl + '?refresh=' + Date.now())
+  function keepSessionAlive () {
+    window.fetch(keepSessionAliveUrl + '?refresh=' + Date.now())
+  }
+
+  return {
+    startCountdown: startCountdown
   }
 }
+
+export default SessionTimeoutDialog
