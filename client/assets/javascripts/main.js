@@ -1,8 +1,8 @@
 /* globals $ */
 import { ButtonToggler } from './modules/buttonToggler.js'
-import { MOJButtonMenu } from './modules/buttonMenu'
-import { GoogleAnalyticsEvents } from './modules/googleAnalyticsEvents'
 import { CookieBanner } from './modules/cookieBanner'
+import { GoogleAnalyticsEvents } from './modules/googleAnalyticsEvents'
+import { MOJButtonMenu } from './modules/buttonMenu'
 
 require('../scss/application.scss')
 require('./modules/bind.js')
