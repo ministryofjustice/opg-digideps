@@ -1,6 +1,5 @@
 /* globals $ */
 import { ButtonToggler } from './modules/buttonToggler.js'
-import { CookieBanner } from './modules/cookieBanner'
 import { GoogleAnalyticsEvents } from './modules/googleAnalyticsEvents'
 import { MOJButtonMenu } from './modules/buttonMenu'
 
@@ -56,9 +55,6 @@ $(document).ready(function () {
 
   // Text area autoSize module
   textAreaAutoSize('form')
-
-  // Cookie banner
-  CookieBanner()
 
   // Details expander
   detailsExpander('.js-details-expander')

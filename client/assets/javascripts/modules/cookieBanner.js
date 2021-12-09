@@ -1,4 +1,4 @@
-export const CookieBanner = function () {
+const CookieBanner = function () {
   var cookieBanner = document.querySelector('[data-module="opg-cookie-banner"]')
 
   if (cookieBanner === null) {
@@ -51,3 +51,5 @@ export const CookieBanner = function () {
     })
   })
 }
+
+export default CookieBanner

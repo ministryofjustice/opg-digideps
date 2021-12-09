@@ -13,12 +13,16 @@ const SessionTimeoutDialog = function (options) {
   const redirectAfterMs = 3000
   const okBtn = options.okBtn
 
+  // Window intervals
+  let countDownPopup
+  let countDownLogout
+
   function startCountdown () {
-    window.setInterval(() => {
+    countDownPopup = window.setInterval(() => {
       element.style.display = 'block'
     }, sessionPopupShowAfterMs)
 
-    window.setInterval(() => {
+    countDownLogout = window.setInterval(() => {
       window.location.reload()
     }, sessionExpiresMs + redirectAfterMs)
   }
@@ -35,8 +39,8 @@ const SessionTimeoutDialog = function (options) {
     keepSessionAlive()
 
     // restart countdown
-    window.clearInterval(this.countDownPopup)
-    window.clearInterval(this.countDownLogout)
+    window.clearInterval(countDownPopup)
+    window.clearInterval(countDownLogout)
     startCountdown()
   }
 
