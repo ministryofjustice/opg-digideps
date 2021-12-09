@@ -5,51 +5,47 @@
  * @param sessionPopupShowAfterMs
  * @param refreshUrl
  */
-const SessionTimeoutDialog = function (options) {
-  const element = options.element
-  const sessionExpiresMs = options.sessionExpiresMs
-  const sessionPopupShowAfterMs = options.sessionPopupShowAfterMs
-  const keepSessionAliveUrl = options.keepSessionAliveUrl
-  const redirectAfterMs = 3000
-  const okBtn = options.okBtn
+const SessionTimeoutDialog = {
+  init (options) {
+    this.element = options.element
+    this.sessionExpiresMs = options.sessionExpiresMs
+    this.sessionPopupShowAfterMs = options.sessionPopupShowAfterMs
+    this.keepSessionAliveUrl = options.keepSessionAliveUrl
+    this.redirectAfterMs = 3000
+    this.okBtn = options.okBtn
+  },
 
-  // Window intervals
-  let countDownPopup
-  let countDownLogout
+  startCountdown () {
+    this.countDownPopup = window.setInterval(() => {
+      this.element.style.display = 'block'
+    }, this.sessionPopupShowAfterMs)
 
-  function startCountdown () {
-    countDownPopup = window.setInterval(() => {
-      element.style.display = 'block'
-    }, sessionPopupShowAfterMs)
-
-    countDownLogout = window.setInterval(() => {
+    this.countDownLogout = window.setInterval(() => {
       window.location.reload()
-    }, sessionExpiresMs + redirectAfterMs)
-  }
+    }, this.sessionExpiresMs + this.redirectAfterMs)
+  },
 
-  // attach click event
-  okBtn.addEventListener('click', function (e) {
-    e.preventDefault()
-    hidePopupAndRestartCountdown(element)
-  })
+  addEventListener (okBtn, element) {
+    // attach click event
+    okBtn.addEventListener('click', function (e) {
+      e.preventDefault()
+      this.hidePopupAndRestartCountdown(element)
+    })
+  },
 
-  function hidePopupAndRestartCountdown (element) {
+  hidePopupAndRestartCountdown (element) {
     element.style.display = 'none'
 
-    keepSessionAlive()
+    this.keepSessionAlive()
 
     // restart countdown
-    window.clearInterval(countDownPopup)
-    window.clearInterval(countDownLogout)
-    startCountdown()
-  }
+    window.clearInterval(this.countDownPopup)
+    window.clearInterval(this.countDownLogout)
+    this.startCountdown()
+  },
 
-  function keepSessionAlive () {
-    window.fetch(keepSessionAliveUrl + '?refresh=' + Date.now())
-  }
-
-  return {
-    startCountdown: startCountdown
+  keepSessionAlive () {
+    window.fetch(this.keepSessionAliveUrl + '?refresh=' + Date.now())
   }
 }
 

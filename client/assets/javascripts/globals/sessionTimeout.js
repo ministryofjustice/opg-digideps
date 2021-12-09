@@ -8,13 +8,15 @@ const SessionTimeout = function () {
   const appTimeoutPop = document.querySelector('[data-module="app-timeout-popup"]')
   const okBtn = document.querySelector('[data-js="ok-button"]')
 
-  SessionTimeoutDialog({
+  SessionTimeoutDialog.init({
     element: appTimeoutPop,
     sessionExpiresMs: sessionExpiresValue * 1000,
     sessionPopupShowAfterMs: popupExpiresValue * 1000,
     keepSessionAliveUrl: keepAliveUrl,
     okBtn: okBtn
-  }).startCountdown()
+  })
+
+  SessionTimeoutDialog.startCountdown()
 }
 
 export default SessionTimeout
