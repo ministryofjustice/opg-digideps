@@ -1,7 +1,7 @@
 {% set translationDomain = "popup-timeout" %}
 {% trans_default_domain translationDomain %}
 
-<div id="timeoutPopup" class="opg-session-timeout" data-module="app-timeout-popup" data-session-expires="{{ 10 }}" data-popup-expires="{{ 5 }}" data-keep-alive="{{ path('session-keep-alive') }}">
+<div id="timeoutPopup" class="opg-session-timeout" data-module="app-timeout-popup" data-session-expires="{{ session_expires_seconds|default(1500) }}" data-popup-expires="{{ session_popup_show_after|default(1200) }}" data-keep-alive="{{ path('session-keep-alive') }}">
 	<div class="opg-session-timeout__dialog">
 		<h1 class="govuk-heading-l">{{ 'component.title' | trans }}</h1>
 
@@ -18,21 +18,3 @@
 		</form>
 	</div>
 </div>
-
-{#  <script>
-    // instantiate object and attach events on page load
-    $().ready(function () { // $DOM READY EVENT
-
-        var sessionExpires = {{ session_expires_seconds|default(1500) }},
-                sessionShowPopupMs = {{ session_popup_show_after|default(1200) }},
-                keepAliveUrl = '{{ path('session-keep-alive') }}';
-
-        new opg.SessionTimeoutDialog({
-            'element': $('[data-module="app-timeout-popup"]'),
-            'sessionExpiresMs': sessionExpires * 1000,
-            'sessionPopupShowAfterMs': sessionShowPopupMs * 1000,
-            'keepSessionAliveUrl': keepAliveUrl
-        }).startCountdown();
-
-    });
-</script> #}
