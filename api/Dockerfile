@@ -16,12 +16,12 @@ RUN composer run-script post-install-cmd --no-interaction
 
 RUN composer dump-autoload --optimize
 
-FROM php:7.4.26-fpm-alpine3.14
+FROM php:8.0.12-fpm-alpine3.14
 WORKDIR /var/www
 EXPOSE 80
 EXPOSE 443
 ENV TIMEOUT=20
-ENV PHP_EXT_DIR=/usr/local/lib/php/extensions/no-debug-non-zts-20190902
+ENV PHP_EXT_DIR=/usr/local/lib/php/extensions/no-debug-non-zts-20200930/
 
 RUN apk --no-cache add \
   postgresql-dev \

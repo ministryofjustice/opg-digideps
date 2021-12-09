@@ -186,7 +186,7 @@ class AuthControllerTest extends AbstractTestController
         $authToken = $this->login('deputy@example.org', 'DigidepsPass1234', API_TOKEN_DEPUTY);
 
         // manually expire token in REDIS
-        self::$frameworkBundleClient->getContainer()->get('snc_redis.default')->expire($authToken, 0);
+        self::$container->get('snc_redis.default')->expire($authToken, 0);
 
         $this->assertJsonRequest('GET', '/auth/get-logged-user', [
             'mustFail' => true,

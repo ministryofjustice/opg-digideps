@@ -98,7 +98,7 @@ trait ExpectedResultsTrait
      */
     private function assertGrandTotal()
     {
-        if (!is_null($grandTotal = $this->getGrandTotal())) {
+        if (!empty($grandTotal = $this->getGrandTotal())) {
             $normalizedTotal = $this->normalizeIntToCurrencyString($grandTotal);
             $sectionAnswerFound = in_array($normalizedTotal, $this->summarySectionItemsFound);
 
@@ -267,6 +267,11 @@ trait ExpectedResultsTrait
 
         // Loop over the collection of values inputted to forms via FormFillingTrait functions for a specific section
         foreach ($this->getSectionAnswers($sectionName) as $sectionAnswers) {
+            // We assert on totals separately - skip asserting
+            if ('totals' === $sectionName) {
+                continue;
+            }
+
             // Loop over each field value to assert against summary page values
             foreach ($sectionAnswers as $fieldName => $fieldValue) {
                 if (is_string($fieldValue) || is_int($fieldValue) || is_float($fieldValue)) {

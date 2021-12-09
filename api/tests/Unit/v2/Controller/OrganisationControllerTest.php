@@ -511,7 +511,7 @@ class OrganisationControllerTest extends AbstractTestController
             ->findOneBy(['id' => $orgId]);
 
         $this->assertInstanceOf(Organisation::class, $organisation);
-        $this->assertTrue(!in_array($newUser, $organisation->getUsers()));
+        $this->assertTrue(!in_array($newUser, $organisation->getUsers()->toArray()));
     }
 
     /**

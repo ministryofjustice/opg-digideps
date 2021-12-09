@@ -136,8 +136,8 @@ trait IngestTrait
             $deputyNumber = isset($row['Deputy No']) ? User::padDeputyNumber($row['Deputy No']) : null;
             $deputyAddressNumber = isset($row['DepAddr No']) ? User::padDeputyNumber($row['DepAddr No']) : null;
 
-            $this->entityUids['client_case_numbers'][] = $row['Case'];
-            $this->entityUids['casrec_case_numbers'][] = strtolower($row['Case'] ?: '');
+            $this->entityUids['client_case_numbers'][] = $row['Case'] ?? null;
+            $this->entityUids['casrec_case_numbers'][] = strtolower($row['Case'] ?? '');
             $this->entityUids['named_deputy_numbers'][] = $deputyAddressNumber ? sprintf('%s-%s', $deputyNumber, $deputyAddressNumber) : $deputyNumber;
             $this->entityUids['org_email_identifiers'][] = $email;
         }
