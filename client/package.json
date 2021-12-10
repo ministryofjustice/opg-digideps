@@ -4,7 +4,7 @@
   "private": true,
   "scripts": {
     "build": "webpack",
-    "lint": "standard --fix",
+    "lint": "standard",
     "test": "jest assets/javascripts/__tests__"
   },
   "devDependencies": {
@@ -62,6 +62,7 @@
     ],
     "resetMocks": true,
     "restoreMocks": true,
+    "testEnvironment": "jsdom",
     "testRegex": "\\.test\\.js$",
     "transform": {
       "^.+\\.js$": "babel-jest"

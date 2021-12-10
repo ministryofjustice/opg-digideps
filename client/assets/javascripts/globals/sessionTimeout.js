@@ -1,12 +1,32 @@
 import SessionTimeoutDialog from '../modules/SessionTimeoutDialog'
 
-const SessionTimeout = function () {
-  const sessionExpiresValue = document.querySelector('[data-session-expires]').dataset.sessionExpires
-  const popupExpiresValue = document.querySelector('[data-popup-expires]').dataset.popupExpires
-  const keepAliveUrl = document.querySelector('[data-keep-alive]').dataset.keepAlive
+const getDataAttributeData = function (dataAttributeName) {
+  const element = document.querySelector(`[${dataAttributeName}]`)
 
-  const appTimeoutPop = document.querySelector('[data-module="app-timeout-popup"]')
-  const okBtn = document.querySelector('[data-js="ok-button"]')
+  if (element === null) {
+    throw new Error(`${dataAttributeName} missing from the page - ensure it is a data attribute on a page element`)
+  }
+
+  return element.getAttribute(dataAttributeName)
+}
+
+const getElementByDataAttribute = function (dataAttribute) {
+  const element = document.querySelector(`[${dataAttribute}]`)
+
+  if (element === null) {
+    throw new Error(`${dataAttribute} missing from the page - ensure it is a data attribute on a page element`)
+  }
+
+  return element
+}
+
+const SessionTimeout = function () {
+  const keepAliveUrl = getDataAttributeData('data-keep-alive')
+  const sessionExpiresValue = getDataAttributeData('data-session-expires')
+  const popupExpiresValue = getDataAttributeData('data-popup-expires')
+
+  const appTimeoutPop = getElementByDataAttribute('data-module="app-timeout-popup"')
+  const okBtn = getElementByDataAttribute('data-js="ok-button"')
 
   SessionTimeoutDialog.init({
     element: appTimeoutPop,
