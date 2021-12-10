@@ -4,7 +4,8 @@ const getDataAttributeData = function (dataAttributeName) {
   const element = document.querySelector(`[${dataAttributeName}]`)
 
   if (element === null) {
-    throw new Error(`${dataAttributeName} missing from the page - ensure it is a data attribute on a page element`)
+    console.log(`${dataAttributeName} missing from the page - ensure it is a data attribute on a page element`)
+    return null
   }
 
   return element.getAttribute(dataAttributeName)
@@ -14,7 +15,8 @@ const getElementByDataAttribute = function (dataAttribute) {
   const element = document.querySelector(`[${dataAttribute}]`)
 
   if (element === null) {
-    throw new Error(`${dataAttribute} missing from the page - ensure it is a data attribute on a page element`)
+    console.log(`${dataAttribute} missing from the page - ensure it is a data attribute on a page element`)
+    return null
   }
 
   return element
@@ -27,6 +29,11 @@ const SessionTimeout = function () {
 
   const appTimeoutPop = getElementByDataAttribute('data-module="app-timeout-popup"')
   const okBtn = getElementByDataAttribute('data-js="ok-button"')
+
+  if ([keepAliveUrl, sessionExpiresValue, popupExpiresValue, appTimeoutPop, okBtn].includes(null)) {
+    console.log('Required data or element is missing from page')
+    return null
+  }
 
   SessionTimeoutDialog.init({
     element: appTimeoutPop,
