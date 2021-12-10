@@ -13,24 +13,33 @@ const SessionTimeoutDialog = {
     this.keepSessionAliveUrl = options.keepSessionAliveUrl
     this.redirectAfterMs = 3000
     this.okBtn = options.okBtn
+
+    this.okBtn.addEventListener('click', this.onButtonClickHandler)
+  },
+
+  onButtonClickHandler (event) {
+    event.preventDefault()
+    this.hidePopupAndRestartCountdown(this.element)
   },
 
   startCountdown () {
-    this.countDownPopup = window.setInterval(() => {
-      this.element.style.display = 'block'
-    }, this.sessionPopupShowAfterMs)
+    this.countDownPopupIntervalId = window.setInterval(
+      this.displayElementBlock,
+      this.sessionPopupShowAfterMs
+    )
 
-    this.countDownLogout = window.setInterval(() => {
-      window.location.reload()
-    }, this.sessionExpiresMs + this.redirectAfterMs)
+    this.countDownLogoutIntervalId = window.setInterval(
+      this.reloadWindow,
+      this.sessionExpiresMs + this.redirectAfterMs
+    )
   },
 
-  addEventListener (okBtn, element) {
-    // attach click event
-    okBtn.addEventListener('click', function (e) {
-      e.preventDefault()
-      this.hidePopupAndRestartCountdown(element)
-    })
+  displayElementBlock () {
+    this.element.style.display = 'block'
+  },
+
+  reloadWindow () {
+    window.location.reload()
   },
 
   hidePopupAndRestartCountdown (element) {
@@ -39,8 +48,8 @@ const SessionTimeoutDialog = {
     this.keepSessionAlive()
 
     // restart countdown
-    window.clearInterval(this.countDownPopup)
-    window.clearInterval(this.countDownLogout)
+    window.clearInterval(this.countDownPopupIntervalId)
+    window.clearInterval(this.countDownLogoutIntervalId)
     this.startCountdown()
   },
 
