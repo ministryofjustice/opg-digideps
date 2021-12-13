@@ -20,6 +20,7 @@
     "del": "^3.0.0",
     "govuk-elements-sass": "^3.1.0",
     "jest": "^27.4.3",
+    "jest-fetch-mock": "^3.0.3",
     "jquery": "^3.5.1",
     "jshint": "^2.12.0",
     "mini-css-extract-plugin": "^2.2.0",
@@ -62,6 +63,7 @@
     ],
     "resetMocks": true,
     "restoreMocks": true,
+    "testEnvironment": "jsdom",
     "testRegex": "\\.test\\.js$",
     "transform": {
       "^.+\\.js$": "babel-jest"
