@@ -81,6 +81,7 @@ form:
             saveAndContinue: Save and continue
             addAnother: Add another
         errors:
+            missingType: Enter an income type
             missingAmount: Enter an amount or select 'I don’t know'
             amountAndDontKnow: You cannot enter an amount and select that you do not know the amount
             missingIncome: Enter at least one type of income

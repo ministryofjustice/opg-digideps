@@ -377,7 +377,7 @@ trait ClientBenefitsCheckSectionTrait
                 $this->assertOnErrorMessage(sprintf($this->missingExplanationErrorText, $this->loggedInUserDetails->getClientFirstName()));
                 break;
             case 'missing income type':
-                $this->assertOnErrorMessage($this->atLeastOneIncomeTypeRequiredErrorText);
+                $this->assertOnErrorMessage($this->missingIncomeTypeErrorText);
                 break;
             case 'at least one income type required':
                 $this->assertOnErrorMessage($this->atLeastOneIncomeTypeRequiredErrorText);

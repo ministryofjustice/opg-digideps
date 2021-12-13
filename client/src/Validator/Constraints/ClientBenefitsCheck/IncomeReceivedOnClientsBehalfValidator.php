@@ -22,12 +22,22 @@ class IncomeReceivedOnClientsBehalfValidator extends ConstraintValidator
 
         /** @var IncomeReceivedOnClientsBehalfInterface $object */
         $object = $this->context->getObject();
+        $propertyName = $this->context->getPropertyName();
 
-        if ('amount' === $this->context->getPropertyName()) {
+        if ('incomeType' === $propertyName) {
+            if (is_null($value)) {
+                $this->context
+                    ->buildViolation($constraint->incomeDetailsMissingIncomeTypeMessage)
+                    ->setTranslationDomain($this->translationDomain)
+                    ->addViolation();
+            }
+        }
+
+        if ('amount' === $propertyName) {
             $this->amountValid($value, $object, $constraint);
         }
 
-        if ('amountDontKnow' === $this->context->getPropertyName()) {
+        if ('amountDontKnow' === $propertyName) {
             $this->amountDontKnowValid($value, $object, $constraint);
         }
     }

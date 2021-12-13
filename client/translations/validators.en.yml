@@ -772,10 +772,6 @@ organisation:
     isActivated:
         notBlank: Please select whether the organisation should be activated
 
-report-client-benefits-check:
-    incomeDetails:
-        errors:
-            missingAmount: Enter an amount or select 'I don’t know'
 #       COMMON ELEMENTS
 # ====================================================================================================
 
