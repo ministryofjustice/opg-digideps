@@ -9,20 +9,11 @@ use App\Tests\Behat\BehatException;
 
 trait ClientBenefitsCheckSectionTrait
 {
+    public bool $clientBenefitsSectionAvailable = false;
     private string $missingDateErrorText = 'Enter the date you last checked %s\'s benefits';
     private string $missingExplanationErrorText = 'Tell us why you have never checked if anyone other than you receives income on %s\'s behalf';
     private string $missingIncomeTypeErrorText = 'Please provide an income type';
-    private string $atLeastOneIncomeTypeRequiredErrorText = 'Please provide an income type';
-
-    public bool $clientBenefitsSectionAvailable = false;
-
-    /**
-     * @When I navigate to the client benefits check report section
-     */
-    public function iNavigateToBenefitsCheckSection()
-    {
-        $this->clickLink('Benefits check and income other people receive');
-    }
+    private string $atLeastOneIncomeTypeRequiredErrorText = 'Enter an amount or select \'I don’t know\'';
 
     /**
      * @When I navigate to and start the client benefits check report section
@@ -32,6 +23,14 @@ trait ClientBenefitsCheckSectionTrait
         $this->iVisitReportOverviewPage();
         $this->iNavigateToBenefitsCheckSection();
         $this->clickLink('Start');
+    }
+
+    /**
+     * @When I navigate to the client benefits check report section
+     */
+    public function iNavigateToBenefitsCheckSection()
+    {
+        $this->clickLink('Benefits check and income other people receive');
     }
 
     /**
@@ -153,32 +152,6 @@ trait ClientBenefitsCheckSectionTrait
     }
 
     /**
-     * @When I add :numOfIncomeTypes type(s) of income with values
-     */
-    public function iAddNumberOfIncomeTypes(int $numOfIncomeTypes)
-    {
-        $this->iAmOnClientBenefitsCheckStep3Page();
-
-        $numOfIncomeTypes = $numOfIncomeTypes - 1;
-
-        foreach (range(0, $numOfIncomeTypes) as $index) {
-            $this->fillInField(
-                "report-client-benefits-check[typesOfIncomeReceivedOnClientsBehalf][$index][incomeType]",
-                $this->faker->sentence(3),
-                'incomeType'
-            );
-
-            $this->fillInField(
-                "report-client-benefits-check[typesOfIncomeReceivedOnClientsBehalf][$index][amount]",
-                $this->faker->numberBetween(10, 2000),
-                'incomeType'
-            );
-
-            $this->pressButton('Add another');
-        }
-    }
-
-    /**
      * @When I add a type of income where I don't know the value
      */
     public function iAddIncomeTypeWithNoValue()
@@ -214,16 +187,6 @@ trait ClientBenefitsCheckSectionTrait
     }
 
     /**
-     * @When I have no further types of income to add
-     */
-    public function iHaveNoFurtherTypesOfIncomeToAdd()
-    {
-        $this->iAmOnClientBenefitsCheckStep3Page();
-
-        $this->pressButton('Save and continue');
-    }
-
-    /**
      * @When I add :numOfIncomeTypes income types from the summary page
      */
     public function iAddIncomeTypesFromSummaryPage(int $numOfIncomeTypes)
@@ -234,6 +197,42 @@ trait ClientBenefitsCheckSectionTrait
 
         $this->iAddNumberOfIncomeTypes($numOfIncomeTypes);
         $this->iHaveNoFurtherTypesOfIncomeToAdd();
+    }
+
+    /**
+     * @When I add :numOfIncomeTypes type(s) of income with values
+     */
+    public function iAddNumberOfIncomeTypes(int $numOfIncomeTypes)
+    {
+        $this->iAmOnClientBenefitsCheckStep3Page();
+
+        $numOfIncomeTypes = $numOfIncomeTypes - 1;
+
+        foreach (range(0, $numOfIncomeTypes) as $index) {
+            $this->fillInField(
+                "report-client-benefits-check[typesOfIncomeReceivedOnClientsBehalf][$index][incomeType]",
+                $this->faker->sentence(3),
+                'incomeType'
+            );
+
+            $this->fillInField(
+                "report-client-benefits-check[typesOfIncomeReceivedOnClientsBehalf][$index][amount]",
+                $this->faker->numberBetween(10, 2000),
+                'incomeType'
+            );
+
+            $this->pressButton('Add another');
+        }
+    }
+
+    /**
+     * @When I have no further types of income to add
+     */
+    public function iHaveNoFurtherTypesOfIncomeToAdd()
+    {
+        $this->iAmOnClientBenefitsCheckStep3Page();
+
+        $this->pressButton('Save and continue');
     }
 
     /**
@@ -378,7 +377,7 @@ trait ClientBenefitsCheckSectionTrait
                 $this->assertOnErrorMessage(sprintf($this->missingExplanationErrorText, $this->loggedInUserDetails->getClientFirstName()));
                 break;
             case 'missing income type':
-                $this->assertOnErrorMessage($this->missingIncomeTypeErrorText);
+                $this->assertOnErrorMessage($this->atLeastOneIncomeTypeRequiredErrorText);
                 break;
             case 'at least one income type required':
                 $this->assertOnErrorMessage($this->atLeastOneIncomeTypeRequiredErrorText);

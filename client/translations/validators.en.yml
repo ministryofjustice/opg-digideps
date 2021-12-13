@@ -4,64 +4,64 @@
 #       ENTITIES
 # ====================================================================================================
 user:
-  email:
-    invalid: This email is not valid
-    notBlank: Enter an email address
-    maxLength: The email cannot be longer than {{ limit }} characters
-    doesNotMatch: Email does not match
-    invalidDomain: "Email does not match the organisation domain: @creatorDomain"
-    alreadyUsed: Email address already in use in the system
-  firstname:
-    notBlank: Enter your first name
-    notBlankOtherUser: Enter the first name
-    minLength: The first name must be at least {{ limit }} letters long
-    maxLength: The first name cannot be longer than {{ limit }} letters
-  lastname:
-    notBlank: Enter your last name
-    notBlankOtherUser: Enter the last name
-    minLength: The last name must be at least {{ limit }} letters long
-    maxLength: The last name cannot be longer than {{ limit }} letters
-  password:
-      notBlank: "You cannot leave this blank: please enter a password"
-      minLength: The password must have at least {{ limit }} characters
-      maxLength: The password cannot be longer than {{ limit }} characters
-      noLowerCaseChars: The password must have at least one lowercase letter
-      noUpperCaseChars: The password must have at least one capital letter
-      notCommonPassword: Your password is too easy for someone to guess. Please choose a different password.
-      noNumber: The password must have at least one number
-      existing:
-        notBlank: Please enter your correct current password
-        notCorrect: Please enter your correct current password
-      new:
-        notBlank: Please enter your new password
-        doesntMatch: Passwords do not match
-  role:
-      notBlank: You must specify a role for the user
-      notBlankPa: Please choose if user has admin rights or not
-  address1:
-    notBlank: Enter your address
-    maxLength: The address name cannot be longer than {{ limit }} letters
-  address2:
-    notBlank: Enter your address
-  address3:
-    notBlank: Enter your address
-  addressPostcode:
-    notBlank: Enter your postcode
-    minLength: The postcode must be at least {{ limit }} characters long
-    maxLength: The postcode cannot be longer than {{ limit }} characters
-  addressCountry:
-    notBlank: Enter your country
-  jobTitle:
-    notBlank: Enter your job title
-    notBlankOtherUser: Enter the job title
-    maxMessage: The job title cannot be longer than {{ limit }} letters
-  phoneMain:
-    notBlank: Enter your phone number
-    notBlankOtherUser: Enter the phone number
-  paTeamName:
-    maxMessage: The team name cannot be longer than {{ limit }} letters
-  agreeTermsUse:
-    notBlank: You must agree to these terms of use to continue
+    email:
+        invalid: This email is not valid
+        notBlank: Enter an email address
+        maxLength: The email cannot be longer than {{ limit }} characters
+        doesNotMatch: Email does not match
+        invalidDomain: "Email does not match the organisation domain: @creatorDomain"
+        alreadyUsed: Email address already in use in the system
+    firstname:
+        notBlank: Enter your first name
+        notBlankOtherUser: Enter the first name
+        minLength: The first name must be at least {{ limit }} letters long
+        maxLength: The first name cannot be longer than {{ limit }} letters
+    lastname:
+        notBlank: Enter your last name
+        notBlankOtherUser: Enter the last name
+        minLength: The last name must be at least {{ limit }} letters long
+        maxLength: The last name cannot be longer than {{ limit }} letters
+    password:
+        notBlank: "You cannot leave this blank: please enter a password"
+        minLength: The password must have at least {{ limit }} characters
+        maxLength: The password cannot be longer than {{ limit }} characters
+        noLowerCaseChars: The password must have at least one lowercase letter
+        noUpperCaseChars: The password must have at least one capital letter
+        notCommonPassword: Your password is too easy for someone to guess. Please choose a different password.
+        noNumber: The password must have at least one number
+        existing:
+            notBlank: Please enter your correct current password
+            notCorrect: Please enter your correct current password
+        new:
+            notBlank: Please enter your new password
+            doesntMatch: Passwords do not match
+    role:
+        notBlank: You must specify a role for the user
+        notBlankPa: Please choose if user has admin rights or not
+    address1:
+        notBlank: Enter your address
+        maxLength: The address name cannot be longer than {{ limit }} letters
+    address2:
+        notBlank: Enter your address
+    address3:
+        notBlank: Enter your address
+    addressPostcode:
+        notBlank: Enter your postcode
+        minLength: The postcode must be at least {{ limit }} characters long
+        maxLength: The postcode cannot be longer than {{ limit }} characters
+    addressCountry:
+        notBlank: Enter your country
+    jobTitle:
+        notBlank: Enter your job title
+        notBlankOtherUser: Enter the job title
+        maxMessage: The job title cannot be longer than {{ limit }} letters
+    phoneMain:
+        notBlank: Enter your phone number
+        notBlankOtherUser: Enter the phone number
+    paTeamName:
+        maxMessage: The team name cannot be longer than {{ limit }} letters
+    agreeTermsUse:
+        notBlank: You must agree to these terms of use to continue
 client:
     firstname:
         notBlank: Enter the client's first name
@@ -73,8 +73,8 @@ client:
         maxMessage: The last name cannot be longer than {{ limit }} letters
     caseNumber:
         notBlank: Enter your case number
-        exactMessage1:  The case number should be 8 characters long.
-        exactMessage2:  Check the last 8 characters of your case reference number and try again
+        exactMessage1: The case number should be 8 characters long.
+        exactMessage2: Check the last 8 characters of your case reference number and try again
     courtDate:
         message: "Enter a valid date in this format: DD/MM/YYYY"
         notBlank: Enter the date of your court order
@@ -94,7 +94,7 @@ client:
         #notBlank: Enter an email address
         maxLength: The email cannot be longer than {{ limit }} characters
     dateOfBirth:
-       lessThan: Date of birth cannot be in the future
+        lessThan: Date of birth cannot be in the future
 
 report:
     startDate:
@@ -110,7 +110,7 @@ report:
         invalidMessage: "Enter a valid date in this format: DD/MM/YYYY"
         notInThePast: Due date cannot be in the past
     dueDateChoice:
-        notBlank:  Select an option
+        notBlank: Select an option
     submissionExceptions:
         due: Report not due
         submitted: Report not submitted
@@ -127,25 +127,25 @@ report:
     debts-management:
         notBlank: Please tell us how the debt is being managed or reduced
     balanceMismatchExplanation:
-      notBlank: Give an explanation for balance mismatching
-      length: This explanation must be at least {{ limit }} letters long
+        notBlank: Give an explanation for balance mismatching
+        length: This explanation must be at least {{ limit }} letters long
     reSubmission:
-      agree.notBlank: You must agree to this statement to continue
+        agree.notBlank: You must agree to this statement to continue
     unsubmissionSections:
-      atLeastOnce: Select at least one section
+        atLeastOnce: Select at least one section
 
 report-declaration:
     agree:
         notBlank: You must agree to this statement to continue
 
 report-management:
-  close:
-    notBlank: You must confirm that you want to close this report
+    close:
+        notBlank: You must confirm that you want to close this report
 
 login:
     email:
         notBlank: Enter your email
-        inValid:  Enter a valid email address
+        inValid: Enter a valid email address
     password:
         notBlank: Enter your password
 contact:
@@ -174,7 +174,7 @@ contact:
 decision:
     noDecisionChoice.notBlank: Please select either 'Yes' or 'No'
     reasonForNoDecisions.notBlank: |
-      Explain why you have not had to make any significant decisions for the client
+        Explain why you have not had to make any significant decisions for the client
     addAnother.notBlank: Please specify if you want to add another decision
     description:
         notBlank: Enter some details about this decision
@@ -186,36 +186,36 @@ decision:
         length: This description must be at least {{ limit }} letters long
 
 document:
-  file:
-    errors:
-      mimeTypesMessage: "Please upload a valid file type. Supported file types include PDF, JPG and PNG"
-      maxSizeMessage: "The file you selected to upload is too big. Please check your file size is less than 15mb."
-      alreadyPresent: "You have already uploaded a file with this name. Please rename your file before uploading again."
-      maxDocumentsPerReport: "You have reached the maximum number of attachments for this report"
-      invalidName: "Your file has an invalid name"
-      maxMessage: "The file name cannot be longer than 255 characters"
-      fileSize: "Your uploaded file exceeded the maximum size of 15M"
-      risky: "Unfortunately, our antivirus check found a problem with this file and we are unable to upload it. Please choose another file"
-      virusFound:  "Unfortunately, our antivirus check found a problem with this file and we are unable to upload it. Please choose another file"
-      generic: "Cannot upload file, please try again later"
-  wishToProvideDocumentation:
-      notBlank: Please select either 'Yes' or 'No'
+    file:
+        errors:
+            mimeTypesMessage: "Please upload a valid file type. Supported file types include PDF, JPG and PNG"
+            maxSizeMessage: "The file you selected to upload is too big. Please check your file size is less than 15mb."
+            alreadyPresent: "You have already uploaded a file with this name. Please rename your file before uploading again."
+            maxDocumentsPerReport: "You have reached the maximum number of attachments for this report"
+            invalidName: "Your file has an invalid name"
+            maxMessage: "The file name cannot be longer than 255 characters"
+            fileSize: "Your uploaded file exceeded the maximum size of 15M"
+            risky: "Unfortunately, our antivirus check found a problem with this file and we are unable to upload it. Please choose another file"
+            virusFound: "Unfortunately, our antivirus check found a problem with this file and we are unable to upload it. Please choose another file"
+            generic: "Cannot upload file, please try again later"
+    wishToProvideDocumentation:
+        notBlank: Please select either 'Yes' or 'No'
 clientContact:
-  form:
-    firstname:
-        notBlank: Enter the contact's first name
-        minMessage: The first name must be at least {{ limit }} characters long
-        maxMessage: The first name cannot be longer than {{ limit }} letters
-    lastname:
-        notBlank: Enter the contact's last name
-        minMessage: The last name must be at least {{ limit }} letters long
-        maxMessage: The last name cannot be longer than {{ limit }} letters
-    email:
-        invalid: This email is not valid
-        maxLength: The email cannot be longer than {{ limit }} characters
-        minMessage: The email must be at least {{ limit }} letters long
-    postcode:
-      maxMessage: The postcode cannot be longer than {{ limit }} letters
+    form:
+        firstname:
+            notBlank: Enter the contact's first name
+            minMessage: The first name must be at least {{ limit }} characters long
+            maxMessage: The first name cannot be longer than {{ limit }} letters
+        lastname:
+            notBlank: Enter the contact's last name
+            minMessage: The last name must be at least {{ limit }} letters long
+            maxMessage: The last name cannot be longer than {{ limit }} letters
+        email:
+            invalid: This email is not valid
+            maxLength: The email cannot be longer than {{ limit }} characters
+            minMessage: The email must be at least {{ limit }} letters long
+        postcode:
+            maxMessage: The postcode cannot be longer than {{ limit }} letters
 
 # currently a subsection of decisions
 mentalCapacity:
@@ -233,8 +233,8 @@ account:
         minMessage: The bank or building society name must be at least {{ limit }} letters long
         maxMessage: The bank or building society name cannot be longer than {{ limit }} letters
     accountType:
-          notBlank: Choose an account type
-          maxMessage: The account type cannot be longer than {{ limit }} letters
+        notBlank: Choose an account type
+        maxMessage: The account type cannot be longer than {{ limit }} letters
     sortCode:
         notBlank: Enter the sort code
         type: The sort code should only contain numbers
@@ -256,50 +256,50 @@ account:
         notBlank: Please select either 'Yes' or 'No'
 
 moneyTransaction:
-  addAnother.notBlank: Please choose an option
-  form:
-    category:
-      notBlank: Please choose an option
-    id:
-      notBlank: Please choose an option
-    amount:
-      notBlank: Please enter an amount
-      type: Enter a valid amount
-      notInRangeMessage: The amount must be between £{{ min }} and £100,000,000,000
-    description:
-      notBlank: Please give us some more information about this amount
+    addAnother.notBlank: Please choose an option
+    form:
+        category:
+            notBlank: Please choose an option
+        id:
+            notBlank: Please choose an option
+        amount:
+            notBlank: Please enter an amount
+            type: Enter a valid amount
+            notInRangeMessage: The amount must be between £{{ min }} and £100,000,000,000
+        description:
+            notBlank: Please give us some more information about this amount
 
 moneyTransactionShort:
-  exist.notBlank: Please choose an option
-  amount:
-      notBlank: Please enter an amount
-      type: Enter a valid amount
-      minMessage: Please input a value of at least £1,000
-      maxMessage: The amount must be less than £100,000,000,000
-  description:
-      notBlank: Please enter a description
+    exist.notBlank: Please choose an option
+    amount:
+        notBlank: Please enter an amount
+        type: Enter a valid amount
+        minMessage: Please input a value of at least £1,000
+        maxMessage: The amount must be less than £100,000,000,000
+    description:
+        notBlank: Please enter a description
 
 expenses:
     paidForAnything.notBlank: Please select either 'Yes' or 'No'
     addAnother.notBlank: Please specify if you want to add another expense
     singleExpense:
-       notNumeric: Enter the amount of the expense in numbers
+        notNumeric: Enter the amount of the expense in numbers
     explanation:
-      notBlank: Please enter a description
+        notBlank: Please enter a description
     amount:
-      notBlank: Please enter an amount
-      type: Enter a valid amount
-      notInRangeMessage: The amount must be between £{{ min }} and £100,000,000,000
+        notBlank: Please enter an amount
+        type: Enter a valid amount
+        notInRangeMessage: The amount must be between £{{ min }} and £100,000,000,000
 
 gifts:
     giftsExist.notBlank: Please select either 'Yes' or 'No'
     addAnother.notBlank: Please specify if you want to add another gift
     explanation:
-      notBlank: Please enter a description
+        notBlank: Please enter a description
     amount:
-      notBlank: Please enter an amount
-      type: Enter a valid amount
-      notInRangeMessage: The amount must be between £{{ min }} and £100,000,000,000
+        notBlank: Please enter an amount
+        type: Enter a valid amount
+        notInRangeMessage: The amount must be between £{{ min }} and £100,000,000,000
 
 
 transfer:
@@ -309,9 +309,9 @@ transfer:
         notBlank: Please select the account you transferred money to
         sameAsFromAccount: You cannot transfer to and from the same account
     amount:
-          notBlank: Enter the amount transferred
-          notNumeric: Please use numbers only to enter the amount
-          notInRangeMessage: The amount must be between £{{ min }} and £100,000,000,000
+        notBlank: Enter the amount transferred
+        notNumeric: Please use numbers only to enter the amount
+        notInRangeMessage: The amount must be between £{{ min }} and £100,000,000,000
     addAnother.notBlank: Please specify if you want to add another transfer
     exist.notBlank: Please choose an option
 
@@ -378,22 +378,22 @@ asset:
 debt:
     noDebtsChoice.notBlank: Please select either 'Yes' or 'No'
     amount:
-      notNumeric: Please use numbers only to enter the amount
-      notInRangeMessage: The amount must be between £{{ min }} and £100,000,000,000
+        notNumeric: Please use numbers only to enter the amount
+        notInRangeMessage: The amount must be between £{{ min }} and £100,000,000,000
     moreDetails:
-      notEmpty: Give us more information about this amount
+        notEmpty: Give us more information about this amount
 
 fee:
     reasonForNoFees:
-       notBlank: Explain why you have not charged any fees for your services
+        notBlank: Explain why you have not charged any fees for your services
     noFeesChoice.notBlank: Please select either 'Yes' or 'No'
     mustHaveAtLeastOneFee: Enter at least one fee
     amount:
-      notNumeric: Please use numbers only to enter the amount
-      minMessage: The amount must be positive
-      maxMessage: The amount must be less than £100,000,000
+        notNumeric: Please use numbers only to enter the amount
+        minMessage: The amount must be positive
+        maxMessage: The amount must be less than £100,000,000
     moreDetails:
-      notEmpty: Give us more information about this amount
+        notEmpty: Give us more information about this amount
 
 visitsCare:
     doYouLiveWithClient:
@@ -423,20 +423,20 @@ action:
         notBlank: Please tell us more about any concerns you may have
     # the following are now in a different section
     actionMoreInfo:
-      notBlank: Please select either 'Yes' or 'No'
+        notBlank: Please select either 'Yes' or 'No'
     actionMoreInfoDetails:
-      notBlank: Tell us more about any questions or concerns you may have about your deputyship
+        notBlank: Tell us more about any questions or concerns you may have about your deputyship
 
 
 lifestyle:
-  careAppointments:
-    notBlank: Please describe client's health and provide details of any care appointments attended
-  doesClientUndertakeSocialActivities:
-    notBlank: Please select either 'Yes' or 'No'
-  activityDetailsYes:
-    notBlank: Give us more details about the different types of activities client takes part in and how often
-  activityDetailsNo:
-      notBlank: Give us more information about why the client does not take part in any activity
+    careAppointments:
+        notBlank: Please describe client's health and provide details of any care appointments attended
+    doesClientUndertakeSocialActivities:
+        notBlank: Please select either 'Yes' or 'No'
+    activityDetailsYes:
+        notBlank: Give us more details about the different types of activities client takes part in and how often
+    activityDetailsNo:
+        notBlank: Give us more information about why the client does not take part in any activity
 
 feedbackAfterReport:
     satisfactionLevel:
@@ -467,324 +467,328 @@ profServiceFee:
             notBlank: Please provide an explanation
 
 profDeputyCostsHowCharged:
-  notBlank: Please select an option
+    notBlank: Please select an option
 
 profDeputyPreviousCost:
-  startDate:
-    notBlank: Please enter the start date
-    notValid: Start date not valid
-  endDate:
-    notBlank: Please enter the end date
-    notValid: End date not valid
-  amount:
-    notBlank: Please enter a value
-    notInRangeMessage: The amount must be between £{{ min }} and £100,000,000,000
+    startDate:
+        notBlank: Please enter the start date
+        notValid: Start date not valid
+    endDate:
+        notBlank: Please enter the end date
+        notValid: End date not valid
+    amount:
+        notBlank: Please enter a value
+        notInRangeMessage: The amount must be between £{{ min }} and £100,000,000,000
 
 profDeputyFixedCost:
-  amount:
-    notBlank: Please enter an amount. Enter 0 if you have not received any payments for this reporting period
-    minMessage: Please enter a positive amount
+    amount:
+        notBlank: Please enter an amount. Enter 0 if you have not received any payments for this reporting period
+        minMessage: Please enter a positive amount
 
 profDeputyInterimCost:
-  atLeastOne: Add at least one interim cost
-  date:
-    notBlank: Please enter a date
-    notValid: Date not valid
-    notFuture: This date cannot be in the future
-  amount:
-    notBlank: Please enter a value
-    notNumeric: Amount not valid
-    notInRangeMessage: The amount must be between £{{ min }} and £100,000,000,000
+    atLeastOne: Add at least one interim cost
+    date:
+        notBlank: Please enter a date
+        notValid: Date not valid
+        notFuture: This date cannot be in the future
+    amount:
+        notBlank: Please enter a value
+        notNumeric: Amount not valid
+        notInRangeMessage: The amount must be between £{{ min }} and £100,000,000,000
 
 profDeputyCostsScco:
-  amountToScco:
-    notBlank: Please enter an amount. Enter 0 if you are not requesting an SCCO assessment
-    minMessage: Please enter a positive amount
+    amountToScco:
+        notBlank: Please enter an amount. Enter 0 if you are not requesting an SCCO assessment
+        minMessage: Please enter a positive amount
 
 profDeputyOtherCost:
-  amount:
-    notNumeric: Please enter a valid amount
-    minMessage: The amount must be positive
-    maxMessage: The amount must be less than £100,000,000,000
-  moreDetails:
-    notBlank: Please give us some more information
+    amount:
+        notNumeric: Please enter a valid amount
+        minMessage: The amount must be positive
+        maxMessage: The amount must be less than £100,000,000,000
+    moreDetails:
+        notBlank: Please give us some more information
 
 profDeputyEstimateCost:
-  profDeputyCostsEstimateHowCharged:
-    notBlank: Please select an option
-  profDeputyManagementCostAmount:
+    profDeputyCostsEstimateHowCharged:
+        notBlank: Please select an option
+    profDeputyManagementCostAmount:
+        amount:
+            notBlank: Please enter an amount
+        breakdownGreaterThanTotal: The individual breakdown of costs must not exceed the total general management amount
     amount:
-      notBlank: Please enter an amount
-    breakdownGreaterThanTotal: The individual breakdown of costs must not exceed the total general management amount
-  amount:
-    notNumeric: Amount not valid
-    notInRangeMessage: The amount must be between £{{ min }} and £100,000,000,000
-  moreDetails:
-      notBlank: Please give us some more information
+        notNumeric: Amount not valid
+        notInRangeMessage: The amount must be between £{{ min }} and £100,000,000,000
+    moreDetails:
+        notBlank: Please give us some more information
 
 profDeputyCostsEstimateMoreInfo:
-  details:
-    notBlank: Please provide information in the box provided
+    details:
+        notBlank: Please provide information in the box provided
 
 
 # ====================================================================================================
 #       NDR
 # ====================================================================================================
 ndr:
-  agree: In order to submit your new deputy report, you must agree to the statement above
-  agreedBehalfDeputy:
-      notBlank: Select an option
-  agreedBehalfDeputyExplanation:
-      notBlank: Give us more information about why you are not signing on everyone's behalf
-  submissionExceptions:
-      due: New deputy report not due
-      submitted: New deputy report not submitted
-      reviewedAndChecked: New deputy report not reviewed and checked
-      readyForSubmission: New deputy report not ready for submission
-  visitsCare:
-      planMoveNewResidence:
-          notBlank: Please select either 'Yes' or 'No'
-      planMoveNewResidenceDetails:
-          notBlank: Give us more information about any plans to move the client to a new residence
-      doYouLiveWithClient:
-          notBlank: Please select either 'Yes' or 'No'
-      howOftenDoYouContactClient:
-          notBlank: Tell us how often you contact the client and how you make sure others are looking after the client's needs
-      doesClientReceivePaidCare:
-          notBlank: Please select either 'Yes' or 'No'
-      howIsCareFunded:
-          notBlank: Select an option
-      whoIsDoingTheCaring:
-          notBlank: Give us more information about who is caring for the client
-      whenWasCarePlanLastReviewed:
-          notBlank: Enter the last review date of the client's care plan
-          invalidMessage: "Enter a valid date in this format: MM/YYYY"
-      doesClientHaveACarePlan:
-          notBlank: Please select either 'Yes' or 'No'
-  account:
-      addAnother.notBlank: Please specify if you want to add another person
-      bank:
-          notBlank: Enter the bank or building society name
-          minMessage: The bank or building society name must be at least {{ limit }} letters long
-          maxMessage: The bank or building society name cannot be longer than {{ limit }} letters
-      accountType:
+    agree: In order to submit your new deputy report, you must agree to the statement above
+    agreedBehalfDeputy:
+        notBlank: Select an option
+    agreedBehalfDeputyExplanation:
+        notBlank: Give us more information about why you are not signing on everyone's behalf
+    submissionExceptions:
+        due: New deputy report not due
+        submitted: New deputy report not submitted
+        reviewedAndChecked: New deputy report not reviewed and checked
+        readyForSubmission: New deputy report not ready for submission
+    visitsCare:
+        planMoveNewResidence:
+            notBlank: Please select either 'Yes' or 'No'
+        planMoveNewResidenceDetails:
+            notBlank: Give us more information about any plans to move the client to a new residence
+        doYouLiveWithClient:
+            notBlank: Please select either 'Yes' or 'No'
+        howOftenDoYouContactClient:
+            notBlank: Tell us how often you contact the client and how you make sure others are looking after the client's needs
+        doesClientReceivePaidCare:
+            notBlank: Please select either 'Yes' or 'No'
+        howIsCareFunded:
+            notBlank: Select an option
+        whoIsDoingTheCaring:
+            notBlank: Give us more information about who is caring for the client
+        whenWasCarePlanLastReviewed:
+            notBlank: Enter the last review date of the client's care plan
+            invalidMessage: "Enter a valid date in this format: MM/YYYY"
+        doesClientHaveACarePlan:
+            notBlank: Please select either 'Yes' or 'No'
+    account:
+        addAnother.notBlank: Please specify if you want to add another person
+        bank:
+            notBlank: Enter the bank or building society name
+            minMessage: The bank or building society name must be at least {{ limit }} letters long
+            maxMessage: The bank or building society name cannot be longer than {{ limit }} letters
+        accountType:
             notBlank: Choose a type of account
             maxMessage: The account type cannot be longer than {{ limit }} letters
-      sortCode:
-          notBlank: Enter the sort code
-          type: The sort code should only contain numbers
-          length: The sort code must be {{ limit }} numbers long
-      accountNumber:
-          notBlank: Enter the last 4 digits of the account number
-          type: The account number must only contain numbers or letters
-          length: Enter the last 4 digits of the account number
-      balanceOnCourtOrderDate:
-          notBlank: Enter the account balance on the date shown on your court order
-          type: The account balance must be in numbers
-          outOfRange: The balance must be less than £100,000,000,000
-      isJointAccount:
-          notBlank: Please select either 'Yes' or 'No'
-  debt:
-      noDebtsChoice.notBlank: Please select either 'Yes' or 'No'
-      mustHaveAtLeastOneDebt: Enter at least one debt
-      debts-management:
-          notBlank: Please tell us how the debt is being managed or reduced
-      amount:
-        notNumeric: Use numbers only to enter the amount
-        notInRangeMessage: The amount must be between £{{ min }} and £100,000,000,000
-      moreDetails:
-        notEmpty: Give us more information about this amount
-      atLeastOne: Add at least one debt
-  asset:
-      exist.notBlank: Please choose an option
-      addAnother.notBlank: Please specify if you want to add another asset
-      title:
-          notBlank: Choose the type of asset from the list
-          maxMessage: The asset name cannot be longer than {{ limit }} letters
-      value:
-          notBlank: Enter the value of this asset
-          type: The value of the asset must be in numbers
-          outOfRange: The amount must be less than £100,000,000,000
-      description:
-          notBlank: Enter a description of this asset
-          length: This description is too short, please give us more information
-      date:
-          notBlank: Enter the date the asset was valued
-          date: "Enter a valid date in this format: DD/MM/YYYY"
-      no_assets:
-          notBlank: Tell us if the client has no assets to add
-      property:
-          address:
-              notBlank: Give us the address of the client's property
-              maxMessage: The address cannot be longer than 200 characters
-          address2:
-              maxMessage: The address cannot be longer than 200 characters
-          county:
-              maxMessage: The county cannot be longer than 75 letters
-          postcode:
-              notBlank: Enter the postcode of the client's property
-              maxMessage: The postcode cannot be longer than {{ limit }} characters
-          occupants:
-              notBlank: Give us more information about who lives at the property
-              maxMessage: Your answer cannot be longer than 500 letters
-          owned:
-              notBlank: Select an option
-          ownedPercentage:
-              notBlank: Tell us what the client's share of the property is
-              type: Enter a number between 1 and 99 for the property share
-          isSubjectToEquityRelease:
-              notBlank: Please select either 'Yes' or 'No'
-          hasMortgage:
-              notBlank: Please select either 'Yes' or 'No'
-          mortgageOutstandingAmount:
-              notBlank: Tell us how much is left to pay on the mortgage
-              type: Enter the outstanding mortgage amount in numbers
-              outOfRange: The amount must be less than £100,000,000,000
-          hasCharges:
-              notBlank: Please select either 'Yes' or 'No'
-          isRentedOut:
-              notBlank: Please select either 'Yes' or 'No'
-          rentIncomeMonth:
-              type: Please use numbers only to enter the amount
-              notBlank: Enter monthly income from renting this property
-              outOfRange: The value must be less than £100,000,000,000
-          rentAgreementEndDate:
-              notBlank: Enter a date for the end of the rental agreement
-          value:
-              notBlank: Give us an estimate of the value of the client's property
-              type: Enter the value of the property in numbers
-              outOfRange: The value of the property must be less than £100,000,000,000
-  incomeBenefit:
-      receiveStatePension:
-          notBlank: Please select either 'Yes' or 'No'
-      receiveOtherIncome:
-          notBlank: Please select either 'Yes' or 'No'
-      receiveOtherIncomeDetails:
-          notBlank: Give us more information about any other income received
-      expectCompensationDamages:
-          notBlank: Please select either 'Yes' or 'No'
-      expectCompensationDamagesDetails:
-          notBlank: Give us more information about damages or compensation you're expecting
-      present:
-          notBlank: Please tick this box as more information are given
-      moreDetails:
-          notBlank: Please give us some more information
-  expenses:
-      paidForAnything.notBlank: Please select either 'Yes' or 'No'
-      addAnother.notBlank: Please specify if you want to add another expense
-      singleExpense:
-        notNumeric: Enter the amount of the expense in numbers
-      explanation:
-        notBlank: Please enter a description
-      amount:
-        notBlank: Please enter an amount
-        type: Enter a valid amount
-        notInRangeMessage: The amount must be between £{{ min }} and £100,000,000,000
-  action:
-    actionGiveGiftsToClient:
-      notBlank: Please select either 'Yes' or 'No'
-    actionGiveGiftsToClientDetails:
-      notBlank: Give us more information about any gifts you plan to make on behalf of the client
-    actionPropertyMaintenance:
-      notBlank: Please select either 'Yes' or 'No'
-    actionPropertySellingRent:
-      notBlank: Please select either 'Yes' or 'No'
-    actionPropertyBuy:
-      notBlank: Please select either 'Yes' or 'No'
-    # the following are now in a new section
-    actionMoreInfo:
-      notBlank: Please select either 'Yes' or 'No'
-    actionMoreInfoDetails:
-      notBlank: Tell us more about any questions or concerns you may have about your deputyship
+        sortCode:
+            notBlank: Enter the sort code
+            type: The sort code should only contain numbers
+            length: The sort code must be {{ limit }} numbers long
+        accountNumber:
+            notBlank: Enter the last 4 digits of the account number
+            type: The account number must only contain numbers or letters
+            length: Enter the last 4 digits of the account number
+        balanceOnCourtOrderDate:
+            notBlank: Enter the account balance on the date shown on your court order
+            type: The account balance must be in numbers
+            outOfRange: The balance must be less than £100,000,000,000
+        isJointAccount:
+            notBlank: Please select either 'Yes' or 'No'
+    debt:
+        noDebtsChoice.notBlank: Please select either 'Yes' or 'No'
+        mustHaveAtLeastOneDebt: Enter at least one debt
+        debts-management:
+            notBlank: Please tell us how the debt is being managed or reduced
+        amount:
+            notNumeric: Use numbers only to enter the amount
+            notInRangeMessage: The amount must be between £{{ min }} and £100,000,000,000
+        moreDetails:
+            notEmpty: Give us more information about this amount
+        atLeastOne: Add at least one debt
+    asset:
+        exist.notBlank: Please choose an option
+        addAnother.notBlank: Please specify if you want to add another asset
+        title:
+            notBlank: Choose the type of asset from the list
+            maxMessage: The asset name cannot be longer than {{ limit }} letters
+        value:
+            notBlank: Enter the value of this asset
+            type: The value of the asset must be in numbers
+            outOfRange: The amount must be less than £100,000,000,000
+        description:
+            notBlank: Enter a description of this asset
+            length: This description is too short, please give us more information
+        date:
+            notBlank: Enter the date the asset was valued
+            date: "Enter a valid date in this format: DD/MM/YYYY"
+        no_assets:
+            notBlank: Tell us if the client has no assets to add
+        property:
+            address:
+                notBlank: Give us the address of the client's property
+                maxMessage: The address cannot be longer than 200 characters
+            address2:
+                maxMessage: The address cannot be longer than 200 characters
+            county:
+                maxMessage: The county cannot be longer than 75 letters
+            postcode:
+                notBlank: Enter the postcode of the client's property
+                maxMessage: The postcode cannot be longer than {{ limit }} characters
+            occupants:
+                notBlank: Give us more information about who lives at the property
+                maxMessage: Your answer cannot be longer than 500 letters
+            owned:
+                notBlank: Select an option
+            ownedPercentage:
+                notBlank: Tell us what the client's share of the property is
+                type: Enter a number between 1 and 99 for the property share
+            isSubjectToEquityRelease:
+                notBlank: Please select either 'Yes' or 'No'
+            hasMortgage:
+                notBlank: Please select either 'Yes' or 'No'
+            mortgageOutstandingAmount:
+                notBlank: Tell us how much is left to pay on the mortgage
+                type: Enter the outstanding mortgage amount in numbers
+                outOfRange: The amount must be less than £100,000,000,000
+            hasCharges:
+                notBlank: Please select either 'Yes' or 'No'
+            isRentedOut:
+                notBlank: Please select either 'Yes' or 'No'
+            rentIncomeMonth:
+                type: Please use numbers only to enter the amount
+                notBlank: Enter monthly income from renting this property
+                outOfRange: The value must be less than £100,000,000,000
+            rentAgreementEndDate:
+                notBlank: Enter a date for the end of the rental agreement
+            value:
+                notBlank: Give us an estimate of the value of the client's property
+                type: Enter the value of the property in numbers
+                outOfRange: The value of the property must be less than £100,000,000,000
+    incomeBenefit:
+        receiveStatePension:
+            notBlank: Please select either 'Yes' or 'No'
+        receiveOtherIncome:
+            notBlank: Please select either 'Yes' or 'No'
+        receiveOtherIncomeDetails:
+            notBlank: Give us more information about any other income received
+        expectCompensationDamages:
+            notBlank: Please select either 'Yes' or 'No'
+        expectCompensationDamagesDetails:
+            notBlank: Give us more information about damages or compensation you're expecting
+        present:
+            notBlank: Please tick this box as more information are given
+        moreDetails:
+            notBlank: Please give us some more information
+    expenses:
+        paidForAnything.notBlank: Please select either 'Yes' or 'No'
+        addAnother.notBlank: Please specify if you want to add another expense
+        singleExpense:
+            notNumeric: Enter the amount of the expense in numbers
+        explanation:
+            notBlank: Please enter a description
+        amount:
+            notBlank: Please enter an amount
+            type: Enter a valid amount
+            notInRangeMessage: The amount must be between £{{ min }} and £100,000,000,000
+    action:
+        actionGiveGiftsToClient:
+            notBlank: Please select either 'Yes' or 'No'
+        actionGiveGiftsToClientDetails:
+            notBlank: Give us more information about any gifts you plan to make on behalf of the client
+        actionPropertyMaintenance:
+            notBlank: Please select either 'Yes' or 'No'
+        actionPropertySellingRent:
+            notBlank: Please select either 'Yes' or 'No'
+        actionPropertyBuy:
+            notBlank: Please select either 'Yes' or 'No'
+        # the following are now in a new section
+        actionMoreInfo:
+            notBlank: Please select either 'Yes' or 'No'
+        actionMoreInfoDetails:
+            notBlank: Tell us more about any questions or concerns you may have about your deputyship
 note:
-  form:
-    title:
-      notBlank: Please enter a title
-      maxLength: The title cannot be longer than {{ limit }} letters
+    form:
+        title:
+            notBlank: Please enter a title
+            maxLength: The title cannot be longer than {{ limit }} letters
 
-    #expenses: # shared with 102/103 expenses, contact developer to customise them for Ndr
+        #expenses: # shared with 102/103 expenses, contact developer to customise them for Ndr
 
 adminSetting:
-  content.notBlank: Please enter a message
-  enabled.notBlank:  Please select either 'Yes' or 'No'
+    content.notBlank: Please enter a message
+    enabled.notBlank: Please select either 'Yes' or 'No'
 
 checklist:
-  yesNoNa: Please select 'Yes', 'No' or 'Not Applicable'
-  reportingPeriodAccurate:
-    notBlank: Please select 'Yes' or 'No'
-  contactDetailsUptoDate:
-    notBlank: Confirm that you've checked the contact details are correct
-  deputyFullNameAccurateInCasrec:
-    notBlank: Confirm that you've checked the deputy's full name on CASREC is correct
-  decisionsSatisfactory:
-    notBlank: Please select 'Yes' or 'No'
-  consultationsSatisfactory:
-    notBlank: Please select 'Yes' or 'No'
-  careArrangements:
-    notBlank: Please select 'Yes' or 'No'
-  lifestyle:
-    notBlank: Please select 'Yes' or 'No'
-  assetsDeclaredAndManaged:
-    notBlank: Please choose an option
-  debtsManaged:
-    notBlank: Please choose an option
-  openClosingBalancesMatch:
-    notBlank: Please choose an option
-  accountsBalance:
-    notBlank: Please choose an option
-  moneyMovementsAcceptable:
-    notBlank: Please choose an option
-  bondAdequate:
-    notBlank: Please choose an option
-  bondOrderMatchCasrec:
-    notBlank: Please choose an option
-  nextBillingEstimatesSatisfactory:
-    notBlank: Please select 'Yes' or 'No'
-  futureSignificantDecisions:
-    notBlank: Please choose an option
-  hasDeputyRaisedConcerns:
-    notBlank: Please choose an option
-  caseWorkerSatisified:
-    notBlank: Please choose an option
-  finalDecision:
-    notBlank: Please choose an option
-  lodgingSummary:
-    notBlank: Please enter all your concerns and decisions
-  satisfiedWithPaExpenses:
-    notBlank: Please choose an option
-  deputyChargeAllowedByCourt:
-    notBlank: Please choose an option
+    yesNoNa: Please select 'Yes', 'No' or 'Not Applicable'
+    reportingPeriodAccurate:
+        notBlank: Please select 'Yes' or 'No'
+    contactDetailsUptoDate:
+        notBlank: Confirm that you've checked the contact details are correct
+    deputyFullNameAccurateInCasrec:
+        notBlank: Confirm that you've checked the deputy's full name on CASREC is correct
+    decisionsSatisfactory:
+        notBlank: Please select 'Yes' or 'No'
+    consultationsSatisfactory:
+        notBlank: Please select 'Yes' or 'No'
+    careArrangements:
+        notBlank: Please select 'Yes' or 'No'
+    lifestyle:
+        notBlank: Please select 'Yes' or 'No'
+    assetsDeclaredAndManaged:
+        notBlank: Please choose an option
+    debtsManaged:
+        notBlank: Please choose an option
+    openClosingBalancesMatch:
+        notBlank: Please choose an option
+    accountsBalance:
+        notBlank: Please choose an option
+    moneyMovementsAcceptable:
+        notBlank: Please choose an option
+    bondAdequate:
+        notBlank: Please choose an option
+    bondOrderMatchCasrec:
+        notBlank: Please choose an option
+    nextBillingEstimatesSatisfactory:
+        notBlank: Please select 'Yes' or 'No'
+    futureSignificantDecisions:
+        notBlank: Please choose an option
+    hasDeputyRaisedConcerns:
+        notBlank: Please choose an option
+    caseWorkerSatisified:
+        notBlank: Please choose an option
+    finalDecision:
+        notBlank: Please choose an option
+    lodgingSummary:
+        notBlank: Please enter all your concerns and decisions
+    satisfiedWithPaExpenses:
+        notBlank: Please choose an option
+    deputyChargeAllowedByCourt:
+        notBlank: Please choose an option
 
 organisation:
-  name:
-    notBlank: Please enter an organisation name
-    maxLength: Organisation name cannot be longer than {{ limit }} characters
-  emailIdentifierType:
-    notBlank: Please select an email identifier
-  emailAddress:
-    notBlank: Please enter an email address
-    maxLength: Email address cannot be longer than {{ limit }} characters
-    invalid: Please enter a valid email address
-  emailDomain:
-    notBlank: Please enter an email domain
-    maxLength: Email domain cannot be longer than {{ limit }} characters
-    invalid: Please enter a valid email domain
-  isActivated:
-    notBlank: Please select whether the organisation should be activated
+    name:
+        notBlank: Please enter an organisation name
+        maxLength: Organisation name cannot be longer than {{ limit }} characters
+    emailIdentifierType:
+        notBlank: Please select an email identifier
+    emailAddress:
+        notBlank: Please enter an email address
+        maxLength: Email address cannot be longer than {{ limit }} characters
+        invalid: Please enter a valid email address
+    emailDomain:
+        notBlank: Please enter an email domain
+        maxLength: Email domain cannot be longer than {{ limit }} characters
+        invalid: Please enter a valid email domain
+    isActivated:
+        notBlank: Please select whether the organisation should be activated
 
+report-client-benefits-check:
+    incomeDetails:
+        errors:
+            missingAmount: Enter an amount or select 'I don’t know'
 #       COMMON ELEMENTS
 # ====================================================================================================
 
 common:
-  yesnochoice:
-    notBlank: Please select either 'Yes' or 'No'
-  genericPhone:
-    minLength: "Check the phone number: it must have at least {{ limit }} numbers"
-    maxLength: "Check the phone number: it cannot be more than {{ limit }} numbers long"
+    yesnochoice:
+        notBlank: Please select either 'Yes' or 'No'
+    genericPhone:
+        minLength: "Check the phone number: it must have at least {{ limit }} numbers"
+        maxLength: "Check the phone number: it cannot be more than {{ limit }} numbers long"
 sendEmail:
     toEmail:
         notBlank: Please supply recipient's email (toEmail)
-        invalid:  Recipient email address is invalid
+        invalid: Recipient email address is invalid
     fromName:
         notBlank: Please supply sender's name (fromName)
         invalid: Sender name is invalid

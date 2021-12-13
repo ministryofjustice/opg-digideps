@@ -56,7 +56,7 @@ form:
             noOptionSelected: Tell us if you have checked %client%'s benefits entitlement
             missingDate: Enter the date you last checked %client%'s benefits
             invalidDate: The date checked must be a real date
-            futureDate: The date cannot be in the future
+            futureDate: The date must be in the past
             missingExplanation: Tell us why you have never checked %client%'s benefit entitlement
             explanationTooShort: In a few words, tell us why you have never checked %client%'s benefit entitlement
 

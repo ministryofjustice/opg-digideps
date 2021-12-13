@@ -34,7 +34,7 @@ class IncomeReceivedOnClientsBehalf implements IncomeReceivedOnClientsBehalfInte
      * @JMS\Type("string")
      * @JMS\Groups({"report", "client-benefits-check"})
      *
-     * @Assert\NotNull(message="Please provide an income type", groups={"client-benefits-check"})
+     * @Assert\NotNull(message="report-client-benefits-check.incomeDetails.errors.missingAmount", groups={"client-benefits-check"})
      */
     private ?string $incomeType = null;
 
@@ -92,14 +92,14 @@ class IncomeReceivedOnClientsBehalf implements IncomeReceivedOnClientsBehalfInte
         return $this;
     }
 
-    public function getIncomeType(): ?string
+    public function getAmountDontKnow(): ?bool
     {
-        return $this->incomeType;
+        return is_null($this->getAmount()) && !is_null($this->getIncomeType());
     }
 
-    public function setIncomeType(?string $incomeType): IncomeReceivedOnClientsBehalf
+    public function setAmountDontKnow(?bool $amountDontKnow): IncomeReceivedOnClientsBehalf
     {
-        $this->incomeType = $incomeType;
+        $this->amountDontKnow = $amountDontKnow;
 
         return $this;
     }
@@ -116,14 +116,14 @@ class IncomeReceivedOnClientsBehalf implements IncomeReceivedOnClientsBehalfInte
         return $this;
     }
 
-    public function getAmountDontKnow(): ?bool
+    public function getIncomeType(): ?string
     {
-        return is_null($this->getAmount()) && !is_null($this->getIncomeType());
+        return $this->incomeType;
     }
 
-    public function setAmountDontKnow(?bool $amountDontKnow): IncomeReceivedOnClientsBehalf
+    public function setIncomeType(?string $incomeType): IncomeReceivedOnClientsBehalf
     {
-        $this->amountDontKnow = $amountDontKnow;
+        $this->incomeType = $incomeType;
 
         return $this;
     }
