@@ -5,9 +5,9 @@ namespace App\v2\Registration\Controller;
 use App\Service\DataCompression;
 use App\v2\Registration\SelfRegistration\Factory\LayDeputyshipDtoCollectionAssemblerFactory;
 use App\v2\Registration\Uploader\LayDeputyshipUploader;
-use Symfony\Component\Routing\Annotation\Route;
 use Sensio\Bundle\FrameworkExtraBundle\Configuration\Security;
 use Symfony\Component\HttpFoundation\Request;
+use Symfony\Component\Routing\Annotation\Route;
 
 /**
  * @Route("/lay-deputyship")
@@ -23,11 +23,6 @@ class LayDeputyshipUploadController
     /** @var LayDeputyshipUploader */
     private $uploader;
 
-    /**
-     * @param DataCompression $dataCompression
-     * @param LayDeputyshipDtoCollectionAssemblerFactory $factory
-     * @param LayDeputyshipUploader $uploader
-     */
     public function __construct(
         DataCompression $dataCompression,
         LayDeputyshipDtoCollectionAssemblerFactory $factory,
@@ -42,7 +37,6 @@ class LayDeputyshipUploadController
      * @Route("/upload", methods={"POST"})
      * @Security("is_granted('ROLE_ADMIN')")
      *
-     * @param Request $request
      * @return array
      */
     public function upload(Request $request)

@@ -15,7 +15,7 @@ class SelfRegisterControllerTest extends AbstractTestController
             'data' => [
                 'firstname' => 'Zac',
                 'lastname' => 'Tolley',
-                'email' => 'behat-missingdata@gov.uk',
+                'email' => 'behat-missingdata@example.org',
             ],
             'ClientSecret' => API_TOKEN_DEPUTY,
         ]);
@@ -32,7 +32,7 @@ class SelfRegisterControllerTest extends AbstractTestController
             'data' => [
                 'firstname' => 'Zac',
                 'lastname' => 'Tolley',
-                'email' => 'behat-dontsaveme@uk.gov',
+                'email' => 'behat-dontsaveme@example.org',
                 'client_firstname' => '',
                 'client_lastname' => '',
                 'case_number' => '12345678',
@@ -40,7 +40,7 @@ class SelfRegisterControllerTest extends AbstractTestController
             'ClientSecret' => API_TOKEN_DEPUTY,
         ]);
 
-        $user = self::fixtures()->getRepo('User')->findOneBy(['email' => 'behat-dontsaveme@uk.gov']);
+        $user = self::fixtures()->getRepo('User')->findOneBy(['email' => 'behat-dontsaveme@example.org']);
         $this->assertNull($user);
     }
 
@@ -71,7 +71,7 @@ class SelfRegisterControllerTest extends AbstractTestController
             'data' => [
                 'firstname' => 'Zac',
                 'lastname' => 'Tolley',
-                'email' => 'gooduser@gov.zzz',
+                'email' => 'gooduser@example.com',
                 'postcode' => 'SW1',
                 'client_firstname' => 'John',
                 'client_lastname' => 'Cross-Tolley',
@@ -86,7 +86,7 @@ class SelfRegisterControllerTest extends AbstractTestController
         $this->assertEquals('Tolley', $user->getLastname());
         $this->assertEquals('Zac', $user->getFirstname());
         $this->assertEquals('SW1', $user->getAddressPostcode());
-        $this->assertEquals('gooduser@gov.zzz', $user->getEmail());
+        $this->assertEquals('gooduser@example.com', $user->getEmail());
         $this->assertEquals(true, $user->getNdrEnabled());
 
         /** @var \App\Entity\Client $theClient */
@@ -111,7 +111,7 @@ class SelfRegisterControllerTest extends AbstractTestController
             'data' => [
                 'firstname' => 'not found',
                 'lastname' => 'test',
-                'email' => 'gooduser2@gov.zzz',
+                'email' => 'gooduser2@example.org',
                 'postcode' => 'SW2',
                 'client_firstname' => 'Cf',
                 'client_lastname' => 'Cl',
@@ -120,7 +120,17 @@ class SelfRegisterControllerTest extends AbstractTestController
             'ClientSecret' => API_TOKEN_DEPUTY,
         ]);
 
-        $this->assertStringContainsString('no matching record in casrec', $responseArray['message']);
+        $expectedErrorJson = json_encode([
+            'search_terms' => [
+                'caseNumber' => '12345600',
+                'clientLastname' => 'cl',
+                'deputySurname' => 'test',
+                'deputyPostcode' => 'sw2',
+            ],
+            'case_number_matches' => [],
+        ]);
+
+        $this->assertStringContainsString($expectedErrorJson, $responseArray['message']);
     }
 
     /**
@@ -151,7 +161,7 @@ class SelfRegisterControllerTest extends AbstractTestController
             'data' => [
                 'firstname' => 'Zac',
                 'lastname' => 'Tolley',
-                'email' => 'gooduser@gov.abc',
+                'email' => 'gooduser-new@example.org',
                 'postcode' => 'SW1',
                 'client_firstname' => 'John',
                 'client_lastname' => 'Cross-Tolley',
@@ -171,7 +181,7 @@ class SelfRegisterControllerTest extends AbstractTestController
             'data' => [
                 'firstname' => 'Zac',
                 'lastname' => 'Tolley',
-                'email' => 'gooduser1@gov.abc',
+                'email' => 'gooduser1@example.org',
                 'postcode' => 'SW1',
                 'client_firstname' => 'Jonh',
                 'client_lastname' => 'Cross-Tolley',
@@ -179,5 +189,67 @@ class SelfRegisterControllerTest extends AbstractTestController
             ],
             'ClientSecret' => API_TOKEN_DEPUTY,
         ]);
+    }
+
+    /**
+     * @test
+     */
+    public function throwErrorForValidCaseNumberButDetailsNotMatching()
+    {
+        $casRec = new CasRec([
+            'Case' => '97643164',
+            'Surname' => 'Douglas',
+            'Deputy No' => 'DEP00199',
+            'Dep Surname' => 'Murphy',
+            'Dep Postcode' => 'SW1',
+            'Typeofrep' => 'OPG102',
+            'Corref' => 'L2',
+            'NDR' => 1,
+        ]);
+
+        $this->fixtures()->persist($casRec);
+        $this->fixtures()->flush();
+
+        $token = $this->login('deputy@example.org', 'DigidepsPass1234', API_TOKEN_DEPUTY);
+
+        $responseArray = $this->assertJsonRequest('POST', '/selfregister', [
+            'mustFail' => true,
+            'AuthToken' => $token,
+            'data' => [
+                'firstname' => 'Zac',
+                'lastname' => 'Tolley',
+                'email' => 'wrong@example.org',
+                'postcode' => 'SW1',
+                'client_firstname' => 'John',
+                'client_lastname' => 'Cross-Tolley',
+                'case_number' => '97643164',
+            ],
+            'ClientSecret' => API_TOKEN_DEPUTY,
+        ]);
+
+        $expectedErrorJson = json_encode([
+            'search_terms' => [
+                'caseNumber' => '97643164',
+                'clientLastname' => 'crosstolley',
+                'deputySurname' => 'tolley',
+                'deputyPostcode' => 'sw1',
+            ],
+            'case_number_matches' => [
+                 [
+                    'case_number' => '97643164',
+                    'client_lastname' => 'douglas',
+                    'deputy_no' => 'dep00199',
+                    'deputy_surname' => 'murphy',
+                    'deputy_post_code' => 'sw1',
+                    'type_of_report' => 'opg102',
+                    'corref' => 'l2',
+                    'updated_at' => null,
+                    'source' => 'casrec',
+                    'order_date' => null,
+                ],
+            ],
+        ]);
+
+        $this->assertStringContainsString($expectedErrorJson, $responseArray['message']);
     }
 }

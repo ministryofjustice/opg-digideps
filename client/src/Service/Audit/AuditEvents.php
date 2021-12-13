@@ -17,17 +17,20 @@ final class AuditEvents
     const EVENT_CLIENT_EMAIL_CHANGED = 'CLIENT_EMAIL_CHANGED';
     const EVENT_CLIENT_DELETED = 'CLIENT_DELETED';
     const EVENT_DEPUTY_DELETED = 'DEPUTY_DELETED';
+    const EVENT_USER_SELF_REGISTER_FAILED = 'USER_SELF_REGISTER_FAILED';
     const EVENT_ADMIN_DELETED = 'ADMIN_DELETED';
     const EVENT_REPORT_UNSUBMITTED = 'REPORT_UNSUBMITTED';
     const EVENT_REPORT_RESUBMITTED = 'REPORT_RESUBMITTED';
     const EVENT_USER_ADDED_TO_ORG = 'USER_ADDED_TO_ORG';
     const EVENT_USER_REMOVED_FROM_ORG = 'USER_REMOVED_FROM_ORG';
+    const EVENT_CSV_UPLOADED = 'CSV_UPLOADED';
 
     const TRIGGER_ADMIN_USER_EDIT = 'ADMIN_USER_EDIT';
     const TRIGGER_ADMIN_BUTTON = 'ADMIN_BUTTON';
     const TRIGGER_CSV_UPLOAD = 'CSV_UPLOAD';
     const TRIGGER_DEPUTY_USER_EDIT_SELF = 'DEPUTY_USER_EDIT_SELF';
     const TRIGGER_DEPUTY_USER_EDIT = 'DEPUTY_USER_EDIT';
+    const TRIGGER_DEPUTY_USER_SELF_REGISTER_ATTEMPT = 'DEPUTY_USER_SELF_REGISTER_ATTEMPT';
     const TRIGGER_CODEPUTY_CREATED = 'CODEPUTY_CREATED';
     const TRIGGER_ORG_USER_MANAGE_ORG_MEMBER = 'ORG_USER_MANAGE_ORG_MEMBER';
     const TRIGGER_ADMIN_USER_MANAGE_ORG_MEMBER = 'ADMIN_USER_MANAGE_ORG_USER';
@@ -228,6 +231,33 @@ final class AuditEvents
         ];
 
         return $event + $this->baseEvent(AuditEvents::EVENT_REPORT_RESUBMITTED);
+    }
+
+    /**
+     * @throws \Exception
+     */
+    public function csvUploaded(
+        string $trigger,
+        string $source,
+        string $roleType
+    ): array {
+        $event = [
+            'trigger' => $trigger,
+            'source' => $source,
+            'role_type' => $roleType,
+            'changed_on' => $this->dateTimeProvider->getDateTime()->format(DateTime::ATOM),
+        ];
+
+        return $event + $this->baseEvent(AuditEvents::EVENT_CSV_UPLOADED);
+    }
+
+    public function selfRegistrationFailed(array $failureData): array
+    {
+        $event = [
+            'trigger' => AuditEvents::TRIGGER_DEPUTY_USER_SELF_REGISTER_ATTEMPT,
+        ] + $failureData;
+
+        return $event + $this->baseEvent(AuditEvents::EVENT_USER_SELF_REGISTER_FAILED);
     }
 
     private function baseEvent(string $eventName): array

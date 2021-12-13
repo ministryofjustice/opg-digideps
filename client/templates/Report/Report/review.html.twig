@@ -98,11 +98,4 @@
     <a class="govuk-link button-link behat-link-download-pdf js-trackDownloadLink" href="{{ path('report_pdf', {'reportId': report.id}) }}">
         <i class="icon icon-pdf"></i>{{ 'downloadAsPdf' | trans() }}
     </a>
-
-    <script>
-        $(document).ready(function() {
-            var ga = new opg.Ga({'timeout': 250});
-            ga.trackDownloadableLink($('.js-trackDownloadLink'));
-        });
-    </script>
 {% endblock %}

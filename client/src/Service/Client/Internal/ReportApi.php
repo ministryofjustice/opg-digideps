@@ -20,6 +20,10 @@ use Symfony\Component\HttpKernel\Exception\NotFoundHttpException;
 class ReportApi
 {
     private const REPORT_ENDPOINT_BY_ID = 'report/%s';
+    private const REPORT_SUBMIT_ENDPOINT = 'report/%s/submit';
+    private const REPORT_UNSUBMIT_ENDPOINT = 'report/%s/unsubmit';
+    private const REPORT_REFRESH_CACHE_ENDPOINT = 'report/%s/refresh-cache';
+
     private const NDR_ENDPOINT_BY_ID = 'ndr/%s';
 
     /** @var RestClient */
@@ -139,7 +143,8 @@ class ReportApi
 
     public function submit(Report $reportToSubmit, User $submittedBy)
     {
-        $newYearReportId = $this->restClient->put(sprintf('report/%s/submit', $reportToSubmit->getId()), $reportToSubmit, ['submit']);
+        $uri = sprintf(self::REPORT_SUBMIT_ENDPOINT, $reportToSubmit->getId());
+        $newYearReportId = $this->restClient->put($uri, $reportToSubmit, ['submit']);
 
         $event = new ReportSubmittedEvent($reportToSubmit, $submittedBy, $newYearReportId);
         $this->eventDispatcher->dispatch($event, ReportSubmittedEvent::NAME);
@@ -148,8 +153,9 @@ class ReportApi
     public function unsubmit(Report $report, User $user, string $trigger): void
     {
         $report->setUnSubmitDate(new \DateTime());
+        $uri = sprintf(self::REPORT_UNSUBMIT_ENDPOINT, $report->getId());
 
-        $this->restClient->put('report/'.$report->getId().'/unsubmit', $report, [
+        $this->restClient->put($uri, $report, [
             'submitted', 'unsubmit_date', 'report_unsubmitted_sections_list', 'startEndDates', 'report_due_date',
         ]);
 
@@ -160,5 +166,20 @@ class ReportApi
         );
 
         $this->eventDispatcher->dispatch($event, ReportUnsubmittedEvent::NAME);
+    }
+
+    public function refreshReportStatusCache(string $reportId, array $sectionIds, array $jmsGroups = []): Report
+    {
+        $jmsGroups = array_merge($jmsGroups, ['report', 'report-client', 'client']);
+
+        $uri = sprintf(self::REPORT_REFRESH_CACHE_ENDPOINT, $reportId);
+
+        return $this->restClient->post(
+            $uri,
+            ['sectionIds' => $sectionIds],
+            $jmsGroups,
+            'Report\\Report',
+            ['query' => ['groups' => $jmsGroups]]
+        );
     }
 }

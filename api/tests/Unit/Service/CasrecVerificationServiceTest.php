@@ -6,6 +6,7 @@ use App\Service\CasrecVerificationService;
 use Doctrine\ORM\EntityManager;
 use Mockery as m;
 use Symfony\Bundle\FrameworkBundle\Test\WebTestCase;
+use Symfony\Component\Serializer\SerializerInterface;
 
 class CasrecVerificationServiceTest extends WebTestCase
 {
@@ -99,7 +100,9 @@ class CasrecVerificationServiceTest extends WebTestCase
             ->shouldReceive('getRepository')->with('App\Entity\CasRec')->andReturn($mockCasrecRepo)
             ->getMock();
 
-        $this->casrecVerificationService = new CasrecVerificationService($em);
+        $serializer = self::prophesize(SerializerInterface::class);
+
+        $this->casrecVerificationService = new CasrecVerificationService($em, $serializer->reveal());
     }
 
     public function tearDown(): void
@@ -125,29 +128,41 @@ class CasrecVerificationServiceTest extends WebTestCase
         $this->assertTrue($this->casrecVerificationService->validate('11111111', 'CSurn', 'DSurn', 'DPC123'));
 
         // test each fail individually
-        $failMessage = 'User registration: no matching record in casrec';
+        $failMessage = '{"search_terms":{"caseNumber":"%s","clientLastname":"%s","deputySurname":"%s","deputyPostcode":"%s"},"case_number_matches":null}';
         try {
             $this->casrecVerificationService->validate('WRONG678', 'CSurn', 'DSurn', 'DPC123');
         } catch (\RuntimeException $e) {
-            $this->assertStringContainsString($failMessage, $e->getMessage());
+            $this->assertStringContainsString(
+                sprintf($failMessage, 'wrong678', 'csurn', 'dsurn', 'dpc123'),
+                $e->getMessage()
+            );
         }
 
         try {
             $this->assertTrue($this->casrecVerificationService->validate('11111111', 'WRONG', 'DSurn', 'DPC123'));
         } catch (\RuntimeException $e) {
-            $this->assertStringContainsString($failMessage, $e->getMessage());
+            $this->assertStringContainsString(
+                sprintf($failMessage, '11111111', 'wrong', 'dsurn', 'dpc123'),
+                $e->getMessage()
+            );
         }
 
         try {
             $this->assertTrue($this->casrecVerificationService->validate('11111111', 'CSurn', 'WRONG', 'DPC123'));
         } catch (\RuntimeException $e) {
-            $this->assertStringContainsString($failMessage, $e->getMessage());
+            $this->assertStringContainsString(
+                sprintf($failMessage, '11111111', 'csurn', 'wrong', 'dpc123'),
+                $e->getMessage()
+            );
         }
 
         try {
             $this->assertTrue($this->casrecVerificationService->validate('11111111', 'CSurn', 'DSurn', 'WRONG'));
         } catch (\RuntimeException $e) {
-            $this->assertStringContainsString($failMessage, $e->getMessage());
+            $this->assertStringContainsString(
+                sprintf($failMessage, '11111111', 'csurn', 'dsurn', 'wrong'),
+                $e->getMessage()
+            );
         }
     }
 
@@ -184,7 +199,7 @@ class CasrecVerificationServiceTest extends WebTestCase
         try {
             $this->assertTrue($this->casrecVerificationService->validate('11111111', 'CSurn', 'DSurn', 'DOEsnT MatteR'));
         } catch (\RuntimeException $e) {
-            $this->assertStringContainsString('User registration: no matching record in casrec', $e->getMessage());
+            $this->assertStringContainsString('{"search_terms":{"caseNumber":"11111111","clientLastname":"csurn","deputySurname":"dsurn","deputyPostcode":"doesntmatter"},"case_number_matches":null}', $e->getMessage());
         }
 
         // but if one MLD in casrec, the postcode check is skipped

@@ -1,4 +1,3 @@
-/* globals $ */
 // SESSION TIMEOUT POPUP LOGIC
 /**
  * @param element
@@ -6,43 +5,57 @@
  * @param sessionPopupShowAfterMs
  * @param refreshUrl
  */
-module.exports = function (options) {
-  var that = this
-  this.element = options.element
-  this.sessionExpiresMs = options.sessionExpiresMs
-  this.sessionPopupShowAfterMs = options.sessionPopupShowAfterMs
-  this.keepSessionAliveUrl = options.keepSessionAliveUrl
-  this.redirectAfterMs = 3000
+const SessionTimeoutDialog = {
+  init (options) {
+    this.element = options.element
+    this.sessionExpiresMs = options.sessionExpiresMs
+    this.sessionPopupShowAfterMs = options.sessionPopupShowAfterMs
+    this.keepSessionAliveUrl = options.keepSessionAliveUrl
+    this.redirectAfterMs = 3000
+    this.okBtn = options.okBtn
 
-  var $okButton = that.element.find('[data-js="ok-button"]')
+    this.okBtn.addEventListener('click', this.onButtonClickHandler)
+  },
 
-  // attach click event
-  $okButton.click(function (e) {
-    e.preventDefault()
-    that.hidePopupAndRestartCountdown()
-  })
+  onButtonClickHandler (event) {
+    event.preventDefault()
+    this.hidePopupAndRestartCountdown(this.element)
+  },
 
-  this.startCountdown = function () {
-    this.countDownPopup = window.setInterval(function () {
-      that.element.css('display', 'block')
-    }, this.sessionPopupShowAfterMs)
+  startCountdown () {
+    this.countDownPopupIntervalId = window.setInterval(
+      this.displayElementBlock,
+      this.sessionPopupShowAfterMs
+    )
 
-    this.countDownLogout = window.setInterval(function () {
-      window.location.reload()
-    }, this.sessionExpiresMs + this.redirectAfterMs)
-  }
+    this.countDownLogoutIntervalId = window.setInterval(
+      this.reloadWindow,
+      this.sessionExpiresMs + this.redirectAfterMs
+    )
+  },
 
-  this.hidePopupAndRestartCountdown = function () {
-    this.element.hide()
+  displayElementBlock () {
+    this.element.style.display = 'block'
+  },
+
+  reloadWindow () {
+    window.location.reload()
+  },
+
+  hidePopupAndRestartCountdown (element) {
+    element.style.display = 'none'
 
     this.keepSessionAlive()
-    // restart countdown
-    window.clearInterval(this.countDownPopup)
-    window.clearInterval(this.countDownLogout)
-    this.startCountdown()
-  }
 
-  this.keepSessionAlive = function () {
-    $.get(this.keepSessionAliveUrl + '?refresh=' + Date.now())
+    // restart countdown
+    window.clearInterval(this.countDownPopupIntervalId)
+    window.clearInterval(this.countDownLogoutIntervalId)
+    this.startCountdown()
+  },
+
+  keepSessionAlive () {
+    window.fetch(this.keepSessionAliveUrl + '?refresh=' + Date.now())
   }
 }
+
+export default SessionTimeoutDialog

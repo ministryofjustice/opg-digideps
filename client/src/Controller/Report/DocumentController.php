@@ -167,7 +167,7 @@ class DocumentController extends AbstractController
         $reportId,
         LoggerInterface $logger
     ) {
-        $report = $this->reportApi->getReport($reportId, self::$jmsGroups);
+        $report = $this->reportApi->refreshReportStatusCache($reportId, ['documents'], self::$jmsGroups);
         list($nextLink, $backLink) = $this->buildNavigationLinks($report);
 
         $formAction = $this->generateUrl('report_documents', ['reportId' => $reportId]);

@@ -19,12 +19,13 @@
     "css-loader": "^3.6.0",
     "del": "^3.0.0",
     "govuk-elements-sass": "^3.1.0",
-    "jest": "^26.6.3",
+    "jest": "^27.4.3",
+    "jest-fetch-mock": "^3.0.3",
     "jquery": "^3.5.1",
     "jshint": "^2.12.0",
     "mini-css-extract-plugin": "^2.2.0",
-    "node-sass": "^6.0.1",
     "postcss-wcag-contrast": "^2.0.0",
+    "sass": "^1.44.0",
     "sass-loader": "^10.2.0",
     "standard": "^14.3.4",
     "stickyfilljs": "^2.1.0",
@@ -62,6 +63,7 @@
     ],
     "resetMocks": true,
     "restoreMocks": true,
+    "testEnvironment": "jsdom",
     "testRegex": "\\.test\\.js$",
     "transform": {
       "^.+\\.js$": "babel-jest"

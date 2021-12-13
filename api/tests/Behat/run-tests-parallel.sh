@@ -4,18 +4,18 @@ set -e
 export BEHAT_PARAMS="{\"extensions\": {\"Behat\\\\MinkExtension\": {\"base_url\": \"$NONADMIN_HOST\", \"browser_stack\": { \"username\": \"$BROWSERSTACK_USERNAME\", \"access_key\": \"$BROWSERSTACK_KEY\"}}}}"
 export APP_ENV=dev
 
-start=`date +%s`
+start=$(date +%s)
 
 confd -onetime -backend env
-./vendor/bin/behat --config=./tests/Behat/behat.yml --stop-on-failure --profile v2-tests-goutte --list-scenarios $@ | ./vendor/liuggio/fastest/fastest "./vendor/bin/behat --profile v2-tests-goutte --tags @v2 --config=./tests/Behat/behat.yml {}"
+./vendor/bin/behat --config=./tests/Behat/behat.yml --stop-on-failure --profile v2-tests-goutte --list-scenarios $@ | ./vendor/liuggio/fastest/fastest -vvv "./vendor/bin/behat --profile v2-tests-goutte --tags @v2 --config=./tests/Behat/behat.yml {}"
 
-end=`date +%s`
+end=$(date +%s)
 
-runtime=$((end-start))
+runtime=$(( end - start))
 
-echo "Time take: ${runtime} secs"
+echo "Time taken: ${runtime} secs"
 
-if [ runtime -gt 300 ]
+if [ $runtime -gt 360 ]
 then
     echo "Stage taking too long. Failing the build!"
     echo "Please split out your tests to a new container"

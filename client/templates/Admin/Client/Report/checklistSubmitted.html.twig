@@ -19,10 +19,13 @@
             </div>
 
             {% if syncFeatureIsEnabled == false %}
-                <p class="govuk-body govuk-!-padding-top-6 govuk-!-padding-bottom-1">
-                    {% set downloadLinkUrl = path('admin_checklist_pdf', {'id': report.id}) %}
-                    {{ (page ~ '.downloadTextPrefix') | trans }} <a href="{{ downloadLinkUrl }}" class="behat-link-download-checklist-pdf">Click here</a> {{ (page ~ '.downloadTextSuffix') | trans }}
-                </p>
+                <div data-redirect-url="{{ path('admin_checklist_pdf', {'id': report.id}) }}">
+                    <p class="govuk-body govuk-!-padding-top-6 govuk-!-padding-bottom-1">
+                        {% set downloadLinkUrl = path('admin_checklist_pdf', {'id': report.id}) %}
+                        {{ (page ~ '.downloadTextPrefix') | trans }} <a href="{{ downloadLinkUrl }}" class="behat-link-download-checklist-pdf">Click here</a> {{ (page ~ '.downloadTextSuffix') | trans }}
+                    </p>
+                </div>
+
             {% endif %}
 
             <p class="govuk-body govuk-!-padding-top-1 govuk-!-padding-bottom-6">
@@ -44,9 +47,5 @@
 {% block javascripts %}
     {{ parent() }}
 
-    {% if syncFeatureIsEnabled == false %}
-        <script>
-          window.location.href = "{{ path('admin_checklist_pdf', {'id': report.id}) }}";
-        </script>
-    {% endif %}
+    <script src="{{ 'javascripts/checklistSubmitted.js'| assetUrl }}"></script>
 {% endblock %}

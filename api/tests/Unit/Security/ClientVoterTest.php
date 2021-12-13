@@ -277,7 +277,7 @@ class ClientVoterTest extends KernelTestCase
         $clientTestHelp = new ClientTestHelper();
 
         $kernel = self::bootKernel();
-        $em = $kernel->getContainer()->get('em');
+        $em = self::$container->get('em');
 
         $client = $clientTestHelp->generateClient($em);
         $em->persist($client);

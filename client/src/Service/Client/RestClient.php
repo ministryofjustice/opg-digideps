@@ -240,9 +240,8 @@ class RestClient implements RestClientInterface
      *
      * @return string response body
      */
-    public function post($endpoint, $mixed, array $jmsGroups = [], $expectedResponseType = 'array')
+    public function post($endpoint, $mixed, array $jmsGroups = [], $expectedResponseType = 'array', $options = [])
     {
-        $options = [];
         if ($jmsGroups) {
             $options['deserialise_groups'] = $jmsGroups;
         }

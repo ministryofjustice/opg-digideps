@@ -1,8 +1,7 @@
 /* globals $ */
 import { ButtonToggler } from './modules/buttonToggler.js'
-import { MOJButtonMenu } from './modules/buttonMenu'
 import { GoogleAnalyticsEvents } from './modules/googleAnalyticsEvents'
-import { CookieBanner } from './modules/cookieBanner'
+import { MOJButtonMenu } from './modules/buttonMenu'
 
 require('../scss/application.scss')
 require('./modules/bind.js')
@@ -56,9 +55,6 @@ $(document).ready(function () {
 
   // Text area autoSize module
   textAreaAutoSize('form')
-
-  // Cookie banner
-  CookieBanner()
 
   // Details expander
   detailsExpander('.js-details-expander')
@@ -128,6 +124,20 @@ $(document).ready(function () {
   }
 
   GoogleAnalyticsEvents.init()
+
+  const trackableLinks = document.querySelectorAll('.js-trackDownloadLink')
+
+  if (trackableLinks !== null) {
+    const ga = new Ga({ timeout: 250 })
+    ga.trackDownloadableLink($('.js-trackDownloadLink'))
+  }
+
+  const transactionCsvElements = document.querySelectorAll('#transactionsCsv')
+
+  if (transactionCsvElements !== null) {
+    const ga = new Ga({ timeout: 250 })
+    ga.trackDownloadableLink($('#transactionsCsv'))
+  }
 })
 
 GOVUKFrontend.initAll()

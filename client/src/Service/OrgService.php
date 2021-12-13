@@ -2,6 +2,9 @@
 
 namespace App\Service;
 
+use App\Event\CSVUploadedEvent;
+use App\EventDispatcher\ObservableEventDispatcher;
+use App\Service\Audit\AuditEvents;
 use App\Service\Client\RestClient;
 use Symfony\Component\HttpFoundation\Session\SessionInterface;
 use Symfony\Component\HttpFoundation\StreamedResponse;
@@ -53,14 +56,18 @@ class OrgService
     /** @var DataCompression */
     private $dataCompression;
 
+    private ObservableEventDispatcher $eventDispatcher;
+
     public function __construct(
         RestClient $restClient,
         Environment $twig,
-        SessionInterface $session
+        SessionInterface $session,
+        ObservableEventDispatcher $eventDispatcher
     ) {
         $this->restClient = $restClient;
         $this->twig = $twig;
         $this->session = $session;
+        $this->eventDispatcher = $eventDispatcher;
     }
 
     /**
@@ -153,6 +160,10 @@ class OrgService
                 $this->output['updated'][$group] += count($items);
             }
         }
+
+        if (!empty($output['source'] and !empty($output['roleType']))) {
+            $this->dispatchCSVUploadEvent($output['source'], $output['roleType']);
+        }
     }
 
     /**
@@ -238,5 +249,16 @@ class OrgService
         });
 
         return $response;
+    }
+
+    private function dispatchCSVUploadEvent(string $source, string $roleType)
+    {
+        $csvUploadedEvent = new CSVUploadedEvent(
+            $source,
+            $roleType,
+            AuditEvents::EVENT_CSV_UPLOADED
+        );
+
+        $this->eventDispatcher->dispatch($csvUploadedEvent, CSVUploadedEvent::NAME);
     }
 }

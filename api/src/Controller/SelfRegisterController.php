@@ -7,8 +7,8 @@ use App\Service\Auth\AuthService;
 use App\Service\Formatter\RestFormatter;
 use App\Service\UserRegistrationService;
 use Psr\Log\LoggerInterface;
-use Symfony\Component\Routing\Annotation\Route;
 use Symfony\Component\HttpFoundation\Request;
+use Symfony\Component\Routing\Annotation\Route;
 use Symfony\Component\Validator\Validator\ValidatorInterface;
 
 /**
@@ -57,7 +57,7 @@ class SelfRegisterController extends RestController
         $errors = $this->validator->validate($selfRegisterData, null, 'self_registration');
 
         if (count($errors) > 0) {
-            throw new \RuntimeException('Invalid registration data: ' . $errors);
+            throw new \RuntimeException('Invalid registration data: '.$errors);
         }
 
         try {
@@ -97,7 +97,7 @@ class SelfRegisterController extends RestController
         $errors = $this->validator->validate($selfRegisterData, null, ['verify_codeputy']);
 
         if (count($errors) > 0) {
-            throw new \RuntimeException('Invalid registration data: ' . $errors);
+            throw new \RuntimeException('Invalid registration data: '.$errors);
         }
 
         try {
@@ -111,10 +111,6 @@ class SelfRegisterController extends RestController
         return ['verified' => $coDeputyVerified];
     }
 
-    /**
-     * @param SelfRegisterData $selfRegisterData
-     * @param array            $data
-     */
     public function populateSelfReg(SelfRegisterData $selfRegisterData, array $data)
     {
         $this->hydrateEntityWithArrayData($selfRegisterData, $data, [
