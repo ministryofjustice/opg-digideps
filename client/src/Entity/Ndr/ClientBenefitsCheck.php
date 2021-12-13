@@ -55,6 +55,8 @@ class ClientBenefitsCheck implements ClientBenefitsCheckInterface
     /**
      * @JMS\Type("string")
      * @JMS\Groups({"report", "ndr", "client-benefits-check"})
+     *
+     * @CustomAssert\ClientBenefitsCheck(groups={"client-benefits-check"})
      */
     private ?string $doOthersReceiveIncomeOnClientsBehalf = '';
 

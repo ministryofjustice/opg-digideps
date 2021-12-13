@@ -28,24 +28,29 @@ class ClientBenefitsCheckValidator extends ConstraintValidator
         $object = $this->context->getObject();
         $report = $object->getReport() instanceof Report ? $object->getReport() : $object->getNdr();
         $this->clientName = $report->getClient()->getFirstName();
+        $propertyName = $this->context->getPropertyName();
 
-        if ('whenLastCheckedEntitlement' === $this->context->getPropertyName()) {
+        if ('whenLastCheckedEntitlement' === $propertyName) {
             $this->whenLastCheckedEntitlementValid($value, $object, $constraint);
         }
 
-        if ('dateLastCheckedEntitlement' === $this->context->getPropertyName()) {
+        if ('dateLastCheckedEntitlement' === $propertyName) {
             $this->dateLastCheckedEntitlementValid($value, $object, $constraint);
         }
 
-        if ('neverCheckedExplanation' === $this->context->getPropertyName()) {
+        if ('neverCheckedExplanation' === $propertyName) {
             $this->neverCheckedExplanationValid($value, $object, $constraint);
         }
 
-        if ('dontKnowIncomeExplanation' === $this->context->getPropertyName()) {
+        if ('doOthersReceiveIncomeOnClientsBehalf' === $propertyName) {
+            $this->incomeOnClientsBehalfValid($value, $object, $constraint);
+        }
+
+        if ('dontKnowIncomeExplanation' === $propertyName) {
             $this->dontKnowIncomeExplanationValid($value, $object, $constraint);
         }
 
-        if ('typesOfIncomeReceivedOnClientsBehalf' === $this->context->getPropertyName()) {
+        if ('typesOfIncomeReceivedOnClientsBehalf' === $propertyName) {
             $this->typesOfIncomeReceivedOnClientsBehalfValid($value, $object, $constraint);
         }
     }
@@ -99,6 +104,17 @@ class ClientBenefitsCheckValidator extends ConstraintValidator
         if (!is_null($value) && strlen($value) < 4) {
             $this->context
                 ->buildViolation($constraint->whenLastCheckedNeverCheckedEntitlementExplanationTooShort)
+                ->setTranslationDomain($this->translationDomain)
+                ->setParameter('%client%', $this->clientName)
+                ->addViolation();
+        }
+    }
+
+    private function incomeOnClientsBehalfValid($value, ClientBenefitsCheckInterface $object, ClientBenefitsCheckConstraint $constraint)
+    {
+        if (is_null($value)) {
+            $this->context
+                ->buildViolation($constraint->incomeOnClientsBehalfNoOptionSelected)
                 ->setTranslationDomain($this->translationDomain)
                 ->setParameter('%client%', $this->clientName)
                 ->addViolation();
