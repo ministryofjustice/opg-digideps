@@ -4,9 +4,11 @@ namespace App\Twig;
 
 use App\Entity\User;
 use App\Service\ReportSectionsLinkService;
+use Symfony\Component\Intl\Countries;
 use Symfony\Contracts\Translation\TranslatorInterface;
 use Twig\Environment;
 use Twig\Extension\AbstractExtension;
+use Twig\TwigFilter;
 use Twig\TwigFunction;
 
 class ComponentsExtension extends AbstractExtension
@@ -54,10 +56,10 @@ class ComponentsExtension extends AbstractExtension
     public function getFilters()
     {
         return [
-            'country_name' => new \Twig_SimpleFilter('country_name', function ($value) {
-                return \Symfony\Component\Intl\Intl::getRegionBundle()->getCountryName($value);
+            'country_name' => new TwigFilter('country_name', function ($value) {
+                return Countries::getName($value);
             }),
-            'last_loggedin_date_formatter' => new \Twig_SimpleFilter('last_loggedin_date_formatter', function ($value) {
+            'last_loggedin_date_formatter' => new TwigFilter('last_loggedin_date_formatter', function ($value) {
                 if ($value instanceof \DateTime) {
                     return $this->formatTimeDifference([
                         'from' => $value,
@@ -68,7 +70,7 @@ class ComponentsExtension extends AbstractExtension
                     ]);
                 }
             }),
-            'pad_day_month' => new \Twig_SimpleFilter('pad_day_month', function ($value) {
+            'pad_day_month' => new TwigFilter('pad_day_month', function ($value) {
                 if ($value && (int) $value >= 1 && (int) $value <= 9) {
                     return '0'.(int) $value;
                 }
@@ -76,7 +78,7 @@ class ComponentsExtension extends AbstractExtension
                 return $value;
             }),
             // convert 'Very Random "string" !!" into "very-random-string"
-            'behat_namify' => new \Twig_SimpleFilter('behat_namify', function ($string) {
+            'behat_namify' => new TwigFilter('behat_namify', function ($string) {
                 $string = preg_replace('/[^\s_\-a-zA-Z0-9]/u', '', $string); // remove unneeded chars
                 $string = str_replace('_', ' ', $string);             // treat underscores as spaces
                 $string = preg_replace('/^\s+|\s+$/', '', $string);   // trim leading/trailing spaces
@@ -85,16 +87,16 @@ class ComponentsExtension extends AbstractExtension
 
                 return $string;
             }),
-            'money_format' => new \Twig_SimpleFilter('money_format', function ($string) {
+            'money_format' => new TwigFilter('money_format', function ($string) {
                 return number_format($string, 2, '.', ',');
             }),
-            'class_name' => new \Twig_SimpleFilter('class_name', function ($object) {
+            'class_name' => new TwigFilter('class_name', function ($object) {
                 return is_object($object) ? get_class($object) : null;
             }),
-            'lcfirst' => new \Twig_SimpleFilter('lcfirst', function ($string) {
+            'lcfirst' => new TwigFilter('lcfirst', function ($string) {
                 return lcfirst($string);
             }),
-            'status_to_tag_css' => new \Twig_SimpleFilter('status_to_tag_css', function ($status) {
+            'status_to_tag_css' => new TwigFilter('status_to_tag_css', function ($status) {
                 switch ($status) {
                     case 'notStarted':
                     case 'not-started':
