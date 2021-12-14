@@ -8,7 +8,6 @@ use App\Entity\IncomeReceivedOnClientsBehalfInterface;
 use App\Validator\Constraints\ClientBenefitsCheck as CustomAssert;
 use DateTime;
 use JMS\Serializer\Annotation as JMS;
-use Symfony\Component\Validator\Constraints as Assert;
 
 class IncomeReceivedOnClientsBehalf implements IncomeReceivedOnClientsBehalfInterface
 {
@@ -34,7 +33,7 @@ class IncomeReceivedOnClientsBehalf implements IncomeReceivedOnClientsBehalfInte
      * @JMS\Type("string")
      * @JMS\Groups({"report", "client-benefits-check"})
      *
-     * @Assert\NotNull(message="report-client-benefits-check.incomeDetails.errors.missingAmount", groups={"client-benefits-check"})
+     * @CustomAssert\IncomeReceivedOnClientsBehalf(groups={"client-benefits-check"})
      */
     private ?string $incomeType = null;
 
