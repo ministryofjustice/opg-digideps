@@ -12,8 +12,8 @@ trait ClientBenefitsCheckSectionTrait
     public bool $clientBenefitsSectionAvailable = false;
     private string $missingDateErrorText = 'Enter the date you last checked %s\'s benefits';
     private string $missingExplanationErrorText = 'Tell us why you have never checked if anyone other than you receives income on %s\'s behalf';
-    private string $missingIncomeTypeErrorText = 'Please provide an income type';
-    private string $atLeastOneIncomeTypeRequiredErrorText = 'Enter an amount or select \'I don’t know\'';
+    private string $missingIncomeTypeErrorText = 'Enter an income type';
+    private string $atLeastOneIncomeTypeRequiredErrorText = 'Enter at least one type of income';
 
     /**
      * @When I navigate to and start the client benefits check report section
