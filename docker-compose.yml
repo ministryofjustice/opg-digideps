@@ -2,204 +2,204 @@ version: '3.2'
 
 ## Define all volumes in docker-compose.override.yml so this file can be used in CI
 services:
-    router:
-        image: jwilder/nginx-proxy
-        ports:
-            - 443:443
-        depends_on:
-            - admin
-            - localstack
-        restart: always
-        volumes:
-            - /var/run/docker.sock:/tmp/docker.sock:ro
-            - ./.certs:/etc/nginx/certs
-            - ./docker/router/my_proxy.conf:/etc/nginx/conf.d/my_proxy.conf:ro
+  router:
+    image: jwilder/nginx-proxy
+    ports:
+      - 443:443
+    depends_on:
+      - admin
+      - localstack
+    restart: always
+    volumes:
+      - /var/run/docker.sock:/tmp/docker.sock:ro
+      - ./.certs:/etc/nginx/certs
+      - ./docker/router/my_proxy.conf:/etc/nginx/conf.d/my_proxy.conf:ro
 
-    aws:
-        image: infrastructureascode/aws-cli
-        environment:
-            - AWS_ACCESS_KEY_ID=foo
-            - AWS_SECRET_ACCESS_KEY=bar
-        working_dir: /app
-        depends_on:
-            - localstack
-        volumes:
-            - .:/app
+  aws:
+    image: infrastructureascode/aws-cli
+    environment:
+      - AWS_ACCESS_KEY_ID=foo
+      - AWS_SECRET_ACCESS_KEY=bar
+    working_dir: /app
+    depends_on:
+      - localstack
+    volumes:
+      - .:/app
 
-    localstack:
-        build:
-            context: .
-            dockerfile: ./localstack.Dockerfile
-        ports:
-            - '4566-4583:4566-4583'
-        environment:
-            - SERVICES=s3,ssm,logs
-            - DATA_DIR=/tmp/localstack/data
-            - DEFAULT_REGION=eu-west-1
-            - USE_SINGLE_REGION=1
-            - DEBUG=1
+  localstack:
+    build:
+      context: .
+      dockerfile: ./localstack.Dockerfile
+    ports:
+      - '4566-4583:4566-4583'
+    environment:
+      - SERVICES=s3,ssm,logs
+      - DATA_DIR=/tmp/localstack/data
+      - DEFAULT_REGION=eu-west-1
+      - USE_SINGLE_REGION=1
+      - DEBUG=1
 
-    wait-for-it:
-        build: ./wait_for_it
+  wait-for-it:
+    build: ./wait_for_it
 
-#    pa11y:
-#        build:
-#            context: ./pa11y
-#        depends_on:
-#            - frontend
+  #    pa11y:
+  #        build:
+  #            context: ./pa11y
+  #        depends_on:
+  #            - frontend
 
-    frontend:
-        build:
-            context: ./client
-            args:
-                REQUIRE_XDEBUG: ${REQUIRE_XDEBUG_FRONTEND} # set REQUIRE_XDEBUG_FRONTEND=1 in .env to install Xdebug
-        ports:
-            - 8070:443
-        depends_on:
-            - api
-            - redis-frontend
-            - htmltopdf
-            - router
-            - localstack
-            - mock-notify-api
-        environment:
-            VIRTUAL_HOST: www.digideps.local,digideps.local
-            VIRTUAL_PROTO: https
-            VIRTUAL_PORT: 443
-            APP_ENV: ${APP_ENV:-dev}
-            APP_DEBUG: ${APP_DEBUG:-0}
-        env_file:
-            - ./client/frontend.env
-        restart: always
-        networks:
-            default:
-                aliases:
-                    - www.digideps.local
-                    - digideps.local
+  frontend:
+    build:
+      context: ./client
+      args:
+        REQUIRE_XDEBUG: ${REQUIRE_XDEBUG_FRONTEND} # set REQUIRE_XDEBUG_FRONTEND=1 in .env to install Xdebug
+    ports:
+      - 8070:443
+    depends_on:
+      - api
+      - redis-frontend
+      - htmltopdf
+      - router
+      - localstack
+      - mock-notify-api
+    environment:
+      VIRTUAL_HOST: www.digideps.local,digideps.local
+      VIRTUAL_PROTO: https
+      VIRTUAL_PORT: 443
+      APP_ENV: ${APP_ENV:-dev}
+      APP_DEBUG: ${APP_DEBUG:-0}
+    env_file:
+      - ./client/frontend.env
+    restart: always
+    networks:
+      default:
+        aliases:
+          - www.digideps.local
+          - digideps.local
 
-    admin:
-        build:
-            context: ./client
-            args:
-                REQUIRE_XDEBUG: ${REQUIRE_XDEBUG_FRONTEND} # set REQUIRE_XDEBUG_FRONTEND=1 in .env to install Xdebug
-        ports:
-            - 8082:443
-        depends_on:
-            - api
-            - redis-frontend
-            - mock-sirius-integration
-            - mock-notify-api
-        environment:
-            VIRTUAL_HOST: admin.digideps.local
-            VIRTUAL_PROTO: https
-            VIRTUAL_PORT: 443
-            APP_ENV: ${APP_ENV:-dev}
-            APP_DEBUG: ${APP_DEBUG:-0}
-        env_file:
-            - ./client/frontend.env
-            - ./client/admin.env
-        restart: always
-        networks:
-            default:
-                aliases:
-                    - admin.digideps.local
+  admin:
+    build:
+      context: ./client
+      args:
+        REQUIRE_XDEBUG: ${REQUIRE_XDEBUG_FRONTEND} # set REQUIRE_XDEBUG_FRONTEND=1 in .env to install Xdebug
+    ports:
+      - 8082:443
+    depends_on:
+      - api
+      - redis-frontend
+      - mock-sirius-integration
+      - mock-notify-api
+    environment:
+      VIRTUAL_HOST: admin.digideps.local
+      VIRTUAL_PROTO: https
+      VIRTUAL_PORT: 443
+      APP_ENV: ${APP_ENV:-dev}
+      APP_DEBUG: ${APP_DEBUG:-0}
+    env_file:
+      - ./client/frontend.env
+      - ./client/admin.env
+    restart: always
+    networks:
+      default:
+        aliases:
+          - admin.digideps.local
 
-    api:
-        build:
-            context: ./api
-            args:
-                REQUIRE_XDEBUG: ${REQUIRE_XDEBUG_API} # set REQUIRE_XDEBUG_API=1 in .env to install Xdebug
-        ports:
-            - 8090:443
-        depends_on:
-            - postgres
-            - redis-api
-            - localstack
-        environment:
-            APP_ENV: ${APP_ENV:-dev}
-            APP_DEBUG: ${APP_DEBUG:-0}
-        env_file:
-            - ./api/api.env
-            - ./api/tests/Behat/test.env
-        restart: always
+  api:
+    build:
+      context: ./api
+      args:
+        REQUIRE_XDEBUG: ${REQUIRE_XDEBUG_API} # set REQUIRE_XDEBUG_API=1 in .env to install Xdebug
+    ports:
+      - 8090:443
+    depends_on:
+      - postgres
+      - redis-api
+      - localstack
+    environment:
+      APP_ENV: ${APP_ENV:-dev}
+      APP_DEBUG: ${APP_DEBUG:-0}
+    env_file:
+      - ./api/api.env
+      - ./api/tests/Behat/test.env
+    restart: always
 
-    htmltopdf:
-        build: ./htmltopdf
-        restart: always
+  htmltopdf:
+    build: ./htmltopdf
+    restart: always
 
-    postgres:
-        image: postgres:9.6
-        ports:
-            - 5432:5432
-        env_file:
-            - ./api/postgres.env
-        environment:
-            # use a different data directory to avoid using the old 9.3 version
-            PGDATA: /var/lib/postgresql96/data
-        restart: always
+  postgres:
+    image: postgres:9.6
+    ports:
+      - 5432:5432
+    env_file:
+      - ./api/postgres.env
+    environment:
+      # use a different data directory to avoid using the old 9.3 version
+      PGDATA: /var/lib/postgresql96/data
+    restart: always
 
-    redis-frontend:
-        image: redis:2.8.21
-        restart: always
+  redis-frontend:
+    image: redis:2.8.21
+    restart: always
 
-    redis-api:
-        image: redis:2.8.21
-        restart: always
+  redis-api:
+    image: redis:2.8.21
+    restart: always
 
-    file-scanner-server:
-        image: mkodockx/docker-clamav:1.0.3-alpine
-        environment:
-            CLAMD_CONF_SelfCheck: 100000
-            FRESHCLAM_CONF_NotifyClamd: 'no'
+  file-scanner-server:
+    image: mkodockx/docker-clamav:1.0.3-alpine
+    environment:
+      CLAMD_CONF_SelfCheck: 100000
+      FRESHCLAM_CONF_NotifyClamd: 'no'
 
-    file-scanner-rest:
-        image: lokori/clamav-rest
-        ports:
-            - 8085:8080
-        environment:
-            CLAMD_HOST: file-scanner-server
+  file-scanner-rest:
+    image: acsauk/clamav-rest-1
+    ports:
+      - 8085:8080
+    environment:
+      CLAMD_HOST: file-scanner-server
 
-    sync:
-        build: ./sync
-        depends_on:
-          - localstack
-          - postgres
-        env_file:
-          - sync/sync.env
+  sync:
+    build: ./sync
+    depends_on:
+      - localstack
+      - postgres
+    env_file:
+      - sync/sync.env
 
-    pact-mock:
-        image: pactfoundation/pact-cli:latest
-        ports:
-            - 1234:80
-        command:
-            - mock-service
-            - -p
-            - "80"
-            - --host
-            - "0.0.0.0"
-            - --pact-dir
-            - /tmp/pacts
-            - --consumer
-            - Complete the deputy report
-            - --provider
-            - OPG Data
+  pact-mock:
+    image: pactfoundation/pact-cli:latest
+    ports:
+      - 1234:80
+    command:
+      - mock-service
+      - -p
+      - "80"
+      - --host
+      - "0.0.0.0"
+      - --pact-dir
+      - /tmp/pacts
+      - --consumer
+      - Complete the deputy report
+      - --provider
+      - OPG Data
 
-    mock-sirius-integration:
-        image: muonsoft/openapi-mock:latest
-        ports:
-            - 6060:8080
-        environment:
-            - OPENAPI_MOCK_SPECIFICATION_URL=https://raw.githubusercontent.com/ministryofjustice/opg-data-deputy-reporting/master/lambda_functions/v2/openapi/deputy-reporting-openapi.yml
+  mock-sirius-integration:
+    image: muonsoft/openapi-mock:latest
+    ports:
+      - 6060:8080
+    environment:
+      - OPENAPI_MOCK_SPECIFICATION_URL=https://raw.githubusercontent.com/ministryofjustice/opg-data-deputy-reporting/master/lambda_functions/v2/openapi/deputy-reporting-openapi.yml
 
-    mock-notify-api:
-        image: stoplight/prism:4.4.1
-        ports:
-            - 4010:4010
-        volumes:
-            - ./client/govuk-notifications.yaml:/tmp/govuk-notifications.yaml
-        command:
-            - mock
-            - /tmp/govuk-notifications.yaml
-            - -h
-            - 0.0.0.0
-            - --dynamic
+  mock-notify-api:
+    image: stoplight/prism:4.4.1
+    ports:
+      - 4010:4010
+    volumes:
+      - ./client/govuk-notifications.yaml:/tmp/govuk-notifications.yaml
+    command:
+      - mock
+      - /tmp/govuk-notifications.yaml
+      - -h
+      - 0.0.0.0
+      - --dynamic
