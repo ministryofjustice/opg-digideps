@@ -82,7 +82,7 @@ locals {
         "protocol": "tcp"
       }],
       "cpu": 0,
-      "image": "lokori/clamav-rest",
+      "image": "acsauk/clamav-rest-1",
       "mountPoints": [],
       "volumesFrom": [],
       "dependsOn": [
