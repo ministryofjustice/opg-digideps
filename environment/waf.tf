@@ -5,7 +5,7 @@ data "aws_wafv2_web_acl" "main" {
 
 resource "aws_wafv2_web_acl_association" "admin" {
   count        = local.account.associate_alb_with_waf_web_acl_enabled ? 1 : 0
-  resource_arn = aws_lb.front.arn
+  resource_arn = aws_lb.admin.arn
   web_acl_arn  = data.aws_wafv2_web_acl.main.arn
 }
 
