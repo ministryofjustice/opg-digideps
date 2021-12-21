@@ -10,7 +10,7 @@
 } %}
 
 {% block htmlTitle %}{{ 'common.htmlTitle' | trans(transOptions, translationDomain) }}{% endblock %}
-{% block supportTitleTop %}{{ 'stepPage.supportTitle' | trans(transOptions, translationDomain)  }}{% endblock %}
+{% block supportTitleTop %}{{ 'stepPage.supportTitle' | trans(transOptions, translationDomain) }}{% endblock %}
 {% block pageTitle %}{{ ('stepPage.pageTitle.' ~ step ~ '.mainTitle') | trans(transOptions, translationDomain) }}{% endblock %}
 
 {% block linkBack %}
@@ -28,41 +28,41 @@
 {% block pageContent %}
     {{ form_start(form, { attr: {novalidate: 'novalidate' } }) }}
 
-        {% if step == 1 %}
-            {% set conditionalDateChecked %}
-                {{ form_known_date(form.dateLastCheckedEntitlement, 'form.whenLastChecked', {
-                    'hintText' : 'form.whenLastChecked.dateCheckedHint' | trans(transOptions, translationDomain),
-                    'showDay' : 'false'
-                }) }}
-            {% endset %}
-
-            {% set conditionalNeverChecked %}
-                {{ form_input(form.neverCheckedExplanation, 'form.whenLastChecked', {
-                    'hintText' : 'form.whenLastChecked.neverCheckedHint' | trans(transOptions, translationDomain),
-                    'labelText' : ' '
-                }) }}
-            {% endset %}
-
-            {{ form_checkbox_group(form.whenLastCheckedEntitlement, 'form.clientBenefitsCheck', {
-                'useFormGroup': false,
-                'labelText': ('form.clientBenefitsCheck.label') | trans(transOptions, translationDomain),
-                label: {
-                    isPageHeading: true,
-                    caption: 'stepPage.supportTitle' | trans
-                },
-                'items': [
-                    {
-                        conditional: conditionalDateChecked
-                    },
-                    {},
-                    {
-                        conditional: conditionalNeverChecked
-                    }
-                ]
+    {% if step == 1 %}
+        {% set conditionalDateChecked %}
+            {{ form_known_date(form.dateLastCheckedEntitlement, 'form.whenLastChecked', {
+                'hintText' : 'form.whenLastChecked.dateCheckedHint' | trans(transOptions, translationDomain),
+                'showDay' : 'false'
             }) }}
+        {% endset %}
 
-            {{ macros.saveAndContinueButton(form.save) }}
-        {% endif %}
+        {% set conditionalNeverChecked %}
+            {{ form_input(form.neverCheckedExplanation, 'form.whenLastChecked', {
+                'hintText' : 'form.whenLastChecked.neverCheckedHint' | trans(transOptions, translationDomain),
+                'labelText' : ' '
+            }) }}
+        {% endset %}
+
+        {{ form_checkbox_group(form.whenLastCheckedEntitlement, 'form.clientBenefitsCheck', {
+            'useFormGroup': false,
+            'labelText': ('form.clientBenefitsCheck.label') | trans(transOptions, translationDomain),
+            label: {
+                isPageHeading: true,
+                caption: 'stepPage.supportTitle' | trans
+            },
+            'items': [
+                {
+                    conditional: conditionalDateChecked
+                },
+                {},
+                {
+                    conditional: conditionalNeverChecked
+                }
+            ]
+        }) }}
+
+        {{ macros.saveAndContinueButton(form.save) }}
+    {% endif %}
 
     {% if step == 2 %}
         {% set conditionalIncomeDontKnowChecked %}
@@ -119,4 +119,10 @@
 
     {{ form_end(form) }}
 
+{% endblock %}
+
+{% block javascripts %}
+    {{ parent() }}
+
+    <script src="{{ 'javascripts/clientBenefitsCheckForm.js'| assetUrl }}"></script>
 {% endblock %}

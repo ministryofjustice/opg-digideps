@@ -11,6 +11,7 @@ module.exports = {
     application: './assets/javascripts/main.js',
     common: './assets/javascripts/common.js',
     checklistSubmitted: './assets/javascripts/pages/checklistSubmitted.js',
+    clientBenefitsCheckForm: './assets/javascripts/pages/clientBenefitsCheckForm.js',
     'formatted-report': './assets/scss/formatted-report.scss',
     fonts: './assets/scss/fonts.scss'
   },
@@ -73,7 +74,10 @@ module.exports = {
         { from: 'node_modules/jquery/dist/jquery.min.js', to: 'javascripts' },
         { from: 'node_modules/govuk-frontend/govuk/assets/fonts', to: 'stylesheets/fonts' },
         { from: 'node_modules/govuk-frontend/govuk/assets/images', to: path.resolve(__dirname, 'public/images') },
-        { from: 'node_modules/@ministryofjustice/frontend/moj/assets/images', to: path.resolve(__dirname, 'public/images') },
+        {
+          from: 'node_modules/@ministryofjustice/frontend/moj/assets/images',
+          to: path.resolve(__dirname, 'public/images')
+        },
         { from: 'node_modules/govuk_frontend_toolkit/images', to: path.resolve(__dirname, 'public/images') },
         { from: 'assets/images', to: path.resolve(__dirname, 'public/images') }
       ]
