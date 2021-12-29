@@ -1,3 +1,4 @@
+import botocore.exceptions
 import boto3
 import argparse
 import requests
@@ -73,11 +74,12 @@ class ECRScanChecker:
                     },
                     WaiterConfig={
                         'Delay': 5,
-                        'MaxAttempts': 60
+                        'MaxAttempts': 1
                     }
                 )
-            except:
-                continue
+            except botocore.exceptions.WaiterError as error:
+                print(error.last_response)
+
         if not tag_exists:
             print("No ECR image scan results for image {0}, tag {1}".format(
                 image, giventag))
