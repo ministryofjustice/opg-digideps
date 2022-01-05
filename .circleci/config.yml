@@ -948,16 +948,16 @@ jobs:
             - run:
                 name: Push image
                 command: docker-compose -f docker-compose.ci.dev.yml push
-      - run:
-          name: Install ECR Scan Results Requirements
-          working_directory: ~/project/ecs_helper/check_ecr_scan_results
-          command: |
-            sudo pip3 install -r requirements.txt
-      - run:
-          name: Check ECR Scan Results
-          working_directory: ~/project/ecs_helper/check_ecr_scan_results
-          command: |
-            python3 aws_ecr_scan_results.py --search digideps --tag "${VERSION}" --slack_webhook "${SLACK_WEBHOOK}" --post_to_slack "${ECR_SCAN_NOTIFY}"
+#      - run:
+#          name: Install ECR Scan Results Requirements
+#          working_directory: ~/project/ecs_helper/check_ecr_scan_results
+#          command: |
+#            sudo pip3 install -r requirements.txt
+#      - run:
+#          name: Check ECR Scan Results
+#          working_directory: ~/project/ecs_helper/check_ecr_scan_results
+#          command: |
+#            python3 aws_ecr_scan_results.py --search digideps --tag "${VERSION}" --slack_webhook "${SLACK_WEBHOOK}" --post_to_slack "${ECR_SCAN_NOTIFY}"
       - persist_to_workspace:
           root: .
           paths:
