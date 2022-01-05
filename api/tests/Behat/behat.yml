@@ -55,11 +55,11 @@ default:
                 - behatch:context:rest
                 - App\Tests\Behat\FeatureContext
 
-        report-management:
-            description: Coverage of report management features
-            paths: [ "%paths.base%/features/v2/reportManagement" ]
-            contexts:
-                - App\Tests\Behat\ReportManagement\ReportManagementFeatureContext
+        # report-management:
+        #     description: Coverage of report management features
+        #     paths: [ "%paths.base%/features/v2/reportManagement" ]
+        #     contexts:
+        #         - App\Tests\Behat\ReportManagement\ReportManagementFeatureContext
 
         court-order-management:
             description: Coverage of court order management features
@@ -243,11 +243,11 @@ v2-tests-goutte:
             contexts:
                 - App\Tests\Behat\v2\Reporting\Admin\ReportingAdminFeatureContext
 
-        report-management:
-            description: Coverage of report management features in the admin side of the app
-            paths: [ "%paths.base%/features-v2/report-management" ]
-            contexts:
-                - App\Tests\Behat\v2\ReportManagement\ReportManagementFeatureContext
+        # report-management:
+        #     description: Coverage of report management features in the admin side of the app
+        #     paths: [ "%paths.base%/features-v2/report-management" ]
+        #     contexts:
+        #         - App\Tests\Behat\v2\ReportManagement\ReportManagementFeatureContext
 
         report-section-navigation:
             description: Coverage of next and previous links in report sections
