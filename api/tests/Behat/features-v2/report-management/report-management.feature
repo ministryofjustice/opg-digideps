@@ -18,8 +18,8 @@ Feature: Report Management (applies to all admin roles)
         And an admin manager user accesses the admin app
         When I visit the admin client details page associated with the deputy I'm interacting with
         And I manage the deputies 'submitted' report
-        And I change the report 'start' date to '29 June 2021'
-        And I change the report 'end' date to '28 June 2022'
+        And I change the report 'start' date to '4 January 2022'
+        And I change the report 'end' date to '5 January 2023'
         And I change the report due date to '4' weeks from now
         And I confirm all report sections are incomplete
         And I submit the new report details
