@@ -26,7 +26,7 @@ class ECRScanChecker:
 
     def set_iam_role_session(self):
         if os.getenv('CI'):
-            role_arn = f'arn:aws:iam::{self.aws_account_id}:role/opg-use-an-lpa-ci'
+            role_arn = f'arn:aws:iam::{self.aws_account_id}:role/digideps-ci'
         else:
             role_arn = f'arn:aws:iam::{self.aws_account_id}:role/operator'
 
@@ -195,11 +195,11 @@ def main():
                         default=os.getenv('SLACK_WEBHOOK'),
                         help='Webhook to use, determines what channel to post to')
     parser.add_argument('--print_to_terminal', dest='print_to_terminal', action='store_const',
-                        const=True, default=False,
+                        const=True, default=True,
                         help='print findings to terminal')
-    parser.add_argument('--skip_post_to_slack', dest='skip_post_to_slack', action='store_const',
-                        const=False, default=True,
-                        help='Optionally turn off posting messages to slack')
+    parser.add_argument('--post_to_slack', dest='post_to_slack',
+                        default=True,
+                        help='Optionally post messages to slack')
 
     args = parser.parse_args()
     work = ECRScanChecker()
@@ -214,7 +214,7 @@ def main():
     if args.print_to_terminal:
         print(report)
 
-    if args.skip_post_to_slack and args.slack_webhook is not None:
+    if args.post_to_slack and args.slack_webhook is not None:
         work.post_to_slack(
             args.slack_webhook,
             report,
