@@ -62,6 +62,11 @@ resource "aws_wafv2_web_acl" "main" {
       managed_rule_group_statement {
         name        = "AWSManagedRulesCommonRuleSet"
         vendor_name = "AWS"
+
+        excluded_rule {
+          name = "SizeRestrictions_BODY"
+        }
+
       }
     }
     visibility_config {
