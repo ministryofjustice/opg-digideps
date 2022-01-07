@@ -75,7 +75,7 @@ class MoneyInController extends AbstractController
      *
      * @return array|RedirectResponse
      */
-    public function stepAction(Request $request, $reportId, $step, $transactionId = null, AuthorizationCheckerInterface $authorizationChecker)
+    public function stepAction(Request $request, $reportId, $step, AuthorizationCheckerInterface $authorizationChecker, $transactionId = null)
     {
         $totalSteps = 2;
         if ($step < 1 || $step > $totalSteps) {

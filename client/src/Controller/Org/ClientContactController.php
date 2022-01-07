@@ -7,10 +7,12 @@ use App\Entity as EntityDir;
 use App\Form as FormDir;
 use App\Service\Client\Internal\ClientApi;
 use App\Service\Client\RestClient;
+use Exception;
 use Psr\Log\LoggerInterface;
 use Sensio\Bundle\FrameworkExtraBundle\Configuration\Template;
 use Symfony\Component\HttpFoundation\Request;
 use Symfony\Component\Routing\Annotation\Route;
+use Throwable;
 
 /**
  * @Route("/contact/")
@@ -43,7 +45,7 @@ class ClientContactController extends AbstractController
      * @Route("add", name="clientcontact_add")
      * @Template("@App/Org/ClientProfile/addContact.html.twig")
      *
-     * @throws \Exception
+     * @throws Exception
      */
     public function addAction(Request $request)
     {
@@ -117,12 +119,26 @@ class ClientContactController extends AbstractController
     }
 
     /**
+     * @param $id
+     *
+     * @return mixed
+     */
+    private function getContactById($id)
+    {
+        return $this->restClient->get(
+            'clientcontacts/'.$id,
+            'ClientContact',
+            ['clientcontact', 'clientcontact-client', 'client', 'client-users', 'current-report', 'report-id', 'user']
+        );
+    }
+
+    /**
      * @Route("{id}/delete", name="clientcontact_delete")
      * @Template("@App/Common/confirmDelete.html.twig")
      *
-     * @throws \Exception
+     * @throws Exception
      */
-    public function deleteConfirmAction(Request $request, $id, $confirmed = false, LoggerInterface $logger)
+    public function deleteConfirmAction(Request $request, $id, LoggerInterface $logger, $confirmed = false)
     {
         $form = $this->createForm(FormDir\ConfirmDeleteType::class);
         $form->handleRequest($request);
@@ -135,7 +151,7 @@ class ClientContactController extends AbstractController
             try {
                 $this->restClient->delete('clientcontacts/'.$id);
                 $request->getSession()->getFlashBag()->add('notice', 'Contact has been removed');
-            } catch (\Throwable $e) {
+            } catch (Throwable $e) {
                 $logger->error($e->getMessage());
                 $request->getSession()->getFlashBag()->add(
                     'error',
@@ -158,19 +174,5 @@ class ClientContactController extends AbstractController
             ],
             'backLink' => $this->clientApi->generateClientProfileLink($client),
         ];
-    }
-
-    /**
-     * @param $id
-     *
-     * @return mixed
-     */
-    private function getContactById($id)
-    {
-        return $this->restClient->get(
-            'clientcontacts/'.$id,
-            'ClientContact',
-            ['clientcontact', 'clientcontact-client', 'client', 'client-users', 'current-report', 'report-id', 'user']
-        );
     }
 }
