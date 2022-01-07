@@ -1,0 +1,12 @@
+name: "Label Pull Request"
+on:
+  - pull_request_target
+jobs:
+  pr-label:
+    runs-on: ubuntu-latest
+    steps:
+      - uses: actions/labeler@main
+        with:
+          configuration-path: ".github/labeller.yml"
+          repo-token: "${{ secrets.GITHUB_TOKEN }}"
+          sync-labels: true
