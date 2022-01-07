@@ -8,6 +8,7 @@ use App\Service\AWS\RequestSigner;
 use GuzzleHttp\Client;
 use GuzzleHttp\Psr7\Request;
 use GuzzleHttp\Psr7\Response;
+use Prophecy\PhpUnit\ProphecyTrait;
 use Prophecy\Prophecy\ObjectProphecy;
 use Psr\Log\LoggerInterface;
 use Symfony\Bundle\FrameworkBundle\Test\KernelTestCase;
@@ -15,6 +16,8 @@ use Symfony\Component\Serializer\Serializer;
 
 class SiriusApiGatewayClientTest extends KernelTestCase
 {
+    use ProphecyTrait;
+
     /** @var string */
     private $baseURL;
 

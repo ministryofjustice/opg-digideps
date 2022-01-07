@@ -1,18 +1,20 @@
-<?php declare(strict_types=1);
+<?php
+
+declare(strict_types=1);
 
 namespace Tests\App\EventListener;
 
 use App\Event\UserActivatedEvent;
 use App\EventSubscriber\UserActivatedSubscriber;
 use App\Service\Mailer\Mailer;
-use App\Service\Mailer\MailFactory;
-use App\Service\Mailer\MailSender;
-use App\TestHelpers\EmailHelpers;
 use App\TestHelpers\UserHelpers;
 use PHPUnit\Framework\TestCase;
+use Prophecy\PhpUnit\ProphecyTrait;
 
 class UserActivatedSubscriberTest extends TestCase
 {
+    use ProphecyTrait;
+
     /** @test */
     public function getSubscribedEvents()
     {

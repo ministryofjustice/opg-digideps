@@ -8,12 +8,16 @@ use App\Entity\Client;
 use App\Entity\Organisation;
 use App\Entity\Report\Report;
 use App\Entity\User;
+use DateTime;
 use Doctrine\ORM\EntityManager;
 use Faker\Factory;
 use PHPUnit\Framework\TestCase;
+use Prophecy\PhpUnit\ProphecyTrait;
 
 class ClientTestHelper extends TestCase
 {
+    use ProphecyTrait;
+
     public function createClientMock(int $id, bool $hasReports)
     {
         $report = $hasReports ? (self::prophesize(Report::class))->reveal() : null;
@@ -34,7 +38,7 @@ class ClientTestHelper extends TestCase
             ->setLastname($faker->lastName)
             ->setCaseNumber($caseNumber ?: self::createValidCaseNumber())
             ->setEmail($faker->safeEmail.mt_rand(1, 100000))
-            ->setCourtDate(new \DateTime('09-Aug-2018'))
+            ->setCourtDate(new DateTime('09-Aug-2018'))
             ->setAddress($faker->streetAddress)
             ->setPostcode($faker->postcode);
 

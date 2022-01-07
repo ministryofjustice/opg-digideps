@@ -1,5 +1,6 @@
-<?php declare(strict_types=1);
+<?php
 
+declare(strict_types=1);
 
 namespace Tests\App\EventListener;
 
@@ -9,10 +10,13 @@ use App\Service\Mailer\Mailer;
 use App\TestHelpers\NdrHelpers;
 use App\TestHelpers\ReportHelpers;
 use App\TestHelpers\UserHelpers;
-use PHPStan\Testing\TestCase;
+use PHPUnit\Framework\TestCase;
+use Prophecy\PhpUnit\ProphecyTrait;
 
 class NdrSubmittedSubscriberTest extends TestCase
 {
+    use ProphecyTrait;
+
     /** @test */
     public function getSubscribedEvents()
     {

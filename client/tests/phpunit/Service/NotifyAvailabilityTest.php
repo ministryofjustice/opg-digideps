@@ -7,10 +7,13 @@ use Alphagov\Notifications\Exception\ApiException as NotifyAPIException;
 use App\Service\Availability\NotifyAvailability;
 use GuzzleHttp\Psr7\Response;
 use PHPUnit\Framework\TestCase;
+use Prophecy\PhpUnit\ProphecyTrait;
 use Prophecy\Prophecy\ObjectProphecy;
 
 class NotifyAvailabilityTest extends TestCase
 {
+    use ProphecyTrait;
+
     /**
      * @test
      */

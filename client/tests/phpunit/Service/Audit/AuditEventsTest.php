@@ -1,16 +1,21 @@
-<?php declare(strict_types=1);
+<?php
+
+declare(strict_types=1);
 
 namespace App\Service\Audit;
 
 use App\Entity\User;
 use App\Service\Time\DateTimeProvider;
-use App\Service\Time\FakeClock;
 use DateTime;
+use DateTimeZone;
 use PHPUnit\Framework\TestCase;
+use Prophecy\PhpUnit\ProphecyTrait;
 use Prophecy\Prophecy\ObjectProphecy;
 
 class AuditEventsTest extends TestCase
 {
+    use ProphecyTrait;
+
     /**
      * @test
      * @dataProvider startDateProvider
@@ -30,7 +35,7 @@ class AuditEventsTest extends TestCase
             'discharged_on' => $now->format(DateTime::ATOM),
             'deputyship_start_date' => $expectedStartDate,
             'event' => 'CLIENT_DELETED',
-            'type' => 'audit'
+            'type' => 'audit',
         ];
 
         $actual = (new AuditEvents($dateTimeProvider->reveal()))->clientDischarged(
@@ -47,12 +52,12 @@ class AuditEventsTest extends TestCase
     public function startDateProvider()
     {
         return [
-             'Start date present' => [
-                 '2019-07-08T09:36:00+01:00',
-                 new DateTime('2019-07-08T09:36', new \DateTimeZone('+0100'))
-             ],
-             'Null start date' => [null, null]
-         ];
+            'Start date present' => [
+                '2019-07-08T09:36:00+01:00',
+                new DateTime('2019-07-08T09:36', new DateTimeZone('+0100')),
+            ],
+            'Null start date' => [null, null],
+        ];
     }
 
     /**
@@ -75,7 +80,7 @@ class AuditEventsTest extends TestCase
             'subject_full_name' => 'Panda Bear',
             'subject_role' => 'ROLE_LAY_DEPUTY',
             'event' => 'USER_EMAIL_CHANGED',
-            'type' => 'audit'
+            'type' => 'audit',
         ];
 
         $actual = (new AuditEvents($dateTimeProvider->reveal()))->userEmailChanged(
@@ -110,7 +115,7 @@ class AuditEventsTest extends TestCase
             'subject_full_name' => 'Panda Bear',
             'subject_role' => 'CLIENT',
             'event' => 'CLIENT_EMAIL_CHANGED',
-            'type' => 'audit'
+            'type' => 'audit',
         ];
 
         $actual = (new AuditEvents($dateTimeProvider->reveal()))->clientEmailChanged(
@@ -128,8 +133,8 @@ class AuditEventsTest extends TestCase
     {
         return [
             'Email changed' => ['me@test.com', 'you@test.com'],
-            'Email removed' =>  ['me@test.com', null],
-            'Email added' => [null, 'you@test.com']
+            'Email removed' => ['me@test.com', null],
+            'Email added' => [null, 'you@test.com'],
         ];
     }
 
@@ -152,7 +157,7 @@ class AuditEventsTest extends TestCase
             'user_changed' => $userChanged,
             'changed_on' => $now->format(DateTime::ATOM),
             'event' => AuditEvents::EVENT_ROLE_CHANGED,
-            'type' => 'audit'
+            'type' => 'audit',
         ];
 
         $actual = (new AuditEvents($dateTimeProvider->reveal()))->roleChanged(
@@ -177,7 +182,7 @@ class AuditEventsTest extends TestCase
     /**
      * @test
      */
-    public function userDeleted_deputy(): void
+    public function userDeletedDeputy(): void
     {
         $now = new DateTime();
 
@@ -193,7 +198,7 @@ class AuditEventsTest extends TestCase
             'subject_email' => 'r.murphy@email.com',
             'subject_role' => 'ROLE_LAY_DEPUTY',
             'event' => 'DEPUTY_DELETED',
-            'type' => 'audit'
+            'type' => 'audit',
         ];
 
         $actual = (new AuditEvents($dateTimeProvider->reveal()))->userDeleted(
@@ -211,7 +216,7 @@ class AuditEventsTest extends TestCase
      * @test
      * @dataProvider adminRoleProvider
      */
-    public function userDeleted_admin(string $role): void
+    public function userDeletedAdmin(string $role): void
     {
         $now = new DateTime();
 
@@ -227,7 +232,7 @@ class AuditEventsTest extends TestCase
             'subject_email' => 'r.konichiwa@email.com',
             'subject_role' => $role,
             'event' => 'ADMIN_DELETED',
-            'type' => 'audit'
+            'type' => 'audit',
         ];
 
         $actual = (new AuditEvents($dateTimeProvider->reveal()))->userDeleted(

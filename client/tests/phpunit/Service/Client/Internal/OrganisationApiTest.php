@@ -1,4 +1,6 @@
-<?php declare(strict_types=1);
+<?php
+
+declare(strict_types=1);
 
 namespace DigidepsTests\Service\Client\Internal;
 
@@ -11,10 +13,13 @@ use App\TestHelpers\OrganisationHelpers;
 use App\TestHelpers\UserHelpers;
 use Doctrine\Common\Collections\ArrayCollection;
 use PHPUnit\Framework\TestCase;
+use Prophecy\PhpUnit\ProphecyTrait;
 use Prophecy\Prophecy\ObjectProphecy;
 
 class OrganisationApiTest extends TestCase
 {
+    use ProphecyTrait;
+
     private ObjectProphecy $restClient;
     private ObjectProphecy $eventDispatcher;
     private OrganisationApi $sut;

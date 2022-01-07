@@ -10,9 +10,12 @@ use DateTime;
 use Doctrine\ORM\EntityManager;
 use Faker\Factory;
 use PHPUnit\Framework\TestCase;
+use Prophecy\PhpUnit\ProphecyTrait;
 
 class UserTestHelper extends TestCase
 {
+    use ProphecyTrait;
+
     public function createUserMock(string $roleName, bool $hasReports, bool $hasClients, int $id)
     {
         $clientTestHelper = new ClientTestHelper();
@@ -26,6 +29,20 @@ class UserTestHelper extends TestCase
         $user->getId()->willReturn($id);
 
         return $user->reveal();
+    }
+
+    public function createAndPersistUser(EntityManager $em, ?Client $client = null, ?string $roleName = User::ROLE_LAY_DEPUTY, ?string $email = null)
+    {
+        $user = $this->createUser($client, $roleName, $email);
+
+        if (!is_null($client)) {
+            $em->persist($client);
+        }
+
+        $em->persist($user);
+        $em->flush();
+
+        return $user;
     }
 
     public function createUser(?Client $client = null, ?string $roleName = User::ROLE_LAY_DEPUTY, ?string $email = null)
@@ -49,20 +66,6 @@ class UserTestHelper extends TestCase
         if (!is_null($client)) {
             $user->addClient($client);
         }
-
-        return $user;
-    }
-
-    public function createAndPersistUser(EntityManager $em, ?Client $client = null, ?string $roleName = User::ROLE_LAY_DEPUTY, ?string $email = null)
-    {
-        $user = $this->createUser($client, $roleName, $email);
-
-        if (!is_null($client)) {
-            $em->persist($client);
-        }
-
-        $em->persist($user);
-        $em->flush();
 
         return $user;
     }

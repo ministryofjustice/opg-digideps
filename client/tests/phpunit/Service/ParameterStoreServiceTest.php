@@ -4,9 +4,12 @@ namespace App\Service;
 
 use Aws\Ssm\SsmClient;
 use PHPUnit\Framework\TestCase;
+use Prophecy\PhpUnit\ProphecyTrait;
 
 class ParameterStoreServiceTest extends TestCase
 {
+    use ProphecyTrait;
+
     /** @test */
     public function getFeatureFlag()
     {

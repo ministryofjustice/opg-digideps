@@ -1,4 +1,6 @@
-<?php declare(strict_types=1);
+<?php
+
+declare(strict_types=1);
 
 namespace DigidepsTests\Service\Client\Internal;
 
@@ -13,6 +15,8 @@ use App\TestHelpers\ClientHelpers;
 use App\TestHelpers\UserHelpers;
 use PHPUnit\Framework\TestCase;
 use Prophecy\Argument;
+use Prophecy\PhpUnit\ProphecyTrait;
+use Prophecy\Prophecy\ObjectProphecy;
 use Psr\Log\LoggerInterface;
 use Symfony\Component\Routing\RouterInterface;
 use Symfony\Component\Security\Core\Authentication\Token\Storage\TokenStorageInterface;
@@ -20,38 +24,40 @@ use Symfony\Component\Security\Core\Authentication\Token\UsernamePasswordToken;
 
 class ClientApiTest extends TestCase
 {
+    use ProphecyTrait;
+
     /**
-     * @var \Prophecy\Prophecy\ObjectProphecy
+     * @var ObjectProphecy
      */
     private $restClient;
 
     /**
-     * @var \Prophecy\Prophecy\ObjectProphecy
+     * @var ObjectProphecy
      */
     private $router;
 
     /**
-     * @var \Prophecy\Prophecy\ObjectProphecy
+     * @var ObjectProphecy
      */
     private $logger;
 
     /**
-     * @var \Prophecy\Prophecy\ObjectProphecy
+     * @var ObjectProphecy
      */
     private $userApi;
 
     /**
-     * @var \Prophecy\Prophecy\ObjectProphecy
+     * @var ObjectProphecy
      */
     private $dateTimeProvider;
 
     /**
-     * @var \Prophecy\Prophecy\ObjectProphecy
+     * @var ObjectProphecy
      */
     private $tokenStorage;
 
     /**
-     * @var \Prophecy\Prophecy\ObjectProphecy
+     * @var ObjectProphecy
      */
     private $eventDispatcher;
 

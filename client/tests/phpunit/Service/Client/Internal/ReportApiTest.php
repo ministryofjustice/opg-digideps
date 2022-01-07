@@ -1,19 +1,24 @@
-<?php declare(strict_types=1);
+<?php
+
+declare(strict_types=1);
 
 namespace Tests\App\Service\Client\Internal;
 
 use App\Event\ReportSubmittedEvent;
+use App\Event\ReportUnsubmittedEvent;
 use App\EventDispatcher\ObservableEventDispatcher;
 use App\Service\Client\Internal\ReportApi;
 use App\Service\Client\RestClient;
 use App\TestHelpers\ReportHelpers;
 use App\TestHelpers\UserHelpers;
 use PHPUnit\Framework\TestCase;
+use Prophecy\PhpUnit\ProphecyTrait;
 use Prophecy\Prophecy\ObjectProphecy;
-use App\Event\ReportUnsubmittedEvent;
 
 class ReportApiTest extends TestCase
 {
+    use ProphecyTrait;
+
     private ObjectProphecy $restClient;
     private ObjectProphecy $eventDispatcher;
     private ReportApi $sut;
@@ -59,7 +64,7 @@ class ReportApiTest extends TestCase
         $submittedReport = ReportHelpers::createSubmittedReport();
 
         $this->restClient
-            ->put('report/' . $submittedReport->getId() . '/unsubmit', $submittedReport, ['submitted', 'unsubmit_date', 'report_unsubmitted_sections_list', 'startEndDates', 'report_due_date'])
+            ->put('report/'.$submittedReport->getId().'/unsubmit', $submittedReport, ['submitted', 'unsubmit_date', 'report_unsubmitted_sections_list', 'startEndDates', 'report_due_date'])
             ->shouldBeCalled();
 
         $reportUnsubmittedEvent = new ReportUnsubmittedEvent(
@@ -79,7 +84,7 @@ class ReportApiTest extends TestCase
     {
         return [
             'Id returned' => ['1'],
-            'Id not returned' => [null]
+            'Id not returned' => [null],
         ];
     }
 }

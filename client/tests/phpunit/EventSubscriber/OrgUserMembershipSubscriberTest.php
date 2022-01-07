@@ -1,28 +1,31 @@
-<?php declare(strict_types=1);
+<?php
 
+declare(strict_types=1);
 
 namespace Tests\App\EventListener;
 
 use App\Event\UserAddedToOrganisationEvent;
 use App\Event\UserRemovedFromOrganisationEvent;
 use App\EventSubscriber\OrgUserMembershipSubscriber;
-use App\Service\Audit\AuditEvents;
 use App\Service\Time\DateTimeProvider;
 use App\TestHelpers\OrganisationHelpers;
 use App\TestHelpers\UserHelpers;
 use DateTime;
 use PHPUnit\Framework\TestCase;
+use Prophecy\PhpUnit\ProphecyTrait;
 use Psr\Log\LoggerInterface;
 
 class OrgUserMembershipSubscriberTest extends TestCase
 {
+    use ProphecyTrait;
+
     /** @test */
     public function getSubscribedEvents()
     {
         self::assertEquals(
             [
                 UserAddedToOrganisationEvent::NAME => 'logUserAddedEvent',
-                UserRemovedFromOrganisationEvent::NAME => 'logUserRemovedEvent'
+                UserRemovedFromOrganisationEvent::NAME => 'logUserRemovedEvent',
             ],
             OrgUserMembershipSubscriber::getSubscribedEvents()
         );
@@ -49,7 +52,7 @@ class OrgUserMembershipSubscriberTest extends TestCase
             'added_on' => $now->format(DateTime::ATOM),
             'added_by' => $currentUser->getEmail(),
             'event' => $expectedEventName,
-            'type' => 'audit'
+            'type' => 'audit',
         ];
 
         $logger = self::prophesize(LoggerInterface::class);
@@ -85,7 +88,7 @@ class OrgUserMembershipSubscriberTest extends TestCase
             'removed_on' => $now->format(DateTime::ATOM),
             'removed_by' => $currentUser->getEmail(),
             'event' => $expectedEventName,
-            'type' => 'audit'
+            'type' => 'audit',
         ];
 
         $logger = self::prophesize(LoggerInterface::class);

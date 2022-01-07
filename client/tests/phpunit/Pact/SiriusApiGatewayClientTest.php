@@ -1,12 +1,12 @@
-<?php declare(strict_types=1);
+<?php
+
+declare(strict_types=1);
 
 namespace App\Service;
 
-use App\Model\Sirius\SiriusChecklistPdfDocumentMetadata;
 use App\Service\AWS\RequestSigner;
 use App\Service\Client\Sirius\SiriusApiGatewayClient;
 use DateTime;
-use DigidepsTests\Helpers\DocumentHelpers;
 use DigidepsTests\Helpers\SiriusHelpers;
 use Exception;
 use GuzzleHttp\Client as GuzzleClient;
@@ -17,13 +17,16 @@ use PhpPact\Consumer\Model\ConsumerRequest;
 use PhpPact\Consumer\Model\ProviderResponse;
 use PhpPact\Standalone\MockService\MockServerEnvConfig;
 use Prophecy\Argument;
+use Prophecy\PhpUnit\ProphecyTrait;
 use Prophecy\Prophecy\ObjectProphecy;
 use Psr\Log\LoggerInterface;
 use Symfony\Bundle\FrameworkBundle\Test\KernelTestCase;
 use Throwable;
 
-class SiriusDocumentsContractTest extends KernelTestCase
+class SiriusApiGatewayClientTest extends KernelTestCase
 {
+    use ProphecyTrait;
+
     /** @var string */
     private $caseRef;
     private $reportPdfUuid;
@@ -38,7 +41,7 @@ class SiriusDocumentsContractTest extends KernelTestCase
     /** @var RequestSigner&ObjectProphecy */
     private $signer;
 
-    /**  @var SiriusApiGatewayClient */
+    /** @var SiriusApiGatewayClient */
     private $sut;
 
     /** @var InteractionBuilder */
@@ -54,7 +57,7 @@ class SiriusDocumentsContractTest extends KernelTestCase
         $serializer = (self::bootKernel(['debug' => false]))->getContainer()->get('serializer');
 
         // Create a configuration that reflects the server that was started. You can create a custom MockServerConfigInterface if needed.
-        $config  = new MockServerEnvConfig();
+        $config = new MockServerEnvConfig();
         $this->builder = new InteractionBuilder($config);
 
         $this->caseRef = '1234567T';
@@ -72,7 +75,7 @@ class SiriusDocumentsContractTest extends KernelTestCase
         $this->sut = new SiriusApiGatewayClient(
             $client,
             $this->signer->reveal(),
-            'http://' . $baseUrl,
+            'http://'.$baseUrl,
             $serializer,
             $this->logger->reveal()
         );
@@ -80,7 +83,8 @@ class SiriusDocumentsContractTest extends KernelTestCase
 
     /**
      * @test
-     * @throws \Exception
+     *
+     * @throws Exception
      */
     public function sendReportPdfDocument()
     {
@@ -106,7 +110,7 @@ class SiriusDocumentsContractTest extends KernelTestCase
 
         try {
             $result = $this->sut->sendReportPdfDocument($siriusDocumentUpload, $this->caseRef);
-        } catch (\Throwable $e) {
+        } catch (Throwable $e) {
             $this->throwReadableFailureMessage($e);
         }
 
@@ -118,9 +122,59 @@ class SiriusDocumentsContractTest extends KernelTestCase
         );
     }
 
+    private function setUpReportPdfPactBuilder(string $caseRef)
+    {
+        $matcher = new Matcher();
+        // Create your expected request from the consumer.
+        $request = (new ConsumerRequest())
+            ->setMethod('POST')
+            ->setPath(sprintf('/v2/clients/%s/reports', $caseRef))
+            ->addHeader('Content-Type', 'application/json')
+            ->setBody([
+                'report' => [
+                    'data' => [
+                        'type' => 'reports',
+                        'attributes' => [
+                            'reporting_period_from' => $matcher->dateISO8601('2018-05-14'),
+                            'reporting_period_to' => $matcher->dateISO8601('2019-05-13'),
+                            'year' => $matcher->integer(2018),
+                            'date_submitted' => $matcher->dateTimeISO8601('2019-06-20T00:00:00+01:00'),
+                            'type' => $matcher->regex('PF', 'PF|HW|NDR'),
+                            'submission_id' => $matcher->integer(9876),
+                        ],
+                        'file' => [
+                            'name' => $this->fileName,
+                            'mimetype' => 'application/pdf',
+                            's3_reference' => $this->s3Reference,
+                        ],
+                    ],
+                ],
+            ]);
+
+        // Create your expected response from the provider.
+        $response = new ProviderResponse();
+        $response
+            ->setStatus(201)
+            ->addHeader('Content-Type', 'application/json')
+            ->setBody([
+                'data' => ['id' => $matcher->uuid($this->reportPdfUuid)],
+            ]);
+        $this->builder
+            ->uponReceiving('A submitted report')
+            ->with($request)
+            ->willRespondWith($response); // This has to be last. This is what makes an API request to the Mock Server to set the interaction.
+    }
+
+    private function throwReadableFailureMessage(Throwable $e)
+    {
+        $json = json_encode(json_decode((string) $e->getResponse()->getBody()), JSON_PRETTY_PRINT);
+        throw new Exception(sprintf('Pact test failed: %s', $json));
+    }
+
     /**
      * @test
-     * @throws \Exception
+     *
+     * @throws Exception
      */
     public function sendSupportingDocument()
     {
@@ -137,7 +191,7 @@ class SiriusDocumentsContractTest extends KernelTestCase
 
         try {
             $result = $this->sut->sendSupportingDocument($upload, $this->reportPdfUuid, $this->caseRef);
-        } catch (\Throwable $e) {
+        } catch (Throwable $e) {
             $this->throwReadableFailureMessage($e);
         }
 
@@ -147,6 +201,46 @@ class SiriusDocumentsContractTest extends KernelTestCase
             $this->reportPdfUuid,
             $result->getBody()->getContents()
         );
+    }
+
+    private function setUpSupportingDocumentPactBuilder(string $caseRef, string $reportPdfDocumentUuid)
+    {
+        $matcher = new Matcher();
+
+        // Create your expected request from the consumer.
+        $request = (new ConsumerRequest())
+            ->setMethod('POST')
+            ->setPath(sprintf('/v2/clients/%s/reports/%s/supportingdocuments', $caseRef, $reportPdfDocumentUuid))
+            ->addHeader('Content-Type', 'application/json')
+            ->setBody([
+                'supporting_document' => [
+                    'data' => [
+                        'type' => 'supportingdocuments',
+                        'attributes' => [
+                            'submission_id' => $matcher->integer(9876),
+                        ],
+                        'file' => [
+                            'name' => $this->fileName,
+                            'mimetype' => 'application/pdf',
+                            's3_reference' => $this->s3Reference,
+                        ],
+                    ],
+                ],
+            ]);
+
+        // Create your expected response from the provider.
+        $response = new ProviderResponse();
+        $response
+            ->setStatus(201)
+            ->addHeader('Content-Type', 'application/json')
+            ->setBody([
+                'data' => ['id' => $matcher->uuid($this->reportPdfUuid)],
+            ]);
+
+        $this->builder
+            ->uponReceiving('A submitted supporting document')
+            ->with($request)
+            ->willRespondWith($response); // This has to be last. This is what makes an API request to the Mock Server to set the interaction.
     }
 
     /**
@@ -171,7 +265,7 @@ class SiriusDocumentsContractTest extends KernelTestCase
 
         try {
             $result = $this->sut->postChecklistPdf($upload, $this->reportPdfUuid, $this->caseRef);
-        } catch (\Throwable $e) {
+        } catch (Throwable $e) {
             $this->throwReadableFailureMessage($e);
         }
 
@@ -181,6 +275,51 @@ class SiriusDocumentsContractTest extends KernelTestCase
             $this->checklistPdfUuid,
             $result->getBody()->getContents()
         );
+    }
+
+    private function setUpChecklistPdfPostPactBuilder(string $caseRef, string $reportPdfDocumentUuid)
+    {
+        $matcher = new Matcher();
+
+        // Create your expected request from the consumer.
+        $request = (new ConsumerRequest())
+            ->setMethod('POST')
+            ->setPath(sprintf('/v2/clients/%s/reports/%s/checklists', $caseRef, $reportPdfDocumentUuid))
+            ->addHeader('Content-Type', 'application/json')
+            ->setBody([
+                'checklist' => [
+                    'data' => [
+                        'type' => 'checklists',
+                        'attributes' => [
+                            'submission_id' => 11112,
+                            'submitter_email' => $this->submitterEmail,
+                            'reporting_period_from' => $matcher->dateISO8601('2019-06-01'),
+                            'reporting_period_to' => $matcher->dateISO8601('2020-05-31'),
+                            'year' => $matcher->integer(2020),
+                            'type' => $matcher->regex('PF', 'PF|HW|COMBINED'),
+                        ],
+                        'file' => [
+                            'name' => $this->fileName,
+                            'mimetype' => 'application/pdf',
+                            'source' => $matcher->regex(base64_encode($this->fileContents), '.+'),
+                        ],
+                    ],
+                ],
+            ]);
+
+        // Create your expected response from the provider.
+        $response = new ProviderResponse();
+        $response
+            ->setStatus(201)
+            ->addHeader('Content-Type', 'application/json')
+            ->setBody([
+                'data' => ['id' => $matcher->uuid($this->expectedChecklistPdfUuid)],
+            ]);
+
+        $this->builder
+            ->uponReceiving('A submitted checklist pdf')
+            ->with($request)
+            ->willRespondWith($response); // This has to be last. This is what makes an API request to the Mock Server to set the interaction.
     }
 
     /**
@@ -213,141 +352,6 @@ class SiriusDocumentsContractTest extends KernelTestCase
         );
     }
 
-    private function setUpReportPdfPactBuilder(string $caseRef)
-    {
-        $matcher = new Matcher();
-        // Create your expected request from the consumer.
-        $request = (new ConsumerRequest())
-            ->setMethod('POST')
-            ->setPath(sprintf('/v2/clients/%s/reports', $caseRef))
-            ->addHeader('Content-Type', 'application/json')
-            ->setBody([
-                'report' => [
-                    'data'=> [
-                        'type' => 'reports',
-                        'attributes' => [
-                            'reporting_period_from' => $matcher->dateISO8601('2018-05-14'),
-                            'reporting_period_to' => $matcher->dateISO8601('2019-05-13'),
-                            'year' => $matcher->integer(2018),
-                            'date_submitted' => $matcher->dateTimeISO8601('2019-06-20T00:00:00+01:00'),
-                            'type' => $matcher->regex('PF', 'PF|HW|NDR'),
-                            'submission_id' => $matcher->integer(9876)
-                        ],
-                        'file' => [
-                            'name' => $this->fileName,
-                            'mimetype' => 'application/pdf',
-                            's3_reference' => $this->s3Reference
-                        ]
-                    ]
-                ]
-            ]);
-
-        // Create your expected response from the provider.
-        $response = new ProviderResponse();
-        $response
-            ->setStatus(201)
-            ->addHeader('Content-Type', 'application/json')
-            ->setBody([
-                'data' => ['id' => $matcher->uuid($this->reportPdfUuid)]
-            ]);
-        $this->builder
-            ->uponReceiving('A submitted report')
-            ->with($request)
-            ->willRespondWith($response); // This has to be last. This is what makes an API request to the Mock Server to set the interaction.
-    }
-
-    private function setUpSupportingDocumentPactBuilder(string $caseRef, string $reportPdfDocumentUuid)
-    {
-        $matcher = new Matcher();
-
-        // Create your expected request from the consumer.
-        $request = (new ConsumerRequest())
-            ->setMethod('POST')
-            ->setPath(sprintf('/v2/clients/%s/reports/%s/supportingdocuments', $caseRef, $reportPdfDocumentUuid))
-            ->addHeader('Content-Type', 'application/json')
-            ->setBody([
-                'supporting_document' => [
-                    'data' => [
-                        'type' => 'supportingdocuments',
-                        'attributes' => [
-                            'submission_id' => $matcher->integer(9876)
-                        ],
-                        'file' => [
-                            'name' => $this->fileName,
-                            'mimetype' => 'application/pdf',
-                            's3_reference' => $this->s3Reference
-                        ]
-                    ]
-                ]
-            ]);
-
-        // Create your expected response from the provider.
-        $response = new ProviderResponse();
-        $response
-            ->setStatus(201)
-            ->addHeader('Content-Type', 'application/json')
-            ->setBody([
-                'data' => ['id' => $matcher->uuid($this->reportPdfUuid)]
-            ]);
-
-        $this->builder
-            ->uponReceiving('A submitted supporting document')
-            ->with($request)
-            ->willRespondWith($response); // This has to be last. This is what makes an API request to the Mock Server to set the interaction.
-    }
-
-    private function setUpChecklistPdfPostPactBuilder(string $caseRef, string $reportPdfDocumentUuid)
-    {
-        $matcher = new Matcher();
-
-        // Create your expected request from the consumer.
-        $request = (new ConsumerRequest())
-            ->setMethod('POST')
-            ->setPath(sprintf('/v2/clients/%s/reports/%s/checklists', $caseRef, $reportPdfDocumentUuid))
-            ->addHeader('Content-Type', 'application/json')
-            ->setBody([
-                'checklist' => [
-                    'data' => [
-                        'type' => 'checklists',
-                        'attributes' => [
-                            "submission_id" => 11112,
-                            "submitter_email" => $this->submitterEmail,
-                            "reporting_period_from" => $matcher->dateISO8601('2019-06-01'),
-                            "reporting_period_to" => $matcher->dateISO8601('2020-05-31'),
-                            "year" => $matcher->integer(2020),
-                            "type" => $matcher->regex('PF', 'PF|HW|COMBINED')
-                        ],
-                        'file' => [
-                            'name' => $this->fileName,
-                            'mimetype' => 'application/pdf',
-                            'source' => $matcher->regex(base64_encode($this->fileContents), '.+')
-                        ]
-                    ]
-                ]
-            ]);
-
-
-        // Create your expected response from the provider.
-        $response = new ProviderResponse();
-        $response
-            ->setStatus(201)
-            ->addHeader('Content-Type', 'application/json')
-            ->setBody([
-                'data' => ['id' => $matcher->uuid($this->expectedChecklistPdfUuid)]
-            ]);
-
-        $this->builder
-            ->uponReceiving('A submitted checklist pdf')
-            ->with($request)
-            ->willRespondWith($response); // This has to be last. This is what makes an API request to the Mock Server to set the interaction.
-    }
-
-    private function throwReadableFailureMessage(\Throwable $e)
-    {
-        $json = json_encode(json_decode((string) $e->getResponse()->getBody()), JSON_PRETTY_PRINT);
-        throw new Exception(sprintf('Pact test failed: %s', $json)) ;
-    }
-
     private function setUpChecklistPdfPutPactBuilder(string $caseRef, string $reportPdfDocumentUuid, string $checklistUuid)
     {
         $matcher = new Matcher();
@@ -362,22 +366,21 @@ class SiriusDocumentsContractTest extends KernelTestCase
                     'data' => [
                         'type' => 'checklists',
                         'attributes' => [
-                            "submission_id" => 11112,
-                            "submitter_email" => $this->submitterEmail,
-                            "reporting_period_from" => $matcher->dateISO8601('2019-06-01'),
-                            "reporting_period_to" => $matcher->dateISO8601('2020-05-31'),
-                            "year" => $matcher->integer(2020),
-                            "type" => $matcher->regex('PF', 'PF|HW|COMBINED')
+                            'submission_id' => 11112,
+                            'submitter_email' => $this->submitterEmail,
+                            'reporting_period_from' => $matcher->dateISO8601('2019-06-01'),
+                            'reporting_period_to' => $matcher->dateISO8601('2020-05-31'),
+                            'year' => $matcher->integer(2020),
+                            'type' => $matcher->regex('PF', 'PF|HW|COMBINED'),
                         ],
                         'file' => [
                             'name' => $this->fileName,
                             'mimetype' => 'application/pdf',
-                            'source' => $matcher->regex(base64_encode($this->fileContents), '.+')
-                        ]
-                    ]
-                ]
+                            'source' => $matcher->regex(base64_encode($this->fileContents), '.+'),
+                        ],
+                    ],
+                ],
             ]);
-
 
         // Create your expected response from the provider.
         $response = new ProviderResponse();
@@ -385,7 +388,7 @@ class SiriusDocumentsContractTest extends KernelTestCase
             ->setStatus(200)
             ->addHeader('Content-Type', 'application/json')
             ->setBody([
-                'data' => ['id' => $matcher->uuid($this->checklistPdfUuid)]
+                'data' => ['id' => $matcher->uuid($this->checklistPdfUuid)],
             ]);
 
         $this->builder

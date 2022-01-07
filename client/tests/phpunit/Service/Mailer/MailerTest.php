@@ -1,8 +1,9 @@
-<?php declare(strict_types=1);
+<?php
+
+declare(strict_types=1);
 
 namespace Tests\App\Service\Mailer;
 
-use App\Model\Email;
 use App\Model\FeedbackReport;
 use App\Service\Mailer\Mailer;
 use App\Service\Mailer\MailFactory;
@@ -11,23 +12,25 @@ use App\TestHelpers\ClientHelpers;
 use App\TestHelpers\EmailHelpers;
 use App\TestHelpers\NdrHelpers;
 use App\TestHelpers\ReportHelpers;
-use App\TestHelpers\ReportTestHelper;
 use App\TestHelpers\UserHelpers;
 use PHPUnit\Framework\TestCase;
-use Prophecy\Argument;
+use Prophecy\PhpUnit\ProphecyTrait;
+use Prophecy\Prophecy\ObjectProphecy;
 
 class MailerTest extends TestCase
 {
-    /** @var \Prophecy\Prophecy\ObjectProphecy */
+    use ProphecyTrait;
+
+    /** @var ObjectProphecy */
     private $mailFactory;
 
-    /** @var \Prophecy\Prophecy\ObjectProphecy */
+    /** @var ObjectProphecy */
     private $mailSender;
 
     /** @var Mailer */
     private $sut;
 
-    public function setUp() : void
+    public function setUp(): void
     {
         $this->mailFactory = self::prophesize(MailFactory::class);
         $this->mailSender = self::prophesize(MailSender::class);
@@ -65,7 +68,7 @@ class MailerTest extends TestCase
     {
         return [
             'Name' => ['Poppy'],
-            'Null' => [null]
+            'Null' => [null],
         ];
     }
 
@@ -87,11 +90,11 @@ class MailerTest extends TestCase
         $formResponse = [
             'specificPage' => true,
             'page' => null,
-            'comments' => "Some comment here",
-            'name' => "Shygirl",
-            'email' => "shygirl@nuxxe.com",
-            'phone' => "01211234567",
-            'satisfactionLevel' => 5
+            'comments' => 'Some comment here',
+            'name' => 'Shygirl',
+            'email' => 'shygirl@nuxxe.com',
+            'phone' => '01211234567',
+            'satisfactionLevel' => 5,
         ];
         $generalFeedbackEmail = EmailHelpers::createEmail();
 
