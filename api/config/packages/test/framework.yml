@@ -1,4 +1,6 @@
 framework:
+    session:
+        handler_id: null
     test: ~
     profiler:
         collect: false
