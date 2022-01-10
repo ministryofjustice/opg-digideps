@@ -12,12 +12,9 @@ use DateTime;
 use Doctrine\ORM\EntityManager;
 use Faker\Factory;
 use PHPUnit\Framework\TestCase;
-use Prophecy\PhpUnit\ProphecyTrait;
 
 class ClientTestHelper extends TestCase
 {
-    use ProphecyTrait;
-
     public function createClientMock(int $id, bool $hasReports)
     {
         $report = $hasReports ? (self::prophesize(Report::class))->reveal() : null;

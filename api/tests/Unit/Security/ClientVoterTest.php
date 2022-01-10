@@ -11,7 +11,6 @@ use App\Security\ClientVoter;
 use App\TestHelpers\ClientTestHelper;
 use App\TestHelpers\UserTestHelper;
 use PHPUnit\Framework\MockObject\MockObject;
-use Prophecy\PhpUnit\ProphecyTrait;
 use Symfony\Bundle\FrameworkBundle\Test\KernelTestCase;
 use Symfony\Component\Security\Core\Authentication\Token\TokenInterface;
 use Symfony\Component\Security\Core\Authentication\Token\UsernamePasswordToken;
@@ -19,8 +18,6 @@ use Symfony\Component\Security\Core\Security;
 
 class ClientVoterTest extends KernelTestCase
 {
-    use ProphecyTrait;
-
     /** @var ClientVoter */
     private $voter;
 

@@ -10,12 +10,9 @@ use DateTime;
 use Doctrine\ORM\EntityManager;
 use Faker\Factory;
 use PHPUnit\Framework\TestCase;
-use Prophecy\PhpUnit\ProphecyTrait;
 
 class UserTestHelper extends TestCase
 {
-    use ProphecyTrait;
-
     public function createUserMock(string $roleName, bool $hasReports, bool $hasClients, int $id)
     {
         $clientTestHelper = new ClientTestHelper();

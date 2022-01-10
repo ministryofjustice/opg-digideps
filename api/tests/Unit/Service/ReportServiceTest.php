@@ -24,15 +24,12 @@ use Mockery;
 use MockeryStub as m;
 use PHPUnit\Framework\TestCase;
 use Prophecy\Argument;
-use Prophecy\PhpUnit\ProphecyTrait;
 use Prophecy\Prophecy\ObjectProphecy;
 use RuntimeException;
 use Throwable;
 
 class ReportServiceTest extends TestCase
 {
-    use ProphecyTrait;
-
     /**
      * @var ReportService
      */

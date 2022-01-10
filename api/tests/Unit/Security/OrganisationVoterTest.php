@@ -8,15 +8,12 @@ use App\Entity\Organisation;
 use App\Entity\User;
 use App\Security\OrganisationVoter;
 use DateTime;
-use Prophecy\PhpUnit\ProphecyTrait;
 use Symfony\Bundle\FrameworkBundle\Test\KernelTestCase;
 use Symfony\Component\Security\Core\Authentication\Token\TokenInterface;
 use Symfony\Component\Security\Core\Security;
 
 class OrganisationVoterTest extends KernelTestCase
 {
-    use ProphecyTrait;
-
     public function setUp(): void
     {
         $this->user = new User();
