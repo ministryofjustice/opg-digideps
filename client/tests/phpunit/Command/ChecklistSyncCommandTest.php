@@ -113,11 +113,8 @@ class ChecklistSyncCommandTest extends KernelTestCase
         ];
 
         $returnValues = [
+            [$this->buildReport(3923)],
             [],
-            [
-                $this->buildReport(),
-                $this->buildReport(),
-            ],
         ];
 
         $this
@@ -127,7 +124,7 @@ class ChecklistSyncCommandTest extends KernelTestCase
             ->invokeTest();
     }
 
-    private function buildReport()
+    private function buildReport(int $id)
     {
         $user = (new User())->setEmail('test@test.com');
 
@@ -138,7 +135,7 @@ class ChecklistSyncCommandTest extends KernelTestCase
             ->setType(Report::TYPE_PROPERTY_AND_AFFAIRS_HIGH_ASSETS);
 
         $checklist = (new Checklist($report))->setSubmittedBy($user);
-        $checklist->setId(3923);
+        $checklist->setId($id);
 
         $report->setChecklist($checklist);
 
@@ -159,13 +156,13 @@ class ChecklistSyncCommandTest extends KernelTestCase
         return $this;
     }
 
-    private function assertApiCallsAreMade(array $arguments, array $returnValues): ChecklistSyncCommandTest
+    private function assertApiCallsAreMade(array $argumentArrays, array $returnValueArrays): ChecklistSyncCommandTest
     {
         $this->restClient
-            ->expects($this->once())
+            ->expects($this->exactly(count($argumentArrays)))
             ->method('apiCall')
-            ->withConsecutive(...$arguments)
-            ->willReturnOnConsecutiveCalls(...$returnValues);
+            ->withConsecutive(...$argumentArrays)
+            ->willReturnOnConsecutiveCalls(...$returnValueArrays);
 
         return $this;
     }
@@ -207,11 +204,8 @@ class ChecklistSyncCommandTest extends KernelTestCase
         ];
 
         $returnValues = [
+            [$this->buildReport(3923)],
             [],
-            [
-                $this->buildReport(),
-                $this->buildReport(),
-            ],
         ];
 
         $this
@@ -240,8 +234,19 @@ class ChecklistSyncCommandTest extends KernelTestCase
                 'put',
                 'checklist/3923',
                 json_encode([
-                    'syncStatus' => Checklist::SYNC_STATUS_PERMANENT_ERROR,
-                    'syncError' => 'Failed to generate PDF',
+                    'syncStatus' => Checklist::SYNC_STATUS_SUCCESS,
+                    'uuid' => 'uuid-1',
+                ]),
+                'raw',
+                [],
+                false,
+            ],
+            [
+                'put',
+                'checklist/3924',
+                json_encode([
+                    'syncStatus' => Checklist::SYNC_STATUS_SUCCESS,
+                    'uuid' => 'uuid-2',
                 ]),
                 'raw',
                 [],
@@ -250,17 +255,16 @@ class ChecklistSyncCommandTest extends KernelTestCase
         ];
 
         $returnValues = [
-            [],
             [
-                $this->buildReport(),
-                $this->buildReport(),
+                $this->buildReport(3923),
+                $this->buildReport(3924),
             ],
+            [],
         ];
 
         $this
             ->ensureFeatureIsEnabled()
             ->assertApiCallsAreMade($apiCallArguments, $returnValues)
-//            ->ensureRestClientReturnsRows()
             ->ensurePdfGenerationWillSucceed()
             ->assertEachRowWillBeTransformedAndSentToSyncService()
             ->invokeTest();
@@ -292,28 +296,32 @@ class ChecklistSyncCommandTest extends KernelTestCase
     /**
      * @test
      */
-    public function fetchesAconfigurableLimitOfChecklists()
+    public function fetchesAConfigurableLimitOfChecklists()
     {
+        $rowLimit = '45';
+
+        $apiCallArguments = [
+            [
+                'get',
+                'report/all-with-queued-checklists',
+                ['row_limit' => $rowLimit],
+                'Report\Report[]',
+                [],
+                false,
+            ],
+        ];
+
+        $returnValues = [
+            [],
+            [],
+        ];
+
         $this
             ->ensureFeatureIsEnabled()
-            ->ensureConfigurableRowLimitIsSetTo('30')
+            ->ensureConfigurableRowLimitIsSetTo($rowLimit)
+            ->assertApiCallsAreMade($apiCallArguments, $returnValues)
             ->ensurePdfGenerationWillSucceed()
-            ->assertChecklistsAreFetchedWithLimitOf('30')
             ->invokeTest();
-    }
-
-    private function assertChecklistsAreFetchedWithLimitOf(string $limit)
-    {
-        $this->restClient
-            ->expects($this->at(0))
-            ->method('apiCall')
-            ->with('get', 'report/all-with-queued-checklists', ['row_limit' => $limit], 'Report\Report[]', [], false)
-            ->willReturn([
-                $this->buildReport(),
-                $this->buildReport(),
-            ]);
-
-        return $this;
     }
 
     private function ensureConfigurableRowLimitIsSetTo(string $limit): ChecklistSyncCommandTest
@@ -331,26 +339,51 @@ class ChecklistSyncCommandTest extends KernelTestCase
      */
     public function fetchesDefaultLimitOfChecklistsOfConfigurableValueNotSet()
     {
+        $apiCallArguments = [
+            [
+                'get',
+                'report/all-with-queued-checklists',
+                ['row_limit' => ChecklistSyncCommand::FALLBACK_ROW_LIMITS],
+                'Report\Report[]',
+                [],
+                false,
+            ],
+            [
+                'put',
+                'checklist/3923',
+                json_encode([
+                    'syncStatus' => Checklist::SYNC_STATUS_SUCCESS,
+                    'uuid' => 'uuid-1',
+                ]),
+                'raw',
+                [],
+                false,
+            ],
+            [
+                'put',
+                'checklist/3924',
+                json_encode([
+                    'syncStatus' => Checklist::SYNC_STATUS_SUCCESS,
+                    'uuid' => 'uuid-2',
+                ]),
+                'raw',
+                [],
+                false,
+            ],
+        ];
+
+        $returnValues = [
+            [$this->buildReport(3923), $this->buildReport(3924)],
+            [],
+        ];
+
         $this
             ->ensureFeatureIsEnabled()
             ->ensureConfigurableRowLimitIsNotSet()
             ->ensurePdfGenerationWillSucceed()
-            ->assertChecklistsAreFetchedWithDefaultLimit()
+            ->assertApiCallsAreMade($apiCallArguments, $returnValues)
+            ->assertEachRowWillBeTransformedAndSentToSyncService()
             ->invokeTest();
-    }
-
-    private function assertChecklistsAreFetchedWithDefaultLimit()
-    {
-        $this->restClient
-            ->expects($this->at(0))
-            ->method('apiCall')
-            ->with('get', 'report/all-with-queued-checklists', ['row_limit' => ChecklistSyncCommand::FALLBACK_ROW_LIMITS], 'Report\Report[]', [], false)
-            ->willReturn([
-                $this->buildReport(),
-                $this->buildReport(),
-            ]);
-
-        return $this;
     }
 
     private function ensureConfigurableRowLimitIsNotSet(): ChecklistSyncCommandTest
@@ -366,48 +399,55 @@ class ChecklistSyncCommandTest extends KernelTestCase
     /**
      * @test
      */
-    public function updatesStatusAndUuidOfEachSuccessfullySyncedChecklist()
+    public function updatesSyncStatusOnFailedDocumentSyncs()
     {
-        $this
-            ->ensureFeatureIsEnabled()
-            ->ensureConfigurableRowLimitIsNotSet()
-            ->ensurePdfGenerationWillSucceed()
-            ->assertChecklistsAreFetchedWithDefaultLimit()
-            ->assertChecklistStatusWillBeUpdatedWithSuccess()
-            ->invokeTest();
-    }
-
-    private function assertChecklistStatusWillBeUpdatedWithSuccess(): ChecklistSyncCommandTest
-    {
-        $this->restClient
-            ->expects($this->at(1))
-            ->method('apiCall')
-            ->with(
+        $apiCallArguments = [
+            [
+                'get',
+                'report/all-with-queued-checklists',
+                ['row_limit' => ChecklistSyncCommand::FALLBACK_ROW_LIMITS],
+                'Report\Report[]',
+                [],
+                false,
+            ],
+            [
                 'put',
                 'checklist/3923',
                 json_encode([
-                    'syncStatus' => Checklist::SYNC_STATUS_SUCCESS,
+                    'syncStatus' => Checklist::SYNC_STATUS_PERMANENT_ERROR,
+                    'syncError' => 'Failed to sync document',
                 ]),
                 'raw',
                 [],
-                false
-            );
+                false,
+            ],
+            [
+                'put',
+                'checklist/3924',
+                json_encode([
+                    'syncStatus' => Checklist::SYNC_STATUS_PERMANENT_ERROR,
+                    'syncError' => 'Failed to sync document',
+                ]),
+                'raw',
+                [],
+                false,
+            ],
+        ];
 
-        return $this;
-    }
+        $returnValues = [
+            [
+                $this->buildReport(3923),
+                $this->buildReport(3924),
+            ],
+            [],
+        ];
 
-    /**
-     * @test
-     */
-    public function updatesSyncStatusOnFailedDocumentSyncs()
-    {
         $this
             ->ensureFeatureIsEnabled()
             ->ensureConfigurableRowLimitIsNotSet()
             ->ensurePdfGenerationWillSucceed()
-            ->assertChecklistsAreFetchedWithDefaultLimit()
+            ->assertApiCallsAreMade($apiCallArguments, $returnValues)
             ->ensureSyncWillFailWith(new SiriusDocumentSyncFailedException('Failed to sync document'))
-            ->assertChecklistStatusWillBeUpdatedWithError('Failed to sync document')
             ->invokeTest();
     }
 
