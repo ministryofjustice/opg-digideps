@@ -2,6 +2,7 @@
 
 namespace App\Service;
 
+use App\Entity\Asset;
 use App\Entity\Ndr\BankAccount;
 use App\Entity\Ndr\ClientBenefitsCheck;
 use App\Entity\Ndr\Debt;
@@ -20,6 +21,16 @@ use PHPUnit\Framework\TestCase;
  */
 class NdrStatusServiceTest extends TestCase
 {
+    /**
+     * @test
+     * @dataProvider visitsCareProvider
+     */
+    public function visitsCare($mocks, $state)
+    {
+        $object = $this->getStatusServiceWithReportMocked($mocks);
+        $this->assertEquals($state, $object->getVisitsCareState()['state']);
+    }
+
     /**
      * @return StatusService
      */
@@ -59,6 +70,138 @@ class NdrStatusServiceTest extends TestCase
         return new StatusService($ndr);
     }
 
+    /**
+     * @test
+     * @dataProvider expensesProvider
+     */
+    public function expenses($mocks, $state)
+    {
+        $object = $this->getStatusServiceWithReportMocked($mocks);
+        $this->assertEquals($state, $object->getExpensesState()['state']);
+    }
+
+    /**
+     * @test
+     * @dataProvider incomeBenefitsProvider
+     */
+    public function incomeBenefits($mocks, $state)
+    {
+        $object = $this->getStatusServiceWithReportMocked($mocks);
+        $this->assertEquals($state, $object->getIncomeBenefitsState()['state']);
+    }
+
+    /**
+     * @test
+     * @dataProvider debtsProvider
+     */
+    public function debts($mocks, $state)
+    {
+        $object = $this->getStatusServiceWithReportMocked($mocks);
+        $this->assertEquals($state, $object->getDebtsState()['state']);
+    }
+
+    /**
+     * @test
+     * @dataProvider banksProvider
+     */
+    public function banks($mocks, $state)
+    {
+        $object = $this->getStatusServiceWithReportMocked($mocks);
+        $this->assertEquals($state, $object->getBankAccountsState()['state']);
+    }
+
+    /**
+     * @test
+     * @dataProvider assetsProvider
+     */
+    public function assets($mocks, $state)
+    {
+        $object = $this->getStatusServiceWithReportMocked($mocks);
+        $this->assertEquals($state, $object->getAssetsState()['state']);
+    }
+
+    /**
+     * @test
+     * @dataProvider actionProvider
+     */
+    public function actions($mocks, $state)
+    {
+        $object = $this->getStatusServiceWithReportMocked($mocks);
+        $this->assertEquals($state, $object->getActionsState()['state']);
+    }
+
+    /**
+     * @test
+     * @dataProvider otherInfoProvider
+     */
+    public function otherinfo($mocks, $state)
+    {
+        $object = $this->getStatusServiceWithReportMocked($mocks);
+        $this->assertEquals($state, $object->getOtherInfoState()['state']);
+    }
+
+    /**
+     * @test
+     */
+    public function getRemainingSectionsAll()
+    {
+        $object = $this->getStatusServiceWithReportMocked([]);
+        $rs = $object->getRemainingSections();
+        $this->assertEquals('not-started', $rs['visitsCare']);
+        $this->assertEquals('not-started', $rs['expenses']);
+        $this->assertEquals('not-started', $rs['incomeBenefits']);
+        $this->assertEquals('not-started', $rs['bankAccounts']);
+        $this->assertEquals('not-started', $rs['assets']);
+        $this->assertEquals('not-started', $rs['debts']);
+        $this->assertEquals('not-started', $rs['actions']);
+        $this->assertEquals('not-started', $rs['otherInfo']);
+        $this->assertEquals('not-started', $rs['clientBenefitsCheck']);
+
+        $this->assertEquals('notStarted', $object->getStatus());
+    }
+
+    public function getRemainingSectionsPartialProvider()
+    {
+        [
+            $visitsCare,
+            $expenses,
+            $incomeBenefits,
+            $banks,
+            $assets,
+            $debts,
+            $action,
+            $otherInfo,
+            $clientBenefitsCheck
+        ] = $this->buildSectionsByProviders();
+
+        return [
+            [array_pop($visitsCare)[0], 'visitsCare'],
+            [array_pop($expenses)[0], 'expenses'],
+            [array_pop($incomeBenefits)[0], 'incomeBenefits'],
+            [array_pop($banks)[0], 'bankAccounts'],
+            [array_pop($assets)[0], 'assets'],
+            [array_pop($debts)[0], 'debts'],
+            [array_pop($action)[0], 'actions'],
+            [array_pop($otherInfo)[0], 'otherInfo'],
+            [array_pop($clientBenefitsCheck)[0], 'clientBenefitsCheck'],
+        ];
+    }
+
+    private function buildSectionsByProviders()
+    {
+        return [
+            $this->visitsCareProvider(),
+            $this->expensesProvider(),
+            $this->incomeBenefitsProvider(),
+            $this->banksProvider(),
+            $this->assetsProvider(),
+            $this->debtsProvider(),
+            $this->actionProvider(),
+            $this->otherInfoProvider(),
+            $this->clientBenefitsCheckProvider(),
+        ];
+    }
+
     public function visitsCareProvider()
     {
         $empty = m::mock(VisitsCare::class, [
@@ -91,16 +234,6 @@ class NdrStatusServiceTest extends TestCase
         ];
     }
 
-    /**
-     * @test
-     * @dataProvider visitsCareProvider
-     */
-    public function visitsCare($mocks, $state)
-    {
-        $object = $this->getStatusServiceWithReportMocked($mocks);
-        $this->assertEquals($state, $object->getVisitsCareState()['state']);
-    }
-
     public function expensesProvider()
     {
         $expense = m::mock(Expense::class);
@@ -113,16 +246,6 @@ class NdrStatusServiceTest extends TestCase
         ];
     }
 
-    /**
-     * @test
-     * @dataProvider expensesProvider
-     */
-    public function expenses($mocks, $state)
-    {
-        $object = $this->getStatusServiceWithReportMocked($mocks);
-        $this->assertEquals($state, $object->getExpensesState()['state']);
-    }
-
     public function incomeBenefitsProvider()
     {
         $ib = m::mock(IncomeBenefit::class);
@@ -131,7 +254,7 @@ class NdrStatusServiceTest extends TestCase
             [[], StatusService::STATE_NOT_STARTED],
             [[
                 'getExpectCompensationDamages' => true, //only this one complete
-                ], StatusService::STATE_INCOMPLETE],
+            ], StatusService::STATE_INCOMPLETE],
             [[
                 'getReceiveStatePension' => true,
                 'getReceiveOtherIncome' => false,
@@ -139,14 +262,28 @@ class NdrStatusServiceTest extends TestCase
         ];
     }
 
-    /**
-     * @test
-     * @dataProvider incomeBenefitsProvider
-     */
-    public function incomeBenefits($mocks, $state)
+    public function banksProvider()
     {
-        $object = $this->getStatusServiceWithReportMocked($mocks);
-        $this->assertEquals($state, $object->getIncomeBenefitsState()['state']);
+        $bankAccount1 = m::mock(BankAccount::class);
+
+        return [
+            [[], StatusService::STATE_NOT_STARTED],
+            [['getBankAccounts' => []], StatusService::STATE_NOT_STARTED],
+            [['getBankAccounts' => [$bankAccount1]], StatusService::STATE_DONE],
+        ];
+    }
+
+    public function assetsProvider()
+    {
+        $asset = m::mock(Asset::class);
+
+        return [
+            [[], StatusService::STATE_NOT_STARTED],
+            [['getAssets' => [], 'getNoAssetToAdd' => null], StatusService::STATE_NOT_STARTED],
+            [['getAssets' => [], 'getNoAssetToAdd' => true], StatusService::STATE_DONE],
+            [['getAssets' => [$asset], 'getNoAssetToAdd' => false], StatusService::STATE_DONE],
+            [['getAssets' => [$asset], 'getNoAssetToAdd' => null], StatusService::STATE_DONE],
+        ];
     }
 
     public function debtsProvider()
@@ -162,60 +299,6 @@ class NdrStatusServiceTest extends TestCase
             [['getHasDebts' => 'yes', 'getDebtsWithValidAmount' => [$debt], 'getDebtManagement' => ''], StatusService::STATE_INCOMPLETE],
             [['getHasDebts' => 'yes', 'getDebtsWithValidAmount' => [$debt], 'getDebtManagement' => 'Payment plan'], StatusService::STATE_DONE],
         ];
-    }
-
-    /**
-     * @test
-     * @dataProvider debtsProvider
-     */
-    public function debts($mocks, $state)
-    {
-        $object = $this->getStatusServiceWithReportMocked($mocks);
-        $this->assertEquals($state, $object->getDebtsState()['state']);
-    }
-
-    public function banksProvider()
-    {
-        $bankAccount1 = m::mock(BankAccount::class);
-
-        return [
-            [[], StatusService::STATE_NOT_STARTED],
-            [['getBankAccounts' => []], StatusService::STATE_NOT_STARTED],
-            [['getBankAccounts' => [$bankAccount1]], StatusService::STATE_DONE],
-        ];
-    }
-
-    /**
-     * @test
-     * @dataProvider banksProvider
-     */
-    public function banks($mocks, $state)
-    {
-        $object = $this->getStatusServiceWithReportMocked($mocks);
-        $this->assertEquals($state, $object->getBankAccountsState()['state']);
-    }
-
-    public function assetsProvider()
-    {
-        $asset = m::mock(\App\Entity\Asset::class);
-
-        return [
-            [[], StatusService::STATE_NOT_STARTED],
-            [['getAssets' => [], 'getNoAssetToAdd' => null], StatusService::STATE_NOT_STARTED],
-            [['getAssets' => [], 'getNoAssetToAdd' => true], StatusService::STATE_DONE],
-            [['getAssets' => [$asset], 'getNoAssetToAdd' => false], StatusService::STATE_DONE],
-            [['getAssets' => [$asset], 'getNoAssetToAdd' => null], StatusService::STATE_DONE],
-        ];
-    }
-
-    /**
-     * @test
-     * @dataProvider assetsProvider
-     */
-    public function assets($mocks, $state)
-    {
-        $object = $this->getStatusServiceWithReportMocked($mocks);
-        $this->assertEquals($state, $object->getAssetsState()['state']);
     }
 
     public function actionProvider()
@@ -238,32 +321,12 @@ class NdrStatusServiceTest extends TestCase
         ];
     }
 
-    /**
-     * @test
-     * @dataProvider actionProvider
-     */
-    public function actions($mocks, $state)
-    {
-        $object = $this->getStatusServiceWithReportMocked($mocks);
-        $this->assertEquals($state, $object->getActionsState()['state']);
-    }
-
     public function otherInfoProvider()
     {
         return [
             [[], StatusService::STATE_NOT_STARTED],
             [['getActionMoreInfo' => 'mr'], StatusService::STATE_DONE],
         ];
-    }
-
-    /**
-     * @test
-     * @dataProvider otherInfoProvider
-     */
-    public function otherinfo($mocks, $state)
-    {
-        $object = $this->getStatusServiceWithReportMocked($mocks);
-        $this->assertEquals($state, $object->getOtherInfoState()['state']);
     }
 
     public function clientBenefitsCheckProvider()
@@ -310,41 +373,6 @@ class NdrStatusServiceTest extends TestCase
 
     /**
      * @test
-     */
-    public function getRemainingSectionsAll()
-    {
-        $object = $this->getStatusServiceWithReportMocked([]);
-        $rs = $object->getRemainingSections();
-        $this->assertEquals('not-started', $rs['visitsCare']);
-        $this->assertEquals('not-started', $rs['expenses']);
-        $this->assertEquals('not-started', $rs['incomeBenefits']);
-        $this->assertEquals('not-started', $rs['bankAccounts']);
-        $this->assertEquals('not-started', $rs['assets']);
-        $this->assertEquals('not-started', $rs['debts']);
-        $this->assertEquals('not-started', $rs['actions']);
-        $this->assertEquals('not-started', $rs['otherInfo']);
-        $this->assertEquals('not-started', $rs['clientBenefitsCheck']);
-
-        $this->assertEquals('notStarted', $object->getStatus());
-    }
-
-    public function getRemainingSectionsPartialProvider()
-    {
-        return [
-            [array_pop($this->visitsCareProvider())[0], 'visitsCare'],
-            [array_pop($this->expensesProvider())[0], 'expenses'],
-            [array_pop($this->incomeBenefitsProvider())[0], 'incomeBenefits'],
-            [array_pop($this->banksProvider())[0], 'bankAccounts'],
-            [array_pop($this->assetsProvider())[0], 'assets'],
-            [array_pop($this->debtsProvider())[0], 'debts'],
-            [array_pop($this->actionProvider())[0], 'actions'],
-            [array_pop($this->otherInfoProvider())[0], 'otherInfo'],
-            [array_pop($this->clientBenefitsCheckProvider())[0], 'clientBenefitsCheck'],
-        ];
-    }
-
-    /**
-     * @test
      * @dataProvider getRemainingSectionsPartialProvider
      */
     public function getRemainingSectionsPartial($provider, $keyRemoved)
@@ -362,15 +390,17 @@ class NdrStatusServiceTest extends TestCase
     {
         $this->assertFalse($this->getStatusServiceWithReportMocked([])->isReadyToSubmit());
 
-        $visitsCare = $this->visitsCareProvider();
-        $expenses = $this->expensesProvider();
-        $incomeBenefits = $this->incomeBenefitsProvider();
-        $banks = $this->banksProvider();
-        $assets = $this->assetsProvider();
-        $debts = $this->debtsProvider();
-        $action = $this->actionProvider();
-        $otherInfo = $this->otherInfoProvider();
-        $clientBenefitsCheck = $this->clientBenefitsCheckProvider();
+        [
+            $visitsCare,
+            $expenses,
+            $incomeBenefits,
+            $banks,
+            $assets,
+            $debts,
+            $action,
+            $otherInfo,
+            $clientBenefitsCheck
+        ] = $this->buildSectionsByProviders();
 
         $object = $this->getStatusServiceWithReportMocked(
             array_pop($visitsCare)[0]
