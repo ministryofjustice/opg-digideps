@@ -28,20 +28,6 @@ class UserTestHelper extends TestCase
         return $user->reveal();
     }
 
-    public function createAndPersistUser(EntityManager $em, ?Client $client = null, ?string $roleName = User::ROLE_LAY_DEPUTY, ?string $email = null)
-    {
-        $user = $this->createUser($client, $roleName, $email);
-
-        if (!is_null($client)) {
-            $em->persist($client);
-        }
-
-        $em->persist($user);
-        $em->flush();
-
-        return $user;
-    }
-
     public function createUser(?Client $client = null, ?string $roleName = User::ROLE_LAY_DEPUTY, ?string $email = null)
     {
         $faker = Factory::create('en_GB');
@@ -63,6 +49,20 @@ class UserTestHelper extends TestCase
         if (!is_null($client)) {
             $user->addClient($client);
         }
+
+        return $user;
+    }
+
+    public function createAndPersistUser(EntityManager $em, ?Client $client = null, ?string $roleName = User::ROLE_LAY_DEPUTY, ?string $email = null)
+    {
+        $user = $this->createUser($client, $roleName, $email);
+
+        if (!is_null($client)) {
+            $em->persist($client);
+        }
+
+        $em->persist($user);
+        $em->flush();
 
         return $user;
     }
