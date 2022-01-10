@@ -44,7 +44,9 @@ class UserResearchController extends RestController
         try {
             $formData = json_decode($request->getContent(), true);
 
-            $formData['satisfaction'] = $this->satisfactionRepository->find($formData['satisfaction']);
+            $satisfactionId = $formData['satisfaction'] ?? null;
+            $formData['satisfaction'] = $satisfactionId ? $this->satisfactionRepository->find($satisfactionId) : null;
+
             $userResearchResponse = $this->factory->generateFromFormData($formData);
             $this->userResearchResponseRepository->create($userResearchResponse, $this->getUser());
 

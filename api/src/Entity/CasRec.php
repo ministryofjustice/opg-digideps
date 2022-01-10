@@ -3,7 +3,10 @@
 namespace App\Entity;
 
 use App\Entity\Report\Report;
+use DateTime;
 use Doctrine\ORM\Mapping as ORM;
+use Exception;
+use InvalidArgumentException;
 use JMS\Serializer\Annotation as JMS;
 use Symfony\Component\Validator\Constraints as Assert;
 
@@ -58,128 +61,6 @@ class CasRec
         [true, self::REALM_PROF, ['hw'], 'opg103', Report::PROF_COMBINED_LOW_ASSETS],
         [true, self::REALM_PROF, ['hw'], 'opg102', Report::PROF_COMBINED_HIGH_ASSETS],
     ];
-
-    /**
-     * @var int
-     *
-     * @ORM\Column(name="id", type="integer", nullable=false)
-     * @ORM\Id
-     * @ORM\GeneratedValue(strategy="IDENTITY")
-     * @ORM\SequenceGenerator(sequenceName="casrec_id_seq", allocationSize=1, initialValue=1)
-     */
-    private $id;
-
-    /**
-     * @var string
-     *
-     * @JMS\Type("string")
-     *
-     * @Assert\NotBlank()
-     *
-     * @ORM\Column(name="client_case_number", type="string", length=20, nullable=false)
-     */
-    private $caseNumber;
-
-    /**
-     * @var string
-     *
-     * @JMS\Type("string")
-     *
-     * @Assert\NotBlank()
-     *
-     * @ORM\Column(name="client_lastname", type="string", length=50, nullable=false)
-     */
-    private $clientLastname;
-
-    /**
-     * @var string
-     *
-     * @JMS\Type("string")
-     *
-     * @Assert\NotBlank()
-     *
-     * @ORM\Column(name="deputy_no", type="string", length=100, nullable=false)
-     */
-    private $deputyNo;
-
-    /**
-     * @var string
-     *
-     * @Assert\NotBlank()
-     *
-     * @ORM\Column(name="deputy_lastname", type="string", length=100, nullable=true)
-     *
-     * @JMS\Type("string")
-     */
-    private $deputySurname;
-
-    /**
-     * @var string
-     *
-     * @JMS\Type("string")
-     *
-     * @ORM\Column(name="deputy_postcode", type="string", length=10, nullable=true)
-     *
-     * @Assert\Length(min=2, max=10, minMessage="postcode too short", maxMessage="postcode too long" )
-     */
-    private $deputyPostCode;
-
-    /**
-     * @var string OPG102|OPG103|empty string
-     *
-     * @JMS\Type("string")
-     *
-     * @ORM\Column(name="type_of_report", type="string", length=10, nullable=true)
-     */
-    private $typeOfReport;
-
-    /**
-     * @var string A2|C1|HW|L2|L2A|L3|L3G|P2A|PGA|PGC|S1A|S1N|empty
-     *
-     * typeOfReport=OPG103 only have
-     *
-     * @JMS\Type("string")
-     *
-     * @ORM\Column(name="corref", type="string", length=10, nullable=true)
-     */
-    private $corref;
-
-    /**
-     * @JMS\Type("string")
-     *
-     * @ORM\Column(name="other_columns", type="text", nullable=true)
-     */
-    private $otherColumns;
-
-    /**
-     * @var \DateTime
-     * @JMS\Type("DateTime<'Y-m-d H:i:s'>")
-     *
-     * @ORM\Column(name="uploaded_at", type="datetime", nullable=true)
-     */
-    private $createdAt;
-
-    /**
-     * @var \DateTime
-     * @JMS\Type("DateTime<'Y-m-d H:i:s'>")
-     *
-     * @ORM\Column(name="updated_at", type="datetime", nullable=true)
-     */
-    private $updatedAt;
-
-    /**
-     * @var string
-     *
-     * @ORM\Column(name="source", type="string", nullable=true, options={"default" : "casrec"})
-     */
-    private $source;
-
-    /**
-     * @var \DateTime
-     * @ORM\Column(name="order_date", type="datetime", nullable=true)
-     */
-    private $orderDate;
-
     /**
      * Filled from cron.
      *
@@ -197,6 +78,114 @@ class CasRec
         'ú' => 'u', 'ü' => 'u', 'û' => 'u', 'ý' => 'y', 'ý' => 'y', 'þ' => 'b', 'ÿ' => 'y', 'ƒ' => 'f',
         'ă' => 'a', 'î' => 'i', 'â' => 'a', 'ș' => 's', 'ț' => 't', 'Ă' => 'A', 'Î' => 'I', 'Â' => 'A', 'Ș' => 'S', 'Ț' => 'T',
     ];
+    /**
+     * @var int
+     *
+     * @ORM\Column(name="id", type="integer", nullable=false)
+     * @ORM\Id
+     * @ORM\GeneratedValue(strategy="IDENTITY")
+     * @ORM\SequenceGenerator(sequenceName="casrec_id_seq", allocationSize=1, initialValue=1)
+     */
+    private $id;
+    /**
+     * @var string
+     *
+     * @JMS\Type("string")
+     *
+     * @Assert\NotBlank()
+     *
+     * @ORM\Column(name="client_case_number", type="string", length=20, nullable=false)
+     */
+    private $caseNumber;
+    /**
+     * @var string
+     *
+     * @JMS\Type("string")
+     *
+     * @Assert\NotBlank()
+     *
+     * @ORM\Column(name="client_lastname", type="string", length=50, nullable=false)
+     */
+    private $clientLastname;
+    /**
+     * @var string
+     *
+     * @JMS\Type("string")
+     *
+     * @Assert\NotBlank()
+     *
+     * @ORM\Column(name="deputy_no", type="string", length=100, nullable=false)
+     */
+    private $deputyNo;
+    /**
+     * @var string
+     *
+     * @Assert\NotBlank()
+     *
+     * @ORM\Column(name="deputy_lastname", type="string", length=100, nullable=true)
+     *
+     * @JMS\Type("string")
+     */
+    private $deputySurname;
+    /**
+     * @var string
+     *
+     * @JMS\Type("string")
+     *
+     * @ORM\Column(name="deputy_postcode", type="string", length=10, nullable=true)
+     *
+     * @Assert\Length(min=2, max=10, minMessage="postcode too short", maxMessage="postcode too long" )
+     */
+    private $deputyPostCode;
+    /**
+     * @var string OPG102|OPG103|empty string
+     *
+     * @JMS\Type("string")
+     *
+     * @ORM\Column(name="type_of_report", type="string", length=10, nullable=true)
+     */
+    private $typeOfReport;
+    /**
+     * @var string A2|C1|HW|L2|L2A|L3|L3G|P2A|PGA|PGC|S1A|S1N|empty
+     *
+     * typeOfReport=OPG103 only have
+     *
+     * @JMS\Type("string")
+     *
+     * @ORM\Column(name="corref", type="string", length=10, nullable=true)
+     */
+    private $corref;
+    /**
+     * @JMS\Type("string")
+     *
+     * @ORM\Column(name="other_columns", type="text", nullable=true)
+     */
+    private $otherColumns;
+    /**
+     * @var DateTime
+     * @JMS\Type("DateTime<'Y-m-d H:i:s'>")
+     *
+     * @ORM\Column(name="uploaded_at", type="datetime", nullable=true)
+     */
+    private $createdAt;
+    /**
+     * @var DateTime
+     * @JMS\Type("DateTime<'Y-m-d H:i:s'>")
+     *
+     * @ORM\Column(name="updated_at", type="datetime", nullable=true)
+     */
+    private $updatedAt;
+    /**
+     * @var string
+     *
+     * @ORM\Column(name="source", type="string", nullable=true, options={"default" : "casrec"})
+     */
+    private $source;
+    /**
+     * @var DateTime
+     * @ORM\Column(name="order_date", type="datetime", nullable=true)
+     */
+    private $orderDate;
 
     public function __construct(array $row)
     {
@@ -207,19 +196,24 @@ class CasRec
         $this->deputyPostCode = self::normaliseSurname($row['Dep Postcode']);
         $this->typeOfReport = self::normaliseCorrefAndTypeOfRep($row['Typeofrep']);
         $this->corref = self::normaliseCorrefAndTypeOfRep($row['Corref']);
-        $this->orderDate = $row['OrderDate'];
+        $this->orderDate = $row['OrderDate'] ?? null;
 
-        $source = isset($row['Source']) ? $row['Source'] : self::CASREC_SOURCE;
+        $source = $row['Source'] ?? self::CASREC_SOURCE;
         $this->setSource($source);
 
         $this->otherColumns = serialize($row);
-        $this->createdAt = new \DateTime();
+        $this->createdAt = new DateTime();
         $this->updatedAt = null;
     }
 
-    private static function normaliseCorrefAndTypeOfRep($value)
+    /** @deprecated use App\Service\DataNormaliser */
+    public static function normaliseCaseNumber($value)
     {
-        return trim(strtolower($value));
+        $value = trim($value);
+        $value = strtolower($value);
+        $value = preg_replace('#^([a-z0-9]+/)#i', '', $value);
+
+        return $value;
     }
 
     /** @deprecated use App\Service\DataNormaliser */
@@ -237,22 +231,17 @@ class CasRec
     }
 
     /** @deprecated use App\Service\DataNormaliser */
-    public static function normaliseCaseNumber($value)
-    {
-        $value = trim($value);
-        $value = strtolower($value);
-        $value = preg_replace('#^([a-z0-9]+/)#i', '', $value);
-
-        return $value;
-    }
-
-    /** @deprecated use App\Service\DataNormaliser */
     public static function normaliseDeputyNo($value)
     {
         $value = trim($value);
         $value = strtolower($value);
 
         return $value;
+    }
+
+    private static function normaliseCorrefAndTypeOfRep($value)
+    {
+        return trim(strtolower($value));
     }
 
     /** @deprecated use App\Service\DataNormaliser */
@@ -266,6 +255,56 @@ class CasRec
         $value = preg_replace('/([^a-z0-9])/i', '', $value);
 
         return $value;
+    }
+
+    /**
+     * Determine type of report based on 'Typeofrep' and 'Corref' columns in the Casrec CSV
+     * 103: when corref = l3/l3g and typeofRep = opg103
+     * 104: when corref == hw and typeofRep empty (104 CURRENTLY DISABLED)
+     * 103: all the other cases;.
+     *
+     * @param string $typeOfRep e.g. opg103
+     * @param string $corref    e.g. l3, l3g
+     * @param string $realm     e.g. REALM_PROF
+     *
+     * @return string Report::TYPE_*
+     */
+    public static function getTypeBasedOnTypeofRepAndCorref($typeOfRep, $corref, $realm)
+    {
+        $typeOfRep = trim(strtolower($typeOfRep));
+        $corref = trim(strtolower($corref));
+
+        // find report type
+        $reportType = null;
+        foreach (self::$csvToReportTypeMap as $row) {
+            list($enabled, $currentUserRole, $currentCorrefs, $currentTypeOfRep, $outputType) = $row;
+            if ($enabled && $realm === $currentUserRole && in_array($corref, $currentCorrefs) && $typeOfRep === $currentTypeOfRep) {
+                return $outputType;
+            }
+        }
+
+        // default report type if no entry mached above
+        switch ($realm) {
+            case self::REALM_LAY:
+                return Report::LAY_PFA_HIGH_ASSETS_TYPE;
+            case self::REALM_PA:
+                return Report::PA_PFA_HIGH_ASSETS_TYPE;
+            case self::REALM_PROF:
+                return Report::PROF_PFA_HIGH_ASSETS_TYPE;
+        }
+
+        throw new Exception(__METHOD__.': realm not recognised to determine report type');
+    }
+
+    /**
+     * @return array
+     */
+    public static function validSources()
+    {
+        return [
+            self::CASREC_SOURCE,
+            self::SIRIUS_SOURCE,
+        ];
     }
 
     public function getCaseNumber()
@@ -310,45 +349,6 @@ class CasRec
     }
 
     /**
-     * Determine type of report based on 'Typeofrep' and 'Corref' columns in the Casrec CSV
-     * 103: when corref = l3/l3g and typeofRep = opg103
-     * 104: when corref == hw and typeofRep empty (104 CURRENTLY DISABLED)
-     * 103: all the other cases;.
-     *
-     * @param string $typeOfRep e.g. opg103
-     * @param string $corref    e.g. l3, l3g
-     * @param string $realm     e.g. REALM_PROF
-     *
-     * @return string Report::TYPE_*
-     */
-    public static function getTypeBasedOnTypeofRepAndCorref($typeOfRep, $corref, $realm)
-    {
-        $typeOfRep = trim(strtolower($typeOfRep));
-        $corref = trim(strtolower($corref));
-
-        // find report type
-        $reportType = null;
-        foreach (self::$csvToReportTypeMap as $row) {
-            list($enabled, $currentUserRole, $currentCorrefs, $currentTypeOfRep, $outputType) = $row;
-            if ($enabled && $realm === $currentUserRole && in_array($corref, $currentCorrefs) && $typeOfRep === $currentTypeOfRep) {
-                return $outputType;
-            }
-        }
-
-        // default report type if no entry mached above
-        switch ($realm) {
-            case self::REALM_LAY:
-                return Report::LAY_PFA_HIGH_ASSETS_TYPE;
-            case self::REALM_PA:
-                return Report::PA_PFA_HIGH_ASSETS_TYPE;
-            case self::REALM_PROF:
-                return Report::PROF_PFA_HIGH_ASSETS_TYPE;
-        }
-
-        throw new \Exception(__METHOD__.': realm not recognised to determine report type');
-    }
-
-    /**
      * @return array
      */
     public function getOtherColumns()
@@ -369,7 +369,15 @@ class CasRec
     }
 
     /**
-     * @param \DateTime $updatedAt
+     * @return DateTime|null
+     */
+    public function getUpdatedAt()
+    {
+        return $this->updatedAt;
+    }
+
+    /**
+     * @param DateTime $updatedAt
      *
      * @return CasRec
      */
@@ -378,14 +386,6 @@ class CasRec
         $this->updatedAt = $updatedAt;
 
         return $this;
-    }
-
-    /**
-     * @return \DateTime|null
-     */
-    public function getUpdatedAt()
-    {
-        return $this->updatedAt;
     }
 
     /**
@@ -405,7 +405,7 @@ class CasRec
     {
         $source = strtolower($source);
         if (!in_array($source, self::validSources())) {
-            throw new \InvalidArgumentException(sprintf('Attempting to set invalid source: %s given', $source));
+            throw new InvalidArgumentException(sprintf('Attempting to set invalid source: %s given', $source));
         }
 
         $this->source = $source;
@@ -414,18 +414,7 @@ class CasRec
     }
 
     /**
-     * @return array
-     */
-    public static function validSources()
-    {
-        return [
-            self::CASREC_SOURCE,
-            self::SIRIUS_SOURCE,
-        ];
-    }
-
-    /**
-     * @return \DateTime
+     * @return DateTime
      */
     public function getOrderDate()
     {
@@ -435,7 +424,7 @@ class CasRec
     /**
      * @return CasRec
      */
-    public function setOrderDate(\DateTime $orderDate)
+    public function setOrderDate(DateTime $orderDate)
     {
         $this->orderDate = $orderDate;
 
