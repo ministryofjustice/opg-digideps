@@ -184,27 +184,42 @@ class ChecklistSyncCommandTest extends KernelTestCase
      */
     public function doesNotAttemptToSyncFailedPdfGenerations()
     {
+        $apiCallArguments = [
+            [
+                'get',
+                'report/all-with-queued-checklists',
+                ['row_limit' => '30'],
+                'Report\Report[]',
+                [],
+                false,
+            ],
+            [
+                'put',
+                'checklist/3923',
+                json_encode([
+                    'syncStatus' => Checklist::SYNC_STATUS_PERMANENT_ERROR,
+                    'syncError' => 'Failed to generate PDF',
+                ]),
+                'raw',
+                [],
+                false,
+            ],
+        ];
+
+        $returnValues = [
+            [],
+            [
+                $this->buildReport(),
+                $this->buildReport(),
+            ],
+        ];
+
         $this
             ->ensureFeatureIsEnabled()
-            ->ensureRestClientReturnsRows()
+            ->assertApiCallsAreMade($apiCallArguments, $returnValues)
             ->ensurePdfGenerationWillFailWith(new PdfGenerationFailedException('Failed to generate PDF'))
             ->assertSyncServiceIsNotInvoked()
             ->invokeTest();
-    }
-
-    private function ensureRestClientReturnsRows(): ChecklistSyncCommandTest
-    {
-        $this->restClient
-            ->expects($this->once())
-            ->method('apiCall')
-            ->withConsecutive([])
-            ->with('get', 'report/all-with-queued-checklists', ['row_limit' => '30'], 'Report\Report[]', [], false)
-            ->willReturnOnConsecutiveCalls([
-                $this->buildReport(),
-                $this->buildReport(),
-            ]);
-
-        return $this;
     }
 
     /**
@@ -212,9 +227,40 @@ class ChecklistSyncCommandTest extends KernelTestCase
      */
     public function fetchesAndSendsQueuedChecklistsToSyncService()
     {
+        $apiCallArguments = [
+            [
+                'get',
+                'report/all-with-queued-checklists',
+                ['row_limit' => '30'],
+                'Report\Report[]',
+                [],
+                false,
+            ],
+            [
+                'put',
+                'checklist/3923',
+                json_encode([
+                    'syncStatus' => Checklist::SYNC_STATUS_PERMANENT_ERROR,
+                    'syncError' => 'Failed to generate PDF',
+                ]),
+                'raw',
+                [],
+                false,
+            ],
+        ];
+
+        $returnValues = [
+            [],
+            [
+                $this->buildReport(),
+                $this->buildReport(),
+            ],
+        ];
+
         $this
             ->ensureFeatureIsEnabled()
-            ->ensureRestClientReturnsRows()
+            ->assertApiCallsAreMade($apiCallArguments, $returnValues)
+//            ->ensureRestClientReturnsRows()
             ->ensurePdfGenerationWillSucceed()
             ->assertEachRowWillBeTransformedAndSentToSyncService()
             ->invokeTest();
