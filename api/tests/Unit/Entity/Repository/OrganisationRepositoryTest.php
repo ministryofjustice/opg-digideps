@@ -3,15 +3,20 @@
 namespace App\Tests\Unit\Entity\Repository;
 
 use App\Entity\Organisation;
+use App\Entity\User;
 use App\Repository\OrganisationRepository;
 use App\Tests\Unit\Fixtures;
+use DateTime;
 use Doctrine\Common\DataFixtures\Purger\ORMPurger;
 use Doctrine\ORM\EntityManagerInterface;
 use Doctrine\ORM\Mapping\ClassMetadata;
+use Prophecy\PhpUnit\ProphecyTrait;
 use Symfony\Bundle\FrameworkBundle\Test\WebTestCase;
 
 class OrganisationRepositoryTest extends WebTestCase
 {
+    use ProphecyTrait;
+
     /**
      * @var OrganisationRepository
      */
@@ -21,25 +26,6 @@ class OrganisationRepositoryTest extends WebTestCase
      * @var EntityManagerInterface
      */
     private $em;
-
-    protected function setUp(): void
-    {
-        $kernel = self::bootKernel();
-
-        $this->em = $kernel->getContainer()
-            ->get('doctrine')
-            ->getManager();
-
-        $this->fixtures = new Fixtures($this->em);
-
-        $metaClass = self::prophesize(ClassMetadata::class);
-        $metaClass->name = Organisation::class;
-
-        $this->sut = $this->em->getRepository(Organisation::class);
-
-        $purger = new ORMPurger($this->em);
-        $purger->purge();
-    }
 
     /** @test */
     public function testGetAllArray()
@@ -82,8 +68,8 @@ class OrganisationRepositoryTest extends WebTestCase
     public function testHasActiveEntitiesSoftDeletedClientInOrgReturnsFalse()
     {
         $orgs = $this->fixtures->createOrganisations(1);
-        $user = $this->fixtures->createUser()->setRoleName(\App\Entity\User::ROLE_PA);
-        $clientDeleted = $this->fixtures->createClient($user, ['setDeletedAt' => new \DateTime()]);
+        $user = $this->fixtures->createUser()->setRoleName(User::ROLE_PA);
+        $clientDeleted = $this->fixtures->createClient($user, ['setDeletedAt' => new DateTime()]);
         $this->em->flush();
 
         $this->fixtures->addClientToOrganisation($clientDeleted->getId(), $orgs[0]->getId());
@@ -96,8 +82,8 @@ class OrganisationRepositoryTest extends WebTestCase
     public function testHasActiveEntitiesArchivedClientInOrgReturnsFalse()
     {
         $orgs = $this->fixtures->createOrganisations(1);
-        $user = $this->fixtures->createUser()->setRoleName(\App\Entity\User::ROLE_PA);
-        $clientArchived = $this->fixtures->createClient($user, ['setArchivedAt' => new \DateTime()]);
+        $user = $this->fixtures->createUser()->setRoleName(User::ROLE_PA);
+        $clientArchived = $this->fixtures->createClient($user, ['setArchivedAt' => new DateTime()]);
         $this->em->flush();
 
         $this->fixtures->addClientToOrganisation($clientArchived->getId(), $orgs[0]->getId());
@@ -110,9 +96,9 @@ class OrganisationRepositoryTest extends WebTestCase
     public function testHasActiveEntitiesArchivedAndSoftDeletedClientsInOrgReturnsFalse()
     {
         $orgs = $this->fixtures->createOrganisations(1);
-        $user = $this->fixtures->createUser()->setRoleName(\App\Entity\User::ROLE_PA);
-        $clientDeleted = $this->fixtures->createClient($user, ['setDeletedAt' => new \DateTime()]);
-        $clientArchived = $this->fixtures->createClient($user, ['setArchivedAt' => new \DateTime()]);
+        $user = $this->fixtures->createUser()->setRoleName(User::ROLE_PA);
+        $clientDeleted = $this->fixtures->createClient($user, ['setDeletedAt' => new DateTime()]);
+        $clientArchived = $this->fixtures->createClient($user, ['setArchivedAt' => new DateTime()]);
         $this->em->flush();
 
         $this->fixtures->addClientToOrganisation($clientDeleted->getId(), $orgs[0]->getId());
@@ -126,10 +112,10 @@ class OrganisationRepositoryTest extends WebTestCase
     public function testHasActiveEntitiesArchivedAndSoftDeletedAndActiveClientsInOrgReturnsTrue()
     {
         $orgs = $this->fixtures->createOrganisations(1);
-        $user = $this->fixtures->createUser()->setRoleName(\App\Entity\User::ROLE_PA);
+        $user = $this->fixtures->createUser()->setRoleName(User::ROLE_PA);
         $clientActive = $this->fixtures->createClient($user);
-        $clientDeleted = $this->fixtures->createClient($user, ['setDeletedAt' => new \DateTime()]);
-        $clientArchived = $this->fixtures->createClient($user, ['setArchivedAt' => new \DateTime()]);
+        $clientDeleted = $this->fixtures->createClient($user, ['setDeletedAt' => new DateTime()]);
+        $clientArchived = $this->fixtures->createClient($user, ['setArchivedAt' => new DateTime()]);
         $this->em->flush();
 
         $this->fixtures->addClientToOrganisation($clientActive->getId(), $orgs[0]->getId());
@@ -144,9 +130,9 @@ class OrganisationRepositoryTest extends WebTestCase
     public function testHasActiveEntitiesArchivedAndSoftDeletedClientsAndUserInOrgReturnsTrue()
     {
         $orgs = $this->fixtures->createOrganisations(1);
-        $user = $this->fixtures->createUser()->setRoleName(\App\Entity\User::ROLE_PA);
-        $clientDeleted = $this->fixtures->createClient($user, ['setDeletedAt' => new \DateTime()]);
-        $clientArchived = $this->fixtures->createClient($user, ['setArchivedAt' => new \DateTime()]);
+        $user = $this->fixtures->createUser()->setRoleName(User::ROLE_PA);
+        $clientDeleted = $this->fixtures->createClient($user, ['setDeletedAt' => new DateTime()]);
+        $clientArchived = $this->fixtures->createClient($user, ['setArchivedAt' => new DateTime()]);
         $this->em->flush();
 
         $this->fixtures->addUserToOrganisation($user->getId(), $orgs[0]->getId());
@@ -161,7 +147,7 @@ class OrganisationRepositoryTest extends WebTestCase
     public function testHasActiveEntitiesActiveClientAndUserInOrgReturnsTrue()
     {
         $orgs = $this->fixtures->createOrganisations(1);
-        $user = $this->fixtures->createUser()->setRoleName(\App\Entity\User::ROLE_PA);
+        $user = $this->fixtures->createUser()->setRoleName(User::ROLE_PA);
         $clientActive = $this->fixtures->createClient($user);
         $this->em->flush();
 
@@ -180,6 +166,25 @@ class OrganisationRepositoryTest extends WebTestCase
 
         $result = $this->sut->findByEmailIdentifier($orgs[0]->getEmailIdentifier());
         self::assertEquals($orgs[0], $result);
+    }
+
+    protected function setUp(): void
+    {
+        $kernel = self::bootKernel();
+
+        $this->em = $kernel->getContainer()
+            ->get('doctrine')
+            ->getManager();
+
+        $this->fixtures = new Fixtures($this->em);
+
+        $metaClass = self::prophesize(ClassMetadata::class);
+        $metaClass->name = Organisation::class;
+
+        $this->sut = $this->em->getRepository(Organisation::class);
+
+        $purger = new ORMPurger($this->em);
+        $purger->purge();
     }
 
     protected function tearDown(): void

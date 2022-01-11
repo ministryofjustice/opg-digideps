@@ -33,8 +33,8 @@ class UserVoterTest extends KernelTestCase
         $clientTestHelp = new ClientTestHelper();
         $reportTestHelper = new ReportTestHelper();
 
-        $kernel = self::bootKernel();
-        $em = $kernel->getContainer()->get('em');
+        self::bootKernel();
+        $em = self::$container->get('em');
 
         $layNoReportsOrClients = $userTestHelper->createAndPersistUser($em, null, User::ROLE_LAY_DEPUTY);
 
@@ -227,7 +227,7 @@ class UserVoterTest extends KernelTestCase
             'Admin Manager deleted Prof Named Deputy' => [$adminManager, $profNamed, -1],
             'Admin Manager deleted Prof Admin Deputy' => [$adminManager, $profAdmin, -1],
             'Admin Manager deletes Prof Team Member' => [$adminManager, $profTeamMember, -1],
-            'Admin Manager deleted Admin user' => [$adminManager, $admin, -1],
+            'Admin Manager deleted Admin user' => [$adminManager, $admin, 1],
             'Admin Manager deletes Super Admin user' => [$adminManager, $superAdmin, -1],
             'Admin Manager deletes Admin Manager user' => [$adminManager, $adminManager2, 1],
             'Admin Manager deletes self' => [$adminManager, $adminManager, -1],
@@ -267,8 +267,8 @@ class UserVoterTest extends KernelTestCase
 
     public function addEditUserProvider()
     {
-        $kernel = self::bootKernel();
-        $em = $kernel->getContainer()->get('em');
+        self::bootKernel();
+        $em = self::$container->get('em');
 
         $userTestHelper = new UserTestHelper();
 

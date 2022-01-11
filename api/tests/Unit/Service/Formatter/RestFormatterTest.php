@@ -9,12 +9,16 @@ use App\Service\Formatter\RestFormatter;
 use App\Service\Validator\RestArrayValidator;
 use PHPUnit\Framework\TestCase;
 use Prophecy\Argument;
+use Prophecy\PhpUnit\ProphecyTrait;
+use Prophecy\Prophecy\ObjectProphecy;
 use Symfony\Component\HttpFoundation\Request;
 
 class RestFormatterTest extends TestCase
 {
-    private \Prophecy\Prophecy\ObjectProphecy $inputOutputFormatter;
-    private \Prophecy\Prophecy\ObjectProphecy $validator;
+    use ProphecyTrait;
+
+    private ObjectProphecy $inputOutputFormatter;
+    private ObjectProphecy $validator;
     private RestFormatter $sut;
 
     public function setUp(): void

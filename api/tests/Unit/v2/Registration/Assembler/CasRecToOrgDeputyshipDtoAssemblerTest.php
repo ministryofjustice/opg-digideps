@@ -9,9 +9,12 @@ use App\Tests\Unit\v2\Registration\TestHelpers\OrgDeputyshipDTOTestHelper;
 use App\v2\Registration\Assembler\CasRecToOrgDeputyshipDtoAssembler;
 use DateTime;
 use PHPUnit\Framework\TestCase;
+use Prophecy\PhpUnit\ProphecyTrait;
 
 class CasRecToOrgDeputyshipDtoAssemblerTest extends TestCase
 {
+    use ProphecyTrait;
+
     /** @test */
     public function assembleFromArrayDataIsSanitised()
     {

@@ -13,8 +13,13 @@ use App\Service\Formatter\RestFormatter;
 use App\Service\ParameterStoreService;
 use App\Service\ReportService;
 use DateTime;
+use Doctrine\DBAL\DBALException;
 use Doctrine\ORM\EntityManagerInterface;
+use Doctrine\ORM\NonUniqueResultException;
+use Exception;
 use Gedmo\SoftDeleteable\Filter\SoftDeleteableFilter;
+use InvalidArgumentException;
+use RuntimeException;
 use Sensio\Bundle\FrameworkExtraBundle\Configuration\Security;
 use Symfony\Component\HttpFoundation\Request;
 use Symfony\Component\HttpKernel\Exception\NotFoundHttpException;
@@ -85,7 +90,7 @@ class ReportController extends RestController
         $reportData = $this->formatter->deserializeBodyContent($request);
 
         if (empty($reportData['client']['id'])) {
-            throw new \InvalidArgumentException('Missing client.id');
+            throw new InvalidArgumentException('Missing client.id');
         }
         $client = $this->findEntityBy(EntityDir\Client::class, $reportData['client']['id']);
         $this->denyAccessIfClientDoesNotBelongToUser($client);
@@ -110,7 +115,7 @@ class ReportController extends RestController
 
     /**
      * @Route("/{id}", requirements={"id":"\d+"}, methods={"GET"})
-     * @Security("is_granted('ROLE_DEPUTY') or has_role('ROLE_ADMIN')")
+     * @Security("is_granted('ROLE_DEPUTY') or is_granted('ROLE_ADMIN')")
      *
      * @param int $id
      *
@@ -152,17 +157,17 @@ class ReportController extends RestController
         $data = $this->formatter->deserializeBodyContent($request);
 
         if (empty($data['submit_date'])) {
-            throw new \InvalidArgumentException('Missing submit_date');
+            throw new InvalidArgumentException('Missing submit_date');
         }
 
         if (empty($data['agreed_behalf_deputy'])) {
-            throw new \InvalidArgumentException('Missing agreed_behalf_deputy');
+            throw new InvalidArgumentException('Missing agreed_behalf_deputy');
         }
 
         /** @var User $user */
         $user = $this->getUser();
         if ('not_deputy' === $data['agreed_behalf_deputy'] && $user->isLayDeputy()) {
-            throw new \InvalidArgumentException('\'not_deputy\' is invalid option of agreed_behalf_deputy for lay deputies');
+            throw new InvalidArgumentException('\'not_deputy\' is invalid option of agreed_behalf_deputy for lay deputies');
         }
 
         $currentReport->setAgreedBehalfDeputy($data['agreed_behalf_deputy']);
@@ -181,7 +186,7 @@ class ReportController extends RestController
 
     /**
      * @Route("/{id}", requirements={"id":"\d+"}, methods={"PUT"})
-     * @Security("is_granted('ROLE_DEPUTY') or has_role('ROLE_ADMIN')")
+     * @Security("is_granted('ROLE_DEPUTY') or is_granted('ROLE_ADMIN')")
      */
     public function update(Request $request, $id)
     {
@@ -532,7 +537,7 @@ class ReportController extends RestController
         /** @var Report $report */
         $report = $this->findEntityBy(EntityDir\Report\Report::class, $id, 'Report not found');
         if (!$report->getSubmitted()) {
-            throw new \RuntimeException('Cannot unsubmit an active report');
+            throw new RuntimeException('Cannot unsubmit an active report');
         }
 
         $data = $this->formatter->deserializeBodyContent($request, [
@@ -555,6 +560,42 @@ class ReportController extends RestController
         $this->em->flush();
 
         return ['id' => $report->getId()];
+    }
+
+    /**
+     * @Route("/get-all-by-user", methods={"GET"})
+     * @Security("is_granted('ROLE_ORG')")
+     *
+     * @return array
+     *
+     * @throws NonUniqueResultException
+     */
+    public function getAllByUser(Request $request)
+    {
+        /** @var User $user */
+        $user = $this->getUser();
+
+        return $this->getReponseByDeterminant($request, $user->getId(), ReportRepository::USER_DETERMINANT);
+    }
+
+    /**
+     * @param mixed $id
+     *
+     * @throws NonUniqueResultException
+     */
+    private function getReponseByDeterminant(Request $request, $orgIdsOrUserId, int $determinant): array
+    {
+        /** @var User $user */
+        $user = $this->getUser();
+
+        $data = $this->repository->getAllByDeterminant($orgIdsOrUserId, $determinant, $request->query, 'reports', $request->query->get('status'));
+        $this->updateReportStatusCache($user->getId());
+
+        $result = [];
+        $result['reports'] = (null === $data) ? [] : $this->transformReports($data);
+        $result['counts'] = $this->getReportCountsByStatus($request, $orgIdsOrUserId, $determinant);
+
+        return $result;
     }
 
     /**
@@ -590,65 +631,6 @@ class ReportController extends RestController
         }
     }
 
-    /**
-     * @Route("/get-all-by-user", methods={"GET"})
-     * @Security("is_granted('ROLE_ORG')")
-     *
-     * @return array
-     *
-     * @throws \Doctrine\ORM\NonUniqueResultException
-     */
-    public function getAllByUser(Request $request)
-    {
-        /** @var User $user */
-        $user = $this->getUser();
-
-        return $this->getReponseByDeterminant($request, $user->getId(), ReportRepository::USER_DETERMINANT);
-    }
-
-    /**
-     * @Route("/get-all-by-orgs", methods={"GET"})
-     * @Security("is_granted('ROLE_ORG')")
-     *
-     * @return array
-     *
-     * @throws \Exception
-     */
-    public function getAllByOrgs(Request $request)
-    {
-        /** @var User $user */
-        $user = $this->getUser();
-
-        /** @var array $organisationIds */
-        $organisationIds = $user->getOrganisationIds();
-
-        if (empty($organisationIds)) {
-            throw new NotFoundHttpException('No organisations found for user');
-        }
-
-        return $this->getReponseByDeterminant($request, $organisationIds, ReportRepository::ORG_DETERMINANT);
-    }
-
-    /**
-     * @param mixed $id
-     *
-     * @throws \Doctrine\ORM\NonUniqueResultException
-     */
-    private function getReponseByDeterminant(Request $request, $orgIdsOrUserId, int $determinant): array
-    {
-        /** @var User $user */
-        $user = $this->getUser();
-
-        $data = $this->repository->getAllByDeterminant($orgIdsOrUserId, $determinant, $request->query, 'reports', $request->query->get('status'));
-        $this->updateReportStatusCache($user->getId());
-
-        $result = [];
-        $result['reports'] = (null === $data) ? [] : $this->transformReports($data);
-        $result['counts'] = $this->getReportCountsByStatus($request, $orgIdsOrUserId, $determinant);
-
-        return $result;
-    }
-
     private function transformReports(array $reportData): array
     {
         $reports = [];
@@ -681,7 +663,7 @@ class ReportController extends RestController
     /**
      * @param mixed $orgIdsOrUserId
      *
-     * @throws \Exception
+     * @throws Exception
      */
     private function getReportCountsByStatus(Request $request, $orgIdsOrUserId, int $determinant): array
     {
@@ -701,13 +683,36 @@ class ReportController extends RestController
      *
      * @return array|mixed|null
      *
-     * @throws \Doctrine\ORM\NonUniqueResultException
+     * @throws NonUniqueResultException
      */
     private function getCountOfReportsByStatus(string $status, $id, int $determinant, Request $request)
     {
         return $this
             ->repository
             ->getAllByDeterminant($id, $determinant, $request->query, 'count', $status);
+    }
+
+    /**
+     * @Route("/get-all-by-orgs", methods={"GET"})
+     * @Security("is_granted('ROLE_ORG')")
+     *
+     * @return array
+     *
+     * @throws Exception
+     */
+    public function getAllByOrgs(Request $request)
+    {
+        /** @var User $user */
+        $user = $this->getUser();
+
+        /** @var array $organisationIds */
+        $organisationIds = $user->getOrganisationIds();
+
+        if (empty($organisationIds)) {
+            throw new NotFoundHttpException('No organisations found for user');
+        }
+
+        return $this->getReponseByDeterminant($request, $organisationIds, ReportRepository::ORG_DETERMINANT);
     }
 
     /**
@@ -766,6 +771,42 @@ class ReportController extends RestController
         return ['checklist' => $checklist->getId()];
     }
 
+    private function populateChecklistEntity($checklist, $checklistData)
+    {
+        $this->hydrateEntityWithArrayData($checklist, $checklistData, [
+            'accounts_balance' => 'setAccountsBalance',
+            'assets_declared_and_managed' => 'setAssetsDeclaredAndManaged',
+            'bond_adequate' => 'setBondAdequate',
+            'bond_order_match_casrec' => 'setBondOrderMatchCasrec',
+            'button_clicked' => 'setButtonClicked',
+            'care_arrangements' => 'setCareArrangements',
+            'case_worker_satisified' => 'setCaseWorkerSatisified',
+            'client_benefits_checked' => 'setClientBenefitsChecked',
+            'consultations_satisfactory' => 'setConsultationsSatisfactory',
+            'contact_details_upto_date' => 'setContactDetailsUptoDate',
+            'decisions_satisfactory' => 'setDecisionsSatisfactory',
+            'debts_managed' => 'setDebtsManaged',
+            'deputy_charge_allowed_by_court' => 'setDeputyChargeAllowedByCourt',
+            'deputy_full_name_accurate_in_casrec' => 'setDeputyFullNameAccurateInCasrec',
+            'final_decision' => 'setFinalDecision',
+            'future_significant_decisions' => 'setFutureSignificantDecisions',
+            'has_deputy_overcharged_from_previous_estimates' => 'setHasDeputyOverchargedFromPreviousEstimates',
+            'has_deputy_raised_concerns' => 'setHasDeputyRaisedConcerns',
+            'lodging_summary' => 'setLodgingSummary',
+            'money_movements_acceptable' => 'setMoneyMovementsAcceptable',
+            'next_billing_estimates_satisfactory' => 'setNextBillingEstimatesSatisfactory',
+            'open_closing_balances_match' => 'setOpenClosingBalancesMatch',
+            'payments_match_cost_certificate' => 'setPaymentsMatchCostCertificate',
+            'prof_costs_reasonable_and_proportionate' => 'setProfCostsReasonableAndProportionate',
+            'reporting_period_accurate' => 'setReportingPeriodAccurate',
+            'satisfied_with_health_and_lifestyle' => 'setSatisfiedWithHealthAndLifestyle',
+            'satisfied_with_pa_expenses' => 'setSatisfiedWithPaExpenses',
+            'synchronisation_status' => 'setSynchronisationStatus',
+        ]);
+
+        return $checklist;
+    }
+
     /**
      * Update a checklist for the report.
      *
@@ -804,42 +845,6 @@ class ReportController extends RestController
         $this->em->flush();
 
         return ['checklist' => $checklist->getId()];
-    }
-
-    private function populateChecklistEntity($checklist, $checklistData)
-    {
-        $this->hydrateEntityWithArrayData($checklist, $checklistData, [
-            'accounts_balance' => 'setAccountsBalance',
-            'assets_declared_and_managed' => 'setAssetsDeclaredAndManaged',
-            'bond_adequate' => 'setBondAdequate',
-            'bond_order_match_casrec' => 'setBondOrderMatchCasrec',
-            'button_clicked' => 'setButtonClicked',
-            'care_arrangements' => 'setCareArrangements',
-            'case_worker_satisified' => 'setCaseWorkerSatisified',
-            'client_benefits_checked' => 'setClientBenefitsChecked',
-            'consultations_satisfactory' => 'setConsultationsSatisfactory',
-            'contact_details_upto_date' => 'setContactDetailsUptoDate',
-            'decisions_satisfactory' => 'setDecisionsSatisfactory',
-            'debts_managed' => 'setDebtsManaged',
-            'deputy_charge_allowed_by_court' => 'setDeputyChargeAllowedByCourt',
-            'deputy_full_name_accurate_in_casrec' => 'setDeputyFullNameAccurateInCasrec',
-            'final_decision' => 'setFinalDecision',
-            'future_significant_decisions' => 'setFutureSignificantDecisions',
-            'has_deputy_overcharged_from_previous_estimates' => 'setHasDeputyOverchargedFromPreviousEstimates',
-            'has_deputy_raised_concerns' => 'setHasDeputyRaisedConcerns',
-            'lodging_summary' => 'setLodgingSummary',
-            'money_movements_acceptable' => 'setMoneyMovementsAcceptable',
-            'next_billing_estimates_satisfactory' => 'setNextBillingEstimatesSatisfactory',
-            'open_closing_balances_match' => 'setOpenClosingBalancesMatch',
-            'payments_match_cost_certificate' => 'setPaymentsMatchCostCertificate',
-            'prof_costs_reasonable_and_proportionate' => 'setProfCostsReasonableAndProportionate',
-            'reporting_period_accurate' => 'setReportingPeriodAccurate',
-            'satisfied_with_health_and_lifestyle' => 'setSatisfiedWithHealthAndLifestyle',
-            'satisfied_with_pa_expenses' => 'setSatisfiedWithPaExpenses',
-            'synchronisation_status' => 'setSynchronisationStatus',
-        ]);
-
-        return $checklist;
     }
 
     /**
@@ -904,7 +909,7 @@ class ReportController extends RestController
     /**
      * @Route("/all-with-queued-checklists", methods={"GET"})
      *
-     * @throws \Doctrine\DBAL\DBALException
+     * @throws DBALException
      */
     public function getReportsWithQueuedChecklists(Request $request): array
     {
@@ -943,7 +948,7 @@ class ReportController extends RestController
         $data = $this->formatter->deserializeBodyContent($request);
 
         if (!isset($data['sectionIds']) || empty($data['sectionIds'])) {
-            throw new \InvalidArgumentException('SectionIds are required to refresh the Report cache');
+            throw new InvalidArgumentException('SectionIds are required to refresh the Report cache');
         }
 
         /** @var ReportRepository $reportRepo */

@@ -11,6 +11,16 @@ trait ContactsSectionTrait
     private bool $hasContacts = false;
 
     /**
+     * @Given I view and start the contacts report section
+     */
+    public function iViewAndStartContactsSection()
+    {
+        $this->iViewContactsSection();
+
+        $this->clickLink('Start contacts');
+    }
+
+    /**
      * @Given I view the contacts report section
      */
     public function iViewContactsSection()
@@ -26,16 +36,6 @@ trait ContactsSectionTrait
         if (!$onSummaryPage) {
             throw new BehatException(sprintf('Not on contacts start page. Current URL is: %s', $currentUrl));
         }
-    }
-
-    /**
-     * @Given I view and start the contacts report section
-     */
-    public function iViewAndStartContactsSection()
-    {
-        $this->iViewContactsSection();
-
-        $this->clickLink('Start contacts');
     }
 
     /**
@@ -62,25 +62,6 @@ trait ContactsSectionTrait
     }
 
     /**
-     * @When I enter valid contact details
-     */
-    public function iEnterValidContactDetails()
-    {
-        $this->fillInField('contact_contactName', $this->faker->name, 'contactDetails');
-        $this->fillInField('contact_relationship', $this->faker->text(50), 'contactDetails');
-        $this->fillInField('contact_explanation', $this->faker->text(200), 'contactDetails');
-        $this->fillInField('contact_address', $this->faker->streetName, 'contactDetails');
-        $this->fillInField('contact_address2', $this->faker->city, 'contactDetails');
-        $this->fillInField('contact_county', $this->faker->county, 'contactDetails');
-        $this->fillInField('contact_postcode', $this->faker->postcode, 'contactDetails');
-        $this->chooseOption('contact_country', 'United Kingdom', 'contactDetails');
-
-        $this->pressButton('Save and continue');
-
-        $this->iAmOnContactsAddAnotherPage();
-    }
-
-    /**
      * @When I enter another contacts details
      */
     public function iEnterAnotherContactsDetails()
@@ -91,6 +72,25 @@ trait ContactsSectionTrait
         $this->iAmOnAddAContactPage();
 
         $this->iEnterValidContactDetails();
+
+        $this->iAmOnContactsAddAnotherPage();
+    }
+
+    /**
+     * @When I enter valid contact details
+     */
+    public function iEnterValidContactDetails()
+    {
+        $this->fillInField('contact_contactName', $this->faker->name, 'contactDetails');
+        $this->fillInField('contact_relationship', $this->faker->text(50), 'contactDetails');
+        $this->fillInField('contact_explanation', $this->faker->text(200), 'contactDetails');
+        $this->fillInField('contact_address', $this->faker->streetName, 'contactDetails');
+        $this->fillInField('contact_address2', $this->faker->city(), 'contactDetails');
+        $this->fillInField('contact_county', $this->faker->county, 'contactDetails');
+        $this->fillInField('contact_postcode', $this->faker->postcode, 'contactDetails');
+        $this->chooseOption('contact_country', 'United Kingdom', 'contactDetails');
+
+        $this->pressButton('Save and continue');
 
         $this->iAmOnContactsAddAnotherPage();
     }

@@ -41,12 +41,12 @@ class ClientFactory
 
         $client = (new Client())
             ->setCaseNumber($faker->unique()->randomNumber(8))
-            ->setFirstname($faker->firstName)
-            ->setLastname($faker->lastName)
+            ->setFirstname($faker->firstName())
+            ->setLastname($faker->lastName())
             ->setPhone('0212112345')
             ->setAddress('1 Fake road')
-            ->setAddress2($faker->city)
-            ->setPostcode($faker->postcode)
+            ->setAddress2($faker->city())
+            ->setPostcode($faker->postcode())
             ->setCounty('West Midlands')
             ->setCountry('GB')
             ->setCourtDate($courtDate ? new DateTime($courtDate) : new DateTime());

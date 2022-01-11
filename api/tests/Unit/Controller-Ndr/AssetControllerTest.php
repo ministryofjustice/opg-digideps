@@ -2,6 +2,8 @@
 
 namespace App\Tests\Unit\Controller\Ndr;
 
+use App\Entity\Ndr\AssetOther;
+use App\Entity\Ndr\AssetProperty;
 use App\Tests\Unit\Controller\AbstractTestController;
 
 class AssetControllerTest extends AbstractTestController
@@ -17,6 +19,16 @@ class AssetControllerTest extends AbstractTestController
     private static $asset2;
     private static $tokenAdmin = null;
     private static $tokenDeputy = null;
+
+    /**
+     * clear fixtures.
+     */
+    public static function tearDownAfterClass(): void
+    {
+        parent::tearDownAfterClass();
+
+        self::fixtures()->clear();
+    }
 
     public function setUp(): void
     {
@@ -43,16 +55,6 @@ class AssetControllerTest extends AbstractTestController
         self::fixtures()->flush()->clear();
     }
 
-    /**
-     * clear fixtures.
-     */
-    public static function tearDownAfterClass(): void
-    {
-        parent::tearDownAfterClass();
-
-        self::fixtures()->clear();
-    }
-
     public function testgetAssetsAuth()
     {
         $url = '/ndr/'.self::$ndr1->getId().'/assets';
@@ -74,13 +76,13 @@ class AssetControllerTest extends AbstractTestController
 
         // assert get
         $data = $this->assertJsonRequest('GET', $url, [
-                'mustSucceed' => true,
-                'AuthToken' => self::$tokenDeputy,
-            ])['data'];
+            'mustSucceed' => true,
+            'AuthToken' => self::$tokenDeputy,
+        ])['data'];
 
         // order by id ASC (insert order)
         usort($data, function ($a, $b) {
-            return $a['id'] > $b['id'];
+            return $a['id'] > $b['id'] ? 1 : 0;
         });
 
         $this->assertCount(2, $data);
@@ -114,9 +116,9 @@ class AssetControllerTest extends AbstractTestController
 
         // assert get
         $data = $this->assertJsonRequest('GET', $url, [
-                'mustSucceed' => true,
-                'AuthToken' => self::$tokenDeputy,
-            ])['data'];
+            'mustSucceed' => true,
+            'AuthToken' => self::$tokenDeputy,
+        ])['data'];
 
         $this->assertEquals(self::$asset1->getId(), $data['id']);
         $this->assertEquals(self::$asset1->getTitle(), $data['title']);
@@ -155,7 +157,8 @@ class AssetControllerTest extends AbstractTestController
 
         self::fixtures()->clear();
 
-        $asset = self::fixtures()->getRepo('Ndr\Asset')->find($return['data']['id']); /* @var $asset \App\Entity\Ndr\AssetOther */
+        $asset = self::fixtures()->getRepo('Ndr\Asset')->find($return['data']['id']);
+        /* @var $asset AssetOther */
         $this->assertInstanceOf('App\Entity\Ndr\AssetOther', $asset);
         $this->assertEquals(123, $asset->getValue());
         $this->assertEquals('de', $asset->getDescription());
@@ -193,7 +196,8 @@ class AssetControllerTest extends AbstractTestController
 
         self::fixtures()->clear();
 
-        $asset = self::fixtures()->getRepo('Ndr\Asset')->find($return['data']['id']); /* @var $asset \App\Entity\Ndr\AssetProperty */
+        $asset = self::fixtures()->getRepo('Ndr\Asset')->find($return['data']['id']);
+        /* @var $asset AssetProperty */
 
         $this->assertInstanceOf('App\Entity\Ndr\AssetProperty', $asset);
         $this->assertEquals('me', $asset->getOccupants());

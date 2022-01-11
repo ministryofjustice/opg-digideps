@@ -10,11 +10,13 @@ use App\Security\UserVoter;
 use App\Service\Auth\AuthService;
 use App\Service\Formatter\RestFormatter;
 use App\Service\UserService;
+use DateTime;
 use Doctrine\Common\Collections\ArrayCollection;
 use Doctrine\ORM\EntityManagerInterface;
 use Doctrine\ORM\OptimisticLockException;
 use Doctrine\ORM\ORMException;
 use Exception;
+use RuntimeException;
 use Sensio\Bundle\FrameworkExtraBundle\Configuration\Security;
 use Symfony\Component\HttpFoundation\Request;
 use Symfony\Component\Routing\Annotation\Route;
@@ -64,7 +66,7 @@ class UserController extends RestController
 
     /**
      * @Route("", methods={"POST"})
-     * @Security("is_granted('ROLE_ADMIN') or has_role('ROLE_AD') or has_role('ROLE_ORG_NAMED') or has_role('ROLE_ORG_ADMIN')")
+     * @Security("is_granted('ROLE_ADMIN') or is_granted('ROLE_AD') or is_granted('ROLE_ORG_NAMED') or is_granted('ROLE_ORG_ADMIN')")
      */
     public function add(Request $request)
     {
@@ -88,6 +90,55 @@ class UserController extends RestController
         $this->formatter->setJmsSerialiserGroups($groups);
 
         return $newUser;
+    }
+
+    /**
+     * call setters on User when $data contains values.
+     * //TODO move to service.
+     */
+    private function populateUser(User $user, array $data)
+    {
+        // Cannot easily(*) use JSM deserialising with already constructed objects.                                                                                                                                                             +
+        // Also. It'd be possible to differentiate when a NULL value is intentional or not
+        // (*) see options here https://github.com/schmittjoh/serializer/issues/79
+        // http://jmsyst.com/libs/serializer/master/event_system
+
+        $this->hydrateEntityWithArrayData($user, $data, [
+            'firstname' => 'setFirstname',
+            'lastname' => 'setLastname',
+            'email' => 'setEmail',
+            'address1' => 'setAddress1',
+            'address2' => 'setAddress2',
+            'address3' => 'setAddress3',
+            'address_postcode' => 'setAddressPostcode',
+            'address_country' => 'setAddressCountry',
+            'phone_alternative' => 'setPhoneAlternative',
+            'phone_main' => 'setPhoneMain',
+            'ndr_enabled' => 'setNdrEnabled',
+            'ad_managed' => 'setAdManaged',
+            'role_name' => 'setRoleName',
+            'job_title' => 'setJobTitle',
+            'co_deputy_client_confirmed' => 'setCoDeputyClientConfirmed',
+        ]);
+
+        if (array_key_exists('last_logged_in', $data)) {
+            $user->setLastLoggedIn(new DateTime($data['last_logged_in']));
+        }
+
+        if (!empty($data['registration_token'])) {
+            $user->setRegistrationToken($data['registration_token']);
+        }
+
+        if (!empty($data['token_date'])) { //important, keep this after "setRegistrationToken" otherwise date will be reset
+            $user->setTokenDate(new DateTime($data['token_date']));
+        }
+
+        if (!empty($data['role_name'])) {
+            $roleToSet = $data['role_name'];
+            $user->setRoleName($roleToSet);
+        }
+
+        return $user;
     }
 
     /**
@@ -206,26 +257,26 @@ class UserController extends RestController
             /** @var User|null $user */
             $user = $this->userRepository->findOneBy(['email' => strtolower($filter)]);
             if (!$user) {
-                throw new \RuntimeException('User not found', 404);
+                throw new RuntimeException('User not found', 404);
             }
         } elseif ('case_number' == $what) {
             /** @var Client|null $client */
             $client = $this->clientRepository->findOneBy(['caseNumber' => $filter]);
             if (!$client) {
-                throw new \RuntimeException('Client not found', 404);
+                throw new RuntimeException('Client not found', 404);
             }
             if (empty($client->getUsers())) {
-                throw new \RuntimeException('Client has not users', 404);
+                throw new RuntimeException('Client has not users', 404);
             }
             $user = $client->getUsers()[0];
         } elseif ('user_id' == $what) {
             /** @var User|null $user */
             $user = $this->userRepository->find($filter);
             if (!$user) {
-                throw new \RuntimeException('User not found', 419);
+                throw new RuntimeException('User not found', 419);
             }
         } else {
-            throw new \RuntimeException('wrong query', 500);
+            throw new RuntimeException('wrong query', 500);
         }
 
         /** @var User $loggedInUser */
@@ -260,7 +311,7 @@ class UserController extends RestController
      * Returns empty if user doesn't exist.
      *
      * @Route("/get-team-names-by-email/{email}", methods={"GET"})
-     * @Security("is_granted('ROLE_ORG_NAMED') or has_role('ROLE_ORG_ADMIN')")
+     * @Security("is_granted('ROLE_ORG_NAMED') or is_granted('ROLE_ORG_ADMIN')")
      */
     public function getUserTeamNames(Request $request, $email)
     {
@@ -312,7 +363,7 @@ class UserController extends RestController
 
     /**
      * @Route("/get-all", methods={"GET"})
-     * @Security("is_granted('ROLE_ADMIN') or has_role('ROLE_AD')")
+     * @Security("is_granted('ROLE_ADMIN') or is_granted('ROLE_AD')")
      */
     public function getAll(Request $request)
     {
@@ -329,7 +380,7 @@ class UserController extends RestController
     public function recreateToken(Request $request, $email)
     {
         if (!$this->authService->isSecretValid($request)) {
-            throw new \RuntimeException('client secret not accepted.', 403);
+            throw new RuntimeException('client secret not accepted.', 403);
         }
 
         /** @var User $user */
@@ -337,7 +388,7 @@ class UserController extends RestController
         $hasAdminSecret = $this->authService->isSecretValidForRole(User::ROLE_ADMIN, $request);
 
         if (!$hasAdminSecret && User::ROLE_ADMIN == $user->getRoleName()) {
-            throw new \RuntimeException('Admin emails not accepted.', 403);
+            throw new RuntimeException('Admin emails not accepted.', 403);
         }
 
         $user->recreateRegistrationToken();
@@ -355,14 +406,14 @@ class UserController extends RestController
     public function getByToken(Request $request, $token)
     {
         if (!$this->authService->isSecretValid($request)) {
-            throw new \RuntimeException('client secret not accepted.', 403);
+            throw new RuntimeException('client secret not accepted.', 403);
         }
 
         /* @var $user User */
         $user = $this->findEntityBy(User::class, ['registrationToken' => $token], 'User not found');
 
         if (!$this->authService->isSecretValidForRole($user->getRoleName(), $request)) {
-            throw new \RuntimeException($user->getRoleName().' user role not allowed from this client.', 403);
+            throw new RuntimeException($user->getRoleName().' user role not allowed from this client.', 403);
         }
 
         // `user-login` contains number of clients and reports, needed to properly redirect the user to the right page after activation
@@ -377,14 +428,14 @@ class UserController extends RestController
     public function agreeTermsUse(Request $request, $token)
     {
         if (!$this->authService->isSecretValid($request)) {
-            throw new \RuntimeException('client secret not accepted.', 403);
+            throw new RuntimeException('client secret not accepted.', 403);
         }
 
         /* @var $user User */
         $user = $this->findEntityBy(User::class, ['registrationToken' => $token], 'User not found');
 
         if (!$this->authService->isSecretValidForRole($user->getRoleName(), $request)) {
-            throw new \RuntimeException($user->getRoleName().' user role not allowed from this client.', 403);
+            throw new RuntimeException($user->getRoleName().' user role not allowed from this client.', 403);
         }
 
         $user->setAgreeTermsUse(true);
@@ -396,55 +447,6 @@ class UserController extends RestController
         $this->em->flush($user);
 
         return $user->getId();
-    }
-
-    /**
-     * call setters on User when $data contains values.
-     * //TODO move to service.
-     */
-    private function populateUser(User $user, array $data)
-    {
-        // Cannot easily(*) use JSM deserialising with already constructed objects.                                                                                                                                                             +
-        // Also. It'd be possible to differentiate when a NULL value is intentional or not
-        // (*) see options here https://github.com/schmittjoh/serializer/issues/79
-        // http://jmsyst.com/libs/serializer/master/event_system
-
-        $this->hydrateEntityWithArrayData($user, $data, [
-            'firstname' => 'setFirstname',
-            'lastname' => 'setLastname',
-            'email' => 'setEmail',
-            'address1' => 'setAddress1',
-            'address2' => 'setAddress2',
-            'address3' => 'setAddress3',
-            'address_postcode' => 'setAddressPostcode',
-            'address_country' => 'setAddressCountry',
-            'phone_alternative' => 'setPhoneAlternative',
-            'phone_main' => 'setPhoneMain',
-            'ndr_enabled' => 'setNdrEnabled',
-            'ad_managed' => 'setAdManaged',
-            'role_name' => 'setRoleName',
-            'job_title' => 'setJobTitle',
-            'co_deputy_client_confirmed' => 'setCoDeputyClientConfirmed',
-        ]);
-
-        if (array_key_exists('last_logged_in', $data)) {
-            $user->setLastLoggedIn(new \DateTime($data['last_logged_in']));
-        }
-
-        if (!empty($data['registration_token'])) {
-            $user->setRegistrationToken($data['registration_token']);
-        }
-
-        if (!empty($data['token_date'])) { //important, keep this after "setRegistrationToken" otherwise date will be reset
-            $user->setTokenDate(new \DateTime($data['token_date']));
-        }
-
-        if (!empty($data['role_name'])) {
-            $roleToSet = $data['role_name'];
-            $user->setRoleName($roleToSet);
-        }
-
-        return $user;
     }
 
     /**
@@ -460,7 +462,7 @@ class UserController extends RestController
         $requestedUser = $this->userRepository->find($id);
 
         if (!$requestedUser) {
-            throw new \RuntimeException('User not found', 419);
+            throw new RuntimeException('User not found', 419);
         }
 
         /** @var ArrayCollection $requestedUserTeams */

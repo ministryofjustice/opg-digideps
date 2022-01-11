@@ -189,13 +189,13 @@ class CasRec
 
     public function __construct(array $row)
     {
-        $this->caseNumber = self::normaliseCaseNumber($row['Case']);
-        $this->clientLastname = self::normaliseSurname($row['Surname']);
-        $this->deputyNo = self::normaliseDeputyNo($row['Deputy No']);
-        $this->deputySurname = self::normaliseSurname($row['Dep Surname']);
-        $this->deputyPostCode = self::normaliseSurname($row['Dep Postcode']);
-        $this->typeOfReport = self::normaliseCorrefAndTypeOfRep($row['Typeofrep']);
-        $this->corref = self::normaliseCorrefAndTypeOfRep($row['Corref']);
+        $this->caseNumber = self::normaliseCaseNumber($row['Case'] ?? '');
+        $this->clientLastname = self::normaliseSurname($row['Surname'] ?? '');
+        $this->deputyNo = self::normaliseDeputyNo($row['Deputy No'] ?? '');
+        $this->deputySurname = self::normaliseSurname($row['Dep Surname'] ?? '');
+        $this->deputyPostCode = self::normaliseSurname($row['Dep Postcode'] ?? '');
+        $this->typeOfReport = self::normaliseCorrefAndTypeOfRep($row['Typeofrep'] ?? '');
+        $this->corref = self::normaliseCorrefAndTypeOfRep($row['Corref'] ?? '');
         $this->orderDate = $row['OrderDate'] ?? null;
 
         $source = $row['Source'] ?? self::CASREC_SOURCE;

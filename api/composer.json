@@ -25,6 +25,7 @@
     "jms/serializer-bundle": "^4.0.1",
     "league/csv": "^9.5",
     "monolog/monolog": "^1.25.1",
+    "phpspec/prophecy-phpunit": "^2.0",
     "predis/predis": "^1.1.1",
     "ramsey/uuid": "^4.2",
     "ramsey/uuid-doctrine": "^1.6",

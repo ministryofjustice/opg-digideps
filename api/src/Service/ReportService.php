@@ -64,227 +64,6 @@ class ReportService
     }
 
     /**
-     * Set report type based on CasRec record (if existing).
-     *
-     * @return string|null type
-     *
-     * @throws Exception
-     */
-    public function getReportTypeBasedOnCasrec(Client $client)
-    {
-        $casRec = $this->casRecRepository->findOneBy(['caseNumber' => $client->getCaseNumber()]);
-        if ($casRec instanceof CasRec) {
-            $namedDeputy = $client->getNamedDeputy();
-
-            if (!is_null($namedDeputy)) {
-                $realm = User::$depTypeIdToRealm[$namedDeputy->getDeputyType()];
-
-                if (!isset($realm)) {
-                    throw new \RuntimeException("Named deputy has invalid type {$namedDeputy->getDeputyType()}");
-                } else {
-                    return CasRec::getTypeBasedOnTypeofRepAndCorref($casRec->getTypeOfReport(), $casRec->getCorref(), $realm);
-                }
-            }
-
-            if (count($client->getUsers())) {
-                if ($client->getUsers()->first()->isLayDeputy()) {
-                    return CasRec::getTypeBasedOnTypeofRepAndCorref($casRec->getTypeOfReport(), $casRec->getCorref(), CasRec::REALM_LAY);
-                }
-            }
-
-            throw new \RuntimeException('Can\'t determine report realm');
-        }
-
-        return null;
-    }
-
-    /**
-     * Create new year's report copying data over (and set start/endDate accordingly).
-     *
-     * @return Report
-     *
-     * @throws Exception
-     */
-    private function createNextYearReport(ReportInterface $oldReport)
-    {
-        if (!$oldReport->getSubmitted()) {
-            throw new \RuntimeException("Can't create a new year report based on an unsubmitted report");
-        }
-
-        $client = $oldReport->getClient();
-
-        if ($oldReport instanceof Report) {
-            $startDate = clone $oldReport->getEndDate();
-            $newReportType = $this->getReportTypeBasedOnCasrec($client) ?: $oldReport->getType();
-            $startDate->modify('+1 day');
-        } elseif ($oldReport instanceof Ndr) {
-            // when the previous report is NDR we need to work out the new reporting period
-            /** @var DateTime $startDate */
-            $startDate = $oldReport->getClient()->getExpectedReportStartDate();
-            // set default type as oldReport is ndr
-            $newReportType = $this->getReportTypeBasedOnCasrec($client) ?: Report::LAY_PFA_HIGH_ASSETS_TYPE;
-        } else {
-            throw new \RuntimeException('createNextYearReport() only supports Report and Ndr');
-        }
-
-        $endDate = clone $startDate;
-        $endDate->modify('+12 months -1 day');
-
-        $newReport = new Report(
-            $client,
-            $newReportType, // report comes from casrec, or last year report, if not found
-            $startDate,
-            $endDate,
-            false
-        );
-
-        $this->clonePersistentResources($newReport, $oldReport);
-
-        $newReport->updateSectionsStatusCache($newReport->getAvailableSections());
-        $this->_em->persist($newReport);
-
-        return $newReport;
-    }
-
-    /**
-     * Clone resources which cross report periods from one account to another.
-     *
-     * @param Ndr|Report $fromReport
-     */
-    public function clonePersistentResources(Report $toReport, $fromReport)
-    {
-        // copy assets
-        $toReport->setNoAssetToAdd($fromReport->getNoAssetToAdd());
-        $fromAssets = $fromReport->getAssets();
-        foreach ($fromAssets as $asset) {
-            // Check that the target report doesn't already have a matching asset
-            $assetExists = $this->checkAssetExists($toReport, $asset);
-
-            if (!$assetExists) {
-                /** @var Asset $newAsset */
-                $newAsset = $this->cloneAsset($asset);
-                $newAsset->setReport($toReport);
-
-                $toReport->addAsset($newAsset);
-                $this->_em->detach($newAsset);
-                $this->_em->persist($newAsset);
-            }
-        }
-
-        // copy bank accounts (opening balance = closing balance, opening date = closing date)
-        foreach ($fromReport->getBankAccounts() as $account) {
-            // Check that the target report doesn't already have a bank account with that account number
-            $accountExists = $this->checkBankAccountExists($toReport, $account);
-
-            if (!$accountExists) {
-                $newAccount = $this->cloneBankAccount($account);
-                $newAccount->setReport($toReport);
-                $toReport->addAccount($newAccount);
-                $this->_em->persist($newAccount);
-            }
-        }
-    }
-
-    /**
-     * @return bool
-     */
-    private function checkAssetExists(ReportInterface $toReport, AssetInterface $asset)
-    {
-        $toAssets = $toReport->getAssets();
-
-        foreach ($toAssets as $toAsset) {
-            if ($toAsset->getType() === $asset->getType()) {
-                if ($asset->isEqual($toAsset)) {
-                    return true;
-                }
-            }
-        }
-
-        return false;
-    }
-
-    /**
-     * @return bool
-     */
-    private function checkBankAccountExists(ReportInterface $toReport, BankAccountInterface $account)
-    {
-        foreach ($toReport->getBankAccounts() as $toAccount) {
-            if (
-                $toAccount->getAccountType() === $account->getAccountType()
-                && $toAccount->getBank() === $account->getBank()
-                && $toAccount->getAccountNumber() === $account->getAccountNumber()
-                && $toAccount->getSortCode() === $account->getSortCode()
-                && !$account->getIsClosed()
-            ) {
-                return true;
-            }
-        }
-
-        return false;
-    }
-
-    /**
-     * Convert NDR asset into Report Asset.
-     *
-     * @return ReportAssetOther|NdrAssetOther|ReportAssetProperty
-     */
-    private function cloneAsset(AssetInterface $asset)
-    {
-        if (
-            $asset instanceof NdrAssetProperty ||
-            $asset instanceof ReportAssetProperty
-        ) {
-            $newAsset = new ReportAssetProperty();
-
-            $newAsset->setAddress($asset->getAddress());
-            $newAsset->setAddress2($asset->getAddress2());
-            $newAsset->setCounty($asset->getCounty());
-            $newAsset->setPostcode($asset->getPostcode());
-            $newAsset->setOccupants($asset->getOccupants());
-            $newAsset->setOwned($asset->getOwned());
-            $newAsset->setOwnedPercentage($asset->getOwnedPercentage());
-            $newAsset->setIsSubjectToEquityRelease($asset->getIsSubjectToEquityRelease());
-            $newAsset->setHasMortgage($asset->getHasMortgage());
-            $newAsset->setMortgageOutstandingAmount($asset->getMortgageOutstandingAmount());
-            $newAsset->setHasCharges($asset->getHasCharges());
-            $newAsset->setIsRentedOut($asset->getIsRentedOut());
-            $newAsset->setRentAgreementEndDate($asset->getRentAgreementEndDate());
-            $newAsset->setRentIncomeMonth($asset->getRentIncomeMonth());
-        } elseif ($asset instanceof NdrAssetOther || $asset instanceof ReportAssetOther) {
-            $newAsset = new ReportAssetOther();
-            $newAsset->setTitle($asset->getTitle());
-            $newAsset->setDescription($asset->getDescription());
-            $newAsset->setValuationDate($asset->getValuationDate());
-        } else {
-            throw new RuntimeException('Unrecognised AssetType');
-        }
-
-        $newAsset->setValue($asset->getValue());
-
-        return $newAsset;
-    }
-
-    /**
-     * Clones instance of ReportInterface and returns new Report Bank Account.
-     *
-     * @return ReportBankAccount
-     */
-    private function cloneBankAccount(BankAccountInterface $account)
-    {
-        $newAccount = new ReportBankAccount();
-
-        $newAccount->setBank($account->getBank());
-        $newAccount->setAccountType($account->getAccountType());
-        $newAccount->setSortCode($account->getSortCode());
-        $newAccount->setAccountNumber($account->getAccountNumber());
-        $newAccount->setOpeningBalance($account->getClosingBalance());
-        $newAccount->setIsJointAccount($account->getIsJointAccount());
-        $newAccount->setCreatedAt(new DateTime());
-
-        return $newAccount;
-    }
-
-    /**
      * Set report submitted and create a new year report.
      *
      * @param string|null $ndrDocumentId
@@ -294,7 +73,7 @@ class ReportService
     public function submit(ReportInterface $currentReport, User $user, DateTime $submitDate, $ndrDocumentId = null)
     {
         if (!$currentReport->getAgreedBehalfDeputy()) {
-            throw new \RuntimeException('Report must be agreed for submission');
+            throw new RuntimeException('Report must be agreed for submission');
         }
 
         // update report submit flag, who submitted and date
@@ -356,6 +135,227 @@ class ReportService
         $this->_em->flush(); // single transaction for report.submitted flags + new year report creation
 
         return $newYearReport;
+    }
+
+    /**
+     * Clone resources which cross report periods from one account to another.
+     *
+     * @param Ndr|Report $fromReport
+     */
+    public function clonePersistentResources(Report $toReport, $fromReport)
+    {
+        // copy assets
+        $toReport->setNoAssetToAdd($fromReport->getNoAssetToAdd());
+        $fromAssets = $fromReport->getAssets();
+        foreach ($fromAssets as $asset) {
+            // Check that the target report doesn't already have a matching asset
+            $assetExists = $this->checkAssetExists($toReport, $asset);
+
+            if (!$assetExists) {
+                /** @var Asset $newAsset */
+                $newAsset = $this->cloneAsset($asset);
+                $newAsset->setReport($toReport);
+
+                $toReport->addAsset($newAsset);
+                $this->_em->detach($newAsset);
+                $this->_em->persist($newAsset);
+            }
+        }
+
+        // copy bank accounts (opening balance = closing balance, opening date = closing date)
+        foreach ($fromReport->getBankAccounts() as $account) {
+            // Check that the target report doesn't already have a bank account with that account number
+            $accountExists = $this->checkBankAccountExists($toReport, $account);
+
+            if (!$accountExists) {
+                $newAccount = $this->cloneBankAccount($account);
+                $newAccount->setReport($toReport);
+                $toReport->addAccount($newAccount);
+                $this->_em->persist($newAccount);
+            }
+        }
+    }
+
+    /**
+     * @return bool
+     */
+    private function checkAssetExists(ReportInterface $toReport, AssetInterface $asset)
+    {
+        $toAssets = $toReport->getAssets();
+
+        foreach ($toAssets as $toAsset) {
+            if ($toAsset->getType() === $asset->getType()) {
+                if ($asset->isEqual($toAsset)) {
+                    return true;
+                }
+            }
+        }
+
+        return false;
+    }
+
+    /**
+     * Convert NDR asset into Report Asset.
+     *
+     * @return ReportAssetOther|NdrAssetOther|ReportAssetProperty
+     */
+    private function cloneAsset(AssetInterface $asset)
+    {
+        if (
+            $asset instanceof NdrAssetProperty ||
+            $asset instanceof ReportAssetProperty
+        ) {
+            $newAsset = new ReportAssetProperty();
+
+            $newAsset->setAddress($asset->getAddress());
+            $newAsset->setAddress2($asset->getAddress2());
+            $newAsset->setCounty($asset->getCounty());
+            $newAsset->setPostcode($asset->getPostcode());
+            $newAsset->setOccupants($asset->getOccupants());
+            $newAsset->setOwned($asset->getOwned());
+            $newAsset->setOwnedPercentage($asset->getOwnedPercentage());
+            $newAsset->setIsSubjectToEquityRelease($asset->getIsSubjectToEquityRelease());
+            $newAsset->setHasMortgage($asset->getHasMortgage());
+            $newAsset->setMortgageOutstandingAmount($asset->getMortgageOutstandingAmount());
+            $newAsset->setHasCharges($asset->getHasCharges());
+            $newAsset->setIsRentedOut($asset->getIsRentedOut());
+            $newAsset->setRentAgreementEndDate($asset->getRentAgreementEndDate());
+            $newAsset->setRentIncomeMonth($asset->getRentIncomeMonth());
+        } elseif ($asset instanceof NdrAssetOther || $asset instanceof ReportAssetOther) {
+            $newAsset = new ReportAssetOther();
+            $newAsset->setTitle($asset->getTitle());
+            $newAsset->setDescription($asset->getDescription());
+            $newAsset->setValuationDate($asset->getValuationDate());
+        } else {
+            throw new RuntimeException('Unrecognised AssetType');
+        }
+
+        $newAsset->setValue($asset->getValue());
+
+        return $newAsset;
+    }
+
+    /**
+     * @return bool
+     */
+    private function checkBankAccountExists(ReportInterface $toReport, BankAccountInterface $account)
+    {
+        foreach ($toReport->getBankAccounts() as $toAccount) {
+            if (
+                $toAccount->getAccountType() === $account->getAccountType()
+                && $toAccount->getBank() === $account->getBank()
+                && $toAccount->getAccountNumber() === $account->getAccountNumber()
+                && $toAccount->getSortCode() === $account->getSortCode()
+                && !$account->getIsClosed()
+            ) {
+                return true;
+            }
+        }
+
+        return false;
+    }
+
+    /**
+     * Clones instance of ReportInterface and returns new Report Bank Account.
+     *
+     * @return ReportBankAccount
+     */
+    private function cloneBankAccount(BankAccountInterface $account)
+    {
+        $newAccount = new ReportBankAccount();
+
+        $newAccount->setBank($account->getBank());
+        $newAccount->setAccountType($account->getAccountType());
+        $newAccount->setSortCode($account->getSortCode());
+        $newAccount->setAccountNumber($account->getAccountNumber());
+        $newAccount->setOpeningBalance($account->getClosingBalance());
+        $newAccount->setIsJointAccount($account->getIsJointAccount());
+        $newAccount->setCreatedAt(new DateTime());
+
+        return $newAccount;
+    }
+
+    /**
+     * Create new year's report copying data over (and set start/endDate accordingly).
+     *
+     * @return Report
+     *
+     * @throws Exception
+     */
+    private function createNextYearReport(ReportInterface $oldReport)
+    {
+        if (!$oldReport->getSubmitted()) {
+            throw new RuntimeException("Can't create a new year report based on an unsubmitted report");
+        }
+
+        $client = $oldReport->getClient();
+
+        if ($oldReport instanceof Report) {
+            $startDate = clone $oldReport->getEndDate();
+            $newReportType = $this->getReportTypeBasedOnCasrec($client) ?: $oldReport->getType();
+            $startDate->modify('+1 day');
+        } elseif ($oldReport instanceof Ndr) {
+            // when the previous report is NDR we need to work out the new reporting period
+            /** @var DateTime $startDate */
+            $startDate = $oldReport->getClient()->getExpectedReportStartDate();
+            // set default type as oldReport is ndr
+            $newReportType = $this->getReportTypeBasedOnCasrec($client) ?: Report::LAY_PFA_HIGH_ASSETS_TYPE;
+        } else {
+            throw new RuntimeException('createNextYearReport() only supports Report and Ndr');
+        }
+
+        $endDate = clone $startDate;
+        $endDate->modify('+12 months -1 day');
+
+        $newReport = new Report(
+            $client,
+            $newReportType, // report comes from casrec, or last year report, if not found
+            $startDate,
+            $endDate,
+            false
+        );
+
+        $this->clonePersistentResources($newReport, $oldReport);
+
+        $newReport->updateSectionsStatusCache($newReport->getAvailableSections());
+        $this->_em->persist($newReport);
+
+        return $newReport;
+    }
+
+    /**
+     * Set report type based on CasRec record (if existing).
+     *
+     * @return string|null type
+     *
+     * @throws Exception
+     */
+    public function getReportTypeBasedOnCasrec(Client $client)
+    {
+        $casRec = $this->casRecRepository->findOneBy(['caseNumber' => $client->getCaseNumber()]);
+        if ($casRec instanceof CasRec) {
+            $namedDeputy = $client->getNamedDeputy();
+
+            if (!is_null($namedDeputy)) {
+                $realm = User::$depTypeIdToRealm[$namedDeputy->getDeputyType()] ?? null;
+
+                if (is_null($realm)) {
+                    throw new RuntimeException("Named deputy has invalid type {$namedDeputy->getDeputyType()}");
+                } else {
+                    return CasRec::getTypeBasedOnTypeofRepAndCorref($casRec->getTypeOfReport(), $casRec->getCorref(), $realm);
+                }
+            }
+
+            if (count($client->getUsers())) {
+                if ($client->getUsers()->first()->isLayDeputy()) {
+                    return CasRec::getTypeBasedOnTypeofRepAndCorref($casRec->getTypeOfReport(), $casRec->getCorref(), CasRec::REALM_LAY);
+                }
+            }
+
+            throw new RuntimeException('Can\'t determine report realm');
+        }
+
+        return null;
     }
 
     /**

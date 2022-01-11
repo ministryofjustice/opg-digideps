@@ -12,11 +12,14 @@ use App\Service\RestHandler\OrganisationUpdateException;
 use Doctrine\ORM\EntityManager;
 use PHPUnit\Framework\TestCase;
 use Prophecy\Argument;
+use Prophecy\PhpUnit\ProphecyTrait;
 use Prophecy\Prophecy\ObjectProphecy;
 use Symfony\Component\Validator\Validator\ValidatorInterface;
 
 class OrganisationRestHandlerTest extends TestCase
 {
+    use ProphecyTrait;
+
     /**
      * @var ObjectProphecy|EntityManager
      */

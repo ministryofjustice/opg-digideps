@@ -37,7 +37,7 @@ class UserResearchController extends RestController
 
     /**
      * @Route("/user-research", name="create_user_research", methods={"POST"})
-     * @Security("has_role('ROLE_DEPUTY') or has_role('ROLE_ORG')")
+     * @Security("is_granted('ROLE_DEPUTY') or is_granted('ROLE_ORG')")
      */
     public function create(Request $request)
     {

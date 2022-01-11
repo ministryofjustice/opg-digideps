@@ -9,9 +9,12 @@ use App\Entity\User;
 use App\Factory\OrganisationFactory;
 use App\Repository\OrganisationRepository;
 use App\Repository\UserRepository;
+use DateTime;
 use Doctrine\ORM\EntityManager;
 use Doctrine\ORM\OptimisticLockException as OptimisticLockExceptionAlias;
+use Doctrine\ORM\ORMException;
 use Exception;
+use InvalidArgumentException;
 use Symfony\Component\Validator\Validator\ValidatorInterface;
 
 class OrganisationRestHandler
@@ -51,7 +54,7 @@ class OrganisationRestHandler
     }
 
     /**
-     * @throws \Doctrine\ORM\ORMException
+     * @throws ORMException
      * @throws OptimisticLockExceptionAlias
      */
     public function create(array $data): Organisation
@@ -84,12 +87,40 @@ class OrganisationRestHandler
         return $organisation;
     }
 
+    private function verifyPostedData(array $data): bool
+    {
+        return
+            isset($data['name'])
+            && isset($data['email_identifier'])
+            && isset($data['is_activated']);
+    }
+
+    /**
+     * @param $emailId
+     */
+    private function orgWithEmailIdExists($emailId): bool
+    {
+        $org = $this->orgRepository->findOneBy(['emailIdentifier' => $emailId]);
+
+        return $org instanceof Organisation ? true : false;
+    }
+
+    /** @param Organisation $entity */
+    private function throwExceptionOnInvalidEntity(Organisation $entity): void
+    {
+        $errors = $this->validator->validate($entity);
+
+        if (count($errors) > 0) {
+            throw new OrganisationCreationException(json_encode($errors));
+        }
+    }
+
     /**
      * @return bool
      *
      * @throws OptimisticLockExceptionAlias
      * @throws Exception
-     * @throws \Doctrine\ORM\ORMException
+     * @throws ORMException
      */
     public function delete(int $id)
     {
@@ -101,16 +132,16 @@ class OrganisationRestHandler
             throw new Exception();
         }
 
-        $organisation->setDeletedAt(new \DateTime());
+        $organisation->setDeletedAt(new DateTime());
         $this->em->flush($organisation);
 
         return true;
     }
 
     /**
-    /**
+     * /**
      * @throws OptimisticLockExceptionAlias
-     * @throws \Doctrine\ORM\ORMException
+     * @throws ORMException
      */
     public function update(array $data, int $id): ?Organisation
     {
@@ -135,24 +166,6 @@ class OrganisationRestHandler
         return $organisation;
     }
 
-    private function verifyPostedData(array $data): bool
-    {
-        return
-            isset($data['name'])
-            && isset($data['email_identifier'])
-            && isset($data['is_activated']);
-    }
-
-    /**
-     * @param $emailId
-     */
-    private function orgWithEmailIdExists($emailId): bool
-    {
-        $org = $this->orgRepository->findOneBy(['emailIdentifier' => $emailId]);
-
-        return $org instanceof Organisation ? true : false;
-    }
-
     private function populateOrganisation(array $data, Organisation $organisation): void
     {
         $organisation
@@ -161,19 +174,9 @@ class OrganisationRestHandler
             ->setIsActivated((bool) $data['is_activated']);
     }
 
-    /** @param Organisation $entity */
-    private function throwExceptionOnInvalidEntity(Organisation $entity): void
-    {
-        $errors = $this->validator->validate($entity);
-
-        if (count($errors) > 0) {
-            throw new OrganisationCreationException((string) $errors);
-        }
-    }
-
     /**
      * @throws OptimisticLockExceptionAlias
-     * @throws \Doctrine\ORM\ORMException
+     * @throws ORMException
      */
     public function addUser(int $orgId, int $userId): void
     {
@@ -184,27 +187,10 @@ class OrganisationRestHandler
         $this->em->flush();
     }
 
-    /**
-     * @throws OptimisticLockExceptionAlias
-     * @throws \Doctrine\ORM\ORMException
-     */
-    public function removeUser(int $orgId, int $userId): void
-    {
-        $organisation = $this->attemptGetOrganisation($orgId);
-        $user = $this->attemptGetUser($userId);
-
-        if (!$organisation->getUsers()->contains($user)) {
-            throw new \InvalidArgumentException('Cannot remove: User does not belong to organisation');
-        }
-
-        $organisation->removeUser($user);
-        $this->em->flush();
-    }
-
     private function attemptGetOrganisation(int $orgId): ?Organisation
     {
         if (null === ($organisation = $this->orgRepository->find($orgId))) {
-            throw new \InvalidArgumentException('Invalid organisation id');
+            throw new InvalidArgumentException('Invalid organisation id');
         }
 
         return $organisation;
@@ -213,9 +199,26 @@ class OrganisationRestHandler
     private function attemptGetUser(int $userId): ?User
     {
         if (null === ($user = $this->userRepository->find($userId))) {
-            throw new \InvalidArgumentException('Invalid user id');
+            throw new InvalidArgumentException('Invalid user id');
         }
 
         return $user;
+    }
+
+    /**
+     * @throws OptimisticLockExceptionAlias
+     * @throws ORMException
+     */
+    public function removeUser(int $orgId, int $userId): void
+    {
+        $organisation = $this->attemptGetOrganisation($orgId);
+        $user = $this->attemptGetUser($userId);
+
+        if (!$organisation->getUsers()->contains($user)) {
+            throw new InvalidArgumentException('Cannot remove: User does not belong to organisation');
+        }
+
+        $organisation->removeUser($user);
+        $this->em->flush();
     }
 }

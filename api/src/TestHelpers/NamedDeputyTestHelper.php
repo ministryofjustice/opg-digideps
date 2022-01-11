@@ -21,7 +21,7 @@ class NamedDeputyTestHelper
             ->setLastname($faker->lastName)
             ->setEmail1($email ?: $faker->safeEmail.rand(1, 100000))
             ->setAddress1($faker->streetAddress)
-            ->setAddress2($faker->city)
+            ->setAddress2($faker->city())
             ->setAddress3($faker->county)
             ->setAddressPostcode($faker->postcode)
             ->setDeputyNo($deputyNumber ?: $faker->randomNumber(8))
