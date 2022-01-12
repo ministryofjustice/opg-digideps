@@ -1,5 +1,6 @@
-<?php declare(strict_types=1);
+<?php
 
+declare(strict_types=1);
 
 namespace App\Service\File;
 
@@ -67,7 +68,7 @@ class S3FileUploaderTest extends KernelTestCase
     }
 
     /** @test */
-    public function uploadSupportingFilesAndPersistDocuments_single_file()
+    public function uploadSupportingFilesAndPersistDocumentsSingleFile()
     {
         $filePath = sprintf('%s/tests/phpunit/TestData/good-jpeg', $this->projectDir);
         $fileBody = file_get_contents($filePath);
@@ -79,6 +80,8 @@ class S3FileUploaderTest extends KernelTestCase
 
         $this->fileNameFixer->addMissingFileExtension($uploadedFile, $fileBody)->shouldBeCalled()->willReturn('good-jpeg.jpeg');
         $this->fileNameFixer->removeWhiteSpaceBeforeFileExtension('good-jpeg.jpeg')->shouldBeCalled()->willReturn('good-jpeg.jpeg');
+        $this->fileNameFixer->removeUnusualCharacters('good-jpeg.jpeg')->shouldBeCalled()->willReturn('good_jpeg.jpeg');
+
         $this->dateTimeProvider->getDateTime()->willReturn($now);
         $this->storage->store(Argument::cetera())->shouldBeCalled();
         $this->restClient->post(Argument::cetera())->shouldBeCalled();
@@ -87,7 +90,7 @@ class S3FileUploaderTest extends KernelTestCase
     }
 
     /** @test */
-    public function uploadSupportingFilesAndPersistDocuments_multiple_files()
+    public function uploadSupportingFilesAndPersistDocumentsMultipleFiles()
     {
         $jpeg = new UploadedFile(sprintf('%s/tests/phpunit/TestData/good-jpeg', $this->projectDir), 'good-jpeg');
         $png = new UploadedFile(sprintf('%s/tests/phpunit/TestData/good-png', $this->projectDir), 'good-png');
@@ -99,6 +102,7 @@ class S3FileUploaderTest extends KernelTestCase
 
         $this->fileNameFixer->addMissingFileExtension(Argument::cetera())->shouldBeCalledTimes(3)->willReturn('the-fixed-file-name');
         $this->fileNameFixer->removeWhiteSpaceBeforeFileExtension('the-fixed-file-name')->shouldBeCalledTimes(3)->willReturn('the-fixed-file-name');
+        $this->fileNameFixer->removeUnusualCharacters('the-fixed-file-name')->shouldBeCalledTimes(3)->willReturn('the_fixed_file_name');
 
         $this->dateTimeProvider->getDateTime()->willReturn($now);
         $this->storage->store(Argument::cetera())->shouldBeCalledTimes(3);
@@ -118,7 +122,7 @@ class S3FileUploaderTest extends KernelTestCase
     }
 
     /** @test */
-    public function removeFileFromS3_missing_storage_ref()
+    public function removeFileFromS3MissingStorageRef()
     {
         self::expectException(Exception::class);
 
