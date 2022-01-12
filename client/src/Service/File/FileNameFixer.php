@@ -237,9 +237,7 @@ class FileNameFixer
 
     public function removeUnusualCharacters(string $fileName)
     {
-        $fileName = str_replace(' ', '_', $fileName);
-        $fileName = str_replace('(', '', $fileName);
-
-        return str_replace(')', '', $fileName);
+        $fileNameSpacesToUnderscores = str_replace(' ', '_', $fileName);
+        return preg_replace('/[^A-Za-z0-9\_\.]/', '', $fileNameSpacesToUnderscores);
     }
 }
