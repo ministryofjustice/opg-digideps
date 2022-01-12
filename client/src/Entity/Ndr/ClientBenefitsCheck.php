@@ -55,6 +55,8 @@ class ClientBenefitsCheck implements ClientBenefitsCheckInterface
     /**
      * @JMS\Type("string")
      * @JMS\Groups({"report", "ndr", "client-benefits-check"})
+     *
+     * @CustomAssert\ClientBenefitsCheck(groups={"client-benefits-check"})
      */
     private ?string $doOthersReceiveIncomeOnClientsBehalf = '';
 
@@ -74,6 +76,12 @@ class ClientBenefitsCheck implements ClientBenefitsCheckInterface
      * @Assert\Valid(groups={"client-benefits-check"})
      */
     private ?ArrayCollection $typesOfIncomeReceivedOnClientsBehalf = null;
+
+    /**
+     * @JMS\Type("App\Entity\Ndr\Ndr")
+     * @JMS\Groups({"report", "client-benefits-check"})
+     */
+    private ?Ndr $report = null;
 
     public function getWhenLastCheckedEntitlement(): string
     {
@@ -174,6 +182,18 @@ class ClientBenefitsCheck implements ClientBenefitsCheckInterface
     public function addTypeOfIncomeReceivedOnClientsBehalf(IncomeReceivedOnClientsBehalf $incomeReceivedOnClientsBehalf): ClientBenefitsCheck
     {
         $this->typesOfIncomeReceivedOnClientsBehalf->add($incomeReceivedOnClientsBehalf);
+
+        return $this;
+    }
+
+    public function getReport(): ?Ndr
+    {
+        return $this->report;
+    }
+
+    public function setReport(?Ndr $report): ClientBenefitsCheck
+    {
+        $this->report = $report;
 
         return $this;
     }

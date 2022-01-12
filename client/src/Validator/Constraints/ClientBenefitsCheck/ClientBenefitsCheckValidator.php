@@ -4,8 +4,11 @@ declare(strict_types=1);
 
 namespace App\Validator\Constraints\ClientBenefitsCheck;
 
+use App\Entity\ClientBenefitsCheckInterface;
 use App\Entity\Report\ClientBenefitsCheck;
+use App\Entity\Report\Report;
 use App\Validator\Constraints\ClientBenefitsCheck\ClientBenefitsCheck as ClientBenefitsCheckConstraint;
+use DateTime;
 use Doctrine\Common\Collections\ArrayCollection;
 use Symfony\Component\Validator\Constraint;
 use Symfony\Component\Validator\ConstraintValidator;
@@ -13,6 +16,9 @@ use Symfony\Component\Validator\Exception\UnexpectedTypeException;
 
 class ClientBenefitsCheckValidator extends ConstraintValidator
 {
+    private string $translationDomain = 'report-client-benefits-check';
+    private ?string $clientName = null;
+
     public function validate($value, Constraint $constraint)
     {
         if (!$constraint instanceof ClientBenefitsCheckConstraint) {
@@ -20,29 +26,36 @@ class ClientBenefitsCheckValidator extends ConstraintValidator
         }
 
         $object = $this->context->getObject();
+        $report = $object->getReport() instanceof Report ? $object->getReport() : $object->getNdr();
+        $this->clientName = $report->getClient()->getFirstName();
+        $propertyName = $this->context->getPropertyName();
 
-        if ('whenLastCheckedEntitlement' === $this->context->getPropertyName()) {
-            $this->whenLastCheckedEntitlementValid($value, $object);
+        if ('whenLastCheckedEntitlement' === $propertyName) {
+            $this->whenLastCheckedEntitlementValid($value, $object, $constraint);
         }
 
-        if ('dateLastCheckedEntitlement' === $this->context->getPropertyName()) {
-            $this->dateLastCheckedEntitlementValid($value, $object);
+        if ('dateLastCheckedEntitlement' === $propertyName) {
+            $this->dateLastCheckedEntitlementValid($value, $object, $constraint);
         }
 
-        if ('neverCheckedExplanation' === $this->context->getPropertyName()) {
-            $this->neverCheckedExplanationValid($value, $object);
+        if ('neverCheckedExplanation' === $propertyName) {
+            $this->neverCheckedExplanationValid($value, $object, $constraint);
         }
 
-        if ('dontKnowIncomeExplanation' === $this->context->getPropertyName()) {
-            $this->dontKnowIncomeExplanationValid($value, $object);
+        if ('doOthersReceiveIncomeOnClientsBehalf' === $propertyName) {
+            $this->incomeOnClientsBehalfValid($value, $object, $constraint);
         }
 
-        if ('typesOfIncomeReceivedOnClientsBehalf' === $this->context->getPropertyName()) {
-            $this->typesOfIncomeReceivedOnClientsBehalfValid($value, $object);
+        if ('dontKnowIncomeExplanation' === $propertyName) {
+            $this->dontKnowIncomeExplanationValid($value, $object, $constraint);
+        }
+
+        if ('typesOfIncomeReceivedOnClientsBehalf' === $propertyName) {
+            $this->typesOfIncomeReceivedOnClientsBehalfValid($value, $object, $constraint);
         }
     }
 
-    private function whenLastCheckedEntitlementValid($value, $object)
+    private function whenLastCheckedEntitlementValid($value, ClientBenefitsCheckInterface $object, ClientBenefitsCheckConstraint $constraint)
     {
         $expectedValues = [
             ClientBenefitsCheck::WHEN_CHECKED_I_HAVE_CHECKED,
@@ -51,51 +64,92 @@ class ClientBenefitsCheckValidator extends ConstraintValidator
         ];
 
         if (!in_array($value, $expectedValues)) {
-            $unexpectedValueMessage = sprintf(
-                '$whenLastCheckedEntitlementValid must be one of %s. %s provided.',
-                implode(',', $expectedValues),
-                $value
-            );
-
-            throw new \RuntimeException($unexpectedValueMessage);
+            $this->context
+                ->buildViolation($constraint->whenLastCheckedNoOptionSelected)
+                ->setTranslationDomain($this->translationDomain)
+                ->setParameter('%client%', $this->clientName)
+                ->addViolation();
         }
     }
 
-    private function dateLastCheckedEntitlementValid($value, $object)
+    private function dateLastCheckedEntitlementValid($value, ClientBenefitsCheckInterface $object, ClientBenefitsCheckConstraint $constraint)
     {
         if (is_null($value) && ClientBenefitsCheck::WHEN_CHECKED_I_HAVE_CHECKED === $object->getWhenLastCheckedEntitlement()) {
             $this->context
-                ->buildViolation('Must provide a date when have checked entitlement')
+                ->buildViolation($constraint->whenLastCheckedMissingDate)
+                ->setTranslationDomain($this->translationDomain)
+                ->setParameter('%client%', $this->clientName)
+                ->addViolation();
+        }
+
+        if (!is_null($value) && $value > new DateTime()) {
+            $this->context
+                ->buildViolation($constraint->whenLastCheckedFutureDate)
+                ->setTranslationDomain($this->translationDomain)
+                ->setParameter('%client%', $this->clientName)
                 ->addViolation();
         }
     }
 
-    private function neverCheckedExplanationValid($value, $object)
+    private function neverCheckedExplanationValid($value, ClientBenefitsCheckInterface $object, ClientBenefitsCheckConstraint $constraint)
     {
         if (is_null($value) && ClientBenefitsCheck::WHEN_CHECKED_IVE_NEVER_CHECKED === $object->getWhenLastCheckedEntitlement()) {
             $this->context
-                ->buildViolation('Must provide an explanation when never checked entitlement')
+                ->buildViolation($constraint->whenLastCheckedNeverCheckedEntitlementMissingExplanation)
+                ->setTranslationDomain($this->translationDomain)
+                ->setParameter('%client%', $this->clientName)
+                ->addViolation();
+        }
+
+        if (!is_null($value) && strlen($value) < 4) {
+            $this->context
+                ->buildViolation($constraint->whenLastCheckedNeverCheckedEntitlementExplanationTooShort)
+                ->setTranslationDomain($this->translationDomain)
+                ->setParameter('%client%', $this->clientName)
                 ->addViolation();
         }
     }
 
-    private function dontKnowIncomeExplanationValid($value, $object)
+    private function incomeOnClientsBehalfValid($value, ClientBenefitsCheckInterface $object, ClientBenefitsCheckConstraint $constraint)
+    {
+        if (is_null($value)) {
+            $this->context
+                ->buildViolation($constraint->incomeOnClientsBehalfNoOptionSelected)
+                ->setTranslationDomain($this->translationDomain)
+                ->setParameter('%client%', $this->clientName)
+                ->addViolation();
+        }
+    }
+
+    private function dontKnowIncomeExplanationValid($value, ClientBenefitsCheckInterface $object, ClientBenefitsCheckConstraint $constraint)
     {
         if (is_null($value) && ClientBenefitsCheck::OTHER_INCOME_DONT_KNOW === $object->getDoOthersReceiveIncomeOnClientsBehalf()) {
             $this->context
-                ->buildViolation('Must provide an explanation when you don\'t know if anyone else received income on clients behalf')
+                ->buildViolation($constraint->incomeOnClientsBehalfNeverCheckedIncomeMissingExplanation)
+                ->setTranslationDomain($this->translationDomain)
+                ->setParameter('%client%', $this->clientName)
+                ->addViolation();
+        }
+
+        if (!is_null($value) && strlen($value) < 4) {
+            $this->context
+                ->buildViolation($constraint->incomeOnClientsBehalfNeverCheckedIncomeExplanationTooShort)
+                ->setTranslationDomain($this->translationDomain)
+                ->setParameter('%client%', $this->clientName)
                 ->addViolation();
         }
     }
 
-    private function typesOfIncomeReceivedOnClientsBehalfValid($value, $object)
+    private function typesOfIncomeReceivedOnClientsBehalfValid($value, ClientBenefitsCheckInterface $object, ClientBenefitsCheckConstraint $constraint)
     {
         if ($object->getTypesOfIncomeReceivedOnClientsBehalf() instanceof ArrayCollection && 1 === $object->getTypesOfIncomeReceivedOnClientsBehalf()->count()) {
             $income = $object->getTypesOfIncomeReceivedOnClientsBehalf()->first();
 
             if (is_null($income->getAmount()) && is_null($income->getIncomeType()) && false === $income->getAmountDontKnow()) {
                 $this->context
-                    ->buildViolation('Must add at least one type of income received by others if answering "yes" to "Do others receive income ion clients behalf". Use the back link if you do not have any income to declare.')
+                    ->buildViolation($constraint->incomeOnClientsBehalfMissingIncome)
+                    ->setTranslationDomain($this->translationDomain)
+                    ->setParameter('%client%', $this->clientName)
                     ->addViolation();
             }
         }

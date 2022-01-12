@@ -11,5 +11,9 @@ use Symfony\Component\Validator\Constraint;
  */
 class IncomeReceivedOnClientsBehalf extends Constraint
 {
+    public string $incomeDetailsMissingIncomeTypeMessage = 'form.incomeDetails.errors.missingType';
+    public string $incomeDetailsMissingAmountMessage = 'form.incomeDetails.errors.missingAmount';
+    public string $incomeDetailsAmountAndDontKnowMessage = 'form.incomeDetails.errors.amountAndDontKnow';
+
     public $mode = 'strict'; // If the constraint has configuration options, define them as public properties
 }

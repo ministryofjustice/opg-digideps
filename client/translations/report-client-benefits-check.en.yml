@@ -52,6 +52,13 @@ form:
             neverChecked: I've never checked this
         dateCheckedHint: Date checked
         neverCheckedHint: Please tell us why you have never checked this
+        errors:
+            noOptionSelected: Tell us if you have checked %client%'s benefits entitlement
+            missingDate: Enter the date you last checked %client%'s benefits
+            invalidDate: The date checked must be a real date
+            futureDate: The date must be in the past
+            missingExplanation: Tell us why you have never checked %client%'s benefit entitlement
+            explanationTooShort: In a few words, tell us why you have never checked %client%'s benefit entitlement
 
     incomeOnClientsBehalf:
         choices:
@@ -60,6 +67,10 @@ form:
             dontKnow: I don't know
         dontKnowLabel: Tell us why you don’t know about this income.
         dontKnowHint: For example, is this something you’ve never checked, don’t know how to check, or have been unable to find out.
+        errors:
+            noOptionSelected: Tell us whether anyone other than you receives income on %client%'s behalf
+            missingExplanation: Tell us why you have never checked if anyone other than you receives income on %client%'s behalf
+            explanationTooShort: In a few words, tell us why you have never checked if anyone other than you receives income on %client%'s behalf
 
     incomeDetails:
         titleHint: For example, benefits paid directly to a care home or family member
@@ -69,6 +80,11 @@ form:
         button:
             saveAndContinue: Save and continue
             addAnother: Add another
+        errors:
+            missingType: Enter a type of income
+            missingAmount: Enter an amount or select 'I don’t know'
+            amountAndDontKnow: You cannot enter an amount and select that you do not know the amount
+            missingIncome: Enter at least one type of income
 
     save:
         label: Save and continue

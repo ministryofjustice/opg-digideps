@@ -6,6 +6,7 @@ namespace Tests\App\Entity\Ndr;
 
 use App\Entity\Ndr\ClientBenefitsCheck;
 use App\Entity\Ndr\IncomeReceivedOnClientsBehalf;
+use App\TestHelpers\NdrHelpers;
 use DateTime;
 use Doctrine\Common\Collections\ArrayCollection;
 use PHPUnit\Framework\TestCase;
@@ -26,13 +27,16 @@ class ClientBenefitsCheckTest extends TestCase
         ?ArrayCollection $incomeTypes,
         int $expectedValidationErrorsCount
     ) {
+        $ndr = NdrHelpers::createNdr();
+
         $sut = (new ClientBenefitsCheck())
             ->setWhenLastCheckedEntitlement($whenLastChecked)
             ->setDateLastCheckedEntitlement($dateLastChecked)
             ->setNeverCheckedExplanation($neverCheckedExplanation)
             ->setDoOthersReceiveIncomeOnClientsBehalf($doOthersReceiveIncome)
             ->setDontKnowIncomeExplanation($incomeExplanation)
-            ->setTypesOfIncomeReceivedOnClientsBehalf($incomeTypes);
+            ->setTypesOfIncomeReceivedOnClientsBehalf($incomeTypes)
+            ->setNdr($ndr);
 
         $validator = Validation::createValidatorBuilder()
             ->enableAnnotationMapping()

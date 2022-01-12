@@ -1,10 +1,5 @@
 // SESSION TIMEOUT POPUP LOGIC
-/**
- * @param element
- * @param sessionExpiresMs
- * @param sessionPopupShowAfterMs
- * @param refreshUrl
- */
+
 const SessionTimeoutDialog = {
   init (options) {
     this.element = options.element

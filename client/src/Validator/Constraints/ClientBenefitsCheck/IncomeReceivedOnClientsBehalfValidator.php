@@ -12,6 +12,8 @@ use Symfony\Component\Validator\Exception\UnexpectedTypeException;
 
 class IncomeReceivedOnClientsBehalfValidator extends ConstraintValidator
 {
+    private string $translationDomain = 'report-client-benefits-check';
+
     public function validate($value, Constraint $constraint)
     {
         if (!$constraint instanceof IncomeReceivedOnClientsBehalfConstraint) {
@@ -20,42 +22,56 @@ class IncomeReceivedOnClientsBehalfValidator extends ConstraintValidator
 
         /** @var IncomeReceivedOnClientsBehalfInterface $object */
         $object = $this->context->getObject();
+        $propertyName = $this->context->getPropertyName();
 
-        if ('amount' === $this->context->getPropertyName()) {
-            $this->amountValid($value, $object);
+        if ('incomeType' === $propertyName) {
+            if (is_null($value)) {
+                $this->context
+                    ->buildViolation($constraint->incomeDetailsMissingIncomeTypeMessage)
+                    ->setTranslationDomain($this->translationDomain)
+                    ->addViolation();
+            }
         }
 
-        if ('amountDontKnow' === $this->context->getPropertyName()) {
-            $this->amountDontKnowValid($value, $object);
+        if ('amount' === $propertyName) {
+            $this->amountValid($value, $object, $constraint);
+        }
+
+        if ('amountDontKnow' === $propertyName) {
+            $this->amountDontKnowValid($value, $object, $constraint);
         }
     }
 
-    private function amountValid($value, IncomeReceivedOnClientsBehalfInterface $object)
+    private function amountValid($value, IncomeReceivedOnClientsBehalfInterface $object, IncomeReceivedOnClientsBehalfConstraint $constraint)
     {
         if (!is_null($value) && true === $object->getAmountDontKnow()) {
             $this->context
-                ->buildViolation("You've provided an amount and confirmed you don't know the income amount. Either remove the amount value or untick don't know amount.")
+                ->buildViolation($constraint->incomeDetailsAmountAndDontKnowMessage)
+                ->setTranslationDomain($this->translationDomain)
                 ->addViolation();
         }
 
         if (is_null($value) && false === $object->getAmountDontKnow() && !is_null($object->getIncomeType())) {
             $this->context
-                ->buildViolation("Either provide an amount or tick don't know amount.")
+                ->buildViolation($constraint->incomeDetailsMissingAmountMessage)
+                ->setTranslationDomain($this->translationDomain)
                 ->addViolation();
         }
     }
 
-    private function amountDontKnowValid($value, IncomeReceivedOnClientsBehalfInterface $object)
+    private function amountDontKnowValid($value, IncomeReceivedOnClientsBehalfInterface $object, IncomeReceivedOnClientsBehalfConstraint $constraint)
     {
         if (true === $value && !is_null($object->getAmount())) {
             $this->context
-                ->buildViolation("You've confirmed you don't know the income amount and provided an amount. Either untick don't know amount or remove the amount value.")
+                ->buildViolation($constraint->incomeDetailsAmountAndDontKnowMessage)
+                ->setTranslationDomain($this->translationDomain)
                 ->addViolation();
         }
 
         if (false === $value && is_null($object->getAmount()) && !is_null($object->getIncomeType())) {
             $this->context
-                ->buildViolation("Either provide an amount or tick don't know amount.")
+                ->buildViolation($constraint->incomeDetailsMissingAmountMessage)
+                ->setTranslationDomain($this->translationDomain)
                 ->addViolation();
         }
     }
