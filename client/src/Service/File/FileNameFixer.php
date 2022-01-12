@@ -1,6 +1,5 @@
 <?php
 
-
 declare(strict_types=1);
 
 namespace App\Service\File;
@@ -236,9 +235,11 @@ class FileNameFixer
         return true === isset($mime_map[$mime]) ? $mime_map[$mime] : false;
     }
 
-    public function removeUnusualCharacters()
+    public function removeUnusualCharacters(string $fileName)
     {
-        return "My_File_1_2nd_revision.pdf";
-    }
+        $fileName = str_replace(' ', '_', $fileName);
+        $fileName = str_replace('(', '', $fileName);
 
+        return str_replace(')', '', $fileName);
+    }
 }
