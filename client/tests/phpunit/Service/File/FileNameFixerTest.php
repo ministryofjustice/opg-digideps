@@ -1,4 +1,5 @@
-<?php declare(strict_types=1);
+<?php
+declare(strict_types=1);
 
 
 namespace App\Service\File;
@@ -59,6 +60,25 @@ class FileNameFixerTest extends KernelTestCase
             'pdf' => ['tests/phpunit/TestData/good-pdf', 'good-pdf', 'good-pdf.pdf'],
             'png' => ['tests/phpunit/TestData/good-png', 'good-png', 'good-png.png'],
             'Already has an extension' => ['tests/phpunit/TestData/good-jpeg.jpeg', 'good-jpeg.jpeg', 'good-jpeg.jpeg'],
+        ];
+    }
+
+    /**
+     * @test
+     * @dataProvider unusualCharactersProvider
+     */
+    public function removeUnusualCharacters($fileName, $expectedFileName)
+    {
+        $actualFileName = $this->sut->removeUnusualCharacters($fileName);
+
+        self::assertEquals($expectedFileName, $actualFileName);
+    }
+
+    public function unusualCharactersProvider()
+    {
+        return [
+            'white space is transformed to underscores' => ['My File 1 2nd revision.pdf', 'My_File_1_2nd_revision.pdf'],
+            'special characters are removed' => ['My File 1 (3rd revision).pdf', 'My_File_1_3rd_revision.pdf'],
         ];
     }
 }
