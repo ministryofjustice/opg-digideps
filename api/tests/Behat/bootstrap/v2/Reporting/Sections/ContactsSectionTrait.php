@@ -81,13 +81,13 @@ trait ContactsSectionTrait
      */
     public function iEnterValidContactDetails()
     {
-        $this->fillInField('contact_contactName', $this->faker->name, 'contactDetails');
+        $this->fillInField('contact_contactName', $this->faker->name(), 'contactDetails');
         $this->fillInField('contact_relationship', $this->faker->text(50), 'contactDetails');
         $this->fillInField('contact_explanation', $this->faker->text(200), 'contactDetails');
-        $this->fillInField('contact_address', $this->faker->streetName, 'contactDetails');
+        $this->fillInField('contact_address', $this->faker->streetName(), 'contactDetails');
         $this->fillInField('contact_address2', $this->faker->city(), 'contactDetails');
         $this->fillInField('contact_county', $this->faker->county, 'contactDetails');
-        $this->fillInField('contact_postcode', $this->faker->postcode, 'contactDetails');
+        $this->fillInField('contact_postcode', $this->faker->postcode(), 'contactDetails');
         $this->chooseOption('contact_country', 'United Kingdom', 'contactDetails');
 
         $this->pressButton('Save and continue');

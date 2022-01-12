@@ -50,31 +50,31 @@ class OrgDeputyshipDTOTestHelper
     public static function generateValidCasRecOrgDeputyshipArray()
     {
         $faker = Factory::create();
-        $courtOrderMadeDate = DateTimeImmutable::createFromMutable($faker->dateTimeThisYear);
+        $courtOrderMadeDate = DateTimeImmutable::createFromMutable($faker->dateTimeThisYear());
         $reportDueDate = $courtOrderMadeDate->modify('12 months - 1 day');
 
         return [
-            'Email' => sprintf('%s@%s%s.com', $faker->userName, $faker->randomNumber(8), $faker->domainWord),
+            'Email' => sprintf('%s@%s%s.com', $faker->userName(), $faker->randomNumber(8), $faker->domainWord()),
             'Deputy No' => (string) $faker->randomNumber(8),
             'Dep Postcode' => Address::postcode(),
-            'Dep Forename' => $faker->firstName,
-            'Dep Surname' => $faker->lastName,
+            'Dep Forename' => $faker->firstName(),
+            'Dep Surname' => $faker->lastName(),
             // Add 23 back in for PA tests
             'Dep Type' => (string) $faker->randomElement([21, 22, 24, 25, 26, 27, 29, 50, 63]),
-            'DepAddr No' => $faker->buildingNumber,
-            'Dep Adrs1' => $faker->streetName,
+            'DepAddr No' => $faker->buildingNumber(),
+            'Dep Adrs1' => $faker->streetName(),
             'Dep Adrs2' => Address::cityPrefix().' '.$faker->city(),
             'Dep Adrs3' => $faker->city(),
             'Dep Adrs4' => Address::county(),
             'Dep Adrs5' => 'UK',
             'Case' => (string) $faker->randomNumber(8),
-            'Forename' => $faker->firstName,
-            'Surname' => $faker->lastName,
+            'Forename' => $faker->firstName(),
+            'Surname' => $faker->lastName(),
             'Corref' => 'A3',
             'Report Due' => $reportDueDate->format('d-M-Y'),
-            'Forename' => $faker->firstName,
-            'Surname' => $faker->lastName,
-            'Client Adrs1' => $faker->buildingNumber.' '.$faker->streetName,
+            'Forename' => $faker->firstName(),
+            'Surname' => $faker->lastName(),
+            'Client Adrs1' => $faker->buildingNumber().' '.$faker->streetName(),
             'Client Adrs2' => Address::cityPrefix().' '.$faker->city(),
             'Client Adrs3' => Address::county(),
             'Client Adrs4' => null,
@@ -312,9 +312,9 @@ class OrgDeputyshipDTOTestHelper
 
         $layDeputy = (new User())
             ->setRoleName(User::ROLE_LAY_DEPUTY)
-            ->setFirstname($faker->firstName)
-            ->setLastname($faker->lastName)
-            ->setEmail($faker->email);
+            ->setFirstname($faker->firstName())
+            ->setLastname($faker->lastName())
+            ->setEmail($faker->email());
 
         $client = (new Client())
             ->setCaseNumber($dto->getCaseNumber())

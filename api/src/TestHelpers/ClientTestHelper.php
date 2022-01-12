@@ -8,6 +8,7 @@ use App\Entity\Client;
 use App\Entity\Organisation;
 use App\Entity\Report\Report;
 use App\Entity\User;
+use DateTime;
 use Doctrine\ORM\EntityManager;
 use Faker\Factory;
 use PHPUnit\Framework\TestCase;
@@ -30,13 +31,13 @@ class ClientTestHelper extends TestCase
         $faker = Factory::create('en_GB');
 
         $client = (new Client())
-            ->setFirstname($faker->firstName)
-            ->setLastname($faker->lastName)
+            ->setFirstname($faker->firstName())
+            ->setLastname($faker->lastName())
             ->setCaseNumber($caseNumber ?: self::createValidCaseNumber())
-            ->setEmail($faker->safeEmail.mt_rand(1, 100000))
-            ->setCourtDate(new \DateTime('09-Aug-2018'))
-            ->setAddress($faker->streetAddress)
-            ->setPostcode($faker->postcode);
+            ->setEmail($faker->safeEmail().mt_rand(1, 100000))
+            ->setCourtDate(new DateTime('09-Aug-2018'))
+            ->setAddress($faker->streetAddress())
+            ->setPostcode($faker->postcode());
 
         if (!is_null($user) && User::ROLE_LAY_DEPUTY === $user->getRoleName()) {
             return $client->addUser($user ?: (new UserTestHelper())->createAndPersistUser($em));

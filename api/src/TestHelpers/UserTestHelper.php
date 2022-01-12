@@ -28,31 +28,6 @@ class UserTestHelper extends TestCase
         return $user->reveal();
     }
 
-    public function createUser(?Client $client = null, ?string $roleName = User::ROLE_LAY_DEPUTY, ?string $email = null)
-    {
-        $faker = Factory::create('en_GB');
-
-        $user = (new User())
-            ->setFirstname($faker->firstName)
-            ->setLastname($faker->lastName)
-            ->setEmail($email ? $email : $faker->safeEmail)
-            ->setRoleName($roleName)
-            ->setPhoneMain($faker->phoneNumber)
-            ->setRegistrationDate(new DateTime())
-            ->setLastLoggedIn(new DateTime())
-            ->setActive(true)
-            ->setAddress1($faker->streetAddress)
-            ->setAddressCountry('GB')
-            ->setAddressPostcode($faker->postcode)
-            ->setAgreeTermsUse(true);
-
-        if (!is_null($client)) {
-            $user->addClient($client);
-        }
-
-        return $user;
-    }
-
     public function createAndPersistUser(EntityManager $em, ?Client $client = null, ?string $roleName = User::ROLE_LAY_DEPUTY, ?string $email = null)
     {
         $user = $this->createUser($client, $roleName, $email);
@@ -63,6 +38,31 @@ class UserTestHelper extends TestCase
 
         $em->persist($user);
         $em->flush();
+
+        return $user;
+    }
+
+    public function createUser(?Client $client = null, ?string $roleName = User::ROLE_LAY_DEPUTY, ?string $email = null)
+    {
+        $faker = Factory::create('en_GB');
+
+        $user = (new User())
+            ->setFirstname($faker->firstName())
+            ->setLastname($faker->lastName())
+            ->setEmail($email ?: $faker->safeEmail())
+            ->setRoleName($roleName)
+            ->setPhoneMain($faker->phoneNumber())
+            ->setRegistrationDate(new DateTime())
+            ->setLastLoggedIn(new DateTime())
+            ->setActive(true)
+            ->setAddress1($faker->streetAddress())
+            ->setAddressCountry('GB')
+            ->setAddressPostcode($faker->postcode())
+            ->setAgreeTermsUse(true);
+
+        if (!is_null($client)) {
+            $user->addClient($client);
+        }
 
         return $user;
     }
