@@ -79,7 +79,9 @@ class FileNameFixerTest extends KernelTestCase
         return [
             'white space is transformed to underscores' => ['My File 1 2nd revision.pdf', 'My_File_1_2nd_revision.pdf'],
             'all special characters are removed' => ['$%/[]My {}{}|{}File_+()=<>1.pdf', 'My_File_1.pdf'],
-            'file extension dot remains, any others transformed to underscores' => ['My_File.png.pdf','My_File_png.pdf']
+            'file extension dot remains, any others transformed to underscores' => ['My_File.png.pdf', 'My_File_png.pdf'],
+            'HTML constructs are not allowed' => ['<a href="myhostilefile.exe">Report</a>.pdf', 'a_hrefmyhostilefile_exeReporta.pdf'],
+            'Directory constructs are not allowed' => ['../../', '___.'],
         ];
     }
 }

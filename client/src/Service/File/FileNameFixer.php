@@ -235,9 +235,11 @@ class FileNameFixer
         return true === isset($mime_map[$mime]) ? $mime_map[$mime] : false;
     }
 
-    public function removeUnusualCharacters(string $fileName)
+    public function removeUnusualCharacters(string $fileName): array | string | null
     {
         $fileNameSpacesToUnderscores = str_replace(' ', '_', $fileName);
-        return preg_replace('/[^A-Za-z0-9\_\.]/', '', $fileNameSpacesToUnderscores);
+        $specialCharsRemoved = preg_replace('/[^A-Za-z0-9_.]/', '', $fileNameSpacesToUnderscores);
+
+        return preg_replace('/[.](?=.*[.])/', '_', $specialCharsRemoved);
     }
 }
