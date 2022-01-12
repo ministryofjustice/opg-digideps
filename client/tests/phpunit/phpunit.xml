@@ -28,7 +28,6 @@
             <directory>./Form</directory>
             <directory>./Mapper</directory>
             <directory>./Model</directory>
-            <directory>./Pact</directory>
             <directory>./Resolver</directory>
             <directory>./Security</directory>
             <directory>./Service</directory>
