@@ -114,7 +114,7 @@ Feature: Client benefits check - Lay users
         When I visit the report overview page
         Then I should see "client-benefits-check" as "not finished"
 
-    @lay-combined-high-not-started @acs
+    @lay-combined-high-not-started
     Scenario: A deputy confirms others receive income on client's behalf and then changes their mind
         Given a Lay Deputy has not started a Combined High Assets report
         And the deputies 'current' report ends and is due 'more' than 60 days after the client benefits check feature flag date
