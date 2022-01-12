@@ -7,9 +7,6 @@ const ConditionalFieldRevealer = {
 
       textInputs.forEach(ti => {
         if (ti && e && 'value' in ti && ti.value.length > 0) {
-          console.log('Removing hidden')
-          console.log(e)
-          console.log(e.classList)
           e.classList.remove('govuk-radios__conditional--hidden')
         }
       })

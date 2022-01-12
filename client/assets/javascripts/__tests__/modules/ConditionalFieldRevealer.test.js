@@ -47,8 +47,6 @@ describe('ConditionalFieldRevealer', () => {
       const expectedInputsWithClassRemoved = [document.getElementById('1'), document.getElementById('2')]
       const expectedInputsWithClassRemaining = [document.getElementById('3')]
 
-      console.log(expectedInputsWithClassRemoved)
-
       expectedInputsWithClassRemoved.forEach(e => {
         expect(e.parentElement.classList).not.toContain('govuk-radios__conditional--hidden')
       })
