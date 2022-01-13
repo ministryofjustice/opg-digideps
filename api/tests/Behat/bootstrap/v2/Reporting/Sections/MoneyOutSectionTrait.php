@@ -95,18 +95,30 @@ trait MoneyOutSectionTrait
     }
 
     /**
-     * @When I add one of each type of money out payment
+     * @When I add one type of money out payment from each category
      */
-    public function iAddOneOfEachTypeOfMoneyOutPayment()
+    public function iAddOneTypeOfMoneyOutPaymentFromEachCategory()
     {
         $this->iAmOnMoneyOutAddPaymentPage();
 
-        foreach ($this->paymentTypeDictionary as $radioPaymentValue => $translatedPaymentValue) {
-            $this->addPayment($radioPaymentValue, $translatedPaymentValue);
-            $this->addAnother('yes');
-        }
-
-        $this->clickLink('Back');
+        $this->addPayment('care-fees', $this->paymentTypeDictionary['care-fees']);
+        $this->addAnother('yes');
+        $this->addPayment('property-maintenance-improvement', $this->paymentTypeDictionary['property-maintenance-improvement']);
+        $this->addAnother('yes');
+        $this->addPayment('mortgage', $this->paymentTypeDictionary['mortgage']);
+        $this->addAnother('yes');
+        $this->addPayment('personal-allowance-pocket-money', $this->paymentTypeDictionary['personal-allowance-pocket-money']);
+        $this->addAnother('yes');
+        $this->addPayment('opg-fees', $this->paymentTypeDictionary['opg-fees']);
+        $this->addAnother('yes');
+        $this->addPayment('purchase-over-1000', $this->paymentTypeDictionary['purchase-over-1000']);
+        $this->addAnother('yes');
+        $this->addPayment('unpaid-care-fees', $this->paymentTypeDictionary['unpaid-care-fees']);
+        $this->addAnother('yes');
+        $this->addPayment('cash-withdrawn', $this->paymentTypeDictionary['cash-withdrawn']);
+        $this->addAnother('yes');
+        $this->addPayment('anything-else-paid-out', $this->paymentTypeDictionary['anything-else-paid-out']);
+        $this->addAnother('no');
     }
 
     /**
