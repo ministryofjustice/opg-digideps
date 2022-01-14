@@ -5,11 +5,15 @@ namespace App\Tests\Unit\Service;
 use App\Service\CasrecVerificationService;
 use Doctrine\ORM\EntityManager;
 use Mockery as m;
+use Prophecy\PhpUnit\ProphecyTrait;
+use RuntimeException;
 use Symfony\Bundle\FrameworkBundle\Test\WebTestCase;
 use Symfony\Component\Serializer\SerializerInterface;
 
 class CasrecVerificationServiceTest extends WebTestCase
 {
+    use ProphecyTrait;
+
     /**
      * @var CasrecVerificationService
      */
@@ -88,7 +92,6 @@ class CasrecVerificationServiceTest extends WebTestCase
             ->shouldReceive('findBy')->with(['caseNumber' => 'wrong678', 'clientLastname' => 'csurn', 'deputySurname' => 'dsurn'])->andReturn([])
             ->shouldReceive('findBy')->with(['caseNumber' => '11111111', 'clientLastname' => 'wrong', 'deputySurname' => 'dsurn'])->andReturn([])
             ->shouldReceive('findBy')->with(['caseNumber' => '11111111', 'clientLastname' => 'csurn', 'deputySurname' => 'wrong'])->andReturn([])
-
             ->shouldReceive('findBy')->with(['caseNumber' => '22222222', 'clientLastname' => 'csurn', 'deputySurname' => 'dsurn'])->andReturn([$crLayNoPC])
             ->shouldReceive('findBy')->with(['caseNumber' => '33333333', 'clientLastname' => 'csurn', 'deputySurname' => 'mldunique'])->andReturn([$casrecMLD1A])
             ->shouldReceive('findBy')->with(['caseNumber' => '33333333', 'clientLastname' => 'csurn', 'deputySurname' => 'sibling'])->andReturn([$casrecMLD1B, $casrecMLD1C])
@@ -131,7 +134,7 @@ class CasrecVerificationServiceTest extends WebTestCase
         $failMessage = '{"search_terms":{"caseNumber":"%s","clientLastname":"%s","deputySurname":"%s","deputyPostcode":"%s"},"case_number_matches":null}';
         try {
             $this->casrecVerificationService->validate('WRONG678', 'CSurn', 'DSurn', 'DPC123');
-        } catch (\RuntimeException $e) {
+        } catch (RuntimeException $e) {
             $this->assertStringContainsString(
                 sprintf($failMessage, 'wrong678', 'csurn', 'dsurn', 'dpc123'),
                 $e->getMessage()
@@ -140,7 +143,7 @@ class CasrecVerificationServiceTest extends WebTestCase
 
         try {
             $this->assertTrue($this->casrecVerificationService->validate('11111111', 'WRONG', 'DSurn', 'DPC123'));
-        } catch (\RuntimeException $e) {
+        } catch (RuntimeException $e) {
             $this->assertStringContainsString(
                 sprintf($failMessage, '11111111', 'wrong', 'dsurn', 'dpc123'),
                 $e->getMessage()
@@ -149,7 +152,7 @@ class CasrecVerificationServiceTest extends WebTestCase
 
         try {
             $this->assertTrue($this->casrecVerificationService->validate('11111111', 'CSurn', 'WRONG', 'DPC123'));
-        } catch (\RuntimeException $e) {
+        } catch (RuntimeException $e) {
             $this->assertStringContainsString(
                 sprintf($failMessage, '11111111', 'csurn', 'wrong', 'dpc123'),
                 $e->getMessage()
@@ -158,7 +161,7 @@ class CasrecVerificationServiceTest extends WebTestCase
 
         try {
             $this->assertTrue($this->casrecVerificationService->validate('11111111', 'CSurn', 'DSurn', 'WRONG'));
-        } catch (\RuntimeException $e) {
+        } catch (RuntimeException $e) {
             $this->assertStringContainsString(
                 sprintf($failMessage, '11111111', 'csurn', 'dsurn', 'wrong'),
                 $e->getMessage()
@@ -198,7 +201,7 @@ class CasrecVerificationServiceTest extends WebTestCase
         // if all MLD postcodes are in casrec, the postcode check is run
         try {
             $this->assertTrue($this->casrecVerificationService->validate('11111111', 'CSurn', 'DSurn', 'DOEsnT MatteR'));
-        } catch (\RuntimeException $e) {
+        } catch (RuntimeException $e) {
             $this->assertStringContainsString('{"search_terms":{"caseNumber":"11111111","clientLastname":"csurn","deputySurname":"dsurn","deputyPostcode":"doesntmatter"},"case_number_matches":null}', $e->getMessage());
         }
 

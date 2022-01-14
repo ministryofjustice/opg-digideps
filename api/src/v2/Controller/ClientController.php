@@ -89,7 +89,7 @@ class ClientController extends RestController
 
     /**
      * @Route("/case-number/{caseNumber}", methods={"GET"})
-     * @Security("is_granted('ROLE_ADMIN') or has_role('ROLE_AD') or has_role('ROLE_DEPUTY')")
+     * @Security("is_granted('ROLE_ADMIN') or is_granted('ROLE_AD') or is_granted('ROLE_DEPUTY')")
      */
     public function getByCaseNumber(string $caseNumber): JsonResponse
     {

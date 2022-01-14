@@ -29,6 +29,7 @@ use Symfony\Component\HttpFoundation\Request;
 use Symfony\Component\HttpFoundation\Response;
 use Symfony\Component\HttpKernel\Exception\NotFoundHttpException;
 use Symfony\Component\Routing\Annotation\Route;
+use Throwable;
 
 /**
  * @Route("/fixture")
@@ -191,6 +192,21 @@ class FixtureController extends AbstractController
         return $deputy;
     }
 
+    private function createNdr(array $fromRequest, Client $client)
+    {
+        $ndr = new Ndr($client);
+        $client->setNdr($ndr);
+
+        $this->em->persist($ndr);
+        $this->em->persist($client);
+
+        if (isset($fromRequest['reportStatus']) && Report::STATUS_READY_TO_SUBMIT === $fromRequest['reportStatus']) {
+            foreach (['visits_care', 'expenses', 'income_benefits', 'bank_accounts', 'assets', 'debts', 'actions', 'other_info', 'client_benefits_check'] as $section) {
+                $this->reportSection->completeSection($ndr, $section);
+            }
+        }
+    }
+
     /**
      * @param $fromRequest
      *
@@ -205,21 +221,6 @@ class FixtureController extends AbstractController
         ], $client);
 
         $this->em->persist($report);
-    }
-
-    private function createNdr(array $fromRequest, Client $client)
-    {
-        $ndr = new Ndr($client);
-        $client->setNdr($ndr);
-
-        $this->em->persist($ndr);
-        $this->em->persist($client);
-
-        if (isset($fromRequest['reportStatus']) && Report::STATUS_READY_TO_SUBMIT === $fromRequest['reportStatus']) {
-            foreach (['visits_care', 'expenses', 'income_benefits', 'bank_accounts', 'assets', 'debts', 'actions', 'other_info', 'client_benefits_check'] as $section) {
-                $this->reportSection->completeSection($ndr, $section);
-            }
-        }
     }
 
     /**
@@ -323,7 +324,7 @@ class FixtureController extends AbstractController
 
     /**
      * @Route("/createAdmin", methods={"POST"})
-     * @Security("is_granted('ROLE_SUPER_ADMIN') or has_role('ROLE_ADMIN') or has_role('ROLE_AD')")
+     * @Security("is_granted('ROLE_SUPER_ADMIN') or is_granted('ROLE_ADMIN') or is_granted('ROLE_AD')")
      */
     public function createAdmin(Request $request)
     {
@@ -350,7 +351,7 @@ class FixtureController extends AbstractController
 
     /**
      * @Route("/getUserIDByEmail/{email}", methods={"GET"})
-     * @Security("is_granted('ROLE_SUPER_ADMIN') or has_role('ROLE_ADMIN') or has_role('ROLE_AD')")
+     * @Security("is_granted('ROLE_SUPER_ADMIN') or is_granted('ROLE_ADMIN') or is_granted('ROLE_AD')")
      */
     public function getUserIDByEmail(string $email)
     {
@@ -628,7 +629,7 @@ class FixtureController extends AbstractController
             $this->em->flush();
 
             return $this->buildSuccessResponse([json_encode($org, JSON_PRETTY_PRINT)], "Org '$orgName' activated", Response::HTTP_OK);
-        } catch (\Throwable $e) {
+        } catch (Throwable $e) {
             $this->buildErrorResponse(sprintf("Organisation '%s' could not be activated: %s", $orgName, $e->getMessage()));
         }
     }

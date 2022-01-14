@@ -11,6 +11,7 @@ use App\Security\ClientVoter;
 use App\TestHelpers\ClientTestHelper;
 use App\TestHelpers\UserTestHelper;
 use PHPUnit\Framework\MockObject\MockObject;
+use Prophecy\PhpUnit\ProphecyTrait;
 use Symfony\Bundle\FrameworkBundle\Test\KernelTestCase;
 use Symfony\Component\Security\Core\Authentication\Token\TokenInterface;
 use Symfony\Component\Security\Core\Authentication\Token\UsernamePasswordToken;
@@ -18,6 +19,8 @@ use Symfony\Component\Security\Core\Security;
 
 class ClientVoterTest extends KernelTestCase
 {
+    use ProphecyTrait;
+
     /** @var ClientVoter */
     private $voter;
 
@@ -52,6 +55,25 @@ class ClientVoterTest extends KernelTestCase
             ->assertDecisionIs(ClientVoter::ACCESS_DENIED);
     }
 
+    private function assertDecisionIs(int $expectedDecision): void
+    {
+        $this->assertEquals($expectedDecision, $this->decision);
+    }
+
+    private function castVoteAgainstClient(Client $client): ClientVoterTest
+    {
+        $this->decision = $this->voter->vote($this->token, $client, [ClientVoter::VIEW, ClientVoter::EDIT]);
+
+        return $this;
+    }
+
+    private function ensureUserIsNotLoggedIn(): ClientVoterTest
+    {
+        $this->token->method('getUser')->willReturn(null);
+
+        return $this;
+    }
+
     /**
      * @test
      */
@@ -61,6 +83,20 @@ class ClientVoterTest extends KernelTestCase
             ->ensureUserIsLoggedInWithRole('ROLE_ADMIN')
             ->castVoteAgainstClient(new Client())
             ->assertDecisionIs(ClientVoter::ACCESS_GRANTED);
+    }
+
+    private function ensureUserIsLoggedInWithRole(string $role): ClientVoterTest
+    {
+        $this->token->method('getUser')->willReturn($this->user);
+
+        if ('ROLE_ADMIN' === $role) {
+            // The ROLE_ADMIN check verifies the users role with the isGranted($roleName) method.
+            $this->security->method('isGranted')->with($role)->willReturn(true);
+        } else {
+            $this->user->setRoleName($role);
+        }
+
+        return $this;
     }
 
     /**
@@ -77,6 +113,13 @@ class ClientVoterTest extends KernelTestCase
             ->assertDecisionIs(ClientVoter::ACCESS_GRANTED);
     }
 
+    private function ensureClientBelongsToUser(Client $client): ClientVoterTest
+    {
+        $client->addUser($this->user);
+
+        return $this;
+    }
+
     /**
      * @test
      */
@@ -89,6 +132,31 @@ class ClientVoterTest extends KernelTestCase
             ->ensureClientDoesNotBelongToUser($client)
             ->castVoteAgainstClient($client)
             ->assertDecisionIs(ClientVoter::ACCESS_DENIED);
+    }
+
+//    todo-aie add test post DDPB-3051
+//    /**
+//     * @test
+//     */
+//    public function denies_access_to_non_lay_users_if_client_belongs_to_users_inactive_organisation_despite_client_belonging_to_user()
+//    {
+//        $client = new Client();
+//        $organisation = new Organisation();
+//        $organisation->setIsActivated(false);
+//
+//        $this
+//            ->ensureUserIsLoggedInWithRole('NOT_LAY_DEPUTY')
+//            ->ensureClientAndUserBelongToSameOrganisation($client, $organisation)
+//            ->ensureClientBelongsToUser($client)
+//            ->castVoteAgainstClient($client)
+//            ->assertDecisionIs(ClientVoter::ACCESS_DENIED);
+//    }
+
+    private function ensureClientDoesNotBelongToUser(Client $client): ClientVoterTest
+    {
+        $client->removeUser($this->user);
+
+        return $this;
     }
 
     /**
@@ -107,6 +175,14 @@ class ClientVoterTest extends KernelTestCase
             ->assertDecisionIs(ClientVoter::ACCESS_GRANTED);
     }
 
+    private function ensureClientAndUserBelongToSameOrganisation(Client $client, Organisation $organisation): ClientVoterTest
+    {
+        $organisation->addUser($this->user);
+        $client->setOrganisation($organisation);
+
+        return $this;
+    }
+
     /**
      * @test
      */
@@ -121,6 +197,15 @@ class ClientVoterTest extends KernelTestCase
             ->ensureClientAndUserBelongToDifferentOrganisations($client, $organisation)
             ->castVoteAgainstClient($client)
             ->assertDecisionIs(ClientVoter::ACCESS_DENIED);
+    }
+
+    private function ensureClientAndUserBelongToDifferentOrganisations(Client $client, Organisation $organisation): ClientVoterTest
+    {
+        $usersOrganisation = (new Organisation())->setIsActivated(true);
+        $usersOrganisation->addUser($this->user);
+        $client->setOrganisation($organisation);
+
+        return $this;
     }
 
     /**
@@ -171,88 +256,6 @@ class ClientVoterTest extends KernelTestCase
             ->ensureClientBelongsToUser($client)
             ->castVoteAgainstClient($client)
             ->assertDecisionIs(ClientVoter::ACCESS_GRANTED);
-    }
-
-//    todo-aie add test post DDPB-3051
-//    /**
-//     * @test
-//     */
-//    public function denies_access_to_non_lay_users_if_client_belongs_to_users_inactive_organisation_despite_client_belonging_to_user()
-//    {
-//        $client = new Client();
-//        $organisation = new Organisation();
-//        $organisation->setIsActivated(false);
-//
-//        $this
-//            ->ensureUserIsLoggedInWithRole('NOT_LAY_DEPUTY')
-//            ->ensureClientAndUserBelongToSameOrganisation($client, $organisation)
-//            ->ensureClientBelongsToUser($client)
-//            ->castVoteAgainstClient($client)
-//            ->assertDecisionIs(ClientVoter::ACCESS_DENIED);
-//    }
-
-    private function ensureUserIsLoggedInWithRole(string $role): ClientVoterTest
-    {
-        $this->token->method('getUser')->willReturn($this->user);
-
-        if ('ROLE_ADMIN' === $role) {
-            // The ROLE_ADMIN check verifies the users role with the isGranted($roleName) method.
-            $this->security->method('isGranted')->with($role)->willReturn(true);
-        } else {
-            $this->user->setRoleName($role);
-        }
-
-        return $this;
-    }
-
-    private function ensureUserIsNotLoggedIn(): ClientVoterTest
-    {
-        $this->token->method('getUser')->willReturn(null);
-
-        return $this;
-    }
-
-    private function ensureClientBelongsToUser(Client $client): ClientVoterTest
-    {
-        $client->addUser($this->user);
-
-        return $this;
-    }
-
-    private function ensureClientDoesNotBelongToUser(Client $client): ClientVoterTest
-    {
-        $client->removeUser($this->user);
-
-        return $this;
-    }
-
-    private function ensureClientAndUserBelongToSameOrganisation(Client $client, Organisation $organisation): ClientVoterTest
-    {
-        $organisation->addUser($this->user);
-        $client->setOrganisation($organisation);
-
-        return $this;
-    }
-
-    private function ensureClientAndUserBelongToDifferentOrganisations(Client $client, Organisation $organisation): ClientVoterTest
-    {
-        $usersOrganisation = (new Organisation())->setIsActivated(true);
-        $usersOrganisation->addUser($this->user);
-        $client->setOrganisation($organisation);
-
-        return $this;
-    }
-
-    private function castVoteAgainstClient(Client $client): ClientVoterTest
-    {
-        $this->decision = $this->voter->vote($this->token, $client, [ClientVoter::VIEW, ClientVoter::EDIT]);
-
-        return $this;
-    }
-
-    private function assertDecisionIs(int $expectedDecision): void
-    {
-        $this->assertEquals($expectedDecision, $this->decision);
     }
 
     /**

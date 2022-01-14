@@ -37,14 +37,16 @@ class UserResearchController extends RestController
 
     /**
      * @Route("/user-research", name="create_user_research", methods={"POST"})
-     * @Security("has_role('ROLE_DEPUTY') or has_role('ROLE_ORG')")
+     * @Security("is_granted('ROLE_DEPUTY') or is_granted('ROLE_ORG')")
      */
     public function create(Request $request)
     {
         try {
             $formData = json_decode($request->getContent(), true);
 
-            $formData['satisfaction'] = $this->satisfactionRepository->find($formData['satisfaction']);
+            $satisfactionId = $formData['satisfaction'] ?? null;
+            $formData['satisfaction'] = $satisfactionId ? $this->satisfactionRepository->find($satisfactionId) : null;
+
             $userResearchResponse = $this->factory->generateFromFormData($formData);
             $this->userResearchResponseRepository->create($userResearchResponse, $this->getUser());
 

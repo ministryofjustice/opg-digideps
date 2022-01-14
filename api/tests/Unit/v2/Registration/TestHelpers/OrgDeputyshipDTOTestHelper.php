@@ -19,6 +19,7 @@ use App\v2\Registration\DTO\OrgDeputyshipDto;
 use DateTime;
 use DateTimeImmutable;
 use Doctrine\ORM\EntityManager;
+use Exception;
 use Faker\Factory;
 use Faker\Provider\en_GB\Address;
 
@@ -43,6 +44,74 @@ class OrgDeputyshipDTOTestHelper
         return base64_encode(gzcompress(json_encode($deputyships), 9));
     }
 
+    /**
+     * @return array
+     */
+    public static function generateValidCasRecOrgDeputyshipArray()
+    {
+        $faker = Factory::create();
+        $courtOrderMadeDate = DateTimeImmutable::createFromMutable($faker->dateTimeThisYear());
+        $reportDueDate = $courtOrderMadeDate->modify('12 months - 1 day');
+
+        return [
+            'Email' => sprintf('%s@%s%s.com', $faker->userName(), $faker->randomNumber(8), $faker->domainWord()),
+            'Deputy No' => (string) $faker->randomNumber(8),
+            'Dep Postcode' => Address::postcode(),
+            'Dep Forename' => $faker->firstName(),
+            'Dep Surname' => $faker->lastName(),
+            // Add 23 back in for PA tests
+            'Dep Type' => (string) $faker->randomElement([21, 22, 24, 25, 26, 27, 29, 50, 63]),
+            'DepAddr No' => $faker->buildingNumber(),
+            'Dep Adrs1' => $faker->streetName(),
+            'Dep Adrs2' => Address::cityPrefix().' '.$faker->city(),
+            'Dep Adrs3' => $faker->city(),
+            'Dep Adrs4' => Address::county(),
+            'Dep Adrs5' => 'UK',
+            'Case' => (string) $faker->randomNumber(8),
+            'Forename' => $faker->firstName(),
+            'Surname' => $faker->lastName(),
+            'Corref' => 'A3',
+            'Report Due' => $reportDueDate->format('d-M-Y'),
+            'Forename' => $faker->firstName(),
+            'Surname' => $faker->lastName(),
+            'Client Adrs1' => $faker->buildingNumber().' '.$faker->streetName(),
+            'Client Adrs2' => Address::cityPrefix().' '.$faker->city(),
+            'Client Adrs3' => Address::county(),
+            'Client Adrs4' => null,
+            'Client Adrs5' => null,
+            'Client Postcode' => Address::postcode(),
+            'Client Date of Birth' => $faker->dateTime()->format('d-M-Y'),
+            'Made Date' => $courtOrderMadeDate->format('d-M-Y'),
+            'Typeofrep' => $faker->randomElement(['OPG102', 'OPG103']),
+            'Last Report Day' => '19-Jan-2021',
+        ];
+    }
+
+    private static function generateInvalidOrgDeputyshipArray()
+    {
+        $invalid = self::generateValidCasRecOrgDeputyshipArray();
+        $invalid['Email'] = '';
+
+        return $invalid;
+    }
+
+    /**
+     * @return OrgDeputyshipDto[]
+     */
+    public static function generateOrgDeputyshipDtos(int $validCount, int $invalidCount)
+    {
+        $json = self::generateCasRecOrgDeputyshipDecompressedJson($validCount, $invalidCount);
+        $dtos = [];
+        $reportUtils = new ReportUtils();
+        $assembler = new CasRecToOrgDeputyshipDtoAssembler($reportUtils);
+
+        foreach (json_decode($json, true) as $dtoArray) {
+            $dtos[] = $assembler->assembleSingleDtoFromArray($dtoArray);
+        }
+
+        return $dtos;
+    }
+
     public static function generateCasRecOrgDeputyshipDecompressedJson(int $validCount, int $invalidCount)
     {
         $deputyships = [];
@@ -63,26 +132,9 @@ class OrgDeputyshipDTOTestHelper
     }
 
     /**
-     * @return OrgDeputyshipDto[]
-     */
-    public static function generateOrgDeputyshipDtos(int $validCount, int $invalidCount)
-    {
-        $json = self::generateCasRecOrgDeputyshipDecompressedJson($validCount, $invalidCount);
-        $dtos = [];
-        $reportUtils = new ReportUtils();
-        $assembler = new CasRecToOrgDeputyshipDtoAssembler($reportUtils);
-
-        foreach (json_decode($json, true) as $dtoArray) {
-            $dtos[] = $assembler->assembleSingleDtoFromArray($dtoArray);
-        }
-
-        return $dtos;
-    }
-
-    /**
      * @return false|string
      *
-     * @throws \Exception
+     * @throws Exception
      */
     public static function generateOrgDeputyshipResponseJson(int $clients, int $organisations, int $namedDeputies, int $reports, int $errors)
     {
@@ -141,57 +193,6 @@ class OrgDeputyshipDTOTestHelper
         }
 
         return $deputyships;
-    }
-
-    /**
-     * @return array
-     */
-    public static function generateValidCasRecOrgDeputyshipArray()
-    {
-        $faker = Factory::create();
-        $courtOrderMadeDate = DateTimeImmutable::createFromMutable($faker->dateTimeThisYear);
-        $reportDueDate = $courtOrderMadeDate->modify('12 months - 1 day');
-
-        return [
-            'Email' => sprintf('%s@%s%s.com', $faker->userName, $faker->randomNumber(8), $faker->domainWord),
-            'Deputy No' => (string) $faker->randomNumber(8),
-            'Dep Postcode' => Address::postcode(),
-            'Dep Forename' => $faker->firstName,
-            'Dep Surname' => $faker->lastName,
-            // Add 23 back in for PA tests
-            'Dep Type' => (string) $faker->randomElement([21, 22, 24, 25, 26, 27, 29, 50, 63]),
-            'DepAddr No' => $faker->buildingNumber,
-            'Dep Adrs1' => $faker->streetName,
-            'Dep Adrs2' => Address::cityPrefix().' '.$faker->city,
-            'Dep Adrs3' => $faker->city,
-            'Dep Adrs4' => Address::county(),
-            'Dep Adrs5' => 'UK',
-            'Case' => (string) $faker->randomNumber(8),
-            'Forename' => $faker->firstName,
-            'Surname' => $faker->lastName,
-            'Corref' => 'A3',
-            'Report Due' => $reportDueDate->format('d-M-Y'),
-            'Forename' => $faker->firstName,
-            'Surname' => $faker->lastName,
-            'Client Adrs1' => $faker->buildingNumber.' '.$faker->streetName,
-            'Client Adrs2' => Address::cityPrefix().' '.$faker->city,
-            'Client Adrs3' => Address::county(),
-            'Client Adrs4' => null,
-            'Client Adrs5' => null,
-            'Client Postcode' => Address::postcode(),
-            'Client Date of Birth' => $faker->dateTime->format('d-M-Y'),
-            'Made Date' => $courtOrderMadeDate->format('d-M-Y'),
-            'Typeofrep' => $faker->randomElement(['OPG102', 'OPG103']),
-            'Last Report Day' => '19-Jan-2021',
-        ];
-    }
-
-    private static function generateInvalidOrgDeputyshipArray()
-    {
-        $invalid = self::generateValidCasRecOrgDeputyshipArray();
-        $invalid['Email'] = '';
-
-        return $invalid;
     }
 
     public static function namedDeputyWasCreated(OrgDeputyshipDto $orgDeputyship, NamedDeputyRepository $namedDeputyRepository)
@@ -311,9 +312,9 @@ class OrgDeputyshipDTOTestHelper
 
         $layDeputy = (new User())
             ->setRoleName(User::ROLE_LAY_DEPUTY)
-            ->setFirstname($faker->firstName)
-            ->setLastname($faker->lastName)
-            ->setEmail($faker->email);
+            ->setFirstname($faker->firstName())
+            ->setLastname($faker->lastName())
+            ->setEmail($faker->email());
 
         $client = (new Client())
             ->setCaseNumber($dto->getCaseNumber())

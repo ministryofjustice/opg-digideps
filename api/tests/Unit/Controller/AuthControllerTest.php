@@ -5,19 +5,12 @@ namespace App\Tests\Unit\Controller;
 use App\Entity\User;
 use App\Service\BruteForce\AttemptsIncrementalWaitingChecker;
 use App\Service\BruteForce\AttemptsInTimeChecker;
-use Mockery as m;
 
 class AuthControllerTest extends AbstractTestController
 {
     public static function setUpBeforeClass(): void
     {
         parent::setUpBeforeClass();
-    }
-
-    private function resetAttempts($key)
-    {
-        self::$container->get(AttemptsInTimeChecker::class)->resetAttempts($key);
-        self::$container->get(AttemptsIncrementalWaitingChecker::class)->resetAttempts($key);
     }
 
     /**
@@ -64,6 +57,12 @@ class AuthControllerTest extends AbstractTestController
         $this->assertJsonRequest('GET', '/auth/get-logged-user', [
             'mustFail' => true,
         ]);
+    }
+
+    private function resetAttempts($key)
+    {
+        self::$container->get(AttemptsInTimeChecker::class)->resetAttempts($key);
+        self::$container->get(AttemptsIncrementalWaitingChecker::class)->resetAttempts($key);
     }
 
     public function testLoginFailSecretPermissions()
@@ -116,9 +115,9 @@ class AuthControllerTest extends AbstractTestController
 
         // assert succeed with token
         $data = $this->assertJsonRequest('GET', '/auth/get-logged-user', [
-                'mustSucceed' => true,
-                'AuthToken' => $authToken,
-            ])['data'];
+            'mustSucceed' => true,
+            'AuthToken' => $authToken,
+        ])['data'];
 
         $this->assertEquals(User::ROLE_LAY_DEPUTY, $data['role_name']);
         $this->assertEquals('deputy@example.org', $data['email']);
@@ -153,16 +152,16 @@ class AuthControllerTest extends AbstractTestController
 
         // assert deputy can access
         $data = $this->assertJsonRequest('GET', '/auth/get-logged-user', [
-                'mustSucceed' => true,
-                'AuthToken' => $authTokenDeputy,
-            ])['data'];
+            'mustSucceed' => true,
+            'AuthToken' => $authTokenDeputy,
+        ])['data'];
         $this->assertEquals('deputy@example.org', $data['email']);
 
         // assert admin can access
         $data = $this->assertJsonRequest('GET', '/auth/get-logged-user', [
-                'mustSucceed' => true,
-                'AuthToken' => $authTokenAdmin,
-            ])['data'];
+            'mustSucceed' => true,
+            'AuthToken' => $authTokenAdmin,
+        ])['data'];
         $this->assertEquals('admin@example.org', $data['email']);
 
         //logout admin and test deputy can still acess
@@ -175,9 +174,9 @@ class AuthControllerTest extends AbstractTestController
             'AuthToken' => $authTokenAdmin,
         ]);
         $data = $this->assertJsonRequest('GET', '/auth/get-logged-user', [
-                'mustSucceed' => true,
-                'AuthToken' => $authTokenDeputy,
-            ])['data'];
+            'mustSucceed' => true,
+            'AuthToken' => $authTokenDeputy,
+        ])['data'];
         $this->assertEquals('deputy@example.org', $data['email']);
     }
 
@@ -202,12 +201,12 @@ class AuthControllerTest extends AbstractTestController
 
         // assert succeed with token
         $data = $this->assertJsonRequest('GET', '/auth/get-logged-user', [
-                'mustSucceed' => true,
-                'AuthToken' => $authToken,
-            ])['data'];
+            'mustSucceed' => true,
+            'AuthToken' => $authToken,
+        ])['data'];
 
         $this->assertEquals('deputy@example.org', $data['email']);
-        $this->assertNull($data['password'], 'No password is returned');
+        $this->assertFalse(isset($data['password']), 'A password was returned when it should not have been returned');
     }
 
     public function testBruteForceSameEmail()
@@ -272,14 +271,14 @@ class AuthControllerTest extends AbstractTestController
 
         // assert it's now locked, even if the password is correct
         $data = $this->assertJsonRequest('POST', '/auth/login', [
-                'mustFail' => true,
-                'data' => [
-                    'email' => 'deputy@example.org',
-                    'password' => 'DigidepsPass1234',
-                ],
-                'ClientSecret' => API_TOKEN_DEPUTY,
-                'assertCode' => 423,
-                'assertResponseCode' => 423,
+            'mustFail' => true,
+            'data' => [
+                'email' => 'deputy@example.org',
+                'password' => 'DigidepsPass1234',
+            ],
+            'ClientSecret' => API_TOKEN_DEPUTY,
+            'assertCode' => 423,
+            'assertResponseCode' => 423,
         ])['data'];
 
         $expectedTimeStamp = time() + 600;

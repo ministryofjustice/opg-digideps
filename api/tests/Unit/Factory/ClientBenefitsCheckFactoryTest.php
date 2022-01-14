@@ -14,6 +14,7 @@ use App\Repository\ReportRepository;
 use DateTime;
 use Doctrine\ORM\EntityManagerInterface;
 use PHPUnit\Framework\TestCase;
+use Prophecy\PhpUnit\ProphecyTrait;
 use Prophecy\Prophecy\ObjectProphecy;
 use Ramsey\Uuid\Uuid;
 use Ramsey\Uuid\UuidInterface;
@@ -21,6 +22,8 @@ use ReflectionClass;
 
 class ClientBenefitsCheckFactoryTest extends TestCase
 {
+    use ProphecyTrait;
+
     private ?ClientBenefitsCheck $incomeClientBenefitsCheck;
 
     private ?float $incomeAmount;
@@ -106,6 +109,40 @@ class ClientBenefitsCheckFactoryTest extends TestCase
         self::assertEquals($existingClientBenefitsCheck, $income->getClientBenefitsCheck());
         self::assertEquals($this->incomeType, $income->getIncomeType());
         self::assertEquals($this->incomeAmount, $income->getAmount());
+    }
+
+    private function generateValidFormData(bool $existingEntity): array
+    {
+        return [
+            'report_id' => $this->reportId,
+            'id' => $existingEntity ? $this->id : null,
+            'created' => $this->created,
+            'when_last_checked_entitlement' => $this->whenLastCheckedEntitlement,
+            'date_last_checked_entitlement' => $this->dateLastCheckedEntitlement,
+            'never_checked_explanation' => $this->neverCheckedExplanation,
+            'do_others_receive_income_on_clients_behalf' => $this->doOthersReceiveIncomeOnClientsBehalf,
+            'dont_know_income_explanation' => $this->dontKnowIncomeExplanation,
+            'types_of_income_received_on_clients_behalf' => [
+                0 => [
+                    'id' => $existingEntity ? $this->incomeId : null,
+                    'created' => $this->incomeCreated,
+                    'client_benefits_check' => $this->incomeClientBenefitsCheck,
+                    'income_type' => $this->incomeType,
+                    'amount' => $this->incomeAmount,
+                    'amount_dont_know' => $this->incomeAmountDontKnow,
+                ],
+            ],
+            'report' => [],
+        ];
+    }
+
+    private function set($entity, $value, $propertyName = 'id')
+    {
+        $class = new ReflectionClass($entity);
+        $property = $class->getProperty($propertyName);
+        $property->setAccessible(true);
+
+        $property->setValue($entity, $value);
     }
 
     /** @test */
@@ -194,45 +231,11 @@ class ClientBenefitsCheckFactoryTest extends TestCase
         self::assertEquals(0, $processedClientBenefitsCheck->getTypesOfIncomeReceivedOnClientsBehalf()->count());
     }
 
-    private function generateValidFormData(bool $existingEntity): array
-    {
-        return [
-            'report_id' => $this->reportId,
-            'id' => $existingEntity ? $this->id : null,
-            'created' => $this->created,
-            'when_last_checked_entitlement' => $this->whenLastCheckedEntitlement,
-            'date_last_checked_entitlement' => $this->dateLastCheckedEntitlement,
-            'never_checked_explanation' => $this->neverCheckedExplanation,
-            'do_others_receive_income_on_clients_behalf' => $this->doOthersReceiveIncomeOnClientsBehalf,
-            'dont_know_income_explanation' => $this->dontKnowIncomeExplanation,
-            'types_of_income_received_on_clients_behalf' => [
-                0 => [
-                    'id' => $existingEntity ? $this->incomeId : null,
-                    'created' => $this->incomeCreated,
-                    'client_benefits_check' => $this->incomeClientBenefitsCheck,
-                    'income_type' => $this->incomeType,
-                    'amount' => $this->incomeAmount,
-                    'amount_dont_know' => $this->incomeAmountDontKnow,
-                ],
-            ],
-            'report' => [],
-        ];
-    }
-
     private function generateValidFormDataRemoveIncomes()
     {
         $data = $this->generateValidFormData(true);
         $data['do_others_receive_income_on_clients_behalf'] = 'no';
 
         return $data;
-    }
-
-    private function set($entity, $value, $propertyName = 'id')
-    {
-        $class = new ReflectionClass($entity);
-        $property = $class->getProperty($propertyName);
-        $property->setAccessible(true);
-
-        $property->setValue($entity, $value);
     }
 }

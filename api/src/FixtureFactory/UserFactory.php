@@ -5,6 +5,8 @@ namespace App\FixtureFactory;
 use App\Entity\Client;
 use App\Entity\Organisation;
 use App\Entity\User;
+use DateTime;
+use Exception;
 use Faker\Factory;
 use Symfony\Component\Security\Core\Encoder\UserPasswordEncoderInterface;
 
@@ -19,7 +21,7 @@ class UserFactory
     }
 
     /**
-     * @throws \Exception
+     * @throws Exception
      */
     public function create(array $data): User
     {
@@ -36,7 +38,7 @@ class UserFactory
             ->setLastname(isset($data['lastName']) ? $data['lastName'] : 'User')
             ->setEmail(isset($data['email']) ? $data['email'] : 'behat-'.strtolower($data['deputyType']).'-deputy-'.$data['id'].'@publicguardian.gov.uk')
             ->setActive(true)
-            ->setRegistrationDate(new \DateTime())
+            ->setRegistrationDate(new DateTime())
             ->setNdrEnabled($ndrEnabled)
             ->setCoDeputyClientConfirmed(isset($data['codeputyEnabled']))
             ->setPhoneMain('07911111111111')
@@ -51,53 +53,6 @@ class UserFactory
         } else {
             $user->setActive(false);
         }
-
-        return $user;
-    }
-
-    /**
-     * @throws \Exception
-     */
-    public function createAdmin(array $data): User
-    {
-        $user = (new User())
-            ->setFirstname(isset($data['firstName']) ? $data['firstName'] : ucfirst($data['adminType']).' Admin '.$data['email'])
-            ->setLastname(isset($data['lastName']) ? $data['lastName'] : 'User')
-            ->setEmail($data['email'])
-            ->setRegistrationDate(new \DateTime())
-            ->setRoleName($data['adminType']);
-
-        if ('true' === $data['activated']) {
-            $user->setPassword($this->encoder->encodePassword($user, 'DigidepsPass1234'))->setActive(true);
-        }
-
-        return $user;
-    }
-
-    /**
-     * @return User|void
-     */
-    public function createGenericOrgUser(Organisation $organisation)
-    {
-        $faker = Factory::create();
-
-        $email = sprintf('%s.%s@%s', $faker->firstName, $faker->lastName, $organisation->getEmailIdentifier());
-        $trimmedEmail = substr($email, 0, 59);
-
-        $user = (new User())
-            ->setFirstname($faker->firstName)
-            ->setLastname($faker->lastName)
-            ->setEmail($trimmedEmail)
-            ->setActive(true)
-            ->setRegistrationDate(new \DateTime())
-            ->setNdrEnabled(false)
-            ->setPhoneMain('07911111111111')
-            ->setAddress1('Victoria Road')
-            ->setAddressPostcode('SW1')
-            ->setAddressCountry('GB')
-            ->setRoleName('ROLE_PROF_TEAM_MEMBER');
-
-        $user->setPassword($this->encoder->encodePassword($user, 'DigidepsPass1234'));
 
         return $user;
     }
@@ -124,6 +79,53 @@ class UserFactory
         }
     }
 
+    /**
+     * @throws Exception
+     */
+    public function createAdmin(array $data): User
+    {
+        $user = (new User())
+            ->setFirstname(isset($data['firstName']) ? $data['firstName'] : ucfirst($data['adminType']).' Admin '.$data['email'])
+            ->setLastname(isset($data['lastName']) ? $data['lastName'] : 'User')
+            ->setEmail($data['email'])
+            ->setRegistrationDate(new DateTime())
+            ->setRoleName($data['adminType']);
+
+        if ('true' === $data['activated']) {
+            $user->setPassword($this->encoder->encodePassword($user, 'DigidepsPass1234'))->setActive(true);
+        }
+
+        return $user;
+    }
+
+    /**
+     * @return User|void
+     */
+    public function createGenericOrgUser(Organisation $organisation)
+    {
+        $faker = Factory::create();
+
+        $email = sprintf('%s.%s@%s', $faker->firstName(), $faker->lastName(), $organisation->getEmailIdentifier());
+        $trimmedEmail = substr($email, 0, 59);
+
+        $user = (new User())
+            ->setFirstname($faker->firstName())
+            ->setLastname($faker->lastName())
+            ->setEmail($trimmedEmail)
+            ->setActive(true)
+            ->setRegistrationDate(new DateTime())
+            ->setNdrEnabled(false)
+            ->setPhoneMain('07911111111111')
+            ->setAddress1('Victoria Road')
+            ->setAddressPostcode('SW1')
+            ->setAddressCountry('GB')
+            ->setRoleName('ROLE_PROF_TEAM_MEMBER');
+
+        $user->setPassword($this->encoder->encodePassword($user, 'DigidepsPass1234'));
+
+        return $user;
+    }
+
     public function createCoDeputy(User $originalDeputy, Client $client, array $data)
     {
         $user2 = clone $originalDeputy;
@@ -137,7 +139,7 @@ class UserFactory
             )
             ->addClient($client)
             ->setActive($data['activated'])
-            ->setRegistrationDate(new \DateTime())
+            ->setRegistrationDate(new DateTime())
             ->setCoDeputyClientConfirmed(true)
             ->setActive(true);
 
