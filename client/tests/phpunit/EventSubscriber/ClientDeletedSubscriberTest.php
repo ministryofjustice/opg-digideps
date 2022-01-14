@@ -1,5 +1,6 @@
-<?php declare(strict_types=1);
+<?php
 
+declare(strict_types=1);
 
 use App\Entity\Client;
 use App\Event\ClientDeletedEvent;
@@ -10,15 +11,18 @@ use App\TestHelpers\ClientHelpers;
 use App\TestHelpers\NamedDeputyHelper;
 use App\TestHelpers\UserHelpers;
 use PHPUnit\Framework\TestCase;
+use Prophecy\PhpUnit\ProphecyTrait;
 use Psr\Log\LoggerInterface;
 
 class ClientDeletedSubscriberTest extends TestCase
 {
+    use ProphecyTrait;
+
     /** @test */
     public function getSubscribedEvents()
     {
         self::assertEquals([
-            ClientDeletedEvent::NAME => 'logEvent'
+            ClientDeletedEvent::NAME => 'logEvent',
         ], ClientDeletedSubscriber::getSubscribedEvents());
     }
 
@@ -47,10 +51,9 @@ class ClientDeletedSubscriberTest extends TestCase
             'deputy_name' => $deputy->getFullName(),
             'discharged_on' => $now->format(DateTime::ATOM),
             'deputyship_start_date' => $clientWithUsers->getCourtDate()->format(DateTime::ATOM),
-            'event' => AuditEvents::EVENT_CLIENT_DISCHARGED,
-            'type' => 'audit'
+            'event' => AuditEvents::EVENT_CLIENT_DELETED,
+            'type' => 'audit',
         ];
-        ;
 
         $logger->notice('', $expectedEvent)->shouldBeCalled();
         $sut->logEvent($clientDeletedEvent);

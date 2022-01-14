@@ -1,5 +1,6 @@
-<?php declare(strict_types=1);
+<?php
 
+declare(strict_types=1);
 
 namespace DigidepsTests\Service\Client\Internal;
 
@@ -14,9 +15,12 @@ use App\TestHelpers\NdrHelpers;
 use App\TestHelpers\ReportHelpers;
 use App\TestHelpers\UserHelpers;
 use PHPUnit\Framework\TestCase;
+use Prophecy\PhpUnit\ProphecyTrait;
 
 class NdrApiTest extends TestCase
 {
+    use ProphecyTrait;
+
     /** @test */
     public function submit()
     {

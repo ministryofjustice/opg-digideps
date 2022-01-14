@@ -9,12 +9,15 @@ use App\Entity\Report\Report;
 use App\Entity\User;
 use App\TestHelpers\UserHelpers;
 use PHPUnit\Framework\TestCase;
+use Prophecy\PhpUnit\ProphecyTrait;
 use Prophecy\Prophecy\ObjectProphecy;
 use Symfony\Component\Security\Core\Authentication\Token\UsernamePasswordToken;
 use Symfony\Component\Security\Core\Authorization\AccessDecisionManagerInterface;
 
 class UserVoterTest extends TestCase
 {
+    use ProphecyTrait;
+
     /**
      * @dataProvider deleteUserProvider
      * @test

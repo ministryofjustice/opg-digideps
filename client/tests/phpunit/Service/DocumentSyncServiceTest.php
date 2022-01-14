@@ -19,12 +19,15 @@ use GuzzleHttp\Psr7\Request;
 use GuzzleHttp\Psr7\Response;
 use JMS\Serializer\Serializer;
 use Prophecy\Argument;
+use Prophecy\PhpUnit\ProphecyTrait;
 use Prophecy\Prophecy\ObjectProphecy;
 use Symfony\Bundle\FrameworkBundle\Test\KernelTestCase;
 use Symfony\Component\HttpFoundation\Response as SymfonyResponse;
 
 class DocumentSyncServiceTest extends KernelTestCase
 {
+    use ProphecyTrait;
+
     /** @var S3Storage&ObjectProphecy */
     private $s3Storage;
 
@@ -304,7 +307,7 @@ class DocumentSyncServiceTest extends KernelTestCase
                 'document/6789',
                 json_encode(
                     ['syncStatus' => Document::SYNC_STATUS_PERMANENT_ERROR,
-                    'syncError' => 'OPGDATA-API-FORBIDDEN: Credentials used for integration lack correct permissions',
+                        'syncError' => 'OPGDATA-API-FORBIDDEN: Credentials used for integration lack correct permissions',
                     ]
                 ),
                 'Report\\Document',

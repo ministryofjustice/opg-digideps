@@ -1,5 +1,6 @@
-<?php declare(strict_types=1);
+<?php
 
+declare(strict_types=1);
 
 namespace Tests\App\EventListener;
 
@@ -8,9 +9,12 @@ use App\EventSubscriber\DeputySelfRegisteredSubscriber;
 use App\Service\Mailer\Mailer;
 use App\TestHelpers\UserHelpers;
 use PHPUnit\Framework\TestCase;
+use Prophecy\PhpUnit\ProphecyTrait;
 
 class DeputySelfRegisteredSubscriberTest extends TestCase
 {
+    use ProphecyTrait;
+
     /** @test */
     public function getSubscribedEvents()
     {

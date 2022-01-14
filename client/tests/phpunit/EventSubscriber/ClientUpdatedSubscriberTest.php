@@ -1,4 +1,6 @@
-<?php declare(strict_types=1);
+<?php
+
+declare(strict_types=1);
 
 namespace Tests\App\EventListener;
 
@@ -15,11 +17,14 @@ use DateTime;
 use Faker\Factory;
 use PHPUnit\Framework\TestCase;
 use Prophecy\Argument;
+use Prophecy\PhpUnit\ProphecyTrait;
 use Prophecy\Prophecy\ObjectProphecy;
 use Psr\Log\LoggerInterface;
 
 class ClientUpdatedSubscriberTest extends TestCase
 {
+    use ProphecyTrait;
+
     /** @var ObjectProphecy */
     private $logger;
 
@@ -78,7 +83,7 @@ class ClientUpdatedSubscriberTest extends TestCase
             'subject_full_name' => $postUpdateClient->getFullName(),
             'subject_role' => 'CLIENT',
             'event' => AuditEvents::EVENT_CLIENT_EMAIL_CHANGED,
-            'type' => 'audit'
+            'type' => 'audit',
         ];
 
         $this->logger->notice($expectedLogMessage, $expectedEvent)->shouldBeCalled();
@@ -96,7 +101,7 @@ class ClientUpdatedSubscriberTest extends TestCase
     }
 
     /** @test */
-    public function logEvent_only_logs_on_email_change()
+    public function logEventOnlyLogsOnEmailChange()
     {
         $preUpdateClient = ClientHelpers::createClient();
         $postUpdateClient = (ClientHelpers::createClient())->setEmail($preUpdateClient->getEmail());
@@ -145,7 +150,7 @@ class ClientUpdatedSubscriberTest extends TestCase
     }
 
     /** @test */
-    public function sendEmail_client_details_not_changed()
+    public function sendEmailClientDetailsNotChanged()
     {
         $preUpdateClient = ClientHelpers::createClient();
         $postUpdateClient = clone $preUpdateClient;
@@ -159,7 +164,7 @@ class ClientUpdatedSubscriberTest extends TestCase
     }
 
     /** @test */
-    public function sendEmail_email_not_sent_when_details_changed_but_clients_are_different()
+    public function sendEmailEmailNotSentWhenDetailsChangedButClientsAreDifferent()
     {
         $preUpdateClient = ClientHelpers::createClient();
         $postUpdateClient = (ClientHelpers::createClient())->setId(12345);

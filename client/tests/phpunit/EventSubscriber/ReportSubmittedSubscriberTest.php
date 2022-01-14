@@ -1,5 +1,6 @@
-<?php declare(strict_types=1);
+<?php
 
+declare(strict_types=1);
 
 namespace Tests\App\EventListener;
 
@@ -7,17 +8,20 @@ use App\Event\ReportSubmittedEvent;
 use App\EventSubscriber\ReportSubmittedSubscriber;
 use App\Service\Audit\AuditEvents;
 use App\Service\Client\Internal\ReportApi;
-use App\Service\Time\DateTimeProvider;
 use App\Service\Mailer\Mailer;
+use App\Service\Time\DateTimeProvider;
 use App\TestHelpers\ReportHelpers;
 use App\TestHelpers\UserHelpers;
 use DateTime;
 use PHPUnit\Framework\TestCase;
-use Psr\Log\LoggerInterface;
 use Prophecy\Argument;
+use Prophecy\PhpUnit\ProphecyTrait;
+use Psr\Log\LoggerInterface;
 
 class ReportSubmittedSubscriberTest extends TestCase
 {
+    use ProphecyTrait;
+
     /**
      * @test
      */
@@ -61,7 +65,7 @@ class ReportSubmittedSubscriberTest extends TestCase
     /**
      * @test
      */
-    public function sendEmail_email_not_sent_for_resubmissions()
+    public function sendEmailEmailNotSentForResubmissions()
     {
         $reportApi = self::prophesize(ReportApi::class);
         $mailer = self::prophesize(Mailer::class);
@@ -94,7 +98,10 @@ class ReportSubmittedSubscriberTest extends TestCase
         $dateTimeProvider = self::prophesize(DateTimeProvider::class);
         $reportApi = self::prophesize(ReportApi::class);
         $mailer = self::prophesize(Mailer::class);
-        $submittedReport = ReportHelpers::createReport();
+
+        $submittedReport = (ReportHelpers::createReport())
+            ->setUnSubmitDate(new DateTime());
+
         $nextYearReport = ReportHelpers::createReport();
 
         $now = new DateTime();
@@ -112,7 +119,7 @@ class ReportSubmittedSubscriberTest extends TestCase
             'report_id' => $submittedReport->getId(),
             'date_resubmitted' => $submittedReport->getSubmitDate(),
             'event' => AuditEvents::EVENT_REPORT_RESUBMITTED,
-            'type' => 'audit'
+            'type' => 'audit',
         ];
 
         $logger->notice('', $expectedEvent)->shouldBeCalled();

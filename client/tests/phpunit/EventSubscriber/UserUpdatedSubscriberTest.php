@@ -1,4 +1,6 @@
-<?php declare(strict_types=1);
+<?php
+
+declare(strict_types=1);
 
 namespace Tests\App\EventListener;
 
@@ -11,11 +13,14 @@ use App\TestHelpers\UserHelpers;
 use DateTime;
 use PHPUnit\Framework\TestCase;
 use Prophecy\Argument;
+use Prophecy\PhpUnit\ProphecyTrait;
 use Prophecy\Prophecy\ObjectProphecy;
 use Psr\Log\LoggerInterface;
 
 class UserUpdatedSubscriberTest extends TestCase
 {
+    use ProphecyTrait;
+
     /** @var UserHelpers */
     private $userHelpers;
 
@@ -51,14 +56,14 @@ class UserUpdatedSubscriberTest extends TestCase
         self::assertEquals(
             [
                 UserUpdatedEvent::NAME => 'auditLog',
-                UserUpdatedEvent::NAME => 'sendEmail'
+                UserUpdatedEvent::NAME => 'sendEmail',
             ],
             UserUpdatedSubscriber::getSubscribedEvents()
         );
     }
 
     /** @test */
-    public function auditLog_email_has_changed()
+    public function auditLogEmailHasChanged()
     {
         $now = new DateTime('now');
 
@@ -76,7 +81,7 @@ class UserUpdatedSubscriberTest extends TestCase
             'subject_full_name' => $postUpdateUser->getFullName(),
             'subject_role' => $postUpdateUser->getRoleName(),
             'event' => 'USER_EMAIL_CHANGED',
-            'type' => 'audit'
+            'type' => 'audit',
         ];
 
         $this->dateTimeProvider->getDateTime()->shouldBeCalled()->willReturn($now);
@@ -87,7 +92,7 @@ class UserUpdatedSubscriberTest extends TestCase
     }
 
     /** @test */
-    public function auditLog_role_has_changed()
+    public function auditLogRoleHasChanged()
     {
         $now = new DateTime('now');
 
@@ -104,7 +109,7 @@ class UserUpdatedSubscriberTest extends TestCase
             'changed_by' => $currentUser->getEmail(),
             'user_changed' => $postUpdateUser->getEmail(),
             'event' => 'ROLE_CHANGED',
-            'type' => 'audit'
+            'type' => 'audit',
         ];
 
         $this->dateTimeProvider->getDateTime()->shouldBeCalled()->willReturn($now);
@@ -115,7 +120,7 @@ class UserUpdatedSubscriberTest extends TestCase
     }
 
     /** @test */
-    public function auditLog_role_or_email_has_not_changed()
+    public function auditLogRoleOrEmailHasNotChanged()
     {
         $trigger = 'A_TRIGGER';
 
@@ -133,7 +138,7 @@ class UserUpdatedSubscriberTest extends TestCase
      * @dataProvider deputyProvider
      * @test
      */
-    public function sendEmail_lay_deputy_details_have_changed(User $preUpdateUser, User $postUpdateUser)
+    public function sendEmailLayDeputyDetailsHaveChanged(User $preUpdateUser, User $postUpdateUser)
     {
         $trigger = 'A_TRIGGER';
         $currentUser = $this->userHelpers->createUser();
@@ -177,15 +182,14 @@ class UserUpdatedSubscriberTest extends TestCase
     /**
      * @test
      */
-    public function sendEmail_email_not_sent_when_role_is_not_lay_deputy()
+    public function sendEmailEmailNotSentWhenRoleIsNotLayDeputy()
     {
         $trigger = 'A_TRIGGER';
         $preUpdateUser = $this->userHelpers->createUser();
         $postUpdateUser = (clone $preUpdateUser)->setRoleName('NOT_LAY_DEPUTY')->setEmail('new.email@example.org');
         $currentUser = $this->userHelpers->createUser();
 
-        $this->mailFactory->createUpdateDeputyDetailsEmail(Argument::any())->shouldNotBeCalled();
-        $this->mailSender->send(Argument::any())->shouldNotBeCalled();
+        $this->mailer->sendUpdateDeputyDetailsEmail(Argument::any())->shouldNotBeCalled();
 
         $event = new UserUpdatedEvent($preUpdateUser, $postUpdateUser, $currentUser, $trigger);
         $this->sut->sendEmail($event);

@@ -1,4 +1,5 @@
 <?php
+
 namespace App\Tests\Command;
 
 use App\Command\DocumentSyncCommand;
@@ -8,8 +9,8 @@ use App\Service\DocumentSyncService;
 use App\Service\ParameterStoreService;
 use DateTime;
 use DateTimeZone;
-use PHPUnit\Framework\MockObject\MockObject;
 use Prophecy\Argument;
+use Prophecy\PhpUnit\ProphecyTrait;
 use Prophecy\Prophecy\ObjectProphecy;
 use Symfony\Bundle\FrameworkBundle\Console\Application;
 use Symfony\Bundle\FrameworkBundle\Test\KernelTestCase;
@@ -19,35 +20,32 @@ use Symfony\Component\Serializer\SerializerInterface;
 
 class DocumentSyncCommandTest extends KernelTestCase
 {
-    /**
-     * @var DocumentSyncService
-     */
-    private $syncService;
-
-    /**
-     * @var RestClient
-     */
-    private $restClient;
-
-    /**
-     * @var SerializerInterface
-     */
-    private $serializer;
-
-    /**
-     * @var ParameterStoreService
-     */
-    private $parameterStore;
-
-    /**
-     * @var CommandTester
-     */
-    private $commandTester;
+    use ProphecyTrait;
 
     /**
      * @var ContainerInterface
      */
     protected static $container;
+    /**
+     * @var DocumentSyncService
+     */
+    private $syncService;
+    /**
+     * @var RestClient
+     */
+    private $restClient;
+    /**
+     * @var SerializerInterface
+     */
+    private $serializer;
+    /**
+     * @var ParameterStoreService
+     */
+    private $parameterStore;
+    /**
+     * @var CommandTester
+     */
+    private $commandTester;
 
     public function setUp(): void
     {
@@ -79,8 +77,8 @@ class DocumentSyncCommandTest extends KernelTestCase
                 'report_start_date' => '2017-02-01',
                 'report_end_date' => '2018-01-31',
                 'report_submit_date' => '2020-04-29 15:05:23',
-                'report_type' => '104'
-            ]
+                'report_type' => '104',
+            ],
         ]);
 
         $queuedDocumentData = (new QueuedDocumentData())
@@ -152,46 +150,45 @@ class DocumentSyncCommandTest extends KernelTestCase
         $this->assertStringContainsString('Feature disabled, sleeping', $output);
     }
 
-    public function testExecute_with_sync_error_submission_ids(): void
+    public function testExecuteWithSyncErrorSubmissionIds(): void
     {
         $this->parameterStore
-           ->getFeatureFlag(ParameterStoreService::FLAG_DOCUMENT_SYNC)
-           ->shouldBeCalled()
-           ->willReturn('1');
+            ->getFeatureFlag(ParameterStoreService::FLAG_DOCUMENT_SYNC)
+            ->shouldBeCalled()
+            ->willReturn('1');
 
         $this->parameterStore
-           ->getParameter(ParameterStoreService::PARAMETER_DOCUMENT_SYNC_ROW_LIMIT)
-           ->shouldBeCalled()
-           ->willReturn('100');
+            ->getParameter(ParameterStoreService::PARAMETER_DOCUMENT_SYNC_ROW_LIMIT)
+            ->shouldBeCalled()
+            ->willReturn('100');
 
         $this->restClient
-           ->apiCall('get', 'document/queued', ['row_limit' => '100'], 'array', Argument::type('array'), false)
-           ->shouldBeCalled()
-           ->willReturn(json_encode([]));
+            ->apiCall('get', 'document/queued', ['row_limit' => '100'], 'array', Argument::type('array'), false)
+            ->shouldBeCalled()
+            ->willReturn(json_encode([]));
 
-        /** @var DocumentSyncService|ObjectProphecy $documentSyncService */
+        /* @var DocumentSyncService|ObjectProphecy $documentSyncService */
         $this->syncService
-           ->getSyncErrorSubmissionIds()
-           ->shouldBeCalled()
-           ->willReturn([1]);
-
-        $this->syncService
-           ->setSubmissionsDocumentsToPermanentError()
-           ->shouldBeCalled();
+            ->getSyncErrorSubmissionIds()
+            ->shouldBeCalled()
+            ->willReturn([1]);
 
         $this->syncService
-           ->getDocsNotSyncedCount()
-           ->shouldBeCalled()
-           ->willReturn(6);
+            ->setSubmissionsDocumentsToPermanentError()
+            ->shouldBeCalled();
 
         $this->syncService
-           ->setSyncErrorSubmissionIds([])
-           ->shouldBeCalled();
+            ->getDocsNotSyncedCount()
+            ->shouldBeCalled()
+            ->willReturn(6);
 
         $this->syncService
-           ->setDocsNotSyncedCount(0)
-           ->shouldBeCalled();
+            ->setSyncErrorSubmissionIds([])
+            ->shouldBeCalled();
 
+        $this->syncService
+            ->setDocsNotSyncedCount(0)
+            ->shouldBeCalled();
 
         $this->commandTester->execute([]);
 

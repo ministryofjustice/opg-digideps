@@ -1,4 +1,6 @@
-<?php declare(strict_types=1);
+<?php
+
+declare(strict_types=1);
 
 namespace App\Service;
 
@@ -10,6 +12,7 @@ use App\Model\RetrievedDocument;
 use App\Service\File\DocumentsZipFileCreator;
 use PHPUnit\Framework\TestCase;
 use Prophecy\Argument;
+use Prophecy\PhpUnit\ProphecyTrait;
 use Prophecy\Prophecy\ObjectProphecy;
 use Symfony\Component\HttpFoundation\Request;
 use Symfony\Component\HttpFoundation\Session\Session;
@@ -18,6 +21,8 @@ use ZipArchive;
 
 class DocumentDownloaderTest extends TestCase
 {
+    use ProphecyTrait;
+
     /**
      * @var ObjectProphecy|DocumentService
      */
@@ -33,32 +38,18 @@ class DocumentDownloaderTest extends TestCase
      */
     private $zipFileCreator;
 
-    public function setUp():void
+    public function setUp(): void
     {
         $this->documentService = self::prophesize(DocumentService::class);
         $this->reportSubmissionService = self::prophesize(ReportSubmissionService::class);
         $this->zipFileCreator = self::prophesize(DocumentsZipFileCreator::class);
     }
 
-    private function generateReportSubmission(string $caseNumber): ReportSubmission
-    {
-        $client = new Client();
-        $client->setCaseNumber($caseNumber);
-
-        $report = new Report();
-        $report->setClient($client);
-
-        $reportSubmission = new ReportSubmission();
-        $reportSubmission->setReport($report);
-
-        return $reportSubmission;
-    }
-
     public function testGenerateDownloadResponse(): void
     {
         $sut = new DocumentDownloader($this->documentService->reveal(), $this->reportSubmissionService->reveal(), $this->zipFileCreator->reveal());
 
-        $zipFile = "/tmp/test-file.zip";
+        $zipFile = '/tmp/test-file.zip';
         file_put_contents($zipFile, 'some content');
 
         $response = $sut->generateDownloadResponse($zipFile);
@@ -136,6 +127,20 @@ class DocumentDownloaderTest extends TestCase
 
         self::assertEquals($expectedRetrievedDocuments, $retrievedDocuments);
         self::assertEquals($missingDocument, $missingDocument);
+    }
+
+    private function generateReportSubmission(string $caseNumber): ReportSubmission
+    {
+        $client = new Client();
+        $client->setCaseNumber($caseNumber);
+
+        $report = new Report();
+        $report->setClient($client);
+
+        $reportSubmission = new ReportSubmission();
+        $reportSubmission->setReport($report);
+
+        return $reportSubmission;
     }
 
     public function testSetMissingDocsFlashMessage(): void

@@ -1,5 +1,6 @@
-<?php declare(strict_types=1);
+<?php
 
+declare(strict_types=1);
 
 namespace Tests\App\EventListener;
 
@@ -10,16 +11,19 @@ use App\Model\FeedbackReport;
 use App\Service\Mailer\Mailer;
 use App\TestHelpers\UserHelpers;
 use PHPUnit\Framework\TestCase;
+use Prophecy\PhpUnit\ProphecyTrait;
 
 class FeedbackSubmittedSubscriberTest extends TestCase
 {
+    use ProphecyTrait;
+
     /** @test */
     public function getSubscribedEvents()
     {
         self::assertEquals(
             [
                 GeneralFeedbackSubmittedEvent::NAME => 'sendGeneralFeedbackEmail',
-                PostSubmissionFeedbackSubmittedEvent::NAME => 'sendPostSubmissionFeedbackEmail'
+                PostSubmissionFeedbackSubmittedEvent::NAME => 'sendPostSubmissionFeedbackEmail',
             ],
             FeedbackSubmittedSubscriber::getSubscribedEvents()
         );

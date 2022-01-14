@@ -1,5 +1,6 @@
-<?php declare(strict_types=1);
+<?php
 
+declare(strict_types=1);
 
 namespace Tests\App\EventListener;
 
@@ -11,10 +12,13 @@ use App\Service\Time\DateTimeProvider;
 use App\TestHelpers\UserHelpers;
 use DateTime;
 use PHPUnit\Framework\TestCase;
+use Prophecy\PhpUnit\ProphecyTrait;
 use Psr\Log\LoggerInterface;
 
 class UserDeletedSubscriberTest extends TestCase
 {
+    use ProphecyTrait;
+
     /** @test */
     public function getSubscribedEvents()
     {
@@ -50,7 +54,7 @@ class UserDeletedSubscriberTest extends TestCase
             'subject_email' => $deletedUser->getEmail(),
             'subject_role' => $deletedUser->getRoleName(),
             'event' => $expectedEventName,
-            'type' => 'audit'
+            'type' => 'audit',
         ];
 
         $logger->notice('', $expectedEvent)->shouldBeCalled();

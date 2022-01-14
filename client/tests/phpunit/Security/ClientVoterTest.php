@@ -8,12 +8,15 @@ use App\Entity\Client;
 use App\Entity\User;
 use App\TestHelpers\ClientHelpers;
 use App\TestHelpers\UserHelpers;
+use Prophecy\PhpUnit\ProphecyTrait;
 use Symfony\Bundle\FrameworkBundle\Test\KernelTestCase;
 use Symfony\Component\Security\Core\Authentication\Token\UsernamePasswordToken;
 use Symfony\Component\Security\Core\Security;
 
 class ClientVoterTest extends KernelTestCase
 {
+    use ProphecyTrait;
+
     /**
      * @dataProvider deleteClientProvider
      * @test

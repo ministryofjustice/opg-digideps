@@ -1,5 +1,6 @@
-<?php declare(strict_types=1);
+<?php
 
+declare(strict_types=1);
 
 namespace App\Service\File;
 
@@ -12,12 +13,15 @@ use App\TestHelpers\ReportHelpers;
 use DateTime;
 use Exception;
 use Prophecy\Argument;
+use Prophecy\PhpUnit\ProphecyTrait;
 use Prophecy\Prophecy\ObjectProphecy;
 use Symfony\Bundle\FrameworkBundle\Test\KernelTestCase;
 use Symfony\Component\HttpFoundation\File\UploadedFile;
 
 class S3FileUploaderTest extends KernelTestCase
 {
+    use ProphecyTrait;
+
     private string $projectDir;
     private ObjectProphecy $storage;
     private ObjectProphecy $restClient;
@@ -67,7 +71,7 @@ class S3FileUploaderTest extends KernelTestCase
     }
 
     /** @test */
-    public function uploadSupportingFilesAndPersistDocuments_single_file()
+    public function uploadSupportingFilesAndPersistDocumentsSingleFile()
     {
         $filePath = sprintf('%s/tests/phpunit/TestData/good-jpeg', $this->projectDir);
         $fileBody = file_get_contents($filePath);
@@ -87,7 +91,7 @@ class S3FileUploaderTest extends KernelTestCase
     }
 
     /** @test */
-    public function uploadSupportingFilesAndPersistDocuments_multiple_files()
+    public function uploadSupportingFilesAndPersistDocumentsMultipleFiles()
     {
         $jpeg = new UploadedFile(sprintf('%s/tests/phpunit/TestData/good-jpeg', $this->projectDir), 'good-jpeg');
         $png = new UploadedFile(sprintf('%s/tests/phpunit/TestData/good-png', $this->projectDir), 'good-png');
@@ -118,7 +122,7 @@ class S3FileUploaderTest extends KernelTestCase
     }
 
     /** @test */
-    public function removeFileFromS3_missing_storage_ref()
+    public function removeFileFromS3MissingStorageRef()
     {
         self::expectException(Exception::class);
 

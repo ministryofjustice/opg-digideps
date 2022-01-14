@@ -1,4 +1,6 @@
-<?php declare(strict_types=1);
+<?php
+
+declare(strict_types=1);
 
 namespace App\Service;
 
@@ -15,6 +17,7 @@ use Doctrine\Common\Collections\ArrayCollection;
 use Exception;
 use PHPUnit\Framework\TestCase;
 use Prophecy\Argument;
+use Prophecy\PhpUnit\ProphecyTrait;
 use Prophecy\Prophecy\ObjectProphecy;
 use Psr\Log\LoggerInterface;
 use Twig\Environment;
@@ -22,6 +25,8 @@ use Twig\Loader\FilesystemLoader;
 
 class DocumentServiceTest extends TestCase
 {
+    use ProphecyTrait;
+
     /**
      * @var DocumentService
      */
@@ -66,7 +71,6 @@ class DocumentServiceTest extends TestCase
      * @var ObjectProphecy|Document
      */
     private $doc4;
-
 
     public function setUp(): void
     {
@@ -120,7 +124,7 @@ class DocumentServiceTest extends TestCase
             ->willReturn([]);
 
         $this->restClient
-            ->delete('document/' . $docId)
+            ->delete('document/'.$docId)
             ->shouldBeCalled()
             ->willReturn(true);
 
@@ -180,7 +184,7 @@ class DocumentServiceTest extends TestCase
     {
         $this->s3Storage->retrieve('ref-1')->shouldBeCalled()->willReturn('doc1 contents');
         $this->s3Storage->retrieve('ref-2')->shouldBeCalled()
-            ->willThrow(new FileNotFoundException("Cannot find file with reference ref-2"));
+            ->willThrow(new FileNotFoundException('Cannot find file with reference ref-2'));
 
         /** @var ObjectProphecy|ReportSubmission $reportSubmission */
         $reportSubmission = self::prophesize(ReportSubmission::class);
@@ -248,9 +252,9 @@ class DocumentServiceTest extends TestCase
     {
         $this->s3Storage->retrieve('ref-1')->shouldBeCalled()->willReturn('doc1 contents');
         $this->s3Storage->retrieve('ref-2')->shouldBeCalled()
-            ->willThrow(new FileNotFoundException("Cannot find file with reference ref-2"));
+            ->willThrow(new FileNotFoundException('Cannot find file with reference ref-2'));
         $this->s3Storage->retrieve('ref-3')->shouldBeCalled()
-            ->willThrow(new FileNotFoundException("Cannot find file with reference ref-3"));
+            ->willThrow(new FileNotFoundException('Cannot find file with reference ref-3'));
         $this->s3Storage->retrieve('ref-4')->shouldBeCalled()->willReturn('doc4 contents');
 
         /** @var ObjectProphecy|ReportSubmission $reportSubmission */
@@ -309,20 +313,6 @@ class DocumentServiceTest extends TestCase
         self::assertEquals($expectedFlash, $actualFlash);
     }
 
-    private function generateReportSubmission(string $caseNumber): ReportSubmission
-    {
-        $client = new Client();
-        $client->setCaseNumber($caseNumber);
-
-        $report = new Report();
-        $report->setClient($client);
-
-        $reportSubmission = new ReportSubmission();
-        $reportSubmission->setReport($report);
-
-        return $reportSubmission;
-    }
-
     public function testTwigTemplate(): void
     {
         $reportSubmission1 = $this->generateReportSubmission('CaseNumber1');
@@ -343,7 +333,7 @@ class DocumentServiceTest extends TestCase
         $missingDocuments = [$missingDoc1, $missingDoc2, $missingDoc3];
         $missingDocumentCaseNumbers = ['CaseNumber1', 'CaseNumber2', 'CaseNumber1'];
 
-        $loader = new FilesystemLoader([__DIR__ . '/../../../templates/FlashMessages']);
+        $loader = new FilesystemLoader([__DIR__.'/../../../templates/FlashMessages']);
 
         $sut = new Environment($loader);
 
@@ -358,5 +348,19 @@ class DocumentServiceTest extends TestCase
             $expectedListItem = "<li>${caseNumber} - ${fileName}</li>";
             self::assertStringContainsString($expectedListItem, $renderedTwig);
         }
+    }
+
+    private function generateReportSubmission(string $caseNumber): ReportSubmission
+    {
+        $client = new Client();
+        $client->setCaseNumber($caseNumber);
+
+        $report = new Report();
+        $report->setClient($client);
+
+        $reportSubmission = new ReportSubmission();
+        $reportSubmission->setReport($report);
+
+        return $reportSubmission;
     }
 }

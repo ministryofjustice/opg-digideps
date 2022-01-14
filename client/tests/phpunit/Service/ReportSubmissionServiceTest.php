@@ -17,6 +17,7 @@ use App\Service\Mailer\MailSender;
 use MockeryStub as m;
 use PHPUnit\Framework\TestCase;
 use Prophecy\Argument;
+use Prophecy\PhpUnit\ProphecyTrait;
 use Prophecy\Prophecy\ObjectProphecy;
 use Symfony\Bridge\Monolog\Logger;
 use Symfony\Component\DependencyInjection\Container;
@@ -24,6 +25,8 @@ use Twig\Environment;
 
 class ReportSubmissionServiceTest extends TestCase
 {
+    use ProphecyTrait;
+
     /**
      * @var ReportSubmissionService
      */
@@ -83,49 +86,6 @@ class ReportSubmissionServiceTest extends TestCase
     }
 
     /**
-     * Generates System Under Test.
-     *
-     * @return ReportSubmissionService
-     */
-    private function generateSut()
-    {
-        $mockContainer = m::mock(Container::class);
-
-        $mockContainer->shouldReceive('get')->with('file_uploader')->andReturn($this->mockFileUploader);
-        $mockContainer->shouldReceive('get')->with('rest_client')->andReturn($this->mockRestClient);
-        $mockContainer->shouldReceive('get')->with('App\Service\Mailer\MailSender')->andReturn($this->mockMailSender);
-        $mockContainer->shouldReceive('get')->with('App\Service\Mailer\MailFactory')->andReturn($this->mockMailFactory);
-        $mockContainer->shouldReceive('get')->with('templating')->andReturn($this->mockTemplatingEngine);
-        $mockContainer->shouldReceive('get')->with('logger')->andReturn($this->mockLogger);
-        $mockContainer->shouldReceive('get')->with('csv_generator_service')->andReturn($this->mockCsvGenerator);
-
-        return new ReportSubmissionService(
-            $this->mockCsvGenerator,
-            $this->mockTemplatingEngine,
-            $this->mockFileUploader,
-            $this->mockRestClient,
-            $this->mockLogger,
-            $this->mockMailFactory,
-            $this->mockMailSender,
-            $this->mockPdfGenerator
-        );
-    }
-
-    private function generateProphecySut()
-    {
-        return new ReportSubmissionService(
-            $this->csvGenerator->reveal(),
-            $this->twig->reveal(),
-            $this->fileUploader->reveal(),
-            $this->restClient->reveal(),
-            $this->logger->reveal(),
-            $this->mailFactory->reveal(),
-            $this->mailSender->reveal(),
-            $this->pdfGenerator->reveal(),
-        );
-    }
-
-    /**
      * @test
      * @dataProvider lowOrNoAssetsReportTypeProvider
      */
@@ -146,6 +106,20 @@ class ReportSubmissionServiceTest extends TestCase
 
         $sut = $this->generateProphecySut();
         $sut->generateReportDocuments($report->reveal());
+    }
+
+    private function generateProphecySut()
+    {
+        return new ReportSubmissionService(
+            $this->csvGenerator->reveal(),
+            $this->twig->reveal(),
+            $this->fileUploader->reveal(),
+            $this->restClient->reveal(),
+            $this->logger->reveal(),
+            $this->mailFactory->reveal(),
+            $this->mailSender->reveal(),
+            $this->pdfGenerator->reveal(),
+        );
     }
 
     public function lowOrNoAssetsReportTypeProvider()
@@ -208,6 +182,35 @@ class ReportSubmissionServiceTest extends TestCase
         $this->sut = $this->generateSut();
 
         $this->assertEquals('PDF CONTENT', $this->sut->getPdfBinaryContent($this->mockReport, true));
+    }
+
+    /**
+     * Generates System Under Test.
+     *
+     * @return ReportSubmissionService
+     */
+    private function generateSut()
+    {
+        $mockContainer = m::mock(Container::class);
+
+        $mockContainer->shouldReceive('get')->with('file_uploader')->andReturn($this->mockFileUploader);
+        $mockContainer->shouldReceive('get')->with('rest_client')->andReturn($this->mockRestClient);
+        $mockContainer->shouldReceive('get')->with('App\Service\Mailer\MailSender')->andReturn($this->mockMailSender);
+        $mockContainer->shouldReceive('get')->with('App\Service\Mailer\MailFactory')->andReturn($this->mockMailFactory);
+        $mockContainer->shouldReceive('get')->with('templating')->andReturn($this->mockTemplatingEngine);
+        $mockContainer->shouldReceive('get')->with('logger')->andReturn($this->mockLogger);
+        $mockContainer->shouldReceive('get')->with('csv_generator_service')->andReturn($this->mockCsvGenerator);
+
+        return new ReportSubmissionService(
+            $this->mockCsvGenerator,
+            $this->mockTemplatingEngine,
+            $this->mockFileUploader,
+            $this->mockRestClient,
+            $this->mockLogger,
+            $this->mockMailFactory,
+            $this->mockMailSender,
+            $this->mockPdfGenerator
+        );
     }
 
     /**

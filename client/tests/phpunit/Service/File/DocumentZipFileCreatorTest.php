@@ -1,15 +1,20 @@
-<?php declare(strict_types=1);
+<?php
+
+declare(strict_types=1);
 
 namespace App\Service\File;
 
 use App\Entity\Report\ReportSubmission;
 use App\Model\RetrievedDocument;
 use PHPUnit\Framework\TestCase;
+use Prophecy\PhpUnit\ProphecyTrait;
 use Prophecy\Prophecy\ObjectProphecy;
 use ZipArchive;
 
 class DocumentZipFileCreatorTest extends TestCase
 {
+    use ProphecyTrait;
+
     public function testCreateZipFilesFromRetrievedDocuments()
     {
         /** @var ObjectProphecy|ReportSubmission $reportSubmission1 */

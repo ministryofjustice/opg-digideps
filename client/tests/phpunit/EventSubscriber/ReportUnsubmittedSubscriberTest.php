@@ -1,5 +1,6 @@
-<?php declare(strict_types=1);
+<?php
 
+declare(strict_types=1);
 
 namespace Tests\App\EventListener;
 
@@ -11,10 +12,13 @@ use App\TestHelpers\ReportHelpers;
 use App\TestHelpers\UserHelpers;
 use DateTime;
 use PHPUnit\Framework\TestCase;
+use Prophecy\PhpUnit\ProphecyTrait;
 use Psr\Log\LoggerInterface;
 
 class ReportUnsubmittedSubscriberTest extends TestCase
 {
+    use ProphecyTrait;
+
     /**
      * @test
      */
@@ -41,7 +45,6 @@ class ReportUnsubmittedSubscriberTest extends TestCase
         $currentUser = UserHelpers::createUser();
         $trigger = 'UNSUBMIT_REPORT';
 
-
         $submittedReport = ReportHelpers::createSubmittedReport();
 
         $sut = new ReportUnsubmittedSubscriber($logger->reveal(), $dateTimeProvider->reveal());
@@ -54,7 +57,7 @@ class ReportUnsubmittedSubscriberTest extends TestCase
             'report_id' => $submittedReport->getId(),
             'date_unsubmitted' => $submittedReport->getUnSubmitDate(),
             'event' => AuditEvents::EVENT_REPORT_UNSUBMITTED,
-            'type' => 'audit'
+            'type' => 'audit',
         ];
 
         $logger->notice('', $expectedEvent)->shouldBeCalled();
