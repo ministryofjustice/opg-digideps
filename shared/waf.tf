@@ -67,6 +67,10 @@ resource "aws_wafv2_web_acl" "main" {
           name = "SizeRestrictions_BODY"
         }
 
+        excluded_rule {
+          name = "CrossSiteScripting_BODY"
+        }
+
       }
     }
     visibility_config {
