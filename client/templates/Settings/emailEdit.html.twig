@@ -5,8 +5,12 @@
 {% set translationDomain = "settings" %}
 {% trans_default_domain translationDomain %}
 
-{% block htmlTitle %}{{ 'htmlTitle.change-email' | trans }}{% endblock %}
-{% block pageTitle %}{{ 'pageTitle.change-email' | trans }}{% endblock %}
+{% block htmlTitle %}
+    {{ 'htmlTitle.change-email' | trans }}
+{% endblock %}
+{% block pageTitle %}
+    {{ 'pageTitle.change-email' | trans }}
+{% endblock %}
 
 {% block breadcrumbs %}
     {{ macros.breadcrumbsSettings("settings-profile-email-edit") }}
@@ -16,16 +20,16 @@
 
     {{ form_start(form, {attr: {novalidate: 'novalidate', class: ''} }) }}
 
-        {{ form_input(form.current_email, 'form.changeEmail.currentEmail') }}
+    {{ form_input(form.current_email, 'form.changeEmail.currentEmail') }}
 
-        {{ form_input(form.new_email.first, 'form.changeEmail.newAddress') }}
-        {{ form_input(form.new_email.second, 'form.changeEmail.newAddress.confirm') }}
+    {{ form_input(form.new_email.first, 'form.changeEmail.newAddress') }}
+    {{ form_input(form.new_email.second, 'form.changeEmail.newAddress.confirm') }}
 
-        {{ form_input(form.password, 'form.changeEmail.currentPassword') }}
+    {{ form_input(form.password, 'form.changeEmail.currentPassword') }}
 
-        <div style="clear:both;display:inline-block;height:0px;" data-module="opg-toggleable-submit">
-            {{ form_submit(form.save,'form.changeEmail.controls.save', {'buttonClass': 'behat-link-save'}) }}
-        </div>
+    <div style="clear:both;display:inline-block;height:0px;" data-module="opg-toggleable-submit">
+        {{ form_submit(form.save,'form.changeEmail.controls.save', {'buttonClass': 'behat-link-save'}) }}
+    </div>
 
     {{ form_end(form) }}
 

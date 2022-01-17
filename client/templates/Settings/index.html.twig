@@ -5,8 +5,12 @@
 {% set translationDomain = "settings" %}
 {% trans_default_domain translationDomain %}
 
-{% block htmlTitle %}{{ (app.user.isDeputyOrg() ? 'htmlTitle.pa-settings-page' : 'htmlTitle.settings-page') | trans }}{% endblock %}
-{% block pageTitle %}{{ (app.user.isDeputyOrg() ? 'pageTitle.pa-settings-page' : 'pageTitle.settings-page') | trans }}{% endblock %}
+{% block htmlTitle %}
+    {{ (app.user.isDeputyOrg() ? 'htmlTitle.pa-settings-page' : 'htmlTitle.settings-page') | trans }}
+{% endblock %}
+{% block pageTitle %}
+    {{ (app.user.isDeputyOrg() ? 'pageTitle.pa-settings-page' : 'pageTitle.settings-page') | trans }}
+{% endblock %}
 
 {% block breadcrumbs %}
     {{ macros.breadcrumbsSettings('settings') }}
@@ -47,7 +51,8 @@
                 </dd>
                 <dd class="govuk-summary-list__actions">
                     <a class="govuk-link" href="{{ path('org_profile_email_edit') }}">
-                        Edit<span class="govuk-visually-hidden"> email</span>
+                        Edit<span class="govuk-visually-hidden">
+                            email</span>
                     </a>
                 </dd>
             </div>
@@ -59,9 +64,10 @@
                     ********
                 </dd>
                 <dd class="govuk-summary-list__actions">
-                <a class="govuk-link" href="{{ path('org_profile_password_edit') }}">
-                    Edit<span class="govuk-visually-hidden"> password</span>
-                </a>
+                    <a class="govuk-link" href="{{ path('org_profile_password_edit') }}">
+                        Edit<span class="govuk-visually-hidden">
+                            password</span>
+                    </a>
                 </dd>
             </div>
         </dl>

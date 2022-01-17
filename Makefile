@@ -108,6 +108,8 @@ behat-suite: up-app-integration-tests reset-fixtures ##@behat Pass in suite name
 behat-profile-suite: up-app-integration-tests reset-fixtures disable-debug ##@behat Pass in profile and suite name as args e.g. make behat-profile-suite profile=<PROFILE NAME> suite=<SUITE NAME>
 	docker-compose -f docker-compose.yml -f docker-compose.dev.yml run --rm test sh ./tests/Behat/run-tests.sh --profile $(profile) --suite $(suite)
 
+migrate: reset-database reset-fixtures ##@database Runs reset-database & reset-fixtures
+
 reset-database: ##@database Resets the DB schema and runs migrations
 	docker-compose run --rm api sh scripts/reset_db_structure_local.sh
 
