@@ -10,6 +10,7 @@ use App\Entity\ReportInterface;
 use App\Service\Client\RestClient;
 use App\Service\File\Storage\StorageInterface;
 use App\Service\Time\DateTimeProvider;
+use Exception;
 use Symfony\Component\HttpFoundation\File\UploadedFile;
 
 class S3FileUploader
@@ -53,6 +54,7 @@ class S3FileUploader
 
         $fileName = $this->fileNameFixer->addMissingFileExtension($file, $body);
         $fileName = $this->fileNameFixer->removeWhiteSpaceBeforeFileExtension($fileName);
+        $fileName = $this->fileNameFixer->removeUnusualCharacters($fileName);
 
         return [$body, $fileName];
     }
@@ -95,13 +97,13 @@ class S3FileUploader
     /**
      * Removes a file from S3.
      *
-     * @throws \Exception
+     * @throws Exception
      */
     public function removeFileFromS3(Document $document)
     {
         $storageReference = $document->getStorageReference();
         if (empty($storageReference)) {
-            throw new \Exception('Document could not be removed. No Reference.');
+            throw new Exception('Document could not be removed. No Reference.');
         }
 
         $this->storage->removeFromS3($storageReference);
