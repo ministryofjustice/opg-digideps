@@ -14,10 +14,10 @@ Feature: Money Out
     Scenario: A user adds one of each payment type
         Given a Lay Deputy has not started a Pfa High Assets report
         When I view and start the money out report section
-        And I add one of each type of money out payment
+        And I add one type of money out payment from each category
         Then I should see the expected results on money out summary page
         When I follow link back to report overview page
-        Then I should see "money-out" as "39 items"
+        Then I should see "money-out" as "9 items"
 
     @lay-pfa-high-not-started
     Scenario: A user removes a payment
