@@ -33,4 +33,12 @@ class FileNameFixer extends FileUtility
 
         return $uploadedFile->getClientOriginalName();
     }
+
+    public function removeUnusualCharacters(string $fileName): array | string | null
+    {
+        $fileNameSpacesToUnderscores = str_replace(' ', '_', $fileName);
+        $specialCharsRemoved = preg_replace('/[^A-Za-z0-9_.]/', '', $fileNameSpacesToUnderscores);
+
+        return preg_replace('/[.](?=.*[.])/', '_', $specialCharsRemoved);
+    }
 }

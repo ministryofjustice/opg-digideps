@@ -86,8 +86,10 @@ class S3FileUploaderTest extends KernelTestCase
 
         $this->fileNameFixer->addMissingFileExtension($uploadedFile, $fileBody)->shouldBeCalled()->willReturn('good-jpeg.jpeg');
         $this->fileNameFixer->removeWhiteSpaceBeforeFileExtension('good-jpeg.jpeg')->shouldBeCalled()->willReturn('good-jpeg.jpeg');
+        $this->fileNameFixer->removeUnusualCharacters('good-jpeg.jpeg')->shouldBeCalled()->willReturn('good_jpeg.jpeg');
 
         $this->mimeTypeAndExtensionChecker->check(Argument::cetera())->shouldBeCalled()->willReturn(true);
+
         $this->dateTimeProvider->getDateTime()->willReturn($now);
         $this->storage->store(Argument::cetera())->shouldBeCalled();
         $this->restClient->post(Argument::cetera())->shouldBeCalled();
@@ -108,6 +110,7 @@ class S3FileUploaderTest extends KernelTestCase
 
         $this->fileNameFixer->addMissingFileExtension(Argument::cetera())->shouldBeCalledTimes(3)->willReturn('the-fixed-file-name');
         $this->fileNameFixer->removeWhiteSpaceBeforeFileExtension('the-fixed-file-name')->shouldBeCalledTimes(3)->willReturn('the-fixed-file-name');
+        $this->fileNameFixer->removeUnusualCharacters('the-fixed-file-name')->shouldBeCalledTimes(3)->willReturn('the_fixed_file_name');
 
         $this->mimeTypeAndExtensionChecker->check(Argument::cetera())->shouldBeCalledTimes(3)->willReturn(true);
 
