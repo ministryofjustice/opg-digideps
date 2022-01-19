@@ -203,7 +203,7 @@ class DocumentController extends AbstractController
                     } catch (Throwable $e) {
                         $logger->warning('Error uploading file: '.$e->getMessage());
 
-                        $form->get('files')->addError(new FormError('Cannot upload file, please try again later.'));
+                        $form->get('files')->addError(new FormError('Cannot upload file, please try again later'));
                     }
                 }
             }
