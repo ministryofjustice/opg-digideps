@@ -50,7 +50,7 @@ class S3FileUploader
             $extensionAndMimeTypeMatch = $this->mimeTypeAndExtensionChecker->check($uploadedFile, $body);
 
             if (!$extensionAndMimeTypeMatch) {
-                throw new MimeTypeAndFileExtensionDoNotMatchException('Your file type and file extension do not match.');
+                throw new MimeTypeAndFileExtensionDoNotMatchException('Your file type and file extension do not match');
             }
 
             $this->uploadFileAndPersistDocument($report, $body, $fileName, false);

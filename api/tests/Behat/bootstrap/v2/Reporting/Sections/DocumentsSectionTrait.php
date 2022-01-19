@@ -23,21 +23,10 @@ trait DocumentsSectionTrait
     private string $invalidFileTypeErrorMessage = 'Please upload a valid file type';
     private string $fileTooBigErrorMessage = 'The file you selected to upload is too big';
     private string $answerNotUpdatedErrorMessage = "Your answer could not be updated to 'No' because you have attached documents";
-    private string $mimeTypeAndFileExtensionDoNotMatchErrorMessage = 'Your file type and file extension do not match.';
+    private string $mimeTypeAndFileExtensionDoNotMatchErrorMessage = 'Your file type and file extension do not match';
     private string $orgCostCertificateMessage = 'Send your final cost certificate for the previous reporting period';
 
     private array $uploadedDocumentFilenames = [];
-
-    /**
-     * @Given I view the documents report section
-     */
-    public function iViewDocumentsSection()
-    {
-        $activeReportId = $this->loggedInUserDetails->getCurrentReportId();
-        $documentsUrl = sprintf(self::REPORT_SECTION_ENDPOINT, $this->reportUrlPrefix, $activeReportId, 'documents');
-
-        $this->visitPath($documentsUrl);
-    }
 
     /**
      * @Given I view and start the documents report section
@@ -50,13 +39,14 @@ trait DocumentsSectionTrait
     }
 
     /**
-     * @Given I have no documents to upload
+     * @Given I view the documents report section
      */
-    public function iHaveNoDocumentsToUpload()
+    public function iViewDocumentsSection()
     {
-        $this->fillField('document_wishToProvideDocumentation_1', 'no');
+        $activeReportId = $this->loggedInUserDetails->getCurrentReportId();
+        $documentsUrl = sprintf(self::REPORT_SECTION_ENDPOINT, $this->reportUrlPrefix, $activeReportId, 'documents');
 
-        $this->pressButton('Save and continue');
+        $this->visitPath($documentsUrl);
     }
 
     /**
@@ -137,6 +127,16 @@ trait DocumentsSectionTrait
         $this->uploadFiles([$this->validJpegFilename]);
     }
 
+    private function uploadFiles(array $filenames)
+    {
+        $this->uploadedDocumentFilenames = $filenames;
+
+        foreach ($filenames as $filename) {
+            $this->attachFileToField('report_document_upload_files', $filename);
+            $this->pressButton('Upload');
+        }
+    }
+
     /**
      * @When I upload multiple valid documents
      */
@@ -159,16 +159,6 @@ trait DocumentsSectionTrait
     public function iUploadOneDocumentThatIsTooLarge()
     {
         $this->uploadFiles([$this->tooLargeFilename]);
-    }
-
-    private function uploadFiles(array $filenames)
-    {
-        $this->uploadedDocumentFilenames = $filenames;
-
-        foreach ($filenames as $filename) {
-            $this->attachFileToField('report_document_upload_files', $filename);
-            $this->pressButton('Upload');
-        }
     }
 
     /**
@@ -239,6 +229,16 @@ trait DocumentsSectionTrait
     {
         $this->clickLink('Edit');
         $this->iHaveNoDocumentsToUpload();
+    }
+
+    /**
+     * @Given I have no documents to upload
+     */
+    public function iHaveNoDocumentsToUpload()
+    {
+        $this->fillField('document_wishToProvideDocumentation_1', 'no');
+
+        $this->pressButton('Save and continue');
     }
 
     /**
