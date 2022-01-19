@@ -1,8 +1,8 @@
-var fs = require('fs')
-var path = require('path')
-var del = require('del')
-var CopyPlugin = require('copy-webpack-plugin')
-var MiniCssExtractPlugin = require('mini-css-extract-plugin')
+const fs = require('fs')
+const path = require('path')
+const del = require('del')
+const CopyPlugin = require('copy-webpack-plugin')
+const MiniCssExtractPlugin = require('mini-css-extract-plugin')
 
 const tag = (new Date()).getTime()
 
@@ -28,7 +28,11 @@ module.exports = {
           {
             loader: 'css-loader',
             options: {
-              url: (url) => url.includes('?inline')
+              url: {
+                filter: (url) => {
+                  return url.includes('?inline')
+                }
+              }
             }
           },
           {
