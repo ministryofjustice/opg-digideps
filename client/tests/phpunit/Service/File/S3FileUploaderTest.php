@@ -28,6 +28,7 @@ class S3FileUploaderTest extends KernelTestCase
     private S3FileUploader $sut;
     private ObjectProphecy $fileNameFixer;
     private ObjectProphecy $dateTimeProvider;
+    private ObjectProphecy $mimeTypeAndExtensionChecker;
 
     public function setUp(): void
     {
@@ -37,12 +38,14 @@ class S3FileUploaderTest extends KernelTestCase
         $this->restClient = self::prophesize(RestClient::class);
         $this->fileNameFixer = self::prophesize(FileNameFixer::class);
         $this->dateTimeProvider = self::prophesize(DateTimeProvider::class);
+        $this->mimeTypeAndExtensionChecker = self::prophesize(MimeTypeAndExtensionChecker::class);
 
         $this->sut = new S3FileUploader(
             $this->storage->reveal(),
             $this->restClient->reveal(),
             $this->fileNameFixer->reveal(),
-            $this->dateTimeProvider->reveal()
+            $this->dateTimeProvider->reveal(),
+            $this->mimeTypeAndExtensionChecker->reveal()
         );
     }
 
@@ -83,6 +86,8 @@ class S3FileUploaderTest extends KernelTestCase
 
         $this->fileNameFixer->addMissingFileExtension($uploadedFile, $fileBody)->shouldBeCalled()->willReturn('good-jpeg.jpeg');
         $this->fileNameFixer->removeWhiteSpaceBeforeFileExtension('good-jpeg.jpeg')->shouldBeCalled()->willReturn('good-jpeg.jpeg');
+
+        $this->mimeTypeAndExtensionChecker->check(Argument::cetera())->shouldBeCalled()->willReturn(true);
         $this->dateTimeProvider->getDateTime()->willReturn($now);
         $this->storage->store(Argument::cetera())->shouldBeCalled();
         $this->restClient->post(Argument::cetera())->shouldBeCalled();
@@ -103,6 +108,8 @@ class S3FileUploaderTest extends KernelTestCase
 
         $this->fileNameFixer->addMissingFileExtension(Argument::cetera())->shouldBeCalledTimes(3)->willReturn('the-fixed-file-name');
         $this->fileNameFixer->removeWhiteSpaceBeforeFileExtension('the-fixed-file-name')->shouldBeCalledTimes(3)->willReturn('the-fixed-file-name');
+
+        $this->mimeTypeAndExtensionChecker->check(Argument::cetera())->shouldBeCalledTimes(3)->willReturn(true);
 
         $this->dateTimeProvider->getDateTime()->willReturn($now);
         $this->storage->store(Argument::cetera())->shouldBeCalledTimes(3);

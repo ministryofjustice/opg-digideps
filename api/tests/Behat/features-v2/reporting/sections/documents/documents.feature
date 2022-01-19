@@ -89,7 +89,7 @@ Feature: Documents - All User Roles
         When I change my mind and confirm I have no documents to upload
         Then I should see an 'answer could not be updated' error
 
-    @lay-pfa-high-not-started @mgord
+    @lay-pfa-high-not-started
     Scenario: A user uploads one supporting document where the mimetype and file extension do not match
         Given a Lay Deputy has not started a report
         When I view and start the documents report section
