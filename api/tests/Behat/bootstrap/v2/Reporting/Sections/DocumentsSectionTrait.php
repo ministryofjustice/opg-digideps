@@ -17,11 +17,13 @@ trait DocumentsSectionTrait
     private string $tooLargeFilename = 'too-big.jpg';
     private string $txtFilename = 'eicar.txt';
     private string $csvFilename = 'behat-pa.csv';
+    private string $pngFilenameWithJpegFileExtension = 'png-file.jpeg';
 
     // Expected validation errors
     private string $invalidFileTypeErrorMessage = 'Please upload a valid file type';
     private string $fileTooBigErrorMessage = 'The file you selected to upload is too big';
     private string $answerNotUpdatedErrorMessage = "Your answer could not be updated to 'No' because you have attached documents";
+    private string $mimeTypeAndFileExtensionDoNotMatchErrorMessage = 'Your file type and file extension do not match.';
     private string $orgCostCertificateMessage = 'Send your final cost certificate for the previous reporting period';
 
     private array $uploadedDocumentFilenames = [];
@@ -245,5 +247,21 @@ trait DocumentsSectionTrait
     public function iShouldSeeFeeGuidance()
     {
         $this->assertOnAlertMessage($this->orgCostCertificateMessage);
+    }
+
+    /**
+     * @Given I upload a file where the mimetype and file extension do not match
+     */
+    public function filesMimetypeAndExtensionDoesNotMatch()
+    {
+        $this->uploadFiles([$this->pngFilenameWithJpegFileExtension]);
+    }
+
+    /**
+     * @Then I should see a 'mimetype and file type do not match' error
+     */
+    public function iShouldSeeAMimetypeAndFileDoNotMatchError()
+    {
+        $this->assertOnErrorMessage($this->mimeTypeAndFileExtensionDoNotMatchErrorMessage);
     }
 }
