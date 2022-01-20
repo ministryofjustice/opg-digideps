@@ -108,7 +108,7 @@ class OrgDeputyshipUploader
         );
 
         // Temporary fix to generate dep adr numbers for all deps - remove once CSVs run
-        if (!is_null($namedDeputy)) {
+        if (!is_null($namedDeputy) && $dto->getDeputyAddressNumber()) {
             $namedDeputy->setDepAddrNo($dto->getDeputyAddressNumber());
         }
 
