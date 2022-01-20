@@ -40,6 +40,7 @@ class NamedDeputyAssembler
             ->setAddress4($dto->getDeputyAddress4())
             ->setAddress5($dto->getDeputyAddress5())
             ->setAddressPostcode($dto->getDeputyPostcode())
-            ->setDeputyType($dto->getDeputyType());
+            ->setDeputyType($dto->getDeputyType())
+            ->setDepAddrNo($dto->getDeputyAddressNumber());
     }
 }
