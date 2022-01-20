@@ -24,16 +24,31 @@
 
 {% block pageContent %}
 
-    {{ macros.notification('infoLink', {
-        'textbeforemarkup': 'Get help paying deputy fees. Check whether you\'re eligible to ',
-        'link': 'https://www.gov.uk/government/publications/deputy-fees-remission-or-exemption',
-        'linktext': 'pay a reduced or no fee',
-        'textaftermarkup': ''})
-    }}
+    {% if app.session.get('login-context') != 'email-update' %}
+        {{ macros.notification('infoLink', {
+            'textbeforemarkup': 'Get help paying deputy fees. Check whether you\'re eligible to ',
+            'link': 'https://www.gov.uk/government/publications/deputy-fees-remission-or-exemption',
+            'linktext': 'pay a reduced or no fee',
+            'textaftermarkup': ''})
+        }}
+    {% endif %}
 
     {% if serviceNotificationContent is defined and serviceNotificationContent %}
         <div class="behat-region-service-notification">
             {{ macros.notification('info', serviceNotificationContent | nl2br) }}
+        </div>
+    {% endif %}
+
+    {% if app.session.get('login-context') == 'email-update' %}
+        <div class="moj-banner">
+            {{ macros.icon('information', 'moj-banner__icon') }}
+            <div class="moj-banner__message">
+                <h3 class="govuk-heading-m govuk-!-margin-bottom-2">Do you also need to change your email on any deputyship records?</h3>
+                <span class="moj-banner__assistive">information</span>
+                <p class="govuk-body govuk-!-margin-bottom-2">If you have a new email address and you're a deputy or contact on any deputyships, you'll need to ask us to update
+                    your contact details on the deputyship records.</p>
+                <p class="govuk-body">Send an email to: <a href="mailto:opg.pro@publicguardian.gov.uk">opg.pro@publicguardian.gov.uk</a></p>
+            </div>
         </div>
     {% endif %}
 

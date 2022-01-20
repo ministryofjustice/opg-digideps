@@ -229,10 +229,6 @@ class UserController extends RestController
 
         $requestedUser->setPassword($newPassword);
 
-        if (array_key_exists('set_active', $data)) {
-            $requestedUser->setActive($data['set_active']);
-        }
-
         $this->em->flush();
 
         return $requestedUser->getId();
