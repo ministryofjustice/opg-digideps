@@ -256,6 +256,20 @@ class UserControllerTest extends AbstractTestController
         ]);
     }
 
+    public function testChangeEmailAuth()
+    {
+        $url = '/user/'.self::$deputy1->getId().'/update-email';
+
+        $this->assertEndpointNeedsAuth('PUT', $url);
+    }
+
+    public function testChangeEmailAcl()
+    {
+        $url = '/user/'.self::$deputy2->getId().'/update-email';
+
+        $this->assertEndpointNotAllowedFor('PUT', $url, self::$tokenDeputy);
+    }
+
     public function testGetOneByIdAuth()
     {
         $url = '/user/'.self::$deputy1->getId();
