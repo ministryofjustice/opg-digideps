@@ -156,24 +156,19 @@
                             {% endif %}
                         </dd>
                         {% if showActions %}
-                            <dd class="govuk-summary-list__value govuk-!-text-align-right">
-                                <span>
-                                    <a
-                                        href="{{ path('client_benefits_check_step', { 'reportId': report.id, 'step': 3, 'reportOrNdr': reportOrNdr }) }}"
-                                        class="govuk-link"
-                                    >
-                                        {{ 'edit' | trans({}, 'common' ) }} <span class="govuk-visually-hidden">income type with description '{{ income.incomeType }}'</span>
-                                    </a>
-                                </span>
-                                    <span>
-                                    <a
-                                        href="{{ path('client_benefits_check_remove_income_type', { 'reportId': report.id, 'incomeTypeId': income.id, 'reportOrNdr': reportOrNdr }) }}"
-                                        class="govuk-link"
-                                    >
-                                        {{ 'remove' | trans({}, 'common' ) }} <span class="govuk-visually-hidden">income type with description '{{ income.incomeType }}'</span>
-                                    </a>
-                                </span>
-                            </dd>
+                            {% set editLinkContextText = 'income type with description ' ~ income.incomeType %}
+                            {% set removeLinkContextText = 'income type with description ' ~ income.incomeType %}
+
+                            {{
+                                macros.edit_remove_links_dd(
+                                    'client_benefits_check_step',
+                                    { 'reportId': report.id, 'step': 3, 'reportOrNdr': reportOrNdr },
+                                    'client_benefits_check_remove_income_type',
+                                    { 'reportId': report.id, 'incomeTypeId': income.id, 'reportOrNdr': reportOrNdr },
+                                    editLinkContextText,
+                                    removeLinkContextText
+                                )
+                            }}
                         {% endif %}
                     </div>
                 {% endfor %}
