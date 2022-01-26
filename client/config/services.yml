@@ -81,6 +81,12 @@ services:
             $serializer: '@serializer'
             $logger: '@logger'
 
+    App\Service\Client\GovUK\BankHolidaysAPIClient:
+        class: App\Service\Client\GovUK\BankHolidaysAPIClient
+        arguments:
+            $httpClient: '@guzzle_api_gateway_client'
+            $logger: '@logger'
+
     App\Service\AWS\RequestSigner:
         class: App\Service\AWS\RequestSigner
         arguments:

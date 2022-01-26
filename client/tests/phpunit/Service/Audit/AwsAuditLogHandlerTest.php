@@ -1,4 +1,6 @@
-<?php declare(strict_types=1);
+<?php
+
+declare(strict_types=1);
 
 namespace App\Service\Audit;
 
@@ -25,7 +27,7 @@ class AwsAuditLogHandlerTest extends TestCase
         $this->cloudWatchClient = $this
             ->getMockBuilder(CloudWatchLogsClient::class)
             ->disableOriginalConstructor()
-            ->addMethods(['putLogEvents', 'createLogStream', 'describeLogStreams'])
+            ->addMethods(['putLogEvents', 'createLogStream', 'describeLogStreams', 'getLogEvents'])
             ->getMock();
 
         $this->sut = new AwsAuditLogHandler($this->cloudWatchClient, self::LOG_GROUP_NAME);
@@ -41,15 +43,16 @@ class AwsAuditLogHandlerTest extends TestCase
 
     /**
      * @test
+     *
      * @throws \Exception
      */
     public function ignoresRecordsWithoutEventName(): void
     {
         $record = [
             'level' => Logger::NOTICE,
-            'message' => "Client Deleted",
+            'message' => 'Client Deleted',
             'datetime' => new \DateTime('2018-09-02 13:42:23'),
-            'context' => ['type' => 'audit']
+            'context' => ['type' => 'audit'],
         ];
 
         $this
@@ -61,15 +64,16 @@ class AwsAuditLogHandlerTest extends TestCase
 
     /**
      * @test
+     *
      * @throws \Exception
      */
     public function ignoresRecordsWithoutEventType(): void
     {
         $record = [
             'level' => Logger::NOTICE,
-            'message' => "Client Deleted",
+            'message' => 'Client Deleted',
             'datetime' => new \DateTime('2018-09-02 13:42:23'),
-            'context' => ['event' => self::STREAM_NAME]
+            'context' => ['event' => self::STREAM_NAME],
         ];
 
         $this
@@ -120,7 +124,59 @@ class AwsAuditLogHandlerTest extends TestCase
     }
 
     /**
-     * @return array
+     * @test
+     */
+    public function getLogEventsByLogStream(): void
+    {
+        $this
+            ->ensureLogEventsWillExist()
+            ->assertExpectedResultIsReturned();
+    }
+
+    private function ensureLogEventsWillExist(): self
+    {
+        $this
+            ->cloudWatchClient
+            ->method('getLogEvents')
+            ->with([
+                       'logGroupName' => self::LOG_GROUP_NAME,
+                       'logStreamName' => self::STREAM_NAME,
+                   ])
+            ->willReturn(new Result([
+                'events' => [
+                    [
+                        'ingestionTime' => 1643206329732,
+                        'message' => 'something',
+                        'timestamp' => 1643206329733,
+                    ],
+                ],
+                'nextBackwardToken' => 'next-sequence-token',
+                'nextForwardToken' => 'next-sequence-token',
+            ]));
+
+        return $this;
+    }
+
+    private function assertExpectedResultIsReturned()
+    {
+        $result = $this->sut->getLogEventsByLogStream(self::STREAM_NAME);
+
+        $expected = new Result([
+                       'events' => [
+                           [
+                               'ingestionTime' => 1643206329732,
+                               'message' => 'something',
+                               'timestamp' => 1643206329733,
+                           ],
+                       ],
+                       'nextBackwardToken' => 'next-sequence-token',
+                       'nextForwardToken' => 'next-sequence-token',
+                   ]);
+
+        $this->assertEquals($expected, $result);
+    }
+
+    /**
      * @throws \Exception
      */
     private function getLogMessageInput(): array
@@ -134,14 +190,11 @@ class AwsAuditLogHandlerTest extends TestCase
             'datetime' => $dateTime,
             'context' => [
                 'event' => self::STREAM_NAME,
-                'type' => 'audit'
-            ]
+                'type' => 'audit',
+            ],
         ];
     }
 
-    /**
-     * @return AwsAuditLogHandlerTest
-     */
     private function ensureLogStreamWillExist(): AwsAuditLogHandlerTest
     {
         $this
@@ -151,17 +204,14 @@ class AwsAuditLogHandlerTest extends TestCase
                 'logStreams' => [
                     [
                         'logStreamName' => self::STREAM_NAME,
-                        'uploadSequenceToken' => 'next-sequence-token'
-                    ]
-                ]
+                        'uploadSequenceToken' => 'next-sequence-token',
+                    ],
+                ],
             ]));
 
         return $this;
     }
 
-    /**
-     * @return AwsAuditLogHandlerTest
-     */
     private function ensureLogStreamWillNotExist(): AwsAuditLogHandlerTest
     {
         $this
@@ -169,16 +219,13 @@ class AwsAuditLogHandlerTest extends TestCase
             ->method('describeLogStreams')
             ->willReturn(new Result([
                 'logStreams' => [
-                    []
-                ]
+                    [],
+                ],
             ]));
 
         return $this;
     }
 
-    /**
-     * @return AwsAuditLogHandlerTest
-     */
     private function assertLogStreamWillBeCreated(): AwsAuditLogHandlerTest
     {
         $this
@@ -187,15 +234,12 @@ class AwsAuditLogHandlerTest extends TestCase
             ->method('createLogStream')
             ->with([
                 'logGroupName' => self::LOG_GROUP_NAME,
-                'logStreamName' => self::STREAM_NAME
+                'logStreamName' => self::STREAM_NAME,
             ]);
 
         return $this;
     }
 
-    /**
-     * @return AwsAuditLogHandlerTest
-     */
     private function assertLogStreamWillNotBeCreated(): AwsAuditLogHandlerTest
     {
         $this
@@ -217,7 +261,7 @@ class AwsAuditLogHandlerTest extends TestCase
             ->method('putLogEvents')
             ->with($this->getExpectedMessageWithSequenceToken())
             ->willReturn(new Result([
-                'nextSequenceToken' => 'next-sequence-token'
+                'nextSequenceToken' => 'next-sequence-token',
             ]));
     }
 
@@ -232,7 +276,7 @@ class AwsAuditLogHandlerTest extends TestCase
             ->method('putLogEvents')
             ->with($this->getExpectedMessageWithoutSequenceToken())
             ->willReturn(new Result([
-                'nextSequenceToken' => 'next-sequence-token'
+                'nextSequenceToken' => 'next-sequence-token',
             ]));
     }
 
@@ -247,13 +291,10 @@ class AwsAuditLogHandlerTest extends TestCase
             ->method('putLogEvents')
             ->withConsecutive([$this->getExpectedMessageWithSequenceToken()], [$this->getExpectedMessageWithSequenceToken()])
             ->willReturn(new Result([
-                'nextSequenceToken' => 'next-sequence-token'
+                'nextSequenceToken' => 'next-sequence-token',
             ]));
     }
 
-    /**
-     *
-     */
     private function assertLogWillNotBePutOnAws(): void
     {
         $this
@@ -263,7 +304,6 @@ class AwsAuditLogHandlerTest extends TestCase
     }
 
     /**
-     * @return array
      * @throws \Exception
      */
     private function getExpectedMessageWithoutSequenceToken(): array
@@ -272,13 +312,13 @@ class AwsAuditLogHandlerTest extends TestCase
         $timezone = new \DateTimeZone(date_default_timezone_get());
         $dateTime->setTimezone($timezone);
 
-        $message =  [
+        $message = [
             'level' => Logger::NOTICE,
             'datetime' => $dateTime,
             'context' => [
                 'event' => self::STREAM_NAME,
-                'type' => 'audit'
-            ]
+                'type' => 'audit',
+            ],
         ];
 
         return [
@@ -286,15 +326,14 @@ class AwsAuditLogHandlerTest extends TestCase
             'logStreamName' => self::STREAM_NAME,
             'logEvents' => [
                 [
-                    'message' => json_encode($message, JSON_UNESCAPED_SLASHES) . "\n",
-                    'timestamp' => $this->getLogMessageInput()['datetime']->format('U.u') * 1000
-                ]
-            ]
+                    'message' => json_encode($message, JSON_UNESCAPED_SLASHES)."\n",
+                    'timestamp' => $this->getLogMessageInput()['datetime']->format('U.u') * 1000,
+                ],
+            ],
         ];
     }
 
     /**
-     * @return array
      * @throws \Exception
      */
     private function getExpectedMessageWithSequenceToken(): array

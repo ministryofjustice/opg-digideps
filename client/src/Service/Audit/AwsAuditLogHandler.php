@@ -120,6 +120,8 @@ class AwsAuditLogHandler extends AbstractAuditLogHandler
                     'logStreamName' => $this->stream,
                 ]
             );
+
+        //$this->client->()
     }
 
     private function determineSequenceToken(bool $refresh = false): void
