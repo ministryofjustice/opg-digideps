@@ -130,73 +130,99 @@ class AwsAuditLogHandlerTest extends TestCase
      * @test
      * @dataProvider awsResultProvider
      */
-    public function getLogEventsByLogStream(Result $result, string $streamName): void
-    {
+    public function getLogEventsByLogStream(
+        Result $result,
+        string $streamName,
+        int $logStartTime,
+        int $logEndTime
+    ): void {
         $this
-            ->ensureLogEventsWillExist($result, $streamName)
-            ->assertExpectedResultIsReturned($result, $streamName);
+            ->ensureLogEventsWillExist($result, $streamName, $logStartTime, $logEndTime)
+            ->assertExpectedResultIsReturned($result, $streamName, $logStartTime, $logEndTime);
     }
 
     public function awsResultProvider()
     {
         return [
-            'one log event' => [new Result([
-                'events' => [
-                    [
-                        'ingestionTime' => 1643206329732,
-                        'message' => 'something',
-                        'timestamp' => 1643206329733,
+            'one log event' => [
+                new Result([
+                    'events' => [
+                        [
+                            'ingestionTime' => 1643206329732,
+                            'message' => 'something',
+                            'timestamp' => 1643206329733,
+                        ],
                     ],
-                ],
-                'nextBackwardToken' => 'next-sequence-token',
-                'nextForwardToken' => 'next-sequence-token',
-            ]), 'logstream 1'],
+                    'nextBackwardToken' => 'next-sequence-token',
+                    'nextForwardToken' => 'next-sequence-token',
+                ]),
+                'logstream 1',
+                1643206329740,
+                1643206329741,
+            ],
             'three log events' => [
                 new Result([
-                'events' => [
-                    [
-                        'ingestionTime' => 1643206329732,
-                        'message' => 'something',
-                        'timestamp' => 1643206329733,
+                    'events' => [
+                        [
+                            'ingestionTime' => 1643206329732,
+                            'message' => 'something',
+                            'timestamp' => 1643206329733,
+                        ],
+                        [
+                            'ingestionTime' => 1643206329999,
+                            'message' => 'else',
+                            'timestamp' => 1643206329999,
+                        ],
+                        [
+                            'ingestionTime' => 1643206330000,
+                            'message' => 'returned',
+                            'timestamp' => 1643206330000,
+                        ],
                     ],
-                    [
-                        'ingestionTime' => 1643206329999,
-                        'message' => 'else',
-                        'timestamp' => 1643206329999,
-                    ],
-                    [
-                        'ingestionTime' => 1643206330000,
-                        'message' => 'returned',
-                        'timestamp' => 1643206330000,
-                    ],
-                ],
-                'nextBackwardToken' => 'next-sequence-token',
-                'nextForwardToken' => 'next-sequence-token',
-            ]), 'logstream 2',
+                    'nextBackwardToken' => 'next-sequence-token',
+                    'nextForwardToken' => 'next-sequence-token',
+                ]),
+                'logstream 2',
+                1643206329750,
+                1643206329751,
             ],
         ];
     }
 
-    private function ensureLogEventsWillExist(Result $result, string $streamName): self
-    {
+    private function ensureLogEventsWillExist(
+        Result $result,
+        string $streamName,
+        int $startTime,
+        int $endTime
+    ): self {
         $this
             ->cloudWatchClient
             ->expects($this->once())
             ->method('getLogEvents')
-            ->with([
-                       'logGroupName' => self::LOG_GROUP_NAME,
-                       'logStreamName' => $streamName,
-                   ])
+            ->with(
+                [
+                    'logGroupName' => self::LOG_GROUP_NAME,
+                    'logStreamName' => $streamName,
+                    'startTime' => $startTime,
+                    'endTime' => $endTime,
+                ]
+            )
             ->willReturn($result);
 
         return $this;
     }
 
-    private function assertExpectedResultIsReturned(Result $expected, string $streamName)
-    {
-        $result = $this->sut->getLogEventsByLogStream($streamName);
+    private function assertExpectedResultIsReturned(
+        Result $expected,
+        string $streamName,
+        int $startTime,
+        int $endTime
+    ): self {
+        $result = $this->sut->getLogEventsByLogStream($streamName, $startTime, $endTime);
 
         $this->assertEquals($expected, $result);
+
+        return $this;
     }
 
     /**
