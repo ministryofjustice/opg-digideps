@@ -4,7 +4,6 @@ namespace App\Service\Audit;
 
 use Aws\CloudWatchLogs\CloudWatchLogsClient;
 use Aws\CloudWatchLogs\Exception\CloudWatchLogsException;
-use Aws\Result;
 use Monolog\Logger;
 
 class AwsAuditLogHandler extends AbstractAuditLogHandler
@@ -121,8 +120,6 @@ class AwsAuditLogHandler extends AbstractAuditLogHandler
                     'logStreamName' => $this->stream,
                 ]
             );
-
-        //$this->client->()
     }
 
     private function determineSequenceToken(bool $refresh = false): void
@@ -159,16 +156,9 @@ class AwsAuditLogHandler extends AbstractAuditLogHandler
 
     public function getLogEventsByLogStream()
     {
-        return new Result([
-            'events' => [
-                [
-                    'ingestionTime' => 1643206329732,
-                    'message' => 'something',
-                    'timestamp' => 1643206329733,
-                ],
-            ],
-            'nextBackwardToken' => 'next-sequence-token',
-            'nextForwardToken' => 'next-sequence-token',
-        ]);
+        return $this->client->getLogEvents([
+                                        'logGroupName' => 'audit-local',
+                                        'logStreamName' => 'DELETED_CLIENTS',
+                                    ]);
     }
 }

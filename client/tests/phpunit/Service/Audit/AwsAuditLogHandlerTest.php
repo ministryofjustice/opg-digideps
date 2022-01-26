@@ -130,11 +130,11 @@ class AwsAuditLogHandlerTest extends TestCase
      * @test
      * @dataProvider awsResultProvider
      */
-    public function getLogEventsByLogStream(Result $result): void
+    public function getLogEventsByLogStream(Result $result, string $streamName): void
     {
         $this
-            ->ensureLogEventsWillExist($result)
-            ->assertExpectedResultIsReturned($result);
+            ->ensureLogEventsWillExist($result, $streamName)
+            ->assertExpectedResultIsReturned($result, $streamName);
     }
 
     public function awsResultProvider()
@@ -150,7 +150,7 @@ class AwsAuditLogHandlerTest extends TestCase
                 ],
                 'nextBackwardToken' => 'next-sequence-token',
                 'nextForwardToken' => 'next-sequence-token',
-            ])],
+            ]), 'logstream 1'],
             'three log events' => [
                 new Result([
                 'events' => [
@@ -172,28 +172,29 @@ class AwsAuditLogHandlerTest extends TestCase
                 ],
                 'nextBackwardToken' => 'next-sequence-token',
                 'nextForwardToken' => 'next-sequence-token',
-            ]),
+            ]), 'logstream 2',
             ],
         ];
     }
 
-    private function ensureLogEventsWillExist(Result $result): self
+    private function ensureLogEventsWillExist(Result $result, string $streamName): self
     {
         $this
             ->cloudWatchClient
+            ->expects($this->once())
             ->method('getLogEvents')
             ->with([
                        'logGroupName' => self::LOG_GROUP_NAME,
-                       'logStreamName' => self::STREAM_NAME,
+                       'logStreamName' => $streamName,
                    ])
             ->willReturn($result);
 
         return $this;
     }
 
-    private function assertExpectedResultIsReturned(Result $expected)
+    private function assertExpectedResultIsReturned(Result $expected, string $streamName)
     {
-        $result = $this->sut->getLogEventsByLogStream(self::STREAM_NAME);
+        $result = $this->sut->getLogEventsByLogStream($streamName);
 
         $this->assertEquals($expected, $result);
     }
