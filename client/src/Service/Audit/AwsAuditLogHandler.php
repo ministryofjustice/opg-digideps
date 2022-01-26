@@ -4,6 +4,7 @@ namespace App\Service\Audit;
 
 use Aws\CloudWatchLogs\CloudWatchLogsClient;
 use Aws\CloudWatchLogs\Exception\CloudWatchLogsException;
+use Aws\Result;
 use Monolog\Logger;
 
 class AwsAuditLogHandler extends AbstractAuditLogHandler
@@ -154,5 +155,20 @@ class AwsAuditLogHandler extends AbstractAuditLogHandler
 
         // Set this in memory in case the same request goes on to audit log something else - saves fetching it from AWS.
         $this->sequenceToken = $response->get('nextSequenceToken');
+    }
+
+    public function getLogEventsByLogStream()
+    {
+        return new Result([
+            'events' => [
+                [
+                    'ingestionTime' => 1643206329732,
+                    'message' => 'something',
+                    'timestamp' => 1643206329733,
+                ],
+            ],
+            'nextBackwardToken' => 'next-sequence-token',
+            'nextForwardToken' => 'next-sequence-token',
+        ]);
     }
 }

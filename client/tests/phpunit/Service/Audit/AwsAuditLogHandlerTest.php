@@ -6,6 +6,9 @@ namespace App\Service\Audit;
 
 use Aws\CloudWatchLogs\CloudWatchLogsClient;
 use Aws\Result;
+use DateTime;
+use DateTimeZone;
+use Exception;
 use Monolog\Handler\AbstractProcessingHandler;
 use Monolog\Logger;
 use PHPUnit\Framework\MockObject\MockObject;
@@ -44,14 +47,14 @@ class AwsAuditLogHandlerTest extends TestCase
     /**
      * @test
      *
-     * @throws \Exception
+     * @throws Exception
      */
     public function ignoresRecordsWithoutEventName(): void
     {
         $record = [
             'level' => Logger::NOTICE,
             'message' => 'Client Deleted',
-            'datetime' => new \DateTime('2018-09-02 13:42:23'),
+            'datetime' => new DateTime('2018-09-02 13:42:23'),
             'context' => ['type' => 'audit'],
         ];
 
@@ -65,14 +68,14 @@ class AwsAuditLogHandlerTest extends TestCase
     /**
      * @test
      *
-     * @throws \Exception
+     * @throws Exception
      */
     public function ignoresRecordsWithoutEventType(): void
     {
         $record = [
             'level' => Logger::NOTICE,
             'message' => 'Client Deleted',
-            'datetime' => new \DateTime('2018-09-02 13:42:23'),
+            'datetime' => new DateTime('2018-09-02 13:42:23'),
             'context' => ['event' => self::STREAM_NAME],
         ];
 
@@ -125,24 +128,19 @@ class AwsAuditLogHandlerTest extends TestCase
 
     /**
      * @test
+     * @dataProvider awsResultProvider
      */
-    public function getLogEventsByLogStream(): void
+    public function getLogEventsByLogStream(Result $result): void
     {
         $this
-            ->ensureLogEventsWillExist()
-            ->assertExpectedResultIsReturned();
+            ->ensureLogEventsWillExist($result)
+            ->assertExpectedResultIsReturned($result);
     }
 
-    private function ensureLogEventsWillExist(): self
+    public function awsResultProvider()
     {
-        $this
-            ->cloudWatchClient
-            ->method('getLogEvents')
-            ->with([
-                       'logGroupName' => self::LOG_GROUP_NAME,
-                       'logStreamName' => self::STREAM_NAME,
-                   ])
-            ->willReturn(new Result([
+        return [
+            'one log event' => [new Result([
                 'events' => [
                     [
                         'ingestionTime' => 1643206329732,
@@ -152,37 +150,61 @@ class AwsAuditLogHandlerTest extends TestCase
                 ],
                 'nextBackwardToken' => 'next-sequence-token',
                 'nextForwardToken' => 'next-sequence-token',
-            ]));
+            ])],
+            'three log events' => [
+                new Result([
+                'events' => [
+                    [
+                        'ingestionTime' => 1643206329732,
+                        'message' => 'something',
+                        'timestamp' => 1643206329733,
+                    ],
+                    [
+                        'ingestionTime' => 1643206329999,
+                        'message' => 'else',
+                        'timestamp' => 1643206329999,
+                    ],
+                    [
+                        'ingestionTime' => 1643206330000,
+                        'message' => 'returned',
+                        'timestamp' => 1643206330000,
+                    ],
+                ],
+                'nextBackwardToken' => 'next-sequence-token',
+                'nextForwardToken' => 'next-sequence-token',
+            ]),
+            ],
+        ];
+    }
+
+    private function ensureLogEventsWillExist(Result $result): self
+    {
+        $this
+            ->cloudWatchClient
+            ->method('getLogEvents')
+            ->with([
+                       'logGroupName' => self::LOG_GROUP_NAME,
+                       'logStreamName' => self::STREAM_NAME,
+                   ])
+            ->willReturn($result);
 
         return $this;
     }
 
-    private function assertExpectedResultIsReturned()
+    private function assertExpectedResultIsReturned(Result $expected)
     {
         $result = $this->sut->getLogEventsByLogStream(self::STREAM_NAME);
-
-        $expected = new Result([
-                       'events' => [
-                           [
-                               'ingestionTime' => 1643206329732,
-                               'message' => 'something',
-                               'timestamp' => 1643206329733,
-                           ],
-                       ],
-                       'nextBackwardToken' => 'next-sequence-token',
-                       'nextForwardToken' => 'next-sequence-token',
-                   ]);
 
         $this->assertEquals($expected, $result);
     }
 
     /**
-     * @throws \Exception
+     * @throws Exception
      */
     private function getLogMessageInput(): array
     {
-        $dateTime = new \DateTime('2018-09-02 13:42:23');
-        $timezone = new \DateTimeZone(date_default_timezone_get());
+        $dateTime = new DateTime('2018-09-02 13:42:23');
+        $timezone = new DateTimeZone(date_default_timezone_get());
         $dateTime->setTimezone($timezone);
 
         return [
@@ -251,7 +273,7 @@ class AwsAuditLogHandlerTest extends TestCase
     }
 
     /**
-     * @throws \Exception
+     * @throws Exception
      */
     private function assertLogWillBePutOnAwsWithSequenceToken(): void
     {
@@ -266,7 +288,7 @@ class AwsAuditLogHandlerTest extends TestCase
     }
 
     /**
-     * @throws \Exception
+     * @throws Exception
      */
     private function assertLogWillBePutOnAwsWithoutSequenceToken(): void
     {
@@ -281,7 +303,7 @@ class AwsAuditLogHandlerTest extends TestCase
     }
 
     /**
-     * @throws \Exception
+     * @throws Exception
      */
     private function assertConsecutiveLogsWillBePutOnAws(): void
     {
@@ -304,12 +326,12 @@ class AwsAuditLogHandlerTest extends TestCase
     }
 
     /**
-     * @throws \Exception
+     * @throws Exception
      */
     private function getExpectedMessageWithoutSequenceToken(): array
     {
-        $dateTime = new \DateTime('2018-09-02 13:42:23');
-        $timezone = new \DateTimeZone(date_default_timezone_get());
+        $dateTime = new DateTime('2018-09-02 13:42:23');
+        $timezone = new DateTimeZone(date_default_timezone_get());
         $dateTime->setTimezone($timezone);
 
         $message = [
@@ -334,7 +356,7 @@ class AwsAuditLogHandlerTest extends TestCase
     }
 
     /**
-     * @throws \Exception
+     * @throws Exception
      */
     private function getExpectedMessageWithSequenceToken(): array
     {
