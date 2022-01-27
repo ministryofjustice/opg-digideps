@@ -3,7 +3,7 @@ FROM golang:1.16 as build-env
 WORKDIR /app
 
 COPY go.mod .
-COPY go.sum .
+#COPY go.sum .
 
 RUN go mod download
 
@@ -19,4 +19,5 @@ RUN apk --update --no-cache add \
 RUN apk --no-cache add tzdata
 
 COPY --from=build-env /go/bin/api_v2 /go/bin/api_v2
+
 ENTRYPOINT ["./go/bin/api_v2"]

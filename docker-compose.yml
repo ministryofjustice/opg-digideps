@@ -125,22 +125,16 @@ services:
 
   api_v2:
     build:
-      context: ./api
-      args:
-        REQUIRE_XDEBUG: ${REQUIRE_XDEBUG_API} # set REQUIRE_XDEBUG_API=1 in .env to install Xdebug
+      context: ./api_v2
+    expose:
+      - "8080"
+
+  api_v2_nginx:
+    build: ./api_v2/nginx
     ports:
-      - 8090:443
+      - "6655:80"
     depends_on:
-      - postgres
-      - redis-api
-      - localstack
-    environment:
-      APP_ENV: ${APP_ENV:-dev}
-      APP_DEBUG: ${APP_DEBUG:-0}
-    env_file:
-      - ./api/api.env
-      - ./api/tests/Behat/test.env
-    restart: always
+      - api_v2
 
   htmltopdf:
     build: ./htmltopdf
