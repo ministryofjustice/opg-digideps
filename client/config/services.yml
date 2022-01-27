@@ -352,3 +352,6 @@ services:
         class: GBProd\UuidNormalizer\UuidDenormalizer
         tags:
             - { name: serializer.denormalizer }
+
+    App\Service\Client\Internal\Api2Client:
+        class: App\Service\Client\Internal\Api2Client

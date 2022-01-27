@@ -123,18 +123,18 @@ services:
       - ./api/tests/Behat/test.env
     restart: always
 
-  api_v2:
+  registration_service:
     build:
-      context: ./api_v2
+      context: ./registration_service
     expose:
       - "8080"
 
-  api_v2_nginx:
-    build: ./api_v2/nginx
+  registration_service_nginx:
+    build: ./registration_service/nginx
     ports:
       - "6655:80"
     depends_on:
-      - api_v2
+      - registration_service
 
   htmltopdf:
     build: ./htmltopdf

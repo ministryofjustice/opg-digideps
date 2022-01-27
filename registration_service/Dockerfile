@@ -9,7 +9,7 @@ RUN go mod download
 
 COPY . .
 
-RUN CGO_ENABLED=0 GOOS=linux GOARCH=amd64 go build -a -installsuffix cgo -o /go/bin/api_v2
+RUN CGO_ENABLED=0 GOOS=linux GOARCH=amd64 go build -a -installsuffix cgo -o /go/bin/registration_service
 
 FROM alpine:3.13
 
@@ -18,6 +18,6 @@ RUN apk --update --no-cache add \
     && rm -rf /var/cache/apk/*
 RUN apk --no-cache add tzdata
 
-COPY --from=build-env /go/bin/api_v2 /go/bin/api_v2
+COPY --from=build-env /go/bin/registration_service /go/bin/registration_service
 
-ENTRYPOINT ["./go/bin/api_v2"]
+ENTRYPOINT ["./go/bin/registration_service"]

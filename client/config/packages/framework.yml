@@ -39,3 +39,12 @@ framework:
 
     property_info:
         enabled: true
+
+    http_client:
+        scoped_clients:
+            # using base_uri, relative URLs (e.g. request("GET", "/registration/new"))
+            # will default to these options
+            registration.api.client:
+                base_uri: 'http://registration_service:8080'
+                headers:
+                    Authorization: 'Option to use auth headers for tokens'
