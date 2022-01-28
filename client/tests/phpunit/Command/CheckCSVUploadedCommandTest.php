@@ -5,57 +5,95 @@ namespace App\Tests\Command;
 use App\Command\CheckCSVUploadedCommand;
 use App\Service\Audit\AwsAuditLogHandler;
 use App\Service\Client\GovUK\BankHolidaysAPIClient;
+use App\Service\SecretManagerService;
 use App\Service\Time\DateTimeProvider;
+use Aws\Result;
+use DateInterval;
+use DateTime;
+use JoliCode\Slack\ClientFactory;
+use Prophecy\Argument;
 use Prophecy\PhpUnit\ProphecyTrait;
 use Prophecy\Prophecy\ObjectProphecy;
+use Symfony\Bundle\FrameworkBundle\Console\Application;
 use Symfony\Bundle\FrameworkBundle\Test\KernelTestCase;
+use Symfony\Component\Console\Tester\CommandTester;
 
 class CheckCSVUploadedCommandTest extends KernelTestCase
 {
     use ProphecyTrait;
+
+    private ObjectProphecy | BankHolidaysAPIClient $bankHolidayAPI;
+    private ObjectProphecy | DateTimeProvider $dateTimeProvider;
+    private ObjectProphecy | AwsAuditLogHandler $awsAuditLogHandler;
+    private ObjectProphecy | SecretManagerService $secretManagerService;
+    private ObjectProphecy | ClientFactory $slackClientFactory;
+    private CommandTester $commandTester;
+
+    public function setUp(): void
+    {
+        $kernel = static::createKernel();
+        $app = new Application($kernel);
+
+        $this->bankHolidayAPI = self::prophesize(BankHolidaysAPIClient::class);
+        $this->dateTimeProvider = self::prophesize(DateTimeProvider::class);
+        $this->awsAuditLogHandler = self::prophesize(AwsAuditLogHandler::class);
+        $this->secretManagerService = self::prophesize(SecretManagerService::class);
+        $this->slackClientFactory = self::prophesize(ClientFactory::class);
+
+        $this->bankHolidayAPI->getBankHolidays()->shouldBeCalled()->willReturn(
+            [
+                'england-and-wales' => [
+                    'division' => 'england-and-wales',
+                    'events' => [
+                        [
+                            'title' => 'New Year’s Day',
+                            'date' => '2017-01-02',
+                            'notes' => 'Substitute day',
+                            'bunting' => true,
+                        ],
+                        [
+                            'title' => 'Christmas Day',
+                            'date' => '2021-12-27',
+                            'notes' => 'Substitute day',
+                            'bunting' => false,
+                        ],
+                    ],
+                ],
+            ]
+        );
+
+        $sut = new CheckCSVUploadedCommand(
+            $this->bankHolidayAPI->reveal(),
+            $this->dateTimeProvider->reveal(),
+            $this->secretManagerService->reveal(),
+            $this->slackClientFactory->reveal(),
+            $this->awsAuditLogHandler->reveal()
+        );
+
+        $app->add($sut);
+
+        $command = $app->find(CheckCSVUploadedCommand::$defaultName);
+        $this->commandTester = new CommandTester($command);
+    }
 
     /**
      * @test
      */
     public function execute()
     {
-        /** @var ObjectProphecy|BankHolidaysAPIClient $bankHolidayAPI */
-        $bankHolidayAPI = self::prophesize(BankHolidaysAPIClient::class);
-        $bankHolidayAPI->getBankHolidays()->shouldBeCalled()->willReturn(
-            [
-                'england-and-wales' => [
-                        'division' => 'england-and-wales',
-                        'events' => [
-                                [
-                                    'title' => 'New Year’s Day',
-                                    'date' => '2017-01-02',
-                                    'notes' => 'Substitute day',
-                                    'bunting' => true,
-                                ],
-                                [
-                                    'title' => 'Christmas Day',
-                                    'date' => '2021-12-27',
-                                    'notes' => 'Substitute day',
-                                    'bunting' => false,
-                                ],
-                            ],
-                    ],
-            ]
-        );
+        $now = new DateTime('01-02-2021');
+        $this->dateTimeProvider->getDateTime()->shouldBeCalled()->willReturn($now);
 
-        /** @var ObjectProphecy|DateTimeProvider $dateTimeProvider */
-        $dateTimeProvider = self::prophesize(DateTimeProvider::class);
-        $now = new \DateTime();
-        $dateTimeProvider->getDateTime()->shouldBeCalled()->willReturn($now);
+        $startingTime = (int) (clone $now)->sub(new DateInterval('P1D'))->format('Uv');
+        $endTime = (int) (clone $now)->format('Uv');
 
-        /** @var ObjectProphecy|AwsAuditLogHandler $awsAuditLogHandler */
-        $awsAuditLogHandler = self::prophesize(AwsAuditLogHandler::class);
-        $startingTime = (int) $now->sub(new DateInterval('P1D'))->format('Uv');
-        $awsAuditLogHandler->getLogEventsByLogStream(
+        $this->awsAuditLogHandler->getLogEventsByLogStream(
             'CSV_UPLOADED',
             $startingTime,
-            $now->format('Uv')
-        )->shouldBeCalled()->willReturn(
+            $endTime
+        )
+            ->shouldBeCalled()
+            ->willReturn(
             new Result(
                 [
                     'events' => [
@@ -71,6 +109,9 @@ class CheckCSVUploadedCommandTest extends KernelTestCase
             ),
         );
 
-        $sut = new CheckCSVUploadedCommand($bankHolidayAPI->reveal(), $dateTimeProvider->reveal());
+        $this->secretManagerService->getSecret(Argument::any())->shouldNotBeCalled();
+        $this->slackClientFactory->create(Argument::any())->shouldNotBeCalled();
+
+        $this->commandTester->execute([]);
     }
 }
