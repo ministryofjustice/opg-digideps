@@ -154,11 +154,15 @@ class AwsAuditLogHandler extends AbstractAuditLogHandler
         $this->sequenceToken = $response->get('nextSequenceToken');
     }
 
-    public function getLogEventsByLogStream(string $streamName)
+    public function getLogEventsByLogStream(string $streamName, int $logStartTime, int $logEndTime)
     {
-        return $this->client->getLogEvents([
-            'logGroupName' => 'audit-local',
-            'logStreamName' => $streamName,
-        ]);
+        return $this->client->getLogEvents(
+            [
+                'logGroupName' => 'audit-local',
+                'logStreamName' => $streamName,
+                'startTime' => $logStartTime,
+                'endTime' => $logEndTime,
+            ]
+        );
     }
 }

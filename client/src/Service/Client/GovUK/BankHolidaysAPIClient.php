@@ -29,7 +29,7 @@ class BankHolidaysAPIClient
     }
 
     /**
-     * @return mixed|\Psr\Http\Message\ResponseInterface
+     * @return array
      *
      * @throws \GuzzleHttp\Exception\GuzzleException
      */
@@ -37,6 +37,8 @@ class BankHolidaysAPIClient
     {
         $request = new Request('GET', self::BANK_HOLIDAYS_ENDPOINT);
 
-        return $this->httpClient->send($request, ['connect_timeout' => 1, 'timeout' => 1.5]);
+        $response = $this->httpClient->send($request, ['connect_timeout' => 1, 'timeout' => 1.5]);
+
+        return json_decode((string) $response->getBody(), true);
     }
 }
