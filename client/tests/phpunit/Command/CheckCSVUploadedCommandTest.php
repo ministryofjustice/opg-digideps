@@ -5,12 +5,15 @@ namespace App\Tests\Command;
 use App\Command\CheckCSVUploadedCommand;
 use App\Service\Audit\AwsAuditLogHandler;
 use App\Service\Client\GovUK\BankHolidaysAPIClient;
+use App\Service\Client\Slack\ClientFactory;
 use App\Service\SecretManagerService;
 use App\Service\Time\DateTimeProvider;
+use Aws\Command;
+use Aws\Exception\AwsException;
 use Aws\Result;
 use DateInterval;
 use DateTime;
-use JoliCode\Slack\ClientFactory;
+use JoliCode\Slack\Api\Client;
 use Prophecy\Argument;
 use Prophecy\PhpUnit\ProphecyTrait;
 use Prophecy\Prophecy\ObjectProphecy;
@@ -28,6 +31,8 @@ class CheckCSVUploadedCommandTest extends KernelTestCase
     private ObjectProphecy | SecretManagerService $secretManagerService;
     private ObjectProphecy | ClientFactory $slackClientFactory;
     private CommandTester $commandTester;
+    private DateTime $now;
+    private string $slackSecret;
 
     public function setUp(): void
     {
@@ -74,27 +79,85 @@ class CheckCSVUploadedCommandTest extends KernelTestCase
 
         $command = $app->find(CheckCSVUploadedCommand::$defaultName);
         $this->commandTester = new CommandTester($command);
+
+        $this->now = new DateTime();
+        $this->slackSecret = 'AFAKETOKEN';
     }
 
     /**
      * @test
      */
-    public function execute()
+    public function executeOnNonBankHolidaysWhenCSVsHaveBeenUploadedSlackIsNotPostedTo()
     {
-        $now = new DateTime('01-02-2021');
-        $this->dateTimeProvider->getDateTime()->shouldBeCalled()->willReturn($now);
+        $this->todayIsNotABankHoliday();
+        $this->csvUploadedEvent(true);
 
-        $startingTime = (int) (clone $now)->sub(new DateInterval('P1D'))->format('Uv');
-        $endTime = (int) (clone $now)->format('Uv');
+        $this->secretManagerService->getSecret(Argument::any())->shouldNotBeCalled();
+        $this->slackClientFactory->create(Argument::any())->shouldNotBeCalled();
 
-        $this->awsAuditLogHandler->getLogEventsByLogStream(
-            'CSV_UPLOADED',
-            $startingTime,
-            $endTime
-        )
+        $this->commandTester->execute([]);
+    }
+
+    /**
+     * @test
+     */
+    public function executeOnBankHolidaysSlackIsNotPostedTo()
+    {
+        $this->todayIsABankHoliday();
+
+        $this->awsAuditLogHandler->getLogEventsByLogStream(Argument::cetera())->shouldNotBeCalled();
+        $this->secretManagerService->getSecret(Argument::any())->shouldNotBeCalled();
+        $this->slackClientFactory->create(Argument::any())->shouldNotBeCalled();
+
+        $this->commandTester->execute([]);
+    }
+
+    /**
+     * @test
+     */
+    public function executeOnNonBankHolidaysWhenCSVsHaveNotBeenUploadedSlackIsPostedTo()
+    {
+        $this->todayIsNotABankHoliday();
+        $this->csvUploadedEvent(false);
+
+        $this->secretManagerService->getSecret('opg-response-slack-token')
             ->shouldBeCalled()
-            ->willReturn(
-            new Result(
+            ->willReturn($this->slackSecret);
+
+        $slackClient = self::prophesize(Client::class);
+        $slackClient->chatPostMessage([
+            'username' => 'opg_response',
+            'channel' => 'random',
+            'text' => 'Hello world',
+        ])
+        ->shouldBeCalled();
+
+        $this->slackClientFactory->createClient($this->slackSecret)
+            ->shouldBeCalled()
+            ->willReturn($slackClient->reveal());
+
+        $this->commandTester->execute([]);
+    }
+
+    private function todayIsNotABankHoliday()
+    {
+        $this->now = new DateTime('01-02-2021');
+        $this->dateTimeProvider->getDateTime()->shouldBeCalled()->willReturn($this->now);
+    }
+
+    private function todayIsABankHoliday()
+    {
+        $this->now = new DateTime('27-12-2021');
+        $this->dateTimeProvider->getDateTime()->shouldBeCalled()->willReturn($this->now);
+    }
+
+    private function csvUploadedEvent(bool $exists)
+    {
+        $startingTime = (int) (clone $this->now)->sub(new DateInterval('P1D'))->format('Uv');
+        $endTime = (int) (clone $this->now)->format('Uv');
+
+        if ($exists) {
+            $expectedResponseFromAWS = new Result(
                 [
                     'events' => [
                         [
@@ -106,12 +169,29 @@ class CheckCSVUploadedCommandTest extends KernelTestCase
                     'nextBackwardToken' => 'next-sequence-token',
                     'nextForwardToken' => 'next-sequence-token',
                 ]
-            ),
-        );
+            );
 
-        $this->secretManagerService->getSecret(Argument::any())->shouldNotBeCalled();
-        $this->slackClientFactory->create(Argument::any())->shouldNotBeCalled();
+            $this->awsAuditLogHandler->getLogEventsByLogStream(
+                'CSV_UPLOADED',
+                $startingTime,
+                $endTime
+            )
+                ->shouldBeCalled()
+                ->willReturn($expectedResponseFromAWS);
+        } else {
+            $exception = new AwsException(
+                'The specified log group does not exist',
+                new Command('getLogEvents'),
+                ['code' => 400]
+            );
 
-        $this->commandTester->execute([]);
+            $this->awsAuditLogHandler->getLogEventsByLogStream(
+                'CSV_UPLOADED',
+                $startingTime,
+                $endTime
+            )
+                ->shouldBeCalled()
+                ->willThrow($exception);
+        }
     }
 }

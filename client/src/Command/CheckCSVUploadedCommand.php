@@ -6,13 +6,15 @@ namespace App\Command;
 
 use App\Service\Audit\AwsAuditLogHandler;
 use App\Service\Client\GovUK\BankHolidaysAPIClient;
+use App\Service\Client\Slack\ClientFactory;
 use App\Service\SecretManagerService;
 use App\Service\Time\DateTimeProvider;
+use Aws\Exception\AwsException;
 use DateInterval;
-use JoliCode\Slack\Api\Client;
-use JoliCode\Slack\ClientFactory;
+use RuntimeException;
 use Symfony\Component\Console\Input\InputInterface;
 use Symfony\Component\Console\Output\OutputInterface;
+use Symfony\Component\HttpFoundation\Response;
 
 class CheckCSVUploadedCommand extends DaemonableCommand
 {
@@ -65,22 +67,29 @@ class CheckCSVUploadedCommand extends DaemonableCommand
             $startingTime = (int) (clone $now)->sub(new DateInterval('P1D'))->format('Uv');
             $endTime = (int) (clone $now)->format('Uv');
 
-            $test = '';
-            $logEvents = $this->awsAuditLogHandler->getLogEventsByLogStream(
-                'CSV_UPLOADED',
-                $startingTime,
-                $endTime
-            );
+            try {
+                $logEvents = $this->awsAuditLogHandler->getLogEventsByLogStream(
+                    'CSV_UPLOADED',
+                    $startingTime,
+                    $endTime
+                );
+            } catch (AwsException $e) {
+                // AWS returns a 400 response if the log stream is empty
+                if (Response::HTTP_BAD_REQUEST === $e->getAwsErrorCode()) {
+                    $logEvents = [];
+                } else {
+                    throw new RuntimeException($e->getMessage());
+                }
+            }
 
             // IF NOT CSV UPLOADED
             if (empty($logEvents)) {
                 $token = $this->secretManagerService->getSecret(SecretManagerService::SLACK_APP_TOKEN_SECRET_NAME);
 
-                // POST TO SLACK
-                /** @var Client $client */
-                $client = ClientFactory::create($token);
+                // POST TO SLACK - need to wrap in helper class as create is a static class function
+                $client = $this->slackClientFactory->createClient($token);
 
-                $result = $client->chatPostMessage([
+                $client->chatPostMessage([
                     'username' => 'opg_response',
                     'channel' => 'random',
                     'text' => 'Hello world',
