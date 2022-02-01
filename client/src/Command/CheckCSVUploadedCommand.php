@@ -56,7 +56,6 @@ class CheckCSVUploadedCommand extends DaemonableCommand
     protected function execute(InputInterface $input, OutputInterface $output): int
     {
         $now = $this->dateTimeProvider->getDateTime();
-
         $currentDate = $now->format('Y-m-d');
 
         $dates = $this->bankHolidayAPIClient->getBankHolidays();
@@ -93,8 +92,8 @@ class CheckCSVUploadedCommand extends DaemonableCommand
 
                 $client->chatPostMessage([
                     'username' => 'opg_response',
-                    'channel' => 'random',
-                    'text' => 'Hello world',
+                    'channel' => 'opg-digideps-team',
+                    'text' => self::CSV_NOT_UPLOADED_SLACK_MESSAGE,
                 ]);
             }
         }

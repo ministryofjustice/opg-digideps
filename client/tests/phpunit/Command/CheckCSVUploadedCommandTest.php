@@ -127,8 +127,8 @@ class CheckCSVUploadedCommandTest extends KernelTestCase
         $slackClient = self::prophesize(Client::class);
         $slackClient->chatPostMessage([
             'username' => 'opg_response',
-            'channel' => 'random',
-            'text' => 'Hello world',
+            'channel' => 'opg-digideps-team',
+            'text' => 'The %s CSV has not been uploaded within the past 24 hours',
         ])
         ->shouldBeCalled();
 
@@ -137,6 +137,30 @@ class CheckCSVUploadedCommandTest extends KernelTestCase
             ->willReturn($slackClient->reveal());
 
         $this->commandTester->execute([]);
+    }
+
+    /**
+     * @test
+     */
+    public function executeErrorIsLoggedIfCantGetAuditLogs()
+    {
+        //Assert 1 is returned by command
+    }
+
+    /**
+     * @test
+     */
+    public function executeSlackMessagesReferencesWhichCSVHasNotBeenUploaded()
+    {
+        //Assert 1 is returned by command
+    }
+
+    /**
+     * @test
+     */
+    public function executeErrorIsLoggedIfSlackPostIsNotSuccessful()
+    {
+        //Assert 1 is returned by command
     }
 
     private function todayIsABankHoliday(bool $isABankHoliday)
