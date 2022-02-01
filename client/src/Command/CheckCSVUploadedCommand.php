@@ -18,6 +18,8 @@ use Symfony\Component\HttpFoundation\Response;
 
 class CheckCSVUploadedCommand extends DaemonableCommand
 {
+    public const CSV_NOT_UPLOADED_SLACK_MESSAGE = 'The %s CSV has not been uploaded within the past 24 hours';
+
     public static $defaultName = 'digideps:check-csv-uploaded';
 
     private BankHolidaysAPIClient $bankHolidayAPIClient;

@@ -89,8 +89,8 @@ class CheckCSVUploadedCommandTest extends KernelTestCase
      */
     public function executeOnNonBankHolidaysWhenCSVsHaveBeenUploadedSlackIsNotPostedTo()
     {
-        $this->todayIsNotABankHoliday();
-        $this->csvUploadedEvent(true);
+        $this->todayIsABankHoliday(false);
+        $this->aCsvUploadedEventExists(true);
 
         $this->secretManagerService->getSecret(Argument::any())->shouldNotBeCalled();
         $this->slackClientFactory->create(Argument::any())->shouldNotBeCalled();
@@ -103,7 +103,7 @@ class CheckCSVUploadedCommandTest extends KernelTestCase
      */
     public function executeOnBankHolidaysSlackIsNotPostedTo()
     {
-        $this->todayIsABankHoliday();
+        $this->todayIsABankHoliday(true);
 
         $this->awsAuditLogHandler->getLogEventsByLogStream(Argument::cetera())->shouldNotBeCalled();
         $this->secretManagerService->getSecret(Argument::any())->shouldNotBeCalled();
@@ -117,8 +117,8 @@ class CheckCSVUploadedCommandTest extends KernelTestCase
      */
     public function executeOnNonBankHolidaysWhenCSVsHaveNotBeenUploadedSlackIsPostedTo()
     {
-        $this->todayIsNotABankHoliday();
-        $this->csvUploadedEvent(false);
+        $this->todayIsABankHoliday(false);
+        $this->aCsvUploadedEventExists(false);
 
         $this->secretManagerService->getSecret('opg-response-slack-token')
             ->shouldBeCalled()
@@ -139,19 +139,13 @@ class CheckCSVUploadedCommandTest extends KernelTestCase
         $this->commandTester->execute([]);
     }
 
-    private function todayIsNotABankHoliday()
+    private function todayIsABankHoliday(bool $isABankHoliday)
     {
-        $this->now = new DateTime('01-02-2021');
+        $this->now = new DateTime($isABankHoliday ? '27-12-2021' : '01-02-2021');
         $this->dateTimeProvider->getDateTime()->shouldBeCalled()->willReturn($this->now);
     }
 
-    private function todayIsABankHoliday()
-    {
-        $this->now = new DateTime('27-12-2021');
-        $this->dateTimeProvider->getDateTime()->shouldBeCalled()->willReturn($this->now);
-    }
-
-    private function csvUploadedEvent(bool $exists)
+    private function aCsvUploadedEventExists(bool $exists)
     {
         $startingTime = (int) (clone $this->now)->sub(new DateInterval('P1D'))->format('Uv');
         $endTime = (int) (clone $this->now)->format('Uv');
