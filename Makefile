@@ -59,6 +59,9 @@ up-app: ##@application Brings the app up
 up-app-build: ##@application Brings the app up and rebuilds containers
 	COMPOSE_HTTP_TIMEOUT=90 docker-compose up -d --build --remove-orphans
 
+up-build-go: ##@application Brings the app up and rebuilds containers
+	COMPOSE_HTTP_TIMEOUT=90 docker-compose up -d --build --remove-orphans registration_service
+
 up-app-xdebug-frontend: ##@application Brings the app up, rebuilds containers and enabled xdebug in client
 	REQUIRE_XDEBUG_FRONTEND=1 docker-compose up -d --build --remove-orphans
 
