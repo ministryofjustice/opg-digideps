@@ -96,6 +96,7 @@ class CheckCSVUploadedCommandTest extends KernelTestCase
         $this->slackClientFactory->create(Argument::any())->shouldNotBeCalled();
 
         $this->commandTester->execute([]);
+        //Assert 0 is returned by command
     }
 
     /**
@@ -110,6 +111,7 @@ class CheckCSVUploadedCommandTest extends KernelTestCase
         $this->slackClientFactory->create(Argument::any())->shouldNotBeCalled();
 
         $this->commandTester->execute([]);
+        //Assert 0 is returned by command
     }
 
     /**
@@ -137,6 +139,8 @@ class CheckCSVUploadedCommandTest extends KernelTestCase
             ->willReturn($slackClient->reveal());
 
         $this->commandTester->execute([]);
+
+        //Assert 0 is returned by command
     }
 
     /**
