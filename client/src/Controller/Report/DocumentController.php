@@ -6,6 +6,7 @@ use App\Controller\AbstractController;
 use App\Entity as EntityDir;
 use App\Entity\Report\Document;
 use App\Entity\User;
+use App\Exception\MimeTypeAndFileExtensionDoNotMatchException;
 use App\Form as FormDir;
 use App\Security\DocumentVoter;
 use App\Service\Client\Internal\ClientApi;
@@ -15,6 +16,7 @@ use App\Service\DocumentService;
 use App\Service\File\S3FileUploader;
 use App\Service\File\Verifier\MultiFileFormUploadVerifier;
 use App\Service\StepRedirector;
+use Exception;
 use Psr\Log\LoggerInterface;
 use Sensio\Bundle\FrameworkExtraBundle\Configuration\Template;
 use Symfony\Component\Form\FormError;
@@ -25,6 +27,7 @@ use Symfony\Component\HttpFoundation\Request;
 use Symfony\Component\HttpFoundation\Response;
 use Symfony\Component\Routing\Annotation\Route;
 use Symfony\Contracts\Translation\TranslatorInterface;
+use Throwable;
 
 class DocumentController extends AbstractController
 {
@@ -159,12 +162,12 @@ class DocumentController extends AbstractController
      *
      * @return array|RedirectResponse
      *
-     * @throws \Exception
+     * @throws Exception
      */
     public function step2Action(
         Request $request,
         MultiFileFormUploadVerifier $multiFileVerifier,
-        $reportId,
+                                    $reportId,
         LoggerInterface $logger
     ) {
         $report = $this->reportApi->refreshReportStatusCache($reportId, ['documents'], self::$jmsGroups);
@@ -192,8 +195,14 @@ class DocumentController extends AbstractController
                         $this->fileUploader->uploadSupportingFilesAndPersistDocuments($uploadedFiles, $report);
 
                         return $this->redirectToRoute('report_documents', ['reportId' => $reportId, 'successUploaded' => 'true']);
-                    } catch (\Throwable $e) {
+                    } catch (MimeTypeAndFileExtensionDoNotMatchException $e) {
+                        $errorMessage = sprintf('Cannot upload file: %s.', $e->getMessage());
+                        $logger->warning($errorMessage);
+
+                        $form->get('files')->addError(new FormError($errorMessage));
+                    } catch (Throwable $e) {
                         $logger->warning('Error uploading file: '.$e->getMessage());
+
                         $form->get('files')->addError(new FormError('Cannot upload file, please try again later'));
                     }
                 }
@@ -211,7 +220,7 @@ class DocumentController extends AbstractController
     }
 
     /**
-     * @throws \Exception
+     * @throws Exception
      */
     private function buildNavigationLinks(EntityDir\Report\Report $report): array
     {
@@ -306,6 +315,20 @@ class DocumentController extends AbstractController
     }
 
     /**
+     * Retrieves the document object with required associated entities to populate the table and back links.
+     *
+     * @return Document
+     */
+    private function getDocument(string $documentId)
+    {
+        return $this->restClient->get(
+            'document/'.$documentId,
+            'Report\Document',
+            ['documents', 'status', 'document-storage-reference', 'document-report-submission', 'document-report', 'report', 'report-client', 'client', 'client-users', 'user-id', 'client-organisations']
+        );
+    }
+
+    /**
      * Removes a document, adds a flash message and redirects to page.
      *
      * @param $documentId
@@ -325,7 +348,7 @@ class DocumentController extends AbstractController
             if ($result) {
                 $this->addFlash('notice', 'Document has been removed');
             }
-        } catch (\Throwable $e) {
+        } catch (Throwable $e) {
             $this->logger->error($e->getMessage());
 
             $this->addFlash(
@@ -389,7 +412,7 @@ class DocumentController extends AbstractController
      *
      * @return RedirectResponse
      *
-     * @throws \Exception
+     * @throws Exception
      */
     public function submitMoreConfirmedAction(Request $request, $reportId)
     {
@@ -408,20 +431,6 @@ class DocumentController extends AbstractController
         } else {
             return $this->redirectToRoute('homepage');
         }
-    }
-
-    /**
-     * Retrieves the document object with required associated entities to populate the table and back links.
-     *
-     * @return Document
-     */
-    private function getDocument(string $documentId)
-    {
-        return $this->restClient->get(
-            'document/'.$documentId,
-            'Report\Document',
-            ['documents', 'status', 'document-storage-reference', 'document-report-submission', 'document-report', 'report', 'report-client', 'client', 'client-users', 'user-id', 'client-organisations']
-        );
     }
 
     /**
