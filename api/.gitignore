@@ -2,3 +2,4 @@ app/SymfonyRequirements.php
 app/bootstrap.php.cache
 app/check.php
 config/parameters.yml
+config/jwt/*
