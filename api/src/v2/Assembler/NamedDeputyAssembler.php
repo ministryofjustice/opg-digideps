@@ -29,7 +29,7 @@ class NamedDeputyAssembler
             sprintf('%s-%s', $dto->getDeputyNumber(), $dto->getDeputyAddressNumber()) :
             $dto->getDeputyNumber();
 
-        return (new NamedDeputy())
+        $namedDeputy = (new NamedDeputy())
             ->setEmail1($dto->getDeputyEmail())
             ->setDeputyNo($deputyNumber)
             ->setFirstname($dto->getDeputyFirstname() ?: null)
@@ -41,5 +41,11 @@ class NamedDeputyAssembler
             ->setAddress5($dto->getDeputyAddress5())
             ->setAddressPostcode($dto->getDeputyPostcode())
             ->setDeputyType($dto->getDeputyType());
+
+        if ($dto->getDeputyAddressNumber()) {
+            $namedDeputy->setDepAddrNo($dto->getDeputyAddressNumber());
+        }
+
+        return $namedDeputy;
     }
 }

@@ -15,8 +15,11 @@ use App\Service\OrgService;
 use App\v2\Assembler\ClientAssembler;
 use App\v2\Assembler\NamedDeputyAssembler;
 use App\v2\Registration\DTO\OrgDeputyshipDto;
+use DateTime;
 use Doctrine\ORM\EntityManagerInterface;
+use Exception;
 use RuntimeException;
+use Throwable;
 
 class OrgDeputyshipUploader
 {
@@ -49,7 +52,7 @@ class OrgDeputyshipUploader
      *
      * @return array
      *
-     * @throws \Exception
+     * @throws Exception
      */
     public function upload(array $deputyshipDtos)
     {
@@ -65,7 +68,7 @@ class OrgDeputyshipUploader
                 $this->handleOrganisation($deputyshipDto);
                 $this->handleClient($deputyshipDto);
                 $this->handleReport($deputyshipDto);
-            } catch (\Throwable $e) {
+            } catch (Throwable $e) {
                 $message = sprintf('Error for case %s: %s', $deputyshipDto->getCaseNumber(), $e->getMessage());
                 $uploadResults['errors'][] = $message;
                 continue;
@@ -104,9 +107,9 @@ class OrgDeputyshipUploader
             ]
         );
 
-        // Temporary fix to generate dep types for all existing named deps - remove once CSVs have been uploaded
-        if (!is_null($namedDeputy)) {
-            $namedDeputy->setDeputyType($dto->getDeputyType());
+        // Temporary fix to generate dep adr numbers for all deps - remove once CSVs run
+        if (!is_null($namedDeputy) && $dto->getDeputyAddressNumber()) {
+            $namedDeputy->setDepAddrNo($dto->getDeputyAddressNumber());
         }
 
         if (is_null($namedDeputy)) {
@@ -123,7 +126,9 @@ class OrgDeputyshipUploader
                 ->setAddress3($dto->getDeputyAddress3())
                 ->setAddress4($dto->getDeputyAddress4())
                 ->setAddress5($dto->getDeputyAddress5())
-                ->setAddressPostcode($dto->getDeputyPostcode());
+                ->setAddressPostcode($dto->getDeputyPostcode())
+                ->setDepAddrNo($dto->getDeputyAddressNumber())
+                ->setDeputyNo($deputyNumber);
 
             $this->em->persist($namedDeputy);
             $this->em->flush();
@@ -171,7 +176,7 @@ class OrgDeputyshipUploader
             if ($this->clientHasNewCourtOrder($client, $dto)) {
                 // Discharge clients with a new court order
                 // Look at adding audit logging for discharge to API side of app
-                $client->setDeletedAt(new \DateTime());
+                $client->setDeletedAt(new DateTime());
                 $this->em->persist($client);
                 $this->em->flush();
 
