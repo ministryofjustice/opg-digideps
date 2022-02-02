@@ -93,10 +93,11 @@ class CheckCSVUploadedCommandTest extends KernelTestCase
         $this->aCsvUploadedEventExists(true);
 
         $this->secretManagerService->getSecret(Argument::any())->shouldNotBeCalled();
-        $this->slackClientFactory->create(Argument::any())->shouldNotBeCalled();
+        $this->slackClientFactory->createClient(Argument::any())->shouldNotBeCalled();
 
-        $this->commandTester->execute([]);
-        //Assert 0 is returned by command
+        $result = $this->commandTester->execute([]);
+
+        $this->assertEquals(0, $result, sprintf('Expected command to return 0, got %d', $result));
     }
 
     /**
@@ -108,10 +109,11 @@ class CheckCSVUploadedCommandTest extends KernelTestCase
 
         $this->awsAuditLogHandler->getLogEventsByLogStream(Argument::cetera())->shouldNotBeCalled();
         $this->secretManagerService->getSecret(Argument::any())->shouldNotBeCalled();
-        $this->slackClientFactory->create(Argument::any())->shouldNotBeCalled();
+        $this->slackClientFactory->createClient(Argument::any())->shouldNotBeCalled();
 
-        $this->commandTester->execute([]);
-        //Assert 0 is returned by command
+        $result = $this->commandTester->execute([]);
+
+        $this->assertEquals(0, $result, sprintf('Expected command to return 0, got %d', $result));
     }
 
     /**
@@ -138,9 +140,9 @@ class CheckCSVUploadedCommandTest extends KernelTestCase
             ->shouldBeCalled()
             ->willReturn($slackClient->reveal());
 
-        $this->commandTester->execute([]);
+        $result = $this->commandTester->execute([]);
 
-        //Assert 0 is returned by command
+        $this->assertEquals(0, $result, sprintf('Expected command to return 0, got %d', $result));
     }
 
     /**
