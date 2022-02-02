@@ -4,6 +4,7 @@ namespace App\Service\Audit;
 
 use Aws\CloudWatchLogs\CloudWatchLogsClient;
 use Aws\CloudWatchLogs\Exception\CloudWatchLogsException;
+use Aws\Result;
 use Monolog\Logger;
 
 class AwsAuditLogHandler extends AbstractAuditLogHandler
@@ -154,7 +155,7 @@ class AwsAuditLogHandler extends AbstractAuditLogHandler
         $this->sequenceToken = $response->get('nextSequenceToken');
     }
 
-    public function getLogEventsByLogStream(string $streamName, int $logStartTime, int $logEndTime)
+    public function getLogEventsByLogStream(string $streamName, int $logStartTime, int $logEndTime): Result
     {
         return $this->client->getLogEvents(
             [
