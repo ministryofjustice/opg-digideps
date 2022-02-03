@@ -10,7 +10,6 @@ use App\Service\Client\Slack\ClientFactory;
 use App\Service\SecretManagerService;
 use App\Service\Time\DateTimeProvider;
 use Aws\Exception\AwsException;
-use Aws\Result;
 use DateInterval;
 use RuntimeException;
 use Symfony\Component\Console\Input\InputInterface;
@@ -106,21 +105,6 @@ class CheckCSVUploadedCommand extends DaemonableCommand
         return 0;
     }
 
-    /**
-    private function altAlertWhichCSVsHaveNotBeenUploaded(Result $result)
-    {
-        $supportedCSVs = ["CasRec Lay", "Sirius Lay", "CasRec Prof", "CasRec PA"];
-
-        $regex = '"source":"%s","role_type":"%s"';
-
-        foreach ($supportedCSVs as $supportedCSV) {
-            list($source, $role) = explode(' ', $supportedCSV);
-            $matchingEvents = preg_grep(sprintf($regex, $source, $role), $result->get('events'));
-            if (empty($matchingEvents)) {
-                $this->postCSVSlackMessage($supportedCSV);
-            }
-        }
-    }*/
     private function checkCasRecLayCSVHasBeenUploaded(array $events)
     {
         $casRecLayCSVUploads = preg_grep('/"source":"casrec","role_type":"LAY"/', $events);

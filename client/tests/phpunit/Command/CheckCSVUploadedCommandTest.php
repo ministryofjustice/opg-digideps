@@ -33,6 +33,7 @@ class CheckCSVUploadedCommandTest extends KernelTestCase
     private CommandTester $commandTester;
     private DateTime $now;
     private string $slackSecret;
+    private array $supportedCSVs = ['CasRec Lay', 'Sirius Lay', 'CasRec Prof', 'CasRec PA'];
 
     public function setUp(): void
     {
@@ -90,7 +91,7 @@ class CheckCSVUploadedCommandTest extends KernelTestCase
     public function executeOnNonBankHolidaysWhenAllCSVsHaveBeenUploadedSlackIsNotPostedTo()
     {
         $this->todayIsABankHoliday(false);
-        $this->allCSVsHaveBeenUploaded();
+        $this->aCsvUploadedEventExists(true, ['CasRec Lay', 'Sirius Lay', 'CasRec Prof', 'CasRec PA']);
 
         $this->secretManagerService->getSecret(Argument::any())->shouldNotBeCalled();
         $this->slackClientFactory->createClient(Argument::any())->shouldNotBeCalled();
@@ -172,9 +173,27 @@ class CheckCSVUploadedCommandTest extends KernelTestCase
      */
     public function executeOnNonBankHolidaysWhenACasRecLayCSVHaveNotBeenUploadedSlackIsPostedTo()
     {
-        //Test for when one type of CSV has not been uploaded
-        //Creating one for each type of CSV provides enough coverage?
-        //Assert 0 is returned by command
+        $this->todayIsABankHoliday(false);
+        $this->aCsvUploadedEventExists(true, ['Sirius Lay', 'CasRec Prof', 'CasRec PA']);
+
+        $this->secretManagerService->getSecret('opg-response-slack-token')
+            ->shouldBeCalled()
+            ->willReturn($this->slackSecret);
+
+        $slackClient = self::prophesize(Client::class);
+        $slackClient->chatPostMessage([
+                                          'username' => 'opg_response',
+                                          'channel' => 'opg-digideps-team',
+                                          'text' => 'The CasRec Lay CSV has not been uploaded within the past 24 hours',
+                                      ])
+            ->shouldBeCalled();
+        $this->slackClientFactory->createClient($this->slackSecret)
+            ->shouldBeCalled()
+            ->willReturn($slackClient->reveal());
+
+        $result = $this->commandTester->execute([]);
+
+        $this->assertEquals(0, $result, sprintf('Expected command to return 0, got %d', $result));
     }
 
     /**
@@ -213,22 +232,16 @@ class CheckCSVUploadedCommandTest extends KernelTestCase
         $this->dateTimeProvider->getDateTime()->shouldBeCalled()->willReturn($this->now);
     }
 
-    // Need to refactor this - either include an appropriate csv message or repurpose for non-csv event message
-    private function aCsvUploadedEventExists(bool $exists)
+    private function aCsvUploadedEventExists(bool $exists, array $uploadedCSVs = [])
     {
         $startingTime = (int) (clone $this->now)->sub(new DateInterval('P1D'))->format('Uv');
         $endTime = (int) (clone $this->now)->format('Uv');
 
         if ($exists) {
+            $events = $this->populateLogEvents($uploadedCSVs);
             $expectedResponseFromAWS = new Result(
                 [
-                    'events' => [
-                        [
-                            'ingestionTime' => 1643206329732,
-                            'message' => 'something',
-                            'timestamp' => 1643206329733,
-                        ],
-                    ],
+                    'events' => $events,
                     'nextBackwardToken' => 'next-sequence-token',
                     'nextForwardToken' => 'next-sequence-token',
                 ]
@@ -258,46 +271,34 @@ class CheckCSVUploadedCommandTest extends KernelTestCase
         }
     }
 
-    private function allCSVsHaveBeenUploaded()
+    // Creates a Result object based on the CSV types passed in
+    private function populateLogEvents(array $uploadedCSVs): array
     {
-        $startingTime = (int) (clone $this->now)->sub(new DateInterval('P1D'))->format('Uv');
-        $endTime = (int) (clone $this->now)->format('Uv');
+        $events = [];
 
-        $expectedResponseFromAWS = new Result(
-            [
-                'events' => [
-                    [
+        if (!empty($uploadedCSVs)) {
+            foreach ($uploadedCSVs as $csv) {
+                if (in_array($csv, $this->supportedCSVs)) {
+                    list($source, $role) = explode(' ', $csv);
+                    $events[] = [
                         'ingestionTime' => 1643206329732,
-                        'message' => '{"message":"","context":{"trigger":"CSV_UPLOADED","source":"casrec","role_type":"LAY","}',
+                        'message' => sprintf(
+                            '{"message":"","context":{"trigger":"CSV_UPLOADED","source":"%s","role_type":"%s","}',
+                            strtolower($source),
+                            strtoupper($role)
+                        ),
                         'timestamp' => 1643206329733,
-                    ],
-                    [
-                        'ingestionTime' => 1643206329734,
-                        'message' => '{"message":"","context":{"trigger":"CSV_UPLOADED","source":"sirius","role_type":"LAY","}',
-                        'timestamp' => 1643206329735,
-                    ],
-                    [
-                        'ingestionTime' => 1643206329736,
-                        'message' => '{"message":"","context":{"trigger":"CSV_UPLOADED","source":"casrec","role_type":"PROF","}',
-                        'timestamp' => 1643206329737,
-                    ],
-                    [
-                        'ingestionTime' => 1643206329738,
-                        'message' => '{"message":"","context":{"trigger":"CSV_UPLOADED","source":"casrec","role_type":"PA","}',
-                        'timestamp' => 1643206329739,
-                    ],
-                ],
-                'nextBackwardToken' => 'next-sequence-token',
-                'nextForwardToken' => 'next-sequence-token',
-            ]
-        );
+                    ];
+                }
+            }
+        } else {
+            $events = [
+                'ingestionTime' => 1643206329732,
+                'message' => 'something',
+                'timestamp' => 1643206329733,
+            ];
+        }
 
-        $this->awsAuditLogHandler->getLogEventsByLogStream(
-            'CSV_UPLOADED',
-            $startingTime,
-            $endTime
-        )
-            ->shouldBeCalled()
-            ->willReturn($expectedResponseFromAWS);
+        return $events;
     }
 }
