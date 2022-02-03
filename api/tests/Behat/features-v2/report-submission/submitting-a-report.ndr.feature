@@ -1,7 +1,7 @@
 @report-submissions @v2
 Feature: Report submissions dashboard
 
-    @ndr-completed @Mia
+    @ndr-completed
     Scenario: Submitting a completed report
         Given a Lay Deputy has a completed NDR report
         And I visit the report overview page
