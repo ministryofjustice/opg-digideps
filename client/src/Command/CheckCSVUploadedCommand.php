@@ -20,6 +20,11 @@ class CheckCSVUploadedCommand extends DaemonableCommand
 {
     public const CSV_NOT_UPLOADED_SLACK_MESSAGE = 'The %s CSV has not been uploaded within the past 24 hours';
 
+    public const CASREC_LAY_CSV = 'CasRec Lay';
+    public const SIRIUS_LAY_CSV = 'Sirius Lay';
+    public const CASREC_PROF_CSV = 'CasRec Prof';
+    public const CASREC_PA_CSV = 'CasRec PA';
+
     public static $defaultName = 'digideps:check-csv-uploaded';
 
     private BankHolidaysAPIClient $bankHolidayAPIClient;
@@ -81,10 +86,10 @@ class CheckCSVUploadedCommand extends DaemonableCommand
                 // AWS returns a 400 response if the log stream is empty
                 if (Response::HTTP_BAD_REQUEST === $e->getAwsErrorCode()) {
                     // Alert on Slack for all CSV types
-                    $this->postCSVSlackMessage('CasRec Lay');
-                    $this->postCSVSlackMessage('Sirius Lay');
-                    $this->postCSVSlackMessage('CasRec Prof');
-                    $this->postCSVSlackMessage('CasRec PA');
+                    $this->postCSVSlackMessage(self::CASREC_LAY_CSV);
+                    $this->postCSVSlackMessage(self::SIRIUS_LAY_CSV);
+                    $this->postCSVSlackMessage(self::CASREC_PROF_CSV);
+                    $this->postCSVSlackMessage(self::CASREC_PA_CSV);
 
                     return 0;
                 } else {
@@ -110,7 +115,7 @@ class CheckCSVUploadedCommand extends DaemonableCommand
         $casRecLayCSVUploads = preg_grep('/"source":"casrec","role_type":"LAY"/', $events);
 
         if (empty($casRecLayCSVUploads)) {
-            $this->postCSVSlackMessage('CasRec Lay');
+            $this->postCSVSlackMessage(self::CASREC_LAY_CSV);
         }
     }
 
@@ -119,7 +124,7 @@ class CheckCSVUploadedCommand extends DaemonableCommand
         $siriusCSVUploads = preg_grep('/"source":"sirius","role_type":"LAY"/', $events);
 
         if (empty($siriusCSVUploads)) {
-            $this->postCSVSlackMessage('Sirius Lay');
+            $this->postCSVSlackMessage(self::SIRIUS_LAY_CSV);
         }
     }
 
@@ -128,7 +133,7 @@ class CheckCSVUploadedCommand extends DaemonableCommand
         $casRecProfCSVUploads = preg_grep('/"source":"casrec","role_type":"PROF"/', $events);
 
         if (empty($casRecProfCSVUploads)) {
-            $this->postCSVSlackMessage('CasRec Prof');
+            $this->postCSVSlackMessage(self::CASREC_PROF_CSV);
         }
     }
 
@@ -137,7 +142,7 @@ class CheckCSVUploadedCommand extends DaemonableCommand
         $casRecPACSVUploads = preg_grep('/"source":"casrec","role_type":"PA"/', $events);
 
         if (empty($casRecPACSVUploads)) {
-            $this->postCSVSlackMessage('CasRec PA');
+            $this->postCSVSlackMessage(self::CASREC_PA_CSV);
         }
     }
 
