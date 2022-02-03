@@ -458,7 +458,7 @@ trait ReportTrait
     public function endDateAndDueDateLoggedInUsersCurrentReportSetToDate(string $dateString, string $currentOrPrevious)
     {
         if (empty($this->loggedInUserDetails) ||
-           (empty($this->loggedInUserDetails->getCurrentReportId()) && empty($this->loggedInUserDetails->getPreviousReportId()))
+            (empty($this->loggedInUserDetails->getCurrentReportId()) && empty($this->loggedInUserDetails->getPreviousReportId()))
         ) {
             throw new BehatException('The logged in user does not have a report. Ensure a user with a report has logged in before using this step.');
         }
@@ -486,5 +486,60 @@ trait ReportTrait
             $this->loggedInUserDetails->setPreviousReportDueDate($newDate);
             $this->loggedInUserDetails->setPreviousReportEndDate($newDate);
         }
+    }
+
+    /**
+     * @When /^I preview and check the report$/
+     */
+    public function iPreviewAndCheckTheReport()
+    {
+        $this->pressButton('Preview and check report');
+        if ('ndr' === strtolower($this->loggedInUserDetails->getCurrentReportNdrOrReport())) {
+            $this->iAmOnNdrReviewPage();
+        } else {
+            $this->iAmOnReportReviewPage();
+        }
+    }
+
+    /**
+     * @Given /^I continue to declaration and submission$/
+     */
+    public function iContinueToDeclarationAndSubmission()
+    {
+        $this->clickLink('Continue to declaration and submission');
+        $this->iAmOnReportDeclarationPage();
+    }
+
+    /**
+     * @Given /^I confirm I agree to the declaration$/
+     */
+    public function iConfirmIAgreeToTheDeclaration()
+    {
+        $this->checkOption('report_declaration[agree]');
+    }
+
+    /**
+     * @Given /^I confirm I am the sole deputy$/
+     */
+    public function iConfirmIAmTheSoleDeputy()
+    {
+        $this->selectOption('report_declaration[agreedBehalfDeputy]', 'only_deputy');
+    }
+
+    /**
+     * @Given /^I submit my report$/
+     */
+    public function iSubmitMyReport()
+    {
+        $this->pressButton('Submit report');
+        $this->iAmOnReportSubmittedPage();
+    }
+
+    /**
+     * @Then /^my report should be submitted$/
+     */
+    public function myReportShouldBeSubmitted()
+    {
+        $this->assertPageContainsText('Your report has been sent to OPG');
     }
 }

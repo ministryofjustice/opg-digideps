@@ -1,39 +1,46 @@
 downloadAsPdf: Download as PDF
+pdfDraftSentence: This is a PDF draft of your report. It has not been submitted to the OPG.
+supportTitleTop: "startYear to endYear report"
+
 incomplete:
-  backToEditingReport: Back to editing report
+    backToEditingReport: Go back and edit the report
 
 submitReport: Submit report
 
 preview:
-  htmlTitle: Preview report - Complete the deputy report | GOV.UK
-  pageTitle: Preview report
-  introPara: |
-    Use this section to check the details of the report are correct. When all sections are
-    completed you will be able to continue the report submission process.
+    htmlTitle: Preview report - Complete the deputy report | GOV.UK
+    pageTitle: Preview report
+    para1: Use this section to check the details of the report are correct.
+    para2: When all sections are completed you will be able to continue the report submission process.
 
 review:
-  htmlTitle: Review report - Complete the deputy report | GOV.UK
-  pageTitle: Review report
-  introPara: Please review all sections of this report before continuing to the deputy declaration.
+    htmlTitle: Review report - Complete the deputy report | GOV.UK
+    pageTitle: Check your report
+    para1: Once you’ve submitted the report, you won’t be able to make any changes.
+    para2: Before submitting please review all sections of the report in the PDF preview below. If you need to make changes you can go back and edit the report.
+    continueToDeclarationButton: Continue to declaration and submission
+
+
 
 submitted:
-  htmlTitle: Submitted report - Complete the deputy report | GOV.UK
-  pageTitle: Submitted report
-  introPara: This report was submitted to OPG on
+    htmlTitle: Submitted report - Complete the deputy report | GOV.UK
+    pageTitle: Submitted report
+    introPara: This report was submitted to OPG on
 
 ndr-preview:
-  htmlTitle: Preview report - Complete the deputy report | GOV.UK
-  pageTitle: Preview report
-  introPara: |
-    Use this section to check the details of the report are correct. When all sections are
-    completed you will be able to continue the report submission process.
+    htmlTitle: Preview report - Complete the deputy report | GOV.UK
+    pageTitle: Preview report
+    introPara: |
+        Use this section to check the details of the report are correct. When all sections are
+        completed you will be able to continue the report submission process.
 
 ndr-review:
-  htmlTitle: Review report - Complete the deputy report | GOV.UK
-  pageTitle: Review report
-  introPara: Please review all sections of this report before continuing to the deputy declaration.
+    htmlTitle: Review report - Complete the deputy report | GOV.UK
+    pageTitle: Check your report
+    para1: Once you’ve submitted the report, you won’t be able to make any changes.
+    para2: Before submitting please review all sections of the report in the PDF preview below. If you need to make changes you can go back and edit the report.
 
 ndr-submitted:
-  htmlTitle: Submitted report - Complete the deputy report | GOV.UK
-  pageTitle: Submitted report
-  introPara: This report was submitted to OPG on
+    htmlTitle: Submitted report - Complete the deputy report | GOV.UK
+    pageTitle: Submitted report
+    introPara: This report was submitted to OPG on
