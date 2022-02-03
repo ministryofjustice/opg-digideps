@@ -507,7 +507,11 @@ trait ReportTrait
     public function iContinueToDeclarationAndSubmission()
     {
         $this->clickLink('Continue to declaration and submission');
-        $this->iAmOnReportDeclarationPage();
+        if ('ndr' === strtolower($this->loggedInUserDetails->getCurrentReportNdrOrReport())) {
+            $this->iAmOnNdrDeclarationPage();
+        } else {
+            $this->iAmOnReportDeclarationPage();
+        }
     }
 
     /**
@@ -515,7 +519,11 @@ trait ReportTrait
      */
     public function iConfirmIAgreeToTheDeclaration()
     {
-        $this->checkOption('report_declaration[agree]');
+        if ('ndr' === strtolower($this->loggedInUserDetails->getCurrentReportNdrOrReport())) {
+            $this->checkOption('ndr_declaration[agree]');
+        } else {
+            $this->checkOption('report_declaration[agree]');
+        }
     }
 
     /**
@@ -523,7 +531,11 @@ trait ReportTrait
      */
     public function iConfirmIAmTheSoleDeputy()
     {
-        $this->selectOption('report_declaration[agreedBehalfDeputy]', 'only_deputy');
+        if ('ndr' === strtolower($this->loggedInUserDetails->getCurrentReportNdrOrReport())) {
+            $this->selectOption('ndr_declaration[agreedBehalfDeputy]', 'only_deputy');
+        } else {
+            $this->selectOption('report_declaration[agreedBehalfDeputy]', 'only_deputy');
+        }
     }
 
     /**
@@ -532,7 +544,11 @@ trait ReportTrait
     public function iSubmitMyReport()
     {
         $this->pressButton('Submit report');
-        $this->iAmOnReportSubmittedPage();
+        if ('ndr' === strtolower($this->loggedInUserDetails->getCurrentReportNdrOrReport())) {
+            $this->iAmOnNdrSubmittedPage();
+        } else {
+            $this->iAmOnReportSubmittedPage();
+        }
     }
 
     /**

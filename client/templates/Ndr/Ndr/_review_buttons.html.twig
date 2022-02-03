@@ -1,0 +1,25 @@
+{% set translationDomain = "report-display" %}
+{% trans_default_domain translationDomain %}
+
+{% if ndr.submitted == false %}
+<div class="govuk-button-group">
+    {% if preview %}
+        <a class="govuk-button" href="{{ path("ndr_overview" , {'ndrId': ndr.id }) }}">
+            {{ 'incomplete.backToEditingReport' | trans() }}
+        </a>
+    {% else %}
+        <a class="govuk-button govuk-button--secondary" data-module="govuk-button"
+           href="{{ path("ndr_overview" , {'ndrId': ndr.id }) }}">
+            {{ 'incomplete.backToEditingReport' | trans() }}
+        </a>
+
+        <a class="govuk-button" data-module="govuk-button"
+           href="{{ path("ndr_declaration" , {'ndrId': ndr.id }) }}">
+            {{ 'review.continueToDeclarationButton' | trans({}) }}
+        </a>
+    {% endif %}
+    {% else %}
+        <a class="govuk-button"
+           href="{{ path('homepage') }}">{{ 'backToYourReports' | trans({}, 'common') }}</a>
+    {% endif %}
+</div>
