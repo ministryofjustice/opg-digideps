@@ -353,5 +353,7 @@ services:
         tags:
             - { name: serializer.denormalizer }
 
-    App\Service\Client\Internal\Api2Client:
-        class: App\Service\Client\Internal\Api2Client
+    App\Controller\NewLoginController:
+        class: App\Controller\NewLoginController
+        arguments:
+            $tokenStorage: '@App\Service\Client\TokenStorage\RedisStorage'

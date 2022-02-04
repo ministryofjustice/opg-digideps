@@ -5,8 +5,10 @@ namespace App\Entity;
 use App\Entity\Report\Report;
 use App\Entity\Traits\AddressTrait;
 use App\Entity\UserResearch\UserResearchResponse;
+use DateTime;
 use Doctrine\Common\Collections\ArrayCollection;
 use Doctrine\ORM\Mapping as ORM;
+use Exception;
 use JMS\Serializer\Annotation as JMS;
 use Symfony\Component\Security\Core\User\UserInterface;
 
@@ -150,7 +152,7 @@ class User implements UserInterface
     private $salt;
 
     /**
-     * @var \DateTime
+     * @var DateTime
      * @JMS\Type("DateTime<'Y-m-d H:i:s'>")
      * @JMS\Groups({"user"})
      *
@@ -167,7 +169,7 @@ class User implements UserInterface
     private $registrationToken;
 
     /**
-     * @var \DateTime
+     * @var DateTime
      * @JMS\Type("DateTime<'Y-m-d H:i:s'>")
      * @JMS\Groups({"user"})
      *
@@ -215,7 +217,7 @@ class User implements UserInterface
     private $phoneAlternative;
 
     /**
-     * @var \DateTime
+     * @var DateTime
      * @JMS\Type("DateTime<'Y-m-d H:i:s'>")
      * @JMS\Groups({"user"})
      *
@@ -269,7 +271,7 @@ class User implements UserInterface
     private $agreeTermsUse;
 
     /**
-     * @var \DateTime
+     * @var DateTime
      * @JMS\Type("DateTime<'Y-m-d'>")
      * @JMS\Groups({"user"})
      *
@@ -314,6 +316,16 @@ class User implements UserInterface
     public function getId()
     {
         return $this->id;
+    }
+
+    /**
+     * @return User
+     */
+    public function setId(?int $id)
+    {
+        $this->id = $id;
+
+        return $this;
     }
 
     /**
@@ -419,7 +431,7 @@ class User implements UserInterface
     /**
      * Set registrationDate.
      *
-     * @param \DateTime $registrationDate
+     * @param DateTime $registrationDate
      *
      * @return User
      */
@@ -433,7 +445,7 @@ class User implements UserInterface
     /**
      * Get registrationDate.
      *
-     * @return \DateTime
+     * @return DateTime
      */
     public function getRegistrationDate()
     {
@@ -445,12 +457,12 @@ class User implements UserInterface
      *
      * @return User
      *
-     * @throws \Exception
+     * @throws Exception
      */
     public function recreateRegistrationToken()
     {
         $this->setRegistrationToken(bin2hex(random_bytes(16)));
-        $this->setTokenDate(new \DateTime());
+        $this->setTokenDate(new DateTime());
 
         return $this;
     }
@@ -506,7 +518,7 @@ class User implements UserInterface
     /**
      * Set tokenDate.
      *
-     * @param \DateTime $tokenDate
+     * @param DateTime $tokenDate
      *
      * @return User
      */
@@ -520,7 +532,7 @@ class User implements UserInterface
     /**
      * Get tokenDate.
      *
-     * @return \DateTime
+     * @return DateTime
      */
     public function getTokenDate()
     {
@@ -763,7 +775,7 @@ class User implements UserInterface
     }
 
     /**
-     * @return \DateTime
+     * @return DateTime
      */
     public function getLastLoggedIn()
     {
@@ -771,9 +783,9 @@ class User implements UserInterface
     }
 
     /**
-     * @param \DateTime $lastLoggedIn
+     * @param DateTime $lastLoggedIn
      */
-    public function setLastLoggedIn(\DateTime $lastLoggedIn = null)
+    public function setLastLoggedIn(DateTime $lastLoggedIn = null)
     {
         $this->lastLoggedIn = $lastLoggedIn;
 
@@ -960,14 +972,14 @@ class User implements UserInterface
         $this->agreeTermsUse = $agreeTermsUse;
 
         if ($agreeTermsUse) {
-            $this->agreeTermsUseDate = new \DateTime('now');
+            $this->agreeTermsUseDate = new DateTime('now');
         }
 
         return $this;
     }
 
     /**
-     * @return \DateTime
+     * @return DateTime
      */
     public function getAgreeTermsUseDate()
     {
@@ -1248,6 +1260,6 @@ class User implements UserInterface
      */
     public function regBeforeToday(User $user): bool
     {
-        return $user->getRegistrationDate() < (new \DateTime())->setTime(00, 00, 00);
+        return $user->getRegistrationDate() < (new DateTime())->setTime(00, 00, 00);
     }
 }

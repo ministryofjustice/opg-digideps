@@ -80,6 +80,9 @@ security:
             pattern: ^/v2/fixture/reset-fixtures
             security: false
             methods: [ GET ]
+        jwt-endpoints:
+            pattern: ^/v3/*
+            security: false
         # keep this one last so that the previous ones bypass the catch-all pattern below
         default:
             pattern: .*
