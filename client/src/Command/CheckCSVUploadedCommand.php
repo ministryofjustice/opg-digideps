@@ -11,7 +11,8 @@ use App\Service\SecretManagerService;
 use App\Service\Time\DateTimeProvider;
 use Aws\Exception\AwsException;
 use DateInterval;
-use RuntimeException;
+use JoliCode\Slack\Exception\SlackErrorResponse;
+use Psr\Log\LoggerInterface;
 use Symfony\Component\Console\Input\InputInterface;
 use Symfony\Component\Console\Output\OutputInterface;
 use Symfony\Component\HttpFoundation\Response;
@@ -19,6 +20,7 @@ use Symfony\Component\HttpFoundation\Response;
 class CheckCSVUploadedCommand extends DaemonableCommand
 {
     public const CSV_NOT_UPLOADED_SLACK_MESSAGE = 'The %s CSV has not been uploaded within the past 24 hours';
+    public const FAILED_TO_RECEIVE_AUDIT_LOG_SLACK_MESSAGE = 'Failed to retrieve audit logs during CSV upload check. Error message: %s';
 
     public const CASREC_LAY_CSV = 'CasRec Lay';
     public const SIRIUS_LAY_CSV = 'Sirius Lay';
@@ -34,20 +36,25 @@ class CheckCSVUploadedCommand extends DaemonableCommand
     private SecretManagerService $secretManagerService;
 
     private ClientFactory $slackClientFactory;
+
     private AwsAuditLogHandler $awsAuditLogHandler;
+
+    private LoggerInterface $logger;
 
     public function __construct(
         BankHolidaysAPIClient $bankHolidayAPIClient,
         DateTimeProvider $dateTimeProvider,
         SecretManagerService $secretManagerService,
         ClientFactory $slackClientFactory,
-        AwsAuditLogHandler $awsAuditLogHandler
+        AwsAuditLogHandler $awsAuditLogHandler,
+        LoggerInterface $logger
     ) {
         $this->bankHolidayAPIClient = $bankHolidayAPIClient;
         $this->dateTimeProvider = $dateTimeProvider;
         $this->secretManagerService = $secretManagerService;
         $this->slackClientFactory = $slackClientFactory;
         $this->awsAuditLogHandler = $awsAuditLogHandler;
+        $this->logger = $logger;
         parent::__construct();
     }
 
@@ -86,14 +93,16 @@ class CheckCSVUploadedCommand extends DaemonableCommand
                 // AWS returns a 400 response if the log stream is empty
                 if (Response::HTTP_BAD_REQUEST === $e->getAwsErrorCode()) {
                     // Alert on Slack for all CSV types
-                    $this->postCSVSlackMessage(self::CASREC_LAY_CSV);
-                    $this->postCSVSlackMessage(self::SIRIUS_LAY_CSV);
-                    $this->postCSVSlackMessage(self::CASREC_PROF_CSV);
-                    $this->postCSVSlackMessage(self::CASREC_PA_CSV);
+                    $this->postSlackMessage(sprintf(self::CSV_NOT_UPLOADED_SLACK_MESSAGE, self::CASREC_LAY_CSV));
+                    $this->postSlackMessage(sprintf(self::CSV_NOT_UPLOADED_SLACK_MESSAGE, self::SIRIUS_LAY_CSV));
+                    $this->postSlackMessage(sprintf(self::CSV_NOT_UPLOADED_SLACK_MESSAGE, self::CASREC_PROF_CSV));
+                    $this->postSlackMessage(sprintf(self::CSV_NOT_UPLOADED_SLACK_MESSAGE, self::CASREC_PA_CSV));
 
                     return 0;
                 } else {
-                    throw new RuntimeException($e->getMessage());
+                    $this->postSlackMessage(sprintf(self::FAILED_TO_RECEIVE_AUDIT_LOG_SLACK_MESSAGE, $e->getMessage()));
+
+                    return 1;
                 }
             }
 
@@ -115,7 +124,7 @@ class CheckCSVUploadedCommand extends DaemonableCommand
         $casRecLayCSVUploads = preg_grep('/"source":"casrec","role_type":"LAY"/', $events);
 
         if (empty($casRecLayCSVUploads)) {
-            $this->postCSVSlackMessage(self::CASREC_LAY_CSV);
+            $this->postSlackMessage(sprintf(self::CSV_NOT_UPLOADED_SLACK_MESSAGE, self::CASREC_LAY_CSV));
         }
     }
 
@@ -124,7 +133,7 @@ class CheckCSVUploadedCommand extends DaemonableCommand
         $siriusCSVUploads = preg_grep('/"source":"sirius","role_type":"LAY"/', $events);
 
         if (empty($siriusCSVUploads)) {
-            $this->postCSVSlackMessage(self::SIRIUS_LAY_CSV);
+            $this->postSlackMessage(sprintf(self::CSV_NOT_UPLOADED_SLACK_MESSAGE, self::SIRIUS_LAY_CSV));
         }
     }
 
@@ -133,7 +142,7 @@ class CheckCSVUploadedCommand extends DaemonableCommand
         $casRecProfCSVUploads = preg_grep('/"source":"casrec","role_type":"PROF"/', $events);
 
         if (empty($casRecProfCSVUploads)) {
-            $this->postCSVSlackMessage(self::CASREC_PROF_CSV);
+            $this->postSlackMessage(sprintf(self::CSV_NOT_UPLOADED_SLACK_MESSAGE, self::CASREC_PROF_CSV));
         }
     }
 
@@ -142,21 +151,25 @@ class CheckCSVUploadedCommand extends DaemonableCommand
         $casRecPACSVUploads = preg_grep('/"source":"casrec","role_type":"PA"/', $events);
 
         if (empty($casRecPACSVUploads)) {
-            $this->postCSVSlackMessage(self::CASREC_PA_CSV);
+            $this->postSlackMessage(sprintf(self::CSV_NOT_UPLOADED_SLACK_MESSAGE, self::CASREC_PA_CSV));
         }
     }
 
-    private function postCSVSlackMessage(string $csv)
+    private function postSlackMessage(string $message)
     {
         $token = $this->secretManagerService->getSecret(SecretManagerService::SLACK_APP_TOKEN_SECRET_NAME);
 
         // POST TO SLACK - need to wrap in helper class as create is a static class function
         $client = $this->slackClientFactory->createClient($token);
 
-        $client->chatPostMessage([
-                                     'username' => 'opg_response',
-                                     'channel' => 'opg-digideps-team',
-                                     'text' => sprintf(self::CSV_NOT_UPLOADED_SLACK_MESSAGE, $csv),
-                                 ]);
+        try {
+            $client->chatPostMessage([
+                                         'username' => 'opg_response',
+                                         'channel' => 'opg-digideps-team',
+                                         'text' => $message,
+                                     ]);
+        } catch (SlackErrorResponse $e) {
+            $this->logger->log('error', 'Failed to post to Slack during CSV upload check');
+        }
     }
 }

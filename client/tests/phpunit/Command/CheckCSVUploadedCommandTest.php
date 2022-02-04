@@ -14,9 +14,11 @@ use Aws\Result;
 use DateInterval;
 use DateTime;
 use JoliCode\Slack\Api\Client;
+use JoliCode\Slack\Exception\SlackErrorResponse;
 use Prophecy\Argument;
 use Prophecy\PhpUnit\ProphecyTrait;
 use Prophecy\Prophecy\ObjectProphecy;
+use Psr\Log\LoggerInterface;
 use Symfony\Bundle\FrameworkBundle\Console\Application;
 use Symfony\Bundle\FrameworkBundle\Test\KernelTestCase;
 use Symfony\Component\Console\Tester\CommandTester;
@@ -30,6 +32,7 @@ class CheckCSVUploadedCommandTest extends KernelTestCase
     private ObjectProphecy | AwsAuditLogHandler $awsAuditLogHandler;
     private ObjectProphecy | SecretManagerService $secretManagerService;
     private ObjectProphecy | ClientFactory $slackClientFactory;
+    private ObjectProphecy | LoggerInterface $logger;
     private CommandTester $commandTester;
     private DateTime $now;
     private string $slackSecret;
@@ -50,6 +53,7 @@ class CheckCSVUploadedCommandTest extends KernelTestCase
         $this->awsAuditLogHandler = self::prophesize(AwsAuditLogHandler::class);
         $this->secretManagerService = self::prophesize(SecretManagerService::class);
         $this->slackClientFactory = self::prophesize(ClientFactory::class);
+        $this->logger = self::prophesize(LoggerInterface::class);
 
         $this->bankHolidayAPI->getBankHolidays()->shouldBeCalled()->willReturn(
             [
@@ -78,7 +82,8 @@ class CheckCSVUploadedCommandTest extends KernelTestCase
             $this->dateTimeProvider->reveal(),
             $this->secretManagerService->reveal(),
             $this->slackClientFactory->reveal(),
-            $this->awsAuditLogHandler->reveal()
+            $this->awsAuditLogHandler->reveal(),
+            $this->logger->reveal()
         );
 
         $app->add($sut);
@@ -263,15 +268,24 @@ class CheckCSVUploadedCommandTest extends KernelTestCase
     public function executeErrorIsLoggedIfCantGetAuditLogs()
     {
         $this->todayIsABankHoliday(false);
-        //Create a mock function for aws audit log error
-        //$this->aCsvUploadedEventExists(true);
+        $this->cannotRetrieveAuditLogs();
 
-        $this->secretManagerService->getSecret(Argument::any())->shouldNotBeCalled();
+        $this->secretManagerService->getSecret('opg-response-slack-token')
+            ->shouldBeCalled()
+            ->willReturn($this->slackSecret);
 
-        //If we can't get logs, do we want to error our or should we post to slack that there was a problem?
-        $this->slackClientFactory->createClient(Argument::any())->shouldNotBeCalled();
         $slackClient = self::prophesize(Client::class);
-        $slackClient->chatPostMessage(Argument::any())->shouldNotBeCalled();
+        $slackClient->chatPostMessage(
+            [
+                'username' => 'opg_response',
+                'channel' => 'opg-digideps-team',
+                'text' => 'Failed to retrieve audit logs during CSV upload check. Error message: The service cannot complete the request.',
+            ]
+        )->shouldBeCalled();
+
+        $this->slackClientFactory->createClient($this->slackSecret)
+            ->shouldBeCalled()
+            ->willReturn($slackClient->reveal());
 
         $result = $this->commandTester->execute([]);
 
@@ -284,7 +298,35 @@ class CheckCSVUploadedCommandTest extends KernelTestCase
      */
     public function executeErrorIsLoggedIfSlackPostIsNotSuccessful()
     {
-        //Assert 1 is returned by command
+        $this->todayIsABankHoliday(false);
+        $this->cannotRetrieveAuditLogs();
+
+        $this->secretManagerService->getSecret('opg-response-slack-token')
+            ->shouldBeCalled()
+            ->willReturn($this->slackSecret);
+
+        $slackClient = self::prophesize(Client::class);
+
+        $exception = new SlackErrorResponse('500', null);
+
+        $slackClient->chatPostMessage(
+            [
+                'username' => 'opg_response',
+                'channel' => 'opg-digideps-team',
+                'text' => 'Failed to retrieve audit logs during CSV upload check. Error message: The service cannot complete the request.',
+            ]
+        )->shouldBeCalled()->willThrow($exception);
+
+        $this->slackClientFactory->createClient($this->slackSecret)
+            ->shouldBeCalled()
+            ->willReturn($slackClient->reveal());
+
+        $this->logger->log('error', 'Failed to post to Slack during CSV upload check')
+            ->shouldBeCalled();
+
+        $result = $this->commandTester->execute([]);
+
+        $this->assertEquals(1, $result, sprintf('Expected command to return 1, got %d', $result));
     }
 
     private function todayIsABankHoliday(bool $isABankHoliday)
@@ -361,5 +403,25 @@ class CheckCSVUploadedCommandTest extends KernelTestCase
         }
 
         return $events;
+    }
+
+    private function cannotRetrieveAuditLogs()
+    {
+        $startingTime = (int) (clone $this->now)->sub(new DateInterval('P1D'))->format('Uv');
+        $endTime = (int) (clone $this->now)->format('Uv');
+
+        $exception = new AwsException(
+            'The service cannot complete the request.',
+            new Command('getLogEvents'),
+            ['code' => 503]
+        );
+
+        $this->awsAuditLogHandler->getLogEventsByLogStream(
+            'CSV_UPLOADED',
+            $startingTime,
+            $endTime
+        )
+            ->shouldBeCalled()
+            ->willThrow($exception);
     }
 }
