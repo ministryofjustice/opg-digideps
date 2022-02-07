@@ -224,8 +224,12 @@ SQL;
 
     public function getAllAdminAccounts()
     {
-        $user = ['Admin Role'];
+        $dql = "SELECT u FROM App\Entity\User u WHERE u.roleName IN('ROLE_ADMIN', 'ROLE_SUPER_ADMIN', 'ROLE_ADMIN_MANAGER')";
 
-        return $user;
+        $query = $this
+            ->getEntityManager()
+            ->createQuery($dql);
+
+        return $query->getResult();
     }
 }
