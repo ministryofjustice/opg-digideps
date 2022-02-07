@@ -1,0 +1,4 @@
+{
+    "$schema": "https://raw.githubusercontent.com/ministryofjustice/opg-repository-reporting/main/schema/v0.0.1.json",
+    "owners": ["digdeps"]
+} 
