@@ -221,4 +221,11 @@ SQL;
 
         return $result->fetchAllAssociative();
     }
+
+    public function getAllAdminAccounts()
+    {
+        $user = ['Admin Role'];
+
+        return $user;
+    }
 }

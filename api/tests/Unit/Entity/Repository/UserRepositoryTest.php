@@ -126,6 +126,19 @@ class UserRepositoryTest extends WebTestCase
         self::assertNotContains($inactiveUserTwo->getId(), $resultsUserIds);
     }
 
+    /** @test */
+    public function getAllAdminAccounts()
+    {
+        $userHelper = new UserTestHelper();
+        $user = $userHelper->createUser(null, User::ROLE_ADMIN);
+
+        $this->em->persist($user);
+        $this->em->flush();
+        $adminUsers = $this->sut->getAllAdminAccounts();
+        self::assertEquals(1, count($adminUsers));
+        self::assertContains($user, $adminUsers);
+    }
+
     protected function tearDown(): void
     {
         parent::tearDown();
