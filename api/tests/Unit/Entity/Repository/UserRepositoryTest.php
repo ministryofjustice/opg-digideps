@@ -148,7 +148,6 @@ class UserRepositoryTest extends WebTestCase
         $expectedDeputyUsersNotReturned = [$layDeputyUser, $profDeputyUser, $paDeputyUser];
         $actualAdminUsers = $this->sut->getAllAdminAccounts();
 
-        self::assertEquals(3, count($actualAdminUsers));
         self::assertEquals($expectedAdminUsersReturned, $actualAdminUsers);
 
         foreach ($expectedDeputyUsersNotReturned as $deputyUser) {
@@ -168,15 +167,15 @@ class UserRepositoryTest extends WebTestCase
         $usersToAdd[] = $nonAdminUserLessThan60Days = $userHelper->createUser(null, User::ROLE_LAY_DEPUTY);
 
         $adminUserMoreThan60Days->setRegistrationDate(new DateTime('-61 days'));
-        $adminUserMoreThan60Days->setActive(false);
+        $adminUserMoreThan60Days->setLastLoggedIn(null);
         $superAdminUserMoreThan60Days->setRegistrationDate(new DateTime('-61 days'));
-        $superAdminUserMoreThan60Days->setActive(false);
+        $superAdminUserMoreThan60Days->setLastLoggedIn(null);
         $adminManagerUserMoreThan60Days->setRegistrationDate(new DateTime('-61 days'));
-        $adminManagerUserMoreThan60Days->setActive(false);
+        $adminManagerUserMoreThan60Days->setLastLoggedIn(null);
         $adminUserLessThan60Days->setRegistrationDate(new DateTime('-5 days'));
-        $adminUserLessThan60Days->setActive(true);
+        $adminUserLessThan60Days->setLastLoggedIn(new DateTime());
         $nonAdminUserLessThan60Days->setRegistrationDate(new DateTime('-61 days'));
-        $adminUserLessThan60Days->setActive(false);
+        $nonAdminUserLessThan60Days->setLastLoggedIn(null);
 
         foreach ($usersToAdd as $user) {
             $this->em->persist($user);
@@ -189,8 +188,42 @@ class UserRepositoryTest extends WebTestCase
 
         $actualAdminUsers = $this->sut->getAllAdminAccountsCreatedButNotActivatedWithin('-60 days');
 
-        self::assertEquals(3, count($actualAdminUsers));
         self::assertEquals($expectedAdminUsersReturned, $actualAdminUsers);
+
+        foreach ($expectedAdminUsersNotReturned as $user) {
+            self::assertNotContains($user, $actualAdminUsers);
+        }
+    }
+
+    /** @test */
+    public function getAllActivatedAdminAccounts()
+    {
+        $userHelper = new UserTestHelper();
+        $usersToAdd = [];
+        $usersToAdd[] = $activeAdminUser = $userHelper->createUser(null, User::ROLE_ADMIN);
+        $usersToAdd[] = $activeSuperAdminUser = $userHelper->createUser(null, User::ROLE_SUPER_ADMIN);
+        $usersToAdd[] = $activeAdminManagerUser = $userHelper->createUser(null, User::ROLE_ADMIN_MANAGER);
+        $usersToAdd[] = $inactiveAdminManagerUser = $userHelper->createUser(null, User::ROLE_ADMIN_MANAGER);
+        $usersToAdd[] = $activeDeputyUser = $userHelper->createUser(null, User::ROLE_LAY_DEPUTY);
+
+        $activeAdminUser->setLastLoggedIn(new DateTime());
+        $activeSuperAdminUser->setLastLoggedIn(new DateTime());
+        $activeAdminManagerUser->setLastLoggedIn(new DateTime());
+        $inactiveAdminManagerUser->setLastLoggedIn();
+        $activeDeputyUser->setLastLoggedIn(new DateTime());
+
+        foreach ($usersToAdd as $user) {
+            $this->em->persist($user);
+        }
+
+        $this->em->flush();
+
+        $expectedActiveAdminUsersReturned = [$activeAdminUser, $activeSuperAdminUser, $activeAdminManagerUser];
+        $expectedAdminUsersNotReturned = [$inactiveAdminManagerUser, $activeDeputyUser];
+
+        $actualAdminUsers = $this->sut->getAllActivatedAdminAccounts();
+
+        self::assertEquals($expectedActiveAdminUsersReturned, $actualAdminUsers);
 
         foreach ($expectedAdminUsersNotReturned as $user) {
             self::assertNotContains($user, $actualAdminUsers);

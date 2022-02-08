@@ -235,12 +235,23 @@ SQL;
 
     public function getAllAdminAccountsCreatedButNotActivatedWithin(string $timeframe)
     {
-//        SELECT COUNT(*) AS inactive_account FROM dd_user WHERE active = FALSE AND registration_date > now() - interval '60 day';
         $date = (new DateTime())->modify($timeframe)->format('Y-m-d H:i:s');
 
         $dql = "SELECT u FROM App\Entity\User u WHERE u.roleName IN('ROLE_ADMIN', 'ROLE_SUPER_ADMIN', 'ROLE_ADMIN_MANAGER')
-                AND u.active = FALSE
+                AND u.lastLoggedIn IS NULL
                 AND u.registrationDate < '{$date}' ";
+
+        $query = $this
+            ->getEntityManager()
+            ->createQuery($dql);
+
+        return $query->getResult();
+    }
+
+    public function getAllActivatedAdminAccounts()
+    {
+        $dql = "SELECT u FROM App\Entity\User u WHERE u.roleName IN('ROLE_ADMIN', 'ROLE_SUPER_ADMIN', 'ROLE_ADMIN_MANAGER')
+                AND u.lastLoggedIn IS NOT NULL";
 
         $query = $this
             ->getEntityManager()
