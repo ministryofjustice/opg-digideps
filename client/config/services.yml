@@ -352,8 +352,3 @@ services:
         class: GBProd\UuidNormalizer\UuidDenormalizer
         tags:
             - { name: serializer.denormalizer }
-
-    App\Controller\NewLoginController:
-        class: App\Controller\NewLoginController
-        arguments:
-            $tokenStorage: '@App\Service\Client\TokenStorage\RedisStorage'

@@ -24,8 +24,9 @@ class RegistrationApi
     public function getMyRequestInfo()
     {
         $user = $this->security->getUser();
-        $jwt = $this->redisStorage->get($user->getId());
-        $response = $this->registrationApiClient->request('GET', '/', ['auth_bearer' => $jwt]);
+        $jwt = $this->redisStorage->get($user->getId().'-jwt');
+        var_dump($jwt);
+        $response = $this->registrationApiClient->request('GET', '/', ['headers' => ['auth_bearer' => $jwt[0]]]);
 
         return $response->getContent();
     }

@@ -16,6 +16,7 @@ import (
 type regServiceResponse struct {
 	Name      string
 	Timestamp time.Time
+	Message string
 }
 
 func regService(w http.ResponseWriter, r *http.Request) {
@@ -42,8 +43,10 @@ func regService(w http.ResponseWriter, r *http.Request) {
 	data := regServiceResponse{
 		Name:      "Go API Test",
 		Timestamp: time.Now(),
-		//Message: responseText,
+		Message: r.Header.Get("auth_bearer"),
 	}
+
+	log.Fatal(r.Header.Get("auth_bearer"))
 
 	// Marshal just returns the JSON encoding
 	json, err := json.Marshal(data)

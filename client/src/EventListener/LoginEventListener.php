@@ -68,7 +68,6 @@ class LoginEventListener
         $jwks = json_decode($jwkResponse->getContent(), true);
 
         if ($event->getResponse()->headers->get('jwt')) {
-            var_dump($event->getResponse()->headers->get('jwt'));
             // Get JWT and save into session for user
             $jwt = json_decode($event->getResponse()->headers->get('jwt'), true)['token'];
 
