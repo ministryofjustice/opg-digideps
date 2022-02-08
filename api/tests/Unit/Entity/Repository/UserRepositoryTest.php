@@ -162,10 +162,21 @@ class UserRepositoryTest extends WebTestCase
         $userHelper = new UserTestHelper();
         $usersToAdd = [];
         $usersToAdd[] = $adminUserMoreThan60Days = $userHelper->createUser(null, User::ROLE_ADMIN);
+        $usersToAdd[] = $superAdminUserMoreThan60Days = $userHelper->createUser(null, User::ROLE_SUPER_ADMIN);
+        $usersToAdd[] = $adminManagerUserMoreThan60Days = $userHelper->createUser(null, User::ROLE_ADMIN_MANAGER);
         $usersToAdd[] = $adminUserLessThan60Days = $userHelper->createUser(null, User::ROLE_ADMIN);
+        $usersToAdd[] = $nonAdminUserLessThan60Days = $userHelper->createUser(null, User::ROLE_LAY_DEPUTY);
 
         $adminUserMoreThan60Days->setRegistrationDate(new DateTime('-61 days'));
+        $adminUserMoreThan60Days->setActive(false);
+        $superAdminUserMoreThan60Days->setRegistrationDate(new DateTime('-61 days'));
+        $superAdminUserMoreThan60Days->setActive(false);
+        $adminManagerUserMoreThan60Days->setRegistrationDate(new DateTime('-61 days'));
+        $adminManagerUserMoreThan60Days->setActive(false);
         $adminUserLessThan60Days->setRegistrationDate(new DateTime('-5 days'));
+        $adminUserLessThan60Days->setActive(true);
+        $nonAdminUserLessThan60Days->setRegistrationDate(new DateTime('-61 days'));
+        $adminUserLessThan60Days->setActive(false);
 
         foreach ($usersToAdd as $user) {
             $this->em->persist($user);
@@ -173,16 +184,16 @@ class UserRepositoryTest extends WebTestCase
 
         $this->em->flush();
 
-        $expectedAdminUsersReturned = [$adminUserMoreThan60Days];
-        $expectedAdminUsersNotReturned = [$adminUserLessThan60Days];
+        $expectedAdminUsersReturned = [$adminUserMoreThan60Days, $superAdminUserMoreThan60Days, $adminManagerUserMoreThan60Days];
+        $expectedAdminUsersNotReturned = [$adminUserLessThan60Days, $nonAdminUserLessThan60Days];
 
         $actualAdminUsers = $this->sut->getAllAdminAccountsCreatedButNotActivatedWithin('-60 days');
 
-        self::assertEquals(1, count($actualAdminUsers));
+        self::assertEquals(3, count($actualAdminUsers));
         self::assertEquals($expectedAdminUsersReturned, $actualAdminUsers);
 
-        foreach ($expectedAdminUsersNotReturned as $deputyUser) {
-            self::assertNotContains($deputyUser, $actualAdminUsers);
+        foreach ($expectedAdminUsersNotReturned as $user) {
+            self::assertNotContains($user, $actualAdminUsers);
         }
     }
 
