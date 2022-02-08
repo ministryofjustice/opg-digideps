@@ -105,7 +105,7 @@ security:
 
         # open URLs
         - { path: ^/test-registration-api, roles: IS_AUTHENTICATED_ANONYMOUSLY }
-        - { path: ^/JWTlogin, roles: IS_AUTHENTICATED_ANONYMOUSLY }
+        - { path: ^/v2/*, roles: IS_AUTHENTICATED_ANONYMOUSLY }
         - { path: ^/login, roles: IS_AUTHENTICATED_ANONYMOUSLY }
         - { path: ^/login-ad, roles: IS_AUTHENTICATED_ANONYMOUSLY }
         - { path: ^/manage, roles: IS_AUTHENTICATED_ANONYMOUSLY }

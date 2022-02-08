@@ -10,12 +10,16 @@ use App\Service\RequestIdLoggerProcessor;
 use GuzzleHttp\ClientInterface;
 use GuzzleHttp\Exception\RequestException;
 use GuzzleHttp\Exception\TransferException;
+use InvalidArgumentException;
+use JMS\Serializer\SerializationContext;
 use JMS\Serializer\SerializerInterface;
 use Psr\Http\Message\ResponseInterface;
 use Psr\Log\LoggerInterface;
+use RuntimeException;
 use Symfony\Component\DependencyInjection\ContainerInterface;
 use Symfony\Component\HttpFoundation\Response;
 use Symfony\Component\Security\Core\Authentication\Token\Storage\TokenStorageInterface as SecurityTokenStorage;
+use Throwable;
 
 /**
  * Connects to RESTful Server (API)
@@ -97,6 +101,11 @@ class RestClient implements RestClientInterface
     const HEADER_CLIENT_SECRET = 'ClientSecret';
 
     /**
+     * Header name holding auth token, returned at login time and re-sent at each requests.
+     */
+    const HEADER_JWT = 'JWT';
+
+    /**
      * Error Messages.
      */
     const ERROR_CONNECT = 'API returned an exception';
@@ -141,7 +150,12 @@ class RestClient implements RestClientInterface
         // store auth token
         $tokenVal = $response->getHeader(self::HEADER_AUTH_TOKEN);
         $tokenVal = is_array($tokenVal) && !empty($tokenVal[0]) ? $tokenVal[0] : null;
+
+        $jwt = $response->getHeader(self::HEADER_JWT);
+        $jwtVal = $jwt[0] ?? null;
+
         $this->tokenStorage->set($user->getId(), $tokenVal);
+        $this->tokenStorage->set(sprintf('%s-jwt', $user->getId()), $jwtVal);
 
         return $user;
     }
@@ -166,7 +180,7 @@ class RestClient implements RestClientInterface
      *
      * @param string $token
      *
-     * @return \App\Entity\User $user
+     * @return User $user
      */
     public function loadUserByToken($token)
     {
@@ -264,7 +278,7 @@ class RestClient implements RestClientInterface
     /**
      * Call POST /selfregister passing client secret.
      *
-     * @return \App\Entity\User
+     * @return User
      */
     public function registerUser(SelfRegisterData $selfRegData)
     {
@@ -278,7 +292,7 @@ class RestClient implements RestClientInterface
      * @param string $expectedResponseType
      * @param array  $options
      *
-     * @throws \InvalidArgumentException
+     * @throws InvalidArgumentException
      *
      * @return mixed
      */
@@ -313,7 +327,7 @@ class RestClient implements RestClientInterface
         } elseif (class_exists('App\\Entity\\'.$expectedResponseType)) {
             return $this->arrayToEntity($expectedResponseType, $responseArray ?: []);
         } else {
-            throw new \InvalidArgumentException(__METHOD__.": invalid type of expected response, $expectedResponseType given.");
+            throw new InvalidArgumentException(__METHOD__.": invalid type of expected response, $expectedResponseType given.");
         }
     }
 
@@ -332,6 +346,7 @@ class RestClient implements RestClientInterface
         // add AuthToken if user is logged
         if (!empty($options['addAuthToken']) && $loggedUserId = $this->getLoggedUserId()) {
             $options['headers'][self::HEADER_AUTH_TOKEN] = $this->tokenStorage->get($loggedUserId);
+            $options['headers'][self::HEADER_JWT] = $this->tokenStorage->get(sprintf('%s-jwt', $loggedUserId));
         }
         if (!empty($options['addClientSecret'])) {
             $options['headers'][self::HEADER_CLIENT_SECRET] = $this->clientSecret;
@@ -375,7 +390,7 @@ class RestClient implements RestClientInterface
                     $body = strval($response->getBody());
                     $data = $this->serialiser->deserialize($body, 'array', 'json');
                 }
-            } catch (\Throwable $e) {
+            } catch (Throwable $e) {
                 $this->logger->warning('RestClient |  '.$url.' | '.$e->getMessage());
             }
 
@@ -398,7 +413,7 @@ class RestClient implements RestClientInterface
 
         try {
             $data = $this->serialiser->deserialize(strval($response->getBody()), 'array', 'json');
-        } catch (\Throwable $e) {
+        } catch (Throwable $e) {
             $this->logger->error(__METHOD__.': '.$e->getMessage().'. Api responded with invalid JSON. [BODY START]: '.$response->getBody().'[END BODY]');
             throw new Exception\JsonDecodeException(self::ERROR_FORMAT.':'.$response->getBody());
         }
@@ -442,7 +457,7 @@ class RestClient implements RestClientInterface
             $entity = $this->arrayToEntity($expectedResponseType, $row);
 
             if (!method_exists($entity, 'getId')) {
-                throw new \RuntimeException('Cannot deserialise entities without an ID');
+                throw new RuntimeException('Cannot deserialise entities without an ID');
             }
 
             $ret[$entity->getId()] = $entity;
@@ -462,7 +477,7 @@ class RestClient implements RestClientInterface
     {
         $ret = $mixed;
         if (is_object($mixed)) {
-            $context = \JMS\Serializer\SerializationContext::create()
+            $context = SerializationContext::create()
                 ->setSerializeNull(true);
 
             if (!empty($options['deserialise_groups'])) {

@@ -126,6 +126,8 @@ services:
   registration_service:
     build:
       context: ./registration_service
+    environment:
+      JWKS_URL: ${JWKS_URL:-https://client/v2/jwks}
     expose:
       - "8080"
 

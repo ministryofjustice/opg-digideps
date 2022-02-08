@@ -11,6 +11,8 @@ use App\Service\Auth\UserProvider;
 use App\Service\BruteForce\AttemptsIncrementalWaitingChecker;
 use App\Service\BruteForce\AttemptsInTimeChecker;
 use App\Service\Formatter\RestFormatter;
+use App\Service\JWT\JWTService;
+use DateTime;
 use Doctrine\ORM\EntityManagerInterface;
 use Symfony\Component\HttpFoundation\Request;
 use Symfony\Component\Routing\Annotation\Route;
@@ -23,11 +25,13 @@ class AuthController extends RestController
 {
     private AuthService $authService;
     private RestFormatter $formatter;
+    private JWTService $JWTService;
 
-    public function __construct(AuthService $authService, RestFormatter $restFormatter)
+    public function __construct(AuthService $authService, RestFormatter $restFormatter, JWTService $JWTService)
     {
         $this->authService = $authService;
         $this->formatter = $restFormatter;
+        $this->JWTService = $JWTService;
     }
 
     /**
@@ -93,13 +97,20 @@ class AuthController extends RestController
         $incrementalWaitingTimechecker->resetAttempts($key);
 
         $randomToken = $userProvider->generateRandomTokenAndStore($user);
-        $user->setLastLoggedIn(new \DateTime());
+        $user->setLastLoggedIn(new DateTime());
         $em->persist($user);
         $em->flush();
+
+        $jwt = $this->JWTService->createNewJWT($user);
 
         // add token into response
         $restInputOutputFormatter->addResponseModifier(function ($response) use ($randomToken) {
             $response->headers->set(HeaderTokenAuthenticator::HEADER_NAME, $randomToken);
+        });
+
+        // add JWT into response
+        $restInputOutputFormatter->addResponseModifier(function ($response) use ($jwt) {
+            $response->headers->set('JWT', $jwt);
         });
 
         // needed for redirector

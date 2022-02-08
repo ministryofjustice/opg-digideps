@@ -5,9 +5,11 @@ namespace App\EventListener;
 use App\Exception\BusinessRulesException;
 use App\Exception\HasDataInterface;
 use Closure;
+use InvalidArgumentException;
 use JMS\Serializer\SerializationContext;
 use JMS\Serializer\SerializerInterface;
 use Psr\Log\LoggerInterface;
+use RuntimeException;
 use Symfony\Component\HttpFoundation\Request;
 use Symfony\Component\HttpFoundation\Response;
 use Symfony\Component\HttpKernel\Event\ExceptionEvent;
@@ -63,8 +65,6 @@ class RestInputOuputFormatter
     }
 
     /**
-     * @param Request $request
-     *
      * @return array
      */
     public function requestContentToArray(Request $request)
@@ -80,6 +80,7 @@ class RestInputOuputFormatter
 
         /** @var array $array */
         $array = $this->serializer->deserialize($content, 'array', $format);
+
         return $array;
     }
 
@@ -88,11 +89,7 @@ class RestInputOuputFormatter
      * Request format has to match the supported formats.
      * Context modifiers are applied.
      *
-     *
-     *
-     * @param array $data
-     * @param Request $request
-     * @param bool    $groupsCheck
+     * @param bool $groupsCheck
      *
      * @return Response
      */
@@ -104,7 +101,7 @@ class RestInputOuputFormatter
             if ($this->defaultFormat) {
                 $format = $this->defaultFormat;
             } else {
-                throw new \RuntimeException("format $format not supported and  defaultFormat not defined. Supported formats: " . implode(',', $this->supportedFormats));
+                throw new RuntimeException("format $format not supported and  defaultFormat not defined. Supported formats: ".implode(',', $this->supportedFormats));
             }
         }
 
@@ -115,13 +112,14 @@ class RestInputOuputFormatter
         }
 
         // if data is defined,
-        if ($groupsCheck && !empty($data['data']) && $this->containsEntity($data['data']) && $context->hasAttribute('groups') === false) {
-            throw new \RuntimeException($request->getMethod() . ' ' . $request->getUri() . ' missing JMS group');
+        if ($groupsCheck && !empty($data['data']) && $this->containsEntity($data['data']) && false === $context->hasAttribute('groups')) {
+            throw new RuntimeException($request->getMethod().' '.$request->getUri().' missing JMS group');
         }
 
         $serializedData = $this->serializer->serialize($data, $format, $context);
         $response = new Response($serializedData);
-        $response->headers->set('Content-Type', 'application/' . $format);
+        $response->headers->set('Content-Type', 'application/'.$format);
+
         // response modifier
         foreach ($this->responseModifiers as $modifier) {
             $modifier($response);
@@ -138,10 +136,11 @@ class RestInputOuputFormatter
                     return true;
                 }
             }
+
             return false;
         }
 
-        return is_object($object) && strpos(get_class($object), 'Entity') !== false;
+        return is_object($object) && false !== strpos(get_class($object), 'Entity');
     }
 
     /**
@@ -179,7 +178,7 @@ class RestInputOuputFormatter
         if ($e instanceof BusinessRulesException) {
             $code = 409;
         }
-        if ($e instanceof \InvalidArgumentException) {
+        if ($e instanceof InvalidArgumentException) {
             $code = 400;
         }
         if ($e instanceof AccessDeniedHttpException) {
@@ -229,22 +228,16 @@ class RestInputOuputFormatter
                 'data' => '',
                 'message' => "{$lastError['message']} {$lastError['file']}:{$lastError['line']} ",
             ]);
-            die;
+            exit;
             //TODO find a way to use kernely temrinate instead, usgin
         });
     }
 
-    /**
-     * @param Closure $f
-     */
     public function addResponseModifier(Closure $f)
     {
         $this->responseModifiers[] = $f;
     }
 
-    /**
-     * @param Closure $f
-     */
     public function addContextModifier(Closure $f)
     {
         $this->contextModifiers[] = $f;

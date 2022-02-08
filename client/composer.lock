@@ -4,24 +4,24 @@
         "Read more about it at https://getcomposer.org/doc/01-basic-usage.md#installing-dependencies",
         "This file is @generated automatically"
     ],
-    "content-hash": "0e0efebba09f8e5de41e7351ecef30eb",
+    "content-hash": "34388fda2a1ca1f2d11d0b8106b043b5",
     "packages": [
         {
             "name": "alphagov/notifications-php-client",
-            "version": "2.1.2",
+            "version": "3.2.0",
             "source": {
                 "type": "git",
                 "url": "https://github.com/alphagov/notifications-php-client.git",
-                "reference": "da60e56f5bdba9f61697487879fa12bbf3534ae4"
+                "reference": "973a115dccbb2f8cec991c5ac77860e57d2f2230"
             },
             "dist": {
                 "type": "zip",
-                "url": "https://api.github.com/repos/alphagov/notifications-php-client/zipball/da60e56f5bdba9f61697487879fa12bbf3534ae4",
-                "reference": "da60e56f5bdba9f61697487879fa12bbf3534ae4",
+                "url": "https://api.github.com/repos/alphagov/notifications-php-client/zipball/973a115dccbb2f8cec991c5ac77860e57d2f2230",
+                "reference": "973a115dccbb2f8cec991c5ac77860e57d2f2230",
                 "shasum": ""
             },
             "require": {
-                "firebase/php-jwt": "^3.0",
+                "firebase/php-jwt": "^5.0",
                 "guzzlehttp/psr7": "^1.2",
                 "php": ">=5.4"
             },
@@ -30,7 +30,7 @@
                 "php-http/guzzle6-adapter": "*",
                 "php-http/message": "^1.1",
                 "php-http/mock-client": "*",
-                "php-http/socket-client": "*",
+                "php-http/socket-client": "2.0.0-beta1",
                 "phpspec/phpspec": "^5.0"
             },
             "suggest": {
@@ -59,9 +59,9 @@
             "description": "PHP client for GOV.UK Notifications",
             "support": {
                 "issues": "https://github.com/alphagov/notifications-php-client/issues",
-                "source": "https://github.com/alphagov/notifications-php-client/tree/2.1.2"
+                "source": "https://github.com/alphagov/notifications-php-client/tree/master"
             },
-            "time": "2020-01-28T14:24:56+00:00"
+            "time": "2020-08-11T07:44:45+00:00"
         },
         {
             "name": "aws/aws-crt-php",
@@ -1012,20 +1012,26 @@
         },
         {
             "name": "firebase/php-jwt",
-            "version": "v3.0.0",
+            "version": "v5.5.1",
             "source": {
                 "type": "git",
                 "url": "https://github.com/firebase/php-jwt.git",
-                "reference": "fa8a06e96526eb7c0eeaa47e4f39be59d21f16e1"
+                "reference": "83b609028194aa042ea33b5af2d41a7427de80e6"
             },
             "dist": {
                 "type": "zip",
-                "url": "https://api.github.com/repos/firebase/php-jwt/zipball/fa8a06e96526eb7c0eeaa47e4f39be59d21f16e1",
-                "reference": "fa8a06e96526eb7c0eeaa47e4f39be59d21f16e1",
+                "url": "https://api.github.com/repos/firebase/php-jwt/zipball/83b609028194aa042ea33b5af2d41a7427de80e6",
+                "reference": "83b609028194aa042ea33b5af2d41a7427de80e6",
                 "shasum": ""
             },
             "require": {
                 "php": ">=5.3.0"
+            },
+            "require-dev": {
+                "phpunit/phpunit": ">=4.8 <=9"
+            },
+            "suggest": {
+                "paragonie/sodium_compat": "Support EdDSA (Ed25519) signatures when libsodium is not present"
             },
             "type": "library",
             "autoload": {
@@ -1051,11 +1057,15 @@
             ],
             "description": "A simple library to encode and decode JSON Web Tokens (JWT) in PHP. Should conform to the current spec.",
             "homepage": "https://github.com/firebase/php-jwt",
+            "keywords": [
+                "jwt",
+                "php"
+            ],
             "support": {
                 "issues": "https://github.com/firebase/php-jwt/issues",
-                "source": "https://github.com/firebase/php-jwt/tree/v3.0.0"
+                "source": "https://github.com/firebase/php-jwt/tree/v5.5.1"
             },
-            "time": "2015-07-22T18:31:08+00:00"
+            "time": "2021-11-08T20:18:51+00:00"
         },
         {
             "name": "friendsofphp/proxy-manager-lts",
@@ -1429,12 +1439,12 @@
                 }
             },
             "autoload": {
-                "psr-4": {
-                    "GuzzleHttp\\Psr7\\": "src/"
-                },
                 "files": [
                     "src/functions_include.php"
-                ]
+                ],
+                "psr-4": {
+                    "GuzzleHttp\\Psr7\\": "src/"
+                }
             },
             "notification-url": "https://packagist.org/downloads/",
             "license": [
@@ -8677,8 +8687,8 @@
     "prefer-stable": false,
     "prefer-lowest": false,
     "platform": {
-        "php": "8.0.12"
+        "php": "^8.0.12"
     },
     "platform-dev": [],
-    "plugin-api-version": "2.2.0"
+    "plugin-api-version": "2.0.0"
 }
