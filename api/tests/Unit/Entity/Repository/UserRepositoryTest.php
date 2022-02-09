@@ -230,6 +230,76 @@ class UserRepositoryTest extends WebTestCase
         }
     }
 
+    /** @test */
+    public function getAllAdminAccountsNotUsedWithin()
+    {
+        $userHelper = new UserTestHelper();
+        $usersToAdd = [];
+        $usersToAdd[] = $loggedInAdminUser = $userHelper->createUser(null, User::ROLE_ADMIN);
+        $usersToAdd[] = $loggedInSuperAdminUser = $userHelper->createUser(null, User::ROLE_SUPER_ADMIN);
+        $usersToAdd[] = $loggedInAdminManagerUser = $userHelper->createUser(null, User::ROLE_ADMIN_MANAGER);
+        $usersToAdd[] = $recentlyLoggedInAdminManagerUser = $userHelper->createUser(null, User::ROLE_ADMIN_MANAGER);
+        $usersToAdd[] = $recentlyLoggedInDeputyUser = $userHelper->createUser(null, User::ROLE_LAY_DEPUTY);
+
+        $loggedInAdminUser->setLastLoggedIn(new DateTime('-95 days'));
+        $loggedInSuperAdminUser->setLastLoggedIn(new DateTime('-91 days'));
+        $loggedInAdminManagerUser->setLastLoggedIn(new DateTime('-91 days'));
+        $recentlyLoggedInAdminManagerUser->setLastLoggedIn(new DateTime('-1 day'));
+        $recentlyLoggedInDeputyUser->setLastLoggedIn(new DateTime('-1 day'));
+
+        foreach ($usersToAdd as $user) {
+            $this->em->persist($user);
+        }
+
+        $this->em->flush();
+
+        $expectedLoggedInAdminUsers = [$loggedInAdminUser, $loggedInSuperAdminUser, $loggedInAdminManagerUser];
+        $expectedRecentlyLoggedInUsersNotReturned = [$recentlyLoggedInAdminManagerUser, $recentlyLoggedInDeputyUser];
+
+        $actualLoggedOutUsers = $this->sut->getAllAdminAccountsNotUsedWithin('-90 days');
+
+        self::assertEquals($expectedLoggedInAdminUsers, $actualLoggedOutUsers);
+
+        foreach ($expectedRecentlyLoggedInUsersNotReturned as $user) {
+            self::assertNotContains($user, $actualLoggedOutUsers);
+        }
+    }
+
+    /** @test */
+    public function getAllAdminAccountsUsedWithin()
+    {
+        $userHelper = new UserTestHelper();
+        $usersToAdd = [];
+        $usersToAdd[] = $loggedInAdminUser = $userHelper->createUser(null, User::ROLE_ADMIN);
+        $usersToAdd[] = $loggedInSuperAdminUser = $userHelper->createUser(null, User::ROLE_SUPER_ADMIN);
+        $usersToAdd[] = $loggedInAdminManagerUser = $userHelper->createUser(null, User::ROLE_ADMIN_MANAGER);
+        $usersToAdd[] = $notRecentlyLoggedInAdminManagerUser = $userHelper->createUser(null, User::ROLE_ADMIN_MANAGER);
+        $usersToAdd[] = $notRecentlyLoggedInDeputyUser = $userHelper->createUser(null, User::ROLE_LAY_DEPUTY);
+
+        $loggedInAdminUser->setLastLoggedIn(new DateTime('-50 days'));
+        $loggedInSuperAdminUser->setLastLoggedIn(new DateTime('-50 days'));
+        $loggedInAdminManagerUser->setLastLoggedIn(new DateTime('-50 days'));
+        $notRecentlyLoggedInAdminManagerUser->setLastLoggedIn(new DateTime('-100 days'));
+        $notRecentlyLoggedInDeputyUser->setLastLoggedIn(new DateTime('-100 days'));
+
+        foreach ($usersToAdd as $user) {
+            $this->em->persist($user);
+        }
+
+        $this->em->flush();
+
+        $expectedLoggedInAdminUsers = [$loggedInAdminUser, $loggedInSuperAdminUser, $loggedInAdminManagerUser];
+        $expectedLoggedOutUsersNotReturned = [$notRecentlyLoggedInAdminManagerUser, $notRecentlyLoggedInDeputyUser];
+
+        $actualLoggedInUsers = $this->sut->getAllAdminAccountsUsedWithin('-90 days');
+
+        self::assertEquals($expectedLoggedInAdminUsers, $actualLoggedInUsers);
+
+        foreach ($expectedLoggedOutUsersNotReturned as $user) {
+            self::assertNotContains($user, $actualLoggedInUsers);
+        }
+    }
+
     protected function tearDown(): void
     {
         parent::tearDown();
