@@ -7,6 +7,8 @@ use App\Exception as AppException;
 use App\Model\SelfRegisterData;
 use App\Service\Client\TokenStorage\TokenStorageInterface;
 use App\Service\RequestIdLoggerProcessor;
+use Firebase\JWT\JWK;
+use Firebase\JWT\JWT;
 use GuzzleHttp\ClientInterface;
 use GuzzleHttp\Exception\RequestException;
 use GuzzleHttp\Exception\TransferException;
@@ -19,6 +21,7 @@ use RuntimeException;
 use Symfony\Component\DependencyInjection\ContainerInterface;
 use Symfony\Component\HttpFoundation\Response;
 use Symfony\Component\Security\Core\Authentication\Token\Storage\TokenStorageInterface as SecurityTokenStorage;
+use Symfony\Contracts\HttpClient\HttpClientInterface;
 use Throwable;
 
 /**
@@ -111,6 +114,7 @@ class RestClient implements RestClientInterface
     const ERROR_CONNECT = 'API returned an exception';
     const ERROR_NO_SUCCESS = 'Endpoint failed with message %s';
     const ERROR_FORMAT = 'Cannot decode endpoint response';
+    private HttpClientInterface $phpApiClient;
 
     public function __construct(
         ContainerInterface $container,
@@ -118,7 +122,8 @@ class RestClient implements RestClientInterface
         TokenStorageInterface $tokenStorage,
         SerializerInterface $serializer,
         LoggerInterface $logger,
-        string $clientSecret
+        string $clientSecret,
+        HttpClientInterface $phpApiClient
     ) {
         $this->client = $client;
         $this->container = $container;
@@ -126,6 +131,7 @@ class RestClient implements RestClientInterface
         $this->serialiser = $serializer;
         $this->logger = $logger;
         $this->clientSecret = $clientSecret;
+        $this->phpApiClient = $phpApiClient;
 
         $this->saveHistory = $container->getParameter('kernel.debug');
         $this->history = [];
@@ -150,12 +156,29 @@ class RestClient implements RestClientInterface
         // store auth token
         $tokenVal = $response->getHeader(self::HEADER_AUTH_TOKEN);
         $tokenVal = is_array($tokenVal) && !empty($tokenVal[0]) ? $tokenVal[0] : null;
-
-        $jwt = $response->getHeader(self::HEADER_JWT);
-        $jwtVal = $jwt[0] ?? null;
-
         $this->tokenStorage->set($user->getId(), $tokenVal);
-        $this->tokenStorage->set(sprintf('%s-jwt', $user->getId()), $jwtVal);
+
+        if ($jwt = $response->getHeader(self::HEADER_JWT)[0]) {
+            // Get public key from API
+            $jwkResponse = $this->phpApiClient->request('GET', 'jwk-public-key');
+            $jwks = json_decode($jwkResponse->getContent(), true);
+
+            try {
+                $keys = JWK::parseKeySet($jwks);
+                // Setting specific algorithm is deprecated - work out why the header is not parsed as RS256
+                $decoded = JWT::decode($jwt, $keys, ['RS256']);
+            } catch (Throwable $e) {
+                // Add steps for refreshing JWT if expired here
+
+                $jwtDecodeFailureReason = sprintf('Failed to decode JWT - %s', $e->getMessage());
+                $this->logger->warning($jwtDecodeFailureReason);
+
+                throw new RuntimeException('Problems authenticating - try again');
+            }
+
+            $userId = ((array) $decoded)['userId'];
+            $this->tokenStorage->set(sprintf('%s-jwt', $userId), $jwt);
+        }
 
         return $user;
     }

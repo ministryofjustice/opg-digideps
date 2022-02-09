@@ -38,6 +38,7 @@ class JWTService
     public function generateJWK()
     {
         $publicKey = file_get_contents(sprintf('%s/config/jwt/public.pem', $this->rootDir));
+        // This should be base64 encoded
         $kid = openssl_digest($publicKey, 'sha256');
 
         $keyInfo = openssl_pkey_get_details(openssl_pkey_get_public($publicKey));
