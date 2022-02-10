@@ -1,6 +1,7 @@
 package main
 
 import (
+	"crypto/tls"
 	"encoding/json"
 	"fmt"
 	"gopkg.in/square/go-jose.v2"
@@ -8,7 +9,7 @@ import (
 	"io/ioutil"
 	"log"
 	"net/http"
-	"os"
+	"strings"
 	"time"
 )
 
@@ -16,7 +17,7 @@ import (
 type regServiceResponse struct {
 	Name      string
 	Timestamp time.Time
-	Message string
+	Message   string
 }
 
 func regService(w http.ResponseWriter, r *http.Request) {
@@ -40,13 +41,53 @@ func regService(w http.ResponseWriter, r *http.Request) {
 	//}
 
 	// Setup the data struct to be return
+	reqToken := r.Header.Get("Authorization")
+	splitToken := strings.Split(reqToken, "Bearer ")
+	reqToken = splitToken[1]
+
+	JWT, err := jwt.ParseSigned(reqToken)
+
+	//var kid string
+	var jku string
+	for _, header := range JWT.Headers {
+
+		//if header.KeyID != "" {
+		//	kid = header.KeyID
+		//}
+
+		if header.ExtraHeaders["jku"] != "" {
+			jku = fmt.Sprintf("%v", header.ExtraHeaders["jku"])
+		}
+	}
+
+
+	// Get public key from frontend client (will likely be standalone service in the future)
+	JWKs, err := fetchJwks(jku)
+
+	if err != nil {
+		log.Printf("could not create jwks request: %v", err)
+	}
+
+	// Get claims out of token (validate signature while doing that)
+	claims := jwt.Claims{}
+	err = JWT.Claims(JWKs, &claims)
+	if err != nil {
+		log.Fatalf("could not retrieve claims: %v", err)
+	}
+
+	log.Println(claims)
+
+	// Validate claims (issuer, expiresAt, etc.)
+	err = claims.Validate(jwt.Expected{})
+	if err != nil {
+		log.Fatalf("could not retrieve claims: %v", err)
+	}
+
 	data := regServiceResponse{
 		Name:      "Go API Test",
 		Timestamp: time.Now(),
-		Message: r.Header.Get("auth_bearer"),
+		Message:   reqToken,
 	}
-
-	log.Fatal(r.Header.Get("auth_bearer"))
 
 	// Marshal just returns the JSON encoding
 	json, err := json.Marshal(data)
@@ -58,67 +99,75 @@ func regService(w http.ResponseWriter, r *http.Request) {
 	w.Write(json)
 }
 
-func fetchJwks() (*jose.JSONWebKeySet, error) {
-  client := &http.Client{}
+func fetchJwks(jku string) (*jose.JSONWebKeySet, error) {
+	// Temp disabling security checks for POC - this will need to be removed and a valid cert returned by frontend
+	tr := &http.Transport{
+		TLSClientConfig: &tls.Config{InsecureSkipVerify: true},
+	}
 
-  req, err := http.NewRequest("GET", os.Getenv("JWKS_URL"), nil)
-  if err != nil {
-    return nil, fmt.Errorf("could not create jwks request: %w", err)
-  }
+	client := &http.Client{Transport: tr}
 
-  res, err := client.Do(req)
-  if err != nil {
-    return nil, fmt.Errorf("could not fetch jwks: %w", err)
-  }
-  defer res.Body.Close()
+	req, err := http.NewRequest("GET", jku, nil)
 
-  if res.StatusCode != 200 {
-    return nil, fmt.Errorf("received non-200 response code")
-  }
+	if err != nil {
+		return nil, fmt.Errorf("could not create jwks request: %w", err)
+	}
 
-  body, err := ioutil.ReadAll(res.Body)
-  if err != nil {
-    return nil, fmt.Errorf("could not read response body: %w", err)
-  }
+	res, err := client.Do(req)
+	if err != nil {
+		return nil, fmt.Errorf("could not fetch jwks: %w", err)
+	}
+	defer res.Body.Close()
 
-  jwks := jose.JSONWebKeySet{}
+	if res.StatusCode != 200 {
+		return nil, fmt.Errorf("received non-200 response code")
+	}
 
-  err = json.Unmarshal(body, &jwks)
-  if err != nil {
-    return nil, fmt.Errorf("could not unmarshal jwks into struct: %w", err)
-  }
+	body, err := ioutil.ReadAll(res.Body)
+	if err != nil {
+		return nil, fmt.Errorf("could not read response body: %w", err)
+	}
 
-  return &jwks, nil
+	jwks := jose.JSONWebKeySet{}
+
+	fmt.Println(string(body))
+
+	err = json.Unmarshal(body, &jwks)
+	if err != nil {
+		return nil, fmt.Errorf("could not unmarshal jwks into struct: %w", err)
+	}
+
+	return &jwks, nil
 }
 
-func verifyToken(bearerToken string) error {
-  // Parse bearer token from request
-  token, err := jwt.ParseSigned(bearerToken)
-  if err != nil {
-    return fmt.Errorf("could not parse Bearer token: %w", err)
-  }
-
-  // Get jwks
-  jsonWebKeySet, err := fetchJwks()
-  if err != nil {
-    return fmt.Errorf("could not load JWKS: %w", err)
-  }
-
-  // Get claims out of token (validate signature while doing that)
-  claims := jwt.Claims{}
-  err = token.Claims(jsonWebKeySet, &claims)
-  if err != nil {
-    return fmt.Errorf("could not retrieve claims: %w", err)
-  }
-
-  // Validate claims (issuer, expiresAt, etc.)
-  err = claims.Validate(jwt.Expected{})
-  if err != nil {
-    return fmt.Errorf("could not validate claims: %w", err)
-  }
-
-  return nil
-}
+//func verifyToken(bearerToken string) error {
+//// Parse bearer token from request
+//token, err := jwt.ParseSigned(bearerToken)
+//if err != nil {
+//  return fmt.Errorf("could not parse Bearer token: %w", err)
+//}
+//
+//// Get jwks
+//jsonWebKeySet, err := fetchJwks()
+//if err != nil {
+//  return fmt.Errorf("could not load JWKS: %w", err)
+//}
+//
+//// Get claims out of token (validate signature while doing that)
+//claims := jwt.Claims{}
+//err = token.Claims(jsonWebKeySet, &claims)
+//if err != nil {
+//  return fmt.Errorf("could not retrieve claims: %w", err)
+//}
+//
+//// Validate claims (issuer, expiresAt, etc.)
+//err = claims.Validate(jwt.Expected{})
+//if err != nil {
+//  return fmt.Errorf("could not validate claims: %w", err)
+//}
+//
+//return nil
+//}
 
 func main() {
 	mux := http.NewServeMux()

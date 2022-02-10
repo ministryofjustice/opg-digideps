@@ -71,7 +71,7 @@ class IndexController extends AbstractController
     }
 
     /**
-     * @Route("/test-registration-api", name="reg-api-test")
+     * @Route("/v2/test-registration-api", name="reg-api-test")
      */
     public function testRegistrationApi()
     {

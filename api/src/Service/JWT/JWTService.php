@@ -32,7 +32,7 @@ class JWTService
             'userId' => $user->getId(),
         ];
 
-        return JWT::encode($payload, $privateKey, 'RS256', $kid);
+        return JWT::encode($payload, $privateKey, 'RS256', $kid, ['jku' => 'https://frontend/v2/.well-known/jwks.json']);
     }
 
     public function generateJWK()
