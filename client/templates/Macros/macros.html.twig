@@ -625,3 +625,24 @@ C13.7,13.2,13.2,13.7,12.5,13.7z M12.5,0.5c-6.6,0-12,5.4-12,12s5.4,12,12,12s12-5.
         </fieldset>
     </div>
 {%- endmacro -%}
+
+{%- macro edit_remove_links_dd(editPathName, editOptions, removePathName, removeOptions, editLinkContextText, removeLinkContextText) -%}
+    <dd class="govuk-summary-list__value govuk-!-text-align-right">
+        <span>
+            <a
+                href="{{ path('client_benefits_check_step', editOptions) }}"
+                class="govuk-link"
+            >
+                {{ 'edit' | trans({}, 'common' ) }} <span class="govuk-visually-hidden">{{ editLinkContextText }}</span>
+            </a>
+        </span>
+        <span>
+            <a
+                href="{{ path(removePathName, removeOptions) }}"
+                class="govuk-link govuk-!-margin-left-1"
+            >
+                {{ 'remove' | trans({}, 'common' ) }} <span class="govuk-visually-hidden">{{ removeLinkContextText }}</span>
+            </a>
+        </span>
+    </dd>
+{%- endmacro -%}
