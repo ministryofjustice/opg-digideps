@@ -48,3 +48,9 @@ repos:
     hooks:
       - id: prettier
         files: \.(js|ts|jsx|tsx|css|less|html|json|markdown|md|yaml|yml)$
+
+  - repo: git://github.com/Bahjat/pre-commit-golang
+    rev: master
+    hooks:
+      - id: go-unit-tests
+      - id: go-static-check # install https://staticcheck.io/docs/
