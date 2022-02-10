@@ -18,10 +18,7 @@ class StatsApi
         $this->restClient = $restClient;
     }
 
-    /**
-     * @return array
-     */
-    public function getActiveLayReportData()
+    public function getActiveLayReportData(): array
     {
         return $this->restClient->get(
             self::GET_ACTIVE_LAY_REPORT_DATA_ENDPOINT,
@@ -30,10 +27,7 @@ class StatsApi
         );
     }
 
-    /**
-     * @return array
-     */
-    public function getAdminUserAccountReportData()
+    public function getAdminUserAccountReportData(): array
     {
         return $this->restClient->get(
             self::GET_ADMIN_USER_ACCOUNT_REPORT_DATA,

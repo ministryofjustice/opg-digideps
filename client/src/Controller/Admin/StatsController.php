@@ -217,7 +217,7 @@ class StatsController extends AbstractController
      *
      * @return array|Response
      */
-    public function reports(Request $request)
+    public function reports()
     {
     }
 
@@ -228,7 +228,7 @@ class StatsController extends AbstractController
      *
      * @return array|Response
      */
-    public function userAccountReports(Request $request)
+    public function userAccountReports()
     {
         return $this->statsApi->getAdminUserAccountReportData();
     }

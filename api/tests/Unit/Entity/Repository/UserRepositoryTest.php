@@ -76,8 +76,7 @@ class UserRepositoryTest extends WebTestCase
         self::assertCount(2, $inactiveUsers);
     }
 
-    /** @test */
-    public function findActiveLaysInLastYear()
+    public function testFindActiveLaysInLastYear()
     {
         $userHelper = new UserTestHelper();
         $reportHelper = new ReportTestHelper();
@@ -126,8 +125,7 @@ class UserRepositoryTest extends WebTestCase
         self::assertNotContains($inactiveUserTwo->getId(), $resultsUserIds);
     }
 
-    /** @test */
-    public function getAllAdminAccounts()
+    public function testGetAllAdminAccounts()
     {
         $userHelper = new UserTestHelper();
         $usersToAdd = [];
@@ -155,8 +153,7 @@ class UserRepositoryTest extends WebTestCase
         }
     }
 
-    /** @test */
-    public function getAllAdminAccountsCreatedButNotActivatedWithin()
+    public function testGetAllAdminAccountsCreatedButNotActivatedWithin()
     {
         $userHelper = new UserTestHelper();
         $usersToAdd = [];
@@ -195,8 +192,7 @@ class UserRepositoryTest extends WebTestCase
         }
     }
 
-    /** @test */
-    public function getAllActivatedAdminAccounts()
+    public function testGetAllActivatedAdminAccounts()
     {
         $userHelper = new UserTestHelper();
         $usersToAdd = [];
@@ -230,8 +226,7 @@ class UserRepositoryTest extends WebTestCase
         }
     }
 
-    /** @test */
-    public function getAllAdminAccountsNotUsedWithin()
+    public function testGetAllAdminAccountsNotUsedWithin()
     {
         $userHelper = new UserTestHelper();
         $usersToAdd = [];
@@ -265,8 +260,7 @@ class UserRepositoryTest extends WebTestCase
         }
     }
 
-    /** @test */
-    public function getAllAdminAccountsUsedWithin()
+    public function testGetAllAdminAccountsUsedWithin()
     {
         $userHelper = new UserTestHelper();
         $usersToAdd = [];

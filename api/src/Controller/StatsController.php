@@ -50,7 +50,7 @@ class StatsController extends RestController
      * @Route("stats/admins/report_data", methods={"GET"})
      * @Security("is_granted('ROLE_SUPER_ADMIN')")
      */
-    public function getAdminUserAccountReportData(Request $request, RestFormatter $formatter)
+    public function getAdminUserAccountReportData(Request $request, RestFormatter $formatter): array
     {
         $serialisedGroups = (array) $request->query->get('groups');
         $formatter->setJmsSerialiserGroups($serialisedGroups);

@@ -71,44 +71,44 @@
 
     <div class="govuk-grid-row">
         <div class="govuk-grid-column-full text--center">
-      <span class="govuk-caption-l govuk-!-margin-top-2" id="metric-satisfaction-total-label">
-        {{ 'metrics.satisfaction.totalLabel' | trans }}
-      </span>
+            <span class="govuk-caption-l govuk-!-margin-top-2" id="metric-satisfaction-total-label">
+            {{ 'metrics.satisfaction.totalLabel' | trans }}
+            </span>
             <span class="govuk-heading-xl govuk-!-margin-bottom-4 govuk-!-font-size-80"
                   aria-labelledby="metric-satisfaction-total-label">
-        {{ stats.satisfaction.all | default('-') }}%
-      </span>
+                {{ stats.satisfaction.all | default('-') }}%
+            </span>
         </div>
     </div>
 
     <div class="govuk-grid-row govuk-!-margin-bottom-9">
         <div class="govuk-grid-column-one-third text--center">
-      <span class="govuk-caption-l govuk-!-margin-top-2" id="metric-reportsSubmitted-total-label">
-        {{ 'metrics.reportsSubmitted.totalLabel' | trans }}
-      </span>
+            <span class="govuk-caption-l govuk-!-margin-top-2" id="metric-reportsSubmitted-total-label">
+            {{ 'metrics.reportsSubmitted.totalLabel' | trans }}
+            </span>
             <span class="govuk-heading-xl govuk-!-margin-bottom-4"
                   aria-labelledby="metric-reportsSubmitted-total-label">
-        {{ stats.reportsSubmitted.all | default('-') }}
-      </span>
+                    {{ stats.reportsSubmitted.all | default('-') }}
+            </span>
         </div>
 
         <div class="govuk-grid-column-one-third text--center">
-      <span class="govuk-caption-l govuk-!-margin-top-2" id="metric-registeredDeputies-total-label">
-        {{ 'metrics.registeredDeputies.totalLabel' | trans }}
-      </span>
+            <span class="govuk-caption-l govuk-!-margin-top-2" id="metric-registeredDeputies-total-label">
+            {{ 'metrics.registeredDeputies.totalLabel' | trans }}
+            </span>
             <span class="govuk-heading-xl govuk-!-margin-bottom-4"
                   aria-labelledby="metric-registeredDeputies-total-label">
-        {{ stats.registeredDeputies.all | default('-') }}
-      </span>
+                 {{ stats.registeredDeputies.all | default('-') }}
+            </span>
         </div>
 
         <div class="govuk-grid-column-one-third text--center">
-      <span class="govuk-caption-l govuk-!-margin-top-2" id="metric-clients-total-label">
-        {{ 'metrics.clients.totalLabel' | trans }}
-      </span>
+          <span class="govuk-caption-l govuk-!-margin-top-2" id="metric-clients-total-label">
+            {{ 'metrics.clients.totalLabel' | trans }}
+          </span>
             <span class="govuk-heading-xl govuk-!-margin-bottom-4" aria-labelledby="metric-clients-total-label">
-        {{ stats.clients.all | default('-') }}
-      </span>
+            {{ stats.clients.all | default('-') }}
+          </span>
         </div>
     </div>
 
@@ -120,8 +120,8 @@
             {% for metric in metrics %}
                 <span class="govuk-caption-m govuk-!-margin-top-5"
                       id="metric-{{ metric }}-{{ dimension }}-{{ value }}-label">
-          {{ ('metrics.' ~ metric  ~ '.label') | trans }}
-        </span>
+                     {{ ('metrics.' ~ metric  ~ '.label') | trans }}
+                </span>
                 <span class="govuk-heading-l govuk-!-margin-bottom-4"
                       aria-labelledby="metric-{{ metric }}-{{ dimension }}-{{ value }}-label">
         {% set val = stats[metric][value] | default('-') %}
@@ -130,7 +130,7 @@
                     {% else %}
                         {{ ('metrics.' ~ metric  ~ '.format') | trans({ '%value%': val }) }}
                     {% endif %}
-        </span>
+                </span>
             {% endfor %}
         </div>
     {% endmacro %}

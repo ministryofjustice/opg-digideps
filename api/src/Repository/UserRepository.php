@@ -235,15 +235,16 @@ SQL;
 
     public function getAllAdminAccountsCreatedButNotActivatedWithin(string $timeframe)
     {
-        $date = (new DateTime())->modify($timeframe)->format('Y-m-d H:i:s');
+        $date = (new DateTime())->modify($timeframe);
 
         $dql = "SELECT u FROM App\Entity\User u WHERE u.roleName IN('ROLE_ADMIN', 'ROLE_SUPER_ADMIN', 'ROLE_ADMIN_MANAGER')
                 AND u.lastLoggedIn IS NULL
-                AND u.registrationDate < '{$date}' ";
+                AND u.registrationDate < :date ";
 
         $query = $this
             ->getEntityManager()
-            ->createQuery($dql);
+            ->createQuery($dql)
+            ->setParameter('date', $date);
 
         return $query->getResult();
     }
@@ -262,28 +263,30 @@ SQL;
 
     public function getAllAdminAccountsNotUsedWithin(string $timeframe)
     {
-        $date = (new DateTime())->modify($timeframe)->format('Y-m-d H:i:s');
+        $date = (new DateTime())->modify($timeframe);
 
         $dql = "SELECT u FROM App\Entity\User u WHERE u.roleName IN('ROLE_ADMIN', 'ROLE_SUPER_ADMIN', 'ROLE_ADMIN_MANAGER')
-                AND u.lastLoggedIn < '{$date}'  ";
+                AND u.lastLoggedIn < :date ";
 
         $query = $this
             ->getEntityManager()
-            ->createQuery($dql);
+            ->createQuery($dql)
+            ->setParameter('date', $date);
 
         return $query->getResult();
     }
 
     public function getAllAdminAccountsUsedWithin(string $timeframe)
     {
-        $date = (new DateTime())->modify($timeframe)->format('Y-m-d H:i:s');
+        $date = (new DateTime())->modify($timeframe);
 
         $dql = "SELECT u FROM App\Entity\User u WHERE u.roleName IN('ROLE_ADMIN', 'ROLE_SUPER_ADMIN', 'ROLE_ADMIN_MANAGER')
-                AND u.lastLoggedIn > '{$date}'  ";
+                AND u.lastLoggedIn > :date ";
 
         $query = $this
             ->getEntityManager()
-            ->createQuery($dql);
+            ->createQuery($dql)
+            ->setParameter('date', $date);
 
         return $query->getResult();
     }
