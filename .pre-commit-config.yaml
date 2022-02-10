@@ -47,4 +47,3 @@ repos:
     rev: v2.5.1
     hooks:
       - id: prettier
-        files: \.(js|ts|jsx|tsx|css|less|html|twig|json|markdown|md|yaml|yml)$
