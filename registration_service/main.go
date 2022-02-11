@@ -75,10 +75,25 @@ func regService(w http.ResponseWriter, r *http.Request) {
 		log.Fatalf("could not retrieve claims: %v", err)
 	}
 
-	log.Println(claims)
+	log.Println(claims.Audience)
+	log.Println(claims.Expiry.Time().String())
+	log.Println(claims.IssuedAt.Time().String())
+	log.Println(claims.Issuer)
+	log.Println(claims.NotBefore.Time().String())
+	log.Println(claims.Subject)
+
+
+	log.Println("Unsafe")
+	log.Println(JWT.UnsafeClaimsWithoutVerification())
+
+	// Do we need to decode kid and assert or do we need to only select jwks with the kid?
 
 	// Validate claims (issuer, expiresAt, etc.)
-	err = claims.Validate(jwt.Expected{})
+	err = claims.Validate(jwt.Expected{
+		Audience: jwt.Audience{"registration_service"},
+		Issuer: "digideps",
+	})
+
 	if err != nil {
 		log.Fatalf("could not retrieve claims: %v", err)
 	}
@@ -129,8 +144,6 @@ func fetchJwks(jku string) (*jose.JSONWebKeySet, error) {
 	}
 
 	jwks := jose.JSONWebKeySet{}
-
-	fmt.Println(string(body))
 
 	err = json.Unmarshal(body, &jwks)
 	if err != nil {

@@ -6,18 +6,13 @@ namespace App\Service\JWT;
 
 use App\Entity\User;
 use Firebase\JWT\JWT;
-use Lexik\Bundle\JWTAuthenticationBundle\Encoder\JWTEncoderInterface;
 
 class JWTService
 {
-    private JWTEncoderInterface $JWTEncoder;
     private string $rootDir;
 
-    public function __construct(
-        JWTEncoderInterface $JWTEncoder,
-        string $rootDir
-    ) {
-        $this->JWTEncoder = $JWTEncoder;
+    public function __construct(string $rootDir)
+    {
         $this->rootDir = $rootDir;
     }
 
@@ -30,6 +25,12 @@ class JWTService
         $payload = [
             'username' => $user->getEmail(),
             'userId' => $user->getId(),
+            'aud' => 'registration_service',
+            'iat' => strtotime('now'),
+            'exp' => strtotime('+1 hour'),
+            'nbf' => strtotime('-10 seconds'),
+            'iss' => 'digideps',
+            'sub' => $user->getEmail(),
         ];
 
         return JWT::encode($payload, $privateKey, 'RS256', $kid, ['jku' => 'https://frontend/v2/.well-known/jwks.json']);
