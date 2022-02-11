@@ -13,8 +13,6 @@ trait ACLTrait
      */
     public function iShouldBeAbleToAccessAnalyticsPage(string $page)
     {
-        $this->iVisitAdminAnalyticsPage();
-
         $linkText = 'Download %s';
         $this->assertLinkWithTextIsOnPage(sprintf($linkText, $page));
 
@@ -73,9 +71,11 @@ trait ACLTrait
             case 'user research report':
                 $this->iVisitAdminUserResearchReportPage();
                 break;
+            case 'view reports':
+                $this->iVisitAdminStatsReportsPage();
+                break;
             default:
                 throw new BehatException(sprintf('Analytics page "%s" unrecognised', $lowercasePageName));
-                break;
         }
     }
 
