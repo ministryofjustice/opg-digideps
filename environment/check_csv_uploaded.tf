@@ -29,7 +29,7 @@ locals {
     }
   }
 
-  check_csv_uploaded_interval = local.environment == "cron(0 12 ? * MON-FRI *)"
+  check_csv_uploaded_interval = "cron(0 12 ? * MON-FRI *)"
 
 }
 
