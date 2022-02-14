@@ -1,4 +1,4 @@
-@v2 @v2_admin @analytics @acs
+@v2 @v2_admin @analytics
 Feature: Analytics - view and download analytics
 
 #    Covering all user types here due to data creating in parallel runs breaking tests

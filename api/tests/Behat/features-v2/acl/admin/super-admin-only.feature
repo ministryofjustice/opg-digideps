@@ -1,4 +1,4 @@
-@v2 @v2_admin @acl @acs
+@v2 @v2_admin @acl
 Feature: Limiting access to sections of the app to super admins
     As a super admin user
     In order to prevent other types of users from accessing sensitive or confusing data
