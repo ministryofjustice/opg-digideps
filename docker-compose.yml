@@ -1,4 +1,4 @@
-version: '3.2'
+version: "3.67"
 
 ## Define all volumes in docker-compose.override.yml so this file can be used in CI
 services:
@@ -31,7 +31,7 @@ services:
       context: .
       dockerfile: ./localstack.Dockerfile
     ports:
-      - '4566-4583:4566-4583'
+      - "4566-4583:4566-4583"
     environment:
       - SERVICES=s3,ssm,logs
       - DATA_DIR=/tmp/localstack/data
@@ -126,6 +126,9 @@ services:
   registration_service:
     build:
       context: ./registration_service
+      target: dev
+    volumes:
+      - ./registration_service:/app:rw,delegated
     environment:
       JWKS_URL: ${JWKS_URL:-https://client/v2/jwks}
     expose:
@@ -165,7 +168,7 @@ services:
     image: mkodockx/docker-clamav:1.0.3-alpine
     environment:
       CLAMD_CONF_SelfCheck: 100000
-      FRESHCLAM_CONF_NotifyClamd: 'no'
+      FRESHCLAM_CONF_NotifyClamd: "no"
 
   file-scanner-rest:
     image: acsauk/clamav-rest-1

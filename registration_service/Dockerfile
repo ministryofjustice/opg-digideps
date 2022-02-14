@@ -1,9 +1,33 @@
-FROM golang:1.17 as build-env
+FROM golang:1.17.5-alpine as base
+WORKDIR /app
+
+ENV CGO_ENABLED=0
+ENV GOOS=linux
+ENV GOARCH=amd64
+
+RUN apk update \
+    && apk add --no-cache \
+    ca-certificates \
+    git \
+    && update-ca-certificates
+
+### Development with hot reload and debugger
+FROM base AS dev
+
+WORKDIR /app
+
+RUN go get -u github.com/cosmtrek/air && go install github.com/go-delve/delve/cmd/dlv@latest
+EXPOSE 8080
+EXPOSE 2345
+
+ENTRYPOINT ["air"]
+
+FROM base as build-env
 
 WORKDIR /app
 
 COPY go.mod .
-#COPY go.sum .
+COPY go.sum .
 
 RUN go mod download
 
