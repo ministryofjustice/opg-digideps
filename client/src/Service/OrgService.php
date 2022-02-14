@@ -49,6 +49,7 @@ class OrgService
             'reports' => 0,
             'organisations' => 0,
         ],
+        'skipped' => 0,
     ];
 
     const CHUNK_SIZE = 50;
@@ -159,6 +160,10 @@ class OrgService
             foreach ($output['updated'] as $group => $items) {
                 $this->output['updated'][$group] += count($items);
             }
+        }
+
+        if (!empty($output['skipped'])) {
+            $this->output['skipped'] += $output['skipped'];
         }
 
         if (!empty($output['source'] and !empty($output['roleType']))) {
