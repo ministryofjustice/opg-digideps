@@ -3,6 +3,7 @@ signIn:
   pageTitle: Sign in
   pageTitleNewPassword: Sign in to your new account
   pageTitleUpdatedPassword: Sign in with your new password
+  pageTitleUpdatedEmail: Sign in with your new email address
 
 signedOut:
   pageTitle: You are now signed out

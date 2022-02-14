@@ -111,9 +111,9 @@ class User implements UserInterface, DeputyInterface
     /**
      * @JMS\Type("string")
      * @JMS\Groups({"admin_add_user", "ad_add_user", "org_team_add", "user_details_full", "user_details_org", "codeputy", "admin_edit_user"})
-     * @Assert\NotBlank( message="user.email.notBlank", groups={"admin_add_user", "user_details_full", "user_details_org", "org_team_add", "password_reset", "codeputy_invite", "verify-codeputy", "admin_edit_user"} )
-     * @Assert\Email( message="user.email.invalid", groups={"admin_add_user", "password_reset", "user_details_full", "user_details_org", "org_team_add", "codeputy_invite", "verify-codeputy", "admin_edit_user"},   )
-     * @Assert\Length( max=60, maxMessage="user.email.maxLength", groups={"admin_add_user", "password_reset", "user_details_full", "user_details_org", "org_team_add", "codeputy_invite", "verify-codeputy", "admin_edit_user"} )
+     * @Assert\NotBlank( message="user.email.notBlank", groups={"admin_add_user", "user_details_full", "user_details_org", "org_team_add", "password_reset", "codeputy_invite", "verify-codeputy", "admin_edit_user", "user_change_email"} )
+     * @Assert\Email( message="user.email.invalid", groups={"admin_add_user", "password_reset", "user_details_full", "user_details_org", "org_team_add", "codeputy_invite", "verify-codeputy", "admin_edit_user", "user_change_email"},   )
+     * @Assert\Length( max=60, maxMessage="user.email.maxLength", groups={"admin_add_user", "password_reset", "user_details_full", "user_details_org", "org_team_add", "codeputy_invite", "verify-codeputy", "admin_edit_user", "user_change_email"} )
      * @EmailSameDomain( message="user.email.invalidDomain", groups={"email_same_domain"})
      *
      * @var string

@@ -7,6 +7,7 @@ namespace App\Service\File;
 use App\Entity\Report\Document;
 use App\Entity\Report\Report;
 use App\Entity\ReportInterface;
+use App\Exception\MimeTypeAndFileExtensionDoNotMatchException;
 use App\Service\Client\RestClient;
 use App\Service\File\Storage\StorageInterface;
 use App\Service\Time\DateTimeProvider;
@@ -21,19 +22,22 @@ class S3FileUploader
     private FileNameFixer $fileNameFixer;
 
     private DateTimeProvider $dateTimeProvider;
+    private MimeTypeAndExtensionChecker $mimeTypeAndExtensionChecker;
 
     public function __construct(
         StorageInterface $s3Storage,
         RestClient $restClient,
         FileNameFixer $fileNameFixer,
         DateTimeProvider $dateTimeProvider,
-        array $options = []
+        MimeTypeAndExtensionChecker $mimeTypeAndExtensionChecker,
+        array $options = [],
     ) {
         $this->storage = $s3Storage;
         $this->restClient = $restClient;
         $this->fileNameFixer = $fileNameFixer;
         $this->options = $options;
         $this->dateTimeProvider = $dateTimeProvider;
+        $this->mimeTypeAndExtensionChecker = $mimeTypeAndExtensionChecker;
     }
 
     /**
@@ -43,6 +47,12 @@ class S3FileUploader
     {
         foreach ($uploadedFiles as $uploadedFile) {
             [$body, $fileName] = $this->getFileBodyAndFileName($uploadedFile);
+            $extensionAndMimeTypeMatch = $this->mimeTypeAndExtensionChecker->check($uploadedFile, $body);
+
+            if (!$extensionAndMimeTypeMatch) {
+                throw new MimeTypeAndFileExtensionDoNotMatchException('Your file type and file extension do not match');
+            }
+
             $this->uploadFileAndPersistDocument($report, $body, $fileName, false);
         }
     }
