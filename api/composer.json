@@ -25,7 +25,6 @@
     "incenteev/composer-parameter-handler": "^2.1.3",
     "jms/serializer-bundle": "^4.0.1",
     "league/csv": "^9.5",
-    "lexik/jwt-authentication-bundle": "^2.14",
     "monolog/monolog": "^1.25.1",
     "phpspec/prophecy-phpunit": "^2.0",
     "predis/predis": "^1.1.1",
