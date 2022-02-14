@@ -10,6 +10,7 @@ use App\Entity\NamedDeputy;
 use App\Entity\Organisation;
 use App\Entity\Report\Report;
 use App\Entity\User;
+use App\Exception\ClientIsArchivedException;
 use App\Factory\OrganisationFactory;
 use App\Service\OrgService;
 use App\v2\Assembler\ClientAssembler;
@@ -59,15 +60,22 @@ class OrgDeputyshipUploader
         $this->resetAdded();
         $this->resetUpdated();
 
-        $uploadResults = ['errors' => []];
+        $uploadResults = ['errors' => [], 'skipped' => 0];
 
         foreach ($deputyshipDtos as $deputyshipDto) {
             try {
                 $this->handleDtoErrors($deputyshipDto);
+
+                $this->client = ($this->em->getRepository(Client::class))->findOneBy(['caseNumber' => $deputyshipDto->getCaseNumber()]);
+
+                $this->skipArchivedClients();
                 $this->handleNamedDeputy($deputyshipDto);
                 $this->handleOrganisation($deputyshipDto);
                 $this->handleClient($deputyshipDto);
                 $this->handleReport($deputyshipDto);
+            } catch (ClientIsArchivedException $e) {
+                ++$uploadResults['skipped'];
+                continue;
             } catch (Throwable $e) {
                 $message = sprintf('Error for case %s: %s', $deputyshipDto->getCaseNumber(), $e->getMessage());
                 $uploadResults['errors'][] = $message;
@@ -156,52 +164,47 @@ class OrgDeputyshipUploader
 
     private function handleClient(OrgDeputyshipDto $dto)
     {
-        /** @var Client $client */
-        $client = ($this->em->getRepository(Client::class))->findOneBy(['caseNumber' => $dto->getCaseNumber()]);
-
-        if ($client instanceof Client && $client->hasLayDeputy()) {
+        if ($this->client instanceof Client && $this->client->hasLayDeputy()) {
             throw new RuntimeException('case number already used');
         }
 
-        if (is_null($client)) {
-            $client = $this->buildClientAndAssociateWithDeputyAndOrg($dto);
+        if (is_null($this->client)) {
+            $this->client = $this->buildClientAndAssociateWithDeputyAndOrg($dto);
 
             $this->added['clients'][] = $dto->getCaseNumber();
         } else {
-            if (is_null($client->getCourtDate())) {
-                $client->setCourtDate($dto->getCourtDate());
-                $this->updated['clients'][] = $client->getId();
+            if (is_null($this->client->getCourtDate())) {
+                $this->client->setCourtDate($dto->getCourtDate());
+                $this->updated['clients'][] = $this->client->getId();
             }
 
-            if ($this->clientHasNewCourtOrder($client, $dto)) {
+            if ($this->clientHasNewCourtOrder($this->client, $dto)) {
                 // Discharge clients with a new court order
                 // Look at adding audit logging for discharge to API side of app
-                $client->setDeletedAt(new DateTime());
-                $this->em->persist($client);
+                $this->client->setDeletedAt(new DateTime());
+                $this->em->persist($this->client);
                 $this->em->flush();
 
-                $client = $this->buildClientAndAssociateWithDeputyAndOrg($dto);
+                $this->client = $this->buildClientAndAssociateWithDeputyAndOrg($dto);
                 $this->added['clients'][] = $dto->getCaseNumber();
             }
 
-            if ($this->clientHasSwitchedOrganisation($client)) {
-                $this->currentOrganisation->addClient($client);
-                $client->setOrganisation($this->currentOrganisation);
+            if ($this->clientHasSwitchedOrganisation($this->client)) {
+                $this->currentOrganisation->addClient($this->client);
+                $this->client->setOrganisation($this->currentOrganisation);
 
-                $this->updated['clients'][] = $client->getId();
+                $this->updated['clients'][] = $this->client->getId();
             }
 
-            if ($this->clientHasNewNamedDeputy($client, $this->namedDeputy)) {
-                $client->setNamedDeputy($this->namedDeputy);
+            if ($this->clientHasNewNamedDeputy($this->client, $this->namedDeputy)) {
+                $this->client->setNamedDeputy($this->namedDeputy);
 
-                $this->updated['clients'][] = $client->getId();
+                $this->updated['clients'][] = $this->client->getId();
             }
         }
 
-        $this->em->persist($client);
+        $this->em->persist($this->client);
         $this->em->flush();
-
-        $this->client = $client;
     }
 
     private function buildClientAndAssociateWithDeputyAndOrg(OrgDeputyshipDto $dto): Client
@@ -339,5 +342,17 @@ class OrgDeputyshipUploader
         $this->updated['organisations'] = array_unique($this->updated['organisations']);
         $this->updated['clients'] = array_unique($this->updated['clients']);
         $this->updated['reports'] = array_unique($this->updated['reports']);
+    }
+
+    private function skipArchivedClients()
+    {
+        if (!is_null($this->client) && !is_null($this->client->getArchivedAt())) {
+            $message = sprintf(
+                'Client with case number "%s" is archived. Skipping CSV row.',
+                $this->client->getCaseNumber()
+            );
+
+            throw new ClientIsArchivedException($message);
+        }
     }
 }

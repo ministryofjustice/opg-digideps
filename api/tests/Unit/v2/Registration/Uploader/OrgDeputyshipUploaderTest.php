@@ -407,4 +407,47 @@ class OrgDeputyshipUploaderTest extends KernelTestCase
             $updatedClient->getCourtDate()
         );
     }
+
+    /** @test */
+    public function uploadRowsWithArchivedClientsAreSkipped()
+    {
+        $deputyships = OrgDeputyshipDTOTestHelper::generateOrgDeputyshipDtos(1, 0);
+
+        $client = OrgDeputyshipDTOTestHelper::ensureClientInUploadExists($deputyships[0], $this->em);
+        $namedDeputy = OrgDeputyshipDTOTestHelper::ensureNamedDeputyInUploadExists($deputyships[0], $this->em);
+
+        $client->setNamedDeputy($namedDeputy);
+        $client->setArchivedAt(new DateTime());
+
+        $this->em->persist($client);
+        $this->em->flush();
+
+        $deputyships[0]->setDeputyAddress1('New Address');
+        $uploadResults = $this->sut->upload($deputyships);
+
+        self::assertCount(
+            0,
+            $uploadResults['updated']['clients'],
+            sprintf('Expecting 0, got %d', count($uploadResults['updated']['clients']))
+        );
+
+        self::assertCount(
+            0,
+            $uploadResults['errors'],
+            sprintf('Expecting 0, got %d', count($uploadResults['errors']))
+        );
+
+        self::assertEquals(
+            1,
+            $uploadResults['skipped'],
+            sprintf('Expecting 1, got %d', $uploadResults['skipped'])
+        );
+
+        $updatedClient = $this->em->getRepository(Client::class)->find($client);
+
+        self::assertNotEquals(
+            $deputyships[0]->getDeputyAddress1(),
+            $updatedClient->getNamedDeputy()->getAddress1()
+        );
+    }
 }
