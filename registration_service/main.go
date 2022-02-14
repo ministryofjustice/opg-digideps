@@ -3,6 +3,7 @@ package main
 import (
 	"crypto/tls"
 	"encoding/json"
+	"errors"
 	"fmt"
 	"gopkg.in/square/go-jose.v2"
 	"gopkg.in/square/go-jose.v2/jwt"
@@ -13,7 +14,6 @@ import (
 	"time"
 )
 
-// regServiceResponse
 type regServiceResponse struct {
 	Name      string
 	Timestamp time.Time
@@ -24,32 +24,67 @@ func regService(w http.ResponseWriter, r *http.Request) {
 	w.Header().Set("Content-Type", "application/json")
 	w.Header().Set("Access-Control-Allow-Origin", "*")
 
-	// Get public key from frontend client (will likely be standalone service in the future)
-	//jwks, err := fetchJwks()
-	//
-	//// Verify token is valid
-	//bearerToken := jwks.Key("blah")
-	//keyJson :=
-	//err = verifyToken()
-	//
-	//var responseText string
-	//
-	//if err!= nil {
-	//	responseText = fmt.Sprintf("Token not valid: %s", err.Error())
-	//} else {
-	//	responseText = "Token is valid yay!"
-	//}
+	JWT, err := parseJWTBearerToken(r)
 
-	// Setup the data struct to be return
+	if err != nil {
+		log.Fatalf("Cannot parse JWT from headers: %v", err)
+	}
+
+	// Get public key from frontend client (will likely be standalone service in the future)
+	JWKs, err := fetchJWKsByJKU(JWT)
+
+	if err != nil {
+		log.Fatalf("could not create jwks request: %v", err)
+	}
+
+	err = verifyToken(JWT, JWKs)
+	var m string
+
+	if err != nil {
+		m = err.Error()
+	} else {
+		m = "Request is authorised"
+	}
+
+	data := regServiceResponse{
+		Name:      "Go API Test",
+		Timestamp: time.Now(),
+		Message:   m,
+	}
+
+	json, err := json.Marshal(data)
+	if err != nil {
+		log.Fatal(err)
+	}
+
+	w.Write(json)
+}
+
+// Extracts and parses the JWT from bearar token
+func parseJWTBearerToken(r *http.Request) (*jwt.JSONWebToken, error) {
 	reqToken := r.Header.Get("Authorization")
+
+	if reqToken == "" {
+		return nil, errors.New("Missing Authorization header")
+	}
+
 	splitToken := strings.Split(reqToken, "Bearer ")
+
+	if len(splitToken) == 1 {
+		return nil, errors.New("Authorization header does not contain a Bearer token")
+	}
+
 	reqToken = splitToken[1]
 
-	JWT, err := jwt.ParseSigned(reqToken)
+	return jwt.ParseSigned(reqToken)
+}
 
+// Grabs the JKU from the JWT header to get JWKs
+func fetchJWKsByJKU(JWT *jwt.JSONWebToken) (*jose.JSONWebKeySet, error) {
 	//var kid string
 	var jku string
 	for _, header := range JWT.Headers {
+		// Do we need to decode kid and assert or do we need to only select jwks with the kid?
 
 		//if header.KeyID != "" {
 		//	kid = header.KeyID
@@ -60,61 +95,6 @@ func regService(w http.ResponseWriter, r *http.Request) {
 		}
 	}
 
-
-	// Get public key from frontend client (will likely be standalone service in the future)
-	JWKs, err := fetchJwks(jku)
-
-	if err != nil {
-		log.Printf("could not create jwks request: %v", err)
-	}
-
-	// Get claims out of token (validate signature while doing that)
-	claims := jwt.Claims{}
-	err = JWT.Claims(JWKs, &claims)
-	if err != nil {
-		log.Fatalf("could not retrieve claims: %v", err)
-	}
-
-	log.Println(claims.Audience)
-	log.Println(claims.Expiry.Time().String())
-	log.Println(claims.IssuedAt.Time().String())
-	log.Println(claims.Issuer)
-	log.Println(claims.NotBefore.Time().String())
-	log.Println(claims.Subject)
-
-
-	log.Println("Unsafe")
-	log.Println(JWT.UnsafeClaimsWithoutVerification())
-
-	// Do we need to decode kid and assert or do we need to only select jwks with the kid?
-
-	// Validate claims (issuer, expiresAt, etc.)
-	err = claims.Validate(jwt.Expected{
-		Audience: jwt.Audience{"registration_service"},
-		Issuer: "digideps",
-	})
-
-	if err != nil {
-		log.Fatalf("could not retrieve claims: %v", err)
-	}
-
-	data := regServiceResponse{
-		Name:      "Go API Test",
-		Timestamp: time.Now(),
-		Message:   reqToken,
-	}
-
-	// Marshal just returns the JSON encoding
-	json, err := json.Marshal(data)
-	if err != nil {
-		log.Fatal(err)
-	}
-
-	// Print the JSON to the endpoint
-	w.Write(json)
-}
-
-func fetchJwks(jku string) (*jose.JSONWebKeySet, error) {
 	// Temp disabling security checks for POC - this will need to be removed and a valid cert returned by frontend
 	tr := &http.Transport{
 		TLSClientConfig: &tls.Config{InsecureSkipVerify: true},
@@ -153,34 +133,27 @@ func fetchJwks(jku string) (*jose.JSONWebKeySet, error) {
 	return &jwks, nil
 }
 
-//func verifyToken(bearerToken string) error {
-//// Parse bearer token from request
-//token, err := jwt.ParseSigned(bearerToken)
-//if err != nil {
-//  return fmt.Errorf("could not parse Bearer token: %w", err)
-//}
-//
-//// Get jwks
-//jsonWebKeySet, err := fetchJwks()
-//if err != nil {
-//  return fmt.Errorf("could not load JWKS: %w", err)
-//}
-//
-//// Get claims out of token (validate signature while doing that)
-//claims := jwt.Claims{}
-//err = token.Claims(jsonWebKeySet, &claims)
-//if err != nil {
-//  return fmt.Errorf("could not retrieve claims: %w", err)
-//}
-//
-//// Validate claims (issuer, expiresAt, etc.)
-//err = claims.Validate(jwt.Expected{})
-//if err != nil {
-//  return fmt.Errorf("could not validate claims: %w", err)
-//}
-//
-//return nil
-//}
+func verifyToken(JWT *jwt.JSONWebToken, JWKs *jose.JSONWebKeySet) error {
+	claims := jwt.Claims{}
+	err := JWT.Claims(JWKs, &claims)
+	if err != nil {
+		errorMsg := fmt.Sprintf("could not retrieve claims: %v", err)
+		return errors.New(errorMsg)
+	}
+
+	// Validate claims (issuer, expiresAt, etc.)
+	err = claims.Validate(jwt.Expected{
+		Audience: jwt.Audience{"registration_service"},
+		Issuer: "digideps",
+	})
+
+	if err != nil {
+		errorMsg := fmt.Sprintf("could not validate claims: %v", err)
+		return errors.New(errorMsg)
+	}
+
+	return nil
+}
 
 func main() {
 	mux := http.NewServeMux()
