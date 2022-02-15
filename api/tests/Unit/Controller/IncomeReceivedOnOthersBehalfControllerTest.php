@@ -42,13 +42,13 @@ class IncomeReceivedOnOthersBehalfControllerTest extends AbstractTestController
             $ndr = $this->prepareReport('ndr', true);
 
             $reportUrl = sprintf(
-                '/report/income-type/delete/%s',
-                $report->getClientBenefitsCheck()->getTypesOfIncomeReceivedOnClientsBehalf()->first()->getId()
+                '/report/money-type/delete/%s',
+                $report->getClientBenefitsCheck()->getTypesOfMoneyReceivedOnClientsBehalf()->first()->getId()
             );
 
             $ndrUrl = sprintf(
-                '/ndr/income-type/delete/%s',
-                $ndr->getClientBenefitsCheck()->getTypesOfIncomeReceivedOnClientsBehalf()->first()->getId()
+                '/ndr/money-type/delete/%s',
+                $ndr->getClientBenefitsCheck()->getTypesOfMoneyReceivedOnClientsBehalf()->first()->getId()
             );
 
             $this->assertEndpointAllowedFor('DELETE', $reportUrl, $deputyToken);
@@ -63,13 +63,13 @@ class IncomeReceivedOnOthersBehalfControllerTest extends AbstractTestController
         $ndr = $this->prepareReport('ndr', true);
 
         $reportUrl = sprintf(
-            '/report/income-type/delete/%s',
-            $report->getClientBenefitsCheck()->getTypesOfIncomeReceivedOnClientsBehalf()->first()->getId()
+            '/report/money-type/delete/%s',
+            $report->getClientBenefitsCheck()->getTypesOfMoneyReceivedOnClientsBehalf()->first()->getId()
         );
 
         $ndrUrl = sprintf(
-            '/ndr/income-type/delete/%s',
-            $ndr->getClientBenefitsCheck()->getTypesOfIncomeReceivedOnClientsBehalf()->first()->getId()
+            '/ndr/money-type/delete/%s',
+            $ndr->getClientBenefitsCheck()->getTypesOfMoneyReceivedOnClientsBehalf()->first()->getId()
         );
 
         $this->assertEndpointNotAllowedFor('DELETE', $reportUrl, self::$tokenAdmin);
@@ -93,14 +93,14 @@ class IncomeReceivedOnOthersBehalfControllerTest extends AbstractTestController
 
             $typeOfIncome->setCreated(new DateTime())
                 ->setAmount(100.50)
-                ->setIncomeType('Universal Credit');
+                ->setMoneyType('Universal Credit');
 
             $clientBenefitsCheck->setReport($report)
                 ->setWhenLastCheckedEntitlement(ClientBenefitsCheck::WHEN_CHECKED_I_HAVE_CHECKED)
                 ->setDateLastCheckedEntitlement(new DateTime())
                 ->setCreated(new DateTime())
                 ->setDoOthersReceiveIncomeOnClientsBehalf('yes')
-                ->addTypeOfIncomeReceivedOnClientsBehalf($typeOfIncome)
+                ->addTypeOfMoneyReceivedOnClientsBehalf($typeOfIncome)
             ;
 
             $typeOfIncome->setClientBenefitsCheck($clientBenefitsCheck);

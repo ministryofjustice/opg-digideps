@@ -83,7 +83,7 @@ class ClientBenefitsCheckFactoryTest extends TestCase
             ->setId(Uuid::fromString($this->incomeId));
 
         $existingClientBenefitsCheck = (new ClientBenefitsCheck())
-            ->addTypeOfIncomeReceivedOnClientsBehalf($existingIncome)
+            ->addTypeOfMoneyReceivedOnClientsBehalf($existingIncome)
             ->setId(Uuid::fromString($this->id));
 
         $processedClientBenefitsCheck = $sut->createFromFormData(
@@ -102,12 +102,12 @@ class ClientBenefitsCheckFactoryTest extends TestCase
         self::assertEquals($this->dontKnowIncomeExplanation, $processedClientBenefitsCheck->getDontKnowIncomeExplanation());
 
         /** @var MoneyReceivedOnClientsBehalf $income */
-        $income = $processedClientBenefitsCheck->getTypesOfIncomeReceivedOnClientsBehalf()->first();
+        $income = $processedClientBenefitsCheck->getTypesOfMoneyReceivedOnClientsBehalf()->first();
 
         self::assertEquals($this->incomeId, $income->getId()->toString());
         self::assertEquals($this->incomeCreated, $income->getCreated()->format('Y-m-d'));
         self::assertEquals($existingClientBenefitsCheck, $income->getClientBenefitsCheck());
-        self::assertEquals($this->incomeType, $income->getIncomeType());
+        self::assertEquals($this->incomeType, $income->getMoneyType());
         self::assertEquals($this->incomeAmount, $income->getAmount());
     }
 
@@ -179,12 +179,12 @@ class ClientBenefitsCheckFactoryTest extends TestCase
         self::assertEquals($this->dontKnowIncomeExplanation, $processedClientBenefitsCheck->getDontKnowIncomeExplanation());
 
         /** @var MoneyReceivedOnClientsBehalf $income */
-        $income = $processedClientBenefitsCheck->getTypesOfIncomeReceivedOnClientsBehalf()->first();
+        $income = $processedClientBenefitsCheck->getTypesOfMoneyReceivedOnClientsBehalf()->first();
 
         self::assertEquals(true, $income->getId() instanceof UuidInterface);
         self::assertEquals($this->incomeCreated, $income->getCreated()->format('Y-m-d'));
         self::assertEquals(true, $income->getClientBenefitsCheck() instanceof ClientBenefitsCheck);
-        self::assertEquals($this->incomeType, $income->getIncomeType());
+        self::assertEquals($this->incomeType, $income->getMoneyType());
         self::assertEquals($this->incomeAmount, $income->getAmount());
     }
 
@@ -206,10 +206,10 @@ class ClientBenefitsCheckFactoryTest extends TestCase
             ->setId(Uuid::fromString($this->incomeId))
             ->setCreated(new DateTime($this->incomeCreated))
             ->setAmount($this->incomeAmount)
-            ->setIncomeType($this->incomeType);
+            ->setMoneyType($this->incomeType);
 
         $existingClientBenefitsCheck = (new ClientBenefitsCheck())
-            ->addTypeOfIncomeReceivedOnClientsBehalf($existingIncome)
+            ->addTypeOfMoneyReceivedOnClientsBehalf($existingIncome)
             ->setId(Uuid::fromString($this->id));
 
         $existingIncome->setClientBenefitsCheck($existingClientBenefitsCheck);
@@ -228,7 +228,7 @@ class ClientBenefitsCheckFactoryTest extends TestCase
         );
 
         self::assertEquals(true, $processedClientBenefitsCheck instanceof ClientBenefitsCheck);
-        self::assertEquals(0, $processedClientBenefitsCheck->getTypesOfIncomeReceivedOnClientsBehalf()->count());
+        self::assertEquals(0, $processedClientBenefitsCheck->getTypesOfMoneyReceivedOnClientsBehalf()->count());
     }
 
     private function generateValidFormDataRemoveIncomes()

@@ -9,10 +9,10 @@ Feature: Client benefits check - Lay users
         Then I should see "client-benefits-check" as "not started"
         When I navigate to and start the client benefits check report section
         And I confirm I checked the clients benefit entitlement on '01/01/2021'
-        And I confirm others receive income on the clients behalf
-        And I add 2 types of income with values
-        And I add a type of income where I don't know the value
-        And I have no further types of income to add
+        And I confirm others receive money on the clients behalf
+        And I add 2 types of money with values
+        And I add a type of money where I don't know the value
+        And I have no further types of money to add
         Then the client benefits check summary page should contain the details I entered
 
     @lay-combined-high-not-started
@@ -21,9 +21,9 @@ Feature: Client benefits check - Lay users
         And the deputies 'current' report ends and is due 'more' than 60 days after the client benefits check feature flag date
         When I navigate to and start the client benefits check report section
         And I confirm I am currently checking the benefits the client is entitled to
-        And I confirm others do not receive income on the clients behalf
+        And I confirm others do not receive money on the clients behalf
         Then the client benefits check summary page should contain the details I entered
-        And I should not see an empty section for income types
+        And I should not see an empty section for money types
 
     @lay-combined-high-not-started
     Scenario: A deputy has never checked the clients benefits entitlement
@@ -31,9 +31,9 @@ Feature: Client benefits check - Lay users
         And the deputies 'current' report ends and is due 'more' than 60 days after the client benefits check feature flag date
         When I navigate to and start the client benefits check report section
         And I confirm I have never checked the benefits the client is entitled to and provide a reason
-        And I confirm others do not receive income on the clients behalf
+        And I confirm others do not receive money on the clients behalf
         Then the client benefits check summary page should contain the details I entered
-        And I should not see an empty section for income types
+        And I should not see an empty section for money types
 
     @lay-combined-high-not-started
     Scenario: A deputy does not know if others receive income on clients behalf
@@ -41,9 +41,9 @@ Feature: Client benefits check - Lay users
         And the deputies 'current' report ends and is due 'more' than 60 days after the client benefits check feature flag date
         When I navigate to and start the client benefits check report section
         And I confirm I have never checked the benefits the client is entitled to and provide a reason
-        And I confirm I do not know if others receive income on the clients behalf and provide an explanation
+        And I confirm I do not know if others receive money on the clients behalf and provide an explanation
         Then the client benefits check summary page should contain the details I entered
-        And I should not see an empty section for income types
+        And I should not see an empty section for money types
 
     @lay-combined-high-completed
     Scenario: Reports due before the new question feature flag do not see the new report section and can submit report
@@ -66,7 +66,7 @@ Feature: Client benefits check - Lay users
         Given a Lay Deputy has completed a Combined High Assets report
         And the deputies 'current' report ends and is due 'more' than 60 days after the client benefits check feature flag date
         When I visit the client benefits check summary page
-        And I add 3 income types from the summary page
+        And I add 3 money types from the summary page
         Then the client benefits check summary page should contain the details I entered
 
     @lay-combined-high-not-started
@@ -75,13 +75,13 @@ Feature: Client benefits check - Lay users
         And the deputies 'current' report ends and is due 'more' than 60 days after the client benefits check feature flag date
         When I navigate to and start the client benefits check report section
         And I confirm I have never checked the benefits the client is entitled to and provide a reason
-        And I confirm others receive income on the clients behalf
-        And I add 1 type of income with values
-        And I have no further types of income to add
-        And I 'edit' the last type of income I added
+        And I confirm others receive money on the clients behalf
+        And I add 1 type of money with values
+        And I have no further types of money to add
+        And I 'edit' the last type of money I added
         Then the client benefits check summary page should contain the details I entered
-        Given I edit my response to do others receive income on a clients behalf to 'no'
-        Then the client benefits check summary page should contain my updated response and no income types
+        Given I edit my response to do others receive money on a clients behalf to 'no'
+        Then the client benefits check summary page should contain my updated response and no money types
         Given I edit my response to when I last checked the clients benefit entitlement to currently checking
         Then the client benefits check summary page should contain the details I entered
 
@@ -91,10 +91,10 @@ Feature: Client benefits check - Lay users
         And the deputies 'current' report ends and is due 'more' than 60 days after the client benefits check feature flag date
         When I navigate to and start the client benefits check report section
         And I confirm I checked the clients benefit entitlement on '01/01/2021'
-        And I confirm others receive income on the clients behalf
-        And I add 2 types of income with values
-        And I have no further types of income to add
-        And I 'remove' the last type of income I added
+        And I confirm others receive money on the clients behalf
+        And I add 2 types of money with values
+        And I have no further types of money to add
+        And I 'remove' the last type of money I added
         Then the client benefits check summary page should contain the details I entered
 
 #    (Testing forms have some validation. Full validation tests are in the individual validator or entity unit tests.)
@@ -106,10 +106,10 @@ Feature: Client benefits check - Lay users
         And I confirm I checked the clients benefit entitlement but dont provide a date
         Then I should see a 'missing date' error on client benefits check summary page
         Given I confirm I checked the clients benefit entitlement on '01/01/2021'
-        And I confirm I dont know if anyone else receives income on the clients behalf and dont provide an explanation
+        And I confirm I dont know if anyone else receives money on the clients behalf and dont provide an explanation
         Then I should see a 'missing explanation' error on client benefits check summary page
-        Given I confirm others receive income on the clients behalf
-        And I confirm the amount but don't provide an income type
+        Given I confirm others receive money on the clients behalf
+        And I confirm the amount but don't provide a money type
         Then I should see a 'missing income type' error on client benefits check summary page
         When I visit the report overview page
         Then I should see "client-benefits-check" as "not finished"
@@ -120,9 +120,9 @@ Feature: Client benefits check - Lay users
         And the deputies 'current' report ends and is due 'more' than 60 days after the client benefits check feature flag date
         When I navigate to and start the client benefits check report section
         And I confirm I checked the clients benefit entitlement on '01/01/2021'
-        And I confirm others receive income on the clients behalf
-        And I attempt to submit an empty income type
+        And I confirm others receive money on the clients behalf
+        And I attempt to submit an empty money type
         Then I should see a 'at least one income type required' error on client benefits check summary page
         And I change my mind and go back to the previous page
-        And I confirm others do not receive income on the clients behalf
+        And I confirm others do not receive money on the clients behalf
         Then the client benefits check summary page should contain the details I entered
