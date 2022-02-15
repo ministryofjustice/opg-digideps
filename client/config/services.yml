@@ -91,6 +91,7 @@ services:
     App\Service\Client\GovUK\BankHolidaysAPIClient:
         class: App\Service\Client\GovUK\BankHolidaysAPIClient
         arguments:
+            $httpClient: '@GuzzleHttp\Client'
             $logger: "@logger"
 
     App\Service\AWS\RequestSigner:

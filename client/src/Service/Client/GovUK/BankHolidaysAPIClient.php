@@ -4,7 +4,7 @@ declare(strict_types=1);
 
 namespace App\Service\Client\GovUK;
 
-use App\Entity\ClientInterface;
+use GuzzleHttp\ClientInterface;
 use GuzzleHttp\Psr7\Request;
 use Psr\Log\LoggerInterface;
 
