@@ -4,7 +4,7 @@ declare(strict_types=1);
 
 namespace App\Validator\Constraints\ClientBenefitsCheck;
 
-use App\Entity\IncomeReceivedOnClientsBehalfInterface;
+use App\Entity\MoneyReceivedOnClientsBehalfInterface;
 use App\Validator\Constraints\ClientBenefitsCheck\IncomeReceivedOnClientsBehalf as IncomeReceivedOnClientsBehalfConstraint;
 use Symfony\Component\Validator\Constraint;
 use Symfony\Component\Validator\ConstraintValidator;
@@ -20,7 +20,7 @@ class IncomeReceivedOnClientsBehalfValidator extends ConstraintValidator
             throw new UnexpectedTypeException($constraint, IncomeReceivedOnClientsBehalfConstraint::class);
         }
 
-        /** @var IncomeReceivedOnClientsBehalfInterface $object */
+        /** @var MoneyReceivedOnClientsBehalfInterface $object */
         $object = $this->context->getObject();
         $propertyName = $this->context->getPropertyName();
 
@@ -42,7 +42,7 @@ class IncomeReceivedOnClientsBehalfValidator extends ConstraintValidator
         }
     }
 
-    private function amountValid($value, IncomeReceivedOnClientsBehalfInterface $object, IncomeReceivedOnClientsBehalfConstraint $constraint)
+    private function amountValid($value, MoneyReceivedOnClientsBehalfInterface $object, IncomeReceivedOnClientsBehalfConstraint $constraint)
     {
         if (!is_null($value) && true === $object->getAmountDontKnow()) {
             $this->context
@@ -59,7 +59,7 @@ class IncomeReceivedOnClientsBehalfValidator extends ConstraintValidator
         }
     }
 
-    private function amountDontKnowValid($value, IncomeReceivedOnClientsBehalfInterface $object, IncomeReceivedOnClientsBehalfConstraint $constraint)
+    private function amountDontKnowValid($value, MoneyReceivedOnClientsBehalfInterface $object, IncomeReceivedOnClientsBehalfConstraint $constraint)
     {
         if (true === $value && !is_null($object->getAmount())) {
             $this->context

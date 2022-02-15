@@ -8,7 +8,7 @@ use App\Entity\Client;
 use App\Entity\Ndr\BankAccount as NdrBankAccount;
 use App\Entity\Ndr\ClientBenefitsCheck as NdrClientBenefitsCheck;
 use App\Entity\Ndr\Debt as NdrDebt;
-use App\Entity\Ndr\IncomeReceivedOnClientsBehalf as NdrIncomeReceivedOnClientsBehalf;
+use App\Entity\Ndr\MoneyReceivedOnClientsBehalf as NdrIncomeReceivedOnClientsBehalf;
 use App\Entity\Ndr\Ndr;
 use App\Entity\Ndr\VisitsCare as NdrVisitsCare;
 use App\Entity\Report\Action;
@@ -16,9 +16,9 @@ use App\Entity\Report\BankAccount;
 use App\Entity\Report\ClientBenefitsCheck;
 use App\Entity\Report\Debt as ReportDebt;
 use App\Entity\Report\Document;
-use App\Entity\Report\IncomeReceivedOnClientsBehalf;
 use App\Entity\Report\Lifestyle;
 use App\Entity\Report\MentalCapacity;
+use App\Entity\Report\MoneyReceivedOnClientsBehalf;
 use App\Entity\Report\MoneyTransaction;
 use App\Entity\Report\ProfDeputyOtherCost;
 use App\Entity\Report\Report;
@@ -387,7 +387,7 @@ class ReportTestHelper
 
     private function completeClientBenefitsCheck(ReportInterface $report): void
     {
-        $typeOfIncome = $report instanceof Ndr ? new NdrIncomeReceivedOnClientsBehalf() : new IncomeReceivedOnClientsBehalf();
+        $typeOfIncome = $report instanceof Ndr ? new NdrIncomeReceivedOnClientsBehalf() : new MoneyReceivedOnClientsBehalf();
         $clientBenefitsCheck = $report instanceof Ndr ? new NdrClientBenefitsCheck() : new ClientBenefitsCheck();
 
         $typeOfIncome->setCreated(new DateTime())

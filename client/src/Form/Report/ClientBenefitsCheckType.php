@@ -4,7 +4,7 @@ declare(strict_types=1);
 
 namespace App\Form\Report;
 
-use App\Entity\IncomeReceivedOnClientsBehalfInterface;
+use App\Entity\MoneyReceivedOnClientsBehalfInterface;
 use App\Entity\Report\ClientBenefitsCheck;
 use App\Form\DateType;
 use Symfony\Component\Form\AbstractType;
@@ -72,7 +72,7 @@ class ClientBenefitsCheckType extends AbstractType
             $builder->add('typesOfIncomeReceivedOnClientsBehalf', CollectionType::class, [
                 'entry_type' => IncomeReceivedOnClientsBehalfType::class,
                 'entry_options' => ['label' => false, 'empty_data' => null],
-                'delete_empty' => function (IncomeReceivedOnClientsBehalfInterface $income) use ($options) {
+                'delete_empty' => function (MoneyReceivedOnClientsBehalfInterface $income) use ($options) {
                     return null === $income->getAmount() && null === $income->getIncomeType() && false === $income->getAmountDontKnow() && $options['allow_delete_empty'];
                 },
                 'allow_delete' => true,

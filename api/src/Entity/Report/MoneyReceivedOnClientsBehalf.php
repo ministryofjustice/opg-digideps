@@ -2,9 +2,9 @@
 
 declare(strict_types=1);
 
-namespace App\Entity\Ndr;
+namespace App\Entity\Report;
 
-use App\Entity\IncomeReceivedOnClientsBehalfInterface;
+use App\Entity\MoneyReceivedOnClientsBehalfInterface;
 use DateTime;
 use Doctrine\ORM\Mapping as ORM;
 use Doctrine\ORM\Mapping\JoinColumn;
@@ -14,10 +14,10 @@ use Ramsey\Uuid\Uuid;
 use Ramsey\Uuid\UuidInterface;
 
 /**
- * @ORM\Table(name="odr_income_received_on_clients_behalf")
+ * @ORM\Table(name="income_received_on_clients_behalf")
  * @ORM\Entity
  */
-class IncomeReceivedOnClientsBehalf implements IncomeReceivedOnClientsBehalfInterface
+class MoneyReceivedOnClientsBehalf implements MoneyReceivedOnClientsBehalfInterface
 {
     public function __construct(?UuidInterface $id = null)
     {
@@ -46,11 +46,11 @@ class IncomeReceivedOnClientsBehalf implements IncomeReceivedOnClientsBehalfInte
     private DateTime $created;
 
     /**
-     * @ORM\ManyToOne(targetEntity="App\Entity\Ndr\ClientBenefitsCheck", inversedBy="incomeReceivedOnClientsBehalf", cascade={"persist"})
+     * @ORM\ManyToOne(targetEntity="App\Entity\Report\ClientBenefitsCheck", inversedBy="incomeReceivedOnClientsBehalf", cascade={"persist"})
      * @JoinColumn(name="client_benefits_check_id", referencedColumnName="id")
      *
      * @JMS\Groups({"client-benefits-check"})
-     * @JMS\Type("App\Entity\Ndr\ClientBenefitsCheck")
+     * @JMS\Type("App\Entity\Report\ClientBenefitsCheck")
      */
     private ClientBenefitsCheck $clientBenefitsCheck;
 
@@ -75,7 +75,7 @@ class IncomeReceivedOnClientsBehalf implements IncomeReceivedOnClientsBehalfInte
         return $this->clientBenefitsCheck;
     }
 
-    public function setClientBenefitsCheck(ClientBenefitsCheck $clientBenefitsCheck): IncomeReceivedOnClientsBehalf
+    public function setClientBenefitsCheck(ClientBenefitsCheck $clientBenefitsCheck): MoneyReceivedOnClientsBehalf
     {
         $this->clientBenefitsCheck = $clientBenefitsCheck;
 
@@ -87,7 +87,7 @@ class IncomeReceivedOnClientsBehalf implements IncomeReceivedOnClientsBehalfInte
         return $this->incomeType;
     }
 
-    public function setIncomeType(string $incomeType): IncomeReceivedOnClientsBehalf
+    public function setIncomeType(string $incomeType): MoneyReceivedOnClientsBehalf
     {
         $this->incomeType = $incomeType;
 
@@ -99,7 +99,7 @@ class IncomeReceivedOnClientsBehalf implements IncomeReceivedOnClientsBehalfInte
         return $this->id;
     }
 
-    public function setId(UuidInterface $id): IncomeReceivedOnClientsBehalf
+    public function setId(UuidInterface $id): MoneyReceivedOnClientsBehalf
     {
         $this->id = $id;
 
@@ -111,7 +111,7 @@ class IncomeReceivedOnClientsBehalf implements IncomeReceivedOnClientsBehalfInte
         return $this->created;
     }
 
-    public function setCreated(DateTime $created): IncomeReceivedOnClientsBehalf
+    public function setCreated(DateTime $created): MoneyReceivedOnClientsBehalf
     {
         $this->created = $created;
 
@@ -123,7 +123,7 @@ class IncomeReceivedOnClientsBehalf implements IncomeReceivedOnClientsBehalfInte
         return $this->amount;
     }
 
-    public function setAmount(?float $amount): IncomeReceivedOnClientsBehalf
+    public function setAmount(?float $amount): MoneyReceivedOnClientsBehalf
     {
         $this->amount = $amount;
 

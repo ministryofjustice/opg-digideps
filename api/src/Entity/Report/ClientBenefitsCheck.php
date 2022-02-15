@@ -109,7 +109,7 @@ class ClientBenefitsCheck implements ClientBenefitsCheckInterface
     private $dontKnowIncomeExplanation;
 
     /**
-     * @ORM\OneToMany(targetEntity="App\Entity\Report\IncomeReceivedOnClientsBehalf", mappedBy="clientBenefitsCheck", cascade={"persist", "remove"}, fetch="EXTRA_LAZY" )
+     * @ORM\OneToMany(targetEntity="MoneyReceivedOnClientsBehalf", mappedBy="clientBenefitsCheck", cascade={"persist", "remove"}, fetch="EXTRA_LAZY" )
      *
      * @JMS\Groups({"client-benefits-check"})
      * @JMS\Type("ArrayCollection<App\Entity\Report\IncomeReceivedOnClientsBehalf>")
@@ -182,7 +182,7 @@ class ClientBenefitsCheck implements ClientBenefitsCheckInterface
         return $this->typesOfIncomeReceivedOnClientsBehalf;
     }
 
-    public function addTypeOfIncomeReceivedOnClientsBehalf(?IncomeReceivedOnClientsBehalf $incomeReceivedOnClientsBehalf): ClientBenefitsCheck
+    public function addTypeOfIncomeReceivedOnClientsBehalf(?MoneyReceivedOnClientsBehalf $incomeReceivedOnClientsBehalf): ClientBenefitsCheck
     {
         if (!$this->typesOfIncomeReceivedOnClientsBehalf->contains($incomeReceivedOnClientsBehalf)) {
             $this->typesOfIncomeReceivedOnClientsBehalf->add($incomeReceivedOnClientsBehalf);

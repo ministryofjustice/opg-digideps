@@ -8,7 +8,7 @@ use App\Entity\Ndr\ClientBenefitsCheck;
 use App\Entity\Ndr\Debt;
 use App\Entity\Ndr\Expense;
 use App\Entity\Ndr\IncomeBenefit;
-use App\Entity\Ndr\IncomeReceivedOnClientsBehalf;
+use App\Entity\Ndr\MoneyReceivedOnClientsBehalf;
 use App\Entity\Ndr\Ndr;
 use App\Entity\Ndr\VisitsCare;
 use App\Service\NdrStatusService as StatusService;
@@ -333,7 +333,7 @@ class NdrStatusServiceTest extends TestCase
     {
         $clientBenefitsCheck = new ClientBenefitsCheck();
         $income = new ArrayCollection();
-        $income->add(new IncomeReceivedOnClientsBehalf());
+        $income->add(new MoneyReceivedOnClientsBehalf());
 
         $incomplete = [
             'getClientBenefitsCheck' => ($clientBenefitsCheck)

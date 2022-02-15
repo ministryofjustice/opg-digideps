@@ -5,7 +5,7 @@ declare(strict_types=1);
 namespace Tests\App\Entity\Report;
 
 use App\Entity\Report\ClientBenefitsCheck;
-use App\Entity\Report\IncomeReceivedOnClientsBehalf;
+use App\Entity\Report\MoneyReceivedOnClientsBehalf;
 use App\TestHelpers\ReportHelpers;
 use DateTime;
 use Doctrine\Common\Collections\ArrayCollection;
@@ -49,7 +49,7 @@ class ClientBenefitsCheckTest extends TestCase
 
     public function invalidDataProvider()
     {
-        $incomeType = (new IncomeReceivedOnClientsBehalf())
+        $incomeType = (new MoneyReceivedOnClientsBehalf())
         ->setAmountDontKnow(false);
 
         $incomeTypes = new ArrayCollection();

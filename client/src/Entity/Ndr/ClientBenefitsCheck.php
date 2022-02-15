@@ -179,7 +179,7 @@ class ClientBenefitsCheck implements ClientBenefitsCheckInterface
         return $this;
     }
 
-    public function addTypeOfIncomeReceivedOnClientsBehalf(IncomeReceivedOnClientsBehalf $incomeReceivedOnClientsBehalf): ClientBenefitsCheck
+    public function addTypeOfIncomeReceivedOnClientsBehalf(MoneyReceivedOnClientsBehalf $incomeReceivedOnClientsBehalf): ClientBenefitsCheck
     {
         $this->typesOfIncomeReceivedOnClientsBehalf->add($incomeReceivedOnClientsBehalf);
 

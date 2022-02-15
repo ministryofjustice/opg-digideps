@@ -5,9 +5,9 @@ declare(strict_types=1);
 namespace App\Tests\Unit\Controller;
 
 use App\Entity\Ndr\ClientBenefitsCheck as NdrClientBenefitsCheck;
-use App\Entity\Ndr\IncomeReceivedOnClientsBehalf as NdrIncomeReceivedOnClientsBehalf;
+use App\Entity\Ndr\MoneyReceivedOnClientsBehalf as NdrIncomeReceivedOnClientsBehalf;
 use App\Entity\Report\ClientBenefitsCheck;
-use App\Entity\Report\IncomeReceivedOnClientsBehalf;
+use App\Entity\Report\MoneyReceivedOnClientsBehalf;
 use App\TestHelpers\ClientTestHelper;
 use App\TestHelpers\ReportTestHelper;
 use App\TestHelpers\UserTestHelper;
@@ -88,7 +88,7 @@ class IncomeReceivedOnOthersBehalfControllerTest extends AbstractTestController
         $report->setClient($client);
 
         if ($withClientBenefitsCheck) {
-            $typeOfIncome = 'ndr' === $reportOrNdr ? new NdrIncomeReceivedOnClientsBehalf() : new IncomeReceivedOnClientsBehalf();
+            $typeOfIncome = 'ndr' === $reportOrNdr ? new NdrIncomeReceivedOnClientsBehalf() : new MoneyReceivedOnClientsBehalf();
             $clientBenefitsCheck = 'ndr' === $reportOrNdr ? new NdrClientBenefitsCheck() : new ClientBenefitsCheck();
 
             $typeOfIncome->setCreated(new DateTime())

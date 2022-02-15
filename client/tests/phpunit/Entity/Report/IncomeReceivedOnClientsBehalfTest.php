@@ -4,7 +4,7 @@ declare(strict_types=1);
 
 namespace Tests\App\Entity\Report;
 
-use App\Entity\Report\IncomeReceivedOnClientsBehalf;
+use App\Entity\Report\MoneyReceivedOnClientsBehalf;
 use PHPUnit\Framework\TestCase;
 use Symfony\Component\Validator\Validation;
 
@@ -16,7 +16,7 @@ class IncomeReceivedOnClientsBehalfTest extends TestCase
      */
     public function testValidation($incomeType, $amount, $amountDontKnow)
     {
-        $sut = (new IncomeReceivedOnClientsBehalf())
+        $sut = (new MoneyReceivedOnClientsBehalf())
             ->setIncomeType($incomeType)
             ->setAmount($amount)
             ->setAmountDontKnow($amountDontKnow);

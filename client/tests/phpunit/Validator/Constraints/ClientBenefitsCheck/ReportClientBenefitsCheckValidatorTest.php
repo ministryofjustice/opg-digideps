@@ -5,7 +5,7 @@ declare(strict_types=1);
 namespace App\Tests\Unit\Validator\Constraints;
 
 use App\Entity\Report\ClientBenefitsCheck;
-use App\Entity\Report\IncomeReceivedOnClientsBehalf;
+use App\Entity\Report\MoneyReceivedOnClientsBehalf;
 use App\TestHelpers\ReportHelpers;
 use App\Validator\Constraints\ClientBenefitsCheck\ClientBenefitsCheck as ClientBenefitsCheckConstraint;
 use App\Validator\Constraints\ClientBenefitsCheck\ClientBenefitsCheckValidator;
@@ -215,7 +215,7 @@ class ReportClientBenefitsCheckValidatorTest extends TestCase
 
     private function addEmptyIncomeTypeToClientBenefitsCheck()
     {
-        $this->reportClientBenefitsCheck->addTypeOfIncomeReceivedOnClientsBehalf(new IncomeReceivedOnClientsBehalf());
+        $this->reportClientBenefitsCheck->addTypeOfIncomeReceivedOnClientsBehalf(new MoneyReceivedOnClientsBehalf());
 
         return $this;
     }

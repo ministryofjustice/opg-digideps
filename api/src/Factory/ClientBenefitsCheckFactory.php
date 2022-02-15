@@ -5,11 +5,11 @@ declare(strict_types=1);
 namespace App\Factory;
 
 use App\Entity\ClientBenefitsCheckInterface;
-use App\Entity\IncomeReceivedOnClientsBehalfInterface;
+use App\Entity\MoneyReceivedOnClientsBehalfInterface;
 use App\Entity\Ndr\ClientBenefitsCheck as NdrClientBenefitsCheck;
-use App\Entity\Ndr\IncomeReceivedOnClientsBehalf as NdrIncomeReceivedOnClientsBehalf;
+use App\Entity\Ndr\MoneyReceivedOnClientsBehalf as NdrIncomeReceivedOnClientsBehalf;
 use App\Entity\Report\ClientBenefitsCheck;
-use App\Entity\Report\IncomeReceivedOnClientsBehalf;
+use App\Entity\Report\MoneyReceivedOnClientsBehalf;
 use App\Repository\NdrRepository;
 use App\Repository\ReportRepository;
 use DateTime;
@@ -106,14 +106,14 @@ class ClientBenefitsCheckFactory
         if (is_array($formData['types_of_income_received_on_clients_behalf'])) {
             foreach ($formData['types_of_income_received_on_clients_behalf'] as $incomeTypeData) {
                 if (is_null($incomeTypeData['id'])) {
-                    $incomeType = 'report' === $reportOrNdr ? new IncomeReceivedOnClientsBehalf() :
+                    $incomeType = 'report' === $reportOrNdr ? new MoneyReceivedOnClientsBehalf() :
                         new NdrIncomeReceivedOnClientsBehalf();
 
                     $incomeType
                         ->setIncomeType($incomeTypeData['income_type'])
                         ->setAmount($incomeTypeData['amount']);
                 } else {
-                    $incomeType = $clientBenefitsCheck->getTypesOfIncomeReceivedOnClientsBehalf()->filter(function (IncomeReceivedOnClientsBehalfInterface $income) use ($incomeTypeData) {
+                    $incomeType = $clientBenefitsCheck->getTypesOfIncomeReceivedOnClientsBehalf()->filter(function (MoneyReceivedOnClientsBehalfInterface $income) use ($incomeTypeData) {
                         return $income->getId()->toString() === $incomeTypeData['id'];
                     })->first();
 

@@ -6,9 +6,9 @@ namespace App\Controller\Report;
 
 use App\Controller\AbstractController;
 use App\Entity\Ndr\ClientBenefitsCheck as NdrClientBenefitsCheck;
-use App\Entity\Ndr\IncomeReceivedOnClientsBehalf as NdrIncomeReceivedOnClientsBehalf;
+use App\Entity\Ndr\MoneyReceivedOnClientsBehalf as NdrIncomeReceivedOnClientsBehalf;
 use App\Entity\Report\ClientBenefitsCheck;
-use App\Entity\Report\IncomeReceivedOnClientsBehalf;
+use App\Entity\Report\MoneyReceivedOnClientsBehalf;
 use App\Entity\Report\Status;
 use App\Form\ConfirmDeleteType;
 use App\Form\Report\ClientBenefitsCheckType;
@@ -125,7 +125,7 @@ class ClientBenefitsCheckController extends AbstractController
                 $clientBenefitsCheck->setTypesOfIncomeReceivedOnClientsBehalf(new ArrayCollection());
             }
 
-            $income = ('ndr' === $reportOrNdr) ? new NdrIncomeReceivedOnClientsBehalf() : new IncomeReceivedOnClientsBehalf();
+            $income = ('ndr' === $reportOrNdr) ? new NdrIncomeReceivedOnClientsBehalf() : new MoneyReceivedOnClientsBehalf();
             $clientBenefitsCheck->addTypeOfIncomeReceivedOnClientsBehalf($income);
         }
 

@@ -5,7 +5,7 @@ declare(strict_types=1);
 namespace App\Tests\Unit\Controller;
 
 use App\Entity\Report\ClientBenefitsCheck;
-use App\Entity\Report\IncomeReceivedOnClientsBehalf;
+use App\Entity\Report\MoneyReceivedOnClientsBehalf;
 use App\TestHelpers\ClientTestHelper;
 use App\TestHelpers\ReportTestHelper;
 use DateTime;
@@ -153,7 +153,7 @@ class ClientBenefitsCheckControllerTest extends AbstractTestController
         $report->setClient($client);
 
         if ($withClientBenefitsCheck) {
-            $typeOfIncome = new IncomeReceivedOnClientsBehalf();
+            $typeOfIncome = new MoneyReceivedOnClientsBehalf();
             $clientBenefitsCheck = new ClientBenefitsCheck();
 
             $typeOfIncome->setCreated(new DateTime())

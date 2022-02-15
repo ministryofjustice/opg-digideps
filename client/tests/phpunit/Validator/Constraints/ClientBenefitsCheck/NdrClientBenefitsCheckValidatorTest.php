@@ -5,7 +5,7 @@ declare(strict_types=1);
 namespace App\Tests\Unit\Validator\Constraints;
 
 use App\Entity\Ndr\ClientBenefitsCheck as NdrClientBenefitsCheck;
-use App\Entity\Ndr\IncomeReceivedOnClientsBehalf as NdrIncomeReceivedOnClientsBehalf;
+use App\Entity\Ndr\MoneyReceivedOnClientsBehalf as NdrIncomeReceivedOnClientsBehalf;
 use App\TestHelpers\NdrHelpers;
 use App\Validator\Constraints\ClientBenefitsCheck\ClientBenefitsCheck as ClientBenefitsCheckConstraint;
 use App\Validator\Constraints\ClientBenefitsCheck\ClientBenefitsCheckValidator;

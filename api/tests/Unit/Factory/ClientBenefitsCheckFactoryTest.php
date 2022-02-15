@@ -6,7 +6,7 @@ namespace App\Tests\Unit\Factory;
 
 use App\Entity\Client;
 use App\Entity\Report\ClientBenefitsCheck;
-use App\Entity\Report\IncomeReceivedOnClientsBehalf;
+use App\Entity\Report\MoneyReceivedOnClientsBehalf;
 use App\Entity\Report\Report;
 use App\Factory\ClientBenefitsCheckFactory;
 use App\Repository\NdrRepository;
@@ -79,7 +79,7 @@ class ClientBenefitsCheckFactoryTest extends TestCase
 
         $sut = new ClientBenefitsCheckFactory($reportRepo->reveal(), $ndrRepo->reveal(), $em->reveal());
 
-        $existingIncome = (new IncomeReceivedOnClientsBehalf())
+        $existingIncome = (new MoneyReceivedOnClientsBehalf())
             ->setId(Uuid::fromString($this->incomeId));
 
         $existingClientBenefitsCheck = (new ClientBenefitsCheck())
@@ -101,7 +101,7 @@ class ClientBenefitsCheckFactoryTest extends TestCase
         self::assertEquals($this->doOthersReceiveIncomeOnClientsBehalf, $processedClientBenefitsCheck->getDoOthersReceiveIncomeOnClientsBehalf());
         self::assertEquals($this->dontKnowIncomeExplanation, $processedClientBenefitsCheck->getDontKnowIncomeExplanation());
 
-        /** @var IncomeReceivedOnClientsBehalf $income */
+        /** @var MoneyReceivedOnClientsBehalf $income */
         $income = $processedClientBenefitsCheck->getTypesOfIncomeReceivedOnClientsBehalf()->first();
 
         self::assertEquals($this->incomeId, $income->getId()->toString());
@@ -178,7 +178,7 @@ class ClientBenefitsCheckFactoryTest extends TestCase
         self::assertEquals($this->doOthersReceiveIncomeOnClientsBehalf, $processedClientBenefitsCheck->getDoOthersReceiveIncomeOnClientsBehalf());
         self::assertEquals($this->dontKnowIncomeExplanation, $processedClientBenefitsCheck->getDontKnowIncomeExplanation());
 
-        /** @var IncomeReceivedOnClientsBehalf $income */
+        /** @var MoneyReceivedOnClientsBehalf $income */
         $income = $processedClientBenefitsCheck->getTypesOfIncomeReceivedOnClientsBehalf()->first();
 
         self::assertEquals(true, $income->getId() instanceof UuidInterface);
@@ -202,7 +202,7 @@ class ClientBenefitsCheckFactoryTest extends TestCase
 
         $ndrRepo = self::prophesize(NdrRepository::class);
 
-        $existingIncome = (new IncomeReceivedOnClientsBehalf())
+        $existingIncome = (new MoneyReceivedOnClientsBehalf())
             ->setId(Uuid::fromString($this->incomeId))
             ->setCreated(new DateTime($this->incomeCreated))
             ->setAmount($this->incomeAmount)
