@@ -4,7 +4,7 @@ declare(strict_types=1);
 
 namespace App\Service\Client\GovUK;
 
-use GuzzleHttp\Client;
+use App\Entity\ClientInterface;
 use GuzzleHttp\Psr7\Request;
 use Psr\Log\LoggerInterface;
 
@@ -12,7 +12,7 @@ class BankHolidaysAPIClient
 {
     public const BANK_HOLIDAYS_ENDPOINT = 'https://www.gov.uk/bank-holidays.json';
 
-    /** @var Client */
+    /** @var ClientInterface */
     private $httpClient;
 
     /**
@@ -21,7 +21,7 @@ class BankHolidaysAPIClient
     private $logger;
 
     public function __construct(
-        Client $httpClient,
+        ClientInterface $httpClient,
         LoggerInterface $logger
     ) {
         $this->httpClient = $httpClient;

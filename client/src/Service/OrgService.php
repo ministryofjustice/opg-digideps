@@ -226,6 +226,7 @@ class OrgService
             if (!$logged) {
                 if (!empty($upload['source'] and !empty($upload['roleType']))) {
                     $this->dispatchCSVUploadEvent($upload['source'], $upload['roleType']);
+                    $logged = true;
                 }
             }
         }

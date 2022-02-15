@@ -159,7 +159,6 @@ class CheckCSVUploadedCommand extends DaemonableCommand
     {
         $token = $this->secretManagerService->getSecret(SecretManagerService::SLACK_APP_TOKEN_SECRET_NAME);
 
-        // POST TO SLACK - need to wrap in helper class as create is a static class function
         $client = $this->slackClientFactory->createClient($token);
 
         try {
