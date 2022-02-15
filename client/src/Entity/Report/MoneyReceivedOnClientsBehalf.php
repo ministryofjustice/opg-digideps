@@ -55,6 +55,14 @@ class MoneyReceivedOnClientsBehalf implements MoneyReceivedOnClientsBehalfInterf
      */
     private ?bool $amountDontKnow = null;
 
+    /**
+     * @JMS\Type("string")
+     * @JMS\Groups({"report", "client-benefits-check"})
+     *
+     * @CustomAssert\MoneyReceivedOnClientsBehalf(groups={"client-benefits-check"})
+     */
+    private string $whoReceivedMoney;
+
     public function getId(): ?string
     {
         return $this->id;
@@ -123,6 +131,18 @@ class MoneyReceivedOnClientsBehalf implements MoneyReceivedOnClientsBehalfInterf
     public function setMoneyType(?string $moneyType): MoneyReceivedOnClientsBehalf
     {
         $this->moneyType = $moneyType;
+
+        return $this;
+    }
+
+    public function getWhoReceivedMoney(): string
+    {
+        return $this->whoReceivedMoney;
+    }
+
+    public function setWhoReceivedMoney(string $whoReceivedMoney): MoneyReceivedOnClientsBehalf
+    {
+        $this->whoReceivedMoney = $whoReceivedMoney;
 
         return $this;
     }

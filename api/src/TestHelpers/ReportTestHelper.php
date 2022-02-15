@@ -30,6 +30,7 @@ use DateInterval;
 use DateTime;
 use Doctrine\Common\Collections\ArrayCollection;
 use Doctrine\ORM\EntityManager;
+use Exception;
 
 class ReportTestHelper
 {
@@ -40,7 +41,7 @@ class ReportTestHelper
     {
         $client = $client ? $client : (new ClientTestHelper())->generateClient($em);
         $type = $type ? $type : Report::LAY_PFA_HIGH_ASSETS_TYPE;
-        $startDate = $startDate ? $startDate : new \DateTime('2 years ago');
+        $startDate = $startDate ? $startDate : new DateTime('2 years ago');
         $endDate = $endDate ? $endDate : (clone $startDate)->add(new DateInterval('P1Y'));
 
         $report = new Report($client, $type, $startDate, $endDate);
@@ -162,12 +163,12 @@ class ReportTestHelper
     }
 
     /**
-     * @throws \Exception
+     * @throws Exception
      */
     private function completeDecisions(ReportInterface $report): void
     {
         $report->setReasonForNoDecisions('No need for decisions');
-        (new MentalCapacity($report))->setHasCapacityChanged('no')->setMentalAssessmentDate(new \DateTime());
+        (new MentalCapacity($report))->setHasCapacityChanged('no')->setMentalAssessmentDate(new DateTime());
     }
 
     private function completeContacts(ReportInterface $report): void
@@ -392,6 +393,7 @@ class ReportTestHelper
 
         $typeOfIncome->setCreated(new DateTime())
             ->setAmount(100.50)
+            ->setWhoReceivedMoney('Some other bloke')
             ->setMoneyType('Universal Credit');
 
         $clientBenefitsCheck->setReport($report)

@@ -76,6 +76,7 @@ form:
         titleHint: For example, benefits paid directly to a care home or family member
         moneyTypeLabel: Type of money
         amountLabel: Amount
+        whoReceivedMoneyLabel: Person or organisation who received the money
         dontKnowCheckboxLabel: I don’t know the amount
         button:
             saveAndContinue: Save and continue
@@ -83,6 +84,7 @@ form:
         errors:
             missingType: Enter a type of money
             missingAmount: Enter an amount or select 'I don’t know'
+            missingWhoReceivedMoney: Enter a type of money
             amountAndDontKnow: You cannot enter an amount and select that you do not know the amount
             missingMoney: Enter at least one type of money
 

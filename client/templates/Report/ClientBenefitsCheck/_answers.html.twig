@@ -211,6 +211,9 @@
                             {{ money.moneyType }}
                         </dt>
                         <dd class="govuk-summary-list__value">
+                            {{ money.whoReceivedMoney }}
+                        </dd>
+                        <dd class="govuk-summary-list__value">
                             {% if money.amount is null %}
                                 {{ 'form.moneyOnClientsBehalf.choices.dontKnow'|trans(transOptions, translationDomain) }}
                             {% else %}

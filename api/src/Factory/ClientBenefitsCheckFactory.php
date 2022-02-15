@@ -112,6 +112,7 @@ class ClientBenefitsCheckFactory
 
                     $moneyType
                         ->setMoneyType($moneyTypeData['money_type'])
+                        ->setWhoReceivedMoney($moneyTypeData['who_received_money'])
                         ->setAmount($moneyTypeData['amount']);
                 } else {
                     $moneyType = $clientBenefitsCheck->getTypesOfMoneyReceivedOnClientsBehalf()->filter(function (MoneyReceivedOnClientsBehalfInterface $money) use ($moneyTypeData) {
@@ -129,6 +130,7 @@ class ClientBenefitsCheckFactory
 
                     $moneyType
                         ->setMoneyType($moneyTypeData['money_type'])
+                        ->setWhoReceivedMoney($moneyTypeData['who_received_money'])
                         ->setAmount($moneyTypeData['amount']);
                 }
 

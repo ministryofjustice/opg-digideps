@@ -155,6 +155,19 @@
                 }}
 
                 {{
+                form_input(
+                    typeOfMoneyReceivedOnClientsBehalf.whoReceivedMoney,
+                    '',
+                    {
+                        hintText: '',
+                        label: {
+                        text: 'form.moneyDetails.whoReceivedMoneyLabel'|trans(transOptions, translationDomain)
+                    }
+                    }
+                )
+                }}
+
+                {{
                     form_input(
                         typeOfMoneyReceivedOnClientsBehalf.amount,
                         '',

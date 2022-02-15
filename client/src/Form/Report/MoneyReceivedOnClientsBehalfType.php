@@ -17,6 +17,7 @@ class MoneyReceivedOnClientsBehalfType extends AbstractType
     public function buildForm(FormBuilderInterface $builder, array $options): void
     {
         $builder->add('moneyType', TextType::class, ['required' => true]);
+        $builder->add('whoReceivedMoney', TextType::class, ['required' => true]);
         $builder->add('amount', NumberType::class, [
                 'required' => false,
                 'invalid_message' => 'The amount value must be in numbers',
@@ -34,7 +35,7 @@ class MoneyReceivedOnClientsBehalfType extends AbstractType
             'data_class' => MoneyReceivedOnClientsBehalfInterface::class,
             'allow_add' => true,
             'allow_extra_fields' => true,
-            'validation_groups' => ['client-benefits-check', 'client-benefits-check'],
+            'validation_groups' => ['client-benefits-check', 'client-benefits-check', 'client-benefits-check'],
         ]);
     }
 }

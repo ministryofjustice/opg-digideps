@@ -33,6 +33,15 @@ class MoneyReceivedOnClientsBehalfValidator extends ConstraintValidator
             }
         }
 
+        if ('whoReceivedMoney' === $propertyName) {
+            if (is_null($value)) {
+                $this->context
+                    ->buildViolation($constraint->moneyDetailsMissingWhoReceivedMoneyMessage)
+                    ->setTranslationDomain($this->translationDomain)
+                    ->addViolation();
+            }
+        }
+
         if ('amount' === $propertyName) {
             $this->amountValid($value, $object, $constraint);
         }

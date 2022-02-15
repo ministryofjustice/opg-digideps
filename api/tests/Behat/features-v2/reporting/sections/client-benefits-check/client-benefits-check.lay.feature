@@ -98,7 +98,7 @@ Feature: Client benefits check - Lay users
         Then the client benefits check summary page should contain the details I entered
 
 #    (Testing forms have some validation. Full validation tests are in the individual validator or entity unit tests.)
-    @lay-combined-high-not-started
+    @lay-combined-high-not-started @acs
     Scenario: A deputy attempts to submit invalid data during the form steps
         Given a Lay Deputy has not started a Combined High Assets report
         And the deputies 'current' report ends and is due 'more' than 60 days after the client benefits check feature flag date
@@ -111,6 +111,8 @@ Feature: Client benefits check - Lay users
         Given I confirm others receive money on the clients behalf
         And I confirm the amount but don't provide a money type
         Then I should see a 'missing money type' error on client benefits check summary page
+        Given I fill in amount and description but dont provide details on who received the money
+        Then I should see a 'missing who received money' error on client benefits check summary page
         When I visit the report overview page
         Then I should see "client-benefits-check" as "not finished"
 

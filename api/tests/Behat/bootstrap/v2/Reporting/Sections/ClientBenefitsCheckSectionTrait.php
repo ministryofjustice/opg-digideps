@@ -13,6 +13,7 @@ trait ClientBenefitsCheckSectionTrait
     private string $missingDateErrorText = 'Enter the date you last checked %s\'s benefits';
     private string $missingExplanationErrorText = 'Tell us why you have never checked if anyone other than you receives money on %s\'s behalf';
     private string $missingMoneyTypeErrorText = 'Enter a type of money';
+    private string $missingWhoReceivedMoneyErrorText = 'Enter who received the money';
     private string $atLeastOneMoneyTypeRequiredErrorText = 'Enter at least one type of money';
 
     /**
@@ -173,8 +174,13 @@ trait ClientBenefitsCheckSectionTrait
 
         $this->fillInField($moneyTypeName, $this->faker->sentence(2), 'moneyType');
 
-        $checkboxByNameXpath = "//input[contains(@type, 'checkbox')]";
-        $checkboxName = ($emptyMoneyType->find('xpath', $checkboxByNameXpath))->getAttribute('name');
+        $whoReceivedMoneyByNameXpath = "//input[contains(@name, 'whoReceivedMoney')]";
+        $whoReceivedMoneyInput = ($emptyMoneyType->find('xpath', $whoReceivedMoneyByNameXpath))->getAttribute('name');
+
+        $this->fillInField($whoReceivedMoneyInput, $this->faker->sentence(2), 'moneyType');
+
+        $checkboxByTypeXpath = "//input[contains(@type, 'checkbox')]";
+        $checkboxName = ($emptyMoneyType->find('xpath', $checkboxByTypeXpath))->getAttribute('name');
 
         $this->tickCheckbox(
             'moneyTypeCheckbox',
@@ -212,6 +218,12 @@ trait ClientBenefitsCheckSectionTrait
             $this->fillInField(
                 "report-client-benefits-check[typesOfMoneyReceivedOnClientsBehalf][$index][moneyType]",
                 $this->faker->sentence(3),
+                'moneyType'
+            );
+
+            $this->fillInField(
+                "report-client-benefits-check[typesOfMoneyReceivedOnClientsBehalf][$index][whoReceivedMoney]",
+                $this->faker->sentence(2),
                 'moneyType'
             );
 
@@ -379,6 +391,9 @@ trait ClientBenefitsCheckSectionTrait
             case 'missing money type':
                 $this->assertOnErrorMessage($this->missingMoneyTypeErrorText);
                 break;
+            case 'missing who received money':
+                $this->assertOnErrorMessage($this->missingMoneyTypeErrorText);
+                break;
             case 'at least one money type required':
                 $this->assertOnErrorMessage($this->atLeastOneMoneyTypeRequiredErrorText);
                 break;
@@ -498,5 +513,25 @@ trait ClientBenefitsCheckSectionTrait
             'haveCheckedBenefits',
             "I'm currently checking this"
         );
+    }
+
+    /**
+     * @Given /^I fill in amount and description but dont provide details on who received the money$/
+     */
+    public function iDontProvideDetailsOnWhoReceivedTheMoney()
+    {
+        $this->fillInField(
+            'report-client-benefits-check[typesOfMoneyReceivedOnClientsBehalf][0][moneyType]',
+            $this->faker->sentence(3),
+            'moneyType'
+        );
+
+        $this->fillInField(
+            'report-client-benefits-check[typesOfMoneyReceivedOnClientsBehalf][0][amount]',
+            $this->faker->numberBetween(10, 2000),
+            'moneyType'
+        );
+
+        $this->pressButton('Add another');
     }
 }
