@@ -218,7 +218,7 @@ class CheckCSVUploadedCommandTest extends KernelTestCase
     /**
      * @test
      */
-    public function executeOnNonBankHolidaysWhereOnlyNonCSVEventExistsSlackIsPostedTo()
+    public function executeOnNonBankHolidaysWhereNonCSVExistsSlackIsPostedTo()
     {
         $this->todayIsABankHoliday(false);
         $this->aCsvUploadedEventExists(true);
