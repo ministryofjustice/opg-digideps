@@ -398,7 +398,7 @@ class ReportTestHelper
             ->setWhenLastCheckedEntitlement(ClientBenefitsCheck::WHEN_CHECKED_I_HAVE_CHECKED)
             ->setDateLastCheckedEntitlement(new DateTime())
             ->setCreated(new DateTime())
-            ->setDoOthersReceiveIncomeOnClientsBehalf('yes')
+            ->setDoOthersReceiveMoneyOnClientsBehalf('yes')
             ->addTypeOfMoneyReceivedOnClientsBehalf($typeOfIncome)
         ;
 

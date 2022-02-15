@@ -42,16 +42,16 @@ class ClientBenefitsCheckValidator extends ConstraintValidator
             $this->neverCheckedExplanationValid($value, $object, $constraint);
         }
 
-        if ('doOthersReceiveIncomeOnClientsBehalf' === $propertyName) {
-            $this->incomeOnClientsBehalfValid($value, $object, $constraint);
+        if ('doOthersReceiveMoneyOnClientsBehalf' === $propertyName) {
+            $this->moneyOnClientsBehalfValid($value, $object, $constraint);
         }
 
-        if ('dontKnowIncomeExplanation' === $propertyName) {
-            $this->dontKnowIncomeExplanationValid($value, $object, $constraint);
+        if ('dontKnowMoneyExplanation' === $propertyName) {
+            $this->dontKnowMoneyExplanationValid($value, $object, $constraint);
         }
 
-        if ('typesOfIncomeReceivedOnClientsBehalf' === $propertyName) {
-            $this->typesOfIncomeReceivedOnClientsBehalfValid($value, $object, $constraint);
+        if ('typesOfMoneyReceivedOnClientsBehalf' === $propertyName) {
+            $this->typesOfMoneyReceivedOnClientsBehalfValid($value, $object, $constraint);
         }
     }
 
@@ -110,22 +110,22 @@ class ClientBenefitsCheckValidator extends ConstraintValidator
         }
     }
 
-    private function incomeOnClientsBehalfValid($value, ClientBenefitsCheckInterface $object, ClientBenefitsCheckConstraint $constraint)
+    private function moneyOnClientsBehalfValid($value, ClientBenefitsCheckInterface $object, ClientBenefitsCheckConstraint $constraint)
     {
         if (is_null($value)) {
             $this->context
-                ->buildViolation($constraint->incomeOnClientsBehalfNoOptionSelected)
+                ->buildViolation($constraint->moneyOnClientsBehalfNoOptionSelected)
                 ->setTranslationDomain($this->translationDomain)
                 ->setParameter('%client%', $this->clientName)
                 ->addViolation();
         }
     }
 
-    private function dontKnowIncomeExplanationValid($value, ClientBenefitsCheckInterface $object, ClientBenefitsCheckConstraint $constraint)
+    private function dontKnowMoneyExplanationValid($value, ClientBenefitsCheckInterface $object, ClientBenefitsCheckConstraint $constraint)
     {
-        if (is_null($value) && ClientBenefitsCheck::OTHER_INCOME_DONT_KNOW === $object->getDoOthersReceiveIncomeOnClientsBehalf()) {
+        if (is_null($value) && ClientBenefitsCheck::OTHER_MONEY_DONT_KNOW === $object->getDoOthersReceiveMoneyOnClientsBehalf()) {
             $this->context
-                ->buildViolation($constraint->incomeOnClientsBehalfNeverCheckedIncomeMissingExplanation)
+                ->buildViolation($constraint->moneyOnClientsBehalfNeverCheckedMoneyMissingExplanation)
                 ->setTranslationDomain($this->translationDomain)
                 ->setParameter('%client%', $this->clientName)
                 ->addViolation();
@@ -133,21 +133,21 @@ class ClientBenefitsCheckValidator extends ConstraintValidator
 
         if (!is_null($value) && strlen($value) < 4) {
             $this->context
-                ->buildViolation($constraint->incomeOnClientsBehalfNeverCheckedIncomeExplanationTooShort)
+                ->buildViolation($constraint->moneyOnClientsBehalfNeverCheckedMoneyExplanationTooShort)
                 ->setTranslationDomain($this->translationDomain)
                 ->setParameter('%client%', $this->clientName)
                 ->addViolation();
         }
     }
 
-    private function typesOfIncomeReceivedOnClientsBehalfValid($value, ClientBenefitsCheckInterface $object, ClientBenefitsCheckConstraint $constraint)
+    private function typesOfMoneyReceivedOnClientsBehalfValid($value, ClientBenefitsCheckInterface $object, ClientBenefitsCheckConstraint $constraint)
     {
         if ($object->getTypesOfMoneyReceivedOnClientsBehalf() instanceof ArrayCollection && 1 === $object->getTypesOfMoneyReceivedOnClientsBehalf()->count()) {
-            $income = $object->getTypesOfMoneyReceivedOnClientsBehalf()->first();
+            $money = $object->getTypesOfMoneyReceivedOnClientsBehalf()->first();
 
-            if (is_null($income->getAmount()) && is_null($income->getIncomeType()) && false === $income->getAmountDontKnow()) {
+            if (is_null($money->getAmount()) && is_null($money->getMoneyType()) && false === $money->getAmountDontKnow()) {
                 $this->context
-                    ->buildViolation($constraint->incomeOnClientsBehalfMissingIncome)
+                    ->buildViolation($constraint->moneyOnClientsBehalfMissingMoney)
                     ->setTranslationDomain($this->translationDomain)
                     ->setParameter('%client%', $this->clientName)
                     ->addViolation();

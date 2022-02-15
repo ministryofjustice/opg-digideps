@@ -39,7 +39,7 @@ class ReportClientBenefitsCheckValidatorTest extends TestCase
         $report = ReportHelpers::createReport();
         $this->reportClientBenefitsCheck = (new ClientBenefitsCheck())
             ->setReport($report)
-            ->setTypesOfIncomeReceivedOnClientsBehalf(new ArrayCollection());
+            ->setTypesOfMoneyReceivedOnClientsBehalf(new ArrayCollection());
 
         $this->reportContext = $this->createMock(ExecutionContextInterface::class);
         $this->reportContext
@@ -145,11 +145,11 @@ class ReportClientBenefitsCheckValidatorTest extends TestCase
     /**
      * @test
      */
-    public function validatorAddsConstraintIfPropertyIsDoOthersReceiveIncomeOnClientsBehalf()
+    public function validatorAddsConstraintIfPropertyIsDoOthersReceiveMoneyOnClientsBehalf()
     {
-        $this->setContextPropertyName('doOthersReceiveIncomeOnClientsBehalf')
+        $this->setContextPropertyName('doOthersReceiveMoneyOnClientsBehalf')
             ->setWhenLastCheckedEntitlementTo('haveChecked')
-            ->expectViolationAdded('form.incomeOnClientsBehalf.errors.noOptionSelected')
+            ->expectViolationAdded('form.moneyOnClientsBehalf.errors.noOptionSelected')
             ->invokeTest(null);
     }
 
@@ -176,44 +176,44 @@ class ReportClientBenefitsCheckValidatorTest extends TestCase
     }
 
     /**
-     * @dataProvider dontKnowIncomeExplanationValueProvider
+     * @dataProvider dontKnowMoneyExplanationValueProvider
      * @test
      */
-    public function validatorAddsConstraintIfPropertyIsDontKnowIncomeExplanation($value, $transId)
+    public function validatorAddsConstraintIfPropertyIsDontKnowMoneyExplanation($value, $transId)
     {
-        $this->setContextPropertyName('dontKnowIncomeExplanation')
-            ->setDoOthersReceiveIncomeOnClientsBehalf('dontKnow')
+        $this->setContextPropertyName('dontKnowMoneyExplanation')
+            ->setDoOthersReceiveMoneyOnClientsBehalf('dontKnow')
             ->expectViolationAdded($transId)
             ->invokeTest($value);
     }
 
-    private function setDoOthersReceiveIncomeOnClientsBehalf(string $doOthersReceiveIncomeOnClientsBehalf)
+    private function setDoOthersReceiveMoneyOnClientsBehalf(string $doOthersReceiveMoneyOnClientsBehalf)
     {
-        $this->reportClientBenefitsCheck->setDoOthersReceiveIncomeOnClientsBehalf($doOthersReceiveIncomeOnClientsBehalf);
+        $this->reportClientBenefitsCheck->setDoOthersReceiveMoneyOnClientsBehalf($doOthersReceiveMoneyOnClientsBehalf);
 
         return $this;
     }
 
-    public function dontKnowIncomeExplanationValueProvider()
+    public function dontKnowMoneyExplanationValueProvider()
     {
         return [
-            'null' => [null, 'form.incomeOnClientsBehalf.errors.missingExplanation'],
-            'future date' => ['aaa', 'form.incomeOnClientsBehalf.errors.explanationTooShort'],
+            'null' => [null, 'form.moneyOnClientsBehalf.errors.missingExplanation'],
+            'future date' => ['aaa', 'form.moneyOnClientsBehalf.errors.explanationTooShort'],
         ];
     }
 
     /**
      * @test
      */
-    public function validatorAddsConstraintIfPropertyIsTypesOfIncomeReceivedOnClientsBehalf()
+    public function validatorAddsConstraintIfPropertyIsTypesOfMoneyReceivedOnClientsBehalf()
     {
-        $this->setContextPropertyName('typesOfIncomeReceivedOnClientsBehalf')
-            ->addEmptyIncomeTypeToClientBenefitsCheck()
-            ->expectViolationAdded('form.incomeDetails.errors.missingIncome')
+        $this->setContextPropertyName('typesOfMoneyReceivedOnClientsBehalf')
+            ->addEmptyMoneyTypeToClientBenefitsCheck()
+            ->expectViolationAdded('form.moneyDetails.errors.missingMoney')
             ->invokeTest(null);
     }
 
-    private function addEmptyIncomeTypeToClientBenefitsCheck()
+    private function addEmptyMoneyTypeToClientBenefitsCheck()
     {
         $this->reportClientBenefitsCheck->addTypeOfMoneyReceivedOnClientsBehalf(new MoneyReceivedOnClientsBehalf());
 

@@ -16,10 +16,10 @@ class ClientBenefitsCheck extends Constraint
     public string $whenLastCheckedFutureDate = 'form.whenLastChecked.errors.futureDate';
     public string $whenLastCheckedNeverCheckedEntitlementMissingExplanation = 'form.whenLastChecked.errors.missingExplanation';
     public string $whenLastCheckedNeverCheckedEntitlementExplanationTooShort = 'form.whenLastChecked.errors.explanationTooShort';
-    public string $incomeOnClientsBehalfNeverCheckedIncomeMissingExplanation = 'form.incomeOnClientsBehalf.errors.missingExplanation';
-    public string $incomeOnClientsBehalfNeverCheckedIncomeExplanationTooShort = 'form.incomeOnClientsBehalf.errors.explanationTooShort';
-    public string $incomeOnClientsBehalfNoOptionSelected = 'form.incomeOnClientsBehalf.errors.noOptionSelected';
-    public string $incomeOnClientsBehalfMissingIncome = 'form.incomeDetails.errors.missingIncome';
+    public string $moneyOnClientsBehalfNeverCheckedMoneyMissingExplanation = 'form.moneyOnClientsBehalf.errors.missingExplanation';
+    public string $moneyOnClientsBehalfNeverCheckedMoneyExplanationTooShort = 'form.moneyOnClientsBehalf.errors.explanationTooShort';
+    public string $moneyOnClientsBehalfNoOptionSelected = 'form.moneyOnClientsBehalf.errors.noOptionSelected';
+    public string $moneyOnClientsBehalfMissingMoney = 'form.moneyDetails.errors.missingMoney';
 
     public $mode = 'strict'; // If the constraint has configuration options, define them as public properties
 }

@@ -56,24 +56,24 @@ class ClientBenefitsCheckType extends AbstractType
         }
 
         if (2 === $this->step) {
-            $builder->add('doOthersReceiveIncomeOnClientsBehalf', ChoiceType::class, [
+            $builder->add('doOthersReceiveMoneyOnClientsBehalf', ChoiceType::class, [
                 'choices' => [
-                    'form.incomeOnClientsBehalf.choices.yes' => ClientBenefitsCheck::OTHER_INCOME_YES,
-                    'form.incomeOnClientsBehalf.choices.no' => ClientBenefitsCheck::OTHER_INCOME_NO,
-                    'form.incomeOnClientsBehalf.choices.dontKnow' => ClientBenefitsCheck::OTHER_INCOME_DONT_KNOW,
+                    'form.moneyOnClientsBehalf.choices.yes' => ClientBenefitsCheck::OTHER_MONEY_YES,
+                    'form.moneyOnClientsBehalf.choices.no' => ClientBenefitsCheck::OTHER_MONEY_NO,
+                    'form.moneyOnClientsBehalf.choices.dontKnow' => ClientBenefitsCheck::OTHER_MONEY_DONT_KNOW,
                 ],
                 'expanded' => true,
             ]);
 
-            $builder->add('dontKnowIncomeExplanation', TextareaType::class);
+            $builder->add('dontKnowMoneyExplanation', TextareaType::class);
         }
 
         if (3 === $this->step) {
-            $builder->add('typesOfIncomeReceivedOnClientsBehalf', CollectionType::class, [
+            $builder->add('typesOfMoneyReceivedOnClientsBehalf', CollectionType::class, [
                 'entry_type' => MoneyReceivedOnClientsBehalfType::class,
                 'entry_options' => ['label' => false, 'empty_data' => null],
-                'delete_empty' => function (MoneyReceivedOnClientsBehalfInterface $income) use ($options) {
-                    return null === $income->getAmount() && null === $income->getIncomeType() && false === $income->getAmountDontKnow() && $options['allow_delete_empty'];
+                'delete_empty' => function (MoneyReceivedOnClientsBehalfInterface $money) use ($options) {
+                    return null === $money->getAmount() && null === $money->getMoneyType() && false === $money->getAmountDontKnow() && $options['allow_delete_empty'];
                 },
                 'allow_delete' => true,
             ]);

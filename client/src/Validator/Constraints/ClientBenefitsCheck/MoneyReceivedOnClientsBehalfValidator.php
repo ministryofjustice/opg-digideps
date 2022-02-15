@@ -5,26 +5,26 @@ declare(strict_types=1);
 namespace App\Validator\Constraints\ClientBenefitsCheck;
 
 use App\Entity\MoneyReceivedOnClientsBehalfInterface;
-use App\Validator\Constraints\ClientBenefitsCheck\MoneyReceivedOnClientsBehalf as IncomeReceivedOnClientsBehalfConstraint;
+use App\Validator\Constraints\ClientBenefitsCheck\MoneyReceivedOnClientsBehalf as MoneyReceivedOnClientsBehalfConstraint;
 use Symfony\Component\Validator\Constraint;
 use Symfony\Component\Validator\ConstraintValidator;
 use Symfony\Component\Validator\Exception\UnexpectedTypeException;
 
-class IncomeReceivedOnClientsBehalfValidator extends ConstraintValidator
+class MoneyReceivedOnClientsBehalfValidator extends ConstraintValidator
 {
     private string $translationDomain = 'report-client-benefits-check';
 
     public function validate($value, Constraint $constraint)
     {
-        if (!$constraint instanceof IncomeReceivedOnClientsBehalfConstraint) {
-            throw new UnexpectedTypeException($constraint, IncomeReceivedOnClientsBehalfConstraint::class);
+        if (!$constraint instanceof MoneyReceivedOnClientsBehalfConstraint) {
+            throw new UnexpectedTypeException($constraint, MoneyReceivedOnClientsBehalfConstraint::class);
         }
 
         /** @var MoneyReceivedOnClientsBehalfInterface $object */
         $object = $this->context->getObject();
         $propertyName = $this->context->getPropertyName();
 
-        if ('incomeType' === $propertyName) {
+        if ('moneyType' === $propertyName) {
             if (is_null($value)) {
                 $this->context
                     ->buildViolation($constraint->moneyDetailsMissingMoneyTypeMessage)
@@ -42,7 +42,7 @@ class IncomeReceivedOnClientsBehalfValidator extends ConstraintValidator
         }
     }
 
-    private function amountValid($value, MoneyReceivedOnClientsBehalfInterface $object, IncomeReceivedOnClientsBehalfConstraint $constraint)
+    private function amountValid($value, MoneyReceivedOnClientsBehalfInterface $object, MoneyReceivedOnClientsBehalfConstraint $constraint)
     {
         if (!is_null($value) && true === $object->getAmountDontKnow()) {
             $this->context
@@ -51,7 +51,7 @@ class IncomeReceivedOnClientsBehalfValidator extends ConstraintValidator
                 ->addViolation();
         }
 
-        if (is_null($value) && false === $object->getAmountDontKnow() && !is_null($object->getIncomeType())) {
+        if (is_null($value) && false === $object->getAmountDontKnow() && !is_null($object->getMoneyType())) {
             $this->context
                 ->buildViolation($constraint->moneyDetailsMissingAmountMessage)
                 ->setTranslationDomain($this->translationDomain)
@@ -59,7 +59,7 @@ class IncomeReceivedOnClientsBehalfValidator extends ConstraintValidator
         }
     }
 
-    private function amountDontKnowValid($value, MoneyReceivedOnClientsBehalfInterface $object, IncomeReceivedOnClientsBehalfConstraint $constraint)
+    private function amountDontKnowValid($value, MoneyReceivedOnClientsBehalfInterface $object, MoneyReceivedOnClientsBehalfConstraint $constraint)
     {
         if (true === $value && !is_null($object->getAmount())) {
             $this->context
@@ -68,7 +68,7 @@ class IncomeReceivedOnClientsBehalfValidator extends ConstraintValidator
                 ->addViolation();
         }
 
-        if (false === $value && is_null($object->getAmount()) && !is_null($object->getIncomeType())) {
+        if (false === $value && is_null($object->getAmount()) && !is_null($object->getMoneyType())) {
             $this->context
                 ->buildViolation($constraint->moneyDetailsMissingAmountMessage)
                 ->setTranslationDomain($this->translationDomain)

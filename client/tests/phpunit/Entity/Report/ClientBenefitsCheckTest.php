@@ -22,9 +22,9 @@ class ClientBenefitsCheckTest extends TestCase
         ?string $whenLastChecked,
         ?DateTime $dateLastChecked,
         ?string $neverCheckedExplanation,
-        ?string $doOthersReceiveIncome,
-        ?string $incomeExplanation,
-        ?ArrayCollection $incomeTypes,
+        ?string $doOthersReceiveMoney,
+        ?string $moneyExplanation,
+        ?ArrayCollection $moneyTypes,
         int $expectedValidationErrorsCount
     ) {
         $report = ReportHelpers::createReport();
@@ -33,9 +33,9 @@ class ClientBenefitsCheckTest extends TestCase
             ->setWhenLastCheckedEntitlement($whenLastChecked)
             ->setDateLastCheckedEntitlement($dateLastChecked)
             ->setNeverCheckedExplanation($neverCheckedExplanation)
-            ->setDoOthersReceiveIncomeOnClientsBehalf($doOthersReceiveIncome)
-            ->setDontKnowIncomeExplanation($incomeExplanation)
-            ->setTypesOfIncomeReceivedOnClientsBehalf($incomeTypes)
+            ->setDoOthersReceiveMoneyOnClientsBehalf($doOthersReceiveMoney)
+            ->setDontKnowMoneyExplanation($moneyExplanation)
+            ->setTypesOfMoneyReceivedOnClientsBehalf($moneyTypes)
             ->setReport($report);
 
         $validator = Validation::createValidatorBuilder()
@@ -49,11 +49,11 @@ class ClientBenefitsCheckTest extends TestCase
 
     public function invalidDataProvider()
     {
-        $incomeType = (new MoneyReceivedOnClientsBehalf())
+        $moneyType = (new MoneyReceivedOnClientsBehalf())
         ->setAmountDontKnow(false);
 
-        $incomeTypes = new ArrayCollection();
-        $incomeTypes->add($incomeType);
+        $moneyTypes = new ArrayCollection();
+        $moneyTypes->add($moneyType);
 
         return [
             "Fails when \$whenLastCheckedEntitlement is 'haveChecked' and \$dateLastCheckedEntitlement is null" => [
@@ -74,7 +74,7 @@ class ClientBenefitsCheckTest extends TestCase
                 null,
                 1,
             ],
-            "Fails when \$doOthersReceiveIncomeOnClientsBehalf is 'dontKnow' and \$dontKnowIncomeExplanation is null" => [
+            "Fails when \$doOthersReceiveMoneyOnClientsBehalf is 'dontKnow' and \$dontKnowMoneyExplanation is null" => [
                 'currentlyChecking',
                 null,
                 null,
@@ -83,13 +83,13 @@ class ClientBenefitsCheckTest extends TestCase
                 null,
                 1,
             ],
-            'Fails when one income type exists in $typesOfIncomeReceivedOnClientsBehalf but income amount and type are null and amountDontKnow is false' => [
+            'Fails when one money type exists in $typesOfMoneyReceivedOnClientsBehalf but money amount and type are null and amountDontKnow is false' => [
                 'currentlyChecking',
                 null,
                 null,
                 'yes',
                 null,
-                $incomeTypes,
+                $moneyTypes,
                 2,
             ],
         ];

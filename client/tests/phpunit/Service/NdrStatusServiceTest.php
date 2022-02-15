@@ -342,23 +342,23 @@ class NdrStatusServiceTest extends TestCase
         $doneDontKnowIncome = [
             'getClientBenefitsCheck' => ($clientBenefitsCheck)
                 ->setWhenLastCheckedEntitlement(ClientBenefitsCheck::WHEN_CHECKED_IM_CURRENTLY_CHECKING)
-                ->setDoOthersReceiveIncomeOnClientsBehalf(ClientBenefitsCheck::OTHER_INCOME_DONT_KNOW),
+                ->setDoOthersReceiveMoneyOnClientsBehalf(ClientBenefitsCheck::OTHER_MONEY_DONT_KNOW),
         ];
         $doneNoIncomeToAdd = [
             'getClientBenefitsCheck' => ($clientBenefitsCheck)
                 ->setWhenLastCheckedEntitlement(ClientBenefitsCheck::WHEN_CHECKED_IM_CURRENTLY_CHECKING)
-                ->setDoOthersReceiveIncomeOnClientsBehalf(ClientBenefitsCheck::OTHER_INCOME_NO),
+                ->setDoOthersReceiveMoneyOnClientsBehalf(ClientBenefitsCheck::OTHER_MONEY_NO),
         ];
         $incompleteMissingIncome = [
             'getClientBenefitsCheck' => ($clientBenefitsCheck)
                 ->setWhenLastCheckedEntitlement(ClientBenefitsCheck::WHEN_CHECKED_IM_CURRENTLY_CHECKING)
-                ->setDoOthersReceiveIncomeOnClientsBehalf(ClientBenefitsCheck::OTHER_INCOME_YES),
+                ->setDoOthersReceiveMoneyOnClientsBehalf(ClientBenefitsCheck::OTHER_MONEY_YES),
         ];
         $doneIncomeAdded = [
             'getClientBenefitsCheck' => ($clientBenefitsCheck)
                 ->setWhenLastCheckedEntitlement(ClientBenefitsCheck::WHEN_CHECKED_IM_CURRENTLY_CHECKING)
-                ->setDoOthersReceiveIncomeOnClientsBehalf(ClientBenefitsCheck::OTHER_INCOME_YES)
-                ->setTypesOfIncomeReceivedOnClientsBehalf($income),
+                ->setDoOthersReceiveMoneyOnClientsBehalf(ClientBenefitsCheck::OTHER_MONEY_YES)
+                ->setTypesOfMoneyReceivedOnClientsBehalf($income),
         ];
 
         return [

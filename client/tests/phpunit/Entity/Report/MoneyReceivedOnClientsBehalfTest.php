@@ -8,16 +8,16 @@ use App\Entity\Report\MoneyReceivedOnClientsBehalf;
 use PHPUnit\Framework\TestCase;
 use Symfony\Component\Validator\Validation;
 
-class IncomeReceivedOnClientsBehalfTest extends TestCase
+class MoneyReceivedOnClientsBehalfTest extends TestCase
 {
     /**
      * @test
      * @dataProvider invalidDataProvider
      */
-    public function testValidation($incomeType, $amount, $amountDontKnow)
+    public function testValidation($moneyType, $amount, $amountDontKnow)
     {
         $sut = (new MoneyReceivedOnClientsBehalf())
-            ->setMoneyType($incomeType)
+            ->setMoneyType($moneyType)
             ->setAmount($amount)
             ->setAmountDontKnow($amountDontKnow);
 
@@ -33,23 +33,23 @@ class IncomeReceivedOnClientsBehalfTest extends TestCase
     public function invalidDataProvider()
     {
         return [
-            'Fails when $amountDontKnow is true and $incomeType and $amount is null' => [
+            'Fails when $amountDontKnow is true and $moneyType and $amount is null' => [
                 null,
                 null,
                 true,
             ],
-            'Fails when $incomeType is a non-empty string and $amount is null and $amountDontKnow is false' => [
-                'A type of income',
+            'Fails when $moneyType is a non-empty string and $amount is null and $amountDontKnow is false' => [
+                'A type of money',
                 null,
                 false,
             ],
-            'Fails when $amount is a number, $incomeType is null and $amountDontKnow is false' => [
+            'Fails when $amount is a number, $moneyType is null and $amountDontKnow is false' => [
                 null,
                 20,
                 false,
             ],
-            'Fails when $amount is a number, $incomeType is a non-empty string and $amountDontKnow is true' => [
-                'Some income type',
+            'Fails when $amount is a number, $moneyType is a non-empty string and $amountDontKnow is true' => [
+                'Some money type',
                 20,
                 true,
             ],

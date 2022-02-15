@@ -5,7 +5,7 @@ declare(strict_types=1);
 namespace App\Tests\Unit\Controller;
 
 use App\Entity\Ndr\ClientBenefitsCheck as NdrClientBenefitsCheck;
-use App\Entity\Ndr\MoneyReceivedOnClientsBehalf as NdrIncomeReceivedOnClientsBehalf;
+use App\Entity\Ndr\MoneyReceivedOnClientsBehalf as NdrMoneyReceivedOnClientsBehalf;
 use App\Entity\Report\ClientBenefitsCheck;
 use App\Entity\Report\MoneyReceivedOnClientsBehalf;
 use App\TestHelpers\ClientTestHelper;
@@ -13,7 +13,7 @@ use App\TestHelpers\ReportTestHelper;
 use App\TestHelpers\UserTestHelper;
 use DateTime;
 
-class IncomeReceivedOnOthersBehalfControllerTest extends AbstractTestController
+class MoneyReceivedOnOthersBehalfControllerTest extends AbstractTestController
 {
     private static $tokenAdmin;
     private static $tokenDeputy;
@@ -88,10 +88,10 @@ class IncomeReceivedOnOthersBehalfControllerTest extends AbstractTestController
         $report->setClient($client);
 
         if ($withClientBenefitsCheck) {
-            $typeOfIncome = 'ndr' === $reportOrNdr ? new NdrIncomeReceivedOnClientsBehalf() : new MoneyReceivedOnClientsBehalf();
+            $typeOfMoney = 'ndr' === $reportOrNdr ? new NdrMoneyReceivedOnClientsBehalf() : new MoneyReceivedOnClientsBehalf();
             $clientBenefitsCheck = 'ndr' === $reportOrNdr ? new NdrClientBenefitsCheck() : new ClientBenefitsCheck();
 
-            $typeOfIncome->setCreated(new DateTime())
+            $typeOfMoney->setCreated(new DateTime())
                 ->setAmount(100.50)
                 ->setMoneyType('Universal Credit');
 
@@ -99,11 +99,11 @@ class IncomeReceivedOnOthersBehalfControllerTest extends AbstractTestController
                 ->setWhenLastCheckedEntitlement(ClientBenefitsCheck::WHEN_CHECKED_I_HAVE_CHECKED)
                 ->setDateLastCheckedEntitlement(new DateTime())
                 ->setCreated(new DateTime())
-                ->setDoOthersReceiveIncomeOnClientsBehalf('yes')
-                ->addTypeOfMoneyReceivedOnClientsBehalf($typeOfIncome)
+                ->setDoOthersReceiveMoneyOnClientsBehalf('yes')
+                ->addTypeOfMoneyReceivedOnClientsBehalf($typeOfMoney)
             ;
 
-            $typeOfIncome->setClientBenefitsCheck($clientBenefitsCheck);
+            $typeOfMoney->setClientBenefitsCheck($clientBenefitsCheck);
             $report->setClientBenefitsCheck($clientBenefitsCheck);
         }
 

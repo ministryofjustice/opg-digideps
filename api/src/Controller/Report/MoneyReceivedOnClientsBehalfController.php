@@ -14,29 +14,22 @@ use Symfony\Component\Routing\Annotation\Route;
 
 class MoneyReceivedOnClientsBehalfController extends RestController
 {
-    private MoneyReceivedOnClientsBehalfRepository $reportIncomeRepository;
-    private NdrMoneyReceivedOnClientsBehalfRepository $ndrIncomeRepository;
-    private RestFormatter $formatter;
-
     public function __construct(
-        MoneyReceivedOnClientsBehalfRepository $reportIncomeRepository,
-        NdrMoneyReceivedOnClientsBehalfRepository $ndrIncomeRepository,
-        RestFormatter $formatter
+        private MoneyReceivedOnClientsBehalfRepository $reportMoneyRepository,
+        private NdrMoneyReceivedOnClientsBehalfRepository $ndrMoneyRepository,
+        private RestFormatter $formatter
     ) {
-        $this->reportIncomeRepository = $reportIncomeRepository;
-        $this->ndrIncomeRepository = $ndrIncomeRepository;
-        $this->formatter = $formatter;
     }
 
     /**
-     * @Route("{reportOrNdr}/money-type/delete/{incomeTypeId}", methods={"DELETE"}, name="delete_income_type")
+     * @Route("{reportOrNdr}/money-type/delete/{moneyTypeId}", methods={"DELETE"}, name="delete_money_type")
      * @Security("is_granted('ROLE_DEPUTY')")
      */
-    public function delete(Request $request, string $reportOrNdr, string $incomeTypeId)
+    public function delete(Request $request, string $reportOrNdr, string $moneyTypeId)
     {
         $groups = $request->get('groups') ? $request->get('groups') : ['client-benefits-check', 'report', 'ndr'];
         $this->formatter->setJmsSerialiserGroups($groups);
-        'ndr' === $reportOrNdr ? $this->ndrIncomeRepository->delete($incomeTypeId) : $this->reportIncomeRepository->delete($incomeTypeId);
+        'ndr' === $reportOrNdr ? $this->ndrMoneyRepository->delete($moneyTypeId) : $this->reportMoneyRepository->delete($moneyTypeId);
 
         return [];
     }

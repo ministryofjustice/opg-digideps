@@ -1,8 +1,8 @@
 common:
     weAskAbout: |
-        In this section we ask you when you last checked what benefits %client% is entitled to, and about any income other people receive directly on %client%’s behalf.
-    htmlTitle: Benefits check and income other people receive - Complete the deputy report | GOV.UK
-    pageTitle: Benefits check and income other people receive
+        In this section we ask you when you last checked what benefits %client% is entitled to, and about any money other people receive directly on %client%’s behalf.
+    htmlTitle: Benefits check and money other people receive - Complete the deputy report | GOV.UK
+    pageTitle: Benefits check and money other people receive
 
 startPage:
     startButton: Start
@@ -12,12 +12,12 @@ stepPage:
         1:
             mainTitle: Have you checked that %client% gets all the benefits they should have?
         2:
-            mainTitle: Does anyone other than you receive income on %client%’s behalf?
+            mainTitle: Does anyone other than you receive money on %client%’s behalf?
             subTitle: For example, benefits paid directly to a care home or family member
         3:
-            mainTitle: Tell us about the income other people receive on %client%'s behalf
+            mainTitle: Tell us about the money other people receive on %client%'s behalf
             subTitle: For example, benefits paid directly to a care home or family member
-    supportTitle: Benefits check and income other people receive
+    supportTitle: Benefits check and money other people receive
     pageDescription:
         step1:
     backLink: Back
@@ -25,21 +25,21 @@ stepPage:
 summaryPage:
     listedAnswers: We've listed your saved answers below.
     checkAnswers: Check they're correct and edit them where necessary
-    addIncomeButtonText: Add income
+    addMoneyButtonText: Add money
     table:
         benefitsCheck:
             title: Benefits check
             column1Title: Question
             column2Title: Answer
             edit: Edit
-        doOthersReceiveIncome:
-            title: Do others receive income on %client%'s behalf
+        doOthersReceiveMoney:
+            title: Do others receive money on %client%'s behalf
             column1Title: Question
             column2Title: Answer
             edit: Edit
-        incomeOtherPeopleReceive:
-            title: Income other people receive
-            column1Title: Type of income
+        moneyOtherPeopleReceive:
+            title: Money other people receive
+            column1Title: Type of money
             column2Title: Amount
             edit: Edit
             remove: Remove
@@ -60,31 +60,31 @@ form:
             missingExplanation: Tell us why you have never checked %client%'s benefit entitlement
             explanationTooShort: In a few words, tell us why you have never checked %client%'s benefit entitlement
 
-    incomeOnClientsBehalf:
+    moneyOnClientsBehalf:
         choices:
             yes: Yes
             no: No
             dontKnow: I don't know
-        dontKnowLabel: Tell us why you don’t know about this income.
+        dontKnowLabel: Tell us why you don’t know about this money.
         dontKnowHint: For example, is this something you’ve never checked, don’t know how to check, or have been unable to find out.
         errors:
-            noOptionSelected: Tell us whether anyone other than you receives income on %client%'s behalf
-            missingExplanation: Tell us why you have never checked if anyone other than you receives income on %client%'s behalf
-            explanationTooShort: In a few words, tell us why you have never checked if anyone other than you receives income on %client%'s behalf
+            noOptionSelected: Tell us whether anyone other than you receives money on %client%'s behalf
+            missingExplanation: Tell us why you have never checked if anyone other than you receives money on %client%'s behalf
+            explanationTooShort: In a few words, tell us why you have never checked if anyone other than you receives money on %client%'s behalf
 
-    incomeDetails:
+    moneyDetails:
         titleHint: For example, benefits paid directly to a care home or family member
-        incomeTypeLabel: Type of income
+        moneyTypeLabel: Type of money
         amountLabel: Amount
         dontKnowCheckboxLabel: I don’t know the amount
         button:
             saveAndContinue: Save and continue
             addAnother: Add another
         errors:
-            missingType: Enter a type of income
+            missingType: Enter a type of money
             missingAmount: Enter an amount or select 'I don’t know'
             amountAndDontKnow: You cannot enter an amount and select that you do not know the amount
-            missingIncome: Enter at least one type of income
+            missingMoney: Enter at least one type of money
 
     save:
         label: Save and continue
@@ -92,8 +92,8 @@ form:
         label: Cancel
 
 deletePage:
-    subject: income type
+    subject: money type
 
 reportReview:
     neverCheckedEntitlementTitle: Explanation for never checking if %client% gets all the benefits they’re entitled to
-    dontKnowIncomeTitle: Explanation for not knowing if others receive income on %client%'s behalf
+    dontKnowMoneyTitle: Explanation for not knowing if others receive money on %client%'s behalf

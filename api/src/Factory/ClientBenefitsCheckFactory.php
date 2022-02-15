@@ -41,21 +41,21 @@ class ClientBenefitsCheckFactory
             }
         }
 
-        $this->removeIncomesIfUserChangesMind($formData, $clientBenefitsCheck);
+        $this->removeMoneysIfUserChangesMind($formData, $clientBenefitsCheck);
 
         return $clientBenefitsCheck;
     }
 
     /**
-     * If a user has entered income types but then changes the answer to the question on if others receive
-     * income on clients' behalf we should remove the income details provided as they are no longer relevant.
+     * If a user has entered money types but then changes the answer to the question on if others receive
+     * money on clients' behalf we should remove the money details provided as they are no longer relevant.
      */
-    private function removeIncomesIfUserChangesMind(array $formData, ClientBenefitsCheckInterface $clientBenefitsCheck)
+    private function removeMoneysIfUserChangesMind(array $formData, ClientBenefitsCheckInterface $clientBenefitsCheck)
     {
-        if ('yes' !== $formData['do_others_receive_income_on_clients_behalf'] &&
+        if ('yes' !== $formData['do_others_receive_money_on_clients_behalf'] &&
             !empty($clientBenefitsCheck->getTypesOfMoneyReceivedOnClientsBehalf())) {
-            foreach ($clientBenefitsCheck->getTypesOfMoneyReceivedOnClientsBehalf() as $incomeType) {
-                $this->em->remove($incomeType);
+            foreach ($clientBenefitsCheck->getTypesOfMoneyReceivedOnClientsBehalf() as $moneyType) {
+                $this->em->remove($moneyType);
             }
 
             $this->em->flush();
@@ -91,9 +91,9 @@ class ClientBenefitsCheckFactory
             ->setReport($report)
             ->setDateLastCheckedEntitlement($dateLastChecked)
             ->setNeverCheckedExplanation($formData['never_checked_explanation'])
-            ->setDontKnowIncomeExplanation($formData['dont_know_income_explanation'])
+            ->setDontKnowMoneyExplanation($formData['dont_know_money_explanation'])
             ->setWhenLastCheckedEntitlement($formData['when_last_checked_entitlement'])
-            ->setDoOthersReceiveIncomeOnClientsBehalf($formData['do_others_receive_income_on_clients_behalf']);
+            ->setDoOthersReceiveMoneyOnClientsBehalf($formData['do_others_receive_money_on_clients_behalf']);
     }
 
     private function hydrateMoneyReceivedOnClientsBehalf(
@@ -103,18 +103,18 @@ class ClientBenefitsCheckFactory
     ) {
         $moneyTypes = [];
 
-        if (is_array($formData['types_of_income_received_on_clients_behalf'])) {
-            foreach ($formData['types_of_income_received_on_clients_behalf'] as $moneyTypeData) {
+        if (is_array($formData['types_of_money_received_on_clients_behalf'])) {
+            foreach ($formData['types_of_money_received_on_clients_behalf'] as $moneyTypeData) {
                 if (is_null($moneyTypeData['id'])) {
                     $moneyType = 'report' === $reportOrNdr ? new MoneyReceivedOnClientsBehalf() :
                         new NdrMoneyReceivedOnClientsBehalf();
 
                     $moneyType
-                        ->setMoneyType($moneyTypeData['income_type'])
+                        ->setMoneyType($moneyTypeData['money_type'])
                         ->setAmount($moneyTypeData['amount']);
                 } else {
-                    $moneyType = $clientBenefitsCheck->getTypesOfMoneyReceivedOnClientsBehalf()->filter(function (MoneyReceivedOnClientsBehalfInterface $income) use ($moneyTypeData) {
-                        return $income->getId()->toString() === $moneyTypeData['id'];
+                    $moneyType = $clientBenefitsCheck->getTypesOfMoneyReceivedOnClientsBehalf()->filter(function (MoneyReceivedOnClientsBehalfInterface $money) use ($moneyTypeData) {
+                        return $money->getId()->toString() === $moneyTypeData['id'];
                     })->first();
 
                     if (false === $moneyType) {
@@ -127,7 +127,7 @@ class ClientBenefitsCheckFactory
                     }
 
                     $moneyType
-                        ->setIncomeType($moneyTypeData['income_type'])
+                        ->setIncomeType($moneyTypeData['money_type'])
                         ->setAmount($moneyTypeData['amount']);
                 }
 

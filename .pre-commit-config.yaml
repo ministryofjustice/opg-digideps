@@ -50,4 +50,6 @@ repos:
         args: ["--write"]
         additional_dependencies:
           - prettier@2.5.1
-          - "prettier-plugin-twig-melody"
+#          Seems quite buggy at the moment. E.g. https://github.com/trivago/prettier-plugin-twig-melody/issues/37
+#          Look at enabling again in a few months
+#          - "prettier-plugin-twig-melody"

@@ -6,7 +6,7 @@ namespace App\Controller\Report;
 
 use App\Controller\AbstractController;
 use App\Entity\Ndr\ClientBenefitsCheck as NdrClientBenefitsCheck;
-use App\Entity\Ndr\MoneyReceivedOnClientsBehalf as NdrIncomeReceivedOnClientsBehalf;
+use App\Entity\Ndr\MoneyReceivedOnClientsBehalf as NdrMoneyReceivedOnClientsBehalf;
 use App\Entity\Report\ClientBenefitsCheck;
 use App\Entity\Report\MoneyReceivedOnClientsBehalf;
 use App\Entity\Report\Status;
@@ -122,10 +122,10 @@ class ClientBenefitsCheckController extends AbstractController
 
         if (3 === $step) {
             if (empty($clientBenefitsCheck->getTypesOfMoneyReceivedOnClientsBehalf())) {
-                $clientBenefitsCheck->setTypesOfIncomeReceivedOnClientsBehalf(new ArrayCollection());
+                $clientBenefitsCheck->setTypesOfMoneyReceivedOnClientsBehalf(new ArrayCollection());
             }
 
-            $income = ('ndr' === $reportOrNdr) ? new NdrIncomeReceivedOnClientsBehalf() : new MoneyReceivedOnClientsBehalf();
+            $income = ('ndr' === $reportOrNdr) ? new NdrMoneyReceivedOnClientsBehalf() : new MoneyReceivedOnClientsBehalf();
             $clientBenefitsCheck->addTypeOfMoneyReceivedOnClientsBehalf($income);
         }
 
@@ -177,7 +177,7 @@ class ClientBenefitsCheckController extends AbstractController
 
     private function incomeNotReceivedByOthers(FormInterface $form)
     {
-        $notYesStatuses = [ClientBenefitsCheck::OTHER_INCOME_NO, ClientBenefitsCheck::OTHER_INCOME_DONT_KNOW];
+        $notYesStatuses = [ClientBenefitsCheck::OTHER_MONEY_NO, ClientBenefitsCheck::OTHER_MONEY_DONT_KNOW];
 
         return $form->has('doOthersReceiveIncomeOnClientsBehalf') &&
             in_array($form->get('doOthersReceiveIncomeOnClientsBehalf')->getData(), $notYesStatuses);
