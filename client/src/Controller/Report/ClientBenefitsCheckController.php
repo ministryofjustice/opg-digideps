@@ -32,24 +32,13 @@ class ClientBenefitsCheckController extends AbstractController
         'client-name',
     ];
 
-    private ReportApi $reportApi;
-    private ClientBenefitsCheckApi $benefitCheckApi;
-    private StepRedirector $stepRedirector;
-    private MoneyReceivedOnClientsBehalfApi $incomeTypeApi;
-    private NdrApi $ndrApi;
-
     public function __construct(
-        ReportApi $reportApi,
-        ClientBenefitsCheckApi $benefitCheckApi,
-        StepRedirector $stepRedirector,
-        MoneyReceivedOnClientsBehalfApi $incomeTypeApi,
-        NdrApi $ndrApi
+        private ReportApi $reportApi,
+        private ClientBenefitsCheckApi $benefitCheckApi,
+        private StepRedirector $stepRedirector,
+        private MoneyReceivedOnClientsBehalfApi $moneyTypeApi,
+        private NdrApi $ndrApi
     ) {
-        $this->reportApi = $reportApi;
-        $this->benefitCheckApi = $benefitCheckApi;
-        $this->stepRedirector = $stepRedirector;
-        $this->incomeTypeApi = $incomeTypeApi;
-        $this->ndrApi = $ndrApi;
     }
 
     /**
@@ -179,8 +168,8 @@ class ClientBenefitsCheckController extends AbstractController
     {
         $notYesStatuses = [ClientBenefitsCheck::OTHER_MONEY_NO, ClientBenefitsCheck::OTHER_MONEY_DONT_KNOW];
 
-        return $form->has('doOthersReceiveIncomeOnClientsBehalf') &&
-            in_array($form->get('doOthersReceiveIncomeOnClientsBehalf')->getData(), $notYesStatuses);
+        return $form->has('doOthersReceiveMoneyOnClientsBehalf') &&
+            in_array($form->get('doOthersReceiveMoneyOnClientsBehalf')->getData(), $notYesStatuses);
     }
 
     /**
@@ -204,38 +193,38 @@ class ClientBenefitsCheckController extends AbstractController
     }
 
     /**
-     * @Route("/{reportOrNdr}/{reportId}/client-benefits-check/remove/money-type/{incomeTypeId}", name="client_benefits_check_remove_income_type", requirements={
+     * @Route("/{reportOrNdr}/{reportId}/client-benefits-check/remove/money-type/{moneyTypeId}", name="client_benefits_check_remove_money_type", requirements={
      *   "reportOrNdr" = "(report|ndr)"
      * })))
      * @Template("@App/Common/confirmDelete.html.twig")
      *
      * @return array|RedirectResponse
      */
-    public function removeIncomeType(Request $request, int $reportId, string $incomeTypeId, string $reportOrNdr)
+    public function removeIncomeType(Request $request, int $reportId, string $moneyTypeId, string $reportOrNdr)
     {
         $report = ('ndr' === $reportOrNdr) ? $this->ndrApi->getNdr($reportId, self::$jmsGroups) :
             $this->reportApi->getReportIfNotSubmitted($reportId, self::$jmsGroups);
 
-        foreach ($report->getClientBenefitsCheck()->getTypesOfMoneyReceivedOnClientsBehalf() as $incomeType) {
-            if ($incomeType->getId() === $incomeTypeId) {
-                $incomeTypeToDelete = $incomeType;
+        foreach ($report->getClientBenefitsCheck()->getTypesOfMoneyReceivedOnClientsBehalf() as $moneyType) {
+            if ($moneyType->getId() === $moneyTypeId) {
+                $moneyTypeToDelete = $moneyType;
                 break;
             }
         }
 
-        if (!isset($incomeTypeToDelete)) {
-            throw $this->createNotFoundException('Income type not found');
+        if (!isset($moneyTypeToDelete)) {
+            throw $this->createNotFoundException('Money type not found');
         }
 
         $form = $this->createForm(ConfirmDeleteType::class);
         $form->handleRequest($request);
 
         if ($form->isSubmitted() && $form->isValid()) {
-            $this->incomeTypeApi->deleteIncomeType($reportOrNdr, $incomeTypeId);
+            $this->moneyTypeApi->deleteMoneyType($reportOrNdr, $moneyTypeId);
 
             $this->addFlash(
                 'notice',
-                'Income type deleted'
+                'Money type deleted'
             );
 
             return $this->redirect($this->generateUrl(
@@ -245,8 +234,8 @@ class ClientBenefitsCheckController extends AbstractController
         }
 
         $summary = [
-            ['label' => 'summaryPage.table.incomeOtherPeopleReceive.column1Title', 'value' => $incomeTypeToDelete->getIncomeType()],
-            ['label' => 'summaryPage.table.incomeOtherPeopleReceive.column2Title', 'value' => $incomeTypeToDelete->getAmount()],
+            ['label' => 'summaryPage.table.moneyOtherPeopleReceive.column1Title', 'value' => $moneyTypeToDelete->getMoneyType()],
+            ['label' => 'summaryPage.table.moneyOtherPeopleReceive.column2Title', 'value' => $moneyTypeToDelete->getAmount()],
         ];
 
         return [

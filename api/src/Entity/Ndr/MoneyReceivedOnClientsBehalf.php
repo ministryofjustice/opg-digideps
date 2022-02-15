@@ -55,12 +55,12 @@ class MoneyReceivedOnClientsBehalf implements MoneyReceivedOnClientsBehalfInterf
     private ClientBenefitsCheck $clientBenefitsCheck;
 
     /**
-     * @ORM\Column(name="income_type", type="string", nullable=false)
+     * @ORM\Column(name="money_type", type="string", nullable=false)
      *
      * @JMS\Groups({"client-benefits-check"})
      * @JMS\Type("string")
      */
-    private string $incomeType;
+    private string $moneyType;
 
     /**
      * @ORM\Column(name="amount", type="decimal", precision=14, scale=2, nullable=true)
@@ -70,13 +70,13 @@ class MoneyReceivedOnClientsBehalf implements MoneyReceivedOnClientsBehalfInterf
      */
     private ?float $amount;
 
-    /**
-     * @ORM\Column(name="who_received_money", type="string", nullable=false)
-     *
-     * @JMS\Groups({"client-benefits-check"})
-     * @JMS\Type("string")
-     */
-    private string $whoReceivedMoney;
+//    /**
+//     * @ORM\Column(name="who_received_money", type="string", nullable=false)
+//     *
+//     * @JMS\Groups({"client-benefits-check"})
+//     * @JMS\Type("string")
+//     */
+//    private string $whoReceivedMoney;
 
     public function getClientBenefitsCheck(): ClientBenefitsCheck
     {
@@ -90,14 +90,14 @@ class MoneyReceivedOnClientsBehalf implements MoneyReceivedOnClientsBehalfInterf
         return $this;
     }
 
-    public function getIncomeType(): string
+    public function getMoneyType(): string
     {
-        return $this->incomeType;
+        return $this->moneyType;
     }
 
-    public function setIncomeType(string $incomeType): MoneyReceivedOnClientsBehalf
+    public function setMoneyType(string $moneyType): MoneyReceivedOnClientsBehalf
     {
-        $this->incomeType = $incomeType;
+        $this->moneyType = $moneyType;
 
         return $this;
     }
@@ -138,15 +138,15 @@ class MoneyReceivedOnClientsBehalf implements MoneyReceivedOnClientsBehalfInterf
         return $this;
     }
 
-    public function getWhoReceivedMoney(): string
-    {
-        return $this->whoReceivedMoney;
-    }
-
-    public function setWhoReceivedMoney(string $whoReceivedMoney): self
-    {
-        $this->whoReceivedMoney = $whoReceivedMoney;
-
-        return $this;
-    }
+//    public function getWhoReceivedMoney(): string
+//    {
+//        return $this->whoReceivedMoney;
+//    }
+//
+//    public function setWhoReceivedMoney(string $whoReceivedMoney): self
+//    {
+//        $this->whoReceivedMoney = $whoReceivedMoney;
+//
+//        return $this;
+//    }
 }

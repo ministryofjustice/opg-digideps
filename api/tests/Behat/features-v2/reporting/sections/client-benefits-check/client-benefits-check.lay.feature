@@ -36,7 +36,7 @@ Feature: Client benefits check - Lay users
         And I should not see an empty section for money types
 
     @lay-combined-high-not-started
-    Scenario: A deputy does not know if others receive income on clients behalf
+    Scenario: A deputy does not know if others receive money on clients behalf
         Given a Lay Deputy has not started a Combined High Assets report
         And the deputies 'current' report ends and is due 'more' than 60 days after the client benefits check feature flag date
         When I navigate to and start the client benefits check report section
@@ -62,7 +62,7 @@ Feature: Client benefits check - Lay users
         Then I should see "client-benefits-check" as "finished"
 
     @lay-combined-high-completed
-    Scenario: A deputy adds income other people receive on the client's behalf from summary page
+    Scenario: A deputy adds money other people receive on the client's behalf from summary page
         Given a Lay Deputy has completed a Combined High Assets report
         And the deputies 'current' report ends and is due 'more' than 60 days after the client benefits check feature flag date
         When I visit the client benefits check summary page
@@ -86,7 +86,7 @@ Feature: Client benefits check - Lay users
         Then the client benefits check summary page should contain the details I entered
 
     @lay-combined-high-not-started
-    Scenario: A deputy removes details of an income other people receive on the client's behalf
+    Scenario: A deputy removes details of an money other people receive on the client's behalf
         Given a Lay Deputy has not started a Combined High Assets report
         And the deputies 'current' report ends and is due 'more' than 60 days after the client benefits check feature flag date
         When I navigate to and start the client benefits check report section
@@ -110,19 +110,19 @@ Feature: Client benefits check - Lay users
         Then I should see a 'missing explanation' error on client benefits check summary page
         Given I confirm others receive money on the clients behalf
         And I confirm the amount but don't provide a money type
-        Then I should see a 'missing income type' error on client benefits check summary page
+        Then I should see a 'missing money type' error on client benefits check summary page
         When I visit the report overview page
         Then I should see "client-benefits-check" as "not finished"
 
     @lay-combined-high-not-started
-    Scenario: A deputy confirms others receive income on client's behalf and then changes their mind
+    Scenario: A deputy confirms others receive money on client's behalf and then changes their mind
         Given a Lay Deputy has not started a Combined High Assets report
         And the deputies 'current' report ends and is due 'more' than 60 days after the client benefits check feature flag date
         When I navigate to and start the client benefits check report section
         And I confirm I checked the clients benefit entitlement on '01/01/2021'
         And I confirm others receive money on the clients behalf
         And I attempt to submit an empty money type
-        Then I should see a 'at least one income type required' error on client benefits check summary page
+        Then I should see a 'at least one money type required' error on client benefits check summary page
         And I change my mind and go back to the previous page
         And I confirm others do not receive money on the clients behalf
         Then the client benefits check summary page should contain the details I entered

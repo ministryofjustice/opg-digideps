@@ -14,6 +14,7 @@ use App\Repository\NdrRepository;
 use App\Repository\ReportRepository;
 use DateTime;
 use Doctrine\ORM\EntityManagerInterface;
+use Exception;
 use Ramsey\Uuid\Uuid;
 use RuntimeException;
 
@@ -67,7 +68,7 @@ class ClientBenefitsCheckFactory
     /**
      * @return NdrClientBenefitsCheck|ClientBenefitsCheck
      *
-     * @throws \Exception
+     * @throws Exception
      */
     private function hydrateClientBenefitsCheck(string $reportOrNdr, array $formData, ?ClientBenefitsCheckInterface $existingEntity)
     {
@@ -127,7 +128,7 @@ class ClientBenefitsCheckFactory
                     }
 
                     $moneyType
-                        ->setIncomeType($moneyTypeData['money_type'])
+                        ->setMoneyType($moneyTypeData['money_type'])
                         ->setAmount($moneyTypeData['amount']);
                 }
 

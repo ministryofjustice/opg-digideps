@@ -30,7 +30,7 @@ Feature: Client benefits check - NDR users
         And I should be able to submit the report
 
     @ndr-not-started
-    Scenario: A deputy removes an item of income they've added
+    Scenario: A deputy removes an item of money they've added
         Given a Lay Deputy has not started an NDR report
         When I navigate to and start the client benefits check report section
         And I confirm I checked the clients benefit entitlement on '01/01/2021'

@@ -17,8 +17,8 @@ class MoneyReceivedOnClientsBehalfApi
         $this->restClient = $restClient;
     }
 
-    public function deleteIncomeType(string $reportOrNdr, string $incomeTypeId)
+    public function deleteMoneyType(string $reportOrNdr, string $moneyTypeId)
     {
-        $this->restClient->delete(sprintf(self::DELETE_ENDPOINT, $reportOrNdr, $incomeTypeId));
+        $this->restClient->delete(sprintf(self::DELETE_ENDPOINT, $reportOrNdr, $moneyTypeId));
     }
 }
