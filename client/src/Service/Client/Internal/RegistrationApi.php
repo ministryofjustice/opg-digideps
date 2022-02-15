@@ -10,15 +10,11 @@ use Symfony\Contracts\HttpClient\HttpClientInterface;
 
 class RegistrationApi
 {
-    private HttpClientInterface $registrationApiClient;
-    private Security $security;
-    private RedisStorage $redisStorage;
-
-    public function __construct(HttpClientInterface $registrationApiClient, Security $security, RedisStorage $redisStorage)
-    {
-        $this->registrationApiClient = $registrationApiClient;
-        $this->security = $security;
-        $this->redisStorage = $redisStorage;
+    public function __construct(
+        private HttpClientInterface $registrationApiClient,
+        private Security $security,
+        private RedisStorage $redisStorage
+    ) {
     }
 
     public function getMyRequestInfo()

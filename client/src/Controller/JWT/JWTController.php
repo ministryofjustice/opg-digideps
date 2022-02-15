@@ -9,11 +9,8 @@ use Symfony\Contracts\HttpClient\HttpClientInterface;
 
 class JWTController extends AbstractController
 {
-    private HttpClientInterface $phpApiClient;
-
-    public function __construct(HttpClientInterface $phpApiClient)
+    public function __construct(private HttpClientInterface $phpApiClient)
     {
-        $this->phpApiClient = $phpApiClient;
     }
 
     /**

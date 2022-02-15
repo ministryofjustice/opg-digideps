@@ -23,15 +23,11 @@ use Symfony\Component\Security\Core\Authentication\Token\Storage\TokenStorageInt
  */
 class AuthController extends RestController
 {
-    private AuthService $authService;
-    private RestFormatter $formatter;
-    private JWTService $JWTService;
-
-    public function __construct(AuthService $authService, RestFormatter $restFormatter, JWTService $JWTService)
-    {
-        $this->authService = $authService;
-        $this->formatter = $restFormatter;
-        $this->JWTService = $JWTService;
+    public function __construct(
+        private AuthService $authService,
+        private RestFormatter $restFormatter,
+        private JWTService $JWTService
+    ) {
     }
 
     /**

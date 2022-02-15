@@ -9,11 +9,8 @@ use Firebase\JWT\JWT;
 
 class JWTService
 {
-    private string $rootDir;
-
-    public function __construct(string $rootDir)
+    public function __construct(private string $rootDir)
     {
-        $this->rootDir = $rootDir;
     }
 
     public function createNewJWT(User $user)
@@ -39,7 +36,7 @@ class JWTService
     public function generateJWK()
     {
         $publicKey = file_get_contents(sprintf('%s/config/jwt/public.pem', $this->rootDir));
-        // This should be base64 encoded
+        // Should this be base64 encoded?
         $kid = openssl_digest($publicKey, 'sha256');
 
         $keyInfo = openssl_pkey_get_details(openssl_pkey_get_public($publicKey));

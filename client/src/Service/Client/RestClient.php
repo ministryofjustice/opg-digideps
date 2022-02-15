@@ -41,34 +41,6 @@ class RestClient implements RestClientInterface
     protected static $availableOptions = ['addAuthToken', 'addClientSecret', 'deserialise_groups'];
 
     /**
-     * @var ClientInterface
-     */
-    protected $client;
-
-    /**
-     * @var SerializerInterface
-     */
-    protected $serialiser;
-
-    /**
-     * Used to keep the user auth token.
-     * UserId is used as a key.
-     *
-     * @var TokenStorageInterface
-     */
-    protected $tokenStorage;
-
-    /**
-     * @var LoggerInterface
-     */
-    protected $logger;
-
-    /**
-     * @var string
-     */
-    protected $clientSecret;
-
-    /**
      * @var array
      */
     protected $history;
@@ -77,11 +49,6 @@ class RestClient implements RestClientInterface
      * @var bool
      */
     protected $saveHistory;
-
-    /**
-     * @var ContainerInterface
-     */
-    protected $container;
 
     /**
      * @var int
@@ -114,25 +81,16 @@ class RestClient implements RestClientInterface
     const ERROR_CONNECT = 'API returned an exception';
     const ERROR_NO_SUCCESS = 'Endpoint failed with message %s';
     const ERROR_FORMAT = 'Cannot decode endpoint response';
-    private HttpClientInterface $phpApiClient;
 
     public function __construct(
-        ContainerInterface $container,
-        ClientInterface $client,
-        TokenStorageInterface $tokenStorage,
-        SerializerInterface $serializer,
-        LoggerInterface $logger,
-        string $clientSecret,
-        HttpClientInterface $phpApiClient
+        protected ContainerInterface $container,
+        protected ClientInterface $client,
+        protected TokenStorageInterface $tokenStorage,
+        protected SerializerInterface $serializer,
+        protected LoggerInterface $logger,
+        protected string $clientSecret,
+        protected HttpClientInterface $phpApiClient
     ) {
-        $this->client = $client;
-        $this->container = $container;
-        $this->tokenStorage = $tokenStorage;
-        $this->serialiser = $serializer;
-        $this->logger = $logger;
-        $this->clientSecret = $clientSecret;
-        $this->phpApiClient = $phpApiClient;
-
         $this->saveHistory = $container->getParameter('kernel.debug');
         $this->history = [];
     }

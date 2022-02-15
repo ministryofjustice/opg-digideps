@@ -28,46 +28,16 @@ use Throwable;
 
 class IndexController extends AbstractController
 {
-    /** @var DeputyProvider */
-    private $deputyProvider;
-
-    /** @var EventDispatcherInterface */
-    private $eventDispatcher;
-
-    /** @var TokenStorageInterface */
-    private $tokenStorage;
-
-    /** @var TranslatorInterface */
-    private $translator;
-
-    /** @var string */
-    private $environment;
-
-    /** @var RestClient */
-    private $restClient;
-
-    /** @var RouterInterface */
-    private $router;
-    private RegistrationApi $registrationApi;
-
     public function __construct(
-        RestClient $restClient,
-        DeputyProvider $deputyProvider,
-        EventDispatcherInterface $eventDispatcher,
-        TokenStorageInterface $tokenStorage,
-        TranslatorInterface $translator,
-        RouterInterface $router,
-        string $environment,
-        RegistrationApi $registrationApi
+        private RestClient $restClient,
+        private DeputyProvider $deputyProvider,
+        private EventDispatcherInterface $eventDispatcher,
+        private TokenStorageInterface $tokenStorage,
+        private TranslatorInterface $translator,
+        private RouterInterface $router,
+        private string $environment,
+        private RegistrationApi $registrationApi
     ) {
-        $this->deputyProvider = $deputyProvider;
-        $this->eventDispatcher = $eventDispatcher;
-        $this->tokenStorage = $tokenStorage;
-        $this->translator = $translator;
-        $this->environment = $environment;
-        $this->restClient = $restClient;
-        $this->router = $router;
-        $this->registrationApi = $registrationApi;
     }
 
     /**
