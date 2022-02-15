@@ -98,7 +98,7 @@ Feature: Client benefits check - Lay users
         Then the client benefits check summary page should contain the details I entered
 
 #    (Testing forms have some validation. Full validation tests are in the individual validator or entity unit tests.)
-    @lay-combined-high-not-started @acs
+    @lay-combined-high-not-started
     Scenario: A deputy attempts to submit invalid data during the form steps
         Given a Lay Deputy has not started a Combined High Assets report
         And the deputies 'current' report ends and is due 'more' than 60 days after the client benefits check feature flag date
