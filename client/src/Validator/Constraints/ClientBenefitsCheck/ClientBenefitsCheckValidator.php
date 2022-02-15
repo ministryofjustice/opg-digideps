@@ -142,8 +142,8 @@ class ClientBenefitsCheckValidator extends ConstraintValidator
 
     private function typesOfIncomeReceivedOnClientsBehalfValid($value, ClientBenefitsCheckInterface $object, ClientBenefitsCheckConstraint $constraint)
     {
-        if ($object->getTypesOfIncomeReceivedOnClientsBehalf() instanceof ArrayCollection && 1 === $object->getTypesOfIncomeReceivedOnClientsBehalf()->count()) {
-            $income = $object->getTypesOfIncomeReceivedOnClientsBehalf()->first();
+        if ($object->getTypesOfMoneyReceivedOnClientsBehalf() instanceof ArrayCollection && 1 === $object->getTypesOfMoneyReceivedOnClientsBehalf()->count()) {
+            $income = $object->getTypesOfMoneyReceivedOnClientsBehalf()->first();
 
             if (is_null($income->getAmount()) && is_null($income->getIncomeType()) && false === $income->getAmountDontKnow()) {
                 $this->context

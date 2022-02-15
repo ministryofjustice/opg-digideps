@@ -12,11 +12,11 @@ use Symfony\Component\Form\Extension\Core\Type\TextType;
 use Symfony\Component\Form\FormBuilderInterface;
 use Symfony\Component\OptionsResolver\OptionsResolver;
 
-class IncomeReceivedOnClientsBehalfType extends AbstractType
+class MoneyReceivedOnClientsBehalfType extends AbstractType
 {
     public function buildForm(FormBuilderInterface $builder, array $options): void
     {
-        $builder->add('incomeType', TextType::class, ['required' => true]);
+        $builder->add('moneyType', TextType::class, ['required' => true]);
         $builder->add('amount', NumberType::class, [
                 'required' => false,
                 'invalid_message' => 'The amount value must be in numbers',

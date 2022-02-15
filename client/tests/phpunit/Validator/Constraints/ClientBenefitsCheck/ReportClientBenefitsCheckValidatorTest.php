@@ -215,7 +215,7 @@ class ReportClientBenefitsCheckValidatorTest extends TestCase
 
     private function addEmptyIncomeTypeToClientBenefitsCheck()
     {
-        $this->reportClientBenefitsCheck->addTypeOfIncomeReceivedOnClientsBehalf(new MoneyReceivedOnClientsBehalf());
+        $this->reportClientBenefitsCheck->addTypeOfMoneyReceivedOnClientsBehalf(new MoneyReceivedOnClientsBehalf());
 
         return $this;
     }

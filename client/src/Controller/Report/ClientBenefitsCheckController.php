@@ -13,7 +13,7 @@ use App\Entity\Report\Status;
 use App\Form\ConfirmDeleteType;
 use App\Form\Report\ClientBenefitsCheckType;
 use App\Service\Client\Internal\ClientBenefitsCheckApi;
-use App\Service\Client\Internal\IncomeReceivedOnClientsBehalfApi;
+use App\Service\Client\Internal\MoneyReceivedOnClientsBehalfApi;
 use App\Service\Client\Internal\NdrApi;
 use App\Service\Client\Internal\ReportApi;
 use App\Service\StepRedirector;
@@ -35,14 +35,14 @@ class ClientBenefitsCheckController extends AbstractController
     private ReportApi $reportApi;
     private ClientBenefitsCheckApi $benefitCheckApi;
     private StepRedirector $stepRedirector;
-    private IncomeReceivedOnClientsBehalfApi $incomeTypeApi;
+    private MoneyReceivedOnClientsBehalfApi $incomeTypeApi;
     private NdrApi $ndrApi;
 
     public function __construct(
         ReportApi $reportApi,
         ClientBenefitsCheckApi $benefitCheckApi,
         StepRedirector $stepRedirector,
-        IncomeReceivedOnClientsBehalfApi $incomeTypeApi,
+        MoneyReceivedOnClientsBehalfApi $incomeTypeApi,
         NdrApi $ndrApi
     ) {
         $this->reportApi = $reportApi;
@@ -121,17 +121,17 @@ class ClientBenefitsCheckController extends AbstractController
         }
 
         if (3 === $step) {
-            if (empty($clientBenefitsCheck->getTypesOfIncomeReceivedOnClientsBehalf())) {
+            if (empty($clientBenefitsCheck->getTypesOfMoneyReceivedOnClientsBehalf())) {
                 $clientBenefitsCheck->setTypesOfIncomeReceivedOnClientsBehalf(new ArrayCollection());
             }
 
             $income = ('ndr' === $reportOrNdr) ? new NdrIncomeReceivedOnClientsBehalf() : new MoneyReceivedOnClientsBehalf();
-            $clientBenefitsCheck->addTypeOfIncomeReceivedOnClientsBehalf($income);
+            $clientBenefitsCheck->addTypeOfMoneyReceivedOnClientsBehalf($income);
         }
 
         // We only want to support deleting empty income types when there is at least one saved income type - otherwise validate the fields
-        $allowDeleteEmpty = $clientBenefitsCheck->getTypesOfIncomeReceivedOnClientsBehalf() instanceof ArrayCollection &&
-            count($clientBenefitsCheck->getTypesOfIncomeReceivedOnClientsBehalf()) >= 2;
+        $allowDeleteEmpty = $clientBenefitsCheck->getTypesOfMoneyReceivedOnClientsBehalf() instanceof ArrayCollection &&
+            count($clientBenefitsCheck->getTypesOfMoneyReceivedOnClientsBehalf()) >= 2;
 
         $form = $this->createForm(
             ClientBenefitsCheckType::class,
@@ -204,7 +204,7 @@ class ClientBenefitsCheckController extends AbstractController
     }
 
     /**
-     * @Route("/{reportOrNdr}/{reportId}/client-benefits-check/remove/income-type/{incomeTypeId}", name="client_benefits_check_remove_income_type", requirements={
+     * @Route("/{reportOrNdr}/{reportId}/client-benefits-check/remove/money-type/{incomeTypeId}", name="client_benefits_check_remove_income_type", requirements={
      *   "reportOrNdr" = "(report|ndr)"
      * })))
      * @Template("@App/Common/confirmDelete.html.twig")
@@ -216,7 +216,7 @@ class ClientBenefitsCheckController extends AbstractController
         $report = ('ndr' === $reportOrNdr) ? $this->ndrApi->getNdr($reportId, self::$jmsGroups) :
             $this->reportApi->getReportIfNotSubmitted($reportId, self::$jmsGroups);
 
-        foreach ($report->getClientBenefitsCheck()->getTypesOfIncomeReceivedOnClientsBehalf() as $incomeType) {
+        foreach ($report->getClientBenefitsCheck()->getTypesOfMoneyReceivedOnClientsBehalf() as $incomeType) {
             if ($incomeType->getId() === $incomeTypeId) {
                 $incomeTypeToDelete = $incomeType;
                 break;

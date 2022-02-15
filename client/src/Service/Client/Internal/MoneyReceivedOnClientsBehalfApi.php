@@ -6,9 +6,9 @@ namespace App\Service\Client\Internal;
 
 use App\Service\Client\RestClient;
 
-class IncomeReceivedOnClientsBehalfApi
+class MoneyReceivedOnClientsBehalfApi
 {
-    const DELETE_ENDPOINT = '%s/income-type/delete/%s';
+    const DELETE_ENDPOINT = '%s/money-type/delete/%s';
 
     private RestClient $restClient;
 

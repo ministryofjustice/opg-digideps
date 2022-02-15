@@ -4,7 +4,7 @@ namespace App\v2\Fixture;
 
 use App\Entity\Ndr as Ndr;
 use App\Entity\Ndr\ClientBenefitsCheck as NdrClientBenefitsCheck;
-use App\Entity\Ndr\MoneyReceivedOnClientsBehalf as NdrIncomeReceivedOnClientsBehalf;
+use App\Entity\Ndr\MoneyReceivedOnClientsBehalf as NdrMoneyReceivedOnClientsBehalf;
 use App\Entity\Report\Action;
 use App\Entity\Report\BankAccount;
 use App\Entity\Report\ClientBenefitsCheck;
@@ -252,11 +252,11 @@ class ReportSection
 
     private function completeClientBenefitsCheck(ReportInterface $report): void
     {
-        $typeOfIncome = $report instanceof Ndr\Ndr ? new NdrIncomeReceivedOnClientsBehalf() : new MoneyReceivedOnClientsBehalf();
+        $typeOfIncome = $report instanceof Ndr\Ndr ? new NdrMoneyReceivedOnClientsBehalf() : new MoneyReceivedOnClientsBehalf();
 
         $typeOfIncome->setCreated(new DateTime())
             ->setAmount(100.50)
-            ->setIncomeType('Universal Credit');
+            ->setMoneyType('Universal Credit');
 
         $clientBenefitsCheck = $report instanceof Ndr\Ndr ? new NdrClientBenefitsCheck() : new ClientBenefitsCheck();
 
@@ -265,7 +265,7 @@ class ReportSection
             ->setDateLastCheckedEntitlement(new DateTime())
             ->setCreated(new DateTime())
             ->setDoOthersReceiveIncomeOnClientsBehalf('yes')
-            ->addTypeOfIncomeReceivedOnClientsBehalf($typeOfIncome)
+            ->addTypeOfMoneyReceivedOnClientsBehalf($typeOfIncome)
         ;
 
         $typeOfIncome->setClientBenefitsCheck($clientBenefitsCheck);

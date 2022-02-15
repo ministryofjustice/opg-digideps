@@ -161,7 +161,7 @@ class NdrClientBenefitsCheckValidatorTest extends TestCase
 
     private function addEmptyIncomeTypeToClientBenefitsCheck()
     {
-        $this->ndrClientBenefitsCheck->addTypeOfIncomeReceivedOnClientsBehalf(new NdrIncomeReceivedOnClientsBehalf());
+        $this->ndrClientBenefitsCheck->addTypeOfMoneyReceivedOnClientsBehalf(new NdrIncomeReceivedOnClientsBehalf());
 
         return $this;
     }

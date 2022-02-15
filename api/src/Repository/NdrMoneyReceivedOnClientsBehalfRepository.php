@@ -4,11 +4,11 @@ declare(strict_types=1);
 
 namespace App\Repository;
 
-use App\Entity\Report\MoneyReceivedOnClientsBehalf;
+use App\Entity\Ndr\MoneyReceivedOnClientsBehalf;
 use Doctrine\Bundle\DoctrineBundle\Repository\ServiceEntityRepository;
 use Doctrine\Persistence\ManagerRegistry;
 
-class IncomeReceivedOnClientsBehalfRepository extends ServiceEntityRepository
+class NdrMoneyReceivedOnClientsBehalfRepository extends ServiceEntityRepository
 {
     public function __construct(ManagerRegistry $registry)
     {

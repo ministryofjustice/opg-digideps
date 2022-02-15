@@ -46,7 +46,7 @@ class MoneyReceivedOnClientsBehalf implements MoneyReceivedOnClientsBehalfInterf
     private DateTime $created;
 
     /**
-     * @ORM\ManyToOne(targetEntity="App\Entity\Report\ClientBenefitsCheck", inversedBy="incomeReceivedOnClientsBehalf", cascade={"persist"})
+     * @ORM\ManyToOne(targetEntity="App\Entity\Report\ClientBenefitsCheck", inversedBy="moneyReceivedOnClientsBehalf", cascade={"persist"})
      * @JoinColumn(name="client_benefits_check_id", referencedColumnName="id")
      *
      * @JMS\Groups({"client-benefits-check"})
@@ -69,6 +69,14 @@ class MoneyReceivedOnClientsBehalf implements MoneyReceivedOnClientsBehalfInterf
      * @JMS\Type("float")
      */
     private ?float $amount;
+
+    /**
+     * @ORM\Column(name="who_received_money", type="string", nullable=false)
+     *
+     * @JMS\Groups({"client-benefits-check"})
+     * @JMS\Type("string")
+     */
+    private string $whoReceivedMoney;
 
     public function getClientBenefitsCheck(): ClientBenefitsCheck
     {
@@ -126,6 +134,18 @@ class MoneyReceivedOnClientsBehalf implements MoneyReceivedOnClientsBehalfInterf
     public function setAmount(?float $amount): MoneyReceivedOnClientsBehalf
     {
         $this->amount = $amount;
+
+        return $this;
+    }
+
+    public function getWhoReceivedMoney(): string
+    {
+        return $this->whoReceivedMoney;
+    }
+
+    public function setWhoReceivedMoney(string $whoReceivedMoney): MoneyReceivedOnClientsBehalf
+    {
+        $this->whoReceivedMoney = $whoReceivedMoney;
 
         return $this;
     }

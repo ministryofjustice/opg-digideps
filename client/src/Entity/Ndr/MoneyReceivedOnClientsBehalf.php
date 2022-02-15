@@ -33,15 +33,15 @@ class MoneyReceivedOnClientsBehalf implements MoneyReceivedOnClientsBehalfInterf
      * @JMS\Type("string")
      * @JMS\Groups({"report", "client-benefits-check"})
      *
-     * @CustomAssert\IncomeReceivedOnClientsBehalf(groups={"client-benefits-check"})
+     * @CustomAssert\MoneyReceivedOnClientsBehalf(groups={"client-benefits-check"})
      */
-    private ?string $incomeType = null;
+    private ?string $moneyType = null;
 
     /**
      * @JMS\Type("float")
      * @JMS\Groups({"report", "client-benefits-check"})
      *
-     * @CustomAssert\IncomeReceivedOnClientsBehalf(groups={"client-benefits-check"})
+     * @CustomAssert\MoneyReceivedOnClientsBehalf(groups={"client-benefits-check"})
      */
     private ?float $amount = null;
 
@@ -49,7 +49,7 @@ class MoneyReceivedOnClientsBehalf implements MoneyReceivedOnClientsBehalfInterf
      * @JMS\Type("bool")
      * @JMS\Groups({"report", "client-benefits-check"})
      *
-     * @CustomAssert\IncomeReceivedOnClientsBehalf(groups={"client-benefits-check"})
+     * @CustomAssert\MoneyReceivedOnClientsBehalf(groups={"client-benefits-check"})
      *
      * This will not be persisted - it exists to enable a checkbox in the form
      */
@@ -93,7 +93,7 @@ class MoneyReceivedOnClientsBehalf implements MoneyReceivedOnClientsBehalfInterf
 
     public function getAmountDontKnow(): ?bool
     {
-        return is_null($this->getAmount()) && !is_null($this->getIncomeType());
+        return is_null($this->getAmount()) && !is_null($this->getMoneyType());
     }
 
     public function setAmountDontKnow(?bool $amountDontKnow): MoneyReceivedOnClientsBehalf
@@ -115,14 +115,14 @@ class MoneyReceivedOnClientsBehalf implements MoneyReceivedOnClientsBehalfInterf
         return $this;
     }
 
-    public function getIncomeType(): ?string
+    public function getMoneyType(): ?string
     {
-        return $this->incomeType;
+        return $this->moneyType;
     }
 
-    public function setIncomeType(?string $incomeType): MoneyReceivedOnClientsBehalf
+    public function setMoneyType(?string $moneyType): MoneyReceivedOnClientsBehalf
     {
-        $this->incomeType = $incomeType;
+        $this->moneyType = $moneyType;
 
         return $this;
     }

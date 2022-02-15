@@ -5,22 +5,22 @@ declare(strict_types=1);
 namespace App\Controller\Report;
 
 use App\Controller\RestController;
-use App\Repository\IncomeReceivedOnClientsBehalfRepository;
-use App\Repository\NdrIncomeReceivedOnClientsBehalfRepository;
+use App\Repository\MoneyReceivedOnClientsBehalfRepository;
+use App\Repository\NdrMoneyReceivedOnClientsBehalfRepository;
 use App\Service\Formatter\RestFormatter;
 use Sensio\Bundle\FrameworkExtraBundle\Configuration\Security;
 use Symfony\Component\HttpFoundation\Request;
 use Symfony\Component\Routing\Annotation\Route;
 
-class IncomeReceivedOnClientsBehalfController extends RestController
+class MoneyReceivedOnClientsBehalfController extends RestController
 {
-    private IncomeReceivedOnClientsBehalfRepository $reportIncomeRepository;
-    private NdrIncomeReceivedOnClientsBehalfRepository $ndrIncomeRepository;
+    private MoneyReceivedOnClientsBehalfRepository $reportIncomeRepository;
+    private NdrMoneyReceivedOnClientsBehalfRepository $ndrIncomeRepository;
     private RestFormatter $formatter;
 
     public function __construct(
-        IncomeReceivedOnClientsBehalfRepository $reportIncomeRepository,
-        NdrIncomeReceivedOnClientsBehalfRepository $ndrIncomeRepository,
+        MoneyReceivedOnClientsBehalfRepository $reportIncomeRepository,
+        NdrMoneyReceivedOnClientsBehalfRepository $ndrIncomeRepository,
         RestFormatter $formatter
     ) {
         $this->reportIncomeRepository = $reportIncomeRepository;
@@ -29,7 +29,7 @@ class IncomeReceivedOnClientsBehalfController extends RestController
     }
 
     /**
-     * @Route("{reportOrNdr}/income-type/delete/{incomeTypeId}", methods={"DELETE"}, name="delete_income_type")
+     * @Route("{reportOrNdr}/money-type/delete/{incomeTypeId}", methods={"DELETE"}, name="delete_income_type")
      * @Security("is_granted('ROLE_DEPUTY')")
      */
     public function delete(Request $request, string $reportOrNdr, string $incomeTypeId)

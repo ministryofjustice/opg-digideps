@@ -7,7 +7,7 @@ namespace App\Factory;
 use App\Entity\ClientBenefitsCheckInterface;
 use App\Entity\MoneyReceivedOnClientsBehalfInterface;
 use App\Entity\Ndr\ClientBenefitsCheck as NdrClientBenefitsCheck;
-use App\Entity\Ndr\MoneyReceivedOnClientsBehalf as NdrIncomeReceivedOnClientsBehalf;
+use App\Entity\Ndr\MoneyReceivedOnClientsBehalf as NdrMoneyReceivedOnClientsBehalf;
 use App\Entity\Report\ClientBenefitsCheck;
 use App\Entity\Report\MoneyReceivedOnClientsBehalf;
 use App\Repository\NdrRepository;
@@ -33,11 +33,11 @@ class ClientBenefitsCheckFactory
     public function createFromFormData(array $formData, string $reportOrNdr, ?ClientBenefitsCheckInterface $existingEntity = null)
     {
         $clientBenefitsCheck = $this->hydrateClientBenefitsCheck($reportOrNdr, $formData, $existingEntity);
-        $incomeTypes = $this->hydrateIncomeReceivedOnClientsBehalf($reportOrNdr, $formData, $clientBenefitsCheck);
+        $moneyTypes = $this->hydrateMoneyReceivedOnClientsBehalf($reportOrNdr, $formData, $clientBenefitsCheck);
 
-        if (!empty($incomeTypes)) {
-            foreach ($incomeTypes as $incomeType) {
-                $clientBenefitsCheck->addTypeOfIncomeReceivedOnClientsBehalf($incomeType);
+        if (!empty($moneyTypes)) {
+            foreach ($moneyTypes as $moneyType) {
+                $clientBenefitsCheck->addTypeOfMoneyReceivedOnClientsBehalf($moneyType);
             }
         }
 
@@ -53,14 +53,14 @@ class ClientBenefitsCheckFactory
     private function removeIncomesIfUserChangesMind(array $formData, ClientBenefitsCheckInterface $clientBenefitsCheck)
     {
         if ('yes' !== $formData['do_others_receive_income_on_clients_behalf'] &&
-            !empty($clientBenefitsCheck->getTypesOfIncomeReceivedOnClientsBehalf())) {
-            foreach ($clientBenefitsCheck->getTypesOfIncomeReceivedOnClientsBehalf() as $incomeType) {
+            !empty($clientBenefitsCheck->getTypesOfMoneyReceivedOnClientsBehalf())) {
+            foreach ($clientBenefitsCheck->getTypesOfMoneyReceivedOnClientsBehalf() as $incomeType) {
                 $this->em->remove($incomeType);
             }
 
             $this->em->flush();
 
-            $clientBenefitsCheck->emptyTypeOfIncomeReceivedOnClientsBehalf();
+            $clientBenefitsCheck->emptyTypeOfMoneyReceivedOnClientsBehalf();
         }
     }
 
@@ -96,45 +96,45 @@ class ClientBenefitsCheckFactory
             ->setDoOthersReceiveIncomeOnClientsBehalf($formData['do_others_receive_income_on_clients_behalf']);
     }
 
-    private function hydrateIncomeReceivedOnClientsBehalf(
+    private function hydrateMoneyReceivedOnClientsBehalf(
         string $reportOrNdr,
         array $formData,
         ClientBenefitsCheckInterface $clientBenefitsCheck
     ) {
-        $incomeTypes = [];
+        $moneyTypes = [];
 
         if (is_array($formData['types_of_income_received_on_clients_behalf'])) {
-            foreach ($formData['types_of_income_received_on_clients_behalf'] as $incomeTypeData) {
-                if (is_null($incomeTypeData['id'])) {
-                    $incomeType = 'report' === $reportOrNdr ? new MoneyReceivedOnClientsBehalf() :
-                        new NdrIncomeReceivedOnClientsBehalf();
+            foreach ($formData['types_of_income_received_on_clients_behalf'] as $moneyTypeData) {
+                if (is_null($moneyTypeData['id'])) {
+                    $moneyType = 'report' === $reportOrNdr ? new MoneyReceivedOnClientsBehalf() :
+                        new NdrMoneyReceivedOnClientsBehalf();
 
-                    $incomeType
-                        ->setIncomeType($incomeTypeData['income_type'])
-                        ->setAmount($incomeTypeData['amount']);
+                    $moneyType
+                        ->setMoneyType($moneyTypeData['income_type'])
+                        ->setAmount($moneyTypeData['amount']);
                 } else {
-                    $incomeType = $clientBenefitsCheck->getTypesOfIncomeReceivedOnClientsBehalf()->filter(function (MoneyReceivedOnClientsBehalfInterface $income) use ($incomeTypeData) {
-                        return $income->getId()->toString() === $incomeTypeData['id'];
+                    $moneyType = $clientBenefitsCheck->getTypesOfMoneyReceivedOnClientsBehalf()->filter(function (MoneyReceivedOnClientsBehalfInterface $income) use ($moneyTypeData) {
+                        return $income->getId()->toString() === $moneyTypeData['id'];
                     })->first();
 
-                    if (false === $incomeType) {
+                    if (false === $moneyType) {
                         $message = sprintf(
-                            'IncomeReceivedOnClientsBehalf with id "%s" was not associated with the ClientBenefitsCheck - cannot build entity',
-                            $incomeTypeData['id']
+                            'MoneyReceivedOnClientsBehalf with id "%s" was not associated with the ClientBenefitsCheck - cannot build entity',
+                            $moneyTypeData['id']
                         );
 
                         throw new RuntimeException($message);
                     }
 
-                    $incomeType
-                        ->setIncomeType($incomeTypeData['income_type'])
-                        ->setAmount($incomeTypeData['amount']);
+                    $moneyType
+                        ->setIncomeType($moneyTypeData['income_type'])
+                        ->setAmount($moneyTypeData['amount']);
                 }
 
-                $incomeTypes[] = $incomeType;
+                $moneyTypes[] = $moneyType;
             }
         }
 
-        return $incomeTypes;
+        return $moneyTypes;
     }
 }

@@ -26,7 +26,7 @@ class ClientBenefitsCheck implements ClientBenefitsCheckInterface
     {
         $this->id = $id ?? Uuid::uuid4();
         $this->created = new DateTime();
-        $this->typesOfIncomeReceivedOnClientsBehalf = new ArrayCollection();
+        $this->typesOfMoneyReceivedOnClientsBehalf = new ArrayCollection();
     }
 
     /**
@@ -112,10 +112,10 @@ class ClientBenefitsCheck implements ClientBenefitsCheckInterface
      * @ORM\OneToMany(targetEntity="MoneyReceivedOnClientsBehalf", mappedBy="clientBenefitsCheck", cascade={"persist", "remove"}, fetch="EXTRA_LAZY" )
      *
      * @JMS\Groups({"client-benefits-check"})
-     * @JMS\Type("ArrayCollection<App\Entity\Report\IncomeReceivedOnClientsBehalf>")
+     * @JMS\Type("ArrayCollection<App\Entity\Report\MoneyReceivedOnClientsBehalf>")
      * @OrderBy({"created" = "ASC"})
      */
-    private $typesOfIncomeReceivedOnClientsBehalf;
+    private $typesOfMoneyReceivedOnClientsBehalf;
 
     public function getId(): UuidInterface
     {
@@ -177,24 +177,24 @@ class ClientBenefitsCheck implements ClientBenefitsCheckInterface
         return $this;
     }
 
-    public function getTypesOfIncomeReceivedOnClientsBehalf(): Collection
+    public function getTypesOfMoneyReceivedOnClientsBehalf(): Collection
     {
-        return $this->typesOfIncomeReceivedOnClientsBehalf;
+        return $this->typesOfMoneyReceivedOnClientsBehalf;
     }
 
-    public function addTypeOfIncomeReceivedOnClientsBehalf(?MoneyReceivedOnClientsBehalf $incomeReceivedOnClientsBehalf): ClientBenefitsCheck
+    public function addTypeOfMoneyReceivedOnClientsBehalf(?MoneyReceivedOnClientsBehalf $moneyReceivedOnClientsBehalf): ClientBenefitsCheck
     {
-        if (!$this->typesOfIncomeReceivedOnClientsBehalf->contains($incomeReceivedOnClientsBehalf)) {
-            $this->typesOfIncomeReceivedOnClientsBehalf->add($incomeReceivedOnClientsBehalf);
-            $incomeReceivedOnClientsBehalf->setClientBenefitsCheck($this);
+        if (!$this->typesOfMoneyReceivedOnClientsBehalf->contains($moneyReceivedOnClientsBehalf)) {
+            $this->typesOfMoneyReceivedOnClientsBehalf->add($moneyReceivedOnClientsBehalf);
+            $moneyReceivedOnClientsBehalf->setClientBenefitsCheck($this);
         }
 
         return $this;
     }
 
-    public function emptyTypeOfIncomeReceivedOnClientsBehalf(): ClientBenefitsCheck
+    public function emptyTypeOfMoneyReceivedOnClientsBehalf(): ClientBenefitsCheck
     {
-        $this->typesOfIncomeReceivedOnClientsBehalf = new ArrayCollection();
+        $this->typesOfMoneyReceivedOnClientsBehalf = new ArrayCollection();
 
         return $this;
     }

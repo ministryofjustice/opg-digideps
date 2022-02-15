@@ -770,7 +770,7 @@ class ReportStatusService
         $answers = $benefitsCheck ? [
             'whenChecked' => $benefitsCheck->getWhenLastCheckedEntitlement(),
             'doOthersReceiveIncome' => $benefitsCheck->getDoOthersReceiveIncomeOnClientsBehalf(),
-            'incomeTypes' => $benefitsCheck->getTypesOfIncomeReceivedOnClientsBehalf()->count() > 0 ? true : null,
+            'incomeTypes' => $benefitsCheck->getTypesOfMoneyReceivedOnClientsBehalf()->count() > 0 ? true : null,
         ] : [];
 
         switch (count(array_filter($answers))) {

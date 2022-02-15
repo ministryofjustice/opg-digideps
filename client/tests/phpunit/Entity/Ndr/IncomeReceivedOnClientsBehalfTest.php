@@ -17,7 +17,7 @@ class IncomeReceivedOnClientsBehalfTest extends TestCase
     public function testValidation($incomeType, $amount, $amountDontKnow)
     {
         $sut = (new MoneyReceivedOnClientsBehalf())
-            ->setIncomeType($incomeType)
+            ->setMoneyType($incomeType)
             ->setAmount($amount)
             ->setAmountDontKnow($amountDontKnow);
 
