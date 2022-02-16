@@ -23,12 +23,6 @@
     {{ macros.linkBackStep(backLink, 'back'|trans({}, 'common')) }}
 {% endblock %}
 
-{% block supportTitleBottom %}
-    {% if step != 1 %}
-        {{ ('stepPage.pageTitle.' ~ step ~ '.subTitle')|trans(transOptions, translationDomain) }}
-    {% endif %}
-{% endblock %}
-
 {% block breadcrumbs %}
     {{ macros.breadcrumbs(report) }}
 {% endblock %}
@@ -46,13 +40,21 @@
     }}
 
     {% if step == 1 %}
+        <p class="govuk-body">
+            {{ 'stepPage.pageDescription.1.benefitsCalculatorSignpost' | trans(
+                {
+                    '%client%': report.client.firstname|e
+                }
+            ) }} <a href="https://www.gov.uk/benefits-calculators" class="govuk-link">independent benefits calculators</a>.
+        </p>
         {% set conditionalDateChecked %}
             {{
                 form_known_date(
                     form.dateLastCheckedEntitlement,
                     'form.whenLastChecked',
                     {
-                        hintText: 'form.whenLastChecked.dateCheckedHint'|trans(transOptions, translationDomain),
+                        hintTextBold: 'form.whenLastChecked.dateCheckedHint'|trans(transOptions, translationDomain),
+                        hintText: 'form.whenLastChecked.dateCheckedHintExample'|trans(transOptions, translationDomain),
                         showDay: 'false'
                     }
                 )
@@ -65,6 +67,7 @@
                     form.neverCheckedExplanation,
                     'form.whenLastChecked',
                     {
+                        hintTextBold: 'form.whenLastChecked.neverCheckedHint'|trans(transOptions, translationDomain),
                         hintText: 'form.whenLastChecked.neverCheckedHint'|trans(transOptions, translationDomain),
                         labelText: ' '
                     }
@@ -100,6 +103,15 @@
     {% endif %}
 
     {% if step == 2 %}
+        <p class="govuk-body">
+            {{ ('stepPage.pageDescription.' ~ step ~ '.bulletsParagraph') | trans(transOptions, translationDomain)}}
+        </p>
+
+        <ul class="govuk-list govuk-list--bullet">
+            <li>{{ ('stepPage.pageDescription.' ~ step ~ '.bullets.1') | trans }}</li>
+            <li>{{ ('stepPage.pageDescription.' ~ step ~ '.bullets.2') | trans }}</li>
+        </ul>
+
         {% set conditionalMoneyDontKnowChecked %}
             {{
                 form_input(
@@ -139,6 +151,15 @@
     {% endif %}
 
     {% if step == 3 %}
+        <p class="govuk-body">
+            {{ ('stepPage.pageDescription.' ~ step ~ '.bulletsParagraph') | trans(transOptions, translationDomain)}}
+        </p>
+
+        <ul class="govuk-list govuk-list--bullet">
+            <li>{{ ('stepPage.pageDescription.' ~ step ~ '.bullets.1') | trans }}</li>
+            <li>{{ ('stepPage.pageDescription.' ~ step ~ '.bullets.2') | trans }}</li>
+        </ul>
+
         {% for typeOfMoneyReceivedOnClientsBehalf in form.typesOfMoneyReceivedOnClientsBehalf %}
             <fieldset class="add-another__item">
                 {{

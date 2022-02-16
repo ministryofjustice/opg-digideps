@@ -220,6 +220,10 @@ class FormFieldsExtension extends AbstractExtension
             $hintText = $this->translator->trans('defaultDateHintText', [], 'common');
         }
 
+        if (isset($vars['hintTextBold']) && !empty($vars['hintTextBold'])) {
+            $hintTextBold = $vars['hintTextBold'];
+        }
+
         //get legendText translation
         $legendParams = isset($vars['legendParameters']) ? $vars['legendParameters'] : [];
 
@@ -243,6 +247,7 @@ class FormFieldsExtension extends AbstractExtension
                 'isPageHeading' => false,
                 'caption' => false,
             ], $vars['legend'] ?? []),
+            'hintTextBold' => $hintTextBold,
             'hintText' => $hintText,
             'element' => $element,
             'showDay' => $showDay,
@@ -413,9 +418,9 @@ class FormFieldsExtension extends AbstractExtension
     }
 
     /**
-     * @param \Symfony\Component\Form\FormView $element
-     * @param string                           $elementName
-     * @param string|null                      $transIndex
+     * @param FormView    $element
+     * @param string      $elementName
+     * @param string|null $transIndex
      *
      * @return array with vars labelText,labelParameters,hintText,element,labelClass, to pass into twig templates @App:Components/Form:*
      */

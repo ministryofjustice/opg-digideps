@@ -13,6 +13,7 @@
             {% endif %}
         </legend>
 
+        <span class="govuk-!-font-weight-bold" id="{{ element.vars.id }}-hint">{{ hintTextBold }}</span>
         <span class="govuk-hint" id="{{ element.vars.id }}-hint">{{ hintText }}</span>
         {{ form_errors(element) }}
 

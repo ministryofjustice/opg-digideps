@@ -11,16 +11,25 @@ use Symfony\Component\Form\Extension\Core\Type\NumberType;
 use Symfony\Component\Form\Extension\Core\Type\TextType;
 use Symfony\Component\Form\FormBuilderInterface;
 use Symfony\Component\OptionsResolver\OptionsResolver;
+use Symfony\Contracts\Translation\TranslatorInterface;
 
 class MoneyReceivedOnClientsBehalfType extends AbstractType
 {
+    public function __construct(private TranslatorInterface $translator)
+    {
+    }
+
     public function buildForm(FormBuilderInterface $builder, array $options): void
     {
         $builder->add('moneyType', TextType::class, ['required' => true]);
         $builder->add('whoReceivedMoney', TextType::class, ['required' => true]);
         $builder->add('amount', NumberType::class, [
                 'required' => false,
-                'invalid_message' => 'The amount value must be in numbers',
+                'invalid_message' => $this->translator->trans(
+                    'form.moneyDetails.errors.amountNotNumbers',
+                    [],
+                    'report-client-benefits-check'
+                ),
             ]
         );
 

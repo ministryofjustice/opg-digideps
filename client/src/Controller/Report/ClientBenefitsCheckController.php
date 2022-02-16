@@ -129,6 +129,7 @@ class ClientBenefitsCheckController extends AbstractController
                 'step' => $step,
                 'allow_delete_empty' => $allowDeleteEmpty,
                 'data_class' => 'ndr' === $reportOrNdr ? NdrClientBenefitsCheck::class : ClientBenefitsCheck::class,
+                'label_translation_parameters' => ['clientFirstname' => $report->getClient()->getFirstname()],
             ]
         );
 

@@ -101,7 +101,7 @@ other_info:
         done: "Finished"
 client_benefits_check:
     subSectionTitle: "Benefits check and money other people receive"
-    subSectionDescription: "Tell us when you last checked what benefits %client% is entitled to, and about any money other people receive directly on %client%’s behalf."
+    subSectionDescription: "Tell us when you last checked what benefits %client% is entitled to, and about any money other people received directly on %client%’s behalf."
     edit: "Edit"
     start: "Start"
     label:

@@ -31,13 +31,15 @@ class ClientBenefitsCheckType extends AbstractType
     public function buildForm(FormBuilderInterface $builder, array $options)
     {
         $this->step = (int) $options['step'];
+        $baseTransParams = ['%client%' => $options['label_translation_parameters']['clientFirstname']];
+        $domain = 'report-client-benefits-check';
 
         if (1 === $this->step) {
             $builder->add('whenLastCheckedEntitlement', ChoiceType::class, [
                 'choices' => [
-                    'form.whenLastChecked.choices.haveChecked' => ClientBenefitsCheck::WHEN_CHECKED_I_HAVE_CHECKED,
-                    'form.whenLastChecked.choices.currentlyChecking' => ClientBenefitsCheck::WHEN_CHECKED_IM_CURRENTLY_CHECKING,
-                    'form.whenLastChecked.choices.neverChecked' => ClientBenefitsCheck::WHEN_CHECKED_IVE_NEVER_CHECKED,
+                    $this->translator->trans('form.whenLastChecked.choices.haveChecked', $baseTransParams, $domain) => ClientBenefitsCheck::WHEN_CHECKED_I_HAVE_CHECKED,
+                    $this->translator->trans('form.whenLastChecked.choices.currentlyChecking', $baseTransParams, $domain) => ClientBenefitsCheck::WHEN_CHECKED_IM_CURRENTLY_CHECKING,
+                    $this->translator->trans('form.whenLastChecked.choices.neverChecked', $baseTransParams, $domain) => ClientBenefitsCheck::WHEN_CHECKED_IVE_NEVER_CHECKED,
                 ],
                 'expanded' => true,
             ]);
@@ -99,6 +101,9 @@ class ClientBenefitsCheckType extends AbstractType
         $resolver->setDefaults(
             [
                 'translation_domain' => 'report-client-benefits-check',
+                'label_translation_parameters' => [
+                    '%client%' => 'ACME Inc.',
+                ],
                 'validation_groups' => [
                     1 => ['client-benefits-check'],
                     2 => ['client-benefits-check'],

@@ -60,7 +60,7 @@ class MoneyReceivedOnClientsBehalfValidator extends ConstraintValidator
                 ->addViolation();
         }
 
-        if (is_null($value) && false === $object->getAmountDontKnow() && !is_null($object->getMoneyType())) {
+        if (is_null($value) && false === $object->getAmountDontKnow()) {
             $this->context
                 ->buildViolation($constraint->moneyDetailsMissingAmountMessage)
                 ->setTranslationDomain($this->translationDomain)
@@ -77,7 +77,7 @@ class MoneyReceivedOnClientsBehalfValidator extends ConstraintValidator
                 ->addViolation();
         }
 
-        if (false === $value && is_null($object->getAmount()) && !is_null($object->getMoneyType())) {
+        if (false === $value && is_null($object->getAmount())) {
             $this->context
                 ->buildViolation($constraint->moneyDetailsMissingAmountMessage)
                 ->setTranslationDomain($this->translationDomain)
