@@ -12,9 +12,9 @@ trait ClientBenefitsCheckSectionTrait
     public bool $clientBenefitsSectionAvailable = false;
     private string $missingDateErrorText = 'Enter the date you last checked %s\'s benefits';
     private string $missingExplanationErrorText = 'Tell us why you have never checked if anyone other than you receives money on %s\'s behalf';
-    private string $missingMoneyTypeErrorText = 'Enter a type of money';
-    private string $missingWhoReceivedMoneyErrorText = 'Enter who received the money';
-    private string $atLeastOneMoneyTypeRequiredErrorText = 'Enter at least one type of money';
+    private string $missingMoneyTypeErrorText = 'Enter the type of payment';
+    private string $missingWhoReceivedMoneyErrorText = 'Enter the name of the person or organisation who received the money';
+    private string $atLeastOneMoneyTypeRequiredErrorText = 'Enter at least one payment';
 
     /**
      * @When I navigate to and start the client benefits check report section
@@ -64,11 +64,13 @@ trait ClientBenefitsCheckSectionTrait
     {
         $this->iAmOnClientBenefitsCheckStep1Page();
 
+        $clientFirstName = $this->loggedInUserDetails->getClientFirstName();
+
         $this->chooseOption(
             'report-client-benefits-check[whenLastCheckedEntitlement]',
             'currentlyChecking',
             'haveCheckedBenefits',
-            'I\'m currently checking this'
+            sprintf('I have begun to check and am waiting to find out if %s', $clientFirstName),
         );
 
         $this->pressButton('Save and continue');
@@ -85,7 +87,7 @@ trait ClientBenefitsCheckSectionTrait
             'report-client-benefits-check[whenLastCheckedEntitlement]',
             'neverChecked',
             'haveCheckedBenefits',
-            'I\'ve never checked this'
+            'No, I did not check this'
         );
 
         $this->fillInField(
@@ -288,15 +290,15 @@ trait ClientBenefitsCheckSectionTrait
         $this->iAmOnClientBenefitsCheckSummaryPage();
 
         if (!is_null($this->getSectionAnswers('haveCheckedBenefits'))) {
-            $this->expectedResultsDisplayedSimplified('haveCheckedBenefits');
+            $this->expectedResultsDisplayedSimplified('haveCheckedBenefits', true);
         }
 
         if (!is_null($this->getSectionAnswers('doOthersReceiveMoney'))) {
-            $this->expectedResultsDisplayedSimplified('doOthersReceiveMoney');
+            $this->expectedResultsDisplayedSimplified('doOthersReceiveMoney', true);
         }
 
         if (!is_null($this->getSectionAnswers('moneyType'))) {
-            $this->expectedResultsDisplayedSimplified('moneyType');
+            $this->expectedResultsDisplayedSimplified('moneyType', true);
         }
     }
 
@@ -392,7 +394,7 @@ trait ClientBenefitsCheckSectionTrait
                 $this->assertOnErrorMessage($this->missingMoneyTypeErrorText);
                 break;
             case 'missing who received money':
-                $this->assertOnErrorMessage($this->missingMoneyTypeErrorText);
+                $this->assertOnErrorMessage($this->missingWhoReceivedMoneyErrorText);
                 break;
             case 'at least one money type required':
                 $this->assertOnErrorMessage($this->atLeastOneMoneyTypeRequiredErrorText);
@@ -467,7 +469,7 @@ trait ClientBenefitsCheckSectionTrait
         $this->iAmOnClientBenefitsCheckSummaryPage();
 
         $clientFirstName = $this->loggedInUserDetails->getClientFirstName();
-        $questionText = sprintf('Does anyone other than you receive money on %s’s behalf?', $clientFirstName);
+        $questionText = sprintf('Does anyone receive any money from other organisations on %s', $clientFirstName);
         $questionRowXpath = sprintf("//dt[contains(., '%s')]/..", $questionText);
         $questionRow = $this->getSession()->getPage()->find('xpath', $questionRowXpath);
 
@@ -497,7 +499,7 @@ trait ClientBenefitsCheckSectionTrait
         $this->iAmOnClientBenefitsCheckSummaryPage();
 
         $clientFirstName = $this->loggedInUserDetails->getClientFirstName();
-        $questionText = sprintf('Have you checked that %s gets all the benefits they should have?', $clientFirstName);
+        $questionText = sprintf('Did you check that %s gets all the benefits they should have in the last reporting period?', $clientFirstName);
         $questionRowXpath = sprintf("//dt[contains(., '%s')]/..", $questionText);
         $questionRow = $this->getSession()->getPage()->find('xpath', $questionRowXpath);
 
@@ -511,7 +513,7 @@ trait ClientBenefitsCheckSectionTrait
             'report-client-benefits-check[whenLastCheckedEntitlement]',
             'currentlyChecking',
             'haveCheckedBenefits',
-            "I'm currently checking this"
+            sprintf('I have begun to check and am waiting to find out if %s', $clientFirstName)
         );
     }
 

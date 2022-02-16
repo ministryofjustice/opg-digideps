@@ -103,7 +103,7 @@ form:
             amountNotNumbers: The total amount for the reporting period must only be be a number
             missingWhoReceivedMoney: Enter the name of the person or organisation who received the money
             amountAndDontKnow: You cannot enter a total amount for the reporting period and select that you do not know the amount
-            missingMoney: Enter at least one type of money
+            missingMoney: Enter at least one payment
 
     save:
         label: Save and continue
