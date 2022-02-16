@@ -15,7 +15,7 @@
                 {% if app.user.isDeputyOrg() %}
                     <a href="{{ path('org_dashboard') }}">{{ 'dashboard' | trans({}, 'common' ) }}</a>
                 {% else %}
-                    <a href="{{ path('homepage') }}">{{ 'yourReports' | trans({}, 'common' ) }}</a>
+                    <a href="{{ path('homepage') }}">{{ 'yourReports' | trans({'deputyFirstname': app.user.firstname, 'deputyLastname': app.user.lastname}, 'common' ) }}</a>
                 {% endif %}
             </li>
             <li>
@@ -24,12 +24,13 @@
                     {% if app.user.isDeputyOrg() %}
                         {{ 'clientProfile' | trans({}, 'common' ) }}
                     {% else %}
-                        {{ 'deputyReportOverview' | trans({}, 'common' ) }}
+                        {{ 'deputyReportOverview' | trans({'startYear': report.startDate | date('Y'),'endYear': report.endDate | date('Y')}, 'common' ) }}
                     {% endif %}
                 </a>
             </li>
             <li>
-                <a href="{{ path('report_review', {'reportId': report.id}) }}" class="behat-link-breadcrumbs-report-review">
+                <a href="{{ path('report_review', {'reportId': report.id}) }}"
+                   class="behat-link-breadcrumbs-report-review">
                     {{ 'reviewReport' | trans({}, 'common' ) }}
                 </a>
             </li>
@@ -66,10 +67,11 @@
         {{ form_checkbox(form.agree, 'agree', { 'labelClass': 'required' }) }}
 
         {% set conditional_details %}
-            {{ form_input(form.agreedBehalfDeputyExplanation, 'agreedBehalfDeputyExplanation' )}}
+            {{ form_input(form.agreedBehalfDeputyExplanation, 'agreedBehalfDeputyExplanation' ) }}
         {% endset %}
 
-        <div class="govuk-form-group push-half--bottom {% if not form.agreedBehalfDeputy.vars.valid %}govuk-form-group--error{% endif %}">
+        <div
+            class="govuk-form-group push-half--bottom {% if not form.agreedBehalfDeputy.vars.valid %}govuk-form-group--error{% endif %}">
             {{ form_checkbox_group(form.agreedBehalfDeputy, 'agreedBehalfDeputy', {
                 'useFormGroup': false,
                 'fieldSetClass' : 'radio-agreed-behalf-deputy',

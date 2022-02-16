@@ -25,12 +25,13 @@
 
 {% block head %}
     {{ parent() }}
-    <link href="{{ 'stylesheets/formatted-report.css' | assetUrl }}"  rel="stylesheet" type="text/css">
+    <link href="{{ 'stylesheets/formatted-report.css' | assetUrl }}" rel="stylesheet" type="text/css">
 {% endblock %}
 
 {% block breadcrumbs %}
     {% if ndr.submitted == true %}
-        <a id="overview-button" href="{{ path('homepage') }}" class="link-back">{{ 'yourReports' | trans({}, 'common' ) }}</a>
+        <a id="overview-button" href="{{ path('homepage') }}"
+           class="link-back">{{ 'yourReports' | trans({}, 'common' ) }}</a>
     {% else %}
         {{ macros.breadcrumbs(ndr) }}
     {% endif %}
@@ -38,46 +39,35 @@
 
 {% block pageContent %}
 
+
     <div class="push--bottom">
         {% if ndr.submitted == false %}
-            <p class="govuk-body">{{ (page ~ '.introPara') | trans() }}</p>
-            {% if preview %}
-                <a class="button" href="{{ path("ndr_overview" , {'ndrId': ndr.id }) }}">
-                    {{ 'incomplete.backToEditingReport' | trans() }}
-                </a>
-                <a class="govuk-link button-link js-trackDownloadLink" href="{{ path('ndr_pdf', {'ndrId': ndr.id}) }}">
-                    <i class="icon icon-pdf"></i>{{ 'downloadAsPdf' | trans() }}
-                </a>
-            {% endif %}
-        {% else %}
-            <p class="govuk-body">{{ (page ~ '.introPara') | trans() }} {{ ndr.submitDate | date("j F Y") }}.</p>
-            <a class="govuk-button button" href="{{ path('homepage') }}">{{ 'backToYourReports' | trans({}, 'common') }}</a>
-            <a class="govuk-link button-link js-trackDownloadLink" href="{{ path('ndr_pdf', {'ndrId': ndr.id}) }}">
-                <i class="icon icon-pdf"></i>{{ 'downloadAsPdf' | trans() }}
-            </a>
+            <p class="govuk-body">{{ (page ~ '.para1') | trans() }}</p>
+            <p class="govuk-body">{{ (page ~ '.para2') | trans() }}</p>
         {% endif %}
+
+        {% include '@App/Ndr/Ndr/_review_buttons.html.twig' %}
+
     </div>
+
+    <div>
+        <span class="opg-text--secondary">{{ 'pdfDraftSentence' | trans() }}</span>
+        {% include '@App/Ndr/Ndr/_pdf_download_link.html.twig' %}
+    </div>
+
 
     <div class="push--bottom">
-        {% include '@App/Ndr/Formatted/formatted_body.html.twig' %}
+        <div class="opg-border--secondary">
+            {% include '@App/Ndr/Formatted/formatted_body.html.twig' %}
+        </div>
     </div>
 
-    {% if ndr.submitted == false %}
-        {% if preview %}
-            <a class="govuk-button" href="{{ path("ndr_overview" , {'ndrId': ndr.id }) }}">
-                {{ 'incomplete.backToEditingReport' | trans() }}
-            </a>
-        {% else %}
-            <a class="govuk-button behat-link-ndr-declaration-page" href="{{ path("ndr_declaration" , {'ndrId': ndr.id }) }}">{{ 'continue' | trans({}, 'common') }}</a>
-            <a class="govuk-link button-link" href="{{ path("ndr_overview" , {'ndrId': ndr.id }) }}">
-                {{ 'incomplete.backToEditingReport' | trans() }}
-            </a>
-        {% endif %}
-    {% else %}
-        <a class="govuk-button" href="{{ path('homepage') }}">{{ 'backToYourReports' | trans({}, 'common') }}</a>
-    {% endif %}
+    <div class="govuk-!-padding-bottom-5">
+        {% include '@App/Ndr/Ndr/_pdf_download_link.html.twig' %}
+    </div>
 
-    <a class="govuk-link button-link js-trackDownloadLink" href="{{ path('ndr_pdf', {'ndrId': ndr.id}) }}">
-        <i class="icon icon-pdf"></i>{{ 'downloadAsPdf' | trans() }}
-    </a>
+
+    {% include '@App/Ndr/Ndr/_review_buttons.html.twig' %}
+
+
 {% endblock %}
