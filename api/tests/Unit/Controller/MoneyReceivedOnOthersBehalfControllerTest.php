@@ -91,9 +91,11 @@ class MoneyReceivedOnOthersBehalfControllerTest extends AbstractTestController
             $typeOfMoney = 'ndr' === $reportOrNdr ? new NdrMoneyReceivedOnClientsBehalf() : new MoneyReceivedOnClientsBehalf();
             $clientBenefitsCheck = 'ndr' === $reportOrNdr ? new NdrClientBenefitsCheck() : new ClientBenefitsCheck();
 
-            $typeOfMoney->setCreated(new DateTime())
+            $typeOfMoney
+                ->setCreated(new DateTime())
                 ->setAmount(100.50)
-                ->setMoneyType('Universal Credit');
+                ->setMoneyType('Universal Credit')
+                ->setWhoReceivedMoney('Some org');
 
             $clientBenefitsCheck->setReport($report)
                 ->setWhenLastCheckedEntitlement(ClientBenefitsCheck::WHEN_CHECKED_I_HAVE_CHECKED)

@@ -14,12 +14,13 @@ class MoneyReceivedOnClientsBehalfTest extends TestCase
      * @test
      * @dataProvider invalidDataProvider
      */
-    public function testValidation($moneyType, $amount, $amountDontKnow)
+    public function testValidation($moneyType, $amount, $amountDontKnow, $whoReceived, $expectedViolationCount)
     {
         $sut = (new MoneyReceivedOnClientsBehalf())
             ->setMoneyType($moneyType)
             ->setAmount($amount)
-            ->setAmountDontKnow($amountDontKnow);
+            ->setAmountDontKnow($amountDontKnow)
+            ->setWhoReceivedMoney($whoReceived);
 
         $validator = Validation::createValidatorBuilder()
             ->enableAnnotationMapping()
@@ -27,31 +28,39 @@ class MoneyReceivedOnClientsBehalfTest extends TestCase
 
         $result = $validator->validate($sut, null, 'client-benefits-check');
 
-        $this->assertCount(1, $result);
+        $this->assertCount($expectedViolationCount, $result);
     }
 
     public function invalidDataProvider()
     {
         return [
-            'Fails when $amountDontKnow is true and $moneyType and $amount is null' => [
+            'Fails when $amountDontKnow is true and $moneyType, $amount and $whoReceived are null' => [
                 null,
                 null,
                 true,
+                null,
+                3,
             ],
-            'Fails when $moneyType is a non-empty string and $amount is null and $amountDontKnow is false' => [
-                'A type of money',
+            'Fails when $moneyType is a non-empty string and $amount is null, $amountDontKnow is false and $whoReceived is null' => [
+                'A type of income',
                 null,
                 false,
+                null,
+                2,
             ],
             'Fails when $amount is a number, $moneyType is null and $amountDontKnow is false' => [
                 null,
                 20,
                 false,
+                null,
+                2,
             ],
             'Fails when $amount is a number, $moneyType is a non-empty string and $amountDontKnow is true' => [
-                'Some money type',
+                'Some income type',
                 20,
                 true,
+                'Some org',
+                1,
             ],
         ];
     }

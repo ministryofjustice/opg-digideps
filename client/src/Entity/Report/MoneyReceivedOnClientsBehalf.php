@@ -61,7 +61,7 @@ class MoneyReceivedOnClientsBehalf implements MoneyReceivedOnClientsBehalfInterf
      *
      * @CustomAssert\MoneyReceivedOnClientsBehalf(groups={"client-benefits-check"})
      */
-    private string $whoReceivedMoney;
+    private ?string $whoReceivedMoney;
 
     public function getId(): ?string
     {
@@ -135,12 +135,12 @@ class MoneyReceivedOnClientsBehalf implements MoneyReceivedOnClientsBehalfInterf
         return $this;
     }
 
-    public function getWhoReceivedMoney(): string
+    public function getWhoReceivedMoney(): ?string
     {
         return $this->whoReceivedMoney;
     }
 
-    public function setWhoReceivedMoney(string $whoReceivedMoney): MoneyReceivedOnClientsBehalf
+    public function setWhoReceivedMoney(?string $whoReceivedMoney): MoneyReceivedOnClientsBehalf
     {
         $this->whoReceivedMoney = $whoReceivedMoney;
 

@@ -90,7 +90,7 @@ class ClientBenefitsCheckTest extends TestCase
                 'yes',
                 null,
                 $moneyTypes,
-                2,
+                5,
             ],
         ];
     }

@@ -158,7 +158,8 @@ class ClientBenefitsCheckControllerTest extends AbstractTestController
 
             $typeOfIncome->setCreated(new DateTime())
                 ->setAmount(100.50)
-                ->setMoneyType('Universal Credit');
+                ->setMoneyType('Universal Credit')
+                ->setWhoReceivedMoney('Some org');
 
             $clientBenefitsCheck->setReport($report)
                 ->setWhenLastCheckedEntitlement(ClientBenefitsCheck::WHEN_CHECKED_I_HAVE_CHECKED)

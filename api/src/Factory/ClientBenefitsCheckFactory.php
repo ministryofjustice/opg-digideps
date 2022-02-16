@@ -53,7 +53,8 @@ class ClientBenefitsCheckFactory
      */
     private function removeMoneysIfUserChangesMind(array $formData, ClientBenefitsCheckInterface $clientBenefitsCheck)
     {
-        if ('yes' !== $formData['do_others_receive_money_on_clients_behalf'] &&
+        if (isset($formData['do_others_receive_money_on_clients_behalf']) &&
+            'yes' !== $formData['do_others_receive_money_on_clients_behalf'] &&
             !empty($clientBenefitsCheck->getTypesOfMoneyReceivedOnClientsBehalf())) {
             foreach ($clientBenefitsCheck->getTypesOfMoneyReceivedOnClientsBehalf() as $moneyType) {
                 $this->em->remove($moneyType);
@@ -91,10 +92,10 @@ class ClientBenefitsCheckFactory
         return $clientBenefitsCheck
             ->setReport($report)
             ->setDateLastCheckedEntitlement($dateLastChecked)
-            ->setNeverCheckedExplanation($formData['never_checked_explanation'])
-            ->setDontKnowMoneyExplanation($formData['dont_know_money_explanation'])
-            ->setWhenLastCheckedEntitlement($formData['when_last_checked_entitlement'])
-            ->setDoOthersReceiveMoneyOnClientsBehalf($formData['do_others_receive_money_on_clients_behalf']);
+            ->setNeverCheckedExplanation($formData['never_checked_explanation'] ?? null)
+            ->setDontKnowMoneyExplanation($formData['dont_know_money_explanation'] ?? null)
+            ->setWhenLastCheckedEntitlement($formData['when_last_checked_entitlement'] ?? null)
+            ->setDoOthersReceiveMoneyOnClientsBehalf($formData['do_others_receive_money_on_clients_behalf'] ?? null);
     }
 
     private function hydrateMoneyReceivedOnClientsBehalf(
@@ -104,7 +105,7 @@ class ClientBenefitsCheckFactory
     ) {
         $moneyTypes = [];
 
-        if (is_array($formData['types_of_money_received_on_clients_behalf'])) {
+        if (isset($formData['types_of_money_received_on_clients_behalf']) && is_array($formData['types_of_money_received_on_clients_behalf'])) {
             foreach ($formData['types_of_money_received_on_clients_behalf'] as $moneyTypeData) {
                 if (is_null($moneyTypeData['id'])) {
                     $moneyType = 'report' === $reportOrNdr ? new MoneyReceivedOnClientsBehalf() :

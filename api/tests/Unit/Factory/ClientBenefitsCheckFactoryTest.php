@@ -41,6 +41,7 @@ class ClientBenefitsCheckFactoryTest extends TestCase
     private ?string $moneyCreated;
     private ?string $moneyType;
     private ?string $moneyAmountDontKnow;
+    private ?string $whoReceivedMoney;
 
     public function setUp(): void
     {
@@ -59,6 +60,7 @@ class ClientBenefitsCheckFactoryTest extends TestCase
         $this->moneyType = 'Universal Credit';
         $this->moneyAmount = 100.5;
         $this->moneyAmountDontKnow = null;
+        $this->whoReceivedMoney = 'Some organisation';
     }
 
     /** @test */
@@ -130,6 +132,7 @@ class ClientBenefitsCheckFactoryTest extends TestCase
                     'money_type' => $this->moneyType,
                     'amount' => $this->moneyAmount,
                     'amount_dont_know' => $this->moneyAmountDontKnow,
+                    'who_received_money' => $this->whoReceivedMoney,
                 ],
             ],
             'report' => [],

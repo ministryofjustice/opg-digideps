@@ -220,10 +220,6 @@ class FormFieldsExtension extends AbstractExtension
             $hintText = $this->translator->trans('defaultDateHintText', [], 'common');
         }
 
-        if (isset($vars['hintTextBold']) && !empty($vars['hintTextBold'])) {
-            $hintTextBold = $vars['hintTextBold'];
-        }
-
         //get legendText translation
         $legendParams = isset($vars['legendParameters']) ? $vars['legendParameters'] : [];
 
@@ -247,7 +243,7 @@ class FormFieldsExtension extends AbstractExtension
                 'isPageHeading' => false,
                 'caption' => false,
             ], $vars['legend'] ?? []),
-            'hintTextBold' => $hintTextBold,
+            'hintTextBold' => $vars['hintTextBold'] ?? null,
             'hintText' => $hintText,
             'element' => $element,
             'showDay' => $showDay,
