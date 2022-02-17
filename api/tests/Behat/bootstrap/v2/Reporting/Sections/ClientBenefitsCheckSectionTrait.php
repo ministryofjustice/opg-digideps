@@ -499,7 +499,7 @@ trait ClientBenefitsCheckSectionTrait
         $this->iAmOnClientBenefitsCheckSummaryPage();
 
         $clientFirstName = $this->loggedInUserDetails->getClientFirstName();
-        $questionText = sprintf('Did you check that %s gets all the benefits they should have in the last reporting period?', $clientFirstName);
+        $questionText = sprintf('Did you check that %s is getting all the benefits', $clientFirstName);
         $questionRowXpath = sprintf("//dt[contains(., '%s')]/..", $questionText);
         $questionRow = $this->getSession()->getPage()->find('xpath', $questionRowXpath);
 

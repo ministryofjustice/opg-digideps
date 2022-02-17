@@ -1,8 +1,9 @@
 common:
     tellUs: |
         In this section you need to tell us:
-    tellUsBullet1: If you checked what benefits %client% is entitled to
-    tellUsBullet2: About any benefits or money other people or organisation received directly on %client%'s behalf
+    tellUsBullets:
+        1: if you checked what benefits %client% is entitled to
+        2: about any benefits or money other people or organisation received directly on %client%'s behalf
 
     htmlTitle: Benefits check and money other people receive - Complete the deputy report | GOV.UK
     pageTitle: Benefits check and money other people receive
@@ -13,7 +14,7 @@ startPage:
 stepPage:
     pageTitle:
         1:
-            mainTitle: Did you check that %client% gets all the benefits they should have in the last reporting period?
+            mainTitle: Did you check that %client% is getting all the benefits they're entitled to in the last reporting period?
         2:
             mainTitle: Does anyone receive any money from other organisations on %client%'s behalf?
         3:
@@ -26,17 +27,18 @@ stepPage:
             bulletsParagraph: |
                 For example:
             bullets:
-                1: Benefits paid directly to a care home or family member
-                2: Housing benefit paid directly to a landlord or housing association
+                1: benefits paid directly to a care home or family member
+                2: Housing Benefit paid directly to a landlord or housing association
         3:
             bulletsParagraph: |
                 For example:
             bullets:
-                1: Benefits paid directly to a care home or family member
-                2: Housing benefit paid directly to a landlord or housing association
+                1: benefits paid directly to a care home or family member
+                2: Housing Benefit paid directly to a landlord or housing association
     backLink: Back
 
 summaryPage:
+    pageDescription: Tell us if you checked what benefits %client% is entitled to, and about any money other organisations received on %client%'s behalf
     listedAnswers: We've listed your saved answers below.
     checkAnswers: Check they're correct and edit them where necessary
     addMoneyButtonText: Add money
@@ -62,7 +64,7 @@ summaryPage:
 form:
     whenLastChecked:
         choices:
-            haveChecked: Yes I checked this and believe %client% is getting all the benefits they’re entitled to
+            haveChecked: Yes, I checked this and believe %client% is getting all the benefits they’re entitled to
             currentlyChecking: I have begun to check and am waiting to find out if %client% is getting all the benefits they’re entitled to
             neverChecked: No, I did not check this
         dateCheckedHint: Date of last check
@@ -81,7 +83,7 @@ form:
             yes: Yes
             no: No
             dontKnow: I don't know
-        dontKnowLabel: Tell us why you don't know about this money.
+        dontKnowLabel: Tell us why you don't know about this.
         dontKnowHint: For example, is this something you've never checked, don't know how to check, or have been unable to find out.
         errors:
             noOptionSelected: Tell us why you have never checked if anyone other than you receives income on %client%'s behalf
