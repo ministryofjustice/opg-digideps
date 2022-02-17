@@ -8,7 +8,11 @@ use App\Entity\Organisation;
 use App\Entity\Report\Report;
 use App\Entity\Report\ReportSubmission;
 use App\Entity\User;
+use DateTime;
 use Doctrine\ORM\EntityManager;
+use Doctrine\ORM\ORMException;
+use InvalidArgumentException;
+use RuntimeException;
 
 /**
  * Used for unit testing.
@@ -110,7 +114,7 @@ class Fixtures
      *
      * @return EntityDir\Report\Document
      *
-     * @throws \Doctrine\ORM\ORMException
+     * @throws ORMException
      */
     public function createDocument($report, string $filename, bool $isReportPdf = true)
     {
@@ -134,12 +138,12 @@ class Fixtures
     /**
      * @return ReportSubmission
      *
-     * @throws \Doctrine\ORM\ORMException
+     * @throws ORMException
      */
     public function createReportSubmission(Report $report = null, User $user = null)
     {
         if (is_null($user)) {
-            $user = $this->createUser();
+            $user = $this->createUser(['setRoleName' => User::ROLE_LAY_DEPUTY, 'setRegistrationDate' => new DateTime(), 'setPhoneMain' => '01211234567']);
         }
 
         if (is_null($report)) {
@@ -161,8 +165,8 @@ class Fixtures
         $report = new EntityDir\Report\Report(
             $client,
             empty($settersMap['setType']) ? EntityDir\Report\Report::LAY_PFA_HIGH_ASSETS_TYPE : $settersMap['setType'],
-            empty($settersMap['setStartDate']) ? new \DateTime('now') : $settersMap['setStartDate'],
-            empty($settersMap['setEndDate']) ? new \DateTime('+12 months -1 day') : $settersMap['setEndDate']
+            empty($settersMap['setStartDate']) ? new DateTime('now') : $settersMap['setStartDate'],
+            empty($settersMap['setEndDate']) ? new DateTime('+12 months -1 day') : $settersMap['setEndDate']
         );
 
         foreach ($settersMap as $k => $v) {
@@ -357,7 +361,7 @@ class Fixtures
     }
 
     /**
-     * @throws \Doctrine\ORM\ORMException
+     * @throws ORMException
      */
     public function createOrganisations(int $amount): array
     {
@@ -370,7 +374,7 @@ class Fixtures
     }
 
     /**
-     * @throws \Doctrine\ORM\ORMException
+     * @throws ORMException
      */
     public function createOrganisation(string $name, string $identifier, bool $isActive): Organisation
     {
@@ -385,7 +389,7 @@ class Fixtures
     }
 
     /**
-     * @throws \Doctrine\ORM\ORMException
+     * @throws ORMException
      */
     public function addUserToOrganisation(int $userId, int $orgId)
     {
@@ -399,7 +403,7 @@ class Fixtures
     }
 
     /**
-     * @throws \Doctrine\ORM\ORMException
+     * @throws ORMException
      */
     public function addClientToOrganisation(int $clientId, int $orgId): void
     {
@@ -413,14 +417,14 @@ class Fixtures
     }
 
     /**
-     * @throws \Doctrine\ORM\ORMException
+     * @throws ORMException
      */
     public function deleteOrganisation(int $orgId): void
     {
         /** @var Organisation $org */
         $org = $this->em->getRepository(Organisation::class)->find($orgId);
 
-        $org->setDeletedAt(new \DateTime('now'));
+        $org->setDeletedAt(new DateTime('now'));
     }
 
     public function flush()
@@ -451,7 +455,7 @@ class Fixtures
     {
         $args = func_get_args();
         if (empty($args)) {
-            throw new \InvalidArgumentException('You must pass at least one object to persist');
+            throw new InvalidArgumentException('You must pass at least one object to persist');
         }
         foreach (func_get_args() as $e) {
             $this->em->persist($e);
@@ -528,7 +532,7 @@ class Fixtures
     public static function restoreDb()
     {
         if (!file_exists(self::PG_DUMP_PATH)) {
-            throw new \RuntimeException(self::PG_DUMP_PATH.' not found');
+            throw new RuntimeException(self::PG_DUMP_PATH.' not found');
         }
         self::pgCommand('psql < '.self::PG_DUMP_PATH);
     }
@@ -542,5 +546,46 @@ class Fixtures
     public function refresh($entity)
     {
         $this->em->refresh($entity);
+    }
+
+    public function createUserResearchResponse(int $howMany)
+    {
+        $range = range(1, $howMany);
+
+        foreach ($range as $i) {
+            $rs = $this->createReportSubmission();
+
+            $researchType = new EntityDir\UserResearch\ResearchType(['surveys']);
+
+            $userResearchResponse = (new EntityDir\UserResearch\UserResearchResponse())
+                ->setCreated(new DateTime())
+                ->setDeputyshipLength('oneToFive')
+                ->setUser($rs->getCreatedBy())
+                ->setHasAccessToVideoCallDevice(true)
+                ->setResearchType($researchType);
+
+            $satisfaction = (new EntityDir\Satisfaction())
+                ->setReport($rs->getReport())
+                ->setDeputyrole(User::ROLE_LAY_DEPUTY)
+                ->setCreated(new DateTime())
+                ->setComments(' Some comments')
+                ->setScore(rand(1, 5))
+                ->setReporttype(Report::LAY_COMBINED_LOW_ASSETS_TYPE)
+                ->setUserResearchResponse($userResearchResponse);
+
+            $userResearchResponse->setSatisfaction($satisfaction);
+
+            $this->em->persist($userResearchResponse);
+            $this->em->persist($satisfaction);
+            $this->em->persist($researchType);
+
+            if (100 === $i) {
+                $this->em->flush();
+                $this->em->clear();
+            }
+        }
+
+        $this->em->flush();
+        $this->em->clear();
     }
 }

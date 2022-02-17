@@ -8,6 +8,8 @@ use App\Entity\User;
 use App\Entity\UserResearch\UserResearchResponse;
 use DateTime;
 use Doctrine\Bundle\DoctrineBundle\Repository\ServiceEntityRepository;
+use Doctrine\ORM\OptimisticLockException;
+use Doctrine\ORM\ORMException;
 use Doctrine\Persistence\ManagerRegistry;
 
 class UserResearchResponseRepository extends ServiceEntityRepository
@@ -18,8 +20,8 @@ class UserResearchResponseRepository extends ServiceEntityRepository
     }
 
     /**
-     * @throws \Doctrine\ORM\ORMException
-     * @throws \Doctrine\ORM\OptimisticLockException
+     * @throws ORMException
+     * @throws OptimisticLockException
      */
     public function create(UserResearchResponse $userResearchResponse, User $user): void
     {
@@ -38,10 +40,13 @@ class UserResearchResponseRepository extends ServiceEntityRepository
     {
         $qb = $this
             ->createQueryBuilder('urr')
+            ->select('urr', 'u', 's', 'rt')
             ->leftJoin('urr.satisfaction', 's')
+            ->leftJoin('urr.user', 'u')
+            ->leftJoin('urr.researchType', 'rt')
             ->where('urr.created > :from')->setParameter('from', $from)
             ->andWhere('urr.created < :to')->setParameter('to', $to);
 
-        return $qb->getQuery()->getResult();
+        return $qb->getQuery()->getArrayResult();
     }
 }

@@ -24,6 +24,7 @@ use Symfony\Component\HttpFoundation\Request;
 use Symfony\Component\HttpFoundation\Response;
 use Symfony\Component\HttpFoundation\ResponseHeaderBag;
 use Symfony\Component\Routing\Annotation\Route;
+use Throwable;
 
 /**
  * @Route("/admin/stats")
@@ -68,7 +69,7 @@ class StatsController extends AbstractController
                 $downloadableData = $transformer->transform($reportSubmissionSummaries);
 
                 return $this->buildResponse($downloadableData);
-            } catch (\Throwable $e) {
+            } catch (Throwable $e) {
                 throw new DisplayableException($e);
             }
         }
@@ -106,7 +107,7 @@ class StatsController extends AbstractController
                 $response->headers->set('Content-Disposition', $disposition);
 
                 return $response;
-            } catch (\Throwable $e) {
+            } catch (Throwable $e) {
                 throw new DisplayableException($e);
             }
         }
@@ -131,7 +132,8 @@ class StatsController extends AbstractController
         if ($form->isSubmitted() && $form->isValid()) {
             try {
                 $userResearchResponses = $mapper->getBy($form->getData());
-                $csv = $this->userResearchResponseCsvGenerator->generateUserResearchResponsesCsv($userResearchResponses);
+                $userResearchResponsesArray = json_decode($userResearchResponses, true)['data'];
+                $csv = $this->userResearchResponseCsvGenerator->generateUserResearchResponsesCsv($userResearchResponsesArray);
 
                 $response = new Response($csv);
 
@@ -144,7 +146,7 @@ class StatsController extends AbstractController
                 $response->headers->set('Content-Disposition', $disposition);
 
                 return $response;
-            } catch (\Throwable $e) {
+            } catch (Throwable $e) {
                 throw new DisplayableException($e);
             }
         }
