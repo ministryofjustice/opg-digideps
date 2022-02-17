@@ -160,10 +160,6 @@ class OrgService
                 $this->output['updated'][$group] += count($items);
             }
         }
-
-        if (!empty($output['source'] and !empty($output['roleType']))) {
-            $this->dispatchCSVUploadEvent($output['source'], $output['roleType']);
-        }
     }
 
     /**
@@ -216,6 +212,8 @@ class OrgService
     {
         $chunkCount = count($chunks);
 
+        $logged = false;
+
         foreach ($chunks as $index => $chunk) {
             $compressedChunk = CsvUploader::compressData($chunk);
 
@@ -224,6 +222,13 @@ class OrgService
 
             $this->storeChunkOutput($upload);
             $this->logProgress($index + 1, $chunkCount);
+
+            if (!$logged) {
+                if (!empty($upload['source'] and !empty($upload['roleType']))) {
+                    $this->dispatchCSVUploadEvent($upload['source'], $upload['roleType']);
+                    $logged = true;
+                }
+            }
         }
     }
 

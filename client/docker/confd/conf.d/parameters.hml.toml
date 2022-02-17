@@ -19,5 +19,6 @@ keys = [
     "/cloudwatch/logs/localstack",
     "/filescanner/url",
     "/filescanner/sslverify",
-    "/htmltopdf/address"
+    "/htmltopdf/address",
+    "/secrets/manager/localstack"
  ]
