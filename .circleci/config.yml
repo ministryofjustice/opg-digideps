@@ -123,6 +123,19 @@ workflows:
           override: "sh,./tests/Behat/run-tests-parallel.sh,--tags,@v2_admin"
           timeout: 1200
 
+      - run-task:
+          name: integration tests sequential only
+          requires:
+            [
+              integration tests reset DB,
+              scale up services for integration tests,
+            ]
+          filters: { branches: { only: [main] } }
+          task_name: integration_test_v2
+          tf_workspace: integration
+          override: "sh,./tests/Behat/run-tests.sh,--tags,@v2_sequential"
+          timeout: 1200
+
       - terraform-plan-all:
           name: plan all terraform environments
           requires:
@@ -145,6 +158,7 @@ workflows:
               integration tests v2 reports 1,
               integration tests v2 reports 2,
               integration tests v2 admin,
+              integration tests sequential only,
             ]
           filters: { branches: { ignore: [main] } }
 
@@ -152,11 +166,11 @@ workflows:
           name: branch complete notification
           message: Your branch << pipeline.git.branch >> has completed
           channel: opg-digicop-builds
-          requires:
-            [
+          requires: [
               integration tests v2 reports 1,
               integration tests v2 reports 2,
               integration tests v2 admin,
+              integration tests sequential only
               plan all terraform environments,
               plan all shared terraform environments,
               api unit test,
@@ -294,6 +308,19 @@ workflows:
           override: "sh,./tests/Behat/run-tests-parallel.sh,--tags,@v2_admin"
           timeout: 1200
 
+      - run-task:
+          name: integration tests sequential only
+          requires:
+            [
+              integration tests reset DB,
+              scale up services for integration tests,
+            ]
+          filters: { branches: { only: [main] } }
+          task_name: integration_test_v2
+          tf_workspace: integration
+          override: "sh,./tests/Behat/run-tests.sh,--tags,@v2_sequential"
+          timeout: 1200
+
       - scale-services:
           name: scale down services for integration tests
           replicas: "1"
@@ -304,6 +331,7 @@ workflows:
               integration tests v2 reports 1,
               integration tests v2 reports 2,
               integration tests v2 admin,
+              integration tests sequential only,
             ]
           filters: { branches: { only: [main] } }
 
@@ -316,13 +344,13 @@ workflows:
 
       - terraform-command:
           name: apply preproduction
-          requires:
-            [
+          requires: [
               api unit test,
               client unit test,
               integration tests v2 reports 1,
               integration tests v2 reports 2,
               integration tests v2 admin,
+              integration tests sequential only
               apply shared-preproduction,
             ]
           filters: { branches: { only: [main] } }
@@ -486,6 +514,7 @@ workflows:
               integration tests v2 reports 1,
               integration tests v2 reports 2,
               integration tests v2 admin,
+              integration tests sequential only,
             ]
           filters: { branches: { only: [main] } }
       - client-unit-test:
