@@ -166,11 +166,12 @@ workflows:
           name: branch complete notification
           message: Your branch << pipeline.git.branch >> has completed
           channel: opg-digicop-builds
-          requires: [
+          requires:
+            [
               integration tests v2 reports 1,
               integration tests v2 reports 2,
               integration tests v2 admin,
-              integration tests sequential only
+              integration tests sequential only,
               plan all terraform environments,
               plan all shared terraform environments,
               api unit test,
