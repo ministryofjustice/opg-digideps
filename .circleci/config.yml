@@ -345,13 +345,14 @@ workflows:
 
       - terraform-command:
           name: apply preproduction
-          requires: [
+          requires:
+            [
               api unit test,
               client unit test,
               integration tests v2 reports 1,
               integration tests v2 reports 2,
               integration tests v2 admin,
-              integration tests sequential only
+              integration tests sequential only,
               apply shared-preproduction,
             ]
           filters: { branches: { only: [main] } }
