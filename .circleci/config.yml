@@ -5,200 +5,204 @@ workflows:
     jobs:
       - build:
           name: build pr
-          filters: { branches: { ignore: [ main ] } }
+          filters: { branches: { ignore: [main] } }
 
       - cancel_redundant_builds:
           name: cancel redundant builds
-          filters: { branches: { ignore: [ main ] } }
+          filters: { branches: { ignore: [main] } }
 
       - lint:
           name: lint terraform
-          filters: { branches: { ignore: [ main ] } }
+          filters: { branches: { ignore: [main] } }
 
       - terraform-command:
           name: plan shared-development
-          requires: [ cancel redundant builds ]
-          filters: { branches: { ignore: [ main ] } }
+          requires: [cancel redundant builds]
+          filters: { branches: { ignore: [main] } }
           tf_tier: shared
           tf_workspace: development
           tf_command: plan
 
       - terraform-command:
           name: plan branch env
-          requires: [ cancel redundant builds ]
-          filters: { branches: { ignore: [ main ] } }
+          requires: [cancel redundant builds]
+          filters: { branches: { ignore: [main] } }
           tf_command: plan
 
       - terraform-command:
           name: initial terraform apply
-          requires: [
-            lint terraform,
-            cancel redundant builds,
-            plan shared-development,
-            plan branch env
-             ]
-          filters: { branches: { ignore: [ main ] } }
+          requires:
+            [
+              lint terraform,
+              cancel redundant builds,
+              plan shared-development,
+              plan branch env,
+            ]
+          filters: { branches: { ignore: [main] } }
           tf_command: apply
           tf_initial_apply: true
 
       - lambda-unit-test:
           name: lambda unit test
-          requires: [ lint terraform ]
-          filters: { branches: { ignore: [ main ] } }
+          requires: [lint terraform]
+          filters: { branches: { ignore: [main] } }
 
       - client-unit-test:
           name: client unit test
-          requires: [ build pr ]
-          filters: { branches: { ignore: [ main ] } }
+          requires: [build pr]
+          filters: { branches: { ignore: [main] } }
 
       - api-unit-tests:
           name: api unit test
-          requires: [ build pr ]
-          filters: { branches: { ignore: [ main ] } }
+          requires: [build pr]
+          filters: { branches: { ignore: [main] } }
 
       - terraform-command:
           name: terraform apply
-          requires: [
-            initial terraform apply,
-            build pr,
-            lambda unit test
-          ]
-          filters: { branches: { ignore: [ main ] } }
+          requires: [initial terraform apply, build pr, lambda unit test]
+          filters: { branches: { ignore: [main] } }
           tf_command: apply
 
       - workspace-protection:
           name: protect branch workspace
-          requires: [ terraform apply ]
-          filters: { branches: { ignore: [ main ] } }
+          requires: [terraform apply]
+          filters: { branches: { ignore: [main] } }
 
       - scale-services:
           name: scale up services for integration tests
           replicas: "5"
-          requires: [ terraform apply ]
-          filters: { branches: { ignore: [ main ] } }
+          requires: [terraform apply]
+          filters: { branches: { ignore: [main] } }
 
-#      - pa11y-ci:
-#          name: accessibility test
-#          requires: [ apply environment ]
-#          filters: { branches: { ignore: [ main ] } }
+      #      - pa11y-ci:
+      #          name: accessibility test
+      #          requires: [ apply environment ]
+      #          filters: { branches: { ignore: [ main ] } }
 
       - run-task:
           name: integration tests reset DB
-          requires: [ terraform apply ]
-          filters: { branches: { ignore: [ main ] } }
+          requires: [terraform apply]
+          filters: { branches: { ignore: [main] } }
           task_name: integration_test_v2
           override: "sh,./tests/Behat/reset-db.sh"
           timeout: 500
 
       - run-task:
           name: integration tests v2 reports 1
-          requires: [ integration tests reset DB, scale up services for integration tests ]
-          filters: { branches: { ignore: [ main ] } }
+          requires:
+            [
+              integration tests reset DB,
+              scale up services for integration tests,
+            ]
+          filters: { branches: { ignore: [main] } }
           task_name: integration_test_v2
           override: "sh,./tests/Behat/run-tests-parallel.sh,--tags,@v2_reporting_1"
           timeout: 1200
 
       - run-task:
           name: integration tests v2 reports 2
-          requires: [ integration tests reset DB, scale up services for integration tests ]
-          filters: { branches: { ignore: [ main ] } }
+          requires:
+            [
+              integration tests reset DB,
+              scale up services for integration tests,
+            ]
+          filters: { branches: { ignore: [main] } }
           task_name: integration_test_v2
           override: "sh,./tests/Behat/run-tests-parallel.sh,--tags,@v2_reporting_2"
           timeout: 1200
 
       - run-task:
           name: integration tests v2 admin
-          requires: [ integration tests reset DB, scale up services for integration tests ]
-          filters: { branches: { ignore: [ main ] } }
+          requires:
+            [
+              integration tests reset DB,
+              scale up services for integration tests,
+            ]
+          filters: { branches: { ignore: [main] } }
           task_name: integration_test_v2
           override: "sh,./tests/Behat/run-tests-parallel.sh,--tags,@v2_admin"
           timeout: 1200
 
       - terraform-plan-all:
           name: plan all terraform environments
-          requires: [
-              protect branch workspace,
-              scale up services for integration tests
-          ]
-          filters: { branches: { ignore: [ main ] } }
+          requires:
+            [protect branch workspace, scale up services for integration tests]
+          filters: { branches: { ignore: [main] } }
           tf_tier: environment
 
       - terraform-plan-all:
           name: plan all shared terraform environments
-          requires: [
-              protect branch workspace,
-              scale up services for integration tests
-          ]
-          filters: { branches: { ignore: [ main ] } }
+          requires:
+            [protect branch workspace, scale up services for integration tests]
+          filters: { branches: { ignore: [main] } }
           tf_tier: shared
 
       - scale-services:
           name: scale down services for integration tests
           replicas: "1"
-          requires: [
-            integration tests v2 reports 1,
-            integration tests v2 reports 2,
-            integration tests v2 admin
-          ]
-          filters: { branches: { ignore: [ main ] } }
+          requires:
+            [
+              integration tests v2 reports 1,
+              integration tests v2 reports 2,
+              integration tests v2 admin,
+            ]
+          filters: { branches: { ignore: [main] } }
 
       - slack/approval-notification:
           name: branch complete notification
           message: Your branch << pipeline.git.branch >> has completed
           channel: opg-digicop-builds
-          requires: [
-            integration tests v2 reports 1,
-            integration tests v2 reports 2,
-            integration tests v2 admin,
-            plan all terraform environments,
-            plan all shared terraform environments,
-            api unit test,
-            client unit test,
-            unprotect environment
-          ]
-          filters: { branches: { ignore: [ main ] } }
+          requires:
+            [
+              integration tests v2 reports 1,
+              integration tests v2 reports 2,
+              integration tests v2 admin,
+              plan all terraform environments,
+              plan all shared terraform environments,
+              api unit test,
+              client unit test,
+              unprotect environment,
+            ]
+          filters: { branches: { ignore: [main] } }
 
       - cleanup:
           name: unprotect environment approval
           type: approval
-          requires: [ terraform apply ]
-          filters: { branches: { ignore: [ main ] } }
+          requires: [terraform apply]
+          filters: { branches: { ignore: [main] } }
 
       - workspace-protection:
           name: unprotect environment
-          requires: [ unprotect environment approval ]
-          filters: { branches: { ignore: [ main ] } }
+          requires: [unprotect environment approval]
+          filters: { branches: { ignore: [main] } }
           protect_time: "0"
 
   integration:
     jobs:
       - lambda-unit-test:
           name: lambda unit test
-          filters: { branches: { only: [ main ] } }
+          filters: { branches: { only: [main] } }
 
       - build:
           name: build integration
           build_dev: true
           ecr_scan_notify: "True"
-          filters: { branches: { only: [ main ] } }
+          filters: { branches: { only: [main] } }
 
       - client-unit-test:
           name: client unit test
-          requires: [ build integration ]
-          filters: { branches: { only: [ main ] } }
+          requires: [build integration]
+          filters: { branches: { only: [main] } }
 
       - api-unit-tests:
           name: api unit test
-          requires: [ build integration ]
-          filters: { branches: { only: [ main ] } }
+          requires: [build integration]
+          filters: { branches: { only: [main] } }
 
       - terraform-command:
           name: apply shared-development
-          requires: [
-            build integration,
-            lambda unit test
-          ]
-          filters: { branches: { only: [ main ] } }
+          requires: [build integration, lambda unit test]
+          filters: { branches: { only: [main] } }
           tf_tier: shared
           tf_workspace: development
           tf_command: apply
@@ -206,42 +210,31 @@ workflows:
       # Notice, no 'reset' or 'restore' over development so we can keep test data
       - terraform-command:
           name: apply development
-          requires: [
-            apply shared-development,
-            lambda unit test
-          ]
+          requires: [apply shared-development, lambda unit test]
           tf_workspace: development
-          filters: { branches: { only: [ main ] } }
+          filters: { branches: { only: [main] } }
           tf_command: apply
 
       - terraform-command:
           name: plan shared-preproduction
-          requires: [
-            build integration
-          ]
-          filters: { branches: { only: [ main ] } }
+          requires: [build integration]
+          filters: { branches: { only: [main] } }
           tf_tier: shared
           tf_workspace: preproduction
           tf_command: plan
 
       - terraform-command:
           name: apply shared-preproduction
-          requires: [
-            plan shared-preproduction,
-            lambda unit test
-          ]
-          filters: { branches: { only: [ main ] } }
+          requires: [plan shared-preproduction, lambda unit test]
+          filters: { branches: { only: [main] } }
           tf_tier: shared
           tf_workspace: preproduction
           tf_command: apply
 
       - terraform-command:
           name: apply integration
-          requires: [
-            build integration,
-            apply shared-preproduction
-          ]
-          filters: { branches: { only: [ main ] } }
+          requires: [build integration, apply shared-preproduction]
+          filters: { branches: { only: [main] } }
           tf_workspace: integration
           tf_command: apply
 
@@ -250,13 +243,13 @@ workflows:
           replicas: "5"
           profile: digideps-ci-pre
           tf_workspace: integration
-          requires: [ apply integration ]
-          filters: { branches: { only: [ main ] } }
+          requires: [apply integration]
+          filters: { branches: { only: [main] } }
 
       - run-task:
           name: integration tests reset DB
-          requires: [ apply integration ]
-          filters: { branches: { only: [ main ] } }
+          requires: [apply integration]
+          filters: { branches: { only: [main] } }
           task_name: integration_test_v2
           tf_workspace: integration
           override: "sh,./tests/Behat/reset-db.sh"
@@ -264,8 +257,12 @@ workflows:
 
       - run-task:
           name: integration tests v2 reports 1
-          requires: [ integration tests reset DB, scale up services for integration tests ]
-          filters: { branches: { only: [ main ] } }
+          requires:
+            [
+              integration tests reset DB,
+              scale up services for integration tests,
+            ]
+          filters: { branches: { only: [main] } }
           task_name: integration_test_v2
           tf_workspace: integration
           override: "sh,./tests/Behat/run-tests-parallel.sh,--tags,@v2_reporting_1"
@@ -273,8 +270,12 @@ workflows:
 
       - run-task:
           name: integration tests v2 reports 2
-          requires: [ integration tests reset DB, scale up services for integration tests ]
-          filters: { branches: { only: [ main ] } }
+          requires:
+            [
+              integration tests reset DB,
+              scale up services for integration tests,
+            ]
+          filters: { branches: { only: [main] } }
           task_name: integration_test_v2
           tf_workspace: integration
           override: "sh,./tests/Behat/run-tests-parallel.sh,--tags,@v2_reporting_2"
@@ -282,8 +283,12 @@ workflows:
 
       - run-task:
           name: integration tests v2 admin
-          requires: [ integration tests reset DB, scale up services for integration tests ]
-          filters: { branches: { only: [ main ] } }
+          requires:
+            [
+              integration tests reset DB,
+              scale up services for integration tests,
+            ]
+          filters: { branches: { only: [main] } }
           task_name: integration_test_v2
           tf_workspace: integration
           override: "sh,./tests/Behat/run-tests-parallel.sh,--tags,@v2_admin"
@@ -294,45 +299,47 @@ workflows:
           replicas: "1"
           profile: digideps-ci-pre
           tf_workspace: integration
-          requires: [
-            integration tests v2 reports 1,
-            integration tests v2 reports 2,
-            integration tests v2 admin
-          ]
-          filters: { branches: { only: [ main ] } }
+          requires:
+            [
+              integration tests v2 reports 1,
+              integration tests v2 reports 2,
+              integration tests v2 admin,
+            ]
+          filters: { branches: { only: [main] } }
 
       - terraform-command:
           name: plan preproduction
-          requires: [ apply shared-development ]
-          filters: { branches: { only: [ main ] } }
+          requires: [apply shared-development]
+          filters: { branches: { only: [main] } }
           tf_workspace: preproduction
           tf_command: plan
 
       - terraform-command:
           name: apply preproduction
-          requires: [
-            api unit test,
-            client unit test,
-            integration tests v2 reports 1,
-            integration tests v2 reports 2,
-            integration tests v2 admin,
-            apply shared-preproduction
-          ]
-          filters: { branches: { only: [ main ] } }
+          requires:
+            [
+              api unit test,
+              client unit test,
+              integration tests v2 reports 1,
+              integration tests v2 reports 2,
+              integration tests v2 admin,
+              apply shared-preproduction,
+            ]
+          filters: { branches: { only: [main] } }
           tf_workspace: preproduction
           tf_command: apply
 
       - terraform-command:
           name: plan production
-          requires: [ apply preproduction ]
-          filters: { branches: { only: [ main ] } }
+          requires: [apply preproduction]
+          filters: { branches: { only: [main] } }
           tf_workspace: production02
           tf_command: plan
 
       - terraform-command:
           name: plan shared-production
-          requires: [ apply preproduction ]
-          filters: { branches: { only: [ main ] } }
+          requires: [apply preproduction]
+          filters: { branches: { only: [main] } }
           tf_tier: shared
           tf_workspace: production
           tf_command: plan
@@ -340,50 +347,50 @@ workflows:
       - slack/approval-notification:
           name: release approval notification
           message: "Production is ready for release and pending approval"
-          requires: [ plan shared-production, plan production ]
-          filters: { branches: { only: [ main ] } }
+          requires: [plan shared-production, plan production]
+          filters: { branches: { only: [main] } }
 
       - approve:
           name: approve release to production
           type: approval
-          requires: [ plan shared-production, plan production ]
-          filters: { branches: { only: [ main ] } }
+          requires: [plan shared-production, plan production]
+          filters: { branches: { only: [main] } }
 
       - terraform-command:
           name: apply shared-production
-          requires: [ approve release to production ]
-          filters: { branches: { only: [ main ] } }
+          requires: [approve release to production]
+          filters: { branches: { only: [main] } }
           tf_tier: shared
           tf_workspace: production
           tf_command: apply
 
       - terraform-command:
           name: apply training
-          requires: [ apply shared-production ]
-          filters: { branches: { only: [ main ] } }
+          requires: [apply shared-production]
+          filters: { branches: { only: [main] } }
           tf_workspace: training
           tf_command: apply
 
       - terraform-command:
           name: apply production
-          requires: [ apply shared-production ]
-          filters: { branches: { only: [ main ] } }
+          requires: [apply shared-production]
+          filters: { branches: { only: [main] } }
           pact_tag: true
           tf_workspace: production02
           tf_command: apply
 
       - run-task:
           name: backup production
-          requires: [ apply production ]
-          filters: { branches: { only: [ main ] } }
+          requires: [apply production]
+          filters: { branches: { only: [main] } }
           task_name: backup
           tf_workspace: production02
           timeout: 700
 
       - run-task:
           name: restore production to preproduction
-          requires: [ backup production ]
-          filters: { branches: { only: [ main ] } }
+          requires: [backup production]
+          filters: { branches: { only: [main] } }
           task_name: restore_from_production
           tf_workspace: preproduction
           timeout: 700
@@ -392,18 +399,18 @@ workflows:
     triggers:
       - schedule:
           cron: "00 05 * * 0"
-          filters: { branches: { only: [ main ] } }
+          filters: { branches: { only: [main] } }
     jobs:
       - lambda-unit-test:
-            name: lambda unit test
-            filters: { branches: { only: [ main ] } }
+          name: lambda unit test
+          filters: { branches: { only: [main] } }
       - build:
           name: build integration
-          filters: { branches: { only: [ main ] } }
+          filters: { branches: { only: [main] } }
       - terraform-command:
           name: apply integration
-          requires: [ build integration ]
-          filters: { branches: { only: [ main ] } }
+          requires: [build integration]
+          filters: { branches: { only: [main] } }
           tf_workspace: integration
           tf_command: apply
       - scale-services:
@@ -411,73 +418,98 @@ workflows:
           replicas: "5"
           profile: digideps-ci-pre
           tf_workspace: integration
-          requires: [ apply integration ]
-          filters: { branches: { only: [ main ] } }
+          requires: [apply integration]
+          filters: { branches: { only: [main] } }
       - run-task:
           name: integration tests reset DB
-          requires: [ apply integration ]
-          filters: { branches: { only: [ main ] } }
+          requires: [apply integration]
+          filters: { branches: { only: [main] } }
           task_name: integration_test_v2
           tf_workspace: integration
           override: "sh,./tests/Behat/reset-db.sh"
           timeout: 500
       - run-task:
           name: integration tests v2 reports 1
-          requires: [ integration tests reset DB, scale up services for integration tests ]
-          filters: { branches: { only: [ main ] } }
+          requires:
+            [
+              integration tests reset DB,
+              scale up services for integration tests,
+            ]
+          filters: { branches: { only: [main] } }
           task_name: integration_test_v2
           tf_workspace: integration
           override: "sh,./tests/Behat/run-tests-parallel.sh,--tags,@v2_reporting_1"
           timeout: 1200
       - run-task:
           name: integration tests v2 reports 2
-          requires: [ integration tests reset DB, scale up services for integration tests ]
-          filters: { branches: { only: [ main ] } }
+          requires:
+            [
+              integration tests reset DB,
+              scale up services for integration tests,
+            ]
+          filters: { branches: { only: [main] } }
           task_name: integration_test_v2
           tf_workspace: integration
           override: "sh,./tests/Behat/run-tests-parallel.sh,--tags,@v2_reporting_2"
           timeout: 1200
       - run-task:
           name: integration tests v2 admin
-          requires: [ integration tests reset DB, scale up services for integration tests ]
-          filters: { branches: { only: [ main ] } }
+          requires:
+            [
+              integration tests reset DB,
+              scale up services for integration tests,
+            ]
+          filters: { branches: { only: [main] } }
           task_name: integration_test_v2
           tf_workspace: integration
           override: "sh,./tests/Behat/run-tests-parallel.sh,--tags,@v2_admin"
+          timeout: 1200
+      - run-task:
+          name: integration tests sequential only
+          requires:
+            [
+              integration tests reset DB,
+              scale up services for integration tests,
+            ]
+          filters: { branches: { only: [main] } }
+          task_name: integration_test_v2
+          tf_workspace: integration
+          override: "sh,./tests/Behat/run-tests.sh,--tags,@v2_sequential"
           timeout: 1200
       - scale-services:
           name: scale down services for integration tests
           replicas: "1"
           profile: digideps-ci-pre
           tf_workspace: integration
-          requires: [
-            integration tests v2 reports 1,
-            integration tests v2 reports 2,
-            integration tests v2 admin
-          ]
-          filters: { branches: { only: [ main ] } }
+          requires:
+            [
+              integration tests v2 reports 1,
+              integration tests v2 reports 2,
+              integration tests v2 admin,
+            ]
+          filters: { branches: { only: [main] } }
       - client-unit-test:
           name: client unit test
-          requires: [ apply integration ]
-          filters: { branches: { only: [ main ] } }
+          requires: [apply integration]
+          filters: { branches: { only: [main] } }
       - api-unit-tests:
           name: api unit test
-          requires: [ apply integration ]
-          filters: { branches: { only: [ main ] } }
+          requires: [apply integration]
+          filters: { branches: { only: [main] } }
       - cross-browser-test:
           name: cross browser test
-          requires: [ apply integration ]
-          filters: { branches: { only: [ main ] } }
+          requires: [apply integration]
+          filters: { branches: { only: [main] } }
 
   nightly_workspace_deletion:
     triggers:
       - schedule:
           cron: "00 00 * * *"
-          filters: { branches: { only: [ main ] } }
+          filters: { branches: { only: [main] } }
     jobs:
       - destroy-workspaces:
           name: destroy non protected workspaces
-          filters: { branches: { only: [ main ] } }
+          filters: { branches: { only: [main] } }
 
 orbs:
   aws-cli: circleci/aws-cli@0.1.13
@@ -611,7 +643,7 @@ jobs:
       - when:
           condition:
             and:
-              - equal: [ shared, << parameters.tf_tier >> ]
+              - equal: [shared, << parameters.tf_tier >>]
           steps:
             - ecs_helper/build
       - run:
@@ -623,9 +655,9 @@ jobs:
       - when:
           condition:
             and:
-              - equal: [ environment, << parameters.tf_tier >> ]
+              - equal: [environment, << parameters.tf_tier >>]
           steps:
-          # We already run on branch on shared dev so no repetition here.
+            # We already run on branch on shared dev so no repetition here.
             - run:
                 name: Run plan on integration
                 command: |
@@ -649,7 +681,7 @@ jobs:
       - when:
           condition:
             and:
-              - equal: [ shared, << parameters.tf_tier >> ]
+              - equal: [shared, << parameters.tf_tier >>]
           steps:
             - run:
                 name: Run plan on shared production
@@ -692,7 +724,7 @@ jobs:
       - when:
           condition:
             and:
-              - equal: [ shared, << parameters.tf_tier >> ]
+              - equal: [shared, << parameters.tf_tier >>]
           steps:
             - ecs_helper/build
       - attach_workspace: { at: ~/project }
@@ -705,17 +737,17 @@ jobs:
       - when:
           condition:
             and:
-              - equal: [ apply, << parameters.tf_command >> ]
-              - equal: [ false, << parameters.tf_initial_apply >> ]
+              - equal: [apply, << parameters.tf_command >>]
+              - equal: [false, << parameters.tf_initial_apply >>]
           steps:
             - run:
                 name: Extract lambda layers
                 command: tar xvf ~/project/lambda_functions/layer.tar
-                working_directory:  ~/project/lambda_functions
+                working_directory: ~/project/lambda_functions
       - when:
           condition:
             and:
-              - equal: [ true, << parameters.tf_initial_apply >> ]
+              - equal: [true, << parameters.tf_initial_apply >>]
           steps:
             - run:
                 name: Run << parameters.tf_command >>
@@ -729,7 +761,7 @@ jobs:
       - when:
           condition:
             and:
-              - equal: [ false, << parameters.tf_initial_apply >> ]
+              - equal: [false, << parameters.tf_initial_apply >>]
           steps:
             - run:
                 name: Run << parameters.tf_command >>
