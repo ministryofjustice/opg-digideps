@@ -2,6 +2,7 @@ locals {
   check_csv_uploaded_sg_rules = {
     ecr     = local.common_sg_rules.ecr
     logs    = local.common_sg_rules.logs
+    s3      = local.common_sg_rules.s3
     ssm     = local.common_sg_rules.ssm
     ecr_api = local.common_sg_rules.ecr_api
     secrets = local.common_sg_rules.secrets
