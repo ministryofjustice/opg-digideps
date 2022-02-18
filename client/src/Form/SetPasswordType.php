@@ -10,7 +10,7 @@ use Symfony\Component\Validator\Constraints as Constraints;
 
 class SetPasswordType extends AbstractType
 {
-    const VALIDATION_GROUP = 'user_set_password';
+    public const VALIDATION_GROUP = 'user_set_password';
 
     public function buildForm(FormBuilderInterface $builder, array $options)
     {
@@ -20,6 +20,8 @@ class SetPasswordType extends AbstractType
             [
                 'type' => FormTypes\PasswordType::class,
                 'invalid_message' => $options['passwordMismatchMessage'],
+                'first_options' => ['attr' => ['autocomplete' => 'off']],
+                'second_options' => ['attr' => ['autocomplete' => 'off']],
             ]
         );
         if (!empty($options['showTermsAndConditions'])) {
@@ -34,11 +36,11 @@ class SetPasswordType extends AbstractType
     public function configureOptions(OptionsResolver $resolver)
     {
         $resolver->setDefaults([
-              'translation_domain' => 'user-activate',
-              'validation_groups' => [self::VALIDATION_GROUP],
-              'showTermsAndConditions' => false,
+            'translation_domain' => 'user-activate',
+            'validation_groups' => [self::VALIDATION_GROUP],
+            'showTermsAndConditions' => false,
         ])
-        ->setRequired(['passwordMismatchMessage']);
+            ->setRequired(['passwordMismatchMessage']);
     }
 
     public function getBlockPrefix()
