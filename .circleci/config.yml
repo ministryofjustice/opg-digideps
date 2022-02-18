@@ -130,7 +130,7 @@ workflows:
               integration tests reset DB,
               scale up services for integration tests,
             ]
-          filters: { branches: { only: [main] } }
+          filters: { branches: { ignore: [main] } }
           task_name: integration_test_v2
           tf_workspace: integration
           override: "sh,./tests/Behat/run-tests.sh,--tags,@v2_sequential"
