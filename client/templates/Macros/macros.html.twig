@@ -11,24 +11,26 @@
                     </a>
                 {% else %}
                     <a href="{{ path('homepage') }}" class="govuk-breadcrumbs__link">
-                        {{ 'yourReports' | trans({}, 'common' ) }}
+                        {{ 'yourReports' | trans({'deputyFirstname': app.user.firstname, 'deputyLastname': app.user.lastname}, 'common' ) }}
                     </a>
                 {% endif %}
             </li>
             <li class="govuk-breadcrumbs__list-item">
                 {% if report.type == 'ndr' %}
                     <a href="{{ path('ndr_overview', {'ndrId': report.id}) }}"
-                       class="govuk-breadcrumbs__link behat-link-breadcrumbs-ndr-overview" data-action="report.overview">
+                       class="govuk-breadcrumbs__link behat-link-breadcrumbs-ndr-overview"
+                       data-action="report.overview">
                         {{ 'newDeputyReportOverview' | trans({}, 'common' ) }}
                     </a>
 
                 {% else %}
                     <a href="{{ path('report_overview', {'reportId': report.id}) }}"
-                       class="govuk-breadcrumbs__link behat-link-breadcrumbs-report-overview" data-action="report.overview">
+                       class="govuk-breadcrumbs__link behat-link-breadcrumbs-report-overview"
+                       data-action="report.overview">
                         {% if isOrgUser %}
                             {{ 'clientProfile' | trans({}, 'common' ) }}
                         {% else %}
-                            {{ 'deputyReportOverview' | trans({}, 'common' ) }}
+                            {{ 'deputyReportOverview' | trans({ 'startYear': report.startDate | date('Y'),'endYear': report.endDate | date('Y') }, 'common' ) }}
                         {% endif %}
                     </a>
                 {% endif %}
@@ -110,7 +112,7 @@
             {% for item in items %}
                 <li class="govuk-breadcrumbs__list-item" {% if loop.last %}aria-current="page"{% endif %}>
                     {% if item.href is defined %}
-                        <a class="govuk-breadcrumbs__link" href="{{ item.href }}">{{ item.text  }}</a>
+                        <a class="govuk-breadcrumbs__link" href="{{ item.href }}">{{ item.text }}</a>
                     {% else %}
                         {{ item.text }}
                     {% endif %}
@@ -132,7 +134,7 @@
             'labelText': 'saveAndContinue',
             'labelTranslationDomain': 'common',
             'buttonClass': 'govuk-button govuk-!-margin-right-1 behat-link-save-and-continue',
-            }) }}
+        }) }}
     </div>
 {% endmacro %}
 
@@ -165,7 +167,8 @@
 
 {% macro icon(type, extraClass = '') %}
     {% if type in ['arrow-up'] %}
-        <svg role="presentation" focusable="false" class="opg-icon {{ extraClass }}" xmlns="http://www.w3.org/2000/svg" width="13" height="17" viewBox="0 0 13 17">
+        <svg role="presentation" focusable="false" class="opg-icon {{ extraClass }}" xmlns="http://www.w3.org/2000/svg"
+             width="13" height="17" viewBox="0 0 13 17">
             {% if type == 'arrow-up' %}
                 <path fill="currentColor" d="M6.5 0L0 6.5 1.4 8l4-4v12.7h2V4l4.3 4L13 6.4z"></path>
             {% endif %}
@@ -210,7 +213,8 @@
             <div class="opg-alert opg-alert--info">
                 {{ _self.icon('information', 'opg-alert__icon') }}
                 <div class="behat-region-alert-message opg-alert__message">
-                    <p class="govuk-body govuk-!-margin-bottom-0">{{ message.textbeforemarkup }}<br><br>{{ message.textaftermarkup }}</p>
+                    <p class="govuk-body govuk-!-margin-bottom-0">{{ message.textbeforemarkup }}
+                        <br><br>{{ message.textaftermarkup }}</p>
                 </div>
             </div>
         {% elseif alertType == 'infoLink' %}
@@ -218,7 +222,8 @@
                 {{ _self.icon('information', 'opg-alert__icon') }}
                 <div class="behat-region-alert-message opg-alert__message">
                     <p class="govuk-body govuk-!-margin-bottom-0">
-                        {{ message.textbeforemarkup }}<a href="{{ message.link }}">{{ message.linktext }}</a>{{ message.textaftermarkup }}
+                        {{ message.textbeforemarkup }}<a
+                            href="{{ message.link }}">{{ message.linktext }}</a>{{ message.textaftermarkup }}
                     </p>
                 </div>
             </div>
@@ -286,7 +291,8 @@
                 {% if (section_link_params(report, section, +1)) %}
                     <li>
                         <a href="{{ section_link_params(report, section, +1).link }}" class="govuk-link">
-                            Next section: {{ ('prevNextLinks.sections.' ~ section_link_params(report, section, +1).section) | trans({}, 'report-common') }}
+                            Next
+                            section: {{ ('prevNextLinks.sections.' ~ section_link_params(report, section, +1).section) | trans({}, 'report-common') }}
                         </a>
                     </li>
                 {% endif %}
@@ -325,27 +331,31 @@
 
 {% macro icon(type, svgClass) %}
     {% if type == 'success' %}
-        <svg class="{{ svgClass }}" fill="currentColor" role="presentation" focusable="false" xmlns="http://www.w3.org/2000/svg" viewBox="0 0 25 25" height="25" width="25">
-            <path d="M25,6.2L8.7,23.2L0,14.1l4-4.2l4.7,4.9L21,2L25,6.2z" />
+        <svg class="{{ svgClass }}" fill="currentColor" role="presentation" focusable="false"
+             xmlns="http://www.w3.org/2000/svg" viewBox="0 0 25 25" height="25" width="25">
+            <path d="M25,6.2L8.7,23.2L0,14.1l4-4.2l4.7,4.9L21,2L25,6.2z"/>
         </svg>
     {% endif %}
 
     {% if type == 'warning' %}
-        <svg class="{{ svgClass }}" fill="currentColor" role="presentation" focusable="false" xmlns="http://www.w3.org/2000/svg" viewBox="0 0 25 25" height="25" width="25">
-            <path d="M13.6,15.4h-2.3v-4.5h2.3V15.4z M13.6,19.8h-2.3v-2.2h2.3V19.8z M0,23.2h25L12.5,2L0,23.2z" />
+        <svg class="{{ svgClass }}" fill="currentColor" role="presentation" focusable="false"
+             xmlns="http://www.w3.org/2000/svg" viewBox="0 0 25 25" height="25" width="25">
+            <path d="M13.6,15.4h-2.3v-4.5h2.3V15.4z M13.6,19.8h-2.3v-2.2h2.3V19.8z M0,23.2h25L12.5,2L0,23.2z"/>
         </svg>
     {% endif %}
 
     {% if type == 'startButton' %}
-        <svg class="{{ svgClass }}" xmlns="http://www.w3.org/2000/svg" width="17.5" height="19" viewBox="0 0 33 40" role="presentation" focusable="false">
-            <path fill="currentColor" d="M0 0h13l20 20-20 20H0l20-20z" />
+        <svg class="{{ svgClass }}" xmlns="http://www.w3.org/2000/svg" width="17.5" height="19" viewBox="0 0 33 40"
+             role="presentation" focusable="false">
+            <path fill="currentColor" d="M0 0h13l20 20-20 20H0l20-20z"/>
         </svg>
     {% endif %}
 
     {% if type == 'information' %}
-        <svg class="{{ svgClass }}" fill="currentColor" role="presentation" focusable="false" xmlns="http://www.w3.org/2000/svg" viewBox="0 0 25 25" height="25" width="25">
+        <svg class="{{ svgClass }}" fill="currentColor" role="presentation" focusable="false"
+             xmlns="http://www.w3.org/2000/svg" viewBox="0 0 25 25" height="25" width="25">
             <path d="M13.7,18.5h-2.4v-2.4h2.4V18.5z M12.5,13.7c-0.7,0-1.2-0.5-1.2-1.2V7.7c0-0.7,0.5-1.2,1.2-1.2s1.2,0.5,1.2,1.2v4.8
-C13.7,13.2,13.2,13.7,12.5,13.7z M12.5,0.5c-6.6,0-12,5.4-12,12s5.4,12,12,12s12-5.4,12-12S19.1,0.5,12.5,0.5z" />
+C13.7,13.2,13.2,13.7,12.5,13.7z M12.5,0.5c-6.6,0-12,5.4-12,12s5.4,12,12,12s12-5.4,12-12S19.1,0.5,12.5,0.5z"/>
         </svg>
     {% endif %}
 {% endmacro %}
@@ -364,15 +374,17 @@ C13.7,13.2,13.2,13.7,12.5,13.7z M12.5,0.5c-6.6,0-12,5.4-12,12s5.4,12,12,12s12-5.
 {% endmacro %}
 
 {% macro startSectionButton(path, text) %}
-    <a href={{ path }} role="button" draggable="false" class="govuk-button govuk-button--start behat-link-start" data-module="govuk-button">
+    <a href={{ path }} role="button" draggable="false" class="govuk-button govuk-button--start behat-link-start"
+       data-module="govuk-button">
         {{ text }}
-        <svg class="govuk-button__start-icon" xmlns="http://www.w3.org/2000/svg" width="17.5" height="19" viewBox="0 0 33 40" aria-hidden="true" focusable="false">
-            <path fill="currentColor" d="M0 0h13l20 20-20 20H0l20-20z" />
+        <svg class="govuk-button__start-icon" xmlns="http://www.w3.org/2000/svg" width="17.5" height="19"
+             viewBox="0 0 33 40" aria-hidden="true" focusable="false">
+            <path fill="currentColor" d="M0 0h13l20 20-20 20H0l20-20z"/>
         </svg>
     </a>
 {% endmacro %}
 
-{#transDomain and successHeading are optional arguments to support passing in a pre-translated string#}
+{# transDomain and successHeading are optional arguments to support passing in a pre-translated string #}
 {% macro successBanner(successText, transDomain, successHeading) %}
     <div class="moj-banner moj-banner--success">
         {{ _self.icon('success', 'moj-banner__icon') }}
@@ -380,7 +392,7 @@ C13.7,13.2,13.2,13.7,12.5,13.7z M12.5,0.5c-6.6,0-12,5.4-12,12s5.4,12,12,12s12-5.
             {% if successHeading is not null %}
                 <h2 class="govuk-heading-m">
                     {% if transDomain is not null %}
-                        {{ successHeading | trans({}, transDomain)  }}
+                        {{ successHeading | trans({}, transDomain) }}
                     {% else %}
                         {{ successHeading }}
                     {% endif %}
@@ -388,15 +400,15 @@ C13.7,13.2,13.2,13.7,12.5,13.7z M12.5,0.5c-6.6,0-12,5.4-12,12s5.4,12,12,12s12-5.
             {% endif %}
             <span class="moj-banner__assistive">Success</span>
             {% if transDomain is not null %}
-                {{ successText | trans({}, transDomain) | nl2br  }}
+                {{ successText | trans({}, transDomain) | nl2br }}
             {% else %}
-                {{ successText | nl2br  }}
+                {{ successText | nl2br }}
             {% endif %}
         </div>
     </div>
 {% endmacro %}
 
-{#transDomain and warningHeading are optional arguments to support passing in a pre-translated string#}
+{# transDomain and warningHeading are optional arguments to support passing in a pre-translated string #}
 {% macro warningBanner(warningText, transDomain, warningHeading) %}
     <div class="moj-banner moj-banner--warning">
         {{ _self.icon('warning', 'moj-banner__icon') }}
@@ -404,7 +416,7 @@ C13.7,13.2,13.2,13.7,12.5,13.7z M12.5,0.5c-6.6,0-12,5.4-12,12s5.4,12,12,12s12-5.
             {% if warningHeading is not null %}
                 <h2 class="govuk-heading-m">
                     {% if transDomain is not null %}
-                        {{ warningHeading | trans({}, transDomain)  }}
+                        {{ warningHeading | trans({}, transDomain) }}
                     {% else %}
                         {{ warningHeading }}
                     {% endif %}
@@ -412,23 +424,23 @@ C13.7,13.2,13.2,13.7,12.5,13.7z M12.5,0.5c-6.6,0-12,5.4-12,12s5.4,12,12,12s12-5.
             {% endif %}
             <span class="moj-banner__assistive">Warning</span>
             {% if transDomain is not null %}
-                {{ warningText | trans({}, transDomain) | nl2br  }}
+                {{ warningText | trans({}, transDomain) | nl2br }}
             {% else %}
-                {{ warningText | nl2br  }}
+                {{ warningText | nl2br }}
             {% endif %}
         </div>
     </div>
 {% endmacro %}
 
-{#transDomain and infoHeading are optional arguments to support passing in a pre-translated string#}
+{# transDomain and infoHeading are optional arguments to support passing in a pre-translated string #}
 {% macro informationBanner(infoText, transDomain, infoHeading) %}
     <div class="moj-banner">
         {{ _self.icon('information', 'moj-banner__icon') }}
         <div class="moj-banner__message">
-            {% if infoHeading is not null  %}
+            {% if infoHeading is not null %}
                 <h2 class="govuk-heading-m">
                     {% if transDomain is not null %}
-                        {{ infoHeading | trans({}, transDomain)  }}
+                        {{ infoHeading | trans({}, transDomain) }}
                     {% else %}
                         {{ infoHeading }}
                     {% endif %}
@@ -436,9 +448,9 @@ C13.7,13.2,13.2,13.7,12.5,13.7z M12.5,0.5c-6.6,0-12,5.4-12,12s5.4,12,12,12s12-5.
             {% endif %}
             <span class="moj-banner__assistive">information</span>
             {% if transDomain is not null %}
-                {{ infoText | trans({}, transDomain) | nl2br  }}
+                {{ infoText | trans({}, transDomain) | nl2br }}
             {% else %}
-                {{ infoText | nl2br  }}
+                {{ infoText | nl2br }}
             {% endif %}
         </div>
     </div>
@@ -480,79 +492,83 @@ C13.7,13.2,13.2,13.7,12.5,13.7z M12.5,0.5c-6.6,0-12,5.4-12,12s5.4,12,12,12s12-5.
     <fieldset class="govuk-fieldset">
 
         {% if formObject.address is defined %}
-        <div class="govuk-form-group">
-            {% set formAddressLabel = translationPrefix ~ 'address.label' %}
-            {% set formAddressContext = translationPrefix ~ 'address.context' %}
-            {{ formAddressLabel | trans({}, transDomain) }}<span class="govuk-visually-hidden">{{ formAddressContext | trans({}, transDomain) }}</span>
-            {{ form_input(formObject.address, '') }}
-        </div>
+            <div class="govuk-form-group">
+                {% set formAddressLabel = translationPrefix ~ 'address.label' %}
+                {% set formAddressContext = translationPrefix ~ 'address.context' %}
+                {{ formAddressLabel | trans({}, transDomain) }}<span
+                    class="govuk-visually-hidden">{{ formAddressContext | trans({}, transDomain) }}</span>
+                {{ form_input(formObject.address, '') }}
+            </div>
         {% endif %}
 
         {% if formObject.address1 is defined %}
-        <div class="govuk-form-group">
-            {% set formAddress1Label = translationPrefix ~ 'address1.label' %}
-            {% set formAddress1Context = translationPrefix ~ 'address1.context' %}
-            {{ formAddress1Label | trans({}, transDomain) }}<span class="govuk-visually-hidden">{{ formAddress1Context | trans({}, transDomain) }}</span>
-            {{ form_input(formObject.address1, '') }}
-        </div>
+            <div class="govuk-form-group">
+                {% set formAddress1Label = translationPrefix ~ 'address1.label' %}
+                {% set formAddress1Context = translationPrefix ~ 'address1.context' %}
+                {{ formAddress1Label | trans({}, transDomain) }}<span
+                    class="govuk-visually-hidden">{{ formAddress1Context | trans({}, transDomain) }}</span>
+                {{ form_input(formObject.address1, '') }}
+            </div>
         {% endif %}
 
         {% if formObject.address2 is defined %}
-        <div class="govuk-form-group">
-            {% set formAddress2Label = translationPrefix ~ 'address2.label' %}
-            {% set formAddress2Context = translationPrefix ~ 'address2.context' %}
-            {{ formAddress2Label | trans({}, transDomain) }}<span class="govuk-visually-hidden">{{ formAddress2Context | trans({}, transDomain) }}</span>
-            {{ form_input(formObject.address2, '') }}
-        </div>
+            <div class="govuk-form-group">
+                {% set formAddress2Label = translationPrefix ~ 'address2.label' %}
+                {% set formAddress2Context = translationPrefix ~ 'address2.context' %}
+                {{ formAddress2Label | trans({}, transDomain) }}<span
+                    class="govuk-visually-hidden">{{ formAddress2Context | trans({}, transDomain) }}</span>
+                {{ form_input(formObject.address2, '') }}
+            </div>
         {% endif %}
 
         {% if formObject.county is defined %}
-        <div class="govuk-form-group">
-            {% set formCountyLabel = translationPrefix ~ 'county.label' %}
-            {{ formCountyLabel | trans({}, transDomain) }}
-            {{ form_input(formObject.county, '') }}
-        </div>
+            <div class="govuk-form-group">
+                {% set formCountyLabel = translationPrefix ~ 'county.label' %}
+                {{ formCountyLabel | trans({}, transDomain) }}
+                {{ form_input(formObject.county, '') }}
+            </div>
         {% endif %}
 
         {% if formObject.address3 is defined %}
-        <div class="govuk-form-group">
-            {% set formAddress3Label = translationPrefix ~ 'address3.label' %}
-            {% set formAddress3Context = translationPrefix ~ 'address3.context' %}
-            {{ formAddress3Label | trans({}, transDomain) }}<span class="govuk-visually-hidden">{{ formAddress3Context | trans({}, transDomain) }}</span>
-            {{ form_input(formObject.address3, '') }}
-        </div>
+            <div class="govuk-form-group">
+                {% set formAddress3Label = translationPrefix ~ 'address3.label' %}
+                {% set formAddress3Context = translationPrefix ~ 'address3.context' %}
+                {{ formAddress3Label | trans({}, transDomain) }}<span
+                    class="govuk-visually-hidden">{{ formAddress3Context | trans({}, transDomain) }}</span>
+                {{ form_input(formObject.address3, '') }}
+            </div>
         {% endif %}
 
         {% if formObject.postcode is defined %}
-        <div class="govuk-form-group">
-            {% set formPostcodeLabel = translationPrefix ~ 'postcode.label' %}
-            {{ formPostcodeLabel | trans({}, transDomain) }}
-            {{ form_input(formObject.postcode, '') }}
-        </div>
+            <div class="govuk-form-group">
+                {% set formPostcodeLabel = translationPrefix ~ 'postcode.label' %}
+                {{ formPostcodeLabel | trans({}, transDomain) }}
+                {{ form_input(formObject.postcode, '') }}
+            </div>
         {% endif %}
 
         {% if formObject.addressPostcode is defined %}
-        <div class="govuk-form-group">
-            {% set formaddressPostcodeLabel = translationPrefix ~ 'addressPostcode.label' %}
-            {{ formaddressPostcodeLabel | trans({}, transDomain) }}
-            {{ form_input(formObject.addressPostcode, '') }}
-        </div>
+            <div class="govuk-form-group">
+                {% set formaddressPostcodeLabel = translationPrefix ~ 'addressPostcode.label' %}
+                {{ formaddressPostcodeLabel | trans({}, transDomain) }}
+                {{ form_input(formObject.addressPostcode, '') }}
+            </div>
         {% endif %}
 
         {% if formObject.country is defined %}
-        <div class="govuk-form-group">
-            {% set formCountryLabel = translationPrefix ~ 'country.label' %}
-            {{ formCountryLabel | trans({}, transDomain) }}
-            {{ form_input(formObject.country, '') }}
-        </div>
+            <div class="govuk-form-group">
+                {% set formCountryLabel = translationPrefix ~ 'country.label' %}
+                {{ formCountryLabel | trans({}, transDomain) }}
+                {{ form_input(formObject.country, '') }}
+            </div>
         {% endif %}
 
         {% if formObject.addressCountry is defined %}
-        <div class="govuk-form-group">
-            {% set formaddressCountryLabel = translationPrefix ~ 'addressCountry.label' %}
-            {{ formaddressCountryLabel | trans({}, transDomain) }}
-            {{ form_input(formObject.addressCountry, '') }}
-        </div>
+            <div class="govuk-form-group">
+                {% set formaddressCountryLabel = translationPrefix ~ 'addressCountry.label' %}
+                {{ formaddressCountryLabel | trans({}, transDomain) }}
+                {{ form_input(formObject.addressCountry, '') }}
+            </div>
         {% endif %}
 
     </fieldset>

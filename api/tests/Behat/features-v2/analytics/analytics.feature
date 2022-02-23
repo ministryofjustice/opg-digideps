@@ -30,6 +30,8 @@ Feature: Analytics - view and download analytics
         Then I should see the correct options in the actions dropdown
         When I try to download the DAT file
         Then I should have no issues downloading the file
+        When I try to view the reports page
+        Then I should have no issues viewing the page
         When I try to download user research report
         Then I should have no issues downloading the file
         When I try to download satisfaction report

@@ -9,6 +9,7 @@ use App\Service\Client\RestClientInterface;
 class StatsApi
 {
     protected const GET_ACTIVE_LAY_REPORT_DATA_ENDPOINT = 'stats/deputies/lay/active';
+    protected const GET_ADMIN_USER_ACCOUNT_REPORT_DATA = 'stats/admins/report_data';
 
     private RestClientInterface $restClient;
 
@@ -17,15 +18,21 @@ class StatsApi
         $this->restClient = $restClient;
     }
 
-    /**
-     * @return array
-     */
-    public function getActiveLayReportData()
+    public function getActiveLayReportData(): array
     {
         return $this->restClient->get(
             self::GET_ACTIVE_LAY_REPORT_DATA_ENDPOINT,
             'array',
             ['active-users']
+        );
+    }
+
+    public function getAdminUserAccountReportData(): array
+    {
+        return $this->restClient->get(
+            self::GET_ADMIN_USER_ACCOUNT_REPORT_DATA,
+            'array',
+            ['admin-account-reports']
         );
     }
 }

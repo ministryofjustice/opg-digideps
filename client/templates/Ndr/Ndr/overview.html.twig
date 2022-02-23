@@ -21,13 +21,15 @@
                         <strong>{{ ndr.submitDate | date("j F Y") }}</strong>
 
                         <p class="flush--bottom">
-                            <a href="{{ path('ndr_pdf', {'ndrId': ndr.id}) }}" class="push-half--right">{{ 'status.downloadACopy' | trans({}, 'ndr-submitted') }}</a>
+                            <a href="{{ path('ndr_pdf', {'ndrId': ndr.id}) }}"
+                               class="push-half--right">{{ 'status.downloadACopy' | trans({}, 'ndr-submitted') }}</a>
                             <a href="{{ path('ndr_review', {'ndrId': ndr.id}) }}">{{ 'status.viewReportOnline' | trans({}, 'ndr-submitted') }}</a>
                         </p>
                     </li>
                 {% elseif not ndrStatus.isReadyToSubmit %}
                     <li>
-                        <p class="govuk-body">Report status: <strong>{{ ('status.' ~ ndrStatus.status) | trans() }}</strong></p>
+                        <p class="govuk-body">Report status:
+                            <strong>{{ ('status.' ~ ndrStatus.status) | trans() }}</strong></p>
                     </li>
                 {% endif %}
             </ul>
@@ -59,7 +61,8 @@
 
 
         <li>
-            <h2 class="govuk-heading-m opg-overview-section__divider">{{ client.firstname }}'s property and finances</h2>
+            <h2 class="govuk-heading-m opg-overview-section__divider">{{ client.firstname }}'s property and
+                finances</h2>
             {% include '@App/Ndr/Ndr/_subsection.html.twig' with {
                 transDomain: translationDomain,
                 subSection: 'deputy_expenses',
@@ -145,11 +148,13 @@
         <div class="push--top">
             {{ macros.notification('info', 'previewNotice' | trans()) }}
         </div>
-        <a id="edit-report-preview" class="govuk-button" href="{{ path('ndr_review', {'ndrId': ndr.id}) }}" data-module="govuk-button">{{ 'options.previewReport' | trans() }}</a>
+        <a id="edit-report-preview" class="govuk-button" href="{{ path('ndr_review', {'ndrId': ndr.id}) }}"
+           data-module="govuk-button">{{ 'options.previewReport' | trans() }}</a>
 
     {% else %}
 
-        <a id="edit-report-review" class="govuk-button push--top" href="{{ path('ndr_review', {'ndrId': ndr.id}) }}" data-module="govuk-button">{{ 'continue' | trans({}, 'common') }}</a>
+        <a id="edit-report-review" class="govuk-button push--top" href="{{ path('ndr_review', {'ndrId': ndr.id}) }}"
+           data-module="govuk-button">{{ 'previewSubmitButton' | trans({}, 'ndr-overview') }}</a>
 
     {% endif %}
 

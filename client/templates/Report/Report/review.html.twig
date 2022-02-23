@@ -21,19 +21,22 @@
 {% endif %}
 
 {% block htmlTitle %}{{ (page ~ '.htmlTitle') | trans }}{% endblock %}
-{% block pageTitle %}{{ (page ~ '.pageTitle') | trans }}{% endblock %}
+{% block supportTitleTop %}{{ ('supportTitleTop') | trans({'startYear': report.startDate | date('Y'),'endYear': report.endDate | date('Y') }) }}{% endblock %}
+ {% block pageTitle %}{{ (page ~ '.pageTitle') | trans }}{% endblock %}
 
 {% block head %}
     {{ parent() }}
-    <link href="{{ 'stylesheets/formatted-report.css' | assetUrl }}"  rel="stylesheet" type="text/css">
+    <link href="{{ 'stylesheets/formatted-report.css' | assetUrl }}" rel="stylesheet" type="text/css">
 {% endblock %}
 
 {% block breadcrumbs %}
     {% if report.submitted == true %}
         {% if isLayDeputy %}
-            <a id="back-to-reports" href="{{ backLink }}" class="govuk-link link-back behat-link-back-to-reports">{{ 'back' | trans({}, 'common' ) }}</a>
+            <a id="back-to-reports" href="{{ backLink }}"
+               class="govuk-link link-back behat-link-back-to-reports">{{ 'back' | trans({}, 'common' ) }}</a>
         {% else %}
-            <a id="back-to-client" href="{{ backLink }}" class="govuk-link link-back behat-link-return-to-client-profile">{{ 'page.returnToClientProfile' | trans({}, 'report-submitted') }}</a>
+            <a id="back-to-client" href="{{ backLink }}"
+               class="govuk-link link-back behat-link-return-to-client-profile">{{ 'page.returnToClientProfile' | trans({}, 'report-submitted') }}</a>
         {% endif %}
     {% else %}
         {{ macros.breadcrumbs(report) }}
@@ -44,58 +47,30 @@
 
     <div class="push--bottom">
         {% if report.submitted == false %}
-            <p class="govuk-body">{{ (page ~ '.introPara') | trans() }}</p>
-            {% if preview %}
-                <a class="govuk-button" href="{{ path("report_overview" , {'reportId': report.id }) }}">
-                    {{ 'incomplete.backToEditingReport' | trans() }}
-                </a>
-                <a class="govuk-link button-link js-trackDownloadLink" href="{{ path('report_pdf', {'reportId': report.id}) }}">
-                    <i class="icon icon-pdf"></i>{{ 'downloadAsPdf' | trans() }}
-                </a>
-            {% endif %}
-        {% else %}
-            <p class="govuk-body">{{ (page ~ '.introPara') | trans() }} {{ report.submitDate | date("j F Y") }}.</p>
-            <a class="govuk-button" href="{{ backLink }}">
-                {% if isLayDeputy %}
-                    {{ 'backToYourReports' | trans({}, 'common') }}
-                {% else %}
-                    {{ 'backToClientProfile' | trans({}, 'common') }}
-                {% endif %}
-            </a>
-            <a class="govuk-link button-link js-trackDownloadLink" href="{{ path('report_pdf', {'reportId': report.id}) }}">
-                <i class="icon icon-pdf"></i>{{ 'downloadAsPdf' | trans() }}
-            </a>
+            <p class="govuk-body">{{ (page ~ '.para1') | trans() }}</p>
+            <p class="govuk-body">{{ (page ~ '.para2') | trans() }}</p>
         {% endif %}
+
+        {% include '@App/Report/Report/_review_buttons.html.twig' %}
+
     </div>
+    <div>
+        <span class="opg-text--secondary">{{ 'pdfDraftSentence' | trans() }}</span>
+        {% include '@App/Report/Report/_pdf_download_link.html.twig' %}
+    </div>
+
 
     <div class="push--bottom">
-        {% include '@App/Report/Formatted/formatted_body.html.twig' %}
+        <div class="opg-border--secondary">
+            {% include '@App/Report/Formatted/formatted_body.html.twig' %}
+        </div>
     </div>
 
-    {% if report.submitted == false %}
-        {% if preview %}
-            <a class="govuk-button" href="{{ path("report_overview" , {'reportId': report.id }) }}">
-                {{ 'incomplete.backToEditingReport' | trans() }}
-            </a>
-        {% else %}
-            <a class="govuk-button left behat-link-declaration-page" href="{{ path("report_declaration" , {'reportId': report.id }) }}">
-                {{ 'continue' | trans({}, 'common') }}
-            </a>
-            <a class="govuk-link button-link" href="{{ path("report_overview" , {'reportId': report.id }) }}">
-                {{ 'incomplete.backToEditingReport' | trans() }}
-            </a>
-        {% endif %}
-    {% else %}
-        <a class="button" href="{{ backLink }}">
-            {% if isLayDeputy %}
-                {{ 'backToYourReports' | trans({}, 'common') }}
-            {% else %}
-                {{ 'backToClientProfile' | trans({}, 'common') }}
-            {% endif %}
-        </a>
-    {% endif %}
+    <div class="govuk-!-padding-bottom-4">
+        {% include '@App/Report/Report/_pdf_download_link.html.twig' %}
+    </div>
 
-    <a class="govuk-link button-link behat-link-download-pdf js-trackDownloadLink" href="{{ path('report_pdf', {'reportId': report.id}) }}">
-        <i class="icon icon-pdf"></i>{{ 'downloadAsPdf' | trans() }}
-    </a>
+    {% include '@App/Report/Report/_review_buttons.html.twig' %}
+
+
 {% endblock %}

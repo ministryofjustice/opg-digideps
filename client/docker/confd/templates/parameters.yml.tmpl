@@ -56,6 +56,18 @@ parameters:
   {{ else }}
       validate: true
   {{ end }}
+    secrets_manager_client_params:
+      version: 'latest'
+      region: 'eu-west-1'
+  {{ if exists "/secrets/manager/localstack" }}
+      endpoint: 'http://localstack:4566'
+      validate: false
+      credentials:
+        key: 'FAKE_ID'
+        secret: 'FAKE_KEY'
+  {{ else }}
+      validate: true
+  {{ end }}
     cloudwatch_logs_client_params:
       version: 'latest'
       region: 'eu-west-1'

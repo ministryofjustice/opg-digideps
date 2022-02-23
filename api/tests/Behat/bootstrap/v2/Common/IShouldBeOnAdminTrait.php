@@ -193,4 +193,12 @@ trait IShouldBeOnAdminTrait
     {
         return $this->iAmOnPage('/admin\/settings\/service-notification$/');
     }
+
+    /**
+     * @Then I should be on the admin stats reports page
+     */
+    public function iAmOnAdminStatsReportsPage()
+    {
+        return $this->iAmOnPage('/admin\/stats\/reports$/');
+    }
 }
