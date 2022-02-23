@@ -255,6 +255,7 @@ class ReportSection
         $typeOfIncome = $report instanceof Ndr\Ndr ? new NdrMoneyReceivedOnClientsBehalf() : new MoneyReceivedOnClientsBehalf();
 
         $typeOfIncome->setCreated(new DateTime())
+            ->setWhoReceivedMoney('Someone')
             ->setAmount(100.50)
             ->setMoneyType('Universal Credit');
 
