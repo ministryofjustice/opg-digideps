@@ -49,6 +49,7 @@ class OrgService
             'reports' => 0,
             'organisations' => 0,
         ],
+        'skipped' => 0,
     ];
 
     const CHUNK_SIZE = 50;
@@ -160,6 +161,10 @@ class OrgService
                 $this->output['updated'][$group] += count($items);
             }
         }
+
+        if (!empty($output['skipped'])) {
+            $this->output['skipped'] += $output['skipped'];
+        }
     }
 
     /**
@@ -179,11 +184,12 @@ class OrgService
         }
 
         $flashAddedMessage = sprintf(
-            'Added %d clients, %d named deputies, %d reports and %d organisations. Go to users tab to enable them.',
+            'Added %d clients, %d named deputies, %d reports and %d organisations. Skipped %s archived clients. Go to users tab to enable them.',
             $this->output['added']['clients'],
             $this->output['added']['named_deputies'],
             $this->output['added']['reports'],
             $this->output['added']['organisations'],
+            $this->output['skipped'],
         );
 
         $flashBag->add(
