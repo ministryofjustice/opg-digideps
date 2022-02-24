@@ -14,11 +14,11 @@ startPage:
 stepPage:
     pageTitle:
         1:
-            mainTitle: Did you check that %client% is getting all the benefits they're entitled to in the last reporting period?
+            mainTitle: Did you check that %client% gets all the benefits they should have in the last reporting period?
         2:
-            mainTitle: Does anyone receive any money from other organisations on %client%'s behalf?
+            mainTitle: Did anyone receive any money from people or organisations on %client%'s behalf?
         3:
-            mainTitle: Tell us about the money other people received from other organisations on %client%'s behalf
+            mainTitle: Tell us about the money others received from people or organisations on %client%'s behalf
     supportTitle: Benefits check and money other people received
     pageDescription:
         1:
@@ -38,7 +38,7 @@ stepPage:
     backLink: Back
 
 summaryPage:
-    pageDescription: Tell us if you checked what benefits %client% is entitled to, and about any money other organisations received on %client%'s behalf
+    pageDescription: Tell us if you checked what benefits %client% is entitled to, and about any money other people or organisations received on %client%'s behalf
     listedAnswers: We've listed your saved answers below.
     checkAnswers: Check they're correct and edit them where necessary
     addMoneyButtonText: Add money
@@ -69,7 +69,7 @@ form:
             neverChecked: No, I did not check this
         dateCheckedHint: Date of last check
         dateCheckedHintExample: For example 4  2021
-        neverCheckedHint: Please tell us why you have never checked this
+        neverCheckedHint: Tell us why you did not check this
         errors:
             noOptionSelected: Tell us if you checked that %client%'s gets all the benefits they're entitled to
             missingDate: Enter the date you last checked %client%'s benefits entitlement
