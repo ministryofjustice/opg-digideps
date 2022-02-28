@@ -211,6 +211,29 @@ class StatsController extends AbstractController
     }
 
     /**
+     * @Route("/reports", name="admin_reports")
+     * @Security("is_granted('ROLE_SUPER_ADMIN')")
+     * @Template("@App/Admin/Stats/reports.html.twig")
+     *
+     * @return array|Response
+     */
+    public function reports()
+    {
+    }
+
+    /**
+     * @Route("/reports/user_accounts", name="admin_user_account_reports")
+     * @Security("is_granted('ROLE_SUPER_ADMIN')")
+     * @Template("@App/Admin/Stats/userAccountReports.html.twig")
+     *
+     * @return array|Response
+     */
+    public function userAccountReports()
+    {
+        return $this->statsApi->getAdminUserAccountReportData();
+    }
+
+    /**
      * Map an array of metric responses to be addressible by deputyType.
      */
     private function mapToDeputyType(array $result): array

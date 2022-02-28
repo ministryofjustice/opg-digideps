@@ -1,0 +1,6 @@
+{% set translationDomain = "report-display" %}
+{% trans_default_domain translationDomain %}
+
+<a class="govuk-link button-link js-trackDownloadLink" href="{{ path('ndr_pdf', {'ndrId': ndr.id}) }}">
+    <i class="icon icon-pdf"></i>{{ 'downloadAsPdf' | trans() }}
+</a>

@@ -156,6 +156,14 @@ trait IVisitAdminTrait
     }
 
     /**
+     * @When I visit the admin stats reports page
+     */
+    public function iVisitAdminStatsReportsPage()
+    {
+        $this->visitAdminPath($this->getAdminStatsReportsUrl());
+    }
+
+    /**
      * @When I visit the admin login page
      */
     public function iVisitAdminLoginPage()

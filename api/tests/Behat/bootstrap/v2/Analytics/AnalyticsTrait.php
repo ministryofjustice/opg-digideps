@@ -152,9 +152,7 @@ trait AnalyticsTrait
     {
         $linkTextItems = [
             'Download DAT file',
-            'Download satisfaction report',
-            'Download user research report',
-            'Download active lays report',
+            'View reports',
         ];
         foreach ($linkTextItems as $linkText) {
             $xpath = sprintf('//a[contains(.,"%s")]', $linkText);
@@ -202,7 +200,7 @@ trait AnalyticsTrait
      */
     public function iTryDownloadSatisfactionReport()
     {
-        $this->iVisitAdminAnalyticsPage();
+        $this->iVisitAdminStatsReportsPage();
         $this->currentLinkText = 'Download satisfaction report';
 
         $xpath = sprintf('//a[contains(.,"%s")]', $this->currentLinkText);
@@ -212,8 +210,6 @@ trait AnalyticsTrait
         }
         $downloadLink->click();
         $this->iAmOnAdminStatsSatisfactionPage();
-
-        $this->fillInAnalyticsStartEndDates();
     }
 
     /**
@@ -221,7 +217,7 @@ trait AnalyticsTrait
      */
     public function iTryDownloadUserResearchReport()
     {
-        $this->iVisitAdminAnalyticsPage();
+        $this->iVisitAdminStatsReportsPage();
         $this->currentLinkText = 'Download user research report';
 
         $xpath = sprintf('//a[contains(.,"%s")]', $this->currentLinkText);
@@ -231,8 +227,6 @@ trait AnalyticsTrait
         }
         $downloadLink->click();
         $this->iAmOnAdminStatsUserResearchPage();
-
-        $this->fillInAnalyticsStartEndDates();
     }
 
     /**
@@ -240,7 +234,7 @@ trait AnalyticsTrait
      */
     public function iTryDownloadActiveLaysReport()
     {
-        $this->iVisitAdminAnalyticsPage();
+        $this->iVisitAdminStatsReportsPage();
         $this->currentLinkText = 'Download active lays report';
 
         $xpath = sprintf('//a[contains(.,"%s")]', $this->currentLinkText);
@@ -271,7 +265,25 @@ trait AnalyticsTrait
     }
 
     /**
-     * @When I should have no issues downloading the file
+     * @When I try to view the reports page
+     */
+    public function iTryViewTheReportsPage()
+    {
+        $this->iVisitAdminAnalyticsPage();
+        $this->currentLinkText = 'View reports';
+
+        $xpath = sprintf('//a[contains(.,"%s")]', $this->currentLinkText);
+        $link = $this->getSession()->getPage()->find('xpath', $xpath);
+        if (is_null($link)) {
+            throw new BehatException(sprintf('Missing the following text: %s', $this->currentLinkText));
+        }
+        $link->click();
+        $this->iAmOnAdminStatsReportsPage();
+    }
+
+    /**
+     * @Then I should have no issues downloading the file
+     * @Then I should have no issues viewing the page
      */
     public function shouldHaveNoIssuesDownloadingFile()
     {

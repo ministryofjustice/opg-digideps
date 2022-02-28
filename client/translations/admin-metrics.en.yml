@@ -2,9 +2,17 @@ indexPage:
     htmlTitle: Administration - Analytics
     pageTitle: Analytics
     downloadDAT: Download DAT file
+    reports: View reports
+
+adminAccounts:
+    pageTitle: Admin Accounts
+
+reports:
+    pageTitle: Reports
     downloadSatisfaction: Download satisfaction report
     downloadUserResearch: Download user research report
     downloadActiveLays: Download active lays report
+    userAccountReports: View admin account metrics
 
 form:
     title: Change reporting period
