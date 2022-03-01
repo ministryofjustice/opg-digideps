@@ -11,24 +11,26 @@ use Symfony\Component\Validator\Constraints as Assert;
 
 class ChangePasswordType extends AbstractType
 {
-    const VALIDATION_GROUP = 'user_change_password';
+    public const VALIDATION_GROUP = 'user_change_password';
 
     public function buildForm(FormBuilderInterface $builder, array $options)
     {
         $builder->add('current_password', FormTypes\PasswordType::class, [
-                    'mapped' => false,
-                    'constraints' => [
-                        new Assert\NotBlank(['message' => 'user.password.existing.notBlank', 'groups' => [self::VALIDATION_GROUP]]),
-                        new DUserPassword(['message' => 'user.password.existing.notCorrect', 'groups' => [self::VALIDATION_GROUP]]),
-                    ],
-                ])
-                ->add('password', FormTypes\RepeatedType::class, [
-                    'mapped' => true,
-                    'type' => FormTypes\PasswordType::class,
-                    'invalid_message' => 'user.password.new.doesntMatch',
-                ])
-                ->add('id', FormTypes\HiddenType::class)
-                ->add('save', FormTypes\SubmitType::class);
+            'mapped' => false,
+            'constraints' => [
+                new Assert\NotBlank(['message' => 'user.password.existing.notBlank', 'groups' => [self::VALIDATION_GROUP]]),
+                new DUserPassword(['message' => 'user.password.existing.notCorrect', 'groups' => [self::VALIDATION_GROUP]]),
+            ],
+        ])
+            ->add('password', FormTypes\RepeatedType::class, [
+                'mapped' => true,
+                'type' => FormTypes\PasswordType::class,
+                'invalid_message' => 'user.password.new.doesntMatch',
+                'first_options' => ['attr' => ['autocomplete' => 'off']],
+                'second_options' => ['attr' => ['autocomplete' => 'off']],
+            ])
+            ->add('id', FormTypes\HiddenType::class)
+            ->add('save', FormTypes\SubmitType::class);
     }
 
     public function configureOptions(OptionsResolver $resolver)
