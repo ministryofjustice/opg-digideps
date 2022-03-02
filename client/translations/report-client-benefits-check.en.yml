@@ -3,10 +3,10 @@ common:
         In this section you need to tell us:
     tellUsBullets:
         1: if you checked what benefits %client% is entitled to
-        2: about any benefits or money other people or organisation received directly on %client%'s behalf
+        2: about any benefits or money other people or organisations received directly on %client%'s behalf
 
-    htmlTitle: Benefits check and money other people receive - Complete the deputy report | GOV.UK
-    pageTitle: Benefits check and money other people receive
+    htmlTitle: Benefits check and money others received - Complete the deputy report | GOV.UK
+    pageTitle: Benefits check and money others received
 
 startPage:
     startButton: Start
@@ -19,7 +19,7 @@ stepPage:
             mainTitle: Did anyone receive any money from people or organisations on %client%'s behalf?
         3:
             mainTitle: Tell us about the money others received from people or organisations on %client%'s behalf
-    supportTitle: Benefits check and money other people received
+    supportTitle: Benefits check and money others received
     pageDescription:
         1:
             benefitsCalculatorSignpost: To help you find out which benefits %client% may be entitled to you can use

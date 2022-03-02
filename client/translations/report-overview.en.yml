@@ -197,8 +197,8 @@ documents:
         done: "{0} no documents | {1} 1 document | ]1,Inf[ %count% documents"
 
 client_benefits_check:
-    subSectionTitle: "Benefits check and money other people receive"
-    subSectionDescription: "Tell us when you last checked what benefits %client% is entitled to, and about any money other people received directly on %client%’s behalf."
+    subSectionTitle: "Benefits check and money others received"
+    subSectionDescription: "Tell us if you checked what benefits %client% is entitled to, and about any money other people or organisations received on %client%’s behalf."
     label:
         done: "Finished"
 
