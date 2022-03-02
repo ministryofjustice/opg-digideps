@@ -1,4 +1,4 @@
-@gifts
+@gifts @v2 @v2_reporting_1
 Feature: Gifts
 
 @lay-pfa-high-not-started

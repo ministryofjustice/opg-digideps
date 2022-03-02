@@ -1,4 +1,4 @@
-@contact-details @v2
+@contact-details @v2_admin @v2
 Feature: Contact details
     Scenario: Home screen should show lay deputy email address
         When I visit the client login page

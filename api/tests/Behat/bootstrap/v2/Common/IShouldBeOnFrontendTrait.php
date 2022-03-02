@@ -21,11 +21,51 @@ trait IShouldBeOnFrontendTrait
     }
 
     /**
+     * @Then I should be on the report review page
+     */
+    public function iAmOnReportReviewPage(): bool
+    {
+        return $this->iAmOnPage('/report\/.*\/review$/');
+    }
+
+    /**
+     * @Then I should be on the ndr review page
+     */
+    public function iAmOnNdrReviewPage(): bool
+    {
+        return $this->iAmOnPage('/ndr\/.*\/review$/');
+    }
+
+    /**
+     * @Then I should be on the report declaration page
+     */
+    public function iAmOnReportDeclarationPage(): bool
+    {
+        return $this->iAmOnPage('/report\/.*\/declaration$/');
+    }
+
+    /**
+     * @Then I should be on the ndr declaration page
+     */
+    public function iAmOnNdrDeclarationPage(): bool
+    {
+        return $this->iAmOnPage('/ndr\/.*\/declaration$/');
+    }
+
+    /**
      * @Then I should be on the report submitted page
      */
     public function iAmOnReportSubmittedPage(): bool
     {
         return $this->iAmOnPage('/report\/.*\/submitted$/');
+    }
+
+    /**
+     * @Then I should be on the ndr submitted page
+     */
+    public function iAmOnNdrSubmittedPage(): bool
+    {
+        return $this->iAmOnPage('/ndr\/.*\/submitted$/');
     }
 
     /**

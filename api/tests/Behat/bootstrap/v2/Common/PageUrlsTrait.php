@@ -53,6 +53,7 @@ trait PageUrlsTrait
     private string $adminActiveLaysReportUrl = '/admin/stats/downloadActiveLaysCsv';
     private string $adminAddUserUrl = '/admin/user-add';
     private string $adminAnalyticsUrl = '/admin/stats/metrics';
+    private string $adminStatsReportsUrl = '/admin/stats/reports';
     private string $adminClientSearchUrl = '/admin/client/search';
     private string $adminClientDetailsUrl = '/admin/client/%s/details';
     private string $adminDATReportUrl = '/admin/stats';
@@ -220,6 +221,11 @@ trait PageUrlsTrait
     public function getAdminAnalyticsUrl(): string
     {
         return $this->adminAnalyticsUrl;
+    }
+
+    public function getAdminStatsReportsUrl(): string
+    {
+        return $this->adminStatsReportsUrl;
     }
 
     public function getDebtsSectionUrl(int $reportId): string

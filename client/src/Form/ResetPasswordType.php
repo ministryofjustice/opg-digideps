@@ -9,16 +9,18 @@ use Symfony\Component\OptionsResolver\OptionsResolver;
 
 class ResetPasswordType extends AbstractType
 {
-    const VALIDATION_GROUP = 'user_set_password';
+    public const VALIDATION_GROUP = 'user_set_password';
 
     public function buildForm(FormBuilderInterface $builder, array $options)
     {
         $builder
-                ->add('password', FormTypes\RepeatedType::class, [
-                    'type' => FormTypes\PasswordType::class,
-                    'invalid_message' => $options['passwordMismatchMessage'],
-                ])
-                ->add('save', FormTypes\SubmitType::class);
+            ->add('password', FormTypes\RepeatedType::class, [
+                'type' => FormTypes\PasswordType::class,
+                'invalid_message' => $options['passwordMismatchMessage'],
+                'first_options' => ['attr' => ['autocomplete' => 'off']],
+                'second_options' => ['attr' => ['autocomplete' => 'off']],
+            ])
+            ->add('save', FormTypes\SubmitType::class);
     }
 
     public function configureOptions(OptionsResolver $resolver)
@@ -27,7 +29,7 @@ class ResetPasswordType extends AbstractType
             'translation_domain' => 'password-reset',
             'validation_groups' => [self::VALIDATION_GROUP],
         ])
-        ->setRequired(['passwordMismatchMessage']);
+            ->setRequired(['passwordMismatchMessage']);
     }
 
     public function getBlockPrefix()
