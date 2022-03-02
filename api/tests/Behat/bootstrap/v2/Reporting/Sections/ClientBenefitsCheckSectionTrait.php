@@ -31,7 +31,7 @@ trait ClientBenefitsCheckSectionTrait
      */
     public function iNavigateToBenefitsCheckSection()
     {
-        $this->clickLink('Benefits check and money other people receive');
+        $this->clickLink('Benefits check and money others received');
     }
 
     /**
