@@ -101,4 +101,20 @@ class ClientController extends AbstractController
 
         return $this->redirectToRoute('admin_client_search');
     }
+
+    /**
+     * @Route("/{id}/archived", name="admin_client_archived", requirements={"id":"\d+"})
+     * @Security("is_granted('ROLE_ADMIN') or has_role('ROLE_AD')")
+     *
+     * @Template("@App/Admin/Client/Client/archived.html.twig")
+     */
+    public function unarchiveAction(string $id): array
+    {
+        $client = $this->clientApi->getWithUsersV2($id);
+
+        return [
+            'client' => $client,
+            'namedDeputy' => $client->getDeputy(),
+        ];
+    }
 }

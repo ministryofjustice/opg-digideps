@@ -12,204 +12,217 @@
 
 {% block pageContent %}
 
-<dl class="govuk-summary-list govuk-summary-list--no-border">
-    <div class="govuk-summary-list__row">
-        <dt class="govuk-summary-list__key">
-            {{ 'courtOrderNumber' | trans({}, 'common') }}
-        </dt>
-        <dd class="govuk-summary-list__value">
-            {{ client.caseNumber }}
-        </dd>
-    </div>
+    <dl class="govuk-summary-list govuk-summary-list--no-border">
+        <div class="govuk-summary-list__row">
+            <dt class="govuk-summary-list__key">
+                {{ 'courtOrderNumber' | trans({}, 'common') }}
+            </dt>
+            <dd class="govuk-summary-list__value">
+                {{ client.caseNumber }}
+            </dd>
+        </div>
 
-    {% if client.archivedAt %}
-    <div class="govuk-summary-list__row">
-        <dt class="govuk-summary-list__key">
-            {{ 'archivedOn' | trans({}, 'common') }}
-        </dt>
-        <dd class="govuk-summary-list__value">
-            {{ client.archivedAt | date("j M Y") }}
-        </dd>
-    </div>
-    {% endif %}
+        {#        {% if client.archivedAt %} #}
+        {#            <div class="govuk-summary-list__row"> #}
+        {#                <dt class="govuk-summary-list__key"> #}
+        {#                    {{ 'archivedOn' | trans({}, 'common') }} #}
+        {#                </dt> #}
+        {#                <dd class="govuk-summary-list__value"> #}
+        {#                    {{ client.archivedAt | date("j M Y") }} #}
 
-    {% if client.deletedAt %}
-    <div class="govuk-summary-list__row">
-        <dt class="govuk-summary-list__key">
-            {{ 'dischargedOn' | trans({}, 'common') }}
-        </dt>
-        <dd class="govuk-summary-list__value behat-region-discharged-on">
-            {{ client.deletedAt | date("j M Y") }}
-        </dd>
-    </div>
-    {% endif %}
+        {#                    {% if is_granted('ROLE_ADMIN_MANAGER') %} #}
+        {#                        {% if not client.isArchived %} #}
+        {#                            <a href="" role="button" data-module="govuk-button" #}
+        {#                               class="govuk-button govuk-button--secondary"> #}
+        {#                                Un-archive client #}
+        {#                            </a> #}
+        {#                        {% endif %} #}
+        {#                    {% endif %} #}
+        {#                </dd> #}
+        {#            </div> #}
+        {#        {% endif %} #}
 
-    {% if client.organisation is not empty %}
-        <dt class="govuk-summary-list__key">
-            {{ (page ~ '.organisation') | trans }}
-        </dt>
-        <dd class="govuk-summary-list__value behat-region-assigned-organisation">
-            <a href="{{ path('admin_organisation_view', {id: client.organisation.id}) }}">{{ client.organisation.name }}</a> ({{ client.organisation.emailIdentifier }})
+        {% if client.deletedAt %}
+            <div class="govuk-summary-list__row">
+                <dt class="govuk-summary-list__key">
+                    {{ 'dischargedOn' | trans({}, 'common') }}
+                </dt>
+                <dd class="govuk-summary-list__value behat-region-discharged-on">
+                    {{ client.deletedAt | date("j M Y") }}
+                </dd>
+            </div>
+        {% endif %}
 
-            {% if not client.organisation.isActivated %}
-                {{ (page ~ '.organisationInactive') | trans }}
-            {% endif %}
-            <br />
-        </dd>
-    {% endif %}
+        {% if client.organisation is not empty %}
+            <dt class="govuk-summary-list__key">
+                {{ (page ~ '.organisation') | trans }}
+            </dt>
+            <dd class="govuk-summary-list__value behat-region-assigned-organisation">
+                <a href="{{ path('admin_organisation_view', {id: client.organisation.id}) }}">{{ client.organisation.name }}</a>
+                ({{ client.organisation.emailIdentifier }})
+
+                {% if not client.organisation.isActivated %}
+                    {{ (page ~ '.organisationInactive') | trans }}
+                {% endif %}
+                <br/>
+            </dd>
+        {% endif %}
+
+        {% if namedDeputy %}
+            <div class="govuk-summary-list__row">
+                <dt class="govuk-summary-list__key">
+                    {{ 'namedDeputy' | trans({}, 'common') }}
+                </dt>
+                <dd class="govuk-summary-list__value behat-region-named-deputy-fullname  ">
+                    {{ namedDeputy.fullName }}
+                </dd>
+            </div>
+        {% endif %}
+    </dl>
 
     {% if namedDeputy %}
-    <div class="govuk-summary-list__row">
-        <dt class="govuk-summary-list__key">
-            {{ 'namedDeputy' | trans({}, 'common') }}
-        </dt>
-        <dd class="govuk-summary-list__value behat-region-named-deputy-fullname  ">
-            {{ namedDeputy.fullName }}
-        </dd>
-    </div>
-    {% endif %}
-</dl>
-
-{% if namedDeputy %}
-<details class="govuk-details" data-module="govuk-details" role="group">
-    <summary class="govuk-details__summary" role="button">
+        <details class="govuk-details" data-module="govuk-details" role="group">
+            <summary class="govuk-details__summary" role="button">
         <span class="govuk-details__summary-text">
             {{ (page ~ '.namedDeputy.title') | trans }}
         </span>
-    </summary>
-    <div class="govuk-details__text behat-region-deputy-details">
-        {% if namedDeputy.addressNotEmptyParts | length > 0 %}
-            <h3 class="govuk-heading-s">
-                {{ (page ~ '.namedDeputy.address') | trans }}
-            </h3>
-            <p class="govuk-body">
-                {% for addressPart in namedDeputy.addressNotEmptyParts %}
-                    {{ addressPart }}<br />
-                {% endfor %}
-            </p>
-        {% endif %}
-        <h3 class="govuk-heading-s">
-            {{ (page ~ '.namedDeputy.contact') | trans }}
-        </h3>
-        <p class="govuk-body">
-            {% if namedDeputy.phoneMain %}
-                {{ 'phone' | trans({}, 'common') }}: {{ namedDeputy.phoneMain }}<br />
-            {% endif %}
-            {% if namedDeputy.email %}
-                {{ 'email' | trans({}, 'common') }}: {{ namedDeputy.email }}<br />
-            {% endif %}
-            {% if namedDeputy.email2 is defined and namedDeputy.email2 %}
-                {{ 'alternativeEmail' | trans({}, 'common') }}: {{ namedDeputy.email2 }}<br />
-            {% endif %}
-            {% if namedDeputy.email3 is defined and namedDeputy.email3 %}
-                {{ 'alternativeEmail' | trans({}, 'common') }}: {{ namedDeputy.email3 }}<br />
-            {% endif %}
-        </p>
-    </div>
-</details>
-{% endif %}
-
-{% if is_granted('ROLE_ADMIN_MANAGER') %}
-    {% if not client.isDeleted %}
-        <a href="{{ path('admin_client_discharge', {id: client.id}) }}" role="button" data-module="govuk-button" class="govuk-button govuk-button--secondary">
-            Discharge deputy
-        </a>
+            </summary>
+            <div class="govuk-details__text behat-region-deputy-details">
+                {% if namedDeputy.addressNotEmptyParts | length > 0 %}
+                    <h3 class="govuk-heading-s">
+                        {{ (page ~ '.namedDeputy.address') | trans }}
+                    </h3>
+                    <p class="govuk-body">
+                        {% for addressPart in namedDeputy.addressNotEmptyParts %}
+                            {{ addressPart }}<br/>
+                        {% endfor %}
+                    </p>
+                {% endif %}
+                <h3 class="govuk-heading-s">
+                    {{ (page ~ '.namedDeputy.contact') | trans }}
+                </h3>
+                <p class="govuk-body">
+                    {% if namedDeputy.phoneMain %}
+                        {{ 'phone' | trans({}, 'common') }}: {{ namedDeputy.phoneMain }}<br/>
+                    {% endif %}
+                    {% if namedDeputy.email %}
+                        {{ 'email' | trans({}, 'common') }}: {{ namedDeputy.email }}<br/>
+                    {% endif %}
+                    {% if namedDeputy.email2 is defined and namedDeputy.email2 %}
+                        {{ 'alternativeEmail' | trans({}, 'common') }}: {{ namedDeputy.email2 }}<br/>
+                    {% endif %}
+                    {% if namedDeputy.email3 is defined and namedDeputy.email3 %}
+                        {{ 'alternativeEmail' | trans({}, 'common') }}: {{ namedDeputy.email3 }}<br/>
+                    {% endif %}
+                </p>
+            </div>
+        </details>
     {% endif %}
-{% endif %}
 
-{% set allReports = client.reports|merge([client.ndr])|filter(r => (r is not null)) %}
-{% set reportsByGroup = {
-    active: allReports | filter(r => not r.submitted and (r.unSubmitDate is not defined or not r.unSubmitDate)),
-    submitted: allReports | filter(r => r.submitted),
-    incomplete: allReports | filter(r => (r.unSubmitDate is defined and r.unSubmitDate) and not r.submitted),
-} %}
+    {% if is_granted('ROLE_ADMIN_MANAGER') %}
+        {% if not client.isDeleted %}
+            <a href="{{ path('admin_client_discharge', {id: client.id}) }}" role="button" data-module="govuk-button"
+               class="govuk-button govuk-button--secondary">
+                Discharge deputy
+            </a>
+        {% endif %}
+    {% endif %}
 
-<h2 class="govuk-heading-l">
-    {{ (page ~ '.reportsTitle') | trans }}
-</h2>
+    {% set allReports = client.reports|merge([client.ndr])|filter(r => (r is not null)) %}
+    {% set reportsByGroup = {
+        active: allReports | filter(r => not r.submitted and (r.unSubmitDate is not defined or not r.unSubmitDate)),
+        submitted: allReports | filter(r => r.submitted),
+        incomplete: allReports | filter(r => (r.unSubmitDate is defined and r.unSubmitDate) and not r.submitted),
+    } %}
 
-{% for type, reports in reportsByGroup %}
-    {% if (reports | length) > 0 %}
-        <table class="govuk-table behat-region-report-group-{{ type }}">
-            <caption class="govuk-table__caption">
+    <h2 class="govuk-heading-l">
+        {{ (page ~ '.reportsTitle') | trans }}
+    </h2>
+
+    {% for type, reports in reportsByGroup %}
+        {% if (reports | length) > 0 %}
+            <table class="govuk-table behat-region-report-group-{{ type }}">
+                <caption class="govuk-table__caption">
             <span class="govuk-tag {{ type | status_to_tag_css }}">
                 {{ type | trans({}, 'admin.label') }}
             </span>
-            </caption>
+                </caption>
 
-            <thead class="govuk-table__head">
-            <tr class="govuk-table__row">
-                <th scope="col" class="govuk-table__header">{{ 'period' | trans({}, 'common') }}</th>
-                <th scope="col" class="govuk-table__header">{{ 'type' | trans({}, 'common') }}</th>
-                <th scope="col" class="govuk-table__header">{{ 'dueDate' | trans({}, 'common') }}</th>
-                {% if type == 'submitted' %}
-                    <th scope="col" class="govuk-table__header">{{ 'submitted' | trans({}, 'common') }}</th>
-                {% endif %}
-                <th scope="col" class="govuk-table__header">
-                    <span class="govuk-visually-hidden">Actions</span>
-                </th>
-            </tr>
-            </thead>
-            <tbody class="govuk-table__body">
-            {% for report in reports %}
-                {% if report.type == 'ndr' %}
-                    {% set enableManageLink = false %}
-                    {% set enableChecklistLink = false %}
-                    {% set enableDownloadLink = false %}
-                    {% set behatRegionPrefix = 'behat-region-report-ndr' %}
-                {% else %}
-                    {% set isProfReport = report.hasSection('profCurrentFees')  %}
-                    {% set enableManageLink = true %}
-                    {% set enableChecklistLink = (report.submitted or report.submitDate) and not isProfReport %}
-                    {% set enableDownloadLink = (report.submitted or report.submitDate) %}
-                    {% set behatRegionPrefix = 'behat-region-report-' ~ report.getPeriod() | replace({' ': '-'}) %}
-                {% endif %}
-
-                <tr class="govuk-table__row {{ behatRegionPrefix }}">
-                    <td class="govuk-table__cell">
-                        {% if report.type == 'ndr' %}
-                            NDR
-                        {% else %}
-                            {{ report.period | replace({' to ': '-'}) }}
-                        {% endif %}
-                    </td>
-                    <td class="govuk-table__cell">
-                        {% if report.type == 'ndr' %}
-                            NDR
-                        {% else %}
-                            OPG{{ report.type | upper }}
-                        {% endif %}
-                    </td>
-                    <td class="govuk-table__cell {{ behatRegionPrefix }}-due-date">
-                        {{ report.dueDate | date("j F Y") }}
-                    </td>
+                <thead class="govuk-table__head">
+                <tr class="govuk-table__row">
+                    <th scope="col" class="govuk-table__header">{{ 'period' | trans({}, 'common') }}</th>
+                    <th scope="col" class="govuk-table__header">{{ 'type' | trans({}, 'common') }}</th>
+                    <th scope="col" class="govuk-table__header">{{ 'dueDate' | trans({}, 'common') }}</th>
                     {% if type == 'submitted' %}
-                        <td class="govuk-table__cell">
-                            {{ report.submitDate | date("j F Y") }}
-                        </td>
+                        <th scope="col" class="govuk-table__header">{{ 'submitted' | trans({}, 'common') }}</th>
                     {% endif %}
-                    <td class="govuk-table__cell text--right">
-                        {% if enableChecklistLink %}
-                            <a href="{{ path('admin_report_checklist', {'id': report.id}) }}"
-                               class="behat-link-checklist">{{ 'checklist' | trans({}, 'common') }}</a>
-                            <br />
-                        {% endif %}
-                        {% if enableManageLink %}
-                            <a href="{{ path('admin_report_manage', {'id': report.id}) }}" class="behat-link-manage">
-                                {{ 'manage' | trans({}, 'common') }} <span class="govuk-visually-hidden">{{ report.period | replace({' to ': '–'}) }} report</span>
-                            </a>
-                            <br />
-                        {% endif %}
-                        {% if enableDownloadLink and is_granted('ROLE_SUPER_ADMIN') %}
-                            <a href="{{ path('report_pdf', {'reportId': report.id}) }}"
-                               class="behat-link-download">{{ 'download' | trans({}, 'common') }}</a>
-                        {% endif %}
-                    </td>
+                    <th scope="col" class="govuk-table__header">
+                        <span class="govuk-visually-hidden">Actions</span>
+                    </th>
                 </tr>
-            {% endfor %}
-            </tbody>
-        </table>
-    {% endif %}
-{% endfor %}
+                </thead>
+                <tbody class="govuk-table__body">
+                {% for report in reports %}
+                    {% if report.type == 'ndr' %}
+                        {% set enableManageLink = false %}
+                        {% set enableChecklistLink = false %}
+                        {% set enableDownloadLink = false %}
+                        {% set behatRegionPrefix = 'behat-region-report-ndr' %}
+                    {% else %}
+                        {% set isProfReport = report.hasSection('profCurrentFees') %}
+                        {% set enableManageLink = true %}
+                        {% set enableChecklistLink = (report.submitted or report.submitDate) and not isProfReport %}
+                        {% set enableDownloadLink = (report.submitted or report.submitDate) %}
+                        {% set behatRegionPrefix = 'behat-region-report-' ~ report.getPeriod() | replace({' ': '-'}) %}
+                    {% endif %}
+
+                    <tr class="govuk-table__row {{ behatRegionPrefix }}">
+                        <td class="govuk-table__cell">
+                            {% if report.type == 'ndr' %}
+                                NDR
+                            {% else %}
+                                {{ report.period | replace({' to ': '-'}) }}
+                            {% endif %}
+                        </td>
+                        <td class="govuk-table__cell">
+                            {% if report.type == 'ndr' %}
+                                NDR
+                            {% else %}
+                                OPG{{ report.type | upper }}
+                            {% endif %}
+                        </td>
+                        <td class="govuk-table__cell {{ behatRegionPrefix }}-due-date">
+                            {{ report.dueDate | date("j F Y") }}
+                        </td>
+                        {% if type == 'submitted' %}
+                            <td class="govuk-table__cell">
+                                {{ report.submitDate | date("j F Y") }}
+                            </td>
+                        {% endif %}
+                        <td class="govuk-table__cell text--right">
+                            {% if enableChecklistLink %}
+                                <a href="{{ path('admin_report_checklist', {'id': report.id}) }}"
+                                   class="behat-link-checklist">{{ 'checklist' | trans({}, 'common') }}</a>
+                                <br/>
+                            {% endif %}
+                            {% if enableManageLink %}
+                                <a href="{{ path('admin_report_manage', {'id': report.id}) }}"
+                                   class="behat-link-manage">
+                                    {{ 'manage' | trans({}, 'common') }} <span
+                                        class="govuk-visually-hidden">{{ report.period | replace({' to ': '–'}) }} report</span>
+                                </a>
+                                <br/>
+                            {% endif %}
+                            {% if enableDownloadLink and is_granted('ROLE_SUPER_ADMIN') %}
+                                <a href="{{ path('report_pdf', {'reportId': report.id}) }}"
+                                   class="behat-link-download">{{ 'download' | trans({}, 'common') }}</a>
+                            {% endif %}
+                        </td>
+                    </tr>
+                {% endfor %}
+                </tbody>
+            </table>
+        {% endif %}
+    {% endfor %}
 
 {% endblock %}
