@@ -8,6 +8,7 @@ adminAccounts:
     pageTitle: Admin Accounts
 
 reports:
+    htmlTitle: Administration - Reports
     pageTitle: Reports
     downloadSatisfaction: Download satisfaction report
     downloadUserResearch: Download user research report
@@ -34,19 +35,19 @@ metrics:
     clients:
         label: Clients
         totalLabel: Total clients
-        format: '%value%'
+        format: "%value%"
     registeredDeputies:
         label: Registered deputies
         totalLabel: Total registered deputies
-        format: '%value%'
+        format: "%value%"
     reportsSubmitted:
         label: Reports submitted
         totalLabel: Total reports submitted
-        format: '%value%'
+        format: "%value%"
     satisfaction:
         label: Satisfaction
         totalLabel: Overall satisfaction
-        format: '%value%%'
+        format: "%value%%"
 
 dimensions:
     deputyType:
