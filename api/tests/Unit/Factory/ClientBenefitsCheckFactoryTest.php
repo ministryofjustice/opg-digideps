@@ -6,7 +6,7 @@ namespace App\Tests\Unit\Factory;
 
 use App\Entity\Client;
 use App\Entity\Report\ClientBenefitsCheck;
-use App\Entity\Report\IncomeReceivedOnClientsBehalf;
+use App\Entity\Report\MoneyReceivedOnClientsBehalf;
 use App\Entity\Report\Report;
 use App\Factory\ClientBenefitsCheckFactory;
 use App\Repository\NdrRepository;
@@ -24,9 +24,9 @@ class ClientBenefitsCheckFactoryTest extends TestCase
 {
     use ProphecyTrait;
 
-    private ?ClientBenefitsCheck $incomeClientBenefitsCheck;
+    private ?ClientBenefitsCheck $moneyClientBenefitsCheck;
 
-    private ?float $incomeAmount;
+    private ?float $moneyAmount;
 
     private ?int $reportId;
 
@@ -35,12 +35,13 @@ class ClientBenefitsCheckFactoryTest extends TestCase
     private ?string $whenLastCheckedEntitlement;
     private ?string $dateLastCheckedEntitlement;
     private ?string $neverCheckedExplanation;
-    private ?string $doOthersReceiveIncomeOnClientsBehalf;
-    private ?string $dontKnowIncomeExplanation;
-    private ?string $incomeId;
-    private ?string $incomeCreated;
-    private ?string $incomeType;
-    private ?string $incomeAmountDontKnow;
+    private ?string $doOthersReceiveMoneyOnClientsBehalf;
+    private ?string $dontKnowMoneyExplanation;
+    private ?string $moneyId;
+    private ?string $moneyCreated;
+    private ?string $moneyType;
+    private ?string $moneyAmountDontKnow;
+    private ?string $whoReceivedMoney;
 
     public function setUp(): void
     {
@@ -50,15 +51,16 @@ class ClientBenefitsCheckFactoryTest extends TestCase
         $this->whenLastCheckedEntitlement = 'haveChecked';
         $this->dateLastCheckedEntitlement = (new DateTime())->format('Y-m-d');
         $this->neverCheckedExplanation = null;
-        $this->doOthersReceiveIncomeOnClientsBehalf = 'yes';
-        $this->dontKnowIncomeExplanation = null;
+        $this->doOthersReceiveMoneyOnClientsBehalf = 'yes';
+        $this->dontKnowMoneyExplanation = null;
 
-        $this->incomeId = '5d80a2f3-4f2c-4e0f-9709-2d201102cb13';
-        $this->incomeCreated = (new DateTime())->format('Y-m-d');
-        $this->incomeClientBenefitsCheck = null;
-        $this->incomeType = 'Universal Credit';
-        $this->incomeAmount = 100.5;
-        $this->incomeAmountDontKnow = null;
+        $this->moneyId = '5d80a2f3-4f2c-4e0f-9709-2d201102cb13';
+        $this->moneyCreated = (new DateTime())->format('Y-m-d');
+        $this->moneyClientBenefitsCheck = null;
+        $this->moneyType = 'Universal Credit';
+        $this->moneyAmount = 100.5;
+        $this->moneyAmountDontKnow = null;
+        $this->whoReceivedMoney = 'Some organisation';
     }
 
     /** @test */
@@ -79,11 +81,11 @@ class ClientBenefitsCheckFactoryTest extends TestCase
 
         $sut = new ClientBenefitsCheckFactory($reportRepo->reveal(), $ndrRepo->reveal(), $em->reveal());
 
-        $existingIncome = (new IncomeReceivedOnClientsBehalf())
-            ->setId(Uuid::fromString($this->incomeId));
+        $existingMoney = (new MoneyReceivedOnClientsBehalf())
+            ->setId(Uuid::fromString($this->moneyId));
 
         $existingClientBenefitsCheck = (new ClientBenefitsCheck())
-            ->addTypeOfIncomeReceivedOnClientsBehalf($existingIncome)
+            ->addTypeOfMoneyReceivedOnClientsBehalf($existingMoney)
             ->setId(Uuid::fromString($this->id));
 
         $processedClientBenefitsCheck = $sut->createFromFormData(
@@ -98,17 +100,17 @@ class ClientBenefitsCheckFactoryTest extends TestCase
         self::assertEquals($this->whenLastCheckedEntitlement, $processedClientBenefitsCheck->getWhenLastCheckedEntitlement());
         self::assertEquals($this->dateLastCheckedEntitlement, $processedClientBenefitsCheck->getDateLastCheckedEntitlement()->format('Y-m-d'));
         self::assertEquals($this->neverCheckedExplanation, $processedClientBenefitsCheck->getNeverCheckedExplanation());
-        self::assertEquals($this->doOthersReceiveIncomeOnClientsBehalf, $processedClientBenefitsCheck->getDoOthersReceiveIncomeOnClientsBehalf());
-        self::assertEquals($this->dontKnowIncomeExplanation, $processedClientBenefitsCheck->getDontKnowIncomeExplanation());
+        self::assertEquals($this->doOthersReceiveMoneyOnClientsBehalf, $processedClientBenefitsCheck->getDoOthersReceiveMoneyOnClientsBehalf());
+        self::assertEquals($this->dontKnowMoneyExplanation, $processedClientBenefitsCheck->getDontKnowMoneyExplanation());
 
-        /** @var IncomeReceivedOnClientsBehalf $income */
-        $income = $processedClientBenefitsCheck->getTypesOfIncomeReceivedOnClientsBehalf()->first();
+        /** @var MoneyReceivedOnClientsBehalf $money */
+        $money = $processedClientBenefitsCheck->getTypesOfMoneyReceivedOnClientsBehalf()->first();
 
-        self::assertEquals($this->incomeId, $income->getId()->toString());
-        self::assertEquals($this->incomeCreated, $income->getCreated()->format('Y-m-d'));
-        self::assertEquals($existingClientBenefitsCheck, $income->getClientBenefitsCheck());
-        self::assertEquals($this->incomeType, $income->getIncomeType());
-        self::assertEquals($this->incomeAmount, $income->getAmount());
+        self::assertEquals($this->moneyId, $money->getId()->toString());
+        self::assertEquals($this->moneyCreated, $money->getCreated()->format('Y-m-d'));
+        self::assertEquals($existingClientBenefitsCheck, $money->getClientBenefitsCheck());
+        self::assertEquals($this->moneyType, $money->getMoneyType());
+        self::assertEquals($this->moneyAmount, $money->getAmount());
     }
 
     private function generateValidFormData(bool $existingEntity): array
@@ -120,16 +122,17 @@ class ClientBenefitsCheckFactoryTest extends TestCase
             'when_last_checked_entitlement' => $this->whenLastCheckedEntitlement,
             'date_last_checked_entitlement' => $this->dateLastCheckedEntitlement,
             'never_checked_explanation' => $this->neverCheckedExplanation,
-            'do_others_receive_income_on_clients_behalf' => $this->doOthersReceiveIncomeOnClientsBehalf,
-            'dont_know_income_explanation' => $this->dontKnowIncomeExplanation,
-            'types_of_income_received_on_clients_behalf' => [
+            'do_others_receive_money_on_clients_behalf' => $this->doOthersReceiveMoneyOnClientsBehalf,
+            'dont_know_money_explanation' => $this->dontKnowMoneyExplanation,
+            'types_of_money_received_on_clients_behalf' => [
                 0 => [
-                    'id' => $existingEntity ? $this->incomeId : null,
-                    'created' => $this->incomeCreated,
-                    'client_benefits_check' => $this->incomeClientBenefitsCheck,
-                    'income_type' => $this->incomeType,
-                    'amount' => $this->incomeAmount,
-                    'amount_dont_know' => $this->incomeAmountDontKnow,
+                    'id' => $existingEntity ? $this->moneyId : null,
+                    'created' => $this->moneyCreated,
+                    'client_benefits_check' => $this->moneyClientBenefitsCheck,
+                    'money_type' => $this->moneyType,
+                    'amount' => $this->moneyAmount,
+                    'amount_dont_know' => $this->moneyAmountDontKnow,
+                    'who_received_money' => $this->whoReceivedMoney,
                 ],
             ],
             'report' => [],
@@ -175,23 +178,23 @@ class ClientBenefitsCheckFactoryTest extends TestCase
         self::assertEquals($this->whenLastCheckedEntitlement, $processedClientBenefitsCheck->getWhenLastCheckedEntitlement());
         self::assertEquals($this->dateLastCheckedEntitlement, $processedClientBenefitsCheck->getDateLastCheckedEntitlement()->format('Y-m-d'));
         self::assertEquals($this->neverCheckedExplanation, $processedClientBenefitsCheck->getNeverCheckedExplanation());
-        self::assertEquals($this->doOthersReceiveIncomeOnClientsBehalf, $processedClientBenefitsCheck->getDoOthersReceiveIncomeOnClientsBehalf());
-        self::assertEquals($this->dontKnowIncomeExplanation, $processedClientBenefitsCheck->getDontKnowIncomeExplanation());
+        self::assertEquals($this->doOthersReceiveMoneyOnClientsBehalf, $processedClientBenefitsCheck->getDoOthersReceiveMoneyOnClientsBehalf());
+        self::assertEquals($this->dontKnowMoneyExplanation, $processedClientBenefitsCheck->getDontKnowMoneyExplanation());
 
-        /** @var IncomeReceivedOnClientsBehalf $income */
-        $income = $processedClientBenefitsCheck->getTypesOfIncomeReceivedOnClientsBehalf()->first();
+        /** @var MoneyReceivedOnClientsBehalf $money */
+        $money = $processedClientBenefitsCheck->getTypesOfMoneyReceivedOnClientsBehalf()->first();
 
-        self::assertEquals(true, $income->getId() instanceof UuidInterface);
-        self::assertEquals($this->incomeCreated, $income->getCreated()->format('Y-m-d'));
-        self::assertEquals(true, $income->getClientBenefitsCheck() instanceof ClientBenefitsCheck);
-        self::assertEquals($this->incomeType, $income->getIncomeType());
-        self::assertEquals($this->incomeAmount, $income->getAmount());
+        self::assertEquals(true, $money->getId() instanceof UuidInterface);
+        self::assertEquals($this->moneyCreated, $money->getCreated()->format('Y-m-d'));
+        self::assertEquals(true, $money->getClientBenefitsCheck() instanceof ClientBenefitsCheck);
+        self::assertEquals($this->moneyType, $money->getMoneyType());
+        self::assertEquals($this->moneyAmount, $money->getAmount());
     }
 
     /** @test */
-    public function createFromFormDataExistingEntityNonYesDoOthersGetIncomeRemovesAllIncomeTypes()
+    public function createFromFormDataExistingEntityNonYesDoOthersGetMoneyRemovesAllMoneyTypes()
     {
-        $validData = $this->generateValidFormDataRemoveIncomes();
+        $validData = $this->generateValidFormDataRemoveMoneys();
 
         $report = new Report(new Client(), Report::LAY_PFA_HIGH_ASSETS_TYPE, new DateTime(), new DateTime());
         $this->set($report, $this->reportId);
@@ -202,21 +205,21 @@ class ClientBenefitsCheckFactoryTest extends TestCase
 
         $ndrRepo = self::prophesize(NdrRepository::class);
 
-        $existingIncome = (new IncomeReceivedOnClientsBehalf())
-            ->setId(Uuid::fromString($this->incomeId))
-            ->setCreated(new DateTime($this->incomeCreated))
-            ->setAmount($this->incomeAmount)
-            ->setIncomeType($this->incomeType);
+        $existingMoney = (new MoneyReceivedOnClientsBehalf())
+            ->setId(Uuid::fromString($this->moneyId))
+            ->setCreated(new DateTime($this->moneyCreated))
+            ->setAmount($this->moneyAmount)
+            ->setMoneyType($this->moneyType);
 
         $existingClientBenefitsCheck = (new ClientBenefitsCheck())
-            ->addTypeOfIncomeReceivedOnClientsBehalf($existingIncome)
+            ->addTypeOfMoneyReceivedOnClientsBehalf($existingMoney)
             ->setId(Uuid::fromString($this->id));
 
-        $existingIncome->setClientBenefitsCheck($existingClientBenefitsCheck);
+        $existingMoney->setClientBenefitsCheck($existingClientBenefitsCheck);
 
         /** @var EntityManagerInterface|ObjectProphecy $em */
         $em = self::prophesize(EntityManagerInterface::class);
-        $em->remove($existingIncome)->shouldBeCalled();
+        $em->remove($existingMoney)->shouldBeCalled();
         $em->flush()->shouldBeCalled();
 
         $sut = new ClientBenefitsCheckFactory($reportRepo->reveal(), $ndrRepo->reveal(), $em->reveal());
@@ -228,13 +231,13 @@ class ClientBenefitsCheckFactoryTest extends TestCase
         );
 
         self::assertEquals(true, $processedClientBenefitsCheck instanceof ClientBenefitsCheck);
-        self::assertEquals(0, $processedClientBenefitsCheck->getTypesOfIncomeReceivedOnClientsBehalf()->count());
+        self::assertEquals(0, $processedClientBenefitsCheck->getTypesOfMoneyReceivedOnClientsBehalf()->count());
     }
 
-    private function generateValidFormDataRemoveIncomes()
+    private function generateValidFormDataRemoveMoneys()
     {
         $data = $this->generateValidFormData(true);
-        $data['do_others_receive_income_on_clients_behalf'] = 'no';
+        $data['do_others_receive_money_on_clients_behalf'] = 'no';
 
         return $data;
     }

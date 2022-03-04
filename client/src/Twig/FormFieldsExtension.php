@@ -243,6 +243,7 @@ class FormFieldsExtension extends AbstractExtension
                 'isPageHeading' => false,
                 'caption' => false,
             ], $vars['legend'] ?? []),
+            'hintTextBold' => $vars['hintTextBold'] ?? null,
             'hintText' => $hintText,
             'element' => $element,
             'showDay' => $showDay,
@@ -413,9 +414,9 @@ class FormFieldsExtension extends AbstractExtension
     }
 
     /**
-     * @param \Symfony\Component\Form\FormView $element
-     * @param string                           $elementName
-     * @param string|null                      $transIndex
+     * @param FormView    $element
+     * @param string      $elementName
+     * @param string|null $transIndex
      *
      * @return array with vars labelText,labelParameters,hintText,element,labelClass, to pass into twig templates @App:Components/Form:*
      */

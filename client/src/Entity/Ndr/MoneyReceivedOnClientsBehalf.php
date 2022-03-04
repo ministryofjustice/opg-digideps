@@ -2,14 +2,14 @@
 
 declare(strict_types=1);
 
-namespace App\Entity\Report;
+namespace App\Entity\Ndr;
 
-use App\Entity\IncomeReceivedOnClientsBehalfInterface;
+use App\Entity\MoneyReceivedOnClientsBehalfInterface;
 use App\Validator\Constraints\ClientBenefitsCheck as CustomAssert;
 use DateTime;
 use JMS\Serializer\Annotation as JMS;
 
-class IncomeReceivedOnClientsBehalf implements IncomeReceivedOnClientsBehalfInterface
+class MoneyReceivedOnClientsBehalf implements MoneyReceivedOnClientsBehalfInterface
 {
     /**
      * @JMS\Type("string")
@@ -24,7 +24,7 @@ class IncomeReceivedOnClientsBehalf implements IncomeReceivedOnClientsBehalfInte
     private ?DateTime $created = null;
 
     /**
-     * @JMS\Type("App\Entity\Report\ClientBenefitsCheck")
+     * @JMS\Type("App\Entity\Ndr\ClientBenefitsCheck")
      * @JMS\Groups({"report", "client-benefits-check"})
      */
     private ?ClientBenefitsCheck $clientBenefitsCheck = null;
@@ -33,15 +33,15 @@ class IncomeReceivedOnClientsBehalf implements IncomeReceivedOnClientsBehalfInte
      * @JMS\Type("string")
      * @JMS\Groups({"report", "client-benefits-check"})
      *
-     * @CustomAssert\IncomeReceivedOnClientsBehalf(groups={"client-benefits-check"})
+     * @CustomAssert\MoneyReceivedOnClientsBehalf(groups={"client-benefits-check"})
      */
-    private ?string $incomeType = null;
+    private ?string $moneyType = null;
 
     /**
      * @JMS\Type("float")
      * @JMS\Groups({"report", "client-benefits-check"})
      *
-     * @CustomAssert\IncomeReceivedOnClientsBehalf(groups={"client-benefits-check"})
+     * @CustomAssert\MoneyReceivedOnClientsBehalf(groups={"client-benefits-check"})
      */
     private ?float $amount = null;
 
@@ -49,18 +49,26 @@ class IncomeReceivedOnClientsBehalf implements IncomeReceivedOnClientsBehalfInte
      * @JMS\Type("bool")
      * @JMS\Groups({"report", "client-benefits-check"})
      *
-     * @CustomAssert\IncomeReceivedOnClientsBehalf(groups={"client-benefits-check"})
+     * @CustomAssert\MoneyReceivedOnClientsBehalf(groups={"client-benefits-check"})
      *
      * This will not be persisted - it exists to enable a checkbox in the form
      */
     private ?bool $amountDontKnow = null;
+
+    /**
+     * @JMS\Type("string")
+     * @JMS\Groups({"report", "client-benefits-check"})
+     *
+     * @CustomAssert\MoneyReceivedOnClientsBehalf(groups={"client-benefits-check"})
+     */
+    private ?string $whoReceivedMoney;
 
     public function getId(): ?string
     {
         return $this->id;
     }
 
-    public function setId(?string $id): IncomeReceivedOnClientsBehalf
+    public function setId(?string $id): MoneyReceivedOnClientsBehalf
     {
         $this->id = $id;
 
@@ -72,7 +80,7 @@ class IncomeReceivedOnClientsBehalf implements IncomeReceivedOnClientsBehalfInte
         return $this->created;
     }
 
-    public function setCreated(?DateTime $created): IncomeReceivedOnClientsBehalf
+    public function setCreated(?DateTime $created): MoneyReceivedOnClientsBehalf
     {
         $this->created = $created;
 
@@ -84,7 +92,7 @@ class IncomeReceivedOnClientsBehalf implements IncomeReceivedOnClientsBehalfInte
         return $this->clientBenefitsCheck;
     }
 
-    public function setClientBenefitsCheck(?ClientBenefitsCheck $clientBenefitsCheck): IncomeReceivedOnClientsBehalf
+    public function setClientBenefitsCheck(?ClientBenefitsCheck $clientBenefitsCheck): MoneyReceivedOnClientsBehalf
     {
         $this->clientBenefitsCheck = $clientBenefitsCheck;
 
@@ -93,10 +101,10 @@ class IncomeReceivedOnClientsBehalf implements IncomeReceivedOnClientsBehalfInte
 
     public function getAmountDontKnow(): ?bool
     {
-        return is_null($this->getAmount()) && !is_null($this->getIncomeType());
+        return is_null($this->getAmount()) && !is_null($this->getMoneyType());
     }
 
-    public function setAmountDontKnow(?bool $amountDontKnow): IncomeReceivedOnClientsBehalf
+    public function setAmountDontKnow(?bool $amountDontKnow): MoneyReceivedOnClientsBehalf
     {
         $this->amountDontKnow = $amountDontKnow;
 
@@ -108,21 +116,33 @@ class IncomeReceivedOnClientsBehalf implements IncomeReceivedOnClientsBehalfInte
         return $this->amount;
     }
 
-    public function setAmount(?float $amount): IncomeReceivedOnClientsBehalf
+    public function setAmount(?float $amount): MoneyReceivedOnClientsBehalf
     {
         $this->amount = $amount;
 
         return $this;
     }
 
-    public function getIncomeType(): ?string
+    public function getMoneyType(): ?string
     {
-        return $this->incomeType;
+        return $this->moneyType;
     }
 
-    public function setIncomeType(?string $incomeType): IncomeReceivedOnClientsBehalf
+    public function setMoneyType(?string $moneyType): MoneyReceivedOnClientsBehalf
     {
-        $this->incomeType = $incomeType;
+        $this->moneyType = $moneyType;
+
+        return $this;
+    }
+
+    public function getWhoReceivedMoney(): ?string
+    {
+        return $this->whoReceivedMoney;
+    }
+
+    public function setWhoReceivedMoney(?string $whoReceivedMoney): MoneyReceivedOnClientsBehalf
+    {
+        $this->whoReceivedMoney = $whoReceivedMoney;
 
         return $this;
     }

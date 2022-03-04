@@ -30,32 +30,32 @@
 
             <table class="checkboxes labelvalue inline">
                 <tr>
-                    <td class="value checkbox"{% if clientBenefitsCheck.doOthersReceiveIncomeOnClientsBehalf == 'yes' %} aria-label=”Selected”>X{% else %}>&nbsp;{% endif %}</td>
+                    <td class="value checkbox" {% if clientBenefitsCheck.doOthersReceiveMoneyOnClientsBehalf == 'yes' %} aria-label="Selected">X{% else %}>&nbsp;{% endif %}</td>
                     <td class="label">{{ 'yes' | trans({}, 'common' ) }}</td>
-                    <td class="value checkbox"{% if clientBenefitsCheck.doOthersReceiveIncomeOnClientsBehalf == 'no' %} aria-label=”Selected”>X{% else %}>&nbsp;{% endif %}</td>
+                    <td class="value checkbox" {% if clientBenefitsCheck.doOthersReceiveMoneyOnClientsBehalf == 'no' %} aria-label="Selected">X{% else %}>&nbsp;{% endif %}</td>
                     <td class="label">{{ 'no' | trans({}, 'common' ) }}</td>
-                    <td class="value checkbox"{% if clientBenefitsCheck.doOthersReceiveIncomeOnClientsBehalf == 'dontKnow' %} aria-label=”Selected”>X{% else %}>&nbsp;{% endif %}</td>
+                    <td class="value checkbox" {% if clientBenefitsCheck.doOthersReceiveMoneyOnClientsBehalf == 'dontKnow' %} aria-label="Selected">X{% else %}>&nbsp;{% endif %}</td>
                     <td class="label">{{ 'dontKnow' | trans({}, 'common' ) }}</td>
                 </tr>
             </table>
 
-            {% if clientBenefitsCheck.doOthersReceiveIncomeOnClientsBehalf == 'yes' %}
+            {% if clientBenefitsCheck.doOthersReceiveMoneyOnClientsBehalf == 'yes' %}
                 <table class="labelvalue money push--top">
-                    {% for income in clientBenefitsCheck.typesOfIncomeReceivedOnClientsBehalf %}
+                    {% for money in clientBenefitsCheck.typesOfMoneyReceivedOnClientsBehalf %}
                         <tr>
-                            <td class="label noborder">{{ income.incomeType }}</td>
+                            <td class="label noborder">{{ money.moneyType }}</td>
                             <td class="value text--right width-fifth">
-                                {% if income.amount is null %} {{ 'form.incomeDetails.dontKnowCheckboxLabel' | trans(transOptions) }} {% else %}&pound;{{ income.amount | money_format }}&nbsp;{% endif %}
+                                {% if money.amount is null %} {{ 'form.moneyDetails.dontKnowCheckboxLabel' | trans(transOptions) }} {% else %}&pound;{{ money.amount | money_format }}&nbsp;{% endif %}
                             </td>
                         </tr>
                     {% endfor %}
                 </table>
             {% endif %}
 
-            {% if clientBenefitsCheck.doOthersReceiveIncomeOnClientsBehalf == 'dontKnow' %}
+            {% if clientBenefitsCheck.doOthersReceiveMoneyOnClientsBehalf == 'dontKnow' %}
                 <div class="labelvalue push--top">
-                    <div class="label">{{ 'reportReview.dontKnowIncomeTitle' | trans(transOptions)}}</div>
-                    <div class="value">{{ clientBenefitsCheck.dontKnowIncomeExplanation | nl2br }}</div>
+                    <div class="label">{{ 'reportReview.dontKnowMoneyTitle' | trans(transOptions)}}</div>
+                    <div class="value">{{ clientBenefitsCheck.dontKnowMoneyExplanation | nl2br }}</div>
                 </div>
             {% endif %}
         </div>

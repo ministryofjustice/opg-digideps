@@ -2,115 +2,218 @@
 
 {% import '@App/Macros/macros.html.twig' as macros %}
 
-{% set translationDomain = "report-client-benefits-check" %}
+{% set translationDomain = 'report-client-benefits-check' %}
 {% trans_default_domain translationDomain %}
 
 {% set transOptions = {
-    '%client%': report.client.firstname | e,
+    '%client%': report.client.firstname|e
 } %}
 
-{% block htmlTitle %}{{ 'common.htmlTitle' | trans(transOptions, translationDomain) }}{% endblock %}
-{% block supportTitleTop %}{{ 'stepPage.supportTitle' | trans(transOptions, translationDomain) }}{% endblock %}
-{% block pageTitle %}{{ ('stepPage.pageTitle.' ~ step ~ '.mainTitle') | trans(transOptions, translationDomain) }}{% endblock %}
+{% block htmlTitle %}
+    {{ 'common.htmlTitle'|trans(transOptions, translationDomain) }}
+{% endblock %}
+{% block supportTitleTop %}
+    {{ 'stepPage.supportTitle'|trans(transOptions, translationDomain) }}
+{% endblock %}
+{% block pageTitle %}
+    {{ ('stepPage.pageTitle.' ~ step ~ '.mainTitle')|trans(transOptions, translationDomain) }}
+{% endblock %}
 
 {% block linkBack %}
-    {{ macros.linkBackStep(backLink, 'back' | trans({}, 'common')) }}
+    {{ macros.linkBackStep(backLink, 'back'|trans({}, 'common')) }}
 {% endblock %}
 
-{% block supportTitleBottom %}
-    {% if step != 1 %}
-        {{ ('stepPage.pageTitle.'  ~ step ~ '.subTitle') | trans(transOptions, translationDomain) }}
-    {% endif %}
+{% block breadcrumbs %}
+    {{ macros.breadcrumbs(report) }}
 {% endblock %}
-
-{% block breadcrumbs %}{{ macros.breadcrumbs(report) }}{% endblock %}
 
 {% block pageContent %}
-    {{ form_start(form, { attr: {novalidate: 'novalidate' } }) }}
+    {{
+        form_start(
+            form,
+            {
+                attr: {
+                    novalidate: 'novalidate'
+                }
+            }
+        )
+    }}
 
     {% if step == 1 %}
+        <p class="govuk-body">
+            {{ 'stepPage.pageDescription.1.benefitsCalculatorSignpost' | trans(
+                {
+                    '%client%': report.client.firstname|e
+                }
+            ) }} <a href="https://www.gov.uk/benefits-calculators" class="govuk-link">independent benefits calculators</a>.
+        </p>
         {% set conditionalDateChecked %}
-            {{ form_known_date(form.dateLastCheckedEntitlement, 'form.whenLastChecked', {
-                'hintText' : 'form.whenLastChecked.dateCheckedHint' | trans(transOptions, translationDomain),
-                'showDay' : 'false'
-            }) }}
+            {{
+                form_known_date(
+                    form.dateLastCheckedEntitlement,
+                    'form.whenLastChecked',
+                    {
+                        hintTextBold: 'form.whenLastChecked.dateCheckedHint'|trans(transOptions, translationDomain),
+                        hintText: 'form.whenLastChecked.dateCheckedHintExample'|trans(transOptions, translationDomain),
+                        showDay: 'false'
+                    }
+                )
+            }}
         {% endset %}
 
         {% set conditionalNeverChecked %}
-            {{ form_input(form.neverCheckedExplanation, 'form.whenLastChecked', {
-                'hintText' : 'form.whenLastChecked.neverCheckedHint' | trans(transOptions, translationDomain),
-                'labelText' : ' '
-            }) }}
+            {{
+                form_input(
+                    form.neverCheckedExplanation,
+                    'form.whenLastChecked',
+                    {
+                        hintTextBold: 'form.whenLastChecked.neverCheckedHint'|trans(transOptions, translationDomain),
+                        hintText: 'form.whenLastChecked.neverCheckedHint'|trans(transOptions, translationDomain),
+                        labelText: ' '
+                    }
+                )
+            }}
         {% endset %}
 
-        {{ form_checkbox_group(form.whenLastCheckedEntitlement, 'form.clientBenefitsCheck', {
-            'useFormGroup': false,
-            'labelText': ('form.clientBenefitsCheck.label') | trans(transOptions, translationDomain),
-            label: {
-                isPageHeading: true,
-                caption: 'stepPage.supportTitle' | trans
-            },
-            'items': [
+        {{
+            form_checkbox_group(
+                form.whenLastCheckedEntitlement,
+                'form.clientBenefitsCheck',
                 {
-                    conditional: conditionalDateChecked
-                },
-                {},
-                {
-                    conditional: conditionalNeverChecked
+                    useFormGroup: false,
+                    labelText: 'form.clientBenefitsCheck.label'|trans(transOptions, translationDomain),
+                    label: {
+                        isPageHeading: true,
+                        caption: 'stepPage.supportTitle'|trans
+                    },
+                    items: [
+                        {
+                            conditional: conditionalDateChecked
+                        },
+                        {},
+                        {
+                            conditional: conditionalNeverChecked
+                        }
+                    ]
                 }
-            ]
-        }) }}
+            )
+        }}
 
         {{ macros.saveAndContinueButton(form.save) }}
     {% endif %}
 
     {% if step == 2 %}
-        {% set conditionalIncomeDontKnowChecked %}
-            {{ form_input(form.dontKnowIncomeExplanation, 'form.incomeOnClientsBehalf', {
-                'hintText' : 'form.incomeOnClientsBehalf.dontKnowHint' | trans(transOptions, translationDomain),
-                'labelText' : 'form.incomeOnClientsBehalf.dontKnowLabel' | trans(transOptions, translationDomain)
-            }) }}
+        <p class="govuk-body">
+            {{ ('stepPage.pageDescription.' ~ step ~ '.bulletsParagraph') | trans(transOptions, translationDomain)}}
+        </p>
+
+        <ul class="govuk-list govuk-list--bullet">
+            <li>{{ ('stepPage.pageDescription.' ~ step ~ '.bullets.1') | trans }}</li>
+            <li>{{ ('stepPage.pageDescription.' ~ step ~ '.bullets.2') | trans }}</li>
+        </ul>
+
+        {% set conditionalMoneyDontKnowChecked %}
+            {{
+                form_input(
+                    form.dontKnowMoneyExplanation,
+                    'form.moneyOnClientsBehalf',
+                    {
+                        hintText: 'form.moneyOnClientsBehalf.dontKnowHint'|trans(transOptions, translationDomain),
+                        labelText: 'form.moneyOnClientsBehalf.dontKnowLabel'|trans(transOptions, translationDomain)
+                    }
+                )
+            }}
         {% endset %}
 
-        {{ form_checkbox_group(form.doOthersReceiveIncomeOnClientsBehalf, 'form.incomeOnClientsBehalf', {
-            'useFormGroup': false,
-            'labelText': ('form.clientBenefitsCheck.label') | trans(transOptions, translationDomain),
-            label: {
-                isPageHeading: true,
-                caption: 'stepPage.supportTitle' | trans
-            },
-            'items': [
-                {},
-                {},
+        {{
+            form_checkbox_group(
+                form.doOthersReceiveMoneyOnClientsBehalf,
+                'form.moneyOnClientsBehalf',
                 {
-                    conditional: conditionalIncomeDontKnowChecked
+                    useFormGroup: false,
+                    labelText: 'form.clientBenefitsCheck.label'|trans(transOptions, translationDomain),
+                    label: {
+                        isPageHeading: true,
+                        caption: 'stepPage.supportTitle'|trans
+                    },
+                    items: [
+                        {},
+                        {},
+                        {
+                            conditional: conditionalMoneyDontKnowChecked
+                        }
+                    ]
                 }
-            ]
-        }) }}
+            )
+        }}
 
         {{ macros.saveAndContinueButton(form.save) }}
     {% endif %}
 
     {% if step == 3 %}
-        {% for typeOfIncomeReceivedOnClientsBehalf in form.typesOfIncomeReceivedOnClientsBehalf %}
+        <p class="govuk-body">
+            {{ ('stepPage.pageDescription.' ~ step ~ '.bulletsParagraph') | trans(transOptions, translationDomain)}}
+        </p>
+
+        <ul class="govuk-list govuk-list--bullet">
+            <li>{{ ('stepPage.pageDescription.' ~ step ~ '.bullets.1') | trans }}</li>
+            <li>{{ ('stepPage.pageDescription.' ~ step ~ '.bullets.2') | trans }}</li>
+        </ul>
+
+        {% for typeOfMoneyReceivedOnClientsBehalf in form.typesOfMoneyReceivedOnClientsBehalf %}
             <fieldset class="add-another__item">
-                {{ form_input(typeOfIncomeReceivedOnClientsBehalf.incomeType, '', {
-                    'hintText' : '',
-                    'label' : { 'text': 'form.incomeDetails.incomeTypeLabel' | trans(transOptions, translationDomain) }
-                }) }}
+                {{
+                    form_input(
+                        typeOfMoneyReceivedOnClientsBehalf.moneyType,
+                        '',
+                        {
+                            hintText: '',
+                            label: {
+                                text: 'form.moneyDetails.moneyTypeLabel'|trans(transOptions, translationDomain)
+                            }
+                        }
+                    )
+                }}
 
-                {{ form_input(typeOfIncomeReceivedOnClientsBehalf.amount, '', {
-                    'hintText' : '',
-                    'label' : { 'text': 'form.incomeDetails.amountLabel' | trans(transOptions, translationDomain) },
-                    'inputPrefix' : '£'
-                }) }}
+                {{
+                form_input(
+                    typeOfMoneyReceivedOnClientsBehalf.whoReceivedMoney,
+                    '',
+                    {
+                        hintText: '',
+                        label: {
+                        text: 'form.moneyDetails.whoReceivedMoneyLabel'|trans(transOptions, translationDomain)
+                    }
+                    }
+                )
+                }}
 
-                {{ form_checkbox(typeOfIncomeReceivedOnClientsBehalf.amountDontKnow, 'form.incomeDetails', {
-                    'labelText': ('form.incomeDetails.dontKnowCheckboxLabel') | trans(transOptions, translationDomain)
-                }) }}
+                {{
+                    form_input(
+                        typeOfMoneyReceivedOnClientsBehalf.amount,
+                        '',
+                        {
+                            hintText: '',
+                            label: {
+                                text: 'form.moneyDetails.amountLabel'|trans(transOptions, translationDomain)
+                            },
+                            inputPrefix: '£'
+                        }
+                    )
+                }}
+
+                {{
+                    form_checkbox(
+                        typeOfMoneyReceivedOnClientsBehalf.amountDontKnow,
+                        'form.moneyDetails',
+                        {
+                            labelText: 'form.moneyDetails.dontKnowCheckboxLabel'|trans(transOptions, translationDomain)
+                        }
+                    )
+                }}
             </fieldset>
 
-            <hr class="govuk-section-break govuk-section-break--m govuk-section-break--visible">
+            <hr class="govuk-section-break govuk-section-break--m govuk-section-break--visible" />
         {% endfor %}
 
         {{ macros.saveAndContinueButton(form.save) }}
@@ -118,11 +221,10 @@
     {% endif %}
 
     {{ form_end(form) }}
-
 {% endblock %}
 
 {% block javascripts %}
     {{ parent() }}
 
-    <script src="{{ 'javascripts/clientBenefitsCheckForm.js'| assetUrl }}"></script>
+    <script src="{{ 'javascripts/clientBenefitsCheckForm.js'|assetUrl }}"></script>
 {% endblock %}

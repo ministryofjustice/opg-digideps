@@ -38,27 +38,27 @@ class ClientBenefitsCheckTest extends TestCase
 
     /**
      * @test
-     * @dataProvider otherIncomeProvider
+     * @dataProvider otherMoneyProvider
      */
-    public function setDoOthersReceiveIncomeOnClientsBehalfSetsDontKnowNullWhenValueIsNotDontKnow(
-        string $otherIncomeReceived,
+    public function setDoOthersReceiveMoneyOnClientsBehalfSetsDontKnowNullWhenValueIsNotDontKnow(
+        string $otherMoneyReceived,
         ?string $expectedExplanation
     ) {
         $sut = (new ClientBenefitsCheck())
-            ->setDoOthersReceiveIncomeOnClientsBehalf(ClientBenefitsCheck::OTHER_INCOME_DONT_KNOW)
-            ->setDontKnowIncomeExplanation('Another explanation');
+            ->setDoOthersReceiveMoneyOnClientsBehalf(ClientBenefitsCheck::OTHER_MONEY_DONT_KNOW)
+            ->setDontKnowMoneyExplanation('Another explanation');
 
-        $sut->setDoOthersReceiveIncomeOnClientsBehalf($otherIncomeReceived);
+        $sut->setDoOthersReceiveMoneyOnClientsBehalf($otherMoneyReceived);
 
-        self::assertEquals($expectedExplanation, $sut->getDontKnowIncomeExplanation());
+        self::assertEquals($expectedExplanation, $sut->getDontKnowMoneyExplanation());
     }
 
-    public function otherIncomeProvider()
+    public function otherMoneyProvider()
     {
         return [
-            'no' => [ClientBenefitsCheck::OTHER_INCOME_NO, null],
-            'yes' => [ClientBenefitsCheck::OTHER_INCOME_YES, null],
-            'dontKnow' => [ClientBenefitsCheck::OTHER_INCOME_DONT_KNOW, 'Another explanation'],
+            'no' => [ClientBenefitsCheck::OTHER_MONEY_NO, null],
+            'yes' => [ClientBenefitsCheck::OTHER_MONEY_YES, null],
+            'dontKnow' => [ClientBenefitsCheck::OTHER_MONEY_DONT_KNOW, 'Another explanation'],
         ];
     }
 

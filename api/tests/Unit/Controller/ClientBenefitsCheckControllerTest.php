@@ -5,7 +5,7 @@ declare(strict_types=1);
 namespace App\Tests\Unit\Controller;
 
 use App\Entity\Report\ClientBenefitsCheck;
-use App\Entity\Report\IncomeReceivedOnClientsBehalf;
+use App\Entity\Report\MoneyReceivedOnClientsBehalf;
 use App\TestHelpers\ClientTestHelper;
 use App\TestHelpers\ReportTestHelper;
 use DateTime;
@@ -108,7 +108,7 @@ class ClientBenefitsCheckControllerTest extends AbstractTestController
             $url = sprintf('/report/client-benefits-check/%s', $report->getClientBenefitsCheck()->getId());
 
             $this->okayData['report_id'] = $report->getId();
-            $this->okayData['types_of_income_received_on_clients_behalf'][0]['id'] = $report->getClientBenefitsCheck()->getTypesOfIncomeReceivedOnClientsBehalf()->first()->getId();
+            $this->okayData['types_of_income_received_on_clients_behalf'][0]['id'] = $report->getClientBenefitsCheck()->getTypesOfMoneyReceivedOnClientsBehalf()->first()->getId();
             $this->okayData['types_of_income_received_on_clients_behalf'][1] = [
                 'id' => null,
                 'created' => '2021-10-20',
@@ -129,7 +129,7 @@ class ClientBenefitsCheckControllerTest extends AbstractTestController
         $url = sprintf('/report/client-benefits-check/%s', $report->getClientBenefitsCheck()->getId());
 
         $this->okayData['report_id'] = $report->getId();
-        $this->okayData['types_of_income_received_on_clients_behalf'][0]['id'] = $report->getClientBenefitsCheck()->getTypesOfIncomeReceivedOnClientsBehalf()->first()->getId();
+        $this->okayData['types_of_income_received_on_clients_behalf'][0]['id'] = $report->getClientBenefitsCheck()->getTypesOfMoneyReceivedOnClientsBehalf()->first()->getId();
         $this->okayData['types_of_income_received_on_clients_behalf'][1] = [
             'id' => null,
             'created' => '2021-10-20',
@@ -153,19 +153,20 @@ class ClientBenefitsCheckControllerTest extends AbstractTestController
         $report->setClient($client);
 
         if ($withClientBenefitsCheck) {
-            $typeOfIncome = new IncomeReceivedOnClientsBehalf();
+            $typeOfIncome = new MoneyReceivedOnClientsBehalf();
             $clientBenefitsCheck = new ClientBenefitsCheck();
 
             $typeOfIncome->setCreated(new DateTime())
                 ->setAmount(100.50)
-                ->setIncomeType('Universal Credit');
+                ->setMoneyType('Universal Credit')
+                ->setWhoReceivedMoney('Some org');
 
             $clientBenefitsCheck->setReport($report)
                 ->setWhenLastCheckedEntitlement(ClientBenefitsCheck::WHEN_CHECKED_I_HAVE_CHECKED)
                 ->setDateLastCheckedEntitlement(new DateTime())
                 ->setCreated(new DateTime())
-                ->setDoOthersReceiveIncomeOnClientsBehalf('yes')
-                ->addTypeOfIncomeReceivedOnClientsBehalf($typeOfIncome)
+                ->setDoOthersReceiveMoneyOnClientsBehalf('yes')
+                ->addTypeOfMoneyReceivedOnClientsBehalf($typeOfIncome)
             ;
 
             $typeOfIncome->setClientBenefitsCheck($clientBenefitsCheck);

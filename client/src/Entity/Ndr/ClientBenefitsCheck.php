@@ -58,7 +58,7 @@ class ClientBenefitsCheck implements ClientBenefitsCheckInterface
      *
      * @CustomAssert\ClientBenefitsCheck(groups={"client-benefits-check"})
      */
-    private ?string $doOthersReceiveIncomeOnClientsBehalf = '';
+    private ?string $doOthersReceiveMoneyOnClientsBehalf = '';
 
     /**
      * @JMS\Type("string")
@@ -66,16 +66,16 @@ class ClientBenefitsCheck implements ClientBenefitsCheckInterface
      *
      * @CustomAssert\ClientBenefitsCheck(groups={"client-benefits-check"})
      */
-    private ?string $dontKnowIncomeExplanation = null;
+    private ?string $dontKnowMoneyExplanation = null;
 
     /**
-     * @JMS\Type("ArrayCollection<App\Entity\Ndr\IncomeReceivedOnClientsBehalf>")
+     * @JMS\Type("ArrayCollection<App\Entity\Ndr\MoneyReceivedOnClientsBehalf>")
      * @JMS\Groups({"report", "ndr", "client-benefits-check"})
      *
      * @CustomAssert\ClientBenefitsCheck(groups={"client-benefits-check"})
      * @Assert\Valid(groups={"client-benefits-check"})
      */
-    private ?ArrayCollection $typesOfIncomeReceivedOnClientsBehalf = null;
+    private ?ArrayCollection $typesOfMoneyReceivedOnClientsBehalf = null;
 
     /**
      * @JMS\Type("App\Entity\Ndr\Ndr")
@@ -143,45 +143,45 @@ class ClientBenefitsCheck implements ClientBenefitsCheckInterface
         return $this;
     }
 
-    public function getDoOthersReceiveIncomeOnClientsBehalf(): ?string
+    public function getDoOthersReceiveMoneyOnClientsBehalf(): ?string
     {
-        return $this->doOthersReceiveIncomeOnClientsBehalf;
+        return $this->doOthersReceiveMoneyOnClientsBehalf;
     }
 
-    public function setDoOthersReceiveIncomeOnClientsBehalf(?string $doOthersReceiveIncomeOnClientsBehalf): ClientBenefitsCheck
+    public function setDoOthersReceiveMoneyOnClientsBehalf(?string $doOthersReceiveMoneyOnClientsBehalf): ClientBenefitsCheck
     {
-        $this->doOthersReceiveIncomeOnClientsBehalf = $doOthersReceiveIncomeOnClientsBehalf;
+        $this->doOthersReceiveMoneyOnClientsBehalf = $doOthersReceiveMoneyOnClientsBehalf;
 
         return $this;
     }
 
-    public function getDontKnowIncomeExplanation(): ?string
+    public function getDontKnowMoneyExplanation(): ?string
     {
-        return $this->dontKnowIncomeExplanation;
+        return $this->dontKnowMoneyExplanation;
     }
 
-    public function setDontKnowIncomeExplanation(?string $dontKnowIncomeExplanation): ClientBenefitsCheck
+    public function setDontKnowMoneyExplanation(?string $dontKnowMoneyExplanation): ClientBenefitsCheck
     {
-        $this->dontKnowIncomeExplanation = $dontKnowIncomeExplanation;
+        $this->dontKnowMoneyExplanation = $dontKnowMoneyExplanation;
 
         return $this;
     }
 
-    public function getTypesOfIncomeReceivedOnClientsBehalf(): ?ArrayCollection
+    public function getTypesOfMoneyReceivedOnClientsBehalf(): ?ArrayCollection
     {
-        return $this->typesOfIncomeReceivedOnClientsBehalf;
+        return $this->typesOfMoneyReceivedOnClientsBehalf;
     }
 
-    public function setTypesOfIncomeReceivedOnClientsBehalf(?ArrayCollection $typesOfIncomeReceivedOnClientsBehalf): ClientBenefitsCheck
+    public function setTypesOfMoneyReceivedOnClientsBehalf(?ArrayCollection $typesOfMoneyReceivedOnClientsBehalf): ClientBenefitsCheck
     {
-        $this->typesOfIncomeReceivedOnClientsBehalf = $typesOfIncomeReceivedOnClientsBehalf;
+        $this->typesOfMoneyReceivedOnClientsBehalf = $typesOfMoneyReceivedOnClientsBehalf;
 
         return $this;
     }
 
-    public function addTypeOfIncomeReceivedOnClientsBehalf(IncomeReceivedOnClientsBehalf $incomeReceivedOnClientsBehalf): ClientBenefitsCheck
+    public function addTypeOfMoneyReceivedOnClientsBehalf(MoneyReceivedOnClientsBehalf $moneyReceivedOnClientsBehalf): ClientBenefitsCheck
     {
-        $this->typesOfIncomeReceivedOnClientsBehalf->add($incomeReceivedOnClientsBehalf);
+        $this->typesOfMoneyReceivedOnClientsBehalf->add($moneyReceivedOnClientsBehalf);
 
         return $this;
     }

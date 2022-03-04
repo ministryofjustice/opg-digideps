@@ -4,13 +4,13 @@ namespace App\v2\Fixture;
 
 use App\Entity\Ndr as Ndr;
 use App\Entity\Ndr\ClientBenefitsCheck as NdrClientBenefitsCheck;
-use App\Entity\Ndr\IncomeReceivedOnClientsBehalf as NdrIncomeReceivedOnClientsBehalf;
+use App\Entity\Ndr\MoneyReceivedOnClientsBehalf as NdrMoneyReceivedOnClientsBehalf;
 use App\Entity\Report\Action;
 use App\Entity\Report\BankAccount;
 use App\Entity\Report\ClientBenefitsCheck;
-use App\Entity\Report\IncomeReceivedOnClientsBehalf;
 use App\Entity\Report\Lifestyle;
 use App\Entity\Report\MentalCapacity;
+use App\Entity\Report\MoneyReceivedOnClientsBehalf;
 use App\Entity\Report\MoneyTransaction;
 use App\Entity\Report\ProfDeputyOtherCost;
 use App\Entity\Report\Report;
@@ -252,11 +252,12 @@ class ReportSection
 
     private function completeClientBenefitsCheck(ReportInterface $report): void
     {
-        $typeOfIncome = $report instanceof Ndr\Ndr ? new NdrIncomeReceivedOnClientsBehalf() : new IncomeReceivedOnClientsBehalf();
+        $typeOfIncome = $report instanceof Ndr\Ndr ? new NdrMoneyReceivedOnClientsBehalf() : new MoneyReceivedOnClientsBehalf();
 
         $typeOfIncome->setCreated(new DateTime())
+            ->setWhoReceivedMoney('Someone')
             ->setAmount(100.50)
-            ->setIncomeType('Universal Credit');
+            ->setMoneyType('Universal Credit');
 
         $clientBenefitsCheck = $report instanceof Ndr\Ndr ? new NdrClientBenefitsCheck() : new ClientBenefitsCheck();
 
@@ -264,8 +265,8 @@ class ReportSection
             ->setWhenLastCheckedEntitlement(ClientBenefitsCheck::WHEN_CHECKED_I_HAVE_CHECKED)
             ->setDateLastCheckedEntitlement(new DateTime())
             ->setCreated(new DateTime())
-            ->setDoOthersReceiveIncomeOnClientsBehalf('yes')
-            ->addTypeOfIncomeReceivedOnClientsBehalf($typeOfIncome)
+            ->setDoOthersReceiveMoneyOnClientsBehalf('yes')
+            ->addTypeOfMoneyReceivedOnClientsBehalf($typeOfIncome)
         ;
 
         $typeOfIncome->setClientBenefitsCheck($clientBenefitsCheck);
