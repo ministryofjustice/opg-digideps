@@ -35,6 +35,13 @@ clientArchived:
     pageTitle: "%clientFirstName% %clientLastName%"
     supportTitle: Clients
 
+clientUnarchived:
+    htmlTitle: Administration - Unarchived Client Successful
+    alertSuccessTitle: Thank you
+    alertSuccessMessage: Your request to un-archive this client has been submitted
+    clientDashboardLink: Return to client dashboard
+
+
 reportManage:
     htmlTitle: Administration - Manage report
     pageTitle: Manage report

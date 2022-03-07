@@ -3,23 +3,25 @@
 {% trans_default_domain "admin-clients" %}
 {% set page = 'clientUnarchived' %}
 
+{% block htmlTitle %}{{ (page ~ '.htmlTitle') | trans }}{% endblock %}
+
+{% block pageTitle %}{% endblock %}
+
 {% block pageContent %}
 
     <div class="govuk-panel govuk-panel--confirmation">
         <h1 class="govuk-panel__title">
-            Thankyou
-            {#            {{ (page | trans) }} #}
+            {{ (page ~ '.alertSuccessTitle') | trans }}
+
         </h1>
         <div class="govuk-panel__body">
-            Your request to un-archive this client has been submitted
-            {#            {{ (page | trans) }} #}
+            {{ (page ~ '.alertSuccessMessage') | trans }}
         </div>
     </div>
 
     <div>
-        <a href=" {{ path("admin_client_details", { id: id }) }}" class="govuk-link">Return to client
-            dashboard</a>
-        {#        {{ (page | trans) }} #}
+        <a href=" {{ path("admin_client_details", { id: id }) }}"
+           class="govuk-link">{{ (page ~ '.clientDashboardLink') | trans }}</a>
     </div>
 
 {% endblock %}
