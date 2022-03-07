@@ -1,0 +1,25 @@
+{% extends '@App/Layouts/application.html.twig' %}
+
+{% trans_default_domain "admin-clients" %}
+{% set page = 'clientUnarchived' %}
+
+{% block pageContent %}
+
+    <div class="govuk-panel govuk-panel--confirmation">
+        <h1 class="govuk-panel__title">
+            Thankyou
+            {#            {{ (page | trans) }} #}
+        </h1>
+        <div class="govuk-panel__body">
+            Your request to un-archive this client has been submitted
+            {#            {{ (page | trans) }} #}
+        </div>
+    </div>
+
+    <div>
+        <a href=" {{ path("admin_client_details", { id: client.id }) }}" class="govuk-link">Return to client
+            dashboard</a>
+        {#        {{ (page | trans) }} #}
+    </div>
+
+{% endblock %}

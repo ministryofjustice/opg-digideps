@@ -18,7 +18,7 @@
     <dl class="govuk-summary-list govuk-summary-list--no-border">
         <div class="govuk-summary-list__row">
             <dt class="govuk-summary-list__key govuk-!-padding-1">
-                {{ 'courtOrderNumber' | trans({}, 'common') }}
+                {{ 'courtOrderNumber' | trans({}, 'common') }}:
             </dt>
             <dd class="govuk-summary-list__value govuk-!-padding-1">
                 {{ client.caseNumber }}
@@ -28,7 +28,7 @@
         {% if namedDeputy %}
             <div class="govuk-summary-list__row">
                 <dt class="govuk-summary-list__key govuk-!-padding-1">
-                    {{ 'namedDeputy' | trans({}, 'common') }}
+                    {{ 'namedDeputy' | trans({}, 'common') }}:
                 </dt>
                 <dd class="govuk-summary-list__value govuk-!-padding-1">
                     {{ namedDeputy.fullName }}
@@ -39,7 +39,7 @@
 
     {% if is_granted('ROLE_ADMIN_MANAGER') %}
         {% if client.archivedAt is not null %}
-            <a href="#" role="button" data-module="govuk-button"
+            <a href="{{ path('admin_client_unarchived', {id: client.id}) }}" role="button" data-module="govuk-button"
                class="govuk-button govuk-button--secondary">
                 Un-archive client
             </a>
@@ -54,7 +54,5 @@
             </a>
         {% endif %}
     {% endif %}
-
-
 
 {% endblock %}

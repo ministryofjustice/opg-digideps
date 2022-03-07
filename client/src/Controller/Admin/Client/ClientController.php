@@ -108,7 +108,7 @@ class ClientController extends AbstractController
      *
      * @Template("@App/Admin/Client/Client/archived.html.twig")
      */
-    public function unarchiveAction(string $id): array
+    public function archivedAction(string $id): array
     {
         $client = $this->clientApi->getWithUsersV2($id);
 
@@ -116,5 +116,16 @@ class ClientController extends AbstractController
             'client' => $client,
             'namedDeputy' => $client->getDeputy(),
         ];
+    }
+
+    /**
+     * @Route("/{id}/unarchived", name="admin_client_unarchived", requirements={"id":"\d+"})
+     * @Security ("is_granted('ROLE_ADMIN_MANAGER')")
+     *
+     * @Template("@App/Admin/Client/Client/unarchived.html.twig")
+     */
+    public function unarchiveAction(string $id)
+    {
+        $this->clientApi->unarchiveClient($id);
     }
 }

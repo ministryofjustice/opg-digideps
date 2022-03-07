@@ -114,4 +114,12 @@ class ClientController extends RestController
 
         return $this->buildSuccessResponse($transformedDto);
     }
+
+    /**
+     * @Route("/unarchive", methods={"PUT"})
+     * @Security("is_granted('ROLE_ADMIN_MANAGER')")
+     */
+    public function unarchiveClientAction(string $id)
+    {
+    }
 }
