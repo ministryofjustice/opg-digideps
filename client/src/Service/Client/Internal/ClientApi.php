@@ -21,7 +21,7 @@ class ClientApi
     private const GET_CLIENT_BY_ID = 'client/%s';
     private const DELETE_CLIENT_BY_ID = 'client/%s/delete';
     private const UPDATE_CLIENT = 'client/upsert';
-    private const UNARCHIVE_CLIENT = 'client/unarchive';
+    private const UNARCHIVE_CLIENT = 'client/%s/unarchive';
 
     private const GET_CLIENT_BY_ID_V2 = 'v2/client/%s';
     private const GET_CLIENT_BY_CASE_NUMBER_V2 = 'v2/client/case-number/%s';
@@ -193,6 +193,7 @@ class ClientApi
 
     public function unarchiveClient(string $id)
     {
-        $this->restClient->put(self::UNARCHIVE_CLIENT, $id);
+        $currentUser = $this->tokenStorage->getToken()->getUser();
+        $this->restClient->put(sprintf(self::UNARCHIVE_CLIENT, $id), $currentUser);
     }
 }

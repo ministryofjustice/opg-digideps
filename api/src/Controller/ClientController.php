@@ -198,4 +198,22 @@ class ClientController extends RestController
 
         return [];
     }
+
+    /**
+     * @Route("/{id}/unarchive", methods={"PUT"}, requirements={"id":"\d+"})
+     * @Security("is_granted('ROLE_ADMIN_MANAGER')")
+     */
+    public function unarchiveClientAction(int $id)
+    {
+        // if the client is not in the database null then return NotFoundHttpException
+        $client = $this->findEntityBy(EntityDir\Client::class, $id);
+        // get the client data from the database and setting the archived at value to null
+        $client->setArchivedAt(null);
+        $this->em->flush($client);
+
+        // return a success response
+        return [
+            'id' => $client->getId(),
+        ];
+    }
 }
