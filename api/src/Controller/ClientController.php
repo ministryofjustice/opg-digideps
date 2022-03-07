@@ -200,7 +200,7 @@ class ClientController extends RestController
     }
 
     /**
-     * @Route("/{id}/unarchive", methods={"PUT"}, requirements={"id":"\d+"})
+     * @Route("/{id}/unarchived", methods={"PUT"}, requirements={"id":"\d+"})
      * @Security("is_granted('ROLE_ADMIN_MANAGER')")
      */
     public function unarchiveClientAction(int $id)

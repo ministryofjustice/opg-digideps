@@ -34,17 +34,18 @@ trait IVisitAdminTrait
     }
 
     /**
-     * @When I visit the admin client unarchived page for an archived client
+     * @When I visit the admin client archived page
      */
-    public function iVisitTheAdminClientUnarchivedPage()
+    public function iVisitTheAdminClientArchivedPage()
     {
         if (!in_array($this->loggedInUserDetails->getUserRole(), $this->loggedInUserDetails::ADMIN_ROLES)) {
             throw new BehatException('Attempting to access an admin page as a non-admin user. Try logging in as an admin user instead');
         }
 
-        $this->profNamedDeputyNotStartedPfaHighDetails->
-        $clientUnarchivedUrl = $this->getAdminClientUnarchivedUrl($this->profNamedDeputyNotStartedPfaHighDetails->getClientId());
-        $this->visitAdminPath($clientUnarchivedUrl);
+        $clientArchivedUrl = $this->getAdminClientArchivedUrl($this->profNamedDeputyNotStartedPfaHighDetails->getClientId());
+        $this->visitAdminPath($clientArchivedUrl);
+
+        $this->interactingWithUserDetails = $this->profNamedDeputyNotStartedPfaHighDetails;
     }
 
     /**
