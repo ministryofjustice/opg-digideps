@@ -7,3 +7,9 @@ resource "aws_cloud9_environment_ec2" "shared" {
   owner_arn                   = "arn:aws:iam::${var.accounts[terraform.workspace].account_id}:assumed-role/operator/alex.saunders"
   tags                        = local.default_tags
 }
+
+resource "aws_cloud9_environment_membership" "shared" {
+  environment_id = aws_cloud9_environment_ec2.shared.id
+  permissions    = "read-write"
+  user_arn       = "arn:aws:iam::${var.accounts[terraform.workspace].account_id}:assumed-role/breakglass"
+}
