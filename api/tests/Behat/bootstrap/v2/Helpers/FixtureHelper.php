@@ -934,9 +934,7 @@ class FixtureHelper
 
     public function updateClientToBeArchived(string $testRunId, array $fixtureUsers)
     {
-        $user = [
-            'clientArchivedAt' => new DateTime('-5 day'),
-        ];
+        $user = $this->createArchivedClient();
 
         return self::buildUserDetails($user);
     }
