@@ -86,9 +86,9 @@ form:
         dontKnowLabel: Tell us why you don't know about this.
         dontKnowHint: For example, is this something you've never checked, don't know how to check, or have been unable to find out.
         errors:
-            noOptionSelected: Tell us whether anyone other than you received money on %client%’s behalf
-            missingExplanation: Tell us why you don't know if anyone other than you received money on %client%’s behalf
-            explanationTooShort: In a few words, tell us why you don't know if anyone other than you received money on %client%’s behalf
+            noOptionSelected: Tell us whether anyone other than you received money on %client%'s behalf
+            missingExplanation: Tell us why you don't know if anyone other than you received money on %client%'s behalf
+            explanationTooShort: In a few words, tell us why you don't know if anyone other than you received money on %client%'s behalf
 
     moneyDetails:
         titleHint: For example, benefits paid directly to a care home or family member
