@@ -295,9 +295,10 @@ class FixtureHelper
         int $satisfactionScore = null,
         ?string $namedDeputyEmail = null,
         ?string $caseNumber = null,
-        ?string $deputyNumber = null
+        ?string $deputyNumber = null,
+        ?DateTime $archivedAt = null
     ) {
-        $client = $this->clientTestHelper->generateClient($this->em, $deputy, $organisation, $caseNumber);
+        $client = $this->clientTestHelper->generateClient($this->em, $deputy, $organisation, $caseNumber, $archivedAt);
         $report = $this->reportTestHelper->generateReport($this->em, $client, $reportType, $startDate);
         $namedDeputy = $this->namedDeputyTestHelper->generatenamedDeputy($namedDeputyEmail, $deputyNumber);
 
@@ -539,6 +540,26 @@ class FixtureHelper
             Report::PROF_HW_TYPE,
             false,
             false
+        );
+
+        return self::buildOrgUserDetails($user);
+    }
+
+    public function createProfNamedHealthWelfareNotStartedClientArchived(string $testRunId): array
+    {
+        $user = $this->createOrgUserClientNamedDeputyAndReport(
+            $testRunId,
+            User::ROLE_PROF_NAMED,
+            'prof-named-hw-not-started-client-archived',
+            Report::PROF_HW_TYPE,
+            false,
+            false,
+            null,
+            null,
+            null,
+            null,
+            null,
+            new DateTime('yesterday'),
         );
 
         return self::buildOrgUserDetails($user);
@@ -1129,7 +1150,8 @@ class FixtureHelper
         ?string $caseNumber = null,
         ?string $deputyNumber = null,
         ?DateTime $startDate = null,
-        ?int $satisfactionScore = null
+        ?int $satisfactionScore = null,
+        ?DateTime $archivedAt = null
     ) {
         if ('prod' === $this->symfonyEnvironment) {
             throw new BehatException('Prod mode enabled - cannot create fixture users');
@@ -1156,7 +1178,8 @@ class FixtureHelper
             $satisfactionScore,
             $namedDeputyEmail,
             $caseNumber,
-            $deputyNumber
+            $deputyNumber,
+            $archivedAt
         );
 
         $this->setClientPassword($user);

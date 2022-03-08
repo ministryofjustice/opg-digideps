@@ -26,7 +26,7 @@ class ClientTestHelper extends TestCase
         return $client->reveal();
     }
 
-    public function generateClient(EntityManager $em, ?User $user = null, ?Organisation $organisation = null, ?string $caseNumber = null)
+    public function generateClient(EntityManager $em, ?User $user = null, ?Organisation $organisation = null, ?string $caseNumber = null, ?DateTime $archivedAt = null)
     {
         $faker = Factory::create('en_GB');
 
@@ -38,6 +38,8 @@ class ClientTestHelper extends TestCase
             ->setCourtDate(new DateTime('09-Aug-2018'))
             ->setAddress($faker->streetAddress())
             ->setPostcode($faker->postcode());
+
+        $client->setArchivedAt($archivedAt);
 
         if (!is_null($user) && User::ROLE_LAY_DEPUTY === $user->getRoleName()) {
             return $client->addUser($user ?: (new UserTestHelper())->createAndPersistUser($em));

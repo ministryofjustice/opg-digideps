@@ -1,7 +1,7 @@
 @v2 @v2_admin @admin-client-unarchive
 Feature: Admin - Client Unarchived
 
-    @super-admin @prof-named-hw-not-started @with-archived-client @mia
+    @super-admin @prof-named-hw-not-started-client-archived @add-archived-client @mia
     Scenario: A super admin user can unarchive a client
         Given a super admin user accesses the admin app
         When I visit the admin client archived page
