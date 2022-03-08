@@ -78,6 +78,7 @@ class FixtureHelper
             'clientFullAddressArray' => self::buildClientAddressArray($client),
             'clientEmail' => $client->getEmail(),
             'clientCaseNumber' => $client->getCaseNumber(),
+            'clientArchivedAt' => $client->getArchivedAt(),
             'currentReportId' => $currentReport->getId(),
             'currentReportType' => $currentReportType,
             'currentReportNdrOrReport' => $currentReport instanceof Ndr ? 'ndr' : 'report',
@@ -929,6 +930,15 @@ class FixtureHelper
         );
 
         return self::buildOrgUserDetails($user);
+    }
+
+    public function updateClientToBeArchived(string $testRunId, array $fixtureUsers)
+    {
+        $user = [
+            'clientArchivedAt' => new DateTime('-5 day'),
+        ];
+
+        return self::buildUserDetails($user);
     }
 
     public function createAdmin(string $testRunId): array

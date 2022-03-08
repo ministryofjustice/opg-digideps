@@ -377,13 +377,8 @@ MESSAGE;
     {
         $this->assertInteractingWithUserIsSet();
 
-        try {
-            $this->clickLink('Un-archive client');
-            $this->iAmOnAdminClientUnarchivedPage();
-            $this->clickLink('Return to client dashboard');
-        } catch (\Throwable $e) {
-            // This step is used as part of testing the discharge button isnt here so swallow errors and assert on following step
-        }
+        $this->clickLink('Un-archive client');
+        $this->iAmOnAdminClientUnarchivedPage();
     }
 
     /**
@@ -392,7 +387,6 @@ MESSAGE;
     public function theClientShouldBeUnarchived()
     {
         $this->assertInteractingWithUserIsSet();
-
         $this->iAmOnAdminClientDetailsPage();
     }
 }

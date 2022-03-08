@@ -85,7 +85,6 @@ class UserDetails
         $this->setUserFullName($userDetails['userFullName'] ?? null);
         $this->setUserFullAddressArray($userDetails['userFullAddressArray'] ?? null);
         $this->setUserPhone($userDetails['userPhone'] ?? null);
-        $this->setUserEmail($userDetails['userEmail'] ?? null);
 
         $this->setNamedDeputyName($userDetails['namedDeputyName'] ?? null);
         $this->setNamedDeputyFullAddressArray($userDetails['namedDeputyFullAddressArray'] ?? null);

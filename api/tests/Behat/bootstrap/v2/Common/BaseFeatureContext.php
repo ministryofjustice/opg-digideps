@@ -478,6 +478,15 @@ class BaseFeatureContext extends MinkContext
     }
 
     /**
+     * @BeforeScenario @with-archived-client
+     */
+    public function addArchivedClient()
+    {
+        $userDetails = $this->fixtureHelper->updateClientToBeArchived($this->testRunId, $this->fixtureUsers);
+        $this->fixtureUsers[] = $this->interactingWithUserDetails = new UserDetails($userDetails);
+    }
+
+    /**
      * @BeforeScenario @admin
      */
     public function createAdmin()
