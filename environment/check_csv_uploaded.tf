@@ -106,7 +106,7 @@ locals {
       { "name": "API_CLIENT_SECRET", "valueFrom": "/aws/reference/secretsmanager/${data.aws_secretsmanager_secret.front_api_client_secret.name}" },
       { "name": "NOTIFY_API_KEY", "valueFrom": "/aws/reference/secretsmanager/${data.aws_secretsmanager_secret.front_notify_api_key.name}" },
       { "name": "SECRET", "valueFrom": "/aws/reference/secretsmanager/${data.aws_secretsmanager_secret.front_frontend_secret.name}" },
-      { "name": "SLACK_APP_TOKEN_SECRET_NAME", "valueFrom": "/aws/reference/secretsmanager/${data.aws_secretsmanager_secret.opg_response_slack_token}" },
+      { "name": "SLACK_APP_TOKEN_SECRET_NAME", "valueFrom": "/aws/reference/secretsmanager/${data.aws_secretsmanager_secret.opg_response_slack_token.name}" },
       { "name": "SIRIUS_API_BASE_URI", "valueFrom": "${aws_ssm_parameter.sirius_api_base_uri.arn}" },
     ],
     "environment": [
