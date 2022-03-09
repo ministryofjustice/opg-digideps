@@ -377,9 +377,13 @@ MESSAGE;
     {
         $this->assertInteractingWithUserIsSet();
 
-        $this->clickLink('Un-archive client');
-        $this->iAmOnAdminClientUnarchivedPage();
-        $this->clickLink('Return to client dashboard');
+        try {
+            $this->clickLink('Un-archive client');
+            $this->iAmOnAdminClientUnarchivedPage();
+            $this->clickLink('Return to client dashboard');
+        } catch (\Throwable $e) {
+            // This step is used as part of testing the unarchive button isnt here so swallow errors and assert on following step
+        }
     }
 
     /**
@@ -405,5 +409,18 @@ MESSAGE;
     {
         $this->assertInteractingWithUserIsSet();
         $this->iAmOnAdminClientDetailsPage();
+    }
+
+    /**
+     * @Then the client should not be unarchived
+     */
+    public function theClientShouldNotBeUnarchived()
+    {
+        $this->assertInteractingWithUserIsSet();
+
+        $this->iVisitAdminClientDetailsPageForDeputyInteractingWith();
+
+        // Expecting to be redirected to the client archived page
+        $this->iAmOnAdminClientArchivedPage();
     }
 }
