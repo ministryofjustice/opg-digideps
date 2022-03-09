@@ -32,6 +32,7 @@ locals {
   cloud9_users = [
     "alex.saunders",
     "gugandeep.chani",
-    "stephen.hinett",
+    "mia.gordon",
+    "stephen.hinett"
   ]
 }
