@@ -13,6 +13,13 @@ locals {
       target_type = "security_group_id"
       target      = module.api_service_security_group.id
     }
+    gov_uk_bank_holidays_api = {
+      port        = 443
+      type        = "egress"
+      protocol    = "tcp"
+      target_type = "cidr_block"
+      target      = "0.0.0.0/0"
+    }
   }
 
   check_csv_uploaded_interval = "cron(0 12 ? * MON-FRI *)"
