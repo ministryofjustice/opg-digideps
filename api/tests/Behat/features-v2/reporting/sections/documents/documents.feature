@@ -1,4 +1,4 @@
-@v2 @v2_reporting_1 @documents
+@v2 @v2_sequential @documents
 Feature: Documents - All User Roles
 
     @lay-pfa-high-not-started
