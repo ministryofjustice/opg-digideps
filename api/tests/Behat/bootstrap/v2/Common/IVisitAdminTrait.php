@@ -27,7 +27,7 @@ trait IVisitAdminTrait
             throw new BehatException('Attempting to access an admin page as a non-admin user. Try logging in as an admin user instead');
         }
 
-        $clientDetailsUrl = $this->getAdminClientDetailsUrl($this->interactingWithUserDetails->getClientId());
+        $clientDetailsUrl = $this->getAdminClientDetailsUrl($this->layDeputySubmittedPfaHighAssetsDetails->getClientId());
         $this->visitAdminPath($clientDetailsUrl);
 
         $this->interactingWithUserDetails = $this->layDeputySubmittedPfaHighAssetsDetails;
