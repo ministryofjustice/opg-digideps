@@ -29,6 +29,8 @@ trait IVisitAdminTrait
 
         $clientDetailsUrl = $this->getAdminClientDetailsUrl($this->interactingWithUserDetails->getClientId());
         $this->visitAdminPath($clientDetailsUrl);
+
+        $this->interactingWithUserDetails = $this->layDeputySubmittedPfaHighAssetsDetails;
     }
 
     /**
