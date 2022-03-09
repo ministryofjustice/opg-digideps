@@ -33,3 +33,7 @@ data "aws_secretsmanager_secret" "front_api_client_secret" {
 data "aws_secretsmanager_secret" "front_notify_api_key" {
   name = join("/", compact([local.account.secrets_prefix, "front-notify-api-key"]))
 }
+
+data "aws_secretsmanager_secret" "slack_api_token" {
+  name = join("/", compact([local.account.secrets_prefix, "opg-response-slack-token"]))
+}
