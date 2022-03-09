@@ -205,13 +205,11 @@ class ClientController extends RestController
      */
     public function unarchiveClientAction(int $id)
     {
-        // if the client is not in the database null then return NotFoundHttpException
         $client = $this->findEntityBy(EntityDir\Client::class, $id);
-        // get the client data from the database and setting the archived at value to null
+
         $client->setArchivedAt(null);
         $this->em->flush($client);
 
-        // return a success response
         return [
             'id' => $client->getId(),
         ];

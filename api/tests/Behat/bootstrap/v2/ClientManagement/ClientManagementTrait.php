@@ -371,15 +371,15 @@ MESSAGE;
     }
 
     /**
-     * @When I attempt to unarchived the client
+     * @When I attempt to un-archive the client
      */
-    public function iAttemptToUnarchivedTheClient()
+    public function iAttemptToUnarchiveTheClient()
     {
         $this->assertInteractingWithUserIsSet();
 
         try {
             $this->clickLink('Un-archive client');
-            $this->iAmOnAdminClientUnarchivedPage();
+            $this->iAmOnAdminClientUnarchivePage();
             $this->clickLink('Return to client dashboard');
         } catch (\Throwable $e) {
             // This step is used as part of testing the unarchive button isnt here so swallow errors and assert on following step
@@ -391,6 +391,7 @@ MESSAGE;
      */
     public function theDeputyHasAnArchivedClient()
     {
+        $this->assertInteractingWithUserIsSet();
         $clientId = $this->interactingWithUserDetails->getClientId();
 
         /** @var Client $client */

@@ -34,7 +34,7 @@ trait IVisitAdminTrait
     }
 
     /**
-     * @When I visit the admin client archived page
+     * @When I visit the admin client archived page for the user I'm interacting with
      */
     public function iVisitTheAdminClientArchivedPage()
     {

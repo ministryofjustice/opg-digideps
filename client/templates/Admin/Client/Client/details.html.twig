@@ -22,26 +22,6 @@
             </dd>
         </div>
 
-        {#        {% if client.archivedAt %} #}
-        {#            <div class="govuk-summary-list__row"> #}
-        {#                <dt class="govuk-summary-list__key"> #}
-        {#                    {{ 'archivedOn' | trans({}, 'common') }} #}
-        {#                </dt> #}
-        {#                <dd class="govuk-summary-list__value"> #}
-        {#                    {{ client.archivedAt | date("j M Y") }} #}
-
-        {#                    {% if is_granted('ROLE_ADMIN_MANAGER') %} #}
-        {#                        {% if not client.isArchived %} #}
-        {#                            <a href="" role="button" data-module="govuk-button" #}
-        {#                               class="govuk-button govuk-button--secondary"> #}
-        {#                                Un-archive client #}
-        {#                            </a> #}
-        {#                        {% endif %} #}
-        {#                    {% endif %} #}
-        {#                </dd> #}
-        {#            </div> #}
-        {#        {% endif %} #}
-
         {% if client.deletedAt %}
             <div class="govuk-summary-list__row">
                 <dt class="govuk-summary-list__key">

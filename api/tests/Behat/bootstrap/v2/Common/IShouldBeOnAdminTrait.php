@@ -202,9 +202,9 @@ trait IShouldBeOnAdminTrait
         return $this->iAmOnPage('/admin\/stats\/reports$/');
     }
 
-    public function iAmOnAdminClientUnarchivedPage()
+    public function iAmOnAdminClientUnarchivePage()
     {
-        return $this->iAmOnPage('/admin\/client\/[0-9]{1,4}\/unarchived.*$/');
+        return $this->iAmOnPage('/admin\/client\/[0-9]{1,4}\/unarchive.*$/');
     }
 
     public function iAmOnAdminClientArchivedPage()
