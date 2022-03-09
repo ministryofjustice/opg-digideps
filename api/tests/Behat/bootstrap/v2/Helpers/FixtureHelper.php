@@ -295,10 +295,9 @@ class FixtureHelper
         int $satisfactionScore = null,
         ?string $namedDeputyEmail = null,
         ?string $caseNumber = null,
-        ?string $deputyNumber = null,
-        ?DateTime $archivedAt = null
+        ?string $deputyNumber = null
     ) {
-        $client = $this->clientTestHelper->generateClient($this->em, $deputy, $organisation, $caseNumber, $archivedAt);
+        $client = $this->clientTestHelper->generateClient($this->em, $deputy, $organisation, $caseNumber);
         $report = $this->reportTestHelper->generateReport($this->em, $client, $reportType, $startDate);
         $namedDeputy = $this->namedDeputyTestHelper->generatenamedDeputy($namedDeputyEmail, $deputyNumber);
 
@@ -933,13 +932,6 @@ class FixtureHelper
         return self::buildOrgUserDetails($user);
     }
 
-    public function updateClientToBeArchived(string $testRunId, array $fixtureUsers)
-    {
-        $user = $this->createArchivedClient();
-
-        return self::buildUserDetails($user);
-    }
-
     public function createAdmin(string $testRunId): array
     {
         $user = $this->createAdminUser(
@@ -1074,11 +1066,11 @@ class FixtureHelper
 
     private function createDeputyClientAndReport(
         string $testRunId,
-        $userRole,
-        $emailPrefix,
-        $reportType,
-        $completed,
-        $submitted,
+                  $userRole,
+                  $emailPrefix,
+                  $reportType,
+                  $completed,
+                  $submitted,
         bool $ndr = false,
         ?DateTime $startDate = null,
         ?int $satisfactionScore = null,
@@ -1121,17 +1113,16 @@ class FixtureHelper
 
     private function createOrgUserClientNamedDeputyAndReport(
         string $testRunId,
-        $userRole,
-        $emailPrefix,
-        $reportType,
-        $completed,
-        $submitted,
+                  $userRole,
+                  $emailPrefix,
+                  $reportType,
+                  $completed,
+                  $submitted,
         ?string $namedDeputyEmail = null,
         ?string $caseNumber = null,
         ?string $deputyNumber = null,
         ?DateTime $startDate = null,
-        ?int $satisfactionScore = null,
-        ?DateTime $archivedAt = null
+        ?int $satisfactionScore = null
     ) {
         if ('prod' === $this->symfonyEnvironment) {
             throw new BehatException('Prod mode enabled - cannot create fixture users');
@@ -1158,8 +1149,7 @@ class FixtureHelper
             $satisfactionScore,
             $namedDeputyEmail,
             $caseNumber,
-            $deputyNumber,
-            $archivedAt
+            $deputyNumber
         );
 
         $this->setClientPassword($user);
