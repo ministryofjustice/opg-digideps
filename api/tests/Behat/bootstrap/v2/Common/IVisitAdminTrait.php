@@ -23,14 +23,8 @@ trait IVisitAdminTrait
      */
     public function iVisitAdminLayClientDetailsPage()
     {
-        if (!in_array($this->loggedInUserDetails->getUserRole(), $this->loggedInUserDetails::ADMIN_ROLES)) {
-            throw new BehatException('Attempting to access an admin page as a non-admin user. Try logging in as an admin user instead');
-        }
-
-        $clientDetailsUrl = $this->getAdminClientDetailsUrl($this->layDeputySubmittedPfaHighAssetsDetails->getClientId());
+        $clientDetailsUrl = $this->getAdminClientDetailsUrl($this->interactingWithUserDetails->getClientId());
         $this->visitAdminPath($clientDetailsUrl);
-
-        $this->interactingWithUserDetails = $this->layDeputySubmittedPfaHighAssetsDetails;
     }
 
     /**

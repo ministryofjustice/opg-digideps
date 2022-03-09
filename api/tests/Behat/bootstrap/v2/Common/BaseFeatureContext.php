@@ -64,8 +64,6 @@ class BaseFeatureContext extends MinkContext
     public UserDetails $profNamedDeputyCompletedHealthWelfareDetails;
     public UserDetails $profNamedDeputySubmittedHealthWelfareDetails;
 
-    public UserDetails $profNamedDeputyNotStartedHealthWelfareClientArchivedDetails;
-
     public UserDetails $publicAuthorityNamedNotStartedPfaHighDetails;
     public UserDetails $publicAuthorityNamedCompletedPfaHighDetails;
     public UserDetails $publicAuthorityNamedSubmittedPfaHighDetails;
@@ -261,15 +259,6 @@ class BaseFeatureContext extends MinkContext
     {
         $userDetails = $this->fixtureHelper->createProfNamedHealthWelfareNotStarted($this->testRunId);
         $this->fixtureUsers[] = $this->profNamedDeputyNotStartedHealthWelfareDetails = new UserDetails($userDetails);
-    }
-
-    /**
-     * @BeforeScenario @prof-named-hw-not-started-client-archived
-     */
-    public function createProfNamedHealthWelfareNotStartedClientArchived()
-    {
-        $userDetails = $this->fixtureHelper->createProfNamedHealthWelfareNotStartedClientArchived($this->testRunId);
-        $this->fixtureUsers[] = $this->profNamedDeputyNotStartedHealthWelfareClientArchivedDetails = new UserDetails($userDetails);
     }
 
     /**

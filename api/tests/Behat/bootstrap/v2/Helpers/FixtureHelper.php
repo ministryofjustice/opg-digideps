@@ -545,26 +545,6 @@ class FixtureHelper
         return self::buildOrgUserDetails($user);
     }
 
-    public function createProfNamedHealthWelfareNotStartedClientArchived(string $testRunId): array
-    {
-        $user = $this->createOrgUserClientNamedDeputyAndReport(
-            $testRunId,
-            User::ROLE_PROF_NAMED,
-            'prof-named-hw-not-started-client-archived',
-            Report::PROF_HW_TYPE,
-            false,
-            false,
-            null,
-            null,
-            null,
-            null,
-            null,
-            new DateTime('yesterday'),
-        );
-
-        return self::buildOrgUserDetails($user);
-    }
-
     public function createProfNamedHealthWelfareCompleted(string $testRunId): array
     {
         $user = $this->createOrgUserClientNamedDeputyAndReport(
