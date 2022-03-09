@@ -36,13 +36,6 @@ trait IVisitAdminTrait
             throw new BehatException('Attempting to access an admin page as a non-admin user. Try logging in as an admin user instead');
         }
 
-        foreach ($this->fixtureUsers as $fixtureUser) {
-            if ($fixtureUser->getClientArchivedAt()) {
-                $this->interactingWithUserDetails = $fixtureUser;
-                break;
-            }
-        }
-
         $clientArchivedUrl = $this->getAdminClientArchivedUrl($this->interactingWithUserDetails->getClientId());
         $this->visitAdminPath($clientArchivedUrl);
     }

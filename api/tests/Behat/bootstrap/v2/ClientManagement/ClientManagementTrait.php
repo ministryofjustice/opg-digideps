@@ -379,6 +379,7 @@ MESSAGE;
 
         $this->clickLink('Un-archive client');
         $this->iAmOnAdminClientUnarchivedPage();
+        $this->clickLink('Return to client dashboard');
     }
 
     /**
