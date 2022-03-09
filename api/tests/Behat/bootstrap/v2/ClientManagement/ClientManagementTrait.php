@@ -371,14 +371,30 @@ MESSAGE;
     }
 
     /**
-     * @When I attempt to unarchive the client
+     * @When I attempt to unarchived the client
      */
-    public function iAttemptToUnarchiveTheClient()
+    public function iAttemptToUnarchivedTheClient()
     {
         $this->assertInteractingWithUserIsSet();
 
         $this->clickLink('Un-archive client');
         $this->iAmOnAdminClientUnarchivedPage();
+    }
+
+    /**
+     * @When an org deputy has an archived client
+     */
+    public function theDeputyHasAnArchivedClient()
+    {
+        $clientId = $this->interactingWithUserDetails->getClientId();
+
+        /** @var Client $client */
+        $client = $this->em->getRepository(Client::class)->find($clientId);
+
+        $client->setArchivedAt(new DateTime('yesterday'));
+
+        $this->em->persist($client);
+        $this->em->flush();
     }
 
     /**
