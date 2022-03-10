@@ -96,3 +96,21 @@ resource "aws_iam_role_policy" "front_task_logs" {
   policy = data.aws_iam_policy_document.ecs_task_logs.json
   role   = aws_iam_role.front.id
 }
+
+
+resource "aws_iam_role_policy" "front_query_secretsmanager" {
+  name   = "front-query-secretsmanager.${local.environment}"
+  policy = data.aws_iam_policy_document.front_query_secretsmanager.json
+  role   = aws_iam_role.front.id
+}
+
+data "aws_iam_policy_document" "front_query_secretsmanager" {
+  statement {
+    sid    = "AllowQuerySecretsmanagerSecrets"
+    effect = "Allow"
+    actions = [
+      "secretsmanager:GetSecretValue"
+    ]
+    resources = ["*"]
+  }
+}
