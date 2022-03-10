@@ -1151,7 +1151,7 @@ jobs:
 
   cross-browser-test:
     machine:
-      image: circleci/classic:latest
+      image: ubuntu-2004:202111-02
     steps:
       - dockerhub_helper/dockerhub_login
       - aws-cli/install
