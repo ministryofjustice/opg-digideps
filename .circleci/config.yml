@@ -582,7 +582,7 @@ orbs:
     executors:
       terraform:
         docker:
-          - image: circleci/golang:1.16
+          - image: cimg/go:1.16
             auth:
               username: $DOCKER_USER
               password: $DOCKER_ACCESS_TOKEN
@@ -1111,7 +1111,7 @@ jobs:
 
   api-unit-tests:
     docker:
-      - image: circleci/php
+      - image: cimg/php:8.0.14
         auth:
           username: $DOCKER_USER
           password: $DOCKER_ACCESS_TOKEN
