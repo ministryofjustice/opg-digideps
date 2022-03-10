@@ -1111,7 +1111,7 @@ jobs:
 
   api-unit-tests:
     docker:
-      - image: cimg/php
+      - image: cimg/php:8.0.14
         auth:
           username: $DOCKER_USER
           password: $DOCKER_ACCESS_TOKEN
