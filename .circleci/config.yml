@@ -1212,7 +1212,7 @@ jobs:
 
   pa11y-ci:
     machine:
-      image: circleci/classic:latest
+      image: ubuntu-2004:202111-02
     steps:
       - dockerhub_helper/dockerhub_login
       - checkout
