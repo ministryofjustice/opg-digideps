@@ -71,7 +71,7 @@ class MoneyReceivedOnClientsBehalf implements MoneyReceivedOnClientsBehalfInterf
     private ?float $amount;
 
     /**
-     * @ORM\Column(name="who_received_money", type="string", nullable=false)
+     * @ORM\Column(name="who_received_money", type="string", nullable=true)
      *
      * @JMS\Groups({"client-benefits-check"})
      * @JMS\Type("string")
