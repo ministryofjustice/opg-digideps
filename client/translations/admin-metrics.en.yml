@@ -10,9 +10,10 @@ adminAccounts:
 reports:
     htmlTitle: Administration - Reports
     pageTitle: Reports
+    downloadActiveLays: Download active lays report
+    downloadAssetsTotalValues: Download total value of assets on submitted reports in last 12 months report
     downloadSatisfaction: Download satisfaction report
     downloadUserResearch: Download user research report
-    downloadActiveLays: Download active lays report
     userAccountReports: View admin account metrics
 
 form:

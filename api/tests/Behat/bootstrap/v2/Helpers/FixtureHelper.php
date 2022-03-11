@@ -661,7 +661,7 @@ class FixtureHelper
             $testRunId,
             User::ROLE_PROF_ADMIN,
             'prof-admin-combined-high-not-started',
-            Report::PROF_COMBINED_HIGH_ASSETS,
+            Report::PROF_COMBINED_HIGH_ASSETS_TYPE,
             false,
             false
         );
@@ -675,7 +675,7 @@ class FixtureHelper
             $testRunId,
             User::ROLE_PROF_ADMIN,
             'prof-admin-combined-high-completed',
-            Report::PROF_COMBINED_HIGH_ASSETS,
+            Report::PROF_COMBINED_HIGH_ASSETS_TYPE,
             true,
             false
         );
@@ -689,7 +689,7 @@ class FixtureHelper
             $testRunId,
             User::ROLE_PROF_ADMIN,
             'prof-admin-combined-high-submitted',
-            Report::PROF_COMBINED_HIGH_ASSETS,
+            Report::PROF_COMBINED_HIGH_ASSETS_TYPE,
             true,
             true
         );
@@ -966,7 +966,7 @@ class FixtureHelper
 
     public function createDataForAnalytics(string $testRunId, $timeAgo, $satisfactionScore)
     {
-        $startDate = new \DateTime($timeAgo);
+        $startDate = new DateTime($timeAgo);
         $deputies = [];
 
         $deputies[] = $this->createOrgUserClientNamedDeputyAndReport(
