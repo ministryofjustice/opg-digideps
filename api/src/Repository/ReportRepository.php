@@ -242,20 +242,12 @@ DQL;
     {
         $oneYearAgo = new DateTime('-1 year');
 
-        switch ($deputyType) {
-            case 'LAY':
-                $types = Report::getAllLayTypes();
-                break;
-            case 'PROF':
-                $types = Report::getAllProfTypes();
-                break;
-            case 'PA':
-                $types = Report::getAllPaTypes();
-                break;
-            default:
-                $types = [];
-                break;
-        }
+        $types = match ($deputyType) {
+            'LAY' => Report::getAllLayTypes(),
+            'PROF' => Report::getAllProfTypes(),
+            'PA' => Report::getAllPaTypes(),
+            default => [],
+        };
 
         $dql = <<<DQL
 SELECT r FROM App\Entity\Report\Report r

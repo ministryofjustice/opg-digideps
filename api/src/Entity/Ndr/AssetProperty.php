@@ -395,10 +395,7 @@ class AssetProperty extends Asset implements AssetInterface
             $asset->getPostcode() === $this->getPostcode();
     }
 
-    /**
-     * @return float|null
-     */
-    public function getValueTotal()
+    public function getValueTotal(): float | int | null
     {
         if (self::OWNED_PARTLY == $this->getOwned()) {
             return $this->getValue() * $this->getOwnedPercentage() / 100;

@@ -13,10 +13,7 @@ class AssetsTotalsCSVGenerator
         $this->csvBuilder = $csvBuilder;
     }
 
-    /**
-     * @return string
-     */
-    public function generateAssetsTotalValuesCSV(array $assetsTotals)
+    public function generateAssetsTotalValuesCSV(array $assetsTotals): string
     {
         $headers = [
             'Lay - Liquid',
