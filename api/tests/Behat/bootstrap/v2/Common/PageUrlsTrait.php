@@ -56,6 +56,7 @@ trait PageUrlsTrait
     private string $adminStatsReportsUrl = '/admin/stats/reports';
     private string $adminClientSearchUrl = '/admin/client/search';
     private string $adminClientDetailsUrl = '/admin/client/%s/details';
+    private string $adminClientArchivedUrl = '/admin/client/%s/archived';
     private string $adminDATReportUrl = '/admin/stats';
     private string $adminEditUserUrl = '/admin/edit-user?filter=%s';
     private string $adminFixturesUrl = '/admin/fixtures';
@@ -151,6 +152,11 @@ trait PageUrlsTrait
     public function getAdminClientDetailsUrl(int $clientId): string
     {
         return sprintf($this->adminClientDetailsUrl, $clientId);
+    }
+
+    public function getAdminClientArchivedUrl(int $clientId): string
+    {
+        return sprintf($this->adminClientArchivedUrl, $clientId);
     }
 
     public function getCourtOrdersFixtureUrl(string $queryString): string

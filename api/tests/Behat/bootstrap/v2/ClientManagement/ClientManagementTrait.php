@@ -369,4 +369,59 @@ MESSAGE;
         $this->em->persist($client);
         $this->em->flush();
     }
+
+    /**
+     * @When I attempt to un-archive the client
+     */
+    public function iAttemptToUnarchiveTheClient()
+    {
+        $this->assertInteractingWithUserIsSet();
+
+        try {
+            $this->clickLink('Un-archive client');
+            $this->iAmOnAdminClientUnarchivePage();
+            $this->clickLink('Return to client dashboard');
+        } catch (\Throwable $e) {
+            // This step is used as part of testing the unarchive button isnt here so swallow errors and assert on following step
+        }
+    }
+
+    /**
+     * @When an org deputy has an archived client
+     */
+    public function theDeputyHasAnArchivedClient()
+    {
+        $this->assertInteractingWithUserIsSet();
+        $clientId = $this->interactingWithUserDetails->getClientId();
+
+        /** @var Client $client */
+        $client = $this->em->getRepository(Client::class)->find($clientId);
+
+        $client->setArchivedAt(new DateTime('yesterday'));
+
+        $this->em->persist($client);
+        $this->em->flush();
+    }
+
+    /**
+     * @Then the client should be unarchived
+     */
+    public function theClientShouldBeUnarchived()
+    {
+        $this->assertInteractingWithUserIsSet();
+        $this->iAmOnAdminClientDetailsPage();
+    }
+
+    /**
+     * @Then the client should not be unarchived
+     */
+    public function theClientShouldNotBeUnarchived()
+    {
+        $this->assertInteractingWithUserIsSet();
+
+        $this->iVisitAdminClientDetailsPageForDeputyInteractingWith();
+
+        // Expecting to be redirected to the client archived page
+        $this->iAmOnAdminClientArchivedPage();
+    }
 }
