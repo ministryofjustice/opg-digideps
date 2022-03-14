@@ -3,6 +3,8 @@
 namespace App\Entity;
 
 use App\Entity\Report\Report;
+use DateTime;
+use InvalidArgumentException;
 use JMS\Serializer\Annotation as JMS;
 use Symfony\Component\Validator\Constraints as Assert;
 
@@ -50,8 +52,8 @@ class CasRec
         // @deprecated (DDPB-2044)
         [true, self::REALM_PROF, ['l3', 'l3g', 'a3'], 'opg102', Report::PROF_PFA_HIGH_ASSETS_TYPE],
         [true, self::REALM_PROF, ['hw'], '', Report::PROF_HW_TYPE],
-        [true, self::REALM_PROF, ['hw'], 'opg103', Report::PROF_COMBINED_LOW_ASSETS],
-        [true, self::REALM_PROF, ['hw'], 'opg102', Report::PROF_COMBINED_HIGH_ASSETS],
+        [true, self::REALM_PROF, ['hw'], 'opg103', Report::PROF_COMBINED_LOW_ASSETS_TYPE],
+        [true, self::REALM_PROF, ['hw'], 'opg102', Report::PROF_COMBINED_HIGH_ASSETS_TYPE],
     ];
 
     /**
@@ -126,14 +128,14 @@ class CasRec
     private $otherColumns;
 
     /**
-     * @var \DateTime
+     * @var DateTime
      *
      * @JMS\Type("DateTime<'Y-m-d H:i:s'>")
      */
     private $createdAt;
 
     /**
-     * @var \DateTime
+     * @var DateTime
      *
      * @JMS\Type("DateTime<'Y-m-d H:i:s'>")
      */
@@ -145,7 +147,7 @@ class CasRec
     private $source;
 
     /**
-     * @var \DateTime
+     * @var DateTime
      */
     private $orderDate;
 
@@ -205,7 +207,7 @@ class CasRec
         return isset($row[$key]) ? $row[$key] : null;
     }
 
-    public function setUpdatedAt(\DateTime $updatedAt): CasRec
+    public function setUpdatedAt(DateTime $updatedAt): CasRec
     {
         $this->updatedAt = $updatedAt;
 
@@ -213,9 +215,9 @@ class CasRec
     }
 
     /**
-     * @return \DateTime|null
+     * @return DateTime|null
      */
-    public function getUpdatedAt(): \DateTime
+    public function getUpdatedAt(): DateTime
     {
         return $this->updatedAt;
     }
@@ -229,7 +231,7 @@ class CasRec
     {
         $source = strtolower($source);
         if (!in_array($source, self::validSources())) {
-            throw new \InvalidArgumentException(sprintf('Attempting to set invalid source: %s given', $source));
+            throw new InvalidArgumentException(sprintf('Attempting to set invalid source: %s given', $source));
         }
 
         $this->source = $source;
@@ -245,12 +247,12 @@ class CasRec
         ];
     }
 
-    public function getOrderDate(): \DateTime
+    public function getOrderDate(): DateTime
     {
         return $this->orderDate;
     }
 
-    public function setOrderDate(\DateTime $orderDate): CasRec
+    public function setOrderDate(DateTime $orderDate): CasRec
     {
         $this->orderDate = $orderDate;
 

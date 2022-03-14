@@ -15,6 +15,7 @@ use App\Mapper\UserResearchResponse\UserResearchResponseSummaryMapper;
 use App\Service\Client\Internal\StatsApi;
 use App\Service\Client\RestClient;
 use App\Service\Csv\ActiveLaysCsvGenerator;
+use App\Service\Csv\AssetsTotalsCSVGenerator;
 use App\Service\Csv\SatisfactionCsvGenerator;
 use App\Service\Csv\UserResearchResponseCsvGenerator;
 use App\Transformer\ReportSubmission\ReportSubmissionBurFixedWidthTransformer;
@@ -31,24 +32,14 @@ use Throwable;
  */
 class StatsController extends AbstractController
 {
-    private RestClient $restClient;
-    private SatisfactionCsvGenerator $satisfactionCsvGenerator;
-    private StatsApi $statsApi;
-    private ActiveLaysCsvGenerator $activeLaysCsvGenerator;
-    private UserResearchResponseCsvGenerator $userResearchResponseCsvGenerator;
-
     public function __construct(
-        RestClient $restClient,
-        SatisfactionCsvGenerator $satisfactionCsvGenerator,
-        StatsApi $statsApi,
-        ActiveLaysCsvGenerator $activeLaysCsvGenerator,
-        UserResearchResponseCsvGenerator $userResearchResponseCsvGenerator
+        private RestClient $restClient,
+        private SatisfactionCsvGenerator $satisfactionCsvGenerator,
+        private StatsApi $statsApi,
+        private ActiveLaysCsvGenerator $activeLaysCsvGenerator,
+        private UserResearchResponseCsvGenerator $userResearchResponseCsvGenerator,
+        private AssetsTotalsCSVGenerator $assetsTotalsCSVGenerator,
     ) {
-        $this->restClient = $restClient;
-        $this->satisfactionCsvGenerator = $satisfactionCsvGenerator;
-        $this->statsApi = $statsApi;
-        $this->activeLaysCsvGenerator = $activeLaysCsvGenerator;
-        $this->userResearchResponseCsvGenerator = $userResearchResponseCsvGenerator;
     }
 
     /**
@@ -266,6 +257,31 @@ class StatsController extends AbstractController
         $disposition = $response->headers->makeDisposition(
             ResponseHeaderBag::DISPOSITION_ATTACHMENT,
             'activeLays.csv'
+        );
+
+        $response->headers->set('Content-Disposition', $disposition);
+
+        return $response;
+    }
+
+    /**
+     * @Route("/downloadAssetsTotalValues", name="admin_total_assets_values")
+     * @Security("is_granted('ROLE_SUPER_ADMIN')")
+     *
+     * @return Response
+     */
+    public function downloadAssetsTotalValues()
+    {
+        $activeLaysData = $this->statsApi->getAssetsTotalValuesWithin12Months();
+
+        $csv = $this->assetsTotalsCSVGenerator->generateAssetsTotalValuesCSV(json_decode($activeLaysData, true));
+
+        $response = new Response($csv);
+
+        $response->headers->set('Content-Type', 'text/csv; charset=utf-8');
+        $disposition = $response->headers->makeDisposition(
+            ResponseHeaderBag::DISPOSITION_ATTACHMENT,
+            'totalAssets.csv'
         );
 
         $response->headers->set('Content-Disposition', $disposition);

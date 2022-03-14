@@ -114,10 +114,10 @@ class CasRecTest extends TestCase
             // 104-5
             ['hw', '', CasRec::REALM_PROF, Report::PROF_HW_TYPE],
             // 103-4-5
-            ['hw', 'opg103', CasRec::REALM_PROF, Report::PROF_COMBINED_LOW_ASSETS],
+            ['hw', 'opg103', CasRec::REALM_PROF, Report::PROF_COMBINED_LOW_ASSETS_TYPE],
             // 102-4-5
-            ['hw', 'opg102', CasRec::REALM_PROF, Report::PROF_COMBINED_HIGH_ASSETS],
-            ['hw', 'opg102', CasRec::REALM_PROF, Report::PROF_COMBINED_HIGH_ASSETS],
+            ['hw', 'opg102', CasRec::REALM_PROF, Report::PROF_COMBINED_HIGH_ASSETS_TYPE],
+            ['hw', 'opg102', CasRec::REALM_PROF, Report::PROF_COMBINED_HIGH_ASSETS_TYPE],
         ];
     }
 

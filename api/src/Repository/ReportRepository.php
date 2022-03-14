@@ -10,8 +10,12 @@ use App\Entity\Report\MoneyShortCategory as ReportMoneyShortCategory;
 use App\Entity\Report\Report;
 use App\Entity\SynchronisableInterface;
 use App\Service\Search\ClientSearchFilter;
+use DateTime;
 use Doctrine\Bundle\DoctrineBundle\Repository\ServiceEntityRepository;
 use Doctrine\DBAL\Connection;
+use Doctrine\DBAL\DBALException;
+use Doctrine\ORM\NonUniqueResultException;
+use Doctrine\ORM\ORMException;
 use Doctrine\Persistence\ManagerRegistry;
 use Symfony\Component\HttpFoundation\ParameterBag;
 
@@ -56,7 +60,7 @@ class ReportRepository extends ServiceEntityRepository
     /**
      * @return int|null
      *
-     * @throws \Doctrine\ORM\ORMException
+     * @throws ORMException
      */
     public function addFeesToReportIfMissing(Report $report)
     {
@@ -128,7 +132,7 @@ class ReportRepository extends ServiceEntityRepository
      *
      * @return array|mixed|null
      *
-     * @throws \Doctrine\ORM\NonUniqueResultException
+     * @throws NonUniqueResultException
      */
     public function getAllByDeterminant($orgIdsOrUserId, $determinant, ParameterBag $query, $select, $status)
     {
@@ -155,7 +159,7 @@ class ReportRepository extends ServiceEntityRepository
             $this->filter->handleSearchTermFilter($searchTerm, $qb, 'c');
         }
 
-        $endOfToday = new \DateTime('today midnight');
+        $endOfToday = new DateTime('today midnight');
 
         if (Report::STATUS_READY_TO_SUBMIT === $status) {
             $qb->andWhere('r.reportStatusCached = :status AND r.endDate < :endOfToday')
@@ -187,7 +191,7 @@ class ReportRepository extends ServiceEntityRepository
     }
 
     /**
-     * @throws \Doctrine\DBAL\DBALException
+     * @throws DBALException
      */
     public function getReportsIdsWithQueuedChecklistsAndSetChecklistsToInProgress(int $limit): array
     {
@@ -229,5 +233,34 @@ DQL;
             ->getEntityManager()
             ->createQuery('SELECT COUNT(r.id) FROM App\Entity\Report\Report r')
             ->getSingleScalarResult();
+    }
+
+    /**
+     * @return Report[]
+     */
+    public function getAllSubmittedReportsWithin12Months(string $deputyType)
+    {
+        $oneYearAgo = new DateTime('-1 year');
+
+        $types = match ($deputyType) {
+            'LAY' => Report::getAllLayTypes(),
+            'PROF' => Report::getAllProfTypes(),
+            'PA' => Report::getAllPaTypes(),
+            default => [],
+        };
+
+        $dql = <<<DQL
+SELECT r FROM App\Entity\Report\Report r
+WHERE r.submitDate > :oneYearAgo
+AND r.type IN (:types)
+DQL;
+
+        $query = $this
+            ->getEntityManager()
+            ->createQuery($dql)
+            ->setParameter('oneYearAgo', $oneYearAgo)
+            ->setParameter('types', $types);
+
+        return $query->getResult();
     }
 }
