@@ -95,7 +95,6 @@ class StatsController extends RestController
         $lays = $this->reportRepository->getAllSubmittedReportsWithin12Months('LAY');
         $profs = $this->reportRepository->getAllSubmittedReportsWithin12Months('PROF');
         $pas = $this->reportRepository->getAllSubmittedReportsWithin12Months('PA');
-        $ndrs = $this->ndrRepository->getAllSubmittedNdrsWithin12Months();
 
         $layClientIds = [];
 
@@ -121,11 +120,9 @@ class StatsController extends RestController
             }
         }
 
-        foreach ($ndrs as $ndr) {
-            if (in_array($ndr->getClient()->getId(), $layClientIds)) {
-                continue;
-            }
+        $ndrs = $this->ndrRepository->getAllSubmittedNdrsWithin12Months($layClientIds);
 
+        foreach ($ndrs as $ndr) {
             $ret['lays']['non-liquid'] += $ndr->getAssetsTotalValue();
             foreach ($ndr->getBankAccounts() as $bankAccount) {
                 $ret['lays']['liquid'] += $bankAccount->getClosingBalance();

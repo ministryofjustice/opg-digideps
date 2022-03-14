@@ -235,6 +235,30 @@ DQL;
             ->getSingleScalarResult();
     }
 
+//     Assets
+
+//    Get SUM of lays, profs and pros for 'other' asset types
+
+//    select SUM(asset.asset_value) as total from asset
+//    LEFT JOIN report ON asset.report_id = report.id
+//    where report.submit_date > '2022-02-12'
+//    and asset.type = 'other'
+
+//    Get SUM of lays, profs and pros for 'property' asset types (using percentage owned)
+
+//    select SUM(asset.asset_value * asset.owned_percentage) as total from asset
+//    LEFT JOIN report ON asset.report_id = report.id
+//    where report.submit_date > '2022-02-12'
+//    and asset.type = 'property'
+
+//    Bank Accounts
+
+//    Get SUM of lays, profs and pros account closing balances
+
+//    select SUM(account.closing_balance) as total from account
+//    LEFT JOIN report ON account.report_id = report.id
+//    where report.submit_date > '2022-02-12'
+
     /**
      * @return Report[]
      */
@@ -250,17 +274,34 @@ DQL;
         };
 
         $dql = <<<DQL
-SELECT r FROM App\Entity\Report\Report r
+SELECT r.assets, r.bankAccounts, r.client, c.id
+FROM App\Entity\Report\Report r
+INNER JOIN r.client c
+INNER JOIN r.bankAccounts b
+INNER JOIN r.assets a
 WHERE r.submitDate > :oneYearAgo
 AND r.type IN (:types)
 DQL;
 
         $query = $this
             ->getEntityManager()
-            ->createQuery($dql)
+            ->createQueryBuilder()
+            ->select('partial r.{id, client}, partial c.{id}')
+            ->from('App\Entity\Report\Report', 'r')
+            ->leftJoin('r.client', 'c')
+            ->leftJoin('r.bankAccounts', 'b')
+            ->leftJoin('r.assets', 'a')
+            ->where('r.submitDate > :oneYearAgo')
+            ->andWhere('r.type IN (:types)')
             ->setParameter('oneYearAgo', $oneYearAgo)
             ->setParameter('types', $types);
 
-        return $query->getResult();
+//        $query = $this
+//            ->getEntityManager()
+//            ->createQuery($dql)
+//            ->setParameter('oneYearAgo', $oneYearAgo)
+//            ->setParameter('types', $types);
+
+        return $query->getQuery()->getResult();
     }
 }

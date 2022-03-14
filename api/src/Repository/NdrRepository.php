@@ -74,19 +74,21 @@ class NdrRepository extends ServiceEntityRepository
     /**
      * @return Ndr[]
      */
-    public function getAllSubmittedNdrsWithin12Months(): array
+    public function getAllSubmittedNdrsWithin12Months(array $clientIds): array
     {
         $oneYearAgo = new DateTime('-1 year');
 
         $dql = <<<DQL
 SELECT n FROM App\Entity\Ndr\Ndr n
 WHERE n.submitDate > :oneYearAgo
+AND n.client NOT IN (:clientIds)
 DQL;
 
         $query = $this
             ->getEntityManager()
             ->createQuery($dql)
-            ->setParameter('oneYearAgo', $oneYearAgo);
+            ->setParameter('oneYearAgo', $oneYearAgo)
+            ->setParameter('clientIds', $clientIds);
 
         return $query->getResult();
     }
