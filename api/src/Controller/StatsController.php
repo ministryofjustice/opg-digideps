@@ -123,7 +123,7 @@ class StatsController extends RestController
 
         $ret['lays']['non-liquid'] += $this->ndrAssetRepository->getSumOfAssets(NdrAssetOther::class, $oneYearAgo, $clientIdsOfSubmittedReports);
         $ret['lays']['non-liquid'] += $this->ndrAssetRepository->getSumOfAssets(NdrAssetProperty::class, $oneYearAgo, $clientIdsOfSubmittedReports);
-        $ret['lays']['liquid'] += $this->ndrBankAccountRepository->getSumOfAccounts($oneYearAgo, $clientIdsOfSubmittedReports, $clientIdsOfSubmittedReports);
+        $ret['lays']['liquid'] += $this->ndrBankAccountRepository->getSumOfAccounts($oneYearAgo, $clientIdsOfSubmittedReports);
 
         $ret['grandTotal'] =
             $ret['lays']['non-liquid'] +
