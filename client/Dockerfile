@@ -1,6 +1,8 @@
 FROM node:14.8.0-alpine AS webpack
 WORKDIR /app
 
+RUN apk upgrade libxml2
+
 COPY package.json .
 COPY package-lock.json .
 COPY webpack.config.js .
