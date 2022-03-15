@@ -236,30 +236,6 @@ DQL;
             ->getSingleScalarResult();
     }
 
-//     Assets
-
-//    Get SUM of lays, profs and pros for 'other' asset types
-
-//    select SUM(asset.asset_value) as total from asset
-//    LEFT JOIN report ON asset.report_id = report.id
-//    where report.submit_date > '2022-02-12'
-//    and asset.type = 'other'
-
-//    Get SUM of lays, profs and pros for 'property' asset types (using percentage owned)
-
-//    select SUM(asset.asset_value * asset.owned_percentage) as total from asset
-//    LEFT JOIN report ON asset.report_id = report.id
-//    where report.submit_date > '2022-02-12'
-//    and asset.type = 'property'
-
-//    Bank Accounts
-
-//    Get SUM of lays, profs and pros account closing balances
-
-//    select SUM(account.closing_balance) as total from account
-//    LEFT JOIN report ON account.report_id = report.id
-//    where report.submit_date > '2022-02-12'
-
     /**
      * @return string[]
      */

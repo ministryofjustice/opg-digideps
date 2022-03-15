@@ -17,15 +17,8 @@ class BankAccountRepository extends ServiceEntityRepository
         parent::__construct($registry, BankAccount::class);
     }
 
-    public function getSumOfAccounts(string $deputyType = '', ?DateTime $after = null): int
+    public function getSumOfAccounts(?string $deputyType = null, ?DateTime $after = null): int
     {
-        $types = match (strtoupper($deputyType)) {
-            'LAY' => Report::getAllLayTypes(),
-            'PROF' => Report::getAllProfTypes(),
-            'PA' => Report::getAllPaTypes(),
-            default => [],
-        };
-
         $query = $this
             ->getEntityManager()
             ->createQueryBuilder()
@@ -40,6 +33,13 @@ class BankAccountRepository extends ServiceEntityRepository
         }
 
         if ($deputyType) {
+            $types = match (strtoupper($deputyType)) {
+                'LAY' => Report::getAllLayTypes(),
+                'PROF' => Report::getAllProfTypes(),
+                'PA' => Report::getAllPaTypes(),
+                default => [],
+            };
+
             $query
                 ->andWhere('r.type IN (:types)')
                 ->setParameter('types', $types);

@@ -28,13 +28,6 @@ class AssetRepository extends ServiceEntityRepository
 
         $selectQuery = AssetOther::class === $assetType ? 'SUM(a.value)' : 'SUM(a.value * a.ownedPercentage)';
 
-        $types = match (strtoupper($deputyType)) {
-            'LAY' => Report::getAllLayTypes(),
-            'PROF' => Report::getAllProfTypes(),
-            'PA' => Report::getAllPaTypes(),
-            default => [],
-        };
-
         $query = $this
             ->getEntityManager()
             ->createQueryBuilder()
@@ -49,6 +42,13 @@ class AssetRepository extends ServiceEntityRepository
         }
 
         if ($deputyType) {
+            $types = match (strtoupper($deputyType)) {
+                'LAY' => Report::getAllLayTypes(),
+                'PROF' => Report::getAllProfTypes(),
+                'PA' => Report::getAllPaTypes(),
+                default => [],
+            };
+
             $query
                 ->andWhere('r.type IN (:types)')
                 ->setParameter('types', $types);
