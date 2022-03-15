@@ -14,6 +14,7 @@ use DateTime;
 use Doctrine\Bundle\DoctrineBundle\Repository\ServiceEntityRepository;
 use Doctrine\DBAL\Connection;
 use Doctrine\DBAL\DBALException;
+use Doctrine\ORM\AbstractQuery;
 use Doctrine\ORM\NonUniqueResultException;
 use Doctrine\ORM\ORMException;
 use Doctrine\Persistence\ManagerRegistry;
@@ -260,48 +261,25 @@ DQL;
 //    where report.submit_date > '2022-02-12'
 
     /**
-     * @return Report[]
+     * @return string[]
      */
-    public function getAllSubmittedReportsWithin12Months(string $deputyType)
+    public function getClientIdsByAllSubmittedLayReportsWithin12Months(): array
     {
         $oneYearAgo = new DateTime('-1 year');
 
-        $types = match ($deputyType) {
-            'LAY' => Report::getAllLayTypes(),
-            'PROF' => Report::getAllProfTypes(),
-            'PA' => Report::getAllPaTypes(),
-            default => [],
-        };
-
-        $dql = <<<DQL
-SELECT r.assets, r.bankAccounts, r.client, c.id
-FROM App\Entity\Report\Report r
-INNER JOIN r.client c
-INNER JOIN r.bankAccounts b
-INNER JOIN r.assets a
-WHERE r.submitDate > :oneYearAgo
-AND r.type IN (:types)
-DQL;
+        $types = Report::getAllLayTypes();
 
         $query = $this
             ->getEntityManager()
             ->createQueryBuilder()
-            ->select('partial r.{id, client}, partial c.{id}')
+            ->select('c.id')
             ->from('App\Entity\Report\Report', 'r')
             ->leftJoin('r.client', 'c')
-            ->leftJoin('r.bankAccounts', 'b')
-            ->leftJoin('r.assets', 'a')
             ->where('r.submitDate > :oneYearAgo')
             ->andWhere('r.type IN (:types)')
             ->setParameter('oneYearAgo', $oneYearAgo)
             ->setParameter('types', $types);
 
-//        $query = $this
-//            ->getEntityManager()
-//            ->createQuery($dql)
-//            ->setParameter('oneYearAgo', $oneYearAgo)
-//            ->setParameter('types', $types);
-
-        return $query->getQuery()->getResult();
+        return $query->getQuery()->getResult(AbstractQuery::HYDRATE_SCALAR_COLUMN);
     }
 }

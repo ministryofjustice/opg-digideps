@@ -263,6 +263,14 @@ services:
         class: App\Repository\BankAccountRepository
         tags: ["doctrine.repository_service"]
 
+    App\Repository\NdrAssetRepository:
+        class: App\Repository\NdrAssetRepository
+        tags: ["doctrine.repository_service"]
+
+    App\Repository\NdrBankAccountRepository:
+        class: App\Repository\NdrBankAccountRepository
+        tags: ["doctrine.repository_service"]
+
     App\Service\Auth\AuthService:
         arguments:
             $encoderFactory: "@security.encoder_factory"
