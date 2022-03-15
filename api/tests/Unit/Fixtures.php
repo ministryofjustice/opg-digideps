@@ -147,12 +147,35 @@ class Fixtures
         }
 
         if (is_null($report)) {
-            $report = $this->createReport($this->createClient($user));
+            $client = $this->createClient($user);
+
+            $report = $this->createReport($client);
+
+            $other = (new EntityDir\Report\AssetOther())
+                ->setValue(rand(1, 10000))
+                ->setReport($report);
+
+            $property = (new EntityDir\Report\AssetProperty())
+                ->setValue(rand(1, 10000))
+                ->setOwnedPercentage(rand(1, 100) / 100)
+                ->setReport($report);
+
+            $bankAccount = (new EntityDir\Report\BankAccount())
+                ->setClosingBalance(floatval(rand(10, 1000000) / 10))
+                ->setReport($report);
+
+            $report->addAsset($other);
+            $report->addAsset($property);
+            $report->addAccount($bankAccount);
+
+            $ndr = $this->createNdr($client);
         }
 
         $submission = new ReportSubmission($report, $user);
+        $report->setSubmitDate(new DateTime('-2 days'));
 
         $this->em->persist($submission);
+        $this->em->persist($report);
 
         return $submission;
     }

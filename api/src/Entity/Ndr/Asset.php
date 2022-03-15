@@ -2,6 +2,7 @@
 
 namespace App\Entity\Ndr;
 
+use DateTime;
 use Doctrine\ORM\Mapping as ORM;
 use JMS\Serializer\Annotation as JMS;
 
@@ -9,7 +10,7 @@ use JMS\Serializer\Annotation as JMS;
  * Asset.
  *
  * @ORM\Table(name="odr_asset")
- * @ORM\Entity()
+ * @ORM\Entity(repositoryClass="App\Repository\NdrAssetRepository")
  * @ORM\InheritanceType("SINGLE_TABLE")
  * @ORM\DiscriminatorColumn(name="type", type="string")
  * @ORM\DiscriminatorMap({
@@ -43,7 +44,7 @@ abstract class Asset
     private $value;
 
     /**
-     * @var \DateTime
+     * @var DateTime
      * @JMS\Groups({"ndr-asset"})
      * @JMS\Type("DateTime")
      * @ORM\Column(name="last_edit", type="datetime", nullable=true)
@@ -121,7 +122,7 @@ abstract class Asset
     /**
      * Set lastedit.
      *
-     * @param \DateTime $lastEdit
+     * @param DateTime $lastEdit
      *
      * @return Asset
      */
@@ -135,7 +136,7 @@ abstract class Asset
     /**
      * Get lastedit.
      *
-     * @return \DateTime
+     * @return DateTime
      */
     public function getLastEdit()
     {
@@ -190,6 +191,6 @@ abstract class Asset
      */
     public function updateLastEdit()
     {
-        $this->setLastEdit(new \DateTime());
+        $this->setLastEdit(new DateTime());
     }
 }
