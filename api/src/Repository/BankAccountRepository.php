@@ -4,30 +4,21 @@ declare(strict_types=1);
 
 namespace App\Repository;
 
-use App\Entity\Report\Asset;
-use App\Entity\Report\AssetOther;
-use App\Entity\Report\AssetProperty;
+use App\Entity\Report\BankAccount;
 use App\Entity\Report\Report;
 use DateTime;
 use Doctrine\Bundle\DoctrineBundle\Repository\ServiceEntityRepository;
 use Doctrine\Persistence\ManagerRegistry;
-use InvalidArgumentException;
 
-class AssetRepository extends ServiceEntityRepository
+class BankAccountRepository extends ServiceEntityRepository
 {
     public function __construct(ManagerRegistry $registry)
     {
-        parent::__construct($registry, Asset::class);
+        parent::__construct($registry, BankAccount::class);
     }
 
-    public function getSumOfAssets(string $assetType = AssetOther::class, ?string $deputyType = null, ?DateTime $after = null): int
+    public function getSumOfAccounts(string $deputyType = '', ?DateTime $after = null): int
     {
-        if (!in_array($assetType, [AssetProperty::class, AssetOther::class])) {
-            throw new InvalidArgumentException('Only "AssetProperty" or "AssetOther" assets are supported');
-        }
-
-        $selectQuery = AssetOther::class === $assetType ? 'SUM(a.value)' : 'SUM(a.value * a.ownedPercentage)';
-
         $types = match (strtoupper($deputyType)) {
             'LAY' => Report::getAllLayTypes(),
             'PROF' => Report::getAllProfTypes(),
@@ -38,8 +29,8 @@ class AssetRepository extends ServiceEntityRepository
         $query = $this
             ->getEntityManager()
             ->createQueryBuilder()
-            ->select($selectQuery)
-            ->from($assetType, 'a')
+            ->select('SUM(a.closingBalance)')
+            ->from('App\Entity\Report\BankAccount', 'a')
             ->leftJoin('a.report', 'r');
 
         if ($after) {

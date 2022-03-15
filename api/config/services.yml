@@ -259,6 +259,10 @@ services:
         class: App\Repository\AssetRepository
         tags: ["doctrine.repository_service"]
 
+    App\Repository\BankAccountRepository:
+        class: App\Repository\BankAccountRepository
+        tags: ["doctrine.repository_service"]
+
     App\Service\Auth\AuthService:
         arguments:
             $encoderFactory: "@security.encoder_factory"
