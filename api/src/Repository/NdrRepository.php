@@ -6,7 +6,6 @@ use App\Entity\Ndr\Debt;
 use App\Entity\Ndr\Ndr;
 use App\Entity\Ndr\OneOff;
 use App\Entity\Ndr\StateBenefit;
-use DateTime;
 use Doctrine\Bundle\DoctrineBundle\Repository\ServiceEntityRepository;
 use Doctrine\Persistence\ManagerRegistry;
 
@@ -69,27 +68,5 @@ class NdrRepository extends ServiceEntityRepository
         }
 
         return $ret;
-    }
-
-    /**
-     * @return Ndr[]
-     */
-    public function getAllSubmittedNdrsWithin12Months(array $clientIds): array
-    {
-        $oneYearAgo = new DateTime('-1 year');
-
-        $dql = <<<DQL
-SELECT n FROM App\Entity\Ndr\Ndr n
-WHERE n.submitDate > :oneYearAgo
-AND n.client NOT IN (:clientIds)
-DQL;
-
-        $query = $this
-            ->getEntityManager()
-            ->createQuery($dql)
-            ->setParameter('oneYearAgo', $oneYearAgo)
-            ->setParameter('clientIds', $clientIds);
-
-        return $query->getResult();
     }
 }
