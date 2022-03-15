@@ -28,10 +28,6 @@ class UserResearchResponseRepositoryTest extends KernelTestCase
 
     // Not to be run in test suites as it takes forever - run this to generate large amounts of userResearchResponses
     // for manual testing
-
-    /**
-     * @test
-     */
     public function canHandleLargeAmountsOfData()
     {
         $this->fixtures->createUserResearchResponse(2000);
