@@ -1426,7 +1426,7 @@ class Report implements ReportInterface
 
     public function getBenefitsSectionReleaseDate(): ?DateTime
     {
-        return $this->benefitsSectionReleaseDate ?: new DateTime('31-12-2030 00:00:00');
+        return $this->benefitsSectionReleaseDate ?: new DateTime('16-03-2022 00:00:00');
     }
 
     /**
