@@ -6,6 +6,7 @@ namespace App\Controller\Admin;
 
 use App\Controller\AbstractController;
 use App\Service\Client\RestClient;
+use Exception;
 use Symfony\Bundle\FrameworkBundle\Console\Application;
 use Symfony\Component\Console\Input\ArrayInput;
 use Symfony\Component\Console\Output\NullOutput;
@@ -27,13 +28,13 @@ class BehatController extends AbstractController
     }
 
     /**
-     * @Route("/admin/behat/run-document-sync-command", name="behat_admin_run_sync_command", methods={"GET"})
+     * @Route("/admin/behat/run-document-sync-command", name="behat_admin_run_document_sync_command", methods={"GET"})
      *
      * @param KernelInterface $kernel
      *
      * @return Response
      *
-     * @throws \Exception
+     * @throws Exception
      */
     public function runDocumentSyncCommand()
     {
@@ -45,6 +46,32 @@ class BehatController extends AbstractController
         $application->setAutoExit(false);
 
         $input = new ArrayInput(['command' => 'digideps:document-sync']);
+        $output = new NullOutput();
+
+        $application->run($input, $output);
+
+        return new Response('');
+    }
+
+    /**
+     * @Route("/admin/behat/run-checklist-sync-command", name="behat_admin_run_checklist_sync_command", methods={"GET"})
+     *
+     * @param KernelInterface $kernel
+     *
+     * @return Response
+     *
+     * @throws Exception
+     */
+    public function runChecklistSyncCommand()
+    {
+        if ('prod' === $this->symfonyEnvironment) {
+            throw $this->createNotFoundException();
+        }
+
+        $application = new Application($this->kernel);
+        $application->setAutoExit(false);
+
+        $input = new ArrayInput(['command' => 'digideps:checklist-sync']);
         $output = new NullOutput();
 
         $application->run($input, $output);

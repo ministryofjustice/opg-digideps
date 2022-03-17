@@ -196,33 +196,37 @@ class ReportRepository extends ServiceEntityRepository
      */
     public function getReportsIdsWithQueuedChecklistsAndSetChecklistsToInProgress(int $limit): array
     {
+        $em = $this->getEntityManager();
+
         $dql = <<<DQL
 SELECT c.id as checklist_id, r.id as report_id
 FROM App\Entity\Report\Report r
 JOIN r.checklist c
-JOIN r.reportSubmissions rs
-WHERE c.synchronisationStatus = ?1
+WHERE c.synchronisationStatus = :status
 DQL;
 
-        $query = $this
-            ->getEntityManager()
+        $query = $em
             ->createQuery($dql)
-            ->setParameter(1, SynchronisableInterface::SYNC_STATUS_QUEUED)
+            ->setParameter('status', SynchronisableInterface::SYNC_STATUS_QUEUED)
             ->setMaxResults($limit);
 
         $result = $query->getArrayResult();
 
         if (count($result)) {
-            $conn = $this->getEntityManager()->getConnection();
-
             $ids = array_map(function ($result) {
                 return $result['checklist_id'];
             }, $result);
 
+            $dql = <<<DQL
+UPDATE App\Entity\Report\Checklist c SET c.synchronisationStatus = 'IN_PROGRESS' WHERE c.id IN (:idsString)
+DQL;
+
             $idsString = implode(',', $ids);
-            $queryString = "UPDATE checklist SET synchronisation_status = 'IN_PROGRESS' WHERE id IN ($idsString)";
-            $query = $conn->prepare($queryString);
-            $query->execute();
+
+            $em
+                ->createQuery($dql)
+                ->setParameter('idsString', $idsString)
+                ->getResult();
         }
 
         return array_column($result, 'report_id');
