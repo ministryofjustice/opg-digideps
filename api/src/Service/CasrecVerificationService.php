@@ -5,6 +5,7 @@ namespace App\Service;
 use App\Entity\CasRec;
 use Doctrine\Common\Persistence\ObjectRepository;
 use Doctrine\ORM\EntityManagerInterface;
+use RuntimeException;
 use Symfony\Component\Serializer\Normalizer\AbstractNormalizer;
 use Symfony\Component\Serializer\SerializerInterface;
 
@@ -75,7 +76,7 @@ class CasrecVerificationService
                 'case_number_matches' => $caseNumberMatches,
             ]);
 
-            throw new \RuntimeException($errorJson, 400);
+            throw new RuntimeException($errorJson, 400);
         }
 
         return true;
@@ -90,7 +91,7 @@ class CasrecVerificationService
     {
         $deputyNumbers = [];
         foreach ($this->lastMatchedCasrecUsers as $casRecMatch) {
-            $deputyNumbers[] = $casRecMatch->getDeputyNo();
+            $deputyNumbers[] = $casRecMatch->getDeputyUid();
         }
 
         return $deputyNumbers;

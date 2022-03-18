@@ -15,10 +15,6 @@ class CasRecFactory
     /** @var DateTimeProvider */
     private $dateProvider;
 
-    /**
-     * @param ValidatorInterface $validator
-     * @param DateTimeProvider $dateProvider
-     */
     public function __construct(ValidatorInterface $validator, DateTimeProvider $dateProvider)
     {
         $this->validator = $validator;
@@ -26,7 +22,6 @@ class CasRecFactory
     }
 
     /**
-     * @param LayDeputyshipDto $dto
      * @return CasRec
      */
     public function createFromDto(LayDeputyshipDto $dto)
@@ -39,23 +34,24 @@ class CasRecFactory
         return $entity;
     }
 
-    /**
-     * @param LayDeputyshipDto $dto
-     * @return array
-     */
     private function convertDtoToArray(LayDeputyshipDto $dto): array
     {
         return [
             'Case' => $dto->getCaseNumber(),
-            'Surname' => $dto->getClientSurname(),
-            'Deputy No' => $dto->getDeputyNumber(),
-            'Dep Surname' => $dto->getDeputySurname(),
-            'Dep Postcode' => $dto->getDeputyPostcode(),
-            'Typeofrep' => $dto->getTypeOfReport(),
-            'Corref' => $dto->getCorref(),
+            'ClientSurname' => $dto->getClientSurname(),
+            'DeputyUid' => $dto->getDeputyUid(),
+            'DeputySurname' => $dto->getDeputySurname(),
+            'DeputyAddress1' => $dto->getDeputyAddress1(),
+            'DeputyAddress2' => $dto->getDeputyAddress2(),
+            'DeputyAddress3' => $dto->getDeputyAddress3(),
+            'DeputyAddress4' => $dto->getDeputyAddress4(),
+            'DeputyAddress5' => $dto->getDeputyAddress5(),
+            'DeputyPostcode' => $dto->getDeputyPostcode(),
+            'ReportType' => $dto->getTypeOfReport(),
             'NDR' => $dto->isNdrEnabled(),
-            'Source' => $dto->getSource(),
-            'OrderDate' => $dto->getOrderDate()
+            'MadeDate' => $dto->getOrderDate(),
+            'OrderType' => $dto->getOrderType(),
+            'CoDeputy' => $dto->getIsCoDeputy(),
         ];
     }
 
@@ -65,9 +61,7 @@ class CasRecFactory
         $errors = $this->validator->validate($entity);
 
         if (count($errors) > 0) {
-            throw new CasRecCreationException(
-                str_replace('Object(App\Entity\CasRec).', '', (string) $errors)
-            );
+            throw new CasRecCreationException(str_replace('Object(App\Entity\CasRec).', '', (string) $errors));
         }
     }
 }

@@ -8,16 +8,13 @@ use App\v2\Registration\Assembler\CasRecToLayDeputyshipDtoAssembler;
 use App\v2\Registration\Assembler\LayDeputyshipDtoAssemblerInterface;
 use App\v2\Registration\Assembler\LayDeputyshipDtoCollectionAssembler;
 use App\v2\Registration\Assembler\SiriusToLayDeputyshipDtoAssembler;
+use InvalidArgumentException;
 
 class LayDeputyshipDtoCollectionAssemblerFactory
 {
-    /**
-     * @param array $uploadedData
-     * @return LayDeputyshipDtoCollectionAssembler
-     */
     public function create(array $uploadedData): LayDeputyshipDtoCollectionAssembler
     {
-        $source = $this->determineSource($uploadedData);
+        $source = 'sirius';
         $assembler = $this->buildAssemblerBySourceType($source);
 
         return new LayDeputyshipDtoCollectionAssembler($assembler);
@@ -46,7 +43,7 @@ class LayDeputyshipDtoCollectionAssemblerFactory
             case CasRec::SIRIUS_SOURCE:
                 return new SiriusToLayDeputyshipDtoAssembler(new DataNormaliser());
             default:
-                throw new \InvalidArgumentException(sprintf('Unable to build assembler from unknown source: %s', $source));
+                throw new InvalidArgumentException(sprintf('Unable to build assembler from unknown source: %s', $source));
         }
     }
 }

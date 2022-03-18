@@ -6,6 +6,7 @@ use App\Entity\CasRec;
 use App\Service\DataNormaliser;
 use App\v2\Registration\Assembler\CasRecToLayDeputyshipDtoAssembler;
 use App\v2\Registration\DTO\LayDeputyshipDto;
+use InvalidArgumentException;
 use PHPUnit\Framework\TestCase;
 
 class CasRecToLayDeputyshipDtoAssemblerTest extends TestCase
@@ -30,7 +31,7 @@ class CasRecToLayDeputyshipDtoAssemblerTest extends TestCase
         $input = $this->getInput();
         unset($input[$itemToRemove]);
 
-        $this->expectException(\InvalidArgumentException::class);
+        $this->expectException(InvalidArgumentException::class);
 
         $this->sut->assembleFromArray($input);
     }
@@ -59,7 +60,7 @@ class CasRecToLayDeputyshipDtoAssemblerTest extends TestCase
         $this->assertInstanceOf(LayDeputyshipDto::class, $result);
         $this->assertEquals('caset', $result->getCaseNumber());
         $this->assertEquals('surname', $result->getClientSurname());
-        $this->assertEquals('deputy_no', $result->getDeputyNumber());
+        $this->assertEquals('deputy_no', $result->getDeputyUid());
         $this->assertEquals('deputysurname', $result->getDeputySurname());
         $this->assertEquals('deputypostcode', $result->getDeputyPostcode());
         $this->assertEquals('type_of_rep', $result->getTypeOfReport());

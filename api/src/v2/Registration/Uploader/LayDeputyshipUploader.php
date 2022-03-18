@@ -9,7 +9,13 @@ use App\v2\Registration\DTO\LayDeputyshipDto;
 use App\v2\Registration\DTO\LayDeputyshipDtoCollection;
 use App\v2\Registration\SelfRegistration\Factory\CasRecCreationException;
 use App\v2\Registration\SelfRegistration\Factory\CasRecFactory;
+use Doctrine\Common\Persistence\Mapping\MappingException;
 use Doctrine\ORM\EntityManagerInterface;
+use Doctrine\ORM\OptimisticLockException;
+use Doctrine\ORM\ORMException;
+use Exception;
+use RuntimeException;
+use Throwable;
 
 class LayDeputyshipUploader
 {
@@ -68,13 +74,8 @@ class LayDeputyshipUploader
             $this
                 ->updateReportTypes()
                 ->commitTransactionToDatabase();
-        } catch (\Throwable $e) {
+        } catch (Throwable $e) {
             return ['added' => $added, 'errors' => [$e->getMessage()]];
-        }
-
-        foreach ($collection as $layDeputyshipDto) {
-            $source = $layDeputyshipDto->getSource();
-            break;
         }
 
         return [
@@ -82,19 +83,19 @@ class LayDeputyshipUploader
             'errors' => $errors,
             'report-update-count' => count($this->reportsUpdated),
             'cases-with-updated-reports' => $this->reportsUpdated,
-            'source' => $source,
+            'source' => 'sirius',
         ];
     }
 
     private function throwExceptionIfDataTooLarge(LayDeputyshipDtoCollection $collection): void
     {
         if ($collection->count() > self::MAX_UPLOAD) {
-            throw new \RuntimeException(sprintf('Max %d records allowed in a single bulk insert', self::MAX_UPLOAD));
+            throw new RuntimeException(sprintf('Max %d records allowed in a single bulk insert', self::MAX_UPLOAD));
         }
     }
 
     /**
-     * @throws \Doctrine\ORM\ORMException
+     * @throws ORMException
      */
     private function createAndPersistNewCasRecEntity(LayDeputyshipDto $layDeputyshipDto): CasRec
     {
@@ -106,7 +107,7 @@ class LayDeputyshipUploader
     }
 
     /**
-     * @throws \Exception
+     * @throws Exception
      */
     private function updateReportTypes(): LayDeputyshipUploader
     {
@@ -128,9 +129,9 @@ class LayDeputyshipUploader
     }
 
     /**
-     * @throws \Doctrine\Common\Persistence\Mapping\MappingException
-     * @throws \Doctrine\ORM\ORMException
-     * @throws \Doctrine\ORM\OptimisticLockException
+     * @throws MappingException
+     * @throws ORMException
+     * @throws OptimisticLockException
      */
     private function commitTransactionToDatabase(): void
     {

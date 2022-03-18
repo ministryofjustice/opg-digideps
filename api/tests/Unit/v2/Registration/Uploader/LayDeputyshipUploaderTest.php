@@ -12,18 +12,21 @@ use App\v2\Registration\DTO\LayDeputyshipDtoCollection;
 use App\v2\Registration\SelfRegistration\Factory\CasRecCreationException;
 use App\v2\Registration\SelfRegistration\Factory\CasRecFactory;
 use App\v2\Registration\Uploader\LayDeputyshipUploader;
+use DateTime;
 use Doctrine\ORM\EntityManager;
 use PHPUnit\Framework\TestCase;
+use PHPUnit_Framework_MockObject_MockObject;
+use RuntimeException;
 
 class LayDeputyshipUploaderTest extends TestCase
 {
-    /** @var EntityManager | \PHPUnit_Framework_MockObject_MockObject */
+    /** @var EntityManager | PHPUnit_Framework_MockObject_MockObject */
     protected $em;
 
-    /** @var ReportRepository | \PHPUnit_Framework_MockObject_MockObject */
+    /** @var ReportRepository | PHPUnit_Framework_MockObject_MockObject */
     protected $reportRepository;
 
-    /** @var CasRecFactory | \PHPUnit_Framework_MockObject_MockObject */
+    /** @var CasRecFactory | PHPUnit_Framework_MockObject_MockObject */
     private $factory;
 
     /** @var LayDeputyshipUploader */
@@ -48,7 +51,7 @@ class LayDeputyshipUploaderTest extends TestCase
      */
     public function throwsExceptionIfDataSetTooLarge()
     {
-        $this->expectException(\RuntimeException::class);
+        $this->expectException(RuntimeException::class);
         $collection = new LayDeputyshipDtoCollection();
 
         for ($i = 0; $i < LayDeputyshipUploader::MAX_UPLOAD + 1; ++$i) {
@@ -106,7 +109,7 @@ class LayDeputyshipUploaderTest extends TestCase
 
         // Ensure an existing Client is found with an active Report whose type is different to the new type in the upload.
         $existingClient = (new Client())->setCaseNumber('case-1');
-        $activeReport = new Report($existingClient, '102', new \DateTime(), new \DateTime(), false);
+        $activeReport = new Report($existingClient, '102', new DateTime(), new DateTime(), false);
         $this->reportRepository
             ->expects($this->once())
             ->method('findAllActiveReportsByCaseNumbersAndRole')
@@ -151,7 +154,7 @@ class LayDeputyshipUploaderTest extends TestCase
     {
         return (new LayDeputyshipDto())
             ->setCaseNumber('case-'.$count)
-            ->setDeputyNumber('depnum-'.$count)
+            ->setDeputyUid('depnum-'.$count)
             ->setSource($source);
     }
 

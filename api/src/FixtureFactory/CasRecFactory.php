@@ -7,6 +7,7 @@ namespace App\FixtureFactory;
 use App\Entity\CasRec;
 use App\v2\Registration\DTO\LayDeputyshipDto;
 use App\v2\Registration\SelfRegistration\Factory\CasRecFactory as CasRecDTOFactory;
+use DateTime;
 
 class CasRecFactory
 {
@@ -33,11 +34,11 @@ class CasRecFactory
             ->setSource('casrec')
             ->setClientSurname($data['clientLastName'] ? $data['clientLastName'] : 'Smith')
             ->setCorref($this->determineCorref($data['reportType']))
-            ->setDeputyNumber($deputyNumber)
+            ->setDeputyUid($deputyNumber)
             ->setDeputyPostcode($data['deputyPostCode'] ? $data['deputyPostCode'] : 'SW1')
             ->setDeputySurname($data['deputyLastName'] ? $data['deputyLastName'] : 'Jones')
             ->setIsNdrEnabled(false)
-            ->setOrderDate(new \DateTime())
+            ->setOrderDate(new DateTime())
             ->setTypeOfReport($data['reportType']);
 
         return $this->casRecFactory->createFromDto($dto);
@@ -52,11 +53,11 @@ class CasRecFactory
             ->setSource('casrec')
             ->setClientSurname('Smith')
             ->setCorref($this->determineCorref($data['reportType']))
-            ->setDeputyNumber($deputyNumber)
+            ->setDeputyUid($deputyNumber)
             ->setDeputyPostcode('SW1')
             ->setDeputySurname('Bloggs')
             ->setIsNdrEnabled(false)
-            ->setOrderDate(new \DateTime())
+            ->setOrderDate(new DateTime())
             ->setTypeOfReport($data['reportType']);
 
         return $this->casRecFactory->createFromDto($dto);

@@ -2,8 +2,6 @@
 
 namespace App\v2\Registration\Assembler;
 
-use App\Entity\CasRec;
-use App\Service\DataNormaliser;
 use App\v2\Registration\DTO\LayDeputyshipDto;
 use DateTime;
 use InvalidArgumentException;
@@ -57,16 +55,21 @@ class SiriusToLayDeputyshipDtoAssembler implements LayDeputyshipDtoAssemblerInte
     {
         return
             (new LayDeputyshipDto())
-                ->setCaseNumber(DataNormaliser::normaliseCaseNumber($data['Case']))
-                ->setClientSurname(DataNormaliser::normaliseSurname($data['Surname']))
-                ->setDeputyNumber(DataNormaliser::normaliseDeputyNo($data['Deputy No']))
-                ->setDeputySurname(DataNormaliser::normaliseSurname($data['Dep Surname']))
-                ->setDeputyPostcode(DataNormaliser::normalisePostCode($data['Dep Postcode']))
-                ->setTypeOfReport($data['Typeofrep'])
-                ->setCorref($this->determineCorref($data['Typeofrep']))
-                ->setIsNdrEnabled(false)
-                ->setSource(CasRec::SIRIUS_SOURCE)
-                ->setOrderDate(new DateTime($data['Made Date']));
+                ->setCaseNumber($data['Case'])
+                ->setClientSurname($data['ClientSurname'])
+                ->setDeputyUid($data['DeputyUid'])
+                ->setDeputySurname($data['DeputySurname'])
+                ->setDeputyAddress1($data['DeputyAddress1'])
+                ->setDeputyAddress2($data['DeputyAddress2'])
+                ->setDeputyAddress3($data['DeputyAddress3'])
+                ->setDeputyAddress4($data['DeputyAddress4'])
+                ->setDeputyAddress5($data['DeputyAddress5'])
+                ->setDeputyPostcode($data['DeputyPostcode'])
+                ->setTypeOfReport($data['ReportType'])
+                ->setIsNdrEnabled($data['NDR'])
+                ->setOrderDate(new DateTime($data['MadeDate']))
+                ->setOrderType($data['OrderType'])
+                ->setIsCoDeputy('yes' === $data['OrderType']);
     }
 
     private function collectMissingColumns(array $data)

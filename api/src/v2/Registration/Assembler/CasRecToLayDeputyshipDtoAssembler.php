@@ -5,6 +5,8 @@ namespace App\v2\Registration\Assembler;
 use App\Entity\CasRec;
 use App\Service\DataNormaliser;
 use App\v2\Registration\DTO\LayDeputyshipDto;
+use DateTime;
+use InvalidArgumentException;
 
 class CasRecToLayDeputyshipDtoAssembler implements LayDeputyshipDtoAssemblerInterface
 {
@@ -35,21 +37,21 @@ class CasRecToLayDeputyshipDtoAssembler implements LayDeputyshipDtoAssemblerInte
                 implode(', ', $this->missingColumns)
             );
 
-            throw new \InvalidArgumentException($message);
+            throw new InvalidArgumentException($message);
         }
 
         return
             (new LayDeputyshipDto())
                 ->setCaseNumber(DataNormaliser::normaliseCaseNumber($data['Case']))
                 ->setClientSurname(DataNormaliser::normaliseSurname($data['Surname']))
-                ->setDeputyNumber(DataNormaliser::normaliseDeputyNo($data['Deputy No']))
+                ->setDeputyUid(DataNormaliser::normaliseDeputyNo($data['Deputy No']))
                 ->setDeputySurname(DataNormaliser::normaliseSurname($data['Dep Surname']))
                 ->setDeputyPostcode(DataNormaliser::normalisePostCode($data['Dep Postcode']))
                 ->setTypeOfReport($data['Typeofrep'])
                 ->setCorref($data['Corref'])
                 ->setIsNdrEnabled($this->determineNdrStatus($data['NDR']))
                 ->setSource(CasRec::CASREC_SOURCE)
-                ->setOrderDate(new \DateTime($data['Made Date']));
+                ->setOrderDate(new DateTime($data['Made Date']));
     }
 
     private function collectMissingColumns(array $data)

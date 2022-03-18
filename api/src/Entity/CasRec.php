@@ -1,12 +1,13 @@
 <?php
 
+declare(strict_types=1);
+
 namespace App\Entity;
 
 use App\Entity\Report\Report;
 use DateTime;
 use Doctrine\ORM\Mapping as ORM;
 use Exception;
-use InvalidArgumentException;
 use JMS\Serializer\Annotation as JMS;
 use Symfony\Component\Validator\Constraints as Assert;
 
@@ -19,9 +20,6 @@ class CasRec
     const REALM_PA = 'REALM_PA';
     const REALM_PROF = 'REALM_PROF';
     const REALM_LAY = 'REALM_LAY';
-
-    const CASREC_SOURCE = 'casrec';
-    const SIRIUS_SOURCE = 'sirius';
 
     /**
      * Holds the mapping rules to define the report type based on the CSV file (CASREC)
@@ -61,6 +59,7 @@ class CasRec
         [true, self::REALM_PROF, ['hw'], 'opg103', Report::PROF_COMBINED_LOW_ASSETS_TYPE],
         [true, self::REALM_PROF, ['hw'], 'opg102', Report::PROF_COMBINED_HIGH_ASSETS_TYPE],
     ];
+
     /**
      * Filled from cron.
      *
@@ -78,133 +77,159 @@ class CasRec
         'ú' => 'u', 'ü' => 'u', 'û' => 'u', 'ý' => 'y', 'ý' => 'y', 'þ' => 'b', 'ÿ' => 'y', 'ƒ' => 'f',
         'ă' => 'a', 'î' => 'i', 'â' => 'a', 'ș' => 's', 'ț' => 't', 'Ă' => 'A', 'Î' => 'I', 'Â' => 'A', 'Ș' => 'S', 'Ț' => 'T',
     ];
+
+    public function __construct(array $row)
+    {
+        $this->caseNumber = $row['Case'] ?? '';
+        $this->clientLastname = $row['ClientSurname'] ?? '';
+        $this->deputyUid = $row['DeputyUid'] ?? '';
+        $this->deputySurname = $row['DeputySurname'] ?? '';
+        $this->deputyAddress1 = $row['DeputyAddress1'];
+        $this->deputyAddress2 = $row['DeputyAddress2'];
+        $this->deputyAddress3 = $row['DeputyAddress3'];
+        $this->deputyAddress4 = $row['DeputyAddress4'];
+        $this->deputyAddress5 = $row['DeputyAddress5'];
+        $this->deputyPostCode = $row['Dep Postcode'];
+        $this->typeOfReport = $row['ReportType'];
+        $this->ndr = $row['NDR'];
+        $this->orderDate = $row['MadeDate'];
+        $this->orderType = $row['OrderType'];
+        $this->isCoDeputy = $row['CoDeputy'];
+
+        $this->createdAt = new DateTime();
+        $this->updatedAt = null;
+    }
+
     /**
-     * @var int
-     *
      * @ORM\Column(name="id", type="integer", nullable=false)
      * @ORM\Id
      * @ORM\GeneratedValue(strategy="IDENTITY")
      * @ORM\SequenceGenerator(sequenceName="casrec_id_seq", allocationSize=1, initialValue=1)
      */
-    private $id;
+    private int $id;
+
     /**
-     * @var string
-     *
      * @JMS\Type("string")
      *
      * @Assert\NotBlank()
      *
      * @ORM\Column(name="client_case_number", type="string", length=20, nullable=false)
      */
-    private $caseNumber;
+    private string $caseNumber;
+
     /**
-     * @var string
-     *
      * @JMS\Type("string")
      *
      * @Assert\NotBlank()
      *
      * @ORM\Column(name="client_lastname", type="string", length=50, nullable=false)
      */
-    private $clientLastname;
+    private string $clientLastname;
+
     /**
-     * @var string
-     *
      * @JMS\Type("string")
      *
      * @Assert\NotBlank()
      *
-     * @ORM\Column(name="deputy_no", type="string", length=100, nullable=false)
+     * @ORM\Column(name="deputy_uid", type="string", length=100, nullable=false)
      */
-    private $deputyNo;
+    private string $deputyUid;
+
     /**
-     * @var string
-     *
      * @Assert\NotBlank()
      *
      * @ORM\Column(name="deputy_lastname", type="string", length=100, nullable=true)
      *
      * @JMS\Type("string")
      */
-    private $deputySurname;
+    private string $deputySurname;
+
     /**
-     * @var string
+     * @JMS\Type("string")
      *
+     * @ORM\Column(name="deputy_address_1", type="string", nullable=true)
+     */
+    private ?string $deputyAddress1;
+
+    /**
+     * @JMS\Type("string")
+     *
+     * @ORM\Column(name="deputy_address_2", type="string", nullable=true)
+     */
+    private ?string $deputyAddress2;
+
+    /**
+     * @JMS\Type("string")
+     *
+     * @ORM\Column(name="deputy_address_3", type="string", nullable=true)
+     */
+    private ?string $deputyAddress3;
+
+    /**
+     * @JMS\Type("string")
+     *
+     * @ORM\Column(name="deputy_address_4", type="string", nullable=true)
+     */
+    private ?string $deputyAddress4;
+
+    /**
+     * @JMS\Type("string")
+     *
+     * @ORM\Column(name="deputy_address_5", type="string", nullable=true)
+     */
+    private ?string $deputyAddress5;
+
+    /**
      * @JMS\Type("string")
      *
      * @ORM\Column(name="deputy_postcode", type="string", length=10, nullable=true)
      *
      * @Assert\Length(min=2, max=10, minMessage="postcode too short", maxMessage="postcode too long" )
      */
-    private $deputyPostCode;
+    private ?string $deputyPostCode;
+
     /**
-     * @var string OPG102|OPG103|empty string
-     *
      * @JMS\Type("string")
      *
      * @ORM\Column(name="type_of_report", type="string", length=10, nullable=true)
      */
-    private $typeOfReport;
+    private ?string $typeOfReport;
+
     /**
-     * @var string A2|C1|HW|L2|L2A|L3|L3G|P2A|PGA|PGC|S1A|S1N|empty
+     * @JMS\Type("bool")
      *
-     * typeOfReport=OPG103 only have
-     *
-     * @JMS\Type("string")
-     *
-     * @ORM\Column(name="corref", type="string", length=10, nullable=true)
+     * @ORM\Column(name="ndr", type="boolean", nullable=true)
      */
-    private $corref;
+    private ?string $ndr;
+
     /**
-     * @JMS\Type("string")
-     *
-     * @ORM\Column(name="other_columns", type="text", nullable=true)
-     */
-    private $otherColumns;
-    /**
-     * @var DateTime
      * @JMS\Type("DateTime<'Y-m-d H:i:s'>")
      *
      * @ORM\Column(name="uploaded_at", type="datetime", nullable=true)
      */
-    private $createdAt;
+    private ?DateTime $createdAt;
+
     /**
-     * @var DateTime
      * @JMS\Type("DateTime<'Y-m-d H:i:s'>")
      *
      * @ORM\Column(name="updated_at", type="datetime", nullable=true)
      */
-    private $updatedAt;
+    private ?DateTime $updatedAt;
+
     /**
-     * @var string
-     *
-     * @ORM\Column(name="source", type="string", nullable=true, options={"default" : "casrec"})
-     */
-    private $source;
-    /**
-     * @var DateTime
      * @ORM\Column(name="order_date", type="datetime", nullable=true)
      */
-    private $orderDate;
+    private ?DateTime $orderDate;
 
-    public function __construct(array $row)
-    {
-        $this->caseNumber = self::normaliseCaseNumber($row['Case'] ?? '');
-        $this->clientLastname = self::normaliseSurname($row['Surname'] ?? '');
-        $this->deputyNo = self::normaliseDeputyNo($row['Deputy No'] ?? '');
-        $this->deputySurname = self::normaliseSurname($row['Dep Surname'] ?? '');
-        $this->deputyPostCode = self::normaliseSurname($row['Dep Postcode'] ?? '');
-        $this->typeOfReport = self::normaliseCorrefAndTypeOfRep($row['Typeofrep'] ?? '');
-        $this->corref = self::normaliseCorrefAndTypeOfRep($row['Corref'] ?? '');
-        $this->orderDate = $row['OrderDate'] ?? null;
+    /**
+     * @ORM\Column(name="order_type", type="string", nullable=true)
+     */
+    private ?string $orderType;
 
-        $source = $row['Source'] ?? self::CASREC_SOURCE;
-        $this->setSource($source);
-
-        $this->otherColumns = serialize($row);
-        $this->createdAt = new DateTime();
-        $this->updatedAt = null;
-    }
+    /**
+     * @ORM\Column(name="is_co_deputy", type="boolean", nullable=true)
+     */
+    private ?bool $isCoDeputy;
 
     /** @deprecated use App\Service\DataNormaliser */
     public static function normaliseCaseNumber($value)
@@ -274,8 +299,6 @@ class CasRec
         $typeOfRep = trim(strtolower($typeOfRep));
         $corref = trim(strtolower($corref));
 
-        // find report type
-        $reportType = null;
         foreach (self::$csvToReportTypeMap as $row) {
             list($enabled, $currentUserRole, $currentCorrefs, $currentTypeOfRep, $outputType) = $row;
             if ($enabled && $realm === $currentUserRole && in_array($corref, $currentCorrefs) && $typeOfRep === $currentTypeOfRep) {
@@ -296,17 +319,6 @@ class CasRec
         throw new Exception(__METHOD__.': realm not recognised to determine report type');
     }
 
-    /**
-     * @return array
-     */
-    public static function validSources()
-    {
-        return [
-            self::CASREC_SOURCE,
-            self::SIRIUS_SOURCE,
-        ];
-    }
-
     public function getCaseNumber()
     {
         return $this->caseNumber;
@@ -317,116 +329,166 @@ class CasRec
         return $this->clientLastname;
     }
 
-    public function getDeputyNo()
+    public function getDeputyUid()
     {
-        return $this->deputyNo;
+        return $this->deputyUid;
     }
 
-    public function getDeputySurname()
+    public function getDeputySurname(): string
     {
         return $this->deputySurname;
     }
 
-    public function getDeputyPostCode()
+    public function getDeputyPostCode(): ?string
     {
         return $this->deputyPostCode;
     }
 
-    /**
-     * @return string
-     */
-    public function getTypeOfReport()
+    public function getTypeOfReport(): ?string
     {
         return $this->typeOfReport;
     }
 
-    /**
-     * @return string
-     */
-    public function getCorref()
-    {
-        return $this->corref;
-    }
-
-    /**
-     * @return array
-     */
-    public function getOtherColumns()
-    {
-        return unserialize($this->otherColumns) ?: [];
-    }
-
-    /**
-     * @param $key
-     *
-     * @return mixed|null
-     */
-    public function getColumn($key)
-    {
-        $row = unserialize($this->otherColumns) ?: [];
-
-        return isset($row[$key]) ? $row[$key] : null;
-    }
-
-    /**
-     * @return DateTime|null
-     */
-    public function getUpdatedAt()
+    public function getUpdatedAt(): ?DateTime
     {
         return $this->updatedAt;
     }
 
-    /**
-     * @param DateTime $updatedAt
-     *
-     * @return CasRec
-     */
-    public function setUpdatedAt($updatedAt)
+    public function setUpdatedAt($updatedAt): self
     {
         $this->updatedAt = $updatedAt;
 
         return $this;
     }
 
-    /**
-     * @return mixed
-     */
-    public function getSource()
-    {
-        return $this->source;
-    }
-
-    /**
-     * @param mixed $source
-     *
-     * @return CasRec
-     */
-    public function setSource($source)
-    {
-        $source = strtolower($source);
-        if (!in_array($source, self::validSources())) {
-            throw new InvalidArgumentException(sprintf('Attempting to set invalid source: %s given', $source));
-        }
-
-        $this->source = $source;
-
-        return $this;
-    }
-
-    /**
-     * @return DateTime
-     */
-    public function getOrderDate()
+    public function getOrderDate(): ?DateTime
     {
         return $this->orderDate;
     }
 
-    /**
-     * @return CasRec
-     */
     public function setOrderDate(DateTime $orderDate)
     {
         $this->orderDate = $orderDate;
+
+        return $this;
+    }
+
+    public function getId(): int
+    {
+        return $this->id;
+    }
+
+    public function setId(int $id): self
+    {
+        $this->id = $id;
+
+        return $this;
+    }
+
+    public function getDeputyAddress1(): ?string
+    {
+        return $this->deputyAddress1;
+    }
+
+    public function setDeputyAddress1(?string $deputyAddress1): self
+    {
+        $this->deputyAddress1 = $deputyAddress1;
+
+        return $this;
+    }
+
+    public function getDeputyAddress2(): ?string
+    {
+        return $this->deputyAddress2;
+    }
+
+    public function setDeputyAddress2(?string $deputyAddress2): self
+    {
+        $this->deputyAddress2 = $deputyAddress2;
+
+        return $this;
+    }
+
+    public function getDeputyAddress3(): ?string
+    {
+        return $this->deputyAddress3;
+    }
+
+    public function setDeputyAddress3(?string $deputyAddress3): self
+    {
+        $this->deputyAddress3 = $deputyAddress3;
+
+        return $this;
+    }
+
+    public function getDeputyAddress4(): ?string
+    {
+        return $this->deputyAddress4;
+    }
+
+    public function setDeputyAddress4(?string $deputyAddress4): self
+    {
+        $this->deputyAddress4 = $deputyAddress4;
+
+        return $this;
+    }
+
+    public function getDeputyAddress5(): ?string
+    {
+        return $this->deputyAddress5;
+    }
+
+    public function setDeputyAddress5(?string $deputyAddress5): self
+    {
+        $this->deputyAddress5 = $deputyAddress5;
+
+        return $this;
+    }
+
+    public function getNdr(): ?string
+    {
+        return $this->ndr;
+    }
+
+    public function setNdr(?string $ndr): self
+    {
+        $this->ndr = $ndr;
+
+        return $this;
+    }
+
+    public function getCreatedAt(): ?DateTime
+    {
+        return $this->createdAt;
+    }
+
+    public function setCreatedAt(?DateTime $createdAt): self
+    {
+        $this->createdAt = $createdAt;
+
+        return $this;
+    }
+
+    public function getOrderType(): mixed
+    {
+        return $this->orderType;
+    }
+
+    public function setOrderType(mixed $orderType): self
+    {
+        $this->orderType = $orderType;
+
+        return $this;
+    }
+
+    public function getIsCoDeputy(): mixed
+    {
+        return $this->isCoDeputy;
+    }
+
+    public function setIsCoDeputy(mixed $isCoDeputy): self
+    {
+        $this->isCoDeputy = $isCoDeputy;
 
         return $this;
     }
