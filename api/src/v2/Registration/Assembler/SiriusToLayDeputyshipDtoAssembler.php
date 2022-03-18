@@ -5,17 +5,27 @@ namespace App\v2\Registration\Assembler;
 use App\Entity\CasRec;
 use App\Service\DataNormaliser;
 use App\v2\Registration\DTO\LayDeputyshipDto;
+use DateTime;
+use InvalidArgumentException;
 
 class SiriusToLayDeputyshipDtoAssembler implements LayDeputyshipDtoAssemblerInterface
 {
     private array $requiredColumns = [
         'Case',
-        'Surname',
-        'Deputy No',
-        'Dep Surname',
-        'Dep Postcode',
-        'Typeofrep',
-        'Made Date',
+        'ClientSurname',
+        'DeputyUid',
+        'DeputySurname',
+        'DeputyAddress1',
+        'DeputyAddress2',
+        'DeputyAddress3',
+        'DeputyAddress4',
+        'DeputyAddress5',
+        'DeputyPostcode',
+        'ReportType',
+        'NDR',
+        'MadeDate',
+        'OrderType',
+        'CoDeputy',
     ];
 
     private array $missingColumns = [];
@@ -33,12 +43,12 @@ class SiriusToLayDeputyshipDtoAssembler implements LayDeputyshipDtoAssemblerInte
                 implode(', ', $this->missingColumns)
             );
 
-            throw new \InvalidArgumentException($message);
+            throw new InvalidArgumentException($message);
         }
 
         try {
             return $this->buildDto($data);
-        } catch (\InvalidArgumentException $e) {
+        } catch (InvalidArgumentException $e) {
             return null;
         }
     }
@@ -56,7 +66,7 @@ class SiriusToLayDeputyshipDtoAssembler implements LayDeputyshipDtoAssemblerInte
                 ->setCorref($this->determineCorref($data['Typeofrep']))
                 ->setIsNdrEnabled(false)
                 ->setSource(CasRec::SIRIUS_SOURCE)
-                ->setOrderDate(new \DateTime($data['Made Date']));
+                ->setOrderDate(new DateTime($data['Made Date']));
     }
 
     private function collectMissingColumns(array $data)
@@ -68,21 +78,6 @@ class SiriusToLayDeputyshipDtoAssembler implements LayDeputyshipDtoAssemblerInte
         $this->missingColumns = array_filter($this->missingColumns);
     }
 
-    /**
-     * @return bool
-     */
-    private function canAssemble(array $data)
-    {
-        return
-            array_key_exists('Case', $data) &&
-            array_key_exists('Surname', $data) &&
-            array_key_exists('Deputy No', $data) &&
-            array_key_exists('Dep Surname', $data) &&
-            array_key_exists('Dep Postcode', $data) &&
-            array_key_exists('Typeofrep', $data) &&
-            array_key_exists('Made Date', $data);
-    }
-
     private function determineCorref(string $reportType): string
     {
         switch ($reportType) {
@@ -91,7 +86,7 @@ class SiriusToLayDeputyshipDtoAssembler implements LayDeputyshipDtoAssemblerInte
             case 'OPG103':
                 return 'L3';
             default:
-                throw new \InvalidArgumentException('Cannot assemble LayDeputyshipDto: Unexpected report type');
+                throw new InvalidArgumentException('Cannot assemble LayDeputyshipDto: Unexpected report type');
         }
     }
 }

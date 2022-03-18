@@ -1,4 +1,4 @@
-@v2 @registration @ingest @v2_admin
+@v2 @registration @ingest @v2_admin @acs
 Feature: Lay CSV data ingestion - sirius source data
 
     @super-admin
