@@ -221,11 +221,9 @@ DQL;
 UPDATE App\Entity\Report\Checklist c SET c.synchronisationStatus = 'IN_PROGRESS' WHERE c.id IN (:idsString)
 DQL;
 
-            $idsString = implode(',', $ids);
-
             $em
                 ->createQuery($dql)
-                ->setParameter('idsString', $idsString)
+                ->setParameter('idsString', $ids)
                 ->getResult();
         }
 
