@@ -31,7 +31,7 @@ class UserFixtures extends AbstractDataFixture
         [
             'id' => '104',
             'deputyType' => 'LAY',
-            'reportType' => null,
+            'reportType' => 'OPG104',
             'reportVariation' => 'HW',
         ],
         [
@@ -61,7 +61,7 @@ class UserFixtures extends AbstractDataFixture
         [
             'id' => '104-6',
             'deputyType' => 'PA',
-            'reportType' => null,
+            'reportType' => 'OPG104',
             'reportVariation' => 'HW',
         ],
         [
@@ -91,7 +91,7 @@ class UserFixtures extends AbstractDataFixture
         [
             'id' => '104-5',
             'deputyType' => 'PROF',
-            'reportType' => null,
+            'reportType' => 'OPG104',
             'reportVariation' => 'HW',
         ],
         [
@@ -111,7 +111,7 @@ class UserFixtures extends AbstractDataFixture
             'deputyType' => 'LAY',
             'reportType' => 'OPG102',
             'reportVariation' => 'L2',
-            'ndr' => true,
+            'ndr' => 'yes',
         ],
         [
             'id' => 'codep',
@@ -155,13 +155,6 @@ class UserFixtures extends AbstractDataFixture
             'reportType' => 'OPG102',
             'reportVariation' => 'HW',
         ],
-//        [
-//            'id' => 'leever-example',
-//            'email' => 'main.contact@leever.example',
-//            'deputyType' => 'PROF',
-//            'reportType' => 'OPG102',
-//            'reportVariation' => 'HW',
-//        ],
     ];
 
     public function __construct(OrganisationRepository $orgRepository, OrganisationFactory $orgFactory)
@@ -202,6 +195,7 @@ class UserFixtures extends AbstractDataFixture
 
         // Create CasRec record for lay deputies
         if ('LAY' === $data['deputyType']) {
+            var_dump($data);
             $casrecData = [
                 'Case' => $data['id'],
                 'ClientSurname' => $data['id'],

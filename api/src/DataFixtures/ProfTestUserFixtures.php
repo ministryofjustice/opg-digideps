@@ -466,7 +466,7 @@ class ProfTestUserFixtures extends AbstractDataFixture
                     'phone' => '078912345678',
                     'email' => 'cly401@hent.com',
                     'dob' => '02/02/1967',
-                    'reportType' => '',
+                    'reportType' => 'OPG103',
                     'reportVariation' => 'hw',
                 ],
             ],

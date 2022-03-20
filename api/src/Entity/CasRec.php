@@ -261,6 +261,8 @@ class CasRec
             $message = sprintf('Translated report type "%s" is not recognised', $fullReportType);
             throw new UnexpectedValueException($message);
         }
+
+        return $fullReportType;
     }
 
     public function getCaseNumber()
