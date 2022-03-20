@@ -10,6 +10,7 @@ use Doctrine\ORM\Mapping as ORM;
 use Exception;
 use JMS\Serializer\Annotation as JMS;
 use Symfony\Component\Validator\Constraints as Assert;
+use UnexpectedValueException;
 
 /**
  * @ORM\Table(name="casrec", indexes={@ORM\Index(name="updated_at_idx", columns={"updated_at"})})
@@ -250,11 +251,16 @@ class CasRec
             $fullReportType = $reportType;
         }
 
-        return match ($realm) {
+        $fullReportType = match ($realm) {
             self::REALM_LAY => $fullReportType,
             self::REALM_PA => sprintf('%s-6', $fullReportType),
             self::REALM_PROF => sprintf('%s-5', $fullReportType),
             default => throw new Exception(__METHOD__.': realm not recognised to determine report type'), };
+
+        if (!in_array($fullReportType, [...Report::getAllLayTypes(), ...Report::getAllPaTypes(), ...Report::getAllProfTypes()])) {
+            $message = sprintf('Translated report type "%s" is not recognised', $fullReportType);
+            throw new UnexpectedValueException($message);
+        }
     }
 
     public function getCaseNumber()
