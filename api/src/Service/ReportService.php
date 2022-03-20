@@ -342,13 +342,13 @@ class ReportService
                 if (is_null($realm)) {
                     throw new RuntimeException("Named deputy has invalid type {$namedDeputy->getDeputyType()}");
                 } else {
-                    return CasRec::getTypeBasedOnTypeofRepAndCorref($casRec->getTypeOfReport(), $casRec->getCorref(), $realm);
+                    return CasRec::getReportTypeByOrderType($casRec->getTypeOfReport(), $casRec->getCorref(), $realm);
                 }
             }
 
             if (count($client->getUsers())) {
                 if ($client->getUsers()->first()->isLayDeputy()) {
-                    return CasRec::getTypeBasedOnTypeofRepAndCorref($casRec->getTypeOfReport(), $casRec->getCorref(), CasRec::REALM_LAY);
+                    return CasRec::getReportTypeByOrderType($casRec->getTypeOfReport(), $casRec->getCorref(), CasRec::REALM_LAY);
                 }
             }
 

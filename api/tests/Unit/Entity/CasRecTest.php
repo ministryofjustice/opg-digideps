@@ -56,76 +56,33 @@ class CasRecTest extends TestCase
         $this->assertEquals($expected, CasRec::normaliseDeputyNo($input));
     }
 
-    public function getTypeBasedOnTypeofRepAndCorrefProvider()
+    public function getReportTypeByOrderTypeProvider()
     {
         // follow order in https://opgtransform.atlassian.net/wiki/spaces/DEPDS/pages/135266255/Report+variations
         return [
-            // 103
-            ['p3', 'opg103', CasRec::REALM_LAY,  Report::LAY_PFA_LOW_ASSETS_TYPE],
-            ['p3g', 'opg103', CasRec::REALM_LAY,  Report::LAY_PFA_LOW_ASSETS_TYPE],
-            ['l3', 'opg103', CasRec::REALM_LAY,  Report::LAY_PFA_LOW_ASSETS_TYPE],
-            ['l3g', 'opg103', CasRec::REALM_LAY,  Report::LAY_PFA_LOW_ASSETS_TYPE],
-            ['a3', 'opg103', CasRec::REALM_LAY,  Report::LAY_PFA_LOW_ASSETS_TYPE],
-
-            // 102
-            [null, null, CasRec::REALM_LAY, Report::LAY_PFA_HIGH_ASSETS_TYPE],
-            [null, 'opg103', CasRec::REALM_LAY, Report::LAY_PFA_HIGH_ASSETS_TYPE],
-            [null, 'opg103', CasRec::REALM_LAY, Report::LAY_PFA_HIGH_ASSETS_TYPE],
-            ['p2', 'opg102', CasRec::REALM_LAY, Report::LAY_PFA_HIGH_ASSETS_TYPE],
-            ['p2a', 'opg102', CasRec::REALM_LAY, Report::LAY_PFA_HIGH_ASSETS_TYPE],
-            ['l2a', 'opg102', CasRec::REALM_LAY, Report::LAY_PFA_HIGH_ASSETS_TYPE],
-            ['l2', 'opg102', CasRec::REALM_LAY, Report::LAY_PFA_HIGH_ASSETS_TYPE],
-
-            // 104
-            ['hw', '', CasRec::REALM_LAY, Report::LAY_HW_TYPE],
-
-            // 103-4
-            ['hw', 'opg103', CasRec::REALM_LAY, Report::LAY_COMBINED_LOW_ASSETS_TYPE],
-
-            // 102-4
-            ['hw', 'opg102', CasRec::REALM_LAY,  Report::LAY_COMBINED_HIGH_ASSETS_TYPE],
-
-            // ============ PA =============
-            // 103-6
-            ['a3', 'opg103', CasRec::REALM_PA, Report::PA_PFA_LOW_ASSETS_TYPE],
-            // 102-6
-            [null, null, CasRec::REALM_PA, Report::PA_PFA_HIGH_ASSETS_TYPE],
-            [null, 'opg103', CasRec::REALM_PA, Report::PA_PFA_HIGH_ASSETS_TYPE],
-            [null, 'opg103', CasRec::REALM_PA, Report::PA_PFA_HIGH_ASSETS_TYPE],
-            ['a2', 'opg102', CasRec::REALM_PA, Report::PA_PFA_HIGH_ASSETS_TYPE],
-            ['a2a', 'opg102', CasRec::REALM_PA, Report::PA_PFA_HIGH_ASSETS_TYPE],
-            // 104-6
-            ['hw', '', CasRec::REALM_PA, Report::PA_HW_TYPE],
-            // 103-4-6
-            ['hw', 'opg103', CasRec::REALM_PA, Report::PA_COMBINED_LOW_ASSETS_TYPE],
-            // 102-4-6
-            ['hw', 'opg102', CasRec::REALM_PA, Report::PA_COMBINED_HIGH_ASSETS_TYPE],
-
-            // ============ Prof =============
-            // 103-5
-            ['p3', 'opg103', CasRec::REALM_PROF, Report::PROF_PFA_LOW_ASSETS_TYPE],
-            ['p3g', 'opg103', CasRec::REALM_PROF, Report::PROF_PFA_LOW_ASSETS_TYPE],
-            // 102-5
-            [null, null, CasRec::REALM_PROF, Report::PROF_PFA_HIGH_ASSETS_TYPE],
-            [null, 'opg103', CasRec::REALM_PROF, Report::PROF_PFA_HIGH_ASSETS_TYPE],
-            [null, 'opg103', CasRec::REALM_PROF, Report::PROF_PFA_HIGH_ASSETS_TYPE],
-            ['p2', 'whatever', CasRec::REALM_PROF, Report::PROF_PFA_HIGH_ASSETS_TYPE],
-            ['p2a', 'whatever', CasRec::REALM_PROF, Report::PROF_PFA_HIGH_ASSETS_TYPE],
-            // 104-5
-            ['hw', '', CasRec::REALM_PROF, Report::PROF_HW_TYPE],
-            // 103-4-5
-            ['hw', 'opg103', CasRec::REALM_PROF, Report::PROF_COMBINED_LOW_ASSETS_TYPE],
-            // 102-4-5
-            ['hw', 'opg102', CasRec::REALM_PROF, Report::PROF_COMBINED_HIGH_ASSETS_TYPE],
-            ['hw', 'opg102', CasRec::REALM_PROF, Report::PROF_COMBINED_HIGH_ASSETS_TYPE],
+            Report::LAY_PFA_LOW_ASSETS_TYPE => ['opg103', 'pfa', CasRec::REALM_LAY,  Report::LAY_PFA_LOW_ASSETS_TYPE],
+            Report::LAY_PFA_HIGH_ASSETS_TYPE => ['opg102', 'pfa', CasRec::REALM_LAY, Report::LAY_PFA_HIGH_ASSETS_TYPE],
+            Report::LAY_HW_TYPE => ['opg104', 'hw', CasRec::REALM_LAY, Report::LAY_HW_TYPE],
+            Report::LAY_COMBINED_LOW_ASSETS_TYPE => ['opg103', 'hw', CasRec::REALM_LAY, Report::LAY_COMBINED_LOW_ASSETS_TYPE],
+            Report::LAY_COMBINED_HIGH_ASSETS_TYPE => ['opg102', 'hw', CasRec::REALM_LAY,  Report::LAY_COMBINED_HIGH_ASSETS_TYPE],
+            Report::PA_PFA_LOW_ASSETS_TYPE => ['opg103', 'pfa', CasRec::REALM_PA, Report::PA_PFA_LOW_ASSETS_TYPE],
+            Report::PA_PFA_HIGH_ASSETS_TYPE => ['opg102', 'pfa', CasRec::REALM_PA, Report::PA_PFA_HIGH_ASSETS_TYPE],
+            Report::PA_HW_TYPE => ['opg104', 'hw', CasRec::REALM_PA, Report::PA_HW_TYPE],
+            Report::PA_COMBINED_LOW_ASSETS_TYPE => ['opg103', 'hw', CasRec::REALM_PA, Report::PA_COMBINED_LOW_ASSETS_TYPE],
+            Report::PA_COMBINED_HIGH_ASSETS_TYPE => ['opg102', 'hw', CasRec::REALM_PA, Report::PA_COMBINED_HIGH_ASSETS_TYPE],
+            Report::PROF_PFA_LOW_ASSETS_TYPE => ['opg103', 'pfa', CasRec::REALM_PROF, Report::PROF_PFA_LOW_ASSETS_TYPE],
+            Report::PROF_PFA_HIGH_ASSETS_TYPE => ['opg102', 'pfa', CasRec::REALM_PROF, Report::PROF_PFA_HIGH_ASSETS_TYPE],
+            Report::PROF_HW_TYPE => ['opg104', 'hw', CasRec::REALM_PROF, Report::PROF_HW_TYPE],
+            Report::PROF_COMBINED_LOW_ASSETS_TYPE => ['opg103', 'hw', CasRec::REALM_PROF, Report::PROF_COMBINED_LOW_ASSETS_TYPE],
+            Report::PROF_COMBINED_HIGH_ASSETS_TYPE => ['opg102', 'hw', CasRec::REALM_PROF, Report::PROF_COMBINED_HIGH_ASSETS_TYPE],
         ];
     }
 
     /**
-     * @dataProvider getTypeBasedOnTypeofRepAndCorrefProvider
+     * @dataProvider getReportTypeByOrderTypeProvider
      */
-    public function testgetTypeBasedOnTypeofRepAndCorref($corref, $typeOfRep, $realm, $expectedType)
+    public function testGetReportTypeByOrderType($reportType, $orderType, $realm, $expectedType)
     {
-        $this->assertEquals($expectedType, CasRec::getTypeBasedOnTypeofRepAndCorref($typeOfRep, $corref, $realm));
+        $this->assertEquals($expectedType, CasRec::getReportTypeByOrderType($reportType, $orderType, $realm));
     }
 }

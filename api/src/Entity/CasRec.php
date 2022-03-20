@@ -22,45 +22,6 @@ class CasRec
     const REALM_LAY = 'REALM_LAY';
 
     /**
-     * Holds the mapping rules to define the report type based on the CSV file (CASREC)
-     * Used by both PA and Lay.
-     *
-     * @var array
-     */
-    private static $csvToReportTypeMap = [
-        // Lay
-        [true, self::REALM_LAY, ['p3', 'p3g', 'l3', 'l3g'], 'opg103', Report::LAY_PFA_LOW_ASSETS_TYPE],
-        // @deprecated (DDPB-2044)
-        [true, self::REALM_LAY, ['l3', 'l3g', 'a3'], 'opg103', Report::LAY_PFA_LOW_ASSETS_TYPE],
-        [true, self::REALM_LAY, ['p2', 'p2a', 'l2a', 'l2'], 'opg102', Report::LAY_PFA_HIGH_ASSETS_TYPE],
-        // @deprecated (DDPB-2044)
-        [true, self::REALM_LAY, ['l3', 'l3g', 'a3'], 'opg102', Report::LAY_PFA_HIGH_ASSETS_TYPE],
-        [true, self::REALM_LAY, ['hw'], '', Report::LAY_HW_TYPE],
-        [true, self::REALM_LAY, ['hw'], 'opg103', Report::LAY_COMBINED_LOW_ASSETS_TYPE],
-        [true, self::REALM_LAY, ['hw'], 'opg102', Report::LAY_COMBINED_HIGH_ASSETS_TYPE],
-        // PA
-        [true, self::REALM_PA, ['a3'], 'opg103', Report::PA_PFA_LOW_ASSETS_TYPE],
-        // @deprecated (DDPB-2044)
-        [true, self::REALM_PA, ['l3', 'l3g', 'a3'], 'opg103', Report::PA_PFA_LOW_ASSETS_TYPE],
-        [true, self::REALM_PA, ['a2', 'a2a'], 'opg102', Report::PA_PFA_HIGH_ASSETS_TYPE],
-        // @deprecated (DDPB-2044)
-        [true, self::REALM_PA, ['l3', 'l3g', 'a3'], 'opg102', Report::PA_PFA_HIGH_ASSETS_TYPE],
-        [true, self::REALM_PA, ['hw'], '', Report::PA_HW_TYPE],
-        [true, self::REALM_PA, ['hw'], 'opg103', Report::PA_COMBINED_LOW_ASSETS_TYPE],
-        [true, self::REALM_PA, ['hw'], 'opg102', Report::PA_COMBINED_HIGH_ASSETS_TYPE],
-        // Prof
-        [true, self::REALM_PROF, ['p3', 'p3g'], 'opg103', Report::PROF_PFA_LOW_ASSETS_TYPE],
-        // @deprecated (DDPB-2044)
-        [true, self::REALM_PROF, ['l3', 'l3g', 'a3'], 'opg103', Report::PROF_PFA_LOW_ASSETS_TYPE],
-        [true, self::REALM_PROF, ['p2', 'p2a'], 'opg102', Report::PROF_PFA_HIGH_ASSETS_TYPE],
-        // @deprecated (DDPB-2044)
-        [true, self::REALM_PROF, ['l3', 'l3g', 'a3'], 'opg102', Report::PROF_PFA_HIGH_ASSETS_TYPE],
-        [true, self::REALM_PROF, ['hw'], '', Report::PROF_HW_TYPE],
-        [true, self::REALM_PROF, ['hw'], 'opg103', Report::PROF_COMBINED_LOW_ASSETS_TYPE],
-        [true, self::REALM_PROF, ['hw'], 'opg102', Report::PROF_COMBINED_HIGH_ASSETS_TYPE],
-    ];
-
-    /**
      * Filled from cron.
      *
      * @var array
@@ -84,17 +45,17 @@ class CasRec
         $this->clientLastname = $row['ClientSurname'] ?? '';
         $this->deputyUid = $row['DeputyUid'] ?? '';
         $this->deputySurname = $row['DeputySurname'] ?? '';
-        $this->deputyAddress1 = $row['DeputyAddress1'];
-        $this->deputyAddress2 = $row['DeputyAddress2'];
-        $this->deputyAddress3 = $row['DeputyAddress3'];
-        $this->deputyAddress4 = $row['DeputyAddress4'];
-        $this->deputyAddress5 = $row['DeputyAddress5'];
-        $this->deputyPostCode = $row['Dep Postcode'];
-        $this->typeOfReport = $row['ReportType'];
-        $this->ndr = $row['NDR'];
-        $this->orderDate = $row['MadeDate'];
-        $this->orderType = $row['OrderType'];
-        $this->isCoDeputy = $row['CoDeputy'];
+        $this->deputyAddress1 = $row['DeputyAddress1'] ?? null;
+        $this->deputyAddress2 = $row['DeputyAddress2'] ?? null;
+        $this->deputyAddress3 = $row['DeputyAddress3'] ?? null;
+        $this->deputyAddress4 = $row['DeputyAddress4'] ?? null;
+        $this->deputyAddress5 = $row['DeputyAddress5'] ?? null;
+        $this->deputyPostCode = $row['Dep Postcode'] ?? null;
+        $this->typeOfReport = $row['ReportType'] ?? null;
+        $this->ndr = $row['NDR'] ?? null;
+        $this->orderDate = $row['MadeDate'] ?? null;
+        $this->orderType = $row['OrderType'] ?? null;
+        $this->isCoDeputy = $row['CoDeputy'] ?? null;
 
         $this->createdAt = new DateTime();
         $this->updatedAt = null;
@@ -264,11 +225,6 @@ class CasRec
         return $value;
     }
 
-    private static function normaliseCorrefAndTypeOfRep($value)
-    {
-        return trim(strtolower($value));
-    }
-
     /** @deprecated use App\Service\DataNormaliser */
     public static function normalisePostCode($value)
     {
@@ -282,41 +238,23 @@ class CasRec
         return $value;
     }
 
-    /**
-     * Determine type of report based on 'Typeofrep' and 'Corref' columns in the Casrec CSV
-     * 103: when corref = l3/l3g and typeofRep = opg103
-     * 104: when corref == hw and typeofRep empty (104 CURRENTLY DISABLED)
-     * 103: all the other cases;.
-     *
-     * @param string $typeOfRep e.g. opg103
-     * @param string $corref    e.g. l3, l3g
-     * @param string $realm     e.g. REALM_PROF
-     *
-     * @return string Report::TYPE_*
-     */
-    public static function getTypeBasedOnTypeofRepAndCorref($typeOfRep, $corref, $realm)
+    public static function getReportTypeByOrderType(string $reportType, string $orderType, string $realm): string
     {
-        $typeOfRep = trim(strtolower($typeOfRep));
-        $corref = trim(strtolower($corref));
+        // drop opg from string
+        $reportType = substr($reportType, 3);
+        $orderType = trim(strtolower($orderType));
 
-        foreach (self::$csvToReportTypeMap as $row) {
-            list($enabled, $currentUserRole, $currentCorrefs, $currentTypeOfRep, $outputType) = $row;
-            if ($enabled && $realm === $currentUserRole && in_array($corref, $currentCorrefs) && $typeOfRep === $currentTypeOfRep) {
-                return $outputType;
-            }
+        if (Report::LAY_HW_TYPE !== $reportType && 'hw' === $orderType) {
+            $fullReportType = sprintf('%s-4', $reportType);
+        } else {
+            $fullReportType = $reportType;
         }
 
-        // default report type if no entry mached above
-        switch ($realm) {
-            case self::REALM_LAY:
-                return Report::LAY_PFA_HIGH_ASSETS_TYPE;
-            case self::REALM_PA:
-                return Report::PA_PFA_HIGH_ASSETS_TYPE;
-            case self::REALM_PROF:
-                return Report::PROF_PFA_HIGH_ASSETS_TYPE;
-        }
-
-        throw new Exception(__METHOD__.': realm not recognised to determine report type');
+        return match ($realm) {
+            self::REALM_LAY => $fullReportType,
+            self::REALM_PA => sprintf('%s-6', $fullReportType),
+            self::REALM_PROF => sprintf('%s-5', $fullReportType),
+            default => throw new Exception(__METHOD__.': realm not recognised to determine report type'), };
     }
 
     public function getCaseNumber()

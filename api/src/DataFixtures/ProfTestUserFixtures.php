@@ -13,6 +13,7 @@ use App\Repository\NamedDeputyRepository;
 use App\Repository\OrganisationRepository;
 use App\Service\OrgService;
 use App\Service\ReportUtils;
+use DateTime;
 use Doctrine\Persistence\ObjectManager;
 
 class ProfTestUserFixtures extends AbstractDataFixture
@@ -535,7 +536,7 @@ class ProfTestUserFixtures extends AbstractDataFixture
             ->setLastname(isset($data['Dep Surname']) ? $data['Dep Surname'] : $data['id'])
             ->setEmail(isset($data['Email']) ? $data['Email'] : $data['id'].'@example.org')
             ->setActive(isset($data['active']) ? $data['active'] : true)
-            ->setRegistrationDate(new \DateTime())
+            ->setRegistrationDate(new DateTime())
             ->setNdrEnabled(false)
             ->setPhoneMain(isset($data['Phone Main']) ? $data['Phone Main'] : null)
             ->setAddress1(isset($data['Dep Adrs1']) ? $data['Dep Adrs1'] : 'Victoria Road')
@@ -596,8 +597,8 @@ class ProfTestUserFixtures extends AbstractDataFixture
     private function createClient($clientData, $userData, $user, $manager, $organisation)
     {
         $client = new Client();
-        $courtDate = \DateTime::createFromFormat('d/m/Y', $clientData['lastReportDate']);
-        $dob = \DateTime::createFromFormat('d/m/Y', $clientData['dob']);
+        $courtDate = DateTime::createFromFormat('d/m/Y', $clientData['lastReportDate']);
+        $dob = DateTime::createFromFormat('d/m/Y', $clientData['dob']);
 
         $client
             ->setCaseNumber(User::padDeputyNumber($clientData['caseNumber']))
@@ -628,8 +629,8 @@ class ProfTestUserFixtures extends AbstractDataFixture
             $ndr = new Ndr($client);
             $manager->persist($ndr);
         } else {
-            $type = CasRec::getTypeBasedOnTypeofRepAndCorref($clientData['reportType'], $clientData['reportVariation'], CasRec::REALM_PROF);
-            $endDate = \DateTime::createFromFormat('d/m/Y', $clientData['lastReportDate']);
+            $type = CasRec::getReportTypeByOrderType($clientData['reportType'], $clientData['reportVariation'], CasRec::REALM_PROF);
+            $endDate = DateTime::createFromFormat('d/m/Y', $clientData['lastReportDate']);
             $startDate = $this->reportUtils->generateReportStartDateFromEndDate($endDate);
             $report = new Report($client, $type, $startDate, $endDate);
 
