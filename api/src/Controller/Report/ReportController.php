@@ -4,6 +4,7 @@ namespace App\Controller\Report;
 
 use App\Controller\RestController;
 use App\Entity as EntityDir;
+use App\Entity\Client;
 use App\Entity\Report\Report;
 use App\Entity\User;
 use App\Exception\UnauthorisedException;
@@ -926,7 +927,11 @@ class ReportController extends RestController
 
         $reports = [];
         foreach ($queuedReportIds as $reportId) {
+            $filter = $this->em->getFilters()->getFilter('softdeleteable');
+            $filter->disableForEntity(Client::class);
+
             $reports[] = $this->findEntityBy(Report::class, $reportId);
+            $filter->enableForEntity(Client::class);
         }
 
         $this->formatter->setJmsSerialiserGroups($this->checklistGroups);

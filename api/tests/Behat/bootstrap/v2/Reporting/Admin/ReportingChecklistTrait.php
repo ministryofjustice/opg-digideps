@@ -5,6 +5,7 @@ declare(strict_types=1);
 namespace App\Tests\Behat\v2\Reporting\Admin;
 
 use App\Entity\Report\Report;
+use App\Tests\Behat\BehatException;
 
 trait ReportingChecklistTrait
 {
@@ -202,5 +203,39 @@ trait ReportingChecklistTrait
                 }
             }
         }
+    }
+
+    /**
+     * @Then /^the checklist status should be \'([^\']*)\'$/
+     */
+    public function theChecklistStatusShouldBe(string $status)
+    {
+        $this->iAmOnAdminReportChecklistPage();
+
+        $expectedStatus = match (strtolower($status)) {
+            'queued' => 'Pending',
+            'synced' => 'Sent to Sirius',
+        };
+
+        $xpath = sprintf('//p[contains(.,"%s")]', $expectedStatus);
+        $sideMenu = $this->getSession()->getPage()->find('xpath', $xpath);
+
+        if (is_null($sideMenu)) {
+            throw new BehatException('The checklist sync status was not visible on the page');
+        }
+    }
+
+    /**
+     * @Given /^I run the checklist-sync command$/
+     */
+    public function iRunTheChecklistSyncCommand()
+    {
+        $this->visitAdminPath('/admin/behat/run-checklist-sync-command');
+
+        if ($this->getSession()->getStatusCode() > 299) {
+            throw new BehatException('There was an non successful response when running the checklist-sync command');
+        }
+
+        sleep(2);
     }
 }
