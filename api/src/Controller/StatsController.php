@@ -135,4 +135,28 @@ class StatsController extends RestController
 
         return new JsonResponse($ret);
     }
+
+    /**
+     * @Route("stats/report/benefits-report-metrics", name="benefits_reoprt_metrics")
+     * @Security("is_granted('ROLE_SUPER_ADMIN')")
+     *
+     * - track how often users select 'yes', 'no', and 'I don't know' to the 'Does anyone other than you receive income on Client's behalf?' question
+     * - track what the users list when selecting 'yes' and are given the 'Tell us about the income other people receive on Client's behalf' question
+     * - track the free input box when selectin ' I don't know' to the 'Does anyone other than you receive income on Client's behalf?' question
+     */
+    public function getBenefitsReportMetrics(): array
+    {
+        $yesResponses = $this->reportRepository->getBenefitsRepsonse('yes');
+        $yesResponsesCount = count($yesResponses);
+        $noResponses = $this->reportRepository->getBenefitsRepsonse('no');
+        $noResponsesCount = count($noResponses);
+        $dontKnowResponses = $this->reportRepository->getBenefitsRepsonse('dontKnow');
+        $dontKnowResponsesCount = count($dontKnowResponses);
+
+        return [
+            'YesResponsesCount' => $yesResponsesCount,
+            'NoResponsesCount' => $noResponsesCount,
+            'DontKnowResponsesCount' => $dontKnowResponsesCount,
+        ];
+    }
 }

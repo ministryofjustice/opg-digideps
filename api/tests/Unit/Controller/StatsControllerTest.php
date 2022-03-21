@@ -52,4 +52,26 @@ class StatsControllerTest extends AbstractTestController
             );
         }
     }
+
+    /** @test */
+    public function benefitsReportMetricsOnlySuperAdminsCanAccess()
+    {
+        $unauthorisedUserTokens = [
+            $this->loginAsAdmin(),
+            $this->loginAsDeputy(),
+            $this->loginAsProf(),
+            $this->loginAsPa(),
+        ];
+
+        foreach ($unauthorisedUserTokens as $token) {
+            $this->assertJsonRequest(
+                'GET',
+                '/stats/report/benefits_metrics',
+                [
+                    'mustFail' => true,
+                    'AuthToken' => $token,
+                ]
+            );
+        }
+    }
 }

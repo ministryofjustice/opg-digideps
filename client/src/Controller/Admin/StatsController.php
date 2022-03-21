@@ -4,6 +4,7 @@ namespace App\Controller\Admin;
 
 use App\Controller\AbstractController;
 use App\Exception\DisplayableException;
+use App\Form\Admin\BenefitsMetricsFilterType;
 use App\Form\Admin\ReportSubmissionDownloadFilterType;
 use App\Form\Admin\SatisfactionFilterType;
 use App\Form\Admin\StatPeriodType;
@@ -224,6 +225,24 @@ class StatsController extends AbstractController
     public function userAccountReports()
     {
         return $this->statsApi->getAdminUserAccountReportData();
+    }
+
+    /**
+     * @Route("/reports/benefits-report-metrics", name="benefits_reoprt_metrics")
+     * @Security("is_granted('ROLE_SUPER_ADMIN')")
+     * @Template("@App/Admin/Stats/benefitsReportMetrics.html.twig")
+     *
+     * @return array|Response
+     */
+    public function benefitsReportMetrics(Request $request)
+    {
+        $form = $this->createForm(BenefitsMetricsFilterType::class, new DateRangeQuery());
+        $form->handleRequest($request);
+
+        return [
+            'stats' => $this->statsApi->getBenefitsReportMetrics(),
+            'form' => $form->createView(),
+        ];
     }
 
     /**

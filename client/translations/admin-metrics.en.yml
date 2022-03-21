@@ -5,7 +5,9 @@ indexPage:
     reports: View reports
 
 adminAccounts:
+    htmlTitle: Administration - Admin Accounts Analytics
     pageTitle: Admin Accounts
+    supportTitle: Analytics
 
 reports:
     htmlTitle: Administration - Reports
@@ -15,6 +17,26 @@ reports:
     downloadSatisfaction: Download satisfaction report
     downloadUserResearch: Download user research report
     userAccountReports: View admin account metrics
+    benefitsSectionMetrics: View benefits report metrics
+
+benefitsReportMetrics:
+    htmlTitle: Administration - Benefits Report Metrics
+    pageTitle: Benefits Report Metrics
+    supportTitle: Analytics
+    form:
+        startDate:
+            label: Start date
+        endDate:
+            label: End date
+        fromDate:
+            legend: Start date
+            hint: For example, 31 3 2015
+        toDate:
+            legend: End date
+            hint: For example, 31 3 2016
+        submitAndDownload:
+            label: Download
+        clear: Clear filter
 
 form:
     title: Change reporting period

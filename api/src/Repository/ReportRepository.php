@@ -25,8 +25,8 @@ class ReportRepository extends ServiceEntityRepository
     /** @var ClientSearchFilter */
     private $filter;
 
-    const USER_DETERMINANT = 1;
-    const ORG_DETERMINANT = 2;
+    public const USER_DETERMINANT = 1;
+    public const ORG_DETERMINANT = 2;
 
     public function __construct(ManagerRegistry $registry, ClientSearchFilter $filter)
     {
@@ -37,10 +37,8 @@ class ReportRepository extends ServiceEntityRepository
     /**
      * add empty Debts to Report.
      * Called from doctrine listener.
-     *
-     * @return int changed records
      */
-    public function addDebtsToReportIfMissing(Report $report)
+    public function addDebtsToReportIfMissing(Report $report): int
     {
         $ret = 0;
 
@@ -59,11 +57,9 @@ class ReportRepository extends ServiceEntityRepository
     }
 
     /**
-     * @return int|null
-     *
      * @throws ORMException
      */
-    public function addFeesToReportIfMissing(Report $report)
+    public function addFeesToReportIfMissing(Report $report): ?int
     {
         if (!$report->isPAreport()) {
             return null;
@@ -109,11 +105,9 @@ class ReportRepository extends ServiceEntityRepository
     }
 
     /**
-     * @param string $role
-     *
      * @return mixed
      */
-    public function findAllActiveReportsByCaseNumbersAndRole(array $caseNumbers, $role)
+    public function findAllActiveReportsByCaseNumbersAndRole(array $caseNumbers, string $role)
     {
         $qb = $this->createQueryBuilder('r');
         $qb->leftJoin('r.client', 'c')
@@ -126,16 +120,11 @@ class ReportRepository extends ServiceEntityRepository
     }
 
     /**
-     * @param mixed       $orgIdsOrUserId
-     * @param int         $determinant
-     * @param string      $select
-     * @param string|null $status
-     *
      * @return array|mixed|null
      *
      * @throws NonUniqueResultException
      */
-    public function getAllByDeterminant($orgIdsOrUserId, $determinant, ParameterBag $query, $select, $status)
+    public function getAllByDeterminant(mixed $orgIdsOrUserId, int $determinant, ParameterBag $query, string $select, ?string $status)
     {
         $qb = $this->createQueryBuilder('r');
 
@@ -259,5 +248,17 @@ DQL;
             ->setParameter('types', $types);
 
         return $query->getQuery()->getResult(AbstractQuery::HYDRATE_SCALAR_COLUMN);
+    }
+
+    public function getBenefitsRepsonse(string $answer): mixed
+    {
+        $dql = "SELECT b FROM App\Entity\Report\ClientBenefitsCheck b WHERE b.doOthersReceiveIncomeOnClientsBehalf = :answer";
+
+        $query = $this
+            ->getEntityManager()
+            ->createQuery($dql)
+            ->setParameter('answer', $answer);
+
+        return $query->getResult();
     }
 }
