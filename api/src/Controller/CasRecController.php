@@ -2,14 +2,14 @@
 
 namespace App\Controller;
 
-use App\Entity\CasRec;
 use App\Repository\CasRecRepository;
 use App\Service\CasrecVerificationService;
 use App\Service\Formatter\RestFormatter;
-use Symfony\Component\HttpFoundation\JsonResponse;
-use Symfony\Component\Routing\Annotation\Route;
+use Doctrine\ORM\NonUniqueResultException;
 use Sensio\Bundle\FrameworkExtraBundle\Configuration\Security;
+use Symfony\Component\HttpFoundation\JsonResponse;
 use Symfony\Component\HttpFoundation\Request;
+use Symfony\Component\Routing\Annotation\Route;
 
 /**
  * @Route("/casrec")
@@ -26,27 +26,24 @@ class CasRecController extends RestController
     }
 
     /**
-     * @Route("/delete-by-source/{source}", methods={"DELETE"})
+     * @Route("/delete", methods={"DELETE"})
      * @Security("is_granted('ROLE_ADMIN')")
      *
-     * @param CasRecRepository $casRecRepository
      * @param $source
+     *
      * @return array|JsonResponse
-     * @throws \Doctrine\ORM\NonUniqueResultException
+     *
+     * @throws NonUniqueResultException
      */
-    public function deleteBySource(CasRecRepository $casRecRepository, $source)
+    public function delete(CasRecRepository $casRecRepository)
     {
-        if (!in_array($source, CasRec::validSources())) {
-            throw new \InvalidArgumentException(sprintf('Invalid source: %s', $source));
-        }
+        $result = $casRecRepository->deleteAll();
 
-        $result = $casRecRepository->deleteAllBySource($source);
-
-        return ['deletion-count' => $result === null ? 0 : $result];
+        return ['deletion-count' => null === $result ? 0 : $result];
     }
 
     /**
-     * Verify Deputy & Client last names, Postcode, and Case Number
+     * Verify Deputy & Client last names, Postcode, and Case Number.
      *
      * @Route("/verify", methods={"POST"})
      */
@@ -82,7 +79,7 @@ class CasRecController extends RestController
 
     /**
      * @Route("/clientHasCoDeputies/{caseNumber}", methods={"GET"})
-     * @param string $caseNumber
+     *
      * @return array|JsonResponse
      */
     public function clientHasCoDeputies(string $caseNumber)

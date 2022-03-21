@@ -12,17 +12,8 @@ class CasRecControllerTest extends AbstractTestController
     private static $deputy2;
     private static $tokenAdmin = null;
     private static $tokenDeputy = null;
-
-    public static function setUpBeforeClass(): void
-    {
-        parent::setUpBeforeClass();
-
-        self::$deputy1 = self::fixtures()->getRepo('User')->findOneByEmail('deputy@example.org');
-        self::$admin1 = self::fixtures()->getRepo('User')->findOneByEmail('admin@example.org');
-        self::$deputy2 = self::fixtures()->createUser();
-
-        self::fixtures()->flush()->clear();
-    }
+    private static $tokenProf = null;
+    private static $tokenPa = null;
 
     /**
      * clear fixtures.
@@ -36,40 +27,65 @@ class CasRecControllerTest extends AbstractTestController
 
     public function setUp(): void
     {
+        parent::setUp();
+
+        self::$deputy1 = self::fixtures()->getRepo('User')->findOneByEmail('deputy@example.org');
+        self::$admin1 = self::fixtures()->getRepo('User')->findOneByEmail('admin@example.org');
+        self::$deputy2 = self::fixtures()->createUser();
+
         if (null === self::$tokenAdmin) {
             self::$tokenAdmin = $this->loginAsAdmin();
             self::$tokenDeputy = $this->loginAsDeputy();
+            self::$tokenProf = $this->loginAsProf();
+            self::$tokenPa = $this->loginAsPa();
         }
 
-        $this->c1 = new CasRec([
+        $data = [
             'Case' => '12345678',
-            'Surname' => 'jones',
-            'Deputy No' => 'd1',
-            'Dep Surname' => 'white',
-            'Dep Postcode' => 'SW1',
-            'Typeofrep' => 'OPG102',
-            'Corref' => 'L2',
-            'custom' => 'c1',
-            'custom 2' => 'c1',
-        ]);
+            'ClientSurname' => 'jones',
+            'DeputyUid' => 'd1',
+            'DeputySurname' => 'white',
+            'DeputyAddress1' => 'Victoria Road',
+            'DeputyPostcode' => 'SW1',
+            'ReportType' => 'OPG102',
+            'MadeDate' => '2010-03-30',
+            'OrderType' => 'pfa',
+        ];
+
+        $this->c1 = new CasRec($data);
     }
 
-    public function testDeleteBySourceVerifiesSourceInput()
+    public function testDeleteHasRoleProtections()
     {
-        $this->buildAndPersistCasRecEntity('12345678', CasRec::CASREC_SOURCE);
+        $this->buildAndPersistCasRecEntity('12345678');
         $this->fixtures()->flush();
         $this->fixtures()->clear();
 
-        $url = '/casrec/delete-by-source/unknownsource';
+        $url = '/casrec/delete';
 
         $this->assertJsonRequest('DELETE', $url, [
             'mustFail' => true,
             'AuthToken' => self::$tokenAdmin,
+            'assertResponseCode' => 200,
+        ]);
+
+        $this->assertJsonRequest('DELETE', $url, [
+            'mustFail' => true,
+            'AuthToken' => self::$tokenDeputy,
             'assertResponseCode' => 400,
         ]);
 
-        $entitiesRemaining = $this->fixtures()->clear()->getRepo('CasRec')->findAll();
-        $this->assertCount(1, $entitiesRemaining);
+        $this->assertJsonRequest('DELETE', $url, [
+            'mustFail' => true,
+            'AuthToken' => self::$tokenProf,
+            'assertResponseCode' => 400,
+        ]);
+
+        $this->assertJsonRequest('DELETE', $url, [
+            'mustFail' => true,
+            'AuthToken' => self::$tokenPa,
+            'assertResponseCode' => 400,
+        ]);
     }
 
     public function testDeleteBySourceDeletesBySource()
@@ -114,7 +130,7 @@ class CasRecControllerTest extends AbstractTestController
 
     public function testVerifyCasRec()
     {
-        $this->buildAndPersistCasRecEntity('12345678', CasRec::CASREC_SOURCE);
+        $this->buildAndPersistCasRecEntity('12345678');
         $this->fixtures()->flush();
         $this->fixtures()->clear();
 
@@ -128,11 +144,7 @@ class CasRecControllerTest extends AbstractTestController
         ]);
     }
 
-    /**
-     * @param $case
-     * @param string $source
-     */
-    private function buildAndPersistCasRecEntity($case, $source = CasRec::CASREC_SOURCE): CasRec
+    private function buildAndPersistCasRecEntity(string $case): CasRec
     {
         $casRec = new CasRec([
             'Case' => $case,
@@ -142,7 +154,6 @@ class CasRecControllerTest extends AbstractTestController
             'Dep Postcode' => 'SW1',
             'Typeofrep' => 'OPG102',
             'Corref' => 'L2',
-            'Source' => $source,
         ]);
 
         $this->fixtures()->persist($casRec);

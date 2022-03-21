@@ -14,20 +14,11 @@ class CasRecRepository extends ServiceEntityRepository
         parent::__construct($registry, CasRec::class);
     }
 
-    /**
-     * @return mixed
-     *
-     * @throws \Doctrine\ORM\NonUniqueResultException
-     */
-    public function deleteAllBySource(string $source)
+    public function deleteAll()
     {
         /** @var QueryBuilder $qb */
         $qb = $this->getEntityManager()->createQueryBuilder();
-
-        $qb
-            ->delete('App\Entity\CasRec', 'cr')
-            ->where('cr.source = :source')
-            ->setParameter('source', $source);
+        $qb->delete('App\Entity\CasRec', 'cr');
 
         return $qb->getQuery()->getOneOrNullResult();
     }
