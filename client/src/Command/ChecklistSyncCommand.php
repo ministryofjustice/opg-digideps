@@ -21,6 +21,7 @@ class ChecklistSyncCommand extends Command
 {
     /** @var string */
     const FALLBACK_ROW_LIMITS = '30';
+    const COMPLETED_MESSAGE = 'Sync command completed';
 
     /** @var string */
     public static $defaultName = 'digideps:checklist-sync';
@@ -96,6 +97,8 @@ class ChecklistSyncCommand extends Command
             $output->writeln(sprintf('%d checklists failed to sync', $this->notSyncedCount));
             $this->notSyncedCount = 0;
         }
+
+        $output->writeln(self::COMPLETED_MESSAGE);
 
         return 0;
     }
