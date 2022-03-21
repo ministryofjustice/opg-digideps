@@ -4,13 +4,13 @@ declare(strict_types=1);
 
 namespace App\Controller\Admin;
 
-use App\Command\ChecklistSyncCommand;
 use App\Controller\AbstractController;
-use App\Service\Client\RestClient;
+use App\Service\ChecklistSyncService;
+use App\Service\Client\Internal\ReportApi;
+use App\Service\ParameterStoreService;
 use Exception;
 use Symfony\Bundle\FrameworkBundle\Console\Application;
 use Symfony\Component\Console\Input\ArrayInput;
-use Symfony\Component\Console\Output\BufferedOutput;
 use Symfony\Component\Console\Output\NullOutput;
 use Symfony\Component\HttpFoundation\Response;
 use Symfony\Component\HttpKernel\KernelInterface;
@@ -18,15 +18,13 @@ use Symfony\Component\Routing\Annotation\Route;
 
 class BehatController extends AbstractController
 {
-    private KernelInterface $kernel;
-    private RestClient $restClient;
-    private string $symfonyEnvironment;
-
-    public function __construct(KernelInterface $kernel, RestClient $restClient, string $symfonyEnvironment)
-    {
-        $this->kernel = $kernel;
-        $this->restClient = $restClient;
-        $this->symfonyEnvironment = $symfonyEnvironment;
+    public function __construct(
+        private KernelInterface $kernel,
+        private string $symfonyEnvironment,
+        private ChecklistSyncService $checklistSyncService,
+        private ReportApi $reportApi,
+        private ParameterStoreService $parameterStore
+    ) {
     }
 
     /**
@@ -70,25 +68,13 @@ class BehatController extends AbstractController
             throw $this->createNotFoundException();
         }
 
-        $application = new Application($this->kernel);
-        $application->setAutoExit(false);
+        $limit = $this->parameterStore->getParameter(ParameterStoreService::PARAMETER_CHECKLIST_SYNC_ROW_LIMIT) ?: '30';
+        $reports = $this->reportApi->getReportsWithQueuedChecklists($limit);
+        $notProcessedCount = $this->checklistSyncService->processChecklistsInCommand($reports);
 
-        $input = new ArrayInput(['command' => 'digideps:checklist-sync']);
-        $output = new BufferedOutput();
+        $message = $notProcessedCount > 0 ? sprintf('%s checklists failed to sync', $notProcessedCount) : 'Sync completed';
+        $statusCode = $notProcessedCount > 0 ? Response::HTTP_BAD_REQUEST : Response::HTTP_OK;
 
-        $application->run($input, $output);
-
-        $timeoutSeconds = 15;
-        $start_time = time();
-
-        while (true) {
-            if ((time() - $start_time) > $timeoutSeconds) {
-                return new Response('Checklist sync command timed out', Response::HTTP_REQUEST_TIMEOUT);
-            }
-
-            if (ChecklistSyncCommand::COMPLETED_MESSAGE === $output->fetch()) {
-                return new Response('');
-            }
-        }
+        return new Response($message, $statusCode);
     }
 }

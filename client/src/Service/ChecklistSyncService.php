@@ -4,8 +4,10 @@ declare(strict_types=1);
 
 namespace App\Service;
 
+use App\Entity\Report\Checklist;
 use App\Entity\Report\Report;
 use App\Entity\Report\ReportSubmission;
+use App\Exception\PdfGenerationFailedException;
 use App\Exception\SiriusDocumentSyncFailedException;
 use App\Model\Sirius\QueuedChecklistData;
 use App\Model\Sirius\SiriusChecklistPdfDocumentMetadata;
@@ -13,20 +15,13 @@ use App\Model\Sirius\SiriusDocumentFile;
 use App\Model\Sirius\SiriusDocumentUpload;
 use App\Service\Client\RestClient;
 use App\Service\Client\Sirius\SiriusApiGatewayClient;
+use GuzzleHttp\Exception\GuzzleException;
 use function GuzzleHttp\Psr7\mimetype_from_filename;
+use Psr\Http\Message\ResponseInterface;
 use Throwable;
 
 class ChecklistSyncService
 {
-    /** @var RestClient */
-    private $restClient;
-
-    /** @var SiriusApiGatewayClient */
-    private $siriusApiGatewayClient;
-
-    /** @var SiriusApiErrorTranslator */
-    private $errorTranslator;
-
     /** @var int */
     const FAILED_TO_SYNC = -1;
 
@@ -34,13 +29,11 @@ class ChecklistSyncService
     const PAPER_REPORT_UUID_FALLBACK = '99999999-9999-9999-9999-999999999999';
 
     public function __construct(
-        RestClient $restClient,
-        SiriusApiGatewayClient $siriusApiGatewayClient,
-        SiriusApiErrorTranslator $errorTranslator
+        private RestClient $restClient,
+        private SiriusApiGatewayClient $siriusApiGatewayClient,
+        private SiriusApiErrorTranslator $errorTranslator,
+        private ChecklistPdfGenerator $pdfGenerator,
     ) {
-        $this->restClient = $restClient;
-        $this->siriusApiGatewayClient = $siriusApiGatewayClient;
-        $this->errorTranslator = $errorTranslator;
     }
 
     /**
@@ -58,9 +51,9 @@ class ChecklistSyncService
     }
 
     /**
-     * @return mixed|\Psr\Http\Message\ResponseInterface|void
+     * @return mixed|ResponseInterface|void
      *
-     * @throws \GuzzleHttp\Exception\GuzzleException
+     * @throws GuzzleException
      */
     private function sendDocument(QueuedChecklistData $checklistData)
     {
@@ -77,7 +70,7 @@ class ChecklistSyncService
     /**
      * @return mixed
      *
-     * @throws \GuzzleHttp\Exception\GuzzleException
+     * @throws GuzzleException
      */
     private function postChecklist(QueuedChecklistData $checklistData, string $reportSubmissionUuid)
     {
@@ -93,7 +86,7 @@ class ChecklistSyncService
     /**
      * @return mixed
      *
-     * @throws \GuzzleHttp\Exception\GuzzleException
+     * @throws GuzzleException
      */
     private function putChecklist(QueuedChecklistData $checklistData, string $reportSubmissionUuid)
     {
@@ -180,5 +173,56 @@ class ChecklistSyncService
             method_exists($e->getResponse(), 'getBody') &&
             is_array($e->getResponse()->getBody()) &&
             isset($e->getResponse()->getBody()['errors']);
+    }
+
+    public function processChecklistsInCommand(array $reports): int
+    {
+        $notSyncedCount = 0;
+
+        /** @var Report $report */
+        foreach ($reports as $report) {
+            try {
+                $content = $this->pdfGenerator->generate($report);
+            } catch (PdfGenerationFailedException $e) {
+                $this->updateChecklistWithError($report, $e);
+                ++$notSyncedCount;
+                continue;
+            }
+
+            try {
+                $queuedChecklistData = $this->buildChecklistData($report, $content);
+                $uuid = $this->sync($queuedChecklistData);
+                $this->updateChecklistWithSuccess($report, $uuid);
+            } catch (SiriusDocumentSyncFailedException $e) {
+                $this->updateChecklistWithError($report, $e);
+                ++$notSyncedCount;
+            }
+        }
+
+        return $notSyncedCount;
+    }
+
+    protected function buildChecklistData(Report $report, string $content): QueuedChecklistData
+    {
+        return (new QueuedChecklistData())
+            ->setChecklistId($report->getChecklist()->getId())
+            ->setChecklistUuid($report->getChecklist()->getUuid())
+            ->setCaseNumber($report->getClient()->getCaseNumber())
+            ->setChecklistFileContents($content)
+            ->setReportStartDate($report->getStartDate())
+            ->setReportEndDate($report->getEndDate())
+            ->setReportSubmissions($report->getReportSubmissions())
+            ->setSubmitterEmail($report->getChecklist()->getSubmittedBy()->getEmail())
+            ->setReportType($report->determineReportType());
+    }
+
+    protected function updateChecklistWithError(Report $report, $e): void
+    {
+        $this->updateChecklist($report->getChecklist()->getId(), Checklist::SYNC_STATUS_PERMANENT_ERROR, $e->getMessage());
+    }
+
+    protected function updateChecklistWithSuccess(Report $report, $uuid): void
+    {
+        $this->updateChecklist($report->getChecklist()->getId(), Checklist::SYNC_STATUS_SUCCESS, null, $uuid);
     }
 }
