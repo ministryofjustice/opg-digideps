@@ -252,7 +252,7 @@ DQL;
 
     public function getBenefitsRepsonse(string $answer): mixed
     {
-        $dql = "SELECT b FROM App\Entity\Report\ClientBenefitsCheck b WHERE b.doOthersReceiveIncomeOnClientsBehalf = :answer";
+        $dql = "SELECT b FROM App\Entity\Report\ClientBenefitsCheck b WHERE b.doOthersReceiveMoneyOnClientsBehalf = :answer";
 
         $query = $this
             ->getEntityManager()
