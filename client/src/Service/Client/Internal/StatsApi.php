@@ -49,12 +49,17 @@ class StatsApi
         return (string) $response;
     }
 
-    public function getBenefitsReportMetrics(): array
+    public function getBenefitsReportMetrics(string $appened = null)
     {
+        $link = self::GET_BENEFITS_REPORT_METRICS;
+        if (null !== $appened) {
+            $link = self::GET_BENEFITS_REPORT_METRICS.$appened;
+        }
+
         return $this->restClient->get(
-            self::GET_BENEFITS_REPORT_METRICS,
+            $link,
             'array',
-            ['benefits-report-metrics']
+            ['admin-benefits-metrics']
         );
     }
 }

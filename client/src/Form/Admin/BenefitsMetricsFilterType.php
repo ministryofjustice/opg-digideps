@@ -36,6 +36,18 @@ class BenefitsMetricsFilterType extends AbstractType
                     'invalid_message' => 'Enter a valid date',
                 ]
             )
+            ->add(
+                'deputyType',
+                FormTypes\ChoiceType::class, [
+                    'choices' => [
+                        'All' => 'all',
+                        'Prof' => 'prof',
+                        'Pa' => 'pa',
+                    ],
+                    'expanded' => false,
+                    'mapped' => false,
+                ]
+            )
             ->add('submitAndDownload', FormTypes\SubmitType::class)
             ->addEventListener(FormEvents::POST_SUBMIT, [$this, 'onPostSubmit']);
     }

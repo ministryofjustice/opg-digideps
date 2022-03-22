@@ -21,27 +21,19 @@
             'hintText': (page ~ '.form.toDate.hint') | trans,
         }) }}<span class="govuk-visually-hidden">of benefits report metrics responses search period</span>
 
+        {{ form_select(form.deputyType, 'benefitsReportMetrics.form.deputyType', {
+        'fieldSetClass' : 'inline',
+        'legendClass' : 'govuk-label--s'
+        }) }}
+
         <div class="govuk-form-group">
             {{ form_submit(form.submitAndDownload, 'benefitsReportMetrics.form.submitAndDownload', {
                 'buttonClass': 'behat-link-submit-and-download'
             }) }}
-            <a href="{{ path('admin_stats') }}" class="govuk-link button-link">{{ 'benefitsReportMetrics.form.clear' | trans }}</a>
+            <a href="{{ path('benefits_reoprt_metrics') }}" class="govuk-link button-link">{{ 'benefitsReportMetrics.form.clear' | trans }}</a>
         </div>
     {{ form_end(form) }}
 
-    {# <div class="govuk-grid-row">
-        <div class="govuk-grid-column-one-third text--center">
-            <span class="govuk-caption-l govuk-!-margin-top-2">Yes Responses</span>
-            <span class="govuk-heading-xl govuk-!-margin-bottom-4 govuk-!-font-size-40 ">{{ stats.YesResponsesCount }}</span>
-        </div>
-        <div class="govuk-grid-column-one-third text--center">
-            <span class="govuk-caption-l govuk-!-margin-top-2">No Responses</span>
-            <span class="govuk-heading-xl govuk-!-margin-bottom-4 govuk-!-font-size-40 ">{{ stats.NoResponsesCount }}</span>
-        </div>
-        <div class="govuk-grid-column-one-third text--center">
-            <span class="govuk-caption-l govuk-!-margin-top-2">Don't Know Responses</span>
-            <span class="govuk-heading-xl govuk-!-margin-bottom-4 govuk-!-font-size-40 ">{{ stats.DontKnowResponsesCount }}</span>
-        </div>
-    </div> #}
+    {{ dump(stats) }}
 
 {% endblock %}

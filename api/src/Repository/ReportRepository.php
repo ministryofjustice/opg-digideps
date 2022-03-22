@@ -250,15 +250,21 @@ DQL;
         return $query->getQuery()->getResult(AbstractQuery::HYDRATE_SCALAR_COLUMN);
     }
 
-    public function getBenefitsRepsonse(string $answer): mixed
+    public function getBenefitsRepsonseMetrics(): mixed
     {
-        $dql = "SELECT b FROM App\Entity\Report\ClientBenefitsCheck b WHERE b.doOthersReceiveMoneyOnClientsBehalf = :answer";
+        $conn = $this->getEntityManager()->getConnection();
 
-        $query = $this
-            ->getEntityManager()
-            ->createQuery($dql)
-            ->setParameter('answer', $answer);
+        $sql = <<<SQL
+SELECT b.*, nd.deputy_type
+FROM (((client_benefits_check b
+LEFT JOIN report r ON b.report_id = r.id)
+LEFT JOIN client c ON c.id = r.client_id)
+LEFT JOIN named_deputy nd ON nd.id = c.named_deputy_id)
+SQL;
 
-        return $query->getResult();
+        $stmt = $conn->prepare($sql);
+        $result = $stmt->executeQuery();
+
+        return $result->fetchAllAssociative();
     }
 }

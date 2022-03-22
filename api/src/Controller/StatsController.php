@@ -4,10 +4,12 @@ declare(strict_types=1);
 
 namespace App\Controller;
 
+use App\Entity\CasRec;
 use App\Entity\Ndr\AssetOther as NdrAssetOther;
 use App\Entity\Ndr\AssetProperty as NdrAssetProperty;
 use App\Entity\Report\AssetOther;
 use App\Entity\Report\AssetProperty;
+use App\Entity\User;
 use App\Repository\AssetRepository;
 use App\Repository\BankAccountRepository;
 use App\Repository\NdrAssetRepository;
@@ -137,26 +139,45 @@ class StatsController extends RestController
     }
 
     /**
-     * @Route("stats/report/benefits-report-metrics", name="benefits_reoprt_metrics")
+     * @Route("stats/report/benefits-report-metrics", methods={"GET", "POST"})
      * @Security("is_granted('ROLE_SUPER_ADMIN')")
      *
      * - track how often users select 'yes', 'no', and 'I don't know' to the 'Does anyone other than you receive income on Client's behalf?' question
      * - track what the users list when selecting 'yes' and are given the 'Tell us about the income other people receive on Client's behalf' question
      * - track the free input box when selectin ' I don't know' to the 'Does anyone other than you receive income on Client's behalf?' question
      */
-    public function getBenefitsReportMetrics(): array
+    public function getBenefitsReportMetrics(Request $request): array
     {
-        $yesResponses = $this->reportRepository->getBenefitsRepsonse('yes');
-        $yesResponsesCount = count($yesResponses);
-        $noResponses = $this->reportRepository->getBenefitsRepsonse('no');
-        $noResponsesCount = count($noResponses);
-        $dontKnowResponses = $this->reportRepository->getBenefitsRepsonse('dontKnow');
-        $dontKnowResponsesCount = count($dontKnowResponses);
+        $deputyType = $request->query->get('deputyType');
+        $startDate = $request->query->get('startDate');
+        $endDate = $request->query->get('endDate');
 
-        return [
-            'YesResponsesCount' => $yesResponsesCount,
-            'NoResponsesCount' => $noResponsesCount,
-            'DontKnowResponsesCount' => $dontKnowResponsesCount,
-        ];
+        $results = $this->reportRepository->getBenefitsRepsonseMetrics();
+
+        $updatedResults = [];
+        foreach ($results as $key => $result) {
+            if ($startDate === null && $endDate === null) {
+                if ('all' === $deputyType) {
+                    array_push($updatedResults, $result);
+                } elseif ('prof' === $deputyType && User::$depTypeIdToRealm[$result['deputy_type']] === CasRec::REALM_PROF) {
+                    array_push($updatedResults, $result);
+                } elseif ('pa' === $deputyType && User::$depTypeIdToRealm[$result['deputy_type']] === CasRec::REALM_PA) {
+                    array_push($updatedResults, $result);
+                }
+            } else {
+                $createdAt = new DateTime($result['created_at']);
+                if ($createdAt->format('Y-m-d') > $startDate && $createdAt->format('Y-m-d') < $endDate) {
+                    if ('all' === $deputyType) {
+                        array_push($updatedResults, $result);
+                    } elseif ('prof' === $deputyType && User::$depTypeIdToRealm[$result['deputy_type']] === CasRec::REALM_PROF) {
+                        array_push($updatedResults, $result);
+                    } elseif ('pa' === $deputyType && User::$depTypeIdToRealm[$result['deputy_type']] === CasRec::REALM_PA) {
+                        array_push($updatedResults, $result);
+                    }
+                }
+            }
+        }
+
+        return $updatedResults;
     }
 }

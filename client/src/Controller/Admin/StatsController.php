@@ -239,8 +239,21 @@ class StatsController extends AbstractController
         $form = $this->createForm(BenefitsMetricsFilterType::class, new DateRangeQuery());
         $form->handleRequest($request);
 
+        $append = '';
+
+        if ($form->isSubmitted() && $form->isValid()) {
+            $deputyType = $form->get('deputyType')->getData();
+            $append = "?deputyType={$deputyType}";
+
+            $startDate = $form->get('startDate')->getData();
+            $endDate = $form->get('endDate')->getData();
+            if (null !== $startDate && null !== $endDate) {
+                $append .= "&startDate={$startDate->format('Y-m-d')}&endDate={$endDate->format('Y-m-d')}";
+            }
+        }
+
         return [
-            'stats' => $this->statsApi->getBenefitsReportMetrics(),
+            'stats' => $this->statsApi->getBenefitsReportMetrics($append),
             'form' => $form->createView(),
         ];
     }
