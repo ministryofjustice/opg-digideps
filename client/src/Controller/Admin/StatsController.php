@@ -255,8 +255,8 @@ class StatsController extends AbstractController
                 }
 
                 $benefitMetricsSummaries = $this->statsApi->getBenefitsReportMetrics($append);
-                $csv = $this->clientBenefitMetricsCsvGenerator->generateClientBenefitsMetricCsv($benefitMetricsSummaries);
 
+                $csv = $this->clientBenefitMetricsCsvGenerator->generateClientBenefitsMetricCsv($benefitMetricsSummaries);
                 $response = new Response($csv);
 
                 $response->headers->set('Content-Type', 'text/csv; charset=utf-8');

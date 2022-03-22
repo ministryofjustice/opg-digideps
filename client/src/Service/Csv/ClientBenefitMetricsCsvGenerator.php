@@ -18,8 +18,6 @@ class ClientBenefitMetricsCsvGenerator
     }
 
     /**
-     * @param []UserResearchResponse $userResearchResponses
-     *
      * @return string
      */
     public function generateClientBenefitsMetricCsv(array $clientBenefitResponses)
