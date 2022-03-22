@@ -17,6 +17,7 @@ use App\Service\Client\Internal\StatsApi;
 use App\Service\Client\RestClient;
 use App\Service\Csv\ActiveLaysCsvGenerator;
 use App\Service\Csv\AssetsTotalsCSVGenerator;
+use App\Service\Csv\ClientBenefitMetricsCsvGenerator;
 use App\Service\Csv\SatisfactionCsvGenerator;
 use App\Service\Csv\UserResearchResponseCsvGenerator;
 use App\Transformer\ReportSubmission\ReportSubmissionBurFixedWidthTransformer;
@@ -40,6 +41,7 @@ class StatsController extends AbstractController
         private ActiveLaysCsvGenerator $activeLaysCsvGenerator,
         private UserResearchResponseCsvGenerator $userResearchResponseCsvGenerator,
         private AssetsTotalsCSVGenerator $assetsTotalsCSVGenerator,
+        private ClientBenefitMetricsCsvGenerator $clientBenefitMetricsCsvGenerator,
     ) {
     }
 
@@ -242,18 +244,36 @@ class StatsController extends AbstractController
         $append = '';
 
         if ($form->isSubmitted() && $form->isValid()) {
-            $deputyType = $form->get('deputyType')->getData();
-            $append = "?deputyType={$deputyType}";
+            try {
+                $deputyType = $form->get('deputyType')->getData();
+                $append = "?deputyType={$deputyType}";
 
-            $startDate = $form->get('startDate')->getData();
-            $endDate = $form->get('endDate')->getData();
-            if (null !== $startDate && null !== $endDate) {
-                $append .= "&startDate={$startDate->format('Y-m-d')}&endDate={$endDate->format('Y-m-d')}";
+                $startDate = $form->get('startDate')->getData();
+                $endDate = $form->get('endDate')->getData();
+                if (null !== $startDate && null !== $endDate) {
+                    $append .= "&startDate={$startDate->format('Y-m-d')}&endDate={$endDate->format('Y-m-d')}";
+                }
+
+                $benefitMetricsSummaries = $this->statsApi->getBenefitsReportMetrics($append);
+                $csv = $this->clientBenefitMetricsCsvGenerator->generateClientBenefitsMetricCsv($benefitMetricsSummaries);
+
+                $response = new Response($csv);
+
+                $response->headers->set('Content-Type', 'text/csv; charset=utf-8');
+                $disposition = $response->headers->makeDisposition(
+                    ResponseHeaderBag::DISPOSITION_ATTACHMENT,
+                    'client-benefits-metrics.csv'
+                );
+
+                $response->headers->set('Content-Disposition', $disposition);
+
+                return $response;
+            } catch (Throwable $e) {
+                throw new DisplayableException($e);
             }
         }
 
         return [
-            'stats' => $this->statsApi->getBenefitsReportMetrics($append),
             'form' => $form->createView(),
         ];
     }
