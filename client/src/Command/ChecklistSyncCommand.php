@@ -6,7 +6,6 @@ namespace App\Command;
 
 use App\Service\ChecklistSyncService;
 use App\Service\Client\Internal\ReportApi;
-use App\Service\Client\RestClient;
 use App\Service\ParameterStoreService;
 use Symfony\Component\Console\Command\Command;
 use Symfony\Component\Console\Input\InputInterface;
@@ -26,7 +25,6 @@ class ChecklistSyncCommand extends Command
      */
     public function __construct(
         private ChecklistSyncService $syncService,
-        private RestClient $restClient,
         private ParameterStoreService $parameterStore,
         private ReportApi $reportApi,
         $name = null

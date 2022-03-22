@@ -4,13 +4,13 @@ declare(strict_types=1);
 
 namespace App\Controller\Admin;
 
+use App\Command\ChecklistSyncCommand;
 use App\Controller\AbstractController;
-use App\Service\ChecklistSyncService;
-use App\Service\Client\Internal\ReportApi;
-use App\Service\ParameterStoreService;
 use Exception;
+use Psr\Log\LoggerInterface;
 use Symfony\Bundle\FrameworkBundle\Console\Application;
 use Symfony\Component\Console\Input\ArrayInput;
+use Symfony\Component\Console\Output\BufferedOutput;
 use Symfony\Component\Console\Output\NullOutput;
 use Symfony\Component\HttpFoundation\Response;
 use Symfony\Component\HttpKernel\KernelInterface;
@@ -21,9 +21,7 @@ class BehatController extends AbstractController
     public function __construct(
         private KernelInterface $kernel,
         private string $symfonyEnvironment,
-        private ChecklistSyncService $checklistSyncService,
-        private ReportApi $reportApi,
-        private ParameterStoreService $parameterStore
+        private LoggerInterface $logger
     ) {
     }
 
@@ -68,13 +66,25 @@ class BehatController extends AbstractController
             throw $this->createNotFoundException();
         }
 
-        $limit = $this->parameterStore->getParameter(ParameterStoreService::PARAMETER_CHECKLIST_SYNC_ROW_LIMIT) ?: '30';
-        $reports = $this->reportApi->getReportsWithQueuedChecklists($limit);
-        $notProcessedCount = $this->checklistSyncService->processChecklistsInCommand($reports);
+        $application = new Application($this->kernel);
+        $application->setAutoExit(false);
 
-        $message = $notProcessedCount > 0 ? sprintf('%s checklists failed to sync', $notProcessedCount) : 'Sync completed';
-        $statusCode = $notProcessedCount > 0 ? Response::HTTP_BAD_REQUEST : Response::HTTP_OK;
+        $input = new ArrayInput(['command' => 'digideps:checklist-sync']);
+        $output = new BufferedOutput();
 
-        return new Response($message, $statusCode);
+        $application->run($input, $output);
+
+        $timeOut = 10;
+        $startTime = time();
+
+        while (true) {
+            if ((time() - $startTime) > $timeOut) {
+                return new Response('Command timed out', Response::HTTP_REQUEST_TIMEOUT);
+            }
+
+            if (str_contains($output->fetch(), ChecklistSyncCommand::COMPLETED_MESSAGE)) {
+                return new Response('');
+            }
+        }
     }
 }
