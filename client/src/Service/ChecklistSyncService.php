@@ -175,7 +175,7 @@ class ChecklistSyncService
             isset($e->getResponse()->getBody()['errors']);
     }
 
-    public function processChecklistsInCommand(array $reports): int
+    public function syncChecklistsByReports(array $reports): int
     {
         $notSyncedCount = 0;
 

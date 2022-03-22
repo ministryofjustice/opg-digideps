@@ -48,7 +48,7 @@ class ChecklistSyncCommand extends Command
         $reports = $this->reportApi->getReportsWithQueuedChecklists($rowLimit);
         $output->writeln(sprintf('%d checklists to upload', count($reports)));
 
-        $notSyncedCount = $this->syncService->processChecklistsInCommand($reports);
+        $notSyncedCount = $this->syncService->syncChecklistsByReports($reports);
 
         if ($notSyncedCount > 0) {
             $output->writeln(sprintf('%d checklists failed to sync', $notSyncedCount));
