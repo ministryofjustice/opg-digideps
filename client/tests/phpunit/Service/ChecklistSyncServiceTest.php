@@ -36,9 +36,6 @@ class ChecklistSyncServiceTest extends TestCase
     /** @var QueuedChecklistData */
     private $dataInput;
 
-    /** @var QueuedChecklistData[] */
-    private $dataInputs;
-
     /** @var string */
     private $returnValue;
 
