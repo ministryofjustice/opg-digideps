@@ -113,7 +113,7 @@ RUN wget -q -O local-php-security-checker https://github.com/fabpot/local-php-se
   && chmod +x local-php-security-checker \
   && su-exec local-php-security-checker
 
-RUN apk upgrade libxml2
+RUN apk upgrade libxml2 openssl
 
 CMD confd -onetime -backend env \
   && waitforit -address=tcp://$DATABASE_HOSTNAME:$DATABASE_PORT -timeout=$TIMEOUT \
