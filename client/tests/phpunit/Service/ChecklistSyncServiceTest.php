@@ -4,8 +4,10 @@ declare(strict_types=1);
 
 namespace App\Service;
 
+use App\Entity\Report\Checklist;
 use App\Entity\Report\ReportSubmission;
 use App\Entity\User;
+use App\Exception\PdfGenerationFailedException;
 use App\Exception\SiriusDocumentSyncFailedException;
 use App\Model\Sirius\QueuedChecklistData;
 use App\Model\Sirius\SiriusChecklistPdfDocumentMetadata;
@@ -332,21 +334,9 @@ class ChecklistSyncServiceTest extends TestCase
     /**
      * @test
      */
-    public function syncChecklistsByReports()
+    public function syncChecklistsByReportsSyncsMultipleValidChecklists()
     {
-        $reports = [];
-
-        foreach (range(1, 2) as $index) {
-            $report = ChecklistTestHelper::buildPfaHighReport($index, 'a@b.com', '12395438');
-
-            $submission = (new ReportSubmission())
-                ->setId(1)
-                ->setCreatedBy((new User())->setEmail('a@b.com'))
-                ->setUuid('rs-uuid');
-            $report->setReportSubmissions([$submission]);
-
-            $reports[] = $report;
-        }
+        $reports = $this->generateSubmittedReports(2);
 
         $this->pdfGenerator
             ->expects($this->exactly(2))
@@ -371,6 +361,167 @@ class ChecklistSyncServiceTest extends TestCase
             )
             ->willReturn($this->getSuccessfulResponse());
 
-        $this->sut->syncChecklistsByReports($reports);
+        $notSyncedCount = $this->sut->syncChecklistsByReports($reports);
+        self::assertEquals(0, $notSyncedCount, sprintf('Expected $notSyncedCount to be %s, but it was %s', 0, $notSyncedCount));
+    }
+
+    /**
+     * @test
+     */
+    public function syncChecklistsByReportsChecklistsWithPDFErrorsAreSkipped()
+    {
+        $reports = $this->generateSubmittedReports(2);
+
+        $pdfException = new PdfGenerationFailedException('Failed to sync due to PDF');
+
+        $this->pdfGenerator
+            ->expects($this->exactly(2))
+            ->method('generate')
+            ->will(
+                $this->onConsecutiveCalls(
+                    $this->throwException($pdfException),
+                    'file-contents',
+                )
+            );
+
+        $expectedFailureData = [
+            'syncStatus' => Checklist::SYNC_STATUS_PERMANENT_ERROR,
+            'syncError' => 'Failed to sync due to PDF',
+        ];
+
+        $expectedSuccessData = [
+            'syncStatus' => Checklist::SYNC_STATUS_SUCCESS,
+            'uuid' => 'returned-checklist-uuid',
+        ];
+
+        $this->restClient
+            ->expects($this->exactly(2))
+            ->method('apiCall')
+            ->withConsecutive(
+                [
+                    'put',
+                    'checklist/1',
+                    json_encode($expectedFailureData),
+                    'raw',
+                    [],
+                    false,
+                ],
+                [
+                    'put',
+                    'checklist/2',
+                    json_encode($expectedSuccessData),
+                    'raw',
+                    [],
+                    false,
+                ]
+            );
+
+        $this
+            ->siriusApiGatewayClient
+            ->expects($this->exactly(1))
+            ->method('postChecklistPdf')
+            ->withConsecutive(
+                [
+                    $this->isInstanceOf(SiriusDocumentUpload::class),
+                    'rs-uuid',
+                    '12395438',
+                ],
+            )
+            ->willReturn($this->getSuccessfulResponse());
+
+        $notSyncedCount = $this->sut->syncChecklistsByReports($reports);
+        self::assertEquals(1, $notSyncedCount, sprintf('Expected $notSyncedCount to be %s, but it was %s', 1, $notSyncedCount));
+    }
+
+    /**
+     * @test
+     */
+    public function syncChecklistsByReportsSiriusSyncErrorChecklistsAreSkipped()
+    {
+        $reports = $this->generateSubmittedReports(2);
+
+        $expectedSiriusSyncException = new SiriusDocumentSyncFailedException('Failed to sync due to Sirius sync');
+
+        $this->pdfGenerator
+            ->expects($this->exactly(2))
+            ->method('generate')
+            ->willReturn('file-contents');
+
+        $expectedFailureData = [
+            'syncStatus' => Checklist::SYNC_STATUS_PERMANENT_ERROR,
+            'syncError' => 'Failed to sync due to Sirius sync',
+        ];
+
+        $expectedSuccessData = [
+            'syncStatus' => Checklist::SYNC_STATUS_SUCCESS,
+            'uuid' => 'returned-checklist-uuid',
+        ];
+
+        $this->restClient
+            ->expects($this->exactly(2))
+            ->method('apiCall')
+            ->withConsecutive(
+                [
+                    'put',
+                    'checklist/1',
+                    json_encode($expectedFailureData),
+                    'raw',
+                    [],
+                    false,
+                ],
+                [
+                    'put',
+                    'checklist/2',
+                    json_encode($expectedSuccessData),
+                    'raw',
+                    [],
+                    false,
+                ]
+            );
+
+        $this
+            ->siriusApiGatewayClient
+            ->expects($this->exactly(2))
+            ->method('postChecklistPdf')
+            ->withConsecutive(
+                [
+                    $this->isInstanceOf(SiriusDocumentUpload::class),
+                    'rs-uuid',
+                    '12395438',
+                ],
+                [
+                    $this->isInstanceOf(SiriusDocumentUpload::class),
+                    'rs-uuid',
+                    '12395438',
+                ],
+            )
+            ->will(
+                $this->onConsecutiveCalls(
+                    $this->throwException($expectedSiriusSyncException),
+                    $this->getSuccessfulResponse(),
+                )
+            );
+
+        $notSyncedCount = $this->sut->syncChecklistsByReports($reports);
+        self::assertEquals(1, $notSyncedCount, sprintf('Expected $notSyncedCount to be %s, but it was %s', 1, $notSyncedCount));
+    }
+
+    private function generateSubmittedReports(int $numberOfReports)
+    {
+        $reports = [];
+
+        foreach (range(1, $numberOfReports) as $index) {
+            $report = ChecklistTestHelper::buildPfaHighReport($index, 'a@b.com', '12395438');
+
+            $submission = (new ReportSubmission())
+                ->setId(1)
+                ->setCreatedBy((new User())->setEmail('a@b.com'))
+                ->setUuid('rs-uuid');
+            $report->setReportSubmissions([$submission]);
+
+            $reports[] = $report;
+        }
+
+        return $reports;
     }
 }
