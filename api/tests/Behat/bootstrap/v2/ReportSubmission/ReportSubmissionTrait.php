@@ -338,4 +338,27 @@ trait ReportSubmissionTrait
             );
         }
     }
+
+    /**
+     * @When I search for submissions using the court order number of the client I am interacting with and check the New column
+     */
+    public function iSearchForSubmissionsUsingTheCourtOrderNumberOfTheClientIAmInteractingWith()
+    {
+        $this->fillInField('q', $this->interactingWithUserDetails->getClientCaseNumber());
+        $this->pressButton('Search');
+        $this->clickLink('New');
+    }
+
+    /**
+     * @Then I should not see the submission under the new tab with the court order number of the user I am interacting with
+     */
+    public function submissionShouldNotAppearInNew()
+    {
+        $caseNumber = $this->interactingWithUserDetails->getClientCaseNumber();
+        $reportPdfRow = $this->getSession()->getPage()->find('css', "table tr:contains('$caseNumber')");
+
+        if (!is_null($reportPdfRow)) {
+            throw new BehatException("The submission ($caseNumber) appears in the new column when it should not appear");
+        }
+    }
 }

@@ -5,6 +5,7 @@ declare(strict_types=1);
 namespace App\Tests\Behat\v2\Reporting\Sections;
 
 use BehatException;
+use Throwable;
 
 trait DocumentsSectionTrait
 {
@@ -64,6 +65,7 @@ trait DocumentsSectionTrait
 
     /**
      * @Then the documents summary page should not contain any documents
+     * @Then the send more documents page should not contain any documents to upload
      */
     public function theDocumentsSummaryPageShouldNotContainDocuments()
     {
@@ -166,7 +168,11 @@ trait DocumentsSectionTrait
      */
     public function iHaveNoFurtherDocumentsToUpload()
     {
-        $this->clickLink('Continue');
+        try {
+            $this->clickLink('Continue');
+        } catch (Throwable $e) {
+            $this->clickLink('Continue to send documents');
+        }
     }
 
     /**
@@ -263,5 +269,14 @@ trait DocumentsSectionTrait
     public function iShouldSeeAMimetypeAndFileDoNotMatchError()
     {
         $this->assertOnErrorMessage($this->mimeTypeAndFileExtensionDoNotMatchErrorMessage);
+    }
+
+    /**
+     * @When /^I continue to submit the empty form$/
+     */
+    public function iContinueToSubmitTheEmptyForm()
+    {
+        $this->clickLink('Send documents');
+        $this->iAmOnLayMainPage();
     }
 }

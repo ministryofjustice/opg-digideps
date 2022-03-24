@@ -392,10 +392,12 @@ class ReportService
             }
         }
 
-        $this->_em->persist($submission);
+        if (!$submission->getDocuments()->isEmpty()) {
+            $this->_em->persist($submission);
 
-        // single transaction flush: current report, submission, new year report
-        $this->_em->flush();
+            // single transaction flush: current report, submission, new year report
+            $this->_em->flush();
+        }
 
         return $currentReport;
     }

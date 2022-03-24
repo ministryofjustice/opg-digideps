@@ -294,4 +294,12 @@ trait IVisitFrontendTrait
     {
         $this->visitFrontendPath($this->getClientBenefitsCheckSummaryUrl($this->loggedInUserDetails->getCurrentReportId()));
     }
+
+    /**
+     * @Given /^I visit the send more documents page$/
+     */
+    public function iVisitTheSendMoreDocumentsPage()
+    {
+        $this->visitFrontendPath($this->getDocumentsSubmitMore($this->loggedInUserDetails->getPreviousReportId()));
+    }
 }
