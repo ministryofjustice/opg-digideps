@@ -931,7 +931,6 @@ class ReportController extends RestController
             $filter->disableForEntity(Client::class);
 
             $reports[] = $this->findEntityBy(Report::class, $reportId);
-            $filter->enableForEntity(Client::class);
         }
 
         $this->formatter->setJmsSerialiserGroups($this->checklistGroups);
