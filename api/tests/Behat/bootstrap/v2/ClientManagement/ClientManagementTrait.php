@@ -8,6 +8,7 @@ use App\Entity\Client;
 use App\Tests\Behat\BehatException;
 use App\Tests\Behat\v2\Common\UserDetails;
 use DateTime;
+use Throwable;
 
 trait ClientManagementTrait
 {
@@ -306,7 +307,7 @@ MESSAGE;
             $this->clickLink('Discharge deputy');
             $this->iAmOnAdminClientDischargePage();
             $this->clickLink('Discharge deputy');
-        } catch (\Throwable $e) {
+        } catch (Throwable $e) {
             // This step is used as part of testing the discharge button isnt here so swallow errors and assert on following step
         }
     }
@@ -381,7 +382,7 @@ MESSAGE;
             $this->clickLink('Un-archive client');
             $this->iAmOnAdminClientUnarchivePage();
             $this->clickLink('Return to client dashboard');
-        } catch (\Throwable $e) {
+        } catch (Throwable $e) {
             // This step is used as part of testing the unarchive button isnt here so swallow errors and assert on following step
         }
     }
@@ -408,7 +409,6 @@ MESSAGE;
      */
     public function theClientShouldBeUnarchived()
     {
-        $this->assertInteractingWithUserIsSet();
         $this->iAmOnAdminClientDetailsPage();
     }
 
@@ -417,11 +417,23 @@ MESSAGE;
      */
     public function theClientShouldNotBeUnarchived()
     {
-        $this->assertInteractingWithUserIsSet();
-
         $this->iVisitAdminClientDetailsPageForDeputyInteractingWith();
 
         // Expecting to be redirected to the client archived page
         $this->iAmOnAdminClientArchivedPage();
+    }
+
+    /**
+     * @Given /^the deputy I am interacting with has been discharged$/
+     */
+    public function theDeputyHasBeenDischarged()
+    {
+        $this->assertInteractingWithUserIsSet();
+
+        $client = $this->em->find(Client::class, $this->interactingWithUserDetails->getClientId());
+        $client->setDeletedAt(new DateTime());
+
+        $this->em->persist($client);
+        $this->em->flush();
     }
 }

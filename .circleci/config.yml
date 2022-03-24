@@ -132,7 +132,6 @@ workflows:
             ]
           filters: { branches: { ignore: [main] } }
           task_name: integration_test_v2
-          tf_workspace: integration
           override: "sh,./tests/Behat/run-tests.sh,--tags,@v2_sequential,--profile,v2-tests-goutte"
           timeout: 1200
 
@@ -1151,7 +1150,7 @@ jobs:
 
   cross-browser-test:
     machine:
-      image: ubuntu-2004:202111-02
+      image: ubuntu-2004:202201-02
     steps:
       - dockerhub_helper/dockerhub_login
       - aws-cli/install
