@@ -270,27 +270,14 @@ class Client implements ClientInterface
         return $this->id;
     }
 
-    /**
-     * Set caseNumber.
-     *
-     * @param string $caseNumber
-     *
-     * @return Client
-     */
-    public function setCaseNumber($caseNumber)
+    public function setCaseNumber(?string $caseNumber): self
     {
-        // normalise case number in order to understand if it's already used when registering and checking with CASREC
-        $this->caseNumber = CasRec::normaliseCaseNumber($caseNumber);
+        $this->caseNumber = $caseNumber;
 
         return $this;
     }
 
-    /**
-     * Get caseNumber.
-     *
-     * @return string
-     */
-    public function getCaseNumber()
+    public function getCaseNumber(): ?string
     {
         return $this->caseNumber;
     }

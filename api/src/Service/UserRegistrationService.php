@@ -2,12 +2,15 @@
 
 namespace App\Service;
 
-use App\Entity\CasRec;
 use App\Entity\Client;
 use App\Entity\Organisation;
 use App\Entity\User;
 use App\Model\SelfRegisterData;
+use DateTime;
 use Doctrine\ORM\EntityManagerInterface;
+use Exception;
+use RuntimeException;
+use Throwable;
 
 class UserRegistrationService
 {
@@ -34,31 +37,31 @@ class UserRegistrationService
      * - throw error 425 if client is already used
      * (see <root>/README.md for more info. Keep the readme file updated with this logic).
      *
-     * @throws \RuntimeException
+     * @throws RuntimeException
      *
      * @return User
      */
     public function selfRegisterUser(SelfRegisterData $selfRegisterData)
     {
         $isMultiDeputyCase = $this->casrecVerificationService->isMultiDeputyCase($selfRegisterData->getCaseNumber());
-        $existingClient = $this->em->getRepository('App\Entity\Client')->findOneByCaseNumber(CasRec::normaliseCaseNumber($selfRegisterData->getCaseNumber()));
+        $existingClient = $this->em->getRepository('App\Entity\Client')->findOneByCaseNumber($selfRegisterData->getCaseNumber());
 
         // ward off non-fee-paying codeps trying to self-register
         if ($isMultiDeputyCase && ($existingClient instanceof Client) && $existingClient->hasDeputies()) {
             // if client exists with case number, the first codep already registered.
-            throw new \RuntimeException(json_encode('Co-deputy cannot self register.'), 403);
+            throw new RuntimeException(json_encode('Co-deputy cannot self register.'), 403);
         }
 
         // Check the user doesn't already exist
         $existingUser = $this->em->getRepository('App\Entity\User')->findOneByEmail($selfRegisterData->getEmail());
         if ($existingUser) {
-            throw new \RuntimeException(json_encode(sprintf('User with email %s already exists.', $existingUser->getEmail())), 422);
+            throw new RuntimeException(json_encode(sprintf('User with email %s already exists.', $existingUser->getEmail())), 422);
         }
 
         // Check the client is unique and has no deputies attached
         if ($existingClient instanceof Client) {
             if ($existingClient->hasDeputies() || $existingClient->getOrganisation() instanceof Organisation) {
-                throw new \RuntimeException(json_encode(sprintf('User registration: Case number %s already used', $existingClient->getCaseNumber())), 425);
+                throw new RuntimeException(json_encode(sprintf('User registration: Case number %s already used', $existingClient->getCaseNumber())), 425);
             } else {
                 // soft delete client
                 $this->em->remove($existingClient);
@@ -91,7 +94,7 @@ class UserRegistrationService
     }
 
     /**
-     * @throws \RuntimeException
+     * @throws RuntimeException
      *
      * @return bool
      */
@@ -99,11 +102,11 @@ class UserRegistrationService
     {
         $user = $this->em->getRepository('App\Entity\User')->findOneByEmail($selfRegisterData->getEmail());
         if (!($user)) {
-            throw new \RuntimeException('User registration: not found', 421);
+            throw new RuntimeException('User registration: not found', 421);
         }
 
         if ($user->getCoDeputyClientConfirmed()) {
-            throw new \RuntimeException("User with email {$user->getEmail()} already exists.", 422);
+            throw new RuntimeException("User with email {$user->getEmail()} already exists.", 422);
         }
 
         $this->casrecVerificationService->validate(
@@ -117,7 +120,7 @@ class UserRegistrationService
     }
 
     /**
-     * @throws \Exception
+     * @throws Exception
      */
     public function saveUserAndClient(User $user, Client $client)
     {
@@ -137,7 +140,7 @@ class UserRegistrationService
 
             // Try and commit the transaction
             $connection->commit();
-        } catch (\Throwable $e) {
+        } catch (Throwable $e) {
             // Rollback the failed transaction attempt
             $connection->rollback();
             throw $e;
@@ -152,7 +155,7 @@ class UserRegistrationService
         $user->setAddressPostcode($selfRegisterData->getPostcode());
         $user->setActive(false);
         $user->setRoleName(User::ROLE_LAY_DEPUTY);
-        $user->setRegistrationDate(new \DateTime());
+        $user->setRegistrationDate(new DateTime());
     }
 
     public function populateClient(Client $client, SelfRegisterData $selfRegisterData)

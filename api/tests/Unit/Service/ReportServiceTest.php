@@ -466,7 +466,7 @@ class ReportServiceTest extends TestCase
         /** @var CasRec&ObjectProphecy $casRec */
         $casRec = $this->prophesize(CasRec::class);
         $casRec->getTypeOfReport()->willReturn(null);
-        $casRec->getCorref()->willReturn(null);
+        $casRec->getOrderType()->willReturn(null);
 
         /** @var ObjectRepository&ObjectProphecy $casRecRepository */
         $casRecRepository = $this->prophesize(ObjectRepository::class);

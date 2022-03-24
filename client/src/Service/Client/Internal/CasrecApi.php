@@ -25,4 +25,9 @@ class CasrecApi
     {
         return $this->restClient->get(sprintf('/casrec/clientHasCoDeputies/%s', $caseNumber), 'array');
     }
+
+    public function deleteAll()
+    {
+        return $this->restClient->delete('casrec/delete');
+    }
 }

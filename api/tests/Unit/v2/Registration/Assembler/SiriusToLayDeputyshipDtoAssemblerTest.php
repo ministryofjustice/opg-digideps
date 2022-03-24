@@ -3,7 +3,6 @@
 namespace App\Tests\Unit\v2\Registration\Assembler;
 
 use App\Entity\CasRec;
-use App\Service\DataNormaliser;
 use App\v2\Registration\Assembler\SiriusToLayDeputyshipDtoAssembler;
 use App\v2\Registration\DTO\LayDeputyshipDto;
 use InvalidArgumentException;
@@ -17,7 +16,7 @@ class SiriusToLayDeputyshipDtoAssemblerTest extends TestCase
     /** {@inheritDoc} */
     protected function setUp(): void
     {
-        $this->sut = new SiriusToLayDeputyshipDtoAssembler(new DataNormaliser());
+        $this->sut = new SiriusToLayDeputyshipDtoAssembler();
     }
 
     /**

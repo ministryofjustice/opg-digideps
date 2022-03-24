@@ -4,7 +4,6 @@ declare(strict_types=1);
 
 namespace App\v2\Registration\Uploader;
 
-use App\Entity\CasRec;
 use App\Entity\Client;
 use App\Entity\NamedDeputy;
 use App\Entity\Organisation;
@@ -95,7 +94,6 @@ class OrgDeputyshipUploader
         }
 
         $uploadResults['roleType'] = $roleType;
-        $uploadResults['source'] = CasRec::CASREC_SOURCE;
         $uploadResults['added'] = $this->added;
         $uploadResults['updated'] = $this->updated;
 

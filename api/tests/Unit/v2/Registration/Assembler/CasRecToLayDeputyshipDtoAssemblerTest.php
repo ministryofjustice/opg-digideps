@@ -2,8 +2,6 @@
 
 namespace App\Tests\Unit\v2\Registration\Assembler;
 
-use App\Entity\CasRec;
-use App\Service\DataNormaliser;
 use App\v2\Registration\Assembler\CasRecToLayDeputyshipDtoAssembler;
 use App\v2\Registration\DTO\LayDeputyshipDto;
 use InvalidArgumentException;
@@ -17,7 +15,7 @@ class CasRecToLayDeputyshipDtoAssemblerTest extends TestCase
     /** {@inheritDoc} */
     protected function setUp(): void
     {
-        $this->sut = new CasRecToLayDeputyshipDtoAssembler(new DataNormaliser());
+        $this->sut = new CasRecToLayDeputyshipDtoAssembler();
     }
 
     /**
@@ -66,7 +64,6 @@ class CasRecToLayDeputyshipDtoAssemblerTest extends TestCase
         $this->assertEquals('type_of_rep', $result->getTypeOfReport());
         $this->assertEquals('corref', $result->getCorref());
         $this->assertEquals(true, $result->isNdrEnabled());
-        $this->assertEquals(CasRec::CASREC_SOURCE, $result->getSource());
         $this->assertEquals('2011-06-14', $result->getOrderDate()->format('Y-m-d'));
     }
 

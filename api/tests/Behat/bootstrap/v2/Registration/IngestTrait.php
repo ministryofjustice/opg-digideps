@@ -24,7 +24,7 @@ trait IngestTrait
     private array $expectedMissingDTOProperties = [];
     private array $entityUids = [
         'client_case_numbers' => [],
-        'named_deputy_numbers' => [],
+        'named_deputy_uids' => [],
         'org_email_identifiers' => [],
         'casrec_case_numbers' => [],
     ];
@@ -132,19 +132,18 @@ trait IngestTrait
 
         foreach ($csvRows as $row) {
             $email = empty($row['Email']) ? null : substr(strstr($row['Email'], '@'), 1);
-            // Required as we pad all dep nos and dep addr nos to make them 8 chars if below 8 chars. See User::padDeputyNumber.
-            $deputyNumber = isset($row['Deputy No']) ? User::padDeputyNumber($row['Deputy No']) : null;
+            $deputyNumber = $row['DeputyUid'] ?? null;
             $deputyAddressNumber = isset($row['DepAddr No']) ? User::padDeputyNumber($row['DepAddr No']) : null;
 
             $this->entityUids['client_case_numbers'][] = $row['Case'] ?? null;
-            $this->entityUids['casrec_case_numbers'][] = strtolower($row['Case'] ?? '');
-            $this->entityUids['named_deputy_numbers'][] = $deputyAddressNumber ? sprintf('%s-%s', $deputyNumber, $deputyAddressNumber) : $deputyNumber;
+            $this->entityUids['casrec_case_numbers'][] = $row['Case'] ?? '';
+            $this->entityUids['named_deputy_uids'][] = $deputyAddressNumber ? sprintf('%s-%s', $deputyNumber, $deputyAddressNumber) : $deputyNumber;
             $this->entityUids['org_email_identifiers'][] = $email;
         }
 
         $this->entityUids['client_case_numbers'] = array_unique($this->entityUids['client_case_numbers']);
         $this->entityUids['casrec_case_numbers'] = array_unique($this->entityUids['casrec_case_numbers']);
-        $this->entityUids['named_deputy_numbers'] = array_unique($this->entityUids['named_deputy_numbers']);
+        $this->entityUids['named_deputy_uids'] = array_unique($this->entityUids['named_deputy_uids']);
         $this->entityUids['org_email_identifiers'] = array_unique($this->entityUids['org_email_identifiers']);
     }
 
@@ -153,7 +152,7 @@ trait IngestTrait
         $this->em->clear();
 
         $clients = $this->em->getRepository(Client::class)->findBy(['caseNumber' => $this->entityUids['client_case_numbers']]);
-        $namedDeputies = $this->em->getRepository(NamedDeputy::class)->findBy(['deputyNo' => $this->entityUids['named_deputy_numbers']]);
+        $namedDeputies = $this->em->getRepository(NamedDeputy::class)->findBy(['deputyNo' => $this->entityUids['named_deputy_uids']]);
         $orgs = $this->em->getRepository(Organisation::class)->findBy(['emailIdentifier' => $this->entityUids['org_email_identifiers']]);
         $casrecs = $this->em->getRepository(CasRec::class)->findBy(['caseNumber' => $this->entityUids['casrec_case_numbers']]);
 
@@ -394,17 +393,16 @@ trait IngestTrait
         } else {
             $requiredColumns = [
                 'Case',
-                'Surname',
-                'Deputy No',
-                'Dep Surname',
-                'Dep Postcode',
-                'Typeofrep',
-                'Made Date',
+                'ClientSurname',
+                'DeputyUid',
+                'DeputySurname',
+                'DeputyPostcode',
+                'ReportType',
+                'MadeDate',
+                'NDR',
+                'OrderType',
+                'CoDeputy',
             ];
-
-            if ('casrec' === $source) {
-                array_push($requiredColumns, 'Corref', 'NDR');
-            }
         }
 
         foreach ($requiredColumns as $requiredColumn) {
@@ -507,7 +505,7 @@ trait IngestTrait
     {
         $this->iAmOnAdminLayCsvUploadPage();
 
-        $this->expectedMissingDTOProperties = ['caseNumber', 'clientLastname', 'deputyNo', 'deputySurname'];
+        $this->expectedMissingDTOProperties = ['caseNumber', 'clientLastname', 'deputyUid', 'deputySurname'];
         $this->casrec['expected'] = $newEntitiesCount;
 
         $filePath = 'casrec' === $source ? 'casrec-csvs/lay-1-row-missing-all-required-1-valid-row.csv' : 'sirius-csvs/lay-1-row-missing-all-required-1-valid-row.csv';
@@ -571,7 +569,7 @@ trait IngestTrait
             throw new BehatException('A named deputy is not associated with client after CSV upload');
         }
 
-        $deputyNo = $this->entityUids['named_deputy_numbers'][0];
+        $deputyNo = $this->entityUids['named_deputy_uids'][0];
 
         $namedDeputyWithCsvDeputyNo = $this->em
             ->getRepository(NamedDeputy::class)

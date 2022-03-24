@@ -9,6 +9,7 @@ use App\Entity\Report\Report;
 use App\Entity\User;
 use App\Service\Time\DateTimeProvider;
 use DateTime;
+use Exception;
 
 final class AuditEvents
 {
@@ -48,7 +49,7 @@ final class AuditEvents
     }
 
     /**
-     * @throws \Exception
+     * @throws Exception
      */
     public function clientDischarged(
         string $trigger,
@@ -111,7 +112,7 @@ final class AuditEvents
     }
 
     /**
-     * @throws \Exception
+     * @throws Exception
      */
     public function roleChanged(string $trigger, string $changedFrom, string $changedTo, string $changedByEmail, string $userChangedEmail): array
     {
@@ -130,7 +131,7 @@ final class AuditEvents
     /**
      * @return array|string[]
      *
-     * @throws \Exception
+     * @throws Exception
      */
     public function userDeleted(string $trigger, string $deletedBy, string $subjectFullName, string $subjectEmail, string $subjectRole): array
     {
@@ -157,7 +158,7 @@ final class AuditEvents
      *
      * @return array|string[]
      *
-     * @throws \Exception
+     * @throws Exception
      */
     public function userAddedToOrg(string $trigger, User $addedUser, Organisation $organisation, User $addedBy)
     {
@@ -181,7 +182,7 @@ final class AuditEvents
      *
      * @return array|string[]
      *
-     * @throws \Exception
+     * @throws Exception
      */
     public function userRemovedFromOrg(string $trigger, User $removedUser, Organisation $organisation, User $removedBy)
     {
@@ -204,7 +205,7 @@ final class AuditEvents
      *
      * @return array|string[]
      *
-     * @throws \Exception
+     * @throws Exception
      */
     public function reportUnsubmitted(Report $unsubmittedReport, User $reportUnsubmittedBy, string $trigger)
     {
@@ -234,16 +235,14 @@ final class AuditEvents
     }
 
     /**
-     * @throws \Exception
+     * @throws Exception
      */
     public function csvUploaded(
         string $trigger,
-        string $source,
         string $roleType
     ): array {
         $event = [
             'trigger' => $trigger,
-            'source' => $source,
             'role_type' => $roleType,
             'changed_on' => $this->dateTimeProvider->getDateTime()->format(DateTime::ATOM),
         ];

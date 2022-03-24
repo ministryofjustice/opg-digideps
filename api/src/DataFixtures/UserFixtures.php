@@ -111,7 +111,7 @@ class UserFixtures extends AbstractDataFixture
             'deputyType' => 'LAY',
             'reportType' => 'OPG102',
             'reportVariation' => 'L2',
-            'ndr' => 'yes',
+            'ndr' => true,
         ],
         [
             'id' => 'codep',
@@ -195,7 +195,6 @@ class UserFixtures extends AbstractDataFixture
 
         // Create CasRec record for lay deputies
         if ('LAY' === $data['deputyType']) {
-            var_dump($data);
             $casrecData = [
                 'Case' => $data['id'],
                 'ClientSurname' => $data['id'],
@@ -209,7 +208,7 @@ class UserFixtures extends AbstractDataFixture
                 'DeputyPostcode' => 'SW1',
                 'ReportType' => $data['reportType'] ?? null,
                 'NDR' => $data['ndr'] ?? null,
-                'MadeDate' => new DateTime('2010-03-30'),
+                'MadeDate' => '2010-03-30',
                 'OrderType' => 'hw',
                 'CoDeputy' => $data['codeputyEnabled'] ?? null,
             ];
@@ -255,7 +254,6 @@ class UserFixtures extends AbstractDataFixture
         // Create report for PROF/PA user 2 years ago
         if ('PROF' === $data['deputyType'] || 'PA' === $data['deputyType']) {
             $realm = 'PROF' === $data['deputyType'] ? CasRec::REALM_PROF : CasRec::REALM_PA;
-            var_dump($data);
 
             $type = CasRec::getReportTypeByOrderType($data['reportType'], $data['reportVariation'], $realm);
             $startDate = $client->getExpectedReportStartDate();

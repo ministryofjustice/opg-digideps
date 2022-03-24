@@ -3,7 +3,9 @@
 namespace App\Tests\Unit\Controller;
 
 use App\Entity\CasRec;
+use App\Entity\Client;
 use App\Entity\User;
+use DateTime;
 
 class SelfRegisterControllerTest extends AbstractTestController
 {
@@ -51,13 +53,15 @@ class SelfRegisterControllerTest extends AbstractTestController
     {
         $casRec = new CasRec([
             'Case' => '12345678',
-            'Surname' => 'Cross-Tolley',
-            'Deputy No' => 'DEP0011',
-            'Dep Surname' => 'Tolley',
-            'Dep Postcode' => 'SW1',
-            'Typeofrep' => 'OPG102',
-            'Corref' => 'L2',
-            'NDR' => 1,
+            'ClientSurname' => 'Cross-Tolley',
+            'DeputyUid' => 'DEP0011',
+            'DeputySurname' => 'Tolley',
+            'DeputyAddress1' => 'Victoria Road',
+            'DeputyPostcode' => 'SW1',
+            'ReportType' => 'OPG102',
+            'MadeDate' => '2010-03-30',
+            'OrderType' => 'pfa',
+            'NDR' => 'yes',
         ]);
 
         $this->fixtures()->persist($casRec);
@@ -89,7 +93,7 @@ class SelfRegisterControllerTest extends AbstractTestController
         $this->assertEquals('gooduser@example.com', $user->getEmail());
         $this->assertEquals(true, $user->getNdrEnabled());
 
-        /** @var \App\Entity\Client $theClient */
+        /** @var Client $theClient */
         $theClient = $user->getClients()->first();
 
         $this->assertEquals('John', $theClient->getFirstname());
@@ -123,9 +127,9 @@ class SelfRegisterControllerTest extends AbstractTestController
         $expectedErrorJson = json_encode([
             'search_terms' => [
                 'caseNumber' => '12345600',
-                'clientLastname' => 'cl',
+                'clientLastname' => 'Cl',
                 'deputySurname' => 'test',
-                'deputyPostcode' => 'sw2',
+                'deputyPostcode' => 'SW2',
             ],
             'case_number_matches' => [],
         ]);
@@ -140,15 +144,17 @@ class SelfRegisterControllerTest extends AbstractTestController
     public function throwErrorForDuplicate()
     {
         $casRec = new CasRec([
-            'Case' => '12345678',
-            'Surname' => 'Cross-Tolley',
-            'Deputy No' => 'DEP0011',
-            'Dep Surname' => 'Tolley',
-            'Dep Postcode' => 'SW1',
-            'Typeofrep' => 'OPG102',
-            'Corref' => 'L2',
-            'NDR' => 1,
-        ]);
+                'Case' => '12345678',
+                'ClientSurname' => 'Cross-Tolley',
+                'DeputyUid' => 'DEP0011',
+                'DeputySurname' => 'Tolley',
+                'DeputyAddress1' => 'Victoria Road',
+                'DeputyPostcode' => 'SW1',
+                'ReportType' => 'OPG102',
+                'MadeDate' => '2010-03-30',
+                'OrderType' => 'pfa',
+                'NDR' => 'yes',
+            ]);
 
         $this->fixtures()->persist($casRec);
         $this->fixtures()->flush($casRec);
@@ -196,16 +202,20 @@ class SelfRegisterControllerTest extends AbstractTestController
      */
     public function throwErrorForValidCaseNumberButDetailsNotMatching()
     {
+        $now = new DateTime();
+
         $casRec = new CasRec([
             'Case' => '97643164',
-            'Surname' => 'Douglas',
-            'Deputy No' => 'DEP00199',
-            'Dep Surname' => 'Murphy',
-            'Dep Postcode' => 'SW1',
-            'Typeofrep' => 'OPG102',
-            'Corref' => 'L2',
-            'NDR' => 1,
-        ]);
+            'ClientSurname' => 'Douglas',
+            'DeputyUid' => 'DEP00199',
+            'DeputySurname' => 'Murphy',
+            'DeputyAddress1' => 'Victoria Road',
+            'DeputyPostcode' => 'SW1',
+            'ReportType' => 'OPG102',
+            'MadeDate' => '2010-03-30',
+            'OrderType' => 'pfa',
+            'NDR' => 'yes',
+        ], $now);
 
         $this->fixtures()->persist($casRec);
         $this->fixtures()->flush();
@@ -227,29 +237,37 @@ class SelfRegisterControllerTest extends AbstractTestController
             'ClientSecret' => API_TOKEN_DEPUTY,
         ]);
 
-        $expectedErrorJson = json_encode([
+        $expectedErrorJson = [
             'search_terms' => [
                 'caseNumber' => '97643164',
-                'clientLastname' => 'crosstolley',
-                'deputySurname' => 'tolley',
-                'deputyPostcode' => 'sw1',
+                'clientLastname' => 'Cross-Tolley',
+                'deputySurname' => 'Tolley',
+                'deputyPostcode' => 'SW1',
             ],
             'case_number_matches' => [
                  [
+                    'id' => 1,
                     'case_number' => '97643164',
-                    'client_lastname' => 'douglas',
-                    'deputy_no' => 'dep00199',
-                    'deputy_surname' => 'murphy',
-                    'deputy_post_code' => 'sw1',
-                    'type_of_report' => 'opg102',
-                    'corref' => 'l2',
+                    'client_lastname' => 'Douglas',
+                    'deputy_uid' => 'DEP00199',
+                    'deputy_surname' => 'Murphy',
+                    'deputy_address1' => 'Victoria Road',
+                    'deputy_address2' => null,
+                    'deputy_address3' => null,
+                    'deputy_address4' => null,
+                    'deputy_address5' => null,
+                    'deputy_post_code' => null,
+                    'type_of_report' => 'OPG102',
+                    'order_type' => 'pfa',
                     'updated_at' => null,
-                    'source' => 'casrec',
-                    'order_date' => null,
+                    'order_date' => '2010-03-30T00:00:00+01:00',
+                    'is_co_deputy' => null,
+                    'ndr' => true,
+                    'created_at' => $now->format('c'),
                 ],
             ],
-        ]);
+        ];
 
-        $this->assertStringContainsString($expectedErrorJson, $responseArray['message']);
+        $this->assertEquals($expectedErrorJson, json_decode($responseArray['message'], true));
     }
 }

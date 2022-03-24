@@ -4,7 +4,6 @@ namespace App\Controller\Admin;
 
 use App\Controller\AbstractController;
 use App\Entity as EntityDir;
-use App\Entity\CasRec;
 use App\Entity\User;
 use App\Event\CSVUploadedEvent;
 use App\EventDispatcher\ObservableEventDispatcher;
@@ -12,16 +11,16 @@ use App\Exception\RestClientException;
 use App\Form as FormDir;
 use App\Security\UserVoter;
 use App\Service\Audit\AuditEvents;
+use App\Service\Client\Internal\CasrecApi;
 use App\Service\Client\Internal\UserApi;
 use App\Service\Client\RestClient;
 use App\Service\CsvUploader;
 use App\Service\DataImporter\CsvToArray;
 use App\Service\Logger;
 use App\Service\OrgService;
-use Predis\Client;
 use Predis\ClientInterface;
 use Psr\Log\LoggerInterface;
-use Redis;
+use RuntimeException;
 use Sensio\Bundle\FrameworkExtraBundle\Configuration\Security;
 use Sensio\Bundle\FrameworkExtraBundle\Configuration\Template;
 use Symfony\Component\Form\Extension\Core\Type\ChoiceType;
@@ -33,33 +32,22 @@ use Symfony\Component\HttpFoundation\Response;
 use Symfony\Component\Routing\Annotation\Route;
 use Symfony\Component\Routing\RouterInterface;
 use Symfony\Contracts\Translation\TranslatorInterface;
+use Throwable;
 
 /**
  * @Route("/admin")
  */
 class IndexController extends AbstractController
 {
-    private OrgService $orgService;
-    private UserVoter $userVoter;
-    private Logger $logger;
-    private RestClient $restClient;
-    private UserApi $userApi;
-    private ObservableEventDispatcher $eventDispatcher;
-
     public function __construct(
-        OrgService $orgService,
-        UserVoter $userVoter,
-        Logger $logger,
-        RestClient $restClient,
-        UserApi $userApi,
-        ObservableEventDispatcher $eventDispatcher
+        private OrgService $orgService,
+        private UserVoter $userVoter,
+        private Logger $logger,
+        private RestClient $restClient,
+        private UserApi $userApi,
+        private ObservableEventDispatcher $eventDispatcher,
+        private CasrecApi $casrecApi
     ) {
-        $this->orgService = $orgService;
-        $this->userVoter = $userVoter;
-        $this->logger = $logger;
-        $this->restClient = $restClient;
-        $this->userApi = $userApi;
-        $this->eventDispatcher = $eventDispatcher;
     }
 
     /**
@@ -111,7 +99,7 @@ class IndexController extends AbstractController
             // add user
             try {
                 if (!$this->isGranted(EntityDir\User::ROLE_SUPER_ADMIN) && EntityDir\User::ROLE_SUPER_ADMIN == $form->getData()->getRoleName()) {
-                    throw new \RuntimeException('Cannot add admin from non-admin user');
+                    throw new RuntimeException('Cannot add admin from non-admin user');
                 }
 
                 $this->userApi->createAdminUser($form->getData());
@@ -145,7 +133,7 @@ class IndexController extends AbstractController
     {
         try {
             return ['user' => $this->getPopulatedUser($id)];
-        } catch (\Throwable $e) {
+        } catch (Throwable $e) {
             return $this->renderNotFound();
         }
     }
@@ -157,7 +145,7 @@ class IndexController extends AbstractController
      *
      * @return array|Response
      *
-     * @throws \Throwable
+     * @throws Throwable
      */
     public function editUserAction(Request $request, TranslatorInterface $translator)
     {
@@ -166,13 +154,13 @@ class IndexController extends AbstractController
         try {
             /* @var User $user */
             $user = $this->getPopulatedUser($filter);
-        } catch (\Throwable $e) {
+        } catch (Throwable $e) {
             return $this->renderNotFound();
         }
 
         try {
             $this->denyAccessUnlessGranted('edit-user', $user);
-        } catch (\Throwable $e) {
+        } catch (Throwable $e) {
             $accessErrorMessage = 'You do not have permission to edit this user';
 
             return $this->render('@App/Admin/Index/error.html.twig', [
@@ -191,7 +179,7 @@ class IndexController extends AbstractController
                 $this->restClient->put('user/'.$user->getId(), $updateUser, ['admin_edit_user']);
                 $this->addFlash('notice', 'Your changes were saved');
                 $this->redirectToRoute('admin_editUser', ['filter' => $user->getId()]);
-            } catch (\Throwable $e) {
+            } catch (Throwable $e) {
                 switch ((int) $e->getCode()) {
                     case 422:
                         $form->get('email')->addError(new FormError($translator->trans('editUserForm.email.existingError', [], 'admin')));
@@ -249,7 +237,7 @@ class IndexController extends AbstractController
      *
      * @param string $id
      *
-     * @return \Symfony\Component\HttpFoundation\RedirectResponse
+     * @return RedirectResponse
      */
     public function editNdrAction(Request $request, $id)
     {
@@ -296,7 +284,7 @@ class IndexController extends AbstractController
      *
      * @param int $id
      *
-     * @return \Symfony\Component\HttpFoundation\RedirectResponse
+     * @return RedirectResponse
      */
     public function deleteAction($id)
     {
@@ -306,7 +294,7 @@ class IndexController extends AbstractController
             $this->userApi->delete($user, AuditEvents::TRIGGER_ADMIN_BUTTON);
 
             return $this->redirect($this->generateUrl('admin_homepage'));
-        } catch (\Throwable $e) {
+        } catch (Throwable $e) {
             $this->logger->warning(
                 sprintf('Error while deleting deputy: %s', $e->getMessage()),
                 ['deputy_email' => $user->getEmail()]
@@ -377,13 +365,11 @@ class IndexController extends AbstractController
                     ->setUnexpectedColumns(['Last Report Day'])
                     ->getData();
 
-                $source = isset($data[0]['Source']) ? strtolower($data[0]['Source']) : 'casrec';
-
                 // small amount of data -> immediate posting and redirect (needed for behat)
                 if (count($data) < $chunkSize) {
                     $compressedData = CsvUploader::compressData($data);
+                    $this->casrecApi->deleteAll();
 
-                    $this->restClient->delete('casrec/delete-by-source/'.$source);
                     $ret = $this->restClient->setTimeout(600)->post('v2/lay-deputyship/upload', $compressedData);
                     $this->addFlash(
                         'notice',
@@ -394,7 +380,7 @@ class IndexController extends AbstractController
                         $this->addFlash('error', $err);
                     }
 
-                    $this->dispatchCSVUploadEvent($ret['source']);
+                    $this->dispatchCSVUploadEvent();
 
                     return $this->redirect($this->generateUrl('casrec_upload'));
                 }
@@ -408,7 +394,7 @@ class IndexController extends AbstractController
                 }
 
                 return $this->redirect($this->generateUrl('casrec_upload', ['nOfChunks' => count($chunks), 'source' => $source]));
-            } catch (\Throwable $e) {
+            } catch (Throwable $e) {
                 $message = $e->getMessage();
                 if ($e instanceof RestClientException && isset($e->getData()['message'])) {
                     $message = $e->getData()['message'];
@@ -462,7 +448,7 @@ class IndexController extends AbstractController
                 }
 
                 return $this->redirect($this->generateUrl('casrec_mld_upgrade'));
-            } catch (\Throwable $e) {
+            } catch (Throwable $e) {
                 $message = $e->getMessage();
                 if ($e instanceof RestClientException && isset($e->getData()['message'])) {
                     $message = $e->getData()['message'];
@@ -545,7 +531,7 @@ class IndexController extends AbstractController
                 $redirectUrl = $this->generateUrl('admin_org_upload');
 
                 return $this->orgService->process($data, $redirectUrl);
-            } catch (\Throwable $e) {
+            } catch (Throwable $e) {
                 $message = $e->getMessage();
 
                 if ($e instanceof RestClientException && isset($e->getData()['message'])) {
@@ -574,17 +560,16 @@ class IndexController extends AbstractController
     {
         try {
             $this->userApi->activate($email, 'pass-reset');
-        } catch (\Throwable $e) {
+        } catch (Throwable $e) {
             $logger->debug($e->getMessage());
         }
 
         return new Response('[Link sent]');
     }
 
-    private function dispatchCSVUploadEvent(string $source)
+    private function dispatchCSVUploadEvent()
     {
         $csvUploadedEvent = new CSVUploadedEvent(
-            $source,
             User::TYPE_LAY,
             AuditEvents::EVENT_CSV_UPLOADED
         );

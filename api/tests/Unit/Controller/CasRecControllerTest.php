@@ -64,7 +64,7 @@ class CasRecControllerTest extends AbstractTestController
         $url = '/casrec/delete';
 
         $this->assertJsonRequest('DELETE', $url, [
-            'mustFail' => true,
+            'mustFail' => false,
             'AuthToken' => self::$tokenAdmin,
             'assertResponseCode' => 200,
         ]);
@@ -72,32 +72,30 @@ class CasRecControllerTest extends AbstractTestController
         $this->assertJsonRequest('DELETE', $url, [
             'mustFail' => true,
             'AuthToken' => self::$tokenDeputy,
-            'assertResponseCode' => 400,
+            'assertResponseCode' => 403,
         ]);
 
         $this->assertJsonRequest('DELETE', $url, [
             'mustFail' => true,
             'AuthToken' => self::$tokenProf,
-            'assertResponseCode' => 400,
+            'assertResponseCode' => 403,
         ]);
 
         $this->assertJsonRequest('DELETE', $url, [
             'mustFail' => true,
             'AuthToken' => self::$tokenPa,
-            'assertResponseCode' => 400,
+            'assertResponseCode' => 403,
         ]);
     }
 
     public function testDeleteBySourceDeletesBySource()
     {
-        $this->buildAndPersistCasRecEntity('23410954', CasRec::CASREC_SOURCE);
-        $this->buildAndPersistCasRecEntity('95043859', CasRec::SIRIUS_SOURCE);
+        $this->buildAndPersistCasRecEntity('23410954');
+        $this->buildAndPersistCasRecEntity('95043859');
         $this->fixtures()->flush();
         $this->fixtures()->clear();
 
-        $url = '/casrec/delete-by-source/casrec';
-        $this->assertEndpointNeedsAuth('DELETE', $url);
-        $this->assertEndpointNotAllowedFor('DELETE', $url, self::$tokenDeputy);
+        $url = '/casrec/delete';
 
         $this->assertJsonRequest('DELETE', $url, [
             'mustSucceed' => true,
@@ -105,8 +103,7 @@ class CasRecControllerTest extends AbstractTestController
         ]);
 
         $entitiesRemaining = $this->fixtures()->clear()->getRepo('CasRec')->findAll();
-        $this->assertCount(1, $entitiesRemaining);
-        $this->assertEquals('95043859', $entitiesRemaining[0]->getCaseNumber());
+        $this->assertCount(0, $entitiesRemaining);
     }
 
     public function testCount()
@@ -148,12 +145,14 @@ class CasRecControllerTest extends AbstractTestController
     {
         $casRec = new CasRec([
             'Case' => $case,
-            'Surname' => 'I should get deleted',
-            'Deputy No' => 'Deputy No',
-            'Dep Surname' => 'admin',
-            'Dep Postcode' => 'SW1',
-            'Typeofrep' => 'OPG102',
-            'Corref' => 'L2',
+            'ClientSurname' => 'I should get deleted',
+            'DeputyUid' => 'Deputy No',
+            'DeputySurname' => 'admin',
+            'DeputyAddress1' => 'Victoria Road',
+            'DeputyPostcode' => 'SW1',
+            'ReportType' => 'OPG102',
+            'MadeDate' => '2010-03-30',
+            'OrderType' => 'pfa',
         ]);
 
         $this->fixtures()->persist($casRec);

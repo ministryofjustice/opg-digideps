@@ -45,26 +45,21 @@ class CasrecVerificationService
      */
     public function validate($caseNumber, $clientSurname, $deputySurname, $deputyPostcode)
     {
-        $normalisedCaseNumber = $this->normaliseCaseNumber($caseNumber);
-        $normalisedClientLastname = $this->normaliseSurname($clientSurname);
-        $normalisedDeputySurname = $this->normaliseSurname($deputySurname);
-        $normalisedDeputyPostcode = $this->normalisePostCode($deputyPostcode);
-
-        $caseNumberMatches = $this->casRecRepo->findBy(['caseNumber' => $normalisedCaseNumber]);
+        $caseNumberMatches = $this->casRecRepo->findBy(['caseNumber' => $caseNumber]);
 
         $detailsToMatchOn = [
-            'caseNumber' => $normalisedCaseNumber,
-            'clientLastname' => $normalisedClientLastname,
-            'deputySurname' => $normalisedDeputySurname,
+            'caseNumber' => $caseNumber,
+            'clientLastname' => $clientSurname,
+            'deputySurname' => $deputySurname,
         ];
 
         /** @var CasRec[] $crMatches */
         $allDetailsMatches = $this->casRecRepo->findBy($detailsToMatchOn);
 
-        $this->lastMatchedCasrecUsers = $this->applyPostcodeFilter($allDetailsMatches, $normalisedDeputyPostcode);
+        $this->lastMatchedCasrecUsers = $this->applyPostcodeFilter($allDetailsMatches, $deputyPostcode);
 
         if (0 == count($this->lastMatchedCasrecUsers)) {
-            $detailsToMatchOn['deputyPostcode'] = $normalisedDeputyPostcode;
+            $detailsToMatchOn['deputyPostcode'] = $deputyPostcode;
 
             $caseNumberMatches = json_decode(
                 $this->serializer->serialize($caseNumberMatches, 'json', [AbstractNormalizer::IGNORED_ATTRIBUTES => ['otherColumns']]),
@@ -103,7 +98,7 @@ class CasrecVerificationService
     public function isLastMachedDeputyNdrEnabled()
     {
         foreach ($this->lastMatchedCasrecUsers as $casRecMatch) {
-            if ($casRecMatch->getColumn('NDR')) {
+            if ($casRecMatch->getNdr()) {
                 return true;
             }
         }
@@ -118,93 +113,33 @@ class CasrecVerificationService
      */
     public function isMultiDeputyCase($caseNumber)
     {
-        $crMatches = $this->casRecRepo->findByCaseNumber($this->normaliseCaseNumber($caseNumber));
+        $crMatches = $this->casRecRepo->findByCaseNumber($caseNumber);
 
         return count($crMatches) > 1;
     }
 
     /**
-     * @param CasRec[] $crMatches
-     * @param string   $deputyPostcode
-     *
      * @return CasRec[]
      */
-    private function applyPostcodeFilter(array $crMatches, string $normalisedDeputyPostcode)
+    private function applyPostcodeFilter(mixed $casrecMatches, string $deputyPostcode)
     {
-        $crByPostcode = [];
-        $crWithPostcodeCount = 0;
-        foreach ($crMatches as $crMatch) {
-            $crMatchPC = $this->normalisePostCode($crMatch->getDeputyPostCode());
-            if (!empty($crMatchPC)) {
-                $crByPostcode[$crMatchPC][] = $crMatch;
-                ++$crWithPostcodeCount;
+        $casrecByPostcode = [];
+        $casrecWithPostcodeCount = 0;
+        foreach ($casrecMatches as $casrecMatch) {
+            $postcode = $casrecMatch->getDeputyPostCode();
+
+            if (!empty($casrecMatch->getDeputyPostCode())) {
+                $casrecByPostcode[$postcode][] = $casrecMatch;
+                ++$casrecWithPostcodeCount;
             }
         }
 
-        if ($crWithPostcodeCount < count($crMatches)) {
-            $filteredResults = $crMatches;
+        if ($casrecWithPostcodeCount < count($casrecMatches)) {
+            $filteredResults = $casrecMatches;
         } else {
-            $filteredResults = array_key_exists($normalisedDeputyPostcode, $crByPostcode) ? $crByPostcode[$normalisedDeputyPostcode] : [];
+            $filteredResults = array_key_exists($deputyPostcode, $casrecByPostcode) ? $casrecByPostcode[$deputyPostcode] : [];
         }
 
         return $filteredResults;
-    }
-
-    /**
-     * @return mixed|string
-     */
-    private function normaliseCaseNumber(string $caseNumber)
-    {
-        $caseNumber = trim($caseNumber);
-        $caseNumber = strtolower($caseNumber);
-        $caseNumber = preg_replace('#^([a-z0-9]+/)#i', '', $caseNumber);
-
-        return $caseNumber;
-    }
-
-    /**
-     * @return string
-     */
-    private function normalisePostcode(string $postcode)
-    {
-        $postcode = trim($postcode);
-        $postcode = strtolower($postcode);
-        // remove MBE suffix
-        /** @var string $postcode */
-        $postcode = preg_replace('/ (mbe|m b e)$/i', '', $postcode);
-        // remove characters that are not a-z or 0-9 or spaces
-        /** @var string $postcode */
-        $postcode = preg_replace('/([^a-z0-9])/i', '', $postcode);
-
-        return $postcode;
-    }
-
-    /**
-     * @return mixed|string
-     */
-    private function normaliseSurname(string $surname)
-    {
-        $surname = trim($surname);
-        $surname = strtolower($surname);
-        $normalizeChars = [
-            'Š' => 'S', 'š' => 's', 'Ð' => 'Dj', 'Ž' => 'Z', 'ž' => 'z', 'À' => 'A', 'Á' => 'A', 'Â' => 'A', 'Ã' => 'A',
-            'Ä' => 'A', 'Å' => 'A', 'Æ' => 'A', 'Ç' => 'C', 'È' => 'E', 'É' => 'E', 'Ê' => 'E', 'Ë' => 'E', 'Ì' => 'I',
-            'Í' => 'I', 'Î' => 'I', 'Ï' => 'I', 'Ñ' => 'N', 'Ò' => 'O', 'Ó' => 'O', 'Ô' => 'O', 'Õ' => 'O', 'Ö' => 'O',
-            'Ø' => 'O', 'Ù' => 'U', 'Ú' => 'U', 'Û' => 'U', 'Ü' => 'U', 'Ý' => 'Y', 'Þ' => 'B', 'ß' => 'Ss', 'à' => 'a',
-            'á' => 'a', 'â' => 'a', 'ã' => 'a', 'ä' => 'a', 'å' => 'a', 'æ' => 'a', 'ç' => 'c', 'è' => 'e', 'é' => 'e',
-            'ê' => 'e', 'ë' => 'e', 'ì' => 'i', 'í' => 'i', 'î' => 'i', 'ï' => 'i', 'ð' => 'o', 'ñ' => 'n', 'ò' => 'o',
-            'ó' => 'o', 'ô' => 'o', 'õ' => 'o', 'ö' => 'o', 'ø' => 'o', 'ù' => 'u', 'ú' => 'u', 'ü' => 'u', 'û' => 'u',
-            'ý' => 'y', 'þ' => 'b', 'ÿ' => 'y', 'ƒ' => 'f', 'ă' => 'a', 'ș' => 's', 'ț' => 't', 'Ă' => 'A', 'Ș' => 'S',
-            'Ț' => 'T',
-        ];
-        $surname = strtr($surname, $normalizeChars);
-        // remove MBE suffix
-        /** @var string $surname */
-        $surname = preg_replace('/ (mbe|m b e)$/i', '', $surname);
-        // remove characters that are not a-z or 0-9 or spaces
-        /** @var string $surname */
-        $surname = preg_replace('/([^a-z0-9])/i', '', $surname);
-
-        return $surname;
     }
 }

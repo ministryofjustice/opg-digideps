@@ -22,25 +22,7 @@ class CasRec
     const REALM_PROF = 'REALM_PROF';
     const REALM_LAY = 'REALM_LAY';
 
-    /**
-     * Filled from cron.
-     *
-     * @var array
-     *
-     * @deprecated use App\Service\DataNormaliser
-     */
-    private static $normalizeChars = [
-        'Š' => 'S', 'š' => 's', 'Ð' => 'Dj', 'Ž' => 'Z', 'ž' => 'z', 'À' => 'A', 'Á' => 'A', 'Â' => 'A', 'Ã' => 'A', 'Ä' => 'A',
-        'Å' => 'A', 'Æ' => 'A', 'Ç' => 'C', 'È' => 'E', 'É' => 'E', 'Ê' => 'E', 'Ë' => 'E', 'Ì' => 'I', 'Í' => 'I', 'Î' => 'I',
-        'Ï' => 'I', 'Ñ' => 'N', 'Ò' => 'O', 'Ó' => 'O', 'Ô' => 'O', 'Õ' => 'O', 'Ö' => 'O', 'Ø' => 'O', 'Ù' => 'U', 'Ú' => 'U',
-        'Û' => 'U', 'Ü' => 'U', 'Ý' => 'Y', 'Þ' => 'B', 'ß' => 'Ss', 'à' => 'a', 'á' => 'a', 'â' => 'a', 'ã' => 'a', 'ä' => 'a',
-        'å' => 'a', 'æ' => 'a', 'ç' => 'c', 'è' => 'e', 'é' => 'e', 'ê' => 'e', 'ë' => 'e', 'ì' => 'i', 'í' => 'i', 'î' => 'i',
-        'ï' => 'i', 'ð' => 'o', 'ñ' => 'n', 'ò' => 'o', 'ó' => 'o', 'ô' => 'o', 'õ' => 'o', 'ö' => 'o', 'ø' => 'o', 'ù' => 'u',
-        'ú' => 'u', 'ü' => 'u', 'û' => 'u', 'ý' => 'y', 'ý' => 'y', 'þ' => 'b', 'ÿ' => 'y', 'ƒ' => 'f',
-        'ă' => 'a', 'î' => 'i', 'â' => 'a', 'ș' => 's', 'ț' => 't', 'Ă' => 'A', 'Î' => 'I', 'Â' => 'A', 'Ș' => 'S', 'Ț' => 'T',
-    ];
-
-    public function __construct(array $row)
+    public function __construct(array $row, ?DateTime $createdAt = null)
     {
         $this->caseNumber = $row['Case'] ?? '';
         $this->clientLastname = $row['ClientSurname'] ?? '';
@@ -53,12 +35,12 @@ class CasRec
         $this->deputyAddress5 = $row['DeputyAddress5'] ?? null;
         $this->deputyPostCode = $row['Dep Postcode'] ?? null;
         $this->typeOfReport = $row['ReportType'] ?? null;
-        $this->ndr = $row['NDR'] ?? null;
-        $this->orderDate = $row['MadeDate'] ?? null;
+        $this->ndr = isset($row['NDR']) ? 'yes' === $row['NDR'] : null;
+        $this->orderDate = isset($row['MadeDate']) ? new DateTime($row['MadeDate']) : null;
         $this->orderType = $row['OrderType'] ?? null;
         $this->isCoDeputy = $row['CoDeputy'] ?? null;
 
-        $this->createdAt = new DateTime();
+        $this->createdAt = $createdAt ?: new DateTime();
         $this->updatedAt = null;
     }
 
@@ -162,7 +144,7 @@ class CasRec
      *
      * @ORM\Column(name="ndr", type="boolean", nullable=true)
      */
-    private ?string $ndr;
+    private ?bool $ndr;
 
     /**
      * @JMS\Type("DateTime<'Y-m-d H:i:s'>")
@@ -193,59 +175,13 @@ class CasRec
      */
     private ?bool $isCoDeputy;
 
-    /** @deprecated use App\Service\DataNormaliser */
-    public static function normaliseCaseNumber($value)
-    {
-        $value = trim($value);
-        $value = strtolower($value);
-        $value = preg_replace('#^([a-z0-9]+/)#i', '', $value);
-
-        return $value;
-    }
-
-    /** @deprecated use App\Service\DataNormaliser */
-    public static function normaliseSurname($value)
-    {
-        $value = trim($value);
-        $value = strtolower($value);
-        $value = strtr($value, self::$normalizeChars);
-        // remove MBE suffix
-        $value = preg_replace('/ (mbe|m b e)$/i', '', $value);
-        // remove characters that are not a-z or 0-9 or spaces
-        $value = preg_replace('/([^a-z0-9])/i', '', $value);
-
-        return $value;
-    }
-
-    /** @deprecated use App\Service\DataNormaliser */
-    public static function normaliseDeputyNo($value)
-    {
-        $value = trim($value);
-        $value = strtolower($value);
-
-        return $value;
-    }
-
-    /** @deprecated use App\Service\DataNormaliser */
-    public static function normalisePostCode($value)
-    {
-        $value = trim($value);
-        $value = strtolower($value);
-        // remove MBE suffix
-        $value = preg_replace('/ (mbe|m b e)$/i', '', $value);
-        // remove characters that are not a-z or 0-9 or spaces
-        $value = preg_replace('/([^a-z0-9])/i', '', $value);
-
-        return $value;
-    }
-
     public static function getReportTypeByOrderType(string $reportType, string $orderType, string $realm): string
     {
         // drop opg from string
         $reportType = substr($reportType, 3);
         $orderType = trim(strtolower($orderType));
 
-        if (Report::LAY_HW_TYPE !== $reportType && 'hw' === $orderType) {
+        if (Report::TYPE_HEALTH_WELFARE !== $reportType && 'hw' === $orderType) {
             $fullReportType = sprintf('%s-4', $reportType);
         } else {
             $fullReportType = $reportType;
@@ -391,12 +327,12 @@ class CasRec
         return $this;
     }
 
-    public function getNdr(): ?string
+    public function getNdr(): ?bool
     {
         return $this->ndr;
     }
 
-    public function setNdr(?string $ndr): self
+    public function setNdr(?bool $ndr): self
     {
         $this->ndr = $ndr;
 

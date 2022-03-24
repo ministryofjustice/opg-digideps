@@ -14,9 +14,6 @@ class CasRec
     const REALM_PROF = 'REALM_PROF';
     const REALM_LAY = 'REALM_LAY';
 
-    const CASREC_SOURCE = 'casrec';
-    const SIRIUS_SOURCE = 'sirius';
-
     /**
      * Holds the mapping rules to define the report type based on the CSV file (CASREC)
      * Used by both PA and Lay.
@@ -114,13 +111,9 @@ class CasRec
     private $typeOfReport;
 
     /**
-     * @var string A2|C1|HW|L2|L2A|L3|L3G|P2A|PGA|PGC|S1A|S1N|empty
-     *
-     * typeOfReport=OPG103 only have
-     *
      * @JMS\Type("string")
      */
-    private $corref;
+    private $orderType;
 
     /**
      * @JMS\Type("string")
@@ -185,9 +178,9 @@ class CasRec
         return $this->typeOfReport;
     }
 
-    public function getCorref(): string
+    public function getOrderType(): string
     {
-        return $this->corref;
+        return $this->orderType;
     }
 
     public function getOtherColumns(): array
@@ -237,14 +230,6 @@ class CasRec
         $this->source = $source;
 
         return $this;
-    }
-
-    public static function validSources(): array
-    {
-        return [
-            self::CASREC_SOURCE,
-            self::SIRIUS_SOURCE,
-        ];
     }
 
     public function getOrderDate(): DateTime

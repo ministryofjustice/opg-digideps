@@ -9,40 +9,33 @@ use Sensio\Bundle\FrameworkExtraBundle\Configuration\Security;
 use Symfony\Component\HttpFoundation\JsonResponse;
 use Symfony\Component\HttpFoundation\Request;
 use Symfony\Component\Routing\Annotation\Route;
+use Throwable;
 
 /**
  * @Route("/admin/ajax")
  */
 class AjaxController extends AbstractController
 {
-    /**
-     * @var RestClient
-     */
-    private $restClient;
-
     public function __construct(
-        RestClient $restClient
+        private RestClient $restClient
     ) {
-        $this->restClient = $restClient;
     }
 
     /**
-     * @Route("/casrec-delete-by-source/{source}", name="casrec_delete_by_source_ajax")
+     * @Route("/casrec-delete", name="casrec_delete_ajax")
      * @Security("is_granted('ROLE_ADMIN') or has_role('ROLE_AD')")
-     *
-     * @param $source
      *
      * @return JsonResponse
      */
-    public function deleteUsersBySourceAjaxAction($source)
+    public function deleteCasrecAjaxAction()
     {
         try {
             $before = $this->restClient->get('casrec/count', 'array');
-            $this->restClient->delete('casrec/delete-by-source/'.$source);
+            $this->restClient->delete('casrec/delete');
             $after = $this->restClient->get('casrec/count', 'array');
 
             return new JsonResponse(['before' => $before, 'after' => $after]);
-        } catch (\Throwable $e) {
+        } catch (Throwable $e) {
             return new JsonResponse($e->getMessage());
         }
     }
@@ -67,7 +60,7 @@ class AjaxController extends AbstractController
             }
 
             return new JsonResponse($ret);
-        } catch (\Throwable $e) {
+        } catch (Throwable $e) {
             return new JsonResponse($e->getMessage());
         }
     }

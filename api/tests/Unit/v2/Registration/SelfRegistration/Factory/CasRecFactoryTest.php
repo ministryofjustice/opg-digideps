@@ -79,7 +79,7 @@ class CasRecFactoryTest extends TestCase
         $this->assertEquals('clientsurname', $result->getClientLastname());
         $this->assertEquals('postcode', $result->getDeputyPostCode());
         $this->assertEquals('type', $result->getTypeOfReport());
-        $this->assertEquals('corref', $result->getCorref());
+        $this->assertEquals('corref', $result->getOrderType());
         $this->assertEquals(true, $result->getColumn('NDR'));
         $this->assertEquals('2010-01-03 12:03:23', $result->getUpdatedAt()->format('Y-m-d H:i:s'));
         $this->assertEquals(CasRec::SIRIUS_SOURCE, $result->getSource());

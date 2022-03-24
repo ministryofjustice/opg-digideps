@@ -2,8 +2,6 @@
 
 namespace App\v2\Registration\Assembler;
 
-use App\Entity\CasRec;
-use App\Service\DataNormaliser;
 use App\v2\Registration\DTO\LayDeputyshipDto;
 use DateTime;
 use InvalidArgumentException;
@@ -42,15 +40,14 @@ class CasRecToLayDeputyshipDtoAssembler implements LayDeputyshipDtoAssemblerInte
 
         return
             (new LayDeputyshipDto())
-                ->setCaseNumber(DataNormaliser::normaliseCaseNumber($data['Case']))
-                ->setClientSurname(DataNormaliser::normaliseSurname($data['Surname']))
-                ->setDeputyUid(DataNormaliser::normaliseDeputyNo($data['Deputy No']))
-                ->setDeputySurname(DataNormaliser::normaliseSurname($data['Dep Surname']))
-                ->setDeputyPostcode(DataNormaliser::normalisePostCode($data['Dep Postcode']))
+                ->setCaseNumber($data['Case'])
+                ->setClientSurname($data['Surname'])
+                ->setDeputyUid($data['Deputy No'])
+                ->setDeputySurname($data['Dep Surname'])
+                ->setDeputyPostcode($data['Dep Postcode'])
                 ->setTypeOfReport($data['Typeofrep'])
                 ->setCorref($data['Corref'])
                 ->setIsNdrEnabled($this->determineNdrStatus($data['NDR']))
-                ->setSource(CasRec::CASREC_SOURCE)
                 ->setOrderDate(new DateTime($data['Made Date']));
     }
 

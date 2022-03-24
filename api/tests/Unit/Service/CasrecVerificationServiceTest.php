@@ -29,57 +29,57 @@ class CasrecVerificationServiceTest extends WebTestCase
         $crLayHasPC = m::mock('\App\Entity\Casrec')
             ->shouldIgnoreMissing(true)
             ->shouldReceive('getCaseNumber')->withNoArgs()->andReturn('11111111')
-            ->shouldReceive('getDeputyPostCode')->withNoArgs()->andReturn('dpc123')
-            ->shouldReceive('getDeputyNo')->withNoArgs()->andReturn('Dep1')
+            ->shouldReceive('getDeputyPostCode')->withNoArgs()->andReturn('DPC123')
+            ->shouldReceive('getDeputyUid')->withNoArgs()->andReturn('Dep1')
             ->getMock();
 
         $crLayNoPC = m::mock('\App\Entity\Casrec')
             ->shouldIgnoreMissing(true)
             ->shouldReceive('getCaseNumber')->withNoArgs()->andReturn('22222222')
             ->shouldReceive('getDeputyPostCode')->withNoArgs()->andReturn('')
-            ->shouldReceive('getDeputyNo')->withNoArgs()->andReturn('MLDA')
+            ->shouldReceive('getDeputyUid')->withNoArgs()->andReturn('MLDA')
             ->getMock();
 
         //Group MLD1 has a postcode for each of the three deputies
         $casrecMLD1A = m::mock('\App\Entity\Casrec')
             ->shouldIgnoreMissing(true)
             ->shouldReceive('getCaseNumber')->withNoArgs()->andReturn('33333333')
-            ->shouldReceive('getDeputyPostCode')->withNoArgs()->andReturn('mld1aa')
+            ->shouldReceive('getDeputyPostCode')->withNoArgs()->andReturn('MLD1AA')
             ->shouldReceive('getDeputySurname')->withNoArgs()->andReturn('unique')
-            ->shouldReceive('getDeputyNo')->withNoArgs()->andReturn('MLDA')
+            ->shouldReceive('getDeputyUid')->withNoArgs()->andReturn('MLDA')
             ->getMock();
 
         $casrecMLD1B = m::mock('\App\Entity\Casrec')
             ->shouldIgnoreMissing(true)
             ->shouldReceive('getCaseNumber')->withNoArgs()->andReturn('33333333')
-            ->shouldReceive('getDeputyPostCode')->withNoArgs()->andReturn('mld1bb')
-            ->shouldReceive('getDeputySurname')->withNoArgs()->andReturn('sibling')
-            ->shouldReceive('getDeputyNo')->withNoArgs()->andReturn('MLDB')
+            ->shouldReceive('getDeputyPostCode')->withNoArgs()->andReturn('MLD1BB')
+            ->shouldReceive('getDeputySurname')->withNoArgs()->andReturn('Sibling')
+            ->shouldReceive('getDeputyUid')->withNoArgs()->andReturn('MLDB')
             ->getMock();
 
         $casrecMLD1C = m::mock('\App\Entity\Casrec')
             ->shouldIgnoreMissing(true)
             ->shouldReceive('getCaseNumber')->withNoArgs()->andReturn('33333333')
-            ->shouldReceive('getDeputyPostCode')->withNoArgs()->andReturn('mld1bb')
-            ->shouldReceive('getDeputySurname')->withNoArgs()->andReturn('sibling')
-            ->shouldReceive('getDeputyNo')->withNoArgs()->andReturn('MLDC')
+            ->shouldReceive('getDeputyPostCode')->withNoArgs()->andReturn('MLD1BB')
+            ->shouldReceive('getDeputySurname')->withNoArgs()->andReturn('Sibling')
+            ->shouldReceive('getDeputyUid')->withNoArgs()->andReturn('MLDC')
             ->getMock();
 
         //Group MLD2 has a missing postcode for one of the two deputies
         $casrecMLD2A = m::mock('\App\Entity\Casrec')
             ->shouldIgnoreMissing(true)
             ->shouldReceive('getCaseNumber')->withNoArgs()->andReturn('44444444')
-            ->shouldReceive('getDeputyPostCode')->withNoArgs()->andReturn('mld2aa')
-            ->shouldReceive('getDeputySurname')->withNoArgs()->andReturn('sibling')
-            ->shouldReceive('getDeputyNo')->withNoArgs()->andReturn('MLDA')
+            ->shouldReceive('getDeputyPostCode')->withNoArgs()->andReturn('MLD2AA')
+            ->shouldReceive('getDeputySurname')->withNoArgs()->andReturn('Sibling')
+            ->shouldReceive('getDeputyUid')->withNoArgs()->andReturn('MLDA')
             ->getMock();
 
         $casrecMLD2B = m::mock('\App\Entity\Casrec')
             ->shouldIgnoreMissing(true)
             ->shouldReceive('getCaseNumber')->withNoArgs()->andReturn('44444444')
             ->shouldReceive('getDeputyPostCode')->withNoArgs()->andReturn('')
-            ->shouldReceive('getDeputySurname')->withNoArgs()->andReturn('sibling')
-            ->shouldReceive('getDeputyNo')->withNoArgs()->andReturn('MLDB')
+            ->shouldReceive('getDeputySurname')->withNoArgs()->andReturn('Sibling')
+            ->shouldReceive('getDeputyUid')->withNoArgs()->andReturn('MLDB')
             ->getMock();
 
         $mockCasrecRepo = m::mock('\Doctrine\ORM\EntityRepository')
@@ -88,14 +88,14 @@ class CasrecVerificationServiceTest extends WebTestCase
             ->shouldReceive('findByCaseNumber')->with('22222222')->andReturn([$crLayNoPC])
             ->shouldReceive('findByCaseNumber')->with('33333333')->andReturn([$casrecMLD1A, $casrecMLD1B, $casrecMLD1C])
             ->shouldReceive('findByCaseNumber')->with('44444444')->andReturn([$casrecMLD2A, $casrecMLD2B])
-            ->shouldReceive('findBy')->with(['caseNumber' => '11111111', 'clientLastname' => 'csurn', 'deputySurname' => 'dsurn'])->andReturn([$crLayHasPC])
-            ->shouldReceive('findBy')->with(['caseNumber' => 'wrong678', 'clientLastname' => 'csurn', 'deputySurname' => 'dsurn'])->andReturn([])
-            ->shouldReceive('findBy')->with(['caseNumber' => '11111111', 'clientLastname' => 'wrong', 'deputySurname' => 'dsurn'])->andReturn([])
-            ->shouldReceive('findBy')->with(['caseNumber' => '11111111', 'clientLastname' => 'csurn', 'deputySurname' => 'wrong'])->andReturn([])
-            ->shouldReceive('findBy')->with(['caseNumber' => '22222222', 'clientLastname' => 'csurn', 'deputySurname' => 'dsurn'])->andReturn([$crLayNoPC])
-            ->shouldReceive('findBy')->with(['caseNumber' => '33333333', 'clientLastname' => 'csurn', 'deputySurname' => 'mldunique'])->andReturn([$casrecMLD1A])
-            ->shouldReceive('findBy')->with(['caseNumber' => '33333333', 'clientLastname' => 'csurn', 'deputySurname' => 'sibling'])->andReturn([$casrecMLD1B, $casrecMLD1C])
-            ->shouldReceive('findBy')->with(['caseNumber' => '44444444', 'clientLastname' => 'csurn', 'deputySurname' => 'sibling'])->andReturn([$casrecMLD2A, $casrecMLD2B])
+            ->shouldReceive('findBy')->with(['caseNumber' => '11111111', 'clientLastname' => 'CSurn', 'deputySurname' => 'DSurn'])->andReturn([$crLayHasPC])
+            ->shouldReceive('findBy')->with(['caseNumber' => 'WRONG678', 'clientLastname' => 'CSurn', 'deputySurname' => 'DSurn'])->andReturn([])
+            ->shouldReceive('findBy')->with(['caseNumber' => '11111111', 'clientLastname' => 'WRONG', 'deputySurname' => 'DSurn'])->andReturn([])
+            ->shouldReceive('findBy')->with(['caseNumber' => '11111111', 'clientLastname' => 'CSurn', 'deputySurname' => 'WRONG'])->andReturn([])
+            ->shouldReceive('findBy')->with(['caseNumber' => '22222222', 'clientLastname' => 'CSurn', 'deputySurname' => 'DSurn'])->andReturn([$crLayNoPC])
+            ->shouldReceive('findBy')->with(['caseNumber' => '33333333', 'clientLastname' => 'CSurn', 'deputySurname' => 'MLDUnique'])->andReturn([$casrecMLD1A])
+            ->shouldReceive('findBy')->with(['caseNumber' => '33333333', 'clientLastname' => 'CSurn', 'deputySurname' => 'Sibling'])->andReturn([$casrecMLD1B, $casrecMLD1C])
+            ->shouldReceive('findBy')->with(['caseNumber' => '44444444', 'clientLastname' => 'CSurn', 'deputySurname' => 'Sibling'])->andReturn([$casrecMLD2A, $casrecMLD2B])
             ->getMock();
 
         $em = m::mock(EntityManager::class)
@@ -136,7 +136,7 @@ class CasrecVerificationServiceTest extends WebTestCase
             $this->casrecVerificationService->validate('WRONG678', 'CSurn', 'DSurn', 'DPC123');
         } catch (RuntimeException $e) {
             $this->assertStringContainsString(
-                sprintf($failMessage, 'wrong678', 'csurn', 'dsurn', 'dpc123'),
+                sprintf($failMessage, 'WRONG678', 'CSurn', 'DSurn', 'DPC123'),
                 $e->getMessage()
             );
         }
@@ -145,7 +145,7 @@ class CasrecVerificationServiceTest extends WebTestCase
             $this->assertTrue($this->casrecVerificationService->validate('11111111', 'WRONG', 'DSurn', 'DPC123'));
         } catch (RuntimeException $e) {
             $this->assertStringContainsString(
-                sprintf($failMessage, '11111111', 'wrong', 'dsurn', 'dpc123'),
+                sprintf($failMessage, '11111111', 'WRONG', 'DSurn', 'DPC123'),
                 $e->getMessage()
             );
         }
@@ -154,7 +154,7 @@ class CasrecVerificationServiceTest extends WebTestCase
             $this->assertTrue($this->casrecVerificationService->validate('11111111', 'CSurn', 'WRONG', 'DPC123'));
         } catch (RuntimeException $e) {
             $this->assertStringContainsString(
-                sprintf($failMessage, '11111111', 'csurn', 'wrong', 'dpc123'),
+                sprintf($failMessage, '11111111', 'CSurn', 'WRONG', 'DPC123'),
                 $e->getMessage()
             );
         }
@@ -163,7 +163,7 @@ class CasrecVerificationServiceTest extends WebTestCase
             $this->assertTrue($this->casrecVerificationService->validate('11111111', 'CSurn', 'DSurn', 'WRONG'));
         } catch (RuntimeException $e) {
             $this->assertStringContainsString(
-                sprintf($failMessage, '11111111', 'csurn', 'dsurn', 'wrong'),
+                sprintf($failMessage, '11111111', 'CSurn', 'DSurn', 'WRONG'),
                 $e->getMessage()
             );
         }
@@ -182,7 +182,7 @@ class CasrecVerificationServiceTest extends WebTestCase
      */
     public function validateMLDUnique()
     {
-        $this->assertTrue($this->casrecVerificationService->validate('33333333', 'CSurn', 'MLDUnique', 'MLD 1AA'));
+        $this->assertTrue($this->casrecVerificationService->validate('33333333', 'CSurn', 'MLDUnique', 'MLD1AA'));
     }
 
     /**
@@ -190,7 +190,7 @@ class CasrecVerificationServiceTest extends WebTestCase
      */
     public function validateSameAddressMLDSiblings()
     {
-        $this->assertTrue($this->casrecVerificationService->validate('33333333', 'CSurn', 'Sibling', 'MLD 1BB'));
+        $this->assertTrue($this->casrecVerificationService->validate('33333333', 'CSurn', 'Sibling', 'MLD1BB'));
     }
 
     /**
@@ -202,7 +202,7 @@ class CasrecVerificationServiceTest extends WebTestCase
         try {
             $this->assertTrue($this->casrecVerificationService->validate('11111111', 'CSurn', 'DSurn', 'DOEsnT MatteR'));
         } catch (RuntimeException $e) {
-            $this->assertStringContainsString('{"search_terms":{"caseNumber":"11111111","clientLastname":"csurn","deputySurname":"dsurn","deputyPostcode":"doesntmatter"},"case_number_matches":null}', $e->getMessage());
+            $this->assertStringContainsString('{"search_terms":{"caseNumber":"11111111","clientLastname":"CSurn","deputySurname":"DSurn","deputyPostcode":"DOEsnT MatteR"},"case_number_matches":null}', $e->getMessage());
         }
 
         // but if one MLD in casrec, the postcode check is skipped
@@ -216,7 +216,7 @@ class CasrecVerificationServiceTest extends WebTestCase
     {
         $this->casrecVerificationService->validate('11111111', 'CSurn', 'DSurn', 'DPC123');
         $this->assertEquals(['Dep1'], $this->casrecVerificationService->getLastMatchedDeputyNumbers());
-        $this->casrecVerificationService->validate('33333333', 'CSurn', 'Sibling', 'MLD 1BB');
+        $this->casrecVerificationService->validate('33333333', 'CSurn', 'Sibling', 'MLD1BB');
         $this->assertEquals(['MLDB', 'MLDC'], $this->casrecVerificationService->getLastMatchedDeputyNumbers());
     }
 }
