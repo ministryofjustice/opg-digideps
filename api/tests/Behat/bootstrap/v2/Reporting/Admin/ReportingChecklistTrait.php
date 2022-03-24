@@ -235,7 +235,5 @@ trait ReportingChecklistTrait
         if ($this->getSession()->getStatusCode() > 299) {
             throw new BehatException('There was an non successful response when running the checklist-sync command');
         }
-
-        sleep(2);
     }
 }
