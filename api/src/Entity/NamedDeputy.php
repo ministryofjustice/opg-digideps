@@ -10,7 +10,7 @@ use JMS\Serializer\Annotation as JMS;
 /**
  * Named Deputy.
  *
- * @ORM\Table(name="named_deputy", indexes={@ORM\Index(name="named_deputy_no_idx", columns={"deputy_no"})})
+ * @ORM\Table(name="named_deputy", indexes={@ORM\Index(name="named_deputy_uuid_idx", columns={"deputy_uuid"})})
  * @ORM\Entity(repositoryClass="App\Repository\NamedDeputyRepository")
  */
 class NamedDeputy
@@ -43,17 +43,9 @@ class NamedDeputy
      *
      * @JMS\Type("string")
      * @JMS\Groups({"report-submitted-by", "named-deputy"})
-     * @ORM\Column(name="deputy_no", type="string", length=20, nullable=false, unique=true)
+     * @ORM\Column(name="deputy_uuid", type="string", length=20, nullable=false, unique=true)
      */
-    private $deputyNo;
-
-    /**
-     * @var string
-     *
-     * @JMS\Type("string")
-     * @ORM\Column(name="deputy_type", type="string", length=5, nullable=true)
-     */
-    private $deputyType;
+    private $deputyUUID;
 
     /**
      * @var string
@@ -99,15 +91,6 @@ class NamedDeputy
      * @ORM\Column(name="email3", type="string", length=60, nullable=true, unique=false)
      */
     private $email3;
-
-    /**
-     * @var string
-     *
-     * @JMS\Type("string")
-     * @JMS\Groups({"report-submitted-by", "named-deputy"})
-     * @ORM\Column(name="dep_addr_no", type="integer", length=100, nullable=true)
-     */
-    private $depAddrNo;
 
     /**
      * @var string
@@ -237,9 +220,21 @@ class NamedDeputy
     /**
      * @return string
      */
-    public function getDeputyNo()
+    public function getDeputyUUID()
     {
-        return $this->deputyNo;
+        return $this->deputyUUID;
+    }
+
+    /**
+     * @param string $deputyUUID
+     *
+     * @return $this
+     */
+    public function setDeputyUUID($deputyUUID)
+    {
+        $this->deputyUUID = $deputyUUID;
+
+        return $this;
     }
 
     /**
