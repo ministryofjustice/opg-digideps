@@ -29,7 +29,7 @@ trait PageUrlsTrait
     private string $deputyFeesExpensesSectionUrl = '/report/%s/pa-fee-expense';
     private string $documentsSectionUrl = '/report/%s/documents';
     private string $documentsStep2Url = '/%s/%s/documents/step/2';
-    private string $documentsSubmitMore = '/%s/%s/documents/submit-more';
+    private string $documentsSubmitMoreUrl = '/%s/%s/documents/submit-more';
     private string $giftsSectionUrl = '/%s/%s/gifts';
     private string $healthAndLifestyleSectionUrl = '/%s/%s/lifestyle';
     private string $healthAndLifestyleSummaryUrl = '/%s/%s/lifestyle/summary';
@@ -391,8 +391,8 @@ trait PageUrlsTrait
         return sprintf($this->documentsStep2Url, $this->reportUrlPrefix, $reportId);
     }
 
-    public function getDocumentsSubmitMore(int $reportId): string
+    public function getDocumentsSubmitMoreUrl(int $reportId): string
     {
-        return sprintf($this->documentsSubmitMore, $this->reportUrlPrefix, $reportId);
+        return sprintf($this->documentsSubmitMoreUrl, $this->reportUrlPrefix, $reportId);
     }
 }

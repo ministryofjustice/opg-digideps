@@ -140,8 +140,7 @@ trait ReportSubmissionTrait
      */
     public function attachSupportingDocumentToSubmittedReport(string $imageName)
     {
-        $reportId = $this->interactingWithUserDetails->getPreviousReportId();
-        $this->visit(sprintf('/report/%s/documents/step/2', $reportId));
+        $this->iVisitTheDocumentsStep2Page();
         $this->attachDocument($imageName);
 
         $this->clickLink('Continue to send documents');
@@ -340,25 +339,32 @@ trait ReportSubmissionTrait
     }
 
     /**
-     * @When I search for submissions using the court order number of the client I am interacting with and check the New column
+     * @When I search for submissions using the court order number of the client I am interacting with and check the :status column
      */
-    public function iSearchForSubmissionsUsingTheCourtOrderNumberOfTheClientIAmInteractingWith()
+    public function iSearchForSubmissionsUsingTheCourtOrderNumberOfTheClientIAmInteractingWithForTheStatusColumn(string $status)
     {
         $this->fillInField('q', $this->interactingWithUserDetails->getClientCaseNumber());
         $this->pressButton('Search');
-        $this->clickLink('New');
+        $this->clickLink($status);
     }
 
     /**
-     * @Then I should not see the submission under the new tab with the court order number of the user I am interacting with
+     * @Then I should not see the submission under the :status tab with the court order number of the user I am interacting with
+     * @Then I should see the submission under the :status tab with the court order number of the user I am interacting with
      */
-    public function submissionShouldNotAppearInNew()
+    public function submissionBehaviourBasedOnStatus(string $status)
     {
         $caseNumber = $this->interactingWithUserDetails->getClientCaseNumber();
         $reportPdfRow = $this->getSession()->getPage()->find('css', "table tr:contains('$caseNumber')");
 
-        if (!is_null($reportPdfRow)) {
-            throw new BehatException("The submission ($caseNumber) appears in the new column when it should not appear");
+        if ('New' === $status) {
+            if (!is_null($reportPdfRow)) {
+                throw new BehatException("The submission ($caseNumber) appears in the new column when it should not appear");
+            }
+        } elseif ('Pending' === $status) {
+            if (is_null($reportPdfRow)) {
+                throw new BehatException("The submission ($caseNumber) does not appear in the pending column when it should appear");
+            }
         }
     }
 }

@@ -2,7 +2,7 @@
 Feature: Attaching Further Documents
 
 
-    @lay-pfa-high-submitted @super-admin @mia
+    @lay-pfa-high-submitted @super-admin
     Scenario: A user attempts to send further documents but there are no documents attached
         Given a Lay Deputy has submitted a report
         When I attached a supporting document "test-image.png" to the submitted report
@@ -11,5 +11,14 @@ Feature: Attaching Further Documents
         When I continue to submit the empty form
         Given a super admin user accesses the admin app
         When I navigate to the admin report submissions page
-        And I search for submissions using the court order number of the client I am interacting with and check the New column
-        Then I should not see the submission under the new tab with the court order number of the user I am interacting with
+        And I search for submissions using the court order number of the client I am interacting with and check the "New" column
+        Then I should not see the submission under the "New" tab with the court order number of the user I am interacting with
+
+    @lay-pfa-high-submitted @super-admin
+    Scenario: A user attempts to send further documents
+        Given a Lay Deputy has submitted a report
+        When I attached a supporting document "test-image.png" to the submitted report
+        Given a super admin user accesses the admin app
+        When I navigate to the admin report submissions page
+        And I search for submissions using the court order number of the client I am interacting with and check the "Pending" column
+        Then I should see the submission under the "Pending" tab with the court order number of the user I am interacting with
