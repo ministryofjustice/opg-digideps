@@ -15,9 +15,9 @@ import (
 )
 
 type regServiceResponse struct {
-	Name      string
-	Timestamp time.Time
-	Message   string
+	name      string
+	timestamp time.Time
+	message   string
 }
 
 func regService(w http.ResponseWriter, r *http.Request) {
@@ -27,7 +27,7 @@ func regService(w http.ResponseWriter, r *http.Request) {
 	JWT, err := parseJWTBearerToken(r)
 
 	if err != nil {
-		log.Fatalf("Cannot parse JWT from headers: %v", err)
+		log.Fatalf("cannot parse JWT from headers: %v", err)
 	}
 
 	// Get public key from frontend client (will likely be standalone service in the future)
@@ -43,13 +43,13 @@ func regService(w http.ResponseWriter, r *http.Request) {
 	if err != nil {
 		m = err.Error()
 	} else {
-		m = "Request is authorised"
+		m = "request is authorised"
 	}
 
 	data := regServiceResponse{
-		Name:      "Go API Test",
-		Timestamp: time.Now(),
-		Message:   m,
+		name:      "Go API Test",
+		timestamp: time.Now(),
+		message:   m,
 	}
 
 	json, err := json.Marshal(data)
@@ -65,13 +65,13 @@ func parseJWTBearerToken(r *http.Request) (*jwt.JSONWebToken, error) {
 	reqToken := r.Header.Get("Authorization")
 
 	if reqToken == "" {
-		return nil, errors.New("Missing Authorization header")
+		return nil, errors.New("missing Authorization header")
 	}
 
 	splitToken := strings.Split(reqToken, "Bearer ")
 
 	if len(splitToken) == 1 {
-		return nil, errors.New("Authorization header does not contain a Bearer token")
+		return nil, errors.New("authorization header does not contain a Bearer token")
 	}
 
 	reqToken = splitToken[1]
