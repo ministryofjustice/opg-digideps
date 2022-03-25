@@ -438,4 +438,14 @@ $print-text: #454572;
             color: $print-text;
         }
     }
+
+
+}
+
+.opg-border--secondary {
+    border-width: thin;
+    border-style: solid;
+    border-color: $govuk-secondary-text-colour;
+    padding: 1rem;
+    width: 800px;
 }

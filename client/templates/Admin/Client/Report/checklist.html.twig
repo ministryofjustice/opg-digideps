@@ -171,13 +171,13 @@
         </div>
         {% if checklist.submittedOn and checklist.finalDecision == 'for-review' %}
             <div class="govuk-grid-column-one-third opg-sticky-menu">
-                {% include '@App/Admin/Client/Report/sidebar/_statuses.html.twig' with {checklistDomain: 'lodging'} %}
+                {% include '@App/Admin/Client/Report/sidebar/_statuses.html.twig' with {checklistDomain: 'lodging', syncStatus: syncStatus} %}
                 {% include '@App/Admin/Client/Report/sidebar/_fullReview.html.twig' %}
                 {% include '@App/Admin/Client/Report/sidebar/_backToTopLinks.html.twig' with {checklistDomain: 'lodging'} %}
             </div>
         {% else %}
             <div class="govuk-grid-column-one-third opg-sticky-menu">
-                {% include '@App/Admin/Client/Report/sidebar/_statuses.html.twig' with {checklistDomain: 'lodging'} %}
+                {% include '@App/Admin/Client/Report/sidebar/_statuses.html.twig' with {checklistDomain: 'lodging', syncStatus: syncStatus} %}
                 {% include '@App/Admin/Client/Report/sidebar/_lodging.html.twig' %}
                 {% include '@App/Admin/Client/Report/sidebar/_backToTopLinks.html.twig' with {checklistDomain: 'lodging'} %}
             </div>

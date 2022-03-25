@@ -5,6 +5,7 @@ declare(strict_types=1);
 namespace App\Service\Csv;
 
 use App\Entity\UserResearch\UserResearchResponse;
+use DateTime;
 
 class UserResearchResponseCsvGenerator
 {
@@ -38,23 +39,25 @@ class UserResearchResponseCsvGenerator
         $rows = [];
 
         foreach ($userResearchResponses as $response) {
-            if (is_null($response->getSatisfaction())) {
+            if (isset($response['satisfaction']) && empty($response['satisfaction'])) {
                 continue;
             }
 
-            $satisfaction = $response->getSatisfaction();
+            $satisfaction = $response['satisfaction'];
+            $user = $response['user'];
+            $dateProvided = (new DateTime($satisfaction['created']['date']))->format('Y-m-d');
 
             $rows[] = [
-                $satisfaction->getScore(),
-                $satisfaction->getComments(),
-                $satisfaction->getDeputyrole(),
-                $satisfaction->getReporttype(),
-                $satisfaction->getCreated()->format('Y-m-d'),
-                $this->transformDeputyshipLength($response->getDeputyShipLength()),
-                $response->getResearchType()->getCommaSeparatedTypesAgreed(),
-                $response->GetHasAccessToVideoCallDevice() ? 'Yes' : 'No',
-                $response->getUser()->getEmail(),
-                $response->getUser()->getPhoneMain(),
+                $satisfaction['score'],
+                $satisfaction['comments'],
+                $satisfaction['deputyrole'],
+                $satisfaction['reporttype'],
+                $dateProvided,
+                $this->transformDeputyshipLength($response['deputyshipLength']),
+                $this->getCommaSeparatedTypesAgreedFromArrayData($response['researchType']),
+                $response['hasAccessToVideoCallDevice'] ? 'Yes' : 'No',
+                $user['email'],
+                $user['phoneMain'],
             ];
         }
 
@@ -75,5 +78,18 @@ class UserResearchResponseCsvGenerator
         }
 
         return 'No response';
+    }
+
+    public function getCommaSeparatedTypesAgreedFromArrayData(array $researchTypeArray)
+    {
+        $types = [];
+
+        foreach ($researchTypeArray as $propName => $value) {
+            if ($value && 'id' !== $propName) {
+                $types[] = $propName;
+            }
+        }
+
+        return implode(',', $types);
     }
 }

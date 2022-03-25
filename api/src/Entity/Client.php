@@ -510,7 +510,7 @@ class Client implements ClientInterface
     /**
      * Get users.
      *
-     * @return \Doctrine\Common\Collections\Collection
+     * @return Collection
      */
     public function getUsers()
     {
@@ -818,10 +818,7 @@ class Client implements ClientInterface
         return (bool) preg_match('/^[0-9t]{8}$/i', $query);
     }
 
-    /**
-     * @return NamedDeputy|null
-     */
-    public function getNamedDeputy()
+    public function getNamedDeputy(): ?NamedDeputy
     {
         return $this->namedDeputy;
     }

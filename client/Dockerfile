@@ -128,6 +128,8 @@ RUN wget -q -O local-php-security-checker https://github.com/fabpot/local-php-se
 # Prebuild cache
 RUN su-exec www-data php -d memory_limit=-1 app/console cache:warmup
 
+RUN apk upgrade libxml2
+
 CMD confd -onetime -backend env \
     && waitforit -address=$API_URL/manage/availability -timeout=$TIMEOUT -insecure \
     && php-fpm -D \

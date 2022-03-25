@@ -202,7 +202,7 @@ class User implements UserInterface
      * @var string
      *
      * @JMS\Type("string")
-     * @JMS\Groups({"user", "report-submitted-by", "user-list"})
+     * @JMS\Groups({"user", "report-submitted-by", "user-list", "user-phone-main"})
      * @ORM\Column(name="phone_main", type="string", length=20, nullable=true)
      */
     private $phoneMain;

@@ -30,7 +30,7 @@ use Throwable;
  */
 class RestClient implements RestClientInterface
 {
-    const HTTP_CODE_AUTHTOKEN_EXPIRED = 419;
+    public const HTTP_CODE_AUTHTOKEN_EXPIRED = 419;
 
     /**
      * Keep here a list of options for the methods
@@ -63,12 +63,12 @@ class RestClient implements RestClientInterface
     /**
      * Header name holding auth token, returned at login time and re-sent at each requests.
      */
-    const HEADER_AUTH_TOKEN = 'AuthToken';
+    public const HEADER_AUTH_TOKEN = 'AuthToken';
 
     /**
      * Header name holding client secret, to send at login time.
      */
-    const HEADER_CLIENT_SECRET = 'ClientSecret';
+    public const HEADER_CLIENT_SECRET = 'ClientSecret';
 
     /**
      * Header name holding auth token, returned at login time and re-sent at each requests.
@@ -78,9 +78,9 @@ class RestClient implements RestClientInterface
     /**
      * Error Messages.
      */
-    const ERROR_CONNECT = 'API returned an exception';
-    const ERROR_NO_SUCCESS = 'Endpoint failed with message %s';
-    const ERROR_FORMAT = 'Cannot decode endpoint response';
+    public const ERROR_CONNECT = 'API returned an exception';
+    public const ERROR_NO_SUCCESS = 'Endpoint failed with message %s';
+    public const ERROR_FORMAT = 'Cannot decode endpoint response';
 
     public function __construct(
         protected ContainerInterface $container,
@@ -206,8 +206,8 @@ class RestClient implements RestClientInterface
         }
 
         return $this->apiCall('get', $endpoint, null, $expectedResponseType, $optionsOverride + [
-            'addAuthToken' => true,
-        ] + $options);
+                'addAuthToken' => true,
+            ] + $options);
     }
 
     /**
@@ -273,9 +273,9 @@ class RestClient implements RestClientInterface
      * @param string $expectedResponseType
      * @param array  $options
      *
-     * @throws InvalidArgumentException
-     *
      * @return mixed
+     *
+     * @throws InvalidArgumentException
      */
     public function apiCall($method, $endpoint, $data, $expectedResponseType, $options = [], $authenticated = true)
     {
@@ -284,9 +284,9 @@ class RestClient implements RestClientInterface
         }
 
         $response = $this->rawSafeCall($method, $endpoint, $options + [
-            'addClientSecret' => !$authenticated,
-            'addAuthToken' => $authenticated,
-        ]);
+                'addClientSecret' => !$authenticated,
+                'addAuthToken' => $authenticated,
+            ]);
         if ('raw' == $expectedResponseType) {
             return $response->getBody();
         }

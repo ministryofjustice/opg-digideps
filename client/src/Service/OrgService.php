@@ -49,6 +49,7 @@ class OrgService
             'reports' => 0,
             'organisations' => 0,
         ],
+        'skipped' => 0,
     ];
 
     const CHUNK_SIZE = 50;
@@ -161,8 +162,8 @@ class OrgService
             }
         }
 
-        if (!empty($output['source'] and !empty($output['roleType']))) {
-            $this->dispatchCSVUploadEvent($output['source'], $output['roleType']);
+        if (!empty($output['skipped'])) {
+            $this->output['skipped'] += $output['skipped'];
         }
     }
 
@@ -183,11 +184,12 @@ class OrgService
         }
 
         $flashAddedMessage = sprintf(
-            'Added %d clients, %d named deputies, %d reports and %d organisations. Go to users tab to enable them.',
+            'Added %d clients, %d named deputies, %d reports and %d organisations. Skipped %s archived clients. Go to users tab to enable them.',
             $this->output['added']['clients'],
             $this->output['added']['named_deputies'],
             $this->output['added']['reports'],
             $this->output['added']['organisations'],
+            $this->output['skipped'],
         );
 
         $flashBag->add(
@@ -216,6 +218,8 @@ class OrgService
     {
         $chunkCount = count($chunks);
 
+        $logged = false;
+
         foreach ($chunks as $index => $chunk) {
             $compressedChunk = CsvUploader::compressData($chunk);
 
@@ -224,6 +228,13 @@ class OrgService
 
             $this->storeChunkOutput($upload);
             $this->logProgress($index + 1, $chunkCount);
+
+            if (!$logged) {
+                if (!empty($upload['source'] and !empty($upload['roleType']))) {
+                    $this->dispatchCSVUploadEvent($upload['source'], $upload['roleType']);
+                    $logged = true;
+                }
+            }
         }
     }
 

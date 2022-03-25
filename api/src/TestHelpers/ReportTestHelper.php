@@ -8,7 +8,7 @@ use App\Entity\Client;
 use App\Entity\Ndr\BankAccount as NdrBankAccount;
 use App\Entity\Ndr\ClientBenefitsCheck as NdrClientBenefitsCheck;
 use App\Entity\Ndr\Debt as NdrDebt;
-use App\Entity\Ndr\IncomeReceivedOnClientsBehalf as NdrIncomeReceivedOnClientsBehalf;
+use App\Entity\Ndr\MoneyReceivedOnClientsBehalf as NdrMoneyReceivedOnClientsBehalf;
 use App\Entity\Ndr\Ndr;
 use App\Entity\Ndr\VisitsCare as NdrVisitsCare;
 use App\Entity\Report\Action;
@@ -16,9 +16,9 @@ use App\Entity\Report\BankAccount;
 use App\Entity\Report\ClientBenefitsCheck;
 use App\Entity\Report\Debt as ReportDebt;
 use App\Entity\Report\Document;
-use App\Entity\Report\IncomeReceivedOnClientsBehalf;
 use App\Entity\Report\Lifestyle;
 use App\Entity\Report\MentalCapacity;
+use App\Entity\Report\MoneyReceivedOnClientsBehalf;
 use App\Entity\Report\MoneyTransaction;
 use App\Entity\Report\ProfDeputyOtherCost;
 use App\Entity\Report\Report;
@@ -30,6 +30,7 @@ use DateInterval;
 use DateTime;
 use Doctrine\Common\Collections\ArrayCollection;
 use Doctrine\ORM\EntityManager;
+use Exception;
 
 class ReportTestHelper
 {
@@ -40,7 +41,7 @@ class ReportTestHelper
     {
         $client = $client ? $client : (new ClientTestHelper())->generateClient($em);
         $type = $type ? $type : Report::LAY_PFA_HIGH_ASSETS_TYPE;
-        $startDate = $startDate ? $startDate : new \DateTime('2 years ago');
+        $startDate = $startDate ? $startDate : new DateTime('2 years ago');
         $endDate = $endDate ? $endDate : (clone $startDate)->add(new DateInterval('P1Y'));
 
         $report = new Report($client, $type, $startDate, $endDate);
@@ -162,12 +163,12 @@ class ReportTestHelper
     }
 
     /**
-     * @throws \Exception
+     * @throws Exception
      */
     private function completeDecisions(ReportInterface $report): void
     {
         $report->setReasonForNoDecisions('No need for decisions');
-        (new MentalCapacity($report))->setHasCapacityChanged('no')->setMentalAssessmentDate(new \DateTime());
+        (new MentalCapacity($report))->setHasCapacityChanged('no')->setMentalAssessmentDate(new DateTime());
     }
 
     private function completeContacts(ReportInterface $report): void
@@ -387,19 +388,20 @@ class ReportTestHelper
 
     private function completeClientBenefitsCheck(ReportInterface $report): void
     {
-        $typeOfIncome = $report instanceof Ndr ? new NdrIncomeReceivedOnClientsBehalf() : new IncomeReceivedOnClientsBehalf();
+        $typeOfIncome = $report instanceof Ndr ? new NdrMoneyReceivedOnClientsBehalf() : new MoneyReceivedOnClientsBehalf();
         $clientBenefitsCheck = $report instanceof Ndr ? new NdrClientBenefitsCheck() : new ClientBenefitsCheck();
 
         $typeOfIncome->setCreated(new DateTime())
             ->setAmount(100.50)
-            ->setIncomeType('Universal Credit');
+            ->setWhoReceivedMoney('Some other bloke')
+            ->setMoneyType('Universal Credit');
 
         $clientBenefitsCheck->setReport($report)
             ->setWhenLastCheckedEntitlement(ClientBenefitsCheck::WHEN_CHECKED_I_HAVE_CHECKED)
             ->setDateLastCheckedEntitlement(new DateTime())
             ->setCreated(new DateTime())
-            ->setDoOthersReceiveIncomeOnClientsBehalf('yes')
-            ->addTypeOfIncomeReceivedOnClientsBehalf($typeOfIncome)
+            ->setDoOthersReceiveMoneyOnClientsBehalf('yes')
+            ->addTypeOfMoneyReceivedOnClientsBehalf($typeOfIncome)
         ;
 
         $typeOfIncome->setClientBenefitsCheck($clientBenefitsCheck);

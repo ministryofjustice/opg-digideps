@@ -17,6 +17,7 @@ class UserDetails
     private ?string $clientEmail = null;
     private ?string $clientFirstName = null;
     private ?array $clientFullAddressArray = null;
+    private ?DateTime $clientArchivedAt = null;
     private ?int $clientId = null;
     private ?string $clientLastName = null;
     private ?string $courtDate = null;
@@ -84,7 +85,6 @@ class UserDetails
         $this->setUserFullName($userDetails['userFullName'] ?? null);
         $this->setUserFullAddressArray($userDetails['userFullAddressArray'] ?? null);
         $this->setUserPhone($userDetails['userPhone'] ?? null);
-        $this->setUserEmail($userDetails['userEmail'] ?? null);
 
         $this->setNamedDeputyName($userDetails['namedDeputyName'] ?? null);
         $this->setNamedDeputyFullAddressArray($userDetails['namedDeputyFullAddressArray'] ?? null);
@@ -102,6 +102,7 @@ class UserDetails
         $this->setClientFullAddressArray($userDetails['clientFullAddressArray'] ?? null);
         $this->setClientEmail($userDetails['clientEmail'] ?? null);
         $this->setClientCaseNumber($userDetails['clientCaseNumber'] ?? null);
+        $this->setClientArchivedAt($userDetails['clientArchivedAt'] ?? null);
 
         $currentReportId = $userDetails['currentReportId'] ?? null;
         $previousReportId = $userDetails['previousReportId'] ?? null;
@@ -279,6 +280,18 @@ class UserDetails
     public function setClientCaseNumber(?string $clientCaseNumber): UserDetails
     {
         $this->clientCaseNumber = $clientCaseNumber;
+
+        return $this;
+    }
+
+    public function getClientArchivedAt(): ?DateTime
+    {
+        return $this->clientArchivedAt;
+    }
+
+    public function setClientArchivedAt(?DateTime $clientArchivedAt): UserDetails
+    {
+        $this->clientArchivedAt = $clientArchivedAt;
 
         return $this;
     }

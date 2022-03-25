@@ -11,6 +11,7 @@ use App\Service\Formatter\RestFormatter;
 use DateTime;
 use RuntimeException;
 use Sensio\Bundle\FrameworkExtraBundle\Configuration\Security;
+use Symfony\Component\HttpFoundation\JsonResponse;
 use Symfony\Component\HttpFoundation\Request;
 use Symfony\Component\HttpFoundation\Response;
 use Symfony\Component\Routing\Annotation\Route;
@@ -74,10 +75,10 @@ class UserResearchController extends RestController
             $toDate = empty($toDateString) ?
                 (new DateTime())->setTime(23, 59, 59) : (new DateTime($toDateString))->setTime(23, 59, 59);
 
-            $groups = $request->get('groups') ? $request->get('groups') : ['satisfaction', 'user-research', 'user'];
+            $groups = ['satisfaction', 'user-research', 'user-email', 'user-phone-main'];
             $this->formatter->setJmsSerialiserGroups($groups);
 
-            return $this->userResearchResponseRepository->getAllFilteredByDate($fromDate, $toDate);
+            return new JsonResponse(['data' => $this->userResearchResponseRepository->getAllFilteredByDate($fromDate, $toDate), 'success' => true]);
         } catch (Throwable $e) {
             throw new RuntimeException(sprintf('There was a problem getting user research responses: %s', $e->getMessage()), Response::HTTP_BAD_REQUEST);
         }

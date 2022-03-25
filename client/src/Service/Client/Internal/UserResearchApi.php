@@ -40,7 +40,6 @@ class UserResearchApi
                 'order' => $query->getSortOrder(),
                 'fromDate' => $fromDate,
                 'toDate' => $toDate,
-                'groups' => ['satisfaction', 'user', 'user-research'],
             ];
 
             $url = sprintf(
@@ -50,6 +49,6 @@ class UserResearchApi
             );
         }
 
-        return $this->restClient->get($url, 'App\Entity\UserResearch\UserResearchResponse[]');
+        return $this->restClient->get($url, 'raw');
     }
 }

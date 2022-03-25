@@ -15,6 +15,7 @@ use App\Mapper\UserResearchResponse\UserResearchResponseSummaryMapper;
 use App\Service\Client\Internal\StatsApi;
 use App\Service\Client\RestClient;
 use App\Service\Csv\ActiveLaysCsvGenerator;
+use App\Service\Csv\AssetsTotalsCSVGenerator;
 use App\Service\Csv\SatisfactionCsvGenerator;
 use App\Service\Csv\UserResearchResponseCsvGenerator;
 use App\Transformer\ReportSubmission\ReportSubmissionBurFixedWidthTransformer;
@@ -24,30 +25,21 @@ use Symfony\Component\HttpFoundation\Request;
 use Symfony\Component\HttpFoundation\Response;
 use Symfony\Component\HttpFoundation\ResponseHeaderBag;
 use Symfony\Component\Routing\Annotation\Route;
+use Throwable;
 
 /**
  * @Route("/admin/stats")
  */
 class StatsController extends AbstractController
 {
-    private RestClient $restClient;
-    private SatisfactionCsvGenerator $satisfactionCsvGenerator;
-    private StatsApi $statsApi;
-    private ActiveLaysCsvGenerator $activeLaysCsvGenerator;
-    private UserResearchResponseCsvGenerator $userResearchResponseCsvGenerator;
-
     public function __construct(
-        RestClient $restClient,
-        SatisfactionCsvGenerator $satisfactionCsvGenerator,
-        StatsApi $statsApi,
-        ActiveLaysCsvGenerator $activeLaysCsvGenerator,
-        UserResearchResponseCsvGenerator $userResearchResponseCsvGenerator
+        private RestClient $restClient,
+        private SatisfactionCsvGenerator $satisfactionCsvGenerator,
+        private StatsApi $statsApi,
+        private ActiveLaysCsvGenerator $activeLaysCsvGenerator,
+        private UserResearchResponseCsvGenerator $userResearchResponseCsvGenerator,
+        private AssetsTotalsCSVGenerator $assetsTotalsCSVGenerator,
     ) {
-        $this->restClient = $restClient;
-        $this->satisfactionCsvGenerator = $satisfactionCsvGenerator;
-        $this->statsApi = $statsApi;
-        $this->activeLaysCsvGenerator = $activeLaysCsvGenerator;
-        $this->userResearchResponseCsvGenerator = $userResearchResponseCsvGenerator;
     }
 
     /**
@@ -68,7 +60,7 @@ class StatsController extends AbstractController
                 $downloadableData = $transformer->transform($reportSubmissionSummaries);
 
                 return $this->buildResponse($downloadableData);
-            } catch (\Throwable $e) {
+            } catch (Throwable $e) {
                 throw new DisplayableException($e);
             }
         }
@@ -106,7 +98,7 @@ class StatsController extends AbstractController
                 $response->headers->set('Content-Disposition', $disposition);
 
                 return $response;
-            } catch (\Throwable $e) {
+            } catch (Throwable $e) {
                 throw new DisplayableException($e);
             }
         }
@@ -131,7 +123,8 @@ class StatsController extends AbstractController
         if ($form->isSubmitted() && $form->isValid()) {
             try {
                 $userResearchResponses = $mapper->getBy($form->getData());
-                $csv = $this->userResearchResponseCsvGenerator->generateUserResearchResponsesCsv($userResearchResponses);
+                $userResearchResponsesArray = json_decode($userResearchResponses, true)['data'];
+                $csv = $this->userResearchResponseCsvGenerator->generateUserResearchResponsesCsv($userResearchResponsesArray);
 
                 $response = new Response($csv);
 
@@ -144,7 +137,7 @@ class StatsController extends AbstractController
                 $response->headers->set('Content-Disposition', $disposition);
 
                 return $response;
-            } catch (\Throwable $e) {
+            } catch (Throwable $e) {
                 throw new DisplayableException($e);
             }
         }
@@ -211,6 +204,29 @@ class StatsController extends AbstractController
     }
 
     /**
+     * @Route("/reports", name="admin_reports")
+     * @Security("is_granted('ROLE_SUPER_ADMIN')")
+     * @Template("@App/Admin/Stats/reports.html.twig")
+     *
+     * @return array|Response
+     */
+    public function reports()
+    {
+    }
+
+    /**
+     * @Route("/reports/user_accounts", name="admin_user_account_reports")
+     * @Security("is_granted('ROLE_SUPER_ADMIN')")
+     * @Template("@App/Admin/Stats/userAccountReports.html.twig")
+     *
+     * @return array|Response
+     */
+    public function userAccountReports()
+    {
+        return $this->statsApi->getAdminUserAccountReportData();
+    }
+
+    /**
      * Map an array of metric responses to be addressible by deputyType.
      */
     private function mapToDeputyType(array $result): array
@@ -241,6 +257,31 @@ class StatsController extends AbstractController
         $disposition = $response->headers->makeDisposition(
             ResponseHeaderBag::DISPOSITION_ATTACHMENT,
             'activeLays.csv'
+        );
+
+        $response->headers->set('Content-Disposition', $disposition);
+
+        return $response;
+    }
+
+    /**
+     * @Route("/downloadAssetsTotalValues", name="admin_total_assets_values")
+     * @Security("is_granted('ROLE_SUPER_ADMIN')")
+     *
+     * @return Response
+     */
+    public function downloadAssetsTotalValues()
+    {
+        $activeLaysData = $this->statsApi->getAssetsTotalValuesWithin12Months();
+
+        $csv = $this->assetsTotalsCSVGenerator->generateAssetsTotalValuesCSV(json_decode($activeLaysData, true));
+
+        $response = new Response($csv);
+
+        $response->headers->set('Content-Type', 'text/csv; charset=utf-8');
+        $disposition = $response->headers->makeDisposition(
+            ResponseHeaderBag::DISPOSITION_ATTACHMENT,
+            'totalAssets.csv'
         );
 
         $response->headers->set('Content-Disposition', $disposition);

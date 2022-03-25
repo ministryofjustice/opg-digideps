@@ -4,7 +4,7 @@ declare(strict_types=1);
 
 namespace App\Entity\Report;
 
-use App\Entity\IncomeReceivedOnClientsBehalfInterface;
+use App\Entity\MoneyReceivedOnClientsBehalfInterface;
 use DateTime;
 use Doctrine\ORM\Mapping as ORM;
 use Doctrine\ORM\Mapping\JoinColumn;
@@ -17,7 +17,7 @@ use Ramsey\Uuid\UuidInterface;
  * @ORM\Table(name="income_received_on_clients_behalf")
  * @ORM\Entity
  */
-class IncomeReceivedOnClientsBehalf implements IncomeReceivedOnClientsBehalfInterface
+class MoneyReceivedOnClientsBehalf implements MoneyReceivedOnClientsBehalfInterface
 {
     public function __construct(?UuidInterface $id = null)
     {
@@ -46,7 +46,7 @@ class IncomeReceivedOnClientsBehalf implements IncomeReceivedOnClientsBehalfInte
     private DateTime $created;
 
     /**
-     * @ORM\ManyToOne(targetEntity="App\Entity\Report\ClientBenefitsCheck", inversedBy="incomeReceivedOnClientsBehalf", cascade={"persist"})
+     * @ORM\ManyToOne(targetEntity="App\Entity\Report\ClientBenefitsCheck", inversedBy="moneyReceivedOnClientsBehalf", cascade={"persist"})
      * @JoinColumn(name="client_benefits_check_id", referencedColumnName="id")
      *
      * @JMS\Groups({"client-benefits-check"})
@@ -55,12 +55,12 @@ class IncomeReceivedOnClientsBehalf implements IncomeReceivedOnClientsBehalfInte
     private ClientBenefitsCheck $clientBenefitsCheck;
 
     /**
-     * @ORM\Column(name="income_type", type="string", nullable=false)
+     * @ORM\Column(name="money_type", type="string", nullable=false)
      *
      * @JMS\Groups({"client-benefits-check"})
      * @JMS\Type("string")
      */
-    private string $incomeType;
+    private string $moneyType;
 
     /**
      * @ORM\Column(name="amount", type="decimal", precision=14, scale=2, nullable=true)
@@ -70,26 +70,34 @@ class IncomeReceivedOnClientsBehalf implements IncomeReceivedOnClientsBehalfInte
      */
     private ?float $amount;
 
+    /**
+     * @ORM\Column(name="who_received_money", type="string", nullable=true)
+     *
+     * @JMS\Groups({"client-benefits-check"})
+     * @JMS\Type("string")
+     */
+    private ?string $whoReceivedMoney;
+
     public function getClientBenefitsCheck(): ClientBenefitsCheck
     {
         return $this->clientBenefitsCheck;
     }
 
-    public function setClientBenefitsCheck(ClientBenefitsCheck $clientBenefitsCheck): IncomeReceivedOnClientsBehalf
+    public function setClientBenefitsCheck(ClientBenefitsCheck $clientBenefitsCheck): MoneyReceivedOnClientsBehalf
     {
         $this->clientBenefitsCheck = $clientBenefitsCheck;
 
         return $this;
     }
 
-    public function getIncomeType(): string
+    public function getMoneyType(): string
     {
-        return $this->incomeType;
+        return $this->moneyType;
     }
 
-    public function setIncomeType(string $incomeType): IncomeReceivedOnClientsBehalf
+    public function setMoneyType(string $moneyType): MoneyReceivedOnClientsBehalf
     {
-        $this->incomeType = $incomeType;
+        $this->moneyType = $moneyType;
 
         return $this;
     }
@@ -99,7 +107,7 @@ class IncomeReceivedOnClientsBehalf implements IncomeReceivedOnClientsBehalfInte
         return $this->id;
     }
 
-    public function setId(UuidInterface $id): IncomeReceivedOnClientsBehalf
+    public function setId(UuidInterface $id): MoneyReceivedOnClientsBehalf
     {
         $this->id = $id;
 
@@ -111,7 +119,7 @@ class IncomeReceivedOnClientsBehalf implements IncomeReceivedOnClientsBehalfInte
         return $this->created;
     }
 
-    public function setCreated(DateTime $created): IncomeReceivedOnClientsBehalf
+    public function setCreated(DateTime $created): MoneyReceivedOnClientsBehalf
     {
         $this->created = $created;
 
@@ -123,9 +131,21 @@ class IncomeReceivedOnClientsBehalf implements IncomeReceivedOnClientsBehalfInte
         return $this->amount;
     }
 
-    public function setAmount(?float $amount): IncomeReceivedOnClientsBehalf
+    public function setAmount(?float $amount): MoneyReceivedOnClientsBehalf
     {
         $this->amount = $amount;
+
+        return $this;
+    }
+
+    public function getWhoReceivedMoney(): ?string
+    {
+        return $this->whoReceivedMoney;
+    }
+
+    public function setWhoReceivedMoney(?string $whoReceivedMoney): MoneyReceivedOnClientsBehalf
+    {
+        $this->whoReceivedMoney = $whoReceivedMoney;
 
         return $this;
     }

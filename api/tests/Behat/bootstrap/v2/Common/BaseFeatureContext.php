@@ -113,6 +113,7 @@ class BaseFeatureContext extends MinkContext
     public KernelInterface $symfonyKernel;
 
     protected FixtureHelper $fixtureHelper;
+
     public EntityManagerInterface $em;
     private ReportTestHelper $reportTestHelper;
 

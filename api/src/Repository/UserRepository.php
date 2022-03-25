@@ -16,12 +16,10 @@ class UserRepository extends ServiceEntityRepository
 {
     /** @var QueryBuilder */
     private $qb;
-    private SerializerInterface $serializer;
 
-    public function __construct(ManagerRegistry $registry, SerializerInterface $serializer)
+    public function __construct(ManagerRegistry $registry, private SerializerInterface $serializer)
     {
         parent::__construct($registry, User::class);
-        $this->serializer = $serializer;
     }
 
     /**
@@ -241,5 +239,74 @@ SQL;
         $result = $stmt->executeQuery(['email' => $email]);
 
         return $this->serializer->deserialize(json_encode($result->fetchAssociative()), 'App\Entity\User', 'json');
+    }
+
+    public function getAllAdminAccounts()
+    {
+        $dql = "SELECT u FROM App\Entity\User u WHERE u.roleName IN('ROLE_ADMIN', 'ROLE_SUPER_ADMIN', 'ROLE_ADMIN_MANAGER')";
+
+        $query = $this
+            ->getEntityManager()
+            ->createQuery($dql);
+
+        return $query->getResult();
+    }
+
+    public function getAllAdminAccountsCreatedButNotActivatedWithin(string $timeframe)
+    {
+        $date = (new DateTime())->modify($timeframe);
+
+        $dql = "SELECT u FROM App\Entity\User u WHERE u.roleName IN('ROLE_ADMIN', 'ROLE_SUPER_ADMIN', 'ROLE_ADMIN_MANAGER')
+                AND u.lastLoggedIn IS NULL
+                AND u.registrationDate < :date ";
+
+        $query = $this
+            ->getEntityManager()
+            ->createQuery($dql)
+            ->setParameter('date', $date);
+
+        return $query->getResult();
+    }
+
+    public function getAllActivatedAdminAccounts()
+    {
+        $dql = "SELECT u FROM App\Entity\User u WHERE u.roleName IN('ROLE_ADMIN', 'ROLE_SUPER_ADMIN', 'ROLE_ADMIN_MANAGER')
+                AND u.lastLoggedIn IS NOT NULL";
+
+        $query = $this
+            ->getEntityManager()
+            ->createQuery($dql);
+
+        return $query->getResult();
+    }
+
+    public function getAllAdminAccountsNotUsedWithin(string $timeframe)
+    {
+        $date = (new DateTime())->modify($timeframe);
+
+        $dql = "SELECT u FROM App\Entity\User u WHERE u.roleName IN('ROLE_ADMIN', 'ROLE_SUPER_ADMIN', 'ROLE_ADMIN_MANAGER')
+                AND u.lastLoggedIn < :date ";
+
+        $query = $this
+            ->getEntityManager()
+            ->createQuery($dql)
+            ->setParameter('date', $date);
+
+        return $query->getResult();
+    }
+
+    public function getAllAdminAccountsUsedWithin(string $timeframe)
+    {
+        $date = (new DateTime())->modify($timeframe);
+
+        $dql = "SELECT u FROM App\Entity\User u WHERE u.roleName IN('ROLE_ADMIN', 'ROLE_SUPER_ADMIN', 'ROLE_ADMIN_MANAGER')
+                AND u.lastLoggedIn > :date ";
+
+        $query = $this
+            ->getEntityManager()
+            ->createQuery($dql)
+            ->setParameter('date', $date);
+
+        return $query->getResult();
     }
 }

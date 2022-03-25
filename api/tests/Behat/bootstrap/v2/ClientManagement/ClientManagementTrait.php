@@ -8,6 +8,7 @@ use App\Entity\Client;
 use App\Tests\Behat\BehatException;
 use App\Tests\Behat\v2\Common\UserDetails;
 use DateTime;
+use Throwable;
 
 trait ClientManagementTrait
 {
@@ -306,7 +307,7 @@ MESSAGE;
             $this->clickLink('Discharge deputy');
             $this->iAmOnAdminClientDischargePage();
             $this->clickLink('Discharge deputy');
-        } catch (\Throwable $e) {
+        } catch (Throwable $e) {
             // This step is used as part of testing the discharge button isnt here so swallow errors and assert on following step
         }
     }
@@ -365,6 +366,72 @@ MESSAGE;
 
         $client = $this->em->find(Client::class, $this->interactingWithUserDetails->getClientId());
         $client->setNamedDeputy(null);
+
+        $this->em->persist($client);
+        $this->em->flush();
+    }
+
+    /**
+     * @When I attempt to un-archive the client
+     */
+    public function iAttemptToUnarchiveTheClient()
+    {
+        $this->assertInteractingWithUserIsSet();
+
+        try {
+            $this->clickLink('Un-archive client');
+            $this->iAmOnAdminClientUnarchivePage();
+            $this->clickLink('Return to client dashboard');
+        } catch (Throwable $e) {
+            // This step is used as part of testing the unarchive button isnt here so swallow errors and assert on following step
+        }
+    }
+
+    /**
+     * @When an org deputy has an archived client
+     */
+    public function theDeputyHasAnArchivedClient()
+    {
+        $this->assertInteractingWithUserIsSet();
+        $clientId = $this->interactingWithUserDetails->getClientId();
+
+        /** @var Client $client */
+        $client = $this->em->getRepository(Client::class)->find($clientId);
+
+        $client->setArchivedAt(new DateTime('yesterday'));
+
+        $this->em->persist($client);
+        $this->em->flush();
+    }
+
+    /**
+     * @Then the client should be unarchived
+     */
+    public function theClientShouldBeUnarchived()
+    {
+        $this->iAmOnAdminClientDetailsPage();
+    }
+
+    /**
+     * @Then the client should not be unarchived
+     */
+    public function theClientShouldNotBeUnarchived()
+    {
+        $this->iVisitAdminClientDetailsPageForDeputyInteractingWith();
+
+        // Expecting to be redirected to the client archived page
+        $this->iAmOnAdminClientArchivedPage();
+    }
+
+    /**
+     * @Given /^the deputy I am interacting with has been discharged$/
+     */
+    public function theDeputyHasBeenDischarged()
+    {
+        $this->assertInteractingWithUserIsSet();
+
+        $client = $this->em->find(Client::class, $this->interactingWithUserDetails->getClientId());
+        $client->setDeletedAt(new DateTime());
 
         $this->em->persist($client);
         $this->em->flush();

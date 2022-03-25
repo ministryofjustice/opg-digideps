@@ -1,4 +1,4 @@
-@report-submissions @document-sync @v2
+@report-submissions @document-sync @v2_sequential @v2
 Feature: Synchronising Documents with Sirius
 
     @super-admin @lay-pfa-high-completed
@@ -13,7 +13,7 @@ Feature: Synchronising Documents with Sirius
         And I view the pending submissions
         Then I should see the case number of the user I'm interacting with
         And the report PDF document should be queued
-        And the document "test-image.png" should be queued
+        And the document "testimage.png" should be queued
 
     @super-admin @ndr-completed
     Scenario: Submitting an NDR sets the synchronisation status of the report PDF to queued
@@ -33,7 +33,7 @@ Feature: Synchronising Documents with Sirius
         And I visit the admin submissions page
         And I view the pending submissions
         Then I should see the case number of the user I'm interacting with
-        And the document "test-image.png" should be queued
+        And the document "testimage.png" should be queued
 
     @super-admin @prof-admin-health-welfare-submitted
     Scenario: Running the document-sync command syncs queued documents with Sirius
@@ -46,8 +46,8 @@ Feature: Synchronising Documents with Sirius
         Then I should see the case number of the user I'm interacting with
         And the report PDF document should be synced
 #       Supporting documents can only sync after report PDF has synced
-        And the document "test-image.png" should be queued
+        And the document "testimage.png" should be queued
         And I run the document-sync command
         And I visit the admin submissions page
         And I view the pending submissions
-        And the document "test-image.png" should be synced
+        And the document "testimage.png" should be synced

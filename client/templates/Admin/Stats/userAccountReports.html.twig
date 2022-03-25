@@ -1,0 +1,52 @@
+{% extends '@App/Layouts/application.html.twig' %}
+
+{% trans_default_domain "admin-metrics" %}
+{% set page = 'adminAccounts' %}
+
+{% set navSection = 'reports' %}
+
+{% block htmlTitle %}{{ (page ~ '.htmlTitle') | trans }}{% endblock %}
+{% block pageTitle %}{{ (page ~ '.pageTitle') | trans }}{% endblock %}
+
+{% block pageContent %}
+
+<div class="govuk-grid-row">
+    <div class="govuk-grid-column-full text--center">
+        <span class="govuk-caption-l govuk-!-margin-top-2 ">Total</span>
+        <span class="govuk-heading-xl govuk-!-margin-bottom-4 govuk-!-font-size-40">{{ TotalAdminAccounts }}</span>
+    </div>
+</div>
+
+
+<div class="govuk-grid-row">
+    <div class="govuk-grid-column-one-half text--center">
+        <span class="govuk-caption-l govuk-!-margin-top-2">Inactive</span>
+        <p class="govuk-caption-l govuk-!-margin-top-2">(created but not activated in the last 60 days)</p>
+        <span class="govuk-heading-xl govuk-!-margin-bottom-4 govuk-!-font-size-40 ">{{ InactiveAdminAccounts }}</span>
+    </div>
+
+
+    <div class="govuk-grid-column-one-half text--center">
+        <span class="govuk-caption-l govuk-!-margin-top-2">Activated</span>
+        <p class="govuk-caption-l govuk-!-margin-top-2">(a user has enabled their account through registration)</p>
+        <span class="govuk-heading-xl govuk-!-margin-bottom-4 govuk-!-font-size-40">{{ ActivatedAdminAccounts }}</span>
+    </div>
+
+    <div class="govuk-grid-row">
+        <div class="govuk-grid-column-one-half text--center">
+            <span class="govuk-caption-l govuk-!-margin-top-2">Activated</span>
+            <p class="govuk-caption-l govuk-!-margin-top-2">(not used within the last 90 days)</p>
+            <span
+                class="govuk-heading-xl govuk-!-margin-bottom-4 govuk-!-font-size-40">{{ ActivatedAdminAccountsNotUsedWithin90Days }}</span>
+        </div>
+
+
+        <div class="govuk-grid-column-one-half text--center">
+            <span class="govuk-caption-l govuk-!-margin-top-2">Activated</span>
+            <p class="govuk-caption-l govuk-!-margin-top-2">(used within the last 90 days)</p>
+            <span
+                class="govuk-heading-xl govuk-!-margin-bottom-4 govuk-!-font-size-40">{{ ActivatedAdminAccountsUsedWithin90Days }}</span>
+        </div>
+    </div>
+
+    {% endblock %}

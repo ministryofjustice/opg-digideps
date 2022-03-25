@@ -38,12 +38,13 @@ class ClientController extends AbstractController
      * @param string $id
      *
      * @Template("@App/Admin/Client/Client/details.html.twig")
-     *
-     * @return array
      */
     public function detailsAction($id)
     {
         $client = $this->clientApi->getWithUsersV2($id);
+        if (null !== $client->getArchivedAt()) {
+            return $this->redirectToRoute('admin_client_archived', ['id' => $client->getId()]);
+        }
 
         return [
             'client' => $client,
@@ -100,5 +101,40 @@ class ClientController extends AbstractController
         $this->clientApi->delete($id, AuditEvents::TRIGGER_ADMIN_BUTTON);
 
         return $this->redirectToRoute('admin_client_search');
+    }
+
+    /**
+     * @Route("/{id}/archived", name="admin_client_archived", requirements={"id":"\d+"})
+     * @Security("is_granted('ROLE_ADMIN') or has_role('ROLE_AD')")
+     *
+     * @Template("@App/Admin/Client/Client/archived.html.twig")
+     */
+    public function archivedAction(string $id): RedirectResponse|array
+    {
+        $client = $this->clientApi->getWithUsersV2($id);
+        if (null === $client->getArchivedAt()) {
+            return $this->redirectToRoute('admin_client_details', ['id' => $client->getId()]);
+        }
+
+        return [
+            'client' => $client,
+            'namedDeputy' => $client->getDeputy(),
+        ];
+    }
+
+    /**
+     * @Route("/{id}/unarchived", name="admin_client_unarchived", requirements={"id":"\d+"})
+     * @Security ("is_granted('ROLE_ADMIN_MANAGER')")
+     *
+     * @Template("@App/Admin/Client/Client/unarchived.html.twig")
+     */
+    public function unarchiveAction(string $id)
+    {
+        $client = $this->clientApi->getWithUsersV2($id);
+        if (null === $client->getArchivedAt()) {
+            return $this->redirectToRoute('admin_client_details', ['id' => $client->getId()]);
+        }
+
+        $this->clientApi->unarchiveClient($id);
     }
 }

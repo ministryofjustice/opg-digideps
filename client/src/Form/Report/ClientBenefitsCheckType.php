@@ -4,7 +4,7 @@ declare(strict_types=1);
 
 namespace App\Form\Report;
 
-use App\Entity\IncomeReceivedOnClientsBehalfInterface;
+use App\Entity\MoneyReceivedOnClientsBehalfInterface;
 use App\Entity\Report\ClientBenefitsCheck;
 use App\Form\DateType;
 use Symfony\Component\Form\AbstractType;
@@ -31,13 +31,15 @@ class ClientBenefitsCheckType extends AbstractType
     public function buildForm(FormBuilderInterface $builder, array $options)
     {
         $this->step = (int) $options['step'];
+        $baseTransParams = ['%client%' => $options['label_translation_parameters']['clientFirstname']];
+        $domain = 'report-client-benefits-check';
 
         if (1 === $this->step) {
             $builder->add('whenLastCheckedEntitlement', ChoiceType::class, [
                 'choices' => [
-                    'form.whenLastChecked.choices.haveChecked' => ClientBenefitsCheck::WHEN_CHECKED_I_HAVE_CHECKED,
-                    'form.whenLastChecked.choices.currentlyChecking' => ClientBenefitsCheck::WHEN_CHECKED_IM_CURRENTLY_CHECKING,
-                    'form.whenLastChecked.choices.neverChecked' => ClientBenefitsCheck::WHEN_CHECKED_IVE_NEVER_CHECKED,
+                    $this->translator->trans('form.whenLastChecked.choices.haveChecked', $baseTransParams, $domain) => ClientBenefitsCheck::WHEN_CHECKED_I_HAVE_CHECKED,
+                    $this->translator->trans('form.whenLastChecked.choices.currentlyChecking', $baseTransParams, $domain) => ClientBenefitsCheck::WHEN_CHECKED_IM_CURRENTLY_CHECKING,
+                    $this->translator->trans('form.whenLastChecked.choices.neverChecked', $baseTransParams, $domain) => ClientBenefitsCheck::WHEN_CHECKED_IVE_NEVER_CHECKED,
                 ],
                 'expanded' => true,
             ]);
@@ -56,24 +58,24 @@ class ClientBenefitsCheckType extends AbstractType
         }
 
         if (2 === $this->step) {
-            $builder->add('doOthersReceiveIncomeOnClientsBehalf', ChoiceType::class, [
+            $builder->add('doOthersReceiveMoneyOnClientsBehalf', ChoiceType::class, [
                 'choices' => [
-                    'form.incomeOnClientsBehalf.choices.yes' => ClientBenefitsCheck::OTHER_INCOME_YES,
-                    'form.incomeOnClientsBehalf.choices.no' => ClientBenefitsCheck::OTHER_INCOME_NO,
-                    'form.incomeOnClientsBehalf.choices.dontKnow' => ClientBenefitsCheck::OTHER_INCOME_DONT_KNOW,
+                    'form.moneyOnClientsBehalf.choices.yes' => ClientBenefitsCheck::OTHER_MONEY_YES,
+                    'form.moneyOnClientsBehalf.choices.no' => ClientBenefitsCheck::OTHER_MONEY_NO,
+                    'form.moneyOnClientsBehalf.choices.dontKnow' => ClientBenefitsCheck::OTHER_MONEY_DONT_KNOW,
                 ],
                 'expanded' => true,
             ]);
 
-            $builder->add('dontKnowIncomeExplanation', TextareaType::class);
+            $builder->add('dontKnowMoneyExplanation', TextareaType::class);
         }
 
         if (3 === $this->step) {
-            $builder->add('typesOfIncomeReceivedOnClientsBehalf', CollectionType::class, [
-                'entry_type' => IncomeReceivedOnClientsBehalfType::class,
+            $builder->add('typesOfMoneyReceivedOnClientsBehalf', CollectionType::class, [
+                'entry_type' => MoneyReceivedOnClientsBehalfType::class,
                 'entry_options' => ['label' => false, 'empty_data' => null],
-                'delete_empty' => function (IncomeReceivedOnClientsBehalfInterface $income) use ($options) {
-                    return null === $income->getAmount() && null === $income->getIncomeType() && false === $income->getAmountDontKnow() && $options['allow_delete_empty'];
+                'delete_empty' => function (MoneyReceivedOnClientsBehalfInterface $money) use ($options) {
+                    return null === $money->getAmount() && null === $money->getMoneyType() && false === $money->getAmountDontKnow() && $options['allow_delete_empty'];
                 },
                 'allow_delete' => true,
             ]);
@@ -99,6 +101,9 @@ class ClientBenefitsCheckType extends AbstractType
         $resolver->setDefaults(
             [
                 'translation_domain' => 'report-client-benefits-check',
+                'label_translation_parameters' => [
+                    '%client%' => 'ACME Inc.',
+                ],
                 'validation_groups' => [
                     1 => ['client-benefits-check'],
                     2 => ['client-benefits-check'],

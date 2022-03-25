@@ -5,7 +5,7 @@ declare(strict_types=1);
 namespace App\Tests\Unit\Validator\Constraints;
 
 use App\Entity\Ndr\ClientBenefitsCheck as NdrClientBenefitsCheck;
-use App\Entity\Ndr\IncomeReceivedOnClientsBehalf as NdrIncomeReceivedOnClientsBehalf;
+use App\Entity\Ndr\MoneyReceivedOnClientsBehalf as NdrMoneyReceivedOnClientsBehalf;
 use App\TestHelpers\NdrHelpers;
 use App\Validator\Constraints\ClientBenefitsCheck\ClientBenefitsCheck as ClientBenefitsCheckConstraint;
 use App\Validator\Constraints\ClientBenefitsCheck\ClientBenefitsCheckValidator;
@@ -38,7 +38,7 @@ class NdrClientBenefitsCheckValidatorTest extends TestCase
         $ndr = NdrHelpers::createNdr();
         $this->ndrClientBenefitsCheck = (new NdrClientBenefitsCheck())
             ->setNdr($ndr)
-            ->setTypesOfIncomeReceivedOnClientsBehalf(new ArrayCollection());
+            ->setTypesOfMoneyReceivedOnClientsBehalf(new ArrayCollection());
 
         $this->ndrContext = $this->createMock(ExecutionContextInterface::class);
         $this->ndrContext
@@ -113,33 +113,33 @@ class NdrClientBenefitsCheckValidatorTest extends TestCase
     }
 
     /**
-     * @dataProvider dontKnowIncomeExplanationValueProvider
+     * @dataProvider dontKnowMoneyExplanationValueProvider
      * @test
      */
-    public function validatorAddsConstraintIfPropertyIsDontKnowIncomeExplanation($value, $transId)
+    public function validatorAddsConstraintIfPropertyIsDontKnowMoneyExplanation($value, $transId)
     {
-        $this->setContextPropertyName('dontKnowIncomeExplanation')
-            ->setDoOthersReceiveIncomeOnClientsBehalf('dontKnow')
+        $this->setContextPropertyName('dontKnowMoneyExplanation')
+            ->setDoOthersReceiveMoneyOnClientsBehalf('dontKnow')
             ->expectViolationAdded($transId)
             ->invokeTest($value);
     }
 
-    public function dontKnowIncomeExplanationValueProvider()
+    public function dontKnowMoneyExplanationValueProvider()
     {
         return [
-            'null' => [null, 'form.incomeOnClientsBehalf.errors.missingExplanation'],
-            'future date' => ['aaa', 'form.incomeOnClientsBehalf.errors.explanationTooShort'],
+            'null' => [null, 'form.moneyOnClientsBehalf.errors.missingExplanation'],
+            'future date' => ['aaa', 'form.moneyOnClientsBehalf.errors.explanationTooShort'],
         ];
     }
 
     /**
      * @test
      */
-    public function validatorAddsConstraintIfPropertyIsTypesOfIncomeReceivedOnClientsBehalf()
+    public function validatorAddsConstraintIfPropertyIsTypesOfMoneyReceivedOnClientsBehalf()
     {
-        $this->setContextPropertyName('typesOfIncomeReceivedOnClientsBehalf')
-            ->addEmptyIncomeTypeToClientBenefitsCheck()
-            ->expectViolationAdded('form.incomeDetails.errors.missingIncome')
+        $this->setContextPropertyName('typesOfMoneyReceivedOnClientsBehalf')
+            ->addEmptyMoneyTypeToClientBenefitsCheck()
+            ->expectViolationAdded('form.moneyDetails.errors.missingMoney')
             ->invokeTest(null);
     }
 
@@ -152,16 +152,16 @@ class NdrClientBenefitsCheckValidatorTest extends TestCase
         return $this;
     }
 
-    private function setDoOthersReceiveIncomeOnClientsBehalf(string $doOthersReceiveIncomeOnClientsBehalf)
+    private function setDoOthersReceiveMoneyOnClientsBehalf(string $doOthersReceiveMoneyOnClientsBehalf)
     {
-        $this->ndrClientBenefitsCheck->setDoOthersReceiveIncomeOnClientsBehalf($doOthersReceiveIncomeOnClientsBehalf);
+        $this->ndrClientBenefitsCheck->setDoOthersReceiveMoneyOnClientsBehalf($doOthersReceiveMoneyOnClientsBehalf);
 
         return $this;
     }
 
-    private function addEmptyIncomeTypeToClientBenefitsCheck()
+    private function addEmptyMoneyTypeToClientBenefitsCheck()
     {
-        $this->ndrClientBenefitsCheck->addTypeOfIncomeReceivedOnClientsBehalf(new NdrIncomeReceivedOnClientsBehalf());
+        $this->ndrClientBenefitsCheck->addTypeOfMoneyReceivedOnClientsBehalf(new NdrMoneyReceivedOnClientsBehalf());
 
         return $this;
     }

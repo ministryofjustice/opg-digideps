@@ -1,0 +1,58 @@
+{% extends '@App/Layouts/application.html.twig' %}
+
+{% trans_default_domain "admin-clients" %}
+{% set page = 'clientArchived' %}
+
+{% block htmlTitle %}{{ (page ~ '.htmlTitle') | trans }}{% endblock %}
+
+{% block pageTitle %}{{ (page ~ '.pageTitle') | trans({ '%clientFirstName%': client.firstname, '%clientLastName%': client.lastname }) }}{% endblock %}
+
+{% block supportTitleTop %}
+    <span class="govuk-caption-xl">{{ (page ~ '.supportTitle') | trans }}</span>
+{% endblock %}
+
+{% block pageContent %}
+
+    <span class="govuk-tag govuk-tag--red govuk-!-margin-bottom-2">client archived</span>
+
+    <dl class="govuk-summary-list govuk-summary-list--no-border">
+        <div class="govuk-summary-list__row">
+            <dt class="govuk-summary-list__key govuk-!-padding-1">
+                {{ 'courtOrderNumber' | trans({}, 'common') }}:
+            </dt>
+            <dd class="govuk-summary-list__value govuk-!-padding-1">
+                {{ client.caseNumber }}
+            </dd>
+        </div>
+
+        {% if namedDeputy %}
+            <div class="govuk-summary-list__row">
+                <dt class="govuk-summary-list__key govuk-!-padding-1">
+                    {{ 'namedDeputy' | trans({}, 'common') }}:
+                </dt>
+                <dd class="govuk-summary-list__value govuk-!-padding-1">
+                    {{ namedDeputy.fullName }}
+                </dd>
+            </div>
+        {% endif %}
+    </dl>
+
+    {% if is_granted('ROLE_ADMIN_MANAGER') %}
+        {% if client.archivedAt is not null %}
+            <a href="{{ path('admin_client_unarchived', {id: client.id}) }}" role="button" data-module="govuk-button"
+               class="govuk-button govuk-button--secondary">
+                Un-archive client
+            </a>
+        {% endif %}
+    {% endif %}
+
+    {% if is_granted('ROLE_ADMIN_MANAGER') %}
+        {% if not client.isDeleted %}
+            <a href="{{ path('admin_client_discharge', {id: client.id}) }}" role="button" data-module="govuk-button"
+               class="govuk-button govuk-button--secondary">
+                Discharge deputy
+            </a>
+        {% endif %}
+    {% endif %}
+
+{% endblock %}

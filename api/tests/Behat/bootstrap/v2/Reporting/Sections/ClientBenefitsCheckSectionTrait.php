@@ -11,9 +11,10 @@ trait ClientBenefitsCheckSectionTrait
 {
     public bool $clientBenefitsSectionAvailable = false;
     private string $missingDateErrorText = 'Enter the date you last checked %s\'s benefits';
-    private string $missingExplanationErrorText = 'Tell us why you have never checked if anyone other than you receives income on %s\'s behalf';
-    private string $missingIncomeTypeErrorText = 'Enter a type of income';
-    private string $atLeastOneIncomeTypeRequiredErrorText = 'Enter at least one type of income';
+    private string $missingExplanationErrorText = 'Tell us why you don\'t know if anyone other than you received money on %s\'s behalf';
+    private string $missingMoneyTypeErrorText = 'Enter the type of payment';
+    private string $missingWhoReceivedMoneyErrorText = 'Enter the name of the person or organisation who received the money';
+    private string $atLeastOneMoneyTypeRequiredErrorText = 'Enter at least one payment';
 
     /**
      * @When I navigate to and start the client benefits check report section
@@ -30,7 +31,7 @@ trait ClientBenefitsCheckSectionTrait
      */
     public function iNavigateToBenefitsCheckSection()
     {
-        $this->clickLink('Benefits check and income other people receive');
+        $this->clickLink('Benefits check and money others received');
     }
 
     /**
@@ -63,11 +64,13 @@ trait ClientBenefitsCheckSectionTrait
     {
         $this->iAmOnClientBenefitsCheckStep1Page();
 
+        $clientFirstName = $this->loggedInUserDetails->getClientFirstName();
+
         $this->chooseOption(
             'report-client-benefits-check[whenLastCheckedEntitlement]',
             'currentlyChecking',
             'haveCheckedBenefits',
-            'I\'m currently checking this'
+            sprintf('I have begun to check and am waiting to find out if %s', $clientFirstName),
         );
 
         $this->pressButton('Save and continue');
@@ -84,7 +87,7 @@ trait ClientBenefitsCheckSectionTrait
             'report-client-benefits-check[whenLastCheckedEntitlement]',
             'neverChecked',
             'haveCheckedBenefits',
-            'I\'ve never checked this'
+            'No, I did not check this'
         );
 
         $this->fillInField(
@@ -97,89 +100,94 @@ trait ClientBenefitsCheckSectionTrait
     }
 
     /**
-     * @When I confirm others receive income on the clients behalf
+     * @When I confirm others receive money on the clients behalf
      */
-    public function iConfirmOthersReceiveIncomeOnClientsBehalf()
+    public function iConfirmOthersReceiveMoneyOnClientsBehalf()
     {
         $this->iAmOnClientBenefitsCheckStep2Page();
 
         $this->chooseOption(
-            'report-client-benefits-check[doOthersReceiveIncomeOnClientsBehalf]',
+            'report-client-benefits-check[doOthersReceiveMoneyOnClientsBehalf]',
             'yes',
-            'doOthersReceiveIncome'
+            'doOthersReceiveMoney'
         );
 
         $this->pressButton('Save and continue');
     }
 
     /**
-     * @When I confirm others do not receive income on the clients behalf
+     * @When I confirm others do not receive money on the clients behalf
      */
-    public function iConfirmOthersDoNotReceiveIncomeOnClientsBehalf()
+    public function iConfirmOthersDoNotReceiveMoneyOnClientsBehalf()
     {
         $this->iAmOnClientBenefitsCheckStep2Page();
 
         $this->chooseOption(
-            'report-client-benefits-check[doOthersReceiveIncomeOnClientsBehalf]',
+            'report-client-benefits-check[doOthersReceiveMoneyOnClientsBehalf]',
             'no',
-            'doOthersReceiveIncome'
+            'doOthersReceiveMoney'
         );
 
         $this->pressButton('Save and continue');
     }
 
     /**
-     * @Given /^I confirm I do not know if others receive income on the clients behalf and provide an explanation$/
+     * @Given /^I confirm I do not know if others receive money on the clients behalf and provide an explanation$/
      */
-    public function iConfirmIDoNotKnowIfOthersReceiveIncomeOnTheClientsBehalfAndProvideAnExplanation()
+    public function iConfirmIDoNotKnowIfOthersReceiveMoneyOnTheClientsBehalfAndProvideAnExplanation()
     {
         $this->iAmOnClientBenefitsCheckStep2Page();
 
         $this->chooseOption(
-            'report-client-benefits-check[doOthersReceiveIncomeOnClientsBehalf]',
+            'report-client-benefits-check[doOthersReceiveMoneyOnClientsBehalf]',
             'dontKnow',
-            'doOthersReceiveIncome',
+            'doOthersReceiveMoney',
             'I don\'t know'
         );
 
         $this->fillInField(
-            'report-client-benefits-check[dontKnowIncomeExplanation]',
+            'report-client-benefits-check[dontKnowMoneyExplanation]',
             $this->faker->sentence(20),
-            'doOthersReceiveIncome',
+            'doOthersReceiveMoney',
         );
 
         $this->pressButton('Save and continue');
     }
 
     /**
-     * @When I add a type of income where I don't know the value
+     * @When I add a type of money where I don't know the value
      */
-    public function iAddIncomeTypeWithNoValue()
+    public function iAddMoneyTypeWithNoValue()
     {
         $this->iAmOnClientBenefitsCheckStep3Page();
 
-        $incomeTypesXpath = "//fieldset[contains(@class, 'add-another__item')]";
-        $incomeTypes = $this->getSession()->getPage()->findAll('xpath', $incomeTypesXpath);
+        $moneyTypesXpath = "//fieldset[contains(@class, 'add-another__item')]";
+        $moneyTypes = $this->getSession()->getPage()->findAll('xpath', $moneyTypesXpath);
 
-        $emptyIncomeType = null;
+        $emptyMoneyType = null;
 
-        foreach ($incomeTypes as $incomeType) {
+        foreach ($moneyTypes as $moneyType) {
             $emptyInputValueGrandparentXpath = '//input[not(@value)]/../..';
-            $emptyIncomeType = $incomeType->find('xpath', $emptyInputValueGrandparentXpath) ?: null;
+            $emptyMoneyType = $moneyType->find('xpath', $emptyInputValueGrandparentXpath) ?: null;
         }
 
-        $incomeTypeByNameXpath = "//input[contains(@name, 'incomeType')]";
-        $incomeTypeName = ($emptyIncomeType->find('xpath', $incomeTypeByNameXpath))->getAttribute('name');
+        $moneyTypeByNameXpath = "//input[contains(@name, 'moneyType')]";
+        $moneyTypeName = ($emptyMoneyType->find('xpath', $moneyTypeByNameXpath))->getAttribute('name');
 
-        $this->fillInField($incomeTypeName, $this->faker->sentence(2), 'incomeType');
+        $this->fillInField($moneyTypeName, $this->faker->sentence(2), 'moneyType');
 
-        $checkboxByNameXpath = "//input[contains(@type, 'checkbox')]";
-        $checkboxName = ($emptyIncomeType->find('xpath', $checkboxByNameXpath))->getAttribute('name');
+        $whoReceivedMoneyByNameXpath = "//input[contains(@name, 'whoReceivedMoney')]";
+        $whoReceivedMoneyInput = ($emptyMoneyType->find('xpath', $whoReceivedMoneyByNameXpath))->getAttribute('name');
+
+        $this->fillInField($whoReceivedMoneyInput, $this->faker->sentence(2), 'moneyType');
+
+        $checkboxByTypeXpath = "//input[contains(@type, 'checkbox')]";
+        $checkboxName = ($emptyMoneyType->find('xpath', $checkboxByTypeXpath))->getAttribute('name');
 
         $this->tickCheckbox(
-            'incomeTypeCheckbox',
+            'moneyTypeCheckbox',
             $checkboxName,
-            'incomeType',
+            'moneyType',
             'I don\'t know'
         );
 
@@ -187,38 +195,44 @@ trait ClientBenefitsCheckSectionTrait
     }
 
     /**
-     * @When I add :numOfIncomeTypes income types from the summary page
+     * @When I add :numOfMoneyTypes money types from the summary page
      */
-    public function iAddIncomeTypesFromSummaryPage(int $numOfIncomeTypes)
+    public function iAddMoneyTypesFromSummaryPage(int $numOfMoneyTypes)
     {
         $this->iAmOnClientBenefitsCheckSummaryPage();
 
-        $this->pressButton('Add income');
+        $this->pressButton('Add money');
 
-        $this->iAddNumberOfIncomeTypes($numOfIncomeTypes);
-        $this->iHaveNoFurtherTypesOfIncomeToAdd();
+        $this->iAddNumberOfMoneyTypes($numOfMoneyTypes);
+        $this->iHaveNoFurtherTypesOfMoneyToAdd();
     }
 
     /**
-     * @When I add :numOfIncomeTypes type(s) of income with values
+     * @When I add :numOfMoneyTypes type(s) of money with values
      */
-    public function iAddNumberOfIncomeTypes(int $numOfIncomeTypes)
+    public function iAddNumberOfMoneyTypes(int $numOfMoneyTypes)
     {
         $this->iAmOnClientBenefitsCheckStep3Page();
 
-        $numOfIncomeTypes = $numOfIncomeTypes - 1;
+        $numOfMoneyTypes = $numOfMoneyTypes - 1;
 
-        foreach (range(0, $numOfIncomeTypes) as $index) {
+        foreach (range(0, $numOfMoneyTypes) as $index) {
             $this->fillInField(
-                "report-client-benefits-check[typesOfIncomeReceivedOnClientsBehalf][$index][incomeType]",
+                "report-client-benefits-check[typesOfMoneyReceivedOnClientsBehalf][$index][moneyType]",
                 $this->faker->sentence(3),
-                'incomeType'
+                'moneyType'
             );
 
             $this->fillInField(
-                "report-client-benefits-check[typesOfIncomeReceivedOnClientsBehalf][$index][amount]",
+                "report-client-benefits-check[typesOfMoneyReceivedOnClientsBehalf][$index][whoReceivedMoney]",
+                $this->faker->sentence(2),
+                'moneyType'
+            );
+
+            $this->fillInField(
+                "report-client-benefits-check[typesOfMoneyReceivedOnClientsBehalf][$index][amount]",
                 $this->faker->numberBetween(10, 2000),
-                'incomeType'
+                'moneyType'
             );
 
             $this->pressButton('Add another');
@@ -226,9 +240,9 @@ trait ClientBenefitsCheckSectionTrait
     }
 
     /**
-     * @When I have no further types of income to add
+     * @When I have no further types of money to add
      */
-    public function iHaveNoFurtherTypesOfIncomeToAdd()
+    public function iHaveNoFurtherTypesOfMoneyToAdd()
     {
         $this->iAmOnClientBenefitsCheckStep3Page();
 
@@ -236,31 +250,31 @@ trait ClientBenefitsCheckSectionTrait
     }
 
     /**
-     * @When I :action the last type of income I added
+     * @When I :action the last type of money I added
      */
-    public function iActionIncomeTypeIAdded(string $action)
+    public function iActionMoneyTypeIAdded(string $action)
     {
         $this->iAmOnClientBenefitsCheckSummaryPage();
 
-        $incomeTypeAnswers = $this->getSectionAnswers('incomeType')[0];
-        $incomeTypeDescription = $incomeTypeAnswers[array_key_first($incomeTypeAnswers)];
+        $moneyTypeAnswers = $this->getSectionAnswers('moneyType')[0];
+        $moneyTypeDescription = $moneyTypeAnswers[array_key_first($moneyTypeAnswers)];
 
-        $incomeTypeRowXpath = sprintf('//dt[contains(.,"%s")]/..', $incomeTypeDescription);
-        $incomeTypeRow = $this->getSession()->getPage()->find('xpath', $incomeTypeRowXpath);
+        $moneyTypeRowXpath = sprintf('//dt[contains(.,"%s")]/..', $moneyTypeDescription);
+        $moneyTypeRow = $this->getSession()->getPage()->find('xpath', $moneyTypeRowXpath);
 
         if ('edit' === strtolower($action)) {
             $this->editFieldAnswerInSection(
-                $incomeTypeRow,
-                array_key_first($incomeTypeAnswers),
+                $moneyTypeRow,
+                array_key_first($moneyTypeAnswers),
                 $this->faker->sentence(3),
-                'incomeType'
+                'moneyType'
             );
         } elseif ('remove' === strtolower($action)) {
             $this->removeAnswerFromSection(
-                array_key_first($incomeTypeAnswers),
-                'incomeType',
+                array_key_first($moneyTypeAnswers),
+                'moneyType',
                 true,
-                'Yes, remove income type'
+                'Yes, remove money type'
             );
         } else {
             throw new BehatException('This step definition only supports "edit" and "remove"');
@@ -269,22 +283,22 @@ trait ClientBenefitsCheckSectionTrait
 
     /**
      * @Then the client benefits check summary page should contain the details I entered
-     * @Then the client benefits check summary page should contain my updated response and no income types
+     * @Then the client benefits check summary page should contain my updated response and no money types
      */
     public function benefitCheckSummaryPageContainsEnteredDetails()
     {
         $this->iAmOnClientBenefitsCheckSummaryPage();
 
         if (!is_null($this->getSectionAnswers('haveCheckedBenefits'))) {
-            $this->expectedResultsDisplayedSimplified('haveCheckedBenefits');
+            $this->expectedResultsDisplayedSimplified('haveCheckedBenefits', true);
         }
 
-        if (!is_null($this->getSectionAnswers('doOthersReceiveIncome'))) {
-            $this->expectedResultsDisplayedSimplified('doOthersReceiveIncome');
+        if (!is_null($this->getSectionAnswers('doOthersReceiveMoney'))) {
+            $this->expectedResultsDisplayedSimplified('doOthersReceiveMoney', true);
         }
 
-        if (!is_null($this->getSectionAnswers('incomeType'))) {
-            $this->expectedResultsDisplayedSimplified('incomeType');
+        if (!is_null($this->getSectionAnswers('moneyType'))) {
+            $this->expectedResultsDisplayedSimplified('moneyType', true);
         }
     }
 
@@ -339,17 +353,17 @@ trait ClientBenefitsCheckSectionTrait
     }
 
     /**
-     * @Given /^I should not see an empty section for income types$/
+     * @Given /^I should not see an empty section for money types$/
      */
-    public function iShouldNotSeeAnEmptySectionForIncomeTypes()
+    public function iShouldNotSeeAnEmptySectionForMoneyTypes()
     {
         $this->iAmOnClientBenefitsCheckSummaryPage();
 
-        $incomeTypeSectionXpath = "//div[contains(@id, 'income-received')]";
-        $incomeTypeDiv = $this->getSession()->getPage()->find('xpath', $incomeTypeSectionXpath);
+        $moneyTypeSectionXpath = "//div[contains(@id, 'money-received')]";
+        $moneyTypeDiv = $this->getSession()->getPage()->find('xpath', $moneyTypeSectionXpath);
 
-        if (!is_null($incomeTypeDiv)) {
-            throw new BehatException('The income types section appears on the page when it should not be visible');
+        if (!is_null($moneyTypeDiv)) {
+            throw new BehatException('The money types section appears on the page when it should not be visible');
         }
     }
 
@@ -376,44 +390,47 @@ trait ClientBenefitsCheckSectionTrait
             case 'missing explanation':
                 $this->assertOnErrorMessage(sprintf($this->missingExplanationErrorText, $this->loggedInUserDetails->getClientFirstName()));
                 break;
-            case 'missing income type':
-                $this->assertOnErrorMessage($this->missingIncomeTypeErrorText);
+            case 'missing money type':
+                $this->assertOnErrorMessage($this->missingMoneyTypeErrorText);
                 break;
-            case 'at least one income type required':
-                $this->assertOnErrorMessage($this->atLeastOneIncomeTypeRequiredErrorText);
+            case 'missing who received money':
+                $this->assertOnErrorMessage($this->missingWhoReceivedMoneyErrorText);
+                break;
+            case 'at least one money type required':
+                $this->assertOnErrorMessage($this->atLeastOneMoneyTypeRequiredErrorText);
                 break;
             default:
-                throw new BehatException('This step only supports "missing date|missing explanation|missing income type|at least one income type required". Either add a new case or update the argument.');
+                throw new BehatException('This step only supports "missing date|missing explanation|missing money type|at least one money type required". Either add a new case or update the argument.');
         }
     }
 
     /**
-     * @Given /^I confirm I dont know if anyone else receives income on the clients behalf and dont provide an explanation$/
+     * @Given /^I confirm I dont know if anyone else receives money on the clients behalf and dont provide an explanation$/
      */
-    public function iConfirmIDontKnowIfAnyoneElseReceivesIncomeOnTheClientsBehalfButDontProvideAnExplanation()
+    public function iConfirmIDontKnowIfAnyoneElseReceivesMoneyOnTheClientsBehalfButDontProvideAnExplanation()
     {
         $this->iAmOnClientBenefitsCheckStep2Page();
 
         $this->chooseOption(
-            'report-client-benefits-check[doOthersReceiveIncomeOnClientsBehalf]',
+            'report-client-benefits-check[doOthersReceiveMoneyOnClientsBehalf]',
             'dontKnow',
-            'doOthersReceiveIncome'
+            'doOthersReceiveMoney'
         );
 
         $this->pressButton('Save and continue');
     }
 
     /**
-     * @Given /^I confirm the amount but don't provide an income type$/
+     * @Given /^I confirm the amount but don't provide a money type$/
      */
-    public function iConfirmTheTypeOfAnAmountButDonTProvideAnIncomeType()
+    public function iConfirmTheTypeOfAnAmountButDonTProvideAMoneyType()
     {
         $this->iAmOnClientBenefitsCheckStep3Page();
 
         $this->fillInField(
-            'report-client-benefits-check[typesOfIncomeReceivedOnClientsBehalf][0][amount]',
+            'report-client-benefits-check[typesOfMoneyReceivedOnClientsBehalf][0][amount]',
             $this->faker->numberBetween(10, 2000),
-            'incomeType'
+            'moneyType'
         );
 
         $this->pressButton('Add another');
@@ -429,15 +446,15 @@ trait ClientBenefitsCheckSectionTrait
         $this->clickLink('Back');
 
         $this->removeAnswerFromSection(
-            'report-client-benefits-check[doOthersReceiveIncomeOnClientsBehalf]',
-            'doOthersReceiveIncome'
+            'report-client-benefits-check[doOthersReceiveMoneyOnClientsBehalf]',
+            'doOthersReceiveMoney'
         );
     }
 
     /**
-     * @Given /^I attempt to submit an empty income type$/
+     * @Given /^I attempt to submit an empty money type$/
      */
-    public function iAttemptToSubmitAnEmptyIncomeType()
+    public function iAttemptToSubmitAnEmptyMoneyType()
     {
         $this->iAmOnClientBenefitsCheckStep3Page();
 
@@ -445,14 +462,14 @@ trait ClientBenefitsCheckSectionTrait
     }
 
     /**
-     * @Given I edit my response to do others receive income on a clients behalf to :response
+     * @Given I edit my response to do others receive money on a clients behalf to :response
      */
-    public function iEditMyResponseToDoOthersReceiveIncomeOnAClientsBehalf(string $response)
+    public function iEditMyResponseToDoOthersReceiveMoneyOnAClientsBehalf(string $response)
     {
         $this->iAmOnClientBenefitsCheckSummaryPage();
 
         $clientFirstName = $this->loggedInUserDetails->getClientFirstName();
-        $questionText = sprintf('Does anyone other than you receive income on %s’s behalf?', $clientFirstName);
+        $questionText = sprintf('Did anyone receive any money from people or organisations on %s', $clientFirstName);
         $questionRowXpath = sprintf("//dt[contains(., '%s')]/..", $questionText);
         $questionRow = $this->getSession()->getPage()->find('xpath', $questionRowXpath);
 
@@ -463,14 +480,14 @@ trait ClientBenefitsCheckSectionTrait
 
         $this->editFieldAnswerInSection(
             $questionRow,
-            'report-client-benefits-check[doOthersReceiveIncomeOnClientsBehalf]',
+            'report-client-benefits-check[doOthersReceiveMoneyOnClientsBehalf]',
             $response,
-            'doOthersReceiveIncome'
+            'doOthersReceiveMoney'
         );
 
         $this->removeAnswerFromSection(
-            'report-client-benefits-check[typesOfIncomeReceivedOnClientsBehalf][0][incomeType]',
-            'incomeType'
+            'report-client-benefits-check[typesOfMoneyReceivedOnClientsBehalf][0][moneyType]',
+            'moneyType'
         );
     }
 
@@ -482,7 +499,7 @@ trait ClientBenefitsCheckSectionTrait
         $this->iAmOnClientBenefitsCheckSummaryPage();
 
         $clientFirstName = $this->loggedInUserDetails->getClientFirstName();
-        $questionText = sprintf('Have you checked that %s gets all the benefits they should have?', $clientFirstName);
+        $questionText = sprintf('Did you check that %s gets all the benefits they should have in the last reporting period', $clientFirstName);
         $questionRowXpath = sprintf("//dt[contains(., '%s')]/..", $questionText);
         $questionRow = $this->getSession()->getPage()->find('xpath', $questionRowXpath);
 
@@ -496,7 +513,27 @@ trait ClientBenefitsCheckSectionTrait
             'report-client-benefits-check[whenLastCheckedEntitlement]',
             'currentlyChecking',
             'haveCheckedBenefits',
-            "I'm currently checking this"
+            sprintf('I have begun to check and am waiting to find out if %s', $clientFirstName)
         );
+    }
+
+    /**
+     * @Given /^I fill in amount and description but dont provide details on who received the money$/
+     */
+    public function iDontProvideDetailsOnWhoReceivedTheMoney()
+    {
+        $this->fillInField(
+            'report-client-benefits-check[typesOfMoneyReceivedOnClientsBehalf][0][moneyType]',
+            $this->faker->sentence(3),
+            'moneyType'
+        );
+
+        $this->fillInField(
+            'report-client-benefits-check[typesOfMoneyReceivedOnClientsBehalf][0][amount]',
+            $this->faker->numberBetween(10, 2000),
+            'moneyType'
+        );
+
+        $this->pressButton('Add another');
     }
 }

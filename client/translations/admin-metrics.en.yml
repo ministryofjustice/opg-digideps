@@ -2,9 +2,19 @@ indexPage:
     htmlTitle: Administration - Analytics
     pageTitle: Analytics
     downloadDAT: Download DAT file
+    reports: View reports
+
+adminAccounts:
+    pageTitle: Admin Accounts
+
+reports:
+    htmlTitle: Administration - Reports
+    pageTitle: Reports
+    downloadActiveLays: Download active lays report
+    downloadAssetsTotalValues: Download total value of assets on submitted reports in last 12 months report
     downloadSatisfaction: Download satisfaction report
     downloadUserResearch: Download user research report
-    downloadActiveLays: Download active lays report
+    userAccountReports: View admin account metrics
 
 form:
     title: Change reporting period
@@ -26,19 +36,19 @@ metrics:
     clients:
         label: Clients
         totalLabel: Total clients
-        format: '%value%'
+        format: "%value%"
     registeredDeputies:
         label: Registered deputies
         totalLabel: Total registered deputies
-        format: '%value%'
+        format: "%value%"
     reportsSubmitted:
         label: Reports submitted
         totalLabel: Total reports submitted
-        format: '%value%'
+        format: "%value%"
     satisfaction:
         label: Satisfaction
         totalLabel: Overall satisfaction
-        format: '%value%%'
+        format: "%value%%"
 
 dimensions:
     deputyType:

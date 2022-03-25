@@ -10,6 +10,7 @@ use App\Entity\Satisfaction;
 use DateTime;
 use Doctrine\Common\Collections\ArrayCollection;
 use Doctrine\ORM\Mapping as ORM;
+use InvalidArgumentException;
 use JMS\Serializer\Annotation as JMS;
 
 /**
@@ -511,7 +512,7 @@ class Ndr implements ReportInterface
     {
         $acceptedValues = ['only_deputy', 'more_deputies_behalf', 'more_deputies_not_behalf'];
         if ($agreedBehalfDeputy && !in_array($agreedBehalfDeputy, $acceptedValues)) {
-            throw new \InvalidArgumentException(__METHOD__." {$agreedBehalfDeputy} given. Expected value: ".implode(' or ', $acceptedValues));
+            throw new InvalidArgumentException(__METHOD__." {$agreedBehalfDeputy} given. Expected value: ".implode(' or ', $acceptedValues));
         }
 
         $this->agreedBehalfDeputy = $agreedBehalfDeputy;
@@ -669,5 +670,15 @@ class Ndr implements ReportInterface
         $this->clientBenefitsCheck = $clientBenefitsCheck;
 
         return $this;
+    }
+
+    public function getAssetsTotalValue(): float | int
+    {
+        $ret = 0;
+        foreach ($this->getAssets() as $asset) {
+            $ret += $asset->getValueTotal();
+        }
+
+        return $ret;
     }
 }

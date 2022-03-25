@@ -33,7 +33,7 @@ services:
     ports:
       - "4566-4583:4566-4583"
     environment:
-      - SERVICES=s3,ssm,logs
+      - SERVICES=s3,ssm,logs,secretsmanager
       - DATA_DIR=/tmp/localstack/data
       - DEFAULT_REGION=eu-west-1
       - USE_SINGLE_REGION=1

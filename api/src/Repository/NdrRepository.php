@@ -20,8 +20,6 @@ class NdrRepository extends ServiceEntityRepository
      * add empty Debts to Ndr.
      * Called from doctrine listener.
      *
-     * @param Ndr $ndr
-     *
      * @return int changed records
      */
     public function addDebtsToNdrIfMissing(Ndr $ndr)
@@ -45,15 +43,13 @@ class NdrRepository extends ServiceEntityRepository
     /**
      * Called from doctrine listener.
      *
-     * @param Ndr $ndr
-     *
      * @return int changed records
      */
     public function addIncomeBenefitsToNdrIfMissing(Ndr $ndr)
     {
         $ret = 0;
 
-        if (count($ndr->getStateBenefits()) === 0) {
+        if (0 === count($ndr->getStateBenefits())) {
             foreach (StateBenefit::$stateBenefitsKeys as $typeId => $hasMoreDetails) {
                 $incomeBenefit = new StateBenefit($ndr, $typeId, $hasMoreDetails);
                 $this->_em->persist($incomeBenefit);
@@ -62,7 +58,7 @@ class NdrRepository extends ServiceEntityRepository
             }
         }
 
-        if (count($ndr->getOneOff()) === 0) {
+        if (0 === count($ndr->getOneOff())) {
             foreach (OneOff::$oneOffKeys as $typeId => $hasMoreDetails) {
                 $incomeBenefit = new OneOff($ndr, $typeId, $hasMoreDetails);
                 $this->_em->persist($incomeBenefit);

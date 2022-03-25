@@ -10,10 +10,14 @@ use App\Entity\Satisfaction;
 use App\Entity\User;
 use App\Service\ReportService;
 use App\Service\ReportStatusService;
+use DateInterval;
 use DateTime;
+use DateTimeZone;
 use Doctrine\Common\Collections\ArrayCollection;
 use Doctrine\ORM\Mapping as ORM;
+use InvalidArgumentException;
 use JMS\Serializer\Annotation as JMS;
+use RuntimeException;
 
 /**
  * Reports.
@@ -77,8 +81,8 @@ class Report implements ReportInterface
     const PROF_PFA_LOW_ASSETS_TYPE = '103-5';
     const PROF_PFA_HIGH_ASSETS_TYPE = '102-5';
     const PROF_HW_TYPE = '104-5';
-    const PROF_COMBINED_LOW_ASSETS = '103-4-5';
-    const PROF_COMBINED_HIGH_ASSETS = '102-4-5';
+    const PROF_COMBINED_LOW_ASSETS_TYPE = '103-4-5';
+    const PROF_COMBINED_HIGH_ASSETS_TYPE = '102-4-5';
 
     const TYPE_HEALTH_WELFARE = '104';
     const TYPE_PROPERTY_AND_AFFAIRS_HIGH_ASSETS = '102';
@@ -162,6 +166,39 @@ class Report implements ReportInterface
             // add when ready
             self::SECTION_PROF_DEPUTY_COSTS_ESTIMATE => self::allProfReportTypes(),
             self::SECTION_DOCUMENTS => self::allRolesAllReportTypes(),
+        ];
+    }
+
+    public static function getAllLayTypes(): array
+    {
+        return [
+            self::LAY_PFA_LOW_ASSETS_TYPE,
+            self::LAY_PFA_HIGH_ASSETS_TYPE,
+            self::LAY_HW_TYPE,
+            self::LAY_COMBINED_LOW_ASSETS_TYPE,
+            self::LAY_COMBINED_HIGH_ASSETS_TYPE,
+        ];
+    }
+
+    public static function getAllProfTypes(): array
+    {
+        return [
+            self::PROF_PFA_LOW_ASSETS_TYPE,
+            self::PROF_PFA_HIGH_ASSETS_TYPE,
+            self::PROF_HW_TYPE,
+            self::PROF_COMBINED_LOW_ASSETS_TYPE,
+            self::PROF_COMBINED_HIGH_ASSETS_TYPE,
+        ];
+    }
+
+    public static function getAllPaTypes(): array
+    {
+        return [
+            self::PA_PFA_LOW_ASSETS_TYPE,
+            self::PA_PFA_HIGH_ASSETS_TYPE,
+            self::PA_HW_TYPE,
+            self::PA_COMBINED_LOW_ASSETS_TYPE,
+            self::PA_COMBINED_HIGH_ASSETS_TYPE,
         ];
     }
 
@@ -443,16 +480,16 @@ class Report implements ReportInterface
     public function __construct(Client $client, $type, DateTime $startDate, DateTime $endDate, $dateChecks = true)
     {
         if (!in_array($type, self::allRolesAllReportTypes())) {
-            throw new \InvalidArgumentException("$type not a valid report type");
+            throw new InvalidArgumentException("$type not a valid report type");
         }
         $this->type = $type;
         $this->client = $client;
-        $this->startDate = new DateTime($startDate->format('Y-m-d'), new \DateTimeZone('Europe/London'));
-        $this->endDate = new DateTime($endDate->format('Y-m-d'), new \DateTimeZone('Europe/London'));
+        $this->startDate = new DateTime($startDate->format('Y-m-d'), new DateTimeZone('Europe/London'));
+        $this->endDate = new DateTime($endDate->format('Y-m-d'), new DateTimeZone('Europe/London'));
         $this->updateDueDateBasedOnEndDate();
 
         if ($dateChecks && count($client->getUnsubmittedReports()) > 0) {
-            throw new \RuntimeException('Client '.$client->getId().' already has an unsubmitted report. Cannot create another one');
+            throw new RuntimeException('Client '.$client->getId().' already has an unsubmitted report. Cannot create another one');
         }
 
         // check date interval overlapping other reports
@@ -466,7 +503,7 @@ class Report implements ReportInterface
             $expectedStartDate->modify('+1 day');
             $daysDiff = (int) $expectedStartDate->diff($this->startDate)->format('%a');
             if (0 !== $daysDiff) {
-                throw new \RuntimeException(sprintf('Incorrect start date. Last submitted report was on %s, '.'therefore the new report is expected to start on %s, not on %s', $endDateLastReport->format('d/m/Y'), $expectedStartDate->format('d/m/Y'), $this->startDate->format('d/m/Y')));
+                throw new RuntimeException(sprintf('Incorrect start date. Last submitted report was on %s, '.'therefore the new report is expected to start on %s, not on %s', $endDateLastReport->format('d/m/Y'), $expectedStartDate->format('d/m/Y'), $this->startDate->format('d/m/Y')));
             }
         }
 
@@ -533,9 +570,9 @@ class Report implements ReportInterface
         // 13/11/19. Then it is 21 days (DDPB-2996)
         $this->dueDate = clone $this->endDate;
         if ($this->isLayReport() && $this->getEndDate()->format('Ymd') >= '20191113') {
-            $this->dueDate->add(new \DateInterval('P21D'));
+            $this->dueDate->add(new DateInterval('P21D'));
         } else {
-            $this->dueDate->add(new \DateInterval('P56D'));
+            $this->dueDate->add(new DateInterval('P56D'));
         }
     }
 
@@ -827,9 +864,7 @@ class Report implements ReportInterface
     }
 
     /**
-     * @param \App\Entity\Report\Action $action
-     *
-     * @return \App\Entity\Report\Report
+     * @return Report
      */
     public function setAction(Action $action)
     {
@@ -895,7 +930,7 @@ class Report implements ReportInterface
         $acceptedValues = ['not_deputy', 'only_deputy', 'more_deputies_behalf', 'more_deputies_not_behalf'];
 
         if ($agreeBehalfDeputy && !in_array($agreeBehalfDeputy, $acceptedValues)) {
-            throw new \InvalidArgumentException(__METHOD__." {$agreeBehalfDeputy} given. Expected value: ".implode(' or ', $acceptedValues));
+            throw new InvalidArgumentException(__METHOD__." {$agreeBehalfDeputy} given. Expected value: ".implode(' or ', $acceptedValues));
         }
 
         $this->agreedBehalfDeputy = $agreeBehalfDeputy;
@@ -1310,8 +1345,8 @@ class Report implements ReportInterface
             self::PROF_PFA_LOW_ASSETS_TYPE => 'propertyAffairsMinimal',
             self::PROF_PFA_HIGH_ASSETS_TYPE => 'propertyAffairsGeneral',
             self::PROF_HW_TYPE => 'healthWelfare',
-            self::PROF_COMBINED_LOW_ASSETS => 'propertyAffairsMinimalHealthWelfare',
-            self::PROF_COMBINED_HIGH_ASSETS => 'propertyAffairsGeneralHealthWelfare',
+            self::PROF_COMBINED_LOW_ASSETS_TYPE => 'propertyAffairsMinimalHealthWelfare',
+            self::PROF_COMBINED_HIGH_ASSETS_TYPE => 'propertyAffairsGeneralHealthWelfare',
         ];
 
         return $titleTranslationKeys[$this->getType()];
@@ -1332,7 +1367,7 @@ class Report implements ReportInterface
 
     public function isProfReport()
     {
-        return in_array($this->getType(), [self::PROF_PFA_HIGH_ASSETS_TYPE, self::PROF_PFA_LOW_ASSETS_TYPE, self::PROF_HW_TYPE, self::PROF_COMBINED_HIGH_ASSETS, self::PROF_COMBINED_LOW_ASSETS]);
+        return in_array($this->getType(), [self::PROF_PFA_HIGH_ASSETS_TYPE, self::PROF_PFA_LOW_ASSETS_TYPE, self::PROF_HW_TYPE, self::PROF_COMBINED_HIGH_ASSETS_TYPE, self::PROF_COMBINED_LOW_ASSETS_TYPE]);
     }
 
     public function getSatisfaction(): Satisfaction
@@ -1391,7 +1426,7 @@ class Report implements ReportInterface
 
     public function getBenefitsSectionReleaseDate(): ?DateTime
     {
-        return $this->benefitsSectionReleaseDate ?: new DateTime('31-12-2030 00:00:00');
+        return $this->benefitsSectionReleaseDate ?: new DateTime('16-03-2022 00:00:00');
     }
 
     /**
@@ -1409,7 +1444,7 @@ class Report implements ReportInterface
         return [
             self::LAY_PFA_LOW_ASSETS_TYPE, self::LAY_PFA_HIGH_ASSETS_TYPE, self::LAY_HW_TYPE, self::LAY_COMBINED_LOW_ASSETS_TYPE, self::LAY_COMBINED_HIGH_ASSETS_TYPE,
             self::PA_PFA_LOW_ASSETS_TYPE, self::PA_PFA_HIGH_ASSETS_TYPE, self::PA_HW_TYPE, self::PA_COMBINED_LOW_ASSETS_TYPE, self::PA_COMBINED_HIGH_ASSETS_TYPE,
-            self::PROF_PFA_LOW_ASSETS_TYPE, self::PROF_PFA_HIGH_ASSETS_TYPE, self::PROF_HW_TYPE, self::PROF_COMBINED_LOW_ASSETS, self::PROF_COMBINED_HIGH_ASSETS,
+            self::PROF_PFA_LOW_ASSETS_TYPE, self::PROF_PFA_HIGH_ASSETS_TYPE, self::PROF_HW_TYPE, self::PROF_COMBINED_LOW_ASSETS_TYPE, self::PROF_COMBINED_HIGH_ASSETS_TYPE,
         ];
     }
 
@@ -1418,7 +1453,7 @@ class Report implements ReportInterface
         return [
             self::LAY_HW_TYPE, self::LAY_COMBINED_LOW_ASSETS_TYPE, self::LAY_COMBINED_HIGH_ASSETS_TYPE,
             self::PA_HW_TYPE, self::PA_COMBINED_LOW_ASSETS_TYPE, self::PA_COMBINED_HIGH_ASSETS_TYPE,
-            self::PROF_HW_TYPE, self::PROF_COMBINED_LOW_ASSETS, self::PROF_COMBINED_HIGH_ASSETS,
+            self::PROF_HW_TYPE, self::PROF_COMBINED_LOW_ASSETS_TYPE, self::PROF_COMBINED_HIGH_ASSETS_TYPE,
         ];
     }
 
@@ -1427,14 +1462,14 @@ class Report implements ReportInterface
         return [
             self::LAY_PFA_LOW_ASSETS_TYPE, self::LAY_PFA_HIGH_ASSETS_TYPE, self::LAY_COMBINED_LOW_ASSETS_TYPE, self::LAY_COMBINED_HIGH_ASSETS_TYPE,
             self::PA_PFA_LOW_ASSETS_TYPE, self::PA_PFA_HIGH_ASSETS_TYPE, self::PA_COMBINED_LOW_ASSETS_TYPE, self::PA_COMBINED_HIGH_ASSETS_TYPE,
-            self::PROF_PFA_LOW_ASSETS_TYPE, self::PROF_PFA_HIGH_ASSETS_TYPE, self::PROF_COMBINED_LOW_ASSETS, self::PROF_COMBINED_HIGH_ASSETS,
+            self::PROF_PFA_LOW_ASSETS_TYPE, self::PROF_PFA_HIGH_ASSETS_TYPE, self::PROF_COMBINED_LOW_ASSETS_TYPE, self::PROF_COMBINED_HIGH_ASSETS_TYPE,
         ];
     }
 
     public static function allProfReportTypes(): array
     {
         return [
-            self::PROF_PFA_LOW_ASSETS_TYPE, self::PROF_PFA_HIGH_ASSETS_TYPE, self::PROF_HW_TYPE, self::PROF_COMBINED_LOW_ASSETS, self::PROF_COMBINED_HIGH_ASSETS,
+            self::PROF_PFA_LOW_ASSETS_TYPE, self::PROF_PFA_HIGH_ASSETS_TYPE, self::PROF_HW_TYPE, self::PROF_COMBINED_LOW_ASSETS_TYPE, self::PROF_COMBINED_HIGH_ASSETS_TYPE,
         ];
     }
 
@@ -1443,7 +1478,7 @@ class Report implements ReportInterface
         return [
             self::LAY_PFA_HIGH_ASSETS_TYPE, self::LAY_COMBINED_HIGH_ASSETS_TYPE,
             self::PA_PFA_HIGH_ASSETS_TYPE, self::PA_COMBINED_HIGH_ASSETS_TYPE,
-            self::PROF_PFA_HIGH_ASSETS_TYPE, self::PROF_COMBINED_HIGH_ASSETS,
+            self::PROF_PFA_HIGH_ASSETS_TYPE, self::PROF_COMBINED_HIGH_ASSETS_TYPE,
         ];
     }
 
@@ -1452,7 +1487,7 @@ class Report implements ReportInterface
         return [
             self::LAY_PFA_LOW_ASSETS_TYPE, self::LAY_COMBINED_LOW_ASSETS_TYPE,
             self::PA_PFA_LOW_ASSETS_TYPE, self::PA_COMBINED_LOW_ASSETS_TYPE,
-            self::PROF_PFA_LOW_ASSETS_TYPE, self::PROF_COMBINED_LOW_ASSETS,
+            self::PROF_PFA_LOW_ASSETS_TYPE, self::PROF_COMBINED_LOW_ASSETS_TYPE,
         ];
     }
 
@@ -1473,7 +1508,7 @@ class Report implements ReportInterface
     public static function profPfaAndCombinedReportTypes(): array
     {
         return [
-            self::PROF_PFA_LOW_ASSETS_TYPE, self::PROF_PFA_HIGH_ASSETS_TYPE, self::PROF_COMBINED_LOW_ASSETS, self::PROF_COMBINED_HIGH_ASSETS,
+            self::PROF_PFA_LOW_ASSETS_TYPE, self::PROF_PFA_HIGH_ASSETS_TYPE, self::PROF_COMBINED_LOW_ASSETS_TYPE, self::PROF_COMBINED_HIGH_ASSETS_TYPE,
         ];
     }
 }
