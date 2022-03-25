@@ -65,11 +65,11 @@ class SiriusToLayDeputyshipDtoAssembler implements LayDeputyshipDtoAssemblerInte
                 ->setDeputyAddress4($data['DeputyAddress4'])
                 ->setDeputyAddress5($data['DeputyAddress5'])
                 ->setDeputyPostcode($data['DeputyPostcode'])
-                ->setTypeOfReport($data['ReportType'])
+                ->setTypeOfReport($this->determineReportTypeIsSupported($data['ReportType']))
                 ->setIsNdrEnabled($data['NDR'])
                 ->setOrderDate(new DateTime($data['MadeDate']))
                 ->setOrderType($data['OrderType'])
-                ->setIsCoDeputy('yes' === $data['OrderType']);
+                ->setIsCoDeputy('yes' === $data['CoDeputy']);
     }
 
     private function collectMissingColumns(array $data)
@@ -81,15 +81,13 @@ class SiriusToLayDeputyshipDtoAssembler implements LayDeputyshipDtoAssemblerInte
         $this->missingColumns = array_filter($this->missingColumns);
     }
 
-    private function determineCorref(string $reportType): string
+    private function determineReportTypeIsSupported(?string $reportType)
     {
-        switch ($reportType) {
-            case 'OPG102':
-                return 'L2';
-            case 'OPG103':
-                return 'L3';
-            default:
-                throw new InvalidArgumentException('Cannot assemble LayDeputyshipDto: Unexpected report type');
-        }
+        $supported = match ($reportType) {
+            'OPG102', 'OPG103', 'OPG104' => true,
+            default => false
+        };
+
+        return $supported ? $reportType : throw new InvalidArgumentException(sprintf('Report type %s not supported', $reportType));
     }
 }

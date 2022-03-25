@@ -30,16 +30,21 @@ class CasRecFactory
         $deputyNumber = str_pad((string) rand(1, 999999), 6, '0', STR_PAD_LEFT);
 
         $dto = (new LayDeputyshipDto())
-            ->setCaseNumber($data['caseNumber'] ? $data['caseNumber'] : $caseNumber)
-            ->setSource('casrec')
-            ->setClientSurname($data['clientLastName'] ? $data['clientLastName'] : 'Smith')
-            ->setCorref($this->determineCorref($data['reportType']))
+            ->setCaseNumber($data['caseNumber'] ?: $caseNumber)
+            ->setClientSurname($data['clientLastName'] ?: 'Smith')
             ->setDeputyUid($deputyNumber)
-            ->setDeputyPostcode($data['deputyPostCode'] ? $data['deputyPostCode'] : 'SW1')
-            ->setDeputySurname($data['deputyLastName'] ? $data['deputyLastName'] : 'Jones')
+            ->setDeputyAddress1($data['deputyPostCode'] ?: 'Victoria Park')
+            ->setDeputyAddress2($data['deputyPostCode'] ?: 'Fakeville')
+            ->setDeputyAddress3($data['deputyPostCode'] ?: 'Pretendham')
+            ->setDeputyAddress4($data['deputyPostCode'] ?: null)
+            ->setDeputyAddress5($data['deputyPostCode'] ?: null)
+            ->setDeputyPostcode($data['deputyPostCode'] ?: 'SW1')
+            ->setDeputySurname($data['deputyLastName'] ?: 'Jones')
             ->setIsNdrEnabled(false)
             ->setOrderDate(new DateTime())
-            ->setTypeOfReport($data['reportType']);
+            ->setTypeOfReport($data['reportType'])
+            ->setOrderType($data['orderType'])
+            ->setIsCoDeputy(false);
 
         return $this->casRecFactory->createFromDto($dto);
     }

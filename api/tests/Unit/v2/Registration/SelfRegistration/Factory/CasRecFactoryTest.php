@@ -78,12 +78,17 @@ class CasRecFactoryTest extends TestCase
         $this->assertEquals('depsurname', $result->getDeputySurname());
         $this->assertEquals('clientsurname', $result->getClientLastname());
         $this->assertEquals('postcode', $result->getDeputyPostCode());
+        $this->assertEquals('depaddress1', $result->getDeputyAddress1());
+        $this->assertEquals('depaddress2', $result->getDeputyAddress2());
+        $this->assertEquals('depaddress3', $result->getDeputyAddress3());
+        $this->assertEquals('depaddress4', $result->getDeputyAddress4());
+        $this->assertEquals('depaddress5', $result->getDeputyAddress5());
         $this->assertEquals('type', $result->getTypeOfReport());
-        $this->assertEquals('corref', $result->getOrderType());
-        $this->assertEquals(true, $result->getColumn('NDR'));
-        $this->assertEquals('2010-01-03 12:03:23', $result->getUpdatedAt()->format('Y-m-d H:i:s'));
-        $this->assertEquals(CasRec::SIRIUS_SOURCE, $result->getSource());
+        $this->assertEquals('pfa', $result->getOrderType());
+        $this->assertEquals(true, $result->getNdr());
+        $this->assertEquals('2010-01-03T12:03:23+00:00', $result->getUpdatedAt()->format('c'));
         $this->assertEquals('2011-06-14', $result->getOrderDate()->format('Y-m-d'));
+        $this->assertEquals(false, $result->getIsCoDeputy());
     }
 
     /**
@@ -96,11 +101,16 @@ class CasRecFactoryTest extends TestCase
             ->setDeputyUid('depnum')
             ->setDeputySurname('depsurname')
             ->setClientSurname('clientsurname')
+            ->setDeputyAddress1('depaddress1')
+            ->setDeputyAddress2('depaddress2')
+            ->setDeputyAddress3('depaddress3')
+            ->setDeputyAddress4('depaddress4')
+            ->setDeputyAddress5('depaddress5')
             ->setDeputyPostcode('postcode')
             ->setTypeOfReport('type')
             ->setIsNdrEnabled(true)
-            ->setCorref('corref')
-            ->setSource(CasRec::SIRIUS_SOURCE)
-            ->setOrderDate(new DateTime('2011-06-14'));
+            ->setOrderType('pfa')
+            ->setOrderDate(new DateTime('2011-06-14'))
+            ->setIsCoDeputy(false);
     }
 }

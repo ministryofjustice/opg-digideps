@@ -48,10 +48,10 @@ class CasRecFactory
             'DeputyAddress5' => $dto->getDeputyAddress5(),
             'DeputyPostcode' => $dto->getDeputyPostcode(),
             'ReportType' => $dto->getTypeOfReport(),
-            'NDR' => $dto->isNdrEnabled(),
-            'MadeDate' => $dto->getOrderDate(),
+            'NDR' => $dto->isNdrEnabled() ? 'yes' : 'no',
+            'MadeDate' => $dto->getOrderDate()->format('Y-m-d'),
             'OrderType' => $dto->getOrderType(),
-            'CoDeputy' => $dto->getIsCoDeputy(),
+            'CoDeputy' => $dto->getIsCoDeputy() ? 'yes' : 'no',
         ];
     }
 

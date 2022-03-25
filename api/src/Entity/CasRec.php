@@ -33,12 +33,12 @@ class CasRec
         $this->deputyAddress3 = $row['DeputyAddress3'] ?? null;
         $this->deputyAddress4 = $row['DeputyAddress4'] ?? null;
         $this->deputyAddress5 = $row['DeputyAddress5'] ?? null;
-        $this->deputyPostCode = $row['Dep Postcode'] ?? null;
+        $this->deputyPostCode = $row['DeputyPostcode'] ?? null;
         $this->typeOfReport = $row['ReportType'] ?? null;
         $this->ndr = isset($row['NDR']) ? 'yes' === $row['NDR'] : null;
         $this->orderDate = isset($row['MadeDate']) ? new DateTime($row['MadeDate']) : null;
         $this->orderType = $row['OrderType'] ?? null;
-        $this->isCoDeputy = $row['CoDeputy'] ?? null;
+        $this->isCoDeputy = isset($row['CoDeputy']) ? 'yes' === $row['CoDeputy'] : null;
 
         $this->createdAt = $createdAt ?: new DateTime();
         $this->updatedAt = null;
