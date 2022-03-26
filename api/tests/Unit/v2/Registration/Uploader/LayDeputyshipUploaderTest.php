@@ -93,13 +93,14 @@ class LayDeputyshipUploaderTest extends TestCase
 
     /**
      * @test
+     * @dataProvider reportTypeProvider
      */
-    public function updatesReportTypeOfActiveReportsIfRequired()
+    public function updatesReportTypeOfActiveReportsIfRequired(string $currentReportType, string $casrecNewReportType, string $expectedNewReportType)
     {
         $collection = new LayDeputyshipDtoCollection();
         $collection->append($this->buildLayDeputyshipDto(1));
 
-        $casRec = new CasRec(['Typeofrep' => 'opg103', 'Corref' => 'l3']);
+        $casRec = new CasRec(['ReportType' => $casrecNewReportType, 'OrderType' => 'OPG104' === $casrecNewReportType ? 'hw' : 'pfa']);
 
         $this->factory
             ->expects($this->once())
@@ -108,7 +109,7 @@ class LayDeputyshipUploaderTest extends TestCase
 
         // Ensure an existing Client is found with an active Report whose type is different to the new type in the upload.
         $existingClient = (new Client())->setCaseNumber('case-1');
-        $activeReport = new Report($existingClient, '102', new DateTime(), new DateTime(), false);
+        $activeReport = new Report($existingClient, $currentReportType, new DateTime(), new DateTime(), false);
         $this->reportRepository
             ->expects($this->once())
             ->method('findAllActiveReportsByCaseNumbersAndRole')
@@ -118,7 +119,16 @@ class LayDeputyshipUploaderTest extends TestCase
         $return = $this->sut->upload($collection);
         $this->assertEquals(1, $return['added']);
         $this->assertCount(0, $return['errors']);
-        $this->assertEquals('103', $activeReport->getType());
+        $this->assertEquals($expectedNewReportType, $activeReport->getType());
+    }
+
+    public function reportTypeProvider()
+    {
+        return [
+            'Changes to 102' => ['103', 'OPG102', '102'],
+            'Changes to 103' => ['102', 'OPG103', '103'],
+            'Changes to 104' => ['102', 'OPG104', '104'],
+        ];
     }
 
     /**

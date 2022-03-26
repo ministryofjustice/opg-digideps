@@ -256,7 +256,7 @@ class SelfRegisterControllerTest extends AbstractTestController
                     'deputy_address3' => null,
                     'deputy_address4' => null,
                     'deputy_address5' => null,
-                    'deputy_post_code' => null,
+                    'deputy_post_code' => 'SW1',
                     'type_of_report' => 'OPG102',
                     'order_type' => 'pfa',
                     'updated_at' => null,
