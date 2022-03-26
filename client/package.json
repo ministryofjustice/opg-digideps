@@ -71,6 +71,7 @@
       "/node_modules/*.+\\.js$"
     ]
   },
+  "prettier": "prettier-config-standard",
   "standard": {
     "env": [
       "jest"
