@@ -88,6 +88,6 @@ class SiriusToLayDeputyshipDtoAssembler implements LayDeputyshipDtoAssemblerInte
             default => false
         };
 
-        return $supported ? $reportType : throw new InvalidArgumentException(sprintf('Report type %s not supported', $reportType));
+        return $supported ? $reportType : '';
     }
 }
