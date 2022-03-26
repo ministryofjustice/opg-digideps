@@ -1,7 +1,7 @@
 const KEY_ENTER = 13
 const KEY_SPACE = 32
 
-function DetachedDetails($module) {
+function DetachedDetails ($module) {
   this.$module = $module
   this.$summary = $module.querySelector('.govuk-details__summary')
   this.$content = document.querySelector(

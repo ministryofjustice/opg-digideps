@@ -1,5 +1,5 @@
 /* globals $ */
-function ShowHideContent() {
+function ShowHideContent () {
   const self = this
 
   // Radio and Checkbox selectors
@@ -10,13 +10,13 @@ function ShowHideContent() {
   }
 
   // Escape name attribute for use in DOM selector
-  function escapeElementName(str) {
+  function escapeElementName (str) {
     const result = str.replace('[', '\\[').replace(']', '\\]')
     return result
   }
 
   // Adds ARIA attributes to control + associated content
-  function initToggledContent() {
+  function initToggledContent () {
     const $control = $(this)
     const $content = getToggledContent($control)
 
@@ -29,7 +29,7 @@ function ShowHideContent() {
   }
 
   // Return toggled content for control
-  function getToggledContent($control) {
+  function getToggledContent ($control) {
     let id = $control.attr('aria-controls')
 
     // ARIA attributes aren't set before init
@@ -42,7 +42,7 @@ function ShowHideContent() {
   }
 
   // Show toggled content for control
-  function showToggledContent($control, $content) {
+  function showToggledContent ($control, $content) {
     // Show content
     if ($content.hasClass('js-hidden')) {
       $content.removeClass('js-hidden')
@@ -56,7 +56,7 @@ function ShowHideContent() {
   }
 
   // Hide toggled content for control
-  function hideToggledContent($control, $content) {
+  function hideToggledContent ($control, $content) {
     $content = $content || getToggledContent($control)
 
     // Hide content
@@ -72,7 +72,7 @@ function ShowHideContent() {
   }
 
   // Handle radio show/hide
-  function handleRadioContent($control, $content) {
+  function handleRadioContent ($control, $content) {
     // All radios in this group which control content
     const selector =
       selectors.radio +
@@ -94,7 +94,7 @@ function ShowHideContent() {
   }
 
   // Handle checkbox show/hide
-  function handleCheckboxContent($control, $content) {
+  function handleCheckboxContent ($control, $content) {
     // Show checkbox content
     if ($control.is(':checked')) {
       showToggledContent($control, $content)
@@ -105,11 +105,11 @@ function ShowHideContent() {
   }
 
   // Set up event handlers etc
-  function init($container, elementSelector, eventSelectors, handler) {
+  function init ($container, elementSelector, eventSelectors, handler) {
     $container = $container || $(document.body)
 
     // Handle control clicks
-    function deferred() {
+    function deferred () {
       const $control = $(this)
       handler($control, getToggledContent($control))
     }
@@ -130,7 +130,7 @@ function ShowHideContent() {
   }
 
   // Get event selectors for all radio groups
-  function getEventSelectorsForRadioGroups() {
+  function getEventSelectorsForRadioGroups () {
     const radioGroups = []
 
     // Build an array of radio group selectors
