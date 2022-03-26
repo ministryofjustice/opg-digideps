@@ -115,7 +115,7 @@ trait IngestTrait
         }
     }
 
-    private function extractUidsFromCsv($csvFilePath)
+    private function extractUidsFromCsv($csvFilePath, string $buttonText)
     {
         if ($this->getMinkParameter('files_path')) {
             $fullPath = rtrim(realpath($this->getMinkParameter('files_path')), DIRECTORY_SEPARATOR).DIRECTORY_SEPARATOR.$csvFilePath;
@@ -132,7 +132,13 @@ trait IngestTrait
 
         foreach ($csvRows as $row) {
             $email = empty($row['Email']) ? null : substr(strstr($row['Email'], '@'), 1);
-            $deputyNumber = $row['DeputyUid'] ?? null;
+
+            if ('Upload PA/Prof users' === $buttonText) {
+                $deputyNumber = isset($row['Deputy No']) ? User::padDeputyNumber($row['Deputy No']) : null;
+            } else {
+                $deputyNumber = $row['DeputyUid'] ?? null;
+            }
+
             $deputyAddressNumber = isset($row['DepAddr No']) ? User::padDeputyNumber($row['DepAddr No']) : null;
 
             $this->entityUids['client_case_numbers'][] = $row['Case'] ?? null;
@@ -194,7 +200,7 @@ trait IngestTrait
         $this->pressButton($uploadButtonText);
         $this->waitForAjaxAndRefresh();
 
-        $this->extractUidsFromCsv($csvFilepath);
+        $this->extractUidsFromCsv($csvFilepath, $uploadButtonText);
         $this->countCreatedEntities();
     }
 
