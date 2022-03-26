@@ -15,7 +15,7 @@ const uploadProgress = function (element) {
   }
 }
 
-var uploadChunk = function (currentChunk, nOfChunks, element) {
+const uploadChunk = function (currentChunk, nOfChunks, element) {
   const casrecAddAjaxUrl = $(element).data('path-casrec-add-ajax')
   const casrecUploadUrl = $(element).data('path-casrec-upload')
 

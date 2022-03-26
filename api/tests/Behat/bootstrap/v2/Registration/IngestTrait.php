@@ -458,7 +458,7 @@ trait IngestTrait
     }
 
     /**
-     * @When I upload a lay CSV that has a new report type :reportTypeNumber and corref for case number :caseNumber
+     * @When I upload a lay CSV that has a new report type :reportTypeNumber for case number :caseNumber
      */
     public function iUploadLayCsvWithNewReportType(string $reportTypeNumber, string $caseNumber)
     {

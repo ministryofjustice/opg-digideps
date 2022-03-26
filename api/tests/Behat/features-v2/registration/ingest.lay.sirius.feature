@@ -13,7 +13,7 @@ Feature: Lay CSV data ingestion - sirius source data
     Scenario: Uploading a Lay CSV that contains existing casrec entities with new report type
         Given a super admin user accesses the admin app
         When I visit the admin upload lay users page
-        And I upload a lay CSV that has a new report type '103' and corref for case number '34343434'
+        And I upload a lay CSV that has a new report type '103' for case number '34343434'
         Then the clients report type should be updated
 
     @super-admin
