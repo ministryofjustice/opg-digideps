@@ -23,7 +23,6 @@
     "jest-fetch-mock": "^3.0.3",
     "jquery": "^3.6.0",
     "mini-css-extract-plugin": "^2.5.3",
-    "prettier-config-standard": "^5.0.0",
     "sass": "^1.49.8",
     "sass-loader": "^10.2.1",
     "standard": "^16.0.4",
@@ -71,7 +70,6 @@
       "/node_modules/*.+\\.js$"
     ]
   },
-  "prettier": "prettier-config-standard",
   "standard": {
     "env": [
       "jest"
