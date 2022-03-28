@@ -29,18 +29,10 @@ use RuntimeException;
 
 class ReportService
 {
-    /** @var ReportRepository */
-    protected $reportRepository;
-
-    /**
-     * @var EntityManagerInterface
-     */
-    protected $_em;
-
     /**
      * @var ObjectRepository
      */
-    private $casRecRepository;
+    private $preRegistrationRepository;
 
     /**
      * @var ObjectRepository
@@ -53,12 +45,10 @@ class ReportService
     private $bankAccountRepository;
 
     public function __construct(
-        EntityManagerInterface $em,
-        ReportRepository $reportRepository
+        private EntityManagerInterface $em,
+        private ReportRepository $reportRepository
     ) {
-        $this->_em = $em;
-        $this->reportRepository = $reportRepository;
-        $this->casRecRepository = $em->getRepository(PreRegistration::class);
+        $this->preRegistrationRepository = $em->getRepository(PreRegistration::class);
         $this->assetRepository = $em->getRepository(Asset::class);
         $this->bankAccountRepository = $em->getRepository(BankAccountEntity::class);
     }
@@ -84,7 +74,7 @@ class ReportService
         // create submission record with NEW documents (= documents not yet attached to a submission)
         $submission = new ReportSubmission($currentReport, $user);
         if ($currentReport instanceof Ndr && (null !== $ndrDocumentId)) {
-            $document = $this->_em->getRepository(Document::class)->find($ndrDocumentId);
+            $document = $this->em->getRepository(Document::class)->find($ndrDocumentId);
 
             if ($document instanceof Document) {
                 $document->setReportSubmission($submission);
@@ -101,7 +91,7 @@ class ReportService
             }
         }
 
-        $this->_em->persist($submission);
+        $this->em->persist($submission);
 
         if ($currentReport instanceof Ndr) {
             // Find the first report and clone assets/accounts across
@@ -132,7 +122,7 @@ class ReportService
             $newYearReport = $this->createNextYearReport($currentReport);
         }
 
-        $this->_em->flush(); // single transaction for report.submitted flags + new year report creation
+        $this->em->flush(); // single transaction for report.submitted flags + new year report creation
 
         return $newYearReport;
     }
@@ -157,8 +147,8 @@ class ReportService
                 $newAsset->setReport($toReport);
 
                 $toReport->addAsset($newAsset);
-                $this->_em->detach($newAsset);
-                $this->_em->persist($newAsset);
+                $this->em->detach($newAsset);
+                $this->em->persist($newAsset);
             }
         }
 
@@ -171,7 +161,7 @@ class ReportService
                 $newAccount = $this->cloneBankAccount($account);
                 $newAccount->setReport($toReport);
                 $toReport->addAccount($newAccount);
-                $this->_em->persist($newAccount);
+                $this->em->persist($newAccount);
             }
         }
     }
@@ -292,14 +282,14 @@ class ReportService
 
         if ($oldReport instanceof Report) {
             $startDate = clone $oldReport->getEndDate();
-            $newReportType = $this->getReportTypeBasedOnCasrec($client) ?: $oldReport->getType();
+            $newReportType = $this->getReportTypeBasedOnSirius($client) ?: $oldReport->getType();
             $startDate->modify('+1 day');
         } elseif ($oldReport instanceof Ndr) {
             // when the previous report is NDR we need to work out the new reporting period
             /** @var DateTime $startDate */
             $startDate = $oldReport->getClient()->getExpectedReportStartDate();
             // set default type as oldReport is ndr
-            $newReportType = $this->getReportTypeBasedOnCasrec($client) ?: Report::LAY_PFA_HIGH_ASSETS_TYPE;
+            $newReportType = $this->getReportTypeBasedOnSirius($client) ?: Report::LAY_PFA_HIGH_ASSETS_TYPE;
         } else {
             throw new RuntimeException('createNextYearReport() only supports Report and Ndr');
         }
@@ -318,7 +308,7 @@ class ReportService
         $this->clonePersistentResources($newReport, $oldReport);
 
         $newReport->updateSectionsStatusCache($newReport->getAvailableSections());
-        $this->_em->persist($newReport);
+        $this->em->persist($newReport);
 
         return $newReport;
     }
@@ -330,9 +320,9 @@ class ReportService
      *
      * @throws Exception
      */
-    public function getReportTypeBasedOnCasrec(Client $client)
+    public function getReportTypeBasedOnSirius(Client $client)
     {
-        $casRec = $this->casRecRepository->findOneBy(['caseNumber' => $client->getCaseNumber()]);
+        $casRec = $this->preRegistrationRepository->findOneBy(['caseNumber' => $client->getCaseNumber()]);
         if ($casRec instanceof PreRegistration) {
             $namedDeputy = $client->getNamedDeputy();
 
@@ -373,7 +363,7 @@ class ReportService
 
         $report->setUnsubmittedSectionsList($sectionList);
 
-        $this->_em->flush();
+        $this->em->flush();
     }
 
     /**
@@ -392,10 +382,10 @@ class ReportService
             }
         }
 
-        $this->_em->persist($submission);
+        $this->em->persist($submission);
 
         // single transaction flush: current report, submission, new year report
-        $this->_em->flush();
+        $this->em->flush();
 
         return $currentReport;
     }

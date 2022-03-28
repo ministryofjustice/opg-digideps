@@ -11,6 +11,7 @@ Feature: Synchronising Documents with Sirius
         And a super admin user accesses the admin app
         And I visit the admin submissions page
         And I view the pending submissions
+        And I search for submissions for the client I'm interacting with
         Then I should see the case number of the user I'm interacting with
         And the report PDF document should be queued
         And the document "testimage.png" should be queued
@@ -22,6 +23,7 @@ Feature: Synchronising Documents with Sirius
         And a super admin user accesses the admin app
         And I visit the admin submissions page
         And I view the pending submissions
+        And I search for submissions for the client I'm interacting with
         Then I should see the case number of the user I'm interacting with
         And the report PDF document should be queued
 
@@ -32,6 +34,7 @@ Feature: Synchronising Documents with Sirius
         And a super admin user accesses the admin app
         And I visit the admin submissions page
         And I view the pending submissions
+        And I search for submissions for the client I'm interacting with
         Then I should see the case number of the user I'm interacting with
         And the document "testimage.png" should be queued
 
@@ -43,6 +46,7 @@ Feature: Synchronising Documents with Sirius
         And I run the document-sync command
         And I visit the admin submissions page
         And I view the pending submissions
+        And I search for submissions for the client I'm interacting with
         Then I should see the case number of the user I'm interacting with
         And the report PDF document should be synced
 #       Supporting documents can only sync after report PDF has synced
@@ -50,4 +54,5 @@ Feature: Synchronising Documents with Sirius
         And I run the document-sync command
         And I visit the admin submissions page
         And I view the pending submissions
+        And I search for submissions for the client I'm interacting with
         And the document "testimage.png" should be synced

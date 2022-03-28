@@ -14,7 +14,7 @@ use UnexpectedValueException;
 
 /**
  * @ORM\Table(name="pre_registration", indexes={@ORM\Index(name="updated_at_idx", columns={"updated_at"})})
- * @ORM\Entity(repositoryClass="PreRegistrationRepository")
+ * @ORM\Entity(repositoryClass="App\Repository\PreRegistrationRepository")
  */
 class PreRegistration
 {

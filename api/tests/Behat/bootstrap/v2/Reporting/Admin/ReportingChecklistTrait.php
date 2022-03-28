@@ -16,7 +16,7 @@ trait ReportingChecklistTrait
     private array $formErrors = [
         "Please select 'Yes' or 'No'",
         "Confirm that you've checked the contact details are correct",
-        "Confirm that you've checked the deputy's full name on CASREC is correct",
+        "Confirm that you've checked the deputy's full name on Sirius is correct",
         "Please select 'Yes' or 'No'",
         "Please select 'Yes' or 'No'",
         "Please select 'Yes' or 'No'",
@@ -99,7 +99,7 @@ trait ReportingChecklistTrait
 
         $this->selectOption('report_checklist[reportingPeriodAccurate]', 'yes');
         $this->checkOption('report_checklist[contactDetailsUptoDate]');
-        $this->checkOption('report_checklist[deputyFullNameAccurateInCasrec]');
+        $this->checkOption('report_checklist[deputyFullNameAccurateInSirius]');
 
         if (in_array($reportType, Report::allRolesHwAndCombinedReportTypes())) {
             $this->selectOption('report_checklist[decisionsSatisfactory]', 'yes');

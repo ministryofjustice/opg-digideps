@@ -482,7 +482,7 @@ class ReportServiceTest extends TestCase
         }
 
         $sut = new ReportService($em->reveal(), $this->reportRepo);
-        $type = $sut->getReportTypeBasedOnCasrec($client->reveal());
+        $type = $sut->getReportTypeBasedOnSirius($client->reveal());
 
         if (!($expectedType instanceof Throwable)) {
             $this->assertEquals($expectedType, $type);

@@ -13,6 +13,19 @@ trait ReportSubmissionTrait
     private array $documentFileNames = [];
 
     /**
+     * @Then I search for submissions for the client I'm interacting with
+     */
+    public function iSearchForSubmissionForClientInteractingWith()
+    {
+        $this->assertInteractingWithUserIsSet();
+        $this->iAmOnAdminReportSubmissionsPage();
+
+        $clientLastName = $this->interactingWithUserDetails->getClientLastName();
+        $this->fillInField('q', $clientLastName);
+        $this->pressButton('search_submit');
+    }
+
+    /**
      * @Then I should see the case number of the user I'm interacting with
      */
     public function iShouldSeeInteractingWithCaseNumber()
@@ -24,7 +37,7 @@ trait ReportSubmissionTrait
         $submissionRow = $this->getSession()->getPage()->find('xpath', $locator);
 
         if (is_null($submissionRow)) {
-            throw new BehatException('Could not find a submission row that contained case number "%s"', $caseNumber);
+            throw new BehatException(sprintf('Could not find a submission row that contained case number "%s"', $caseNumber));
         }
     }
 

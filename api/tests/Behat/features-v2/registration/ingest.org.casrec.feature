@@ -1,4 +1,4 @@
-@v2 @registration @ingest @v2_admin @acs
+@v2 @registration @ingest @v2_admin
 Feature: Org CSV data ingestion - casrec source data
 
     @super-admin

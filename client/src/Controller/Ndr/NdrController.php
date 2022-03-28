@@ -15,9 +15,12 @@ use App\Service\Client\Internal\PreRegistrationApi;
 use App\Service\Client\Internal\SatisfactionApi;
 use App\Service\Client\Internal\UserApi;
 use App\Service\File\S3FileUploader;
+use App\Service\HtmlToPdfGenerator;
 use App\Service\NdrStatusService;
 use App\Service\ParameterStoreService;
 use App\Service\Redirector;
+use DateTime;
+use Exception;
 use Sensio\Bundle\FrameworkExtraBundle\Configuration\Template;
 use Symfony\Component\HttpFoundation\RedirectResponse;
 use Symfony\Component\HttpFoundation\Request;
@@ -56,7 +59,8 @@ class NdrController extends AbstractController
         private ClientApi $clientApi,
         private PreRegistrationApi $preRegistrationApi,
         private SatisfactionApi $satisfactionApi,
-        private NdrApi $ndrApi
+        private NdrApi $ndrApi,
+        private HtmlToPdfGenerator $htmlToPdf
     ) {
     }
 
@@ -181,7 +185,7 @@ class NdrController extends AbstractController
 
         $attachmentName = sprintf(
             'DigiNdr-%s_%s.pdf',
-            $ndr->getSubmitDate() instanceof \DateTime ? $ndr->getSubmitDate()->format('Y-m-d') : 'n-a-',
+            $ndr->getSubmitDate() instanceof DateTime ? $ndr->getSubmitDate()->format('Y-m-d') : 'n-a-',
             $ndr->getClient()->getCaseNumber()
         );
 
@@ -209,7 +213,7 @@ class NdrController extends AbstractController
      *
      * @return array|RedirectResponse
      *
-     * @throws \Exception
+     * @throws Exception
      */
     public function declarationAction(Request $request, $ndrId, S3FileUploader $fileUploader)
     {
@@ -234,7 +238,7 @@ class NdrController extends AbstractController
         $form = $this->createForm(FormDir\Ndr\ReportDeclarationType::class, $ndr);
         $form->handleRequest($request);
         if ($form->isSubmitted() && $form->isValid()) {
-            $ndr->setSubmitted(true)->setSubmitDate(new \DateTime());
+            $ndr->setSubmitted(true)->setSubmitDate(new DateTime());
 
             // store PDF as a document
             $pdfBinaryContent = $this->getPdfBinaryContent($ndr);
