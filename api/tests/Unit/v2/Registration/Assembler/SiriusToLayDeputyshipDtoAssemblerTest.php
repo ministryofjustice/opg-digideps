@@ -58,17 +58,6 @@ class SiriusToLayDeputyshipDtoAssemblerTest extends TestCase
 
     /**
      * @test
-     */
-    public function assembleFromArrayReturnsNullIfGivenUnexpectedReportType(): void
-    {
-        $input = $this->getInput();
-        $input['Typeofrep'] = 'OPG105';
-
-        $this->assertNull($this->sut->assembleFromArray($input));
-    }
-
-    /**
-     * @test
      * @dataProvider getReportTypeToCorrefExpectation
      */
     public function assembleFromArrayAssemblesAndReturnsALayDeputyshipDto($reportType): void
