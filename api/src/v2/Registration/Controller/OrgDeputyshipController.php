@@ -6,7 +6,7 @@ namespace App\v2\Registration\Controller;
 
 use App\Service\DataCompression;
 use App\v2\Controller\ControllerTrait;
-use App\v2\Registration\Assembler\CasRecToOrgDeputyshipDtoAssembler;
+use App\v2\Registration\Assembler\SiriusToOrgDeputyshipDtoAssembler;
 use App\v2\Registration\Uploader\OrgDeputyshipUploader;
 use Sensio\Bundle\FrameworkExtraBundle\Configuration\Security;
 use Symfony\Bundle\FrameworkBundle\Controller\AbstractController;
@@ -21,7 +21,7 @@ class OrgDeputyshipController extends AbstractController
     /** @var OrgDeputyshipUploader */
     private $uploader;
 
-    /** @var CasRecToOrgDeputyshipDtoAssembler */
+    /** @var SiriusToOrgDeputyshipDtoAssembler */
     private $assembler;
 
     /** @var DataCompression */
@@ -32,7 +32,7 @@ class OrgDeputyshipController extends AbstractController
      */
     public function __construct(
         OrgDeputyshipUploader $orgDeputyshipUploader,
-        CasRecToOrgDeputyshipDtoAssembler $assembler,
+        SiriusToOrgDeputyshipDtoAssembler $assembler,
         DataCompression $dataCompression
     ) {
         $this->uploader = $orgDeputyshipUploader;

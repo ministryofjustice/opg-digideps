@@ -14,23 +14,23 @@ class OrgDeputyshipDto
     private $clientLastname;
     private $clientAddress1;
     private $clientAddress2;
-    private $clientCounty;
     private $clientPostCode;
+    private $deputyUUID;
+    private $deputyFirstname;
+    private $deputyLastname;
+    private $deputyEmail;
     private $deputyAddress1;
     private $deputyAddress2;
-    private $deputyLastname;
-    private $deputyNumber;
-    private $deputyType;
+    private $deputyPostcode;
     private $reportType;
 
     /** @var string|null */
-    private $deputyEmail;
+    private $clientAddress3;
+    private $clientAddress4;
+    private $clientAddress5;
     private $deputyAddress3;
     private $deputyAddress4;
     private $deputyAddress5;
-    private $deputyAddressNumber;
-    private $deputyPostcode;
-    private $deputyFirstname;
 
     /** @var DateTime|null */
     private $clientDateOfBirth;
@@ -49,6 +49,21 @@ class OrgDeputyshipDto
     public function setDeputyEmail(?string $deputyEmail): self
     {
         $this->deputyEmail = $deputyEmail;
+
+        return $this;
+    }
+
+    public function getDeputyUUID(): string
+    {
+        return $this->deputyUUID;
+    }
+
+    /**
+     * @return OrgDeputyshipDto
+     */
+    public function setDeputyUUID(string $deputyUUID): self
+    {
+        $this->deputyUUID = $deputyUUID;
 
         return $this;
     }
@@ -197,17 +212,47 @@ class OrgDeputyshipDto
         return $this;
     }
 
-    public function getClientCounty(): ?string
+    public function getClientAddress3(): ?string
     {
-        return $this->clientCounty;
+        return $this->clientAddress3;
     }
 
     /**
      * @return OrgDeputyshipDto
      */
-    public function setClientCounty(?string $clientCounty): self
+    public function setClientAddress3(?string $clientAddress3): self
     {
-        $this->clientCounty = $clientCounty;
+        $this->clientAddress3 = $clientAddress3;
+
+        return $this;
+    }
+
+    public function getClientAddress4(): ?string
+    {
+        return $this->clientAddress4;
+    }
+
+    /**
+     * @return OrgDeputyshipDto
+     */
+    public function setClientAddress4(?string $clientAddress4): self
+    {
+        $this->clientAddress4 = $clientAddress4;
+
+        return $this;
+    }
+
+    public function getClientAddress5(): ?string
+    {
+        return $this->clientAddress5;
+    }
+
+    /**
+     * @return OrgDeputyshipDto
+     */
+    public function setClientAddress5(?string $clientAddress5): self
+    {
+        $this->clientAddress5 = $clientAddress5;
 
         return $this;
     }
@@ -373,21 +418,6 @@ class OrgDeputyshipDto
     public function setDeputyAddress5(?string $deputyAddress5): OrgDeputyshipDto
     {
         $this->deputyAddress5 = $deputyAddress5;
-
-        return $this;
-    }
-
-    /**
-     * @return mixed
-     */
-    public function getDeputyType(): string
-    {
-        return $this->deputyType;
-    }
-
-    public function setDeputyType(string $deputyType)
-    {
-        $this->deputyType = $deputyType;
 
         return $this;
     }

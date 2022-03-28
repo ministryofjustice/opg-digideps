@@ -72,7 +72,7 @@ class OrgDeputyshipUploaderTest extends KernelTestCase
     /** @test  */
     public function uploadNewNamedDeputiesAreCreated()
     {
-        $deputyships = OrgDeputyshipDTOTestHelper::generateOrgDeputyshipDtos(1, 0);
+        $deputyships = OrgDeputyshipDTOTestHelper::generateSiriusOrgDeputyshipDtos(1, 0);
 
         $this->sut->upload($deputyships);
 
@@ -85,7 +85,7 @@ class OrgDeputyshipUploaderTest extends KernelTestCase
     /** @test */
     public function uploadExistingNamedDeputiesAreNotProcessed()
     {
-        $deputyships = OrgDeputyshipDTOTestHelper::generateOrgDeputyshipDtos(1, 0);
+        $deputyships = OrgDeputyshipDTOTestHelper::generateSiriusOrgDeputyshipDtos(1, 0);
         OrgDeputyshipDTOTestHelper::ensureNamedDeputyInUploadExists($deputyships[0], $this->em);
 
         $actualUploadResults = $this->sut->upload($deputyships);
@@ -98,7 +98,7 @@ class OrgDeputyshipUploaderTest extends KernelTestCase
     /** @test */
     public function uploadNamedDeputyWithSameDetailsButNewDeputyNoCreatesNewDeputy()
     {
-        $deputyships = OrgDeputyshipDTOTestHelper::generateOrgDeputyshipDtos(1, 0);
+        $deputyships = OrgDeputyshipDTOTestHelper::generateSiriusOrgDeputyshipDtos(1, 0);
         $namedDeputy = OrgDeputyshipDTOTestHelper::ensureNamedDeputyInUploadExists($deputyships[0], $this->em);
         $namedDeputy->setDeputyNo('123456');
 
@@ -115,7 +115,7 @@ class OrgDeputyshipUploaderTest extends KernelTestCase
     /** @test */
     public function uploadExistingNamedDeputiesWithNewAddressDetailsAreUpdated()
     {
-        $deputyships = OrgDeputyshipDTOTestHelper::generateOrgDeputyshipDtos(1, 0);
+        $deputyships = OrgDeputyshipDTOTestHelper::generateSiriusOrgDeputyshipDtos(1, 0);
         $namedDeputy = OrgDeputyshipDTOTestHelper::ensureNamedDeputyInUploadExists($deputyships[0], $this->em);
         $namedDeputy->setAddress1('10 New Road');
 
@@ -132,7 +132,7 @@ class OrgDeputyshipUploaderTest extends KernelTestCase
     /** @test */
     public function uploadNewOrganisationsAreCreated()
     {
-        $deputyships = OrgDeputyshipDTOTestHelper::generateOrgDeputyshipDtos(1, 0);
+        $deputyships = OrgDeputyshipDTOTestHelper::generateSiriusOrgDeputyshipDtos(1, 0);
 
         $this->sut->upload($deputyships);
 
@@ -147,7 +147,7 @@ class OrgDeputyshipUploaderTest extends KernelTestCase
     /** @test */
     public function uploadExistingOrganisationsAreNotProcessed()
     {
-        $deputyships = OrgDeputyshipDTOTestHelper::generateOrgDeputyshipDtos(1, 0);
+        $deputyships = OrgDeputyshipDTOTestHelper::generateSiriusOrgDeputyshipDtos(1, 0);
 
         $orgIdentifier = explode('@', $deputyships[0]->getDeputyEmail())[1];
         OrgDeputyshipDTOTestHelper::ensureOrgInUploadExists($orgIdentifier, $this->em);
@@ -161,7 +161,7 @@ class OrgDeputyshipUploaderTest extends KernelTestCase
     /** @test */
     public function uploadNewClientsAreCreated()
     {
-        $deputyships = OrgDeputyshipDTOTestHelper::generateOrgDeputyshipDtos(1, 0);
+        $deputyships = OrgDeputyshipDTOTestHelper::generateSiriusOrgDeputyshipDtos(1, 0);
 
         $this->sut->upload($deputyships);
 
@@ -177,7 +177,7 @@ class OrgDeputyshipUploaderTest extends KernelTestCase
      */
     public function uploadExistingClientsWithNewMadeDateCreatesNewReport(DateTime $existingCourtDate, DateTime $uploadCourtDate)
     {
-        $deputyships = OrgDeputyshipDTOTestHelper::generateOrgDeputyshipDtos(1, 0);
+        $deputyships = OrgDeputyshipDTOTestHelper::generateSiriusOrgDeputyshipDtos(1, 0);
         $deputyships[0]->setCourtDate($uploadCourtDate);
 
         $client = OrgDeputyshipDTOTestHelper::ensureClientInUploadExists($deputyships[0], $this->em);
@@ -205,7 +205,7 @@ class OrgDeputyshipUploaderTest extends KernelTestCase
     /** @test */
     public function uploadClientAndOrgAreAssociated()
     {
-        $deputyships = OrgDeputyshipDTOTestHelper::generateOrgDeputyshipDtos(1, 0);
+        $deputyships = OrgDeputyshipDTOTestHelper::generateSiriusOrgDeputyshipDtos(1, 0);
 
         $this->sut->upload($deputyships);
 
@@ -228,7 +228,7 @@ class OrgDeputyshipUploaderTest extends KernelTestCase
     /** @test  */
     public function uploadClientAndNamedDeputyAreAssociatedWhenClientHasSwitchedOrgsAndNamedDeputyHasChanged()
     {
-        $deputyships = OrgDeputyshipDTOTestHelper::generateOrgDeputyshipDtos(1, 0);
+        $deputyships = OrgDeputyshipDTOTestHelper::generateSiriusOrgDeputyshipDtos(1, 0);
 
         $orgIdentifier = explode('@', $deputyships[0]->getDeputyEmail())[1];
 
@@ -267,7 +267,7 @@ class OrgDeputyshipUploaderTest extends KernelTestCase
     /** @test */
     public function uploadReportsAreCreatedForNewClients()
     {
-        $deputyships = OrgDeputyshipDTOTestHelper::generateOrgDeputyshipDtos(1, 0);
+        $deputyships = OrgDeputyshipDTOTestHelper::generateSiriusOrgDeputyshipDtos(1, 0);
 
         $this->sut->upload($deputyships);
 
@@ -283,7 +283,7 @@ class OrgDeputyshipUploaderTest extends KernelTestCase
     /** @test */
     public function uploadExistingReportTypeIsChangedIfTypeIsDifferent()
     {
-        $deputyships = OrgDeputyshipDTOTestHelper::generateOrgDeputyshipDtos(1, 0);
+        $deputyships = OrgDeputyshipDTOTestHelper::generateSiriusOrgDeputyshipDtos(1, 0);
         $changedReportType = '102-5';
         $deputyships[0]->setReportType($changedReportType);
 
@@ -326,7 +326,7 @@ class OrgDeputyshipUploaderTest extends KernelTestCase
 
     public function errorProvider()
     {
-        $deputyships = OrgDeputyshipDTOTestHelper::generateOrgDeputyshipDtos(1, 0);
+        $deputyships = OrgDeputyshipDTOTestHelper::generateSiriusOrgDeputyshipDtos(1, 0);
 
         return [
             'Missing deputy email' => [(clone $deputyships[0])->setDeputyEmail(null), ['Deputy Email']],
@@ -343,7 +343,7 @@ class OrgDeputyshipUploaderTest extends KernelTestCase
     /** @test  */
     public function uploadExistingClientsWithLayDeputiesThrowsAnError()
     {
-        $deputyships = OrgDeputyshipDTOTestHelper::generateOrgDeputyshipDtos(1, 0);
+        $deputyships = OrgDeputyshipDTOTestHelper::generateSiriusOrgDeputyshipDtos(1, 0);
         OrgDeputyshipDTOTestHelper::ensureClientInUploadExistsAndHasALayDeputy($deputyships[0], $this->em);
 
         $uploadResults = $this->sut->upload($deputyships);
@@ -359,7 +359,7 @@ class OrgDeputyshipUploaderTest extends KernelTestCase
     /** @test */
     public function uploadUploadingTheSameDtoASecondTimeDoesNotCreateDuplicates()
     {
-        $deputyships = OrgDeputyshipDTOTestHelper::generateOrgDeputyshipDtos(1, 0);
+        $deputyships = OrgDeputyshipDTOTestHelper::generateSiriusOrgDeputyshipDtos(1, 0);
 
         $firstUploadResults = $this->sut->upload($deputyships);
 
@@ -385,7 +385,7 @@ class OrgDeputyshipUploaderTest extends KernelTestCase
     /** @test */
     public function uploadExistingClientsWithMissingCourtDateHaveCourtDateAdded()
     {
-        $deputyships = OrgDeputyshipDTOTestHelper::generateOrgDeputyshipDtos(1, 0);
+        $deputyships = OrgDeputyshipDTOTestHelper::generateSiriusOrgDeputyshipDtos(1, 0);
         $client = OrgDeputyshipDTOTestHelper::ensureClientInUploadExists($deputyships[0], $this->em);
         $client->setCourtDate(null);
 
@@ -411,7 +411,7 @@ class OrgDeputyshipUploaderTest extends KernelTestCase
     /** @test */
     public function uploadRowsWithArchivedClientsAreSkipped()
     {
-        $deputyships = OrgDeputyshipDTOTestHelper::generateOrgDeputyshipDtos(1, 0);
+        $deputyships = OrgDeputyshipDTOTestHelper::generateSiriusOrgDeputyshipDtos(1, 0);
 
         $client = OrgDeputyshipDTOTestHelper::ensureClientInUploadExists($deputyships[0], $this->em);
         $namedDeputy = OrgDeputyshipDTOTestHelper::ensureNamedDeputyInUploadExists($deputyships[0], $this->em);
