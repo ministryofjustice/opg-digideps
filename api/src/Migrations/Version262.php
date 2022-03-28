@@ -11,39 +11,30 @@ final class Version262 extends AbstractMigration
 {
     public function getDescription(): string
     {
-        return 'Empty data from casrec and add/update column names for new Sirius CSV content';
+        return 'Rename casrec table to pre_registration and add new deputy address fields. Amend references of casrec to sirius in other table columns.';
     }
 
     public function up(Schema $schema): void
     {
-        $this->addSql('DELETE FROM casrec');
-        $this->addSql('ALTER TABLE casrec ADD deputy_address_1 VARCHAR(255) DEFAULT NULL');
-        $this->addSql('ALTER TABLE casrec ADD deputy_address_2 VARCHAR(255) DEFAULT NULL');
-        $this->addSql('ALTER TABLE casrec ADD deputy_address_3 VARCHAR(255) DEFAULT NULL');
-        $this->addSql('ALTER TABLE casrec ADD deputy_address_4 VARCHAR(255) DEFAULT NULL');
-        $this->addSql('ALTER TABLE casrec ADD deputy_address_5 VARCHAR(255) DEFAULT NULL');
-        $this->addSql('ALTER TABLE casrec ADD ndr BOOLEAN DEFAULT NULL');
-        $this->addSql('ALTER TABLE casrec ADD order_type VARCHAR(255) DEFAULT NULL');
-        $this->addSql('ALTER TABLE casrec ADD is_co_deputy BOOLEAN DEFAULT NULL');
-        $this->addSql('ALTER TABLE casrec DROP corref');
-        $this->addSql('ALTER TABLE casrec DROP other_columns');
-        $this->addSql('ALTER TABLE casrec DROP source');
-        $this->addSql('ALTER TABLE casrec RENAME COLUMN deputy_no TO deputy_uid');
+        $this->addSql('DROP SEQUENCE casrec_id_seq CASCADE');
+        $this->addSql('CREATE TABLE pre_registration (id SERIAL NOT NULL, client_case_number VARCHAR(20) NOT NULL, client_lastname VARCHAR(50) NOT NULL, deputy_uid VARCHAR(100) NOT NULL, deputy_lastname VARCHAR(100) DEFAULT NULL, deputy_address_1 VARCHAR(255) DEFAULT NULL, deputy_address_2 VARCHAR(255) DEFAULT NULL, deputy_address_3 VARCHAR(255) DEFAULT NULL, deputy_address_4 VARCHAR(255) DEFAULT NULL, deputy_address_5 VARCHAR(255) DEFAULT NULL, deputy_postcode VARCHAR(10) DEFAULT NULL, type_of_report VARCHAR(10) DEFAULT NULL, ndr BOOLEAN DEFAULT NULL, uploaded_at TIMESTAMP(0) WITHOUT TIME ZONE DEFAULT NULL, updated_at TIMESTAMP(0) WITHOUT TIME ZONE DEFAULT NULL, order_date TIMESTAMP(0) WITHOUT TIME ZONE DEFAULT NULL, order_type VARCHAR(255) DEFAULT NULL, is_co_deputy BOOLEAN DEFAULT NULL, PRIMARY KEY(id))');
+        $this->addSql('CREATE INDEX updated_at_index ON pre_registration (updated_at)');
+        $this->addSql('DROP TABLE casrec');
+        $this->addSql('ALTER TABLE checklist ADD deputy_full_name_accurate_in_sirius VARCHAR(3) DEFAULT NULL');
+        $this->addSql('ALTER TABLE checklist ADD bond_order_match_sirius VARCHAR(3) DEFAULT NULL');
+        $this->addSql('ALTER TABLE checklist DROP deputy_full_name_accurate_in_casrec');
+        $this->addSql('ALTER TABLE checklist DROP bond_order_match_casrec');
     }
 
     public function down(Schema $schema): void
     {
-        $this->addSql('ALTER TABLE casrec ADD corref VARCHAR(10) DEFAULT NULL');
-        $this->addSql('ALTER TABLE casrec ADD other_columns TEXT DEFAULT NULL');
-        $this->addSql('ALTER TABLE casrec ADD source VARCHAR(255) DEFAULT \'casrec\'');
-        $this->addSql('ALTER TABLE casrec DROP deputy_address_1');
-        $this->addSql('ALTER TABLE casrec DROP deputy_address_2');
-        $this->addSql('ALTER TABLE casrec DROP deputy_address_3');
-        $this->addSql('ALTER TABLE casrec DROP deputy_address_4');
-        $this->addSql('ALTER TABLE casrec DROP deputy_address_5');
-        $this->addSql('ALTER TABLE casrec DROP ndr');
-        $this->addSql('ALTER TABLE casrec DROP order_type');
-        $this->addSql('ALTER TABLE casrec DROP is_co_deputy');
-        $this->addSql('ALTER TABLE casrec RENAME COLUMN deputy_uid TO deputy_no');
+        $this->addSql('CREATE SEQUENCE casrec_id_seq INCREMENT BY 1 MINVALUE 1 START 1');
+        $this->addSql('CREATE TABLE casrec (id SERIAL NOT NULL, client_case_number VARCHAR(20) NOT NULL, client_lastname VARCHAR(50) NOT NULL, deputy_uid VARCHAR(100) NOT NULL, deputy_lastname VARCHAR(100) DEFAULT NULL, deputy_postcode VARCHAR(10) DEFAULT NULL, type_of_report VARCHAR(10) DEFAULT NULL, uploaded_at TIMESTAMP(0) WITHOUT TIME ZONE DEFAULT NULL, updated_at TIMESTAMP(0) WITHOUT TIME ZONE DEFAULT NULL, order_date TIMESTAMP(0) WITHOUT TIME ZONE DEFAULT NULL, deputy_address_1 VARCHAR(255) DEFAULT NULL, deputy_address_2 VARCHAR(255) DEFAULT NULL, deputy_address_3 VARCHAR(255) DEFAULT NULL, deputy_address_4 VARCHAR(255) DEFAULT NULL, deputy_address_5 VARCHAR(255) DEFAULT NULL, ndr BOOLEAN DEFAULT NULL, order_type VARCHAR(255) DEFAULT NULL, is_co_deputy BOOLEAN DEFAULT NULL, PRIMARY KEY(id))');
+        $this->addSql('CREATE INDEX updated_at_index ON casrec (updated_at)');
+        $this->addSql('DROP TABLE pre_registration');
+        $this->addSql('ALTER TABLE checklist ADD deputy_full_name_accurate_in_casrec VARCHAR(3) DEFAULT NULL');
+        $this->addSql('ALTER TABLE checklist ADD bond_order_match_casrec VARCHAR(3) DEFAULT NULL');
+        $this->addSql('ALTER TABLE checklist DROP deputy_full_name_accurate_in_sirius');
+        $this->addSql('ALTER TABLE checklist DROP bond_order_match_sirius');
     }
 }
