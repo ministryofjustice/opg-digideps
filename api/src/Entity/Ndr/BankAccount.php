@@ -3,6 +3,7 @@
 namespace App\Entity\Ndr;
 
 use App\Entity\BankAccountInterface;
+use DateTime;
 use Doctrine\ORM\Mapping as ORM;
 use JMS\Serializer\Annotation as JMS;
 
@@ -10,7 +11,7 @@ use JMS\Serializer\Annotation as JMS;
  * Account.
  *
  * @ORM\Table(name="odr_account")
- * @ORM\Entity()
+ * @ORM\Entity(repositoryClass="App\Repository\NdrBankAccountRepository")
  */
 class BankAccount implements BankAccountInterface
 {
@@ -37,7 +38,7 @@ class BankAccount implements BankAccountInterface
     private static $typesNotRequiringSortCode = [
         'postoffice',
         'cfo',
-        'other_no_sortcode'
+        'other_no_sortcode',
     ];
 
     /**
@@ -47,7 +48,7 @@ class BankAccount implements BankAccountInterface
      */
     private static $typesNotRequiringBankName = [
         'postoffice',
-        'cfo'
+        'cfo',
     ];
 
     /**
@@ -92,7 +93,7 @@ class BankAccount implements BankAccountInterface
     private $accountNumber;
 
     /**
-     * @var \DateTime
+     * @var DateTime
      * @JMS\Groups({"ndr-account"})
      *
      * @ORM\Column(name="created_at", type="datetime", nullable=true)
@@ -133,7 +134,7 @@ class BankAccount implements BankAccountInterface
     public function __construct()
     {
         $this->lastEdit = null;
-        $this->createdAt = new \DateTime();
+        $this->createdAt = new DateTime();
     }
 
     /**
@@ -288,7 +289,7 @@ class BankAccount implements BankAccountInterface
     }
 
     /**
-     * @return \DateTime
+     * @return DateTime
      */
     public function getCreatedAt()
     {
@@ -296,7 +297,7 @@ class BankAccount implements BankAccountInterface
     }
 
     /**
-     * @param \DateTime $createdAt
+     * @param DateTime $createdAt
      *
      * @return BankAccount
      */
@@ -393,7 +394,7 @@ class BankAccount implements BankAccountInterface
      * <bank> - <type> (****<last 4 digits>)
      * e.g.
      * barclays - Current account (****1234)
-     * Natwest - ISA (****4444)
+     * Natwest - ISA (****4444).
      *
      * @JMS\VirtualProperty
      * @JMS\SerializedName("name_one_line")
@@ -403,8 +404,8 @@ class BankAccount implements BankAccountInterface
      */
     public function getNameOneLine()
     {
-        return (!empty($this->getBank()) ? $this->getBank() . ' - '  : '')
-            . $this->getAccountTypeText()
-            . ' (****' . $this->getAccountNumber() . ')';
+        return (!empty($this->getBank()) ? $this->getBank().' - ' : '')
+            .$this->getAccountTypeText()
+            .' (****'.$this->getAccountNumber().')';
     }
 }

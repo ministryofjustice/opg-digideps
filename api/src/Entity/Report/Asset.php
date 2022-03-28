@@ -2,6 +2,7 @@
 
 namespace App\Entity\Report;
 
+use DateTime;
 use Doctrine\ORM\Mapping as ORM;
 use JMS\Serializer\Annotation as JMS;
 
@@ -9,7 +10,7 @@ use JMS\Serializer\Annotation as JMS;
  * Asset.
  *
  * @ORM\Table(name="asset")
- * @ORM\Entity()
+ * @ORM\Entity(repositoryClass="App\Repository\AssetRepository")
  * @ORM\InheritanceType("SINGLE_TABLE")
  * @ORM\DiscriminatorColumn(name="type", type="string")
  * @ORM\DiscriminatorMap({
@@ -43,7 +44,7 @@ abstract class Asset
     private $value;
 
     /**
-     * @var \DateTime
+     * @var DateTime
      * @JMS\Groups({"asset"})
      * @JMS\Type("DateTime")
      * @ORM\Column(name="last_edit", type="datetime", nullable=true)
@@ -59,7 +60,7 @@ abstract class Asset
     private $report;
 
     /**
-     * Discriminator field
+     * Discriminator field.
      *
      * @var string
      * @JMS\Exclude
@@ -136,7 +137,7 @@ abstract class Asset
     /**
      * Set lastedit.
      *
-     * @param \DateTime $lastedit
+     * @param DateTime $lastedit
      *
      * @return Asset
      */
@@ -150,7 +151,7 @@ abstract class Asset
     /**
      * Get lastedit.
      *
-     * @return \DateTime
+     * @return DateTime
      */
     public function getLastedit()
     {
@@ -202,6 +203,6 @@ abstract class Asset
      */
     public function updateLastEdit()
     {
-        $this->setLastedit(new \DateTime());
+        $this->setLastedit(new DateTime());
     }
 }

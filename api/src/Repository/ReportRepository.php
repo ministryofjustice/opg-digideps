@@ -14,6 +14,7 @@ use DateTime;
 use Doctrine\Bundle\DoctrineBundle\Repository\ServiceEntityRepository;
 use Doctrine\DBAL\Connection;
 use Doctrine\DBAL\DBALException;
+use Doctrine\ORM\AbstractQuery;
 use Doctrine\ORM\NonUniqueResultException;
 use Doctrine\ORM\ORMException;
 use Doctrine\Persistence\ManagerRegistry;
@@ -195,33 +196,35 @@ class ReportRepository extends ServiceEntityRepository
      */
     public function getReportsIdsWithQueuedChecklistsAndSetChecklistsToInProgress(int $limit): array
     {
+        $em = $this->getEntityManager();
+
         $dql = <<<DQL
 SELECT c.id as checklist_id, r.id as report_id
 FROM App\Entity\Report\Report r
 JOIN r.checklist c
-JOIN r.reportSubmissions rs
-WHERE c.synchronisationStatus = ?1
+WHERE c.synchronisationStatus = :status
 DQL;
 
-        $query = $this
-            ->getEntityManager()
+        $query = $em
             ->createQuery($dql)
-            ->setParameter(1, SynchronisableInterface::SYNC_STATUS_QUEUED)
+            ->setParameter('status', SynchronisableInterface::SYNC_STATUS_QUEUED)
             ->setMaxResults($limit);
 
         $result = $query->getArrayResult();
 
         if (count($result)) {
-            $conn = $this->getEntityManager()->getConnection();
-
             $ids = array_map(function ($result) {
                 return $result['checklist_id'];
             }, $result);
 
-            $idsString = implode(',', $ids);
-            $queryString = "UPDATE checklist SET synchronisation_status = 'IN_PROGRESS' WHERE id IN ($idsString)";
-            $query = $conn->prepare($queryString);
-            $query->execute();
+            $dql = <<<DQL
+UPDATE App\Entity\Report\Checklist c SET c.synchronisationStatus = 'IN_PROGRESS' WHERE c.id IN (:idsString)
+DQL;
+
+            $em
+                ->createQuery($dql)
+                ->setParameter('idsString', $ids)
+                ->getResult();
         }
 
         return array_column($result, 'report_id');
@@ -236,31 +239,25 @@ DQL;
     }
 
     /**
-     * @return Report[]
+     * @return string[]
      */
-    public function getAllSubmittedReportsWithin12Months(string $deputyType)
+    public function getClientIdsByAllSubmittedLayReportsWithin12Months(): array
     {
         $oneYearAgo = new DateTime('-1 year');
 
-        $types = match ($deputyType) {
-            'LAY' => Report::getAllLayTypes(),
-            'PROF' => Report::getAllProfTypes(),
-            'PA' => Report::getAllPaTypes(),
-            default => [],
-        };
-
-        $dql = <<<DQL
-SELECT r FROM App\Entity\Report\Report r
-WHERE r.submitDate > :oneYearAgo
-AND r.type IN (:types)
-DQL;
+        $types = Report::getAllLayTypes();
 
         $query = $this
             ->getEntityManager()
-            ->createQuery($dql)
+            ->createQueryBuilder()
+            ->select('c.id')
+            ->from('App\Entity\Report\Report', 'r')
+            ->leftJoin('r.client', 'c')
+            ->where('r.submitDate > :oneYearAgo')
+            ->andWhere('r.type IN (:types)')
             ->setParameter('oneYearAgo', $oneYearAgo)
             ->setParameter('types', $types);
 
-        return $query->getResult();
+        return $query->getQuery()->getResult(AbstractQuery::HYDRATE_SCALAR_COLUMN);
     }
 }

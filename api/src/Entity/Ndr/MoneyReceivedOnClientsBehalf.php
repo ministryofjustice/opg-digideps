@@ -76,7 +76,7 @@ class MoneyReceivedOnClientsBehalf implements MoneyReceivedOnClientsBehalfInterf
      * @JMS\Groups({"client-benefits-check"})
      * @JMS\Type("string")
      */
-    private string $whoReceivedMoney;
+    private ?string $whoReceivedMoney;
 
     public function getClientBenefitsCheck(): ClientBenefitsCheck
     {
@@ -138,12 +138,12 @@ class MoneyReceivedOnClientsBehalf implements MoneyReceivedOnClientsBehalfInterf
         return $this;
     }
 
-    public function getWhoReceivedMoney(): string
+    public function getWhoReceivedMoney(): ?string
     {
         return $this->whoReceivedMoney;
     }
 
-    public function setWhoReceivedMoney(string $whoReceivedMoney): self
+    public function setWhoReceivedMoney(?string $whoReceivedMoney): self
     {
         $this->whoReceivedMoney = $whoReceivedMoney;
 

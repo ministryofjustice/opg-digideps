@@ -52,28 +52,29 @@ trait PageUrlsTrait
     private string $visitsAndCareSectionUrl = '/%s/%s/visits-care';
 
     // Admin
+    private string $adminUserSearchUrl = '/admin';
+    private string $adminUploadLayUsersUrl = '/admin/casrec-upload';
+    private string $adminClientArchivedUrl = '/admin/client/%s/archived';
+    private string $adminClientDetailsUrl = '/admin/client/%s/details';
+    private string $adminClientSearchUrl = '/admin/client/search';
+    private string $adminSubmissionsPage = '/admin/documents/list';
+    private string $adminEditUserUrl = '/admin/edit-user?filter=%s';
+    private string $adminUploadOrgUsersUrl = '/admin/org-csv-upload';
+    private string $adminChecklistPage = '/admin/report/%s/checklist';
+    private string $adminNotificationUrl = '/admin/settings/service-notification';
+    private string $adminDATReportUrl = '/admin/stats';
     private string $adminActiveLaysReportUrl = '/admin/stats/downloadActiveLaysCsv';
-    private string $adminAddUserUrl = '/admin/user-add';
     private string $adminAnalyticsUrl = '/admin/stats/metrics';
     private string $adminStatsReportsUrl = '/admin/stats/reports';
-    private string $adminClientSearchUrl = '/admin/client/search';
-    private string $adminClientDetailsUrl = '/admin/client/%s/details';
-    private string $adminClientArchivedUrl = '/admin/client/%s/archived';
-    private string $adminDATReportUrl = '/admin/stats';
-    private string $adminEditUserUrl = '/admin/edit-user?filter=%s';
-    private string $adminFixturesUrl = '/admin/fixtures';
-    private string $adminMyUserProfileUrl = '/deputyship-details/your-details';
-    private string $adminNotificationUrl = '/admin/settings/service-notification';
     private string $adminSatisfactionReportUrl = '/admin/stats/satisfaction';
-    private string $adminSubmissionsPage = '/admin/documents/list';
     private string $adminUserResearchReportUrl = '/admin/stats/user-research';
-    private string $adminUserSearchUrl = '/admin';
+    private string $adminAddUserUrl = '/admin/user-add';
     private string $adminViewUserUrl = '/admin/user/%s';
     private string $adminUploadUsersUrl = '/admin/upload';
-    private string $adminUploadOrgUsersUrl = '/admin/org-csv-upload';
-    private string $adminUploadLayUsersUrl = '/admin/casrec-upload';
+    private string $adminMyUserProfileUrl = '/deputyship-details/your-details';
 
     // Fixtures
+    private string $adminFixturesUrl = '/admin/fixtures';
     private string $courtOrdersFixtureUrl = '/admin/fixtures/court-orders?%s';
 
     public function getReportSubmittedUrl(int $reportId): string
@@ -394,5 +395,10 @@ trait PageUrlsTrait
     public function getDocumentsSubmitMoreUrl(int $reportId): string
     {
         return sprintf($this->documentsSubmitMoreUrl, $this->reportUrlPrefix, $reportId);
+    }
+
+    public function getAdminChecklistPage(string $reportId): string
+    {
+        return sprintf($this->adminChecklistPage, $reportId);
     }
 }
