@@ -4,27 +4,21 @@ declare(strict_types=1);
 
 namespace App\FixtureFactory;
 
-use App\Entity\CasRec;
+use App\Entity\PreRegistration;
 use App\v2\Registration\DTO\LayDeputyshipDto;
-use App\v2\Registration\SelfRegistration\Factory\CasRecFactory as CasRecDTOFactory;
+use App\v2\Registration\SelfRegistration\Factory\PreRegistrationFactory as PreRegistrationDTOFactory;
 use DateTime;
 
-class CasRecFactory
+class PreRegistrationFactory
 {
-    /**
-     * @var CasRecDTOFactory
-     */
-    private $casRecFactory;
-
-    public function __construct(CasRecDTOFactory $casRecFactory)
+    public function __construct(private PreRegistrationDTOFactory $preRegistrationFactory)
     {
-        $this->casRecFactory = $casRecFactory;
     }
 
     /**
      * @return Client
      */
-    public function create(array $data): CasRec
+    public function create(array $data): PreRegistration
     {
         $caseNumber = str_pad((string) rand(1, 99999999), 8, '0', STR_PAD_LEFT);
         $deputyNumber = str_pad((string) rand(1, 999999), 6, '0', STR_PAD_LEFT);
@@ -46,41 +40,24 @@ class CasRecFactory
             ->setOrderType($data['orderType'])
             ->setIsCoDeputy(false);
 
-        return $this->casRecFactory->createFromDto($dto);
+        return $this->preRegistrationFactory->createFromDto($dto);
     }
 
-    public function createCoDeputy(string $caseNumber, array $data): CasRec
+    public function createCoDeputy(string $caseNumber, array $data): PreRegistration
     {
-        $deputyNumber = str_pad((string) rand(1, 999999), 6, '0', STR_PAD_LEFT);
+        $deputyUid = (string) mt_rand(1, 999999999);
 
         $dto = (new LayDeputyshipDto())
             ->setCaseNumber($caseNumber)
-            ->setSource('casrec')
             ->setClientSurname('Smith')
-            ->setCorref($this->determineCorref($data['reportType']))
-            ->setDeputyUid($deputyNumber)
+            ->setOrderType($data['orderType'])
+            ->setDeputyUid($deputyUid)
             ->setDeputyPostcode('SW1')
             ->setDeputySurname('Bloggs')
             ->setIsNdrEnabled(false)
             ->setOrderDate(new DateTime())
             ->setTypeOfReport($data['reportType']);
 
-        return $this->casRecFactory->createFromDto($dto);
-    }
-
-    private function determineCorref(string $reportType): string
-    {
-        switch ($reportType) {
-            case '102':
-                return 'l2';
-            case '103':
-                return 'l3';
-            case '102-4':
-            case '103-4':
-            case '104':
-                return 'hw';
-            default:
-                return 'l2';
-        }
+        return $this->preRegistrationFactory->createFromDto($dto);
     }
 }

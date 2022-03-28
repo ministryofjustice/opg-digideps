@@ -13,10 +13,10 @@ use Symfony\Component\Validator\Constraints as Assert;
 use UnexpectedValueException;
 
 /**
- * @ORM\Table(name="casrec", indexes={@ORM\Index(name="updated_at_idx", columns={"updated_at"})})
- * @ORM\Entity(repositoryClass="App\Repository\CasRecRepository")
+ * @ORM\Table(name="pre_registration", indexes={@ORM\Index(name="updated_at_idx", columns={"updated_at"})})
+ * @ORM\Entity(repositoryClass="PreRegistrationRepository")
  */
-class CasRec
+class PreRegistration
 {
     const REALM_PA = 'REALM_PA';
     const REALM_PROF = 'REALM_PROF';
@@ -48,7 +48,7 @@ class CasRec
      * @ORM\Column(name="id", type="integer", nullable=false)
      * @ORM\Id
      * @ORM\GeneratedValue(strategy="IDENTITY")
-     * @ORM\SequenceGenerator(sequenceName="casrec_id_seq", allocationSize=1, initialValue=1)
+     * @ORM\SequenceGenerator(sequenceName="pre_registration_id_seq", allocationSize=1, initialValue=1)
      */
     private int $id;
 

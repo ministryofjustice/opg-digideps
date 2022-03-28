@@ -4,10 +4,10 @@ declare(strict_types=1);
 
 namespace App\Tests\Behat\v2\Registration;
 
-use App\Entity\CasRec;
 use App\Entity\Client;
 use App\Entity\NamedDeputy;
 use App\Entity\Organisation;
+use App\Entity\PreRegistration;
 use App\Entity\Report\Report;
 use App\Entity\User;
 use App\Tests\Behat\BehatException;
@@ -160,7 +160,7 @@ trait IngestTrait
         $clients = $this->em->getRepository(Client::class)->findBy(['caseNumber' => $this->entityUids['client_case_numbers']]);
         $namedDeputies = $this->em->getRepository(NamedDeputy::class)->findBy(['deputyNo' => $this->entityUids['named_deputy_uids']]);
         $orgs = $this->em->getRepository(Organisation::class)->findBy(['emailIdentifier' => $this->entityUids['org_email_identifiers']]);
-        $casrecs = $this->em->getRepository(CasRec::class)->findBy(['caseNumber' => $this->entityUids['casrec_case_numbers']]);
+        $casrecs = $this->em->getRepository(PreRegistration::class)->findBy(['caseNumber' => $this->entityUids['casrec_case_numbers']]);
 
         $reports = [];
 
@@ -438,9 +438,9 @@ trait IngestTrait
     }
 
     /**
-     * @When I upload a lay CSV that contains :newEntitiesCount new casrec entities
+     * @When I upload a lay CSV that contains :newEntitiesCount new pre-registration entities
      */
-    public function iUploadCsvContaining3CasrecEntities(int $newEntitiesCount)
+    public function iUploadCsvContaining3PreRegistrationEntities(int $newEntitiesCount)
     {
         $this->iamOnAdminUploadUsersPage();
 

@@ -9,14 +9,12 @@ use App\Exception\ReportNotSubmittedException;
 use App\Exception\ReportSubmittedException;
 use App\Form as FormDir;
 use App\Model as ModelDir;
-use App\Service\Client\Internal\CasrecApi;
 use App\Service\Client\Internal\ClientApi;
 use App\Service\Client\Internal\NdrApi;
+use App\Service\Client\Internal\PreRegistrationApi;
 use App\Service\Client\Internal\SatisfactionApi;
 use App\Service\Client\Internal\UserApi;
-use App\Service\Client\RestClient;
 use App\Service\File\S3FileUploader;
-use App\Service\HtmlToPdfGenerator;
 use App\Service\NdrStatusService;
 use App\Service\ParameterStoreService;
 use App\Service\Redirector;
@@ -53,42 +51,13 @@ class NdrController extends AbstractController
         'visits-care',
     ];
 
-    /** @var HtmlToPdfGenerator */
-    private $htmlToPdf;
-
-    /** @var UserApi */
-    private $userApi;
-
-    /** @var ClientApi */
-    private $clientApi;
-
-    /** @var RestClient */
-    private $restClient;
-
-    /** @var SatisfactionApi */
-    private $satisfactionApi;
-
-    /** @var NdrApi */
-    private $ndrApi;
-
-    private CasrecApi $casrecApi;
-
     public function __construct(
-        HtmlToPdfGenerator $htmlToPdfGenerator,
-        UserApi $userApi,
-        ClientApi $clientApi,
-        RestClient $restClient,
-        CasrecApi $casrecApi,
-        SatisfactionApi $satisfactionApi,
-        NdrApi $ndrApi
+        private UserApi $userApi,
+        private ClientApi $clientApi,
+        private PreRegistrationApi $preRegistrationApi,
+        private SatisfactionApi $satisfactionApi,
+        private NdrApi $ndrApi
     ) {
-        $this->htmlToPdf = $htmlToPdfGenerator;
-        $this->userApi = $userApi;
-        $this->clientApi = $clientApi;
-        $this->restClient = $restClient;
-        $this->casrecApi = $casrecApi;
-        $this->satisfactionApi = $satisfactionApi;
-        $this->ndrApi = $ndrApi;
     }
 
     /**
@@ -119,7 +88,7 @@ class NdrController extends AbstractController
         return [
             'client' => $client,
             'coDeputies' => $coDeputies,
-            'clientHasCoDeputies' => $this->casrecApi->clientHasCoDeputies($client->getCaseNumber()),
+            'clientHasCoDeputies' => $this->preRegistrationApi->clientHasCoDeputies($client->getCaseNumber()),
             'ndr' => $client->getNdr(),
             'reportsSubmitted' => $client->getSubmittedReports(),
             'reportActive' => $client->getActiveReport(),

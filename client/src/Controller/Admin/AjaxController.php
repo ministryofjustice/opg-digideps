@@ -3,6 +3,8 @@
 namespace App\Controller\Admin;
 
 use App\Controller\AbstractController;
+use App\Service\Client\Internal\LayDeputyshipApi;
+use App\Service\Client\Internal\PreRegistrationApi;
 use App\Service\Client\RestClient;
 use Predis\ClientInterface;
 use Sensio\Bundle\FrameworkExtraBundle\Configuration\Security;
@@ -17,22 +19,24 @@ use Throwable;
 class AjaxController extends AbstractController
 {
     public function __construct(
-        private RestClient $restClient
+        private RestClient $restClient,
+        private PreRegistrationApi $preRegistrationApi,
+        private LayDeputyshipApi $layDeputyshipApi
     ) {
     }
 
     /**
-     * @Route("/casrec-delete", name="casrec_delete_ajax")
+     * @Route("/pre-registration-delete", name="pre_registration_delete_ajax")
      * @Security("is_granted('ROLE_ADMIN') or has_role('ROLE_AD')")
      *
      * @return JsonResponse
      */
-    public function deleteCasrecAjaxAction()
+    public function deletePreRegistrationAjaxAction()
     {
         try {
-            $before = $this->restClient->get('casrec/count', 'array');
-            $this->restClient->delete('casrec/delete');
-            $after = $this->restClient->get('casrec/count', 'array');
+            $before = $this->preRegistrationApi->count();
+            $this->preRegistrationApi->deleteAll();
+            $after = $this->preRegistrationApi->count();
 
             return new JsonResponse(['before' => $before, 'after' => $after]);
         } catch (Throwable $e) {
@@ -41,7 +45,7 @@ class AjaxController extends AbstractController
     }
 
     /**
-     * @Route("/casrec-add", name="casrec_add_ajax")
+     * @Route("/pre-registration-add", name="pre_registration_add_ajax")
      * @Security("is_granted('ROLE_ADMIN') or has_role('ROLE_AD')")
      *
      * @return JsonResponse
@@ -53,7 +57,7 @@ class AjaxController extends AbstractController
         try {
             $compressedData = $redisClient->get($chunkId);
             if ($compressedData) {
-                $ret = $this->restClient->setTimeout(600)->post('v2/lay-deputyship/upload', $compressedData);
+                $this->layDeputyshipApi->uploadLayDeputyShip($compressedData);
                 $redisClient->del($chunkId); //cleanup for next execution
             } else {
                 $ret['added'] = 0;

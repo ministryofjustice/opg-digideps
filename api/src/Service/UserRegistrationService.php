@@ -14,18 +14,10 @@ use Throwable;
 
 class UserRegistrationService
 {
-    /** @var EntityManagerInterface */
-    private $em;
-
-    /**
-     * @var CasrecVerificationService
-     */
-    private $casrecVerificationService;
-
-    public function __construct(EntityManagerInterface $em, CasrecVerificationService $casrecVerificationService)
-    {
-        $this->em = $em;
-        $this->casrecVerificationService = $casrecVerificationService;
+    public function __construct(
+        private EntityManagerInterface $em,
+        private PreRegistrationVerificationService $preRegistrationVerificationService
+    ) {
     }
 
     /**
@@ -43,7 +35,7 @@ class UserRegistrationService
      */
     public function selfRegisterUser(SelfRegisterData $selfRegisterData)
     {
-        $isMultiDeputyCase = $this->casrecVerificationService->isMultiDeputyCase($selfRegisterData->getCaseNumber());
+        $isMultiDeputyCase = $this->preRegistrationVerificationService->isMultiDeputyCase($selfRegisterData->getCaseNumber());
         $existingClient = $this->em->getRepository('App\Entity\Client')->findOneByCaseNumber($selfRegisterData->getCaseNumber());
 
         // ward off non-fee-paying codeps trying to self-register
@@ -78,15 +70,15 @@ class UserRegistrationService
 
         $this->populateClient($client, $selfRegisterData);
 
-        $this->casrecVerificationService->validate(
+        $this->preRegistrationVerificationService->validate(
             $selfRegisterData->getCaseNumber(),
             $selfRegisterData->getClientLastname(),
             $selfRegisterData->getLastname(),
             $user->getAddressPostcode()
         );
 
-        $user->setDeputyNo(implode(',', $this->casrecVerificationService->getLastMatchedDeputyNumbers()));
-        $user->setNdrEnabled($this->casrecVerificationService->isLastMachedDeputyNdrEnabled());
+        $user->setDeputyNo(implode(',', $this->preRegistrationVerificationService->getLastMatchedDeputyNumbers()));
+        $user->setNdrEnabled($this->preRegistrationVerificationService->isLastMachedDeputyNdrEnabled());
 
         $this->saveUserAndClient($user, $client);
 
@@ -109,7 +101,7 @@ class UserRegistrationService
             throw new RuntimeException("User with email {$user->getEmail()} already exists.", 422);
         }
 
-        $this->casrecVerificationService->validate(
+        $this->preRegistrationVerificationService->validate(
             $selfRegisterData->getCaseNumber(),
             $selfRegisterData->getClientLastname(),
             $selfRegisterData->getLastname(),

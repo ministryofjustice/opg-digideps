@@ -66,9 +66,9 @@ class Checklist implements SynchronisableInterface
      *
      * @JMS\Groups({"report-checklist"})
      *
-     * @ORM\Column(name="deputy_full_name_accurate_in_casrec", type="string", length=3, nullable=true)
+     * @ORM\Column(name="deputy_full_name_accurate_in_sirius", type="string", length=3, nullable=true)
      */
-    private $deputyFullNameAccurateInCasrec;
+    private $deputyFullNameAccurateInSirius;
 
     /**
      * @var string
@@ -183,9 +183,9 @@ class Checklist implements SynchronisableInterface
      *
      * @JMS\Groups({"report-checklist"})
      *
-     * @ORM\Column(name="bond_order_match_casrec", type="string", length=3, nullable=true)
+     * @ORM\Column(name="bond_order_match_sirius", type="string", length=3, nullable=true)
      */
-    private $bondOrderMatchCasrec;
+    private $bondOrderMatchSirius;
 
     /**
      * @var string
@@ -418,19 +418,19 @@ class Checklist implements SynchronisableInterface
     /**
      * @return string
      */
-    public function getDeputyFullNameAccurateInCasrec()
+    public function getDeputyFullNameAccurateInSirius()
     {
-        return $this->deputyFullNameAccurateInCasrec;
+        return $this->deputyFullNameAccurateInSirius;
     }
 
     /**
-     * @param string $deputyFullNameAccurateInCasrec
+     * @param string $deputyFullNameAccurateInSirius
      *
      * @return $this
      */
-    public function setDeputyFullNameAccurateInCasrec($deputyFullNameAccurateInCasrec)
+    public function setDeputyFullNameAccurateInSirius($deputyFullNameAccurateInSirius)
     {
-        $this->deputyFullNameAccurateInCasrec = $deputyFullNameAccurateInCasrec;
+        $this->deputyFullNameAccurateInSirius = $deputyFullNameAccurateInSirius;
 
         return $this;
     }
@@ -670,19 +670,19 @@ class Checklist implements SynchronisableInterface
     /**
      * @return string
      */
-    public function getBondOrderMatchCasrec()
+    public function getBondOrderMatchSirius()
     {
-        return $this->bondOrderMatchCasrec;
+        return $this->bondOrderMatchSirius;
     }
 
     /**
-     * @param string $bondOrderMatchCasrec
+     * @param string $bondOrderMatchSirius
      *
      * @return $this
      */
-    public function setBondOrderMatchCasrec($bondOrderMatchCasrec)
+    public function setBondOrderMatchSirius($bondOrderMatchSirius)
     {
-        $this->bondOrderMatchCasrec = $bondOrderMatchCasrec;
+        $this->bondOrderMatchSirius = $bondOrderMatchSirius;
 
         return $this;
     }

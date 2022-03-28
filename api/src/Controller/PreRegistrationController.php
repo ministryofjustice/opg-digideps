@@ -2,9 +2,9 @@
 
 namespace App\Controller;
 
-use App\Repository\CasRecRepository;
-use App\Service\CasrecVerificationService;
+use App\Repository\PreRegistrationRepository;
 use App\Service\Formatter\RestFormatter;
+use App\Service\PreRegistrationVerificationService;
 use Doctrine\ORM\NonUniqueResultException;
 use Sensio\Bundle\FrameworkExtraBundle\Configuration\Security;
 use Symfony\Component\HttpFoundation\JsonResponse;
@@ -12,17 +12,14 @@ use Symfony\Component\HttpFoundation\Request;
 use Symfony\Component\Routing\Annotation\Route;
 
 /**
- * @Route("/casrec")
+ * @Route("/pre-registration")
  */
-class CasRecController extends RestController
+class PreRegistrationController extends RestController
 {
-    private CasrecVerificationService $casrecVerification;
-    private RestFormatter $formatter;
-
-    public function __construct(CasrecVerificationService $casrecVerification, RestFormatter $formatter)
-    {
-        $this->casrecVerification = $casrecVerification;
-        $this->formatter = $formatter;
+    public function __construct(
+        private PreRegistrationVerificationService $preRegistrationVerificationService,
+        private RestFormatter $formatter
+    ) {
     }
 
     /**
@@ -35,9 +32,9 @@ class CasRecController extends RestController
      *
      * @throws NonUniqueResultException
      */
-    public function delete(CasRecRepository $casRecRepository)
+    public function delete(PreRegistrationRepository $preRegistrationRepository)
     {
-        $result = $casRecRepository->deleteAll();
+        $result = $preRegistrationRepository->deleteAll();
 
         return ['deletion-count' => null === $result ? 0 : $result];
     }
@@ -47,19 +44,19 @@ class CasRecController extends RestController
      *
      * @Route("/verify", methods={"POST"})
      */
-    public function verify(Request $request, CasrecVerificationService $verificationService)
+    public function verify(Request $request, PreRegistrationVerificationService $verificationService)
     {
         $clientData = $this->formatter->deserializeBodyContent($request);
         $user = $this->getUser();
 
-        $casrecVerified = $verificationService->validate(
+        $verified = $verificationService->validate(
             $clientData['case_number'],
             $clientData['lastname'],
             $user->getLastname(),
             $user->getAddressPostcode()
         );
 
-        return ['verified' => $casrecVerified];
+        return ['verified' => $verified];
     }
 
     /**
@@ -69,12 +66,10 @@ class CasRecController extends RestController
     public function userCount()
     {
         $qb = $this->getDoctrine()->getManager()->createQueryBuilder();
-        $qb->select('count(c.id)');
-        $qb->from('App\Entity\CasRec', 'c');
+        $qb->select('count(p.id)');
+        $qb->from('App\Entity\PreRegistration', 'p');
 
-        $count = $qb->getQuery()->getSingleScalarResult();
-
-        return $count;
+        return $qb->getQuery()->getSingleScalarResult();
     }
 
     /**
@@ -84,6 +79,6 @@ class CasRecController extends RestController
      */
     public function clientHasCoDeputies(string $caseNumber)
     {
-        return $this->casrecVerification->isMultiDeputyCase($caseNumber);
+        return $this->preRegistrationVerificationService->isMultiDeputyCase($caseNumber);
     }
 }

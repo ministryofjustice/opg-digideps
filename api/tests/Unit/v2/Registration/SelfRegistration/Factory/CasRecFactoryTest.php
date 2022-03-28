@@ -2,11 +2,11 @@
 
 namespace App\Tests\Unit\v2\Registration\SelfRegistration\Factory;
 
-use App\Entity\CasRec;
+use App\Entity\PreRegistration;
 use App\Service\DateTimeProvider;
 use App\v2\Registration\DTO\LayDeputyshipDto;
-use App\v2\Registration\SelfRegistration\Factory\CasRecCreationException;
-use App\v2\Registration\SelfRegistration\Factory\CasRecFactory;
+use App\v2\Registration\SelfRegistration\Factory\PreRegistrationCreationException;
+use App\v2\Registration\SelfRegistration\Factory\PreRegistrationFactory;
 use DateTime;
 use Exception;
 use PHPUnit\Framework\TestCase;
@@ -17,7 +17,7 @@ use Symfony\Component\Validator\Validator\ValidatorInterface;
 
 class CasRecFactoryTest extends TestCase
 {
-    /** @var CasRecFactory */
+    /** @var PreRegistrationFactory */
     private $factory;
 
     /** @var ValidatorInterface | PHPUnit_Framework_MockObject_MockObject */
@@ -32,7 +32,7 @@ class CasRecFactoryTest extends TestCase
         $this->validator = $this->createMock(ValidatorInterface::class);
         $this->dateTimeProvider = $this->createMock(DateTimeProvider::class);
 
-        $this->factory = new CasRecFactory($this->validator, $this->dateTimeProvider);
+        $this->factory = new PreRegistrationFactory($this->validator, $this->dateTimeProvider);
     }
 
     /**
@@ -40,7 +40,7 @@ class CasRecFactoryTest extends TestCase
      */
     public function throwsExceptionIfCreatesInvalidEntity()
     {
-        $this->expectException(CasRecCreationException::class);
+        $this->expectException(PreRegistrationCreationException::class);
         $constraintList = new ConstraintViolationList([
             new ConstraintViolation('Bad casenumber given', '', [], '', '', ''),
             new ConstraintViolation('Bad postcode given', '', [], '', '', ''),
@@ -69,10 +69,10 @@ class CasRecFactoryTest extends TestCase
             ->method('getDateTime')
             ->willReturn(new DateTime('2010-01-03 12:03:23'));
 
-        /** @var CasRec $result */
+        /** @var PreRegistration $result */
         $result = $this->factory->createFromDto($this->buildLayDeputyshipDto());
 
-        $this->assertInstanceOf(CasRec::class, $result);
+        $this->assertInstanceOf(PreRegistration::class, $result);
         $this->assertEquals('case', $result->getCaseNumber());
         $this->assertEquals('depnum', $result->getDeputyUid());
         $this->assertEquals('depsurname', $result->getDeputySurname());

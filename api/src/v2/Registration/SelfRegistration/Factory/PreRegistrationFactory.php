@@ -2,31 +2,23 @@
 
 namespace App\v2\Registration\SelfRegistration\Factory;
 
-use App\Entity\CasRec;
+use App\Entity\PreRegistration;
 use App\Service\DateTimeProvider;
 use App\v2\Registration\DTO\LayDeputyshipDto;
 use Symfony\Component\Validator\Validator\ValidatorInterface;
 
-class CasRecFactory
+class PreRegistrationFactory
 {
-    /** @var ValidatorInterface */
-    private $validator;
-
-    /** @var DateTimeProvider */
-    private $dateProvider;
-
-    public function __construct(ValidatorInterface $validator, DateTimeProvider $dateProvider)
+    public function __construct(private ValidatorInterface $validator, private DateTimeProvider $dateProvider)
     {
-        $this->validator = $validator;
-        $this->dateProvider = $dateProvider;
     }
 
     /**
-     * @return CasRec
+     * @return PreRegistration
      */
     public function createFromDto(LayDeputyshipDto $dto)
     {
-        $entity = new CasRec($this->convertDtoToArray($dto));
+        $entity = new PreRegistration($this->convertDtoToArray($dto));
         $entity->setUpdatedAt($this->dateProvider->getDateTime());
 
         $this->throwExceptionOnInvalidEntity($entity);
@@ -55,13 +47,13 @@ class CasRecFactory
         ];
     }
 
-    /** @param CasRec $entity */
-    private function throwExceptionOnInvalidEntity(CasRec $entity): void
+    /** @param PreRegistration $entity */
+    private function throwExceptionOnInvalidEntity(PreRegistration $entity): void
     {
         $errors = $this->validator->validate($entity);
 
         if (count($errors) > 0) {
-            throw new CasRecCreationException(str_replace('Object(App\Entity\CasRec).', '', (string) $errors));
+            throw new PreRegistrationCreationException(str_replace('Object(App\Entity\PreRegistration).', '', (string) $errors));
         }
     }
 }

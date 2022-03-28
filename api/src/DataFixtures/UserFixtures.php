@@ -2,10 +2,10 @@
 
 namespace App\DataFixtures;
 
-use App\Entity\CasRec;
 use App\Entity\Client;
 use App\Entity\NamedDeputy;
 use App\Entity\Ndr\Ndr;
+use App\Entity\PreRegistration;
 use App\Entity\Report\Report;
 use App\Entity\User;
 use App\Factory\OrganisationFactory;
@@ -193,9 +193,9 @@ class UserFixtures extends AbstractDataFixture
 
         $manager->persist($user);
 
-        // Create CasRec record for lay deputies
+        // Create PreRegistration record for lay deputies
         if ('LAY' === $data['deputyType']) {
-            $casrecData = [
+            $preRegistrationData = [
                 'Case' => $data['id'],
                 'ClientSurname' => $data['id'],
                 'DeputyUid' => str_replace('-', '', $data['id']),
@@ -213,8 +213,8 @@ class UserFixtures extends AbstractDataFixture
                 'CoDeputy' => $data['codeputyEnabled'] ?? null,
             ];
 
-            $casRec = new CasRec($casrecData);
-            $manager->persist($casRec);
+            $preRegistration = new PreRegistration($preRegistrationData);
+            $manager->persist($preRegistration);
         }
         // Create client
         $client = new Client();
@@ -253,9 +253,9 @@ class UserFixtures extends AbstractDataFixture
 
         // Create report for PROF/PA user 2 years ago
         if ('PROF' === $data['deputyType'] || 'PA' === $data['deputyType']) {
-            $realm = 'PROF' === $data['deputyType'] ? CasRec::REALM_PROF : CasRec::REALM_PA;
+            $realm = 'PROF' === $data['deputyType'] ? PreRegistration::REALM_PROF : PreRegistration::REALM_PA;
 
-            $type = CasRec::getReportTypeByOrderType($data['reportType'], $data['reportVariation'], $realm);
+            $type = PreRegistration::getReportTypeByOrderType($data['reportType'], $data['reportVariation'], $realm);
             $startDate = $client->getExpectedReportStartDate();
             $startDate->setDate('2016', intval($startDate->format('m')), intval($startDate->format('d')));
             $endDate = $client->getExpectedReportEndDate();

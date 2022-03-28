@@ -11,7 +11,8 @@ use App\Exception\RestClientException;
 use App\Form as FormDir;
 use App\Security\UserVoter;
 use App\Service\Audit\AuditEvents;
-use App\Service\Client\Internal\CasrecApi;
+use App\Service\Client\Internal\LayDeputyshipApi;
+use App\Service\Client\Internal\PreRegistrationApi;
 use App\Service\Client\Internal\UserApi;
 use App\Service\Client\RestClient;
 use App\Service\CsvUploader;
@@ -41,12 +42,12 @@ class IndexController extends AbstractController
 {
     public function __construct(
         private OrgService $orgService,
-        private UserVoter $userVoter,
         private Logger $logger,
         private RestClient $restClient,
         private UserApi $userApi,
         private ObservableEventDispatcher $eventDispatcher,
-        private CasrecApi $casrecApi
+        private PreRegistrationApi $preRegistrationApi,
+        private LayDeputyshipApi $layDeputyshipApi
     ) {
     }
 
@@ -329,7 +330,7 @@ class IndexController extends AbstractController
 
         if ($form->isSubmitted() && $form->isValid()) {
             if ('lay' === $form->get('type')->getData()) {
-                return new RedirectResponse($router->generate('casrec_upload'));
+                return new RedirectResponse($router->generate('pre_registration_upload'));
             } elseif ('org' === $form->get('type')->getData()) {
                 return new RedirectResponse($router->generate('admin_org_upload'));
             }
@@ -341,7 +342,7 @@ class IndexController extends AbstractController
     }
 
     /**
-     * @Route("/casrec-upload", name="casrec_upload")
+     * @Route("/pre-registration-upload", name="pre_registration_upload")
      * @Security("is_granted('ROLE_ADMIN') or has_role('ROLE_AD')")
      * @Template("@App/Admin/Index/uploadUsers.html.twig")
      */
@@ -368,9 +369,10 @@ class IndexController extends AbstractController
                 // small amount of data -> immediate posting and redirect (needed for behat)
                 if (count($data) < $chunkSize) {
                     $compressedData = CsvUploader::compressData($data);
-                    $this->casrecApi->deleteAll();
+                    $this->preRegistrationApi->deleteAll();
 
-                    $ret = $this->restClient->setTimeout(600)->post('v2/lay-deputyship/upload', $compressedData);
+                    $ret = $this->layDeputyshipApi->uploadLayDeputyShip($compressedData);
+
                     $this->addFlash(
                         'notice',
                         sprintf('%d record uploaded, %d error(s)', $ret['added'], count($ret['errors']))
@@ -382,7 +384,7 @@ class IndexController extends AbstractController
 
                     $this->dispatchCSVUploadEvent();
 
-                    return $this->redirect($this->generateUrl('casrec_upload'));
+                    return $this->redirect($this->generateUrl('pre_registration_upload'));
                 }
 
                 // big amount of data => store in redis + redirect
@@ -393,7 +395,7 @@ class IndexController extends AbstractController
                     $redisClient->set('chunk'.$k, $compressedData);
                 }
 
-                return $this->redirect($this->generateUrl('casrec_upload', ['nOfChunks' => count($chunks), 'source' => $source]));
+                return $this->redirect($this->generateUrl('pre_registration_upload', ['nOfChunks' => count($chunks), 'source' => $source]));
             } catch (Throwable $e) {
                 $message = $e->getMessage();
                 if ($e instanceof RestClientException && isset($e->getData()['message'])) {
@@ -405,60 +407,7 @@ class IndexController extends AbstractController
 
         return [
             'nOfChunks' => $request->get('nOfChunks'),
-            'source' => $request->get('source'),
-            'currentRecords' => $this->restClient->get('casrec/count', 'array'),
-            'form' => $form->createView(),
-            'maxUploadSize' => min([ini_get('upload_max_filesize'), ini_get('post_max_size')]),
-        ];
-    }
-
-    /**
-     * @Route("/casrec-mld-upgrade", name="casrec_mld_upgrade")
-     * @Security("is_granted('ROLE_ADMIN') or has_role('ROLE_AD')")
-     * @Template("@App/Admin/Index/upgradeMld.html.twig")
-     */
-    public function upgradeMldAction(Request $request)
-    {
-        $form = $this->createForm(FormDir\UploadCsvType::class, null, [
-            'method' => 'POST',
-        ]);
-
-        $form->handleRequest($request);
-
-        if ($form->isSubmitted() && $form->isValid()) {
-            $fileName = $form->get('file')->getData();
-            try {
-                $data = (new CsvToArray($fileName, true))
-                    ->setExpectedColumns([
-                        'Deputy No',
-                    ])
-                    ->getData();
-                $compressedData = CsvUploader::compressData($data);
-                $ret = $this->restClient->setTimeout(600)->post('codeputy/mldupgrade', $compressedData);
-                $this->addFlash(
-                    'notice',
-                    sprintf('Your file contained %d deputy numbers, %d were updated, with %d error(s)', $ret['requested_mld_upgrades'], $ret['updated'], count($ret['errors']))
-                );
-
-                foreach ($ret['errors'] as $err) {
-                    $this->addFlash(
-                        'error',
-                        $err
-                    );
-                }
-
-                return $this->redirect($this->generateUrl('casrec_mld_upgrade'));
-            } catch (Throwable $e) {
-                $message = $e->getMessage();
-                if ($e instanceof RestClientException && isset($e->getData()['message'])) {
-                    $message = $e->getData()['message'];
-                }
-                $form->get('file')->addError(new FormError($message));
-            }
-        }
-
-        return [
-            'currentMldUsers' => $this->restClient->get('codeputy/count', 'array'),
+            'currentRecords' => $this->preRegistrationApi->count(),
             'form' => $form->createView(),
             'maxUploadSize' => min([ini_get('upload_max_filesize'), ini_get('post_max_size')]),
         ];

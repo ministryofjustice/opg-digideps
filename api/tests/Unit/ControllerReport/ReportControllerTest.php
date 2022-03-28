@@ -726,7 +726,7 @@ class ReportControllerTest extends AbstractTestController
         $this->assertEquals($checklistId, $checklist->getId());
         $this->assertEquals('yes', $checklist->getReportingPeriodAccurate());
         $this->assertEquals('1', $checklist->getContactDetailsUptoDate());
-        $this->assertEquals('1', $checklist->getDeputyFullNameAccurateinCasrec());
+        $this->assertEquals('1', $checklist->getDeputyFullNameAccurateInSirius());
         $this->assertEquals('yes', $checklist->getDecisionsSatisfactory());
         $this->assertEquals('yes', $checklist->getConsultationsSatisfactory());
         $this->assertEquals('yes', $checklist->getCareArrangements());
@@ -736,7 +736,7 @@ class ReportControllerTest extends AbstractTestController
         $this->assertEquals('yes', $checklist->getAccountsBalance());
         $this->assertEquals('yes', $checklist->getMoneyMovementsAcceptable());
         $this->assertEquals('yes', $checklist->getBondAdequate());
-        $this->assertEquals('yes', $checklist->getBondOrderMatchCasrec());
+        $this->assertEquals('yes', $checklist->getBondOrderMatchSirius());
         $this->assertEquals('yes', $checklist->getFutureSignificantDecisions());
         $this->assertEquals('no', $checklist->getHasDeputyRaisedConcerns());
         $this->assertEquals('yes', $checklist->getCaseWorkerSatisified());
@@ -821,7 +821,7 @@ class ReportControllerTest extends AbstractTestController
         $this->assertEquals($checklistId, $checklist->getId());
         $this->assertEquals('yes', $checklist->getReportingPeriodAccurate());
         $this->assertEquals('1', $checklist->getContactDetailsUptoDate());
-        $this->assertEquals('1', $checklist->getDeputyFullNameAccurateinCasrec());
+        $this->assertEquals('1', $checklist->getDeputyFullNameAccurateInSirius());
         $this->assertEquals('yes', $checklist->getDecisionsSatisfactory());
         $this->assertEquals('yes', $checklist->getConsultationsSatisfactory());
         $this->assertEquals('yes', $checklist->getCareArrangements());
@@ -831,7 +831,7 @@ class ReportControllerTest extends AbstractTestController
         $this->assertEquals('yes', $checklist->getAccountsBalance());
         $this->assertEquals('yes', $checklist->getMoneyMovementsAcceptable());
         $this->assertEquals('yes', $checklist->getBondAdequate());
-        $this->assertEquals('yes', $checklist->getBondOrderMatchCasrec());
+        $this->assertEquals('yes', $checklist->getBondOrderMatchSirius());
         $this->assertEquals('yes', $checklist->getFutureSignificantDecisions());
         $this->assertEquals('no', $checklist->getHasDeputyRaisedConcerns());
         $this->assertEquals('yes', $checklist->getCaseWorkerSatisified());
@@ -930,7 +930,7 @@ class ReportControllerTest extends AbstractTestController
         $this->assertEquals($checklistId, $checklist->getId());
         $this->assertEquals('yes', $checklist->getReportingPeriodAccurate());
         $this->assertEquals('1', $checklist->getContactDetailsUptoDate());
-        $this->assertEquals('1', $checklist->getDeputyFullNameAccurateinCasrec());
+        $this->assertEquals('1', $checklist->getDeputyFullNameAccurateInSirius());
         $this->assertEquals('yes', $checklist->getDecisionsSatisfactory());
         $this->assertEquals('yes', $checklist->getConsultationsSatisfactory());
         $this->assertEquals('yes', $checklist->getCareArrangements());
@@ -940,7 +940,7 @@ class ReportControllerTest extends AbstractTestController
         $this->assertEquals('yes', $checklist->getAccountsBalance());
         $this->assertEquals('yes', $checklist->getMoneyMovementsAcceptable());
         $this->assertEquals('yes', $checklist->getBondAdequate());
-        $this->assertEquals('yes', $checklist->getBondOrderMatchCasrec());
+        $this->assertEquals('yes', $checklist->getBondOrderMatchSirius());
         $this->assertEquals('yes', $checklist->getFutureSignificantDecisions());
         $this->assertEquals('no', $checklist->getHasDeputyRaisedConcerns());
         $this->assertEquals('yes', $checklist->getCaseWorkerSatisified());

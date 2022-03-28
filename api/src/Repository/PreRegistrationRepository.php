@@ -1,24 +1,26 @@
 <?php
 
+declare(strict_types=1);
+
 namespace App\Repository;
 
-use App\Entity\CasRec;
+use App\Entity\PreRegistration;
 use Doctrine\Bundle\DoctrineBundle\Repository\ServiceEntityRepository;
 use Doctrine\ORM\QueryBuilder;
 use Doctrine\Persistence\ManagerRegistry;
 
-class CasRecRepository extends ServiceEntityRepository
+class PreRegistrationRepository extends ServiceEntityRepository
 {
     public function __construct(ManagerRegistry $registry)
     {
-        parent::__construct($registry, CasRec::class);
+        parent::__construct($registry, PreRegistration::class);
     }
 
     public function deleteAll()
     {
         /** @var QueryBuilder $qb */
         $qb = $this->getEntityManager()->createQueryBuilder();
-        $qb->delete('App\Entity\CasRec', 'cr');
+        $qb->delete('App\Entity\PreRegistration', 'p');
 
         return $qb->getQuery()->getOneOrNullResult();
     }
@@ -27,7 +29,7 @@ class CasRecRepository extends ServiceEntityRepository
     {
         return $this
             ->getEntityManager()
-            ->createQuery('SELECT COUNT(c.id) FROM App\Entity\Casrec c')
+            ->createQuery('SELECT COUNT(p.id) FROM App\Entity\PreRegistration p')
             ->getSingleScalarResult();
     }
 }

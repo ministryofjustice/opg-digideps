@@ -2,13 +2,13 @@
 
 namespace App\v2\Registration\Uploader;
 
-use App\Entity\CasRec;
+use App\Entity\PreRegistration;
 use App\Entity\User;
 use App\Repository\ReportRepository;
 use App\v2\Registration\DTO\LayDeputyshipDto;
 use App\v2\Registration\DTO\LayDeputyshipDtoCollection;
-use App\v2\Registration\SelfRegistration\Factory\CasRecCreationException;
-use App\v2\Registration\SelfRegistration\Factory\CasRecFactory;
+use App\v2\Registration\SelfRegistration\Factory\PreRegistrationCreationException;
+use App\v2\Registration\SelfRegistration\Factory\PreRegistrationFactory;
 use Doctrine\Common\Persistence\Mapping\MappingException;
 use Doctrine\ORM\EntityManagerInterface;
 use Doctrine\ORM\OptimisticLockException;
@@ -19,20 +19,11 @@ use Throwable;
 
 class LayDeputyshipUploader
 {
-    /** @var EntityManagerInterface */
-    protected $em;
-
-    /** @var ReportRepository */
-    protected $reportRepository;
-
-    /** @var CasRecFactory */
-    private $casRecFactory;
-
     /** @var array */
     private $reportsUpdated = [];
 
     /** @var array */
-    private $casRecEntriesByCaseNumber = [];
+    private $preRegistrationEntriesByCaseNumber = [];
 
     /** @var int */
     const MAX_UPLOAD = 10000;
@@ -41,13 +32,10 @@ class LayDeputyshipUploader
     const FLUSH_EVERY = 5000;
 
     public function __construct(
-        EntityManagerInterface $em,
-        ReportRepository $reportRepository,
-        CasRecFactory $casRecFactory
+        private EntityManagerInterface $em,
+        private ReportRepository $reportRepository,
+        private PreRegistrationFactory $preRegistrationFactory
     ) {
-        $this->em = $em;
-        $this->reportRepository = $reportRepository;
-        $this->casRecFactory = $casRecFactory;
     }
 
     public function upload(LayDeputyshipDtoCollection $collection): array
@@ -63,9 +51,9 @@ class LayDeputyshipUploader
             foreach ($collection as $index => $layDeputyshipDto) {
                 try {
                     $caseNumber = (string) $layDeputyshipDto->getCaseNumber();
-                    $this->casRecEntriesByCaseNumber[$caseNumber] = $this->createAndPersistNewCasRecEntity($layDeputyshipDto);
+                    $this->preRegistrationEntriesByCaseNumber[$caseNumber] = $this->createAndPersistNewPreRegistrationEntity($layDeputyshipDto);
                     ++$added;
-                } catch (CasRecCreationException $e) {
+                } catch (PreRegistrationCreationException $e) {
                     $errors[] = sprintf('ERROR IN LINE %d: %s', $index + 2, $e->getMessage());
                     continue;
                 }
@@ -97,13 +85,13 @@ class LayDeputyshipUploader
     /**
      * @throws ORMException
      */
-    private function createAndPersistNewCasRecEntity(LayDeputyshipDto $layDeputyshipDto): CasRec
+    private function createAndPersistNewPreRegistrationEntity(LayDeputyshipDto $layDeputyshipDto): PreRegistration
     {
-        $casRecEntity = $this->casRecFactory->createFromDto($layDeputyshipDto);
+        $preRegistrationEntity = $this->preRegistrationFactory->createFromDto($layDeputyshipDto);
 
-        $this->em->persist($casRecEntity);
+        $this->em->persist($preRegistrationEntity);
 
-        return $casRecEntity;
+        return $preRegistrationEntity;
     }
 
     /**
@@ -111,14 +99,14 @@ class LayDeputyshipUploader
      */
     private function updateReportTypes(): LayDeputyshipUploader
     {
-        $caseNumbers = array_keys($this->casRecEntriesByCaseNumber);
+        $caseNumbers = array_keys($this->preRegistrationEntriesByCaseNumber);
         $reports = $this->reportRepository->findAllActiveReportsByCaseNumbersAndRole($caseNumbers, User::ROLE_LAY_DEPUTY);
 
         foreach ($reports as $currentActiveReport) {
             $reportCaseNumber = $currentActiveReport->getClient()->getCaseNumber();
-            /** @var CasRec $casRec */
-            $casRec = $this->casRecEntriesByCaseNumber[$reportCaseNumber];
-            $determinedReportType = CasRec::getReportTypeByOrderType($casRec->getTypeOfReport(), $casRec->getOrderType(), CasRec::REALM_LAY);
+            /** @var PreRegistration $preRegistration */
+            $preRegistration = $this->preRegistrationEntriesByCaseNumber[$reportCaseNumber];
+            $determinedReportType = PreRegistration::getReportTypeByOrderType($preRegistration->getTypeOfReport(), $preRegistration->getOrderType(), PreRegistration::REALM_LAY);
 
             if ($currentActiveReport->getType() != $determinedReportType) {
                 $currentActiveReport->setType($determinedReportType);

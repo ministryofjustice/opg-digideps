@@ -4,11 +4,11 @@ namespace App\Service;
 
 use App\Entity\AssetInterface;
 use App\Entity\BankAccountInterface;
-use App\Entity\CasRec;
 use App\Entity\Client;
 use App\Entity\Ndr\AssetOther as NdrAssetOther;
 use App\Entity\Ndr\AssetProperty as NdrAssetProperty;
 use App\Entity\Ndr\Ndr;
+use App\Entity\PreRegistration;
 use App\Entity\Report\Asset;
 use App\Entity\Report\AssetOther as ReportAssetOther;
 use App\Entity\Report\AssetProperty as ReportAssetProperty;
@@ -58,7 +58,7 @@ class ReportService
     ) {
         $this->_em = $em;
         $this->reportRepository = $reportRepository;
-        $this->casRecRepository = $em->getRepository(CasRec::class);
+        $this->casRecRepository = $em->getRepository(PreRegistration::class);
         $this->assetRepository = $em->getRepository(Asset::class);
         $this->bankAccountRepository = $em->getRepository(BankAccountEntity::class);
     }
@@ -333,7 +333,7 @@ class ReportService
     public function getReportTypeBasedOnCasrec(Client $client)
     {
         $casRec = $this->casRecRepository->findOneBy(['caseNumber' => $client->getCaseNumber()]);
-        if ($casRec instanceof CasRec) {
+        if ($casRec instanceof PreRegistration) {
             $namedDeputy = $client->getNamedDeputy();
 
             if (!is_null($namedDeputy)) {
@@ -342,13 +342,13 @@ class ReportService
                 if (is_null($realm)) {
                     throw new RuntimeException("Named deputy has invalid type {$namedDeputy->getDeputyType()}");
                 } else {
-                    return CasRec::getReportTypeByOrderType($casRec->getTypeOfReport(), $casRec->getOrderType(), $realm);
+                    return PreRegistration::getReportTypeByOrderType($casRec->getTypeOfReport(), $casRec->getOrderType(), $realm);
                 }
             }
 
             if (count($client->getUsers())) {
                 if ($client->getUsers()->first()->isLayDeputy()) {
-                    return CasRec::getReportTypeByOrderType($casRec->getTypeOfReport(), $casRec->getOrderType(), CasRec::REALM_LAY);
+                    return PreRegistration::getReportTypeByOrderType($casRec->getTypeOfReport(), $casRec->getOrderType(), PreRegistration::REALM_LAY);
                 }
             }
 

@@ -2,7 +2,7 @@
 
 namespace App\Service;
 
-use App\Entity\CasRec;
+use App\Entity\PreRegistration;
 use DateInterval;
 use DateTime;
 
@@ -60,7 +60,7 @@ class ReportUtils
 
     public function convertTypeofRepAndCorrefToReportType(string $typeOfRep, string $corref, string $realm)
     {
-        return CasRec::getReportTypeByOrderType($typeOfRep, $corref, $realm);
+        return PreRegistration::getReportTypeByOrderType($typeOfRep, $corref, $realm);
     }
 
     public function padCasRecNumber(string $number)

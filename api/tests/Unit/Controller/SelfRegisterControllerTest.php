@@ -2,8 +2,8 @@
 
 namespace App\Tests\Unit\Controller;
 
-use App\Entity\CasRec;
 use App\Entity\Client;
+use App\Entity\PreRegistration;
 use App\Entity\User;
 use DateTime;
 
@@ -51,7 +51,7 @@ class SelfRegisterControllerTest extends AbstractTestController
      */
     public function savesValidUserToDb()
     {
-        $casRec = new CasRec([
+        $casRec = new PreRegistration([
             'Case' => '12345678',
             'ClientSurname' => 'Cross-Tolley',
             'DeputyUid' => 'DEP0011',
@@ -143,7 +143,7 @@ class SelfRegisterControllerTest extends AbstractTestController
      */
     public function throwErrorForDuplicate()
     {
-        $casRec = new CasRec([
+        $casRec = new PreRegistration([
                 'Case' => '12345678',
                 'ClientSurname' => 'Cross-Tolley',
                 'DeputyUid' => 'DEP0011',
@@ -204,7 +204,7 @@ class SelfRegisterControllerTest extends AbstractTestController
     {
         $now = new DateTime();
 
-        $casRec = new CasRec([
+        $casRec = new PreRegistration([
             'Case' => '97643164',
             'ClientSurname' => 'Douglas',
             'DeputyUid' => 'DEP00199',

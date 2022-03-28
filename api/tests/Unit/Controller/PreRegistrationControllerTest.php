@@ -2,10 +2,10 @@
 
 namespace App\Tests\Unit\Controller;
 
-use App\Entity\CasRec;
+use App\Entity\PreRegistration;
 use App\Tests\Unit\Fixtures;
 
-class CasRecControllerTest extends AbstractTestController
+class PreRegistrationControllerTest extends AbstractTestController
 {
     private static $deputy1;
     private static $admin1;
@@ -52,16 +52,16 @@ class CasRecControllerTest extends AbstractTestController
             'OrderType' => 'pfa',
         ];
 
-        $this->c1 = new CasRec($data);
+        $this->c1 = new PreRegistration($data);
     }
 
     public function testDeleteHasRoleProtections()
     {
-        $this->buildAndPersistCasRecEntity('12345678');
+        $this->buildAndPersistPreRegistrationEntity('12345678');
         $this->fixtures()->flush();
         $this->fixtures()->clear();
 
-        $url = '/casrec/delete';
+        $url = '/pre-registration/delete';
 
         $this->assertJsonRequest('DELETE', $url, [
             'mustFail' => false,
@@ -90,29 +90,29 @@ class CasRecControllerTest extends AbstractTestController
 
     public function testDeleteBySourceDeletesBySource()
     {
-        $this->buildAndPersistCasRecEntity('23410954');
-        $this->buildAndPersistCasRecEntity('95043859');
+        $this->buildAndPersistPreRegistrationEntity('23410954');
+        $this->buildAndPersistPreRegistrationEntity('95043859');
         $this->fixtures()->flush();
         $this->fixtures()->clear();
 
-        $url = '/casrec/delete';
+        $url = '/pre-registration/delete';
 
         $this->assertJsonRequest('DELETE', $url, [
             'mustSucceed' => true,
             'AuthToken' => self::$tokenAdmin,
         ]);
 
-        $entitiesRemaining = $this->fixtures()->clear()->getRepo('CasRec')->findAll();
+        $entitiesRemaining = $this->fixtures()->clear()->getRepo('PreRegistration')->findAll();
         $this->assertCount(0, $entitiesRemaining);
     }
 
     public function testCount()
     {
-        $url = '/casrec/count';
+        $url = '/pre-registration/count';
         $this->assertEndpointNeedsAuth('GET', $url);
         $this->assertEndpointNotAllowedFor('GET', $url, self::$tokenDeputy);
 
-        Fixtures::deleteReportsData(['casrec']);
+        Fixtures::deleteReportsData(['pre_registration']);
         $this->fixtures()->persist($this->c1)->flush($this->c1);
 
         // check count
@@ -125,13 +125,13 @@ class CasRecControllerTest extends AbstractTestController
         $this->assertEquals(1, $data);
     }
 
-    public function testVerifyCasRec()
+    public function testVerifyPreRegistration()
     {
-        $this->buildAndPersistCasRecEntity('12345678');
+        $this->buildAndPersistPreRegistrationEntity('12345678');
         $this->fixtures()->flush();
         $this->fixtures()->clear();
 
-        $this->assertJsonRequest('POST', '/casrec/verify', [
+        $this->assertJsonRequest('POST', '/pre-registration/verify', [
             'data' => [
                 'case_number' => '12345678',
                 'lastname' => 'I should get deleted',
@@ -141,9 +141,9 @@ class CasRecControllerTest extends AbstractTestController
         ]);
     }
 
-    private function buildAndPersistCasRecEntity(string $case): CasRec
+    private function buildAndPersistPreRegistrationEntity(string $case): PreRegistration
     {
-        $casRec = new CasRec([
+        $preRegistration = new PreRegistration([
             'Case' => $case,
             'ClientSurname' => 'I should get deleted',
             'DeputyUid' => 'Deputy No',
@@ -155,8 +155,8 @@ class CasRecControllerTest extends AbstractTestController
             'OrderType' => 'pfa',
         ]);
 
-        $this->fixtures()->persist($casRec);
+        $this->fixtures()->persist($preRegistration);
 
-        return $casRec;
+        return $preRegistration;
     }
 }

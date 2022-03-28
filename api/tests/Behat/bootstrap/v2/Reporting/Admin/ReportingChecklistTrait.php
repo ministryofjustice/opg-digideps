@@ -118,7 +118,7 @@ trait ReportingChecklistTrait
             $this->selectOption('report_checklist[accountsBalance]', 'yes');
             $this->selectOption('report_checklist[moneyMovementsAcceptable]', 'yes');
             $this->selectOption('report_checklist[bondAdequate]', 'yes');
-            $this->selectOption('report_checklist[bondOrderMatchCasrec]', 'yes');
+            $this->selectOption('report_checklist[bondOrderMatchSirius]', 'yes');
         }
 
         $this->selectOption('report_checklist[caseWorkerSatisified]', 'yes');

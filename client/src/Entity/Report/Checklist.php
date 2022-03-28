@@ -51,9 +51,9 @@ class Checklist implements SynchronisableInterface
      *
      * @JMS\Groups({"report-checklist"})
      * @JMS\Type("boolean")
-     * @Assert\NotBlank(message="checklist.deputyFullNameAccurateInCasrec.notBlank", groups={"submit-deputy-fullname-accurate-casrec-checklist"})
+     * @Assert\NotBlank(message="checklist.deputyFullNameAccurateInSirius.notBlank", groups={"submit-deputy-fullname-accurate-sirius-checklist"})
      */
-    private $deputyFullNameAccurateInCasrec;
+    private $deputyFullNameAccurateInSirius;
 
     /**
      * @var string
@@ -167,7 +167,7 @@ class Checklist implements SynchronisableInterface
      *
      * @JMS\Groups({"report-checklist"})
      * @JMS\Type("string")
-     * @Assert\NotBlank(message="checklist.bondOrderMatchCasrec.notBlank", groups={"submit-bonds-checklist"})
+     * @Assert\NotBlank(message="checklist.bondOrderMatchSirius.notBlank", groups={"submit-bonds-checklist"})
      */
     private $bondAdequate;
 
@@ -176,9 +176,9 @@ class Checklist implements SynchronisableInterface
      *
      * @JMS\Groups({"report-checklist"})
      * @JMS\Type("string")
-     * @Assert\NotBlank(message="checklist.bondOrderMatchCasrec.notBlank", groups={"submit-bonds-checklist"})
+     * @Assert\NotBlank(message="checklist.bondOrderMatchSirius.notBlank", groups={"submit-bonds-checklist"})
      */
-    private $bondOrderMatchCasrec;
+    private $bondOrderMatchSirius;
 
     /**
      * @var string
@@ -393,19 +393,19 @@ class Checklist implements SynchronisableInterface
     /**
      * @return string
      */
-    public function getDeputyFullNameAccurateInCasrec()
+    public function getDeputyFullNameAccurateInSirius()
     {
-        return $this->deputyFullNameAccurateInCasrec;
+        return $this->deputyFullNameAccurateInSirius;
     }
 
     /**
-     * @param string $deputyFullNameAccurateInCasrec
+     * @param string $deputyFullNameAccurateInSirius
      *
      * @return $this
      */
-    public function setDeputyFullNameAccurateInCasrec($deputyFullNameAccurateInCasrec)
+    public function setDeputyFullNameAccurateInSirius($deputyFullNameAccurateInSirius)
     {
-        $this->deputyFullNameAccurateInCasrec = $deputyFullNameAccurateInCasrec;
+        $this->deputyFullNameAccurateInSirius = $deputyFullNameAccurateInSirius;
 
         return $this;
     }
@@ -653,19 +653,19 @@ class Checklist implements SynchronisableInterface
     /**
      * @return string
      */
-    public function getBondOrderMatchCasrec()
+    public function getBondOrderMatchSirius()
     {
-        return $this->bondOrderMatchCasrec;
+        return $this->bondOrderMatchSirius;
     }
 
     /**
-     * @param string $bondOrderMatchCasrec
+     * @param string $bondOrderMatchSirius
      *
      * @return $this
      */
-    public function setBondOrderMatchCasrec($bondOrderMatchCasrec)
+    public function setBondOrderMatchSirius($bondOrderMatchSirius)
     {
-        $this->bondOrderMatchCasrec = $bondOrderMatchCasrec;
+        $this->bondOrderMatchSirius = $bondOrderMatchSirius;
 
         return $this;
     }

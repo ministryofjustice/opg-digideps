@@ -2,10 +2,10 @@
 
 namespace App\DataFixtures;
 
-use App\Entity\CasRec;
 use App\Entity\Client;
 use App\Entity\NamedDeputy;
 use App\Entity\Ndr\Ndr;
+use App\Entity\PreRegistration;
 use App\Entity\Report\Report;
 use App\Entity\User;
 use App\Factory\OrganisationFactory;
@@ -286,7 +286,7 @@ class PATestUserFixtures extends AbstractDataFixture
             $ndr = new Ndr($client);
             $manager->persist($ndr);
         } else {
-            $type = CasRec::getReportTypeByOrderType($clientData['reportType'], $clientData['reportVariation'], CasRec::REALM_PA);
+            $type = PreRegistration::getReportTypeByOrderType($clientData['reportType'], $clientData['reportVariation'], PreRegistration::REALM_PA);
             $endDate = DateTime::createFromFormat('d/m/Y', $clientData['lastReportDate']);
             $startDate = $this->reportUtils->generateReportStartDateFromEndDate($endDate);
             $report = new Report($client, $type, $startDate, $endDate);
