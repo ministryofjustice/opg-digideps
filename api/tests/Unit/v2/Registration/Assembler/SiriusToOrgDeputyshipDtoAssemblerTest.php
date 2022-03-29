@@ -53,7 +53,7 @@ class SiriusToOrgDeputyshipDtoAssemblerTest extends TestCase
         self::assertEquals($siriusArray['ClientAddress4'], $dto->getClientAddress4());
         self::assertEquals($siriusArray['ClientAddress5'], $dto->getClientAddress5());
         self::assertEquals($siriusArray['ClientPostcode'], $dto->getClientPostCode());
-        self::assertEquals($siriusArray['DeputyUid'], $dto->getDeputyUUID());
+        self::assertEquals($siriusArray['DeputyUid'], $dto->getDeputyUid());
         self::assertEquals($siriusArray['DeputyEmail'], $dto->getDeputyEmail());
         self::assertEquals($siriusArray['DeputyForename'], $dto->getDeputyFirstname());
         self::assertEquals($siriusArray['DeputySurname'], $dto->getDeputyLastname());

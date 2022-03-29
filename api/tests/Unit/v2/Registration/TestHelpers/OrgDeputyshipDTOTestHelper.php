@@ -189,7 +189,7 @@ class OrgDeputyshipDTOTestHelper
     {
         $namedDeputy = (new NamedDeputy())
             ->setEmail1($dto->getDeputyEmail())
-            ->setDeputyUUID($dto->getDeputyUUID())
+            ->setDeputyUUID($dto->getDeputyUid())
             ->setFirstname($dto->getDeputyFirstname())
             ->setLastname($dto->getDeputyLastname())
             ->setAddress1($dto->getDeputyAddress1())

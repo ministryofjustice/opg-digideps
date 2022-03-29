@@ -57,7 +57,7 @@ class SiriusToOrgDeputyshipDtoAssembler
             ->setClientAddress4($row['ClientAddress4'])
             ->setClientAddress5($row['ClientAddress5'])
             ->setClientPostCode($row['ClientPostcode'])
-            ->setDeputyUUID($row['DeputyUid'])
+            ->setDeputyUid($row['DeputyUid'])
             ->setDeputyEmail($row['Email'])
             ->setDeputyFirstname($row['DeputyForename'])
             ->setDeputyLastname($row['DeputySurname'])

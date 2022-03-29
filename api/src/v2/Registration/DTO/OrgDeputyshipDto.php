@@ -15,7 +15,7 @@ class OrgDeputyshipDto
     private $clientAddress1;
     private $clientAddress2;
     private $clientPostCode;
-    private $deputyUUID;
+    private $deputyUid;
     private $deputyFirstname;
     private $deputyLastname;
     private $deputyEmail;
@@ -53,17 +53,17 @@ class OrgDeputyshipDto
         return $this;
     }
 
-    public function getDeputyUUID(): string
+    public function getDeputyUid(): string
     {
-        return $this->deputyUUID;
+        return $this->deputyUid;
     }
 
     /**
      * @return OrgDeputyshipDto
      */
-    public function setDeputyUUID(string $deputyUUID): self
+    public function setDeputyUid(string $deputyUid): self
     {
-        $this->deputyUUID = $deputyUUID;
+        $this->deputyUid = $deputyUid;
 
         return $this;
     }

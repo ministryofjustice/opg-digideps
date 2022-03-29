@@ -10,7 +10,7 @@ use JMS\Serializer\Annotation as JMS;
 /**
  * Named Deputy.
  *
- * @ORM\Table(name="named_deputy", indexes={@ORM\Index(name="named_deputy_uuid_idx", columns={"deputy_uuid"})})
+ * @ORM\Table(name="named_deputy", indexes={@ORM\Index(name="named_deputy_uid_idx", columns={"deputy_uid"})})
  * @ORM\Entity(repositoryClass="App\Repository\NamedDeputyRepository")
  */
 class NamedDeputy
@@ -43,9 +43,9 @@ class NamedDeputy
      *
      * @JMS\Type("string")
      * @JMS\Groups({"report-submitted-by", "named-deputy"})
-     * @ORM\Column(name="deputy_uuid", type="string", length=20, nullable=false, unique=true)
+     * @ORM\Column(name="deputy_uid", type="string", length=20, nullable=false, unique=true)
      */
-    private $deputyUUID;
+    private $deputyUid;
 
     /**
      * @var string
@@ -220,19 +220,19 @@ class NamedDeputy
     /**
      * @return string
      */
-    public function getDeputyUUID()
+    public function getDeputyUid()
     {
-        return $this->deputyUUID;
+        return $this->deputyUid;
     }
 
     /**
-     * @param string $deputyUUID
+     * @param string $deputyUid
      *
      * @return $this
      */
-    public function setDeputyUUID($deputyUUID)
+    public function setDeputyUid($deputyUid)
     {
-        $this->deputyUUID = $deputyUUID;
+        $this->deputyUid = $deputyUid;
 
         return $this;
     }

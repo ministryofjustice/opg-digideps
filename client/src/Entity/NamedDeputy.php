@@ -27,7 +27,7 @@ class NamedDeputy implements DeputyInterface
      *
      * @JMS\Type("string")
      */
-    private $deputyUUID;
+    private $deputyUid;
 
     /**
      * @var string
