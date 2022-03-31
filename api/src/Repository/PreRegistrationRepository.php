@@ -33,7 +33,7 @@ class PreRegistrationRepository extends ServiceEntityRepository
             ->getSingleScalarResult();
     }
 
-    public function findByRegistrationDetails(string $caseNumber, string $clientSurname, string $deputySurname)
+    public function findByRegistrationDetails(string $caseNumber, string $clientLastname, string $deputySurname)
     {
         return $this
             ->getEntityManager()
@@ -41,9 +41,9 @@ class PreRegistrationRepository extends ServiceEntityRepository
             ->select('p')
             ->from(PreRegistration::class, 'p')
             ->where('LOWER(p.caseNumber) = LOWER(:caseNumber)')
-            ->where('LOWER(p.clientSurname) = LOWER(:clientSurname)')
-            ->where('LOWER(p.deputySurname) = LOWER(:deputySurname)')
-            ->setParameters(['caseNumber' => $caseNumber, 'clientSurname' => $clientSurname, 'deputySurname' => $deputySurname])
+            ->andWhere('LOWER(p.clientLastname) = LOWER(:clientLastname)')
+            ->andWhere('LOWER(p.deputySurname) = LOWER(:deputySurname)')
+            ->setParameters(['caseNumber' => $caseNumber, 'clientLastname' => $clientLastname, 'deputySurname' => $deputySurname])
             ->getQuery()
             ->getResult();
     }

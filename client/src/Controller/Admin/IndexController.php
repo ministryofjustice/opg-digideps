@@ -395,7 +395,7 @@ class IndexController extends AbstractController
                     $redisClient->set('chunk'.$k, $compressedData);
                 }
 
-                return $this->redirect($this->generateUrl('pre_registration_upload', ['nOfChunks' => count($chunks), 'source' => $source]));
+                return $this->redirect($this->generateUrl('pre_registration_upload', ['nOfChunks' => count($chunks)]));
             } catch (Throwable $e) {
                 $message = $e->getMessage();
                 if ($e instanceof RestClientException && isset($e->getData()['message'])) {

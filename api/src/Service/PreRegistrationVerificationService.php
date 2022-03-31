@@ -24,7 +24,7 @@ class PreRegistrationVerificationService
      * Throw error 400 if preregistration has no record matching case number,
      * client surname, deputy surname, and postcode (if set).
      */
-    public function validate(string $caseNumber, string $clientSurname, string $deputySurname, string $deputyPostcode): bool
+    public function validate(string $caseNumber, string $clientSurname, string $deputySurname, ?string $deputyPostcode): bool
     {
         $caseNumberMatches = $this->preRegistrationRepository->findByCaseNumber($caseNumber);
 
@@ -37,22 +37,24 @@ class PreRegistrationVerificationService
         /** @var PreRegistration[] $allDetailsMatches */
         $allDetailsMatches = $this->preRegistrationRepository->findByRegistrationDetails($caseNumber, $clientSurname, $deputySurname);
 
-        $this->lastMatchedPreRegistrationUsers = $this->applyPostcodeFilter($allDetailsMatches, $deputyPostcode);
+        if ($deputyPostcode) {
+            $this->lastMatchedPreRegistrationUsers = $this->applyPostcodeFilter($allDetailsMatches, $deputyPostcode);
 
-        if (0 == count($this->lastMatchedPreRegistrationUsers)) {
-            $detailsToMatchOn['deputyPostcode'] = $deputyPostcode;
+            if (0 == count($this->lastMatchedPreRegistrationUsers)) {
+                $detailsToMatchOn['deputyPostcode'] = $deputyPostcode;
 
-            $caseNumberMatches = json_decode(
-                $this->serializer->serialize($caseNumberMatches, 'json', [AbstractNormalizer::IGNORED_ATTRIBUTES => ['otherColumns']]),
-                true
-            );
+                $caseNumberMatches = json_decode(
+                    $this->serializer->serialize($caseNumberMatches, 'json', [AbstractNormalizer::IGNORED_ATTRIBUTES => ['otherColumns']]),
+                    true
+                );
 
-            $errorJson = json_encode([
-                'search_terms' => $detailsToMatchOn,
-                'case_number_matches' => $caseNumberMatches,
-            ]);
+                $errorJson = json_encode([
+                    'search_terms' => $detailsToMatchOn,
+                    'case_number_matches' => $caseNumberMatches,
+                ]);
 
-            throw new RuntimeException($errorJson, 400);
+                throw new RuntimeException($errorJson, 400);
+            }
         }
 
         return true;

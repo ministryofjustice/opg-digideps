@@ -778,7 +778,7 @@ class ReportController extends RestController
             'accounts_balance' => 'setAccountsBalance',
             'assets_declared_and_managed' => 'setAssetsDeclaredAndManaged',
             'bond_adequate' => 'setBondAdequate',
-            'bond_order_match_sirius' => 'setbondOrderMatchSirius',
+            'bond_order_match_sirius' => 'setBondOrderMatchSirius',
             'button_clicked' => 'setButtonClicked',
             'care_arrangements' => 'setCareArrangements',
             'case_worker_satisified' => 'setCaseWorkerSatisified',
