@@ -295,11 +295,11 @@ class FixtureHelper
         int $satisfactionScore = null,
         ?string $namedDeputyEmail = null,
         ?string $caseNumber = null,
-        ?string $deputyNumber = null
+        ?string $deputyUid = null
     ) {
         $client = $this->clientTestHelper->generateClient($this->em, $deputy, $organisation, $caseNumber);
         $report = $this->reportTestHelper->generateReport($this->em, $client, $reportType, $startDate);
-        $namedDeputy = $this->namedDeputyTestHelper->generatenamedDeputy($namedDeputyEmail, $deputyNumber);
+        $namedDeputy = $this->namedDeputyTestHelper->generatenamedDeputy($namedDeputyEmail, $deputyUid);
 
         $client->addReport($report);
         $client->setOrganisation($organisation);

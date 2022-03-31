@@ -20,21 +20,7 @@ class NamedDeputy implements DeputyInterface
      *
      * @JMS\Type("string")
      */
-    private $deputyNo;
-
-    /**
-     * @var string
-     *
-     * @JMS\Type("string")
-     */
     private $deputyUid;
-
-    /**
-     * @var string
-     *
-     * @JMS\Type("string")
-     */
-    private $deputyType;
 
     /**
      * @var string
@@ -69,13 +55,6 @@ class NamedDeputy implements DeputyInterface
      * @JMS\Type("string")
      */
     private $email3;
-
-    /**
-     * @var string
-     *
-     * @JMS\Type("string")
-     */
-    private $depAddrNo;
 
     /**
      * @var string
@@ -156,26 +135,6 @@ class NamedDeputy implements DeputyInterface
     public function setId($id)
     {
         $this->id = $id;
-
-        return $this;
-    }
-
-    /**
-     * @return string
-     */
-    public function getDeputyNo()
-    {
-        return $this->deputyNo;
-    }
-
-    /**
-     * @param string $deputyNo
-     *
-     * @return $this
-     */
-    public function setDeputyNo($deputyNo)
-    {
-        $this->deputyNo = $deputyNo;
 
         return $this;
     }
@@ -294,26 +253,6 @@ class NamedDeputy implements DeputyInterface
     public function setEmail3($email3)
     {
         $this->email3 = $email3;
-
-        return $this;
-    }
-
-    /**
-     * @return string
-     */
-    public function getDepAddrNo()
-    {
-        return $this->depAddrNo;
-    }
-
-    /**
-     * @param string $depAddrNo
-     *
-     * @return $this
-     */
-    public function setDepAddrNo($depAddrNo)
-    {
-        $this->depAddrNo = $depAddrNo;
 
         return $this;
     }

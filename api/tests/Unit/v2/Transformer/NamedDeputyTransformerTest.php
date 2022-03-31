@@ -15,13 +15,12 @@ class NamedDeputyTransformerTest extends TestCase
     {
         $dto = (new NamedDeputyDto())
             ->setId(4)
-            ->setDeputyNo('01234567')
+            ->setDeputyUid('01234567')
             ->setFirstName('foo')
             ->setLastName('bar')
             ->setEmail1('foo1@org')
             ->setEmail2('foo2@org')
             ->setEmail3('foo3@org')
-            ->setDepAddrNo('54321')
             ->setPhoneMain('123')
             ->setPhoneAlterrnative('456')
             ->setAddress1('a1')
@@ -35,13 +34,12 @@ class NamedDeputyTransformerTest extends TestCase
         $transformed = (new NamedDeputyTransformer())->transform($dto);
 
         $this->assertEquals(4, $transformed['id']);
-        $this->assertEquals('01234567', $transformed['deputy_no']);
+        $this->assertEquals('01234567', $transformed['deputy_uid']);
         $this->assertEquals('foo', $transformed['firstname']);
         $this->assertEquals('bar', $transformed['lastname']);
         $this->assertEquals('foo1@org', $transformed['email1']);
         $this->assertEquals('foo2@org', $transformed['email2']);
         $this->assertEquals('foo3@org', $transformed['email3']);
-        $this->assertEquals('54321', $transformed['deputy_addr_no']);
         $this->assertEquals('123', $transformed['phone_main']);
         $this->assertEquals('456', $transformed['phone_alternative']);
         $this->assertEquals('a1', $transformed['address1']);

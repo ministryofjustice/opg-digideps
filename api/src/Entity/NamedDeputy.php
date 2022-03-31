@@ -222,30 +222,6 @@ class NamedDeputy
     }
 
     /**
-     * @param string $deputyNo
-     *
-     * @return $this
-     */
-    public function setDeputyNo($deputyNo)
-    {
-        $this->deputyNo = User::padDeputyNumber($deputyNo);
-
-        return $this;
-    }
-
-    public function getDeputyType(): string
-    {
-        return $this->deputyType;
-    }
-
-    public function setDeputyType(string $deputyType)
-    {
-        $this->deputyType = $deputyType;
-
-        return $this;
-    }
-
-    /**
      * @return string
      */
     public function getFirstname()
@@ -342,26 +318,6 @@ class NamedDeputy
     public function setEmail3($email3)
     {
         $this->email3 = trim($email3);
-
-        return $this;
-    }
-
-    /**
-     * @return string
-     */
-    public function getDepAddrNo()
-    {
-        return $this->depAddrNo;
-    }
-
-    /**
-     * @param string $depAddrNo
-     *
-     * @return $this
-     */
-    public function setDepAddrNo($depAddrNo)
-    {
-        $this->depAddrNo = User::padDeputyNumber($depAddrNo);
 
         return $this;
     }

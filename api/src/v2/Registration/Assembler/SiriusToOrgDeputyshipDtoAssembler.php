@@ -4,9 +4,9 @@ declare(strict_types=1);
 
 namespace App\v2\Registration\Assembler;
 
-use App\Entity\User;
 use App\Service\ReportUtils;
 use App\v2\Registration\DTO\OrgDeputyshipDto;
+use DateTime;
 
 class SiriusToOrgDeputyshipDtoAssembler
 {
@@ -47,7 +47,7 @@ class SiriusToOrgDeputyshipDtoAssembler
             ->setCaseNumber($row['Case'])
             ->setClientFirstname($row['ClientForename'])
             ->setClientLastname($row['ClientSurname'])
-            ->setClientDateOfBirth($row['ClientDateOfBirth'])
+            ->setClientDateOfBirth(new DateTime($row['ClientDateOfBirth']))
             ->setClientAddress1($row['ClientAddress1'])
             ->setClientAddress2($row['ClientAddress2'])
             ->setClientAddress3($row['ClientAddress3'])
@@ -64,10 +64,10 @@ class SiriusToOrgDeputyshipDtoAssembler
             ->setDeputyAddress4($row['DeputyAddress4'])
             ->setDeputyAddress5($row['DeputyAddress5'])
             ->setDeputyPostcode($row['DeputyPostcode'])
-            ->setCourtDate($row['MadeDate'])
+            ->setCourtDate(new DateTime($row['MadeDate']))
             ->setReportStartDate($reportStartDate)
-            ->setReportEndDate($reportEndDate)
+            ->setReportEndDate($reportEndDate);
 
-            ->setReportType($reportType);
+        //->setReportType($reportType);
     }
 }

@@ -247,7 +247,7 @@ class FixtureController extends AbstractController
 
         $namedDeputy = $this->buildNamedDeputy($deputy, $fromRequest);
 
-        $client->setNamedDeputy($this->buildNamedDeputy($deputy, $fromRequest));
+        $client->setNamedDeputy($namedDeputy);
         $client->setOrganisation($organisation);
 
         if ($fromRequest['orgSizeUsers'] > 1 && !empty($fromRequest['orgSizeUsers'])) {
@@ -272,8 +272,7 @@ class FixtureController extends AbstractController
             ->setFirstname($deputy->getFirstname())
             ->setLastname($deputy->getLastname())
             ->setEmail1($deputy->getEmail())
-            ->setDeputyNo($fromRequest['caseNumber'].mt_rand(1, 100))
-            ->setDeputyType('PA' === $fromRequest['deputyType'] ? 23 : 21)
+            ->setDeputyUid($fromRequest['caseNumber'].mt_rand(1, 100))
             ->setAddress1($deputy->getAddress1())
             ->setAddressPostcode($deputy->getAddressPostcode())
             ->setPhoneMain($deputy->getPhoneMain());
@@ -516,10 +515,10 @@ class FixtureController extends AbstractController
 
             if ($user) {
                 $namedDeputy = (new NamedDeputy())
+                    ->setDeputyUid(rand(8, 8))
                     ->setEmail1($user->getEmail())
                     ->setFirstname($user->getFirstname())
-                    ->setLastname($user->getLastname())
-                    ->setDeputyNo(rand(8, 8));
+                    ->setLastname($user->getLastname());
 
                 $this->em->persist($namedDeputy);
 
