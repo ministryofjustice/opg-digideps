@@ -229,7 +229,7 @@ class UserFixtures extends AbstractDataFixture
             $namedDeputy
                 ->setFirstname('Named')
                 ->setLastname('Deputy '.$data['id'])
-                ->setDeputyNo('nd-'.$data['id'])
+                ->setDeputyUid('nd-'.$data['id'])
                 ->setEmail1('behat-nd-'.$data['id'].'@publicguardian.gov.uk')
                 ->setPhoneMain('07911111111111')
                 ->setAddress1('Victoria Road')

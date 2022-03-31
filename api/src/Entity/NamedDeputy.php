@@ -174,22 +174,6 @@ class NamedDeputy
     private $phoneAlternative;
 
     /**
-     * @var bool
-     *
-     * @JMS\Type("boolean")
-     * @ORM\Column(name="fee_payer", type="boolean", nullable=true)
-     */
-    private $feePayer;
-
-    /**
-     * @var bool
-     *
-     * @JMS\Type("boolean")
-     * @ORM\Column(name="corres", type="boolean", nullable=true)
-     */
-    private $corres;
-
-    /**
      * @return int
      */
     public function getId()
@@ -558,30 +542,6 @@ class NamedDeputy
     public function setPhoneAlternative($phoneAlternative)
     {
         $this->phoneAlternative = trim($phoneAlternative);
-
-        return $this;
-    }
-
-    /**
-     * @param bool $feePayer
-     *
-     * @return $this
-     */
-    public function setFeePayer($feePayer)
-    {
-        $this->feePayer = $feePayer;
-
-        return $this;
-    }
-
-    /**
-     * @param bool $corres
-     *
-     * @return $this
-     */
-    public function setCorres($corres)
-    {
-        $this->corres = $corres;
 
         return $this;
     }

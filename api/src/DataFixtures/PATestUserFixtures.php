@@ -50,8 +50,7 @@ class PATestUserFixtures extends AbstractDataFixture
             'Dep Surname' => 'SURNAME1',
             'Email' => 'behat-pa1@publicguardian.gov.uk',
             'active' => false,
-            'Deputy No' => '9000001',
-            'Dep Type' => 23,
+            'Deputy Uid' => '9000001',
             'roleName' => 'ROLE_PA_NAMED',
             'Dep Adrs1' => 'PA OPG',
             'Dep Adrs2' => 'ADD2',
@@ -101,8 +100,7 @@ class PATestUserFixtures extends AbstractDataFixture
             'Dep Surname' => 'SURNAME1',
             'Email' => 'behat-pa2@publicguardian.gov.uk',
             'active' => false,
-            'Deputy No' => '9000002',
-            'Dep Type' => 23,
+            'Deputy Uid' => '9000002',
             'roleName' => 'ROLE_PA_NAMED',
             'Dep Adrs1' => 'PA OPG',
             'Dep Adrs2' => 'ADD2',
@@ -136,8 +134,7 @@ class PATestUserFixtures extends AbstractDataFixture
             'Dep Surname' => 'SURNAME1',
             'Email' => 'behat-pa3@publicguardian.gov.uk',
             'active' => false,
-            'Deputy No' => '9000003',
-            'Dep Type' => 23,
+            'Deputy Uid' => '9000003',
             'roleName' => 'ROLE_PA_NAMED',
             'Dep Adrs1' => 'PA OPG',
             'Dep Adrs2' => 'ADD2',
@@ -203,7 +200,6 @@ class PATestUserFixtures extends AbstractDataFixture
             ->setAddress3(isset($data['address3']) ? $data['address3'] : null)
             ->setAddressPostcode(isset($data['addressPostcode']) ? $data['addressPostcode'] : 'SW1')
             ->setAddressCountry('GB')
-            ->setDeputyNo(isset($data['Deputy No']) ? $data['Deputy No'] : null)
             ->setRoleName($data['roleName'])
             ->setAgreeTermsUse(isset($data['Agree Terms Use']) ? $data['Agree Terms Use'] : true);
 

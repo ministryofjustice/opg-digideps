@@ -50,8 +50,7 @@ class ProfTestUserFixtures extends AbstractDataFixture
             'Dep Surname' => 'SURNAME1',
             'Email' => 'behat-prof1@publicguardian.gov.uk',
             'active' => false,
-            'Deputy No' => '9000004',
-            'Dep Type' => 23,
+            'Deputy Uid' => '9000004',
             'roleName' => 'ROLE_PROF_NAMED',
             'Dep Adrs1' => 'Prof OPG',
             'Dep Adrs2' => 'ADD2',
@@ -311,8 +310,7 @@ class ProfTestUserFixtures extends AbstractDataFixture
             'Dep Surname' => 'SURNAME1',
             'Email' => 'behat-prof2@publicguardian.gov.uk',
             'active' => false,
-            'Deputy No' => '9000005',
-            'Dep Type' => 23,
+            'Deputy Uid' => '9000005',
             'roleName' => 'ROLE_PROF_NAMED',
             'Dep Adrs1' => 'Prof OPG',
             'Dep Adrs2' => 'ADD2',
@@ -376,8 +374,7 @@ class ProfTestUserFixtures extends AbstractDataFixture
             'Dep Surname' => 'SURNAME1',
             'Email' => 'behat-prof3@publicguardian.gov.uk',
             'active' => false,
-            'Deputy No' => '9000006',
-            'Dep Type' => 23,
+            'Deputy Uid' => '9000006',
             'roleName' => 'ROLE_PROF_NAMED',
             'Dep Adrs1' => 'Prof OPG',
             'Dep Adrs2' => 'ADD2',
@@ -441,8 +438,7 @@ class ProfTestUserFixtures extends AbstractDataFixture
             'Dep Surname' => 'SURNAME1',
             'Email' => 'behat-prof4@publicguardian.gov.uk',
             'active' => false,
-            'Deputy No' => '9000007',
-            'Dep Type' => 23,
+            'Deputy Uid' => '9000007',
             'roleName' => 'ROLE_PROF_NAMED',
             'Dep Adrs1' => 'Prof OPG',
             'Dep Adrs2' => 'ADD2',
@@ -476,8 +472,7 @@ class ProfTestUserFixtures extends AbstractDataFixture
             'Dep Surname' => 'SURNAME1',
             'Email' => 'existing-deputy1@abc-solicitors.uk',
             'active' => true,
-            'Deputy No' => '9000008',
-            'Dep Type' => 23,
+            'Deputy Uid' => '9000008',
             'roleName' => 'ROLE_PROF_NAMED',
             'Dep Adrs1' => 'ABC Solicitors',
             'Dep Adrs2' => 'ADD2',
@@ -543,7 +538,6 @@ class ProfTestUserFixtures extends AbstractDataFixture
             ->setAddress3(isset($data['Dep Adrs3']) ? $data['Dep Adrs3'] : null)
             ->setAddressPostcode(isset($data['Dep Postcode']) ? $data['Dep Postcode'] : 'SW1')
             ->setAddressCountry('GB')
-            ->setDeputyNo(isset($data['Deputy No']) ? $data['Deputy No'] : null)
             ->setRoleName($data['roleName'])
             ->setAgreeTermsUse(isset($data['Agree Terms Use']) ? $data['Agree Terms Use'] : true);
 

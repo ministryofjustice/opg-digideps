@@ -141,20 +141,6 @@ class NamedDeputy implements DeputyInterface
     private $phoneAlternative;
 
     /**
-     * @var bool
-     *
-     * @JMS\Type("boolean")
-     */
-    private $feePayer;
-
-    /**
-     * @var bool
-     *
-     * @JMS\Type("boolean")
-     */
-    private $corres;
-
-    /**
      * @return int
      */
     public function getId()
@@ -524,36 +510,6 @@ class NamedDeputy implements DeputyInterface
     public function setPhoneAlternative($phoneAlternative)
     {
         $this->phoneAlternative = trim($phoneAlternative);
-
-        return $this;
-    }
-
-    public function isFeePayer(): bool
-    {
-        return $this->feePayer;
-    }
-
-    /**
-     * @return $this
-     */
-    public function setFeePayer(bool $feePayer)
-    {
-        $this->feePayer = $feePayer;
-
-        return $this;
-    }
-
-    public function isCorres(): bool
-    {
-        return $this->corres;
-    }
-
-    /**
-     * @return $this
-     */
-    public function setCorres(bool $corres)
-    {
-        $this->corres = $corres;
 
         return $this;
     }

@@ -10,7 +10,7 @@ use Doctrine\Migrations\AbstractMigration;
 /**
  * Auto-generated Migration: Please modify to your needs!
  */
-final class Version262 extends AbstractMigration
+final class Version263 extends AbstractMigration
 {
     public function getDescription(): string
     {
@@ -26,7 +26,10 @@ Changes to support migratrion from Casrec to Sirius';
         $this->addSql('DROP INDEX named_deputy_no_idx');
         $this->addSql('ALTER TABLE named_deputy DROP deputy_type');
         $this->addSql('ALTER TABLE named_deputy DROP dep_addr_no');
-        $this->addSql('ALTER TABLE named_deputy RENAME COLUMN deputy_no TO deputy_uuid');
+        $this->addSql('ALTER TABLE named_deputy DROP deputy_no');
+        $this->addSql('ALTER TABLE named_deputy DROP fee_payer');
+        $this->addSql('ALTER TABLE named_deputy DROP corres');
+        $this->addSql('ALTER TABLE named_deputy ADD deputy_uid VARCHAR(20)');
         $this->addSql('CREATE UNIQUE INDEX UNIQ_1058689D625B8D2 ON named_deputy (deputy_uid)');
         $this->addSql('CREATE INDEX named_deputy_uuid_idx ON named_deputy (deputy_uid)');
     }
@@ -34,11 +37,15 @@ Changes to support migratrion from Casrec to Sirius';
     public function down(Schema $schema): void
     {
         // this down() migration is auto-generated, please modify it to your needs
+        $this->addSql('DELETE FROM named_deputy');
         $this->addSql('DROP INDEX UNIQ_1058689D625B8D2');
         $this->addSql('DROP INDEX named_deputy_uid_idx');
+        $this->addSql('ALTER TABLE named_deputy DROP deputy_uid');
         $this->addSql('ALTER TABLE named_deputy ADD deputy_type VARCHAR(5) DEFAULT NULL');
         $this->addSql('ALTER TABLE named_deputy ADD dep_addr_no INT DEFAULT NULL');
-        $this->addSql('ALTER TABLE named_deputy RENAME COLUMN deputy_uid TO deputy_no');
+        $this->addSql('ALTER TABLE named_deputy ADD deputy_no VARCHAR(20)');
+        $this->addSql('ALTER TABLE named_deputy ADD fee_payer BOOLEAN DEFAULT NULL');
+        $this->addSql('ALTER TABLE named_deputy ADD corres BOOLEAN DEFAULT NULL');
         $this->addSql('CREATE UNIQUE INDEX uniq_105868993fcdcf4 ON named_deputy (deputy_no)');
         $this->addSql('CREATE INDEX named_deputy_no_idx ON named_deputy (deputy_no)');
     }

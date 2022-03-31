@@ -27,7 +27,7 @@ class NamedDeputyAssembler
     {
         $namedDeputy = (new NamedDeputy())
             ->setEmail1($dto->getDeputyEmail())
-            ->setDeputyUUID($dto->getDeputyUid())
+            ->setDeputyUid($dto->getDeputyUid())
             ->setFirstname($dto->getDeputyFirstname() ?: null)
             ->setLastname($dto->getDeputyLastname())
             ->setAddress1($dto->getDeputyAddress1())
