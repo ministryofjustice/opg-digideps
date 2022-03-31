@@ -13,7 +13,7 @@ class PreRegistrationVerificationService
     /**
      * @var PreRegistration[]
      */
-    private $lastMatchedPreRegistrationUsers;
+    private array $lastMatchedPreRegistrationUsers;
 
     public function __construct(private SerializerInterface $serializer, private PreRegistrationRepository $preRegistrationRepository)
     {
@@ -23,17 +23,10 @@ class PreRegistrationVerificationService
     /**
      * Throw error 400 if preregistration has no record matching case number,
      * client surname, deputy surname, and postcode (if set).
-     *
-     * @param string $caseNumber
-     * @param string $clientSurname
-     * @param string $deputySurname
-     * @param string $deputyPostcode
-     *
-     * @return bool
      */
-    public function validate($caseNumber, $clientSurname, $deputySurname, $deputyPostcode)
+    public function validate(string $caseNumber, string $clientSurname, string $deputySurname, string $deputyPostcode): bool
     {
-        $caseNumberMatches = $this->preRegistrationRepository->findBy(['caseNumber' => $caseNumber]);
+        $caseNumberMatches = $this->preRegistrationRepository->findByCaseNumber($caseNumber);
 
         $detailsToMatchOn = [
             'caseNumber' => $caseNumber,
@@ -41,8 +34,8 @@ class PreRegistrationVerificationService
             'deputySurname' => $deputySurname,
         ];
 
-        /** @var PreRegistration[] $crMatches */
-        $allDetailsMatches = $this->preRegistrationRepository->findBy($detailsToMatchOn);
+        /** @var PreRegistration[] $allDetailsMatches */
+        $allDetailsMatches = $this->preRegistrationRepository->findByRegistrationDetails($caseNumber, $clientSurname, $deputySurname);
 
         $this->lastMatchedPreRegistrationUsers = $this->applyPostcodeFilter($allDetailsMatches, $deputyPostcode);
 
@@ -67,10 +60,8 @@ class PreRegistrationVerificationService
 
     /**
      * Since co-deputies, multiple deputies may be matched (eg siblings at same postcode).
-     *
-     * @return array
      */
-    public function getLastMatchedDeputyNumbers()
+    public function getLastMatchedDeputyNumbers(): array
     {
         $deputyNumbers = [];
         foreach ($this->lastMatchedPreRegistrationUsers as $match) {
@@ -83,7 +74,7 @@ class PreRegistrationVerificationService
     /**
      * @return bool true if at least one matched PreRegistration contains NDR flag set to true
      */
-    public function isLastMachedDeputyNdrEnabled()
+    public function isLastMachedDeputyNdrEnabled(): bool
     {
         foreach ($this->lastMatchedPreRegistrationUsers as $match) {
             if ($match->getNdr()) {
@@ -94,12 +85,7 @@ class PreRegistrationVerificationService
         return false;
     }
 
-    /**
-     * @param string $caseNumber
-     *
-     * @return bool
-     */
-    public function isMultiDeputyCase($caseNumber)
+    public function isMultiDeputyCase(string $caseNumber): bool
     {
         $crMatches = $this->preRegistrationRepository->findByCaseNumber($caseNumber);
 
@@ -109,20 +95,22 @@ class PreRegistrationVerificationService
     /**
      * @return PreRegistration[]
      */
-    private function applyPostcodeFilter(mixed $preRegistrationMatches, string $deputyPostcode)
+    private function applyPostcodeFilter(mixed $preRegistrationMatches, string $deputyPostcode): array
     {
+        $deputyPostcode = DataNormaliser::normalisePostcode($deputyPostcode);
+
         $preRegistrationByPostcode = [];
-        $preREgistrationWithPostcodeCount = 0;
+        $preRegistrationWithPostcodeCount = 0;
         foreach ($preRegistrationMatches as $match) {
-            $postcode = $match->getDeputyPostCode();
+            $postcode = DataNormaliser::normalisePostcode($match->getDeputyPostCode());
 
             if (!empty($match->getDeputyPostCode())) {
                 $preRegistrationByPostcode[$postcode][] = $match;
-                ++$preREgistrationWithPostcodeCount;
+                ++$preRegistrationWithPostcodeCount;
             }
         }
 
-        if ($preREgistrationWithPostcodeCount < count($preRegistrationMatches)) {
+        if ($preRegistrationWithPostcodeCount < count($preRegistrationMatches)) {
             $filteredResults = $preRegistrationMatches;
         } else {
             $filteredResults = array_key_exists($deputyPostcode, $preRegistrationByPostcode) ? $preRegistrationByPostcode[$deputyPostcode] : [];

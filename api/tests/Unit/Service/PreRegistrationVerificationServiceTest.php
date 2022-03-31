@@ -85,14 +85,14 @@ class PreRegistrationVerificationServiceTest extends WebTestCase
             ->shouldReceive('findByCaseNumber')->with('22222222')->andReturn([$crLayNoPC])
             ->shouldReceive('findByCaseNumber')->with('33333333')->andReturn([$preRegMLD1A, $preRegMLD1B, $preRegMLD1C])
             ->shouldReceive('findByCaseNumber')->with('44444444')->andReturn([$preRegMLD2A, $preRegMLD2B])
-            ->shouldReceive('findBy')->with(['caseNumber' => '11111111', 'clientLastname' => 'CSurn', 'deputySurname' => 'DSurn'])->andReturn([$crLayHasPC])
-            ->shouldReceive('findBy')->with(['caseNumber' => 'WRONG678', 'clientLastname' => 'CSurn', 'deputySurname' => 'DSurn'])->andReturn([])
-            ->shouldReceive('findBy')->with(['caseNumber' => '11111111', 'clientLastname' => 'WRONG', 'deputySurname' => 'DSurn'])->andReturn([])
-            ->shouldReceive('findBy')->with(['caseNumber' => '11111111', 'clientLastname' => 'CSurn', 'deputySurname' => 'WRONG'])->andReturn([])
-            ->shouldReceive('findBy')->with(['caseNumber' => '22222222', 'clientLastname' => 'CSurn', 'deputySurname' => 'DSurn'])->andReturn([$crLayNoPC])
-            ->shouldReceive('findBy')->with(['caseNumber' => '33333333', 'clientLastname' => 'CSurn', 'deputySurname' => 'MLDUnique'])->andReturn([$preRegMLD1A])
-            ->shouldReceive('findBy')->with(['caseNumber' => '33333333', 'clientLastname' => 'CSurn', 'deputySurname' => 'Sibling'])->andReturn([$preRegMLD1B, $preRegMLD1C])
-            ->shouldReceive('findBy')->with(['caseNumber' => '44444444', 'clientLastname' => 'CSurn', 'deputySurname' => 'Sibling'])->andReturn([$preRegMLD2A, $preRegMLD2B])
+            ->shouldReceive('findByRegistrationDetails')->with('11111111', 'CSurn', 'DSurn')->andReturn([$crLayHasPC])
+            ->shouldReceive('findByRegistrationDetails')->with('WRONG678', 'CSurn', 'DSurn')->andReturn([])
+            ->shouldReceive('findByRegistrationDetails')->with('11111111', 'WRONG', 'DSurn')->andReturn([])
+            ->shouldReceive('findByRegistrationDetails')->with('11111111', 'CSurn', 'WRONG')->andReturn([])
+            ->shouldReceive('findByRegistrationDetails')->with('22222222', 'CSurn', 'DSurn')->andReturn([$crLayNoPC])
+            ->shouldReceive('findByRegistrationDetails')->with('33333333', 'CSurn', 'MLDUnique')->andReturn([$preRegMLD1A])
+            ->shouldReceive('findByRegistrationDetails')->with('33333333', 'CSurn', 'Sibling')->andReturn([$preRegMLD1B, $preRegMLD1C])
+            ->shouldReceive('findByRegistrationDetails')->with('44444444', 'CSurn', 'Sibling')->andReturn([$preRegMLD2A, $preRegMLD2B])
             ->getMock();
 
         $serializer = self::prophesize(SerializerInterface::class);
