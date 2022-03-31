@@ -40,14 +40,11 @@ class SiriusToOrgDeputyshipDtoAssembler
 //            User::$depTypeIdToRealm[$row['Dep Type']]
 //        );
 
-        $reportEndDate = $row['LastReportDay'];
+        $reportEndDate = new \DateTime($row['LastReportDay']);
         $reportStartDate = $reportEndDate ? $this->reportUtils->generateReportStartDateFromEndDate($reportEndDate) : null;
 
-        // Adding padding as entities that use DTO data pad case number, deputy number and deputy address number - needs to match for DB lookups on these values
-        $caseNumber = $this->reportUtils->padCasRecNumber(strtolower($row['Case']));
-
         return (new OrgDeputyshipDto())
-            ->setCaseNumber($caseNumber)
+            ->setCaseNumber($row['Case'])
             ->setClientFirstname($row['ClientForename'])
             ->setClientLastname($row['ClientSurname'])
             ->setClientDateOfBirth($row['ClientDateOfBirth'])

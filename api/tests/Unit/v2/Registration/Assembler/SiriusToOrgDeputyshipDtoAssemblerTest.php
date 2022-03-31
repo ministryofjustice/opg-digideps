@@ -98,33 +98,4 @@ class SiriusToOrgDeputyshipDtoAssemblerTest extends TestCase
         self::assertEquals($reportEndDate, $dto->getReportEndDate());
         //self::assertEquals($reportType, $dto->getReportType());
     }
-
-    /** @test */
-    public function assembleFromArrayDataIsSanitised()
-    {
-        $siriusArray = OrgDeputyshipDTOTestHelper::generateValidSiriusOrgDeputyshipArray();
-        $siriusArray['Case'] = 'ABCD12';
-        $siriusArray['ClientForename'] = '   Claire  ';
-        $siriusArray['ClientSurname'] = ' Murphy     ';
-
-        $lastReportDate = new DateTime($siriusArray['LastReportDay']);
-
-        $reportUtils = self::prophesize(ReportUtils::class);
-
-        // Prophecize determining report after merging in with Alex's branch
-//        $reportUtils->convertTypeofRepAndCorrefToReportType($siriusArray['Typeofrep'], $siriusArray['Corref'], 'REALM_PROF')
-//            ->shouldBeCalled()
-//            ->willReturn('OPG102');
-        $reportUtils->generateReportStartDateFromEndDate($lastReportDate)
-            ->shouldBeCalled();
-        $reportUtils->padCasRecNumber('ABCD12')
-            ->shouldBeCalled();
-
-        $sut = new SiriusToOrgDeputyshipDtoAssembler($reportUtils->reveal());
-        $dto = $sut->assembleSingleDtoFromArray($siriusArray);
-
-        self::assertEquals('00ABCD12', $dto->getCaseNumber());
-        self::assertEquals('Claire', $dto->getClientFirstname());
-        self::assertEquals('Murphy', $dto->getClientLastname());
-    }
 }

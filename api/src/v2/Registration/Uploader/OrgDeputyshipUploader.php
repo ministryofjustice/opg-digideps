@@ -104,21 +104,12 @@ class OrgDeputyshipUploader
 
     private function handleNamedDeputy(OrgDeputyshipDto $dto)
     {
-        $deputyNumber = $dto->getDeputyAddressNumber() ?
-            sprintf('%s-%s', $dto->getDeputyNumber(), $dto->getDeputyAddressNumber()) :
-            $dto->getDeputyNumber();
-
         /** @var NamedDeputy $namedDeputy */
         $namedDeputy = ($this->em->getRepository(NamedDeputy::class))->findOneBy(
             [
-                'deputyNo' => $deputyNumber,
+                'deputyUid' => $dto->getDeputyUid(),
             ]
         );
-
-        // Temporary fix to generate dep adr numbers for all deps - remove once CSVs run
-        if (!is_null($namedDeputy) && $dto->getDeputyAddressNumber()) {
-            $namedDeputy->setDepAddrNo($dto->getDeputyAddressNumber());
-        }
 
         if (is_null($namedDeputy)) {
             $namedDeputy = $this->namedDeputyAssembler->assembleFromOrgDeputyshipDto($dto);
@@ -134,9 +125,7 @@ class OrgDeputyshipUploader
                 ->setAddress3($dto->getDeputyAddress3())
                 ->setAddress4($dto->getDeputyAddress4())
                 ->setAddress5($dto->getDeputyAddress5())
-                ->setAddressPostcode($dto->getDeputyPostcode())
-                ->setDepAddrNo($dto->getDeputyAddressNumber())
-                ->setDeputyNo($deputyNumber);
+                ->setAddressPostcode($dto->getDeputyPostcode());
 
             $this->em->persist($namedDeputy);
             $this->em->flush();
@@ -253,7 +242,7 @@ class OrgDeputyshipUploader
     {
         return
             null === $client->getNamedDeputy() ||
-            $client->getNamedDeputy()->getDeputyNo() !== $namedDeputy->getDeputyNo();
+            $client->getNamedDeputy()->getDeputyUid() !== $namedDeputy->getDeputyUUID();
     }
 
     private function handleReport(OrgDeputyshipDto $dto)

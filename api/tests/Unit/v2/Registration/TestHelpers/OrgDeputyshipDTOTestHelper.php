@@ -129,7 +129,7 @@ class OrgDeputyshipDTOTestHelper
 
     public static function namedDeputyWasCreated(OrgDeputyshipDto $orgDeputyship, NamedDeputyRepository $namedDeputyRepository)
     {
-        return $namedDeputyRepository->findOneBy(['email1' => $orgDeputyship->getDeputyEmail()]) instanceof NamedDeputy;
+        return $namedDeputyRepository->findOneBy(['$deputyUid' => $orgDeputyship->getDeputyUid()]) instanceof NamedDeputy;
     }
 
     public static function organisationWasCreated(string $emailIdentifier, OrganisationRepository $orgRepo)
@@ -155,7 +155,7 @@ class OrgDeputyshipDTOTestHelper
     public static function clientAndNamedDeputyAreAssociated(OrgDeputyshipDto $orgDeputyship, ClientRepository $clientRepo, NamedDeputyRepository $namedDeputyRepo)
     {
         $client = $clientRepo->findOneBy(['caseNumber' => $orgDeputyship->getCaseNumber()]);
-        $namedDeputy = $namedDeputyRepo->findOneBy(['email1' => $orgDeputyship->getDeputyEmail()]);
+        $namedDeputy = $namedDeputyRepo->findOneBy(['$deputyUid' => $orgDeputyship->getDeputyUid()]);
 
         return $client->getNamedDeputy() === $namedDeputy;
     }
@@ -189,7 +189,7 @@ class OrgDeputyshipDTOTestHelper
     {
         $namedDeputy = (new NamedDeputy())
             ->setEmail1($dto->getDeputyEmail())
-            ->setDeputyUUID($dto->getDeputyUid())
+            ->setDeputyUid($dto->getDeputyUid())
             ->setFirstname($dto->getDeputyFirstname())
             ->setLastname($dto->getDeputyLastname())
             ->setAddress1($dto->getDeputyAddress1())

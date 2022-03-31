@@ -78,7 +78,7 @@ class OrgDeputyshipUploaderTest extends KernelTestCase
 
         self::assertTrue(
             OrgDeputyshipDTOTestHelper::namedDeputyWasCreated($deputyships[0], $this->namedDeputyRepository),
-            sprintf('Named deputy with email %s could not be found', $deputyships[0]->getDeputyEmail())
+            sprintf('Named deputy with DeputyUid %s could not be found', $deputyships[0]->getDeputyUid())
         );
     }
 
@@ -96,11 +96,11 @@ class OrgDeputyshipUploaderTest extends KernelTestCase
     }
 
     /** @test */
-    public function uploadNamedDeputyWithSameDetailsButNewDeputyNoCreatesNewDeputy()
+    public function uploadNamedDeputyWithSameDetailsButNewDeputyUidCreatesNewDeputy()
     {
         $deputyships = OrgDeputyshipDTOTestHelper::generateSiriusOrgDeputyshipDtos(1, 0);
         $namedDeputy = OrgDeputyshipDTOTestHelper::ensureNamedDeputyInUploadExists($deputyships[0], $this->em);
-        $namedDeputy->setDeputyNo('123456');
+        $namedDeputy->setDeputyUid('12345678');
 
         $this->em->persist($namedDeputy);
         $this->em->flush();
@@ -234,7 +234,7 @@ class OrgDeputyshipUploaderTest extends KernelTestCase
 
         $originalNamedDeputy = OrgDeputyshipDTOTestHelper::ensureNamedDeputyInUploadExists($deputyships[0], $this->em);
         $originalNamedDeputy->setEmail1(sprintf('different.deputy@%s', $orgIdentifier));
-        $originalNamedDeputy->setDeputyNo('abc123');
+        $originalNamedDeputy->setDeputyUid('ABCD1234');
 
         $organisation = OrgDeputyshipDTOTestHelper::ensureOrgInUploadExists($orgIdentifier, $this->em);
         $organisation->setEmailIdentifier($orgIdentifier);
@@ -254,9 +254,9 @@ class OrgDeputyshipUploaderTest extends KernelTestCase
                 $this->namedDeputyRepository
             ),
             sprintf(
-                'Client with case number "%s" and named deputy with email "%s" are not associated when they should be',
+                'Client with case number "%s" and named deputy with uid "%s" are not associated when they should be',
                 $deputyships[0]->getCaseNumber(),
-                $deputyships[0]->getDeputyEmail()
+                $deputyships[0]->getDeputyUid()
             )
         );
 
