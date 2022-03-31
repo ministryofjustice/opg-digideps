@@ -15,7 +15,7 @@ use Symfony\Component\Validator\ConstraintViolation;
 use Symfony\Component\Validator\ConstraintViolationList;
 use Symfony\Component\Validator\Validator\ValidatorInterface;
 
-class CasRecFactoryTest extends TestCase
+class PreRegistrationFactoryTest extends TestCase
 {
     /** @var PreRegistrationFactory */
     private $factory;

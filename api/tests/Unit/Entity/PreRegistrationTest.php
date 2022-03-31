@@ -6,7 +6,7 @@ use App\Entity\PreRegistration;
 use App\Entity\Report\Report;
 use PHPUnit\Framework\TestCase;
 
-class CasRecTest extends TestCase
+class PreRegistrationTest extends TestCase
 {
     public function getReportTypeByOrderTypeProvider()
     {
