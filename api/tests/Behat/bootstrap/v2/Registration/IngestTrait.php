@@ -144,7 +144,7 @@ trait IngestTrait
         $this->em->clear();
 
         $clients = $this->em->getRepository(Client::class)->findBy(['caseNumber' => $this->entityUids['client_case_numbers']]);
-        $namedDeputies = $this->em->getRepository(NamedDeputy::class)->findBy(['deputyNo' => $this->entityUids['named_deputy_uids']]);
+        $namedDeputies = $this->em->getRepository(NamedDeputy::class)->findBy(['deputyUid' => $this->entityUids['named_deputy_uids']]);
         $orgs = $this->em->getRepository(Organisation::class)->findBy(['emailIdentifier' => $this->entityUids['org_email_identifiers']]);
         $casrecs = $this->em->getRepository(PreRegistration::class)->findBy(['caseNumber' => $this->entityUids['casrec_case_numbers']]);
 
@@ -553,14 +553,14 @@ trait IngestTrait
             throw new BehatException('A named deputy is not associated with client after CSV upload');
         }
 
-        $deputyNo = $this->entityUids['named_deputy_uids'][0];
+        $deputyUid = $this->entityUids['named_deputy_uids'][0];
 
         $namedDeputyWithCsvDeputyUid = $this->em
             ->getRepository(NamedDeputy::class)
-            ->findOneBy(['deputyUid' => $deputyNo]);
+            ->findOneBy(['deputyUid' => $deputyUid]);
 
         if (is_null($namedDeputyWithCsvDeputyUid)) {
-            throw new BehatException(sprintf('Named deputy with deputy uid "%s" not found', $deputyNo));
+            throw new BehatException(sprintf('Named deputy with deputy uid "%s" not found', $deputyUid));
         }
 
         $this->assertEntitiesAreTheSame(

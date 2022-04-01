@@ -33,12 +33,7 @@ class SiriusToOrgDeputyshipDtoAssembler
 
     public function assembleSingleDtoFromArray(array $row): OrgDeputyshipDto
     {
-        //Use the new function implemented by Alex to determine report type
-//        $reportType = $this->reportUtils->convertTypeofRepAndCorrefToReportType(
-//            $row['Typeofrep'],
-//            $row['Corref'],
-//            User::$depTypeIdToRealm[$row['Dep Type']]
-//        );
+        $reportType = $this->reportUtils->determineReportType($row['ReportType'], $row['OrderType'], $row['DeputyType']);
 
         $reportEndDate = new \DateTime($row['LastReportDay']);
         $reportStartDate = $reportEndDate ? $this->reportUtils->generateReportStartDateFromEndDate($reportEndDate) : null;
@@ -66,8 +61,7 @@ class SiriusToOrgDeputyshipDtoAssembler
             ->setDeputyPostcode($row['DeputyPostcode'])
             ->setCourtDate(new DateTime($row['MadeDate']))
             ->setReportStartDate($reportStartDate)
-            ->setReportEndDate($reportEndDate);
-
-        //->setReportType($reportType);
+            ->setReportEndDate($reportEndDate)
+            ->setReportType($reportType);
     }
 }

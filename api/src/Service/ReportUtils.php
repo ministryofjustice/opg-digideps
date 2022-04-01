@@ -58,9 +58,15 @@ class ReportUtils
         return $ret;
     }
 
-    public function convertTypeofRepAndCorrefToReportType(string $typeOfRep, string $corref, string $realm)
+    public function determineReportType(string $reportType, string $orderType, string $role)
     {
-        return PreRegistration::getReportTypeByOrderType($typeOfRep, $corref, $realm);
+        if ('PA' == $role) {
+            $realm = PreRegistration::REALM_PA;
+        } else {
+            $realm = PreRegistration::REALM_PROF;
+        }
+
+        return PreRegistration::getReportTypeByOrderType($reportType, $orderType, $realm);
     }
 
     public function padCasRecNumber(string $number)

@@ -230,10 +230,8 @@ class OrgService
             $this->logProgress($index + 1, $chunkCount);
 
             if (!$logged) {
-                if (!empty($upload['source'] and !empty($upload['roleType']))) {
-                    $this->dispatchCSVUploadEvent($upload['source'], $upload['roleType']);
-                    $logged = true;
-                }
+                $this->dispatchCSVUploadEvent();
+                $logged = true;
             }
         }
     }
@@ -262,11 +260,10 @@ class OrgService
         return $response;
     }
 
-    private function dispatchCSVUploadEvent(string $source, string $roleType)
+    private function dispatchCSVUploadEvent()
     {
         $csvUploadedEvent = new CSVUploadedEvent(
-            $source,
-            $roleType,
+            'ORG',
             AuditEvents::EVENT_CSV_UPLOADED
         );
 
