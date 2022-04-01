@@ -62,7 +62,7 @@ trait IngestTrait
         $this->pressButton('Continue');
 
         $this->uploadCsvAndCountCreatedEntities(
-            'sirius-csvs/sirius-org-3-valid-rows.csv',
+            'sirius-csvs/org-3-valid-rows.csv',
             'Upload PA/Prof users'
         );
     }
@@ -256,15 +256,15 @@ trait IngestTrait
     }
 
     /**
-     * @When I upload a :source org CSV that has a new report type :reportTypeNumber for an existing report that has not been submitted or unsubmitted
+     * @When I upload an org CSV that has a new report type :reportTypeNumber for an existing report that has not been submitted or unsubmitted
      */
-    public function iUploadACsvThatHasANewReportType(string $source, string $reportTypeNumber)
+    public function iUploadACsvThatHasANewReportType(string $reportTypeNumber)
     {
         $this->iAmOnAdminOrgCsvUploadPage();
 
         $this->expectedReportType = $reportTypeNumber;
 
-        $this->createProfAdminNotStarted(null, 'fuzzy.lumpkins@jojo6.com', '60000000', '112233');
+        $this->createProfAdminNotStarted(null, 'fuzzy.lumpkins@jojo6.com', '60000000', '740000000001');
 
         $this->uploadCsvAndCountCreatedEntities(
             'sirius-csvs/org-1-updated-row-report-type.csv',
@@ -288,7 +288,7 @@ trait IngestTrait
         $this->assertStringEqualsString(
             $this->expectedReportType,
             $currentReport->getType(),
-            'Comparing expected named deputy address to actual named deputy address'
+            'Comparing expected report type to actual report type'
         );
     }
 

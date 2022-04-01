@@ -29,7 +29,7 @@ Feature: Org CSV data ingestion - casrec source data
     Scenario: Uploading a CSV that contains existing clients and named deputies - report type updated
         Given a super admin user accesses the admin app
         When I visit the admin upload org users page
-        And I upload a 'casrec' org CSV that has a new report type '103-5' for an existing report that has not been submitted or unsubmitted
+        And I upload an org CSV that has a new report type '103-5' for an existing report that has not been submitted or unsubmitted
         Then the report type should be updated
 
     @super-admin
