@@ -4,7 +4,9 @@ namespace App\Entity\Ndr;
 
 use App\Entity\AssetInterface;
 use App\Entity\Report\AssetProperty as ReportAssetProperty;
+use DateTime;
 use Doctrine\ORM\Mapping as ORM;
+use InvalidArgumentException;
 use JMS\Serializer\Annotation as JMS;
 
 /**
@@ -121,7 +123,7 @@ class AssetProperty extends Asset implements AssetInterface
     private $isRentedOut;
 
     /**
-     * @var \DateTime
+     * @var DateTime
      * @JMS\Groups({"ndr-asset"})
      * @JMS\Type("DateTime<'Y-m-d'>")
      * @ORM\Column(name="rent_agreement_end_date", type="datetime", nullable=true)
@@ -280,7 +282,7 @@ class AssetProperty extends Asset implements AssetInterface
     public function setOwned($owned)
     {
         if (!in_array($owned, [self::OWNED_FULLY, self::OWNED_PARTLY])) {
-            throw new \InvalidArgumentException(__METHOD__ . "Invalid owned type [$owned]");
+            throw new InvalidArgumentException(__METHOD__."Invalid owned type [$owned]");
         }
 
         $this->owned = $owned;
@@ -350,16 +352,16 @@ class AssetProperty extends Asset implements AssetInterface
      */
     public function deleteUnusedData()
     {
-        if ($this->getIsRentedOut() === 'no') {
+        if ('no' === $this->getIsRentedOut()) {
             $this->setRentAgreementEndDate(null);
             $this->setRentIncomeMonth(null);
         }
 
-        if ($this->getHasMortgage() ===  'no') {
+        if ('no' === $this->getHasMortgage()) {
             $this->setMortgageOutstandingAmount(null);
         }
 
-        if ($this->getOwned() === self::OWNED_FULLY) {
+        if (self::OWNED_FULLY === $this->getOwned()) {
             $this->setOwnedPercentage(null);
         }
     }
@@ -380,7 +382,6 @@ class AssetProperty extends Asset implements AssetInterface
     }
 
     /**
-     * @param AssetInterface $asset
      * @return bool
      */
     public function isEqual(AssetInterface $asset)
@@ -392,5 +393,14 @@ class AssetProperty extends Asset implements AssetInterface
         return $asset->getAddress() === $this->getAddress() &&
             $asset->getAddress2() === $this->getAddress2() &&
             $asset->getPostcode() === $this->getPostcode();
+    }
+
+    public function getValueTotal(): float | int | null
+    {
+        if (self::OWNED_PARTLY == $this->getOwned()) {
+            return $this->getValue() * $this->getOwnedPercentage() / 100;
+        }
+
+        return parent::getValueTotal();
     }
 }

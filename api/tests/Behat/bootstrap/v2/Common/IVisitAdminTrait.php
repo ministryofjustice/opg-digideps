@@ -34,6 +34,19 @@ trait IVisitAdminTrait
     }
 
     /**
+     * @When I visit the admin client archived page for the user I'm interacting with
+     */
+    public function iVisitTheAdminClientArchivedPage()
+    {
+        if (!in_array($this->loggedInUserDetails->getUserRole(), $this->loggedInUserDetails::ADMIN_ROLES)) {
+            throw new BehatException('Attempting to access an admin page as a non-admin user. Try logging in as an admin user instead');
+        }
+
+        $clientArchivedUrl = $this->getAdminClientArchivedUrl($this->interactingWithUserDetails->getClientId());
+        $this->visitAdminPath($clientArchivedUrl);
+    }
+
+    /**
      * @When I visit the admin client details page associated with the deputy I'm interacting with
      */
     public function iVisitAdminClientDetailsPageForDeputyInteractingWith()
@@ -209,5 +222,17 @@ trait IVisitAdminTrait
     public function iVisitTheAdminNotificationPage()
     {
         $this->visitAdminPath($this->getAdminNotificationUrl());
+    }
+
+    /**
+     * @When I visit the checklist page for the previously submitted report for the user I am interacting with
+     */
+    public function iVisitTheChecklistPageForSubmittedReport()
+    {
+        $this->assertInteractingWithUserIsSet();
+
+        $this->visitAdminPath(
+            $this->getAdminChecklistPage($this->interactingWithUserDetails->getPreviousReportId())
+        );
     }
 }

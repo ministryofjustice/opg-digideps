@@ -30,6 +30,7 @@ class BaseFeatureContext extends MinkContext
     use FixturesTrait;
     use FormFillingTrait;
     use INavigateToAdminTrait;
+    use INavigateToFrontendTrait;
     use IShouldBeOnAdminTrait;
     use IShouldBeOnFrontendTrait;
     use IVisitAdminTrait;
@@ -113,6 +114,7 @@ class BaseFeatureContext extends MinkContext
     public KernelInterface $symfonyKernel;
 
     protected FixtureHelper $fixtureHelper;
+
     public EntityManagerInterface $em;
     private ReportTestHelper $reportTestHelper;
 

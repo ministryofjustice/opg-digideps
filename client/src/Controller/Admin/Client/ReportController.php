@@ -6,6 +6,7 @@ use App\Controller\AbstractController;
 use App\Entity\Ndr\Ndr;
 use App\Entity\Report\Checklist;
 use App\Entity\Report\Report;
+use App\Entity\SynchronisableInterface;
 use App\Exception\ReportNotSubmittedException;
 use App\Form\Admin\CloseReportConfirmType;
 use App\Form\Admin\CloseReportType;
@@ -19,6 +20,8 @@ use App\Service\Client\Internal\ReportApi;
 use App\Service\Client\RestClient;
 use App\Service\ParameterStoreService;
 use App\Service\ReportSubmissionService;
+use DateTime;
+use Exception;
 use Psr\Log\LoggerInterface;
 use Sensio\Bundle\FrameworkExtraBundle\Configuration\Security;
 use Sensio\Bundle\FrameworkExtraBundle\Configuration\Template;
@@ -129,7 +132,7 @@ class ReportController extends AbstractController
             array_merge(
                 self::$reportGroupsAll,
                 [
-                    'report-checklist', 'checklist-information', 'last-modified', 'user', 'previous-report-data', 'action', 'report-submitted-by',
+                    'report-checklist', 'checklist-information', 'last-modified', 'user', 'previous-report-data', 'action', 'report-submitted-by', 'synchronisation',
                 ]
             )
         );
@@ -218,6 +221,16 @@ class ReportController extends AbstractController
             $costBreakdown = $report->generateActualSubmittedEstimateCosts();
         }
 
+        $syncStatus = null;
+
+        if ($checklist->getSynchronisationStatus()) {
+            $syncStatus = match ($checklist->getSynchronisationStatus()) {
+                SynchronisableInterface::SYNC_STATUS_QUEUED, SynchronisableInterface::SYNC_STATUS_IN_PROGRESS => 'Pending',
+                SynchronisableInterface::SYNC_STATUS_PERMANENT_ERROR, SynchronisableInterface::SYNC_STATUS_TEMPORARY_ERROR => 'Failed',
+                SynchronisableInterface::SYNC_STATUS_SUCCESS => 'Sent to Sirius',
+            };
+        }
+
         return [
             'report' => $report,
             'submittedEstimateCosts' => $costBreakdown,
@@ -227,6 +240,7 @@ class ReportController extends AbstractController
             'reviewChecklist' => $reviewChecklist,
             'previousReportData' => $report->getPreviousReportData(),
             'reportOrNdr' => $report instanceof Ndr ? 'ndr' : 'report',
+            'syncStatus' => $syncStatus,
         ];
     }
 
@@ -282,7 +296,7 @@ class ReportController extends AbstractController
         $attachmentName = sprintf(
             'DigiChecklist-%s_%s_%s.pdf',
             $report->getEndDate()->format('Y'),
-            $report->getSubmitDate() instanceof \DateTime ? $report->getSubmitDate()->format('Y-m-d') : 'n-a-', //some old reports have no submission date
+            $report->getSubmitDate() instanceof DateTime ? $report->getSubmitDate()->format('Y-m-d') : 'n-a-', //some old reports have no submission date
             $report->getClient()->getCaseNumber()
         );
 
@@ -304,7 +318,7 @@ class ReportController extends AbstractController
      *
      * @return array|Response|RedirectResponse
      *
-     * @throws \Exception
+     * @throws Exception
      */
     public function manageAction(Request $request, $id)
     {
@@ -342,7 +356,7 @@ class ReportController extends AbstractController
     }
 
     /**
-     * @throws \Exception
+     * @throws Exception
      */
     private function prepopulateWithPreviousChoices(array $dataFromUrl, FormInterface $form): void
     {
@@ -351,7 +365,7 @@ class ReportController extends AbstractController
         }
 
         foreach (['dueDateCustom', 'startDate', 'endDate'] as $field) {
-            $form->has($field) && array_key_exists($field, $dataFromUrl) && $form[$field]->setData(new \DateTime($dataFromUrl[$field]));
+            $form->has($field) && array_key_exists($field, $dataFromUrl) && $form[$field]->setData(new DateTime($dataFromUrl[$field]));
         }
 
         if ($form->has('unsubmittedSection') && isset($dataFromUrl['unsubmittedSectionsList'])) {
@@ -367,7 +381,7 @@ class ReportController extends AbstractController
     }
 
     /**
-     * @throws \Exception
+     * @throws Exception
      */
     private function setChoicesInSession(Request $request, FormInterface $form, Report $report): void
     {
@@ -379,7 +393,7 @@ class ReportController extends AbstractController
             'type' => $form['type']->getData(),
             'dueDate' => $this->determineNewDueDateFromForm($report, $form)->format('Y-m-d'),
             'dueDateChoice' => $form['dueDateChoice']->getData(),
-            'dueDateCustom' => $customDueDate instanceof \DateTime ? $customDueDate->format('Y-m-d') : null,
+            'dueDateCustom' => $customDueDate instanceof DateTime ? $customDueDate->format('Y-m-d') : null,
             'startDate' => $startDate,
             'endDate' => $endDate,
             'unsubmittedSectionsList' => implode(',', $report->getUnsubmittedSectionsIds()),
@@ -389,18 +403,18 @@ class ReportController extends AbstractController
     /**
      * @param array $data
      *
-     * @return \DateTime|null
+     * @return DateTime|null
      *
-     * @throws \Exception
+     * @throws Exception
      */
     private function determineNewDueDateFromForm(Report $report, FormInterface $form)
     {
         $newDueDate = $report->getDueDate();
 
         if (preg_match('/^\d+$/', $form['dueDateChoice']->getData())) {
-            $newDueDate = new \DateTime();
+            $newDueDate = new DateTime();
             $newDueDate->modify("+{$form['dueDateChoice']->getData()} weeks");
-        } elseif ('custom' == $form['dueDateChoice']->getData() && $form['dueDateCustom']->getData() instanceof \DateTime) {
+        } elseif ('custom' == $form['dueDateChoice']->getData() && $form['dueDateCustom']->getData() instanceof DateTime) {
             $newDueDate = $form['dueDateCustom']->getData();
         }
 
@@ -415,7 +429,7 @@ class ReportController extends AbstractController
      *
      * @return array|Response|RedirectResponse
      *
-     * @throws \Exception
+     * @throws Exception
      * @Template("@App/Admin/Client/Report/manageConfirm.html.twig")
      */
     public function manageConfirmAction(Request $request, $id)
@@ -473,7 +487,7 @@ class ReportController extends AbstractController
     }
 
     /**
-     * @throws \Exception
+     * @throws Exception
      */
     private function populateReportFromSession(Report $report, array $sessionData): void
     {
@@ -487,7 +501,7 @@ class ReportController extends AbstractController
         foreach (['dueDate', 'startDate', 'endDate'] as $field) {
             if (isset($sessionData[$field])) {
                 $setter = sprintf('set%s', ucfirst($field));
-                $report->{$setter}(new \DateTime($sessionData[$field]));
+                $report->{$setter}(new DateTime($sessionData[$field]));
             }
         }
     }
@@ -501,7 +515,7 @@ class ReportController extends AbstractController
      * @return array|RedirectResponse
      * @Template("@App/Admin/Client/Report/manageCloseReportConfirm.html.twig")
      *
-     * @throws \Exception
+     * @throws Exception
      */
     public function manageCloseReportConfirmAction(Request $request, $id)
     {

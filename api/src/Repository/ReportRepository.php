@@ -10,8 +10,13 @@ use App\Entity\Report\MoneyShortCategory as ReportMoneyShortCategory;
 use App\Entity\Report\Report;
 use App\Entity\SynchronisableInterface;
 use App\Service\Search\ClientSearchFilter;
+use DateTime;
 use Doctrine\Bundle\DoctrineBundle\Repository\ServiceEntityRepository;
 use Doctrine\DBAL\Connection;
+use Doctrine\DBAL\DBALException;
+use Doctrine\ORM\AbstractQuery;
+use Doctrine\ORM\NonUniqueResultException;
+use Doctrine\ORM\ORMException;
 use Doctrine\Persistence\ManagerRegistry;
 use Symfony\Component\HttpFoundation\ParameterBag;
 
@@ -56,7 +61,7 @@ class ReportRepository extends ServiceEntityRepository
     /**
      * @return int|null
      *
-     * @throws \Doctrine\ORM\ORMException
+     * @throws ORMException
      */
     public function addFeesToReportIfMissing(Report $report)
     {
@@ -128,7 +133,7 @@ class ReportRepository extends ServiceEntityRepository
      *
      * @return array|mixed|null
      *
-     * @throws \Doctrine\ORM\NonUniqueResultException
+     * @throws NonUniqueResultException
      */
     public function getAllByDeterminant($orgIdsOrUserId, $determinant, ParameterBag $query, $select, $status)
     {
@@ -155,7 +160,7 @@ class ReportRepository extends ServiceEntityRepository
             $this->filter->handleSearchTermFilter($searchTerm, $qb, 'c');
         }
 
-        $endOfToday = new \DateTime('today midnight');
+        $endOfToday = new DateTime('today midnight');
 
         if (Report::STATUS_READY_TO_SUBMIT === $status) {
             $qb->andWhere('r.reportStatusCached = :status AND r.endDate < :endOfToday')
@@ -187,37 +192,39 @@ class ReportRepository extends ServiceEntityRepository
     }
 
     /**
-     * @throws \Doctrine\DBAL\DBALException
+     * @throws DBALException
      */
     public function getReportsIdsWithQueuedChecklistsAndSetChecklistsToInProgress(int $limit): array
     {
+        $em = $this->getEntityManager();
+
         $dql = <<<DQL
 SELECT c.id as checklist_id, r.id as report_id
 FROM App\Entity\Report\Report r
 JOIN r.checklist c
-JOIN r.reportSubmissions rs
-WHERE c.synchronisationStatus = ?1
+WHERE c.synchronisationStatus = :status
 DQL;
 
-        $query = $this
-            ->getEntityManager()
+        $query = $em
             ->createQuery($dql)
-            ->setParameter(1, SynchronisableInterface::SYNC_STATUS_QUEUED)
+            ->setParameter('status', SynchronisableInterface::SYNC_STATUS_QUEUED)
             ->setMaxResults($limit);
 
         $result = $query->getArrayResult();
 
         if (count($result)) {
-            $conn = $this->getEntityManager()->getConnection();
-
             $ids = array_map(function ($result) {
                 return $result['checklist_id'];
             }, $result);
 
-            $idsString = implode(',', $ids);
-            $queryString = "UPDATE checklist SET synchronisation_status = 'IN_PROGRESS' WHERE id IN ($idsString)";
-            $query = $conn->prepare($queryString);
-            $query->execute();
+            $dql = <<<DQL
+UPDATE App\Entity\Report\Checklist c SET c.synchronisationStatus = 'IN_PROGRESS' WHERE c.id IN (:idsString)
+DQL;
+
+            $em
+                ->createQuery($dql)
+                ->setParameter('idsString', $ids)
+                ->getResult();
         }
 
         return array_column($result, 'report_id');
@@ -229,5 +236,28 @@ DQL;
             ->getEntityManager()
             ->createQuery('SELECT COUNT(r.id) FROM App\Entity\Report\Report r')
             ->getSingleScalarResult();
+    }
+
+    /**
+     * @return string[]
+     */
+    public function getClientIdsByAllSubmittedLayReportsWithin12Months(): array
+    {
+        $oneYearAgo = new DateTime('-1 year');
+
+        $types = Report::getAllLayTypes();
+
+        $query = $this
+            ->getEntityManager()
+            ->createQueryBuilder()
+            ->select('c.id')
+            ->from('App\Entity\Report\Report', 'r')
+            ->leftJoin('r.client', 'c')
+            ->where('r.submitDate > :oneYearAgo')
+            ->andWhere('r.type IN (:types)')
+            ->setParameter('oneYearAgo', $oneYearAgo)
+            ->setParameter('types', $types);
+
+        return $query->getQuery()->getResult(AbstractQuery::HYDRATE_SCALAR_COLUMN);
     }
 }

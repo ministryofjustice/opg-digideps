@@ -113,6 +113,8 @@ RUN wget -q -O local-php-security-checker https://github.com/fabpot/local-php-se
   && chmod +x local-php-security-checker \
   && su-exec local-php-security-checker
 
+RUN apk upgrade libxml2 openssl libssl1.1 libcrypto1.1 libretls zlib
+
 CMD confd -onetime -backend env \
   && waitforit -address=tcp://$DATABASE_HOSTNAME:$DATABASE_PORT -timeout=$TIMEOUT \
   && su-exec www-data:www-data php app/console doctrine:migrations:migrate --allow-no-migration --no-interaction \

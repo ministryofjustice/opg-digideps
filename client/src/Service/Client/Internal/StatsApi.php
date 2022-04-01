@@ -10,6 +10,7 @@ class StatsApi
 {
     protected const GET_ACTIVE_LAY_REPORT_DATA_ENDPOINT = 'stats/deputies/lay/active';
     protected const GET_ADMIN_USER_ACCOUNT_REPORT_DATA = 'stats/admins/report_data';
+    protected const GET_ASSETS_TOTAL_VALUES = 'stats/assets/total_values';
 
     private RestClientInterface $restClient;
 
@@ -34,5 +35,16 @@ class StatsApi
             'array',
             ['admin-account-reports']
         );
+    }
+
+    public function getAssetsTotalValuesWithin12Months(): string
+    {
+        $response = $this->restClient->get(
+            self::GET_ASSETS_TOTAL_VALUES,
+            'raw',
+            ['admin-account-reports']
+        );
+
+        return (string) $response;
     }
 }

@@ -16,8 +16,7 @@
 
     {{ form_input(form.q, 'Search', {
         'labelText': (page ~ '.searchBy') | trans,
-        'inputClass': '' })
-    }}
+        'inputClass': '' }) }}
     {{ form_submit(form.search, '', { 'labelText': 'Search' }) }}
 
     {{ form_end(form) }}
@@ -27,41 +26,48 @@
     {# LIST #}
     {% if app.request.get('search_clients') is not null %}
 
-    <div class="behat-region-clients client-list">
+        <div class="behat-region-clients client-list">
 
-        <h2 id="client-list-title" class="govuk-heading-m flush--ends">{{ (page ~ '.clientTable.heading') | trans }}</h2>
-        {% if clients | length  == filters.limit %}
-            <p class="govuk-body">
-                {{ (page ~ '.clientTable.resultsLimited.line01') | trans }}<br>
-                {{ (page ~ '.clientTable.resultsLimited.line02') | trans }}
-            </p>
-        {% else %}
-            <p class="behat-region-client-search-count">
-                Found {{ clients | length }} clients
-            </p>
-        {% endif %}
+            <h2 id="client-list-title"
+                class="govuk-heading-m flush--ends">{{ (page ~ '.clientTable.heading') | trans }}</h2>
+            {% if clients | length  == filters.limit %}
+                <p class="govuk-body">
+                    {{ (page ~ '.clientTable.resultsLimited.line01') | trans }}<br>
+                    {{ (page ~ '.clientTable.resultsLimited.line02') | trans }}
+                </p>
+            {% else %}
+                <p class="behat-region-client-search-count">
+                    Found {{ clients | length }} clients
+                </p>
+            {% endif %}
 
 
-        {# client list #}
-        <table class="width-two-thirds">
-            <thead>
+            {# client list #}
+            <table class="width-two-thirds">
+                <thead>
                 <tr>
                     <th scope="col">{{ 'client' | trans({}, 'common') }}</th>
                     <th scope="col">{{ 'caseNumber' | trans({}, 'common') }}</th>
                     <th scope="col">{{ 'clientSearch.clientTable.activeFrom' | trans({}, 'admin-clients') }}</th>
                     <th scope="col">{{ 'clientSearch.clientTable.discharged' | trans({}, 'admin-clients') }}</th>
                 </tr>
-            </thead>
-            <tbody>
+                </thead>
+                <tbody>
                 {% if clients | length %}
                     {% for client in clients %}
                         {% set discharged = "" %}
                         {% if client.deletedAt is not null %}
                             {% set discharged = "discharged-" %}
                         {% endif %}
+
+                        {% set clientPathLink = "admin_client_details" %}
+                        {% if client.archivedAt is not null %}
+                            {% set clientPathLink = "admin_client_archived" %}
+                        {% endif %}
                         <tr class="behat-region-client-row behat-region-{{ discharged }}client-{{ client.caseNumber }}">
                             <td>
-                                <a class="behat-link-client-details behat-link-{{ discharged }}client-detail-{{ client.caseNumber }} govuk-!-font-weight-bold" href="{{ path('admin_client_details', {'id' : client.id}) }}">
+                                <a class="behat-link-client-details behat-link-{{ discharged }}client-detail-{{ client.caseNumber }} govuk-!-font-weight-bold"
+                                   href="{{ path( clientPathLink, {'id' : client.id}) }}">
                                     {{ client.fullName }}
                                 </a>
                             </td>
@@ -85,12 +91,12 @@
                     {% endfor %}
                 {% else %}
                     <tr>
-                        <td colspan="3">{{ (page ~ '.clientTable.noResults') | trans  }}</td>
+                        <td colspan="3">{{ (page ~ '.clientTable.noResults') | trans }}</td>
                     </tr>
                 {% endif %}
-            </tbody>
-        </table>
-    </div>
+                </tbody>
+            </table>
+        </div>
     {% endif %}
 
 {% endblock %}

@@ -73,10 +73,6 @@ class ClientController extends RestController
 
         $transformedDto = $this->clientTransformer->transform($dto, [], $transformedOrg);
 
-        if ($transformedDto['archived_at']) {
-            throw $this->createAccessDeniedException('Cannot access archived reports');
-        }
-
         /* @var Client $client */
         $client = $this->findEntityBy(Client::class, $transformedDto['id']);
 

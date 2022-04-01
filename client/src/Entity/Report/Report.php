@@ -10,6 +10,7 @@ use App\Validator\Constraints as AppAssert;
 use App\Validator\Constraints\StartEndDateComparableInterface;
 use DateTime;
 use JMS\Serializer\Annotation as JMS;
+use RuntimeException;
 use Symfony\Component\Validator\Constraints as Assert;
 
 /**
@@ -1090,7 +1091,7 @@ class Report implements ReportInterface, StartEndDateComparableInterface
         $submitDate = $this->getSubmitDate();
 
         if (is_null($endDate)) {
-            throw new \RuntimeException('Cannot create an attachment for a report with no end date');
+            throw new RuntimeException('Cannot create an attachment for a report with no end date');
         }
 
         $attachmentName = sprintf(
@@ -1255,7 +1256,7 @@ class Report implements ReportInterface, StartEndDateComparableInterface
                 Report::LAY_PFA_HIGH_ASSETS_TYPE,
                 Report::LAY_COMBINED_HIGH_ASSETS_TYPE,
                 Report::PROF_PFA_HIGH_ASSETS_TYPE,
-                Report::PROF_COMBINED_HIGH_ASSETS,
+                Report::PROF_COMBINED_HIGH_ASSETS_TYPE,
                 Report::PA_PFA_HIGH_ASSETS_TYPE,
                 Report::PA_COMBINED_HIGH_ASSETS_TYPE,
             ]
@@ -1274,7 +1275,7 @@ class Report implements ReportInterface, StartEndDateComparableInterface
 
     public function isProfReport(): bool
     {
-        return in_array($this->getType(), [self::PROF_PFA_HIGH_ASSETS_TYPE, self::PROF_PFA_LOW_ASSETS_TYPE, self::PROF_HW_TYPE, self::PROF_COMBINED_HIGH_ASSETS, self::PROF_COMBINED_LOW_ASSETS]);
+        return in_array($this->getType(), [self::PROF_PFA_HIGH_ASSETS_TYPE, self::PROF_PFA_LOW_ASSETS_TYPE, self::PROF_HW_TYPE, self::PROF_COMBINED_HIGH_ASSETS_TYPE, self::PROF_COMBINED_LOW_ASSETS_TYPE]);
     }
 
     /**

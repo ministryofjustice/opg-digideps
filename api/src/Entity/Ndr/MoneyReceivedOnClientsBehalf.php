@@ -71,12 +71,12 @@ class MoneyReceivedOnClientsBehalf implements MoneyReceivedOnClientsBehalfInterf
     private ?float $amount;
 
     /**
-     * @ORM\Column(name="who_received_money", type="string", nullable=false)
+     * @ORM\Column(name="who_received_money", type="string", nullable=true)
      *
      * @JMS\Groups({"client-benefits-check"})
      * @JMS\Type("string")
      */
-    private string $whoReceivedMoney;
+    private ?string $whoReceivedMoney;
 
     public function getClientBenefitsCheck(): ClientBenefitsCheck
     {
@@ -138,12 +138,12 @@ class MoneyReceivedOnClientsBehalf implements MoneyReceivedOnClientsBehalfInterf
         return $this;
     }
 
-    public function getWhoReceivedMoney(): string
+    public function getWhoReceivedMoney(): ?string
     {
         return $this->whoReceivedMoney;
     }
 
-    public function setWhoReceivedMoney(string $whoReceivedMoney): self
+    public function setWhoReceivedMoney(?string $whoReceivedMoney): self
     {
         $this->whoReceivedMoney = $whoReceivedMoney;
 

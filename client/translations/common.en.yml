@@ -85,7 +85,9 @@ savedBy: Saved by
 date: Date
 lastSaved: Last saved
 lastSubmitted: Last submitted
+synchronisedStatus: Synchronised status
 dischargedOn: Discharged on
+archivedOn: Archived on
 namedDeputy: Named deputy
 mainPhone: Main phone
 amount: Amount
@@ -110,8 +112,8 @@ notSavedYet: Not saved yet
 changesNeeded: Changes needed
 
 # Breadcrumbs
-yourReports: 'Your reports - deputyFirstname deputyLastname'
-deputyReportOverview: 'startYear to endYear report overview'
+yourReports: "Your reports - deputyFirstname deputyLastname"
+deputyReportOverview: "startYear to endYear report overview"
 newDeputyReportOverview: New deputy report overview
 reviewReport: Review report
 dashboard: Dashboard

@@ -15,6 +15,7 @@ use Symfony\Component\Serializer\SerializerInterface;
 class DocumentSyncCommand extends DaemonableCommand
 {
     const FALLBACK_ROW_LIMITS = '100';
+    const COMPLETED_MESSAGE = 'Sync command completed';
 
     public static $defaultName = 'digideps:document-sync';
 
@@ -79,6 +80,8 @@ class DocumentSyncCommand extends DaemonableCommand
             $output->writeln(sprintf('%d documents failed to sync', $this->documentSyncService->getDocsNotSyncedCount()));
             $this->documentSyncService->setDocsNotSyncedCount(0);
         }
+
+        $output->writeln(self::COMPLETED_MESSAGE);
 
         return 0;
     }
