@@ -1,17 +1,17 @@
 /* globals $, FormData */
-var uploadProgressPA = function (element) {
-  var $form = $(element)
-  var $progress = $form.find('progress')
-  var $button = $form.find('.govuk-button')
-  var $uploadExplanation = $form.find('[data-js="upload-explanation"]')
-  var $uploadError = $form.find('[data-js="upload-error"]')
+const uploadProgressPA = function (element) {
+  const $form = $(element)
+  const $progress = $form.find('progress')
+  const $button = $form.find('.govuk-button')
+  const $uploadExplanation = $form.find('[data-js="upload-explanation"]')
+  const $uploadError = $form.find('[data-js="upload-error"]')
 
   $button.on('click', (event) => {
     event.preventDefault()
 
-    var redirectUrl = window.location.href
-    var submitUrl = $form.attr('action') || window.location.href
-    var isComplete = false
+    let redirectUrl = window.location.href
+    const submitUrl = $form.attr('action') || window.location.href
+    let isComplete = false
 
     $progress.removeClass('hidden')
     $uploadExplanation.removeClass('hidden')
@@ -27,7 +27,7 @@ var uploadProgressPA = function (element) {
         onprogress: function (e) {
           const lines = e.currentTarget.response.split('\n')
 
-          lines.forEach(line => {
+          lines.forEach((line) => {
             const log = line.split(' ')
             const command = log.shift()
 

@@ -119,8 +119,8 @@
     text: contents,
 }) }}
 
-{% if form.deputyFullNameAccurateInCasrec is defined %}
-    {{ checklist_checkbox(form.deputyFullNameAccurateInCasrec) }}
+{% if form.deputyFullNameAccurateInSirius is defined %}
+    {{ checklist_checkbox(form.deputyFullNameAccurateInSirius) }}
 
     <div class="govuk-inset-text govuk-!-margin-top-2">
         <strong>{{ (page ~ '.deputysFullName') | trans }}:</strong> {{ deputy.fullName }}

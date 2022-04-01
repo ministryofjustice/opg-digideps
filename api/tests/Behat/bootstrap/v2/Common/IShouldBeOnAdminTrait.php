@@ -57,7 +57,7 @@ trait IShouldBeOnAdminTrait
      */
     public function iAmOnAdminLayCsvUploadPage()
     {
-        return $this->iAmOnPage('/admin\/casrec-upload/');
+        return $this->iAmOnPage('/admin\/pre-registration-upload/');
     }
 
     /**

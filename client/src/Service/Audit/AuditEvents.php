@@ -9,6 +9,7 @@ use App\Entity\Report\Report;
 use App\Entity\User;
 use App\Service\Time\DateTimeProvider;
 use DateTime;
+use Exception;
 
 final class AuditEvents
 {
@@ -28,8 +29,9 @@ final class AuditEvents
     const TRIGGER_ADMIN_USER_EDIT = 'ADMIN_USER_EDIT';
     const TRIGGER_ADMIN_BUTTON = 'ADMIN_BUTTON';
     const TRIGGER_CSV_UPLOAD = 'CSV_UPLOAD';
-    const TRIGGER_DEPUTY_USER_EDIT_SELF = 'DEPUTY_USER_EDIT_SELF';
+    const TRIGGER_DEPUTY_USER_EDIT_CLIENT_DURING_REGISTRATION = 'TRIGGER_DEPUTY_USER_EDIT_CLIENT_DURING_REGISTRATION';
     const TRIGGER_DEPUTY_USER_EDIT = 'DEPUTY_USER_EDIT';
+    const TRIGGER_DEPUTY_USER_EDIT_SELF = 'DEPUTY_USER_EDIT_SELF';
     const TRIGGER_DEPUTY_USER_SELF_REGISTER_ATTEMPT = 'DEPUTY_USER_SELF_REGISTER_ATTEMPT';
     const TRIGGER_CODEPUTY_CREATED = 'CODEPUTY_CREATED';
     const TRIGGER_ORG_USER_MANAGE_ORG_MEMBER = 'ORG_USER_MANAGE_ORG_MEMBER';
@@ -48,7 +50,7 @@ final class AuditEvents
     }
 
     /**
-     * @throws \Exception
+     * @throws Exception
      */
     public function clientDischarged(
         string $trigger,
@@ -111,7 +113,7 @@ final class AuditEvents
     }
 
     /**
-     * @throws \Exception
+     * @throws Exception
      */
     public function roleChanged(string $trigger, string $changedFrom, string $changedTo, string $changedByEmail, string $userChangedEmail): array
     {
@@ -130,7 +132,7 @@ final class AuditEvents
     /**
      * @return array|string[]
      *
-     * @throws \Exception
+     * @throws Exception
      */
     public function userDeleted(string $trigger, string $deletedBy, string $subjectFullName, string $subjectEmail, string $subjectRole): array
     {
@@ -157,7 +159,7 @@ final class AuditEvents
      *
      * @return array|string[]
      *
-     * @throws \Exception
+     * @throws Exception
      */
     public function userAddedToOrg(string $trigger, User $addedUser, Organisation $organisation, User $addedBy)
     {
@@ -181,7 +183,7 @@ final class AuditEvents
      *
      * @return array|string[]
      *
-     * @throws \Exception
+     * @throws Exception
      */
     public function userRemovedFromOrg(string $trigger, User $removedUser, Organisation $organisation, User $removedBy)
     {
@@ -204,7 +206,7 @@ final class AuditEvents
      *
      * @return array|string[]
      *
-     * @throws \Exception
+     * @throws Exception
      */
     public function reportUnsubmitted(Report $unsubmittedReport, User $reportUnsubmittedBy, string $trigger)
     {
@@ -234,16 +236,14 @@ final class AuditEvents
     }
 
     /**
-     * @throws \Exception
+     * @throws Exception
      */
     public function csvUploaded(
         string $trigger,
-        string $source,
         string $roleType
     ): array {
         $event = [
             'trigger' => $trigger,
-            'source' => $source,
             'role_type' => $roleType,
             'changed_on' => $this->dateTimeProvider->getDateTime()->format(DateTime::ATOM),
         ];

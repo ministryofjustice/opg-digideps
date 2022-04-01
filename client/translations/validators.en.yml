@@ -4,66 +4,66 @@
 #       ENTITIES
 # ====================================================================================================
 user:
-  email:
-    invalid: This email is not valid
-    notBlank: Enter an email address
-    maxLength: The email cannot be longer than {{ limit }} characters
-    doesNotMatch: Email does not match
-    invalidDomain: "Email does not match the organisation domain: @creatorDomain"
-    alreadyUsed: Email address already in use in the system
-    new:
-      doesntMatch: Confirmed Email does not match the new Email
-  firstname:
-    notBlank: Enter your first name
-    notBlankOtherUser: Enter the first name
-    minLength: The first name must be at least {{ limit }} letters long
-    maxLength: The first name cannot be longer than {{ limit }} letters
-  lastname:
-    notBlank: Enter your last name
-    notBlankOtherUser: Enter the last name
-    minLength: The last name must be at least {{ limit }} letters long
-    maxLength: The last name cannot be longer than {{ limit }} letters
-  password:
-      notBlank: "You cannot leave this blank: please enter a password"
-      minLength: The password must have at least {{ limit }} characters
-      maxLength: The password cannot be longer than {{ limit }} characters
-      noLowerCaseChars: The password must have at least one lowercase letter
-      noUpperCaseChars: The password must have at least one capital letter
-      notCommonPassword: Your password is too easy for someone to guess. Please choose a different password.
-      noNumber: The password must have at least one number
-      existing:
-        notBlank: Please enter your correct current password
-        notCorrect: Please enter your correct current password
-      new:
-        notBlank: Please enter your new password
-        doesntMatch: Passwords do not match
-  role:
-      notBlank: You must specify a role for the user
-      notBlankPa: Please choose if user has admin rights or not
-  address1:
-    notBlank: Enter your address
-    maxLength: The address name cannot be longer than {{ limit }} letters
-  address2:
-    notBlank: Enter your address
-  address3:
-    notBlank: Enter your address
-  addressPostcode:
-    notBlank: Enter your postcode
-    minLength: The postcode must be at least {{ limit }} characters long
-    maxLength: The postcode cannot be longer than {{ limit }} characters
-  addressCountry:
-    notBlank: Enter your country
-  jobTitle:
-    notBlank: Enter your job title
-    notBlankOtherUser: Enter the job title
-    maxMessage: The job title cannot be longer than {{ limit }} letters
-  phoneMain:
-    notBlank: Enter your phone number
-    notBlankOtherUser: Enter the phone number
-  paTeamName:
-    maxMessage: The team name cannot be longer than {{ limit }} letters
-  agreeTermsUse:
-    notBlank: You must agree to these terms of use to continue
+    email:
+        invalid: This email is not valid
+        notBlank: Enter an email address
+        maxLength: The email cannot be longer than {{ limit }} characters
+        doesNotMatch: Email does not match
+        invalidDomain: "Email does not match the organisation domain: @creatorDomain"
+        alreadyUsed: Email address already in use in the system
+        new:
+            doesntMatch: Confirmed Email does not match the new Email
+    firstname:
+        notBlank: Enter your first name
+        notBlankOtherUser: Enter the first name
+        minLength: The first name must be at least {{ limit }} letters long
+        maxLength: The first name cannot be longer than {{ limit }} letters
+    lastname:
+        notBlank: Enter your last name
+        notBlankOtherUser: Enter the last name
+        minLength: The last name must be at least {{ limit }} letters long
+        maxLength: The last name cannot be longer than {{ limit }} letters
+    password:
+        notBlank: "You cannot leave this blank: please enter a password"
+        minLength: The password must have at least {{ limit }} characters
+        maxLength: The password cannot be longer than {{ limit }} characters
+        noLowerCaseChars: The password must have at least one lowercase letter
+        noUpperCaseChars: The password must have at least one capital letter
+        notCommonPassword: Your password is too easy for someone to guess. Please choose a different password.
+        noNumber: The password must have at least one number
+        existing:
+            notBlank: Please enter your correct current password
+            notCorrect: Please enter your correct current password
+        new:
+            notBlank: Please enter your new password
+            doesntMatch: Passwords do not match
+    role:
+        notBlank: You must specify a role for the user
+        notBlankPa: Please choose if user has admin rights or not
+    address1:
+        notBlank: Enter your address
+        maxLength: The address name cannot be longer than {{ limit }} letters
+    address2:
+        notBlank: Enter your address
+    address3:
+        notBlank: Enter your address
+    addressPostcode:
+        notBlank: Enter your postcode
+        minLength: The postcode must be at least {{ limit }} characters long
+        maxLength: The postcode cannot be longer than {{ limit }} characters
+    addressCountry:
+        notBlank: Enter your country
+    jobTitle:
+        notBlank: Enter your job title
+        notBlankOtherUser: Enter the job title
+        maxMessage: The job title cannot be longer than {{ limit }} letters
+    phoneMain:
+        notBlank: Enter your phone number
+        notBlankOtherUser: Enter the phone number
+    paTeamName:
+        maxMessage: The team name cannot be longer than {{ limit }} letters
+    agreeTermsUse:
+        notBlank: You must agree to these terms of use to continue
 client:
     firstname:
         notBlank: Enter the client's first name
@@ -303,7 +303,6 @@ gifts:
         type: Enter a valid amount
         notInRangeMessage: The amount must be between £{{ min }} and £100,000,000,000
 
-
 transfer:
     accountFrom:
         notBlank: Please select the account you transferred money from
@@ -316,7 +315,6 @@ transfer:
         notInRangeMessage: The amount must be between £{{ min }} and £100,000,000,000
     addAnother.notBlank: Please specify if you want to add another transfer
     exist.notBlank: Please choose an option
-
 
 asset:
     exist.notBlank: Please choose an option
@@ -429,7 +427,6 @@ action:
     actionMoreInfoDetails:
         notBlank: Tell us more about any questions or concerns you may have about your deputyship
 
-
 lifestyle:
     careAppointments:
         notBlank: Please describe client's health and provide details of any care appointments attended
@@ -527,7 +524,6 @@ profDeputyEstimateCost:
 profDeputyCostsEstimateMoreInfo:
     details:
         notBlank: Please provide information in the box provided
-
 
 # ====================================================================================================
 #       NDR
@@ -716,8 +712,8 @@ checklist:
         notBlank: Please select 'Yes' or 'No'
     contactDetailsUptoDate:
         notBlank: Confirm that you've checked the contact details are correct
-    deputyFullNameAccurateInCasrec:
-        notBlank: Confirm that you've checked the deputy's full name on CASREC is correct
+    deputyFullNameAccurateInSirius:
+        notBlank: Confirm that you've checked the deputy's full name on Sirius is correct
     decisionsSatisfactory:
         notBlank: Please select 'Yes' or 'No'
     consultationsSatisfactory:
@@ -738,7 +734,7 @@ checklist:
         notBlank: Please choose an option
     bondAdequate:
         notBlank: Please choose an option
-    bondOrderMatchCasrec:
+    bondOrderMatchSirius:
         notBlank: Please choose an option
     nextBillingEstimatesSatisfactory:
         notBlank: Please select 'Yes' or 'No'

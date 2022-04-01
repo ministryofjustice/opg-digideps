@@ -3,9 +3,9 @@
 namespace App\Tests\Unit\Service;
 
 use App\Entity as EntityDir;
-use App\Entity\CasRec;
 use App\Entity\Client;
 use App\Entity\NamedDeputy;
+use App\Entity\PreRegistration;
 use App\Entity\Report\Asset;
 use App\Entity\Report\AssetProperty;
 use App\Entity\Report\BankAccount;
@@ -80,7 +80,7 @@ class ReportServiceTest extends TestCase
 
         $this->em->shouldReceive('getRepository')->andReturnUsing(function ($arg) use ($client) {
             switch ($arg) {
-                case CasRec::class:
+                case PreRegistration::class:
                     return m::mock(EntityRepository::class)->shouldReceive('findOneBy')
                         ->with(['caseNumber' => $client->getCaseNumber()])
                         ->andReturn(null)
@@ -463,10 +463,10 @@ class ReportServiceTest extends TestCase
             $users->add($user->reveal());
         }
 
-        /** @var CasRec&ObjectProphecy $casRec */
-        $casRec = $this->prophesize(CasRec::class);
-        $casRec->getTypeOfReport()->willReturn(null);
-        $casRec->getCorref()->willReturn(null);
+        /** @var PreRegistration&ObjectProphecy $casRec */
+        $casRec = $this->prophesize(PreRegistration::class);
+        $casRec->getTypeOfReport()->willReturn('OPG102');
+        $casRec->getOrderType()->willReturn('pfa');
 
         /** @var ObjectRepository&ObjectProphecy $casRecRepository */
         $casRecRepository = $this->prophesize(ObjectRepository::class);
@@ -474,7 +474,7 @@ class ReportServiceTest extends TestCase
 
         /** @var EntityManager&ObjectProphecy $em */
         $em = $this->prophesize(EntityManager::class);
-        $em->getRepository(CasRec::class)->shouldBeCalled()->willReturn($casRecRepository);
+        $em->getRepository(PreRegistration::class)->shouldBeCalled()->willReturn($casRecRepository);
         $em->getRepository(Argument::any())->shouldBeCalled()->willReturn(null);
 
         if (RuntimeException::class === $expectedType) {
@@ -482,7 +482,7 @@ class ReportServiceTest extends TestCase
         }
 
         $sut = new ReportService($em->reveal(), $this->reportRepo);
-        $type = $sut->getReportTypeBasedOnCasrec($client->reveal());
+        $type = $sut->getReportTypeBasedOnSirius($client->reveal());
 
         if (!($expectedType instanceof Throwable)) {
             $this->assertEquals($expectedType, $type);

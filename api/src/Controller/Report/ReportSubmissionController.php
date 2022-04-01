@@ -12,9 +12,9 @@ use App\Transformer\ReportSubmission\ReportSubmissionSummaryTransformer;
 use DateTime;
 use Doctrine\ORM\EntityManagerInterface;
 use InvalidArgumentException;
-use Symfony\Component\Routing\Annotation\Route;
 use Sensio\Bundle\FrameworkExtraBundle\Configuration\Security;
 use Symfony\Component\HttpFoundation\Request;
+use Symfony\Component\Routing\Annotation\Route;
 
 /**
  * @Route("/report-submission")
@@ -28,7 +28,7 @@ class ReportSubmissionController extends RestController
     const QUEUEABLE_STATUSES = [
         null,
         Document::SYNC_STATUS_TEMPORARY_ERROR,
-        Document::SYNC_STATUS_PERMANENT_ERROR
+        Document::SYNC_STATUS_PERMANENT_ERROR,
     ];
 
     private static array $jmsGroups = [
@@ -48,7 +48,6 @@ class ReportSubmissionController extends RestController
         'documents',
         'synchronisation',
     ];
-
 
     public function __construct(EntityManagerInterface $em, AuthService $authService, RestFormatter $formatter)
     {
@@ -95,7 +94,7 @@ class ReportSubmissionController extends RestController
 
     /**
      * Update documents
-     * return array of storage references, for admin area to delete if needed
+     * return array of storage references, for admin area to delete if needed.
      *
      * @Route("/{reportSubmissionId}", requirements={"reportSubmissionId":"\d+"}, methods={"PUT"})
      * @Security("is_granted('ROLE_ADMIN')")
@@ -145,14 +144,14 @@ class ReportSubmissionController extends RestController
 
     /**
      * Get old report submissions.
-     * Called from ADMIN cron
+     * Called from ADMIN cron.
      *
      * @Route("/old", methods={"GET"})
      */
     public function getOld(Request $request)
     {
         if (!$this->authService->isSecretValidForRole(EntityDir\User::ROLE_ADMIN, $request)) {
-            throw new \RuntimeException(__METHOD__ . ' only accessible from ADMIN container.', 403);
+            throw new \RuntimeException(__METHOD__.' only accessible from ADMIN container.', 403);
         }
 
         $repo = $this->getRepository(EntityDir\Report\ReportSubmission::class); /* @var $repo EntityDir\Repository\ReportSubmissionRepository */
@@ -166,14 +165,14 @@ class ReportSubmissionController extends RestController
 
     /**
      * Set report undownloadable (and remove the storage reference for the files.
-     * Called from ADMIN cron
+     * Called from ADMIN cron.
      *
      * @Route("/{id}/set-undownloadable", requirements={"id":"\d+"}, methods={"PUT"})
      */
     public function setUndownloadable($id, Request $request)
     {
         if (!$this->authService->isSecretValidForRole(EntityDir\User::ROLE_ADMIN, $request)) {
-            throw new \RuntimeException(__METHOD__ . ' only accessible from ADMIN container.', 403);
+            throw new \RuntimeException(__METHOD__.' only accessible from ADMIN container.', 403);
         }
 
         /* @var $reportSubmission EntityDir\Report\ReportSubmission */
@@ -189,7 +188,7 @@ class ReportSubmissionController extends RestController
     }
 
     /**
-     * Queue submission documents which have been synced yet
+     * Queue submission documents which have been synced yet.
      *
      * @Route("/{id}/queue-documents", requirements={"id":"\d+"}, methods={"PUT"})
      * @Security("is_granted('ROLE_SUPER_ADMIN')")
@@ -217,16 +216,12 @@ class ReportSubmissionController extends RestController
     }
 
     /**
-     * @Route("/casrec_data", name="casrec_data", methods={"GET"})
+     * @Route("/pre-registration-data", name="pre_registration_data", methods={"GET"})
      * @Security("is_granted('ROLE_ADMIN')")
      *
-     * @param Request $request
-     * @param ReportSubmissionSummaryTransformer $reportSubmissionSummaryTransformer
-     *
-     * @return array
      * @throws \Exception
      */
-    public function getCasrecData(Request $request, ReportSubmissionSummaryTransformer $reportSubmissionSummaryTransformer): array
+    public function getPreRegistrationData(Request $request, ReportSubmissionSummaryTransformer $reportSubmissionSummaryTransformer): array
     {
         /* @var $repo EntityDir\Repository\ReportSubmissionRepository */
         $repo = $this->getRepository(EntityDir\Report\ReportSubmission::class);

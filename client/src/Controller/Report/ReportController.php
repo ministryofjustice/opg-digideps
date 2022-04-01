@@ -15,8 +15,8 @@ use App\Form\FeedbackReportType;
 use App\Form\Report\ReportDeclarationType;
 use App\Form\Report\ReportType;
 use App\Model\FeedbackReport;
-use App\Service\Client\Internal\CasrecApi;
 use App\Service\Client\Internal\ClientApi;
+use App\Service\Client\Internal\PreRegistrationApi;
 use App\Service\Client\Internal\ReportApi;
 use App\Service\Client\Internal\SatisfactionApi;
 use App\Service\Client\Internal\UserApi;
@@ -94,33 +94,16 @@ class ReportController extends AbstractController
         'wish-to-provide-documentation',
     ];
 
-    private RestClient $restClient;
-    private ReportApi $reportApi;
-    private UserApi $userApi;
-    private ClientApi $clientApi;
-    private SatisfactionApi $satisfactionApi;
-    private CasrecApi $casrecApi;
-    private FormFactoryInterface $formFactory;
-    private TranslatorInterface $translator;
-
     public function __construct(
-        RestClient $restClient,
-        ReportApi $reportApi,
-        UserApi $userApi,
-        ClientApi $clientApi,
-        SatisfactionApi $satisfactionApi,
-        CasrecApi $casrecApi,
-        FormFactoryInterface $formFactory,
-        TranslatorInterface $translator
+        private RestClient $restClient,
+        private ReportApi $reportApi,
+        private UserApi $userApi,
+        private ClientApi $clientApi,
+        private SatisfactionApi $satisfactionApi,
+        private PreRegistrationApi $preRegistrationApi,
+        private FormFactoryInterface $formFactory,
+        private TranslatorInterface $translator
     ) {
-        $this->restClient = $restClient;
-        $this->reportApi = $reportApi;
-        $this->userApi = $userApi;
-        $this->clientApi = $clientApi;
-        $this->satisfactionApi = $satisfactionApi;
-        $this->casrecApi = $casrecApi;
-        $this->formFactory = $formFactory;
-        $this->translator = $translator;
     }
 
     /**
@@ -156,7 +139,7 @@ class ReportController extends AbstractController
 
         return [
             'user' => $user,
-            'clientHasCoDeputies' => $this->casrecApi->clientHasCoDeputies($client->getCaseNumber()),
+            'clientHasCoDeputies' => $this->preRegistrationApi->clientHasCoDeputies($client->getCaseNumber()),
             'client' => $client,
             'coDeputies' => $coDeputies,
         ];

@@ -5,8 +5,8 @@ namespace App\Controller\Admin;
 use App\Controller\AbstractController;
 use App\Entity\Report\Report;
 use App\Entity\User;
-use App\Form\Admin\Fixture\CasrecFixtureType;
 use App\Form\Admin\Fixture\CourtOrderFixtureType;
+use App\Form\Admin\Fixture\PreRegistrationFixtureType;
 use App\Service\Client\Internal\ReportApi;
 use App\Service\Client\Internal\UserApi;
 use App\Service\Client\RestClient;
@@ -14,6 +14,7 @@ use App\Service\Client\TokenStorage\TokenStorageInterface;
 use App\Service\DeputyProvider;
 use App\TestHelpers\ClientHelpers;
 use DateTime;
+use Exception;
 use Sensio\Bundle\FrameworkExtraBundle\Configuration\Security;
 use Sensio\Bundle\FrameworkExtraBundle\Configuration\Template;
 use Symfony\Component\HttpFoundation\JsonResponse;
@@ -22,6 +23,7 @@ use Symfony\Component\HttpFoundation\Response;
 use Symfony\Component\HttpKernel\KernelInterface;
 use Symfony\Component\Routing\Annotation\Route;
 use Symfony\Component\Serializer\SerializerInterface;
+use Throwable;
 use Twig\Environment;
 
 /**
@@ -291,7 +293,7 @@ class FixtureController extends AbstractController
                         ]
                     )
                 );
-        } catch (\Throwable $e) {
+        } catch (Throwable $e) {
             throw $e;
         }
 
@@ -328,7 +330,7 @@ class FixtureController extends AbstractController
                         ]
                     )
                 );
-        } catch (\Throwable $e) {
+        } catch (Throwable $e) {
             throw $e;
         }
 
@@ -352,21 +354,21 @@ class FixtureController extends AbstractController
     }
 
     /**
-     * @Route("/create-casrec", name="casrec_fixture", methods={"GET", "POST"})
+     * @Route("/create-pre-registration", name="pre_registration_fixture", methods={"GET", "POST"})
      * @Security("is_granted('ROLE_SUPER_ADMIN')")
-     * @Template("@App/Admin/Fixtures/casRec.html.twig")
+     * @Template("@App/Admin/Fixtures/preRegistration.html.twig")
      *
      * @param KernelInterface $kernel
      *
      * @return array
      */
-    public function createCasrec(Request $request)
+    public function createPreRegistration(Request $request)
     {
         if ('prod' === $this->symfonyEnvironment) {
             throw $this->createNotFoundException();
         }
 
-        $form = $this->createForm(CasrecFixtureType::class, null, [
+        $form = $this->createForm(PreRegistrationFixtureType::class, null, [
             'deputyType' => $request->get('deputy-type', User::TYPE_LAY),
             'reportType' => $request->get('report-type', 'OPG102'),
             'createCoDeputy' => $request->get('create-co-deputy', false),
@@ -376,13 +378,13 @@ class FixtureController extends AbstractController
         if ($form->isSubmitted() && $form->isValid()) {
             $submitted = $form->getData();
 
-            $response = $this->restClient->post('v2/fixture/createCasrec', json_encode([
+            $response = $this->restClient->post('v2/fixture/create-pre-registration', json_encode([
                 'deputyType' => $submitted['deputyType'],
                 'reportType' => $submitted['reportType'],
                 'createCoDeputy' => $submitted['createCoDeputy'],
             ]), [], 'array');
 
-            $this->addFlash('fixture', $this->createCasRecFlashMessage($response));
+            $this->addFlash('fixture', $this->createPreRegistrationFlashMessage($response));
         }
 
         return ['form' => $form->createView()];
@@ -394,9 +396,9 @@ class FixtureController extends AbstractController
      *
      * @return string
      */
-    public function createCasRecFlashMessage(array $data)
+    public function createPreRegistrationFlashMessage(array $data)
     {
-        return $this->twig->render('@App/FlashMessages/fixture-casrec-created.html.twig', $data);
+        return $this->twig->render('@App/FlashMessages/fixture-pre-registration-created.html.twig', $data);
     }
 
     /**
@@ -405,7 +407,7 @@ class FixtureController extends AbstractController
      *
      * @return void
      *
-     * @throws \Exception
+     * @throws Exception
      */
     public function unsubmitReport(int $reportId)
     {
@@ -416,8 +418,8 @@ class FixtureController extends AbstractController
         try {
             $report = $this->reportApi->getReport($reportId);
             $this->reportApi->unsubmit($report, $this->getUser(), 'Fixture tests');
-        } catch (\Throwable $e) {
-            throw new \Exception(sprintf('Could not unsubmit report %s: %s', $reportId, $e->getMessage()));
+        } catch (Throwable $e) {
+            throw new Exception(sprintf('Could not unsubmit report %s: %s', $reportId, $e->getMessage()));
         }
     }
 
@@ -444,7 +446,7 @@ class FixtureController extends AbstractController
             }
 
             return new Response('Clients added to Users org');
-        } catch (\Throwable $e) {
+        } catch (Throwable $e) {
             return new Response(sprintf('Could not move %s clients to users org: %s', $userEmail, $e->getMessage()), 500);
         }
     }
@@ -472,7 +474,7 @@ class FixtureController extends AbstractController
             }
 
             return new Response('Org activated');
-        } catch (\Throwable $e) {
+        } catch (Throwable $e) {
             return new Response(sprintf('Could not activate %s org: %s', $orgName, $response->getBody()->getContents()), 500);
         }
     }

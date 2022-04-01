@@ -2,14 +2,15 @@
 
 namespace App\DataFixtures;
 
-use App\Entity\CasRec;
 use App\Entity\Client;
 use App\Entity\NamedDeputy;
 use App\Entity\Ndr\Ndr;
+use App\Entity\PreRegistration;
 use App\Entity\Report\Report;
 use App\Entity\User;
 use App\Factory\OrganisationFactory;
 use App\Repository\OrganisationRepository;
+use DateTime;
 use Doctrine\Persistence\ObjectManager;
 
 class UserFixtures extends AbstractDataFixture
@@ -30,7 +31,7 @@ class UserFixtures extends AbstractDataFixture
         [
             'id' => '104',
             'deputyType' => 'LAY',
-            'reportType' => null,
+            'reportType' => 'OPG104',
             'reportVariation' => 'HW',
         ],
         [
@@ -60,7 +61,7 @@ class UserFixtures extends AbstractDataFixture
         [
             'id' => '104-6',
             'deputyType' => 'PA',
-            'reportType' => null,
+            'reportType' => 'OPG104',
             'reportVariation' => 'HW',
         ],
         [
@@ -90,7 +91,7 @@ class UserFixtures extends AbstractDataFixture
         [
             'id' => '104-5',
             'deputyType' => 'PROF',
-            'reportType' => null,
+            'reportType' => 'OPG104',
             'reportVariation' => 'HW',
         ],
         [
@@ -154,13 +155,6 @@ class UserFixtures extends AbstractDataFixture
             'reportType' => 'OPG102',
             'reportVariation' => 'HW',
         ],
-//        [
-//            'id' => 'leever-example',
-//            'email' => 'main.contact@leever.example',
-//            'deputyType' => 'PROF',
-//            'reportType' => 'OPG102',
-//            'reportVariation' => 'HW',
-//        ],
     ];
 
     public function __construct(OrganisationRepository $orgRepository, OrganisationFactory $orgFactory)
@@ -187,7 +181,7 @@ class UserFixtures extends AbstractDataFixture
             ->setLastname('User')
             ->setEmail(isset($data['email']) ? $data['email'] : 'behat-'.strtolower($data['deputyType']).'-deputy-'.$data['id'].'@publicguardian.gov.uk')
             ->setActive(true)
-            ->setRegistrationDate(new \DateTime())
+            ->setRegistrationDate(new DateTime())
             ->setNdrEnabled(isset($data['ndr']))
             ->setCoDeputyClientConfirmed(isset($data['codeputyEnabled']))
             ->setPhoneMain('07911111111111')
@@ -199,21 +193,29 @@ class UserFixtures extends AbstractDataFixture
 
         $manager->persist($user);
 
-        // Create CasRec record for lay deputies
+        // Create PreRegistration record for lay deputies
         if ('LAY' === $data['deputyType']) {
-            $casRec = new CasRec([
+            $preRegistrationData = [
                 'Case' => $data['id'],
-                'Surname' => $data['id'],
-                'Deputy No' => str_replace('-', '', $data['id']),
-                'Dep Surname' => 'User',
-                'Dep Postcode' => 'SW1',
-                'Typeofrep' => $data['reportType'],
-                'Corref' => $data['reportVariation'],
-                'OrderDate' => new \DateTime('2010-03-30'),
-            ]);
-            $manager->persist($casRec);
-        }
+                'ClientSurname' => $data['id'],
+                'DeputyUid' => str_replace('-', '', $data['id']),
+                'DeputySurname' => 'User',
+                'DeputyAddress1' => 'Victoria Road',
+                'DeputyAddress2' => null,
+                'DeputyAddress3' => null,
+                'DeputyAddress4' => null,
+                'DeputyAddress5' => null,
+                'DeputyPostcode' => 'SW1',
+                'ReportType' => $data['reportType'] ?? null,
+                'NDR' => $data['ndr'] ?? null,
+                'MadeDate' => '2010-03-30',
+                'OrderType' => 'hw',
+                'CoDeputy' => $data['codeputyEnabled'] ?? null,
+            ];
 
+            $preRegistration = new PreRegistration($preRegistrationData);
+            $manager->persist($preRegistration);
+        }
         // Create client
         $client = new Client();
         $client
@@ -222,7 +224,7 @@ class UserFixtures extends AbstractDataFixture
             ->setLastname($data['id'].'-client')
             ->setPhone('022222222222222')
             ->setAddress('Victoria road')
-            ->setCourtDate(\DateTime::createFromFormat('d/m/Y', '01/11/2017'));
+            ->setCourtDate(DateTime::createFromFormat('d/m/Y', '01/11/2017'));
 
         if ('PROF' === $data['deputyType'] || 'PA' === $data['deputyType']) {
             $namedDeputy = new NamedDeputy();
@@ -251,8 +253,9 @@ class UserFixtures extends AbstractDataFixture
 
         // Create report for PROF/PA user 2 years ago
         if ('PROF' === $data['deputyType'] || 'PA' === $data['deputyType']) {
-            $realm = 'PROF' === $data['deputyType'] ? CasRec::REALM_PROF : CasRec::REALM_PA;
-            $type = CasRec::getTypeBasedOnTypeofRepAndCorref($data['reportType'], $data['reportVariation'], $realm);
+            $realm = 'PROF' === $data['deputyType'] ? PreRegistration::REALM_PROF : PreRegistration::REALM_PA;
+
+            $type = PreRegistration::getReportTypeByOrderType($data['reportType'], $data['reportVariation'], $realm);
             $startDate = $client->getExpectedReportStartDate();
             $startDate->setDate('2016', intval($startDate->format('m')), intval($startDate->format('d')));
             $endDate = $client->getExpectedReportEndDate();

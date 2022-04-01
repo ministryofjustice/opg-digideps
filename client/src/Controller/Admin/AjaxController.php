@@ -3,52 +3,49 @@
 namespace App\Controller\Admin;
 
 use App\Controller\AbstractController;
+use App\Service\Client\Internal\LayDeputyshipApi;
+use App\Service\Client\Internal\PreRegistrationApi;
 use App\Service\Client\RestClient;
 use Predis\ClientInterface;
 use Sensio\Bundle\FrameworkExtraBundle\Configuration\Security;
 use Symfony\Component\HttpFoundation\JsonResponse;
 use Symfony\Component\HttpFoundation\Request;
 use Symfony\Component\Routing\Annotation\Route;
+use Throwable;
 
 /**
  * @Route("/admin/ajax")
  */
 class AjaxController extends AbstractController
 {
-    /**
-     * @var RestClient
-     */
-    private $restClient;
-
     public function __construct(
-        RestClient $restClient
+        private RestClient $restClient,
+        private PreRegistrationApi $preRegistrationApi,
+        private LayDeputyshipApi $layDeputyshipApi
     ) {
-        $this->restClient = $restClient;
     }
 
     /**
-     * @Route("/casrec-delete-by-source/{source}", name="casrec_delete_by_source_ajax")
+     * @Route("/pre-registration-delete", name="pre_registration_delete_ajax")
      * @Security("is_granted('ROLE_ADMIN') or has_role('ROLE_AD')")
-     *
-     * @param $source
      *
      * @return JsonResponse
      */
-    public function deleteUsersBySourceAjaxAction($source)
+    public function deletePreRegistrationAjaxAction()
     {
         try {
-            $before = $this->restClient->get('casrec/count', 'array');
-            $this->restClient->delete('casrec/delete-by-source/'.$source);
-            $after = $this->restClient->get('casrec/count', 'array');
+            $before = $this->preRegistrationApi->count();
+            $this->preRegistrationApi->deleteAll();
+            $after = $this->preRegistrationApi->count();
 
             return new JsonResponse(['before' => $before, 'after' => $after]);
-        } catch (\Throwable $e) {
+        } catch (Throwable $e) {
             return new JsonResponse($e->getMessage());
         }
     }
 
     /**
-     * @Route("/casrec-add", name="casrec_add_ajax")
+     * @Route("/pre-registration-add", name="pre_registration_add_ajax")
      * @Security("is_granted('ROLE_ADMIN') or has_role('ROLE_AD')")
      *
      * @return JsonResponse
@@ -60,14 +57,14 @@ class AjaxController extends AbstractController
         try {
             $compressedData = $redisClient->get($chunkId);
             if ($compressedData) {
-                $ret = $this->restClient->setTimeout(600)->post('v2/lay-deputyship/upload', $compressedData);
+                $ret = $this->layDeputyshipApi->uploadLayDeputyShip($compressedData);
                 $redisClient->del($chunkId); //cleanup for next execution
             } else {
                 $ret['added'] = 0;
             }
 
             return new JsonResponse($ret);
-        } catch (\Throwable $e) {
+        } catch (Throwable $e) {
             return new JsonResponse($e->getMessage());
         }
     }

@@ -2,24 +2,28 @@
 
 namespace App\Tests\Unit\v2\Registration\SelfRegistration\Factory;
 
-use App\Entity\CasRec;
+use App\Entity\PreRegistration;
 use App\Service\DateTimeProvider;
 use App\v2\Registration\DTO\LayDeputyshipDto;
-use App\v2\Registration\SelfRegistration\Factory\CasRecFactory;
+use App\v2\Registration\SelfRegistration\Factory\PreRegistrationCreationException;
+use App\v2\Registration\SelfRegistration\Factory\PreRegistrationFactory;
+use DateTime;
+use Exception;
 use PHPUnit\Framework\TestCase;
+use PHPUnit_Framework_MockObject_MockObject;
 use Symfony\Component\Validator\ConstraintViolation;
 use Symfony\Component\Validator\ConstraintViolationList;
 use Symfony\Component\Validator\Validator\ValidatorInterface;
 
-class CasRecFactoryTest extends TestCase
+class PreRegistrationFactoryTest extends TestCase
 {
-    /** @var CasRecFactory */
+    /** @var PreRegistrationFactory */
     private $factory;
 
-    /** @var ValidatorInterface | \PHPUnit_Framework_MockObject_MockObject */
+    /** @var ValidatorInterface | PHPUnit_Framework_MockObject_MockObject */
     private $validator;
 
-    /** @var DateTimeProvider | \PHPUnit_Framework_MockObject_MockObject */
+    /** @var DateTimeProvider | PHPUnit_Framework_MockObject_MockObject */
     private $dateTimeProvider;
 
     /** {@inheritDoc} */
@@ -28,7 +32,7 @@ class CasRecFactoryTest extends TestCase
         $this->validator = $this->createMock(ValidatorInterface::class);
         $this->dateTimeProvider = $this->createMock(DateTimeProvider::class);
 
-        $this->factory = new CasRecFactory($this->validator, $this->dateTimeProvider);
+        $this->factory = new PreRegistrationFactory($this->validator, $this->dateTimeProvider);
     }
 
     /**
@@ -36,7 +40,7 @@ class CasRecFactoryTest extends TestCase
      */
     public function throwsExceptionIfCreatesInvalidEntity()
     {
-        $this->expectException(\App\v2\Registration\SelfRegistration\Factory\CasRecCreationException::class);
+        $this->expectException(PreRegistrationCreationException::class);
         $constraintList = new ConstraintViolationList([
             new ConstraintViolation('Bad casenumber given', '', [], '', '', ''),
             new ConstraintViolation('Bad postcode given', '', [], '', '', ''),
@@ -63,40 +67,50 @@ class CasRecFactoryTest extends TestCase
         $this->dateTimeProvider
             ->expects($this->once())
             ->method('getDateTime')
-            ->willReturn(new \DateTime('2010-01-03 12:03:23'));
+            ->willReturn(new DateTime('2010-01-03 12:03:23'));
 
-        /** @var CasRec $result */
+        /** @var PreRegistration $result */
         $result = $this->factory->createFromDto($this->buildLayDeputyshipDto());
 
-        $this->assertInstanceOf(CasRec::class, $result);
+        $this->assertInstanceOf(PreRegistration::class, $result);
         $this->assertEquals('case', $result->getCaseNumber());
-        $this->assertEquals('depnum', $result->getDeputyNo());
+        $this->assertEquals('depnum', $result->getDeputyUid());
         $this->assertEquals('depsurname', $result->getDeputySurname());
         $this->assertEquals('clientsurname', $result->getClientLastname());
         $this->assertEquals('postcode', $result->getDeputyPostCode());
+        $this->assertEquals('depaddress1', $result->getDeputyAddress1());
+        $this->assertEquals('depaddress2', $result->getDeputyAddress2());
+        $this->assertEquals('depaddress3', $result->getDeputyAddress3());
+        $this->assertEquals('depaddress4', $result->getDeputyAddress4());
+        $this->assertEquals('depaddress5', $result->getDeputyAddress5());
         $this->assertEquals('type', $result->getTypeOfReport());
-        $this->assertEquals('corref', $result->getCorref());
-        $this->assertEquals(true, $result->getColumn('NDR'));
-        $this->assertEquals('2010-01-03 12:03:23', $result->getUpdatedAt()->format('Y-m-d H:i:s'));
-        $this->assertEquals(CasRec::SIRIUS_SOURCE, $result->getSource());
+        $this->assertEquals('pfa', $result->getOrderType());
+        $this->assertEquals(true, $result->getNdr());
+        $this->assertEquals('2010-01-03T12:03:23+00:00', $result->getUpdatedAt()->format('c'));
         $this->assertEquals('2011-06-14', $result->getOrderDate()->format('Y-m-d'));
+        $this->assertEquals(false, $result->getIsCoDeputy());
     }
 
     /**
-     * @throws \Exception
+     * @throws Exception
      */
     private function buildLayDeputyshipDto(): LayDeputyshipDto
     {
         return (new LayDeputyshipDto())
             ->setCaseNumber('case')
-            ->setDeputyNumber('depnum')
+            ->setDeputyUid('depnum')
             ->setDeputySurname('depsurname')
             ->setClientSurname('clientsurname')
+            ->setDeputyAddress1('depaddress1')
+            ->setDeputyAddress2('depaddress2')
+            ->setDeputyAddress3('depaddress3')
+            ->setDeputyAddress4('depaddress4')
+            ->setDeputyAddress5('depaddress5')
             ->setDeputyPostcode('postcode')
             ->setTypeOfReport('type')
             ->setIsNdrEnabled(true)
-            ->setCorref('corref')
-            ->setSource(CasRec::SIRIUS_SOURCE)
-            ->setOrderDate(new \DateTime('2011-06-14'));
+            ->setOrderType('pfa')
+            ->setOrderDate(new DateTime('2011-06-14'))
+            ->setIsCoDeputy(false);
     }
 }

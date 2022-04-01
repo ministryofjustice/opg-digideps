@@ -4,7 +4,6 @@ declare(strict_types=1);
 
 namespace App\v2\Registration\Uploader;
 
-use App\Entity\CasRec;
 use App\Entity\Client;
 use App\Entity\NamedDeputy;
 use App\Entity\Organisation;
@@ -84,8 +83,16 @@ class OrgDeputyshipUploader
 
         $this->removeDuplicateIds();
 
-        $uploadResults['roleType'] = 'ORG';
-        $uploadResults['source'] = CasRec::CASREC_SOURCE;
+        $roleType = User::TYPE_PA;
+        // DepAddr No column is missing from PA CSV uploads
+        foreach ($deputyshipDtos as $deputyshipDto) {
+            if (null != $deputyshipDto->getDeputyAddressNumber()) {
+                $roleType = User::TYPE_PROF;
+                break;
+            }
+        }
+
+        $uploadResults['roleType'] = $roleType;
         $uploadResults['added'] = $this->added;
         $uploadResults['updated'] = $this->updated;
 

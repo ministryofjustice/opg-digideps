@@ -1,5 +1,7 @@
 <?php
 
+declare(strict_types=1);
+
 namespace App\Tests\Command;
 
 use App\Command\CheckCSVUploadedCommand;
@@ -37,7 +39,6 @@ class CheckCSVUploadedCommandTest extends KernelTestCase
     private DateTime $now;
     private string $slackSecret;
     private array $supportedCSVs = [
-        CheckCSVUploadedCommand::CASREC_LAY_CSV,
         CheckCSVUploadedCommand::SIRIUS_LAY_CSV,
         CheckCSVUploadedCommand::CASREC_PROF_CSV,
         CheckCSVUploadedCommand::CASREC_PA_CSV,
@@ -102,7 +103,6 @@ class CheckCSVUploadedCommandTest extends KernelTestCase
     {
         $this->todayIsABankHoliday(false);
         $this->aCsvUploadedEventExists(true, [
-            CheckCSVUploadedCommand::CASREC_LAY_CSV,
             CheckCSVUploadedCommand::SIRIUS_LAY_CSV,
             CheckCSVUploadedCommand::CASREC_PROF_CSV,
             CheckCSVUploadedCommand::CASREC_PA_CSV,
@@ -152,12 +152,6 @@ class CheckCSVUploadedCommandTest extends KernelTestCase
         $slackClient->chatPostMessage([
                                           'username' => 'opg_response',
                                           'channel' => 'opg-digideps-team',
-                                          'text' => 'The CasRec Lay CSV has not been uploaded within the past 24 hours',
-                                      ])
-            ->shouldBeCalled();
-        $slackClient->chatPostMessage([
-                                          'username' => 'opg_response',
-                                          'channel' => 'opg-digideps-team',
                                           'text' => 'The Sirius Lay CSV has not been uploaded within the past 24 hours',
                                       ])
             ->shouldBeCalled();
@@ -186,11 +180,10 @@ class CheckCSVUploadedCommandTest extends KernelTestCase
     /**
      * @test
      */
-    public function executeOnNonBankHolidaysWhenACasRecLayCSVHaveNotBeenUploadedSlackIsPostedTo()
+    public function executeOnNonBankHolidaysWhenALayCSVHaveNotBeenUploadedSlackIsPostedTo()
     {
         $this->todayIsABankHoliday(false);
         $this->aCsvUploadedEventExists(true, [
-            CheckCSVUploadedCommand::SIRIUS_LAY_CSV,
             CheckCSVUploadedCommand::CASREC_PROF_CSV,
             CheckCSVUploadedCommand::CASREC_PA_CSV,
         ]);
@@ -203,9 +196,10 @@ class CheckCSVUploadedCommandTest extends KernelTestCase
         $slackClient->chatPostMessage([
                                           'username' => 'opg_response',
                                           'channel' => 'opg-digideps-team',
-                                          'text' => 'The CasRec Lay CSV has not been uploaded within the past 24 hours',
+                                          'text' => 'The Sirius Lay CSV has not been uploaded within the past 24 hours',
                                       ])
             ->shouldBeCalled();
+
         $this->slackClientFactory->createClient($this->slackSecret)
             ->shouldBeCalled()
             ->willReturn($slackClient->reveal());
@@ -228,24 +222,21 @@ class CheckCSVUploadedCommandTest extends KernelTestCase
             ->willReturn($this->slackSecret);
 
         $slackClient = self::prophesize(Client::class);
-        $slackClient->chatPostMessage([
-                                          'username' => 'opg_response',
-                                          'channel' => 'opg-digideps-team',
-                                          'text' => 'The CasRec Lay CSV has not been uploaded within the past 24 hours',
-                                      ])
-            ->shouldBeCalled();
+
         $slackClient->chatPostMessage([
                                           'username' => 'opg_response',
                                           'channel' => 'opg-digideps-team',
                                           'text' => 'The Sirius Lay CSV has not been uploaded within the past 24 hours',
                                       ])
             ->shouldBeCalled();
+
         $slackClient->chatPostMessage([
                                           'username' => 'opg_response',
                                           'channel' => 'opg-digideps-team',
                                           'text' => 'The CasRec Prof CSV has not been uploaded within the past 24 hours',
                                       ])
             ->shouldBeCalled();
+
         $slackClient->chatPostMessage([
                                           'username' => 'opg_response',
                                           'channel' => 'opg-digideps-team',
@@ -290,7 +281,6 @@ class CheckCSVUploadedCommandTest extends KernelTestCase
         $result = $this->commandTester->execute([]);
 
         $this->assertEquals(1, $result, sprintf('Expected command to return 1, got %d', $result));
-        //Assert 1 is returned by command
     }
 
     /**
