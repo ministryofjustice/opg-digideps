@@ -5,7 +5,7 @@ Feature: Org CSV data ingestion - casrec source data
     Scenario: Uploading a CSV that contains new clients and named deputies only
         Given a super admin user accesses the admin app
         When I navigate to the upload users page
-        And I upload a 'casrec' 'org' CSV that contains the following new entities:
+        And I upload an org CSV that contains the following new entities:
             | clients | named_deputies | organisations | reports |
             | 3       | 2              | 2             | 3       |
         Then the new 'org' entities should be added to the database
@@ -15,14 +15,14 @@ Feature: Org CSV data ingestion - casrec source data
     Scenario: Uploading a CSV that contains existing clients and named deputies - new named deputy in same firm
         Given a super admin user accesses the admin app
         When I visit the admin upload org users page
-        And I upload a 'casrec' org CSV that has a new named deputy 'MAYOR MCCRACKEN' within the same org as the clients existing name deputy
+        And I upload an org CSV that has a new named deputy 'MAYOR MCCRACKEN' within the same org as the clients existing name deputy
         Then the clients named deputy should be updated
 
     @super-admin
     Scenario: Uploading a CSV that contains existing clients and named deputies - named deputy address and phone updated
         Given a super admin user accesses the admin app
         When I visit the admin upload org users page
-        And I upload a 'casrec' org CSV that has a new address '75 Plutonium Way, Salem, Witchington, Barberaham, Townsville, TW5 V78' for an existing named deputy
+        And I upload an org CSV that has a new address '75 Plutonium Way, Salem, Witchington, Barberaham, Townsville, TW5 V78' for an existing named deputy
         Then the named deputy's address should be updated
 
     @super-admin

@@ -831,7 +831,7 @@ class FixtureHelper
         string $testRunId,
         ?string $namedDeputyEmail = null,
         ?string $caseNumber = null,
-        ?string $deputyNumber = null
+        ?string $deputyUid = null
     ) {
         $user = $this->createOrgUserClientNamedDeputyAndReport(
             $testRunId,
@@ -842,7 +842,7 @@ class FixtureHelper
             false,
             $namedDeputyEmail,
             $caseNumber,
-            $deputyNumber
+            $deputyUid
         );
 
         return self::buildOrgUserDetails($user);
@@ -1120,7 +1120,7 @@ class FixtureHelper
                   $submitted,
         ?string $namedDeputyEmail = null,
         ?string $caseNumber = null,
-        ?string $deputyNumber = null,
+        ?string $deputyUid = null,
         ?DateTime $startDate = null,
         ?int $satisfactionScore = null
     ) {
@@ -1149,7 +1149,7 @@ class FixtureHelper
             $satisfactionScore,
             $namedDeputyEmail,
             $caseNumber,
-            $deputyNumber
+            $deputyUid
         );
 
         $this->setClientPassword($user);
