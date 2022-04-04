@@ -864,6 +864,7 @@ jobs:
           name: scale services
           command: |
             aws ecs update-service --service front-${TF_WORKSPACE} --cluster ${TF_WORKSPACE} --desired-count << parameters.replicas >> --profile << parameters.profile >>
+            aws ecs update-service --service admin-${TF_WORKSPACE} --cluster ${TF_WORKSPACE} --desired-count << parameters.replicas >> --profile << parameters.profile >>
             aws ecs update-service --service api-${TF_WORKSPACE} --cluster ${TF_WORKSPACE} --desired-count << parameters.replicas >> --profile << parameters.profile >>
 
   destroy-workspaces:
