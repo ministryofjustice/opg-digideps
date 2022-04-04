@@ -346,7 +346,6 @@ class ReportService
                     return PreRegistration::getReportTypeByOrderType($casRec->getTypeOfReport(), $casRec->getOrderType(), PreRegistration::REALM_LAY);
                 }
             }
-
             throw new RuntimeException('Can\'t determine report realm');
         }
 

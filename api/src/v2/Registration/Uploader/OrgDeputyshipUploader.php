@@ -229,7 +229,7 @@ class OrgDeputyshipUploader
     {
         return
             null === $client->getNamedDeputy() ||
-            $client->getNamedDeputy()->getDeputyUid() !== $namedDeputy->getDeputyUUID();
+            $client->getNamedDeputy()->getDeputyUid() !== $namedDeputy->getDeputyUid();
     }
 
     private function handleReport(OrgDeputyshipDto $dto)

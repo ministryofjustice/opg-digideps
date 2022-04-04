@@ -31,7 +31,7 @@ Changes to support migratrion from Casrec to Sirius';
         $this->addSql('ALTER TABLE named_deputy DROP corres');
         $this->addSql('ALTER TABLE named_deputy ADD deputy_uid VARCHAR(20)');
         $this->addSql('CREATE UNIQUE INDEX UNIQ_1058689D625B8D2 ON named_deputy (deputy_uid)');
-        $this->addSql('CREATE INDEX named_deputy_uuid_idx ON named_deputy (deputy_uid)');
+        $this->addSql('CREATE INDEX named_deputy_uid_idx ON named_deputy (deputy_uid)');
     }
 
     public function down(Schema $schema): void
