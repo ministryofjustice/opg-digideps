@@ -135,9 +135,6 @@ class ECRScanChecker:
         severity = finding['severity']
         vuln_type = finding['type']
         cve = finding['title']
-        description = 'None'
-        if 'description' in finding:
-            description = finding['description']
         updated = finding['updatedAt']
         link = finding['packageVulnerabilityDetails']['sourceUrl']
         result = (
@@ -146,7 +143,6 @@ class ECRScanChecker:
             f'*Severity:* {severity} \n'
             f'*Type:* `{vuln_type}`\n'
             f'*CVE:* {cve} \n'
-            f'*Description:* {description} \n'
             f'*Updated:* `{updated}`\n'
             f'*Link:* `{link}`\n\n'
         )
