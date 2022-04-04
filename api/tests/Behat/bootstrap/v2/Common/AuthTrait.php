@@ -138,13 +138,9 @@ trait AuthTrait
      */
     public function clickActivationOrPasswordResetLinkInEmail($admin, $pageType, $email)
     {
-        $this->superAdminUsersAccessesAdmin();
+        $user = $this->em->getRepository(User::class)->findOneBy(['email' => $email]);
 
-        $url = sprintf('/admin/fixtures/user-registration-token?email=%s', $email);
-        $this->visitAdminPath($url);
-        var_dump($this->getSession()->getCurrentUrl());
-
-        $token = $this->getSession()->getPage()->getContent();
+        $token = $user->getRegistrationToken();
         $this->visitAdminPath('/logout');
 
         $page = 'activation' === $pageType ? 'activate' : 'password-reset';

@@ -149,6 +149,14 @@ trait IShouldBeOnFrontendTrait
     }
 
     /**
+     * @Then I should be on the Ndr Lay homepage
+     */
+    public function iAmOnNdrLayMainPage(): bool
+    {
+        return $this->iAmOnPage('/ndr$/');
+    }
+
+    /**
      * @Then I should be on the Lay reports overview page
      */
     public function iAmOnReportsOverviewPage(): bool

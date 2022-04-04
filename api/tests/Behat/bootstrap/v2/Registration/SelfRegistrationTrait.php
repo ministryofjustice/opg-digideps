@@ -22,26 +22,16 @@ trait SelfRegistrationTrait
         $this->fillInField('self_registration_caseNumber', '31313131');
         $this->pressButton('self_registration_save');
 
-        var_dump('1st');
-
         $this->clickActivationOrPasswordResetLinkInEmail(false, 'activation', 'brian@duck.co.uk');
-        var_dump('1.1');
         $this->fillInField('set_password_password_first', 'DigidepsPass1234');
-        var_dump('1.2');
         $this->fillInField('set_password_password_second', 'DigidepsPass1234');
-        var_dump('1.3');
         $this->checkOption('set_password_showTermsAndConditions');
-        var_dump('1.4');
         $this->pressButton('set_password_save');
-
-        var_dump('2nd');
 
         $this->assertPageContainsText('Sign in to your new account');
         $this->fillInField('login_email', 'brian@duck.co.uk');
         $this->fillInField('login_password', 'DigidepsPass1234');
         $this->pressButton('login_login');
-
-        var_dump('3rd');
 
         $this->fillInField('user_details_address1', '102 Petty France');
         $this->fillInField('user_details_address2', 'MOJ');
@@ -49,8 +39,6 @@ trait SelfRegistrationTrait
         $this->fillInField('user_details_addressCountry', 'GB');
         $this->fillInField('user_details_phoneMain', '01789 321234');
         $this->pressButton('user_details_save');
-
-        var_dump('4th');
 
         $this->fillInField('client_address', '1 South Parade');
         $this->fillInField('client_address2', 'First Floor');
@@ -61,18 +49,7 @@ trait SelfRegistrationTrait
         $this->fillInField('client_courtDate_day', '01');
         $this->fillInField('client_courtDate_month', '01');
         $this->fillInField('client_courtDate_year', '2016');
+
         $this->pressButton('client_save');
-
-        var_dump('5th');
-
-        $this->fillInField('report_startDate_day', '02');
-        $this->fillInField('report_startDate_month', '03');
-        $this->fillInField('report_startDate_year', '2016');
-        $this->fillInField('report_endDate_day', '01');
-        $this->fillInField('report_endDate_month', '03');
-        $this->fillInField('report_endDate_year', '2017');
-        $this->pressButton('report_save');
-
-        var_dump('6th');
     }
 }
