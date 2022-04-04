@@ -11,7 +11,7 @@ trait SelfRegistrationTrait
      */
     public function aLayDeputyRegistersToDeputiseForAClientWithValidDetails()
     {
-        $this->visit('/register');
+        $this->visitFrontendPath('/register');
         $this->fillInField('self_registration_firstname', 'Brian');
         $this->fillInField('self_registration_lastname', 'Duck');
         $this->fillInField('self_registration_email_first', 'brian@duck.co.uk');
@@ -24,7 +24,7 @@ trait SelfRegistrationTrait
 
         var_dump('1st');
 
-        $this->openActivationOrPasswordResetPage('', 'activation', 'brian@duck.co.uk');
+        $this->clickActivationOrPasswordResetLinkInEmail(false, 'activation', 'brian@duck.co.uk');
         var_dump('1.1');
         $this->fillInField('set_password_password_first', 'DigidepsPass1234');
         var_dump('1.2');
