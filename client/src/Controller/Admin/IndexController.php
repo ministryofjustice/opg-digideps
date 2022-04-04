@@ -434,41 +434,33 @@ class IndexController extends AbstractController
 
                 $data = (new CsvToArray($fileName, false))
                     ->setExpectedColumns([
-                        'Deputy No',
-                        //'Pat Create', 'Dship Create', //should hold reg date / Cour order date, but no specs given yet
-                        'Dep Postcode',
-                        'Dep Forename',
-                        'Dep Surname',
-                        'Dep Type', // 23 = PA (but not confirmed)
-                        'Dep Adrs1',
-                        'Dep Adrs2',
-                        'Dep Adrs3',
-                        'Dep Adrs4',
-                        'Dep Adrs5',
-                        'Dep Postcode',
-                        'Email', //mandatory, used as user ID whem uploading
-                        'Email2',
-                        'Email3',
-                        'Case', //case number, used as ID when uploading
-                        'Forename', 'Surname', //client forename and surname
-                        'Corref',
-                        'Typeofrep',
-                        'Last Report Day',
-                        'Made Date',
+                        'Case',
+                        'ClientForename',
+                        'ClientSurname',
+                        'ClientDateOfBirth',
+                        'ClientPostcode',
+                        'DeputyUid',
+                        'DeputyType',
+                        'DeputyEmail',
+                        'DeputyOrganisation',
+                        'DeputyPostcode',
+                        'MadeDate',
+                        'LastReportDay',
+                        'ReportType',
+                        'OrderType',
+                        'CoDeputy',
                     ])
                     ->setOptionalColumns([
-                        'Client Adrs1',
-                        'Client Adrs2',
-                        'Client Adrs3',
-                        'Client Postcode',
-                        'Client Phone',
-                        'Client Email',
-                        'Client Date of Birth',
-                        'Phone Main',
-                        'Phone Alternative',
-                        'Fee Payer',
-                        'Corres',
-                        'DepAddr No',
+                        'ClientAddress1',
+                        'ClientAddress2',
+                        'ClientAddress3',
+                        'ClientAddress4',
+                        'ClientAddress5',
+                        'DeputyAddress1',
+                        'DeputyAddress2',
+                        'DeputyAddress3',
+                        'DeputyAddress4',
+                        'DeputyAddress5',
                     ])
                     ->setUnexpectedColumns([
                         'NDR',

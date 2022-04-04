@@ -8,6 +8,7 @@ use App\Service\DataCompression;
 use App\v2\Controller\ControllerTrait;
 use App\v2\Registration\Assembler\SiriusToOrgDeputyshipDtoAssembler;
 use App\v2\Registration\Uploader\OrgDeputyshipUploader;
+use RuntimeException;
 use Sensio\Bundle\FrameworkExtraBundle\Configuration\Security;
 use Symfony\Bundle\FrameworkBundle\Controller\AbstractController;
 use Symfony\Component\HttpFoundation\Request;
@@ -50,13 +51,15 @@ class OrgDeputyshipController extends AbstractController
         $rowCount = count($decompressedData);
 
         if (!$rowCount) {
-            throw new \RuntimeException('No records received from the API');
+            throw new RuntimeException('No records received from the API');
         }
         if ($rowCount > self::MAX_UPLOAD_BATCH_SIZE) {
-            throw new \RuntimeException(sprintf('Max %s records allowed in a single bulk insert', self::MAX_UPLOAD_BATCH_SIZE));
+            throw new RuntimeException(sprintf('Max %s records allowed in a single bulk insert', self::MAX_UPLOAD_BATCH_SIZE));
         }
 
         $dtos = $this->assembler->assembleMultipleDtosFromArray($decompressedData);
+
+        var_dump($dtos);
 
         return $this->uploader->upload($dtos);
     }

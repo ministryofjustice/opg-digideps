@@ -9,7 +9,6 @@ use App\Entity\NamedDeputy;
 use App\Entity\Organisation;
 use App\Entity\PreRegistration;
 use App\Entity\Report\Report;
-use App\Entity\User;
 use App\Tests\Behat\BehatException;
 use Behat\Gherkin\Node\TableNode;
 use DateTime;
@@ -26,7 +25,7 @@ trait IngestTrait
         'client_case_numbers' => [],
         'named_deputy_uids' => [],
         'org_email_identifiers' => [],
-        'casrec_case_numbers' => [],
+        'sirius_case_numbers' => [],
     ];
 
     private ?DateTime $expectedClientCourtDate = null;
@@ -101,7 +100,7 @@ trait IngestTrait
         }
     }
 
-    private function extractUidsFromCsv($csvFilePath, string $buttonText)
+    private function extractUidsFromCsv($csvFilePath)
     {
         if ($this->getMinkParameter('files_path')) {
             $fullPath = rtrim(realpath($this->getMinkParameter('files_path')), DIRECTORY_SEPARATOR).DIRECTORY_SEPARATOR.$csvFilePath;
@@ -111,30 +110,27 @@ trait IngestTrait
         }
 
         $csvRows = array_map('str_getcsv', file($csvFilePath));
+
         array_walk($csvRows, function (&$a) use ($csvRows) {
             $a = array_combine($csvRows[0], $a);
         });
         array_shift($csvRows); // remove column header
 
+        var_dump($csvRows);
+
         foreach ($csvRows as $row) {
-            $email = empty($row['Email']) ? null : substr(strstr($row['Email'], '@'), 1);
-
-            if ('Upload PA/Prof users' === $buttonText) {
-                $deputyNumber = isset($row['Deputy No']) ? User::padDeputyNumber($row['Deputy No']) : null;
-            } else {
-                $deputyNumber = $row['DeputyUid'] ?? null;
-            }
-
-            $deputyAddressNumber = isset($row['DepAddr No']) ? User::padDeputyNumber($row['DepAddr No']) : null;
+            $email = empty($row['DeputyEmail']) ? null : substr(strstr($row['DeputyEmail'], '@'), 1);
 
             $this->entityUids['client_case_numbers'][] = $row['Case'] ?? null;
-            $this->entityUids['casrec_case_numbers'][] = $row['Case'] ?? '';
-            $this->entityUids['named_deputy_uids'][] = $deputyAddressNumber ? sprintf('%s-%s', $deputyNumber, $deputyAddressNumber) : $deputyNumber;
+            $this->entityUids['sirius_case_numbers'][] = $row['Case'] ?? '';
+            $this->entityUids['named_deputy_uids'][] = $row['DeputyUid'] ?? '';
             $this->entityUids['org_email_identifiers'][] = $email;
         }
 
+        var_dump($this->entityUids);
+
         $this->entityUids['client_case_numbers'] = array_unique($this->entityUids['client_case_numbers']);
-        $this->entityUids['casrec_case_numbers'] = array_unique($this->entityUids['casrec_case_numbers']);
+        $this->entityUids['sirius_case_numbers'] = array_unique($this->entityUids['sirius_case_numbers']);
         $this->entityUids['named_deputy_uids'] = array_unique($this->entityUids['named_deputy_uids']);
         $this->entityUids['org_email_identifiers'] = array_unique($this->entityUids['org_email_identifiers']);
     }
@@ -146,7 +142,7 @@ trait IngestTrait
         $clients = $this->em->getRepository(Client::class)->findBy(['caseNumber' => $this->entityUids['client_case_numbers']]);
         $namedDeputies = $this->em->getRepository(NamedDeputy::class)->findBy(['deputyUid' => $this->entityUids['named_deputy_uids']]);
         $orgs = $this->em->getRepository(Organisation::class)->findBy(['emailIdentifier' => $this->entityUids['org_email_identifiers']]);
-        $casrecs = $this->em->getRepository(PreRegistration::class)->findBy(['caseNumber' => $this->entityUids['casrec_case_numbers']]);
+        $casrecs = $this->em->getRepository(PreRegistration::class)->findBy(['caseNumber' => $this->entityUids['sirius_case_numbers']]);
 
         $reports = [];
 
@@ -186,7 +182,7 @@ trait IngestTrait
         $this->pressButton($uploadButtonText);
         $this->waitForAjaxAndRefresh();
 
-        $this->extractUidsFromCsv($csvFilepath, $uploadButtonText);
+        $this->extractUidsFromCsv($csvFilepath);
         $this->countCreatedEntities();
     }
 

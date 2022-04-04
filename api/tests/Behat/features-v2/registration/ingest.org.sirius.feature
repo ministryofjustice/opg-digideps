@@ -1,7 +1,7 @@
-@v2 @registration @ingest @v2_admin @gugs
-Feature: Org CSV data ingestion - casrec source data
+@v2 @registration @ingest @v2_admin
+Feature: Org CSV data ingestion - sirius source data
 
-    @super-admin
+    @super-admin @acs
     Scenario: Uploading a CSV that contains new clients and named deputies only
         Given a super admin user accesses the admin app
         When I navigate to the upload users page

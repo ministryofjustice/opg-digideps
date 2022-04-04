@@ -35,14 +35,15 @@ class SiriusToOrgDeputyshipDtoAssembler
     {
         $reportType = $this->reportUtils->determineReportType($row['ReportType'], $row['OrderType'], $row['DeputyType']);
 
-        $reportEndDate = new \DateTime($row['LastReportDay']);
+        $reportEndDate = new DateTime($row['LastReportDay']);
         $reportStartDate = $reportEndDate ? $this->reportUtils->generateReportStartDateFromEndDate($reportEndDate) : null;
 
         return (new OrgDeputyshipDto())
             ->setCaseNumber($row['Case'])
             ->setClientFirstname($row['ClientForename'])
             ->setClientLastname($row['ClientSurname'])
-            ->setClientDateOfBirth(new DateTime($row['ClientDateOfBirth']))
+            // TODO ask Sirius to change format to DD-MM-YYYY rather than DD/MM/YYYY
+            ->setClientDateOfBirth(new DateTime(str_replace('/', '-', $row['ClientDateOfBirth'])))
             ->setClientAddress1($row['ClientAddress1'])
             ->setClientAddress2($row['ClientAddress2'])
             ->setClientAddress3($row['ClientAddress3'])
