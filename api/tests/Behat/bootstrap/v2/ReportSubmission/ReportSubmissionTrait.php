@@ -380,4 +380,16 @@ trait ReportSubmissionTrait
             }
         }
     }
+
+    /**
+     * @Then I should see Lay High Assets report for the next reporting period
+     */
+    public function iShouldSeeLayHighAssetsReportForTheNextReportingPeriod()
+    {
+        $this->clickLink('Continue');
+        $this->assertStringContainsString(
+            'Money transfers',
+            $this->getSession()->getPage()->getContent(),
+            'Comparing expected section against sections visible');
+    }
 }

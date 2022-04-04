@@ -11,3 +11,5 @@ Feature: Submitting a report - NDR
         And I confirm I am the sole deputy
         And I submit my report
         Then my report should be submitted
+        When I visit the lay start page
+        Then I should see Lay High Assets report for the next reporting period

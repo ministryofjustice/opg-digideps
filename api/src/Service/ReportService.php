@@ -282,7 +282,7 @@ class ReportService
 
         if ($oldReport instanceof Report) {
             $startDate = clone $oldReport->getEndDate();
-            $newReportType = $this->getReportTypeBasedOnSirius($client) ?: $oldReport->getType();
+            $newReportType = $oldReport->getType();
             $startDate->modify('+1 day');
         } elseif ($oldReport instanceof Ndr) {
             // when the previous report is NDR we need to work out the new reporting period
@@ -329,24 +329,11 @@ class ReportService
     {
         $casRec = $this->preRegistrationRepository->findOneBy(['caseNumber' => $client->getCaseNumber()]);
         if ($casRec instanceof PreRegistration) {
-            $namedDeputy = $client->getNamedDeputy();
-
-            if (!is_null($namedDeputy)) {
-                $realm = User::$depTypeIdToRealm[$namedDeputy->getDeputyType()] ?? null;
-
-                if (is_null($realm)) {
-                    throw new RuntimeException("Named deputy has invalid type {$namedDeputy->getDeputyType()}");
-                } else {
-                    return PreRegistration::getReportTypeByOrderType($casRec->getTypeOfReport(), $casRec->getOrderType(), $realm);
-                }
-            }
-
             if (count($client->getUsers())) {
                 if ($client->getUsers()->first()->isLayDeputy()) {
                     return PreRegistration::getReportTypeByOrderType($casRec->getTypeOfReport(), $casRec->getOrderType(), PreRegistration::REALM_LAY);
                 }
             }
-            throw new RuntimeException('Can\'t determine report realm');
         }
 
         return null;
