@@ -104,7 +104,7 @@ class Client implements ClientInterface
      *
      * @ORM\Column(name="address", type="string", length=200, nullable=true)
      */
-    private ?string $address;
+    private ?string $address = null;
 
     /**
      * @JMS\Type("string")
@@ -112,7 +112,7 @@ class Client implements ClientInterface
      *
      * @ORM\Column(name="address2", type="string", length=200, nullable=true)
      */
-    private ?string $address2;
+    private ?string $address2 = null;
 
     /**
      * @JMS\Type("string")
@@ -120,7 +120,7 @@ class Client implements ClientInterface
      *
      * @ORM\Column(name="address3", type="string", length=200, nullable=true)
      */
-    private ?string $address3;
+    private ?string $address3 = null;
 
     /**
      * @JMS\Type("string")
@@ -128,7 +128,7 @@ class Client implements ClientInterface
      *
      * @ORM\Column(name="address4", type="string", length=200, nullable=true)
      */
-    private ?string $address4;
+    private ?string $address4 = null;
 
     /**
      * @JMS\Type("string")
@@ -136,7 +136,7 @@ class Client implements ClientInterface
      *
      * @ORM\Column(name="address5", type="string", length=200, nullable=true)
      */
-    private ?string $address5;
+    private ?string $address5 = null;
 
     /**
      * @JMS\Type("string")

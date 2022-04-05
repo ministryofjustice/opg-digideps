@@ -158,7 +158,7 @@ trait IngestTrait
     /**
      * @When I upload an org CSV that has a new named deputy :newNamedDeputy within the same org as the clients existing name deputy
      */
-    public function iUploadAnOrgCsvThatHasANewMadeDateAndNamedDeputyWithinTheSameOrgAsTheClientsExistingNameDeputy(string $source, string $newNamedDeputy)
+    public function iUploadAnOrgCsvThatHasANewMadeDateAndNamedDeputyWithinTheSameOrgAsTheClientsExistingNameDeputy(string $newNamedDeputy)
     {
         $this->iAmOnAdminOrgCsvUploadPage();
 
@@ -518,7 +518,7 @@ trait IngestTrait
 
         $this->clientBeforeCsvUpload = $existingClient;
 
-        $filePath = 'casrec-csvs/org-1-row-new-named-deputy-and-org-existing-client.csv';
+        $filePath = 'sirius-csvs/org-1-row-new-named-deputy-and-org-existing-client.csv';
         $this->uploadCsvAndCountCreatedEntities($filePath, 'Upload PA/Prof users');
 
         $this->em->clear();
@@ -609,7 +609,7 @@ trait IngestTrait
     {
         $this->iAmOnAdminOrgCsvUploadPage();
 
-        $this->createProfAdminNotStarted(null, 'sufjan@stevens.com', '2828282t', '20082008-00000999');
+        $this->createProfAdminNotStarted(null, 'sufjan@stevens.com', '2828282t', '20082008');
 
         $this->em->clear();
 
@@ -623,7 +623,7 @@ trait IngestTrait
 
         $this->clientBeforeCsvUpload = $existingClient;
 
-        $filePath = 'casrec-csvs/org-1-row-existing-named-deputy-and-client-new-org-and-street-address.csv';
+        $filePath = 'sirius-csvs/org-1-row-existing-named-deputy-and-client-new-org-and-street-address.csv';
         $this->uploadCsvAndCountCreatedEntities($filePath, 'Upload PA/Prof users');
 
         $this->em->clear();
@@ -658,7 +658,7 @@ trait IngestTrait
 
         $this->clientBeforeCsvUpload = $existingClient;
 
-        $filePath = 'casrec-csvs/org-1-updated-row-existing-case-number-new-made-date.csv';
+        $filePath = 'sirius-csvs/org-1-updated-row-existing-case-number-new-made-date.csv';
         $this->uploadCsvAndCountCreatedEntities($filePath, 'Upload PA/Prof users');
 
         $this->em->clear();

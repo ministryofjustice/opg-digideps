@@ -37,6 +37,7 @@ class ClientTestHelper extends TestCase
             ->setEmail($faker->safeEmail().mt_rand(1, 100000))
             ->setCourtDate(new DateTime('09-Aug-2018'))
             ->setAddress($faker->streetAddress())
+            ->setAddress2($faker->streetAddress())
             ->setPostcode($faker->postcode());
 
         if (!is_null($user) && User::ROLE_LAY_DEPUTY === $user->getRoleName()) {
