@@ -145,7 +145,7 @@ class ClientControllerTest extends AbstractTestController
         $this->assertEquals('Address', $client->getAddress());
         $this->assertEquals('Address2', $client->getAddress2());
         $this->assertEquals('Postcode', $client->getPostcode());
-        $this->assertEquals('County', $client->getCounty());
+        $this->assertEquals('County', $client->getAddress3());
         $this->assertEquals('Phone', $client->getPhone());
         $this->assertEquals(null, $client->getDateOfBirth());
         $this->assertEquals('2015-12-31', $client->getCourtDate()->format('Y-m-d'));
@@ -188,7 +188,7 @@ class ClientControllerTest extends AbstractTestController
         $this->assertEquals('a1', $client->getAddress());
         $this->assertEquals('a2', $client->getAddress2());
         $this->assertEquals('p', $client->getPostcode());
-        $this->assertEquals('c', $client->getCounty());
+        $this->assertEquals('c', $client->getAddress3());
         $this->assertEquals('p', $client->getPhone());
         $this->assertEquals('1947-01-31', $client->getDateOfBirth()->format('Y-m-d'));
         $this->assertEquals('pa000001', $client->getCaseNumber()); //assert not changed

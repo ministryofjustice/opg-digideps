@@ -443,6 +443,8 @@ class IndexController extends AbstractController
                         'DeputyType',
                         'DeputyEmail',
                         'DeputyOrganisation',
+                        'DeputyForename',
+                        'DeputySurname',
                         'DeputyPostcode',
                         'MadeDate',
                         'LastReportDay',

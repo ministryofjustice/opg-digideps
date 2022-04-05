@@ -127,7 +127,7 @@ class Client
      * @JMS\Type("string")
      * @JMS\Groups({"edit", "pa-edit"})
      *
-     * @Assert\Length(max=200, maxMessage="client.address.maxMessage", groups={"lay-deputy-client", "pa-client", "lay-deputy-client-edit"})
+     * @Assert\Length(max=200, maxMessage="client.address2.maxMessage", groups={"lay-deputy-client", "pa-client", "lay-deputy-client-edit"})
      *
      * @var string
      */
@@ -137,11 +137,31 @@ class Client
      * @JMS\Type("string")
      * @JMS\Groups({"edit", "pa-edit"})
      *
-     * @Assert\Length(max=75, maxMessage="client.county.maxMessage", groups={"lay-deputy-client", "pa-client", "lay-deputy-client-edit"})
+     * @Assert\Length(max=200, maxMessage="client.address3.maxMessage", groups={"lay-deputy-client", "pa-client", "lay-deputy-client-edit"})
      *
      * @var string
      */
-    private $county;
+    private $address3;
+
+    /**
+     * @JMS\Type("string")
+     * @JMS\Groups({"edit", "pa-edit"})
+     *
+     * @Assert\Length(max=75, maxMessage="client.address4.maxMessage", groups={"lay-deputy-client", "pa-client", "lay-deputy-client-edit"})
+     *
+     * @var string
+     */
+    private $address4;
+
+    /**
+     * @JMS\Type("string")
+     * @JMS\Groups({"edit", "pa-edit"})
+     *
+     * @Assert\Length(max=75, maxMessage="client.address5.maxMessage", groups={"lay-deputy-client", "pa-client", "lay-deputy-client-edit"})
+     *
+     * @var string
+     */
+    private $address5;
 
     /**
      * @JMS\Type("string")
@@ -608,19 +628,43 @@ class Client
     /**
      * @return string
      */
-    public function getCounty()
+    public function getAddress3()
     {
-        return $this->county;
+        return $this->address3;
     }
 
     /**
-     * @param string $county
+     * @param string $address3
      *
      * @return Client
      */
-    public function setCounty($county)
+    public function setAddress3($address3)
     {
-        $this->county = $county;
+        $this->address3 = $address3;
+
+        return $this;
+    }
+
+    public function getAddress4(): string
+    {
+        return $this->address4;
+    }
+
+    public function setAddress4(string $address4): Client
+    {
+        $this->address4 = $address4;
+
+        return $this;
+    }
+
+    public function getAddress5(): string
+    {
+        return $this->address5;
+    }
+
+    public function setAddress5(string $address5): Client
+    {
+        $this->address5 = $address5;
 
         return $this;
     }
@@ -673,7 +717,7 @@ class Client
         return array_filter([
             $this->address,
             $this->address2,
-            $this->county,
+            $this->address3,
             $this->postcode,
         ]);
     }

@@ -263,7 +263,7 @@ class PATestUserFixtures extends AbstractDataFixture
             ->setCourtDate($courtDate->modify('-1year +1day'))
             ->setAddress($clientData['address1'])
             ->setAddress2($clientData['address2'])
-            ->setCounty($clientData['address3'])
+            ->setAddress3($clientData['address3'])
             ->setPostcode($clientData['addressPostcode'])
             ->setCountry('GB')
             ->setPhone($clientData['phone'])

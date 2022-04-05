@@ -32,6 +32,11 @@ Changes to support migratrion from Casrec to Sirius';
         $this->addSql('ALTER TABLE named_deputy ADD deputy_uid VARCHAR(20)');
         $this->addSql('CREATE UNIQUE INDEX UNIQ_1058689D625B8D2 ON named_deputy (deputy_uid)');
         $this->addSql('CREATE INDEX named_deputy_uid_idx ON named_deputy (deputy_uid)');
+
+        $this->addSql('ALTER TABLE client RENAME county to address3');
+        $this->addSql('ALTER TABLE client ALTER COLUMN address3 TYPE VARCHAR(200)');
+        $this->addSql('ALTER TABLE client ADD address4 VARCHAR(200)');
+        $this->addSql('ALTER TABLE client ADD address5 VARCHAR(200)');
     }
 
     public function down(Schema $schema): void
@@ -48,5 +53,10 @@ Changes to support migratrion from Casrec to Sirius';
         $this->addSql('ALTER TABLE named_deputy ADD corres BOOLEAN DEFAULT NULL');
         $this->addSql('CREATE UNIQUE INDEX uniq_105868993fcdcf4 ON named_deputy (deputy_no)');
         $this->addSql('CREATE INDEX named_deputy_no_idx ON named_deputy (deputy_no)');
+
+        $this->addSql('ALTER TABLE client RENAME address3 to county');
+        $this->addSql('ALTER TABLE client ALTER COLUMN county TYPE VARCHAR(75)');
+        $this->addSql('ALTER TABLE client DROP address4');
+        $this->addSql('ALTER TABLE client DROP address5');
     }
 }

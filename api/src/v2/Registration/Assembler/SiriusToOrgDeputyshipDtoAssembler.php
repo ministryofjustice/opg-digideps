@@ -35,7 +35,7 @@ class SiriusToOrgDeputyshipDtoAssembler
     {
         $reportType = $this->reportUtils->determineReportType($row['ReportType'], $row['OrderType'], $row['DeputyType']);
 
-        $reportEndDate = new DateTime($row['LastReportDay']);
+        $reportEndDate = new DateTime(str_replace('/', '-', $row['LastReportDay']));
         $reportStartDate = $reportEndDate ? $this->reportUtils->generateReportStartDateFromEndDate($reportEndDate) : null;
 
         return (new OrgDeputyshipDto())
@@ -51,7 +51,7 @@ class SiriusToOrgDeputyshipDtoAssembler
             ->setClientAddress5($row['ClientAddress5'])
             ->setClientPostCode($row['ClientPostcode'])
             ->setDeputyUid($row['DeputyUid'])
-            ->setDeputyEmail($row['Email'])
+            ->setDeputyEmail($row['DeputyEmail'])
             ->setDeputyFirstname($row['DeputyForename'])
             ->setDeputyLastname($row['DeputySurname'])
             ->setDeputyAddress1($row['DeputyAddress1'])
@@ -60,7 +60,7 @@ class SiriusToOrgDeputyshipDtoAssembler
             ->setDeputyAddress4($row['DeputyAddress4'])
             ->setDeputyAddress5($row['DeputyAddress5'])
             ->setDeputyPostcode($row['DeputyPostcode'])
-            ->setCourtDate(new DateTime($row['MadeDate']))
+            ->setCourtDate(new DateTime(str_replace('/', '-', $row['MadeDate'])))
             ->setReportStartDate($reportStartDate)
             ->setReportEndDate($reportEndDate)
             ->setReportType($reportType);

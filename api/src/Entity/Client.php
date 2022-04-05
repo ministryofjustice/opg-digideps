@@ -102,31 +102,41 @@ class Client implements ClientInterface
      * @JMS\Type("string")
      * @JMS\Groups({"client"})
      *
-     * @var string
-     *
      * @ORM\Column(name="address", type="string", length=200, nullable=true)
      */
-    private $address;
+    private ?string $address;
 
     /**
      * @JMS\Type("string")
      * @JMS\Groups({"client"})
-     *
-     * @var string
      *
      * @ORM\Column(name="address2", type="string", length=200, nullable=true)
      */
-    private $address2;
+    private ?string $address2;
 
     /**
      * @JMS\Type("string")
      * @JMS\Groups({"client"})
      *
-     * @var string
-     *
-     * @ORM\Column(name="county", type="string", length=75, nullable=true)
+     * @ORM\Column(name="address3", type="string", length=200, nullable=true)
      */
-    private $county;
+    private ?string $address3;
+
+    /**
+     * @JMS\Type("string")
+     * @JMS\Groups({"client"})
+     *
+     * @ORM\Column(name="address4", type="string", length=200, nullable=true)
+     */
+    private ?string $address4;
+
+    /**
+     * @JMS\Type("string")
+     * @JMS\Groups({"client"})
+     *
+     * @ORM\Column(name="address5", type="string", length=200, nullable=true)
+     */
+    private ?string $address5;
 
     /**
      * @JMS\Type("string")
@@ -330,26 +340,14 @@ class Client implements ClientInterface
         return $this->phone;
     }
 
-    /**
-     * Set address.
-     *
-     * @param string $address
-     *
-     * @return Client
-     */
-    public function setAddress($address)
+    public function setAddress(?string $address)
     {
         $this->address = $address;
 
         return $this;
     }
 
-    /**
-     * Get address.
-     *
-     * @return string
-     */
-    public function getAddress()
+    public function getAddress(): ?string
     {
         return $this->address;
     }
@@ -655,52 +653,52 @@ class Client implements ClientInterface
         return $this->getFirstname().$space.$this->getLastname();
     }
 
-    /**
-     * Set address2.
-     *
-     * @param string $address2
-     *
-     * @return Client
-     */
-    public function setAddress2($address2)
+    public function setAddress2(?string $address2)
     {
         $this->address2 = $address2;
 
         return $this;
     }
 
-    /**
-     * Get address2.
-     *
-     * @return string
-     */
-    public function getAddress2()
+    public function getAddress2(): ?string
     {
         return $this->address2;
     }
 
-    /**
-     * Set county.
-     *
-     * @param string $county
-     *
-     * @return Client
-     */
-    public function setCounty($county)
+    public function setAddress3(?string $address3)
     {
-        $this->county = $county;
+        $this->address3 = $address3;
 
         return $this;
     }
 
-    /**
-     * Get county.
-     *
-     * @return string
-     */
-    public function getCounty()
+    public function getAddress3(): ?string
     {
-        return $this->county;
+        return $this->address3;
+    }
+
+    public function setAddress4(?string $address4): Client
+    {
+        $this->address4 = $address4;
+
+        return $this;
+    }
+
+    public function getAddress4(): ?string
+    {
+        return $this->address4;
+    }
+
+    public function setAddress5(?string $address5): Client
+    {
+        $this->address5 = $address5;
+
+        return $this;
+    }
+
+    public function getAddress5(): string
+    {
+        return $this->address5;
     }
 
     /**

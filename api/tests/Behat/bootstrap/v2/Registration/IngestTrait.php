@@ -127,12 +127,12 @@ trait IngestTrait
             $this->entityUids['org_email_identifiers'][] = $email;
         }
 
-        var_dump($this->entityUids);
-
         $this->entityUids['client_case_numbers'] = array_unique($this->entityUids['client_case_numbers']);
         $this->entityUids['sirius_case_numbers'] = array_unique($this->entityUids['sirius_case_numbers']);
         $this->entityUids['named_deputy_uids'] = array_unique($this->entityUids['named_deputy_uids']);
         $this->entityUids['org_email_identifiers'] = array_unique($this->entityUids['org_email_identifiers']);
+
+        var_dump($this->entityUids);
     }
 
     private function countCreatedEntities()
@@ -143,6 +143,12 @@ trait IngestTrait
         $namedDeputies = $this->em->getRepository(NamedDeputy::class)->findBy(['deputyUid' => $this->entityUids['named_deputy_uids']]);
         $orgs = $this->em->getRepository(Organisation::class)->findBy(['emailIdentifier' => $this->entityUids['org_email_identifiers']]);
         $casrecs = $this->em->getRepository(PreRegistration::class)->findBy(['caseNumber' => $this->entityUids['sirius_case_numbers']]);
+
+        var_dump('Orgs:');
+        var_dump($orgs[0]->getEmailIdentifier());
+        var_dump($orgs[1]->getEmailIdentifier());
+
+        var_dump(count($orgs));
 
         $reports = [];
 

@@ -166,7 +166,7 @@ class FixtureHelper
             [
                 'address1' => $client->getAddress(),
                 'address2' => $client->getAddress2(),
-                'address3' => $client->getCounty(),
+                'address3' => $client->getAddress3(),
                 'addressPostcode' => $client->getPostcode(),
                 'addressCountry' => $client->getCountry(),
             ],
