@@ -42,7 +42,9 @@ trait SelfRegistrationTrait
 
         $this->fillInField('client_address', '1 South Parade');
         $this->fillInField('client_address2', 'First Floor');
-        $this->fillInField('client_county', 'Notts');
+        $this->fillInField('client_address3', 'Big Building');
+        $this->fillInField('client_address4', 'Large Town');
+        $this->fillInField('client_address5', 'Notts');
         $this->fillInField('client_postcode', 'NG1 2HT');
         $this->fillInField('client_country', 'GB');
         $this->fillInField('client_phone', '01789432876');
