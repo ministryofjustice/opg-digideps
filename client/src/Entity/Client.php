@@ -127,7 +127,7 @@ class Client
      * @JMS\Type("string")
      * @JMS\Groups({"edit", "pa-edit"})
      *
-     * @Assert\Length(max=200, maxMessage="client.address2.maxMessage", groups={"lay-deputy-client", "pa-client", "lay-deputy-client-edit"})
+     * @Assert\Length(max=200, maxMessage="client.address.maxMessage", groups={"lay-deputy-client", "pa-client", "lay-deputy-client-edit"})
      *
      * @var string
      */
@@ -137,7 +137,7 @@ class Client
      * @JMS\Type("string")
      * @JMS\Groups({"edit", "pa-edit"})
      *
-     * @Assert\Length(max=200, maxMessage="client.address3.maxMessage", groups={"lay-deputy-client", "pa-client", "lay-deputy-client-edit"})
+     * @Assert\Length(max=200, maxMessage="client.address.maxMessage", groups={"lay-deputy-client", "pa-client", "lay-deputy-client-edit"})
      *
      * @var string
      */
@@ -147,7 +147,7 @@ class Client
      * @JMS\Type("string")
      * @JMS\Groups({"edit", "pa-edit"})
      *
-     * @Assert\Length(max=75, maxMessage="client.address4.maxMessage", groups={"lay-deputy-client", "pa-client", "lay-deputy-client-edit"})
+     * @Assert\Length(max=200, maxMessage="client.address.maxMessage", groups={"lay-deputy-client", "pa-client", "lay-deputy-client-edit"})
      *
      * @var string
      */
@@ -157,7 +157,7 @@ class Client
      * @JMS\Type("string")
      * @JMS\Groups({"edit", "pa-edit"})
      *
-     * @Assert\Length(max=75, maxMessage="client.address5.maxMessage", groups={"lay-deputy-client", "pa-client", "lay-deputy-client-edit"})
+     * @Assert\Length(max=200, maxMessage="client.address.maxMessage", groups={"lay-deputy-client", "pa-client", "lay-deputy-client-edit"})
      *
      * @var string
      */
@@ -598,71 +598,55 @@ class Client
      *
      * @return Client
      */
-    public function setAddress($address)
+    public function setAddress($address): self
     {
         $this->address = $address;
 
         return $this;
     }
 
-    /**
-     * @return string
-     */
-    public function getAddress2()
+    public function getAddress2(): ?string
     {
         return $this->address2;
     }
 
-    /**
-     * @param string $address2
-     *
-     * @return Client
-     */
-    public function setAddress2($address2)
+    public function setAddress2(?string $address2): self
     {
         $this->address2 = $address2;
 
         return $this;
     }
 
-    /**
-     * @return string
-     */
-    public function getAddress3()
+    public function getAddress3(): ?string
     {
         return $this->address3;
     }
 
-    /**
-     * @param string $address3
-     *
-     * @return Client
-     */
-    public function setAddress3($address3)
+    public function setAddress3(?string $address3): self
     {
         $this->address3 = $address3;
 
         return $this;
     }
 
-    public function getAddress4(): string
+    public function getAddress4(): ?string
     {
         return $this->address4;
     }
 
-    public function setAddress4(string $address4): Client
+    public function setAddress4(?string $address4): self
     {
         $this->address4 = $address4;
 
         return $this;
     }
 
-    public function getAddress5(): string
+    public function getAddress5(): ?string
     {
         return $this->address5;
     }
 
-    public function setAddress5(string $address5): Client
+    public function setAddress5(?string $address5): self
     {
         $this->address5 = $address5;
 

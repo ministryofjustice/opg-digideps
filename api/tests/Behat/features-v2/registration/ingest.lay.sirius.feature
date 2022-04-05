@@ -29,5 +29,5 @@ Feature: Lay CSV data ingestion - sirius source data
     Scenario: Uploading a Lay CSV that has missing required columns
         Given a super admin user accesses the admin app
         When I visit the admin upload lay users page
-        And I upload a 'sirius' 'lay' CSV that does not have any of the required columns
+        And I upload a 'lay' CSV that does not have any of the required columns
         Then I should see an error showing which columns are missing on the 'lay' csv upload page

@@ -84,8 +84,6 @@ client:
     address:
         notBlank: Enter the client's address
         maxMessage: The address cannot be longer than {{ limit }} characters
-    county:
-        maxMessage: The county cannot be longer than {{ limit }} letters
     postcode:
         notBlank: Enter the client's postcode
         minMessage: The postcode must be at least {{ limit }} characters long

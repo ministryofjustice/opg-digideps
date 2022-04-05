@@ -36,7 +36,7 @@ Feature: Org CSV data ingestion - sirius source data
     Scenario: Uploading a CSV that contains a new named deputy in a new organisation for an existing client - same case number, same made date
         Given a super admin user accesses the admin app
         When I visit the admin upload org users page
-        And I upload a 'casrec' org CSV that has a new named deputy in a new organisation for an existing client
+        And I upload an org CSV that has a new named deputy in a new organisation for an existing client
         Then the named deputy associated with the client should be updated to the new named deputy
         And the organisation associated with the client should be updated to the new organisation
         And the report associated with the client should remain the same
@@ -45,24 +45,24 @@ Feature: Org CSV data ingestion - sirius source data
     Scenario: Uploading a CSV where an existing client's named deputy has changed firm  - same case number, same made date
         Given a super admin user accesses the admin app
         When I visit the admin upload org users page
-        And I upload a 'casrec' org CSV that contains a new org email and street address but the same deputy number for an existing clients named deputy
+        And I upload an org CSV that contains a new org email and street address but the same deputy number for an existing clients named deputy
         Then the organisation associated with the client should be updated to the new organisation
         And the named deputy's address should be updated to '88 BROAD WALK, ALINGHAM, CORK, VALE, TOWNSVILLE, TW8 R55'
         And the named deputy associated with the client should remain the same
         And the report associated with the client should remain the same
 
-    @super-admin @acs
+    @super-admin
     Scenario: Uploading a CSV that contains a new named deputy in a new organisation for an existing client - same case number, new made date
         Given a super admin user accesses the admin app
         When I visit the admin upload org users page
-        And I upload a 'casrec' org CSV that has a an existing case number and new made date for an existing client
+        And I upload an org CSV that has a an existing case number and new made date for an existing client
         Then a new report should be generated for the client
 
     @super-admin
     Scenario: Uploading a CSV where the same named deputy appears with two addresses
         Given a super admin user accesses the admin app
         When I visit the admin upload org users page
-        And I upload a 'casrec' org CSV that contains two rows with the same named deputy number but different address numbers
+        And I upload an org CSV that contains two rows with the same named deputy at two different addresses with different deputy uids
         Then there should be two named deputies created
         And the named deputy for '97864531' should have the address '6 MAYFIELD AVENUE, WYLDE GREEN, SUTTON COLDFIELD, WEST MIDLANDS, WARWICKSHIRE, B73 5QQ'
         And the named deputy for '64597832' should have the address '21 NIGEL ROAD, NORTHFIELD, BIRMINGHAM, WEST MIDLANDS, WARWICKSHIRE, B31 1LL'
@@ -71,7 +71,7 @@ Feature: Org CSV data ingestion - sirius source data
     Scenario: Uploading a CSV that contains deputies with missing required information alongside valid deputy rows
         Given a super admin user accesses the admin app
         When I visit the admin upload org users page
-        And I upload a 'casrec' org CSV that has 1 row with missing values 'Last Report Day, Made Date, Email' for case number '70000000' and 1 valid row
+        And I upload an org CSV that has 1 row with missing values 'LastReportDay, MadeDate, DeputyEmail' for case number '70000000' and 1 valid row
         Then I should see an error showing the problem on the 'org' csv upload page
         And the new 'org' entities should be added to the database
         And the count of the new 'org' entities added should be displayed on the page
@@ -80,12 +80,12 @@ Feature: Org CSV data ingestion - sirius source data
     Scenario: Uploading a CSV that has missing required columns
         Given a super admin user accesses the admin app
         When I visit the admin upload org users page
-        And I upload a 'casrec' 'org' CSV that does not have any of the required columns
+        And I upload an 'org' CSV that does not have any of the required columns
         Then I should see an error showing which columns are missing on the 'org' csv upload page
 
     @super-admin
     Scenario: Uploading a CSV that has an unexpected column
         Given a super admin user accesses the admin app
         When I visit the admin upload org users page
-        And I upload a 'casrec' org CSV that has an 'NDR' column
+        And I upload an org CSV that has an 'NDR' column
         Then I should see an error showing the column that was unexpected

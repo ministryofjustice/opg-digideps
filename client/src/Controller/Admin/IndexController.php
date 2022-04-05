@@ -363,7 +363,7 @@ class IndexController extends AbstractController
 
                 $data = $csvToArray
                     ->setOptionalColumns($csvToArray->getFirstRow())
-                    ->setUnexpectedColumns(['Last Report Day'])
+                    ->setUnexpectedColumns(['LastReportDay', 'DeputyOrganisation'])
                     ->getData();
 
                 // small amount of data -> immediate posting and redirect (needed for behat)

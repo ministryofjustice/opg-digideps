@@ -24,8 +24,8 @@ class ClientFactory
             ->setPhone(isset($data['phone']) ? $data['phone'] : '022222222222222')
             ->setAddress(isset($data['address']) ? $data['address'] : 'Victoria road')
             ->setAddress2(isset($data['address2']) ? $data['address2'] : 'Birmingham')
+            ->setAddress3(isset($data['address3']) ? $data['address3'] : 'West Midlands')
             ->setPostcode(isset($data['postCode']) ? $data['postCode'] : 'B4 6HQ')
-            ->setAddress3(isset($data['county']) ? $data['county'] : 'West Midlands')
             ->setCountry('GB')
             ->setCourtDate(DateTime::createFromFormat($dateFormat, $courtDate));
 

@@ -285,9 +285,9 @@ trait IngestTrait
     }
 
     /**
-     * @When I upload a :source org CSV that has 1 row with missing values 'Last Report Day, Made Date, Email' for case number :caseNumber and 1 valid row
+     * @When I upload an org CSV that has 1 row with missing values 'LastReportDay, MadeDate, DeputyEmail' for case number :caseNumber and 1 valid row
      */
-    public function iUploadACsvThatHasMissingValueAndOneValidRow(string $source, string $caseNumber)
+    public function iUploadACsvThatHasMissingValueAndOneValidRow(string $caseNumber)
     {
         $this->iAmOnAdminOrgCsvUploadPage();
 
@@ -302,7 +302,7 @@ trait IngestTrait
         $this->createProfAdminNotStarted();
 
         $this->uploadCsvAndCountCreatedEntities(
-            'casrec-csvs/org-1-row-missing-last-report-date-1-valid-row.csv',
+            'sirius-csvs/org-1-row-missing-last-report-date-1-valid-row.csv',
             'Upload PA/Prof users'
         );
     }
@@ -322,14 +322,14 @@ trait IngestTrait
     }
 
     /**
-     * @When I upload a :source :userType CSV that does not have any of the required columns
+     * @When I upload a|an :userType CSV that does not have any of the required columns
      */
-    public function iUploadACsvThatHasMissingDeputyUidColumn(string $source, string $userType)
+    public function iUploadACsvThatHasMissingDeputyUidColumn(string $userType)
     {
         $this->iAmOnCorrectUploadPage($userType);
 
-        if ('casrec' === $source) {
-            $csvFilepath = 'casrec-csvs/org-1-row-missing-all-required-columns.csv';
+        if ('org' === $userType) {
+            $csvFilepath = 'sirius-csvs/org-1-row-missing-all-required-columns.csv';
         } else {
             $csvFilepath = 'sirius-csvs/lay-1-row-missing-all-required-columns.csv';
         }
@@ -348,27 +348,23 @@ trait IngestTrait
 
         if ('org' === strtolower($userType)) {
             $requiredColumns = [
-                'Deputy No',
-                'Dep Postcode',
-                'Dep Forename',
-                'Dep Surname',
-                'Dep Type',
-                'Dep Adrs1',
-                'Dep Adrs2',
-                'Dep Adrs3',
-                'Dep Adrs4',
-                'Dep Adrs5',
-                'Dep Postcode',
-                'Email',
-                'Email2',
-                'Email3',
                 'Case',
-                'Forename',
-                'Surname',
-                'Corref',
-                'Typeofrep',
-                'Last Report Day',
-                'Made Date',
+                'ClientForename',
+                'ClientSurname',
+                'ClientDateOfBirth',
+                'ClientPostcode',
+                'DeputyUid',
+                'DeputyType',
+                'DeputyEmail',
+                'DeputyOrganisation',
+                'DeputyForename',
+                'DeputySurname',
+                'DeputyPostcode',
+                'MadeDate',
+                'LastReportDay',
+                'ReportType',
+                'OrderType',
+                'CoDeputy',
             ];
         } else {
             $requiredColumns = [
@@ -391,16 +387,16 @@ trait IngestTrait
     }
 
     /**
-     * @When I upload a :source org CSV that has an/a :columnName column
+     * @When I upload an org CSV that has an/a :columnName column
      */
-    public function iUploadACsvThatHasNdrColumn(string $source, string $columnName)
+    public function iUploadACsvThatHasNdrColumn(string $columnName)
     {
         $this->iAmOnAdminOrgCsvUploadPage();
 
         $this->expectedUnexpectedColumn = $columnName;
 
         $this->uploadCsvAndCountCreatedEntities(
-            'casrec-csvs/org-1-row-with-ndr-column.csv',
+            'sirius-csvs/org-1-row-with-ndr-column.csv',
             'Upload PA/Prof users'
         );
     }
@@ -490,7 +486,7 @@ trait IngestTrait
     }
 
     /**
-     * @When I upload a :source org CSV that has a new named deputy in a new organisation for an existing client
+     * @When I upload an org CSV that has a new named deputy in a new organisation for an existing client
      */
     public function iUploadCsvThatHasNewNamedDeputyAndOrgForExistingClient()
     {
@@ -603,7 +599,7 @@ trait IngestTrait
     }
 
     /**
-     * @When I upload a :source org CSV that contains a new org email and street address but the same deputy number for an existing clients named deputy
+     * @When I upload an org CSV that contains a new org email and street address but the same deputy number for an existing clients named deputy
      */
     public function iUploadCsvThatHasOrgEmailAndStreetAddressButSameDepNoForExistingClient()
     {
@@ -638,7 +634,7 @@ trait IngestTrait
     }
 
     /**
-     * @When I upload a :source org CSV that has a an existing case number and new made date for an existing client
+     * @When I upload an org CSV that has a an existing case number and new made date for an existing client
      */
     public function iUploadCsvThatHasExistingCaseNumberNewMadeDateForExistingClient()
     {
@@ -745,13 +741,13 @@ trait IngestTrait
     }
 
     /**
-     * @When I upload a :source org CSV that contains two rows with the same named deputy number but different address numbers
+     * @When I upload an org CSV that contains two rows with the same named deputy at two different addresses with different deputy uids
      */
-    public function iUploadCsvWithOneNamedDeputyOnTwoLinesWithDifferentAddresses(string $source)
+    public function iUploadCsvWithOneNamedDeputyOnTwoLinesWithDifferentAddresses()
     {
         $this->iAmOnAdminOrgCsvUploadPage();
 
-        $filePath = 'casrec-csvs/org-2-rows-1-named-deputy-with-different-addresses.csv';
+        $filePath = 'sirius-csvs/org-2-rows-1-named-deputy-with-different-addresses.csv';
         $this->uploadCsvAndCountCreatedEntities($filePath, 'Upload PA/Prof users');
 
         $this->em->clear();

@@ -35,15 +35,17 @@ class SiriusToOrgDeputyshipDtoAssembler
     {
         $reportType = $this->reportUtils->determineReportType($row['ReportType'], $row['OrderType'], $row['DeputyType']);
 
-        $reportEndDate = new DateTime(str_replace('/', '-', $row['LastReportDay']));
+        $reportEndDate = $row['LastReportDay'] ? new DateTime(str_replace('/', '-', $row['LastReportDay'])) : null;
         $reportStartDate = $reportEndDate ? $this->reportUtils->generateReportStartDateFromEndDate($reportEndDate) : null;
+        $madeDate = $row['MadeDate'] ? new DateTime(str_replace('/', '-', $row['MadeDate'])) : null;
+        $dateOfBirth = $row['ClientDateOfBirth'] ? new DateTime(str_replace('/', '-', $row['ClientDateOfBirth'])) : null;
 
         return (new OrgDeputyshipDto())
             ->setCaseNumber($row['Case'])
             ->setClientFirstname($row['ClientForename'])
             ->setClientLastname($row['ClientSurname'])
             // TODO ask Sirius to change format to DD-MM-YYYY rather than DD/MM/YYYY
-            ->setClientDateOfBirth(new DateTime(str_replace('/', '-', $row['ClientDateOfBirth'])))
+            ->setClientDateOfBirth($dateOfBirth)
             ->setClientAddress1($row['ClientAddress1'])
             ->setClientAddress2($row['ClientAddress2'])
             ->setClientAddress3($row['ClientAddress3'])
@@ -60,7 +62,7 @@ class SiriusToOrgDeputyshipDtoAssembler
             ->setDeputyAddress4($row['DeputyAddress4'])
             ->setDeputyAddress5($row['DeputyAddress5'])
             ->setDeputyPostcode($row['DeputyPostcode'])
-            ->setCourtDate(new DateTime(str_replace('/', '-', $row['MadeDate'])))
+            ->setCourtDate($madeDate)
             ->setReportStartDate($reportStartDate)
             ->setReportEndDate($reportEndDate)
             ->setReportType($reportType);
