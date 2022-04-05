@@ -59,8 +59,6 @@ class OrgDeputyshipController extends AbstractController
 
         $dtos = $this->assembler->assembleMultipleDtosFromArray($decompressedData);
 
-        var_dump($dtos);
-
         return $this->uploader->upload($dtos);
     }
 }

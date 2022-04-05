@@ -19,7 +19,7 @@ trait IngestTrait
     private array $namedDeputies = ['expected' => 0, 'found' => 0];
     private array $organisations = ['expected' => 0, 'found' => 0];
     private array $reports = ['expected' => 0, 'found' => 0];
-    private array $casrec = ['expected' => 0, 'found' => 0];
+    private array $preRegistration = ['expected' => 0, 'found' => 0];
     private array $expectedMissingDTOProperties = [];
     private array $entityUids = [
         'client_case_numbers' => [],
@@ -79,7 +79,7 @@ trait IngestTrait
             $this->assertIntEqualsInt($this->organisations['expected'], $this->organisations['found'], 'Count of entities based on UIDs - organisations');
             $this->assertIntEqualsInt($this->reports['expected'], $this->reports['found'], 'Count of entities based on UIDs - reports');
         } else {
-            $this->assertIntEqualsInt($this->casrec['expected'], $this->casrec['found'], 'Count of entities based on UIDs - casrec');
+            $this->assertIntEqualsInt($this->preRegistration['expected'], $this->preRegistration['found'], 'Count of entities based on UIDs - Pre-registration');
         }
     }
 
@@ -96,7 +96,7 @@ trait IngestTrait
             $this->assertOnAlertMessage(sprintf('%s organisation', $this->organisations['expected']));
             $this->assertOnAlertMessage(sprintf('%s reports', $this->reports['expected']));
         } else {
-            $this->assertOnAlertMessage(sprintf('%s record uploaded', $this->casrec['expected']));
+            $this->assertOnAlertMessage(sprintf('%s record uploaded', $this->preRegistration['expected']));
         }
     }
 
@@ -116,8 +116,6 @@ trait IngestTrait
         });
         array_shift($csvRows); // remove column header
 
-        var_dump($csvRows);
-
         foreach ($csvRows as $row) {
             $email = empty($row['DeputyEmail']) ? null : substr(strstr($row['DeputyEmail'], '@'), 1);
 
@@ -131,8 +129,6 @@ trait IngestTrait
         $this->entityUids['sirius_case_numbers'] = array_unique($this->entityUids['sirius_case_numbers']);
         $this->entityUids['named_deputy_uids'] = array_unique($this->entityUids['named_deputy_uids']);
         $this->entityUids['org_email_identifiers'] = array_unique($this->entityUids['org_email_identifiers']);
-
-        var_dump($this->entityUids);
     }
 
     private function countCreatedEntities()
@@ -142,13 +138,7 @@ trait IngestTrait
         $clients = $this->em->getRepository(Client::class)->findBy(['caseNumber' => $this->entityUids['client_case_numbers']]);
         $namedDeputies = $this->em->getRepository(NamedDeputy::class)->findBy(['deputyUid' => $this->entityUids['named_deputy_uids']]);
         $orgs = $this->em->getRepository(Organisation::class)->findBy(['emailIdentifier' => $this->entityUids['org_email_identifiers']]);
-        $casrecs = $this->em->getRepository(PreRegistration::class)->findBy(['caseNumber' => $this->entityUids['sirius_case_numbers']]);
-
-        var_dump('Orgs:');
-        var_dump($orgs[0]->getEmailIdentifier());
-        var_dump($orgs[1]->getEmailIdentifier());
-
-        var_dump(count($orgs));
+        $preRegistrations = $this->em->getRepository(PreRegistration::class)->findBy(['caseNumber' => $this->entityUids['sirius_case_numbers']]);
 
         $reports = [];
 
@@ -161,7 +151,7 @@ trait IngestTrait
         $this->clients['found'] = count($clients);
         $this->namedDeputies['found'] = count($namedDeputies);
         $this->organisations['found'] = count($orgs);
-        $this->casrec['found'] = count($casrecs);
+        $this->preRegistration['found'] = count($preRegistrations);
         $this->reports['found'] = count($reports);
     }
 
@@ -432,7 +422,7 @@ trait IngestTrait
     {
         $this->iamOnAdminUploadUsersPage();
 
-        $this->casrec['expected'] = $newEntitiesCount;
+        $this->preRegistration['expected'] = $newEntitiesCount;
 
         $this->selectOption('form[type]', 'lay');
         $this->pressButton('Continue');
@@ -492,7 +482,7 @@ trait IngestTrait
         $this->iAmOnAdminLayCsvUploadPage();
 
         $this->expectedMissingDTOProperties = ['caseNumber', 'clientLastname', 'deputyUid', 'deputySurname'];
-        $this->casrec['expected'] = $newEntitiesCount;
+        $this->preRegistration['expected'] = $newEntitiesCount;
 
         $filePath = 'sirius-csvs/lay-1-row-missing-all-required-1-valid-row.csv';
 

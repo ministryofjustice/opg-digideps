@@ -16,8 +16,7 @@ class CSVUploadedEvent extends Event
 
     private array $validRoleTypes = [
         User::TYPE_LAY,
-        User::TYPE_PA,
-        User::TYPE_PROF,
+        'ORG',
     ];
 
     public function __construct($roleType, $trigger)
