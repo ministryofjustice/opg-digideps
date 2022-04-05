@@ -432,6 +432,8 @@ class ReportServiceTest extends TestCase
         $this->assertEquals(false, ReportService::isDue(new DateTime('next week')));
     }
 
+    //TODO rewrite test as code is now simplified. Probably better to delete and start from scratch than try to convert
+
     /**
      * @dataProvider getReportTypeOptions
      */
@@ -493,16 +495,10 @@ class ReportServiceTest extends TestCase
     {
         return [
             'layUserAttached' => [null, true, false, false, Report::LAY_PFA_HIGH_ASSETS_TYPE],
-            'profUserAttached' => [null, false, true, false, RuntimeException::class],
-            'paUserAttached' => [null, false, false, true, RuntimeException::class],
             'multipleUsersAttached' => [null, true, true, true, Report::LAY_PFA_HIGH_ASSETS_TYPE],
             'noNamedDeputyNoUser' => [null, false, false, false, RuntimeException::class],
             'invalidNamedDeputyNoUser' => [400, false, false, false, RuntimeException::class],
             'invalidNamedDeputyLayUser' => [400, true, false, false, RuntimeException::class],
-            'paNamedDeputy' => [23, false, false, false, Report::PA_PFA_HIGH_ASSETS_TYPE],
-            'profNamedDeputy' => [21, false, false, false, Report::PROF_PFA_HIGH_ASSETS_TYPE],
-            'otherProfNamedDeputy' => [26, false, false, false, Report::PROF_PFA_HIGH_ASSETS_TYPE],
-            'profNamedDeputyAndLayUser' => [26, true, false, false, Report::PROF_PFA_HIGH_ASSETS_TYPE],
         ];
     }
 

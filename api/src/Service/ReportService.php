@@ -327,11 +327,12 @@ class ReportService
     //Therefore looks like the code to check for nameddeputy will always be null
     public function getReportTypeBasedOnSirius(Client $client)
     {
-        $casRec = $this->preRegistrationRepository->findOneBy(['caseNumber' => $client->getCaseNumber()]);
-        if ($casRec instanceof PreRegistration) {
+        $preRegistration = $this->preRegistrationRepository->findOneBy(['caseNumber' => $client->getCaseNumber()]);
+
+        if ($preRegistration instanceof PreRegistration) {
             if (count($client->getUsers())) {
                 if ($client->getUsers()->first()->isLayDeputy()) {
-                    return PreRegistration::getReportTypeByOrderType($casRec->getTypeOfReport(), $casRec->getOrderType(), PreRegistration::REALM_LAY);
+                    return PreRegistration::getReportTypeByOrderType($preRegistration->getTypeOfReport(), $preRegistration->getOrderType(), PreRegistration::REALM_LAY);
                 }
             }
         }
