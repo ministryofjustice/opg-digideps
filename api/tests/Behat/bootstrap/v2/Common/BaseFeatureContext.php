@@ -30,6 +30,7 @@ class BaseFeatureContext extends MinkContext
     use FixturesTrait;
     use FormFillingTrait;
     use INavigateToAdminTrait;
+    use INavigateToFrontendTrait;
     use IShouldBeOnAdminTrait;
     use IShouldBeOnFrontendTrait;
     use IVisitAdminTrait;
