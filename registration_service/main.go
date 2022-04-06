@@ -15,9 +15,9 @@ import (
 )
 
 type regServiceResponse struct {
-	name      string
-	timestamp time.Time
-	message   string
+	Name      string
+	Timestamp time.Time
+	Message   string
 }
 
 func regService(w http.ResponseWriter, r *http.Request) {
@@ -42,22 +42,19 @@ func regService(w http.ResponseWriter, r *http.Request) {
 
 	if err != nil {
 		m = err.Error()
+		log.Println("Return error")
 	} else {
 		m = "request is authorised"
+        log.Println("Return success")
 	}
 
 	data := regServiceResponse{
-		name:      "Go API Test",
-		timestamp: time.Now(),
-		message:   m,
+		Name:      "Go API Test",
+		Timestamp: time.Now(),
+		Message:   m,
 	}
 
-	json, err := json.Marshal(data)
-	if err != nil {
-		log.Fatal(err)
-	}
-
-	w.Write(json)
+    _ = json.NewEncoder(w).Encode(data)
 }
 
 // Extracts and parses the JWT from bearar token

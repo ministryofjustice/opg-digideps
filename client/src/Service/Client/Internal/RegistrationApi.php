@@ -17,7 +17,7 @@ class RegistrationApi
     ) {
     }
 
-    public function getMyRequestInfo()
+    public function getSecuredData()
     {
         $user = $this->security->getUser();
         $jwt = $this->redisStorage->get($user->getId().'-jwt');

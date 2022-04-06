@@ -49,7 +49,7 @@ class AuthController extends RestController
         if (!$this->authService->isSecretValid($request)) {
             throw new AppException\UnauthorisedException('client secret not accepted.');
         }
-        $data = $this->formatter->deserializeBodyContent($request);
+        $data = $this->restFormatter->deserializeBodyContent($request);
 
         //brute force checks
         $index = array_key_exists('token', $data) ? 'token' : 'email';
@@ -110,7 +110,7 @@ class AuthController extends RestController
         });
 
         // needed for redirector
-        $this->formatter->setJmsSerialiserGroups(['user', 'user-login']);
+        $this->restFormatter->setJmsSerialiserGroups(['user', 'user-login']);
 
         return $user;
     }

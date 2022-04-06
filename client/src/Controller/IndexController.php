@@ -45,7 +45,7 @@ class IndexController extends AbstractController
      */
     public function testRegistrationApi()
     {
-        return new Response($this->registrationApi->getMyRequestInfo());
+        return new Response($this->registrationApi->getSecuredData());
     }
 
     /**

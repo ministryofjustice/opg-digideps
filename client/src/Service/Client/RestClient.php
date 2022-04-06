@@ -369,7 +369,7 @@ class RestClient implements RestClientInterface
             try {
                 if ($response instanceof ResponseInterface) {
                     $body = strval($response->getBody());
-                    $data = $this->serialiser->deserialize($body, 'array', 'json');
+                    $data = $this->serializer->deserialize($body, 'array', 'json');
                 }
             } catch (Throwable $e) {
                 $this->logger->warning('RestClient |  '.$url.' | '.$e->getMessage());
@@ -393,7 +393,7 @@ class RestClient implements RestClientInterface
         //TODO validate $response->getStatusCode()
 
         try {
-            $data = $this->serialiser->deserialize(strval($response->getBody()), 'array', 'json');
+            $data = $this->serializer->deserialize(strval($response->getBody()), 'array', 'json');
         } catch (Throwable $e) {
             $this->logger->error(__METHOD__.': '.$e->getMessage().'. Api responded with invalid JSON. [BODY START]: '.$response->getBody().'[END BODY]');
             throw new Exception\JsonDecodeException(self::ERROR_FORMAT.':'.$response->getBody());
@@ -419,7 +419,7 @@ class RestClient implements RestClientInterface
         /** @var string */
         $data = json_encode($data);
 
-        return $this->serialiser->deserialize($data, $fullClassName, 'json');
+        return $this->serializer->deserialize($data, $fullClassName, 'json');
     }
 
     /**
@@ -469,9 +469,9 @@ class RestClient implements RestClientInterface
                 $context->setGroups($options['deserialise_groups']);
             }
 
-            $ret = $this->serialiser->serialize($mixed, 'json', $context);
+            $ret = $this->serializer->serialize($mixed, 'json', $context);
         } elseif (is_array($mixed)) {
-            $ret = $this->serialiser->serialize($mixed, 'json');
+            $ret = $this->serializer->serialize($mixed, 'json');
         }
 
         return $ret;
