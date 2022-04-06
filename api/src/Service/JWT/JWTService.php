@@ -5,18 +5,20 @@ declare(strict_types=1);
 namespace App\Service\JWT;
 
 use App\Entity\User;
+use App\Service\SecretManagerService;
 use Firebase\JWT\JWT;
+use Psr\Log\LoggerInterface;
 
 class JWTService
 {
-    public function __construct(private string $rootDir)
+    public function __construct(private SecretManagerService $secretManager, private LoggerInterface $logger)
     {
     }
 
     public function createNewJWT(User $user)
     {
-        $privateKey = file_get_contents(sprintf('%s/config/jwt/private.pem', $this->rootDir));
-        $publicKey = file_get_contents(sprintf('%s/config/jwt/public.pem', $this->rootDir));
+        $privateKey = base64_decode($this->secretManager->getSecret(SecretManagerService::PRIVATE_JWT_KEY_BASE64_SECRET_NAME));
+        $publicKey = base64_decode($this->secretManager->getSecret(SecretManagerService::PUBLIC_JWT_KEY_BASE64_SECRET_NAME));
 
         $kid = openssl_digest($publicKey, 'sha256');
         $payload = [
@@ -30,12 +32,14 @@ class JWTService
             'sub' => $user->getEmail(),
         ];
 
+        // TODO Need to pass in the frontend host from env var here
         return JWT::encode($payload, $privateKey, 'RS256', $kid, ['jku' => 'https://frontend/v2/.well-known/jwks.json']);
     }
 
     public function generateJWK()
     {
-        $publicKey = file_get_contents(sprintf('%s/config/jwt/public.pem', $this->rootDir));
+        $publicKey = base64_decode($this->secretManager->getSecret(SecretManagerService::PUBLIC_JWT_KEY_BASE64_SECRET_NAME));
+
         // Should this be base64 encoded?
         $kid = openssl_digest($publicKey, 'sha256');
 
