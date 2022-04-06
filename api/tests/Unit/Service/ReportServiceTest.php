@@ -4,7 +4,6 @@ namespace App\Tests\Unit\Service;
 
 use App\Entity as EntityDir;
 use App\Entity\Client;
-use App\Entity\NamedDeputy;
 use App\Entity\PreRegistration;
 use App\Entity\Report\Asset;
 use App\Entity\Report\AssetProperty;
@@ -12,22 +11,22 @@ use App\Entity\Report\BankAccount;
 use App\Entity\Report\Document;
 use App\Entity\Report\Report;
 use App\Entity\User;
+use App\Repository\AssetRepository;
+use App\Repository\BankAccountRepository;
 use App\Repository\DocumentRepository;
+use App\Repository\PreRegistrationRepository;
 use App\Repository\ReportRepository;
 use App\Service\ReportService;
 use DateTime;
-use Doctrine\Common\Collections\ArrayCollection;
 use Doctrine\ORM\EntityManager;
+use Doctrine\ORM\EntityManagerInterface;
 use Doctrine\ORM\EntityRepository;
-use Doctrine\Persistence\ObjectRepository;
 use Mockery;
 use MockeryStub as m;
 use PHPUnit\Framework\TestCase;
-use Prophecy\Argument;
 use Prophecy\PhpUnit\ProphecyTrait;
 use Prophecy\Prophecy\ObjectProphecy;
 use RuntimeException;
-use Throwable;
 
 class ReportServiceTest extends TestCase
 {
@@ -37,10 +36,12 @@ class ReportServiceTest extends TestCase
      * @var ReportService
      */
     protected $sut;
+
     /**
      * @var EntityDir\User
      */
     private $user;
+
     /**
      * @var Report
      */
@@ -432,73 +433,61 @@ class ReportServiceTest extends TestCase
         $this->assertEquals(false, ReportService::isDue(new DateTime('next week')));
     }
 
-    //TODO rewrite test as code is now simplified. Probably better to delete and start from scratch than try to convert
-
     /**
-     * @dataProvider getReportTypeOptions
+     * @dataProvider getReportTypeBasedOnSiriusProvider
      */
-    public function testReportTypeCalculation($namedDeputyType, $isLay, $isProf, $isPa, $expectedType)
+    public function testGetReportTypeBasedOnSirius(Client $client, bool $isAString)
     {
-        $namedDeputy = null;
-        if ($namedDeputyType) {
-            /** @var NamedDeputy&ObjectProphecy $namedDeputyMock */
-            $namedDeputyMock = $this->prophesize(NamedDeputy::class);
-            $namedDeputyMock->getDeputyType()->shouldBeCalled()->willReturn($namedDeputyType);
-            $namedDeputy = $namedDeputyMock->reveal();
-        }
+        $preRegistration = new PreRegistration(['ReportType' => 'OPG103', 'OrderType' => 'pfa']);
 
-        /** @var Client&ObjectProphecy $client */
-        $client = $this->prophesize(Client::class);
-        $client->getNamedDeputy()->shouldBeCalled()->willReturn($namedDeputy);
-        $client->getCaseNumber()->shouldBeCalled()->willReturn(4148);
+        /** @var ObjectProphecy|PreRegistrationRepository $preRegistrationRepo */
+        $preRegistrationRepo = self::prophesize(PreRegistrationRepository::class);
+        $preRegistrationRepo->findOneBy(['caseNumber' => '12345678'])->willReturn($preRegistration);
 
-        $users = new ArrayCollection();
-        $client->getUsers()->willReturn($users);
+        $reportRepository = self::prophesize(ReportRepository::class);
+        $assetRepository = self::prophesize(AssetRepository::class);
+        $bankAccountRepository = self::prophesize(BankAccountRepository::class);
 
-        if ($isLay || $isProf || $isPa) {
-            /** @var User&ObjectProphecy $user */
-            $user = $this->prophesize(User::class);
-            $user->isLayDeputy()->willReturn($isLay);
-            $user->isProfDeputy()->willReturn($isProf);
-            $user->isPaDeputy()->willReturn($isPa);
+        $em = self::prophesize(EntityManagerInterface::class);
+        $em->getRepository(PreRegistration::class)->willReturn($preRegistrationRepo->reveal());
+        $em->getRepository(Asset::class)->willReturn($assetRepository->reveal());
+        $em->getRepository(BankAccount::class)->willReturn($bankAccountRepository->reveal());
 
-            $users->add($user->reveal());
-        }
+        $sut = new ReportService($em->reveal(), $reportRepository->reveal());
 
-        /** @var PreRegistration&ObjectProphecy $casRec */
-        $casRec = $this->prophesize(PreRegistration::class);
-        $casRec->getTypeOfReport()->willReturn('OPG102');
-        $casRec->getOrderType()->willReturn('pfa');
-
-        /** @var ObjectRepository&ObjectProphecy $casRecRepository */
-        $casRecRepository = $this->prophesize(ObjectRepository::class);
-        $casRecRepository->findOneBy(['caseNumber' => 4148])->shouldBeCalled()->willReturn($casRec->reveal());
-
-        /** @var EntityManager&ObjectProphecy $em */
-        $em = $this->prophesize(EntityManager::class);
-        $em->getRepository(PreRegistration::class)->shouldBeCalled()->willReturn($casRecRepository);
-        $em->getRepository(Argument::any())->shouldBeCalled()->willReturn(null);
-
-        if (RuntimeException::class === $expectedType) {
-            $this->expectException($expectedType);
-        }
-
-        $sut = new ReportService($em->reveal(), $this->reportRepo);
-        $type = $sut->getReportTypeBasedOnSirius($client->reveal());
-
-        if (!($expectedType instanceof Throwable)) {
-            $this->assertEquals($expectedType, $type);
-        }
+        self::assertEquals($isAString, is_string($sut->getReportTypeBasedOnSirius($client)));
     }
 
-    public function getReportTypeOptions()
+    public function getReportTypeBasedOnSiriusProvider()
     {
+        $lay = (new User())->setRoleName(User::ROLE_LAY_DEPUTY);
+        $prof = (new User())->setRoleName(User::ROLE_PROF_ADMIN);
+        $pa = (new User())->setRoleName(User::ROLE_PA_ADMIN);
+
+        $layClient = (new Client())
+            ->addUser($lay)
+            ->setCaseNumber('12345678')
+            ->setCourtDate(new DateTime('2014-06-06'));
+
+        $profClient = (new Client())
+            ->addUser($prof)
+            ->setCaseNumber('12345678')
+            ->setCourtDate(new DateTime('2014-06-06'));
+
+        $paClient = (new Client())
+            ->addUser($pa)
+            ->setCaseNumber('12345678')
+            ->setCourtDate(new DateTime('2014-06-06'));
+
+        $noUserClient = (new Client())
+            ->setCaseNumber('12345678')
+            ->setCourtDate(new DateTime('2014-06-06'));
+
         return [
-            'layUserAttached' => [null, true, false, false, Report::LAY_PFA_HIGH_ASSETS_TYPE],
-            'multipleUsersAttached' => [null, true, true, true, Report::LAY_PFA_HIGH_ASSETS_TYPE],
-            'noNamedDeputyNoUser' => [null, false, false, false, RuntimeException::class],
-            'invalidNamedDeputyNoUser' => [400, false, false, false, RuntimeException::class],
-            'invalidNamedDeputyLayUser' => [400, true, false, false, RuntimeException::class],
+            'layUserAttachedToClient' => [$layClient, true],
+            'profUserAttachedToClient' => [$profClient, false],
+            'paUserAttachedToClient' => [$paClient, false],
+            'noUsersAttached' => [$noUserClient, false],
         ];
     }
 

@@ -332,7 +332,11 @@ class ReportService
         if ($preRegistration instanceof PreRegistration) {
             if (count($client->getUsers())) {
                 if ($client->getUsers()->first()->isLayDeputy()) {
-                    return PreRegistration::getReportTypeByOrderType($preRegistration->getTypeOfReport(), $preRegistration->getOrderType(), PreRegistration::REALM_LAY);
+                    return PreRegistration::getReportTypeByOrderType(
+                        $preRegistration->getTypeOfReport(),
+                        $preRegistration->getOrderType(),
+                        PreRegistration::REALM_LAY
+                    );
                 }
             }
         }
