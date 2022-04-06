@@ -10,7 +10,6 @@ use App\v2\Registration\Assembler\SiriusToOrgDeputyshipDtoAssembler;
 use DateTime;
 use PHPUnit\Framework\TestCase;
 use Prophecy\PhpUnit\ProphecyTrait;
-use Symfony\Component\Validator\Constraints\Date;
 
 class SiriusToOrgDeputyshipDtoAssemblerTest extends TestCase
 {
@@ -25,8 +24,10 @@ class SiriusToOrgDeputyshipDtoAssemblerTest extends TestCase
         $siriusArray['ReportType'] = 'OPG102';
         $siriusArray['OrderType'] = 'pfa';
 
-        $expectedReportEndDate = new DateTime($siriusArray['LastReportDay']);
-        $expectedReportStartDate = new DateTime('04/03/2021');
+        $expectedReportEndDate = DateTime::createFromFormat('d/m/Y', $siriusArray['LastReportDay']);
+        $expectedReportStartDate = DateTime::createFromFormat('d/m/Y', '04/03/2021');
+        $expectedClientDateOfBirth = DateTime::createFromFormat('d/m/Y', $siriusArray['ClientDateOfBirth']);
+        $expectedMadeDate = DateTime::createFromFormat('d/m/Y', $siriusArray['MadeDate']);
 
         $reportUtils = self::prophesize(ReportUtils::class);
 
@@ -34,8 +35,7 @@ class SiriusToOrgDeputyshipDtoAssemblerTest extends TestCase
             ->shouldBeCalled()
             ->willReturn('102-5');
 
-        $reportUtils->generateReportStartDateFromEndDate($expectedReportEndDate)->shouldBeCalled();
-        $reportUtils->padCasRecNumber($siriusArray['Case'])->shouldBeCalled();
+        $reportUtils->generateReportStartDateFromEndDate($expectedReportEndDate)->shouldBeCalled()->willReturn($expectedReportStartDate);
 
         $sut = new SiriusToOrgDeputyshipDtoAssembler($reportUtils->reveal());
 
@@ -44,7 +44,7 @@ class SiriusToOrgDeputyshipDtoAssemblerTest extends TestCase
         self::assertEquals($siriusArray['Case'], $dto->getCaseNumber());
         self::assertEquals($siriusArray['ClientForename'], $dto->getClientFirstname());
         self::assertEquals($siriusArray['ClientSurname'], $dto->getClientLastname());
-        self::assertEquals($siriusArray['ClientDateOfBirth'], $dto->getClientDateOfBirth());
+        self::assertEquals($expectedClientDateOfBirth, $dto->getClientDateOfBirth());
         self::assertEquals($siriusArray['ClientAddress1'], $dto->getClientAddress1());
         self::assertEquals($siriusArray['ClientAddress2'], $dto->getClientAddress2());
         self::assertEquals($siriusArray['ClientAddress3'], $dto->getClientAddress3());
@@ -61,7 +61,7 @@ class SiriusToOrgDeputyshipDtoAssemblerTest extends TestCase
         self::assertEquals($siriusArray['DeputyAddress4'], $dto->getDeputyAddress4());
         self::assertEquals($siriusArray['DeputyAddress5'], $dto->getDeputyAddress5());
         self::assertEquals($siriusArray['DeputyPostcode'], $dto->getDeputyPostcode());
-        self::assertEquals(new Date($siriusArray['MadeDate']), $dto->getCourtDate());
+        self::assertEquals($expectedMadeDate, $dto->getCourtDate());
         self::assertEquals($expectedReportStartDate, $dto->getReportStartDate());
         self::assertEquals($expectedReportEndDate, $dto->getReportEndDate());
         self::assertEquals('102-5', $dto->getReportType());
@@ -76,7 +76,7 @@ class SiriusToOrgDeputyshipDtoAssemblerTest extends TestCase
         $siriusArray['ReportType'] = 'OPG103';
         $siriusArray['OrderType'] = 'hw';
 
-        $reportEndDate = new DateTime($siriusArray['LastReportDay']);
+        $reportEndDate = DateTime::createFromFormat('d/m/Y', $siriusArray['LastReportDay']);
 
         $reportUtils = self::prophesize(ReportUtils::class);
 
@@ -85,7 +85,6 @@ class SiriusToOrgDeputyshipDtoAssemblerTest extends TestCase
             ->willReturn('103-4-6');
 
         $reportUtils->generateReportStartDateFromEndDate($reportEndDate)->shouldBeCalled();
-        $reportUtils->padCasRecNumber($siriusArray['Case'])->shouldBeCalled();
 
         $sut = new SiriusToOrgDeputyshipDtoAssembler($reportUtils->reveal());
 

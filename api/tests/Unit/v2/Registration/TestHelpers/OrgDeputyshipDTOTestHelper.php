@@ -56,7 +56,7 @@ class OrgDeputyshipDTOTestHelper
             'Case' => (string) $faker->randomNumber(8),
             'ClientForename' => $faker->firstName(),
             'ClientSurname' => $faker->lastName(),
-            'ClientDateOfBirth' => $faker->dateTime()->format('d/M/Y'),
+            'ClientDateOfBirth' => $faker->dateTime()->format('d/m/Y'),
             'ClientAddress1' => $faker->buildingNumber().' '.$faker->streetName(),
             'ClientAddress2' => Address::cityPrefix().' '.$faker->city(),
             'ClientAddress3' => Address::county(),
@@ -75,8 +75,8 @@ class OrgDeputyshipDTOTestHelper
             'DeputyAddress4' => Address::county(),
             'DeputyAddress5' => 'UK',
             'DeputyPostcode' => Address::postcode(),
-            'MadeDate' => $courtOrderMadeDate->format('d/M/Y'),
-            'LastReportDay' => $reportPeriodEndDate->format('d/M/Y'),
+            'MadeDate' => $courtOrderMadeDate->format('d/m/Y'),
+            'LastReportDay' => $reportPeriodEndDate->format('d/m/Y'),
             'ReportType' => $faker->randomElement(['OPG102', 'OPG103', 'OPG104']),
             'OrderType' => $faker->randomElement(['pfa', 'hw']),
             'CoDeputy' => $faker->randomElement(['yes', 'no']),
@@ -129,7 +129,7 @@ class OrgDeputyshipDTOTestHelper
 
     public static function namedDeputyWasCreated(OrgDeputyshipDto $orgDeputyship, NamedDeputyRepository $namedDeputyRepository)
     {
-        return $namedDeputyRepository->findOneBy(['$deputyUid' => $orgDeputyship->getDeputyUid()]) instanceof NamedDeputy;
+        return $namedDeputyRepository->findOneBy(['deputyUid' => $orgDeputyship->getDeputyUid()]) instanceof NamedDeputy;
     }
 
     public static function organisationWasCreated(string $emailIdentifier, OrganisationRepository $orgRepo)
@@ -155,7 +155,7 @@ class OrgDeputyshipDTOTestHelper
     public static function clientAndNamedDeputyAreAssociated(OrgDeputyshipDto $orgDeputyship, ClientRepository $clientRepo, NamedDeputyRepository $namedDeputyRepo)
     {
         $client = $clientRepo->findOneBy(['caseNumber' => $orgDeputyship->getCaseNumber()]);
-        $namedDeputy = $namedDeputyRepo->findOneBy(['$deputyUid' => $orgDeputyship->getDeputyUid()]);
+        $namedDeputy = $namedDeputyRepo->findOneBy(['deputyUid' => $orgDeputyship->getDeputyUid()]);
 
         return $client->getNamedDeputy() === $namedDeputy;
     }

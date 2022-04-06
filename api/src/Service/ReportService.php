@@ -320,11 +320,6 @@ class ReportService
      *
      * @throws Exception
      */
-
-    //Todo - check if this is needed for Org cases
-    //Searches pre-registration table, but org cases are not stored in that table
-    //Attempts to get namedDeputy from client, but only for org cases would a client have a named deputy
-    //Therefore looks like the code to check for nameddeputy will always be null
     public function getReportTypeBasedOnSirius(Client $client)
     {
         $preRegistration = $this->preRegistrationRepository->findOneBy(['caseNumber' => $client->getCaseNumber()]);

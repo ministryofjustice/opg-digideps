@@ -35,16 +35,15 @@ class SiriusToOrgDeputyshipDtoAssembler
     {
         $reportType = $this->reportUtils->determineReportType($row['ReportType'], $row['OrderType'], $row['DeputyType']);
 
-        $reportEndDate = $row['LastReportDay'] ? new DateTime(str_replace('/', '-', $row['LastReportDay'])) : null;
+        $reportEndDate = $row['LastReportDay'] ? DateTime::createFromFormat('d/m/Y', $row['LastReportDay']) : null;
         $reportStartDate = $reportEndDate ? $this->reportUtils->generateReportStartDateFromEndDate($reportEndDate) : null;
-        $madeDate = $row['MadeDate'] ? new DateTime(str_replace('/', '-', $row['MadeDate'])) : null;
-        $dateOfBirth = $row['ClientDateOfBirth'] ? new DateTime(str_replace('/', '-', $row['ClientDateOfBirth'])) : null;
+        $madeDate = $row['MadeDate'] ? DateTime::createFromFormat('d/m/Y', $row['MadeDate']) : null;
+        $dateOfBirth = $row['ClientDateOfBirth'] ? DateTime::createFromFormat('d/m/Y', $row['ClientDateOfBirth']) : null;
 
         return (new OrgDeputyshipDto())
             ->setCaseNumber($row['Case'])
             ->setClientFirstname($row['ClientForename'])
             ->setClientLastname($row['ClientSurname'])
-            // TODO ask Sirius to change format to DD-MM-YYYY rather than DD/MM/YYYY
             ->setClientDateOfBirth($dateOfBirth)
             ->setClientAddress1($row['ClientAddress1'])
             ->setClientAddress2($row['ClientAddress2'])
