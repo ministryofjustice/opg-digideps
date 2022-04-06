@@ -10,16 +10,8 @@ class SecretManagerService
 {
     public const SLACK_APP_TOKEN_SECRET_NAME = 'opg-response-slack-token';
 
-    /** @var SecretsManagerClient */
-    private $secretsManagerClient;
-
-    /** @var string */
-    private $secretPrefix;
-
-    public function __construct(SecretsManagerClient $secretsManagerClient, string $secretPrefix)
+    public function __construct(private SecretsManagerClient $secretsManagerClient, private string $secretPrefix)
     {
-        $this->secretsManagerClient = $secretsManagerClient;
-        $this->secretPrefix = $secretPrefix;
     }
 
     public function getSecret(string $secretName)
