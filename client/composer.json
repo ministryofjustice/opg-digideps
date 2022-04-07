@@ -11,7 +11,7 @@
     },
     "require": {
         "php": "^8.0.12",
-        "alphagov/notifications-php-client": "^2.1",
+        "alphagov/notifications-php-client": "^4.0.1",
         "aws/aws-sdk-php": "^3.100.9",
         "egulias/email-validator": "^2.0.0",
         "fakerphp/faker": "^1.16",
