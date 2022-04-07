@@ -13,6 +13,19 @@ trait ReportSubmissionTrait
     private array $documentFileNames = [];
 
     /**
+     * @Then I search for submissions for the client I'm interacting with
+     */
+    public function iSearchForSubmissionForClientInteractingWith()
+    {
+        $this->assertInteractingWithUserIsSet();
+        $this->iAmOnAdminReportSubmissionsPage();
+
+        $clientLastName = $this->interactingWithUserDetails->getClientLastName();
+        $this->fillInField('q', $clientLastName);
+        $this->pressButton('search_submit');
+    }
+
+    /**
      * @Then I should see the case number of the user I'm interacting with
      */
     public function iShouldSeeInteractingWithCaseNumber()
@@ -24,7 +37,7 @@ trait ReportSubmissionTrait
         $submissionRow = $this->getSession()->getPage()->find('xpath', $locator);
 
         if (is_null($submissionRow)) {
-            throw new BehatException('Could not find a submission row that contained case number "%s"', $caseNumber);
+            throw new BehatException(sprintf('Could not find a submission row that contained case number "%s"', $caseNumber));
         }
     }
 
@@ -366,5 +379,17 @@ trait ReportSubmissionTrait
                 throw new BehatException("The submission ($caseNumber) does not appear in the pending column when it should appear");
             }
         }
+    }
+
+    /**
+     * @Then I should see Lay High Assets report for the next reporting period
+     */
+    public function iShouldSeeLayHighAssetsReportForTheNextReportingPeriod()
+    {
+        $this->clickLink('Continue');
+        $this->assertStringContainsString(
+            'Money transfers',
+            $this->getSession()->getPage()->getContent(),
+            'Comparing expected section against sections visible');
     }
 }

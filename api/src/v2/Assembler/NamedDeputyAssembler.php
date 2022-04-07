@@ -25,13 +25,9 @@ class NamedDeputyAssembler
 
     public function assembleFromOrgDeputyshipDto(OrgDeputyshipDto $dto)
     {
-        $deputyNumber = $dto->getDeputyAddressNumber() ?
-            sprintf('%s-%s', $dto->getDeputyNumber(), $dto->getDeputyAddressNumber()) :
-            $dto->getDeputyNumber();
-
         $namedDeputy = (new NamedDeputy())
             ->setEmail1($dto->getDeputyEmail())
-            ->setDeputyNo($deputyNumber)
+            ->setDeputyUid($dto->getDeputyUid())
             ->setFirstname($dto->getDeputyFirstname() ?: null)
             ->setLastname($dto->getDeputyLastname())
             ->setAddress1($dto->getDeputyAddress1())
@@ -39,12 +35,7 @@ class NamedDeputyAssembler
             ->setAddress3($dto->getDeputyAddress3())
             ->setAddress4($dto->getDeputyAddress4())
             ->setAddress5($dto->getDeputyAddress5())
-            ->setAddressPostcode($dto->getDeputyPostcode())
-            ->setDeputyType($dto->getDeputyType());
-
-        if ($dto->getDeputyAddressNumber()) {
-            $namedDeputy->setDepAddrNo($dto->getDeputyAddressNumber());
-        }
+            ->setAddressPostcode($dto->getDeputyPostcode());
 
         return $namedDeputy;
     }

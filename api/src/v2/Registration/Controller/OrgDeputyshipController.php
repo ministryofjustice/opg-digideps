@@ -6,8 +6,9 @@ namespace App\v2\Registration\Controller;
 
 use App\Service\DataCompression;
 use App\v2\Controller\ControllerTrait;
-use App\v2\Registration\Assembler\CasRecToOrgDeputyshipDtoAssembler;
+use App\v2\Registration\Assembler\SiriusToOrgDeputyshipDtoAssembler;
 use App\v2\Registration\Uploader\OrgDeputyshipUploader;
+use RuntimeException;
 use Sensio\Bundle\FrameworkExtraBundle\Configuration\Security;
 use Symfony\Bundle\FrameworkBundle\Controller\AbstractController;
 use Symfony\Component\HttpFoundation\Request;
@@ -21,7 +22,7 @@ class OrgDeputyshipController extends AbstractController
     /** @var OrgDeputyshipUploader */
     private $uploader;
 
-    /** @var CasRecToOrgDeputyshipDtoAssembler */
+    /** @var SiriusToOrgDeputyshipDtoAssembler */
     private $assembler;
 
     /** @var DataCompression */
@@ -32,7 +33,7 @@ class OrgDeputyshipController extends AbstractController
      */
     public function __construct(
         OrgDeputyshipUploader $orgDeputyshipUploader,
-        CasRecToOrgDeputyshipDtoAssembler $assembler,
+        SiriusToOrgDeputyshipDtoAssembler $assembler,
         DataCompression $dataCompression
     ) {
         $this->uploader = $orgDeputyshipUploader;
@@ -50,10 +51,10 @@ class OrgDeputyshipController extends AbstractController
         $rowCount = count($decompressedData);
 
         if (!$rowCount) {
-            throw new \RuntimeException('No records received from the API');
+            throw new RuntimeException('No records received from the API');
         }
         if ($rowCount > self::MAX_UPLOAD_BATCH_SIZE) {
-            throw new \RuntimeException(sprintf('Max %s records allowed in a single bulk insert', self::MAX_UPLOAD_BATCH_SIZE));
+            throw new RuntimeException(sprintf('Max %s records allowed in a single bulk insert', self::MAX_UPLOAD_BATCH_SIZE));
         }
 
         $dtos = $this->assembler->assembleMultipleDtosFromArray($decompressedData);

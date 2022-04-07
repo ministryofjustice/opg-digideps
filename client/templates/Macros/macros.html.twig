@@ -539,6 +539,26 @@ C13.7,13.2,13.2,13.7,12.5,13.7z M12.5,0.5c-6.6,0-12,5.4-12,12s5.4,12,12,12s12-5.
             </div>
         {% endif %}
 
+        {% if formObject.address4 is defined %}
+            <div class="govuk-form-group">
+                {% set formAddress4Label = translationPrefix ~ 'address4.label' %}
+                {% set formAddress4Context = translationPrefix ~ 'address4.context' %}
+                {{ formAddress4Label | trans({}, transDomain) }}<span
+                    class="govuk-visually-hidden">{{ formAddress4Context | trans({}, transDomain) }}</span>
+                {{ form_input(formObject.address4, '') }}
+            </div>
+        {% endif %}
+
+        {% if formObject.address5 is defined %}
+            <div class="govuk-form-group">
+                {% set formAddress5Label = translationPrefix ~ 'address5.label' %}
+                {% set formAddress5Context = translationPrefix ~ 'address5.context' %}
+                {{ formAddress5Label | trans({}, transDomain) }}<span
+                    class="govuk-visually-hidden">{{ formAddress5Context | trans({}, transDomain) }}</span>
+                {{ form_input(formObject.address5, '') }}
+            </div>
+        {% endif %}
+
         {% if formObject.postcode is defined %}
             <div class="govuk-form-group">
                 {% set formPostcodeLabel = translationPrefix ~ 'postcode.label' %}

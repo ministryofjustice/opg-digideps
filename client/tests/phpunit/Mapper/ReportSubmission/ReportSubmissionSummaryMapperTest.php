@@ -59,7 +59,7 @@ class ReportSubmissionSummaryMapperTest extends TestCase
             ->restClient
             ->expects($this->once())
             ->method('get')
-            ->with('/report-submission/casrec_data?orderBy=id&order=DESC', $this->anything())
+            ->with('/report-submission/pre-registration-data?orderBy=id&order=DESC', $this->anything())
             ->willReturn('returned-from-rest-client');
     }
 
@@ -78,11 +78,11 @@ class ReportSubmissionSummaryMapperTest extends TestCase
      */
     private function buildExpectedUrl()
     {
-        return sprintf('/report-submission/casrec_data?%s', http_build_query([
+        return sprintf('/report-submission/pre-registration-data?%s', http_build_query([
             'orderBy' => $this->query->getOrderBy(),
             'order' => $this->query->getSortOrder(),
             'fromDate' => '2001-01-01',
-            'toDate' => '2001-01-02'
+            'toDate' => '2001-01-02',
         ]));
     }
 

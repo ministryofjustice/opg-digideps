@@ -4,6 +4,7 @@ declare(strict_types=1);
 
 namespace App\Tests\Behat\v2\Common;
 
+use App\Entity\User;
 use App\Tests\Behat\BehatException;
 
 trait AuthTrait
@@ -37,6 +38,7 @@ trait AuthTrait
         $this->visitAdminPath('/login');
         $this->fillField('login_email', $email);
         $this->fillField('login_password', 'DigidepsPass1234');
+
         $this->pressButton('login_login');
 
         $this->loggedInUserDetails = $this->getUserDetailsByEmail($email);
@@ -129,5 +131,48 @@ trait AuthTrait
         $this->assertInteractingWithUserIsSet();
 
         $this->loginToFrontendAs($this->interactingWithUserDetails->getUserEmail());
+    }
+
+    /**
+     * @When /^I click the (admin |)(activation|password reset) link in the email sent to my address "(.+)"$/
+     */
+    public function clickActivationOrPasswordResetLinkInEmail($admin, $pageType, $email)
+    {
+        $user = $this->em->getRepository(User::class)->findOneBy(['email' => $email]);
+
+        $token = $user->getRegistrationToken();
+        $this->visitAdminPath('/logout');
+
+        $page = 'activation' === $pageType ? 'activate' : 'password-reset';
+
+        if ('' === $admin || false === $admin) {
+            $this->visitPath("/user/$page/$token");
+        } else {
+            $this->visitAdminPath("/user/$page/$token");
+        }
+    }
+
+    public function assertSuperAdminLoggedIn()
+    {
+        $this->assertRoleIs(USER::ROLE_SUPER_ADMIN, $this->loggedInUserDetails->getUserRole());
+    }
+
+    public function assertAdminLoggedIn()
+    {
+        $this->assertRoleIs(USER::ROLE_ADMIN, $this->loggedInUserDetails->getUserRole());
+    }
+
+    public function assertAdminManagerLoggedIn()
+    {
+        $this->assertRoleIs(USER::ROLE_ADMIN_MANAGER, $this->loggedInUserDetails->getUserRole());
+    }
+
+    private function assertRoleIs(string $expectedRole, string $actualRole)
+    {
+        $isExpectedRole = $actualRole === $expectedRole;
+
+        if (!$isExpectedRole) {
+            throw new BehatException(sprintf('Logged in user role is "%s", should be %s', $expectedRole, $actualRole));
+        }
     }
 }

@@ -47,8 +47,14 @@
                 {% if report.client.address2 is not empty %}
                     {{ report.client.address2 }}<br/>
                 {% endif %}
-                {% if report.client.county is not empty %}
-                    {{ report.client.county }}<br/>
+                {% if report.client.address3 is not empty %}
+                    {{ report.client.address3 }}<br/>
+                {% endif %}
+                {% if report.client.address4 is not empty %}
+                    {{ report.client.address4 }}<br/>
+                {% endif %}
+                {% if report.client.address5 is not empty %}
+                    {{ report.client.address5 }}<br/>
                 {% endif %}
                 {% if report.client.postcode is not empty %}
                     {{ report.client.postcode }}<br/>
@@ -119,8 +125,8 @@
     text: contents,
 }) }}
 
-{% if form.deputyFullNameAccurateInCasrec is defined %}
-    {{ checklist_checkbox(form.deputyFullNameAccurateInCasrec) }}
+{% if form.deputyFullNameAccurateInSirius is defined %}
+    {{ checklist_checkbox(form.deputyFullNameAccurateInSirius) }}
 
     <div class="govuk-inset-text govuk-!-margin-top-2">
         <strong>{{ (page ~ '.deputysFullName') | trans }}:</strong> {{ deputy.fullName }}

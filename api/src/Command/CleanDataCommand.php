@@ -3,7 +3,7 @@
 namespace App\Command;
 
 use App\Entity\User;
-use App\Service\CasrecVerificationService;
+use App\Service\PreRegistrationVerificationService;
 use Doctrine\ORM\EntityManagerInterface;
 use Symfony\Component\Console\Command\Command;
 use Symfony\Component\Console\Input\InputInterface;
@@ -23,10 +23,10 @@ class CleanDataCommand extends Command
     /** @var EntityManagerInterface */
     private $em;
 
-    /** @var CasrecVerificationService */
+    /** @var PreRegistrationVerificationService */
     private $verificationService;
 
-    public function __construct(EntityManagerInterface $em, CasrecVerificationService $verificationService)
+    public function __construct(EntityManagerInterface $em, PreRegistrationVerificationService $verificationService)
     {
         $this->em = $em;
         $this->verificationService = $verificationService;
@@ -78,7 +78,7 @@ class CleanDataCommand extends Command
                 $output->writeln(" deputyNo set to $deputyNo ");
                 ++$fixed;
             } catch (\Throwable $e) {
-                $error = 400 === $e->getCode() ? 'CASREC match not found' : $e->getMessage();
+                $error = 400 === $e->getCode() ? 'PreRegistration match not found' : $e->getMessage();
                 $output->writeln(' ERROR: '.$error);
                 ++$mismatch;
             }

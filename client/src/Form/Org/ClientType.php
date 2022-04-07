@@ -6,10 +6,9 @@ use Symfony\Component\Form\AbstractType;
 use Symfony\Component\Form\Extension\Core\Type as FormTypes;
 use Symfony\Component\Form\FormBuilderInterface;
 use Symfony\Component\OptionsResolver\OptionsResolver;
-use Symfony\Component\Validator\Constraints\Email;
 
 /**
- * PA - edit client
+ * PA - edit client.
  *
  * Similar to edit client for Lay, but too many differences therefore easier to replicate then inherit
  * and share only a few fields
@@ -29,9 +28,10 @@ class ClientType extends AbstractType
             ->add('email', FormTypes\EmailType::class)
             ->add('address', FormTypes\TextType::class)
             ->add('address2', FormTypes\TextType::class)
+            ->add('address3', FormTypes\TextType::class)
+            ->add('address4', FormTypes\TextType::class)
+            ->add('address5', FormTypes\TextType::class)
             ->add('postcode', FormTypes\TextType::class)
-
-            ->add('county', FormTypes\TextType::class)
             ->add('phone', FormTypes\TextType::class)
             ->add('id', FormTypes\HiddenType::class)
             ->add('save', FormTypes\SubmitType::class);

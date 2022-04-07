@@ -1,0 +1,16 @@
+{% extends '@App/Layouts/application.html.twig' %}
+
+{% trans_default_domain "admin-fixtures" %}
+
+{% block htmlTitle %}Data Fixtures - Pre-registration{% endblock %}
+{% block pageTitle %}Pre-registration{% endblock %}
+{% block supportTitleTop %}Data Fixtures{% endblock %}
+
+{% block pageContent %}
+    {{ form_start(form, {attr: {novalidate: 'novalidate' }}) }}
+    {{ form_select(form.deputyType, 'preRegistration.deputyType') }}
+    {{ form_select(form.reportType, 'preRegistration.reportType') }}
+    {{ form_select(form.createCoDeputy, 'preRegistration.createCoDeputy') }}
+    {{ form_submit(form.submit, 'preRegistration.submit') }}
+    {{ form_end(form) }}
+{% endblock %}

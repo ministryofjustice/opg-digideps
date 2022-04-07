@@ -1,5 +1,5 @@
-@report-submissions @v2
-Feature: Report submissions dashboard
+@report-submissions @v2 @v2_reporting_1
+Feature: Submitting a report
 
     @lay-pfa-high-completed
     Scenario: Submitting a completed report

@@ -29,8 +29,14 @@
                     {% if client.address2 is not empty %}
                         <div itemprop="addressLocality">{{ client.address2 }}</div>
                     {% endif %}
-                    {% if client.county is not empty %}
-                        <div itemprop="addressRegion">{{ client.county }}</div>
+                    {% if client.address3 is not empty %}
+                        <div itemprop="addressRegion">{{ client.address3 }}</div>
+                    {% endif %}
+                    {% if client.address4 is not empty %}
+                        <div itemprop="addressRegion">{{ client.address4 }}</div>
+                    {% endif %}
+                    {% if client.address5 is not empty %}
+                        <div itemprop="addressRegion">{{ client.address5 }}</div>
                     {% endif %}
                     {% if client.postcode is not empty %}
                         <div itemprop="postalCode" class="behat-region-client-address-postcode">{{ client.postcode }}</div>

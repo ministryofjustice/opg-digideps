@@ -4,12 +4,10 @@ declare(strict_types=1);
 
 namespace App\v2\Registration\Uploader;
 
-use App\Entity\CasRec;
 use App\Entity\Client;
 use App\Entity\NamedDeputy;
 use App\Entity\Organisation;
 use App\Entity\Report\Report;
-use App\Entity\User;
 use App\Exception\ClientIsArchivedException;
 use App\Factory\OrganisationFactory;
 use App\Service\OrgService;
@@ -85,17 +83,6 @@ class OrgDeputyshipUploader
 
         $this->removeDuplicateIds();
 
-        $roleType = User::TYPE_PA;
-        // DepAddr No column is missing from PA CSV uploads
-        foreach ($deputyshipDtos as $deputyshipDto) {
-            if (null != $deputyshipDto->getDeputyAddressNumber()) {
-                $roleType = User::TYPE_PROF;
-                break;
-            }
-        }
-
-        $uploadResults['roleType'] = $roleType;
-        $uploadResults['source'] = CasRec::CASREC_SOURCE;
         $uploadResults['added'] = $this->added;
         $uploadResults['updated'] = $this->updated;
 
@@ -104,21 +91,12 @@ class OrgDeputyshipUploader
 
     private function handleNamedDeputy(OrgDeputyshipDto $dto)
     {
-        $deputyNumber = $dto->getDeputyAddressNumber() ?
-            sprintf('%s-%s', $dto->getDeputyNumber(), $dto->getDeputyAddressNumber()) :
-            $dto->getDeputyNumber();
-
         /** @var NamedDeputy $namedDeputy */
         $namedDeputy = ($this->em->getRepository(NamedDeputy::class))->findOneBy(
             [
-                'deputyNo' => $deputyNumber,
+                'deputyUid' => $dto->getDeputyUid(),
             ]
         );
-
-        // Temporary fix to generate dep adr numbers for all deps - remove once CSVs run
-        if (!is_null($namedDeputy) && $dto->getDeputyAddressNumber()) {
-            $namedDeputy->setDepAddrNo($dto->getDeputyAddressNumber());
-        }
 
         if (is_null($namedDeputy)) {
             $namedDeputy = $this->namedDeputyAssembler->assembleFromOrgDeputyshipDto($dto);
@@ -134,9 +112,7 @@ class OrgDeputyshipUploader
                 ->setAddress3($dto->getDeputyAddress3())
                 ->setAddress4($dto->getDeputyAddress4())
                 ->setAddress5($dto->getDeputyAddress5())
-                ->setAddressPostcode($dto->getDeputyPostcode())
-                ->setDepAddrNo($dto->getDeputyAddressNumber())
-                ->setDeputyNo($deputyNumber);
+                ->setAddressPostcode($dto->getDeputyPostcode());
 
             $this->em->persist($namedDeputy);
             $this->em->flush();
@@ -253,7 +229,7 @@ class OrgDeputyshipUploader
     {
         return
             null === $client->getNamedDeputy() ||
-            $client->getNamedDeputy()->getDeputyNo() !== $namedDeputy->getDeputyNo();
+            $client->getNamedDeputy()->getDeputyUid() !== $namedDeputy->getDeputyUid();
     }
 
     private function handleReport(OrgDeputyshipDto $dto)
