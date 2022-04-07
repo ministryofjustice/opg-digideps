@@ -35,10 +35,10 @@ class SiriusToOrgDeputyshipDtoAssembler
     {
         $reportType = $this->reportUtils->determineReportType($row['ReportType'], $row['OrderType'], $row['DeputyType']);
 
-        $reportEndDate = $row['LastReportDay'] ? DateTime::createFromFormat('d/m/Y', $row['LastReportDay']) : null;
+        $reportEndDate = $this->processDate($row['LastReportDay']);
         $reportStartDate = $reportEndDate ? $this->reportUtils->generateReportStartDateFromEndDate($reportEndDate) : null;
-        $madeDate = $row['MadeDate'] ? DateTime::createFromFormat('d/m/Y', $row['MadeDate']) : null;
-        $dateOfBirth = $row['ClientDateOfBirth'] ? DateTime::createFromFormat('d/m/Y', $row['ClientDateOfBirth']) : null;
+        $madeDate = $this->processDate($row['MadeDate']);
+        $dateOfBirth = $this->processDate($row['ClientDateOfBirth']);
 
         return (new OrgDeputyshipDto())
             ->setCaseNumber($row['Case'])
@@ -65,5 +65,20 @@ class SiriusToOrgDeputyshipDtoAssembler
             ->setReportStartDate($reportStartDate)
             ->setReportEndDate($reportEndDate)
             ->setReportType($reportType);
+    }
+
+    public function processDate(string $date): ?DateTime
+    {
+        if ($date) {
+            $result = DateTime::createFromFormat('d/m/Y', $date);
+
+            if (false != $result) {
+                return $result;
+            } else {
+                return null;
+            }
+        }
+
+        return null;
     }
 }
