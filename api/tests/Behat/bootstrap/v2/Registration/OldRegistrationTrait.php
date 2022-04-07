@@ -16,7 +16,7 @@ trait OldRegistrationTrait
      */
     public function theSelfRegistrationLookupTableIsEmpty()
     {
-        $query = 'DELETE FROM casrec';
+        $query = 'DELETE FROM preregistration';
         $command = sprintf('psql %s -c "%s"', self::$dbName, $query);
         exec($command);
     }
