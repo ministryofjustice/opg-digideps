@@ -1,4 +1,4 @@
-@report-submissions @attaching-further-documents @v2 @v2_reporting_1
+@report-submissions @attaching-further-documents @v2 @v2_sequential
 Feature: Attaching Further Documents
 
 
