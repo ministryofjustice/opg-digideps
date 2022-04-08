@@ -93,7 +93,7 @@ workflows:
           requires: [integration tests reset DB]
           filters: { branches: { ignore: [main] } }
           task_name: integration_test_v2
-          override: "sh,./tests/Behat/run-tests.sh,--tags,@v2_reporting_1,--profile,v2-tests-goutte"
+          override: "sh,./tests/Behat/run-tests-parallel.sh,--tags,@v2_reporting_1,--profile,v2-tests-goutte"
           timeout: 1200
 
       - run-task:
@@ -101,7 +101,7 @@ workflows:
           requires: [integration tests reset DB]
           filters: { branches: { ignore: [main] } }
           task_name: integration_test_v2
-          override: "sh,./tests/Behat/run-tests.sh,--tags,@v2_reporting_2,--profile,v2-tests-goutte"
+          override: "sh,./tests/Behat/run-tests-parallel.sh,--tags,@v2_reporting_2,--profile,v2-tests-goutte"
           timeout: 1200
 
       - run-task:
@@ -109,7 +109,7 @@ workflows:
           requires: [integration tests reset DB]
           filters: { branches: { ignore: [main] } }
           task_name: integration_test_v2
-          override: "sh,./tests/Behat/run-tests.sh,--tags,@v2_admin,--profile,v2-tests-goutte"
+          override: "sh,./tests/Behat/run-tests-parallel.sh,--tags,@v2_admin,--profile,v2-tests-goutte"
           timeout: 1200
 
       - run-task:

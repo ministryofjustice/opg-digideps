@@ -6,4 +6,4 @@ export APP_ENV=dev
 
 confd -onetime -backend env
 #su-exec www-data php app/console doctrine:fixtures:load --no-interaction
-./vendor/bin/behat --config=./tests/Behat/behat.yml  --stop-on-failure $@
+./vendor/bin/behat --config=./tests/Behat/behat.yml  --stop-on-failure --profile v2-tests-goutte $@
