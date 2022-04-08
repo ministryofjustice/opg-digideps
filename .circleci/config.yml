@@ -89,11 +89,7 @@ workflows:
 
       - run-task:
           name: integration tests v2 reports 1
-          requires:
-            [
-              integration tests reset DB,
-              scale up services for integration tests,
-            ]
+          requires: [integration tests reset DB]
           filters: { branches: { ignore: [main] } }
           task_name: integration_test_v2
           override: "sh,./tests/Behat/run-test.sh,--tags,@v2_reporting_1,--profile,v2-tests-goutte"
@@ -101,11 +97,7 @@ workflows:
 
       - run-task:
           name: integration tests v2 reports 2
-          requires:
-            [
-              integration tests reset DB,
-              scale up services for integration tests,
-            ]
+          requires: [integration tests reset DB]
           filters: { branches: { ignore: [main] } }
           task_name: integration_test_v2
           override: "sh,./tests/Behat/run-tests.sh,--tags,@v2_reporting_2,--profile,v2-tests-goutte"
@@ -113,11 +105,7 @@ workflows:
 
       - run-task:
           name: integration tests v2 admin
-          requires:
-            [
-              integration tests reset DB,
-              scale up services for integration tests,
-            ]
+          requires: [integration tests reset DB]
           filters: { branches: { ignore: [main] } }
           task_name: integration_test_v2
           override: "sh,./tests/Behat/run-tests.sh,--tags,@v2_admin,--profile,v2-tests-goutte"
@@ -125,11 +113,7 @@ workflows:
 
       - run-task:
           name: integration tests sequential only
-          requires:
-            [
-              integration tests reset DB,
-              scale up services for integration tests,
-            ]
+          requires: [integration tests reset DB]
           filters: { branches: { ignore: [main] } }
           task_name: integration_test_v2
           override: "sh,./tests/Behat/run-tests.sh,--tags,@v2_sequential,--profile,v2-tests-goutte"
@@ -137,15 +121,13 @@ workflows:
 
       - terraform-plan-all:
           name: plan all terraform environments
-          requires:
-            [protect branch workspace, scale up services for integration tests]
+          requires: [protect branch workspace]
           filters: { branches: { ignore: [main] } }
           tf_tier: environment
 
       - terraform-plan-all:
           name: plan all shared terraform environments
-          requires:
-            [protect branch workspace, scale up services for integration tests]
+          requires: [protect branch workspace]
           filters: { branches: { ignore: [main] } }
           tf_tier: shared
 
