@@ -68,11 +68,11 @@ workflows:
           requires: [terraform apply]
           filters: { branches: { ignore: [main] } }
 
-      - scale-services:
-          name: scale up services for integration tests
-          replicas: "2"
-          requires: [terraform apply]
-          filters: { branches: { ignore: [main] } }
+      #      - scale-services:
+      #          name: scale up services for integration tests
+      #          replicas: "2"
+      #          requires: [terraform apply]
+      #          filters: { branches: { ignore: [main] } }
 
       #      - pa11y-ci:
       #          name: accessibility test
@@ -96,7 +96,7 @@ workflows:
             ]
           filters: { branches: { ignore: [main] } }
           task_name: integration_test_v2
-          override: "sh,./tests/Behat/run-tests-parallel.sh,--tags,@v2_reporting_1"
+          override: "sh,./tests/Behat/run-test.sh,--tags,@v2_reporting_1,--profile,v2-tests-goutte"
           timeout: 1200
 
       - run-task:
@@ -108,7 +108,7 @@ workflows:
             ]
           filters: { branches: { ignore: [main] } }
           task_name: integration_test_v2
-          override: "sh,./tests/Behat/run-tests-parallel.sh,--tags,@v2_reporting_2"
+          override: "sh,./tests/Behat/run-tests.sh,--tags,@v2_reporting_2,--profile,v2-tests-goutte"
           timeout: 1200
 
       - run-task:
@@ -120,7 +120,7 @@ workflows:
             ]
           filters: { branches: { ignore: [main] } }
           task_name: integration_test_v2
-          override: "sh,./tests/Behat/run-tests-parallel.sh,--tags,@v2_admin"
+          override: "sh,./tests/Behat/run-tests.sh,--tags,@v2_admin,--profile,v2-tests-goutte"
           timeout: 1200
 
       - run-task:
