@@ -92,7 +92,7 @@ workflows:
           requires: [integration tests reset DB]
           filters: { branches: { ignore: [main] } }
           task_name: integration_test_v2
-          override: "sh,./tests/Behat/run-test.sh,--tags,@v2_reporting_1,--profile,v2-tests-goutte"
+          override: "sh,./tests/Behat/run-tests.sh,--tags,@v2_reporting_1,--profile,v2-tests-goutte"
           timeout: 1200
 
       - run-task:
@@ -131,17 +131,17 @@ workflows:
           filters: { branches: { ignore: [main] } }
           tf_tier: shared
 
-      - scale-services:
-          name: scale down services for integration tests
-          replicas: "1"
-          requires:
-            [
-              integration tests v2 reports 1,
-              integration tests v2 reports 2,
-              integration tests v2 admin,
-              integration tests sequential only,
-            ]
-          filters: { branches: { ignore: [main] } }
+      #      - scale-services:
+      #          name: scale down services for integration tests
+      #          replicas: "1"
+      #          requires:
+      #            [
+      #              integration tests v2 reports 1,
+      #              integration tests v2 reports 2,
+      #              integration tests v2 admin,
+      #              integration tests sequential only,
+      #            ]
+      #          filters: { branches: { ignore: [main] } }
 
       - slack/approval-notification:
           name: branch complete notification

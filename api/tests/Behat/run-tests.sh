@@ -5,5 +5,5 @@ export BEHAT_PARAMS="{\"extensions\": {\"Behat\\\\MinkExtension\": {\"base_url\"
 export APP_ENV=dev
 
 confd -onetime -backend env
-su-exec www-data php app/console doctrine:fixtures:load --no-interaction
+#su-exec www-data php app/console doctrine:fixtures:load --no-interaction
 ./vendor/bin/behat --config=./tests/Behat/behat.yml  --stop-on-failure $@
