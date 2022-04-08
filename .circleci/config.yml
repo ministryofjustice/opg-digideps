@@ -6,6 +6,7 @@ workflows:
       - build:
           name: build pr
           filters: { branches: { ignore: [main] } }
+          ecr_scan_notify: "False"
 
       - cancel_redundant_builds:
           name: cancel redundant builds
