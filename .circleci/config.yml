@@ -69,16 +69,16 @@ workflows:
           requires: [terraform apply]
           filters: { branches: { ignore: [main] } }
 
-      #      - scale-services:
-      #          name: scale up services for integration tests
-      #          replicas: "2"
-      #          requires: [terraform apply]
-      #          filters: { branches: { ignore: [main] } }
+      - scale-services:
+          name: scale up services for integration tests
+          replicas: "3"
+          requires: [terraform apply]
+          filters: { branches: { ignore: [main] } }
 
-      #      - pa11y-ci:
-      #          name: accessibility test
-      #          requires: [ apply environment ]
-      #          filters: { branches: { ignore: [ main ] } }
+      #            - pa11y-ci:
+      #                name: accessibility test
+      #                requires: [ apply environment ]
+      #                filters: { branches: { ignore: [ main ] } }
 
       - run-task:
           name: integration tests reset DB
@@ -90,7 +90,11 @@ workflows:
 
       - run-task:
           name: integration tests v2 reports 1
-          requires: [integration tests reset DB]
+          requires:
+            [
+              integration tests reset DB,
+              scale up services for integration tests,
+            ]
           filters: { branches: { ignore: [main] } }
           task_name: integration_test_v2
           override: "sh,./tests/Behat/run-tests-parallel.sh,--tags,@v2_reporting_1,--profile,v2-tests-goutte"
@@ -98,7 +102,11 @@ workflows:
 
       - run-task:
           name: integration tests v2 reports 2
-          requires: [integration tests reset DB]
+          requires:
+            [
+              integration tests reset DB,
+              scale up services for integration tests,
+            ]
           filters: { branches: { ignore: [main] } }
           task_name: integration_test_v2
           override: "sh,./tests/Behat/run-tests-parallel.sh,--tags,@v2_reporting_2,--profile,v2-tests-goutte"
@@ -106,7 +114,11 @@ workflows:
 
       - run-task:
           name: integration tests v2 admin
-          requires: [integration tests reset DB]
+          requires:
+            [
+              integration tests reset DB,
+              scale up services for integration tests,
+            ]
           filters: { branches: { ignore: [main] } }
           task_name: integration_test_v2
           override: "sh,./tests/Behat/run-tests-parallel.sh,--tags,@v2_admin,--profile,v2-tests-goutte"
@@ -114,7 +126,11 @@ workflows:
 
       - run-task:
           name: integration tests sequential only
-          requires: [integration tests reset DB]
+          requires:
+            [
+              integration tests reset DB,
+              scale up services for integration tests,
+            ]
           filters: { branches: { ignore: [main] } }
           task_name: integration_test_v2
           override: "sh,./tests/Behat/run-tests.sh,--tags,@v2_sequential,--profile,v2-tests-goutte"
@@ -132,17 +148,17 @@ workflows:
           filters: { branches: { ignore: [main] } }
           tf_tier: shared
 
-      #      - scale-services:
-      #          name: scale down services for integration tests
-      #          replicas: "1"
-      #          requires:
-      #            [
-      #              integration tests v2 reports 1,
-      #              integration tests v2 reports 2,
-      #              integration tests v2 admin,
-      #              integration tests sequential only,
-      #            ]
-      #          filters: { branches: { ignore: [main] } }
+      - scale-services:
+          name: scale down services for integration tests
+          replicas: "1"
+          requires:
+            [
+              integration tests v2 reports 1,
+              integration tests v2 reports 2,
+              integration tests v2 admin,
+              integration tests sequential only,
+            ]
+          filters: { branches: { ignore: [main] } }
 
       - slack/approval-notification:
           name: branch complete notification
