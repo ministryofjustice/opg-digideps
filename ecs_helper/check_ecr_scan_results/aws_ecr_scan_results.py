@@ -210,7 +210,7 @@ def main():
     if args.print_to_terminal:
         print(report)
 
-    if args.post_to_slack and args.slack_webhook is not None:
+    if args.post_to_slack == "True" and args.slack_webhook is not None:
         work.post_to_slack(
             args.slack_webhook,
             report,

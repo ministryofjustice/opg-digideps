@@ -6,6 +6,7 @@ workflows:
       - build:
           name: build pr
           filters: { branches: { ignore: [main] } }
+          ecr_scan_notify: "False"
 
       - cancel_redundant_builds:
           name: cancel redundant builds
@@ -70,14 +71,14 @@ workflows:
 
       - scale-services:
           name: scale up services for integration tests
-          replicas: "5"
+          replicas: "6"
           requires: [terraform apply]
           filters: { branches: { ignore: [main] } }
 
-      #      - pa11y-ci:
-      #          name: accessibility test
-      #          requires: [ apply environment ]
-      #          filters: { branches: { ignore: [ main ] } }
+      #            - pa11y-ci:
+      #                name: accessibility test
+      #                requires: [ apply environment ]
+      #                filters: { branches: { ignore: [ main ] } }
 
       - run-task:
           name: integration tests reset DB
@@ -96,7 +97,7 @@ workflows:
             ]
           filters: { branches: { ignore: [main] } }
           task_name: integration_test_v2
-          override: "sh,./tests/Behat/run-tests-parallel.sh,--tags,@v2_reporting_1"
+          override: "sh,./tests/Behat/run-tests-parallel.sh,--tags,@v2_reporting_1,--profile,v2-tests-goutte"
           timeout: 1200
 
       - run-task:
@@ -108,7 +109,7 @@ workflows:
             ]
           filters: { branches: { ignore: [main] } }
           task_name: integration_test_v2
-          override: "sh,./tests/Behat/run-tests-parallel.sh,--tags,@v2_reporting_2"
+          override: "sh,./tests/Behat/run-tests-parallel.sh,--tags,@v2_reporting_2,--profile,v2-tests-goutte"
           timeout: 1200
 
       - run-task:
@@ -120,7 +121,7 @@ workflows:
             ]
           filters: { branches: { ignore: [main] } }
           task_name: integration_test_v2
-          override: "sh,./tests/Behat/run-tests-parallel.sh,--tags,@v2_admin"
+          override: "sh,./tests/Behat/run-tests-parallel.sh,--tags,@v2_admin,--profile,v2-tests-goutte"
           timeout: 1200
 
       - run-task:
@@ -254,7 +255,7 @@ workflows:
 
       - scale-services:
           name: scale up services for integration tests
-          replicas: "5"
+          replicas: "6"
           profile: digideps-ci-pre
           tf_workspace: integration
           requires: [apply integration]
@@ -444,7 +445,7 @@ workflows:
           tf_command: apply
       - scale-services:
           name: scale up services for integration tests
-          replicas: "5"
+          replicas: "6"
           profile: digideps-ci-pre
           tf_workspace: integration
           requires: [apply integration]

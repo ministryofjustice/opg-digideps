@@ -78,7 +78,9 @@ $(document).ready(function () {
   tableMultiSelect()
 
   // Detached details/summary
-  const $detachedDetails = document.querySelectorAll('[data-module="opg-detached-details"]')
+  const $detachedDetails = document.querySelectorAll(
+    '[data-module="opg-detached-details"]'
+  )
   nodeListForEach($detachedDetails, function ($el) {
     new DetachedDetails($el).init()
   })
@@ -87,7 +89,9 @@ $(document).ready(function () {
   const showHideContent = new ShowHideContent()
   showHideContent.init()
 
-  const $togglers = document.querySelectorAll('[data-module="opg-button-toggler"]')
+  const $togglers = document.querySelectorAll(
+    '[data-module="opg-button-toggler"]'
+  )
 
   if ($togglers !== null) {
     nodeListForEach($togglers, function ($el) {
@@ -101,15 +105,23 @@ $(document).ready(function () {
     new MOJButtonMenu().init($menuButtons)
   }
 
-  const $submitButtons = document.querySelectorAll('[data-module="opg-toggleable-submit"]')
+  const $submitButtons = document.querySelectorAll(
+    '[data-module="opg-toggleable-submit"]'
+  )
 
   if ($submitButtons !== null) {
     $submitButtons.forEach(function ($el) {
       $el.addEventListener('click', function ($e) {
-        $e.target.classList.add('opg-submit-link--disabled', 'govuk-button--disabled')
+        $e.target.classList.add(
+          'opg-submit-link--disabled',
+          'govuk-button--disabled'
+        )
 
         setTimeout(function () {
-          $e.target.classList.remove('opg-submit-link--disabled', 'govuk-button--disabled')
+          $e.target.classList.remove(
+            'opg-submit-link--disabled',
+            'govuk-button--disabled'
+          )
         }, 3000)
       })
     })
@@ -143,5 +155,5 @@ $(document).ready(function () {
 GOVUKFrontend.initAll()
 
 // Polyfill elements with position:sticky
-var elements = document.querySelectorAll('.opg-sticky-menu')
+const elements = document.querySelectorAll('.opg-sticky-menu')
 Stickyfill.add(elements)

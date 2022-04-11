@@ -14,7 +14,7 @@ Feature: Synchronising Checklists with Sirius
         And I visit the checklist page for the previously submitted report for the user I am interacting with
         Then the checklist status should be 'synced'
 
-    @super-admin @lay-health-welfare-submitted @acs
+    @super-admin @lay-health-welfare-submitted
     Scenario: Reports associated with a discharged deputy (deleted client) successfully syncs with Sirius
         Given a Lay Deputy has submitted a health and welfare report
         And the deputy I am interacting with has been discharged
