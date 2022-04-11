@@ -1,7 +1,9 @@
 /* globals $, ga */
-var Ga = function (options) {
+const Ga = function (options) {
   options = options || {}
-  this.timeout = Object.prototype.hasOwnProperty.call(options, 'timeout') ? options.timeout : 250
+  this.timeout = Object.prototype.hasOwnProperty.call(options, 'timeout')
+    ? options.timeout
+    : 250
 }
 
 /**
@@ -13,11 +15,11 @@ var Ga = function (options) {
  * @param integer timeoutMs milliseconds
  */
 Ga.prototype.trackDownloadableLink = function (element) {
-  var _this = this
+  const _this = this
 
   element.click(function (e) {
     e.preventDefault()
-    var link = $(e.target).attr('href')
+    const link = $(e.target).attr('href')
 
     // track page view with the "href" link
     ga('send', 'pageview', link)
