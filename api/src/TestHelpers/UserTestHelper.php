@@ -49,7 +49,7 @@ class UserTestHelper extends TestCase
         $user = (new User())
             ->setFirstname($faker->firstName())
             ->setLastname($faker->lastName())
-            ->setEmail($email ?: $faker->safeEmail())
+            ->setEmail($email ?: $faker->safeEmail().mt_rand(1, 100))
             ->setRoleName($roleName)
             ->setPhoneMain($faker->phoneNumber())
             ->setRegistrationDate(new DateTime())
