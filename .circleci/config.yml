@@ -71,7 +71,7 @@ workflows:
 
       - scale-services:
           name: scale up services for integration tests
-          replicas: "4"
+          replicas: "5"
           requires: [terraform apply]
           filters: { branches: { ignore: [main] } }
 
@@ -255,7 +255,7 @@ workflows:
 
       - scale-services:
           name: scale up services for integration tests
-          replicas: "2"
+          replicas: "5"
           profile: digideps-ci-pre
           tf_workspace: integration
           requires: [apply integration]
@@ -445,7 +445,7 @@ workflows:
           tf_command: apply
       - scale-services:
           name: scale up services for integration tests
-          replicas: "2"
+          replicas: "5"
           profile: digideps-ci-pre
           tf_workspace: integration
           requires: [apply integration]
