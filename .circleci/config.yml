@@ -71,7 +71,7 @@ workflows:
 
       - scale-services:
           name: scale up services for integration tests
-          replicas: "5"
+          replicas: "6"
           requires: [terraform apply]
           filters: { branches: { ignore: [main] } }
 
