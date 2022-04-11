@@ -138,13 +138,15 @@ workflows:
 
       - terraform-plan-all:
           name: plan all terraform environments
-          requires: [protect branch workspace]
+          requires:
+            [protect branch workspace, scale up services for integration tests]
           filters: { branches: { ignore: [main] } }
           tf_tier: environment
 
       - terraform-plan-all:
           name: plan all shared terraform environments
-          requires: [protect branch workspace]
+          requires:
+            [protect branch workspace, scale up services for integration tests]
           filters: { branches: { ignore: [main] } }
           tf_tier: shared
 
