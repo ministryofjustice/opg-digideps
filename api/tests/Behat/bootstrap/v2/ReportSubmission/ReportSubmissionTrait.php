@@ -127,11 +127,11 @@ trait ReportSubmissionTrait
         $reportPdfRow = $this->getSession()->getPage()->find('css', 'table tr:contains("DigiRep-")');
 
         if (is_null($reportPdfRow)) {
-            throw new BehatException('Cannot find a table row that contains the report PDF');
+            throw new BehatException(sprintf('Cannot find a table row that contains the report PDF. Page content: %s', $this->getSession()->getPage()->getHtml()));
         }
 
-        if (false === strpos($reportPdfRow->getHtml(), 'Success')) {
-            throw new BehatException('The document has not been synced');
+        if (false === strpos($pdfRow = $reportPdfRow->getHtml(), 'Success')) {
+            throw new BehatException(sprintf('The document has not been synced. Row HTML: %s', $pdfRow));
         }
     }
 
