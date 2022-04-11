@@ -1,10 +1,12 @@
-var KEY_ENTER = 13
-var KEY_SPACE = 32
+const KEY_ENTER = 13
+const KEY_SPACE = 32
 
 function DetachedDetails ($module) {
   this.$module = $module
   this.$summary = $module.querySelector('.govuk-details__summary')
-  this.$content = document.querySelector('#' + $module.getAttribute('aria-controls'))
+  this.$content = document.querySelector(
+    '#' + $module.getAttribute('aria-controls')
+  )
 }
 
 // Initialize component
@@ -35,20 +37,20 @@ DetachedDetails.prototype.handleClick = function (e) {
 DetachedDetails.prototype.draw = function () {
   const isOpen = this.$module.getAttribute('open') !== null
 
-  this.$summary.setAttribute('aria-expanded', (isOpen ? 'true' : 'false'))
-  this.$content.setAttribute('aria-hidden', (isOpen ? 'false' : 'true'))
+  this.$summary.setAttribute('aria-expanded', isOpen ? 'true' : 'false')
+  this.$content.setAttribute('aria-hidden', isOpen ? 'false' : 'true')
 
-  this.$content.style.display = (isOpen ? '' : 'none')
+  this.$content.style.display = isOpen ? '' : 'none'
 }
 
 /**
-* Handle cross-modal click events
-* @param {object} node element
-* @param {function} callback function
-*/
+ * Handle cross-modal click events
+ * @param {object} node element
+ * @param {function} callback function
+ */
 DetachedDetails.prototype.handleInputs = function (node, callback) {
   node.addEventListener('keypress', function (event) {
-    var target = event.target
+    const target = event.target
     // When the key gets pressed - check if it is enter or space
     if (event.keyCode === KEY_ENTER || event.keyCode === KEY_SPACE) {
       if (target.nodeName.toLowerCase() === 'summary') {
@@ -68,7 +70,7 @@ DetachedDetails.prototype.handleInputs = function (node, callback) {
 
   // Prevent keyup to prevent clicking twice in Firefox when using space key
   node.addEventListener('keyup', function (event) {
-    var target = event.target
+    const target = event.target
     if (event.keyCode === KEY_SPACE) {
       if (target.nodeName.toLowerCase() === 'summary') {
         event.preventDefault()

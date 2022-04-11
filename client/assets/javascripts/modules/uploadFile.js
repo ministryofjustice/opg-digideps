@@ -1,10 +1,10 @@
 /* globals $ */
-var UPLOAD_LIMIT = 15
+const UPLOAD_LIMIT = 15
 
 module.exports = function (containerSelector) {
   // Show in progress message
   $(containerSelector).on('click', function () {
-    var fileName = $('#report_document_upload_files').val()
+    const fileName = $('#report_document_upload_files').val()
     if (fileName) {
       $('#upload-progress').removeClass('hidden')
     }
@@ -13,12 +13,18 @@ module.exports = function (containerSelector) {
   // Show an error if file is over 15mb
   $('#upload_form').on('submit', function (e) {
     e.preventDefault()
-    var fileElement = $('#report_document_upload_files')
-    var actionUrl = $(this).attr('action')
+    const fileElement = $('#report_document_upload_files')
+    const actionUrl = $(this).attr('action')
 
     // check whether browser fully supports all File API
-    if (window.File && window.FileReader && window.FileList && window.Blob && fileElement[0].files.length > 0) {
-      var fsize = fileElement[0].files[0].size
+    if (
+      window.File &&
+      window.FileReader &&
+      window.FileList &&
+      window.Blob &&
+      fileElement[0].files.length > 0
+    ) {
+      const fsize = fileElement[0].files[0].size
       if (fsize > UPLOAD_LIMIT * 1024 * 1024) {
         window.location = actionUrl + '?error=tooBig'
         return
