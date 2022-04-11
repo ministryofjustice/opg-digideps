@@ -56,19 +56,8 @@ trait ReportSubmissionTrait
      */
     public function documentsAreSetToQueued()
     {
-        $reportPrefix = 'ndr' === $this->interactingWithUserDetails->getCurrentReportNdrOrReport() ? 'NdrRep' : 'DigiRep';
-        $reportPdfRow = $this->getSession()->getPage()->find(
-            'css',
-            sprintf('table tr:contains("%s-")', $reportPrefix)
-        );
-
-        if (is_null($reportPdfRow)) {
-            throw new BehatException('Cannot find a table row that contains the report PDF');
-        }
-
-        if (false === strpos($reportPdfRow->getHtml(), 'Queued')) {
-            throw new BehatException('The document does not appear to be queued');
-        }
+        $reportPrefix = 'ndr' === $this->interactingWithUserDetails->getCurrentReportNdrOrReport() ? 'NdrRep-' : 'DigiRep-';
+        $this->assertRowWithStatusAppears($reportPrefix, 'Queued');
     }
 
     /**
@@ -76,15 +65,7 @@ trait ReportSubmissionTrait
      */
     public function documentShouldBeQueued(string $fileName)
     {
-        $reportPdfRow = $this->getSession()->getPage()->find('css', "table tr:contains('$fileName')");
-
-        if (is_null($reportPdfRow)) {
-            throw new BehatException("Cannot find a table row that contains the document with filename $fileName");
-        }
-
-        if (false === strpos($reportPdfRow->getHtml(), 'Queued')) {
-            throw new BehatException('The document does not appear to be queued');
-        }
+        $this->assertRowWithStatusAppears($fileName, 'Queued');
     }
 
     /**
@@ -94,15 +75,7 @@ trait ReportSubmissionTrait
     {
         $this->clickLink('Synchronised');
 
-        $reportPdfRow = $this->getSession()->getPage()->find('css', "table tr:contains('$fileName')");
-
-        if (is_null($reportPdfRow)) {
-            throw new BehatException("Cannot find a table row that contains the document with filename $fileName");
-        }
-
-        if (false === strpos($reportPdfRow->getHtml(), 'Success')) {
-            throw new BehatException('The document does not appear to be queued');
-        }
+        $this->assertRowWithStatusAppears($fileName, 'Success');
     }
 
     /**
@@ -116,7 +89,7 @@ trait ReportSubmissionTrait
             throw new BehatException('There was an non successful response when running the document-sync command');
         }
 
-        sleep(2);
+        sleep(1);
     }
 
     /**
@@ -124,15 +97,7 @@ trait ReportSubmissionTrait
      */
     public function theReportPDFDocumentShouldBeSynced()
     {
-        $reportPdfRow = $this->getSession()->getPage()->find('css', 'table tr:contains("DigiRep-")');
-
-        if (is_null($reportPdfRow)) {
-            throw new BehatException(sprintf('Cannot find a table row that contains the report PDF. Page content: %s', $this->getSession()->getPage()->getHtml()));
-        }
-
-        if (false === strpos($pdfRow = $reportPdfRow->getHtml(), 'Success')) {
-            throw new BehatException(sprintf('The document has not been synced. Row HTML: %s', $pdfRow));
-        }
+        $this->assertRowWithStatusAppears('DigiRep-', 'Success');
     }
 
     /**
@@ -365,6 +330,22 @@ trait ReportSubmissionTrait
             if (is_null($reportPdfRow)) {
                 throw new BehatException("The submission ($caseNumber) does not appear in the pending column when it should appear");
             }
+        }
+    }
+
+    private function assertRowWithStatusAppears(string $searchTerm, string $status)
+    {
+        $reportPdfRow = $this->getSession()->getPage()->find(
+            'css',
+            sprintf('table tr:contains("%s")', $searchTerm)
+        );
+
+        if (is_null($reportPdfRow)) {
+            throw new BehatException(sprintf('Cannot find a table row that contains %s. Page content: %s', $searchTerm, $this->getSession()->getPage()->getHtml()));
+        }
+
+        if (!str_contains($reportPdfRow->getHtml(), $status)) {
+            throw new BehatException(sprintf('The document does not have a status of %s. Row content: %s', $status, $reportPdfRow->getHtml()));
         }
     }
 }
