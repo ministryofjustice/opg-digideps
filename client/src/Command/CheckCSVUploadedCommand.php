@@ -19,7 +19,7 @@ use Throwable;
 
 class CheckCSVUploadedCommand extends DaemonableCommand
 {
-    public const CSV_NOT_UPLOADED_SLACK_MESSAGE = 'The %s CSV has not been uploaded within the past 24 hours';
+    public const CSV_NOT_UPLOADED_SLACK_MESSAGE = 'The %s CSV has not been uploaded within the past 24 hours :cat_spin:';
     public const FAILED_TO_RECEIVE_AUDIT_LOG_SLACK_MESSAGE = 'Failed to retrieve audit logs during CSV upload check. Error message: %s';
 
     public const CASREC_LAY_CSV = 'CasRec Lay';
@@ -162,11 +162,13 @@ class CheckCSVUploadedCommand extends DaemonableCommand
         $client = $this->slackClientFactory->createClient($token);
 
         try {
-            $client->chatPostMessage([
-                                         'username' => 'opg_response',
-                                         'channel' => 'opg-digideps-team',
-                                         'text' => $message,
-                                     ]);
+            $client->chatPostMessage(
+                [
+                    'username' => 'opg_response',
+                    'channel' => 'opg-digideps-team',
+                    'text' => $message,
+                ]
+            );
         } catch (Throwable $e) {
             $this->logger->log('error', sprintf('Failed to post to Slack during CSV upload check:  %s', $e->getMessage()));
         }
