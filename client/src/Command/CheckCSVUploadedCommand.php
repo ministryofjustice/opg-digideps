@@ -29,32 +29,15 @@ class CheckCSVUploadedCommand extends DaemonableCommand
 
     public static $defaultName = 'digideps:check-csv-uploaded';
 
-    private BankHolidaysAPIClient $bankHolidayAPIClient;
-
-    private DateTimeProvider $dateTimeProvider;
-
-    private SecretManagerService $secretManagerService;
-
-    private ClientFactory $slackClientFactory;
-
-    private AwsAuditLogHandler $awsAuditLogHandler;
-
-    private LoggerInterface $logger;
-
     public function __construct(
-        BankHolidaysAPIClient $bankHolidayAPIClient,
-        DateTimeProvider $dateTimeProvider,
-        SecretManagerService $secretManagerService,
-        ClientFactory $slackClientFactory,
-        AwsAuditLogHandler $awsAuditLogHandler,
-        LoggerInterface $logger
+        private BankHolidaysAPIClient $bankHolidayAPIClient,
+        private DateTimeProvider $dateTimeProvider,
+        private SecretManagerService $secretManagerService,
+        private ClientFactory $slackClientFactory,
+        private AwsAuditLogHandler $awsAuditLogHandler,
+        private LoggerInterface $logger,
+        private string $auditLogGroupName
     ) {
-        $this->bankHolidayAPIClient = $bankHolidayAPIClient;
-        $this->dateTimeProvider = $dateTimeProvider;
-        $this->secretManagerService = $secretManagerService;
-        $this->slackClientFactory = $slackClientFactory;
-        $this->awsAuditLogHandler = $awsAuditLogHandler;
-        $this->logger = $logger;
         parent::__construct();
     }
 
@@ -87,7 +70,8 @@ class CheckCSVUploadedCommand extends DaemonableCommand
                 $logEvents = $this->awsAuditLogHandler->getLogEventsByLogStream(
                     'CSV_UPLOADED',
                     $startingTime,
-                    $endTime
+                    $endTime,
+                    $this->audi
                 )->get('events');
             } catch (AwsException $e) {
                 // AWS returns a 400 response if the log stream is empty
