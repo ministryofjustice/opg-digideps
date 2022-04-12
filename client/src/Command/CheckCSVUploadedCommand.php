@@ -168,7 +168,7 @@ class CheckCSVUploadedCommand extends DaemonableCommand
                                          'text' => $message,
                                      ]);
         } catch (SlackErrorResponse $e) {
-            $this->logger->log('error', 'Failed to post to Slack during CSV upload check');
+            $this->logger->log('error', sprintf('Failed to post to Slack during CSV upload check:  %s', $e->getMessage()));
         }
     }
 }
