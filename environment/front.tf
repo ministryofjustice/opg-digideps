@@ -114,3 +114,20 @@ data "aws_iam_policy_document" "front_query_secretsmanager" {
     resources = ["*"]
   }
 }
+
+resource "aws_iam_role_policy" "front_get_log_events" {
+  name   = "front-get-log-events.${local.environment}"
+  policy = data.aws_iam_policy_document.front_get_log_events.json
+  role   = aws_iam_role.front.id
+}
+
+data "aws_iam_policy_document" "front_get_log_events" {
+  statement {
+    sid    = "AllowGetLogEvents"
+    effect = "Allow"
+    actions = [
+      "logs:GetLogEvents"
+    ]
+    resources = ["*"]
+  }
+}
