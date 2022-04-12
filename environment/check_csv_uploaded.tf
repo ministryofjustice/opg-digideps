@@ -107,7 +107,6 @@ locals {
       { "name": "NOTIFY_API_KEY", "valueFrom": "/aws/reference/secretsmanager/${data.aws_secretsmanager_secret.front_notify_api_key.name}" },
       { "name": "SECRET", "valueFrom": "/aws/reference/secretsmanager/${data.aws_secretsmanager_secret.front_frontend_secret.name}" },
       { "name": "SIRIUS_API_BASE_URI", "valueFrom": "${aws_ssm_parameter.sirius_api_base_uri.arn}" },
-      { "name": "SLACK_APP_TOKEN_SECRET_NAME", "valueFrom": "/aws/reference/secretsmanager/${data.aws_secretsmanager_secret.opg_response_slack_token.name}" }
     ],
     "environment": [
       { "name": "ADMIN_HOST", "value": "https://${aws_route53_record.admin.fqdn}" },
