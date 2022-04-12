@@ -11,11 +11,11 @@ use App\Service\SecretManagerService;
 use App\Service\Time\DateTimeProvider;
 use Aws\Exception\AwsException;
 use DateInterval;
-use JoliCode\Slack\Exception\SlackErrorResponse;
 use Psr\Log\LoggerInterface;
 use Symfony\Component\Console\Input\InputInterface;
 use Symfony\Component\Console\Output\OutputInterface;
 use Symfony\Component\HttpFoundation\Response;
+use Throwable;
 
 class CheckCSVUploadedCommand extends DaemonableCommand
 {
@@ -167,7 +167,7 @@ class CheckCSVUploadedCommand extends DaemonableCommand
                                          'channel' => 'opg-digideps-team',
                                          'text' => $message,
                                      ]);
-        } catch (SlackErrorResponse $e) {
+        } catch (Throwable $e) {
             $this->logger->log('error', sprintf('Failed to post to Slack during CSV upload check:  %s', $e->getMessage()));
         }
     }
