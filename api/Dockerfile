@@ -43,7 +43,7 @@ RUN pecl install pcov && docker-php-ext-enable pcov
 # Install Xdebug if directed to with build arg from docker-compose.yml
 ARG REQUIRE_XDEBUG=0
 RUN if [[ $REQUIRE_XDEBUG = 1 ]] ; then \
-  pecl install xdebug-3.1.1  ;\
+  pecl install xdebug-3.1.4  ;\
   docker-php-ext-enable $PHP_EXT_DIR/xdebug.so ; \
   echo "xdebug.mode = develop,debug" >> /usr/local/etc/php/conf.d/docker-php-ext-xdebug.ini ; \
   echo "xdebug.discover_client_host = true" >> /usr/local/etc/php/conf.d/docker-php-ext-xdebug.ini ; \

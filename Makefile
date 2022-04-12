@@ -129,8 +129,11 @@ disable-debug: ##@application Puts app in dev mode and disables debug (so the ap
 
 cache-clear: ##@application Clear the cache of the application
 	docker-compose exec api sh -c "rm -rf var/cache/*" && \
+	docker-compose -f docker-compose.yml -f docker-compose.dev.yml exec api sh -c "rm -rf var/cache/*" && \
 	docker-compose exec frontend sh -c "rm -rf var/cache/*" && \
+	docker-compose -f docker-compose.yml -f docker-compose.dev.yml exec frontend sh -c "rm -rf var/cache/*" && \
 	docker-compose exec admin sh -c "rm -rf var/cache/*" && \
+	docker-compose -f docker-compose.yml -f docker-compose.dev.yml exec admin sh -c "rm -rf var/cache/*" && \
 	echo "Cache reset"
 
 enable-debug: ##@application Puts app in dev mode and enables debug (so the app has toolbar/profiling)

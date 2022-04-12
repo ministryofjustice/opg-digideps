@@ -14,6 +14,8 @@ use App\Tests\Behat\OrganisationManagement\OrganisationManagementTrait;
 use App\Tests\Behat\UserManagement\UserManagementTrait;
 use Behat\Behat\Context\SnippetAcceptingContext;
 use Behat\MinkExtension\Context\MinkContext;
+use Exception;
+use RuntimeException;
 
 /**
  * Behat context class.
@@ -75,29 +77,16 @@ class FeatureContext extends MinkContext implements SnippetAcceptingContext
     }
 
     /**
-     * @BeforeSuite
-     */
-    public static function prepare(\Behat\Testwork\Hook\Scope\BeforeSuiteScope $scope)
-    {
-        $suiteName = $scope->getSuite()->getName();
-        echo "\n\n"
-            .strtoupper($suiteName)."\n"
-            .str_repeat('=', strlen($suiteName))."\n"
-            .$scope->getSuite()->getSetting('description')."\n"
-            ."\n";
-    }
-
-    /**
      * @Then the response should have the :arg1 header containing :arg2
      */
     public function theResponseShouldHaveTheHeaderContaining($header, $value)
     {
         $headers = array_change_key_case($this->getSession()->getDriver()->getResponseHeaders(), CASE_LOWER);
         if (empty($headers[strtolower($header)][0])) {
-            throw new \Exception("Header '{$header}' not found.");
+            throw new Exception("Header '{$header}' not found.");
         }
         if (false === strpos($headers[strtolower($header)][0], $value)) {
-            throw new \Exception("Header '{$header}' has value '{$headers[$header][0]}' that does not contains '{$value}'");
+            throw new Exception("Header '{$header}' has value '{$headers[$header][0]}' that does not contains '{$value}'");
         }
     }
 
@@ -121,7 +110,7 @@ class FeatureContext extends MinkContext implements SnippetAcceptingContext
 
         $currentUrl = $this->getSession()->getCurrentUrl();
         if (substr($currentUrl, 0, strlen($baseUrl)) !== $baseUrl) {
-            throw new \RuntimeException("$currentUrl does not start with $baseUrl");
+            throw new RuntimeException("$currentUrl does not start with $baseUrl");
         }
     }
 
@@ -132,7 +121,7 @@ class FeatureContext extends MinkContext implements SnippetAcceptingContext
         } elseif ('admin' === $area) {
             return $this->getAdminUrl();
         } else {
-            throw new \RuntimeException(__METHOD__.': area not valid');
+            throw new RuntimeException(__METHOD__.': area not valid');
         }
     }
 }
