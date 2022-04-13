@@ -39,4 +39,10 @@ class ParameterStoreService
 
         return $flag['Parameter']['Value'];
     }
+
+    public function addParameter($parameterName, $parameterValue)
+    {
+        $parameterName = $this->parameterPrefix.$parameterName;
+        $this->ssmClient->putParameter(['Name' => $parameterName, 'Value' => $parameterValue]);
+    }
 }
