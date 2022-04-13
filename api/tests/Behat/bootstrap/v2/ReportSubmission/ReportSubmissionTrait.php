@@ -338,4 +338,11 @@ trait ReportSubmissionTrait
             );
         }
     }
+
+    /**
+     * @Given /^the document sync enabled flag is set to \'([^\']*)\'$/
+     */
+    public function theDocumentSyncEnabledFlagIsSetTo($documentFeatureFlagValue)
+    {
+    }
 }
