@@ -48,7 +48,7 @@ Feature: Report submissions dashboard
         Then the status of the documents for the client with one report submission should be 'Queued'
 
 
-    @super-admin
+    @super-admin @mia
     Scenario: Make 'New' tab visibility toggle based on Document Sync Enabled flag
         Given the document sync enabled flag is set to '1'
         And a super admin user accesses the admin app
