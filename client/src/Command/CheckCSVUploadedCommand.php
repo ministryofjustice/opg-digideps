@@ -11,16 +11,19 @@ use App\Service\SecretManagerService;
 use App\Service\Time\DateTimeProvider;
 use Aws\Exception\AwsException;
 use DateInterval;
+use DateTime;
 use Psr\Log\LoggerInterface;
 use Symfony\Component\Console\Input\InputInterface;
 use Symfony\Component\Console\Output\OutputInterface;
-use Symfony\Component\HttpFoundation\Response;
 use Throwable;
 
 class CheckCSVUploadedCommand extends DaemonableCommand
 {
     public const CSV_NOT_UPLOADED_SLACK_MESSAGE = 'The %s CSV has not been uploaded within the past 24 hours :cat_spin:';
-    public const FAILED_TO_RECEIVE_AUDIT_LOG_SLACK_MESSAGE = 'Failed to retrieve audit logs during CSV upload check. Error message: %s';
+    public const FAILED_TO_RETRIEVE_BANK_HOLIDAYS_SLACK_MESSAGE = 'Failed to retrieve bank holidays from Gov.uk. Error message: %s';
+    public const FAILED_TO_RETRIEVE_AUDIT_LOG_SLACK_MESSAGE = 'Failed to retrieve audit logs during CSV upload check. Error message: %s';
+    public const LOG_GROUP_NOT_CREATED_SLACK_MESSAGE = 'A log group with the name "%s" could not be found. Unable to determine if CSVs have been uploaded.';
+    public const UNEXPECTED_ERROR_SLACK_MESSAGE = 'An unexpected error occurred during CSV upload check. Error message: %s';
 
     public const CASREC_LAY_CSV = 'CasRec Lay';
     public const SIRIUS_LAY_CSV = 'Sirius Lay';
@@ -28,6 +31,7 @@ class CheckCSVUploadedCommand extends DaemonableCommand
     public const CASREC_PA_CSV = 'CasRec PA';
 
     public static $defaultName = 'digideps:check-csv-uploaded';
+    private DateTime $now;
 
     public function __construct(
         private BankHolidaysAPIClient $bankHolidayAPIClient,
@@ -38,6 +42,8 @@ class CheckCSVUploadedCommand extends DaemonableCommand
         private LoggerInterface $logger,
         private string $auditLogGroupName
     ) {
+        $this->now = $this->dateTimeProvider->getDateTime();
+
         parent::__construct();
     }
 
@@ -52,42 +58,30 @@ class CheckCSVUploadedCommand extends DaemonableCommand
 
     protected function execute(InputInterface $input, OutputInterface $output): int
     {
-        $now = $this->dateTimeProvider->getDateTime();
-        $currentDate = $now->format('Y-m-d');
+        $currentDate = $this->now->format('Y-m-d');
 
-        $dates = $this->bankHolidayAPIClient->getBankHolidays();
+        try {
+            $dates = $this->bankHolidayAPIClient->getBankHolidays();
+        } catch (Throwable $e) {
+            $this->postSlackMessage(sprintf(self::FAILED_TO_RETRIEVE_BANK_HOLIDAYS_SLACK_MESSAGE, $e->getMessage()));
+        }
 
         $isBankHoliday = array_search($currentDate, array_column($dates['england-and-wales']['events'], 'date'));
 
         // Do not alert on Bank Holidays
-        if (false == $isBankHoliday) {
-            // Calculate 24 hour period start time and end time
-            $startingTime = (int) (clone $now)->sub(new DateInterval('P1D'))->format('Uv');
-            $endTime = (int) (clone $now)->format('Uv');
+        if (false === $isBankHoliday) {
+            $logStreams = $this->getLogStreams();
 
-            $logEvents = [];
-            try {
-                $logEvents = $this->awsAuditLogHandler->getLogEventsByLogStream(
-                    'CSV_UPLOADED',
-                    $startingTime,
-                    $endTime,
-                    $this->audi
-                )->get('events');
-            } catch (AwsException $e) {
-                // AWS returns a 400 response if the log stream is empty
-                if (Response::HTTP_BAD_REQUEST === $e->getAwsErrorCode()) {
-                    // Alert on Slack for all CSV types
-                    $this->postSlackMessage(sprintf(self::CSV_NOT_UPLOADED_SLACK_MESSAGE, self::CASREC_LAY_CSV));
-                    $this->postSlackMessage(sprintf(self::CSV_NOT_UPLOADED_SLACK_MESSAGE, self::SIRIUS_LAY_CSV));
-                    $this->postSlackMessage(sprintf(self::CSV_NOT_UPLOADED_SLACK_MESSAGE, self::CASREC_PROF_CSV));
-                    $this->postSlackMessage(sprintf(self::CSV_NOT_UPLOADED_SLACK_MESSAGE, self::CASREC_PA_CSV));
+            if (empty($logStreams)) {
+                $this->alertNoCSVsWereUploaded();
 
-                    return 0;
-                } else {
-                    $this->postSlackMessage(sprintf(self::FAILED_TO_RECEIVE_AUDIT_LOG_SLACK_MESSAGE, $e->getMessage()));
+                return 0;
+            }
 
-                    return 1;
-                }
+            $logEvents = $this->getLogEvents();
+
+            if (is_int($logEvents)) {
+                return $logEvents;
             }
 
             if (!empty($logEvents)) {
@@ -101,6 +95,56 @@ class CheckCSVUploadedCommand extends DaemonableCommand
         }
 
         return 0;
+    }
+
+    private function getLogEvents(): int | array
+    {
+        // Calculate 24 hour period start time and end time
+        $startingTime = (int) (clone $this->now)->sub(new DateInterval('P1D'))->format('Uv');
+        $endTime = (int) (clone $this->now)->format('Uv');
+
+        try {
+            $logEvents = $this->awsAuditLogHandler->getLogEventsByLogStream(
+                'CSV_UPLOADED',
+                $startingTime,
+                $endTime,
+                $this->auditLogGroupName
+            )->get('events');
+        } catch (AwsException $e) {
+            // AWS returns a 400 response if the log stream is empty or log group does not exist with ResourceNotFoundException code
+            if ('ResourceNotFoundException' === $e->getAwsErrorCode()) {
+                $this->alertNoCSVsWereUploaded();
+
+                return 0;
+            } else {
+                $this->postSlackMessage(sprintf(self::FAILED_TO_RETRIEVE_AUDIT_LOG_SLACK_MESSAGE, $e->getMessage()));
+
+                return 1;
+            }
+        }
+
+        return $logEvents;
+    }
+
+    private function getLogStreams()
+    {
+        try {
+            return $this->awsAuditLogHandler->getLogStreams($this->auditLogGroupName);
+        } catch (AwsException $e) {
+            if ('ResourceNotFoundException' === $e->getAwsErrorCode()) {
+                $this->postSlackMessage(sprintf(self::LOG_GROUP_NOT_CREATED_SLACK_MESSAGE, $this->auditLogGroupName));
+            } else {
+                $this->postSlackMessage(sprintf(self::UNEXPECTED_ERROR_SLACK_MESSAGE, $e->getAwsErrorMessage()));
+            }
+        }
+    }
+
+    private function alertNoCSVsWereUploaded()
+    {
+        $this->postSlackMessage(sprintf(self::CSV_NOT_UPLOADED_SLACK_MESSAGE, self::CASREC_LAY_CSV));
+        $this->postSlackMessage(sprintf(self::CSV_NOT_UPLOADED_SLACK_MESSAGE, self::SIRIUS_LAY_CSV));
+        $this->postSlackMessage(sprintf(self::CSV_NOT_UPLOADED_SLACK_MESSAGE, self::CASREC_PROF_CSV));
+        $this->postSlackMessage(sprintf(self::CSV_NOT_UPLOADED_SLACK_MESSAGE, self::CASREC_PA_CSV));
     }
 
     private function checkCasRecLayCSVHasBeenUploaded(array $events)
@@ -149,7 +193,7 @@ class CheckCSVUploadedCommand extends DaemonableCommand
             $client->chatPostMessage(
                 [
                     'username' => 'opg_response',
-                    'channel' => 'opg-digideps-team',
+                    'channel' => 'opg-digideps-dev',
                     'text' => $message,
                 ]
             );

@@ -159,11 +159,22 @@ class AwsAuditLogHandler extends AbstractAuditLogHandler
     {
         return $this->client->getLogEvents(
             [
-                'logGroupName' => 'audit-local',
+                'logGroupName' => $groupName,
                 'logStreamName' => $streamName,
                 'startTime' => $logStartTime,
                 'endTime' => $logEndTime,
             ]
         );
+    }
+
+    public function getLogStreams(string $logGroupName)
+    {
+        return $this
+            ->client
+            ->describeLogStreams(
+                [
+                    'logGroupName' => $logGroupName,
+                ]
+            )->get('logStreams');
     }
 }
