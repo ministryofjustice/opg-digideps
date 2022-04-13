@@ -4,14 +4,8 @@ declare(strict_types=1);
 
 namespace App\Command;
 
-use App\Entity\Report\Checklist;
-use App\Entity\Report\Report;
-use App\Exception\PdfGenerationFailedException;
-use App\Exception\SiriusDocumentSyncFailedException;
-use App\Model\Sirius\QueuedChecklistData;
-use App\Service\ChecklistPdfGenerator;
 use App\Service\ChecklistSyncService;
-use App\Service\Client\RestClient;
+use App\Service\Client\Internal\ReportApi;
 use App\Service\ParameterStoreService;
 use Symfony\Component\Console\Command\Command;
 use Symfony\Component\Console\Input\InputInterface;
@@ -21,40 +15,20 @@ class ChecklistSyncCommand extends Command
 {
     /** @var string */
     const FALLBACK_ROW_LIMITS = '30';
+    const COMPLETED_MESSAGE = 'Sync command completed';
 
     /** @var string */
     public static $defaultName = 'digideps:checklist-sync';
-
-    /** @var ChecklistPdfGenerator */
-    private $pdfGenerator;
-
-    /** @var ChecklistSyncService */
-    private $syncService;
-
-    /** @var RestClient */
-    private $restClient;
-
-    /** @var ParameterStoreService */
-    private $parameterStore;
-
-    /** @var int */
-    private $notSyncedCount = 0;
 
     /**
      * @param null $name
      */
     public function __construct(
-        ChecklistPdfGenerator $pdfGenerator,
-        ChecklistSyncService $syncService,
-        RestClient $restClient,
-        ParameterStoreService $parameterStore,
+        private ChecklistSyncService $syncService,
+        private ParameterStoreService $parameterStore,
+        private ReportApi $reportApi,
         $name = null
     ) {
-        $this->pdfGenerator = $pdfGenerator;
-        $this->syncService = $syncService;
-        $this->restClient = $restClient;
-        $this->parameterStore = $parameterStore;
-
         parent::__construct($name);
     }
 
@@ -68,34 +42,19 @@ class ChecklistSyncCommand extends Command
             return 0;
         }
 
+        $rowLimit = $this->getSyncRowLimit();
+
         /** @var array $reports */
-        $reports = $this->getReportsWithQueuedChecklists();
+        $reports = $this->reportApi->getReportsWithQueuedChecklists($rowLimit);
         $output->writeln(sprintf('%d checklists to upload', count($reports)));
 
-        /** @var Report $report */
-        foreach ($reports as $report) {
-            try {
-                $content = $this->pdfGenerator->generate($report);
-            } catch (PdfGenerationFailedException $e) {
-                $this->updateChecklistWithError($report, $e);
-                ++$this->notSyncedCount;
-                continue;
-            }
+        $notSyncedCount = $this->syncService->syncChecklistsByReports($reports);
 
-            try {
-                $queuedChecklistData = $this->buildChecklistData($report, $content);
-                $uuid = $this->syncService->sync($queuedChecklistData);
-                $this->updateChecklistWithSuccess($report, $uuid);
-            } catch (SiriusDocumentSyncFailedException $e) {
-                $this->updateChecklistWithError($report, $e);
-                ++$this->notSyncedCount;
-            }
+        if ($notSyncedCount > 0) {
+            $output->writeln(sprintf('%d checklists failed to sync', $notSyncedCount));
         }
 
-        if ($this->notSyncedCount > 0) {
-            $output->writeln(sprintf('%d checklists failed to sync', $this->notSyncedCount));
-            $this->notSyncedCount = 0;
-        }
+        $output->writeln(self::COMPLETED_MESSAGE);
 
         return 0;
     }
@@ -106,45 +65,6 @@ class ChecklistSyncCommand extends Command
     }
 
     /**
-     * @return QueuedChecklistData[]
-     */
-    private function getReportsWithQueuedChecklists(): array
-    {
-        return $this->restClient->apiCall(
-            'get',
-            'report/all-with-queued-checklists',
-            ['row_limit' => $this->getSyncRowLimit()],
-            'Report\Report[]',
-            [],
-            false
-        );
-    }
-
-    private function getSyncRowLimit(): string
-    {
-        $limit = $this->parameterStore->getParameter(ParameterStoreService::PARAMETER_CHECKLIST_SYNC_ROW_LIMIT);
-
-        return $limit ? $limit : self::FALLBACK_ROW_LIMITS;
-    }
-
-    /**
-     * @param $content
-     */
-    protected function buildChecklistData(Report $report, $content): QueuedChecklistData
-    {
-        return (new QueuedChecklistData())
-            ->setChecklistId($report->getChecklist()->getId())
-            ->setChecklistUuid($report->getChecklist()->getUuid())
-            ->setCaseNumber($report->getClient()->getCaseNumber())
-            ->setChecklistFileContents($content)
-            ->setReportStartDate($report->getStartDate())
-            ->setReportEndDate($report->getEndDate())
-            ->setReportSubmissions($report->getReportSubmissions())
-            ->setSubmitterEmail($report->getChecklist()->getSubmittedBy()->getEmail())
-            ->setReportType($report->determineReportType());
-    }
-
-    /**
      * {@inheritDoc}
      */
     protected function configure(): void
@@ -152,42 +72,10 @@ class ChecklistSyncCommand extends Command
         $this->setDescription('Uploads queued checklists to Sirius and reports back the success');
     }
 
-    /**
-     * @param $e
-     */
-    protected function updateChecklistWithError(Report $report, $e): void
+    private function getSyncRowLimit(): string
     {
-        $this->updateChecklist($report->getChecklist()->getId(), Checklist::SYNC_STATUS_PERMANENT_ERROR, $e->getMessage());
-    }
+        $limit = $this->parameterStore->getParameter(ParameterStoreService::PARAMETER_CHECKLIST_SYNC_ROW_LIMIT);
 
-    /**
-     * @param $uuid
-     */
-    protected function updateChecklistWithSuccess(Report $report, $uuid): void
-    {
-        $this->updateChecklist($report->getChecklist()->getId(), Checklist::SYNC_STATUS_SUCCESS, null, $uuid);
-    }
-
-    private function updateChecklist(int $id, string $status, string $message = null, string $uuid = null): void
-    {
-        $data = ['syncStatus' => $status];
-
-        if (null !== $message) {
-            $errorMessage = json_decode($message, true) ? json_decode($message, true) : $message;
-            $data['syncError'] = $errorMessage;
-        }
-
-        if (null !== $uuid) {
-            $data['uuid'] = $uuid;
-        }
-
-        $this->restClient->apiCall(
-            'put',
-            sprintf('checklist/%s', $id),
-            json_encode($data),
-            'raw',
-            [],
-            false
-        );
+        return $limit ?: self::FALLBACK_ROW_LIMITS;
     }
 }

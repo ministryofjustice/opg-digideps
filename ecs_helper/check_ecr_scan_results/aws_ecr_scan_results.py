@@ -135,9 +135,6 @@ class ECRScanChecker:
         severity = finding['severity']
         vuln_type = finding['type']
         cve = finding['title']
-        description = 'None'
-        if 'description' in finding:
-            description = finding['description']
         updated = finding['updatedAt']
         link = finding['packageVulnerabilityDetails']['sourceUrl']
         result = (
@@ -146,7 +143,6 @@ class ECRScanChecker:
             f'*Severity:* {severity} \n'
             f'*Type:* `{vuln_type}`\n'
             f'*CVE:* {cve} \n'
-            f'*Description:* {description} \n'
             f'*Updated:* `{updated}`\n'
             f'*Link:* `{link}`\n\n'
         )
@@ -214,7 +210,7 @@ def main():
     if args.print_to_terminal:
         print(report)
 
-    if args.post_to_slack and args.slack_webhook is not None:
+    if args.post_to_slack == "True" and args.slack_webhook is not None:
         work.post_to_slack(
             args.slack_webhook,
             report,

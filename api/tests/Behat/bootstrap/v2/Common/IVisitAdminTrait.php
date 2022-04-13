@@ -223,4 +223,16 @@ trait IVisitAdminTrait
     {
         $this->visitAdminPath($this->getAdminNotificationUrl());
     }
+
+    /**
+     * @When I visit the checklist page for the previously submitted report for the user I am interacting with
+     */
+    public function iVisitTheChecklistPageForSubmittedReport()
+    {
+        $this->assertInteractingWithUserIsSet();
+
+        $this->visitAdminPath(
+            $this->getAdminChecklistPage($this->interactingWithUserDetails->getPreviousReportId())
+        );
+    }
 }

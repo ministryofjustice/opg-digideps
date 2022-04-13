@@ -2,7 +2,7 @@
 module.exports = function (containerSelector) {
   // if 'from' account is already selected when loading page, remove that account from the 'to'
   // (for example when only 'from' account is selected when posting form - which returns an error)
-  var selectedFromAccount = $(containerSelector).val()
+  const selectedFromAccount = $(containerSelector).val()
   if (selectedFromAccount !== '') {
     $('.js-transfer-to option[value=' + selectedFromAccount + ']').hide()
   }
@@ -12,11 +12,11 @@ module.exports = function (containerSelector) {
     // show all 'to' accounts
     $('.js-transfer-to option').show()
     // selected 'from' account
-    var selectedId = $(this).val()
+    const selectedId = $(this).val()
     // only update 'to' accounts if a 'from' account is selected
     if (selectedId !== '') {
       // if 'to' account matches selected 'from' account, reset dropdown
-      var $selectTo = $('.js-transfer-to')
+      const $selectTo = $('.js-transfer-to')
       if ($selectTo.val() === selectedId) {
         $selectTo.val('')
       }

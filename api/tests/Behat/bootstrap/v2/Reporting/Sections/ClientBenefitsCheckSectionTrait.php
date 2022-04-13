@@ -11,7 +11,7 @@ trait ClientBenefitsCheckSectionTrait
 {
     public bool $clientBenefitsSectionAvailable = false;
     private string $missingDateErrorText = 'Enter the date you last checked %s\'s benefits';
-    private string $missingExplanationErrorText = 'Tell us why you have never checked if anyone other than you receives money on %s\'s behalf';
+    private string $missingExplanationErrorText = 'Tell us why you don\'t know if anyone other than you received money on %s\'s behalf';
     private string $missingMoneyTypeErrorText = 'Enter the type of payment';
     private string $missingWhoReceivedMoneyErrorText = 'Enter the name of the person or organisation who received the money';
     private string $atLeastOneMoneyTypeRequiredErrorText = 'Enter at least one payment';

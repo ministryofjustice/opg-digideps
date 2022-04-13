@@ -236,7 +236,8 @@ class ClientBenefitsCheckController extends AbstractController
 
         $summary = [
             ['label' => 'summaryPage.table.moneyOtherPeopleReceive.column1Title', 'value' => $moneyTypeToDelete->getMoneyType()],
-            ['label' => 'summaryPage.table.moneyOtherPeopleReceive.column2Title', 'value' => $moneyTypeToDelete->getAmount()],
+            ['label' => 'summaryPage.table.moneyOtherPeopleReceive.column2Title', 'value' => $moneyTypeToDelete->getWhoReceivedMoney()],
+            ['label' => 'summaryPage.table.moneyOtherPeopleReceive.column3Title', 'value' => '£'.$moneyTypeToDelete->getAmount()],
         ];
 
         return [

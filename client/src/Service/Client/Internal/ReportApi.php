@@ -15,6 +15,7 @@ use App\Exception\DisplayableException;
 use App\Exception\ReportSubmittedException;
 use App\Exception\RestClientException;
 use App\Service\Client\RestClient;
+use DateTime;
 use Symfony\Component\HttpKernel\Exception\NotFoundHttpException;
 
 class ReportApi
@@ -23,6 +24,7 @@ class ReportApi
     private const REPORT_SUBMIT_ENDPOINT = 'report/%s/submit';
     private const REPORT_UNSUBMIT_ENDPOINT = 'report/%s/unsubmit';
     private const REPORT_REFRESH_CACHE_ENDPOINT = 'report/%s/refresh-cache';
+    private const REPORT_GET_ALL_WITH_QUEUED_CHECKLISTS_ENDPOINT = 'report/all-with-queued-checklists';
 
     private const NDR_ENDPOINT_BY_ID = 'ndr/%s';
 
@@ -152,7 +154,7 @@ class ReportApi
 
     public function unsubmit(Report $report, User $user, string $trigger): void
     {
-        $report->setUnSubmitDate(new \DateTime());
+        $report->setUnSubmitDate(new DateTime());
         $uri = sprintf(self::REPORT_UNSUBMIT_ENDPOINT, $report->getId());
 
         $this->restClient->put($uri, $report, [
@@ -180,6 +182,21 @@ class ReportApi
             $jmsGroups,
             'Report\\Report',
             ['query' => ['groups' => $jmsGroups]]
+        );
+    }
+
+    /**
+     * @return Report[]
+     */
+    public function getReportsWithQueuedChecklists(string $rowLimit): array
+    {
+        return $this->restClient->apiCall(
+            'get',
+            self::REPORT_GET_ALL_WITH_QUEUED_CHECKLISTS_ENDPOINT,
+            ['row_limit' => $rowLimit],
+            'Report\Report[]',
+            [],
+            false
         );
     }
 }

@@ -21,6 +21,10 @@
         <br>
         {{ checklist.submittedBy.fullName}}, {{ checklist.submittedBy.roleFullName }}
     </p>
-{% endif %}
 
-{#<hr class="govuk-section-break govuk-section-break--m govuk-section-break--visible">#}
+    {% if (syncStatus) %}
+        <p class="govuk-body-s">
+            {{ 'synchronisedStatus' | trans({}, 'common') }}: {{ syncStatus }}
+        </p>
+    {% endif %}
+{% endif %}

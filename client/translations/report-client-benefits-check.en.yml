@@ -71,7 +71,7 @@ form:
         dateCheckedHintExample: For example 4  2021
         neverCheckedHint: Tell us why you did not check this
         errors:
-            noOptionSelected: Tell us if you checked that %client%'s gets all the benefits they're entitled to
+            noOptionSelected: Tell us if you checked that %client% gets all the benefits they're entitled to
             missingDate: Enter the date you last checked %client%'s benefits entitlement
             invalidDate: The date of last check must be a real date
             futureDate: The date of last check must be in the past
@@ -86,9 +86,9 @@ form:
         dontKnowLabel: Tell us why you don't know about this.
         dontKnowHint: For example, is this something you've never checked, don't know how to check, or have been unable to find out.
         errors:
-            noOptionSelected: Tell us why you have never checked if anyone other than you receives income on %client%'s behalf
-            missingExplanation: Tell us why you have never checked if anyone other than you receives money on %client%'s behalf
-            explanationTooShort: In a few words, tell us why you have never checked if anyone other than you receives money on %client%'s behalf
+            noOptionSelected: Tell us whether anyone other than you received money on %client%'s behalf
+            missingExplanation: Tell us why you don't know if anyone other than you received money on %client%'s behalf
+            explanationTooShort: In a few words, tell us why you don't know if anyone other than you received money on %client%'s behalf
 
     moneyDetails:
         titleHint: For example, benefits paid directly to a care home or family member

@@ -4,12 +4,21 @@ declare(strict_types=1);
 
 namespace App\Controller;
 
+use App\Entity\Ndr\AssetOther as NdrAssetOther;
+use App\Entity\Ndr\AssetProperty as NdrAssetProperty;
+use App\Entity\Report\AssetOther;
+use App\Entity\Report\AssetProperty;
+use App\Repository\AssetRepository;
+use App\Repository\BankAccountRepository;
+use App\Repository\NdrAssetRepository;
+use App\Repository\NdrBankAccountRepository;
 use App\Repository\NdrRepository;
 use App\Repository\ReportRepository;
 use App\Repository\UserRepository;
 use App\Service\Formatter\RestFormatter;
 use App\Service\Stats\QueryFactory;
 use App\Service\Stats\StatsQueryParameters;
+use DateTime;
 use Sensio\Bundle\FrameworkExtraBundle\Configuration\Security;
 use Symfony\Component\HttpFoundation\JsonResponse;
 use Symfony\Component\HttpFoundation\Request;
@@ -22,6 +31,10 @@ class StatsController extends RestController
         private UserRepository $userRepository,
         private ReportRepository $reportRepository,
         private NdrRepository $ndrRepository,
+        private AssetRepository $assetRepository,
+        private BankAccountRepository $bankAccountRepository,
+        private NdrAssetRepository $ndrAssetRepository,
+        private NdrBankAccountRepository $ndrBankAccountRepository,
     ) {
     }
 
@@ -92,45 +105,25 @@ class StatsController extends RestController
             'grandTotal' => 0,
         ];
 
-        $lays = $this->reportRepository->getAllSubmittedReportsWithin12Months('LAY');
-        $profs = $this->reportRepository->getAllSubmittedReportsWithin12Months('PROF');
-        $pas = $this->reportRepository->getAllSubmittedReportsWithin12Months('PA');
-        $ndrs = $this->ndrRepository->getAllSubmittedNdrsWithin12Months();
+        $oneYearAgo = new DateTime('-1 year');
 
-        $layClientIds = [];
+        $ret['lays']['non-liquid'] += $this->assetRepository->getSumOfAssets(AssetOther::class, 'LAY', $oneYearAgo);
+        $ret['profs']['non-liquid'] += $this->assetRepository->getSumOfAssets(AssetOther::class, 'PROF', $oneYearAgo);
+        $ret['pas']['non-liquid'] += $this->assetRepository->getSumOfAssets(AssetOther::class, 'PA', $oneYearAgo);
 
-        foreach ($lays as $layReport) {
-            $layClientIds[] = $layReport->getClientId();
-            $ret['lays']['non-liquid'] += $layReport->getAssetsTotalValue();
-            foreach ($layReport->getBankAccounts() as $bankAccount) {
-                $ret['lays']['liquid'] += $bankAccount->getClosingBalance();
-            }
-        }
+        $ret['lays']['non-liquid'] += $this->assetRepository->getSumOfAssets(AssetProperty::class, 'LAY', $oneYearAgo);
+        $ret['profs']['non-liquid'] += $this->assetRepository->getSumOfAssets(AssetProperty::class, 'PROF', $oneYearAgo);
+        $ret['pas']['non-liquid'] += $this->assetRepository->getSumOfAssets(AssetProperty::class, 'PA', $oneYearAgo);
 
-        foreach ($profs as $profReport) {
-            $ret['profs']['non-liquid'] += $profReport->getAssetsTotalValue();
-            foreach ($profReport->getBankAccounts() as $bankAccount) {
-                $ret['profs']['liquid'] += $bankAccount->getClosingBalance();
-            }
-        }
+        $ret['lays']['liquid'] += $this->bankAccountRepository->getSumOfAccounts('LAY', $oneYearAgo);
+        $ret['profs']['liquid'] += $this->bankAccountRepository->getSumOfAccounts('PROF', $oneYearAgo);
+        $ret['pas']['liquid'] += $this->bankAccountRepository->getSumOfAccounts('PA', $oneYearAgo);
 
-        foreach ($pas as $paReport) {
-            $ret['pas']['non-liquid'] += $paReport->getAssetsTotalValue();
-            foreach ($paReport->getBankAccounts() as $bankAccount) {
-                $ret['pas']['liquid'] += $bankAccount->getClosingBalance();
-            }
-        }
+        $clientIdsOfSubmittedReports = $this->reportRepository->getClientIdsByAllSubmittedLayReportsWithin12Months();
 
-        foreach ($ndrs as $ndr) {
-            if (in_array($ndr->getClient()->getId(), $layClientIds)) {
-                continue;
-            }
-
-            $ret['lays']['non-liquid'] += $ndr->getAssetsTotalValue();
-            foreach ($ndr->getBankAccounts() as $bankAccount) {
-                $ret['lays']['liquid'] += $bankAccount->getClosingBalance();
-            }
-        }
+        $ret['lays']['non-liquid'] += $this->ndrAssetRepository->getSumOfAssets(NdrAssetOther::class, $oneYearAgo, $clientIdsOfSubmittedReports);
+        $ret['lays']['non-liquid'] += $this->ndrAssetRepository->getSumOfAssets(NdrAssetProperty::class, $oneYearAgo, $clientIdsOfSubmittedReports);
+        $ret['lays']['liquid'] += $this->ndrBankAccountRepository->getSumOfAccounts($oneYearAgo, $clientIdsOfSubmittedReports);
 
         $ret['grandTotal'] =
             $ret['lays']['non-liquid'] +

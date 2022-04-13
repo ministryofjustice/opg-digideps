@@ -1,11 +1,11 @@
 <?php
 
 declare(strict_types=1);
-declare(strict_types=1);
 
 namespace App\Entity;
 
 use DateTime;
+use InvalidArgumentException;
 
 trait SynchronisableTrait
 {
@@ -63,7 +63,7 @@ trait SynchronisableTrait
             self::SYNC_STATUS_PERMANENT_ERROR,
             ])
         ) {
-            throw new \InvalidArgumentException('Invalid synchronisation status');
+            throw new InvalidArgumentException('Invalid synchronisation status');
         }
 
         $this->synchronisationStatus = $status;
