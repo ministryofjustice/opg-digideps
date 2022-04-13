@@ -62,16 +62,18 @@
 
     <div class="govuk-tabs">
         <ul class="govuk-tabs__list" role="tablist">
-            <li class="govuk-tabs__list-item {% if currentTab == 'new' %}govuk-tabs__list-item--selected{% endif %}">
-                <a class="govuk-tabs__tab behat-link-tab-new"
-                   href="{{ path(baseRoute, {'status': 'new'} | merge(filtersToPreserveInTabs) ) }}" role="tab"
-                   tabindex="0">
-                    {{ 'page.tabs.new.label' | trans }}
-                </a>
-                {% if counts.new %}
-                    <span class="govuk-tag">{{ counts.new }}</span>
-                {% endif %}
-            </li>
+            {% if isDocumentSyncEnabled == '0' %}
+                <li class="govuk-tabs__list-item {% if currentTab == 'new' %}govuk-tabs__list-item--selected{% endif %}">
+                    <a class="govuk-tabs__tab behat-link-tab-new"
+                       href="{{ path(baseRoute, {'status': 'new'} | merge(filtersToPreserveInTabs) ) }}" role="tab"
+                       tabindex="0">
+                        {{ 'page.tabs.new.label' | trans }}
+                    </a>
+                    {% if counts.new %}
+                        <span class="govuk-tag">{{ counts.new }}</span>
+                    {% endif %}
+                </li>
+            {% endif %}
             <li class="govuk-tabs__list-item {% if currentTab == 'pending' %}govuk-tabs__list-item--selected{% endif %}">
                 <a class="govuk-tabs__tab behat-link-tab-pending"
                    href="{{ path(baseRoute, {'status': 'pending'} | merge(filtersToPreserveInTabs) ) }}" role="tab"

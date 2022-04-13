@@ -276,7 +276,7 @@ class ReportSubmissionController extends AbstractController
 
         return [
             'q' => $request->get('q'),
-            'status' => $request->get('status', 'new'), // new | archived
+            'status' => $request->get('status', 'pending'), // new | archived
             'limit' => $request->query->get('limit') ?: 15,
             'offset' => $request->query->get('offset') ?: 0,
             'created_by_role' => $request->get('created_by_role'),

@@ -117,7 +117,7 @@ class BaseFeatureContext extends MinkContext
         private KernelInterface $symfonyKernel,
         private EntityManagerInterface $em,
         private ReportTestHelper $reportTestHelper,
-        private ParameterStoreService $parameterStoreService
+        protected ParameterStoreService $parameterStoreService
     ) {
         $this->appEnvironment = $this->symfonyKernel->getEnvironment();
 

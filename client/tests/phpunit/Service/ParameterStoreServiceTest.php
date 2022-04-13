@@ -59,7 +59,7 @@ class ParameterStoreServiceTest extends TestCase
 
         $sut = new ParameterStoreService($ssmClient->reveal(), $parameterPrefix, '/flag-prefix/');
 
-        $sut->addParameter($parameterName, $parameterValue);
+        $sut->putParameter($parameterName, $parameterValue);
     }
 
     public function parameterDataProvider()
