@@ -34,6 +34,6 @@ data "aws_secretsmanager_secret" "front_notify_api_key" {
   name = join("/", compact([local.account.secrets_prefix, "front-notify-api-key"]))
 }
 
-data "aws_secretsmanager_secret" "opg_alert_slack_token" {
-  name = join("/", compact([local.account.secrets_prefix, "opg-alert-slack-token"]))
+data "aws_secretsmanager_secret" "opg_alerts_slack_token" {
+  name = join("/", compact([local.account.secrets_prefix, "opg-alerts-slack-token"]))
 }
