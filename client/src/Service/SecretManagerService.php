@@ -8,7 +8,7 @@ use Aws\SecretsManager\SecretsManagerClient;
 
 class SecretManagerService
 {
-    public const SLACK_APP_TOKEN_SECRET_NAME = 'opg-response-slack-token';
+    public const SLACK_APP_TOKEN_SECRET_NAME = 'opg-alerts-slack-token';
 
     public function __construct(private SecretsManagerClient $secretsManagerClient, private string $secretPrefix)
     {
