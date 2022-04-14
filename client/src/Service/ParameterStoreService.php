@@ -48,9 +48,15 @@ class ParameterStoreService
         return $flag['Parameter']['Value'];
     }
 
-    public function addParameter($parameterName, $parameterValue)
+    public function putParameter($parameterName, $parameterValue)
     {
         $parameterName = $this->parameterPrefix.$parameterName;
-        $this->ssmClient->putParameter(['Name' => $parameterName, 'Value' => $parameterValue]);
+        $this->ssmClient->putParameter(['Name' => $parameterName, 'Value' => $parameterValue, 'Overwrite' => true]);
+    }
+
+    public function putFeatureFlag($flagName, $flagValue)
+    {
+        $flagName = $this->flagPrefix.$flagName;
+        $this->ssmClient->putParameter(['Name' => $flagName, 'Value' => $flagValue, 'Overwrite' => true]);
     }
 }

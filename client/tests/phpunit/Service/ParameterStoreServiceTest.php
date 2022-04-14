@@ -4,7 +4,6 @@ namespace App\Service;
 
 use Aws\Ssm\SsmClient;
 use PHPUnit\Framework\TestCase;
-use Prophecy\Argument;
 use Prophecy\PhpUnit\ProphecyTrait;
 
 class ParameterStoreServiceTest extends TestCase
@@ -43,14 +42,14 @@ class ParameterStoreServiceTest extends TestCase
      * @dataProvider parameterDataProvider
      * @test
      */
-    public function addParameter($parameterName, $parameterValue)
+    public function putParameter($parameterName, $parameterValue)
     {
         $ssmClient = self::prophesize(SsmClient::class);
         $parameterPrefix = '/param-prefix/';
         $ssmClient
-            ->putParameter(Argument::exact(
+            ->putParameter(
                 ['Name' => $parameterPrefix.$parameterName,
-                    'Value' => $parameterValue, ]))
+                    'Value' => $parameterValue, 'Overwrite' => true, ])
             ->shouldBeCalled()
             ->willReturn([
                 'Tier' => 'Standard',
@@ -60,6 +59,29 @@ class ParameterStoreServiceTest extends TestCase
         $sut = new ParameterStoreService($ssmClient->reveal(), $parameterPrefix, '/flag-prefix/');
 
         $sut->putParameter($parameterName, $parameterValue);
+    }
+
+    /**
+     * @dataProvider parameterDataProvider
+     * @test
+     */
+    public function putFeatureFlag($flagName, $flagValue)
+    {
+        $ssmClient = self::prophesize(SsmClient::class);
+        $flagPrefix = '/flag-prefix/';
+        $ssmClient
+            ->putParameter(
+                ['Name' => $flagPrefix.$flagName,
+                    'Value' => $flagValue, 'Overwrite' => true, ])
+            ->shouldBeCalled()
+            ->willReturn([
+                'Tier' => 'Standard',
+                'Version' => 10,
+            ]);
+
+        $sut = new ParameterStoreService($ssmClient->reveal(), '/param-prefix/', '/flag-prefix/');
+
+        $sut->putFeatureFlag($flagName, $flagValue);
     }
 
     public function parameterDataProvider()
