@@ -8,6 +8,7 @@ Feature: Attaching Further Documents
         And I visit the send more documents page
         Then the send more documents page should not contain any documents to upload
         When I continue to submit the empty form
+        Given the document sync enabled flag is set to '0'
         Given a super admin user accesses the admin app
         When I navigate to the admin report submissions page
         And I search for submissions using the court order number of the client I am interacting with and check the "New" column
