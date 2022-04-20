@@ -24,6 +24,19 @@ data "aws_iam_policy_document" "admin_s3" {
   }
 }
 
+data "aws_iam_policy_document" "admin_put_parameter_ssm" {
+  statement {
+    sid    = "AllowPutSSMParameters"
+    effect = "Allow"
+    actions = [
+      "ssm:PutParameter"
+    ]
+    resources = [
+      aws_ssm_parameter.flag_document_sync.arn,
+    ]
+  }
+}
+
 resource "aws_iam_role_policy" "admin_query_ssm" {
   name   = "admin-query-ssm.${local.environment}"
   policy = data.aws_iam_policy_document.front_query_ssm.json
@@ -33,5 +46,11 @@ resource "aws_iam_role_policy" "admin_query_ssm" {
 resource "aws_iam_role_policy" "admin_task_logs" {
   name   = "admin-task-logs.${local.environment}"
   policy = data.aws_iam_policy_document.ecs_task_logs.json
+  role   = aws_iam_role.admin.id
+}
+
+resource "aws_iam_role_policy" "admin_put_parameter_ssm" {
+  name   = "admin-put-parameter-ssm.${local.environment}"
+  policy = data.aws_iam_policy_document.admin_put_parameter_ssm.json
   role   = aws_iam_role.admin.id
 }
