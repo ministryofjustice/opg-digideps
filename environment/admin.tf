@@ -49,8 +49,8 @@ resource "aws_iam_role_policy" "admin_task_logs" {
   role   = aws_iam_role.admin.id
 }
 
-resource "aws_iam_role_policy" "admin_put_parameter_ssm" {
-  name   = "admin-put-parameter-ssm.${local.environment}"
+resource "aws_iam_role_policy" "admin_put_parameter_ssm_integration_tests" {
+  name   = "admin-put-parameter-ssm-integration-tests.${local.environment}"
   policy = data.aws_iam_policy_document.admin_put_parameter_ssm.json
-  role   = aws_iam_role.admin.id
+  role   = data.aws_iam_role.sync.id
 }
