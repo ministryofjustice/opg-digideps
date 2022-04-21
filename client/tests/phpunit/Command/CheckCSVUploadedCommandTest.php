@@ -45,10 +45,9 @@ class CheckCSVUploadedCommandTest extends KernelTestCase
     private string $slackSecret;
 
     private array $supportedCSVs = [
-        CheckCSVUploadedCommand::CASREC_LAY_CSV,
         CheckCSVUploadedCommand::SIRIUS_LAY_CSV,
-        CheckCSVUploadedCommand::CASREC_PROF_CSV,
-        CheckCSVUploadedCommand::CASREC_PA_CSV,
+        CheckCSVUploadedCommand::SIRIUS_PROF_CSV,
+        CheckCSVUploadedCommand::SIRIUS_PA_CSV,
     ];
 
     public function setUp(): void
@@ -90,10 +89,9 @@ class CheckCSVUploadedCommandTest extends KernelTestCase
     {
         $this->todayIsABankHoliday(false);
         $this->aCsvUploadedEventExists(true, [
-            CheckCSVUploadedCommand::CASREC_LAY_CSV,
             CheckCSVUploadedCommand::SIRIUS_LAY_CSV,
-            CheckCSVUploadedCommand::CASREC_PROF_CSV,
-            CheckCSVUploadedCommand::CASREC_PA_CSV,
+            CheckCSVUploadedCommand::SIRIUS_PROF_CSV,
+            CheckCSVUploadedCommand::SIRIUS_PA_CSV,
         ]);
 
         $this->secretManagerService->getSecret(Argument::any())->shouldNotBeCalled();
@@ -137,12 +135,7 @@ class CheckCSVUploadedCommandTest extends KernelTestCase
             ->willReturn($this->slackSecret);
 
         $slackClient = self::prophesize(Client::class);
-        $slackClient->chatPostMessage([
-              'username' => 'opg-alerts',
-              'channel' => 'opg-digideps-team',
-              'text' => ':cat_spin: The CasRec Lay CSV has not been uploaded within the past 24 hours',
-            ])
-            ->shouldBeCalled();
+
         $slackClient->chatPostMessage([
               'username' => 'opg-alerts',
               'channel' => 'opg-digideps-team',
@@ -152,13 +145,13 @@ class CheckCSVUploadedCommandTest extends KernelTestCase
         $slackClient->chatPostMessage([
               'username' => 'opg-alerts',
               'channel' => 'opg-digideps-team',
-              'text' => ':cat_spin: The CasRec Prof CSV has not been uploaded within the past 24 hours',
+              'text' => ':cat_spin: The Sirius Prof CSV has not been uploaded within the past 24 hours',
             ])
             ->shouldBeCalled();
         $slackClient->chatPostMessage([
               'username' => 'opg-alerts',
               'channel' => 'opg-digideps-team',
-              'text' => ':cat_spin: The CasRec PA CSV has not been uploaded within the past 24 hours',
+              'text' => ':cat_spin: The Sirius PA CSV has not been uploaded within the past 24 hours',
             ])
             ->shouldBeCalled();
 
@@ -174,13 +167,12 @@ class CheckCSVUploadedCommandTest extends KernelTestCase
     /**
      * @test
      */
-    public function executeOnNonBankHolidaysWhenACasRecLayCSVHaveNotBeenUploadedSlackIsPostedTo()
+    public function executeOnNonBankHolidaysWhenASiriusLayCSVHaveNotBeenUploadedSlackIsPostedTo()
     {
         $this->todayIsABankHoliday(false);
         $this->aCsvUploadedEventExists(true, [
-            CheckCSVUploadedCommand::SIRIUS_LAY_CSV,
-            CheckCSVUploadedCommand::CASREC_PROF_CSV,
-            CheckCSVUploadedCommand::CASREC_PA_CSV,
+            CheckCSVUploadedCommand::SIRIUS_PROF_CSV,
+            CheckCSVUploadedCommand::SIRIUS_PA_CSV,
         ]);
 
         $this->secretManagerService->getSecret('opg-alerts-slack-token')
@@ -191,7 +183,7 @@ class CheckCSVUploadedCommandTest extends KernelTestCase
         $slackClient->chatPostMessage([
               'username' => 'opg-alerts',
               'channel' => 'opg-digideps-team',
-              'text' => ':cat_spin: The CasRec Lay CSV has not been uploaded within the past 24 hours',
+              'text' => ':cat_spin: The Sirius Lay CSV has not been uploaded within the past 24 hours',
             ])
             ->shouldBeCalled();
         $this->slackClientFactory->createClient($this->slackSecret)
@@ -206,10 +198,10 @@ class CheckCSVUploadedCommandTest extends KernelTestCase
     /**
      * @test
      */
-    public function executeOnNonBankHolidaysWhereNonCSVExistsSlackIsPostedTo()
+    public function executeOnNonBankHolidaysWhereLogStreamExistsButNoMatchingCSVEventsExistSlackIsPostedTo()
     {
         $this->todayIsABankHoliday(false);
-        $this->aCsvUploadedEventExists(true);
+        $this->aCsvUploadedEventExists(true, []);
 
         $this->secretManagerService->getSecret('opg-alerts-slack-token')
             ->shouldBeCalled()
@@ -217,30 +209,22 @@ class CheckCSVUploadedCommandTest extends KernelTestCase
 
         $slackClient = self::prophesize(Client::class);
         $slackClient->chatPostMessage([
-              'username' => 'opg-alerts',
-              'channel' => 'opg-digideps-team',
-              'text' => ':cat_spin: The CasRec Lay CSV has not been uploaded within the past 24 hours',
-            ])
+            'username' => 'opg-alerts',
+            'channel' => 'opg-digideps-team',
+            'text' => ':cat_spin: The Sirius Lay CSV has not been uploaded within the past 24 hours',
+        ])
             ->shouldBeCalled();
         $slackClient->chatPostMessage([
-              'username' => 'opg-alerts',
-              'channel' => 'opg-digideps-team',
-              'text' => ':cat_spin: The Sirius Lay CSV has not been uploaded within the past 24 hours',
-            ])
+            'username' => 'opg-alerts',
+            'channel' => 'opg-digideps-team',
+            'text' => ':cat_spin: The Sirius Prof CSV has not been uploaded within the past 24 hours',
+        ])
             ->shouldBeCalled();
-
         $slackClient->chatPostMessage([
-              'username' => 'opg-alerts',
-              'channel' => 'opg-digideps-team',
-              'text' => ':cat_spin: The CasRec Prof CSV has not been uploaded within the past 24 hours',
-            ])
-            ->shouldBeCalled();
-
-        $slackClient->chatPostMessage([
-              'username' => 'opg-alerts',
-              'channel' => 'opg-digideps-team',
-              'text' => ':cat_spin: The CasRec PA CSV has not been uploaded within the past 24 hours',
-            ])
+            'username' => 'opg-alerts',
+            'channel' => 'opg-digideps-team',
+            'text' => ':cat_spin: The Sirius PA CSV has not been uploaded within the past 24 hours',
+        ])
             ->shouldBeCalled();
 
         $this->slackClientFactory->createClient($this->slackSecret)

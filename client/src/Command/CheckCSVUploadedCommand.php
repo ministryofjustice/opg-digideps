@@ -26,8 +26,8 @@ class CheckCSVUploadedCommand extends DaemonableCommand
     public const UNEXPECTED_ERROR_SLACK_MESSAGE = 'An unexpected error occurred during CSV upload check. Error message: %s';
 
     public const SIRIUS_LAY_CSV = 'Sirius Lay';
-    public const CASREC_PROF_CSV = 'CasRec Prof';
-    public const CASREC_PA_CSV = 'CasRec PA';
+    public const SIRIUS_PROF_CSV = 'Sirius Prof';
+    public const SIRIUS_PA_CSV = 'Sirius PA';
 
     public static $defaultName = 'digideps:check-csv-uploaded';
 
@@ -140,7 +140,7 @@ class CheckCSVUploadedCommand extends DaemonableCommand
 
     private function alertNoCSVsWereUploaded()
     {
-        foreach ([self::CASREC_LAY_CSV, self::SIRIUS_LAY_CSV, self::CASREC_PROF_CSV, self::CASREC_PA_CSV] as $csvType) {
+        foreach ([self::SIRIUS_LAY_CSV, self::SIRIUS_PA_CSV, self::SIRIUS_PROF_CSV] as $csvType) {
             $this->postSlackMessage(sprintf(self::CSV_NOT_UPLOADED_SLACK_MESSAGE, $csvType), 'opg-digideps-team');
         }
     }
@@ -148,10 +148,9 @@ class CheckCSVUploadedCommand extends DaemonableCommand
     private function checkCsvsHaveBeenUploadedAndAlert(array $events)
     {
         $typesAndRegexes = [
-            self::CASREC_LAY_CSV => '/"source":"casrec","role_type":"LAY"/',
             self::SIRIUS_LAY_CSV => '/"source":"sirius","role_type":"LAY"/',
-            self::CASREC_PROF_CSV => '/"source":"casrec","role_type":"PROF"/',
-            self::CASREC_PA_CSV => '/"source":"casrec","role_type":"PA"/',
+            self::SIRIUS_PROF_CSV => '/"source":"sirius","role_type":"PROF"/',
+            self::SIRIUS_PA_CSV => '/"source":"sirius","role_type":"PA"/',
         ];
 
         foreach ($typesAndRegexes as $type => $regex) {
