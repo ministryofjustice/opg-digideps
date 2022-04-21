@@ -13,6 +13,13 @@ locals {
       target_type = "security_group_id"
       target      = module.api_service_security_group.id
     }
+    gov_uk_bank_holidays_api = {
+      port        = 443
+      type        = "egress"
+      protocol    = "tcp"
+      target_type = "cidr_block"
+      target      = "0.0.0.0/0"
+    }
   }
 
   check_csv_uploaded_interval = "cron(0 12 ? * MON-FRI *)"
@@ -120,6 +127,7 @@ locals {
       { "name": "PARAMETER_PREFIX", "value": "${local.parameter_prefix}" },
       { "name": "ROLE", "value": "front" },
       { "name": "S3_BUCKETNAME", "value": "pa-uploads-${local.environment}" },
+      { "name": "SECRETS_PREFIX", "value": "${local.account.secrets_prefix}" },
       { "name": "SESSION_REDIS_DSN", "value": "redis://${aws_route53_record.frontend_redis.fqdn}" },
       { "name": "SESSION_PREFIX", "value": "dd_session_front" }
     ]

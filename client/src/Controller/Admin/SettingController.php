@@ -28,7 +28,7 @@ class SettingController extends AbstractController
 
     /**
      * @Route("/service-notification", name="admin_setting_service_notifications")
-     * @Security("is_granted('ROLE_ADMIN')")
+     * @Security("is_granted('ROLE_SUPER_ADMIN')")
      * @Template("@App/Admin/Setting/serviceNotification.html.twig")
      */
     public function serviceNotificationAction(Request $request)

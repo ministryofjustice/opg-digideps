@@ -55,6 +55,7 @@ data "aws_iam_policy_document" "execution_role" {
       "ecr:GetDownloadUrlForLayer",
       "ecr:BatchGetImage",
       "logs:CreateLogStream",
+      "logs:GetLogEvents",
       "logs:PutLogEvents",
       "ssm:GetParameters",
       "secretsmanager:GetSecretValue",
