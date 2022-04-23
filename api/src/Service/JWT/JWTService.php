@@ -32,6 +32,7 @@ class JWTService
             'nbf' => strtotime('-10 seconds'),
             'iss' => 'digideps',
             'sub' => $user->getEmail(),
+            'role' => $user->getRoleName()
         ];
         
         return JWT::encode($payload, $privateKey, 'RS256', $kid, ['jku' => sprintf(self::JKU_URL_TEMPLATE, $this->frontendHost)]);
