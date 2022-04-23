@@ -3,7 +3,6 @@
 namespace App\Controller;
 
 use App\Form as FormDir;
-use App\Service\Client\Internal\RegistrationApi;
 use App\Service\Client\RestClient;
 use App\Service\DeputyProvider;
 use App\Service\Redirector;
