@@ -352,3 +352,13 @@ services:
                 "%env(PARAMETER_PREFIX)%",
                 "%env(FEATURE_FLAG_PREFIX)%",
             ]
+
+    Aws\SecretsManager\SecretsManagerClient:
+        arguments: ["%secrets_manager_client_params%"]
+
+    App\Service\SecretManagerService:
+        arguments:
+            [
+                '@Aws\SecretsManager\SecretsManagerClient',
+                "%env(SECRETS_PREFIX)%",
+            ]

@@ -11,6 +11,8 @@ use App\Service\Auth\UserProvider;
 use App\Service\BruteForce\AttemptsIncrementalWaitingChecker;
 use App\Service\BruteForce\AttemptsInTimeChecker;
 use App\Service\Formatter\RestFormatter;
+use App\Service\JWT\JWTService;
+use DateTime;
 use Doctrine\ORM\EntityManagerInterface;
 use Symfony\Component\HttpFoundation\Request;
 use Symfony\Component\Routing\Annotation\Route;
@@ -21,13 +23,11 @@ use Symfony\Component\Security\Core\Authentication\Token\Storage\TokenStorageInt
  */
 class AuthController extends RestController
 {
-    private AuthService $authService;
-    private RestFormatter $formatter;
-
-    public function __construct(AuthService $authService, RestFormatter $restFormatter)
-    {
-        $this->authService = $authService;
-        $this->formatter = $restFormatter;
+    public function __construct(
+        private AuthService $authService,
+        private RestFormatter $restFormatter,
+        private JWTService $JWTService
+    ) {
     }
 
     /**
@@ -49,7 +49,7 @@ class AuthController extends RestController
         if (!$this->authService->isSecretValid($request)) {
             throw new AppException\UnauthorisedException('client secret not accepted.');
         }
-        $data = $this->formatter->deserializeBodyContent($request);
+        $data = $this->restFormatter->deserializeBodyContent($request);
 
         //brute force checks
         $index = array_key_exists('token', $data) ? 'token' : 'email';
@@ -93,17 +93,24 @@ class AuthController extends RestController
         $incrementalWaitingTimechecker->resetAttempts($key);
 
         $randomToken = $userProvider->generateRandomTokenAndStore($user);
-        $user->setLastLoggedIn(new \DateTime());
+        $user->setLastLoggedIn(new DateTime());
         $em->persist($user);
         $em->flush();
+
+        $jwt = $this->JWTService->createNewJWT($user);
 
         // add token into response
         $restInputOutputFormatter->addResponseModifier(function ($response) use ($randomToken) {
             $response->headers->set(HeaderTokenAuthenticator::HEADER_NAME, $randomToken);
         });
 
+        // add JWT into response
+        $restInputOutputFormatter->addResponseModifier(function ($response) use ($jwt) {
+            $response->headers->set('JWT', $jwt);
+        });
+
         // needed for redirector
-        $this->formatter->setJmsSerialiserGroups(['user', 'user-login']);
+        $this->restFormatter->setJmsSerialiserGroups(['user', 'user-login']);
 
         return $user;
     }

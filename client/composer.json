@@ -11,10 +11,11 @@
     },
     "require": {
         "php": "^8.0.12",
-        "alphagov/notifications-php-client": "^4.0.1",
+        "alphagov/notifications-php-client": "^3.2",
         "aws/aws-sdk-php": "^3.100.9",
         "egulias/email-validator": "^2.0.0",
         "fakerphp/faker": "^1.16",
+        "firebase/php-jwt": "^5.0",
         "gbprod/uuid-normalizer": "^1.2",
         "guzzlehttp/guzzle": "^7.4.0",
         "incenteev/composer-parameter-handler": "^2.1.3",

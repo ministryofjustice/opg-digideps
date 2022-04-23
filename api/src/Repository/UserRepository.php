@@ -10,13 +10,14 @@ use Doctrine\Bundle\DoctrineBundle\Repository\ServiceEntityRepository;
 use Doctrine\ORM\QueryBuilder;
 use Doctrine\Persistence\ManagerRegistry;
 use Symfony\Component\HttpFoundation\Request;
+use Symfony\Component\Serializer\SerializerInterface;
 
 class UserRepository extends ServiceEntityRepository
 {
     /** @var QueryBuilder */
     private $qb;
 
-    public function __construct(ManagerRegistry $registry)
+    public function __construct(ManagerRegistry $registry, private SerializerInterface $serializer)
     {
         parent::__construct($registry, User::class);
     }
@@ -220,6 +221,24 @@ SQL;
         $result = $stmt->executeQuery(['oneYearAgo' => $oneYearAgo]);
 
         return $result->fetchAllAssociative();
+    }
+
+    /**
+     * Required to avoid lazy loading which is incompatible with Symfony Serializer.
+     */
+    public function findUserByEmail(string $email)
+    {
+        $conn = $this->getEntityManager()->getConnection();
+
+        $sql = <<<SQL
+SELECT * FROM dd_user as u
+WHERE u.email = :email
+SQL;
+
+        $stmt = $conn->prepare($sql);
+        $result = $stmt->executeQuery(['email' => $email]);
+
+        return $this->serializer->deserialize(json_encode($result->fetchAssociative()), 'App\Entity\User', 'json');
     }
 
     public function getAllAdminAccounts()

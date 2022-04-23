@@ -39,3 +39,17 @@ framework:
 
     property_info:
         enabled: true
+
+    http_client:
+        scoped_clients:
+            # using base_uri, relative URLs (e.g. request("GET", "/registration/new"))
+            # will default to these options
+            registration.api.client:
+                base_uri: 'http://registration_service:8080'
+                headers:
+                    Accept: 'application/json'
+
+            php.api.client:
+                base_uri: 'http://api/v3/'
+                verify_host: false
+                verify_peer: false

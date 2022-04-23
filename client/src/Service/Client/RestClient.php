@@ -7,15 +7,22 @@ use App\Exception as AppException;
 use App\Model\SelfRegisterData;
 use App\Service\Client\TokenStorage\TokenStorageInterface;
 use App\Service\RequestIdLoggerProcessor;
+use Firebase\JWT\JWK;
+use Firebase\JWT\JWT;
 use GuzzleHttp\ClientInterface;
 use GuzzleHttp\Exception\RequestException;
 use GuzzleHttp\Exception\TransferException;
+use InvalidArgumentException;
+use JMS\Serializer\SerializationContext;
 use JMS\Serializer\SerializerInterface;
 use Psr\Http\Message\ResponseInterface;
 use Psr\Log\LoggerInterface;
+use RuntimeException;
 use Symfony\Component\DependencyInjection\ContainerInterface;
 use Symfony\Component\HttpFoundation\Response;
 use Symfony\Component\Security\Core\Authentication\Token\Storage\TokenStorageInterface as SecurityTokenStorage;
+use Symfony\Contracts\HttpClient\HttpClientInterface;
+use Throwable;
 
 /**
  * Connects to RESTful Server (API)
@@ -34,34 +41,6 @@ class RestClient implements RestClientInterface
     protected static $availableOptions = ['addAuthToken', 'addClientSecret', 'deserialise_groups'];
 
     /**
-     * @var ClientInterface
-     */
-    protected $client;
-
-    /**
-     * @var SerializerInterface
-     */
-    protected $serialiser;
-
-    /**
-     * Used to keep the user auth token.
-     * UserId is used as a key.
-     *
-     * @var TokenStorageInterface
-     */
-    protected $tokenStorage;
-
-    /**
-     * @var LoggerInterface
-     */
-    protected $logger;
-
-    /**
-     * @var string
-     */
-    protected $clientSecret;
-
-    /**
      * @var array
      */
     protected $history;
@@ -70,11 +49,6 @@ class RestClient implements RestClientInterface
      * @var bool
      */
     protected $saveHistory;
-
-    /**
-     * @var ContainerInterface
-     */
-    protected $container;
 
     /**
      * @var int
@@ -97,6 +71,11 @@ class RestClient implements RestClientInterface
     public const HEADER_CLIENT_SECRET = 'ClientSecret';
 
     /**
+     * Header name holding auth token, returned at login time and re-sent at each requests.
+     */
+    const HEADER_JWT = 'JWT';
+
+    /**
      * Error Messages.
      */
     public const ERROR_CONNECT = 'API returned an exception';
@@ -104,20 +83,14 @@ class RestClient implements RestClientInterface
     public const ERROR_FORMAT = 'Cannot decode endpoint response';
 
     public function __construct(
-        ContainerInterface $container,
-        ClientInterface $client,
-        TokenStorageInterface $tokenStorage,
-        SerializerInterface $serializer,
-        LoggerInterface $logger,
-        string $clientSecret
+        protected ContainerInterface $container,
+        protected ClientInterface $client,
+        protected TokenStorageInterface $tokenStorage,
+        protected SerializerInterface $serializer,
+        protected LoggerInterface $logger,
+        protected string $clientSecret,
+        protected HttpClientInterface $phpApiClient
     ) {
-        $this->client = $client;
-        $this->container = $container;
-        $this->tokenStorage = $tokenStorage;
-        $this->serialiser = $serializer;
-        $this->logger = $logger;
-        $this->clientSecret = $clientSecret;
-
         $this->saveHistory = $container->getParameter('kernel.debug');
         $this->history = [];
     }
@@ -143,6 +116,28 @@ class RestClient implements RestClientInterface
         $tokenVal = is_array($tokenVal) && !empty($tokenVal[0]) ? $tokenVal[0] : null;
         $this->tokenStorage->set($user->getId(), $tokenVal);
 
+        if ($jwt = $response->getHeader(self::HEADER_JWT)[0]) {
+            // Get public key from API
+            $jwkResponse = $this->phpApiClient->request('GET', 'jwk-public-key');
+            $jwks = json_decode($jwkResponse->getContent(), true);
+
+            try {
+                $keys = JWK::parseKeySet($jwks);
+                // Setting specific algorithm is deprecated - work out why the header is not parsed as RS256
+                $decoded = JWT::decode($jwt, $keys, ['RS256']);
+            } catch (Throwable $e) {
+                // Add steps for refreshing JWT if expired here
+
+                $jwtDecodeFailureReason = sprintf('Failed to decode JWT - %s', $e->getMessage());
+                $this->logger->warning($jwtDecodeFailureReason);
+
+                throw new RuntimeException('Problems authenticating - try again');
+            }
+
+            $userId = ((array) $decoded)['userId'];
+            $this->tokenStorage->set(sprintf('%s-jwt', $userId), $jwt);
+        }
+
         return $user;
     }
 
@@ -166,7 +161,7 @@ class RestClient implements RestClientInterface
      *
      * @param string $token
      *
-     * @return \App\Entity\User $user
+     * @return User $user
      */
     public function loadUserByToken($token)
     {
@@ -264,7 +259,7 @@ class RestClient implements RestClientInterface
     /**
      * Call POST /selfregister passing client secret.
      *
-     * @return \App\Entity\User
+     * @return User
      */
     public function registerUser(SelfRegisterData $selfRegData)
     {
@@ -280,7 +275,7 @@ class RestClient implements RestClientInterface
      *
      * @return mixed
      *
-     * @throws \InvalidArgumentException
+     * @throws InvalidArgumentException
      */
     public function apiCall($method, $endpoint, $data, $expectedResponseType, $options = [], $authenticated = true)
     {
@@ -313,7 +308,7 @@ class RestClient implements RestClientInterface
         } elseif (class_exists('App\\Entity\\'.$expectedResponseType)) {
             return $this->arrayToEntity($expectedResponseType, $responseArray ?: []);
         } else {
-            throw new \InvalidArgumentException(__METHOD__.": invalid type of expected response, $expectedResponseType given.");
+            throw new InvalidArgumentException(__METHOD__.": invalid type of expected response, $expectedResponseType given.");
         }
     }
 
@@ -332,6 +327,7 @@ class RestClient implements RestClientInterface
         // add AuthToken if user is logged
         if (!empty($options['addAuthToken']) && $loggedUserId = $this->getLoggedUserId()) {
             $options['headers'][self::HEADER_AUTH_TOKEN] = $this->tokenStorage->get($loggedUserId);
+            $options['headers'][self::HEADER_JWT] = $this->tokenStorage->get(sprintf('%s-jwt', $loggedUserId));
         }
         if (!empty($options['addClientSecret'])) {
             $options['headers'][self::HEADER_CLIENT_SECRET] = $this->clientSecret;
@@ -373,9 +369,9 @@ class RestClient implements RestClientInterface
             try {
                 if ($response instanceof ResponseInterface) {
                     $body = strval($response->getBody());
-                    $data = $this->serialiser->deserialize($body, 'array', 'json');
+                    $data = $this->serializer->deserialize($body, 'array', 'json');
                 }
-            } catch (\Throwable $e) {
+            } catch (Throwable $e) {
                 $this->logger->warning('RestClient |  '.$url.' | '.$e->getMessage());
             }
 
@@ -397,8 +393,8 @@ class RestClient implements RestClientInterface
         //TODO validate $response->getStatusCode()
 
         try {
-            $data = $this->serialiser->deserialize(strval($response->getBody()), 'array', 'json');
-        } catch (\Throwable $e) {
+            $data = $this->serializer->deserialize(strval($response->getBody()), 'array', 'json');
+        } catch (Throwable $e) {
             $this->logger->error(__METHOD__.': '.$e->getMessage().'. Api responded with invalid JSON. [BODY START]: '.$response->getBody().'[END BODY]');
             throw new Exception\JsonDecodeException(self::ERROR_FORMAT.':'.$response->getBody());
         }
@@ -423,7 +419,7 @@ class RestClient implements RestClientInterface
         /** @var string */
         $data = json_encode($data);
 
-        return $this->serialiser->deserialize($data, $fullClassName, 'json');
+        return $this->serializer->deserialize($data, $fullClassName, 'json');
     }
 
     /**
@@ -442,7 +438,7 @@ class RestClient implements RestClientInterface
             $entity = $this->arrayToEntity($expectedResponseType, $row);
 
             if (!method_exists($entity, 'getId')) {
-                throw new \RuntimeException('Cannot deserialise entities without an ID');
+                throw new RuntimeException('Cannot deserialise entities without an ID');
             }
 
             $ret[$entity->getId()] = $entity;
@@ -462,7 +458,7 @@ class RestClient implements RestClientInterface
     {
         $ret = $mixed;
         if (is_object($mixed)) {
-            $context = \JMS\Serializer\SerializationContext::create()
+            $context = SerializationContext::create()
                 ->setSerializeNull(true);
 
             if (!empty($options['deserialise_groups'])) {
@@ -473,9 +469,9 @@ class RestClient implements RestClientInterface
                 $context->setGroups($options['deserialise_groups']);
             }
 
-            $ret = $this->serialiser->serialize($mixed, 'json', $context);
+            $ret = $this->serializer->serialize($mixed, 'json', $context);
         } elseif (is_array($mixed)) {
-            $ret = $this->serialiser->serialize($mixed, 'json');
+            $ret = $this->serializer->serialize($mixed, 'json');
         }
 
         return $ret;
