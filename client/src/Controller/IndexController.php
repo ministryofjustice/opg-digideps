@@ -35,17 +35,8 @@ class IndexController extends AbstractController
         private TokenStorageInterface $tokenStorage,
         private TranslatorInterface $translator,
         private RouterInterface $router,
-        private string $environment,
-        private RegistrationApi $registrationApi
+        private string $environment
     ) {
-    }
-
-    /**
-     * @Route("/v2/test-registration-api", name="reg-api-test")
-     */
-    public function testRegistrationApi()
-    {
-        return new Response($this->registrationApi->getSecuredData());
     }
 
     /**

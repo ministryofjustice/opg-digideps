@@ -11,7 +11,9 @@ use Psr\Log\LoggerInterface;
 
 class JWTService
 {
-    public function __construct(private SecretManagerService $secretManager, private LoggerInterface $logger)
+    public const JKU_URL_TEMPLATE = '%s/v2/.well-known/jwks.json';
+    
+    public function __construct(private SecretManagerService $secretManager, private LoggerInterface $logger, private string $frontendHost)
     {
     }
 
@@ -31,9 +33,8 @@ class JWTService
             'iss' => 'digideps',
             'sub' => $user->getEmail(),
         ];
-
-        // TODO Need to pass in the frontend host from env var here
-        return JWT::encode($payload, $privateKey, 'RS256', $kid, ['jku' => 'https://frontend/v2/.well-known/jwks.json']);
+        
+        return JWT::encode($payload, $privateKey, 'RS256', $kid, ['jku' => sprintf(self::JKU_URL_TEMPLATE, $this->frontendHost)]);
     }
 
     public function generateJWK()

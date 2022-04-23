@@ -103,6 +103,8 @@ locals {
       { "name": "SECRETS_FRONT_KEY", "valueFrom": "${data.aws_secretsmanager_secret.front_api_client_secret.arn}" }
     ],
     "environment": [
+      { "name": "ADMIN_HOST", "value": "https://${aws_route53_record.admin.fqdn}" },
+      { "name": "FRONTEND_HOST", "value": "https://${aws_route53_record.front.fqdn}" },
       { "name": "AUDIT_LOG_GROUP_NAME", "value": "audit-${local.environment}" },
       { "name": "DATABASE_HOSTNAME", "value": "${local.db.endpoint}" },
       { "name": "DATABASE_NAME", "value": "${local.db.name}" },
