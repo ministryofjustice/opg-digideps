@@ -215,10 +215,12 @@ class ReportSubmissionController extends AbstractController
             switch ($action) {
                 case self::ACTION_ARCHIVE:
                     $this->processArchive($checkedBoxes);
-                    $notice = $this->translator->transChoice(
-                        'page.postactions.archived.notice',
-                        $totalChecked,
-                        ['%count%' => $totalChecked],
+                    $transKey = $totalChecked > 1 ? 'page.postactions.archived.noticePlural' : 'page.postactions.archived.noticeSingular';
+                    $notice = $this->translator->trans(
+                        $transKey,
+                        [
+                            'count' => $totalChecked,
+                        ],
                         'admin-documents'
                     );
 

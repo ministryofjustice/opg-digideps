@@ -20,9 +20,9 @@
     {% if totalRecords <= recordsPerPage %}
         <p data-test-id="pager-summary">
             {% if totalRecords == 1 %}
-            {{  messages.singlePage.singular | transchoice(totalRecords) }}
+            {{  messages.singlePage.singular | trans({'%count%': totalRecords}) }}
             {% else %}
-            {{  messages.singlePage.plural | transchoice(totalRecords) }}
+            {{  messages.singlePage.plural | trans({'%count%': totalRecords}) }}
             {%  endif %}
         </p>
     {% else %}
