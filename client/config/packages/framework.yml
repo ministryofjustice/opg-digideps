@@ -2,6 +2,7 @@ imports:
     - { resource: ../parameters.yml }
 
 framework:
+    assets: ~
     translator:
         fallback: "%locale%"
         default_path: "%kernel.project_dir%/translations"
