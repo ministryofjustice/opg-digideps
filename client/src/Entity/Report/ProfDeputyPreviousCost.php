@@ -28,7 +28,7 @@ class ProfDeputyPreviousCost implements StartEndDateComparableInterface
      * @JMS\Groups({"profDeputyPrevCosts"})
      *
      * @Assert\NotBlank(message="profDeputyPreviousCost.startDate.notBlank", groups={"prof-deputy-prev-costs"})
-     * @Assert\Date(message="profDeputyPreviousCost.startDate.notValid", groups={"prof-deputy-prev-costs"})
+     * @Assert\Type(type="DateTimeInterface",message="profDeputyPreviousCost.startDate.notValid", groups={"prof-deputy-prev-costs"})
      */
     private $startDate;
 
@@ -39,7 +39,7 @@ class ProfDeputyPreviousCost implements StartEndDateComparableInterface
      * @JMS\Groups({"profDeputyPrevCosts"})
      *
      * @Assert\NotBlank(message="profDeputyPreviousCost.endDate.notBlank", groups={"prof-deputy-prev-costs"})
-     * @Assert\Date(message="profDeputyPreviousCost.endDate.notValid", groups={"prof-deputy-prev-costs"})
+     * @Assert\Type(type="DateTimeInterface",message="profDeputyPreviousCost.endDate.notValid", groups={"prof-deputy-prev-costs"})
      */
     private $endDate;
 

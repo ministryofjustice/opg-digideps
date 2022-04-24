@@ -41,30 +41,30 @@ class Report implements ReportInterface, StartEndDateComparableInterface
     use ReportTraits\ReportUnsubmittedSections;
 
     // Applies to both costs and estimate costs
-    const PROF_DEPUTY_COSTS_TYPE_FIXED = 'fixed';
-    const PROF_DEPUTY_COSTS_TYPE_ASSESSED = 'assessed';
-    const PROF_DEPUTY_COSTS_TYPE_BOTH = 'both';
+    public const PROF_DEPUTY_COSTS_TYPE_FIXED = 'fixed';
+    public const PROF_DEPUTY_COSTS_TYPE_ASSESSED = 'assessed';
+    public const PROF_DEPUTY_COSTS_TYPE_BOTH = 'both';
 
-    const STATUS_NOT_STARTED = 'notStarted';
-    const STATUS_READY_TO_SUBMIT = 'readyToSubmit';
-    const STATUS_NOT_FINISHED = 'notFinished';
+    public const STATUS_NOT_STARTED = 'notStarted';
+    public const STATUS_READY_TO_SUBMIT = 'readyToSubmit';
+    public const STATUS_NOT_FINISHED = 'notFinished';
 
-    const TYPE_HEALTH_WELFARE = '104';
-    const TYPE_PROPERTY_AND_AFFAIRS_HIGH_ASSETS = '102';
-    const TYPE_PROPERTY_AND_AFFAIRS_LOW_ASSETS = '103';
-    const TYPE_COMBINED_HIGH_ASSETS = '102-4';
-    const TYPE_COMBINED_LOW_ASSETS = '103-4';
+    public const TYPE_HEALTH_WELFARE = '104';
+    public const TYPE_PROPERTY_AND_AFFAIRS_HIGH_ASSETS = '102';
+    public const TYPE_PROPERTY_AND_AFFAIRS_LOW_ASSETS = '103';
+    public const TYPE_COMBINED_HIGH_ASSETS = '102-4';
+    public const TYPE_COMBINED_LOW_ASSETS = '103-4';
 
-    const TYPE_ABBREVIATION_HW = 'HW';
-    const TYPE_ABBREVIATION_PF = 'PF';
-    const TYPE_ABBREVIATION_COMBINED = 'COMBINED';
+    public const TYPE_ABBREVIATION_HW = 'HW';
+    public const TYPE_ABBREVIATION_PF = 'PF';
+    public const TYPE_ABBREVIATION_COMBINED = 'COMBINED';
 
-    const HIGH_ASSETS_REPORT_TYPES = [
+    public const HIGH_ASSETS_REPORT_TYPES = [
         self::TYPE_PROPERTY_AND_AFFAIRS_HIGH_ASSETS,
         self::TYPE_COMBINED_HIGH_ASSETS,
     ];
 
-    const BENEFITS_CHECK_SECTION_REQUIRED_GRACE_PERIOD_DAYS = 60;
+    public const BENEFITS_CHECK_SECTION_REQUIRED_GRACE_PERIOD_DAYS = 60;
 
     /**
      * @JMS\Type("integer")
@@ -96,7 +96,7 @@ class Report implements ReportInterface, StartEndDateComparableInterface
      * @JMS\Groups({"startEndDates"})
      *
      * @Assert\NotBlank( message="report.startDate.notBlank", groups={"start-end-dates"} )
-     * @Assert\Date( message="report.startDate.invalidMessage", groups={"start-end-dates"} )
+     * @Assert\Type(type="DateTimeInterface", message="report.startDate.invalidMessage", groups={"start-end-dates"} )
      *
      * @var DateTime|null
      */
@@ -107,7 +107,7 @@ class Report implements ReportInterface, StartEndDateComparableInterface
      * @JMS\Groups({"startEndDates"})
      *
      * @Assert\NotBlank( message="report.endDate.notBlank", groups={"start-end-dates"} )
-     * @Assert\Date( message="report.endDate.invalidMessage", groups={"start-end-dates"} )
+     * @Assert\Type(type="DateTimeInterface", message="report.endDate.invalidMessage", groups={"start-end-dates"} )
      *
      * @var DateTime|null
      */
@@ -1097,7 +1097,7 @@ class Report implements ReportInterface, StartEndDateComparableInterface
         $attachmentName = sprintf(
             $format,
             $endDate->format('Y'),
-            $submitDate instanceof DateTime ? $submitDate->format('Y-m-d') : 'n-a-', //some old reports have no submission date
+            $submitDate instanceof DateTime ? $submitDate->format('Y-m-d') : 'n-a-', // some old reports have no submission date
             $this->getClient()->getCaseNumber()
         );
 

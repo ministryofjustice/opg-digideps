@@ -14,12 +14,12 @@ use Symfony\Component\Validator\Constraints as Assert;
 abstract class ProfServiceFee
 {
     use HasReportTrait;
-    const TYPE_ASSESSED_FEE = 'assessed';
-    const TYPE_FIXED_FEE = 'fixed';
+    public const TYPE_ASSESSED_FEE = 'assessed';
+    public const TYPE_FIXED_FEE = 'fixed';
 
-    const TYPE_PREVIOUS_FEE = 'previous';
-    const TYPE_CURRENT_FEE = 'current';
-    const TYPE_ESTIMATED_FEE = 'estimated';
+    public const TYPE_PREVIOUS_FEE = 'previous';
+    public const TYPE_CURRENT_FEE = 'current';
+    public const TYPE_ESTIMATED_FEE = 'estimated';
 
     /**
      * @JMS\Type("integer")
@@ -115,7 +115,7 @@ abstract class ProfServiceFee
      * @JMS\Type("DateTime<'Y-m-d'>")
      * @JMS\Groups({"prof-service-fees"})
      *
-     * @Assert\Date(message="profServiceFee.paymentReceivedDate.invalidMessage", groups={"prof-service-fee-details-type-payment-received"})
+     * @Assert\Type(type="DateTimeInterface",message="profServiceFee.paymentReceivedDate.invalidMessage", groups={"prof-service-fee-details-type-payment-received"})
      * @Assert\LessThanOrEqual("today", message="profServiceFee.paymentReceivedDate.notInTheFuture", groups={"prof-service-fee-details-type-payment-received"})
      * @Assert\NotBlank(message="profServiceFee.paymentReceivedDate.notBlank", groups={"prof-service-fee-details-type-payment-received"})
      *

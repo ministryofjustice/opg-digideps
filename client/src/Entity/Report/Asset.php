@@ -72,7 +72,7 @@ abstract class Asset
     private $valueTotal;
 
     /**
-     * @Assert\Date(message="asset.date.date")
+     * @Assert\Type(type="DateTimeInterface",message="asset.date.date")
      * @JMS\Type("DateTime")
      */
     private $valuationDate;

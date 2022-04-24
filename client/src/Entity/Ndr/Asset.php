@@ -65,7 +65,7 @@ abstract class Asset
     private $value;
 
     /**
-     * @Assert\Date(message="ndr.asset.date.date")
+     * @Assert\Type(type="DateTimeInterface",message="ndr.asset.date.date")
      * @JMS\Type("DateTime")
      */
     private $valuationDate;
