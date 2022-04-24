@@ -14,6 +14,7 @@ use JMS\Serializer\SerializerInterface;
 use Psr\Http\Message\ResponseInterface;
 use Psr\Log\LoggerInterface;
 use Symfony\Component\DependencyInjection\ContainerInterface;
+use Symfony\Component\DependencyInjection\ParameterBag\ParameterBagInterface;
 use Symfony\Component\HttpFoundation\Response;
 use Symfony\Component\Security\Core\Authentication\Token\Storage\TokenStorageInterface as SecurityTokenStorage;
 
@@ -34,34 +35,6 @@ class RestClient implements RestClientInterface
     protected static $availableOptions = ['addAuthToken', 'addClientSecret', 'deserialise_groups'];
 
     /**
-     * @var ClientInterface
-     */
-    protected $client;
-
-    /**
-     * @var SerializerInterface
-     */
-    protected $serialiser;
-
-    /**
-     * Used to keep the user auth token.
-     * UserId is used as a key.
-     *
-     * @var TokenStorageInterface
-     */
-    protected $tokenStorage;
-
-    /**
-     * @var LoggerInterface
-     */
-    protected $logger;
-
-    /**
-     * @var string
-     */
-    protected $clientSecret;
-
-    /**
      * @var array
      */
     protected $history;
@@ -70,11 +43,6 @@ class RestClient implements RestClientInterface
      * @var bool
      */
     protected $saveHistory;
-
-    /**
-     * @var ContainerInterface
-     */
-    protected $container;
 
     /**
      * @var int
@@ -104,21 +72,16 @@ class RestClient implements RestClientInterface
     public const ERROR_FORMAT = 'Cannot decode endpoint response';
 
     public function __construct(
-        ContainerInterface $container,
-        ClientInterface $client,
-        TokenStorageInterface $tokenStorage,
-        SerializerInterface $serializer,
-        LoggerInterface $logger,
-        string $clientSecret
+        protected ContainerInterface $container,
+        protected ClientInterface $client,
+        protected TokenStorageInterface $tokenStorage,
+        protected SerializerInterface $serialiser,
+        protected LoggerInterface $logger,
+        protected string $clientSecret,
+        protected ParameterBagInterface $params,
+        protected SecurityTokenStorage $securityTokenStorage
     ) {
-        $this->client = $client;
-        $this->container = $container;
-        $this->tokenStorage = $tokenStorage;
-        $this->serialiser = $serializer;
-        $this->logger = $logger;
-        $this->clientSecret = $clientSecret;
-
-        $this->saveHistory = $container->getParameter('kernel.debug');
+        $this->saveHistory = $params->get('kernel.debug');
         $this->history = [];
     }
 
@@ -199,7 +162,7 @@ class RestClient implements RestClientInterface
         }
 
         // guzzle 6 does not append query groups and params in the string.
-        //TODO add $queryParams as a method param (Replace last if not used) and avoid using endpoing with query string
+        // TODO add $queryParams as a method param (Replace last if not used) and avoid using endpoing with query string
 
         /** @var array */
         $url = parse_url($endpoint);
@@ -394,7 +357,7 @@ class RestClient implements RestClientInterface
      */
     private function extractDataArray(ResponseInterface $response)
     {
-        //TODO validate $response->getStatusCode()
+        // TODO validate $response->getStatusCode()
 
         try {
             $data = $this->serialiser->deserialize(strval($response->getBody()), 'array', 'json');
@@ -541,9 +504,7 @@ class RestClient implements RestClientInterface
         if ($this->userId) {
             return $this->userId;
         } else {
-            /** @var SecurityTokenStorage */
-            $tokenStorage = $this->container->get('security.token_storage');
-            $token = $tokenStorage->getToken();
+            $token = $this->securityTokenStorage->getToken();
 
             if (!is_null($token)) {
                 $user = $token->getUser();
