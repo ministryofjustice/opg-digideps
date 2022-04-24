@@ -86,7 +86,7 @@ trait DeputyManagementTrait
 
         $this->completedFormFields['admin[firstname]'] = $this->faker->firstName();
         $this->completedFormFields['admin[lastname]'] = $this->faker->lastName();
-        $this->completedFormFields['admin[addressPostcode]'] = $this->faker->postcode;
+        $this->completedFormFields['admin[addressPostcode]'] = $this->faker->postcode();
     }
 
     /**

@@ -158,7 +158,7 @@ trait AssetsSectionTrait
     {
         $streetAddress = $this->faker->streetAddress;
         $streetAddress = str_replace(["\n", "\r"], ' ', $streetAddress);
-        $postcode = $this->faker->postcode;
+        $postcode = $this->faker->postcode();
 
         if ('ndr' == $this->reportUrlPrefix) {
             $this->fillInField('ndr_asset[address]', $streetAddress, 'assetDetailsPropertyAddress');

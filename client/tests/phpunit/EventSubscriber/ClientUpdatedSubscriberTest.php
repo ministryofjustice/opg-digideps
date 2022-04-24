@@ -138,14 +138,14 @@ class ClientUpdatedSubscriberTest extends TestCase
         return [
             'Firstname changed' => [$preUpdateClient, (clone $preUpdateClient)->setFirstname($faker->firstName())],
             'Lastname changed' => [$preUpdateClient, (clone $preUpdateClient)->setLastname($faker->lastName())],
-            'Address changed' => [$preUpdateClient, (clone $preUpdateClient)->setAddress($faker->address)],
-            'Address2 changed' => [$preUpdateClient, (clone $preUpdateClient)->setAddress2($faker->address)],
+            'Address changed' => [$preUpdateClient, (clone $preUpdateClient)->setAddress($faker->address())],
+            'Address2 changed' => [$preUpdateClient, (clone $preUpdateClient)->setAddress2($faker->address())],
             'CourtDate changed' => [$preUpdateClient, (clone $preUpdateClient)->setCourtDate(new DateTime($faker->date()))],
-            'County changed' => [$preUpdateClient, (clone $preUpdateClient)->setCounty($faker->state)],
-            'Postcode changed' => [$preUpdateClient, (clone $preUpdateClient)->setPostcode($faker->postcode)],
+            'County changed' => [$preUpdateClient, (clone $preUpdateClient)->setCounty($faker->state())],
+            'Postcode changed' => [$preUpdateClient, (clone $preUpdateClient)->setPostcode($faker->postcode())],
             'Country changed' => [$preUpdateClient, (clone $preUpdateClient)->setCountry('USA')],
             'Phone changed' => [$preUpdateClient, (clone $preUpdateClient)->setPhone($faker->phoneNumber())],
-            'Email changed' => [$preUpdateClient, (clone $preUpdateClient)->setEmail($faker->email)],
+            'Email changed' => [$preUpdateClient, (clone $preUpdateClient)->setEmail($faker->email())],
         ];
     }
 

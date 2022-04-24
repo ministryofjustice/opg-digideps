@@ -60,7 +60,7 @@ class SatisfactionApiTest extends TestCase
             'name' => $this->faker->name(),
             'phone' => $this->faker->phoneNumber(),
             'page' => $this->faker->url(),
-            'email' => $this->faker->email,
+            'email' => $this->faker->email(),
             'satisfactionLevel' => $score,
         ];
 
