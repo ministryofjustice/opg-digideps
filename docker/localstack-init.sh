@@ -1,8 +1,12 @@
-#! /usr/bin/env sh
-
 set -e
 
-awslocal logs create-log-group --log-group-name audit-local
+groupExists=$( (awslocal logs describe-log-groups | jq '.logGroups[] | select(.logGroupName == "audit-local")') )
+
+#Create log group if it does not exist (stops ResourceAlreadyExists errors)
+if [ -z "$groupExists" ]
+then
+    awslocal logs create-log-group --log-group-name audit-local
+fi
 
 awslocal s3api create-bucket --bucket pa-uploads-local
 awslocal s3api put-bucket-versioning --bucket pa-uploads-local --versioning-configuration Status=Enabled
