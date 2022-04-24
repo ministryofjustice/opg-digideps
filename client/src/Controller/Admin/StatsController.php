@@ -44,7 +44,7 @@ class StatsController extends AbstractController
 
     /**
      * @Route("", name="admin_stats")
-     * @Security("is_granted('ROLE_ADMIN') or has_role('ROLE_AD')")
+     * @Security("is_granted('ROLE_ADMIN') or is_granted('ROLE_AD')")
      * @Template("@App/Admin/Stats/stats.html.twig")
      *
      * @return array|Response
@@ -167,7 +167,7 @@ class StatsController extends AbstractController
 
     /**
      * @Route("/metrics", name="admin_metrics")
-     * @Security("is_granted('ROLE_ADMIN') or has_role('ROLE_AD')")
+     * @Security("is_granted('ROLE_ADMIN') or is_granted('ROLE_AD')")
      * @Template("@App/Admin/Stats/metrics.html.twig")
      *
      * @return array|Response

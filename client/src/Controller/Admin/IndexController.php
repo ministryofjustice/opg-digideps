@@ -64,7 +64,7 @@ class IndexController extends AbstractController
 
     /**
      * @Route("/", name="admin_homepage")
-     * @Security("is_granted('ROLE_ADMIN') or has_role('ROLE_AD')")
+     * @Security("is_granted('ROLE_ADMIN') or is_granted('ROLE_AD')")
      * @Template("@App/Admin/Index/index.html.twig")
      */
     public function indexAction(Request $request)
@@ -97,7 +97,7 @@ class IndexController extends AbstractController
 
     /**
      * @Route("/user-add", name="admin_add_user")
-     * @Security("is_granted('ROLE_ADMIN') or has_role('ROLE_AD')")
+     * @Security("is_granted('ROLE_ADMIN') or is_granted('ROLE_AD')")
      * @Template("@App/Admin/Index/addUser.html.twig")
      *
      * @return array|RedirectResponse
@@ -152,7 +152,7 @@ class IndexController extends AbstractController
 
     /**
      * @Route("/edit-user", name="admin_editUser", methods={"GET", "POST"})
-     * @Security("is_granted('ROLE_ADMIN') or has_role('ROLE_AD')")
+     * @Security("is_granted('ROLE_ADMIN') or is_granted('ROLE_AD')")
      * @Template("@App/Admin/Index/editUser.html.twig")
      *
      * @return array|Response
@@ -245,7 +245,7 @@ class IndexController extends AbstractController
 
     /**
      * @Route("/edit-ndr/{id}", name="admin_editNdr", methods={"POST"})
-     * @Security("is_granted('ROLE_ADMIN') or has_role('ROLE_AD')")
+     * @Security("is_granted('ROLE_ADMIN') or is_granted('ROLE_AD')")
      *
      * @param string $id
      *
@@ -273,7 +273,7 @@ class IndexController extends AbstractController
 
     /**
      * @Route("/delete-confirm/{id}", name="admin_delete_confirm", methods={"GET"})
-     * @Security("is_granted('ROLE_ADMIN') or has_role('ROLE_AD')")
+     * @Security("is_granted('ROLE_ADMIN') or is_granted('ROLE_AD')")
      * @Template("@App/Admin/Index/deleteConfirm.html.twig")
      *
      * @param int $id
@@ -292,7 +292,7 @@ class IndexController extends AbstractController
 
     /**
      * @Route("/delete/{id}", name="admin_delete", methods={"GET"})
-     * @Security("is_granted('ROLE_ADMIN') or has_role('ROLE_AD')")
+     * @Security("is_granted('ROLE_ADMIN') or is_granted('ROLE_AD')")
      *
      * @param int $id
      *
@@ -320,7 +320,7 @@ class IndexController extends AbstractController
 
     /**
      * @Route("/upload", name="admin_upload")
-     * @Security("is_granted('ROLE_ADMIN') or has_role('ROLE_AD')")
+     * @Security("is_granted('ROLE_ADMIN') or is_granted('ROLE_AD')")
      * @Template("@App/Admin/Index/upload.html.twig")
      */
     public function uploadAction(Request $request, RouterInterface $router)
@@ -354,7 +354,7 @@ class IndexController extends AbstractController
 
     /**
      * @Route("/casrec-upload", name="casrec_upload")
-     * @Security("is_granted('ROLE_ADMIN') or has_role('ROLE_AD')")
+     * @Security("is_granted('ROLE_ADMIN') or is_granted('ROLE_AD')")
      * @Template("@App/Admin/Index/uploadUsers.html.twig")
      */
     public function uploadUsersAction(Request $request, ClientInterface $redisClient)
@@ -428,7 +428,7 @@ class IndexController extends AbstractController
 
     /**
      * @Route("/casrec-mld-upgrade", name="casrec_mld_upgrade")
-     * @Security("is_granted('ROLE_ADMIN') or has_role('ROLE_AD')")
+     * @Security("is_granted('ROLE_ADMIN') or is_granted('ROLE_AD')")
      * @Template("@App/Admin/Index/upgradeMld.html.twig")
      */
     public function upgradeMldAction(Request $request)
@@ -480,7 +480,7 @@ class IndexController extends AbstractController
 
     /**
      * @Route("/org-csv-upload", name="admin_org_upload")
-     * @Security("is_granted('ROLE_ADMIN') or has_role('ROLE_AD')")
+     * @Security("is_granted('ROLE_ADMIN') or is_granted('ROLE_AD')")
      * @Template("@App/Admin/Index/uploadOrgUsers.html.twig")
      */
     public function uploadOrgUsersAction(Request $request)
@@ -500,7 +500,7 @@ class IndexController extends AbstractController
                 $data = (new CsvToArray($fileName, false))
                     ->setExpectedColumns([
                         'Deputy No',
-                        //'Pat Create', 'Dship Create', //should hold reg date / Cour order date, but no specs given yet
+                        // 'Pat Create', 'Dship Create', //should hold reg date / Cour order date, but no specs given yet
                         'Dep Postcode',
                         'Dep Forename',
                         'Dep Surname',
@@ -511,11 +511,11 @@ class IndexController extends AbstractController
                         'Dep Adrs4',
                         'Dep Adrs5',
                         'Dep Postcode',
-                        'Email', //mandatory, used as user ID whem uploading
+                        'Email', // mandatory, used as user ID whem uploading
                         'Email2',
                         'Email3',
-                        'Case', //case number, used as ID when uploading
-                        'Forename', 'Surname', //client forename and surname
+                        'Case', // case number, used as ID when uploading
+                        'Forename', 'Surname', // client forename and surname
                         'Corref',
                         'Typeofrep',
                         'Last Report Day',
@@ -568,7 +568,7 @@ class IndexController extends AbstractController
 
     /**
      * @Route("/send-activation-link/{email}", name="admin_send_activation_link")
-     * @Security("is_granted('ROLE_ADMIN') or has_role('ROLE_AD')")
+     * @Security("is_granted('ROLE_ADMIN') or is_granted('ROLE_AD')")
      **/
     public function sendUserActivationLinkAction(string $email, LoggerInterface $logger)
     {

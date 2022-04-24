@@ -153,7 +153,7 @@ class FixtureController extends AbstractController
 
     /**
      * @Route("/complete-sections/{reportType}/{reportId}", requirements={"id":"\d+"}, methods={"GET"})
-     * @Security("is_granted('ROLE_ADMIN') or has_role('ROLE_AD')")
+     * @Security("is_granted('ROLE_ADMIN') or is_granted('ROLE_AD')")
      *
      * @param $reportId
      * @param KernelInterface $kernel
@@ -175,7 +175,7 @@ class FixtureController extends AbstractController
 
     /**
      * @Route("/createAdmin", methods={"GET"})
-     * @Security("is_granted('ROLE_SUPER_ADMIN') or has_role('ROLE_ADMIN') or has_role('ROLE_AD')")
+     * @Security("is_granted('ROLE_SUPER_ADMIN') or is_granted('ROLE_ADMIN') or is_granted('ROLE_AD')")
      */
     public function createAdmin(Request $request)
     {
@@ -198,7 +198,7 @@ class FixtureController extends AbstractController
 
     /**
      * @Route("/getUserIDByEmail/{email}", methods={"GET"})
-     * @Security("is_granted('ROLE_SUPER_ADMIN') or has_role('ROLE_ADMIN') or has_role('ROLE_AD')")
+     * @Security("is_granted('ROLE_SUPER_ADMIN') or is_granted('ROLE_ADMIN') or is_granted('ROLE_AD')")
      */
     public function getUserIDByEmail(string $email)
     {

@@ -28,7 +28,7 @@ class AjaxController extends AbstractController
 
     /**
      * @Route("/casrec-delete-by-source/{source}", name="casrec_delete_by_source_ajax")
-     * @Security("is_granted('ROLE_ADMIN') or has_role('ROLE_AD')")
+     * @Security("is_granted('ROLE_ADMIN') or is_granted('ROLE_AD')")
      *
      * @param $source
      *
@@ -49,7 +49,7 @@ class AjaxController extends AbstractController
 
     /**
      * @Route("/casrec-add", name="casrec_add_ajax")
-     * @Security("is_granted('ROLE_ADMIN') or has_role('ROLE_AD')")
+     * @Security("is_granted('ROLE_ADMIN') or is_granted('ROLE_AD')")
      *
      * @return JsonResponse
      */
@@ -61,7 +61,7 @@ class AjaxController extends AbstractController
             $compressedData = $redisClient->get($chunkId);
             if ($compressedData) {
                 $ret = $this->restClient->setTimeout(600)->post('v2/lay-deputyship/upload', $compressedData);
-                $redisClient->del($chunkId); //cleanup for next execution
+                $redisClient->del($chunkId); // cleanup for next execution
             } else {
                 $ret['added'] = 0;
             }

@@ -25,9 +25,9 @@ use Throwable;
  */
 class ReportSubmissionController extends AbstractController
 {
-    const ACTION_DOWNLOAD = 'download';
-    const ACTION_ARCHIVE = 'archive';
-    const ACTION_SYNCHRONISE = 'synchronise';
+    public const ACTION_DOWNLOAD = 'download';
+    public const ACTION_ARCHIVE = 'archive';
+    public const ACTION_SYNCHRONISE = 'synchronise';
 
     /**
      * @var DocumentDownloader
@@ -63,7 +63,7 @@ class ReportSubmissionController extends AbstractController
 
     /**
      * @Route("/documents/list", name="admin_documents", methods={"GET", "POST"})
-     * @Security("is_granted('ROLE_ADMIN') or has_role('ROLE_AD')")
+     * @Security("is_granted('ROLE_ADMIN') or is_granted('ROLE_AD')")
      * @Template("@App/Admin/ReportSubmission/index.html.twig")
      *
      * @return array<mixed>|Response
@@ -116,7 +116,7 @@ class ReportSubmissionController extends AbstractController
 
     /**
      * @Route("/documents/list/download", name="admin_documents_download", methods={"GET"})
-     * @Security("is_granted('ROLE_ADMIN') or has_role('ROLE_AD')")
+     * @Security("is_granted('ROLE_ADMIN') or is_granted('ROLE_AD')")
      */
     public function downloadDocuments(Request $request): Response
     {
@@ -144,7 +144,7 @@ class ReportSubmissionController extends AbstractController
 
     /**
      * @Route("/documents/{submissionId}/{documentId}/download", name="admin_document_download", methods={"GET"})
-     * @Security("is_granted('ROLE_ADMIN') or has_role('ROLE_AD')")
+     * @Security("is_granted('ROLE_ADMIN') or is_granted('ROLE_AD')")
      */
     public function downloadIndividualDocument(int $submissionId, int $documentId): Response
     {
@@ -181,7 +181,7 @@ class ReportSubmissionController extends AbstractController
 
     /**
      * @Route("/documents/list/download_ready", name="admin_documents_download_ready", methods={"GET"})
-     * @Security("is_granted('ROLE_ADMIN') or has_role('ROLE_AD')")
+     * @Security("is_granted('ROLE_ADMIN') or is_granted('ROLE_AD')")
      * @Template("@App/Admin/ReportSubmission/download-ready.html.twig")
      *
      * @return array<mixed>
