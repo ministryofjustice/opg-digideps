@@ -4,7 +4,6 @@ namespace App\Controller\Admin;
 
 use App\Controller\AbstractController;
 use App\Entity as EntityDir;
-use App\Entity\CasRec;
 use App\Entity\User;
 use App\Event\CSVUploadedEvent;
 use App\EventDispatcher\ObservableEventDispatcher;
@@ -18,12 +17,12 @@ use App\Service\CsvUploader;
 use App\Service\DataImporter\CsvToArray;
 use App\Service\Logger;
 use App\Service\OrgService;
-use Predis\Client;
 use Predis\ClientInterface;
 use Psr\Log\LoggerInterface;
 use Redis;
 use Sensio\Bundle\FrameworkExtraBundle\Configuration\Security;
 use Sensio\Bundle\FrameworkExtraBundle\Configuration\Template;
+use Symfony\Component\DependencyInjection\ParameterBag\ParameterBagInterface;
 use Symfony\Component\Form\Extension\Core\Type\ChoiceType;
 use Symfony\Component\Form\Extension\Core\Type\SubmitType;
 use Symfony\Component\Form\FormError;
@@ -39,27 +38,15 @@ use Symfony\Contracts\Translation\TranslatorInterface;
  */
 class IndexController extends AbstractController
 {
-    private OrgService $orgService;
-    private UserVoter $userVoter;
-    private Logger $logger;
-    private RestClient $restClient;
-    private UserApi $userApi;
-    private ObservableEventDispatcher $eventDispatcher;
-
     public function __construct(
-        OrgService $orgService,
-        UserVoter $userVoter,
-        Logger $logger,
-        RestClient $restClient,
-        UserApi $userApi,
-        ObservableEventDispatcher $eventDispatcher
+        private OrgService $orgService,
+        private UserVoter $userVoter,
+        private Logger $logger,
+        private RestClient $restClient,
+        private UserApi $userApi,
+        private ObservableEventDispatcher $eventDispatcher,
+        private ParameterBagInterface $params
     ) {
-        $this->orgService = $orgService;
-        $this->userVoter = $userVoter;
-        $this->logger = $logger;
-        $this->restClient = $restClient;
-        $this->userApi = $userApi;
-        $this->eventDispatcher = $eventDispatcher;
     }
 
     /**
@@ -212,7 +199,7 @@ class IndexController extends AbstractController
             'action' => 'edit',
             'id' => $user->getId(),
             'user' => $user,
-            'deputyBaseUrl' => $this->container->getParameter('non_admin_host'),
+            'deputyBaseUrl' => $this->params->get('non_admin_host'),
         ];
 
         if ($user->isLayDeputy()) {

@@ -8,6 +8,7 @@ use App\Service\DeputyProvider;
 use App\Service\Redirector;
 use App\Service\StringUtils;
 use Sensio\Bundle\FrameworkExtraBundle\Configuration\Template;
+use Symfony\Component\DependencyInjection\ParameterBag\ParameterBagInterface;
 use Symfony\Component\EventDispatcher\EventDispatcherInterface;
 use Symfony\Component\Form\FormError;
 use Symfony\Component\HttpFoundation\RedirectResponse;
@@ -25,43 +26,16 @@ use Symfony\Contracts\Translation\TranslatorInterface;
 
 class IndexController extends AbstractController
 {
-    /** @var DeputyProvider */
-    private $deputyProvider;
-
-    /** @var EventDispatcherInterface */
-    private $eventDispatcher;
-
-    /** @var TokenStorageInterface */
-    private $tokenStorage;
-
-    /** @var TranslatorInterface */
-    private $translator;
-
-    /** @var string */
-    private $environment;
-
-    /** @var RestClient */
-    private $restClient;
-
-    /** @var RouterInterface */
-    private $router;
-
     public function __construct(
-        RestClient $restClient,
-        DeputyProvider $deputyProvider,
-        EventDispatcherInterface $eventDispatcher,
-        TokenStorageInterface $tokenStorage,
-        TranslatorInterface $translator,
-        RouterInterface $router,
-        string $environment
+        private RestClient $restClient,
+        private DeputyProvider $deputyProvider,
+        private EventDispatcherInterface $eventDispatcher,
+        private TokenStorageInterface $tokenStorage,
+        private TranslatorInterface $translator,
+        private RouterInterface $router,
+        private string $environment,
+        private ParameterBagInterface $params
     ) {
-        $this->deputyProvider = $deputyProvider;
-        $this->eventDispatcher = $eventDispatcher;
-        $this->tokenStorage = $tokenStorage;
-        $this->translator = $translator;
-        $this->environment = $environment;
-        $this->restClient = $restClient;
-        $this->router = $router;
     }
 
     /**
@@ -130,15 +104,15 @@ class IndexController extends AbstractController
         $session = $request->getSession();
 
         if ('logoutPage' === $session->get('loggedOutFrom')) {
-            $session->set('loggedOutFrom', null); //avoid display the message at next page reload
+            $session->set('loggedOutFrom', null); // avoid display the message at next page reload
 
             return $this->render('@App/Index/login-from-logout.html.twig', [
                     'form' => $form->createView(),
                 ] + $vars);
         } elseif ('timeout' === $session->get('loggedOutFrom') || 'api' === $request->query->get('from')) {
-            $session->set('loggedOutFrom', null); //avoid display the message at next page reload
+            $session->set('loggedOutFrom', null); // avoid display the message at next page reload
             $vars['error'] = $this->translator->trans('sessionTimeoutOutWarning', [
-                '%time%' => StringUtils::secondsToHoursMinutes($this->container->getParameter('session_expire_seconds')),
+                '%time%' => StringUtils::secondsToHoursMinutes($this->params->get('session_expire_seconds')),
             ], 'signin');
         }
 
