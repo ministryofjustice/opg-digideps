@@ -28,10 +28,10 @@
         "ramsey/uuid": "^4.2",
         "sensio/framework-extra-bundle": "^6.0",
         "snc/redis-bundle": "^3.5.2",
-        "symfony/finder": "^4.0",
-        "symfony/http-client": "^4.4.0",
+        "symfony/finder": "^5.4.3",
+        "symfony/http-client": "^5.4.7",
         "symfony/monolog-bundle": "^3.0.0",
-        "symfony/symfony": "^4.0",
+        "symfony/symfony": "^5.4.7",
         "twig/extra-bundle": "^3.3",
         "twig/intl-extra": "^3.3"
     },
@@ -54,6 +54,9 @@
         },
         "branch-alias": {
             "dev-master": "2.3-dev"
+        },
+        "symfony": {
+            "require": "5.4.*"
         }
     },
     "repositories": [
@@ -74,6 +77,6 @@
         "phpunit/phpunit": "^9.5.10",
         "symfony/maker-bundle": "^1.29",
         "symfony/phpunit-bridge": "^5.2",
-        "symfony/var-dumper": "^4.0"
+        "symfony/var-dumper": "^5.4.6"
     }
 }
