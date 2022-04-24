@@ -40,7 +40,7 @@ services:
             $symfonyDebug: "%kernel.debug%"
             Predis\ClientInterface: "@snc_redis.default"
             $environment: "%env(ROLE)%"
-            $rootDir: "%kernel.root_dir%"
+            $rootDir: "%kernel.project_dir%"
 
     App\:
         resource: "../src/"
@@ -205,7 +205,7 @@ services:
 
     App\Twig\AssetsExtension:
         public: false
-        arguments: ["%kernel.root_dir%"]
+        arguments: ["%kernel.project_dir%"]
         tags:
             - { name: twig.extension }
 
