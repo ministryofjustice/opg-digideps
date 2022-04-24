@@ -2,71 +2,27 @@
 
 namespace App\Service\Auth;
 
-use App\Repository\UserRepository;
 use App\Entity\User;
+use App\Repository\UserRepository;
 use Psr\Log\LoggerInterface;
 use Symfony\Component\HttpFoundation\Request;
-use Symfony\Component\Security\Core\Encoder\EncoderFactoryInterface;
-use Symfony\Component\Security\Core\Role\Role;
+use Symfony\Component\PasswordHasher\Hasher\UserPasswordHasherInterface;
 use Symfony\Component\Security\Core\Role\RoleHierarchyInterface;
 
 class AuthService
 {
-    const HEADER_CLIENT_SECRET = 'ClientSecret';
+    public const HEADER_CLIENT_SECRET = 'ClientSecret';
 
-    /**
-     * @var LoggerInterface
-     */
-    private $logger;
-
-    /**
-     * @var array
-     */
-    private $clientPermissions;
-
-    /**
-     * @var array
-     */
-    private $clientSecrets;
-
-    /**
-     * @var UserRepository
-     */
-    private $userRepository;
-
-    /**
-     * @var EncoderFactoryInterface
-     */
-    private $securityEncoderFactory;
-
-    /**
-     * @var RoleHierarchyInterface
-     */
-    private $roleHierarchy;
-
-    /**
-     * @param EncoderFactoryInterface $encoderFactory
-     * @param LoggerInterface $logger
-     * @param UserRepository $userRepository
-     * @param RoleHierarchyInterface $roleHierarchy
-     * @param array $clientPermissions
-     */
     public function __construct(
-        EncoderFactoryInterface $encoderFactory,
-        LoggerInterface $logger,
-        UserRepository $userRepository,
-        RoleHierarchyInterface $roleHierarchy,
-        array $clientPermissions
+        private UserPasswordHasherInterface $passwordHasher,
+        private LoggerInterface $logger,
+        private UserRepository $userRepository,
+        private RoleHierarchyInterface $roleHierarchy,
+        private array $clientPermissions
     ) {
         if (!is_array($clientPermissions) || empty($clientPermissions)) {
             throw new \InvalidArgumentException('client_permissions not defined in config.');
         }
-
-        $this->userRepository = $userRepository;
-        $this->logger = $logger;
-        $this->securityEncoderFactory = $encoderFactory;
-        $this->roleHierarchy = $roleHierarchy;
-        $this->clientPermissions = $clientPermissions;
 
         $this->clientSecrets = [
             'admin' => getenv('SECRETS_ADMIN_KEY'),
@@ -75,7 +31,6 @@ class AuthService
     }
 
     /**
-     * @param Request $request
      * @return bool
      */
     public function isSecretValid(Request $request)
@@ -111,10 +66,9 @@ class AuthService
         }
 
         // check hashed password matching
-        $encodedPass = $this->securityEncoderFactory->getEncoder($user)
-            ->encodePassword($pass, $user->getSalt());
+        $hashedPassword = $this->passwordHasher->hashPassword($user, $pass);
 
-        if ($user->getPassword() == $encodedPass) {
+        if ($user->getPassword() == $hashedPassword) {
             return $user;
         }
 
@@ -138,12 +92,6 @@ class AuthService
         return $user;
     }
 
-    /**
-     * @param string|null $roleName
-     * @param Request $request
-     *
-     * @return bool
-     */
     public function isSecretValidForRole(?string $roleName, Request $request): bool
     {
         if (is_null($roleName)) {

@@ -10,6 +10,7 @@ use Doctrine\Common\Collections\ArrayCollection;
 use Doctrine\ORM\Mapping as ORM;
 use Exception;
 use JMS\Serializer\Annotation as JMS;
+use Symfony\Component\Security\Core\User\PasswordAuthenticatedUserInterface;
 use Symfony\Component\Security\Core\User\UserInterface;
 
 /**
@@ -18,7 +19,7 @@ use Symfony\Component\Security\Core\User\UserInterface;
  * @ORM\Table(name="dd_user", indexes={@ORM\Index(name="deputy_no_idx", columns={"deputy_no"})})
  * @ORM\Entity(repositoryClass="App\Repository\UserRepository")
  */
-class User implements UserInterface
+class User implements UserInterface, PasswordAuthenticatedUserInterface
 {
     use AddressTrait;
 
@@ -57,9 +58,9 @@ class User implements UserInterface
     ];
 
     public static $depTypeIdToRealm = [
-        //PA
+        // PA
         23 => CasRec::REALM_PA,
-        //PROFESSIONAL
+        // PROFESSIONAL
         21 => CasRec::REALM_PROF,
         26 => CasRec::REALM_PROF,
         63 => CasRec::REALM_PROF,
@@ -643,7 +644,7 @@ class User implements UserInterface
 
     public function getSalt()
     {
-        //return $this->salt;
+        // return $this->salt;
         return;
     }
 
@@ -1251,5 +1252,15 @@ class User implements UserInterface
     public function regBeforeToday(User $user): bool
     {
         return $user->getRegistrationDate() < (new DateTime())->setTime(00, 00, 00);
+    }
+
+    /**
+     * The public representation of the user (e.g. a username, an email address, etc.).
+     *
+     * @see UserInterface
+     */
+    public function getUserIdentifier(): string
+    {
+        return (string) $this->email;
     }
 }
