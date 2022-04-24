@@ -112,10 +112,10 @@ trait AdminManagementTrait
 
     private function setNewUserFormValues(string $roleName)
     {
-        $this->completedFormFields['text']['admin[email]'] = $this->faker->safeEmail;
-        $this->completedFormFields['text']['admin[firstname]'] = $this->faker->firstName;
-        $this->completedFormFields['text']['admin[lastname]'] = $this->faker->lastName;
-        $this->completedFormFields['text']['admin[addressPostcode]'] = $this->faker->postcode;
+        $this->completedFormFields['text']['admin[email]'] = $this->faker->safeEmail();
+        $this->completedFormFields['text']['admin[firstname]'] = $this->faker->firstName();
+        $this->completedFormFields['text']['admin[lastname]'] = $this->faker->lastName();
+        $this->completedFormFields['text']['admin[addressPostcode]'] = $this->faker->postcode();
 
         if (in_array($roleName, User::$adminRoles)) {
             $this->completedFormFields['select']['admin[roleNameStaff]'] = $roleName;
@@ -216,8 +216,8 @@ trait AdminManagementTrait
     public function updateMyFirstnameAndLastname()
     {
         $this->clickLink('Edit your details');
-        $this->completedFormFields['user_details[firstname]'] = $this->faker->firstname;
-        $this->completedFormFields['user_details[lastname]'] = $this->faker->lastname;
+        $this->completedFormFields['user_details[firstname]'] = $this->faker->firstName();
+        $this->completedFormFields['user_details[lastname]'] = $this->faker->lastName();
 
         foreach ($this->completedFormFields as $fieldName => $fieldValue) {
             $this->fillField($fieldName, $fieldValue);
@@ -268,12 +268,12 @@ trait AdminManagementTrait
         $this->iVisitAdminEditUserPageForInteractingWithUser();
 
         try {
-            $this->completedFormFields['admin[firstname]'] = $this->faker->firstname;
-            $this->completedFormFields['admin[lastname]'] = $this->faker->lastname;
-            $this->completedFormFields['admin[addressPostcode]'] = $this->faker->postcode;
+            $this->completedFormFields['admin[firstname]'] = $this->faker->firstName();
+            $this->completedFormFields['admin[lastname]'] = $this->faker->lastName();
+            $this->completedFormFields['admin[addressPostcode]'] = $this->faker->postcode();
 
             if (User::ROLE_SUPER_ADMIN === $this->loggedInUserDetails->getUserRole()) {
-                $this->completedFormFields['admin[email]'] = $this->faker->safeEmail;
+                $this->completedFormFields['admin[email]'] = $this->faker->safeEmail();
             }
 
             foreach ($this->completedFormFields as $fieldName => $fieldValue) {

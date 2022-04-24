@@ -25,10 +25,10 @@ class UserHelpers extends KernelTestCase
 
         return (new User())
             ->setId($faker->numberBetween(1, 999999999))
-            ->setFirstname($faker->firstName)
-            ->setLastname($faker->lastName)
-            ->setRoleName($faker->jobTitle)
-            ->setEmail($faker->safeEmail);
+            ->setFirstname($faker->firstName())
+            ->setLastname($faker->lastName())
+            ->setRoleName($faker->jobTitle())
+            ->setEmail($faker->safeEmail());
     }
 
     /**
@@ -49,7 +49,7 @@ class UserHelpers extends KernelTestCase
             unset($invitedCoDeputy->$key);
         }
 
-        return $invitedCoDeputy->setEmail($faker->safeEmail);
+        return $invitedCoDeputy->setEmail($faker->safeEmail());
     }
 
     public static function createAdminUser(): User

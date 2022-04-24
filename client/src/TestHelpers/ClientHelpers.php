@@ -18,9 +18,9 @@ class ClientHelpers
         $client = (new Client())
             ->setCaseNumber(self::createValidCaseNumber())
             ->setCourtDate(new DateTime())
-            ->setEmail($faker->safeEmail)
-            ->setFirstname($faker->firstName)
-            ->setLastname($faker->lastName)
+            ->setEmail($faker->safeEmail())
+            ->setFirstname($faker->firstName())
+            ->setLastname($faker->lastName())
             ->setId(1);
 
         if ($report) {
