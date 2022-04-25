@@ -2,10 +2,10 @@ doctrine_migrations:
     organize_migrations: false # Version >=1.2 Possible values are: "BY_YEAR", "BY_YEAR_AND_MONTH", false
 
     services:
-         'Doctrine\Migrations\Version\MigrationFactory': 'App\Migrations\Factory\MigrationFactoryDecorator'
+        'Doctrine\Migrations\Version\MigrationFactory': 'App\Migrations\Factory\MigrationFactoryDecorator'
 
     migrations_paths:
-        'DoctrineMigrations': '%kernel.root_dir%/src/Migrations'
+        "DoctrineMigrations": "%kernel.project_dir%/src/Migrations"
 
     # Entity manager to use for migrations. This overrides the "connection" setting.
     em: default
@@ -13,7 +13,7 @@ doctrine_migrations:
     storage:
         # Default (SQL table) metadata storage configuration
         table_storage:
-            table_name: 'migrations'
-            version_column_name: 'version'
+            table_name: "migrations"
+            version_column_name: "version"
             version_column_length: 1024
-            executed_at_column_name: 'executed_at'
+            executed_at_column_name: "executed_at"

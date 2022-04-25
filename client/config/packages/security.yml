@@ -45,6 +45,11 @@ security:
         ROLE_PROF_ADMIN: [ROLE_PROF, ROLE_ORG_ADMIN]
         ROLE_PROF_TEAM_MEMBER: [ROLE_PROF, ROLE_ORG_TEAM_MEMBER]
 
+    password_hashers:
+        # Use native password hasher, which auto-selects and migrates the best
+        # possible hashing algorithm (starting from Symfony 5.3 this is "bcrypt")
+        Symfony\Component\Security\Core\User\PasswordAuthenticatedUserInterface: "auto"
+
     providers:
         deputy:
             id: App\Service\DeputyProvider
@@ -76,10 +81,8 @@ security:
 
         secured_area:
             form_login:
-                #check_path: /login_check
-                login_path: /login
-                #username_parameter: login[email]
-                #password_parameter: login[password]
+                login_path: login
+                check_path: login
             logout:
                 path: /logout
                 target: /

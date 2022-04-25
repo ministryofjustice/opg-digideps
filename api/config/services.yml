@@ -42,10 +42,10 @@ services:
         autoconfigure: true # Automatically registers your services as commands, event subscribers, etc.
         bind:
             $fixturesEnabled: "%env(bool:FIXTURES_ENABLED)%"
-            $yamlFixtureLocation: "%kernel.root_dir%/src/DataFixtures/"
+            $yamlFixtureLocation: "%kernel.project_dir%/src/DataFixtures/"
             $fixtureParams: "%fixtures%"
             $symfonyEnvironment: "%kernel.environment%"
-            $rootDir: "%kernel.root_dir%"
+            $projectDir: "%kernel.project_dir%"
 
     # makes classes in src/ available to be used as services
     # this creates a service per class whose id is the fully-qualified class name

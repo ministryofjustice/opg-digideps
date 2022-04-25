@@ -40,7 +40,7 @@ services:
             $symfonyDebug: "%kernel.debug%"
             Predis\ClientInterface: "@snc_redis.default"
             $environment: "%env(ROLE)%"
-            $rootDir: "%kernel.project_dir%"
+            $projectDir: "%kernel.project_dir%"
 
     App\:
         resource: "../src/"

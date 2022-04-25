@@ -8,8 +8,10 @@ security:
         # possible hashing algorithm (starting from Symfony 5.3 this is "bcrypt")
         Symfony\Component\Security\Core\User\PasswordAuthenticatedUserInterface: "auto"
 
+    enable_authenticator_manager: true
+
     providers:
-        app_user_provider:
+        users:
             entity:
                 class: App\Entity\User
                 property: email
@@ -93,7 +95,7 @@ security:
         default:
             pattern: .*
             security: true
-            simple_preauth:
+            custom_authenticators:
                 authenticator: App\Service\Auth\HeaderTokenAuthenticator
             provider: user_provider_redis
             stateless: true

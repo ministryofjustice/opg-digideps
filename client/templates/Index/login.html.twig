@@ -56,13 +56,18 @@
     {% block loginHeader %}
     {% endblock %}
 
-    {{ form_start(form, {attr: {novalidate: 'novalidate'}}) }}
+    <form action="{{ path('login') }}" method="post">
+        <label for="username">Email:</label>
+        <input type="text" id="username" name="_username" value="{{ last_username }}"/>
 
-    {{ form_input(form.email,'signInForm.email') }}
-    {{ form_input(form.password,'signInForm.password') }}
-    {{ form_submit(form.login,'signInForm.signin', {'buttonClass': 'behat-link-login'}) }}
+        <label for="password">Password:</label>
+        <input type="password" id="password" name="_password"/>
 
-    {{ form_end(form) }}
+        {# If you want to control the URL the user is redirected to on success
+        <input type="hidden" name="_target_path" value="/account"/> #}
+
+        <button type="submit">login</button>
+    </form>
 
     <a class="behat-link-forgotten-password" href="{{ path('password_forgotten') }}">{{ 'forgottenPassword' | trans }}</a>
 

@@ -7,13 +7,14 @@ use App\Validator\Constraints\CommonPassword;
 use App\Validator\Constraints\EmailSameDomain;
 use Doctrine\Common\Collections\ArrayCollection;
 use JMS\Serializer\Annotation as JMS;
+use Symfony\Component\Security\Core\User\PasswordAuthenticatedUserInterface;
 use Symfony\Component\Security\Core\User\UserInterface;
 use Symfony\Component\Validator\Constraints as Assert;
 
 /**
  * @codeCoverageIgnore
  */
-class User implements UserInterface, DeputyInterface
+class User implements UserInterface, DeputyInterface, PasswordAuthenticatedUserInterface
 {
     use LoginInfoTrait;
 
@@ -452,7 +453,7 @@ class User implements UserInterface, DeputyInterface
     /**
      * @return string $password
      */
-    public function getPassword()
+    public function getPassword(): null|string
     {
         return $this->password;
     }
