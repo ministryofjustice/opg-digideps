@@ -273,10 +273,6 @@ services:
 
     App\Service\Auth\AuthService:
         arguments:
-            $encoderFactory: "@security.encoder_factory"
-            $logger: "@logger"
-            $userRepository: '@App\Repository\UserRepository'
-            $roleHierarchy: "@security.role_hierarchy"
             $clientPermissions: "%client_permissions%"
 
     App\Service\BruteForce\AttemptsInTimeChecker:

@@ -19,49 +19,30 @@ use Exception;
 use RuntimeException;
 use Sensio\Bundle\FrameworkExtraBundle\Configuration\Security;
 use Symfony\Component\HttpFoundation\Request;
+use Symfony\Component\PasswordHasher\Hasher\UserPasswordHasherInterface;
 use Symfony\Component\Routing\Annotation\Route;
 use Symfony\Component\Security\Core\Authentication\Token\TokenInterface;
-use Symfony\Component\Security\Core\Encoder\EncoderFactoryInterface;
 use Symfony\Component\Security\Core\Security as SecurityHelper;
 
-//TODO
-//http://symfony.com/doc/current/bundles/SensioFrameworkExtraBundle/annotations/converters.html
+// TODO
+// http://symfony.com/doc/current/bundles/SensioFrameworkExtraBundle/annotations/converters.html
 
 /**
  * @Route("/user")
  */
 class UserController extends RestController
 {
-    private UserService $userService;
-    private EncoderFactoryInterface $encoderFactory;
-    private UserRepository $userRepository;
-    private ClientRepository $clientRepository;
-    private UserVoter $userVoter;
-    private SecurityHelper $securityHelper;
-    private EntityManagerInterface $em;
-    private AuthService $authService;
-    private RestFormatter $formatter;
-
     public function __construct(
-        UserService $userService,
-        EncoderFactoryInterface $encoderFactory,
-        UserRepository $userRepository,
-        ClientRepository $clientRepository,
-        UserVoter $userVoter,
-        SecurityHelper $securityHelper,
-        EntityManagerInterface $em,
-        AuthService $authService,
-        RestFormatter $formatter
+        private UserService $userService,
+        private UserPasswordHasherInterface $passwordHasher,
+        private UserRepository $userRepository,
+        private ClientRepository $clientRepository,
+        private UserVoter $userVoter,
+        private SecurityHelper $securityHelper,
+        private EntityManagerInterface $em,
+        private AuthService $authService,
+        private RestFormatter $formatter
     ) {
-        $this->userService = $userService;
-        $this->encoderFactory = $encoderFactory;
-        $this->userRepository = $userRepository;
-        $this->clientRepository = $clientRepository;
-        $this->userVoter = $userVoter;
-        $this->securityHelper = $securityHelper;
-        $this->em = $em;
-        $this->authService = $authService;
-        $this->formatter = $formatter;
     }
 
     /**
@@ -129,7 +110,7 @@ class UserController extends RestController
             $user->setRegistrationToken($data['registration_token']);
         }
 
-        if (!empty($data['token_date'])) { //important, keep this after "setRegistrationToken" otherwise date will be reset
+        if (!empty($data['token_date'])) { // important, keep this after "setRegistrationToken" otherwise date will be reset
             $user->setTokenDate(new DateTime($data['token_date']));
         }
 
@@ -199,7 +180,7 @@ class UserController extends RestController
             'password' => 'notEmpty',
         ]);
 
-        $oldPassword = $this->encoderFactory->getEncoder($requestedUser)->encodePassword($data['password'], $requestedUser->getSalt());
+        $oldPassword = $this->passwordHasher->hashPassword($requestedUser, $data['password']);
 
         return $oldPassword == $requestedUser->getPassword();
     }
@@ -225,7 +206,7 @@ class UserController extends RestController
             'password_plain' => 'notEmpty',
         ]);
 
-        $newPassword = $this->encoderFactory->getEncoder($requestedUser)->encodePassword($data['password_plain'], $requestedUser->getSalt());
+        $newPassword = $this->passwordHasher->hashPassword($requestedUser, $data['password']);
 
         $requestedUser->setPassword($newPassword);
 
