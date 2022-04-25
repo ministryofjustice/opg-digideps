@@ -29,7 +29,9 @@ data "aws_iam_policy_document" "admin_put_parameter_ssm" {
     sid    = "AllowPutSSMParameters"
     effect = "Allow"
     actions = [
-      "ssm:PutParameter"
+      "ssm:PutParameter",
+      "ssm:GetParameter",
+      "ssm:GetParameters"
     ]
     resources = [
       aws_ssm_parameter.flag_document_sync.arn,
