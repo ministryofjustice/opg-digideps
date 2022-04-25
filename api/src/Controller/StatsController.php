@@ -149,7 +149,6 @@ class StatsController extends RestController
         $startDate = $request->query->get('startDate');
         $endDate = $request->query->get('endDate');
 
-        $result = $this->reportRepository->getBenefitsResponseMetrics($startDate, $endDate, $deputyType);
-        return $result;
+        return $this->reportRepository->getBenefitsResponseMetrics($startDate, $endDate, $deputyType);
     }
 }

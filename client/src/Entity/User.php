@@ -49,21 +49,6 @@ class User implements UserInterface, DeputyInterface
         self::ROLE_ADMIN_MANAGER,
     ];
 
-    public static $depTypeIdToRealm = [
-        //PA
-        23 => CasRec::REALM_PA,
-        //PROFESSIONAL
-        21 => CasRec::REALM_PROF,
-        26 => CasRec::REALM_PROF,
-        63 => CasRec::REALM_PROF,
-        22 => CasRec::REALM_PROF,
-        24 => CasRec::REALM_PROF,
-        25 => CasRec::REALM_PROF,
-        27 => CasRec::REALM_PROF,
-        29 => CasRec::REALM_PROF,
-        50 => CasRec::REALM_PROF,
-    ];
-
     /**
      * @JMS\Exclude
      */
@@ -848,10 +833,9 @@ class User implements UserInterface, DeputyInterface
     public function hasAddressDetails()
     {
         return !empty($this->getAddress1())
-              && !empty($this->getAddressCountry())
-              && !empty($this->getAddressPostcode())
-              && !empty($this->getPhoneMain())
-        ;
+            && !empty($this->getAddressCountry())
+            && !empty($this->getAddressPostcode())
+            && !empty($this->getPhoneMain());
     }
 
     /**
