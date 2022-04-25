@@ -4,9 +4,8 @@ declare(strict_types=1);
 
 namespace App\Service\Csv;
 
-use App\Entity\CasRec;
-use App\Entity\User;
 use DateTime;
+use Exception;
 
 class ClientBenefitMetricsCsvGenerator
 {
@@ -18,9 +17,9 @@ class ClientBenefitMetricsCsvGenerator
     }
 
     /**
-     * @return string
+     * @throws Exception
      */
-    public function generateClientBenefitsMetricCsv(array $clientBenefitResponses)
+    public function generateClientBenefitsMetricCsv(array $clientBenefitResponses): string
     {
         $headers = [
             'Deputy Type',
@@ -35,14 +34,12 @@ class ClientBenefitMetricsCsvGenerator
         $rows = [];
 
         foreach ($clientBenefitResponses as $response) {
-            $deputyType = CasRec::REALM_PA === User::$depTypeIdToRealm[$response['deputy_type']] ? 'pa' : 'prof';
-
             if (null !== $response['date_last_checked_entitlement']) {
                 $dateLastCheckedFormatted = (new DateTime($response['date_last_checked_entitlement']))->format('Y-m-d');
             }
 
             $rows[] = [
-                $deputyType,
+                $response['deputy_type'],
                 $response['when_last_checked_entitlement'],
                 $response['do_others_receive_money_on_clients_behalf'],
                 $dateLastCheckedFormatted,

@@ -41,6 +41,7 @@ class BenefitsMetricsFilterType extends AbstractType
                 FormTypes\ChoiceType::class, [
                     'choices' => [
                         'All' => 'all',
+                        'Lay' => 'lay',
                         'Prof' => 'prof',
                         'Pa' => 'pa',
                     ],

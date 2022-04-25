@@ -132,13 +132,13 @@ class ReportRepository extends ServiceEntityRepository
             $qb
                 ->select(('count' === $select) ? 'COUNT(DISTINCT r)' : 'r,c')
                 ->leftJoin('r.client', 'c')
-                ->leftJoin('c.users', 'u')->where('u.id = '.$orgIdsOrUserId);
+                ->leftJoin('c.users', 'u')->where('u.id = ' . $orgIdsOrUserId);
         } else {
             $qb
                 ->select(('count' === $select) ? 'COUNT(DISTINCT r)' : 'r,c,o')
                 ->leftJoin('r.client', 'c')
                 ->leftJoin('c.organisation', 'o')
-                ->where('o.isActivated = true AND o.id in ('.implode(',', $orgIdsOrUserId).')');
+                ->where('o.isActivated = true AND o.id in (' . implode(',', $orgIdsOrUserId) . ')');
         }
 
         $qb
@@ -250,21 +250,89 @@ DQL;
         return $query->getQuery()->getResult(AbstractQuery::HYDRATE_SCALAR_COLUMN);
     }
 
-    public function getBenefitsRepsonseMetrics(): mixed
+    public function getBenefitsResponseMetrics(?string $startDate = null, ?string $endDate = null, ?string $deputyType = null): array
     {
         $conn = $this->getEntityManager()->getConnection();
 
         $sql = <<<SQL
-SELECT b.*, nd.deputy_type
+SELECT b.*,
+CASE
+        WHEN r.type IN ('103', '102', '104', '103-4', '102-4') THEN 'Lay'
+        WHEN r.type IN ('103-5','102-5','104-5','103-4-5','102-4-5') THEN 'Prof'
+        ELSE 'PA'
+END deputy_type
 FROM (((client_benefits_check b
 LEFT JOIN report r ON b.report_id = r.id)
 LEFT JOIN client c ON c.id = r.client_id)
 LEFT JOIN named_deputy nd ON nd.id = c.named_deputy_id)
 SQL;
 
-        $stmt = $conn->prepare($sql);
-        $result = $stmt->executeQuery();
+        $params = [];
+        if ($startDate && $endDate) {
+            $sql .= 'WHERE b.created_at BETWEEN :startDate AND :endDate';
+            $params['startDate'] = $startDate;
+            $params['endDate'] = $endDate;
+        }
 
-        return $result->fetchAllAssociative();
+        if ($deputyType && $deputyType !== 'all') {
+            $types = match (strtoupper($deputyType)) {
+                'LAY' => Report::getAllLayTypes(),
+                'PROF' => Report::getAllProfTypes(),
+                'PA' => Report::getAllPaTypes(),
+                default => [],
+            };
+
+            if ($startDate === null && $endDate === null) {
+                $sql .= ' WHERE r.type IN (:deputyTypes)';
+            } else {
+                $sql .= ' AND r.type IN (:deputyTypes)';
+            }
+
+            $params['deputyTypes'] = "'" . str_replace(',', '\',\'', implode(',', $types)) . "'";
+        }
+
+        // print_r($this->interpolateQuery($sql, $params));
+
+        $stmt = $conn->prepare($sql);
+        $result = $stmt->executeQuery($params)->fetchAllAssociative();
+
+        return $result;
+    }
+
+    /**
+     * Replaces any parameter placeholders in a query with the value of that
+     * parameter. Useful for debugging. Assumes anonymous parameters from
+     * $params are are in the same order as specified in $query
+     *
+     * @param string $query The sql query with parameter placeholders
+     * @param array $params The array of substitution parameters
+     * @return string The interpolated query
+     */
+    public function interpolateQuery($query, $params)
+    {
+        $keys = array();
+        $values = $params;
+
+        # build a regular expression for each parameter
+        foreach ($params as $key => $value) {
+            if (is_string($key)) {
+                $keys[] = '/:' . $key . '/';
+            } else {
+                $keys[] = '/[?]/';
+            }
+
+            if (is_string($value))
+                $values[$key] = "" . $value . "";
+
+            if (is_array($value))
+                $values[$key] = "'" . implode("','", $value) . "'";
+
+            if (is_null($value))
+                $values[$key] = 'NULL';
+        }
+
+        $query = preg_replace($keys, $values, $query);
+
+        return $query;
     }
 }

@@ -49,11 +49,11 @@ class StatsApi
         return (string) $response;
     }
 
-    public function getBenefitsReportMetrics(string $appened = null)
+    public function getBenefitsReportMetrics(?string $append = null)
     {
         $link = self::GET_BENEFITS_REPORT_METRICS;
-        if (null !== $appened) {
-            $link = self::GET_BENEFITS_REPORT_METRICS.$appened;
+        if (null !== $append) {
+            $link = self::GET_BENEFITS_REPORT_METRICS.$append;
         }
 
         return $this->restClient->get(

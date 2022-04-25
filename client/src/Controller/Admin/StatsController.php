@@ -161,7 +161,7 @@ class StatsController extends AbstractController
         $response->headers->set('Content-Type', 'application/octet-stream');
 
         $attachmentName = sprintf('cwsdigidepsopg00001%s.dat', date('YmdHi'));
-        $response->headers->set('Content-Disposition', 'attachment; filename="'.$attachmentName.'"');
+        $response->headers->set('Content-Disposition', 'attachment; filename="' . $attachmentName . '"');
 
         $response->sendHeaders();
 
@@ -191,8 +191,8 @@ class StatsController extends AbstractController
         $metrics = ['satisfaction', 'reportsSubmitted', 'clients', 'registeredDeputies'];
 
         foreach ($metrics as $metric) {
-            $all = $this->restClient->get('stats?metric='.$metric.$append, 'array');
-            $byRole = $this->restClient->get('stats?metric='.$metric.'&dimension[]=deputyType'.$append, 'array');
+            $all = $this->restClient->get('stats?metric=' . $metric . $append, 'array');
+            $byRole = $this->restClient->get('stats?metric=' . $metric . '&dimension[]=deputyType' . $append, 'array');
 
             $stats[$metric] = array_merge(
                 ['all' => $all[0]['amount']],
@@ -240,8 +240,6 @@ class StatsController extends AbstractController
     {
         $form = $this->createForm(BenefitsMetricsFilterType::class, new DateRangeQuery());
         $form->handleRequest($request);
-
-        $append = '';
 
         if ($form->isSubmitted() && $form->isValid()) {
             try {
