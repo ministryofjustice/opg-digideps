@@ -34,18 +34,18 @@ class ClientBenefitMetricsCsvGenerator
         $rows = [];
 
         foreach ($clientBenefitResponses as $response) {
-            if (null !== $response['date_last_checked_entitlement']) {
-                $dateLastCheckedFormatted = (new DateTime($response['date_last_checked_entitlement']))->format('Y-m-d');
+            if (null !== $response['dateLastCheckedEntitlement']) {
+                $dateLastCheckedFormatted = (new DateTime($response['dateLastCheckedEntitlement']))->format('Y-m-d');
             }
 
             $rows[] = [
                 $response['deputy_type'],
-                $response['when_last_checked_entitlement'],
-                $response['do_others_receive_money_on_clients_behalf'],
+                $response['whenLastCheckedEntitlement'],
+                $response['doOthersReceiveMoneyOnClientsBehalf'],
                 $dateLastCheckedFormatted,
-                $response['never_checked_explanation'],
-                $response['dont_know_money_explanation'],
-                $response['created_at'],
+                $response['neverCheckedExplanation'],
+                $response['dontKnowMoneyExplanation'],
+                $response['created'],
             ];
         }
 

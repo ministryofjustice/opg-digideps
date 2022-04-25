@@ -254,24 +254,29 @@ DQL;
     {
         $conn = $this->getEntityManager()->getConnection();
 
-        $sql = <<<SQL
-SELECT b.*,
-CASE
+        $caseStatement = "CASE
         WHEN r.type IN ('103', '102', '104', '103-4', '102-4') THEN 'Lay'
         WHEN r.type IN ('103-5','102-5','104-5','103-4-5','102-4-5') THEN 'Prof'
         ELSE 'PA'
-END deputy_type
-FROM (((client_benefits_check b
-LEFT JOIN report r ON b.report_id = r.id)
-LEFT JOIN client c ON c.id = r.client_id)
-LEFT JOIN named_deputy nd ON nd.id = c.named_deputy_id)
-SQL;
+END deputy_type";
 
-        $params = [];
+        $query = $this
+            ->getEntityManager()
+            ->createQueryBuilder()
+            ->select('b.whenLastCheckedEntitlement, b.doOthersReceiveMoneyOnClientsBehalf, b.dateLastCheckedEntitlement, b.neverCheckedExplanation, b.dontKnowMoneyExplanation, b.created')
+            ->from('App\Entity\Report\ClientBenefitsCheck', 'b')
+            ->addSelect($caseStatement)
+            ->leftJoin('b.report', 'r')
+            ->leftJoin('r.client', 'c')
+            ->leftJoin('c.namedDeputy', 'nd');
+
         if ($startDate && $endDate) {
-            $sql .= 'WHERE b.created_at BETWEEN :startDate AND :endDate';
-            $params['startDate'] = $startDate;
-            $params['endDate'] = $endDate;
+            $startDate = new DateTime($startDate);
+            $endDate = new DateTime($endDate);
+
+            $query->where('b.created BETWEEN :startDate AND :endDate')
+                ->setParameter('startDate', $startDate->setTime(0, 0, 0))
+                ->setParameter('endDate', $endDate->setTime(23, 59, 59));
         }
 
         if ($deputyType && $deputyType !== 'all') {
@@ -283,20 +288,15 @@ SQL;
             };
 
             if ($startDate === null && $endDate === null) {
-                $sql .= ' WHERE r.type IN (:deputyTypes)';
+                $query->where('r.type IN (:deputyTypes)')
+                    ->setParameter('deputyTypes', $types);
             } else {
-                $sql .= ' AND r.type IN (:deputyTypes)';
+                $query->andWhere('r.type IN (:deputyTypes)')
+                    ->setParameter('deputyTypes', $types);
             }
-
-            $params['deputyTypes'] = "'" . str_replace(',', '\',\'', implode(',', $types)) . "'";
         }
 
-        // print_r($this->interpolateQuery($sql, $params));
-
-        $stmt = $conn->prepare($sql);
-        $result = $stmt->executeQuery($params)->fetchAllAssociative();
-
-        return $result;
+        return $query->getQuery()->getArrayResult();
     }
 
     /**
