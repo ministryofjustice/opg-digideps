@@ -252,8 +252,6 @@ DQL;
 
     public function getBenefitsResponseMetrics(?string $startDate = null, ?string $endDate = null, ?string $deputyType = null): array
     {
-        $conn = $this->getEntityManager()->getConnection();
-
         $caseStatement = "CASE
         WHEN r.type IN ('103', '102', '104', '103-4', '102-4') THEN 'Lay'
         WHEN r.type IN ('103-5','102-5','104-5','103-4-5','102-4-5') THEN 'Prof'
