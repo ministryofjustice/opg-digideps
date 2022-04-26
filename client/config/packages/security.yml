@@ -77,7 +77,9 @@ security:
         secured_area:
             lazy: true
             provider: client_user_provider
-            custom_authenticator: App\Security\LoginFormAuthenticator
+            custom_authenticators:
+                #                Do we need another authenticator for session? Similar to API?
+                - App\Security\LoginFormAuthenticator
             logout:
                 path: /logout
                 target: /

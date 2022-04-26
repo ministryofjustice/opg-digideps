@@ -4,32 +4,54 @@ declare(strict_types=1);
 
 namespace App\Security;
 
+use App\Entity\User;
+use App\Service\Client\Internal\UserApi;
+use Symfony\Component\Security\Core\Exception\UserNotFoundException;
 use Symfony\Component\Security\Core\User\PasswordUpgraderInterface;
 use Symfony\Component\Security\Core\User\UserInterface;
 use Symfony\Component\Security\Core\User\UserProviderInterface;
 
-/**
- * @method UserInterface loadUserByIdentifier(string $identifier)
- */
 class UserProvider implements UserProviderInterface, PasswordUpgraderInterface
 {
-    public function refreshUser(UserInterface $user)
+    public function __construct(private UserApi $userApi)
     {
-        // TODO: Implement refreshUser() method.
     }
 
-    public function supportsClass(string $class)
+    public function refreshUser(UserInterface $user)
     {
-        // TODO: Implement supportsClass() method.
+        $user = $this->userApi->get($user->getId());
+
+        if (!$user) {
+            throw new UserNotFoundException('User not found');
+        }
+
+        return $user;
+    }
+
+    public function supportsClass(string $class): bool
+    {
+        return User::class === $class || is_subclass_of($class, User::class);
+    }
+
+    public function loadUserByIdentifier(string $identifier)
+    {
+        $user = $this->userApi->getByEmail($identifier);
+
+        if (!$user) {
+            throw new UserNotFoundException('User not found');
+        }
+
+        return $user;
     }
 
     public function loadUserByUsername(string $username)
     {
-        // TODO: Implement loadUserByUsername() method.
-    }
+        $user = $this->userApi->getByEmail($username);
 
-    public function __call(string $name, array $arguments)
-    {
-        // TODO: Implement @method UserInterface loadUserByIdentifier(string $identifier)
+        if (!$user) {
+            throw new UserNotFoundException('User not found');
+        }
+
+        return $user;
     }
 }

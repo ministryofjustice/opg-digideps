@@ -1277,4 +1277,9 @@ class User implements UserInterface, DeputyInterface, PasswordAuthenticatedUserI
 
         return $this;
     }
+
+    public function getUserIdentifier(): ?string
+    {
+        return $this->email;
+    }
 }
