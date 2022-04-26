@@ -35,7 +35,7 @@ Feature: Synchronising Documents with Sirius
         Then I should see the case number of the user I'm interacting with
         And the document "testimage.png" should be queued
 
-    @super-admin @prof-admin-health-welfare-submitted
+    @super-admin @prof-admin-health-welfare-submitted @mia
     Scenario: Running the document-sync command syncs queued documents with Sirius
         Given a Professional Deputy has submitted a Health and Welfare report
         And I attached a supporting document "test-image.png" to the submitted report
