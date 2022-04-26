@@ -7,8 +7,10 @@ use App\Service\Client\RestClient;
 use App\Service\DeputyProvider;
 use App\Service\Redirector;
 use App\Service\StringUtils;
+use Sensio\Bundle\FrameworkExtraBundle\Configuration\Template;
 use Symfony\Component\DependencyInjection\ParameterBag\ParameterBagInterface;
 use Symfony\Component\EventDispatcher\EventDispatcherInterface;
+use Symfony\Component\Form\FormError;
 use Symfony\Component\HttpFoundation\RedirectResponse;
 use Symfony\Component\HttpFoundation\Request;
 use Symfony\Component\HttpFoundation\Response;
@@ -19,7 +21,6 @@ use Symfony\Component\Routing\RouterInterface;
 use Symfony\Component\Security\Core\Authentication\Token\Storage\TokenStorageInterface;
 use Symfony\Component\Security\Core\Authentication\Token\UsernamePasswordToken;
 use Symfony\Component\Security\Core\Exception\AccessDeniedException;
-use Symfony\Component\Security\Http\Authentication\AuthenticationUtils;
 use Symfony\Component\Security\Http\Event\InteractiveLoginEvent;
 use Symfony\Contracts\Translation\TranslatorInterface;
 
@@ -54,23 +55,61 @@ class IndexController extends AbstractController
             ]);
     }
 
-    #[Route('login', name: 'login')]
-    public function loginAction(Request $request, AuthenticationUtils $authenticationUtils)
+    /**
+     * @Route("login", name="login")
+     * @Template("@App/Index/login.html.twig")
+     *
+     * @return Response|null
+     */
+    public function loginAction(Request $request)
     {
         $form = $this->createForm(FormDir\LoginType::class, null, [
             'action' => $this->generateUrl('login'),
         ]);
-
 //        $form->handleRequest($request);
         $vars = [
             'isAdmin' => 'admin' === $this->environment,
         ];
+//
+//        if ($form->isSubmitted() && $form->isValid()) {
+//            try {
+//                $this->logUserIn($form->getData(), $request, [
+//                    '_adId' => null,
+//                    '_adFirstname' => null,
+//                    '_adLastname' => null,
+//                    'loggedOutFrom' => null,
+//                ]);
+//            } catch (\Throwable $e) {
+//                $error = $e->getMessage();
+//
+//                if (423 == $e->getCode() && method_exists($e, 'getData')) {
+//                    $lockedFor = ceil(($e->getData()['data'] - time()) / 60);
+//                    $error = $this->translator->trans('bruteForceLocked', ['%minutes%' => $lockedFor], 'signin');
+//                }
+//
+//                if (499 == $e->getCode()) {
+//                    // too-many-attempts warning. captcha ?
+//                }
+//
+//                $form->addError(new FormError($error));
+//
+//                return $this->render('@App/Index/login.html.twig', [
+//                        'form' => $form->createView(),
+//                    ] + $vars);
+//            }
+//        }
 
         // different page version for timeout and manual logout
         /** @var SessionInterface */
         $session = $request->getSession();
 
-        if ('timeout' === $session->get('loggedOutFrom') || 'api' === $request->query->get('from')) {
+        if ('logoutPage' === $session->get('loggedOutFrom')) {
+            $session->set('loggedOutFrom', null); // avoid display the message at next page reload
+
+            return $this->render('@App/Index/login-from-logout.html.twig', [
+                    'form' => $form->createView(),
+                ] + $vars);
+        } elseif ('timeout' === $session->get('loggedOutFrom') || 'api' === $request->query->get('from')) {
             $session->set('loggedOutFrom', null); // avoid display the message at next page reload
             $vars['error'] = $this->translator->trans('sessionTimeoutOutWarning', [
                 '%time%' => StringUtils::secondsToHoursMinutes($this->params->get('session_expire_seconds')),
@@ -82,7 +121,6 @@ class IndexController extends AbstractController
         return $this->render('@App/Index/login.html.twig', [
                 'form' => $form->createView(),
                 'serviceNotificationContent' => $snSetting->isEnabled() ? $snSetting->getContent() : null,
-                'last_username' => $authenticationUtils->getLastUsername(),
         ] + $vars);
     }
 

@@ -101,11 +101,6 @@ class RestClient implements RestClientInterface
         /** @var User */
         $user = $this->arrayToEntity('User', $this->extractDataArray($response));
 
-        // store auth token
-        $tokenVal = $response->getHeader(self::HEADER_AUTH_TOKEN);
-        $tokenVal = is_array($tokenVal) && !empty($tokenVal[0]) ? $tokenVal[0] : null;
-        $this->tokenStorage->set($user->getId(), $tokenVal);
-
         return $user;
     }
 

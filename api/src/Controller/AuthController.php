@@ -5,9 +5,9 @@ namespace App\Controller;
 use App\Entity\User;
 use App\EventListener\RestInputOuputFormatter;
 use App\Exception as AppException;
+use App\Security\HeaderTokenAuthenticator;
+use App\Security\RedisUserProvider;
 use App\Service\Auth\AuthService;
-use App\Service\Auth\HeaderTokenAuthenticator;
-use App\Service\Auth\UserProvider;
 use App\Service\BruteForce\AttemptsIncrementalWaitingChecker;
 use App\Service\BruteForce\AttemptsInTimeChecker;
 use App\Service\Formatter\RestFormatter;
@@ -40,7 +40,7 @@ class AuthController extends RestController
      */
     public function login(
         Request $request,
-        UserProvider $userProvider,
+        RedisUserProvider $userProvider,
         AttemptsInTimeChecker $attemptsInTimechecker,
         AttemptsIncrementalWaitingChecker $incrementalWaitingTimechecker,
         RestInputOuputFormatter $restInputOutputFormatter,
@@ -51,11 +51,11 @@ class AuthController extends RestController
         }
         $data = $this->formatter->deserializeBodyContent($request);
 
-        //brute force checks
+        // brute force checks
         $index = array_key_exists('token', $data) ? 'token' : 'email';
         $key = $index.$data[$index];
 
-        $attemptsInTimechecker->registerAttempt($key); //e.g emailName@example.org
+        $attemptsInTimechecker->registerAttempt($key); // e.g emailName@example.org
         $incrementalWaitingTimechecker->registerAttempt($key);
 
         // exception if reached delay-check
@@ -113,7 +113,7 @@ class AuthController extends RestController
      *
      * @Route("/logout", methods={"POST"})
      */
-    public function logout(Request $request, UserProvider $userProvider)
+    public function logout(Request $request, RedisUserProvider $userProvider)
     {
         $authToken = HeaderTokenAuthenticator::getTokenFromRequest($request);
 

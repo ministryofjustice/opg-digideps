@@ -59,16 +59,14 @@ class AuthService
         $user = $this->userRepository->findOneBy([
             'email' => $email,
         ]);
+
         if (!$user instanceof User) {
             $this->logger->info('Login: user by email not found ');
 
             return false;
         }
 
-        // check hashed password matching
-        $hashedPassword = $this->passwordHasher->hashPassword($user, $pass);
-
-        if ($user->getPassword() == $hashedPassword) {
+        if ($this->passwordHasher->isPasswordValid($user, $pass)) {
             return $user;
         }
 

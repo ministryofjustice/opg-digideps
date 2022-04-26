@@ -3,7 +3,7 @@
 namespace App\Tests\Unit\Service\Auth;
 
 use App\Repository\UserRepository;
-use App\Service\Auth\UserProvider;
+use App\Security\RedisUserProvider;
 use Mockery;
 use MockeryStub as m;
 use PHPUnit\Framework\TestCase;
@@ -12,7 +12,7 @@ use RuntimeException;
 class UserProviderTest extends TestCase
 {
     /**
-     * @var UserProvider
+     * @var RedisUserProvider
      */
     private $userProvider;
 
@@ -26,7 +26,7 @@ class UserProviderTest extends TestCase
         $this->logger = m::stub('Symfony\Bridge\Monolog\Logger');
         $options = ['timeout_seconds' => 7];
 
-        $this->userProvider = new UserProvider($this->em, $this->redis, $this->logger, $options, $this->repo);
+        $this->userProvider = new RedisUserProvider($this->em, $this->redis, $this->logger, $options, $this->repo);
     }
 
     public function testloadUserByUsernameRedisNotFound()

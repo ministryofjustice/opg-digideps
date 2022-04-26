@@ -170,7 +170,7 @@ services:
             - '@App\Factory\OrganisationFactory'
             - "%shared_email_domains%"
 
-    App\Service\Auth\UserProvider:
+    App\Security\RedisUserProvider:
         arguments:
             [
                 "@em",

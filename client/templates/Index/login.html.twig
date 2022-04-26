@@ -56,17 +56,21 @@
     {% block loginHeader %}
     {% endblock %}
 
-    <form action="{{ path('login') }}" method="post">
-        <label for="username">Email:</label>
-        <input type="text" id="username" name="_username" value="{{ last_username }}"/>
-
-        <label for="password">Password:</label>
-        <input type="password" id="password" name="_password"/>
-
-        {# If you want to control the URL the user is redirected to on success
-        <input type="hidden" name="_target_path" value="/account"/> #}
-
-        <button type="submit">login</button>
+    <form method="post" class="row g-3">
+        <h1 class="h3 mb-3 font-weight-normal">Please sign in</h1>
+        <div class="col-12">
+            <label for="inputEmail">Email</label>
+            <input type="email" name="email" id="inputEmail" class="form-control" required autofocus>
+        </div>
+        <div class="col-12">
+            <label for="inputPassword">Password</label>
+            <input type="password" name="password" id="inputPassword" class="form-control" required>
+        </div>
+        <div class="col-12">
+            <button class="btn btn-lg btn-primary float-end" type="submit">
+                Sign in
+            </button>
+        </div>
     </form>
 
     <a class="behat-link-forgotten-password" href="{{ path('password_forgotten') }}">{{ 'forgottenPassword' | trans }}</a>

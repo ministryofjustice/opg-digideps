@@ -2,7 +2,7 @@
 
 namespace App\Tests\Unit\Service\Auth;
 
-use App\Service\Auth\HeaderTokenAuthenticator;
+use App\Security\HeaderTokenAuthenticator;
 use MockeryStub as m;
 use PHPUnit\Framework\TestCase;
 use Symfony\Component\HttpFoundation\Request;
@@ -57,7 +57,7 @@ class HeaderTokenAuthenticatorTest extends TestCase
         $token = m::stub('Symfony\Component\Security\Core\Authentication\Token\TokenInterface', [
             'getCredentials' => 'AuthTokenValue',
         ]);
-        $userProvider = m::stub('App\Service\Auth\UserProvider', [
+        $userProvider = m::stub('App\Security\RedisUserProvider', [
             'loadUserByUsername(AuthTokenValue)' => $user,
         ]);
 
