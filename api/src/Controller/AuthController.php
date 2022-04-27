@@ -5,6 +5,7 @@ namespace App\Controller;
 use App\Entity\User;
 use App\EventListener\RestInputOuputFormatter;
 use App\Exception as AppException;
+use App\Repository\UserRepository;
 use App\Security\HeaderTokenAuthenticator;
 use App\Security\RedisUserProvider;
 use App\Service\Auth\AuthService;
@@ -12,6 +13,7 @@ use App\Service\BruteForce\AttemptsIncrementalWaitingChecker;
 use App\Service\BruteForce\AttemptsInTimeChecker;
 use App\Service\Formatter\RestFormatter;
 use Doctrine\ORM\EntityManagerInterface;
+use Predis\Client;
 use Symfony\Component\HttpFoundation\Request;
 use Symfony\Component\Routing\Annotation\Route;
 use Symfony\Component\Security\Core\Authentication\Token\Storage\TokenStorageInterface;
@@ -21,13 +23,11 @@ use Symfony\Component\Security\Core\Authentication\Token\Storage\TokenStorageInt
  */
 class AuthController extends RestController
 {
-    private AuthService $authService;
-    private RestFormatter $formatter;
-
-    public function __construct(AuthService $authService, RestFormatter $restFormatter)
-    {
-        $this->authService = $authService;
-        $this->formatter = $restFormatter;
+    public function __construct(
+        private AuthService $authService,
+        private RestFormatter $restFormatter,
+        private UserRepository $userRepository
+    ) {
     }
 
     /**
@@ -40,16 +40,17 @@ class AuthController extends RestController
      */
     public function login(
         Request $request,
-        RedisUserProvider $userProvider,
         AttemptsInTimeChecker $attemptsInTimechecker,
         AttemptsIncrementalWaitingChecker $incrementalWaitingTimechecker,
         RestInputOuputFormatter $restInputOutputFormatter,
-        EntityManagerInterface $em
+        EntityManagerInterface $em,
+        Client $redis,
+        TokenStorageInterface $tokenStorage
     ) {
         if (!$this->authService->isSecretValid($request)) {
             throw new AppException\UnauthorisedException('client secret not accepted.');
         }
-        $data = $this->formatter->deserializeBodyContent($request);
+        $data = $this->restFormatter->deserializeBodyContent($request);
 
         // brute force checks
         $index = array_key_exists('token', $data) ? 'token' : 'email';
@@ -71,16 +72,14 @@ class AuthController extends RestController
         // load user by credentials (token or username & password)
         if (array_key_exists('token', $data)) {
             $user = $this->authService->getUserByToken($data['token']);
+        } elseif ($tokenStorage->getToken()->getUser()) {
+            $user = $tokenStorage->getToken()->getUser();
         } else {
-            $user = $this->authService->getUserByEmailAndPassword(strtolower($data['email']), $data['password']);
-        }
-
-        if (!$user) {
             // incase the user is not found or the password is not valid (same error given for security reasons)
             if ($attemptsInTimechecker->maxAttemptsReached($key)) {
                 throw new AppException\UserWrongCredentialsManyAttempts();
             } else {
-                throw new AppException\UserWrongCredentials();
+                throw new AppException\UserWrongCredentialsException();
             }
         }
 
@@ -92,18 +91,20 @@ class AuthController extends RestController
         $attemptsInTimechecker->resetAttempts($key);
         $incrementalWaitingTimechecker->resetAttempts($key);
 
-        $randomToken = $userProvider->generateRandomTokenAndStore($user);
         $user->setLastLoggedIn(new \DateTime());
         $em->persist($user);
         $em->flush();
 
+        $authToken = $user->getId().'_'.sha1(microtime().spl_object_hash($user).rand(1, 999));
+        $redis->set($authToken, serialize($tokenStorage->getToken()));
+
         // add token into response
-        $restInputOutputFormatter->addResponseModifier(function ($response) use ($randomToken) {
-            $response->headers->set(HeaderTokenAuthenticator::HEADER_NAME, $randomToken);
+        $restInputOutputFormatter->addResponseModifier(function ($response) use ($authToken) {
+            $response->headers->set(HeaderTokenAuthenticator::HEADER_NAME, $authToken);
         });
 
         // needed for redirector
-        $this->formatter->setJmsSerialiserGroups(['user', 'user-login']);
+        $this->restFormatter->setJmsSerialiserGroups(['user', 'user-login']);
 
         return $user;
     }
@@ -127,7 +128,7 @@ class AuthController extends RestController
      */
     public function getLoggedUser(TokenStorageInterface $tokenStorage)
     {
-        $this->formatter->setJmsSerialiserGroups(['user', 'user-login']);
+        $this->restFormatter->setJmsSerialiserGroups(['user', 'user-login']);
 
         return $tokenStorage->getToken()->getUser();
     }

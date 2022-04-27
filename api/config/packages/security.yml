@@ -24,10 +24,6 @@ security:
             pattern: ^/feedback/homepage
             security: false
             methods: [POST]
-        login:
-            pattern: ^/auth/login$
-            security: false
-            methods: [POST]
         userRecreateToken:
             pattern: ^/user/recreate-token
             security: false

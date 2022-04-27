@@ -80,6 +80,7 @@ security:
             custom_authenticators:
                 #                Do we need another authenticator for session? Similar to API?
                 - App\Security\LoginFormAuthenticator
+                - App\Security\SessionAuthenticator
             logout:
                 path: /logout
                 target: /

@@ -5,7 +5,7 @@ namespace App\Service\Client;
 use App\Entity\User;
 use App\Exception as AppException;
 use App\Model\SelfRegisterData;
-use App\Service\Client\TokenStorage\TokenStorageInterface;
+use App\Service\Client\TokenStorage\RedisStorage;
 use App\Service\RequestIdLoggerProcessor;
 use GuzzleHttp\ClientInterface;
 use GuzzleHttp\Exception\RequestException;
@@ -16,7 +16,6 @@ use Psr\Log\LoggerInterface;
 use Symfony\Component\DependencyInjection\ContainerInterface;
 use Symfony\Component\DependencyInjection\ParameterBag\ParameterBagInterface;
 use Symfony\Component\HttpFoundation\Response;
-use Symfony\Component\Security\Core\Authentication\Token\Storage\TokenStorageInterface as SecurityTokenStorage;
 
 /**
  * Connects to RESTful Server (API)
@@ -74,12 +73,11 @@ class RestClient implements RestClientInterface
     public function __construct(
         protected ContainerInterface $container,
         protected ClientInterface $client,
-        protected TokenStorageInterface $tokenStorage,
+        protected RedisStorage $redisStorage,
         protected SerializerInterface $serialiser,
         protected LoggerInterface $logger,
         protected string $clientSecret,
-        protected ParameterBagInterface $params,
-        protected SecurityTokenStorage $securityTokenStorage
+        protected ParameterBagInterface $params
     ) {
         $this->saveHistory = $params->get('kernel.debug');
         $this->history = [];
@@ -100,8 +98,9 @@ class RestClient implements RestClientInterface
 
         /** @var User */
         $user = $this->arrayToEntity('User', $this->extractDataArray($response));
+        $authToken = $response->getHeader(RestClient::HEADER_AUTH_TOKEN)[0];
 
-        return $user;
+        return [$user, $authToken];
     }
 
     /**
@@ -112,7 +111,7 @@ class RestClient implements RestClientInterface
         $responseArray = $this->apiCall('post', '/auth/logout', null, 'array');
 
         // remove AuthToken
-        $this->tokenStorage->remove($this->getLoggedUserId());
+        $this->redisStorage->reset();
 
         return $responseArray;
     }
@@ -289,7 +288,7 @@ class RestClient implements RestClientInterface
     {
         // add AuthToken if user is logged
         if (!empty($options['addAuthToken']) && $loggedUserId = $this->getLoggedUserId()) {
-            $options['headers'][self::HEADER_AUTH_TOKEN] = $this->tokenStorage->get($loggedUserId);
+            $options['headers'][self::HEADER_AUTH_TOKEN] = $this->redisStorage->get($loggedUserId);
         }
         if (!empty($options['addClientSecret'])) {
             $options['headers'][self::HEADER_CLIENT_SECRET] = $this->clientSecret;
@@ -499,7 +498,7 @@ class RestClient implements RestClientInterface
         if ($this->userId) {
             return $this->userId;
         } else {
-            $token = $this->securityTokenStorage->getToken();
+            $token = $this->redisStorage->getToken();
 
             if (!is_null($token)) {
                 $user = $token->getUser();

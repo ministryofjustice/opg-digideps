@@ -10,7 +10,6 @@ use App\Form\Admin\Fixture\CourtOrderFixtureType;
 use App\Service\Client\Internal\ReportApi;
 use App\Service\Client\Internal\UserApi;
 use App\Service\Client\RestClient;
-use App\Service\Client\TokenStorage\TokenStorageInterface;
 use App\Service\DeputyProvider;
 use App\TestHelpers\ClientHelpers;
 use DateTime;
@@ -34,7 +33,6 @@ class FixtureController extends AbstractController
     private RestClient $restClient;
     private ReportApi $reportApi;
     private UserApi $userApi;
-    private TokenStorageInterface $tokenStorage;
     private DeputyProvider $deputyProvider;
     private string $symfonyEnvironment;
 
@@ -44,7 +42,6 @@ class FixtureController extends AbstractController
         RestClient $restClient,
         ReportApi $reportApi,
         UserApi $userApi,
-        TokenStorageInterface $tokenStorage,
         DeputyProvider $deputyProvider,
         string $symfonyEnvironment
     ) {
@@ -53,7 +50,6 @@ class FixtureController extends AbstractController
         $this->restClient = $restClient;
         $this->reportApi = $reportApi;
         $this->userApi = $userApi;
-        $this->tokenStorage = $tokenStorage;
         $this->deputyProvider = $deputyProvider;
         $this->symfonyEnvironment = $symfonyEnvironment;
     }

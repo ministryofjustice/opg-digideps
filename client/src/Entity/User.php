@@ -357,6 +357,12 @@ class User implements UserInterface, DeputyInterface, PasswordAuthenticatedUserI
      */
     private $numberOfSubmittedReports;
 
+    /**
+     * @JMS\Type("string")
+     * @JMS\Groups({"user_details_full", "user_details_basic", "admin_add_user"})
+     **/
+    private ?string $authToken;
+
     public function __construct()
     {
         $this->organisations = new ArrayCollection();
@@ -1281,5 +1287,17 @@ class User implements UserInterface, DeputyInterface, PasswordAuthenticatedUserI
     public function getUserIdentifier(): ?string
     {
         return $this->email;
+    }
+
+    public function getAuthToken(): ?string
+    {
+        return $this->authToken;
+    }
+
+    public function setAuthToken(?string $authToken): User
+    {
+        $this->authToken = $authToken;
+
+        return $this;
     }
 }
