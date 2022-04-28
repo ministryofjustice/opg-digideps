@@ -77,7 +77,7 @@ Feature: admin / admin
     And I follow "Upload users"
     And I fill in "form_type_0" with "lay"
     And I press "Continue"
-    Then I should be on "/admin/casrec-upload"
+    Then I should be on "/admin/pre-registration-upload"
 
   Scenario: Can follow links to org upload page
     Given I am logged in to admin as "admin@publicguardian.gov.uk" with password "DigidepsPass1234"

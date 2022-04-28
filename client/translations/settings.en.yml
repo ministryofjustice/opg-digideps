@@ -1,131 +1,137 @@
 pageTitle:
-  settings-page: Your deputyship details
-  pa-settings-page: Settings
-  change-password: Change password
-  change-email: Change email
-  profile: Your details
-  profile-edit: Edit your details
-  registration-password:
-  registration-details: Enter your details
+    settings-page: Your deputyship details
+    pa-settings-page: Settings
+    change-password: Change password
+    change-email: Change email
+    profile: Your details
+    profile-edit: Edit your details
+    registration-password:
+    registration-details: Enter your details
 htmlTitle:
-  settings-page: Deputy report - Your deputyship details | GOV.UK
-  pa-settings-page: Settings - Complete the deputy report | GOV.UK
-  change-password: Settings - Change password
-  change-email: Settings - Change email
-  profile: Settings - Your details
-  profile-edit: Settings - Edit your details
-  registration-details: Registration - Enter your details
+    settings-page: Deputy report - Your deputyship details | GOV.UK
+    pa-settings-page: Settings - Complete the deputy report | GOV.UK
+    change-password: Settings - Change password
+    change-email: Settings - Change email
+    profile: Settings - Your details
+    profile-edit: Settings - Edit your details
+    registration-details: Registration - Enter your details
 supportTitle:
-  password: Settings
-  profile:  Settings
-  profile-edit:  Settings
+    password: Settings
+    profile: Settings
+    profile-edit: Settings
 
 settings-page:
-  subtitle: Your sign in details
-  links:
-    client:
-      title: "%client%'s details"
-      description: "Edit %client%'s name, address, phone number, case number and your court order date."
-    profile:
-      title: Your details
-      description:    Edit your name, address and phone number.
-      pa-description: Update any details on your account such as job title, telephone number or email address
-    password:
-      title: Your password
-      description: Change the password you use to sign in
-    team:
-      title: User accounts
-      description: View team members
-      admin-description: Add, edit and remove user accounts for your team members. Any users you add will be able to see and edit all your organisation's reports.
-    organisation:
-      title: User accounts
-      description: View and edit members of your organisations
+    subtitle: Your sign in details
+    links:
+        client:
+            title: "%client%'s details"
+            description: "Edit %client%'s name, address, phone number, case number and your court order date."
+        profile:
+            title: Your details
+            description: Edit your name, address and phone number.
+            pa-description: Update any details on your account such as job title, telephone number or email address
+        password:
+            title: Your password
+            description: Change the password you use to sign in
+        team:
+            title: User accounts
+            description: View team members
+            admin-description: Add, edit and remove user accounts for your team members. Any users you add will be able to see and edit all your organisation's reports.
+        organisation:
+            title: User accounts
+            description: View and edit members of your organisations
 
 profile-page:
-  fullName: Full name
-  address: Address
-  mainPhoneNumber: Phone number
-  alternativePhoneNumber: Alternative phone number
-  emailAddress: Email address
-  jobTitle: Job title
-  editButton: Edit your details
+    fullName: Full name
+    address: Address
+    mainPhoneNumber: Phone number
+    alternativePhoneNumber: Alternative phone number
+    emailAddress: Email address
+    jobTitle: Job title
+    editButton: Edit your details
 
 # Co-deputy registration
 verifyDeputy:
-  yourDetails: Your details
-  yourClientsDetails: Your client's details
+    yourDetails: Your details
+    yourClientsDetails: Your client's details
 
 form:
-  editYourDetails:
-    subSectionTitle: "Edit your details"
-    detailsEntered: "Details you've already entered"
-    furtherDetailsNeeded: "Further details needed"
-    controls:
-      cancel:
-        label: Cancel
-      save:
-        label: Save
-      firstname:
-        label: First name
-      lastname:
-        label: Last name
-      address1:
-        label: Address
-        context: 1 of 3
-      address2:
-        label: " "
-        context: Address 2 of 3
-      address3:
-        label: " "
-        context: Address 3 of 3
-      addressPostcode:
-        label: Postcode
-      addressCountry:
-        label: Country
-      phoneMain:
-        label: Phone number
-      phoneAlternative:
-        label: Alternative phone number
-      email:
-        label: Email
-      jobTitle:
-        label: Job title
-      removeAdmin:
-        title: Administrator access
-        label: Give up administrator rights
-        hint: You are currently an administrator on the Deputy Report Service.
+    editYourDetails:
+        subSectionTitle: "Edit your details"
+        detailsEntered: "Details you've already entered"
+        furtherDetailsNeeded: "Further details needed"
+        controls:
+            cancel:
+                label: Cancel
+            save:
+                label: Save
+            firstname:
+                label: First name
+            lastname:
+                label: Last name
+            address1:
+                label: Address
+                context: 1 of 5
+            address2:
+                label: " "
+                context: Address 2 of 5
+            address3:
+                label: " "
+                context: Address 3 of 5
+            address4:
+                label: " "
+                context: Address 4 of 5
+            address5:
+                label: " "
+                context: Address 5 of 5
+            addressPostcode:
+                label: Postcode
+            addressCountry:
+                label: Country
+            phoneMain:
+                label: Phone number
+            phoneAlternative:
+                label: Alternative phone number
+            email:
+                label: Email
+            jobTitle:
+                label: Job title
+            removeAdmin:
+                title: Administrator access
+                label: Give up administrator rights
+                hint: You are currently an administrator on the Deputy Report Service.
 
-  changeYourPassword:
-    controls:
-      cancel:
-        label: Cancel
-      save:
-        label: Save
-      currentPassword:
-          label: Current password
-      newPassword:
-          label: New password
-          hint: "Your password must have:"
-          hintList: |
-            at least 14 characters
-            at least 1 uppercase letter
-            at least 1 lowercase letter
-            at least 1 number
-      confirmNewPassword:
-          label: Confirm new password
+    changeYourPassword:
+        controls:
+            cancel:
+                label: Cancel
+            save:
+                label: Save
+            currentPassword:
+                label: Current password
+            newPassword:
+                label: New password
+                hint: "Your password must have:"
+                hintList: |
+                    at least 14 characters
+                    at least 1 uppercase letter
+                    at least 1 lowercase letter
+                    at least 1 number
+            confirmNewPassword:
+                label: Confirm new password
 
-  changeEmail:
-    currentEmail:
-      label: Current email address
-    newAddress:
-      label: New email address
-      confirm:
-        label: Confirm new email
-    controls:
-      cancel:
-        label: Cancel
-      save:
-        label: Save
-    currentPassword:
-        label: Current password
-        hint: Please enter your current password to update your email
+    changeEmail:
+        currentEmail:
+            label: Current email address
+        newAddress:
+            label: New email address
+            confirm:
+                label: Confirm new email
+        controls:
+            cancel:
+                label: Cancel
+            save:
+                label: Save
+        currentPassword:
+            label: Current password
+            hint: Please enter your current password to update your email

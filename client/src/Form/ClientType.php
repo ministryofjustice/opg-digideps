@@ -25,8 +25,10 @@ class ClientType extends AbstractType
         ])
                 ->add('address', FormTypes\TextType::class)
                 ->add('address2', FormTypes\TextType::class)
+                ->add('address3', FormTypes\TextType::class)
+                ->add('address4', FormTypes\TextType::class)
+                ->add('address5', FormTypes\TextType::class)
                 ->add('postcode', FormTypes\TextType::class)
-                ->add('county', FormTypes\TextType::class)
                 ->add('country', FormTypes\CountryType::class, [
                       'preferred_choices' => ['GB'],
                       'placeholder' => 'country.defaultOption',
@@ -48,7 +50,7 @@ class ClientType extends AbstractType
     {
         $resolver->setDefaults([
             'translation_domain' => 'registration',
-            'validation_groups'  => 'lay-deputy-client'
+            'validation_groups' => 'lay-deputy-client',
         ]);
     }
 

@@ -20,14 +20,7 @@ class NamedDeputy implements DeputyInterface
      *
      * @JMS\Type("string")
      */
-    private $deputyNo;
-
-    /**
-     * @var string
-     *
-     * @JMS\Type("string")
-     */
-    private $deputyType;
+    private $deputyUid;
 
     /**
      * @var string
@@ -62,13 +55,6 @@ class NamedDeputy implements DeputyInterface
      * @JMS\Type("string")
      */
     private $email3;
-
-    /**
-     * @var string
-     *
-     * @JMS\Type("string")
-     */
-    private $depAddrNo;
 
     /**
      * @var string
@@ -134,20 +120,6 @@ class NamedDeputy implements DeputyInterface
     private $phoneAlternative;
 
     /**
-     * @var bool
-     *
-     * @JMS\Type("boolean")
-     */
-    private $feePayer;
-
-    /**
-     * @var bool
-     *
-     * @JMS\Type("boolean")
-     */
-    private $corres;
-
-    /**
      * @return int
      */
     public function getId()
@@ -163,26 +135,6 @@ class NamedDeputy implements DeputyInterface
     public function setId($id)
     {
         $this->id = $id;
-
-        return $this;
-    }
-
-    /**
-     * @return string
-     */
-    public function getDeputyNo()
-    {
-        return $this->deputyNo;
-    }
-
-    /**
-     * @param string $deputyNo
-     *
-     * @return $this
-     */
-    public function setDeputyNo($deputyNo)
-    {
-        $this->deputyNo = $deputyNo;
 
         return $this;
     }
@@ -301,26 +253,6 @@ class NamedDeputy implements DeputyInterface
     public function setEmail3($email3)
     {
         $this->email3 = $email3;
-
-        return $this;
-    }
-
-    /**
-     * @return string
-     */
-    public function getDepAddrNo()
-    {
-        return $this->depAddrNo;
-    }
-
-    /**
-     * @param string $depAddrNo
-     *
-     * @return $this
-     */
-    public function setDepAddrNo($depAddrNo)
-    {
-        $this->depAddrNo = $depAddrNo;
 
         return $this;
     }
@@ -517,36 +449,6 @@ class NamedDeputy implements DeputyInterface
     public function setPhoneAlternative($phoneAlternative)
     {
         $this->phoneAlternative = trim($phoneAlternative);
-
-        return $this;
-    }
-
-    public function isFeePayer(): bool
-    {
-        return $this->feePayer;
-    }
-
-    /**
-     * @return $this
-     */
-    public function setFeePayer(bool $feePayer)
-    {
-        $this->feePayer = $feePayer;
-
-        return $this;
-    }
-
-    public function isCorres(): bool
-    {
-        return $this->corres;
-    }
-
-    /**
-     * @return $this
-     */
-    public function setCorres(bool $corres)
-    {
-        $this->corres = $corres;
 
         return $this;
     }

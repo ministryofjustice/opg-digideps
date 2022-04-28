@@ -2,10 +2,10 @@
 
 namespace App\DataFixtures;
 
-use App\Entity\CasRec;
 use App\Entity\Client;
 use App\Entity\NamedDeputy;
 use App\Entity\Ndr\Ndr;
+use App\Entity\PreRegistration;
 use App\Entity\Report\Report;
 use App\Entity\User;
 use App\Factory\OrganisationFactory;
@@ -13,6 +13,7 @@ use App\Repository\NamedDeputyRepository;
 use App\Repository\OrganisationRepository;
 use App\Service\OrgService;
 use App\Service\ReportUtils;
+use DateTime;
 use Doctrine\Persistence\ObjectManager;
 
 class ProfTestUserFixtures extends AbstractDataFixture
@@ -50,8 +51,7 @@ class ProfTestUserFixtures extends AbstractDataFixture
             'Dep Surname' => 'SURNAME1',
             'Email' => 'behat-prof1@publicguardian.gov.uk',
             'active' => false,
-            'Deputy No' => '9000004',
-            'Dep Type' => 23,
+            'Deputy Uid' => '9000004',
             'roleName' => 'ROLE_PROF_NAMED',
             'Dep Adrs1' => 'Prof OPG',
             'Dep Adrs2' => 'ADD2',
@@ -311,8 +311,7 @@ class ProfTestUserFixtures extends AbstractDataFixture
             'Dep Surname' => 'SURNAME1',
             'Email' => 'behat-prof2@publicguardian.gov.uk',
             'active' => false,
-            'Deputy No' => '9000005',
-            'Dep Type' => 23,
+            'Deputy Uid' => '9000005',
             'roleName' => 'ROLE_PROF_NAMED',
             'Dep Adrs1' => 'Prof OPG',
             'Dep Adrs2' => 'ADD2',
@@ -376,8 +375,7 @@ class ProfTestUserFixtures extends AbstractDataFixture
             'Dep Surname' => 'SURNAME1',
             'Email' => 'behat-prof3@publicguardian.gov.uk',
             'active' => false,
-            'Deputy No' => '9000006',
-            'Dep Type' => 23,
+            'Deputy Uid' => '9000006',
             'roleName' => 'ROLE_PROF_NAMED',
             'Dep Adrs1' => 'Prof OPG',
             'Dep Adrs2' => 'ADD2',
@@ -441,8 +439,7 @@ class ProfTestUserFixtures extends AbstractDataFixture
             'Dep Surname' => 'SURNAME1',
             'Email' => 'behat-prof4@publicguardian.gov.uk',
             'active' => false,
-            'Deputy No' => '9000007',
-            'Dep Type' => 23,
+            'Deputy Uid' => '9000007',
             'roleName' => 'ROLE_PROF_NAMED',
             'Dep Adrs1' => 'Prof OPG',
             'Dep Adrs2' => 'ADD2',
@@ -465,7 +462,7 @@ class ProfTestUserFixtures extends AbstractDataFixture
                     'phone' => '078912345678',
                     'email' => 'cly401@hent.com',
                     'dob' => '02/02/1967',
-                    'reportType' => '',
+                    'reportType' => 'OPG103',
                     'reportVariation' => 'hw',
                 ],
             ],
@@ -476,8 +473,7 @@ class ProfTestUserFixtures extends AbstractDataFixture
             'Dep Surname' => 'SURNAME1',
             'Email' => 'existing-deputy1@abc-solicitors.uk',
             'active' => true,
-            'Deputy No' => '9000008',
-            'Dep Type' => 23,
+            'Deputy Uid' => '9000008',
             'roleName' => 'ROLE_PROF_NAMED',
             'Dep Adrs1' => 'ABC Solicitors',
             'Dep Adrs2' => 'ADD2',
@@ -535,7 +531,7 @@ class ProfTestUserFixtures extends AbstractDataFixture
             ->setLastname(isset($data['Dep Surname']) ? $data['Dep Surname'] : $data['id'])
             ->setEmail(isset($data['Email']) ? $data['Email'] : $data['id'].'@example.org')
             ->setActive(isset($data['active']) ? $data['active'] : true)
-            ->setRegistrationDate(new \DateTime())
+            ->setRegistrationDate(new DateTime())
             ->setNdrEnabled(false)
             ->setPhoneMain(isset($data['Phone Main']) ? $data['Phone Main'] : null)
             ->setAddress1(isset($data['Dep Adrs1']) ? $data['Dep Adrs1'] : 'Victoria Road')
@@ -543,7 +539,6 @@ class ProfTestUserFixtures extends AbstractDataFixture
             ->setAddress3(isset($data['Dep Adrs3']) ? $data['Dep Adrs3'] : null)
             ->setAddressPostcode(isset($data['Dep Postcode']) ? $data['Dep Postcode'] : 'SW1')
             ->setAddressCountry('GB')
-            ->setDeputyNo(isset($data['Deputy No']) ? $data['Deputy No'] : null)
             ->setRoleName($data['roleName'])
             ->setAgreeTermsUse(isset($data['Agree Terms Use']) ? $data['Agree Terms Use'] : true);
 
@@ -596,8 +591,8 @@ class ProfTestUserFixtures extends AbstractDataFixture
     private function createClient($clientData, $userData, $user, $manager, $organisation)
     {
         $client = new Client();
-        $courtDate = \DateTime::createFromFormat('d/m/Y', $clientData['lastReportDate']);
-        $dob = \DateTime::createFromFormat('d/m/Y', $clientData['dob']);
+        $courtDate = DateTime::createFromFormat('d/m/Y', $clientData['lastReportDate']);
+        $dob = DateTime::createFromFormat('d/m/Y', $clientData['dob']);
 
         $client
             ->setCaseNumber(User::padDeputyNumber($clientData['caseNumber']))
@@ -606,7 +601,7 @@ class ProfTestUserFixtures extends AbstractDataFixture
             ->setCourtDate($courtDate->modify('-1year +1day'))
             ->setAddress($clientData['address1'])
             ->setAddress2($clientData['address2'])
-            ->setCounty($clientData['address3'])
+            ->setAddress3($clientData['address3'])
             ->setPostcode($clientData['addressPostcode'])
             ->setCountry('GB')
             ->setPhone($clientData['phone'])
@@ -628,8 +623,8 @@ class ProfTestUserFixtures extends AbstractDataFixture
             $ndr = new Ndr($client);
             $manager->persist($ndr);
         } else {
-            $type = CasRec::getTypeBasedOnTypeofRepAndCorref($clientData['reportType'], $clientData['reportVariation'], CasRec::REALM_PROF);
-            $endDate = \DateTime::createFromFormat('d/m/Y', $clientData['lastReportDate']);
+            $type = PreRegistration::getReportTypeByOrderType($clientData['reportType'], $clientData['reportVariation'], PreRegistration::REALM_PROF);
+            $endDate = DateTime::createFromFormat('d/m/Y', $clientData['lastReportDate']);
             $startDate = $this->reportUtils->generateReportStartDateFromEndDate($endDate);
             $report = new Report($client, $type, $startDate, $endDate);
 

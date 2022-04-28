@@ -96,7 +96,7 @@ class MailFactoryTest extends TestCase
             ->setAddress('10 Fake Road')
             ->setAddress2('Pretendville')
             ->setPostcode('A12 3BC')
-            ->setCounty('Notrealingham')
+            ->setAddress3('Notrealingham')
             ->setCountry('GB')
             ->setPhone('01215553333');
     }

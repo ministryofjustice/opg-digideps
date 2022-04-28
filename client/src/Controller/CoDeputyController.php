@@ -18,6 +18,7 @@ use Symfony\Component\HttpFoundation\Request;
 use Symfony\Component\Routing\Annotation\Route;
 use Symfony\Component\Validator\Validator\ValidatorInterface;
 use Symfony\Contracts\Translation\TranslatorInterface;
+use Throwable;
 
 class CoDeputyController extends AbstractController
 {
@@ -83,7 +84,7 @@ class CoDeputyController extends AbstractController
                 $mainClient = $this->restClient->get('client/'.$clientId, 'Client', ['client', 'client-users', 'report-id', 'current-report', 'user']);
                 $mainDeputy = reset($mainClient->getUsers());
 
-                // validate against casRec
+                // validate against pre-registration data
                 try {
                     $this->restClient->apiCall('post', 'selfregister/verifycodeputy', $selfRegisterData, 'array', [], false);
                     $user->setCoDeputyClientConfirmed(true);
@@ -93,7 +94,7 @@ class CoDeputyController extends AbstractController
                     $this->restClient->put('user/'.$user->getId(), $user);
 
                     return $this->redirect($this->generateUrl('homepage'));
-                } catch (\Throwable $e) {
+                } catch (Throwable $e) {
                     $translator = $this->translator;
 
                     switch ((int) $e->getCode()) {
@@ -140,7 +141,7 @@ class CoDeputyController extends AbstractController
      *
      * @return array|RedirectResponse
      *
-     * @throws \Throwable
+     * @throws Throwable
      */
     public function addAction(Request $request, Redirector $redirector)
     {
@@ -172,7 +173,7 @@ class CoDeputyController extends AbstractController
                 $request->getSession()->getFlashBag()->add('notice', 'Deputy invitation has been sent');
 
                 return $this->redirect($backLink);
-            } catch (\Throwable $e) {
+            } catch (Throwable $e) {
                 switch ((int) $e->getCode()) {
                     case 422:
                         $form->get('email')->addError(new FormError($this->translator->trans('form.email.existingError', [], 'co-deputy')));
@@ -200,7 +201,7 @@ class CoDeputyController extends AbstractController
      *
      * @return array|RedirectResponse
      *
-     * @throws \Throwable
+     * @throws Throwable
      */
     public function resendActivationAction(Request $request, string $email)
     {
@@ -229,7 +230,7 @@ class CoDeputyController extends AbstractController
                 $request->getSession()->getFlashBag()->add('notice', 'Deputy invitation was re-sent');
 
                 return $this->redirect($backLink);
-            } catch (\Throwable $e) {
+            } catch (Throwable $e) {
                 switch ((int) $e->getCode()) {
                     case 422:
                         $form->get('email')->addError(new FormError($this->translator->trans('form.email.existingError', [], 'co-deputy')));

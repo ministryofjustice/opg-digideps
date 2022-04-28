@@ -1,4 +1,6 @@
-<?php declare(strict_types=1);
+<?php
+
+declare(strict_types=1);
 
 namespace App\Form\Admin;
 
@@ -8,7 +10,6 @@ use Symfony\Component\Form\Test\TypeTestCase;
 
 class ReportChecklistTypeTest extends TypeTestCase
 {
-
     /**
      * @dataProvider formValuesProvider
      */
@@ -20,7 +21,7 @@ class ReportChecklistTypeTest extends TypeTestCase
         $formDataObject = new Checklist($report);
 
         $options = [
-            'report' => $report
+            'report' => $report,
         ];
 
         $form = $this->factory->create(ReportChecklistType::class, $formDataObject, $options);
@@ -30,7 +31,7 @@ class ReportChecklistTypeTest extends TypeTestCase
         $expected->setProfCostsReasonableAndProportionate($costValues);
         $expected->setHasDeputyOverchargedFromPreviousEstimates($costValues);
         $expected->setContactDetailsUptoDate($deputyDetails);
-        $expected->setDeputyFullNameAccurateInCasrec($deputyDetails);
+        $expected->setDeputyFullNameAccurateInSirius($deputyDetails);
 
         $formData = [
             'paymentsMatchCostCertificate' => $costValues,
@@ -50,7 +51,7 @@ class ReportChecklistTypeTest extends TypeTestCase
         return [
             'Yes' => ['yes', false],
             'No' => ['no', false],
-            'Not Applicable' => ['na', false]
+            'Not Applicable' => ['na', false],
         ];
     }
 }

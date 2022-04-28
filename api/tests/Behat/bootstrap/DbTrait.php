@@ -4,6 +4,8 @@ namespace App\Tests\Behat;
 
 use Behat\Behat\Hook\Scope\AfterScenarioScope;
 use Behat\Behat\Hook\Scope\BeforeScenarioScope;
+use InvalidArgumentException;
+use RuntimeException;
 
 trait DbTrait
 {
@@ -14,10 +16,10 @@ trait DbTrait
     {
         $sqlFile = self::getSnapshotPath($status);
         // truncate cascade + insert. faster than drop + table recreate
-        exec('echo "SET client_min_messages TO WARNING; truncate dd_user, satisfaction, named_deputy, organisation, casrec, setting, client cascade;" > '.$sqlFile);
+        exec('echo "SET client_min_messages TO WARNING; truncate dd_user, satisfaction, named_deputy, organisation, pre_registration, setting, client cascade;" > '.$sqlFile);
         exec('pg_dump '.self::$dbName."  --data-only  --inserts --exclude-table='migrations' | sed '/EXTENSION/d' >> {$sqlFile}", $output, $return);
         if (!file_exists($sqlFile) || filesize($sqlFile) < 100) {
-            throw new \RuntimeException("SQL snapshot $sqlFile not created or not valid");
+            throw new RuntimeException("SQL snapshot $sqlFile not created or not valid");
         }
     }
 
@@ -29,7 +31,7 @@ trait DbTrait
         $sqlFile = self::getSnapshotPath($status);
         if (!file_exists($sqlFile)) {
             $error = "File $sqlFile not found. Re-run the full behat suite to recreate the missing snapshots.";
-            throw new \RuntimeException($error);
+            throw new RuntimeException($error);
         }
 
         exec(sprintf('psql %s --quiet < %s', self::$dbName, $sqlFile));
@@ -92,7 +94,7 @@ trait DbTrait
     public function dbQueryRaw($table, array $fields)
     {
         if (!$fields) {
-            throw new \InvalidArgumentException(__METHOD__.' array with at least one element expected');
+            throw new InvalidArgumentException(__METHOD__.' array with at least one element expected');
         }
         $columns = join(',', array_keys($fields));
         $values = "'".join("', '", array_values($fields))."'";

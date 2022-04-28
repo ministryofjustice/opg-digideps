@@ -14,24 +14,23 @@ use App\Repository\NamedDeputyRepository;
 use App\Repository\OrganisationRepository;
 use App\Repository\ReportRepository;
 use App\Service\ReportUtils;
-use App\v2\Registration\Assembler\CasRecToOrgDeputyshipDtoAssembler;
+use App\v2\Registration\Assembler\SiriusToOrgDeputyshipDtoAssembler;
 use App\v2\Registration\DTO\OrgDeputyshipDto;
 use DateTime;
 use DateTimeImmutable;
 use Doctrine\ORM\EntityManager;
-use Exception;
 use Faker\Factory;
 use Faker\Provider\en_GB\Address;
 
 class OrgDeputyshipDTOTestHelper
 {
-    public static function generateCasRecOrgDeputyshipCompressedJson(int $validCount, int $invalidCount)
+    public static function generateSiriusOrgDeputyshipCompressedJson(int $validCount, int $invalidCount)
     {
         $deputyships = [];
 
         if ($validCount > 0) {
             foreach (range(1, $validCount) as $index) {
-                $deputyships[] = self::generateValidCasRecOrgDeputyshipArray();
+                $deputyships[] = self::generateValidSiriusOrgDeputyshipArray();
             }
         }
 
@@ -47,50 +46,47 @@ class OrgDeputyshipDTOTestHelper
     /**
      * @return array
      */
-    public static function generateValidCasRecOrgDeputyshipArray()
+    public static function generateValidSiriusOrgDeputyshipArray()
     {
         $faker = Factory::create();
         $courtOrderMadeDate = DateTimeImmutable::createFromMutable($faker->dateTimeThisYear());
-        $reportDueDate = $courtOrderMadeDate->modify('12 months - 1 day');
+        $reportPeriodEndDate = $courtOrderMadeDate->modify('12 months - 1 day');
 
         return [
-            'Email' => sprintf('%s@%s%s.com', $faker->userName(), $faker->randomNumber(8), $faker->domainWord()),
-            'Deputy No' => (string) $faker->randomNumber(8),
-            'Dep Postcode' => Address::postcode(),
-            'Dep Forename' => $faker->firstName(),
-            'Dep Surname' => $faker->lastName(),
-            // Add 23 back in for PA tests
-            'Dep Type' => (string) $faker->randomElement([21, 22, 24, 25, 26, 27, 29, 50, 63]),
-            'DepAddr No' => $faker->buildingNumber(),
-            'Dep Adrs1' => $faker->streetName(),
-            'Dep Adrs2' => Address::cityPrefix().' '.$faker->city(),
-            'Dep Adrs3' => $faker->city(),
-            'Dep Adrs4' => Address::county(),
-            'Dep Adrs5' => 'UK',
             'Case' => (string) $faker->randomNumber(8),
-            'Forename' => $faker->firstName(),
-            'Surname' => $faker->lastName(),
-            'Corref' => 'A3',
-            'Report Due' => $reportDueDate->format('d-M-Y'),
-            'Forename' => $faker->firstName(),
-            'Surname' => $faker->lastName(),
-            'Client Adrs1' => $faker->buildingNumber().' '.$faker->streetName(),
-            'Client Adrs2' => Address::cityPrefix().' '.$faker->city(),
-            'Client Adrs3' => Address::county(),
-            'Client Adrs4' => null,
-            'Client Adrs5' => null,
-            'Client Postcode' => Address::postcode(),
-            'Client Date of Birth' => $faker->dateTime()->format('d-M-Y'),
-            'Made Date' => $courtOrderMadeDate->format('d-M-Y'),
-            'Typeofrep' => $faker->randomElement(['OPG102', 'OPG103']),
-            'Last Report Day' => '19-Jan-2021',
+            'ClientForename' => $faker->firstName(),
+            'ClientSurname' => $faker->lastName(),
+            'ClientDateOfBirth' => $faker->dateTime()->format('d/m/Y'),
+            'ClientAddress1' => $faker->buildingNumber().' '.$faker->streetName(),
+            'ClientAddress2' => Address::cityPrefix().' '.$faker->city(),
+            'ClientAddress3' => Address::county(),
+            'ClientAddress4' => null,
+            'ClientAddress5' => null,
+            'ClientPostcode' => Address::postcode(),
+            'DeputyUid' => (string) $faker->randomNumber(8),
+            'DeputyType' => $faker->randomElement(['PRO', 'PA']),
+            'DeputyEmail' => sprintf('%s@%s%s.com', $faker->userName(), $faker->randomNumber(8), $faker->domainWord()),
+            'DeputyOrganisation' => $faker->company(),
+            'DeputyForename' => $faker->firstName(),
+            'DeputySurname' => $faker->lastName(),
+            'DeputyAddress1' => $faker->streetName(),
+            'DeputyAddress2' => Address::cityPrefix().' '.$faker->city(),
+            'DeputyAddress3' => $faker->city(),
+            'DeputyAddress4' => Address::county(),
+            'DeputyAddress5' => 'UK',
+            'DeputyPostcode' => Address::postcode(),
+            'MadeDate' => $courtOrderMadeDate->format('d/m/Y'),
+            'LastReportDay' => $reportPeriodEndDate->format('d/m/Y'),
+            'ReportType' => $faker->randomElement(['OPG102', 'OPG103', 'OPG104']),
+            'OrderType' => $faker->randomElement(['pfa', 'hw']),
+            'CoDeputy' => $faker->randomElement(['yes', 'no']),
         ];
     }
 
     private static function generateInvalidOrgDeputyshipArray()
     {
-        $invalid = self::generateValidCasRecOrgDeputyshipArray();
-        $invalid['Email'] = '';
+        $invalid = self::generateValidSiriusOrgDeputyshipArray();
+        $invalid['DeputyEmail'] = '';
 
         return $invalid;
     }
@@ -98,12 +94,12 @@ class OrgDeputyshipDTOTestHelper
     /**
      * @return OrgDeputyshipDto[]
      */
-    public static function generateOrgDeputyshipDtos(int $validCount, int $invalidCount)
+    public static function generateSiriusOrgDeputyshipDtos(int $validCount, int $invalidCount)
     {
-        $json = self::generateCasRecOrgDeputyshipDecompressedJson($validCount, $invalidCount);
+        $json = self::generateSiriusOrgDeputyshipDecompressedJson($validCount, $invalidCount);
         $dtos = [];
         $reportUtils = new ReportUtils();
-        $assembler = new CasRecToOrgDeputyshipDtoAssembler($reportUtils);
+        $assembler = new SiriusToOrgDeputyshipDtoAssembler($reportUtils);
 
         foreach (json_decode($json, true) as $dtoArray) {
             $dtos[] = $assembler->assembleSingleDtoFromArray($dtoArray);
@@ -112,13 +108,13 @@ class OrgDeputyshipDTOTestHelper
         return $dtos;
     }
 
-    public static function generateCasRecOrgDeputyshipDecompressedJson(int $validCount, int $invalidCount)
+    public static function generateSiriusOrgDeputyshipDecompressedJson(int $validCount, int $invalidCount)
     {
         $deputyships = [];
 
         if ($validCount > 0) {
             foreach (range(1, $validCount) as $index) {
-                $deputyships[] = self::generateValidCasRecOrgDeputyshipArray();
+                $deputyships[] = self::generateValidSiriusOrgDeputyshipArray();
             }
         }
 
@@ -131,73 +127,9 @@ class OrgDeputyshipDTOTestHelper
         return json_encode($deputyships);
     }
 
-    /**
-     * @return false|string
-     *
-     * @throws Exception
-     */
-    public static function generateOrgDeputyshipResponseJson(int $clients, int $organisations, int $namedDeputies, int $reports, int $errors)
-    {
-        $result = ['errors' => $errors];
-        $added = ['clients' => [], 'organisations' => [], 'named_deputies' => [], 'reports' => []];
-
-        if ($clients > 0) {
-            foreach (range(1, $clients) as $index) {
-                $added['clients'] = random_int(10000000, 99999999);
-            }
-        }
-
-        if ($organisations > 0) {
-            foreach (range(1, $organisations) as $index) {
-                $added['discharged_clients'] = random_int(10000000, 99999999);
-            }
-        }
-
-        if ($namedDeputies > 0) {
-            foreach (range(1, $namedDeputies) as $index) {
-                $added['named_deputies'] = random_int(10000000, 99999999);
-            }
-        }
-
-        if ($reports > 0) {
-            foreach (range(1, $reports) as $index) {
-                $added['reports'] = random_int(10000000, 99999999);
-            }
-        }
-
-        if ($errors > 0) {
-            foreach (range(1, $errors) as $index) {
-                $result['errors'] = 'An error occurred';
-            }
-        }
-
-        $result['added'] = $added;
-
-        return json_encode($result);
-    }
-
-    public static function createOrgDeputyshipModel(int $validCount, int $invalidCount)
-    {
-        $deputyships = [];
-
-        if ($validCount > 0) {
-            foreach (range(1, $validCount) as $index) {
-                $deputyships[] = (new OrgDeputyshipDto())->setIsValid(true);
-            }
-        }
-
-        if ($invalidCount > 0) {
-            foreach (range(1, $invalidCount) as $index) {
-                $deputyships[] = (new OrgDeputyshipDto())->setIsValid(false);
-            }
-        }
-
-        return $deputyships;
-    }
-
     public static function namedDeputyWasCreated(OrgDeputyshipDto $orgDeputyship, NamedDeputyRepository $namedDeputyRepository)
     {
-        return $namedDeputyRepository->findOneBy(['email1' => $orgDeputyship->getDeputyEmail()]) instanceof NamedDeputy;
+        return $namedDeputyRepository->findOneBy(['deputyUid' => $orgDeputyship->getDeputyUid()]) instanceof NamedDeputy;
     }
 
     public static function organisationWasCreated(string $emailIdentifier, OrganisationRepository $orgRepo)
@@ -223,7 +155,7 @@ class OrgDeputyshipDTOTestHelper
     public static function clientAndNamedDeputyAreAssociated(OrgDeputyshipDto $orgDeputyship, ClientRepository $clientRepo, NamedDeputyRepository $namedDeputyRepo)
     {
         $client = $clientRepo->findOneBy(['caseNumber' => $orgDeputyship->getCaseNumber()]);
-        $namedDeputy = $namedDeputyRepo->findOneBy(['email1' => $orgDeputyship->getDeputyEmail()]);
+        $namedDeputy = $namedDeputyRepo->findOneBy(['deputyUid' => $orgDeputyship->getDeputyUid()]);
 
         return $client->getNamedDeputy() === $namedDeputy;
     }
@@ -257,7 +189,7 @@ class OrgDeputyshipDTOTestHelper
     {
         $namedDeputy = (new NamedDeputy())
             ->setEmail1($dto->getDeputyEmail())
-            ->setDeputyNo(sprintf('%s-%s', $dto->getDeputyNumber(), $dto->getDeputyAddressNumber()))
+            ->setDeputyUid($dto->getDeputyUid())
             ->setFirstname($dto->getDeputyFirstname())
             ->setLastname($dto->getDeputyLastname())
             ->setAddress1($dto->getDeputyAddress1())
@@ -265,8 +197,7 @@ class OrgDeputyshipDTOTestHelper
             ->setAddress3($dto->getDeputyAddress3())
             ->setAddress4($dto->getDeputyAddress4())
             ->setAddress5($dto->getDeputyAddress5())
-            ->setAddressPostcode($dto->getDeputyPostcode())
-            ->setDeputyType($dto->getDeputyType());
+            ->setAddressPostcode($dto->getDeputyPostcode());
 
         $em->persist($namedDeputy);
         $em->flush();

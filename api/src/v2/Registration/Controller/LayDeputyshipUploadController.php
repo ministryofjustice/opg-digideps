@@ -44,7 +44,7 @@ class LayDeputyshipUploadController
         ini_set('memory_limit', '1024M');
 
         $postedData = $this->dataCompression->decompress($request->getContent());
-        $assembler = $this->factory->create($postedData);
+        $assembler = $this->factory->create();
         $uploadCollection = $assembler->assembleFromArray($postedData);
 
         return $this->uploader->upload($uploadCollection);
