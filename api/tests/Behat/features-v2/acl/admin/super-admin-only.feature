@@ -5,7 +5,7 @@ Feature: Limiting access to sections of the app to super admins
     I need to limit access to certain areas of the app to Super Admins
 
     @super-admin
-    Scenario: A super admin attempts to access analytics, reports and fixtures
+    Scenario: A super admin attempts to access analytics, reports, fixtures and notifications
         Given a super admin user accesses the admin app
         When I navigate to the admin analytics page
         Then I should be able to access the "DAT file"
@@ -16,22 +16,25 @@ Feature: Limiting access to sections of the app to super admins
         When I visit the admin stats reports page
         Then I should be able to access the "user research report"
         When I visit the admin stats reports page
-        Then I should be able to access the fixtures page
+        Then I should be able to access the 'Fixtures' page
+        Then I should be able to access the 'Notifications' page
 
     @admin-manager
-    Scenario: An admin manager attempts to access analytics and reports
+    Scenario: An admin manager attempts to access analytics, reports, fixtures and notifications
         Given an admin manager user accesses the admin app
         When I navigate to the admin analytics page
         Then I should be able to access the "DAT file"
         When I navigate to the admin analytics page
         Then I should not be able to access the "view reports"
-        Then I should not be able to access the fixtures page
+        Then I should not be able to access the 'Fixtures' page
+        Then I should not be able to access the 'Notifications' page
 
     @admin
-    Scenario: An admin attempts to access analytics and reports
+    Scenario: An admin attempts to access analytics, reports, fixtures and notifications
         Given an admin user accesses the admin app
         When I navigate to the admin analytics page
         Then I should be able to access the "DAT file"
         When I navigate to the admin analytics page
         Then I should not be able to access the "view reports"
-        Then I should not be able to access the fixtures page
+        Then I should not be able to access the 'Fixtures' page
+        Then I should not be able to access the 'Notifications' page

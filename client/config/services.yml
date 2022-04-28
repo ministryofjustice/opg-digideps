@@ -405,3 +405,8 @@ services:
         class: GBProd\UuidNormalizer\UuidDenormalizer
         tags:
             - { name: serializer.denormalizer }
+
+    App\Command\CheckCSVUploadedCommand:
+        class: App\Command\CheckCSVUploadedCommand
+        arguments:
+            $auditLogGroupName: "%env(AUDIT_LOG_GROUP_NAME)%"

@@ -89,23 +89,27 @@ trait FixturesTrait
      */
     public function twoClientsExistWithTheSameFirstName(string $whichName)
     {
-        $userDetails1 = $this->createLayCombinedHighSubmitted(null, $this->testRunId.rand(1, 10000));
+        $userDetails1 = $this->createLayCombinedHighSubmitted(null, $this->testRunId.mt_rand(1, 10000));
         $client1 = $this->em->getRepository(Client::class)->find($userDetails1->getClientId());
-        $client1->setFirstname($client1->getFirstname().$this->testRunId);
-        $client1->setLastname($client1->getLastname().$this->testRunId);
 
-        $userDetails2 = $this->createLayCombinedHighSubmitted(null, $this->testRunId.rand(1, 10000));
+        $firstName = $client1->getFirstname().time();
+        $lastName = $client1->getLastname().time();
+
+        $client1->setFirstname($firstName);
+        $client1->setLastname($lastName);
+
+        $userDetails2 = $this->createLayCombinedHighSubmitted(null, $this->testRunId.mt_rand(1, 10000));
         $client2 = $this->em->getRepository(Client::class)->find($userDetails2->getClientId());
 
         if ('first' === $whichName) {
-            $userDetails1->setClientFirstName($client1->getFirstname());
-            $userDetails2->setClientFirstName($userDetails1->getClientFirstName());
-            $client2->setFirstname($userDetails2->getClientFirstName());
+            $userDetails1->setClientFirstName($firstName);
+            $userDetails2->setClientFirstName($firstName);
+            $client2->setFirstname($firstName);
             array_push($this->sameFirstNameUserDetails, $userDetails1, $userDetails2);
         } else {
-            $userDetails1->setClientLastName($client1->getLastname());
-            $userDetails2->setClientLastName($userDetails1->getClientLastName());
-            $client2->setLastname($userDetails2->getClientLastName());
+            $userDetails1->setClientLastName($lastName);
+            $userDetails2->setClientLastName($lastName);
+            $client2->setLastname($lastName);
             array_push($this->sameLastNameUserDetails, $userDetails1, $userDetails2);
         }
 

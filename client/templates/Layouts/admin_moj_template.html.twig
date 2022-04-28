@@ -98,14 +98,6 @@
                             ) }}
                         </li>
                         <li class="moj-primary-navigation__item">
-                            {{ _self.navLink(
-                                'admin_setting_service_notifications',
-                                'nav.serviceNotification',
-                                navSection == 'notifications',
-                                'behat-link-admin-settings'
-                            ) }}
-                        </li>
-                        <li class="moj-primary-navigation__item">
                             {{ _self.navLink('admin_metrics', 'nav.adminStats', navSection == 'metrics') }}
                         </li>
                     {% elseif is_granted('ROLE_AD') %}
@@ -117,6 +109,14 @@
                         </li>
                     {% endif %}
                     {% if is_granted('ROLE_SUPER_ADMIN') %}
+                        <li class="moj-primary-navigation__item">
+                            {{ _self.navLink(
+                                'admin_setting_service_notifications',
+                                'nav.serviceNotification',
+                                navSection == 'notifications',
+                                'behat-link-admin-settings'
+                            ) }}
+                        </li>
                         <li class="moj-primary-navigation__item">
                             {{ _self.navLink('admin_fixtures', 'nav.adminFixtures', navSection == 'fixtures') }}
                         </li>

@@ -1,6 +1,5 @@
-@report-submissions @attaching-further-documents @v2 @v2_reporting_1
+@report-submissions @attaching-further-documents @v2 @v2_sequential
 Feature: Attaching Further Documents
-
 
     @lay-pfa-high-submitted @super-admin
     Scenario: A user attempts to send further documents but there are no documents attached

@@ -1,32 +1,44 @@
 /* globals $ */
 module.exports = function (element) {
   element = $(element)
-  var number = element.val()
+  let number = element.val()
 
   if (number.replace(/^\s+|\s+$/g, '') === '' || isNaN(number)) {
     return
   }
 
-  var decimalplaces = 2
-  var decimalcharacter = '.'
-  var thousandseparater = ','
+  const decimalplaces = 2
+  const decimalcharacter = '.'
+  const thousandseparater = ','
   number = parseFloat(number)
 
-  var negative = number < 0
+  const negative = number < 0
 
-  var formatted = String(number.toFixed(decimalplaces))
-  if (decimalcharacter.length && decimalcharacter !== '.') { formatted = formatted.replace(/\./, decimalcharacter) }
-  var integer = ''
-  var fraction = ''
-  var strnumber = String(formatted)
-  var dotpos = decimalcharacter.length ? strnumber.indexOf(decimalcharacter) : -1
+  let formatted = String(number.toFixed(decimalplaces))
+  if (decimalcharacter.length && decimalcharacter !== '.') {
+    formatted = formatted.replace(/\./, decimalcharacter)
+  }
+  let integer = ''
+  let fraction = ''
+  const strnumber = String(formatted)
+  const dotpos = decimalcharacter.length
+    ? strnumber.indexOf(decimalcharacter)
+    : -1
   if (dotpos > -1) {
-    if (dotpos) { integer = strnumber.substr(0, dotpos) }
+    if (dotpos) {
+      integer = strnumber.substr(0, dotpos)
+    }
     fraction = strnumber.substr(dotpos + 1)
-  } else { integer = strnumber }
-  if (integer) { integer = String(Math.abs(integer)) }
-  while (fraction.length < decimalplaces) { fraction += '0' }
-  var temparray = []
+  } else {
+    integer = strnumber
+  }
+  if (integer) {
+    integer = String(Math.abs(integer))
+  }
+  while (fraction.length < decimalplaces) {
+    fraction += '0'
+  }
+  const temparray = []
 
   while (integer.length > 3) {
     temparray.unshift(integer.substr(-3))
@@ -36,7 +48,7 @@ module.exports = function (element) {
   temparray.unshift(integer)
   integer = temparray.join(thousandseparater)
 
-  var formattedStr = integer + decimalcharacter + fraction
+  let formattedStr = integer + decimalcharacter + fraction
   if (negative) {
     formattedStr = '-' + formattedStr
   }

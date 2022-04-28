@@ -1,5 +1,7 @@
 <?php
 
+declare(strict_types=1);
+
 namespace App\Tests\Command;
 
 use App\Command\CheckCSVUploadedCommand;
@@ -13,6 +15,7 @@ use Aws\Exception\AwsException;
 use Aws\Result;
 use DateInterval;
 use DateTime;
+use GuzzleHttp\Exception\TransferException;
 use JoliCode\Slack\Api\Client;
 use JoliCode\Slack\Exception\SlackErrorResponse;
 use Prophecy\Argument;
@@ -33,9 +36,14 @@ class CheckCSVUploadedCommandTest extends KernelTestCase
     private ObjectProphecy | SecretManagerService $secretManagerService;
     private ObjectProphecy | ClientFactory $slackClientFactory;
     private ObjectProphecy | LoggerInterface $logger;
+
     private CommandTester $commandTester;
+
     private DateTime $now;
+
+    private string $auditLogGroupName;
     private string $slackSecret;
+
     private array $supportedCSVs = [
         CheckCSVUploadedCommand::CASREC_LAY_CSV,
         CheckCSVUploadedCommand::SIRIUS_LAY_CSV,
@@ -54,28 +62,7 @@ class CheckCSVUploadedCommandTest extends KernelTestCase
         $this->secretManagerService = self::prophesize(SecretManagerService::class);
         $this->slackClientFactory = self::prophesize(ClientFactory::class);
         $this->logger = self::prophesize(LoggerInterface::class);
-
-        $this->bankHolidayAPI->getBankHolidays()->shouldBeCalled()->willReturn(
-            [
-                'england-and-wales' => [
-                    'division' => 'england-and-wales',
-                    'events' => [
-                        [
-                            'title' => 'New Year’s Day',
-                            'date' => '2017-01-02',
-                            'notes' => 'Substitute day',
-                            'bunting' => true,
-                        ],
-                        [
-                            'title' => 'Christmas Day',
-                            'date' => '2021-12-27',
-                            'notes' => 'Substitute day',
-                            'bunting' => false,
-                        ],
-                    ],
-                ],
-            ]
-        );
+        $this->auditLogGroupName = '/something/logs';
 
         $sut = new CheckCSVUploadedCommand(
             $this->bankHolidayAPI->reveal(),
@@ -83,7 +70,8 @@ class CheckCSVUploadedCommandTest extends KernelTestCase
             $this->secretManagerService->reveal(),
             $this->slackClientFactory->reveal(),
             $this->awsAuditLogHandler->reveal(),
-            $this->logger->reveal()
+            $this->logger->reveal(),
+            $this->auditLogGroupName
         );
 
         $app->add($sut);
@@ -144,34 +132,34 @@ class CheckCSVUploadedCommandTest extends KernelTestCase
         $this->todayIsABankHoliday(false);
         $this->aCsvUploadedEventExists(false);
 
-        $this->secretManagerService->getSecret('opg-response-slack-token')
+        $this->secretManagerService->getSecret('opg-alerts-slack-token')
             ->shouldBeCalled()
             ->willReturn($this->slackSecret);
 
         $slackClient = self::prophesize(Client::class);
         $slackClient->chatPostMessage([
-                                          'username' => 'opg_response',
-                                          'channel' => 'opg-digideps-team',
-                                          'text' => 'The CasRec Lay CSV has not been uploaded within the past 24 hours',
-                                      ])
+              'username' => 'opg-alerts',
+              'channel' => 'opg-digideps-team',
+              'text' => ':cat_spin: The CasRec Lay CSV has not been uploaded within the past 24 hours',
+            ])
             ->shouldBeCalled();
         $slackClient->chatPostMessage([
-                                          'username' => 'opg_response',
-                                          'channel' => 'opg-digideps-team',
-                                          'text' => 'The Sirius Lay CSV has not been uploaded within the past 24 hours',
-                                      ])
+              'username' => 'opg-alerts',
+              'channel' => 'opg-digideps-team',
+              'text' => ':cat_spin: The Sirius Lay CSV has not been uploaded within the past 24 hours',
+            ])
             ->shouldBeCalled();
         $slackClient->chatPostMessage([
-                                          'username' => 'opg_response',
-                                          'channel' => 'opg-digideps-team',
-                                          'text' => 'The CasRec Prof CSV has not been uploaded within the past 24 hours',
-                                      ])
+              'username' => 'opg-alerts',
+              'channel' => 'opg-digideps-team',
+              'text' => ':cat_spin: The CasRec Prof CSV has not been uploaded within the past 24 hours',
+            ])
             ->shouldBeCalled();
         $slackClient->chatPostMessage([
-                                          'username' => 'opg_response',
-                                          'channel' => 'opg-digideps-team',
-                                          'text' => 'The CasRec PA CSV has not been uploaded within the past 24 hours',
-                                      ])
+              'username' => 'opg-alerts',
+              'channel' => 'opg-digideps-team',
+              'text' => ':cat_spin: The CasRec PA CSV has not been uploaded within the past 24 hours',
+            ])
             ->shouldBeCalled();
 
         $this->slackClientFactory->createClient($this->slackSecret)
@@ -195,16 +183,16 @@ class CheckCSVUploadedCommandTest extends KernelTestCase
             CheckCSVUploadedCommand::CASREC_PA_CSV,
         ]);
 
-        $this->secretManagerService->getSecret('opg-response-slack-token')
+        $this->secretManagerService->getSecret('opg-alerts-slack-token')
             ->shouldBeCalled()
             ->willReturn($this->slackSecret);
 
         $slackClient = self::prophesize(Client::class);
         $slackClient->chatPostMessage([
-                                          'username' => 'opg_response',
-                                          'channel' => 'opg-digideps-team',
-                                          'text' => 'The CasRec Lay CSV has not been uploaded within the past 24 hours',
-                                      ])
+              'username' => 'opg-alerts',
+              'channel' => 'opg-digideps-team',
+              'text' => ':cat_spin: The CasRec Lay CSV has not been uploaded within the past 24 hours',
+            ])
             ->shouldBeCalled();
         $this->slackClientFactory->createClient($this->slackSecret)
             ->shouldBeCalled()
@@ -223,34 +211,34 @@ class CheckCSVUploadedCommandTest extends KernelTestCase
         $this->todayIsABankHoliday(false);
         $this->aCsvUploadedEventExists(true);
 
-        $this->secretManagerService->getSecret('opg-response-slack-token')
+        $this->secretManagerService->getSecret('opg-alerts-slack-token')
             ->shouldBeCalled()
             ->willReturn($this->slackSecret);
 
         $slackClient = self::prophesize(Client::class);
         $slackClient->chatPostMessage([
-                                          'username' => 'opg_response',
-                                          'channel' => 'opg-digideps-team',
-                                          'text' => 'The CasRec Lay CSV has not been uploaded within the past 24 hours',
-                                      ])
+              'username' => 'opg-alerts',
+              'channel' => 'opg-digideps-team',
+              'text' => ':cat_spin: The CasRec Lay CSV has not been uploaded within the past 24 hours',
+            ])
             ->shouldBeCalled();
         $slackClient->chatPostMessage([
-                                          'username' => 'opg_response',
-                                          'channel' => 'opg-digideps-team',
-                                          'text' => 'The Sirius Lay CSV has not been uploaded within the past 24 hours',
-                                      ])
+              'username' => 'opg-alerts',
+              'channel' => 'opg-digideps-team',
+              'text' => ':cat_spin: The Sirius Lay CSV has not been uploaded within the past 24 hours',
+            ])
             ->shouldBeCalled();
         $slackClient->chatPostMessage([
-                                          'username' => 'opg_response',
-                                          'channel' => 'opg-digideps-team',
-                                          'text' => 'The CasRec Prof CSV has not been uploaded within the past 24 hours',
-                                      ])
+              'username' => 'opg-alerts',
+              'channel' => 'opg-digideps-team',
+              'text' => ':cat_spin: The CasRec Prof CSV has not been uploaded within the past 24 hours',
+            ])
             ->shouldBeCalled();
         $slackClient->chatPostMessage([
-                                          'username' => 'opg_response',
-                                          'channel' => 'opg-digideps-team',
-                                          'text' => 'The CasRec PA CSV has not been uploaded within the past 24 hours',
-                                      ])
+              'username' => 'opg-alerts',
+              'channel' => 'opg-digideps-team',
+              'text' => ':cat_spin: The CasRec PA CSV has not been uploaded within the past 24 hours',
+            ])
             ->shouldBeCalled();
 
         $this->slackClientFactory->createClient($this->slackSecret)
@@ -270,15 +258,15 @@ class CheckCSVUploadedCommandTest extends KernelTestCase
         $this->todayIsABankHoliday(false);
         $this->cannotRetrieveAuditLogs();
 
-        $this->secretManagerService->getSecret('opg-response-slack-token')
+        $this->secretManagerService->getSecret('opg-alerts-slack-token')
             ->shouldBeCalled()
             ->willReturn($this->slackSecret);
 
         $slackClient = self::prophesize(Client::class);
         $slackClient->chatPostMessage(
             [
-                'username' => 'opg_response',
-                'channel' => 'opg-digideps-team',
+                'username' => 'opg-alerts',
+                'channel' => 'opg-digideps-devs',
                 'text' => 'Failed to retrieve audit logs during CSV upload check. Error message: The service cannot complete the request.',
             ]
         )->shouldBeCalled();
@@ -301,7 +289,7 @@ class CheckCSVUploadedCommandTest extends KernelTestCase
         $this->todayIsABankHoliday(false);
         $this->cannotRetrieveAuditLogs();
 
-        $this->secretManagerService->getSecret('opg-response-slack-token')
+        $this->secretManagerService->getSecret('opg-alerts-slack-token')
             ->shouldBeCalled()
             ->willReturn($this->slackSecret);
 
@@ -311,8 +299,8 @@ class CheckCSVUploadedCommandTest extends KernelTestCase
 
         $slackClient->chatPostMessage(
             [
-                'username' => 'opg_response',
-                'channel' => 'opg-digideps-team',
+                'username' => 'opg-alerts',
+                'channel' => 'opg-digideps-devs',
                 'text' => 'Failed to retrieve audit logs during CSV upload check. Error message: The service cannot complete the request.',
             ]
         )->shouldBeCalled()->willThrow($exception);
@@ -321,8 +309,41 @@ class CheckCSVUploadedCommandTest extends KernelTestCase
             ->shouldBeCalled()
             ->willReturn($slackClient->reveal());
 
-        $this->logger->log('error', 'Failed to post to Slack during CSV upload check')
+        $this->logger->log('error', sprintf('Failed to post to Slack during CSV upload check: Slack returned error code "500"'))
             ->shouldBeCalled();
+
+        $result = $this->commandTester->execute([]);
+
+        $this->assertEquals(1, $result, sprintf('Expected command to return 1, got %d', $result));
+    }
+
+    /**
+     * @test
+     */
+    public function executeErrorMessagePostedToSlackWhenUnableToRetrieveBankHolidays()
+    {
+        $this->now = new DateTime('01-02-2021');
+        $this->dateTimeProvider->getDateTime()->shouldBeCalled()->willReturn($this->now);
+
+        $this->unableToRetrieveBankHolidays();
+
+        $this->secretManagerService->getSecret('opg-alerts-slack-token')
+            ->shouldBeCalled()
+            ->willReturn($this->slackSecret);
+
+        $slackClient = self::prophesize(Client::class);
+
+        $slackClient->chatPostMessage(
+            [
+                'username' => 'opg-alerts',
+                'channel' => 'opg-digideps-devs',
+                'text' => 'Failed to retrieve bank holidays from Gov.uk. Error message: Something went wrong oops',
+            ]
+        )->shouldBeCalled();
+
+        $this->slackClientFactory->createClient($this->slackSecret)
+            ->shouldBeCalled()
+            ->willReturn($slackClient->reveal());
 
         $result = $this->commandTester->execute([]);
 
@@ -331,6 +352,28 @@ class CheckCSVUploadedCommandTest extends KernelTestCase
 
     private function todayIsABankHoliday(bool $isABankHoliday)
     {
+        $this->bankHolidayAPI->getBankHolidays()->shouldBeCalled()->willReturn(
+            [
+                'england-and-wales' => [
+                    'division' => 'england-and-wales',
+                    'events' => [
+                        [
+                            'title' => 'New Year’s Day',
+                            'date' => '2017-01-02',
+                            'notes' => 'Substitute day',
+                            'bunting' => true,
+                        ],
+                        [
+                            'title' => 'Christmas Day',
+                            'date' => '2021-12-27',
+                            'notes' => 'Substitute day',
+                            'bunting' => false,
+                        ],
+                    ],
+                ],
+            ]
+        );
+
         $this->now = new DateTime($isABankHoliday ? '27-12-2021' : '01-02-2021');
         $this->dateTimeProvider->getDateTime()->shouldBeCalled()->willReturn($this->now);
     }
@@ -341,6 +384,25 @@ class CheckCSVUploadedCommandTest extends KernelTestCase
         $endTime = (int) (clone $this->now)->format('Uv');
 
         if ($exists) {
+            $this->awsAuditLogHandler->getLogStreams($this->auditLogGroupName)
+                ->shouldBeCalled()
+                ->willReturn(new Result(
+                    [
+                        'logStreams' => [
+                            [
+                                'logStreamName' => 'CSV_UPLOADED',
+                                'creationTime' => 1649928424320,
+                                'firstEventTimestamp' => 1649928424261.6438,
+                                'lastEventTimestamp' => 1649928531011.631,
+                                'lastIngestionTime' => 1649928531058,
+                                'uploadSequenceToken' => '2',
+                                'arn' => 'arn:aws:logs:eu-west-1:000000000000:log-group:audit-local:log-stream:CSV_UPLOADED',
+                                'storedBytes' => 645,
+                            ],
+                        ],
+                    ])
+                );
+
             $events = $this->populateLogEvents($uploadedCSVs);
             $expectedResponseFromAWS = new Result(
                 [
@@ -353,24 +415,15 @@ class CheckCSVUploadedCommandTest extends KernelTestCase
             $this->awsAuditLogHandler->getLogEventsByLogStream(
                 'CSV_UPLOADED',
                 $startingTime,
-                $endTime
+                $endTime,
+                $this->auditLogGroupName
             )
                 ->shouldBeCalled()
                 ->willReturn($expectedResponseFromAWS);
         } else {
-            $exception = new AwsException(
-                'The specified log group does not exist',
-                new Command('getLogEvents'),
-                ['code' => 400]
-            );
-
-            $this->awsAuditLogHandler->getLogEventsByLogStream(
-                'CSV_UPLOADED',
-                $startingTime,
-                $endTime
-            )
+            $this->awsAuditLogHandler->getLogStreams($this->auditLogGroupName)
                 ->shouldBeCalled()
-                ->willThrow($exception);
+                ->willReturn([]);
         }
     }
 
@@ -410,6 +463,25 @@ class CheckCSVUploadedCommandTest extends KernelTestCase
         $startingTime = (int) (clone $this->now)->sub(new DateInterval('P1D'))->format('Uv');
         $endTime = (int) (clone $this->now)->format('Uv');
 
+        $this->awsAuditLogHandler->getLogStreams($this->auditLogGroupName)
+            ->shouldBeCalled()
+            ->willReturn(new Result(
+                    [
+                        'logStreams' => [
+                            [
+                                'logStreamName' => 'CSV_UPLOADED',
+                                'creationTime' => 1649928424320,
+                                'firstEventTimestamp' => 1649928424261.6438,
+                                'lastEventTimestamp' => 1649928531011.631,
+                                'lastIngestionTime' => 1649928531058,
+                                'uploadSequenceToken' => '2',
+                                'arn' => 'arn:aws:logs:eu-west-1:000000000000:log-group:audit-local:log-stream:CSV_UPLOADED',
+                                'storedBytes' => 645,
+                            ],
+                        ],
+                    ])
+            );
+
         $exception = new AwsException(
             'The service cannot complete the request.',
             new Command('getLogEvents'),
@@ -419,9 +491,17 @@ class CheckCSVUploadedCommandTest extends KernelTestCase
         $this->awsAuditLogHandler->getLogEventsByLogStream(
             'CSV_UPLOADED',
             $startingTime,
-            $endTime
+            $endTime,
+            $this->auditLogGroupName
         )
             ->shouldBeCalled()
             ->willThrow($exception);
+    }
+
+    private function unableToRetrieveBankHolidays()
+    {
+        $this->bankHolidayAPI->getBankHolidays()
+            ->shouldBeCalled()
+            ->willThrow(new TransferException('Something went wrong oops'));
     }
 }

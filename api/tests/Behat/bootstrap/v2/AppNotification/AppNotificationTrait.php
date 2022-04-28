@@ -70,7 +70,7 @@ trait AppNotificationTrait
      */
     public function iTurnOffTheServiceNotificationAndCanNoLongerSeeItOnTheClientLoginPage()
     {
-        $this->loginToAdminAs($this->adminDetails->getUserEmail());
+        $this->loginToAdminAs($this->loggedInUserDetails->getUserEmail());
 
         $this->iVisitTheAdminNotificationPage();
         $this->iAmOnAdminNotificationPage();

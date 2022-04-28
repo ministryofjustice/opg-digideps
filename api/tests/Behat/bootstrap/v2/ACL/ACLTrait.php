@@ -80,22 +80,32 @@ trait ACLTrait
     }
 
     /**
-     * @Then I should be able to access the fixtures page
+     * @Then /^I should be able to access the \'([^\']*)\' page$/
      */
-    public function iShouldBeAbleToFixturesPage()
+    public function iShouldBeAbleToAccessThePage(string $page)
     {
-        $this->assertLinkWithTextIsOnPage('Fixtures');
-        $this->iVisitAdminFixturesPage();
+        $this->assertLinkWithTextIsOnPage($page);
+
+        match (strtolower($page)) {
+            'fixtures' => $this->iVisitAdminFixturesPage(),
+            'notifications' => $this->iVisitTheAdminNotificationPage()
+        };
+
         $this->canAccessSensitivePage();
     }
 
     /**
-     * @Then I should not be able to access the fixtures page
+     * @Then /^I should not be able to access the \'([^\']*)\' page$/
      */
-    public function iShouldNotBeAbleToFixturesPage()
+    public function iShouldNotBeAbleToAccessThePage(string $page)
     {
-        $this->assertLinkWithTextIsNotOnPage('Fixtures');
-        $this->iVisitAdminFixturesPage();
+        $this->assertLinkWithTextIsNotOnPage($page);
+
+        match (strtolower($page)) {
+            'fixtures' => $this->iVisitAdminFixturesPage(),
+            'notifications' => $this->iVisitTheAdminNotificationPage()
+        };
+
         $this->canNotAccessSensitivePage();
     }
 }
