@@ -4,6 +4,7 @@ declare(strict_types=1);
 
 namespace App\Tests\Behat\v2\Common;
 
+use App\Service\ParameterStoreService;
 use App\TestHelpers\ReportTestHelper;
 use App\Tests\Behat\v2\Analytics\AnalyticsTrait;
 use App\Tests\Behat\v2\Helpers\FixtureHelper;
@@ -111,29 +112,18 @@ class BaseFeatureContext extends MinkContext
 
     public Generator $faker;
 
-    public KernelInterface $symfonyKernel;
-
-    protected FixtureHelper $fixtureHelper;
-
-    public EntityManagerInterface $em;
-    private ReportTestHelper $reportTestHelper;
-
     public function __construct(
-        FixtureHelper $fixtureHelper,
-        KernelInterface $symfonyKernel,
-        EntityManagerInterface $em,
-        ReportTestHelper $reportTestHelper
+        private FixtureHelper $fixtureHelper,
+        private KernelInterface $symfonyKernel,
+        protected EntityManagerInterface $em,
+        private ReportTestHelper $reportTestHelper,
+        protected ParameterStoreService $parameterStoreService
     ) {
-        $this->symfonyKernel = $symfonyKernel;
         $this->appEnvironment = $this->symfonyKernel->getEnvironment();
 
         if ('prod' === $this->appEnvironment) {
             throw new Exception('Unable to run behat tests in prod mode. Change the apps mode to dev or test and try again');
         }
-
-        $this->fixtureHelper = $fixtureHelper;
-        $this->em = $em;
-        $this->reportTestHelper = $reportTestHelper;
     }
 
     /**

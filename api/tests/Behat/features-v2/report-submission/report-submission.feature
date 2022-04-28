@@ -46,3 +46,18 @@ Feature: Report submissions dashboard
         Then the status of the documents for the client with one report submission should be 'Permanent Fail'
         And I manually 'synchronise' the client that has one submitted report
         Then the status of the documents for the client with one report submission should be 'Queued'
+
+
+    @super-admin
+    Scenario: Make 'New' tab visibility toggle based on Document Sync Enabled flag
+        And a super admin user accesses the admin app
+        Given the document sync enabled flag is set to '0'
+        And I navigate to the admin report submissions page
+        Then the 'New' tab 'is' visible
+        Then the 'Pending' tab 'is' visible
+        Then the 'Synchronised' tab 'is' visible
+        Given the document sync enabled flag is set to '1'
+        And I navigate to the admin report submissions page
+        Then the 'New' tab 'is not' visible
+        Then the 'Pending' tab 'is' visible
+        Then the 'Synchronised' tab 'is' visible

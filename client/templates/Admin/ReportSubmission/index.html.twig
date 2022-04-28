@@ -32,8 +32,8 @@
             <div class="govuk-grid-row">
                 <div class="govuk-grid-column-one-third govuk-form-group">
                     <label for="search" class="govuk-label">{{ 'page.searchForm.search.label' | trans }}</label>
-                    <input type="text" id="search" name="q" value="{{ filters.q }}" class="govuk-input" />
-                    <input type="hidden" name="status" value="{{ filters.status }}" />
+                    <input type="text" id="search" name="q" value="{{ filters.q }}" class="govuk-input"/>
+                    <input type="hidden" name="status" value="{{ filters.status }}"/>
                 </div>
                 <div class="govuk-grid-column-one-third govuk-form-group">
                     <label for="created_by_role" class="govuk-label">{{ 'role' | trans({}, 'common' ) }}</label>
@@ -44,14 +44,16 @@
                             'ROLE_PROF_%': 'Professional deputy',
                             'ROLE_LAY_DEPUTY': 'Lay deputy'
                         } %}
-                            <option value="{{ value }}" {{ filters.created_by_role == value ? 'selected="selected"' : '' }}>{{ label }}</option>
+                            <option
+                                value="{{ value }}" {{ filters.created_by_role == value ? 'selected="selected"' : '' }}>{{ label }}</option>
                         {% endfor %}
                     </select>
                 </div>
             </div>
-            <input id="search_submit" class="govuk-button behat-link-search" type="submit" value="Search" />
+            <input id="search_submit" class="govuk-button behat-link-search" type="submit" value="Search"/>
             {% if filters.q or filters.created_by_role %}
-                <a href="{{ path(baseRoute, {'status': filters.status}) }}" class="govuk-button govuk-button--secondary">Clear filters</a>
+                <a href="{{ path(baseRoute, {'status': filters.status}) }}"
+                   class="govuk-button govuk-button--secondary">Clear filters</a>
             {% endif %}
         </fieldset>
     </form>
@@ -60,16 +62,22 @@
 
     <div class="govuk-tabs">
         <ul class="govuk-tabs__list" role="tablist">
-            <li class="govuk-tabs__list-item {% if currentTab == 'new' %}govuk-tabs__list-item--selected{% endif %}">
-                <a class="govuk-tabs__tab behat-link-tab-new" href="{{ path(baseRoute, {'status': 'new'} | merge(filtersToPreserveInTabs) ) }}" role="tab" tabindex="0">
-                    {{ 'page.tabs.new.label' | trans }}
-                </a>
-                {% if counts.new %}
-                    <span class="govuk-tag">{{ counts.new }}</span>
-                {% endif %}
-            </li>
+            {% if isDocumentSyncEnabled == '0' %}
+                <li class="govuk-tabs__list-item {% if currentTab == 'new' %}govuk-tabs__list-item--selected{% endif %}">
+                    <a class="govuk-tabs__tab behat-link-tab-new"
+                       href="{{ path(baseRoute, {'status': 'new'} | merge(filtersToPreserveInTabs) ) }}" role="tab"
+                       tabindex="0">
+                        {{ 'page.tabs.new.label' | trans }}
+                    </a>
+                    {% if counts.new %}
+                        <span class="govuk-tag">{{ counts.new }}</span>
+                    {% endif %}
+                </li>
+            {% endif %}
             <li class="govuk-tabs__list-item {% if currentTab == 'pending' %}govuk-tabs__list-item--selected{% endif %}">
-                <a class="govuk-tabs__tab behat-link-tab-pending" href="{{ path(baseRoute, {'status': 'pending'} | merge(filtersToPreserveInTabs) ) }}" role="tab" tabindex="0">
+                <a class="govuk-tabs__tab behat-link-tab-pending"
+                   href="{{ path(baseRoute, {'status': 'pending'} | merge(filtersToPreserveInTabs) ) }}" role="tab"
+                   tabindex="0">
                     {{ 'page.tabs.pending.label' | trans }}
                 </a>
                 {% if counts.pending %}
@@ -77,7 +85,9 @@
                 {% endif %}
             </li>
             <li class="govuk-tabs__list-item {% if currentTab == 'archived' %}govuk-tabs__list-item--selected{% endif %}">
-                <a class="govuk-tabs__tab behat-link-tab-archived" href="{{ path(baseRoute, {'status': 'archived'} | merge(filtersToPreserveInTabs)) }}" role="tab" tabindex="0">
+                <a class="govuk-tabs__tab behat-link-tab-archived"
+                   href="{{ path(baseRoute, {'status': 'archived'} | merge(filtersToPreserveInTabs)) }}" role="tab"
+                   tabindex="0">
                     {{ 'page.tabs.archived.label' | trans }}
                 </a>
             </li>
@@ -86,52 +96,56 @@
 
     {# table with records #}
     {% if  records | length %}
-    <form name="multiForm" id="multiForm" action="{{ path(baseRoute, {'status': filters.status} | merge(filtersToPreserveInTabs)) }}" method="POST">
-        <div class="govuk-grid-row">
-            {% if nOfdownloadableSubmissions > 0 %}
-                <div class="govuk-grid-column-two-thirds">
-                    {% for action in postActions %}
-                        <input
-                            type="submit"
-                            id="action-{{ action }}"
-                            value="{{ ('page.postactions.' ~ action) | trans }}"
-                            name="multiAction"
-                            class="behat-link-{{ action }} govuk-button govuk-button--secondary"
-                            data-js="multiselect-disabled-button"
-                        />
-                    {% endfor %}
-                </div>
-                <div class="govuk-grid-column-one-third text--right">
-                    <span data-js="multiselect-selected-count">0 cases</span> selected
-                </div>
-            {% endif %}
-        </div>
-        <table class="govuk-table govuk-checkboxes govuk-checkboxes--small">
-            <thead class="govuk-table__head">
+        <form name="multiForm" id="multiForm"
+              action="{{ path(baseRoute, {'status': filters.status} | merge(filtersToPreserveInTabs)) }}" method="POST">
+            <div class="govuk-grid-row">
+                {% if nOfdownloadableSubmissions > 0 %}
+                    <div class="govuk-grid-column-two-thirds">
+                        {% for action in postActions %}
+                            <input
+                                type="submit"
+                                id="action-{{ action }}"
+                                value="{{ ('page.postactions.' ~ action) | trans }}"
+                                name="multiAction"
+                                class="behat-link-{{ action }} govuk-button govuk-button--secondary"
+                                data-js="multiselect-disabled-button"
+                            />
+                        {% endfor %}
+                    </div>
+                    <div class="govuk-grid-column-one-third text--right">
+                        <span data-js="multiselect-selected-count">0 cases</span> selected
+                    </div>
+                {% endif %}
+            </div>
+            <table class="govuk-table govuk-checkboxes govuk-checkboxes--small">
+                <thead class="govuk-table__head">
                 <tr class="govuk-table__row">
                     {% if nOfdownloadableSubmissions > 0 %}
-                      <th scope="col" class="govuk-table__header govuk-!-padding-left-4 govuk-!-padding-top-0 govuk-!-padding-bottom-0">
-                        <div class="govuk-checkboxes__item">
-                            <input type="checkbox" id="select-all" name="select-all" value="all" class="govuk-checkboxes__input" data-js="multiselect-checkbox-all" />
-                            <label for="select-all" class="govuk-label govuk-checkboxes__label">
-                                &nbsp;
-                                <span class="govuk-visually-hidden">
+                        <th scope="col"
+                            class="govuk-table__header govuk-!-padding-left-4 govuk-!-padding-top-0 govuk-!-padding-bottom-0">
+                            <div class="govuk-checkboxes__item">
+                                <input type="checkbox" id="select-all" name="select-all" value="all"
+                                       class="govuk-checkboxes__input" data-js="multiselect-checkbox-all"/>
+                                <label for="select-all" class="govuk-label govuk-checkboxes__label">
+                                    &nbsp;
+                                    <span class="govuk-visually-hidden">
                                     {{ 'page.resultsTable.header.all' | trans }}
                                 </span>
-                            </label>
-                        </div>
-                      </th>
+                                </label>
+                            </div>
+                        </th>
                     {% endif %}
                     <th scope="col" class="govuk-table__header">{{ 'page.resultsTable.header.client' | trans }}</th>
-                    <th scope="col" class="govuk-table__header"><span class="govuk-visually-hidden">{{ 'page.resultsTable.header.documents' | trans }}</span></th>
+                    <th scope="col" class="govuk-table__header"><span
+                            class="govuk-visually-hidden">{{ 'page.resultsTable.header.documents' | trans }}</span></th>
                     <th scope="col" class="govuk-table__header">{{ 'page.resultsTable.header.caseNumber' | trans }}</th>
                     <th scope="col" class="govuk-table__header">{{ 'page.resultsTable.header.submitted' | trans }}</th>
                     {% if currentTab == 'archived' %}
                         <th>{{ 'page.resultsTable.header.user' | trans }}</th>
                     {% endif %}
                 </tr>
-            </thead>
-            <tbody class="govuk-table__body">
+                </thead>
+                <tbody class="govuk-table__body">
                 {% for reportSubmission in records %}
                     {% set report = reportSubmission.report %}
                     {% set ndr = reportSubmission.ndr %}
@@ -140,22 +154,26 @@
                     {# Type: report.type #}
                     <tr class="govuk-table__row behat-region-report-submission behat-region-report-submission-{{ loop.index }}">
                         {% if nOfdownloadableSubmissions > 0 %}
-                          <td class="govuk-table__cell govuk-!-padding-left-4 govuk-!-padding-top-1">
-                            {% if reportSubmission.isDownloadable %}
-                            <div class="govuk-checkboxes__item">
-                                <input type="checkbox" id="cb{{ reportSubmission.id }}" name="checkboxes[{{ reportSubmission.id }}]"
-                                       class="govuk-checkboxes__input" data-js="multiselect-checkbox" />
-                                <label for="cb{{ reportSubmission.id }}" class="govuk-label govuk-checkboxes__label">
+                            <td class="govuk-table__cell govuk-!-padding-left-4 govuk-!-padding-top-1">
+                                {% if reportSubmission.isDownloadable %}
+                                    <div class="govuk-checkboxes__item">
+                                        <input type="checkbox" id="cb{{ reportSubmission.id }}"
+                                               name="checkboxes[{{ reportSubmission.id }}]"
+                                               class="govuk-checkboxes__input" data-js="multiselect-checkbox"/>
+                                        <label for="cb{{ reportSubmission.id }}"
+                                               class="govuk-label govuk-checkboxes__label">
                                     <span class="govuk-visually-hidden">
                                         Select {{ client.caseNumber }}
                                     </span>
-                                </label>
-                            </div>
-                            {% endif %}
-                          </td>
+                                        </label>
+                                    </div>
+                                {% endif %}
+                            </td>
                         {% endif %}
                         <td class="govuk-table__cell">
-                            <div class="govuk-details govuk-!-margin-bottom-0" aria-controls="docs-table-{{ reportSubmission.id }}" data-module="opg-detached-details">
+                            <div class="govuk-details govuk-!-margin-bottom-0"
+                                 aria-controls="docs-table-{{ reportSubmission.id }}"
+                                 data-module="opg-detached-details">
                                 <a href="#" role="button" class="govuk-details__summary">
                                     {{ client.fullname }}
                                 </a>
@@ -183,7 +201,8 @@
                         {% if currentTab == 'archived' %}
                             <td class="govuk-table__cell">
                                 {% if reportSubmission.archivedBy %}
-                                    <span title="{{ reportSubmission.archivedBy.firstname }} {{ reportSubmission.archivedBy.lastname }}">{{ reportSubmission.archivedBy.firstname | first }}{{ reportSubmission.archivedBy.lastname | first }}</span>
+                                    <span
+                                        title="{{ reportSubmission.archivedBy.firstname }} {{ reportSubmission.archivedBy.lastname }}">{{ reportSubmission.archivedBy.firstname | first }}{{ reportSubmission.archivedBy.lastname | first }}</span>
                                 {% else %}
                                     <span title="{{ 'page.resultsTable.automaticallyArchived' | trans }}">-</span>
                                 {% endif %}
@@ -191,14 +210,15 @@
                         {% endif %}
                     </tr>
 
-                    <tr id="docs-table-{{ reportSubmission.id }}" class="behat-region-report-submission-documents-{{ loop.index }}">
+                    <tr id="docs-table-{{ reportSubmission.id }}"
+                        class="behat-region-report-submission-documents-{{ loop.index }}">
                         <td colspan="7">
                             {{ include('@App/Admin/ReportSubmission/_document-sync-table.html.twig', { reportSubmission: reportSubmission, documents: reportSubmission.documents }) }}
                         </td>
                     </tr>
                 {% endfor %}
-            </tbody>
-        </table>
+                </tbody>
+            </table>
         </form>
         {% include '@App/Components/paginator.html.twig' with {
             currentOffset: filters.offset,

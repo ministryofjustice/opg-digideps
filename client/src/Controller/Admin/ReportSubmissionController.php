@@ -25,9 +25,9 @@ use Throwable;
  */
 class ReportSubmissionController extends AbstractController
 {
-    const ACTION_DOWNLOAD = 'download';
-    const ACTION_ARCHIVE = 'archive';
-    const ACTION_SYNCHRONISE = 'synchronise';
+    public const ACTION_DOWNLOAD = 'download';
+    public const ACTION_ARCHIVE = 'archive';
+    public const ACTION_SYNCHRONISE = 'synchronise';
 
     /**
      * @var DocumentDownloader
@@ -96,7 +96,9 @@ class ReportSubmissionController extends AbstractController
         /** @var EntityDir\User $user */
         $user = $this->getUser();
 
-        if ('1' === $parameterStoreService->getFeatureFlag(ParameterStoreService::FLAG_DOCUMENT_SYNC) && EntityDir\User::ROLE_SUPER_ADMIN === $user->getRoleName()) {
+        $isDocumentSyncEnabled = $parameterStoreService->getFeatureFlag(ParameterStoreService::FLAG_DOCUMENT_SYNC);
+
+        if ('1' === $isDocumentSyncEnabled && EntityDir\User::ROLE_SUPER_ADMIN === $user->getRoleName()) {
             $postActions[] = self::ACTION_SYNCHRONISE;
         }
 
@@ -111,6 +113,7 @@ class ReportSubmissionController extends AbstractController
             ],
             'nOfdownloadableSubmissions' => $nOfdownloadableSubmissions,
             'currentTab' => $currentFilters['status'],
+            'isDocumentSyncEnabled' => $isDocumentSyncEnabled,
         ];
     }
 
@@ -222,7 +225,7 @@ class ReportSubmissionController extends AbstractController
                         'admin-documents'
                     );
 
-                        $this->addFlash('notice', $notice);
+                    $this->addFlash('notice', $notice);
                     break;
 
                 case self::ACTION_DOWNLOAD:
@@ -273,7 +276,7 @@ class ReportSubmissionController extends AbstractController
 
         return [
             'q' => $request->get('q'),
-            'status' => $request->get('status', 'new'), // new | archived
+            'status' => $request->get('status', 'pending'), // new | archived
             'limit' => $request->query->get('limit') ?: 15,
             'offset' => $request->query->get('offset') ?: 0,
             'created_by_role' => $request->get('created_by_role'),

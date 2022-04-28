@@ -6,6 +6,7 @@ namespace App\Tests\Behat\v2\ReportSubmission;
 
 use App\Entity\Report\Document;
 use App\Entity\Report\ReportSubmission;
+use App\Service\ParameterStoreService;
 use App\Tests\Behat\BehatException;
 
 trait ReportSubmissionTrait
@@ -300,6 +301,33 @@ trait ReportSubmissionTrait
                 $documentRow->getHtml(),
                 'Comparing expected status against status in table row that contains an expected filename'
             );
+        }
+    }
+
+    /**
+     * @Given /^the document sync enabled flag is set to \'([^\']*)\'$/
+     */
+    public function theDocumentSyncEnabledFlagIsSetTo($documentFeatureFlagValue)
+    {
+        $this->parameterStoreService->putFeatureFlag(ParameterStoreService::FLAG_DOCUMENT_SYNC, $documentFeatureFlagValue);
+    }
+
+    /**
+     * @Then /^the \'([^\']*)\' tab \'([^\']*)\' visible$/
+     */
+    public function tabVisibilityCheck($tabName, $visibility)
+    {
+        $shouldBeVisible = 'is' === $visibility;
+        $newSubmissionTab = $this->getSession()->getPage()->find('css', "a:contains('$tabName')");
+
+        if ($shouldBeVisible && !$newSubmissionTab) {
+            $errorMessage = "The 'New' tab is not visible when it should be";
+            throw new BehatException($errorMessage);
+        }
+
+        if (!$shouldBeVisible && $newSubmissionTab) {
+            $errorMessage = "The 'New' tab is visible when it shouldn't be";
+            throw new BehatException($errorMessage);
         }
     }
 
