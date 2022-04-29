@@ -12,6 +12,7 @@ use App\Service\Client\RestClient;
 use App\Service\File\Storage\StorageInterface;
 use App\Service\Time\DateTimeProvider;
 use Exception;
+use Orbitale\Component\ImageMagick\Command;
 use Symfony\Component\HttpFoundation\File\UploadedFile;
 
 class S3FileUploader
@@ -31,6 +32,7 @@ class S3FileUploader
         DateTimeProvider $dateTimeProvider,
         MimeTypeAndExtensionChecker $mimeTypeAndExtensionChecker,
         array $options = [],
+//        private ImageMagickFactory $imageMagickFactory
     ) {
         $this->storage = $s3Storage;
         $this->restClient = $restClient;
@@ -46,6 +48,9 @@ class S3FileUploader
     public function uploadSupportingFilesAndPersistDocuments(array $uploadedFiles, Report $report): void
     {
         foreach ($uploadedFiles as $uploadedFile) {
+            $sanitisedFileName = $this->sanitiseFileName($uploadedFile);
+            $body = $this->convertJpegVariationsToJpeg($uploadedFile, $sanitisedFileName);
+
             [$body, $fileName] = $this->getFileBodyAndFileName($uploadedFile);
             $extensionAndMimeTypeMatch = $this->mimeTypeAndExtensionChecker->check($uploadedFile, $body);
 
@@ -65,6 +70,20 @@ class S3FileUploader
         $fileName = $this->fileNameFixer->addMissingFileExtension($file, $body);
         $fileName = $this->fileNameFixer->removeWhiteSpaceBeforeFileExtension($fileName);
         $fileName = $this->fileNameFixer->removeUnusualCharacters($fileName);
+
+        $imageMagick = new Command();
+        $newPath = sprintf('%s.%s', $file->getPathName(), 'jpg');
+        $response = $imageMagick
+            ->convert($file->getPathname())
+            ->output($newPath)
+            ->run();
+
+        // Check if the command failed and get the error if needed
+        if ($response->hasFailed()) {
+            throw new Exception('An error occurred:'.$response->getError());
+        }
+
+        $body = file_get_contents($newPath);
 
         return [$body, $fileName];
     }
