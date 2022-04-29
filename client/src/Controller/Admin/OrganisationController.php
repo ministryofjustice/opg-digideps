@@ -5,11 +5,14 @@ namespace App\Controller\Admin;
 use App\Controller\AbstractController;
 use App\Entity\Organisation;
 use App\Entity\User;
+use App\Event\OrgCreatedEvent;
+use App\EventDispatcher\ObservableEventDispatcher;
 use App\Exception\RestClientException;
 use App\Form as FormDir;
 use App\Service\Audit\AuditEvents;
 use App\Service\Client\Internal\OrganisationApi;
 use App\Service\Client\RestClient;
+use App\Service\Client\TokenStorage\TokenStorageInterface;
 use Psr\Log\LoggerInterface;
 use Sensio\Bundle\FrameworkExtraBundle\Configuration\Security;
 use Sensio\Bundle\FrameworkExtraBundle\Configuration\Template;
@@ -23,18 +26,13 @@ use Symfony\Contracts\Translation\TranslatorInterface;
  */
 class OrganisationController extends AbstractController
 {
-    private RestClient $restClient;
-    private LoggerInterface $logger;
-    private OrganisationApi $organisationApi;
-
     public function __construct(
-        RestClient $restClient,
-        LoggerInterface $logger,
-        OrganisationApi $organisationApi
+        private RestClient $restClient,
+        private LoggerInterface $logger,
+        private OrganisationApi $organisationApi,
+        private ObservableEventDispatcher $eventDispatcher,
+        private TokenStorageInterface $tokenStorage
     ) {
-        $this->restClient = $restClient;
-        $this->logger = $logger;
-        $this->organisationApi = $organisationApi;
     }
 
     /**
@@ -94,6 +92,7 @@ class OrganisationController extends AbstractController
 
             try {
                 $this->restClient->post('v2/organisation', $organisation);
+                $this->dispatchOrgCreatedEvent($organisation);
                 $request->getSession()->getFlashBag()->add('notice', 'The organisation has been created');
 
                 return $this->redirectToRoute('admin_organisation_homepage');
@@ -279,5 +278,19 @@ class OrganisationController extends AbstractController
             ],
             'backLink' => $this->generateUrl('admin_organisation_view', ['id' => $organisation->getId()]),
         ];
+    }
+
+    private function dispatchOrgCreatedEvent(Organisation $organisation)
+    {
+        $trigger = AuditEvents::TRIGGER_ADMIN_MANUAL_ORG_CREATION;
+        $currentUser = $this->tokenStorage->getToken()->getUser();
+
+        $orgCreatedEvent = new OrgCreatedEvent(
+            $trigger,
+            $currentUser,
+            $organisation
+        );
+
+        $this->eventDispatcher->dispatch($orgCreatedEvent, OrgCreatedEvent::NAME);
     }
 }
