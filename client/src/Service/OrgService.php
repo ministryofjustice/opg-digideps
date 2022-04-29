@@ -3,6 +3,7 @@
 namespace App\Service;
 
 use App\Event\CSVUploadedEvent;
+use App\Event\OrgCreatedEvent;
 use App\EventDispatcher\ObservableEventDispatcher;
 use App\Service\Audit\AuditEvents;
 use App\Service\Client\RestClient;
@@ -52,7 +53,7 @@ class OrgService
         'skipped' => 0,
     ];
 
-    const CHUNK_SIZE = 50;
+    public const CHUNK_SIZE = 50;
 
     /** @var DataCompression */
     private $dataCompression;
@@ -229,6 +230,10 @@ class OrgService
             $this->storeChunkOutput($upload);
             $this->logProgress($index + 1, $chunkCount);
 
+            foreach ($upload['added']['organisations'] as $organisation) {
+                $this->dispatchOrgCreatedEvent($organisation);
+            }
+
             if (!$logged) {
                 if (!empty($upload['source'] and !empty($upload['roleType']))) {
                     $this->dispatchCSVUploadEvent($upload['source'], $upload['roleType']);
@@ -271,5 +276,19 @@ class OrgService
         );
 
         $this->eventDispatcher->dispatch($csvUploadedEvent, CSVUploadedEvent::NAME);
+    }
+
+    private function dispatchOrgCreatedEvent(Organisation $organisation)
+    {
+        $trigger = AuditEvents::TRIGGER_CSV_UPLOAD;
+        $currentUser = $this->tokenStorage->getToken()->getUser();
+
+        $orgCreatedEvent = new OrgCreatedEvent(
+            $trigger,
+            $currentUser,
+            $organisation
+        );
+
+        $this->eventDispatcher->dispatch($orgCreatedEvent, OrgCreatedEvent::NAME);
     }
 }
