@@ -158,7 +158,7 @@ class OrgDeputyshipUploader
 
             $this->currentOrganisation = $organisation;
 
-            $this->added['organisations'][] = $organisation->getId();
+            $this->added['organisations'][] = $organisation;
         }
     }
 
