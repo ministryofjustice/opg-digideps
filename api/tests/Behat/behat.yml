@@ -6,7 +6,7 @@ default:
     suites:
         infra:
             description: Minimal test suite to check infrastructure
-            paths: [ "%paths.base%/features" ]
+            paths: ["%paths.base%/features"]
             filters:
                 tags: "@infra"
             contexts:
@@ -14,13 +14,13 @@ default:
 
         admin:
             description: End to end journey for Admin user
-            paths:    [ "%paths.base%/features/admin" ]
+            paths: ["%paths.base%/features/admin"]
             contexts:
                 - App\Tests\Behat\FeatureContext
 
         lay:
             description: End to end journey for Lay deputy user
-            paths:    [ "%paths.base%/features/deputy" ]
+            paths: ["%paths.base%/features/deputy"]
             filters:
                 tags: "@deputy"
             contexts:
@@ -28,7 +28,7 @@ default:
 
         ndr:
             description: End to end journey for NDR-enabled Lay deputy user (fewer checks than deputy suite for common functionalities)
-            paths:    [ "%paths.base%/features/deputy" ]
+            paths: ["%paths.base%/features/deputy"]
             filters:
                 tags: "@ndr"
             contexts:
@@ -36,23 +36,22 @@ default:
 
         pa:
             description: End to end journey for Pub Authority users
-            paths:    [ "%paths.base%/features/pa" ]
+            paths: ["%paths.base%/features/pa"]
             contexts:
                 - App\Tests\Behat\FeatureContext
 
         prof:
             description: End to end journey for Professional Deputy users
-            paths:    [ "%paths.base%/features/prof" ]
+            paths: ["%paths.base%/features/prof"]
             contexts:
                 - App\Tests\Behat\FeatureContext
 
         security:
             description: Tests to assert on the apps security features
-            paths: [ "%paths.base%/features/v2/security" ]
+            paths: ["%paths.base%/features/v2/security"]
             filters:
                 tags: "@security"
             contexts:
-                - behatch:context:rest
                 - App\Tests\Behat\FeatureContext
 
         # report-management:
@@ -63,25 +62,25 @@ default:
 
         court-order-management:
             description: Coverage of court order management features
-            paths: [ "%paths.base%/features/v2/courtOrderManagement" ]
+            paths: ["%paths.base%/features/v2/courtOrderManagement"]
             contexts:
                 - App\Tests\Behat\CourtOrderManagement\CourtOrderManagementFeatureContext
 
         authentication:
             description: Coverage of authentication
-            paths: [ "%paths.base%/features/v2/authentication" ]
+            paths: ["%paths.base%/features/v2/authentication"]
             contexts:
                 - App\Tests\Behat\Authentication\AuthenticationFeatureContext
 
         organisationManagement:
             description: Coverage of the organisation management features
-            paths: [ "%paths.base%/features/v2/organisationManagement" ]
+            paths: ["%paths.base%/features/v2/organisationManagement"]
             contexts:
                 - App\Tests\Behat\OrganisationManagement\OrganisationManagementFeatureContext
 
         user-management:
             description: Coverage of user management features (deleteing, editing etc)
-            paths: [ "%paths.base%/features/v2/userManagement" ]
+            paths: ["%paths.base%/features/v2/userManagement"]
             contexts:
                 - App\Tests\Behat\UserManagement\UserManagementFeatureContext
 
@@ -95,16 +94,15 @@ default:
                     browserstack-debug: true
                     browserstack-tunnel: true
                     acceptSslCerts: true
-                    project: 'Digideps Cross Browser Test - Manual'
-            files_path: '%paths.base%/fixtures/'
+                    project: "Digideps Cross Browser Test - Manual"
+            files_path: "%paths.base%/fixtures/"
             default_session: goutte
-        Behatch\Extension: ~
 
 cross-browser-chrome:
     suites:
         chrome:
             description: Coverage of user journeys using the Chrome browser
-            paths: [ "%paths.base%/features-v2/cross-browser" ]
+            paths: ["%paths.base%/features-v2/cross-browser"]
             filters:
                 tags: "@chrome"
             contexts:
@@ -113,17 +111,17 @@ cross-browser-chrome:
         Behat\MinkExtension:
             browser_stack:
                 capabilities:
-                    browser: 'chrome'
-                    browserVersion: 'latest'
-                    os: 'Windows'
-                    os_version: '10'
-                    build: 'Chrome'
+                    browser: "chrome"
+                    browserVersion: "latest"
+                    os: "Windows"
+                    os_version: "10"
+                    build: "Chrome"
 
 cross-browser-ie11:
     suites:
         ie11:
             description: Coverage of user journeys using the Internet Explorer 11 browser
-            paths: [ "%paths.base%/features-v2/cross-browser" ]
+            paths: ["%paths.base%/features-v2/cross-browser"]
             filters:
                 tags: "@ie11"
             contexts:
@@ -132,17 +130,17 @@ cross-browser-ie11:
         Behat\MinkExtension:
             browser_stack:
                 capabilities:
-                    browser: 'ie'
-                    browserVersion: '11'
-                    os: 'Windows'
-                    os_version: '10'
-                    build: 'Internet Explorer'
+                    browser: "ie"
+                    browserVersion: "11"
+                    os: "Windows"
+                    os_version: "10"
+                    build: "Internet Explorer"
 
 cross-browser-android-chrome:
     suites:
         android-chrome:
             description: Coverage of user journeys using the Chrome browser on an android device
-            paths: [ "%paths.base%/features-v2/cross-browser" ]
+            paths: ["%paths.base%/features-v2/cross-browser"]
             filters:
                 tags: "@android-chrome"
             contexts:
@@ -151,95 +149,95 @@ cross-browser-android-chrome:
         Behat\MinkExtension:
             browser_stack:
                 capabilities:
-                    os_version: '9.0'
-                    device: 'Samsung Galaxy S10'
-                    build: 'Android'
+                    os_version: "9.0"
+                    device: "Samsung Galaxy S10"
+                    build: "Android"
 
 v2-tests-goutte:
     formatters:
         pretty:
             output_styles:
-                passed: [ white, green, [ bold ] ]
-                passed_param: [ white, green, [ underscore, bold ] ]
-                undefined: [ yellow, null, [ underscore, bold ] ]
-                pending: [ yellow, null, [ underscore ] ]
-                pending_param: [ yellow, null, [ underscore, bold ] ]
-                failed: [ white, red, [ bold ] ]
-                failed_param: [ white, red, [ underscore, bold ] ]
-                skipped: [ cyan ]
-                skipped_param: [ cyan, null, [ bold ] ]
-                comment: [ cyan ]
-                tag: [ cyan ]
+                passed: [white, green, [bold]]
+                passed_param: [white, green, [underscore, bold]]
+                undefined: [yellow, null, [underscore, bold]]
+                pending: [yellow, null, [underscore]]
+                pending_param: [yellow, null, [underscore, bold]]
+                failed: [white, red, [bold]]
+                failed_param: [white, red, [underscore, bold]]
+                skipped: [cyan]
+                skipped_param: [cyan, null, [bold]]
+                comment: [cyan]
+                tag: [cyan]
     suites:
         acl-v2:
             description: Coverage of Access Control
-            paths: [ "%paths.base%/features-v2/acl" ]
+            paths: ["%paths.base%/features-v2/acl"]
             contexts:
                 - App\Tests\Behat\v2\ACL\ACLFeatureContext
 
         admin-management:
             description: Covering the admin user management features of the app
-            paths: [ "%paths.base%/features-v2/admin-management" ]
+            paths: ["%paths.base%/features-v2/admin-management"]
             contexts:
                 - App\Tests\Behat\v2\AdminManagement\AdminManagementFeatureContext
 
         analytics:
             description: Covering the admin analytics feature
-            paths: [ "%paths.base%/features-v2/analytics" ]
+            paths: ["%paths.base%/features-v2/analytics"]
             contexts:
                 - App\Tests\Behat\v2\Analytics\AnalyticsFeatureContext
 
         client-management:
             description: Covering the client management features of the app (frontend and admin)
-            paths: [ "%paths.base%/features-v2/client-management" ]
+            paths: ["%paths.base%/features-v2/client-management"]
             contexts:
                 - App\Tests\Behat\v2\ClientManagement\ClientManagementFeatureContext
 
         contact-details:
             description: Coverage of displaying contact details based on user role
-            paths: [ "%paths.base%/features-v2/contact-details" ]
+            paths: ["%paths.base%/features-v2/contact-details"]
             contexts:
                 - App\Tests\Behat\v2\ContactDetails\ContactDetailsFeatureContext
 
         deputy-management:
             description: Coverage of deputy management features - adding, deleting, editing
-            paths: [ "%paths.base%/features-v2/deputy-management" ]
+            paths: ["%paths.base%/features-v2/deputy-management"]
             contexts:
                 - App\Tests\Behat\v2\DeputyManagement\DeputyManagementFeatureContext
 
         feedback:
             description: Covering features that allow users to give us feedback
-            paths: [ "%paths.base%/features-v2/feedback" ]
+            paths: ["%paths.base%/features-v2/feedback"]
             contexts:
                 - App\Tests\Behat\v2\Feedback\FeedbackFeatureContext
 
         organisation-management:
             description: Coverage of organisation management features - adding, deleting, editing
-            paths: [ "%paths.base%/features-v2/organisation-management" ]
+            paths: ["%paths.base%/features-v2/organisation-management"]
             contexts:
                 - App\Tests\Behat\v2\OrganisationManagement\OrganisationManagementFeatureContext
 
         registration:
             description: Covering the registration flows (CSV ingest, self-register and activation)
-            paths: [ "%paths.base%/features-v2/registration" ]
+            paths: ["%paths.base%/features-v2/registration"]
             contexts:
                 - App\Tests\Behat\v2\Registration\RegistrationFeatureContext
 
         report-overiew:
             description: Coverage of the report overview page
-            paths: [ "%paths.base%/features-v2/reporting/report-overview" ]
+            paths: ["%paths.base%/features-v2/reporting/report-overview"]
             contexts:
                 - App\Tests\Behat\v2\Reporting\Sections\ReportingSectionsFeatureContext
 
         app-notification:
             description: Coverage of service notifications of the app
-            paths: [ "%paths.base%/features-v2/app-notification" ]
+            paths: ["%paths.base%/features-v2/app-notification"]
             contexts:
                 - App\Tests\Behat\v2\AppNotification\AppNotificationFeatureContext
 
         reporting-checklist:
             description: Coverage of report checklist feature
-            paths: [ "%paths.base%/features-v2/report-checklist" ]
+            paths: ["%paths.base%/features-v2/report-checklist"]
             contexts:
                 - App\Tests\Behat\v2\Reporting\Admin\ReportingAdminFeatureContext
 
@@ -251,141 +249,152 @@ v2-tests-goutte:
 
         report-section-navigation:
             description: Coverage of next and previous links in report sections
-            paths: [ "%paths.base%/features-v2/reporting/section-navigation" ]
+            paths: ["%paths.base%/features-v2/reporting/section-navigation"]
             contexts:
                 - App\Tests\Behat\v2\ReportSectionNavigation\ReportSectionNavigationFeatureContext
 
         report-submission:
             description: Coverage of report submission and document sync features in the admin side of the app
-            paths: [ "%paths.base%/features-v2/report-submission" ]
+            paths: ["%paths.base%/features-v2/report-submission"]
             contexts:
                 - App\Tests\Behat\v2\ReportSubmission\ReportSubmissionFeatureContext
 
         section-accounts:
             description: Covering the 'Accounts' section of the report
-            paths: [ "%paths.base%/features-v2/reporting/sections/accounts" ]
+            paths: ["%paths.base%/features-v2/reporting/sections/accounts"]
             contexts:
                 - App\Tests\Behat\v2\Reporting\Sections\ReportingSectionsFeatureContext
 
         section-actions:
             description: Covering the 'Actions' section of the report
-            paths: [ "%paths.base%/features-v2/reporting/sections/actions" ]
+            paths: ["%paths.base%/features-v2/reporting/sections/actions"]
             contexts:
                 - App\Tests\Behat\v2\Reporting\Sections\ReportingSectionsFeatureContext
 
         section-additional-information:
             description: Covering the 'Additional Information' section of the report
-            paths: [ "%paths.base%/features-v2/reporting/sections/additional-information" ]
+            paths:
+                [
+                    "%paths.base%/features-v2/reporting/sections/additional-information",
+                ]
             contexts:
                 - App\Tests\Behat\v2\Reporting\Sections\ReportingSectionsFeatureContext
 
         section-assets:
             description: Covering the 'Assets' section of the report
-            paths: [ "%paths.base%/features-v2/reporting/sections/assets" ]
+            paths: ["%paths.base%/features-v2/reporting/sections/assets"]
             contexts:
                 - App\Tests\Behat\v2\Reporting\Sections\ReportingSectionsFeatureContext
 
         section-client-benefits-check:
             description: Covering the 'Client benefits check' section of the report
-            paths: [ "%paths.base%/features-v2/reporting/sections/client-benefits-check" ]
+            paths:
+                [
+                    "%paths.base%/features-v2/reporting/sections/client-benefits-check",
+                ]
             contexts:
                 - App\Tests\Behat\v2\Reporting\Sections\ReportingSectionsFeatureContext
 
         section-contacts:
             description: Covering the 'Contacts' section of the report
-            paths: [ "%paths.base%/features-v2/reporting/sections/contacts" ]
+            paths: ["%paths.base%/features-v2/reporting/sections/contacts"]
             contexts:
                 - App\Tests\Behat\v2\Reporting\Sections\ReportingSectionsFeatureContext
 
         section-deputy-costs-estimate:
             description: Covering the 'Deputy Costs Estimate' section of the report
-            paths: [ "%paths.base%/features-v2/reporting/sections/deputy-costs-estimate" ]
+            paths:
+                [
+                    "%paths.base%/features-v2/reporting/sections/deputy-costs-estimate",
+                ]
             contexts:
                 - App\Tests\Behat\v2\Reporting\Sections\ReportingSectionsFeatureContext
 
         section-deputy-costs:
             description: Covering the 'Deputy Costs' section of the report
-            paths: [ "%paths.base%/features-v2/reporting/sections/deputy-costs" ]
+            paths: ["%paths.base%/features-v2/reporting/sections/deputy-costs"]
             contexts:
                 - App\Tests\Behat\v2\Reporting\Sections\ReportingSectionsFeatureContext
 
         section-deputy-expenses:
             description: Covering the 'Deputy Expenses' section of the report
-            paths: [ "%paths.base%/features-v2/reporting/sections/deputy-expenses" ]
+            paths:
+                ["%paths.base%/features-v2/reporting/sections/deputy-expenses"]
             contexts:
                 - App\Tests\Behat\v2\Reporting\Sections\ReportingSectionsFeatureContext
 
         section-documents:
             description: Covering the 'Documents' section of the report
-            paths: [ "%paths.base%/features-v2/reporting/sections/documents" ]
+            paths: ["%paths.base%/features-v2/reporting/sections/documents"]
             contexts:
                 - App\Tests\Behat\v2\Reporting\Sections\ReportingSectionsFeatureContext
 
         section-gifts:
             description: Covering the 'Gifts' section of the report
-            paths: [ "%paths.base%/features-v2/reporting/sections/gifts" ]
+            paths: ["%paths.base%/features-v2/reporting/sections/gifts"]
             contexts:
                 - App\Tests\Behat\v2\Reporting\Sections\ReportingSectionsFeatureContext
 
         section-health-lifestyle:
             description: Covering the 'Health and Lifestyle' section of the report
-            paths: [ "%paths.base%/features-v2/reporting/sections/health-lifestyle" ]
+            paths:
+                ["%paths.base%/features-v2/reporting/sections/health-lifestyle"]
             contexts:
                 - App\Tests\Behat\v2\Reporting\Sections\ReportingSectionsFeatureContext
 
         section-money-in:
             description: Covering the 'Money In' section of the report
-            paths: [ "%paths.base%/features-v2/reporting/sections/money-in" ]
+            paths: ["%paths.base%/features-v2/reporting/sections/money-in"]
             contexts:
                 - App\Tests\Behat\v2\Reporting\Sections\ReportingSectionsFeatureContext
 
         section-money-out:
             description: Covering the 'Money Out' section of the report
-            paths: [ "%paths.base%/features-v2/reporting/sections/money-out" ]
+            paths: ["%paths.base%/features-v2/reporting/sections/money-out"]
             contexts:
                 - App\Tests\Behat\v2\Reporting\Sections\ReportingSectionsFeatureContext
 
         section-visit-care:
             description: Covering the 'Visits and Care' section of the report
-            paths: [ "%paths.base%/features-v2/reporting/sections/visits-care" ]
+            paths: ["%paths.base%/features-v2/reporting/sections/visits-care"]
             contexts:
                 - App\Tests\Behat\v2\Reporting\Sections\ReportingSectionsFeatureContext
 
         section-debts:
             description: Covering the 'Debts' section of the report
-            paths: [ "%paths.base%/features-v2/reporting/sections/debts" ]
+            paths: ["%paths.base%/features-v2/reporting/sections/debts"]
             contexts:
                 - App\Tests\Behat\v2\Reporting\Sections\ReportingSectionsFeatureContext
 
         section-income-benefits:
             description: Covering the 'Income Benefits' section of the report
-            paths: [ "%paths.base%/features-v2/reporting/sections/income-benefits" ]
+            paths:
+                ["%paths.base%/features-v2/reporting/sections/income-benefits"]
             contexts:
                 - App\Tests\Behat\v2\Reporting\Sections\ReportingSectionsFeatureContext
 
         service-health:
             description: Covering service health monitoring features of the app
-            paths: [ "%paths.base%/features-v2/service-health" ]
+            paths: ["%paths.base%/features-v2/service-health"]
             contexts:
                 - App\Tests\Behat\v2\ServiceHealth\ServiceHealthFeatureContext
 
         user-management:
             description: Covering the user management features of the app (admin)
-            paths: [ "%paths.base%/features-v2/user-management" ]
+            paths: ["%paths.base%/features-v2/user-management"]
             contexts:
                 - App\Tests\Behat\v2\UserManagement\UserManagementFeatureContext
 
     extensions:
         Behat\MinkExtension:
-            files_path: '%paths.base%/fixtures/'
+            files_path: "%paths.base%/fixtures/"
             default_session: goutte
             sessions:
                 symfony:
                     symfony: ~
-        Behatch\Extension: ~
         FriendsOfBehat\SymfonyExtension:
             kernel:
-                path: '%paths.base%/../../src/Kernel.php'
+                path: "%paths.base%/../../src/Kernel.php"
                 class: App\Kernel
         Liuggio\Fastest\Behat\ListFeaturesExtension\Extension: ~
 
@@ -393,7 +402,7 @@ v2-tests-browserstack:
     suites:
         contacts:
             description: Covering the 'Contacts' section of the report
-            paths: [ "%paths.base%/features-v2/reporting/sections/contacts" ]
+            paths: ["%paths.base%/features-v2/reporting/sections/contacts"]
             contexts:
                 - App\Tests\Behat\v2\Reporting\Sections\ReportingSectionsFeatureContext
     extensions:
@@ -403,13 +412,12 @@ v2-tests-browserstack:
                     browserstack-debug: true
                     browserstack-tunnel: true
                     acceptSslCerts: true
-                    project: 'Digideps Cross Browser Test - Manual'
-                    browser: 'chrome'
-                    browserVersion: 'latest'
-                    os: 'Windows'
-                    os_version: '10'
-                    build: 'Chrome'
-                    name: 'v2-tests'
-            files_path: '%paths.base%/fixtures/'
+                    project: "Digideps Cross Browser Test - Manual"
+                    browser: "chrome"
+                    browserVersion: "latest"
+                    os: "Windows"
+                    os_version: "10"
+                    build: "Chrome"
+                    name: "v2-tests"
+            files_path: "%paths.base%/fixtures/"
             default_session: browser_stack
-        Behatch\Extension: ~

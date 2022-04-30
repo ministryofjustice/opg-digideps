@@ -258,15 +258,15 @@ class IndexController extends AbstractController
      */
     public function logoutAction(Request $request)
     {
-        $this->tokenStorage->setToken(null);
-
-        /** @var SessionInterface */
-        $session = $request->getSession();
-        $session->invalidate();
-
-        return $this->redirect(
-            $this->generateUrl('homepage')
-        );
+//        $this->tokenStorage->setToken(null);
+//
+//        /** @var SessionInterface */
+//        $session = $request->getSession();
+//        $session->invalidate();
+//
+//        return $this->redirect(
+//            $this->generateUrl('homepage')
+//        );
     }
 
     /**

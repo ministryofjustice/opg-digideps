@@ -78,11 +78,10 @@ security:
             lazy: true
             provider: client_user_provider
             custom_authenticators:
-                #                Do we need another authenticator for session? Similar to API?
                 - App\Security\LoginFormAuthenticator
                 - App\Security\SessionAuthenticator
             logout:
-                path: /logout
+                path: logout
                 target: /
                 success_handler: logout_listener
                 # needed to save custom login params
