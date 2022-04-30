@@ -22,8 +22,6 @@ Changes to support migratrion from Casrec to Sirius';
     {
         // this up() migration is auto-generated, please modify it to your needs
         $this->addSql('DELETE FROM named_deputy');
-        $this->addSql('DROP INDEX uniq_105868993fcdcf4');
-        $this->addSql('DROP INDEX named_deputy_no_idx');
         $this->addSql('ALTER TABLE named_deputy DROP deputy_type');
         $this->addSql('ALTER TABLE named_deputy DROP dep_addr_no');
         $this->addSql('ALTER TABLE named_deputy DROP deputy_no');
