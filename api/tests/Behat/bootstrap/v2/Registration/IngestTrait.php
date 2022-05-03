@@ -322,7 +322,7 @@ trait IngestTrait
     }
 
     /**
-     * @When I upload a|an :userType CSV that does not have any of the required columns
+     * @When I upload a(n) :userType CSV that does not have any of the required columns
      */
     public function iUploadACsvThatHasMissingDeputyUidColumn(string $userType)
     {
@@ -364,7 +364,6 @@ trait IngestTrait
                 'LastReportDay',
                 'ReportType',
                 'OrderType',
-                'CoDeputy',
             ];
         } else {
             $requiredColumns = [

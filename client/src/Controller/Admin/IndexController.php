@@ -450,7 +450,6 @@ class IndexController extends AbstractController
                         'LastReportDay',
                         'ReportType',
                         'OrderType',
-                        'CoDeputy',
                     ])
                     ->setOptionalColumns([
                         'ClientAddress1',
