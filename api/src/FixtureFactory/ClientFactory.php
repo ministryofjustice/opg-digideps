@@ -24,8 +24,8 @@ class ClientFactory
             ->setPhone(isset($data['phone']) ? $data['phone'] : '022222222222222')
             ->setAddress(isset($data['address']) ? $data['address'] : 'Victoria road')
             ->setAddress2(isset($data['address2']) ? $data['address2'] : 'Birmingham')
+            ->setAddress3(isset($data['address3']) ? $data['address3'] : 'West Midlands')
             ->setPostcode(isset($data['postCode']) ? $data['postCode'] : 'B4 6HQ')
-            ->setCounty(isset($data['county']) ? $data['county'] : 'West Midlands')
             ->setCountry('GB')
             ->setCourtDate(DateTime::createFromFormat($dateFormat, $courtDate));
 
@@ -47,7 +47,7 @@ class ClientFactory
             ->setAddress('1 Fake road')
             ->setAddress2($faker->city())
             ->setPostcode($faker->postcode())
-            ->setCounty('West Midlands')
+            ->setAddress3('West Midlands')
             ->setCountry('GB')
             ->setCourtDate($courtDate ? new DateTime($courtDate) : new DateTime());
 

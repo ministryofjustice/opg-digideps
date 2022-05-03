@@ -15,7 +15,7 @@ class RegistrationFeatureContext extends BaseFeatureContext
      */
     public function theSelfRegistrationLookupTableIsEmpty()
     {
-        $query = 'DELETE FROM casrec';
+        $query = 'DELETE FROM pre_registration';
         $command = sprintf('psql %s -c "%s"', self::$dbName, $query);
         exec($command);
     }
@@ -26,7 +26,7 @@ class RegistrationFeatureContext extends BaseFeatureContext
     public function anAdminUserUploadsTheFileIntoTheLayCsvUploader($file)
     {
         $this->iAmLoggedInToAdminAsWithPassword('admin@publicguardian.gov.uk', 'DigidepsPass1234');
-        $this->visitAdminPath('/admin/casrec-upload');
+        $this->visitAdminPath('/admin/pre-registration-upload');
         $this->attachFileToField('admin_upload_file', $file);
         $this->pressButton('admin_upload_upload');
     }

@@ -42,12 +42,12 @@
                     </tbody>
                 </table>
 
-                <h3 class="label question bold">{{ (page ~ '.form.deputyFullNameAccurateInCasrec.label') | trans({}, 'admin-checklist') }}</h3>
+                <h3 class="label question bold">{{ (page ~ '.form.deputyFullNameAccurateInSirius.label') | trans({}, 'admin-checklist') }}</h3>
 
                 <table class="checkboxes labelvalue inline">
                     <tbody>
                         <tr>
-                            <td class="checkbox value"{% if lodgingChecklist.deputyFullNameAccurateInCasrec == true %} aria-label=”Selected”>X{% else %}>&nbsp;{% endif %}</td>
+                            <td class="checkbox value"{% if lodgingChecklist.deputyFullNameAccurateInSirius == true %} aria-label=”Selected”>X{% else %}>&nbsp;{% endif %}</td>
                             <td class="label">{{ 'yes' | trans({}, 'common' ) }}</td>
                         </tr>
                     </tbody>
@@ -294,16 +294,16 @@
                     </tbody>
                 </table>
 
-                <h3 class="label question bold">{{ (page ~ '.form.bondOrderMatchCasrec.label') | trans({}, 'admin-checklist') }}</h3>
+                <h3 class="label question bold">{{ (page ~ '.form.bondOrderMatchSirius.label') | trans({}, 'admin-checklist') }}</h3>
 
                 <table class="checkboxes labelvalue inline">
                     <tbody>
                         <tr>
-                            <td class="checkbox value"{% if lodgingChecklist.bondOrderMatchCasrec == 'yes' %} aria-label=”Selected”>X{% else %}>&nbsp;{% endif %}</td>
+                            <td class="checkbox value"{% if lodgingChecklist.bondOrderMatchSirius == 'yes' %} aria-label=”Selected”>X{% else %}>&nbsp;{% endif %}</td>
                             <td class="label">{{ 'yes' | trans({}, 'common' ) }}</td>
-                            <td class="checkbox value"{% if lodgingChecklist.bondOrderMatchCasrec == 'no' %} aria-label=”Selected”>X{% else %}>&nbsp;{% endif %}</td>
+                            <td class="checkbox value"{% if lodgingChecklist.bondOrderMatchSirius == 'no' %} aria-label=”Selected”>X{% else %}>&nbsp;{% endif %}</td>
                             <td class="label">{{ 'no' | trans({}, 'common' ) }}</td>
-                            <td class="checkbox value"{% if lodgingChecklist.bondOrderMatchCasrec == 'na' %} aria-label=”Selected”>X{% else %}>&nbsp;{% endif %}</td>
+                            <td class="checkbox value"{% if lodgingChecklist.bondOrderMatchSirius == 'na' %} aria-label=”Selected”>X{% else %}>&nbsp;{% endif %}</td>
                             <td class="label">{{ 'notApplicable' | trans({}, 'common' ) }}</td>
                         </tr>
                     </tbody>

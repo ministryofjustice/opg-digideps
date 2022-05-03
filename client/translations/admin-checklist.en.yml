@@ -85,8 +85,8 @@ checklistPage:
         contactDetailsUptoDate:
             label: Contact details are correct and up to date (updated where applicable)
             qid: L1.2
-        deputyFullNameAccurateInCasrec:
-            label: Deputy's full name on CASREC is correct and up to date (updated where applicable)
+        deputyFullNameAccurateInSirius:
+            label: Deputy's full name on Sirius is correct and up to date (updated where applicable)
             qid: L1.3
         decisionsSatisfactory:
             label: Have satisfactory responses been provided by the deputy?
@@ -136,9 +136,9 @@ checklistPage:
                 Is the bond adequate protection for the client's assets? If ‘No’, refer to the Security
                 Bonds Discrepancy Resolution Job Card.
             qid: L9.1
-        bondOrderMatchCasrec:
+        bondOrderMatchSirius:
             label: |
-                Does the bond amount on CASREC match that on the order? If ‘No’, refer to the Security
+                Does the bond amount on Sirius match that on the order? If ‘No’, refer to the Security
                 Bonds Discrepancy Resolution Job Card.
             qid: L9.2
         paymentsMatchCostCertificate:
@@ -187,7 +187,7 @@ checklistPage:
             hintList: |
                 Document any concerns
                 Explain the decisions you've made and any further action taken
-                Include changes made to CASREC details (or referrals to the MDU)
+                Include changes made to Sirius details (or referrals to the MDU)
                 Do not repeat statements made by the deputy unless they are relevant to a decision you have made.
         fullBankStatementsExist:
             qid: R1.1

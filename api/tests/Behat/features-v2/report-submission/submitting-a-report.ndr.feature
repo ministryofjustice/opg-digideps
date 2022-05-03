@@ -1,5 +1,5 @@
-@report-submissions @v2
-Feature: Report submissions dashboard
+@report-submissions @v2 @v2_reporting_1
+Feature: Submitting a report - NDR
 
     @ndr-completed
     Scenario: Submitting a completed report
@@ -11,3 +11,5 @@ Feature: Report submissions dashboard
         And I confirm I am the sole deputy
         And I submit my report
         Then my report should be submitted
+        When I visit the lay start page
+        Then I should see Lay High Assets report for the next reporting period

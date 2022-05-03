@@ -4,13 +4,12 @@ namespace App\Service;
 
 use App\Entity as EntityDir;
 use App\Entity\NamedDeputy;
-use App\Repository\ClientRepository;
-use App\Repository\UserRepository;
-use App\Repository\NamedDeputyRepository;
 use App\Entity\User;
 use App\Factory\NamedDeputyFactory;
+use App\Repository\ClientRepository;
+use App\Repository\NamedDeputyRepository;
+use App\Repository\UserRepository;
 use Doctrine\ORM\EntityManagerInterface;
-use Symfony\Component\Finder\Exception\AccessDeniedException;
 
 class OrgService
 {
@@ -46,13 +45,6 @@ class OrgService
      */
     private $added;
 
-    /**
-     * @param EntityManagerInterface $em
-     * @param UserRepository $userRepository
-     * @param ClientRepository $clientRepository
-     * @param NamedDeputyRepository $namedDeputyRepository
-     * @param NamedDeputyFactory $namedDeputyFactory
-     */
     public function __construct(
         EntityManagerInterface $em,
         UserRepository $userRepository,
@@ -69,20 +61,13 @@ class OrgService
     }
 
     /**
-     * @param string $id
-     *
-     * @return User|null|object
-     *
+     * @return User|object|null
      */
     public function getMemberById(string $id)
     {
         return $this->userRepository->find($id);
     }
 
-    /**
-     * @param User $userWithClients
-     * @param User $userBeingAdded
-     */
     public function addUserToUsersClients(User $userWithClients, User $userBeingAdded)
     {
         $clientIds = $this->clientRepository->findAllClientIdsByUser($userWithClients);
@@ -94,15 +79,14 @@ class OrgService
 
     /**
      * @param array $csvRow
+     *
      * @return NamedDeputy|null
      */
     public function identifyNamedDeputy($csvRow)
     {
-        $deputyNo = EntityDir\User::padDeputyNumber($csvRow['Deputy No']);
-
         /** @var NamedDeputy|null $namedDeputy */
         $namedDeputy = $this->namedDeputyRepository->findOneBy([
-            'deputyNo' => $deputyNo,
+            'deputyUid' => $csvRow['Deputy Uid'],
             'email1' => strtolower($csvRow['Email']),
             'firstname' => $csvRow['Dep Forename'],
             'lastname' => $csvRow['Dep Surname'],
@@ -115,17 +99,16 @@ class OrgService
 
     /**
      * @param array $csvRow
+     *
      * @return EntityDir\NamedDeputy
      */
     public function createNamedDeputy($csvRow)
     {
-        $deputyNo = EntityDir\User::padDeputyNumber($csvRow['Deputy No']);
-
         $namedDeputy = $this->namedDeputyFactory->createFromOrgCsv($csvRow);
         $this->em->persist($namedDeputy);
         $this->em->flush();
 
-        $this->added['named_deputies'][] = $deputyNo;
+        $this->added['named_deputies'][] = $csvRow['Deputy Uid'];
 
         return $namedDeputy;
     }

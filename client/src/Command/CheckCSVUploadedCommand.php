@@ -25,12 +25,12 @@ class CheckCSVUploadedCommand extends DaemonableCommand
     public const LOG_GROUP_NOT_CREATED_SLACK_MESSAGE = 'A log group with the name "%s" could not be found. Unable to determine if CSVs have been uploaded.';
     public const UNEXPECTED_ERROR_SLACK_MESSAGE = 'An unexpected error occurred during CSV upload check. Error message: %s';
 
-    public const CASREC_LAY_CSV = 'CasRec Lay';
-    public const SIRIUS_LAY_CSV = 'Sirius Lay';
-    public const CASREC_PROF_CSV = 'CasRec Prof';
-    public const CASREC_PA_CSV = 'CasRec PA';
+    public const LAY_CSV = 'Lay';
+    public const PROF_CSV = 'Prof';
+    public const PA_CSV = 'PA';
 
     public static $defaultName = 'digideps:check-csv-uploaded';
+
     private DateTime $now;
 
     public function __construct(
@@ -140,7 +140,7 @@ class CheckCSVUploadedCommand extends DaemonableCommand
 
     private function alertNoCSVsWereUploaded()
     {
-        foreach ([self::CASREC_LAY_CSV, self::SIRIUS_LAY_CSV, self::CASREC_PROF_CSV, self::CASREC_PA_CSV] as $csvType) {
+        foreach ([self::LAY_CSV, self::PA_CSV, self::PROF_CSV] as $csvType) {
             $this->postSlackMessage(sprintf(self::CSV_NOT_UPLOADED_SLACK_MESSAGE, $csvType), 'opg-digideps-team');
         }
     }
@@ -148,10 +148,9 @@ class CheckCSVUploadedCommand extends DaemonableCommand
     private function checkCsvsHaveBeenUploadedAndAlert(array $events)
     {
         $typesAndRegexes = [
-            self::CASREC_LAY_CSV => '/"source":"casrec","role_type":"LAY"/',
-            self::SIRIUS_LAY_CSV => '/"source":"sirius","role_type":"LAY"/',
-            self::CASREC_PROF_CSV => '/"source":"casrec","role_type":"PROF"/',
-            self::CASREC_PA_CSV => '/"source":"casrec","role_type":"PA"/',
+            self::LAY_CSV => '/"role_type":"LAY"/',
+            self::PROF_CSV => '/"role_type":"PROF"/',
+            self::PA_CSV => '/"role_type":"PA"/',
         ];
 
         foreach ($typesAndRegexes as $type => $regex) {
