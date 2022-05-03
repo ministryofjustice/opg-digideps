@@ -39,27 +39,14 @@ use Symfony\Contracts\Translation\TranslatorInterface;
  */
 class IndexController extends AbstractController
 {
-    private OrgService $orgService;
-    private UserVoter $userVoter;
-    private Logger $logger;
-    private RestClient $restClient;
-    private UserApi $userApi;
-    private ObservableEventDispatcher $eventDispatcher;
-
     public function __construct(
-        OrgService $orgService,
-        UserVoter $userVoter,
-        Logger $logger,
-        RestClient $restClient,
-        UserApi $userApi,
-        ObservableEventDispatcher $eventDispatcher
+        private OrgService $orgService,
+        private UserVoter $userVoter,
+        private Logger $logger,
+        private RestClient $restClient,
+        private UserApi $userApi,
+        private ObservableEventDispatcher $eventDispatcher
     ) {
-        $this->orgService = $orgService;
-        $this->userVoter = $userVoter;
-        $this->logger = $logger;
-        $this->restClient = $restClient;
-        $this->userApi = $userApi;
-        $this->eventDispatcher = $eventDispatcher;
     }
 
     /**
