@@ -51,7 +51,14 @@ trait SelfRegistrationTrait
         $this->fillInField('client_courtDate_day', '01');
         $this->fillInField('client_courtDate_month', '01');
         $this->fillInField('client_courtDate_year', '2016');
-
         $this->pressButton('client_save');
+
+        $this->fillInField('report_startDate_day', '01');
+        $this->fillInField('report_startDate_month', '01');
+        $this->fillInField('report_startDate_year', '2016');
+        $this->fillInField('report_endDate_day', '31');
+        $this->fillInField('report_endDate_month', '12');
+        $this->fillInField('report_endDate_year', '2016');
+        $this->pressButton('report_save');
     }
 }
