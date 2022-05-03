@@ -14,6 +14,7 @@ use App\Security\UserVoter;
 use App\Service\Audit\AuditEvents;
 use App\Service\Client\Internal\UserApi;
 use App\Service\Client\RestClient;
+use App\Service\Client\TokenStorage\TokenStorageInterface;
 use App\Service\CsvUploader;
 use App\Service\DataImporter\CsvToArray;
 use App\Service\Logger;
@@ -39,27 +40,15 @@ use Symfony\Contracts\Translation\TranslatorInterface;
  */
 class IndexController extends AbstractController
 {
-    private OrgService $orgService;
-    private UserVoter $userVoter;
-    private Logger $logger;
-    private RestClient $restClient;
-    private UserApi $userApi;
-    private ObservableEventDispatcher $eventDispatcher;
-
     public function __construct(
-        OrgService $orgService,
-        UserVoter $userVoter,
-        Logger $logger,
-        RestClient $restClient,
-        UserApi $userApi,
-        ObservableEventDispatcher $eventDispatcher
+        private OrgService $orgService,
+        private UserVoter $userVoter,
+        private Logger $logger,
+        private RestClient $restClient,
+        private UserApi $userApi,
+        private ObservableEventDispatcher $eventDispatcher,
+        private TokenStorageInterface $tokenStorage
     ) {
-        $this->orgService = $orgService;
-        $this->userVoter = $userVoter;
-        $this->logger = $logger;
-        $this->restClient = $restClient;
-        $this->userApi = $userApi;
-        $this->eventDispatcher = $eventDispatcher;
     }
 
     /**
@@ -583,10 +572,13 @@ class IndexController extends AbstractController
 
     private function dispatchCSVUploadEvent(string $source)
     {
+        $currentUser = $this->tokenStorage->getToken()->getUser();
+
         $csvUploadedEvent = new CSVUploadedEvent(
             $source,
             User::TYPE_LAY,
-            AuditEvents::EVENT_CSV_UPLOADED
+            AuditEvents::EVENT_CSV_UPLOADED,
+            $currentUser
         );
 
         $this->eventDispatcher->dispatch($csvUploadedEvent, CSVUploadedEvent::NAME);
