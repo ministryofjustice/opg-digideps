@@ -19,8 +19,8 @@ class OrgCreatedSubscriber implements EventSubscriberInterface
     private $logger;
 
     public function __construct(
-        LoggerInterface $logger,
-        DateTimeProvider $dateTimeProvider
+        private LoggerInterface $logger,
+        private DateTimeProvider $dateTimeProvider
     ) {
         $this->logger = $logger;
         $this->dateTimeProvider = $dateTimeProvider;
