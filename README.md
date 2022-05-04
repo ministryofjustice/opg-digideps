@@ -77,12 +77,12 @@ _See [deployment documentation](docs/DEPLOYMENT.md)_
 ## Built with
 
 - Terraform 1.0.0
-- PHP 7.4
+- PHP 8.0
 - Symfony 4.4
-- Doctrine 2.0
+- Doctrine 3.0
 - Twig
 - Behat 3
-- PHPUnit 8
+- PHPUnit 9
 - [GOV.UK Design System](https://design-system.service.gov.uk/)
 - [GOV.UK Notify](https://notifications.service.gov.uk/)
 

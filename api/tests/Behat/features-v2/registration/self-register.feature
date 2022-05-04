@@ -7,4 +7,4 @@ Feature: Lay Deputy Self Registration
         When I navigate to the upload users page
         And I upload a lay CSV that contains 3 new pre-registration entities
         And a Lay Deputy registers to deputise for a client with valid details
-        Then I should be on the Ndr Lay homepage
+        Then I should be on the Lay homepage

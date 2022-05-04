@@ -374,7 +374,6 @@ trait IngestTrait
                 'DeputyPostcode',
                 'ReportType',
                 'MadeDate',
-                'NDR',
                 'OrderType',
                 'CoDeputy',
             ];
