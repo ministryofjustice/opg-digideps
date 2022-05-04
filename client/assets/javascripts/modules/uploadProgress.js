@@ -28,8 +28,8 @@ const uploadChunk = function (currentChunk, nOfChunks, element) {
         $(element).val(currentChunk + 1)
         uploadChunk(currentChunk + 1, nOfChunks, element)
       })
-      .error(function () {
-        window.alert('Upload error. please try uploading again')
+      .fail(function (jqXHR, textStatus, errorThrown) {
+        window.alert(`Upload error. please try uploading again: ${textStatus}`)
       })
   } else {
     window.location.href = preRegistrationUploadUrl

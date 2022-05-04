@@ -70,7 +70,7 @@ class SiriusToOrgDeputyshipDtoAssembler
     public function processDate(string $date): ?DateTime
     {
         if ($date) {
-            $result = DateTime::createFromFormat('d/m/Y', $date);
+            $result = DateTime::createFromFormat('Y-m-d', $date);
 
             if (false != $result) {
                 return $result;
