@@ -19,15 +19,15 @@ class SiriusToOrgDeputyshipDtoAssemblerTest extends TestCase
     public function assembleFromArrayProfPFAHighAssets()
     {
         $siriusArray = OrgDeputyshipDTOTestHelper::generateValidSiriusOrgDeputyshipArray();
-        $siriusArray['LastReportDay'] = '03/03/2022';
+        $siriusArray['LastReportDay'] = '2022-03-03';
         $siriusArray['DeputyType'] = 'PRO';
         $siriusArray['ReportType'] = 'OPG102';
         $siriusArray['OrderType'] = 'pfa';
 
-        $expectedReportEndDate = DateTime::createFromFormat('d/m/Y', $siriusArray['LastReportDay']);
-        $expectedReportStartDate = DateTime::createFromFormat('d/m/Y', '04/03/2021');
-        $expectedClientDateOfBirth = DateTime::createFromFormat('d/m/Y', $siriusArray['ClientDateOfBirth']);
-        $expectedMadeDate = DateTime::createFromFormat('d/m/Y', $siriusArray['MadeDate']);
+        $expectedReportEndDate = DateTime::createFromFormat('Y-m-d', $siriusArray['LastReportDay']);
+        $expectedReportStartDate = DateTime::createFromFormat('Y-m-d', '2021-03-04');
+        $expectedClientDateOfBirth = DateTime::createFromFormat('Y-m-d', $siriusArray['ClientDateOfBirth']);
+        $expectedMadeDate = DateTime::createFromFormat('Y-m-d', $siriusArray['MadeDate']);
 
         $reportUtils = self::prophesize(ReportUtils::class);
 
@@ -71,12 +71,12 @@ class SiriusToOrgDeputyshipDtoAssemblerTest extends TestCase
     public function assembleFromArrayPALowAssetsHybridHW()
     {
         $siriusArray = OrgDeputyshipDTOTestHelper::generateValidSiriusOrgDeputyshipArray();
-        $siriusArray['LastReportDay'] = '10/01/2022';
+        $siriusArray['LastReportDay'] = '2022-01-10';
         $siriusArray['DeputyType'] = 'PA';
         $siriusArray['ReportType'] = 'OPG103';
         $siriusArray['OrderType'] = 'hw';
 
-        $reportEndDate = DateTime::createFromFormat('d/m/Y', $siriusArray['LastReportDay']);
+        $reportEndDate = DateTime::createFromFormat('Y-m-d', $siriusArray['LastReportDay']);
 
         $reportUtils = self::prophesize(ReportUtils::class);
 
