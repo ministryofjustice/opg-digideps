@@ -56,7 +56,7 @@ class OrgDeputyshipDTOTestHelper
             'Case' => (string) $faker->randomNumber(8),
             'ClientForename' => $faker->firstName(),
             'ClientSurname' => $faker->lastName(),
-            'ClientDateOfBirth' => $faker->dateTime()->format('d/m/Y'),
+            'ClientDateOfBirth' => $faker->dateTime()->format('Y-m-d'),
             'ClientAddress1' => $faker->buildingNumber().' '.$faker->streetName(),
             'ClientAddress2' => Address::cityPrefix().' '.$faker->city(),
             'ClientAddress3' => Address::county(),
@@ -75,8 +75,8 @@ class OrgDeputyshipDTOTestHelper
             'DeputyAddress4' => Address::county(),
             'DeputyAddress5' => 'UK',
             'DeputyPostcode' => Address::postcode(),
-            'MadeDate' => $courtOrderMadeDate->format('d/m/Y'),
-            'LastReportDay' => $reportPeriodEndDate->format('d/m/Y'),
+            'MadeDate' => $courtOrderMadeDate->format('Y-m-d'),
+            'LastReportDay' => $reportPeriodEndDate->format('Y-m-d'),
             'ReportType' => $faker->randomElement(['OPG102', 'OPG103', 'OPG104']),
             'OrderType' => $faker->randomElement(['pfa', 'hw']),
             'CoDeputy' => $faker->randomElement(['yes', 'no']),
@@ -265,8 +265,8 @@ class OrgDeputyshipDTOTestHelper
         Client $client,
         EntityManager $em,
         string $reportType = '103-5',
-        string $startDate = '01-11-2019',
-        string $endDate = '31-10-2020'
+        string $startDate = '2019-11-01',
+        string $endDate = '2020-10-31'
     ) {
         $report = new Report($client, $reportType, new DateTime($startDate), new DateTime($endDate));
         $client->addReport($report);

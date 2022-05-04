@@ -108,7 +108,7 @@ class SiriusToLayDeputyshipDtoAssemblerTest extends TestCase
             'DeputyPostcode' => 'deputy_postcode',
             'CoDeputy' => 'yes',
             'ReportType' => 'type_of_rep',
-            'MadeDate' => '14-Jun-11',
+            'MadeDate' => '2011-06-14',
             'OrderType' => 'pfa',
         ];
     }
