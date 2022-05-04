@@ -266,7 +266,7 @@ final class AuditEvents
     {
         $event = [
             'trigger' => $trigger,
-            'current_user' => $currentUser->getEmail(),
+            'created_by' => $currentUser->getEmail(),
             'organisation_id' => $organisation->getId(),
             'organisation_name' => $organisation->getName(),
             'organisation_identifier' => $organisation->getEmailIdentifier(),

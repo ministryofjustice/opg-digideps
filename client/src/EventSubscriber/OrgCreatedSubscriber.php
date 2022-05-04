@@ -12,18 +12,10 @@ use Symfony\Component\EventDispatcher\EventSubscriberInterface;
 
 class OrgCreatedSubscriber implements EventSubscriberInterface
 {
-    /** @var DateTimeProvider */
-    private $dateTimeProvider;
-
-    /** @var LoggerInterface */
-    private $logger;
-
     public function __construct(
-        LoggerInterface $logger,
-        DateTimeProvider $dateTimeProvider
+        private LoggerInterface $logger,
+        private DateTimeProvider $dateTimeProvider
     ) {
-        $this->logger = $logger;
-        $this->dateTimeProvider = $dateTimeProvider;
     }
 
     public static function getSubscribedEvents(): array
