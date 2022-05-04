@@ -6,6 +6,7 @@ use App\Repository\PreRegistrationRepository;
 use App\Service\Formatter\RestFormatter;
 use App\Service\PreRegistrationVerificationService;
 use Doctrine\ORM\NonUniqueResultException;
+use Psr\Log\LoggerInterface;
 use Sensio\Bundle\FrameworkExtraBundle\Configuration\Security;
 use Symfony\Component\HttpFoundation\JsonResponse;
 use Symfony\Component\HttpFoundation\Request;
@@ -18,7 +19,8 @@ class PreRegistrationController extends RestController
 {
     public function __construct(
         private PreRegistrationVerificationService $preRegistrationVerificationService,
-        private RestFormatter $formatter
+        private RestFormatter $formatter,
+        private LoggerInterface $logger
     ) {
     }
 
@@ -34,6 +36,8 @@ class PreRegistrationController extends RestController
      */
     public function delete(PreRegistrationRepository $preRegistrationRepository)
     {
+        $this->logger->warning('Deleteing all pre-registration entities');
+
         $result = $preRegistrationRepository->deleteAll();
 
         return ['deletion-count' => null === $result ? 0 : $result];

@@ -17,7 +17,6 @@ use App\Service\Client\Internal\UserApi;
 use App\Service\Client\RestClient;
 use App\Service\CsvUploader;
 use App\Service\DataImporter\CsvToArray;
-use App\Service\Logger;
 use App\Service\OrgService;
 use Predis\ClientInterface;
 use Psr\Log\LoggerInterface;
@@ -42,7 +41,7 @@ class IndexController extends AbstractController
 {
     public function __construct(
         private OrgService $orgService,
-        private Logger $logger,
+        private LoggerInterface $logger,
         private RestClient $restClient,
         private UserApi $userApi,
         private ObservableEventDispatcher $eventDispatcher,
@@ -356,6 +355,11 @@ class IndexController extends AbstractController
 
         $form->handleRequest($request);
 
+        // AjaxController redirects to this page after working through chunks - check if its completed to dispatch event
+        if ('1' === $request->get('completed')) {
+            $this->dispatchCSVUploadEvent();
+        }
+
         if ($form->isSubmitted() && $form->isValid()) {
             $fileName = $form->get('file')->getData();
             try {
@@ -371,7 +375,7 @@ class IndexController extends AbstractController
                     $compressedData = CsvUploader::compressData($data);
                     $this->preRegistrationApi->deleteAll();
 
-                    $ret = $this->layDeputyshipApi->uploadLayDeputyShip($compressedData);
+                    $ret = $this->layDeputyshipApi->uploadLayDeputyShip($compressedData, 'below 2000');
 
                     $this->addFlash(
                         'notice',
@@ -380,6 +384,9 @@ class IndexController extends AbstractController
 
                     foreach ($ret['errors'] as $err) {
                         $this->addFlash('error', $err);
+                        $this->logger->warning(
+                            sprintf('Error while uploading csv: %s', $err->getMessage())
+                        );
                     }
 
                     $this->dispatchCSVUploadEvent();

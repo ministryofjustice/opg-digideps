@@ -32,7 +32,7 @@ const uploadChunk = function (currentChunk, nOfChunks, element) {
         window.alert(`Upload error. please try uploading again: ${textStatus}`)
       })
   } else {
-    window.location.href = preRegistrationUploadUrl
+    window.location.href = `${preRegistrationUploadUrl}?complete=1`
   }
 }
 
