@@ -310,7 +310,7 @@ class OrgDeputyshipUploader
     private function removeDuplicateIds()
     {
         $this->added['named_deputies'] = array_unique($this->added['named_deputies']);
-        $this->added['organisations'] = array_unique($this->added['organisations']);
+        $this->added['organisations'] = array_unique($this->added['organisations'], SORT_REGULAR);
         $this->added['clients'] = array_unique($this->added['clients']);
         $this->added['reports'] = array_unique($this->added['reports']);
 
