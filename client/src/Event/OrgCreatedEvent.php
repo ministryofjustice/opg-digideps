@@ -16,11 +16,11 @@ class OrgCreatedEvent extends Event
     private User $currentUser;
     private Organisation $organisation;
 
-    public function _construct(string $trigger, User $currentUser, Organisation $organisation)
+    public function __construct(string $trigger, User $currentUser, Organisation $organisation)
     {
-        $this->setTrigger($trigger)
-            ->setCurrentUser($currentUser)
-            ->setOrganisation($organisation);
+        $this->setTrigger($trigger);
+        $this->setCurrentUser($currentUser);
+        $this->setOrganisation($organisation);
     }
 
     public function getTrigger(): string

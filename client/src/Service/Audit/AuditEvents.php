@@ -255,7 +255,7 @@ final class AuditEvents
 
     /**
      * @param string       $trigger      , what caused the event
-     * @param Organisation $organisation , the org the user has been removed from
+     * @param Organisation $organisation , the org the user has added
      * @param User         $currentUser  , return the logged in user
      *
      * @return array|string[]
