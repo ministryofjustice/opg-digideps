@@ -33,7 +33,7 @@ class LayDeputyshipUploadController
     {
         ini_set('memory_limit', '1024M');
 
-        $message = sprintf('Uploading chunk with Id: %s', $request->get('chunkId'));
+        $message = sprintf('Uploading chunk with Id: %s', $request->headers->get('chunkId'));
         $this->logger->warning($message);
 
         $postedData = $this->dataCompression->decompress($request->getContent());

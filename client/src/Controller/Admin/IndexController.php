@@ -366,8 +366,26 @@ class IndexController extends AbstractController
                 $csvToArray = new CsvToArray($fileName, false, true);
 
                 $data = $csvToArray
-                    ->setOptionalColumns($csvToArray->getFirstRow())
-                    ->setUnexpectedColumns(['LastReportDay', 'DeputyOrganisation'])
+                    ->setExpectedColumns([
+                        'Case',
+                        'ClientSurname',
+                        'DeputyUid',
+                        'DeputySurname',
+                        'DeputyAddress1',
+                        'DeputyAddress2',
+                        'DeputyAddress3',
+                        'DeputyAddress4',
+                        'DeputyAddress5',
+                        'DeputyPostcode',
+                        'ReportType',
+                        'MadeDate',
+                        'OrderType',
+                        'CoDeputy',
+                    ])
+                    ->setUnexpectedColumns([
+                        'LastReportDay',
+                        'DeputyOrganisation',
+                    ])
                     ->getData();
 
                 // small amount of data -> immediate posting and redirect (needed for behat)
