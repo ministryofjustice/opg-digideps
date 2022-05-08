@@ -63,9 +63,7 @@ class IndexController extends AbstractController
      */
     public function loginAction(Request $request)
     {
-        $form = $this->createForm(FormDir\LoginType::class, null, [
-            'action' => $this->generateUrl('login'),
-        ]);
+        $form = $this->createForm(FormDir\LoginType::class);
 //        $form->handleRequest($request);
         $vars = [
             'isAdmin' => 'admin' === $this->environment,

@@ -172,7 +172,7 @@ Feature: Codeputy Self Registration
     And I fill in the following:
       | email     | behat-user-ndr-codep@publicguardian.gov.uk |
       | password  | DigidepsPass1234 |
-    And I press "login_button"
+    And I press "login_login"
     When I set the user details to:
       | name    | Peter         | NDR           |        |         |    |
       | address | 102           | MOJ           | London | AA1 2BB | GB |

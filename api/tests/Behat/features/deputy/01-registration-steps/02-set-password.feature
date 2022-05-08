@@ -56,7 +56,7 @@ Feature: deputy / user / set password
         When I fill in the following:
             | email     | behat-user@publicguardian.gov.uk |
             | password  | DigidepsPass1234 |
-        And I press "login_button"
+        And I press "login_login"
         Then I should not see an "#error-summary" element
 
     @ndr
@@ -68,5 +68,5 @@ Feature: deputy / user / set password
         And I fill in the following:
             | email     | behat-user-ndr@publicguardian.gov.uk |
             | password  | DigidepsPass1234 |
-        And I press "login_button"
+        And I press "login_login"
         Then I should not see an "#error-summary" element

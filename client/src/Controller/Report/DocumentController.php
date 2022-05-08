@@ -167,7 +167,7 @@ class DocumentController extends AbstractController
     public function step2Action(
         Request $request,
         MultiFileFormUploadVerifier $multiFileVerifier,
-                                    $reportId,
+        string $reportId,
         LoggerInterface $logger
     ) {
         $report = $this->reportApi->refreshReportStatusCache($reportId, ['documents'], self::$jmsGroups);

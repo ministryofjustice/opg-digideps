@@ -12,11 +12,18 @@ class LoginType extends AbstractType
 {
     public function buildForm(FormBuilderInterface $builder, array $options)
     {
-        $builder->add('email', FormTypes\EmailType::class, ['constraints' => [new Constraints\NotBlank(['message' => 'login.email.notBlank']),
-                                                             new Constraints\Email(['message' => 'login.email.inValid']), ],
-                                        ])
-                ->add('password', FormTypes\PasswordType::class, ['constraints' => new Constraints\NotBlank(['message' => 'login.password.notBlank'])])
-                ->add('login', FormTypes\SubmitType::class);
+        $builder
+            ->add(
+            'email',
+            FormTypes\EmailType::class,
+                ['constraints' => [
+                    new Constraints\NotBlank(['message' => 'login.email.notBlank']),
+                    new Constraints\Email(['message' => 'login.email.inValid']),
+                    ],
+                ]
+            )
+            ->add('password', FormTypes\PasswordType::class, ['constraints' => new Constraints\NotBlank(['message' => 'login.password.notBlank'])])
+            ->add('login', FormTypes\SubmitType::class);
     }
 
     public function configureOptions(OptionsResolver $resolver)

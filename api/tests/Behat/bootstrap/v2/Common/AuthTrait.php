@@ -15,9 +15,9 @@ trait AuthTrait
     {
         $this->visitPath('/logout');
         $this->visitPath('/login');
-        $this->fillField('email', $email);
-        $this->fillField('password', 'DigidepsPass1234');
-        $this->pressButton('login_button');
+        $this->fillField('login_email', $email);
+        $this->fillField('login_password', 'DigidepsPass1234');
+        $this->pressButton('login_login');
 
         $userDetailsArray = $this->fixtureHelper->getLoggedInUserDetails($email);
 
@@ -35,9 +35,9 @@ trait AuthTrait
     {
         $this->visitAdminPath('/logout');
         $this->visitAdminPath('/login');
-        $this->fillField('email', $email);
-        $this->fillField('password', 'DigidepsPass1234');
-        $this->pressButton('login_button');
+        $this->fillField('login_email', $email);
+        $this->fillField('login_password', 'DigidepsPass1234');
+        $this->pressButton('login_login');
 
         $this->loggedInUserDetails = $this->getUserDetailsByEmail($email);
     }

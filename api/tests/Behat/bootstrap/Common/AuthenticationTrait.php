@@ -13,9 +13,9 @@ trait AuthenticationTrait
     {
         $this->visitPath('/logout');
         $this->visitPath('/login');
-        $this->fillField('email', $email);
-        $this->fillField('password', $password);
-        $this->pressButton('login_button');
+        $this->fillField('login_email', $email);
+        $this->fillField('login_password', $password);
+        $this->pressButton('login_login');
     }
 
     /**
@@ -26,9 +26,9 @@ trait AuthenticationTrait
         $this->visitAdminPath('/logout');
 
         $this->iAmAtAdminLogin();
-        $this->fillField('email', $email);
-        $this->fillField('password', $password);
-        $this->pressButton('login_button');
+        $this->fillField('login_email', $email);
+        $this->fillField('login_password', $password);
+        $this->pressButton('login_login');
         $this->theFormShouldBeValid();
     }
 
