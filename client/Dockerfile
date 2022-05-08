@@ -84,7 +84,18 @@ RUN wget -q -O /usr/local/bin/waitforit https://github.com/maxcnunes/waitforit/r
 
 # Generate certificate
 RUN mkdir -p /etc/nginx/certs
-RUN openssl req -newkey rsa:4096 -x509 -nodes -keyout /etc/nginx/certs/app.key -new -out /etc/nginx/certs/app.crt -subj "/C=GB/ST=GB/L=London/O=OPG/OU=Digital/CN=default" -sha256 -days "3650"
+
+RUN openssl req \
+    -newkey rsa:4096 \
+    -x509 \
+    -nodes \
+    -keyout /etc/nginx/certs/app.key \
+    -new \
+    -out /etc/nginx/certs/app.crt \
+    -subj /CN=\digideps \
+    -sha256 \
+    -days 3650 \
+    -addext "subjectAltName = DNS:digideps.local,DNS:admin.digideps.local"
 
 RUN mkdir -p var/cache \
     && mkdir -p var/logs \

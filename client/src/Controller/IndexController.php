@@ -254,7 +254,7 @@ class IndexController extends AbstractController
     }
 
     /**
-     * @Route("/logout", name="logout")
+     * @Route("/logout", name="app_logout")
      */
     public function logoutAction(Request $request)
     {

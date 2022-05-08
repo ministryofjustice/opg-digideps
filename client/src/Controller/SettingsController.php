@@ -214,7 +214,7 @@ class SettingsController extends AbstractController
 
                 $this->addFlash('notice', 'For security reasons you have been logged out because you have changed your admin rights. Please log in again below');
 
-                $redirectRoute = $this->generateUrl('logout');
+                $redirectRoute = $this->generateUrl('app_logout');
             } else {
                 $this->addFlash('notice', 'Your account details have been updated');
 

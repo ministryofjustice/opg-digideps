@@ -202,9 +202,9 @@ trait UserTrait
         $this->pressButton('set_password_save');
         $this->theFormShouldBeValid();
         $this->assertResponseStatus(200);
-        $this->fillField('login_email', $email);
-        $this->fillField('login_password', $password);
-        $this->pressButton('login_login');
+        $this->fillField('email', $email);
+        $this->fillField('password', $password);
+        $this->pressButton('login_button');
         $this->fillField('user_details_jobTitle', 'Main org contact');
         $this->pressButton('user_details_save');
         $this->theFormShouldBeValid();
@@ -431,8 +431,8 @@ trait UserTrait
     private function iLogInWithNewPassword($email, $password): void
     {
         $this->assertPageContainsText('Sign in to your new account');
-        $this->fillField('login_email', $email);
-        $this->fillField('login_password', $password);
-        $this->pressButton('login_login');
+        $this->fillField('email', $email);
+        $this->fillField('password', $password);
+        $this->pressButton('login_button');
     }
 }

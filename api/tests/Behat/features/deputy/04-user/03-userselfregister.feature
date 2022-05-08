@@ -98,8 +98,8 @@ Feature: User Self Registration
       #
     Then I am on admin login page
     And I fill in the following:
-      | login_email    | admin@publicguardian.gov.uk |
-      | login_password | DigidepsPass1234                        |
+      | email    | admin@publicguardian.gov.uk |
+      | password | DigidepsPass1234                        |
     Then I click on "login"
     Then I should see "behat-zac.tolley@digital.justice.gov.uk" in the "users" region
 

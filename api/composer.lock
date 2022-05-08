@@ -4,7 +4,7 @@
         "Read more about it at https://getcomposer.org/doc/01-basic-usage.md#installing-dependencies",
         "This file is @generated automatically"
     ],
-    "content-hash": "9474a9d8dd0cd2ca53887440135f3f70",
+    "content-hash": "87c8e586efee98339805ef713700995c",
     "packages": [
         {
             "name": "aws/aws-crt-php",
@@ -11467,11 +11467,11 @@
     "packages-dev": [
         {
             "name": "acsauk/mink-extension",
-            "version": "v2.6.5",
+            "version": "v2.6.14",
             "source": {
                 "type": "git",
                 "url": "https://github.com/acsauk/MinkExtension.git",
-                "reference": "fa878d7d16c5839cc6f53587f84d9b424ca4fbf7"
+                "reference": "e6ee36265a11b2c310229a93795906e4376169b1"
             },
             "require": {
                 "behat/behat": "^3.10.0",
@@ -11511,7 +11511,7 @@
             "description": "Mink extension for Behat",
             "homepage": "http://extensions.behat.org/mink",
             "keywords": ["browser", "gui", "test", "web"],
-            "time": "2022-04-30T12:05:46+00:00"
+            "time": "2022-05-08T14:19:58+00:00"
         },
         {
             "name": "behat/behat",

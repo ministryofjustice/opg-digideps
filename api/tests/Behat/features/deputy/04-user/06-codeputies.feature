@@ -170,9 +170,9 @@ Feature: Codeputy Self Registration
     And I activate the user "behat-user-ndr-codep@publicguardian.gov.uk" with password "DigidepsPass1234"
     And I go to "/login"
     And I fill in the following:
-      | login_email     | behat-user-ndr-codep@publicguardian.gov.uk |
-      | login_password  | DigidepsPass1234 |
-    And I press "login_login"
+      | email     | behat-user-ndr-codep@publicguardian.gov.uk |
+      | password  | DigidepsPass1234 |
+    And I press "login_button"
     When I set the user details to:
       | name    | Peter         | NDR           |        |         |    |
       | address | 102           | MOJ           | London | AA1 2BB | GB |

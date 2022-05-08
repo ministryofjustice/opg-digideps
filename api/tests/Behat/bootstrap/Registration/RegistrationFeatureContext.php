@@ -55,9 +55,9 @@ class RegistrationFeatureContext extends BaseFeatureContext
             $this->pressButton('set_password_save');
 
             $this->assertPageContainsText('Sign in to your new account');
-            $this->fillField('login_email', $courtOrder['deputyEmail']);
-            $this->fillField('login_password', 'DigidepsPass1234');
-            $this->pressButton('login_login');
+            $this->fillField('email', $courtOrder['deputyEmail']);
+            $this->fillField('password', 'DigidepsPass1234');
+            $this->pressButton('login_button');
 
             $this->fillField('user_details_address1', '102 Petty France');
             $this->fillField('user_details_address2', 'MOJ');
