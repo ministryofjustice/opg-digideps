@@ -322,6 +322,16 @@ trait IngestTrait
     }
 
     /**
+     * @Then I should see information showing the row was skipped on the :type csv upload page
+     */
+    public function iShouldSeeErrorShowingSkippedRow(string $type)
+    {
+        $this->iAmOnCorrectUploadPage($type);
+
+        $this->assertOnInfoMessage('1 skipped');
+    }
+
+    /**
      * @When I upload a(n) :userType CSV that does not have any of the required columns
      */
     public function iUploadACsvThatHasMissingDeputyUidColumn(string $userType)
@@ -479,6 +489,20 @@ trait IngestTrait
         $this->preRegistration['expected'] = $newEntitiesCount;
 
         $filePath = 'sirius-csvs/lay-1-row-missing-all-required-1-valid-row.csv';
+
+        $this->uploadCsvAndCountCreatedEntities($filePath, 'Upload Lay users');
+    }
+
+    /**
+     * @When I upload a lay CSV that has 1 row with an invalid report type and :newEntitiesCount valid row
+     */
+    public function iUploadCsvWithInvalidReportTypeAndValidRows(int $newEntitiesCount)
+    {
+        $this->iAmOnAdminLayCsvUploadPage();
+
+        $this->preRegistration['expected'] = $newEntitiesCount;
+
+        $filePath = 'sirius-csvs/lay-1-row-invalid-report-type-1-valid-row.csv';
 
         $this->uploadCsvAndCountCreatedEntities($filePath, 'Upload Lay users');
     }
@@ -807,5 +831,29 @@ trait IngestTrait
             $actualNamedDeputiesAddress,
             'Comparing address defined in step against actual named deputy address'
             );
+    }
+
+    private function assertOnInfoMessage(string $expectedMessage)
+    {
+        $flashDiv = $this->getSession()->getPage()->find('css', 'div.opg-alert--info');
+
+        if (is_null($flashDiv)) {
+            $missingDivMessage = <<<MESSAGE
+A div with the class opg-alert--info was not found.
+This suggests one of the following:
+
+- the information flash alert was not triggered
+- the form error appears in a non-GDS error element
+- the flash error element is not using macro.notification.
+MESSAGE;
+
+            throw new BehatException($missingDivMessage);
+        }
+
+        $infoMessageFound = str_contains($flashDiv->getHtml(), $expectedMessage);
+
+        if (!$infoMessageFound) {
+            throw new BehatException(sprintf('The error summary did not contain the expected error message. Expected: "%s", got (full HTML): %s', $errorMessage, $errorHtml));
+        }
     }
 }

@@ -57,6 +57,19 @@ class SiriusToLayDeputyshipDtoAssemblerTest extends TestCase
 
     /**
      * @test
+     */
+    public function assembleFromArrayThrowsExceptionIfGivenInvalidReportType(): void
+    {
+        $input = $this->getInput();
+        $input['ReportType'] = 'invalidReportType';
+
+        $this->expectException(InvalidArgumentException::class);
+
+        $this->sut->assembleFromArray($input);
+    }
+
+    /**
+     * @test
      * @dataProvider getReportTypeToCorrefExpectation
      */
     public function assembleFromArrayAssemblesAndReturnsALayDeputyshipDto($reportType): void
