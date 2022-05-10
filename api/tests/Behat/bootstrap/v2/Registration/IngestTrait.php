@@ -324,7 +324,7 @@ trait IngestTrait
     /**
      * @Then I should see information showing the row was skipped on the :type csv upload page
      */
-    public function iShouldSeeErrorShowingSkippedRow(string $type)
+    public function iShouldSeeInformationShowingRowSkipped(string $type)
     {
         $this->iAmOnCorrectUploadPage($type);
 

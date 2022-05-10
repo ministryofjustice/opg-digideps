@@ -16,7 +16,7 @@ Feature: Lay CSV data ingestion - sirius source data
         And I upload a lay CSV that has a new report type '103' for case number '34343434'
         Then the clients report type should be updated
 
-    @super-admin @gsc
+    @super-admin
     Scenario: Uploading a Lay CSV that contains deputies with missing required information alongside valid deputy rows
         Given a super admin user accesses the admin app
         When I visit the admin upload lay users page
@@ -25,7 +25,7 @@ Feature: Lay CSV data ingestion - sirius source data
         And the new 'lay' entities should be added to the database
         And the count of the new 'lay' entities added should be displayed on the page
 
-    @super-admin @gsc
+    @super-admin
     Scenario: Uploading a Lay CSV that contains contains a row with an invalid report type
         Given a super admin user accesses the admin app
         When I visit the admin upload lay users page
