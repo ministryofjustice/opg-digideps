@@ -12,13 +12,14 @@ use App\Form as FormDir;
 use App\Service\Audit\AuditEvents;
 use App\Service\Client\Internal\OrganisationApi;
 use App\Service\Client\RestClient;
-use App\Service\Client\TokenStorage\TokenStorageInterface;
+//use App\Service\Client\TokenStorage\TokenStorageInterface;
 use Psr\Log\LoggerInterface;
 use Sensio\Bundle\FrameworkExtraBundle\Configuration\Security;
 use Sensio\Bundle\FrameworkExtraBundle\Configuration\Template;
 use Symfony\Component\Form\FormError;
 use Symfony\Component\HttpFoundation\Request;
 use Symfony\Component\Routing\Annotation\Route;
+use Symfony\Component\Security\Core\Authentication\Token\Storage\TokenStorageInterface;
 use Symfony\Contracts\Translation\TranslatorInterface;
 
 /**
