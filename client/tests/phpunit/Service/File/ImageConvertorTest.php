@@ -4,14 +4,17 @@ declare(strict_types=1);
 
 namespace App\Service\File;
 
-use PHPUnit\Framework\TestCase;
+use Symfony\Bundle\FrameworkBundle\Test\KernelTestCase;
 
-class ImageConvertorTest extends TestCase
+class ImageConvertorTest extends KernelTestCase
 {
-    public function testConvertImageTo()
+    /** @test */
+    public function convert()
     {
+        $projectDir = self::bootKernel()->getProjectDir();
         $sut = new ImageConvertor();
-        $sut->convertImageTo($image, SupportedTargetFileType::JFIF)
 
+        $filePath = sprintf('%s/tests/phpunit/TestData/good-jpeg.jpeg', $projectDir);
+        $sut->convert($filePath);
     }
 }

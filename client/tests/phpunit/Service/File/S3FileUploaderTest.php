@@ -39,13 +39,15 @@ class S3FileUploaderTest extends KernelTestCase
         $this->fileNameFixer = self::prophesize(FileNameFixer::class);
         $this->dateTimeProvider = self::prophesize(DateTimeProvider::class);
         $this->mimeTypeAndExtensionChecker = self::prophesize(MimeTypeAndExtensionChecker::class);
+        $this->imageConvertor = self::prophesize(ImageConvertor::class);
 
         $this->sut = new S3FileUploader(
             $this->storage->reveal(),
             $this->restClient->reveal(),
             $this->fileNameFixer->reveal(),
             $this->dateTimeProvider->reveal(),
-            $this->mimeTypeAndExtensionChecker->reveal()
+            $this->mimeTypeAndExtensionChecker->reveal(),
+            $this->imageConvertor->reveal()
         );
     }
 
@@ -87,6 +89,7 @@ class S3FileUploaderTest extends KernelTestCase
         $this->fileNameFixer->addMissingFileExtension($uploadedFile, $fileBody)->shouldBeCalled()->willReturn('good-jpeg.jpeg');
         $this->fileNameFixer->removeWhiteSpaceBeforeFileExtension('good-jpeg.jpeg')->shouldBeCalled()->willReturn('good-jpeg.jpeg');
         $this->fileNameFixer->removeUnusualCharacters('good-jpeg.jpeg')->shouldBeCalled()->willReturn('good_jpeg.jpeg');
+        $this->imageConvertor->convert('good-jpeg.jpeg')->shouldBeCalled()->willReturn('good_jpeg.jpeg');
 
         $this->mimeTypeAndExtensionChecker->check(Argument::cetera())->shouldBeCalled()->willReturn(true);
 
@@ -101,22 +104,25 @@ class S3FileUploaderTest extends KernelTestCase
     public function uploadSupportingFilesAndPersistDocumentsMultipleFiles()
     {
         $jpeg = new UploadedFile(sprintf('%s/tests/phpunit/TestData/good-jpeg', $this->projectDir), 'good-jpeg');
-        $png = new UploadedFile(sprintf('%s/tests/phpunit/TestData/good-png', $this->projectDir), 'good-png');
-        $pdf = new UploadedFile(sprintf('%s/tests/phpunit/TestData/good-pdf', $this->projectDir), 'good-pdf');
-        $files = [$jpeg, $png, $pdf];
+        $png = new UploadedFile(sprintf('%s/tests/phpunit/TestData/good-png.png', $this->projectDir), 'good-png.png');
+        $pdf = new UploadedFile(sprintf('%s/tests/phpunit/TestData/good-pdf.pdf', $this->projectDir), 'good-pdf.pdf');
+        $heic = new UploadedFile(sprintf('%s/tests/phpunit/TestData/good-heic.heic', $this->projectDir), 'good-heic.heic');
+        $jfif = new UploadedFile(sprintf('%s/tests/phpunit/TestData/good-jfif.jfif', $this->projectDir), 'good-jfif.jfif');
+        $files = [$jpeg, $png, $pdf, $heic, $jfif];
 
         $report = ReportHelpers::createReport();
         $now = new DateTime();
 
-        $this->fileNameFixer->addMissingFileExtension(Argument::cetera())->shouldBeCalledTimes(3)->willReturn('the-fixed-file-name');
-        $this->fileNameFixer->removeWhiteSpaceBeforeFileExtension('the-fixed-file-name')->shouldBeCalledTimes(3)->willReturn('the-fixed-file-name');
-        $this->fileNameFixer->removeUnusualCharacters('the-fixed-file-name')->shouldBeCalledTimes(3)->willReturn('the_fixed_file_name');
+        $this->fileNameFixer->addMissingFileExtension(Argument::cetera())->shouldBeCalledTimes(5)->willReturn('the-fixed-file-name');
+        $this->fileNameFixer->removeWhiteSpaceBeforeFileExtension('the-fixed-file-name')->shouldBeCalledTimes(5)->willReturn('the-fixed-file-name');
+        $this->fileNameFixer->removeUnusualCharacters('the-fixed-file-name')->shouldBeCalledTimes(5)->willReturn('the_fixed_file_name');
+        $this->imageConvertor->convert('the-fixed-file-name')->shouldBeCalledTimes(5)->willReturn('the-fixed-file-name');
 
-        $this->mimeTypeAndExtensionChecker->check(Argument::cetera())->shouldBeCalledTimes(3)->willReturn(true);
+        $this->mimeTypeAndExtensionChecker->check(Argument::cetera())->shouldBeCalledTimes(5)->willReturn(true);
 
         $this->dateTimeProvider->getDateTime()->willReturn($now);
-        $this->storage->store(Argument::cetera())->shouldBeCalledTimes(3);
-        $this->restClient->post(Argument::cetera())->shouldBeCalledTimes(3);
+        $this->storage->store(Argument::cetera())->shouldBeCalledTimes(5);
+        $this->restClient->post(Argument::cetera())->shouldBeCalledTimes(5);
 
         $this->sut->uploadSupportingFilesAndPersistDocuments($files, $report);
     }
