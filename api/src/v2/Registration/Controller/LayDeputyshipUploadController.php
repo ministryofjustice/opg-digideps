@@ -47,6 +47,9 @@ class LayDeputyshipUploadController
         $assembler = $this->factory->create();
         $uploadCollection = $assembler->assembleFromArray($postedData);
 
-        return $this->uploader->upload($uploadCollection);
+        $result = $this->uploader->upload($uploadCollection['collection']);
+        $result['skipped'] = $uploadCollection['skipped'];
+
+        return $result;
     }
 }

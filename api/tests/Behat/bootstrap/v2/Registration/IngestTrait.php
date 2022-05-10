@@ -322,6 +322,16 @@ trait IngestTrait
     }
 
     /**
+     * @Then I should see an alert showing the row was skipped on the :type csv upload page
+     */
+    public function iShouldSeeAnAlertShowingRowSkipped(string $type)
+    {
+        $this->iAmOnCorrectUploadPage($type);
+
+        $this->assertOnAlertMessage('1 skipped');
+    }
+
+    /**
      * @When I upload a(n) :userType CSV that does not have any of the required columns
      */
     public function iUploadACsvThatHasMissingDeputyUidColumn(string $userType)
@@ -479,6 +489,20 @@ trait IngestTrait
         $this->preRegistration['expected'] = $newEntitiesCount;
 
         $filePath = 'sirius-csvs/lay-1-row-missing-all-required-1-valid-row.csv';
+
+        $this->uploadCsvAndCountCreatedEntities($filePath, 'Upload Lay users');
+    }
+
+    /**
+     * @When I upload a lay CSV that has 1 row with an invalid report type and :newEntitiesCount valid row
+     */
+    public function iUploadCsvWithInvalidReportTypeAndValidRows(int $newEntitiesCount)
+    {
+        $this->iAmOnAdminLayCsvUploadPage();
+
+        $this->preRegistration['expected'] = $newEntitiesCount;
+
+        $filePath = 'sirius-csvs/lay-1-row-invalid-report-type-1-valid-row.csv';
 
         $this->uploadCsvAndCountCreatedEntities($filePath, 'Upload Lay users');
     }

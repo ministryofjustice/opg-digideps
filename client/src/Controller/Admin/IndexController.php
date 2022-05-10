@@ -375,7 +375,7 @@ class IndexController extends AbstractController
 
                     $this->addFlash(
                         'notice',
-                        sprintf('%d record uploaded, %d error(s)', $ret['added'], count($ret['errors']))
+                        sprintf('%d record uploaded, %d error(s), %d skipped', $ret['added'], count($ret['errors']), count($ret['skipped']))
                     );
 
                     foreach ($ret['errors'] as $err) {
