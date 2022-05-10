@@ -7,12 +7,8 @@ use App\v2\Registration\DTO\LayDeputyshipDtoCollection;
 
 class LayDeputyshipDtoCollectionAssembler
 {
-    /** @var LayDeputyshipDtoAssemblerInterface */
-    private $layDeputyshipDtoAssembler;
-
-    public function __construct(LayDeputyshipDtoAssemblerInterface $layDeputyshipDtoAssembler)
+    public function __construct(private LayDeputyshipDtoAssemblerInterface $layDeputyshipDtoAssembler)
     {
-        $this->layDeputyshipDtoAssembler = $layDeputyshipDtoAssembler;
     }
 
     public function assembleFromArray(array $data): array

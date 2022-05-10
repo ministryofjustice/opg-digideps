@@ -322,13 +322,13 @@ trait IngestTrait
     }
 
     /**
-     * @Then I should see information showing the row was skipped on the :type csv upload page
+     * @Then I should see an alert showing the row was skipped on the :type csv upload page
      */
-    public function iShouldSeeInformationShowingRowSkipped(string $type)
+    public function iShouldSeeAnAlertShowingRowSkipped(string $type)
     {
         $this->iAmOnCorrectUploadPage($type);
 
-        $this->assertOnInfoMessage('1 skipped');
+        $this->assertOnAlertMessage('1 skipped');
     }
 
     /**
@@ -831,29 +831,5 @@ trait IngestTrait
             $actualNamedDeputiesAddress,
             'Comparing address defined in step against actual named deputy address'
             );
-    }
-
-    private function assertOnInfoMessage(string $expectedMessage)
-    {
-        $flashDiv = $this->getSession()->getPage()->find('css', 'div.opg-alert--info');
-
-        if (is_null($flashDiv)) {
-            $missingDivMessage = <<<MESSAGE
-A div with the class opg-alert--info was not found.
-This suggests one of the following:
-
-- the information flash alert was not triggered
-- the form error appears in a non-GDS error element
-- the flash error element is not using macro.notification.
-MESSAGE;
-
-            throw new BehatException($missingDivMessage);
-        }
-
-        $infoMessageFound = str_contains($flashDiv->getHtml(), $expectedMessage);
-
-        if (!$infoMessageFound) {
-            throw new BehatException(sprintf('The error summary did not contain the expected error message. Expected: "%s", got (full HTML): %s', $errorMessage, $errorHtml));
-        }
     }
 }

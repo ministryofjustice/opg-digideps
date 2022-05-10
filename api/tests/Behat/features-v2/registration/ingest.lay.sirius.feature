@@ -30,7 +30,7 @@ Feature: Lay CSV data ingestion - sirius source data
         Given a super admin user accesses the admin app
         When I visit the admin upload lay users page
         And I upload a lay CSV that has 1 row with an invalid report type and 1 valid row
-        Then I should see information showing the row was skipped on the 'lay' csv upload page
+        Then I should see an alert showing the row was skipped on the 'lay' csv upload page
         And the new 'lay' entities should be added to the database
         And the count of the new 'lay' entities added should be displayed on the page
 
