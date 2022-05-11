@@ -13,6 +13,8 @@ trait DocumentsSectionTrait
     private string $validJpegFilename = 'good.jpg';
     private string $validPngFilename = 'good.png';
     private string $validPdfFilename = 'good.pdf';
+    private string $validHeicFilename = 'good.heic';
+    private string $validJfifFilename = 'good.jfif';
 
     // Invalid files
     private string $tooLargeFilename = 'too-big.jpg';
@@ -144,7 +146,7 @@ trait DocumentsSectionTrait
      */
     public function iUploadMultipleValidDocuments()
     {
-        $this->uploadFiles([$this->validJpegFilename, $this->validPdfFilename, $this->validPngFilename]);
+        $this->uploadFiles([$this->validJpegFilename, $this->validPdfFilename, $this->validPngFilename, $this->validHeicFilename, $this->validJfifFilename]);
     }
 
     /**

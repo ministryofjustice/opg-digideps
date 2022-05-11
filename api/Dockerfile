@@ -21,7 +21,7 @@ WORKDIR /var/www
 EXPOSE 80
 EXPOSE 443
 ENV TIMEOUT=20
-ENV PHP_EXT_DIR=/usr/local/lib/php/extensions/no-debug-non-zts-20200930/
+ENV PHP_EXT_DIR=/usr/local/lib/php/extensions/no-debug-non-zts-20210902/
 
 RUN apk --no-cache add \
   postgresql-dev \

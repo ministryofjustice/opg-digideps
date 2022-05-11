@@ -12,34 +12,19 @@ use App\Service\Client\RestClient;
 use App\Service\File\Storage\StorageInterface;
 use App\Service\Time\DateTimeProvider;
 use Exception;
-use Orbitale\Component\ImageMagick\Command;
 use Symfony\Component\HttpFoundation\File\UploadedFile;
 
 class S3FileUploader
 {
-    private StorageInterface $storage;
-    private RestClient $restClient;
-    private array $options;
-    private FileNameFixer $fileNameFixer;
-
-    private DateTimeProvider $dateTimeProvider;
-    private MimeTypeAndExtensionChecker $mimeTypeAndExtensionChecker;
-
     public function __construct(
-        StorageInterface $s3Storage,
-        RestClient $restClient,
-        FileNameFixer $fileNameFixer,
-        DateTimeProvider $dateTimeProvider,
-        MimeTypeAndExtensionChecker $mimeTypeAndExtensionChecker,
-        array $options = [],
-//        private ImageMagickFactory $imageMagickFactory
+        private StorageInterface $s3Storage,
+        private RestClient $restClient,
+        private FileNameFixer $fileNameFixer,
+        private DateTimeProvider $dateTimeProvider,
+        private MimeTypeAndExtensionChecker $mimeTypeAndExtensionChecker,
+        private ImageConvertor $imageConvertor,
+        private array $options = []
     ) {
-        $this->storage = $s3Storage;
-        $this->restClient = $restClient;
-        $this->fileNameFixer = $fileNameFixer;
-        $this->options = $options;
-        $this->dateTimeProvider = $dateTimeProvider;
-        $this->mimeTypeAndExtensionChecker = $mimeTypeAndExtensionChecker;
     }
 
     /**
@@ -48,8 +33,8 @@ class S3FileUploader
     public function uploadSupportingFilesAndPersistDocuments(array $uploadedFiles, Report $report): void
     {
         foreach ($uploadedFiles as $uploadedFile) {
-            $sanitisedFileName = $this->sanitiseFileName($uploadedFile);
-            $body = $this->convertJpegVariationsToJpeg($uploadedFile, $sanitisedFileName);
+//            $sanitisedFileName = $this->sanitiseFileName($uploadedFile);
+//            $body = $this->convertJpegVariationsToJpeg($uploadedFile, $sanitisedFileName);
 
             [$body, $fileName] = $this->getFileBodyAndFileName($uploadedFile);
             $extensionAndMimeTypeMatch = $this->mimeTypeAndExtensionChecker->check($uploadedFile, $body);
@@ -64,26 +49,13 @@ class S3FileUploader
 
     private function getFileBodyAndFileName(UploadedFile $file): array
     {
-        /** @var string $body */
-        $body = file_get_contents($file->getPathname());
+        $fileNameAndPath = $this->fileNameFixer->addMissingFileExtension($file);
+        $fileNameAndPath = $this->fileNameFixer->removeWhiteSpaceBeforeFileExtension($fileNameAndPath);
+        $fileNameAndPath = $this->fileNameFixer->removeUnusualCharacters($fileNameAndPath);
 
-        $fileName = $this->fileNameFixer->addMissingFileExtension($file, $body);
-        $fileName = $this->fileNameFixer->removeWhiteSpaceBeforeFileExtension($fileName);
-        $fileName = $this->fileNameFixer->removeUnusualCharacters($fileName);
+        [$body, $fileNameAndPath] = $this->imageConvertor->convert($fileNameAndPath);
 
-        $imageMagick = new Command();
-        $newPath = sprintf('%s.%s', $file->getPathName(), 'jpg');
-        $response = $imageMagick
-            ->convert($file->getPathname())
-            ->output($newPath)
-            ->run();
-
-        // Check if the command failed and get the error if needed
-        if ($response->hasFailed()) {
-            throw new Exception('An error occurred:'.$response->getError());
-        }
-
-        $body = file_get_contents($newPath);
+        $body = file_get_contents($filePath);
 
         return [$body, $fileName];
     }

@@ -4,7 +4,7 @@
         "Read more about it at https://getcomposer.org/doc/01-basic-usage.md#installing-dependencies",
         "This file is @generated automatically"
     ],
-    "content-hash": "88dd6610b562f56745ec40c605719497",
+    "content-hash": "c776255f5074d3b90337c55eb539e3b6",
     "packages": [
         {
             "name": "alphagov/notifications-php-client",
@@ -4679,21 +4679,21 @@
         },
         {
             "name": "symfony/symfony",
-            "version": "v4.4.37",
+            "version": "v4.4.41",
             "source": {
                 "type": "git",
                 "url": "https://github.com/symfony/symfony.git",
-                "reference": "1ec78b0e535d587bd6c5503227b47a0808e96934"
+                "reference": "6c95a4884f112aca0fa4042e6ef765617a8870c6"
             },
             "dist": {
                 "type": "zip",
-                "url": "https://api.github.com/repos/symfony/symfony/zipball/1ec78b0e535d587bd6c5503227b47a0808e96934",
-                "reference": "1ec78b0e535d587bd6c5503227b47a0808e96934",
+                "url": "https://api.github.com/repos/symfony/symfony/zipball/6c95a4884f112aca0fa4042e6ef765617a8870c6",
+                "reference": "6c95a4884f112aca0fa4042e6ef765617a8870c6",
                 "shasum": ""
             },
             "require": {
                 "doctrine/event-manager": "~1.0",
-                "doctrine/persistence": "^1.3|^2",
+                "doctrine/persistence": "^1.3|^2|^3",
                 "ext-xml": "*",
                 "friendsofphp/proxy-manager-lts": "^1.0.2",
                 "php": ">=7.1.3",
@@ -4858,7 +4858,7 @@
             "keywords": ["framework"],
             "support": {
                 "issues": "https://github.com/symfony/symfony/issues",
-                "source": "https://github.com/symfony/symfony/tree/v4.4.37"
+                "source": "https://github.com/symfony/symfony/tree/v4.4.41"
             },
             "funding": [
                 {
@@ -4874,7 +4874,7 @@
                     "type": "tidelift"
                 }
             ],
-            "time": "2022-01-28T10:47:37+00:00"
+            "time": "2022-04-27T17:14:51+00:00"
         },
         {
             "name": "twig/extra-bundle",
@@ -8809,7 +8809,7 @@
     "prefer-stable": false,
     "prefer-lowest": false,
     "platform": {
-        "php": "^8.0.12"
+        "php": "^8.1.5"
     },
     "platform-dev": [],
     "plugin-api-version": "2.3.0"

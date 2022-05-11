@@ -24,7 +24,7 @@ Feature: Documents - All User Roles
         When I follow link back to report overview page
         Then I should see "documents" as "1 document"
 
-    @lay-pfa-high-not-started
+    @lay-pfa-high-not-started @acs
     Scenario: A user uploads multiple supporting document that have valid file types
         Given a Lay Deputy has not started a report
         When I view and start the documents report section

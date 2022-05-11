@@ -14,7 +14,10 @@ class ImageConvertorTest extends KernelTestCase
         $projectDir = self::bootKernel()->getProjectDir();
         $sut = new ImageConvertor();
 
-        $filePath = sprintf('%s/tests/phpunit/TestData/good-jpeg.jpeg', $projectDir);
-        $sut->convert($filePath);
+        $filePath = sprintf('%s/tests/phpunit/TestData/good-heic.heic', $projectDir);
+        [$body, $filename] = $sut->convert($filePath);
+
+        self::assertEquals('good-heic.jpeg', $filename);
+        $test = 'blah';
     }
 }

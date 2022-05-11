@@ -200,7 +200,7 @@ abstract class FileUtility
      *
      * @return false|string
      */
-    protected function mimeToExtension($mime): bool | string
+    protected function mimeToExtension($mime): bool|string
     {
         return true === isset($this->mimeMap[$mime]) ? $this->mimeMap[$mime] : false;
     }

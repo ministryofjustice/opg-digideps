@@ -55,6 +55,11 @@ class ImageConvertor
             throw new Exception('An error occurred: '.$response->getError());
         }
 
-        return [file_get_contents($newPath), $newFilename];
+        $newBody = file_get_contents($newPath);
+
+        // remove the created file from the filesystem - we're just interested in the body
+        unlink(realpath($newPath));
+
+        return [$newBody, $newFilename];
     }
 }
