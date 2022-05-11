@@ -12,7 +12,6 @@ use App\Form as FormDir;
 use App\Service\Audit\AuditEvents;
 use App\Service\Client\Internal\OrganisationApi;
 use App\Service\Client\RestClient;
-//use App\Service\Client\TokenStorage\TokenStorageInterface;
 use Psr\Log\LoggerInterface;
 use Sensio\Bundle\FrameworkExtraBundle\Configuration\Security;
 use Sensio\Bundle\FrameworkExtraBundle\Configuration\Template;
@@ -285,11 +284,17 @@ class OrganisationController extends AbstractController
     {
         $trigger = AuditEvents::TRIGGER_ADMIN_MANUAL_ORG_CREATION;
         $currentUser = $this->tokenStorage->getToken()->getUser();
+        $organisationArray = [
+            'id' => $organisation->getId(),
+            'name' => $organisation->getName(),
+            'email_identifier' => $organisation->getEmailIdentifier(),
+            'is_activated' => $organisation->isActivated(),
+        ];
 
         $orgCreatedEvent = new OrgCreatedEvent(
             $trigger,
             $currentUser,
-            $organisation
+            $organisationArray
         );
 
         $this->eventDispatcher->dispatch($orgCreatedEvent, OrgCreatedEvent::NAME);

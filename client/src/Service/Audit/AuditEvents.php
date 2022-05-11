@@ -262,15 +262,15 @@ final class AuditEvents
      *
      * @throws \Exception
      */
-    public function orgCreated(string $trigger, User $currentUser, Organisation $organisation): array
+    public function orgCreated(string $trigger, User $currentUser, array $organisation): array
     {
         $event = [
             'trigger' => $trigger,
             'created_by' => $currentUser->getEmail(),
-            'organisation_id' => $organisation->getId(),
-            'organisation_name' => $organisation->getName(),
-            'organisation_identifier' => $organisation->getEmailIdentifier(),
-            'organisation_status' => $organisation->isActivated(),
+            'organisation_id' => $organisation['id'],
+            'organisation_name' => $organisation['name'],
+            'organisation_identifier' => $organisation['email_identifier'],
+            'organisation_status' => $organisation['is_activated'],
             'created_on' => $this->dateTimeProvider->getDateTime()->format(DateTime::ATOM),
         ];
 

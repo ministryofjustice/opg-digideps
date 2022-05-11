@@ -9,25 +9,11 @@ use App\Service\Audit\AuditEvents;
 use App\Service\Client\RestClient;
 use Symfony\Component\HttpFoundation\Session\SessionInterface;
 use Symfony\Component\HttpFoundation\StreamedResponse;
+use Symfony\Component\Security\Core\Authentication\Token\Storage\TokenStorageInterface;
 use Twig\Environment;
 
 class OrgService
 {
-    /**
-     * @var RestClient
-     */
-    private $restClient;
-
-    /**
-     * @var Environment
-     */
-    private $twig;
-
-    /**
-     * @var SessionInterface
-     */
-    private $session;
-
     /**
      * @var bool
      */
@@ -55,21 +41,13 @@ class OrgService
 
     public const CHUNK_SIZE = 50;
 
-    /** @var DataCompression */
-    private $dataCompression;
-
-    private ObservableEventDispatcher $eventDispatcher;
-
     public function __construct(
-        RestClient $restClient,
-        Environment $twig,
-        SessionInterface $session,
-        ObservableEventDispatcher $eventDispatcher
+        private RestClient $restClient,
+        private Environment $twig,
+        private SessionInterface $session,
+        private ObservableEventDispatcher $eventDispatcher,
+        private TokenStorageInterface $tokenStorage
     ) {
-        $this->restClient = $restClient;
-        $this->twig = $twig;
-        $this->session = $session;
-        $this->eventDispatcher = $eventDispatcher;
     }
 
     /**
@@ -275,7 +253,7 @@ class OrgService
         $this->eventDispatcher->dispatch($csvUploadedEvent, CSVUploadedEvent::NAME);
     }
 
-    private function dispatchOrgCreatedEvent(Organisation $organisation)
+    private function dispatchOrgCreatedEvent(array $organisation)
     {
         $trigger = AuditEvents::TRIGGER_CSV_UPLOAD;
         $currentUser = $this->tokenStorage->getToken()->getUser();

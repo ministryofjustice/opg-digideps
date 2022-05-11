@@ -8,7 +8,6 @@ use App\Event\OrgCreatedEvent;
 use App\EventSubscriber\OrgCreatedSubscriber;
 use App\Service\Audit\AuditEvents;
 use App\Service\Time\DateTimeProvider;
-use App\TestHelpers\OrganisationHelpers;
 use App\TestHelpers\UserHelpers;
 use DateTime;
 use PHPUnit\Framework\TestCase;
@@ -42,17 +41,23 @@ class OrgCreatedSubscriberTest extends TestCase
         $sut = new OrgCreatedSubscriber($logger->reveal(), $dateTimeProvider->reveal());
 
         $currentUser = UserHelpers::createSuperAdminUser();
-        $organisation = OrganisationHelpers::createActivatedOrganisation();
+        $organisation =
+            [
+                'id' => 83,
+                'name' => 'Your Organisation',
+                'email_identifier' => 'mccracken.com',
+                'is_activated' => 'TRUE',
+            ];
 
         $orgCreatedEvent = new OrgCreatedEvent($trigger, $currentUser, $organisation);
 
         $expectedEvent = [
             'trigger' => $trigger,
             'created_by' => $currentUser->getEmail(),
-            'organisation_id' => $organisation->getId(),
-            'organisation_name' => $organisation->getName(),
-            'organisation_identifier' => $organisation->getEmailIdentifier(),
-            'organisation_status' => $organisation->isActivated(),
+            'organisation_id' => $organisation['id'],
+            'organisation_name' => $organisation['name'],
+            'organisation_identifier' => $organisation['email_identifier'],
+            'organisation_status' => $organisation['is_activated'],
             'created_on' => $now->format(DateTime::ATOM),
             'event' => AuditEvents::EVENT_ORG_CREATED,
             'type' => 'audit',

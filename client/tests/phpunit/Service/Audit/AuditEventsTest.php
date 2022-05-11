@@ -6,7 +6,6 @@ namespace App\Service\Audit;
 
 use App\Entity\User;
 use App\Service\Time\DateTimeProvider;
-use App\TestHelpers\OrganisationHelpers;
 use App\TestHelpers\UserHelpers;
 use DateTime;
 use DateTimeZone;
@@ -267,15 +266,21 @@ class AuditEventsTest extends TestCase
         $dateTimeProvider = self::prophesize(DateTimeProvider::class);
         $dateTimeProvider->getDateTime()->shouldBeCalled()->willReturn($now);
         $currentUser = UserHelpers::createSuperAdminUser();
-        $organisation = OrganisationHelpers::createActivatedOrganisation();
+        $organisation =
+            [
+                'id' => 83,
+                'name' => 'Your Organisation',
+                'email_identifier' => 'mccracken.com',
+                'is_activated' => 'TRUE',
+            ];
 
         $expected = [
             'trigger' => 'ADMIN_MANUAL_ORG_CREATION',
             'created_by' => $currentUser->getEmail(),
-            'organisation_id' => $organisation->getId(),
-            'organisation_name' => $organisation->getName(),
-            'organisation_identifier' => $organisation->getEmailIdentifier(),
-            'organisation_status' => $organisation->isActivated(),
+            'organisation_id' => $organisation['id'],
+            'organisation_name' => $organisation['name'],
+            'organisation_identifier' => $organisation['email_identifier'],
+            'organisation_status' => $organisation['is_activated'],
             'created_on' => $now->format(DateTime::ATOM),
             'event' => 'ORG_CREATED',
             'type' => 'audit',

@@ -4,7 +4,6 @@ declare(strict_types=1);
 
 namespace App\Event;
 
-use App\Entity\Organisation;
 use App\Entity\User;
 use Symfony\Contracts\EventDispatcher\Event;
 
@@ -14,9 +13,9 @@ class OrgCreatedEvent extends Event
 
     private string $trigger;
     private User $currentUser;
-    private Organisation $organisation;
+    private array $organisation;
 
-    public function __construct(string $trigger, User $currentUser, Organisation $organisation)
+    public function __construct(string $trigger, User $currentUser, array $organisation)
     {
         $this->setTrigger($trigger);
         $this->setCurrentUser($currentUser);
@@ -47,12 +46,12 @@ class OrgCreatedEvent extends Event
         return $this;
     }
 
-    public function getOrganisation(): Organisation
+    public function getOrganisation(): array
     {
         return $this->organisation;
     }
 
-    public function setOrganisation(Organisation $organisation): OrgCreatedEvent
+    public function setOrganisation(array $organisation): OrgCreatedEvent
     {
         $this->organisation = $organisation;
 
