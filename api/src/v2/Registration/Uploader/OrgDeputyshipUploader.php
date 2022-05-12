@@ -240,6 +240,8 @@ class OrgDeputyshipUploader
             if (!$report->getSubmitted() && empty($report->getUnSubmitDate())) {
                 // Add audit logging for report type changing
                 $report->setType($dto->getReportType());
+
+                $this->updated['reports'][] = $report->getId();
             }
 
             if ($this->clientHasNewOrgAndNamedDeputy($this->client, $this->namedDeputy)) {
