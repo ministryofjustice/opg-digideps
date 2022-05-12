@@ -282,7 +282,7 @@ class Client implements ClientInterface
 
     public function setCaseNumber(?string $caseNumber): self
     {
-        $this->caseNumber = $caseNumber;
+        $this->caseNumber = $caseNumber ? strtolower($caseNumber) : null;
 
         return $this;
     }
