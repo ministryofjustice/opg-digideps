@@ -450,4 +450,32 @@ class OrgDeputyshipUploaderTest extends KernelTestCase
             $updatedClient->getNamedDeputy()->getAddress1()
         );
     }
+
+    /** @test */
+    public function uploadCaseNumberSearchIsNotCaseSensitive()
+    {
+        $deputyships = OrgDeputyshipDTOTestHelper::generateSiriusOrgDeputyshipDtos(1, 0);
+        $client = OrgDeputyshipDTOTestHelper::ensureClientInUploadExists($deputyships[0], $this->em);
+        $client->setCourtDate(null);
+        $client->setCaseNumber('1234567t');
+        $deputyships[0]->setCaseNumber('1234567T');
+
+        $this->em->persist($client);
+        $this->em->flush();
+
+        $uploadResults = $this->sut->upload($deputyships);
+
+        self::assertCount(
+            1,
+            $uploadResults['updated']['clients'],
+            sprintf('Expecting 1, got %d', count($uploadResults['updated']['clients']))
+        );
+
+        $updatedClient = $this->em->getRepository(Client::class)->find($client);
+
+        self::assertEquals(
+            $deputyships[0]->getCourtDate(),
+            $updatedClient->getCourtDate()
+        );
+    }
 }

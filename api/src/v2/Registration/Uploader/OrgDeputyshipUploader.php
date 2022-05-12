@@ -64,7 +64,7 @@ class OrgDeputyshipUploader
             try {
                 $this->handleDtoErrors($deputyshipDto);
 
-                $this->client = ($this->em->getRepository(Client::class))->findOneBy(['caseNumber' => $deputyshipDto->getCaseNumber()]);
+                $this->client = ($this->em->getRepository(Client::class))->findByCaseNumber($deputyshipDto->getCaseNumber());
 
                 $this->skipArchivedClients();
                 $this->handleNamedDeputy($deputyshipDto);
