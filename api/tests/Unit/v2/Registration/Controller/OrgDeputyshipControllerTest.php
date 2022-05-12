@@ -22,12 +22,13 @@ class OrgDeputyshipControllerTest extends AbstractTestController
      */
     public function setUp(): void
     {
+        $this->client = static::createClient(['environment' => 'test', 'debug' => false]);
+
         if (null === self::$tokenAdmin) {
             self::$tokenAdmin = $this->loginAsAdmin();
         }
 
         $this->headers = ['CONTENT_TYPE' => 'application/json', 'HTTP_AuthToken' => self::$tokenAdmin];
-        $this->client = static::createClient(['environment' => 'test', 'debug' => false]);
     }
 
     /** @test */

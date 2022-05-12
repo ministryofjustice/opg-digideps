@@ -132,12 +132,12 @@ class ClientRepository extends ServiceEntityRepository
             ->getSingleScalarResult();
     }
 
-    public function findByCaseNumber(string $caseNumber)
+    public function findByCaseNumber(string $caseNumber): ?Client
     {
         return $this
             ->getEntityManager()
             ->createQuery('SELECT c FROM App\Entity\Client c WHERE LOWER(c.caseNumber) = LOWER(:caseNumber)')
             ->setParameter('caseNumber', $caseNumber)
-            ->getSingleResult();
+            ->getOneOrNullResult();
     }
 }
