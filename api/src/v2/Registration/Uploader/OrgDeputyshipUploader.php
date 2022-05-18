@@ -64,7 +64,7 @@ class OrgDeputyshipUploader
             try {
                 $this->handleDtoErrors($deputyshipDto);
 
-                $this->client = ($this->em->getRepository(Client::class))->findOneBy(['caseNumber' => $deputyshipDto->getCaseNumber()]);
+                $this->client = ($this->em->getRepository(Client::class))->findByCaseNumber($deputyshipDto->getCaseNumber());
 
                 $this->skipArchivedClients();
                 $this->handleNamedDeputy($deputyshipDto);
@@ -240,6 +240,8 @@ class OrgDeputyshipUploader
             if (!$report->getSubmitted() && empty($report->getUnSubmitDate())) {
                 // Add audit logging for report type changing
                 $report->setType($dto->getReportType());
+
+                $this->updated['reports'][] = $report->getId();
             }
 
             if ($this->clientHasNewOrgAndNamedDeputy($this->client, $this->namedDeputy)) {

@@ -20,7 +20,6 @@ class SiriusToLayDeputyshipDtoAssembler implements LayDeputyshipDtoAssemblerInte
         'DeputyAddress5',
         'DeputyPostcode',
         'ReportType',
-        'NDR',
         'MadeDate',
         'OrderType',
         'CoDeputy',
@@ -66,7 +65,7 @@ class SiriusToLayDeputyshipDtoAssembler implements LayDeputyshipDtoAssemblerInte
                 ->setDeputyAddress5($data['DeputyAddress5'])
                 ->setDeputyPostcode($data['DeputyPostcode'])
                 ->setTypeOfReport($this->determineReportTypeIsSupported($data['ReportType']))
-                ->setIsNdrEnabled($data['NDR'])
+                ->setIsNdrEnabled(false)
                 ->setOrderDate(new DateTime($data['MadeDate']))
                 ->setOrderType($data['OrderType'])
                 ->setIsCoDeputy('yes' === $data['CoDeputy']);
@@ -88,6 +87,10 @@ class SiriusToLayDeputyshipDtoAssembler implements LayDeputyshipDtoAssemblerInte
             default => false
         };
 
-        return $supported ? $reportType : '';
+        if (!$supported) {
+            throw new InvalidArgumentException();
+        }
+
+        return $reportType;
     }
 }

@@ -56,7 +56,7 @@ class OrgDeputyshipDTOTestHelper
             'Case' => (string) $faker->randomNumber(8),
             'ClientForename' => $faker->firstName(),
             'ClientSurname' => $faker->lastName(),
-            'ClientDateOfBirth' => $faker->dateTime()->format('d/m/Y'),
+            'ClientDateOfBirth' => $faker->dateTime()->format('Y-m-d'),
             'ClientAddress1' => $faker->buildingNumber().' '.$faker->streetName(),
             'ClientAddress2' => Address::cityPrefix().' '.$faker->city(),
             'ClientAddress3' => Address::county(),
@@ -75,8 +75,8 @@ class OrgDeputyshipDTOTestHelper
             'DeputyAddress4' => Address::county(),
             'DeputyAddress5' => 'UK',
             'DeputyPostcode' => Address::postcode(),
-            'MadeDate' => $courtOrderMadeDate->format('d/m/Y'),
-            'LastReportDay' => $reportPeriodEndDate->format('d/m/Y'),
+            'MadeDate' => $courtOrderMadeDate->format('Y-m-d'),
+            'LastReportDay' => $reportPeriodEndDate->format('Y-m-d'),
             'ReportType' => $faker->randomElement(['OPG102', 'OPG103', 'OPG104']),
             'OrderType' => $faker->randomElement(['pfa', 'hw']),
             'CoDeputy' => $faker->randomElement(['yes', 'no']),
@@ -139,12 +139,12 @@ class OrgDeputyshipDTOTestHelper
 
     public static function clientWasCreated(OrgDeputyshipDto $orgDeputyship, ClientRepository $clientRepo)
     {
-        return $clientRepo->findOneBy(['caseNumber' => $orgDeputyship->getCaseNumber()]) instanceof Client;
+        return $clientRepo->findByCaseNumber($orgDeputyship->getCaseNumber()) instanceof Client;
     }
 
     public static function clientAndOrgAreAssociated(OrgDeputyshipDto $orgDeputyship, ClientRepository $clientRepo, OrganisationRepository $orgRepo)
     {
-        $client = $clientRepo->findOneBy(['caseNumber' => $orgDeputyship->getCaseNumber()]);
+        $client = $clientRepo->findByCaseNumber($orgDeputyship->getCaseNumber());
 
         $orgEmailIdentifier = explode('@', $orgDeputyship->getDeputyEmail())[1];
         $org = $orgRepo->findOneBy(['emailIdentifier' => $orgEmailIdentifier]);
@@ -154,7 +154,7 @@ class OrgDeputyshipDTOTestHelper
 
     public static function clientAndNamedDeputyAreAssociated(OrgDeputyshipDto $orgDeputyship, ClientRepository $clientRepo, NamedDeputyRepository $namedDeputyRepo)
     {
-        $client = $clientRepo->findOneBy(['caseNumber' => $orgDeputyship->getCaseNumber()]);
+        $client = $clientRepo->findByCaseNumber($orgDeputyship->getCaseNumber());
         $namedDeputy = $namedDeputyRepo->findOneBy(['deputyUid' => $orgDeputyship->getDeputyUid()]);
 
         return $client->getNamedDeputy() === $namedDeputy;
@@ -162,7 +162,7 @@ class OrgDeputyshipDTOTestHelper
 
     public static function clientAndNamedDeputyAreNotAssociated(OrgDeputyshipDto $orgDeputyship, ClientRepository $clientRepo, NamedDeputyRepository $namedDeputyRepo)
     {
-        $client = $clientRepo->findOneBy(['caseNumber' => $orgDeputyship->getCaseNumber()]);
+        $client = $clientRepo->findByCaseNumber($orgDeputyship->getCaseNumber());
         $namedDeputy = $namedDeputyRepo->findOneBy(['email1' => $orgDeputyship->getDeputyEmail()]);
 
         return !($client->getNamedDeputy() === $namedDeputy);
@@ -170,7 +170,7 @@ class OrgDeputyshipDTOTestHelper
 
     public static function clientHasAReportOfType(string $caseNumber, string $reportType, ClientRepository $clientRepo)
     {
-        $client = $clientRepo->findOneBy(['caseNumber' => $caseNumber]);
+        $client = $clientRepo->findByCaseNumber($caseNumber);
 
         return $client->getReports()->first()->getType() == $reportType;
     }
@@ -265,8 +265,8 @@ class OrgDeputyshipDTOTestHelper
         Client $client,
         EntityManager $em,
         string $reportType = '103-5',
-        string $startDate = '01-11-2019',
-        string $endDate = '31-10-2020'
+        string $startDate = '2019-11-01',
+        string $endDate = '2020-10-31'
     ) {
         $report = new Report($client, $reportType, new DateTime($startDate), new DateTime($endDate));
         $client->addReport($report);

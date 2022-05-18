@@ -49,11 +49,23 @@ class SiriusToLayDeputyshipDtoAssemblerTest extends TestCase
             ['DeputyAddress5'],
             ['DeputyPostcode'],
             ['ReportType'],
-            ['NDR'],
             ['MadeDate'],
             ['OrderType'],
             ['CoDeputy'],
         ];
+    }
+
+    /**
+     * @test
+     */
+    public function assembleFromArrayThrowsExceptionIfGivenInvalidReportType(): void
+    {
+        $input = $this->getInput();
+        $input['ReportType'] = 'invalidReportType';
+
+        $result = $this->sut->assembleFromArray($input);
+
+        $this->assertNull($result);
     }
 
     /**
@@ -80,7 +92,7 @@ class SiriusToLayDeputyshipDtoAssemblerTest extends TestCase
         $this->assertEquals('depaddress5', $result->getDeputyAddress5());
         $this->assertEquals($reportType, $result->getTypeOfReport());
         $this->assertEquals('pfa', $result->getOrderType());
-        $this->assertEquals(true, $result->isNdrEnabled());
+        $this->assertEquals(false, $result->isNdrEnabled());
         $this->assertEquals('2011-06-14', $result->getOrderDate()->format('Y-m-d'));
         $this->assertEquals(true, $result->getIsCoDeputy());
     }
@@ -107,10 +119,9 @@ class SiriusToLayDeputyshipDtoAssemblerTest extends TestCase
             'DeputyAddress4' => 'depaddress4',
             'DeputyAddress5' => 'depaddress5',
             'DeputyPostcode' => 'deputy_postcode',
-            'NDR' => 'yes',
             'CoDeputy' => 'yes',
             'ReportType' => 'type_of_rep',
-            'MadeDate' => '14-Jun-11',
+            'MadeDate' => '2011-06-14',
             'OrderType' => 'pfa',
         ];
     }
