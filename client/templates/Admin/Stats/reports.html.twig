@@ -1,37 +1,34 @@
 {% extends '@App/Layouts/application.html.twig' %}
 
-{% trans_default_domain "admin-metrics" %}
+{% trans_default_domain 'admin-metrics' %}
 {% set page = 'reports' %}
 
 {% set navSection = 'reports' %}
 
-{% block htmlTitle %}{{ (page ~ '.htmlTitle') | trans }}{% endblock %}
-{% block pageTitle %}{{ (page ~ '.pageTitle') | trans }}{% endblock %}
+{% block htmlTitle %}
+    {{ (page ~ '.htmlTitle')|trans }}
+{% endblock %}
+{% block pageTitle %}
+    {{ (page ~ '.pageTitle')|trans }}
+{% endblock %}
 
 {% block pageContent %}
     <p>
-        <a href="{{ path('admin_active_lays_csv') }}" class="govuk-link">
-            {{ (page ~ '.downloadActiveLays') | trans }}
-        </a>
+        <a href="{{ path('admin_active_lays_csv') }}" class="govuk-link">{{ (page ~ '.downloadActiveLays')|trans }}</a>
     </p>
 
     <p>
-        <a href="{{ path('admin_satisfaction') }}" class="govuk-link">
-            {{ (page ~ '.downloadSatisfaction') | trans }}
-        </a>
+        <a href="{{ path('admin_satisfaction') }}" class="govuk-link">{{ (page ~ '.downloadSatisfaction')|trans }}</a>
     </p>
     <p>
-        <a href="{{ path('admin_user_research') }}" class="govuk-link">
-            {{ (page ~ '.downloadUserResearch') | trans }}
-        </a>
+        <a href="{{ path('admin_user_research') }}" class="govuk-link">{{ (page ~ '.downloadUserResearch')|trans }}</a>
     </p>
-
     <p>
-        <a href="{{ path('admin_user_account_reports') }}" class="govuk-link">
-            {{ (page ~ '.userAccountReports') | trans }}
-        </a>
+        <a href="{{ path('admin_user_account_reports') }}" class="govuk-link">{{ (page ~ '.userAccountReports')|trans }}</a>
     </p>
-
+    <p>
+        <a href="{{ path('benefits_reoprt_metrics') }}" class="govuk-link">{{ (page ~ '.benefitsSectionMetrics')|trans }}</a>
+    </p>
     <p>
         <a href="{{ path('admin_total_assets_values') }}" class="govuk-link">
             {{ (page ~ '.downloadAssetsTotalValues') | trans }}

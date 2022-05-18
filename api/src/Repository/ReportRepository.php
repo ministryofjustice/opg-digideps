@@ -25,8 +25,8 @@ class ReportRepository extends ServiceEntityRepository
     /** @var ClientSearchFilter */
     private $filter;
 
-    const USER_DETERMINANT = 1;
-    const ORG_DETERMINANT = 2;
+    public const USER_DETERMINANT = 1;
+    public const ORG_DETERMINANT = 2;
 
     public function __construct(ManagerRegistry $registry, ClientSearchFilter $filter)
     {
@@ -37,10 +37,8 @@ class ReportRepository extends ServiceEntityRepository
     /**
      * add empty Debts to Report.
      * Called from doctrine listener.
-     *
-     * @return int changed records
      */
-    public function addDebtsToReportIfMissing(Report $report)
+    public function addDebtsToReportIfMissing(Report $report): int
     {
         $ret = 0;
 
@@ -59,11 +57,9 @@ class ReportRepository extends ServiceEntityRepository
     }
 
     /**
-     * @return int|null
-     *
      * @throws ORMException
      */
-    public function addFeesToReportIfMissing(Report $report)
+    public function addFeesToReportIfMissing(Report $report): ?int
     {
         if (!$report->isPAreport()) {
             return null;
@@ -109,11 +105,9 @@ class ReportRepository extends ServiceEntityRepository
     }
 
     /**
-     * @param string $role
-     *
      * @return mixed
      */
-    public function findAllActiveReportsByCaseNumbersAndRole(array $caseNumbers, $role)
+    public function findAllActiveReportsByCaseNumbersAndRole(array $caseNumbers, string $role)
     {
         $qb = $this->createQueryBuilder('r');
         $qb->leftJoin('r.client', 'c')
@@ -126,16 +120,11 @@ class ReportRepository extends ServiceEntityRepository
     }
 
     /**
-     * @param mixed       $orgIdsOrUserId
-     * @param int         $determinant
-     * @param string      $select
-     * @param string|null $status
-     *
      * @return array|mixed|null
      *
      * @throws NonUniqueResultException
      */
-    public function getAllByDeterminant($orgIdsOrUserId, $determinant, ParameterBag $query, $select, $status)
+    public function getAllByDeterminant(mixed $orgIdsOrUserId, int $determinant, ParameterBag $query, string $select, ?string $status)
     {
         $qb = $this->createQueryBuilder('r');
 
@@ -143,13 +132,13 @@ class ReportRepository extends ServiceEntityRepository
             $qb
                 ->select(('count' === $select) ? 'COUNT(DISTINCT r)' : 'r,c')
                 ->leftJoin('r.client', 'c')
-                ->leftJoin('c.users', 'u')->where('u.id = '.$orgIdsOrUserId);
+                ->leftJoin('c.users', 'u')->where('u.id = ' . $orgIdsOrUserId);
         } else {
             $qb
                 ->select(('count' === $select) ? 'COUNT(DISTINCT r)' : 'r,c,o')
                 ->leftJoin('r.client', 'c')
                 ->leftJoin('c.organisation', 'o')
-                ->where('o.isActivated = true AND o.id in ('.implode(',', $orgIdsOrUserId).')');
+                ->where('o.isActivated = true AND o.id in (' . implode(',', $orgIdsOrUserId) . ')');
         }
 
         $qb
@@ -259,5 +248,52 @@ DQL;
             ->setParameter('types', $types);
 
         return $query->getQuery()->getResult(AbstractQuery::HYDRATE_SCALAR_COLUMN);
+    }
+
+    public function getBenefitsResponseMetrics(?string $startDate = null, ?string $endDate = null, ?string $deputyType = null): array
+    {
+        $caseStatement = "CASE
+        WHEN r.type IN ('103', '102', '104', '103-4', '102-4') THEN 'Lay'
+        WHEN r.type IN ('103-5','102-5','104-5','103-4-5','102-4-5') THEN 'Prof'
+        ELSE 'PA'
+END deputy_type";
+
+        $query = $this
+            ->getEntityManager()
+            ->createQueryBuilder()
+            ->select('b.whenLastCheckedEntitlement, b.doOthersReceiveMoneyOnClientsBehalf, b.dateLastCheckedEntitlement, b.neverCheckedExplanation, b.dontKnowMoneyExplanation, b.created')
+            ->from('App\Entity\Report\ClientBenefitsCheck', 'b')
+            ->addSelect($caseStatement)
+            ->leftJoin('b.report', 'r')
+            ->leftJoin('r.client', 'c')
+            ->leftJoin('c.namedDeputy', 'nd');
+
+        if ($startDate && $endDate) {
+            $startDate = new DateTime($startDate);
+            $endDate = new DateTime($endDate);
+
+            $query->where('b.created BETWEEN :startDate AND :endDate')
+                ->setParameter('startDate', $startDate->setTime(0, 0, 0))
+                ->setParameter('endDate', $endDate->setTime(23, 59, 59));
+        }
+
+        if ($deputyType && $deputyType !== 'all') {
+            $types = match (strtoupper($deputyType)) {
+                'LAY' => Report::getAllLayTypes(),
+                'PROF' => Report::getAllProfTypes(),
+                'PA' => Report::getAllPaTypes(),
+                default => [],
+            };
+
+            if ($startDate === null && $endDate === null) {
+                $query->where('r.type IN (:deputyTypes)')
+                    ->setParameter('deputyTypes', $types);
+            } else {
+                $query->andWhere('r.type IN (:deputyTypes)')
+                    ->setParameter('deputyTypes', $types);
+            }
+        }
+
+        return $query->getQuery()->getArrayResult();
     }
 }

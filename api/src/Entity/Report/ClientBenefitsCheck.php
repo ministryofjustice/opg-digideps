@@ -50,7 +50,7 @@ class ClientBenefitsCheck implements ClientBenefitsCheckInterface
     private DateTime $created;
 
     /**
-     * @ORM\OneToOne (targetEntity="App\Entity\Report\Report", inversedBy="clientBenefitsCheck")
+     * @ORM\OneToOne(targetEntity="App\Entity\Report\Report", inversedBy="clientBenefitsCheck")
      * @ORM\JoinColumn(name="report_id", referencedColumnName="id", onDelete="CASCADE",nullable=true)
      *
      * @JMS\Groups({"client-benefits-check-report"})

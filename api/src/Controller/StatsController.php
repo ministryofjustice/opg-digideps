@@ -4,10 +4,13 @@ declare(strict_types=1);
 
 namespace App\Controller;
 
+use App\Entity\CasRec;
 use App\Entity\Ndr\AssetOther as NdrAssetOther;
 use App\Entity\Ndr\AssetProperty as NdrAssetProperty;
 use App\Entity\Report\AssetOther;
 use App\Entity\Report\AssetProperty;
+use App\Entity\Report\Report;
+use App\Entity\User;
 use App\Repository\AssetRepository;
 use App\Repository\BankAccountRepository;
 use App\Repository\NdrAssetRepository;
@@ -134,5 +137,18 @@ class StatsController extends RestController
             $ret['pas']['liquid'];
 
         return new JsonResponse($ret);
+    }
+
+    /**
+     * @Route("stats/report/benefits-report-metrics", methods={"GET", "POST"})
+     * @Security("is_granted('ROLE_SUPER_ADMIN')")
+     */
+    public function getBenefitsReportMetrics(Request $request): array
+    {
+        $deputyType = $request->query->get('deputyType');
+        $startDate = $request->query->get('startDate');
+        $endDate = $request->query->get('endDate');
+
+        return $this->reportRepository->getBenefitsResponseMetrics($startDate, $endDate, $deputyType);
     }
 }

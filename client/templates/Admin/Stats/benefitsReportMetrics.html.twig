@@ -1,0 +1,37 @@
+{% extends '@App/Layouts/application.html.twig' %}
+
+{% set translationDomain = "admin-metrics" %}
+{% trans_default_domain translationDomain %}
+{% set page = 'benefitsReportMetrics' %}
+
+{% set navSection = 'reports' %}
+
+{% block htmlTitle %}{{ (page ~ '.htmlTitle') | trans }}{% endblock %}
+{% block pageTitle %}{{ (page ~ '.pageTitle') | trans }}{% endblock %}
+{% block supportTitleTop %}{{ (page ~ '.supportTitle') | trans }}{% endblock %}
+
+{% block pageContent %}
+
+    {{ form_start(form, {attr: {class: 'search', novalidate: 'novalidate' }}) }}
+        {{ form_known_date(form.startDate, 'benefitsReportMetrics.form.fromDate', {
+            'hintText': (page ~ '.form.fromDate.hint') | trans,
+        }) }}<span class="govuk-visually-hidden">of benefits report metrics responses search period</span>
+
+        {{ form_known_date(form.endDate, 'benefitsReportMetrics.form.toDate', {
+            'hintText': (page ~ '.form.toDate.hint') | trans,
+        }) }}<span class="govuk-visually-hidden">of benefits report metrics responses search period</span>
+
+        {{ form_select(form.deputyType, 'benefitsReportMetrics.form.deputyType', {
+        'fieldSetClass' : 'inline',
+        'legendClass' : 'govuk-label--s'
+        }) }}
+
+        <div class="govuk-form-group">
+            {{ form_submit(form.submitAndDownload, 'benefitsReportMetrics.form.submitAndDownload', {
+                'buttonClass': 'behat-link-submit-and-download'
+            }) }}
+            <a href="{{ path('benefits_reoprt_metrics') }}" class="govuk-link button-link">{{ 'benefitsReportMetrics.form.clear' | trans }}</a>
+        </div>
+    {{ form_end(form) }}
+
+{% endblock %}
