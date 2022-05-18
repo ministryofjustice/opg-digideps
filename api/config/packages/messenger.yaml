@@ -1,0 +1,7 @@
+framework:
+    messenger:
+        transports:
+            sirius-events-queue: enqueue://default?topic[name]=topic&queue[name]=sirius-events-queue
+
+        routing:
+            'App\Message\Command\UploadCsv': sirius-events-queue

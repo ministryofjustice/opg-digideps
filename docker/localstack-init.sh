@@ -16,3 +16,5 @@ awslocal ssm put-parameter --name "/default/parameter/document-sync-interval-min
 awslocal ssm put-parameter --name "/default/parameter/document-sync-row-limit" --value "100" --type String --overwrite
 
 awslocal secretsmanager create-secret --name "default/opg-alerts-slack-token" --secret-string "IAMAFAKETOKEN"
+
+awslocal sqs create-queue --queue-name sirius-events-queue

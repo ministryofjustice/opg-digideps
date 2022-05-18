@@ -155,3 +155,6 @@ composer-api: ##@application Drops you into the API container with composer inst
 composer-frontend: ##@application Drops you into the frontend container with composer installed
 	docker-compose exec frontend sh install-composer.sh
 	docker-compose exec frontend sh
+
+add-message-to-queue: ##@localstack Adds a message to the  Sirius Events Queue in Localstack
+	docker-compose exec localstack awslocal sqs send-message --queue-url http://localhost:4566/00000000000/sirius-events-queue --message-body test
