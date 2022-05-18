@@ -26,9 +26,11 @@ final class AuditEvents
     public const EVENT_USER_REMOVED_FROM_ORG = 'USER_REMOVED_FROM_ORG';
     public const EVENT_CSV_UPLOADED = 'CSV_UPLOADED';
     public const EVENT_ORG_CREATED = 'ORG_CREATED';
+    public const EVENT_ADMIN_MANAGER_CREATED = 'ADMIN_MANAGER_CREATED';
 
     public const TRIGGER_ADMIN_USER_EDIT = 'ADMIN_USER_EDIT';
     public const TRIGGER_ADMIN_BUTTON = 'ADMIN_BUTTON';
+    public const TRIGGER_ADMIN_MANAGER_MANUALLY_CREATED = 'ADMIN_MANAGER_MANUALLY_CREATED';
     public const TRIGGER_CSV_UPLOAD = 'CSV_UPLOAD';
     public const TRIGGER_DEPUTY_USER_EDIT_CLIENT_DURING_REGISTRATION = 'TRIGGER_DEPUTY_USER_EDIT_CLIENT_DURING_REGISTRATION';
     public const TRIGGER_DEPUTY_USER_EDIT = 'DEPUTY_USER_EDIT';
@@ -284,6 +286,30 @@ final class AuditEvents
             ] + $failureData;
 
         return $event + $this->baseEvent(AuditEvents::EVENT_USER_SELF_REGISTER_FAILED);
+    }
+
+    /**
+     * @param string $trigger     , what caused the event
+     * @param User   $createdUser , the newly created user
+     * @param User   $currentUser , the logged in user
+     * @param string $roleType    , the roletype of the user
+     *
+     * @throws \Exception
+     */
+    public function adminUserCreated(string $trigger, User $createdUser, User $currentUser, string $roleType): array
+    {
+        $event = [
+            'trigger' => $trigger,
+            'logged_in_user_first_name' => $currentUser->getFirstname(),
+            'logged_in_last_name' => $currentUser->getLastname(),
+            'admin_user_first_name' => $createdUser->getFirstname(),
+            'admin_user_last_name' => $createdUser->getLastname(),
+            'admin_user_email' => $createdUser->getEmail(),
+            'roleType' => $roleType,
+            'created_on' => $this->dateTimeProvider->getDateTime()->format(DateTime::ATOM),
+        ];
+
+        return $event + $this->baseEvent(AuditEvents::EVENT_ADMIN_MANAGER_CREATED);
     }
 
     private function baseEvent(string $eventName): array

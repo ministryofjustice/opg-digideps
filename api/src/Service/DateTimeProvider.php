@@ -2,10 +2,11 @@
 
 namespace App\Service;
 
-class DateTimeProvider
+class DateTimeProvider extends \App\Service\Time\DateTimeProvider
 {
     /**
      * @param null $dateTime
+     *
      * @return \DateTime
      */
     public function getDateTime($dateTime = null)
