@@ -146,7 +146,7 @@ Feature: Deputy costs - Applies to Org users only
         When I declare 1 previous cost with valid dates and amounts
         Then I should be on the deputy costs - costs received page
 
-    @prof-admin-health-welfare-not-started
+    @prof-admin-health-welfare-not-started @acs
     Scenario: A professional deputy provides invalid information - assessed costs
         Given a Professional Admin Deputy has not started a report
         When I visit and start the deputy costs report section for an existing client

@@ -12,11 +12,21 @@ class MimeTypeAndExtensionChecker extends FileUtility
     {
         $fileExtension = $uploadedFile->getClientOriginalExtension();
 
-        if ('jpg' === $fileExtension) {
-            $fileExtension = 'jpeg';
-        }
-
         $mimeType = $this->mimeTypeDetector->detectMimeType($uploadedFile->getPathName(), $fileBody);
+
+        if (is_array($this->mimeMap[$mimeType])) {
+            $match = false;
+
+            foreach ($this->mimeMap[$mimeType] as $extension) {
+                $matched = $extension === $fileExtension;
+                $match = $matched;
+                if ($matched) {
+                    break;
+                }
+            }
+
+            return $match;
+        }
 
         return $this->mimeMap[$mimeType] === $fileExtension;
     }

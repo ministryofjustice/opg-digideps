@@ -79,17 +79,16 @@ class S3FileUploaderTest extends KernelTestCase
     public function uploadSupportingFilesAndPersistDocumentsSingleFile()
     {
         $filePath = sprintf('%s/tests/phpunit/TestData/good-jpeg', $this->projectDir);
-        $fileBody = file_get_contents($filePath);
         $uploadedFile = new UploadedFile($filePath, 'good-jpeg');
         $files = [$uploadedFile];
 
         $report = ReportHelpers::createReport();
         $now = new DateTime();
 
-        $this->fileNameFixer->addMissingFileExtension($uploadedFile, $fileBody)->shouldBeCalled()->willReturn('good-jpeg.jpeg');
+        $this->fileNameFixer->addMissingFileExtension($uploadedFile)->shouldBeCalled()->willReturn('good-jpeg.jpeg');
         $this->fileNameFixer->removeWhiteSpaceBeforeFileExtension('good-jpeg.jpeg')->shouldBeCalled()->willReturn('good-jpeg.jpeg');
         $this->fileNameFixer->removeUnusualCharacters('good-jpeg.jpeg')->shouldBeCalled()->willReturn('good_jpeg.jpeg');
-        $this->imageConvertor->convert('good-jpeg.jpeg')->shouldBeCalled()->willReturn('good_jpeg.jpeg');
+        $this->imageConvertor->convert('good_jpeg.jpeg', Argument::any())->shouldBeCalled()->willReturn(['body content', 'good_jpeg.jpeg']);
 
         $this->mimeTypeAndExtensionChecker->check(Argument::cetera())->shouldBeCalled()->willReturn(true);
 
@@ -116,7 +115,7 @@ class S3FileUploaderTest extends KernelTestCase
         $this->fileNameFixer->addMissingFileExtension(Argument::cetera())->shouldBeCalledTimes(5)->willReturn('the-fixed-file-name');
         $this->fileNameFixer->removeWhiteSpaceBeforeFileExtension('the-fixed-file-name')->shouldBeCalledTimes(5)->willReturn('the-fixed-file-name');
         $this->fileNameFixer->removeUnusualCharacters('the-fixed-file-name')->shouldBeCalledTimes(5)->willReturn('the_fixed_file_name');
-        $this->imageConvertor->convert('the-fixed-file-name')->shouldBeCalledTimes(5)->willReturn('the-fixed-file-name');
+        $this->imageConvertor->convert('the_fixed_file_name', Argument::any())->shouldBeCalledTimes(5)->willReturn(['body content', 'the-fixed-file-name']);
 
         $this->mimeTypeAndExtensionChecker->check(Argument::cetera())->shouldBeCalledTimes(5)->willReturn(true);
 

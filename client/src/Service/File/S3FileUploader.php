@@ -33,31 +33,27 @@ class S3FileUploader
     public function uploadSupportingFilesAndPersistDocuments(array $uploadedFiles, Report $report): void
     {
         foreach ($uploadedFiles as $uploadedFile) {
-//            $sanitisedFileName = $this->sanitiseFileName($uploadedFile);
-//            $body = $this->convertJpegVariationsToJpeg($uploadedFile, $sanitisedFileName);
-
-            [$body, $fileName] = $this->getFileBodyAndFileName($uploadedFile);
-            $extensionAndMimeTypeMatch = $this->mimeTypeAndExtensionChecker->check($uploadedFile, $body);
+            $fileBody = file_get_contents($uploadedFile->getRealPath());
+            $extensionAndMimeTypeMatch = $this->mimeTypeAndExtensionChecker->check($uploadedFile, $fileBody);
 
             if (!$extensionAndMimeTypeMatch) {
                 throw new MimeTypeAndFileExtensionDoNotMatchException('Your file type and file extension do not match');
             }
 
-            $this->uploadFileAndPersistDocument($report, $body, $fileName, false);
+            $sanitisedFileName = $this->getSanitisedFileName($uploadedFile);
+
+            [$newBody, $newFilename] = $this->imageConvertor->convert($sanitisedFileName, $uploadedFile->getRealPath());
+
+            $this->uploadFileAndPersistDocument($report, $newBody, $newFilename, false);
         }
     }
 
-    private function getFileBodyAndFileName(UploadedFile $file): array
+    private function getSanitisedFileName(UploadedFile $file): string
     {
-        $fileNameAndPath = $this->fileNameFixer->addMissingFileExtension($file);
-        $fileNameAndPath = $this->fileNameFixer->removeWhiteSpaceBeforeFileExtension($fileNameAndPath);
-        $fileNameAndPath = $this->fileNameFixer->removeUnusualCharacters($fileNameAndPath);
+        $sanitisedFileNameAndPath = $this->fileNameFixer->addMissingFileExtension($file);
+        $sanitisedFileNameAndPath = $this->fileNameFixer->removeWhiteSpaceBeforeFileExtension($sanitisedFileNameAndPath);
 
-        [$body, $fileNameAndPath] = $this->imageConvertor->convert($fileNameAndPath);
-
-        $body = file_get_contents($filePath);
-
-        return [$body, $fileName];
+        return $this->fileNameFixer->removeUnusualCharacters($sanitisedFileNameAndPath);
     }
 
     /**
@@ -75,7 +71,7 @@ class S3FileUploader
             $this->dateTimeProvider->getDateTime()->format('v')
         );
 
-        $this->storage->store($storageReference, $body);
+        $this->s3Storage->store($storageReference, $body);
 
         $document = (new Document())
             ->setStorageReference($storageReference)
@@ -107,6 +103,6 @@ class S3FileUploader
             throw new Exception('Document could not be removed. No Reference.');
         }
 
-        $this->storage->removeFromS3($storageReference);
+        $this->s3Storage->removeFromS3($storageReference);
     }
 }

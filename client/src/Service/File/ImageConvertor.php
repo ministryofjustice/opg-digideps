@@ -27,17 +27,17 @@ class ImageConvertor
      * If a supported original file type id provided returns the body and filename of the newly converted file.
      * Unsupported file types will return the original body and filename of the original file.
      */
-    public function convert(string $filePath)
+    public function convert(string $filePath, string $currentFileLocation)
     {
         $pathInfo = pathinfo($filePath);
-        $directory = $pathInfo['dirname'];
+        $directory = '/tmp';
         $extension = $pathInfo['extension'];
         $filename = $pathInfo['filename'];
 
         $fileType = ConvertableImageTypes::tryFrom($extension);
 
         if (is_null($fileType)) {
-            return [file_get_contents($filePath), $filePath];
+            return [file_get_contents($currentFileLocation), $filePath];
         }
 
         $targetExtension = $fileType->convertsTo();
@@ -46,7 +46,7 @@ class ImageConvertor
         $newPath = sprintf('%s/%s.%s', $directory, $filename, $targetExtension);
         $newFilename = sprintf('%s.%s', $filename, $targetExtension);
         $response = $imageMagick
-            ->convert($filePath)
+            ->convert($currentFileLocation)
             ->output($newPath)
             ->run();
 
