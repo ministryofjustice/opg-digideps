@@ -11,7 +11,7 @@ class ReportSubmissionSummaryMapper
     private $restClient;
 
     /** @var string */
-    const API_ENDPOINT = '/report-submission/casrec_data';
+    const API_ENDPOINT = '/report-submission/pre-registration-data';
 
     public function __construct(RestClient $restClient)
     {

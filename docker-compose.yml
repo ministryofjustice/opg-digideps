@@ -139,11 +139,11 @@ services:
     restart: always
 
   redis-frontend:
-    image: redis:2.8.21
+    image: redis:6.2.7
     restart: always
 
   redis-api:
-    image: redis:2.8.21
+    image: redis:6.2.7
     restart: always
 
   file-scanner-server:

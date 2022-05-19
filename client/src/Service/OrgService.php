@@ -3,30 +3,17 @@
 namespace App\Service;
 
 use App\Event\CSVUploadedEvent;
+use App\Event\OrgCreatedEvent;
 use App\EventDispatcher\ObservableEventDispatcher;
 use App\Service\Audit\AuditEvents;
 use App\Service\Client\RestClient;
 use Symfony\Component\HttpFoundation\Session\SessionInterface;
 use Symfony\Component\HttpFoundation\StreamedResponse;
+use Symfony\Component\Security\Core\Authentication\Token\Storage\TokenStorageInterface;
 use Twig\Environment;
 
 class OrgService
 {
-    /**
-     * @var RestClient
-     */
-    private $restClient;
-
-    /**
-     * @var Environment
-     */
-    private $twig;
-
-    /**
-     * @var SessionInterface
-     */
-    private $session;
-
     /**
      * @var bool
      */
@@ -52,23 +39,15 @@ class OrgService
         'skipped' => 0,
     ];
 
-    const CHUNK_SIZE = 50;
-
-    /** @var DataCompression */
-    private $dataCompression;
-
-    private ObservableEventDispatcher $eventDispatcher;
+    public const CHUNK_SIZE = 50;
 
     public function __construct(
-        RestClient $restClient,
-        Environment $twig,
-        SessionInterface $session,
-        ObservableEventDispatcher $eventDispatcher
+        private RestClient $restClient,
+        private Environment $twig,
+        private SessionInterface $session,
+        private ObservableEventDispatcher $eventDispatcher,
+        private TokenStorageInterface $tokenStorage
     ) {
-        $this->restClient = $restClient;
-        $this->twig = $twig;
-        $this->session = $session;
-        $this->eventDispatcher = $eventDispatcher;
     }
 
     /**
@@ -229,11 +208,13 @@ class OrgService
             $this->storeChunkOutput($upload);
             $this->logProgress($index + 1, $chunkCount);
 
+            foreach ($upload['added']['organisations'] as $organisation) {
+                $this->dispatchOrgCreatedEvent($organisation);
+            }
+
             if (!$logged) {
-                if (!empty($upload['source'] and !empty($upload['roleType']))) {
-                    $this->dispatchCSVUploadEvent($upload['source'], $upload['roleType']);
-                    $logged = true;
-                }
+                $this->dispatchCSVUploadEvent();
+                $logged = true;
             }
         }
     }
@@ -262,14 +243,27 @@ class OrgService
         return $response;
     }
 
-    private function dispatchCSVUploadEvent(string $source, string $roleType)
+    private function dispatchCSVUploadEvent()
     {
         $csvUploadedEvent = new CSVUploadedEvent(
-            $source,
-            $roleType,
+            'ORG',
             AuditEvents::EVENT_CSV_UPLOADED
         );
 
         $this->eventDispatcher->dispatch($csvUploadedEvent, CSVUploadedEvent::NAME);
+    }
+
+    private function dispatchOrgCreatedEvent(array $organisation)
+    {
+        $trigger = AuditEvents::TRIGGER_CSV_UPLOAD;
+        $currentUser = $this->tokenStorage->getToken()->getUser();
+
+        $orgCreatedEvent = new OrgCreatedEvent(
+            $trigger,
+            $currentUser,
+            $organisation
+        );
+
+        $this->eventDispatcher->dispatch($orgCreatedEvent, OrgCreatedEvent::NAME);
     }
 }

@@ -2,13 +2,13 @@
 
 namespace App\Entity;
 
+use App\Entity\Traits\IsSoftDeleteableEntity;
 use Doctrine\Common\Collections\ArrayCollection;
 use Doctrine\Common\Collections\Collection;
 use Doctrine\ORM\Mapping as ORM;
+use Gedmo\Mapping\Annotation as Gedmo;
 use JMS\Serializer\Annotation as JMS;
 use Symfony\Component\Validator\Constraints as Assert;
-use App\Entity\Traits\IsSoftDeleteableEntity;
-use Gedmo\Mapping\Annotation as Gedmo;
 
 /**
  * @ORM\Table(name="organisation")
@@ -26,7 +26,7 @@ class Organisation implements OrganisationInterface
      * @ORM\Id
      * @ORM\GeneratedValue(strategy="IDENTITY")
      * @ORM\SequenceGenerator(sequenceName="organisation_id_seq", allocationSize=1, initialValue=1)
-     * @JMS\Groups({"organisation", "user-organisations", "client-organisations"})
+     * @JMS\Groups({"organisation", "user-organisations", "client-organisations", "org-created-event"})
      */
     private $id;
 
@@ -35,14 +35,14 @@ class Organisation implements OrganisationInterface
      *
      * @Assert\NotBlank()
      * @ORM\Column(name="name", type="string", length=256, nullable=false)
-     * @JMS\Groups({"organisation", "user-organisations", "client-organisations"})
+     * @JMS\Groups({"organisation", "user-organisations", "client-organisations", "org-created-event"})
      */
     private $name;
 
     /**
      * @var string
      *
-     * @JMS\Groups({"user-organisations", "organisation"})
+     * @JMS\Groups({"user-organisations", "organisation", "org-created-event"})
      * @JMS\Type("string")
      * @JMS\SerializedName("email_identifier")
      * @Assert\NotBlank()
@@ -53,7 +53,7 @@ class Organisation implements OrganisationInterface
     /**
      * @var bool
      *
-     * @JMS\Groups({"organisation", "user-organisations", "client-organisations"})
+     * @JMS\Groups({"organisation", "user-organisations", "client-organisations", "org-created-event"})
      * @JMS\Type("boolean")
      * @JMS\SerializedName("is_activated")
      * @ORM\Column(name="is_activated", type="boolean", options={ "default": false}, nullable=false)
@@ -80,18 +80,11 @@ class Organisation implements OrganisationInterface
         $this->clients = new ArrayCollection();
     }
 
-    /**
-     * @return int
-     */
     public function getId(): int
     {
         return $this->id;
     }
 
-    /**
-     * @param int $id
-     * @return Organisation
-     */
     public function setId(int $id): Organisation
     {
         $this->id = $id;
@@ -99,18 +92,11 @@ class Organisation implements OrganisationInterface
         return $this;
     }
 
-    /**
-     * @return string
-     */
     public function getName(): string
     {
         return $this->name;
     }
 
-    /**
-     * @param string $name
-     * @return Organisation
-     */
     public function setName(string $name): Organisation
     {
         $this->name = $name;
@@ -118,18 +104,11 @@ class Organisation implements OrganisationInterface
         return $this;
     }
 
-    /**
-     * @return string
-     */
     public function getEmailIdentifier(): string
     {
         return $this->emailIdentifier;
     }
 
-    /**
-     * @param string $emailIdentifier
-     * @return Organisation
-     */
     public function setEmailIdentifier(string $emailIdentifier): Organisation
     {
         $this->emailIdentifier = $emailIdentifier;
@@ -137,18 +116,11 @@ class Organisation implements OrganisationInterface
         return $this;
     }
 
-    /**
-     * @return bool
-     */
     public function isActivated(): bool
     {
         return $this->isActivated;
     }
 
-    /**
-     * @param bool $isActivated
-     * @return Organisation
-     */
     public function setIsActivated(bool $isActivated): Organisation
     {
         $this->isActivated = $isActivated;
@@ -156,18 +128,11 @@ class Organisation implements OrganisationInterface
         return $this;
     }
 
-    /**
-     * @return Collection
-     */
     public function getUsers(): Collection
     {
         return $this->users;
     }
 
-    /**
-     * @param User $user
-     * @return Organisation
-     */
     public function addUser(User $user): Organisation
     {
         if (!$this->users->contains($user)) {
@@ -177,28 +142,18 @@ class Organisation implements OrganisationInterface
         return $this;
     }
 
-    /**
-     * @param User $user
-     * @return Organisation
-     */
     public function removeUser(User $user): Organisation
     {
         $this->users->removeElement($user);
+
         return $this;
     }
 
-    /**
-     * @return Collection
-     */
     public function getClients(): Collection
     {
         return $this->clients;
     }
 
-    /**
-     * @param Client $client
-     * @return Organisation
-     */
     public function addClient(Client $client): Organisation
     {
         if (!$this->clients->contains($client)) {
@@ -208,18 +163,14 @@ class Organisation implements OrganisationInterface
         return $this;
     }
 
-    /**
-     * @param Client $client
-     * @return Organisation
-     */
     public function removeClient(Client $client): Organisation
     {
         $this->clients->removeElement($client);
+
         return $this;
     }
 
     /**
-     * @param User $user
      * @return bool
      */
     public function containsUser(User $user)

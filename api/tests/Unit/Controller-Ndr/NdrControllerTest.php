@@ -2,8 +2,10 @@
 
 namespace App\Tests\Unit\Controller\Ndr;
 
+use App\Entity\Ndr\Ndr;
 use App\Entity\Report\ReportSubmission;
 use App\Tests\Unit\Controller\AbstractTestController;
+use Datetime;
 
 class NdrControllerTest extends AbstractTestController
 {
@@ -32,7 +34,7 @@ class NdrControllerTest extends AbstractTestController
             self::$deputy1,
             [
                 'setFirstname' => 'c1',
-                'setCourtDate' => new \Datetime('2018-11-01'),
+                'setCourtDate' => new Datetime('2018-11-01'),
             ]
         );
         self::$ndr1 = self::fixtures()->createNdr(self::$client1);
@@ -61,9 +63,8 @@ class NdrControllerTest extends AbstractTestController
         $this->assertEquals(false, self::$ndr1->getSubmitted());
 
         $ndrId = self::$ndr1->getId();
-        $url = '/ndr/'.$ndrId.'/submit';
-        $ndrId = self::$ndr1->getId();
         $url = '/ndr/'.$ndrId.'/submit?documentId='.self::$document1->getId();
+
         $this->assertJsonRequest('PUT', $url, [
             'mustSucceed' => true,
             'AuthToken' => self::$tokenDeputy,
@@ -76,7 +77,7 @@ class NdrControllerTest extends AbstractTestController
 
         // assert account created with transactions
         $ndr = self::fixtures()->clear()->getRepo('Ndr\Ndr')->find($ndrId);
-        /* @var $ndr \App\Entity\Ndr\Ndr */
+        /* @var $ndr Ndr */
         $this->assertEquals(true, $ndr->getSubmitted());
         $this->assertEquals('more_deputies_not_behalf', $ndr->getAgreedBehalfDeputy());
         $this->assertEquals('abdexplanation', $ndr->getAgreedBehalfDeputyExplanation());
@@ -102,7 +103,7 @@ class NdrControllerTest extends AbstractTestController
         // assert account created with transactions
 
         $ndr = self::fixtures()->clear()->getRepo('Ndr\Ndr')->find($ndrId);
-        /* @var $ndr \App\Entity\Ndr\Ndr */
+        /* @var $ndr Ndr */
         $this->assertEquals(true, $ndr->getSubmitted());
         $this->assertEquals('only_deputy', $ndr->getAgreedBehalfDeputy());
         $this->assertEquals(null, $ndr->getAgreedBehalfDeputyExplanation());

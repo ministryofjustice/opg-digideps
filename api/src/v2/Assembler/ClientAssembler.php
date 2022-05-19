@@ -129,7 +129,9 @@ class ClientAssembler
             ->setLastname($dto->getClientLastname())
             ->setAddress($dto->getClientAddress1() ?: null)
             ->setAddress2($dto->getClientAddress2() ?: null)
-            ->setCounty($dto->getClientCounty() ?: null)
+            ->setAddress3($dto->getClientAddress3() ?: null)
+            ->setAddress4($dto->getClientAddress4() ?: null)
+            ->setAddress5($dto->getClientAddress5() ?: null)
             ->setDateOfBirth($dto->getClientDateOfBirth() ?: null)
             ->setCourtDate($dto->getCourtDate() ?: null);
 

@@ -10,7 +10,7 @@ use JMS\Serializer\Annotation as JMS;
 /**
  * Named Deputy.
  *
- * @ORM\Table(name="named_deputy", indexes={@ORM\Index(name="named_deputy_no_idx", columns={"deputy_no"})})
+ * @ORM\Table(name="named_deputy", indexes={@ORM\Index(name="named_deputy_uid_idx", columns={"deputy_uid"})})
  * @ORM\Entity(repositoryClass="App\Repository\NamedDeputyRepository")
  */
 class NamedDeputy
@@ -43,17 +43,9 @@ class NamedDeputy
      *
      * @JMS\Type("string")
      * @JMS\Groups({"report-submitted-by", "named-deputy"})
-     * @ORM\Column(name="deputy_no", type="string", length=20, nullable=false, unique=true)
+     * @ORM\Column(name="deputy_uid", type="string", length=20, nullable=false, unique=true)
      */
-    private $deputyNo;
-
-    /**
-     * @var string
-     *
-     * @JMS\Type("string")
-     * @ORM\Column(name="deputy_type", type="string", length=5, nullable=true)
-     */
-    private $deputyType;
+    private $deputyUid;
 
     /**
      * @var string
@@ -99,15 +91,6 @@ class NamedDeputy
      * @ORM\Column(name="email3", type="string", length=60, nullable=true, unique=false)
      */
     private $email3;
-
-    /**
-     * @var string
-     *
-     * @JMS\Type("string")
-     * @JMS\Groups({"report-submitted-by", "named-deputy"})
-     * @ORM\Column(name="dep_addr_no", type="integer", length=100, nullable=true)
-     */
-    private $depAddrNo;
 
     /**
      * @var string
@@ -191,22 +174,6 @@ class NamedDeputy
     private $phoneAlternative;
 
     /**
-     * @var bool
-     *
-     * @JMS\Type("boolean")
-     * @ORM\Column(name="fee_payer", type="boolean", nullable=true)
-     */
-    private $feePayer;
-
-    /**
-     * @var bool
-     *
-     * @JMS\Type("boolean")
-     * @ORM\Column(name="corres", type="boolean", nullable=true)
-     */
-    private $corres;
-
-    /**
      * @return int
      */
     public function getId()
@@ -237,31 +204,19 @@ class NamedDeputy
     /**
      * @return string
      */
-    public function getDeputyNo()
+    public function getDeputyUid()
     {
-        return $this->deputyNo;
+        return $this->deputyUid;
     }
 
     /**
-     * @param string $deputyNo
+     * @param string $deputyUid
      *
      * @return $this
      */
-    public function setDeputyNo($deputyNo)
+    public function setDeputyUid($deputyUid)
     {
-        $this->deputyNo = User::padDeputyNumber($deputyNo);
-
-        return $this;
-    }
-
-    public function getDeputyType(): string
-    {
-        return $this->deputyType;
-    }
-
-    public function setDeputyType(string $deputyType)
-    {
-        $this->deputyType = $deputyType;
+        $this->deputyUid = $deputyUid;
 
         return $this;
     }
@@ -363,26 +318,6 @@ class NamedDeputy
     public function setEmail3($email3)
     {
         $this->email3 = trim($email3);
-
-        return $this;
-    }
-
-    /**
-     * @return string
-     */
-    public function getDepAddrNo()
-    {
-        return $this->depAddrNo;
-    }
-
-    /**
-     * @param string $depAddrNo
-     *
-     * @return $this
-     */
-    public function setDepAddrNo($depAddrNo)
-    {
-        $this->depAddrNo = User::padDeputyNumber($depAddrNo);
 
         return $this;
     }
@@ -563,30 +498,6 @@ class NamedDeputy
     public function setPhoneAlternative($phoneAlternative)
     {
         $this->phoneAlternative = trim($phoneAlternative);
-
-        return $this;
-    }
-
-    /**
-     * @param bool $feePayer
-     *
-     * @return $this
-     */
-    public function setFeePayer($feePayer)
-    {
-        $this->feePayer = $feePayer;
-
-        return $this;
-    }
-
-    /**
-     * @param bool $corres
-     *
-     * @return $this
-     */
-    public function setCorres($corres)
-    {
-        $this->corres = $corres;
 
         return $this;
     }

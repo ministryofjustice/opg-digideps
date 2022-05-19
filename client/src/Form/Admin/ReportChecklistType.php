@@ -45,7 +45,7 @@ class ReportChecklistType extends AbstractType
 
         // DDPB-2293 question not relevant for PA
         if (!$this->report->hasSection('paDeputyExpenses')) {
-            $builder->add('deputyFullNameAccurateInCasrec', FormTypes\CheckboxType::class);
+            $builder->add('deputyFullNameAccurateInSirius', FormTypes\CheckboxType::class);
         }
 
         $builder
@@ -81,7 +81,7 @@ class ReportChecklistType extends AbstractType
                 // Otherwise add Bonds question
                 $builder
                     ->add('bondAdequate', FormTypes\ChoiceType::class, $yesNoNaOptions)
-                    ->add('bondOrderMatchCasrec', FormTypes\ChoiceType::class, $yesNoNaOptions);
+                    ->add('bondOrderMatchSirius', FormTypes\ChoiceType::class, $yesNoNaOptions);
             }
         }
 
@@ -145,7 +145,7 @@ class ReportChecklistType extends AbstractType
 
                     // DDPB-2293 question not relevant for PA
                     if (!$isPaReport) {
-                        $ret[] = 'submit-deputy-fullname-accurate-casrec-checklist';
+                        $ret[] = 'submit-deputy-fullname-accurate-sirius-checklist';
                     }
 
                     // bonds to show when report has financial info but not a PA one

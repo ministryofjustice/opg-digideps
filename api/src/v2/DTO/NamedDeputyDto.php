@@ -8,7 +8,7 @@ class NamedDeputyDto
     private $id;
 
     /** @var string */
-    private $deputyNo;
+    private $deputyUid;
 
     /** @var string */
     private $firstName;
@@ -26,27 +26,24 @@ class NamedDeputyDto
     private $email3;
 
     /** @var string */
-    private $depAddrNo;
-
-    /** @var  string */
     private $phoneMain;
 
-    /** @var  string */
+    /** @var string */
     private $phoneAlterrnative;
 
-    /** @var  string */
+    /** @var string */
     private $address1;
 
-    /** @var  string */
+    /** @var string */
     private $address2;
 
-    /** @var  string */
+    /** @var string */
     private $address3;
 
-    /** @var  string */
+    /** @var string */
     private $address4;
 
-    /** @var  string */
+    /** @var string */
     private $address5;
 
     /** @var string */
@@ -55,98 +52,78 @@ class NamedDeputyDto
     /** @var string */
     private $addressCountry;
 
-    /**
-     * @return int
-     */
     public function getId(): int
     {
         return $this->id;
     }
 
     /**
-     * @param int $id
-     *
      * @return $this
      */
     public function setId(int $id)
     {
         $this->id = $id;
+
         return $this;
     }
 
-    /**
-     * @return string
-     */
-    public function getDeputyNo(): string
+    public function getDeputyUid(): string
     {
-        return $this->deputyNo;
+        return $this->deputyUid;
     }
 
     /**
-     * @param string $deputyNo
-     *
      * @return $this
      */
-    public function setDeputyNo(string $deputyNo)
+    public function setDeputyUid(string $deputyUid)
     {
-        $this->deputyNo = $deputyNo;
+        $this->deputyUid = $deputyUid;
+
         return $this;
     }
 
-    /**
-     * @return string
-     */
     public function getFirstName(): string
     {
         return $this->firstName;
     }
 
     /**
-     * @param string $firstName
-     *
      * @return $this
      */
     public function setFirstName(string $firstName)
     {
         $this->firstName = $firstName;
+
         return $this;
     }
 
-    /**
-     * @return string
-     */
     public function getLastName(): string
     {
         return $this->lastName;
     }
 
     /**
-     * @param string $lastName
-     *
      * @return $this
      */
     public function setLastName(string $lastName)
     {
         $this->lastName = $lastName;
+
         return $this;
     }
 
-    /**
-     * @return string
-     */
     public function getEmail1(): string
     {
         return $this->email1;
     }
 
     /**
-     * @param string $email1
-     *
      * @return $this
      */
     public function setEmail1(string $email1)
     {
         $this->email1 = $email1;
+
         return $this;
     }
 
@@ -159,13 +136,12 @@ class NamedDeputyDto
     }
 
     /**
-     * @param string $email2
-     *
      * @return $this
      */
     public function setEmail2(string $email2)
     {
         $this->email2 = $email2;
+
         return $this;
     }
 
@@ -178,31 +154,12 @@ class NamedDeputyDto
     }
 
     /**
-     * @param string $email3
-     *
      * @return $this
      */
     public function setEmail3(string $email3)
     {
         $this->email3 = $email3;
-        return $this;
-    }
 
-    /**
-     * @return string
-     */
-    public function getDepAddrNo(): ?string
-    {
-        return $this->depAddrNo;
-    }
-
-    /**
-     * @param string $depAddrNo
-     * @return $this
-     */
-    public function setDepAddrNo(string $depAddrNo)
-    {
-        $this->depAddrNo = $depAddrNo;
         return $this;
     }
 
@@ -215,13 +172,12 @@ class NamedDeputyDto
     }
 
     /**
-     * @param string $phoneMain
-     *
      * @return $this
      */
     public function setPhoneMain(string $phoneMain)
     {
         $this->phoneMain = $phoneMain;
+
         return $this;
     }
 
@@ -234,13 +190,12 @@ class NamedDeputyDto
     }
 
     /**
-     * @param string $phoneAlterrnative
-     *
      * @return $this
      */
     public function setPhoneAlterrnative(string $phoneAlterrnative)
     {
         $this->phoneAlterrnative = $phoneAlterrnative;
+
         return $this;
     }
 
@@ -253,13 +208,12 @@ class NamedDeputyDto
     }
 
     /**
-     * @param string $address1
-     *
      * @return $this
      */
     public function setAddress1(string $address1)
     {
         $this->address1 = $address1;
+
         return $this;
     }
 
@@ -272,13 +226,12 @@ class NamedDeputyDto
     }
 
     /**
-     * @param string $address2
-     *
      * @return $this
      */
     public function setAddress2(string $address2)
     {
         $this->address2 = $address2;
+
         return $this;
     }
 
@@ -291,13 +244,12 @@ class NamedDeputyDto
     }
 
     /**
-     * @param string $address3
-     *
      * @return $this
      */
     public function setAddress3(string $address3)
     {
         $this->address3 = $address3;
+
         return $this;
     }
 
@@ -310,13 +262,12 @@ class NamedDeputyDto
     }
 
     /**
-     * @param string $address4
-     *
      * @return $this
      */
     public function setAddress4(string $address4)
     {
         $this->address4 = $address4;
+
         return $this;
     }
 
@@ -329,13 +280,12 @@ class NamedDeputyDto
     }
 
     /**
-     * @param string $address5
-     *
      * @return $this
      */
     public function setAddress5(string $address5)
     {
         $this->address5 = $address5;
+
         return $this;
     }
 
@@ -348,13 +298,12 @@ class NamedDeputyDto
     }
 
     /**
-     * @param string $addressPostcode
-     *
      * @return $this
      */
     public function setAddressPostcode(string $addressPostcode)
     {
         $this->addressPostcode = $addressPostcode;
+
         return $this;
     }
 
@@ -367,13 +316,12 @@ class NamedDeputyDto
     }
 
     /**
-     * @param string $addressCountry
-     *
      * @return $this
      */
     public function setAddressCountry(string $addressCountry)
     {
         $this->addressCountry = $addressCountry;
+
         return $this;
     }
 }

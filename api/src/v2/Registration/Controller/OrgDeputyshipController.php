@@ -5,9 +5,11 @@ declare(strict_types=1);
 namespace App\v2\Registration\Controller;
 
 use App\Service\DataCompression;
+use App\Service\Formatter\RestFormatter;
 use App\v2\Controller\ControllerTrait;
-use App\v2\Registration\Assembler\CasRecToOrgDeputyshipDtoAssembler;
+use App\v2\Registration\Assembler\SiriusToOrgDeputyshipDtoAssembler;
 use App\v2\Registration\Uploader\OrgDeputyshipUploader;
+use RuntimeException;
 use Sensio\Bundle\FrameworkExtraBundle\Configuration\Security;
 use Symfony\Bundle\FrameworkBundle\Controller\AbstractController;
 use Symfony\Component\HttpFoundation\Request;
@@ -16,28 +18,15 @@ use Symfony\Component\Routing\Annotation\Route;
 class OrgDeputyshipController extends AbstractController
 {
     use ControllerTrait;
-    const MAX_UPLOAD_BATCH_SIZE = 10000;
 
-    /** @var OrgDeputyshipUploader */
-    private $uploader;
+    public const MAX_UPLOAD_BATCH_SIZE = 10000;
 
-    /** @var CasRecToOrgDeputyshipDtoAssembler */
-    private $assembler;
-
-    /** @var DataCompression */
-    private $dataCompression;
-
-    /**
-     * OrgDeputyshipController constructor.
-     */
     public function __construct(
-        OrgDeputyshipUploader $orgDeputyshipUploader,
-        CasRecToOrgDeputyshipDtoAssembler $assembler,
-        DataCompression $dataCompression
+        private OrgDeputyshipUploader $uploader,
+        private SiriusToOrgDeputyshipDtoAssembler $assembler,
+        private DataCompression $dataCompression,
+        private RestFormatter $restFormatter
     ) {
-        $this->uploader = $orgDeputyshipUploader;
-        $this->assembler = $assembler;
-        $this->dataCompression = $dataCompression;
     }
 
     /**
@@ -49,11 +38,13 @@ class OrgDeputyshipController extends AbstractController
         $decompressedData = $this->dataCompression->decompress($request->getContent());
         $rowCount = count($decompressedData);
 
+        $this->restFormatter->setJmsSerialiserGroups(['org-created-event']);
+
         if (!$rowCount) {
-            throw new \RuntimeException('No records received from the API');
+            throw new RuntimeException('No records received from the API');
         }
         if ($rowCount > self::MAX_UPLOAD_BATCH_SIZE) {
-            throw new \RuntimeException(sprintf('Max %s records allowed in a single bulk insert', self::MAX_UPLOAD_BATCH_SIZE));
+            throw new RuntimeException(sprintf('Max %s records allowed in a single bulk insert', self::MAX_UPLOAD_BATCH_SIZE));
         }
 
         $dtos = $this->assembler->assembleMultipleDtosFromArray($decompressedData);

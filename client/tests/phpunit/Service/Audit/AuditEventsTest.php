@@ -6,6 +6,7 @@ namespace App\Service\Audit;
 
 use App\Entity\User;
 use App\Service\Time\DateTimeProvider;
+use App\TestHelpers\UserHelpers;
 use DateTime;
 use DateTimeZone;
 use PHPUnit\Framework\TestCase;
@@ -252,5 +253,45 @@ class AuditEventsTest extends TestCase
             'admin' => [User::ROLE_ADMIN],
             'super admin' => [User::ROLE_SUPER_ADMIN],
         ];
+    }
+
+    /**
+     * @test
+     */
+    public function orgCreated()
+    {
+        $now = new DateTime();
+
+        /** @var ObjectProphecy|DateTimeProvider $dateTimeProvider */
+        $dateTimeProvider = self::prophesize(DateTimeProvider::class);
+        $dateTimeProvider->getDateTime()->shouldBeCalled()->willReturn($now);
+        $currentUser = UserHelpers::createSuperAdminUser();
+        $organisation =
+            [
+                'id' => 83,
+                'name' => 'Your Organisation',
+                'email_identifier' => 'mccracken.com',
+                'is_activated' => 'TRUE',
+            ];
+
+        $expected = [
+            'trigger' => 'ADMIN_MANUAL_ORG_CREATION',
+            'created_by' => $currentUser->getEmail(),
+            'organisation_id' => $organisation['id'],
+            'organisation_name' => $organisation['name'],
+            'organisation_identifier' => $organisation['email_identifier'],
+            'organisation_status' => $organisation['is_activated'],
+            'created_on' => $now->format(DateTime::ATOM),
+            'event' => 'ORG_CREATED',
+            'type' => 'audit',
+        ];
+
+        $actual = (new AuditEvents($dateTimeProvider->reveal()))->orgCreated(
+            'ADMIN_MANUAL_ORG_CREATION',
+            $currentUser,
+            $organisation
+        );
+
+        $this->assertEquals($expected, $actual);
     }
 }
