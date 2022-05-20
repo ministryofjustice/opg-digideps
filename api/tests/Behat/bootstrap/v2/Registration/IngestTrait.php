@@ -73,11 +73,6 @@ trait IngestTrait
     {
         $this->iAmOnCorrectUploadPage($type);
 
-        var_dump($this->clients);
-        var_dump($this->namedDeputies);
-        var_dump($this->organisations);
-        var_dump($this->reports);
-
         if (in_array(strtolower($type), ['org', 'pa'])) {
             $this->assertIntEqualsInt($this->clients['expected'], $this->clients['found'], 'Count of entities based on UIDs - clients');
             $this->assertIntEqualsInt($this->namedDeputies['expected'], $this->namedDeputies['found'], 'Count of entities based on UIDs - named deputies');
