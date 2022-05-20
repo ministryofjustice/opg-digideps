@@ -1,5 +1,7 @@
 <?php
 
+declare(strict_types=1);
+
 namespace App\v2\Assembler;
 
 use App\Entity\NamedDeputy;
@@ -25,10 +27,16 @@ class NamedDeputyAssembler
 
     public function assembleFromOrgDeputyshipDto(OrgDeputyshipDto $dto)
     {
+        if ($dto->deputyIsAnOrganisation()) {
+            $deputyFirstName = $dto->getOrganisationName();
+        } else {
+            $deputyFirstName = empty($dto->getDeputyFirstname()) ? null : $dto->getDeputyFirstname();
+        }
+
         $namedDeputy = (new NamedDeputy())
             ->setEmail1($dto->getDeputyEmail())
             ->setDeputyUid($dto->getDeputyUid())
-            ->setFirstname($dto->getDeputyFirstname() ?: null)
+            ->setFirstname($deputyFirstName)
             ->setLastname($dto->getDeputyLastname())
             ->setAddress1($dto->getDeputyAddress1())
             ->setAddress2($dto->getDeputyAddress2())

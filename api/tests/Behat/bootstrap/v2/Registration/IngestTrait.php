@@ -804,7 +804,7 @@ trait IngestTrait
     }
 
     /**
-     * @Then the named deputy for :caseNumber should have the address :fullAddress
+     * @Then the named deputy for case number :caseNumber should have the address :fullAddress
      */
     public function namedDeputyForCaseNumberShouldHaveAddress(string $caseNumber, string $fullAddress)
     {
@@ -831,5 +831,110 @@ trait IngestTrait
             $actualNamedDeputiesAddress,
             'Comparing address defined in step against actual named deputy address'
             );
+    }
+
+    /**
+     * @Given I upload an org CSV that has an organisation name :name but missing deputy first and last name
+     */
+    public function iUploadAnOrgCSVThatHasAnOrganisationNameButMissingDeputyFirstAndLastName($name)
+    {
+        $this->iAmOnAdminOrgCsvUploadPage();
+
+        $filePath = 'sirius-csvs/org-1-row-1-named-deputy-with-org-name-no-first-last-name.csv';
+        $this->uploadCsvAndCountCreatedEntities($filePath, 'Upload PA/Prof users');
+
+        $this->em->clear();
+    }
+
+    /**
+     * @Then the named deputy :firstOrLast name should be :expectedName
+     */
+    public function theNamedDeputyNameShouldBe($firstOrLast, $expectedName)
+    {
+        $expectedName = 'empty' === $expectedName ? '' : $expectedName;
+
+        $namedDeputyUid = $this->entityUids['named_deputy_uids'][0];
+
+        $namedDeputy = $this->em
+            ->getRepository(NamedDeputy::class)
+            ->findOneBy(['deputyUid' => $namedDeputyUid]);
+
+        if (is_null($namedDeputy)) {
+            throw new BehatException(sprintf('Could not find a named deputy with UID "%s"', $namedDeputyUid));
+        }
+
+        switch ($firstOrLast) {
+            case 'first':
+                $actualName = $namedDeputy->getFirstname();
+                break;
+            case 'last':
+                $actualName = $namedDeputy->getLastname();
+                break;
+            default:
+                throw new BehatException(sprintf('Can only match on firstName or lastName, "%s" provided.', $firstOrLast));
+        }
+
+        $matched = $actualName === $expectedName;
+
+        if (!$matched) {
+            throw new BehatException(sprintf('The named deputy "%s" name did not match. Wanted "%s", got "%s".', $firstOrLast, $expectedName, $actualName));
+        }
+    }
+
+    /**
+     * @Given I upload an org CSV that has one person deputy and one organisation deputy
+     */
+    public function iUploadAnOrgCSVThatHasOnePersonDeputyAndOneOrganisationDeputy()
+    {
+        $this->iAmOnAdminOrgCsvUploadPage();
+
+        $filePath = 'sirius-csvs/org-2-rows-1-person-deputy-1-org-deputy.csv';
+        $this->uploadCsvAndCountCreatedEntities($filePath, 'Upload PA/Prof users');
+
+        $this->clients['expected'] = 2;
+        $this->namedDeputies['expected'] = 2;
+        $this->organisations['expected'] = 2;
+        $this->reports['expected'] = 2;
+
+        $this->em->clear();
+    }
+
+    /**
+     * @Given I upload an org CSV that updates the person deputy with an org name and the org deputy with a person name
+     */
+    public function iUploadAnOrgCSVThatUpdatesThePersonDeputyWithAnOrgNameAndTheOrgDeputyWithAPersonName()
+    {
+        $this->iAmOnAdminOrgCsvUploadPage();
+
+        $filePath = 'sirius-csvs/org-2-rows-1-person-deputy-1-org-deputy-updated-names.csv';
+        $this->uploadCsvAndCountCreatedEntities($filePath, 'Upload PA/Prof users');
+
+        $this->em->clear();
+    }
+
+    /**
+     * @Then the named deputy with deputy UID :deputyUid should have the full name :fullName
+     */
+    public function theNamedDeputyWithDeputyUIDShouldHaveTheFullName($deputyUid, $fullName)
+    {
+        $namedDeputy = $this->em
+            ->getRepository(NamedDeputy::class)
+            ->findOneBy(['deputyUid' => $deputyUid]);
+
+        if (is_null($namedDeputy)) {
+            throw new BehatException(sprintf('Could not find a named deputy with UID "%s"', $deputyUid));
+        }
+
+        if (!empty($namedDeputy->getLastname())) {
+            $actualName = sprintf('%s %s', $namedDeputy->getFirstname(), $namedDeputy->getLastname());
+        } else {
+            $actualName = $namedDeputy->getFirstname();
+        }
+
+        $nameMatches = $actualName === $fullName;
+
+        if (!$nameMatches) {
+            throw new BehatException(sprintf('The deputies name was not updated. Wanted: "%s", got "%s"', $fullName, $actualName));
+        }
     }
 }
