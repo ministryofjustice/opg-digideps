@@ -64,8 +64,8 @@ Feature: Org CSV data ingestion - sirius source data
         When I visit the admin upload org users page
         And I upload an org CSV that contains two rows with the same named deputy at two different addresses with different deputy uids
         Then there should be two named deputies created
-        And the named deputy for '97864531' should have the address '6 MAYFIELD AVENUE, WYLDE GREEN, SUTTON COLDFIELD, WEST MIDLANDS, WARWICKSHIRE, B73 5QQ'
-        And the named deputy for '64597832' should have the address '21 NIGEL ROAD, NORTHFIELD, BIRMINGHAM, WEST MIDLANDS, WARWICKSHIRE, B31 1LL'
+        And the named deputy for case number '97864531' should have the address '6 MAYFIELD AVENUE, WYLDE GREEN, SUTTON COLDFIELD, WEST MIDLANDS, WARWICKSHIRE, B73 5QQ'
+        And the named deputy for case number '64597832' should have the address '21 NIGEL ROAD, NORTHFIELD, BIRMINGHAM, WEST MIDLANDS, WARWICKSHIRE, B31 1LL'
 
     @super-admin
     Scenario: Uploading a CSV that contains deputies with missing required information alongside valid deputy rows
@@ -89,3 +89,22 @@ Feature: Org CSV data ingestion - sirius source data
         When I visit the admin upload org users page
         And I upload an org CSV that has an 'NDR' column
         Then I should see an error showing the column that was unexpected
+
+    @super-admin
+    Scenario: Uploading a CSV that has an organisation name but missing deputy first and last name
+        Given a super admin user accesses the admin app
+        When I visit the admin upload org users page
+        And I upload an org CSV that has an organisation name 'Conglom-O Corporation' but missing deputy first and last name
+        Then the named deputy 'first' name should be 'Conglom-O Corporation'
+        And the named deputy 'last' name should be 'empty'
+
+    @super-admin @acs
+    Scenario: Uploading a CSV that contains deputy name updates for existing deputies
+        Given a super admin user accesses the admin app
+        When I visit the admin upload org users page
+        And I upload an org CSV that has one person deputy and one organisation deputy
+        Then the new 'org' entities should be added to the database
+        When I visit the admin upload org users page
+        And I upload an org CSV that updates the person deputy with an org name and the org deputy with a person name
+        Then the named deputy with deputy UID '19921992' should have the full name 'HYPERPOP Inc.'
+        And the named deputy with deputy UID '19901990' should have the full name 'Alexander Cook'

@@ -105,7 +105,9 @@ class OrgDeputyshipUploader
             $this->em->flush();
 
             $this->added['named_deputies'][] = $namedDeputy->getId();
-        } elseif ($namedDeputy->addressHasChanged($dto)) {
+        }
+
+        if ($namedDeputy->addressHasChanged($dto)) {
             $namedDeputy
                 ->setAddress1($dto->getDeputyAddress1())
                 ->setAddress2($dto->getDeputyAddress2())
@@ -113,6 +115,21 @@ class OrgDeputyshipUploader
                 ->setAddress4($dto->getDeputyAddress4())
                 ->setAddress5($dto->getDeputyAddress5())
                 ->setAddressPostcode($dto->getDeputyPostcode());
+
+            $this->em->persist($namedDeputy);
+            $this->em->flush();
+
+            $this->updated['named_deputies'][] = $namedDeputy->getId();
+        }
+
+        if ($namedDeputy->nameHasChanged($dto)) {
+            if ($dto->deputyIsAnOrganisation()) {
+                $namedDeputy->setFirstname($dto->getOrganisationName());
+                $namedDeputy->setLastname('');
+            } else {
+                $namedDeputy->setFirstname($dto->getDeputyFirstname());
+                $namedDeputy->setLastname($dto->getDeputyLastname());
+            }
 
             $this->em->persist($namedDeputy);
             $this->em->flush();
@@ -238,10 +255,12 @@ class OrgDeputyshipUploader
 
         if ($report) {
             if (!$report->getSubmitted() && empty($report->getUnSubmitDate())) {
-                // Add audit logging for report type changing
-                $report->setType($dto->getReportType());
+                if ($report->getType() !== $dto->getReportType()) {
+                    // Add audit logging for report type changing
+                    $report->setType($dto->getReportType());
 
-                $this->updated['reports'][] = $report->getId();
+                    $this->updated['reports'][] = $report->getId();
+                }
             }
 
             if ($this->clientHasNewOrgAndNamedDeputy($this->client, $this->namedDeputy)) {
