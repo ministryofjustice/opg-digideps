@@ -1,4 +1,4 @@
-FROM composer:2.1.2 AS composer
+FROM composer:2.3.5 AS composer
 
 WORKDIR /app
 

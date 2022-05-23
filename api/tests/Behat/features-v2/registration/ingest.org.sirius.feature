@@ -98,7 +98,7 @@ Feature: Org CSV data ingestion - sirius source data
         Then the named deputy 'first' name should be 'Conglom-O Corporation'
         And the named deputy 'last' name should be 'empty'
 
-    @super-admin @acs
+    @super-admin
     Scenario: Uploading a CSV that contains deputy name updates for existing deputies
         Given a super admin user accesses the admin app
         When I visit the admin upload org users page

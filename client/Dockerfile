@@ -18,7 +18,7 @@ RUN npm audit --production
 #Build assets
 RUN NODE_ENV=production npm run build
 
-FROM composer:2.1.2 AS composer
+FROM composer:2.3.5 AS composer
 WORKDIR /app
 
 RUN apk update
@@ -46,7 +46,7 @@ ENV TIMEOUT=60
 ENV PHP_EXT_DIR=/usr/local/lib/php/extensions/no-debug-non-zts-20210902/
 
 # Install core PHP extensions
-RUN apk add --no-cache openssl nginx nginx-mod-http-headers-more su-exec postgresql-client libzip-dev unzip php7-igbinary php7-pecl-redis php8-pecl-imagick
+RUN apk add --no-cache openssl nginx nginx-mod-http-headers-more su-exec postgresql-client libzip-dev unzip php8-pecl-igbinary php8-pecl-redis php8-pecl-imagick
 RUN docker-php-ext-install pcntl zip opcache
 RUN docker-php-ext-enable opcache
 
