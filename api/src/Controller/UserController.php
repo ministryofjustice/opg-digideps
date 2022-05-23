@@ -4,9 +4,12 @@ namespace App\Controller;
 
 use App\Entity\Client;
 use App\Entity\User;
+use App\Event\AdminManagerCreatedEvent;
+use App\EventDispatcher\ObservableEventDispatcher;
 use App\Repository\ClientRepository;
 use App\Repository\UserRepository;
 use App\Security\UserVoter;
+use App\Service\Audit\AuditEvents;
 use App\Service\Auth\AuthService;
 use App\Service\Formatter\RestFormatter;
 use App\Service\UserService;
@@ -32,36 +35,18 @@ use Symfony\Component\Security\Core\Security as SecurityHelper;
  */
 class UserController extends RestController
 {
-    private UserService $userService;
-    private EncoderFactoryInterface $encoderFactory;
-    private UserRepository $userRepository;
-    private ClientRepository $clientRepository;
-    private UserVoter $userVoter;
-    private SecurityHelper $securityHelper;
-    private EntityManagerInterface $em;
-    private AuthService $authService;
-    private RestFormatter $formatter;
-
     public function __construct(
-        UserService $userService,
-        EncoderFactoryInterface $encoderFactory,
-        UserRepository $userRepository,
-        ClientRepository $clientRepository,
-        UserVoter $userVoter,
-        SecurityHelper $securityHelper,
-        EntityManagerInterface $em,
-        AuthService $authService,
-        RestFormatter $formatter
+        private UserService $userService,
+        private EncoderFactoryInterface $encoderFactory,
+        private UserRepository $userRepository,
+        private ClientRepository $clientRepository,
+        private UserVoter $userVoter,
+        private SecurityHelper $securityHelper,
+        private EntityManagerInterface $em,
+        private AuthService $authService,
+        private RestFormatter $formatter,
+        private ObservableEventDispatcher $eventDispatcher
     ) {
-        $this->userService = $userService;
-        $this->encoderFactory = $encoderFactory;
-        $this->userRepository = $userRepository;
-        $this->clientRepository = $clientRepository;
-        $this->userVoter = $userVoter;
-        $this->securityHelper = $securityHelper;
-        $this->em = $em;
-        $this->authService = $authService;
-        $this->formatter = $formatter;
     }
 
     /**
@@ -84,6 +69,10 @@ class UserController extends RestController
         $loggedInUser = $this->getUser();
 
         $this->userService->addUser($loggedInUser, $newUser, $data);
+
+        if ('ROLE_ADMIN_MANAGER' === $data['role_name']) {
+            $this->dispatchAdminManagerCreatedEvent($newUser);
+        }
 
         $groups = $request->query->has('groups') ?
             $request->query->get('groups') : ['user', 'user-teams', 'team'];
@@ -529,5 +518,19 @@ class UserController extends RestController
         $this->em->flush();
 
         return $user->getRegistrationToken();
+    }
+
+    private function dispatchAdminManagerCreatedEvent(User $newUser)
+    {
+        $trigger = AuditEvents::TRIGGER_ADMIN_MANAGER_MANUALLY_CREATED;
+        $currentUser = $this->tokenStorage->getToken()->getUser();
+
+        $adminManagerCreatedEvent = new adminManagerCreatedEvent(
+            $trigger,
+            $currentUser,
+            $newUser
+        );
+
+        $this->eventDispatcher->dispatch($adminManagerCreatedEvent, AdminManagerCreatedEvent::NAME);
     }
 }
