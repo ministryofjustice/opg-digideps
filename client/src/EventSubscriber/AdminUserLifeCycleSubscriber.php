@@ -4,6 +4,7 @@ declare(strict_types=1);
 
 namespace App\EventSubscriber;
 
+use App\Event\AdminManagerCreatedEvent;
 use App\Event\AdminUserCreatedEvent;
 use App\Service\Audit\AuditEvents;
 use App\Service\Mailer\Mailer;
@@ -11,7 +12,7 @@ use App\Service\Time\DateTimeProvider;
 use Psr\Log\LoggerInterface;
 use Symfony\Component\EventDispatcher\EventSubscriberInterface;
 
-class AdminUserCreatedSubscriber implements EventSubscriberInterface
+class AdminUserLifeCycleSubscriber implements EventSubscriberInterface
 {
     public function __construct(
         private Mailer $mailer,
@@ -24,7 +25,7 @@ class AdminUserCreatedSubscriber implements EventSubscriberInterface
     {
         return [
             AdminUserCreatedEvent::NAME => 'sendEmail',
-            AdminUserCreatedEvent::NAME => 'auditLog',
+            AdminManagerCreatedEvent::NAME => 'auditLog',
         ];
     }
 
@@ -33,15 +34,14 @@ class AdminUserCreatedSubscriber implements EventSubscriberInterface
         $this->mailer->sendActivationEmail($event->getCreatedUser());
     }
 
-    public function auditLog(AdminUserCreatedEvent $event)
+    public function auditLog(AdminManagerCreatedEvent $event)
     {
-        $adminUserCreatedEvent = (new AuditEvents($this->dateTimeProvider))
-            ->adminUserCreated(
+        $adminManagerCreatedEvent = (new AuditEvents($this->dateTimeProvider))
+            ->adminManagerCreated(
                 $event->getTrigger(),
                 $event->getCurrentUser(),
-                $event->getCreatedUser(),
-                $event->getRoleType()
+                $event->getCreatedAdminManager()
             );
-        $this->logger->notice('', $adminUserCreatedEvent);
+        $this->logger->notice('', $adminManagerCreatedEvent);
     }
 }

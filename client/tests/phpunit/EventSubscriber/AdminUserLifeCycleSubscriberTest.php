@@ -5,13 +5,13 @@ declare(strict_types=1);
 namespace Tests\App\EventListener;
 
 use App\Event\AdminUserCreatedEvent;
-use App\EventSubscriber\AdminUserCreatedSubscriber;
+use App\EventSubscriber\AdminUserLifeCycleSubscriber;
 use App\Service\Mailer\Mailer;
 use App\TestHelpers\UserHelpers;
 use PHPUnit\Framework\TestCase;
 use Prophecy\PhpUnit\ProphecyTrait;
 
-class AdminUserCreatedSubscriberTest extends TestCase
+class AdminUserLifeCycleSubscriberTest extends TestCase
 {
     use ProphecyTrait;
 
@@ -20,7 +20,7 @@ class AdminUserCreatedSubscriberTest extends TestCase
     {
         self::assertEquals(
             [AdminUserCreatedEvent::NAME => 'sendEmail'],
-            AdminUserCreatedSubscriber::getSubscribedEvents()
+            AdminUserLifeCycleSubscriber::getSubscribedEvents()
         );
     }
 
@@ -33,7 +33,7 @@ class AdminUserCreatedSubscriberTest extends TestCase
         $mailer = self::prophesize(Mailer::class);
         $mailer->sendActivationEmail($createdUser)->shouldBeCalled();
 
-        $sut = new AdminUserCreatedSubscriber($mailer->reveal());
+        $sut = new AdminUserLifeCycleSubscriber($mailer->reveal());
         $sut->sendEmail($userCreatedEvent);
     }
 }
