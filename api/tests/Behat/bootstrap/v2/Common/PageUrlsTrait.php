@@ -53,7 +53,7 @@ trait PageUrlsTrait
 
     // Admin
     private string $adminUserSearchUrl = '/admin';
-    private string $adminUploadLayUsersUrl = '/admin/casrec-upload';
+    private string $adminUploadLayUsersUrl = '/admin/pre-registration-upload';
     private string $adminClientArchivedUrl = '/admin/client/%s/archived';
     private string $adminClientDetailsUrl = '/admin/client/%s/details';
     private string $adminClientSearchUrl = '/admin/client/search';

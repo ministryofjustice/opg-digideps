@@ -11,6 +11,7 @@ class StatsApi
     protected const GET_ACTIVE_LAY_REPORT_DATA_ENDPOINT = 'stats/deputies/lay/active';
     protected const GET_ADMIN_USER_ACCOUNT_REPORT_DATA = 'stats/admins/report_data';
     protected const GET_ASSETS_TOTAL_VALUES = 'stats/assets/total_values';
+    protected const GET_BENEFITS_REPORT_METRICS = 'stats/report/benefits-report-metrics';
 
     private RestClientInterface $restClient;
 
@@ -46,5 +47,19 @@ class StatsApi
         );
 
         return (string) $response;
+    }
+
+    public function getBenefitsReportMetrics(?string $append = null)
+    {
+        $link = self::GET_BENEFITS_REPORT_METRICS;
+        if (null !== $append) {
+            $link = self::GET_BENEFITS_REPORT_METRICS.$append;
+        }
+
+        return $this->restClient->get(
+            $link,
+            'array',
+            ['admin-benefits-metrics']
+        );
     }
 }

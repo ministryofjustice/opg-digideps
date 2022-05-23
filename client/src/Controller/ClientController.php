@@ -8,42 +8,28 @@ use App\Entity\User;
 use App\Form\ClientType;
 use App\Service\Audit\AuditEvents;
 use App\Service\Client\Internal\ClientApi;
+use App\Service\Client\Internal\PreRegistrationApi;
 use App\Service\Client\Internal\UserApi;
 use App\Service\Client\RestClient;
 use App\Service\Redirector;
 use Psr\Log\LoggerInterface;
+use RuntimeException;
 use Sensio\Bundle\FrameworkExtraBundle\Configuration\Template;
 use Symfony\Component\Form\FormError;
 use Symfony\Component\HttpFoundation\RedirectResponse;
 use Symfony\Component\HttpFoundation\Request;
 use Symfony\Component\Routing\Annotation\Route;
-use Symfony\Component\Routing\RouterInterface;
 use Symfony\Contracts\Translation\TranslatorInterface;
+use Throwable;
 
 class ClientController extends AbstractController
 {
-    /** @var UserApi */
-    private $userApi;
-
-    /** @var ClientApi */
-    private $clientApi;
-
-    /** @var RestClient */
-    private $restClient;
-
-    /** @var RouterInterface */
-    private $router;
-
     public function __construct(
-        UserApi $userApi,
-        ClientApi $clientApi,
-        RestClient $restClient,
-        RouterInterface $router
+        private UserApi $userApi,
+        private ClientApi $clientApi,
+        private RestClient $restClient,
+        private PreRegistrationApi $preRegistrationApi
     ) {
-        $this->userApi = $userApi;
-        $this->clientApi = $clientApi;
-        $this->restClient = $restClient;
-        $this->router = $router;
     }
 
     /**
@@ -83,7 +69,7 @@ class ClientController extends AbstractController
             /** @var User $user */
             $user = $this->getUser();
             $userId = $user->getId();
-            throw new \RuntimeException("User $userId does not have a client");
+            throw new RuntimeException("User $userId does not have a client");
         }
 
         $form = $this->createForm(ClientType::class, clone $preUpdateClient, [
@@ -151,11 +137,14 @@ class ClientController extends AbstractController
         $form->handleRequest($request);
         if ($form->isSubmitted() && $form->isValid()) {
             try {
-                // validate against casRec
-                $this->restClient->apiCall('post', 'casrec/verify', $client, 'array', []);
+                // validate against pre-registration data
+                $this->preRegistrationApi->verify($client);
 
-                // $method is set above to either post or put
-                $response = $this->restClient->$method('client/upsert', $form->getData());
+                if ('post' === $method) {
+                    $response = $this->clientApi->create($form->getData());
+                } else {
+                    $response = $this->clientApi->update($client, $form->getData(), AuditEvents::TRIGGER_DEPUTY_USER_EDIT_CLIENT_DURING_REGISTRATION);
+                }
 
                 /** @var User $currentUser */
                 $currentUser = $this->getUser();
@@ -165,7 +154,7 @@ class ClientController extends AbstractController
                     : $this->generateUrl('report_create', ['clientId' => $response['id']]);
 
                 return $this->redirect($url);
-            } catch (\Throwable $e) {
+            } catch (Throwable $e) {
                 switch ((int) $e->getCode()) {
                     case 400:
                         $form->addError(new FormError($translator->trans('formErrors.matching', [], 'register')));

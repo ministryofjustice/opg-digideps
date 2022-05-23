@@ -337,27 +337,27 @@ class BaseFeatureContext extends MinkContext
     /**
      * @BeforeScenario @prof-admin-health-welfare-not-started
      */
-    public function createProfAdminNotStarted(?BeforeScenarioScope $scenario = null, ?string $namedDeputyEmail = null, ?string $caseNumber = null, ?string $deputyNumber = null)
+    public function createProfAdminNotStarted(?BeforeScenarioScope $scenario = null, ?string $namedDeputyEmail = null, ?string $caseNumber = null, ?string $deputyUid = null)
     {
-        $userDetails = $this->fixtureHelper->createProfAdminNotStarted($this->testRunId, $namedDeputyEmail, $caseNumber, $deputyNumber);
+        $userDetails = $this->fixtureHelper->createProfAdminNotStarted($this->testRunId, $namedDeputyEmail, $caseNumber, $deputyUid);
         $this->fixtureUsers[] = $this->profAdminDeputyHealthWelfareNotStartedDetails = new UserDetails($userDetails);
     }
 
     /**
      * @BeforeScenario @prof-admin-health-welfare-completed
      */
-    public function createProfAdminCompleted(?BeforeScenarioScope $scenario = null, ?string $namedDeputyEmail = null, ?string $caseNumber = null, ?string $deputyNumber = null)
+    public function createProfAdminCompleted(?BeforeScenarioScope $scenario = null, ?string $namedDeputyEmail = null, ?string $caseNumber = null, ?string $deputyUid = null)
     {
-        $userDetails = $this->fixtureHelper->createProfAdminCompleted($this->testRunId, $namedDeputyEmail, $caseNumber, $deputyNumber);
+        $userDetails = $this->fixtureHelper->createProfAdminCompleted($this->testRunId, $namedDeputyEmail, $caseNumber, $deputyUid);
         $this->fixtureUsers[] = $this->profAdminDeputyHealthWelfareCompletedDetails = new UserDetails($userDetails);
     }
 
     /**
      * @BeforeScenario @prof-admin-health-welfare-submitted
      */
-    public function createProfAdminSubmitted(?BeforeScenarioScope $scenario = null, ?string $namedDeputyEmail = null, ?string $caseNumber = null, ?string $deputyNumber = null)
+    public function createProfAdminSubmitted(?BeforeScenarioScope $scenario = null, ?string $namedDeputyEmail = null, ?string $caseNumber = null, ?string $deputyUid = null)
     {
-        $userDetails = $this->fixtureHelper->createProfAdminSubmitted($this->testRunId, $namedDeputyEmail, $caseNumber, $deputyNumber);
+        $userDetails = $this->fixtureHelper->createProfAdminSubmitted($this->testRunId, $namedDeputyEmail, $caseNumber, $deputyUid);
         $this->fixtureUsers[] = $this->profAdminDeputyHealthWelfareSubmittedDetails = new UserDetails($userDetails);
     }
 

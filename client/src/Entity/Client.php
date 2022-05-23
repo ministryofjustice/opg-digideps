@@ -137,11 +137,31 @@ class Client
      * @JMS\Type("string")
      * @JMS\Groups({"edit", "pa-edit"})
      *
-     * @Assert\Length(max=75, maxMessage="client.county.maxMessage", groups={"lay-deputy-client", "pa-client", "lay-deputy-client-edit"})
+     * @Assert\Length(max=200, maxMessage="client.address.maxMessage", groups={"lay-deputy-client", "pa-client", "lay-deputy-client-edit"})
      *
      * @var string
      */
-    private $county;
+    private $address3;
+
+    /**
+     * @JMS\Type("string")
+     * @JMS\Groups({"edit", "pa-edit"})
+     *
+     * @Assert\Length(max=200, maxMessage="client.address.maxMessage", groups={"lay-deputy-client", "pa-client", "lay-deputy-client-edit"})
+     *
+     * @var string
+     */
+    private $address4;
+
+    /**
+     * @JMS\Type("string")
+     * @JMS\Groups({"edit", "pa-edit"})
+     *
+     * @Assert\Length(max=200, maxMessage="client.address.maxMessage", groups={"lay-deputy-client", "pa-client", "lay-deputy-client-edit"})
+     *
+     * @var string
+     */
+    private $address5;
 
     /**
      * @JMS\Type("string")
@@ -578,49 +598,57 @@ class Client
      *
      * @return Client
      */
-    public function setAddress($address)
+    public function setAddress($address): self
     {
         $this->address = $address;
 
         return $this;
     }
 
-    /**
-     * @return string
-     */
-    public function getAddress2()
+    public function getAddress2(): ?string
     {
         return $this->address2;
     }
 
-    /**
-     * @param string $address2
-     *
-     * @return Client
-     */
-    public function setAddress2($address2)
+    public function setAddress2(?string $address2): self
     {
         $this->address2 = $address2;
 
         return $this;
     }
 
-    /**
-     * @return string
-     */
-    public function getCounty()
+    public function getAddress3(): ?string
     {
-        return $this->county;
+        return $this->address3;
     }
 
-    /**
-     * @param string $county
-     *
-     * @return Client
-     */
-    public function setCounty($county)
+    public function setAddress3(?string $address3): self
     {
-        $this->county = $county;
+        $this->address3 = $address3;
+
+        return $this;
+    }
+
+    public function getAddress4(): ?string
+    {
+        return $this->address4;
+    }
+
+    public function setAddress4(?string $address4): self
+    {
+        $this->address4 = $address4;
+
+        return $this;
+    }
+
+    public function getAddress5(): ?string
+    {
+        return $this->address5;
+    }
+
+    public function setAddress5(?string $address5): self
+    {
+        $this->address5 = $address5;
 
         return $this;
     }
@@ -673,7 +701,7 @@ class Client
         return array_filter([
             $this->address,
             $this->address2,
-            $this->county,
+            $this->address3,
             $this->postcode,
         ]);
     }

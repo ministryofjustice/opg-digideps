@@ -82,7 +82,7 @@ client-unit-tests: ##@unit-tests Run the client unit tests
 	REQUIRE_XDEBUG_FRONTEND=0 REQUIRE_XDEBUG_API=0 docker-compose build frontend admin
 	docker-compose -f docker-compose.yml run -e APP_ENV=unit_test -e APP_DEBUG=0 --rm frontend vendor/bin/phpunit -c tests/phpunit
 
-api-unit-tests: reset-database reset-fixtures ##@unit-tests Run the api unit tests
+api-unit-tests: reset-fixtures ##@unit-tests Run the api unit tests
 	REQUIRE_XDEBUG_FRONTEND=0 REQUIRE_XDEBUG_API=0 docker-compose build api
 	docker-compose -f docker-compose.yml run --rm -e APP_ENV=test -e APP_DEBUG=0 api sh scripts/apiunittest.sh
 
@@ -98,7 +98,7 @@ endif
 
 behat-tests-v2-goutte-parallel: up-app-integration-tests reset-fixtures disable-debug ##@behat Run the integration tests in parallel
 	docker-compose -f docker-compose.yml -f docker-compose.dev.yml run --rm test sh ./tests/Behat/run-tests.sh --tags @v2_sequential
-	docker-compose -f docker-compose.yml -f docker-compose.dev.yml run --rm test sh ./tests/Behat/run-tests-parallel.sh --tags @v2&&~@v2_sequential
+	docker-compose -f docker-compose.yml -f docker-compose.dev.yml run --rm test sh ./tests/Behat/run-tests-parallel.sh --tags "@v2&&~@v2_sequential"
 
 behat-tests-v2-browserstack: up-app-integration-tests reset-fixtures disable-debug
 	docker-compose -f docker-compose.yml -f docker-compose.dev.yml run --rm test sh ./tests/Behat/run-tests.sh --profile v2-tests-browserstack --tags @v2
@@ -129,8 +129,11 @@ disable-debug: ##@application Puts app in dev mode and disables debug (so the ap
 
 cache-clear: ##@application Clear the cache of the application
 	docker-compose exec api sh -c "rm -rf var/cache/*" && \
+	docker-compose -f docker-compose.yml -f docker-compose.dev.yml exec api sh -c "rm -rf var/cache/*" && \
 	docker-compose exec frontend sh -c "rm -rf var/cache/*" && \
+	docker-compose -f docker-compose.yml -f docker-compose.dev.yml exec frontend sh -c "rm -rf var/cache/*" && \
 	docker-compose exec admin sh -c "rm -rf var/cache/*" && \
+	docker-compose -f docker-compose.yml -f docker-compose.dev.yml exec admin sh -c "rm -rf var/cache/*" && \
 	echo "Cache reset"
 
 enable-debug: ##@application Puts app in dev mode and enables debug (so the app has toolbar/profiling)

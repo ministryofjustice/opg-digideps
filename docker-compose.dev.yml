@@ -1,43 +1,43 @@
-version: '3.2'
+version: "3.2"
 
 services:
-    test:
-        build: ./api
-        depends_on:
-            - localstack
-            - mock-sirius-integration
-        volumes:
-            - ./api/tests/Behat:/var/www/tests/Behat
-            - ./api/src:/var/www/src
-            - ./api/tests/Behat/snapshots:/tmp/html
-        env_file:
-            - ./api/api.env
-            - ./api/tests/Behat/test.env
-            - ./api/tests/Behat/.env
+  test:
+    build: ./api
+    depends_on:
+      - localstack
+      - mock-sirius-integration
+    volumes:
+      - ./api/tests/Behat:/var/www/tests/Behat
+      - ./api/src:/var/www/src
+      - ./api/tests/Behat/snapshots:/tmp/html
+    env_file:
+      - ./api/api.env
+      - ./api/tests/Behat/test.env
+      - ./api/tests/Behat/.env
 
-    npm:
-        image: node:14.8.0-alpine
-        working_dir: /app
-        volumes:
-            - ./client/:/app
-        entrypoint: npm
-        environment:
-            NODE_ENV: production
+  npm:
+    image: node:14.19.1-alpine
+    working_dir: /app
+    volumes:
+      - ./client/:/app
+    entrypoint: npm
+    environment:
+      NODE_ENV: production
 
-    composerapi:
-        image: composer:2.1.2
-        volumes:
-            - ./api/:/app
+  composerapi:
+    image: composer:2.2.12
+    volumes:
+      - ./api/:/app
 
-    composerfront:
-        image: composer:2.1.2
-        volumes:
-            - ./client/:/app
+  composerfront:
+    image: composer:2.2.12
+    volumes:
+      - ./client/:/app
 
-    frontend:
-        env_file:
-            - .env
+  frontend:
+    env_file:
+      - .env
 
-    admin:
-        env_file:
-            - .env
+  admin:
+    env_file:
+      - .env

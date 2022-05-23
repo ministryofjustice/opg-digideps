@@ -6,6 +6,7 @@ use App\Entity\Client;
 use App\Entity\Report\Document;
 use App\Entity\Report\ReportSubmission;
 use App\Entity\User;
+use DateTime;
 use Doctrine\Bundle\DoctrineBundle\Repository\ServiceEntityRepository;
 use Doctrine\Persistence\ManagerRegistry;
 use Gedmo\SoftDeleteable\Filter\SoftDeleteableFilter;
@@ -67,9 +68,9 @@ class ReportSubmissionRepository extends ServiceEntityRepository
                 'lower(nc.firstname) LIKE :qLike',
                 'lower(nc.lastname) LIKE :qLike',
                 // case number
-                'c.caseNumber = :q',
+                'LOWER(c.caseNumber) = LOWER(:q)',
                 // separate clause to check ndrs
-                'nc.caseNumber = :q',
+                'LOWER(nc.caseNumber) = LOWER(:q)',
             ]));
 
             $qb->setParameter('qLike', '%'.strtolower($q).'%');
@@ -116,7 +117,7 @@ class ReportSubmissionRepository extends ServiceEntityRepository
      *
      * @return ReportSubmission[]
      */
-    public function findDownloadableOlderThan(\DateTime $olderThan, $limit)
+    public function findDownloadableOlderThan(DateTime $olderThan, $limit)
     {
         $qb = $this->createQueryBuilder('rs');
         $qb
@@ -133,16 +134,16 @@ class ReportSubmissionRepository extends ServiceEntityRepository
     /**
      * @param $offset
      * @param $limit
-     * @param \DateTime $fromDate
-     * @param \DateTime $toDate
-     * @param string    $orderBy  default createdOn
-     * @param string    $order    default ASC
+     * @param DateTime $fromDate
+     * @param DateTime $toDate
+     * @param string   $orderBy  default createdOn
+     * @param string   $order    default ASC
      *
      * @return array
      */
     public function findAllReportSubmissions(
-        \DateTime $fromDate = null,
-        \DateTime $toDate = null,
+        DateTime $fromDate = null,
+        DateTime $toDate = null,
         $orderBy = 'createdOn',
         $order = 'ASC'
     ) {
@@ -179,21 +180,21 @@ class ReportSubmissionRepository extends ServiceEntityRepository
     /**
      * Calculate FromDate for ReportSubmissions. Used for CSV generation to include weekends reports on Monday.
      *
-     * @return \DateTime
+     * @return DateTime
      */
-    private function determineCreatedFromDate(\DateTime $date = null)
+    private function determineCreatedFromDate(DateTime $date = null)
     {
         $dateFormat = (1 == date('N')) ? 'last Friday midnight' : 'yesterday midnight';
 
-        return ($date instanceof \DateTime) ? $date : new \DateTime($dateFormat);
+        return ($date instanceof DateTime) ? $date : new DateTime($dateFormat);
     }
 
     /**
-     * @return \DateTime
+     * @return DateTime
      */
-    private function determineCreatedToDate(\DateTime $date = null)
+    private function determineCreatedToDate(DateTime $date = null)
     {
-        return ($date instanceof \DateTime) ? $date : new \DateTime();
+        return ($date instanceof DateTime) ? $date : new DateTime();
     }
 
     public function findOneByIdUnfiltered($id)

@@ -4,12 +4,10 @@ declare(strict_types=1);
 
 namespace App\v2\Registration\Uploader;
 
-use App\Entity\CasRec;
 use App\Entity\Client;
 use App\Entity\NamedDeputy;
 use App\Entity\Organisation;
 use App\Entity\Report\Report;
-use App\Entity\User;
 use App\Exception\ClientIsArchivedException;
 use App\Factory\OrganisationFactory;
 use App\Service\OrgService;
@@ -66,7 +64,7 @@ class OrgDeputyshipUploader
             try {
                 $this->handleDtoErrors($deputyshipDto);
 
-                $this->client = ($this->em->getRepository(Client::class))->findOneBy(['caseNumber' => $deputyshipDto->getCaseNumber()]);
+                $this->client = ($this->em->getRepository(Client::class))->findByCaseNumber($deputyshipDto->getCaseNumber());
 
                 $this->skipArchivedClients();
                 $this->handleNamedDeputy($deputyshipDto);
@@ -85,17 +83,6 @@ class OrgDeputyshipUploader
 
         $this->removeDuplicateIds();
 
-        $roleType = User::TYPE_PA;
-        // DepAddr No column is missing from PA CSV uploads
-        foreach ($deputyshipDtos as $deputyshipDto) {
-            if (null != $deputyshipDto->getDeputyAddressNumber()) {
-                $roleType = User::TYPE_PROF;
-                break;
-            }
-        }
-
-        $uploadResults['roleType'] = $roleType;
-        $uploadResults['source'] = CasRec::CASREC_SOURCE;
         $uploadResults['added'] = $this->added;
         $uploadResults['updated'] = $this->updated;
 
@@ -104,21 +91,12 @@ class OrgDeputyshipUploader
 
     private function handleNamedDeputy(OrgDeputyshipDto $dto)
     {
-        $deputyNumber = $dto->getDeputyAddressNumber() ?
-            sprintf('%s-%s', $dto->getDeputyNumber(), $dto->getDeputyAddressNumber()) :
-            $dto->getDeputyNumber();
-
         /** @var NamedDeputy $namedDeputy */
         $namedDeputy = ($this->em->getRepository(NamedDeputy::class))->findOneBy(
             [
-                'deputyNo' => $deputyNumber,
+                'deputyUid' => $dto->getDeputyUid(),
             ]
         );
-
-        // Temporary fix to generate dep adr numbers for all deps - remove once CSVs run
-        if (!is_null($namedDeputy) && $dto->getDeputyAddressNumber()) {
-            $namedDeputy->setDepAddrNo($dto->getDeputyAddressNumber());
-        }
 
         if (is_null($namedDeputy)) {
             $namedDeputy = $this->namedDeputyAssembler->assembleFromOrgDeputyshipDto($dto);
@@ -127,16 +105,31 @@ class OrgDeputyshipUploader
             $this->em->flush();
 
             $this->added['named_deputies'][] = $namedDeputy->getId();
-        } elseif ($namedDeputy->addressHasChanged($dto)) {
+        }
+
+        if ($namedDeputy->addressHasChanged($dto)) {
             $namedDeputy
                 ->setAddress1($dto->getDeputyAddress1())
                 ->setAddress2($dto->getDeputyAddress2())
                 ->setAddress3($dto->getDeputyAddress3())
                 ->setAddress4($dto->getDeputyAddress4())
                 ->setAddress5($dto->getDeputyAddress5())
-                ->setAddressPostcode($dto->getDeputyPostcode())
-                ->setDepAddrNo($dto->getDeputyAddressNumber())
-                ->setDeputyNo($deputyNumber);
+                ->setAddressPostcode($dto->getDeputyPostcode());
+
+            $this->em->persist($namedDeputy);
+            $this->em->flush();
+
+            $this->updated['named_deputies'][] = $namedDeputy->getId();
+        }
+
+        if ($namedDeputy->nameHasChanged($dto)) {
+            if ($dto->deputyIsAnOrganisation()) {
+                $namedDeputy->setFirstname($dto->getOrganisationName());
+                $namedDeputy->setLastname('');
+            } else {
+                $namedDeputy->setFirstname($dto->getDeputyFirstname());
+                $namedDeputy->setLastname($dto->getDeputyLastname());
+            }
 
             $this->em->persist($namedDeputy);
             $this->em->flush();
@@ -158,7 +151,7 @@ class OrgDeputyshipUploader
 
             $this->currentOrganisation = $organisation;
 
-            $this->added['organisations'][] = $organisation->getId();
+            $this->added['organisations'][] = $organisation;
         }
     }
 
@@ -253,7 +246,7 @@ class OrgDeputyshipUploader
     {
         return
             null === $client->getNamedDeputy() ||
-            $client->getNamedDeputy()->getDeputyNo() !== $namedDeputy->getDeputyNo();
+            $client->getNamedDeputy()->getDeputyUid() !== $namedDeputy->getDeputyUid();
     }
 
     private function handleReport(OrgDeputyshipDto $dto)
@@ -262,8 +255,12 @@ class OrgDeputyshipUploader
 
         if ($report) {
             if (!$report->getSubmitted() && empty($report->getUnSubmitDate())) {
-                // Add audit logging for report type changing
-                $report->setType($dto->getReportType());
+                if ($report->getType() !== $dto->getReportType()) {
+                    // Add audit logging for report type changing
+                    $report->setType($dto->getReportType());
+
+                    $this->updated['reports'][] = $report->getId();
+                }
             }
 
             if ($this->clientHasNewOrgAndNamedDeputy($this->client, $this->namedDeputy)) {
@@ -334,7 +331,7 @@ class OrgDeputyshipUploader
     private function removeDuplicateIds()
     {
         $this->added['named_deputies'] = array_unique($this->added['named_deputies']);
-        $this->added['organisations'] = array_unique($this->added['organisations']);
+        $this->added['organisations'] = array_unique($this->added['organisations'], SORT_REGULAR);
         $this->added['clients'] = array_unique($this->added['clients']);
         $this->added['reports'] = array_unique($this->added['reports']);
 

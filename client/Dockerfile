@@ -57,7 +57,7 @@ RUN pecl install pcov && docker-php-ext-enable pcov
 # Install Xdebug if directed to with build arg from docker-compose.yml
 ARG REQUIRE_XDEBUG=0
 RUN if [[ $REQUIRE_XDEBUG = 1 ]] ; then \
-    pecl install xdebug-3.1.1  ;\
+    pecl install xdebug-3.1.4  ;\
     docker-php-ext-enable $PHP_EXT_DIR/xdebug.so ; \
     echo "xdebug.mode = develop,debug" >> /usr/local/etc/php/conf.d/docker-php-ext-xdebug.ini ; \
     echo "xdebug.client_host = host.docker.internal" >> /usr/local/etc/php/conf.d/docker-php-ext-xdebug.ini ; \
@@ -127,7 +127,7 @@ RUN wget -q -O local-php-security-checker https://github.com/fabpot/local-php-se
 # Prebuild cache
 RUN su-exec www-data php -d memory_limit=-1 app/console cache:warmup
 
-RUN apk upgrade libxml2 openssl libssl1.1 libcrypto1.1 libretls zlib busybox
+RUN apk upgrade libxml2 openssl libssl1.1 libcrypto1.1 libretls zlib busybox curl gzip xz xz-libs libcurl
 
 CMD confd -onetime -backend env \
     && waitforit -address=$API_URL/manage/availability -timeout=$TIMEOUT -insecure \

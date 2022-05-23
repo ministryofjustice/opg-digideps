@@ -54,9 +54,11 @@ class ClientController extends RestController
             'lastname' => 'setLastname',
             'address' => 'setAddress',
             'address2' => 'setAddress2',
+            'address3' => 'setAddress3',
+            'address4' => 'setAddress4',
+            'address5' => 'setAddress5',
             'postcode' => 'setPostcode',
             'country' => 'setCountry',
-            'county' => 'setCounty',
             'phone' => 'setPhone',
             'email' => 'setEmail',
         ]);

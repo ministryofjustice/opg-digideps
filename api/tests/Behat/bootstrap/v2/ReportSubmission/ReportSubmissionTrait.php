@@ -25,7 +25,7 @@ trait ReportSubmissionTrait
         $submissionRow = $this->getSession()->getPage()->find('xpath', $locator);
 
         if (is_null($submissionRow)) {
-            throw new BehatException('Could not find a submission row that contained case number "%s"', $caseNumber);
+            throw new BehatException(sprintf('Could not find a submission row that contained case number "%s"', $caseNumber));
         }
     }
 
@@ -375,5 +375,17 @@ trait ReportSubmissionTrait
         if (!str_contains($reportPdfRow->getHtml(), $status)) {
             throw new BehatException(sprintf('The document does not have a status of %s. Row content: %s', $status, $reportPdfRow->getHtml()));
         }
+    }
+
+    /**
+     * @Then I should see Lay High Assets report for the next reporting period
+     */
+    public function iShouldSeeLayHighAssetsReportForTheNextReportingPeriod()
+    {
+        $this->clickLink('Continue');
+        $this->assertStringContainsString(
+            'Money transfers',
+            $this->getSession()->getPage()->getContent(),
+            'Comparing expected section against sections visible');
     }
 }

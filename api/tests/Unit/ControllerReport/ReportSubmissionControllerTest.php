@@ -177,7 +177,7 @@ class ReportSubmissionControllerTest extends AbstractTestController
         self::fixtures()->flush();
 
         $data = $this->makeRequestAndReturnResults(
-            '/report-submission/casrec_data',
+            '/report-submission/pre-registration-data',
             ['fromDate' => $fromDate, 'toDate' => $toDate]
         );
 
@@ -235,7 +235,7 @@ class ReportSubmissionControllerTest extends AbstractTestController
         $this->updateReportSubmissionByIdWithNewDateTime($reportId, 'today');
         self::fixtures()->flush();
 
-        $result = $this->makeRequestAndReturnResults('/report-submission/casrec_data', []);
+        $result = $this->makeRequestAndReturnResults('/report-submission/pre-registration-data', []);
         $this->assertResponseIncludesReportWithCaseNumber($result, '1000000');
     }
 
