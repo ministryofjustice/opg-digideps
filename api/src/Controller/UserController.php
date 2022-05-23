@@ -4,6 +4,7 @@ namespace App\Controller;
 
 use App\Entity\Client;
 use App\Entity\User;
+use App\Message\Command\UploadCsv;
 use App\Repository\ClientRepository;
 use App\Repository\UserRepository;
 use App\Security\UserVoter;
@@ -19,13 +20,14 @@ use Exception;
 use RuntimeException;
 use Sensio\Bundle\FrameworkExtraBundle\Configuration\Security;
 use Symfony\Component\HttpFoundation\Request;
+use Symfony\Component\Messenger\MessageBusInterface;
 use Symfony\Component\Routing\Annotation\Route;
 use Symfony\Component\Security\Core\Authentication\Token\TokenInterface;
 use Symfony\Component\Security\Core\Encoder\EncoderFactoryInterface;
 use Symfony\Component\Security\Core\Security as SecurityHelper;
 
-//TODO
-//http://symfony.com/doc/current/bundles/SensioFrameworkExtraBundle/annotations/converters.html
+// TODO
+// http://symfony.com/doc/current/bundles/SensioFrameworkExtraBundle/annotations/converters.html
 
 /**
  * @Route("/user")
@@ -129,7 +131,7 @@ class UserController extends RestController
             $user->setRegistrationToken($data['registration_token']);
         }
 
-        if (!empty($data['token_date'])) { //important, keep this after "setRegistrationToken" otherwise date will be reset
+        if (!empty($data['token_date'])) { // important, keep this after "setRegistrationToken" otherwise date will be reset
             $user->setTokenDate(new DateTime($data['token_date']));
         }
 
@@ -393,9 +395,11 @@ class UserController extends RestController
      * @Route("/get-all", methods={"GET"})
      * @Security("is_granted('ROLE_ADMIN') or is_granted('ROLE_AD')")
      */
-    public function getAll(Request $request)
+    public function getAll(Request $request, MessageBusInterface $messageBus)
     {
         $this->formatter->setJmsSerialiserGroups(['user']);
+
+        $messageBus->dispatch(new UploadCsv('org'));
 
         return $this->userRepository->findUsersByQueryParameters($request);
     }

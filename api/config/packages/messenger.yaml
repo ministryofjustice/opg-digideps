@@ -1,7 +1,10 @@
 framework:
     messenger:
         transports:
-            sirius-events-queue: enqueue://default?topic[name]=topic&queue[name]=sirius-events-queue
+            #sirius-events-queue: enqueue://default?topic[name]=topic&queue[name]=sirius-events-queue
+            sirius-events-queue:
+                dsn: doctrine://default
+                serializer: App\Messenger\ExternalJsonMessengerSerializer
 
         routing:
             'App\Message\Command\UploadCsv': sirius-events-queue
