@@ -203,6 +203,6 @@ class ClientApi
 
     public function create(Client $client)
     {
-        return $this->restClient->post(self::CREAT_CLIENT, $client);
+        return $this->restClient->post(self::CREATE_CLIENT, $client);
     }
 }
