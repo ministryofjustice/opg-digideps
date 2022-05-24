@@ -2,7 +2,6 @@
 
 namespace App\Form\Report;
 
-use App\Entity\Report\Document;
 use Symfony\Component\Form\AbstractType;
 use Symfony\Component\Form\Extension\Core\Type as FormTypes;
 use Symfony\Component\Form\Extension\Core\Type\FileType;
@@ -16,7 +15,7 @@ class UploadType extends AbstractType
         $builder
             ->add('files', FileType::class, [
                 'required' => false,
-                'multiple' => true
+                'multiple' => true,
             ])
             ->add('save', FormTypes\SubmitType::class);
     }
@@ -25,7 +24,7 @@ class UploadType extends AbstractType
     {
         $resolver->setDefaults([
             'validation_groups' => ['document'],
-            'translation_domain' => 'report-documents'
+            'translation_domain' => 'report-documents',
         ]);
     }
 

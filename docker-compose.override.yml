@@ -25,6 +25,7 @@ services:
       - ./api/public:/var/www/public
       - ./api/scripts:/var/www/scripts
       - ./api/src:/var/www/src
+      - ./api/vendor:/var/www/vendor
       - ./api/tests:/var/www/tests
       - ./api/api.env:/var/www/api.env
       - ./api/postgres.env:/var/www/postgres.env

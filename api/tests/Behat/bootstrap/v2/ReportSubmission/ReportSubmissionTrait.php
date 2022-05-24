@@ -109,6 +109,7 @@ trait ReportSubmissionTrait
         $this->iVisitTheDocumentsStep2Page();
         $this->attachDocument($imageName);
 
+        var_dump($this->getSession()->getDriver()->getContent());
         $this->clickLink('Continue to send documents');
 
         $this->clickLink('Send documents');

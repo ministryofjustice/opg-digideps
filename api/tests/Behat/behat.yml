@@ -288,13 +288,13 @@ v2-tests-goutte:
     extensions:
         Behat\MinkExtension:
             files_path: "%paths.base%/fixtures/"
-            default_session: browserkit_http
+            default_session: goutte
             sessions:
                 symfony:
                     symfony: ~
-                browserkit_http:
-                    browserkit_http:
-                        http_client_parameters:
+                goutte:
+                    goutte:
+                        server_parameters:
                             verify_peer: false
                             verify_host: false
         FriendsOfBehat\SymfonyExtension:
