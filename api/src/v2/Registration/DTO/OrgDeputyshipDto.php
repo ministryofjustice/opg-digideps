@@ -8,35 +8,33 @@ use DateTime;
 
 class OrgDeputyshipDto
 {
-    /** @var string */
-    private $caseNumber;
-    private $clientFirstname;
-    private $clientLastname;
-    private $clientAddress1;
-    private $clientAddress2;
-    private $clientPostCode;
-    private $deputyUid;
-    private $deputyFirstname;
-    private $deputyLastname;
-    private $deputyEmail;
-    private $deputyAddress1;
-    private $deputyAddress2;
-    private $deputyPostcode;
-    private $reportType;
+    private string $caseNumber;
+    private string $clientFirstname;
+    private string $clientLastname;
+    private string $clientAddress1;
+    private string $clientAddress2;
+    private string $clientPostCode;
+    private string $deputyUid;
+    private string $deputyFirstname;
+    private string $deputyLastname;
+    private string $deputyEmail;
+    private string $deputyAddress1;
+    private string $deputyAddress2;
+    private string $deputyPostcode;
+    private string $organisationName;
+    private string $reportType;
 
-    /** @var string|null */
-    private $clientAddress3;
-    private $clientAddress4;
-    private $clientAddress5;
-    private $deputyAddress3;
-    private $deputyAddress4;
-    private $deputyAddress5;
+    private ?string $clientAddress3;
+    private ?string $clientAddress4;
+    private ?string $clientAddress5;
+    private ?string $deputyAddress3;
+    private ?string $deputyAddress4;
+    private ?string $deputyAddress5;
 
-    /** @var DateTime|null */
-    private $clientDateOfBirth;
-    private $courtDate;
-    private $reportStartDate;
-    private $reportEndDate;
+    private ?DateTime $clientDateOfBirth;
+    private ?DateTime $courtDate;
+    private ?DateTime $reportStartDate;
+    private ?DateTime $reportEndDate;
 
     public function getDeputyEmail(): ?string
     {
@@ -420,5 +418,22 @@ class OrgDeputyshipDto
         $this->deputyAddress5 = $deputyAddress5;
 
         return $this;
+    }
+
+    public function getOrganisationName(): ?string
+    {
+        return $this->organisationName;
+    }
+
+    public function setOrganisationName(?string $organisationName): OrgDeputyshipDto
+    {
+        $this->organisationName = $organisationName;
+
+        return $this;
+    }
+
+    public function deputyIsAnOrganisation(): bool
+    {
+        return $this->getOrganisationName() && empty($this->getDeputyFirstname());
     }
 }

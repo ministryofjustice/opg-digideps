@@ -511,4 +511,14 @@ class NamedDeputy
              $this->getAddress5() !== $dto->getDeputyAddress5() ||
              $this->getAddressPostcode() !== $dto->getDeputyPostcode();
     }
+
+    public function nameHasChanged(OrgDeputyshipDto $dto): bool
+    {
+        if ($dto->deputyIsAnOrganisation()) {
+            return $dto->getOrganisationName() !== $this->getFirstname();
+        } else {
+            return $dto->getDeputyFirstname() !== $this->getFirstname() ||
+            $dto->getDeputyLastname() !== $this->getLastname();
+        }
+    }
 }

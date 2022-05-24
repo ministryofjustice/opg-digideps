@@ -329,12 +329,12 @@ class OrgDeputyshipUploaderTest extends KernelTestCase
         $deputyships = OrgDeputyshipDTOTestHelper::generateSiriusOrgDeputyshipDtos(1, 0);
 
         return [
-            'Missing deputy email' => [(clone $deputyships[0])->setDeputyEmail(null), ['Deputy Email']],
+            'Missing deputy email' => [(clone $deputyships[0])->setDeputyEmail(''), ['Deputy Email']],
             'Missing start date' => [(clone $deputyships[0])->setReportStartDate(null), ['Report Start Date']],
             'Missing end date' => [(clone $deputyships[0])->setReportEndDate(null), ['Report End Date']],
             'Missing court date' => [(clone $deputyships[0])->setCourtDate(null), ['Court Date']],
             'All missing' => [
-                (clone $deputyships[0])->setDeputyEmail(null)->setReportStartDate(null)->setReportEndDate(null)->setCourtDate(null),
+                (clone $deputyships[0])->setDeputyEmail('')->setReportStartDate(null)->setReportEndDate(null)->setCourtDate(null),
                 ['Report Start Date', 'Report End Date', 'Court Date', 'Deputy Email'],
             ],
         ];

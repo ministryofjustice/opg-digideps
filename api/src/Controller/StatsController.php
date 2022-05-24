@@ -4,13 +4,10 @@ declare(strict_types=1);
 
 namespace App\Controller;
 
-use App\Entity\CasRec;
 use App\Entity\Ndr\AssetOther as NdrAssetOther;
 use App\Entity\Ndr\AssetProperty as NdrAssetProperty;
 use App\Entity\Report\AssetOther;
 use App\Entity\Report\AssetProperty;
-use App\Entity\Report\Report;
-use App\Entity\User;
 use App\Repository\AssetRepository;
 use App\Repository\BankAccountRepository;
 use App\Repository\NdrAssetRepository;
