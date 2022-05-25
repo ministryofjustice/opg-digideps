@@ -56,7 +56,7 @@ class AdminUserLifeCycleSubscriberTest extends TestCase
     {
         self::assertEquals([
             AdminUserCreatedEvent::NAME => 'sendEmail',
-            AdminManagerCreatedEvent::NAME => 'logAdminManagerAddedEvent',
+            AdminManagerCreatedEvent::NAME => 'logAdminManagerCreatedEvent',
             AdminManagerDeletedEvent::NAME => 'logAdminManagerDeletedEvent',
         ], AdminUserLifeCycleSubscriber::getSubscribedEvents());
     }
