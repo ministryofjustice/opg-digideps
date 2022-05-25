@@ -157,7 +157,8 @@ class ClientController extends AbstractController
                 return $this->redirect($url);
             } catch (Throwable $e) {
                 if (!$e instanceof RestClientException) {
-                    $logger->error($e->getMessage());
+                    $message = sprintf('Case "%s" failed to create their client. Error: "%s"', $form->getData()->getCaseNumber(), $e->getMessage());
+                    $logger->error($message);
                     throw $e;
                 }
 
@@ -171,7 +172,6 @@ class ClientController extends AbstractController
                 }
 
                 $logger->error(__METHOD__.': '.$e->getMessage().', code: '.$e->getCode());
-                $logger->error(get_class($e));
             }
         }
 
