@@ -5,6 +5,7 @@ declare(strict_types=1);
 namespace Tests\App\EventListener;
 
 use App\Event\AdminManagerCreatedEvent;
+use App\Event\AdminManagerDeletedEvent;
 use App\Event\AdminUserCreatedEvent;
 use App\EventSubscriber\AdminUserLifeCycleSubscriber;
 use App\Service\Audit\AuditEvents;
@@ -55,7 +56,8 @@ class AdminUserLifeCycleSubscriberTest extends TestCase
     {
         self::assertEquals([
             AdminUserCreatedEvent::NAME => 'sendEmail',
-            AdminManagerCreatedEvent::NAME => 'auditLog',
+            AdminManagerCreatedEvent::NAME => 'logAdminManagerAddedEvent',
+            AdminManagerDeletedEvent::NAME => 'logAdminManagerDeletedEvent',
         ], AdminUserLifeCycleSubscriber::getSubscribedEvents());
     }
 
@@ -71,7 +73,7 @@ class AdminUserLifeCycleSubscriberTest extends TestCase
     }
 
     /** @test */
-    public function auditLog()
+    public function logAdminManagerAddedEvent()
     {
         $now = new DateTime('now');
 
@@ -96,6 +98,35 @@ class AdminUserLifeCycleSubscriberTest extends TestCase
 
         $adminManagerCreatedEvent = new AdminManagerCreatedEvent($trigger, $currentUser, $createdAdminManager);
 
-        $this->sut->auditLog($adminManagerCreatedEvent);
+        $this->sut->logAdminManagerAddedEvent($adminManagerCreatedEvent);
+    }
+
+    /** @test */
+    public function logAdminManagerDeletedEvent()
+    {
+        $now = new DateTime('now');
+
+        $currentUser = $this->userHelpers->createSuperAdminUser();
+        $deletedAdminManager = $this->userHelpers->createAdminManager();
+        $trigger = 'ADMIN_MANAGER_MANUALLY_DELETED';
+
+        $expectedEvent = [
+            'trigger' => $trigger,
+            'logged_in_user_first_name' => $currentUser->getFirstname(),
+            'logged_in_last_name' => $currentUser->getLastname(),
+            'admin_user_first_name' => $deletedAdminManager->getFirstname(),
+            'admin_user_last_name' => $deletedAdminManager->getLastname(),
+            'admin_user_email' => $deletedAdminManager->getEmail(),
+            'created_on' => $now->format(DateTime::ATOM),
+            'event' => AuditEvents::EVENT_ADMIN_MANAGER_DELETED,
+            'type' => 'audit',
+        ];
+
+        $this->dateTimeProvider->getDateTime()->shouldBeCalled()->willReturn($now);
+        $this->logger->notice('', $expectedEvent)->shouldBeCalled();
+
+        $adminManagerDeletedEvent = new AdminManagerDeletedEvent($trigger, $currentUser, $deletedAdminManager);
+
+        $this->sut->logAdminManagerDeletedEvent($adminManagerDeletedEvent);
     }
 }

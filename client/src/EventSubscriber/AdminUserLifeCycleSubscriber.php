@@ -5,6 +5,7 @@ declare(strict_types=1);
 namespace App\EventSubscriber;
 
 use App\Event\AdminManagerCreatedEvent;
+use App\Event\AdminManagerDeletedEvent;
 use App\Event\AdminUserCreatedEvent;
 use App\Service\Audit\AuditEvents;
 use App\Service\Mailer\Mailer;
@@ -25,7 +26,8 @@ class AdminUserLifeCycleSubscriber implements EventSubscriberInterface
     {
         return [
             AdminUserCreatedEvent::NAME => 'sendEmail',
-            AdminManagerCreatedEvent::NAME => 'auditLog',
+            AdminManagerCreatedEvent::NAME => 'logAdminManagerAddedEvent',
+            AdminManagerDeletedEvent::NAME => 'logAdminManagerDeletedEvent',
         ];
     }
 
@@ -34,7 +36,7 @@ class AdminUserLifeCycleSubscriber implements EventSubscriberInterface
         $this->mailer->sendActivationEmail($event->getCreatedUser());
     }
 
-    public function auditLog(AdminManagerCreatedEvent $event)
+    public function logAdminManagerAddedEvent(AdminManagerCreatedEvent $event)
     {
         $adminManagerCreatedEvent = (new AuditEvents($this->dateTimeProvider))
             ->adminManagerCreated(
@@ -43,5 +45,16 @@ class AdminUserLifeCycleSubscriber implements EventSubscriberInterface
                 $event->getCreatedAdminManager()
             );
         $this->logger->notice('', $adminManagerCreatedEvent);
+    }
+
+    public function logAdminManagerDeletedEvent(AdminManagerDeletedEvent $event)
+    {
+        $adminManagerDeletedEvent = (new AuditEvents($this->dateTimeProvider))
+            ->adminManagerDeleted(
+                $event->getTrigger(),
+                $event->getCurrentUser(),
+                $event->getDeletedAdminManager()
+            );
+        $this->logger->notice('', $adminManagerDeletedEvent);
     }
 }
