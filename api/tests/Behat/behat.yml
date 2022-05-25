@@ -294,9 +294,8 @@ v2-tests-goutte:
                     symfony: ~
                 goutte:
                     goutte:
-                        server_parameters:
-                            verify_peer: false
-                            verify_host: false
+                        guzzle_parameters:
+                            verify: false
         FriendsOfBehat\SymfonyExtension:
             kernel:
                 path: "%paths.base%/../../src/Kernel.php"

@@ -25,13 +25,13 @@ class ImageConvertor
         $extension = $pathInfo['extension'];
         $filename = $pathInfo['filename'];
 
-        $fileType = $this->convertsTo($extension);
-
-        if (is_null($fileType)) {
+        try {
+            $fileType = $this->convertsFrom($extension);
+        } catch (\Throwable $e) {
             return [file_get_contents($currentFileLocation), $filePath];
         }
 
-        $targetExtension = $fileType->convertsTo();
+        $targetExtension = $this->convertsTo($fileType);
 
         $imageMagick = new Command();
         $newPath = sprintf('%s/%s.%s', $directory, $filename, $targetExtension);
@@ -54,12 +54,19 @@ class ImageConvertor
         return [$newBody, $newFilename];
     }
 
-    public function convertsTo(string $fileExtension): string
+    public function convertsFrom(string $fileExtension)
     {
         if (!in_array($fileExtension, self::SUPPORTED_IMAGE_TYPES)) {
             $message = sprintf('Image type "%s" is not supported. Supported image types are %s', $fileExtension, implode(', ', self::SUPPORTED_IMAGE_TYPES));
             throw new InvalidArgumentException($message);
         }
+
+        return $fileExtension;
+    }
+
+    public function convertsTo(string $fileExtension): string
+    {
+        $fileExtension = $this->convertsFrom($fileExtension);
 
         return match ($fileExtension) {
             self::JFIF, self::HEIC => 'jpeg',
