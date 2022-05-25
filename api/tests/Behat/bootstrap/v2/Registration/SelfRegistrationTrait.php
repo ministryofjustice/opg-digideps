@@ -117,8 +117,6 @@ trait SelfRegistrationTrait
         $this->fillInField('report_endDate_month', '12');
         $this->fillInField('report_endDate_year', '2016');
         $this->pressButton('report_save');
-
-//        $this->fillInField('admin[email]', $userEmail);
     }
 
     /**
