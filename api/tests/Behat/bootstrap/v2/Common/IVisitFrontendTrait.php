@@ -4,6 +4,7 @@ declare(strict_types=1);
 
 namespace App\Tests\Behat\v2\Common;
 
+use App\Entity\User;
 use App\Tests\Behat\BehatException;
 
 trait IVisitFrontendTrait
@@ -309,5 +310,17 @@ trait IVisitFrontendTrait
     public function iVisitTheSendMoreDocumentsPage()
     {
         $this->visitFrontendPath($this->getDocumentsSubmitMoreUrl($this->loggedInUserDetails->getPreviousReportId()));
+    }
+
+    /**
+     * @Given /^I visit the activate user page for the user I am interacting with$/
+     */
+    public function iVisitTheActivateUserPageInteractingUser()
+    {
+        $activationToken = ($this->em->getRepository(User::class)->findOneBy(
+            ['email' => strtolower($this->interactingWithUserDetails->getUserEmail())]
+        ))->getRegistrationToken();
+
+        $this->visitFrontendPath($this->getActivateUserPage($activationToken));
     }
 }
