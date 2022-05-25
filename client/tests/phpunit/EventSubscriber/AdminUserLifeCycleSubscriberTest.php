@@ -12,10 +12,10 @@ use App\Service\Mailer\Mailer;
 use App\Service\Time\DateTimeProvider;
 use App\TestHelpers\UserHelpers;
 use DateTime;
-use Monolog\Logger;
 use PHPUnit\Framework\TestCase;
 use Prophecy\PhpUnit\ProphecyTrait;
 use Prophecy\Prophecy\ObjectProphecy;
+use Psr\Log\LoggerInterface;
 
 class AdminUserLifeCycleSubscriberTest extends TestCase
 {
@@ -40,7 +40,7 @@ class AdminUserLifeCycleSubscriberTest extends TestCase
     {
         $this->userHelpers = new UserHelpers();
         $this->dateTimeProvider = self::prophesize(DateTimeProvider::class);
-        $this->logger = self::prophesize(Logger::class);
+        $this->logger = self::prophesize(LoggerInterface::class);
         $this->mailer = self::prophesize(Mailer::class);
 
         $this->sut = (new AdminUserLifeCycleSubscriber(
@@ -77,7 +77,7 @@ class AdminUserLifeCycleSubscriberTest extends TestCase
 
         $currentUser = $this->userHelpers->createSuperAdminUser();
         $createdAdminManager = $this->userHelpers->createAdminManager();
-        $trigger = 'ADMIN_MANUAL_ORG_CREATION';
+        $trigger = 'ADMIN_MANAGER_MANUALLY_CREATED';
 
         $expectedEvent = [
             'trigger' => $trigger,
@@ -87,11 +87,11 @@ class AdminUserLifeCycleSubscriberTest extends TestCase
             'admin_user_last_name' => $createdAdminManager->getLastname(),
             'admin_user_email' => $createdAdminManager->getEmail(),
             'created_on' => $now->format(DateTime::ATOM),
-            'event' => AuditEvents::TRIGGER_ADMIN_MANAGER_MANUALLY_CREATED,
+            'event' => AuditEvents::EVENT_ADMIN_MANAGER_CREATED,
             'type' => 'audit',
         ];
 
-        $this->dateTimeProvider->getDateTime()->willReturn($now);
+        $this->dateTimeProvider->getDateTime()->shouldBeCalled()->willReturn($now);
         $this->logger->notice('', $expectedEvent)->shouldBeCalled();
 
         $adminManagerCreatedEvent = new AdminManagerCreatedEvent($trigger, $currentUser, $createdAdminManager);
