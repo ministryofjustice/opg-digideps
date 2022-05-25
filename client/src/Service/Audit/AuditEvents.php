@@ -256,9 +256,9 @@ final class AuditEvents
     }
 
     /**
-     * @param string       $trigger      , what caused the event
-     * @param Organisation $organisation , the org the user has added
-     * @param User         $currentUser  , return the logged in user
+     * @param string $trigger      , what caused the event
+     * @param array  $organisation , the org the user has added
+     * @param User   $currentUser  , return the logged in user
      *
      * @return array|string[]
      *
@@ -289,23 +289,21 @@ final class AuditEvents
     }
 
     /**
-     * @param string $trigger     , what caused the event
-     * @param User   $createdUser , the newly created user
-     * @param User   $currentUser , the logged in user
-     * @param string $roleType    , the roletype of the user
+     * @param string $trigger             , what caused the event
+     * @param User   $createdAdminManager , the newly created admin manager
+     * @param User   $currentUser         , the logged in user
      *
      * @throws \Exception
      */
-    public function adminUserCreated(string $trigger, User $createdUser, User $currentUser, string $roleType): array
+    public function adminManagerCreated(string $trigger, User $currentUser, User $createdAdminManager): array
     {
         $event = [
             'trigger' => $trigger,
             'logged_in_user_first_name' => $currentUser->getFirstname(),
             'logged_in_last_name' => $currentUser->getLastname(),
-            'admin_user_first_name' => $createdUser->getFirstname(),
-            'admin_user_last_name' => $createdUser->getLastname(),
-            'admin_user_email' => $createdUser->getEmail(),
-            'roleType' => $roleType,
+            'admin_user_first_name' => $createdAdminManager->getFirstname(),
+            'admin_user_last_name' => $createdAdminManager->getLastname(),
+            'admin_user_email' => $createdAdminManager->getEmail(),
             'created_on' => $this->dateTimeProvider->getDateTime()->format(DateTime::ATOM),
         ];
 

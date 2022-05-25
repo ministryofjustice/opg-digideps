@@ -17,9 +17,9 @@ class AdminManagerCreatedEvent extends Event
 
     public function __construct(string $trigger, User $currentUser, User $createdAdminManager)
     {
-        $this->setcreatedAdminManager($createdAdminManager)
-            ->setTrigger($trigger)
-            ->setCurrentUser($currentUser);
+        $this->setTrigger($trigger)
+            ->setCurrentUser($currentUser)
+            ->setCreatedAdminManager($createdAdminManager);
     }
 
     public function getTrigger(): string

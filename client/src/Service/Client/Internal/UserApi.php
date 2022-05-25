@@ -5,6 +5,7 @@ declare(strict_types=1);
 namespace App\Service\Client\Internal;
 
 use App\Entity\User;
+use App\Event\AdminManagerCreatedEvent;
 use App\Event\AdminUserCreatedEvent;
 use App\Event\CoDeputyCreatedEvent;
 use App\Event\CoDeputyInvitedEvent;
@@ -17,6 +18,7 @@ use App\Event\UserPasswordResetEvent;
 use App\Event\UserUpdatedEvent;
 use App\EventDispatcher\ObservableEventDispatcher;
 use App\Model\SelfRegisterData;
+use App\Service\Audit\AuditEvents;
 use App\Service\Client\RestClientInterface;
 use Symfony\Component\Security\Core\Authentication\Token\Storage\TokenStorageInterface;
 
@@ -55,6 +57,10 @@ class UserApi
 
         $userCreatedEvent = new AdminUserCreatedEvent($createdUser);
         $this->eventDispatcher->dispatch($userCreatedEvent, AdminUserCreatedEvent::NAME);
+
+        if (User::ROLE_ADMIN_MANAGER === $createdUser->getRoleName()) {
+            $this->dispatchAdminManagerCreatedEvent($createdUser);
+        }
 
         return $createdUser;
     }
@@ -259,5 +265,19 @@ class UserApi
             'User[]',
             ['user', 'user-clients']
         );
+    }
+
+    private function dispatchAdminManagerCreatedEvent(User $createdUser)
+    {
+        $trigger = AuditEvents::TRIGGER_ADMIN_MANAGER_MANUALLY_CREATED;
+        $currentUser = $this->tokenStorage->getToken()->getUser();
+
+        $adminManagerCreatedEvent = new adminManagerCreatedEvent(
+            $trigger,
+            $currentUser,
+            $createdUser
+        );
+
+        $this->eventDispatcher->dispatch($adminManagerCreatedEvent, AdminManagerCreatedEvent::NAME);
     }
 }
