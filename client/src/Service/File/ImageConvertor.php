@@ -4,25 +4,16 @@ declare(strict_types=1);
 
 namespace App\Service\File;
 
-use App\Enum\ConvertableImageTypes;
 use Exception;
+use InvalidArgumentException;
 use Orbitale\Component\ImageMagick\Command;
-
-// enum SupportedOriginalFileType: string
-// {
-//    case JFIF = 'jfif';
-//    case HEIC = 'heic';
-//
-//    public function convertsTo(): string
-//    {
-//        return match ($this) {
-//            self::JFIF, self::HEIC => 'jpeg',
-//        };
-//    }
-// }
 
 class ImageConvertor
 {
+    public const JFIF = 'jfif';
+    public const HEIC = 'heic';
+    public const SUPPORTED_IMAGE_TYPES = [self::JFIF, self::HEIC];
+
     /**
      * If a supported original file type id provided returns the body and filename of the newly converted file.
      * Unsupported file types will return the original body and filename of the original file.
@@ -34,7 +25,7 @@ class ImageConvertor
         $extension = $pathInfo['extension'];
         $filename = $pathInfo['filename'];
 
-        $fileType = ConvertableImageTypes::tryFrom($extension);
+        $fileType = $this->convertsTo($extension);
 
         if (is_null($fileType)) {
             return [file_get_contents($currentFileLocation), $filePath];
@@ -61,5 +52,17 @@ class ImageConvertor
         unlink(realpath($newPath));
 
         return [$newBody, $newFilename];
+    }
+
+    public function convertsTo(string $fileExtension): string
+    {
+        if (!in_array($fileExtension, self::SUPPORTED_IMAGE_TYPES)) {
+            $message = sprintf('Image type "%s" is not supported. Supported image types are %s', $fileExtension, implode(', ', self::SUPPORTED_IMAGE_TYPES));
+            throw new InvalidArgumentException($message);
+        }
+
+        return match ($fileExtension) {
+            self::JFIF, self::HEIC => 'jpeg',
+        };
     }
 }

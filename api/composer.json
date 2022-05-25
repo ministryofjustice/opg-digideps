@@ -15,7 +15,7 @@
         }
     },
     "require": {
-        "php": "^8.1.5",
+        "php": "^8.0.19",
         "aws/aws-sdk-php": "^3.100.9",
         "behat/mink-goutte-driver": "^2.0.0",
         "doctrine/doctrine-bundle": "^2.2",
