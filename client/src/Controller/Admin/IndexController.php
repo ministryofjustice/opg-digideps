@@ -279,10 +279,6 @@ class IndexController extends AbstractController
 
         $this->denyAccessUnlessGranted(UserVoter::DELETE_USER, $userToDelete, 'Unable to delete this user');
 
-        if (User::ROLE_ADMIN_MANAGER === $userToDelete->getRoleName()) {
-            $this->dispatchAdminManagerDeletedEvent($userToDelete);
-        }
-
         return ['user' => $userToDelete];
     }
 
@@ -300,6 +296,10 @@ class IndexController extends AbstractController
 
         try {
             $this->userApi->delete($user, AuditEvents::TRIGGER_ADMIN_BUTTON);
+
+            if (User::ROLE_ADMIN_MANAGER === $user->getRoleName()) {
+                $this->dispatchAdminManagerDeletedEvent($user);
+            }
 
             return $this->redirect($this->generateUrl('admin_homepage'));
         } catch (Throwable $e) {
