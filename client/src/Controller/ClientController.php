@@ -5,6 +5,7 @@ namespace App\Controller;
 use App\Entity\Client;
 use App\Entity\Report\Report;
 use App\Entity\User;
+use App\Exception\RestClientException;
 use App\Form\ClientType;
 use App\Service\Audit\AuditEvents;
 use App\Service\Client\Internal\ClientApi;
@@ -155,6 +156,12 @@ class ClientController extends AbstractController
 
                 return $this->redirect($url);
             } catch (Throwable $e) {
+                if (!$e instanceof RestClientException) {
+                    $message = sprintf('Case "%s" failed to create their client. Error: "%s"', $form->getData()->getCaseNumber(), $e->getMessage());
+                    $logger->error($message);
+                    throw $e;
+                }
+
                 switch ((int) $e->getCode()) {
                     case 400:
                         $form->addError(new FormError($translator->trans('formErrors.matching', [], 'register')));
