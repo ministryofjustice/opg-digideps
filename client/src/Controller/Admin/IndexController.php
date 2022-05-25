@@ -531,7 +531,7 @@ class IndexController extends AbstractController
         $trigger = AuditEvents::TRIGGER_ADMIN_MANAGER_MANUALLY_DELETED;
         $currentUser = $this->tokenStorage->getToken()->getUser();
 
-        $adminManagerDeletedEvent = new adminManagerDeletedEvent(
+        $adminManagerDeletedEvent = new AdminManagerDeletedEvent(
             $trigger,
             $currentUser,
             $userToDelete

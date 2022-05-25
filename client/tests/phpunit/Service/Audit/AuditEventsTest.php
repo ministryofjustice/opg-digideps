@@ -311,7 +311,8 @@ class AuditEventsTest extends TestCase
         $expected = [
             'trigger' => 'ADMIN_MANAGER_MANUALLY_CREATED',
             'logged_in_user_first_name' => $currentUser->getFirstname(),
-            'logged_in_last_name' => $currentUser->getLastname(),
+            'logged_in_user_last_name' => $currentUser->getLastname(),
+            'logged_in_user_email' => $currentUser->getEmail(),
             'admin_user_first_name' => $createdAdminManager->getFirstname(),
             'admin_user_last_name' => $createdAdminManager->getLastname(),
             'admin_user_email' => $createdAdminManager->getEmail(),
@@ -345,7 +346,8 @@ class AuditEventsTest extends TestCase
         $expected = [
             'trigger' => 'ADMIN_MANAGER_MANUALLY_DELETED',
             'logged_in_user_first_name' => $currentUser->getFirstname(),
-            'logged_in_last_name' => $currentUser->getLastname(),
+            'logged_in_user_last_name' => $currentUser->getLastname(),
+            'logged_in_user_email' => $currentUser->getEmail(),
             'admin_user_first_name' => $adminManagerToDelete->getFirstname(),
             'admin_user_last_name' => $adminManagerToDelete->getLastname(),
             'admin_user_email' => $adminManagerToDelete->getEmail(),

@@ -2,7 +2,7 @@
 
 namespace App\Service;
 
-class DateTimeProvider extends \App\Service\Time\DateTimeProvider
+class DateTimeProvider
 {
     /**
      * @param null $dateTime

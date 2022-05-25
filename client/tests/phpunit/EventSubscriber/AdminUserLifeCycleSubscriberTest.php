@@ -73,7 +73,7 @@ class AdminUserLifeCycleSubscriberTest extends TestCase
     }
 
     /** @test */
-    public function logAdminManagerAddedEvent()
+    public function logAdminManagerCreatedEvent()
     {
         $now = new DateTime('now');
 
@@ -84,7 +84,8 @@ class AdminUserLifeCycleSubscriberTest extends TestCase
         $expectedEvent = [
             'trigger' => $trigger,
             'logged_in_user_first_name' => $currentUser->getFirstname(),
-            'logged_in_last_name' => $currentUser->getLastname(),
+            'logged_in_user_last_name' => $currentUser->getLastname(),
+            'logged_in_user_email' => $currentUser->getEmail(),
             'admin_user_first_name' => $createdAdminManager->getFirstname(),
             'admin_user_last_name' => $createdAdminManager->getLastname(),
             'admin_user_email' => $createdAdminManager->getEmail(),
@@ -98,7 +99,7 @@ class AdminUserLifeCycleSubscriberTest extends TestCase
 
         $adminManagerCreatedEvent = new AdminManagerCreatedEvent($trigger, $currentUser, $createdAdminManager);
 
-        $this->sut->logAdminManagerAddedEvent($adminManagerCreatedEvent);
+        $this->sut->logAdminManagerCreatedEvent($adminManagerCreatedEvent);
     }
 
     /** @test */
@@ -113,7 +114,8 @@ class AdminUserLifeCycleSubscriberTest extends TestCase
         $expectedEvent = [
             'trigger' => $trigger,
             'logged_in_user_first_name' => $currentUser->getFirstname(),
-            'logged_in_last_name' => $currentUser->getLastname(),
+            'logged_in_user_last_name' => $currentUser->getLastname(),
+            'logged_in_user_email' => $currentUser->getEmail(),
             'admin_user_first_name' => $deletedAdminManager->getFirstname(),
             'admin_user_last_name' => $deletedAdminManager->getLastname(),
             'admin_user_email' => $deletedAdminManager->getEmail(),
