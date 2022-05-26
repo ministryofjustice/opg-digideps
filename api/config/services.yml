@@ -349,3 +349,6 @@ services:
                 "%env(PARAMETER_PREFIX)%",
                 "%env(FEATURE_FLAG_PREFIX)%",
             ]
+
+    App\Messenger\Transport\SqsTransportFactory:
+        tags: [messenger.transport_factory]

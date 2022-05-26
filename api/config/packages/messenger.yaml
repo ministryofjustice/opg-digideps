@@ -1,6 +1,12 @@
 framework:
     messenger:
         transports:
-            sirius-events-queue:
-                dsn: "http://localhost:4566/sirius-events-queue"
+            sqs:
+                dsn: "sqs://localstack:4566"
                 serializer: App\Messenger\ExternalJsonMessengerSerializer
+                options:
+                    endpoint: http://localstack:4566
+                    access_key: fakeKey
+                    secret_key: secretKey
+                    queue_name: sirius-events-queue
+                    sslmode: disabled
