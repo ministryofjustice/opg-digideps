@@ -5,6 +5,7 @@ namespace App\Controller\Admin;
 use App\Controller\AbstractController;
 use App\Entity as EntityDir;
 use App\Entity\User;
+use App\Event\AdminManagerDeletedEvent;
 use App\Event\CSVUploadedEvent;
 use App\EventDispatcher\ObservableEventDispatcher;
 use App\Exception\RestClientException;
@@ -32,6 +33,7 @@ use Symfony\Component\HttpFoundation\Request;
 use Symfony\Component\HttpFoundation\Response;
 use Symfony\Component\Routing\Annotation\Route;
 use Symfony\Component\Routing\RouterInterface;
+use Symfony\Component\Security\Core\Authentication\Token\Storage\TokenStorageInterface;
 use Symfony\Contracts\Translation\TranslatorInterface;
 use Throwable;
 
@@ -47,7 +49,8 @@ class IndexController extends AbstractController
         private UserApi $userApi,
         private ObservableEventDispatcher $eventDispatcher,
         private PreRegistrationApi $preRegistrationApi,
-        private LayDeputyshipApi $layDeputyshipApi
+        private LayDeputyshipApi $layDeputyshipApi,
+        private TokenStorageInterface $tokenStorage
     ) {
     }
 
@@ -294,6 +297,10 @@ class IndexController extends AbstractController
         try {
             $this->userApi->delete($user, AuditEvents::TRIGGER_ADMIN_BUTTON);
 
+            if (User::ROLE_ADMIN_MANAGER === $user->getRoleName()) {
+                $this->dispatchAdminManagerDeletedEvent($user);
+            }
+
             return $this->redirect($this->generateUrl('admin_homepage'));
         } catch (Throwable $e) {
             $this->logger->warning(
@@ -517,5 +524,19 @@ class IndexController extends AbstractController
         );
 
         $this->eventDispatcher->dispatch($csvUploadedEvent, CSVUploadedEvent::NAME);
+    }
+
+    private function dispatchAdminManagerDeletedEvent(User $userToDelete)
+    {
+        $trigger = AuditEvents::TRIGGER_ADMIN_MANAGER_MANUALLY_DELETED;
+        $currentUser = $this->tokenStorage->getToken()->getUser();
+
+        $adminManagerDeletedEvent = new AdminManagerDeletedEvent(
+            $trigger,
+            $currentUser,
+            $userToDelete
+        );
+
+        $this->eventDispatcher->dispatch($adminManagerDeletedEvent, AdminManagerDeletedEvent::NAME);
     }
 }
