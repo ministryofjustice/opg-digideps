@@ -1,0 +1,14 @@
+version: "3.2"
+
+## Defines commands we can run from containers
+services:
+  dr-restore:
+    build:
+      context: ./disaster_recovery/restore
+      dockerfile: Dockerfile
+    environment:
+      AWS_ACCESS_KEY_ID: $AWS_ACCESS_KEY_ID
+      AWS_SECRET_ACCESS_KEY: $AWS_SECRET_ACCESS_KEY
+      AWS_SESSION_TOKEN: $AWS_SESSION_TOKEN
+    volumes:
+      - ./disaster_recovery/restore/disaster_recovery.py:/disaster_recovery.py
