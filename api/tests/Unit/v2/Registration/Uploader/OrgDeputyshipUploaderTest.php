@@ -171,36 +171,36 @@ class OrgDeputyshipUploaderTest extends KernelTestCase
         );
     }
 
-    /**
-     * @dataProvider existingClientProvider
-     * @test
-     */
-    public function uploadExistingClientsWithNewMadeDateCreatesNewReport(DateTime $existingCourtDate, DateTime $uploadCourtDate)
-    {
-        $deputyships = OrgDeputyshipDTOTestHelper::generateSiriusOrgDeputyshipDtos(1, 0);
-        $deputyships[0]->setCourtDate($uploadCourtDate);
-
-        $client = OrgDeputyshipDTOTestHelper::ensureClientInUploadExists($deputyships[0], $this->em);
-        $existingReport = OrgDeputyshipDTOTestHelper::ensureAReportExistsAndIsAssociatedWithClient($client, $this->em);
-
-        $client->setCourtDate($existingCourtDate);
-
-        $this->em->persist($client);
-        $this->em->flush();
-
-        $this->sut->upload($deputyships);
-
-        $client = $this->clientRepository->findOneBy(['caseNumber' => $deputyships[0]->getCaseNumber()]);
-
-        self::assertNotEquals($existingReport->getId(), $client->getCurrentReport()->getId());
-    }
-
-    public function existingClientProvider()
-    {
-        return [
-            'Updated court date' => [new DateTime('Today'), new DateTime('Tomorrow')],
-        ];
-    }
+//    /**
+//     * @dataProvider existingClientProvider
+//     * @test
+//     */
+//    public function uploadExistingClientsWithNewMadeDateCreatesNewReport(DateTime $existingCourtDate, DateTime $uploadCourtDate)
+//    {
+//        $deputyships = OrgDeputyshipDTOTestHelper::generateSiriusOrgDeputyshipDtos(1, 0);
+//        $deputyships[0]->setCourtDate($uploadCourtDate);
+//
+//        $client = OrgDeputyshipDTOTestHelper::ensureClientInUploadExists($deputyships[0], $this->em);
+//        $existingReport = OrgDeputyshipDTOTestHelper::ensureAReportExistsAndIsAssociatedWithClient($client, $this->em);
+//
+//        $client->setCourtDate($existingCourtDate);
+//
+//        $this->em->persist($client);
+//        $this->em->flush();
+//
+//        $this->sut->upload($deputyships);
+//
+//        $client = $this->clientRepository->findOneBy(['caseNumber' => $deputyships[0]->getCaseNumber()]);
+//
+//        self::assertNotEquals($existingReport->getId(), $client->getCurrentReport()->getId());
+//    }
+//
+//    public function existingClientProvider()
+//    {
+//        return [
+//            'Updated court date' => [new DateTime('Today'), new DateTime('Tomorrow')],
+//        ];
+//    }
 
     /** @test */
     public function uploadClientAndOrgAreAssociated()
