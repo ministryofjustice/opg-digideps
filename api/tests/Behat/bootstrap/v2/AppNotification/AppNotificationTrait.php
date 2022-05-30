@@ -94,11 +94,11 @@ trait AppNotificationTrait
     }
 
     /**
-     * @Then I should see a banner confirming the version of the app I am using
+     * @Then I should see a banner confirming the :hostedEnvironment version of the app I am using
      */
-    public function iShouldSeeABannerConfirmingTheVersionOfTheAppIAmUsing()
+    public function iShouldSeeABannerConfirmingTheVersionOfTheAppIAmUsing(string $hostedEnvironment)
     {
-        $this->assertPageContainsText('You are now logged into the admin environment');
+        $this->assertPageContainsText(sprintf('You are now logged into the %s environment', $hostedEnvironment));
     }
 
     /**
