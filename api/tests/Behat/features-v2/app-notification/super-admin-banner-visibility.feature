@@ -1,8 +1,8 @@
 @v2 @v2_admin @app-notification @mia
 Feature: Restricting visibility of banner notification to super admin only
+    To ensure that I know what version of the app I am using
     As a super admin user
-    To ensure that I am aware of the version of the app I am using
-    I want to confirmation of this with a banner notification
+    I want to see a banner notification confirming the hosted environment I am logged in to
 
     @super-admin
     Scenario: A super admin has visibility of the banner notification in the admin app
