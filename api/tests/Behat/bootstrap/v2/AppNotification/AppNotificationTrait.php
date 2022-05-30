@@ -92,4 +92,20 @@ trait AppNotificationTrait
     {
         $this->assertOnErrorMessage($this->validationMsg);
     }
+
+    /**
+     * @Then I should see a banner confirming the version of the app I am using
+     */
+    public function iShouldSeeABannerConfirmingTheVersionOfTheAppIAmUsing()
+    {
+        $this->assertPageContainsText('You are now logged into the admin environment');
+    }
+
+    /**
+     * @Then I should not see the banner confirming the version of the app I am using
+     */
+    public function iShouldNotSeeTheBannerConfirmingTheVersionOfTheAppIAmUsing()
+    {
+        $this->assertElementNotOnPage('govuk-notification-banner__heading');
+    }
 }
