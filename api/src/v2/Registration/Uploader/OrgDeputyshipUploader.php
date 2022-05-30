@@ -171,16 +171,17 @@ class OrgDeputyshipUploader
                 $this->updated['clients'][] = $this->client->getId();
             }
 
-            if ($this->clientHasNewCourtOrder($this->client, $dto)) {
-                // Discharge clients with a new court order
-                // Look at adding audit logging for discharge to API side of app
-                $this->client->setDeletedAt(new DateTime());
-                $this->em->persist($this->client);
-                $this->em->flush();
-
-                $this->client = $this->buildClientAndAssociateWithDeputyAndOrg($dto);
-                $this->added['clients'][] = $dto->getCaseNumber();
-            }
+//            Temp disabling until we can rely on Sirius data
+//            if ($this->clientHasNewCourtOrder($this->client, $dto)) {
+//                // Discharge clients with a new court order
+//                // Look at adding audit logging for discharge to API side of app
+//                $this->client->setDeletedAt(new DateTime());
+//                $this->em->persist($this->client);
+//                $this->em->flush();
+//
+//                $this->client = $this->buildClientAndAssociateWithDeputyAndOrg($dto);
+//                $this->added['clients'][] = $dto->getCaseNumber();
+//            }
 
             if ($this->clientHasSwitchedOrganisation($this->client)) {
                 $this->currentOrganisation->addClient($this->client);
