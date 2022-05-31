@@ -93,19 +93,30 @@ trait AppNotificationTrait
         $this->assertOnErrorMessage($this->validationMsg);
     }
 
+//    /**
+//     * @Then /^I should see a banner confirming the *(\[a-zA-Z]+\.+) of the app I am using$/
+//     */
+//    public function iShouldSeeABannerConfirmingTheOfTheAppIAmUsing(string $hostedEnvironment)
+//    {
+//        $this->assertPageContainsText(sprintf('You are now logged into the %s environment', $hostedEnvironment));
+//    }
+
     /**
-     * @Then I should see a banner confirming the :hostedEnvironment version of the app I am using
+     * @Then /^I should see a banner confirming the \'([^\']*)\' version of the app I am using$/
      */
-    public function iShouldSeeABannerConfirmingTheVersionOfTheAppIAmUsing(string $hostedEnvironment)
+    public function iShouldSeeABannerConfirmingTheOfTheAppIAmUsing($hostedEnvironment)
     {
-        $this->assertPageContainsText(sprintf('You are now logged into the %s environment', $hostedEnvironment));
+        $banner = 'You are now logged into the %s environment';
+        var_dump($hostedEnvironment);
+        $this->assertPageContainsText(sprintf($banner, $hostedEnvironment));
     }
 
     /**
      * @Then I should not see the banner confirming the version of the app I am using
      */
-    public function iShouldNotSeeTheBannerConfirmingTheVersionOfTheAppIAmUsing()
+    public function iShouldNotSeeTheBannerConfirmingTheVersionOfTheAppIAmUsing(string $hostedEnvironment)
     {
         $this->assertElementNotOnPage('govuk-notification-banner__heading');
+//        $this->assertPageNotContainsText('You are now logged into the %s environment', $hostedEnvironment);
     }
 }
