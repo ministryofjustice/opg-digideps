@@ -22,6 +22,7 @@ vendor/
 .terraform/
 **/terraform.output.json
 **/terraform.plan*
+**/shared/builds
 
 # Repo-specific excludes
 docker/log
