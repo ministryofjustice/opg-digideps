@@ -93,30 +93,41 @@ trait AppNotificationTrait
         $this->assertOnErrorMessage($this->validationMsg);
     }
 
-//    /**
-//     * @Then /^I should see a banner confirming the *(\[a-zA-Z]+\.+) of the app I am using$/
-//     */
-//    public function iShouldSeeABannerConfirmingTheOfTheAppIAmUsing(string $hostedEnvironment)
-//    {
-//        $this->assertPageContainsText(sprintf('You are now logged into the %s environment', $hostedEnvironment));
-//    }
-
-    /**
-     * @Then /^I should see a banner confirming the \'([^\']*)\' version of the app I am using$/
-     */
-    public function iShouldSeeABannerConfirmingTheOfTheAppIAmUsing($hostedEnvironment)
+    private function getHostedEnvironment(): string
     {
-        $banner = 'You are now logged into the %s environment';
-        var_dump($hostedEnvironment);
-        $this->assertPageContainsText(sprintf($banner, $hostedEnvironment));
+        $this->iVisitTheFrontendAvailabilityPage();
+        $hostedEnvironmentListItem = $this->getSession()->getPage()->find('xpath', '//li[contains(.,"Hosted environment")]');
+        $haystack = $hostedEnvironmentListItem->getHtml();
+
+        return trim(substr(strrchr($haystack, ': '), 2));
     }
 
     /**
-     * @Then I should not see the banner confirming the version of the app I am using
+     * @Then I should see a banner confirming where the app is hosted
      */
-    public function iShouldNotSeeTheBannerConfirmingTheVersionOfTheAppIAmUsing(string $hostedEnvironment)
+    public function iShouldSeeABannerConfirmingTheAppIAmUsing()
     {
+        $hostedEnvironment = $this->getHostedEnvironment();
+        $this->iVisitAdminSearchUserPage();
+
+        $banner = sprintf('You are now logged into the %s environment', $hostedEnvironment);
+        $this->assertPageContainsText($banner);
+    }
+
+    /**
+     * @Then I should not see a banner confirming where the app is hosted
+     */
+    public function iShouldNotSeeABannerConfirmingTheAppIAmUsing()
+    {
+        $hostedEnvironment = $this->getHostedEnvironment();
+
+        if (in_array($this->loggedInUserDetails->getUserRole(), $this->loggedInUserDetails::ADMIN_ROLES)) {
+            $this->iVisitAdminSearchUserPage();
+        } else {
+            $this->iVisitLayStartPage();
+        }
+        $banner = sprintf('You are now logged into the %s environment', $hostedEnvironment);
+        $this->assertPageNotContainsText($banner);
         $this->assertElementNotOnPage('govuk-notification-banner__heading');
-//        $this->assertPageNotContainsText('You are now logged into the %s environment', $hostedEnvironment);
     }
 }
