@@ -1,34 +1,8 @@
 resource "aws_s3_bucket" "pa_uploads_branch_replication" {
   count         = local.account.name == "development" ? 1 : 0
   bucket        = "pa-uploads-branch-replication"
-  acl           = "private"
   force_destroy = true
-
-  versioning {
-    enabled = true
-  }
-
-  lifecycle_rule {
-    enabled = true
-
-    expiration {
-      days = 10
-    }
-
-    noncurrent_version_expiration {
-      days = 10
-    }
-  }
-
-  server_side_encryption_configuration {
-    rule {
-      apply_server_side_encryption_by_default {
-        sse_algorithm = "AES256"
-      }
-    }
-  }
-
-  tags = local.default_tags
+  tags          = local.default_tags
 }
 
 resource "aws_s3_bucket_public_access_block" "pa_uploads_branch_replication" {
@@ -133,4 +107,48 @@ resource "aws_iam_role_policy_attachment" "replication" {
   count      = local.account.name == "development" ? 1 : 0
   role       = aws_iam_role.replication[0].name
   policy_arn = aws_iam_policy.replication[0].arn
+}
+
+resource "aws_s3_bucket_server_side_encryption_configuration" "pa_uploads_branch_replication" {
+  count  = local.account.name == "development" ? 1 : 0
+  bucket = aws_s3_bucket.pa_uploads_branch_replication[0].bucket
+
+  rule {
+    apply_server_side_encryption_by_default {
+      sse_algorithm = "AES256"
+    }
+  }
+}
+
+resource "aws_s3_bucket_versioning" "pa_uploads_branch_replication" {
+  count  = local.account.name == "development" ? 1 : 0
+  bucket = aws_s3_bucket.pa_uploads_branch_replication[0].id
+  versioning_configuration {
+    status = "Enabled"
+  }
+}
+
+resource "aws_s3_bucket_acl" "pa_uploads_branch_replication" {
+  count  = local.account.name == "development" ? 1 : 0
+  bucket = aws_s3_bucket.pa_uploads_branch_replication[0].id
+  acl    = "private"
+}
+
+resource "aws_s3_bucket_lifecycle_configuration" "pa_uploads_branch_replication" {
+  count  = local.account.name == "development" ? 1 : 0
+  bucket = aws_s3_bucket.pa_uploads_branch_replication[0].id
+
+  rule {
+    id     = "expire-after-10-days"
+    status = "Enabled"
+
+    noncurrent_version_expiration {
+      noncurrent_days = 10
+    }
+
+    expiration {
+      days                         = 10
+      expired_object_delete_marker = true
+    }
+  }
 }
