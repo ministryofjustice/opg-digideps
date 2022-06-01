@@ -25,9 +25,8 @@ class CheckCSVUploadedCommand extends DaemonableCommand
     public const LOG_GROUP_NOT_CREATED_SLACK_MESSAGE = 'A log group with the name "%s" could not be found. Unable to determine if CSVs have been uploaded.';
     public const UNEXPECTED_ERROR_SLACK_MESSAGE = 'An unexpected error occurred during CSV upload check. Error message: %s';
 
-    public const LAY_CSV = 'Lay';
-    public const PROF_CSV = 'Prof';
-    public const PA_CSV = 'PA';
+    public const LAY_CSV = 'LAY';
+    public const ORG_CSV = 'ORG';
 
     public static $defaultName = 'digideps:check-csv-uploaded';
 
@@ -96,7 +95,7 @@ class CheckCSVUploadedCommand extends DaemonableCommand
         return 0;
     }
 
-    private function getLogEvents(): int | array
+    private function getLogEvents(): int|array
     {
         // Calculate 24 hour period start time and end time
         $startingTime = (int) (clone $this->now)->sub(new DateInterval('P1D'))->format('Uv');
@@ -140,7 +139,7 @@ class CheckCSVUploadedCommand extends DaemonableCommand
 
     private function alertNoCSVsWereUploaded()
     {
-        foreach ([self::LAY_CSV, self::PA_CSV, self::PROF_CSV] as $csvType) {
+        foreach ([self::LAY_CSV, self::ORG_CSV] as $csvType) {
             $this->postSlackMessage(sprintf(self::CSV_NOT_UPLOADED_SLACK_MESSAGE, $csvType), 'opg-digideps-team');
         }
     }
@@ -149,8 +148,7 @@ class CheckCSVUploadedCommand extends DaemonableCommand
     {
         $typesAndRegexes = [
             self::LAY_CSV => '/"role_type":"LAY"/',
-            self::PROF_CSV => '/"role_type":"PROF"/',
-            self::PA_CSV => '/"role_type":"PA"/',
+            self::ORG_CSV => '/"role_type":"ORG"/',
         ];
 
         foreach ($typesAndRegexes as $type => $regex) {
@@ -169,6 +167,8 @@ class CheckCSVUploadedCommand extends DaemonableCommand
         $client = $this->slackClientFactory->createClient($token);
 
         try {
+            $this->logger->log('notice', 'Posting CSV upload check to slack');
+
             $client->chatPostMessage(
                 [
                     'username' => 'opg-alerts',
