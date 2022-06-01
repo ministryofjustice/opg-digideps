@@ -18,7 +18,6 @@ use App\Service\Client\Internal\UserApi;
 use App\Service\Client\RestClient;
 use App\Service\CsvUploader;
 use App\Service\DataImporter\CsvToArray;
-use App\Service\Logger;
 use App\Service\OrgService;
 use Predis\ClientInterface;
 use Psr\Log\LoggerInterface;
@@ -44,7 +43,7 @@ class IndexController extends AbstractController
 {
     public function __construct(
         private OrgService $orgService,
-        private Logger $logger,
+        private LoggerInterface $logger,
         private RestClient $restClient,
         private UserApi $userApi,
         private ObservableEventDispatcher $eventDispatcher,
@@ -363,13 +362,33 @@ class IndexController extends AbstractController
 
         $form->handleRequest($request);
 
+        // AjaxController redirects to this page after working through chunks - check if its completed to dispatch event
+        if ('1' === $request->get('complete')) {
+            $this->dispatchCSVUploadEvent();
+        }
+
         if ($form->isSubmitted() && $form->isValid()) {
             $fileName = $form->get('file')->getData();
             try {
                 $csvToArray = new CsvToArray($fileName, false, true);
 
                 $data = $csvToArray
-                    ->setOptionalColumns($csvToArray->getFirstRow())
+                    ->setOptionalColumns([
+                        'Case',
+                        'ClientSurname',
+                        'DeputyUid',
+                        'DeputySurname',
+                        'DeputyAddress1',
+                        'DeputyAddress2',
+                        'DeputyAddress3',
+                        'DeputyAddress4',
+                        'DeputyAddress5',
+                        'DeputyPostcode',
+                        'ReportType',
+                        'MadeDate',
+                        'OrderType',
+                        'CoDeputy',
+                    ])
                     ->setUnexpectedColumns(['LastReportDay', 'DeputyOrganisation'])
                     ->getData();
 
@@ -378,7 +397,7 @@ class IndexController extends AbstractController
                     $compressedData = CsvUploader::compressData($data);
                     $this->preRegistrationApi->deleteAll();
 
-                    $ret = $this->layDeputyshipApi->uploadLayDeputyShip($compressedData);
+                    $ret = $this->layDeputyshipApi->uploadLayDeputyShip($compressedData, 'below_2000_rows');
 
                     $this->addFlash(
                         'notice',
@@ -386,6 +405,10 @@ class IndexController extends AbstractController
                     );
 
                     foreach ($ret['errors'] as $err) {
+                        $this->logger->warning(
+                            sprintf('Error while uploading csv: %s', $err->getMessage())
+                        );
+
                         $this->addFlash('error', $err);
                     }
 

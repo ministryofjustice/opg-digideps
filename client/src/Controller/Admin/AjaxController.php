@@ -57,8 +57,8 @@ class AjaxController extends AbstractController
         try {
             $compressedData = $redisClient->get($chunkId);
             if ($compressedData) {
-                $ret = $this->layDeputyshipApi->uploadLayDeputyShip($compressedData);
-                $redisClient->del($chunkId); //cleanup for next execution
+                $ret = $this->layDeputyshipApi->uploadLayDeputyShip($compressedData, $chunkId);
+                $redisClient->del($chunkId); // cleanup for next execution
             } else {
                 $ret['added'] = 0;
             }
