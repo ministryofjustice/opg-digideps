@@ -1,4 +1,4 @@
-@v2 @v2_admin @app-notification @mia
+@v2 @v2_admin @app-notification
 Feature: Restricting visibility of banner notification to super admin only
     To ensure that I know what version of the app I am using
     As a super admin user
