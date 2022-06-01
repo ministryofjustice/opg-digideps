@@ -1,23 +1,26 @@
 <h1>App Health Check</h1>
 <ul>
-  <li>
-    <b>Environment</b>: {{ environment }}
-  </li>
-  <li>
-    <b>Debug enabled</b>: {% if debug %} true {% else %} false {% endif %}
-  </li>
-  {% for service in services %}
     <li>
-      <b>{{ service.name }}</b>:
-      {% if service.healthy %}
-        {% if service.customMessage %}
-          <span style="color: #FF0000">{{ service.customMessage | nl2br }}</span>
-        {% else %}
-          OK
-        {% endif %}
-      {% else %}
-        <span style="color: #FF0000">{{ service.errors | nl2br }}</span>
-      {% endif %}
+        <b>Environment</b>: {{ environment }}
     </li>
-  {% endfor %}
+    <li>
+        <b>Hosted environment</b>: {{ hostedEnv }}
+    </li>
+    <li>
+        <b>Debug enabled</b>: {% if debug %} true {% else %} false {% endif %}
+    </li>
+    {% for service in services %}
+        <li>
+            <b>{{ service.name }}</b>:
+            {% if service.healthy %}
+                {% if service.customMessage %}
+                    <span style="color: #FF0000">{{ service.customMessage | nl2br }}</span>
+                {% else %}
+                    OK
+                {% endif %}
+            {% else %}
+                <span style="color: #FF0000">{{ service.errors | nl2br }}</span>
+            {% endif %}
+        </li>
+    {% endfor %}
 </ul>

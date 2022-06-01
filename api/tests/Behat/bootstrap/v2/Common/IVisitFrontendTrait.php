@@ -323,4 +323,12 @@ trait IVisitFrontendTrait
 
         $this->visitFrontendPath($this->getActivateUserPage($activationToken));
     }
+
+    /**
+     * @Given /^I visit the frontend availability page$/
+     */
+    public function iVisitTheFrontendAvailabilityPage()
+    {
+        $this->visitFrontendPath($this->getAvailabilityPage());
+    }
 }

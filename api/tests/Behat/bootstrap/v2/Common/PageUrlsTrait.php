@@ -14,6 +14,7 @@ trait PageUrlsTrait
     private string $anyOtherInfoUrl = '/%s/%s/any-other-info';
     private string $assetsSectionUrl = '/%s/%s/assets';
     private string $assetsSummarySectionUrl = '/%s/%s/assets/summary';
+    private string $availabilityUrl = '/manage/availability';
     private string $clientLoginPageUrl = '/login';
     private string $clientBenefitCheckSummaryPageUrl = '/%s/%s/client-benefits-check/summary';
     private string $contactsAddUrl = '/report/%s/contacts/add';
@@ -406,5 +407,10 @@ trait PageUrlsTrait
     public function getActivateUserPage(string $activationToken): string
     {
         return sprintf($this->activateUserAccount, $activationToken);
+    }
+
+    public function getAvailabilityPage(): string
+    {
+        return $this->availabilityUrl;
     }
 }
