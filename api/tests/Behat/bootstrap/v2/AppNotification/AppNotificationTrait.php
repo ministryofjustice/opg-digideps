@@ -92,4 +92,42 @@ trait AppNotificationTrait
     {
         $this->assertOnErrorMessage($this->validationMsg);
     }
+
+    private function getHostedEnvironment(): string
+    {
+        $this->iVisitTheFrontendAvailabilityPage();
+        $hostedEnvironmentListItem = $this->getSession()->getPage()->find('xpath', '//li[contains(.,"Hosted environment")]');
+        $haystack = $hostedEnvironmentListItem->getHtml();
+
+        return trim(substr(strrchr($haystack, ': '), 2));
+    }
+
+    /**
+     * @Then I should see a banner confirming where the app is hosted
+     */
+    public function iShouldSeeABannerConfirmingTheAppIAmUsing()
+    {
+        $hostedEnvironment = $this->getHostedEnvironment();
+        $this->iVisitAdminSearchUserPage();
+
+        $banner = sprintf('You are now logged into the %s environment', $hostedEnvironment);
+        $this->assertPageContainsText($banner);
+    }
+
+    /**
+     * @Then I should not see a banner confirming where the app is hosted
+     */
+    public function iShouldNotSeeABannerConfirmingTheAppIAmUsing()
+    {
+        $hostedEnvironment = $this->getHostedEnvironment();
+
+        if (in_array($this->loggedInUserDetails->getUserRole(), $this->loggedInUserDetails::ADMIN_ROLES)) {
+            $this->iVisitAdminSearchUserPage();
+        } else {
+            $this->iVisitLayStartPage();
+        }
+        $banner = sprintf('You are now logged into the %s environment', $hostedEnvironment);
+        $this->assertPageNotContainsText($banner);
+        $this->assertElementNotOnPage('govuk-notification-banner__heading');
+    }
 }

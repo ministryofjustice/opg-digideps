@@ -10,6 +10,7 @@ services:
       - ./api/tests/Behat:/var/www/tests/Behat
       - ./api/src:/var/www/src
       - ./api/tests/Behat/snapshots:/tmp/html
+      - ./api/vendor:/var/www/vendor
     env_file:
       - ./api/api.env
       - ./api/tests/Behat/test.env

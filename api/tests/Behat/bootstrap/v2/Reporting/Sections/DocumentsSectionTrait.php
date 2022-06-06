@@ -4,7 +4,7 @@ declare(strict_types=1);
 
 namespace App\Tests\Behat\v2\Reporting\Sections;
 
-use BehatException;
+use App\Tests\Behat\BehatException;
 use Throwable;
 
 trait DocumentsSectionTrait
@@ -13,6 +13,8 @@ trait DocumentsSectionTrait
     private string $validJpegFilename = 'good.jpg';
     private string $validPngFilename = 'good.png';
     private string $validPdfFilename = 'good.pdf';
+    private string $validHeicFilename = 'good-heic.heic';
+    private string $validJfifFilename = 'good-jfif.jfif';
 
     // Invalid files
     private string $tooLargeFilename = 'too-big.jpg';
@@ -91,11 +93,28 @@ trait DocumentsSectionTrait
         $this->findFileNamesInDls($descriptionLists);
     }
 
-    private function findFileNamesInDls(array $descriptionLists)
+    /**
+     * @Then the documents summary page should contain the documents I uploaded with converted filenames
+     * @Then the documents uploads page should contain the documents I uploaded with converted filenames
+     */
+    public function theDocumentsSummaryPageShouldContainDocumentsIUploadedConvertedFilenames()
+    {
+        if (empty($this->uploadedDocumentFilenames)) {
+            throw new BehatException('$this->uploadedDocumentFilenames is empty. This suggests no documents were uploaded.');
+        }
+
+        $descriptionLists = $this->findAllCssElements('dl');
+
+        $this->findFileNamesInDls($descriptionLists, ['goodheic.jpeg', 'goodjfif.jpeg']);
+    }
+
+    private function findFileNamesInDls(array $descriptionLists, array $convertedFileNames = [])
     {
         $missingFilenames = [];
 
-        foreach ($this->uploadedDocumentFilenames as $uploadedDocumentFilename) {
+        $fileNamesToFind = empty($convertedFileNames) ? $this->uploadedDocumentFilenames : $convertedFileNames;
+
+        foreach ($fileNamesToFind as $uploadedDocumentFilename) {
             $foundFilename = false;
 
             foreach ($descriptionLists as $descriptionList) {
@@ -140,11 +159,19 @@ trait DocumentsSectionTrait
     }
 
     /**
-     * @When I upload multiple valid documents
+     * @When I upload multiple valid documents that do not require conversion
      */
-    public function iUploadMultipleValidDocuments()
+    public function iUploadMultipleValidDocumentsNoConvesion()
     {
         $this->uploadFiles([$this->validJpegFilename, $this->validPdfFilename, $this->validPngFilename]);
+    }
+
+    /**
+     * @When I upload multiple valid documents that require conversion
+     */
+    public function iUploadMultipleValidDocumentsRequireConversion()
+    {
+        $this->uploadFiles([$this->validHeicFilename, $this->validJfifFilename]);
     }
 
     /**

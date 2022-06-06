@@ -685,7 +685,7 @@ trait DeputyCostsSectionTrait
 
         $this->fillInField(
             'costs_interims[profDeputyInterimCosts][0][amount]',
-            null,
+            '',
             'CurrentPeriodInterimCosts0'
         );
 
