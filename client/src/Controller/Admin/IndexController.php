@@ -404,10 +404,13 @@ class IndexController extends AbstractController
 
                 return $this->redirect($this->generateUrl('pre_registration_upload', ['nOfChunks' => count($chunks)]));
             } catch (Throwable $e) {
+                $this->logger->debug($e);
                 $message = $e->getMessage();
+
                 if ($e instanceof RestClientException && isset($e->getData()['message'])) {
                     $message = $e->getData()['message'];
                 }
+
                 $form->get('file')->addError(new FormError($message));
             }
         }
