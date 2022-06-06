@@ -19,10 +19,10 @@ vendor/
 !ecs_helper/vendor/
 
 # Terraform
-**/.terraform.lock.hcl
 .terraform/
 **/terraform.output.json
 **/terraform.plan*
+**/shared/builds
 
 # Repo-specific excludes
 docker/log

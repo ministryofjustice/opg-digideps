@@ -10,9 +10,11 @@ trait PageUrlsTrait
     private string $accountsAddAnAccountUrl = '/%s/%s/bank-account/step1';
     private string $accountsSummaryUrl = '/%s/%s/bank-account/summary';
     private string $actionsSectionUrl = '/%s/%s/actions';
+    private string $activateUserAccount = '/user/activate/%s';
     private string $anyOtherInfoUrl = '/%s/%s/any-other-info';
     private string $assetsSectionUrl = '/%s/%s/assets';
     private string $assetsSummarySectionUrl = '/%s/%s/assets/summary';
+    private string $availabilityUrl = '/manage/availability';
     private string $clientLoginPageUrl = '/login';
     private string $clientBenefitCheckSummaryPageUrl = '/%s/%s/client-benefits-check/summary';
     private string $contactsAddUrl = '/report/%s/contacts/add';
@@ -400,5 +402,15 @@ trait PageUrlsTrait
     public function getAdminChecklistPage(string $reportId): string
     {
         return sprintf($this->adminChecklistPage, $reportId);
+    }
+
+    public function getActivateUserPage(string $activationToken): string
+    {
+        return sprintf($this->activateUserAccount, $activationToken);
+    }
+
+    public function getAvailabilityPage(): string
+    {
+        return $this->availabilityUrl;
     }
 }

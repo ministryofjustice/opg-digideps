@@ -294,4 +294,74 @@ class AuditEventsTest extends TestCase
 
         $this->assertEquals($expected, $actual);
     }
+
+    /**
+     * @test
+     */
+    public function adminManagerCreated()
+    {
+        $now = new DateTime();
+
+        /** @var ObjectProphecy|DateTimeProvider $dateTimeProvider */
+        $dateTimeProvider = self::prophesize(DateTimeProvider::class);
+        $dateTimeProvider->getDateTime()->shouldBeCalled()->willReturn($now);
+        $currentUser = UserHelpers::createSuperAdminUser();
+        $createdAdminManager = UserHelpers::createAdminManager();
+
+        $expected = [
+            'trigger' => 'ADMIN_MANAGER_MANUALLY_CREATED',
+            'logged_in_user_first_name' => $currentUser->getFirstname(),
+            'logged_in_user_last_name' => $currentUser->getLastname(),
+            'logged_in_user_email' => $currentUser->getEmail(),
+            'admin_user_first_name' => $createdAdminManager->getFirstname(),
+            'admin_user_last_name' => $createdAdminManager->getLastname(),
+            'admin_user_email' => $createdAdminManager->getEmail(),
+            'created_on' => $now->format(DateTime::ATOM),
+            'event' => 'ADMIN_MANAGER_CREATED',
+            'type' => 'audit',
+        ];
+
+        $actual = (new AuditEvents($dateTimeProvider->reveal()))->adminManagerCreated(
+            'ADMIN_MANAGER_MANUALLY_CREATED',
+            $currentUser,
+            $createdAdminManager
+        );
+
+        $this->assertEquals($expected, $actual);
+    }
+
+    /**
+     * @test
+     */
+    public function adminManagerDeleted()
+    {
+        $now = new DateTime();
+
+        /** @var ObjectProphecy|DateTimeProvider $dateTimeProvider */
+        $dateTimeProvider = self::prophesize(DateTimeProvider::class);
+        $dateTimeProvider->getDateTime()->shouldBeCalled()->willReturn($now);
+        $currentUser = UserHelpers::createSuperAdminUser();
+        $adminManagerToDelete = UserHelpers::createAdminManager();
+
+        $expected = [
+            'trigger' => 'ADMIN_MANAGER_MANUALLY_DELETED',
+            'logged_in_user_first_name' => $currentUser->getFirstname(),
+            'logged_in_user_last_name' => $currentUser->getLastname(),
+            'logged_in_user_email' => $currentUser->getEmail(),
+            'admin_user_first_name' => $adminManagerToDelete->getFirstname(),
+            'admin_user_last_name' => $adminManagerToDelete->getLastname(),
+            'admin_user_email' => $adminManagerToDelete->getEmail(),
+            'created_on' => $now->format(DateTime::ATOM),
+            'event' => 'ADMIN_MANAGER_DELETED',
+            'type' => 'audit',
+        ];
+
+        $actual = (new AuditEvents($dateTimeProvider->reveal()))->adminManagerDeleted(
+            'ADMIN_MANAGER_MANUALLY_DELETED',
+            $currentUser,
+            $adminManagerToDelete
+        );
+
+        $this->assertEquals($expected, $actual);
+    }
 }

@@ -16,28 +16,15 @@ use Symfony\Component\HttpFoundation\File\UploadedFile;
 
 class S3FileUploader
 {
-    private StorageInterface $storage;
-    private RestClient $restClient;
-    private array $options;
-    private FileNameFixer $fileNameFixer;
-
-    private DateTimeProvider $dateTimeProvider;
-    private MimeTypeAndExtensionChecker $mimeTypeAndExtensionChecker;
-
     public function __construct(
-        StorageInterface $s3Storage,
-        RestClient $restClient,
-        FileNameFixer $fileNameFixer,
-        DateTimeProvider $dateTimeProvider,
-        MimeTypeAndExtensionChecker $mimeTypeAndExtensionChecker,
-        array $options = [],
+        private StorageInterface $s3Storage,
+        private RestClient $restClient,
+        private FileNameFixer $fileNameFixer,
+        private DateTimeProvider $dateTimeProvider,
+        private MimeTypeAndExtensionChecker $mimeTypeAndExtensionChecker,
+        private ImageConvertor $imageConvertor,
+        private array $options = []
     ) {
-        $this->storage = $s3Storage;
-        $this->restClient = $restClient;
-        $this->fileNameFixer = $fileNameFixer;
-        $this->options = $options;
-        $this->dateTimeProvider = $dateTimeProvider;
-        $this->mimeTypeAndExtensionChecker = $mimeTypeAndExtensionChecker;
     }
 
     /**
@@ -46,27 +33,27 @@ class S3FileUploader
     public function uploadSupportingFilesAndPersistDocuments(array $uploadedFiles, Report $report): void
     {
         foreach ($uploadedFiles as $uploadedFile) {
-            [$body, $fileName] = $this->getFileBodyAndFileName($uploadedFile);
-            $extensionAndMimeTypeMatch = $this->mimeTypeAndExtensionChecker->check($uploadedFile, $body);
+            $fileBody = file_get_contents($uploadedFile->getRealPath());
+            $extensionAndMimeTypeMatch = $this->mimeTypeAndExtensionChecker->check($uploadedFile, $fileBody);
 
             if (!$extensionAndMimeTypeMatch) {
                 throw new MimeTypeAndFileExtensionDoNotMatchException('Your file type and file extension do not match');
             }
 
-            $this->uploadFileAndPersistDocument($report, $body, $fileName, false);
+            $sanitisedFileName = $this->getSanitisedFileName($uploadedFile);
+
+            [$newBody, $newFilename] = $this->imageConvertor->convert($sanitisedFileName, $uploadedFile->getRealPath());
+
+            $this->uploadFileAndPersistDocument($report, $newBody, $newFilename, false);
         }
     }
 
-    private function getFileBodyAndFileName(UploadedFile $file): array
+    private function getSanitisedFileName(UploadedFile $file): string
     {
-        /** @var string $body */
-        $body = file_get_contents($file->getPathname());
+        $sanitisedFileNameAndPath = $this->fileNameFixer->addMissingFileExtension($file);
+        $sanitisedFileNameAndPath = $this->fileNameFixer->removeWhiteSpaceBeforeFileExtension($sanitisedFileNameAndPath);
 
-        $fileName = $this->fileNameFixer->addMissingFileExtension($file, $body);
-        $fileName = $this->fileNameFixer->removeWhiteSpaceBeforeFileExtension($fileName);
-        $fileName = $this->fileNameFixer->removeUnusualCharacters($fileName);
-
-        return [$body, $fileName];
+        return $this->fileNameFixer->removeUnusualCharacters($sanitisedFileNameAndPath);
     }
 
     /**
@@ -84,7 +71,7 @@ class S3FileUploader
             $this->dateTimeProvider->getDateTime()->format('v')
         );
 
-        $this->storage->store($storageReference, $body);
+        $this->s3Storage->store($storageReference, $body);
 
         $document = (new Document())
             ->setStorageReference($storageReference)
@@ -116,6 +103,6 @@ class S3FileUploader
             throw new Exception('Document could not be removed. No Reference.');
         }
 
-        $this->storage->removeFromS3($storageReference);
+        $this->s3Storage->removeFromS3($storageReference);
     }
 }

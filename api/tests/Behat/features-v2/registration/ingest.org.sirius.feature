@@ -51,12 +51,12 @@ Feature: Org CSV data ingestion - sirius source data
         And the named deputy associated with the client should remain the same
         And the report associated with the client should remain the same
 
-    @super-admin
-    Scenario: Uploading a CSV that contains a new named deputy in a new organisation for an existing client - same case number, new made date
-        Given a super admin user accesses the admin app
-        When I visit the admin upload org users page
-        And I upload an org CSV that has a an existing case number and new made date for an existing client
-        Then a new report should be generated for the client
+#    @super-admin
+#    Scenario: Uploading a CSV that contains a new named deputy in a new organisation for an existing client - same case number, new made date
+#        Given a super admin user accesses the admin app
+#        When I visit the admin upload org users page
+#        And I upload an org CSV that has a an existing case number and new made date for an existing client
+#        Then a new report should be generated for the client
 
     @super-admin
     Scenario: Uploading a CSV where the same named deputy appears with two addresses
@@ -98,7 +98,7 @@ Feature: Org CSV data ingestion - sirius source data
         Then the named deputy 'first' name should be 'Conglom-O Corporation'
         And the named deputy 'last' name should be 'empty'
 
-    @super-admin @acs
+    @super-admin
     Scenario: Uploading a CSV that contains deputy name updates for existing deputies
         Given a super admin user accesses the admin app
         When I visit the admin upload org users page

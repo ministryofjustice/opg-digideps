@@ -128,7 +128,7 @@ services:
     restart: always
 
   postgres:
-    image: postgres:9.6
+    image: postgres:10.21
     ports:
       - 5432:5432
     env_file:

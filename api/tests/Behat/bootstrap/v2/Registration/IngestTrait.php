@@ -21,7 +21,7 @@ trait IngestTrait
     private array $reports = ['expected' => 0, 'found' => 0];
     private array $preRegistration = ['expected' => 0, 'found' => 0];
     private array $expectedMissingDTOProperties = [];
-    private array $entityUids = [
+    public array $entityUids = [
         'client_case_numbers' => [],
         'named_deputy_uids' => [],
         'org_email_identifiers' => [],
