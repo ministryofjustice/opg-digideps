@@ -51,3 +51,23 @@ Feature: Synchronising Documents with Sirius
         And I visit the admin submissions page
         And I search for submissions using the court order number of the client I am interacting with and check the 'Synchronised' column
         And the document "testimage.png" should be synced
+
+#    Need to convert supported documents at submission time rather than sync time due to OOM errors. Keeping
+#    test steps here to be used on a future ticket.
+
+#    @super-admin @lay-pfa-high-completed
+#    Scenario: Documents in formats that can be converted are converted before being synced with Sirius
+#        Given a Lay Deputy has a completed report
+#        And the user uploaded a document with a file type that can be converted before the document conversion feature was released
+#        When a super admin user accesses the admin app
+#        And I run the document-sync command
+#        And I visit the admin submissions page
+#        And I search for submissions using the court order number of the client I am interacting with and check the 'Pending' column
+#        Then I should see the case number of the user I'm interacting with
+#        And the report PDF document should be synced
+##       Supporting documents can only sync after report PDF has synced
+#        And the document "good-heic.heic" should be queued
+#        And I run the document-sync command
+#        And I visit the admin submissions page
+#        And I search for submissions using the court order number of the client I am interacting with and check the 'Synchronised' column
+#        And the document "goodheic.jpeg" should be synced

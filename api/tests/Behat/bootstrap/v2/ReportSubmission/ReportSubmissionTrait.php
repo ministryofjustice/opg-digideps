@@ -5,6 +5,7 @@ declare(strict_types=1);
 namespace App\Tests\Behat\v2\ReportSubmission;
 
 use App\Entity\Report\Document;
+use App\Entity\Report\Report;
 use App\Entity\Report\ReportSubmission;
 use App\Service\ParameterStoreService;
 use App\Tests\Behat\BehatException;
@@ -387,5 +388,27 @@ trait ReportSubmissionTrait
             'Money transfers',
             $this->getSession()->getPage()->getContent(),
             'Comparing expected section against sections visible');
+    }
+
+    /**
+     * @Given /^the user uploaded a document with a file type that can be converted before the document conversion feature was released$/
+     */
+    public function theUserUploadedADocumentWithAFileTypeThatCanBeConvertedBeforeTheDocumentConversionFeatureWasReleased()
+    {
+        $this->iViewDocumentsSection();
+        $this->iHaveDocumentsToUpload();
+        $this->iAttachedASupportingDocumentToTheCompletedReport('good-heic.heic');
+
+        // Have to hack in uploading a heic doc as the app now automatically converts type on adding documents
+        $report = $this->em->getRepository(Report::class)->find($this->loggedInUserDetails->getCurrentReportId());
+        $this->em->refresh($report);
+        $document = $report->getDeputyDocuments()->first();
+        var_dump(count($report->getDocuments()));
+        $document->setFileName('good-heic.heic');
+
+        $this->em->persist($document);
+        $this->em->flush();
+
+        $this->iSubmitTheReport();
     }
 }

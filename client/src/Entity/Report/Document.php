@@ -20,8 +20,8 @@ class Document implements DocumentInterface, SynchronisableInterface
     use CreationAudit;
     use HasReportTrait;
     use SynchronisableTrait;
-    const FILE_NAME_MAX_LENGTH = 255;
-    const MAX_UPLOAD_PER_REPORT = 100;
+    public const FILE_NAME_MAX_LENGTH = 255;
+    public const MAX_UPLOAD_PER_REPORT = 100;
 
     public function isValidForReport(ExecutionContextInterface $context): void
     {
@@ -77,7 +77,7 @@ class Document implements DocumentInterface, SynchronisableInterface
      * @Assert\File(
      *     maxSize = "15M",
      *     maxSizeMessage = "document.file.errors.maxSizeMessage",
-     *     mimeTypes = {"application/pdf", "application/x-pdf", "image/png", "image/jpeg"},
+     *     mimeTypes = {"application/pdf", "application/x-pdf", "image/png", "image/jpeg", "image/heif"},
      *     mimeTypesMessage = "document.file.errors.mimeTypesMessage",
      *     groups={"document"}
      * )

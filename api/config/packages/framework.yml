@@ -8,15 +8,15 @@ framework:
     secret: "%secret%"
     router:
         strict_requirements: ~
-    form:            ~
+    form: ~
     csrf_protection: ~
-    validation:      { enable_annotations: true }
+    validation: { enable_annotations: true }
     templating:
-        engines: ['php']
-    default_locale:  "%locale%"
-    session:         ~
-    fragments:       ~
+        engines: ["php"]
+    default_locale: "%locale%"
+    session: ~
+    fragments: ~
     http_method_override: true
     serializer:
         enable_annotations: true
-        name_converter: 'serializer.name_converter.camel_case_to_snake_case'
+        name_converter: "serializer.name_converter.camel_case_to_snake_case"
