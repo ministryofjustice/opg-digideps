@@ -7,7 +7,7 @@ resource "aws_sns_topic" "alerts" {
 }
 
 module "notify_slack" {
-  source = "github.com/terraform-aws-modules/terraform-aws-notify-slack.git?ref=v2.4.0"
+  source = "github.com/terraform-aws-modules/terraform-aws-notify-slack.git?ref=v5.1.0"
 
   sns_topic_name   = aws_sns_topic.alerts.name
   create_sns_topic = false
@@ -35,7 +35,7 @@ resource "aws_sns_topic" "availability-alert" {
 }
 
 module "notify_slack_us-east-1" {
-  source = "github.com/terraform-aws-modules/terraform-aws-notify-slack.git?ref=v2.4.0"
+  source = "github.com/terraform-aws-modules/terraform-aws-notify-slack.git?ref=v5.1.0"
 
   providers = {
     aws = aws.us-east-1
