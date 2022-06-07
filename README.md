@@ -18,8 +18,8 @@ experience.
 
 #### M1 macOS Monterey ≥ 12.2 | Intel macOS Monterey ≥ 12.3 Docker settings
 
-`Docker preferences -> Experimental Features -> tick 'Use the new Virtualization framework'`
-`Docker preferences -> Experimental Features -> tick 'Enable VirtioFS accelerated directory sharing'`
+* `Docker preferences -> Experimental Features -> tick 'Use the new Virtualization framework'`
+* `Docker preferences -> Experimental Features -> tick 'Enable VirtioFS accelerated directory sharing'`
 
 Once both boxes are checked click `Apply & Restart` then run the `Make` command `make up-app-build`
 
