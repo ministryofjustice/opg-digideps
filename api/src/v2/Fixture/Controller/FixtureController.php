@@ -13,6 +13,7 @@ use App\FixtureFactory\ClientFactory;
 use App\FixtureFactory\PreRegistrationFactory;
 use App\FixtureFactory\ReportFactory;
 use App\FixtureFactory\UserFactory;
+use App\Repository\NamedDeputyRepository;
 use App\Repository\NdrRepository;
 use App\Repository\OrganisationRepository;
 use App\Repository\ReportRepository;
@@ -51,13 +52,14 @@ class FixtureController extends AbstractController
         private UserRepository $userRepository,
         private NdrRepository $ndrRepository,
         private PreRegistrationFactory $preRegistrationFactory,
+        private NamedDeputyRepository $namedDeputyRepository,
         private string $symfonyEnvironment
     ) {
     }
 
     /**
      * @Route("/court-order", methods={"POST"})
-     * @Security("is_granted('ROLE_ADMIN')")
+     * @Security("is_granted('ROLE_SUPER_ADMIN')")
      *
      * @return JsonResponse
      *
@@ -204,7 +206,7 @@ class FixtureController extends AbstractController
         $uniqueOrgNameSegment = (preg_match('/\d+/', $fromRequest['deputyEmail'], $matches)) ? $matches[0] : rand(0, 9999);
         $orgName = sprintf('Org %s Ltd', $uniqueOrgNameSegment);
 
-        if (null === ($organisation = $this->orgRepository->findOneBy(['name' => $orgName]))) {
+        if (null === ($organisation = $this->organisationRepository->findOneBy(['name' => $orgName]))) {
             $organisation = $this->organisationFactory->createFromEmailIdentifier($orgName, $fromRequest['deputyEmail'], true);
         }
 
@@ -385,9 +387,7 @@ class FixtureController extends AbstractController
 
         $fromRequest = json_decode($request->getContent(), true);
 
-        $user = $this->em
-            ->getRepository(User::class)
-            ->findOneBy(['email' => $fromRequest['email']]);
+        $user = $this->userRepository->findOneBy(['email' => $fromRequest['email']]);
 
         $this->em->remove($user);
         $this->em->flush();
@@ -419,7 +419,7 @@ class FixtureController extends AbstractController
         ]);
 
         /** @var User $deputy */
-        $deputy = $this->em->getRepository(User::class)->findOneBy(['email' => $fromRequest['deputyEmail']]);
+        $deputy = $this->userRepository->findOneBy(['email' => $fromRequest['deputyEmail']]);
 
         if (null === $deputy) {
             return $this->buildNotFoundResponse(sprintf("Could not find user with email address '%s'", $fromRequest['deputyEmail']));
@@ -457,7 +457,7 @@ class FixtureController extends AbstractController
         ]);
 
         /** @var Organisation $org */
-        $org = $this->em->getRepository(Organisation::class)->findOneBy(['emailIdentifier' => $fromRequest['orgEmailIdentifier']]);
+        $org = $this->organisationRepository->findOneBy(['emailIdentifier' => $fromRequest['orgEmailIdentifier']]);
 
         if (is_null($org)) {
             return $this->buildNotFoundResponse(sprintf("Could not find org with email identifier '%s'", $fromRequest['orgEmailIdentifier']));
@@ -481,10 +481,10 @@ class FixtureController extends AbstractController
 
     private function createNamedDeputyByExistingUser(string $userEmail)
     {
-        $namedDeputy = $this->em->getRepository(NamedDeputy::class)->findOneBy(['email1' => $userEmail]);
+        $namedDeputy = $this->namedDeputyRepository->findOneBy(['email1' => $userEmail]);
 
         if (is_null($namedDeputy)) {
-            $user = $this->em->getRepository(User::class)->findOneBy(['email' => $userEmail]);
+            $user = $this->userRepository->findOneBy(['email' => $userEmail]);
 
             if ($user) {
                 $namedDeputy = (new NamedDeputy())
@@ -554,7 +554,7 @@ class FixtureController extends AbstractController
         }
 
         /** @var User $user */
-        $user = $this->em->getRepository(User::class)->findOneBy(['email' => $userEmail]);
+        $user = $this->userRepository->findOneBy(['email' => $userEmail]);
 
         if (is_null($user)) {
             $this->buildErrorResponse("User $userEmail not found");
@@ -590,7 +590,7 @@ class FixtureController extends AbstractController
             }
 
             /** @var Organisation $org */
-            $org = $this->em->getRepository(Organisation::class)->findOneBy(['name' => $orgName]);
+            $org = $this->organisationRepository->findOneBy(['name' => $orgName]);
 
             if (is_null($org)) {
                 $this->buildErrorResponse("Org '$orgName' not found");

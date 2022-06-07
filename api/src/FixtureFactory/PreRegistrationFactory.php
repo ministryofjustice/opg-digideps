@@ -38,7 +38,7 @@ class PreRegistrationFactory
             ->setOrderDate(new DateTime())
             ->setTypeOfReport($data['reportType'] ?? 'OPG102')
             ->setOrderType($data['orderType'] ?? 'PFA')
-            ->setIsCoDeputy(false);
+            ->setIsCoDeputy($data['createCoDeputy'] ?? false);
 
         return $this->preRegistrationFactory->createFromDto($dto);
     }
@@ -52,10 +52,17 @@ class PreRegistrationFactory
             ->setClientSurname('Smith')
             ->setOrderType($data['orderType'])
             ->setDeputyUid($deputyUid)
+            ->setDeputyAddress1($data['deputyAddress1'] ?? '7 Colonnade Square')
+            ->setDeputyAddress2($data['deputyAddress2'] ?? 'Middletown')
+            ->setDeputyAddress3($data['deputyAddress3'] ?? null)
+            ->setDeputyAddress4($data['deputyAddress4'] ?? null)
+            ->setDeputyAddress5($data['deputyAddress5'] ?? null)
             ->setDeputyPostcode('SW1')
             ->setDeputySurname('Bloggs')
             ->setIsNdrEnabled(false)
             ->setOrderDate(new DateTime())
+            ->setIsCoDeputy(true)
+            ->setOrderType($data['orderType'] ?? 'PFA')
             ->setTypeOfReport($data['reportType']);
 
         return $this->preRegistrationFactory->createFromDto($dto);
