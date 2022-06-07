@@ -7,9 +7,12 @@ to submit their reports, and the private area for case managers to review submit
 
 ## Requirements
 
-You must have Docker installed. Once installed click on the cog icon in Docker, select `Experimental Features` and tick
-both boxes. To complete the setup, locate the Digideps root directory in your terminal and run `make up-app-build` or
-the equivalent docker command `docker-compose up -d --build --remove-orphans` which can found in the `Makefile`.
+You must have Docker installed.
+
+Once installed, if you are on a newer version of macOS, click on the cog icon in Docker, select `Experimental Features`
+and tick both boxes. To complete the setup, locate the Digideps root directory in your terminal and
+run `make up-app-build` or the equivalent docker command `docker-compose up -d --build --remove-orphans` which can found
+in the `Makefile`.
 
 If developing the app then ensure you have [pre-commit](https://pre-commit.com/) installed to take advantage of the
 pre-commit [hooks](.pre-commit-config.yaml) we've added to the project to make PRs a more consistent and enjoyable
