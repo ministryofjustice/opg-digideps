@@ -406,7 +406,7 @@ class IndexController extends AbstractController
 
                     foreach ($ret['errors'] as $err) {
                         $this->logger->warning(
-                            sprintf('Error while uploading csv: %s', $err->getMessage())
+                            sprintf('Error while uploading csv: %s', $err)
                         );
 
                         $this->addFlash('error', $err);
