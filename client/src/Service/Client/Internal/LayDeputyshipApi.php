@@ -14,8 +14,14 @@ class LayDeputyshipApi
     {
     }
 
-    public function uploadLayDeputyShip(mixed $compressedData)
+    public function uploadLayDeputyShip(mixed $compressedData, string $chunkId)
     {
-        return $this->restClient->setTimeout(600)->post(self::UPLOAD_LAY_DEPUTYSHIP_ENDPOINT, $compressedData);
+        return $this->restClient->setTimeout(600)->post(
+            self::UPLOAD_LAY_DEPUTYSHIP_ENDPOINT,
+            $compressedData,
+            [],
+            'array',
+            ['headers' => ['chunkId' => $chunkId]]
+        );
     }
 }

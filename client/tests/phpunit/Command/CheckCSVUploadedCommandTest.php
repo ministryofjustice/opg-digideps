@@ -30,12 +30,12 @@ class CheckCSVUploadedCommandTest extends KernelTestCase
 {
     use ProphecyTrait;
 
-    private ObjectProphecy | BankHolidaysAPIClient $bankHolidayAPI;
-    private ObjectProphecy | DateTimeProvider $dateTimeProvider;
-    private ObjectProphecy | AwsAuditLogHandler $awsAuditLogHandler;
-    private ObjectProphecy | SecretManagerService $secretManagerService;
-    private ObjectProphecy | ClientFactory $slackClientFactory;
-    private ObjectProphecy | LoggerInterface $logger;
+    private ObjectProphecy|BankHolidaysAPIClient $bankHolidayAPI;
+    private ObjectProphecy|DateTimeProvider $dateTimeProvider;
+    private ObjectProphecy|AwsAuditLogHandler $awsAuditLogHandler;
+    private ObjectProphecy|SecretManagerService $secretManagerService;
+    private ObjectProphecy|ClientFactory $slackClientFactory;
+    private ObjectProphecy|LoggerInterface $logger;
 
     private CommandTester $commandTester;
 
@@ -46,8 +46,7 @@ class CheckCSVUploadedCommandTest extends KernelTestCase
 
     private array $supportedCSVs = [
         CheckCSVUploadedCommand::LAY_CSV,
-        CheckCSVUploadedCommand::PROF_CSV,
-        CheckCSVUploadedCommand::PA_CSV,
+        CheckCSVUploadedCommand::ORG_CSV,
     ];
 
     public function setUp(): void
@@ -90,8 +89,7 @@ class CheckCSVUploadedCommandTest extends KernelTestCase
         $this->todayIsABankHoliday(false);
         $this->aCsvUploadedEventExists(true, [
             CheckCSVUploadedCommand::LAY_CSV,
-            CheckCSVUploadedCommand::PROF_CSV,
-            CheckCSVUploadedCommand::PA_CSV,
+            CheckCSVUploadedCommand::ORG_CSV,
         ]);
 
         $this->secretManagerService->getSecret(Argument::any())->shouldNotBeCalled();
@@ -139,19 +137,13 @@ class CheckCSVUploadedCommandTest extends KernelTestCase
         $slackClient->chatPostMessage([
               'username' => 'opg-alerts',
               'channel' => 'opg-digideps-team',
-              'text' => ':cat_spin: The Lay CSV has not been uploaded within the past 24 hours',
+              'text' => ':cat_spin: The LAY CSV has not been uploaded within the past 24 hours',
             ])
             ->shouldBeCalled();
         $slackClient->chatPostMessage([
               'username' => 'opg-alerts',
               'channel' => 'opg-digideps-team',
-              'text' => ':cat_spin: The Prof CSV has not been uploaded within the past 24 hours',
-            ])
-            ->shouldBeCalled();
-        $slackClient->chatPostMessage([
-              'username' => 'opg-alerts',
-              'channel' => 'opg-digideps-team',
-              'text' => ':cat_spin: The PA CSV has not been uploaded within the past 24 hours',
+              'text' => ':cat_spin: The ORG CSV has not been uploaded within the past 24 hours',
             ])
             ->shouldBeCalled();
 
@@ -171,8 +163,7 @@ class CheckCSVUploadedCommandTest extends KernelTestCase
     {
         $this->todayIsABankHoliday(false);
         $this->aCsvUploadedEventExists(true, [
-            CheckCSVUploadedCommand::PROF_CSV,
-            CheckCSVUploadedCommand::PA_CSV,
+            CheckCSVUploadedCommand::ORG_CSV,
         ]);
 
         $this->secretManagerService->getSecret('opg-alerts-slack-token')
@@ -183,7 +174,7 @@ class CheckCSVUploadedCommandTest extends KernelTestCase
         $slackClient->chatPostMessage([
               'username' => 'opg-alerts',
               'channel' => 'opg-digideps-team',
-              'text' => ':cat_spin: The Lay CSV has not been uploaded within the past 24 hours',
+              'text' => ':cat_spin: The LAY CSV has not been uploaded within the past 24 hours',
             ])
             ->shouldBeCalled();
         $this->slackClientFactory->createClient($this->slackSecret)
@@ -211,19 +202,13 @@ class CheckCSVUploadedCommandTest extends KernelTestCase
         $slackClient->chatPostMessage([
             'username' => 'opg-alerts',
             'channel' => 'opg-digideps-team',
-            'text' => ':cat_spin: The Lay CSV has not been uploaded within the past 24 hours',
+            'text' => ':cat_spin: The LAY CSV has not been uploaded within the past 24 hours',
         ])
             ->shouldBeCalled();
         $slackClient->chatPostMessage([
             'username' => 'opg-alerts',
             'channel' => 'opg-digideps-team',
-            'text' => ':cat_spin: The Prof CSV has not been uploaded within the past 24 hours',
-        ])
-            ->shouldBeCalled();
-        $slackClient->chatPostMessage([
-            'username' => 'opg-alerts',
-            'channel' => 'opg-digideps-team',
-            'text' => ':cat_spin: The PA CSV has not been uploaded within the past 24 hours',
+            'text' => ':cat_spin: The ORG CSV has not been uploaded within the past 24 hours',
         ])
             ->shouldBeCalled();
 
@@ -293,6 +278,9 @@ class CheckCSVUploadedCommandTest extends KernelTestCase
         $this->slackClientFactory->createClient($this->slackSecret)
             ->shouldBeCalled()
             ->willReturn($slackClient->reveal());
+
+        $this->logger->log('notice', sprintf('Posting CSV upload check to slack'))
+            ->shouldBeCalled();
 
         $this->logger->log('error', sprintf('Failed to post to Slack during CSV upload check: Slack returned error code "500"'))
             ->shouldBeCalled();
