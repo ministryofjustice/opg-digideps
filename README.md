@@ -7,16 +7,19 @@ to submit their reports, and the private area for case managers to review submit
 
 ## Requirements
 
-You must have Docker installed.
-
-Once installed, if you are on a newer version of macOS, click on the cog icon in Docker, select `Experimental Features`
-and tick both boxes. To complete the setup, locate the Digideps root directory in your terminal and
-run `make up-app-build` or the equivalent docker command `docker-compose up -d --build --remove-orphans` which can found
-in the `Makefile`.
+You must have Docker installed. 
 
 If developing the app then ensure you have [pre-commit](https://pre-commit.com/) installed to take advantage of the
 pre-commit [hooks](.pre-commit-config.yaml) we've added to the project to make PRs a more consistent and enjoyable
 experience.
+
+> **N.B.** If you have an M1 macOS running Monterey 12.2 or higher, or you have an Intel based macOS running Monterey 12.3 or higher then there are some Docker setting you can enable which improves I/O performance for operations on volumes.
+
+#### M1 macOS Monterey ≥ 12.2 | Intel macOS Monterey ≥ 12.3 Docker settings
+`Docker preferences -> Experimental Features -> tick 'Use the new Virtualization framework'`  
+`Docker preferences -> Experimental Features -> tick 'Enable VirtioFS accelerated directory sharing'`
+
+Once both boxes are checked click `Apply & Restart` then run the `Make` command `make up-app-build`
 
 ## Installation
 
