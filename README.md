@@ -8,9 +8,7 @@ This app is the [Complete the deputy report][service] service. It provides an on
 
 You must have Docker installed.
 
-If developing the app then ensure you have [pre-commit](https://pre-commit.com/) installed to take advantage of the
-pre-commit [hooks](.pre-commit-config.yaml) we've added to the project to make PRs a more consistent and enjoyable
-experience.
+If developing the app then ensure you have [pre-commit](https://pre-commit.com/) installed to take advantage of the pre-commit [hooks](.pre-commit-config.yaml) we've added to the project to make PRs a more consistent and enjoyable experience.
 
 > **N.B.** If you have an M1 macOS running Monterey 12.2 or higher, or you have an Intel based macOS running Monterey 12.3 or higher then there are some Docker setting you can enable which improves I/O performance for operations on volumes.
 
