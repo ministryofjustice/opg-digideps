@@ -10,8 +10,7 @@ Since v3 performance with Xdebug enabled is only slightly slower than without so
 
 ## PHPStorm PHPUnit XDebug setup
 
-To enable step through xdebug in PHPStorm/IntelliJ you'll need to ensure the setup for PHP and PHPUnit are pointing to
-the relevant Docker PHP install.
+To enable step through xdebug in PHPStorm/IntelliJ you'll need to ensure the setup for PHP and PHPUnit are pointing to the relevant Docker PHP install.
 
 ## Create frontend and api servers
 
