@@ -44,8 +44,7 @@ Client/Admin with any api specific namings or file locations updated to match th
 * In PHP > Test Frameworks add a new configuration type and select `PHP Unit by Remote Interpreter` and select the CLI
   Interpreter that was just created for Docker API.
 * For PHP Unit Library > select `Use Composer Autoloader` and enter `/var/www/vendor/autoload.php` in `Path to script`.
-* Click the refresh symbol and confirm a version of PHP Unit is displayed here - if not then recheck the path mappings
-  set up above.
+* Click the refresh symbol and confirm a version of PHP Unit is displayed here - if not then recheck the path mappings set up above.
 * For `Default Configuration File` enter `/var/www/tests/phpunit/phpunit.xml` and `Default Bootstrap File`
   enter `/var/www/tests/phpunit/bootstrap.php`.
 
