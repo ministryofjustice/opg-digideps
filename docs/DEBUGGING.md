@@ -14,8 +14,7 @@ To enable step through xdebug in PHPStorm/IntelliJ you'll need to ensure the set
 
 ## Create frontend and api servers
 
-Go to `Preferences` and select `Servers` under the PHP dropdown. When setting up each server (frontend and api) you will
-need to add and click the following:
+Go to `Preferences` and select `Servers` under the PHP dropdown. When setting up each server (frontend and api) you will need to add and click the following:
 
 * Add a `name` for each server and a `host name` - api (for api) and digideps.local (for frontend)
 * The `Port` needs to be 443 for both servers Select tick box `Use path mappings` and find folder (client or API)
