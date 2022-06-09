@@ -47,8 +47,7 @@ Client/Admin with any api specific namings or file locations updated to match th
 * Click the refresh symbol and confirm a version of PHP Unit is displayed here - if not then recheck the path mappings set up above.
 * For `Default Configuration File` enter `/var/www/tests/phpunit/phpunit.xml` and `Default Bootstrap File` enter `/var/www/tests/phpunit/bootstrap.php`.
 
-* To set up the frontend container, you will need to enter the same file locations except for the `Default config file`
-  which needs to be `/var/www/tests/phpunit.xml`
+* To set up the frontend container, you will need to enter the same file locations except for the `Default config file` which needs to be `/var/www/tests/phpunit.xml`
 
 ### Edit Run/Debug configurations
 
