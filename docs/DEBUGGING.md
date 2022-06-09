@@ -6,8 +6,7 @@ To install Xdebug on the API, either manually pass `REQUIRE_XDEBUG_API=1` as an 
 
 You can confirm installation by running `php -v` in the container and seeing that it reports the Xdebug version.
 
-Since v3 performance with Xdebug enabled is only slightly slower than without so leaving Xdebug enabled shouldn't be a
-huge performance hit compared with previous versions.
+Since v3 performance with Xdebug enabled is only slightly slower than without so leaving Xdebug enabled shouldn't be a huge performance hit compared with previous versions.
 
 ## PHPStorm PHPUnit XDebug setup
 
