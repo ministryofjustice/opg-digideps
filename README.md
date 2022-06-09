@@ -45,8 +45,7 @@ $ make reset-fixtures
 
 ![Digideps traffic flow diagram](./docs/traffic_flow_diagram.png)
 
-This diagram can be updated in `traffic_flow_diagram.puml` and then rendered to PNG
-using `plantuml ./docs/traffic_flow_diagram.puml -o .`.
+This diagram can be updated in `traffic_flow_diagram.puml` and then rendered to PNG using `plantuml ./docs/traffic_flow_diagram.puml -o .`.
 
 ## Terraform installation
 
