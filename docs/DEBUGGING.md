@@ -55,7 +55,4 @@ Client/Admin with any api specific namings or file locations updated to match th
 * Add name (api or client) and select the tick box `Filter debug connection by IDE key` and enter `PHPSTORM` in the `IDE key` field.
 * Click the `Server` dropdown and select the server that corresponds to the service.
 
-This should be everything required to have debugging set up for test runs. To confirm, find a test and add a breakpoint
-in the test itself or a class that is exercised during the test then click the play symbol next to the test function and
-hit the debug icon. Once the container starts up you should drop into debug mode and have the ability to step through
-the code and execute commands against the current state of the app.
+This should be everything required to have debugging set up for test runs. To confirm, find a test and add a breakpoint in the test itself or a class that is exercised during the test then click the play symbol next to the test function and hit the debug icon. Once the container starts up you should drop into debug mode and have the ability to step through the code and execute commands against the current state of the app.
