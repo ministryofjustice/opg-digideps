@@ -26,8 +26,7 @@ The steps below are for setting this up for the API container. This will need to
 
 * Go to Preferences > PHP > Click PHP > `...` next to CLI Interpreter.
 
-* Add a new interpreter with `+` and select `From Docker, Vagrant, Vm, Remote...`. Choose `Docker Compose`,ensure the
-  root docker-compose.yml file is selected for Configuration file. Give this a sensible name that includes `api`.
+* Add a new interpreter with `+` and select `From Docker, Vagrant, Vm, Remote...`. Choose `Docker Compose`,ensure the root docker-compose.yml file is selected for Configuration file. Give this a sensible name that includes `api`.
 * Add name and select service (frontend or api)
 * Click on 'NEW' button next to Servers, make sure 'Docker for Mac' is selected and click 'ok'. Server should change
   to 'Docker', click apply Then click refresh icon and apply
