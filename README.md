@@ -23,8 +23,7 @@ Once both boxes are checked click `Apply & Restart` then run the `Make` command 
 
 - Add `127.0.0.1 digideps.local admin.digideps.local api.digideps.local www.digideps.local` to `/etc/hosts`
 - Navigate to the root directory of this repository and run `make up-app`
-- Check `https://digideps.local/` (Deputy area) and `https://admin.digideps.local/` (Admin area). Your browser will warn
-  you about a self-signed certificate.
+- Check `https://digideps.local/` (Deputy area) and `https://admin.digideps.local/` (Admin area). Your browser will warn you about a self-signed certificate.
 - Run `./generate_certs.sh` to populate your certs directory
 
 ### Reset the database
