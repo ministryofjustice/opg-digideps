@@ -22,8 +22,7 @@ Go to `Preferences` and select `Servers` under the PHP dropdown. When setting up
 
 ### Create a Docker PHP CLI Interpreter
 
-The steps below are for setting this up for the API container. This will need to be followed again for setting up
-Client/Admin with any api specific namings or file locations updated to match the client directory.
+The steps below are for setting this up for the API container. This will need to be followed again for setting up Client/Admin with any api specific namings or file locations updated to match the client directory.
 
 * Go to Preferences > PHP > Click PHP > `...` next to CLI Interpreter.
 
