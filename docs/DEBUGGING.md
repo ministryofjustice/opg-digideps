@@ -1,8 +1,6 @@
 ## Xdebug
 
-To use Xdebug in the `frontend` and/or `admin` app, it must be installed on the client image. To install, you will need
-to either manually pass `REQUIRE_XDEBUG_FRONTEND=1` as an env var when bringing up the app or run the make
-command `up-app-xdebug-frontend`
+To use Xdebug in the `frontend` and/or `admin` app, it must be installed on the client image. To install, you will need to either manually pass `REQUIRE_XDEBUG_FRONTEND=1` as an env var when bringing up the app or run the make command `up-app-xdebug-frontend`
 
 To install Xdebug on the API, either manually pass `REQUIRE_XDEBUG_API=1` as an env var when bringing up the app or run
 the make command `up-app-xdebug-api`.
