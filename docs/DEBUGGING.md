@@ -28,8 +28,7 @@ The steps below are for setting this up for the API container. This will need to
 
 * Add a new interpreter with `+` and select `From Docker, Vagrant, Vm, Remote...`. Choose `Docker Compose`,ensure the root docker-compose.yml file is selected for Configuration file. Give this a sensible name that includes `api`.
 * Add name and select service (frontend or api)
-* Click on 'NEW' button next to Servers, make sure 'Docker for Mac' is selected and click 'ok'. Server should change
-  to 'Docker', click apply Then click refresh icon and apply
+* Click on 'NEW' button next to Servers, make sure 'Docker for Mac' is selected and click 'ok'. Server should change to 'Docker', click apply Then click refresh icon and apply
 
 * In PHP > Debug ensure the port in the Xdebug section is set to `9003`. Un-tick the three boxes under 'Xdebug'
 
