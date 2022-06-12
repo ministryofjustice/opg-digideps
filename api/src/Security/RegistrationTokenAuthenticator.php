@@ -5,21 +5,21 @@ declare(strict_types=1);
 namespace App\Security;
 
 use App\Entity\User;
-use App\Exception\UserWrongCredentialsException;
+use App\Exception\InvalidRegistrationTokenException;
 use App\Repository\UserRepository;
 use Symfony\Component\HttpFoundation\Request;
 use Symfony\Component\HttpFoundation\Response;
+use Symfony\Component\Security\Core\Authentication\Token\Storage\TokenStorageInterface;
 use Symfony\Component\Security\Core\Authentication\Token\TokenInterface;
 use Symfony\Component\Security\Core\Exception\AuthenticationException;
 use Symfony\Component\Security\Core\Exception\UserNotFoundException;
 use Symfony\Component\Security\Http\Authenticator\AbstractAuthenticator;
 use Symfony\Component\Security\Http\Authenticator\Passport\Badge\UserBadge;
-use Symfony\Component\Security\Http\Authenticator\Passport\Credentials\PasswordCredentials;
-use Symfony\Component\Security\Http\Authenticator\Passport\Passport;
+use Symfony\Component\Security\Http\Authenticator\Passport\SelfValidatingPassport;
 
-class LoginRequestAuthenticator extends AbstractAuthenticator
+class RegistrationTokenAuthenticator extends AbstractAuthenticator
 {
-    public function __construct(private UserRepository $userRepository)
+    public function __construct(private UserRepository $userRepository, private TokenStorageInterface $tokenStorage)
     {
     }
 
@@ -27,40 +27,37 @@ class LoginRequestAuthenticator extends AbstractAuthenticator
     {
         return '/auth/login' === $request->getPathInfo() &&
             $request->isMethod('POST') &&
-            $this->hasRequiredLoginDetails($request);
+            $this->requestHasToken($request);
     }
 
-    public function authenticate(Request $request): Passport
+    public function authenticate(Request $request)
     {
         $content = json_decode($request->getContent(), true);
-        $email = $content['email'] ?? null;
-        $password = $content['password'] ?? null;
+        $token = $content['token'];
+        $user = $this->userRepository->findOneBy(['registrationToken' => $token]);
 
-        return new Passport(
-            new UserBadge($email, function ($email) {
-                $user = $this->userRepository->findOneBy(['email' => $email]);
+        if (!$user instanceof User) {
+            throw new UserNotFoundException('User not found');
+        }
 
-                if ($user instanceof User) {
-                    return $user;
-                }
-
-                throw new UserNotFoundException('User not found');
-            }),
-            new PasswordCredentials($password)
+        return new SelfValidatingPassport(
+            new UserBadge($user->getEmail()),
         );
     }
 
     public function onAuthenticationSuccess(Request $request, TokenInterface $token, string $firewallName): ?Response
     {
+        $this->tokenStorage->setToken($token);
+
         return null;
     }
 
     public function onAuthenticationFailure(Request $request, AuthenticationException $exception): ?Response
     {
-        throw new UserWrongCredentialsException();
+        throw new InvalidRegistrationTokenException();
     }
 
-    private function hasRequiredLoginDetails(Request $request): bool
+    private function requestHasToken(Request $request): bool
     {
         if (empty($request->getContent())) {
             return false;
@@ -68,13 +65,6 @@ class LoginRequestAuthenticator extends AbstractAuthenticator
 
         $body = json_decode($request->getContent(), true);
 
-        $email = isset($body['email']) ?? false;
-        $password = isset($body['password']) ?? false;
-
-        if ($email && $password) {
-            return true;
-        }
-
-        return false;
+        return isset($body['token']);
     }
 }

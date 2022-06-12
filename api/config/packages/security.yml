@@ -90,8 +90,9 @@ security:
             security: true
             custom_authenticators:
                 - App\Security\LoginRequestAuthenticator
+                - App\Security\RegistrationTokenAuthenticator
                 - App\Security\HeaderTokenAuthenticator
-            provider: redis_user_provider
+            provider: entity_user_provider
             stateless: true
 
     # https://opgtransform.atlassian.net/wiki/spaces/DEPDS/pages/191299647/User+roles

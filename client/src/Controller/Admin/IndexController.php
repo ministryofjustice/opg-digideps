@@ -50,9 +50,8 @@ class IndexController extends AbstractController
         private ObservableEventDispatcher $eventDispatcher,
         private PreRegistrationApi $preRegistrationApi,
         private LayDeputyshipApi $layDeputyshipApi,
-        private TokenStorageInterface $tokenStorage
-        private UserVoter $userVoter,
-        private ParameterBagInterface $params
+        private TokenStorageInterface $tokenStorage,
+        private ParameterBagInterface $params,
     ) {
     }
 
@@ -352,7 +351,7 @@ class IndexController extends AbstractController
 
     /**
      * @Route("/pre-registration-upload", name="pre_registration_upload")
-     * @Security("is_granted('ROLE_ADMIN') or has_role('ROLE_AD')")
+     * @Security("is_granted('ROLE_ADMIN') or is_granted('ROLE_AD')")
      * @Template("@App/Admin/Index/uploadUsers.html.twig")
      */
     public function uploadUsersAction(Request $request, ClientInterface $redisClient)

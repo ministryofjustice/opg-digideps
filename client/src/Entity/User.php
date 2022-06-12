@@ -361,7 +361,7 @@ class User implements UserInterface, DeputyInterface, PasswordAuthenticatedUserI
      * @JMS\Type("string")
      * @JMS\Groups({"user_details_full", "user_details_basic", "admin_add_user"})
      **/
-    private ?string $authToken;
+    private ?string $authToken = null;
 
     public function __construct()
     {

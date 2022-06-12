@@ -19,9 +19,7 @@ use Symfony\Component\Routing\Annotation\Route;
 use Symfony\Component\Routing\Exception\ResourceNotFoundException;
 use Symfony\Component\Routing\RouterInterface;
 use Symfony\Component\Security\Core\Authentication\Token\Storage\TokenStorageInterface;
-use Symfony\Component\Security\Core\Authentication\Token\UsernamePasswordToken;
 use Symfony\Component\Security\Core\Exception\AccessDeniedException;
-use Symfony\Component\Security\Http\Event\InteractiveLoginEvent;
 use Symfony\Contracts\Translation\TranslatorInterface;
 
 class IndexController extends AbstractController
@@ -120,63 +118,6 @@ class IndexController extends AbstractController
                 'form' => $form->createView(),
                 'serviceNotificationContent' => $snSetting->isEnabled() ? $snSetting->getContent() : null,
         ] + $vars);
-    }
-
-    /**
-     * @Route("login-ad/{userToken}/{adId}/{adFirstname}/{adLastname}", name="ad_login")
-     *
-     * @param $userToken
-     * @param $adId
-     * @param $adFirstname
-     * @param $adLastname
-     *
-     * @return Response
-     *
-     * @throws \Throwable
-     */
-    public function adLoginAction(Request $request, $userToken, $adId, $adFirstname, $adLastname)
-    {
-        $this->logUserIn(['token' => $userToken], $request, [
-            '_adId' => $adId,
-            '_adFirstname' => $adFirstname,
-            '_adLastname' => $adLastname,
-            'loggedOutFrom' => null,
-        ]);
-
-//        if failing on feature branch, just render a page that does a JS redirect.
-//        behat should open the page later and test you don't get redirected
-
-        $url = $this->generateUrl('user_details');
-
-        return new Response("<a href='$url'>continue</a>");
-    }
-
-    /**
-     * @param array $credentials see RestClient::login()
-     *
-     * @throws \Throwable
-     */
-    private function logUserIn($credentials, Request $request, array $sessionVars)
-    {
-        $user = $this->deputyProvider->login($credentials);
-        // manually set session token into security context (manual login)
-        $token = new UsernamePasswordToken($user, null, 'secured_area', $user->getRoles());
-        $this->tokenStorage->setToken($token);
-
-        /** @var SessionInterface */
-        $session = $request->getSession();
-        $session->set('_security_secured_area', serialize($token));
-        foreach ($sessionVars as $k => $v) {
-            $session->set($k, $v);
-        }
-
-        // regenerate cookie, otherwise gc_* timeouts might logout out after successful login
-        $session->migrate();
-
-        $event = new InteractiveLoginEvent($request, $token);
-        $this->eventDispatcher->dispatch($event, 'security.interactive_login');
-
-        $session->set('lastLoggedIn', $user->getLastLoggedIn());
     }
 
     /**

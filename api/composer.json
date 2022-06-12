@@ -15,7 +15,7 @@
         }
     },
     "require": {
-        "php": "^8.0.12",
+        "php": "^8.0.19",
         "aws/aws-sdk-php": "^3.100.9",
         "doctrine/doctrine-bundle": "^2.2",
         "doctrine/doctrine-migrations-bundle": "^3.0",
@@ -92,15 +92,15 @@
         "symfony/yaml": "^5.4.0"
     },
     "require-dev": {
+        "acsauk/mink-extension": "^2.5.2",
         "behat/behat": "^3.8",
         "behat/mink": "^1.8",
-        "behat/mink-browserkit-driver": "^2.1.0",
-        "behat/mink-goutte-driver": "^2.0.0",
+        "behat/mink-goutte-driver": "^1.2",
         "behat/mink-selenium2-driver": "^1.4",
         "doctrine/doctrine-fixtures-bundle": "^3.4",
-        "acsauk/mink-extension": "^2.6.2",
-        "friends-of-behat/symfony-extension": "^2.2",
         "fakerphp/faker": "^1.16",
+        "friends-of-behat/mink-browserkit-driver": "^1.6",
+        "friends-of-behat/symfony-extension": "^2.2",
         "liuggio/fastest": "^1.9",
         "mockery/mockery": "^1.0.0",
         "phpstan/phpstan": "^1.0.0",

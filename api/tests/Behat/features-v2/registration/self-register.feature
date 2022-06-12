@@ -1,7 +1,7 @@
 @v2 @registration @self-register @v2_sequential
 Feature: Lay Deputy Self Registration
 
-    @super-admin
+    @super-admin @acs
     Scenario: A Lay user with an existing pre-registration record can self register
         Given a super admin user accesses the admin app
         When I navigate to the upload users page

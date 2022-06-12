@@ -27,7 +27,7 @@ class AjaxController extends AbstractController
 
     /**
      * @Route("/pre-registration-delete", name="pre_registration_delete_ajax")
-     * @Security("is_granted('ROLE_ADMIN') or has_role('ROLE_AD')")
+     * @Security("is_granted('ROLE_ADMIN') or is_granted('ROLE_AD')")
      *
      * @return JsonResponse
      */
@@ -46,7 +46,7 @@ class AjaxController extends AbstractController
 
     /**
      * @Route("/pre-registration-add", name="pre_registration_add_ajax")
-     * @Security("is_granted('ROLE_ADMIN') or has_role('ROLE_AD')")
+     * @Security("is_granted('ROLE_ADMIN') or is_granted('ROLE_AD')")
      *
      * @return JsonResponse
      */
