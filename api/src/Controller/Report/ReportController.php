@@ -101,8 +101,8 @@ class ReportController extends RestController
             'end_date' => 'notEmpty',
         ]);
 
-        // report type is taken from CASREC. In case that's not available (shouldn't happen unless casrec table is dropped), use a 102
-        $reportType = $this->reportService->getReportTypeBasedOnCasrec($client) ?: Report::LAY_PFA_HIGH_ASSETS_TYPE;
+        // report type is taken from Sirius. In case that's not available (shouldn't happen unless pre registration table is dropped), use a 102
+        $reportType = $this->reportService->getReportTypeBasedOnSirius($client) ?: Report::LAY_PFA_HIGH_ASSETS_TYPE;
         $report = new Report($client, $reportType, new DateTime($reportData['start_date']), new DateTime($reportData['end_date']));
         $report->setReportSeen(true);
 
@@ -778,7 +778,7 @@ class ReportController extends RestController
             'accounts_balance' => 'setAccountsBalance',
             'assets_declared_and_managed' => 'setAssetsDeclaredAndManaged',
             'bond_adequate' => 'setBondAdequate',
-            'bond_order_match_casrec' => 'setBondOrderMatchCasrec',
+            'bond_order_match_sirius' => 'setBondOrderMatchSirius',
             'button_clicked' => 'setButtonClicked',
             'care_arrangements' => 'setCareArrangements',
             'case_worker_satisified' => 'setCaseWorkerSatisified',
@@ -788,7 +788,7 @@ class ReportController extends RestController
             'decisions_satisfactory' => 'setDecisionsSatisfactory',
             'debts_managed' => 'setDebtsManaged',
             'deputy_charge_allowed_by_court' => 'setDeputyChargeAllowedByCourt',
-            'deputy_full_name_accurate_in_casrec' => 'setDeputyFullNameAccurateInCasrec',
+            'deputy_full_name_accurate_in_sirius' => 'setDeputyFullNameAccurateInSirius',
             'final_decision' => 'setFinalDecision',
             'future_significant_decisions' => 'setFutureSignificantDecisions',
             'has_deputy_overcharged_from_previous_estimates' => 'setHasDeputyOverchargedFromPreviousEstimates',

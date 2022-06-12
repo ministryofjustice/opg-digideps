@@ -115,4 +115,12 @@ class ClientTest extends TestCase
         $this->object->setCourtDate(null);
         $this->assertEquals(null, $this->object->getExpectedReportEndDate(2020));
     }
+
+    public function testSetCaseNumberEnforcesLowercase()
+    {
+        $sut = new Client();
+        $sut->setCaseNumber('ABC123dF');
+
+        self::assertEquals('abc123df', $sut->getCaseNumber());
+    }
 }

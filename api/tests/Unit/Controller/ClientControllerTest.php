@@ -2,7 +2,9 @@
 
 namespace App\Tests\Unit\Controller;
 
+use App\Entity\Client;
 use App\Entity\Ndr\Ndr;
+use DateTime;
 
 class ClientControllerTest extends AbstractTestController
 {
@@ -31,9 +33,11 @@ class ClientControllerTest extends AbstractTestController
         'allowed_court_order_types' => [],
         'address' => 'Address',
         'address2' => 'Address2',
+        'address3' => 'Address3',
+        'address4' => 'Address4',
+        'address5' => 'Address5',
         'postcode' => 'Postcode',
         'country' => 'Country',
-        'county' => 'County',
         'phone' => 'Phone',
         'court_date' => '2015-12-31',
     ];
@@ -43,8 +47,10 @@ class ClientControllerTest extends AbstractTestController
         'lastname' => 'l',
         'address' => 'a1',
         'address2' => 'a2',
+        'address3' => 'a3',
+        'address4' => 'a4',
+        'address5' => 'a5',
         'postcode' => 'p',
-        'county' => 'c',
         'phone' => 'p',
         'email' => 'e',
         'date_of_birth' => '1947-1-31',
@@ -120,7 +126,7 @@ class ClientControllerTest extends AbstractTestController
         ]);
         self::fixtures()->clear();
 
-        $client = self::fixtures()->getRepo('Client')->find($return['data']['id']); /* @var $client \App\Entity\Client */
+        $client = self::fixtures()->getRepo('Client')->find($return['data']['id']); /* @var $client Client */
         $this->assertEquals('Firstname', $client->getFirstname());
         $this->assertCount(1, $client->getUsers());
         $this->assertEquals(self::$deputy1->getId(), $client->getUsers()->first()->getId());
@@ -139,13 +145,15 @@ class ClientControllerTest extends AbstractTestController
             'data' => ['id' => self::$client1->getId()] + $this->updateDataLay,
         ]);
         self::fixtures()->clear();
-        $client = self::fixtures()->getRepo('Client')->find($return['data']['id']); /* @var $client \App\Entity\Client */
+        $client = self::fixtures()->getRepo('Client')->find($return['data']['id']); /* @var $client Client */
         $this->assertEquals('Firstname', $client->getFirstname());
         $this->assertEquals('Lastname', $client->getLastname());
         $this->assertEquals('Address', $client->getAddress());
         $this->assertEquals('Address2', $client->getAddress2());
         $this->assertEquals('Postcode', $client->getPostcode());
-        $this->assertEquals('County', $client->getCounty());
+        $this->assertEquals('Address3', $client->getAddress3());
+        $this->assertEquals('Address4', $client->getAddress4());
+        $this->assertEquals('Address5', $client->getAddress5());
         $this->assertEquals('Phone', $client->getPhone());
         $this->assertEquals(null, $client->getDateOfBirth());
         $this->assertEquals('2015-12-31', $client->getCourtDate()->format('Y-m-d'));
@@ -165,7 +173,7 @@ class ClientControllerTest extends AbstractTestController
             'data' => ['id' => self::$client1->getId(), 'ndr_enabled' => true] + $this->updateDataLay,
         ]);
         self::fixtures()->clear();
-        $client = self::fixtures()->getRepo('Client')->find($return['data']['id']); /* @var $client \App\Entity\Client */
+        $client = self::fixtures()->getRepo('Client')->find($return['data']['id']); /* @var $client Client */
         $this->assertInstanceOf(Ndr::class, $client->getNdr());
     }
 
@@ -182,13 +190,15 @@ class ClientControllerTest extends AbstractTestController
             'data' => ['id' => self::$pa1Client1->getId()] + $this->updateDataPa,
         ]);
         self::fixtures()->clear();
-        $client = self::fixtures()->getRepo('Client')->find($return['data']['id']); /* @var $client \App\Entity\Client */
+        $client = self::fixtures()->getRepo('Client')->find($return['data']['id']); /* @var $client Client */
         $this->assertEquals('f', $client->getFirstname());
         $this->assertEquals('l', $client->getLastname());
         $this->assertEquals('a1', $client->getAddress());
         $this->assertEquals('a2', $client->getAddress2());
+        $this->assertEquals('a3', $client->getAddress3());
+        $this->assertEquals('a4', $client->getAddress4());
+        $this->assertEquals('a5', $client->getAddress5());
         $this->assertEquals('p', $client->getPostcode());
-        $this->assertEquals('c', $client->getCounty());
         $this->assertEquals('p', $client->getPhone());
         $this->assertEquals('1947-01-31', $client->getDateOfBirth()->format('Y-m-d'));
         $this->assertEquals('pa000001', $client->getCaseNumber()); //assert not changed
@@ -252,7 +262,7 @@ class ClientControllerTest extends AbstractTestController
 
         $this->assertInstanceOf('App\Entity\Client', $client);
         $this->assertEquals(1, count($client->getUsers()));
-        $this->assertInstanceOf(\DateTime::class, $client->getArchivedAt());
+        $this->assertInstanceOf(DateTime::class, $client->getArchivedAt());
     }
 
     public function testDetailsAction()

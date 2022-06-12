@@ -128,7 +128,7 @@ services:
     restart: always
 
   postgres:
-    image: postgres:9.6
+    image: postgres:10.21
     ports:
       - 5432:5432
     env_file:
@@ -139,11 +139,11 @@ services:
     restart: always
 
   redis-frontend:
-    image: redis:6.2.6
+    image: redis:6.2.7
     restart: always
 
   redis-api:
-    image: redis:6.2.6
+    image: redis:6.2.7
     restart: always
 
   file-scanner-server:

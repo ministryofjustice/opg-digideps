@@ -840,10 +840,9 @@ class User implements UserInterface, DeputyInterface, PasswordAuthenticatedUserI
     public function hasAddressDetails()
     {
         return !empty($this->getAddress1())
-              && !empty($this->getAddressCountry())
-              && !empty($this->getAddressPostcode())
-              && !empty($this->getPhoneMain())
-        ;
+            && !empty($this->getAddressCountry())
+            && !empty($this->getAddressPostcode())
+            && !empty($this->getPhoneMain());
     }
 
     /**

@@ -2,6 +2,7 @@
 
 declare(strict_types=1);
 
+use App\Event\AdminManagerCreatedEvent;
 use App\Event\AdminUserCreatedEvent;
 use App\Event\CoDeputyCreatedEvent;
 use App\Event\CoDeputyInvitedEvent;
@@ -103,6 +104,30 @@ class UserApiTest extends TestCase
 
         $userCreatedEvent = new AdminUserCreatedEvent($userToCreate);
         $this->eventDispatcher->dispatch($userCreatedEvent, 'admin.user.created')->shouldBeCalled();
+
+        $this->sut->createAdminUser($userToCreate);
+    }
+
+    /** @test */
+    public function createAdminManagerUser()
+    {
+        $currentUser = UserHelpers::createSuperAdminUser();
+        $userToCreate = UserHelpers::createAdminManager();
+
+        $trigger = 'ADMIN_MANAGER_MANUALLY_CREATED';
+
+        $usernamePasswordToken = new UsernamePasswordToken($currentUser, 'password', 'key');
+        $this->tokenStorage->getToken()->willReturn($usernamePasswordToken);
+
+        $this->restClient->post('user', $userToCreate, ['admin_add_user'], 'User')->shouldBeCalled()->willReturn($userToCreate);
+
+        $userCreatedEvent = new AdminUserCreatedEvent($userToCreate);
+        $this->eventDispatcher->dispatch($userCreatedEvent, 'admin.user.created')->shouldBeCalled();
+
+        $adminManagerCreatedEvent = new AdminManagerCreatedEvent($trigger, $currentUser, $userToCreate);
+        if ('ROLE_ADMIN_MANAGER' === $userToCreate->getRoleName()) {
+            $this->eventDispatcher->dispatch($adminManagerCreatedEvent, 'admin.manager.created')->shouldBeCalled();
+        }
 
         $this->sut->createAdminUser($userToCreate);
     }

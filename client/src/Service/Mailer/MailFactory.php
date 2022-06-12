@@ -289,7 +289,7 @@ class MailFactory
             'fullName' => $client->getFullName(),
             'address' => $client->getAddress(),
             'address2' => $client->getAddress2(),
-            'address3' => $client->getCounty(),
+            'address3' => $client->getAddress3(),
             'postcode' => $client->getPostcode(),
             'countryName' => $countryName,
             'phone' => $client->getPhone(),

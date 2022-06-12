@@ -1,6 +1,6 @@
 list:
     links:
-        casRec: CasRec Fixtures
+        preRegistration: Pre-registration Fixtures
         courtOrders: Court Orders Fixtures
 courtOrders:
     deputyType:
@@ -21,7 +21,7 @@ courtOrders:
         label: Users In Org (ignored for lays)
     submit:
         label: Create
-casRec:
+preRegistration:
     deputyType:
         label: Deputy Role
     reportType:

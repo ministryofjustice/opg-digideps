@@ -296,9 +296,9 @@ resource "aws_cloudwatch_metric_alarm" "frontend_alb_average_response_time" {
   tags                      = local.default_tags
 }
 
-resource "aws_cloudwatch_log_metric_filter" "casrec_add_in_progress" {
+resource "aws_cloudwatch_log_metric_filter" "pre_registration_add_in_progress" {
   name           = "AdminCSVUploadInProgressFilter.${local.environment}"
-  pattern        = "{ ($.service_name = \"admin\") && ($.request_uri = \"/admin/ajax/casrec-add*\") }"
+  pattern        = "{ ($.service_name = \"admin\") && ($.request_uri = \"/admin/ajax/pre-registration-add*\") }"
   log_group_name = aws_cloudwatch_log_group.opg_digi_deps.name
 
   metric_transformation {
@@ -323,7 +323,7 @@ resource "aws_cloudwatch_metric_alarm" "admin_alb_average_response_time" {
 
   metric_query {
     id          = "real_long_response"
-    expression  = "IF((alb_response_times > 1 AND casrec_csv < 1), 1, 0)"
+    expression  = "IF((alb_response_times > 1 AND pre_registration_csv < 1), 1, 0)"
     label       = "LongResponseTime"
     return_data = "true"
   }
@@ -344,11 +344,11 @@ resource "aws_cloudwatch_metric_alarm" "admin_alb_average_response_time" {
   }
 
   metric_query {
-    id = "casrec_csv"
+    id = "pre_registration_csv"
 
     metric {
-      metric_name = aws_cloudwatch_log_metric_filter.casrec_add_in_progress.metric_transformation[0].name
-      namespace   = aws_cloudwatch_log_metric_filter.casrec_add_in_progress.metric_transformation[0].namespace
+      metric_name = aws_cloudwatch_log_metric_filter.pre_registration_add_in_progress.metric_transformation[0].name
+      namespace   = aws_cloudwatch_log_metric_filter.pre_registration_add_in_progress.metric_transformation[0].namespace
       period      = "60"
       stat        = "Maximum"
     }

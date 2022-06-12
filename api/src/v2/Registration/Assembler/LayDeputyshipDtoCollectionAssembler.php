@@ -7,33 +7,25 @@ use App\v2\Registration\DTO\LayDeputyshipDtoCollection;
 
 class LayDeputyshipDtoCollectionAssembler
 {
-    /** @var LayDeputyshipDtoAssemblerInterface */
-    private $layDeputyshipDtoAssembler;
-
-    /**
-     * @param LayDeputyshipDtoAssemblerInterface $layDeputyshipDtoAssembler
-     */
-    public function __construct(LayDeputyshipDtoAssemblerInterface $layDeputyshipDtoAssembler)
+    public function __construct(private LayDeputyshipDtoAssemblerInterface $layDeputyshipDtoAssembler)
     {
-        $this->layDeputyshipDtoAssembler = $layDeputyshipDtoAssembler;
     }
 
-    /**
-     * @param array $data
-     * @return LayDeputyshipDtoCollection
-     */
-    public function assembleFromArray(array $data): LayDeputyshipDtoCollection
+    public function assembleFromArray(array $data): array
     {
+        $skipped = [];
         $collection = new LayDeputyshipDtoCollection();
 
-        foreach ($data as $uploadRow) {
+        foreach ($data as $line => $uploadRow) {
             $item = $this->layDeputyshipDtoAssembler->assembleFromArray($uploadRow);
             if ($item instanceof LayDeputyshipDto) {
                 $collection->append($item);
+            } else {
+                $skipped[] = sprintf('SKIPPED LINE %d:', $line + 2);
             }
         }
 
-        return $collection;
+        return ['skipped' => $skipped, 'collection' => $collection];
     }
 
     public function getLayDeputyshipDtoAssembler(): LayDeputyshipDtoAssemblerInterface

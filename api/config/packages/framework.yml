@@ -2,7 +2,6 @@ imports:
     - { resource: ../parameters.yml }
 
 framework:
-    #esi:             ~
     translator:
         enabled: false
     secret: "%secret%"

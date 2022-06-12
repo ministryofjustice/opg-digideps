@@ -5,6 +5,7 @@ namespace App\v2\Registration\Controller;
 use App\Service\DataCompression;
 use App\v2\Registration\SelfRegistration\Factory\LayDeputyshipDtoCollectionAssemblerFactory;
 use App\v2\Registration\Uploader\LayDeputyshipUploader;
+use Psr\Log\LoggerInterface;
 use Sensio\Bundle\FrameworkExtraBundle\Configuration\Security;
 use Symfony\Component\HttpFoundation\Request;
 use Symfony\Component\Routing\Annotation\Route;
@@ -14,23 +15,12 @@ use Symfony\Component\Routing\Annotation\Route;
  */
 class LayDeputyshipUploadController
 {
-    /** @var DataCompression */
-    private $dataCompression;
-
-    /** @var LayDeputyshipDtoCollectionAssemblerFactory */
-    private $factory;
-
-    /** @var LayDeputyshipUploader */
-    private $uploader;
-
     public function __construct(
-        DataCompression $dataCompression,
-        LayDeputyshipDtoCollectionAssemblerFactory $factory,
-        LayDeputyshipUploader $uploader
+        private DataCompression $dataCompression,
+        private LayDeputyshipDtoCollectionAssemblerFactory $factory,
+        private LayDeputyshipUploader $uploader,
+        private LoggerInterface $logger
     ) {
-        $this->dataCompression = $dataCompression;
-        $this->factory = $factory;
-        $this->uploader = $uploader;
     }
 
     /**
@@ -43,10 +33,16 @@ class LayDeputyshipUploadController
     {
         ini_set('memory_limit', '1024M');
 
+        $message = sprintf('Uploading chunk with Id: %s', $request->headers->get('chunkId'));
+        $this->logger->notice($message);
+
         $postedData = $this->dataCompression->decompress($request->getContent());
-        $assembler = $this->factory->create($postedData);
+        $assembler = $this->factory->create();
         $uploadCollection = $assembler->assembleFromArray($postedData);
 
-        return $this->uploader->upload($uploadCollection);
+        $result = $this->uploader->upload($uploadCollection['collection']);
+        $result['skipped'] = $uploadCollection['skipped'];
+
+        return $result;
     }
 }

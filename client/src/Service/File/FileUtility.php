@@ -7,6 +7,7 @@ use League\MimeTypeDetection\FinfoMimeTypeDetector;
 abstract class FileUtility
 {
     protected FinfoMimeTypeDetector $mimeTypeDetector;
+    // If a mimetype has multiple associated extensions, the first index of the array should be the default extension
     protected array $mimeMap = [
         'video/3gpp2' => '3g2',
         'video/3gp' => '3gp',
@@ -65,6 +66,7 @@ abstract class FileUtility
         'application/gpg-keys' => 'gpg',
         'application/x-gtar' => 'gtar',
         'application/x-gzip' => 'gzip',
+        'image/heif' => 'heic',
         'application/mac-binhex40' => 'hqx',
         'application/mac-binhex' => 'hqx',
         'application/x-binhex40' => 'hqx',
@@ -81,7 +83,7 @@ abstract class FileUtility
         'video/mj2' => 'jp2',
         'image/jpx' => 'jp2',
         'image/jpm' => 'jp2',
-        'image/jpeg' => 'jpeg',
+        'image/jpeg' => ['jpeg', 'jpg', 'jfif'],
         'image/pjpeg' => 'jpeg',
         'application/x-javascript' => 'js',
         'application/json' => 'json',
@@ -195,13 +197,13 @@ abstract class FileUtility
 
     /**
      * Courtesy of this gem of a comment - https://gist.github.com/alexcorvi/df8faecb59e86bee93411f6a7967df2c#gistcomment-2722664.
-     *
-     * @param $mime
-     *
-     * @return false|string
      */
-    protected function mimeToExtension($mime): bool | string
+    protected function mimeToExtension($mime): bool|string|array
     {
-        return true === isset($this->mimeMap[$mime]) ? $this->mimeMap[$mime] : false;
+        if (isset($this->mimeMap[$mime])) {
+            return is_array($this->mimeMap[$mime]) ? $this->mimeMap[$mime][0] : $this->mimeMap[$mime];
+        }
+
+        return false;
     }
 }

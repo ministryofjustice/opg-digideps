@@ -288,15 +288,14 @@ v2-tests-goutte:
     extensions:
         Behat\MinkExtension:
             files_path: "%paths.base%/fixtures/"
-            default_session: browserkit
+            default_session: goutte
             sessions:
                 symfony:
                     symfony: ~
-                browserkit:
-                    browserkit_http:
-                        http_client_parameters:
-                            verify_host: false
-                            verify_peer: false
+                goutte:
+                    goutte:
+                        guzzle_parameters:
+                            verify: false
         FriendsOfBehat\SymfonyExtension:
             kernel:
                 path: "%paths.base%/../../src/Kernel.php"

@@ -67,6 +67,7 @@ resource "aws_cloudwatch_event_rule" "check_csv_uploaded_cron_rule" {
   description         = "Check daily which CSVs have been uploaded in ${terraform.workspace}"
   schedule_expression = local.check_csv_uploaded_interval
   tags                = local.default_tags
+  is_enabled          = local.environment == "production02" ? true : false
 }
 
 resource "aws_cloudwatch_event_target" "check_csv_uploaded_scheduled_task" {

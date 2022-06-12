@@ -1,5 +1,7 @@
 <?php
 
+declare(strict_types=1);
+
 namespace App\v2\Assembler;
 
 use App\Entity\NamedDeputy;
@@ -25,26 +27,23 @@ class NamedDeputyAssembler
 
     public function assembleFromOrgDeputyshipDto(OrgDeputyshipDto $dto)
     {
-        $deputyNumber = $dto->getDeputyAddressNumber() ?
-            sprintf('%s-%s', $dto->getDeputyNumber(), $dto->getDeputyAddressNumber()) :
-            $dto->getDeputyNumber();
+        if ($dto->deputyIsAnOrganisation()) {
+            $deputyFirstName = $dto->getOrganisationName();
+        } else {
+            $deputyFirstName = empty($dto->getDeputyFirstname()) ? null : $dto->getDeputyFirstname();
+        }
 
         $namedDeputy = (new NamedDeputy())
             ->setEmail1($dto->getDeputyEmail())
-            ->setDeputyNo($deputyNumber)
-            ->setFirstname($dto->getDeputyFirstname() ?: null)
+            ->setDeputyUid($dto->getDeputyUid())
+            ->setFirstname($deputyFirstName)
             ->setLastname($dto->getDeputyLastname())
             ->setAddress1($dto->getDeputyAddress1())
             ->setAddress2($dto->getDeputyAddress2())
             ->setAddress3($dto->getDeputyAddress3())
             ->setAddress4($dto->getDeputyAddress4())
             ->setAddress5($dto->getDeputyAddress5())
-            ->setAddressPostcode($dto->getDeputyPostcode())
-            ->setDeputyType($dto->getDeputyType());
-
-        if ($dto->getDeputyAddressNumber()) {
-            $namedDeputy->setDepAddrNo($dto->getDeputyAddressNumber());
-        }
+            ->setAddressPostcode($dto->getDeputyPostcode());
 
         return $namedDeputy;
     }

@@ -3,12 +3,10 @@ const uploadProgress = function (element) {
   // check if exists
   if ($(element).length === 1) {
     const nOfChunks = $(element).attr('max') - 1
-    const casrecDeleteBySourceUrl = $(element).data(
-      'path-casrec-delete-by-source-ajax'
-    )
+    const preRegistrationDeleteUrl = $(element).data('path-pre-registration-delete-ajax')
 
     $.ajax({
-      url: casrecDeleteBySourceUrl,
+      url: preRegistrationDeleteUrl,
       dataType: 'json'
     }).done(function (data) {
       $(element).val(1)
@@ -18,23 +16,23 @@ const uploadProgress = function (element) {
 }
 
 const uploadChunk = function (currentChunk, nOfChunks, element) {
-  const casrecAddAjaxUrl = $(element).data('path-casrec-add-ajax')
-  const casrecUploadUrl = $(element).data('path-casrec-upload')
+  const preRegistrationAddAjaxUrl = $(element).data('path-pre-registration-add-ajax')
+  const preRegistrationUploadUrl = $(element).data('path-pre-registration-upload')
 
   if (currentChunk < nOfChunks) {
     $.ajax({
-      url: casrecAddAjaxUrl + '?chunk=' + currentChunk,
+      url: preRegistrationAddAjaxUrl + '?chunk=' + currentChunk,
       dataType: 'json'
     })
       .done(function (data) {
         $(element).val(currentChunk + 1)
         uploadChunk(currentChunk + 1, nOfChunks, element)
       })
-      .error(function () {
-        window.alert('Upload error. please try uploading again')
+      .fail(function (jqXHR, textStatus, errorThrown) {
+        window.alert(`Upload error. please try uploading again: ${textStatus}`)
       })
   } else {
-    window.location.href = casrecUploadUrl
+    window.location.href = `${preRegistrationUploadUrl}?complete=1`
   }
 }
 

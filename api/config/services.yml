@@ -204,8 +204,8 @@ services:
 
     Symfony\Component\Security\Core\Role\RoleHierarchyInterface: "@security.role_hierarchy"
 
-    App\Repository\CasRecRepository:
-        class: App\Repository\CasRecRepository
+    App\Repository\PreRegistrationRepository:
+        class: App\Repository\PreRegistrationRepository
         tags: ["doctrine.repository_service"]
 
     App\Repository\ClientContactRepository:
@@ -325,9 +325,6 @@ services:
 
     PlainOrganisationAssembler:
         class: App\v2\Assembler\OrganisationAssembler
-
-    App\v2\Registration\Assembler\CasRecToLayDeputyshipDtoAssembler: ~
-    App\v2\Registration\Assembler\LayDeputyshipDtoAssemblerInterface: '@App\v2\Registration\Assembler\CasRecToLayDeputyshipDtoAssembler'
 
     uuid_normalizer:
         class: GBProd\UuidNormalizer\UuidNormalizer

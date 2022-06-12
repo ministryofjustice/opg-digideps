@@ -2,6 +2,7 @@ twig:
     default_path: "%kernel.project_dir%/templates"
     globals:
         env: "%env(ROLE)%"
+        hosted_env: "%env(ENVIRONMENT)%"
         opg_docker_tag: "%opg_docker_tag%"
         session_expires_seconds: "%session_expire_seconds%"
         session_popup_show_after: "%session_popup_show_after%"
