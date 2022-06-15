@@ -29,7 +29,7 @@ locals {
     }
   }
 
-  document_sync_interval = local.environment == "production02" ? "rate(2 minutes)" : "rate(24 hours)"
+  document_sync_interval = local.environment == "production02" ? "rate(5 minutes)" : "rate(24 hours)"
 
 }
 
