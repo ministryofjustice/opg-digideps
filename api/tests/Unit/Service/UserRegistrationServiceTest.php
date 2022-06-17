@@ -8,8 +8,9 @@ use App\Entity\User;
 use App\Model\SelfRegisterData;
 use App\Repository\ClientRepository;
 use App\Repository\UserRepository;
-use App\Service\CasrecVerificationService;
+use App\Service\PreRegistrationVerificationService;
 use App\Service\UserRegistrationService;
+use DateTime;
 use Doctrine\ORM\EntityManager;
 use Doctrine\ORM\ORMInvalidArgumentException;
 use Mockery as m;
@@ -34,7 +35,7 @@ class UserRegistrationServiceTest extends TestCase
             ->shouldReceive('getRepository')->with('App\Entity\User')->andReturn($mockUserRepository)
             ->getMock();
 
-        $mockCasrecVerificationService = m::mock(CasrecVerificationService::class);
+        $mockCasrecVerificationService = m::mock(PreRegistrationVerificationService::class);
         $mockCasrecVerificationService->shouldIgnoreMissing();
 
         $this->userRegistrationService = new UserRegistrationService($em, $mockCasrecVerificationService);
@@ -66,7 +67,7 @@ class UserRegistrationServiceTest extends TestCase
         $this->assertNotNull($user->getTokenDate());
 
         $token_time = $user->getTokenDate();
-        $now = new \DateTime();
+        $now = new DateTime();
         $diffInSeconds = $now->getTimestamp() - $token_time->getTimestamp();
 
         $this->assertLessThan(60, $diffInSeconds);  // time was set to just now
@@ -122,7 +123,7 @@ class UserRegistrationServiceTest extends TestCase
             ->shouldReceive('persist')->with($mockClient)->once()
             ->getMock();
 
-        $mockCasrecVerificationService = m::mock('\App\Service\CasrecVerificationService');
+        $mockCasrecVerificationService = m::mock('\App\Service\PreRegistrationVerificationService');
         $mockCasrecVerificationService->shouldIgnoreMissing(true);
 
         $this->userRegistrationService = new UserRegistrationService($em, $mockCasrecVerificationService);
@@ -159,10 +160,10 @@ class UserRegistrationServiceTest extends TestCase
             ->shouldReceive('persist')->with($mockUser)->once()->andThrow($exception)
             ->getMock();
 
-        $mockCasrecVerificationService = m::mock('\App\Service\CasrecVerificationService');
+        $mockCasrecVerificationService = m::mock('\App\Service\PreRegistrationVerificationService');
         $mockCasrecVerificationService->shouldIgnoreMissing(true);
 
-        $this->expectException(\Doctrine\ORM\ORMInvalidArgumentException::class);
+        $this->expectException(ORMInvalidArgumentException::class);
 
         $this->userRegistrationService = new UserRegistrationService($em, $mockCasrecVerificationService);
 
@@ -199,10 +200,10 @@ class UserRegistrationServiceTest extends TestCase
             ->shouldReceive('persist')->with($mockClient)->once()->andThrow($exception)
             ->getMock();
 
-        $mockCasrecVerificationService = m::mock('\App\Service\CasrecVerificationService');
+        $mockCasrecVerificationService = m::mock('\App\Service\PreRegistrationVerificationService');
         $mockCasrecVerificationService->shouldIgnoreMissing(true);
 
-        $this->expectException(\Doctrine\ORM\ORMInvalidArgumentException::class);
+        $this->expectException(ORMInvalidArgumentException::class);
 
         $this->userRegistrationService = new UserRegistrationService($em, $mockCasrecVerificationService);
 
@@ -230,10 +231,10 @@ class UserRegistrationServiceTest extends TestCase
         $mockClient = m::mock(Client::class)
             ->shouldIgnoreMissing(true)
             ->makePartial()
-            ->shouldReceive('getCourtDate')->andReturn(new \DateTime('2015-05-04'))
+            ->shouldReceive('getCourtDate')->andReturn(new DateTime('2015-05-04'))
             ->getMock();
 
-        $datetime = new \DateTime('2015-05-04');
+        $datetime = new DateTime('2015-05-04');
         $mockClient->shouldIgnoreMissing(true)
             ->shouldReceive('getCourtDate')->andReturn($datetime)
             ->getMock();
@@ -265,13 +266,13 @@ class UserRegistrationServiceTest extends TestCase
             ->shouldReceive('getRepository')->with('App\Entity\Client')->andReturn($mockClientRepository)
             ->getMock();
 
-        $mockCasrecVerificationService = m::mock('\App\Service\CasrecVerificationService')
+        $mockPreRegistrationVerificationService = m::mock('\App\Service\PreRegistrationVerificationService')
             ->shouldIgnoreMissing(true)
             ->shouldReceive('isMultiDeputyCase')->with('12341234')->andReturn(false)
             ->shouldReceive('getLastMatchedDeputyNumbers')->andReturn(['123'])
             ->getMock();
 
-        $this->userRegistrationService = new UserRegistrationService($em, $mockCasrecVerificationService);
+        $this->userRegistrationService = new UserRegistrationService($em, $mockPreRegistrationVerificationService);
         $this->userRegistrationService->selfRegisterUser($data);
     }
 
@@ -303,7 +304,7 @@ class UserRegistrationServiceTest extends TestCase
             ->shouldReceive('getRepository')->with('App\Entity\User')->andReturn($userRepo)
             ->getMock();
 
-        $casrecVerificationService = m::mock(CasrecVerificationService::class)
+        $casrecVerificationService = m::mock(PreRegistrationVerificationService::class)
             ->shouldReceive('isMultiDeputyCase')->andReturn(false)
             ->getMock();
 
@@ -342,7 +343,7 @@ class UserRegistrationServiceTest extends TestCase
             ->shouldReceive('getRepository')->with('App\Entity\User')->andReturn($userRepo)
             ->getMock();
 
-        $casrecVerificationService = m::mock(CasrecVerificationService::class)
+        $casrecVerificationService = m::mock(PreRegistrationVerificationService::class)
             ->shouldReceive('isMultiDeputyCase')->andReturn(false)
             ->getMock();
 

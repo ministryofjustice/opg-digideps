@@ -2,28 +2,31 @@
 
 namespace App\Tests\Unit\v2\Registration\Uploader;
 
-use App\Entity\CasRec;
 use App\Entity\Client;
+use App\Entity\PreRegistration;
 use App\Entity\Report\Report;
 use App\Entity\User;
 use App\Repository\ReportRepository;
 use App\v2\Registration\DTO\LayDeputyshipDto;
 use App\v2\Registration\DTO\LayDeputyshipDtoCollection;
-use App\v2\Registration\SelfRegistration\Factory\CasRecCreationException;
-use App\v2\Registration\SelfRegistration\Factory\CasRecFactory;
+use App\v2\Registration\SelfRegistration\Factory\PreRegistrationCreationException;
+use App\v2\Registration\SelfRegistration\Factory\PreRegistrationFactory;
 use App\v2\Registration\Uploader\LayDeputyshipUploader;
+use DateTime;
 use Doctrine\ORM\EntityManager;
 use PHPUnit\Framework\TestCase;
+use PHPUnit_Framework_MockObject_MockObject;
+use RuntimeException;
 
 class LayDeputyshipUploaderTest extends TestCase
 {
-    /** @var EntityManager | \PHPUnit_Framework_MockObject_MockObject */
+    /** @var EntityManager | PHPUnit_Framework_MockObject_MockObject */
     protected $em;
 
-    /** @var ReportRepository | \PHPUnit_Framework_MockObject_MockObject */
+    /** @var ReportRepository | PHPUnit_Framework_MockObject_MockObject */
     protected $reportRepository;
 
-    /** @var CasRecFactory | \PHPUnit_Framework_MockObject_MockObject */
+    /** @var PreRegistrationFactory | PHPUnit_Framework_MockObject_MockObject */
     private $factory;
 
     /** @var LayDeputyshipUploader */
@@ -34,7 +37,7 @@ class LayDeputyshipUploaderTest extends TestCase
     {
         $this->em = $this->getMockBuilder(EntityManager::class)->disableOriginalConstructor()->getMock();
         $this->reportRepository = $this->getMockBuilder(ReportRepository::class)->disableOriginalConstructor()->getMock();
-        $this->factory = $this->getMockBuilder(CasRecFactory::class)->disableOriginalConstructor()->enableArgumentCloning()->getMock();
+        $this->factory = $this->getMockBuilder(PreRegistrationFactory::class)->disableOriginalConstructor()->enableArgumentCloning()->getMock();
 
         $this->sut = new LayDeputyshipUploader(
             $this->em,
@@ -48,7 +51,7 @@ class LayDeputyshipUploaderTest extends TestCase
      */
     public function throwsExceptionIfDataSetTooLarge()
     {
-        $this->expectException(\RuntimeException::class);
+        $this->expectException(RuntimeException::class);
         $collection = new LayDeputyshipDtoCollection();
 
         for ($i = 0; $i < LayDeputyshipUploader::MAX_UPLOAD + 1; ++$i) {
@@ -66,14 +69,14 @@ class LayDeputyshipUploaderTest extends TestCase
         $collection = new LayDeputyshipDtoCollection();
 
         for ($i = 0; $i < 3; ++$i) {
-            $collection->append($this->buildLayDeputyshipDto($i, CasRec::CASREC_SOURCE));
+            $collection->append($this->buildLayDeputyshipDto($i));
         }
 
-        // Assert 3 CasRec entities will be created.
+        // Assert 3 PreRegistration entities will be created.
         $this->factory
             ->expects($this->exactly(3))
             ->method('createFromDto')
-            ->willReturnOnConsecutiveCalls(new CasRec([]), new CasRec([]), new CasRec([]));
+            ->willReturnOnConsecutiveCalls(new PreRegistration([]), new PreRegistration([]), new PreRegistration([]));
 
         // Assert Report Types will not be updated (not relevant for this test).
         $this->reportRepository
@@ -86,27 +89,27 @@ class LayDeputyshipUploaderTest extends TestCase
 
         $this->assertEquals(3, $return['added']);
         $this->assertCount(0, $return['errors']);
-        $this->assertEquals(CasRec::CASREC_SOURCE, $return['source']);
     }
 
     /**
      * @test
+     * @dataProvider reportTypeProvider
      */
-    public function updatesReportTypeOfActiveReportsIfRequired()
+    public function updatesReportTypeOfActiveReportsIfRequired(string $currentReportType, string $preRegistrationNewReportType, string $expectedNewReportType)
     {
         $collection = new LayDeputyshipDtoCollection();
-        $collection->append($this->buildLayDeputyshipDto(1, CasRec::SIRIUS_SOURCE));
+        $collection->append($this->buildLayDeputyshipDto(1));
 
-        $casRec = new CasRec(['Typeofrep' => 'opg103', 'Corref' => 'l3']);
+        $preRegistration = new PreRegistration(['ReportType' => $preRegistrationNewReportType, 'OrderType' => 'OPG104' === $preRegistrationNewReportType ? 'hw' : 'pfa']);
 
         $this->factory
             ->expects($this->once())
             ->method('createFromDto')
-            ->willReturnOnConsecutiveCalls($casRec);
+            ->willReturnOnConsecutiveCalls($preRegistration);
 
         // Ensure an existing Client is found with an active Report whose type is different to the new type in the upload.
         $existingClient = (new Client())->setCaseNumber('case-1');
-        $activeReport = new Report($existingClient, '102', new \DateTime(), new \DateTime(), false);
+        $activeReport = new Report($existingClient, $currentReportType, new DateTime(), new DateTime(), false);
         $this->reportRepository
             ->expects($this->once())
             ->method('findAllActiveReportsByCaseNumbersAndRole')
@@ -116,8 +119,16 @@ class LayDeputyshipUploaderTest extends TestCase
         $return = $this->sut->upload($collection);
         $this->assertEquals(1, $return['added']);
         $this->assertCount(0, $return['errors']);
-        $this->assertEquals(CasRec::SIRIUS_SOURCE, $return['source']);
-        $this->assertEquals('103', $activeReport->getType());
+        $this->assertEquals($expectedNewReportType, $activeReport->getType());
+    }
+
+    public function reportTypeProvider()
+    {
+        return [
+            'Changes to 102' => ['103', 'OPG102', '102'],
+            'Changes to 103' => ['102', 'OPG103', '103'],
+            'Changes to 104' => ['102', 'OPG104', '104'],
+        ];
     }
 
     /**
@@ -126,13 +137,13 @@ class LayDeputyshipUploaderTest extends TestCase
     public function ignoresDeputyshipsWithInvalidDeputyshipData()
     {
         $collection = new LayDeputyshipDtoCollection();
-        $collection->append($this->buildLayDeputyshipDto(1, CasRec::SIRIUS_SOURCE));
+        $collection->append($this->buildLayDeputyshipDto(1));
 
         // Ensure factory will throw an exception
         $this
             ->factory
             ->method('createFromDto')
-            ->willThrowException(new CasRecCreationException('Unable to create CasRec entity'));
+            ->willThrowException(new PreRegistrationCreationException('Unable to create PreRegistration entity'));
 
         $this->assertReportTypesWillNotBeUpdated();
 
@@ -140,19 +151,17 @@ class LayDeputyshipUploaderTest extends TestCase
 
         $this->assertEquals(0, $return['added']);
         $this->assertCount(1, $return['errors']);
-        $this->assertEquals(CasRec::SIRIUS_SOURCE, $return['source']);
-        $this->assertEquals('ERROR IN LINE 2: Unable to create CasRec entity', $return['errors'][0]);
+        $this->assertEquals('ERROR IN LINE 2: Unable to create PreRegistration entity', $return['errors'][0]);
     }
 
     /**
      * @param $count
      */
-    private function buildLayDeputyshipDto($count, $source): LayDeputyshipDto
+    private function buildLayDeputyshipDto($count): LayDeputyshipDto
     {
         return (new LayDeputyshipDto())
             ->setCaseNumber('case-'.$count)
-            ->setDeputyNumber('depnum-'.$count)
-            ->setSource($source);
+            ->setDeputyUid('depnum-'.$count);
     }
 
     private function assertReportTypesWillNotBeUpdated(): void

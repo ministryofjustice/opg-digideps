@@ -5,7 +5,9 @@ declare(strict_types=1);
 namespace App\Tests\Behat\v2\ReportSubmission;
 
 use App\Entity\Report\Document;
+use App\Entity\Report\Report;
 use App\Entity\Report\ReportSubmission;
+use App\Service\ParameterStoreService;
 use App\Tests\Behat\BehatException;
 
 trait ReportSubmissionTrait
@@ -24,7 +26,7 @@ trait ReportSubmissionTrait
         $submissionRow = $this->getSession()->getPage()->find('xpath', $locator);
 
         if (is_null($submissionRow)) {
-            throw new BehatException('Could not find a submission row that contained case number "%s"', $caseNumber);
+            throw new BehatException(sprintf('Could not find a submission row that contained case number "%s"', $caseNumber));
         }
     }
 
@@ -304,6 +306,33 @@ trait ReportSubmissionTrait
     }
 
     /**
+     * @Given /^the document sync enabled flag is set to \'([^\']*)\'$/
+     */
+    public function theDocumentSyncEnabledFlagIsSetTo($documentFeatureFlagValue)
+    {
+        $this->parameterStoreService->putFeatureFlag(ParameterStoreService::FLAG_DOCUMENT_SYNC, $documentFeatureFlagValue);
+    }
+
+    /**
+     * @Then /^the \'([^\']*)\' tab \'([^\']*)\' visible$/
+     */
+    public function tabVisibilityCheck($tabName, $visibility)
+    {
+        $shouldBeVisible = 'is' === $visibility;
+        $newSubmissionTab = $this->getSession()->getPage()->find('css', "a:contains('$tabName')");
+
+        if ($shouldBeVisible && !$newSubmissionTab) {
+            $errorMessage = "The 'New' tab is not visible when it should be";
+            throw new BehatException($errorMessage);
+        }
+
+        if (!$shouldBeVisible && $newSubmissionTab) {
+            $errorMessage = "The 'New' tab is visible when it shouldn't be";
+            throw new BehatException($errorMessage);
+        }
+    }
+
+    /**
      * @When I search for submissions using the court order number of the client I am interacting with and check the :status column
      */
     public function iSearchForSubmissionsUsingTheCourtOrderNumberOfTheClientIAmInteractingWithForTheStatusColumn(string $status)
@@ -347,5 +376,39 @@ trait ReportSubmissionTrait
         if (!str_contains($reportPdfRow->getHtml(), $status)) {
             throw new BehatException(sprintf('The document does not have a status of %s. Row content: %s', $status, $reportPdfRow->getHtml()));
         }
+    }
+
+    /**
+     * @Then I should see Lay High Assets report for the next reporting period
+     */
+    public function iShouldSeeLayHighAssetsReportForTheNextReportingPeriod()
+    {
+        $this->clickLink('Continue');
+        $this->assertStringContainsString(
+            'Money transfers',
+            $this->getSession()->getPage()->getContent(),
+            'Comparing expected section against sections visible');
+    }
+
+    /**
+     * @Given /^the user uploaded a document with a file type that can be converted before the document conversion feature was released$/
+     */
+    public function theUserUploadedADocumentWithAFileTypeThatCanBeConvertedBeforeTheDocumentConversionFeatureWasReleased()
+    {
+        $this->iViewDocumentsSection();
+        $this->iHaveDocumentsToUpload();
+        $this->iAttachedASupportingDocumentToTheCompletedReport('good-heic.heic');
+
+        // Have to hack in uploading a heic doc as the app now automatically converts type on adding documents
+        $report = $this->em->getRepository(Report::class)->find($this->loggedInUserDetails->getCurrentReportId());
+        $this->em->refresh($report);
+        $document = $report->getDeputyDocuments()->first();
+        var_dump(count($report->getDocuments()));
+        $document->setFileName('good-heic.heic');
+
+        $this->em->persist($document);
+        $this->em->flush();
+
+        $this->iSubmitTheReport();
     }
 }

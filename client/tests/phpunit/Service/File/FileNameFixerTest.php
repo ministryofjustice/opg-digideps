@@ -47,8 +47,7 @@ class FileNameFixerTest extends KernelTestCase
     {
         $filePath = sprintf('%s/%s', $this->projectDir, $relativeFilePath);
         $uploadedFile = new UploadedFile($filePath, $fileName);
-        $fileBody = file_get_contents($filePath);
-        $alteredFileName = $this->sut->addMissingFileExtension($uploadedFile, $fileBody);
+        $alteredFileName = $this->sut->addMissingFileExtension($uploadedFile);
 
         self::assertEquals($expectedFilename, $alteredFileName);
     }

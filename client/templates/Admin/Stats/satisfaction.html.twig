@@ -1,6 +1,7 @@
 {% extends '@App/Layouts/application.html.twig' %}
 
-{% trans_default_domain "admin" %}
+{% set translationDomain = "admin" %}
+{% trans_default_domain translationDomain %}
 {% set page = 'satisfactionPage' %}
 
 {% set navSection = 'metrics' %}
@@ -19,11 +20,11 @@
         {{ form_start(form, {attr: {class: 'search', novalidate: 'novalidate' }}) }}
 
         {{ form_known_date(form.startDate, 'satisfactionPage.form.fromDate', {
-            'hintText': 'satisfactionPage.form.fromDate.hint'
+            'hintText': (page ~ '.form.fromDate.hint') | trans
         }) }}<span class="govuk-visually-hidden">of satisfaction search period</span>
 
         {{ form_known_date(form.endDate, 'satisfactionPage.form.toDate', {
-            'hintText': 'satisfactionPage.form.toDate.hint'
+            'hintText': (page ~ '.form.toDate.hint') | trans
         }) }}<span class="govuk-visually-hidden">of satisfaction search period</span>
 
         <div class="govuk-form-group">

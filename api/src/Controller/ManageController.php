@@ -48,6 +48,7 @@ class ManageController extends RestController
 
     /**
      * @param LoggerInterface $logger
+     *
      * @return array [boolean healthy, error string]
      */
     private function dbInfo()
@@ -59,8 +60,8 @@ class ManageController extends RestController
         } catch (\Throwable $e) {
             // customise error message if possible
             $returnMessage = 'Database generic error';
-            if ($e instanceof \PDOException && $e->getCode() === 7) {
-                $returnMessage = 'Database service not reachabe (' . $e->getMessage() . ')';
+            if ($e instanceof \PDOException && 7 === $e->getCode()) {
+                $returnMessage = 'Database service not reachable ('.$e->getMessage().')';
             }
 
             $this->logger->error($e->getMessage());

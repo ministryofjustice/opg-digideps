@@ -7,7 +7,6 @@ namespace App\Controller\Admin;
 use App\Command\ChecklistSyncCommand;
 use App\Controller\AbstractController;
 use Exception;
-use Psr\Log\LoggerInterface;
 use Symfony\Bundle\FrameworkBundle\Console\Application;
 use Symfony\Component\Console\Input\ArrayInput;
 use Symfony\Component\Console\Output\BufferedOutput;
@@ -20,8 +19,7 @@ class BehatController extends AbstractController
 {
     public function __construct(
         private KernelInterface $kernel,
-        private string $symfonyEnvironment,
-        private LoggerInterface $logger
+        private string $symfonyEnvironment
     ) {
     }
 

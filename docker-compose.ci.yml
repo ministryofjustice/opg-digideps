@@ -14,4 +14,4 @@ services:
     build: ./htmltopdf
   drbackup:
     image: ${AWS_REGISTRY}/digideps/dr-backup:${VERSION}
-    build: ./dr_backup
+    build: ./disaster_recovery/backup

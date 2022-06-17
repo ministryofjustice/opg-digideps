@@ -26,12 +26,27 @@
 
             <dt class="label">{{ 'address' | trans({}, 'common' ) }}</dt>
             <dd class="value address-value behat-region-deputy-address">
-                {{ deputy.address1 }}<br/>
-                {{ deputy.address2 }}<br/>
-                {{ deputy.address3 }}<br/>
-                {{ deputy.address4 }}<br/>
-                {{ deputy.address5 }}<br/>
-                {{ deputy.addressPostcode }}
+                {% if deputy.address1 is not empty %}
+                    {{ deputy.address1 }}<br/>
+                {% endif %}
+                {% if deputy.address2 is not empty %}
+                    {{ deputy.address2 }}<br/>
+                {% endif %}
+                {% if deputy.address3 is not empty %}
+                    {{ deputy.address3 }}<br/>
+                {% endif %}
+                {% if deputy.address4 is not empty %}
+                    {{ deputy.address4 }}<br/>
+                {% endif %}
+                {% if deputy.address5 is not empty %}
+                    {{ deputy.address5 }}<br/>
+                {% endif %}
+                {% if deputy.addressPostcode is not empty %}
+                    {{ deputy.addressPostcode }}<br/>
+                {% endif %}
+                {% if deputy.addressCountry is not empty %}
+                    {{ deputy.addressCountry | country_name }}
+                {% endif %}
             </dd>
 
             <dt class="label">Telephone number</dt>
@@ -59,10 +74,27 @@
 
             <dt class="label">{{ 'address' | trans({}, 'common' ) }}</dt>
             <dd class="value address-value">
-                {{ client.address }}<br/>
-                {{ client.address2 }}<br/>
-                {{ client.county }}<br/>
-                {{ client.postcode }}
+                {% if client.address is not empty %}
+                    {{ client.address }}<br/>
+                {% endif %}
+                {% if client.address2 is not empty %}
+                    {{ client.address2 }}<br/>
+                {% endif %}
+                {% if client.address3 is not empty %}
+                    {{ client.address3 }}<br/>
+                {% endif %}
+                {% if client.address4 is not empty %}
+                    {{ client.address4 }}<br/>
+                {% endif %}
+                {% if client.address5 is not empty %}
+                    {{ client.address5 }}<br/>
+                {% endif %}
+                {% if client.postcode is not empty %}
+                    {{ client.postcode }}<br/>
+                {% endif %}
+                {% if client.country is not empty %}
+                    {{ client.country | country_name }}
+                {% endif %}
             </dd>
 
             <dt class="label">Telephone number</dt>

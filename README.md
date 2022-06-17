@@ -2,13 +2,22 @@
 
 # Complete the deputy report
 
-This app is the [Complete the deputy report][service] service. It provides an online reporting service used by deputies to submit their reports, and the private area for case managers to review submitted reports.
+This app is the [Complete the deputy report][service] service. It provides an online reporting service that has a publicly available frontend used by deputies to submit their reports, and a VPN restricted admin area for case managers to review submitted reports.
 
 ## Requirements
 
 You must have Docker installed.
 
 If developing the app then ensure you have [pre-commit](https://pre-commit.com/) installed to take advantage of the pre-commit [hooks](.pre-commit-config.yaml) we've added to the project to make PRs a more consistent and enjoyable experience.
+
+> **N.B.** If you have an M1 macOS running Monterey 12.2 or higher, or you have an Intel based macOS running Monterey 12.3 or higher then there are some Docker setting you can enable which improves I/O performance for operations on volumes.
+
+#### M1 macOS Monterey ≥ 12.2 | Intel macOS Monterey ≥ 12.3 Docker settings
+
+* `Docker preferences -> Experimental Features -> tick 'Use the new Virtualization framework'`
+* `Docker preferences -> Experimental Features -> tick 'Enable VirtioFS accelerated directory sharing'`
+
+Once both boxes are checked click `Apply & Restart` then run the `Make` command `make up-app-build`
 
 ## Installation
 
@@ -77,12 +86,12 @@ _See [deployment documentation](docs/DEPLOYMENT.md)_
 ## Built with
 
 - Terraform 1.0.0
-- PHP 7.4
+- PHP 8.0
 - Symfony 4.4
-- Doctrine 2.0
+- Doctrine 3.0
 - Twig
 - Behat 3
-- PHPUnit 8
+- PHPUnit 9
 - [GOV.UK Design System](https://design-system.service.gov.uk/)
 - [GOV.UK Notify](https://notifications.service.gov.uk/)
 

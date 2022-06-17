@@ -57,18 +57,18 @@ class User implements UserInterface
     ];
 
     public static $depTypeIdToRealm = [
-        //PA
-        23 => CasRec::REALM_PA,
-        //PROFESSIONAL
-        21 => CasRec::REALM_PROF,
-        26 => CasRec::REALM_PROF,
-        63 => CasRec::REALM_PROF,
-        22 => CasRec::REALM_PROF,
-        24 => CasRec::REALM_PROF,
-        25 => CasRec::REALM_PROF,
-        27 => CasRec::REALM_PROF,
-        29 => CasRec::REALM_PROF,
-        50 => CasRec::REALM_PROF,
+        // PA
+        23 => PreRegistration::REALM_PA,
+        // PROFESSIONAL
+        21 => PreRegistration::REALM_PROF,
+        26 => PreRegistration::REALM_PROF,
+        63 => PreRegistration::REALM_PROF,
+        22 => PreRegistration::REALM_PROF,
+        24 => PreRegistration::REALM_PROF,
+        25 => PreRegistration::REALM_PROF,
+        27 => PreRegistration::REALM_PROF,
+        29 => PreRegistration::REALM_PROF,
+        50 => PreRegistration::REALM_PROF,
     ];
 
     /**
@@ -653,7 +653,7 @@ class User implements UserInterface
 
     public function getSalt()
     {
-        //return $this->salt;
+        // return $this->salt;
         return;
     }
 

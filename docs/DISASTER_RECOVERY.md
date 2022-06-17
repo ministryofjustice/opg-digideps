@@ -23,11 +23,65 @@ All of our measures to restore the service fall within the 48 hours specified by
 #### Instructions to restore from snapshot
 
 1) Sign in to the AWS Management Console and open the Amazon RDS console at https://console.aws.amazon.com/rds/.
-2) In the navigation pane, choose Snapshots.
-3) Choose the DB cluster snapshot that you want to restore from.
-4) For Actions, choose Restore Snapshot.
-5) On the Restore DB Instance page, for DB Instance Identifier, enter the name for your restored DB cluster.
-6) Choose Restore DB Instance.
+2) Rename the current cluster appending `-bck` to the end of it
+3) Rename any instances appending `-bck` to the end of them
+4) In the navigation pane, choose Snapshots.
+5) Choose the DB cluster snapshot that you want to restore from.
+6) For Actions, choose Restore Snapshot.
+7) On the Restore DB Cluster page, for DB Cluster Identifier, enter the name for your restored DB cluster.
+8) Choose Restore DB Cluster.
+9) Create the correct number of instances
+10) Run terraform plan against the environment and check that you have restored the DB as terraform state was expecting
+11) Delete the old `-bck` cluster and instances
+
+This process can be vastly simplified if you use our automated restore container:
+
+Run `docker-compose -f docker-compose.commands.yml up dr-restore` to see a help file
+
+You can then run various options. Some examples below:
+
+Title: Restore from point in time to the same instance
+Example disaster: An update was run directly on database that had huge unintended consequences 
+and you're willing to accept a small loss of data that would happen in the intervening time.
+Remediation: Restore to a time before the query was run.
+```
+aws-vault exec identity --duration=2h -- \
+docker-compose -f docker-compose.commands.yml run dr-restore \
+python3 disaster_recovery.py --cluster_from api-ddpb4341 --pitr '2022-01-01 09:10:00' 
+```
+
+Title: Restore from a snapshot
+Example disaster: You have somehow managed to destroy all the data whilst building a database 
+so can no longer do a point in time recovery.
+Remediation: Restore from an existing snapshot in the environment.
+```
+aws-vault exec identity --duration=2h -- \
+docker-compose -f docker-compose.commands.yml run -rm dr-restore \
+python3 disaster_recovery.py \
+--cluster_from api-ddpb9999 --snapshot_id api-9999-2022-01-01-12-30 
+```
+
+Title: Restore from a snapshot in backup account
+Example disaster: Account was compromised and all the snapshots and DBs were deleted. 
+You have managed to rebuild prod using terraform and need latest data.
+Remediation: Restore from an existing snapshot in backup account (use the name of snapshot stored in backup).
+```
+aws-vault exec identity --duration=2h -- \
+docker-compose -f docker-compose.commands.yml run -rm dr-restore \
+python3 disaster_recovery.py \
+--cluster_from api-ddpb9999 --snapshot_id api-9999-2022-01-01-12-30 --restore_from_remote True
+```
+
+Title: Restore to a different cluster
+Example disaster: You have no idea when something bad happened to the data and want to go back in time on 
+another instance and see if the data was ok at a point in time without affecting your main DB operation.
+Remediation: Restore from an existing DB to a point in time into another cluster.
+```
+aws-vault exec identity --duration=2h -- \
+docker-compose -f docker-compose.commands.yml run -rm dr-restore \
+python3 disaster_recovery.py \
+--cluster_from api-ddpb9999 --cluster_to api-new_test_cluster --pitr '2022-01-01 09:10:00' 
+```
 
 | Disaster                                                                                                           | Severity | Likelihood | Recovery                                                                                                                                                                                                                       |
 |--------------------------------------------------------------------------------------------------------------------|----------|------------|--------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------|

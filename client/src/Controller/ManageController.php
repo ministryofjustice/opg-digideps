@@ -18,21 +18,13 @@ use Symfony\Component\Routing\Annotation\Route;
  */
 class ManageController extends AbstractController
 {
-    private string $symfonyEnvironment;
-    private string $symfonyDebug;
-    private string $environment;
-    private LoggerInterface $logger;
-
     public function __construct(
-        string $symfonyEnvironment,
-        string $symfonyDebug,
-        string $environment,
-        LoggerInterface $logger
+        private string $symfonyEnvironment,
+        private string $symfonyDebug,
+        private string $environment,
+        private LoggerInterface $logger,
+        private string $hostedEnv
     ) {
-        $this->symfonyEnvironment = $symfonyEnvironment;
-        $this->symfonyDebug = $symfonyDebug;
-        $this->environment = $environment;
-        $this->logger = $logger;
     }
 
     /**
@@ -67,6 +59,7 @@ class ManageController extends AbstractController
             'errors' => $errors,
             'environment' => $this->symfonyEnvironment,
             'debug' => $this->symfonyDebug,
+            'hostedEnv' => $this->hostedEnv,
         ]);
 
         $response->setStatusCode($healthy ? 200 : 500);
@@ -136,11 +129,11 @@ class ManageController extends AbstractController
             }
             $serviceTimeTaken = (microtime(true) - $startServiceTime);
             $logObject = $logObject.sprintf(
-                '["service": "%s", "time": "%s", error: "%s"],',
-                $service->getName(),
-                round($serviceTimeTaken, 3),
-                $service->getErrors()
-            );
+                    '["service": "%s", "time": "%s", error: "%s"],',
+                    $service->getName(),
+                    round($serviceTimeTaken, 3),
+                    $service->getErrors()
+                );
         }
 
         if ($logResponses) {

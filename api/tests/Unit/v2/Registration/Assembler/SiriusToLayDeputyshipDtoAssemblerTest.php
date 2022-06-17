@@ -2,10 +2,9 @@
 
 namespace App\Tests\Unit\v2\Registration\Assembler;
 
-use App\Entity\CasRec;
-use App\Service\DataNormaliser;
 use App\v2\Registration\Assembler\SiriusToLayDeputyshipDtoAssembler;
 use App\v2\Registration\DTO\LayDeputyshipDto;
+use InvalidArgumentException;
 use PHPUnit\Framework\TestCase;
 
 class SiriusToLayDeputyshipDtoAssemblerTest extends TestCase
@@ -16,7 +15,7 @@ class SiriusToLayDeputyshipDtoAssemblerTest extends TestCase
     /** {@inheritDoc} */
     protected function setUp(): void
     {
-        $this->sut = new SiriusToLayDeputyshipDtoAssembler(new DataNormaliser());
+        $this->sut = new SiriusToLayDeputyshipDtoAssembler();
     }
 
     /**
@@ -30,7 +29,7 @@ class SiriusToLayDeputyshipDtoAssemblerTest extends TestCase
         $input = $this->getInput();
         unset($input[$itemToRemove]);
 
-        $this->expectException(\InvalidArgumentException::class);
+        $this->expectException(InvalidArgumentException::class);
 
         $this->sut->assembleFromArray($input);
     }
@@ -40,55 +39,69 @@ class SiriusToLayDeputyshipDtoAssemblerTest extends TestCase
     {
         return [
             ['Case'],
-            ['Surname'],
-            ['Deputy No'],
-            ['Dep Surname'],
-            ['Dep Postcode'],
-            ['Typeofrep'],
-            ['Made Date'],
+            ['ClientSurname'],
+            ['DeputyUid'],
+            ['DeputySurname'],
+            ['DeputyAddress1'],
+            ['DeputyAddress2'],
+            ['DeputyAddress3'],
+            ['DeputyAddress4'],
+            ['DeputyAddress5'],
+            ['DeputyPostcode'],
+            ['ReportType'],
+            ['MadeDate'],
+            ['OrderType'],
+            ['CoDeputy'],
         ];
     }
 
     /**
      * @test
      */
-    public function assembleFromArrayReturnsNullIfGivenUnexpectedReportType(): void
+    public function assembleFromArrayThrowsExceptionIfGivenInvalidReportType(): void
     {
         $input = $this->getInput();
-        $input['Typeofrep'] = 'OPG104';
+        $input['ReportType'] = 'invalidReportType';
 
-        $this->assertNull($this->sut->assembleFromArray($input));
+        $result = $this->sut->assembleFromArray($input);
+
+        $this->assertNull($result);
     }
 
     /**
      * @test
      * @dataProvider getReportTypeToCorrefExpectation
      */
-    public function assembleFromArrayAssemblesAndReturnsALayDeputyshipDto($reportType, $expectedCorref): void
+    public function assembleFromArrayAssemblesAndReturnsALayDeputyshipDto($reportType): void
     {
         $input = $this->getInput();
-        $input['Typeofrep'] = $reportType;
+        $input['ReportType'] = $reportType;
 
         $result = $this->sut->assembleFromArray($input);
 
         $this->assertInstanceOf(LayDeputyshipDto::class, $result);
-        $this->assertEquals('caset', $result->getCaseNumber());
+        $this->assertEquals('caseT', $result->getCaseNumber());
         $this->assertEquals('surname', $result->getClientSurname());
-        $this->assertEquals('deputy_no', $result->getDeputyNumber());
+        $this->assertEquals('deputy_no', $result->getDeputyUid());
         $this->assertEquals('deputysurname', $result->getDeputySurname());
-        $this->assertEquals('deputypostcode', $result->getDeputyPostcode());
+        $this->assertEquals('deputy_postcode', $result->getDeputyPostcode());
+        $this->assertEquals('depaddress1', $result->getDeputyAddress1());
+        $this->assertEquals('depaddress2', $result->getDeputyAddress2());
+        $this->assertEquals('depaddress3', $result->getDeputyAddress3());
+        $this->assertEquals('depaddress4', $result->getDeputyAddress4());
+        $this->assertEquals('depaddress5', $result->getDeputyAddress5());
         $this->assertEquals($reportType, $result->getTypeOfReport());
-        $this->assertEquals($expectedCorref, $result->getCorref());
+        $this->assertEquals('pfa', $result->getOrderType());
         $this->assertEquals(false, $result->isNdrEnabled());
-        $this->assertEquals(CasRec::SIRIUS_SOURCE, $result->getSource());
         $this->assertEquals('2011-06-14', $result->getOrderDate()->format('Y-m-d'));
+        $this->assertEquals(true, $result->getIsCoDeputy());
     }
 
     public function getReportTypeToCorrefExpectation()
     {
         return [
-            ['reportType' => 'OPG102', 'expectedCorref' => 'L2'],
-            ['reportType' => 'OPG103', 'expectedCorref' => 'L3'],
+            ['reportType' => 'OPG102'],
+            ['reportType' => 'OPG103'],
         ];
     }
 
@@ -97,14 +110,19 @@ class SiriusToLayDeputyshipDtoAssemblerTest extends TestCase
     {
         return [
             'Case' => 'caseT',
-            'Surname' => 'surname',
-            'Deputy No' => 'deputy_no',
-            'Dep Surname' => 'deputysurname',
-            'Dep Postcode' => 'deputy_postcode',
-            'Typeofrep' => 'type_of_rep',
-            'Source' => 'will-use-constant-instead',
-            'Not used' => 'not_used',
-            'Made Date' => '14-Jun-11',
+            'ClientSurname' => 'surname',
+            'DeputyUid' => 'deputy_no',
+            'DeputySurname' => 'deputysurname',
+            'DeputyAddress1' => 'depaddress1',
+            'DeputyAddress2' => 'depaddress2',
+            'DeputyAddress3' => 'depaddress3',
+            'DeputyAddress4' => 'depaddress4',
+            'DeputyAddress5' => 'depaddress5',
+            'DeputyPostcode' => 'deputy_postcode',
+            'CoDeputy' => 'yes',
+            'ReportType' => 'type_of_rep',
+            'MadeDate' => '2011-06-14',
+            'OrderType' => 'pfa',
         ];
     }
 }

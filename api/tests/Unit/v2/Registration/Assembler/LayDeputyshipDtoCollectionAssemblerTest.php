@@ -13,7 +13,7 @@ class LayDeputyshipDtoCollectionAssemblerTest extends TestCase
     /** @var LayDeputyshipDtoCollectionAssembler */
     private $sut;
 
-    /** @var LayDeputyshipDtoAssemblerInterface | \PHPUnit_Framework_MockObject_MockObject */
+    /** @var LayDeputyshipDtoAssemblerInterface|\PHPUnit_Framework_MockObject_MockObject */
     private $layDeputyshipDtoAssembler;
 
     /** @var LayDeputyshipDtoCollection */
@@ -56,8 +56,8 @@ class LayDeputyshipDtoCollectionAssemblerTest extends TestCase
 
     private function assertCollectionIsReturnedAndContainsEachAssembledItem(): void
     {
-        $this->assertInstanceOf(LayDeputyshipDtoCollection::class, $this->result);
-        $this->assertEquals(2, $this->result->count());
+        $this->assertInstanceOf(LayDeputyshipDtoCollection::class, $this->result['collection']);
+        $this->assertEquals(2, $this->result['collection']->count());
     }
 
     /** @test */
@@ -76,6 +76,6 @@ class LayDeputyshipDtoCollectionAssemblerTest extends TestCase
             ->willReturnOnConsecutiveCalls(null, new LayDeputyshipDto());
 
         $this->result = $this->sut->assembleFromArray($input);
-        $this->assertEquals(1, $this->result->count());
+        $this->assertEquals(1, $this->result['collection']->count());
     }
 }

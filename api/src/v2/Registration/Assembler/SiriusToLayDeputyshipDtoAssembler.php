@@ -2,20 +2,27 @@
 
 namespace App\v2\Registration\Assembler;
 
-use App\Entity\CasRec;
-use App\Service\DataNormaliser;
 use App\v2\Registration\DTO\LayDeputyshipDto;
+use DateTime;
+use InvalidArgumentException;
 
 class SiriusToLayDeputyshipDtoAssembler implements LayDeputyshipDtoAssemblerInterface
 {
     private array $requiredColumns = [
         'Case',
-        'Surname',
-        'Deputy No',
-        'Dep Surname',
-        'Dep Postcode',
-        'Typeofrep',
-        'Made Date',
+        'ClientSurname',
+        'DeputyUid',
+        'DeputySurname',
+        'DeputyAddress1',
+        'DeputyAddress2',
+        'DeputyAddress3',
+        'DeputyAddress4',
+        'DeputyAddress5',
+        'DeputyPostcode',
+        'ReportType',
+        'MadeDate',
+        'OrderType',
+        'CoDeputy',
     ];
 
     private array $missingColumns = [];
@@ -33,12 +40,12 @@ class SiriusToLayDeputyshipDtoAssembler implements LayDeputyshipDtoAssemblerInte
                 implode(', ', $this->missingColumns)
             );
 
-            throw new \InvalidArgumentException($message);
+            throw new InvalidArgumentException($message);
         }
 
         try {
             return $this->buildDto($data);
-        } catch (\InvalidArgumentException $e) {
+        } catch (InvalidArgumentException $e) {
             return null;
         }
     }
@@ -47,16 +54,21 @@ class SiriusToLayDeputyshipDtoAssembler implements LayDeputyshipDtoAssemblerInte
     {
         return
             (new LayDeputyshipDto())
-                ->setCaseNumber(DataNormaliser::normaliseCaseNumber($data['Case']))
-                ->setClientSurname(DataNormaliser::normaliseSurname($data['Surname']))
-                ->setDeputyNumber(DataNormaliser::normaliseDeputyNo($data['Deputy No']))
-                ->setDeputySurname(DataNormaliser::normaliseSurname($data['Dep Surname']))
-                ->setDeputyPostcode(DataNormaliser::normalisePostCode($data['Dep Postcode']))
-                ->setTypeOfReport($data['Typeofrep'])
-                ->setCorref($this->determineCorref($data['Typeofrep']))
+                ->setCaseNumber($data['Case'])
+                ->setClientSurname($data['ClientSurname'])
+                ->setDeputyUid($data['DeputyUid'])
+                ->setDeputySurname($data['DeputySurname'])
+                ->setDeputyAddress1($data['DeputyAddress1'])
+                ->setDeputyAddress2($data['DeputyAddress2'])
+                ->setDeputyAddress3($data['DeputyAddress3'])
+                ->setDeputyAddress4($data['DeputyAddress4'])
+                ->setDeputyAddress5($data['DeputyAddress5'])
+                ->setDeputyPostcode($data['DeputyPostcode'])
+                ->setTypeOfReport($this->determineReportTypeIsSupported($data['ReportType']))
                 ->setIsNdrEnabled(false)
-                ->setSource(CasRec::SIRIUS_SOURCE)
-                ->setOrderDate(new \DateTime($data['Made Date']));
+                ->setOrderDate(new DateTime($data['MadeDate']))
+                ->setOrderType($data['OrderType'])
+                ->setIsCoDeputy('yes' === $data['CoDeputy']);
     }
 
     private function collectMissingColumns(array $data)
@@ -68,30 +80,17 @@ class SiriusToLayDeputyshipDtoAssembler implements LayDeputyshipDtoAssemblerInte
         $this->missingColumns = array_filter($this->missingColumns);
     }
 
-    /**
-     * @return bool
-     */
-    private function canAssemble(array $data)
+    private function determineReportTypeIsSupported(?string $reportType)
     {
-        return
-            array_key_exists('Case', $data) &&
-            array_key_exists('Surname', $data) &&
-            array_key_exists('Deputy No', $data) &&
-            array_key_exists('Dep Surname', $data) &&
-            array_key_exists('Dep Postcode', $data) &&
-            array_key_exists('Typeofrep', $data) &&
-            array_key_exists('Made Date', $data);
-    }
+        $supported = match ($reportType) {
+            'OPG102', 'OPG103', 'OPG104' => true,
+            default => false
+        };
 
-    private function determineCorref(string $reportType): string
-    {
-        switch ($reportType) {
-            case 'OPG102':
-                return 'L2';
-            case 'OPG103':
-                return 'L3';
-            default:
-                throw new \InvalidArgumentException('Cannot assemble LayDeputyshipDto: Unexpected report type');
+        if (!$supported) {
+            throw new InvalidArgumentException();
         }
+
+        return $reportType;
     }
 }

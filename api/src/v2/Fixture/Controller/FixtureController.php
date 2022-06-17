@@ -9,10 +9,11 @@ use App\Entity\Organisation;
 use App\Entity\Report\Report;
 use App\Entity\User;
 use App\Factory\OrganisationFactory;
-use App\FixtureFactory\CasRecFactory;
 use App\FixtureFactory\ClientFactory;
+use App\FixtureFactory\PreRegistrationFactory;
 use App\FixtureFactory\ReportFactory;
 use App\FixtureFactory\UserFactory;
+use App\Repository\NamedDeputyRepository;
 use App\Repository\NdrRepository;
 use App\Repository\OrganisationRepository;
 use App\Repository\ReportRepository;
@@ -38,53 +39,27 @@ class FixtureController extends AbstractController
 {
     use ControllerTrait;
 
-    private $em;
-    private $clientFactory;
-    private $userFactory;
-    private $organisationFactory;
-    private $reportFactory;
-    private $reportRepository;
-    private $reportSection;
-    private $deputyRepository;
-    private $orgRepository;
-    private $userRepository;
-    private $ndrRepository;
-    private $casRecFactory;
-    private string $symfonyEnvironment;
-
     public function __construct(
-        EntityManagerInterface $em,
-        ClientFactory $clientFactory,
-        UserFactory $userFactory,
-        OrganisationFactory $organisationFactory,
-        ReportFactory $reportFactory,
-        ReportRepository $reportRepository,
-        ReportSection $reportSection,
-        UserRepository $deputyRepository,
-        OrganisationRepository $organisationRepository,
-        UserRepository $userRepository,
-        NdrRepository $ndrRepository,
-        CasRecFactory $casRecFactory,
-        string $symfonyEnvironment
+        private EntityManagerInterface $em,
+        private ClientFactory $clientFactory,
+        private UserFactory $userFactory,
+        private OrganisationFactory $organisationFactory,
+        private ReportFactory $reportFactory,
+        private ReportRepository $reportRepository,
+        private ReportSection $reportSection,
+        private UserRepository $deputyRepository,
+        private OrganisationRepository $organisationRepository,
+        private UserRepository $userRepository,
+        private NdrRepository $ndrRepository,
+        private PreRegistrationFactory $preRegistrationFactory,
+        private NamedDeputyRepository $namedDeputyRepository,
+        private string $symfonyEnvironment
     ) {
-        $this->em = $em;
-        $this->clientFactory = $clientFactory;
-        $this->userFactory = $userFactory;
-        $this->organisationFactory = $organisationFactory;
-        $this->reportFactory = $reportFactory;
-        $this->reportRepository = $reportRepository;
-        $this->reportSection = $reportSection;
-        $this->deputyRepository = $deputyRepository;
-        $this->orgRepository = $organisationRepository;
-        $this->userRepository = $userRepository;
-        $this->ndrRepository = $ndrRepository;
-        $this->casRecFactory = $casRecFactory;
-        $this->symfonyEnvironment = $symfonyEnvironment;
     }
 
     /**
      * @Route("/court-order", methods={"POST"})
-     * @Security("is_granted('ROLE_ADMIN')")
+     * @Security("is_granted('ROLE_SUPER_ADMIN')")
      *
      * @return JsonResponse
      *
@@ -103,7 +78,7 @@ class FixtureController extends AbstractController
 
         if (null === $deputy = $this->deputyRepository->findOneBy(['email' => strtolower($fromRequest['deputyEmail'])])) {
             $deputy = $this->createDeputy($fromRequest);
-            $deputyCasRec = $this->casRecFactory->create(
+            $deputyPreRegistration = $this->preRegistrationFactory->create(
                 [
                     'caseNumber' => $client->getCaseNumber(),
                     'clientLastName' => $client->getLastname(),
@@ -113,7 +88,7 @@ class FixtureController extends AbstractController
                 ]
             );
 
-            $this->em->persist($deputyCasRec);
+            $this->em->persist($deputyPreRegistration);
         }
 
         if ('ndr' === strtolower($fromRequest['reportType'])) {
@@ -133,7 +108,7 @@ class FixtureController extends AbstractController
             $deputy->setCoDeputyClientConfirmed(true);
             $coDeputy = $this->userFactory->createCoDeputy($deputy, $client, $fromRequest);
 
-            $coDeputyCasRec = $this->casRecFactory->create(
+            $coDeputyPreRegistration = $this->preRegistrationFactory->create(
                 [
                     'caseNumber' => $client->getCaseNumber(),
                     'clientLastName' => $client->getLastname(),
@@ -143,7 +118,7 @@ class FixtureController extends AbstractController
                 ]
             );
 
-            $this->em->persist($coDeputyCasRec);
+            $this->em->persist($coDeputyPreRegistration);
             $this->em->persist($coDeputy);
         }
 
@@ -231,7 +206,7 @@ class FixtureController extends AbstractController
         $uniqueOrgNameSegment = (preg_match('/\d+/', $fromRequest['deputyEmail'], $matches)) ? $matches[0] : rand(0, 9999);
         $orgName = sprintf('Org %s Ltd', $uniqueOrgNameSegment);
 
-        if (null === ($organisation = $this->orgRepository->findOneBy(['name' => $orgName]))) {
+        if (null === ($organisation = $this->organisationRepository->findOneBy(['name' => $orgName]))) {
             $organisation = $this->organisationFactory->createFromEmailIdentifier($orgName, $fromRequest['deputyEmail'], true);
         }
 
@@ -247,7 +222,7 @@ class FixtureController extends AbstractController
 
         $namedDeputy = $this->buildNamedDeputy($deputy, $fromRequest);
 
-        $client->setNamedDeputy($this->buildNamedDeputy($deputy, $fromRequest));
+        $client->setNamedDeputy($namedDeputy);
         $client->setOrganisation($organisation);
 
         if ($fromRequest['orgSizeUsers'] > 1 && !empty($fromRequest['orgSizeUsers'])) {
@@ -272,8 +247,7 @@ class FixtureController extends AbstractController
             ->setFirstname($deputy->getFirstname())
             ->setLastname($deputy->getLastname())
             ->setEmail1($deputy->getEmail())
-            ->setDeputyNo($fromRequest['caseNumber'].mt_rand(1, 100))
-            ->setDeputyType('PA' === $fromRequest['deputyType'] ? 23 : 21)
+            ->setDeputyUid($fromRequest['caseNumber'].mt_rand(1, 100))
             ->setAddress1($deputy->getAddress1())
             ->setAddressPostcode($deputy->getAddressPostcode())
             ->setPhoneMain($deputy->getPhoneMain());
@@ -413,9 +387,7 @@ class FixtureController extends AbstractController
 
         $fromRequest = json_decode($request->getContent(), true);
 
-        $user = $this->em
-            ->getRepository(User::class)
-            ->findOneBy(['email' => $fromRequest['email']]);
+        $user = $this->userRepository->findOneBy(['email' => $fromRequest['email']]);
 
         $this->em->remove($user);
         $this->em->flush();
@@ -447,7 +419,7 @@ class FixtureController extends AbstractController
         ]);
 
         /** @var User $deputy */
-        $deputy = $this->em->getRepository(User::class)->findOneBy(['email' => $fromRequest['deputyEmail']]);
+        $deputy = $this->userRepository->findOneBy(['email' => $fromRequest['deputyEmail']]);
 
         if (null === $deputy) {
             return $this->buildNotFoundResponse(sprintf("Could not find user with email address '%s'", $fromRequest['deputyEmail']));
@@ -485,7 +457,7 @@ class FixtureController extends AbstractController
         ]);
 
         /** @var Organisation $org */
-        $org = $this->em->getRepository(Organisation::class)->findOneBy(['emailIdentifier' => $fromRequest['orgEmailIdentifier']]);
+        $org = $this->organisationRepository->findOneBy(['emailIdentifier' => $fromRequest['orgEmailIdentifier']]);
 
         if (is_null($org)) {
             return $this->buildNotFoundResponse(sprintf("Could not find org with email identifier '%s'", $fromRequest['orgEmailIdentifier']));
@@ -509,17 +481,17 @@ class FixtureController extends AbstractController
 
     private function createNamedDeputyByExistingUser(string $userEmail)
     {
-        $namedDeputy = $this->em->getRepository(NamedDeputy::class)->findOneBy(['email1' => $userEmail]);
+        $namedDeputy = $this->namedDeputyRepository->findOneBy(['email1' => $userEmail]);
 
         if (is_null($namedDeputy)) {
-            $user = $this->em->getRepository(User::class)->findOneBy(['email' => $userEmail]);
+            $user = $this->userRepository->findOneBy(['email' => $userEmail]);
 
             if ($user) {
                 $namedDeputy = (new NamedDeputy())
+                    ->setDeputyUid(rand(8, 8))
                     ->setEmail1($user->getEmail())
                     ->setFirstname($user->getFirstname())
-                    ->setLastname($user->getLastname())
-                    ->setDeputyNo(rand(8, 8));
+                    ->setLastname($user->getLastname());
 
                 $this->em->persist($namedDeputy);
 
@@ -536,10 +508,10 @@ class FixtureController extends AbstractController
     }
 
     /**
-     * @Route("/createCasrec", methods={"POST"})
+     * @Route("/create-pre-registration", methods={"POST"})
      * @Security("is_granted('ROLE_ADMIN', 'ROLE_AD')")
      */
-    public function createCasrec(Request $request)
+    public function createPreRegistration(Request $request)
     {
         if ('prod' === $this->symfonyEnvironment) {
             throw $this->createNotFoundException();
@@ -547,26 +519,26 @@ class FixtureController extends AbstractController
 
         $fromRequest = json_decode($request->getContent(), true);
 
-        $casRec = $this->casRecFactory->create($fromRequest);
+        $preRegistration = $this->preRegistrationFactory->create($fromRequest);
 
         $data = [
-            'caseNumber' => $casRec->getCaseNumber(),
-            'clientLastName' => $casRec->getClientLastname(),
-            'deputyLastName' => $casRec->getDeputySurname(),
-            'deputyPostCode' => $casRec->getDeputyPostCode(),
+            'caseNumber' => $preRegistration->getCaseNumber(),
+            'clientLastName' => $preRegistration->getClientLastname(),
+            'deputyLastName' => $preRegistration->getDeputySurname(),
+            'deputyPostCode' => $preRegistration->getDeputyPostCode(),
         ];
 
         if ($fromRequest['createCoDeputy']) {
-            $coDeputy = $this->casRecFactory->createCoDeputy($casRec->getCaseNumber(), $fromRequest);
+            $coDeputy = $this->preRegistrationFactory->createCoDeputy($preRegistration->getCaseNumber(), $fromRequest);
             $this->em->persist($coDeputy);
             $data['coDeputyLastName'] = $coDeputy->getDeputySurname();
             $data['coDeputyPostCode'] = $coDeputy->getDeputyPostCode();
         }
 
-        $this->em->persist($casRec);
+        $this->em->persist($preRegistration);
         $this->em->flush();
 
-        return $this->buildSuccessResponse($data, 'CasRec row created', Response::HTTP_OK);
+        return $this->buildSuccessResponse($data, 'PreRegistration row created', Response::HTTP_OK);
     }
 
     /**
@@ -582,7 +554,7 @@ class FixtureController extends AbstractController
         }
 
         /** @var User $user */
-        $user = $this->em->getRepository(User::class)->findOneBy(['email' => $userEmail]);
+        $user = $this->userRepository->findOneBy(['email' => $userEmail]);
 
         if (is_null($user)) {
             $this->buildErrorResponse("User $userEmail not found");
@@ -618,7 +590,7 @@ class FixtureController extends AbstractController
             }
 
             /** @var Organisation $org */
-            $org = $this->em->getRepository(Organisation::class)->findOneBy(['name' => $orgName]);
+            $org = $this->organisationRepository->findOneBy(['name' => $orgName]);
 
             if (is_null($org)) {
                 $this->buildErrorResponse("Org '$orgName' not found");

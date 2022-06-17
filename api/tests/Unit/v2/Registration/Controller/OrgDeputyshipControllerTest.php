@@ -22,18 +22,19 @@ class OrgDeputyshipControllerTest extends AbstractTestController
      */
     public function setUp(): void
     {
+        $this->client = static::createClient(['environment' => 'test', 'debug' => false]);
+
         if (null === self::$tokenAdmin) {
             self::$tokenAdmin = $this->loginAsAdmin();
         }
 
         $this->headers = ['CONTENT_TYPE' => 'application/json', 'HTTP_AuthToken' => self::$tokenAdmin];
-        $this->client = static::createClient(['environment' => 'test', 'debug' => false]);
     }
 
     /** @test */
     public function create()
     {
-        $orgDeputyshipJson = OrgDeputyshipDTOTestHelper::generateCasRecOrgDeputyshipCompressedJson(2, 0);
+        $orgDeputyshipJson = OrgDeputyshipDTOTestHelper::generateSiriusOrgDeputyshipCompressedJson(2, 0);
         $this->client->request('POST', '/v2/org-deputyships', [], [], $this->headers, $orgDeputyshipJson);
 
         $this->assertEquals(Response::HTTP_OK, $this->client->getResponse()->getStatusCode());
@@ -81,10 +82,10 @@ class OrgDeputyshipControllerTest extends AbstractTestController
     {
         return [
             '3 valid Org Deputyships' => [
-                    OrgDeputyshipDTOTestHelper::generateCasRecOrgDeputyshipCompressedJson(3, 0), 3, 3, 3, 3, 0,
+                    OrgDeputyshipDTOTestHelper::generateSiriusOrgDeputyshipCompressedJson(3, 0), 3, 3, 3, 3, 0,
                 ],
             '2 valid, 1 invalid Org Deputyships' => [
-                    OrgDeputyshipDTOTestHelper::generateCasRecOrgDeputyshipCompressedJson(2, 1), 2, 2, 2, 2, 1,
+                    OrgDeputyshipDTOTestHelper::generateSiriusOrgDeputyshipCompressedJson(2, 1), 2, 2, 2, 2, 1,
                 ],
         ];
     }
@@ -103,8 +104,8 @@ class OrgDeputyshipControllerTest extends AbstractTestController
     public function invalidPayloadProvider()
     {
         return [
-            'Too many records' => [OrgDeputyshipDTOTestHelper::generateCasRecOrgDeputyshipCompressedJson(10001, 0)],
-            'No records' => [OrgDeputyshipDTOTestHelper::generateCasRecOrgDeputyshipCompressedJson(0, 0)],
+            'Too many records' => [OrgDeputyshipDTOTestHelper::generateSiriusOrgDeputyshipCompressedJson(10001, 0)],
+            'No records' => [OrgDeputyshipDTOTestHelper::generateSiriusOrgDeputyshipCompressedJson(0, 0)],
         ];
     }
 }

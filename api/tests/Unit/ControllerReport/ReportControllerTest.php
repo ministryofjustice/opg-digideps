@@ -2,10 +2,13 @@
 
 namespace App\Tests\Unit\ControllerReport;
 
+use App\Entity\Report\Checklist;
+use App\Entity\Report\ChecklistInformation;
 use App\Entity\Report\Document;
 use App\Entity\Report\Fee;
 use App\Entity\Report\Report;
 use App\Tests\Unit\Controller\AbstractTestController;
+use DateTime;
 
 class ReportControllerTest extends AbstractTestController
 {
@@ -21,12 +24,10 @@ class ReportControllerTest extends AbstractTestController
     private static $tokenPa = null;
     private static $tokenPaAdmin = null;
     private static $tokenPaTeamMember = null;
-    private static $casRec1;
 
     // pa
     private static $pa1;
     private static $pa2Admin;
-    private static $caseManager;
     private static $pa3TeamMember;
     private static $pa1Client1;
     private static $pa1Client1Report1;
@@ -60,8 +61,8 @@ class ReportControllerTest extends AbstractTestController
         self::fixtures()->flush();
 
         self::$report1 = self::fixtures()->createReport(self::$client1, [
-            'setStartDate' => new \DateTime('2014-01-01'),
-            'setEndDate' => new \DateTime('2014-12-31'),
+            'setStartDate' => new DateTime('2014-01-01'),
+            'setEndDate' => new DateTime('2014-12-31'),
             'setSubmitted' => true,
             'setSubmittedBy' => self::$deputy1,
             'setWishToProvideDocumentation' => true,
@@ -75,14 +76,14 @@ class ReportControllerTest extends AbstractTestController
         self::fixtures()->flush();
 
         self::$reportEdit = self::fixtures()->createReport(self::$clientEdit, [
-            'setStartDate' => new \DateTime('2014-01-01'),
-            'setEndDate' => new \DateTime('2014-12-31'),
+            'setStartDate' => new DateTime('2014-01-01'),
+            'setEndDate' => new DateTime('2014-12-31'),
             'setSubmitted' => false,
             'setSubmittedBy' => null,
         ]);
         self::$report103 = self::fixtures()->createReport(self::$client1, [
-            'setStartDate' => new \DateTime('2015-01-01'),
-            'setEndDate' => new \DateTime('2015-12-31'),
+            'setStartDate' => new DateTime('2015-01-01'),
+            'setEndDate' => new DateTime('2015-12-31'),
             'setType' => Report::LAY_PFA_LOW_ASSETS_TYPE,
             'setSubmitted' => true,
             'setSubmittedBy' => self::$deputy1,
@@ -179,7 +180,7 @@ class ReportControllerTest extends AbstractTestController
 
         // assert creation
         $report = self::fixtures()->getReportById($reportId);
-        /* @var $report \App\Entity\Report\Report */
+        /* @var $report Report */
         $this->assertEquals(self::$client1->getId(), $report->getClient()->getId());
         $this->assertEquals('2016-01-01', $report->getStartDate()->format('Y-m-d'));
         $this->assertEquals('2016-12-31', $report->getEndDate()->format('Y-m-d'));
@@ -333,7 +334,7 @@ class ReportControllerTest extends AbstractTestController
 
         // assert account created with transactions
         $report = self::fixtures()->clear()->getReportById(self::$reportEdit->getId());
-        /* @var $report \App\Entity\Report\Report */
+        /* @var $report Report */
         $this->assertEquals(true, $report->getSubmitted());
         $this->assertEquals(self::$deputy1->getId(), $report->getSubmittedBy()->getId());
         $this->assertEquals('only_deputy', $report->getAgreedBehalfDeputy());
@@ -417,7 +418,7 @@ class ReportControllerTest extends AbstractTestController
         $reportId = self::$report1->getId();
         $url = '/report/'.$reportId;
 
-        self::fixtures()->getReportById($reportId)->setDueDate(new \DateTime('2016-11-30'));
+        self::fixtures()->getReportById($reportId)->setDueDate(new DateTime('2016-11-30'));
         self::fixtures()->flush()->clear();
 
         // assert get
@@ -701,7 +702,7 @@ class ReportControllerTest extends AbstractTestController
                 'button_clicked' => 'save', // Save further information
                 'reporting_period_accurate' => 'yes',
                 'contact_details_upto_date' => 1,
-                'deputy_full_name_accurate_in_casrec' => 1,
+                'deputy_full_name_accurate_in_sirius' => 1,
                 'decisions_satisfactory' => 'yes',
                 'consultations_satisfactory' => 'yes',
                 'care_arrangements' => 'yes',
@@ -711,7 +712,7 @@ class ReportControllerTest extends AbstractTestController
                 'accounts_balance' => 'yes',
                 'money_movements_acceptable' => 'yes',
                 'bond_adequate' => 'yes',
-                'bond_order_match_casrec' => 'yes',
+                'bond_order_match_sirius' => 'yes',
                 'future_significant_decisions' => 'yes',
                 'has_deputy_raised_concerns' => 'no',
                 'case_worker_satisified' => 'yes',
@@ -719,14 +720,14 @@ class ReportControllerTest extends AbstractTestController
         ])['data']['checklist'];
 
         // assert creation
-        /* @var $report \App\Entity\Report\Report */
+        /* @var $report Report */
         $report = self::fixtures()->getReportById($reportId);
-        /* @var $checklist \App\Entity\Report\Checklist */
+        /* @var $checklist Checklist */
         $checklist = $report->getChecklist();
         $this->assertEquals($checklistId, $checklist->getId());
         $this->assertEquals('yes', $checklist->getReportingPeriodAccurate());
         $this->assertEquals('1', $checklist->getContactDetailsUptoDate());
-        $this->assertEquals('1', $checklist->getDeputyFullNameAccurateinCasrec());
+        $this->assertEquals('1', $checklist->getDeputyFullNameAccurateInSirius());
         $this->assertEquals('yes', $checklist->getDecisionsSatisfactory());
         $this->assertEquals('yes', $checklist->getConsultationsSatisfactory());
         $this->assertEquals('yes', $checklist->getCareArrangements());
@@ -736,7 +737,7 @@ class ReportControllerTest extends AbstractTestController
         $this->assertEquals('yes', $checklist->getAccountsBalance());
         $this->assertEquals('yes', $checklist->getMoneyMovementsAcceptable());
         $this->assertEquals('yes', $checklist->getBondAdequate());
-        $this->assertEquals('yes', $checklist->getBondOrderMatchCasrec());
+        $this->assertEquals('yes', $checklist->getBondOrderMatchSirius());
         $this->assertEquals('yes', $checklist->getFutureSignificantDecisions());
         $this->assertEquals('no', $checklist->getHasDeputyRaisedConcerns());
         $this->assertEquals('yes', $checklist->getCaseWorkerSatisified());
@@ -767,7 +768,7 @@ class ReportControllerTest extends AbstractTestController
                 'button_clicked' => 'save', // Save further information
                 'reporting_period_accurate' => 'yes',
                 'contact_details_upto_date' => 1,
-                'deputy_full_name_accurate_in_casrec' => 1,
+                'deputy_full_name_accurate_in_sirius' => 1,
                 'decisions_satisfactory' => 'yes',
                 'consultations_satisfactory' => 'yes',
                 'care_arrangements' => 'yes',
@@ -777,7 +778,7 @@ class ReportControllerTest extends AbstractTestController
                 'accounts_balance' => 'yes',
                 'money_movements_acceptable' => 'yes',
                 'bond_adequate' => 'yes',
-                'bond_order_match_casrec' => 'yes',
+                'bond_order_match_sirius' => 'yes',
                 'future_significant_decisions' => 'yes',
                 'has_deputy_raised_concerns' => 'no',
                 'case_worker_satisified' => 'yes',
@@ -806,7 +807,7 @@ class ReportControllerTest extends AbstractTestController
                 'accounts_balance' => 'yes',
                 'money_movements_acceptable' => 'yes',
                 'bond_adequate' => 'yes',
-                'bond_order_match_casrec' => 'yes',
+                'bond_order_match_sirius' => 'yes',
                 'future_significant_decisions' => 'yes',
                 'has_deputy_raised_concerns' => 'no',
                 'case_worker_satisified' => 'yes',
@@ -814,14 +815,14 @@ class ReportControllerTest extends AbstractTestController
         ])['data']['checklist'];
 
         // assert creation
-        /* @var $report \App\Entity\Report\Report */
+        /* @var $report Report */
         $report = self::fixtures()->getReportById($reportId);
-        /* @var $checklist \App\Entity\Report\Checklist */
+        /* @var $checklist Checklist */
         $checklist = $report->getChecklist();
         $this->assertEquals($checklistId, $checklist->getId());
         $this->assertEquals('yes', $checklist->getReportingPeriodAccurate());
         $this->assertEquals('1', $checklist->getContactDetailsUptoDate());
-        $this->assertEquals('1', $checklist->getDeputyFullNameAccurateinCasrec());
+        $this->assertEquals('1', $checklist->getDeputyFullNameAccurateInSirius());
         $this->assertEquals('yes', $checklist->getDecisionsSatisfactory());
         $this->assertEquals('yes', $checklist->getConsultationsSatisfactory());
         $this->assertEquals('yes', $checklist->getCareArrangements());
@@ -831,19 +832,19 @@ class ReportControllerTest extends AbstractTestController
         $this->assertEquals('yes', $checklist->getAccountsBalance());
         $this->assertEquals('yes', $checklist->getMoneyMovementsAcceptable());
         $this->assertEquals('yes', $checklist->getBondAdequate());
-        $this->assertEquals('yes', $checklist->getBondOrderMatchCasrec());
+        $this->assertEquals('yes', $checklist->getBondOrderMatchSirius());
         $this->assertEquals('yes', $checklist->getFutureSignificantDecisions());
         $this->assertEquals('no', $checklist->getHasDeputyRaisedConcerns());
         $this->assertEquals('yes', $checklist->getCaseWorkerSatisified());
 
         // assert checklist information created
-        /* @var $checklist \App\Entity\Report\Checklist */
+        /* @var $checklist Checklist */
         $checklistInfo = $checklist->getChecklistInformation();
         $this->assertCount(1, $checklistInfo);
 
         // assert checklist information saved correctly
         $checklistInfo = $checklistInfo[0];
-        /* @var $checklistInfo \App\Entity\Report\ChecklistInformation * */
+        /* @var $checklistInfo ChecklistInformation * */
         $this->assertEquals($checklist->getId(), $checklistInfo->getChecklist()->getId());
         $this->assertNotEmpty($checklistInfo->getId());
         $this->assertNotEmpty($checklistInfo->getCreatedBy());
@@ -876,7 +877,7 @@ class ReportControllerTest extends AbstractTestController
                 'button_clicked' => 'save', // Save further information
                 'reporting_period_accurate' => 'yes',
                 'contact_details_upto_date' => 1,
-                'deputy_full_name_accurate_in_casrec' => 1,
+                'deputy_full_name_accurate_in_sirius' => 1,
                 'further_information_received' => 'Some more info',
                 'decisions_satisfactory' => 'yes',
                 'consultations_satisfactory' => 'yes',
@@ -887,7 +888,7 @@ class ReportControllerTest extends AbstractTestController
                 'accounts_balance' => 'yes',
                 'money_movements_acceptable' => 'yes',
                 'bond_adequate' => 'yes',
-                'bond_order_match_casrec' => 'yes',
+                'bond_order_match_sirius' => 'yes',
                 'future_significant_decisions' => 'yes',
                 'has_deputy_raised_concerns' => 'no',
                 'case_worker_satisified' => 'yes',
@@ -922,15 +923,15 @@ class ReportControllerTest extends AbstractTestController
         ])['data']['checklist'];
 
         // assert creation
-        /* @var $report \App\Entity\Report\Report */
+        /* @var $report Report */
         $report = self::fixtures()->getReportById($reportId);
-        /* @var $checklist \App\Entity\Report\Checklist */
+        /* @var $checklist Checklist */
         $checklist = $report->getChecklist();
 
         $this->assertEquals($checklistId, $checklist->getId());
         $this->assertEquals('yes', $checklist->getReportingPeriodAccurate());
         $this->assertEquals('1', $checklist->getContactDetailsUptoDate());
-        $this->assertEquals('1', $checklist->getDeputyFullNameAccurateinCasrec());
+        $this->assertEquals('1', $checklist->getDeputyFullNameAccurateInSirius());
         $this->assertEquals('yes', $checklist->getDecisionsSatisfactory());
         $this->assertEquals('yes', $checklist->getConsultationsSatisfactory());
         $this->assertEquals('yes', $checklist->getCareArrangements());
@@ -940,7 +941,7 @@ class ReportControllerTest extends AbstractTestController
         $this->assertEquals('yes', $checklist->getAccountsBalance());
         $this->assertEquals('yes', $checklist->getMoneyMovementsAcceptable());
         $this->assertEquals('yes', $checklist->getBondAdequate());
-        $this->assertEquals('yes', $checklist->getBondOrderMatchCasrec());
+        $this->assertEquals('yes', $checklist->getBondOrderMatchSirius());
         $this->assertEquals('yes', $checklist->getFutureSignificantDecisions());
         $this->assertEquals('no', $checklist->getHasDeputyRaisedConcerns());
         $this->assertEquals('yes', $checklist->getCaseWorkerSatisified());
@@ -948,14 +949,14 @@ class ReportControllerTest extends AbstractTestController
         $this->assertEquals('for-review', $checklist->getFinalDecision());
 
         // assert checklist information created
-        /* @var $checklist \App\Entity\Report\Checklist */
+        /* @var $checklist Checklist */
         $checklist = $report->getChecklist();
         $checklistInfo = $checklist->getChecklistInformation();
         $this->assertCount(1, $checklistInfo);
 
         // assert checklist information saved correctly
         $checklistInfo = $checklistInfo[0];
-        /* @var $checklistInfo \App\Entity\Report\ChecklistInformation * */
+        /* @var $checklistInfo ChecklistInformation * */
         $this->assertEquals($checklist->getId(), $checklistInfo->getChecklist()->getId());
         $this->assertNotEmpty($checklistInfo->getId());
         $this->assertNotEmpty($checklistInfo->getCreatedBy());

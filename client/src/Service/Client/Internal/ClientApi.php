@@ -12,6 +12,7 @@ use App\EventDispatcher\ObservableEventDispatcher;
 use App\Service\Client\RestClient;
 use App\Service\Client\RestClientInterface;
 use App\Service\Time\DateTimeProvider;
+use Exception;
 use Psr\Log\LoggerInterface;
 use Symfony\Component\Routing\RouterInterface;
 use Symfony\Component\Security\Core\Authentication\Token\Storage\TokenStorageInterface;
@@ -21,6 +22,7 @@ class ClientApi
     private const GET_CLIENT_BY_ID = 'client/%s';
     private const DELETE_CLIENT_BY_ID = 'client/%s/delete';
     private const UPDATE_CLIENT = 'client/upsert';
+    private const CREATE_CLIENT = 'client/upsert';
     private const UNARCHIVE_CLIENT = 'client/%s/unarchive';
 
     private const GET_CLIENT_BY_ID_V2 = 'v2/client/%s';
@@ -85,7 +87,7 @@ class ClientApi
      *
      * @return string
      *
-     * @throws \Exception
+     * @throws Exception
      */
     public function generateClientProfileLink(Client $client)
     {
@@ -108,7 +110,7 @@ class ClientApi
             'Client entity missing current report when trying to generate client profile link'
         );
 
-        throw new \Exception('Unable to generate client profile link.');
+        throw new Exception('Unable to generate client profile link.');
     }
 
     /**
@@ -175,12 +177,14 @@ class ClientApi
 
     public function update(Client $preUpdateClient, Client $postUpdateClient, string $trigger)
     {
-        $this->restClient->put(self::UPDATE_CLIENT, $postUpdateClient, ['pa-edit', 'edit']);
+        $response = $this->restClient->put(self::UPDATE_CLIENT, $postUpdateClient, ['pa-edit', 'edit']);
         $currentUser = $this->tokenStorage->getToken()->getUser();
 
         $clientUpdatedEvent = new ClientUpdatedEvent($preUpdateClient, $postUpdateClient, $currentUser, $trigger);
 
         $this->eventDispatcher->dispatch($clientUpdatedEvent, ClientUpdatedEvent::NAME);
+
+        return $response;
     }
 
     /**
@@ -195,5 +199,10 @@ class ClientApi
     {
         $currentUser = $this->tokenStorage->getToken()->getUser();
         $this->restClient->put(sprintf(self::UNARCHIVE_CLIENT, $id), $currentUser);
+    }
+
+    public function create(Client $client)
+    {
+        return $this->restClient->post(self::CREATE_CLIENT, $client);
     }
 }
