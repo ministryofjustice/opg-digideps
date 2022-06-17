@@ -571,12 +571,12 @@ class ReportController extends RestController
      *
      * @throws NonUniqueResultException
      */
-    public function getAllByUser(Request $request)
+    public function getAllByUser(Request $request): array
     {
         /** @var User $user */
         $user = $this->getUser();
 
-        return $this->getReponseByDeterminant($request, $user->getId(), ReportRepository::USER_DETERMINANT);
+        return $this->getResponseByDeterminant($request, $user->getId(), ReportRepository::USER_DETERMINANT);
     }
 
     /**
@@ -584,7 +584,7 @@ class ReportController extends RestController
      *
      * @throws NonUniqueResultException
      */
-    private function getReponseByDeterminant(Request $request, $orgIdsOrUserId, int $determinant): array
+    private function getResponseByDeterminant(Request $request, $orgIdsOrUserId, int $determinant): array
     {
         /** @var User $user */
         $user = $this->getUser();
@@ -713,7 +713,7 @@ class ReportController extends RestController
             throw new NotFoundHttpException('No organisations found for user');
         }
 
-        return $this->getReponseByDeterminant($request, $organisationIds, ReportRepository::ORG_DETERMINANT);
+        return $this->getResponseByDeterminant($request, $organisationIds, ReportRepository::ORG_DETERMINANT);
     }
 
     /**

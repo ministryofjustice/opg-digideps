@@ -225,6 +225,22 @@ class FixtureController extends AbstractController
         $client->setNamedDeputy($namedDeputy);
         $client->setOrganisation($organisation);
 
+        // if the org size is 1 but we want 10 clients still then create the clients but
+        // we return so we don't create another 10 clients on top if we have a org size > 1
+        if ($fromRequest['orgSizeUsers'] === 1 && $fromRequest['orgSizeClients'] > 1 && !empty($fromRequest['orgSizeClients'])) {
+            foreach (range(1, $fromRequest['orgSizeClients']) as $number) {
+                $orgClient = $this->clientFactory->createGenericOrgClient($namedDeputy, $organisation, $fromRequest['courtDate']);
+                $this->em->persist($orgClient);
+
+                $this->createReport($fromRequest, $orgClient);
+            }
+
+            $this->em->persist($client);
+            $this->em->persist($organisation);
+
+            return;
+        }
+
         if ($fromRequest['orgSizeUsers'] > 1 && !empty($fromRequest['orgSizeUsers'])) {
             foreach (range(1, $fromRequest['orgSizeClients']) as $number) {
                 $orgClient = $this->clientFactory->createGenericOrgClient($namedDeputy, $organisation, $fromRequest['courtDate']);

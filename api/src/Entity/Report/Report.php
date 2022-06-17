@@ -531,12 +531,14 @@ class Report implements ReportInterface
         $this->profDeputyPreviousCosts = new ArrayCollection();
         $this->profDeputyInterimCosts = new ArrayCollection();
         $this->profDeputyEstimateCosts = new ArrayCollection();
+        $this->clientBenefitsCheck = new ArrayCollection();
 
         // set sections as notStarted when a new report is created
         $statusCached = [];
         foreach ($this->getAvailableSections() as $sectionId) {
             $statusCached[$sectionId] = ['state' => ReportStatusService::STATE_NOT_STARTED, 'nOfRecords' => 0];
         }
+        
         $this->setSectionStatusesCached($statusCached);
         $this->reportStatusCached = self::STATUS_NOT_STARTED;
     }
