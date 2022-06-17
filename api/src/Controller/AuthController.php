@@ -117,8 +117,10 @@ class AuthController extends RestController
 
             return $user;
         } catch (\Throwable $e) {
-            $this->logger->warning('Error when attempting to log user in: %s', $e->getMessage());
+            $this->logger->warning(sprintf('Error when attempting to log user in: %s', $e->getMessage()));
         }
+
+        return '';
     }
 
     /**
