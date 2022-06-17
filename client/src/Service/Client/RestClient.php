@@ -73,7 +73,7 @@ class RestClient implements RestClientInterface
     /**
      * Header name holding auth token, returned at login time and re-sent at each requests.
      */
-    const HEADER_JWT = 'JWT';
+    public const HEADER_JWT = 'JWT';
 
     /**
      * Error Messages.
@@ -116,7 +116,7 @@ class RestClient implements RestClientInterface
         $tokenVal = is_array($tokenVal) && !empty($tokenVal[0]) ? $tokenVal[0] : null;
         $this->tokenStorage->set($user->getId(), $tokenVal);
 
-        if ($jwt = $response->getHeader(self::HEADER_JWT)[0]) {
+        if ($response->hasHeader(self::HEADER_JWT) && $jwt = $response->getHeader(self::HEADER_JWT)[0]) {
             // Get public key from API
             $jwkResponse = $this->phpApiClient->request('GET', 'jwk-public-key');
             $jwks = json_decode($jwkResponse->getContent(), true);
@@ -194,7 +194,7 @@ class RestClient implements RestClientInterface
         }
 
         // guzzle 6 does not append query groups and params in the string.
-        //TODO add $queryParams as a method param (Replace last if not used) and avoid using endpoing with query string
+        // TODO add $queryParams as a method param (Replace last if not used) and avoid using endpoing with query string
 
         /** @var array */
         $url = parse_url($endpoint);
@@ -327,7 +327,11 @@ class RestClient implements RestClientInterface
         // add AuthToken if user is logged
         if (!empty($options['addAuthToken']) && $loggedUserId = $this->getLoggedUserId()) {
             $options['headers'][self::HEADER_AUTH_TOKEN] = $this->tokenStorage->get($loggedUserId);
-            $options['headers'][self::HEADER_JWT] = $this->tokenStorage->get(sprintf('%s-jwt', $loggedUserId));
+            $jwt = $this->tokenStorage->get(sprintf('%s-jwt', $loggedUserId));
+
+            if ($jwt) {
+                $options['headers'][self::HEADER_JWT] = $jwt;
+            }
         }
         if (!empty($options['addClientSecret'])) {
             $options['headers'][self::HEADER_CLIENT_SECRET] = $this->clientSecret;
@@ -390,7 +394,7 @@ class RestClient implements RestClientInterface
      */
     private function extractDataArray(ResponseInterface $response)
     {
-        //TODO validate $response->getStatusCode()
+        // TODO validate $response->getStatusCode()
 
         try {
             $data = $this->serializer->deserialize(strval($response->getBody()), 'array', 'json');

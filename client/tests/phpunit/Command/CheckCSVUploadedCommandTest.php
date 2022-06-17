@@ -128,7 +128,7 @@ class CheckCSVUploadedCommandTest extends KernelTestCase
         $this->todayIsABankHoliday(false);
         $this->aCsvUploadedEventExists(false);
 
-        $this->secretManagerService->getSecret('opg-alerts-slack-token')
+        $this->secretManagerService->getSecret('opg-response-slack-token')
             ->shouldBeCalled()
             ->willReturn($this->slackSecret);
 
@@ -166,7 +166,7 @@ class CheckCSVUploadedCommandTest extends KernelTestCase
             CheckCSVUploadedCommand::ORG_CSV,
         ]);
 
-        $this->secretManagerService->getSecret('opg-alerts-slack-token')
+        $this->secretManagerService->getSecret('opg-response-slack-token')
             ->shouldBeCalled()
             ->willReturn($this->slackSecret);
 
@@ -194,7 +194,7 @@ class CheckCSVUploadedCommandTest extends KernelTestCase
         $this->todayIsABankHoliday(false);
         $this->aCsvUploadedEventExists(true, []);
 
-        $this->secretManagerService->getSecret('opg-alerts-slack-token')
+        $this->secretManagerService->getSecret('opg-response-slack-token')
             ->shouldBeCalled()
             ->willReturn($this->slackSecret);
 
@@ -229,7 +229,7 @@ class CheckCSVUploadedCommandTest extends KernelTestCase
         $this->todayIsABankHoliday(false);
         $this->cannotRetrieveAuditLogs();
 
-        $this->secretManagerService->getSecret('opg-alerts-slack-token')
+        $this->secretManagerService->getSecret('opg-response-slack-token')
             ->shouldBeCalled()
             ->willReturn($this->slackSecret);
 
@@ -259,7 +259,7 @@ class CheckCSVUploadedCommandTest extends KernelTestCase
         $this->todayIsABankHoliday(false);
         $this->cannotRetrieveAuditLogs();
 
-        $this->secretManagerService->getSecret('opg-alerts-slack-token')
+        $this->secretManagerService->getSecret('opg-response-slack-token')
             ->shouldBeCalled()
             ->willReturn($this->slackSecret);
 
@@ -300,7 +300,7 @@ class CheckCSVUploadedCommandTest extends KernelTestCase
 
         $this->unableToRetrieveBankHolidays();
 
-        $this->secretManagerService->getSecret('opg-alerts-slack-token')
+        $this->secretManagerService->getSecret('opg-response-slack-token')
             ->shouldBeCalled()
             ->willReturn($this->slackSecret);
 

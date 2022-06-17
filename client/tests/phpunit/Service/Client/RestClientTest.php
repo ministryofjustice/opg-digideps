@@ -13,6 +13,7 @@ use Psr\Http\Message\ResponseInterface;
 use Symfony\Bridge\Monolog\Logger;
 use Symfony\Component\DependencyInjection\ContainerInterface;
 use Symfony\Component\HttpFoundation\Response;
+use Symfony\Contracts\HttpClient\HttpClientInterface;
 
 class RestClientTest extends TestCase
 {
@@ -61,6 +62,11 @@ class RestClientTest extends TestCase
      */
     private $endpointResponse;
 
+    /**
+     * @var HttpClientInterface|MockInterface
+     */
+    private $phpApiClient;
+
     public function setUp(): void
     {
         $this->client = m::mock('GuzzleHttp\ClientInterface');
@@ -69,6 +75,7 @@ class RestClientTest extends TestCase
         $this->logger = m::mock('Symfony\Bridge\Monolog\Logger');
         $this->clientSecret = 'secret-123';
         $this->sessionToken = 'sessionToken347349r783';
+
         $this->container = m::mock('Symfony\Component\DependencyInjection\ContainerInterface');
         $this->container->shouldReceive('get')->with('jms_serializer')->andReturn($this->serialiser);
         $this->container->shouldReceive('get')->with('logger')->andReturn($this->logger);
@@ -77,13 +84,16 @@ class RestClientTest extends TestCase
 
         $this->endpointResponse = m::mock('Psr\Http\Message\ResponseInterface');
 
+        $this->phpApiClient = m::mock(HttpClientInterface::class);
+
         $this->object = new RestClient(
             $this->container,
             $this->client,
             $this->tokenStorage,
             $this->serialiser,
             $this->logger,
-            $this->clientSecret
+            $this->clientSecret,
+            $this->phpApiClient
         );
 
         $this->object->setLoggedUserId(1);
@@ -104,6 +114,7 @@ class RestClientTest extends TestCase
         $this->serialiser->shouldReceive('deserialize')->with($userJson, 'App\Entity\User', 'json')->andReturn($loggedUser);
 
         $this->endpointResponse->shouldReceive('getHeader')->with('AuthToken')->andReturn([$this->sessionToken]);
+        $this->endpointResponse->shouldReceive('hasHeader')->with('JWT')->andReturn(false);
         $this->endpointResponse->shouldReceive('getBody')->andReturn($userJson);
 
         $this->client
@@ -130,7 +141,8 @@ class RestClientTest extends TestCase
         $this->endpointResponse->shouldReceive('getStatusCode')->andReturn(Response::HTTP_OK);
         $this->endpointResponse->shouldReceive('getBody')->andReturn($responseJson);
 
-        $this->tokenStorage->shouldReceive('get')->once()->andReturn($this->sessionToken);
+        $this->tokenStorage->shouldReceive('get')->with('1')->once()->andReturn($this->sessionToken);
+        $this->tokenStorage->shouldReceive('get')->with('1-jwt')->once()->andReturn(false);
         $this->tokenStorage->shouldReceive('remove')->once()->with(1);
 
         $this->serialiser
@@ -211,8 +223,8 @@ class RestClientTest extends TestCase
         $this->endpointResponse->shouldReceive('getStatusCode')->andReturn(Response::HTTP_OK);
         $this->endpointResponse->shouldReceive('getBody')->andReturn($responseJson);
 
-        $this->tokenStorage
-            ->shouldReceive('get')->once()->andReturn($this->sessionToken);
+        $this->tokenStorage->shouldReceive('get')->with('1')->once()->andReturn($this->sessionToken);
+        $this->tokenStorage->shouldReceive('get')->with('1-jwt')->once()->andReturn(false);
 
         $this->client->shouldReceive('put')->with($endpointUrl, [
             'headers' => ['AuthToken' => $this->sessionToken],
@@ -238,8 +250,8 @@ class RestClientTest extends TestCase
         $this->endpointResponse->shouldReceive('getStatusCode')->andReturn(Response::HTTP_CREATED);
         $this->endpointResponse->shouldReceive('getBody')->andReturn($responseJson);
 
-        $this->tokenStorage
-            ->shouldReceive('get')->once()->andReturn($this->sessionToken);
+        $this->tokenStorage->shouldReceive('get')->with('1')->once()->andReturn($this->sessionToken);
+        $this->tokenStorage->shouldReceive('get')->with('1-jwt')->once()->andReturn(false);
 
         $this->client->shouldReceive('post')->with($endpointUrl, [
             'headers' => ['AuthToken' => $this->sessionToken],
@@ -262,8 +274,8 @@ class RestClientTest extends TestCase
             ->shouldReceive('deserialize')->with($responseJson, 'array', 'json')->andReturn($responseArray)
         ;
 
-        $this->tokenStorage
-            ->shouldReceive('get')->once()->andReturn($this->sessionToken);
+        $this->tokenStorage->shouldReceive('get')->with('1')->once()->andReturn($this->sessionToken);
+        $this->tokenStorage->shouldReceive('get')->with('1-jwt')->once()->andReturn(false);
 
         $this->endpointResponse->shouldReceive('getStatusCode')->andReturn(Response::HTTP_OK);
         $this->endpointResponse->shouldReceive('getBody')->andReturn($responseJson);
@@ -289,8 +301,8 @@ class RestClientTest extends TestCase
         $this->serialiser->shouldReceive('deserialize')->with($responseJson, 'array', 'json')->andReturn($responseArray);
         $this->serialiser->shouldReceive('deserialize')->with($responseDataJson, 'App\Entity\User', 'json')->andReturn($user);
 
-        $this->tokenStorage
-            ->shouldReceive('get')->once()->andReturn($this->sessionToken);
+        $this->tokenStorage->shouldReceive('get')->with('1')->once()->andReturn($this->sessionToken);
+        $this->tokenStorage->shouldReceive('get')->with('1-jwt')->once()->andReturn(false);
 
         $this->endpointResponse->shouldReceive('getStatusCode')->andReturn(Response::HTTP_OK);
         $this->endpointResponse->shouldReceive('getBody')->andReturn($responseJson);
@@ -319,13 +331,12 @@ class RestClientTest extends TestCase
         $user1->shouldReceive('getId')->andReturn(1);
         $user2->shouldReceive('getId')->andReturn(2);
 
-
-        $this->serialiser->shouldReceive('deserialize')->with($responseJson, 'array', 'json')->andReturn($responseArray); //extractDataArray()
+        $this->serialiser->shouldReceive('deserialize')->with($responseJson, 'array', 'json')->andReturn($responseArray); // extractDataArray()
         $this->serialiser->shouldReceive('deserialize')->with($user1Json, 'App\Entity\User', 'json')->andReturn($user1);
         $this->serialiser->shouldReceive('deserialize')->with($user2Json, 'App\Entity\User', 'json')->andReturn($user2);
 
-        $this->tokenStorage
-            ->shouldReceive('get')->once()->andReturn($this->sessionToken);
+        $this->tokenStorage->shouldReceive('get')->with('1')->once()->andReturn($this->sessionToken);
+        $this->tokenStorage->shouldReceive('get')->with('1-jwt')->once()->andReturn(false);
 
         $this->endpointResponse->shouldReceive('getStatusCode')->andReturn(Response::HTTP_OK);
         $this->endpointResponse->shouldReceive('getBody')->andReturn($responseJson);
@@ -353,8 +364,8 @@ class RestClientTest extends TestCase
         $this->serialiser
             ->shouldReceive('deserialize')->with($responseJson, 'array', 'json');
 
-        $this->tokenStorage
-            ->shouldReceive('get')->once()->andReturn($this->sessionToken);
+        $this->tokenStorage->shouldReceive('get')->with('1')->once()->andReturn($this->sessionToken);
+        $this->tokenStorage->shouldReceive('get')->with('1-jwt')->once()->andReturn(false);
 
         $this->endpointResponse->shouldReceive('getStatusCode')->andReturn(Response::HTTP_OK);
         $this->endpointResponse->shouldReceive('getBody')->andReturn($responseJson);
@@ -383,8 +394,8 @@ class RestClientTest extends TestCase
         $this->serialiser
             ->shouldReceive('deserialize')->with($responseJson, 'array', 'json')->andReturn($responseArray);
 
-        $this->tokenStorage
-            ->shouldReceive('get')->once()->andReturn($this->sessionToken);
+        $this->tokenStorage->shouldReceive('get')->with('1')->once()->andReturn($this->sessionToken);
+        $this->tokenStorage->shouldReceive('get')->with('1-jwt')->once()->andReturn(false);
 
         $this->endpointResponse->shouldReceive('getStatusCode')->andReturn(Response::HTTP_OK);
         $this->endpointResponse->shouldReceive('getBody')->andReturn($responseJson);
@@ -405,8 +416,8 @@ class RestClientTest extends TestCase
 
         $endpointUrl = '/path/to/endpoint';
 
-        $this->tokenStorage
-            ->shouldReceive('get')->once()->andReturn($this->sessionToken);
+        $this->tokenStorage->shouldReceive('get')->with('1')->once()->andReturn($this->sessionToken);
+        $this->tokenStorage->shouldReceive('get')->with('1-jwt')->once()->andReturn(false);
 
         $this->endpointResponse
             ->shouldReceive('getBody')->andReturn('whatever');
@@ -431,8 +442,8 @@ class RestClientTest extends TestCase
         $this->serialiser
             ->shouldReceive('deserialize')->with($responseJson, 'array', 'json')->andReturn($responseArray);
 
-        $this->tokenStorage
-            ->shouldReceive('get')->once()->andReturn($this->sessionToken);
+        $this->tokenStorage->shouldReceive('get')->with('1')->once()->andReturn($this->sessionToken);
+        $this->tokenStorage->shouldReceive('get')->with('1-jwt')->once()->andReturn(false);
 
         $this->endpointResponse->shouldReceive('getStatusCode')->andReturn(Response::HTTP_OK);
         $this->endpointResponse->shouldReceive('getBody')->andReturn($responseJson);
@@ -465,7 +476,8 @@ class RestClientTest extends TestCase
             $this->tokenStorage,
             $this->serialiser,
             $this->logger,
-            $this->clientSecret
+            $this->clientSecret,
+            $this->phpApiClient
         );
         $object->setLoggedUserId(1);
 
@@ -477,8 +489,8 @@ class RestClientTest extends TestCase
         $this->serialiser
             ->shouldReceive('deserialize')->with($responseJson, 'array', 'json')->andReturn($responseArray);
 
-        $this->tokenStorage
-            ->shouldReceive('get')->andReturn($this->sessionToken);
+        $this->tokenStorage->shouldReceive('get')->with('1')->once()->andReturn($this->sessionToken);
+        $this->tokenStorage->shouldReceive('get')->with('1-jwt')->once()->andReturn(false);
 
         $this->endpointResponse->shouldReceive('getBody')->andReturn($responseJson);
         $this->endpointResponse->shouldReceive('getStatusCode')->andReturn(Response::HTTP_OK);
