@@ -14,6 +14,7 @@ use App\Service\Formatter\RestFormatter;
 use App\Service\JWT\JWTService;
 use DateTime;
 use Doctrine\ORM\EntityManagerInterface;
+use Psr\Log\LoggerInterface;
 use Symfony\Component\HttpFoundation\Request;
 use Symfony\Component\Routing\Annotation\Route;
 use Symfony\Component\Security\Core\Authentication\Token\Storage\TokenStorageInterface;
@@ -26,7 +27,8 @@ class AuthController extends RestController
     public function __construct(
         private AuthService $authService,
         private RestFormatter $restFormatter,
-        private JWTService $JWTService
+        private JWTService $JWTService,
+        private LoggerInterface $logger
     ) {
     }
 
@@ -46,73 +48,77 @@ class AuthController extends RestController
         RestInputOuputFormatter $restInputOutputFormatter,
         EntityManagerInterface $em
     ) {
-        if (!$this->authService->isSecretValid($request)) {
-            throw new AppException\UnauthorisedException('client secret not accepted.');
-        }
-        $data = $this->restFormatter->deserializeBodyContent($request);
-
-        // brute force checks
-        $index = array_key_exists('token', $data) ? 'token' : 'email';
-        $key = $index.$data[$index];
-
-        $attemptsInTimechecker->registerAttempt($key); // e.g emailName@example.org
-        $incrementalWaitingTimechecker->registerAttempt($key);
-
-        // exception if reached delay-check
-        if ($incrementalWaitingTimechecker->isFrozen($key)) {
-            $nextAttemptAt = $incrementalWaitingTimechecker->getUnfrozenAt($key);
-            $nextAttemptIn = ceil(($nextAttemptAt - time()) / 60);
-            $exception = new AppException\UnauthorisedException("Attack detected. Please try again in $nextAttemptIn minutes", 423);
-            $exception->setData($nextAttemptAt);
-
-            throw $exception;
-        }
-
-        // load user by credentials (token or username & password)
-        if (array_key_exists('token', $data)) {
-            $user = $this->authService->getUserByToken($data['token']);
-        } else {
-            $user = $this->authService->getUserByEmailAndPassword(strtolower($data['email']), $data['password']);
-        }
-
-        if (!$user) {
-            // incase the user is not found or the password is not valid (same error given for security reasons)
-            if ($attemptsInTimechecker->maxAttemptsReached($key)) {
-                throw new AppException\UserWrongCredentialsManyAttempts();
-            } else {
-                throw new AppException\UserWrongCredentials();
+        try {
+            if (!$this->authService->isSecretValid($request)) {
+                throw new AppException\UnauthorisedException('client secret not accepted.');
             }
+            $data = $this->restFormatter->deserializeBodyContent($request);
+
+            // brute force checks
+            $index = array_key_exists('token', $data) ? 'token' : 'email';
+            $key = $index.$data[$index];
+
+            $attemptsInTimechecker->registerAttempt($key); // e.g emailName@example.org
+            $incrementalWaitingTimechecker->registerAttempt($key);
+
+            // exception if reached delay-check
+            if ($incrementalWaitingTimechecker->isFrozen($key)) {
+                $nextAttemptAt = $incrementalWaitingTimechecker->getUnfrozenAt($key);
+                $nextAttemptIn = ceil(($nextAttemptAt - time()) / 60);
+                $exception = new AppException\UnauthorisedException("Attack detected. Please try again in $nextAttemptIn minutes", 423);
+                $exception->setData($nextAttemptAt);
+
+                throw $exception;
+            }
+
+            // load user by credentials (token or username & password)
+            if (array_key_exists('token', $data)) {
+                $user = $this->authService->getUserByToken($data['token']);
+            } else {
+                $user = $this->authService->getUserByEmailAndPassword(strtolower($data['email']), $data['password']);
+            }
+
+            if (!$user) {
+                // incase the user is not found or the password is not valid (same error given for security reasons)
+                if ($attemptsInTimechecker->maxAttemptsReached($key)) {
+                    throw new AppException\UserWrongCredentialsManyAttempts();
+                } else {
+                    throw new AppException\UserWrongCredentials();
+                }
+            }
+
+            if (!$this->authService->isSecretValidForRole($user->getRoleName(), $request)) {
+                throw new AppException\UnauthorisedException($user->getRoleName().' user role not allowed from this client.');
+            }
+
+            // reset counters at successful login
+            $attemptsInTimechecker->resetAttempts($key);
+            $incrementalWaitingTimechecker->resetAttempts($key);
+
+            $randomToken = $userProvider->generateRandomTokenAndStore($user);
+            $user->setLastLoggedIn(new DateTime());
+            $em->persist($user);
+            $em->flush();
+
+            $jwt = $this->JWTService->createNewJWT($user);
+
+            // add token into response
+            $restInputOutputFormatter->addResponseModifier(function ($response) use ($randomToken) {
+                $response->headers->set(HeaderTokenAuthenticator::HEADER_NAME, $randomToken);
+            });
+
+            // add JWT into response
+            $restInputOutputFormatter->addResponseModifier(function ($response) use ($jwt) {
+                $response->headers->set('JWT', $jwt);
+            });
+
+            // needed for redirector
+            $this->restFormatter->setJmsSerialiserGroups(['user', 'user-login']);
+
+            return $user;
+        } catch (\Throwable $e) {
+            $this->logger->warning('Error when attempting to log user in: %s', $e->getMessage());
         }
-
-        if (!$this->authService->isSecretValidForRole($user->getRoleName(), $request)) {
-            throw new AppException\UnauthorisedException($user->getRoleName().' user role not allowed from this client.');
-        }
-
-        // reset counters at successful login
-        $attemptsInTimechecker->resetAttempts($key);
-        $incrementalWaitingTimechecker->resetAttempts($key);
-
-        $randomToken = $userProvider->generateRandomTokenAndStore($user);
-        $user->setLastLoggedIn(new DateTime());
-        $em->persist($user);
-        $em->flush();
-
-        $jwt = $this->JWTService->createNewJWT($user);
-
-        // add token into response
-        $restInputOutputFormatter->addResponseModifier(function ($response) use ($randomToken) {
-            $response->headers->set(HeaderTokenAuthenticator::HEADER_NAME, $randomToken);
-        });
-
-        // add JWT into response
-        $restInputOutputFormatter->addResponseModifier(function ($response) use ($jwt) {
-            $response->headers->set('JWT', $jwt);
-        });
-
-        // needed for redirector
-        $this->restFormatter->setJmsSerialiserGroups(['user', 'user-login']);
-
-        return $user;
     }
 
     /**
