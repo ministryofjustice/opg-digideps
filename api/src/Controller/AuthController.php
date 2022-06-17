@@ -51,11 +51,11 @@ class AuthController extends RestController
         }
         $data = $this->restFormatter->deserializeBodyContent($request);
 
-        //brute force checks
+        // brute force checks
         $index = array_key_exists('token', $data) ? 'token' : 'email';
         $key = $index.$data[$index];
 
-        $attemptsInTimechecker->registerAttempt($key); //e.g emailName@example.org
+        $attemptsInTimechecker->registerAttempt($key); // e.g emailName@example.org
         $incrementalWaitingTimechecker->registerAttempt($key);
 
         // exception if reached delay-check
@@ -134,7 +134,7 @@ class AuthController extends RestController
      */
     public function getLoggedUser(TokenStorageInterface $tokenStorage)
     {
-        $this->formatter->setJmsSerialiserGroups(['user', 'user-login']);
+        $this->restFormatter->setJmsSerialiserGroups(['user', 'user-login']);
 
         return $tokenStorage->getToken()->getUser();
     }
