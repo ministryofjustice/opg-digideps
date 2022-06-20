@@ -117,11 +117,11 @@ class RestClient implements RestClientInterface
         $this->tokenStorage->set($user->getId(), $tokenVal);
 
         if ($response->hasHeader(self::HEADER_JWT) && $jwt = $response->getHeader(self::HEADER_JWT)[0]) {
-            // Get public key from API
-            $jwkResponse = $this->phpApiClient->request('GET', 'jwk-public-key');
-            $jwks = json_decode($jwkResponse->getContent(), true);
-
             try {
+                // Get public key from API
+                $jwkResponse = $this->phpApiClient->request('GET', 'jwk-public-key');
+                $jwks = json_decode($jwkResponse->getContent(), true);
+
                 $keys = JWK::parseKeySet($jwks);
                 // Setting specific algorithm is deprecated - work out why the header is not parsed as RS256
                 $decoded = JWT::decode($jwt, $keys, ['RS256']);

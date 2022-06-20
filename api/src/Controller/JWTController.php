@@ -5,13 +5,14 @@ declare(strict_types=1);
 namespace App\Controller;
 
 use App\Service\JWT\JWTService;
+use Psr\Log\LoggerInterface;
 use Symfony\Bundle\FrameworkBundle\Controller\AbstractController;
 use Symfony\Component\HttpFoundation\JsonResponse;
 use Symfony\Component\Routing\Annotation\Route;
 
 class JWTController extends AbstractController
 {
-    public function __construct(private JWTService $JWTService)
+    public function __construct(private JWTService $JWTService, private LoggerInterface $logger)
     {
     }
 
@@ -20,6 +21,15 @@ class JWTController extends AbstractController
      */
     public function getPublicJwkKey(): JsonResponse
     {
-        return new JsonResponse($this->JWTService->generateJWK());
+        try {
+            $this->logger->warning('Serving JWK');
+            $jwk = $this->JWTService->generateJWK();
+        } catch (\Throwable $e) {
+            $message = sprintf('Error Serving JWK: %s', $e->getMessage());
+            $this->logger->warning($message);
+            throw $e;
+        }
+
+        return new JsonResponse($jwk);
     }
 }

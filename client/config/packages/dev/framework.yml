@@ -4,4 +4,12 @@ framework:
     profiler:
         only_exceptions: false
         enabled: "%kernel.debug%"
-    ide: 'phpstorm://open?file=%%f&line=%%l'
+    ide: "phpstorm://open?file=%%f&line=%%l"
+    http_client:
+        scoped_clients:
+            # by setting base_uri, relative URLs (e.g. request("GET", "/registration/new"))
+            # will default to these options
+            php.api.client:
+                base_uri: "https://api/v3/"
+                verify_host: false
+                verify_peer: false
