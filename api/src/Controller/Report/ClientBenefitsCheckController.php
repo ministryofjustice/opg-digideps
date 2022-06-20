@@ -90,6 +90,7 @@ class ClientBenefitsCheckController extends RestController
         if ($clientBenefitsCheck->getReport()) {
             $clientBenefitsCheck->getReport()->updateSectionsStatusCache([Report::SECTION_CLIENT_BENEFITS_CHECK]);
         }
+        $this->getCorrectRepository($reportOrNdr)->persistAndFlush($clientBenefitsCheck);
 
         return $clientBenefitsCheck;
     }

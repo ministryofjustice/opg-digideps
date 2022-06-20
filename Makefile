@@ -115,6 +115,9 @@ reset-database: ##@database Resets the DB schema and runs migrations
 reset-fixtures: ##@database Resets the DB contents and reloads fixtures
 	docker-compose run --rm api sh scripts/reset_db_fixtures_local.sh
 
+db-terminal: ##@database Login to the database via the terminal
+	docker exec -it opg-digideps-postgres-1 sh -c "psql -U api"
+
 redis-clear: ##@database Clears out all the data from redis (session related tokens)
 	for c in ${REDIS_CONTAINERS} ; do \
 	  docker-compose exec $$c redis-cli flushall; \
