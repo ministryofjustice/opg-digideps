@@ -7,14 +7,19 @@ namespace App\Service\JWT;
 use App\Entity\User;
 use App\Service\SecretManagerService;
 use Firebase\JWT\JWT;
+use Firebase\JWT\Key;
 use Psr\Log\LoggerInterface;
 
 class JWTService
 {
     public const JKU_URL_TEMPLATE = '%s/v2/.well-known/jwks.json';
-    
-    public function __construct(private SecretManagerService $secretManager, private LoggerInterface $logger, private string $frontendHost)
-    {
+    public const JWT_ISS = 'digideps';
+
+    public function __construct(
+        private SecretManagerService $secretManager,
+        private LoggerInterface $logger,
+        private string $frontendHost
+    ) {
     }
 
     public function createNewJWT(User $user)
@@ -24,17 +29,15 @@ class JWTService
 
         $kid = openssl_digest($publicKey, 'sha256');
         $payload = [
-            'username' => $user->getEmail(),
-            'userId' => $user->getId(),
             'aud' => 'registration_service',
             'iat' => strtotime('now'),
             'exp' => strtotime('+1 hour'),
             'nbf' => strtotime('-10 seconds'),
-            'iss' => 'digideps',
-            'sub' => $user->getEmail(),
-            'role' => $user->getRoleName()
+            'iss' => self::JWT_ISS,
+            'sub' => $user->getId(),
+            'role' => $user->getRoleName(),
         ];
-        
+
         return JWT::encode($payload, $privateKey, 'RS256', $kid, ['jku' => sprintf(self::JKU_URL_TEMPLATE, $this->frontendHost)]);
     }
 
@@ -59,5 +62,20 @@ class JWTService
                 ],
             ],
         ];
+    }
+
+    public function verify(string $jwt)
+    {
+        try {
+            $publicKey = base64_decode($this->secretManager->getSecret(SecretManagerService::PUBLIC_JWT_KEY_BASE64_SECRET_NAME));
+            // Asserts on nbd, iat, exp and signature
+            $decoded = (array) JWT::decode($jwt, new Key($publicKey, 'RS256'));
+        } catch (\Throwable $e) {
+            $this->logger->warning(sprintf('JWT verification failed: %s', $e->getMessage()));
+
+            return false;
+        }
+
+        return self::JWT_ISS === $decoded['iss'];
     }
 }

@@ -275,7 +275,7 @@ services:
 
     App\Service\Auth\AuthService:
         arguments:
-            $encoderFactory: "@security.encoder_factory"
+            $securityEncoderFactory: "@security.encoder_factory"
             $logger: "@logger"
             $userRepository: '@App\Repository\UserRepository'
             $roleHierarchy: "@security.role_hierarchy"

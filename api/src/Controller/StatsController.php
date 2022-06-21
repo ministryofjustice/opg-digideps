@@ -8,13 +8,14 @@ use App\Entity\Ndr\AssetOther as NdrAssetOther;
 use App\Entity\Ndr\AssetProperty as NdrAssetProperty;
 use App\Entity\Report\AssetOther;
 use App\Entity\Report\AssetProperty;
+use App\Exception\UnauthorisedException;
 use App\Repository\AssetRepository;
 use App\Repository\BankAccountRepository;
 use App\Repository\NdrAssetRepository;
 use App\Repository\NdrBankAccountRepository;
-use App\Repository\NdrRepository;
 use App\Repository\ReportRepository;
 use App\Repository\UserRepository;
+use App\Service\Auth\AuthService;
 use App\Service\Formatter\RestFormatter;
 use App\Service\Stats\QueryFactory;
 use App\Service\Stats\StatsQueryParameters;
@@ -30,11 +31,11 @@ class StatsController extends RestController
         private QueryFactory $QueryFactory,
         private UserRepository $userRepository,
         private ReportRepository $reportRepository,
-        private NdrRepository $ndrRepository,
         private AssetRepository $assetRepository,
         private BankAccountRepository $bankAccountRepository,
         private NdrAssetRepository $ndrAssetRepository,
         private NdrBankAccountRepository $ndrBankAccountRepository,
+        private AuthService $authService
     ) {
     }
 
@@ -54,8 +55,12 @@ class StatsController extends RestController
      * @Route("stats/deputies/lay/active", methods={"GET"})
      * @Security("is_granted('ROLE_SUPER_ADMIN')")
      */
-    public function getActiveLays()
+    public function getActiveLays(Request $request)
     {
+        if (!$this->authService->isJWTValid($request)) {
+            throw new UnauthorisedException('JWT is not valid');
+        }
+
         return $this->userRepository->findActiveLaysInLastYear();
     }
 
