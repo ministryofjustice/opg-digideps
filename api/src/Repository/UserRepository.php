@@ -232,7 +232,7 @@ SQL;
 
         $sql = <<<SQL
 SELECT * FROM dd_user as u
-WHERE u.email = :email
+WHERE lower(u.email) = lower(:email)
 SQL;
 
         $stmt = $conn->prepare($sql);
