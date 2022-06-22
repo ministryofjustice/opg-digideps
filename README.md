@@ -25,6 +25,7 @@ Once both boxes are checked click `Apply & Restart` then run the `Make` command 
 - Navigate to the root directory of this repository and run `make up-app`
 - Check `https://digideps.local/` (Deputy area) and `https://admin.digideps.local/` (Admin area). Your browser will warn you about a self-signed certificate.
 - Run `./generate_certs.sh` to populate your certs directory
+    - **NB:** Once this has ran it will create a directory called `./certs` inside there are multiple `.crt` files. On a macOS system you need to add these certificates to your keychain. Use the following link if you are unsure how to do that [Adding certificate to macOS keychain](https://support.apple.com/en-gb/guide/keychain-access/kyca2431/mac)
 
 ### Reset the database
 

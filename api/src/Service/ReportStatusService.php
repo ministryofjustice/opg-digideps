@@ -688,6 +688,38 @@ class ReportStatusService
         }
     }
 
+ /**
+     * @JMS\VirtualProperty
+     * @JMS\Type("array")
+     * @JMS\Groups({"status", "client-benefits-check-state"})
+     */
+    public function getClientBenefitsCheckState(): array
+    {
+        $benefitsCheck = $this->report->getClientBenefitsCheck();
+
+        $answers = $benefitsCheck ? [
+            'whenChecked' => $benefitsCheck->getWhenLastCheckedEntitlement(),
+            'doOthersReceiveIncome' => $benefitsCheck->getDoOthersReceiveMoneyOnClientsBehalf(),
+            'incomeTypes' => $benefitsCheck->getTypesOfMoneyReceivedOnClientsBehalf()->count() > 0 ? true : null,
+        ] : [];
+
+        switch (count(array_filter($answers))) {
+            case 0:
+                return ['state' => self::STATE_NOT_STARTED, 'nOfRecords' => 0];
+            case 2:
+                if (in_array($answers['doOthersReceiveIncome'], [ClientBenefitsCheck::OTHER_MONEY_DONT_KNOW, ClientBenefitsCheck::OTHER_MONEY_NO])) {
+                     return ['state' => self::STATE_DONE, 'nOfRecords' => 0];
+                } else {
+                    return ['state' => self::STATE_INCOMPLETE, 'nOfRecords' => 0];
+                }
+                // no break
+            case 3:
+                return ['state' => self::STATE_DONE, 'nOfRecords' => 0];
+            default:
+                return ['state' => self::STATE_INCOMPLETE, 'nOfRecords' => 0];
+        }
+    }    
+
     /**
      * @JMS\Exclude
      *
@@ -756,37 +788,5 @@ class ReportStatusService
         }
 
         return $this->isReadyToSubmit() ? Report::STATUS_READY_TO_SUBMIT : Report::STATUS_NOT_FINISHED;
-    }
-
-    /**
-     * @JMS\VirtualProperty
-     * @JMS\Type("array")
-     * @JMS\Groups({"status", "client-benefits-check-state"})
-     */
-    public function getClientBenefitsCheckState(): array
-    {
-        $benefitsCheck = $this->report->getClientBenefitsCheck();
-
-        $answers = $benefitsCheck ? [
-            'whenChecked' => $benefitsCheck->getWhenLastCheckedEntitlement(),
-            'doOthersReceiveIncome' => $benefitsCheck->getDoOthersReceiveMoneyOnClientsBehalf(),
-            'incomeTypes' => $benefitsCheck->getTypesOfMoneyReceivedOnClientsBehalf()->count() > 0 ? true : null,
-        ] : [];
-
-        switch (count(array_filter($answers))) {
-            case 0:
-                return ['state' => self::STATE_NOT_STARTED, 'nOfRecords' => 0];
-            case 2:
-                if (in_array($answers['doOthersReceiveIncome'], [ClientBenefitsCheck::OTHER_MONEY_DONT_KNOW, ClientBenefitsCheck::OTHER_MONEY_NO])) {
-                    return ['state' => self::STATE_DONE, 'nOfRecords' => 0];
-                } else {
-                    return ['state' => self::STATE_INCOMPLETE, 'nOfRecords' => 0];
-                }
-                // no break
-            case 3:
-                return ['state' => self::STATE_DONE, 'nOfRecords' => 0];
-            default:
-                return ['state' => self::STATE_INCOMPLETE, 'nOfRecords' => 0];
-        }
     }
 }
