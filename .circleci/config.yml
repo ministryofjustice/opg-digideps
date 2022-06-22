@@ -24,21 +24,20 @@ workflows:
           tf_workspace: development
           tf_command: plan
 
+      - workspace-protection:
+          name: protect branch workspace
+          requires: [cancel redundant builds]
+          filters: { branches: { ignore: [main] } }
+
       - terraform-command:
           name: plan branch env
-          requires: [cancel redundant builds]
+          requires: [protect branch workspace]
           filters: { branches: { ignore: [main] } }
           tf_command: plan
 
       - terraform-command:
           name: initial terraform apply
-          requires:
-            [
-              lint terraform,
-              cancel redundant builds,
-              plan shared-development,
-              plan branch env,
-            ]
+          requires: [lint terraform, plan shared-development, plan branch env]
           filters: { branches: { ignore: [main] } }
           tf_command: apply
           tf_initial_apply: true
@@ -63,11 +62,6 @@ workflows:
           requires: [initial terraform apply, build pr, lambda unit test]
           filters: { branches: { ignore: [main] } }
           tf_command: apply
-
-      - workspace-protection:
-          name: protect branch workspace
-          requires: [terraform apply]
-          filters: { branches: { ignore: [main] } }
 
       - scale-services:
           name: scale up services for integration tests
@@ -532,10 +526,10 @@ workflows:
           requires: [apply integration]
           filters: { branches: { only: [main] } }
 
-  nightly_workspace_deletion:
+  hourly_workspace_deletion:
     triggers:
       - schedule:
-          cron: "00 00 * * *"
+          cron: "00 * * * *"
           filters: { branches: { only: [main] } }
     jobs:
       - destroy-workspaces:
@@ -815,7 +809,7 @@ jobs:
       protect_time:
         description: time to protect workspace
         type: string
-        default: "24"
+        default: "3"
     environment:
       PROTECT_TIME: << parameters.protect_time >>
     steps:
