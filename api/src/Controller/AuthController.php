@@ -112,8 +112,6 @@ class AuthController extends RestController
                 $response->headers->set('JWT', $jwt);
             });
 
-            $this->logger->warning(sprintf('Logging JWT added to header (REMOVE BEFORE RELEASING): %s', $jwt));
-
             // needed for redirector
             $this->restFormatter->setJmsSerialiserGroups(['user', 'user-login']);
 

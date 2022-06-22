@@ -6,8 +6,9 @@ use App\Entity\User;
 use App\Exception as AppException;
 use App\Model\SelfRegisterData;
 use App\Service\Client\TokenStorage\TokenStorageInterface;
+use App\Service\JWT\JWTService;
 use App\Service\RequestIdLoggerProcessor;
-use Firebase\JWT\JWK;
+use Firebase\JWT\ExpiredException;
 use Firebase\JWT\JWT;
 use GuzzleHttp\ClientInterface;
 use GuzzleHttp\Exception\RequestException;
@@ -89,7 +90,8 @@ class RestClient implements RestClientInterface
         protected SerializerInterface $serializer,
         protected LoggerInterface $logger,
         protected string $clientSecret,
-        protected HttpClientInterface $phpApiClient
+        protected HttpClientInterface $openInternetClient,
+        protected JWTService $JWTService
     ) {
         $this->saveHistory = $container->getParameter('kernel.debug');
         $this->history = [];
@@ -116,26 +118,28 @@ class RestClient implements RestClientInterface
         $tokenVal = is_array($tokenVal) && !empty($tokenVal[0]) ? $tokenVal[0] : null;
         $this->tokenStorage->set($user->getId(), $tokenVal);
 
-        if ($response->hasHeader(self::HEADER_JWT) && $jwt = $response->getHeader(self::HEADER_JWT)[0]) {
+        // Temporarily scoping this to super admins until we're happy with the flow
+        if ($response->hasHeader(self::HEADER_JWT) && User::ROLE_SUPER_ADMIN === $user->getRoleName()) {
             try {
+                $jwt = $response->getHeader(self::HEADER_JWT)[0];
+                $jwtHeaders = $this->JWTService->getJWTHeaders($jwt);
                 // Get public key from API
-                $jwkResponse = $this->phpApiClient->request('GET', 'jwk-public-key');
+                $jwkResponse = $this->openInternetClient->request('GET', $jwtHeaders['jku']);
                 $jwks = json_decode($jwkResponse->getContent(), true);
+                $decoded = $this->JWTService->decodeAndVerifyWithKey($jwt, $jwks);
 
-                $keys = JWK::parseKeySet($jwks);
-                // Setting specific algorithm is deprecated - work out why the header is not parsed as RS256
-                $decoded = JWT::decode($jwt, $keys, ['RS256']);
+                $userId = $decoded['sub'];
+                $this->tokenStorage->set(sprintf('%s-jwt', $userId), $jwt);
+            } catch (ExpiredException $e) {
+                // Swallow expired token errors for now and just log - implement once we're rolling JWT to all users
+                $this->logger->warning(sprintf('JWT expired: %s', $e->getMessage()));
             } catch (Throwable $e) {
                 // Add steps for refreshing JWT if expired here
-
                 $jwtDecodeFailureReason = sprintf('Failed to decode JWT - %s', $e->getMessage());
                 $this->logger->warning($jwtDecodeFailureReason);
 
-                throw new RuntimeException('Problems authenticating - try again');
+                throw new RuntimeException('Problems decoding JWT - try again');
             }
-
-            $userId = ((array) $decoded)['userId'];
-            $this->tokenStorage->set(sprintf('%s-jwt', $userId), $jwt);
         }
 
         return $user;

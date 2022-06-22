@@ -4,19 +4,28 @@ namespace DigidepsTests\Service\Client;
 
 use App\Service\Client\RestClient;
 use App\Service\Client\TokenStorage\TokenStorageInterface;
+use App\Service\JWT\JWTService;
+use GuzzleHttp\Client;
 use GuzzleHttp\ClientInterface;
+use GuzzleHttp\Psr7\Response as GuzzleResponse;
 use JMS\Serializer\SerializerInterface;
 use Mockery as m;
 use Mockery\MockInterface;
 use PHPUnit\Framework\TestCase;
+use Prophecy\Argument;
+use Prophecy\PhpUnit\ProphecyTrait;
 use Psr\Http\Message\ResponseInterface;
 use Symfony\Bridge\Monolog\Logger;
 use Symfony\Component\DependencyInjection\ContainerInterface;
+use Symfony\Component\HttpClient\MockHttpClient;
+use Symfony\Component\HttpClient\Response\MockResponse;
 use Symfony\Component\HttpFoundation\Response;
 use Symfony\Contracts\HttpClient\HttpClientInterface;
 
 class RestClientTest extends TestCase
 {
+    use ProphecyTrait;
+
     /**
      * @var RestClient
      */
@@ -65,7 +74,7 @@ class RestClientTest extends TestCase
     /**
      * @var HttpClientInterface|MockInterface
      */
-    private $phpApiClient;
+    private $openInternetClient;
 
     public function setUp(): void
     {
@@ -84,7 +93,8 @@ class RestClientTest extends TestCase
 
         $this->endpointResponse = m::mock('Psr\Http\Message\ResponseInterface');
 
-        $this->phpApiClient = m::mock(HttpClientInterface::class);
+        $this->openInternetClient = m::mock(HttpClientInterface::class);
+        $this->jwtService = m::mock(JWTService::class);
 
         $this->object = new RestClient(
             $this->container,
@@ -93,7 +103,8 @@ class RestClientTest extends TestCase
             $this->serialiser,
             $this->logger,
             $this->clientSecret,
-            $this->phpApiClient
+            $this->openInternetClient,
+            $this->jwtService
         );
 
         $this->object->setLoggedUserId(1);
@@ -477,7 +488,7 @@ class RestClientTest extends TestCase
             $this->serialiser,
             $this->logger,
             $this->clientSecret,
-            $this->phpApiClient
+            $this->openInternetClient
         );
         $object->setLoggedUserId(1);
 
@@ -512,6 +523,108 @@ class RestClientTest extends TestCase
 
         $this->assertTrue($actual[0]['time'] > 0);
         $this->assertTrue($actual[0]['time'] < 1);
+    }
+
+    public function testJWTReturnedWhenSuperAdminLogsIn()
+    {
+        $client = self::prophesize(Client::class);
+        $tokenStorage = self::prophesize(TokenStorageInterface::class);
+        $serializer = self::prophesize(SerializerInterface::class);
+        $logger = self::prophesize(Logger::class);
+        $container = self::prophesize(ContainerInterface::class);
+        $jwtService = self::prophesize(JWTService::class);
+
+        $clientSecret = 'aSecret';
+        $sessionToken = 'someToken123';
+
+        $expectedLoggedInUser = m::mock('App\Entity\User')
+            ->shouldReceive('getId')->andReturn(1)
+            ->shouldReceive('getRolename')->andReturn('ROLE_SUPER_ADMIN')
+            ->getMock();
+        $userArray = ['id' => 1, 'firstname' => 'Peter'];
+        $userJson = json_encode($userArray);
+
+        [$jwks, $jwtHeaders, $jwtClaims] = $this->generateValidJwtJwkArrays();
+
+        $encodedJWT = JWTService::base64EncodeJWT($jwtHeaders, $jwtClaims);
+
+        $mockResponseJson = json_encode($jwks, JSON_THROW_ON_ERROR);
+        $mockResponse = new MockResponse($mockResponseJson, [
+            'http_code' => 200,
+            'response_headers' => ['Content-Type: application/json'],
+        ]);
+
+        $openInternetClient = new MockHttpClient($mockResponse);
+
+        $sut = new RestClient(
+            $container->reveal(),
+            $client->reveal(),
+            $tokenStorage->reveal(),
+            $serializer->reveal(),
+            $logger->reveal(),
+            $clientSecret,
+            $openInternetClient,
+            $jwtService->reveal()
+        );
+
+        $credentialsArray = ['username' => 'u', 'password' => 'p'];
+        $credentialsJson = json_encode($credentialsArray);
+        $serializer->serialize($credentialsArray, 'json')->willReturn($credentialsJson);
+        $serializer->deserialize($userJson, 'array', 'json')->willReturn(['success' => true, 'data' => $userArray]);
+        $serializer->deserialize($userJson, 'App\Entity\User', 'json')->willReturn($expectedLoggedInUser);
+
+        $loginResponse = new GuzzleResponse(200, ['AuthToken' => $sessionToken, 'JWT' => [0 => $encodedJWT]], $userJson);
+
+        $client->post('/auth/login', [
+            'body' => $credentialsJson,
+            'headers' => ['ClientSecret' => $clientSecret],
+        ])->willReturn($loginResponse);
+
+        $tokenStorage->set('1', $sessionToken)->shouldBeCalled();
+        $tokenStorage->set('1-jwt', $encodedJWT)->shouldBeCalled();
+
+        $jwtService->getJWTHeaders($encodedJWT)->shouldBeCalled()->willReturn($jwtHeaders);
+        $jwtService->decodeAndVerifyWithKey($encodedJWT, $jwks)->shouldBeCalled()->willReturn($jwtClaims);
+
+        $logger->warning(Argument::any())->shouldNotBeCalled();
+
+        $actualUser = $sut->login($credentialsArray);
+        $this->assertEquals($expectedLoggedInUser, $actualUser);
+    }
+
+    private function generateValidJwtJwkArrays()
+    {
+        $jwks = [
+            'keys' => [
+                0 => [
+                    'kty' => 'RSA',
+                    'n' => 'wxzA2VTIuogiRQT1DVPYrBc4GZmS5eR6UXawTXCWB8vXKT-2TXRcb8r5esVmzOspqpU7k9jFEhI-upEx15Ok7VG7kAuvJ8k17PV4iJryw14YIwWet7hVFkVzlFn_yUVULwOXsCn6bZi3ZKbV4C9p5xtyB1QiZkoEVzvtp88r_T1f9kA1a8lIeTFrrVV-xV6kReCUSu9Ctlx-Ev6Gi66siW_81_5hV-BvUmzFskVAca6O92EKxTW764EoIxWGZYJ2v1j-eZkGk2-OdsFY5OdIqPEo8Hm0U5KwsY5CsDOpHPVEMJnQLFBJuq7bHve-DqUtl2QcJnDUcDKUnXuqKGJ-HQ',
+                    'e' => 'AQAB',
+                    'kid' => '45ed51b79f00b11d47100b9cc7092ef2819da72df0fc0be8f89824a779973bc0',
+                    'alg' => 'RS256',
+                    'use' => 'sig',
+                ],
+            ],
+        ];
+
+        $jwtHeaders = [
+            'jku' => 'https://digideps.local/v2/.well-known/jwks.json',
+            'typ' => 'JWT',
+            'alg' => 'RS256',
+            'kid' => '45ed51b79f00b11d47100b9cc7092ef2819da72df0fc0be8f89824a779973bc0',
+        ];
+
+        $jwtClaims = [
+            'aud' => 'registration_service',
+            'iat' => strtotime('now'),
+            'exp' => strtotime('+1 hour'),
+            'nbf' => strtotime('-10 seconds'),
+            'iss' => 'digideps',
+            'sub' => 1,
+            'role' => 'ROLE_SUPER_ADMIN',
+        ];
+
+        return [$jwks, $jwtHeaders, $jwtClaims];
     }
 
     public function tearDown(): void
