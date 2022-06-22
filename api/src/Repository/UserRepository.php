@@ -54,7 +54,7 @@ class UserRepository extends ServiceEntityRepository
         $this->qb
             ->setFirstResult($request->get('offset', 0))
             ->setMaxResults($request->get('limit', 50))
-            ->orderBy('u.'.$order_by, $sort_order)
+            ->orderBy('u.' . $order_by, $sort_order)
             ->groupBy('u.id');
 
         if ($request->get('filter_by_ids')) {
@@ -112,7 +112,7 @@ class UserRepository extends ServiceEntityRepository
             $this->qb->leftJoin('u.clients', 'c');
 
             $searchTerms = explode(' ', $searchTerm);
-            $includeClients = (bool) $request->get('include_clients');
+            $includeClients = (bool)$request->get('include_clients');
 
             if (1 === count($searchTerms)) {
                 $this->addBroadMatchFilter($searchTerm, $includeClients);
@@ -135,7 +135,7 @@ class UserRepository extends ServiceEntityRepository
             $nameBasedQuery .= ' OR (lower(c.firstname) LIKE :qLike OR lower(c.lastname) LIKE :qLike)';
         }
 
-        $this->qb->setParameter('qLike', '%'.strtolower($searchTerm).'%');
+        $this->qb->setParameter('qLike', '%' . strtolower($searchTerm) . '%');
         $this->qb->andWhere($nameBasedQuery);
     }
 
@@ -282,6 +282,22 @@ SQL;
 
         $dql = "SELECT u FROM App\Entity\User u WHERE u.roleName IN('ROLE_ADMIN', 'ROLE_SUPER_ADMIN', 'ROLE_ADMIN_MANAGER')
                 AND u.lastLoggedIn > :date ";
+
+        $query = $this
+            ->getEntityManager()
+            ->createQuery($dql)
+            ->setParameter('date', $date);
+
+        return $query->getResult();
+    }
+
+
+    public function getAllAdminUserAccountsNotUsedWithin(string $timeframe)
+
+    {
+        $date = (new DateTime())->modify($timeframe);
+
+        $dql = "SELECT u FROM App\Entity\User u WHERE u.roleName IN('ROLE_ADMIN') AND u.lastLoggedIn < :date ";
 
         $query = $this
             ->getEntityManager()

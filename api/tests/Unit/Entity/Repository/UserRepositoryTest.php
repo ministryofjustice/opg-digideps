@@ -1,6 +1,6 @@
 <?php
 
-namespace App\Tests\Unit\Repository;
+namespace App\Tests\Unit\Entity\Repository;
 
 use App\Entity\User;
 use App\Repository\UserRepository;
@@ -292,6 +292,38 @@ class UserRepositoryTest extends WebTestCase
         foreach ($expectedLoggedOutUsersNotReturned as $user) {
             self::assertNotContains($user, $actualLoggedInUsers);
         }
+    }
+    
+    public function testGetAllAdminUserAccountsNotUsedWithin()
+    {
+        $userHelper = new UserTestHelper();
+        $usersToAdd = [];
+        $usersToAdd[] = $notRecentlyLoggedInAdminUser = $userHelper->createUser(null, User::ROLE_ADMIN);
+        $usersToAdd[] = $recentlyLoggedInAdminUser = $userHelper->createUser(null, User::ROLE_ADMIN);
+        $usersToAdd[] = $recentlyLoggedInAdminManagerUser = $userHelper->createUser(null, User::ROLE_ADMIN_MANAGER);
+        $usersToAdd[] = $recentlyLoggedInDeputyUser = $userHelper->createUser(null, User::ROLE_LAY_DEPUTY);
+
+        $notRecentlyLoggedInAdminUser->setLastLoggedIn(new DateTime('-410 days'));
+        $recentlyLoggedInAdminUser->setLastLoggedIn(new DateTime('-10 days'));
+        $recentlyLoggedInAdminManagerUser->setLastLoggedIn(new DateTime('-10 days'));
+        $recentlyLoggedInDeputyUser->setLastLoggedIn(new DateTime('-10 days'));
+
+        foreach ($usersToAdd as $user) {
+            $this->em->persist($user);
+        }
+
+        $this->em->flush();
+
+        $expectedLoggedInAdminUsers = [$notRecentlyLoggedInAdminUser];
+        $expectedRecentlyLoggedInUsersNotReturned = [$recentlyLoggedInAdminUser, $recentlyLoggedInAdminManagerUser, $recentlyLoggedInDeputyUser];
+
+        $actualLoggedInAdminUsers = $this->sut->getAllAdminUserAccountsNotUsedWithin('-398 days');
+
+        self::assertEquals($expectedLoggedInAdminUsers, $actualLoggedInAdminUsers);
+
+        foreach ($expectedRecentlyLoggedInUsersNotReturned as $user) {
+            self::assertNotContains($user, $actualLoggedInAdminUsers);
+        } 
     }
 
     protected function tearDown(): void
