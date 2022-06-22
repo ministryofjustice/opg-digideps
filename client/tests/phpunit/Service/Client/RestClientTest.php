@@ -76,6 +76,11 @@ class RestClientTest extends TestCase
      */
     private $openInternetClient;
 
+    /**
+     * @var HttpClientInterface|MockInterface
+     */
+    private $jwtService;
+
     public function setUp(): void
     {
         $this->client = m::mock('GuzzleHttp\ClientInterface');
@@ -488,7 +493,8 @@ class RestClientTest extends TestCase
             $this->serialiser,
             $this->logger,
             $this->clientSecret,
-            $this->openInternetClient
+            $this->openInternetClient,
+            $this->jwtService
         );
         $object->setLoggedUserId(1);
 
