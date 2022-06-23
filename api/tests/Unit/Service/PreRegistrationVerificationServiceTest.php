@@ -132,6 +132,14 @@ class PreRegistrationVerificationServiceTest extends WebTestCase
     /**
      * @test
      */
+    public function validateCaseInsensitive()
+    {
+        $this->assertTrue($this->preRegistrationVerificationService->validate('11111111', 'csurn', 'DSURN', 'dPc123'));
+    }
+
+    /**
+     * @test
+     */
     public function validateNonMLDWithPostcode()
     {
         $this->assertTrue($this->preRegistrationVerificationService->validate('11111111', 'CSurn', 'DSurn', 'DPC123'));

@@ -151,7 +151,7 @@ class PreRegistrationVerificationService
         $caseNumberClientLastnameMatches = [];
 
         foreach ($caseNumberMatches as $match) {
-            if ($match->getClientLastname() == $detailsToMatchOn['clientLastname']) {
+            if (mb_strtolower($match->getClientLastname()) == mb_strtolower($detailsToMatchOn['clientLastname'])) {
                 $caseNumberClientLastnameMatches[] = $match;
             }
         }
@@ -181,7 +181,7 @@ class PreRegistrationVerificationService
         $filteredClientLastnameMatches = [];
 
         foreach ($filteredCaseNumberMatches as $match) {
-            if ($match->getDeputySurname() == $detailsToMatchOn['deputySurname']) {
+            if (mb_strtolower($match->getDeputySurname()) == mb_strtolower($detailsToMatchOn['deputySurname'])) {
                 $filteredClientLastnameMatches[] = $match;
             }
         }
