@@ -1,9 +1,11 @@
 version: "3.2"
 services:
   api:
+    container_name: api-unit-tests-api
     image: ${AWS_REGISTRY}/digideps/api:${VERSION}
     build: ./api
   client:
+    container_name: client-unit-tests-frontend
     image: ${AWS_REGISTRY}/digideps/client:${VERSION}
     build: ./client
   sync:
