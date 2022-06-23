@@ -137,7 +137,7 @@ class UserController extends AbstractController
 
             // log in
             $clientToken = new UsernamePasswordToken($user, null, 'secured_area', $user->getRoles());
-            $tokenStorage->setToken($clientToken); //now the user is logged in
+            $tokenStorage->setToken($clientToken); // now the user is logged in
 
             $session->set('_security_secured_area', serialize($clientToken));
 
@@ -318,6 +318,18 @@ class UserController extends AbstractController
 
                     case 425:
                         $form->addError(new FormError($this->translator->trans('formErrors.caseNumberAlreadyUsed', [], 'register')));
+                        break;
+
+                    case 460:
+                        $form->get('caseNumber')->addError(new FormError($this->translator->trans('matching.caseNumberError', [], 'register')));
+                        break;
+
+                    case 461:
+                        $form->get('clientLastname')->addError(new FormError($this->translator->trans('matching.clientLastnameError', [], 'register')));
+                        break;
+
+                    case 462:
+                        $form->get('lastname')->addError(new FormError($this->translator->trans('matching.deputyLastnameError', [], 'register')));
                         break;
 
                     default:

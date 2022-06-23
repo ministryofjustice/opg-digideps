@@ -131,7 +131,6 @@ class SelfRegisterControllerTest extends AbstractTestController
                 'deputySurname' => 'test',
                 'deputyPostcode' => 'SW2',
             ],
-            'case_number_matches' => [],
         ]);
 
         $this->assertStringContainsString($expectedErrorJson, $responseArray['message']);
@@ -246,6 +245,154 @@ class SelfRegisterControllerTest extends AbstractTestController
             ],
             'case_number_matches' => [
                  [
+                    'id' => 1,
+                    'case_number' => '97643164',
+                    'client_lastname' => 'Douglas',
+                    'deputy_uid' => 'DEP00199',
+                    'deputy_surname' => 'Murphy',
+                    'deputy_address1' => 'Victoria Road',
+                    'deputy_address2' => null,
+                    'deputy_address3' => null,
+                    'deputy_address4' => null,
+                    'deputy_address5' => null,
+                    'deputy_post_code' => 'SW1',
+                    'type_of_report' => 'OPG102',
+                    'order_type' => 'pfa',
+                    'updated_at' => null,
+                    'order_date' => '2010-03-30T00:00:00+01:00',
+                    'is_co_deputy' => null,
+                    'ndr' => true,
+                    'created_at' => $now->format('c'),
+                ],
+            ],
+        ];
+
+        $this->assertEquals($expectedErrorJson, json_decode($responseArray['message'], true));
+    }
+
+    /**
+     * @test
+     */
+    public function throwErrorForValidCaseNumberClientLastnameButInvalidDeputyLastname()
+    {
+        $now = new DateTime();
+
+        $casRec = new PreRegistration([
+            'Case' => '97643164',
+            'ClientSurname' => 'Douglas',
+            'DeputyUid' => 'DEP00199',
+            'DeputySurname' => 'Murphy',
+            'DeputyAddress1' => 'Victoria Road',
+            'DeputyPostcode' => 'SW1',
+            'ReportType' => 'OPG102',
+            'MadeDate' => '2010-03-30',
+            'OrderType' => 'pfa',
+            'NDR' => 'yes',
+        ], $now);
+
+        $this->fixtures()->persist($casRec);
+        $this->fixtures()->flush();
+
+        $token = $this->login('deputy@example.org', 'DigidepsPass1234', API_TOKEN_DEPUTY);
+
+        $responseArray = $this->assertJsonRequest('POST', '/selfregister', [
+            'mustFail' => true,
+            'AuthToken' => $token,
+            'data' => [
+                'firstname' => 'Zac',
+                'lastname' => 'Tolley',
+                'email' => 'wrong@example.org',
+                'postcode' => 'SW1',
+                'client_firstname' => 'John',
+                'client_lastname' => 'Douglas',
+                'case_number' => '97643164',
+            ],
+            'ClientSecret' => API_TOKEN_DEPUTY,
+        ]);
+
+        $expectedErrorJson = [
+            'search_terms' => [
+                'caseNumber' => '97643164',
+                'clientLastname' => 'Douglas',
+                'deputySurname' => 'Tolley',
+                'deputyPostcode' => 'SW1',
+            ],
+            'client_last_name_matches' => [
+                [
+                    'id' => 1,
+                    'case_number' => '97643164',
+                    'client_lastname' => 'Douglas',
+                    'deputy_uid' => 'DEP00199',
+                    'deputy_surname' => 'Murphy',
+                    'deputy_address1' => 'Victoria Road',
+                    'deputy_address2' => null,
+                    'deputy_address3' => null,
+                    'deputy_address4' => null,
+                    'deputy_address5' => null,
+                    'deputy_post_code' => 'SW1',
+                    'type_of_report' => 'OPG102',
+                    'order_type' => 'pfa',
+                    'updated_at' => null,
+                    'order_date' => '2010-03-30T00:00:00+01:00',
+                    'is_co_deputy' => null,
+                    'ndr' => true,
+                    'created_at' => $now->format('c'),
+                ],
+            ],
+        ];
+
+        $this->assertEquals($expectedErrorJson, json_decode($responseArray['message'], true));
+    }
+
+    /**
+     * @test
+     */
+    public function throwErrorForValidCaseNumberClientAndDeputyLastnameButInvalidPostcode()
+    {
+        $now = new DateTime();
+
+        $casRec = new PreRegistration([
+            'Case' => '97643164',
+            'ClientSurname' => 'Douglas',
+            'DeputyUid' => 'DEP00199',
+            'DeputySurname' => 'Murphy',
+            'DeputyAddress1' => 'Victoria Road',
+            'DeputyPostcode' => 'SW1',
+            'ReportType' => 'OPG102',
+            'MadeDate' => '2010-03-30',
+            'OrderType' => 'pfa',
+            'NDR' => 'yes',
+        ], $now);
+
+        $this->fixtures()->persist($casRec);
+        $this->fixtures()->flush();
+
+        $token = $this->login('deputy@example.org', 'DigidepsPass1234', API_TOKEN_DEPUTY);
+
+        $responseArray = $this->assertJsonRequest('POST', '/selfregister', [
+            'mustFail' => true,
+            'AuthToken' => $token,
+            'data' => [
+                'firstname' => 'Zac',
+                'lastname' => 'Murphy',
+                'email' => 'wrong@example.org',
+                'postcode' => 'ABC 123',
+                'client_firstname' => 'John',
+                'client_lastname' => 'Douglas',
+                'case_number' => '97643164',
+            ],
+            'ClientSecret' => API_TOKEN_DEPUTY,
+        ]);
+
+        $expectedErrorJson = [
+            'search_terms' => [
+                'caseNumber' => '97643164',
+                'clientLastname' => 'Douglas',
+                'deputySurname' => 'Murphy',
+                'deputyPostcode' => 'ABC 123',
+            ],
+            'deputy_last_name_matches' => [
+                [
                     'id' => 1,
                     'case_number' => '97643164',
                     'client_lastname' => 'Douglas',
