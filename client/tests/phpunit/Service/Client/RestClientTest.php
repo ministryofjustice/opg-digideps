@@ -158,7 +158,7 @@ class RestClientTest extends TestCase
         $this->endpointResponse->shouldReceive('getBody')->andReturn($responseJson);
 
         $this->tokenStorage->shouldReceive('get')->with('1')->once()->andReturn($this->sessionToken);
-        $this->tokenStorage->shouldReceive('get')->with('1-jwt')->once()->andReturn(false);
+        $this->tokenStorage->shouldReceive('get')->with('urn:opg:digideps:users:1-jwt')->once()->andReturn(false);
         $this->tokenStorage->shouldReceive('remove')->once()->with(1);
 
         $this->serialiser
@@ -240,7 +240,7 @@ class RestClientTest extends TestCase
         $this->endpointResponse->shouldReceive('getBody')->andReturn($responseJson);
 
         $this->tokenStorage->shouldReceive('get')->with('1')->once()->andReturn($this->sessionToken);
-        $this->tokenStorage->shouldReceive('get')->with('1-jwt')->once()->andReturn(false);
+        $this->tokenStorage->shouldReceive('get')->with('urn:opg:digideps:users:1-jwt')->once()->andReturn(false);
 
         $this->client->shouldReceive('put')->with($endpointUrl, [
             'headers' => ['AuthToken' => $this->sessionToken],
@@ -267,7 +267,7 @@ class RestClientTest extends TestCase
         $this->endpointResponse->shouldReceive('getBody')->andReturn($responseJson);
 
         $this->tokenStorage->shouldReceive('get')->with('1')->once()->andReturn($this->sessionToken);
-        $this->tokenStorage->shouldReceive('get')->with('1-jwt')->once()->andReturn(false);
+        $this->tokenStorage->shouldReceive('get')->with('urn:opg:digideps:users:1-jwt')->once()->andReturn(false);
 
         $this->client->shouldReceive('post')->with($endpointUrl, [
             'headers' => ['AuthToken' => $this->sessionToken],
@@ -291,7 +291,7 @@ class RestClientTest extends TestCase
         ;
 
         $this->tokenStorage->shouldReceive('get')->with('1')->once()->andReturn($this->sessionToken);
-        $this->tokenStorage->shouldReceive('get')->with('1-jwt')->once()->andReturn(false);
+        $this->tokenStorage->shouldReceive('get')->with('urn:opg:digideps:users:1-jwt')->once()->andReturn(false);
 
         $this->endpointResponse->shouldReceive('getStatusCode')->andReturn(Response::HTTP_OK);
         $this->endpointResponse->shouldReceive('getBody')->andReturn($responseJson);
@@ -318,7 +318,7 @@ class RestClientTest extends TestCase
         $this->serialiser->shouldReceive('deserialize')->with($responseDataJson, 'App\Entity\User', 'json')->andReturn($user);
 
         $this->tokenStorage->shouldReceive('get')->with('1')->once()->andReturn($this->sessionToken);
-        $this->tokenStorage->shouldReceive('get')->with('1-jwt')->once()->andReturn(false);
+        $this->tokenStorage->shouldReceive('get')->with('urn:opg:digideps:users:1-jwt')->once()->andReturn(false);
 
         $this->endpointResponse->shouldReceive('getStatusCode')->andReturn(Response::HTTP_OK);
         $this->endpointResponse->shouldReceive('getBody')->andReturn($responseJson);
@@ -352,7 +352,7 @@ class RestClientTest extends TestCase
         $this->serialiser->shouldReceive('deserialize')->with($user2Json, 'App\Entity\User', 'json')->andReturn($user2);
 
         $this->tokenStorage->shouldReceive('get')->with('1')->once()->andReturn($this->sessionToken);
-        $this->tokenStorage->shouldReceive('get')->with('1-jwt')->once()->andReturn(false);
+        $this->tokenStorage->shouldReceive('get')->with('urn:opg:digideps:users:1-jwt')->once()->andReturn(false);
 
         $this->endpointResponse->shouldReceive('getStatusCode')->andReturn(Response::HTTP_OK);
         $this->endpointResponse->shouldReceive('getBody')->andReturn($responseJson);
@@ -381,7 +381,7 @@ class RestClientTest extends TestCase
             ->shouldReceive('deserialize')->with($responseJson, 'array', 'json');
 
         $this->tokenStorage->shouldReceive('get')->with('1')->once()->andReturn($this->sessionToken);
-        $this->tokenStorage->shouldReceive('get')->with('1-jwt')->once()->andReturn(false);
+        $this->tokenStorage->shouldReceive('get')->with('urn:opg:digideps:users:1-jwt')->once()->andReturn(false);
 
         $this->endpointResponse->shouldReceive('getStatusCode')->andReturn(Response::HTTP_OK);
         $this->endpointResponse->shouldReceive('getBody')->andReturn($responseJson);
@@ -411,7 +411,7 @@ class RestClientTest extends TestCase
             ->shouldReceive('deserialize')->with($responseJson, 'array', 'json')->andReturn($responseArray);
 
         $this->tokenStorage->shouldReceive('get')->with('1')->once()->andReturn($this->sessionToken);
-        $this->tokenStorage->shouldReceive('get')->with('1-jwt')->once()->andReturn(false);
+        $this->tokenStorage->shouldReceive('get')->with('urn:opg:digideps:users:1-jwt')->once()->andReturn(false);
 
         $this->endpointResponse->shouldReceive('getStatusCode')->andReturn(Response::HTTP_OK);
         $this->endpointResponse->shouldReceive('getBody')->andReturn($responseJson);
@@ -433,7 +433,7 @@ class RestClientTest extends TestCase
         $endpointUrl = '/path/to/endpoint';
 
         $this->tokenStorage->shouldReceive('get')->with('1')->once()->andReturn($this->sessionToken);
-        $this->tokenStorage->shouldReceive('get')->with('1-jwt')->once()->andReturn(false);
+        $this->tokenStorage->shouldReceive('get')->with('urn:opg:digideps:users:1-jwt')->once()->andReturn(false);
 
         $this->endpointResponse
             ->shouldReceive('getBody')->andReturn('whatever');
@@ -459,7 +459,7 @@ class RestClientTest extends TestCase
             ->shouldReceive('deserialize')->with($responseJson, 'array', 'json')->andReturn($responseArray);
 
         $this->tokenStorage->shouldReceive('get')->with('1')->once()->andReturn($this->sessionToken);
-        $this->tokenStorage->shouldReceive('get')->with('1-jwt')->once()->andReturn(false);
+        $this->tokenStorage->shouldReceive('get')->with('urn:opg:digideps:users:1-jwt')->once()->andReturn(false);
 
         $this->endpointResponse->shouldReceive('getStatusCode')->andReturn(Response::HTTP_OK);
         $this->endpointResponse->shouldReceive('getBody')->andReturn($responseJson);
@@ -507,7 +507,7 @@ class RestClientTest extends TestCase
             ->shouldReceive('deserialize')->with($responseJson, 'array', 'json')->andReturn($responseArray);
 
         $this->tokenStorage->shouldReceive('get')->with('1')->once()->andReturn($this->sessionToken);
-        $this->tokenStorage->shouldReceive('get')->with('1-jwt')->once()->andReturn(false);
+        $this->tokenStorage->shouldReceive('get')->with('urn:opg:digideps:users:1-jwt')->once()->andReturn(false);
 
         $this->endpointResponse->shouldReceive('getBody')->andReturn($responseJson);
         $this->endpointResponse->shouldReceive('getStatusCode')->andReturn(Response::HTTP_OK);
@@ -587,7 +587,7 @@ class RestClientTest extends TestCase
         ])->willReturn($loginResponse);
 
         $tokenStorage->set('1', $sessionToken)->shouldBeCalled();
-        $tokenStorage->set('1-jwt', $encodedJWT)->shouldBeCalled();
+        $tokenStorage->set('urn:opg:digideps:users:1-jwt', $encodedJWT)->shouldBeCalled();
 
         $jwtService->getJWTHeaders($encodedJWT)->shouldBeCalled()->willReturn($jwtHeaders);
         $jwtService->decodeAndVerifyWithKey($encodedJWT, $jwks)->shouldBeCalled()->willReturn($jwtClaims);
@@ -626,7 +626,7 @@ class RestClientTest extends TestCase
             'exp' => strtotime('+1 hour'),
             'nbf' => strtotime('-10 seconds'),
             'iss' => 'digideps',
-            'sub' => 1,
+            'sub' => 'urn:opg:digideps:users:1',
             'role' => 'ROLE_SUPER_ADMIN',
         ];
 

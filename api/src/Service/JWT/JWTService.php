@@ -13,7 +13,6 @@ use Psr\Log\LoggerInterface;
 class JWTService
 {
     public const JKU_URL_TEMPLATE = '%s/v2/.well-known/jwks.json';
-    public const JWT_ISS = 'digideps';
 
     public function __construct(
         private SecretManagerService $secretManager,
@@ -29,16 +28,16 @@ class JWTService
 
         $kid = openssl_digest($publicKey, 'sha256');
         $payload = [
-            'aud' => 'registration_service',
+            'aud' => self::generateAud('registration_service'),
             'iat' => strtotime('now'),
             'exp' => strtotime('+1 hour'),
             'nbf' => strtotime('-10 seconds'),
-            'iss' => self::JWT_ISS,
+            'iss' => self::generateIss(),
         ];
 
         if ($user) {
-            $payload['sub'] = $user->getId();
-            $payload['role'] = $user->getRoleName();
+            $payload['sub'] = self::generateSub((string) $user->getId());
+            $payload['role'] = self::generateRole($user->getRoleName());
         }
 
         return JWT::encode($payload, $privateKey, 'RS256', $kid, ['jku' => sprintf(self::JKU_URL_TEMPLATE, $this->frontendHost)]);
@@ -79,6 +78,26 @@ class JWTService
             return false;
         }
 
-        return self::JWT_ISS === $decoded['iss'];
+        return self::generateIss() === $decoded['iss'];
+    }
+
+    public static function generateIss(): string
+    {
+        return 'urn:opg:digideps';
+    }
+
+    public static function generateSub(string $userIdentifier)
+    {
+        return sprintf('%s:users:%s', self::generateIss(), $userIdentifier);
+    }
+
+    public static function generateAud(string $serviceName)
+    {
+        return sprintf('urn:opg:%s', $serviceName);
+    }
+
+    public static function generateRole(string $role)
+    {
+        return sprintf('%s:%s', self::generateIss(), $role);
     }
 }

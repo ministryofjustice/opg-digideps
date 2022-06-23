@@ -128,8 +128,9 @@ class RestClient implements RestClientInterface
                 $jwks = json_decode($jwkResponse->getContent(), true);
                 $decoded = $this->JWTService->decodeAndVerifyWithKey($jwt, $jwks);
 
-                $userId = $decoded['sub'];
-                $this->tokenStorage->set(sprintf('%s-jwt', $userId), $jwt);
+                $subjectUrn = $decoded['sub'];
+                // Move to secure cookie in next iteration
+                $this->tokenStorage->set(sprintf('%s-jwt', $subjectUrn), $jwt);
             } catch (ExpiredException $e) {
                 // Swallow expired token errors for now and just log - implement once we're rolling JWT to all users
                 $this->logger->warning(sprintf('JWT expired: %s', $e->getMessage()));
@@ -331,7 +332,7 @@ class RestClient implements RestClientInterface
         // add AuthToken if user is logged
         if (!empty($options['addAuthToken']) && $loggedUserId = $this->getLoggedUserId()) {
             $options['headers'][self::HEADER_AUTH_TOKEN] = $this->tokenStorage->get($loggedUserId);
-            $jwt = $this->tokenStorage->get(sprintf('%s-jwt', $loggedUserId));
+            $jwt = $this->tokenStorage->get(sprintf('%s:%s-jwt', 'urn:opg:digideps:users', $loggedUserId));
 
             if ($jwt) {
                 $options['headers'][self::HEADER_JWT] = $jwt;

@@ -100,16 +100,17 @@ class AuthController extends RestController
             $em->persist($user);
             $em->flush();
 
-            $jwt = $this->JWTService->createNewJWT($user);
+            if (User::ROLE_SUPER_ADMIN === $user->getRoleName()) {
+                $jwt = $this->JWTService->createNewJWT($user);
+
+                $restInputOutputFormatter->addResponseModifier(function ($response) use ($jwt) {
+                    $response->headers->set('JWT', $jwt);
+                });
+            }
 
             // add token into response
             $restInputOutputFormatter->addResponseModifier(function ($response) use ($randomToken) {
                 $response->headers->set(HeaderTokenAuthenticator::HEADER_NAME, $randomToken);
-            });
-
-            // add JWT into response
-            $restInputOutputFormatter->addResponseModifier(function ($response) use ($jwt) {
-                $response->headers->set('JWT', $jwt);
             });
 
             // needed for redirector
