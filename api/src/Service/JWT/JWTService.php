@@ -22,7 +22,7 @@ class JWTService
     ) {
     }
 
-    public function createNewJWT(User $user)
+    public function createNewJWT(?User $user = null)
     {
         $privateKey = base64_decode($this->secretManager->getSecret(SecretManagerService::PRIVATE_JWT_KEY_BASE64_SECRET_NAME));
         $publicKey = base64_decode($this->secretManager->getSecret(SecretManagerService::PUBLIC_JWT_KEY_BASE64_SECRET_NAME));
@@ -34,9 +34,12 @@ class JWTService
             'exp' => strtotime('+1 hour'),
             'nbf' => strtotime('-10 seconds'),
             'iss' => self::JWT_ISS,
-            'sub' => $user->getId(),
-            'role' => $user->getRoleName(),
         ];
+
+        if ($user) {
+            $payload['sub'] = $user->getId();
+            $payload['role'] = $user->getRoleName();
+        }
 
         return JWT::encode($payload, $privateKey, 'RS256', $kid, ['jku' => sprintf(self::JKU_URL_TEMPLATE, $this->frontendHost)]);
     }

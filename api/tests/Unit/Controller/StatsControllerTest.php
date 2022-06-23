@@ -6,16 +6,6 @@ namespace App\Tests\Unit\Controller;
 
 class StatsControllerTest extends AbstractTestController
 {
-    private $entityManager;
-
-    public function setUp(): void
-    {
-        $kernel = self::bootKernel();
-        $this->entityManager = $kernel->getContainer()
-            ->get('doctrine')
-            ->getManager();
-    }
-
     /** @test */
     public function activeLayDeputies()
     {
@@ -25,7 +15,8 @@ class StatsControllerTest extends AbstractTestController
             [
                 'mustSucceed' => true,
                 'AuthToken' => $this->loginAsSuperAdmin(),
-            ]
+            ],
+            true
         );
 
         self::assertIsArray($response);

@@ -57,11 +57,11 @@ class StatsController extends RestController
      */
     public function getActiveLays(Request $request)
     {
-        if (!$this->authService->isJWTValid($request)) {
-            throw new UnauthorisedException('JWT is not valid');
+        if ($this->authService->JWTIsValid($request)) {
+            return $this->userRepository->findActiveLaysInLastYear();
         }
 
-        return $this->userRepository->findActiveLaysInLastYear();
+        throw new UnauthorisedException('JWT is not valid');
     }
 
     /**

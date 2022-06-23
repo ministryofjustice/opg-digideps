@@ -115,14 +115,14 @@ class AuthService
         return false;
     }
 
-    public function isJWTValid(Request $request): bool
+    public function JWTIsValid(Request $request): bool
     {
         $jwt = $request->headers->get(self::HEADER_JWT);
 
-        if (!is_string($jwt)) {
-            return false;
+        if (!is_null($jwt)) {
+            return $this->JWTService->verify($jwt);
         }
 
-        return $this->JWTService->verify($jwt);
+        return false;
     }
 }
