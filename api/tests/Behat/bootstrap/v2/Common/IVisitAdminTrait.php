@@ -177,6 +177,15 @@ trait IVisitAdminTrait
     }
 
     /**
+     * @When I visit the inactive admin users report page
+     */
+    public function iVisitInactiveAdminUsersReportsPage()
+    {
+        $this->visitAdminPath($this->getInactiveAdminUsersReportUrl());
+    }
+
+
+    /**
      * @When I visit the admin login page
      */
     public function iVisitAdminLoginPage()

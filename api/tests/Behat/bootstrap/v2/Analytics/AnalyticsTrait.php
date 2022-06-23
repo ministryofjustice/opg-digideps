@@ -270,8 +270,8 @@ trait AnalyticsTrait
      */
     public function iTryToDownloadInactiveAdminUserReport()
     {
-        $this->iVisitAdminAnalyticsPage();
-        $this->currentLinkText = 'Download Admin User Report';
+        $this->iVisitAdminStatsReportsPage();
+        $this->currentLinkText = 'Download inactive admin user report';
 
         $xpath = sprintf('//a[contains(.,"%s")]', $this->currentLinkText);
         $downloadLink = $this->getSession()->getPage()->find('xpath', $xpath);
@@ -279,9 +279,6 @@ trait AnalyticsTrait
             throw new BehatException(sprintf('Missing the following text: %s', $this->currentLinkText));
         }
         $downloadLink->click();
-        $this->iAmOnAdminStatsPage();
-
-//        $this->fillInAnalyticsStartEndDates();
     }
 
     /**

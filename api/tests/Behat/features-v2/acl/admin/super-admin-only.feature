@@ -4,7 +4,7 @@ Feature: Limiting access to sections of the app to super admins
     In order to prevent other types of users from accessing sensitive or confusing data
     I need to limit access to certain areas of the app to Super Admins
 
-    @super-admin
+    @super-admin @mia
     Scenario: A super admin attempts to access analytics, reports, fixtures and notifications
         Given a super admin user accesses the admin app
         When I navigate to the admin analytics page
@@ -15,6 +15,8 @@ Feature: Limiting access to sections of the app to super admins
         Then I should be able to access the "active lays report"
         When I visit the admin stats reports page
         Then I should be able to access the "user research report"
+        When I visit the admin stats reports page
+        Then I should be able to access the "inactive admin users report"
         When I visit the admin stats reports page
         Then I should be able to access the 'Fixtures' page
         Then I should be able to access the 'Notifications' page

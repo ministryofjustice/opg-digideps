@@ -38,8 +38,6 @@ Feature: Analytics - view and download analytics
         Then I should have no issues downloading the file
         When I try to download active lays report
         Then I should have no issues downloading the file
-        When I try to download inactive admin user report
-        Then I should have no issues downloading the file
 
     @admin-manager
     Scenario: A admin manager downloads files from the analytics page
