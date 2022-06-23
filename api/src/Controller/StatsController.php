@@ -93,6 +93,27 @@ class StatsController extends RestController
     }
 
     /**
+     * @Route("stats/admins/inactive_report_data", methods={"GET"})
+     * @Security("is_granted('ROLE_SUPER_ADMIN')")
+     */
+    public function getInactiveAdminUserReportData(Request $request, RestFormatter $formatter): array
+    {
+        
+        return $this->userRepository->getAllAdminUserAccountsNotUsedWithin('-395 days');
+        
+//        $serialisedGroups = (array) $request->query->get('groups');
+//        $formatter->setJmsSerialiserGroups($serialisedGroups);
+//        
+//        $adminUserAccountsNotUsedWithin13Months = $this->userRepository->getAllAdminUserAccountsNotUsedWithin('-395 days');
+//
+//        return [
+//            'AdminUserAccountsNotUsedWithin13Months' => $adminUserAccountsNotUsedWithin13Months
+//        ];
+    }
+    
+    
+    
+    /**
      * @Route("stats/assets/total_values", methods={"GET"})
      * @Security("is_granted('ROLE_SUPER_ADMIN')")
      */

@@ -18,6 +18,7 @@ use App\Service\Client\RestClient;
 use App\Service\Csv\ActiveLaysCsvGenerator;
 use App\Service\Csv\AssetsTotalsCSVGenerator;
 use App\Service\Csv\ClientBenefitMetricsCsvGenerator;
+use App\Service\Csv\InactiveAdminUserCsvGenerator;
 use App\Service\Csv\SatisfactionCsvGenerator;
 use App\Service\Csv\UserResearchResponseCsvGenerator;
 use App\Transformer\ReportSubmission\ReportSubmissionBurFixedWidthTransformer;
@@ -34,6 +35,8 @@ use Throwable;
  */
 class StatsController extends AbstractController
 {
+
+
     public function __construct(
         private RestClient $restClient,
         private SatisfactionCsvGenerator $satisfactionCsvGenerator,
@@ -42,6 +45,7 @@ class StatsController extends AbstractController
         private UserResearchResponseCsvGenerator $userResearchResponseCsvGenerator,
         private AssetsTotalsCSVGenerator $assetsTotalsCSVGenerator,
         private ClientBenefitMetricsCsvGenerator $clientBenefitMetricsCsvGenerator,
+        private InactiveAdminUserCsvGenerator $inactiveAdminUserCsvGenerator
     ) {
     }
 
@@ -337,5 +341,31 @@ class StatsController extends AbstractController
         $response->headers->set('Content-Disposition', $disposition);
 
         return $response;
+    }
+
+
+    /**
+     * @Route("/downloadInactiveAdminUsersCsv", name="admin_inactive_user_report")
+     * @Security("is_granted('ROLE_SUPER_ADMIN')")
+     *
+     * @return Response
+     */
+    public function downloadInactiveAdminUsers()
+    {
+        $inactiveAccountUserData = $this->statsApi->getInactiveAdminUsers();
+        $csv = $this->inactiveAdminUserCsvGenerator->generateInactiveAdminUsersCsv($inactiveAccountUserData);
+
+        $response = new Response($csv);
+
+        $response->headers->set('Content-Type', 'text/csv; charset=utf-8');
+        $disposition = $response->headers->makeDisposition(
+            ResponseHeaderBag::DISPOSITION_ATTACHMENT,
+            'inactiveAdminUsers.csv'
+        );
+
+        $response->headers->set('Content-Disposition', $disposition);
+
+        return $response;
+
     }
 }
