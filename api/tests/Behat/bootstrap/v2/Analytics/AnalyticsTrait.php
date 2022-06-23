@@ -6,6 +6,7 @@ namespace App\Tests\Behat\v2\Analytics;
 
 use App\Entity\User;
 use App\Tests\Behat\BehatException;
+use Behat\Behat\Tester\Exception\PendingException;
 
 trait AnalyticsTrait
 {
@@ -265,6 +266,25 @@ trait AnalyticsTrait
     }
 
     /**
+     * @When /^I try to download inactive admin user report$/
+     */
+    public function iTryToDownloadInactiveAdminUserReport()
+    {
+        $this->iVisitAdminAnalyticsPage();
+        $this->currentLinkText = 'Download Admin User Report';
+
+        $xpath = sprintf('//a[contains(.,"%s")]', $this->currentLinkText);
+        $downloadLink = $this->getSession()->getPage()->find('xpath', $xpath);
+        if (is_null($downloadLink)) {
+            throw new BehatException(sprintf('Missing the following text: %s', $this->currentLinkText));
+        }
+        $downloadLink->click();
+        $this->iAmOnAdminStatsPage();
+
+//        $this->fillInAnalyticsStartEndDates();
+    }
+
+    /**
      * @When I try to view the reports page
      */
     public function iTryViewTheReportsPage()
@@ -292,4 +312,6 @@ trait AnalyticsTrait
             throw new BehatException(sprintf('%s, returned a %s response', $this->currentLinkText, strval($responseStatus)));
         }
     }
+
+   
 }
