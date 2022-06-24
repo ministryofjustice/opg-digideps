@@ -12,7 +12,7 @@ class InactiveAdminUserCsvGenerator
     }
 
     /**
-     * @return string
+//     * @return string
      */
     public function generateInactiveAdminUsersCsv(array $adminUsers)
     {
@@ -27,15 +27,17 @@ class InactiveAdminUserCsvGenerator
 
         $rows = [];
 
-        foreach ($adminUsers as $user) {
-            $rows[] = [
-                $user['id'],
-                sprintf('%s %s', $user['firstname'], $user['lastname']),
-                $user['email'],
-                $user['last_logged_in'],
-                $user['active'],
-                $user['role_name']
-            ];
+        foreach ($adminUsers as $users) {
+            foreach ($users as $user) {
+                $rows[] = [
+                    $user['id'],
+                    sprintf('%s %s', $user['firstname'], $user['lastname']),
+                    $user['email'],
+                    $user['last_logged_in'],
+                    $user['active'],
+                    $user['role_name']
+                ];
+            }
         }
         return $this->csvBuilder->buildCsv($headers, $rows);
     }
