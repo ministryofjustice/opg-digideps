@@ -303,7 +303,7 @@ class UserRepositoryTest extends WebTestCase
         $usersToAdd[] = $recentlyLoggedInAdminManagerUser = $userHelper->createUser(null, User::ROLE_ADMIN_MANAGER);
         $usersToAdd[] = $recentlyLoggedInDeputyUser = $userHelper->createUser(null, User::ROLE_LAY_DEPUTY);
 
-        $notRecentlyLoggedInAdminUser->setLastLoggedIn(new DateTime('-410 days'));
+        $notRecentlyLoggedInAdminUser->setLastLoggedIn(new DateTime('-14 months'));
         $recentlyLoggedInAdminUser->setLastLoggedIn(new DateTime('-10 days'));
         $recentlyLoggedInAdminManagerUser->setLastLoggedIn(new DateTime('-10 days'));
         $recentlyLoggedInDeputyUser->setLastLoggedIn(new DateTime('-10 days'));
@@ -317,7 +317,7 @@ class UserRepositoryTest extends WebTestCase
         $expectedLoggedInAdminUsers = [$notRecentlyLoggedInAdminUser];
         $expectedRecentlyLoggedInUsersNotReturned = [$recentlyLoggedInAdminUser, $recentlyLoggedInAdminManagerUser, $recentlyLoggedInDeputyUser];
 
-        $actualLoggedInAdminUsers = $this->sut->getAllAdminUserAccountsNotUsedWithin('-398 days');
+        $actualLoggedInAdminUsers = $this->sut->getAllAdminUserAccountsNotUsedWithin('-13 months');
 
         self::assertEquals($expectedLoggedInAdminUsers, $actualLoggedInAdminUsers);
 
