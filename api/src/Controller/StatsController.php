@@ -99,16 +99,16 @@ class StatsController extends RestController
     public function getInactiveAdminUserReportData(Request $request, RestFormatter $formatter): array
     {
         
-        return $this->userRepository->getAllAdminUserAccountsNotUsedWithin('-395 days');
+//        return $this->userRepository->getAllAdminUserAccountsNotUsedWithin('-395 days');
         
-//        $serialisedGroups = (array) $request->query->get('groups');
-//        $formatter->setJmsSerialiserGroups($serialisedGroups);
-//        
-//        $adminUserAccountsNotUsedWithin13Months = $this->userRepository->getAllAdminUserAccountsNotUsedWithin('-395 days');
-//
-//        return [
-//            'AdminUserAccountsNotUsedWithin13Months' => $adminUserAccountsNotUsedWithin13Months
-//        ];
+        $serialisedGroups = (array) $request->query->get('groups');
+        $formatter->setJmsSerialiserGroups($serialisedGroups);
+        
+        $adminUserAccountsNotUsedWithin13Months = $this->userRepository->getAllAdminUserAccountsNotUsedWithin('-395 days');
+
+        return [
+            'AdminUserAccountsNotUsedWithin13Months' => $adminUserAccountsNotUsedWithin13Months
+        ];
     }
     
     
