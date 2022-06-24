@@ -74,7 +74,7 @@ class User implements UserInterface
     /**
      * @var int
      * @JMS\Type("integer")
-     * @JMS\Groups({"user", "report-submitted-by", "user-id", "user-list"})
+     * @JMS\Groups({"user", "report-submitted-by", "user-id", "user-list", "admin-account-reports"})
      *
      * @ORM\Column(name="id", type="integer", nullable=false)
      * @ORM\Id
@@ -103,7 +103,7 @@ class User implements UserInterface
     /**
      * @var string
      * @JMS\Type("string")
-     * @JMS\Groups({ "user", "report-submitted-by", "user-name", "user-list"})
+     * @JMS\Groups({ "user", "report-submitted-by", "user-name", "user-list", "admin-account-reports"})
      *
      * @ORM\Column(name="firstname", type="string", length=100, nullable=false)
      */
@@ -114,7 +114,7 @@ class User implements UserInterface
      *
      * @ORM\Column(name="lastname", type="string", length=100, nullable=true)
      * @JMS\Type("string")
-     * @JMS\Groups({ "user", "report-submitted-by", "user-name", "user-list"})
+     * @JMS\Groups({ "user", "report-submitted-by", "user-name", "user-list", "admin-account-reports"})
      */
     private $lastname;
 
@@ -128,7 +128,7 @@ class User implements UserInterface
 
     /**
      * @var string
-     * @JMS\Groups({"user", "report-submitted-by", "user-email", "user-list"})
+     * @JMS\Groups({"user", "report-submitted-by", "user-email", "user-list", "admin-account-reports"})
      * @JMS\Type("string")
      *
      * @ORM\Column(name="email", type="string", length=60, nullable=false, unique=true)
@@ -138,7 +138,7 @@ class User implements UserInterface
     /**
      * @var bool
      * @JMS\Type("boolean")
-     * @JMS\Groups({"user", "user-list"})
+     * @JMS\Groups({"user", "user-list", "admin-account-reports"})
      *
      * @ORM\Column(name="active", type="boolean", nullable=true, options = { "default": false })
      */
@@ -182,7 +182,7 @@ class User implements UserInterface
      *             see roles in Role class
      *
      * @JMS\Type("string")
-     * @JMS\Groups({"user", "report-submitted-by", "user-rolename", "user-list", "team-users"})
+     * @JMS\Groups({"user", "report-submitted-by", "user-rolename", "user-list", "team-users", "admin-account-reports"})
      *
      * @ORM\Column(name="role_name", type="string", length=50, nullable=true)
      */
@@ -219,7 +219,7 @@ class User implements UserInterface
     /**
      * @var DateTime
      * @JMS\Type("DateTime<'Y-m-d H:i:s'>")
-     * @JMS\Groups({"user"})
+     * @JMS\Groups({"user", "admin-account-reports"})
      *
      * @ORM\Column(name="last_logged_in", type="datetime", nullable=true)
      */
