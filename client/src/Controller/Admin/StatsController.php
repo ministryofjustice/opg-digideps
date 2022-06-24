@@ -345,12 +345,12 @@ class StatsController extends AbstractController
 
 
     /**
-     * @Route("/downloadInactiveAdminUsersCsv", name="admin_inactive_user_report")
+     * @Route("/reports/downloadInactiveAdminUsersCsv", name="admin_inactive_user_report")
      * @Security("is_granted('ROLE_SUPER_ADMIN')")
      *
      * @return Response
      */
-    public function downloadInactiveAdminUsers()
+    public function downloadInactiveAdminUsersCsv()
     {
         $inactiveAccountUserData = $this->statsApi->getInactiveAdminUsers();
         $csv = $this->inactiveAdminUserCsvGenerator->generateInactiveAdminUsersCsv($inactiveAccountUserData);
