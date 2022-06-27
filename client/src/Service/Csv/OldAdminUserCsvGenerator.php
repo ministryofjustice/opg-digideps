@@ -34,7 +34,7 @@ class OldAdminUserCsvGenerator
                     sprintf('%s %s', $user['firstname'], $user['lastname']),
                     $user['email'],
                     $user['last_logged_in'],
-                    $user['active'],
+                    $user['active'] ? 'Yes' : 'No',
                     $user['role_name']
                 ];
             }
