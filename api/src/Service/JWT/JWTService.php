@@ -6,8 +6,12 @@ namespace App\Service\JWT;
 
 use App\Entity\User;
 use App\Service\SecretManagerService;
-use Firebase\JWT\JWT;
-use Firebase\JWT\Key;
+use App\Service\Time\DateTimeProvider;
+use Lcobucci\JWT\Configuration;
+use Lcobucci\JWT\Signer;
+use Lcobucci\JWT\Validation\Constraint\IssuedBy;
+use Lcobucci\JWT\Validation\Constraint\PermittedFor;
+use Lcobucci\JWT\Validation\Constraint\SignedWith;
 use Psr\Log\LoggerInterface;
 
 class JWTService
@@ -17,30 +21,36 @@ class JWTService
     public function __construct(
         private SecretManagerService $secretManager,
         private LoggerInterface $logger,
-        private string $frontendHost
+        private string $frontendHost,
+        private DateTimeProvider $dateTimeProvider
     ) {
     }
 
     public function createNewJWT(?User $user = null)
     {
-        $privateKey = base64_decode($this->secretManager->getSecret(SecretManagerService::PRIVATE_JWT_KEY_BASE64_SECRET_NAME));
-        $publicKey = base64_decode($this->secretManager->getSecret(SecretManagerService::PUBLIC_JWT_KEY_BASE64_SECRET_NAME));
-
+        $config = $this->initJWTConfig();
+        $publicKey = $config->signingKey()->contents();
         $kid = openssl_digest($publicKey, 'sha256');
-        $payload = [
-            'aud' => self::generateAud('registration_service'),
-            'iat' => strtotime('now'),
-            'exp' => strtotime('+1 hour'),
-            'nbf' => strtotime('-10 seconds'),
-            'iss' => self::generateIss(),
-        ];
+
+        $token = $config
+            ->builder()
+            ->withHeader('jku', sprintf(self::JKU_URL_TEMPLATE, $this->frontendHost))
+            ->withHeader('kid', $kid)
+            ->permittedFor(self::generateAud('registration_service'))
+            ->issuedAt($this->dateTimeProvider->getDateTimeImmutable('now'))
+            ->expiresAt($this->dateTimeProvider->getDateTimeImmutable('+1 hour'))
+            ->canOnlyBeUsedAfter($this->dateTimeProvider->getDateTimeImmutable('-10 seconds'))
+            ->issuedBy(self::generateIss());
 
         if ($user) {
-            $payload['sub'] = self::generateSub((string) $user->getId());
-            $payload['role'] = self::generateRole($user->getRoleName());
+            $token
+                    ->relatedTo(self::generateSub((string) $user->getId()))
+                    ->withClaim('role', self::generateRole($user->getRoleName()));
         }
 
-        return JWT::encode($payload, $privateKey, 'RS256', $kid, ['jku' => sprintf(self::JKU_URL_TEMPLATE, $this->frontendHost)]);
+        return $token
+            ->getToken($config->signer(), $config->signingKey())
+            ->toString();
     }
 
     public function generateJWK()
@@ -69,16 +79,18 @@ class JWTService
     public function verify(string $jwt)
     {
         try {
-            $publicKey = base64_decode($this->secretManager->getSecret(SecretManagerService::PUBLIC_JWT_KEY_BASE64_SECRET_NAME));
-            // Asserts on nbd, iat, exp and signature
-            $decoded = (array) JWT::decode($jwt, new Key($publicKey, 'RS256'));
+            $config = $this->initJWTConfig();
+            $token = $config->parser()->parse($jwt);
+            $constraints = $config->validationConstraints();
+            $config->validator()->assert($token, ...$constraints);
         } catch (\Throwable $e) {
             $this->logger->warning(sprintf('JWT verification failed: %s', $e->getMessage()));
+            var_dump(sprintf('JWT verification failed: %s', $e->getMessage()));
 
             return false;
         }
 
-        return self::generateIss() === $decoded['iss'];
+        return true;
     }
 
     public static function generateIss(): string
@@ -99,5 +111,25 @@ class JWTService
     public static function generateRole(string $role)
     {
         return sprintf('%s:%s', self::generateIss(), $role);
+    }
+
+    private function initJWTConfig(): Configuration
+    {
+        $publicKey = base64_decode($this->secretManager->getSecret(SecretManagerService::PUBLIC_JWT_KEY_BASE64_SECRET_NAME));
+        $privateKey = base64_decode($this->secretManager->getSecret(SecretManagerService::PRIVATE_JWT_KEY_BASE64_SECRET_NAME));
+
+        $config = Configuration::forAsymmetricSigner(
+            new Signer\Rsa\Sha256(),
+            Signer\Key\InMemory::plainText($privateKey),
+            Signer\Key\InMemory::plainText($publicKey),
+        );
+
+        $config->setValidationConstraints(
+            new IssuedBy(self::generateIss()),
+            new PermittedFor(self::generateAud('registration_service')),
+            new SignedWith(new Signer\Rsa\Sha256(), Signer\Key\InMemory::plainText($publicKey))
+        );
+
+        return $config;
     }
 }
