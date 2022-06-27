@@ -17,7 +17,7 @@ reports:
     downloadSatisfaction: Download satisfaction report
     downloadUserResearch: Download user research report
     userAccountReports: View admin account metrics
-    oldUserAccountReports: Download old admin users report
+    oldUserAccountReports: Download admin users not logged in within last 13 months report
     benefitsSectionMetrics: View benefits report metrics
 
 benefitsReportMetrics:
