@@ -36,16 +36,16 @@ class JWTServiceTest extends TestCase
             'role' => 'urn:opg:digideps:ROLE_SUPER_ADMIN',
         ];
 
-        $this->jwtSignature = 'a signature';
+        $this->jwtSignature = ['a signature'];
 
         // Not used in prod
         $this->jwtHeadersClaim = <<<JWT
-eyJ0eXAiOiJKV1QiLCJhbGciOiJSUzI1NiIsImprdSI6Imh0dHBzOi8vZGlnaWRlcHMubG9jYWwvdjIvLndlbGwta25vd24vandrcy5qc29uIiwia2lkIjoiY2M1N2Y0ZGQzYmVhMDgwYmFmNjVlNzg4ODNhZDQ4NzRkMjJkMTgyODIyMzUwMjQyYzNiN2EzZGQwNTFiZjE4YyJ9.eyJhdWQiOiJ1cm46b3BnOnJlZ2lzdHJhdGlvbl9zZXJ2aWNlIiwiaWF0IjoxNjU2MzYxNjc5Ljk5MDQ3MSwiZXhwIjoxNjU2MzY1Mjc5Ljk5MDQ4LCJuYmYiOjE2NTYzNjE2NjkuOTkwNDkyLCJpc3MiOiJ1cm46b3BnOmRpZ2lkZXBzIiwic3ViIjoidXJuOm9wZzpkaWdpZGVwczp1c2VyczozIiwicm9sZSI6InVybjpvcGc6ZGlnaWRlcHM6Uk9MRV9TVVBFUl9BRE1JTiJ9
+eyJqa3UiOiJodHRwczpcL1wvZGlnaWRlcHMubG9jYWxcL3YyXC8ud2VsbC1rbm93blwvandrcy5qc29uIiwidHlwIjoiSldUIiwiYWxnIjoiUlMyNTYiLCJraWQiOiJjYzU3ZjRkZDNiZWEwODBiYWY2NWU3ODg4M2FkNDg3NGQyMmQxODI4MjIzNTAyNDJjM2I3YTNkZDA1MWJmMThjIn0.eyJhdWQiOiJ1cm46b3BnOnJlZ2lzdHJhdGlvbl9zZXJ2aWNlIiwiaWF0IjoiMTY1NjM1OTk2Ni43Nzk4MzYiLCJleHAiOiIxNjU2MzYzNTY2Ljc3OTg0MSIsIm5iZiI6IjE2NTYzNTk5NTYuNzc5ODUzIiwiaXNzIjoidXJuOm9wZzpkaWdpZGVwcyIsInN1YiI6InVybjpvcGc6ZGlnaWRlcHM6dXNlcnM6MyIsInJvbGUiOiJ1cm46b3BnOmRpZ2lkZXBzOlJPTEVfU1VQRVJfQURNSU4ifQ
 JWT;
 
         // Not used in prod
         $this->jwtHeadersClaimSignature = <<<JWT
-eyJ0eXAiOiJKV1QiLCJhbGciOiJSUzI1NiIsImprdSI6Imh0dHBzOi8vZGlnaWRlcHMubG9jYWwvdjIvLndlbGwta25vd24vandrcy5qc29uIiwia2lkIjoiY2M1N2Y0ZGQzYmVhMDgwYmFmNjVlNzg4ODNhZDQ4NzRkMjJkMTgyODIyMzUwMjQyYzNiN2EzZGQwNTFiZjE4YyJ9.eyJhdWQiOiJ1cm46b3BnOnJlZ2lzdHJhdGlvbl9zZXJ2aWNlIiwiaWF0IjoxNjU2MzYxNjc5Ljk5MDQ3MSwiZXhwIjoxNjU2MzY1Mjc5Ljk5MDQ4LCJuYmYiOjE2NTYzNjE2NjkuOTkwNDkyLCJpc3MiOiJ1cm46b3BnOmRpZ2lkZXBzIiwic3ViIjoidXJuOm9wZzpkaWdpZGVwczp1c2VyczozIiwicm9sZSI6InVybjpvcGc6ZGlnaWRlcHM6Uk9MRV9TVVBFUl9BRE1JTiJ9.ImEgc2lnbmF0dXJl
+eyJqa3UiOiJodHRwczpcL1wvZGlnaWRlcHMubG9jYWxcL3YyXC8ud2VsbC1rbm93blwvandrcy5qc29uIiwidHlwIjoiSldUIiwiYWxnIjoiUlMyNTYiLCJraWQiOiJjYzU3ZjRkZDNiZWEwODBiYWY2NWU3ODg4M2FkNDg3NGQyMmQxODI4MjIzNTAyNDJjM2I3YTNkZDA1MWJmMThjIn0.eyJhdWQiOiJ1cm46b3BnOnJlZ2lzdHJhdGlvbl9zZXJ2aWNlIiwiaWF0IjoiMTY1NjM1OTk2Ni43Nzk4MzYiLCJleHAiOiIxNjU2MzYzNTY2Ljc3OTg0MSIsIm5iZiI6IjE2NTYzNTk5NTYuNzc5ODUzIiwiaXNzIjoidXJuOm9wZzpkaWdpZGVwcyIsInN1YiI6InVybjpvcGc6ZGlnaWRlcHM6dXNlcnM6MyIsInJvbGUiOiJ1cm46b3BnOmRpZ2lkZXBzOlJPTEVfU1VQRVJfQURNSU4ifQ.WyJhIHNpZ25hdHVyZSJd
 JWT;
 
         $this->jwks = [
@@ -75,20 +75,6 @@ JWT;
     }
 
     /** @test */
-    public function base64DecodeJWTMissingSignature()
-    {
-        $expectedDecodedJWT = ['headers' => $this->jwtHeaders, 'claims' => $this->jwtClaims];
-        self::assertSame($expectedDecodedJWT, JWTService::base64DecodeJWT($this->jwtHeadersClaim));
-    }
-
-    /** @test */
-    public function base64DecodeJWTWithSignature()
-    {
-        $expectedDecodedJWT = ['headers' => $this->jwtHeaders, 'claims' => $this->jwtClaims, 'signature' => $this->jwtSignature];
-        self::assertSame($expectedDecodedJWT, JWTService::base64DecodeJWT($this->jwtHeadersClaimSignature));
-    }
-
-    /** @test */
     public function getJWTHeaders()
     {
         $sut = new JWTService();
@@ -104,9 +90,9 @@ JWT;
         $actualHeaders = $sut->getJWTClaims($this->jwtHeadersClaimSignature);
 
         $this->jwtClaims['aud'] = [$this->jwtClaims['aud']];
-        $this->jwtClaims['iat'] = DateTimeImmutable::createFromFormat('U', $this->jwtClaims['iat']);
-        $this->jwtClaims['exp'] = DateTimeImmutable::createFromFormat('U', $this->jwtClaims['exp']);
-        $this->jwtClaims['nbf'] = DateTimeImmutable::createFromFormat('U', $this->jwtClaims['nbf']);
+        $this->jwtClaims['iat'] = DateTimeImmutable::createFromFormat('U.u', $this->jwtClaims['iat']);
+        $this->jwtClaims['exp'] = DateTimeImmutable::createFromFormat('U.u', $this->jwtClaims['exp']);
+        $this->jwtClaims['nbf'] = DateTimeImmutable::createFromFormat('U.u', $this->jwtClaims['nbf']);
 
         self::assertEquals($this->jwtClaims, $actualHeaders);
     }
@@ -117,7 +103,7 @@ JWT;
         $sut = new JWTService();
         $signature = $sut->getJWTSignature($this->jwtHeadersClaimSignature);
 
-        self::assertSame($this->jwtSignature, $signature);
+        self::assertSame(json_encode($this->jwtSignature), $signature);
     }
 
     /** @test */

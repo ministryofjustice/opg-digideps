@@ -71,24 +71,6 @@ class JWTService
         return $jwt;
     }
 
-    public static function base64DecodeJWT(string $jwt)
-    {
-        1 === substr_count($jwt, '.') ?
-            [$headers, $claims] = explode('.', $jwt) :
-            [$headers, $claims, $signature] = explode('.', $jwt);
-
-        $decoded = [
-            'headers' => json_decode(base64_decode(str_replace(['-', '_'], ['+', '/'], $headers)), true),
-            'claims' => json_decode(base64_decode(str_replace(['-', '_'], ['+', '/'], $claims)), true),
-        ];
-
-        if (isset($signature)) {
-            $decoded['signature'] = json_decode(base64_decode(str_replace(['-', '_'], ['+', '/'], $signature)), true);
-        }
-
-        return $decoded;
-    }
-
     public function getPublicKeyByJWK(string $jwt, array $jwks)
     {
         $headers = $this->getJWTHeaders($jwt);

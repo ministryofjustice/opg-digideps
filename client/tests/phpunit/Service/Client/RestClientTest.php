@@ -9,6 +9,7 @@ use GuzzleHttp\Client;
 use GuzzleHttp\ClientInterface;
 use GuzzleHttp\Psr7\Response as GuzzleResponse;
 use JMS\Serializer\SerializerInterface;
+use Lcobucci\JWT\Token;
 use Mockery as m;
 use Mockery\MockInterface;
 use PHPUnit\Framework\TestCase;
@@ -590,7 +591,13 @@ class RestClientTest extends TestCase
         $tokenStorage->set('urn:opg:digideps:users:1-jwt', $encodedJWT)->shouldBeCalled();
 
         $jwtService->getJWTHeaders($encodedJWT)->shouldBeCalled()->willReturn($jwtHeaders);
-        $jwtService->decodeAndVerifyWithKey($encodedJWT, $jwks)->shouldBeCalled()->willReturn($jwtClaims);
+        $jwtService->decodeAndVerifyWithJWK($encodedJWT, $jwks)->shouldBeCalled()->willReturn(
+            new Token\Plain(
+                new Token\DataSet([], ''),
+                new Token\DataSet($jwtClaims, ''),
+                new Token\Signature('', '')
+            )
+        );
 
         $logger->warning(Argument::any())->shouldNotBeCalled();
 

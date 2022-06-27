@@ -8,7 +8,6 @@ use App\Model\SelfRegisterData;
 use App\Service\Client\TokenStorage\TokenStorageInterface;
 use App\Service\JWT\JWTService;
 use App\Service\RequestIdLoggerProcessor;
-use Firebase\JWT\ExpiredException;
 use Firebase\JWT\JWT;
 use GuzzleHttp\ClientInterface;
 use GuzzleHttp\Exception\RequestException;
@@ -16,6 +15,7 @@ use GuzzleHttp\Exception\TransferException;
 use InvalidArgumentException;
 use JMS\Serializer\SerializationContext;
 use JMS\Serializer\SerializerInterface;
+use Lcobucci\JWT\Validation\ConstraintViolation;
 use Psr\Http\Message\ResponseInterface;
 use Psr\Log\LoggerInterface;
 use RuntimeException;
@@ -123,15 +123,17 @@ class RestClient implements RestClientInterface
             try {
                 $jwt = $response->getHeader(self::HEADER_JWT)[0];
                 $jwtHeaders = $this->JWTService->getJWTHeaders($jwt);
+
                 // Get public key from API
                 $jwkResponse = $this->openInternetClient->request('GET', $jwtHeaders['jku']);
                 $jwks = json_decode($jwkResponse->getContent(), true);
 
                 $decoded = $this->JWTService->decodeAndVerifyWithJWK($jwt, $jwks);
                 $subjectUrn = $decoded->claims()->get('sub');
+
                 // Move to secure cookie in next iteration
                 $this->tokenStorage->set(sprintf('%s-jwt', $subjectUrn), $jwt);
-            } catch (ExpiredException $e) {
+            } catch (ConstraintViolation $e) {
                 // Swallow expired token errors for now and just log - implement once we're rolling JWT to all users
                 $this->logger->warning(sprintf('JWT expired: %s', $e->getMessage()));
             } catch (Throwable $e) {
