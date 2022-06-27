@@ -93,10 +93,10 @@ class StatsController extends RestController
     }
 
     /**
-     * @Route("stats/admins/inactive_report_data", methods={"GET"})
+     * @Route("stats/admins/old_report_data", methods={"GET"})
      * @Security("is_granted('ROLE_SUPER_ADMIN')")
      */
-    public function getInactiveAdminUserReportData(Request $request, Restformatter $formatter): array
+    public function getOldAdminUserReportData(Request $request, Restformatter $formatter): array
     {
         
         $serialisedGroups = (array) $request->query->get('groups');

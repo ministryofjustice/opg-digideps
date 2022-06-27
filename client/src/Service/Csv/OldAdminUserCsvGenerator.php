@@ -2,7 +2,7 @@
 
 namespace App\Service\Csv;
 
-class InactiveAdminUserCsvGenerator
+class OldAdminUserCsvGenerator
 {
     private CsvBuilder $csvBuilder;
 
@@ -12,9 +12,9 @@ class InactiveAdminUserCsvGenerator
     }
 
     /**
-//     * @return string
+     * @return string
      */
-    public function generateInactiveAdminUsersCsv(array $adminUsers)
+    public function generateOldAdminUsersCsv(array $adminUsers)
     {
         $headers = [
             'Id',

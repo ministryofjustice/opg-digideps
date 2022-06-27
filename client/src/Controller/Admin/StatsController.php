@@ -18,7 +18,7 @@ use App\Service\Client\RestClient;
 use App\Service\Csv\ActiveLaysCsvGenerator;
 use App\Service\Csv\AssetsTotalsCSVGenerator;
 use App\Service\Csv\ClientBenefitMetricsCsvGenerator;
-use App\Service\Csv\InactiveAdminUserCsvGenerator;
+use App\Service\Csv\OldAdminUserCsvGenerator;
 use App\Service\Csv\SatisfactionCsvGenerator;
 use App\Service\Csv\UserResearchResponseCsvGenerator;
 use App\Transformer\ReportSubmission\ReportSubmissionBurFixedWidthTransformer;
@@ -45,7 +45,7 @@ class StatsController extends AbstractController
         private UserResearchResponseCsvGenerator $userResearchResponseCsvGenerator,
         private AssetsTotalsCSVGenerator $assetsTotalsCSVGenerator,
         private ClientBenefitMetricsCsvGenerator $clientBenefitMetricsCsvGenerator,
-        private InactiveAdminUserCsvGenerator $inactiveAdminUserCsvGenerator
+        private OldAdminUserCsvGenerator $inactiveAdminUserCsvGenerator
     ) {
     }
 
@@ -345,15 +345,15 @@ class StatsController extends AbstractController
 
 
     /**
-     * @Route("/reports/downloadInactiveAdminUsersCsv", name="admin_inactive_user_report")
+     * @Route("/reports/downloadOldAdminUsersCsv", name="admin_old_user_account_report")
      * @Security("is_granted('ROLE_SUPER_ADMIN')")
      *
      * @return Response
      */
-    public function downloadInactiveAdminUsersCsv()
+    public function downloadOldAdminUsersCsv()
     {
-        $inactiveAccountUserData = $this->statsApi->getInactiveAdminUsers();
-        $csv = $this->inactiveAdminUserCsvGenerator->generateInactiveAdminUsersCsv($inactiveAccountUserData);
+        $oldAccountUserData = $this->statsApi->getOldAdminUsers();
+        $csv = $this->inactiveAdminUserCsvGenerator->generateOldAdminUsersCsv($oldAccountUserData);
 
         $response = new Response($csv);
 
