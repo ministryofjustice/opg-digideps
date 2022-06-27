@@ -66,7 +66,7 @@ trait PageUrlsTrait
     private string $adminNotificationUrl = '/admin/settings/service-notification';
     private string $adminDATReportUrl = '/admin/stats';
     private string $adminActiveLaysReportUrl = '/admin/stats/downloadActiveLaysCsv';
-    private string $adminInactiveAdminUsersReportUrl = '/admin/stats/downloadInactiveAdminUsersCsv';
+    private string $adminOldAdminUsersReportUrl = '/admin/stats/reports/downloadOldAdminUsersCsv';
     private string $adminAnalyticsUrl = '/admin/stats/metrics';
     private string $adminStatsReportsUrl = '/admin/stats/reports';
     private string $adminSatisfactionReportUrl = '/admin/stats/satisfaction';
@@ -225,9 +225,9 @@ trait PageUrlsTrait
         return $this->adminActiveLaysReportUrl;
     }
     
-    public function getInactiveAdminUsersReportUrl(): string
+    public function getOldAdminUsersReportUrl(): string
     {
-        return $this->adminInactiveAdminUsersReportUrl;
+        return $this->adminOldAdminUsersReportUrl;
     }
 
     public function getAdminFixturesUrl(): string
