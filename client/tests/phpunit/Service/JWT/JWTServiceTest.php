@@ -6,42 +6,60 @@ use App\Service\JWT\JWTService;
 use PHPUnit\Framework\TestCase;
 
 /**
- * @property string[] $jwtHeaders
- * @property array    $jwtClaims
- * @property string[] $jwtSignature
- * @property string   $jwtHeadersClaim
- * @property string   $jwtHeadersClaimSignature
+ * @property string[]     $jwtHeaders
+ * @property array        $jwtClaims
+ * @property string[]     $jwtSignature
+ * @property string       $jwtHeadersClaim
+ * @property string       $jwtHeadersClaimSignature
+ * @property string[][][] $jwks
  */
 class JWTServiceTest extends TestCase
 {
     public function setUp(): void
     {
+        // The props below are all valid values based on a JWT (not used in prod)
+
         $this->jwtHeaders = [
             'jku' => 'https://digideps.local/v2/.well-known/jwks.json',
             'typ' => 'JWT',
             'alg' => 'RS256',
-            'kid' => '45ed51b79f00b11d47100b9cc7092ef2819da72df0fc0be8f89824a779973bc0',
+            'kid' => 'cc57f4dd3bea080baf65e78883ad4874d22d182822350242c3b7a3dd051bf18c',
         ];
 
         $this->jwtClaims = [
-            'aud' => 'registration_service',
-            'iat' => 1655914720,
-            'exp' => 1655918320,
-            'nbf' => 1655914710,
-            'iss' => 'digideps',
-            'sub' => 1,
-            'role' => 'ROLE_SUPER_ADMIN',
+            'aud' => 'urn:opg:registration_service',
+            'iat' => '1656359966.779836',
+            'exp' => '1656363566.779841',
+            'nbf' => '1656359956.779853',
+            'iss' => 'urn:opg:digideps',
+            'sub' => 'urn:opg:digideps:users:3',
+            'role' => 'urn:opg:digideps:ROLE_SUPER_ADMIN',
         ];
 
-        $this->jwtSignature = ['a signature'];
+        $this->jwtSignature = 'a signature';
 
+        // Not used in prod
         $this->jwtHeadersClaim = <<<JWT
-eyJqa3UiOiJodHRwczpcL1wvZGlnaWRlcHMubG9jYWxcL3YyXC8ud2VsbC1rbm93blwvandrcy5qc29uIiwidHlwIjoiSldUIiwiYWxnIjoiUlMyNTYiLCJraWQiOiI0NWVkNTFiNzlmMDBiMTFkNDcxMDBiOWNjNzA5MmVmMjgxOWRhNzJkZjBmYzBiZThmODk4MjRhNzc5OTczYmMwIn0.eyJhdWQiOiJyZWdpc3RyYXRpb25fc2VydmljZSIsImlhdCI6MTY1NTkxNDcyMCwiZXhwIjoxNjU1OTE4MzIwLCJuYmYiOjE2NTU5MTQ3MTAsImlzcyI6ImRpZ2lkZXBzIiwic3ViIjoxLCJyb2xlIjoiUk9MRV9TVVBFUl9BRE1JTiJ9
+eyJ0eXAiOiJKV1QiLCJhbGciOiJSUzI1NiIsImprdSI6Imh0dHBzOi8vZGlnaWRlcHMubG9jYWwvdjIvLndlbGwta25vd24vandrcy5qc29uIiwia2lkIjoiY2M1N2Y0ZGQzYmVhMDgwYmFmNjVlNzg4ODNhZDQ4NzRkMjJkMTgyODIyMzUwMjQyYzNiN2EzZGQwNTFiZjE4YyJ9.eyJhdWQiOiJ1cm46b3BnOnJlZ2lzdHJhdGlvbl9zZXJ2aWNlIiwiaWF0IjoxNjU2MzYxNjc5Ljk5MDQ3MSwiZXhwIjoxNjU2MzY1Mjc5Ljk5MDQ4LCJuYmYiOjE2NTYzNjE2NjkuOTkwNDkyLCJpc3MiOiJ1cm46b3BnOmRpZ2lkZXBzIiwic3ViIjoidXJuOm9wZzpkaWdpZGVwczp1c2VyczozIiwicm9sZSI6InVybjpvcGc6ZGlnaWRlcHM6Uk9MRV9TVVBFUl9BRE1JTiJ9
 JWT;
 
+        // Not used in prod
         $this->jwtHeadersClaimSignature = <<<JWT
-eyJqa3UiOiJodHRwczpcL1wvZGlnaWRlcHMubG9jYWxcL3YyXC8ud2VsbC1rbm93blwvandrcy5qc29uIiwidHlwIjoiSldUIiwiYWxnIjoiUlMyNTYiLCJraWQiOiI0NWVkNTFiNzlmMDBiMTFkNDcxMDBiOWNjNzA5MmVmMjgxOWRhNzJkZjBmYzBiZThmODk4MjRhNzc5OTczYmMwIn0.eyJhdWQiOiJyZWdpc3RyYXRpb25fc2VydmljZSIsImlhdCI6MTY1NTkxNDcyMCwiZXhwIjoxNjU1OTE4MzIwLCJuYmYiOjE2NTU5MTQ3MTAsImlzcyI6ImRpZ2lkZXBzIiwic3ViIjoxLCJyb2xlIjoiUk9MRV9TVVBFUl9BRE1JTiJ9.WyJhIHNpZ25hdHVyZSJd
+eyJ0eXAiOiJKV1QiLCJhbGciOiJSUzI1NiIsImprdSI6Imh0dHBzOi8vZGlnaWRlcHMubG9jYWwvdjIvLndlbGwta25vd24vandrcy5qc29uIiwia2lkIjoiY2M1N2Y0ZGQzYmVhMDgwYmFmNjVlNzg4ODNhZDQ4NzRkMjJkMTgyODIyMzUwMjQyYzNiN2EzZGQwNTFiZjE4YyJ9.eyJhdWQiOiJ1cm46b3BnOnJlZ2lzdHJhdGlvbl9zZXJ2aWNlIiwiaWF0IjoxNjU2MzYxNjc5Ljk5MDQ3MSwiZXhwIjoxNjU2MzY1Mjc5Ljk5MDQ4LCJuYmYiOjE2NTYzNjE2NjkuOTkwNDkyLCJpc3MiOiJ1cm46b3BnOmRpZ2lkZXBzIiwic3ViIjoidXJuOm9wZzpkaWdpZGVwczp1c2VyczozIiwicm9sZSI6InVybjpvcGc6ZGlnaWRlcHM6Uk9MRV9TVVBFUl9BRE1JTiJ9.ImEgc2lnbmF0dXJl
 JWT;
+
+        $this->jwks = [
+            'keys' => [
+                'cc57f4dd3bea080baf65e78883ad4874d22d182822350242c3b7a3dd051bf18c' => [
+                    'kty' => 'RSA',
+                    'n' => '10dGTg473Av9lRp_jhvWIo7oG8qm_FTOj-YpieNScOkCZsgWuSLuYzElBRpDAAq6zMr1SwXYSGSbPzAoYd0U9rWLO3AKuVHoZbwd5RjKen-l5lVOWmF2da6vnPyOxwKowA3dPhGsSPOXCU7TitKHGz7fJCDMMdbxxZMdX2qfIpWN9n90gyjOQYqilQtJLnBDNYtYNhEU6o_fsVkOdspP_gJIQE--NpXW9udaQ8mjIhuFfa_b8ucp_puJXtgeNNGiJ4ebwE0hNLBDhCLeXGSlvGvjf9P3c1oIR9z5i_12h8X7pQ2nxBT1d4shzWaFc07OIzssAwYDu4c5M41ilcAiCQ',
+                    'e' => 'AQAB',
+                    'kid' => 'cc57f4dd3bea080baf65e78883ad4874d22d182822350242c3b7a3dd051bf18c',
+                    'alg' => 'RS256',
+                    'use' => 'sig',
+                ],
+            ],
+        ];
     }
 
     /** @test */
@@ -85,15 +103,42 @@ JWT;
         $sut = new JWTService();
         $actualHeaders = $sut->getJWTClaims($this->jwtHeadersClaimSignature);
 
-        self::assertSame($this->jwtClaims, $actualHeaders);
+        $this->jwtClaims['aud'] = [$this->jwtClaims['aud']];
+        $this->jwtClaims['iat'] = DateTimeImmutable::createFromFormat('U', $this->jwtClaims['iat']);
+        $this->jwtClaims['exp'] = DateTimeImmutable::createFromFormat('U', $this->jwtClaims['exp']);
+        $this->jwtClaims['nbf'] = DateTimeImmutable::createFromFormat('U', $this->jwtClaims['nbf']);
+
+        self::assertEquals($this->jwtClaims, $actualHeaders);
     }
 
     /** @test */
     public function getJWTSignature()
     {
         $sut = new JWTService();
-        $actualHeaders = $sut->getJWTSignature($this->jwtHeadersClaimSignature);
+        $signature = $sut->getJWTSignature($this->jwtHeadersClaimSignature);
 
-        self::assertSame($this->jwtSignature, $actualHeaders);
+        self::assertSame($this->jwtSignature, $signature);
+    }
+
+    /** @test */
+    public function getPublicKeyByJWK()
+    {
+        $sut = new JWTService();
+        $actualPublicKey = $sut->getPublicKeyByJWK($this->jwtHeadersClaimSignature, $this->jwks);
+
+        $expectedPublicKey = <<<KEY
+-----BEGIN PUBLIC KEY-----
+MIIBIjANBgkqhkiG9w0BAQEFAAOCAQ8AMIIBCgKCAQEA10dGTg473Av9lRp/jhvW
+Io7oG8qm/FTOj+YpieNScOkCZsgWuSLuYzElBRpDAAq6zMr1SwXYSGSbPzAoYd0U
+9rWLO3AKuVHoZbwd5RjKen+l5lVOWmF2da6vnPyOxwKowA3dPhGsSPOXCU7TitKH
+Gz7fJCDMMdbxxZMdX2qfIpWN9n90gyjOQYqilQtJLnBDNYtYNhEU6o/fsVkOdspP
+/gJIQE++NpXW9udaQ8mjIhuFfa/b8ucp/puJXtgeNNGiJ4ebwE0hNLBDhCLeXGSl
+vGvjf9P3c1oIR9z5i/12h8X7pQ2nxBT1d4shzWaFc07OIzssAwYDu4c5M41ilcAi
+CQIDAQAB
+-----END PUBLIC KEY-----
+
+KEY;
+
+        self::assertSame($expectedPublicKey, $actualPublicKey);
     }
 }

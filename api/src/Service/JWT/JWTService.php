@@ -29,7 +29,7 @@ class JWTService
     public function createNewJWT(?User $user = null)
     {
         $config = $this->initJWTConfig();
-        $publicKey = $config->signingKey()->contents();
+        $publicKey = $config->verificationKey()->contents();
         $kid = openssl_digest($publicKey, 'sha256');
 
         $token = $config
@@ -64,7 +64,7 @@ class JWTService
 
         return [
             'keys' => [
-                [
+                $kid => [
                     'kty' => 'RSA',
                     'n' => rtrim(str_replace(['+', '/'], ['-', '_'], base64_encode($keyInfo['rsa']['n'])), '='),
                     'e' => rtrim(str_replace(['+', '/'], ['-', '_'], base64_encode($keyInfo['rsa']['e'])), '='),

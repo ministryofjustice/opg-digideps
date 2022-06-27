@@ -126,9 +126,9 @@ class RestClient implements RestClientInterface
                 // Get public key from API
                 $jwkResponse = $this->openInternetClient->request('GET', $jwtHeaders['jku']);
                 $jwks = json_decode($jwkResponse->getContent(), true);
-                $decoded = $this->JWTService->decodeAndVerifyWithKey($jwt, $jwks);
 
-                $subjectUrn = $decoded['sub'];
+                $decoded = $this->JWTService->decodeAndVerifyWithJWK($jwt, $jwks);
+                $subjectUrn = $decoded->claims()->get('sub');
                 // Move to secure cookie in next iteration
                 $this->tokenStorage->set(sprintf('%s-jwt', $subjectUrn), $jwt);
             } catch (ExpiredException $e) {
