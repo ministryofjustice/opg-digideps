@@ -4,7 +4,7 @@ Feature: Limiting access to sections of the app to super admins
     In order to prevent other types of users from accessing sensitive or confusing data
     I need to limit access to certain areas of the app to Super Admins
 
-    @super-admin @mia
+    @super-admin 
     Scenario: A super admin attempts to access analytics, reports, fixtures and notifications
         Given a super admin user accesses the admin app
         When I navigate to the admin analytics page
