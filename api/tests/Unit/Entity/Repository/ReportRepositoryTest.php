@@ -146,7 +146,7 @@ class ReportRepositoryTest extends ApiBaseTestCase
         $this->entityManager->refresh($client->getUsers()[0]);
 
         $result = $this->repository->findAllActiveReportsByCaseNumbersAndRole(['4932965T'], $client->getUsers()[0]->getRoleName());
-        self::assertEquals($existingReport[0], $result);
+        self::assertEquals($existingReport, $result[0]);
     }
 
     /**
