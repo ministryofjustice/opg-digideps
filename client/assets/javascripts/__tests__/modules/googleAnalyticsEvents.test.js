@@ -47,6 +47,15 @@ const setDocumentBody = () => {
                 </span>
                 <input class="govuk-input" id="email" name="email" type="email" value="" inputmode="email" spellcheck="false" autocomplete="email">
             </div>
+            <div class="govuk-form-group form-group--error">
+                <label class="govuk-label" for="email">
+                    Confirm your email address
+                </label>
+                <span class="govuk-error-message">
+                    <span class="govuk-visually-hidden">Error:</span> Your email address does not match
+                </span>
+                <input class="govuk-input" id="email" name="email" type="email" value="" inputmode="email" spellcheck="false" autocomplete="email">
+            </div>
             <div class="govuk-form-group govuk-form-group--error">
                 <label class="govuk-label" for="show_hide_password">
                     Create a password
@@ -76,6 +85,7 @@ beforeAll(() => {
 
 describe('googleAnalyticsEvents', () => {
   const expectedEmailErrorMessage = 'Enter an email address in the correct format, like name@example.com'
+  const expectedConfirmEmailErrorMessage = 'Your email address does not match'
   const expectedPasswordErrorMessageOne = 'Password must be 8 characters or more'
   const expectedPasswordErrorMessageTwo = 'Password must include a number'
   const expectedPasswordErrorMessageThree = 'Password must include a capital letter'
@@ -116,9 +126,9 @@ describe('googleAnalyticsEvents', () => {
 
   })
 
-  describe('extractErrorEventInfo', () => {
+  describe('extractFormErrorEventInfo', () => {
     it('returns an array of error event objects', () => {
-      const actualEventInfos = GoogleAnalyticsEvents.extractErrorEventInfo('govuk-form-group--error', 'govuk-error-message')
+      const actualEventInfos = GoogleAnalyticsEvents.extractFormErrorEventInfo('govuk-form-group--error', 'govuk-error-message')
 
       const exepctedEventInfos = [
         {
@@ -148,7 +158,20 @@ describe('googleAnalyticsEvents', () => {
         },
       ]
 
-      expect(actualEventInfos, exepctedEventInfos)
+      expect(actualEventInfos).toEqual(exepctedEventInfos)
+
+      const moreActualEventInfos = GoogleAnalyticsEvents.extractFormErrorEventInfo('form-group--error', 'govuk-error-message')
+
+      const moreExepctedEventInfos = [
+        {
+          action: 'Confirm your email address',
+          params: { event_category: 'Form errors', event_label: `#email - ${expectedConfirmEmailErrorMessage}` }
+        },
+      ]
+
+      expect(moreActualEventInfos).toEqual(moreExepctedEventInfos)
+
+
     })
   })
 

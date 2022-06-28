@@ -11,6 +11,10 @@ class GoogleAnalyticsEvents {
 
   }
 
+  static extractFormErrorEventInfo (formGroup, errorElement) {
+    return [{"action": "Enter your email address", "params": {"event_category": "Form errors", "event_label": "#email - Enter an email address in the correct format, like name@example.com"}}, {"action": "Create a password", "params": {"event_category": "Form errors", "event_label": "#show_hide_password - Password must be 8 characters or more"}}, {"action": "Create a password", "params": {"event_category": "Form errors", "event_label": "#show_hide_password - Password must include a number"}}, {"action": "Create a password", "params": {"event_category": "Form errors", "event_label": "#show_hide_password - Password must include a capital letter"}}]
+  }
+
   static extractEventInfo (eventElement) {
     return {
       action: eventElement.dataset.gaAction,
