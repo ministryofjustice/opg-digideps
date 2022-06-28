@@ -74,6 +74,7 @@ class JWTService
     public function getPublicKeyByJWK(string $jwt, array $jwks)
     {
         $headers = $this->getJWTHeaders($jwt);
+        // @TODO rewrite using lcobucci/jwt when https://github.com/lcobucci/jwt/issues/32 is resolved
         $set = JWKSet::createFromKeyData($jwks);
 
         $jwk = $set->get($headers['kid']); // Same as $json['keys'][0]['kid']
