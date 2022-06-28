@@ -1,5 +1,5 @@
 import { GoogleAnalyticsEvents } from '../../modules/googleAnalyticsEvents'
-import { beforeAll, describe, it, jest } from '@jest/globals'
+import { beforeAll, describe, expect, it, jest } from '@jest/globals'
 
 const globals = (() => {
   window.gtag = jest.fn()
@@ -52,13 +52,13 @@ const setDocumentBody = () => {
                     Create a password
                 </label>
                 <span class="govuk-error-message">
-                <span class="govuk-visually-hidden">Error:</span> Password must be 8 characters or more
+                    <span class="govuk-visually-hidden">Error:</span> Password must be 8 characters or more
                 </span>
                 <span class="govuk-error-message">
-                <span class="govuk-visually-hidden">Error:</span> Password must include a number
+                    <span class="govuk-visually-hidden">Error:</span> Password must include a number
                 </span>
                 <span class="govuk-error-message">
-                <span class="govuk-visually-hidden">Error:</span> Password must include a capital letter
+                    <span class="govuk-visually-hidden">Error:</span> Password must include a capital letter
                 </span>
                 <input class="govuk-input govuk-input moj-password-reveal__input govuk-input--width-20" id="show_hide_password" name="show_hide_password" type="password" value="">
                 <button class="govuk-button govuk-button--secondary moj-password-reveal__button" data-module="govuk-button" type="button" data-showpassword="Show" data-hidepassword="Hide">Show</button>
@@ -74,48 +74,82 @@ beforeAll(() => {
   GoogleAnalyticsEvents.init()
 })
 
-
 describe('googleAnalyticsEvents', () => {
+  const expectedEmailErrorMessage = 'Enter an email address in the correct format, like name@example.com'
+  const expectedPasswordErrorMessageOne = 'Password must be 8 characters or more'
+  const expectedPasswordErrorMessageTwo = 'Password must include a number'
+  const expectedPasswordErrorMessageThree = 'Password must include a capital letter'
+
   describe('initFormValidationErrors', () => {
     it('send form validation errors to google analytics', () => {
-      const expectedEmailErrorMessage = "Enter an email address in the correct format, like name@example.com"
-      const expectedPasswordErrorMessageOne = "Password must be 8 characters or more"
-      const expectedPasswordErrorMessageTwo = "Password must include a number"
-      const expectedPasswordErrorMessageThree = "Password must include a capital letter"
-
-      GoogleAnalyticsEvents.initFormValidationErrors();
+      GoogleAnalyticsEvents.initFormValidationErrors()
 
       expect(window.gtag).toHaveBeenNthCalledWith(
         1,
         'event',
         'Enter your email address',
-        { event_category: 'Form errors', event_label: `#email - ${expectedEmailErrorMessage}`}
+        { event_category: 'Form errors', event_label: `#email - ${expectedEmailErrorMessage}` }
       )
 
       expect(window.gtag).toHaveBeenNthCalledWith(
         2,
         'event',
         'Create a password',
-        { event_category: 'Form errors', event_label: `#show_hide_password - ${expectedPasswordErrorMessageOne}`}
+        { event_category: 'Form errors', event_label: `#show_hide_password - ${expectedPasswordErrorMessageOne}` }
       )
 
       expect(window.gtag).toHaveBeenNthCalledWith(
         3,
         'event',
         'Create a password',
-        { event_category: 'Form errors', event_label: `#show_hide_password - ${expectedPasswordErrorMessageTwo}`}
+        { event_category: 'Form errors', event_label: `#show_hide_password - ${expectedPasswordErrorMessageTwo}` }
       )
 
       expect(window.gtag).toHaveBeenNthCalledWith(
         4,
         'event',
         'Create a password',
-        { event_category: 'Form errors', event_label: `#show_hide_password - ${expectedPasswordErrorMessageThree}`}
+        { event_category: 'Form errors', event_label: `#show_hide_password - ${expectedPasswordErrorMessageThree}` }
       )
 
     })
 
+  })
 
+  describe('extractErrorEventInfo', () => {
+    it('returns an array of error event objects', () => {
+      const actualEventInfos = GoogleAnalyticsEvents.extractErrorEventInfo('govuk-form-group--error', 'govuk-error-message')
+
+      const exepctedEventInfos = [
+        {
+          action: 'Enter your email address',
+          params: { event_category: 'Form errors', event_label: `#email - ${expectedEmailErrorMessage}` }
+        },
+        {
+          action: 'Create a password',
+          params: {
+            event_category: 'Form errors',
+            event_label: `#show_hide_password - ${expectedPasswordErrorMessageOne}`
+          }
+        },
+        {
+          action: 'Create a password',
+          params: {
+            event_category: 'Form errors',
+            event_label: `#show_hide_password - ${expectedPasswordErrorMessageTwo}`
+          }
+        },
+        {
+          action: 'Create a password',
+          params: {
+            event_category: 'Form errors',
+            event_label: `#show_hide_password - ${expectedPasswordErrorMessageThree}`
+          }
+        },
+      ]
+
+      expect(actualEventInfos, exepctedEventInfos)
+    })
   })
 
   describe('extractEventInfo', () => {

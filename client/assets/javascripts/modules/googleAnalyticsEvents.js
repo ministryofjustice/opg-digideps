@@ -7,6 +7,10 @@ class GoogleAnalyticsEvents {
     })
   }
 
+  static initFormValidationErrors () {
+
+  }
+
   static extractEventInfo (eventElement) {
     return {
       action: eventElement.dataset.gaAction,
