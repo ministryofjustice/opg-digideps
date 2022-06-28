@@ -26,13 +26,13 @@ class ReportRepositoryTest extends ApiBaseTestCase
     /** @var ReportRepository */
     private $sut;
 
-    /** @var Report | MockInterface */
+    /** @var Report|MockInterface */
     private $mockReport;
 
-    /** @var ManagerRegistry | MockInterface */
+    /** @var ManagerRegistry|MockInterface */
     private $mockManagerRegistry;
 
-    /** @var ClientInterface | MockInterface */
+    /** @var ClientInterface|MockInterface */
     private $mockClient;
 
     /** @var ReportRepository */
@@ -45,7 +45,7 @@ class ReportRepositoryTest extends ApiBaseTestCase
     private $queuedChecklists = [];
 
     /** @var int */
-    const QUERY_LIMIT = 2;
+    public const QUERY_LIMIT = 2;
 
     /**
      * @var ClientSearchFilter|m\LegacyMockInterface|MockInterface
@@ -132,6 +132,23 @@ class ReportRepositoryTest extends ApiBaseTestCase
             ->assertQueuedChecklistsAreUpdatedToInProgress();
     }
 
+    /** @test */
+    public function findAllActiveReportsByCaseNumbersAndRoleIsCaseInsensitive()
+    {
+        $client = (new Client())->setCaseNumber('4932965t');
+        $this->entityManager->persist($client);
+
+        $existingReport = $this->buildReport($client);
+
+        $this->entityManager->flush();
+        $this->entityManager->refresh($existingReport);
+        $this->entityManager->refresh($client);
+        $this->entityManager->refresh($client->getUsers()[0]);
+
+        $result = $this->repository->findAllActiveReportsByCaseNumbersAndRole(['4932965T'], $client->getUsers()[0]->getRoleName());
+        self::assertEquals($existingReport[0], $result);
+    }
+
     /**
      * @throws \Doctrine\ORM\ORMException
      * @throws \Doctrine\ORM\OptimisticLockException
@@ -213,7 +230,10 @@ class ReportRepositoryTest extends ApiBaseTestCase
             ->setFirstname('firstname')
             ->setLastname('lastname')
             ->setEmail(sprintf('email%s@test.com', rand(1, 100000)))
-            ->setPassword('password');
+            ->setPassword('password')
+            ->setRoleName('ROLE_LAY');
+
+        $client->addUser($user);
 
         $reportSubmission = new ReportSubmission($report, $user);
         $report->addReportSubmission($reportSubmission);
@@ -221,6 +241,7 @@ class ReportRepositoryTest extends ApiBaseTestCase
         $this->entityManager->persist($report);
         $this->entityManager->persist($reportSubmission);
         $this->entityManager->persist($user);
+        $this->entityManager->persist($client);
 
         return $report;
     }

@@ -109,10 +109,12 @@ class ReportRepository extends ServiceEntityRepository
      */
     public function findAllActiveReportsByCaseNumbersAndRole(array $caseNumbers, string $role)
     {
+        $caseNumbers = array_map('strtolower', $caseNumbers);
+
         $qb = $this->createQueryBuilder('r');
         $qb->leftJoin('r.client', 'c')
             ->leftJoin('c.users', 'u')
-            ->where('(r.submitted = false OR r.submitted is null) AND r.unSubmitDate IS NULL AND c.caseNumber IN (:caseNumbers) AND u.roleName = :roleName')
+            ->where('(r.submitted = false OR r.submitted is null) AND r.unSubmitDate IS NULL AND LOWER(c.caseNumber) IN (:caseNumbers) AND u.roleName = :roleName')
             ->setParameter('caseNumbers', $caseNumbers, Connection::PARAM_STR_ARRAY)
             ->setParameter('roleName', $role);
 
@@ -132,13 +134,13 @@ class ReportRepository extends ServiceEntityRepository
             $qb
                 ->select(('count' === $select) ? 'COUNT(DISTINCT r)' : 'r,c')
                 ->leftJoin('r.client', 'c')
-                ->leftJoin('c.users', 'u')->where('u.id = ' . $orgIdsOrUserId);
+                ->leftJoin('c.users', 'u')->where('u.id = '.$orgIdsOrUserId);
         } else {
             $qb
                 ->select(('count' === $select) ? 'COUNT(DISTINCT r)' : 'r,c,o')
                 ->leftJoin('r.client', 'c')
                 ->leftJoin('c.organisation', 'o')
-                ->where('o.isActivated = true AND o.id in (' . implode(',', $orgIdsOrUserId) . ')');
+                ->where('o.isActivated = true AND o.id in ('.implode(',', $orgIdsOrUserId).')');
         }
 
         $qb
@@ -277,7 +279,7 @@ END deputy_type";
                 ->setParameter('endDate', $endDate->setTime(23, 59, 59));
         }
 
-        if ($deputyType && $deputyType !== 'all') {
+        if ($deputyType && 'all' !== $deputyType) {
             $types = match (strtoupper($deputyType)) {
                 'LAY' => Report::getAllLayTypes(),
                 'PROF' => Report::getAllProfTypes(),
@@ -285,7 +287,7 @@ END deputy_type";
                 default => [],
             };
 
-            if ($startDate === null && $endDate === null) {
+            if (null === $startDate && null === $endDate) {
                 $query->where('r.type IN (:deputyTypes)')
                     ->setParameter('deputyTypes', $types);
             } else {
