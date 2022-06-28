@@ -170,8 +170,6 @@ describe('googleAnalyticsEvents', () => {
       ]
 
       expect(moreActualEventInfos).toEqual(moreExepctedEventInfos)
-
-
     })
   })
 
