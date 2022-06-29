@@ -2,6 +2,7 @@
 
 namespace App\Entity;
 
+use App\Entity\Traits\Timestamps;
 use App\v2\Registration\DTO\OrgDeputyshipDto;
 use Doctrine\Common\Collections\ArrayCollection;
 use Doctrine\ORM\Mapping as ORM;
@@ -12,9 +13,12 @@ use JMS\Serializer\Annotation as JMS;
  *
  * @ORM\Table(name="named_deputy", indexes={@ORM\Index(name="named_deputy_uid_idx", columns={"deputy_uid"})})
  * @ORM\Entity(repositoryClass="App\Repository\NamedDeputyRepository")
+ * @ORM\HasLifecycleCallbacks()
  */
 class NamedDeputy
 {
+    use Timestamps;
+    
     /**
      * @var int
      * @JMS\Type("integer")

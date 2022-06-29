@@ -5,6 +5,7 @@ namespace App\Entity;
 use App\Entity\Ndr\Ndr;
 use App\Entity\Report\Report;
 use App\Entity\Traits\IsSoftDeleteableEntity;
+use App\Entity\Traits\Timestamps;
 use DateTime;
 use Doctrine\Common\Collections\ArrayCollection;
 use Doctrine\Common\Collections\Collection;
@@ -26,9 +27,11 @@ use Symfony\Component\Security\Core\User\UserInterface;
  *     )
  * @ORM\Entity(repositoryClass="App\Repository\ClientRepository")
  * @Gedmo\SoftDeleteable(fieldName="deletedAt", timeAware=false)
+ * @ORM\HasLifecycleCallbacks()
  */
 class Client implements ClientInterface
 {
+    use Timestamps;
     use IsSoftDeleteableEntity;
 
     /**

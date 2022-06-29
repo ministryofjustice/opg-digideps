@@ -7,6 +7,7 @@ use App\Entity\Ndr\Ndr;
 use App\Entity\Report\Traits as ReportTraits;
 use App\Entity\ReportInterface;
 use App\Entity\Satisfaction;
+use App\Entity\Traits\Timestamps;
 use App\Entity\User;
 use App\Service\ReportService;
 use App\Service\ReportStatusService;
@@ -30,9 +31,11 @@ use RuntimeException;
  *     @ORM\Index(name="report_status_cached_idx", columns={"report_status_cached"})
  *  })
  * @ORM\Entity(repositoryClass="App\Repository\ReportRepository")
+ * @ORM\HasLifecycleCallbacks()
  */
 class Report implements ReportInterface
 {
+    use Timestamps;
     use ReportTraits\AssetTrait;
     use ReportTraits\BankAccountTrait;
     use ReportTraits\BalanceTrait;

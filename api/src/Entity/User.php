@@ -4,6 +4,7 @@ namespace App\Entity;
 
 use App\Entity\Report\Report;
 use App\Entity\Traits\AddressTrait;
+use App\Entity\Traits\Timestamps;
 use App\Entity\UserResearch\UserResearchResponse;
 use DateTime;
 use Doctrine\Common\Collections\ArrayCollection;
@@ -17,9 +18,11 @@ use Symfony\Component\Security\Core\User\UserInterface;
  *
  * @ORM\Table(name="dd_user", indexes={@ORM\Index(name="deputy_no_idx", columns={"deputy_no"})})
  * @ORM\Entity(repositoryClass="App\Repository\UserRepository")
+ * @ORM\HasLifecycleCallbacks()
  */
 class User implements UserInterface
 {
+    use Timestamps;
     use AddressTrait;
 
     public const TOKEN_EXPIRE_HOURS = 48;
