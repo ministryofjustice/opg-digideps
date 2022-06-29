@@ -135,21 +135,6 @@ class PreRegistration
         return $this->orderType;
     }
 
-    public function setUpdatedAt(DateTime $updatedAt): PreRegistration
-    {
-        $this->updatedAt = $updatedAt;
-
-        return $this;
-    }
-
-    /**
-     * @return DateTime|null
-     */
-    public function getUpdatedAt(): DateTime
-    {
-        return $this->updatedAt;
-    }
-
     public function getOrderDate(): DateTime
     {
         return $this->orderDate;

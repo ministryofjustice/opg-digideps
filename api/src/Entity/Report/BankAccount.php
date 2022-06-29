@@ -3,6 +3,7 @@
 namespace App\Entity\Report;
 
 use App\Entity\BankAccountInterface;
+use App\Entity\Traits\Timestamps;
 use Doctrine\Common\Collections\ArrayCollection;
 use Doctrine\ORM\Mapping as ORM;
 use JMS\Serializer\Annotation as JMS;
@@ -12,9 +13,12 @@ use JMS\Serializer\Annotation as JMS;
  *
  * @ORM\Table(name="account")
  * @ORM\Entity()
+ * @ORM\HasLifecycleCallbacks()
  */
 class BankAccount implements BankAccountInterface
 {
+    use Timestamps;
+    
     /**
      * Keep in sync with client.
      *
@@ -318,24 +322,6 @@ class BankAccount implements BankAccountInterface
     public function getLastEdit()
     {
         return $this->lastEdit;
-    }
-
-    /**
-     * @return \DateTime
-     */
-    public function getCreatedAt()
-    {
-        return $this->createdAt;
-    }
-
-    /**
-     * @param \DateTime $createdAt
-     */
-    public function setCreatedAt(\DateTime $createdAt)
-    {
-        $this->createdAt = $createdAt;
-
-        return $this;
     }
 
     /**

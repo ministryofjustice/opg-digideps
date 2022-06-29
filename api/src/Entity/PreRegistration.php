@@ -5,6 +5,7 @@ declare(strict_types=1);
 namespace App\Entity;
 
 use App\Entity\Report\Report;
+use App\Entity\Traits\Timestamps;
 use DateTime;
 use Doctrine\ORM\Mapping as ORM;
 use Exception;
@@ -15,9 +16,12 @@ use UnexpectedValueException;
 /**
  * @ORM\Table(name="pre_registration", indexes={@ORM\Index(name="updated_at_idx", columns={"updated_at"})})
  * @ORM\Entity(repositoryClass="App\Repository\PreRegistrationRepository")
+ * @ORM\HasLifecycleCallbacks()
  */
 class PreRegistration
 {
+    use Timestamps; 
+
     const REALM_PA = 'REALM_PA';
     const REALM_PROF = 'REALM_PROF';
     const REALM_LAY = 'REALM_LAY';
@@ -231,18 +235,6 @@ class PreRegistration
         return $this->typeOfReport;
     }
 
-    public function getUpdatedAt(): ?DateTime
-    {
-        return $this->updatedAt;
-    }
-
-    public function setUpdatedAt($updatedAt): self
-    {
-        $this->updatedAt = $updatedAt;
-
-        return $this;
-    }
-
     public function getOrderDate(): ?DateTime
     {
         return $this->orderDate;
@@ -335,18 +327,6 @@ class PreRegistration
     public function setNdr(?bool $ndr): self
     {
         $this->ndr = $ndr;
-
-        return $this;
-    }
-
-    public function getCreatedAt(): ?DateTime
-    {
-        return $this->createdAt;
-    }
-
-    public function setCreatedAt(?DateTime $createdAt): self
-    {
-        $this->createdAt = $createdAt;
 
         return $this;
     }

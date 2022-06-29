@@ -3,6 +3,7 @@
 namespace App\Entity\Ndr;
 
 use App\Entity\BankAccountInterface;
+use App\Entity\Traits\Timestamps;
 use DateTime;
 use Doctrine\ORM\Mapping as ORM;
 use JMS\Serializer\Annotation as JMS;
@@ -12,9 +13,12 @@ use JMS\Serializer\Annotation as JMS;
  *
  * @ORM\Table(name="odr_account")
  * @ORM\Entity(repositoryClass="App\Repository\NdrBankAccountRepository")
+ * @ORM\HasLifecycleCallbacks()
  */
 class BankAccount implements BankAccountInterface
 {
+    use Timestamps;
+    
     /**
      * Keep in sync with client.
      *
@@ -294,18 +298,6 @@ class BankAccount implements BankAccountInterface
     public function getCreatedAt()
     {
         return $this->createdAt;
-    }
-
-    /**
-     * @param DateTime $createdAt
-     *
-     * @return BankAccount
-     */
-    public function setCreatedAt($createdAt)
-    {
-        $this->createdAt = $createdAt;
-
-        return $this;
     }
 
     /**
