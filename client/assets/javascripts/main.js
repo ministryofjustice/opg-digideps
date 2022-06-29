@@ -37,8 +37,8 @@ export function nodeListForEach (nodes, callback) {
 }
 
 window.opg = {
-  Ga: Ga,
-  SessionTimeoutDialog: SessionTimeoutDialog
+  Ga,
+  SessionTimeoutDialog
 }
 
 $(document).ready(function () {
@@ -136,6 +136,7 @@ $(document).ready(function () {
   }
 
   GoogleAnalyticsEvents.init()
+  GoogleAnalyticsEvents.initFormValidationErrors()
 
   const trackableLinks = document.querySelectorAll('.js-trackDownloadLink')
 

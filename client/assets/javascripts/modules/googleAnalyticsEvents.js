@@ -8,7 +8,12 @@ class GoogleAnalyticsEvents {
   }
 
   static initFormValidationErrors () {
-
+    console.log('Running form validation function')
+    const eventInfos = GoogleAnalyticsEvents.extractFormErrorEventInfo('govuk-form-group--error', 'govuk-error-message')
+    eventInfos.forEach(e => {
+      window.globals.gtag('event', e.action, e.params)
+      console.log('Sending error to Google')
+    })
   }
 
   static extractFormErrorEventInfo (formGroupClass, errorElementClass) {
@@ -26,7 +31,7 @@ class GoogleAnalyticsEvents {
         const event = {}
         const params = {}
         event.action = label
-        const messageContent = errorMessage.textContent.replace("Error:", "").trim()
+        const messageContent = errorMessage.textContent.replace('Error:', '').trim()
 
         params.event_category = 'Form errors'
         params.event_label = `#${inputId} - ${messageContent}`
@@ -42,7 +47,8 @@ class GoogleAnalyticsEvents {
 
   static extractEventInfo (eventElement) {
     return {
-      action: eventElement.dataset.gaAction, event_params: {
+      action: eventElement.dataset.gaAction,
+      event_params: {
         event_category: eventElement.dataset.gaCategory, event_label: eventElement.dataset.gaLabel
       }
     }

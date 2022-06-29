@@ -24,12 +24,12 @@ class PreRegistrationVerificationService
      * Throw error 400 if preregistration has no record matching case number,
      * client surname, deputy surname, and postcode (if set).
      */
-    public function validate(string $caseNumber, string $clientSurname, string $deputySurname, ?string $deputyPostcode): bool
+    public function validate(string $caseNumber, string $clientLastname, string $deputyLastname, ?string $deputyPostcode): bool
     {
         $detailsToMatchOn = [
             'caseNumber' => $caseNumber,
-            'clientLastname' => $clientSurname,
-            'deputySurname' => $deputySurname,
+            'clientLastname' => $clientLastname,
+            'deputyLastname' => $deputyLastname,
         ];
 
         if ($deputyPostcode) {
@@ -38,24 +38,7 @@ class PreRegistrationVerificationService
 
         $caseNumberMatches = $this->getCaseNumberMatches($detailsToMatchOn);
 
-        $clientLastnameMatches = $this->filterByClientLastname($caseNumberMatches, $detailsToMatchOn);
-
-        $deputyLastnameMatches = $this->filterByDeputyLastname($clientLastnameMatches, $detailsToMatchOn);
-
-        if ($deputyPostcode) {
-            $this->lastMatchedPreRegistrationUsers = $this->applyPostcodeFilter($deputyLastnameMatches, $deputyPostcode);
-
-            if (0 == count($this->lastMatchedPreRegistrationUsers)) {
-                $deputyLastnameMatches = $this->formatPreRegistraionMatchesForErrorOutput($deputyLastnameMatches);
-
-                $errorJson = json_encode([
-                    'search_terms' => $detailsToMatchOn,
-                    'deputy_last_name_matches' => $deputyLastnameMatches,
-                ]);
-
-                throw new RuntimeException($errorJson, 400);
-            }
-        }
+        $this->lastMatchedPreRegistrationUsers = $this->checkOtherDetailsMatch($caseNumberMatches, $detailsToMatchOn);
 
         return true;
     }
@@ -145,59 +128,81 @@ class PreRegistrationVerificationService
      *
      * @return PreRegistration[]
      */
-    private function filterByClientLastname(array $caseNumberMatches, array $detailsToMatchOn)
+    private function checkOtherDetailsMatch(array $caseNumberMatches, $detailsToMatchOn)
     {
-        /** @var PreRegistration[] $caseNumberClientLastnameMatches */
-        $caseNumberClientLastnameMatches = [];
+        $matchingErrors = ['client_lastname' => false, 'deputy_lastname' => false, 'deputy_postcode' => false];
+
+        /** @var PreRegistration[] $clientLastnameMatches */
+        $clientLastnameMatches = [];
 
         foreach ($caseNumberMatches as $match) {
             if (mb_strtolower($match->getClientLastname()) == mb_strtolower($detailsToMatchOn['clientLastname'])) {
-                $caseNumberClientLastnameMatches[] = $match;
+                $clientLastnameMatches[] = $match;
             }
         }
 
-        if (0 === count($caseNumberClientLastnameMatches)) {
-            $caseNumberMatches = $this->formatPreRegistraionMatchesForErrorOutput($caseNumberMatches);
+        if (0 === count($clientLastnameMatches)) {
+            $matchingErrors['client_lastname'] = true;
+            $clientLastnameMatches = $caseNumberMatches;
+        }
+
+        /** @var PreRegistration[] $deputyLastnameMatches */
+        $deputyLastnameMatches = [];
+
+        foreach ($clientLastnameMatches as $match) {
+            if (mb_strtolower($match->getDeputySurname()) == mb_strtolower($detailsToMatchOn['deputyLastname'])) {
+                $deputyLastnameMatches[] = $match;
+            }
+        }
+
+        if (0 === count($deputyLastnameMatches)) {
+            $matchingErrors['deputy_lastname'] = true;
+            $deputyLastnameMatches = $clientLastnameMatches;
+        }
+
+        if ($detailsToMatchOn['deputyPostcode']) {
+            $normalisedPostcode = DataNormaliser::normalisePostcode($detailsToMatchOn['deputyPostcode']);
+            $preRegistrationByPostcode = [];
+            $preRegistrationWithPostcodeCount = 0;
+
+            foreach ($deputyLastnameMatches as $match) {
+                $postcode = DataNormaliser::normalisePostcode($match->getDeputyPostCode());
+
+                if (!empty($match->getDeputyPostCode())) {
+                    $preRegistrationByPostcode[$postcode][] = $match;
+                    ++$preRegistrationWithPostcodeCount;
+                }
+            }
+
+            if ($preRegistrationWithPostcodeCount < count($deputyLastnameMatches)) {
+                $deputyPostcodeMatches = $deputyLastnameMatches;
+            } else {
+                $deputyPostcodeMatches = array_key_exists($normalisedPostcode, $preRegistrationByPostcode) ? $preRegistrationByPostcode[$normalisedPostcode] : [];
+            }
+
+            if (0 === count($deputyPostcodeMatches)) {
+                $matchingErrors['deputy_postcode'] = true;
+                $deputyPostcodeMatches = $deputyLastnameMatches;
+            }
+
+            $finalMatchingCases = $deputyPostcodeMatches;
+        } else {
+            $finalMatchingCases = $deputyLastnameMatches;
+        }
+
+        if (in_array(true, $matchingErrors)) {
+            $formattedPreRegistrationMatches = $this->formatPreRegistrationMatchesForErrorOutput($caseNumberMatches);
 
             $errorJson = json_encode([
                 'search_terms' => $detailsToMatchOn,
-                'case_number_matches' => $caseNumberMatches,
+                'case_number_matches' => $formattedPreRegistrationMatches,
+                'matching_errors' => $matchingErrors,
             ]);
 
             throw new RuntimeException($errorJson, 461);
         }
 
-        return $caseNumberClientLastnameMatches;
-    }
-
-    /**
-     * @param PreRegistration[] $filteredCaseNumberMatches
-     *
-     * @return PreRegistration[]
-     */
-    private function filterByDeputyLastname(array $filteredCaseNumberMatches, array $detailsToMatchOn)
-    {
-        /** @var PreRegistration[] $filteredClientLastnameMatches */
-        $filteredClientLastnameMatches = [];
-
-        foreach ($filteredCaseNumberMatches as $match) {
-            if (mb_strtolower($match->getDeputySurname()) == mb_strtolower($detailsToMatchOn['deputySurname'])) {
-                $filteredClientLastnameMatches[] = $match;
-            }
-        }
-
-        if (0 === count($filteredClientLastnameMatches)) {
-            $filteredCaseNumberMatches = $this->formatPreRegistraionMatchesForErrorOutput($filteredCaseNumberMatches);
-
-            $errorJson = json_encode([
-                'search_terms' => $detailsToMatchOn,
-                'client_last_name_matches' => $filteredCaseNumberMatches,
-            ]);
-
-            throw new RuntimeException($errorJson, 462);
-        }
-
-        return $filteredClientLastnameMatches;
+        return $finalMatchingCases;
     }
 
     /**
@@ -205,7 +210,7 @@ class PreRegistrationVerificationService
      *
      * @return PreRegistration[]
      */
-    private function formatPreRegistraionMatchesForErrorOutput(array $matches): mixed
+    private function formatPreRegistrationMatchesForErrorOutput(array $matches): mixed
     {
         $matches = json_decode(
             $this->serializer->serialize($matches, 'json', [AbstractNormalizer::IGNORED_ATTRIBUTES => ['otherColumns']]),

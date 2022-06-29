@@ -145,7 +145,7 @@ class PreRegistrationVerificationServiceTest extends WebTestCase
         $this->assertTrue($this->preRegistrationVerificationService->validate('11111111', 'CSurn', 'DSurn', 'DPC123'));
 
         // test each fail individually
-        $incorrectCaseNumberMessage = '{"search_terms":{"caseNumber":"%s","clientLastname":"%s","deputySurname":"%s","deputyPostcode":"%s"}}';
+        $incorrectCaseNumberMessage = '{"search_terms":{"caseNumber":"%s","clientLastname":"%s","deputyLastname":"%s","deputyPostcode":"%s"}}';
         try {
             $this->preRegistrationVerificationService->validate('WRONG678', 'CSurn', 'DSurn', 'DPC123');
         } catch (RuntimeException $e) {
@@ -156,37 +156,54 @@ class PreRegistrationVerificationServiceTest extends WebTestCase
             $this->assertEquals(460, $e->getCode());
         }
 
-        $incorrectClientLastnameMessage = '{"search_terms":{"caseNumber":"%s","clientLastname":"%s","deputySurname":"%s","deputyPostcode":"%s"},"case_number_matches":null}';
+        $termsAndMatchesMessage = '{"search_terms":{"caseNumber":"%s","clientLastname":"%s","deputyLastname":"%s","deputyPostcode":"%s"},"case_number_matches":null';
+
+        $incorrectClientLastnameMessage = '"matching_errors":{"client_lastname":true,"deputy_lastname":false,"deputy_postcode":false}';
         try {
             $this->assertTrue($this->preRegistrationVerificationService->validate('11111111', 'WRONG', 'DSurn', 'DPC123'));
         } catch (RuntimeException $e) {
             $this->assertStringContainsString(
-                sprintf($incorrectClientLastnameMessage, '11111111', 'WRONG', 'DSurn', 'DPC123'),
+                sprintf($termsAndMatchesMessage, '11111111', 'WRONG', 'DSurn', 'DPC123'),
                 $e->getMessage()
             );
+            $this->assertStringContainsString($incorrectClientLastnameMessage, $e->getMessage());
             $this->assertEquals(461, $e->getCode());
         }
 
-        $incorrectClientLastnameMessage = '{"search_terms":{"caseNumber":"%s","clientLastname":"%s","deputySurname":"%s","deputyPostcode":"%s"},"client_last_name_matches":null}';
+        $incorrectDeputyLastnameMessage = '"matching_errors":{"client_lastname":false,"deputy_lastname":true,"deputy_postcode":false}';
         try {
             $this->assertTrue($this->preRegistrationVerificationService->validate('11111111', 'CSurn', 'WRONG', 'DPC123'));
         } catch (RuntimeException $e) {
             $this->assertStringContainsString(
-                sprintf($incorrectClientLastnameMessage, '11111111', 'CSurn', 'WRONG', 'DPC123'),
+                sprintf($termsAndMatchesMessage, '11111111', 'CSurn', 'WRONG', 'DPC123'),
                 $e->getMessage()
             );
-            $this->assertEquals(462, $e->getCode());
+            $this->assertStringContainsString($incorrectDeputyLastnameMessage, $e->getMessage());
+            $this->assertEquals(461, $e->getCode());
         }
 
-        $incorrectPostCodeMessage = '{"search_terms":{"caseNumber":"%s","clientLastname":"%s","deputySurname":"%s","deputyPostcode":"%s"},"deputy_last_name_matches":null}';
+        $incorrectPostCodeMessage = '"matching_errors":{"client_lastname":false,"deputy_lastname":false,"deputy_postcode":true}';
         try {
             $this->assertTrue($this->preRegistrationVerificationService->validate('11111111', 'CSurn', 'DSurn', 'WRONG'));
         } catch (RuntimeException $e) {
             $this->assertStringContainsString(
-                sprintf($incorrectPostCodeMessage, '11111111', 'CSurn', 'DSurn', 'WRONG'),
+                sprintf($termsAndMatchesMessage, '11111111', 'CSurn', 'DSurn', 'WRONG'),
                 $e->getMessage()
             );
-            $this->assertEquals(400, $e->getCode());
+            $this->assertStringContainsString($incorrectPostCodeMessage, $e->getMessage());
+            $this->assertEquals(461, $e->getCode());
+        }
+
+        $incorrectLastnamesAndPostcode = '"matching_errors":{"client_lastname":true,"deputy_lastname":true,"deputy_postcode":true}';
+        try {
+            $this->assertTrue($this->preRegistrationVerificationService->validate('11111111', 'WRONG', 'WRONG', 'WRONG'));
+        } catch (RuntimeException $e) {
+            $this->assertStringContainsString(
+                sprintf($termsAndMatchesMessage, '11111111', 'WRONG', 'WRONG', 'WRONG'),
+                $e->getMessage()
+            );
+            $this->assertStringContainsString($incorrectLastnamesAndPostcode, $e->getMessage());
+            $this->assertEquals(461, $e->getCode());
         }
     }
 
@@ -195,7 +212,7 @@ class PreRegistrationVerificationServiceTest extends WebTestCase
      */
     public function validateNonMLDWithNoPostcode()
     {
-        $this->assertTrue($this->preRegistrationVerificationService->validate('22222222', 'CSurn', 'DSurn', 'ANY ThinG'));
+        $this->assertTrue($this->preRegistrationVerificationService->validate('22222222', 'CSurn', 'DSurn', ''));
     }
 
     /**
@@ -223,7 +240,12 @@ class PreRegistrationVerificationServiceTest extends WebTestCase
         try {
             $this->assertTrue($this->preRegistrationVerificationService->validate('11111111', 'CSurn', 'DSurn', 'DOEsnT MatteR'));
         } catch (RuntimeException $e) {
-            $this->assertStringContainsString('{"search_terms":{"caseNumber":"11111111","clientLastname":"CSurn","deputySurname":"DSurn","deputyPostcode":"DOEsnT MatteR"},"deputy_last_name_matches":null}', $e->getMessage());
+            $expectedErrorMessage = '{"search_terms":{"caseNumber":"%s","clientLastname":"%s","deputyLastname":"%s","deputyPostcode":"%s"},"case_number_matches":null,"matching_errors":{"client_lastname":false,"deputy_lastname":false,"deputy_postcode":true}}';
+            $this->assertStringContainsString(
+                sprintf($expectedErrorMessage, '11111111', 'CSurn', 'DSurn', 'DOEsnT MatteR'),
+                $e->getMessage()
+            );
+            $this->assertEquals(461, $e->getCode());
         }
 
         // but if one MLD in preRegistration, the postcode check is skipped

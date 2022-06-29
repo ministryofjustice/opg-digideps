@@ -121,9 +121,7 @@ describe('googleAnalyticsEvents', () => {
         'Create a password',
         { event_category: 'Form errors', event_label: `#show_hide_password - ${expectedPasswordErrorMessageThree}` }
       )
-
     })
-
   })
 
   describe('extractFormErrorEventInfo', () => {
@@ -155,7 +153,7 @@ describe('googleAnalyticsEvents', () => {
             event_category: 'Form errors',
             event_label: `#show_hide_password - ${expectedPasswordErrorMessageThree}`
           }
-        },
+        }
       ]
 
       expect(actualEventInfos).toEqual(exepctedEventInfos)
@@ -166,7 +164,7 @@ describe('googleAnalyticsEvents', () => {
         {
           action: 'Confirm your email address',
           params: { event_category: 'Form errors', event_label: `#email - ${expectedConfirmEmailErrorMessage}` }
-        },
+        }
       ]
 
       expect(moreActualEventInfos).toEqual(moreExepctedEventInfos)
