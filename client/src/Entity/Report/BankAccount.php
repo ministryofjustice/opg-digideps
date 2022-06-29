@@ -283,18 +283,6 @@ class BankAccount implements BankAccountInterface
         return $this;
     }
 
-    public function setLastEdit($lastEdit)
-    {
-        $this->lastEdit = $lastEdit;
-
-        return $this;
-    }
-
-    public function getLastEdit()
-    {
-        return $this->lastEdit;
-    }
-
     /**
      * @return string
      */

@@ -116,20 +116,6 @@ class Decision
         return $this->clientInvolvedDetails;
     }
 
-    /**
-     * Set lastedit.
-     *
-     * @param \DateTime $lastedit
-     *
-     * @return Decision
-     */
-    public function setLastedit($lastedit)
-    {
-        $this->lastedit = $lastedit;
-
-        return $this;
-    }
-
     public function setReport(Report $report)
     {
         $this->report = $report;

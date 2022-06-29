@@ -2,6 +2,7 @@
 
 namespace App\Entity\Report;
 
+use App\Entity\Traits\Timestamps;
 use Doctrine\ORM\Mapping as ORM;
 use JMS\Serializer\Annotation as JMS;
 
@@ -10,9 +11,12 @@ use JMS\Serializer\Annotation as JMS;
  *
  * @ORM\Table(name="contact")
  * @ORM\Entity
+ * @ORM\HasLifecycleCallbacks()
  */
 class Contact
 {
+    use Timestamps;
+
     /**
      * @var int
      *
@@ -249,30 +253,6 @@ class Contact
     public function getPhone1()
     {
         return $this->phone1;
-    }
-
-    /**
-     * Set lastedit.
-     *
-     * @param \DateTime $lastedit
-     *
-     * @return Contact
-     */
-    public function setLastedit($lastedit)
-    {
-        $this->lastedit = $lastedit;
-
-        return $this;
-    }
-
-    /**
-     * Get lastedit.
-     *
-     * @return \DateTime
-     */
-    public function getLastedit()
-    {
-        return $this->lastedit;
     }
 
     /**

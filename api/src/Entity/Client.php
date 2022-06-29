@@ -450,30 +450,6 @@ class Client implements ClientInterface
     }
 
     /**
-     * Set lastedit.
-     *
-     * @param DateTime $lastedit
-     *
-     * @return Client
-     */
-    public function setLastedit($lastedit)
-    {
-        $this->lastedit = $lastedit;
-
-        return $this;
-    }
-
-    /**
-     * Get lastedit.
-     *
-     * @return DateTime|null
-     */
-    public function getLastedit()
-    {
-        return $this->lastedit;
-    }
-
-    /**
      * Add users.
      *
      * @return Client

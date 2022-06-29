@@ -329,14 +329,6 @@ class Report implements ReportInterface
     private $unSubmitDate;
 
     /**
-     * @var DateTime
-     * @JMS\Accessor(getter="getLastedit")
-     * @JMS\Type("DateTime<'Y-m-d'>")
-     * @ORM\Column(name="last_edit", type="datetime", nullable=true)
-     */
-    private $lastedit;
-
-    /**
      * @var bool whether the report is submitted or not
      *
      * @JMS\Groups({"report"})
@@ -726,28 +718,6 @@ class Report implements ReportInterface
         $this->unSubmitDate = $unSubmitDate;
 
         return $this;
-    }
-
-    /**
-     * Set lastedit.
-     *
-     * @return Report
-     */
-    public function setLastedit(DateTime $lastedit)
-    {
-        $this->lastedit = new DateTime($lastedit->format('Y-m-d'));
-
-        return $this;
-    }
-
-    /**
-     * Get lastedit.
-     *
-     * @return DateTime
-     */
-    public function getLastedit()
-    {
-        return $this->lastedit;
     }
 
     /**

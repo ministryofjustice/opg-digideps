@@ -80,8 +80,7 @@ class AccountController extends RestController
         $data = $this->formatter->deserializeBodyContent($request);
 
         $this->fillAccountData($account, $data);
-
-        $account->setLastEdit(new \DateTime());
+        
         $this->em->flush();
 
         $report->updateSectionsStatusCache($this->sectionIds);

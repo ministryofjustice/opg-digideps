@@ -2,6 +2,7 @@
 
 namespace App\Entity\Ndr;
 
+use App\Entity\Traits\Timestamps;
 use DateTime;
 use Doctrine\ORM\Mapping as ORM;
 use JMS\Serializer\Annotation as JMS;
@@ -21,6 +22,8 @@ use JMS\Serializer\Annotation as JMS;
  */
 abstract class Asset
 {
+    use Timestamps;
+    
     /**
      * @var int
      * @JMS\Type("integer")
@@ -120,30 +123,6 @@ abstract class Asset
     }
 
     /**
-     * Set lastedit.
-     *
-     * @param DateTime $lastEdit
-     *
-     * @return Asset
-     */
-    public function setLastEdit($lastEdit)
-    {
-        $this->lastEdit = $lastEdit;
-
-        return $this;
-    }
-
-    /**
-     * Get lastedit.
-     *
-     * @return DateTime
-     */
-    public function getLastEdit()
-    {
-        return $this->lastEdit;
-    }
-
-    /**
      * @return Ndr
      */
     public function getNdr()
@@ -183,14 +162,5 @@ abstract class Asset
         $this->type = $type;
 
         return $this;
-    }
-
-    /**
-     * @ORM\PrePersist
-     * @ORM\PreUpdate
-     */
-    public function updateLastEdit()
-    {
-        $this->setLastEdit(new DateTime());
     }
 }

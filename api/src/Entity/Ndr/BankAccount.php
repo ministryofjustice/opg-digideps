@@ -175,23 +175,6 @@ class BankAccount implements BankAccountInterface
         return !in_array($this->getAccountType(), self::$typesNotRequiringSortCode);
     }
 
-    public function getLastEdit()
-    {
-        return $this->lastEdit;
-    }
-
-    /**
-     * @param null $lastEdit
-     *
-     * @return BankAccount
-     */
-    public function setLastEdit($lastEdit)
-    {
-        $this->lastEdit = $lastEdit;
-
-        return $this;
-    }
-
     /**
      * @return int
      */

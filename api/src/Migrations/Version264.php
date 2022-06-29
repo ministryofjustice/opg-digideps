@@ -20,25 +20,42 @@ final class Version264 extends AbstractMigration
     public function up(Schema $schema): void
     {
         // this up() migration is auto-generated, please modify it to your needs
+        // report
         $this->addSql('ALTER TABLE report ADD created_at TIMESTAMP NULL DEFAULT NULL');
-        $this->addSql('ALTER TABLE report ADD updated_at TIMESTAMP NULL DEFAULT NULL');
+        $this->addSql('ALTER TABLE report RENAME COLUMN last_edit TO updated_at');
+
+        // users
         $this->addSql('ALTER TABLE dd_user ADD created_at TIMESTAMP NULL DEFAULT NULL');
         $this->addSql('ALTER TABLE dd_user ADD updated_at TIMESTAMP NULL DEFAULT NULL');
+
+        // client
         $this->addSql('ALTER TABLE client ADD created_at TIMESTAMP NULL DEFAULT NULL');
-        $this->addSql('ALTER TABLE client ADD updated_at TIMESTAMP NULL DEFAULT NULL');
+        $this->addSql('ALTER TABLE client RENAME COLUMN last_edit TO updated_at');
+
+        // named deputy
         $this->addSql('ALTER TABLE named_deputy ADD created_at TIMESTAMP NULL DEFAULT NULL');
         $this->addSql('ALTER TABLE named_deputy ADD updated_at TIMESTAMP NULL DEFAULT NULL');
+
+        // account
+        $this->addSql('ALTER TABLE account RENAME COLUMN last_edit TO updated_at TIMESTAMP NULL DEFAULT NULL');
+        $this->addSql('ALTER TABLE odr_account ADD updated_at TIMESTAMP NULL DEFAULT NULL');
+
+        // pre registration
+        $this->addSql('ALTER TABLE pre_registration ADD created_at TIMESTAMP NULL DEFAULT NULL');
     }
 
     public function down(Schema $schema): void
     {
         // this down() migration is auto-generated, please modify it to your needs
         $this->addSql('ALTER TABLE report DROP created_at');
-        $this->addSql('ALTER TABLE report DROP updated_at');
+        $this->addSql('ALTER TABLE report RENAME COLUMN updated_at TO last_edit');
+
         $this->addSql('ALTER TABLE dd_user DROP created_at');
         $this->addSql('ALTER TABLE dd_user DROP updated_at');
+
         $this->addSql('ALTER TABLE client DROP created_at');
-        $this->addSql('ALTER TABLE client DROP updated_at');
+        $this->addSql('ALTER TABLE client RENAME COLUMN updated_at TO last_edit');
+
         $this->addSql('ALTER TABLE named_deputy DROP created_at');
         $this->addSql('ALTER TABLE named_deputy DROP updated_at');
     }

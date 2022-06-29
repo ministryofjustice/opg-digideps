@@ -301,30 +301,6 @@ class BankAccount implements BankAccountInterface
     }
 
     /**
-     * Set lastEdit.
-     *
-     * @param \DateTime $lastEdit
-     *
-     * @return BankAccount
-     */
-    public function setLastEdit($lastEdit)
-    {
-        $this->lastEdit = $lastEdit;
-
-        return $this;
-    }
-
-    /**
-     * Get lastEdit.
-     *
-     * @return \DateTime
-     */
-    public function getLastEdit()
-    {
-        return $this->lastEdit;
-    }
-
-    /**
      * Set openingBalance.
      *
      * @param string $openingBalance
