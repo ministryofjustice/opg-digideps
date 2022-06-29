@@ -22,8 +22,8 @@ final class Version264 extends AbstractMigration
         // this up() migration is auto-generated, please modify it to your needs
         $this->addSql('ALTER TABLE report ADD created_at TIMESTAMP NULL DEFAULT NULL');
         $this->addSql('ALTER TABLE report ADD updated_at TIMESTAMP NULL DEFAULT NULL');
-        $this->addSql('ALTER TABLE user ADD created_at TIMESTAMP NULL DEFAULT NULL');
-        $this->addSql('ALTER TABLE user ADD updated_at TIMESTAMP NULL DEFAULT NULL');
+        $this->addSql('ALTER TABLE dd_user ADD created_at TIMESTAMP NULL DEFAULT NULL');
+        $this->addSql('ALTER TABLE dd_user ADD updated_at TIMESTAMP NULL DEFAULT NULL');
         $this->addSql('ALTER TABLE client ADD created_at TIMESTAMP NULL DEFAULT NULL');
         $this->addSql('ALTER TABLE client ADD updated_at TIMESTAMP NULL DEFAULT NULL');
         $this->addSql('ALTER TABLE named_deputy ADD created_at TIMESTAMP NULL DEFAULT NULL');
@@ -35,8 +35,8 @@ final class Version264 extends AbstractMigration
         // this down() migration is auto-generated, please modify it to your needs
         $this->addSql('ALTER TABLE report DROP created_at');
         $this->addSql('ALTER TABLE report DROP updated_at');
-        $this->addSql('ALTER TABLE user DROP created_at');
-        $this->addSql('ALTER TABLE user DROP updated_at');
+        $this->addSql('ALTER TABLE dd_user DROP created_at');
+        $this->addSql('ALTER TABLE dd_user DROP updated_at');
         $this->addSql('ALTER TABLE client DROP created_at');
         $this->addSql('ALTER TABLE client DROP updated_at');
         $this->addSql('ALTER TABLE named_deputy DROP created_at');

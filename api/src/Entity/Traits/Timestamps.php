@@ -56,5 +56,5 @@ trait Timestamps
     public function setUpdatedAtAutomatically()
     {
         $this->setUpdatedAt(new DateTime());
-    }
+    }    
 }
