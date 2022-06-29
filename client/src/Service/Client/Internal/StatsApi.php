@@ -10,6 +10,7 @@ class StatsApi
 {
     protected const GET_ACTIVE_LAY_REPORT_DATA_ENDPOINT = 'stats/deputies/lay/active';
     protected const GET_ADMIN_USER_ACCOUNT_REPORT_DATA = 'stats/admins/report_data';
+    protected const GET_OLD_ADMIN_USER_REPORT_DATA = 'stats/admins/old_report_data';
     protected const GET_ASSETS_TOTAL_VALUES = 'stats/assets/total_values';
     protected const GET_BENEFITS_REPORT_METRICS = 'stats/report/benefits-report-metrics';
 
@@ -60,6 +61,15 @@ class StatsApi
             $link,
             'array',
             ['admin-benefits-metrics']
+        );
+    }
+
+    public function getOldAdminUsers(): array
+    {
+        return $this->restClient->get(
+            self::GET_OLD_ADMIN_USER_REPORT_DATA,
+            'array',
+            ['user']
         );
     }
 }

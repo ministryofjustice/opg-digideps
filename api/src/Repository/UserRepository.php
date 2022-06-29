@@ -309,4 +309,18 @@ SQL;
 
         return $query->getResult();
     }
+
+    public function getAllAdminUserAccountsNotUsedWithin(string $timeframe)
+    {
+        $date = (new DateTime())->modify($timeframe);
+
+        $dql = "SELECT u FROM App\Entity\User u WHERE u.roleName IN('ROLE_ADMIN') AND u.lastLoggedIn < :date ";
+
+        $query = $this
+            ->getEntityManager()
+            ->createQuery($dql)
+            ->setParameter('date', $date);
+
+        return $query->getResult();
+    }
 }

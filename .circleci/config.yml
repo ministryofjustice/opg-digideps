@@ -170,21 +170,8 @@ workflows:
               plan all shared terraform environments,
               api unit test,
               client unit test,
-              unprotect environment,
             ]
           filters: { branches: { ignore: [main] } }
-
-      - cleanup:
-          name: unprotect environment approval
-          type: approval
-          requires: [terraform apply]
-          filters: { branches: { ignore: [main] } }
-
-      - workspace-protection:
-          name: unprotect environment
-          requires: [unprotect environment approval]
-          filters: { branches: { ignore: [main] } }
-          protect_time: "0"
 
   integration:
     jobs:
@@ -526,10 +513,10 @@ workflows:
           requires: [apply integration]
           filters: { branches: { only: [main] } }
 
-  hourly_workspace_deletion:
+  scheduled_workspace_deletion:
     triggers:
       - schedule:
-          cron: "00 * * * *"
+          cron: "0 8,20 * * 0-6" # twice a day at 8am and 8pm
           filters: { branches: { only: [main] } }
     jobs:
       - destroy-workspaces:
@@ -882,8 +869,8 @@ jobs:
             ./scripts/workspace_cleanup.sh $(terraform-workspace-manager -protected-workspaces=true -aws-account-id=248804316466 -aws-iam-role=digideps-ci)
       - slack/status:
           channel: opg-digideps-devs
-          failure_message: nightly destroy workspaces has failed.
-          success_message: nightly destroy workspaces has succeeded.
+          failure_message: scheduled destroy workspaces has failed.
+          success_message: scheduled destroy workspaces has succeeded.
 
   cancel_redundant_builds:
     docker:

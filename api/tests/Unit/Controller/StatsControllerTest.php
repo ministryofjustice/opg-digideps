@@ -6,6 +6,17 @@ namespace App\Tests\Unit\Controller;
 
 class StatsControllerTest extends AbstractTestController
 {
+    private $entityManager;
+
+    public function setUp(): void
+    {
+        parent::setUp();
+        $kernel = self::bootKernel();
+        $this->entityManager = $kernel->getContainer()
+            ->get('doctrine')
+            ->getManager();
+    }
+
     /** @test */
     public function activeLayDeputies()
     {
@@ -61,6 +72,28 @@ class StatsControllerTest extends AbstractTestController
                 [
                     'mustFail' => true,
                     'AuthToken' => $token,
+                ]
+            );
+        }
+    }
+
+    /** @test */
+    public function oldAdminUsersOnlySuperAdminsCanAccess()
+    {
+        $unauthorisedUserTokens = [
+            $this->loginAsAdmin(),
+            $this->loginAsDeputy(),
+            $this->loginAsProf(),
+            $this->loginAsPa(),
+        ];
+
+        foreach ($unauthorisedUserTokens as $token) {
+            $this->assertJsonRequest(
+                'GET',
+                '/stats/admins/old_report_data',
+                [
+                   'mustFail' => true,
+                   'AuthToken' => $token,
                 ]
             );
         }
