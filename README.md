@@ -98,7 +98,7 @@ _See [deployment documentation](docs/DEPLOYMENT.md)_
 
 ## License
 
-The OPG Digideps Client is released under the MIT license, a copy of which can be found in [LICENSE](LICENSE).
+The OPG Digideps Client is released under the MIT license, a copy of which can be found in [LICENSE](LICENSE)..
 
 [service]: https://complete-deputy-report.service.gov.uk/
 
