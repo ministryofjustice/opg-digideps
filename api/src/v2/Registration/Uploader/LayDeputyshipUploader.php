@@ -26,10 +26,10 @@ class LayDeputyshipUploader
     private $preRegistrationEntriesByCaseNumber = [];
 
     /** @var int */
-    const MAX_UPLOAD = 10000;
+    public const MAX_UPLOAD = 10000;
 
     /** @var int */
-    const FLUSH_EVERY = 5000;
+    public const FLUSH_EVERY = 5000;
 
     public function __construct(
         private EntityManagerInterface $em,
@@ -50,7 +50,7 @@ class LayDeputyshipUploader
 
             foreach ($collection as $index => $layDeputyshipDto) {
                 try {
-                    $caseNumber = (string) $layDeputyshipDto->getCaseNumber();
+                    $caseNumber = strtolower((string) $layDeputyshipDto->getCaseNumber());
                     $this->preRegistrationEntriesByCaseNumber[$caseNumber] = $this->createAndPersistNewPreRegistrationEntity($layDeputyshipDto);
                     ++$added;
                 } catch (PreRegistrationCreationException $e) {
