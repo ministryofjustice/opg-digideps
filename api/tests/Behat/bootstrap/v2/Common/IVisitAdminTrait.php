@@ -183,8 +183,7 @@ trait IVisitAdminTrait
     {
         $this->visitAdminPath($this->getOldAdminUsersReportUrl());
     }
-
-
+    
     /**
      * @When I visit the admin login page
      */

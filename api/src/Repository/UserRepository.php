@@ -290,10 +290,8 @@ SQL;
 
         return $query->getResult();
     }
-
-
+    
     public function getAllAdminUserAccountsNotUsedWithin(string $timeframe)
-
     {
         $date = (new DateTime())->modify($timeframe);
 

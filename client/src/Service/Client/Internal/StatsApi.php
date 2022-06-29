@@ -69,7 +69,7 @@ class StatsApi
         return $this->restClient->get(
             self::GET_OLD_ADMIN_USER_REPORT_DATA,
             'array',
-            ['admin-account-reports']
+            ['user']
         );
     }
 }

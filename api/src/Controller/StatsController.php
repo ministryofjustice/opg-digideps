@@ -98,7 +98,6 @@ class StatsController extends RestController
      */
     public function getOldAdminUserReportData(Request $request, Restformatter $formatter): array
     {
-        
         $serialisedGroups = (array) $request->query->get('groups');
         $formatter->setJmsSerialiserGroups($serialisedGroups);
 
@@ -108,8 +107,6 @@ class StatsController extends RestController
             'AdminUserAccountsNotUsedWithin13Months' => $adminUserAccountsNotUsedWithin13Months
         ];
     }
-    
-    
     
     /**
      * @Route("stats/assets/total_values", methods={"GET"})

@@ -343,7 +343,6 @@ class StatsController extends AbstractController
         return $response;
     }
 
-
     /**
      * @Route("/reports/downloadOldAdminUsersCsv", name="admin_old_user_account_report")
      * @Security("is_granted('ROLE_SUPER_ADMIN')")
@@ -366,6 +365,5 @@ class StatsController extends AbstractController
         $response->headers->set('Content-Disposition', $disposition);
 
         return $response;
-
     }
 }

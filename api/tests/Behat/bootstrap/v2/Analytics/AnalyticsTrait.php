@@ -293,6 +293,4 @@ trait AnalyticsTrait
             throw new BehatException(sprintf('%s, returned a %s response', $this->currentLinkText, strval($responseStatus)));
         }
     }
-
-   
 }
