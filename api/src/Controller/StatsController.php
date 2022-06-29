@@ -93,6 +93,22 @@ class StatsController extends RestController
     }
 
     /**
+     * @Route("stats/admins/old_report_data", methods={"GET"})
+     * @Security("is_granted('ROLE_SUPER_ADMIN')")
+     */
+    public function getOldAdminUserReportData(Request $request, Restformatter $formatter): array
+    {
+        $serialisedGroups = (array) $request->query->get('groups');
+        $formatter->setJmsSerialiserGroups($serialisedGroups);
+
+        $adminUserAccountsNotUsedWithin13Months = $this->userRepository->getAllAdminUserAccountsNotUsedWithin('-13 months');
+
+        return [
+            'AdminUserAccountsNotUsedWithin13Months' => $adminUserAccountsNotUsedWithin13Months
+        ];
+    }
+    
+    /**
      * @Route("stats/assets/total_values", methods={"GET"})
      * @Security("is_granted('ROLE_SUPER_ADMIN')")
      */
@@ -138,7 +154,7 @@ class StatsController extends RestController
 
     /**
      * @Route("stats/report/benefits-report-metrics", methods={"GET", "POST"})
-     * @Security("is_granted('ROLE_SUPER_ADMIN')")
+     * @Security("is_granted('ROLE_SUPER_ADMIN')") 
      */
     public function getBenefitsReportMetrics(Request $request): array
     {
