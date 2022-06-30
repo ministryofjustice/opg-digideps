@@ -80,33 +80,6 @@ class PreRegistrationVerificationService
     /**
      * @return PreRegistration[]
      */
-    private function applyPostcodeFilter(mixed $preRegistrationMatches, string $deputyPostcode): array
-    {
-        $deputyPostcode = DataNormaliser::normalisePostcode($deputyPostcode);
-
-        $preRegistrationByPostcode = [];
-        $preRegistrationWithPostcodeCount = 0;
-        foreach ($preRegistrationMatches as $match) {
-            $postcode = DataNormaliser::normalisePostcode($match->getDeputyPostCode());
-
-            if (!empty($match->getDeputyPostCode())) {
-                $preRegistrationByPostcode[$postcode][] = $match;
-                ++$preRegistrationWithPostcodeCount;
-            }
-        }
-
-        if ($preRegistrationWithPostcodeCount < count($preRegistrationMatches)) {
-            $filteredResults = $preRegistrationMatches;
-        } else {
-            $filteredResults = array_key_exists($deputyPostcode, $preRegistrationByPostcode) ? $preRegistrationByPostcode[$deputyPostcode] : [];
-        }
-
-        return $filteredResults;
-    }
-
-    /**
-     * @return PreRegistration[]
-     */
     private function getCaseNumberMatches(array $detailsToMatchOn): array
     {
         /** @var PreRegistration[] $caseNumberMatches */
