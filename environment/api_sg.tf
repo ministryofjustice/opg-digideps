@@ -1,11 +1,18 @@
 locals {
   api_service_sg_rules = {
-    ecr     = local.common_sg_rules.ecr
-    logs    = local.common_sg_rules.logs
-    s3      = local.common_sg_rules.s3
-    ssm     = local.common_sg_rules.ssm
-    secret  = local.common_sg_rules.secrets
-    ecr_api = local.common_sg_rules.ecr_api
+    ecr            = local.common_sg_rules.ecr
+    logs           = local.common_sg_rules.logs
+    s3             = local.common_sg_rules.s3
+    ssm            = local.common_sg_rules.ssm
+    ecr_api        = local.common_sg_rules.ecr_api
+    secrets_egress = local.common_sg_rules.secrets
+    secrets_ingress = {
+      port        = 443
+      type        = "ingress"
+      protocol    = "tcp"
+      target_type = "security_group_id"
+      target      = data.aws_security_group.secrets_endpoint.id
+    }
     cache = {
       port        = 6379
       type        = "egress"

@@ -26,7 +26,8 @@ class StatsControllerTest extends AbstractTestController
             [
                 'mustSucceed' => true,
                 'AuthToken' => $this->loginAsSuperAdmin(),
-            ]
+            ],
+            true
         );
 
         self::assertIsArray($response);
@@ -75,7 +76,7 @@ class StatsControllerTest extends AbstractTestController
             );
         }
     }
-    
+
     /** @test */
     public function oldAdminUsersOnlySuperAdminsCanAccess()
     {
@@ -85,14 +86,14 @@ class StatsControllerTest extends AbstractTestController
             $this->loginAsProf(),
             $this->loginAsPa(),
         ];
-        
-        foreach ($unauthorisedUserTokens as $token){
+
+        foreach ($unauthorisedUserTokens as $token) {
             $this->assertJsonRequest(
                 'GET',
                 '/stats/admins/old_report_data',
                 [
                    'mustFail' => true,
-                   'AuthToken' => $token, 
+                   'AuthToken' => $token,
                 ]
             );
         }

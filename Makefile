@@ -54,7 +54,7 @@ lint-terraform: ##@checks Lint Terraform
 	@$(TFLINT) shared
 
 up-app: ##@application Brings the app up
-	docker-compose up -d --remove-orphans
+	docker-compose -f docker-compose.yml -f docker-compose.dev.yml up -d --remove-orphans
 
 up-app-build: ##@application Brings the app up and rebuilds containers
 	COMPOSE_HTTP_TIMEOUT=90 docker-compose up -d --build --remove-orphans
@@ -73,7 +73,7 @@ up-app-xdebug-api-cachegrind: ##@application Brings the app up, rebuilds contain
 
 up-app-integration-tests: ##@application Brings the app up using test env vars (see test.env)
 	REQUIRE_XDEBUG_FRONTEND=0 REQUIRE_XDEBUG_API=0 docker-compose -f docker-compose.yml -f docker-compose.dev.yml build frontend admin api test
-	APP_ENV=dev APP_DEBUG=0 docker-compose -f docker-compose.yml -f docker-compose.dev.yml up -d --remove-orphans
+	APP_DEBUG=0 docker-compose -f docker-compose.yml -f docker-compose.dev.yml up -d --remove-orphans
 
 down-app: ##@application Tears down the app
 	docker-compose down -v --remove-orphans
