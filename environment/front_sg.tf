@@ -95,6 +95,7 @@ resource "aws_security_group_rule" "front_elb_http_in" {
   to_port           = 80
   security_group_id = module.front_elb_security_group.id
   cidr_blocks       = local.front_allow_list
+  description       = "Front allow list to Front LB"
 }
 
 resource "aws_security_group_rule" "front_elb_https_in" {
@@ -104,6 +105,7 @@ resource "aws_security_group_rule" "front_elb_https_in" {
   to_port           = 443
   security_group_id = module.front_elb_security_group.id
   cidr_blocks       = local.front_allow_list
+  description       = "Front allow list to Front LB Secure"
 }
 
 //No room for rules left in front_elb_security_group
@@ -122,4 +124,5 @@ resource "aws_security_group_rule" "front_elb_route53_hc_in" {
   to_port           = 443
   security_group_id = module.front_elb_security_group_route53_hc.id
   cidr_blocks       = local.route53_healthchecker_ips
+  description       = "Route53 Healthcheck to Front LB"
 }

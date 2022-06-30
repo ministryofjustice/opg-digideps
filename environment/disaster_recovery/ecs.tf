@@ -65,6 +65,7 @@ locals {
 resource "aws_cloudwatch_log_group" "dr_backup" {
   name              = "dr-backup-${var.environment}"
   retention_in_days = var.log_retention
+  kms_key_id        = var.logs_kms_key_arn
   tags              = var.default_tags
 }
 

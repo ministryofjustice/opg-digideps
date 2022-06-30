@@ -1,6 +1,6 @@
 resource "aws_lb" "admin" {
   name                       = "admin-${local.environment}"
-  internal                   = false
+  internal                   = false #tfsec:ignore:aws-elb-alb-not-public - This is public LB
   load_balancer_type         = "application"
   subnets                    = data.aws_subnet.public.*.id
   idle_timeout               = 300

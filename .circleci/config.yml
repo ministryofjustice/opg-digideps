@@ -12,6 +12,10 @@ workflows:
           name: cancel redundant builds
           filters: { branches: { ignore: [main] } }
 
+      - tfsec-scan:
+          name: scan with tfsec
+          filters: { branches: { ignore: [main] } }
+
       - lint:
           name: lint terraform
           filters: { branches: { ignore: [main] } }
@@ -527,6 +531,7 @@ orbs:
   aws-cli: circleci/aws-cli@0.1.13
   slack: circleci/slack@3.4.2
   codecov: codecov/codecov@1.1.1
+  tfsec: mycodeself/tfsec@1.1.0
   dockerhub_helper:
     orbs:
       docker: circleci/docker@1.4.0
@@ -634,12 +639,12 @@ jobs:
             terraform init -backend=false
             terraform validate
           working_directory: ~/project/shared
-      - run:
-          name: install tfsec
-          command: go install github.com/aquasecurity/tfsec/cmd/tfsec@latest
-      - run:
-          name: run tfsec
-          command: tfsec || true
+
+  tfsec-scan:
+    executor: tfsec/default
+    steps:
+      - checkout
+      - tfsec/scan
 
   terraform-plan-all:
     executor: terraform/terraform

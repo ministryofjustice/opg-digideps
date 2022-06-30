@@ -1,8 +1,3 @@
-resource "aws_cloudwatch_log_group" "monitoring_lambda" {
-  name = "/aws/lambda/monitoring-${local.environment}"
-  tags = local.default_tags
-}
-
 resource "aws_lambda_function" "monitoring" {
   filename         = data.archive_file.monitoring_lambda_zip.output_path
   source_code_hash = data.archive_file.monitoring_lambda_zip.output_base64sha256
