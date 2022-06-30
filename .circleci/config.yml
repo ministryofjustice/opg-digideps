@@ -1080,7 +1080,7 @@ jobs:
 
             docker-compose -f docker-compose.yml -f docker-compose.ci.test.yml --project-name client-unit-tests exec frontend sh scripts/client-unit-tests.sh
             docker-compose -f docker-compose.yml -f docker-compose.ci.test.yml --project-name client-unit-tests exec frontend chmod -R 777 tests/phpunit/coverage/client-unit-tests.xml
-            docker cp "client-unit-tests_frontend_1:/var/www/tests/phpunit/coverage/client-unit-tests.xml" "./client-unit-tests.xml"
+            docker cp "client-unit-tests-frontend:/var/www/tests/phpunit/coverage/client-unit-tests.xml" "./client-unit-tests.xml"
 
             docker-compose -f docker-compose.yml -f docker-compose.ci.test.yml --project-name client-unit-tests exec pact-mock cat /tmp/pacts/complete_the_deputy_report-opg_data.json > pact.json
             docker-compose -f docker-compose.yml -f docker-compose.ci.test.yml --project-name client-unit-tests stop pact-mock
@@ -1126,7 +1126,7 @@ jobs:
             docker-compose -f docker-compose.yml -f docker-compose.ci.test.yml --project-name api-unit-tests exec api sh scripts/apiunittest.sh
 
             docker-compose -f docker-compose.yml -f docker-compose.ci.test.yml --project-name api-unit-tests exec api chmod -R 777 tests/coverage/api-unit-tests.xml
-            docker cp "api-unit-tests_api_1:/var/www/tests/coverage/api-unit-tests.xml" "./api-unit-tests.xml"
+            docker cp "api-unit-tests-api:/var/www/tests/coverage/api-unit-tests.xml" "./api-unit-tests.xml"
       - codecov/upload:
           file: ./api-unit-tests.xml
           flags: api
