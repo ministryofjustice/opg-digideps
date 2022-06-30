@@ -53,6 +53,10 @@ final class Version264 extends AbstractMigration
         // contact
         $this->addSql('ALTER TABLE contact ADD created_at TIMESTAMP(0) WITHOUT TIME ZONE DEFAULT NULL');
         $this->addSql('ALTER TABLE contact RENAME COLUMN last_edit TO updated_at');
+
+        // decision
+        $this->addSql('ALTER TABLE decision ADD created_at TIMESTAMP(0) WITHOUT TIME ZONE DEFAULT NULL');
+        $this->addSql('ALTER TABLE decision ADD updated_at TIMESTAMP(0) WITHOUT TIME ZONE DEFAULT NULL');
     }
 
     public function down(Schema $schema): void
