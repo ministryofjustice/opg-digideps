@@ -79,13 +79,6 @@ class PreRegistration
 
     /**
      * @var DateTime
-     *
-     * @JMS\Type("DateTime<'Y-m-d H:i:s'>")
-     */
-    private $uploadedAt;
-
-    /**
-     * @var DateTime
      */
     private $orderDate;
 

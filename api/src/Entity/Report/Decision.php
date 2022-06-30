@@ -2,6 +2,7 @@
 
 namespace App\Entity\Report;
 
+use App\Entity\Traits\CreateUpdateTimestamps;
 use Doctrine\ORM\Mapping as ORM;
 use JMS\Serializer\Annotation as JMS;
 
@@ -10,9 +11,12 @@ use JMS\Serializer\Annotation as JMS;
  *
  * @ORM\Table(name="decision")
  * @ORM\Entity
+ * @ORM\HasLifecycleCallbacks()
  */
 class Decision
 {
+    use CreateUpdateTimestamps;
+    
     /**
      * @var int
      *

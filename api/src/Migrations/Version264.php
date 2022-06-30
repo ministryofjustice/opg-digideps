@@ -21,36 +21,37 @@ final class Version264 extends AbstractMigration
     {
         // this up() migration is auto-generated, please modify it to your needs
         // report
-        $this->addSql('ALTER TABLE report ADD created_at TIMESTAMP NULL DEFAULT NULL');
+        $this->addSql('ALTER TABLE report ADD created_at TIMESTAMP(0) WITHOUT TIME ZONE DEFAULT NULL');
         $this->addSql('ALTER TABLE report RENAME COLUMN last_edit TO updated_at');
 
         // users
-        $this->addSql('ALTER TABLE dd_user ADD created_at TIMESTAMP NULL DEFAULT NULL');
-        $this->addSql('ALTER TABLE dd_user ADD updated_at TIMESTAMP NULL DEFAULT NULL');
+        $this->addSql('ALTER TABLE dd_user ADD created_at TIMESTAMP(0) WITHOUT TIME ZONE DEFAULT NULL');
+        $this->addSql('ALTER TABLE dd_user ADD updated_at TIMESTAMP(0) WITHOUT TIME ZONE DEFAULT NULL');
 
         // client
-        $this->addSql('ALTER TABLE client ADD created_at TIMESTAMP NULL DEFAULT NULL');
+        $this->addSql('ALTER TABLE client ADD created_at TIMESTAMP(0) WITHOUT TIME ZONE DEFAULT NULL');
         $this->addSql('ALTER TABLE client RENAME COLUMN last_edit TO updated_at');
 
         // named deputy
-        $this->addSql('ALTER TABLE named_deputy ADD created_at TIMESTAMP NULL DEFAULT NULL');
-        $this->addSql('ALTER TABLE named_deputy ADD updated_at TIMESTAMP NULL DEFAULT NULL');
+        $this->addSql('ALTER TABLE named_deputy ADD created_at TIMESTAMP(0) WITHOUT TIME ZONE DEFAULT NULL');
+        $this->addSql('ALTER TABLE named_deputy ADD updated_at TIMESTAMP(0) WITHOUT TIME ZONE DEFAULT NULL');
 
         // account
-        $this->addSql('ALTER TABLE odr_account ADD updated_at TIMESTAMP NULL DEFAULT NULL');
+        $this->addSql('ALTER TABLE odr_account ADD updated_at TIMESTAMP(0) WITHOUT TIME ZONE DEFAULT NULL');
         $this->addSql('ALTER TABLE account RENAME COLUMN last_edit TO updated_at');
 
         // pre registration
-        $this->addSql('ALTER TABLE pre_registration ADD created_at TIMESTAMP NULL DEFAULT NULL');
+        $this->addSql('ALTER TABLE pre_registration DROP uploaded_at'); // replace by created_at
+        $this->addSql('ALTER TABLE pre_registration ADD created_at TIMESTAMP(0) WITHOUT TIME ZONE DEFAULT NULL');
 
         // asset
-        $this->addSql('ALTER TABLE odr_asset ADD created_at TIMESTAMP NULL DEFAULT NULL');
+        $this->addSql('ALTER TABLE odr_asset ADD created_at TIMESTAMP(0) WITHOUT TIME ZONE DEFAULT NULL');
         $this->addSql('ALTER TABLE odr_asset RENAME COLUMN last_edit TO updated_at');
-        $this->addSql('ALTER TABLE asset ADD created_at TIMESTAMP NULL DEFAULT NULL');
+        $this->addSql('ALTER TABLE asset ADD created_at TIMESTAMP(0) WITHOUT TIME ZONE DEFAULT NULL');
         $this->addSql('ALTER TABLE asset RENAME COLUMN last_edit TO updated_at');
 
         // contact
-        $this->addSql('ALTER TABLE contact ADD created_at TIMESTAMP NULL DEFAULT NULL');
+        $this->addSql('ALTER TABLE contact ADD created_at TIMESTAMP(0) WITHOUT TIME ZONE DEFAULT NULL');
         $this->addSql('ALTER TABLE contact RENAME COLUMN last_edit TO updated_at');
     }
 
@@ -77,6 +78,7 @@ final class Version264 extends AbstractMigration
         $this->addSql('ALTER TABLE odr_account DROP updated_at');
         $this->addSql('ALTER TABLE account RENAME COLUMN updated_at TO last_edit');
 
+        $this->addSql('ALTER TABLE pre_registration ADD uploaded_at TIMESTAMP(0) WITHOUT TIME ZONE DEFAULT NULL');
         $this->addSql('ALTER TABLE pre_registration DROP created_at');
 
         $this->addSql('ALTER TABLE contact DROP created_at');
