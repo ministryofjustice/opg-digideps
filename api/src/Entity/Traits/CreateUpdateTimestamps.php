@@ -6,17 +6,17 @@ use DateTime;
 use DateTimeInterface;
 use Doctrine\ORM\Mapping as ORM;
 
-trait Timestamps
+trait CreateUpdateTimestamps
 {
     /**
      * @ORM\Column(name="created_at", type="datetime", nullable=true)
      */
-    private $createdAt;
+    private ?DateTimeInterface $createdAt = null;
 
     /**
      * @ORM\Column(name="updated_at", type="datetime", nullable=true)
      */
-    private $updatedAt;
+    private ?DateTimeInterface $updatedAt = null;
 
     public function getCreatedAt(): ?DateTimeInterface
     {

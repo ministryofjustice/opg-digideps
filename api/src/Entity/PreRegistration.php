@@ -5,7 +5,7 @@ declare(strict_types=1);
 namespace App\Entity;
 
 use App\Entity\Report\Report;
-use App\Entity\Traits\Timestamps;
+use App\Entity\Traits\CreateUpdateTimestamps;
 use DateTime;
 use Doctrine\ORM\Mapping as ORM;
 use Exception;
@@ -20,13 +20,13 @@ use UnexpectedValueException;
  */
 class PreRegistration
 {
-    use Timestamps; 
+    use CreateUpdateTimestamps; 
 
     const REALM_PA = 'REALM_PA';
     const REALM_PROF = 'REALM_PROF';
     const REALM_LAY = 'REALM_LAY';
 
-    public function __construct(array $row, ?DateTime $createdAt = null)
+    public function __construct(array $row, ?DateTime $uploadedAt = null)
     {
         $this->caseNumber = $row['Case'] ?? '';
         $this->clientLastname = $row['ClientSurname'] ?? '';
@@ -44,7 +44,7 @@ class PreRegistration
         $this->orderType = $row['OrderType'] ?? null;
         $this->isCoDeputy = isset($row['CoDeputy']) ? 'yes' === $row['CoDeputy'] : null;
 
-        $this->createdAt = $createdAt ?: new DateTime();
+        $this->uploadedAt = $uploadedAt ?: new DateTime();
         $this->updatedAt = null;
     }
 
@@ -155,14 +155,7 @@ class PreRegistration
      *
      * @ORM\Column(name="uploaded_at", type="datetime", nullable=true)
      */
-    private ?DateTime $createdAt;
-
-    /**
-     * @JMS\Type("DateTime<'Y-m-d H:i:s'>")
-     *
-     * @ORM\Column(name="updated_at", type="datetime", nullable=true)
-     */
-    private ?DateTime $updatedAt;
+    private ?DateTime $uploadedAt;
 
     /**
      * @ORM\Column(name="order_date", type="datetime", nullable=true)

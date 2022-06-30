@@ -4,7 +4,7 @@ namespace App\Entity;
 
 use App\Entity\Report\Report;
 use App\Entity\Traits\AddressTrait;
-use App\Entity\Traits\Timestamps;
+use App\Entity\Traits\CreateUpdateTimestamps;
 use App\Entity\UserResearch\UserResearchResponse;
 use DateTime;
 use Doctrine\Common\Collections\ArrayCollection;
@@ -22,7 +22,7 @@ use Symfony\Component\Security\Core\User\UserInterface;
  */
 class User implements UserInterface
 {
-    use Timestamps;
+    use CreateUpdateTimestamps;
     use AddressTrait;
 
     public const TOKEN_EXPIRE_HOURS = 48;

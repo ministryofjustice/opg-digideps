@@ -2,7 +2,7 @@
 
 namespace App\Entity;
 
-use App\Entity\Traits\Timestamps;
+use App\Entity\Traits\CreateUpdateTimestamps;
 use App\v2\Registration\DTO\OrgDeputyshipDto;
 use Doctrine\Common\Collections\ArrayCollection;
 use Doctrine\ORM\Mapping as ORM;
@@ -17,7 +17,7 @@ use JMS\Serializer\Annotation as JMS;
  */
 class NamedDeputy
 {
-    use Timestamps;
+    use CreateUpdateTimestamps;
     
     /**
      * @var int

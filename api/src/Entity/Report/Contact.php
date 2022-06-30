@@ -2,7 +2,7 @@
 
 namespace App\Entity\Report;
 
-use App\Entity\Traits\Timestamps;
+use App\Entity\Traits\CreateUpdateTimestamps;
 use Doctrine\ORM\Mapping as ORM;
 use JMS\Serializer\Annotation as JMS;
 
@@ -15,7 +15,7 @@ use JMS\Serializer\Annotation as JMS;
  */
 class Contact
 {
-    use Timestamps;
+    use CreateUpdateTimestamps;
 
     /**
      * @var int
@@ -109,13 +109,6 @@ class Contact
      * @ORM\Column(name="phone1", type="string", length=20, nullable=true)
      */
     private $phone1;
-
-    /**
-     * @var \DateTime
-     *
-     * @ORM\Column(name="last_edit", type="datetime", nullable=true)
-     */
-    private $lastedit;
 
     /**
      * @var Report

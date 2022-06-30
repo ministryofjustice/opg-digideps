@@ -2,7 +2,7 @@
 
 namespace App\Entity\Report;
 
-use App\Entity\Traits\Timestamps;
+use App\Entity\Traits\CreateUpdateTimestamps;
 use DateTime;
 use Doctrine\ORM\Mapping as ORM;
 use JMS\Serializer\Annotation as JMS;
@@ -22,7 +22,7 @@ use JMS\Serializer\Annotation as JMS;
  */
 abstract class Asset
 {
-    use Timestamps;
+    use CreateUpdateTimestamps;
     
     /**
      * @var int
@@ -45,14 +45,6 @@ abstract class Asset
      * @ORM\Column(name="asset_value", type="decimal", precision=14, scale=2, nullable=true)
      */
     private $value;
-
-    /**
-     * @var DateTime
-     * @JMS\Groups({"asset"})
-     * @JMS\Type("DateTime")
-     * @ORM\Column(name="last_edit", type="datetime", nullable=true)
-     */
-    private $lastedit;
 
     /**
      * @var Report

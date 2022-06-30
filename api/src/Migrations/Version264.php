@@ -37,11 +37,21 @@ final class Version264 extends AbstractMigration
         $this->addSql('ALTER TABLE named_deputy ADD updated_at TIMESTAMP NULL DEFAULT NULL');
 
         // account
-        $this->addSql('ALTER TABLE account RENAME COLUMN last_edit TO updated_at TIMESTAMP NULL DEFAULT NULL');
         $this->addSql('ALTER TABLE odr_account ADD updated_at TIMESTAMP NULL DEFAULT NULL');
+        $this->addSql('ALTER TABLE account RENAME COLUMN last_edit TO updated_at');
 
         // pre registration
         $this->addSql('ALTER TABLE pre_registration ADD created_at TIMESTAMP NULL DEFAULT NULL');
+
+        // asset
+        $this->addSql('ALTER TABLE odr_asset ADD created_at TIMESTAMP NULL DEFAULT NULL');
+        $this->addSql('ALTER TABLE odr_asset RENAME COLUMN last_edit TO updated_at');
+        $this->addSql('ALTER TABLE asset ADD created_at TIMESTAMP NULL DEFAULT NULL');
+        $this->addSql('ALTER TABLE asset RENAME COLUMN last_edit TO updated_at');
+
+        // contact
+        $this->addSql('ALTER TABLE contact ADD created_at TIMESTAMP NULL DEFAULT NULL');
+        $this->addSql('ALTER TABLE contact RENAME COLUMN last_edit TO updated_at');
     }
 
     public function down(Schema $schema): void
@@ -58,5 +68,18 @@ final class Version264 extends AbstractMigration
 
         $this->addSql('ALTER TABLE named_deputy DROP created_at');
         $this->addSql('ALTER TABLE named_deputy DROP updated_at');
+
+        $this->addSql('ALTER TABLE odr_asset DROP created_at');
+        $this->addSql('ALTER TABLE odr_asset RENAME COLUMN updated_at TO last_edit');
+        $this->addSql('ALTER TABLE asset DROP created_at');
+        $this->addSql('ALTER TABLE asset RENAME COLUMN updated_at TO last_edit');
+
+        $this->addSql('ALTER TABLE odr_account DROP updated_at');
+        $this->addSql('ALTER TABLE account RENAME COLUMN updated_at TO last_edit');
+
+        $this->addSql('ALTER TABLE pre_registration DROP created_at');
+
+        $this->addSql('ALTER TABLE contact DROP created_at');
+        $this->addSql('ALTER TABLE contact RENAME COLUMN updated_at TO last_edit');
     }
 }

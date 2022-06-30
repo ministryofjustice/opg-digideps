@@ -7,7 +7,7 @@ use App\Entity\Ndr\Ndr;
 use App\Entity\Report\Traits as ReportTraits;
 use App\Entity\ReportInterface;
 use App\Entity\Satisfaction;
-use App\Entity\Traits\Timestamps;
+use App\Entity\Traits\CreateUpdateTimestamps;
 use App\Entity\User;
 use App\Service\ReportService;
 use App\Service\ReportStatusService;
@@ -35,7 +35,7 @@ use RuntimeException;
  */
 class Report implements ReportInterface
 {
-    use Timestamps;
+    use CreateUpdateTimestamps;
     use ReportTraits\AssetTrait;
     use ReportTraits\BankAccountTrait;
     use ReportTraits\BalanceTrait;

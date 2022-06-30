@@ -82,14 +82,7 @@ class PreRegistration
      *
      * @JMS\Type("DateTime<'Y-m-d H:i:s'>")
      */
-    private $createdAt;
-
-    /**
-     * @var DateTime
-     *
-     * @JMS\Type("DateTime<'Y-m-d H:i:s'>")
-     */
-    private $updatedAt;
+    private $uploadedAt;
 
     /**
      * @var DateTime

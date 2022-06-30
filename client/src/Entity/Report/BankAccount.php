@@ -135,20 +135,6 @@ class BankAccount implements BankAccountInterface
     private $isJointAccount;
 
     /**
-     * @JMS\Type("DateTime")
-     *
-     * @var \DateTime
-     */
-    private $lastEdit;
-
-    /**
-     * @JMS\Type("DateTime")
-     *
-     * @var \DateTime
-     */
-    private $createdAt;
-
-    /**
      * @JMS\Type("string")
      * @JMS\Groups({"account"})
      *

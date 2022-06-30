@@ -3,7 +3,7 @@
 namespace App\Entity\Ndr;
 
 use App\Entity\BankAccountInterface;
-use App\Entity\Traits\Timestamps;
+use App\Entity\Traits\CreateUpdateTimestamps;
 use DateTime;
 use Doctrine\ORM\Mapping as ORM;
 use JMS\Serializer\Annotation as JMS;
@@ -17,7 +17,7 @@ use JMS\Serializer\Annotation as JMS;
  */
 class BankAccount implements BankAccountInterface
 {
-    use Timestamps;
+    use CreateUpdateTimestamps;
     
     /**
      * Keep in sync with client.
@@ -95,14 +95,6 @@ class BankAccount implements BankAccountInterface
      * @ORM\Column(name="account_number", type="string", length=4, nullable=true)
      */
     private $accountNumber;
-
-    /**
-     * @var DateTime
-     * @JMS\Groups({"ndr-account"})
-     *
-     * @ORM\Column(name="created_at", type="datetime", nullable=true)
-     */
-    private $createdAt;
 
     /**
      * @var float
