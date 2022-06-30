@@ -128,7 +128,7 @@ class SelfRegisterControllerTest extends AbstractTestController
             'search_terms' => [
                 'caseNumber' => '12345600',
                 'clientLastname' => 'Cl',
-                'deputySurname' => 'test',
+                'deputyLastname' => 'test',
                 'deputyPostcode' => 'SW2',
             ],
         ]);
@@ -228,7 +228,7 @@ class SelfRegisterControllerTest extends AbstractTestController
                 'firstname' => 'Zac',
                 'lastname' => 'Tolley',
                 'email' => 'wrong@example.org',
-                'postcode' => 'SW1',
+                'postcode' => 'ABC 123',
                 'client_firstname' => 'John',
                 'client_lastname' => 'Cross-Tolley',
                 'case_number' => '97643164',
@@ -240,8 +240,8 @@ class SelfRegisterControllerTest extends AbstractTestController
             'search_terms' => [
                 'caseNumber' => '97643164',
                 'clientLastname' => 'Cross-Tolley',
-                'deputySurname' => 'Tolley',
-                'deputyPostcode' => 'SW1',
+                'deputyLastname' => 'Tolley',
+                'deputyPostcode' => 'ABC 123',
             ],
             'case_number_matches' => [
                  [
@@ -265,6 +265,11 @@ class SelfRegisterControllerTest extends AbstractTestController
                     'created_at' => $now->format('c'),
                 ],
             ],
+            'matching_errors' => [
+                'client_lastname' => true,
+                'deputy_lastname' => true,
+                'deputy_postcode' => true,
+            ],
         ];
 
         $this->assertEquals($expectedErrorJson, json_decode($responseArray['message'], true));
@@ -273,7 +278,7 @@ class SelfRegisterControllerTest extends AbstractTestController
     /**
      * @test
      */
-    public function throwErrorForValidCaseNumberClientLastnameButInvalidDeputyLastname()
+    public function throwErrorForValidCaseNumberClientLastnameDeputyPostcodeButInvalidDeputyLastname()
     {
         $now = new DateTime();
 
@@ -314,10 +319,10 @@ class SelfRegisterControllerTest extends AbstractTestController
             'search_terms' => [
                 'caseNumber' => '97643164',
                 'clientLastname' => 'Douglas',
-                'deputySurname' => 'Tolley',
+                'deputyLastname' => 'Tolley',
                 'deputyPostcode' => 'SW1',
             ],
-            'client_last_name_matches' => [
+            'case_number_matches' => [
                 [
                     'id' => 1,
                     'case_number' => '97643164',
@@ -338,6 +343,11 @@ class SelfRegisterControllerTest extends AbstractTestController
                     'ndr' => true,
                     'created_at' => $now->format('c'),
                 ],
+            ],
+            'matching_errors' => [
+                'client_lastname' => false,
+                'deputy_lastname' => true,
+                'deputy_postcode' => false,
             ],
         ];
 
@@ -388,10 +398,10 @@ class SelfRegisterControllerTest extends AbstractTestController
             'search_terms' => [
                 'caseNumber' => '97643164',
                 'clientLastname' => 'Douglas',
-                'deputySurname' => 'Murphy',
+                'deputyLastname' => 'Murphy',
                 'deputyPostcode' => 'ABC 123',
             ],
-            'deputy_last_name_matches' => [
+            'case_number_matches' => [
                 [
                     'id' => 1,
                     'case_number' => '97643164',
@@ -412,6 +422,11 @@ class SelfRegisterControllerTest extends AbstractTestController
                     'ndr' => true,
                     'created_at' => $now->format('c'),
                 ],
+            ],
+            'matching_errors' => [
+                'client_lastname' => false,
+                'deputy_lastname' => false,
+                'deputy_postcode' => true,
             ],
         ];
 

@@ -321,17 +321,23 @@ class UserController extends AbstractController
                         break;
 
                     case 460:
-                        $form->get('caseNumber')->addError(new FormError($this->translator->trans('matching.caseNumberError', [], 'register')));
+                        $form->get('caseNumber')->addError(new FormError($this->translator->trans('matchingErrors.caseNumber', [], 'register')));
                         break;
 
                     case 461:
-                        $form->get('clientLastname')->addError(new FormError($this->translator->trans('matching.clientLastnameError', [], 'register')));
-                        break;
+                        $decodedError = json_decode($e->getData()['message'], true);
 
-                    case 462:
-                        $form->get('lastname')->addError(new FormError($this->translator->trans('matching.deputyLastnameError', [], 'register')));
-                        break;
+                        if (true == $decodedError['matching_errors']['client_lastname']) {
+                            $form->get('clientLastname')->addError(new FormError($this->translator->trans('matchingErrors.clientLastname', [], 'register')));
+                        }
+                        if (true == $decodedError['matching_errors']['deputy_lastname']) {
+                            $form->get('lastname')->addError(new FormError($this->translator->trans('matchingErrors.deputyLastname', [], 'register')));
+                        }
+                        if (true == $decodedError['matching_errors']['deputy_postcode']) {
+                            $form->get('postcode')->addError(new FormError($this->translator->trans('matchingErrors.deputyPostcode', [], 'register')));
+                        }
 
+                        break;
                     default:
                         $form->addError(new FormError($this->translator->trans('formErrors.generic', [], 'register')));
                 }
