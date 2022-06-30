@@ -38,12 +38,6 @@ resource "aws_iam_role_policy" "execution_role" {
   role   = aws_iam_role.execution_role.id
 }
 
-resource "aws_cloudwatch_log_group" "opg_digi_deps" {
-  name              = local.environment
-  retention_in_days = 180
-  tags              = local.default_tags
-}
-
 data "aws_iam_policy_document" "execution_role" {
   statement {
     effect    = "Allow"
@@ -104,11 +98,6 @@ data "aws_iam_policy_document" "ecs_task_logs" {
       "logs:PutLogEvents"
     ]
   }
-}
-
-resource "aws_cloudwatch_log_group" "audit" {
-  name = "audit-${local.environment}"
-  tags = local.default_tags
 }
 
 data "aws_iam_role" "ecs_autoscaling_service_role" {

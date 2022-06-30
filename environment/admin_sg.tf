@@ -89,6 +89,7 @@ module "admin_elb_security_group" {
 # Using a resource rather than module here due to a large list of IPs
 resource "aws_security_group_rule" "admin_whitelist" {
   type              = "ingress"
+  description       = "whitelist to admin"
   protocol          = "tcp"
   from_port         = 443
   to_port           = 443
@@ -107,6 +108,7 @@ module "admin_elb_security_group_route53_hc" {
 
 resource "aws_security_group_rule" "admin_elb_route53_hc_in" {
   type              = "ingress"
+  description       = "healthcheck to admin"
   protocol          = "tcp"
   from_port         = 443
   to_port           = 443

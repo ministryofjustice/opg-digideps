@@ -17,6 +17,9 @@ resource "aws_lambda_function" "monitoring" {
     security_group_ids = [module.monitoring_lambda_security_group.id]
     subnet_ids         = data.aws_subnet.private.*.id
   }
+  tracing_config {
+    mode = "Active"
+  }
   environment {
     variables = {
       ENVIRONMENT = local.environment

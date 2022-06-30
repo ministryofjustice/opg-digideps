@@ -1,10 +1,10 @@
 resource "aws_lb" "front" {
-  name               = "front-${local.environment}"
-  internal           = false
-  load_balancer_type = "application"
-  subnets            = data.aws_subnet.public.*.id
-  idle_timeout       = 300
-
+  name                       = "front-${local.environment}"
+  internal                   = false
+  load_balancer_type         = "application"
+  subnets                    = data.aws_subnet.public.*.id
+  idle_timeout               = 300
+  drop_invalid_header_fields = true
 
   security_groups = [module.front_elb_security_group.id, module.front_elb_security_group_route53_hc.id]
 

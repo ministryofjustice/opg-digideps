@@ -111,7 +111,17 @@ data "aws_iam_policy_document" "front_query_secretsmanager" {
     actions = [
       "secretsmanager:GetSecretValue"
     ]
-    resources = ["*"]
+    resources = [
+      data.aws_secretsmanager_secret.database_password.arn,
+      data.aws_secretsmanager_secret_version.database_password.arn,
+      data.aws_secretsmanager_secret.api_secret.arn,
+      data.aws_secretsmanager_secret.front_frontend_secret.arn,
+      data.aws_secretsmanager_secret.admin_frontend_secret.arn,
+      data.aws_secretsmanager_secret.admin_api_client_secret.arn,
+      data.aws_secretsmanager_secret.front_api_client_secret.arn,
+      data.aws_secretsmanager_secret.front_notify_api_key.arn,
+      data.aws_secretsmanager_secret.opg_alerts_slack_token.arn,
+    ]
   }
 }
 
@@ -128,6 +138,6 @@ data "aws_iam_policy_document" "front_get_log_events" {
     actions = [
       "logs:GetLogEvents"
     ]
-    resources = ["*"]
+    resources = [aws_cloudwatch_log_group.opg_digi_deps.arn]
   }
 }

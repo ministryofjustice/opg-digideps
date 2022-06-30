@@ -9,8 +9,9 @@ resource "aws_security_group_rule" "rules" {
   source_security_group_id = each.value.target_type == "security_group_id" ? each.value.target : null
   prefix_list_ids          = each.value.target_type == "prefix_list_id" ? [each.value.target] : null
   description              = each.key
-  cidr_blocks              = each.value.target_type == "cidr_block" ? [each.value.target] : null
-  self                     = each.value.target_type == "self" ? each.value.target : null
+  #tfsec:ignore:aws-vpc-no-public-egress-sgr - these should be legit but we need to split out this module to be sure
+  cidr_blocks = each.value.target_type == "cidr_block" ? [each.value.target] : null
+  self        = each.value.target_type == "self" ? each.value.target : null
 }
 
 resource "aws_security_group" "group" {
