@@ -77,8 +77,8 @@ trait SelfRegistrationTrait
         $this->visitFrontendPath('/register');
         $this->fillInField('self_registration_firstname', 'Brian');
         $this->fillInField('self_registration_lastname', 'Duck');
-        $this->fillInField('self_registration_email_first', 'brian@duck.co.uk');
-        $this->fillInField('self_registration_email_second', 'brian@duck.co.uk');
+        $this->fillInField('self_registration_email_first', 'brian2@duck.co.uk');
+        $this->fillInField('self_registration_email_second', 'brian2@duck.co.uk');
         $this->fillInField('self_registration_postcode', 'B1');
         $this->fillInField('self_registration_clientFirstname', 'Billy');
         $this->fillInField('self_registration_clientLastname', 'Huey');
@@ -94,8 +94,8 @@ trait SelfRegistrationTrait
         $this->visitFrontendPath('/register');
         $this->fillInField('self_registration_firstname', 'Wrong');
         $this->fillInField('self_registration_lastname', 'Name');
-        $this->fillInField('self_registration_email_first', 'brian@duck.co.uk');
-        $this->fillInField('self_registration_email_second', 'brian@duck.co.uk');
+        $this->fillInField('self_registration_email_first', 'brian3@duck.co.uk');
+        $this->fillInField('self_registration_email_second', 'brian3@duck.co.uk');
         $this->fillInField('self_registration_postcode', 'ABC 123');
         $this->fillInField('self_registration_clientFirstname', 'Wrong');
         $this->fillInField('self_registration_clientLastname', 'Name');
