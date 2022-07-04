@@ -72,7 +72,7 @@ class UserControllerTest extends AbstractTestController
 
     public function testAdd()
     {
-        self::$tokenSuperAdmin = $this->loginAsSuperAdmin();
+        self::$tokenAdmin = $this->loginAsAdmin();
 
         $return = $this->assertJsonRequest('POST', '/user', [
             'data' => [
@@ -91,7 +91,7 @@ class UserControllerTest extends AbstractTestController
         $this->assertEquals('n', $user->getFirstname());
         $this->assertEquals('s', $user->getLastname());
         $this->assertEquals('n.s@example.org', $user->getEmail());
-        $this->assertEquals($loggedInUser, $user->getCreatedBy(), sprintf('The User that created this user was not as expected. Wanted user with ID: %s, Got: %g', $this->loggedInUserId, $user->getCreatedBy()));
+        $this->assertEquals($loggedInUser->getId(), $user->getCreatedBy()->getId(), sprintf('The User that created this user was not as expected. Wanted user with ID: %s, Got: %g', $this->loggedInUserId, $user->getCreatedBy() ? $user->getCreatedBy()->getId() : null));
     }
 
     public function testUpdateAuth()

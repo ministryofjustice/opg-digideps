@@ -4,8 +4,8 @@ namespace App\Service;
 
 use App\Entity\Client;
 use App\Entity\Ndr\Ndr;
-use App\Repository\UserRepository;
 use App\Entity\User;
+use App\Repository\UserRepository;
 use Doctrine\ORM\EntityManagerInterface;
 
 class UserService
@@ -31,10 +31,8 @@ class UserService
     }
 
     /**
-     * Adds a new user to the database
+     * Adds a new user to the database.
      *
-     * @param User $loggedInUser
-     * @param User $userToAdd
      * @param $data
      */
     public function addUser(User $loggedInUser, User $userToAdd, $data)
@@ -43,6 +41,7 @@ class UserService
 
         $userToAdd->setRegistrationDate(new \DateTime());
         $userToAdd->recreateRegistrationToken();
+        $userToAdd->setCreatedBy($loggedInUser);
         $this->em->persist($userToAdd);
         $this->em->flush();
 
@@ -51,7 +50,7 @@ class UserService
 
     /**
      * @param User $originalUser Original user for comparison checks
-     * @param User $updatedUser
+     *
      * @throws \Doctrine\ORM\OptimisticLockException
      */
     public function editUser(User $originalUser, User $updatedUser)
@@ -65,8 +64,6 @@ class UserService
     }
 
     /**
-     * @param User $originalUser
-     * @param User $updatedUser
      * @return UserService
      */
     private function throwExceptionIfUpdatedEmailExists(User $originalUser, User $updatedUser)
@@ -79,14 +76,12 @@ class UserService
     }
 
     /**
-     * @param User $originalUser
-     * @param User $updatedUser
      * @return UserService
      */
     private function throwExceptionIfUserChangesRoleType(User $originalUser, User $updatedUser)
     {
         $adminBefore = in_array($originalUser->getRoleName(), User::$adminRoles);
-        $adminAfter  = in_array($updatedUser->getRoleName(), User::$adminRoles);
+        $adminAfter = in_array($updatedUser->getRoleName(), User::$adminRoles);
 
         if ($adminAfter !== $adminBefore) {
             throw new \RuntimeException('Cannot change realm of user\'s role', 425);
@@ -105,9 +100,6 @@ class UserService
         }
     }
 
-    /**
-     * @param User $updatedUser
-     */
     private function handleNdrStatusUpdate(User $updatedUser)
     {
         $client = $updatedUser->getFirstClient();
@@ -115,14 +107,12 @@ class UserService
             return;
         }
 
-
         if ($updatedUser->getNdrEnabled() && !$this->clientHasExistingNdr($client)) {
             $this->createNdrForClient($client);
         }
     }
 
     /**
-     * @param Client $client
      * @return bool
      */
     private function clientHasExistingNdr(Client $client)
@@ -131,7 +121,6 @@ class UserService
     }
 
     /**
-     * @param Client $client
      * @return Ndr
      */
     private function createNdrForClient(Client $client)
