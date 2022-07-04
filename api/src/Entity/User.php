@@ -298,6 +298,15 @@ class User implements UserInterface
     private $userResearchResponse;
 
     /**
+     * @ORM\OneToOne(targetEntity="App\Entity\User")
+     * @ORM\JoinColumn(name="created_by_id", referencedColumnName="id")
+     *
+     * @JMS\Type("App\Entity\User")
+     * @JMS\Groups({"user"})
+     */
+    private ?User $createdBy = null;
+
+    /**
      * Constructor.
      */
     public function __construct($coDeputyClientConfirmed = false)
@@ -1261,5 +1270,17 @@ class User implements UserInterface
     public function regBeforeToday(User $user): bool
     {
         return $user->getRegistrationDate() < (new DateTime())->setTime(00, 00, 00);
+    }
+
+    public function getCreatedBy(): ?User
+    {
+        return $this->createdBy;
+    }
+
+    public function setCreatedBy(?User $createdBy): User
+    {
+        $this->createdBy = $createdBy;
+
+        return $this;
     }
 }
