@@ -228,6 +228,8 @@ class UserRegistrationServiceTest extends TestCase
             ->shouldReceive('getId')->andReturn(1)
             ->getMock();
 
+        $mockUser->shouldReceive('setCreatedBy')->with($mockUser);
+
         $mockClient = m::mock(Client::class)
             ->shouldIgnoreMissing(true)
             ->makePartial()
