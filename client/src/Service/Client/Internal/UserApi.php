@@ -51,7 +51,7 @@ class UserApi
         $this->eventDispatcher = $eventDispatcher;
     }
 
-    public function createAdminUser(User $userToCreate, array $jmsGroups = ['admin_add_user'])
+    public function createUser(User $userToCreate, array $jmsGroups = ['admin_add_user'])
     {
         $createdUser = $this->restClient->post(self::USER_ENDPOINT, $userToCreate, $jmsGroups, 'User');
 
