@@ -72,31 +72,24 @@ data "aws_iam_policy_document" "front_query_ssm" {
   }
 }
 
-resource "aws_iam_role_policy" "ecs_scheduled_tasks" {
-  name   = "front-ecs-scheduled-task.${local.environment}"
-  policy = data.aws_iam_policy_document.ecs_scheduled_tasks.json
-  role   = aws_iam_role.front.id
-}
-
-data "aws_iam_policy_document" "ecs_scheduled_tasks" {
-  statement {
-    sid    = "AllowCloudwatchPassIAMRolesToECSTasks"
-    effect = "Allow"
-    actions = [
-      "iam:ListInstanceProfiles",
-      "iam:ListRoles",
-      "iam:PassRole"
-    ]
-    resources = ["*"]
-  }
-}
-
-resource "aws_iam_role_policy" "front_task_logs" {
-  name   = "front-task-logs.${local.environment}"
-  policy = data.aws_iam_policy_document.ecs_task_logs.json
-  role   = aws_iam_role.front.id
-}
-
+#resource "aws_iam_role_policy" "ecs_scheduled_tasks" {
+#  name   = "front-ecs-scheduled-task.${local.environment}"
+#  policy = data.aws_iam_policy_document.ecs_scheduled_tasks.json
+#  role   = aws_iam_role.front.id
+#}
+#
+#data "aws_iam_policy_document" "ecs_scheduled_tasks" {
+#  statement {
+#    sid    = "AllowCloudwatchPassIAMRolesToECSTasks"
+#    effect = "Allow"
+#    actions = [
+#      "iam:ListInstanceProfiles",
+#      "iam:ListRoles",
+#      "iam:PassRole"
+#    ]
+#    resources = ["*"]
+#  }
+#}
 
 resource "aws_iam_role_policy" "front_query_secretsmanager" {
   name   = "front-query-secretsmanager.${local.environment}"
@@ -140,4 +133,10 @@ data "aws_iam_policy_document" "front_get_log_events" {
     ]
     resources = [aws_cloudwatch_log_group.opg_digi_deps.arn]
   }
+}
+
+resource "aws_iam_role_policy" "front_task_logs" {
+  name   = "front-task-logs.${local.environment}"
+  policy = data.aws_iam_policy_document.ecs_task_logs.json
+  role   = aws_iam_role.front.id
 }

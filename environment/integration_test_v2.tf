@@ -43,11 +43,12 @@ locals {
 }
 
 module "integration_test_v2_security_group" {
-  source = "./security_group"
-  rules  = local.integration_test_v2_sg_rules
-  name   = "integration-test-v2"
-  tags   = local.default_tags
-  vpc_id = data.aws_vpc.vpc.id
+  source      = "./security_group"
+  description = "Integration Tests V2 Service"
+  rules       = local.integration_test_v2_sg_rules
+  name        = "integration-test-v2"
+  tags        = local.default_tags
+  vpc_id      = data.aws_vpc.vpc.id
 }
 
 locals {

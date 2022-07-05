@@ -29,16 +29,18 @@ locals {
     }
   }
 
-  document_sync_interval = local.environment == "production02" ? "rate(5 minutes)" : "rate(24 hours)"
+  document_sync_interval = "rate(5 minutes)"
+  #  document_sync_interval = local.environment == "production02" ? "rate(5 minutes)" : "rate(24 hours)"
 
 }
 
 module "document_sync_service_security_group" {
-  source = "./security_group"
-  rules  = local.document_sync_sg_rules
-  name   = "document-sync-service"
-  tags   = local.default_tags
-  vpc_id = data.aws_vpc.vpc.id
+  source      = "./security_group"
+  description = "Document sync service"
+  rules       = local.document_sync_sg_rules
+  name        = "document-sync-service"
+  tags        = local.default_tags
+  vpc_id      = data.aws_vpc.vpc.id
 }
 
 resource "aws_ecs_task_definition" "document_sync" {

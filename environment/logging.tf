@@ -26,6 +26,7 @@ resource "aws_cloudwatch_log_group" "monitoring_lambda" {
 resource "aws_kms_key" "cloudwatch_logs" {
   description             = "Digideps cloudwatch logs for ${local.environment}"
   deletion_window_in_days = 10
+  enable_key_rotation     = true
   policy                  = data.aws_iam_policy_document.cloudwatch_kms.json
 }
 

@@ -1,6 +1,10 @@
 resource "aws_ecs_cluster" "main" {
   name = local.environment
   tags = local.default_tags
+  setting {
+    name  = "containerInsights"
+    value = "enabled"
+  }
 }
 
 data "aws_iam_policy_document" "task_role_assume_policy" {

@@ -223,6 +223,7 @@ data "aws_iam_policy_document" "replication_policy" {
         "arn:aws:kms:eu-west-1:${local.backup_account_id}:key/${local.account.s3_backup_kms_arn}"
       ]
     }
+    #tfsec:ignore:aws-iam-no-policy-wildcards - Not overly permissive
     resources = [
       "arn:aws:s3:::${local.account.name}.backup.digideps.opg.service.justice.gov.uk/*",
       "${data.aws_s3_bucket.replication_bucket.arn}/*"

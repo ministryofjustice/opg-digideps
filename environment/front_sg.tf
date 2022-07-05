@@ -59,11 +59,12 @@ locals {
 }
 
 module "front_service_security_group" {
-  source = "./security_group"
-  rules  = local.front_sg_rules
-  name   = "front-service"
-  tags   = local.default_tags
-  vpc_id = data.aws_vpc.vpc.id
+  source      = "./security_group"
+  description = "Front service"
+  rules       = local.front_sg_rules
+  name        = "front-service"
+  tags        = local.default_tags
+  vpc_id      = data.aws_vpc.vpc.id
 }
 
 locals {
@@ -79,11 +80,12 @@ locals {
 }
 
 module "front_elb_security_group" {
-  source = "./security_group"
-  rules  = local.front_elb_sg_rules
-  name   = "front-alb"
-  tags   = local.default_tags
-  vpc_id = data.aws_vpc.vpc.id
+  source      = "./security_group"
+  description = "Front Elastic Load Balancer"
+  rules       = local.front_elb_sg_rules
+  name        = "front-alb"
+  tags        = local.default_tags
+  vpc_id      = data.aws_vpc.vpc.id
 }
 
 # Using resources rather than a module here due to a large list of IPs
@@ -110,11 +112,12 @@ resource "aws_security_group_rule" "front_elb_https_in" {
 
 //No room for rules left in front_elb_security_group
 module "front_elb_security_group_route53_hc" {
-  source = "./security_group"
-  rules  = local.front_elb_sg_rules
-  name   = "front-alb"
-  tags   = local.default_tags
-  vpc_id = data.aws_vpc.vpc.id
+  source      = "./security_group"
+  description = "Front Elastic Load Balancer Healthcheck"
+  rules       = local.front_elb_sg_rules
+  name        = "front-alb"
+  tags        = local.default_tags
+  vpc_id      = data.aws_vpc.vpc.id
 }
 
 resource "aws_security_group_rule" "front_elb_route53_hc_in" {

@@ -59,11 +59,12 @@ locals {
 }
 
 module "admin_service_security_group" {
-  source = "./security_group"
-  rules  = local.admin_sg_rules
-  name   = "admin-service"
-  tags   = local.default_tags
-  vpc_id = data.aws_vpc.vpc.id
+  source      = "./security_group"
+  description = "Admin Service"
+  rules       = local.admin_sg_rules
+  name        = "admin-service"
+  tags        = local.default_tags
+  vpc_id      = data.aws_vpc.vpc.id
 }
 
 locals {
@@ -79,11 +80,12 @@ locals {
 }
 
 module "admin_elb_security_group" {
-  source = "./security_group"
-  rules  = local.admin_elb_sg_rules
-  name   = "admin-elb"
-  tags   = local.default_tags
-  vpc_id = data.aws_vpc.vpc.id
+  source      = "./security_group"
+  description = "Admin Elastic Load Balancer"
+  rules       = local.admin_elb_sg_rules
+  name        = "admin-elb"
+  tags        = local.default_tags
+  vpc_id      = data.aws_vpc.vpc.id
 }
 
 # Using a resource rather than module here due to a large list of IPs
@@ -99,11 +101,12 @@ resource "aws_security_group_rule" "admin_whitelist" {
 
 //No room for rules left in admin_elb_security_group
 module "admin_elb_security_group_route53_hc" {
-  source = "./security_group"
-  rules  = local.admin_elb_sg_rules
-  name   = "admin-alb-route53-hc"
-  tags   = local.default_tags
-  vpc_id = data.aws_vpc.vpc.id
+  source      = "./security_group"
+  description = "Admin Elastic Load Balancer Healthcheck"
+  rules       = local.admin_elb_sg_rules
+  name        = "admin-alb-route53-hc"
+  tags        = local.default_tags
+  vpc_id      = data.aws_vpc.vpc.id
 }
 
 resource "aws_security_group_rule" "admin_elb_route53_hc_in" {

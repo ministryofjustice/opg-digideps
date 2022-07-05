@@ -641,10 +641,19 @@ jobs:
           working_directory: ~/project/shared
 
   tfsec-scan:
-    executor: tfsec/default
+    executor: terraform/terraform
     steps:
       - checkout
-      - tfsec/scan
+      - run:
+          name: install tfsec
+          command: |
+            URL=$(curl -s https://api.github.com/repos/aquasecurity/tfsec/releases/latest | grep "tfsec-linux-amd64\"$" | grep browser_download_url | cut -d '"' -f 4)
+            wget $URL
+            chmod +x tfsec-linux-amd64
+            sudo mv tfsec-linux-amd64 /usr/local/bin/tfsec
+      - run:
+          name: run tfsec
+          command: tfsec || true
 
   terraform-plan-all:
     executor: terraform/terraform

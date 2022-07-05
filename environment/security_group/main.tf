@@ -17,6 +17,7 @@ resource "aws_security_group_rule" "rules" {
 resource "aws_security_group" "group" {
   name_prefix = var.name
   vpc_id      = var.vpc_id
+  description = var.description
 
   lifecycle {
     create_before_destroy = true
