@@ -39,7 +39,7 @@ locals {
 
 module "checklist_sync_service_security_group" {
   source      = "./security_group"
-  description = "Checklist sync service"
+  description = "Checklist Sync Service"
   rules       = local.checklist_sync_sg_rules
   name        = "checklist-sync-service"
   tags        = local.default_tags

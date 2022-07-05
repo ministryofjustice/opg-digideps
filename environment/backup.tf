@@ -33,7 +33,7 @@ locals {
 
 module "backup_security_group" {
   source      = "./security_group"
-  description = "Backup service"
+  description = "Backup Service"
   rules       = local.backup_sg_rules
   name        = "backup"
   tags        = local.default_tags

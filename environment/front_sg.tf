@@ -60,7 +60,7 @@ locals {
 
 module "front_service_security_group" {
   source      = "./security_group"
-  description = "Front service"
+  description = "Front Service"
   rules       = local.front_sg_rules
   name        = "front-service"
   tags        = local.default_tags

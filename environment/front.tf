@@ -72,25 +72,6 @@ data "aws_iam_policy_document" "front_query_ssm" {
   }
 }
 
-#resource "aws_iam_role_policy" "ecs_scheduled_tasks" {
-#  name   = "front-ecs-scheduled-task.${local.environment}"
-#  policy = data.aws_iam_policy_document.ecs_scheduled_tasks.json
-#  role   = aws_iam_role.front.id
-#}
-#
-#data "aws_iam_policy_document" "ecs_scheduled_tasks" {
-#  statement {
-#    sid    = "AllowCloudwatchPassIAMRolesToECSTasks"
-#    effect = "Allow"
-#    actions = [
-#      "iam:ListInstanceProfiles",
-#      "iam:ListRoles",
-#      "iam:PassRole"
-#    ]
-#    resources = ["*"]
-#  }
-#}
-
 resource "aws_iam_role_policy" "front_query_secretsmanager" {
   name   = "front-query-secretsmanager.${local.environment}"
   policy = data.aws_iam_policy_document.front_query_secretsmanager.json

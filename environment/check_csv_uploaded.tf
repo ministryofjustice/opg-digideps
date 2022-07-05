@@ -27,7 +27,7 @@ locals {
 
 module "check_csv_uploaded_service_security_group" {
   source      = "./security_group"
-  description = "Check CSV uploaded service"
+  description = "Check CSV Uploaded Service"
   rules       = local.check_csv_uploaded_sg_rules
   name        = "check-csv-uploaded-service"
   tags        = local.default_tags

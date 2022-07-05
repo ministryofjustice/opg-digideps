@@ -20,8 +20,6 @@ resource "aws_cloudwatch_log_group" "monitoring_lambda" {
   tags       = local.default_tags
 }
 
-
-
 ##### Shared KMS key for logs #####
 resource "aws_kms_key" "cloudwatch_logs" {
   description             = "Digideps cloudwatch logs for ${local.environment}"
