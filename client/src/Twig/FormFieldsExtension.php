@@ -478,6 +478,7 @@ class FormFieldsExtension extends AbstractExtension
             'inputClass' => $inputClass,
             'inputPrefix' => $inputPrefix,
             'useFormGroup' => isset($vars['useFormGroup']) ? $vars['useFormGroup'] : true,
+            'dataModule' => isset($vars['dataModule']) ? $vars['dataModule'] : false,
             'formGroupClass' => $formGroupClass,
             'labelRaw' => !empty($vars['labelRaw']),
             'labelLink' => !empty($vars['labelLink']),
