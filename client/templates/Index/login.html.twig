@@ -58,8 +58,13 @@
 
     {{ form_start(form, {attr: {novalidate: 'novalidate'}}) }}
 
+    <div class="govuk-form-group">
     {{ form_input(form.email,'signInForm.email') }}
     {{ form_input(form.password,'signInForm.password') }}
+        <button type="button" class="govuk-button govuk-button--secondary moj-password-reveal__button"
+                onclick="passwordToggle()" aria-hidden="true">Show</button>
+    </div>
+
     {{ form_submit(form.login,'signInForm.signin', {'buttonClass': 'behat-link-login'}) }}
 
     {{ form_end(form) }}
