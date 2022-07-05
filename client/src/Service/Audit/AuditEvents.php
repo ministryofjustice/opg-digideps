@@ -19,6 +19,7 @@ final class AuditEvents
     public const EVENT_CLIENT_DELETED = 'CLIENT_DELETED';
     public const EVENT_DEPUTY_DELETED = 'DEPUTY_DELETED';
     public const EVENT_USER_SELF_REGISTER_FAILED = 'USER_SELF_REGISTER_FAILED';
+    public const EVENT_USER_SELF_REGISTER_SUCCEEDED = 'USER_SELF_REGISTER_SUCCEEDED';
     public const EVENT_ADMIN_DELETED = 'ADMIN_DELETED';
     public const EVENT_REPORT_UNSUBMITTED = 'REPORT_UNSUBMITTED';
     public const EVENT_REPORT_RESUBMITTED = 'REPORT_RESUBMITTED';
@@ -288,6 +289,20 @@ final class AuditEvents
             ] + $failureData;
 
         return $event + $this->baseEvent(AuditEvents::EVENT_USER_SELF_REGISTER_FAILED);
+    }
+
+    public function selfRegistrationSucceeded(User $registeredUser): array
+    {
+        $event = [
+                'trigger' => AuditEvents::TRIGGER_DEPUTY_USER_SELF_REGISTER_ATTEMPT,
+                'registered_user_email' => $registeredUser->getEmail(),
+                'user_role' => $registeredUser->getRoleName(),
+                'has_multi_deputy_order' => $registeredUser->getIsCoDeputy(),
+                'created_by_case_manager' => $registeredUser->getCreatedBy() === $registeredUser ? 0 : 1,
+                'created_on' => $this->dateTimeProvider->getDateTime()->format(DateTime::ATOM),
+            ];
+
+        return $event + $this->baseEvent(AuditEvents::EVENT_USER_SELF_REGISTER_SUCCEEDED);
     }
 
     /**

@@ -15,6 +15,7 @@ use App\Form\FeedbackReportType;
 use App\Form\Report\ReportDeclarationType;
 use App\Form\Report\ReportType;
 use App\Model\FeedbackReport;
+use App\Service\Audit\AuditEvents;
 use App\Service\Client\Internal\ClientApi;
 use App\Service\Client\Internal\PreRegistrationApi;
 use App\Service\Client\Internal\ReportApi;
@@ -25,7 +26,9 @@ use App\Service\Csv\TransactionsCsvGenerator;
 use App\Service\ParameterStoreService;
 use App\Service\Redirector;
 use App\Service\ReportSubmissionService;
+use App\Service\Time\DateTimeProvider;
 use DateTime;
+use Psr\Log\LoggerInterface;
 use Sensio\Bundle\FrameworkExtraBundle\Configuration\Template;
 use Symfony\Component\Form\FormFactoryInterface;
 use Symfony\Component\HttpFoundation\RedirectResponse;
@@ -102,7 +105,9 @@ class ReportController extends AbstractController
         private SatisfactionApi $satisfactionApi,
         private PreRegistrationApi $preRegistrationApi,
         private FormFactoryInterface $formFactory,
-        private TranslatorInterface $translator
+        private TranslatorInterface $translator,
+        private LoggerInterface $logger,
+        private DateTimeProvider $dateTimeProvider
     ) {
     }
 
@@ -133,7 +138,7 @@ class ReportController extends AbstractController
         }
         $client = array_shift($clients);
 
-        //refresh client adding codeputes (another API call to avoid recursion with users)
+        // refresh client adding codeputes (another API call to avoid recursion with users)
         $clientWithCoDeputies = $this->clientApi->getWithUsersV2($client->getId());
         $coDeputies = $clientWithCoDeputies->getCoDeputies();
 
@@ -219,7 +224,7 @@ class ReportController extends AbstractController
             $report,
             [
                 'translation_domain' => 'registration',
-                'action' => $this->generateUrl('report_create', ['clientId' => $clientId]), //TODO useless ?
+                'action' => $this->generateUrl('report_create', ['clientId' => $clientId]), // TODO useless ?
             ]
         );
 
@@ -227,6 +232,11 @@ class ReportController extends AbstractController
 
         if ($form->isSubmitted() && $form->isValid()) {
             $this->restClient->post('report', $form->getData());
+
+            $this->logger->notice(
+                '',
+                (new AuditEvents($this->dateTimeProvider))->selfRegistrationSucceeded($this->getUser())
+            );
 
             return $this->redirect($this->generateUrl('homepage'));
         }
@@ -335,7 +345,7 @@ class ReportController extends AbstractController
             'client',
             'user',
             'client-reports',
-            'report', //needed ?
+            'report', // needed ?
             'client-clientcontacts',
             'clientcontact',
             'client-notes',
@@ -517,7 +527,7 @@ class ReportController extends AbstractController
         $attachmentName = sprintf(
             'DigiRep-%s_%s_%s.pdf',
             $endDate->format('Y'),
-            $submitDate instanceof DateTime ? $submitDate->format('Y-m-d') : 'n-a-', //some old reports have no submission date
+            $submitDate instanceof DateTime ? $submitDate->format('Y-m-d') : 'n-a-', // some old reports have no submission date
             $report->getClient()->getCaseNumber()
         );
 
@@ -560,7 +570,7 @@ class ReportController extends AbstractController
         $attachmentName = sprintf(
             'DigiRepTransactions-%s_%s_%s.csv',
             $endDate->format('Y'),
-            $submitDate instanceof DateTime ? $submitDate->format('Y-m-d') : 'n-a-', //some old reports have no submission date
+            $submitDate instanceof DateTime ? $submitDate->format('Y-m-d') : 'n-a-', // some old reports have no submission date
             $report->getClient()->getCaseNumber()
         );
 

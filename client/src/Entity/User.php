@@ -357,6 +357,12 @@ class User implements UserInterface, DeputyInterface
      */
     private $numberOfSubmittedReports;
 
+    /**
+     * @JMS\Type("App\Entity\User")
+     * @JMS\Groups({"user"})
+     */
+    private ?User $createdBy = null;
+
     public function __construct()
     {
         $this->organisations = new ArrayCollection();
@@ -609,9 +615,11 @@ class User implements UserInterface, DeputyInterface
     /**
      * @param bool $isCoDeputy
      */
-    public function setIsCoDeputy($isCoDeputy)
+    public function setIsCoDeputy($isCoDeputy): self
     {
         $this->isCoDeputy = $isCoDeputy;
+
+        return $this;
     }
 
     /**
@@ -1273,6 +1281,18 @@ class User implements UserInterface, DeputyInterface
     public function setAddress5($address5): User
     {
         $this->address5 = $address5;
+
+        return $this;
+    }
+
+    public function getCreatedBy(): ?User
+    {
+        return $this->createdBy;
+    }
+
+    public function setCreatedBy(?User $createdBy): User
+    {
+        $this->createdBy = $createdBy;
 
         return $this;
     }
