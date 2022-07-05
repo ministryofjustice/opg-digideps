@@ -51,21 +51,10 @@ class SelfRegisterControllerTest extends AbstractTestController
      */
     public function savesValidUserToDb()
     {
-        $casRec = new PreRegistration([
-            'Case' => '12345678',
-            'ClientSurname' => 'Cross-Tolley',
-            'DeputyUid' => 'DEP0011',
-            'DeputySurname' => 'Tolley',
-            'DeputyAddress1' => 'Victoria Road',
-            'DeputyPostcode' => 'SW1',
-            'ReportType' => 'OPG102',
-            'MadeDate' => '2010-03-30',
-            'OrderType' => 'pfa',
-            'NDR' => 'yes',
-        ]);
+        $preRegistration = $this->generatePreRegistration('12345678', 'Cross-Tolley', 'DEP0011', 'Tolley');
 
-        $this->fixtures()->persist($casRec);
-        $this->fixtures()->flush($casRec);
+        $this->fixtures()->persist($preRegistration);
+        $this->fixtures()->flush($preRegistration);
 
         $token = $this->login('deputy@example.org', 'DigidepsPass1234', API_TOKEN_DEPUTY);
 
@@ -105,7 +94,7 @@ class SelfRegisterControllerTest extends AbstractTestController
      * @test
      * @depends savesValidUserToDb
      */
-    public function userNotFoundinCasRec()
+    public function userNotFoundinPreRegistration()
     {
         $token = $this->login('deputy@example.org', 'DigidepsPass1234', API_TOKEN_DEPUTY);
 
@@ -142,21 +131,10 @@ class SelfRegisterControllerTest extends AbstractTestController
      */
     public function throwErrorForDuplicate()
     {
-        $casRec = new PreRegistration([
-                'Case' => '12345678',
-                'ClientSurname' => 'Cross-Tolley',
-                'DeputyUid' => 'DEP0011',
-                'DeputySurname' => 'Tolley',
-                'DeputyAddress1' => 'Victoria Road',
-                'DeputyPostcode' => 'SW1',
-                'ReportType' => 'OPG102',
-                'MadeDate' => '2010-03-30',
-                'OrderType' => 'pfa',
-                'NDR' => 'yes',
-            ]);
+        $preRegistration = $this->generatePreRegistration('12345678', 'Cross-Tolley', 'DEP0011', 'Tolley');
 
-        $this->fixtures()->persist($casRec);
-        $this->fixtures()->flush($casRec);
+        $this->fixtures()->persist($preRegistration);
+        $this->fixtures()->flush($preRegistration);
 
         $token = $this->login('deputy@example.org', 'DigidepsPass1234', API_TOKEN_DEPUTY);
 
@@ -203,20 +181,9 @@ class SelfRegisterControllerTest extends AbstractTestController
     {
         $now = new DateTime();
 
-        $casRec = new PreRegistration([
-            'Case' => '97643164',
-            'ClientSurname' => 'Douglas',
-            'DeputyUid' => 'DEP00199',
-            'DeputySurname' => 'Murphy',
-            'DeputyAddress1' => 'Victoria Road',
-            'DeputyPostcode' => 'SW1',
-            'ReportType' => 'OPG102',
-            'MadeDate' => '2010-03-30',
-            'OrderType' => 'pfa',
-            'NDR' => 'yes',
-        ], $now);
+        $preRegistration = $this->generatePreRegistration('97643164', 'Douglas', 'DEP00199', 'Murphy');
 
-        $this->fixtures()->persist($casRec);
+        $this->fixtures()->persist($preRegistration);
         $this->fixtures()->flush();
 
         $token = $this->login('deputy@example.org', 'DigidepsPass1234', API_TOKEN_DEPUTY);
@@ -282,20 +249,9 @@ class SelfRegisterControllerTest extends AbstractTestController
     {
         $now = new DateTime();
 
-        $casRec = new PreRegistration([
-            'Case' => '97643164',
-            'ClientSurname' => 'Douglas',
-            'DeputyUid' => 'DEP00199',
-            'DeputySurname' => 'Murphy',
-            'DeputyAddress1' => 'Victoria Road',
-            'DeputyPostcode' => 'SW1',
-            'ReportType' => 'OPG102',
-            'MadeDate' => '2010-03-30',
-            'OrderType' => 'pfa',
-            'NDR' => 'yes',
-        ], $now);
+        $preRegistration = $this->generatePreRegistration('97643164', 'Douglas', 'DEP00199', 'Murphy');
 
-        $this->fixtures()->persist($casRec);
+        $this->fixtures()->persist($preRegistration);
         $this->fixtures()->flush();
 
         $token = $this->login('deputy@example.org', 'DigidepsPass1234', API_TOKEN_DEPUTY);
@@ -361,20 +317,9 @@ class SelfRegisterControllerTest extends AbstractTestController
     {
         $now = new DateTime();
 
-        $casRec = new PreRegistration([
-            'Case' => '97643164',
-            'ClientSurname' => 'Douglas',
-            'DeputyUid' => 'DEP00199',
-            'DeputySurname' => 'Murphy',
-            'DeputyAddress1' => 'Victoria Road',
-            'DeputyPostcode' => 'SW1',
-            'ReportType' => 'OPG102',
-            'MadeDate' => '2010-03-30',
-            'OrderType' => 'pfa',
-            'NDR' => 'yes',
-        ], $now);
+        $preRegistration = $this->generatePreRegistration('97643164', 'Douglas', 'DEP00199', 'Murphy');
 
-        $this->fixtures()->persist($casRec);
+        $this->fixtures()->persist($preRegistration);
         $this->fixtures()->flush();
 
         $token = $this->login('deputy@example.org', 'DigidepsPass1234', API_TOKEN_DEPUTY);
@@ -431,5 +376,21 @@ class SelfRegisterControllerTest extends AbstractTestController
         ];
 
         $this->assertEquals($expectedErrorJson, json_decode($responseArray['message'], true));
+    }
+
+    public function generatePreRegistration(string $caseNumber, string $clientSurname, string $deputyUid, string $deputySurname, ?DateTime $createdAt = null): PreRegistration
+    {
+        return new PreRegistration([
+            'Case' => $caseNumber,
+            'ClientSurname' => $clientSurname,
+            'DeputyUid' => $deputyUid,
+            'DeputySurname' => $deputySurname,
+            'DeputyAddress1' => 'Victoria Road',
+            'DeputyPostcode' => 'SW1',
+            'ReportType' => 'OPG102',
+            'MadeDate' => '2010-03-30',
+            'OrderType' => 'pfa',
+            'NDR' => 'yes',
+        ], $createdAt);
     }
 }
