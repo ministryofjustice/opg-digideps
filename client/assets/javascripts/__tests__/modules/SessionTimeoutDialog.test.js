@@ -65,9 +65,6 @@ describe('SessionTimeoutDialog', () => {
     document.body.innerHTML = '<div>Test div</div><button>Test btn</button>'
     const divElement = document.querySelector('div')
 
-    SessionTimeoutDialog.countDownPopupIntervalId = 'abc'
-    SessionTimeoutDialog.countDownLogoutIntervalId = 'xyz'
-
     it('hides the popup', () => {
       SessionTimeoutDialog.hidePopupAndRestartCountdown(divElement)
 
@@ -84,6 +81,9 @@ describe('SessionTimeoutDialog', () => {
 
     it('clears the window intervals', () => {
       const spy = jest.spyOn(window, 'clearInterval')
+
+      SessionTimeoutDialog.countDownPopupIntervalId = 'abc'
+      SessionTimeoutDialog.countDownLogoutIntervalId = 'xyz'
 
       SessionTimeoutDialog.hidePopupAndRestartCountdown(divElement)
 

@@ -137,7 +137,7 @@ class UserController extends AbstractController
 
             // log in
             $clientToken = new UsernamePasswordToken($user, null, 'secured_area', $user->getRoles());
-            $tokenStorage->setToken($clientToken); //now the user is logged in
+            $tokenStorage->setToken($clientToken); // now the user is logged in
 
             $session->set('_security_secured_area', serialize($clientToken));
 
@@ -320,6 +320,24 @@ class UserController extends AbstractController
                         $form->addError(new FormError($this->translator->trans('formErrors.caseNumberAlreadyUsed', [], 'register')));
                         break;
 
+                    case 460:
+                        $form->get('caseNumber')->addError(new FormError($this->translator->trans('matchingErrors.caseNumber', [], 'register')));
+                        break;
+
+                    case 461:
+                        $decodedError = json_decode($e->getData()['message'], true);
+
+                        if (true == $decodedError['matching_errors']['client_lastname']) {
+                            $form->get('clientLastname')->addError(new FormError($this->translator->trans('matchingErrors.clientLastname', [], 'register')));
+                        }
+                        if (true == $decodedError['matching_errors']['deputy_lastname']) {
+                            $form->get('lastname')->addError(new FormError($this->translator->trans('matchingErrors.deputyLastname', [], 'register')));
+                        }
+                        if (true == $decodedError['matching_errors']['deputy_postcode']) {
+                            $form->get('postcode')->addError(new FormError($this->translator->trans('matchingErrors.deputyPostcode', [], 'register')));
+                        }
+
+                        break;
                     default:
                         $form->addError(new FormError($this->translator->trans('formErrors.generic', [], 'register')));
                 }
