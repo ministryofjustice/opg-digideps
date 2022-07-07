@@ -266,18 +266,18 @@ class OrgDeputyshipUploader
                 }
             }
 
-            if ($this->clientHasNewOrgAndNamedDeputy($this->client, $this->namedDeputy)) {
-                $report = new Report(
-                    $this->client,
-                    $dto->getReportType(),
-                    $dto->getReportStartDate(),
-                    $dto->getReportEndDate()
-                );
-
-                $this->client->addReport($report);
-
-                $this->added['reports'][] = $this->client->getCaseNumber().'-'.$dto->getReportEndDate()->format('Y-m-d');
-            }
+//            if ($this->clientHasNewOrgAndNamedDeputy($this->client, $this->namedDeputy)) {
+//                $report = new Report(
+//                    $this->client,
+//                    $dto->getReportType(),
+//                    $dto->getReportStartDate(),
+//                    $dto->getReportEndDate()
+//                );
+//
+//                $this->client->addReport($report);
+//
+//                $this->added['reports'][] = $this->client->getCaseNumber().'-'.$dto->getReportEndDate()->format('Y-m-d');
+//            }
         } else {
             $report = new Report(
                 $this->client,
