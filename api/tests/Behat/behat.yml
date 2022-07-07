@@ -1,23 +1,3 @@
-default:
-    gherkin:
-        cache: ~
-    autoload:
-        'App\Tests\Behat': "%paths.base%/bootstrap"
-    extensions:
-        Behat\MinkExtension:
-            goutte:
-                guzzle_parameters:
-                    verify: false
-            browser_stack:
-                capabilities:
-                    browserstack-debug: true
-                    browserstack-tunnel: true
-                    acceptSslCerts: true
-                    project: "Digideps Cross Browser Test - Manual"
-            files_path: "%paths.base%/fixtures/"
-            default_session: goutte
-        Behatch\Extension: ~
-
 cross-browser-chrome:
     suites:
         chrome:
@@ -312,7 +292,10 @@ v2-tests-goutte:
             sessions:
                 symfony:
                     symfony: ~
-        Behatch\Extension: ~
+                goutte:
+                    goutte:
+                        guzzle_parameters:
+                            verify: false
         FriendsOfBehat\SymfonyExtension:
             kernel:
                 path: "%paths.base%/../../src/Kernel.php"
@@ -342,4 +325,3 @@ v2-tests-browserstack:
                     name: "v2-tests"
             files_path: "%paths.base%/fixtures/"
             default_session: browser_stack
-        Behatch\Extension: ~

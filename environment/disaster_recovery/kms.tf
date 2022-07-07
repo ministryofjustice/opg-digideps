@@ -19,7 +19,8 @@ data "aws_iam_policy_document" "kms_db_backup_key" {
     principals {
       type = "AWS"
       identifiers = [
-        "arn:aws:iam::${var.backup_account_id}:role/${var.cross_account_role_name}"
+        "arn:aws:iam::${var.backup_account_id}:role/${var.cross_account_role_name}",
+        "arn:aws:iam::${var.backup_account_id}:role/breakglass"
       ]
     }
     resources = ["*"]

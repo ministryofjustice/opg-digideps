@@ -6,6 +6,7 @@ namespace App\Tests\Behat\v2\Analytics;
 
 use App\Entity\User;
 use App\Tests\Behat\BehatException;
+use Behat\Behat\Tester\Exception\PendingException;
 
 trait AnalyticsTrait
 {

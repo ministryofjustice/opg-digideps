@@ -57,9 +57,9 @@ class User implements UserInterface
     ];
 
     public static $depTypeIdToRealm = [
-        //PA
+        // PA
         23 => PreRegistration::REALM_PA,
-        //PROFESSIONAL
+        // PROFESSIONAL
         21 => PreRegistration::REALM_PROF,
         26 => PreRegistration::REALM_PROF,
         63 => PreRegistration::REALM_PROF,
@@ -316,6 +316,16 @@ class User implements UserInterface
     public function getId()
     {
         return $this->id;
+    }
+
+    /**
+     * @return User
+     */
+    public function setId(?int $id)
+    {
+        $this->id = $id;
+
+        return $this;
     }
 
     /**
@@ -643,7 +653,7 @@ class User implements UserInterface
 
     public function getSalt()
     {
-        //return $this->salt;
+        // return $this->salt;
         return;
     }
 

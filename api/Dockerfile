@@ -1,4 +1,4 @@
-FROM composer:2.1.2 AS composer
+FROM composer:2.3.5 AS composer
 
 WORKDIR /app
 
@@ -16,7 +16,7 @@ RUN composer run-script post-install-cmd --no-interaction
 
 RUN composer dump-autoload --optimize
 
-FROM php:8.0.12-fpm-alpine3.14
+FROM php:8.0.19-fpm-alpine3.15
 WORKDIR /var/www
 EXPOSE 80
 EXPOSE 443
@@ -46,7 +46,6 @@ RUN if [[ $REQUIRE_XDEBUG = 1 ]] ; then \
   pecl install xdebug-3.1.4  ;\
   docker-php-ext-enable $PHP_EXT_DIR/xdebug.so ; \
   echo "xdebug.mode = develop,debug" >> /usr/local/etc/php/conf.d/docker-php-ext-xdebug.ini ; \
-  echo "xdebug.discover_client_host = true" >> /usr/local/etc/php/conf.d/docker-php-ext-xdebug.ini ; \
   echo "xdebug.client_host = host.docker.internal" >> /usr/local/etc/php/conf.d/docker-php-ext-xdebug.ini ; \
   echo "xdebug.start_with_request = yes" >> /usr/local/etc/php/conf.d/docker-php-ext-xdebug.ini ; \
   echo "xdebug.log = /tmp/xdebug.log" >> /usr/local/etc/php/conf.d/docker-php-ext-xdebug.ini ; \

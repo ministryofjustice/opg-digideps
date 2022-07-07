@@ -14,6 +14,7 @@ trait PageUrlsTrait
     private string $anyOtherInfoUrl = '/%s/%s/any-other-info';
     private string $assetsSectionUrl = '/%s/%s/assets';
     private string $assetsSummarySectionUrl = '/%s/%s/assets/summary';
+    private string $availabilityUrl = '/manage/availability';
     private string $clientLoginPageUrl = '/login';
     private string $clientBenefitCheckSummaryPageUrl = '/%s/%s/client-benefits-check/summary';
     private string $contactsAddUrl = '/report/%s/contacts/add';
@@ -65,6 +66,7 @@ trait PageUrlsTrait
     private string $adminNotificationUrl = '/admin/settings/service-notification';
     private string $adminDATReportUrl = '/admin/stats';
     private string $adminActiveLaysReportUrl = '/admin/stats/downloadActiveLaysCsv';
+    private string $adminOldAdminUsersReportUrl = '/admin/stats/reports/downloadOldAdminUsersCsv';
     private string $adminAnalyticsUrl = '/admin/stats/metrics';
     private string $adminStatsReportsUrl = '/admin/stats/reports';
     private string $adminSatisfactionReportUrl = '/admin/stats/satisfaction';
@@ -221,6 +223,11 @@ trait PageUrlsTrait
     public function getAdminActiveLaysReportUrl(): string
     {
         return $this->adminActiveLaysReportUrl;
+    }
+    
+    public function getOldAdminUsersReportUrl(): string
+    {
+        return $this->adminOldAdminUsersReportUrl;
     }
 
     public function getAdminFixturesUrl(): string
@@ -406,5 +413,10 @@ trait PageUrlsTrait
     public function getActivateUserPage(string $activationToken): string
     {
         return sprintf($this->activateUserAccount, $activationToken);
+    }
+
+    public function getAvailabilityPage(): string
+    {
+        return $this->availabilityUrl;
     }
 }

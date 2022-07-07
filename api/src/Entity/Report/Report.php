@@ -537,6 +537,7 @@ class Report implements ReportInterface
         foreach ($this->getAvailableSections() as $sectionId) {
             $statusCached[$sectionId] = ['state' => ReportStatusService::STATE_NOT_STARTED, 'nOfRecords' => 0];
         }
+        
         $this->setSectionStatusesCached($statusCached);
         $this->reportStatusCached = self::STATUS_NOT_STARTED;
     }

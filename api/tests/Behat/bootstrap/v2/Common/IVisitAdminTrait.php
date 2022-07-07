@@ -177,6 +177,14 @@ trait IVisitAdminTrait
     }
 
     /**
+     * @When I visit the admin users not logged in within last 13 months report page
+     */
+    public function iVisitOldAdminUsersReportsPage()
+    {
+        $this->visitAdminPath($this->getOldAdminUsersReportUrl());
+    }
+    
+    /**
      * @When I visit the admin login page
      */
     public function iVisitAdminLoginPage()

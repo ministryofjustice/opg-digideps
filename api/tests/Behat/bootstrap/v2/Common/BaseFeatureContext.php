@@ -114,7 +114,7 @@ class BaseFeatureContext extends MinkContext
 
     public function __construct(
         private FixtureHelper $fixtureHelper,
-        private KernelInterface $symfonyKernel,
+        protected KernelInterface $symfonyKernel,
         protected EntityManagerInterface $em,
         private ReportTestHelper $reportTestHelper,
         protected ParameterStoreService $parameterStoreService

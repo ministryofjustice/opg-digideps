@@ -72,5 +72,12 @@ locals {
       target_type = "security_group_id"
       target      = data.aws_security_group.ecr_api_endpoint.id
     }
+    api_service = {
+      port        = 443
+      type        = "egress"
+      protocol    = "tcp"
+      target_type = "security_group_id"
+      target      = module.api_service_security_group.id
+    }
   }
 }

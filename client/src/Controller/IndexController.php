@@ -7,6 +7,7 @@ use App\Service\Client\RestClient;
 use App\Service\DeputyProvider;
 use App\Service\Redirector;
 use App\Service\StringUtils;
+use const PHP_URL_PATH;
 use Sensio\Bundle\FrameworkExtraBundle\Configuration\Template;
 use Symfony\Component\EventDispatcher\EventDispatcherInterface;
 use Symfony\Component\Form\FormError;
@@ -22,46 +23,19 @@ use Symfony\Component\Security\Core\Authentication\Token\UsernamePasswordToken;
 use Symfony\Component\Security\Core\Exception\AccessDeniedException;
 use Symfony\Component\Security\Http\Event\InteractiveLoginEvent;
 use Symfony\Contracts\Translation\TranslatorInterface;
+use Throwable;
 
 class IndexController extends AbstractController
 {
-    /** @var DeputyProvider */
-    private $deputyProvider;
-
-    /** @var EventDispatcherInterface */
-    private $eventDispatcher;
-
-    /** @var TokenStorageInterface */
-    private $tokenStorage;
-
-    /** @var TranslatorInterface */
-    private $translator;
-
-    /** @var string */
-    private $environment;
-
-    /** @var RestClient */
-    private $restClient;
-
-    /** @var RouterInterface */
-    private $router;
-
     public function __construct(
-        RestClient $restClient,
-        DeputyProvider $deputyProvider,
-        EventDispatcherInterface $eventDispatcher,
-        TokenStorageInterface $tokenStorage,
-        TranslatorInterface $translator,
-        RouterInterface $router,
-        string $environment
+        private RestClient $restClient,
+        private DeputyProvider $deputyProvider,
+        private EventDispatcherInterface $eventDispatcher,
+        private TokenStorageInterface $tokenStorage,
+        private TranslatorInterface $translator,
+        private RouterInterface $router,
+        private string $environment
     ) {
-        $this->deputyProvider = $deputyProvider;
-        $this->eventDispatcher = $eventDispatcher;
-        $this->tokenStorage = $tokenStorage;
-        $this->translator = $translator;
-        $this->environment = $environment;
-        $this->restClient = $restClient;
-        $this->router = $router;
     }
 
     /**
@@ -105,7 +79,7 @@ class IndexController extends AbstractController
                     '_adLastname' => null,
                     'loggedOutFrom' => null,
                 ]);
-            } catch (\Throwable $e) {
+            } catch (Throwable $e) {
                 $error = $e->getMessage();
 
                 if (423 == $e->getCode() && method_exists($e, 'getData')) {
@@ -146,6 +120,7 @@ class IndexController extends AbstractController
 
         return $this->render('@App/Index/login.html.twig', [
                 'form' => $form->createView(),
+                'serviceNotificationContent' => null,
                 'serviceNotificationContent' => $snSetting->isEnabled() ? $snSetting->getContent() : null,
         ] + $vars);
     }
@@ -160,7 +135,7 @@ class IndexController extends AbstractController
      *
      * @return Response
      *
-     * @throws \Throwable
+     * @throws Throwable
      */
     public function adLoginAction(Request $request, $userToken, $adId, $adFirstname, $adLastname)
     {
@@ -182,7 +157,7 @@ class IndexController extends AbstractController
     /**
      * @param array $credentials see RestClient::login()
      *
-     * @throws \Throwable
+     * @throws Throwable
      */
     private function logUserIn($credentials, Request $request, array $sessionVars)
     {
@@ -344,7 +319,7 @@ class IndexController extends AbstractController
             return null;
         }
 
-        $refererUrlPath = parse_url($referer, \PHP_URL_PATH);
+        $refererUrlPath = parse_url($referer, PHP_URL_PATH);
 
         if (!$refererUrlPath) {
             return null;
