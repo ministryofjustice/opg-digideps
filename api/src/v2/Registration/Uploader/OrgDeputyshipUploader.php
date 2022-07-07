@@ -107,34 +107,36 @@ class OrgDeputyshipUploader
             $this->added['named_deputies'][] = $namedDeputy->getId();
         }
 
-        if ($namedDeputy->addressHasChanged($dto)) {
-            $namedDeputy
-                ->setAddress1($dto->getDeputyAddress1())
-                ->setAddress2($dto->getDeputyAddress2())
-                ->setAddress3($dto->getDeputyAddress3())
-                ->setAddress4($dto->getDeputyAddress4())
-                ->setAddress5($dto->getDeputyAddress5())
-                ->setAddressPostcode($dto->getDeputyPostcode());
+        if ($namedDeputy->getDeputyUid() === $dto->getDeputyUid()) {
+            if ($namedDeputy->addressHasChanged($dto)) {
+                $namedDeputy
+                    ->setAddress1($dto->getDeputyAddress1())
+                    ->setAddress2($dto->getDeputyAddress2())
+                    ->setAddress3($dto->getDeputyAddress3())
+                    ->setAddress4($dto->getDeputyAddress4())
+                    ->setAddress5($dto->getDeputyAddress5())
+                    ->setAddressPostcode($dto->getDeputyPostcode());
 
-            $this->em->persist($namedDeputy);
-            $this->em->flush();
+                $this->em->persist($namedDeputy);
+                $this->em->flush();
 
-            $this->updated['named_deputies'][] = $namedDeputy->getId();
-        }
-
-        if ($namedDeputy->nameHasChanged($dto)) {
-            if ($dto->deputyIsAnOrganisation()) {
-                $namedDeputy->setFirstname($dto->getOrganisationName());
-                $namedDeputy->setLastname('');
-            } else {
-                $namedDeputy->setFirstname($dto->getDeputyFirstname());
-                $namedDeputy->setLastname($dto->getDeputyLastname());
+                $this->updated['named_deputies'][] = $namedDeputy->getId();
             }
 
-            $this->em->persist($namedDeputy);
-            $this->em->flush();
+            if ($namedDeputy->nameHasChanged($dto)) {
+                if ($dto->deputyIsAnOrganisation()) {
+                    $namedDeputy->setFirstname($dto->getOrganisationName());
+                    $namedDeputy->setLastname('');
+                } else {
+                    $namedDeputy->setFirstname($dto->getDeputyFirstname());
+                    $namedDeputy->setLastname($dto->getDeputyLastname());
+                }
 
-            $this->updated['named_deputies'][] = $namedDeputy->getId();
+                $this->em->persist($namedDeputy);
+                $this->em->flush();
+
+                $this->updated['named_deputies'][] = $namedDeputy->getId();
+            }
         }
 
         $this->namedDeputy = $namedDeputy;
