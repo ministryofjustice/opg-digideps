@@ -3,16 +3,16 @@
 namespace App\Controller;
 
 use App\Entity as EntityDir;
+use App\Event\RegistrationFailedEvent;
+use App\EventDispatcher\ObservableEventDispatcher;
 use App\Exception\RestClientException;
 use App\Form as FormDir;
 use App\Model\SelfRegisterData;
-use App\Service\Audit\AuditEvents;
 use App\Service\Client\Internal\ClientApi;
 use App\Service\Client\Internal\UserApi;
 use App\Service\Client\RestClient;
 use App\Service\DeputyProvider;
 use App\Service\Redirector;
-use App\Service\Time\DateTimeProvider;
 use Psr\Log\LoggerInterface;
 use Sensio\Bundle\FrameworkExtraBundle\Configuration\Security;
 use Sensio\Bundle\FrameworkExtraBundle\Configuration\Template;
@@ -28,27 +28,14 @@ use Symfony\Contracts\Translation\TranslatorInterface;
 
 class UserController extends AbstractController
 {
-    private RestClient $restClient;
-    private UserApi $userApi;
-    private ClientApi $clientApi;
-    private TranslatorInterface $translator;
-    private LoggerInterface $logger;
-    private DateTimeProvider $dateTimeProvider;
-
     public function __construct(
-        RestClient $restClient,
-        UserApi $userApi,
-        ClientApi $clientApi,
-        TranslatorInterface $translator,
-        LoggerInterface $logger,
-        DateTimeProvider $dateTimeProvider
+        private RestClient $restClient,
+        private UserApi $userApi,
+        private ClientApi $clientApi,
+        private TranslatorInterface $translator,
+        private LoggerInterface $logger,
+        private ObservableEventDispatcher $eventDispatcher
     ) {
-        $this->restClient = $restClient;
-        $this->userApi = $userApi;
-        $this->clientApi = $clientApi;
-        $this->translator = $translator;
-        $this->logger = $logger;
-        $this->dateTimeProvider = $dateTimeProvider;
     }
 
     /**
@@ -347,7 +334,8 @@ class UserController extends AbstractController
                 // If response from API is not valid json just log the message
                 $failureData = !is_array($failureData) ? ['failure_message' => $failureData] : $failureData;
 
-                $this->logger->notice('', (new AuditEvents($this->dateTimeProvider))->selfRegistrationFailed($failureData));
+                $event = new RegistrationFailedEvent($failureData, $e->getMessage());
+                $this->eventDispatcher->dispatch($event, RegistrationFailedEvent::NAME);
             }
         }
 
