@@ -8,3 +8,4 @@ require (
 )
 
 require github.com/jmespath/go-jmespath v0.4.0 // indirect
+require github.com/stretchr/testify v1.7.2 // indirect
