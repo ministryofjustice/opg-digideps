@@ -183,18 +183,18 @@ class OrgDeputyshipUploader
 //                $this->added['clients'][] = $dto->getCaseNumber();
 //            }
 
-            if ($this->clientHasSwitchedOrganisation($this->client)) {
-                $this->currentOrganisation->addClient($this->client);
-                $this->client->setOrganisation($this->currentOrganisation);
-
-                $this->updated['clients'][] = $this->client->getId();
-            }
-
-            if ($this->clientHasNewNamedDeputy($this->client, $this->namedDeputy)) {
-                $this->client->setNamedDeputy($this->namedDeputy);
-
-                $this->updated['clients'][] = $this->client->getId();
-            }
+//            if ($this->clientHasSwitchedOrganisation($this->client)) {
+//                $this->currentOrganisation->addClient($this->client);
+//                $this->client->setOrganisation($this->currentOrganisation);
+//
+//                $this->updated['clients'][] = $this->client->getId();
+//            }
+//
+//            if ($this->clientHasNewNamedDeputy($this->client, $this->namedDeputy)) {
+//                $this->client->setNamedDeputy($this->namedDeputy);
+//
+//                $this->updated['clients'][] = $this->client->getId();
+//            }
         }
 
         $this->em->persist($this->client);
