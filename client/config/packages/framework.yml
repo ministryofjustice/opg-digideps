@@ -41,6 +41,9 @@ framework:
         enabled: true
 
     http_client:
+        default_options:
+            verify_host: false
+            verify_peer: false
         scoped_clients:
             # by setting base_uri, relative URLs (e.g. request("GET", "/registration/new"))
             # will default to these options
