@@ -109,7 +109,7 @@ class PreRegistrationVerificationService
         $clientLastnameMatches = [];
 
         foreach ($caseNumberMatches as $match) {
-            if (mb_strtolower($match->getClientLastname()) == mb_strtolower($detailsToMatchOn['clientLastname'])) {
+            if (trim(mb_strtolower($match->getClientLastname())) === trim(mb_strtolower($detailsToMatchOn['clientLastname']))) {
                 $clientLastnameMatches[] = $match;
             }
         }
@@ -123,7 +123,7 @@ class PreRegistrationVerificationService
         $deputyLastnameMatches = [];
 
         foreach ($clientLastnameMatches as $match) {
-            if (mb_strtolower($match->getDeputySurname()) == mb_strtolower($detailsToMatchOn['deputyLastname'])) {
+            if (trim(mb_strtolower($match->getDeputySurname())) === trim(mb_strtolower($detailsToMatchOn['deputyLastname']))) {
                 $deputyLastnameMatches[] = $match;
             }
         }
