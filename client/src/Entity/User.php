@@ -5,7 +5,6 @@ namespace App\Entity;
 use App\Entity\Traits\LoginInfoTrait;
 use App\Validator\Constraints\CommonPassword;
 use App\Validator\Constraints\EmailSameDomain;
-use DateTime;
 use Doctrine\Common\Collections\ArrayCollection;
 use JMS\Serializer\Annotation as JMS;
 use Symfony\Component\Security\Core\User\UserInterface;
@@ -136,7 +135,7 @@ class User implements UserInterface, DeputyInterface
     /**
      * @JMS\Type("string")
      *
-     * @var string|null
+     * @var string
      */
     private $salt;
 
@@ -168,7 +167,7 @@ class User implements UserInterface, DeputyInterface
      * @JMS\Type("DateTime<'Y-m-d H:i:s'>")
      * @JMS\Groups({"user"})
      *
-     * @var DateTime|null
+     * @var \DateTime|null
      */
     private $registrationDate;
 
@@ -176,7 +175,7 @@ class User implements UserInterface, DeputyInterface
      * @JMS\Type("string")
      * @JMS\Groups({"registrationToken"})
      *
-     * @var string|null
+     * @var string
      */
     private $registrationToken;
 
@@ -184,7 +183,7 @@ class User implements UserInterface, DeputyInterface
      * @JMS\Type("DateTime<'Y-m-d H:i:s'>")
      * @JMS\Groups({"registrationToken"})
      *
-     * @var DateTime|null
+     * @var \DateTime
      */
     private $tokenDate;
 
@@ -210,7 +209,7 @@ class User implements UserInterface, DeputyInterface
      * @JMS\Groups({"user_details_full", "profile_org"})
      * @Assert\Length( max=200, maxMessage="user.address1.maxMessage", groups={"user_details_full", "profile_org"} )
      *
-     * @var string|null
+     * @var string
      */
     private $address2;
 
@@ -219,7 +218,7 @@ class User implements UserInterface, DeputyInterface
      * @JMS\Groups({"user_details_full", "profile_org"})
      * @Assert\Length( max=200, maxMessage="user.address1.maxMessage", groups={"user_details_full", "profile_org"} )
      *
-     * @var string|null
+     * @var string
      */
     private $address3;
 
@@ -228,7 +227,7 @@ class User implements UserInterface, DeputyInterface
      * @JMS\Groups({"user_details_full", "profile_org"})
      * @Assert\Length( max=200, maxMessage="user.address1.maxMessage", groups={"user_details_full", "profile_org"} )
      *
-     * @var string|null
+     * @var string
      */
     private $address4;
 
@@ -237,7 +236,7 @@ class User implements UserInterface, DeputyInterface
      * @JMS\Groups({"user_details_full", "profile_org"})
      * @Assert\Length( max=200, maxMessage="user.address1.maxMessage", groups={"user_details_full", "profile_org"} )
      *
-     * @var string|null
+     * @var string
      */
     private $address5;
 
@@ -275,7 +274,7 @@ class User implements UserInterface, DeputyInterface
      * @JMS\Groups({"user_details_full", "profile_org"})
      * @Assert\Length(min=10, max=20, minMessage="common.genericPhone.minLength", maxMessage="common.genericPhone.maxLength", groups={"user_details_full"} )
      *
-     * @var string|null
+     * @var string
      */
     private $phoneAlternative;
 
@@ -283,12 +282,12 @@ class User implements UserInterface, DeputyInterface
      * @JMS\Type("DateTime<'Y-m-d H:i:s'>")
      * @JMS\Groups({"lastLoggedIn"})
      *
-     * @var DateTime|null
+     * @var \DateTime|null
      */
     private $lastLoggedIn;
 
     /**
-     * @var string|null
+     * @var string
      *
      * @JMS\Type("string")
      */
@@ -298,12 +297,12 @@ class User implements UserInterface, DeputyInterface
      * @JMS\Type("boolean")
      * @JMS\Groups({"admin_add_user", "ad_add_user", "admin_edit_user"})
      *
-     * @var bool|null
+     * @var bool
      */
     private $ndrEnabled;
 
     /**
-     * @var bool|null
+     * @var bool
      * @JMS\Type("boolean")
      * @JMS\Groups({"ad_managed", "ad_add_user"})
      */
@@ -314,7 +313,7 @@ class User implements UserInterface, DeputyInterface
      * @JMS\Groups({"user_details_org", "org_team_add"})
      * @Assert\Length(max=150, maxMessage="user.jobTitle.maxMessage", groups={"user_details_org"} )
      *
-     * @var string|null
+     * @var string
      */
     private $jobTitle;
 
@@ -330,7 +329,7 @@ class User implements UserInterface, DeputyInterface
     /**
      * @JMS\Type("boolean")
      *
-     * @var bool|null
+     * @var bool
      */
     private $isCoDeputy;
 
@@ -373,7 +372,7 @@ class User implements UserInterface, DeputyInterface
     /**
      * @param int $id
      *
-     * @return User
+     * @return \App\Entity\User
      */
     public function setId($id)
     {
@@ -393,7 +392,7 @@ class User implements UserInterface, DeputyInterface
     /**
      * @param string $firstname
      *
-     * @return User
+     * @return \App\Entity\User
      */
     public function setFirstname($firstname)
     {
@@ -413,7 +412,7 @@ class User implements UserInterface, DeputyInterface
     /**
      * @param string $lastname
      *
-     * @return User
+     * @return \App\Entity\User
      */
     public function setLastname($lastname)
     {
@@ -441,7 +440,7 @@ class User implements UserInterface, DeputyInterface
     /**
      * @param string $email
      *
-     * @return User
+     * @return \App\Entity\User
      */
     public function setEmail($email)
     {
@@ -461,7 +460,7 @@ class User implements UserInterface, DeputyInterface
     /**
      * @param string $password
      *
-     * @return User
+     * @return \App\Entity\User
      */
     public function setPassword($password)
     {
@@ -493,7 +492,7 @@ class User implements UserInterface, DeputyInterface
     /**
      * @param bool $active
      *
-     * @return User
+     * @return \App\Entity\User
      */
     public function setActive($active)
     {
@@ -515,7 +514,7 @@ class User implements UserInterface, DeputyInterface
     }
 
     /**
-     * @return DateTime|null $registrationDate
+     * @return \DateTime|null $registrationDate
      */
     public function getRegistrationDate()
     {
@@ -523,11 +522,11 @@ class User implements UserInterface, DeputyInterface
     }
 
     /**
-     * @param DateTime $registrationDate
+     * @param \DateTime $registrationDate
      *
-     * @return User
+     * @return \App\Entity\User
      */
-    public function setRegistrationDate(DateTime $registrationDate = null)
+    public function setRegistrationDate(\DateTime $registrationDate = null)
     {
         $this->registrationDate = $registrationDate;
 
@@ -545,7 +544,7 @@ class User implements UserInterface, DeputyInterface
     /**
      * @param string $registrationToken
      *
-     * @return User
+     * @return \App\Entity\User
      */
     public function setRegistrationToken($registrationToken)
     {
@@ -555,7 +554,7 @@ class User implements UserInterface, DeputyInterface
     }
 
     /**
-     * @return DateTime $tokenDate
+     * @return \DateTime $tokenDate
      */
     public function getTokenDate()
     {
@@ -563,9 +562,9 @@ class User implements UserInterface, DeputyInterface
     }
 
     /**
-     * @param DateTime $tokenDate
+     * @param \DateTime $tokenDate
      *
-     * @return User
+     * @return \App\Entity\User
      */
     public function setTokenDate($tokenDate)
     {
@@ -589,7 +588,7 @@ class User implements UserInterface, DeputyInterface
     /**
      * @param string $gaTrackingId
      *
-     * @return User
+     * @return \App\Entity\User
      */
     public function setGaTrackingId($gaTrackingId)
     {
@@ -675,7 +674,7 @@ class User implements UserInterface, DeputyInterface
     {
         $expiresSeconds = $hoursExpires * 3600;
 
-        $timeStampNow = (new DateTime())->getTimestamp();
+        $timeStampNow = (new \DateTime())->getTimestamp();
         $timestampToken = $this->getTokenDate()->getTimestamp();
 
         $diffSeconds = $timeStampNow - $timestampToken;
@@ -793,7 +792,7 @@ class User implements UserInterface, DeputyInterface
     }
 
     /**
-     * @return DateTime|null
+     * @return \DateTime|null
      */
     public function getLastLoggedIn()
     {
@@ -801,9 +800,9 @@ class User implements UserInterface, DeputyInterface
     }
 
     /**
-     * @param DateTime $lastLoggedIn
+     * @param \DateTime $lastLoggedIn
      */
-    public function setLastLoggedIn(DateTime $lastLoggedIn = null)
+    public function setLastLoggedIn(\DateTime $lastLoggedIn = null)
     {
         $this->lastLoggedIn = $lastLoggedIn;
     }
@@ -1250,7 +1249,7 @@ class User implements UserInterface, DeputyInterface
      */
     public function regBeforeToday(User $user): bool
     {
-        return $user->getRegistrationDate() < (new DateTime())->setTime(00, 00, 00);
+        return $user->getRegistrationDate() < (new \DateTime())->setTime(00, 00, 00);
     }
 
     public function getAddress4()

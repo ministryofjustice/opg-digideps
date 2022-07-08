@@ -15,7 +15,7 @@ use Symfony\Component\Security\Http\Authentication\SimplePreAuthenticatorInterfa
  */
 class HeaderTokenAuthenticator implements SimplePreAuthenticatorInterface
 {
-    public const HEADER_NAME = 'AuthToken';
+    const HEADER_NAME = 'AuthToken';
 
     public static function getTokenFromRequest(Request $request)
     {
@@ -47,8 +47,6 @@ class HeaderTokenAuthenticator implements SimplePreAuthenticatorInterface
      */
     public function authenticateToken(TokenInterface $token, UserProviderInterface $userProvider, $providerKey)
     {
-        // When rolling out JWT system-wide this is where we will need to hook in to
-
         if ($userProvider instanceof UserProvider) {
             $authTokenValue = $token->getCredentials();
             $user = $userProvider->loadUserByUsername($authTokenValue);
@@ -60,7 +58,8 @@ class HeaderTokenAuthenticator implements SimplePreAuthenticatorInterface
                 $user->getRoles()
             );
         } else {
-            throw new \InvalidArgumentException('The user provider must be an instance '.'of UserByTokenProvider ('.get_class($userProvider).' was given).');
+            throw new \InvalidArgumentException('The user provider must be an instance '
+            . 'of UserByTokenProvider (' . get_class($userProvider) . ' was given).');
         }
     }
 

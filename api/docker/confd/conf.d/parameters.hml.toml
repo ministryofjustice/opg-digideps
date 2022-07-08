@@ -10,7 +10,6 @@ keys = [
     "/redis",
     "/secret",
     "/secrets",
-    "/secrets/manager/localstack",
     "/security",
     "/smtp",
     "/ssm/localstack",

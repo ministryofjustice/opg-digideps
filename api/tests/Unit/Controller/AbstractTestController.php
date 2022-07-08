@@ -4,7 +4,6 @@ namespace App\Tests\Unit\Controller;
 
 use App\Service\BruteForce\AttemptsIncrementalWaitingChecker;
 use App\Service\BruteForce\AttemptsInTimeChecker;
-use App\Service\JWT\JWTService;
 use App\Tests\Unit\Fixtures;
 use Doctrine\ORM\EntityManager;
 use Symfony\Bundle\FrameworkBundle\Client;
@@ -12,9 +11,6 @@ use Symfony\Bundle\FrameworkBundle\Test\WebTestCase;
 use Symfony\Component\DependencyInjection\Container;
 use Symfony\Component\HttpFoundation\Response;
 
-/**
- * @property JWTService|null $jwtService
- */
 abstract class AbstractTestController extends WebTestCase
 {
     /** @var Fixtures */
@@ -29,9 +25,6 @@ abstract class AbstractTestController extends WebTestCase
     /** @var string|false */
     protected static $adminSecret;
 
-    /** @var JWTService */
-    protected $jwtService;
-
     /**
      * Create static client and fixtures.
      */
@@ -39,15 +32,13 @@ abstract class AbstractTestController extends WebTestCase
     {
         // each test restores the db before launching the entire suite,
         // help to cleanup records created from previously-executed tests
-        // TODO consider moving into setUpBeforeClass of each method. might not be needed for some tests
+        //TODO consider moving into setUpBeforeClass of each method. might not be needed for some tests
         Fixtures::deleteReportsData();
 
-        self::bootKernel();
         self::$frameworkBundleClient = static::createClient(['environment' => 'test', 'debug' => false]);
 
         /** @var EntityManager $em */
         $em = self::$container->get('em');
-        $this->jwtService = self::$container->get('App\Service\JWT\JWTService');
 
         self::$fixtures = new Fixtures($em);
 
@@ -78,7 +69,7 @@ abstract class AbstractTestController extends WebTestCase
     /**
      * @param array $options with keys method, uri, data, mustSucceed, mustFail, assertId
      */
-    public function assertJsonRequest($method, $uri, array $options = [], bool $withValidJwt = false): array
+    public function assertJsonRequest($method, $uri, array $options = []): array
     {
         $headers = ['CONTENT_TYPE' => 'application/json'];
         if (isset($options['AuthToken'])) {
@@ -86,10 +77,6 @@ abstract class AbstractTestController extends WebTestCase
         }
         if (isset($options['ClientSecret'])) {
             $headers['HTTP_ClientSecret'] = $options['ClientSecret'];
-        }
-
-        if ($withValidJwt) {
-            $headers['HTTP_JWT'] = $this->jwtService->createNewJWT();
         }
 
         $rawData = null;

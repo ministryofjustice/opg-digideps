@@ -4,7 +4,6 @@ namespace App\Tests\Unit\Service\Auth;
 
 use App\Repository\UserRepository;
 use App\Service\Auth\AuthService;
-use App\Service\JWT\JWTService;
 use Mockery;
 use MockeryStub as m;
 use PHPUnit\Framework\TestCase;
@@ -47,17 +46,11 @@ class AuthServiceTest extends TestCase
      */
     private $encoderFactory;
 
-    /**
-     * @var Mockery\LegacyMockInterface|Mockery\MockInterface|JWTService
-     */
-    private $JWTService;
-
     public function setUp(): void
     {
         $this->userRepo = m::stub(UserRepository::class);
         $this->logger = m::mock('Symfony\Bridge\Monolog\Logger');
         $this->encoderFactory = m::stub('Symfony\Component\Security\Core\Encoder\EncoderFactory');
-        $this->JWTService = m::mock(JWTService::class);
 
         $hierarchy = [
             'ROLE_SUPER_ADMIN' => ['ROLE_ADMIN'],
@@ -66,21 +59,14 @@ class AuthServiceTest extends TestCase
         ];
 
         $this->roleHierarchy = new RoleHierarchy($hierarchy);
-        $this->authService = new AuthService(
-            $this->encoderFactory,
-            $this->logger,
-            $this->userRepo,
-            $this->roleHierarchy,
-            $this->clientPermissions,
-            $this->JWTService,
-        );
+        $this->authService = new AuthService($this->encoderFactory, $this->logger, $this->userRepo, $this->roleHierarchy, $this->clientPermissions);
     }
 
     public function testMissingSecrets()
     {
         $this->expectException(\InvalidArgumentException::class);
 
-        $this->authService = new AuthService($this->encoderFactory, $this->logger, $this->userRepo, $this->roleHierarchy, [], $this->JWTService);
+        $this->authService = new AuthService($this->encoderFactory, $this->logger, $this->userRepo, $this->roleHierarchy, []);
     }
 
     public function isSecretValidProvider()
@@ -156,7 +142,7 @@ class AuthServiceTest extends TestCase
         $this->userRepo->shouldReceive('findOneBy')->with(['registrationToken' => 'token'])->andReturn($user);
         $this->assertEquals($user, $this->authService->getUserByToken('token'));
 
-        $this->userRepo->shouldReceive('findOneBy')->with(['registrationToken' => 'wrongtoken'])->andReturn(null);
+        $this->userRepo->shouldReceive('findOneBy')->with(['registrationToken' => 'wrongtoken'])->andReturn(false);
         $this->assertEquals(null, $this->authService->getUserByToken('wrongtoken'));
     }
 
@@ -191,39 +177,6 @@ class AuthServiceTest extends TestCase
         $request->headers->set(AuthService::HEADER_CLIENT_SECRET, $clientSecret);
 
         $this->assertEquals($expectedResult, $this->authService->isSecretValidForRole($role, $request));
-    }
-
-    /** @test */
-    public function jWTIsValid()
-    {
-        $this->JWTService->shouldReceive('verify')->with('not-a.real-jwt')->andReturn(true);
-
-        $request = new Request();
-        $request->headers->set(AuthService::HEADER_JWT, 'not-a.real-jwt');
-
-        $this->assertEquals(true, $this->authService->JWTIsValid($request));
-    }
-
-    /**
-     * @test
-     * @dataProvider JWTValidFailureProvider
-     */
-    public function jWTIsValidFailures(Request $request)
-    {
-        $this->assertEquals(false, $this->authService->JWTIsValid($request));
-    }
-
-    public function JWTValidFailureProvider()
-    {
-        $requestNoHeader = new Request();
-
-        $requestHeaderNull = new Request();
-        $requestHeaderNull->headers->set(AuthService::HEADER_JWT, null);
-
-        return [
-            'JWT header does not exist' => [$requestNoHeader],
-            'JWT header exists but is null' => [$requestHeaderNull],
-        ];
     }
 
     public function tearDown(): void

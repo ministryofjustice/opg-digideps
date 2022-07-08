@@ -46,8 +46,6 @@ services:
             $fixtureParams: "%fixtures%"
             $symfonyEnvironment: "%kernel.environment%"
             $rootDir: "%kernel.root_dir%"
-            $frontendHost: "%env(FRONTEND_HOST)%"
-            $adminHost: "%env(FRONTEND_HOST)%"
 
     # makes classes in src/ available to be used as services
     # this creates a service per class whose id is the fully-qualified class name
@@ -275,7 +273,7 @@ services:
 
     App\Service\Auth\AuthService:
         arguments:
-            $securityEncoderFactory: "@security.encoder_factory"
+            $encoderFactory: "@security.encoder_factory"
             $logger: "@logger"
             $userRepository: '@App\Repository\UserRepository'
             $roleHierarchy: "@security.role_hierarchy"
@@ -350,14 +348,4 @@ services:
                 '@Aws\Ssm\SsmClient',
                 "%env(PARAMETER_PREFIX)%",
                 "%env(FEATURE_FLAG_PREFIX)%",
-            ]
-
-    Aws\SecretsManager\SecretsManagerClient:
-        arguments: ["%secrets_manager_client_params%"]
-
-    App\Service\SecretManagerService:
-        arguments:
-            [
-                '@Aws\SecretsManager\SecretsManagerClient',
-                "%env(SECRETS_PREFIX)%",
             ]

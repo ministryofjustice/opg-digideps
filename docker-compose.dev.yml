@@ -15,8 +15,6 @@ services:
       - ./api/api.env
       - ./api/tests/Behat/test.env
       - ./api/tests/Behat/.env
-    environment:
-      APP_ENV: dev
 
   npm:
     image: node:14.19.1-alpine
@@ -38,13 +36,9 @@ services:
       - ./client/:/app
 
   frontend:
-    environment:
-      APP_ENV: dev
     env_file:
       - .env
 
   admin:
-    environment:
-      APP_ENV: dev
     env_file:
       - .env

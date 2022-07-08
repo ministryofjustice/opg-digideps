@@ -167,7 +167,7 @@ trait AddressTrait
         return $this;
     }
 
-    public function getAddress4(): ?string
+    public function getAddress4(): string
     {
         return $this->address4;
     }
@@ -175,14 +175,14 @@ trait AddressTrait
     /**
      * @return $this
      */
-    public function setAddress4(?string $address4)
+    public function setAddress4(string $address4)
     {
         $this->address4 = $address4;
 
         return $this;
     }
 
-    public function getAddress5(): ?string
+    public function getAddress5(): string
     {
         return $this->address5;
     }
@@ -190,7 +190,7 @@ trait AddressTrait
     /**
      * @return $this
      */
-    public function setAddress5(?string $address5)
+    public function setAddress5(string $address5)
     {
         $this->address5 = $address5;
 

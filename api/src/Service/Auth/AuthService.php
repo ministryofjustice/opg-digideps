@@ -2,32 +2,71 @@
 
 namespace App\Service\Auth;
 
-use App\Entity\User;
 use App\Repository\UserRepository;
-use App\Service\JWT\JWTService;
+use App\Entity\User;
 use Psr\Log\LoggerInterface;
 use Symfony\Component\HttpFoundation\Request;
 use Symfony\Component\Security\Core\Encoder\EncoderFactoryInterface;
+use Symfony\Component\Security\Core\Role\Role;
 use Symfony\Component\Security\Core\Role\RoleHierarchyInterface;
 
 class AuthService
 {
-    public const HEADER_CLIENT_SECRET = 'ClientSecret';
-    public const HEADER_JWT = 'JWT';
+    const HEADER_CLIENT_SECRET = 'ClientSecret';
 
-    private array $clientSecrets = [];
+    /**
+     * @var LoggerInterface
+     */
+    private $logger;
 
+    /**
+     * @var array
+     */
+    private $clientPermissions;
+
+    /**
+     * @var array
+     */
+    private $clientSecrets;
+
+    /**
+     * @var UserRepository
+     */
+    private $userRepository;
+
+    /**
+     * @var EncoderFactoryInterface
+     */
+    private $securityEncoderFactory;
+
+    /**
+     * @var RoleHierarchyInterface
+     */
+    private $roleHierarchy;
+
+    /**
+     * @param EncoderFactoryInterface $encoderFactory
+     * @param LoggerInterface $logger
+     * @param UserRepository $userRepository
+     * @param RoleHierarchyInterface $roleHierarchy
+     * @param array $clientPermissions
+     */
     public function __construct(
-        private EncoderFactoryInterface $securityEncoderFactory,
-        private LoggerInterface $logger,
-        private UserRepository $userRepository,
-        private RoleHierarchyInterface $roleHierarchy,
-        private array $clientPermissions,
-        private JWTService $JWTService
+        EncoderFactoryInterface $encoderFactory,
+        LoggerInterface $logger,
+        UserRepository $userRepository,
+        RoleHierarchyInterface $roleHierarchy,
+        array $clientPermissions
     ) {
-        if (empty($clientPermissions)) {
+        if (!is_array($clientPermissions) || empty($clientPermissions)) {
             throw new \InvalidArgumentException('client_permissions not defined in config.');
         }
+
+        $this->userRepository = $userRepository;
+        $this->logger = $logger;
+        $this->securityEncoderFactory = $encoderFactory;
+        $this->roleHierarchy = $roleHierarchy;
+        $this->clientPermissions = $clientPermissions;
 
         $this->clientSecrets = [
             'admin' => getenv('SECRETS_ADMIN_KEY'),
@@ -35,7 +74,11 @@ class AuthService
         ];
     }
 
-    public function isSecretValid(Request $request): bool
+    /**
+     * @param Request $request
+     * @return bool
+     */
+    public function isSecretValid(Request $request)
     {
         $clientSecretFromRequest = $request->headers->get(self::HEADER_CLIENT_SECRET);
 
@@ -47,9 +90,12 @@ class AuthService
     }
 
     /**
+     * @param string $email
+     * @param string $pass
+     *
      * @return User|bool|null or null if the user it not found or password is wrong
      */
-    public function getUserByEmailAndPassword($email, $pass): User|bool|null
+    public function getUserByEmailAndPassword($email, $pass)
     {
         if (!$email || !$pass) {
             return null;
@@ -77,7 +123,12 @@ class AuthService
         return null;
     }
 
-    public function getUserByToken($token): User|null
+    /**
+     * @param string $token
+     *
+     * @return User|null
+     */
+    public function getUserByToken($token)
     {
         /** @var User|null $user */
         $user = $this->userRepository->findOneBy([
@@ -87,6 +138,12 @@ class AuthService
         return $user;
     }
 
+    /**
+     * @param string|null $roleName
+     * @param Request $request
+     *
+     * @return bool
+     */
     public function isSecretValidForRole(?string $roleName, Request $request): bool
     {
         if (is_null($roleName)) {
@@ -110,17 +167,6 @@ class AuthService
             if (in_array($role, $permittedRoles)) {
                 return true;
             }
-        }
-
-        return false;
-    }
-
-    public function JWTIsValid(Request $request): bool
-    {
-        $jwt = $request->headers->get(self::HEADER_JWT);
-
-        if (!is_null($jwt)) {
-            return $this->JWTService->verify($jwt);
         }
 
         return false;

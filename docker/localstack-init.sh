@@ -15,12 +15,4 @@ awslocal ssm put-parameter --name "/default/parameter/checklist-sync-row-limit" 
 awslocal ssm put-parameter --name "/default/parameter/document-sync-interval-minutes" --value "4" --type String --overwrite
 awslocal ssm put-parameter --name "/default/parameter/document-sync-row-limit" --value "100" --type String --overwrite
 
-awslocal secretsmanager create-secret --name "default/opg-response-slack-token" --secret-string "IAMAFAKETOKEN"
-
-openssl genrsa -out private.pem 2048
-openssl rsa -in private.pem -outform PEM -pubout -out public.pem
-
-awslocal secretsmanager create-secret --name "default/private-jwt-key-base64" --secret-string "$(base64 private.pem)"
-awslocal secretsmanager create-secret --name "default/public-jwt-key-base64" --secret-string "$(base64 public.pem)"
-
-rm private.pem public.pem
+awslocal secretsmanager create-secret --name "default/opg-alerts-slack-token" --secret-string "IAMAFAKETOKEN"
