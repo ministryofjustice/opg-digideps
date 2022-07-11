@@ -32,11 +32,12 @@ locals {
 }
 
 module "reset_database_security_group" {
-  source = "./security_group"
-  rules  = local.reset_database_sg_rules
-  name   = "reset-database"
-  tags   = local.default_tags
-  vpc_id = data.aws_vpc.vpc.id
+  source      = "./security_group"
+  description = "Reset Database Service"
+  rules       = local.reset_database_sg_rules
+  name        = "reset-database"
+  tags        = local.default_tags
+  vpc_id      = data.aws_vpc.vpc.id
 }
 
 locals {

@@ -72,32 +72,6 @@ data "aws_iam_policy_document" "front_query_ssm" {
   }
 }
 
-resource "aws_iam_role_policy" "ecs_scheduled_tasks" {
-  name   = "front-ecs-scheduled-task.${local.environment}"
-  policy = data.aws_iam_policy_document.ecs_scheduled_tasks.json
-  role   = aws_iam_role.front.id
-}
-
-data "aws_iam_policy_document" "ecs_scheduled_tasks" {
-  statement {
-    sid    = "AllowCloudwatchPassIAMRolesToECSTasks"
-    effect = "Allow"
-    actions = [
-      "iam:ListInstanceProfiles",
-      "iam:ListRoles",
-      "iam:PassRole"
-    ]
-    resources = ["*"]
-  }
-}
-
-resource "aws_iam_role_policy" "front_task_logs" {
-  name   = "front-task-logs.${local.environment}"
-  policy = data.aws_iam_policy_document.ecs_task_logs.json
-  role   = aws_iam_role.front.id
-}
-
-
 resource "aws_iam_role_policy" "front_query_secretsmanager" {
   name   = "front-query-secretsmanager.${local.environment}"
   policy = data.aws_iam_policy_document.front_query_secretsmanager.json
@@ -111,7 +85,17 @@ data "aws_iam_policy_document" "front_query_secretsmanager" {
     actions = [
       "secretsmanager:GetSecretValue"
     ]
-    resources = ["*"]
+    resources = [
+      data.aws_secretsmanager_secret.database_password.arn,
+      data.aws_secretsmanager_secret_version.database_password.arn,
+      data.aws_secretsmanager_secret.api_secret.arn,
+      data.aws_secretsmanager_secret.front_frontend_secret.arn,
+      data.aws_secretsmanager_secret.admin_frontend_secret.arn,
+      data.aws_secretsmanager_secret.admin_api_client_secret.arn,
+      data.aws_secretsmanager_secret.front_api_client_secret.arn,
+      data.aws_secretsmanager_secret.front_notify_api_key.arn,
+      data.aws_secretsmanager_secret.opg_alerts_slack_token.arn,
+    ]
   }
 }
 
@@ -128,6 +112,12 @@ data "aws_iam_policy_document" "front_get_log_events" {
     actions = [
       "logs:GetLogEvents"
     ]
-    resources = ["*"]
+    resources = [aws_cloudwatch_log_group.opg_digi_deps.arn]
   }
+}
+
+resource "aws_iam_role_policy" "front_task_logs" {
+  name   = "front-task-logs.${local.environment}"
+  policy = data.aws_iam_policy_document.ecs_task_logs.json
+  role   = aws_iam_role.front.id
 }

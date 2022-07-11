@@ -1,6 +1,10 @@
 resource "aws_ecs_cluster" "main" {
   name = local.environment
   tags = local.default_tags
+  setting {
+    name  = "containerInsights"
+    value = "enabled"
+  }
 }
 
 data "aws_iam_policy_document" "task_role_assume_policy" {
@@ -36,12 +40,6 @@ data "aws_iam_policy_document" "execution_role_assume_policy" {
 resource "aws_iam_role_policy" "execution_role" {
   policy = data.aws_iam_policy_document.execution_role.json
   role   = aws_iam_role.execution_role.id
-}
-
-resource "aws_cloudwatch_log_group" "opg_digi_deps" {
-  name              = local.environment
-  retention_in_days = 180
-  tags              = local.default_tags
 }
 
 data "aws_iam_policy_document" "execution_role" {
@@ -104,11 +102,6 @@ data "aws_iam_policy_document" "ecs_task_logs" {
       "logs:PutLogEvents"
     ]
   }
-}
-
-resource "aws_cloudwatch_log_group" "audit" {
-  name = "audit-${local.environment}"
-  tags = local.default_tags
 }
 
 data "aws_iam_role" "ecs_autoscaling_service_role" {

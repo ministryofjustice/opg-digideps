@@ -26,9 +26,10 @@ locals {
 }
 
 module "scan_security_group" {
-  source = "./security_group"
-  rules  = local.scan_sg_rules
-  name   = "scan"
-  tags   = local.default_tags
-  vpc_id = data.aws_vpc.vpc.id
+  source      = "./security_group"
+  description = "Scan Service"
+  rules       = local.scan_sg_rules
+  name        = "scan"
+  tags        = local.default_tags
+  vpc_id      = data.aws_vpc.vpc.id
 }

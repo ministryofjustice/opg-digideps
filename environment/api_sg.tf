@@ -59,11 +59,12 @@ locals {
 }
 
 module "api_service_security_group" {
-  source = "./security_group"
-  rules  = local.api_service_sg_rules
-  name   = "api-service"
-  tags   = local.default_tags
-  vpc_id = data.aws_vpc.vpc.id
+  source      = "./security_group"
+  description = "API Service"
+  rules       = local.api_service_sg_rules
+  name        = "api-service"
+  tags        = local.default_tags
+  vpc_id      = data.aws_vpc.vpc.id
 }
 
 locals {
@@ -142,11 +143,12 @@ locals {
 }
 
 module "api_rds_security_group" {
-  source = "./security_group"
-  rules  = local.api_rds_sg_rules
-  name   = "api-rds"
-  tags   = local.default_tags
-  vpc_id = data.aws_vpc.vpc.id
+  source      = "./security_group"
+  description = "RDS Database"
+  rules       = local.api_rds_sg_rules
+  name        = "api-rds"
+  tags        = local.default_tags
+  vpc_id      = data.aws_vpc.vpc.id
 }
 
 data "aws_security_group" "cloud9" {

@@ -38,11 +38,12 @@ locals {
 }
 
 module "checklist_sync_service_security_group" {
-  source = "./security_group"
-  rules  = local.checklist_sync_sg_rules
-  name   = "checklist-sync-service"
-  tags   = local.default_tags
-  vpc_id = data.aws_vpc.vpc.id
+  source      = "./security_group"
+  description = "Checklist Sync Service"
+  rules       = local.checklist_sync_sg_rules
+  name        = "checklist-sync-service"
+  tags        = local.default_tags
+  vpc_id      = data.aws_vpc.vpc.id
 }
 
 resource "aws_ecs_task_definition" "checklist_sync" {
