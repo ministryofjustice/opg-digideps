@@ -282,10 +282,11 @@ final class AuditEvents
         return $event + $this->baseEvent(AuditEvents::EVENT_ORG_CREATED);
     }
 
-    public function selfRegistrationFailed(array $failureData): array
+    public function selfRegistrationFailed(array $failureData, string $errorMessage): array
     {
         $event = [
                 'trigger' => AuditEvents::TRIGGER_DEPUTY_USER_SELF_REGISTER_ATTEMPT,
+                'message' => $errorMessage,
             ] + $failureData;
 
         return $event + $this->baseEvent(AuditEvents::EVENT_USER_SELF_REGISTER_FAILED);

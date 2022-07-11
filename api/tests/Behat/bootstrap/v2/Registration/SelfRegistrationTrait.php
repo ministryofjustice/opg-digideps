@@ -8,6 +8,11 @@ use App\Tests\Behat\v2\Common\UserDetails;
 
 trait SelfRegistrationTrait
 {
+    private string $invalidCaseNumberError = "The case number you provided does not match our records.\nPlease call 0115 934 2700 to make sure we have a record of your deputyship.";
+    private string $invalidDeputyLastnameError = "The client's last name you provided does not match our records.";
+    private string $invalidDeputyPostcodeError = 'Your last name you provided does not match our records.';
+    private string $invalidClientLastnameError = 'The postcode you provided does not match our records.';
+
     /**
      * @Given a Lay Deputy registers to deputise for a client with valid details
      */
@@ -62,6 +67,72 @@ trait SelfRegistrationTrait
         $this->fillInField('report_endDate_month', '12');
         $this->fillInField('report_endDate_year', '2016');
         $this->pressButton('report_save');
+    }
+
+    /**
+     * @Given a Lay Deputy registers to deputise for a client with an invalid case number
+     */
+    public function aLayDeputyRegistersToDeputiseForAClientWithAnInvalidCaseNumber()
+    {
+        $this->visitFrontendPath('/register');
+        $this->fillInField('self_registration_firstname', 'Brian');
+        $this->fillInField('self_registration_lastname', 'Duck');
+        $this->fillInField('self_registration_email_first', 'brian2@duck.co.uk');
+        $this->fillInField('self_registration_email_second', 'brian2@duck.co.uk');
+        $this->fillInField('self_registration_postcode', 'B1');
+        $this->fillInField('self_registration_clientFirstname', 'Billy');
+        $this->fillInField('self_registration_clientLastname', 'Huey');
+        $this->fillInField('self_registration_caseNumber', '31313137');
+        $this->pressButton('self_registration_save');
+    }
+
+    /**
+     * @Given a Lay Deputy registers to deputise for a client with a valid case number and invalid case details
+     */
+    public function aLayDeputyRegistersToDeputiseForAClientWithAnValidCaseNumberAndInvalidCaseDetails()
+    {
+        $this->visitFrontendPath('/register');
+        $this->fillInField('self_registration_firstname', 'Wrong');
+        $this->fillInField('self_registration_lastname', 'Name');
+        $this->fillInField('self_registration_email_first', 'brian3@duck.co.uk');
+        $this->fillInField('self_registration_email_second', 'brian3@duck.co.uk');
+        $this->fillInField('self_registration_postcode', 'ABC 123');
+        $this->fillInField('self_registration_clientFirstname', 'Wrong');
+        $this->fillInField('self_registration_clientLastname', 'Name');
+        $this->fillInField('self_registration_caseNumber', '31313131');
+        $this->pressButton('self_registration_save');
+    }
+
+    /**
+     * @Then I should see an 'invalid case number' error
+     */
+    public function iShouldSeeAnInvalidCaseNumberError()
+    {
+        $this->assertOnErrorMessage($this->invalidCaseNumberError);
+    }
+
+    /**
+     * @Then I should see an 'invalid deputy lastname' error
+     */
+    public function iShouldSeeAnInvalidDeputyLastnameError()
+    {
+        $this->assertOnErrorMessage($this->invalidDeputyLastnameError);
+    }
+
+    /**
+     * @Then I should see an 'invalid deputy postcode' error
+     */
+    public function iShouldSeeAnInvalidDeputyPostcodeError()
+    {
+        $this->assertOnErrorMessage($this->invalidDeputyPostcodeError);
+    }
+
+    /**
+     * @Then I should see an 'invalid client lastname' error
+     */
+    public function iShouldSeeAnInvalidClientLastnameError()
+    {
+        $this->assertOnErrorMessage($this->invalidClientLastnameError);
     }
 
     /**
