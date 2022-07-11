@@ -94,7 +94,6 @@ data "aws_iam_policy_document" "front_query_secretsmanager" {
       data.aws_secretsmanager_secret.admin_api_client_secret.arn,
       data.aws_secretsmanager_secret.front_api_client_secret.arn,
       data.aws_secretsmanager_secret.front_notify_api_key.arn,
-      data.aws_secretsmanager_secret.opg_alerts_slack_token.arn,
     ]
   }
 }
