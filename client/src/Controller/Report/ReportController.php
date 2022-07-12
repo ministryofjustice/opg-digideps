@@ -8,6 +8,8 @@ use App\Entity\DeputyInterface;
 use App\Entity\NamedDeputy;
 use App\Entity\Report\Report;
 use App\Entity\User;
+use App\Event\RegistrationSucceededEvent;
+use App\EventDispatcher\ObservableEventDispatcher;
 use App\Exception\DisplayableException;
 use App\Exception\ReportNotSubmittableException;
 use App\Exception\ReportNotSubmittedException;
@@ -15,7 +17,6 @@ use App\Form\FeedbackReportType;
 use App\Form\Report\ReportDeclarationType;
 use App\Form\Report\ReportType;
 use App\Model\FeedbackReport;
-use App\Service\Audit\AuditEvents;
 use App\Service\Client\Internal\ClientApi;
 use App\Service\Client\Internal\PreRegistrationApi;
 use App\Service\Client\Internal\ReportApi;
@@ -26,9 +27,7 @@ use App\Service\Csv\TransactionsCsvGenerator;
 use App\Service\ParameterStoreService;
 use App\Service\Redirector;
 use App\Service\ReportSubmissionService;
-use App\Service\Time\DateTimeProvider;
 use DateTime;
-use Psr\Log\LoggerInterface;
 use Sensio\Bundle\FrameworkExtraBundle\Configuration\Template;
 use Symfony\Component\Form\FormFactoryInterface;
 use Symfony\Component\HttpFoundation\RedirectResponse;
@@ -106,8 +105,7 @@ class ReportController extends AbstractController
         private PreRegistrationApi $preRegistrationApi,
         private FormFactoryInterface $formFactory,
         private TranslatorInterface $translator,
-        private LoggerInterface $logger,
-        private DateTimeProvider $dateTimeProvider
+        private ObservableEventDispatcher $eventDispatcher
     ) {
     }
 
@@ -233,10 +231,8 @@ class ReportController extends AbstractController
         if ($form->isSubmitted() && $form->isValid()) {
             $this->restClient->post('report', $form->getData());
 
-            $this->logger->notice(
-                '',
-                (new AuditEvents($this->dateTimeProvider))->selfRegistrationSucceeded($this->getUser())
-            );
+            $user = $this->userApi->getUserWithData();
+            $this->eventDispatcher->dispatch(new RegistrationSucceededEvent($user), RegistrationSucceededEvent::NAME);
 
             return $this->redirect($this->generateUrl('homepage'));
         }

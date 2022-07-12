@@ -39,7 +39,6 @@ class UserService
     {
         $this->exceptionIfEmailExist($userToAdd->getEmail());
 
-        $userToAdd->setRegistrationDate(new \DateTime());
         $userToAdd->recreateRegistrationToken();
         $userToAdd->setCreatedBy($loggedInUser);
         $this->em->persist($userToAdd);

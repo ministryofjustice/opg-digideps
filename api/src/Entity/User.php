@@ -56,6 +56,11 @@ class User implements UserInterface
         self::ROLE_ADMIN_MANAGER,
     ];
 
+    public static array $caseManagerRoles = [
+        self::ROLE_ADMIN,
+        self::ROLE_ADMIN_MANAGER,
+    ];
+
     public static $depTypeIdToRealm = [
         // PA
         23 => PreRegistration::REALM_PA,
@@ -298,13 +303,15 @@ class User implements UserInterface
     private $userResearchResponse;
 
     /**
+     * @var User|null
      * @ORM\OneToOne(targetEntity="App\Entity\User")
      * @ORM\JoinColumn(name="created_by_id", referencedColumnName="id")
      *
      * @JMS\Type("App\Entity\User")
-     * @JMS\Groups({"user"})
+     * @JMS\Groups({"user", "created-by"})
+     * @JMS\MaxDepth(3)
      */
-    private ?User $createdBy = null;
+    private $createdBy;
 
     /**
      * Constructor.
@@ -1264,8 +1271,6 @@ class User implements UserInterface
 
     /**
      * Check if a user registration was before today.
-     *
-     * @param $user
      */
     public function regBeforeToday(User $user): bool
     {
@@ -1282,5 +1287,27 @@ class User implements UserInterface
         $this->createdBy = $createdBy;
 
         return $this;
+    }
+
+    /**
+     * @JMS\VirtualProperty
+     * @JMS\SerializedName("is_case_manager")
+     * @JMS\Groups({"user"})
+     * @JMS\Type("bool")
+     */
+    public function isCaseManager(): bool
+    {
+        return in_array($this->getRoleName(), $this::$caseManagerRoles);
+    }
+
+    /**
+     * @JMS\VirtualProperty
+     * @JMS\SerializedName("created_by_case_manager")
+     * @JMS\Groups({"user"})
+     * @JMS\Type("bool")
+     */
+    public function createdByCaseManager(): bool
+    {
+        return $this->getCreatedBy() && $this->getCreatedBy()->isCaseManager();
     }
 }

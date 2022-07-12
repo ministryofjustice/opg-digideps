@@ -379,7 +379,8 @@ class AuditEventsTest extends TestCase
         $registeredUser = (UserHelpers::createLayUser())
             ->setCreatedBy($caseManager)
             ->setIsCoDeputy(true)
-            ->setEmail('a@b.com');
+            ->setEmail('a@b.com')
+            ->setIsCaseManager(false);
 
         $expected = [
             'trigger' => 'DEPUTY_USER_SELF_REGISTER_ATTEMPT',

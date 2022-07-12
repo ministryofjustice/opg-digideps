@@ -39,6 +39,7 @@ final class AuditEvents
     public const TRIGGER_DEPUTY_USER_EDIT = 'DEPUTY_USER_EDIT';
     public const TRIGGER_DEPUTY_USER_EDIT_SELF = 'DEPUTY_USER_EDIT_SELF';
     public const TRIGGER_DEPUTY_USER_SELF_REGISTER_ATTEMPT = 'DEPUTY_USER_SELF_REGISTER_ATTEMPT';
+    public const TRIGGER_DEPUTY_USER_REGISTRATION_FLOW_COMPLETED = 'DEPUTY_USER_REGISTRATION_FLOW_COMPLETED';
     public const TRIGGER_CODEPUTY_CREATED = 'CODEPUTY_CREATED';
     public const TRIGGER_ORG_USER_MANAGE_ORG_MEMBER = 'ORG_USER_MANAGE_ORG_MEMBER';
     public const TRIGGER_ADMIN_USER_MANAGE_ORG_MEMBER = 'ADMIN_USER_MANAGE_ORG_USER';
@@ -299,7 +300,7 @@ final class AuditEvents
                 'registered_user_email' => $registeredUser->getEmail(),
                 'user_role' => $registeredUser->getRoleName(),
                 'has_multi_deputy_order' => $registeredUser->getIsCoDeputy(),
-                'created_by_case_manager' => $registeredUser->getCreatedBy() === $registeredUser ? 0 : 1,
+                'created_by_case_manager' => $registeredUser->createdByCaseManager(),
                 'created_on' => $this->dateTimeProvider->getDateTime()->format(DateTime::ATOM),
             ];
 

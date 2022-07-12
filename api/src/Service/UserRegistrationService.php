@@ -6,7 +6,6 @@ use App\Entity\Client;
 use App\Entity\Organisation;
 use App\Entity\User;
 use App\Model\SelfRegisterData;
-use DateTime;
 use Doctrine\ORM\EntityManagerInterface;
 use Exception;
 use RuntimeException;
@@ -150,7 +149,6 @@ class UserRegistrationService
         $user->setAddressPostcode($selfRegisterData->getPostcode());
         $user->setActive(false);
         $user->setRoleName(User::ROLE_LAY_DEPUTY);
-        $user->setRegistrationDate(new DateTime());
     }
 
     public function populateClient(Client $client, SelfRegisterData $selfRegisterData)
