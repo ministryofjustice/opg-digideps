@@ -380,7 +380,8 @@ class AuditEventsTest extends TestCase
             ->setCreatedBy($caseManager)
             ->setIsCoDeputy(true)
             ->setEmail('a@b.com')
-            ->setIsCaseManager(false);
+            ->setIsCaseManager(false)
+            ->setCreatedByCaseManager(true);
 
         $expected = [
             'trigger' => 'DEPUTY_USER_SELF_REGISTER_ATTEMPT',
