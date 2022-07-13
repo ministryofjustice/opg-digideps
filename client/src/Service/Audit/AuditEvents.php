@@ -12,6 +12,8 @@ use App\Service\Mailer\MailFactory;
 use App\Service\Time\DateTimeProvider;
 use DateTime;
 use Exception;
+use ReflectionClass;
+use Throwable;
 
 final class AuditEvents
 {
@@ -31,8 +33,8 @@ final class AuditEvents
     public const EVENT_ORG_CREATED = 'ORG_CREATED';
     public const EVENT_ADMIN_MANAGER_CREATED = 'ADMIN_MANAGER_CREATED';
     public const EVENT_ADMIN_MANAGER_DELETED = 'ADMIN_MANAGER_DELETED';
-    public const EVENT_EMAIL_NOT_SENT = 'EVENT_EMAIL_NOT_SENT';
-    public const EVENT_EMAIL_SENT = 'EVENT_EMAIL_SENT';
+    public const EVENT_EMAIL_NOT_SENT = 'EMAIL_NOT_SENT';
+    public const EVENT_EMAIL_SENT = 'EMAIL_SENT';
 
     public const TRIGGER_ADMIN_USER_EDIT = 'ADMIN_USER_EDIT';
     public const TRIGGER_ADMIN_BUTTON = 'ADMIN_BUTTON';
@@ -362,9 +364,9 @@ final class AuditEvents
         return $this->buildEmailEvent($email, $loggedInUser) + $this->baseEvent(AuditEvents::EVENT_EMAIL_SENT);
     }
 
-    public function emailNotSent(Email $email, ?User $loggedInUser): array
+    public function emailNotSent(Email $email, ?User $loggedInUser, Throwable $error): array
     {
-        return $this->buildEmailEvent($email, $loggedInUser) + $this->baseEvent(AuditEvents::EVENT_EMAIL_NOT_SENT);
+        return $this->buildEmailEvent($email, $loggedInUser) + $this->baseEvent(AuditEvents::EVENT_EMAIL_NOT_SENT) + ['error_message' => $error->getMessage()];
     }
 
     private function buildEmailEvent(Email $email, ?User $loggedInUser)
@@ -378,6 +380,7 @@ final class AuditEvents
             'logged_in_user_email' => $loggedInUser->getEmail(),
             'recipient_email' => $email->getToEmail(),
             'template_name' => $templateName,
+            'notify_template_id' => $email->getTemplate(),
             'sent_on' => $this->dateTimeProvider->getDateTime()->format(DateTime::ATOM),
         ];
     }
