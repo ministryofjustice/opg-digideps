@@ -47,13 +47,13 @@
         <span class="opg-input-prefix">{{ inputPrefix }}</span>
     {% endif %}
 
+    {% set attr = { 'class': class, 'rows': '5', 'aria-describedby': describedby } %}
+    {% if dataModule%}
+        {% set attr = attr|merge({'data-module': dataModule}) %}
+    {% endif %}
     {% if element.vars.valid %}
         {{ form_widget(element, {
-            'attr': {
-                'class': class,
-                'rows': '5',
-                'aria-describedby': describedby,
-            }
+            'attr': attr
         }) }}
     {% else %}
         {{ form_widget(element, {
