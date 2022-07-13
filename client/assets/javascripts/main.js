@@ -2,6 +2,7 @@
 import { ButtonToggler } from './modules/buttonToggler.js'
 import { GoogleAnalyticsEvents } from './modules/googleAnalyticsEvents'
 import { MOJButtonMenu } from './modules/buttonMenu'
+import MOJFrontend from '@ministryofjustice/frontend'
 
 require('../scss/application.scss')
 require('./modules/bind.js')
@@ -37,8 +38,8 @@ export function nodeListForEach (nodes, callback) {
 }
 
 window.opg = {
-  Ga: Ga,
-  SessionTimeoutDialog: SessionTimeoutDialog
+  Ga,
+  SessionTimeoutDialog
 }
 
 $(document).ready(function () {
@@ -136,6 +137,7 @@ $(document).ready(function () {
   }
 
   GoogleAnalyticsEvents.init()
+  GoogleAnalyticsEvents.initFormValidationErrors()
 
   const trackableLinks = document.querySelectorAll('.js-trackDownloadLink')
 
@@ -153,6 +155,7 @@ $(document).ready(function () {
 })
 
 GOVUKFrontend.initAll()
+MOJFrontend.initAll()
 
 // Polyfill elements with position:sticky
 const elements = document.querySelectorAll('.opg-sticky-menu')

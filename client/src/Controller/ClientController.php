@@ -5,6 +5,8 @@ namespace App\Controller;
 use App\Entity\Client;
 use App\Entity\Report\Report;
 use App\Entity\User;
+use App\Event\RegistrationFailedEvent;
+use App\EventDispatcher\ObservableEventDispatcher;
 use App\Exception\RestClientException;
 use App\Form\ClientType;
 use App\Service\Audit\AuditEvents;
@@ -29,7 +31,8 @@ class ClientController extends AbstractController
         private UserApi $userApi,
         private ClientApi $clientApi,
         private RestClient $restClient,
-        private PreRegistrationApi $preRegistrationApi
+        private PreRegistrationApi $preRegistrationApi,
+        private ObservableEventDispatcher $eventDispatcher
     ) {
     }
 
@@ -157,8 +160,14 @@ class ClientController extends AbstractController
                 return $this->redirect($url);
             } catch (Throwable $e) {
                 if (!$e instanceof RestClientException) {
-                    $message = sprintf('Case "%s" failed to create their client. Error: "%s"', $form->getData()->getCaseNumber(), $e->getMessage());
-                    $logger->error($message);
+                    $failureData = json_decode($e->getData()['message'], true);
+
+                    // If response from API is not valid json just log the message
+                    $failureData = !is_array($failureData) ? ['failure_message' => $failureData] : $failureData;
+
+                    $event = new RegistrationFailedEvent($failureData, $e->getMessage());
+                    $this->eventDispatcher->dispatch($event, RegistrationFailedEvent::NAME);
+
                     throw $e;
                 }
 

@@ -9,6 +9,7 @@ resource "aws_kms_key" "db_backup" {
   description             = "KMS DB secondary backup"
   deletion_window_in_days = 10
   policy                  = data.aws_iam_policy_document.kms_db_backup_key.json
+  enable_key_rotation     = true
   tags                    = var.default_tags
 }
 
