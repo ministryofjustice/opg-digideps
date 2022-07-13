@@ -46,6 +46,7 @@ trait AuthTrait
 
     /**
      * @Given an admin user accesses the admin app
+     * @Given a case manager accesses the admin app
      */
     public function adminUsersAccessesAdmin()
     {
@@ -141,13 +142,14 @@ trait AuthTrait
         $user = $this->em->getRepository(User::class)->findOneBy(['email' => $email]);
 
         $token = $user->getRegistrationToken();
-        $this->visitAdminPath('/logout');
 
         $page = 'activation' === $pageType ? 'activate' : 'password-reset';
 
         if ('' === $admin || false === $admin) {
+            $this->visitPath('/logout');
             $this->visitPath("/user/$page/$token");
         } else {
+            $this->visitAdminPath('/logout');
             $this->visitAdminPath("/user/$page/$token");
         }
     }

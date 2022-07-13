@@ -9,6 +9,7 @@ use App\Tests\Behat\v2\Common\BaseFeatureContext;
 
 class RegistrationFeatureContext extends BaseFeatureContext
 {
+    use ActivateTrait;
     use AdminManagementTrait;
     use AuthenticationTrait;
     use FormTrait;

@@ -61,6 +61,20 @@ class User implements UserInterface
         self::ROLE_ADMIN_MANAGER,
     ];
 
+    public static $orgRoles = [
+        self::ROLE_PA,
+        self::ROLE_PA_NAMED,
+        self::ROLE_PA_ADMIN,
+        self::ROLE_PA_TEAM_MEMBER,
+        self::ROLE_PROF,
+        self::ROLE_PROF_NAMED,
+        self::ROLE_PROF_ADMIN,
+        self::ROLE_PROF_TEAM_MEMBER,
+        self::ROLE_ORG_NAMED,
+        self::ROLE_ORG_ADMIN,
+        self::ROLE_ORG_TEAM_MEMBER,
+    ];
+
     public static $depTypeIdToRealm = [
         // PA
         23 => PreRegistration::REALM_PA,

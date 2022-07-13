@@ -300,7 +300,7 @@ final class AuditEvents
                 'registered_user_email' => $registeredUser->getEmail(),
                 'user_role' => $registeredUser->getRoleName(),
                 'has_multi_deputy_order' => $registeredUser->getIsCoDeputy(),
-                'created_by_case_manager' => $registeredUser->createdByCaseManager(),
+                'created_by_case_manager' => $registeredUser->isCreatedByCaseManager(),
                 'created_on' => $this->dateTimeProvider->getDateTime()->format(DateTime::ATOM),
             ];
 
