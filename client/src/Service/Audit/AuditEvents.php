@@ -7,6 +7,8 @@ namespace App\Service\Audit;
 use App\Entity\Organisation;
 use App\Entity\Report\Report;
 use App\Entity\User;
+use App\Model\Email;
+use App\Service\Mailer\MailFactory;
 use App\Service\Time\DateTimeProvider;
 use DateTime;
 use Exception;
@@ -29,6 +31,8 @@ final class AuditEvents
     public const EVENT_ORG_CREATED = 'ORG_CREATED';
     public const EVENT_ADMIN_MANAGER_CREATED = 'ADMIN_MANAGER_CREATED';
     public const EVENT_ADMIN_MANAGER_DELETED = 'ADMIN_MANAGER_DELETED';
+    public const EVENT_EMAIL_NOT_SENT = 'EVENT_EMAIL_NOT_SENT';
+    public const EVENT_EMAIL_SENT = 'EVENT_EMAIL_SENT';
 
     public const TRIGGER_ADMIN_USER_EDIT = 'ADMIN_USER_EDIT';
     public const TRIGGER_ADMIN_BUTTON = 'ADMIN_BUTTON';
@@ -351,6 +355,31 @@ final class AuditEvents
         ];
 
         return $event + $this->baseEvent(AuditEvents::EVENT_ADMIN_MANAGER_DELETED);
+    }
+
+    public function emailSent(Email $email, ?User $loggedInUser): array
+    {
+        return $this->buildEmailEvent($email, $loggedInUser) + $this->baseEvent(AuditEvents::EVENT_EMAIL_SENT);
+    }
+
+    public function emailNotSent(Email $email, ?User $loggedInUser): array
+    {
+        return $this->buildEmailEvent($email, $loggedInUser) + $this->baseEvent(AuditEvents::EVENT_EMAIL_NOT_SENT);
+    }
+
+    private function buildEmailEvent(Email $email, ?User $loggedInUser)
+    {
+        $class = new ReflectionClass(MailFactory::class);
+        $constants = array_flip($class->getConstants());
+
+        $templateName = $constants[$email->getTemplate()];
+
+        return [
+            'logged_in_user_email' => $loggedInUser->getEmail(),
+            'recipient_email' => $email->getToEmail(),
+            'template_name' => $templateName,
+            'sent_on' => $this->dateTimeProvider->getDateTime()->format(DateTime::ATOM),
+        ];
     }
 
     private function baseEvent(string $eventName): array
