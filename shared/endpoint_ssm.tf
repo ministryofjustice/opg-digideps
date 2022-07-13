@@ -10,6 +10,7 @@ resource "aws_vpc_endpoint" "ssm" {
 
 resource "aws_security_group" "ssm_endpoint" {
   name_prefix = "ssm_endpoint"
+  description = "systems manager endpoint"
   vpc_id      = aws_vpc.main.id
   tags        = merge(local.default_tags, { Name = "ssm_endpoint" })
 
@@ -19,6 +20,7 @@ resource "aws_security_group" "ssm_endpoint" {
 }
 
 resource "aws_security_group_rule" "ssm_endpoint_https_in" {
+  description       = "internal traffic to ssm endpoint"
   from_port         = 443
   protocol          = "tcp"
   security_group_id = aws_security_group.ssm_endpoint.id

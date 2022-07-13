@@ -10,6 +10,7 @@ resource "aws_vpc_endpoint" "logs" {
 
 resource "aws_security_group" "logs_endpoint" {
   name_prefix = "logs_endpoint"
+  description = "logs endpoint"
   vpc_id      = aws_vpc.main.id
   tags        = merge(local.default_tags, { Name = "logs_endpoint" })
 
@@ -19,6 +20,7 @@ resource "aws_security_group" "logs_endpoint" {
 }
 
 resource "aws_security_group_rule" "logs_endpoint_https_in" {
+  description       = "internal traffic to logs endpoint"
   from_port         = 443
   protocol          = "tcp"
   security_group_id = aws_security_group.logs_endpoint.id

@@ -10,6 +10,7 @@ resource "aws_vpc_endpoint" "secrets" {
 
 resource "aws_security_group" "secrets_endpoint" {
   name_prefix = "secrets_endpoint"
+  description = "secrets endpoint"
   vpc_id      = aws_vpc.main.id
   tags        = merge(local.default_tags, { Name = "secrets_endpoint" })
 
@@ -19,6 +20,7 @@ resource "aws_security_group" "secrets_endpoint" {
 }
 
 resource "aws_security_group_rule" "secrets_endpoint_https_in" {
+  description       = "internal traffic to secrets endpoint"
   from_port         = 443
   protocol          = "tcp"
   security_group_id = aws_security_group.secrets_endpoint.id
