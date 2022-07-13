@@ -242,16 +242,5 @@ trait ActivateTrait
         $this->selectOption('organisation_member_roleName_0', 'ROLE_PROF_TEAM_MEMBER');
 
         $this->pressButton('organisation_member_save');
-//        visit organisation add user page
-//        Fill in
-//            organisation_member_firstname
-//            organisation_member_lastname
-//            organisation_member_email
-//            organisation_member_jobTitle
-//            organisation_member_phoneMain
-
-//        select organisation_member_roleName_0 Yes
-
-//        press Save
     }
 }
