@@ -104,8 +104,7 @@ class ContactController extends RestController
             ->setPostcode($contactData['postcode'])
             ->setCountry($contactData['country'])
             ->setExplanation($contactData['explanation'])
-            ->setRelationship($contactData['relationship'])
-            ->setLastedit(new \DateTime());
+            ->setRelationship($contactData['relationship']);
 
         $this->em->persist($contact);
         $this->em->flush();

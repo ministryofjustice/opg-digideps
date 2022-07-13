@@ -19,7 +19,6 @@ class PreRegistrationFactory
     public function createFromDto(LayDeputyshipDto $dto)
     {
         $entity = new PreRegistration($this->convertDtoToArray($dto));
-        $entity->setUpdatedAt($this->dateProvider->getDateTime());
 
         $this->throwExceptionOnInvalidEntity($entity);
 

@@ -7,6 +7,7 @@ use App\Entity\Ndr\Ndr;
 use App\Entity\Report\Traits as ReportTraits;
 use App\Entity\ReportInterface;
 use App\Entity\Satisfaction;
+use App\Entity\Traits\CreateUpdateTimestamps;
 use App\Entity\User;
 use App\Service\ReportService;
 use App\Service\ReportStatusService;
@@ -30,9 +31,11 @@ use RuntimeException;
  *     @ORM\Index(name="report_status_cached_idx", columns={"report_status_cached"})
  *  })
  * @ORM\Entity(repositoryClass="App\Repository\ReportRepository")
+ * @ORM\HasLifecycleCallbacks()
  */
 class Report implements ReportInterface
 {
+    use CreateUpdateTimestamps;
     use ReportTraits\AssetTrait;
     use ReportTraits\BankAccountTrait;
     use ReportTraits\BalanceTrait;
@@ -324,14 +327,6 @@ class Report implements ReportInterface
      * @ORM\Column(name="un_submit_date", type="datetime", nullable=true)
      */
     private $unSubmitDate;
-
-    /**
-     * @var DateTime
-     * @JMS\Accessor(getter="getLastedit")
-     * @JMS\Type("DateTime<'Y-m-d'>")
-     * @ORM\Column(name="last_edit", type="datetime", nullable=true)
-     */
-    private $lastedit;
 
     /**
      * @var bool whether the report is submitted or not
@@ -723,28 +718,6 @@ class Report implements ReportInterface
         $this->unSubmitDate = $unSubmitDate;
 
         return $this;
-    }
-
-    /**
-     * Set lastedit.
-     *
-     * @return Report
-     */
-    public function setLastedit(DateTime $lastedit)
-    {
-        $this->lastedit = new DateTime($lastedit->format('Y-m-d'));
-
-        return $this;
-    }
-
-    /**
-     * Get lastedit.
-     *
-     * @return DateTime
-     */
-    public function getLastedit()
-    {
-        return $this->lastedit;
     }
 
     /**

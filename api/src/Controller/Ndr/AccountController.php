@@ -75,8 +75,6 @@ class AccountController extends RestController
 
         $this->fillAccountData($account, $data);
 
-        $account->setLastEdit(new \DateTime());
-
         $this->em->flush();
 
         return $account->getId();

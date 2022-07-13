@@ -3,6 +3,7 @@
 namespace App\Entity\Report;
 
 use App\Entity\BankAccountInterface;
+use App\Entity\Traits\CreateUpdateTimestamps;
 use Doctrine\Common\Collections\ArrayCollection;
 use Doctrine\ORM\Mapping as ORM;
 use JMS\Serializer\Annotation as JMS;
@@ -12,9 +13,12 @@ use JMS\Serializer\Annotation as JMS;
  *
  * @ORM\Table(name="account")
  * @ORM\Entity()
+ * @ORM\HasLifecycleCallbacks()
  */
 class BankAccount implements BankAccountInterface
 {
+    use CreateUpdateTimestamps;
+    
     /**
      * Keep in sync with client.
      *
@@ -91,22 +95,6 @@ class BankAccount implements BankAccountInterface
      * @ORM\Column(name="account_number", type="string", length=4, nullable=true)
      */
     private $accountNumber;
-
-    /**
-     * @var \DateTime
-     * @JMS\Groups({"account"})
-     *
-     * @ORM\Column(name="last_edit", type="datetime", nullable=true)
-     */
-    private $lastEdit;
-
-    /**
-     * @var \DateTime
-     * @JMS\Groups({"account"})
-     *
-     * @ORM\Column(name="created_at", type="datetime", nullable=true)
-     */
-    private $createdAt;
 
     /**
      * @var float
@@ -294,48 +282,6 @@ class BankAccount implements BankAccountInterface
     public function getAccountNumber()
     {
         return $this->accountNumber;
-    }
-
-    /**
-     * Set lastEdit.
-     *
-     * @param \DateTime $lastEdit
-     *
-     * @return BankAccount
-     */
-    public function setLastEdit($lastEdit)
-    {
-        $this->lastEdit = $lastEdit;
-
-        return $this;
-    }
-
-    /**
-     * Get lastEdit.
-     *
-     * @return \DateTime
-     */
-    public function getLastEdit()
-    {
-        return $this->lastEdit;
-    }
-
-    /**
-     * @return \DateTime
-     */
-    public function getCreatedAt()
-    {
-        return $this->createdAt;
-    }
-
-    /**
-     * @param \DateTime $createdAt
-     */
-    public function setCreatedAt(\DateTime $createdAt)
-    {
-        $this->createdAt = $createdAt;
-
-        return $this;
     }
 
     /**
