@@ -815,46 +815,6 @@ class Checklist implements SynchronisableInterface
     /**
      * @return string
      */
-    public function getDecision()
-    {
-        return $this->decision;
-    }
-
-    /**
-     * @param string $decision
-     *
-     * @return $this
-     */
-    public function setDecision($decision)
-    {
-        $this->decision = $decision;
-
-        return $this;
-    }
-
-    /**
-     * @return string
-     */
-    public function getCaseManagerName()
-    {
-        return $this->caseManagerName;
-    }
-
-    /**
-     * @param string $caseManagerName
-     *
-     * @return $this
-     */
-    public function setCaseManagerName($caseManagerName)
-    {
-        $this->caseManagerName = $caseManagerName;
-
-        return $this;
-    }
-
-    /**
-     * @return string
-     */
     public function getLodgingSummary()
     {
         return $this->lodgingSummary;

@@ -3,7 +3,7 @@
 namespace App\Entity;
 
 /**
- * Common functionalities among Report and NDR
+ * Common functionalities among Report and NDR.
  */
 interface BankAccountInterface
 {
@@ -12,8 +12,6 @@ interface BankAccountInterface
     public function getBank();
 
     public function getAccountTypeText();
-
-    public function getOpeningBalance();
 
     public function getClosingBalance();
 
