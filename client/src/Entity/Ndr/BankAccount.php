@@ -32,7 +32,7 @@ class BankAccount implements BankAccountInterface
     private static $typesNotRequiringSortCode = [
         'postoffice',
         'cfo',
-        'other_no_sortcode'
+        'other_no_sortcode',
     ];
 
     /**
@@ -40,7 +40,7 @@ class BankAccount implements BankAccountInterface
      */
     private static $typesNotRequiringBankName = [
         'postoffice',
-        'cfo'
+        'cfo',
     ];
 
     /**
@@ -72,7 +72,6 @@ class BankAccount implements BankAccountInterface
      * @var string
      */
     private $bank;
-
 
     /**
      * @JMS\Type("string")
@@ -252,22 +251,6 @@ class BankAccount implements BankAccountInterface
     /**
      * @return decimal
      */
-    public function getOpeningBalance()
-    {
-        return $this->openingBalance;
-    }
-
-    /**
-     * @param decimal $openingBalance
-     */
-    public function setOpeningBalance($openingBalance)
-    {
-        $this->openingBalance = $openingBalance;
-    }
-
-    /**
-     * @return decimal
-     */
     public function getBalanceOnCourtOrderDate()
     {
         return $this->balanceOnCourtOrderDate;
@@ -339,11 +322,13 @@ class BankAccount implements BankAccountInterface
 
     /**
      * @param string $nameOneLine
+     *
      * @return $this
      */
     public function setNameOneLine($nameOneLine)
     {
         $this->nameOneLine = $nameOneLine;
+
         return $this;
     }
 }
