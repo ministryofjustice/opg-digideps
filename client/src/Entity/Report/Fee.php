@@ -42,6 +42,13 @@ class Fee
     private $moreDetails;
 
     /**
+     * @var int
+     * @JMS\Groups({"fee"})
+     * @JMS\Type("int")
+     */
+    private $id;
+
+    /**
      * @return mixed
      */
     public function getId()

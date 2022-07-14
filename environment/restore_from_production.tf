@@ -32,11 +32,12 @@ locals {
 }
 
 module "restore_from_production_security_group" {
-  source = "./security_group"
-  rules  = local.restore_from_production_sg_rules
-  name   = "restore-from-production"
-  tags   = local.default_tags
-  vpc_id = data.aws_vpc.vpc.id
+  source      = "./security_group"
+  description = "Restore from Production Service"
+  rules       = local.restore_from_production_sg_rules
+  name        = "restore-from-production"
+  tags        = local.default_tags
+  vpc_id      = data.aws_vpc.vpc.id
 }
 
 locals {

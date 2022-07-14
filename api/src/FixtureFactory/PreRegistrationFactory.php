@@ -22,7 +22,8 @@ class PreRegistrationFactory
     {
         $caseNumber = str_pad((string) rand(1, 99999999), 8, '0', STR_PAD_LEFT);
         $deputyNumber = str_pad((string) rand(1, 999999), 6, '0', STR_PAD_LEFT);
-
+        $reportType = $data['reportType'] == 'ndr' ? 'OPG102' : $data['reportType'];
+            
         $dto = (new LayDeputyshipDto())
             ->setCaseNumber($data['caseNumber'] ?? $caseNumber)
             ->setClientSurname($data['clientLastName'] ?? 'Smith')
@@ -36,7 +37,7 @@ class PreRegistrationFactory
             ->setDeputySurname($data['deputyLastName'] ?? 'Jones')
             ->setIsNdrEnabled(false)
             ->setOrderDate(new DateTime())
-            ->setTypeOfReport($data['reportType'] ?? 'OPG102')
+            ->setTypeOfReport($reportType ?? 'OPG102')
             ->setOrderType($data['orderType'] ?? 'PFA')
             ->setIsCoDeputy($data['createCoDeputy'] ?? false);
 

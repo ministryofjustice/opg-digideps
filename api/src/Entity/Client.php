@@ -5,6 +5,7 @@ namespace App\Entity;
 use App\Entity\Ndr\Ndr;
 use App\Entity\Report\Report;
 use App\Entity\Traits\IsSoftDeleteableEntity;
+use App\Entity\Traits\CreateUpdateTimestamps;
 use DateTime;
 use Doctrine\Common\Collections\ArrayCollection;
 use Doctrine\Common\Collections\Collection;
@@ -26,9 +27,11 @@ use Symfony\Component\Security\Core\User\UserInterface;
  *     )
  * @ORM\Entity(repositoryClass="App\Repository\ClientRepository")
  * @Gedmo\SoftDeleteable(fieldName="deletedAt", timeAware=false)
+ * @ORM\HasLifecycleCallbacks()
  */
 class Client implements ClientInterface
 {
+    use CreateUpdateTimestamps;
     use IsSoftDeleteableEntity;
 
     /**
@@ -187,15 +190,6 @@ class Client implements ClientInterface
      * @ORM\Column(name="court_date", type="date", nullable=true)
      */
     private $courtDate;
-
-    /**
-     * @JMS\Exclude
-     *
-     * @var DateTime|null
-     *
-     * @ORM\Column(name="last_edit", type="datetime", nullable=true)
-     */
-    private $lastedit;
 
     /**
      * @JMS\Type("DateTime<'Y-m-d'>")
@@ -444,30 +438,6 @@ class Client implements ClientInterface
     public function getCourtDate()
     {
         return $this->courtDate;
-    }
-
-    /**
-     * Set lastedit.
-     *
-     * @param DateTime $lastedit
-     *
-     * @return Client
-     */
-    public function setLastedit($lastedit)
-    {
-        $this->lastedit = $lastedit;
-
-        return $this;
-    }
-
-    /**
-     * Get lastedit.
-     *
-     * @return DateTime|null
-     */
-    public function getLastedit()
-    {
-        return $this->lastedit;
     }
 
     /**

@@ -14,3 +14,4 @@ variable "task_role_assume_policy" {}
 variable "log_retention" {}
 variable "task_runner_arn" {}
 variable "cross_account_role_name" {}
+variable "logs_kms_key_arn" {}

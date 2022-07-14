@@ -32,11 +32,12 @@ locals {
 }
 
 module "backup_security_group" {
-  source = "./security_group"
-  rules  = local.backup_sg_rules
-  name   = "backup"
-  tags   = local.default_tags
-  vpc_id = data.aws_vpc.vpc.id
+  source      = "./security_group"
+  description = "Backup Service"
+  rules       = local.backup_sg_rules
+  name        = "backup"
+  tags        = local.default_tags
+  vpc_id      = data.aws_vpc.vpc.id
 }
 
 data "aws_canonical_user_id" "development" {

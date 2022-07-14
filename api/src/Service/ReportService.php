@@ -260,7 +260,6 @@ class ReportService
         $newAccount->setAccountNumber($account->getAccountNumber());
         $newAccount->setOpeningBalance($account->getClosingBalance());
         $newAccount->setIsJointAccount($account->getIsJointAccount());
-        $newAccount->setCreatedAt(new DateTime());
 
         return $newAccount;
     }

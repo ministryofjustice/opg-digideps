@@ -34,9 +34,10 @@ locals {
 }
 
 module "frontend_cache_security_group" {
-  source = "./security_group"
-  rules  = local.front_cache_sg_rules
-  name   = "frontend-cache-${local.environment}"
-  tags   = local.default_tags
-  vpc_id = data.aws_vpc.vpc.id
+  source      = "./security_group"
+  description = "Front Redis"
+  rules       = local.front_cache_sg_rules
+  name        = "frontend-cache-${local.environment}"
+  tags        = local.default_tags
+  vpc_id      = data.aws_vpc.vpc.id
 }

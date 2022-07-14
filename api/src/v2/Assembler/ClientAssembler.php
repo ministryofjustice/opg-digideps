@@ -100,11 +100,6 @@ class ClientAssembler
         return $dtos;
     }
 
-    private function assembleClientOrganisation(array $organisation)
-    {
-        return $this->organisationDtoAssembler->assembleFromArray($organisation);
-    }
-
     /**
      * @return
      */
@@ -137,7 +132,7 @@ class ClientAssembler
 
         if (!empty($dto->getClientPostCode())) {
             $client->setPostcode($dto->getClientPostCode());
-            $client->setCountry('GB'); //postcode given means a UK address is given
+            $client->setCountry('GB'); // postcode given means a UK address is given
         }
 
         return $client;

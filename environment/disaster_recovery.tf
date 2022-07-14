@@ -17,4 +17,5 @@ module "disaster_recovery_backup" {
   task_runner_arn         = data.aws_iam_role.events_task_runner.arn
   task_role_assume_policy = data.aws_iam_policy_document.task_role_assume_policy
   cross_account_role_name = local.cross_account_role_name
+  logs_kms_key_arn        = aws_kms_key.cloudwatch_logs.arn
 }

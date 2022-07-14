@@ -14,6 +14,11 @@ class HtmlToPdfGenerator
     private $url;
 
     /**
+     * @var int
+     */
+    private $timeoutSeconds;
+
+    /**
      * @param string $url
      */
     public function __construct($url, $timeoutSeconds)
@@ -39,7 +44,7 @@ class HtmlToPdfGenerator
      */
     public function getPdfFromHtml($html)
     {
-        //Example from https://github.com/openlabs/docker-htmltopdf-aas/issues/18
+        // Example from https://github.com/openlabs/docker-htmltopdf-aas/issues/18
         $data = [
             'contents' => base64_encode($html),
             'options' => [
@@ -55,7 +60,7 @@ class HtmlToPdfGenerator
         $ch = curl_init();
 
         curl_setopt($ch, CURLOPT_CONNECTTIMEOUT, $this->timeoutSeconds);
-        curl_setopt($ch, CURLOPT_TIMEOUT, $this->timeoutSeconds); //timeout in seconds
+        curl_setopt($ch, CURLOPT_TIMEOUT, $this->timeoutSeconds); // timeout in seconds
         curl_setopt($ch, CURLOPT_URL, $this->url);
         curl_setopt($ch, CURLOPT_CUSTOMREQUEST, 'POST');
         curl_setopt($ch, CURLOPT_POSTFIELDS, $dataString);
