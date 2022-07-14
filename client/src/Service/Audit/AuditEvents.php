@@ -381,6 +381,8 @@ final class AuditEvents
             'recipient_email' => $email->getToEmail(),
             'template_name' => $templateName,
             'notify_template_id' => $email->getTemplate(),
+            'email_parameters' => $email->getParameters(),
+            'from_address_id' => $email->getFromEmailNotifyID(),
             'sent_on' => $this->dateTimeProvider->getDateTime()->format(DateTime::ATOM),
         ];
     }

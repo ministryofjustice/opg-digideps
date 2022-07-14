@@ -338,13 +338,17 @@ class AuditEventsTest extends TestCase
         $loggedInUser = UserHelpers::createSuperAdminUser();
         $email = (new Email())
             ->setTemplate(MailFactory::ACTIVATION_TEMPLATE_ID)
-            ->setToEmail('a@b.com');
+            ->setToEmail('a@b.com')
+            ->setParameters(['some' => 'info'])
+            ->setFromEmailNotifyID('abc123');
 
         $expected = [
             'logged_in_user_email' => $loggedInUser->getEmail(),
             'recipient_email' => 'a@b.com',
             'template_name' => 'ACTIVATION_TEMPLATE_ID',
             'notify_template_id' => '07e7fdb3-ad81-4105-b6b6-c3854e0c6caa',
+            'email_parameters' => ['some' => 'info'],
+            'from_address_id' => 'abc123',
             'sent_on' => $this->now->format(DateTime::ATOM),
             'event' => 'EMAIL_SENT',
             'type' => 'audit',
@@ -366,7 +370,10 @@ class AuditEventsTest extends TestCase
         $loggedInUser = UserHelpers::createSuperAdminUser();
         $email = (new Email())
             ->setTemplate(MailFactory::ACTIVATION_TEMPLATE_ID)
-            ->setToEmail('a@b.com');
+            ->setToEmail('a@b.com')
+            ->setParameters(['more' => 'stuff'])
+            ->setFromEmailNotifyID('xyz987');
+
         $error = new Exception('Something went wrong');
 
         $expected = [
@@ -374,6 +381,8 @@ class AuditEventsTest extends TestCase
             'recipient_email' => 'a@b.com',
             'template_name' => 'ACTIVATION_TEMPLATE_ID',
             'notify_template_id' => '07e7fdb3-ad81-4105-b6b6-c3854e0c6caa',
+            'email_parameters' => ['more' => 'stuff'],
+            'from_address_id' => 'xyz987',
             'sent_on' => $this->now->format(DateTime::ATOM),
             'event' => 'EMAIL_NOT_SENT',
             'type' => 'audit',
