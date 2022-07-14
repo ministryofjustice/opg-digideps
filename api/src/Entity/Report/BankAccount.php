@@ -4,7 +4,6 @@ namespace App\Entity\Report;
 
 use App\Entity\BankAccountInterface;
 use App\Entity\Traits\CreateUpdateTimestamps;
-use Doctrine\Common\Collections\ArrayCollection;
 use Doctrine\ORM\Mapping as ORM;
 use JMS\Serializer\Annotation as JMS;
 
@@ -18,7 +17,7 @@ use JMS\Serializer\Annotation as JMS;
 class BankAccount implements BankAccountInterface
 {
     use CreateUpdateTimestamps;
-    
+
     /**
      * Keep in sync with client.
      *
@@ -42,7 +41,7 @@ class BankAccount implements BankAccountInterface
     private static $typesNotRequiringSortCode = [
         'postoffice',
         'cfo',
-        'other_no_sortcode'
+        'other_no_sortcode',
     ];
 
     /**
@@ -52,7 +51,7 @@ class BankAccount implements BankAccountInterface
      */
     private static $typesNotRequiringBankName = [
         'postoffice',
-        'cfo'
+        'cfo',
     ];
 
     /**
@@ -156,8 +155,6 @@ class BankAccount implements BankAccountInterface
      */
     public function __construct()
     {
-        $this->transactions = new ArrayCollection();
-        $this->lastEdit = null;
         $this->createdAt = new \DateTime();
         $this->isClosed = false;
     }
@@ -430,7 +427,7 @@ class BankAccount implements BankAccountInterface
      * <bank> - <type> (****<last 4 digits>)
      * e.g.
      * barclays - Current account (****1234)
-     * Natwest - ISA (****4444)
+     * Natwest - ISA (****4444).
      *
      * @JMS\VirtualProperty
      * @JMS\SerializedName("name_one_line")
@@ -440,8 +437,8 @@ class BankAccount implements BankAccountInterface
      */
     public function getNameOneLine()
     {
-        return (!empty($this->getBank()) ? $this->getBank() . ' - '  : '')
-            . $this->getAccountTypeText()
-            . ' (****' . $this->getAccountNumber() . ')';
+        return (!empty($this->getBank()) ? $this->getBank().' - ' : '')
+            .$this->getAccountTypeText()
+            .' (****'.$this->getAccountNumber().')';
     }
 }

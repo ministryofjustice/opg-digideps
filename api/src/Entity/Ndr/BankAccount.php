@@ -18,7 +18,7 @@ use JMS\Serializer\Annotation as JMS;
 class BankAccount implements BankAccountInterface
 {
     use CreateUpdateTimestamps;
-    
+
     /**
      * Keep in sync with client.
      *
@@ -129,7 +129,6 @@ class BankAccount implements BankAccountInterface
      */
     public function __construct()
     {
-        $this->lastEdit = null;
         $this->createdAt = new DateTime();
     }
 

@@ -66,21 +66,6 @@ class OrgDeputyshipDto
         return $this;
     }
 
-    public function getDeputyNumber(): string
-    {
-        return $this->deputyNumber;
-    }
-
-    /**
-     * @return OrgDeputyshipDto
-     */
-    public function setDeputyNumber(string $deputyNumber): self
-    {
-        $this->deputyNumber = $deputyNumber;
-
-        return $this;
-    }
-
     public function getDeputyFirstname(): ?string
     {
         return $this->deputyFirstname;
@@ -356,18 +341,6 @@ class OrgDeputyshipDto
     public function setReportEndDate(?DateTime $reportEndDate): self
     {
         $this->reportEndDate = $reportEndDate;
-
-        return $this;
-    }
-
-    public function getDeputyAddressNumber(): ?string
-    {
-        return $this->deputyAddressNumber;
-    }
-
-    public function setDeputyAddressNumber(?string $deputyAddressNumber): OrgDeputyshipDto
-    {
-        $this->deputyAddressNumber = $deputyAddressNumber;
 
         return $this;
     }
