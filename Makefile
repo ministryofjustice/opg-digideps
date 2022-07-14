@@ -155,10 +155,19 @@ enable-debug: ##@application Puts app in dev mode and enables debug (so the app 
 	done
 
 phpstan-api:
+ifdef level
+	docker-compose run --rm api vendor/phpstan/phpstan/phpstan analyse src --memory-limit=1G --level=$(level)
+else
 	docker-compose run --rm api vendor/phpstan/phpstan/phpstan analyse src --memory-limit=1G --level=max
+endif
+
 
 phpstan-frontend:
+ifdef level
+	docker-compose run --rm frontend vendor/phpstan/phpstan/phpstan analyse src --memory-limit=1G --level=$(level)
+else
 	docker-compose run --rm frontend vendor/phpstan/phpstan/phpstan analyse src --memory-limit=1G --level=max
+endif
 
 get-audit-logs: ##@localstack Get audit log groups by passing event name e.g. get-audit-logs event_name=ROLE_CHANGED (see client/Audit/src/service/Audit/AuditEvents)
 	docker-compose exec localstack awslocal logs get-log-events --log-group-name audit-local --log-stream-name $(event_name)
