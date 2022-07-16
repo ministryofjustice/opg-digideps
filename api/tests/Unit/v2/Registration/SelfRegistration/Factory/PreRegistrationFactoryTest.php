@@ -20,10 +20,10 @@ class PreRegistrationFactoryTest extends TestCase
     /** @var PreRegistrationFactory */
     private $factory;
 
-    /** @var ValidatorInterface | PHPUnit_Framework_MockObject_MockObject */
+    /** @var ValidatorInterface|PHPUnit_Framework_MockObject_MockObject */
     private $validator;
 
-    /** @var DateTimeProvider | PHPUnit_Framework_MockObject_MockObject */
+    /** @var DateTimeProvider|PHPUnit_Framework_MockObject_MockObject */
     private $dateTimeProvider;
 
     /** {@inheritDoc} */
@@ -64,11 +64,6 @@ class PreRegistrationFactoryTest extends TestCase
             ->method('validate')
             ->willReturn(new ConstraintViolationList());
 
-        $this->dateTimeProvider
-            ->expects($this->once())
-            ->method('getDateTime')
-            ->willReturn(new DateTime('2010-01-03 12:03:23'));
-
         /** @var PreRegistration $result */
         $result = $this->factory->createFromDto($this->buildLayDeputyshipDto());
 
@@ -86,7 +81,6 @@ class PreRegistrationFactoryTest extends TestCase
         $this->assertEquals('type', $result->getTypeOfReport());
         $this->assertEquals('pfa', $result->getOrderType());
         $this->assertEquals(true, $result->getNdr());
-        $this->assertEquals('2010-01-03T12:03:23+00:00', $result->getUpdatedAt()->format('c'));
         $this->assertEquals('2011-06-14', $result->getOrderDate()->format('Y-m-d'));
         $this->assertEquals(false, $result->getIsCoDeputy());
     }

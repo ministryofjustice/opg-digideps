@@ -119,7 +119,13 @@ reset-fixtures: ##@database Resets the DB contents and reloads fixtures
 	docker-compose run --rm api sh scripts/reset_db_fixtures_local.sh
 
 db-terminal: ##@database Login to the database via the terminal
-	docker exec -it opg-digideps_postgres_1 sh -c "psql -U api"
+	docker exec -it opg-digideps-postgres sh -c "psql -U api"
+
+api-logs: ##@logs Follow the API logs
+	docker logs opg-digideps-api --follow
+
+frontend-logs: ##@logs Follow the API logs
+	docker logs opg-digideps-frontend --follow
 
 redis-clear: ##@database Clears out all the data from redis (session related tokens)
 	for c in ${REDIS_CONTAINERS} ; do \
@@ -148,11 +154,20 @@ enable-debug: ##@application Puts app in dev mode and enables debug (so the app 
 	  echo "$$c: debug enabled." ; \
 	done
 
-phpstan-api:
+phpstan-api: ##@static-analysis Runs PHPStan against API. Defaults to max level but supports passing level as an arg e.g. level=1
+ifdef level
+	docker-compose run --rm api vendor/phpstan/phpstan/phpstan analyse src --memory-limit=1G --level=$(level)
+else
 	docker-compose run --rm api vendor/phpstan/phpstan/phpstan analyse src --memory-limit=1G --level=max
+endif
 
-phpstan-frontend:
+
+phpstan-client: ##@static-analysis Runs PHPStan against client. Defaults to max level but supports passing level as an arg e.g. level=1
+ifdef level
+	docker-compose run --rm frontend vendor/phpstan/phpstan/phpstan analyse src --memory-limit=1G --level=$(level)
+else
 	docker-compose run --rm frontend vendor/phpstan/phpstan/phpstan analyse src --memory-limit=1G --level=max
+endif
 
 get-audit-logs: ##@localstack Get audit log groups by passing event name e.g. get-audit-logs event_name=ROLE_CHANGED (see client/Audit/src/service/Audit/AuditEvents)
 	docker-compose exec localstack awslocal logs get-log-events --log-group-name audit-local --log-stream-name $(event_name)

@@ -5,6 +5,7 @@ declare(strict_types=1);
 namespace App\Entity;
 
 use App\Entity\Report\Report;
+use App\Entity\Traits\CreateUpdateTimestamps;
 use DateTime;
 use Doctrine\ORM\Mapping as ORM;
 use Exception;
@@ -15,14 +16,17 @@ use UnexpectedValueException;
 /**
  * @ORM\Table(name="pre_registration", indexes={@ORM\Index(name="updated_at_idx", columns={"updated_at"})})
  * @ORM\Entity(repositoryClass="App\Repository\PreRegistrationRepository")
+ * @ORM\HasLifecycleCallbacks()
  */
 class PreRegistration
 {
+    use CreateUpdateTimestamps; 
+
     const REALM_PA = 'REALM_PA';
     const REALM_PROF = 'REALM_PROF';
     const REALM_LAY = 'REALM_LAY';
 
-    public function __construct(array $row, ?DateTime $createdAt = null)
+    public function __construct(array $row)
     {
         $this->caseNumber = $row['Case'] ?? '';
         $this->clientLastname = $row['ClientSurname'] ?? '';
@@ -40,7 +44,6 @@ class PreRegistration
         $this->orderType = $row['OrderType'] ?? null;
         $this->isCoDeputy = isset($row['CoDeputy']) ? 'yes' === $row['CoDeputy'] : null;
 
-        $this->createdAt = $createdAt ?: new DateTime();
         $this->updatedAt = null;
     }
 
@@ -147,20 +150,6 @@ class PreRegistration
     private ?bool $ndr;
 
     /**
-     * @JMS\Type("DateTime<'Y-m-d H:i:s'>")
-     *
-     * @ORM\Column(name="uploaded_at", type="datetime", nullable=true)
-     */
-    private ?DateTime $createdAt;
-
-    /**
-     * @JMS\Type("DateTime<'Y-m-d H:i:s'>")
-     *
-     * @ORM\Column(name="updated_at", type="datetime", nullable=true)
-     */
-    private ?DateTime $updatedAt;
-
-    /**
      * @ORM\Column(name="order_date", type="datetime", nullable=true)
      */
     private ?DateTime $orderDate;
@@ -229,18 +218,6 @@ class PreRegistration
     public function getTypeOfReport(): ?string
     {
         return $this->typeOfReport;
-    }
-
-    public function getUpdatedAt(): ?DateTime
-    {
-        return $this->updatedAt;
-    }
-
-    public function setUpdatedAt($updatedAt): self
-    {
-        $this->updatedAt = $updatedAt;
-
-        return $this;
     }
 
     public function getOrderDate(): ?DateTime
@@ -335,18 +312,6 @@ class PreRegistration
     public function setNdr(?bool $ndr): self
     {
         $this->ndr = $ndr;
-
-        return $this;
-    }
-
-    public function getCreatedAt(): ?DateTime
-    {
-        return $this->createdAt;
-    }
-
-    public function setCreatedAt(?DateTime $createdAt): self
-    {
-        $this->createdAt = $createdAt;
 
         return $this;
     }

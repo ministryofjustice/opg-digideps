@@ -79,20 +79,6 @@ class PreRegistration
 
     /**
      * @var DateTime
-     *
-     * @JMS\Type("DateTime<'Y-m-d H:i:s'>")
-     */
-    private $createdAt;
-
-    /**
-     * @var DateTime
-     *
-     * @JMS\Type("DateTime<'Y-m-d H:i:s'>")
-     */
-    private $updatedAt;
-
-    /**
-     * @var DateTime
      */
     private $orderDate;
 
@@ -133,21 +119,6 @@ class PreRegistration
     public function getOrderType(): string
     {
         return $this->orderType;
-    }
-
-    public function setUpdatedAt(DateTime $updatedAt): PreRegistration
-    {
-        $this->updatedAt = $updatedAt;
-
-        return $this;
-    }
-
-    /**
-     * @return DateTime|null
-     */
-    public function getUpdatedAt(): DateTime
-    {
-        return $this->updatedAt;
     }
 
     public function getOrderDate(): DateTime
