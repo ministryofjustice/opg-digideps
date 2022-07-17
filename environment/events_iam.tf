@@ -23,7 +23,7 @@ resource "aws_iam_role_policy" "events_task_runner" {
 }
 
 locals {
-  events_task_dr_role_list = local.account.dr_backup ? [module.disaster_recovery_backup.task_role_arn] : []
+  events_task_dr_role_list = local.account.dr_backup ? [module.disaster_recovery_backup[0].task_role_arn] : []
   events_task_role_list = [
     aws_iam_role.front.arn,
     aws_iam_role.api.arn,
@@ -32,7 +32,7 @@ locals {
   ]
   combined_events_task_role_list = tolist(concat(local.events_task_role_list, local.events_task_dr_role_list))
 
-  events_dr_task_list = local.account.dr_backup ? [module.disaster_recovery_backup.task_definition_arn] : []
+  events_dr_task_list = local.account.dr_backup ? [module.disaster_recovery_backup[0].task_definition_arn] : []
   events_task_list = [
     aws_ecs_task_definition.check_csv_uploaded.arn,
     aws_ecs_task_definition.check_csv_uploaded.arn,
