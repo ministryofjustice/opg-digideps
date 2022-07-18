@@ -377,7 +377,7 @@ final class AuditEvents
         $templateName = $constants[$email->getTemplate()];
 
         return [
-            'logged_in_user_email' => $loggedInUser->getEmail(),
+            'logged_in_user_email' => $loggedInUser?->getEmail(),
             'recipient_email' => $email->getToEmail(),
             'template_name' => $templateName,
             'notify_template_id' => $email->getTemplate(),
