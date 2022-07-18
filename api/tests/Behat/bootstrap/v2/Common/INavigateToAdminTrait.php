@@ -38,7 +38,7 @@ trait INavigateToAdminTrait
     public function iNavigateToAddNewUser()
     {
         $this->iAmOnAdminUsersSearchPage();
-        $this->clickBasedOnText('Add new user');
+        $this->clickLink('Add new user');
     }
 
     /**
