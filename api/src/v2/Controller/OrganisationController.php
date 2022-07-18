@@ -51,7 +51,6 @@ class OrganisationController extends AbstractController
         OrganisationRepository $repository,
         OrganisationAssembler $assembler,
         OrganisationTransformer $transformer,
-        RestFormatter $formatter
     ) {
         $this->restHandler = $restHandler;
         $this->repository = $repository;
