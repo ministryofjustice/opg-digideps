@@ -33,7 +33,7 @@ class AwsAuditLogHandler extends AbstractAuditLogHandler
      * @param int  $level
      * @param bool $bubble
      */
-    public function __construct(CloudWatchLogsClient $client, $group, $level = Logger::NOTICE, $bubble = true, private LoggerInterface $logger)
+    public function __construct(CloudWatchLogsClient $client, $group, private LoggerInterface $logger, $level = Logger::NOTICE, $bubble = true)
     {
         $this->client = $client;
         $this->group = $group;
