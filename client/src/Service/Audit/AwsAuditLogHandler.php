@@ -62,7 +62,7 @@ class AwsAuditLogHandler extends AbstractAuditLogHandler
         try {
             $this->send($entry);
         } catch (CloudWatchLogsException $e) {
-            $this->determineSequenceToken($refresh = true);
+            $this->determineSequenceToken(true);
             $this->send($entry);
         }
     }
@@ -82,7 +82,6 @@ class AwsAuditLogHandler extends AbstractAuditLogHandler
         $this->existingStreams = $this->fetchExistingStreams();
         $existingStreamsNames = $this->extractExistingStreamNames();
 
-        $this->logger->warning(sprintf('acs123 existingStreams is "%s"', implode(', ', $this->existingStreams)));
         $this->logger->warning(sprintf('acs123 $existingStreamsNames is "%s"', implode(', ', $existingStreamsNames)));
 
         if (!in_array($this->stream, $existingStreamsNames, true)) {
