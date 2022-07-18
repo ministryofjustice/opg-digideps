@@ -255,18 +255,6 @@ class UserApi
         return $this->restClient->apiCall('put', 'user/agree-terms-use/'.$token, null, 'raw', [], false);
     }
 
-    /**
-     * @return User[]
-     */
-    public function getActiveLays()
-    {
-        return $this->restClient->get(
-            self::GET_ACTIVE_LAYS,
-            'User[]',
-            ['user', 'user-clients']
-        );
-    }
-
     private function dispatchAdminManagerCreatedEvent(User $createdUser)
     {
         $trigger = AuditEvents::TRIGGER_ADMIN_MANAGER_MANUALLY_CREATED;
