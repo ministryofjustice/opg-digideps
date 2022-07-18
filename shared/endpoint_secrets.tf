@@ -8,9 +8,9 @@ resource "aws_vpc_endpoint" "secrets" {
   tags                = merge(local.default_tags, { Name = "secrets" })
 }
 
+#tfsec:ignore:aws-vpc-add-description-to-security-group - can't replace these, will have to be two part PR
 resource "aws_security_group" "secrets_endpoint" {
   name_prefix = "secrets_endpoint"
-  description = "secrets endpoint"
   vpc_id      = aws_vpc.main.id
   tags        = merge(local.default_tags, { Name = "secrets_endpoint" })
 

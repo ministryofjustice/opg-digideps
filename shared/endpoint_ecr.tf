@@ -8,9 +8,9 @@ resource "aws_vpc_endpoint" "ecr" {
   tags                = merge(local.default_tags, { Name = "ecr" })
 }
 
+#tfsec:ignore:aws-vpc-add-description-to-security-group - can't replace these, will have to be two part PR
 resource "aws_security_group" "ecr_endpoint" {
   name_prefix = "ecr_endpoint"
-  description = "ecr endpoint"
   vpc_id      = aws_vpc.main.id
   tags        = merge(local.default_tags, { Name = "ecr_endpoint" })
 
@@ -41,9 +41,9 @@ resource "aws_vpc_endpoint" "ecr_api" {
   tags                = merge(local.default_tags, { Name = "ecr_api" })
 }
 
+#tfsec:ignore:aws-vpc-add-description-to-security-group - can't replace these, will have to be two part PR
 resource "aws_security_group" "ecr_api_endpoint" {
   name_prefix = "ecr_api_endpoint"
-  description = "ecr api endpoint"
   vpc_id      = aws_vpc.main.id
   tags        = merge(local.default_tags, { Name = "ecr_api_endpoint" })
 
