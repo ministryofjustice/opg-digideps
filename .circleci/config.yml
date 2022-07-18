@@ -919,7 +919,7 @@ jobs:
         auth:
           username: $DOCKER_USER
           password: $DOCKER_ACCESS_TOKEN
-    resource_class: medium
+    resource_class: medium+
     parameters:
       build_dev:
         description: whether to build the development client image
