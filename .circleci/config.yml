@@ -919,7 +919,7 @@ jobs:
         auth:
           username: $DOCKER_USER
           password: $DOCKER_ACCESS_TOKEN
-    resource_class: large
+    resource_class: medium
     parameters:
       build_dev:
         description: whether to build the development client image
@@ -937,6 +937,7 @@ jobs:
     steps:
       - dockerhub_helper/dockerhub_login
       - setup_remote_docker:
+          docker_layer_caching: true
           version: 20.10.6
       - aws-cli/install
       - add_ssh_keys:
@@ -1039,7 +1040,8 @@ jobs:
     resource_class: small
     steps:
       - dockerhub_helper/dockerhub_login
-      - setup_remote_docker
+      - setup_remote_docker:
+          docker_layer_caching: true
       - checkout
       - attach_workspace: { at: ~/project }
       - run:
@@ -1071,7 +1073,8 @@ jobs:
     resource_class: small
     steps:
       - dockerhub_helper/dockerhub_login
-      - setup_remote_docker
+      - setup_remote_docker:
+          docker_layer_caching: true
       - checkout
       - attach_workspace: { at: ~/project }
       - run:
@@ -1120,7 +1123,8 @@ jobs:
     resource_class: small
     steps:
       - dockerhub_helper/dockerhub_login
-      - setup_remote_docker
+      - setup_remote_docker:
+          docker_layer_caching: true
       - checkout
       - attach_workspace: { at: ~/project }
       - run:
