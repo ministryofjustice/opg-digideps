@@ -85,7 +85,7 @@ class MailSenderTest extends WebTestCase
         $email = $this->generateEmail();
 
         $this->logger->notice(Argument::cetera())->shouldBeCalled();
-        $this->logger->error('Error message')->shouldBeCalled();
+        $this->logger->error('Error sending email: Error message')->shouldBeCalled();
 
         $this->notifyClient->sendEmail(Argument::cetera())->willThrow(new NotifyException('Error message'));
 
