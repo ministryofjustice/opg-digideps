@@ -197,6 +197,7 @@ class OrganisationController extends AbstractController
         $form->handleRequest($request);
 
         $organisation = $this->restClient->get('v2/organisation/'.$id, 'Organisation');
+        $userToAdd = [];
 
         if ($form->get('email')->getData()) {
             try {
