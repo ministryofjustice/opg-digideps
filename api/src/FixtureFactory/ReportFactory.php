@@ -28,6 +28,8 @@ class ReportFactory
      */
     public function create(array $data, Client $client): Report
     {
+        $type = '';
+        
         if ($data['deputyType'] === User::TYPE_LAY) {
             $type = $data['reportType'];
         } elseif (in_array($data['deputyType'], ['PA', 'PA_ADMIN', 'PA_TEAM_MEMBER'])) {
