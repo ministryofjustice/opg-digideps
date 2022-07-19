@@ -38,7 +38,7 @@ class MailSender implements MailSenderInterface
                 (new AuditEvents($this->dateTimeProvider))->emailSent($email, $currentUser)
             );
         } catch (Throwable $exception) {
-            $this->logger->error($exception->getMessage());
+            $this->logger->error(sprintf('Error sending email: %s', $exception->getMessage()));
 
             $currentUser = $this->tokenStorage?->getToken()?->getUser();
 

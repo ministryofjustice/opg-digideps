@@ -6,7 +6,6 @@ use Aws\CloudWatchLogs\CloudWatchLogsClient;
 use Aws\CloudWatchLogs\Exception\CloudWatchLogsException;
 use Aws\Result;
 use Monolog\Logger;
-use Psr\Log\LoggerInterface;
 
 class AwsAuditLogHandler extends AbstractAuditLogHandler
 {
@@ -33,7 +32,7 @@ class AwsAuditLogHandler extends AbstractAuditLogHandler
      * @param int  $level
      * @param bool $bubble
      */
-    public function __construct(CloudWatchLogsClient $client, $group, private LoggerInterface $logger, $level = Logger::NOTICE, $bubble = true)
+    public function __construct(CloudWatchLogsClient $client, $group, $level = Logger::NOTICE, $bubble = true)
     {
         $this->client = $client;
         $this->group = $group;
@@ -50,13 +49,14 @@ class AwsAuditLogHandler extends AbstractAuditLogHandler
             return;
         }
 
+        $this->initialized = $this->stream === $entry['context']['event'];
         $this->stream = $entry['context']['event'];
-        $this->logger->warning(sprintf('logStream is "%s"', $this->stream));
-        $entry = $this->formatEntry($entry);
 
-        if (false === $this->initialized) {
+        if (!$this->initialized) {
             $this->initialize();
         }
+
+        $entry = $this->formatEntry($entry);
 
         // send items, retry once with a fresh sequence token
         try {
@@ -82,15 +82,11 @@ class AwsAuditLogHandler extends AbstractAuditLogHandler
         $this->existingStreams = $this->fetchExistingStreams();
         $existingStreamsNames = $this->extractExistingStreamNames();
 
-        $this->logger->warning(sprintf('acs123 $existingStreamsNames is "%s"', implode(', ', $existingStreamsNames)));
-
         if (!in_array($this->stream, $existingStreamsNames, true)) {
             $this->createLogStream();
         } else {
             $this->determineSequenceToken();
         }
-
-        $this->initialized = true;
     }
 
     private function fetchExistingStreams(): array
@@ -117,8 +113,6 @@ class AwsAuditLogHandler extends AbstractAuditLogHandler
 
     private function createLogStream(): void
     {
-        $this->logger->warning(sprintf('acs123 creating logStream "%s" in logGroup "%s"', $this->stream, $this->group));
-
         $this
             ->client
             ->createLogStream(
