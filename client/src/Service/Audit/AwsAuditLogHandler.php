@@ -49,12 +49,9 @@ class AwsAuditLogHandler extends AbstractAuditLogHandler
             return;
         }
 
-        $this->initialized = $this->stream === $entry['context']['event'];
         $this->stream = $entry['context']['event'];
 
-        if (!$this->initialized) {
-            $this->initialize();
-        }
+        $this->initialize();
 
         $entry = $this->formatEntry($entry);
 
