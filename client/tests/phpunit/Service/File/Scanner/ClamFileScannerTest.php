@@ -29,8 +29,6 @@ class ClamFileScannerTest extends TestCase
     /** @var Client */
     private $client;
 
-    /** mixed */
-    private $result;
 
     protected function setUp(): void
     {
@@ -45,8 +43,7 @@ class ClamFileScannerTest extends TestCase
     {
         $this
             ->ensureFileWillBeClean()
-            ->invokeTest('file.pdf')
-            ->assertGracefulReturn();
+            ->invokeTest('file.pdf');
     }
 
     /**
@@ -80,8 +77,7 @@ class ClamFileScannerTest extends TestCase
     {
         $this
             ->ensureServiceIsTemporarilyUnavailable()
-            ->invokeTest('file.pdf')
-            ->assertGracefulReturn();
+            ->invokeTest('file.pdf');
     }
 
     /**
@@ -175,20 +171,12 @@ class ClamFileScannerTest extends TestCase
     }
 
     /**
-     * @return $this
-     *
      * @throws \GuzzleHttp\Exception\GuzzleException
      */
-    private function invokeTest($filename): ClamFileScannerTest
+    private function invokeTest($filename)
     {
         $this->scanner = new ClamFileScanner($this->client, $this->logger, $this->badPdfKeywords);
-        $this->result = $this->scanner->scanFile(new UploadedFile(__DIR__."/$filename", $filename));
-
-        return $this;
+        $this->scanner->scanFile(new UploadedFile(__DIR__."/$filename", $filename));
     }
 
-    private function assertGracefulReturn()
-    {
-        $this->assertTrue($this->result);
-    }
 }
