@@ -61,7 +61,7 @@ class AwsAuditLogHandler extends AbstractAuditLogHandler
         try {
             $this->send($entry);
         } catch (CloudWatchLogsException $e) {
-            $this->determineSequenceToken(true);
+            $this->determineSequenceToken();
             $this->send($entry);
         }
     }
@@ -124,16 +124,29 @@ class AwsAuditLogHandler extends AbstractAuditLogHandler
             );
     }
 
-    private function determineSequenceToken(bool $refresh = false): string
+    private function determineSequenceToken(): void
     {
-        return $this
+        $response = $this
             ->client
             ->describeLogStreams(
                 [
                     'logGroupName' => $this->group,
                     'logStreamNamePrefix' => $this->stream,
                 ]
-            )->get('nextToken');
+            );
+
+        $nextToken = $response->get('nextToken') ? $response->get('nextToken') : null;
+
+        if (!$nextToken) {
+            foreach ($this->existingStreams as $stream) {
+                if ($stream['logStreamName'] === $this->stream && isset($stream['uploadSequenceToken'])) {
+                    $this->sequenceToken = $stream['uploadSequenceToken'];
+                    break;
+                }
+            }
+        } else {
+            $this->sequenceToken = $nextToken;
+        }
     }
 
     private function send(array $entry): void
