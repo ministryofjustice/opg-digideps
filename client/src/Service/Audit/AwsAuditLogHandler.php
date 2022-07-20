@@ -56,7 +56,9 @@ class AwsAuditLogHandler extends AbstractAuditLogHandler
         try {
             $this->send($entry);
         } catch (CloudWatchLogsException $e) {
-            $this->determineSequenceToken();
+            $describeStreamsResponse = $this->describeStreams();
+            $this->sequenceToken = $describeStreamsResponse->get('nextToken');
+
             $this->send($entry);
         }
     }
@@ -73,17 +75,19 @@ class AwsAuditLogHandler extends AbstractAuditLogHandler
 
     private function initialize(): void
     {
-        $this->existingStreams = $this->fetchExistingStreams();
-        $existingStreamsNames = $this->extractExistingStreamNames();
+        $describeStreamsResponse = $this->describeStreams();
+
+        $existingStreams = $describeStreamsResponse->get('logStreams');
+        $existingStreamsNames = $this->extractExistingStreamNames($existingStreams);
 
         if (!in_array($this->stream, $existingStreamsNames, true)) {
             $this->createLogStream();
         } else {
-            $this->determineSequenceToken();
+            $this->sequenceToken = $describeStreamsResponse->get('nextToken');
         }
     }
 
-    private function fetchExistingStreams(): array
+    private function describeStreams(): Result
     {
         return $this
             ->client
@@ -92,16 +96,16 @@ class AwsAuditLogHandler extends AbstractAuditLogHandler
                     'logGroupName' => $this->group,
                     'logStreamNamePrefix' => $this->stream,
                 ]
-            )->get('logStreams');
+            );
     }
 
-    private function extractExistingStreamNames(): array
+    private function extractExistingStreamNames(array $streams): array
     {
         return array_map(
             function ($stream) {
                 return $stream['logStreamName'] ?? null;
             },
-            $this->existingStreams
+            $streams
         );
     }
 
@@ -115,31 +119,6 @@ class AwsAuditLogHandler extends AbstractAuditLogHandler
                     'logStreamName' => $this->stream,
                 ]
             );
-    }
-
-    private function determineSequenceToken(): void
-    {
-        $response = $this
-            ->client
-            ->describeLogStreams(
-                [
-                    'logGroupName' => $this->group,
-                    'logStreamNamePrefix' => $this->stream,
-                ]
-            );
-
-        $nextToken = !empty($response->get('nextToken')) ? $response->get('nextToken') : null;
-
-        if (!$nextToken) {
-            foreach ($this->existingStreams as $stream) {
-                if ($stream['logStreamName'] === $this->stream && isset($stream['uploadSequenceToken'])) {
-                    $this->sequenceToken = $stream['uploadSequenceToken'];
-                    break;
-                }
-            }
-        } else {
-            $this->sequenceToken = $nextToken;
-        }
     }
 
     private function send(array $entry): void
