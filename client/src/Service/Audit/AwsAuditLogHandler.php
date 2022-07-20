@@ -24,9 +24,6 @@ class AwsAuditLogHandler extends AbstractAuditLogHandler
     /** @var array */
     private $existingStreams = [];
 
-    /** @var bool */
-    private $initialized = false;
-
     /**
      * @param $group
      * @param int  $level
@@ -51,9 +48,7 @@ class AwsAuditLogHandler extends AbstractAuditLogHandler
 
         $this->stream = $entry['context']['event'];
 
-        if (!$this->initialized) {
-            $this->initialize();
-        }
+        $this->initialize();
 
         $entry = $this->formatEntry($entry);
 
@@ -86,8 +81,6 @@ class AwsAuditLogHandler extends AbstractAuditLogHandler
         } else {
             $this->determineSequenceToken();
         }
-
-        $this->initialized = true;
     }
 
     private function fetchExistingStreams(): array
@@ -135,7 +128,7 @@ class AwsAuditLogHandler extends AbstractAuditLogHandler
                 ]
             );
 
-        $nextToken = $response->get('nextToken') ? $response->get('nextToken') : null;
+        $nextToken = !empty($response->get('nextToken')) ? $response->get('nextToken') : null;
 
         if (!$nextToken) {
             foreach ($this->existingStreams as $stream) {
