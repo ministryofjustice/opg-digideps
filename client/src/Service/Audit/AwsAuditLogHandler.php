@@ -51,7 +51,9 @@ class AwsAuditLogHandler extends AbstractAuditLogHandler
 
         $this->stream = $entry['context']['event'];
 
-        $this->initialize();
+        if (!$this->initialized) {
+            $this->initialize();
+        }
 
         $entry = $this->formatEntry($entry);
 
@@ -84,6 +86,8 @@ class AwsAuditLogHandler extends AbstractAuditLogHandler
         } else {
             $this->determineSequenceToken();
         }
+
+        $this->initialized = true;
     }
 
     private function fetchExistingStreams(): array
@@ -120,18 +124,16 @@ class AwsAuditLogHandler extends AbstractAuditLogHandler
             );
     }
 
-    private function determineSequenceToken(bool $refresh = false): void
+    private function determineSequenceToken(bool $refresh = false): string
     {
-        if ($refresh) {
-            $this->existingStreams = $this->fetchExistingStreams();
-        }
-
-        foreach ($this->existingStreams as $stream) {
-            if ($stream['logStreamName'] === $this->stream && isset($stream['uploadSequenceToken'])) {
-                $this->sequenceToken = $stream['uploadSequenceToken'];
-                break;
-            }
-        }
+        return $this
+            ->client
+            ->describeLogStreams(
+                [
+                    'logGroupName' => $this->group,
+                    'logStreamNamePrefix' => $this->stream,
+                ]
+            )->get('nextToken');
     }
 
     private function send(array $entry): void
