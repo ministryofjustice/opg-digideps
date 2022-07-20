@@ -1,5 +1,5 @@
 @v2 @registration @activate @v2_admin
-Feature: Activate user account
+Feature: Activate user account - Organisation users
 
     @admin
     Scenario: User registration date and active flag are only set when a user completes the full registration flow - Case manager created

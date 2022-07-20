@@ -35,9 +35,10 @@ trait ActivateTrait
 
         $this->newUserType = $typeOfUser;
         $this->newUserEmail = $this->faker->safeEmail();
-        $lastName = 'lay' === strtolower($typeOfUser) ? $this->existingPreRegistration->getDeputySurname() : $this->faker->lastName();
-        $postCode = 'lay' === strtolower($typeOfUser) ? $this->existingPreRegistration->getDeputyPostCode() : $this->faker->postcode();
-        $roleName = 'lay' === strtolower($typeOfUser) ? 'ROLE_LAY_DEPUTY' : 'ROLE_PROF_ADMIN';
+
+        $lastName = in_array(strtolower($typeOfUser), ['lay', 'ndr']) ? $this->existingPreRegistration->getDeputySurname() : $this->faker->lastName();
+        $postCode = in_array(strtolower($typeOfUser), ['lay', 'ndr']) ? $this->existingPreRegistration->getDeputyPostCode() : $this->faker->postcode();
+        $roleName = in_array(strtolower($typeOfUser), ['lay', 'ndr']) ? 'ROLE_LAY_DEPUTY' : 'ROLE_PROF_ADMIN';
 
         $this->fillInField('admin_email', $this->newUserEmail);
         $this->fillInField('admin_firstname', $this->faker->firstName());
@@ -46,6 +47,10 @@ trait ActivateTrait
 
         $this->selectOption('admin[roleType]', 'deputy');
         $this->selectOption('admin[roleNameDeputy]', $roleName);
+
+        if ('ndr' === $typeOfUser) {
+            $this->checkOption('admin_ndrEnabled');
+        }
 
         $this->pressButton('Save user');
         $this->clickLink('Sign out');
@@ -67,9 +72,12 @@ trait ActivateTrait
     {
         $this->completeSetPasswordStep();
 
-        if ('lay' === $this->newUserType) {
+        if (in_array(strtolower($this->newUserType), ['lay', 'ndr'])) {
             $this->loginToFrontendAs($this->newUserEmail);
             $this->completeUserDetailsSection();
+        }
+
+        if ('lay' === $this->newUserType) {
             $this->completeClientDetailsSection();
         }
     }
@@ -186,10 +194,20 @@ trait ActivateTrait
     {
         $this->loginToFrontendAs($this->newUserEmail);
 
-        if ('lay' === $userType) {
-            $this->completeReportDatesSection();
-        } else {
-            $this->completeOrgUserDetailsSection();
+        sleep(1);
+
+        switch ($userType) {
+            case 'lay':
+                $this->completeReportDatesSection();
+                break;
+            case 'org':
+                $this->completeOrgUserDetailsSection();
+                break;
+            case 'ndr':
+                $this->completeClientDetailsSection();
+                break;
+            default:
+                throw new BehatException('Only supported userTypes for this step are "lay", "org" or "ndr". Use an available type or add a new one.');
         }
     }
 
