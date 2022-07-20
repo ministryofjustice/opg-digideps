@@ -13,6 +13,7 @@ use DateTime;
 trait ActivateTrait
 {
     private ?PreRegistration $existingPreRegistration;
+    private array $newUsers = [];
     private string $newUserEmail = '';
     private string $newUserType = '';
 
@@ -33,14 +34,13 @@ trait ActivateTrait
         $this->assertAdminLoggedIn();
         $this->iVisitAdminAddUserPage();
 
-        $this->newUserType = $typeOfUser;
-        $this->newUserEmail = $this->faker->safeEmail();
+        $this->newUsers += [$this->testRunId => ['type' => $typeOfUser, 'email' => $this->faker->safeEmail()]];
 
         $lastName = in_array(strtolower($typeOfUser), ['lay', 'ndr']) ? $this->existingPreRegistration->getDeputySurname() : $this->faker->lastName();
         $postCode = in_array(strtolower($typeOfUser), ['lay', 'ndr']) ? $this->existingPreRegistration->getDeputyPostCode() : $this->faker->postcode();
         $roleName = in_array(strtolower($typeOfUser), ['lay', 'ndr']) ? 'ROLE_LAY_DEPUTY' : 'ROLE_PROF_ADMIN';
 
-        $this->fillInField('admin_email', $this->newUserEmail);
+        $this->fillInField('admin_email', $this->getUserForTestRun()['email']);
         $this->fillInField('admin_firstname', $this->faker->firstName());
         $this->fillInField('admin_lastname', $lastName);
         $this->fillInField('admin_addressPostcode', $postCode);
@@ -56,13 +56,18 @@ trait ActivateTrait
         $this->clickLink('Sign out');
     }
 
+    private function getUserForTestRun()
+    {
+        return $this->newUsers[$this->testRunId];
+    }
+
     /**
      * @When /^the user clicks the activate account link in their email$/
      */
     public function theUserClicksTheActivateAccountLinkInTheirEmail()
     {
         $this->getSession()->reset();
-        $this->clickActivationOrPasswordResetLinkInEmail(false, 'activation', $this->newUserEmail);
+        $this->clickActivationOrPasswordResetLinkInEmail(false, 'activation', $this->getUserForTestRun()['email']);
     }
 
     /**
@@ -72,12 +77,12 @@ trait ActivateTrait
     {
         $this->completeSetPasswordStep();
 
-        if (in_array(strtolower($this->newUserType), ['lay', 'ndr'])) {
-            $this->loginToFrontendAs($this->newUserEmail);
+        if (in_array(strtolower($this->getUserForTestRun()['type']), ['lay', 'ndr'])) {
+            $this->loginToFrontendAs($this->getUserForTestRun()['email']);
             $this->completeUserDetailsSection();
         }
 
-        if ('lay' === $this->newUserType) {
+        if ('lay' === $this->getUserForTestRun()['type']) {
             $this->completeClientDetailsSection();
         }
     }
@@ -135,7 +140,7 @@ trait ActivateTrait
      */
     public function thePartiallyRegisteredUsersShouldSet(string $property, string $toBeOrNotToBe)
     {
-        $this->fillInField('admin_q', $this->newUserEmail);
+        $this->fillInField('admin_q', $this->getUserForTestRun()['email']);
         $this->pressButton('Search');
 
         $headerByProperty = match (strtolower($property)) {
@@ -160,7 +165,7 @@ trait ActivateTrait
                 throw new BehatException(sprintf('"%s" is not a supported property. Supported properties are %s.', $property, implode(', ', $supportedProperties)));
         }
 
-        $cellValue = $this->getTableCellByUniqueRowValueAndHeader($headerByProperty, $this->newUserEmail);
+        $cellValue = $this->getTableCellByUniqueRowValueAndHeader($headerByProperty, $this->getUserForTestRun()['email']);
 
         if (!str_contains($cellValue, $matchingString)) {
             throw new BehatException(sprintf('Expected "%s" property to be "%s", got "%s"', $headerByProperty, $matchingString, $cellValue));
@@ -187,12 +192,12 @@ trait ActivateTrait
      */
     public function theUserCompletesTheFinalRegistrationStep()
     {
-        $this->completeFinalRegistrationSection($this->newUserType);
+        $this->completeFinalRegistrationSection($this->getUserForTestRun()['type']);
     }
 
     private function completeFinalRegistrationSection($userType)
     {
-        $this->loginToFrontendAs($this->newUserEmail);
+        $this->loginToFrontendAs($this->getUserForTestRun()['email']);
 
         sleep(1);
 
@@ -224,15 +229,14 @@ trait ActivateTrait
      */
     public function aLayDeputyProvidesDetailsThatMatchThePreRegistrationDetails()
     {
-        $this->newUserType = 'lay';
-        $this->newUserEmail = $this->faker->safeEmail();
+        $this->newUsers += [$this->testRunId => ['type' => 'lay', 'email' => $this->faker->safeEmail()]];
 
         $this->visitFrontendPath('/register');
 
         $this->fillInField('self_registration_firstname', 'Brian');
         $this->fillInField('self_registration_lastname', $this->existingPreRegistration->getDeputySurname());
-        $this->fillInField('self_registration_email_first', $this->newUserEmail);
-        $this->fillInField('self_registration_email_second', $this->newUserEmail);
+        $this->fillInField('self_registration_email_first', $this->getUserForTestRun()['email']);
+        $this->fillInField('self_registration_email_second', $this->getUserForTestRun()['email']);
         $this->fillInField('self_registration_postcode', $this->existingPreRegistration->getDeputyPostCode());
         $this->fillInField('self_registration_clientFirstname', 'Billy');
         $this->fillInField('self_registration_clientLastname', $this->existingPreRegistration->getClientLastname());
@@ -250,12 +254,11 @@ trait ActivateTrait
     {
         $this->iVisitOrganisationAddUserPageForLoggedInUser();
 
-        $this->newUserType = 'org';
-        $this->newUserEmail = $this->faker->safeEmail();
+        $this->newUsers += [$this->testRunId => ['type' => 'org', 'email' => $this->faker->safeEmail()]];
 
         $this->fillInField('organisation_member_firstname', $this->faker->firstName());
         $this->fillInField('organisation_member_lastname', $this->faker->lastName());
-        $this->fillInField('organisation_member_email', $this->newUserEmail);
+        $this->fillInField('organisation_member_email', $this->getUserForTestRun()['email']);
 
         $this->selectOption('organisation_member_roleName_0', 'ROLE_PROF_TEAM_MEMBER');
 
