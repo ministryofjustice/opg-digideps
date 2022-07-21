@@ -72,9 +72,11 @@ class UserControllerTest extends AbstractTestController
 
     public function testAdd()
     {
+        self::$tokenAdmin = $this->loginAsAdmin();
+
         $return = $this->assertJsonRequest('POST', '/user', [
             'data' => [
-                'role_name' => User::ROLE_LAY_DEPUTY, //deputy role
+                'role_name' => User::ROLE_LAY_DEPUTY, // deputy role
                 'firstname' => 'n',
                 'lastname' => 's',
                 'email' => 'n.s@example.org',
@@ -84,9 +86,12 @@ class UserControllerTest extends AbstractTestController
         ]);
 
         $user = $this->fixtures()->clear()->getRepo('User')->find($return['data']['id']);
+        $loggedInUser = $this->fixtures()->clear()->getRepo('User')->find($this->loggedInUserId);
+
         $this->assertEquals('n', $user->getFirstname());
         $this->assertEquals('s', $user->getLastname());
         $this->assertEquals('n.s@example.org', $user->getEmail());
+        $this->assertEquals($loggedInUser->getId(), $user->getCreatedBy()->getId(), sprintf('The User that created this user was not as expected. Wanted user with ID: %s, Got: %g', $this->loggedInUserId, $user->getCreatedBy() ? $user->getCreatedBy()->getId() : null));
     }
 
     public function testUpdateAuth()
@@ -250,7 +255,7 @@ class UserControllerTest extends AbstractTestController
             'mustSucceed' => true,
             'AuthToken' => self::$tokenDeputy,
             'data' => [
-                'password_plain' => 'DigidepsPass1234', //restore password for subsequent logins
+                'password_plain' => 'DigidepsPass1234', // restore password for subsequent logins
                 'send_email' => 'password-reset',
             ],
         ]);

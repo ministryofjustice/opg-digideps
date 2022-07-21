@@ -68,6 +68,7 @@ resource "aws_rds_cluster" "cluster_serverless" {
   deletion_protection          = var.deletion_protection
   engine                       = var.engine
   engine_mode                  = "serverless"
+  engine_version               = var.engine_version
   final_snapshot_identifier    = "${var.database_name}-${terraform.workspace}-final-snapshot"
   kms_key_id                   = var.kms_key_id
   master_username              = var.master_username

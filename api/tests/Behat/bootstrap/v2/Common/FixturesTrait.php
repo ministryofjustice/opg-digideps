@@ -177,6 +177,22 @@ trait FixturesTrait
         }
     }
 
+    public function assertLoggedInUserIsSet()
+    {
+        if (is_null($this->loggedInUserDetails)) {
+            throw new BehatException('An logged in User has not been set. Ensure a previous step in the scenario has set this User and try again.');
+        }
+    }
+
+    public function assertLoggedInUserHasOrgRole()
+    {
+        if (!in_array($this->loggedInUserDetails->getUserRole(), User::$orgRoles)) {
+            $message = sprintf('The logged in user role is "%s"/ Expected one of "%s".', $this->loggedInUserDetails->getUserRole(), implode(', ', User::$orgRoles));
+
+            throw new BehatException($message);
+        }
+    }
+
     public function createAdditionalProfHealthWelfareUsers(int $numberOfUsers): array
     {
         $users = [];

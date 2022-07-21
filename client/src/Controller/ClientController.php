@@ -6,6 +6,7 @@ use App\Entity\Client;
 use App\Entity\Report\Report;
 use App\Entity\User;
 use App\Event\RegistrationFailedEvent;
+use App\Event\RegistrationSucceededEvent;
 use App\EventDispatcher\ObservableEventDispatcher;
 use App\Exception\RestClientException;
 use App\Form\ClientType;
@@ -15,6 +16,7 @@ use App\Service\Client\Internal\PreRegistrationApi;
 use App\Service\Client\Internal\UserApi;
 use App\Service\Client\RestClient;
 use App\Service\Redirector;
+use App\Service\Time\DateTimeProvider;
 use Psr\Log\LoggerInterface;
 use RuntimeException;
 use Sensio\Bundle\FrameworkExtraBundle\Configuration\Template;
@@ -32,7 +34,8 @@ class ClientController extends AbstractController
         private ClientApi $clientApi,
         private RestClient $restClient,
         private PreRegistrationApi $preRegistrationApi,
-        private ObservableEventDispatcher $eventDispatcher
+        private ObservableEventDispatcher $eventDispatcher,
+        private DateTimeProvider $dateTimeProvider
     ) {
     }
 
@@ -156,6 +159,12 @@ class ClientController extends AbstractController
                 $url = $currentUser->isNdrEnabled()
                     ? $this->generateUrl('ndr_index')
                     : $this->generateUrl('report_create', ['clientId' => $response['id']]);
+
+                if ($currentUser->isNdrEnabled()) {
+                    $event = new RegistrationSucceededEvent($currentUser);
+
+                    $this->eventDispatcher->dispatch($event, RegistrationSucceededEvent::NAME);
+                }
 
                 return $this->redirect($url);
             } catch (Throwable $e) {
