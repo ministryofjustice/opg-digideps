@@ -19,7 +19,7 @@
 
     {{ form_start(form, {attr: {'data-module': 'csv-upload-progress', novalidate: 'novalidate' }}) }}
 
-    <div class="opg-alert opg-alert--error hidden" data-js="upload-error">
+    <div class="opg-alert opg-alert--error hidden govuk-error-summary" data-js="upload-error">
         <div class="opg-alert__message">
             {{ (page ~ '.uploadError') | trans }}
         </div>
