@@ -105,7 +105,7 @@ class IndexController extends AbstractController
                     throw new RuntimeException('Cannot add admin from non-admin user');
                 }
 
-                $this->userApi->createAdminUser($form->getData());
+                $this->userApi->createUser($form->getData());
 
                 $this->addFlash(
                     'notice',

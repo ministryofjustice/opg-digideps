@@ -104,6 +104,8 @@ class UserRegistrationServiceTest extends TestCase
             ->shouldReceive('getId')->andReturn(1)
             ->getMock();
 
+        $mockUser->shouldReceive('setCreatedBy')->andReturn($mockUser);
+
         $mockClient = m::mock('\App\Entity\Client')
             ->shouldIgnoreMissing(true)
             ->shouldReceive('addUser')->once()->with($mockUser)
@@ -119,7 +121,7 @@ class UserRegistrationServiceTest extends TestCase
             ->shouldIgnoreMissing(true)
             ->shouldReceive('getConnection')->andReturn($mockConnection)
             ->shouldReceive('flush')->twice()
-            ->shouldReceive('persist')->with($mockUser)->once()
+            ->shouldReceive('persist')->with($mockUser)->twice()
             ->shouldReceive('persist')->with($mockClient)->once()
             ->getMock();
 
@@ -180,6 +182,8 @@ class UserRegistrationServiceTest extends TestCase
             ->shouldReceive('getId')->andReturn(1)
             ->getMock();
 
+        $mockUser->shouldReceive('setCreatedBy')->andReturn($mockUser);
+
         $mockClient = m::mock('\App\Entity\Client')
             ->shouldIgnoreMissing(true)
             ->shouldReceive('addUser')->with($mockUser)
@@ -196,7 +200,7 @@ class UserRegistrationServiceTest extends TestCase
         $em = m::mock(EntityManager::class)
             ->shouldIgnoreMissing(true)
             ->shouldReceive('getConnection')->andReturn($mockConnection)
-            ->shouldReceive('persist')->with($mockUser)->once()
+            ->shouldReceive('persist')->with($mockUser)->twice()
             ->shouldReceive('persist')->with($mockClient)->once()->andThrow($exception)
             ->getMock();
 
@@ -227,6 +231,8 @@ class UserRegistrationServiceTest extends TestCase
         $mockUser = m::mock('\App\Entity\User')
             ->shouldReceive('getId')->andReturn(1)
             ->getMock();
+
+        $mockUser->shouldReceive('setCreatedBy')->with($mockUser);
 
         $mockClient = m::mock(Client::class)
             ->shouldIgnoreMissing(true)

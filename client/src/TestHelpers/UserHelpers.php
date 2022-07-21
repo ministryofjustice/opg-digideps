@@ -54,7 +54,7 @@ class UserHelpers extends KernelTestCase
 
     public static function createAdminUser(): User
     {
-        return (self::createUser())->setRoleName(User::ROLE_ADMIN);
+        return (self::createUser())->setRoleName(User::ROLE_ADMIN)->setIsCaseManager(true);
     }
 
     public static function createSuperAdminUser(): User
@@ -64,7 +64,7 @@ class UserHelpers extends KernelTestCase
 
     public static function createAdminManager(): User
     {
-        return (self::createUser())->setRoleName(User::ROLE_ADMIN_MANAGER);
+        return (self::createUser())->setRoleName(User::ROLE_ADMIN_MANAGER)->setIsCaseManager(true);
     }
 
     public static function createProfDeputyUser(): User
