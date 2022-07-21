@@ -463,6 +463,8 @@ class FixtureController extends AbstractController
             throw $this->createNotFoundException();
         }
 
+        $response = new Response();
+
         try {
             /** @var \GuzzleHttp\Psr7\Response $response */
             $response = $this
