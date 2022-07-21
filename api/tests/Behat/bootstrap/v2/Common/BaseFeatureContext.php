@@ -113,10 +113,10 @@ class BaseFeatureContext extends MinkContext
     public Generator $faker;
 
     public function __construct(
-        private FixtureHelper $fixtureHelper,
+        protected FixtureHelper $fixtureHelper,
         protected KernelInterface $symfonyKernel,
         protected EntityManagerInterface $em,
-        private ReportTestHelper $reportTestHelper,
+        protected ReportTestHelper $reportTestHelper,
         protected ParameterStoreService $parameterStoreService
     ) {
         $this->appEnvironment = $this->symfonyKernel->getEnvironment();

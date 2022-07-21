@@ -24,8 +24,8 @@ use Symfony\Component\Security\Core\Authentication\Token\TokenInterface;
 use Symfony\Component\Security\Core\Encoder\EncoderFactoryInterface;
 use Symfony\Component\Security\Core\Security as SecurityHelper;
 
-//TODO
-//http://symfony.com/doc/current/bundles/SensioFrameworkExtraBundle/annotations/converters.html
+// TODO
+// http://symfony.com/doc/current/bundles/SensioFrameworkExtraBundle/annotations/converters.html
 
 /**
  * @Route("/user")
@@ -129,13 +129,22 @@ class UserController extends RestController
             $user->setRegistrationToken($data['registration_token']);
         }
 
-        if (!empty($data['token_date'])) { //important, keep this after "setRegistrationToken" otherwise date will be reset
+        if (!empty($data['token_date'])) { // important, keep this after "setRegistrationToken" otherwise date will be reset
             $user->setTokenDate(new DateTime($data['token_date']));
         }
 
         if (!empty($data['role_name'])) {
             $roleToSet = $data['role_name'];
             $user->setRoleName($roleToSet);
+        }
+
+        if (!empty($data['active'])) {
+            $user->setActive($data['active']);
+        }
+
+        if (!empty($data['registration_date'])) {
+            $registrationDate = new DateTime($data['registration_date']);
+            $user->setRegistrationDate($registrationDate);
         }
 
         return $user;

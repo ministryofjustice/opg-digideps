@@ -4,6 +4,7 @@ namespace App\Controller;
 
 use App\Entity as EntityDir;
 use App\Event\RegistrationFailedEvent;
+use App\Event\RegistrationSucceededEvent;
 use App\EventDispatcher\ObservableEventDispatcher;
 use App\Exception\RestClientException;
 use App\Form as FormDir;
@@ -202,6 +203,9 @@ class UserController extends AbstractController
             if ($user->isLayDeputy()) {
                 return $this->redirectToRoute('client_add');
             }
+
+//            this is the final step for Org users so registration has succeeded
+            $this->eventDispatcher->dispatch(new RegistrationSucceededEvent($user), RegistrationSucceededEvent::NAME);
 
             // all other users go to their homepage (dashboard for PROF/PA), or /admin for Admins
             return $this->redirect($redirector->getHomepageRedirect());

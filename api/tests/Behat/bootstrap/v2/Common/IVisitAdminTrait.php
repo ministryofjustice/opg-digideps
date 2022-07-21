@@ -2,6 +2,7 @@
 
 namespace App\Tests\Behat\v2\Common;
 
+use App\Entity\Organisation;
 use App\Tests\Behat\BehatException;
 
 trait IVisitAdminTrait
@@ -183,7 +184,7 @@ trait IVisitAdminTrait
     {
         $this->visitAdminPath($this->getOldAdminUsersReportUrl());
     }
-    
+
     /**
      * @When I visit the admin login page
      */
@@ -240,7 +241,25 @@ trait IVisitAdminTrait
         $this->assertInteractingWithUserIsSet();
 
         $this->visitAdminPath(
-            $this->getAdminChecklistPage($this->interactingWithUserDetails->getPreviousReportId())
+            $this->getAdminChecklistUrl($this->interactingWithUserDetails->getPreviousReportId())
         );
+    }
+
+    /**
+     * @When I visit the organisation Add User page for the logged-in user
+     */
+    public function iVisitOrganisationAddUserPageForLoggedInUser()
+    {
+        $this->assertLoggedInUserIsSet();
+        $this->assertLoggedInUserHasOrgRole();
+
+        $emailIdentifier = $this->loggedInUserDetails->getOrganisationEmailIdentifier();
+        $organisation = $this->em->getRepository(Organisation::class)->findOneBy(['emailIdentifier' => $emailIdentifier]);
+
+        if (is_null($organisation)) {
+            throw new BehatException(sprintf('Could not find an organisation with email identifier "%s"', $emailIdentifier));
+        }
+
+        $this->visitFrontendPath($this->getOrgAddUserUrl($organisation->getId()));
     }
 }

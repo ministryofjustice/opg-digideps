@@ -321,7 +321,7 @@ trait IVisitFrontendTrait
             ['email' => strtolower($this->interactingWithUserDetails->getUserEmail())]
         ))->getRegistrationToken();
 
-        $this->visitFrontendPath($this->getActivateUserPage($activationToken));
+        $this->visitFrontendPath($this->getActivateUserUrl($activationToken));
     }
 
     /**
@@ -329,6 +329,6 @@ trait IVisitFrontendTrait
      */
     public function iVisitTheFrontendAvailabilityPage()
     {
-        $this->visitFrontendPath($this->getAvailabilityPage());
+        $this->visitFrontendPath($this->getAvailabilityUrl());
     }
 }
