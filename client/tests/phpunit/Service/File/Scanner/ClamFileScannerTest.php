@@ -29,7 +29,6 @@ class ClamFileScannerTest extends TestCase
     /** @var Client */
     private $client;
 
-
     protected function setUp(): void
     {
         $this->logger = $this->createMock(LoggerInterface::class);
@@ -178,5 +177,4 @@ class ClamFileScannerTest extends TestCase
         $this->scanner = new ClamFileScanner($this->client, $this->logger, $this->badPdfKeywords);
         $this->scanner->scanFile(new UploadedFile(__DIR__."/$filename", $filename));
     }
-
 }
