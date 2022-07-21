@@ -58,7 +58,8 @@ class DocumentService
         $storageRef = $document->getStorageReference();
 
         $endpointResult = '';
-        
+        $s3Result = [];
+
         try {
             if (is_numeric($documentId) && !empty($storageRef)) {
                 //Ensure document is removed from s3 and database
