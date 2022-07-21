@@ -16,13 +16,7 @@ class AwsAuditLogHandler extends AbstractAuditLogHandler
     private $group;
 
     /** @var string */
-    private $stream;
-
-    /** @var string */
     private $sequenceToken;
-
-    /** @var array */
-    private $existingStreams = [];
 
     /**
      * @param $group
@@ -46,20 +40,18 @@ class AwsAuditLogHandler extends AbstractAuditLogHandler
             return;
         }
 
-        $this->stream = $entry['context']['event'];
-
-        $this->initialize();
-
+        $stream = $entry['context']['event'];
+        $sequenceToken = $this->initialize($stream);
         $entry = $this->formatEntry($entry);
 
         // send items, retry once with a fresh sequence token
         try {
-            $this->send($entry);
+            $this->send($entry, $stream, $sequenceToken);
         } catch (CloudWatchLogsException $e) {
-            $describeStreamsResponse = $this->describeStreams();
-            $this->sequenceToken = $describeStreamsResponse->get('nextToken');
+            $describeStreamsResponse = $this->describeStreams($stream);
+            $sequenceToken = $describeStreamsResponse->get('nextToken');
 
-            $this->send($entry);
+            $this->send($entry, $stream, $sequenceToken);
         }
     }
 
@@ -73,28 +65,28 @@ class AwsAuditLogHandler extends AbstractAuditLogHandler
         ];
     }
 
-    private function initialize(): void
+    private function initialize(string $stream): ?string
     {
-        $describeStreamsResponse = $this->describeStreams();
+        $describeStreamsResponse = $this->describeStreams($stream);
 
         $existingStreams = $describeStreamsResponse->get('logStreams');
         $existingStreamsNames = $this->extractExistingStreamNames($existingStreams);
 
-        if (!in_array($this->stream, $existingStreamsNames, true)) {
-            $this->createLogStream();
+        if (!in_array($stream, $existingStreamsNames, true)) {
+            $this->createLogStream($stream);
         } else {
-            $this->sequenceToken = $describeStreamsResponse->get('nextToken');
+            return $describeStreamsResponse->get('nextToken');
         }
     }
 
-    private function describeStreams(): Result
+    private function describeStreams(string $stream): Result
     {
         return $this
             ->client
             ->describeLogStreams(
                 [
                     'logGroupName' => $this->group,
-                    'logStreamNamePrefix' => $this->stream,
+                    'logStreamNamePrefix' => $stream,
                 ]
             );
     }
@@ -109,34 +101,31 @@ class AwsAuditLogHandler extends AbstractAuditLogHandler
         );
     }
 
-    private function createLogStream(): void
+    private function createLogStream(string $stream): void
     {
         $this
             ->client
             ->createLogStream(
                 [
                     'logGroupName' => $this->group,
-                    'logStreamName' => $this->stream,
+                    'logStreamName' => $stream,
                 ]
             );
     }
 
-    private function send(array $entry): void
+    private function send(array $entry, string $stream, ?string $sequenceToken): void
     {
         $data = [
             'logGroupName' => $this->group,
-            'logStreamName' => $this->stream,
+            'logStreamName' => $stream,
             'logEvents' => $entry,
         ];
 
-        if (!empty($this->sequenceToken)) {
-            $data['sequenceToken'] = $this->sequenceToken;
+        if (!empty($sequenceToken)) {
+            $data['sequenceToken'] = $sequenceToken;
         }
 
-        $response = $this->client->putLogEvents($data);
-
-        // Set this in memory in case the same request goes on to audit log something else - saves fetching it from AWS.
-        $this->sequenceToken = $response->get('nextSequenceToken');
+        $this->client->putLogEvents($data);
     }
 
     public function getLogEventsByLogStream(string $streamName, int $logStartTime, int $logEndTime, string $groupName): Result
