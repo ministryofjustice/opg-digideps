@@ -364,4 +364,38 @@ class AuditEventsTest extends TestCase
 
         $this->assertEquals($expected, $actual);
     }
+
+    /**
+     * @test
+     */
+    public function selfRegistrationSucceeded()
+    {
+        $now = new DateTime();
+
+        /** @var ObjectProphecy|DateTimeProvider $dateTimeProvider */
+        $dateTimeProvider = self::prophesize(DateTimeProvider::class);
+        $dateTimeProvider->getDateTime()->shouldBeCalled()->willReturn($now);
+        $caseManager = UserHelpers::createAdminManager();
+        $registeredUser = (UserHelpers::createLayUser())
+            ->setCreatedBy($caseManager)
+            ->setIsCoDeputy(true)
+            ->setEmail('a@b.com')
+            ->setIsCaseManager(false)
+            ->setCreatedByCaseManager(true);
+
+        $expected = [
+            'trigger' => 'DEPUTY_USER_SELF_REGISTER_ATTEMPT',
+            'registered_user_email' => 'a@b.com',
+            'user_role' => 'ROLE_LAY_DEPUTY',
+            'has_multi_deputy_order' => true,
+            'created_by_case_manager' => 1,
+            'created_on' => $now->format(DateTime::ATOM),
+            'event' => 'USER_SELF_REGISTER_SUCCEEDED',
+            'type' => 'audit',
+        ];
+
+        $actual = (new AuditEvents($dateTimeProvider->reveal()))->selfRegistrationSucceeded($registeredUser);
+
+        $this->assertEquals($expected, $actual);
+    }
 }

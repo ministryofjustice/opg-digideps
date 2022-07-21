@@ -133,7 +133,7 @@ class PreRegistrationVerificationService
             $deputyLastnameMatches = $clientLastnameMatches;
         }
 
-        if ($detailsToMatchOn['deputyPostcode']) {
+        if (isset($detailsToMatchOn['deputyPostcode'])) {
             $normalisedPostcode = DataNormaliser::normalisePostcode($detailsToMatchOn['deputyPostcode']);
             $preRegistrationByPostcode = [];
             $preRegistrationWithPostcodeCount = 0;

@@ -51,7 +51,7 @@ class UserApi
         $this->eventDispatcher = $eventDispatcher;
     }
 
-    public function createAdminUser(User $userToCreate, array $jmsGroups = ['admin_add_user'])
+    public function createUser(User $userToCreate, array $jmsGroups = ['admin_add_user'])
     {
         $createdUser = $this->restClient->post(self::USER_ENDPOINT, $userToCreate, $jmsGroups, 'User');
 
@@ -253,18 +253,6 @@ class UserApi
     public function agreeTermsUse($token)
     {
         return $this->restClient->apiCall('put', 'user/agree-terms-use/'.$token, null, 'raw', [], false);
-    }
-
-    /**
-     * @return User[]
-     */
-    public function getActiveLays()
-    {
-        return $this->restClient->get(
-            self::GET_ACTIVE_LAYS,
-            'User[]',
-            ['user', 'user-clients']
-        );
     }
 
     private function dispatchAdminManagerCreatedEvent(User $createdUser)

@@ -50,6 +50,11 @@ class User implements UserInterface, DeputyInterface
         self::ROLE_ADMIN_MANAGER,
     ];
 
+    public static array $caseManagerRoles = [
+        self::ROLE_ADMIN,
+        self::ROLE_ADMIN_MANAGER,
+    ];
+
     /**
      * @JMS\Exclude
      */
@@ -357,6 +362,30 @@ class User implements UserInterface, DeputyInterface
      */
     private $numberOfSubmittedReports;
 
+    /**
+     * @JMS\Type("App\Entity\User")
+     * @JMS\Groups({"user"})
+     *
+     * @var User
+     */
+    private $createdBy;
+
+    /**
+     * @JMS\Type("bool")
+     * @JMS\Groups({"user"})
+     *
+     * @var bool
+     */
+    private $isCaseManager;
+
+    /**
+     * @JMS\Type("bool")
+     * @JMS\Groups({"user"})
+     *
+     * @var bool
+     */
+    private $createdByCaseManager;
+
     public function __construct()
     {
         $this->organisations = new ArrayCollection();
@@ -609,9 +638,11 @@ class User implements UserInterface, DeputyInterface
     /**
      * @param bool $isCoDeputy
      */
-    public function setIsCoDeputy($isCoDeputy)
+    public function setIsCoDeputy($isCoDeputy): self
     {
         $this->isCoDeputy = $isCoDeputy;
+
+        return $this;
     }
 
     /**
@@ -1273,6 +1304,42 @@ class User implements UserInterface, DeputyInterface
     public function setAddress5($address5): User
     {
         $this->address5 = $address5;
+
+        return $this;
+    }
+
+    public function getCreatedBy(): ?User
+    {
+        return $this->createdBy;
+    }
+
+    public function setCreatedBy(?User $createdBy): User
+    {
+        $this->createdBy = $createdBy;
+
+        return $this;
+    }
+
+    public function isCaseManager(): bool
+    {
+        return $this->isCaseManager;
+    }
+
+    public function setIsCaseManager(bool $isCaseManager): User
+    {
+        $this->isCaseManager = $isCaseManager;
+
+        return $this;
+    }
+
+    public function isCreatedByCaseManager(): bool
+    {
+        return $this->createdByCaseManager;
+    }
+
+    public function setCreatedByCaseManager(bool $createdByCaseManager): User
+    {
+        $this->createdByCaseManager = $createdByCaseManager;
 
         return $this;
     }

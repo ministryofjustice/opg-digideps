@@ -32,6 +32,8 @@ abstract class AbstractTestController extends WebTestCase
     /** @var JWTService */
     protected $jwtService;
 
+    protected ?int $loggedInUserId = null;
+
     /**
      * Create static client and fixtures.
      */
@@ -169,6 +171,7 @@ abstract class AbstractTestController extends WebTestCase
             ],
         ])['data'];
         $this->assertEquals($email, $responseArray['email']);
+        $this->loggedInUserId = $responseArray['id'];
 
         /** @var Response $response */
         $response = self::$frameworkBundleClient->getResponse();

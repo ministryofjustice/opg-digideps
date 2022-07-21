@@ -59,6 +59,25 @@ class User implements UserInterface
         self::ROLE_ADMIN_MANAGER,
     ];
 
+    public static array $caseManagerRoles = [
+        self::ROLE_ADMIN,
+        self::ROLE_ADMIN_MANAGER,
+    ];
+
+    public static $orgRoles = [
+        self::ROLE_PA,
+        self::ROLE_PA_NAMED,
+        self::ROLE_PA_ADMIN,
+        self::ROLE_PA_TEAM_MEMBER,
+        self::ROLE_PROF,
+        self::ROLE_PROF_NAMED,
+        self::ROLE_PROF_ADMIN,
+        self::ROLE_PROF_TEAM_MEMBER,
+        self::ROLE_ORG_NAMED,
+        self::ROLE_ORG_ADMIN,
+        self::ROLE_ORG_TEAM_MEMBER,
+    ];
+
     public static $depTypeIdToRealm = [
         // PA
         23 => PreRegistration::REALM_PA,
@@ -299,6 +318,17 @@ class User implements UserInterface
      * @ORM\OneToMany(targetEntity="App\Entity\UserResearch\UserResearchResponse", mappedBy="user", cascade={"persist"})
      */
     private $userResearchResponse;
+
+    /**
+     * @var User|null
+     * @ORM\OneToOne(targetEntity="App\Entity\User")
+     * @ORM\JoinColumn(name="created_by_id", referencedColumnName="id")
+     *
+     * @JMS\Type("App\Entity\User")
+     * @JMS\Groups({"user", "created-by"})
+     * @JMS\MaxDepth(3)
+     */
+    private $createdBy;
 
     /**
      * Constructor.
@@ -1258,11 +1288,43 @@ class User implements UserInterface
 
     /**
      * Check if a user registration was before today.
-     *
-     * @param $user
      */
     public function regBeforeToday(User $user): bool
     {
         return $user->getRegistrationDate() < (new DateTime())->setTime(00, 00, 00);
+    }
+
+    public function getCreatedBy(): ?User
+    {
+        return $this->createdBy;
+    }
+
+    public function setCreatedBy(?User $createdBy): User
+    {
+        $this->createdBy = $createdBy;
+
+        return $this;
+    }
+
+    /**
+     * @JMS\VirtualProperty
+     * @JMS\SerializedName("is_case_manager")
+     * @JMS\Groups({"user"})
+     * @JMS\Type("bool")
+     */
+    public function isCaseManager(): bool
+    {
+        return in_array($this->getRoleName(), $this::$caseManagerRoles);
+    }
+
+    /**
+     * @JMS\VirtualProperty
+     * @JMS\SerializedName("created_by_case_manager")
+     * @JMS\Groups({"user"})
+     * @JMS\Type("bool")
+     */
+    public function createdByCaseManager(): bool
+    {
+        return $this->getCreatedBy() && $this->getCreatedBy()->isCaseManager();
     }
 }

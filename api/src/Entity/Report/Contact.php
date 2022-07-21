@@ -273,16 +273,6 @@ class Contact
     }
 
     /**
-     * Return full name, e.g. Mr John Smith.
-     */
-    public function getFullName()
-    {
-        $space = ' ';
-
-        return $this->getFirstname() . $space . $this->getLastname();
-    }
-
-    /**
      * Set address.
      *
      * @param string $address

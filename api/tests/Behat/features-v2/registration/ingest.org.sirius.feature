@@ -1,4 +1,4 @@
-@v2 @registration @ingest @v2_admin
+@v2 @registration @ingest @v2_sequential
 Feature: Org CSV data ingestion - sirius source data
 
     @super-admin
