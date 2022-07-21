@@ -3,23 +3,20 @@
 namespace App\v2\Controller;
 
 use App\Entity\Organisation;
-use App\Repository\OrganisationRepository;
 use App\Entity\User;
-use App\Service\Formatter\RestFormatter;
+use App\Repository\OrganisationRepository;
 use App\Service\RestHandler\OrganisationRestHandler;
 use App\v2\Assembler\OrganisationAssembler;
 use App\v2\Transformer\OrganisationTransformer;
 use Doctrine\ORM\OptimisticLockException;
 use Doctrine\ORM\ORMException;
 use Sensio\Bundle\FrameworkExtraBundle\Configuration\Entity;
-use Symfony\Bundle\FrameworkBundle\Controller\AbstractController;
-use Symfony\Component\Routing\Annotation\Route;
 use Sensio\Bundle\FrameworkExtraBundle\Configuration\Security;
+use Symfony\Bundle\FrameworkBundle\Controller\AbstractController;
 use Symfony\Component\HttpFoundation\JsonResponse;
 use Symfony\Component\HttpFoundation\Request;
 use Symfony\Component\HttpFoundation\Response;
-use Symfony\Component\HttpKernel\Exception\BadRequestHttpException;
-use Symfony\Component\HttpKernel\Exception\NotFoundHttpException;
+use Symfony\Component\Routing\Annotation\Route;
 
 /**
  * @Route("/organisation")
@@ -40,18 +37,11 @@ class OrganisationController extends AbstractController
     /** @var OrganisationTransformer */
     private $transformer;
 
-    /**
-     * @param OrganisationRestHandler $restHandler
-     * @param OrganisationRepository $repository
-     * @param OrganisationAssembler $assembler
-     * @param OrganisationTransformer $transformer
-     */
     public function __construct(
         OrganisationRestHandler $restHandler,
         OrganisationRepository $repository,
         OrganisationAssembler $assembler,
         OrganisationTransformer $transformer,
-        RestFormatter $formatter
     ) {
         $this->restHandler = $restHandler;
         $this->repository = $repository;
@@ -62,8 +52,6 @@ class OrganisationController extends AbstractController
     /**
      * @Route("/list", methods={"GET"})
      * @Security("is_granted('ROLE_ADMIN')")
-     *
-     * @return JsonResponse
      */
     public function getAllAction(): JsonResponse
     {
@@ -108,7 +96,6 @@ class OrganisationController extends AbstractController
      * @Security("is_granted('view', organisation)")
      *
      * @param int $id
-     * @return JsonResponse
      */
     public function getByIdAction(Organisation $organisation): JsonResponse
     {
@@ -122,8 +109,6 @@ class OrganisationController extends AbstractController
      * @Route("", methods={"POST"})
      * @Security("is_granted('ROLE_ADMIN')")
      *
-     * @param Request $request
-     * @return JsonResponse
      * @throws ORMException
      * @throws OptimisticLockException
      */
@@ -138,10 +123,6 @@ class OrganisationController extends AbstractController
     /**
      * @Route("/{id}", requirements={"id":"\d+"}, methods={"PUT"})
      * @Security("is_granted('ROLE_ADMIN')")
-     *
-     * @param Request $request
-     * @param int $id
-     * @return JsonResponse
      */
     public function updateAction(Request $request, int $id): JsonResponse
     {
@@ -156,7 +137,7 @@ class OrganisationController extends AbstractController
      * @Security("is_granted('ROLE_SUPER_ADMIN')")
      *
      * @param $int id
-     * @return JsonResponse
+     *
      * @throws ORMException
      * @throws OptimisticLockException
      */
@@ -173,10 +154,8 @@ class OrganisationController extends AbstractController
      * @Entity("organisation", expr="repository.find(orgId)")
      * @Security("is_granted('edit', organisation)")
      *
-     * @param Request $request
      * @param int $orgId
-     * @param int $userId
-     * @return JsonResponse
+     *
      * @throws ORMException
      * @throws OptimisticLockException
      */
@@ -194,8 +173,7 @@ class OrganisationController extends AbstractController
      * @Security("is_granted('edit', organisation)")
      *
      * @param int $orgId
-     * @param int $userId
-     * @return JsonResponse
+     *
      * @throws ORMException
      * @throws OptimisticLockException
      */
@@ -215,6 +193,7 @@ class OrganisationController extends AbstractController
     {
         return $this->getUser()->getOrganisations()[0]->getUsers();
     }
+
     /**
      * @Route("/member/{id}", requirements={"id":"\d+"}, methods={"GET"})
      * @Security("is_granted('ROLE_ORG')")
