@@ -48,10 +48,11 @@ class AwsAuditLogHandler extends AbstractAuditLogHandler
         try {
             $this->send($entry, $stream, $sequenceToken);
         } catch (CloudWatchLogsException $e) {
-            $describeStreamsResponse = $this->describeStreams($stream);
-            $sequenceToken = $describeStreamsResponse->get('nextToken');
+            if ('InvalidSequenceTokenException' === $e->getAwsErrorCode()) {
+                $this->send($entry, $stream, $e->get('expectedSequenceToken'));
+            }
 
-            $this->send($entry, $stream, $sequenceToken);
+            throw $e;
         }
     }
 
