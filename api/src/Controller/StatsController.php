@@ -45,6 +45,7 @@ class StatsController extends RestController
      */
     public function getMetric(Request $request)
     {
+        $this->authService->JWTIsValid($request);
         $params = new StatsQueryParameters($request->query->all());
         $query = $this->QueryFactory->create($params);
 

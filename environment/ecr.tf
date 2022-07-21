@@ -3,11 +3,12 @@ locals {
   client_tag       = local.environment == "development" ? "development-${local.docker_tag_elems[1]}" : var.OPG_DOCKER_TAG
 
   images = {
-    api       = "${data.aws_ecr_repository.images["api"].repository_url}:${var.OPG_DOCKER_TAG}"
-    client    = "${data.aws_ecr_repository.images["client"].repository_url}:${local.client_tag}"
-    sync      = "${data.aws_ecr_repository.images["sync"].repository_url}:${var.OPG_DOCKER_TAG}"
-    htmltopdf = "${data.aws_ecr_repository.images["htmltopdf"].repository_url}:${var.OPG_DOCKER_TAG}"
-    drbackup  = "${data.aws_ecr_repository.images["dr-backup"].repository_url}:${var.OPG_DOCKER_TAG}"
+    api         = "${data.aws_ecr_repository.images["api"].repository_url}:${var.OPG_DOCKER_TAG}"
+    client      = "${data.aws_ecr_repository.images["client"].repository_url}:${local.client_tag}"
+    sync        = "${data.aws_ecr_repository.images["sync"].repository_url}:${var.OPG_DOCKER_TAG}"
+    htmltopdf   = "${data.aws_ecr_repository.images["htmltopdf"].repository_url}:${var.OPG_DOCKER_TAG}"
+    drbackup    = "${data.aws_ecr_repository.images["dr-backup"].repository_url}:${var.OPG_DOCKER_TAG}"
+    synchronise = "${data.aws_ecr_repository.images["test"].repository_url}:${var.OPG_DOCKER_TAG}"
   }
 
   repositories = [
@@ -15,7 +16,8 @@ locals {
     "client",
     "dr-backup",
     "sync",
-    "htmltopdf"
+    "htmltopdf",
+    "test"
   ]
 }
 

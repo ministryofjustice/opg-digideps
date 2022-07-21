@@ -119,6 +119,10 @@ class AuthService
     {
         $jwt = $request->headers->get(self::HEADER_JWT);
 
+        $this->logger->warning($jwt);
+        $this->logger->warning($request);
+        $this->logger->warning('jimmy');
+
         if (!is_null($jwt)) {
             return $this->JWTService->verify($jwt);
         }

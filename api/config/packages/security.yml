@@ -17,7 +17,7 @@ security:
             security: false
             methods: [POST]
         login:
-            pattern:  ^/auth/login$
+            pattern: ^/auth/login$
             security: false
             methods: [POST]
         userRecreateToken:
@@ -37,9 +37,9 @@ security:
             security: false
             methods: [POST]
         queuedDocuments:
-           pattern: ^/document/queued
-           security: false
-           methods: [GET]
+            pattern: ^/document/queued
+            security: false
+            methods: [GET]
         updateDocument:
             pattern: ^/document/\d+
             security: false
@@ -61,27 +61,30 @@ security:
             security: false
             methods: [PUT]
         reportSubmissionGetOld:
-           pattern: ^/report-submission/old
-           security: false
-           #methods: [GET]
+            pattern: ^/report-submission/old
+            security: false
+            #methods: [GET]
         reportSubmissionSetUndownloadable:
-           pattern: ^/report-submission/\d+/set-undownloadable
-           security: false
-           #methods: [PUT]
+            pattern: ^/report-submission/\d+/set-undownloadable
+            security: false
+            #methods: [PUT]
         satisfaction:
-           pattern: ^/satisfaction/public
-           security: false
-           methods: [POST]
+            pattern: ^/satisfaction/public
+            security: false
+            methods: [POST]
         settingServiceNotification:
-           pattern: ^/setting/service-notification
-           security: false
-           methods: [GET]
+            pattern: ^/setting/service-notification
+            security: false
+            methods: [GET]
         resetFixtures:
             pattern: ^/v2/fixture/reset-fixtures
             security: false
-            methods: [ GET ]
+            methods: [GET]
         jwt-endpoints:
             pattern: ^/v3/*
+            security: false
+        jwtAuthController:
+            pattern: ^/authorise/*
             security: false
         # keep this one last so that the previous ones bypass the catch-all pattern below
         default:
@@ -90,23 +93,23 @@ security:
             simple_preauth:
                 authenticator: App\Service\Auth\HeaderTokenAuthenticator
             provider: user_provider_redis
-            stateless:   true
+            stateless: true
 
     # https://opgtransform.atlassian.net/wiki/spaces/DEPDS/pages/191299647/User+roles
     role_hierarchy:
-        ROLE_SUPER_ADMIN:     [ ROLE_ADMIN, ROLE_ADMIN_MANAGER ]
-        ROLE_ADMIN_MANAGER:  [ ROLE_ADMIN ]
+        ROLE_SUPER_ADMIN: [ROLE_ADMIN, ROLE_ADMIN_MANAGER]
+        ROLE_ADMIN_MANAGER: [ROLE_ADMIN]
 
-        ROLE_LAY_DEPUTY:      ROLE_DEPUTY
-        ROLE_ORG:             ROLE_DEPUTY
+        ROLE_LAY_DEPUTY: ROLE_DEPUTY
+        ROLE_ORG: ROLE_DEPUTY
 
-        ROLE_PA:              ROLE_ORG
-        ROLE_PROF:            ROLE_ORG
+        ROLE_PA: ROLE_ORG
+        ROLE_PROF: ROLE_ORG
 
-        ROLE_PA_NAMED:        [ ROLE_PA, ROLE_ORG_NAMED ]
-        ROLE_PA_ADMIN:        [ ROLE_PA, ROLE_ORG_ADMIN ]
-        ROLE_PA_TEAM_MEMBER:  [ ROLE_PA, ROLE_ORG_TEAM_MEMBER ]
+        ROLE_PA_NAMED: [ROLE_PA, ROLE_ORG_NAMED]
+        ROLE_PA_ADMIN: [ROLE_PA, ROLE_ORG_ADMIN]
+        ROLE_PA_TEAM_MEMBER: [ROLE_PA, ROLE_ORG_TEAM_MEMBER]
 
-        ROLE_PROF_NAMED:        [ ROLE_PROF, ROLE_ORG_NAMED ]
-        ROLE_PROF_ADMIN:        [ ROLE_PROF, ROLE_ORG_ADMIN ]
-        ROLE_PROF_TEAM_MEMBER:  [ ROLE_PROF, ROLE_ORG_TEAM_MEMBER ]
+        ROLE_PROF_NAMED: [ROLE_PROF, ROLE_ORG_NAMED]
+        ROLE_PROF_ADMIN: [ROLE_PROF, ROLE_ORG_ADMIN]
+        ROLE_PROF_TEAM_MEMBER: [ROLE_PROF, ROLE_ORG_TEAM_MEMBER]

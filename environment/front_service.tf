@@ -1,3 +1,7 @@
+locals {
+  front_service_fqdn = "front.${aws_service_discovery_private_dns_namespace.private.name}"
+}
+
 resource "aws_ecs_task_definition" "front" {
   family                   = "front-${local.environment}"
   requires_compatibilities = ["FARGATE"]
