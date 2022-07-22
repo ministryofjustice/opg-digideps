@@ -76,7 +76,8 @@
     {{ form_start(form, {attr: {novalidate: 'novalidate'}}) }}
 
     {{ form_input(form.email,'signInForm.email') }}
-    {{ form_input(form.password,'signInForm.password') }}
+    {{ form_input(form.password,'signInForm.password', {'dataModule': 'moj-password-reveal' }) }}
+
     {{ form_submit(form.login,'signInForm.signin', {'buttonClass': 'behat-link-login'}) }}
 
     {{ form_end(form) }}

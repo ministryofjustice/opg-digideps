@@ -1,11 +1,18 @@
 locals {
   api_service_sg_rules = {
-    ecr     = local.common_sg_rules.ecr
-    logs    = local.common_sg_rules.logs
-    s3      = local.common_sg_rules.s3
-    ssm     = local.common_sg_rules.ssm
-    secret  = local.common_sg_rules.secrets
-    ecr_api = local.common_sg_rules.ecr_api
+    ecr            = local.common_sg_rules.ecr
+    logs           = local.common_sg_rules.logs
+    s3             = local.common_sg_rules.s3
+    ssm            = local.common_sg_rules.ssm
+    ecr_api        = local.common_sg_rules.ecr_api
+    secrets_egress = local.common_sg_rules.secrets
+    secrets_ingress = {
+      port        = 443
+      type        = "ingress"
+      protocol    = "tcp"
+      target_type = "security_group_id"
+      target      = data.aws_security_group.secrets_endpoint.id
+    }
     cache = {
       port        = 6379
       type        = "egress"
@@ -52,11 +59,12 @@ locals {
 }
 
 module "api_service_security_group" {
-  source = "./security_group"
-  rules  = local.api_service_sg_rules
-  name   = "api-service"
-  tags   = local.default_tags
-  vpc_id = data.aws_vpc.vpc.id
+  source      = "./security_group"
+  description = "API Service"
+  rules       = local.api_service_sg_rules
+  name        = "api-service"
+  tags        = local.default_tags
+  vpc_id      = data.aws_vpc.vpc.id
 }
 
 locals {
@@ -135,11 +143,12 @@ locals {
 }
 
 module "api_rds_security_group" {
-  source = "./security_group"
-  rules  = local.api_rds_sg_rules
-  name   = "api-rds"
-  tags   = local.default_tags
-  vpc_id = data.aws_vpc.vpc.id
+  source      = "./security_group"
+  description = "RDS Database"
+  rules       = local.api_rds_sg_rules
+  name        = "api-rds"
+  tags        = local.default_tags
+  vpc_id      = data.aws_vpc.vpc.id
 }
 
 data "aws_security_group" "cloud9" {

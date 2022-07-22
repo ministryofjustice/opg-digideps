@@ -3,6 +3,7 @@
 namespace App\Entity\Ndr;
 
 use App\Entity\BankAccountInterface;
+use App\Entity\Traits\CreateUpdateTimestamps;
 use DateTime;
 use Doctrine\ORM\Mapping as ORM;
 use JMS\Serializer\Annotation as JMS;
@@ -12,9 +13,12 @@ use JMS\Serializer\Annotation as JMS;
  *
  * @ORM\Table(name="odr_account")
  * @ORM\Entity(repositoryClass="App\Repository\NdrBankAccountRepository")
+ * @ORM\HasLifecycleCallbacks()
  */
 class BankAccount implements BankAccountInterface
 {
+    use CreateUpdateTimestamps;
+
     /**
      * Keep in sync with client.
      *
@@ -93,14 +97,6 @@ class BankAccount implements BankAccountInterface
     private $accountNumber;
 
     /**
-     * @var DateTime
-     * @JMS\Groups({"ndr-account"})
-     *
-     * @ORM\Column(name="created_at", type="datetime", nullable=true)
-     */
-    private $createdAt;
-
-    /**
      * @var float
      * @JMS\Groups({"ndr-account"})
      * @JMS\Type("string")
@@ -133,7 +129,6 @@ class BankAccount implements BankAccountInterface
      */
     public function __construct()
     {
-        $this->lastEdit = null;
         $this->createdAt = new DateTime();
     }
 
@@ -169,23 +164,6 @@ class BankAccount implements BankAccountInterface
     public function requiresSortCode()
     {
         return !in_array($this->getAccountType(), self::$typesNotRequiringSortCode);
-    }
-
-    public function getLastEdit()
-    {
-        return $this->lastEdit;
-    }
-
-    /**
-     * @param null $lastEdit
-     *
-     * @return BankAccount
-     */
-    public function setLastEdit($lastEdit)
-    {
-        $this->lastEdit = $lastEdit;
-
-        return $this;
     }
 
     /**
@@ -294,18 +272,6 @@ class BankAccount implements BankAccountInterface
     public function getCreatedAt()
     {
         return $this->createdAt;
-    }
-
-    /**
-     * @param DateTime $createdAt
-     *
-     * @return BankAccount
-     */
-    public function setCreatedAt($createdAt)
-    {
-        $this->createdAt = $createdAt;
-
-        return $this;
     }
 
     /**

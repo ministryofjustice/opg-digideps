@@ -105,7 +105,7 @@ class UserApiTest extends TestCase
         $userCreatedEvent = new AdminUserCreatedEvent($userToCreate);
         $this->eventDispatcher->dispatch($userCreatedEvent, 'admin.user.created')->shouldBeCalled();
 
-        $this->sut->createAdminUser($userToCreate);
+        $this->sut->createUser($userToCreate);
     }
 
     /** @test */
@@ -125,11 +125,9 @@ class UserApiTest extends TestCase
         $this->eventDispatcher->dispatch($userCreatedEvent, 'admin.user.created')->shouldBeCalled();
 
         $adminManagerCreatedEvent = new AdminManagerCreatedEvent($trigger, $currentUser, $userToCreate);
-        if ('ROLE_ADMIN_MANAGER' === $userToCreate->getRoleName()) {
-            $this->eventDispatcher->dispatch($adminManagerCreatedEvent, 'admin.manager.created')->shouldBeCalled();
-        }
+        $this->eventDispatcher->dispatch($adminManagerCreatedEvent, 'admin.manager.created')->shouldBeCalled();
 
-        $this->sut->createAdminUser($userToCreate);
+        $this->sut->createUser($userToCreate);
     }
 
     /** @test */

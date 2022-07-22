@@ -18,6 +18,7 @@ use App\Service\Client\RestClient;
 use App\Service\Csv\ActiveLaysCsvGenerator;
 use App\Service\Csv\AssetsTotalsCSVGenerator;
 use App\Service\Csv\ClientBenefitMetricsCsvGenerator;
+use App\Service\Csv\OldAdminUserCsvGenerator;
 use App\Service\Csv\SatisfactionCsvGenerator;
 use App\Service\Csv\UserResearchResponseCsvGenerator;
 use App\Transformer\ReportSubmission\ReportSubmissionBurFixedWidthTransformer;
@@ -42,6 +43,7 @@ class StatsController extends AbstractController
         private UserResearchResponseCsvGenerator $userResearchResponseCsvGenerator,
         private AssetsTotalsCSVGenerator $assetsTotalsCSVGenerator,
         private ClientBenefitMetricsCsvGenerator $clientBenefitMetricsCsvGenerator,
+        private OldAdminUserCsvGenerator $inactiveAdminUserCsvGenerator
     ) {
     }
 
@@ -332,6 +334,30 @@ class StatsController extends AbstractController
         $disposition = $response->headers->makeDisposition(
             ResponseHeaderBag::DISPOSITION_ATTACHMENT,
             'totalAssets.csv'
+        );
+
+        $response->headers->set('Content-Disposition', $disposition);
+
+        return $response;
+    }
+
+    /**
+     * @Route("/reports/downloadOldAdminUsersCsv", name="admin_old_user_account_report")
+     * @Security("is_granted('ROLE_SUPER_ADMIN')")
+     *
+     * @return Response
+     */
+    public function downloadOldAdminUsersCsv()
+    {
+        $oldAccountUserData = $this->statsApi->getOldAdminUsers();
+        $csv = $this->inactiveAdminUserCsvGenerator->generateOldAdminUsersCsv($oldAccountUserData);
+
+        $response = new Response($csv);
+
+        $response->headers->set('Content-Type', 'text/csv; charset=utf-8');
+        $disposition = $response->headers->makeDisposition(
+            ResponseHeaderBag::DISPOSITION_ATTACHMENT,
+            'inactiveAdminUsers.csv'
         );
 
         $response->headers->set('Content-Disposition', $disposition);

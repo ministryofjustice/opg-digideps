@@ -5,6 +5,7 @@ namespace App\Entity;
 use App\Entity\Traits\LoginInfoTrait;
 use App\Validator\Constraints\CommonPassword;
 use App\Validator\Constraints\EmailSameDomain;
+use DateTime;
 use Doctrine\Common\Collections\ArrayCollection;
 use JMS\Serializer\Annotation as JMS;
 use Symfony\Component\Security\Core\User\PasswordAuthenticatedUserInterface;
@@ -47,6 +48,11 @@ class User implements UserInterface, DeputyInterface, PasswordAuthenticatedUserI
     public static array $adminRoles = [
         self::ROLE_ADMIN,
         self::ROLE_SUPER_ADMIN,
+        self::ROLE_ADMIN_MANAGER,
+    ];
+
+    public static array $caseManagerRoles = [
+        self::ROLE_ADMIN,
         self::ROLE_ADMIN_MANAGER,
     ];
 
@@ -136,7 +142,7 @@ class User implements UserInterface, DeputyInterface, PasswordAuthenticatedUserI
     /**
      * @JMS\Type("string")
      *
-     * @var string
+     * @var string|null
      */
     private $salt;
 
@@ -168,7 +174,7 @@ class User implements UserInterface, DeputyInterface, PasswordAuthenticatedUserI
      * @JMS\Type("DateTime<'Y-m-d H:i:s'>")
      * @JMS\Groups({"user"})
      *
-     * @var \DateTime|null
+     * @var DateTime|null
      */
     private $registrationDate;
 
@@ -176,7 +182,7 @@ class User implements UserInterface, DeputyInterface, PasswordAuthenticatedUserI
      * @JMS\Type("string")
      * @JMS\Groups({"registrationToken"})
      *
-     * @var string
+     * @var string|null
      */
     private $registrationToken;
 
@@ -184,7 +190,7 @@ class User implements UserInterface, DeputyInterface, PasswordAuthenticatedUserI
      * @JMS\Type("DateTime<'Y-m-d H:i:s'>")
      * @JMS\Groups({"registrationToken"})
      *
-     * @var \DateTime
+     * @var DateTime|null
      */
     private $tokenDate;
 
@@ -210,7 +216,7 @@ class User implements UserInterface, DeputyInterface, PasswordAuthenticatedUserI
      * @JMS\Groups({"user_details_full", "profile_org"})
      * @Assert\Length( max=200, maxMessage="user.address1.maxMessage", groups={"user_details_full", "profile_org"} )
      *
-     * @var string
+     * @var string|null
      */
     private $address2;
 
@@ -219,7 +225,7 @@ class User implements UserInterface, DeputyInterface, PasswordAuthenticatedUserI
      * @JMS\Groups({"user_details_full", "profile_org"})
      * @Assert\Length( max=200, maxMessage="user.address1.maxMessage", groups={"user_details_full", "profile_org"} )
      *
-     * @var string
+     * @var string|null
      */
     private $address3;
 
@@ -228,7 +234,7 @@ class User implements UserInterface, DeputyInterface, PasswordAuthenticatedUserI
      * @JMS\Groups({"user_details_full", "profile_org"})
      * @Assert\Length( max=200, maxMessage="user.address1.maxMessage", groups={"user_details_full", "profile_org"} )
      *
-     * @var string
+     * @var string|null
      */
     private $address4;
 
@@ -237,7 +243,7 @@ class User implements UserInterface, DeputyInterface, PasswordAuthenticatedUserI
      * @JMS\Groups({"user_details_full", "profile_org"})
      * @Assert\Length( max=200, maxMessage="user.address1.maxMessage", groups={"user_details_full", "profile_org"} )
      *
-     * @var string
+     * @var string|null
      */
     private $address5;
 
@@ -275,7 +281,7 @@ class User implements UserInterface, DeputyInterface, PasswordAuthenticatedUserI
      * @JMS\Groups({"user_details_full", "profile_org"})
      * @Assert\Length(min=10, max=20, minMessage="common.genericPhone.minLength", maxMessage="common.genericPhone.maxLength", groups={"user_details_full"} )
      *
-     * @var string
+     * @var string|null
      */
     private $phoneAlternative;
 
@@ -283,12 +289,12 @@ class User implements UserInterface, DeputyInterface, PasswordAuthenticatedUserI
      * @JMS\Type("DateTime<'Y-m-d H:i:s'>")
      * @JMS\Groups({"lastLoggedIn"})
      *
-     * @var \DateTime|null
+     * @var DateTime|null
      */
     private $lastLoggedIn;
 
     /**
-     * @var string
+     * @var string|null
      *
      * @JMS\Type("string")
      */
@@ -298,12 +304,12 @@ class User implements UserInterface, DeputyInterface, PasswordAuthenticatedUserI
      * @JMS\Type("boolean")
      * @JMS\Groups({"admin_add_user", "ad_add_user", "admin_edit_user"})
      *
-     * @var bool
+     * @var bool|null
      */
     private $ndrEnabled;
 
     /**
-     * @var bool
+     * @var bool|null
      * @JMS\Type("boolean")
      * @JMS\Groups({"ad_managed", "ad_add_user"})
      */
@@ -314,7 +320,7 @@ class User implements UserInterface, DeputyInterface, PasswordAuthenticatedUserI
      * @JMS\Groups({"user_details_org", "org_team_add"})
      * @Assert\Length(max=150, maxMessage="user.jobTitle.maxMessage", groups={"user_details_org"} )
      *
-     * @var string
+     * @var string|null
      */
     private $jobTitle;
 
@@ -330,7 +336,7 @@ class User implements UserInterface, DeputyInterface, PasswordAuthenticatedUserI
     /**
      * @JMS\Type("boolean")
      *
-     * @var bool
+     * @var bool|null
      */
     private $isCoDeputy;
 
@@ -363,6 +369,30 @@ class User implements UserInterface, DeputyInterface, PasswordAuthenticatedUserI
      **/
     private ?string $authToken = null;
 
+    /**
+     * @JMS\Type("App\Entity\User")
+     * @JMS\Groups({"user"})
+     *
+     * @var User
+     */
+    private $createdBy;
+
+    /**
+     * @JMS\Type("bool")
+     * @JMS\Groups({"user"})
+     *
+     * @var bool
+     */
+    private $isCaseManager;
+
+    /**
+     * @JMS\Type("bool")
+     * @JMS\Groups({"user"})
+     *
+     * @var bool
+     */
+    private $createdByCaseManager;
+
     public function __construct()
     {
         $this->organisations = new ArrayCollection();
@@ -379,7 +409,7 @@ class User implements UserInterface, DeputyInterface, PasswordAuthenticatedUserI
     /**
      * @param int $id
      *
-     * @return \App\Entity\User
+     * @return User
      */
     public function setId($id)
     {
@@ -399,7 +429,7 @@ class User implements UserInterface, DeputyInterface, PasswordAuthenticatedUserI
     /**
      * @param string $firstname
      *
-     * @return \App\Entity\User
+     * @return User
      */
     public function setFirstname($firstname)
     {
@@ -419,7 +449,7 @@ class User implements UserInterface, DeputyInterface, PasswordAuthenticatedUserI
     /**
      * @param string $lastname
      *
-     * @return \App\Entity\User
+     * @return User
      */
     public function setLastname($lastname)
     {
@@ -447,7 +477,7 @@ class User implements UserInterface, DeputyInterface, PasswordAuthenticatedUserI
     /**
      * @param string $email
      *
-     * @return \App\Entity\User
+     * @return User
      */
     public function setEmail($email)
     {
@@ -467,7 +497,7 @@ class User implements UserInterface, DeputyInterface, PasswordAuthenticatedUserI
     /**
      * @param string $password
      *
-     * @return \App\Entity\User
+     * @return User
      */
     public function setPassword($password)
     {
@@ -499,7 +529,7 @@ class User implements UserInterface, DeputyInterface, PasswordAuthenticatedUserI
     /**
      * @param bool $active
      *
-     * @return \App\Entity\User
+     * @return User
      */
     public function setActive($active)
     {
@@ -521,7 +551,7 @@ class User implements UserInterface, DeputyInterface, PasswordAuthenticatedUserI
     }
 
     /**
-     * @return \DateTime|null $registrationDate
+     * @return DateTime|null $registrationDate
      */
     public function getRegistrationDate()
     {
@@ -529,11 +559,11 @@ class User implements UserInterface, DeputyInterface, PasswordAuthenticatedUserI
     }
 
     /**
-     * @param \DateTime $registrationDate
+     * @param DateTime $registrationDate
      *
-     * @return \App\Entity\User
+     * @return User
      */
-    public function setRegistrationDate(\DateTime $registrationDate = null)
+    public function setRegistrationDate(DateTime $registrationDate = null)
     {
         $this->registrationDate = $registrationDate;
 
@@ -551,7 +581,7 @@ class User implements UserInterface, DeputyInterface, PasswordAuthenticatedUserI
     /**
      * @param string $registrationToken
      *
-     * @return \App\Entity\User
+     * @return User
      */
     public function setRegistrationToken($registrationToken)
     {
@@ -561,7 +591,7 @@ class User implements UserInterface, DeputyInterface, PasswordAuthenticatedUserI
     }
 
     /**
-     * @return \DateTime $tokenDate
+     * @return DateTime $tokenDate
      */
     public function getTokenDate()
     {
@@ -569,9 +599,9 @@ class User implements UserInterface, DeputyInterface, PasswordAuthenticatedUserI
     }
 
     /**
-     * @param \DateTime $tokenDate
+     * @param DateTime $tokenDate
      *
-     * @return \App\Entity\User
+     * @return User
      */
     public function setTokenDate($tokenDate)
     {
@@ -595,7 +625,7 @@ class User implements UserInterface, DeputyInterface, PasswordAuthenticatedUserI
     /**
      * @param string $gaTrackingId
      *
-     * @return \App\Entity\User
+     * @return User
      */
     public function setGaTrackingId($gaTrackingId)
     {
@@ -615,9 +645,11 @@ class User implements UserInterface, DeputyInterface, PasswordAuthenticatedUserI
     /**
      * @param bool $isCoDeputy
      */
-    public function setIsCoDeputy($isCoDeputy)
+    public function setIsCoDeputy($isCoDeputy): self
     {
         $this->isCoDeputy = $isCoDeputy;
+
+        return $this;
     }
 
     /**
@@ -681,7 +713,7 @@ class User implements UserInterface, DeputyInterface, PasswordAuthenticatedUserI
     {
         $expiresSeconds = $hoursExpires * 3600;
 
-        $timeStampNow = (new \DateTime())->getTimestamp();
+        $timeStampNow = (new DateTime())->getTimestamp();
         $timestampToken = $this->getTokenDate()->getTimestamp();
 
         $diffSeconds = $timeStampNow - $timestampToken;
@@ -799,7 +831,7 @@ class User implements UserInterface, DeputyInterface, PasswordAuthenticatedUserI
     }
 
     /**
-     * @return \DateTime|null
+     * @return DateTime|null
      */
     public function getLastLoggedIn()
     {
@@ -807,9 +839,9 @@ class User implements UserInterface, DeputyInterface, PasswordAuthenticatedUserI
     }
 
     /**
-     * @param \DateTime $lastLoggedIn
+     * @param DateTime $lastLoggedIn
      */
-    public function setLastLoggedIn(\DateTime $lastLoggedIn = null)
+    public function setLastLoggedIn(DateTime $lastLoggedIn = null)
     {
         $this->lastLoggedIn = $lastLoggedIn;
     }
@@ -1256,7 +1288,7 @@ class User implements UserInterface, DeputyInterface, PasswordAuthenticatedUserI
      */
     public function regBeforeToday(User $user): bool
     {
-        return $user->getRegistrationDate() < (new \DateTime())->setTime(00, 00, 00);
+        return $user->getRegistrationDate() < (new DateTime())->setTime(00, 00, 00);
     }
 
     public function getAddress4()
@@ -1279,6 +1311,42 @@ class User implements UserInterface, DeputyInterface, PasswordAuthenticatedUserI
     public function setAddress5($address5): User
     {
         $this->address5 = $address5;
+
+        return $this;
+    }
+
+    public function getCreatedBy(): ?User
+    {
+        return $this->createdBy;
+    }
+
+    public function setCreatedBy(?User $createdBy): User
+    {
+        $this->createdBy = $createdBy;
+
+        return $this;
+    }
+
+    public function isCaseManager(): bool
+    {
+        return $this->isCaseManager;
+    }
+
+    public function setIsCaseManager(bool $isCaseManager): User
+    {
+        $this->isCaseManager = $isCaseManager;
+
+        return $this;
+    }
+
+    public function isCreatedByCaseManager(): bool
+    {
+        return $this->createdByCaseManager;
+    }
+
+    public function setCreatedByCaseManager(bool $createdByCaseManager): User
+    {
+        $this->createdByCaseManager = $createdByCaseManager;
 
         return $this;
     }

@@ -119,6 +119,15 @@ class UserController extends RestController
             $user->setRoleName($roleToSet);
         }
 
+        if (!empty($data['active'])) {
+            $user->setActive($data['active']);
+        }
+
+        if (!empty($data['registration_date'])) {
+            $registrationDate = new DateTime($data['registration_date']);
+            $user->setRegistrationDate($registrationDate);
+        }
+
         return $user;
     }
 

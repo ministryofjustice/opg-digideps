@@ -32,11 +32,12 @@ locals {
 }
 
 module "restore_security_group" {
-  source = "./security_group"
-  rules  = local.restore_sg_rules
-  name   = "restore"
-  tags   = local.default_tags
-  vpc_id = data.aws_vpc.vpc.id
+  source      = "./security_group"
+  description = "Restore Database Service"
+  rules       = local.restore_sg_rules
+  name        = "restore"
+  tags        = local.default_tags
+  vpc_id      = data.aws_vpc.vpc.id
 }
 
 locals {

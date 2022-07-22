@@ -9,21 +9,21 @@ trait LoginInfoTrait
     /**
      * @JMS\Type("integer")
      *
-     * @var int
+     * @var int|null
      */
     private $idOfClientWithDetails;
 
     /**
      * @JMS\Type("integer")
      *
-     * @var int
+     * @var int|null
      */
     private $activeReportId;
 
     /**
      * @JMS\Type("integer")
      *
-     * @var int
+     * @var int|null
      */
     private $numberOfReports;
 

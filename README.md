@@ -25,6 +25,11 @@ Once both boxes are checked click `Apply & Restart` then run the `Make` command 
 - Navigate to the root directory of this repository and run `make up-app`
 - Check `https://digideps.local/` (Deputy area) and `https://admin.digideps.local/` (Admin area). Your browser will warn you about a self-signed certificate.
 - Run `./generate_certs.sh` to populate your certs directory
+    - **NB:** Once this has ran it will create a directory called `./certs` inside there are multiple `.crt` files. On a macOS system you need to add these certificates to your keychain. Use the following link if you are unsure how to do that [Adding certificate to macOS keychain](https://support.apple.com/en-gb/guide/keychain-access/kyca2431/mac)
+    - Once these have been added to your keychain you need to 'Always Trust' these certificates so Chrome will also trust them.
+        - Open up `Keychain access` find the certificates you have added. These will either live inside `Default Keychains -> login` or `System Keychains -> System` on the sidebar
+        - Once you have located each certificate, double-click them to open the certificate.
+        - Click the `Trust` section and then change `When using this certificate:` from `Use System Defaults` to `Always Trust`. **Do this step for all 3 certificates**
 
 ### Reset the database
 

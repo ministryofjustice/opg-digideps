@@ -15,9 +15,9 @@ use JMS\Serializer\Annotation as JMS;
  */
 class AssetProperty extends Asset implements AssetInterface
 {
-    const OCCUPANTS_OTHER = 'other';
-    const OWNED_FULLY = 'fully';
-    const OWNED_PARTLY = 'partly';
+    public const OCCUPANTS_OTHER = 'other';
+    public const OWNED_FULLY = 'fully';
+    public const OWNED_PARTLY = 'partly';
 
     /**
      * @JMS\Type("string")
@@ -395,12 +395,12 @@ class AssetProperty extends Asset implements AssetInterface
             $asset->getPostcode() === $this->getPostcode();
     }
 
-    public function getValueTotal(): float | int | null
+    public function getValueTotal(): float|int|null
     {
         if (self::OWNED_PARTLY == $this->getOwned()) {
             return $this->getValue() * $this->getOwnedPercentage() / 100;
         }
 
-        return parent::getValueTotal();
+        return $this->getValueTotal();
     }
 }

@@ -4,23 +4,29 @@ namespace App\Service\Auth;
 
 use App\Entity\User;
 use App\Repository\UserRepository;
+use App\Service\JWT\JWTService;
 use Psr\Log\LoggerInterface;
 use Symfony\Component\HttpFoundation\Request;
 use Symfony\Component\PasswordHasher\Hasher\UserPasswordHasherInterface;
+use Symfony\Component\Security\Core\Encoder\EncoderFactoryInterface;
 use Symfony\Component\Security\Core\Role\RoleHierarchyInterface;
 
 class AuthService
 {
     public const HEADER_CLIENT_SECRET = 'ClientSecret';
+    public const HEADER_JWT = 'JWT';
+    private array $clientSecrets = [];
 
     public function __construct(
-        private UserPasswordHasherInterface $passwordHasher,
+        private EncoderFactoryInterface $securityEncoderFactory,
         private LoggerInterface $logger,
         private UserRepository $userRepository,
         private RoleHierarchyInterface $roleHierarchy,
-        private array $clientPermissions
+        private array $clientPermissions,
+        private JWTService $JWTService
+        private UserPasswordHasherInterface $passwordHasher,
     ) {
-        if (!is_array($clientPermissions) || empty($clientPermissions)) {
+        if (empty($clientPermissions)) {
             throw new \InvalidArgumentException('client_permissions not defined in config.');
         }
 
@@ -30,10 +36,7 @@ class AuthService
         ];
     }
 
-    /**
-     * @return bool
-     */
-    public function isSecretValid(Request $request)
+    public function isSecretValid(Request $request): bool
     {
         $clientSecretFromRequest = $request->headers->get(self::HEADER_CLIENT_SECRET);
 
@@ -45,12 +48,9 @@ class AuthService
     }
 
     /**
-     * @param string $email
-     * @param string $pass
-     *
      * @return User|bool|null or null if the user it not found or password is wrong
      */
-    public function getUserByEmailAndPassword($email, $pass)
+    public function getUserByEmailAndPassword($email, $pass): User|bool|null
     {
         if (!$email || !$pass) {
             return null;
@@ -75,12 +75,7 @@ class AuthService
         return null;
     }
 
-    /**
-     * @param string $token
-     *
-     * @return User|null
-     */
-    public function getUserByToken($token)
+    public function getUserByToken($token): User|null
     {
         /** @var User|null $user */
         $user = $this->userRepository->findOneBy([
@@ -113,6 +108,17 @@ class AuthService
             if (in_array($role, $permittedRoles)) {
                 return true;
             }
+        }
+
+        return false;
+    }
+
+    public function JWTIsValid(Request $request): bool
+    {
+        $jwt = $request->headers->get(self::HEADER_JWT);
+
+        if (!is_null($jwt)) {
+            return $this->JWTService->verify($jwt);
         }
 
         return false;

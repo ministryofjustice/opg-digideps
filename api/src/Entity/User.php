@@ -4,6 +4,7 @@ namespace App\Entity;
 
 use App\Entity\Report\Report;
 use App\Entity\Traits\AddressTrait;
+use App\Entity\Traits\CreateUpdateTimestamps;
 use App\Entity\UserResearch\UserResearchResponse;
 use DateTime;
 use Doctrine\Common\Collections\ArrayCollection;
@@ -18,9 +19,11 @@ use Symfony\Component\Security\Core\User\UserInterface;
  *
  * @ORM\Table(name="dd_user", indexes={@ORM\Index(name="deputy_no_idx", columns={"deputy_no"})})
  * @ORM\Entity(repositoryClass="App\Repository\UserRepository")
+ * @ORM\HasLifecycleCallbacks()
  */
 class User implements UserInterface, PasswordAuthenticatedUserInterface
 {
+    use CreateUpdateTimestamps;
     use AddressTrait;
 
     public const TOKEN_EXPIRE_HOURS = 48;
@@ -55,6 +58,25 @@ class User implements UserInterface, PasswordAuthenticatedUserInterface
         self::ROLE_ADMIN,
         self::ROLE_SUPER_ADMIN,
         self::ROLE_ADMIN_MANAGER,
+    ];
+
+    public static array $caseManagerRoles = [
+        self::ROLE_ADMIN,
+        self::ROLE_ADMIN_MANAGER,
+    ];
+
+    public static $orgRoles = [
+        self::ROLE_PA,
+        self::ROLE_PA_NAMED,
+        self::ROLE_PA_ADMIN,
+        self::ROLE_PA_TEAM_MEMBER,
+        self::ROLE_PROF,
+        self::ROLE_PROF_NAMED,
+        self::ROLE_PROF_ADMIN,
+        self::ROLE_PROF_TEAM_MEMBER,
+        self::ROLE_ORG_NAMED,
+        self::ROLE_ORG_ADMIN,
+        self::ROLE_ORG_TEAM_MEMBER,
     ];
 
     public static $depTypeIdToRealm = [
@@ -299,6 +321,17 @@ class User implements UserInterface, PasswordAuthenticatedUserInterface
     private $userResearchResponse;
 
     /**
+     * @var User|null
+     * @ORM\OneToOne(targetEntity="App\Entity\User")
+     * @ORM\JoinColumn(name="created_by_id", referencedColumnName="id")
+     *
+     * @JMS\Type("App\Entity\User")
+     * @JMS\Groups({"user", "created-by"})
+     * @JMS\MaxDepth(3)
+     */
+    private $createdBy;
+
+    /**
      * Constructor.
      */
     public function __construct($coDeputyClientConfirmed = false)
@@ -317,6 +350,16 @@ class User implements UserInterface, PasswordAuthenticatedUserInterface
     public function getId()
     {
         return $this->id;
+    }
+
+    /**
+     * @return User
+     */
+    public function setId(?int $id)
+    {
+        $this->id = $id;
+
+        return $this;
     }
 
     /**
@@ -1246,12 +1289,44 @@ class User implements UserInterface, PasswordAuthenticatedUserInterface
 
     /**
      * Check if a user registration was before today.
-     *
-     * @param $user
      */
     public function regBeforeToday(User $user): bool
     {
         return $user->getRegistrationDate() < (new DateTime())->setTime(00, 00, 00);
+    }
+
+    public function getCreatedBy(): ?User
+    {
+        return $this->createdBy;
+    }
+
+    public function setCreatedBy(?User $createdBy): User
+    {
+        $this->createdBy = $createdBy;
+
+        return $this;
+    }
+
+    /**
+     * @JMS\VirtualProperty
+     * @JMS\SerializedName("is_case_manager")
+     * @JMS\Groups({"user"})
+     * @JMS\Type("bool")
+     */
+    public function isCaseManager(): bool
+    {
+        return in_array($this->getRoleName(), $this::$caseManagerRoles);
+    }
+
+    /**
+     * @JMS\VirtualProperty
+     * @JMS\SerializedName("created_by_case_manager")
+     * @JMS\Groups({"user"})
+     * @JMS\Type("bool")
+     */
+    public function createdByCaseManager(): bool
+    {
+        return $this->getCreatedBy() && $this->getCreatedBy()->isCaseManager();
     }
 
     /**

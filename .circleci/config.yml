@@ -12,6 +12,10 @@ workflows:
           name: cancel redundant builds
           filters: { branches: { ignore: [main] } }
 
+      - tfsec-scan:
+          name: scan with tfsec
+          filters: { branches: { ignore: [main] } }
+
       - lint:
           name: lint terraform
           filters: { branches: { ignore: [main] } }
@@ -24,21 +28,20 @@ workflows:
           tf_workspace: development
           tf_command: plan
 
+      - workspace-protection:
+          name: protect branch workspace
+          requires: [cancel redundant builds]
+          filters: { branches: { ignore: [main] } }
+
       - terraform-command:
           name: plan branch env
-          requires: [cancel redundant builds]
+          requires: [protect branch workspace]
           filters: { branches: { ignore: [main] } }
           tf_command: plan
 
       - terraform-command:
           name: initial terraform apply
-          requires:
-            [
-              lint terraform,
-              cancel redundant builds,
-              plan shared-development,
-              plan branch env,
-            ]
+          requires: [lint terraform, plan shared-development, plan branch env]
           filters: { branches: { ignore: [main] } }
           tf_command: apply
           tf_initial_apply: true
@@ -63,11 +66,6 @@ workflows:
           requires: [initial terraform apply, build pr, lambda unit test]
           filters: { branches: { ignore: [main] } }
           tf_command: apply
-
-      - workspace-protection:
-          name: protect branch workspace
-          requires: [terraform apply]
-          filters: { branches: { ignore: [main] } }
 
       - scale-services:
           name: scale up services for integration tests
@@ -176,21 +174,8 @@ workflows:
               plan all shared terraform environments,
               api unit test,
               client unit test,
-              unprotect environment,
             ]
           filters: { branches: { ignore: [main] } }
-
-      - cleanup:
-          name: unprotect environment approval
-          type: approval
-          requires: [terraform apply]
-          filters: { branches: { ignore: [main] } }
-
-      - workspace-protection:
-          name: unprotect environment
-          requires: [unprotect environment approval]
-          filters: { branches: { ignore: [main] } }
-          protect_time: "0"
 
   integration:
     jobs:
@@ -532,10 +517,10 @@ workflows:
           requires: [apply integration]
           filters: { branches: { only: [main] } }
 
-  nightly_workspace_deletion:
+  scheduled_workspace_deletion:
     triggers:
       - schedule:
-          cron: "00 00 * * *"
+          cron: "0 8,20 * * 0-6" # twice a day at 8am and 8pm
           filters: { branches: { only: [main] } }
     jobs:
       - destroy-workspaces:
@@ -546,6 +531,7 @@ orbs:
   aws-cli: circleci/aws-cli@0.1.13
   slack: circleci/slack@3.4.2
   codecov: codecov/codecov@1.1.1
+  tfsec: mycodeself/tfsec@1.1.0
   dockerhub_helper:
     orbs:
       docker: circleci/docker@1.4.0
@@ -653,6 +639,21 @@ jobs:
             terraform init -backend=false
             terraform validate
           working_directory: ~/project/shared
+
+  tfsec-scan:
+    executor: terraform/terraform
+    steps:
+      - checkout
+      - run:
+          name: install tfsec
+          command: |
+            URL=$(curl -s https://api.github.com/repos/aquasecurity/tfsec/releases/latest | grep "tfsec-linux-amd64\"$" | grep browser_download_url | cut -d '"' -f 4)
+            wget $URL
+            chmod +x tfsec-linux-amd64
+            sudo mv tfsec-linux-amd64 /usr/local/bin/tfsec
+      - run:
+          name: run tfsec
+          command: tfsec || true
 
   terraform-plan-all:
     executor: terraform/terraform
@@ -815,7 +816,7 @@ jobs:
       protect_time:
         description: time to protect workspace
         type: string
-        default: "24"
+        default: "3"
     environment:
       PROTECT_TIME: << parameters.protect_time >>
     steps:
@@ -888,8 +889,8 @@ jobs:
             ./scripts/workspace_cleanup.sh $(terraform-workspace-manager -protected-workspaces=true -aws-account-id=248804316466 -aws-iam-role=digideps-ci)
       - slack/status:
           channel: opg-digideps-devs
-          failure_message: nightly destroy workspaces has failed.
-          success_message: nightly destroy workspaces has succeeded.
+          failure_message: scheduled destroy workspaces has failed.
+          success_message: scheduled destroy workspaces has succeeded.
 
   cancel_redundant_builds:
     docker:
@@ -1099,7 +1100,7 @@ jobs:
 
             docker-compose -f docker-compose.yml -f docker-compose.ci.test.yml --project-name client-unit-tests exec frontend sh scripts/client-unit-tests.sh
             docker-compose -f docker-compose.yml -f docker-compose.ci.test.yml --project-name client-unit-tests exec frontend chmod -R 777 tests/phpunit/coverage/client-unit-tests.xml
-            docker cp "client-unit-tests_frontend_1:/var/www/tests/phpunit/coverage/client-unit-tests.xml" "./client-unit-tests.xml"
+            docker cp "client-unit-tests-frontend:/var/www/tests/phpunit/coverage/client-unit-tests.xml" "./client-unit-tests.xml"
 
             docker-compose -f docker-compose.yml -f docker-compose.ci.test.yml --project-name client-unit-tests exec pact-mock cat /tmp/pacts/complete_the_deputy_report-opg_data.json > pact.json
             docker-compose -f docker-compose.yml -f docker-compose.ci.test.yml --project-name client-unit-tests stop pact-mock
@@ -1145,7 +1146,7 @@ jobs:
             docker-compose -f docker-compose.yml -f docker-compose.ci.test.yml --project-name api-unit-tests exec api sh scripts/apiunittest.sh
 
             docker-compose -f docker-compose.yml -f docker-compose.ci.test.yml --project-name api-unit-tests exec api chmod -R 777 tests/coverage/api-unit-tests.xml
-            docker cp "api-unit-tests_api_1:/var/www/tests/coverage/api-unit-tests.xml" "./api-unit-tests.xml"
+            docker cp "api-unit-tests-api:/var/www/tests/coverage/api-unit-tests.xml" "./api-unit-tests.xml"
       - codecov/upload:
           file: ./api-unit-tests.xml
           flags: api

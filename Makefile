@@ -54,7 +54,7 @@ lint-terraform: ##@checks Lint Terraform
 	@$(TFLINT) shared
 
 up-app: ##@application Brings the app up
-	docker-compose up -d --remove-orphans
+	docker-compose -f docker-compose.yml -f docker-compose.dev.yml up -d --remove-orphans
 
 up-app-build: ##@application Brings the app up and rebuilds containers
 	COMPOSE_HTTP_TIMEOUT=90 docker-compose up -d --build --remove-orphans
@@ -76,7 +76,7 @@ up-app-xdebug: ##@application Brings the app up, rebuilds containers and enabled
 
 up-app-integration-tests: ##@application Brings the app up using test env vars (see test.env)
 	REQUIRE_XDEBUG_FRONTEND=0 REQUIRE_XDEBUG_API=0 docker-compose -f docker-compose.yml -f docker-compose.dev.yml build frontend admin api test
-	APP_ENV=dev APP_DEBUG=0 docker-compose -f docker-compose.yml -f docker-compose.dev.yml up -d --remove-orphans
+	APP_DEBUG=0 docker-compose -f docker-compose.yml -f docker-compose.dev.yml up -d --remove-orphans
 
 down-app: ##@application Tears down the app
 	docker-compose down -v --remove-orphans
@@ -91,6 +91,9 @@ api-unit-tests: reset-fixtures ##@unit-tests Run the api unit tests
 
 behat-tests: up-app-integration-tests reset-fixtures ##@behat Run the whole behat test suite
 	docker-compose -f docker-compose.yml -f docker-compose.dev.yml run --rm test sh ./tests/Behat/run-tests.sh
+
+behat-tests-tag: up-app-integration-tests reset-fixtures ##@behat Run behat tests with specified tag e.g. make behat-tests-tag tag=<tag> (Do not include the @)
+	docker-compose -f docker-compose.yml -f docker-compose.dev.yml run --rm test sh ./tests/Behat/run-tests.sh --profile v2-tests-goutte --tags @$(tag)
 
 behat-tests-v2-goutte: up-app-integration-tests reset-fixtures disable-debug ##@behat Pass in suite name as arg e.g. make behat-tests-v2-goutte suite=<SUITE NAME>
 ifdef suite
@@ -117,6 +120,15 @@ reset-database: ##@database Resets the DB schema and runs migrations
 
 reset-fixtures: ##@database Resets the DB contents and reloads fixtures
 	docker-compose run --rm api sh scripts/reset_db_fixtures_local.sh
+
+db-terminal: ##@database Login to the database via the terminal
+	docker exec -it opg-digideps-postgres sh -c "psql -U api"
+
+api-logs: ##@logs Follow the API logs
+	docker logs opg-digideps-api --follow
+
+frontend-logs: ##@logs Follow the API logs
+	docker logs opg-digideps-frontend --follow
 
 redis-clear: ##@database Clears out all the data from redis (session related tokens)
 	for c in ${REDIS_CONTAINERS} ; do \
@@ -145,11 +157,20 @@ enable-debug: ##@application Puts app in dev mode and enables debug (so the app 
 	  echo "$$c: debug enabled." ; \
 	done
 
-phpstan-api:
-	docker-compose run --rm api vendor/phpstan/phpstan/phpstan analyse src --memory-limit=0 --level=max
+phpstan-api: ##@static-analysis Runs PHPStan against API. Defaults to max level but supports passing level as an arg e.g. level=1
+ifdef level
+	docker-compose run --rm api vendor/phpstan/phpstan/phpstan analyse src --memory-limit=1G --level=$(level)
+else
+	docker-compose run --rm api vendor/phpstan/phpstan/phpstan analyse src --memory-limit=1G --level=max
+endif
 
-phpstan-frontend:
-	docker-compose run --rm frontend vendor/phpstan/phpstan/phpstan analyse src --memory-limit=0 --level=max
+
+phpstan-client: ##@static-analysis Runs PHPStan against client. Defaults to max level but supports passing level as an arg e.g. level=1
+ifdef level
+	docker-compose run --rm frontend vendor/phpstan/phpstan/phpstan analyse src --memory-limit=1G --level=$(level)
+else
+	docker-compose run --rm frontend vendor/phpstan/phpstan/phpstan analyse src --memory-limit=1G --level=max
+endif
 
 get-audit-logs: ##@localstack Get audit log groups by passing event name e.g. get-audit-logs event_name=ROLE_CHANGED (see client/Audit/src/service/Audit/AuditEvents)
 	docker-compose exec localstack awslocal logs get-log-events --log-group-name audit-local --log-stream-name $(event_name)

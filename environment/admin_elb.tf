@@ -1,9 +1,10 @@
 resource "aws_lb" "admin" {
-  name               = "admin-${local.environment}"
-  internal           = false
-  load_balancer_type = "application"
-  subnets            = data.aws_subnet.public.*.id
-  idle_timeout       = 300
+  name                       = "admin-${local.environment}"
+  internal                   = false #tfsec:ignore:aws-elb-alb-not-public - This is public LB
+  load_balancer_type         = "application"
+  subnets                    = data.aws_subnet.public.*.id
+  idle_timeout               = 300
+  drop_invalid_header_fields = true
 
   security_groups = [module.admin_elb_security_group.id, module.admin_elb_security_group_route53_hc.id]
 

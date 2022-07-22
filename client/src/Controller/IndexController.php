@@ -7,6 +7,7 @@ use App\Service\Client\RestClient;
 use App\Service\DeputyProvider;
 use App\Service\Redirector;
 use App\Service\StringUtils;
+use const PHP_URL_PATH;
 use Sensio\Bundle\FrameworkExtraBundle\Configuration\Template;
 use Symfony\Component\DependencyInjection\ParameterBag\ParameterBagInterface;
 use Symfony\Component\EventDispatcher\EventDispatcherInterface;
@@ -257,7 +258,7 @@ class IndexController extends AbstractController
             return null;
         }
 
-        $refererUrlPath = parse_url($referer, \PHP_URL_PATH);
+        $refererUrlPath = parse_url($referer, PHP_URL_PATH);
 
         if (!$refererUrlPath) {
             return null;

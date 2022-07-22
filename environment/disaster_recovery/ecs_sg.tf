@@ -16,9 +16,10 @@ locals {
 }
 
 module "dr_backup_security_group" {
-  source = "../security_group"
-  rules  = local.dr_backup_sg_rules
-  name   = "dr-backup"
-  tags   = var.default_tags
-  vpc_id = var.aws_vpc_id
+  source      = "../security_group"
+  description = "DR Backup Service"
+  rules       = local.dr_backup_sg_rules
+  name        = "dr-backup"
+  tags        = var.default_tags
+  vpc_id      = var.aws_vpc_id
 }

@@ -104,6 +104,7 @@ security:
         - { path: ^/report/\d+/deputy-expenses, roles: [ROLE_LAY_DEPUTY] }
 
         # open URLs
+        - { path: ^/v2/*, roles: PUBLIC_ACCESS }
         - { path: ^/login, roles: PUBLIC_ACCESS }
         - { path: ^/logout, roles: PUBLIC_ACCESS }
         - { path: ^/login-ad, roles: PUBLIC_ACCESS }

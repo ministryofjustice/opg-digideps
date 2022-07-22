@@ -34,6 +34,10 @@ data "aws_secretsmanager_secret" "front_notify_api_key" {
   name = join("/", compact([local.account.secrets_prefix, "front-notify-api-key"]))
 }
 
-data "aws_secretsmanager_secret" "opg_alerts_slack_token" {
-  name = join("/", compact([local.account.secrets_prefix, "opg-alerts-slack-token"]))
+data "aws_secretsmanager_secret" "private_jwt_key_base64" {
+  name = join("/", compact([local.account.secrets_prefix, "private-jwt-key-base64"]))
+}
+
+data "aws_secretsmanager_secret" "public_jwt_key_base64" {
+  name = join("/", compact([local.account.secrets_prefix, "public-jwt-key-base64"]))
 }

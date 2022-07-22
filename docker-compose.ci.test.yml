@@ -3,10 +3,12 @@ version: '3.2'
 ## Override for tests in CI
 services:
     frontend:
+        container_name: client-unit-tests-frontend
         image: frontend:latest
     admin:
         image: admin:latest
     api:
+        container_name: api-unit-tests-api
         image: api:latest
     htmltopdf:
         image: htmltopdf:latest

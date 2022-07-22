@@ -20,9 +20,9 @@
 
     {{ form_start(form, {attr: {novalidate: 'novalidate' }}) }}
 
-        {{ form_input(form.password.first,'password', { 'hasHintList': true } ) }}
+        {{ form_input(form.password.first,'password', {'dataModule': 'moj-password-reveal' , 'hasHintList': true}) }}
 
-        {{ form_input(form.password.second,'password_confirm' ) }}
+        {{ form_input(form.password.second,'password_confirm', {'dataModule': 'moj-password-reveal'}) }}
 
         {% if form.showTermsAndConditions is defined %}
             {{ form_checkbox(form.showTermsAndConditions, '', {

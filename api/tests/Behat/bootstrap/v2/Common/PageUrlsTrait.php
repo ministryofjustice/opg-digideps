@@ -46,6 +46,7 @@ trait PageUrlsTrait
     private string $moneyOutShortSectionUrl = '/%s/%s/money-out-short';
     private string $moneyOutShortSectionSummaryUrl = '/%s/%s/money-out-short/summary';
     private string $moneyTransfersSectionUrl = '/%s/%s/money-transfers';
+    private string $orgAddUserUrl = '/org/settings/organisation/%s/add-user';
     private string $orgDashboardUrl = '/org';
     private string $postSubmissionUserResearchUrl = '/report/%s/post_submission_user_research';
     private string $reportOverviewUrl = '/%s/%s/overview';
@@ -66,6 +67,7 @@ trait PageUrlsTrait
     private string $adminNotificationUrl = '/admin/settings/service-notification';
     private string $adminDATReportUrl = '/admin/stats';
     private string $adminActiveLaysReportUrl = '/admin/stats/downloadActiveLaysCsv';
+    private string $adminOldAdminUsersReportUrl = '/admin/stats/reports/downloadOldAdminUsersCsv';
     private string $adminAnalyticsUrl = '/admin/stats/metrics';
     private string $adminStatsReportsUrl = '/admin/stats/reports';
     private string $adminSatisfactionReportUrl = '/admin/stats/satisfaction';
@@ -222,6 +224,11 @@ trait PageUrlsTrait
     public function getAdminActiveLaysReportUrl(): string
     {
         return $this->adminActiveLaysReportUrl;
+    }
+
+    public function getOldAdminUsersReportUrl(): string
+    {
+        return $this->adminOldAdminUsersReportUrl;
     }
 
     public function getAdminFixturesUrl(): string
@@ -399,18 +406,23 @@ trait PageUrlsTrait
         return sprintf($this->documentsSubmitMoreUrl, $this->reportUrlPrefix, $reportId);
     }
 
-    public function getAdminChecklistPage(string $reportId): string
+    public function getAdminChecklistUrl(string $reportId): string
     {
         return sprintf($this->adminChecklistPage, $reportId);
     }
 
-    public function getActivateUserPage(string $activationToken): string
+    public function getActivateUserUrl(string $activationToken): string
     {
         return sprintf($this->activateUserAccount, $activationToken);
     }
 
-    public function getAvailabilityPage(): string
+    public function getAvailabilityUrl(): string
     {
         return $this->availabilityUrl;
+    }
+
+    public function getOrgAddUserUrl(string $orgId): string
+    {
+        return sprintf($this->orgAddUserUrl, $orgId);
     }
 }

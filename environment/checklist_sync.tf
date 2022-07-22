@@ -38,11 +38,12 @@ locals {
 }
 
 module "checklist_sync_service_security_group" {
-  source = "./security_group"
-  rules  = local.checklist_sync_sg_rules
-  name   = "checklist-sync-service"
-  tags   = local.default_tags
-  vpc_id = data.aws_vpc.vpc.id
+  source      = "./security_group"
+  description = "Checklist Sync Service"
+  rules       = local.checklist_sync_sg_rules
+  name        = "checklist-sync-service"
+  tags        = local.default_tags
+  vpc_id      = data.aws_vpc.vpc.id
 }
 
 resource "aws_ecs_task_definition" "checklist_sync" {
@@ -76,7 +77,7 @@ resource "aws_ecs_service" "checklist_sync" {
 
 resource "aws_cloudwatch_event_rule" "checklist_sync_cron_rule" {
   name                = "${aws_ecs_task_definition.checklist_sync.family}-schedule"
-  schedule_expression = "rate(5 minutes)"
+  schedule_expression = local.document_sync_interval
   tags                = local.default_tags
 }
 

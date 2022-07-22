@@ -3,16 +3,17 @@
 namespace App\Controller;
 
 use App\Entity as EntityDir;
+use App\Event\RegistrationFailedEvent;
+use App\Event\RegistrationSucceededEvent;
+use App\EventDispatcher\ObservableEventDispatcher;
 use App\Exception\RestClientException;
 use App\Form as FormDir;
 use App\Model\SelfRegisterData;
-use App\Service\Audit\AuditEvents;
 use App\Service\Client\Internal\ClientApi;
 use App\Service\Client\Internal\UserApi;
 use App\Service\Client\RestClient;
 use App\Service\DeputyProvider;
 use App\Service\Redirector;
-use App\Service\Time\DateTimeProvider;
 use Psr\Log\LoggerInterface;
 use Sensio\Bundle\FrameworkExtraBundle\Configuration\Security;
 use Sensio\Bundle\FrameworkExtraBundle\Configuration\Template;
@@ -28,27 +29,14 @@ use Symfony\Contracts\Translation\TranslatorInterface;
 
 class UserController extends AbstractController
 {
-    private RestClient $restClient;
-    private UserApi $userApi;
-    private ClientApi $clientApi;
-    private TranslatorInterface $translator;
-    private LoggerInterface $logger;
-    private DateTimeProvider $dateTimeProvider;
-
     public function __construct(
-        RestClient $restClient,
-        UserApi $userApi,
-        ClientApi $clientApi,
-        TranslatorInterface $translator,
-        LoggerInterface $logger,
-        DateTimeProvider $dateTimeProvider
+        private RestClient $restClient,
+        private UserApi $userApi,
+        private ClientApi $clientApi,
+        private TranslatorInterface $translator,
+        private LoggerInterface $logger,
+        private ObservableEventDispatcher $eventDispatcher
     ) {
-        $this->restClient = $restClient;
-        $this->userApi = $userApi;
-        $this->clientApi = $clientApi;
-        $this->translator = $translator;
-        $this->logger = $logger;
-        $this->dateTimeProvider = $dateTimeProvider;
     }
 
     /**
@@ -137,7 +125,7 @@ class UserController extends AbstractController
 
             // log in
             $clientToken = new UsernamePasswordToken($user, null, 'secured_area', $user->getRoles());
-            $tokenStorage->setToken($clientToken); //now the user is logged in
+            $tokenStorage->setToken($clientToken); // now the user is logged in
 
             $session->set('_security_secured_area', serialize($clientToken));
 
@@ -215,6 +203,9 @@ class UserController extends AbstractController
             if ($user->isLayDeputy()) {
                 return $this->redirectToRoute('client_add');
             }
+
+//            this is the final step for Org users so registration has succeeded
+            $this->eventDispatcher->dispatch(new RegistrationSucceededEvent($user), RegistrationSucceededEvent::NAME);
 
             // all other users go to their homepage (dashboard for PROF/PA), or /admin for Admins
             return $this->redirect($redirector->getHomepageRedirect());
@@ -320,6 +311,24 @@ class UserController extends AbstractController
                         $form->addError(new FormError($this->translator->trans('formErrors.caseNumberAlreadyUsed', [], 'register')));
                         break;
 
+                    case 460:
+                        $form->get('caseNumber')->addError(new FormError($this->translator->trans('matchingErrors.caseNumber', [], 'register')));
+                        break;
+
+                    case 461:
+                        $decodedError = json_decode($e->getData()['message'], true);
+
+                        if (true == $decodedError['matching_errors']['client_lastname']) {
+                            $form->get('clientLastname')->addError(new FormError($this->translator->trans('matchingErrors.clientLastname', [], 'register')));
+                        }
+                        if (true == $decodedError['matching_errors']['deputy_lastname']) {
+                            $form->get('lastname')->addError(new FormError($this->translator->trans('matchingErrors.deputyLastname', [], 'register')));
+                        }
+                        if (true == $decodedError['matching_errors']['deputy_postcode']) {
+                            $form->get('postcode')->addError(new FormError($this->translator->trans('matchingErrors.deputyPostcode', [], 'register')));
+                        }
+
+                        break;
                     default:
                         $form->addError(new FormError($this->translator->trans('formErrors.generic', [], 'register')));
                 }
@@ -329,7 +338,8 @@ class UserController extends AbstractController
                 // If response from API is not valid json just log the message
                 $failureData = !is_array($failureData) ? ['failure_message' => $failureData] : $failureData;
 
-                $this->logger->notice('', (new AuditEvents($this->dateTimeProvider))->selfRegistrationFailed($failureData));
+                $event = new RegistrationFailedEvent($failureData, $e->getMessage());
+                $this->eventDispatcher->dispatch($event, RegistrationFailedEvent::NAME);
             }
         }
 

@@ -5,6 +5,9 @@ namespace App\Controller;
 use App\Entity\Client;
 use App\Entity\Report\Report;
 use App\Entity\User;
+use App\Event\RegistrationFailedEvent;
+use App\Event\RegistrationSucceededEvent;
+use App\EventDispatcher\ObservableEventDispatcher;
 use App\Exception\RestClientException;
 use App\Form\ClientType;
 use App\Service\Audit\AuditEvents;
@@ -13,6 +16,7 @@ use App\Service\Client\Internal\PreRegistrationApi;
 use App\Service\Client\Internal\UserApi;
 use App\Service\Client\RestClient;
 use App\Service\Redirector;
+use App\Service\Time\DateTimeProvider;
 use Psr\Log\LoggerInterface;
 use RuntimeException;
 use Sensio\Bundle\FrameworkExtraBundle\Configuration\Template;
@@ -29,7 +33,9 @@ class ClientController extends AbstractController
         private UserApi $userApi,
         private ClientApi $clientApi,
         private RestClient $restClient,
-        private PreRegistrationApi $preRegistrationApi
+        private PreRegistrationApi $preRegistrationApi,
+        private ObservableEventDispatcher $eventDispatcher,
+        private DateTimeProvider $dateTimeProvider
     ) {
     }
 
@@ -154,11 +160,23 @@ class ClientController extends AbstractController
                     ? $this->generateUrl('ndr_index')
                     : $this->generateUrl('report_create', ['clientId' => $response['id']]);
 
+                if ($currentUser->isNdrEnabled()) {
+                    $event = new RegistrationSucceededEvent($currentUser);
+
+                    $this->eventDispatcher->dispatch($event, RegistrationSucceededEvent::NAME);
+                }
+
                 return $this->redirect($url);
             } catch (Throwable $e) {
                 if (!$e instanceof RestClientException) {
-                    $message = sprintf('Case "%s" failed to create their client. Error: "%s"', $form->getData()->getCaseNumber(), $e->getMessage());
-                    $logger->error($message);
+                    $failureData = json_decode($e->getData()['message'], true);
+
+                    // If response from API is not valid json just log the message
+                    $failureData = !is_array($failureData) ? ['failure_message' => $failureData] : $failureData;
+
+                    $event = new RegistrationFailedEvent($failureData, $e->getMessage());
+                    $this->eventDispatcher->dispatch($event, RegistrationFailedEvent::NAME);
+
                     throw $e;
                 }
 

@@ -2,6 +2,7 @@
 
 namespace App\Entity\Report;
 
+use App\Entity\Traits\CreateUpdateTimestamps;
 use DateTime;
 use Doctrine\ORM\Mapping as ORM;
 use JMS\Serializer\Annotation as JMS;
@@ -21,6 +22,8 @@ use JMS\Serializer\Annotation as JMS;
  */
 abstract class Asset
 {
+    use CreateUpdateTimestamps;
+    
     /**
      * @var int
      * @JMS\Type("integer")
@@ -42,14 +45,6 @@ abstract class Asset
      * @ORM\Column(name="asset_value", type="decimal", precision=14, scale=2, nullable=true)
      */
     private $value;
-
-    /**
-     * @var DateTime
-     * @JMS\Groups({"asset"})
-     * @JMS\Type("DateTime")
-     * @ORM\Column(name="last_edit", type="datetime", nullable=true)
-     */
-    private $lastedit;
 
     /**
      * @var Report
@@ -135,30 +130,6 @@ abstract class Asset
     }
 
     /**
-     * Set lastedit.
-     *
-     * @param DateTime $lastedit
-     *
-     * @return Asset
-     */
-    public function setLastedit($lastedit)
-    {
-        $this->lastedit = $lastedit;
-
-        return $this;
-    }
-
-    /**
-     * Get lastedit.
-     *
-     * @return DateTime
-     */
-    public function getLastedit()
-    {
-        return $this->lastedit;
-    }
-
-    /**
      * Set report and set to false the report.noAssetToAdd status.
      *
      * @param Report $report
@@ -195,14 +166,5 @@ abstract class Asset
         $this->type = $type;
 
         return $this;
-    }
-
-    /**
-     * @ORM\PrePersist
-     * @ORM\PreUpdate
-     */
-    public function updateLastEdit()
-    {
-        $this->setLastedit(new DateTime());
     }
 }

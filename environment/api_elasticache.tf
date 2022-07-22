@@ -30,9 +30,10 @@ locals {
 }
 
 module "api_cache_security_group" {
-  source = "./security_group"
-  rules  = local.api_cache_sg_rules
-  name   = "api-cache"
-  tags   = local.default_tags
-  vpc_id = data.aws_vpc.vpc.id
+  source      = "./security_group"
+  description = "API Redis"
+  rules       = local.api_cache_sg_rules
+  name        = "api-cache"
+  tags        = local.default_tags
+  vpc_id      = data.aws_vpc.vpc.id
 }

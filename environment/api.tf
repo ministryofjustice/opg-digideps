@@ -12,11 +12,11 @@ resource "aws_iam_role_policy" "api_task_logs" {
 
 resource "aws_iam_role_policy" "api_query_ssm" {
   name   = "api-query-ssm.${local.environment}"
-  policy = data.aws_iam_policy_document.api_query_ssm.json
+  policy = data.aws_iam_policy_document.api_permissions.json
   role   = aws_iam_role.api.id
 }
 
-data "aws_iam_policy_document" "api_query_ssm" {
+data "aws_iam_policy_document" "api_permissions" {
   statement {
     sid    = "AllowQuerySSMParameters"
     effect = "Allow"
@@ -28,6 +28,18 @@ data "aws_iam_policy_document" "api_query_ssm" {
       aws_ssm_parameter.document_sync_row_limit.arn,
       aws_ssm_parameter.flag_checklist_sync.arn,
       aws_ssm_parameter.checklist_sync_row_limit.arn
+    ]
+  }
+
+  statement {
+    sid    = "AllowQuerySecretsManager"
+    effect = "Allow"
+    actions = [
+      "secretsmanager:GetSecretValue"
+    ]
+    resources = [
+      data.aws_secretsmanager_secret.private_jwt_key_base64.arn,
+      data.aws_secretsmanager_secret.public_jwt_key_base64.arn
     ]
   }
 }

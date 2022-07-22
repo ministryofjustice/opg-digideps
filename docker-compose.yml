@@ -49,6 +49,7 @@ services:
   #            - frontend
 
   frontend:
+    container_name: opg-digideps-frontend
     build:
       context: ./client
       args:
@@ -78,6 +79,7 @@ services:
           - digideps.local
 
   admin:
+    container_name: opg-digideps-admin
     build:
       context: ./client
       args:
@@ -105,6 +107,7 @@ services:
           - admin.digideps.local
 
   api:
+    container_name: opg-digideps-api
     build:
       context: ./api
       args:
@@ -128,6 +131,7 @@ services:
     restart: always
 
   postgres:
+    container_name: opg-digideps-postgres
     image: postgres:10.21
     ports:
       - 5432:5432

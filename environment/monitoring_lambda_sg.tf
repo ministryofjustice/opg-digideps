@@ -18,9 +18,10 @@ locals {
 }
 
 module "monitoring_lambda_security_group" {
-  source = "./security_group"
-  rules  = local.monitoring_lambda_sg_rules
-  name   = "monitoring-lambda"
-  tags   = local.default_tags
-  vpc_id = data.aws_vpc.vpc.id
+  source      = "./security_group"
+  description = "Monitoring Lambda"
+  rules       = local.monitoring_lambda_sg_rules
+  name        = "monitoring-lambda"
+  tags        = local.default_tags
+  vpc_id      = data.aws_vpc.vpc.id
 }

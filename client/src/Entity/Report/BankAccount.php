@@ -135,20 +135,6 @@ class BankAccount implements BankAccountInterface
     private $isJointAccount;
 
     /**
-     * @JMS\Type("DateTime")
-     *
-     * @var \DateTime
-     */
-    private $lastEdit;
-
-    /**
-     * @JMS\Type("DateTime")
-     *
-     * @var \DateTime
-     */
-    private $createdAt;
-
-    /**
      * @JMS\Type("string")
      * @JMS\Groups({"account"})
      *
@@ -281,31 +267,6 @@ class BankAccount implements BankAccountInterface
         $this->isClosed = $isClosed;
 
         return $this;
-    }
-
-    public function setLastEdit($lastEdit)
-    {
-        $this->lastEdit = $lastEdit;
-
-        return $this;
-    }
-
-    public function getLastEdit()
-    {
-        return $this->lastEdit;
-    }
-
-    /**
-     * @return \DateTime
-     */
-    public function getCreatedAt()
-    {
-        return $this->createdAt;
-    }
-
-    public function setCreatedAt(\DateTime $createdAt)
-    {
-        $this->createdAt = $createdAt;
     }
 
     /**

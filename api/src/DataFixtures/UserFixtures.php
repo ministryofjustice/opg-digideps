@@ -157,6 +157,9 @@ class UserFixtures extends AbstractDataFixture
         ],
     ];
 
+    private OrganisationRepository $orgRepository;
+    private OrganisationFactory $orgFactory;
+
     public function __construct(OrganisationRepository $orgRepository, OrganisationFactory $orgFactory)
     {
         $this->orgRepository = $orgRepository;

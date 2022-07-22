@@ -39,11 +39,12 @@ locals {
 }
 
 module "smoke_test_security_group" {
-  source = "./security_group"
-  rules  = local.smoke_test_sg_rules
-  name   = "smoke-test"
-  tags   = local.default_tags
-  vpc_id = data.aws_vpc.vpc.id
+  source      = "./security_group"
+  description = "Smoke Test Service"
+  rules       = local.smoke_test_sg_rules
+  name        = "smoke-test"
+  tags        = local.default_tags
+  vpc_id      = data.aws_vpc.vpc.id
 }
 
 locals {

@@ -8,9 +8,11 @@ use App\Entity\Client;
 use App\Entity\NamedDeputy;
 use App\Entity\Ndr\Ndr;
 use App\Entity\Organisation;
+use App\Entity\PreRegistration;
 use App\Entity\Report\Report;
 use App\Entity\Satisfaction;
 use App\Entity\User;
+use App\FixtureFactory\PreRegistrationFactory;
 use App\TestHelpers\ClientTestHelper;
 use App\TestHelpers\NamedDeputyTestHelper;
 use App\TestHelpers\OrganisationTestHelper;
@@ -23,10 +25,6 @@ use Symfony\Component\Security\Core\Encoder\UserPasswordEncoderInterface;
 
 class FixtureHelper
 {
-    private EntityManagerInterface $em;
-    private array $fixtureParams;
-    private UserPasswordEncoderInterface $encoder;
-    private string $symfonyEnvironment;
     private UserTestHelper $userTestHelper;
     private ReportTestHelper $reportTestHelper;
     private ClientTestHelper $clientTestHelper;
@@ -38,16 +36,12 @@ class FixtureHelper
     private string $orgEmailIdentifier = 'test-org.uk';
 
     public function __construct(
-        EntityManagerInterface $entityManager,
-        array $fixtureParams,
-        UserPasswordEncoderInterface $encoder,
-        string $symfonyEnvironment
+        private EntityManagerInterface $em,
+        private array $fixtureParams,
+        private UserPasswordEncoderInterface $encoder,
+        private string $symfonyEnvironment,
+        private PreRegistrationFactory $preRegistrationFactory
     ) {
-        $this->em = $entityManager;
-        $this->fixtureParams = $fixtureParams;
-        $this->encoder = $encoder;
-        $this->symfonyEnvironment = $symfonyEnvironment;
-
         $this->userTestHelper = new UserTestHelper();
         $this->reportTestHelper = new ReportTestHelper();
         $this->clientTestHelper = new ClientTestHelper();
@@ -57,11 +51,17 @@ class FixtureHelper
 
     public static function buildUserDetails(User $user)
     {
-        $client = $user->isLayDeputy() ? $user->getFirstClient() : $user->getOrganisations()[0]->getClients()[0];
+        $client = $user->isLayDeputy() ? $user->getFirstClient() : $user?->getOrganisations()[0]?->getClients()[0];
 
-        $currentReport = $user->getNdrEnabled() ? $client->getNdr() : $client->getCurrentReport();
-        $currentReportType = $user->getNdrEnabled() ? null : $currentReport->getType();
-        $previousReport = $user->getNdrEnabled() ? null : $client->getReports()[0];
+        if ($client) {
+            $currentReport = $user->getNdrEnabled() ? $client->getNdr() : $client?->getCurrentReport();
+            $currentReportType = $user->getNdrEnabled() ? null : $currentReport?->getType();
+            $previousReport = $user->getNdrEnabled() ? null : $client?->getReports()[0];
+        } else {
+            $currentReport = null;
+            $currentReportType = null;
+            $previousReport = null;
+        }
 
         $userDetails = [
             'userId' => $user->getId(),
@@ -72,21 +72,21 @@ class FixtureHelper
             'userFullName' => $user->getFullName(),
             'userFullAddressArray' => self::buildUserAddressArray($user),
             'userPhone' => $user->getPhoneMain(),
-            'clientId' => $client->getId(),
-            'clientFirstName' => $client->getFirstname(),
-            'clientLastName' => $client->getLastname(),
-            'clientFullAddressArray' => self::buildClientAddressArray($client),
-            'clientEmail' => $client->getEmail(),
-            'clientCaseNumber' => $client->getCaseNumber(),
-            'clientArchivedAt' => $client->getArchivedAt(),
-            'currentReportId' => $currentReport->getId(),
+            'clientId' => $client?->getId(),
+            'clientFirstName' => $client?->getFirstname(),
+            'clientLastName' => $client?->getLastname(),
+            'clientFullAddressArray' => $client ? self::buildClientAddressArray($client) : null,
+            'clientEmail' => $client?->getEmail(),
+            'clientCaseNumber' => $client?->getCaseNumber(),
+            'clientArchivedAt' => $client?->getArchivedAt(),
+            'currentReportId' => $currentReport?->getId(),
             'currentReportType' => $currentReportType,
             'currentReportNdrOrReport' => $currentReport instanceof Ndr ? 'ndr' : 'report',
-            'currentReportDueDate' => $currentReport->getDueDate(),
-            'currentReportStartDate' => $currentReport->getStartDate(),
-            'currentReportEndDate' => $currentReport instanceof Ndr ? null : $currentReport->getEndDate(),
-            'currentReportBankAccountId' => $currentReport->getBankAccounts()[0]->getId(),
-            'courtDate' => $client->getCourtDate()->format('j F Y'),
+            'currentReportDueDate' => $currentReport?->getDueDate(),
+            'currentReportStartDate' => $currentReport?->getStartDate(),
+            'currentReportEndDate' => $currentReport instanceof Ndr ? null : $currentReport?->getEndDate(),
+            'currentReportBankAccountId' => $currentReport?->getBankAccounts()[0]->getId(),
+            'courtDate' => $client ? $client->getCourtDate()?->format('j F Y') : null,
         ];
 
         if ($previousReport && $previousReport->getId() !== $currentReport->getId()) {
@@ -110,22 +110,24 @@ class FixtureHelper
     public static function buildOrgUserDetails(User $user)
     {
         $organisation = $user->getOrganisations()->first();
-        $namedDeputy = $organisation->getClients()[0]->getNamedDeputy();
+        $namedDeputy = $organisation?->getClients()[0]->getNamedDeputy();
 
-        $details = [
-            'organisationName' => $organisation->getName(),
-            'organisationEmailIdentifier' => $organisation->getEmailIdentifier(),
-            'namedDeputyName' => sprintf(
-                '%s %s',
-                $namedDeputy->getFirstname(),
-                $namedDeputy->getLastName()
-            ),
-            'namedDeputyFullAddressArray' => self::buildNamedDeputyAddressArray($namedDeputy),
-            'namedDeputyPhone' => $namedDeputy->getPhoneMain(),
-            'namedDeputyPhoneAlt' => $namedDeputy->getPhoneAlternative(),
-            'namedDeputyEmail' => $namedDeputy->getEmail1(),
-            'namedDeputyEmailAlt' => $namedDeputy->getEmail2(),
-        ];
+        if ($namedDeputy) {
+            $details = [
+                'organisationName' => $organisation->getName(),
+                'organisationEmailIdentifier' => $organisation->getEmailIdentifier(),
+                'namedDeputyName' => sprintf(
+                    '%s %s',
+                    $namedDeputy->getFirstname(),
+                    $namedDeputy->getLastName()
+                ),
+                'namedDeputyFullAddressArray' => self::buildNamedDeputyAddressArray($namedDeputy),
+                'namedDeputyPhone' => $namedDeputy->getPhoneMain(),
+                'namedDeputyPhoneAlt' => $namedDeputy->getPhoneAlternative(),
+                'namedDeputyEmail' => $namedDeputy->getEmail1(),
+                'namedDeputyEmailAlt' => $namedDeputy->getEmail2(),
+            ];
+        }
 
         return array_merge(self::buildUserDetails($user), $details);
     }
@@ -1162,5 +1164,16 @@ class FixtureHelper
         $client->setPassword($this->encoder->encodePassword($client, $this->fixtureParams['account_password']));
         $this->em->persist($client);
         $this->em->flush();
+    }
+
+    public function createPreRegistration(string $reportType = 'OPG102', string $orderType = 'PFA'): PreRegistration
+    {
+        $data = ['reportType' => $reportType, 'orderType' => $orderType];
+
+        $preRegistration = $this->preRegistrationFactory->create($data);
+        $this->em->persist($preRegistration);
+        $this->em->flush();
+
+        return $preRegistration;
     }
 }
