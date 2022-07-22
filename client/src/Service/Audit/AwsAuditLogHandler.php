@@ -15,9 +15,6 @@ class AwsAuditLogHandler extends AbstractAuditLogHandler
     /** @var string */
     private $group;
 
-    /** @var string */
-    private $sequenceToken;
-
     /**
      * @param $group
      * @param int  $level
