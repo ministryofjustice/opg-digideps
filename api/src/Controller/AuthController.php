@@ -13,7 +13,6 @@ use App\Service\BruteForce\AttemptsIncrementalWaitingChecker;
 use App\Service\BruteForce\AttemptsInTimeChecker;
 use App\Service\Formatter\RestFormatter;
 use App\Service\JWT\JWTService;
-use DateTime;
 use Doctrine\ORM\EntityManagerInterface;
 use Predis\Client;
 use Psr\Log\LoggerInterface;
@@ -29,7 +28,7 @@ class AuthController extends RestController
     public function __construct(
         private AuthService $authService,
         private RestFormatter $restFormatter,
-        private UserRepository $userRepository
+        private UserRepository $userRepository,
         private JWTService $JWTService,
         private LoggerInterface $logger
     ) {

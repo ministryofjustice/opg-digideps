@@ -22,7 +22,6 @@ use RuntimeException;
 use Symfony\Component\DependencyInjection\ContainerInterface;
 use Symfony\Component\DependencyInjection\ParameterBag\ParameterBagInterface;
 use Symfony\Component\HttpFoundation\Response;
-use Symfony\Component\Security\Core\Authentication\Token\Storage\TokenStorageInterface as SecurityTokenStorage;
 use Symfony\Contracts\HttpClient\HttpClientInterface;
 use Throwable;
 
@@ -88,10 +87,10 @@ class RestClient implements RestClientInterface
         protected ContainerInterface $container,
         protected ClientInterface $client,
         protected RedisStorage $redisStorage,
-        protected SerializerInterface $serialiser,
+        protected SerializerInterface $serializer,
         protected LoggerInterface $logger,
         protected string $clientSecret,
-        protected ParameterBagInterface $params
+        protected ParameterBagInterface $params,
         protected HttpClientInterface $openInternetClient,
         protected JWTService $JWTService
     ) {
@@ -130,7 +129,7 @@ class RestClient implements RestClientInterface
                 $subjectUrn = $decoded->claims()->get('sub');
 
                 // Move to secure cookie in next iteration
-                $this->tokenStorage->set(sprintf('%s-jwt', $subjectUrn), $jwt);
+                $this->redisStorage->set(sprintf('%s-jwt', $subjectUrn), $jwt);
             } catch (ConstraintViolation $e) {
                 // Swallow expired token errors for now and just log - implement once we're rolling JWT to all users
                 $this->logger->warning(sprintf('JWT expired: %s', $e->getMessage()));
@@ -332,7 +331,7 @@ class RestClient implements RestClientInterface
         // add AuthToken if user is logged
         if (!empty($options['addAuthToken']) && $loggedUserId = $this->getLoggedUserId()) {
             $options['headers'][self::HEADER_AUTH_TOKEN] = $this->redisStorage->get($loggedUserId);
-            $jwt = $this->tokenStorage->get(sprintf('%s:%s-jwt', 'urn:opg:digideps:users', $loggedUserId));
+            $jwt = $this->redisStorage->get(sprintf('%s:%s-jwt', 'urn:opg:digideps:users', $loggedUserId));
 
             if ($jwt) {
                 $options['headers'][self::HEADER_JWT] = $jwt;

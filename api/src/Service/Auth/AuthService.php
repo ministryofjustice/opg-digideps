@@ -8,7 +8,6 @@ use App\Service\JWT\JWTService;
 use Psr\Log\LoggerInterface;
 use Symfony\Component\HttpFoundation\Request;
 use Symfony\Component\PasswordHasher\Hasher\UserPasswordHasherInterface;
-use Symfony\Component\Security\Core\Encoder\EncoderFactoryInterface;
 use Symfony\Component\Security\Core\Role\RoleHierarchyInterface;
 
 class AuthService
@@ -18,13 +17,12 @@ class AuthService
     private array $clientSecrets = [];
 
     public function __construct(
-        private EncoderFactoryInterface $securityEncoderFactory,
         private LoggerInterface $logger,
         private UserRepository $userRepository,
         private RoleHierarchyInterface $roleHierarchy,
         private array $clientPermissions,
-        private JWTService $JWTService
-        private UserPasswordHasherInterface $passwordHasher,
+        private JWTService $JWTService,
+        private UserPasswordHasherInterface $passwordHasher
     ) {
         if (empty($clientPermissions)) {
             throw new \InvalidArgumentException('client_permissions not defined in config.');
