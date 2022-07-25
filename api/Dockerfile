@@ -42,6 +42,7 @@ RUN pecl install pcov && docker-php-ext-enable pcov
 
 # Install Xdebug if directed to with build arg from docker-compose.yml
 ARG REQUIRE_XDEBUG=0
+ARG XDEBUG_IDEKEY_API=PHPSTORM
 RUN if [[ $REQUIRE_XDEBUG = 1 ]] ; then \
   pecl install xdebug-3.1.4  ;\
   docker-php-ext-enable $PHP_EXT_DIR/xdebug.so ; \
@@ -49,7 +50,7 @@ RUN if [[ $REQUIRE_XDEBUG = 1 ]] ; then \
   echo "xdebug.client_host = host.docker.internal" >> /usr/local/etc/php/conf.d/docker-php-ext-xdebug.ini ; \
   echo "xdebug.start_with_request = yes" >> /usr/local/etc/php/conf.d/docker-php-ext-xdebug.ini ; \
   echo "xdebug.log = /tmp/xdebug.log" >> /usr/local/etc/php/conf.d/docker-php-ext-xdebug.ini ; \
-  echo "xdebug.idekey = PHPSTORM-API" >> /usr/local/etc/php/conf.d/docker-php-ext-xdebug.ini ; \
+  echo "xdebug.idekey = ${XDEBUG_IDEKEY_API}" >> /usr/local/etc/php/conf.d/docker-php-ext-xdebug.ini ; \
   fi ;
 
 # Route NGINX logs to stdout/stderr
@@ -69,18 +70,7 @@ RUN wget -q -O /usr/local/bin/waitforit https://github.com/maxcnunes/waitforit/r
 
 # Generate certificate
 RUN mkdir -p /etc/nginx/certs
-
-RUN openssl req \
-        -newkey rsa:4096 \
-        -x509 \
-        -nodes \
-        -keyout /etc/nginx/certs/app.key \
-        -new \
-        -out /etc/nginx/certs/app.crt \
-        -subj "/C=GB/ST=GB/L=London/O=OPG/OU=Digital/CN=digideps api" \
-        -sha256 \
-        -days 3650 \
-        -addext "subjectAltName = DNS:api.digideps.local"
+RUN openssl req -newkey rsa:4096 -x509 -nodes -keyout /etc/nginx/certs/app.key -new -out /etc/nginx/certs/app.crt -subj "/C=GB/ST=GB/L=London/O=OPG/OU=Digital/CN=default" -sha256 -days "3650"
 
 RUN mkdir -p var/cache \
   && mkdir -p var/logs \

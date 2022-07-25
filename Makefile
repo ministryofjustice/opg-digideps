@@ -59,11 +59,14 @@ up-app: ##@application Brings the app up
 up-app-build: ##@application Brings the app up and rebuilds containers
 	COMPOSE_HTTP_TIMEOUT=90 docker-compose up -d --build --remove-orphans
 
-up-app-xdebug-frontend: ##@application Brings the app up, rebuilds containers and enabled xdebug in client
-	REQUIRE_XDEBUG_FRONTEND=1 docker-compose up -d --build --remove-orphans
+up-app-xdebug: ##@application Brings the app up, rebuilds containers and enabled xdebug in api and client (see DEBUGGING.md for config and setup)
+	REQUIRE_XDEBUG_CLIENT=1 REQUIRE_XDEBUG_API=1 XDEBUG_IDEKEY_API=PHPSTORM-API XDEBUG_IDEKEY_CLIENT=PHPSTORM-CLIENT docker-compose up -d --build --remove-orphans
 
-up-app-xdebug-frontend-cachegrind: ##@application Brings the app up, rebuilds containers and enabled xdebug in client with cachegrind being captured
- 	REQUIRE_XDEBUG_FRONTEND=1 docker-compose -f docker-compose.yml -f docker-compose.cachegrind.yml up -d --build --remove-orphans
+up-app-xdebug-client: ##@application Brings the app up, rebuilds containers and enabled xdebug in client
+	REQUIRE_XDEBUG_CLIENT=1 docker-compose up -d --build --remove-orphans
+
+up-app-xdebug-client-cachegrind: ##@application Brings the app up, rebuilds containers and enabled xdebug in client with cachegrind being captured
+ 	REQUIRE_XDEBUG_CLIENT=1 docker-compose -f docker-compose.yml -f docker-compose.cachegrind.yml up -d --build --remove-orphans
 
 up-app-xdebug-api: ##@application Brings the app up, rebuilds containers and enabled xdebug in client
 	REQUIRE_XDEBUG_API=1 docker-compose up -d --build --remove-orphans
@@ -71,22 +74,19 @@ up-app-xdebug-api: ##@application Brings the app up, rebuilds containers and ena
 up-app-xdebug-api-cachegrind: ##@application Brings the app up, rebuilds containers and enabled xdebug in client with cachegrind
 	REQUIRE_XDEBUG_API=1 docker-compose -f docker-compose.yml -f docker-compose.cachegrind.yml  up -d --build --remove-orphans
 
-up-app-xdebug: ##@application Brings the app up, rebuilds containers and enabled xdebug in client
-	REQUIRE_XDEBUG_API=1 REQUIRE_XDEBUG_FRONTEND=1 docker-compose up -d --build --remove-orphans
-
 up-app-integration-tests: ##@application Brings the app up using test env vars (see test.env)
-	REQUIRE_XDEBUG_FRONTEND=0 REQUIRE_XDEBUG_API=0 docker-compose -f docker-compose.yml -f docker-compose.dev.yml build frontend admin api test
+	REQUIRE_XDEBUG_CLIENT=0 REQUIRE_XDEBUG_API=0 docker-compose -f docker-compose.yml -f docker-compose.dev.yml build frontend admin api test
 	APP_DEBUG=0 docker-compose -f docker-compose.yml -f docker-compose.dev.yml up -d --remove-orphans
 
 down-app: ##@application Tears down the app
 	docker-compose down -v --remove-orphans
 
 client-unit-tests: ##@unit-tests Run the client unit tests
-	REQUIRE_XDEBUG_FRONTEND=0 REQUIRE_XDEBUG_API=0 docker-compose build frontend admin
+	REQUIRE_XDEBUG_CLIENT=0 REQUIRE_XDEBUG_API=0 docker-compose build frontend admin
 	docker-compose -f docker-compose.yml run -e APP_ENV=unit_test -e APP_DEBUG=0 --rm frontend vendor/bin/phpunit -c tests/phpunit
 
 api-unit-tests: reset-fixtures ##@unit-tests Run the api unit tests
-	REQUIRE_XDEBUG_FRONTEND=0 REQUIRE_XDEBUG_API=0 docker-compose build api
+	REQUIRE_XDEBUG_CLIENT=0 REQUIRE_XDEBUG_API=0 docker-compose build api
 	docker-compose -f docker-compose.yml run --rm -e APP_ENV=test -e APP_DEBUG=0 api sh scripts/apiunittest.sh
 
 behat-tests: up-app-integration-tests reset-fixtures ##@behat Run the whole behat test suite
@@ -122,13 +122,16 @@ reset-fixtures: ##@database Resets the DB contents and reloads fixtures
 	docker-compose run --rm api sh scripts/reset_db_fixtures_local.sh
 
 db-terminal: ##@database Login to the database via the terminal
-	docker exec -it opg-digideps-postgres sh -c "psql -U api"
+	docker-compose exec -it postgres sh -c "psql -U api"
 
 api-logs: ##@logs Follow the API logs
-	docker logs opg-digideps-api --follow
+	docker-compose logs api --follow
 
-frontend-logs: ##@logs Follow the API logs
-	docker logs opg-digideps-frontend --follow
+frontend-logs: ##@logs Follow the frontend logs
+	docker-compose logs frontend --follow
+
+admin-logs: ##@logs Follow the admin logs
+	docker-compose logs admin --follow
 
 redis-clear: ##@database Clears out all the data from redis (session related tokens)
 	for c in ${REDIS_CONTAINERS} ; do \
@@ -179,6 +182,6 @@ composer-api: ##@application Drops you into the API container with composer inst
 	docker-compose exec api sh install-composer.sh
 	docker-compose exec api sh
 
-composer-frontend: ##@application Drops you into the frontend container with composer installed
+composer-client: ##@application Drops you into the frontend container with composer installed
 	docker-compose exec frontend sh install-composer.sh
 	docker-compose exec frontend sh
