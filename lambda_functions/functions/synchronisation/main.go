@@ -4,7 +4,6 @@ import (
 	"bytes"
 	"context"
 	"crypto/tls"
-	"fmt"
 	"log"
 	"net/http"
 	"os"
@@ -25,7 +24,8 @@ func handleRequest(ctx context.Context, event events.SQSEvent) (string, error) {
 	http.DefaultTransport.(*http.Transport).TLSClientConfig = &tls.Config{InsecureSkipVerify: true}
 	body := strings.NewReader("{}")
 	res, err := http.Post(url, "application/json", body)
-
+ 	log.Println(event)
+	log.Println(ctx)
 	if err != nil {
 		log.Printf("failed to call remote service: (%v)\n", err)
 	}
@@ -36,9 +36,10 @@ func handleRequest(ctx context.Context, event events.SQSEvent) (string, error) {
 	buffer.ReadFrom(res.Body)
 	responseBody := buffer.String()
 
-    fmt.Println(res.StatusCode)
-    fmt.Println(res.Status)
-	fmt.Println(responseBody)
+
+    log.Println(res.StatusCode)
+    log.Println(res.Status)
+	log.Println(responseBody)
 
 	return "Completed Document Kickoff", nil
 }

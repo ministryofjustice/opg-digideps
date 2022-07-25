@@ -4,6 +4,7 @@ namespace App\Controller\Synchronisation;
 
 use App\Controller\AbstractController;
 use App\Model\Sirius\QueuedDocumentData;
+use App\Service\ChecklistSyncService;
 use App\Service\Client\RestClient;
 use App\Service\DocumentSyncService;
 use App\Service\ParameterStoreService;
@@ -12,15 +13,18 @@ use Symfony\Component\HttpFoundation\JsonResponse;
 use Symfony\Component\Routing\Annotation\Route;
 use Symfony\Component\Serializer\SerializerInterface;
 
-class DocumentSynchronisationController extends AbstractController
+class SynchronisationController extends AbstractController
 {
-    public const FALLBACK_ROW_LIMITS = '100';
+    public const DOCUMENT_FALLBACK_ROW_LIMITS = '100';
+    public const CHECKLIST_FALLBACK_ROW_LIMITS = '30';
     public const COMPLETED_MESSAGE = 'Sync command completed';
 
     public static $defaultName = 'digideps:document-sync';
 
     /** @var DocumentSyncService */
     private $documentSyncService;
+
+    private $checklistSyncService;
 
     /** @var RestClient */
     private $restClient;
@@ -35,12 +39,14 @@ class DocumentSynchronisationController extends AbstractController
 
     public function __construct(
         DocumentSyncService $documentSyncService,
+        ChecklistSyncService $checklistSyncService,
         RestClient $restClient,
         SerializerInterface $serializer,
         ParameterStoreService $parameterStore,
         LoggerInterface $logger
     ) {
         $this->documentSyncService = $documentSyncService;
+        $this->checklistSyncService = $checklistSyncService;
         $this->restClient = $restClient;
         $this->serializer = $serializer;
         $this->parameterStore = $parameterStore;
@@ -71,7 +77,7 @@ class DocumentSynchronisationController extends AbstractController
     {
         ini_set('memory_limit', '512M');
 
-        if (!$this->isFeatureEnabled()) {
+        if (!$this->isDocumentFeatureEnabled()) {
             return new JsonResponse(['Document Sync Disabled']);
         }
 
@@ -97,16 +103,56 @@ class DocumentSynchronisationController extends AbstractController
         return new JsonResponse([self::COMPLETED_MESSAGE]);
     }
 
-    private function isFeatureEnabled(): bool
+    /**
+     * @Route("/synchronise/checklists", name="synchronise_checklists", methods={"POST"})
+     */
+    protected function synchroniseChecklist(): JsonResponse
+    {
+        ini_set('memory_limit', '512M');
+
+        if (!$this->isChecklistFeatureEnabled()) {
+            return new JsonResponse(['Checklist Sync Disabled']);
+        }
+
+        $rowLimit = $this->getChecklistSyncRowLimit();
+
+        /** @var array $reports */
+        $reports = $this->reportApi->getReportsWithQueuedChecklists($rowLimit);
+        $this->logger->info(sprintf('%d checklists to upload', count($reports)));
+
+        $notSyncedCount = $this->checklistSyncService->syncChecklistsByReports($reports);
+
+        if ($notSyncedCount > 0) {
+            $this->logger->info(sprintf('%d checklists failed to sync', $notSyncedCount));
+        }
+
+        $this->logger->info(self::COMPLETED_MESSAGE);
+
+        return new JsonResponse([self::COMPLETED_MESSAGE]);
+    }
+
+    private function isDocumentFeatureEnabled(): bool
+    {
+        return '1' === $this->parameterStore->getFeatureFlag(ParameterStoreService::FLAG_CHECKLIST_SYNC);
+    }
+
+    private function isChecklistFeatureEnabled(): bool
     {
         return '1' === $this->parameterStore->getFeatureFlag(ParameterStoreService::FLAG_DOCUMENT_SYNC);
     }
 
-    private function getSyncRowLimit(): string
+    private function getDocumentSyncRowLimit(): string
     {
         $limit = $this->parameterStore->getParameter(ParameterStoreService::PARAMETER_DOCUMENT_SYNC_ROW_LIMIT);
 
-        return $limit ? $limit : self::FALLBACK_ROW_LIMITS;
+        return $limit ? $limit : self::DOCUMENT_FALLBACK_ROW_LIMITS;
+    }
+
+    private function getChecklistSyncRowLimit(): string
+    {
+        $limit = $this->parameterStore->getParameter(ParameterStoreService::PARAMETER_CHECKLIST_SYNC_ROW_LIMIT);
+
+        return $limit ? $limit : self::CHECKLIST_FALLBACK_ROW_LIMITS;
     }
 
     /**
@@ -117,7 +163,7 @@ class DocumentSynchronisationController extends AbstractController
         $queuedDocumentData = $this->restClient->apiCall(
             'get',
             'document/queued',
-            ['row_limit' => $this->getSyncRowLimit()],
+            ['row_limit' => $this->getDocumentSyncRowLimit()],
             'array',
             [],
             false

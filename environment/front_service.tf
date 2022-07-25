@@ -2,6 +2,31 @@ locals {
   front_service_fqdn = "front.${aws_service_discovery_private_dns_namespace.private.name}"
 }
 
+resource "aws_service_discovery_service" "front" {
+  name = "front"
+
+  dns_config {
+    namespace_id = aws_service_discovery_private_dns_namespace.private.id
+
+    dns_records {
+      ttl  = 10
+      type = "A"
+    }
+
+    routing_policy = "MULTIVALUE"
+  }
+
+  health_check_custom_config {
+    failure_threshold = 1
+  }
+
+  tags = local.default_tags
+
+  depends_on = [aws_service_discovery_private_dns_namespace.private]
+
+  force_destroy = local.account.deletion_protection ? false : true
+}
+
 resource "aws_ecs_task_definition" "front" {
   family                   = "front-${local.environment}"
   requires_compatibilities = ["FARGATE"]
@@ -38,7 +63,11 @@ resource "aws_ecs_service" "front" {
     container_port   = 443
   }
 
-  depends_on = [aws_lb_listener.front_https]
+  service_registries {
+    registry_arn = aws_service_discovery_service.front.arn
+  }
+
+  depends_on = [aws_lb_listener.front_https, aws_service_discovery_service.front]
 }
 
 locals {
