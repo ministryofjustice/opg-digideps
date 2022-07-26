@@ -36,7 +36,11 @@ data "aws_iam_policy_document" "sync" {
     sid    = "AllowSyncTaskObjects"
     effect = "Allow"
     actions = [
-      "s3:*Object*"
+      "s3:PutObject",
+      "s3:GetObject",
+      "s3:DeleteObject",
+      "s3:ListObject",
+      "s3:ListBucket",
     ]
     resources = [
       "${data.aws_s3_bucket.sync.arn}/*",
@@ -47,7 +51,13 @@ data "aws_iam_policy_document" "sync" {
     sid    = "AllowSyncTaskKMS"
     effect = "Allow"
     actions = [
-      "kms:*"
+      "kms:Decrypt",
+      "kms:DescribeKey",
+      "kms:Encrypt",
+      "kms:GenerateDataKeyPair",
+      "kms:GenerateDataKeyPairWithoutPlaintext",
+      "kms:GenerateDataKeyWithoutPlaintext",
+      "kms:ReEncrypt"
     ]
     resources = [
       data.aws_kms_alias.backup.target_key_arn,

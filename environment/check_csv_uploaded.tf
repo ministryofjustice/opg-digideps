@@ -75,7 +75,7 @@ resource "aws_cloudwatch_event_target" "check_csv_uploaded_scheduled_task" {
   target_id = "ScheduledCheckCSVUploaded"
   rule      = aws_cloudwatch_event_rule.check_csv_uploaded_cron_rule.name
   arn       = aws_ecs_cluster.main.arn
-  role_arn  = data.aws_iam_role.events_task_runner.arn
+  role_arn  = aws_iam_role.events_task_runner.arn
 
   ecs_target {
     task_count          = 1

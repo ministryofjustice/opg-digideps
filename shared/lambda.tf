@@ -64,6 +64,9 @@ resource "aws_lambda_function" "redeployer_lambda" {
   handler       = "main"
   runtime       = "go1.x"
   depends_on    = [aws_cloudwatch_log_group.redeployer_lambda]
+  tracing_config {
+    mode = "Active"
+  }
 
   source_code_hash = filebase64sha256(data.archive_file.redeployer_zip.output_path)
   tags = merge(
@@ -75,6 +78,7 @@ resource "aws_lambda_function" "redeployer_lambda" {
 resource "aws_cloudwatch_log_group" "redeployer_lambda" {
   name              = "/aws/lambda/${local.redeployer_lambda_function_name}"
   retention_in_days = 14
+  kms_key_id        = aws_kms_key.cloudwatch_logs.arn
   tags = merge(
     local.default_tags,
     { Name = "redeployer-${local.account.name}-log-group" },

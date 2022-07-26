@@ -9,7 +9,7 @@ variable "deletion_protection" {}
 variable "db_subnet_group_name" {}
 variable "database_name" {}
 variable "engine" { default = "aurora-postgresql" }
-variable "engine_version" { default = "10.11" }
+variable "engine_version" { default = "10" }
 variable "kms_key_id" {}
 variable "master_username" {}
 variable "master_password" {}

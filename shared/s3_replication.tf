@@ -1,3 +1,4 @@
+#tfsec:ignore:aws-s3-enable-bucket-logging - only contains dev data. no need for access logging
 resource "aws_s3_bucket" "pa_uploads_branch_replication" {
   count         = local.account.name == "development" ? 1 : 0
   bucket        = "pa-uploads-branch-replication"

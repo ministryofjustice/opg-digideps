@@ -1,3 +1,4 @@
+# To be removed as moved to environment
 resource "aws_iam_role" "events_task_runner" {
   name = "events_task_runner"
 
