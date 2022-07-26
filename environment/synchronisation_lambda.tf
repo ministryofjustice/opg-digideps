@@ -45,7 +45,7 @@ resource "aws_cloudwatch_event_rule" "event_rule" {
 resource "aws_cloudwatch_event_target" "check_at_rate" {
   rule  = aws_cloudwatch_event_rule.event_rule.name
   arn   = module.lamdba_synchronisation.lambda.arn
-  input = "{\"commands\":[\"document\"]}"
+  input = jsonencode({ "command" : "document" })
 }
 
 resource "aws_lambda_permission" "allow_cloudwatch_to_call_synchronise_lambda" {
