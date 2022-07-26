@@ -222,5 +222,5 @@ services:
       AWS_S3_ENDPOINT: http://localstack:4566
       AWS_ACCESS_KEY_ID: localstack
       AWS_SECRET_ACCESS_KEY: localstack
-      DIGIDEPS_SYNC_ENDPOINT: https://frontend/synchronise/documents
+      DIGIDEPS_SYNC_ENDPOINT: https://frontend
     entrypoint: /aws-lambda/aws-lambda-rie /var/task/main

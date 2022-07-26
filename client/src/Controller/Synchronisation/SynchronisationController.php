@@ -5,6 +5,7 @@ namespace App\Controller\Synchronisation;
 use App\Controller\AbstractController;
 use App\Model\Sirius\QueuedDocumentData;
 use App\Service\ChecklistSyncService;
+use App\Service\Client\Internal\ReportApi;
 use App\Service\Client\RestClient;
 use App\Service\DocumentSyncService;
 use App\Service\ParameterStoreService;
@@ -36,6 +37,7 @@ class SynchronisationController extends AbstractController
     private $parameterStore;
 
     private LoggerInterface $logger;
+    private ReportApi $reportApi;
 
     public function __construct(
         DocumentSyncService $documentSyncService,
@@ -43,7 +45,8 @@ class SynchronisationController extends AbstractController
         RestClient $restClient,
         SerializerInterface $serializer,
         ParameterStoreService $parameterStore,
-        LoggerInterface $logger
+        LoggerInterface $logger,
+        ReportApi $reportApi
     ) {
         $this->documentSyncService = $documentSyncService;
         $this->checklistSyncService = $checklistSyncService;
@@ -51,6 +54,7 @@ class SynchronisationController extends AbstractController
         $this->serializer = $serializer;
         $this->parameterStore = $parameterStore;
         $this->logger = $logger;
+        $this->reportApi = $reportApi;
     }
 
     /**
@@ -71,7 +75,7 @@ class SynchronisationController extends AbstractController
     }
 
     /**
-     * @Route("/synchronise/documents", name="synchronise_documents", methods={"POST"})
+     * @Route("/synchronise/documents", name="synchronise_documents", methods={"POST", "GET"})
      */
     public function synchroniseDocument(): JsonResponse
     {
@@ -104,9 +108,9 @@ class SynchronisationController extends AbstractController
     }
 
     /**
-     * @Route("/synchronise/checklists", name="synchronise_checklists", methods={"POST"})
+     * @Route("/synchronise/checklists", name="synchronise_checklists", methods={"POST", "GET"})
      */
-    protected function synchroniseChecklist(): JsonResponse
+    public function synchroniseChecklist(): JsonResponse
     {
         ini_set('memory_limit', '512M');
 

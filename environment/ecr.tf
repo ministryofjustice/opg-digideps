@@ -8,7 +8,7 @@ locals {
     sync        = "${data.aws_ecr_repository.images["sync"].repository_url}:${var.OPG_DOCKER_TAG}"
     htmltopdf   = "${data.aws_ecr_repository.images["htmltopdf"].repository_url}:${var.OPG_DOCKER_TAG}"
     drbackup    = "${data.aws_ecr_repository.images["dr-backup"].repository_url}:${var.OPG_DOCKER_TAG}"
-    synchronise = "${data.aws_ecr_repository.images["test"].repository_url}:${var.OPG_DOCKER_TAG}"
+    synchronise = "${data.aws_ecr_repository.images["synchronise-lambda"].repository_url}:${var.OPG_DOCKER_TAG}"
   }
 
   repositories = [
@@ -17,7 +17,7 @@ locals {
     "dr-backup",
     "sync",
     "htmltopdf",
-    "test"
+    "synchronise-lambda"
   ]
 }
 

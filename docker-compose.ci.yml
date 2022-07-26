@@ -16,5 +16,5 @@ services:
     image: ${AWS_REGISTRY}/digideps/dr-backup:${VERSION}
     build: ./disaster_recovery/backup
   synchronisation:
-    image: ${AWS_REGISTRY}/digideps/test:${VERSION}
+    image: ${AWS_REGISTRY}/digideps/synchronise-lambda:${VERSION}
     build: ./lambda_functions/functions/synchronisation
