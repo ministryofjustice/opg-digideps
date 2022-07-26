@@ -2,34 +2,46 @@
 
 namespace App\EventListener;
 
-use Mockery as m;
 use PHPUnit\Framework\TestCase;
+use Prophecy\PhpUnit\ProphecyTrait;
+use Prophecy\Prophecy\ObjectProphecy;
+use Symfony\Component\HttpFoundation\Request;
+use Symfony\Component\HttpFoundation\Response;
+use Symfony\Component\HttpFoundation\ResponseHeaderBag;
+use Symfony\Component\HttpKernel\Event\ResponseEvent;
+use Symfony\Component\HttpKernel\HttpKernelInterface;
+use Symfony\Component\HttpKernel\KernelInterface;
 
 /**
  * Act on session on each request.
  */
 class ResponseNoCacheListenerTest extends TestCase
 {
+    use ProphecyTrait;
+
     /**
      * @test
      * @doesNotPerformAssertions
      */
     public function onKernelResponse()
     {
-        $headers = m::mock('Symfony\Component\HttpFoundation');
-        $headers->shouldReceive('set')->once()->with('Cache-Control', 'no-cache, no-store, must-revalidate');
-        $headers->shouldReceive('set')->once()->with('Pragma', 'no-cache');
-        $headers->shouldReceive('set')->once()->with('Expires', '0');
+        /** @var ObjectProphecy|ResponseHeaderBag $headers */
+        $headers = self::prophesize(ResponseHeaderBag::class);
 
-        $response = m::mock('Symfony\Component\HttpFoundation\Response');
-        $response->headers = $headers;
+        $headers->set('Cache-Control', 'no-cache, no-store, must-revalidate')->shouldBeCalled();
+        $headers->set('Pragma', 'no-cache')->shouldBeCalled();
+        $headers->set('Expires', '0')->shouldBeCalled();
 
-        $event = m::mock('Symfony\Component\HttpKernel\Event\ResponseEvent');
-        $event->shouldReceive('getResponse')->andReturn($response);
+        /** @var ObjectProphecy|Response $response */
+        $response = self::prophesize(Response::class);
+        $response->headers = $headers->reveal();
+
+        $kernel = self::prophesize(KernelInterface::class);
+        $request = self::prophesize(Request::class);
+
+        $event = new ResponseEvent($kernel->reveal(), $request->reveal(), HttpKernelInterface::MAIN_REQUEST, $response->reveal());
 
         $object = new ResponseNoCacheListener();
         $object->onKernelResponse($event);
-
-        m::close();
     }
 }

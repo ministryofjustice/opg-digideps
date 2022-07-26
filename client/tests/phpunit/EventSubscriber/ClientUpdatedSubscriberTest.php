@@ -141,7 +141,6 @@ class ClientUpdatedSubscriberTest extends TestCase
             'Address changed' => [$preUpdateClient, (clone $preUpdateClient)->setAddress($faker->address())],
             'Address2 changed' => [$preUpdateClient, (clone $preUpdateClient)->setAddress2($faker->address())],
             'CourtDate changed' => [$preUpdateClient, (clone $preUpdateClient)->setCourtDate(new DateTime($faker->date()))],
-            'County changed' => [$preUpdateClient, (clone $preUpdateClient)->setCounty($faker->state())],
             'Postcode changed' => [$preUpdateClient, (clone $preUpdateClient)->setPostcode($faker->postcode())],
             'Country changed' => [$preUpdateClient, (clone $preUpdateClient)->setCountry('USA')],
             'Phone changed' => [$preUpdateClient, (clone $preUpdateClient)->setPhone($faker->phoneNumber())],
