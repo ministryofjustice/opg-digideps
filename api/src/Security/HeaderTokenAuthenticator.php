@@ -92,7 +92,7 @@ class HeaderTokenAuthenticator extends AbstractAuthenticator
 
         return new SelfValidatingPassport(
             new UserBadge($postAuthToken->getUserIdentifier(), function ($userEmail) {
-                $user = $this->userRepository->findOneBy(['email' => $userEmail]);
+                $user = $this->userRepository->findOneBy(['email' => strtolower($userEmail)]);
 
                 if ($user instanceof User) {
                     return $user;
@@ -110,6 +110,6 @@ class HeaderTokenAuthenticator extends AbstractAuthenticator
 
     public function onAuthenticationFailure(Request $request, AuthenticationException $exception): ?Response
     {
-        throw new UserWrongCredentialsException();
+        throw new UserWrongCredentialsException($exception->getMessage());
     }
 }

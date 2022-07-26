@@ -33,7 +33,7 @@ class LoginRequestAuthenticator extends AbstractAuthenticator
     public function authenticate(Request $request): Passport
     {
         $content = json_decode($request->getContent(), true);
-        $email = $content['email'] ?? null;
+        $email = strtolower($content['email']) ?? null;
         $password = $content['password'] ?? null;
 
         return new Passport(
@@ -57,7 +57,7 @@ class LoginRequestAuthenticator extends AbstractAuthenticator
 
     public function onAuthenticationFailure(Request $request, AuthenticationException $exception): ?Response
     {
-        throw new UserWrongCredentialsException();
+        throw new UserWrongCredentialsException($exception->getMessage());
     }
 
     private function hasRequiredLoginDetails(Request $request): bool

@@ -20,10 +20,7 @@ use Sensio\Bundle\FrameworkExtraBundle\Configuration\Template;
 use Symfony\Component\Form\FormError;
 use Symfony\Component\HttpFoundation\Request;
 use Symfony\Component\HttpFoundation\Response;
-use Symfony\Component\HttpFoundation\Session\SessionInterface;
 use Symfony\Component\Routing\Annotation\Route;
-use Symfony\Component\Security\Core\Authentication\Token\Storage\TokenStorageInterface;
-use Symfony\Component\Security\Core\Authentication\Token\UsernamePasswordToken;
 use Symfony\Component\Security\Core\Exception\UsernameNotFoundException;
 use Symfony\Contracts\Translation\TranslatorInterface;
 
@@ -53,9 +50,7 @@ class UserController extends AbstractController
         Redirector $redirector,
         DeputyProvider $deputyProvider,
         string $action,
-        string $token,
-        TokenStorageInterface $tokenStorage,
-        SessionInterface $session
+        string $token
     ): Response {
         $isActivatePage = 'activate' === $action;
 
@@ -123,16 +118,8 @@ class UserController extends AbstractController
             // set agree terms for user
             $this->userApi->agreeTermsUse($token);
 
-            // log in
-            $clientToken = new UsernamePasswordToken($user, 'secured_area', $user->getRoles());
-            $tokenStorage->setToken($clientToken); // now the user is logged in
-
-            $session->set('_security_secured_area', serialize($clientToken));
-
             if ($isActivatePage) {
-                // WORK OUT WHY WE AREN'T LOGGED OUT - SHOULD BE LOGGED OUT ON PASSWORD CHANGE
                 $request->getSession()->set('login-context', 'password-create');
-//                $route = $user->getIsCoDeputy() ? 'codep_verification' : 'user_details';
 
                 return $this->redirectToRoute('login');
             } else {

@@ -64,7 +64,7 @@ class LoginFormAuthenticator extends AbstractAuthenticator
 
     public function onAuthenticationSuccess(Request $request, TokenInterface $token, string $firewallName): ?Response
     {
-        $request->getSession()->remove('login-context');
+//        $request->getSession()->remove('login-context');
 
         $redirectUrl = $this->redirector->getFirstPageAfterLogin($request->getSession());
         $this->redirector->removeLastAccessedUrl(); // avoid this URL to be used a the next login

@@ -55,6 +55,8 @@ class IndexController extends AbstractController
     }
 
     /**
+     * Session logic for login is now in LoginFormAuthenticator as of Symfony 5.4.
+     *
      * @Route("login", name="login")
      * @Template("@App/Index/login.html.twig")
      *
