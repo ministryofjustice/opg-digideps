@@ -41,7 +41,7 @@ class UserController extends RestController
         private SecurityHelper $securityHelper,
         private EntityManagerInterface $em,
         private AuthService $authService,
-        private RestFormatter $formatter
+        private RestFormatter $formatter,
     ) {
     }
 
@@ -201,19 +201,30 @@ class UserController extends RestController
      */
     public function changePassword(Request $request, $id)
     {
-        /** @var User $loggedInUser */
-        $loggedInUser = $this->getUser();
+        $data = $this->formatter->deserializeBodyContent($request, [
+            'password' => 'notEmpty',
+        ]);
 
         /** @var User $requestedUser */
         $requestedUser = $this->findEntityBy(User::class, $id, 'User not found');
 
-        if ($loggedInUser->getId() != $requestedUser->getId()) {
-            throw $this->createAccessDeniedException("Not authorised to change other user's data");
-        }
+        if (!$requestedUser->getActive() && isset($data['token'])) {
+            if ($requestedUser->getRegistrationToken() !== $data['token']) {
+                $tokenMismatchMessage = sprintf('Registration token provided does not match the User (id: %s) registration token', $id);
+                throw $this->createAccessDeniedException($tokenMismatchMessage);
+            }
+        } else {
+            /** @var User $loggedInUser */
+            $loggedInUser = $this->getUser();
 
-        $data = $this->formatter->deserializeBodyContent($request, [
-            'password_plain' => 'notEmpty',
-        ]);
+            if (is_null($loggedInUser)) {
+                throw $this->createAccessDeniedException('A user is not set in session - ensure a user has been set before calling set-password');
+            }
+
+            if ($loggedInUser->getId() != $requestedUser->getId()) {
+                throw $this->createAccessDeniedException("Not authorised to change other user's data");
+            }
+        }
 
         $newPassword = $this->passwordHasher->hashPassword($requestedUser, $data['password']);
 
@@ -246,10 +257,6 @@ class UserController extends RestController
         ]);
 
         $requestedUser->setEmail($data['updated_email']);
-
-        if (array_key_exists('set_active', $data)) {
-            $requestedUser->setActive($data['set_active']);
-        }
 
         $this->em->flush();
 

@@ -63,16 +63,16 @@ up-app-xdebug: ##@application Brings the app up, rebuilds containers and enabled
 	REQUIRE_XDEBUG_CLIENT=1 REQUIRE_XDEBUG_API=1 XDEBUG_IDEKEY_API=PHPSTORM-API XDEBUG_IDEKEY_CLIENT=PHPSTORM-CLIENT docker-compose up -d --build --remove-orphans
 
 up-app-xdebug-client: ##@application Brings the app up, rebuilds containers and enabled xdebug in client
-	REQUIRE_XDEBUG_CLIENT=1 docker-compose up -d --build --remove-orphans
+	REQUIRE_XDEBUG_CLIENT=1 XDEBUG_IDEKEY_CLIENT=PHPSTORM docker-compose up -d --build --remove-orphans
 
 up-app-xdebug-client-cachegrind: ##@application Brings the app up, rebuilds containers and enabled xdebug in client with cachegrind being captured
- 	REQUIRE_XDEBUG_CLIENT=1 docker-compose -f docker-compose.yml -f docker-compose.cachegrind.yml up -d --build --remove-orphans
+ 	REQUIRE_XDEBUG_CLIENT=1 XDEBUG_IDEKEY_CLIENT=PHPSTORM docker-compose -f docker-compose.yml -f docker-compose.cachegrind.yml up -d --build --remove-orphans
 
 up-app-xdebug-api: ##@application Brings the app up, rebuilds containers and enabled xdebug in client
-	REQUIRE_XDEBUG_API=1 docker-compose up -d --build --remove-orphans
+	REQUIRE_XDEBUG_API=1 XDEBUG_IDEKEY_API=PHPSTORM docker-compose up -d --build --remove-orphans
 
 up-app-xdebug-api-cachegrind: ##@application Brings the app up, rebuilds containers and enabled xdebug in client with cachegrind
-	REQUIRE_XDEBUG_API=1 docker-compose -f docker-compose.yml -f docker-compose.cachegrind.yml  up -d --build --remove-orphans
+	REQUIRE_XDEBUG_API=1 XDEBUG_IDEKEY_API=PHPSTORM docker-compose -f docker-compose.yml -f docker-compose.cachegrind.yml  up -d --build --remove-orphans
 
 up-app-integration-tests: ##@application Brings the app up using test env vars (see test.env)
 	REQUIRE_XDEBUG_CLIENT=0 REQUIRE_XDEBUG_API=0 docker-compose -f docker-compose.yml -f docker-compose.dev.yml build frontend admin api test

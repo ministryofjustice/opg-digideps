@@ -893,7 +893,7 @@ class User implements UserInterface, PasswordAuthenticatedUserInterface
 
     /**
      * @JMS\VirtualProperty
-     * @JMS\Groups({"user-login"})
+     * @JMS\Groups({"user"})
      * @JMS\Type("integer")
      * @JMS\SerializedName("number_of_reports")
      */

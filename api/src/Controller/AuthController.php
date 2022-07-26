@@ -87,7 +87,7 @@ class AuthController extends RestController
                 if ($attemptsInTimechecker->maxAttemptsReached($key)) {
                     throw new AppException\UserWrongCredentialsManyAttempts();
                 } else {
-                    throw new AppException\UserWrongCredentials();
+                    throw new AppException\UserWrongCredentialsException();
                 }
             }
 
@@ -103,7 +103,7 @@ class AuthController extends RestController
                 if ($attemptsInTimechecker->maxAttemptsReached($key)) {
                     throw new AppException\UserWrongCredentialsManyAttempts();
                 } else {
-                    throw new AppException\UserWrongCredentials();
+                    throw new AppException\UserWrongCredentialsException();
                 }
             }
 
@@ -119,6 +119,7 @@ class AuthController extends RestController
             $em->persist($user);
             $em->flush();
 
+            // Now doing this inline rather than injecting RedisUserProvider
             $authToken = $user->getId().'_'.sha1(microtime().spl_object_hash($user).rand(1, 999));
             $redis->set($authToken, serialize($tokenStorage->getToken()));
 
@@ -135,11 +136,6 @@ class AuthController extends RestController
                 });
             }
 
-            // add token into response
-            $restInputOutputFormatter->addResponseModifier(function ($response) use ($randomToken) {
-                $response->headers->set(HeaderTokenAuthenticator::HEADER_NAME, $randomToken);
-            });
-
             // needed for redirector
             $this->restFormatter->setJmsSerialiserGroups(['user', 'user-login']);
 
@@ -155,9 +151,9 @@ class AuthController extends RestController
      *
      * @Route("/logout", methods={"POST"})
      */
-    public function logout(Request $request, RedisUserProvider $userProvider)
+    public function logout(Request $request, RedisUserProvider $userProvider, TokenStorageInterface $tokenStorage)
     {
-        $authToken = HeaderTokenAuthenticator::getTokenFromRequest($request);
+        $authToken = $tokenStorage->getToken()->getUser();
 
         return $userProvider->removeToken($authToken);
     }

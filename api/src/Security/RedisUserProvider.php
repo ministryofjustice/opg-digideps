@@ -84,4 +84,9 @@ class RedisUserProvider implements UserProviderInterface, PasswordUpgraderInterf
     {
         // TODO: Implement @method UserInterface loadUserByIdentifier(string $identifier)
     }
+
+    public function upgradePassword(UserInterface $user, string $newEncodedPassword): void
+    {
+        // TODO: Implement upgradePassword() method.
+    }
 }

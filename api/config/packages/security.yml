@@ -89,13 +89,13 @@ security:
             security: false
         # keep this one last so that the previous ones bypass the catch-all pattern below
         default:
-            pattern: .*
-            security: true
             custom_authenticators:
                 - App\Security\LoginRequestAuthenticator
                 - App\Security\RegistrationTokenAuthenticator
                 - App\Security\HeaderTokenAuthenticator
+            pattern: .*
             provider: entity_user_provider
+            security: true
             stateless: true
 
     # https://opgtransform.atlassian.net/wiki/spaces/DEPDS/pages/191299647/User+roles

@@ -113,8 +113,8 @@ class UserController extends AbstractController
 
             /** @var string */
             $data = json_encode([
-                'password_plain' => $user->getPassword(),
-                'set_active' => true,
+                'password' => $user->getPassword(),
+                'token' => $token,
             ]);
 
             // set password for user
@@ -124,16 +124,17 @@ class UserController extends AbstractController
             $this->userApi->agreeTermsUse($token);
 
             // log in
-            $clientToken = new UsernamePasswordToken($user, null, 'secured_area', $user->getRoles());
+            $clientToken = new UsernamePasswordToken($user, 'secured_area', $user->getRoles());
             $tokenStorage->setToken($clientToken); // now the user is logged in
 
             $session->set('_security_secured_area', serialize($clientToken));
 
             if ($isActivatePage) {
+                // WORK OUT WHY WE AREN'T LOGGED OUT - SHOULD BE LOGGED OUT ON PASSWORD CHANGE
                 $request->getSession()->set('login-context', 'password-create');
-                $route = $user->getIsCoDeputy() ? 'codep_verification' : 'user_details';
+//                $route = $user->getIsCoDeputy() ? 'codep_verification' : 'user_details';
 
-                return $this->redirectToRoute($route);
+                return $this->redirectToRoute('login');
             } else {
                 $request->getSession()->set('login-context', 'password-update');
 
