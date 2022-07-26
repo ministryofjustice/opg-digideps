@@ -19,7 +19,7 @@ class UserProvider implements UserProviderInterface, PasswordUpgraderInterface
 
     public function refreshUser(UserInterface $user)
     {
-        $user = $this->userApi->get($user->getId());
+        $user = $this->userApi->get($user->getId(), ['user', 'user-organisations']);
 
         if (!$user) {
             throw new UserNotFoundException('User not found');
@@ -35,7 +35,7 @@ class UserProvider implements UserProviderInterface, PasswordUpgraderInterface
 
     public function loadUserByIdentifier(string $identifier)
     {
-        $user = $this->userApi->getByEmail($identifier);
+        $user = $this->userApi->getByEmail($identifier, ['user', 'user-organisations']);
 
         if (!$user) {
             throw new UserNotFoundException('User not found');
@@ -46,7 +46,7 @@ class UserProvider implements UserProviderInterface, PasswordUpgraderInterface
 
     public function loadUserByUsername(string $username)
     {
-        $user = $this->userApi->getByEmail($username);
+        $user = $this->userApi->getByEmail($username, ['user', 'user-organisations']);
 
         if (!$user) {
             throw new UserNotFoundException('User not found');

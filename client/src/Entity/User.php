@@ -1252,6 +1252,10 @@ class User implements UserInterface, DeputyInterface, PasswordAuthenticatedUserI
 
     public function belongsToActiveOrganisation(): bool
     {
+        if (empty($this->organisations)) {
+            return false;
+        }
+
         foreach ($this->getOrganisations() as $organisation) {
             if ($organisation->isActivated()) {
                 return true;

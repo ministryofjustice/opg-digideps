@@ -27,7 +27,7 @@ Feature: Lay Deputy Self Registration
         And a Lay Deputy registers to deputise for a client with valid details
         Then I should be on the Lay homepage
 
-    @super-admin @acs
+    @super-admin
     Scenario: A Lay user with an existing pre-registration record and a user account created by a case manager can register
         Given a super admin user accesses the admin app
         When I navigate to the upload users page

@@ -1,7 +1,7 @@
 @v2 @v2_reporting_2 @deputy-costs
 Feature: Deputy costs - Applies to Org users only
 
-    @prof-admin-health-welfare-not-started
+    @prof-admin-health-welfare-not-started @acs
     Scenario: A professional deputy has fixed deputy costs only
         Given a Professional Admin Deputy has not started a report
         When I navigate to and start the deputy costs report section for an existing client
