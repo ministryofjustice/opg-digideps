@@ -20,6 +20,7 @@ class SynchronisationController extends AbstractController
     public const DOCUMENT_FALLBACK_ROW_LIMITS = '100';
     public const CHECKLIST_FALLBACK_ROW_LIMITS = '30';
     public const COMPLETED_MESSAGE = 'Sync command completed';
+    public const AUTH_ERROR_MESSAGE = 'Unable to authenticate';
 
     public static $defaultName = 'digideps:document-sync';
 
@@ -58,10 +59,7 @@ class SynchronisationController extends AbstractController
         $this->reportApi = $reportApi;
     }
 
-    /**
-     * @Route("/synchronise/authjwt", name="authjwt", methods={"POST", "GET"})
-     */
-    public function authoriseJwt($jwt): JsonResponse
+    public function authoriseJwt($jwt): bool
     {
         $validJWT = $this->restClient->apiCall(
             'get',
@@ -76,7 +74,15 @@ class SynchronisationController extends AbstractController
             false
         );
 
-        return new JsonResponse([$validJWT]);
+        if (str_contains(strval($validJWT), '"success":true,"data":true')) {
+            $this->logger->info('JWT verification succeeded');
+
+            return true;
+        } else {
+            $this->logger->warning($validJWT);
+
+            return false;
+        }
     }
 
     /**
@@ -103,19 +109,17 @@ class SynchronisationController extends AbstractController
      */
     public function synchroniseDocument(Request $request): JsonResponse
     {
-        ini_set('memory_limit', '512M');
+        $jwt = $request->headers->get('JWT');
+
+        if (!$this->authoriseJwt($jwt)) {
+            return new JsonResponse([self::AUTH_ERROR_MESSAGE], 401);
+        }
 
         if (!$this->isDocumentFeatureEnabled()) {
             return new JsonResponse(['Document Sync Disabled']);
         }
 
-        $this->logger->warning($request);
-
-        $jwt = $request->headers->get('JWT');
-
-        $this->logger->warning($request->headers->get('JWT'));
-
-        $this->authoriseJwt($jwt);
+        ini_set('memory_limit', '512M');
 
         /** @var QueuedDocumentData[] $documents */
         $documents = $this->getQueuedDocumentsData();

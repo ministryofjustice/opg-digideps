@@ -6,6 +6,7 @@ data "aws_ecr_repository" "deputy_reporting" {
 locals {
   lambda_env_vars = {
     DIGIDEPS_SYNC_ENDPOINT = "https://${local.front_service_fqdn}"
+    SECRETS_PREFIX         = local.account.secrets_prefix
   }
 }
 
@@ -33,6 +34,16 @@ resource "aws_security_group_rule" "lambda_sync_to_front" {
   source_security_group_id = module.front_service_security_group.id
   security_group_id        = module.lamdba_synchronisation.lambda_sg.id
   description              = "Outbound lambda sync to front"
+}
+
+resource "aws_security_group_rule" "lambda_sync_to_secrets_endpoint" {
+  type                     = "egress"
+  protocol                 = "tcp"
+  from_port                = 443
+  to_port                  = 443
+  source_security_group_id = data.aws_security_group.secrets_endpoint.id
+  security_group_id        = module.lamdba_synchronisation.lambda_sg.id
+  description              = "Outbound lambda to secrets endpoint"
 }
 
 resource "aws_cloudwatch_event_rule" "sync_documents" {

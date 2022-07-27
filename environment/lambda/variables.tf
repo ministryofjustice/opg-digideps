@@ -104,3 +104,8 @@ variable "vpc_id" {
   type        = string
   default     = null
 }
+
+variable "secrets" {
+  description = "Secrets lambda has access to"
+  default     = []
+}
