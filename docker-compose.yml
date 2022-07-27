@@ -219,8 +219,8 @@ services:
       - 2080:8080
     environment:
       AWS_REGION: eu-west-1
-      AWS_S3_ENDPOINT: http://localstack:4566
       AWS_ACCESS_KEY_ID: localstack
       AWS_SECRET_ACCESS_KEY: localstack
       DIGIDEPS_SYNC_ENDPOINT: https://frontend
+      LOCALSTACK_ENDPOINT: http://localstack:4566
     entrypoint: /aws-lambda/aws-lambda-rie /var/task/main

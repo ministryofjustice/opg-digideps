@@ -14,8 +14,10 @@ import (
 
 	// "github.com/aws/aws-lambda-go/events"
 	runtime "github.com/aws/aws-lambda-go/lambda"
+	"github.com/aws/aws-sdk-go/aws"
 	"github.com/aws/aws-sdk-go/aws/session"
 	"github.com/aws/aws-sdk-go/service/lambda"
+	"github.com/aws/aws-sdk-go/service/secretsmanager"
 )
 
 var client = lambda.New(session.New())
@@ -29,10 +31,30 @@ type LamdbaResponse struct {
 	status int
 }
 
+func getSecret() string {
+	secretName := "default/synchronise-jwt"
+	region := "eu-west-1"
+	sess := session.Must(session.NewSession())
+
+	svc := secretsmanager.New(sess, aws.NewConfig().WithRegion(region))
+
+	localStackEndpoint := os.Getenv("LOCALSTACK_ENDPOINT");
+	if  localStackEndpoint != "" {
+		svc.Endpoint = localStackEndpoint
+	}
+	result, err := svc.GetSecretValue(&secretsmanager.GetSecretValueInput{SecretId: &secretName})
+	if err != nil {
+		log.Fatal(err.Error())
+	}
+	return *result.SecretString
+}
+
 func handleRequest(ctx context.Context, event Input) (string, error) {
 	url := os.Getenv("DIGIDEPS_SYNC_ENDPOINT")
 
 	log.Println(event.Command)
+
+	jwt := getSecret();
 
 	suffix := ""
 	if event.Command == "documents" {
@@ -46,6 +68,13 @@ func handleRequest(ctx context.Context, event Input) (string, error) {
 	//Internal call trusted (until we remove TLS at load balancer anyway)
 	http.DefaultTransport.(*http.Transport).TLSClientConfig = &tls.Config{InsecureSkipVerify: true}
 	body := strings.NewReader("{}")
+	client := http.Client{}
+	req , err := http.NewRequest("POST", urlFinal, nil)
+	req.Header.Set("JWT", jwt)
+	res, _ := client.Do(req)
+
+
+
 	res, err := http.Post(urlFinal, "application/json", body)
 	if err != nil {
 		log.Printf("failed to call remote service: (%v)\n", err)

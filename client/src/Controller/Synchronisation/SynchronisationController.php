@@ -11,6 +11,7 @@ use App\Service\DocumentSyncService;
 use App\Service\ParameterStoreService;
 use Psr\Log\LoggerInterface;
 use Symfony\Component\HttpFoundation\JsonResponse;
+use Symfony\Component\HttpFoundation\Request;
 use Symfony\Component\Routing\Annotation\Route;
 use Symfony\Component\Serializer\SerializerInterface;
 
@@ -58,16 +59,20 @@ class SynchronisationController extends AbstractController
     }
 
     /**
-     * @Route("/synchronise/jim", name="jim", methods={"GET"})
+     * @Route("/synchronise/authjwt", name="authjwt", methods={"POST", "GET"})
      */
-    public function jim(): JsonResponse
+    public function authoriseJwt($jwt): JsonResponse
     {
         $validJWT = $this->restClient->apiCall(
             'get',
-            'authorise/jwt',
+            'jwt/authorise',
             [],
             'raw',
-            [],
+            [
+                'headers' => [
+                    'JWT' => $jwt,
+                ],
+            ],
             false
         );
 
@@ -75,15 +80,42 @@ class SynchronisationController extends AbstractController
     }
 
     /**
+     * @Route("/synchronise/createjwt", name="createjwt", methods={"POST", "GET"})
+     */
+    public function createJwt(): JsonResponse
+    {
+        $validJWT = $this->restClient->apiCall(
+            'get',
+            '/jwt/create',
+            [],
+            'raw',
+            [],
+            false
+        );
+
+        $this->logger->warning(json_decode(strval($validJWT))->data);
+
+        return new JsonResponse([json_decode(strval($validJWT))->data]);
+    }
+
+    /**
      * @Route("/synchronise/documents", name="synchronise_documents", methods={"POST", "GET"})
      */
-    public function synchroniseDocument(): JsonResponse
+    public function synchroniseDocument(Request $request): JsonResponse
     {
         ini_set('memory_limit', '512M');
 
         if (!$this->isDocumentFeatureEnabled()) {
             return new JsonResponse(['Document Sync Disabled']);
         }
+
+        $this->logger->warning($request);
+
+        $jwt = $request->headers->get('JWT');
+
+        $this->logger->warning($request->headers->get('JWT'));
+
+        $this->authoriseJwt($jwt);
 
         /** @var QueuedDocumentData[] $documents */
         $documents = $this->getQueuedDocumentsData();

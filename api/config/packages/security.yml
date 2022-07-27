@@ -86,6 +86,9 @@ security:
         jwtAuthController:
             pattern: ^/authorise/*
             security: false
+        jwtAuth:
+            pattern: ^/jwt/*
+            security: false
         # keep this one last so that the previous ones bypass the catch-all pattern below
         default:
             pattern: .*
