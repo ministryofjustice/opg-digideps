@@ -22,6 +22,7 @@ resource "aws_iam_role_policy" "sync" {
   role   = aws_iam_role.sync.id
 }
 
+# follow up for tfsec fix. needs proper testing in dev environment
 data "aws_iam_policy_document" "sync" {
   statement {
     sid     = "AllowSyncTaskBucket"
@@ -36,11 +37,7 @@ data "aws_iam_policy_document" "sync" {
     sid    = "AllowSyncTaskObjects"
     effect = "Allow"
     actions = [
-      "s3:PutObject",
-      "s3:GetObject",
-      "s3:DeleteObject",
-      "s3:ListObject",
-      "s3:ListBucket",
+      "s3:*Object*"
     ]
     resources = [
       "${data.aws_s3_bucket.sync.arn}/*",
@@ -51,13 +48,7 @@ data "aws_iam_policy_document" "sync" {
     sid    = "AllowSyncTaskKMS"
     effect = "Allow"
     actions = [
-      "kms:Decrypt",
-      "kms:DescribeKey",
-      "kms:Encrypt",
-      "kms:GenerateDataKeyPair",
-      "kms:GenerateDataKeyPairWithoutPlaintext",
-      "kms:GenerateDataKeyWithoutPlaintext",
-      "kms:ReEncrypt"
+      "kms:*"
     ]
     resources = [
       data.aws_kms_alias.backup.target_key_arn,
