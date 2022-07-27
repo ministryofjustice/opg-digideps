@@ -21,7 +21,6 @@ class ResponseNoCacheListenerTest extends TestCase
 
     /**
      * @test
-     * @doesNotPerformAssertions
      */
     public function onKernelResponse()
     {

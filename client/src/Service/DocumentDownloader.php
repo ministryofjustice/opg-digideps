@@ -11,8 +11,8 @@ use Symfony\Component\HttpFoundation\Session\Flash\FlashBag;
 
 class DocumentDownloader
 {
-    const ACTION_DOWNLOAD = 'download';
-    const MSG_NOT_DOWNLOADABLE = 'This report is not downloadable';
+    public const ACTION_DOWNLOAD = 'download';
+    public const MSG_NOT_DOWNLOADABLE = 'This report is not downloadable';
 
     /**
      * @var DocumentService
@@ -86,7 +86,7 @@ class DocumentDownloader
         $response->headers->set('Content-Description', 'File Transfer');
         $response->headers->set('Content-Disposition', 'attachment; filename="'.basename($fileName).'";');
         $response->sendHeaders();
-        $response->setContent(readfile($fileName));
+        $response->setContent(file_get_contents($fileName));
 
         $this->zipFileCreator->cleanUp();
 

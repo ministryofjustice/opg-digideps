@@ -487,11 +487,12 @@ class RestClientTest extends TestCase
         $this->clientSecret = 'secret-123';
         $this->sessionToken = 'sessionToken347349r783';
         $this->container = m::mock('Symfony\Component\DependencyInjection\ContainerInterface');
+        $this->parameterBag = m::mock(ParameterBagInterface::class);
 
         $this->container->shouldReceive('get')->with('jms_serializer')->andReturn($this->serialiser);
         $this->container->shouldReceive('get')->with('logger')->andReturn($this->logger);
         $this->container->shouldReceive('get')->with('request_stack')->andReturn(null);
-        $this->container->shouldReceive('getParameter')->with('kernel.debug')->andReturn(true);
+        $this->parameterBag->shouldReceive('get')->with('kernel.debug')->andReturn(true);
 
         $object = new RestClient(
             $this->container,
@@ -597,7 +598,6 @@ class RestClientTest extends TestCase
             'headers' => ['ClientSecret' => $clientSecret],
         ])->willReturn($loginResponse);
 
-        $redisStorage->set('1', $sessionToken)->shouldBeCalled();
         $redisStorage->set('urn:opg:digideps:users:1-jwt', $encodedJWT)->shouldBeCalled();
 
         $jwtService->getJWTHeaders($encodedJWT)->shouldBeCalled()->willReturn($jwtHeaders);
@@ -611,8 +611,10 @@ class RestClientTest extends TestCase
 
         $logger->warning(Argument::any())->shouldNotBeCalled();
 
-        $actualUser = $sut->login($credentialsArray);
+        [$actualUser, $actualAuthToken] = $sut->login($credentialsArray);
+
         $this->assertEquals($expectedLoggedInUser, $actualUser);
+        $this->assertEquals($sessionToken, $actualAuthToken);
     }
 
     private function generateValidJwtJwkArrays()
