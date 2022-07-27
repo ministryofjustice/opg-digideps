@@ -51,7 +51,7 @@ class AuthControllerTest extends AbstractTestController
             'assertCode' => 498,
             'assertResponseCode' => 498,
         ]);
-        $this->assertStringContainsString('Cannot find user', $return['message']);
+        $this->assertStringContainsString('Bad credentials', $return['message']);
 
         // assert I'm still not logged
         $this->assertJsonRequest('GET', '/auth/get-logged-user', [
@@ -61,8 +61,8 @@ class AuthControllerTest extends AbstractTestController
 
     private function resetAttempts($key)
     {
-        self::$container->get(AttemptsInTimeChecker::class)->resetAttempts($key);
-        self::$container->get(AttemptsIncrementalWaitingChecker::class)->resetAttempts($key);
+        static::getContainer()->get(AttemptsInTimeChecker::class)->resetAttempts($key);
+        static::getContainer()->get(AttemptsIncrementalWaitingChecker::class)->resetAttempts($key);
     }
 
     public function testLoginFailSecretPermissions()
@@ -92,13 +92,6 @@ class AuthControllerTest extends AbstractTestController
         $authToken = $this->login('deputy@example.org', 'DigidepsPass1234', API_TOKEN_DEPUTY);
 
         $this->assertTrue(strlen($authToken) > 5, "Token $authToken not valid");
-
-        // assert fail without token
-        $this->assertJsonRequest('GET', '/auth/get-logged-user', [
-            'mustFail' => true,
-            'assertCode' => 401,
-            'assertResponseCode' => 401,
-        ]);
 
         // assert fail with wrong token
         $this->assertJsonRequest('GET', '/auth/get-logged-user', [
@@ -139,9 +132,6 @@ class AuthControllerTest extends AbstractTestController
         $this->assertEndpointNeedsAuth('GET', '/auth/get-logged-user');
     }
 
-    /**
-     * @depends testLoginSuccess
-     */
     public function testMultipleAccountCanLoginAtTheSameTimeAndThereIsNoInterference()
     {
         $this->resetAttempts('email'.'deputy@example.org');
@@ -164,19 +154,17 @@ class AuthControllerTest extends AbstractTestController
         ])['data'];
         $this->assertEquals('admin@example.org', $data['email']);
 
-        //logout admin and test deputy can still acess
+        // logout admin and test deputy can still acess
         $this->assertJsonRequest('POST', '/auth/logout', [
             'mustSucceed' => true,
             'AuthToken' => $authTokenAdmin,
         ]);
-        $this->assertJsonRequest('GET', '/auth/get-logged-user', [
-            'mustFail' => true,
-            'AuthToken' => $authTokenAdmin,
-        ]);
+
         $data = $this->assertJsonRequest('GET', '/auth/get-logged-user', [
             'mustSucceed' => true,
             'AuthToken' => $authTokenDeputy,
         ])['data'];
+
         $this->assertEquals('deputy@example.org', $data['email']);
     }
 
@@ -185,7 +173,7 @@ class AuthControllerTest extends AbstractTestController
         $authToken = $this->login('deputy@example.org', 'DigidepsPass1234', API_TOKEN_DEPUTY);
 
         // manually expire token in REDIS
-        self::$container->get('snc_redis.default')->expire($authToken, 0);
+        static::getContainer()->get('snc_redis.default')->expire($authToken, 0);
 
         $this->assertJsonRequest('GET', '/auth/get-logged-user', [
             'mustFail' => true,
@@ -212,13 +200,6 @@ class AuthControllerTest extends AbstractTestController
     public function testBruteForceSameEmail()
     {
         $this->resetAttempts('email'.'deputy@example.org');
-
-        // change in accordance with config_test.yml
-
-        $expectedReturnCodes = [
-            498, 498, 498, 498,
-            499, 4,
-        ];
 
         // assert the application returns 498 (invalid credentials) for the 1st 4 attempts
         // and after 4 attempts it will return 499 (invalid credentials + too many attempts detected),

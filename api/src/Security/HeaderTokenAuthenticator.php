@@ -6,6 +6,7 @@ use App\Entity\User;
 use App\Exception\UserWrongCredentialsException;
 use App\Repository\UserRepository;
 use Predis\Client;
+use Psr\Log\LoggerInterface;
 use Symfony\Component\HttpFoundation\Request;
 use Symfony\Component\HttpFoundation\Response;
 use Symfony\Component\Security\Core\Authentication\Token\PreAuthenticatedToken;
@@ -26,8 +27,11 @@ class HeaderTokenAuthenticator extends AbstractAuthenticator
 {
     public const HEADER_NAME = 'AuthToken';
 
-    public function __construct(private Client $redis, private UserRepository $userRepository)
-    {
+    public function __construct(
+        private Client $redis,
+        private UserRepository $userRepository,
+        private LoggerInterface $logger
+    ) {
     }
 //    public static function getTokenFromRequest(Request $request)
 //    {
@@ -90,6 +94,11 @@ class HeaderTokenAuthenticator extends AbstractAuthenticator
         /** @var PostAuthenticationToken $postAuthToken */
         $postAuthToken = unserialize($this->redis->get($authTokenKey));
 
+        if (!$postAuthToken) {
+            $this->logger->warning(sprintf('Auth token not found in Redis with key %s', $authTokenKey));
+            throw new UserNotFoundException('User not found');
+        }
+
         return new SelfValidatingPassport(
             new UserBadge($postAuthToken->getUserIdentifier(), function ($userEmail) {
                 $user = $this->userRepository->findOneBy(['email' => strtolower($userEmail)]);
@@ -110,6 +119,6 @@ class HeaderTokenAuthenticator extends AbstractAuthenticator
 
     public function onAuthenticationFailure(Request $request, AuthenticationException $exception): ?Response
     {
-        throw new UserWrongCredentialsException($exception->getMessage());
+        throw new UserWrongCredentialsException($exception->getMessage(), 419);
     }
 }

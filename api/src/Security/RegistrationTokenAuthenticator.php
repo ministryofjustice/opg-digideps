@@ -5,10 +5,12 @@ declare(strict_types=1);
 namespace App\Security;
 
 use App\Entity\User;
-use App\EventListener\RestInputOuputFormatter;
 use App\Exception\InvalidRegistrationTokenException;
+use App\Exception\UnauthorisedException;
 use App\Repository\UserRepository;
-use Predis\Client;
+use App\Service\Auth\AuthService;
+use App\Service\BruteForce\AttemptsIncrementalWaitingChecker;
+use App\Service\BruteForce\AttemptsInTimeChecker;
 use Symfony\Component\HttpFoundation\Request;
 use Symfony\Component\HttpFoundation\Response;
 use Symfony\Component\Security\Core\Authentication\Token\Storage\TokenStorageInterface;
@@ -21,11 +23,14 @@ use Symfony\Component\Security\Http\Authenticator\Passport\SelfValidatingPasspor
 
 class RegistrationTokenAuthenticator extends AbstractAuthenticator
 {
+    private string $bruteForceKey = '';
+
     public function __construct(
         private UserRepository $userRepository,
         private TokenStorageInterface $tokenStorage,
-        private Client $redis,
-        private RestInputOuputFormatter $restInputOutputFormatter
+        private AuthService $authService,
+        private AttemptsInTimeChecker $attemptsInTimechecker,
+        private AttemptsIncrementalWaitingChecker $incrementalWaitingTimechecker,
     ) {
     }
 
@@ -36,12 +41,37 @@ class RegistrationTokenAuthenticator extends AbstractAuthenticator
 
     public function authenticate(Request $request)
     {
-        $content = json_decode($request->getContent(), true);
-        $token = $content['token'];
+        if (!$this->authService->isSecretValid($request)) {
+            throw new UnauthorisedException('client secret not accepted.');
+        }
+
+        $data = json_decode($request->getContent(), true);
+        $token = $data['token'];
+
+        // brute force checks
+        $this->bruteForceKey = 'token'.$token;
+
+        $this->attemptsInTimechecker->registerAttempt($this->bruteForceKey);
+        $this->incrementalWaitingTimechecker->registerAttempt($this->bruteForceKey);
+
+        // exception if reached delay-check
+        if ($this->incrementalWaitingTimechecker->isFrozen($this->bruteForceKey)) {
+            $nextAttemptAt = $this->incrementalWaitingTimechecker->getUnfrozenAt($this->bruteForceKey);
+            $nextAttemptIn = ceil(($nextAttemptAt - time()) / 60);
+            $exception = new UnauthorisedException("Attack detected. Please try again in $nextAttemptIn minutes", 423);
+            $exception->setData($nextAttemptAt);
+
+            throw $exception;
+        }
+
         $user = $this->userRepository->findOneBy(['registrationToken' => $token]);
 
         if (!$user instanceof User) {
             throw new UserNotFoundException('User not found');
+        }
+
+        if (!$this->authService->isSecretValidForRole($user->getRoleName(), $request)) {
+            throw new UnauthorisedException($user->getRoleName().' user role not allowed from this client.');
         }
 
         return new SelfValidatingPassport(
@@ -51,6 +81,8 @@ class RegistrationTokenAuthenticator extends AbstractAuthenticator
 
     public function onAuthenticationSuccess(Request $request, TokenInterface $token, string $firewallName): ?Response
     {
+        $this->attemptsInTimechecker->resetAttempts($this->bruteForceKey);
+        $this->incrementalWaitingTimechecker->resetAttempts($this->bruteForceKey);
         $this->tokenStorage->setToken($token);
 
         return null;
@@ -76,16 +108,13 @@ class RegistrationTokenAuthenticator extends AbstractAuthenticator
 
         $body = json_decode($request->getContent(), true);
 
-        $token = isset($body['token']) ?? false;
-        $password = isset($body['password']) ?? false;
+        $token = $body['token'] ?? false;
+        $password = $body['password'] ?? false;
 
         if (!$password || !$token) {
             return false;
         }
 
-        $body = json_decode($request->getContent(), true);
-
-        $token = $body['token'];
         $userId = $this->userRepository->findOneBy(['registrationToken' => $token])->getId();
 
         $expectedUrl = sprintf('user/%s/set-password', $userId);

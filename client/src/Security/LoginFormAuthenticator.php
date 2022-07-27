@@ -4,13 +4,13 @@ declare(strict_types=1);
 
 namespace App\Security;
 
-use App\Exception\UserWrongCredentialsException;
 use App\Service\Client\RestClient;
 use App\Service\Client\TokenStorage\RedisStorage;
 use App\Service\Redirector;
 use Symfony\Component\HttpFoundation\RedirectResponse;
 use Symfony\Component\HttpFoundation\Request;
 use Symfony\Component\HttpFoundation\Response;
+use Symfony\Component\Routing\RouterInterface;
 use Symfony\Component\Security\Core\Authentication\Token\TokenInterface;
 use Symfony\Component\Security\Core\Exception\AuthenticationException;
 use Symfony\Component\Security\Core\Exception\UserNotFoundException;
@@ -25,7 +25,8 @@ class LoginFormAuthenticator extends AbstractAuthenticator
     public function __construct(
         private RestClient $restClient,
         private Redirector $redirector,
-        private RedisStorage $tokenStorage
+        private RedisStorage $tokenStorage,
+        private RouterInterface $router
     ) {
     }
 
@@ -64,8 +65,6 @@ class LoginFormAuthenticator extends AbstractAuthenticator
 
     public function onAuthenticationSuccess(Request $request, TokenInterface $token, string $firewallName): ?Response
     {
-//        $request->getSession()->remove('login-context');
-
         $redirectUrl = $this->redirector->getFirstPageAfterLogin($request->getSession());
         $this->redirector->removeLastAccessedUrl(); // avoid this URL to be used a the next login
 
@@ -74,6 +73,10 @@ class LoginFormAuthenticator extends AbstractAuthenticator
 
     public function onAuthenticationFailure(Request $request, AuthenticationException $exception): ?Response
     {
-        throw new UserWrongCredentialsException($exception->getMessage());
+        $request->getSession()->set(Security::AUTHENTICATION_ERROR, $exception);
+
+        return new RedirectResponse(
+            $this->router->generate('login')
+        );
     }
 }

@@ -21,6 +21,7 @@ use Symfony\Component\Routing\Exception\ResourceNotFoundException;
 use Symfony\Component\Routing\RouterInterface;
 use Symfony\Component\Security\Core\Authentication\Token\Storage\TokenStorageInterface;
 use Symfony\Component\Security\Core\Exception\AccessDeniedException;
+use Symfony\Component\Security\Http\Authentication\AuthenticationUtils;
 use Symfony\Contracts\Translation\TranslatorInterface;
 
 class IndexController extends AbstractController
@@ -62,41 +63,32 @@ class IndexController extends AbstractController
      *
      * @return Response|null
      */
-    public function loginAction(Request $request)
+    public function loginAction(Request $request, AuthenticationUtils $authenticationUtils)
     {
         $form = $this->createForm(FormDir\LoginType::class);
-//        $form->handleRequest($request);
+
         $vars = [
             'isAdmin' => 'admin' === $this->environment,
         ];
-//
-//        if ($form->isSubmitted() && $form->isValid()) {
-//            try {
-//                $this->logUserIn($form->getData(), $request, [
-//                    '_adId' => null,
-//                    '_adFirstname' => null,
-//                    '_adLastname' => null,
-//                    'loggedOutFrom' => null,
-//                ]);
-//            } catch (\Throwable $e) {
-//                $error = $e->getMessage();
-//
-//                if (423 == $e->getCode() && method_exists($e, 'getData')) {
-//                    $lockedFor = ceil(($e->getData()['data'] - time()) / 60);
-//                    $error = $this->translator->trans('bruteForceLocked', ['%minutes%' => $lockedFor], 'signin');
-//                }
-//
-//                if (499 == $e->getCode()) {
-//                    // too-many-attempts warning. captcha ?
-//                }
-//
-//                $form->addError(new FormError($error));
-//
-//                return $this->render('@App/Index/login.html.twig', [
-//                        'form' => $form->createView(),
-//                    ] + $vars);
-//            }
-//        }
+
+        // See LoginFormAuthenticator - exceptions are set in request session and accessed here once redirected
+        $lastAuthError = $authenticationUtils->getLastAuthenticationError();
+
+        if ($lastAuthError) {
+            $errorMessage = $lastAuthError->getMessage();
+
+            if (423 == $lastAuthError->getCode() && method_exists($lastAuthError, 'getData')) {
+                $lockedFor = ceil(($lastAuthError->getData()['data'] - time()) / 60);
+                $errorMessage = $this->translator->trans('bruteForceLocked', ['%minutes%' => $lockedFor], 'signin');
+            }
+
+            $form->addError(new FormError($errorMessage));
+
+            return $this->render(
+                '@App/Index/login.html.twig',
+                ['form' => $form->createView()] + $vars
+            );
+        }
 
         // different page version for timeout and manual logout
         /** @var SessionInterface */

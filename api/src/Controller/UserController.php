@@ -195,7 +195,7 @@ class UserController extends RestController
     }
 
     /**
-     * change password, activate user and send remind email.
+     * See RegistrationTokenAuthenticator for checks and how User is set in session.
      *
      * @Route("/{id}/set-password", methods={"PUT"})
      */
@@ -230,6 +230,7 @@ class UserController extends RestController
 
         $requestedUser->setPassword($newPassword);
 
+        $this->em->persist($requestedUser);
         $this->em->flush();
 
         return $requestedUser->getId();
