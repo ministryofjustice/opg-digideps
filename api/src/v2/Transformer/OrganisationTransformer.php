@@ -80,6 +80,8 @@ class OrganisationTransformer
             return [];
         }
 
+        $transformed = [];
+        
         foreach ($clients as $client) {
             if ($client instanceof ClientDto) {
                 $transformed[] = $this->clientTransformer->transform($client, ['reports', 'ndr', 'organisation']);

@@ -4,8 +4,7 @@ namespace App\Service\File\Scanner;
 
 use App\Service\File\Scanner\Exception\VirusFoundException;
 use GuzzleHttp\ClientInterface;
-use GuzzleHttp\Exception\ConnectException;
-use GuzzleHttp\Exception\ServerException;
+use GuzzleHttp\Exception\GuzzleException;
 use GuzzleHttp\Psr7\Response;
 use Psr\Http\Message\ResponseInterface;
 use Psr\Log\LoggerInterface;
@@ -35,7 +34,7 @@ class ClamFileScanner
     /**
      * @throws \GuzzleHttp\Exception\GuzzleException
      */
-    public function scanFile(UploadedFile $file): bool
+    public function scanFile(UploadedFile $file)
     {
         if ($this->fileIsPdf($file) && $this->pdfContainsBadKeywords($file)) {
             $this->logger->info(sprintf('Scan result: bad keyword found in file: %s', $file->getClientOriginalName()));
@@ -47,23 +46,19 @@ class ClamFileScanner
             try {
                 ++$attempts;
                 $response = $this->attemptScan($file);
+
+                if (!$this->scanResultIsPass($response)) {
+                    $this->logger->info(sprintf('Scan result: virus found in file: %s', $file->getClientOriginalName()));
+                    throw new VirusFoundException();
+                }
                 break;
-            } catch (ServerException $e) {
-            } catch (ConnectException $e) {
+            } catch (GuzzleException $e) {
+                if ($attempts >= self::MAX_SCAN_ATTEMPTS) {
+                    $this->logger->error(sprintf('Scanner service down: %s', $e->getMessage()));
+                    throw new \RuntimeException('Scanner service not available');
+                }
             }
         }
-
-        if (!isset($response) || !$response instanceof Response) {
-            $this->logger->error(sprintf('Scanner service down: %s', $e->getMessage()));
-            throw new \RuntimeException('Scanner service not available');
-        }
-
-        if (!$this->scanResultIsPass($response)) {
-            $this->logger->info(sprintf('Scan result: virus found in file: %s', $file->getClientOriginalName()));
-            throw new VirusFoundException();
-        }
-
-        return true;
     }
 
     private function fileIsPdf(UploadedFile $file): bool

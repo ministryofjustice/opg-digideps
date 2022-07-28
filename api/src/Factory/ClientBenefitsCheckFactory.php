@@ -73,6 +73,8 @@ class ClientBenefitsCheckFactory
      */
     private function hydrateClientBenefitsCheck(string $reportOrNdr, array $formData, ?ClientBenefitsCheckInterface $existingEntity)
     {
+        $report = '';
+        
         if ('ndr' === $reportOrNdr) {
             $report = $this->ndrRepository->find($formData['ndr_id']);
         }
