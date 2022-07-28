@@ -8,7 +8,6 @@ use App\Entity\Report\Checklist;
 use App\Entity\Report\Report;
 use App\Entity\Report\ReviewChecklist;
 use App\Exception\PdfGenerationFailedException;
-use App\Model\Sirius\QueuedChecklistData;
 use PHPUnit\Framework\TestCase;
 use Psr\Log\LoggerInterface;
 use Twig\Environment;
@@ -142,31 +141,4 @@ class ChecklistPdfGeneratorTest extends TestCase
 
         return $this;
     }
-
-    public function ensureNotApplicableAnswerIsVisibleInPDF(): ChecklistPdfGeneratorTest
-    {
-        $report = $this->buildReportInputWithNotApplicableAnswer();
-
-        $this
-            ->ensureHtmlRenderWillSucceed($report)
-            ->ensurePdfGenerationWillSucceed();
-
-        $notApplicableAnswer = $report->getChecklist()->getPaymentsMatchCostCertificate();
-        $this->assertEquals('Not Applicable', $notApplicableAnswer);
-
-        return $this;
-    }
-
-    private function buildReportInputWithNotApplicableAnswer(): Report
-    {
-        $report = new Report();
-        $checklist = new Checklist($report);
-        $reviewChecklist = new ReviewChecklist($report);
-        $checklist->setPaymentsMatchCostCertificate('Not applicable');
-        $report->setChecklist($checklist);
-        $report->setReviewChecklist($reviewChecklist);
-
-        return $report;
-    }
-
 }
