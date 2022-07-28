@@ -103,7 +103,6 @@ class AuthController extends RestController
             if (User::ROLE_SUPER_ADMIN === $user->getRoleName()) {
                 $jwt = $this->JWTService->createNewJWT($user);
 
-                $this->logger->warning($jwt);
                 $restInputOutputFormatter->addResponseModifier(function ($response) use ($jwt) {
                     $response->headers->set('JWT', $jwt);
                 });

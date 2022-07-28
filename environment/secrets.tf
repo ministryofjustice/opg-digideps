@@ -42,6 +42,6 @@ data "aws_secretsmanager_secret" "public_jwt_key_base64" {
   name = join("/", compact([local.account.secrets_prefix, "public-jwt-key-base64"]))
 }
 
-#data "aws_secretsmanager_secret" "jwt_token_synchronisation" {
-#  name = join("/", compact([local.account.secrets_prefix, "synchronisation-jwt-token"]))
-#}
+data "aws_secretsmanager_secret" "jwt_token_synchronisation" {
+  name = join("/", compact([local.account.secrets_prefix, "synchronisation-jwt-token"]))
+}

@@ -83,9 +83,6 @@ security:
         jwt-endpoints:
             pattern: ^/v3/*
             security: false
-        jwtAuthController:
-            pattern: ^/authorise/*
-            security: false
         jwtAuth:
             pattern: ^/jwt/*
             security: false

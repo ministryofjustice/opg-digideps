@@ -52,7 +52,6 @@ class JWTController extends AbstractController
     public function createJWT(Request $request): string
     {
         $jwt = $this->JWTService->createNewJWT();
-        $this->logger->warning($jwt);
 
         return $jwt;
     }
