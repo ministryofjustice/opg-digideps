@@ -6,6 +6,7 @@ namespace App\Security;
 
 use App\Exception\UnauthorisedException;
 use App\Exception\UserWrongCredentialsException;
+use App\Exception\UserWrongCredentialsManyAttempts;
 use App\Repository\UserRepository;
 use App\Service\Auth\AuthService;
 use App\Service\BruteForce\AttemptsIncrementalWaitingChecker;
@@ -39,8 +40,7 @@ class LoginRequestAuthenticator extends AbstractAuthenticator
     public function supports(Request $request): ?bool
     {
         return '/auth/login' === $request->getPathInfo() &&
-            $request->isMethod('POST') &&
-            $this->hasRequiredLoginDetails($request);
+            $request->isMethod('POST');
     }
 
     public function authenticate(Request $request): Passport
@@ -48,6 +48,11 @@ class LoginRequestAuthenticator extends AbstractAuthenticator
         if (!$this->authService->isSecretValid($request)) {
             $this->logger->warning('Client secret not accepted in LoginRequestAuthenticator');
             throw new UnauthorisedException('client secret not accepted.');
+        }
+
+        if (!$this->hasRequiredLoginDetails($request)) {
+            $this->logger->warning('Insufficient login details provided - requires email and password but one, or both, was missing');
+            throw new UserNotFoundException('User not found');
         }
 
         $data = json_decode($request->getContent(), true);
@@ -102,7 +107,11 @@ class LoginRequestAuthenticator extends AbstractAuthenticator
 
     public function onAuthenticationFailure(Request $request, AuthenticationException $exception): ?Response
     {
-        throw new UserWrongCredentialsException($exception->getMessage());
+        if ($this->attemptsInTimechecker->maxAttemptsReached($this->bruteForceKey)) {
+            throw new UserWrongCredentialsManyAttempts();
+        }
+
+        throw new UserWrongCredentialsException($exception->getMessage(), $exception->getCode());
     }
 
     private function hasRequiredLoginDetails(Request $request): bool

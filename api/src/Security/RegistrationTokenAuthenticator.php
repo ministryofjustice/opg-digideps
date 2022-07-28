@@ -7,6 +7,7 @@ namespace App\Security;
 use App\Entity\User;
 use App\Exception\InvalidRegistrationTokenException;
 use App\Exception\UnauthorisedException;
+use App\Exception\UserWrongCredentialsManyAttempts;
 use App\Repository\UserRepository;
 use App\Service\Auth\AuthService;
 use App\Service\BruteForce\AttemptsIncrementalWaitingChecker;
@@ -90,7 +91,11 @@ class RegistrationTokenAuthenticator extends AbstractAuthenticator
 
     public function onAuthenticationFailure(Request $request, AuthenticationException $exception): ?Response
     {
-        throw new InvalidRegistrationTokenException();
+        if ($this->attemptsInTimechecker->maxAttemptsReached($this->bruteForceKey)) {
+            throw new UserWrongCredentialsManyAttempts();
+        }
+
+        throw new InvalidRegistrationTokenException($exception->getMessage(), $exception->getCode());
     }
 
     private function isLoginRouteWithRequiredData(Request $request): bool
