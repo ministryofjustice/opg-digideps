@@ -12,6 +12,6 @@
     <env name="SECRETS_FRONT_KEY" value="layDeputySecret" force="true"/>
     <env name="SECRETS_ADMIN_KEY" value="adminSecret" force="true"/>
     <env name="KERNEL_CLASS" value="App\Kernel"/>
-<!--    <env name="SYMFONY_DEPRECATIONS_HELPER" value="disabled"/>-->
+    <env name="SYMFONY_DEPRECATIONS_HELPER" value="disabled"/>
   </php>
 </phpunit>

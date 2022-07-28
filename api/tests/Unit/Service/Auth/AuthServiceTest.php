@@ -8,6 +8,7 @@ use App\Service\JWT\JWTService;
 use Mockery;
 use MockeryStub as m;
 use PHPUnit\Framework\TestCase;
+use Psr\Log\LoggerInterface;
 use Symfony\Component\HttpFoundation\Request;
 use Symfony\Component\PasswordHasher\Hasher\UserPasswordHasherInterface;
 use Symfony\Component\Security\Core\Role\RoleHierarchy;
@@ -56,7 +57,7 @@ class AuthServiceTest extends TestCase
     public function setUp(): void
     {
         $this->userRepo = m::stub(UserRepository::class);
-        $this->logger = m::mock('Symfony\Bridge\Monolog\Logger');
+        $this->logger = m::mock(LoggerInterface::class);
         $this->passwordHasher = m::stub(UserPasswordHasherInterface::class);
         $this->JWTService = m::mock(JWTService::class);
 
@@ -68,12 +69,12 @@ class AuthServiceTest extends TestCase
 
         $this->roleHierarchy = new RoleHierarchy($hierarchy);
         $this->authService = new AuthService(
-            $this->passwordHasher,
             $this->logger,
             $this->userRepo,
             $this->roleHierarchy,
             $this->clientPermissions,
             $this->JWTService,
+            $this->passwordHasher,
         );
     }
 
@@ -81,7 +82,13 @@ class AuthServiceTest extends TestCase
     {
         $this->expectException(\InvalidArgumentException::class);
 
-        $this->authService = new AuthService($this->passwordHasher, $this->logger, $this->userRepo, $this->roleHierarchy, [], $this->JWTService);
+        $this->authService = new AuthService($this->logger,
+            $this->userRepo,
+            $this->roleHierarchy,
+            [],
+            $this->JWTService,
+            $this->passwordHasher
+        );
     }
 
     public function isSecretValidProvider()
@@ -124,7 +131,7 @@ class AuthServiceTest extends TestCase
         ]);
         $this->userRepo->shouldReceive('findOneBy')->with(['email' => 'email@example.org'])->andReturn($user);
 
-        $this->passwordHasher->shouldReceive('hashPassword')->with($user, 'plainpassword')->andReturn('encodedPassword-WRONG');
+        $this->passwordHasher->shouldReceive('isPasswordValid')->with($user, 'plainPassword')->andReturn(false);
 
         $this->logger->shouldReceive('info')->with(Mockery::pattern('/password mismatch/'))->once();
 
@@ -142,7 +149,7 @@ class AuthServiceTest extends TestCase
         $encoder = m::stub('Symfony\Component\Security\Core\Encoder\PasswordEncoderInterface', [
                 'encodePassword(plainPassword,salt)' => 'encodedPassword',
         ]);
-        $this->passwordHasher->shouldReceive('getEncoder')->with($user)->andReturn($encoder);
+        $this->passwordHasher->shouldReceive('isPasswordValid')->with($user, 'plainPassword')->andReturn(true);
 
         $this->assertEquals($user, $this->authService->getUserByEmailAndPassword('email@example.org', 'plainPassword'));
     }
@@ -152,9 +159,11 @@ class AuthServiceTest extends TestCase
         $user = m::mock('App\Entity\User');
 
         $this->userRepo->shouldReceive('findOneBy')->with(['registrationToken' => 'token'])->andReturn($user);
+
         $this->assertEquals($user, $this->authService->getUserByToken('token'));
 
-        $this->userRepo->shouldReceive('findOneBy')->with(['registrationToken' => 'wrongtoken'])->andReturn(false);
+        $this->userRepo->shouldReceive('findOneBy')->with(['registrationToken' => 'wrongtoken'])->andReturn(null);
+
         $this->assertEquals(null, $this->authService->getUserByToken('wrongtoken'));
     }
 

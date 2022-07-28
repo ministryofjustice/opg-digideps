@@ -2,86 +2,122 @@
 
 namespace App\Tests\Unit\Service\Auth;
 
+use App\Entity\User;
+use App\Repository\UserRepository;
 use App\Security\HeaderTokenAuthenticator;
-use MockeryStub as m;
 use PHPUnit\Framework\TestCase;
+use Predis\Client;
+use Prophecy\PhpUnit\ProphecyTrait;
+use Prophecy\Prophecy\ObjectProphecy;
+use Psr\Log\LoggerInterface;
 use Symfony\Component\HttpFoundation\Request;
+use Symfony\Component\Security\Core\Exception\UserNotFoundException;
+use Symfony\Component\Security\Http\Authenticator\Passport\Badge\UserBadge;
+use Symfony\Component\Security\Http\Authenticator\Passport\SelfValidatingPassport;
+use Symfony\Component\Security\Http\Authenticator\Token\PostAuthenticationToken;
 
 class HeaderTokenAuthenticatorTest extends TestCase
 {
+    use ProphecyTrait;
+
     /**
      * @var HeaderTokenAuthenticator
      */
-    private $headerTokenAuth;
+    private $sut;
+    private ObjectProphecy|Client $redisClient;
+    private ObjectProphecy|UserRepository $userRepository;
+    private ObjectProphecy|LoggerInterface $logger;
 
     public function setUp(): void
     {
-        $this->headerTokenAuth = new HeaderTokenAuthenticator();
+        $this->redisClient = self::prophesize(Client::class);
+        $this->userRepository = self::prophesize(UserRepository::class);
+        $this->logger = self::prophesize(LoggerInterface::class);
+
+        $this->sut = new HeaderTokenAuthenticator(
+            $this->redisClient->reveal(),
+            $this->userRepository->reveal(),
+            $this->logger->reveal()
+        );
     }
 
-    public function testcreateTokenNotFound()
+    public function testSupports()
     {
-        $request = new Request();
+        $supportedRequest = new Request();
+        $supportedRequest->headers->set('AuthToken', 'AuthTokenValue');
 
-        $this->expectException(\RuntimeException::class);
-        $this->headerTokenAuth->createToken($request, 'providerKey');
+        $unsupportedRequest = new Request();
+        $unsupportedRequest->headers->set('AuthToken', '');
+
+        self::assertEquals(true, $this->sut->supports($supportedRequest));
+        self::assertEquals(false, $this->sut->supports($unsupportedRequest));
     }
 
-    public function testcreateToken()
+    public function testAuthenticate()
     {
-        $request = new Request();
-        $request->headers->set(HeaderTokenAuthenticator::HEADER_NAME, 'AuthTokenValue');
+        $supportedRequest = new Request();
+        $supportedRequest->headers->set('AuthToken', 'AuthTokenValue');
 
-        $preAuthToken = $this->headerTokenAuth->createToken($request, 'providerKey');
-        $this->assertInstanceOf('Symfony\Component\Security\Core\Authentication\Token\PreAuthenticatedToken', $preAuthToken);
-        $this->assertEquals('anon.', $preAuthToken->getUser());
-        $this->assertEquals('providerKey', $preAuthToken->getProviderKey());
-        $this->assertEquals('AuthTokenValue', $preAuthToken->getCredentials());
+        $user = (new User())
+            ->setEmail('a@b.com');
+        $postAuthToken = new PostAuthenticationToken($user, 'a_firewall', ['ROLE_LAY_DEPUTY']);
+        $this->userRepository->findOneBy(['email' => 'a@b.com'])->willReturn($user);
+
+        $this->redisClient->get('AuthTokenValue')->willReturn(serialize($postAuthToken));
+
+        $passport = new SelfValidatingPassport(
+            new UserBadge($postAuthToken->getUserIdentifier(), function ($userEmail) {
+                $user = $this->userRepository->findOneBy(['email' => strtolower($userEmail)]);
+
+                if ($user instanceof User) {
+                    return $user;
+                }
+
+                throw new UserNotFoundException('User not found');
+            })
+        );
+
+        self::assertEquals($passport, $this->sut->authenticate($supportedRequest));
     }
 
-    public function testauthenticateTokenWrongProvider()
+    public function testAuthenticateRedisKeyDoesNotExistThrowsError()
     {
-        $this->expectException(\InvalidArgumentException::class);
-        $token = m::mock('Symfony\Component\Security\Core\Authentication\Token\TokenInterface');
-        $user = m::mock('Symfony\Component\Security\Core\User\UserProviderInterface');
+        self::expectExceptionObject(new UserNotFoundException('User not found'));
 
-        $this->headerTokenAuth->authenticateToken($token, $user, 'providerKey');
+        $supportedRequest = new Request();
+        $supportedRequest->headers->set('AuthToken', 'AuthTokenValue');
+
+        $this->redisClient->get('AuthTokenValue')->willReturn(null);
+
+        $this->sut->authenticate($supportedRequest);
     }
 
-    public function testauthenticateTokenSuccess()
+    public function testAuthenticateUserWithIdentifierInTokenDoesNotExistReturnsPassport()
     {
-        $user = m::stub('App\Entity\User', [
-                'getRoles' => ['role1'],
-        ]);
+        $supportedRequest = new Request();
+        $supportedRequest->headers->set('AuthToken', 'AuthTokenValue');
 
-        $token = m::stub('Symfony\Component\Security\Core\Authentication\Token\TokenInterface', [
-            'getCredentials' => 'AuthTokenValue',
-        ]);
-        $userProvider = m::stub('App\Security\RedisUserProvider', [
-            'loadUserByUsername(AuthTokenValue)' => $user,
-        ]);
+        $user = (new User())
+            ->setEmail('a@b.com');
+        $postAuthToken = new PostAuthenticationToken($user, 'a_firewall', ['ROLE_LAY_DEPUTY']);
 
-        $preAuthToken = $this->headerTokenAuth->authenticateToken($token, $userProvider, 'providerKey');
-        $this->assertInstanceOf('Symfony\Component\Security\Core\Authentication\Token\PreAuthenticatedToken', $preAuthToken);
-        $this->assertEquals($user, $preAuthToken->getUser());
-        $this->assertEquals('providerKey', $preAuthToken->getProviderKey());
-        $this->assertEquals('AuthTokenValue', $preAuthToken->getCredentials());
-    }
+        $this->redisClient->get('AuthTokenValue')->shouldBeCalled()->willReturn(serialize($postAuthToken));
+        $this->userRepository->findOneBy(['email' => 'a@b.com'])->shouldNotBeCalled();
 
-    public function testsupportsToken()
-    {
-        $token = m::mock('Symfony\Component\Security\Core\Authentication\Token\TokenInterface');
-        $preAuthToken = m::stub('Symfony\Component\Security\Core\Authentication\Token\PreAuthenticatedToken', [
-            'getProviderKey' => 'providerKey',
-        ]);
+        $passport = new SelfValidatingPassport(
+            new UserBadge($postAuthToken->getUserIdentifier(), function ($userEmail) {
+                $user = $this->userRepository->findOneBy(['email' => strtolower($userEmail)]);
 
-        $this->assertFalse($this->headerTokenAuth->supportsToken($token, 'providerKey'));
-        $this->assertFalse($this->headerTokenAuth->supportsToken($preAuthToken, 'providerKey-WRONG'));
-        $this->assertTrue($this->headerTokenAuth->supportsToken($preAuthToken, 'providerKey'));
-    }
+                if ($user instanceof User) {
+                    return $user;
+                }
 
-    public function tearDown(): void
-    {
-        m::close();
+                throw new UserNotFoundException('User not found');
+            })
+        );
+
+        self::assertEquals($passport, $this->sut->authenticate($supportedRequest));
+
+        // Look at how to test authenticators - looks like UserNotFoundException is not thrown but userrepo->findOneBy also has not been called
     }
 }
