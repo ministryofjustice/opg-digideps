@@ -117,7 +117,5 @@ class HeaderTokenAuthenticatorTest extends TestCase
         );
 
         self::assertEquals($passport, $this->sut->authenticate($supportedRequest));
-
-        // Look at how to test authenticators - looks like UserNotFoundException is not thrown but userrepo->findOneBy also has not been called
     }
 }
