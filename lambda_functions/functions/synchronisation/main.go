@@ -118,8 +118,6 @@ func (l *Lambda) HandleEvent(ctx context.Context, event Input) (string, error) {
 		return "", errors.New(msg)
 	}
 
-	fmt.Print(res)
-	fmt.Print(err)
 	msg := "successfully called sync process"
 	log.Println(msg)
 

@@ -84,7 +84,7 @@ security:
             pattern: ^/v3/*
             security: false
         jwtAuth:
-            pattern: ^/jwt/*
+            pattern: ^/jwt/authorise
             security: false
         # keep this one last so that the previous ones bypass the catch-all pattern below
         default:

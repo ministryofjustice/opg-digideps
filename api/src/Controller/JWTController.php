@@ -45,14 +45,4 @@ class JWTController extends AbstractController
     {
         return $this->authService->JWTIsValid($request);
     }
-
-    /**
-     * @Route("/jwt/create", methods={"GET"})
-     */
-    public function createJWT(Request $request): string
-    {
-        $jwt = $this->JWTService->createNewJWT();
-
-        return $jwt;
-    }
 }

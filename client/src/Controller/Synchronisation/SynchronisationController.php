@@ -86,25 +86,6 @@ class SynchronisationController extends AbstractController
     }
 
     /**
-     * @Route("/synchronise/createjwt", name="createjwt", methods={"POST", "GET"})
-     */
-    public function createJwt(): JsonResponse
-    {
-        $validJWT = $this->restClient->apiCall(
-            'get',
-            '/jwt/create',
-            [],
-            'raw',
-            [],
-            false
-        );
-
-        $this->logger->warning(json_decode(strval($validJWT))->data);
-
-        return new JsonResponse([json_decode(strval($validJWT))->data]);
-    }
-
-    /**
      * @Route("/synchronise/documents", name="synchronise_documents", methods={"POST", "GET"})
      */
     public function synchroniseDocument(Request $request): JsonResponse
