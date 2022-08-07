@@ -127,13 +127,19 @@ class SynchronisationController extends AbstractController
     /**
      * @Route("/synchronise/checklists", name="synchronise_checklists", methods={"POST", "GET"})
      */
-    public function synchroniseChecklist(): JsonResponse
+    public function synchroniseChecklist(Request $request): JsonResponse
     {
-        ini_set('memory_limit', '512M');
+        $jwt = $request->headers->get('JWT');
+
+        if (!$this->authoriseJwt($jwt)) {
+            return new JsonResponse([self::AUTH_ERROR_MESSAGE], 401);
+        }
 
         if (!$this->isChecklistFeatureEnabled()) {
             return new JsonResponse(['Checklist Sync Disabled']);
         }
+
+        ini_set('memory_limit', '512M');
 
         $rowLimit = $this->getChecklistSyncRowLimit();
 
