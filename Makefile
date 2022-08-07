@@ -113,10 +113,10 @@ behat-profile-suite: up-app-integration-tests reset-fixtures disable-debug ##@be
 	docker-compose -f docker-compose.yml -f docker-compose.dev.yml run --rm test sh ./tests/Behat/run-tests.sh --profile $(profile) --suite $(suite)
 
 reset-database: ##@database Resets the DB schema and runs migrations
-	docker-compose -f docker-compose.yml -f docker-compose.dev.yml run --rm api sh scripts/reset_db_structure_local.sh
+	docker-compose run --rm api sh scripts/reset_db_structure_local.sh
 
 reset-fixtures: ##@database Resets the DB contents and reloads fixtures
-	docker-compose -f docker-compose.yml -f docker-compose.dev.yml run --rm api sh scripts/reset_db_fixtures_local.sh
+	docker-compose run --rm api sh scripts/reset_db_fixtures_local.sh
 
 db-terminal: ##@database Login to the database via the terminal
 	docker exec -it opg-digideps-postgres sh -c "psql -U api"

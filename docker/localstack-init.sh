@@ -22,5 +22,13 @@ openssl rsa -in private.pem -outform PEM -pubout -out public.pem
 
 awslocal secretsmanager create-secret --name "default/private-jwt-key-base64" --secret-string "$(base64 private.pem)"
 awslocal secretsmanager create-secret --name "default/public-jwt-key-base64" --secret-string "$(base64 public.pem)"
-awslocal secretsmanager create-secret --name "default/synchronise-jwt" --secret-string "eyJ0eXAiOiJKV1QiLCJhbGciOiJSUzI1NiIsImprdSI6Imh0dHBzOi8vZGlnaWRlcHMubG9jYWwvdjIvLndlbGwta25vd24vandrcy5qc29uIiwia2lkIjoiYTY0NTM5YjIzOTk2ZGMxYWQxMzBiYTljNmY0OWUyNjk4NWE1MjMyMDk3NjAxNmM2ZDQxMzcwODE4ZDgxYWIwOCJ9.eyJhdWQiOiJ1cm46b3BnOnJlZ2lzdHJhdGlvbl9zZXJ2aWNlIiwiaWF0IjoxNjU4OTA4OTY5LjI2NTUwMSwiZXhwIjoxNjU4OTEyNTY5LjI2NTUxLCJuYmYiOjE2NTg5MDg5NTkuMjY1NTE1LCJpc3MiOiJ1cm46b3BnOmRpZ2lkZXBzIn0.rOE_xpwl966v26GVJqJsU7MaqKC4EbE5CBtH176z2hfuYLaOxxuGt39t5YbQvZdymd8mHWcnsWumv4fudZZqzGzg1BSPllywFaLJtvvAJSti-NxGGHU8eeszc6LsW6ryfcLxtL29D6mMCmbN90v98muxKM6KMKWEWIS1uKzMGGwp7ZWJWYL7l9VE039skZhRKNs0T96ySktF4OfNj46Z7x4QSsC5MJEOl8hLPWUB6Bwq9ie09DVOos8apdTU2ac8yZ54PmTlkH5Ir9-A57NKg4IEC1zSfSe2PgsSI2BlJj_xx8aHCQtOfXcqvjnEZUZkHV_7e1xOjLMfJsQeYTjpiw"
+
+kid=$(echo -n $(base64 public.pem) | openssl dgst -sha256)
+b64headers=$(echo -n "{\"typ\": \"JWT\", \"alg\": \"RS256\", \"jku\": \"https://digideps.local/v2/.well-known/jwks.json\", \"kid\": \"${kid}\"}"  | openssl base64 -e -A | tr '+/' '-_' | tr -d '=';)
+b64payload=$(echo -n '{"aud": "urn:opg:registration_service","iat": 1659782970.135131,"exp": 1975402170.135139,"nbf": 1659782960.135146,"iss": "urn:opg:digideps"}' | openssl base64 -e -A | tr '+/' '-_' | tr -d '=';)
+b64headandpay="${b64headers}.${b64payload}"
+b64digest=$(echo -n ${b64headandpay} | openssl dgst -sha256 -sign private.pem -binary | openssl base64 -e -A | tr '+/' '-_' | tr -d '=';)
+b64jwt=${b64headandpay}.${b64digest}
+
+awslocal secretsmanager create-secret --name "default/synchronisation-jwt-token" --secret-string ${b64jwt}
 rm private.pem public.pem

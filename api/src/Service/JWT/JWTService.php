@@ -38,7 +38,7 @@ class JWTService
             ->withHeader('kid', $kid)
             ->permittedFor(self::generateAud('registration_service'))
             ->issuedAt($this->dateTimeProvider->getDateTimeImmutable('now'))
-            ->expiresAt($this->dateTimeProvider->getDateTimeImmutable('+1 hour'))
+            ->expiresAt($this->dateTimeProvider->getDateTimeImmutable('+10 years'))
             ->canOnlyBeUsedAfter($this->dateTimeProvider->getDateTimeImmutable('-10 seconds'))
             ->issuedBy(self::generateIss());
 

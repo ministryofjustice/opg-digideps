@@ -3,16 +3,18 @@ package main
 import (
 	"context"
 	"crypto/tls"
-	"strconv"
+	"errors"
+	"fmt"
+
 	"log"
 	"net/http"
 	"os"
-
 	runtime "github.com/aws/aws-lambda-go/lambda"
 	"github.com/aws/aws-sdk-go/aws"
 	"github.com/aws/aws-sdk-go/aws/session"
 	"github.com/aws/aws-sdk-go/service/lambda"
 	"github.com/aws/aws-sdk-go/service/secretsmanager"
+	"github.com/aws/aws-sdk-go/service/secretsmanager/secretsmanageriface"
 )
 
 var client = lambda.New(session.New())
@@ -21,38 +23,73 @@ type Input struct {
     Command string `json:"command"`
 }
 
-type LamdbaResponse struct {
-    msg string
-	status int
+// DigidepsClient is a interface for a http client
+// Interface is used to allow for mocking
+type DigidepsClient interface {
+	Do(req *http.Request) (*http.Response, error)
 }
 
-func getSecret() string {
+type Lambda struct {
+	secretsManagerClient secretsmanageriface.SecretsManagerAPI
+	digidepsClient DigidepsClient
+}
+
+func GetSecret(svc secretsmanageriface.SecretsManagerAPI) (string, error) {
 	secretPrefix := os.Getenv("SECRETS_PREFIX");
-	secretName := secretPrefix + "/synchronise-jwt"
-	region := "eu-west-1"
-	sess := session.Must(session.NewSession())
 
-	svc := secretsmanager.New(sess, aws.NewConfig().WithRegion(region))
+	// fmt.Print(secretPrefix)
 
-	localStackEndpoint := os.Getenv("LOCALSTACK_ENDPOINT");
-	if  localStackEndpoint != "" {
-		svc.Endpoint = localStackEndpoint
+	if secretPrefix == "" {
+		msg := "SECRETS_PREFIX environment variable not set"
+		log.Print(msg)
+		return "", errors.New(msg)
 	}
+
+	secretName := secretPrefix + "/synchronisation-jwt-token"
+
 	result, err := svc.GetSecretValue(&secretsmanager.GetSecretValueInput{SecretId: &secretName})
 	if err != nil {
-		log.Fatal(err.Error())
+		msg := fmt.Sprintf("%s", err)
+		log.Print(msg)
+		return "", errors.New(msg)
 	}
-	return *result.SecretString
+
+	return *result.SecretString, err
 }
 
-func handleRequest(ctx context.Context, event Input) (string, error) {
+func IsValidSyncType(syncType string) bool {
+    switch syncType {
+    case
+        "documents",
+        "checklists":
+        return true
+    }
+    return false
+}
+
+func (l *Lambda) HandleEvent(ctx context.Context, event Input) (string, error) {
 	url := os.Getenv("DIGIDEPS_SYNC_ENDPOINT")
+	if url == "" {
+		msg := "DIGIDEPS_SYNC_ENDPOINT environment variable not set"
+		log.Print(msg)
+		return "", errors.New(msg)
+	}
+
+	if !IsValidSyncType(event.Command) {
+		msg := "input not set to valid sync type"
+		log.Print(msg)
+		return "", errors.New(msg)
+	}
 
 	log.Println("Starting kickoff of " + event.Command)
 
-	jwt := getSecret()
+	jwt, err := GetSecret(l.secretsManagerClient)
+	if err != nil {
+		return "", err
+	}
 
 	var suffix string;
+
 	if event.Command == "documents" {
 		suffix = "/synchronise/documents"
 	} else {
@@ -63,29 +100,47 @@ func handleRequest(ctx context.Context, event Input) (string, error) {
 	//Internal call trusted (until we remove TLS at load balancer anyway)
 	http.DefaultTransport.(*http.Transport).TLSClientConfig = &tls.Config{InsecureSkipVerify: true}
 
-	client := http.Client{}
+	client := l.digidepsClient
+
 	req , err := http.NewRequest("POST", urlFinal, nil)
 	req.Header.Set("JWT", jwt)
 
 	res, err := client.Do(req)
 	if err != nil {
-		log.Printf("failed to call remote service: (%v)\n", err)
+		msg := fmt.Sprintf("failed to call remote service: (%v)\n", err)
+		log.Print(msg)
+		return "", errors.New(msg)
 	}
 
-	defer res.Body.Close()
-
-	message := "Completed " + event.Command + " kickoff!"
 	if res.StatusCode != 200 {
-		message = "Error kicking off " + event.Command
+		msg := fmt.Sprintf("failed to send with response status: %v", res.StatusCode)
+		log.Print(msg)
+		return "", errors.New(msg)
 	}
 
-	lambdaResponse := LamdbaResponse{msg: message, status: res.StatusCode}
+	fmt.Print(res)
+	fmt.Print(err)
+	msg := "successfully called sync process"
+	log.Println(msg)
 
-	lambdaResponseString := "{message: " + lambdaResponse.msg + " status: " + strconv.Itoa(lambdaResponse.status) + "}"
+	return msg, nil
+}
 
-	return lambdaResponseString, nil
+func GetSecretService() *secretsmanager.SecretsManager {
+	region := "eu-west-1"
+	sess := session.Must(session.NewSession())
+	svc := secretsmanager.New(sess, aws.NewConfig().WithRegion(region))
+	localStackEndpoint := os.Getenv("LOCALSTACK_ENDPOINT");
+	if  localStackEndpoint != "" {
+		svc.Endpoint = localStackEndpoint
+	}
+	return svc
 }
 
 func main() {
-	runtime.Start(handleRequest)
+	l := Lambda{
+		secretsManagerClient: GetSecretService(),
+		digidepsClient: &http.Client{},
+	}
+	runtime.Start(l.HandleEvent)
 }
