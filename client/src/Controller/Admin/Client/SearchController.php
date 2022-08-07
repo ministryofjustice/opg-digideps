@@ -41,6 +41,8 @@ class SearchController extends AbstractController
             return $this->buildViewParams($form);
         }
 
+        $filters = [];
+
         $form->handleRequest($request);
         if ($form->isSubmitted() && $form->isValid()) {
             $filters = $form->getData() + $this->getDefaultFilters($request);

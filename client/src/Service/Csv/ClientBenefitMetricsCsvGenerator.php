@@ -29,6 +29,7 @@ class ClientBenefitMetricsCsvGenerator
         ];
 
         $rows = [];
+        $dateLastCheckedFormatted = '';
 
         foreach ($clientBenefitResponses as $response) {
             if (null !== $response['dateLastCheckedEntitlement']) {

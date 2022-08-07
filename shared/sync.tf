@@ -22,6 +22,7 @@ resource "aws_iam_role_policy" "sync" {
   role   = aws_iam_role.sync.id
 }
 
+# follow up for tfsec fix. needs proper testing in dev environment
 data "aws_iam_policy_document" "sync" {
   statement {
     sid     = "AllowSyncTaskBucket"

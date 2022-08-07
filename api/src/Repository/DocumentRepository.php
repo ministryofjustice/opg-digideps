@@ -71,6 +71,8 @@ LIMIT $limit;";
         $result = $docStmt->executeQuery();
 
         $documents = [];
+        $reportIds = [];
+        $ndrIds = [];
 
         // Get all queued documents
         $results = $result->fetchAllAssociative();
