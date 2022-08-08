@@ -66,6 +66,8 @@ class LayDeputyshipUploader
                 ->updateReportTypes()
                 ->commitTransactionToDatabase();
         } catch (Throwable $e) {
+            $this->logger->error($e->getMessage());
+
             return ['added' => $added, 'errors' => [$e->getMessage()]];
         }
 
@@ -107,6 +109,7 @@ class LayDeputyshipUploader
 
         foreach ($reports as $currentActiveReport) {
             $reportCaseNumber = $currentActiveReport->getClient()->getCaseNumber();
+            $this->logger->warning(sprintf('Processing report with id: %d, and report type: %s, for casenumber: %s', $currentActiveReport->getId(), $currentActiveReport->getType(), $reportCaseNumber));
             /** @var PreRegistration $preRegistration */
             $preRegistration = $this->preRegistrationEntriesByCaseNumber[$reportCaseNumber];
             $determinedReportType = PreRegistration::getReportTypeByOrderType($preRegistration->getTypeOfReport(), $preRegistration->getOrderType(), PreRegistration::REALM_LAY);
