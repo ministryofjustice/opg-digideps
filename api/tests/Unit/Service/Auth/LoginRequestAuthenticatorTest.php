@@ -19,8 +19,11 @@ class LoginRequestAuthenticatorTest extends TestCase
 {
     use ProphecyTrait;
 
-    /** @test */
-    public function supports()
+    /**
+     * @test
+     * @dataProvider requestProvider
+     */
+    public function supports(Request $request, bool $expectedIsSupported)
     {
         $userRepo = self::prophesize(UserRepository::class);
         $attemptsInTimeChecker = self::prophesize(AttemptsInTimeChecker::class);
@@ -38,9 +41,16 @@ class LoginRequestAuthenticatorTest extends TestCase
             $logger->reveal()
         );
 
-        $supportedRequest = new Request();
-        $supportedRequest->request->;
+        self::assertEquals($expectedIsSupported, $sut->supports($request));
+    }
 
-        self::assertEquals(true, $sut->supports());
+    public function requestProvider()
+    {
+        return [
+            'Valid request' => [Request::create('/auth/login', 'POST'), true],
+            'Valid uri, invalid method' => [Request::create('/auth/login', 'GET'), false],
+            'Invalid uri, valid method' => [Request::create('/auth/logout', 'POST'), false],
+            'Invalid values' => [Request::create('/auth/logout', 'DELETE'), false],
+        ];
     }
 }
