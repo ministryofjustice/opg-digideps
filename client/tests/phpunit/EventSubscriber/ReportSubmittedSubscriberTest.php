@@ -28,7 +28,12 @@ class ReportSubmittedSubscriberTest extends TestCase
     public function getSubscribedEvents()
     {
         self::assertEquals(
-            [ReportSubmittedEvent::NAME => 'log', ReportSubmittedEvent::NAME => 'sendEmail'],
+            [
+                ReportSubmittedEvent::NAME => [
+                    ['logEvent', 2],
+                    ['sendEmail', 1],
+                ],
+            ],
             ReportSubmittedSubscriber::getSubscribedEvents()
         );
     }
@@ -99,7 +104,7 @@ class ReportSubmittedSubscriberTest extends TestCase
         $reportApi = self::prophesize(ReportApi::class);
         $mailer = self::prophesize(Mailer::class);
 
-        $submittedReport = (ReportHelpers::createReport())
+        $submittedReport = ReportHelpers::createReport()
             ->setUnSubmitDate(new DateTime());
 
         $nextYearReport = ReportHelpers::createReport();

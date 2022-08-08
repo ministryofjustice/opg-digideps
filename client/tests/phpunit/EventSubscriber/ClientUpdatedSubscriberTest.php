@@ -54,7 +54,12 @@ class ClientUpdatedSubscriberTest extends TestCase
     public function getSubscribedEvents()
     {
         self::assertEquals(
-            [ClientUpdatedEvent::NAME => 'logEvent', ClientUpdatedEvent::NAME => 'sendEmail'],
+            [
+                ClientUpdatedEvent::NAME => [
+                        ['logEvent', 2],
+                        ['sendEmail', 1],
+                    ],
+            ],
             ClientUpdatedSubscriber::getSubscribedEvents()
         );
     }
@@ -104,7 +109,7 @@ class ClientUpdatedSubscriberTest extends TestCase
     public function logEventOnlyLogsOnEmailChange()
     {
         $preUpdateClient = ClientHelpers::createClient();
-        $postUpdateClient = (ClientHelpers::createClient())->setEmail($preUpdateClient->getEmail());
+        $postUpdateClient = ClientHelpers::createClient()->setEmail($preUpdateClient->getEmail());
         $changedBy = UserHelpers::createUser();
         $trigger = 'A_TRIGGER';
 
@@ -120,7 +125,7 @@ class ClientUpdatedSubscriberTest extends TestCase
      */
     public function sendEmail(Client $preUpdateClient, Client $postUpdateClient)
     {
-        $changedBy = (UserHelpers::createUser())->setRoleName(User::ROLE_LAY_DEPUTY);
+        $changedBy = UserHelpers::createUser()->setRoleName(User::ROLE_LAY_DEPUTY);
         $trigger = 'A_TRIGGER';
 
         $event = new ClientUpdatedEvent($preUpdateClient, $postUpdateClient, $changedBy, $trigger);
@@ -154,7 +159,7 @@ class ClientUpdatedSubscriberTest extends TestCase
     {
         $preUpdateClient = ClientHelpers::createClient();
         $postUpdateClient = clone $preUpdateClient;
-        $changedBy = (UserHelpers::createUser())->setRoleName(User::ROLE_LAY_DEPUTY);
+        $changedBy = UserHelpers::createUser()->setRoleName(User::ROLE_LAY_DEPUTY);
         $trigger = 'A_TRIGGER';
 
         $event = new ClientUpdatedEvent($preUpdateClient, $postUpdateClient, $changedBy, $trigger);
@@ -167,8 +172,8 @@ class ClientUpdatedSubscriberTest extends TestCase
     public function sendEmailEmailNotSentWhenDetailsChangedButClientsAreDifferent()
     {
         $preUpdateClient = ClientHelpers::createClient();
-        $postUpdateClient = (ClientHelpers::createClient())->setId(12345);
-        $changedBy = (UserHelpers::createUser())->setRoleName(User::ROLE_LAY_DEPUTY);
+        $postUpdateClient = ClientHelpers::createClient()->setId(12345);
+        $changedBy = UserHelpers::createUser()->setRoleName(User::ROLE_LAY_DEPUTY);
         $trigger = 'A_TRIGGER';
 
         $event = new ClientUpdatedEvent($preUpdateClient, $postUpdateClient, $changedBy, $trigger);
