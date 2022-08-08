@@ -30,7 +30,7 @@ class ReportSubmittedSubscriberTest extends TestCase
         self::assertEquals(
             [
                 ReportSubmittedEvent::NAME => [
-                    ['logEvent', 2],
+                    ['logResubmittedReport', 2],
                     ['sendEmail', 1],
                 ],
             ],

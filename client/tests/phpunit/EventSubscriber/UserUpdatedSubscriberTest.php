@@ -56,7 +56,7 @@ class UserUpdatedSubscriberTest extends TestCase
         self::assertEquals(
             [
                 UserUpdatedEvent::NAME => [
-                    ['logEvent', 2],
+                    ['auditLog', 2],
                     ['sendEmail', 1],
                 ],
             ],
