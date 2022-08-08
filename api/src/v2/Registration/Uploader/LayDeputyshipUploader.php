@@ -108,7 +108,7 @@ class LayDeputyshipUploader
         $reports = $this->reportRepository->findAllActiveReportsByCaseNumbersAndRole($caseNumbers, User::ROLE_LAY_DEPUTY);
 
         foreach ($reports as $currentActiveReport) {
-            $reportCaseNumber = $currentActiveReport->getClient()->getCaseNumber();
+            $reportCaseNumber = strtolower($currentActiveReport->getClient()->getCaseNumber());
             $this->logger->warning(sprintf('Processing report with id: %d, and report type: %s, for casenumber: %s', $currentActiveReport->getId(), $currentActiveReport->getType(), $reportCaseNumber));
             /** @var PreRegistration $preRegistration */
             $preRegistration = $this->preRegistrationEntriesByCaseNumber[$reportCaseNumber];
