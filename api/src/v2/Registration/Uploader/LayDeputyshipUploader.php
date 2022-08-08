@@ -14,6 +14,7 @@ use Doctrine\ORM\EntityManagerInterface;
 use Doctrine\ORM\OptimisticLockException;
 use Doctrine\ORM\ORMException;
 use Exception;
+use Psr\Log\LoggerInterface;
 use RuntimeException;
 use Throwable;
 
@@ -34,7 +35,8 @@ class LayDeputyshipUploader
     public function __construct(
         private EntityManagerInterface $em,
         private ReportRepository $reportRepository,
-        private PreRegistrationFactory $preRegistrationFactory
+        private PreRegistrationFactory $preRegistrationFactory,
+        private LoggerInterface $logger
     ) {
     }
 
@@ -54,6 +56,7 @@ class LayDeputyshipUploader
                     $this->preRegistrationEntriesByCaseNumber[$caseNumber] = $this->createAndPersistNewPreRegistrationEntity($layDeputyshipDto);
                     ++$added;
                 } catch (PreRegistrationCreationException $e) {
+                    $this->logger->error(sprintf('ERROR IN LINE %d: %s', $index + 2, $e->getMessage()));
                     $errors[] = sprintf('ERROR IN LINE %d: %s', $index + 2, $e->getMessage());
                     continue;
                 }
