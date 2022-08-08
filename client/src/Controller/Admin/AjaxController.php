@@ -55,18 +55,17 @@ class AjaxController extends AbstractController
     public function uploadUsersAjaxAction(Request $request, ClientInterface $redisClient)
     {
         $chunkId = 'chunk'.$request->get('chunk');
-        $this->logger->warning(sprintf('Processing chunk with chunkId: %s', $chunkId));
+        $this->logger->warning(sprintf('AJAX: Processing chunk with chunkId: %s', $chunkId));
 
         try {
             $compressedData = $redisClient->get($chunkId);
             if ($compressedData) {
                 $ret = $this->layDeputyshipApi->uploadLayDeputyShip($compressedData, $chunkId);
-                $this->logger->warning(sprintf('Successfully processed chunk with chunkId: %s', $chunkId));
+                $this->logger->warning(sprintf('AJAX: Successfully processed chunkId: %s', $chunkId));
                 $redisClient->del($chunkId); // cleanup for next execution
-                $this->logger->warning(sprintf('Successfully deleted chunk from redis with chunkId: %s', $chunkId));
             } else {
                 $ret['added'] = 0;
-                $this->logger->error(sprintf('Unable to process chunk with chunkId: %s', $chunkId));
+                $this->logger->error(sprintf('AJAX: Unable to process chunkId: %s', $chunkId));
             }
 
             return new JsonResponse($ret);

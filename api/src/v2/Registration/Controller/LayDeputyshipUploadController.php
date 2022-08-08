@@ -40,13 +40,13 @@ class LayDeputyshipUploadController
         $assembler = $this->factory->create();
         $uploadCollection = $assembler->assembleFromArray($postedData);
 
-        $this->logger->warning(sprintf('Assembled dto from chunk with chunkId: %s', $request->headers->get('chunkId')));
-        $this->logger->warning(sprintf('Size of dtos: %d', count($uploadCollection['collection'])));
+        $this->logger->warning(sprintf('Assembled DTO collection from chunkId: %s', $request->headers->get('chunkId')));
+        $this->logger->warning(sprintf('Size of DTO Collection: %d', count($uploadCollection['collection'])));
 
         $result = $this->uploader->upload($uploadCollection['collection']);
         $result['skipped'] = $uploadCollection['skipped'];
 
-        $this->logger->warning(sprintf('Persisted chunk with chunkId: %s', $request->headers->get('chunkId')));
+        $this->logger->warning(sprintf('Persisted DTO Collection with chunkId: %s', $request->headers->get('chunkId')));
 
         return $result;
     }

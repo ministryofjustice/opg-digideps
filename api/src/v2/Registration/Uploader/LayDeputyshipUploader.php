@@ -56,8 +56,9 @@ class LayDeputyshipUploader
                     $this->preRegistrationEntriesByCaseNumber[$caseNumber] = $this->createAndPersistNewPreRegistrationEntity($layDeputyshipDto);
                     ++$added;
                 } catch (PreRegistrationCreationException $e) {
-                    $this->logger->error(sprintf('ERROR IN LINE %d: %s', $index + 2, $e->getMessage()));
-                    $errors[] = sprintf('ERROR IN LINE %d: %s', $index + 2, $e->getMessage());
+                    $message = sprintf('ERROR IN LINE %d: %s', $index + 2, $e->getMessage());
+                    $this->logger->error($message);
+                    $errors[] = $message;
                     continue;
                 }
             }
@@ -104,20 +105,27 @@ class LayDeputyshipUploader
      */
     private function updateReportTypes(): LayDeputyshipUploader
     {
+        $reportCaseNumber = '';
+        $currentActiveReportId = null;
         $caseNumbers = array_keys($this->preRegistrationEntriesByCaseNumber);
         $reports = $this->reportRepository->findAllActiveReportsByCaseNumbersAndRole($caseNumbers, User::ROLE_LAY_DEPUTY);
 
-        foreach ($reports as $currentActiveReport) {
-            $reportCaseNumber = strtolower($currentActiveReport->getClient()->getCaseNumber());
-            $this->logger->warning(sprintf('Processing report with id: %d, and report type: %s, for casenumber: %s', $currentActiveReport->getId(), $currentActiveReport->getType(), $reportCaseNumber));
-            /** @var PreRegistration $preRegistration */
-            $preRegistration = $this->preRegistrationEntriesByCaseNumber[$reportCaseNumber];
-            $determinedReportType = PreRegistration::getReportTypeByOrderType($preRegistration->getTypeOfReport(), $preRegistration->getOrderType(), PreRegistration::REALM_LAY);
+        try {
+            foreach ($reports as $currentActiveReport) {
+                $reportCaseNumber = strtolower($currentActiveReport->getClient()->getCaseNumber());
+                $currentActiveReportId = $currentActiveReport->getId();
+                /** @var PreRegistration $preRegistration */
+                $preRegistration = $this->preRegistrationEntriesByCaseNumber[$reportCaseNumber];
+                $determinedReportType = PreRegistration::getReportTypeByOrderType($preRegistration->getTypeOfReport(), $preRegistration->getOrderType(), PreRegistration::REALM_LAY);
 
-            if ($currentActiveReport->getType() != $determinedReportType) {
-                $currentActiveReport->setType($determinedReportType);
-                $this->reportsUpdated[] = $reportCaseNumber;
+                if ($currentActiveReport->getType() != $determinedReportType) {
+                    $currentActiveReport->setType($determinedReportType);
+                    $this->reportsUpdated[] = $reportCaseNumber;
+                }
             }
+        } catch (Throwable $e) {
+            $this->logger->error(sprintf('Error whilst updating report type for report with ID: %d, for case number: %s', $currentActiveReportId, $reportCaseNumber));
+            throw new Exception($e->getMessage());
         }
 
         return $this;
