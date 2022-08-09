@@ -9,7 +9,6 @@ use App\Service\JWT\JWTService;
 use Psr\Log\LoggerInterface;
 use Symfony\Bundle\FrameworkBundle\Controller\AbstractController;
 use Symfony\Component\HttpFoundation\JsonResponse;
-use Symfony\Component\HttpFoundation\Request;
 use Symfony\Component\Routing\Annotation\Route;
 
 class JWTController extends AbstractController
@@ -36,13 +35,5 @@ class JWTController extends AbstractController
         }
 
         return new JsonResponse($jwk);
-    }
-
-    /**
-     * @Route("/jwt/authorise", methods={"GET"})
-     */
-    public function checkJWTValid(Request $request): bool
-    {
-        return $this->authService->JWTIsValid($request);
     }
 }

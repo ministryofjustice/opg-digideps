@@ -149,7 +149,7 @@ class DocumentControllerTest extends AbstractTestController
     }
 
     /** @test */
-    public function getQueuedDocumentsUsesSecretAuth(): void
+    public function getQueuedDocumentsUsesAuth(): void
     {
         $return = $this->assertJsonRequest('GET', '/document/queued', [
             'mustFail' => true,
@@ -157,15 +157,24 @@ class DocumentControllerTest extends AbstractTestController
             'assertCode' => 403,
             'assertResponseCode' => 403,
             'data' => ['row_limit' => 100],
-        ]);
+        ], true);
 
         $this->assertStringContainsString('client secret not accepted', $return['message']);
+
+        $return = $this->assertJsonRequest('GET', '/document/queued', [
+            'mustFail' => true,
+            'ClientSecret' => API_TOKEN_DEPUTY,
+            'assertCode' => 403,
+            'assertResponseCode' => 403,
+            'data' => ['row_limit' => 100],
+        ]);
+        $this->assertStringContainsString('JWT is not valid', $return['message']);
 
         $return = $this->assertJsonRequest('GET', '/document/queued', [
             'mustSucceed' => true,
             'ClientSecret' => API_TOKEN_DEPUTY,
             'data' => ['row_limit' => 100],
-        ]);
+        ], true);
 
         self::assertCount(0, json_decode($return['data'], true));
     }
@@ -184,7 +193,7 @@ class DocumentControllerTest extends AbstractTestController
             'mustSucceed' => true,
             'ClientSecret' => API_TOKEN_DEPUTY,
             'data' => ['row_limit' => 100],
-        ]);
+        ], true);
 
         self::assertCount(1, json_decode($return['data'], true));
     }
@@ -200,7 +209,7 @@ class DocumentControllerTest extends AbstractTestController
             'mustSucceed' => true,
             'ClientSecret' => API_TOKEN_DEPUTY,
             'data' => ['syncStatus' => Document::SYNC_STATUS_SUCCESS],
-        ]);
+        ], true);
 
         self::assertEquals(self::$document1->getId(), $response['data']['id']);
         self::assertEquals(Document::SYNC_STATUS_SUCCESS, $response['data']['synchronisation_status']);

@@ -301,7 +301,7 @@ class ReportControllerTest extends AbstractTestController
             $this->assertArrayHasKey('nOfRecords', $data[$key]);
         }
 
-        //$this->assertArrayHasKey('balance_matches', $data); //TODO check why failing
+        // $this->assertArrayHasKey('balance_matches', $data); //TODO check why failing
         $this->assertArrayHasKey('status', $data);
     }
 
@@ -385,7 +385,7 @@ class ReportControllerTest extends AbstractTestController
 
         // both
         $q = http_build_query(['groups' => ['report']]);
-        //assert both groups (quick)
+        // assert both groups (quick)
         $data = $this->assertJsonRequest('GET', '/report/'.self::$reportEdit->getId().'?'.$q, [
             'mustSucceed' => true,
             'AuthToken' => self::$tokenDeputy,
@@ -434,7 +434,7 @@ class ReportControllerTest extends AbstractTestController
 
         // both
         $q = http_build_query(['groups' => ['report']]);
-        //assert both groups (quick)
+        // assert both groups (quick)
         $data = $this->assertJsonRequest('GET', $url.'?'.$q, [
             'mustSucceed' => true,
             'AuthToken' => self::$tokenDeputy,
@@ -454,7 +454,7 @@ class ReportControllerTest extends AbstractTestController
                 'balance_mismatch_explanation' => 'bme',
             ],
         ]);
-        //assert both groups (quick)
+        // assert both groups (quick)
         $data = $this->assertJsonRequest('GET', $url.'?'.$q, [
             'mustSucceed' => true,
             'AuthToken' => self::$tokenDeputy,
@@ -485,7 +485,7 @@ class ReportControllerTest extends AbstractTestController
         ]);
 
         $q = http_build_query(['groups' => ['debt']]);
-        //assert both groups (quick)
+        // assert both groups (quick)
         $data = $this->assertJsonRequest('GET', $url.'?'.$q, [
             'mustSucceed' => true,
             'AuthToken' => self::$tokenDeputy,
@@ -550,7 +550,7 @@ class ReportControllerTest extends AbstractTestController
         ]);
 
         $q = http_build_query(['groups' => ['fee']]);
-        //assert both groups (quick)
+        // assert both groups (quick)
         $data = $this->assertJsonRequest('GET', $url.'?'.$q, [
             'mustSucceed' => true,
             'AuthToken' => self::$tokenPa,
@@ -967,7 +967,7 @@ class ReportControllerTest extends AbstractTestController
     }
 
     /** @test */
-    public function getQueuedDocumentsUsesSecretAuth(): void
+    public function getQueuedDocumentsUsesAuth(): void
     {
         $return = $this->assertJsonRequest('GET', '/report/all-with-queued-checklists', [
             'mustFail' => true,
@@ -975,15 +975,25 @@ class ReportControllerTest extends AbstractTestController
             'assertCode' => 403,
             'assertResponseCode' => 403,
             'data' => ['row_limit' => 100],
-        ]);
+        ], true);
 
         $this->assertStringContainsString('client secret not accepted', $return['message']);
+
+        $return = $this->assertJsonRequest('GET', '/report/all-with-queued-checklists', [
+            'mustFail' => true,
+            'ClientSecret' => API_TOKEN_DEPUTY,
+            'assertCode' => 403,
+            'assertResponseCode' => 403,
+            'data' => ['row_limit' => 100],
+        ]);
+
+        $this->assertStringContainsString('JWT is not valid', $return['message']);
 
         $return = $this->assertJsonRequest('GET', '/report/all-with-queued-checklists', [
             'mustSucceed' => true,
             'ClientSecret' => API_TOKEN_DEPUTY,
             'data' => ['row_limit' => 100],
-        ]);
+        ], true);
 
         self::assertCount(0, $return['data']);
     }

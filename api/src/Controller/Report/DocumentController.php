@@ -16,9 +16,9 @@ use Symfony\Component\Routing\Annotation\Route;
 
 class DocumentController extends RestController
 {
-    const DOCUMENT_SYNC_ERROR_STATUSES = [Document::SYNC_STATUS_TEMPORARY_ERROR, Document::SYNC_STATUS_PERMANENT_ERROR];
-    const RETRIES_FAILED_MESSAGE = 'Document failed to sync after 4 attempts';
-    const REPORT_PDF_FAILED_MESSAGE = 'Report PDF failed to sync';
+    public const DOCUMENT_SYNC_ERROR_STATUSES = [Document::SYNC_STATUS_TEMPORARY_ERROR, Document::SYNC_STATUS_PERMANENT_ERROR];
+    public const RETRIES_FAILED_MESSAGE = 'Document failed to sync after 4 attempts';
+    public const REPORT_PDF_FAILED_MESSAGE = 'Report PDF failed to sync';
 
     private EntityManagerInterface $em;
     private AuthService $authService;
@@ -135,6 +135,9 @@ class DocumentController extends RestController
      */
     public function getQueuedDocuments(Request $request, EntityManagerInterface $em): string
     {
+        if (!$this->authService->JWTIsValid($request)) {
+            throw new UnauthorisedException('JWT is not valid');
+        }
         if (!$this->authService->isSecretValid($request)) {
             throw new UnauthorisedException('client secret not accepted.');
         }

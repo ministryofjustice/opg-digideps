@@ -16,6 +16,7 @@ use App\Exception\ReportSubmittedException;
 use App\Exception\RestClientException;
 use App\Service\Client\RestClient;
 use DateTime;
+use Symfony\Component\HttpFoundation\Request;
 use Symfony\Component\HttpKernel\Exception\NotFoundHttpException;
 
 class ReportApi
@@ -196,6 +197,25 @@ class ReportApi
             ['row_limit' => $rowLimit],
             'Report\Report[]',
             [],
+            false
+        );
+    }
+
+    /**
+     * @return Report[]
+     */
+    public function getReportsWithQueuedChecklistsAPI(Request $request, string $rowLimit): array
+    {
+        return $this->restClient->apiCall(
+            'get',
+            self::REPORT_GET_ALL_WITH_QUEUED_CHECKLISTS_ENDPOINT,
+            ['row_limit' => $rowLimit],
+            'Report\Report[]',
+            [
+                'headers' => [
+                    'JWT' => $request->headers->get('JWT'),
+                ],
+            ],
             false
         );
     }

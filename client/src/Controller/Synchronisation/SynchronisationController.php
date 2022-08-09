@@ -20,69 +20,18 @@ class SynchronisationController extends AbstractController
     public const DOCUMENT_FALLBACK_ROW_LIMITS = '100';
     public const CHECKLIST_FALLBACK_ROW_LIMITS = '30';
     public const COMPLETED_MESSAGE = 'Sync command completed';
-    public const AUTH_ERROR_MESSAGE = 'Unable to authenticate';
 
     public static $defaultName = 'digideps:document-sync';
 
-    /** @var DocumentSyncService */
-    private $documentSyncService;
-
-    private $checklistSyncService;
-
-    /** @var RestClient */
-    private $restClient;
-
-    /** @var SerializerInterface */
-    private $serializer;
-
-    /** @var ParameterStoreService */
-    private $parameterStore;
-
-    private LoggerInterface $logger;
-    private ReportApi $reportApi;
-
     public function __construct(
-        DocumentSyncService $documentSyncService,
-        ChecklistSyncService $checklistSyncService,
-        RestClient $restClient,
-        SerializerInterface $serializer,
-        ParameterStoreService $parameterStore,
-        LoggerInterface $logger,
-        ReportApi $reportApi
+        private DocumentSyncService $documentSyncService,
+        private ChecklistSyncService $checklistSyncService,
+        private RestClient $restClient,
+        private SerializerInterface $serializer,
+        private ParameterStoreService $parameterStore,
+        private LoggerInterface $logger,
+        private ReportApi $reportApi
     ) {
-        $this->documentSyncService = $documentSyncService;
-        $this->checklistSyncService = $checklistSyncService;
-        $this->restClient = $restClient;
-        $this->serializer = $serializer;
-        $this->parameterStore = $parameterStore;
-        $this->logger = $logger;
-        $this->reportApi = $reportApi;
-    }
-
-    public function authoriseJwt($jwt): bool
-    {
-        $validJWT = $this->restClient->apiCall(
-            'get',
-            'jwt/authorise',
-            [],
-            'raw',
-            [
-                'headers' => [
-                    'JWT' => $jwt,
-                ],
-            ],
-            false
-        );
-
-        if (str_contains(strval($validJWT), '"success":true,"data":true')) {
-            $this->logger->info('JWT verification succeeded');
-
-            return true;
-        } else {
-            $this->logger->warning($validJWT);
-
-            return false;
-        }
     }
 
     /**
@@ -90,12 +39,6 @@ class SynchronisationController extends AbstractController
      */
     public function synchroniseDocument(Request $request): JsonResponse
     {
-        $jwt = $request->headers->get('JWT');
-
-        if (!$this->authoriseJwt($jwt)) {
-            return new JsonResponse([self::AUTH_ERROR_MESSAGE], 401);
-        }
-
         if (!$this->isDocumentFeatureEnabled()) {
             return new JsonResponse(['Document Sync Disabled']);
         }
@@ -103,7 +46,7 @@ class SynchronisationController extends AbstractController
         ini_set('memory_limit', '512M');
 
         /** @var QueuedDocumentData[] $documents */
-        $documents = $this->getQueuedDocumentsData();
+        $documents = $this->getQueuedDocumentsData($request);
 
         $this->logger->info(sprintf('%d documents to upload', count($documents)));
 
@@ -129,12 +72,6 @@ class SynchronisationController extends AbstractController
      */
     public function synchroniseChecklist(Request $request): JsonResponse
     {
-        $jwt = $request->headers->get('JWT');
-
-        if (!$this->authoriseJwt($jwt)) {
-            return new JsonResponse([self::AUTH_ERROR_MESSAGE], 401);
-        }
-
         if (!$this->isChecklistFeatureEnabled()) {
             return new JsonResponse(['Checklist Sync Disabled']);
         }
@@ -144,7 +81,7 @@ class SynchronisationController extends AbstractController
         $rowLimit = $this->getChecklistSyncRowLimit();
 
         /** @var array $reports */
-        $reports = $this->reportApi->getReportsWithQueuedChecklists($rowLimit);
+        $reports = $this->reportApi->getReportsWithQueuedChecklistsAPI($request, $rowLimit);
         $this->logger->info(sprintf('%d checklists to upload', count($reports)));
 
         $notSyncedCount = $this->checklistSyncService->syncChecklistsByReports($reports);
@@ -185,14 +122,18 @@ class SynchronisationController extends AbstractController
     /**
      * @return QueuedDocumentData[]
      */
-    private function getQueuedDocumentsData(): array
+    private function getQueuedDocumentsData(Request $request): array
     {
         $queuedDocumentData = $this->restClient->apiCall(
             'get',
             'document/queued',
             ['row_limit' => $this->getDocumentSyncRowLimit()],
             'array',
-            [],
+            [
+                'headers' => [
+                    'JWT' => $request->headers->get('JWT'),
+                ],
+            ],
             false
         );
 
