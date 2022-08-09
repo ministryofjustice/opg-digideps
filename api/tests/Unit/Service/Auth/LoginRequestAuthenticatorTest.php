@@ -6,6 +6,8 @@ namespace App\Tests\Unit\Service\Auth;
 
 use App\Entity\User;
 use App\Exception\UnauthorisedException;
+use App\Exception\UserWrongCredentialsException;
+use App\Exception\UserWrongCredentialsManyAttempts;
 use App\Repository\UserRepository;
 use App\Security\LoginRequestAuthenticator;
 use App\Service\Auth\AuthService;
@@ -19,6 +21,8 @@ use Prophecy\Prophecy\ObjectProphecy;
 use Psr\Log\LoggerInterface;
 use Symfony\Component\HttpFoundation\Request;
 use Symfony\Component\Security\Core\Authentication\Token\Storage\TokenStorageInterface;
+use Symfony\Component\Security\Core\Authentication\Token\UsernamePasswordToken;
+use Symfony\Component\Security\Core\Exception\AuthenticationException;
 use Symfony\Component\Security\Core\Exception\UserNotFoundException;
 use Symfony\Component\Security\Http\Authenticator\Passport\Badge\UserBadge;
 use Symfony\Component\Security\Http\Authenticator\Passport\Credentials\PasswordCredentials;
@@ -161,9 +165,7 @@ class LoginRequestAuthenticatorTest extends TestCase
         ];
     }
 
-    /**
-     * @test
-     */
+    /** @test */
     public function authenticateDoesNotAuthenticateIfUserIsFrozenOut()
     {
         $now = new DateTime();
@@ -208,5 +210,128 @@ class LoginRequestAuthenticatorTest extends TestCase
                 $e->getData()
             );
         }
+    }
+
+    /** @test */
+    public function authenticateDoesNotAuthenticateIfUserCannotBeFound()
+    {
+        self::expectExceptionObject(new UserNotFoundException('User not found'));
+
+        $request = Request::create(
+            '/auth/login',
+            'POST',
+            [],
+            [],
+            [],
+            [],
+            json_encode(['email' => 'a@b.com', 'password' => 'password123']),
+        );
+
+        $this->authService->isSecretValid($request)->willReturn(true);
+
+        $this->attemptsInTimeChecker->registerAttempt('emaila@b.com')->willReturn($this->attemptsInTimeChecker);
+        $this->incrementalWaitingTimechecker->registerAttempt('emaila@b.com')->willReturn($this->incrementalWaitingTimechecker);
+
+        $this->incrementalWaitingTimechecker->isFrozen('emaila@b.com')->willReturn(false);
+
+        $this->userRepo->findOneBy(['email' => 'a@b.com'])->willReturn(null);
+
+        $this->sut->authenticate($request);
+    }
+
+    /** @test */
+    public function authenticateDoesNotAuthenticateIfSecretIsNotValidForUserRole()
+    {
+        self::expectExceptionObject(new UnauthorisedException('ROLE_USER user role not allowed from this client.'));
+
+        $request = Request::create(
+            '/auth/login',
+            'POST',
+            [],
+            [],
+            [],
+            [],
+            json_encode(['email' => 'a@b.com', 'password' => 'password123']),
+        );
+
+        $this->authService->isSecretValid($request)->willReturn(true);
+
+        $this->attemptsInTimeChecker->registerAttempt('emaila@b.com')->willReturn($this->attemptsInTimeChecker);
+        $this->incrementalWaitingTimechecker->registerAttempt('emaila@b.com')->willReturn($this->incrementalWaitingTimechecker);
+
+        $this->incrementalWaitingTimechecker->isFrozen('emaila@b.com')->willReturn(false);
+
+        $user = (new User())
+            ->setPassword('password123')
+            ->setRoleName('ROLE_USER');
+        $this->userRepo->findOneBy(['email' => 'a@b.com'])->willReturn($user);
+
+        $this->authService->isSecretValidForRole('ROLE_USER', $request)->willReturn(false);
+
+        $this->sut->authenticate($request);
+    }
+
+    /** @test */
+    public function onAuthenticationSuccess()
+    {
+        $token = new UsernamePasswordToken(new User(), 'private-firewall');
+
+        $this->tokenStorage->setToken($token)->shouldBeCalled();
+        $this->attemptsInTimeChecker->resetAttempts('')->shouldBeCalled();
+        $this->incrementalWaitingTimechecker->resetAttempts('')->shouldBeCalled();
+
+        $request = Request::create(
+            '/auth/login',
+            'POST',
+            [],
+            [],
+            [],
+            [],
+            json_encode(['email' => 'a@b.com', 'password' => 'password123']),
+        );
+
+        self::assertNull($this->sut->onAuthenticationSuccess($request, $token, 'private-firewall'));
+    }
+
+    /** @test */
+    public function onAuthenticationFailure()
+    {
+        self::expectExceptionObject(new UserWrongCredentialsException('It broke', 444));
+
+        $authException = new AuthenticationException('It broke', 444);
+        $this->attemptsInTimeChecker->maxAttemptsReached('')->willReturn(false);
+
+        $request = Request::create(
+            '/auth/login',
+            'POST',
+            [],
+            [],
+            [],
+            [],
+            json_encode(['email' => 'a@b.com', 'password' => 'password123']),
+        );
+
+        self::assertNull($this->sut->onAuthenticationFailure($request, $authException));
+    }
+
+    /** @test */
+    public function onAuthenticationFailureThrowsUserWrongCredentialsManyAttemptsExceptionOnTooManyAttempts()
+    {
+        self::expectExceptionObject(new UserWrongCredentialsManyAttempts());
+
+        $authException = new AuthenticationException('It broke', 444);
+        $this->attemptsInTimeChecker->maxAttemptsReached('')->willReturn(true);
+
+        $request = Request::create(
+            '/auth/login',
+            'POST',
+            [],
+            [],
+            [],
+            [],
+            json_encode(['email' => 'a@b.com', 'password' => 'password123']),
+        );
+
+        self::assertNull($this->sut->onAuthenticationFailure($request, $authException));
     }
 }
