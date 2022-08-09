@@ -35,8 +35,10 @@ class ReportSubmittedSubscriber implements EventSubscriberInterface
     public static function getSubscribedEvents()
     {
         return [
-            ReportSubmittedEvent::NAME => 'logResubmittedReport',
-            ReportSubmittedEvent::NAME => 'sendEmail',
+            ReportSubmittedEvent::NAME => [
+                ['logResubmittedReport', 2],
+                ['sendEmail', 1],
+            ],
         ];
     }
 

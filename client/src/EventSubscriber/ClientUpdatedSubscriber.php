@@ -32,8 +32,10 @@ class ClientUpdatedSubscriber implements EventSubscriberInterface
     public static function getSubscribedEvents()
     {
         return [
-            ClientUpdatedEvent::NAME => 'logEvent',
-            ClientUpdatedEvent::NAME => 'sendEmail',
+            ClientUpdatedEvent::NAME => [
+                ['logEvent', 2],
+                ['sendEmail', 1],
+            ],
         ];
     }
 
