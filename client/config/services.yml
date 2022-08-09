@@ -42,7 +42,6 @@ services:
             $environment: "%env(ROLE)%"
             $hostedEnv: "%env(ENVIRONMENT)%"
             $rootDir: "%kernel.root_dir%"
-            $csvLogger: "@monolog.logger.csv"
 
     App\:
         resource: "../src/"

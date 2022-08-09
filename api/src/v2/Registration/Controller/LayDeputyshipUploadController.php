@@ -19,7 +19,7 @@ class LayDeputyshipUploadController
         private DataCompression $dataCompression,
         private LayDeputyshipDtoCollectionAssemblerFactory $factory,
         private LayDeputyshipUploader $uploader,
-        private LoggerInterface $logger
+        private LoggerInterface $csvLogger
     ) {
     }
 
@@ -34,19 +34,19 @@ class LayDeputyshipUploadController
         ini_set('memory_limit', '1024M');
 
         $message = sprintf('Uploading chunk with Id: %s', $request->headers->get('chunkId'));
-        $this->logger->warning($message);
+        $this->csvLogger->notice($message);
 
         $postedData = $this->dataCompression->decompress($request->getContent());
         $assembler = $this->factory->create();
         $uploadCollection = $assembler->assembleFromArray($postedData);
 
-        $this->logger->warning(sprintf('Assembled DTO collection from chunkId: %s', $request->headers->get('chunkId')));
-        $this->logger->warning(sprintf('Size of DTO Collection: %d', count($uploadCollection['collection'])));
+        $this->csvLogger->notice(sprintf('Assembled DTO collection from chunkId: %s', $request->headers->get('chunkId')));
+        $this->csvLogger->notice(sprintf('Size of DTO Collection: %d', count($uploadCollection['collection'])));
 
         $result = $this->uploader->upload($uploadCollection['collection']);
         $result['skipped'] = $uploadCollection['skipped'];
 
-        $this->logger->warning(sprintf('Persisted DTO Collection with chunkId: %s', $request->headers->get('chunkId')));
+        $this->csvLogger->notice(sprintf('Persisted DTO Collection with chunkId: %s', $request->headers->get('chunkId')));
 
         return $result;
     }
