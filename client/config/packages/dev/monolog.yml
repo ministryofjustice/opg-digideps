@@ -1,4 +1,5 @@
 monolog:
+    channels: ["csv"]
     handlers:
         main:
             type: stream
@@ -12,7 +13,7 @@ monolog:
             path: php://stderr
             level: notice
             formatter: line_formatter
-            channels: ["!translation"]
+            channels: ["csv"]
             bubble: false
         audit:
             type: service

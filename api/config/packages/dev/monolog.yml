@@ -1,4 +1,5 @@
 monolog:
+    channels: ["csv"]
     handlers:
         main:
             type: stream
@@ -11,6 +12,6 @@ monolog:
             type: stream
             path: php://stderr
             level: notice
-            formatter: logstash_formatter
+            formatter: line_formatter
             bubble: false
             channels: ["csv"]
