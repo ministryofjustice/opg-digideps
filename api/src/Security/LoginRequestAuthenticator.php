@@ -11,6 +11,7 @@ use App\Repository\UserRepository;
 use App\Service\Auth\AuthService;
 use App\Service\BruteForce\AttemptsIncrementalWaitingChecker;
 use App\Service\BruteForce\AttemptsInTimeChecker;
+use App\Service\DateTimeProvider;
 use Psr\Log\LoggerInterface;
 use Symfony\Component\HttpFoundation\Request;
 use Symfony\Component\HttpFoundation\Response;
@@ -33,7 +34,8 @@ class LoginRequestAuthenticator extends AbstractAuthenticator
         private AttemptsIncrementalWaitingChecker $incrementalWaitingTimechecker,
         private AuthService $authService,
         private TokenStorageInterface $tokenStorage,
-        private LoggerInterface $logger
+        private LoggerInterface $logger,
+        private DateTimeProvider $dateTimeProvider
     ) {
     }
 
@@ -68,7 +70,8 @@ class LoginRequestAuthenticator extends AbstractAuthenticator
         // exception if reached delay-check
         if ($this->incrementalWaitingTimechecker->isFrozen($this->bruteForceKey)) {
             $nextAttemptAt = $this->incrementalWaitingTimechecker->getUnfrozenAt($this->bruteForceKey);
-            $nextAttemptIn = ceil(($nextAttemptAt - time()) / 60);
+            $nowTime = intval(($this->dateTimeProvider->getDateTime())->format('U'));
+            $nextAttemptIn = ceil(($nextAttemptAt - $nowTime) / 60);
             $exception = new UnauthorisedException("Attack detected. Please try again in $nextAttemptIn minutes", 423);
             $exception->setData($nextAttemptAt);
 
