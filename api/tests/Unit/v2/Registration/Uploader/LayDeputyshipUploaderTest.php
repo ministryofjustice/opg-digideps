@@ -16,21 +16,25 @@ use DateTime;
 use Doctrine\ORM\EntityManager;
 use PHPUnit\Framework\TestCase;
 use PHPUnit_Framework_MockObject_MockObject;
+use Psr\Log\LoggerInterface;
 use RuntimeException;
 
 class LayDeputyshipUploaderTest extends TestCase
 {
-    /** @var EntityManager | PHPUnit_Framework_MockObject_MockObject */
+    /** @var EntityManager|PHPUnit_Framework_MockObject_MockObject */
     protected $em;
 
-    /** @var ReportRepository | PHPUnit_Framework_MockObject_MockObject */
+    /** @var ReportRepository|PHPUnit_Framework_MockObject_MockObject */
     protected $reportRepository;
 
-    /** @var PreRegistrationFactory | PHPUnit_Framework_MockObject_MockObject */
+    /** @var PreRegistrationFactory|PHPUnit_Framework_MockObject_MockObject */
     private $factory;
 
     /** @var LayDeputyshipUploader */
     private $sut;
+
+    /** @var LoggerInterface */
+    private $logger;
 
     /** {@inheritDoc} */
     protected function setUp(): void
@@ -38,11 +42,13 @@ class LayDeputyshipUploaderTest extends TestCase
         $this->em = $this->getMockBuilder(EntityManager::class)->disableOriginalConstructor()->getMock();
         $this->reportRepository = $this->getMockBuilder(ReportRepository::class)->disableOriginalConstructor()->getMock();
         $this->factory = $this->getMockBuilder(PreRegistrationFactory::class)->disableOriginalConstructor()->enableArgumentCloning()->getMock();
+        $this->logger = $this->getMockBuilder(LoggerInterface::class)->disableOriginalConstructor()->getMock();
 
         $this->sut = new LayDeputyshipUploader(
             $this->em,
             $this->reportRepository,
-            $this->factory
+            $this->factory,
+            $this->logger
         );
     }
 

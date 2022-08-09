@@ -1,7 +1,15 @@
 monolog:
-   handlers:
-       main:
+    channels: ["csv"]
+    handlers:
+        main:
             type: stream
             path: "%log_path%"
             level: warning
             formatter: line_formatter
+            channels: ["!csv"]
+        csv:
+            type: stream
+            path: "%log_path%"
+            level: notice
+            formatter: logstash_formatter
+            channels: ["csv"]

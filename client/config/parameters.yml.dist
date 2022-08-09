@@ -25,6 +25,7 @@ parameters:
         gds: null
     opg_docker_tag: 0.0.0
     log_level: warning
+    csv_log_level: notice
     log_path: /var/log/app/application.log
     # the following two paramters can be set to null on production
     email_params:
