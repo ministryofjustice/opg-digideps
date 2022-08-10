@@ -967,9 +967,31 @@ class ReportControllerTest extends AbstractTestController
     }
 
     /** @test */
-    public function getQueuedDocumentsUsesAuth(): void
+    public function getQueuedDocumentsUsesSecretAuth(): void
     {
         $return = $this->assertJsonRequest('GET', '/report/all-with-queued-checklists', [
+            'mustFail' => true,
+            'ClientSecret' => 'WRONG CLIENT SECRET',
+            'assertCode' => 403,
+            'assertResponseCode' => 403,
+            'data' => ['row_limit' => 100],
+        ]);
+
+        $this->assertStringContainsString('client secret not accepted', $return['message']);
+
+        $return = $this->assertJsonRequest('GET', '/report/all-with-queued-checklists', [
+            'mustSucceed' => true,
+            'ClientSecret' => API_TOKEN_DEPUTY,
+            'data' => ['row_limit' => 100],
+        ]);
+
+        self::assertCount(0, $return['data']);
+    }
+
+    /** @test */
+    public function getQueuedDocumentsJwtUsesAuth(): void
+    {
+        $return = $this->assertJsonRequest('GET', '/report/all-with-queued-checklists-jwt', [
             'mustFail' => true,
             'ClientSecret' => 'WRONG CLIENT SECRET',
             'assertCode' => 403,
@@ -979,7 +1001,7 @@ class ReportControllerTest extends AbstractTestController
 
         $this->assertStringContainsString('client secret not accepted', $return['message']);
 
-        $return = $this->assertJsonRequest('GET', '/report/all-with-queued-checklists', [
+        $return = $this->assertJsonRequest('GET', '/report/all-with-queued-checklists-jwt', [
             'mustFail' => true,
             'ClientSecret' => API_TOKEN_DEPUTY,
             'assertCode' => 403,
@@ -989,7 +1011,7 @@ class ReportControllerTest extends AbstractTestController
 
         $this->assertStringContainsString('JWT is not valid', $return['message']);
 
-        $return = $this->assertJsonRequest('GET', '/report/all-with-queued-checklists', [
+        $return = $this->assertJsonRequest('GET', '/report/all-with-queued-checklists-jwt', [
             'mustSucceed' => true,
             'ClientSecret' => API_TOKEN_DEPUTY,
             'data' => ['row_limit' => 100],

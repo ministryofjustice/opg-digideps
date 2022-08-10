@@ -81,7 +81,7 @@ class SynchronisationController extends AbstractController
         $rowLimit = $this->getChecklistSyncRowLimit();
 
         /** @var array $reports */
-        $reports = $this->reportApi->getReportsWithQueuedChecklistsAPI($request, $rowLimit);
+        $reports = $this->reportApi->getReportsWithQueuedChecklistsJwt($request, $rowLimit);
         $this->logger->info(sprintf('%d checklists to upload', count($reports)));
 
         $notSyncedCount = $this->checklistSyncService->syncChecklistsByReports($reports);
@@ -126,7 +126,7 @@ class SynchronisationController extends AbstractController
     {
         $queuedDocumentData = $this->restClient->apiCall(
             'get',
-            'document/queued',
+            'document/queued-jwt',
             ['row_limit' => $this->getDocumentSyncRowLimit()],
             'array',
             [

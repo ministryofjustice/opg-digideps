@@ -135,6 +135,25 @@ class DocumentController extends RestController
      */
     public function getQueuedDocuments(Request $request, EntityManagerInterface $em): string
     {
+        if (!$this->authService->isSecretValid($request)) {
+            throw new UnauthorisedException('client secret not accepted.');
+        }
+
+        $data = $this->formatter->deserializeBodyContent($request);
+
+        $documentRepo = $em->getRepository(Document::class);
+
+        return json_encode($documentRepo->getQueuedDocumentsAndSetToInProgress($data['row_limit']));
+    }
+
+    // Duplicating above function until DDPB-4469 is played
+    /**
+     * Get queued documents.
+     *
+     * @Route("/document/queued-jwt", methods={"GET"})
+     */
+    public function getQueuedDocumentsJwt(Request $request, EntityManagerInterface $em): string
+    {
         if (!$this->authService->JWTIsValid($request)) {
             throw new UnauthorisedException('JWT is not valid');
         }

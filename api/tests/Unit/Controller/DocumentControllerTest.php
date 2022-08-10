@@ -149,9 +149,31 @@ class DocumentControllerTest extends AbstractTestController
     }
 
     /** @test */
-    public function getQueuedDocumentsUsesAuth(): void
+    public function getQueuedDocumentsUsesSecretAuth(): void
     {
         $return = $this->assertJsonRequest('GET', '/document/queued', [
+            'mustFail' => true,
+            'ClientSecret' => 'WRONG CLIENT SECRET',
+            'assertCode' => 403,
+            'assertResponseCode' => 403,
+            'data' => ['row_limit' => 100],
+        ]);
+
+        $this->assertStringContainsString('client secret not accepted', $return['message']);
+
+        $return = $this->assertJsonRequest('GET', '/document/queued', [
+            'mustSucceed' => true,
+            'ClientSecret' => API_TOKEN_DEPUTY,
+            'data' => ['row_limit' => 100],
+        ]);
+
+        self::assertCount(0, json_decode($return['data'], true));
+    }
+
+    /** @test */
+    public function getQueuedDocumentsJwtUsesAuth(): void
+    {
+        $return = $this->assertJsonRequest('GET', '/document/queued-jwt', [
             'mustFail' => true,
             'ClientSecret' => 'WRONG CLIENT SECRET',
             'assertCode' => 403,
@@ -161,7 +183,7 @@ class DocumentControllerTest extends AbstractTestController
 
         $this->assertStringContainsString('client secret not accepted', $return['message']);
 
-        $return = $this->assertJsonRequest('GET', '/document/queued', [
+        $return = $this->assertJsonRequest('GET', '/document/queued-jwt', [
             'mustFail' => true,
             'ClientSecret' => API_TOKEN_DEPUTY,
             'assertCode' => 403,
@@ -170,7 +192,7 @@ class DocumentControllerTest extends AbstractTestController
         ]);
         $this->assertStringContainsString('JWT is not valid', $return['message']);
 
-        $return = $this->assertJsonRequest('GET', '/document/queued', [
+        $return = $this->assertJsonRequest('GET', '/document/queued-jwt', [
             'mustSucceed' => true,
             'ClientSecret' => API_TOKEN_DEPUTY,
             'data' => ['row_limit' => 100],
