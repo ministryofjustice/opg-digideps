@@ -1,29 +1,99 @@
 version: 2.1
 
 workflows:
-  pull_request:
+  dependabot_app:
+    when:
+      and:
+        - not:
+            {
+              matches:
+                {
+                  pattern: "^dependabot/.+$",
+                  value: << pipeline.git.branch >>,
+                },
+            }
+        - not: { equal: [main, << pipeline.git.branch >>] }
     jobs:
       - build:
           name: build pr
-          filters: { branches: { ignore: [main] } }
+          ecr_scan_notify: "False"
+          push_ecr: false
+
+      - client-unit-test:
+          name: client unit test
+          requires: [build pr]
+
+      - api-unit-tests:
+          name: api unit test
+          requires: [build pr]
+
+      - integration-tests-local:
+          name: local integration tests
+          requires: [build pr]
+
+      - slack/approval-notification:
+          name: branch complete notification
+          message: Your branch << pipeline.git.branch >> has completed
+          channel: opg-digicop-builds
+          requires: [local integration tests, api unit test, client unit test]
+
+  dependabot_terraform:
+    when:
+      and:
+        - matches:
+            {
+              pattern: "^dependabot/terraform.+$",
+              value: << pipeline.git.branch >>,
+            }
+        - not: { equal: [main, << pipeline.git.branch >>] }
+    jobs:
+      - lint:
+          name: lint terraform
+
+      - slack/approval-notification:
+          name: branch complete notification
+          message: Your branch << pipeline.git.branch >> has completed
+          channel: opg-digicop-builds
+          requires: [lint terraform]
+
+  pull_request:
+    when:
+      and:
+        - or:
+            [
+              {
+                matches:
+                  {
+                    pattern: "^dependabot/composer.+$",
+                    value: << pipeline.git.branch >>,
+                  },
+              },
+              {
+                matches:
+                  {
+                    pattern: "^dependabot/npm_and_yarn.+$",
+                    value: << pipeline.git.branch >>,
+                  },
+              },
+            ]
+        - not: { equal: [main, << pipeline.git.branch >>] }
+    jobs:
+      - build:
+          name: build pr
           ecr_scan_notify: "False"
 
       - cancel_redundant_builds:
           name: cancel redundant builds
-          filters: { branches: { ignore: [main] } }
 
       - tfsec-scan:
           name: scan with tfsec
-          filters: { branches: { ignore: [main] } }
 
       - lint:
           name: lint terraform
-          filters: { branches: { ignore: [main] } }
 
       - terraform-command:
           name: plan shared-development
           requires: [cancel redundant builds]
-          filters: { branches: { ignore: [main] } }
           tf_tier: shared
           tf_workspace: development
           tf_command: plan
@@ -31,47 +101,39 @@ workflows:
       - workspace-protection:
           name: protect branch workspace
           requires: [cancel redundant builds]
-          filters: { branches: { ignore: [main] } }
 
       - terraform-command:
           name: plan branch env
           requires: [protect branch workspace]
-          filters: { branches: { ignore: [main] } }
           tf_command: plan
 
       - terraform-command:
           name: initial terraform apply
           requires: [lint terraform, plan shared-development, plan branch env]
-          filters: { branches: { ignore: [main] } }
           tf_command: apply
           tf_initial_apply: true
 
       - lambda-unit-test:
           name: lambda unit test
           requires: [lint terraform]
-          filters: { branches: { ignore: [main] } }
 
       - client-unit-test:
           name: client unit test
           requires: [build pr]
-          filters: { branches: { ignore: [main] } }
 
       - api-unit-tests:
           name: api unit test
           requires: [build pr]
-          filters: { branches: { ignore: [main] } }
 
       - terraform-command:
           name: terraform apply
           requires: [initial terraform apply, build pr, lambda unit test]
-          filters: { branches: { ignore: [main] } }
           tf_command: apply
 
       - scale-services:
           name: scale up services for integration tests
           replicas: "6"
           requires: [terraform apply]
-          filters: { branches: { ignore: [main] } }
 
       #            - pa11y-ci:
       #                name: accessibility test
@@ -81,7 +143,6 @@ workflows:
       - run-task:
           name: integration tests reset DB
           requires: [terraform apply]
-          filters: { branches: { ignore: [main] } }
           task_name: integration_test_v2
           override: "sh,./tests/Behat/reset-db.sh"
           timeout: 500
@@ -93,7 +154,6 @@ workflows:
               integration tests reset DB,
               scale up services for integration tests,
             ]
-          filters: { branches: { ignore: [main] } }
           task_name: integration_test_v2
           override: "sh,./tests/Behat/run-tests-parallel.sh,--tags,@v2_reporting_1,--profile,v2-tests-goutte"
           timeout: 1200
@@ -105,7 +165,6 @@ workflows:
               integration tests reset DB,
               scale up services for integration tests,
             ]
-          filters: { branches: { ignore: [main] } }
           task_name: integration_test_v2
           override: "sh,./tests/Behat/run-tests-parallel.sh,--tags,@v2_reporting_2,--profile,v2-tests-goutte"
           timeout: 1200
@@ -117,7 +176,6 @@ workflows:
               integration tests reset DB,
               scale up services for integration tests,
             ]
-          filters: { branches: { ignore: [main] } }
           task_name: integration_test_v2
           override: "sh,./tests/Behat/run-tests-parallel.sh,--tags,@v2_admin,--profile,v2-tests-goutte"
           timeout: 1200
@@ -129,7 +187,6 @@ workflows:
               integration tests reset DB,
               scale up services for integration tests,
             ]
-          filters: { branches: { ignore: [main] } }
           task_name: integration_test_v2
           override: "sh,./tests/Behat/run-tests.sh,--tags,@v2_sequential,--profile,v2-tests-goutte"
           timeout: 1200
@@ -138,14 +195,12 @@ workflows:
           name: plan all terraform environments
           requires:
             [protect branch workspace, scale up services for integration tests]
-          filters: { branches: { ignore: [main] } }
           tf_tier: environment
 
       - terraform-plan-all:
           name: plan all shared terraform environments
           requires:
             [protect branch workspace, scale up services for integration tests]
-          filters: { branches: { ignore: [main] } }
           tf_tier: shared
 
       - scale-services:
@@ -158,7 +213,6 @@ workflows:
               integration tests v2 admin,
               integration tests sequential only,
             ]
-          filters: { branches: { ignore: [main] } }
 
       - slack/approval-notification:
           name: branch complete notification
@@ -175,7 +229,6 @@ workflows:
               api unit test,
               client unit test,
             ]
-          filters: { branches: { ignore: [main] } }
 
   integration:
     jobs:
@@ -929,6 +982,10 @@ jobs:
         description: whether to notify slack
         type: string
         default: "False"
+      push_ecr:
+        description: whether to push images to ECR
+        type: boolean
+        default: true
     environment:
       AWS_REGION: eu-west-1
       AWS_CONFIG_FILE: ~/project/aws_config
@@ -1000,35 +1057,71 @@ jobs:
             docker save -o client.tar client:latest
             docker save -o api.tar api:latest
             docker save -o htmltopdf.tar htmltopdf:latest
-          background: true
-      - run:
-          name: Push images
-          command: docker-compose -f docker-compose.ci.yml push
+          background: << parameters.push_ecr >>
       - when:
-          condition: << parameters.build_dev >>
+          condition: << parameters.push_ecr >>
           steps:
             - run:
-                name: add robots.txt to frontend development
-                command: docker-compose -f docker-compose.ci.dev.yml build --build-arg AWS_REGISTRY=${AWS_REGISTRY} --build-arg VERSION=${VERSION}
+                name: Push images
+                command: docker-compose -f docker-compose.ci.yml push
+            - when:
+                condition: << parameters.build_dev >>
+                steps:
+                  - run:
+                      name: add robots.txt to frontend development
+                      command: docker-compose -f docker-compose.ci.dev.yml build --build-arg AWS_REGISTRY=${AWS_REGISTRY} --build-arg VERSION=${VERSION}
+                  - run:
+                      name: Push image
+                      command: docker-compose -f docker-compose.ci.dev.yml push
             - run:
-                name: Push image
-                command: docker-compose -f docker-compose.ci.dev.yml push
-      - run:
-          name: Install ECR Scan Results Requirements
-          working_directory: ~/project/ecs_helper/check_ecr_scan_results
-          command: |
-            sudo pip3 install -r requirements.txt
-      - run:
-          name: Check ECR Scan Results
-          working_directory: ~/project/ecs_helper/check_ecr_scan_results
-          command: |
-            python3 aws_ecr_scan_results.py --search digideps --tag "${VERSION}" --slack_webhook "${SLACK_WEBHOOK}" --post_to_slack "${ECR_SCAN_NOTIFY}"
+                name: Install ECR Scan Results Requirements
+                working_directory: ~/project/ecs_helper/check_ecr_scan_results
+                command: |
+                  sudo pip3 install -r requirements.txt
+            - run:
+                name: Check ECR Scan Results
+                working_directory: ~/project/ecs_helper/check_ecr_scan_results
+                command: |
+                  python3 aws_ecr_scan_results.py --search digideps --tag "${VERSION}" --slack_webhook "${SLACK_WEBHOOK}" --post_to_slack "${ECR_SCAN_NOTIFY}"
       - persist_to_workspace:
           root: .
           paths:
             - ./client.tar
             - ./api.tar
             - ./htmltopdf.tar
+
+  integration-tests-local:
+    docker:
+      - image: circleci/python:3
+        auth:
+          username: $DOCKER_USER
+          password: $DOCKER_ACCESS_TOKEN
+    resource_class: small
+    steps:
+      - dockerhub_helper/dockerhub_login
+      - setup_remote_docker
+      - checkout
+      - attach_workspace: { at: ~/project }
+      - run:
+          name: load docker image
+          command: |
+            docker load -i ~/project/client.tar
+            docker load -i ~/project/api.tar
+            docker load -i ~/project/htmltopdf.tar
+            docker tag client:latest admin:latest
+            docker tag client:latest frontend:latest
+      - run:
+          name: Set environment
+          command: |
+            ~/project/.circleci/set_env.sh >> $BASH_ENV
+            ~/project/.circleci/set_env_pact.sh >> $BASH_ENV
+      - run:
+          name: Run integration tests
+          command: |
+            touch ~/project/api/tests/Behat/.env
+            REQUIRE_XDEBUG_FRONTEND=0 REQUIRE_XDEBUG_API=0 docker-compose -f docker-compose.yml -f docker-compose.behat.yml build frontend admin api test
+            APP_DEBUG=0 docker-compose -f docker-compose.yml -f docker-compose.behat.yml up -d --remove-orphans
+            docker-compose -f docker-compose.yml -f docker-compose.behat.yml run --rm test sh ./tests/Behat/run-tests.sh
 
   lambda-unit-test:
     docker:

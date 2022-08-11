@@ -1,6 +1,12 @@
 version: "3.2"
 
 services:
+  router:
+    volumes:
+      - /var/run/docker.sock:/tmp/docker.sock:ro
+      - ./.certs:/etc/nginx/certs
+      - ./docker/router/my_proxy.conf:/etc/nginx/conf.d/my_proxy.conf:ro
+
   test:
     build: ./api
     depends_on:
@@ -48,3 +54,7 @@ services:
       APP_ENV: dev
     env_file:
       - .env
+
+  synchronisation:
+    restart: "no"
+    entrypoint: ["echo", "Service sync disabled"]
