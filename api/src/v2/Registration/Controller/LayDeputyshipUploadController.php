@@ -44,6 +44,7 @@ class LayDeputyshipUploadController
         $this->csvLogger->notice(sprintf('Size of DTO Collection: %d', count($uploadCollection['collection'])));
 
         $result = $this->uploader->upload($uploadCollection['collection']);
+
         $result['skipped'] = $uploadCollection['skipped'];
 
         $this->csvLogger->notice(sprintf('Persisted DTO Collection with chunkId: %s', $request->headers->get('chunkId')));
