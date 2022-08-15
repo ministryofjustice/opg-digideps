@@ -4,14 +4,23 @@ workflows:
   dependabot_app:
     when:
       and:
-        - not:
-            {
-              matches:
-                {
-                  pattern: "^dependabot/.+$",
-                  value: << pipeline.git.branch >>,
-                },
-            }
+        - or:
+            [
+              {
+                matches:
+                  {
+                    pattern: "^dependabot/composer.+$",
+                    value: << pipeline.git.branch >>,
+                  },
+              },
+              {
+                matches:
+                  {
+                    pattern: "^dependabot/npm_and_yarn.+$",
+                    value: << pipeline.git.branch >>,
+                  },
+              },
+            ]
         - not: { equal: [main, << pipeline.git.branch >>] }
     jobs:
       - build:
@@ -27,15 +36,11 @@ workflows:
           name: api unit test
           requires: [build pr]
 
-      - integration-tests-local:
-          name: local integration tests
-          requires: [build pr]
-
       - slack/approval-notification:
           name: branch complete notification
           message: Your branch << pipeline.git.branch >> has completed
           channel: opg-digicop-builds
-          requires: [local integration tests, api unit test, client unit test]
+          requires: [api unit test, client unit test]
 
   dependabot_terraform:
     when:
@@ -59,23 +64,14 @@ workflows:
   pull_request:
     when:
       and:
-        - or:
-            [
-              {
-                matches:
-                  {
-                    pattern: "^dependabot/composer.+$",
-                    value: << pipeline.git.branch >>,
-                  },
-              },
-              {
-                matches:
-                  {
-                    pattern: "^dependabot/npm_and_yarn.+$",
-                    value: << pipeline.git.branch >>,
-                  },
-              },
-            ]
+        - not:
+            {
+              matches:
+                {
+                  pattern: "^dependabot/.+$",
+                  value: << pipeline.git.branch >>,
+                },
+            }
         - not: { equal: [main, << pipeline.git.branch >>] }
     jobs:
       - build:
@@ -1089,39 +1085,6 @@ jobs:
             - ./client.tar
             - ./api.tar
             - ./htmltopdf.tar
-
-  integration-tests-local:
-    docker:
-      - image: circleci/python:3
-        auth:
-          username: $DOCKER_USER
-          password: $DOCKER_ACCESS_TOKEN
-    resource_class: small
-    steps:
-      - dockerhub_helper/dockerhub_login
-      - setup_remote_docker
-      - checkout
-      - attach_workspace: { at: ~/project }
-      - run:
-          name: load docker image
-          command: |
-            docker load -i ~/project/client.tar
-            docker load -i ~/project/api.tar
-            docker load -i ~/project/htmltopdf.tar
-            docker tag client:latest admin:latest
-            docker tag client:latest frontend:latest
-      - run:
-          name: Set environment
-          command: |
-            ~/project/.circleci/set_env.sh >> $BASH_ENV
-            ~/project/.circleci/set_env_pact.sh >> $BASH_ENV
-      - run:
-          name: Run integration tests
-          command: |
-            touch ~/project/api/tests/Behat/.env
-            REQUIRE_XDEBUG_FRONTEND=0 REQUIRE_XDEBUG_API=0 docker-compose -f docker-compose.yml -f docker-compose.behat.yml build frontend admin api test
-            APP_DEBUG=0 docker-compose -f docker-compose.yml -f docker-compose.behat.yml up -d --remove-orphans
-            docker-compose -f docker-compose.yml -f docker-compose.behat.yml run --rm test sh ./tests/Behat/run-tests.sh
 
   lambda-unit-test:
     docker:
