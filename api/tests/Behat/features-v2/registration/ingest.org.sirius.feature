@@ -41,6 +41,7 @@ Feature: Org CSV data ingestion - sirius source data
 #        And the organisation associated with the client should be updated to the new organisation
 #        And the report associated with the client should remain the same
 
+    #Temporary test to ensure that we are not updating the client if the organisation has changed
     @super-admin
     Scenario: Uploading a CSV that contains a new named deputy in a new organisation for an existing client - same case number, same made date
         Given a super admin user accesses the admin app

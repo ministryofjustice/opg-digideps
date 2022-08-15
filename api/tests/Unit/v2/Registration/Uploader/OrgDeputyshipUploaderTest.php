@@ -225,6 +225,7 @@ class OrgDeputyshipUploaderTest extends KernelTestCase
         );
     }
 
+    // Temporary test to ensure that we are not updating the client if the organisation has changed
     /** @test  */
     public function uploadClientAndNamedDeputyAreNotAssociatedWhenClientHasSwitchedOrgsAndNamedDeputyHasChanged()
     {
