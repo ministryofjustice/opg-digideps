@@ -29,7 +29,7 @@ class SynchronisationController extends AbstractController
         private RestClient $restClient,
         private SerializerInterface $serializer,
         private ParameterStoreService $parameterStore,
-        private LoggerInterface $logger,
+        private LoggerInterface $verboseLogger,
         private ReportApi $reportApi
     ) {
     }
@@ -48,7 +48,7 @@ class SynchronisationController extends AbstractController
         /** @var QueuedDocumentData[] $documents */
         $documents = $this->getQueuedDocumentsData($request);
 
-        $this->logger->info(sprintf('%d documents to upload', count($documents)));
+        $this->verboseLogger->notice(sprintf('%d documents to upload', count($documents)));
 
         foreach ($documents as $document) {
             $this->documentSyncService->syncDocument($document);
@@ -60,9 +60,11 @@ class SynchronisationController extends AbstractController
         }
 
         if ($this->documentSyncService->getDocsNotSyncedCount() > 0) {
-            $this->logger->info(sprintf('%d documents failed to sync', $this->documentSyncService->getDocsNotSyncedCount()));
+            $this->verboseLogger->notice(sprintf('%d documents failed to sync', $this->documentSyncService->getDocsNotSyncedCount()));
             $this->documentSyncService->setDocsNotSyncedCount(0);
         }
+
+        $this->verboseLogger->notice(self::COMPLETED_MESSAGE);
 
         return new JsonResponse([self::COMPLETED_MESSAGE]);
     }
@@ -82,15 +84,15 @@ class SynchronisationController extends AbstractController
 
         /** @var array $reports */
         $reports = $this->reportApi->getReportsWithQueuedChecklistsJwt($request, $rowLimit);
-        $this->logger->info(sprintf('%d checklists to upload', count($reports)));
+        $this->verboseLogger->notice(sprintf('%d checklists to upload', count($reports)));
 
         $notSyncedCount = $this->checklistSyncService->syncChecklistsByReports($reports);
 
         if ($notSyncedCount > 0) {
-            $this->logger->info(sprintf('%d checklists failed to sync', $notSyncedCount));
+            $this->verboseLogger->notice(sprintf('%d checklists failed to sync', $notSyncedCount));
         }
 
-        $this->logger->info(self::COMPLETED_MESSAGE);
+        $this->verboseLogger->notice(self::COMPLETED_MESSAGE);
 
         return new JsonResponse([self::COMPLETED_MESSAGE]);
     }
