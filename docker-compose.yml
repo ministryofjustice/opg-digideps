@@ -33,11 +33,14 @@ services:
     ports:
       - "4566-4583:4566-4583"
     environment:
-      - SERVICES=s3,ssm,logs,secretsmanager
+      - SERVICES=s3,ssm,logs,secretsmanager,lambda
       - DATA_DIR=/tmp/localstack/data
       - DEFAULT_REGION=eu-west-1
       - USE_SINGLE_REGION=1
       - DEBUG=1
+      - LAMBDA_EXECUTOR=docker
+      - LAMBDA_REMOVE_CONTAINERS="true"
+      - LAMBDA_FORWARD_URL=http://synchronisation:8080
 
   wait-for-it:
     build: ./wait_for_it
@@ -207,3 +210,18 @@ services:
       - -h
       - 0.0.0.0
       - --dynamic
+
+  synchronisation:
+    build:
+      context: ./lambda_functions/functions/synchronisation
+    image: synchronisation:latest
+    ports:
+      - 2080:8080
+    environment:
+      AWS_REGION: eu-west-1
+      AWS_ACCESS_KEY_ID: localstack
+      AWS_SECRET_ACCESS_KEY: localstack
+      DIGIDEPS_SYNC_ENDPOINT: https://frontend
+      SECRETS_PREFIX: default
+      LOCALSTACK_ENDPOINT: http://localstack:4566
+    entrypoint: /aws-lambda/aws-lambda-rie /var/task/main

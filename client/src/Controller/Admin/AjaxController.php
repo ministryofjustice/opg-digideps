@@ -23,7 +23,7 @@ class AjaxController extends AbstractController
         private RestClient $restClient,
         private PreRegistrationApi $preRegistrationApi,
         private LayDeputyshipApi $layDeputyshipApi,
-        private LoggerInterface $csvLogger
+        private LoggerInterface $verboseLogger
     ) {
     }
 
@@ -55,17 +55,17 @@ class AjaxController extends AbstractController
     public function uploadUsersAjaxAction(Request $request, ClientInterface $redisClient)
     {
         $chunkId = 'chunk'.$request->get('chunk');
-        $this->csvLogger->notice(sprintf('AJAX: Processing chunk with chunkId: %s', $chunkId));
+        $this->verboseLogger->notice(sprintf('AJAX: Processing chunk with chunkId: %s', $chunkId));
 
         try {
             $compressedData = $redisClient->get($chunkId);
             if ($compressedData) {
                 $ret = $this->layDeputyshipApi->uploadLayDeputyShip($compressedData, $chunkId);
-                $this->csvLogger->notice(sprintf('AJAX: Successfully processed chunkId: %s', $chunkId));
+                $this->verboseLogger->notice(sprintf('AJAX: Successfully processed chunkId: %s', $chunkId));
                 $redisClient->del($chunkId); // cleanup for next execution
             } else {
                 $ret['added'] = 0;
-                $this->csvLogger->error(sprintf('AJAX: Unable to process chunkId: %s', $chunkId));
+                $this->verboseLogger->error(sprintf('AJAX: Unable to process chunkId: %s', $chunkId));
             }
 
             return new JsonResponse($ret);

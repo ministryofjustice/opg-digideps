@@ -36,7 +36,7 @@ class LayDeputyshipUploader
         private EntityManagerInterface $em,
         private ReportRepository $reportRepository,
         private PreRegistrationFactory $preRegistrationFactory,
-        private LoggerInterface $csvLogger
+        private LoggerInterface $verboseLogger
     ) {
     }
 
@@ -57,7 +57,7 @@ class LayDeputyshipUploader
                     ++$added;
                 } catch (PreRegistrationCreationException $e) {
                     $message = sprintf('ERROR IN LINE %d: %s', $index + 2, $e->getMessage());
-                    $this->csvLogger->error($message);
+                    $this->verboseLogger->error($message);
                     $errors[] = $message;
                     continue;
                 }
@@ -67,7 +67,7 @@ class LayDeputyshipUploader
                 ->updateReportTypes()
                 ->commitTransactionToDatabase();
         } catch (Throwable $e) {
-            $this->csvLogger->error($e->getMessage());
+            $this->verboseLogger->error($e->getMessage());
 
             return ['added' => $added, 'errors' => [$e->getMessage()]];
         }
@@ -124,7 +124,7 @@ class LayDeputyshipUploader
                 }
             }
         } catch (Throwable $e) {
-            $this->csvLogger->error(sprintf('Error whilst updating report type for report with ID: %d, for case number: %s', $currentActiveReportId, $reportCaseNumber));
+            $this->verboseLogger->error(sprintf('Error whilst updating report type for report with ID: %d, for case number: %s', $currentActiveReportId, $reportCaseNumber));
             throw new Exception($e->getMessage());
         }
 

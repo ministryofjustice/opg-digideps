@@ -20,7 +20,8 @@ module "environment_secrets" {
     "database-password",
     "front-api-client-secret",
     "front-frontend-secret",
-    "front-notify-api-key"
+    "front-notify-api-key",
+    "synchronisation-jwt-token"
   ]
   tags = local.default_tags
 }
