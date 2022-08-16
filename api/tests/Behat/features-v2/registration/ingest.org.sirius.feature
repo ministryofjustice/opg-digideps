@@ -11,12 +11,12 @@ Feature: Org CSV data ingestion - sirius source data
         Then the new 'org' entities should be added to the database
         And the count of the new 'org' entities added should be displayed on the page
 
-#    @super-admin
-#    Scenario: Uploading a CSV that contains existing clients and named deputies - new named deputy in same firm
-#        Given a super admin user accesses the admin app
-#        When I visit the admin upload org users page
-#        And I upload an org CSV that has a new named deputy 'MAYOR MCCRACKEN' within the same org as the clients existing name deputy
-#        Then the clients named deputy should be updated
+    @super-admin
+    Scenario: Uploading a CSV that contains existing clients and named deputies - new named deputy in same firm
+        Given a super admin user accesses the admin app
+        When I visit the admin upload org users page
+        And I upload an org CSV that has a new named deputy 'MAYOR MCCRACKEN' within the same org as the clients existing name deputy
+        Then the clients named deputy should be updated
 
 #    @super-admin
 #    Scenario: Uploading a CSV that contains existing clients and named deputies - named deputy address and phone updated
@@ -40,6 +40,16 @@ Feature: Org CSV data ingestion - sirius source data
 #        Then the named deputy associated with the client should be updated to the new named deputy
 #        And the organisation associated with the client should be updated to the new organisation
 #        And the report associated with the client should remain the same
+
+    #Temporary test to ensure that we are not updating the client if the organisation has changed
+    @super-admin
+    Scenario: Uploading a CSV that contains a new named deputy in a new organisation for an existing client - same case number, same made date
+        Given a super admin user accesses the admin app
+        When I visit the admin upload org users page
+        And I upload an org CSV that has a new named deputy in a new organisation for an existing client
+        Then the named deputy associated with the client should remain the same
+        And the organisation associated with the client should remain the same
+        And the report associated with the client should remain the same
 
 #    @super-admin
 #    Scenario: Uploading a CSV where an existing client's named deputy has changed firm  - same case number, same made date

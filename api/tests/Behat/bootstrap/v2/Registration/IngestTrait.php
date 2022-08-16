@@ -225,9 +225,9 @@ trait IngestTrait
 
         $this->em->clear();
 
-        $namedDeputy = ($this->em
+        $namedDeputy = $this->em
             ->getRepository(Client::class)
-            ->find($this->profAdminDeputyHealthWelfareNotStartedDetails->getClientId()))
+            ->find($this->profAdminDeputyHealthWelfareNotStartedDetails->getClientId())
             ->getNamedDeputy();
 
         $actualNamedDeputiesAddress = sprintf(
@@ -581,6 +581,28 @@ trait IngestTrait
     }
 
     /**
+     * @Then the organisation associated with the client should remain the same
+     */
+    public function organisationAssociatedWitClientShouldRemainTheSame()
+    {
+        $this->iAmOnAdminOrgCsvUploadPage();
+
+        $this->em->clear();
+
+        $organisationAfterCsvUpload = $this->clientAfterCsvUpload->getOrganisation();
+
+        if (is_null($organisationAfterCsvUpload)) {
+            throw new BehatException('An organisation is not associated with client after CSV upload');
+        }
+
+        $this->assertEntitiesAreTheSame(
+            $this->clientBeforeCsvUpload->getOrganisation(),
+            $organisationAfterCsvUpload,
+            'Comparing organisation associated with client before CSV upload against organisation associated with client after CSV upload'
+        );
+    }
+
+    /**
      * @Then the organisation associated with the client should be updated to the new organisation
      */
     public function organisationAssociatedWitClientShouldBeUpdatedToNewOrganisation()
@@ -830,7 +852,7 @@ trait IngestTrait
             $fullAddress,
             $actualNamedDeputiesAddress,
             'Comparing address defined in step against actual named deputy address'
-            );
+        );
     }
 
     /**
