@@ -72,6 +72,7 @@ class AwsAuditLogHandler extends AbstractAuditLogHandler
 
         if (!in_array($stream, $existingStreamsNames, true)) {
             $this->createLogStream($stream);
+            return null;
         } else {
             return $describeStreamsResponse->get('nextToken');
         }
