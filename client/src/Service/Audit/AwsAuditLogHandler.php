@@ -38,7 +38,9 @@ class AwsAuditLogHandler extends AbstractAuditLogHandler
         }
 
         $stream = $entry['context']['event'];
+//        var_dump($stream);
         $sequenceToken = $this->initialize($stream);
+//        var_dump($sequenceToken);
         $entry = $this->formatEntry($entry);
 
         // send items, retry once with a fresh sequence token
@@ -72,9 +74,8 @@ class AwsAuditLogHandler extends AbstractAuditLogHandler
 
         if (!in_array($stream, $existingStreamsNames, true)) {
             $this->createLogStream($stream);
-            return null;
         } else {
-            return $describeStreamsResponse->get('nextToken');
+            return $existingStreams[0]['uploadSequenceToken'];
         }
     }
 
