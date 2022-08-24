@@ -198,12 +198,24 @@ class OrgDeputyshipUploader
 //                $this->updated['clients'][] = $this->client->getId();
 //            }
 
-            // Temp fix for clients who have new named deputy in same organisation
-            if (!$this->clientHasSwitchedOrganisation($this->client)) {
-                if ($this->clientHasNewNamedDeputy($this->client, $this->namedDeputy)) {
-                    $this->client->setNamedDeputy($this->namedDeputy);
+            if (!$this->clientHasNewCourtOrder($this->client, $dto)) {
+                // Temp fix for deputies that have switched organisation and taken the client with them
+                if ($this->clientHasSwitchedOrganisation($this->client)) {
+                    if (!$this->clientHasNewNamedDeputy($this->client, $this->namedDeputy)) {
+                        $this->currentOrganisation->addClient($this->client);
+                        $this->client->setOrganisation($this->currentOrganisation);
 
-                    $this->updated['clients'][] = $this->client->getId();
+                        $this->updated['clients'][] = $this->client->getId();
+                    }
+                }
+
+                // Temp fix for clients who have new named deputy in same organisation
+                if (!$this->clientHasSwitchedOrganisation($this->client)) {
+                    if ($this->clientHasNewNamedDeputy($this->client, $this->namedDeputy)) {
+                        $this->client->setNamedDeputy($this->namedDeputy);
+
+                        $this->updated['clients'][] = $this->client->getId();
+                    }
                 }
             }
         }
