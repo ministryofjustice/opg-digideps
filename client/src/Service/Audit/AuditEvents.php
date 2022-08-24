@@ -13,6 +13,7 @@ use App\Service\Time\DateTimeProvider;
 use DateTime;
 use Exception;
 use ReflectionClass;
+use Symfony\Component\Security\Core\User\UserInterface;
 use Throwable;
 
 final class AuditEvents
@@ -359,17 +360,17 @@ final class AuditEvents
         return $event + $this->baseEvent(AuditEvents::EVENT_ADMIN_MANAGER_DELETED);
     }
 
-    public function emailSent(Email $email, ?User $loggedInUser): array
+    public function emailSent(Email $email, User|string|null $loggedInUser): array
     {
         return $this->buildEmailEvent($email, $loggedInUser) + $this->baseEvent(AuditEvents::EVENT_EMAIL_SENT);
     }
 
-    public function emailNotSent(Email $email, ?User $loggedInUser, Throwable $error): array
+    public function emailNotSent(Email $email, User|string|null $loggedInUser, Throwable $error): array
     {
         return $this->buildEmailEvent($email, $loggedInUser) + $this->baseEvent(AuditEvents::EVENT_EMAIL_NOT_SENT) + ['error_message' => $error->getMessage()];
     }
 
-    private function buildEmailEvent(Email $email, ?User $loggedInUser)
+    private function buildEmailEvent(Email $email, User|string|null $loggedInUser)
     {
         $class = new ReflectionClass(MailFactory::class);
         $constants = array_flip($class->getConstants());
@@ -377,7 +378,7 @@ final class AuditEvents
         $templateName = $constants[$email->getTemplate()];
 
         return [
-            'logged_in_user_email' => $loggedInUser?->getEmail(),
+            'logged_in_user_email' => ($loggedInUser == "anon." ) ? "user not signed in" : $loggedInUser?->getEmail(),
             'recipient_email' => $email->getToEmail(),
             'template_name' => $templateName,
             'notify_template_id' => $email->getTemplate(),
