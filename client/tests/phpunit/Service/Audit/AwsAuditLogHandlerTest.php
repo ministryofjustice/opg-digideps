@@ -13,17 +13,19 @@ use Monolog\Handler\AbstractProcessingHandler;
 use Monolog\Logger;
 use PHPUnit\Framework\MockObject\MockObject;
 use PHPUnit\Framework\TestCase;
+use Psr\Log\LoggerInterface;
 
 class AwsAuditLogHandlerTest extends TestCase
 {
     /** @var AwsAuditLogHandler */
     private $sut;
 
-    /** @var MockObject | CloudWatchLogsClient */
+    /** @var MockObject|CloudWatchLogsClient */
     private $cloudWatchClient;
 
-    const LOG_GROUP_NAME = 'audit-local';
-    const STREAM_NAME = 'DELETED_CLIENTS';
+    public const LOG_GROUP_NAME = 'audit-local';
+    public const STREAM_NAME = 'DELETED_CLIENTS';
+    private LoggerInterface|MockObject $logger;
 
     public function setUp(): void
     {

@@ -3,36 +3,28 @@
 namespace App\Service\Mailer;
 
 use Alphagov\Notifications\Client as NotifyClient;
-use Alphagov\Notifications\Exception\NotifyException;
 use App\Model\Email;
+use App\Service\Audit\AuditEvents;
+use App\Service\Time\DateTimeProvider;
 use Psr\Log\LoggerInterface;
+use Symfony\Component\Security\Core\Authentication\Token\Storage\TokenStorageInterface;
+use Throwable;
 
 class MailSender implements MailSenderInterface
 {
-    /**
-     * @var LoggerInterface
-     */
-    private $logger;
-
-    /**
-     * @var NotifyClient
-     */
-    private $notifyClient;
-
-    /**
-     * MailSender constructor.
-     */
     public function __construct(
-        LoggerInterface $logger,
-        NotifyClient $notifyClient
+        private LoggerInterface $logger,
+        private NotifyClient $notifyClient,
+        private DateTimeProvider $dateTimeProvider,
+        private TokenStorageInterface $tokenStorage
     ) {
-        $this->logger = $logger;
-        $this->notifyClient = $notifyClient;
     }
 
     public function send(Email $email): bool
     {
         try {
+            $currentUser = $this->tokenStorage?->getToken()?->getUser();
+
             $this->notifyClient->sendEmail(
                 $email->getToEmail(),
                 $email->getTemplate(),
@@ -40,8 +32,20 @@ class MailSender implements MailSenderInterface
                 '',
                 $email->getFromEmailNotifyID()
             );
-        } catch (NotifyException $exception) {
-            $this->logger->error($exception->getMessage());
+
+            $this->logger->notice(
+                '',
+                (new AuditEvents($this->dateTimeProvider))->emailSent($email, $currentUser)
+            );
+        } catch (Throwable $exception) {
+            $this->logger->error(sprintf('Error sending email: %s', $exception->getMessage()));
+
+            $currentUser = $this->tokenStorage?->getToken()?->getUser();
+
+            $this->logger->notice(
+                '',
+                (new AuditEvents($this->dateTimeProvider))->emailNotSent($email, $currentUser, $exception)
+            );
 
             return false;
         }
