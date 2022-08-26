@@ -173,6 +173,8 @@ class OrgDeputyshipUploader
                 $this->updated['clients'][] = $this->client->getId();
             }
 
+            // TODO - Implement fix for https://opgtransform.atlassian.net/browse/DDPB-4350
+            // TODO - Remove temporary fixes/workarounds after the above issue is fixed
 //            //Temp disabling until we can rely on Sirius data
 //            if ($this->clientHasNewCourtOrder($this->client, $dto)) {
 //                // Discharge clients with a new court order
@@ -198,8 +200,8 @@ class OrgDeputyshipUploader
 //                $this->updated['clients'][] = $this->client->getId();
 //            }
 
+            // Temp fix for deputies that have switched organisation and taken the client with them
             if (!$this->clientHasNewCourtOrder($this->client, $dto)) {
-                // Temp fix for deputies that have switched organisation and taken the client with them
                 if ($this->clientHasSwitchedOrganisation($this->client)) {
                     if (!$this->clientHasNewNamedDeputy($this->client, $this->namedDeputy)) {
                         $this->currentOrganisation->addClient($this->client);
@@ -208,14 +210,14 @@ class OrgDeputyshipUploader
                         $this->updated['clients'][] = $this->client->getId();
                     }
                 }
+            }
 
-                // Temp fix for clients who have new named deputy in same organisation
-                if (!$this->clientHasSwitchedOrganisation($this->client)) {
-                    if ($this->clientHasNewNamedDeputy($this->client, $this->namedDeputy)) {
-                        $this->client->setNamedDeputy($this->namedDeputy);
+            // Temp fix for clients who have new named deputy in same organisation
+            if (!$this->clientHasSwitchedOrganisation($this->client)) {
+                if ($this->clientHasNewNamedDeputy($this->client, $this->namedDeputy)) {
+                    $this->client->setNamedDeputy($this->namedDeputy);
 
-                        $this->updated['clients'][] = $this->client->getId();
-                    }
+                    $this->updated['clients'][] = $this->client->getId();
                 }
             }
         }
