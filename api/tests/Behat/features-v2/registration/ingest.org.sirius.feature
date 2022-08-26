@@ -51,15 +51,15 @@ Feature: Org CSV data ingestion - sirius source data
         And the organisation associated with the client should remain the same
         And the report associated with the client should remain the same
 
-#    @super-admin
-#    Scenario: Uploading a CSV where an existing client's named deputy has changed firm  - same case number, same made date
-#        Given a super admin user accesses the admin app
-#        When I visit the admin upload org users page
-#        And I upload an org CSV that contains a new org email and street address but the same deputy number for an existing clients named deputy
-#        Then the organisation associated with the client should be updated to the new organisation
-#        And the named deputy's address should be updated to '88 BROAD WALK, ALINGHAM, CORK, VALE, TOWNSVILLE, TW8 R55'
-#        And the named deputy associated with the client should remain the same
-#        And the report associated with the client should remain the same
+    @super-admin
+    Scenario: Uploading a CSV where an existing client's named deputy has changed firm  - same case number, same made date
+        Given a super admin user accesses the admin app
+        When I visit the admin upload org users page
+        And I upload an org CSV that contains a new org email and street address but the same deputy number for an existing clients named deputy
+        Then the organisation associated with the client should be updated to the new organisation
+        And the named deputy's address should be updated to '88 BROAD WALK, ALINGHAM, CORK, VALE, TOWNSVILLE, TW8 R55'
+        And the named deputy associated with the client should remain the same
+        And the report associated with the client should remain the same
 
 #    @super-admin
 #    Scenario: Uploading a CSV that contains a new named deputy in a new organisation for an existing client - same case number, new made date
