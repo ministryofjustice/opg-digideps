@@ -225,9 +225,9 @@ class OrgDeputyshipUploaderTest extends KernelTestCase
         );
     }
 
-    // Temporary test to ensure that we are not updating the client if the organisation has changed
+    // Temporary test to ensure that we are not updating the client if court order made date has changed
     /** @test  */
-    public function uploadClientAndNamedDeputyAreNotAssociatedWhenClientHasSwitchedOrgsAndNamedDeputyHasChanged()
+    public function uploadClientAndNamedDeputyAreNotAssociatedWhenClientHasNewCourtOrderMadeDate()
     {
         $deputyships = OrgDeputyshipDTOTestHelper::generateSiriusOrgDeputyshipDtos(1, 0);
 
@@ -242,6 +242,7 @@ class OrgDeputyshipUploaderTest extends KernelTestCase
 
         $client = OrgDeputyshipDTOTestHelper::ensureClientInUploadExists($deputyships[0], $this->em);
         $client->setNamedDeputy($originalNamedDeputy)->setOrganisation($organisation);
+        $client->setCourtDate(new DateTime());
 
         $this->em->persist($client);
         $this->em->flush();
@@ -272,23 +273,21 @@ class OrgDeputyshipUploaderTest extends KernelTestCase
     }
 
     /** @test  */
-    public function uploadClientAndNamedDeputyAreAssociatedWhenClientHasNotSwitchedOrgsAndNamedDeputyHasChanged()
+    public function uploadClientAndNamedDeputyAreAssociatedWhenClientHasSwitchedOrgsAndNamedDeputyHasNotChangedAndMadeDateHasNotChanged()
     {
         $deputyships = OrgDeputyshipDTOTestHelper::generateSiriusOrgDeputyshipDtos(1, 0);
 
-        $orgIdentifier = explode('@', $deputyships[0]->getDeputyEmail())[1];
+        $originalOrgIdentifier = 'differentorg.co.uk';
 
         $originalNamedDeputy = OrgDeputyshipDTOTestHelper::ensureNamedDeputyInUploadExists($deputyships[0], $this->em);
-        $originalNamedDeputy->setEmail1(sprintf('different.deputy@%s', $orgIdentifier));
-        $originalNamedDeputy->setDeputyUid('ABCD1234');
 
-        $organisation = OrgDeputyshipDTOTestHelper::ensureOrgInUploadExists($orgIdentifier, $this->em);
-        $organisation->setEmailIdentifier($orgIdentifier);
+        $organisation = OrgDeputyshipDTOTestHelper::ensureOrgInUploadExists($originalOrgIdentifier, $this->em);
+        $organisation->setEmailIdentifier($originalOrgIdentifier);
 
-        $client = OrgDeputyshipDTOTestHelper::ensureClientInUploadExists($deputyships[0], $this->em);
-        $client->setNamedDeputy($originalNamedDeputy)->setOrganisation($organisation);
+        $originalClient = OrgDeputyshipDTOTestHelper::ensureClientInUploadExists($deputyships[0], $this->em);
+        $originalClient->setNamedDeputy($originalNamedDeputy)->setOrganisation($organisation);
 
-        $this->em->persist($client);
+        $this->em->persist($originalClient);
         $this->em->flush();
 
         $actualUploadResults = $this->sut->upload($deputyships);
@@ -308,6 +307,160 @@ class OrgDeputyshipUploaderTest extends KernelTestCase
 
         self::assertCount(0, $actualUploadResults['added']['clients']);
         self::assertCount(1, $actualUploadResults['updated']['clients']);
+
+        /** @var Client $updatedClient */
+        $updatedClient = $this->em->getRepository(Client::class)->findOneBy(['caseNumber' => $deputyships[0]->getCaseNumber()]);
+        $this->em->refresh($updatedClient);
+
+        self::assertEquals($originalClient->getId(), $updatedClient->getId());
+        self::assertEquals($originalNamedDeputy->getDeputyUid(), $updatedClient->getNamedDeputy()->getDeputyUid());
+
+        $newOrgIdentifier = explode('@', $deputyships[0]->getDeputyEmail())[1];
+        self::assertEquals($newOrgIdentifier, $updatedClient->getOrganisation()->getEmailIdentifier());
+    }
+
+    /** @test  */
+    public function uploadClientAndNamedDeputyAreNotAssociatedWhenClientHasSwitchedOrgsAndNamedDeputyHasNotChangedAndMadeDateHasChanged()
+    {
+        $deputyships = OrgDeputyshipDTOTestHelper::generateSiriusOrgDeputyshipDtos(1, 0);
+
+        $originalOrgIdentifier = 'differentorg.co.uk';
+
+        $originalNamedDeputy = OrgDeputyshipDTOTestHelper::ensureNamedDeputyInUploadExists($deputyships[0], $this->em);
+
+        $organisation = OrgDeputyshipDTOTestHelper::ensureOrgInUploadExists($originalOrgIdentifier, $this->em);
+        $organisation->setEmailIdentifier($originalOrgIdentifier);
+
+        $originalClient = OrgDeputyshipDTOTestHelper::ensureClientInUploadExists($deputyships[0], $this->em);
+        $originalClient->setNamedDeputy($originalNamedDeputy)->setOrganisation($organisation);
+        $originalClient->setCourtDate(new DateTime());
+
+        $this->em->persist($originalClient);
+        $this->em->flush();
+
+        $actualUploadResults = $this->sut->upload($deputyships);
+
+        self::assertTrue(
+            OrgDeputyshipDTOTestHelper::clientAndNamedDeputyAreAssociated(
+                $deputyships[0],
+                $this->clientRepository,
+                $this->namedDeputyRepository
+            ),
+            sprintf(
+                'Client with case number "%s" and named deputy with uid "%s" are not associated when they should be',
+                $deputyships[0]->getCaseNumber(),
+                $deputyships[0]->getDeputyUid()
+            )
+        );
+
+        self::assertCount(0, $actualUploadResults['added']['clients']);
+        self::assertCount(0, $actualUploadResults['updated']['clients']);
+
+        /** @var Client $updatedClient */
+        $updatedClient = $this->em->getRepository(Client::class)->findOneBy(['caseNumber' => $deputyships[0]->getCaseNumber()]);
+        $this->em->refresh($updatedClient);
+
+        self::assertEquals($originalClient->getId(), $updatedClient->getId());
+        self::assertEquals($originalNamedDeputy->getDeputyUid(), $updatedClient->getNamedDeputy()->getDeputyUid());
+
+        self::assertEquals($originalOrgIdentifier, $updatedClient->getOrganisation()->getEmailIdentifier());
+    }
+
+    /** @test  */
+    public function uploadClientAndNamedDeputyAreAssociatedWhenClientHasNotSwitchedOrgsAndNamedDeputyHasChangedAndMadeDateHasChanged()
+    {
+        $deputyships = OrgDeputyshipDTOTestHelper::generateSiriusOrgDeputyshipDtos(1, 0);
+
+        $orgIdentifier = explode('@', $deputyships[0]->getDeputyEmail())[1];
+
+        $originalNamedDeputy = OrgDeputyshipDTOTestHelper::ensureNamedDeputyInUploadExists($deputyships[0], $this->em);
+        $originalNamedDeputy->setEmail1(sprintf('different.deputy@%s', $orgIdentifier));
+        $originalNamedDeputy->setDeputyUid('ABCD1234');
+
+        $organisation = OrgDeputyshipDTOTestHelper::ensureOrgInUploadExists($orgIdentifier, $this->em);
+        $organisation->setEmailIdentifier($orgIdentifier);
+
+        $originalClient = OrgDeputyshipDTOTestHelper::ensureClientInUploadExists($deputyships[0], $this->em);
+        $originalClient->setNamedDeputy($originalNamedDeputy)->setOrganisation($organisation);
+        $originalClient->setCourtDate(new DateTime());
+
+        $this->em->persist($originalClient);
+        $this->em->flush();
+
+        $actualUploadResults = $this->sut->upload($deputyships);
+
+        self::assertTrue(
+            OrgDeputyshipDTOTestHelper::clientAndNamedDeputyAreAssociated(
+                $deputyships[0],
+                $this->clientRepository,
+                $this->namedDeputyRepository
+            ),
+            sprintf(
+                'Client with case number "%s" and named deputy with uid "%s" are not associated when they should be',
+                $deputyships[0]->getCaseNumber(),
+                $deputyships[0]->getDeputyUid()
+            )
+        );
+
+        self::assertCount(0, $actualUploadResults['added']['clients']);
+        self::assertCount(1, $actualUploadResults['updated']['clients']);
+
+        /** @var Client $updatedClient */
+        $updatedClient = $this->em->getRepository(Client::class)->findOneBy(['caseNumber' => $deputyships[0]->getCaseNumber()]);
+        $this->em->refresh($updatedClient);
+
+        self::assertEquals($originalClient->getId(), $updatedClient->getId());
+        self::assertEquals($deputyships[0]->getDeputyUid(), $updatedClient->getNamedDeputy()->getDeputyUid());
+
+        self::assertEquals($orgIdentifier, $updatedClient->getOrganisation()->getEmailIdentifier());
+    }
+
+    /** @test  */
+    public function uploadClientAndNamedDeputyAreAssociatedWhenClientHasNotSwitchedOrgsAndNamedDeputyHasChangedAndMadeDateNotChanged()
+    {
+        $deputyships = OrgDeputyshipDTOTestHelper::generateSiriusOrgDeputyshipDtos(1, 0);
+
+        $orgIdentifier = explode('@', $deputyships[0]->getDeputyEmail())[1];
+
+        $originalNamedDeputy = OrgDeputyshipDTOTestHelper::ensureNamedDeputyInUploadExists($deputyships[0], $this->em);
+        $originalNamedDeputy->setEmail1(sprintf('different.deputy@%s', $orgIdentifier));
+        $originalNamedDeputy->setDeputyUid('ABCD1234');
+
+        $organisation = OrgDeputyshipDTOTestHelper::ensureOrgInUploadExists($orgIdentifier, $this->em);
+        $organisation->setEmailIdentifier($orgIdentifier);
+
+        $originalClient = OrgDeputyshipDTOTestHelper::ensureClientInUploadExists($deputyships[0], $this->em);
+        $originalClient->setNamedDeputy($originalNamedDeputy)->setOrganisation($organisation);
+
+        $this->em->persist($originalClient);
+        $this->em->flush();
+
+        $actualUploadResults = $this->sut->upload($deputyships);
+
+        self::assertTrue(
+            OrgDeputyshipDTOTestHelper::clientAndNamedDeputyAreAssociated(
+                $deputyships[0],
+                $this->clientRepository,
+                $this->namedDeputyRepository
+            ),
+            sprintf(
+                'Client with case number "%s" and named deputy with uid "%s" are not associated when they should be',
+                $deputyships[0]->getCaseNumber(),
+                $deputyships[0]->getDeputyUid()
+            )
+        );
+
+        self::assertCount(0, $actualUploadResults['added']['clients']);
+        self::assertCount(1, $actualUploadResults['updated']['clients']);
+
+        /** @var Client $updatedClient */
+        $updatedClient = $this->em->getRepository(Client::class)->findOneBy(['caseNumber' => $deputyships[0]->getCaseNumber()]);
+        $this->em->refresh($updatedClient);
+
+        self::assertEquals($originalClient->getId(), $updatedClient->getId());
+        self::assertEquals($deputyships[0]->getDeputyUid(), $updatedClient->getNamedDeputy()->getDeputyUid());
+
+        self::assertEquals($orgIdentifier, $updatedClient->getOrganisation()->getEmailIdentifier());
     }
 
     /** @test */

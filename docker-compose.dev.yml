@@ -48,3 +48,7 @@ services:
       APP_ENV: dev
     env_file:
       - .env
+
+  synchronisation:
+    volumes:
+      - ./lambda_functions/functions/synchronisation/.aws-lambda-rie:/aws-lambda
