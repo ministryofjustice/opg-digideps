@@ -19,6 +19,17 @@ data "aws_kms_alias" "source_default_key" {
   name = "alias/aws/s3"
 }
 
+#module "pa_uploads" {
+#  source = "./modules/s3_bucket"
+#
+#  account_name  = local.account.account_name
+#  bucket_name   = "pa-uploads-${local.environment}"
+#  force_destroy = local.account.force_destroy_bucket
+#  providers = {
+#    aws = aws
+#  }
+#}
+
 // CREATE THE MAIN BUCKET
 resource "aws_s3_bucket" "pa_uploads" {
   bucket        = "pa-uploads-${local.environment}"

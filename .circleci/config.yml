@@ -562,7 +562,7 @@ orbs:
         steps:
           - run:
               name: Build redeployer
-              working_directory: ~/project/shared/go_redeployer
+              working_directory: ~/project/infrastructure/shared/go_redeployer
               command: GOARCH=amd64 GOOS=linux go build -o main ./main.go
   terraform:
     executors:
@@ -632,13 +632,13 @@ jobs:
           command: |
             terraform init -backend=false
             terraform validate
-          working_directory: ~/project/environment
+          working_directory: ~/project/infrastructure/environment
       - run:
           name: terraform shared validate
           command: |
             terraform init -backend=false
             terraform validate
-          working_directory: ~/project/shared
+          working_directory: ~/project/infrastructure/shared
 
   tfsec-scan:
     executor: terraform/terraform
@@ -663,7 +663,7 @@ jobs:
         description: tier to alter - shared or environment
         default: environment
         type: string
-    working_directory: ~/project/<< parameters.tf_tier >>
+    working_directory: ~/project/infrastructure/<< parameters.tf_tier >>
     environment:
       TF_TIER: << parameters.tf_tier >>
       INIT_APPLY: "true"
@@ -747,7 +747,7 @@ jobs:
     environment:
       WORKSPACE: << parameters.tf_workspace >>
       INIT_APPLY: << parameters.tf_initial_apply >>
-    working_directory: ~/project/<< parameters.tf_tier >>
+    working_directory: ~/project/infrastructure/<< parameters.tf_tier >>
     steps:
       - checkout:
           path: ~/project
@@ -811,7 +811,7 @@ jobs:
   workspace-protection:
     executor: terraform/terraform
     resource_class: small
-    working_directory: ~/project/environment
+    working_directory: ~/project/infrastructure/environment
     parameters:
       protect_time:
         description: time to protect workspace
@@ -838,7 +838,7 @@ jobs:
           username: $DOCKER_USER
           password: $DOCKER_ACCESS_TOKEN
     resource_class: small
-    working_directory: ~/project/environment
+    working_directory: ~/project/infrastructure/environment
     parameters:
       replicas:
         description: number of replicas
@@ -872,7 +872,7 @@ jobs:
   destroy-workspaces:
     executor: terraform/terraform
     resource_class: small
-    working_directory: ~/project/environment
+    working_directory: ~/project/infrastructure/environment
     steps:
       - checkout:
           path: ~/project
@@ -1264,7 +1264,7 @@ jobs:
         default: ""
     environment:
       WORKSPACE: << parameters.tf_workspace >>
-    working_directory: ~/project/environment
+    working_directory: ~/project/infrastructure/environment
     steps:
       - checkout:
           path: ~/project
