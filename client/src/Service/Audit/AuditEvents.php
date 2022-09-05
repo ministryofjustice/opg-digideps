@@ -7,9 +7,14 @@ namespace App\Service\Audit;
 use App\Entity\Organisation;
 use App\Entity\Report\Report;
 use App\Entity\User;
+use App\Model\Email;
+use App\Service\Mailer\MailFactory;
 use App\Service\Time\DateTimeProvider;
 use DateTime;
 use Exception;
+use ReflectionClass;
+use Symfony\Component\Security\Core\User\UserInterface;
+use Throwable;
 
 final class AuditEvents
 {
@@ -29,6 +34,8 @@ final class AuditEvents
     public const EVENT_ORG_CREATED = 'ORG_CREATED';
     public const EVENT_ADMIN_MANAGER_CREATED = 'ADMIN_MANAGER_CREATED';
     public const EVENT_ADMIN_MANAGER_DELETED = 'ADMIN_MANAGER_DELETED';
+    public const EVENT_EMAIL_NOT_SENT = 'EMAIL_NOT_SENT';
+    public const EVENT_EMAIL_SENT = 'EMAIL_SENT';
 
     public const TRIGGER_ADMIN_USER_EDIT = 'ADMIN_USER_EDIT';
     public const TRIGGER_ADMIN_BUTTON = 'ADMIN_BUTTON';
@@ -351,6 +358,34 @@ final class AuditEvents
         ];
 
         return $event + $this->baseEvent(AuditEvents::EVENT_ADMIN_MANAGER_DELETED);
+    }
+
+    public function emailSent(Email $email, User|string|null $loggedInUser): array
+    {
+        return $this->buildEmailEvent($email, $loggedInUser) + $this->baseEvent(AuditEvents::EVENT_EMAIL_SENT);
+    }
+
+    public function emailNotSent(Email $email, User|string|null $loggedInUser, Throwable $error): array
+    {
+        return $this->buildEmailEvent($email, $loggedInUser) + $this->baseEvent(AuditEvents::EVENT_EMAIL_NOT_SENT) + ['error_message' => $error->getMessage()];
+    }
+
+    private function buildEmailEvent(Email $email, User|string|null $loggedInUser)
+    {
+        $class = new ReflectionClass(MailFactory::class);
+        $constants = array_flip($class->getConstants());
+
+        $templateName = $constants[$email->getTemplate()];
+
+        return [
+            'logged_in_user_email' => ($loggedInUser == "anon." ) ? "user not signed in" : $loggedInUser?->getEmail(),
+            'recipient_email' => $email->getToEmail(),
+            'template_name' => $templateName,
+            'notify_template_id' => $email->getTemplate(),
+            'email_parameters' => $email->getParameters(),
+            'from_address_id' => $email->getFromEmailNotifyID(),
+            'sent_on' => $this->dateTimeProvider->getDateTime()->format(DateTime::ATOM),
+        ];
     }
 
     private function baseEvent(string $eventName): array

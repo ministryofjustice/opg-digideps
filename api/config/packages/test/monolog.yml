@@ -1,15 +1,15 @@
 monolog:
-    channels: ["csv"]
+    channels: ["verbose"]
     handlers:
         main:
             type: stream
             path: "%log_path%"
             level: warning
             formatter: line_formatter
-            channels: ["!csv"]
+            channels: ["!verbose"]
         csv:
             type: stream
             path: "%log_path%"
             level: notice
             formatter: logstash_formatter
-            channels: ["csv"]
+            channels: ["verbose"]

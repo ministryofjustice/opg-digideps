@@ -21,7 +21,7 @@ parameters:
             permissions: [ROLE_ADMIN, ROLE_LAY_DEPUTY]
 
     log_level: warning
-    csv_log_level: notice
+    verbose_log_level: notice
     log_path: /var/log/app/application.log
 
     cloudwatch_logs_client_params:
