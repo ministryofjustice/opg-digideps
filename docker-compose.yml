@@ -10,10 +10,6 @@ services:
       - admin
       - localstack
     restart: always
-    volumes:
-      - /var/run/docker.sock:/tmp/docker.sock:ro
-      - ./.certs:/etc/nginx/certs
-      - ./docker/router/my_proxy.conf:/etc/nginx/conf.d/my_proxy.conf:ro
 
   aws:
     image: infrastructureascode/aws-cli
@@ -23,8 +19,6 @@ services:
     working_dir: /app
     depends_on:
       - localstack
-    volumes:
-      - .:/app
 
   localstack:
     build:
@@ -202,8 +196,6 @@ services:
     image: stoplight/prism:4.4.1
     ports:
       - 4010:4010
-    volumes:
-      - ./client/govuk-notifications.yaml:/tmp/govuk-notifications.yaml
     command:
       - mock
       - /tmp/govuk-notifications.yaml

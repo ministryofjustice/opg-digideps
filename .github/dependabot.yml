@@ -1,0 +1,72 @@
+version: 2
+# https://docs.github.com/en/github/administering-a-repository/configuration-options-for-dependency-updates
+updates:
+  # Enable version updates for frontend npm
+  - package-ecosystem: "npm"
+    directory: "/client"
+    commit-message:
+      prefix: "app"
+    schedule:
+      # Check for updates every Friday to be merged in on the Monday
+      interval: "weekly"
+      day: "friday"
+      time: "18:00"
+      timezone: "Europe/London"
+    versioning-strategy: lockfile-only
+    open-pull-requests-limit: 3
+
+  # Enable version updates for frontend composer
+  - package-ecosystem: "composer"
+    directory: "/client"
+    commit-message:
+      prefix: "app"
+    schedule:
+      # Check for updates every Friday to be merged in on the Monday
+      interval: "weekly"
+      day: "friday"
+      time: "18:00"
+      timezone: "Europe/London"
+    versioning-strategy: lockfile-only
+    open-pull-requests-limit: 3
+
+  # Enable version updates for api composer
+  - package-ecosystem: "composer"
+    directory: "/api"
+    commit-message:
+      prefix: "app"
+    schedule:
+      # Check for updates every Friday to be merged in on the Monday
+      interval: "weekly"
+      day: "friday"
+      time: "18:00"
+      timezone: "Europe/London"
+    versioning-strategy: lockfile-only
+    open-pull-requests-limit: 3
+
+  # Enable version updates for account terraform
+  - package-ecosystem: "terraform"
+    directory: "/shared"
+    commit-message:
+      prefix: "infra"
+    schedule:
+      # Check for updates every Friday to be merged in on the Monday
+      interval: "weekly"
+      day: "friday"
+      time: "18:00"
+      timezone: "Europe/London"
+    versioning-strategy: lockfile-only
+    open-pull-requests-limit: 1
+
+  # Enable version updates for environment terraform
+  - package-ecosystem: "terraform"
+    directory: "/environment"
+    commit-message:
+      prefix: "infra"
+    schedule:
+      # Check for updates every Friday to be merged in on the Monday
+      interval: "weekly"
+      day: "friday"
+      time: "18:00"
+      timezone: "Europe/London"
+    versioning-strategy: lockfile-only
+    open-pull-requests-limit: 1
