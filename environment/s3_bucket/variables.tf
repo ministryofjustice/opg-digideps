@@ -37,7 +37,7 @@ variable "restrict_public_buckets" {
   default     = true
 }
 
-variable "kms_key" {
+variable "kms_key_id" {
   description = "kms key to encrypt s3 bucket with"
 }
 
@@ -51,8 +51,52 @@ variable "expiration_days" {
   default     = "1825"
 }
 
+variable "non_current_expiration_days" {
+  description = "Lifecycle expiration days for non current version"
+  default     = "365"
+}
+
 variable "versioning_enabled" {
   description = "Whether versioning is enabled on the bucket."
+  default     = false
+}
+
+variable "environment_name" {
+  description = "Environment name"
+}
+
+variable "replication_to_backup" {
+  description = "Whether replication is enabled"
+  default     = false
+}
+
+variable "replication_role_arn" {
+  description = "Role to use for replication"
+  default     = null
+}
+
+variable "replication_kms_key_id" {
+  description = "Replication KMS key"
+  default     = null
+}
+
+variable "replication_within_account_bucket" {
+  description = "Replication within account bucket"
+  default     = null
+}
+
+variable "replication_to_backup_account_bucket" {
+  description = "Replication within account bucket"
+  default     = null
+}
+
+variable "replication_account_id" {
+  description = "Replication account id"
+  default     = null
+}
+
+variable "replication_within_account" {
+  description = "Replication within account"
   default     = false
 }
 

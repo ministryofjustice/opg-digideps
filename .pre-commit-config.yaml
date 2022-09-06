@@ -21,7 +21,7 @@ repos:
     rev: v1.72.1
     hooks:
       - id: terraform_fmt
-      - id: terraform_validate
+  #      - id: terraform_validate
 
   - repo: https://github.com/awslabs/git-secrets
     rev: master

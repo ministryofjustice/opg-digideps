@@ -22,7 +22,7 @@ resource "aws_s3_bucket_server_side_encryption_configuration" "bucket_encryption
   rule {
     apply_server_side_encryption_by_default {
       sse_algorithm     = "aws:kms"
-      kms_master_key_id = var.kms_key.key_id
+      kms_master_key_id = var.kms_key_id
     }
   }
 }
@@ -43,7 +43,7 @@ resource "aws_s3_bucket_lifecycle_configuration" "bucket" {
       }
 
       noncurrent_version_expiration {
-        noncurrent_days = var.expiration_days
+        noncurrent_days = var.non_current_expiration_days
       }
     }
   }
@@ -111,5 +111,21 @@ data "aws_iam_policy_document" "bucket" {
       type        = "AWS"
       identifiers = ["*"]
     }
+  }
+
+  statement {
+    sid     = "DelegateS3Access"
+    effect  = "Allow"
+    actions = ["s3:ListBucket", "s3:GetObject"]
+
+    principals {
+      type        = "AWS"
+      identifiers = ["arn:aws:iam::${var.replication_account_id}:root"]
+    }
+
+    resources = [
+      aws_s3_bucket.bucket.arn,
+      "${aws_s3_bucket.bucket.arn}/*"
+    ]
   }
 }
