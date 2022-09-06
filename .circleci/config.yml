@@ -78,153 +78,153 @@ workflows:
           name: build pr
           ecr_scan_notify: "False"
 
-      - cancel_redundant_builds:
-          name: cancel redundant builds
+      #      - cancel_redundant_builds:
+      #          name: cancel redundant builds
 
-      - tfsec-scan:
-          name: scan with tfsec
-
-      - lint:
-          name: lint terraform
-
-      - terraform-command:
-          name: plan shared-development
-          requires: [cancel redundant builds]
-          tf_tier: shared
-          tf_workspace: development
-          tf_command: plan
-
-      - workspace-protection:
-          name: protect branch workspace
-          requires: [cancel redundant builds]
-
-      - terraform-command:
-          name: plan branch env
-          requires: [protect branch workspace]
-          tf_command: plan
-
-      - terraform-command:
-          name: initial terraform apply
-          requires: [lint terraform, plan shared-development, plan branch env]
-          tf_command: apply
-          tf_initial_apply: true
-
-      - lambda-unit-test:
-          name: lambda unit test
-          requires: [lint terraform]
+      #      - tfsec-scan:
+      #          name: scan with tfsec
+      #
+      #      - lint:
+      #          name: lint terraform
+      #
+      #      - terraform-command:
+      #          name: plan shared-development
+      #          requires: [cancel redundant builds]
+      #          tf_tier: shared
+      #          tf_workspace: development
+      #          tf_command: plan
+      #
+      #      - workspace-protection:
+      #          name: protect branch workspace
+      #          requires: [cancel redundant builds]
+      #
+      #      - terraform-command:
+      #          name: plan branch env
+      #          requires: [protect branch workspace]
+      #          tf_command: plan
+      #
+      #      - terraform-command:
+      #          name: initial terraform apply
+      #          requires: [lint terraform, plan shared-development, plan branch env]
+      #          tf_command: apply
+      #          tf_initial_apply: true
+      #
+      #      - lambda-unit-test:
+      #          name: lambda unit test
+      #          requires: [lint terraform]
 
       - client-unit-test:
           name: client unit test
           requires: [build pr]
 
-      - api-unit-tests:
-          name: api unit test
-          requires: [build pr]
-
-      - terraform-command:
-          name: terraform apply
-          requires: [initial terraform apply, build pr, lambda unit test]
-          tf_command: apply
-
-      - scale-services:
-          name: scale up services for integration tests
-          replicas: "6"
-          requires: [terraform apply]
-
-      #            - pa11y-ci:
-      #                name: accessibility test
-      #                requires: [ apply environment ]
-      #                filters: { branches: { ignore: [ main ] } }
-
-      - run-task:
-          name: integration tests reset DB
-          requires: [terraform apply]
-          task_name: integration_test_v2
-          override: "sh,./tests/Behat/reset-db.sh"
-          timeout: 500
-
-      - run-task:
-          name: integration tests v2 reports 1
-          requires:
-            [
-              integration tests reset DB,
-              scale up services for integration tests,
-            ]
-          task_name: integration_test_v2
-          override: "sh,./tests/Behat/run-tests-parallel.sh,--tags,@v2_reporting_1,--profile,v2-tests-goutte"
-          timeout: 1200
-
-      - run-task:
-          name: integration tests v2 reports 2
-          requires:
-            [
-              integration tests reset DB,
-              scale up services for integration tests,
-            ]
-          task_name: integration_test_v2
-          override: "sh,./tests/Behat/run-tests-parallel.sh,--tags,@v2_reporting_2,--profile,v2-tests-goutte"
-          timeout: 1200
-
-      - run-task:
-          name: integration tests v2 admin
-          requires:
-            [
-              integration tests reset DB,
-              scale up services for integration tests,
-            ]
-          task_name: integration_test_v2
-          override: "sh,./tests/Behat/run-tests-parallel.sh,--tags,@v2_admin,--profile,v2-tests-goutte"
-          timeout: 1200
-
-      - run-task:
-          name: integration tests sequential only
-          requires:
-            [
-              integration tests reset DB,
-              scale up services for integration tests,
-            ]
-          task_name: integration_test_v2
-          override: "sh,./tests/Behat/run-tests.sh,--tags,@v2_sequential,--profile,v2-tests-goutte"
-          timeout: 1200
-
-      - terraform-plan-all:
-          name: plan all terraform environments
-          requires:
-            [protect branch workspace, scale up services for integration tests]
-          tf_tier: environment
-
-      - terraform-plan-all:
-          name: plan all shared terraform environments
-          requires:
-            [protect branch workspace, scale up services for integration tests]
-          tf_tier: shared
-
-      - scale-services:
-          name: scale down services for integration tests
-          replicas: "1"
-          requires:
-            [
-              integration tests v2 reports 1,
-              integration tests v2 reports 2,
-              integration tests v2 admin,
-              integration tests sequential only,
-            ]
-
-      - slack/approval-notification:
-          name: branch complete notification
-          message: Your branch << pipeline.git.branch >> has completed
-          channel: opg-digicop-builds
-          requires:
-            [
-              integration tests v2 reports 1,
-              integration tests v2 reports 2,
-              integration tests v2 admin,
-              integration tests sequential only,
-              plan all terraform environments,
-              plan all shared terraform environments,
-              api unit test,
-              client unit test,
-            ]
+  #      - api-unit-tests:
+  #          name: api unit test
+  #          requires: [build pr]
+  #
+  #      - terraform-command:
+  #          name: terraform apply
+  #          requires: [initial terraform apply, build pr, lambda unit test]
+  #          tf_command: apply
+  #
+  #      - scale-services:
+  #          name: scale up services for integration tests
+  #          replicas: "6"
+  #          requires: [terraform apply]
+  #
+  #      #            - pa11y-ci:
+  #      #                name: accessibility test
+  #      #                requires: [ apply environment ]
+  #      #                filters: { branches: { ignore: [ main ] } }
+  #
+  #      - run-task:
+  #          name: integration tests reset DB
+  #          requires: [terraform apply]
+  #          task_name: integration_test_v2
+  #          override: "sh,./tests/Behat/reset-db.sh"
+  #          timeout: 500
+  #
+  #      - run-task:
+  #          name: integration tests v2 reports 1
+  #          requires:
+  #            [
+  #              integration tests reset DB,
+  #              scale up services for integration tests,
+  #            ]
+  #          task_name: integration_test_v2
+  #          override: "sh,./tests/Behat/run-tests-parallel.sh,--tags,@v2_reporting_1,--profile,v2-tests-goutte"
+  #          timeout: 1200
+  #
+  #      - run-task:
+  #          name: integration tests v2 reports 2
+  #          requires:
+  #            [
+  #              integration tests reset DB,
+  #              scale up services for integration tests,
+  #            ]
+  #          task_name: integration_test_v2
+  #          override: "sh,./tests/Behat/run-tests-parallel.sh,--tags,@v2_reporting_2,--profile,v2-tests-goutte"
+  #          timeout: 1200
+  #
+  #      - run-task:
+  #          name: integration tests v2 admin
+  #          requires:
+  #            [
+  #              integration tests reset DB,
+  #              scale up services for integration tests,
+  #            ]
+  #          task_name: integration_test_v2
+  #          override: "sh,./tests/Behat/run-tests-parallel.sh,--tags,@v2_admin,--profile,v2-tests-goutte"
+  #          timeout: 1200
+  #
+  #      - run-task:
+  #          name: integration tests sequential only
+  #          requires:
+  #            [
+  #              integration tests reset DB,
+  #              scale up services for integration tests,
+  #            ]
+  #          task_name: integration_test_v2
+  #          override: "sh,./tests/Behat/run-tests.sh,--tags,@v2_sequential,--profile,v2-tests-goutte"
+  #          timeout: 1200
+  #
+  #      - terraform-plan-all:
+  #          name: plan all terraform environments
+  #          requires:
+  #            [protect branch workspace, scale up services for integration tests]
+  #          tf_tier: environment
+  #
+  #      - terraform-plan-all:
+  #          name: plan all shared terraform environments
+  #          requires:
+  #            [protect branch workspace, scale up services for integration tests]
+  #          tf_tier: shared
+  #
+  #      - scale-services:
+  #          name: scale down services for integration tests
+  #          replicas: "1"
+  #          requires:
+  #            [
+  #              integration tests v2 reports 1,
+  #              integration tests v2 reports 2,
+  #              integration tests v2 admin,
+  #              integration tests sequential only,
+  #            ]
+  #
+  #      - slack/approval-notification:
+  #          name: branch complete notification
+  #          message: Your branch << pipeline.git.branch >> has completed
+  #          channel: opg-digicop-builds
+  #          requires:
+  #            [
+  #              integration tests v2 reports 1,
+  #              integration tests v2 reports 2,
+  #              integration tests v2 admin,
+  #              integration tests sequential only,
+  #              plan all terraform environments,
+  #              plan all shared terraform environments,
+  #              api unit test,
+  #              client unit test,
+  #            ]
 
   integration:
     jobs:
@@ -1119,15 +1119,17 @@ jobs:
             - ./lambda_functions/layer.tar
 
   client-unit-test:
-    docker:
-      - image: circleci/python:3
-        auth:
-          username: $DOCKER_USER
-          password: $DOCKER_ACCESS_TOKEN
-    resource_class: small
+    machine:
+      image: ubuntu-2204:2022.07.1
+    #    docker:
+    #      - image: circleci/python:3
+    #        auth:
+    #          username: $DOCKER_USER
+    #          password: $DOCKER_ACCESS_TOKEN
+    resource_class: medium
     steps:
       - dockerhub_helper/dockerhub_login
-      - setup_remote_docker
+      #      - setup_remote_docker
       - checkout
       - attach_workspace: { at: ~/project }
       - run:
