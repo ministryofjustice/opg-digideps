@@ -57,6 +57,7 @@ data "aws_iam_policy_document" "replication_policy" {
       "s3:GetObjectRetention",
       "s3:GetObjectLegalHold"
     ]
+    #tfsec:ignore:aws-iam-no-policy-wildcards - Not overly permissive
     resources = [
       "${module.pa_uploads.arn}/*",
       module.pa_uploads.arn
