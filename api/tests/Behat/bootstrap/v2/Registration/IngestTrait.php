@@ -935,6 +935,19 @@ trait IngestTrait
     }
 
     /**
+     * @Given I upload an org CSV that updates the deputy's email
+     */
+    public function iUploadAnOrgCSVThatUpdatesTheDeputysEmail()
+    {
+        $this->iAmOnAdminOrgCsvUploadPage();
+
+        $filePath = 'sirius-csvs/org-2-rows-1-person-deputy-1-org-deputy-updated-emails.csv';
+        $this->uploadCsvAndCountCreatedEntities($filePath, 'Upload PA/Prof users');
+
+        $this->em->clear();
+    }
+
+    /**
      * @Then the named deputy with deputy UID :deputyUid should have the full name :fullName
      */
     public function theNamedDeputyWithDeputyUIDShouldHaveTheFullName($deputyUid, $fullName)
@@ -957,6 +970,28 @@ trait IngestTrait
 
         if (!$nameMatches) {
             throw new BehatException(sprintf('The deputies name was not updated. Wanted: "%s", got "%s"', $fullName, $actualName));
+        }
+    }
+
+    /**
+     * @Then the named deputy with deputy UID :deputyUid should have the email :email
+     */
+    public function theNamedDeputyWithDeputyUIDShouldHaveTheEmail($deputyUid, $email)
+    {
+        $namedDeputy = $this->em
+            ->getRepository(NamedDeputy::class)
+            ->findOneBy(['deputyUid' => $deputyUid]);
+
+        if (is_null($namedDeputy)) {
+            throw new BehatException(sprintf('Could not find a named deputy with UID "%s"', $deputyUid));
+        }
+
+        $actualEmail = $namedDeputy->getEmail1();
+
+        $emailMatches = $actualEmail === $email;
+
+        if (!$emailMatches) {
+            throw new BehatException(sprintf("The deputy's email was not updated. Wanted: '%s', got '%s'", $email, $actualEmail));
         }
     }
 }
