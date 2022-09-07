@@ -20,48 +20,20 @@
         </include>
     </coverage>
     <testsuites>
-        <testsuite name="Client unit tests service files">
-            <file>./Service/ChecklistPdfGeneratorTest.php</file>
-            <file>./Service/ChecklistSyncServiceTest.php</file>
-            <file>./Service/DeputyProviderTest.php</file>
-            <file>./Service/DocumentDownloaderTest.php</file>
-            <file>./Service/DocumentServiceTest.php</file>
-            <file>./Service/DocumentSyncServiceTest.php</file>
-            <file>./Service/NdrStatusServiceTest.php</file>
-            <file>./Service/NotifyAvailabilityTest.php</file>
-            <file>./Service/ParameterStoreServiceTest.php</file>
-            <file>./Service/RedirectorTest.php</file>
-            <file>./Service/ReportSectionLinksServiceTest.php</file>
-            <file>./Service/ReportSubmissionServiceTest.php</file>
-            <file>./Service/RequestIdLoggerProcessorTest.php</file>
-            <file>./Service/SiriusApiErrorTranslatorTest.php</file>
-            <file>./Service/StringUtilsTest.php</file>
-        </testsuite>
-        <testsuite name="Client unit tests service directories 1">
-            <directory>./Service/AWS</directory>
-            <directory>./Service/Audit</directory>
-            <directory>./Service/Client</directory>
-            <directory>./Service/Csv</directory>
-        </testsuite>
-        <testsuite name="Client unit tests service directories 2">
-            <directory>./Service/DataImporter</directory>
-            <directory>./Service/File</directory>
-            <directory>./Service/JWT</directory>
-            <directory>./Service/Mailer</directory>
-        </testsuite>
         <testsuite name="Client unit tests">
             <directory>./Command</directory>
+            <directory>./Entity</directory>
             <directory>./EventListener</directory>
             <directory>./EventSubscriber</directory>
             <directory>./Form</directory>
             <directory>./Mapper</directory>
+            <directory>./Model</directory>
             <directory>./Resolver</directory>
             <directory>./Security</directory>
+            <directory>./Service</directory>
             <directory>./Transformer</directory>
             <directory>./Twig</directory>
             <directory>./Validator</directory>
-            <directory>./Entity</directory>
-            <directory>./Model</directory>
         </testsuite>
         <testsuite name="Pact contract tests">
             <directory>./Pact</directory>
@@ -69,7 +41,7 @@
     </testsuites>
     <php>
         <ini name="error_log" value="/dev/stdout"/>
-        <ini name="memory_limit" value="1024M"/>
+        <ini name="memory_limit" value="512M"/>
         <env name="PACT_MOCK_SERVER_HOST" value="pact-mock"/>
         <env name="PACT_MOCK_SERVER_PORT" value="80"/>
         <env name="PACT_CONSUMER_NAME" value="Complete the deputy report"/>
