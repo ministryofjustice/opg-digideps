@@ -1119,17 +1119,18 @@ jobs:
             - ./lambda_functions/layer.tar
 
   client-unit-test:
-    machine:
-      image: ubuntu-2204:2022.07.1
-    #    docker:
-    #      - image: circleci/python:3
-    #        auth:
-    #          username: $DOCKER_USER
-    #          password: $DOCKER_ACCESS_TOKEN
+    #    machine:
+    #      image: ubuntu-2204:2022.07.1
+    docker:
+      - image: circleci/python:3
+        auth:
+          username: $DOCKER_USER
+          password: $DOCKER_ACCESS_TOKEN
     resource_class: medium
     steps:
       - dockerhub_helper/dockerhub_login
-      #      - setup_remote_docker
+      - setup_remote_docker:
+          version: 17.09.0-ce
       - checkout
       - attach_workspace: { at: ~/project }
       - run:
@@ -1162,6 +1163,7 @@ jobs:
 
             docker-compose -f docker-compose.yml -f docker-compose.ci.test.yml --project-name client-unit-tests exec pact-mock cat /tmp/pacts/complete_the_deputy_report-opg_data.json > pact.json
             docker-compose -f docker-compose.yml -f docker-compose.ci.test.yml --project-name client-unit-tests stop pact-mock
+          working_directory: ~/project
       - codecov/upload:
           file: ./client-unit-tests.xml
           flags: client
