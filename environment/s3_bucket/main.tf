@@ -120,7 +120,7 @@ data "aws_iam_policy_document" "bucket" {
 
     principals {
       type        = "AWS"
-      identifiers = ["arn:aws:iam::${var.replication_account_id}:root"]
+      identifiers = ["arn:aws:iam::${var.backup_account_id}:root"]
     }
 
     resources = [

@@ -75,8 +75,8 @@ variable "replication_role_arn" {
   default     = null
 }
 
-variable "replication_kms_key_id" {
-  description = "Replication KMS key"
+variable "backup_kms_key_id" {
+  description = "Backup replication KMS key"
   default     = null
 }
 
@@ -90,8 +90,8 @@ variable "replication_to_backup_account_bucket" {
   default     = null
 }
 
-variable "replication_account_id" {
-  description = "Replication account id"
+variable "backup_account_id" {
+  description = "Backup replication account id"
   default     = null
 }
 

@@ -11,11 +11,11 @@ resource "aws_s3_bucket_replication_configuration" "bucket_replication" {
 
 
     destination {
-      account = var.replication_account_id
+      account = var.backup_account_id
       bucket  = var.replication_to_backup_account_bucket
 
       encryption_configuration {
-        replica_kms_key_id = var.replication_kms_key_id
+        replica_kms_key_id = var.backup_kms_key_id
       }
 
       access_control_translation {
