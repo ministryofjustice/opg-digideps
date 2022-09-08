@@ -43,3 +43,15 @@ data "aws_iam_policy_document" "api_permissions" {
     ]
   }
 }
+
+#  statement {
+#    sid = "AllowIamAccessToDB"
+#    effect = "Allow"
+#    actions = [
+#      "rds-db:connect"
+#    ]
+#    resources = [
+#      "arn:aws:rds-db:<region>:<account>:dbuser:<resource id>/iamuser"
+#    ]
+#    arn:aws:rds:eu-west-1:248804316466:cluster:api-ddpb4227
+#  }
