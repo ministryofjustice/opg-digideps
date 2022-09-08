@@ -1,3 +1,7 @@
+.govuk-header {
+    border-bottom: 2px solid #fff !important;
+}
+
 .govuk-header .govuk-header__container {
     border-bottom: 0 !important;
     padding-bottom: 10px;
@@ -14,7 +18,7 @@
     background-color: #b1b4b6;
     color: #fff;
     margin-top: 2px;
-    padding: 15px 0
+    padding: 15px 0;
 }
 
 @media print {
