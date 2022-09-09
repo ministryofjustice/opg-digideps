@@ -11,18 +11,18 @@
     <meta name="format-detection" content="telephone=no">
 {% endblock %}
 
-{% block htmlTitle %}Deputy Report
-{% endblock %}
+{% block htmlTitle %}Deputy Report{% endblock %}
 
 {% block proposition_content %}
 
-    <a href="{{ (app.user and app.user.isDeputyOrg()) ? path('org_dashboard') : '/' }}" class="govuk-header__link govuk-header__link--service-name">
-        {% block proposition_title %}Complete the deputy report
-        {% endblock %}
+    <a href="{{ (app.user and app.user.isDeputyOrg()) ? path('org_dashboard') : '/' }}"
+       class="govuk-header__link govuk-header__link--service-name">
+        {% block proposition_title %}Complete the deputy report{% endblock %}
     </a>
 
     {% if app.user %}
-        <button type="button" role="button" class="govuk-header__menu-button govuk-js-header-toggle" aria-controls="navigation" aria-label="Show or hide Top Level Navigation">
+        <button type="button" role="button" class="govuk-header__menu-button govuk-js-header-toggle"
+                aria-controls="navigation" aria-label="Show or hide Top Level Navigation">
             Menu
         </button>
     {% endif %}
@@ -32,9 +32,7 @@
                 {% if is_granted('ROLE_LAY_DEPUTY') %}
                     {% if adLoggedAsDeputy %}
                         <li class="govuk-header__navigation-item">
-                            Logged as
-                            {{ adName }}
-                            (Assisted Digital)
+                            Logged as {{ adName }} (Assisted Digital)
                         </li>
                     {% endif %}
                     <li class="govuk-header__navigation-item">
@@ -71,6 +69,7 @@
 {% endblock %}
 
 {% block content %}
+
     {% block validationSummary %}
         {% if form | default(false) %}
             {{ form_errors_list(form) }}
@@ -106,71 +105,67 @@
         <div class="moj-page-header-actions">
             <div class="moj-page-header-actions__title">
                 {% if block("supportTitleTop") is defined and block("supportTitleTop") != "" %}
-                    <span class="govuk-caption-xl"> {% block supportTitleTop %}{% endblock %}
-                        </span>
-                    {% endif %}
+                    <span class="govuk-caption-xl">{% block supportTitleTop %}{% endblock %}</span>
+                {% endif %}
 
-                    <h1 class="govuk-heading-xl">
-                        {% block pageTitle %}
-                            Deputy report
-                        {% endblock %}
-                    </h1>
+                <h1 class="govuk-heading-xl">
+                    {% block pageTitle %} Deputy report {% endblock %}
+                </h1>
 
-                    {% if block("supportTitleBottom") is defined and block("supportTitleBottom") != "" %}
-                        <span class="govuk-caption-xl"> {% block supportTitleBottom %}{% endblock %}
-                            </span>
-                        {% endif %}
-                    </div>
+                {% if block("supportTitleBottom") is defined and block("supportTitleBottom") != "" %}
+                    <span class="govuk-caption-xl">{% block supportTitleBottom %}{% endblock %}</span>
+                {% endif %}
+            </div>
 
-                    <div class="moj-page-header-actions__actions">
-                        <div class="moj-button-menu">
-                            <div class="moj-button-menu__wrapper">
-                                {% block actions %}{% endblock %}
-                            </div>
-                        </div>
+            <div class="moj-page-header-actions__actions">
+                <div class="moj-button-menu">
+                    <div class="moj-button-menu__wrapper">
+                        {% block actions %}{% endblock %}
                     </div>
                 </div>
-            {% endblock %}
+            </div>
+        </div>
+    {% endblock %}
 
 
-            {% block progressBar %}{% endblock %}
+    {% block progressBar %}{% endblock %}
 
-            {% block pageContent %}{% endblock %}
+    {% block pageContent %}{% endblock %}
 
-        {% endblock %}
+{% endblock %}
 
-        {% block footerSupportLinks %}
-            <li class="govuk-footer__inline-list-item">
-                <a href="{{ path('terms') }}" class="govuk-footer__link">
-                    Terms of use
-                </a>
-            </li>
-            <li class="govuk-footer__inline-list-item">
-                <a href="{{ path('privacy') }}" class="govuk-footer__link">
-                    Privacy notice
-                </a>
-            </li>
-            <li class="govuk-footer__inline-list-item">
-                <a href="{{ path('cookies') }}" class="govuk-footer__link">
-                    Cookies
-                </a>
-            </li>
-            <li class="govuk-footer__inline-list-item">
-                <a href="{{ path('accessibility') }}" class="govuk-footer__link">
-                    Accessibility
-                </a>
-            </li>
-        {% endblock %}
+{% block footerSupportLinks %}
+    <li class="govuk-footer__inline-list-item">
+        <a href="{{ path('terms') }}" class="govuk-footer__link">
+            Terms of use
+        </a>
+    </li>
+    <li class="govuk-footer__inline-list-item">
+        <a href="{{ path('privacy') }}" class="govuk-footer__link">
+            Privacy notice
+        </a>
+    </li>
+    <li class="govuk-footer__inline-list-item">
+        <a href="{{ path('cookies') }}" class="govuk-footer__link">
+            Cookies
+        </a>
+    </li>
+    <li class="govuk-footer__inline-list-item">
+        <a href="{{ path('accessibility') }}" class="govuk-footer__link">
+            Accessibility
+        </a>
+    </li>
+{% endblock %}
 
-        {% block javascripts %}
-            <script src="{{ 'javascripts/application.js'| assetUrl }}"></script>
-            <script src="{{ 'javascripts/common.js'| assetUrl }}"></script>
-        {% endblock %}
+{% block javascripts %}
+    <script src="{{ 'javascripts/application.js'| assetUrl }}"></script>
+    <script src="{{ 'javascripts/common.js'| assetUrl }}"></script>
+{% endblock %}
 
-        {% block bodyEnd %}
+{% block bodyEnd %}
 
-            {% block popups %}
-                {% include '@App/Components/Resources/_popups.html.twig' %}
-            {% endblock %}
+    {% block popups %}
+        {% include '@App/Components/Resources/_popups.html.twig' %}
+    {% endblock %}
 
-        {% endblock %}
+{% endblock %}
