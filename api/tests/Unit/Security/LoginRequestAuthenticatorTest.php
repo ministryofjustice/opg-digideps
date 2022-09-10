@@ -2,7 +2,7 @@
 
 declare(strict_types=1);
 
-namespace App\Tests\Unit\Service\Auth;
+namespace App\Tests\Unit\Security;
 
 use App\Entity\User;
 use App\Exception\UnauthorisedException;
