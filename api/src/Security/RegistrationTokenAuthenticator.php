@@ -30,8 +30,8 @@ class RegistrationTokenAuthenticator extends AbstractAuthenticator
         private UserRepository $userRepository,
         private TokenStorageInterface $tokenStorage,
         private AuthService $authService,
-        private AttemptsInTimeChecker $attemptsInTimechecker,
-        private AttemptsIncrementalWaitingChecker $incrementalWaitingTimechecker,
+        private AttemptsInTimeChecker $attemptsInTimeChecker,
+        private AttemptsIncrementalWaitingChecker $incrementalWaitingTimeChecker,
     ) {
     }
 
@@ -52,12 +52,12 @@ class RegistrationTokenAuthenticator extends AbstractAuthenticator
         // brute force checks
         $this->bruteForceKey = 'token'.$token;
 
-        $this->attemptsInTimechecker->registerAttempt($this->bruteForceKey);
-        $this->incrementalWaitingTimechecker->registerAttempt($this->bruteForceKey);
+        $this->attemptsInTimeChecker->registerAttempt($this->bruteForceKey);
+        $this->incrementalWaitingTimeChecker->registerAttempt($this->bruteForceKey);
 
         // exception if reached delay-check
-        if ($this->incrementalWaitingTimechecker->isFrozen($this->bruteForceKey)) {
-            $nextAttemptAt = $this->incrementalWaitingTimechecker->getUnfrozenAt($this->bruteForceKey);
+        if ($this->incrementalWaitingTimeChecker->isFrozen($this->bruteForceKey)) {
+            $nextAttemptAt = $this->incrementalWaitingTimeChecker->getUnfrozenAt($this->bruteForceKey);
             $nextAttemptIn = ceil(($nextAttemptAt - time()) / 60);
             $exception = new UnauthorisedException("Attack detected. Please try again in $nextAttemptIn minutes", 423);
             $exception->setData($nextAttemptAt);
@@ -82,8 +82,8 @@ class RegistrationTokenAuthenticator extends AbstractAuthenticator
 
     public function onAuthenticationSuccess(Request $request, TokenInterface $token, string $firewallName): ?Response
     {
-        $this->attemptsInTimechecker->resetAttempts($this->bruteForceKey);
-        $this->incrementalWaitingTimechecker->resetAttempts($this->bruteForceKey);
+        $this->attemptsInTimeChecker->resetAttempts($this->bruteForceKey);
+        $this->incrementalWaitingTimeChecker->resetAttempts($this->bruteForceKey);
         $this->tokenStorage->setToken($token);
 
         return null;
@@ -91,7 +91,7 @@ class RegistrationTokenAuthenticator extends AbstractAuthenticator
 
     public function onAuthenticationFailure(Request $request, AuthenticationException $exception): ?Response
     {
-        if ($this->attemptsInTimechecker->maxAttemptsReached($this->bruteForceKey)) {
+        if ($this->attemptsInTimeChecker->maxAttemptsReached($this->bruteForceKey)) {
             throw new UserWrongCredentialsManyAttempts();
         }
 
@@ -120,9 +120,13 @@ class RegistrationTokenAuthenticator extends AbstractAuthenticator
             return false;
         }
 
-        $userId = $this->userRepository->findOneBy(['registrationToken' => $token])->getId();
+        $userId = $this->userRepository->findOneBy(['registrationToken' => $token])?->getId();
 
-        $expectedUrl = sprintf('user/%s/set-password', $userId);
+        if (!$userId) {
+            return false;
+        }
+
+        $expectedUrl = sprintf('/user/%s/set-password', $userId);
 
         return $expectedUrl === $request->getPathInfo() && $request->isMethod('PUT');
     }
