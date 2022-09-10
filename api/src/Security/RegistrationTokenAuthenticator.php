@@ -50,7 +50,7 @@ class RegistrationTokenAuthenticator extends AbstractAuthenticator
         $token = $data['token'];
 
         // brute force checks
-        $this->bruteForceKey = 'token'.$token;
+        $this->setBruteForceKey('token'.$token);
 
         $this->attemptsInTimeChecker->registerAttempt($this->bruteForceKey);
         $this->incrementalWaitingTimeChecker->registerAttempt($this->bruteForceKey);
@@ -140,5 +140,10 @@ class RegistrationTokenAuthenticator extends AbstractAuthenticator
         $body = json_decode($request->getContent(), true);
 
         return isset($body['token']);
+    }
+
+    public function setBruteForceKey(string $bruteForceKey)
+    {
+        $this->bruteForceKey = $bruteForceKey;
     }
 }

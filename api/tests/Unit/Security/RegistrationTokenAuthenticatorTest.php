@@ -5,7 +5,9 @@ declare(strict_types=1);
 namespace App\Tests\Unit\Security;
 
 use App\Entity\User;
+use App\Exception\InvalidRegistrationTokenException;
 use App\Exception\UnauthorisedException;
+use App\Exception\UserWrongCredentialsManyAttempts;
 use App\Repository\UserRepository;
 use App\Security\RegistrationTokenAuthenticator;
 use App\Service\Auth\AuthService;
@@ -15,7 +17,9 @@ use PHPUnit\Framework\TestCase;
 use Prophecy\PhpUnit\ProphecyTrait;
 use Prophecy\Prophecy\ObjectProphecy;
 use Symfony\Component\HttpFoundation\Request;
+use Symfony\Component\Security\Core\Authentication\Token\NullToken;
 use Symfony\Component\Security\Core\Authentication\Token\Storage\TokenStorageInterface;
+use Symfony\Component\Security\Core\Exception\AuthenticationException;
 use Symfony\Component\Security\Core\Exception\UserNotFoundException;
 use Symfony\Component\Security\Http\Authenticator\Passport\Badge\UserBadge;
 use Symfony\Component\Security\Http\Authenticator\Passport\SelfValidatingPassport;
@@ -331,5 +335,55 @@ class RegistrationTokenAuthenticatorTest extends TestCase
             ->willReturn(false);
 
         $this->sut->authenticate($request);
+    }
+
+    /** @test */
+    public function onAuthenticationSuccess()
+    {
+        $this->sut->setBruteForceKey('_abc');
+        $expectedToken = new NullToken();
+
+        $this->attemptsInTimeChecker->resetAttempts('_abc')
+            ->shouldBeCalled();
+        $this->incrementalWaitingTimeChecker->resetAttempts('_abc')
+            ->shouldBeCalled();
+        $this->tokenStorage->setToken($expectedToken)
+            ->shouldBeCalled();
+
+        $this->sut->onAuthenticationSuccess(new Request(), $expectedToken, 'a-firewall');
+    }
+
+    /** @test */
+    public function onAuthenticationFailure()
+    {
+        self::expectExceptionObject(
+            new InvalidRegistrationTokenException('Failure message', 123)
+        );
+
+        $this->sut->setBruteForceKey('_abc');
+
+        $this->attemptsInTimeChecker->maxAttemptsReached('_abc')
+            ->shouldBeCalled()
+            ->willReturn(false);
+
+        $authException = new AuthenticationException('Failure message', 123);
+        $this->sut->onAuthenticationFailure(new Request(), $authException);
+    }
+
+    /** @test */
+    public function onAuthenticationFailureMaxLoginAttemptsReached()
+    {
+        self::expectExceptionObject(
+            new UserWrongCredentialsManyAttempts()
+        );
+
+        $this->sut->setBruteForceKey('_abc');
+
+        $this->attemptsInTimeChecker->maxAttemptsReached('_abc')
+            ->shouldBeCalled()
+            ->willReturn(true);
+
+        $authException = new AuthenticationException('Failure message', 123);
+        $this->sut->onAuthenticationFailure(new Request(), $authException);
     }
 }
