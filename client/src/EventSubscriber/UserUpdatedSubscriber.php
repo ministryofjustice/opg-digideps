@@ -36,8 +36,10 @@ class UserUpdatedSubscriber implements EventSubscriberInterface
     public static function getSubscribedEvents()
     {
         return [
-            UserUpdatedEvent::NAME => 'auditLog',
-            UserUpdatedEvent::NAME => 'sendEmail',
+            UserUpdatedEvent::NAME => [
+                ['auditLog', 2],
+                ['sendEmail', 1],
+            ],
         ];
     }
 

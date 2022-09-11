@@ -85,7 +85,6 @@ class JWTService
             $config->validator()->assert($token, ...$constraints);
         } catch (\Throwable $e) {
             $this->logger->warning(sprintf('JWT verification failed: %s', $e->getMessage()));
-            var_dump(sprintf('JWT verification failed: %s', $e->getMessage()));
 
             return false;
         }

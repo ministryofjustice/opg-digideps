@@ -1,4 +1,5 @@
 monolog:
+    channels: ["verbose"]
     handlers:
         main:
             type: stream
@@ -6,3 +7,11 @@ monolog:
             level: "%log_level%"
             formatter: logstash_formatter
             bubble: false
+            channels: ["!verbose"]
+        csv:
+            type: stream
+            path: php://stdout
+            level: "%verbose_log_level%"
+            formatter: logstash_formatter
+            bubble: false
+            channels: ["verbose"]

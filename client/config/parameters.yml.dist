@@ -25,6 +25,7 @@ parameters:
         gds: null
     opg_docker_tag: 0.0.0
     log_level: warning
+    verbose_log_level: notice
     log_path: /var/log/app/application.log
     # the following two paramters can be set to null on production
     email_params:
@@ -63,9 +64,9 @@ parameters:
       region: 'eu-west-1'
       validate: true
     secrets_manager_client_params:
-          version: 'latest'
-          region: 'eu-west-1'
-          validate: true
+      version: 'latest'
+      region: 'eu-west-1'
+      validate: true
     cloudwatch_logs_client_params:
       version: 'latest'
       region: 'eu-west-1'

@@ -64,7 +64,7 @@ class OrgDeputyshipUploader
             try {
                 $this->handleDtoErrors($deputyshipDto);
 
-                $this->client = ($this->em->getRepository(Client::class))->findByCaseNumber($deputyshipDto->getCaseNumber());
+                $this->client = $this->em->getRepository(Client::class)->findByCaseNumber($deputyshipDto->getCaseNumber());
 
                 $this->skipArchivedClients();
                 $this->handleNamedDeputy($deputyshipDto);
@@ -92,7 +92,7 @@ class OrgDeputyshipUploader
     private function handleNamedDeputy(OrgDeputyshipDto $dto)
     {
         /** @var NamedDeputy $namedDeputy */
-        $namedDeputy = ($this->em->getRepository(NamedDeputy::class))->findOneBy(
+        $namedDeputy = $this->em->getRepository(NamedDeputy::class)->findOneBy(
             [
                 'deputyUid' => $dto->getDeputyUid(),
             ]
@@ -144,7 +144,7 @@ class OrgDeputyshipUploader
 
     private function handleOrganisation(OrgDeputyshipDto $dto)
     {
-        $this->currentOrganisation = $foundOrganisation = ($this->em->getRepository(Organisation::class))->findByEmailIdentifier($dto->getDeputyEmail());
+        $this->currentOrganisation = $foundOrganisation = $this->em->getRepository(Organisation::class)->findByEmailIdentifier($dto->getDeputyEmail());
 
         if (is_null($foundOrganisation)) {
             $organisation = $this->orgFactory->createFromFullEmail(OrgService::DEFAULT_ORG_NAME, $dto->getDeputyEmail());
@@ -173,7 +173,9 @@ class OrgDeputyshipUploader
                 $this->updated['clients'][] = $this->client->getId();
             }
 
-//            Temp disabling until we can rely on Sirius data
+            // TODO - Implement fix for https://opgtransform.atlassian.net/browse/DDPB-4350
+            // TODO - Remove temporary fixes/workarounds after the above issue is fixed
+//            //Temp disabling until we can rely on Sirius data
 //            if ($this->clientHasNewCourtOrder($this->client, $dto)) {
 //                // Discharge clients with a new court order
 //                // Look at adding audit logging for discharge to API side of app
@@ -184,7 +186,7 @@ class OrgDeputyshipUploader
 //                $this->client = $this->buildClientAndAssociateWithDeputyAndOrg($dto);
 //                $this->added['clients'][] = $dto->getCaseNumber();
 //            }
-
+//
 //            if ($this->clientHasSwitchedOrganisation($this->client)) {
 //                $this->currentOrganisation->addClient($this->client);
 //                $this->client->setOrganisation($this->currentOrganisation);
@@ -197,6 +199,27 @@ class OrgDeputyshipUploader
 //
 //                $this->updated['clients'][] = $this->client->getId();
 //            }
+
+            // Temp fix for deputies that have switched organisation and taken the client with them
+            if (!$this->clientHasNewCourtOrder($this->client, $dto)) {
+                if ($this->clientHasSwitchedOrganisation($this->client)) {
+                    if (!$this->clientHasNewNamedDeputy($this->client, $this->namedDeputy)) {
+                        $this->currentOrganisation->addClient($this->client);
+                        $this->client->setOrganisation($this->currentOrganisation);
+
+                        $this->updated['clients'][] = $this->client->getId();
+                    }
+                }
+            }
+
+            // Temp fix for clients who have new named deputy in same organisation
+            if (!$this->clientHasSwitchedOrganisation($this->client)) {
+                if ($this->clientHasNewNamedDeputy($this->client, $this->namedDeputy)) {
+                    $this->client->setNamedDeputy($this->namedDeputy);
+
+                    $this->updated['clients'][] = $this->client->getId();
+                }
+            }
         }
 
         $this->em->persist($this->client);

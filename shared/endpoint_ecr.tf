@@ -8,6 +8,7 @@ resource "aws_vpc_endpoint" "ecr" {
   tags                = merge(local.default_tags, { Name = "ecr" })
 }
 
+#tfsec:ignore:aws-vpc-add-description-to-security-group - can't replace these, will have to be two part PR
 resource "aws_security_group" "ecr_endpoint" {
   name_prefix = "ecr_endpoint"
   vpc_id      = aws_vpc.main.id
@@ -19,6 +20,7 @@ resource "aws_security_group" "ecr_endpoint" {
 }
 
 resource "aws_security_group_rule" "ecr_endpoint_https_in" {
+  description       = "internal traffic to ecr endpoint"
   from_port         = 443
   protocol          = "tcp"
   security_group_id = aws_security_group.ecr_endpoint.id
@@ -39,6 +41,7 @@ resource "aws_vpc_endpoint" "ecr_api" {
   tags                = merge(local.default_tags, { Name = "ecr_api" })
 }
 
+#tfsec:ignore:aws-vpc-add-description-to-security-group - can't replace these, will have to be two part PR
 resource "aws_security_group" "ecr_api_endpoint" {
   name_prefix = "ecr_api_endpoint"
   vpc_id      = aws_vpc.main.id
@@ -50,6 +53,7 @@ resource "aws_security_group" "ecr_api_endpoint" {
 }
 
 resource "aws_security_group_rule" "ecr_api_endpoint_https_in" {
+  description       = "internal traffic to api ecr endpoint"
   from_port         = 443
   protocol          = "tcp"
   security_group_id = aws_security_group.ecr_api_endpoint.id

@@ -92,7 +92,9 @@ class ReportService
         }
 
         $this->em->persist($submission);
-
+        
+        $newYearReport = [];
+        
         if ($currentReport instanceof Ndr) {
             // Find the first report and clone assets/accounts across
             $reports = $currentReport->getClient()->getReports();

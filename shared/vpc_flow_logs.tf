@@ -7,6 +7,7 @@ resource "aws_flow_log" "vpc_flow_logs" {
 
 resource "aws_cloudwatch_log_group" "vpc_flow_logs" {
   name              = "vpc-flow-logs-${local.account.name}"
+  kms_key_id        = aws_kms_key.cloudwatch_logs.arn
   retention_in_days = 180
 }
 
@@ -41,7 +42,8 @@ data "aws_iam_policy_document" "vpc_flow_logs_role_policy" {
       "logs:DescribeLogGroups",
       "logs:DescribeLogStreams"
     ]
-
+    # This is as defined in the AWS Documentation. See https://docs.aws.amazon.com/vpc/latest/userguide/flow-logs-cwl.html
+    #tfsec:ignore:aws-iam-no-policy-wildcards
     resources = ["*"]
     effect    = "Allow"
   }

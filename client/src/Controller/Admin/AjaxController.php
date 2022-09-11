@@ -7,6 +7,7 @@ use App\Service\Client\Internal\LayDeputyshipApi;
 use App\Service\Client\Internal\PreRegistrationApi;
 use App\Service\Client\RestClient;
 use Predis\ClientInterface;
+use Psr\Log\LoggerInterface;
 use Sensio\Bundle\FrameworkExtraBundle\Configuration\Security;
 use Symfony\Component\HttpFoundation\JsonResponse;
 use Symfony\Component\HttpFoundation\Request;
@@ -21,7 +22,8 @@ class AjaxController extends AbstractController
     public function __construct(
         private RestClient $restClient,
         private PreRegistrationApi $preRegistrationApi,
-        private LayDeputyshipApi $layDeputyshipApi
+        private LayDeputyshipApi $layDeputyshipApi,
+        private LoggerInterface $verboseLogger
     ) {
     }
 
@@ -53,14 +55,17 @@ class AjaxController extends AbstractController
     public function uploadUsersAjaxAction(Request $request, ClientInterface $redisClient)
     {
         $chunkId = 'chunk'.$request->get('chunk');
+        $this->verboseLogger->notice(sprintf('AJAX: Processing chunk with chunkId: %s', $chunkId));
 
         try {
             $compressedData = $redisClient->get($chunkId);
             if ($compressedData) {
                 $ret = $this->layDeputyshipApi->uploadLayDeputyShip($compressedData, $chunkId);
+                $this->verboseLogger->notice(sprintf('AJAX: Successfully processed chunkId: %s', $chunkId));
                 $redisClient->del($chunkId); // cleanup for next execution
             } else {
                 $ret['added'] = 0;
+                $this->verboseLogger->error(sprintf('AJAX: Unable to process chunkId: %s', $chunkId));
             }
 
             return new JsonResponse($ret);

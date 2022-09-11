@@ -44,6 +44,10 @@ security:
             pattern: ^/document/queued
             security: false
             methods: [GET]
+        queuedDocumentsJwt:
+            pattern: ^/document/queued-jwt
+            security: false
+            methods: [GET]
         updateDocument:
             pattern: ^/document/\d+
             security: false
@@ -54,6 +58,10 @@ security:
             methods: [PUT]
         reportsWithQueuedChecklists:
             pattern: ^/report/all-with-queued-checklists
+            security: false
+            methods: [GET]
+        reportsWithQueuedChecklistsJwt:
+            pattern: ^/report/all-with-queued-checklists-jwt
             security: false
             methods: [GET]
         updateChecklist:

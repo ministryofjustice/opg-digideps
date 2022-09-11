@@ -3,6 +3,12 @@ version: "3.2"
 #docker-compose.override.yml is loaded and merged with docker-compose.yml by default when calling docker-compose up.
 #This file won't be merged when using docker-compose -f docker-compose.yml up (or using any other compose file).
 services:
+  router:
+    volumes:
+      - /var/run/docker.sock:/tmp/docker.sock:ro
+      - ./.certs:/etc/nginx/certs
+      - ./docker/router/my_proxy.conf:/etc/nginx/conf.d/my_proxy.conf:ro
+
   admin:
     volumes:
       - ./client/src:/var/www/src
@@ -25,7 +31,6 @@ services:
       - ./api/public:/var/www/public
       - ./api/scripts:/var/www/scripts
       - ./api/src:/var/www/src
-      - ./api/vendor:/var/www/vendor
       - ./api/tests:/var/www/tests
       - ./api/api.env:/var/www/api.env
       - ./api/postgres.env:/var/www/postgres.env
@@ -52,3 +57,15 @@ services:
   htmltopdf:
     volumes:
       - ./htmltopdf/app.py:/app.py
+
+  synchronisation:
+    volumes:
+      - ./lambda_functions/functions/synchronisation/.aws-lambda-rie:/aws-lambda
+
+  mock-notify-api:
+    volumes:
+      - ./client/govuk-notifications.yaml:/tmp/govuk-notifications.yaml
+
+  aws:
+    volumes:
+      - .:/app

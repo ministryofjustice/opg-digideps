@@ -56,22 +56,6 @@ class Debt
     }
 
     /**
-     * @return array
-     */
-    public static function getDebtTypeIds()
-    {
-        return self::$debtTypeIds;
-    }
-
-    /**
-     * @param array $debtTypeIds
-     */
-    public static function setDebtTypeIds($debtTypeIds)
-    {
-        self::$debtTypeIds = $debtTypeIds;
-    }
-
-    /**
      * @return mixed
      */
     public function getDebtTypeId()

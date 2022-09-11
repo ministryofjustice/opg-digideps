@@ -219,13 +219,13 @@ class ReportController extends RestController
                 foreach ($data['debts'] as $row) {
                     $debt = $report->getDebtByTypeId($row['debt_type_id']);
                     if (!$debt instanceof EntityDir\Report\Debt) {
-                        continue; //not clear when that might happen. kept similar to transaction below
+                        continue; // not clear when that might happen. kept similar to transaction below
                     }
                     $debt->setAmountAndDetails($row['amount'], $row['more_details']);
                     $this->em->flush($debt);
                 }
             }
-            $this->formatter->setJmsSerialiserGroups(['debts']); //returns saved data (AJAX operations)
+            $this->formatter->setJmsSerialiserGroups(['debts']); // returns saved data (AJAX operations)
             $this->em->flush();
             $report->updateSectionsStatusCache([
                 Report::SECTION_DEBTS,
@@ -282,7 +282,7 @@ class ReportController extends RestController
             foreach ($data['fees'] as $row) {
                 $fee = $report->getFeeByTypeId($row['fee_type_id']);
                 if (!$fee instanceof EntityDir\Report\Fee) {
-                    continue; //not clear when that might happen. kept similar to transaction below
+                    continue; // not clear when that might happen. kept similar to transaction below
                 }
                 $fee->setAmountAndDetails($row['amount'], $row['more_details']);
                 $this->em->flush($fee);
@@ -345,7 +345,7 @@ class ReportController extends RestController
 
         if (array_key_exists('end_date', $data)) {
             $report->setEndDate(new DateTime($data['end_date']));
-            //end date could be updated automatically with a listener, but better not to overload
+            // end date could be updated automatically with a listener, but better not to overload
             // the default behaviour until the logic is 100% clear
             $report->updateDueDateBasedOnEndDate();
         }
@@ -376,7 +376,7 @@ class ReportController extends RestController
 
         if (array_key_exists('no_transfers_to_add', $data)) {
             if (true === $data['no_transfers_to_add']) {
-                //true here means "no", so remove existing transfers
+                // true here means "no", so remove existing transfers
                 foreach ($report->getMoneyTransfers() as $e) {
                     $this->em->remove($e);
                 }
@@ -498,7 +498,7 @@ class ReportController extends RestController
         }
 
         if (array_key_exists('current_prof_payments_received', $data)) {
-            if ('no' == $data['current_prof_payments_received']) { //reset whole section
+            if ('no' == $data['current_prof_payments_received']) { // reset whole section
                 foreach ($report->getCurrentProfServiceFees() as $f) {
                     $this->em->remove($f);
                 }
@@ -566,8 +566,6 @@ class ReportController extends RestController
     /**
      * @Route("/get-all-by-user", methods={"GET"})
      * @Security("is_granted('ROLE_ORG')")
-     *
-     * @return array
      *
      * @throws NonUniqueResultException
      */
@@ -914,6 +912,41 @@ class ReportController extends RestController
      */
     public function getReportsWithQueuedChecklists(Request $request): array
     {
+        if (!$this->authService->isSecretValid($request)) {
+            throw new UnauthorisedException('client secret not accepted.');
+        }
+
+        /** @var array $data */
+        $data = $this->formatter->deserializeBodyContent($request);
+
+        /** @var ReportRepository $reportRepo */
+        $reportRepo = $this->em->getRepository(Report::class);
+        $queuedReportIds = $reportRepo->getReportsIdsWithQueuedChecklistsAndSetChecklistsToInProgress(intval($data['row_limit']));
+
+        $reports = [];
+        foreach ($queuedReportIds as $reportId) {
+            $filter = $this->em->getFilters()->getFilter('softdeleteable');
+            $filter->disableForEntity(Client::class);
+
+            $reports[] = $this->findEntityBy(Report::class, $reportId);
+        }
+
+        $this->formatter->setJmsSerialiserGroups($this->checklistGroups);
+
+        return $reports;
+    }
+
+    // Duplicating above function until DDPB-4469 is played
+    /**
+     * @Route("/all-with-queued-checklists-jwt", methods={"GET"})
+     *
+     * @throws DBALException
+     */
+    public function getReportsWithQueuedChecklistsJwt(Request $request): array
+    {
+        if (!$this->authService->JWTIsValid($request)) {
+            throw new UnauthorisedException('JWT is not valid');
+        }
         if (!$this->authService->isSecretValid($request)) {
             throw new UnauthorisedException('client secret not accepted.');
         }

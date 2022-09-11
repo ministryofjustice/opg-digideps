@@ -70,6 +70,10 @@ security:
             pattern: ^/manage/*
             security: false
 
+        synchroniseController:
+            pattern: ^/synchronise/*
+            security: false
+
         error503:
             pattern: ^/error-503
             security: false

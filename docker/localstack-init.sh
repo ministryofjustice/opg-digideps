@@ -27,4 +27,12 @@ openssl rsa -in private.pem -outform PEM -pubout -out public.pem
 awslocal secretsmanager create-secret --name "default/private-jwt-key-base64" --secret-string "$(base64 private.pem)"
 awslocal secretsmanager create-secret --name "default/public-jwt-key-base64" --secret-string "$(base64 public.pem)"
 
+kid=$(echo -n $(base64 public.pem) | openssl dgst -sha256)
+b64headers=$(echo -n "{\"typ\": \"JWT\", \"alg\": \"RS256\", \"jku\": \"https://digideps.local/v2/.well-known/jwks.json\", \"kid\": \"${kid}\"}"  | openssl base64 -e -A | tr '+/' '-_' | tr -d '=';)
+b64payload=$(echo -n '{"aud": "urn:opg:registration_service","iat": 1659782970.135131,"exp": 1975402170.135139,"nbf": 1659782960.135146,"iss": "urn:opg:digideps"}' | openssl base64 -e -A | tr '+/' '-_' | tr -d '=';)
+b64headandpay="${b64headers}.${b64payload}"
+b64digest=$(echo -n ${b64headandpay} | openssl dgst -sha256 -sign private.pem -binary | openssl base64 -e -A | tr '+/' '-_' | tr -d '=';)
+b64jwt=${b64headandpay}.${b64digest}
+
+awslocal secretsmanager create-secret --name "default/synchronisation-jwt-token" --secret-string ${b64jwt}
 rm private.pem public.pem

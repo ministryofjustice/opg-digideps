@@ -23,7 +23,7 @@ resource "aws_cloudwatch_event_target" "psql_analyse" {
   target_id = "psql-analyse-${terraform.workspace}"
   arn       = aws_ecs_cluster.main.arn
   rule      = aws_cloudwatch_event_rule.psql_analyse.name
-  role_arn  = data.aws_iam_role.events_task_runner.arn
+  role_arn  = aws_iam_role.events_task_runner.arn
 
   ecs_target {
     task_count          = 1

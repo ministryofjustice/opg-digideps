@@ -108,6 +108,8 @@ trait ReportAssetTrait
         ];
 
         $ret = [];
+        $title = '';
+
         foreach ($this->assets as $asset) {
             // select title
             if ($asset instanceof AssetProperty) {
