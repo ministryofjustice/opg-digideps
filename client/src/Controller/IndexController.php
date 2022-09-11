@@ -192,15 +192,7 @@ class IndexController extends AbstractController
      */
     public function logoutAction(Request $request)
     {
-//        $this->tokenStorage->setToken(null);
-//
-//        /** @var SessionInterface */
-//        $session = $request->getSession();
-//        $session->invalidate();
-//
-//        return $this->redirect(
-//            $this->generateUrl('homepage')
-//        );
+        // Handled as automatically as part of Symfony security component
     }
 
     /**
