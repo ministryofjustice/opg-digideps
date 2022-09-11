@@ -21,22 +21,6 @@ class AuthControllerTest extends AbstractTestController
         $this->assertEndpointNeedsAuth('GET', '/auth/get-logged-user');
     }
 
-    public function testLoginFailWrongSecret()
-    {
-        $return = $this->assertJsonRequest('POST', '/auth/login', [
-            'mustFail' => true,
-            'ClientSecret' => 'WRONG CLIENT SECRET',
-            'assertCode' => 403,
-            'assertResponseCode' => 403,
-        ]);
-        $this->assertStringContainsString('client secret not accepted', $return['message']);
-
-        // assert I'm not logged
-        $this->assertJsonRequest('GET', '/auth/get-logged-user', [
-            'mustFail' => true,
-        ]);
-    }
-
     public function testLoginFailWrongPassword()
     {
         $this->resetAttempts('email'.'user@mail.com-WRONG');

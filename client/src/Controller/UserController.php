@@ -21,7 +21,7 @@ use Symfony\Component\Form\FormError;
 use Symfony\Component\HttpFoundation\Request;
 use Symfony\Component\HttpFoundation\Response;
 use Symfony\Component\Routing\Annotation\Route;
-use Symfony\Component\Security\Core\Exception\UsernameNotFoundException;
+use Symfony\Component\Security\Core\Exception\UserNotFoundException;
 use Symfony\Contracts\Translation\TranslatorInterface;
 
 class UserController extends AbstractController
@@ -102,7 +102,7 @@ class UserController extends AbstractController
             // login user into API
             try {
                 $deputyProvider->login(['token' => $token]);
-            } catch (UsernameNotFoundException $e) {
+            } catch (UserNotFoundException $e) {
                 return $this->renderError('This activation link is not working or has already been used');
             }
 
@@ -113,7 +113,7 @@ class UserController extends AbstractController
             ]);
 
             // set password for user
-            $this->restClient->put('user/'.$user->getId().'/set-password', $data);
+            $this->restClient->apiCall('PUT', 'user/'.$user->getId().'/set-password', $data, 'array', [], false);
 
             // set agree terms for user
             $this->userApi->agreeTermsUse($token);

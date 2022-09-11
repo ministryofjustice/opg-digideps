@@ -73,10 +73,97 @@ class LoginRequestAuthenticatorTest extends TestCase
     public function requestProvider()
     {
         return [
-            'Valid request' => [Request::create('/auth/login', 'POST'), true],
-            'Valid uri, invalid method' => [Request::create('/auth/login', 'GET'), false],
-            'Invalid uri, valid method' => [Request::create('/auth/logout', 'POST'), false],
-            'Invalid values' => [Request::create('/auth/logout', 'DELETE'), false],
+            'Valid request' => [
+                Request::create(
+                    '/auth/login',
+                    'POST',
+                    [],
+                    [],
+                    [],
+                    [],
+                    json_encode(['email' => 'a@b.com', 'password' => 'password123']),
+                ),
+                true,
+            ],
+            'Valid uri, invalid method' => [
+                Request::create(
+                    '/auth/login',
+                    'GET',
+                    [],
+                    [],
+                    [],
+                    [],
+                    json_encode(['email' => 'a@b.com', 'password' => 'password123']),
+                ),
+                false,
+            ],
+            'Invalid uri, valid method' => [
+                Request::create(
+                    '/auth/logout',
+                    'POST',
+                    [],
+                    [],
+                    [],
+                    [],
+                    json_encode(['email' => 'a@b.com', 'password' => 'password123']),
+                ),
+                false,
+            ],
+            'Invalid body - missing email' => [
+                Request::create(
+                    '/auth/login',
+                    'POST',
+                    [],
+                    [],
+                    [],
+                    [],
+                    json_encode(['password' => 'password123']),
+                ),
+                false,
+            ],
+            'Invalid body - missing password' => [
+                Request::create(
+                    '/auth/login',
+                    'POST',
+                    [],
+                    [],
+                    [],
+                    [],
+                    json_encode(['email' => 'a@b.com']),
+                ),
+                false,
+            ],
+            'Invalid body - empty email' => [
+                Request::create(
+                    '/auth/login',
+                    'POST',
+                    [],
+                    [],
+                    [],
+                    [],
+                    json_encode(['email' => '', 'password' => 'password123']),
+                ),
+                false,
+            ],
+            'Invalid body - empty password' => [
+                Request::create(
+                    '/auth/login',
+                    'POST',
+                    [],
+                    [],
+                    [],
+                    [],
+                    json_encode(['email' => 'a@example.org', 'password' => '']),
+                ),
+                false,
+            ],
+            'Invalid body - empty body' => [
+                Request::create(
+                    '/auth/login',
+                    'POST',
+                ),
+                false,
+            ],
         ];
     }
 

@@ -42,7 +42,8 @@ class LoginRequestAuthenticator extends AbstractAuthenticator
     public function supports(Request $request): ?bool
     {
         return '/auth/login' === $request->getPathInfo() &&
-            $request->isMethod('POST');
+            $request->isMethod('POST') &&
+            $this->hasRequiredLoginDetails($request);
     }
 
     public function authenticate(Request $request): Passport
@@ -125,13 +126,17 @@ class LoginRequestAuthenticator extends AbstractAuthenticator
 
         $body = json_decode($request->getContent(), true);
 
-        $email = isset($body['email']) ?? false;
-        $password = isset($body['password']) ?? false;
+        $emailKeyPresent = isset($body['email']) ?? false;
+        $passwordKeyPresent = isset($body['password']) ?? false;
 
-        if ($email && $password) {
-            return true;
+        if (!$emailKeyPresent || !$passwordKeyPresent) {
+            return false;
         }
 
-        return false;
+        if (empty($body['email']) || empty($body['password'])) {
+            return false;
+        }
+
+        return true;
     }
 }

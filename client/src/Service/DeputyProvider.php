@@ -7,7 +7,7 @@ use App\Service\Client\RestClient;
 use App\Service\Client\RestClientInterface;
 use Psr\Log\LoggerInterface;
 use Symfony\Component\Security\Core\Exception\UnsupportedUserException;
-use Symfony\Component\Security\Core\Exception\UsernameNotFoundException;
+use Symfony\Component\Security\Core\Exception\UserNotFoundException;
 use Symfony\Component\Security\Core\User\UserInterface;
 use Symfony\Component\Security\Core\User\UserProviderInterface;
 
@@ -53,7 +53,7 @@ class DeputyProvider implements UserProviderInterface
                 throw $e;
             }
 
-            throw new UsernameNotFoundException('We do not recognise your email address or password - please try again.', $e->getCode());
+            throw new UserNotFoundException('We do not recognise your email address or password - please try again.', $e->getCode());
         }
     }
 
