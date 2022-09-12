@@ -61,6 +61,7 @@ class Client implements ClientInterface
      * @JMS\Groups({"client-reports"})
      * @JMS\Type("ArrayCollection<App\Entity\Report\Report>")
      * @ORM\OneToMany(targetEntity="App\Entity\Report\Report", mappedBy="client", cascade={"persist", "remove"})
+     * @ORM\OrderBy({"submitDate"="DESC"})
      */
     private $reports;
 
