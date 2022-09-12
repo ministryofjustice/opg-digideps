@@ -79,6 +79,8 @@ locals {
       { "name": "DATABASE_NAME", "value": "${local.db.name}" },
       { "name": "DATABASE_PORT", "value": "${local.db.port}" },
       { "name": "DATABASE_USERNAME", "value": "${local.db.username}" },
+      { "name": "DATABASE_SSL", "value": "verify-full" },
+      { "name": "DATABASE_IAM_AUTH", "value": "1" },
       { "name": "FIXTURES_ACCOUNTPASSWORD", "value": "DigidepsPass1234" },
       { "name": "NGINX_APP_NAME", "value": "api" },
       { "name": "OPG_DOCKER_TAG", "value": "${var.OPG_DOCKER_TAG}" },

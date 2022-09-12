@@ -79,7 +79,7 @@ class AuthController extends RestController
             }
 
             if (!$user) {
-                // incase the user is not found or the password is not valid (same error given for security reasons)
+                // in case the user is not found or the password is not valid (same error given for security reasons)
                 if ($attemptsInTimechecker->maxAttemptsReached($key)) {
                     throw new AppException\UserWrongCredentialsManyAttempts();
                 } else {

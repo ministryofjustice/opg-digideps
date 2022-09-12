@@ -25,7 +25,7 @@ resource "aws_rds_cluster" "cluster" {
 
   lifecycle {
     ignore_changes  = [replication_source_identifier]
-    prevent_destroy = true
+    prevent_destroy = false
   }
   depends_on = [var.log_group]
 }

@@ -6,18 +6,34 @@ namespace App\DBAL;
 
 use Aws\Credentials\CredentialProvider;
 use Aws\Rds\AuthTokenGenerator;
+use Doctrine\Common\EventManager;
+use Doctrine\DBAL\Configuration;
 use Doctrine\DBAL\Connection;
+use Doctrine\DBAL\Driver;
+use Doctrine\DBAL\Driver\Exception;
 use Doctrine\DBAL\Event\ConnectionEventArgs;
 use Doctrine\DBAL\Events;
+use Predis\Client as PredisClient;
 
 class ConnectionWrapper extends Connection
 {
     public const IAM_AUTH = 'DATABASE_IAM_AUTH';
+    public const REDIS_DSN = 'REDIS_DSN';
+    public const USER_TOKEN = 'IamUserToken';
 
-    /**
-     * @var bool
-     */
-    private $_isConnected = false;
+    private bool $_isConnected = false;
+
+    private PredisClient $redis;
+
+    public function __construct(array $params, Driver $driver, ?Configuration $config = null, ?EventManager $eventManager = null)
+    {
+        parent::__construct($params, $driver, $config, $eventManager);
+        $this->redis = new PredisClient([
+            'scheme' => 'redis',
+            'host' => explode('://', getenv(self::REDIS_DSN))[1],
+            'port' => 6379,
+        ]);
+    }
 
     /**
      * {@inheritDoc}
@@ -35,15 +51,22 @@ class ConnectionWrapper extends Connection
 
         if ('1' == $iam_auth) {
             file_put_contents('php://stderr', print_r('IAM AUTH ACTIVE', true));
-            $params['user'] = 'iamuser';
-            $provider = CredentialProvider::defaultProvider();
-            $RdsAuthGenerator = new AuthTokenGenerator($provider);
+            $params['user'] = 'api';
+            if (!$this->redis->get(self::USER_TOKEN)) {
+                $this->refreshToken();
+            } else {
+                file_put_contents('php://stderr', print_r('user_token_exists', true));
+            }
 
-            $token = $RdsAuthGenerator->createToken($params['host'].':'.$params['port'], 'eu-west-1', $params['user']);
-            $params['password'] = $token;
+            $params['password'] = $this->redis->get(self::USER_TOKEN);
         }
-        file_put_contents('php://stderr', print_r('USER SET TO: '.$params['user'], true));
-        $this->_conn = $this->_driver->connect($params);
+
+        try {
+            $this->_conn = $this->_driver->connect($params);
+        } catch (Exception) {
+            $this->refreshToken();
+            $this->_conn = $this->_driver->connect($params);
+        }
 
         if ($this->_eventManager->hasListeners(Events::postConnect)) {
             $eventArgs = new ConnectionEventArgs($this);
@@ -53,6 +76,18 @@ class ConnectionWrapper extends Connection
         $this->_isConnected = true;
 
         return true;
+    }
+
+    private function refreshToken()
+    {
+        file_put_contents('php://stderr', print_r('user_token_not_exists', true));
+        //                $provider = CredentialProvider::defaultProvider();
+        //                $RdsAuthGenerator = new AuthTokenGenerator($provider);
+        //
+        //                $token = $RdsAuthGenerator->createToken($params['host'].':'.$params['port'], 'eu-west-1', $params['user']);
+        $token = 'api';
+        $this->redis->set(self::USER_TOKEN, $token);
+        $this->redis->expire(self::USER_TOKEN, 600);
     }
 
     /**
