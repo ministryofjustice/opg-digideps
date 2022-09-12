@@ -114,6 +114,8 @@ RUN wget -q -O local-php-security-checker https://github.com/fabpot/local-php-se
 
 RUN apk upgrade libxml2 openssl libssl1.1 libcrypto1.1 libretls zlib busybox curl gzip xz xz-libs libcurl
 
+RUN mkdir certs && chmod 755 certs && wget -O certs/rds-ca-2019-root.pem https://s3.amazonaws.com/rds-downloads/rds-ca-2019-root.pem
+
 CMD confd -onetime -backend env \
   && waitforit -address=tcp://$DATABASE_HOSTNAME:$DATABASE_PORT -timeout=$TIMEOUT \
   && su-exec www-data:www-data php app/console doctrine:migrations:migrate --allow-no-migration --no-interaction \

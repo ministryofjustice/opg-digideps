@@ -42,16 +42,15 @@ data "aws_iam_policy_document" "api_permissions" {
       data.aws_secretsmanager_secret.public_jwt_key_base64.arn
     ]
   }
-}
 
-#  statement {
-#    sid = "AllowIamAccessToDB"
-#    effect = "Allow"
-#    actions = [
-#      "rds-db:connect"
-#    ]
-#    resources = [
-#      "arn:aws:rds-db:<region>:<account>:dbuser:<resource id>/iamuser"
-#    ]
-#    arn:aws:rds:eu-west-1:248804316466:cluster:api-ddpb4227
-#  }
+  statement {
+    sid    = "ConnectToRdsByIam"
+    effect = "Allow"
+
+    actions = [
+      "rds-db:connect",
+    ]
+
+    resources = ["arn:aws:rds-db:${data.aws_region.current.name}:${data.aws_caller_identity.current.account_id}:dbuser:*/*"]
+  }
+}
