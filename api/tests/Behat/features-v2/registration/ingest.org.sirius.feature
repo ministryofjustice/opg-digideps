@@ -127,4 +127,4 @@ Feature: Org CSV data ingestion - sirius source data
         Then the new 'org' entities should be added to the database
         When I visit the admin upload org users page
         And I upload an org CSV that updates the deputy's email
-        Then the named deputy with deputy UID '19921992' should have the email 'chalers.martin@xcx.com'
+        Then the named deputy with deputy UID '19921992' should have the email 'example@example.com'
