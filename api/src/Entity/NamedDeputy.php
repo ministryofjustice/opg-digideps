@@ -528,6 +528,7 @@ class NamedDeputy
 
     public function emailHasChanged(OrgDeputyshipDto $dto): bool
     {
-        return $this->email1 !== $dto->getDeputyEmail();
+        return $this->email1 !== $dto->getDeputyEmail() &&
+            null !== $dto->getDeputyEmail();
     }
 }
