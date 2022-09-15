@@ -18,7 +18,7 @@ use JMS\Serializer\Annotation as JMS;
 class NamedDeputy
 {
     use CreateUpdateTimestamps;
-    
+
     /**
      * @var int
      * @JMS\Type("integer")
@@ -524,5 +524,11 @@ class NamedDeputy
             return $dto->getDeputyFirstname() !== $this->getFirstname() ||
             $dto->getDeputyLastname() !== $this->getLastname();
         }
+    }
+
+    public function emailHasChanged(OrgDeputyshipDto $dto): bool
+    {
+        return $this->email1 !== $dto->getDeputyEmail() &&
+            null !== $dto->getDeputyEmail();
     }
 }

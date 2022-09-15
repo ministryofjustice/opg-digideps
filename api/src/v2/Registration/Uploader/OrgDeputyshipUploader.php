@@ -137,6 +137,15 @@ class OrgDeputyshipUploader
 
                 $this->updated['named_deputies'][] = $namedDeputy->getId();
             }
+
+            if ($namedDeputy->emailHasChanged($dto)) {
+                $namedDeputy->setEmail1($dto->getDeputyEmail());
+
+                $this->em->persist($namedDeputy);
+                $this->em->flush();
+
+                $this->updated['named_deputies'][] = $namedDeputy->getId();
+            }
         }
 
         $this->namedDeputy = $namedDeputy;

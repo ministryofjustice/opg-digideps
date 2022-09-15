@@ -717,4 +717,54 @@ class OrgDeputyshipUploaderTest extends KernelTestCase
         self::assertEquals('Joson', $updatedNamedDeputy->getLastname());
         self::assertEquals('10 PretendVille Road', $updatedNamedDeputy->getAddress1());
     }
+
+    /** @test */
+    public function uploadOnlyUpdateDeputyEmailIfDTODeputyUidMatchesExistingDeputyUid()
+    {
+        $deputyships = OrgDeputyshipDTOTestHelper::generateSiriusOrgDeputyshipDtos(1, 0);
+        $client = OrgDeputyshipDTOTestHelper::ensureClientInUploadExists($deputyships[0], $this->em);
+        $existingDeputy = OrgDeputyshipDTOTestHelper::ensureNamedDeputyInUploadExists($deputyships[0], $this->em);
+
+        $deputyships[0]->setDeputyUid('abc123');
+        $deputyships[0]->setDeputyEmail('william@somecompany.com');
+
+        $existingDeputy->setDeputyUid('xyz789');
+        $existingDeputy->setEmail1('william@differentcompany.com');
+
+        $client->setNamedDeputy($existingDeputy);
+
+        $this->em->persist($client);
+        $this->em->persist($existingDeputy);
+        $this->em->flush();
+
+        $uploadResults = $this->sut->upload($deputyships);
+
+        self::assertCount(
+            1,
+            $uploadResults['updated']['clients'],
+            sprintf('Expecting 1, got %d', count($uploadResults['updated']['clients']))
+        );
+
+        /** @var NamedDeputy $updatedNamedDeputy */
+        $updatedNamedDeputy = $this->em->getRepository(NamedDeputy::class)->find($existingDeputy);
+        $this->em->refresh($updatedNamedDeputy);
+
+        self::assertEquals('william@differentcompany.com', $updatedNamedDeputy->getEmail1());
+
+        $deputyships[0]->setDeputyUid('xyz789');
+
+        $uploadResults = $this->sut->upload($deputyships);
+
+        self::assertCount(
+            1,
+            $uploadResults['updated']['clients'],
+            sprintf('Expecting 1, got %d', count($uploadResults['updated']['clients']))
+        );
+
+        /** @var NamedDeputy $updatedNamedDeputy */
+        $updatedNamedDeputy = $this->em->getRepository(NamedDeputy::class)->find($existingDeputy);
+        $this->em->refresh($updatedNamedDeputy);
+
+        self::assertEquals('william@somecompany.com', $updatedNamedDeputy->getEmail1());
+    }
 }

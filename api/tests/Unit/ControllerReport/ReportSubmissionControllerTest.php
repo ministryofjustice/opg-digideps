@@ -35,7 +35,7 @@ class ReportSubmissionControllerTest extends AbstractTestController
                 'setStartDate' => new DateTime('2014-01-01'),
                 'setEndDate' => new DateTime('2014-12-31'),
                 'setSubmitted' => true,
-                'setSubmittedBy' => self::$pa1, //irrelevant for assertions
+                'setSubmittedBy' => self::$pa1, // irrelevant for assertions
                 'setSubmitDate' => new DateTime('2015-01-01'),
             ]);
             // create submission
@@ -132,7 +132,7 @@ class ReportSubmissionControllerTest extends AbstractTestController
         $this->assertCount(1, $data['records']);
 
         $this->assertEquals(['new' => 1, 'pending' => 0, 'archived' => 0], $reportsGetAllRequest(['status' => 'new', 'q' => 'c0'])['counts']); // client name
-        $this->assertEquals(['new' => 1, 'pending' => 0, 'archived' => 0], $reportsGetAllRequest(['status' => 'new', 'q' => 'l0'])['counts']); //client surname
+        $this->assertEquals(['new' => 1, 'pending' => 0, 'archived' => 0], $reportsGetAllRequest(['status' => 'new', 'q' => 'l0'])['counts']); // client surname
         $this->assertEquals(['new' => 3, 'pending' => 1, 'archived' => 1], $reportsGetAllRequest(['status' => 'new', 'q' => 'test'])['counts']); // deputy name
         $this->assertEquals(['new' => 1, 'pending' => 0, 'archived' => 1], $reportsGetAllRequest(['created_by_role' => 'ROLE_LAY_DEPUTY'])['counts']);
         // since this filter works with the role being a prefix, ROLE_PA would include all the ROLE_PA* ones
@@ -144,7 +144,7 @@ class ReportSubmissionControllerTest extends AbstractTestController
         $this->assertEquals(['1000000', '1000001', '1000003'], $this->getOrderedCaseNumbersFromSubmissions($submissions));
 
         $submissions = $reportsGetAllRequest(['status' => 'new', 'q' => 'test', 'orderBy' => 'id', 'limit' => 2, 'offset' => 1])['records'];
-        $this->assertEquals(['1000001', '1000003'], $this->getOrderedCaseNumbersFromSubmissions($submissions));
+        $this->assertEquals(['1000000', '1000001'], $this->getOrderedCaseNumbersFromSubmissions($submissions));
     }
 
     private function getOrderedCaseNumbersFromSubmissions($submissions)
