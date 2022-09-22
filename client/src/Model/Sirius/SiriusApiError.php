@@ -9,7 +9,7 @@ class SiriusApiError
     /** @var string */
     private $title;
     private $code;
-    private $description;
+    private $detail;
 
     public function getTitle(): ?string
     {
@@ -41,17 +41,17 @@ class SiriusApiError
         return $this;
     }
 
-    public function getDescription(): ?string
+    public function getDetail(): ?string
     {
-        return $this->description;
+        return $this->detail;
     }
 
     /**
      * @return SiriusApiError
      */
-    public function setDescription(?string $description): self
+    public function setDetail(?string $detail): self
     {
-        $this->description = $description;
+        $this->detail = $detail;
 
         return $this;
     }

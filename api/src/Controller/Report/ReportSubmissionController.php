@@ -25,7 +25,7 @@ class ReportSubmissionController extends RestController
     private AuthService $authService;
     private RestFormatter $formatter;
 
-    const QUEUEABLE_STATUSES = [
+    public const QUEUEABLE_STATUSES = [
         null,
         Document::SYNC_STATUS_TEMPORARY_ERROR,
         Document::SYNC_STATUS_PERMANENT_ERROR,
@@ -71,7 +71,7 @@ class ReportSubmissionController extends RestController
             $request->get('offset', 0),
             $request->get('limit', 15),
             $request->get('orderBy', 'createdOn'),
-            $request->get('order', 'ASC')
+            $request->get('order', 'DESC')
         );
 
         $this->formatter->setJmsSerialiserGroups(self::$jmsGroups);

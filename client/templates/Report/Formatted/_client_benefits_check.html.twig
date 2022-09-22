@@ -41,10 +41,16 @@
 
             {% if clientBenefitsCheck.doOthersReceiveMoneyOnClientsBehalf == 'yes' %}
                 <table class="labelvalue money push--top">
+                    <tr>
+                        <th>Type of payment</th>
+                        <th>Person or organisation who received the money</th>
+                        <th style="border-bottom: 0">Total amount for reporting period</th>
+                    </tr>
                     {% for money in clientBenefitsCheck.typesOfMoneyReceivedOnClientsBehalf %}
                         <tr>
                             <td class="label noborder">{{ money.moneyType }}</td>
-                            <td class="value text--right width-fifth">
+                            <td class="label noborder">{{ money.whoReceivedMoney }}</td>
+                            <td class="value text--right width-quarter">
                                 {% if money.amount is null %} {{ 'form.moneyDetails.dontKnowCheckboxLabel' | trans(transOptions) }} {% else %}&pound;{{ money.amount | money_format }}&nbsp;{% endif %}
                             </td>
                         </tr>
