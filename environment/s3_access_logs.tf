@@ -1,3 +1,5 @@
+# This can all go once all prod objects have expired
+# as we are now logging to centrally set up access logs
 resource "aws_s3_bucket" "s3_access_logs" {
   bucket        = "s3-access-logs.${local.environment}"
   force_destroy = local.account["force_destroy_bucket"]
