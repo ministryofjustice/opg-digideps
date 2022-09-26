@@ -62,3 +62,22 @@ module "pa_uploads" {
     aws = aws
   }
 }
+
+module "csv_replicator" {
+  source = "./s3_bucket"
+
+  account_name                = local.account.name
+  bucket_name                 = "csv-replicator-${local.environment}"
+  force_destroy               = local.account.force_destroy_bucket
+  kms_key_id                  = aws_kms_key.s3.key_id
+  environment_name            = local.environment
+  enable_lifecycle            = true
+  expiration_days             = local.expiration_days
+  non_current_expiration_days = local.noncurrent_expiration_days
+  backup_kms_key_id           = "arn:aws:kms:eu-west-1:${local.backup_account_id}:key/${local.account.s3_backup_kms_arn}"
+  backup_account_id           = local.backup_account_id
+
+  providers = {
+    aws = aws
+  }
+}
