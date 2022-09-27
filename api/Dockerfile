@@ -16,7 +16,7 @@ RUN composer run-script post-install-cmd --no-interaction
 
 RUN composer dump-autoload --optimize
 
-FROM php:8.0.19-fpm-alpine3.15
+FROM php:8.0.23-fpm-alpine3.16
 WORKDIR /var/www
 EXPOSE 80
 EXPOSE 443
@@ -30,8 +30,8 @@ RUN apk --no-cache add \
   nginx \
   nginx-mod-http-headers-more \
   su-exec \
-  php7-igbinary \
-  php7-pecl-redis
+  php8-pecl-igbinary \
+  php8-pecl-redis
 
 RUN docker-php-ext-install pdo pdo_pgsql opcache
 RUN docker-php-ext-enable opcache
