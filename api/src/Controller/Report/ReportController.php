@@ -906,38 +906,6 @@ class ReportController extends RestController
     }
 
     /**
-     * @Route("/all-with-queued-checklists", methods={"GET"})
-     *
-     * @throws DBALException
-     */
-    public function getReportsWithQueuedChecklists(Request $request): array
-    {
-        if (!$this->authService->isSecretValid($request)) {
-            throw new UnauthorisedException('client secret not accepted.');
-        }
-
-        /** @var array $data */
-        $data = $this->formatter->deserializeBodyContent($request);
-
-        /** @var ReportRepository $reportRepo */
-        $reportRepo = $this->em->getRepository(Report::class);
-        $queuedReportIds = $reportRepo->getReportsIdsWithQueuedChecklistsAndSetChecklistsToInProgress(intval($data['row_limit']));
-
-        $reports = [];
-        foreach ($queuedReportIds as $reportId) {
-            $filter = $this->em->getFilters()->getFilter('softdeleteable');
-            $filter->disableForEntity(Client::class);
-
-            $reports[] = $this->findEntityBy(Report::class, $reportId);
-        }
-
-        $this->formatter->setJmsSerialiserGroups($this->checklistGroups);
-
-        return $reports;
-    }
-
-    // Duplicating above function until DDPB-4469 is played
-    /**
      * @Route("/all-with-queued-checklists-jwt", methods={"GET"})
      *
      * @throws DBALException

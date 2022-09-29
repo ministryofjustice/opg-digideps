@@ -36,10 +36,6 @@ security:
             pattern: ^/selfregister
             security: false
             methods: [POST]
-        queuedDocuments:
-            pattern: ^/document/queued
-            security: false
-            methods: [GET]
         queuedDocumentsJwt:
             pattern: ^/document/queued-jwt
             security: false
@@ -52,10 +48,6 @@ security:
             pattern: ^/document/update-related-statuses
             security: false
             methods: [PUT]
-        reportsWithQueuedChecklists:
-            pattern: ^/report/all-with-queued-checklists
-            security: false
-            methods: [GET]
         reportsWithQueuedChecklistsJwt:
             pattern: ^/report/all-with-queued-checklists-jwt
             security: false

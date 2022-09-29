@@ -36,9 +36,7 @@ locals {
   events_task_list = [
     aws_ecs_task_definition.check_csv_uploaded.arn,
     aws_ecs_task_definition.check_csv_uploaded.arn,
-    aws_ecs_task_definition.checklist_sync.arn,
     aws_ecs_task_definition.api.arn,
-    aws_ecs_task_definition.document_sync.arn,
   ]
   combined_events_task_list = tolist(concat(local.events_task_list, local.events_dr_task_list))
 }

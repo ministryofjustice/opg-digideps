@@ -25,7 +25,6 @@ class ReportApi
     private const REPORT_SUBMIT_ENDPOINT = 'report/%s/submit';
     private const REPORT_UNSUBMIT_ENDPOINT = 'report/%s/unsubmit';
     private const REPORT_REFRESH_CACHE_ENDPOINT = 'report/%s/refresh-cache';
-    private const REPORT_GET_ALL_WITH_QUEUED_CHECKLISTS_ENDPOINT = 'report/all-with-queued-checklists';
     private const REPORT_GET_ALL_WITH_QUEUED_CHECKLISTS_ENDPOINT_JWT = 'report/all-with-queued-checklists-jwt';
 
     private const NDR_ENDPOINT_BY_ID = 'ndr/%s';
@@ -93,10 +92,10 @@ class ReportApi
     }
 
     /**
+     * @return Report
+     *
      * @throws DisplayableException  if report doesn't have specified section
      * @throws NotFoundHttpException if report is submitted
-     *
-     * @return Report
      */
     public function getReportIfNotSubmitted(int $reportId, array $groups = [])
     {
@@ -187,22 +186,6 @@ class ReportApi
         );
     }
 
-    /**
-     * @return Report[]
-     */
-    public function getReportsWithQueuedChecklists(string $rowLimit): array
-    {
-        return $this->restClient->apiCall(
-            'get',
-            self::REPORT_GET_ALL_WITH_QUEUED_CHECKLISTS_ENDPOINT,
-            ['row_limit' => $rowLimit],
-            'Report\Report[]',
-            [],
-            false
-        );
-    }
-
-    // Duplicating above function until DDPB-4469 is played
     /**
      * @return Report[]
      */

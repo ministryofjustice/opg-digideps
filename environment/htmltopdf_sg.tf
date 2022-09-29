@@ -18,13 +18,6 @@ locals {
       target_type = "security_group_id"
       target      = module.admin_service_security_group.id
     }
-    checklist = {
-      port        = 80
-      type        = "ingress"
-      protocol    = "tcp"
-      target_type = "security_group_id"
-      target      = module.checklist_sync_service_security_group.id
-    }
   }
 }
 
