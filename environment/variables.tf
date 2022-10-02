@@ -81,10 +81,6 @@ locals {
     infrastructure-support = "OPG WebOps: opgteam@digital.justice.gov.uk"
     is-production          = local.account.is_production
   }
-
-  psql13_parameter_group_family = "postgres13"
-  psql10_parameter_group_family = "postgres10"
-
 }
 
 data "terraform_remote_state" "shared" {
