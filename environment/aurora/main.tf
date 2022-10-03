@@ -22,7 +22,6 @@ resource "aws_rds_cluster" "cluster" {
   vpc_security_group_ids              = var.vpc_security_group_ids
   tags                                = var.tags
   iam_database_authentication_enabled = var.iam_database_authentication_enabled
-  allow_major_version_upgrade         = true
   lifecycle {
     ignore_changes  = [replication_source_identifier]
     prevent_destroy = true
