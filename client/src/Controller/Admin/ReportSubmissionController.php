@@ -272,7 +272,7 @@ class ReportSubmissionController extends AbstractController
      */
     private static function getFiltersFromRequest(Request $request)
     {
-        $order = 'new' === $request->get('status', 'new') ? 'ASC' : 'DESC';
+        $order = 'new' === $request->get('status', 'new') ? 'DESC' : 'ASC';
 
         return [
             'q' => $request->get('q'),

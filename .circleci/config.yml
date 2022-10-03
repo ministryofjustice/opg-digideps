@@ -583,7 +583,7 @@ orbs:
   tfsec: mycodeself/tfsec@1.1.0
   dockerhub_helper:
     orbs:
-      docker: circleci/docker@1.4.0
+      docker: circleci/docker@2.1.4
     commands:
       dockerhub_login:
         steps:
@@ -1177,7 +1177,8 @@ jobs:
     resource_class: small
     steps:
       - dockerhub_helper/dockerhub_login
-      - setup_remote_docker
+      - setup_remote_docker:
+          version: 17.09.0-ce
       - checkout
       - attach_workspace: { at: ~/project }
       - run:

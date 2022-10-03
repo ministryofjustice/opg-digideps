@@ -43,7 +43,7 @@ variable "accounts" {
       aurora_serverless                      = bool
       deletion_protection                    = bool
       aurora_enabled                         = bool
-      s3_backup_replication                  = string
+      s3_backup_replication                  = bool
       s3_backup_kms_arn                      = string
       associate_alb_with_waf_web_acl_enabled = bool
     })

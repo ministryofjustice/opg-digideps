@@ -54,7 +54,6 @@ updates:
       day: "friday"
       time: "18:00"
       timezone: "Europe/London"
-    versioning-strategy: lockfile-only
     open-pull-requests-limit: 1
 
   # Enable version updates for environment terraform
@@ -68,5 +67,4 @@ updates:
       day: "friday"
       time: "18:00"
       timezone: "Europe/London"
-    versioning-strategy: lockfile-only
     open-pull-requests-limit: 1
