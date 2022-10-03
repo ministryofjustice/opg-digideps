@@ -23,13 +23,12 @@ class AssetControllerTest extends AbstractTestController
     {
         parent::setUp();
 
-        //deputy1
+        // deputy1
         self::$deputy1 = self::fixtures()->getRepo('User')->findOneByEmail('deputy@example.org');
         self::$client1 = self::fixtures()->createClient(self::$deputy1, ['setFirstname' => 'c1']);
         self::$report1 = self::fixtures()->createReport(self::$client1);
         self::$asset1 = self::fixtures()->createAsset('other', self::$report1, ['setTitle' => 'asset1']);
         self::$assetp1 = self::fixtures()->createAsset('property', self::$report1, ['setAddress' => 'ha1']);
-
         // deputy 2
         self::$deputy2 = self::fixtures()->createUser();
         self::$client2 = self::fixtures()->createClient(self::$deputy2);
@@ -66,13 +65,13 @@ class AssetControllerTest extends AbstractTestController
 
         $this->assertCount(2, $data);
 
-        $this->assertEquals(self::$assetp1->getId(), $data[0]['id']);
-        $this->assertEquals('ha1', $data[0]['address']);
-        $this->assertEquals('property', $data[0]['type']);
+        $this->assertEquals(self::$asset1->getId(), $data[0]['id']);
+        $this->assertEquals('asset1', $data[0]['title']);
+        $this->assertEquals('other', $data[0]['type']);
 
-        $this->assertEquals(self::$asset1->getId(), $data[1]['id']);
-        $this->assertEquals('asset1', $data[1]['title']);
-        $this->assertEquals('other', $data[1]['type']);
+        $this->assertEquals(self::$assetp1->getId(), $data[1]['id']);
+        $this->assertEquals('ha1', $data[1]['address']);
+        $this->assertEquals('property', $data[1]['type']);
     }
 
     public function testgetOneByIdAuth()
