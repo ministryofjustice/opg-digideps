@@ -23,5 +23,6 @@ variable "timeout_delete" { default = "90m" }
 variable "skip_final_snapshot" {}
 variable "storage_encrypted" { default = true }
 variable "vpc_security_group_ids" {}
-variable "replication_source_identifier" {}
+variable "replication_source_identifier" { default = "" }
+variable "iam_database_authentication_enabled" { default = false }
 variable "log_group" {}

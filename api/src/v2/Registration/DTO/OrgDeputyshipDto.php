@@ -17,7 +17,7 @@ class OrgDeputyshipDto
     private string $deputyUid;
     private string $deputyFirstname;
     private string $deputyLastname;
-    private string $deputyEmail;
+    private ?string $deputyEmail;
     private string $deputyAddress1;
     private string $deputyAddress2;
     private string $deputyPostcode;

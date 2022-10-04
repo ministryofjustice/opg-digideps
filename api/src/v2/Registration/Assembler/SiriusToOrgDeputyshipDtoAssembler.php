@@ -39,6 +39,7 @@ class SiriusToOrgDeputyshipDtoAssembler
         $reportStartDate = $reportEndDate ? $this->reportUtils->generateReportStartDateFromEndDate($reportEndDate) : null;
         $madeDate = $this->processDate($row['MadeDate']);
         $dateOfBirth = $this->processDate($row['ClientDateOfBirth']);
+        $deputyEmail = filter_var($row['DeputyEmail'], FILTER_VALIDATE_EMAIL) ? $row['DeputyEmail'] : null;
 
         return (new OrgDeputyshipDto())
             ->setCaseNumber($row['Case'])
@@ -57,7 +58,7 @@ class SiriusToOrgDeputyshipDtoAssembler
             ->setDeputyAddress3($row['DeputyAddress3'])
             ->setDeputyAddress4($row['DeputyAddress4'])
             ->setDeputyAddress5($row['DeputyAddress5'])
-            ->setDeputyEmail($row['DeputyEmail'])
+            ->setDeputyEmail($deputyEmail)
             ->setDeputyFirstname($row['DeputyForename'])
             ->setDeputyLastname($row['DeputySurname'])
             ->setDeputyPostcode($row['DeputyPostcode'])

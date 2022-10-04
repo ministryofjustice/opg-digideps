@@ -1,24 +1,23 @@
 module "api_aurora" {
-  source                        = "./aurora"
-  count                         = 1
-  aurora_serverless             = local.account.aurora_serverless
-  account_id                    = data.aws_caller_identity.current.account_id
-  apply_immediately             = local.account.deletion_protection ? false : true
-  cluster_identifier            = "api"
-  db_subnet_group_name          = local.account.db_subnet_group
-  deletion_protection           = local.account.deletion_protection ? true : false
-  database_name                 = "api"
-  engine_version                = local.account.psql_engine_version
-  master_username               = "digidepsmaster"
-  master_password               = data.aws_secretsmanager_secret_version.database_password.secret_string
-  instance_count                = local.account.aurora_instance_count
-  instance_class                = "db.t3.medium"
-  kms_key_id                    = data.aws_kms_key.rds.arn
-  replication_source_identifier = ""
-  skip_final_snapshot           = local.account.deletion_protection ? false : true
-  vpc_security_group_ids        = [module.api_rds_security_group.id]
-  tags                          = local.default_tags
-  log_group                     = aws_cloudwatch_log_group.api_cluster
+  source                 = "./aurora"
+  count                  = 1
+  aurora_serverless      = local.account.aurora_serverless
+  account_id             = data.aws_caller_identity.current.account_id
+  apply_immediately      = local.account.deletion_protection ? false : true
+  cluster_identifier     = "api"
+  db_subnet_group_name   = local.account.db_subnet_group
+  deletion_protection    = local.account.deletion_protection ? true : false
+  database_name          = "api"
+  engine_version         = local.account.psql_engine_version
+  master_username        = "digidepsmaster"
+  master_password        = data.aws_secretsmanager_secret_version.database_password.secret_string
+  instance_count         = local.account.aurora_instance_count
+  instance_class         = "db.t3.medium"
+  kms_key_id             = data.aws_kms_key.rds.arn
+  skip_final_snapshot    = local.account.deletion_protection ? false : true
+  vpc_security_group_ids = [module.api_rds_security_group.id]
+  tags                   = local.default_tags
+  log_group              = aws_cloudwatch_log_group.api_cluster
 }
 
 locals {

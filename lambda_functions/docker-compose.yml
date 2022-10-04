@@ -10,7 +10,7 @@ services:
       PYTHONPATH: /workdir
     restart: always
   postgres:
-    image: postgres:10.21
+    image: postgres:13.7
     ports:
       - 5432:5432
     environment:

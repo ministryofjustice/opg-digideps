@@ -118,3 +118,13 @@ Feature: Org CSV data ingestion - sirius source data
         And I upload an org CSV that updates the person deputy with an org name and the org deputy with a person name
         Then the named deputy with deputy UID '19921992' should have the full name 'HYPERPOP Inc.'
         And the named deputy with deputy UID '19901990' should have the full name 'Alexander Cook'
+
+    @super-admin
+    Scenario: Uploading a CSV that contains deputy email updates for existing deputies
+        Given a super admin user accesses the admin app
+        When I visit the admin upload org users page
+        And I upload an org CSV that has one person deputy and one organisation deputy
+        Then the new 'org' entities should be added to the database
+        When I visit the admin upload org users page
+        And I upload an org CSV that updates the deputy's email
+        Then the named deputy with deputy UID '19921992' should have the email 'example@example.com'

@@ -16,7 +16,7 @@ RUN composer run-script post-install-cmd --no-interaction
 
 RUN composer dump-autoload --optimize
 
-FROM php:8.0.19-fpm-alpine3.15
+FROM php:8.0.23-fpm-alpine3.16
 WORKDIR /var/www
 EXPOSE 80
 EXPOSE 443
@@ -30,8 +30,8 @@ RUN apk --no-cache add \
   nginx \
   nginx-mod-http-headers-more \
   su-exec \
-  php7-igbinary \
-  php7-pecl-redis
+  php8-pecl-igbinary \
+  php8-pecl-redis
 
 RUN docker-php-ext-install pdo pdo_pgsql opcache
 RUN docker-php-ext-enable opcache
@@ -107,11 +107,6 @@ RUN chmod 544 /var/www/tests/Behat/run-tests-parallel.sh
 
 # Prebuild cache
 RUN su-exec www-data php -d memory_limit=-1 app/console cache:warmup
-
-# Check for security issues
-RUN wget -q -O local-php-security-checker https://github.com/fabpot/local-php-security-checker/releases/download/v1.0.0/local-php-security-checker_1.0.0_linux_arm64 \
-  && chmod +x local-php-security-checker \
-  && su-exec local-php-security-checker
 
 RUN apk upgrade libxml2 openssl libssl1.1 libcrypto1.1 libretls zlib busybox curl gzip xz xz-libs libcurl
 

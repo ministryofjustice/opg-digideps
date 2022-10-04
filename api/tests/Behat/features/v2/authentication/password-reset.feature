@@ -41,12 +41,12 @@ Feature: Users can reset their password via self-service
         And I press "Save password"
         Then the form should be invalid
         # valid password!
-        When I fill in the reset password fields with "DigidepsPass12345"
+        When I fill in the reset password fields with "DigidepsPass仮名😀12345"
         And I press "Save password"
         Then the form should be valid
         And I should be on "/login"
         And I should see "Sign in with your new password"
-        When I am logged in as "enrique75@mail.example" with password "DigidepsPass12345"
+        When I am logged in as "enrique75@mail.example" with password "DigidepsPass仮名😀12345"
         Then the form should be valid
         Given I am on "/login"
         Then I should see "Sign in"
