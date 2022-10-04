@@ -90,8 +90,11 @@ class ReportService
                 }
             }
         }
-
+        
         $this->em->persist($submission);
+        
+//      Set user to active once they have submitted a report
+        $user->setActive(true);
         
         $newYearReport = [];
         
