@@ -230,8 +230,8 @@ trait ReportingChecklistTrait
      */
     public function iRunTheChecklistSyncCommand()
     {
-        $this->visitAdminPath('/admin/behat/run-checklist-sync-command');
-
+        $this->visitFrontendPathJwt('/synchronise/checklists');
+        sleep(3);
         if ($this->getSession()->getStatusCode() > 299) {
             throw new BehatException('There was an non successful response when running the checklist-sync command');
         }

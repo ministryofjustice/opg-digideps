@@ -85,8 +85,8 @@ trait ReportSubmissionTrait
      */
     public function iRunTheDocumentSyncCommand()
     {
-        $this->visitAdminPath('/admin/behat/run-document-sync-command');
-
+        $this->visitFrontendPathJwt('/synchronise/documents');
+        sleep(3);
         if ($this->getSession()->getStatusCode() > 299) {
             throw new BehatException('There was an non successful response when running the document-sync command');
         }

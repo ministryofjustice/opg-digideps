@@ -4,6 +4,7 @@ declare(strict_types=1);
 
 namespace App\Tests\Behat\v2\Common;
 
+use App\Service\JWT\JWTService;
 use App\Service\ParameterStoreService;
 use App\TestHelpers\ReportTestHelper;
 use App\Tests\Behat\v2\Analytics\AnalyticsTrait;
@@ -117,7 +118,8 @@ class BaseFeatureContext extends MinkContext
         protected KernelInterface $symfonyKernel,
         protected EntityManagerInterface $em,
         protected ReportTestHelper $reportTestHelper,
-        protected ParameterStoreService $parameterStoreService
+        protected ParameterStoreService $parameterStoreService,
+        protected JWTService $jwtService
     ) {
         $this->appEnvironment = $this->symfonyKernel->getEnvironment();
 
@@ -510,6 +512,15 @@ class BaseFeatureContext extends MinkContext
     {
         $siteUrl = $this->getSiteUrl();
         $this->visitPath($siteUrl.$path);
+    }
+
+    public function visitFrontendPathJwt(string $path)
+    {
+        $jwt = $this->jwtService->createNewJWT();
+        $siteUrl = $this->getSiteUrl();
+        $session = $this->getSession();
+        $session->setRequestHeader('JWT', $jwt);
+        $session->visit($this->locatePath($siteUrl.$path));
     }
 
     public function visitAdminPath(string $path)
