@@ -29,23 +29,39 @@ class DocumentsSynchronisedSubscriberTest extends TestCase
     }
 
     /**
+     * @dataProvider documentProvider
+     *
      * @test
      */
-    public function synchroniseDocuments()
+    public function synchroniseDocuments(array $documents, int $failCount, array $submissionError)
     {
-        $documents = $this->documentProvider();
         $verboseLogger = self::prophesize(LoggerInterface::class);
         $docSyncService = self::prophesize(DocumentSyncService::class);
+
+        $docSyncService->getDocsNotSyncedCount()->willReturn($failCount);
+        $docSyncService->getSyncErrorSubmissionIds()->willReturn($submissionError);
+        $docSyncService->syncDocument($documents[0])->willReturn($documents[0]);
+
+        if (count($submissionError) > 0) {
+            $docSyncService->setSubmissionsDocumentsToPermanentError()->shouldBeCalled();
+            $docSyncService->setSyncErrorSubmissionIds([])->shouldBeCalled();
+        } else {
+            $docSyncService->setSubmissionsDocumentsToPermanentError()->shouldNotBeCalled();
+            $docSyncService->setSyncErrorSubmissionIds([])->shouldNotBeCalled();
+        }
+
+        if ($failCount > 0) {
+            $docSyncService->setDocsNotSyncedCount(0)->shouldBeCalled();
+            $verboseLogger->notice(sprintf('%d documents failed to sync', $failCount))->shouldBeCalled();
+        } else {
+            $docSyncService->setDocsNotSyncedCount(0)->shouldNotBeCalled();
+            $verboseLogger->notice(sprintf('%d documents failed to sync', $failCount))->shouldNotBeCalled();
+        }
 
         $sut = new DocumentsSynchronisedSubscriber($verboseLogger->reveal(), $docSyncService->reveal());
 
         $event = new DocumentsSynchronisedEvent($documents);
 
-        $expectedEvent = [
-            'documents' => $documents,
-        ];
-
-        $verboseLogger->notice('', $expectedEvent)->shouldBeCalled();
         $sut->synchroniseDocuments($event);
     }
 
@@ -70,6 +86,11 @@ class DocumentsSynchronisedSubscriberTest extends TestCase
             $queuedDocumentData,
         ];
 
-        return $arrayOfDocuments;
+        return [
+            'All Sync' => [$arrayOfDocuments, 0, []],
+            'Sync Errors' => [$arrayOfDocuments, 1, []],
+            'Sync and SubmissionId Errors' => [$arrayOfDocuments, 1, [9876]],
+            'SubmissionId Errors' => [$arrayOfDocuments, 0, [9876]],
+        ];
     }
 }

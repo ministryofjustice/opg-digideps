@@ -31,8 +31,6 @@ class DocumentsSynchronisedSubscriber implements EventSubscriberInterface
             $this->documentSyncService->syncDocument($document);
         }
 
-        $this->verboseLogger->notice(sprintf('%d documents failed to sync', $this->documentSyncService->getDocsNotSyncedCount()));
-
         if (count($this->documentSyncService->getSyncErrorSubmissionIds()) > 0) {
             $this->documentSyncService->setSubmissionsDocumentsToPermanentError();
             $this->documentSyncService->setSyncErrorSubmissionIds([]);
