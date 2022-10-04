@@ -7,10 +7,8 @@ use App\Event\ChecklistsSynchronisedEvent;
 use App\Event\DocumentsSynchronisedEvent;
 use App\EventDispatcher\ObservableEventDispatcher;
 use App\Model\Sirius\QueuedDocumentData;
-use App\Service\ChecklistSyncService;
 use App\Service\Client\Internal\ReportApi;
 use App\Service\Client\RestClient;
-use App\Service\DocumentSyncService;
 use App\Service\ParameterStoreService;
 use Psr\Log\LoggerInterface;
 use Symfony\Component\HttpFoundation\JsonResponse;
@@ -27,8 +25,6 @@ class SynchronisationController extends AbstractController
     public static $defaultName = 'digideps:document-sync';
 
     public function __construct(
-        private DocumentSyncService $documentSyncService,
-        private ChecklistSyncService $checklistSyncService,
         private RestClient $restClient,
         private SerializerInterface $serializer,
         private ParameterStoreService $parameterStore,
@@ -87,12 +83,12 @@ class SynchronisationController extends AbstractController
 
     private function isDocumentFeatureEnabled(): bool
     {
-        return '1' === $this->parameterStore->getFeatureFlag(ParameterStoreService::FLAG_CHECKLIST_SYNC);
+        return '1' === $this->parameterStore->getFeatureFlag(ParameterStoreService::FLAG_DOCUMENT_SYNC);
     }
 
     private function isChecklistFeatureEnabled(): bool
     {
-        return '1' === $this->parameterStore->getFeatureFlag(ParameterStoreService::FLAG_DOCUMENT_SYNC);
+        return '1' === $this->parameterStore->getFeatureFlag(ParameterStoreService::FLAG_CHECKLIST_SYNC);
     }
 
     private function getDocumentSyncRowLimit(): string

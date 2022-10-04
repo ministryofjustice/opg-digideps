@@ -193,7 +193,7 @@ class ReportApi
     {
         return $this->restClient->apiCall(
             'get',
-            self::REPORT_GET_ALL_WITH_QUEUED_CHECKLISTS_ENDPOINT_JWT,
+            'report/all-with-queued-checklists-jwt',
             ['row_limit' => $rowLimit],
             'Report\Report[]',
             [
