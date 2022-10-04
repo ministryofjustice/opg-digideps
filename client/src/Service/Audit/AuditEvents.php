@@ -13,7 +13,6 @@ use App\Service\Time\DateTimeProvider;
 use DateTime;
 use Exception;
 use ReflectionClass;
-use Symfony\Component\Security\Core\User\UserInterface;
 use Throwable;
 
 final class AuditEvents
@@ -36,6 +35,8 @@ final class AuditEvents
     public const EVENT_ADMIN_MANAGER_DELETED = 'ADMIN_MANAGER_DELETED';
     public const EVENT_EMAIL_NOT_SENT = 'EMAIL_NOT_SENT';
     public const EVENT_EMAIL_SENT = 'EMAIL_SENT';
+    public const EVENT_DOCUMENTS_SYNCHRONISED = 'DOCUMENTS_SYNCHRONISED';
+    public const EVENT_CHECKLISTS_SYNCHRONISED = 'CHECKLISTS_SYNCHRONISED';
 
     public const TRIGGER_ADMIN_USER_EDIT = 'ADMIN_USER_EDIT';
     public const TRIGGER_ADMIN_BUTTON = 'ADMIN_BUTTON';
@@ -378,7 +379,7 @@ final class AuditEvents
         $templateName = $constants[$email->getTemplate()];
 
         return [
-            'logged_in_user_email' => ($loggedInUser == "anon." ) ? "user not signed in" : $loggedInUser?->getEmail(),
+            'logged_in_user_email' => ('anon.' == $loggedInUser) ? 'user not signed in' : $loggedInUser?->getEmail(),
             'recipient_email' => $email->getToEmail(),
             'template_name' => $templateName,
             'notify_template_id' => $email->getTemplate(),

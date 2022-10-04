@@ -3,6 +3,9 @@
 namespace App\Controller\Synchronisation;
 
 use App\Controller\AbstractController;
+use App\Event\ChecklistsSynchronisedEvent;
+use App\Event\DocumentsSynchronisedEvent;
+use App\EventDispatcher\ObservableEventDispatcher;
 use App\Model\Sirius\QueuedDocumentData;
 use App\Service\ChecklistSyncService;
 use App\Service\Client\Internal\ReportApi;
@@ -30,7 +33,8 @@ class SynchronisationController extends AbstractController
         private SerializerInterface $serializer,
         private ParameterStoreService $parameterStore,
         private LoggerInterface $verboseLogger,
-        private ReportApi $reportApi
+        private ReportApi $reportApi,
+        private ObservableEventDispatcher $eventDispatcher
     ) {
     }
 
@@ -50,19 +54,7 @@ class SynchronisationController extends AbstractController
 
         $this->verboseLogger->notice(sprintf('%d documents to upload', count($documents)));
 
-        foreach ($documents as $document) {
-            $this->documentSyncService->syncDocument($document);
-        }
-
-        if (count($this->documentSyncService->getSyncErrorSubmissionIds()) > 0) {
-            $this->documentSyncService->setSubmissionsDocumentsToPermanentError();
-            $this->documentSyncService->setSyncErrorSubmissionIds([]);
-        }
-
-        if ($this->documentSyncService->getDocsNotSyncedCount() > 0) {
-            $this->verboseLogger->notice(sprintf('%d documents failed to sync', $this->documentSyncService->getDocsNotSyncedCount()));
-            $this->documentSyncService->setDocsNotSyncedCount(0);
-        }
+        $this->dispatchDocuments($documents);
 
         $this->verboseLogger->notice(self::COMPLETED_MESSAGE);
 
@@ -86,11 +78,7 @@ class SynchronisationController extends AbstractController
         $reports = $this->reportApi->getReportsWithQueuedChecklistsJwt($request, $rowLimit);
         $this->verboseLogger->notice(sprintf('%d checklists to upload', count($reports)));
 
-        $notSyncedCount = $this->checklistSyncService->syncChecklistsByReports($reports);
-
-        if ($notSyncedCount > 0) {
-            $this->verboseLogger->notice(sprintf('%d checklists failed to sync', $notSyncedCount));
-        }
+        $this->dispatchChecklists($reports);
 
         $this->verboseLogger->notice(self::COMPLETED_MESSAGE);
 
@@ -140,5 +128,23 @@ class SynchronisationController extends AbstractController
         );
 
         return $this->serializer->deserialize($queuedDocumentData, 'App\Model\Sirius\QueuedDocumentData[]', 'json');
+    }
+
+    private function dispatchDocuments(array $documents)
+    {
+        $documentsSynchornisedEvent = new DocumentsSynchronisedEvent(
+            $documents
+        );
+
+        $this->eventDispatcher->dispatch($documentsSynchornisedEvent, DocumentsSynchronisedEvent::NAME);
+    }
+
+    private function dispatchChecklists(array $reports)
+    {
+        $checklistsSynchronisedEvent = new ChecklistsSynchronisedEvent(
+            $reports
+        );
+
+        $this->eventDispatcher->dispatch($checklistsSynchronisedEvent, ChecklistsSynchronisedEvent::NAME);
     }
 }
