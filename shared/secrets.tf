@@ -21,7 +21,9 @@ module "environment_secrets" {
     "front-api-client-secret",
     "front-frontend-secret",
     "front-notify-api-key",
-    "synchronisation-jwt-token"
+    "synchronisation-jwt-token",
+    "public-jwt-key-base64",
+    "private-jwt-key-base64"
   ]
   tags = local.default_tags
 }
