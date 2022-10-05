@@ -109,7 +109,11 @@ class RestClient implements RestClientInterface
      */
     public function login(array $credentials)
     {
-        $response = $this->apiCall('post', '/auth/login', $credentials, 'response', [], false);
+        try {
+            $response = $this->apiCall('post', '/auth/login', $credentials, 'response', [], false);
+        } catch (\Exception $e) {
+            return null;
+        }
 
         /** @var User */
         $user = $this->arrayToEntity('User', $this->extractDataArray($response));

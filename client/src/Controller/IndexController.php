@@ -7,7 +7,9 @@ use App\Service\Client\RestClient;
 use App\Service\DeputyProvider;
 use App\Service\Redirector;
 use App\Service\StringUtils;
+
 use const PHP_URL_PATH;
+
 use Sensio\Bundle\FrameworkExtraBundle\Configuration\Template;
 use Symfony\Component\DependencyInjection\ParameterBag\ParameterBagInterface;
 use Symfony\Component\EventDispatcher\EventDispatcherInterface;
@@ -76,6 +78,10 @@ class IndexController extends AbstractController
 
         if ($lastAuthError) {
             $errorMessage = $lastAuthError->getMessage();
+
+            if ('Bad credentials.' == $errorMessage) {
+                $errorMessage = $this->translator->trans('signInForm.signin.invalidMessage', [], 'signin');
+            }
 
             if (423 == $lastAuthError->getCode() && method_exists($lastAuthError, 'getData')) {
                 $lockedFor = ceil(($lastAuthError->getData()['data'] - time()) / 60);
