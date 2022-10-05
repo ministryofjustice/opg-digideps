@@ -10,20 +10,6 @@ resource "aws_iam_role_policy" "rds_iam_test" {
   role   = aws_iam_role.rds_iam_test.id
 }
 
-#data "aws_iam_policy_document" "rds_iam_assume_role" {
-#  statement {
-#    effect  = "Allow"
-#    actions = ["sts:AssumeRole"]
-#
-#    principals {
-#      identifiers = [
-#        "arn:aws:iam::631181914621:user/james.warren",
-#      ]
-#      type = "AWS"
-#    }
-#  }
-#}
-
 data "aws_iam_policy_document" "rds_iam" {
   statement {
     sid    = "ConnectRDSIam"
@@ -140,28 +126,3 @@ data "aws_iam_policy_document" "rds_iam_test_profile" {
     }
   }
 }
-
-#        {
-#            "Effect": "Allow",
-#            "Action": "ssm:StartSession",
-#            "Resource": "arn:aws:ec2:*:*:instance/*",
-#            "Condition": {
-#                "StringLike": {
-#                    "ssm:resourceTag/aws:cloud9:environment": "*"
-#                },
-#                "StringEquals": {
-#                    "aws:CalledViaFirst": "cloud9.amazonaws.com"
-#                }
-#            }
-#        },
-#        {
-#            "Effect": "Allow",
-#            "Action": [
-#                "ssm:StartSession"
-#            ],
-#            "Resource": [
-#                "arn:aws:ssm:*:*:document/*"
-#            ]
-#        }
-#    ]
-#}

@@ -46,6 +46,7 @@ variable "accounts" {
       s3_backup_replication                  = bool
       s3_backup_kms_arn                      = string
       associate_alb_with_waf_web_acl_enabled = bool
+      iam_database_authentication_enabled    = bool
     })
   )
 }

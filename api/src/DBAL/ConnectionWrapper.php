@@ -50,10 +50,9 @@ class ConnectionWrapper extends Connection
         file_put_contents('php://stderr', print_r('IAM_AUTH_VALUE: '.$iam_auth, true));
 
         if ('1' == $iam_auth) {
-            file_put_contents('php://stderr', print_r('IAM AUTH ACTIVE', true));
-            $params['user'] = 'api';
+            $params['user'] = 'iamuser';
             if (!$this->redis->get(self::USER_TOKEN)) {
-                $this->refreshToken();
+                $this->refreshToken($params);
             } else {
                 file_put_contents('php://stderr', print_r('user_token_exists', true));
             }
@@ -64,7 +63,7 @@ class ConnectionWrapper extends Connection
         try {
             $this->_conn = $this->_driver->connect($params);
         } catch (Exception) {
-            $this->refreshToken();
+            $this->refreshToken($params);
             $this->_conn = $this->_driver->connect($params);
         }
 
@@ -78,14 +77,13 @@ class ConnectionWrapper extends Connection
         return true;
     }
 
-    private function refreshToken()
+    private function refreshToken($params)
     {
         file_put_contents('php://stderr', print_r('user_token_not_exists', true));
-        //                $provider = CredentialProvider::defaultProvider();
-        //                $RdsAuthGenerator = new AuthTokenGenerator($provider);
-        //
-        //                $token = $RdsAuthGenerator->createToken($params['host'].':'.$params['port'], 'eu-west-1', $params['user']);
-        $token = 'api';
+        $provider = CredentialProvider::defaultProvider();
+        $RdsAuthGenerator = new AuthTokenGenerator($provider);
+
+        $token = $RdsAuthGenerator->createToken($params['host'].':'.$params['port'], 'eu-west-1', $params['user']);
         $this->redis->set(self::USER_TOKEN, $token);
         $this->redis->expire(self::USER_TOKEN, 600);
     }
