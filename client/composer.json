@@ -78,7 +78,8 @@
         "symfony/yaml": "^5.4.0",
         "twig/extra-bundle": "^3.3",
         "twig/intl-extra": "^3.3",
-        "web-token/jwt-core": "^2.2"
+        "web-token/jwt-core": "^2.2",
+        "doctrine/collections": "^1.6.8"
     },
     "scripts": {
         "post-install-cmd": [
