@@ -990,7 +990,7 @@ jobs:
     steps:
       - dockerhub_helper/dockerhub_login
       - setup_remote_docker:
-          version: 20.10.6
+          version: 20.10.17
       - aws-cli/install
       - add_ssh_keys:
           fingerprints:
@@ -1095,7 +1095,8 @@ jobs:
     resource_class: small
     steps:
       - dockerhub_helper/dockerhub_login
-      - setup_remote_docker
+      - setup_remote_docker:
+          version: 20.10.17
       - checkout
       - attach_workspace: { at: ~/project }
       - run:
@@ -1128,7 +1129,7 @@ jobs:
     steps:
       - dockerhub_helper/dockerhub_login
       - setup_remote_docker:
-          version: 17.09.0-ce
+          version: 20.10.17
       - checkout
       - attach_workspace: { at: ~/project }
       - run:
