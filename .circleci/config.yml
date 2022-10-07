@@ -1125,7 +1125,7 @@ jobs:
 
   client-unit-test:
     docker:
-      - image: cimg/python:3.10.7
+      - image: cimg/php:8.0.14
         auth:
           username: $DOCKER_USER
           password: $DOCKER_ACCESS_TOKEN
@@ -1144,11 +1144,7 @@ jobs:
             docker load -i ~/project/htmltopdf.tar
             docker tag client:latest admin:latest
             docker tag client:latest frontend:latest
-      - run:
-          name: install aws cli
-          command: |
-            python3 -m pip install awscli --upgrade --user
-            aws --version
+      - aws-cli/install
       - run:
           name: Set environment
           command: |
