@@ -882,7 +882,7 @@ jobs:
 
   scale-services:
     docker:
-      - image: circleci/python:3
+      - image: cimg/python:3.10.7
         auth:
           username: $DOCKER_USER
           password: $DOCKER_ACCESS_TOKEN
@@ -943,7 +943,7 @@ jobs:
 
   cancel_redundant_builds:
     docker:
-      - image: circleci/python:3
+      - image: cimg/python:3.10.7
         auth:
           username: $DOCKER_USER
           password: $DOCKER_ACCESS_TOKEN
@@ -964,7 +964,7 @@ jobs:
 
   build:
     docker:
-      - image: circleci/python:3
+      - image: cimg/python:3.10.7
         auth:
           username: $DOCKER_USER
           password: $DOCKER_ACCESS_TOKEN
@@ -1088,7 +1088,7 @@ jobs:
 
   lambda-unit-test:
     docker:
-      - image: circleci/python:3
+      - image: cimg/python:3.10.7
         auth:
           username: $DOCKER_USER
           password: $DOCKER_ACCESS_TOKEN
@@ -1121,7 +1121,7 @@ jobs:
 
   client-unit-test:
     docker:
-      - image: circleci/python:3
+      - image: cimg/python:3.10.7
         auth:
           username: $DOCKER_USER
           password: $DOCKER_ACCESS_TOKEN
