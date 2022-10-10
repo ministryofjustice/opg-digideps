@@ -1129,7 +1129,7 @@ jobs:
         auth:
           username: $DOCKER_USER
           password: $DOCKER_ACCESS_TOKEN
-    resource_class: medium
+    resource_class: small
     steps:
       - dockerhub_helper/dockerhub_login
       - setup_remote_docker:
