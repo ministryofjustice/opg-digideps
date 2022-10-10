@@ -13,10 +13,10 @@ class CommonPasswordValidatorTest extends TestCase
 
     public function setUp(): void
     {
-        file_put_contents(
-            self::PW_FILE_PATH,
-            fopen(self::PWNED_PW_URL, 'r')
-        );
+        // file_put_contents(
+        //     self::PW_FILE_PATH,
+        //     fopen(self::PWNED_PW_URL, 'r')
+        // );
     }
 
     /**
