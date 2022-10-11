@@ -13,6 +13,7 @@ _Any tips and tricks, blog posts or tools which helped you. Plus anything notabl
 - [ ] I have performed a self-review of my own code
 - [ ] I have updated documentation (Confluence/ADR/tech debt doc) where relevant
 - [ ] I have added tests to prove my work
+- [ ] I have checked my work for potential security issues and refered to the [OWASP top 10](https://owasp.org/www-project-top-ten/)
 - [ ] The product team have approved these changes
 
 ### Frontend
