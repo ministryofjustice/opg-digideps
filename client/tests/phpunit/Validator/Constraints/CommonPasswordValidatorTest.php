@@ -8,16 +8,6 @@ use PHPUnit\Framework\TestCase;
 
 class CommonPasswordValidatorTest extends TestCase
 {
-    const PW_FILE_PATH = '/tmp/commonpasswords.txt';
-    const PWNED_PW_URL = 'https://www.ncsc.gov.uk/static-assets/documents/PwnedPasswordsTop100k.txt';
-
-    public function setUp(): void
-    {
-        // file_put_contents(
-        //     self::PW_FILE_PATH,
-        //     fopen(self::PWNED_PW_URL, 'r')
-        // );
-    }
 
     /**
      * @param string $expectedMessage The expected message on a validation violation, if any.
