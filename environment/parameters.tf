@@ -17,7 +17,7 @@ resource "aws_ssm_parameter" "sirius_api_base_uri" {
 resource "aws_ssm_parameter" "document_sync_row_limit" {
   name  = "${local.parameter_prefix}document-sync-row-limit"
   type  = "String"
-  value = "30"
+  value = "100"
 
   tags = local.default_tags
 
