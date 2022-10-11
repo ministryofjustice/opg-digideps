@@ -20,13 +20,6 @@ locals {
       target_type = "cidr_block"
       target      = "0.0.0.0/0"
     }
-    pdf = {
-      port        = 80
-      type        = "egress"
-      protocol    = "tcp"
-      target_type = "security_group_id"
-      target      = module.htmltopdf_security_group.id
-    }
     mock_sirius_integration = {
       port        = 8080
       type        = "egress"
@@ -63,7 +56,6 @@ resource "aws_ecs_service" "document_sync" {
   name                    = aws_ecs_task_definition.document_sync.family
   cluster                 = aws_ecs_cluster.main.id
   task_definition         = aws_ecs_task_definition.document_sync.arn
-  desired_count           = local.environment == "production02" ? 1 : 0
   launch_type             = "FARGATE"
   platform_version        = "1.4.0"
   enable_ecs_managed_tags = true
@@ -105,12 +97,11 @@ resource "aws_cloudwatch_event_target" "document_sync_scheduled_task" {
 }
 
 locals {
-  script_name             = local.environment == "production02" ? "scripts/document_and_checklist_sched.sh" : "scripts/documentsync.sh"
   document_sync_container = <<EOF
   {
     "name": "document-sync",
     "image": "${local.images.client}",
-    "command": [ "sh", "${local.script_name}", "-d" ],
+    "command": [ "sh", "scripts/documentsync.sh", "-d" ],
     "logConfiguration": {
       "logDriver": "awslogs",
       "options": {
@@ -138,8 +129,7 @@ locals {
       { "name": "GA_DEFAULT", "value": "${local.account.ga_default}" },
       { "name": "GA_GDS", "value": "${local.account.ga_gds}" },
       { "name": "FEATURE_FLAG_PREFIX", "value": "${local.feature_flag_prefix}" },
-      { "name": "PARAMETER_PREFIX", "value": "${local.parameter_prefix}" },
-      { "name": "HTMLTOPDF_ADDRESS", "value": "http://${local.htmltopdf_service_fqdn}" }
+      { "name": "PARAMETER_PREFIX", "value": "${local.parameter_prefix}" }
     ]
   }
 
