@@ -20,6 +20,13 @@ locals {
       target_type = "cidr_block"
       target      = "0.0.0.0/0"
     }
+    pdf = {
+      port        = 80
+      type        = "egress"
+      protocol    = "tcp"
+      target_type = "security_group_id"
+      target      = module.htmltopdf_security_group.id
+    }
     mock_sirius_integration = {
       port        = 8080
       type        = "egress"
@@ -131,7 +138,8 @@ locals {
       { "name": "GA_DEFAULT", "value": "${local.account.ga_default}" },
       { "name": "GA_GDS", "value": "${local.account.ga_gds}" },
       { "name": "FEATURE_FLAG_PREFIX", "value": "${local.feature_flag_prefix}" },
-      { "name": "PARAMETER_PREFIX", "value": "${local.parameter_prefix}" }
+      { "name": "PARAMETER_PREFIX", "value": "${local.parameter_prefix}" },
+      { "name": "HTMLTOPDF_ADDRESS", "value": "http://${local.htmltopdf_service_fqdn}" }
     ]
   }
 
