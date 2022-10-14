@@ -22,6 +22,8 @@ use RuntimeException;
 use Symfony\Component\DependencyInjection\ContainerInterface;
 use Symfony\Component\DependencyInjection\ParameterBag\ParameterBagInterface;
 use Symfony\Component\HttpFoundation\Response;
+use Symfony\Component\Security\Core\Exception\BadCredentialsException;
+use Symfony\Component\Security\Core\Exception\TooManyLoginAttemptsAuthenticationException;
 use Symfony\Contracts\HttpClient\HttpClientInterface;
 use Throwable;
 
@@ -111,8 +113,12 @@ class RestClient implements RestClientInterface
     {
         try {
             $response = $this->apiCall('post', '/auth/login', $credentials, 'response', [], false);
-        } catch (\Exception $e) {
-            return null;
+        } catch (AppException\RestClientException $e) {
+            if (423 == $e->getCode()) {
+                throw new TooManyLoginAttemptsAuthenticationException($e->getData()['data']);
+            } else {
+                throw new BadCredentialsException('Invalid credentials.', 498);
+            }
         }
 
         /** @var User */

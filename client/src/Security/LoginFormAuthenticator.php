@@ -13,6 +13,8 @@ use Symfony\Component\HttpFoundation\Response;
 use Symfony\Component\Routing\RouterInterface;
 use Symfony\Component\Security\Core\Authentication\Token\TokenInterface;
 use Symfony\Component\Security\Core\Exception\AuthenticationException;
+use Symfony\Component\Security\Core\Exception\BadCredentialsException;
+use Symfony\Component\Security\Core\Exception\TooManyLoginAttemptsAuthenticationException;
 use Symfony\Component\Security\Core\Exception\UserNotFoundException;
 use Symfony\Component\Security\Core\Security;
 use Symfony\Component\Security\Http\Authenticator\AbstractAuthenticator;
@@ -44,15 +46,28 @@ class LoginFormAuthenticator extends AbstractAuthenticator
 
         return new Passport(
             new UserBadge($email, function ($userEmail) use ($password) {
-                [$user, $authToken] = $this->restClient->login(['email' => $userEmail, 'password' => $password]);
+                try {
+                    [$user, $authToken] = $this->restClient->login(['email' => $userEmail, 'password' => $password]);
 
-                if (!$user) {
-                    throw new UserNotFoundException('User not found');
+                    if (!$user) {
+                        throw new UserNotFoundException('User not found');
+                    }
+
+                    $this->tokenStorage->set((string) $user->getId(), $authToken);
+
+                    return $user;
+                } catch (AuthenticationException $e) {
+                    throw $e;
+//                    //TODO: We're recreating the same exception, can we skip this step?
+//                    //TODO: Should we be checking exceptions via the messageKey? Is there something a bit more secure we can use?
+//                    if(str_contains($e->getMessageKey(), 'Too many failed login attempts')) {
+//                        throw new TooManyLoginAttemptsAuthenticationException($e->getMessageData()['%minutes%']);
+//                    } elseif (str_contains($e->getMessageKey(), 'Invalid credentials.')) {
+//                        throw new BadCredentialsException('Invalid credentials.', 498);
+//                    }
                 }
 
-                $this->tokenStorage->set((string) $user->getId(), $authToken);
-
-                return $user;
+                return null;
             }),
             new CustomCredentials(function ($password) {
                 // We check credentials in API so as long as that returns then we can assume they are valid

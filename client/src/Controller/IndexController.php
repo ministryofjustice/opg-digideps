@@ -23,6 +23,8 @@ use Symfony\Component\Routing\Exception\ResourceNotFoundException;
 use Symfony\Component\Routing\RouterInterface;
 use Symfony\Component\Security\Core\Authentication\Token\Storage\TokenStorageInterface;
 use Symfony\Component\Security\Core\Exception\AccessDeniedException;
+use Symfony\Component\Security\Core\Exception\BadCredentialsException;
+use Symfony\Component\Security\Core\Exception\TooManyLoginAttemptsAuthenticationException;
 use Symfony\Component\Security\Http\Authentication\AuthenticationUtils;
 use Symfony\Contracts\Translation\TranslatorInterface;
 
@@ -77,14 +79,14 @@ class IndexController extends AbstractController
         $lastAuthError = $authenticationUtils->getLastAuthenticationError();
 
         if ($lastAuthError) {
-            $errorMessage = $lastAuthError->getMessage();
+            $errorMessage = $lastAuthError->getMessageKey();
 
-            if ('Bad credentials.' == $errorMessage) {
+            if ($lastAuthError instanceof BadCredentialsException) {
                 $errorMessage = $this->translator->trans('signInForm.signin.invalidMessage', [], 'signin');
             }
 
-            if (423 == $lastAuthError->getCode() && method_exists($lastAuthError, 'getData')) {
-                $lockedFor = ceil(($lastAuthError->getData()['data'] - time()) / 60);
+            if ($lastAuthError instanceof TooManyLoginAttemptsAuthenticationException) {
+                $lockedFor = $lastAuthError->getMessageData()['%minutes%'];
                 $errorMessage = $this->translator->trans('bruteForceLocked', ['%minutes%' => $lockedFor], 'signin');
             }
 

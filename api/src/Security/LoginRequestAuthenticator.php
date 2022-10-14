@@ -6,7 +6,6 @@ namespace App\Security;
 
 use App\Exception\UnauthorisedException;
 use App\Exception\UserWrongCredentialsException;
-use App\Exception\UserWrongCredentialsManyAttempts;
 use App\Repository\UserRepository;
 use App\Service\Auth\AuthService;
 use App\Service\BruteForce\AttemptsIncrementalWaitingChecker;
@@ -71,10 +70,10 @@ class LoginRequestAuthenticator extends AbstractAuthenticator
         // exception if reached delay-check
         if ($this->incrementalWaitingTimechecker->isFrozen($this->bruteForceKey)) {
             $nextAttemptAt = $this->incrementalWaitingTimechecker->getUnfrozenAt($this->bruteForceKey);
-            $nowTime = intval(($this->dateTimeProvider->getDateTime())->format('U'));
+            $nowTime = intval($this->dateTimeProvider->getDateTime()->format('U'));
             $nextAttemptIn = ceil(($nextAttemptAt - $nowTime) / 60);
             $exception = new UnauthorisedException("Attack detected. Please try again in $nextAttemptIn minutes", 423);
-            $exception->setData($nextAttemptAt);
+            $exception->setData($nextAttemptIn);
 
             $this->logger->warning(sprintf('Brute force limit reached in LoginRequestAuthenticator for email "%s"', $email));
 
@@ -112,7 +111,7 @@ class LoginRequestAuthenticator extends AbstractAuthenticator
     public function onAuthenticationFailure(Request $request, AuthenticationException $exception): ?Response
     {
         if ($this->attemptsInTimechecker->maxAttemptsReached($this->bruteForceKey)) {
-            throw new UserWrongCredentialsManyAttempts();
+            throw $exception;
         }
 
         throw new UserWrongCredentialsException($exception->getMessage(), $exception->getCode());
