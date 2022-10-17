@@ -3,6 +3,7 @@
 namespace App\Service;
 
 use App\Event\CSVUploadedEvent;
+use App\Event\DeputyChangedOrgEvent;
 use App\Event\OrgCreatedEvent;
 use App\EventDispatcher\ObservableEventDispatcher;
 use App\Service\Audit\AuditEvents;
@@ -144,6 +145,10 @@ class OrgService
         if (!empty($output['skipped'])) {
             $this->output['skipped'] += $output['skipped'];
         }
+
+        if (!empty($output['sameClientNewOrg'])) {
+            $this->output['sameClientNewOrg'] += $output['sameClientNewOrg'];
+        }
     }
 
     /**
@@ -212,6 +217,10 @@ class OrgService
                 $this->dispatchOrgCreatedEvent($organisation);
             }
 
+            foreach ($upload['sameClientNewOrg']['clients'] as $client) {
+                $this->dispatchDeputyChangingOrganisationEvent($client);
+            }
+
             if (!$logged) {
                 $this->dispatchCSVUploadEvent();
                 $logged = true;
@@ -266,4 +275,19 @@ class OrgService
 
         $this->eventDispatcher->dispatch($orgCreatedEvent, OrgCreatedEvent::NAME);
     }
+
+    private function dispatchDeputyChangingOrganisationEvent(array $client)
+    {
+        $trigger = AuditEvents::EVENT_DEPUTY_CHANGED_ORG;
+        $preUpdateClient = $client->getOrganisation()->getId();
+
+        $deputyChangedOrganisationEvent = new DeputyChangedOrgEvent(
+            $trigger,
+            $preUpdateClient,
+            $postUpdateClient,
+            $client
+        );
+        $this->eventDispatcher->dispatch($deputyChangedOrganisationEvent, DeputyChangedOrgEvent::NAME);
+    }
+
 }
