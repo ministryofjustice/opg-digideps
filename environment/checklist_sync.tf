@@ -62,7 +62,6 @@ resource "aws_ecs_service" "checklist_sync" {
   name                    = aws_ecs_task_definition.checklist_sync.family
   cluster                 = aws_ecs_cluster.main.id
   task_definition         = aws_ecs_task_definition.checklist_sync.arn
-  desired_count           = local.environment == "production02" ? 1 : 0
   launch_type             = "FARGATE"
   platform_version        = "1.4.0"
   enable_ecs_managed_tags = true
@@ -104,12 +103,11 @@ resource "aws_cloudwatch_event_target" "checklist_sync_scheduled_task" {
 }
 
 locals {
-  script_name              = local.environment == "production02" ? "scripts/document_and_checklist_sched.sh" : "scripts/checklistsync.sh"
   checklist_sync_container = <<EOF
   {
     "name": "checklist-sync",
     "image": "${local.images.client}",
-    "command": [ "sh", "${local.script_name}", "-d" ],
+    "command": [ "sh", "scripts/checklistsync.sh" ],
     "logConfiguration": {
       "logDriver": "awslogs",
       "options": {
