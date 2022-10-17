@@ -7,7 +7,6 @@ namespace App\Tests\Unit\Security;
 use App\Entity\User;
 use App\Exception\UnauthorisedException;
 use App\Exception\UserWrongCredentialsException;
-use App\Exception\UserWrongCredentialsManyAttempts;
 use App\Repository\UserRepository;
 use App\Security\LoginRequestAuthenticator;
 use App\Service\Auth\AuthService;
@@ -293,7 +292,7 @@ class LoginRequestAuthenticatorTest extends TestCase
             $this->fail('UnauthorisedException was not thrown');
         } catch (UnauthorisedException $e) {
             $this->assertSame(
-                $nowPlusOneHourTime,
+                $nextAttemptIn,
                 $e->getData()
             );
         }
@@ -404,9 +403,10 @@ class LoginRequestAuthenticatorTest extends TestCase
     /** @test */
     public function onAuthenticationFailureThrowsUserWrongCredentialsManyAttemptsExceptionOnTooManyAttempts()
     {
-        self::expectExceptionObject(new UserWrongCredentialsManyAttempts());
-
         $authException = new AuthenticationException('It broke', 444);
+
+        self::expectExceptionObject($authException);
+
         $this->attemptsInTimeChecker->maxAttemptsReached('')->willReturn(true);
 
         $request = Request::create(

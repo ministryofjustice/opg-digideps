@@ -188,7 +188,7 @@ class AuthControllerTest extends AbstractTestController
         // assert the application returns 498 (invalid credentials) for the 1st 4 attempts
         // and after 4 attempts it will return 499 (invalid credentials + too many attempts detected),
         // still allowing the user to try
-        foreach ([498, 498, 498, 498, 499] as $expectedReturnCode) {
+        foreach ([498, 498, 498, 498, 500] as $expectedReturnCode) {
             $this->assertJsonRequest('POST', '/auth/login', [
                 'mustFail' => true,
                 'data' => [
@@ -221,7 +221,7 @@ class AuthControllerTest extends AbstractTestController
         ]);
 
         // 10  attempts
-        foreach ([498, 498, 498, 498, 499, 499, 499, 499, 499] as $expectedReturnCode) {
+        foreach ([498, 498, 498, 498, 500, 500, 500, 500, 500] as $expectedReturnCode) {
             $this->assertJsonRequest('POST', '/auth/login', [
                 'mustFail' => true,
                 'data' => [
@@ -246,7 +246,6 @@ class AuthControllerTest extends AbstractTestController
             'assertResponseCode' => 423,
         ])['data'];
 
-        $expectedTimeStamp = time() + 600;
-        $this->assertTrue(abs($expectedTimeStamp - $data) < 30, 'data does not contain when login with be unlocked');
+        $this->assertTrue($data < 30, 'Data does not contain time the user is locked out for');
     }
 }
