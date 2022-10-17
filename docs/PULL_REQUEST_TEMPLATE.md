@@ -14,6 +14,7 @@ _Any tips and tricks, blog posts or tools which helped you. Plus anything notabl
 - [ ] I have updated documentation (Confluence/ADR/tech debt doc) where relevant
 - [ ] I have added tests to prove my work
 - [ ] The product team have approved these changes
+- [ ] I have checked my work for potential security issues and refered to the [OWASP top 10](https://owasp.org/www-project-top-ten/)
 
 ### Frontend
 - [ ] I have run an in-browser accessibility test (e.g. WAVE, Lighthouse)
