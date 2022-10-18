@@ -12,18 +12,10 @@ use Twig\TwigFilter;
  */
 class AssetsExtension extends AbstractExtension
 {
-    /** @var string */
-    private $tag;
+    private ?string $tag = null;
 
-    /** @var string */
-    private $rootDir;
-
-    /**
-     * @param string $rootDir
-     */
-    public function __construct($rootDir)
+    public function __construct(private string $projectDir)
     {
-        $this->rootDir = $rootDir;
     }
 
     /** Get the version name for assets add it to the url to give a versioned url
@@ -39,7 +31,7 @@ class AssetsExtension extends AbstractExtension
     public function assetSourceFilter($originalUrl)
     {
         $tag = $this->getTag();
-        $source = file_get_contents($this->rootDir.'/public/assets/'.$tag.'/'.$originalUrl);
+        $source = file_get_contents($this->projectDir.'/public/assets/'.$tag.'/'.$originalUrl);
 
         return $source;
     }
@@ -51,7 +43,7 @@ class AssetsExtension extends AbstractExtension
     {
         if (!$this->tag) {
             // List the files in the web/assets folder
-            $assetRoot = $this->rootDir.'/public/assets';
+            $assetRoot = $this->projectDir.'/public/assets';
             $assetContents = array_diff(scandir($assetRoot, SCANDIR_SORT_DESCENDING), ['..', '.']);
 
             // set the value to the folder we find.

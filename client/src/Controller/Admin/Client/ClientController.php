@@ -33,7 +33,7 @@ class ClientController extends AbstractController
     /**
      * @Route("/{id}/details", name="admin_client_details", requirements={"id":"\d+"})
      * //TODO define Security group (AD to remove?)
-     * @Security("is_granted('ROLE_ADMIN') or has_role('ROLE_AD')")
+     * @Security("is_granted('ROLE_ADMIN') or is_granted('ROLE_AD')")
      *
      * @param string $id
      *
@@ -54,7 +54,7 @@ class ClientController extends AbstractController
 
     /**
      * @Route("/case-number/{caseNumber}/details", name="admin_client_by_case_number_details")
-     * @Security("is_granted('ROLE_ADMIN') or has_role('ROLE_AD')")
+     * @Security("is_granted('ROLE_ADMIN') or is_granted('ROLE_AD')")
      *
      * @return RedirectResponse
      */
@@ -105,7 +105,7 @@ class ClientController extends AbstractController
 
     /**
      * @Route("/{id}/archived", name="admin_client_archived", requirements={"id":"\d+"})
-     * @Security("is_granted('ROLE_ADMIN') or has_role('ROLE_AD')")
+     * @Security("is_granted('ROLE_ADMIN') or is_granted('ROLE_AD')")
      *
      * @Template("@App/Admin/Client/Client/archived.html.twig")
      */

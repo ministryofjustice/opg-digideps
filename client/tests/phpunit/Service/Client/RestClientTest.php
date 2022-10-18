@@ -3,7 +3,7 @@
 namespace DigidepsTests\Service\Client;
 
 use App\Service\Client\RestClient;
-use App\Service\Client\TokenStorage\TokenStorageInterface;
+use App\Service\Client\TokenStorage\RedisStorage;
 use App\Service\JWT\JWTService;
 use GuzzleHttp\Client;
 use GuzzleHttp\ClientInterface;
@@ -18,6 +18,7 @@ use Prophecy\PhpUnit\ProphecyTrait;
 use Psr\Http\Message\ResponseInterface;
 use Symfony\Bridge\Monolog\Logger;
 use Symfony\Component\DependencyInjection\ContainerInterface;
+use Symfony\Component\DependencyInjection\ParameterBag\ParameterBagInterface;
 use Symfony\Component\HttpClient\MockHttpClient;
 use Symfony\Component\HttpClient\Response\MockResponse;
 use Symfony\Component\HttpFoundation\Response;
@@ -43,9 +44,9 @@ class RestClientTest extends TestCase
     private $serialiser;
 
     /**
-     * @var TokenStorageInterface|MockInterface
+     * @var RedisStorage|MockInterface
      */
-    private $tokenStorage;
+    private $redisStorage;
 
     /**
      * @var Logger|MockInterface
@@ -82,20 +83,24 @@ class RestClientTest extends TestCase
      */
     private $jwtService;
 
+    private m\LegacyMockInterface|ParameterBagInterface|MockInterface $parameterBag;
+
     public function setUp(): void
     {
         $this->client = m::mock('GuzzleHttp\ClientInterface');
-        $this->tokenStorage = m::mock('App\Service\Client\TokenStorage\TokenStorageInterface');
+        $this->redisStorage = m::mock(RedisStorage::class);
         $this->serialiser = m::mock('JMS\Serializer\SerializerInterface');
         $this->logger = m::mock('Symfony\Bridge\Monolog\Logger');
         $this->clientSecret = 'secret-123';
         $this->sessionToken = 'sessionToken347349r783';
+        $this->parameterBag = m::mock(ParameterBagInterface::class);
 
         $this->container = m::mock('Symfony\Component\DependencyInjection\ContainerInterface');
         $this->container->shouldReceive('get')->with('jms_serializer')->andReturn($this->serialiser);
         $this->container->shouldReceive('get')->with('logger')->andReturn($this->logger);
-        $this->container->shouldReceive('getParameter')->with('kernel.debug')->andReturn(false);
         $this->container->shouldIgnoreMissing();
+
+        $this->parameterBag->shouldReceive('get')->with('kernel.debug')->andReturn(false);
 
         $this->endpointResponse = m::mock('Psr\Http\Message\ResponseInterface');
 
@@ -105,10 +110,11 @@ class RestClientTest extends TestCase
         $this->object = new RestClient(
             $this->container,
             $this->client,
-            $this->tokenStorage,
+            $this->redisStorage,
             $this->serialiser,
             $this->logger,
             $this->clientSecret,
+            $this->parameterBag,
             $this->openInternetClient,
             $this->jwtService
         );
@@ -140,13 +146,13 @@ class RestClientTest extends TestCase
                 'headers' => ['ClientSecret' => $this->clientSecret],
             ])->andReturn($this->endpointResponse);
 
-        $this->tokenStorage
-            ->shouldReceive('set')->once()->with(m::any(), $this->sessionToken);
-
         $this->logger
             ->shouldReceive('warning')->never();
 
-        $this->assertEquals($loggedUser, $this->object->login($credentialsArray));
+        [$user, $authToken] = $this->object->login($credentialsArray);
+
+        $this->assertEquals($loggedUser, $user);
+        $this->assertEquals($this->sessionToken, $authToken);
     }
 
     public function testLogout()
@@ -158,9 +164,9 @@ class RestClientTest extends TestCase
         $this->endpointResponse->shouldReceive('getStatusCode')->andReturn(Response::HTTP_OK);
         $this->endpointResponse->shouldReceive('getBody')->andReturn($responseJson);
 
-        $this->tokenStorage->shouldReceive('get')->with('1')->once()->andReturn($this->sessionToken);
-        $this->tokenStorage->shouldReceive('get')->with('urn:opg:digideps:users:1-jwt')->once()->andReturn(false);
-        $this->tokenStorage->shouldReceive('remove')->once()->with(1);
+        $this->redisStorage->shouldReceive('get')->with('1')->once()->andReturn($this->sessionToken);
+        $this->redisStorage->shouldReceive('get')->with('urn:opg:digideps:users:1-jwt')->once()->andReturn(false);
+        $this->redisStorage->shouldReceive('reset')->once();
 
         $this->serialiser
             ->shouldReceive('deserialize')->with($responseJson, 'array', 'json')->andReturn($responseArray);
@@ -240,8 +246,8 @@ class RestClientTest extends TestCase
         $this->endpointResponse->shouldReceive('getStatusCode')->andReturn(Response::HTTP_OK);
         $this->endpointResponse->shouldReceive('getBody')->andReturn($responseJson);
 
-        $this->tokenStorage->shouldReceive('get')->with('1')->once()->andReturn($this->sessionToken);
-        $this->tokenStorage->shouldReceive('get')->with('urn:opg:digideps:users:1-jwt')->once()->andReturn(false);
+        $this->redisStorage->shouldReceive('get')->with('1')->once()->andReturn($this->sessionToken);
+        $this->redisStorage->shouldReceive('get')->with('urn:opg:digideps:users:1-jwt')->once()->andReturn(false);
 
         $this->client->shouldReceive('put')->with($endpointUrl, [
             'headers' => ['AuthToken' => $this->sessionToken],
@@ -267,8 +273,8 @@ class RestClientTest extends TestCase
         $this->endpointResponse->shouldReceive('getStatusCode')->andReturn(Response::HTTP_CREATED);
         $this->endpointResponse->shouldReceive('getBody')->andReturn($responseJson);
 
-        $this->tokenStorage->shouldReceive('get')->with('1')->once()->andReturn($this->sessionToken);
-        $this->tokenStorage->shouldReceive('get')->with('urn:opg:digideps:users:1-jwt')->once()->andReturn(false);
+        $this->redisStorage->shouldReceive('get')->with('1')->once()->andReturn($this->sessionToken);
+        $this->redisStorage->shouldReceive('get')->with('urn:opg:digideps:users:1-jwt')->once()->andReturn(false);
 
         $this->client->shouldReceive('post')->with($endpointUrl, [
             'headers' => ['AuthToken' => $this->sessionToken],
@@ -291,8 +297,8 @@ class RestClientTest extends TestCase
             ->shouldReceive('deserialize')->with($responseJson, 'array', 'json')->andReturn($responseArray)
         ;
 
-        $this->tokenStorage->shouldReceive('get')->with('1')->once()->andReturn($this->sessionToken);
-        $this->tokenStorage->shouldReceive('get')->with('urn:opg:digideps:users:1-jwt')->once()->andReturn(false);
+        $this->redisStorage->shouldReceive('get')->with('1')->once()->andReturn($this->sessionToken);
+        $this->redisStorage->shouldReceive('get')->with('urn:opg:digideps:users:1-jwt')->once()->andReturn(false);
 
         $this->endpointResponse->shouldReceive('getStatusCode')->andReturn(Response::HTTP_OK);
         $this->endpointResponse->shouldReceive('getBody')->andReturn($responseJson);
@@ -318,8 +324,8 @@ class RestClientTest extends TestCase
         $this->serialiser->shouldReceive('deserialize')->with($responseJson, 'array', 'json')->andReturn($responseArray);
         $this->serialiser->shouldReceive('deserialize')->with($responseDataJson, 'App\Entity\User', 'json')->andReturn($user);
 
-        $this->tokenStorage->shouldReceive('get')->with('1')->once()->andReturn($this->sessionToken);
-        $this->tokenStorage->shouldReceive('get')->with('urn:opg:digideps:users:1-jwt')->once()->andReturn(false);
+        $this->redisStorage->shouldReceive('get')->with('1')->once()->andReturn($this->sessionToken);
+        $this->redisStorage->shouldReceive('get')->with('urn:opg:digideps:users:1-jwt')->once()->andReturn(false);
 
         $this->endpointResponse->shouldReceive('getStatusCode')->andReturn(Response::HTTP_OK);
         $this->endpointResponse->shouldReceive('getBody')->andReturn($responseJson);
@@ -352,8 +358,8 @@ class RestClientTest extends TestCase
         $this->serialiser->shouldReceive('deserialize')->with($user1Json, 'App\Entity\User', 'json')->andReturn($user1);
         $this->serialiser->shouldReceive('deserialize')->with($user2Json, 'App\Entity\User', 'json')->andReturn($user2);
 
-        $this->tokenStorage->shouldReceive('get')->with('1')->once()->andReturn($this->sessionToken);
-        $this->tokenStorage->shouldReceive('get')->with('urn:opg:digideps:users:1-jwt')->once()->andReturn(false);
+        $this->redisStorage->shouldReceive('get')->with('1')->once()->andReturn($this->sessionToken);
+        $this->redisStorage->shouldReceive('get')->with('urn:opg:digideps:users:1-jwt')->once()->andReturn(false);
 
         $this->endpointResponse->shouldReceive('getStatusCode')->andReturn(Response::HTTP_OK);
         $this->endpointResponse->shouldReceive('getBody')->andReturn($responseJson);
@@ -381,8 +387,8 @@ class RestClientTest extends TestCase
         $this->serialiser
             ->shouldReceive('deserialize')->with($responseJson, 'array', 'json');
 
-        $this->tokenStorage->shouldReceive('get')->with('1')->once()->andReturn($this->sessionToken);
-        $this->tokenStorage->shouldReceive('get')->with('urn:opg:digideps:users:1-jwt')->once()->andReturn(false);
+        $this->redisStorage->shouldReceive('get')->with('1')->once()->andReturn($this->sessionToken);
+        $this->redisStorage->shouldReceive('get')->with('urn:opg:digideps:users:1-jwt')->once()->andReturn(false);
 
         $this->endpointResponse->shouldReceive('getStatusCode')->andReturn(Response::HTTP_OK);
         $this->endpointResponse->shouldReceive('getBody')->andReturn($responseJson);
@@ -411,8 +417,8 @@ class RestClientTest extends TestCase
         $this->serialiser
             ->shouldReceive('deserialize')->with($responseJson, 'array', 'json')->andReturn($responseArray);
 
-        $this->tokenStorage->shouldReceive('get')->with('1')->once()->andReturn($this->sessionToken);
-        $this->tokenStorage->shouldReceive('get')->with('urn:opg:digideps:users:1-jwt')->once()->andReturn(false);
+        $this->redisStorage->shouldReceive('get')->with('1')->once()->andReturn($this->sessionToken);
+        $this->redisStorage->shouldReceive('get')->with('urn:opg:digideps:users:1-jwt')->once()->andReturn(false);
 
         $this->endpointResponse->shouldReceive('getStatusCode')->andReturn(Response::HTTP_OK);
         $this->endpointResponse->shouldReceive('getBody')->andReturn($responseJson);
@@ -433,8 +439,8 @@ class RestClientTest extends TestCase
 
         $endpointUrl = '/path/to/endpoint';
 
-        $this->tokenStorage->shouldReceive('get')->with('1')->once()->andReturn($this->sessionToken);
-        $this->tokenStorage->shouldReceive('get')->with('urn:opg:digideps:users:1-jwt')->once()->andReturn(false);
+        $this->redisStorage->shouldReceive('get')->with('1')->once()->andReturn($this->sessionToken);
+        $this->redisStorage->shouldReceive('get')->with('urn:opg:digideps:users:1-jwt')->once()->andReturn(false);
 
         $this->endpointResponse
             ->shouldReceive('getBody')->andReturn('whatever');
@@ -459,8 +465,8 @@ class RestClientTest extends TestCase
         $this->serialiser
             ->shouldReceive('deserialize')->with($responseJson, 'array', 'json')->andReturn($responseArray);
 
-        $this->tokenStorage->shouldReceive('get')->with('1')->once()->andReturn($this->sessionToken);
-        $this->tokenStorage->shouldReceive('get')->with('urn:opg:digideps:users:1-jwt')->once()->andReturn(false);
+        $this->redisStorage->shouldReceive('get')->with('1')->once()->andReturn($this->sessionToken);
+        $this->redisStorage->shouldReceive('get')->with('urn:opg:digideps:users:1-jwt')->once()->andReturn(false);
 
         $this->endpointResponse->shouldReceive('getStatusCode')->andReturn(Response::HTTP_OK);
         $this->endpointResponse->shouldReceive('getBody')->andReturn($responseJson);
@@ -475,25 +481,27 @@ class RestClientTest extends TestCase
     public function testGetHistory()
     {
         $this->client = m::mock('GuzzleHttp\ClientInterface');
-        $this->tokenStorage = m::mock('App\Service\Client\TokenStorage\TokenStorageInterface');
+        $this->redisStorage = m::mock(RedisStorage::class);
         $this->serialiser = m::mock('JMS\Serializer\SerializerInterface');
         $this->logger = m::mock('Symfony\Bridge\Monolog\Logger');
         $this->clientSecret = 'secret-123';
         $this->sessionToken = 'sessionToken347349r783';
         $this->container = m::mock('Symfony\Component\DependencyInjection\ContainerInterface');
+        $this->parameterBag = m::mock(ParameterBagInterface::class);
 
         $this->container->shouldReceive('get')->with('jms_serializer')->andReturn($this->serialiser);
         $this->container->shouldReceive('get')->with('logger')->andReturn($this->logger);
         $this->container->shouldReceive('get')->with('request_stack')->andReturn(null);
-        $this->container->shouldReceive('getParameter')->with('kernel.debug')->andReturn(true);
+        $this->parameterBag->shouldReceive('get')->with('kernel.debug')->andReturn(true);
 
         $object = new RestClient(
             $this->container,
             $this->client,
-            $this->tokenStorage,
+            $this->redisStorage,
             $this->serialiser,
             $this->logger,
             $this->clientSecret,
+            $this->parameterBag,
             $this->openInternetClient,
             $this->jwtService
         );
@@ -507,8 +515,8 @@ class RestClientTest extends TestCase
         $this->serialiser
             ->shouldReceive('deserialize')->with($responseJson, 'array', 'json')->andReturn($responseArray);
 
-        $this->tokenStorage->shouldReceive('get')->with('1')->once()->andReturn($this->sessionToken);
-        $this->tokenStorage->shouldReceive('get')->with('urn:opg:digideps:users:1-jwt')->once()->andReturn(false);
+        $this->redisStorage->shouldReceive('get')->with('1')->once()->andReturn($this->sessionToken);
+        $this->redisStorage->shouldReceive('get')->with('urn:opg:digideps:users:1-jwt')->once()->andReturn(false);
 
         $this->endpointResponse->shouldReceive('getBody')->andReturn($responseJson);
         $this->endpointResponse->shouldReceive('getStatusCode')->andReturn(Response::HTTP_OK);
@@ -535,7 +543,7 @@ class RestClientTest extends TestCase
     public function testJWTReturnedWhenSuperAdminLogsIn()
     {
         $client = self::prophesize(Client::class);
-        $tokenStorage = self::prophesize(TokenStorageInterface::class);
+        $redisStorage = self::prophesize(RedisStorage::class);
         $serializer = self::prophesize(SerializerInterface::class);
         $logger = self::prophesize(Logger::class);
         $container = self::prophesize(ContainerInterface::class);
@@ -561,15 +569,18 @@ class RestClientTest extends TestCase
             'response_headers' => ['Content-Type: application/json'],
         ]);
 
+        $parameterBag = self::prophesize(ParameterBagInterface::class);
+
         $openInternetClient = new MockHttpClient($mockResponse);
 
         $sut = new RestClient(
             $container->reveal(),
             $client->reveal(),
-            $tokenStorage->reveal(),
+            $redisStorage->reveal(),
             $serializer->reveal(),
             $logger->reveal(),
             $clientSecret,
+            $parameterBag->reveal(),
             $openInternetClient,
             $jwtService->reveal()
         );
@@ -587,8 +598,7 @@ class RestClientTest extends TestCase
             'headers' => ['ClientSecret' => $clientSecret],
         ])->willReturn($loginResponse);
 
-        $tokenStorage->set('1', $sessionToken)->shouldBeCalled();
-        $tokenStorage->set('urn:opg:digideps:users:1-jwt', $encodedJWT)->shouldBeCalled();
+        $redisStorage->set('urn:opg:digideps:users:1-jwt', $encodedJWT)->shouldBeCalled();
 
         $jwtService->getJWTHeaders($encodedJWT)->shouldBeCalled()->willReturn($jwtHeaders);
         $jwtService->decodeAndVerifyWithJWK($encodedJWT, $jwks)->shouldBeCalled()->willReturn(
@@ -601,8 +611,10 @@ class RestClientTest extends TestCase
 
         $logger->warning(Argument::any())->shouldNotBeCalled();
 
-        $actualUser = $sut->login($credentialsArray);
+        [$actualUser, $actualAuthToken] = $sut->login($credentialsArray);
+
         $this->assertEquals($expectedLoggedInUser, $actualUser);
+        $this->assertEquals($sessionToken, $actualAuthToken);
     }
 
     private function generateValidJwtJwkArrays()

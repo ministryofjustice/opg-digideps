@@ -8,13 +8,14 @@ use App\Validator\Constraints\EmailSameDomain;
 use DateTime;
 use Doctrine\Common\Collections\ArrayCollection;
 use JMS\Serializer\Annotation as JMS;
+use Symfony\Component\Security\Core\User\PasswordAuthenticatedUserInterface;
 use Symfony\Component\Security\Core\User\UserInterface;
 use Symfony\Component\Validator\Constraints as Assert;
 
 /**
  * @codeCoverageIgnore
  */
-class User implements UserInterface, DeputyInterface
+class User implements UserInterface, DeputyInterface, PasswordAuthenticatedUserInterface
 {
     use LoginInfoTrait;
 
@@ -363,6 +364,12 @@ class User implements UserInterface, DeputyInterface
     private $numberOfSubmittedReports;
 
     /**
+     * @JMS\Type("string")
+     * @JMS\Groups({"user_details_full", "user_details_basic", "admin_add_user"})
+     **/
+    private ?string $authToken = null;
+
+    /**
      * @JMS\Type("App\Entity\User")
      * @JMS\Groups({"user"})
      *
@@ -482,7 +489,7 @@ class User implements UserInterface, DeputyInterface
     /**
      * @return string $password
      */
-    public function getPassword()
+    public function getPassword(): null|string
     {
         return $this->password;
     }
@@ -1245,6 +1252,10 @@ class User implements UserInterface, DeputyInterface
 
     public function belongsToActiveOrganisation(): bool
     {
+        if (empty($this->organisations)) {
+            return false;
+        }
+
         foreach ($this->getOrganisations() as $organisation) {
             if ($organisation->isActivated()) {
                 return true;
@@ -1340,6 +1351,23 @@ class User implements UserInterface, DeputyInterface
     public function setCreatedByCaseManager(bool $createdByCaseManager): User
     {
         $this->createdByCaseManager = $createdByCaseManager;
+
+        return $this;
+    }
+
+    public function getUserIdentifier(): ?string
+    {
+        return $this->email;
+    }
+
+    public function getAuthToken(): ?string
+    {
+        return $this->authToken;
+    }
+
+    public function setAuthToken(?string $authToken): User
+    {
+        $this->authToken = $authToken;
 
         return $this;
     }

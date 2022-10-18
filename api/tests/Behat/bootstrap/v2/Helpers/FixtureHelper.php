@@ -327,6 +327,7 @@ class FixtureHelper
         $this->em->persist($deputy);
         $this->em->persist($client);
         $this->em->persist($report);
+        $this->em->persist($organisation);
 
         if ($submitted and isset($satisfactionScore)) {
             $satisfaction = $this->setSatisfaction($report, $deputy, $satisfactionScore);

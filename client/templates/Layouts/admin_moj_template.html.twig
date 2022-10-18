@@ -33,24 +33,23 @@
             </div>
             <div class="moj-header__content">
                 <nav class="moj-header__navigation" aria-label="Account navigation">
-                    <ul class="moj-header__navigation-list">
-                        {% if app.user %}
-                            <li class="moj-header__navigation-item">
-                                {{ app.user.getFullName() }}
-                            </li>
-                            <li class="moj-header__navigation-item">
-                                <a class="moj-header__navigation-link behat-link-user-account"
-                                   href="{{ path('account_settings') }}">
-                                    {{ 'nav.userAccount' | trans }}
-                                </a>
-                            </li>
-                            <li class="moj-header__navigation-item">
-                                <a class="moj-header__navigation-link behat-link-logout" href="{{ path('logout') }}">
-                                    {{ 'signOut' | trans({}, 'common' ) }}
-                                </a>
-                            </li>
-                        {% endif %}
-                    </ul>
+                <ul class="moj-header__navigation-list">
+                    {% if app.user %}
+                        <li class="moj-header__navigation-item">
+                            {{ app.user.getFullName() }}
+                        </li>
+                        <li class="moj-header__navigation-item">
+                            <a class="moj-header__navigation-link behat-link-user-account" href="{{ path('account_settings') }}">
+                                {{ 'nav.userAccount' | trans }}
+                            </a>
+                        </li>
+                        <li class="moj-header__navigation-item">
+                            <a class="moj-header__navigation-link behat-link-logout" href="{{ path('app_logout') }}">
+                                {{ 'signOut' | trans({}, 'common' ) }}
+                            </a>
+                        </li>
+                    {% endif %}
+                </ul>
                 </nav>
             </div>
         </div>

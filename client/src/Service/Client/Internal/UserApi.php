@@ -80,30 +80,34 @@ class UserApi
      */
     public function get(int $id, array $jmsGroups = [])
     {
-        return $this->restClient->get(sprintf(self::USER_BY_ID_ENDPOINT, $id), 'User', $jmsGroups);
-    }
-
-    /**
-     * @return mixed
-     */
-    public function getByEmail(string $email, array $jsmgroups = [])
-    {
         return $this->restClient->get(
-            sprintf(self::GET_USER_BY_EMAIL_ENDPOINT, $email),
+            sprintf(self::USER_BY_ID_ENDPOINT, $id),
             'User',
-            $jsmgroups
+            $jmsGroups
         );
     }
 
     /**
      * @return mixed
      */
-    public function getByEmailOrgAdmins(string $email, array $jsmgroups = [])
+    public function getByEmail(string $email, array $jmsGroups = [])
+    {
+        return $this->restClient->get(
+            sprintf(self::GET_USER_BY_EMAIL_ENDPOINT, $email),
+            'User',
+            $jmsGroups
+        );
+    }
+
+    /**
+     * @return mixed
+     */
+    public function getByEmailOrgAdmins(string $email, array $jmsGroups = [])
     {
         return $this->restClient->get(
             sprintf(self::GET_USER_BY_EMAIL_ORG_ADMINS_ENDPOINT, $email),
             'User',
-            $jsmgroups
+            $jmsGroups
         );
     }
 

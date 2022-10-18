@@ -72,7 +72,7 @@ class VisitsCare
      * @JMS\Groups({"visits-care"})
      *
      * @Assert\NotBlank(message="visitsCare.whenWasCarePlanLastReviewed.notBlank", groups={"visits-care-care-plan-last-review"})
-     * @Assert\Date( message="visitsCare.whenWasCarePlanLastReviewed.invalidMessage", groups={"visits-care-care-plan-last-review"} )
+     * @Assert\Type(type="DateTimeInterface", message="visitsCare.whenWasCarePlanLastReviewed.invalidMessage", groups={"visits-care-care-plan-last-review"} )
      */
     private $whenWasCarePlanLastReviewed;
 
@@ -262,15 +262,15 @@ class VisitsCare
      */
     public function keepOnlyRelevantVisitsCareData()
     {
-        if ($this->doYouLiveWithClient == 'yes') {
+        if ('yes' == $this->doYouLiveWithClient) {
             $this->howOftenDoYouContactClient = null;
         }
 
-        if ($this->doesClientReceivePaidCare == 'no') {
+        if ('no' == $this->doesClientReceivePaidCare) {
             $this->howIsCareFunded = null;
         }
 
-        if ($this->doesClientHaveACarePlan == 'no') {
+        if ('no' == $this->doesClientHaveACarePlan) {
             $this->whenWasCarePlanLastReviewed = null;
         }
 

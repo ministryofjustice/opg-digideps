@@ -17,7 +17,7 @@ class DocumentHelpers
         $document = new Document($report);
 
         return $document
-            ->setStorageReference($faker->url)
+            ->setStorageReference($faker->url())
             ->setFileName('report.pdf')
             ->setId(1);
     }

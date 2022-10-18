@@ -35,8 +35,6 @@ use Throwable;
  */
 class StatsController extends AbstractController
 {
-
-
     public function __construct(
         private RestClient $restClient,
         private SatisfactionCsvGenerator $satisfactionCsvGenerator,
@@ -51,7 +49,7 @@ class StatsController extends AbstractController
 
     /**
      * @Route("", name="admin_stats")
-     * @Security("is_granted('ROLE_ADMIN') or has_role('ROLE_AD')")
+     * @Security("is_granted('ROLE_ADMIN') or is_granted('ROLE_AD')")
      * @Template("@App/Admin/Stats/stats.html.twig")
      *
      * @return array|Response
@@ -165,7 +163,7 @@ class StatsController extends AbstractController
         $response->headers->set('Content-Type', 'application/octet-stream');
 
         $attachmentName = sprintf('cwsdigidepsopg00001%s.dat', date('YmdHi'));
-        $response->headers->set('Content-Disposition', 'attachment; filename="' . $attachmentName . '"');
+        $response->headers->set('Content-Disposition', 'attachment; filename="'.$attachmentName.'"');
 
         $response->sendHeaders();
 
@@ -174,7 +172,7 @@ class StatsController extends AbstractController
 
     /**
      * @Route("/metrics", name="admin_metrics")
-     * @Security("is_granted('ROLE_ADMIN') or has_role('ROLE_AD')")
+     * @Security("is_granted('ROLE_ADMIN') or is_granted('ROLE_AD')")
      * @Template("@App/Admin/Stats/metrics.html.twig")
      *
      * @return array|Response
@@ -195,8 +193,8 @@ class StatsController extends AbstractController
         $metrics = ['satisfaction', 'reportsSubmitted', 'clients', 'registeredDeputies'];
 
         foreach ($metrics as $metric) {
-            $all = $this->restClient->get('stats?metric=' . $metric . $append, 'array');
-            $byRole = $this->restClient->get('stats?metric=' . $metric . '&dimension[]=deputyType' . $append, 'array');
+            $all = $this->restClient->get('stats?metric='.$metric.$append, 'array');
+            $byRole = $this->restClient->get('stats?metric='.$metric.'&dimension[]=deputyType'.$append, 'array');
 
             $stats[$metric] = array_merge(
                 ['all' => $all[0]['amount']],

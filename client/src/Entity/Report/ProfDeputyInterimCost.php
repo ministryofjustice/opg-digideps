@@ -2,9 +2,9 @@
 
 namespace App\Entity\Report;
 
+use DateTime;
 use JMS\Serializer\Annotation as JMS;
 use Symfony\Component\Validator\Constraints as Assert;
-use DateTime;
 
 class ProfDeputyInterimCost
 {
@@ -31,11 +31,10 @@ class ProfDeputyInterimCost
      * @JMS\Type("DateTime<'Y-m-d'>")
      * @JMS\Groups({"profDeputyInterimCosts"})
      *
-     * @Assert\Date(message="profDeputyInterimCost.date.notValid", groups={"prof-deputy-interim-costs"})
+     * @Assert\Type(type="DateTimeInterface",message="profDeputyInterimCost.date.notValid", groups={"prof-deputy-interim-costs"})
      * @Assert\LessThanOrEqual("today", message="profDeputyInterimCost.date.notFuture", groups={"prof-deputy-interim-costs"})
      */
     private $date;
-
 
     /**
      * @return int
@@ -53,7 +52,6 @@ class ProfDeputyInterimCost
         $this->id = $id;
     }
 
-
     /**
      * @return string
      */
@@ -69,7 +67,6 @@ class ProfDeputyInterimCost
     {
         $this->amount = $amount;
     }
-
 
     /**
      * @return DateTime

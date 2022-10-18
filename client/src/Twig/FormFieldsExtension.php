@@ -45,12 +45,12 @@ class FormFieldsExtension extends AbstractExtension
      */
     public function renderFormInput($element, $elementName, array $vars = [], $transIndex = null)
     {
-        //generate input field html using variables supplied
+        // generate input field html using variables supplied
         echo $this->environment->render(
             '@App/Components/Form/_input.html.twig',
             array_merge(
                 $this->getFormComponentTwigVariables($element, $elementName, $vars, $transIndex),
-                ['multiline' => in_array('textarea', $element->vars['block_prefixes'])]
+                ['multiline' => in_array('textarea', $element->vars['block_prefixes'] ?? [])]
             )
         );
     }
@@ -80,11 +80,11 @@ class FormFieldsExtension extends AbstractExtension
      */
     public function renderCheckboxGroup(FormView $element, $elementName, $vars, $transIndex = null)
     {
-        //lets get the translation for hintText, labelClass and labelText
+        // lets get the translation for hintText, labelClass and labelText
         $translationKey = (!is_null($transIndex)) ? $transIndex.'.'.$elementName : $elementName;
         $domain = $element->parent->vars['translation_domain'];
 
-        //sort hint text translation
+        // sort hint text translation
         if (isset($vars['hintText'])) {
             $hintText = $vars['hintText'];
         } else {
@@ -95,7 +95,7 @@ class FormFieldsExtension extends AbstractExtension
         if (isset($vars['legendText'])) {
             $legendText = $vars['legendText'];
         } else {
-            //get legendText translation. Look for a .legend value, if there isn't one then try the top level
+            // get legendText translation. Look for a .legend value, if there isn't one then try the top level
             $legendTextTrans = $this->translator->trans($translationKey.'.legend', [], $domain);
 
             if ($legendTextTrans != $translationKey.'.legend') {
@@ -111,7 +111,7 @@ class FormFieldsExtension extends AbstractExtension
             }
         }
 
-        //generate input field html using variables supplied
+        // generate input field html using variables supplied
         echo $this->environment->render('@App/Components/Form/_checkboxgroup.html.twig', [
             'classes' => isset($vars['classes']) ? $vars['classes'] : null,
             'disabled' => isset($vars['disabled']) ? $vars['disabled'] : false,
@@ -137,11 +137,11 @@ class FormFieldsExtension extends AbstractExtension
      */
     public function renderCheckboxGroupNew(FormView $element, $elementName, $vars, $transIndex = null)
     {
-        //lets get the translation for hintText, labelClass and labelText
+        // lets get the translation for hintText, labelClass and labelText
         $translationKey = (!is_null($transIndex)) ? $transIndex.'.'.$elementName : $elementName;
         $domain = $element->parent->vars['translation_domain'];
 
-        //sort hint text translation
+        // sort hint text translation
         if (isset($vars['hintText'])) {
             $hintText = $vars['hintText'];
         } else {
@@ -152,7 +152,7 @@ class FormFieldsExtension extends AbstractExtension
         if (isset($vars['legendText'])) {
             $legendText = $vars['legendText'];
         } else {
-            //get legendText translation. Look for a .legend value, if there isn't one then try the top level
+            // get legendText translation. Look for a .legend value, if there isn't one then try the top level
             $legendTextTrans = $this->translator->trans($translationKey.'.legend', [], $domain);
 
             if ($legendTextTrans != $translationKey.'.legend') {
@@ -168,7 +168,7 @@ class FormFieldsExtension extends AbstractExtension
             }
         }
 
-        //generate input field html using variables supplied
+        // generate input field html using variables supplied
         echo $this->environment->render('@App/Components/Form/_checkboxgroup_new.html.twig', [
             'fieldSetClass' => isset($vars['fieldSetClass']) ? $vars['fieldSetClass'] : null,
             'legendText' => $legendText,
@@ -190,7 +190,7 @@ class FormFieldsExtension extends AbstractExtension
      */
     public function renderFormDropDown($element, $elementName, array $vars = [], $transIndex = null)
     {
-        //generate input field html using variables supplied
+        // generate input field html using variables supplied
         echo $this->environment->render(
             '@App/Components/Form/_select.html.twig',
             $this->getFormComponentTwigVariables($element, $elementName, $vars, $transIndex)
@@ -210,7 +210,7 @@ class FormFieldsExtension extends AbstractExtension
             $showDay = 'true';
         }
 
-        //sort hint text translation
+        // sort hint text translation
         $hintTextTrans = $this->translator->trans($translationKey.'.hint', [], $domain);
         if (isset($vars['hintText']) && !empty($vars['hintText'])) {
             $hintText = $vars['hintText'];
@@ -220,7 +220,7 @@ class FormFieldsExtension extends AbstractExtension
             $hintText = $this->translator->trans('defaultDateHintText', [], 'common');
         }
 
-        //get legendText translation
+        // get legendText translation
         $legendParams = isset($vars['legendParameters']) ? $vars['legendParameters'] : [];
 
         $legendTextTrans = $this->translator->trans($translationKey.'.legend', $legendParams, $domain);
@@ -253,16 +253,16 @@ class FormFieldsExtension extends AbstractExtension
 
     public function renderFormSortCode($element, $elementName, array $vars = [], $transIndex = null)
     {
-        //lets get the translation for class and labelText
+        // lets get the translation for class and labelText
         $translationKey = (!is_null($transIndex)) ? $transIndex.'.'.$elementName : $elementName;
         // read domain from Form ption 'translation_domain'
         $domain = $element->parent->vars['translation_domain'];
 
-        //sort hint text translation
+        // sort hint text translation
         $hintTextTrans = $this->translator->trans($translationKey.'.hint', [], $domain);
         $hintText = ($hintTextTrans != $translationKey.'.hint') ? $hintTextTrans : null;
 
-        //get legendText translation
+        // get legendText translation
         $legendTextTrans = $this->translator->trans($translationKey.'.legend', [], $domain);
 
         $legendText = ($legendTextTrans != $translationKey.'.legend') ? $legendTextTrans : null;
@@ -422,7 +422,7 @@ class FormFieldsExtension extends AbstractExtension
      */
     private function getFormComponentTwigVariables($element, $elementName, array $vars, $transIndex)
     {
-        //lets get the translation for hintText, labelClass and labelText
+        // lets get the translation for hintText, labelClass and labelText
         $translationKey = (!is_null($transIndex)) ? $transIndex.'.'.$elementName : $elementName;
         $domain = $element->parent->vars['translation_domain'];
 
@@ -433,7 +433,7 @@ class FormFieldsExtension extends AbstractExtension
             $hintText = ($hintTextTrans != $translationKey.'.hint') ? $hintTextTrans : null;
         }
 
-        //sort hintList text translation
+        // sort hintList text translation
         $hintListArray = null;
         if (!empty($vars['hasHintList'])) {
             $hintListParams = isset($vars['hintListParameters']) ? $vars['hintListParameters'] : [];
@@ -454,14 +454,14 @@ class FormFieldsExtension extends AbstractExtension
             }
         }
 
-        //inputPrefix
+        // inputPrefix
         $inputPrefix = isset($vars['inputPrefix']) ? $this->translator->trans($vars['inputPrefix'], [], $domain) : null;
 
         $labelClass = isset($vars['labelClass']) ? $vars['labelClass'] : null;
         $inputClass = isset($vars['inputClass']) ? $vars['inputClass'] : null;
         $formGroupClass = isset($vars['formGroupClass']) ? $vars['formGroupClass'] : '';
 
-        //Text to insert to the left of an input, e.g. * * * * for account
+        // Text to insert to the left of an input, e.g. * * * * for account
         $preInputText = null;
         if (!empty($vars['hasPreInput'])) {
             $preInputTextTrans = $this->translator->trans($translationKey.'.preInput', [], $domain);

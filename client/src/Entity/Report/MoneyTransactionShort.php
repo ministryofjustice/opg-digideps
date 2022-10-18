@@ -50,7 +50,7 @@ class MoneyTransactionShort
      * @JMS\Type("DateTime<'Y-m-d'>")
      * @JMS\Groups({"moneyTransactionShort"})
      *
-     * @Assert\Date(message="moneyTransactionShort.date.notValid", groups={"money-transaction-short"})
+     * @Assert\Type(type="DateTimeInterface", message="moneyTransactionShort.date.notValid", groups={"money-transaction-short"})
      */
     private $date;
 

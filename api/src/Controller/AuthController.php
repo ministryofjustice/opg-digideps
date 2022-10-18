@@ -4,20 +4,17 @@ namespace App\Controller;
 
 use App\Entity\User;
 use App\EventListener\RestInputOuputFormatter;
-use App\Exception as AppException;
-use App\Service\Auth\AuthService;
-use App\Service\Auth\HeaderTokenAuthenticator;
-use App\Service\Auth\UserProvider;
-use App\Service\BruteForce\AttemptsIncrementalWaitingChecker;
-use App\Service\BruteForce\AttemptsInTimeChecker;
+use App\Security\HeaderTokenAuthenticator;
+use App\Security\RedisUserProvider;
 use App\Service\Formatter\RestFormatter;
 use App\Service\JWT\JWTService;
-use DateTime;
 use Doctrine\ORM\EntityManagerInterface;
+use Predis\Client;
 use Psr\Log\LoggerInterface;
-use Symfony\Component\HttpFoundation\Request;
 use Symfony\Component\Routing\Annotation\Route;
 use Symfony\Component\Security\Core\Authentication\Token\Storage\TokenStorageInterface;
+use Symfony\Component\Security\Core\Exception\UserNotFoundException;
+use Throwable;
 
 /**
  * @Route("/auth")
@@ -25,80 +22,42 @@ use Symfony\Component\Security\Core\Authentication\Token\Storage\TokenStorageInt
 class AuthController extends RestController
 {
     public function __construct(
-        private AuthService $authService,
         private RestFormatter $restFormatter,
         private JWTService $JWTService,
-        private LoggerInterface $logger
+        private LoggerInterface $logger,
+        private TokenStorageInterface $tokenStorage
     ) {
     }
 
     /**
-     * Return the user by email&password or token
-     * expected keys in body: 'token' or ('email' and 'password').
+     * @Route("/login", methods={"POST"}, name="api_login")
      *
-     * @Route("/login", methods={"POST"})
+     * @return User
      *
-     * @return User|bool|null
+     * @throws Throwable
      */
     public function login(
-        Request $request,
-        UserProvider $userProvider,
-        AttemptsInTimeChecker $attemptsInTimechecker,
-        AttemptsIncrementalWaitingChecker $incrementalWaitingTimechecker,
         RestInputOuputFormatter $restInputOutputFormatter,
-        EntityManagerInterface $em
+        EntityManagerInterface $em,
+        Client $redis,
     ) {
         try {
-            if (!$this->authService->isSecretValid($request)) {
-                throw new AppException\UnauthorisedException('client secret not accepted.');
-            }
-            $data = $this->restFormatter->deserializeBodyContent($request);
+            // See LoginRequestAuthenticator and RegistrationTokenAuthenticator for checks. User is set in token storage on successful authentication via Symfony event
+            /** @var User $user */
+            $user = $this->tokenStorage->getToken()->getUser();
 
-            // brute force checks
-            $index = array_key_exists('token', $data) ? 'token' : 'email';
-            $key = $index.$data[$index];
-
-            $attemptsInTimechecker->registerAttempt($key); // e.g emailName@example.org
-            $incrementalWaitingTimechecker->registerAttempt($key);
-
-            // exception if reached delay-check
-            if ($incrementalWaitingTimechecker->isFrozen($key)) {
-                $nextAttemptAt = $incrementalWaitingTimechecker->getUnfrozenAt($key);
-                $nextAttemptIn = ceil(($nextAttemptAt - time()) / 60);
-                $exception = new AppException\UnauthorisedException("Attack detected. Please try again in $nextAttemptIn minutes", 423);
-                $exception->setData($nextAttemptAt);
-
-                throw $exception;
-            }
-
-            // load user by credentials (token or username & password)
-            if (array_key_exists('token', $data)) {
-                $user = $this->authService->getUserByToken($data['token']);
-            } else {
-                $user = $this->authService->getUserByEmailAndPassword(strtolower($data['email']), $data['password']);
-            }
-
-            if (!$user) {
-                // incase the user is not found or the password is not valid (same error given for security reasons)
-                if ($attemptsInTimechecker->maxAttemptsReached($key)) {
-                    throw new AppException\UserWrongCredentialsManyAttempts();
-                } else {
-                    throw new AppException\UserWrongCredentials();
-                }
-            }
-
-            if (!$this->authService->isSecretValidForRole($user->getRoleName(), $request)) {
-                throw new AppException\UnauthorisedException($user->getRoleName().' user role not allowed from this client.');
-            }
-
-            // reset counters at successful login
-            $attemptsInTimechecker->resetAttempts($key);
-            $incrementalWaitingTimechecker->resetAttempts($key);
-
-            $randomToken = $userProvider->generateRandomTokenAndStore($user);
-            $user->setLastLoggedIn(new DateTime());
+            $user->setLastLoggedIn(new \DateTime());
             $em->persist($user);
             $em->flush();
+
+            // Now doing this inline rather than injecting RedisUserProvider
+            $authToken = $user->getId().'_'.sha1(microtime().spl_object_hash($user).rand(1, 999));
+            $redis->set($authToken, serialize($this->tokenStorage->getToken()));
+
+            // add token into response
+            $restInputOutputFormatter->addResponseModifier(function ($response) use ($authToken) {
+                $response->headers->set(HeaderTokenAuthenticator::HEADER_NAME, $authToken);
+            });
 
             if (User::ROLE_SUPER_ADMIN === $user->getRoleName()) {
                 $jwt = $this->JWTService->createNewJWT($user);
@@ -108,29 +67,22 @@ class AuthController extends RestController
                 });
             }
 
-            // add token into response
-            $restInputOutputFormatter->addResponseModifier(function ($response) use ($randomToken) {
-                $response->headers->set(HeaderTokenAuthenticator::HEADER_NAME, $randomToken);
-            });
-
             // needed for redirector
             $this->restFormatter->setJmsSerialiserGroups(['user', 'user-login']);
 
             return $user;
-        } catch (\Throwable $e) {
+        } catch (Throwable $e) {
             $this->logger->warning(sprintf('Error when attempting to log user in: %s', $e->getMessage()));
             throw $e;
         }
     }
 
     /**
-     * Return the user by email and hashed password (or exception if not found).
-     *
      * @Route("/logout", methods={"POST"})
      */
-    public function logout(Request $request, UserProvider $userProvider)
+    public function logout(RedisUserProvider $userProvider)
     {
-        $authToken = HeaderTokenAuthenticator::getTokenFromRequest($request);
+        $authToken = $this->tokenStorage->getToken();
 
         return $userProvider->removeToken($authToken);
     }
@@ -140,10 +92,16 @@ class AuthController extends RestController
      *
      * @Route("/get-logged-user", methods={"GET"})
      */
-    public function getLoggedUser(TokenStorageInterface $tokenStorage)
+    public function getLoggedUser()
     {
         $this->restFormatter->setJmsSerialiserGroups(['user', 'user-login']);
+        $user = $this->tokenStorage->getToken()?->getUser();
 
-        return $tokenStorage->getToken()->getUser();
+        if (!$user) {
+            $this->logger->warning('Expected to find a token in tokenStorage but it was empty');
+            throw new UserNotFoundException();
+        }
+
+        return $user;
     }
 }

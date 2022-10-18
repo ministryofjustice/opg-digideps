@@ -2,9 +2,10 @@ imports:
     - { resource: ../parameters.yml }
 
 framework:
+    assets: ~
     translator:
         fallback: "%locale%"
-        default_path: "%kernel.root_dir%/translations"
+        default_path: "%kernel.project_dir%/translations"
     secret: "%secret%"
     router:
         strict_requirements: ~
@@ -13,9 +14,7 @@ framework:
     validation:
         enabled: true
         enable_annotations: true
-        strict_email: true
-    templating:
-        engines: ["twig"]
+        email_validation_mode: strict
     default_locale: "%locale%"
     session:
         handler_id: snc_redis.session.handler

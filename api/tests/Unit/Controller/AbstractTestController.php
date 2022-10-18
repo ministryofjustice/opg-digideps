@@ -44,12 +44,11 @@ abstract class AbstractTestController extends WebTestCase
         // TODO consider moving into setUpBeforeClass of each method. might not be needed for some tests
         Fixtures::deleteReportsData();
 
-        self::bootKernel();
         self::$frameworkBundleClient = static::createClient(['environment' => 'test', 'debug' => false]);
 
         /** @var EntityManager $em */
-        $em = self::$container->get('em');
-        $this->jwtService = self::$container->get('App\Service\JWT\JWTService');
+        $em = static::getContainer()->get('em');
+        $this->jwtService = static::getContainer()->get('App\Service\JWT\JWTService');
 
         self::$fixtures = new Fixtures($em);
 

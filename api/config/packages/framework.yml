@@ -2,7 +2,6 @@ imports:
     - { resource: ../parameters.yml }
 
 framework:
-    #esi:             ~
     translator:
         enabled: false
     secret: "%secret%"
@@ -11,8 +10,6 @@ framework:
     form: ~
     csrf_protection: ~
     validation: { enable_annotations: true }
-    templating:
-        engines: ["php"]
     default_locale: "%locale%"
     session: ~
     fragments: ~

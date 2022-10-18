@@ -42,10 +42,11 @@ services:
         autoconfigure: true # Automatically registers your services as commands, event subscribers, etc.
         bind:
             $fixturesEnabled: "%env(bool:FIXTURES_ENABLED)%"
-            $yamlFixtureLocation: "%kernel.root_dir%/src/DataFixtures/"
+            $yamlFixtureLocation: "%kernel.project_dir%/src/DataFixtures/"
             $fixtureParams: "%fixtures%"
             $symfonyEnvironment: "%kernel.environment%"
-            $rootDir: "%kernel.root_dir%"
+            $projectDir: "%kernel.project_dir%"
+            $redis: "@snc_redis.default"
             $frontendHost: "%env(FRONTEND_HOST)%"
             $adminHost: "%env(FRONTEND_HOST)%"
 
@@ -172,7 +173,7 @@ services:
             - '@App\Factory\OrganisationFactory'
             - "%shared_email_domains%"
 
-    App\Service\Auth\UserProvider:
+    App\Security\RedisUserProvider:
         arguments:
             [
                 "@em",
@@ -275,10 +276,6 @@ services:
 
     App\Service\Auth\AuthService:
         arguments:
-            $securityEncoderFactory: "@security.encoder_factory"
-            $logger: "@logger"
-            $userRepository: '@App\Repository\UserRepository'
-            $roleHierarchy: "@security.role_hierarchy"
             $clientPermissions: "%client_permissions%"
 
     App\Service\BruteForce\AttemptsInTimeChecker:
@@ -351,6 +348,11 @@ services:
                 "%env(PARAMETER_PREFIX)%",
                 "%env(FEATURE_FLAG_PREFIX)%",
             ]
+
+    App\Security\HeaderTokenAuthenticator:
+        class: App\Security\HeaderTokenAuthenticator
+        arguments:
+            $redis: "@snc_redis.default"
 
     Aws\SecretsManager\SecretsManagerClient:
         arguments: ["%secrets_manager_client_params%"]

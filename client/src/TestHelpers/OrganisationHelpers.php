@@ -13,7 +13,7 @@ class OrganisationHelpers
     public static function createActivatedOrganisation(): Organisation
     {
         $faker = Factory::create();
-        $orgName = $faker->company;
+        $orgName = $faker->company();
 
         $organisation = (new Organisation())
             ->setId(1)

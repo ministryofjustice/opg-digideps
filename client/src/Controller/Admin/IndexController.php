@@ -24,6 +24,7 @@ use Psr\Log\LoggerInterface;
 use RuntimeException;
 use Sensio\Bundle\FrameworkExtraBundle\Configuration\Security;
 use Sensio\Bundle\FrameworkExtraBundle\Configuration\Template;
+use Symfony\Component\DependencyInjection\ParameterBag\ParameterBagInterface;
 use Symfony\Component\Form\Extension\Core\Type\ChoiceType;
 use Symfony\Component\Form\Extension\Core\Type\SubmitType;
 use Symfony\Component\Form\FormError;
@@ -49,13 +50,14 @@ class IndexController extends AbstractController
         private ObservableEventDispatcher $eventDispatcher,
         private PreRegistrationApi $preRegistrationApi,
         private LayDeputyshipApi $layDeputyshipApi,
-        private TokenStorageInterface $tokenStorage
+        private TokenStorageInterface $tokenStorage,
+        private ParameterBagInterface $params,
     ) {
     }
 
     /**
      * @Route("/", name="admin_homepage")
-     * @Security("is_granted('ROLE_ADMIN') or has_role('ROLE_AD')")
+     * @Security("is_granted('ROLE_ADMIN') or is_granted('ROLE_AD')")
      * @Template("@App/Admin/Index/index.html.twig")
      */
     public function indexAction(Request $request)
@@ -88,7 +90,7 @@ class IndexController extends AbstractController
 
     /**
      * @Route("/user-add", name="admin_add_user")
-     * @Security("is_granted('ROLE_ADMIN') or has_role('ROLE_AD')")
+     * @Security("is_granted('ROLE_ADMIN') or is_granted('ROLE_AD')")
      * @Template("@App/Admin/Index/addUser.html.twig")
      *
      * @return array|RedirectResponse
@@ -143,7 +145,7 @@ class IndexController extends AbstractController
 
     /**
      * @Route("/edit-user", name="admin_editUser", methods={"GET", "POST"})
-     * @Security("is_granted('ROLE_ADMIN') or has_role('ROLE_AD')")
+     * @Security("is_granted('ROLE_ADMIN') or is_granted('ROLE_AD')")
      * @Template("@App/Admin/Index/editUser.html.twig")
      *
      * @return array|Response
@@ -203,7 +205,7 @@ class IndexController extends AbstractController
             'action' => 'edit',
             'id' => $user->getId(),
             'user' => $user,
-            'deputyBaseUrl' => $this->container->getParameter('non_admin_host'),
+            'deputyBaseUrl' => $this->params->get('non_admin_host'),
         ];
 
         if ($user->isLayDeputy()) {
@@ -236,7 +238,7 @@ class IndexController extends AbstractController
 
     /**
      * @Route("/edit-ndr/{id}", name="admin_editNdr", methods={"POST"})
-     * @Security("is_granted('ROLE_ADMIN') or has_role('ROLE_AD')")
+     * @Security("is_granted('ROLE_ADMIN') or is_granted('ROLE_AD')")
      *
      * @param string $id
      *
@@ -264,7 +266,7 @@ class IndexController extends AbstractController
 
     /**
      * @Route("/delete-confirm/{id}", name="admin_delete_confirm", methods={"GET"})
-     * @Security("is_granted('ROLE_ADMIN') or has_role('ROLE_AD')")
+     * @Security("is_granted('ROLE_ADMIN') or is_granted('ROLE_AD')")
      * @Template("@App/Admin/Index/deleteConfirm.html.twig")
      *
      * @param int $id
@@ -283,7 +285,7 @@ class IndexController extends AbstractController
 
     /**
      * @Route("/delete/{id}", name="admin_delete", methods={"GET"})
-     * @Security("is_granted('ROLE_ADMIN') or has_role('ROLE_AD')")
+     * @Security("is_granted('ROLE_ADMIN') or is_granted('ROLE_AD')")
      *
      * @param int $id
      *
@@ -315,7 +317,7 @@ class IndexController extends AbstractController
 
     /**
      * @Route("/upload", name="admin_upload")
-     * @Security("is_granted('ROLE_ADMIN') or has_role('ROLE_AD')")
+     * @Security("is_granted('ROLE_ADMIN') or is_granted('ROLE_AD')")
      * @Template("@App/Admin/Index/upload.html.twig")
      */
     public function uploadAction(Request $request, RouterInterface $router)
@@ -349,7 +351,7 @@ class IndexController extends AbstractController
 
     /**
      * @Route("/pre-registration-upload", name="pre_registration_upload")
-     * @Security("is_granted('ROLE_ADMIN') or has_role('ROLE_AD')")
+     * @Security("is_granted('ROLE_ADMIN') or is_granted('ROLE_AD')")
      * @Template("@App/Admin/Index/uploadUsers.html.twig")
      */
     public function uploadUsersAction(Request $request, ClientInterface $redisClient)
@@ -450,7 +452,7 @@ class IndexController extends AbstractController
 
     /**
      * @Route("/org-csv-upload", name="admin_org_upload")
-     * @Security("is_granted('ROLE_ADMIN') or has_role('ROLE_AD')")
+     * @Security("is_granted('ROLE_ADMIN') or is_granted('ROLE_AD')")
      * @Template("@App/Admin/Index/uploadOrgUsers.html.twig")
      */
     public function uploadOrgUsersAction(Request $request)
@@ -531,7 +533,7 @@ class IndexController extends AbstractController
 
     /**
      * @Route("/send-activation-link/{email}", name="admin_send_activation_link")
-     * @Security("is_granted('ROLE_ADMIN') or has_role('ROLE_AD')")
+     * @Security("is_granted('ROLE_ADMIN') or is_granted('ROLE_AD')")
      **/
     public function sendUserActivationLinkAction(string $email, LoggerInterface $logger)
     {

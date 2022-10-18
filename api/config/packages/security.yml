@@ -1,11 +1,19 @@
 security:
-    encoders:
-        Symfony\Component\Security\Core\User\User: plaintext
-        App\Entity\User: sha512
+    password_hashers:
+        App\Entity\User: "auto"
+        # Use native password hasher, which auto-selects and migrates the best
+        # possible hashing algorithm (starting from Symfony 5.3 this is "bcrypt")
+        Symfony\Component\Security\Core\User\PasswordAuthenticatedUserInterface: "auto"
+
+    enable_authenticator_manager: true
 
     providers:
-        user_provider_redis:
-            id: App\Service\Auth\UserProvider
+        entity_user_provider:
+            entity:
+                class: App\Entity\User
+                property: email
+        redis_user_provider:
+            id: App\Security\RedisUserProvider
 
     firewalls:
         elb:
@@ -14,10 +22,6 @@ security:
             methods: [GET]
         feedbackHomepage:
             pattern: ^/feedback/homepage
-            security: false
-            methods: [POST]
-        login:
-            pattern: ^/auth/login$
             security: false
             methods: [POST]
         userRecreateToken:
@@ -93,11 +97,13 @@ security:
             security: false
         # keep this one last so that the previous ones bypass the catch-all pattern below
         default:
+            custom_authenticators:
+                - App\Security\LoginRequestAuthenticator
+                - App\Security\RegistrationTokenAuthenticator
+                - App\Security\HeaderTokenAuthenticator
             pattern: .*
+            provider: entity_user_provider
             security: true
-            simple_preauth:
-                authenticator: App\Service\Auth\HeaderTokenAuthenticator
-            provider: user_provider_redis
             stateless: true
 
     # https://opgtransform.atlassian.net/wiki/spaces/DEPDS/pages/191299647/User+roles

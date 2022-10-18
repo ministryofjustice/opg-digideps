@@ -34,7 +34,7 @@ class UserVoterTest extends KernelTestCase
         $reportTestHelper = new ReportTestHelper();
 
         self::bootKernel();
-        $em = self::$container->get('em');
+        $em = static::getContainer()->get('em');
 
         $layNoReportsOrClients = $userTestHelper->createAndPersistUser($em, null, User::ROLE_LAY_DEPUTY);
 
@@ -268,7 +268,7 @@ class UserVoterTest extends KernelTestCase
     public function addEditUserProvider()
     {
         self::bootKernel();
-        $em = self::$container->get('em');
+        $em = static::getContainer()->get('em');
 
         $userTestHelper = new UserTestHelper();
 

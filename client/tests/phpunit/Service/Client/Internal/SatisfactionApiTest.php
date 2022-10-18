@@ -57,10 +57,10 @@ class SatisfactionApiTest extends TestCase
 
         $formData = [
             'comments' => $comments,
-            'name' => $this->faker->name,
-            'phone' => $this->faker->phoneNumber,
-            'page' => $this->faker->url,
-            'email' => $this->faker->email,
+            'name' => $this->faker->name(),
+            'phone' => $this->faker->phoneNumber(),
+            'page' => $this->faker->url(),
+            'email' => $this->faker->email(),
             'satisfactionLevel' => $score,
         ];
 

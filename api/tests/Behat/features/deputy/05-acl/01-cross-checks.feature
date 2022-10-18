@@ -10,8 +10,8 @@ Feature: deputy / acl / cross domain (admin and deputy) checks
         Given I go to "/logout"
         And I am on admin login page
         When I fill in the following:
-            | login_email     | behat-lay-deputy-ndr@publicguardian.gov.ukk |
-            | login_password  | DigidepsPass1234 |
+            | email     | behat-lay-deputy-ndr@publicguardian.gov.ukk |
+            | password  | DigidepsPass1234 |
         And I click on "login"
         Then I should see an "#error-summary" element
         And I should be on "/login"

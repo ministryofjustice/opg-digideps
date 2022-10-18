@@ -1,6 +1,3 @@
-logout:
-    path: /logout
-
 # # redirecting the admin home
 root:
     path: /pa

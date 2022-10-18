@@ -41,6 +41,9 @@ trait DeputyCostsSectionTrait
             $this->loggedInUserDetails->getClientFirstName(),
         );
 
+        $this->fillInField('search', $this->loggedInUserDetails->getClientLastName());
+        $this->pressButton('search_submit');
+
         $this->clickLink($clientName);
         $this->clickLink('Deputy costs');
         $this->clickLink('Start');

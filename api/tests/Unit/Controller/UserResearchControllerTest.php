@@ -111,7 +111,7 @@ class UserResearchControllerTest extends AbstractTestController
 
     private function prepareSatisfaction()
     {
-        $em = self::$container->get('em');
+        $em = static::getContainer()->get('em');
 
         $report = (new ReportTestHelper())->generateReport($em);
         $client = (new ClientTestHelper())->generateClient($em);

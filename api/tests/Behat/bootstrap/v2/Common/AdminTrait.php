@@ -18,8 +18,8 @@ trait AdminTrait
      */
     public function iEnterWrongValueTypes()
     {
-        $this->fillField('admin[firstname]', $this->faker->firstname);
-        $this->fillField('admin[lastname]', $this->faker->lastname);
+        $this->fillField('admin[firstname]', $this->faker->firstName());
+        $this->fillField('admin[lastname]', $this->faker->lastName());
         $this->fillField('admin[addressPostcode]', $this->faker->sentence(5));
         $this->fillField('admin[email]', $this->faker->sentence(5));
         $this->pressButton('Update user');

@@ -14,10 +14,10 @@ class NamedDeputyHelper
         $faker = Faker\Factory::create();
 
         return (new NamedDeputy())
-            ->setFirstname($faker->firstName)
-            ->setLastname($faker->lastName)
-            ->setEmail1($faker->safeEmail)
-            ->setPhoneMain($faker->phoneNumber)
+            ->setFirstname($faker->firstName())
+            ->setLastname($faker->lastName())
+            ->setEmail1($faker->safeEmail())
+            ->setPhoneMain($faker->phoneNumber())
             ->setId(1);
     }
 }

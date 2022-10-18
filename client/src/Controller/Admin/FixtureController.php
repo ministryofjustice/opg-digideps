@@ -10,7 +10,6 @@ use App\Form\Admin\Fixture\PreRegistrationFixtureType;
 use App\Service\Client\Internal\ReportApi;
 use App\Service\Client\Internal\UserApi;
 use App\Service\Client\RestClient;
-use App\Service\Client\TokenStorage\TokenStorageInterface;
 use App\Service\DeputyProvider;
 use App\TestHelpers\ClientHelpers;
 use DateTime;
@@ -36,7 +35,6 @@ class FixtureController extends AbstractController
     private RestClient $restClient;
     private ReportApi $reportApi;
     private UserApi $userApi;
-    private TokenStorageInterface $tokenStorage;
     private DeputyProvider $deputyProvider;
     private string $symfonyEnvironment;
 
@@ -46,7 +44,6 @@ class FixtureController extends AbstractController
         RestClient $restClient,
         ReportApi $reportApi,
         UserApi $userApi,
-        TokenStorageInterface $tokenStorage,
         DeputyProvider $deputyProvider,
         string $symfonyEnvironment
     ) {
@@ -55,7 +52,6 @@ class FixtureController extends AbstractController
         $this->restClient = $restClient;
         $this->reportApi = $reportApi;
         $this->userApi = $userApi;
-        $this->tokenStorage = $tokenStorage;
         $this->deputyProvider = $deputyProvider;
         $this->symfonyEnvironment = $symfonyEnvironment;
     }
@@ -155,7 +151,7 @@ class FixtureController extends AbstractController
 
     /**
      * @Route("/complete-sections/{reportType}/{reportId}", requirements={"id":"\d+"}, methods={"GET"})
-     * @Security("is_granted('ROLE_ADMIN') or has_role('ROLE_AD')")
+     * @Security("is_granted('ROLE_ADMIN') or is_granted('ROLE_AD')")
      *
      * @param $reportId
      * @param KernelInterface $kernel
@@ -177,7 +173,7 @@ class FixtureController extends AbstractController
 
     /**
      * @Route("/createAdmin", methods={"GET"})
-     * @Security("is_granted('ROLE_SUPER_ADMIN') or has_role('ROLE_ADMIN') or has_role('ROLE_AD')")
+     * @Security("is_granted('ROLE_SUPER_ADMIN') or is_granted('ROLE_ADMIN') or is_granted('ROLE_AD')")
      */
     public function createAdmin(Request $request)
     {
@@ -200,7 +196,7 @@ class FixtureController extends AbstractController
 
     /**
      * @Route("/getUserIDByEmail/{email}", methods={"GET"})
-     * @Security("is_granted('ROLE_SUPER_ADMIN') or has_role('ROLE_ADMIN') or has_role('ROLE_AD')")
+     * @Security("is_granted('ROLE_SUPER_ADMIN') or is_granted('ROLE_ADMIN') or is_granted('ROLE_AD')")
      */
     public function getUserIDByEmail(string $email)
     {

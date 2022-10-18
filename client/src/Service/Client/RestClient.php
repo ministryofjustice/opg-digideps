@@ -5,7 +5,7 @@ namespace App\Service\Client;
 use App\Entity\User;
 use App\Exception as AppException;
 use App\Model\SelfRegisterData;
-use App\Service\Client\TokenStorage\TokenStorageInterface;
+use App\Service\Client\TokenStorage\RedisStorage;
 use App\Service\JWT\JWTService;
 use App\Service\RequestIdLoggerProcessor;
 use Firebase\JWT\JWT;
@@ -20,8 +20,10 @@ use Psr\Http\Message\ResponseInterface;
 use Psr\Log\LoggerInterface;
 use RuntimeException;
 use Symfony\Component\DependencyInjection\ContainerInterface;
+use Symfony\Component\DependencyInjection\ParameterBag\ParameterBagInterface;
 use Symfony\Component\HttpFoundation\Response;
-use Symfony\Component\Security\Core\Authentication\Token\Storage\TokenStorageInterface as SecurityTokenStorage;
+use Symfony\Component\Security\Core\Exception\BadCredentialsException;
+use Symfony\Component\Security\Core\Exception\TooManyLoginAttemptsAuthenticationException;
 use Symfony\Contracts\HttpClient\HttpClientInterface;
 use Throwable;
 
@@ -86,14 +88,15 @@ class RestClient implements RestClientInterface
     public function __construct(
         protected ContainerInterface $container,
         protected ClientInterface $client,
-        protected TokenStorageInterface $tokenStorage,
+        protected RedisStorage $redisStorage,
         protected SerializerInterface $serializer,
         protected LoggerInterface $logger,
         protected string $clientSecret,
+        protected ParameterBagInterface $params,
         protected HttpClientInterface $openInternetClient,
         protected JWTService $JWTService
     ) {
-        $this->saveHistory = $container->getParameter('kernel.debug');
+        $this->saveHistory = $params->get('kernel.debug');
         $this->history = [];
     }
 
@@ -108,15 +111,19 @@ class RestClient implements RestClientInterface
      */
     public function login(array $credentials)
     {
-        $response = $this->apiCall('post', '/auth/login', $credentials, 'response', [], false);
+        try {
+            $response = $this->apiCall('post', '/auth/login', $credentials, 'response', [], false);
+        } catch (AppException\RestClientException $e) {
+            if (423 == $e->getCode()) {
+                throw new TooManyLoginAttemptsAuthenticationException($e->getData()['data']);
+            } else {
+                throw new BadCredentialsException('Invalid credentials.', 498);
+            }
+        }
 
         /** @var User */
         $user = $this->arrayToEntity('User', $this->extractDataArray($response));
-
-        // store auth token
-        $tokenVal = $response->getHeader(self::HEADER_AUTH_TOKEN);
-        $tokenVal = is_array($tokenVal) && !empty($tokenVal[0]) ? $tokenVal[0] : null;
-        $this->tokenStorage->set($user->getId(), $tokenVal);
+        $authToken = $response->getHeader(RestClient::HEADER_AUTH_TOKEN)[0];
 
         // Temporarily scoping this to super admins until we're happy with the flow
         if ($response->hasHeader(self::HEADER_JWT) && User::ROLE_SUPER_ADMIN === $user->getRoleName()) {
@@ -132,7 +139,7 @@ class RestClient implements RestClientInterface
                 $subjectUrn = $decoded->claims()->get('sub');
 
                 // Move to secure cookie in next iteration
-                $this->tokenStorage->set(sprintf('%s-jwt', $subjectUrn), $jwt);
+                $this->redisStorage->set(sprintf('%s-jwt', $subjectUrn), $jwt);
             } catch (ConstraintViolation $e) {
                 // Swallow expired token errors for now and just log - implement once we're rolling JWT to all users
                 $this->logger->warning(sprintf('JWT expired: %s', $e->getMessage()));
@@ -145,7 +152,7 @@ class RestClient implements RestClientInterface
             }
         }
 
-        return $user;
+        return [$user, $authToken];
     }
 
     /**
@@ -156,7 +163,7 @@ class RestClient implements RestClientInterface
         $responseArray = $this->apiCall('post', '/auth/logout', null, 'array');
 
         // remove AuthToken
-        $this->tokenStorage->remove($this->getLoggedUserId());
+        $this->redisStorage->reset();
 
         return $responseArray;
     }
@@ -333,13 +340,14 @@ class RestClient implements RestClientInterface
     {
         // add AuthToken if user is logged
         if (!empty($options['addAuthToken']) && $loggedUserId = $this->getLoggedUserId()) {
-            $options['headers'][self::HEADER_AUTH_TOKEN] = $this->tokenStorage->get($loggedUserId);
-            $jwt = $this->tokenStorage->get(sprintf('%s:%s-jwt', 'urn:opg:digideps:users', $loggedUserId));
+            $options['headers'][self::HEADER_AUTH_TOKEN] = $this->redisStorage->get($loggedUserId);
+            $jwt = $this->redisStorage->get(sprintf('%s:%s-jwt', 'urn:opg:digideps:users', $loggedUserId));
 
             if ($jwt) {
                 $options['headers'][self::HEADER_JWT] = $jwt;
             }
         }
+
         if (!empty($options['addClientSecret'])) {
             $options['headers'][self::HEADER_CLIENT_SECRET] = $this->clientSecret;
         }
@@ -548,9 +556,7 @@ class RestClient implements RestClientInterface
         if ($this->userId) {
             return $this->userId;
         } else {
-            /** @var SecurityTokenStorage */
-            $tokenStorage = $this->container->get('security.token_storage');
-            $token = $tokenStorage->getToken();
+            $token = $this->redisStorage->getToken();
 
             if (!is_null($token)) {
                 $user = $token->getUser();

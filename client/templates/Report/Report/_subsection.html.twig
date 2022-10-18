@@ -41,7 +41,7 @@
     {% else %}
         <span class="opg-overview-section__status govuk-tag {{ state.state | status_to_tag_css }} behat-region-{{ subSection }}-state-{{ state.state }}">
             {% if state.state == 'done' or customiseAllLabels | default(false) %}
-                {{ (subSection ~ '.label.' ~ state.state) | transchoice(state.nOfRecords | default(0)) }}
+                {{ (subSection ~ '.label.' ~ state.state) | trans({'%count%': state.nOfRecords}) }}
             {% else %}
                 {{ ('labels.' ~ state.state) | trans }}
             {% endif %}

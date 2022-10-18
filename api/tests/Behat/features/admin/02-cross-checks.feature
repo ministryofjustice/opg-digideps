@@ -9,8 +9,8 @@ Feature: admin / acl
         Given I go to "/logout"
         And  I go to "/login"
         When I fill in the following:
-            | login_email     | behat-admin-user@publicguardian.gov.uk |
-            | login_password  | DigidepsPass1234! |
+            | email     | behat-admin-user@publicguardian.gov.uk |
+            | password  | DigidepsPass1234! |
         And I click on "login"
         Then I should see an "#error-summary" element
         And I should be on "/login"

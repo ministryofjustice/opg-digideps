@@ -41,7 +41,8 @@ services:
             Predis\ClientInterface: "@snc_redis.default"
             $environment: "%env(ROLE)%"
             $hostedEnv: "%env(ENVIRONMENT)%"
-            $rootDir: "%kernel.root_dir%"
+            $projectDir: "%kernel.project_dir%"
+            $sessionPrefix: "%session_prefix%"
 
     App\:
         resource: "../src/"
@@ -206,7 +207,7 @@ services:
 
     App\Twig\AssetsExtension:
         public: false
-        arguments: ["%kernel.root_dir%"]
+        arguments: ["%kernel.project_dir%"]
         tags:
             - { name: twig.extension }
 
@@ -346,7 +347,8 @@ services:
               }
 
     App\Service\Client\TokenStorage\RedisStorage:
-        arguments: ["@snc_redis.default", "redis_token_storage_dd"]
+        arguments:
+            $redis: "@snc_redis.default"
 
     # Voter on User, used by PA area
     # http://symfony.com/doc/2.8/security/voters.html

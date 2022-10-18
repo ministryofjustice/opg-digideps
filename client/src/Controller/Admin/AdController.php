@@ -10,6 +10,7 @@ use App\Service\Client\Internal\UserApi;
 use App\Service\Client\RestClient;
 use Sensio\Bundle\FrameworkExtraBundle\Configuration\Security;
 use Sensio\Bundle\FrameworkExtraBundle\Configuration\Template;
+use Symfony\Component\DependencyInjection\ParameterBag\ParameterBagInterface;
 use Symfony\Component\Form\FormError;
 use Symfony\Component\HttpFoundation\RedirectResponse;
 use Symfony\Component\HttpFoundation\Request;
@@ -21,16 +22,11 @@ use Symfony\Component\Routing\Annotation\Route;
  */
 class AdController extends AbstractController
 {
-    /** @var RestClient */
-    private $restClient;
-
-    /** @var UserApi */
-    private $userApi;
-
-    public function __construct(RestClient $restClient, UserApi $userApi)
-    {
-        $this->restClient = $restClient;
-        $this->userApi = $userApi;
+    public function __construct(
+        private RestClient $restClient,
+        private UserApi $userApi,
+        private ParameterBagInterface $params
+    ) {
     }
 
     /**
@@ -64,7 +60,7 @@ class AdController extends AbstractController
             if ($form->isSubmitted() && $form->isValid()) {
                 // add user
                 try {
-                    $userToAdd = $form->getData(); /* @var $userToAdd EntityDir\User*/
+                    $userToAdd = $form->getData(); /* @var $userToAdd EntityDir\User */
                     // set email (needed to recreate token before login)
                     $userToAdd->setEmail('ad'.$this->getUser()->getId().'-'.time().'@digital.justice.gov.uk');
                     $userToAdd->setAdManaged(true);
@@ -76,8 +72,8 @@ class AdController extends AbstractController
 
                     return $this->redirectToRoute('ad_homepage', [
                         'userAdded' => $response->getId(),
-                        //'order_by'=>'id's,
-                        //'sort_order'=>'DESC',
+                        // 'order_by'=>'id's,
+                        // 'sort_order'=>'DESC',
                     ]);
                 } catch (RestClientException $e) {
                     $form->get('firstname')->addError(new FormError($e->getData()['message']));
@@ -153,7 +149,7 @@ class AdController extends AbstractController
             $deputy = $this->userApi->recreateToken($deputy->getEmail());
 
             // redirect to deputy area
-            $deputyBaseUrl = rtrim($this->container->getParameter('non_admin_host'), '/');
+            $deputyBaseUrl = rtrim($this->params->get('non_admin_host'), '/');
             $redirectUrl = $deputyBaseUrl.$this->generateUrl('ad_login', [
                     'adId' => $adUser->getId(),
                     'userToken' => $deputy->getRegistrationToken(),
