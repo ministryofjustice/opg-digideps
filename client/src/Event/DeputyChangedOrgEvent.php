@@ -4,7 +4,6 @@ declare(strict_types=1);
 
 namespace App\Event;
 
-use App\Entity\Client;
 use Symfony\Contracts\EventDispatcher\Event;
 
 class DeputyChangedOrgEvent extends Event
@@ -12,15 +11,15 @@ class DeputyChangedOrgEvent extends Event
     const NAME = 'deputy.changedOrg';
 
     private string $trigger;
-    private Client $client;
-    private Client $previousDeputyOrg;
+    private int $previousOrg;
+    private int $newOrg;
 
 
-    public function __construct(string $trigger, Client $previousDeputyOrg, Client $client)
+    public function __construct(string $trigger, int $previousOrg, int $newOrg)
     {
         $this->setTrigger($trigger);
-        $this->setPreviousDeputyOrg($previousDeputyOrg);
-        $this->setClient($client);
+        $this->setPreviousOrg($previousOrg);
+        $this->setNewOrg($newOrg);
     }
 
 
@@ -36,26 +35,26 @@ class DeputyChangedOrgEvent extends Event
         return $this;
     }
 
-    public function getPreviousDeputyOrg(): Client
+    public function getPreviousOrg(): int
     {
-        return $this->previousDeputyOrg;
+        return $this->previousOrg;
     }
 
-    public function setPreviousDeputyOrg(Client $previousDeputyOrg): DeputyChangedOrgEvent
+    public function setPreviousOrg(int $previousOrg): DeputyChangedOrgEvent
     {
-        $this->previousDeputyOrg = $previousDeputyOrg;
+        $this->previousOrg = $previousOrg;
 
         return $this;
     }
 
-    public function getClient(): Client
+    public function getNewOrg(): int
     {
-        return $this->client;
+        return $this->newOrg;
     }
 
-    public function setClient(Client $client): DeputyChangedOrgEvent
+    public function setNewOrg(int $newOrg): DeputyChangedOrgEvent
     {
-        $this->client = $client;
+        $this->newOrg = $newOrg;
 
         return $this;
     }
