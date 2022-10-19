@@ -4,6 +4,8 @@ declare(strict_types=1);
 
 namespace App\Service\Audit;
 
+use App\Entity\Client;
+use App\Entity\NamedDeputy;
 use App\Entity\Organisation;
 use App\Entity\Report\Report;
 use App\Entity\User;
@@ -36,6 +38,7 @@ final class AuditEvents
     public const EVENT_ADMIN_MANAGER_DELETED = 'ADMIN_MANAGER_DELETED';
     public const EVENT_EMAIL_NOT_SENT = 'EMAIL_NOT_SENT';
     public const EVENT_EMAIL_SENT = 'EMAIL_SENT';
+    public const EVENT_DEPUTY_CHANGED_ORG = 'DEPUTY_CHANGED_ORG';
 
     public const TRIGGER_ADMIN_USER_EDIT = 'ADMIN_USER_EDIT';
     public const TRIGGER_ADMIN_BUTTON = 'ADMIN_BUTTON';
@@ -53,6 +56,7 @@ final class AuditEvents
     public const TRIGGER_ADMIN_MANUAL_ORG_CREATION = 'ADMIN_MANUAL_ORG_CREATION';
     public const TRIGGER_UNSUBMIT_REPORT = 'UNSUBMIT_REPORT';
     public const TRIGGER_RESUBMIT_REPORT = 'RESUBMIT_REPORT';
+    public const TRIGGER_DEPUTY_CHANGED_ORG = 'DEPUTY_CHANGED_ORG';
 
     /**
      * @var DateTimeProvider
@@ -386,6 +390,27 @@ final class AuditEvents
             'from_address_id' => $email->getFromEmailNotifyID(),
             'sent_on' => $this->dateTimeProvider->getDateTime()->format(DateTime::ATOM),
         ];
+    }
+
+    /**
+     * @param string $trigger , what caused the event
+     * @param Client $client  , client with new organisation but same deputy and court order
+     * @param Client $previousDeputyOrg , previous deputy organisation
+     */
+
+    public function deputyChangedOrganisationEvent(string $trigger, Client $previousDeputyOrg, Client $client): array
+    {
+
+        $event = [
+            'trigger' => $trigger,
+            'date_deputy_changed' => $this->dateTimeProvider->getDateTime()->format(DateTime::ATOM),
+            'deputy_id' => $client->getNamedDeputy()->getId(),
+            'organisation_moved_from' => $previousDeputyOrg->getOrganisation(),
+            'organisation_moved_to' => $client->getOrganisation(),
+            'clients_moved_over' => $client->getId(),
+        ];
+
+        return $event + $this->baseEvent(AuditEvents::EVENT_DEPUTY_CHANGED_ORG);
     }
 
     private function baseEvent(string $eventName): array
