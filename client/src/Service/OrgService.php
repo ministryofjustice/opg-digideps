@@ -147,7 +147,9 @@ class OrgService
         }
 
         if (!empty($output['sameClientNewOrg'])) {
-            $this->output['sameClientNewOrg'] += $output['sameClientNewOrg'];
+            foreach ($output['sameClientNewOrg'] as $group => $items) {
+                $this->output['sameClientNewOrg'][$group] += count($items);
+            }
         }
     }
 
@@ -278,13 +280,13 @@ class OrgService
 
     private function dispatchDeputyChangingOrganisationEvent(array $client)
     {
-        $trigger = AuditEvents::EVENT_DEPUTY_CHANGED_ORG;
-        $preUpdateClient = $client->getOrganisation()->getId();
+        $trigger = AuditEvents::TRIGGER_DEPUTY_CHANGED_ORG;
+        $clientID = $client['id'];
+//        $previousDeputyOrg =
 
         $deputyChangedOrganisationEvent = new DeputyChangedOrgEvent(
             $trigger,
-            $preUpdateClient,
-            $postUpdateClient,
+//            $previousDeputyOrg,
             $client
         );
         $this->eventDispatcher->dispatch($deputyChangedOrganisationEvent, DeputyChangedOrgEvent::NAME);

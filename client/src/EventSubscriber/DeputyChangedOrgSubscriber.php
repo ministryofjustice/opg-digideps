@@ -6,8 +6,7 @@ namespace App\EventSubscriber;
 
 use App\Event\DeputyChangedOrgEvent;
 use App\Service\Audit\AuditEvents;
-use App\Service\DateTimeProvider;
-use App\Service\Logger;
+use App\Service\Time\DateTimeProvider;
 use Psr\Log\LoggerInterface;
 use Symfony\Component\EventDispatcher\EventSubscriberInterface;
 
@@ -18,8 +17,6 @@ class DeputyChangedOrgSubscriber implements EventSubscriberInterface
 
     public function __construct(LoggerInterface $logger, DateTimeProvider $dateTimeProvider)
     {
-        $this->dateTimeProvider = $dateTimeProvider;
-        $this->logger = $logger;
     }
 
     public static function getSubscribedEvents(): array
@@ -31,39 +28,19 @@ class DeputyChangedOrgSubscriber implements EventSubscriberInterface
 
     public function auditLog(DeputyChangedOrgEvent $event)
     {
-// deputy has changed organisation
-// deputy has same client id/case numbers - log
 
-        if ($this->deputyOrganisationHasChanged($event) || ($this->deputyOrganisationHasChanged($event) && $this->clientHasNotChanged($event))) {
+        if ($event->getPreviousDeputyOrg()->getOrganisation() !== $event->getClient()->getOrganisation()
+            && $event->getPreviousDeputyOrg()->getCaseNumber() === $event->getClient()->getCaseNumber()) {
+
             $deputyChangedOrgEvent = (new AuditEvents($this->dateTimeProvider))
-                ->deputyChangedOrg(
+                ->deputyChangedOrganisationEvent (
                     $event->getTrigger(),
-                    $event->getPostUpdateDeputy()->getFullName(),
-                    $event->getPreUpdateDeputy()->getOrganisations(),
-                    $event->getPostUpdateDeputy()->getOrganisations(),
-//                    $event->getPreUpdateClient()->getDeputy(),
-//                    $event->getPostUpdateClient()->getDeputy(),
-                    $event->getPreUpdateDeputy()->getClients(),
-                    $event->getPostUpdateDeputy()->getClients(),
+                    $event->getPreviousDeputyOrg(),
+                    $event->getClient()
                 );
+
             $this->logger->notice('', $deputyChangedOrgEvent);
         }
-    }
-
-    private function deputyOrganisationHasChanged(DeputyChangedOrgEvent $event): bool
-    {
-        return $event->getPreUpdateDeputy()->getOrganisations() !== $event->getPostUpdateDeputy()->getOrganisations();
-    }
-
-    private function clientHasNotChanged(DeputyChangedOrgEvent $event): bool
-    {
-//        if postUpdateDeputy org has changed but their clients named deputy is the same return true
-
-        $deputyId = $event->getPostUpdateDeputy()->getId();
-        $preUpdateClientsDeputyId = $event->getPreUpdateClient()->getNamedDeputy()->getId();
-        $postUpdateClientsDeputyId = $event->getPostUpdateClient()->getNamedDeputy()->getId();
-
-        return $event->getPreUpdateDeputy()->getClients() === $event->getPostUpdateDeputy()->getClients();
     }
 }
 

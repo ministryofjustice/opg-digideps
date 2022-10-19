@@ -5,7 +5,6 @@ declare(strict_types=1);
 namespace App\Event;
 
 use App\Entity\Client;
-use App\Entity\User;
 use Symfony\Contracts\EventDispatcher\Event;
 
 class DeputyChangedOrgEvent extends Event
@@ -13,25 +12,15 @@ class DeputyChangedOrgEvent extends Event
     const NAME = 'deputy.changedOrg';
 
     private string $trigger;
-    private User $preUpdateDeputy;
-    private User $postUpdateDeputy;
-    private Client $preUpdateClient;
-    private Client $postUpdateClient;
+    private Client $client;
+    private Client $previousDeputyOrg;
 
 
-    public function __construct(
-        string $trigger,
-        Client $preUpdateClient,
-        Client $postUpdateClient,
-        User $preUpdateDeputy,
-        User $postUpdateDeputy,
-    )
+    public function __construct(string $trigger, Client $previousDeputyOrg, Client $client)
     {
         $this->setTrigger($trigger);
-        $this->setPreUpdateDeputy($preUpdateDeputy);
-        $this->setPostUpdateDeputy($postUpdateDeputy);
-        $this->setPreUpdateClient($preUpdateClient);
-        $this->setPostUpdateClient($postUpdateClient);
+        $this->setPreviousDeputyOrg($previousDeputyOrg);
+        $this->setClient($client);
     }
 
 
@@ -47,51 +36,26 @@ class DeputyChangedOrgEvent extends Event
         return $this;
     }
 
-    public function getPreUpdateDeputy(): User
+    public function getPreviousDeputyOrg(): Client
     {
-        return $this->preUpdateDeputy;
+        return $this->previousDeputyOrg;
     }
 
-    public function setPreUpdateDeputy(User $preUpdateDeputy): DeputyChangedOrgEvent
+    public function setPreviousDeputyOrg(Client $previousDeputyOrg): DeputyChangedOrgEvent
     {
-        $this->preUpdateDeputy = $preUpdateDeputy;
+        $this->previousDeputyOrg = $previousDeputyOrg;
 
         return $this;
     }
 
-    public function getPostUpdateDeputy(): User
+    public function getClient(): Client
     {
-        return $this->postUpdateDeputy;
+        return $this->client;
     }
 
-    public function setPostUpdateDeputy(User $postUpdateDeputy): DeputyChangedOrgEvent
+    public function setClient(Client $client): DeputyChangedOrgEvent
     {
-        $this->postUpdateDeputy = $postUpdateDeputy;
-
-        return $this;
-    }
-
-
-    public function getPreUpdateClient(): Client
-    {
-        return $this->preUpdateClient;
-    }
-
-    public function setPreUpdateClient(Client $preUpdateClient): DeputyChangedOrgEvent
-    {
-        $this->preUpdateClient = $preUpdateClient;
-
-        return $this;
-    }
-
-    public function getPostUpdateClient(): Client
-    {
-        return $this->postUpdateClient;
-    }
-
-    public function setPostUpdateClient(Client $postUpdateClient): DeputyChangedOrgEvent
-    {
-        $this->postUpdateClient = $postUpdateClient;
+        $this->client = $client;
 
         return $this;
     }

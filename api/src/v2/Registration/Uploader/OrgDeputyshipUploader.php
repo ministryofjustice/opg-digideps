@@ -24,7 +24,7 @@ class OrgDeputyshipUploader
 {
     private array $added = ['clients' => [], 'named_deputies' => [], 'reports' => [], 'organisations' => []];
     private array $updated = ['clients' => [], 'named_deputies' => [], 'reports' => [], 'organisations' => []];
-    private array $sameClientNewOrg = ['clients' => []];
+    private array $changeOrg = ['clients' => [], 'old_organisation' => [], 'new_organisation' => []];
 
     private ?Organisation $currentOrganisation = null;
     private ?NamedDeputy $namedDeputy = null;
@@ -220,7 +220,9 @@ class OrgDeputyshipUploader
                         $this->updated['clients'][] = $this->client->getId();
                         
                         // Track clients for audit logging purposes
-                        $this->sameClientNewOrg['clients'][] = $this->client->getId();
+                        $this->changeOrg['clients'][] = $this->client->getId();
+                        $this->changeOrg['old_organisation'][] = $this->currentOrganisation->getId();
+                        $this->changeOrg['new_organisation'][] = $this->client->getOrganisation();
                     }
                 }
             }
