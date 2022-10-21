@@ -117,7 +117,7 @@ class SettingsController extends AbstractController
         if ($form->isSubmitted() && $form->isValid()) {
             $plainPassword = $request->request->get('change_password')['password']['first'];
             $this->restClient->put('user/'.$user->getId().'/set-password', json_encode([
-                'password_plain' => $plainPassword,
+                'password' => $plainPassword,
             ]));
             $request->getSession()->set('login-context', 'password-update');
 
