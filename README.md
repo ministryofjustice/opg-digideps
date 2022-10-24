@@ -92,7 +92,7 @@ _See [deployment documentation](docs/DEPLOYMENT.md)_
 
 - Terraform 1.0.0
 - PHP 8.0
-- Symfony 4.4
+- Symfony 5.4
 - Doctrine 3.0
 - Twig
 - Behat 3
