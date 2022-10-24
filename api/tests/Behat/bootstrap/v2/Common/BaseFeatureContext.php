@@ -496,6 +496,15 @@ class BaseFeatureContext extends MinkContext
         $this->fixtureUsers[] = $this->superAdminDetails = new UserDetails($userDetails);
     }
 
+    /**
+     * @BeforeScenario @lay-pfa-high-not-started-legacy-password-hash
+     */
+    public function createPfaHighNotStartedLegacyPasswordHash(?BeforeScenarioScope $scenario = null, ?string $caseNumber = null)
+    {
+        $userDetails = $this->fixtureHelper->createLayPfaHighAssetsNotStartedLegacyPasswordHash($this->testRunId, $caseNumber);
+        $this->fixtureUsers[] = $this->layDeputyNotStartedPfaHighAssetsDetails = new UserDetails($userDetails);
+    }
+
     public function getAdminUrl(): string
     {
         return getenv('ADMIN_HOST');
