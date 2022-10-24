@@ -7,8 +7,6 @@ namespace App\Tests\Behat\v2\Common;
 use App\Entity\User;
 use App\Tests\Behat\BehatException;
 
-use function PHPUnit\Framework\assertNotEquals;
-
 trait AuthTrait
 {
     /**
@@ -207,6 +205,6 @@ trait AuthTrait
 
         $this->em->refresh($user);
 
-        $this->assertStringDoesNotEqualString($this->fixtureHelper->getLegacyPasswordHash(), $user->getPassword(), 'Asserting current password hash does not match legacy password hash')
+        $this->assertStringDoesNotEqualString($this->fixtureHelper->getLegacyPasswordHash(), $user->getPassword(), 'Asserting current password hash does not match legacy password hash');
     }
 }
