@@ -13,13 +13,15 @@ class DeputyChangedOrgEvent extends Event
     private string $trigger;
     private int $previousOrg;
     private int $newOrg;
+    private array $client;
 
 
-    public function __construct(string $trigger, int $previousOrg, int $newOrg)
+    public function __construct(string $trigger, int $previousOrg, int $newOrg, array $client)
     {
         $this->setTrigger($trigger);
         $this->setPreviousOrg($previousOrg);
         $this->setNewOrg($newOrg);
+        $this->setClient($client);
     }
 
 
@@ -55,6 +57,18 @@ class DeputyChangedOrgEvent extends Event
     public function setNewOrg(int $newOrg): DeputyChangedOrgEvent
     {
         $this->newOrg = $newOrg;
+
+        return $this;
+    }
+
+    public function getClient(): array
+    {
+        return $this->client;
+    }
+
+    public function setClient(array $client): DeputyChangedOrgEvent
+    {
+        $this->client = $client;
 
         return $this;
     }
