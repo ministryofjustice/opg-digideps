@@ -12,6 +12,7 @@ use Symfony\Component\HttpFoundation\Session\SessionInterface;
 use Symfony\Component\HttpFoundation\StreamedResponse;
 use Symfony\Component\Security\Core\Authentication\Token\Storage\TokenStorageInterface;
 use Twig\Environment;
+use App\Entity\Client;
 
 class OrgService
 {
@@ -146,9 +147,9 @@ class OrgService
             $this->output['skipped'] += $output['skipped'];
         }
 
-        if (!empty($output['sameClientNewOrg'])) {
-            foreach ($output['sameClientNewOrg'] as $group => $items) {
-                $this->output['sameClientNewOrg'][$group] += count($items);
+        if (!empty($output['$changeOrg'])) {
+            foreach ($output['$changeOrg'] as $group => $items) {
+                $this->output['$changeOrg'][$group] += count($items);
             }
         }
     }
@@ -219,9 +220,15 @@ class OrgService
                 $this->dispatchOrgCreatedEvent($organisation);
             }
 
-            foreach ($upload['sameClientNewOrg']['clients'] as $client) {
-                $this->dispatchDeputyChangingOrganisationEvent($client);
-            }
+            $clientIds = $upload['sameOrg']['client_ids'];
+
+                foreach ($upload['sameOrg']['old_organisation'] as $previousOrg) {
+                    foreach ($upload['sameOrg']['new_organisation'] as $newOrg) {
+
+                        $this->dispatchDeputyChangingOrganisationEvent($previousOrg, $newOrg, $clientIds);
+                    }
+                }
+
 
             if (!$logged) {
                 $this->dispatchCSVUploadEvent();
@@ -278,17 +285,17 @@ class OrgService
         $this->eventDispatcher->dispatch($orgCreatedEvent, OrgCreatedEvent::NAME);
     }
 
-    private function dispatchDeputyChangingOrganisationEvent(array $client)
+    private function dispatchDeputyChangingOrganisationEvent(int $previousOrg, int $newOrg, array $clientIds)
     {
         $trigger = AuditEvents::TRIGGER_DEPUTY_CHANGED_ORG;
-        $clientID = $client['id'];
-//        $previousDeputyOrg =
 
         $deputyChangedOrganisationEvent = new DeputyChangedOrgEvent(
             $trigger,
-//            $previousDeputyOrg,
-            $client
+            $previousOrg,
+            $newOrg,
+            $clientIds
         );
+
         $this->eventDispatcher->dispatch($deputyChangedOrganisationEvent, DeputyChangedOrgEvent::NAME);
     }
 

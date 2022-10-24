@@ -12,11 +12,11 @@ use Symfony\Component\EventDispatcher\EventSubscriberInterface;
 
 class DeputyChangedOrgSubscriber implements EventSubscriberInterface
 {
-    private DateTimeProvider $dateTimeProvider;
-    private LoggerInterface $logger;
 
-    public function __construct(LoggerInterface $logger, DateTimeProvider $dateTimeProvider)
-    {
+    public function __construct(
+        private LoggerInterface $logger,
+        private DateTimeProvider $dateTimeProvider
+    ){
     }
 
     public static function getSubscribedEvents(): array
@@ -28,20 +28,16 @@ class DeputyChangedOrgSubscriber implements EventSubscriberInterface
 
     public function auditLog(DeputyChangedOrgEvent $event)
     {
-
-        if ($event->getPreviousDeputyOrg()->getOrganisation() !== $event->getClient()->getOrganisation()
-            && $event->getPreviousDeputyOrg()->getCaseNumber() === $event->getClient()->getCaseNumber()) {
-
             $deputyChangedOrgEvent = (new AuditEvents($this->dateTimeProvider))
                 ->deputyChangedOrganisationEvent (
                     $event->getTrigger(),
-                    $event->getPreviousDeputyOrg(),
+                    $event->getPreviousOrg(),
+                    $event->getNewOrg(),
                     $event->getClient()
                 );
 
             $this->logger->notice('', $deputyChangedOrgEvent);
         }
-    }
 }
 
 
