@@ -207,6 +207,6 @@ trait AuthTrait
 
         $this->em->refresh($user);
 
-        assertNotEquals($this->fixtureHelper->getLegacyPasswordHash(), $user->getPassword(), 'Asserting current password hash does not match legacy password hash');
+        $this->assertStringDoesNotEqualString($this->fixtureHelper->getLegacyPasswordHash(), $user->getPassword(), 'Asserting current password hash does not match legacy password hash')
     }
 }
