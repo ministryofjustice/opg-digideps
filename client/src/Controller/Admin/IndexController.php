@@ -18,7 +18,11 @@ use App\Service\Client\Internal\UserApi;
 use App\Service\Client\RestClient;
 use App\Service\CsvUploader;
 use App\Service\DataImporter\CsvToArray;
+use App\Service\File\Storage\FileNotFoundException;
+use App\Service\File\Storage\S3Storage;
 use App\Service\OrgService;
+use Aws\S3\Exception\S3Exception;
+use Aws\S3\S3Client;
 use Predis\ClientInterface;
 use Psr\Log\LoggerInterface;
 use RuntimeException;
@@ -28,6 +32,7 @@ use Symfony\Component\DependencyInjection\ParameterBag\ParameterBagInterface;
 use Symfony\Component\Form\Extension\Core\Type\ChoiceType;
 use Symfony\Component\Form\Extension\Core\Type\SubmitType;
 use Symfony\Component\Form\FormError;
+use Symfony\Component\Form\FormInterface;
 use Symfony\Component\HttpFoundation\RedirectResponse;
 use Symfony\Component\HttpFoundation\Request;
 use Symfony\Component\HttpFoundation\Response;
@@ -52,6 +57,7 @@ class IndexController extends AbstractController
         private LayDeputyshipApi $layDeputyshipApi,
         private TokenStorageInterface $tokenStorage,
         private ParameterBagInterface $params,
+        private S3Client $s3
     ) {
     }
 
@@ -457,77 +463,29 @@ class IndexController extends AbstractController
      */
     public function uploadOrgUsersAction(Request $request)
     {
-        $form = $this->createForm(FormDir\UploadCsvType::class, null, [
+        $uploadForm = $this->createForm(FormDir\UploadCsvType::class, null, [
             'method' => 'POST',
         ]);
 
-        $form->handleRequest($request);
+        $uploadForm->handleRequest($request);
 
-        $outputStreamResponse = isset($_GET['ajax']);
+        $processForm = $this->createForm(FormDir\OrgCsvProcessType::class, null, [
+            'method' => 'POST',
+        ]);
 
-        if ($form->isSubmitted() && $form->isValid()) {
-            try {
-                $fileName = $form->get('file')->getData();
+        $processForm->handleRequest($request);
 
-                $data = (new CsvToArray($fileName, false))
-                    ->setExpectedColumns([
-                        'Case',
-                        'ClientForename',
-                        'ClientSurname',
-                        'ClientDateOfBirth',
-                        'ClientPostcode',
-                        'DeputyUid',
-                        'DeputyType',
-                        'DeputyEmail',
-                        'DeputyOrganisation',
-                        'DeputyForename',
-                        'DeputySurname',
-                        'DeputyPostcode',
-                        'MadeDate',
-                        'LastReportDay',
-                        'ReportType',
-                        'OrderType',
-                    ])
-                    ->setOptionalColumns([
-                        'ClientAddress1',
-                        'ClientAddress2',
-                        'ClientAddress3',
-                        'ClientAddress4',
-                        'ClientAddress5',
-                        'DeputyAddress1',
-                        'DeputyAddress2',
-                        'DeputyAddress3',
-                        'DeputyAddress4',
-                        'DeputyAddress5',
-                    ])
-                    ->setUnexpectedColumns([
-                        'NDR',
-                    ])
-                    ->getData();
-
-                $this->orgService->setLogging($outputStreamResponse);
-
-                $redirectUrl = $this->generateUrl('admin_org_upload');
-
-                return $this->orgService->process($data, $redirectUrl);
-            } catch (Throwable $e) {
-                $message = $e->getMessage();
-
-                if ($e instanceof RestClientException && isset($e->getData()['message'])) {
-                    $message = $e->getData()['message'];
-                }
-
-                if ($outputStreamResponse) {
-                    $this->addFlash('error', $message);
-                    exit();
-                } else {
-                    $form->get('file')->addError(new FormError($message));
-                }
-            }
+        if ($uploadForm->isSubmitted() && $uploadForm->isValid()) {
+            $this->handleUploadForm($uploadForm);
+        } else if ($processForm->isSubmitted() && $processForm->isValid()) {
+            $this->handleProcessForm($processForm);
         }
 
+        // $s3FileInfo = $this->s3Storage->getFileInfo('paProDeputyReport.csv');
+
         return [
-            'form' => $form->createView(),
+            'uploadForm' => $uploadForm->createView(),
+            'processForm' => $processForm->createView(),
         ];
     }
 
@@ -544,6 +502,128 @@ class IndexController extends AbstractController
         }
 
         return new Response('[Link sent]');
+    }
+
+    private function handleUploadForm(FormInterface $uploadForm) {
+        $outputStreamResponse = isset($_GET['ajax']);
+
+        try {
+            $fileName = $uploadForm->get('file')->getData();
+
+            $data = (new CsvToArray($fileName, false))
+                ->setExpectedColumns([
+                    'Case',
+                    'ClientForename',
+                    'ClientSurname',
+                    'ClientDateOfBirth',
+                    'ClientPostcode',
+                    'DeputyUid',
+                    'DeputyType',
+                    'DeputyEmail',
+                    'DeputyOrganisation',
+                    'DeputyForename',
+                    'DeputySurname',
+                    'DeputyPostcode',
+                    'MadeDate',
+                    'LastReportDay',
+                    'ReportType',
+                    'OrderType',
+                ])
+                ->setOptionalColumns([
+                    'ClientAddress1',
+                    'ClientAddress2',
+                    'ClientAddress3',
+                    'ClientAddress4',
+                    'ClientAddress5',
+                    'DeputyAddress1',
+                    'DeputyAddress2',
+                    'DeputyAddress3',
+                    'DeputyAddress4',
+                    'DeputyAddress5',
+                ])
+                ->setUnexpectedColumns([
+                    'NDR',
+                ])
+                ->getData();
+
+            $this->orgService->setLogging($outputStreamResponse);
+
+            $redirectUrl = $this->generateUrl('admin_org_upload');
+
+            return $this->orgService->process($data, $redirectUrl);
+        } catch (Throwable $e) {
+            $message = $e->getMessage();
+
+            if ($e instanceof RestClientException && isset($e->getData()['message'])) {
+                $message = $e->getData()['message'];
+            }
+
+            if ($outputStreamResponse) {
+                $this->addFlash('error', $message);
+                exit();
+            } else {
+                $uploadForm->get('file')->addError(new FormError($message));
+            }
+        }
+    }
+
+    private function handleProcessForm(FormInterface $processForm) {
+        try {
+            $bucket = $this->container->getParameter('s3_sirius_bucket');
+            $this->s3->registerStreamWrapper();
+
+            $this->s3->getObject([
+                'Bucket' => $bucket,
+                'Key' => 'paProDeputyReport.csv',
+                'SaveAs' => '/tmp/paDeputyReport.csv'
+            ]);
+
+            $data = (new CsvToArray('/tmp/paDeputyReport.csv', false))
+                ->setExpectedColumns([
+                    'Case',
+                    'ClientForename',
+                    'ClientSurname',
+                    'ClientDateOfBirth',
+                    'ClientPostcode',
+                    'DeputyUid',
+                    'DeputyType',
+                    'DeputyEmail',
+                    'DeputyOrganisation',
+                    'DeputyForename',
+                    'DeputySurname',
+                    'DeputyPostcode',
+                    'MadeDate',
+                    'LastReportDay',
+                    'ReportType',
+                    'OrderType',
+                ])
+                ->setOptionalColumns([
+                    'ClientAddress1',
+                    'ClientAddress2',
+                    'ClientAddress3',
+                    'ClientAddress4',
+                    'ClientAddress5',
+                    'DeputyAddress1',
+                    'DeputyAddress2',
+                    'DeputyAddress3',
+                    'DeputyAddress4',
+                    'DeputyAddress5',
+                ])
+                ->setUnexpectedColumns([
+                    'NDR',
+                ])
+                ->getData();
+
+            $redirectUrl = $this->generateUrl('admin_org_upload');
+            return $this->orgService->process($data, $redirectUrl);
+        } catch (S3Exception $e) {
+            if (in_array($e->getAwsErrorCode(), self::MISSING_FILE_AWS_ERROR_CODES)) {
+                throw new FileNotFoundException("Cannot find file with reference paProDeputyReport.csv");
+            }
+            throw $e;
+        }
+
+        return $this->redirect($this->generateUrl('admin_org_upload'));
     }
 
     private function dispatchCSVUploadEvent()

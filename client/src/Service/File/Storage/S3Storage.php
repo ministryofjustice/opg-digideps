@@ -17,9 +17,8 @@ class S3Storage implements StorageInterface
 {
     // If a file is deleted in S3 it will return an AccessDenied error until its permanently deleted
     const MISSING_FILE_AWS_ERROR_CODES = ['NoSuchKey', 'AccessDenied'];
+
     /**
-     * @var S3ClientInterface
-     *
      * https://github.com/aws/aws-sdk-php
      * http://docs.aws.amazon.com/aws-sdk-php/v2/api/class-Aws.S3.S3Client.html
      *
@@ -27,17 +26,10 @@ class S3Storage implements StorageInterface
      * https://github.com/jubos/fake-s3
      * https://github.com/jubos/fake-s3/wiki/Supported-Clients
      */
-    private $s3Client;
+    private S3ClientInterface $s3Client;
 
-    /**
-     * @var string
-     */
-    private $bucketName;
-
-    /**
-     * @var LoggerInterface
-     */
-    private $logger;
+    private string $bucketName;
+    private LoggerInterface $logger;
 
     /**
      * S3Storage constructor.
