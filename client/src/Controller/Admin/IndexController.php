@@ -19,21 +19,30 @@ use App\Service\Client\RestClient;
 use App\Service\CsvUploader;
 use App\Service\DataImporter\CsvToArray;
 use App\Service\OrgService;
+use Aws\S3\S3Client;
+use Exception;
 use Predis\ClientInterface;
 use Psr\Log\LoggerInterface;
 use RuntimeException;
 use Sensio\Bundle\FrameworkExtraBundle\Configuration\Security;
 use Sensio\Bundle\FrameworkExtraBundle\Configuration\Template;
+use Symfony\Bundle\FrameworkBundle\Console\Application;
+use Symfony\Component\Console\Input\ArrayInput;
+use Symfony\Component\Console\Output\NullOutput;
 use Symfony\Component\DependencyInjection\ParameterBag\ParameterBagInterface;
 use Symfony\Component\Form\Extension\Core\Type\ChoiceType;
 use Symfony\Component\Form\Extension\Core\Type\SubmitType;
 use Symfony\Component\Form\FormError;
+use Symfony\Component\Form\FormInterface;
 use Symfony\Component\HttpFoundation\RedirectResponse;
 use Symfony\Component\HttpFoundation\Request;
 use Symfony\Component\HttpFoundation\Response;
+use Symfony\Component\HttpKernel\KernelEvents;
+use Symfony\Component\HttpKernel\KernelInterface;
 use Symfony\Component\Routing\Annotation\Route;
 use Symfony\Component\Routing\RouterInterface;
 use Symfony\Component\Security\Core\Authentication\Token\Storage\TokenStorageInterface;
+use Symfony\Contracts\EventDispatcher\EventDispatcherInterface;
 use Symfony\Contracts\Translation\TranslatorInterface;
 use Throwable;
 
@@ -52,6 +61,9 @@ class IndexController extends AbstractController
         private LayDeputyshipApi $layDeputyshipApi,
         private TokenStorageInterface $tokenStorage,
         private ParameterBagInterface $params,
+        private KernelInterface $kernel,
+        private EventDispatcherInterface $dispatcher,
+        private S3Client $s3
     ) {
     }
 
@@ -353,100 +365,107 @@ class IndexController extends AbstractController
      * @Route("/pre-registration-upload", name="pre_registration_upload")
      * @Security("is_granted('ROLE_ADMIN') or is_granted('ROLE_AD')")
      * @Template("@App/Admin/Index/uploadUsers.html.twig")
+     * @throws Exception
      */
     public function uploadUsersAction(Request $request, ClientInterface $redisClient)
     {
         $chunkSize = 2000;
 
-        $form = $this->createForm(FormDir\UploadCsvType::class, null, [
+        $uploadForm = $this->createForm(FormDir\UploadCsvType::class, null, [
+            'method' => 'POST',
+        ]);
+        $processForm = $this->createForm(FormDir\ProcessCSVType::class, null, [
             'method' => 'POST',
         ]);
 
-        $form->handleRequest($request);
+        if ($request->isMethod('POST')) {
+            $uploadForm->handleRequest($request);
+            $processForm->handleRequest($request);
 
-        // AjaxController redirects to this page after working through chunks - check if its completed to dispatch event
-        if ('1' === $request->get('complete')) {
-            $this->dispatchCSVUploadEvent();
-        }
+            if ($request->get('admin_upload')) {
+                // AjaxController redirects to this page after working through chunks - check if its completed to dispatch event
+                if ('1' === $request->get('complete')) {
+                    $this->dispatchCSVUploadEvent();
+                }
 
-        if ($form->isSubmitted() && $form->isValid()) {
-            $fileName = $form->get('file')->getData();
-            try {
-                $csvToArray = new CsvToArray($fileName, false, true);
+                if ($uploadForm->isSubmitted() && $uploadForm->isValid()) {
+                    $data = $this->handleLayUploadForm($uploadForm);
 
-                $data = $csvToArray
-                    ->setOptionalColumns([
-                        'Case',
-                        'ClientSurname',
-                        'DeputyUid',
-                        'DeputySurname',
-                        'DeputyAddress1',
-                        'DeputyAddress2',
-                        'DeputyAddress3',
-                        'DeputyAddress4',
-                        'DeputyAddress5',
-                        'DeputyPostcode',
-                        'ReportType',
-                        'MadeDate',
-                        'OrderType',
-                        'CoDeputy',
-                    ])
-                    ->setUnexpectedColumns(['LastReportDay', 'DeputyOrganisation'])
-                    ->getData();
+                    // small amount of data -> immediate posting and redirect (needed for behat)
+                    if (count($data) < $chunkSize) {
+                        $compressedData = CsvUploader::compressData($data);
+                        $this->preRegistrationApi->deleteAll();
 
-                // small amount of data -> immediate posting and redirect (needed for behat)
-                if (count($data) < $chunkSize) {
-                    $compressedData = CsvUploader::compressData($data);
-                    $this->preRegistrationApi->deleteAll();
+                        $ret = $this->layDeputyshipApi->uploadLayDeputyShip($compressedData, 'below_2000_rows');
 
-                    $ret = $this->layDeputyshipApi->uploadLayDeputyShip($compressedData, 'below_2000_rows');
-
-                    $this->addFlash(
-                        'notice',
-                        sprintf('%d record uploaded, %d error(s), %d skipped', $ret['added'], count($ret['errors']), count($ret['skipped']))
-                    );
-
-                    foreach ($ret['errors'] as $err) {
-                        $this->logger->warning(
-                            sprintf('Error while uploading csv: %s', $err)
+                        $this->addFlash(
+                            'notice',
+                            sprintf('%d record(s) uploaded, %d error(s), %d skipped', $ret['added'], count($ret['errors']), count($ret['skipped']))
                         );
 
-                        $this->addFlash('error', $err);
+                        foreach ($ret['errors'] as $err) {
+                            $this->logger->warning(
+                                sprintf('Error while uploading csv: %s', $err)
+                            );
+
+                            $this->addFlash('error', $err);
+                        }
+
+                        $this->dispatchCSVUploadEvent();
+
+                        return $this->redirect($this->generateUrl('pre_registration_upload'));
                     }
 
-                    $this->dispatchCSVUploadEvent();
+                    // big amount of data => store in redis + redirect
+                    $chunks = array_chunk($data, $chunkSize);
+
+                    foreach ($chunks as $k => $chunk) {
+                        $compressedData = CsvUploader::compressData($chunk);
+                        $redisClient->set('chunk'.$k, $compressedData);
+                    }
+
+                    return $this->redirect($this->generateUrl('pre_registration_upload', ['nOfChunks' => count($chunks)]));
+                }
+            } else if ($request->get('admin_process')) {
+                if ($processForm->isSubmitted() && $processForm->isValid()) {
+                    /** Run the lay CSV command as a background task */
+                    $email = $this->tokenStorage->getToken()->getUser()->getUsername();
+                    $this->dispatcher->addListener(KernelEvents::TERMINATE, function () use ($email) {
+                        $application = new Application($this->kernel);
+                        $input = new ArrayInput([
+                            'command' => 'digideps:process-lay-csv',
+                            'email' => $email,
+                        ]);
+
+                        $output = new NullOutput();
+                        $application->run($input, $output);
+                    });
+
+                    $this->addFlash("notice", "CSV import process started. Keep an eye on your emails for completion.");
 
                     return $this->redirect($this->generateUrl('pre_registration_upload'));
                 }
-
-                // big amount of data => store in redis + redirect
-                $chunks = array_chunk($data, $chunkSize);
-
-                foreach ($chunks as $k => $chunk) {
-                    $compressedData = CsvUploader::compressData($chunk);
-                    $redisClient->set('chunk'.$k, $compressedData);
-                }
-
-                return $this->redirect($this->generateUrl('pre_registration_upload', ['nOfChunks' => count($chunks)]));
-            } catch (Throwable $e) {
-                $this->logger->warning('DEBUG CSV UPLOAD...');
-                $this->logger->warning($e);
-
-                $message = $e->getMessage();
-
-                if ($e instanceof RestClientException && isset($e->getData()['message'])) {
-                    $message = $e->getData()['message'];
-                }
-
-                $form->get('file')->addError(new FormError($message));
             }
         }
+
+        /** S3 bucket information */
+        $bucket = $this->params->get('s3_sirius_bucket');
+        $layReportFile = 'layDeputyReport.csv';
+        $bucketFileInfo = $this->s3->getObject([
+            'Bucket' => $bucket,
+            'Key' => $layReportFile,
+        ]);
 
         return [
             'nOfChunks' => $request->get('nOfChunks'),
             'currentRecords' => $this->preRegistrationApi->count(),
-            'form' => $form->createView(),
+            'uploadForm' => $uploadForm->createView(),
+            'processForm' => $processForm->createView(),
             'maxUploadSize' => min([ini_get('upload_max_filesize'), ini_get('post_max_size')]),
+            'fileUploadedInfo' => [
+                'fileName' => $layReportFile,
+                'date' => $bucketFileInfo['LastModified']->format('d/m/Y - H:i:s A')
+            ],
         ];
     }
 
@@ -454,80 +473,69 @@ class IndexController extends AbstractController
      * @Route("/org-csv-upload", name="admin_org_upload")
      * @Security("is_granted('ROLE_ADMIN') or is_granted('ROLE_AD')")
      * @Template("@App/Admin/Index/uploadOrgUsers.html.twig")
+     * @throws Exception
      */
     public function uploadOrgUsersAction(Request $request)
     {
-        $form = $this->createForm(FormDir\UploadCsvType::class, null, [
+        $uploadForm = $this->createForm(FormDir\UploadCsvType::class, null, [
+            'method' => 'POST',
+        ]);
+        $processForm = $this->createForm(FormDir\ProcessCSVType::class, null, [
             'method' => 'POST',
         ]);
 
-        $form->handleRequest($request);
+        if ($request->isMethod('POST')) {
+            $uploadForm->handleRequest($request);
+            $processForm->handleRequest($request);
 
-        $outputStreamResponse = isset($_GET['ajax']);
+            $outputStreamResponse = isset($_GET['ajax']);
+            if ($request->get('admin_upload')) {
+                if ($uploadForm->isSubmitted() && $uploadForm->isValid()) {
+                    $data = $this->handleOrgUploadForm($uploadForm, $outputStreamResponse);
 
-        if ($form->isSubmitted() && $form->isValid()) {
-            try {
-                $fileName = $form->get('file')->getData();
+                    $this->orgService->setLogging($outputStreamResponse);
 
-                $data = (new CsvToArray($fileName, false))
-                    ->setExpectedColumns([
-                        'Case',
-                        'ClientForename',
-                        'ClientSurname',
-                        'ClientDateOfBirth',
-                        'ClientPostcode',
-                        'DeputyUid',
-                        'DeputyType',
-                        'DeputyEmail',
-                        'DeputyOrganisation',
-                        'DeputyForename',
-                        'DeputySurname',
-                        'DeputyPostcode',
-                        'MadeDate',
-                        'LastReportDay',
-                        'ReportType',
-                        'OrderType',
-                    ])
-                    ->setOptionalColumns([
-                        'ClientAddress1',
-                        'ClientAddress2',
-                        'ClientAddress3',
-                        'ClientAddress4',
-                        'ClientAddress5',
-                        'DeputyAddress1',
-                        'DeputyAddress2',
-                        'DeputyAddress3',
-                        'DeputyAddress4',
-                        'DeputyAddress5',
-                    ])
-                    ->setUnexpectedColumns([
-                        'NDR',
-                    ])
-                    ->getData();
-
-                $this->orgService->setLogging($outputStreamResponse);
-
-                $redirectUrl = $this->generateUrl('admin_org_upload');
-
-                return $this->orgService->process($data, $redirectUrl);
-            } catch (Throwable $e) {
-                $message = $e->getMessage();
-
-                if ($e instanceof RestClientException && isset($e->getData()['message'])) {
-                    $message = $e->getData()['message'];
+                    $redirectUrl = $this->generateUrl('admin_org_upload');
+                    return $this->orgService->process($data, $redirectUrl);
                 }
+            } else if ($request->get('admin_process')) {
+                if ($processForm->isSubmitted() && $processForm->isValid()) {
+                    /** Run the org CSV command as a background task */
+                    $email = $this->tokenStorage->getToken()->getUser()->getUsername();
+                    $this->dispatcher->addListener(KernelEvents::TERMINATE, function () use ($email) {
+                        $application = new Application($this->kernel);
+                        $input = new ArrayInput([
+                            'command' => 'digideps:process-org-csv',
+                            'email' => $email,
+                        ]);
 
-                if ($outputStreamResponse) {
-                    $this->addFlash('error', $message);
-                    exit();
-                } else {
-                    $form->get('file')->addError(new FormError($message));
+                        $output = new NullOutput();
+                        $application->run($input, $output);
+                    });
+
+
+                    $this->addFlash("notice", "CSV import process started. Keep an eye on your emails for completion.");
+
+                    return $this->redirect($this->generateUrl('admin_org_upload'));
                 }
             }
         }
 
+        /** S3 bucket information */
+        $bucket = $this->params->get('s3_sirius_bucket');
+        $paProReportFile = 'paProDeputyReport.csv';
+        $bucketFileInfo = $this->s3->getObject([
+            'Bucket' => $bucket,
+            'Key' => $paProReportFile,
+        ]);
+
         return [
-            'form' => $form->createView(),
+            'uploadForm' => $uploadForm->createView(),
+            'processForm' => $processForm->createView(),
+            'fileUploadedInfo' => [
+                'fileName' => $paProReportFile,
+                'date' => $bucketFileInfo['LastModified']->format('d/m/Y - H:i:s A')
+            ],
         ];
     }
 
@@ -544,6 +552,78 @@ class IndexController extends AbstractController
         }
 
         return new Response('[Link sent]');
+    }
+
+    private function handleOrgUploadForm(FormInterface $uploadForm, bool $outputStreamResponse) {
+        try {
+            $fileName = $uploadForm->get('file')->getData();
+
+            return (new CsvToArray($fileName, false))
+                ->setExpectedColumns([
+                    'Case',
+                    'ClientForename',
+                    'ClientSurname',
+                    'ClientDateOfBirth',
+                    'ClientPostcode',
+                    'DeputyUid',
+                    'DeputyType',
+                    'DeputyEmail',
+                    'DeputyOrganisation',
+                    'DeputyForename',
+                    'DeputySurname',
+                    'DeputyPostcode',
+                    'MadeDate',
+                    'LastReportDay',
+                    'ReportType',
+                    'OrderType',
+                ])
+                ->setOptionalColumns([
+                    'ClientAddress1',
+                    'ClientAddress2',
+                    'ClientAddress3',
+                    'ClientAddress4',
+                    'ClientAddress5',
+                    'DeputyAddress1',
+                    'DeputyAddress2',
+                    'DeputyAddress3',
+                    'DeputyAddress4',
+                    'DeputyAddress5',
+                ])
+                ->setUnexpectedColumns([
+                    'NDR',
+                ])
+                ->getData();
+        } catch (Throwable $e) {
+            $this->formExceptionError($e, $outputStreamResponse, $uploadForm);
+        }
+    }
+
+    private function handleLayUploadForm(FormInterface $form) {
+        try {
+            $fileName = $form->get('file')->getData();
+
+            return (new CsvToArray($fileName, false, false))
+                ->setOptionalColumns([
+                    'Case',
+                    'ClientSurname',
+                    'DeputyUid',
+                    'DeputySurname',
+                    'DeputyAddress1',
+                    'DeputyAddress2',
+                    'DeputyAddress3',
+                    'DeputyAddress4',
+                    'DeputyAddress5',
+                    'DeputyPostcode',
+                    'ReportType',
+                    'MadeDate',
+                    'OrderType',
+                    'CoDeputy',
+                ])
+                ->setUnexpectedColumns(['LastReportDay', 'DeputyOrganisation'])
+                ->getData();
+        } catch (Throwable $e) {
+            $this->formExceptionError($e, false, $form);
+        }
     }
 
     private function dispatchCSVUploadEvent()
@@ -568,5 +648,27 @@ class IndexController extends AbstractController
         );
 
         $this->eventDispatcher->dispatch($adminManagerDeletedEvent, AdminManagerDeletedEvent::NAME);
+    }
+
+    /**
+     * @param Throwable|Exception $e
+     * @param bool $outputStreamResponse
+     * @param FormInterface $form
+     * @return void
+     */
+    private function formExceptionError(Throwable|Exception $e, bool $outputStreamResponse, FormInterface $form): void
+    {
+        $message = $e->getMessage();
+
+        if ($e instanceof RestClientException && isset($e->getData()['message'])) {
+            $message = $e->getData()['message'];
+        }
+
+        if ($outputStreamResponse) {
+            $this->addFlash('error', $message);
+            exit();
+        } else {
+            $form->addError(new FormError($message));
+        }
     }
 }

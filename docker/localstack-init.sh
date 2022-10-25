@@ -8,8 +8,19 @@ then
     awslocal logs create-log-group --log-group-name audit-local
 fi
 
-awslocal s3api create-bucket --bucket pa-uploads-local
-awslocal s3api put-bucket-versioning --bucket pa-uploads-local --versioning-configuration Status=Enabled
+awslocal s3 mb s3://pa-uploads-local
+awslocal s3 mb s3://sirius-bucket-local
+
+awslocal s3 cp /tmp/paProDeputyReport.csv s3://sirius-bucket-local/paProDeputyReport.csv
+awslocal s3 cp /tmp/layDeputyReport.csv s3://sirius-bucket-local/layDeputyReport.csv
+
+awslocal s3api put-bucket-policy \
+    --policy '{ "Statement": [ { "Sid": "DenyUnEncryptedObjectUploads", "Effect": "Deny", "Principal": { "AWS": "*" }, "Action": "s3:PutObject", "Resource": "arn:aws:s3:eu-west-1::csv-bucket/*", "Condition":  { "StringNotEquals": { "s3:x-amz-server-side-encryption": "AES256" } } }, { "Sid": "DenyUnEncryptedObjectUploads", "Effect": "Deny", "Principal": { "AWS": "*" }, "Action": "s3:PutObject", "Resource": "arn:aws:s3:eu-west-1::csv-bucket/*", "Condition":  { "Bool": { "aws:SecureTransport": false } } } ] }' \
+    --bucket "pa-uploads-local"
+
+awslocal s3api put-bucket-policy \
+    --policy '{ "Statement": [ { "Sid": "DenyUnEncryptedObjectUploads", "Effect": "Deny", "Principal": { "AWS": "*" }, "Action": "s3:PutObject", "Resource": "arn:aws:s3:eu-west-1::sirius-bucket/*", "Condition":  { "StringNotEquals": { "s3:x-amz-server-side-encryption": "AES256" } } }, { "Sid": "DenyUnEncryptedObjectUploads", "Effect": "Deny", "Principal": { "AWS": "*" }, "Action": "s3:PutObject", "Resource": "arn:aws:s3:eu-west-1::sirius-bucket/*", "Condition":  { "Bool": { "aws:SecureTransport": false } } } ] }' \
+    --bucket "sirius-bucket-local"
 
 awslocal ssm put-parameter --name "/default/flag/checklist-sync" --value "1" --type String --overwrite
 awslocal ssm put-parameter --name "/default/flag/document-sync" --value "1" --type String --overwrite

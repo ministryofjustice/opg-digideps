@@ -32,6 +32,7 @@ parameters:
         {{ end }}
     htmltopdf_address: {{ if exists "/htmltopdf/address" }}{{ getv "/htmltopdf/address" }}{{ else }}'http://htmltopdf'{{ end }}
     s3_bucket_name: {{ if exists "/s3/bucketname" }}{{ getv "/s3/bucketname" }}{{ else }}not_set{{ end }}
+    s3_sirius_bucket: {{ if exists "/s3/sirius/bucket" }}{{ getv "/s3/sirius/bucket" }}{{ else }}not_set{{ end }}
     s3_client_params:
       version: 'latest'
       region: 'eu-west-1'

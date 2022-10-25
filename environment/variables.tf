@@ -69,6 +69,8 @@ locals {
 
   account                 = contains(keys(var.accounts), local.environment) ? var.accounts[local.environment] : var.accounts["default"]
   environment             = lower(terraform.workspace)
+  non_dev_environments    = ["production02", "preproduction", "training", "integration"]
+  sirius_environment      = contains(local.non_dev_environments, local.environment) ? local.environment : "dev"
   subdomain               = local.account["subdomain_enabled"] ? local.environment : ""
   backup_account_id       = "238302996107"
   cross_account_role_name = "cross-acc-db-backup.digideps-production"

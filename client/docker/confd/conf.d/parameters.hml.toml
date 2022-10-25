@@ -14,6 +14,7 @@ keys = [
     "/email",
     "/smtp",
     "/s3/bucketname",
+    "/s3/sirius/bucket",
     "/s3/localstack",
     "/ssm/localstack",
     "/cloudwatch/logs/localstack",
