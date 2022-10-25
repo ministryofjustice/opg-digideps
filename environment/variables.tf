@@ -81,6 +81,8 @@ locals {
     infrastructure-support = "OPG WebOps: opgteam@digital.justice.gov.uk"
     is-production          = local.account.is_production
   }
+
+  openapi_mock_version = "v0.3.3"
 }
 
 data "terraform_remote_state" "shared" {
