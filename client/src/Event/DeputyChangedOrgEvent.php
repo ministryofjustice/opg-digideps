@@ -10,18 +10,13 @@ class DeputyChangedOrgEvent extends Event
 {
     const NAME = 'deputy.changedOrg';
 
-    private string $trigger;
-    private int $previousOrg;
-    private int $newOrg;
-    private array $client;
-
-
-    public function __construct(string $trigger, int $previousOrg, int $newOrg, array $client)
+    public function __construct(private string $trigger, private int $deputyId, private int $previousOrgId, private int $newOrgId, private array $clientIds)
     {
         $this->setTrigger($trigger);
-        $this->setPreviousOrg($previousOrg);
-        $this->setNewOrg($newOrg);
-        $this->setClient($client);
+        $this->setDeputyId($deputyId);
+        $this->setPreviousOrgId($previousOrgId);
+        $this->setNewOrgId($newOrgId);
+        $this->setClientIds($clientIds);
     }
 
 
@@ -37,38 +32,50 @@ class DeputyChangedOrgEvent extends Event
         return $this;
     }
 
-    public function getPreviousOrg(): int
+    public function getPreviousOrgId(): int
     {
-        return $this->previousOrg;
+        return $this->previousOrgId;
     }
 
-    public function setPreviousOrg(int $previousOrg): DeputyChangedOrgEvent
+    public function setPreviousOrgId(int $previousOrgId): DeputyChangedOrgEvent
     {
-        $this->previousOrg = $previousOrg;
+        $this->previousOrgId = $previousOrgId;
 
         return $this;
     }
 
-    public function getNewOrg(): int
+    public function getDeputyId(): int
     {
-        return $this->newOrg;
+        return $this->deputyId;
     }
 
-    public function setNewOrg(int $newOrg): DeputyChangedOrgEvent
+    public function setDeputyId(int $deputyId): DeputyChangedOrgEvent
     {
-        $this->newOrg = $newOrg;
+        $this->deputyId = $deputyId;
 
         return $this;
     }
 
-    public function getClient(): array
+    public function getNewOrgId(): int
     {
-        return $this->client;
+        return $this->newOrgId;
     }
 
-    public function setClient(array $client): DeputyChangedOrgEvent
+    public function setNewOrgId(int $newOrgId): DeputyChangedOrgEvent
     {
-        $this->client = $client;
+        $this->newOrgId = $newOrgId;
+
+        return $this;
+    }
+
+    public function getClientIds(): array
+    {
+        return $this->clientIds;
+    }
+
+    public function setClientIds(array $clientIds): DeputyChangedOrgEvent
+    {
+        $this->clientIds = $clientIds;
 
         return $this;
     }

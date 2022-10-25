@@ -24,7 +24,7 @@ class OrgDeputyshipUploader
 {
     private array $added = ['clients' => [], 'named_deputies' => [], 'reports' => [], 'organisations' => []];
     private array $updated = ['clients' => [], 'named_deputies' => [], 'reports' => [], 'organisations' => []];
-    private array $changeOrg = ['client_ids' => [], 'old_organisation' => [], 'new_organisation' => []];
+    private array $changeOrg = ['client_ids' => [], 'old_organisation' => null, 'new_organisation' => null, 'deputy_id' => null];
 
     private ?Organisation $currentOrganisation = null;
     private ?NamedDeputy $namedDeputy = null;
@@ -86,6 +86,7 @@ class OrgDeputyshipUploader
 
         $uploadResults['added'] = $this->added;
         $uploadResults['updated'] = $this->updated;
+        $uploadResults['changeOrg'] = $this->changeOrg;
 
         return $uploadResults;
     }
@@ -214,17 +215,19 @@ class OrgDeputyshipUploader
             if (!$this->clientHasNewCourtOrder($this->client, $dto)) {
                 if ($this->clientHasSwitchedOrganisation($this->client)) {
                     if (!$this->clientHasNewNamedDeputy($this->client, $this->namedDeputy)) {
-                        
-                        $this->changeOrg['old_organisation'][] = $this->client->getOrganisation()->getId();
+
+                        // Track clients original organisation for audit logging before it is updated
+                        $this->changeOrg['old_organisation'] = $this->client->getOrganisation()->getId();
                         
                         $this->currentOrganisation->addClient($this->client);
                         $this->client->setOrganisation($this->currentOrganisation);
 
-                        $this->updated['client_ids'][] = $this->client->getId();
+                        $this->updated['clients'][] = $this->client->getId();
                         
                         // Track clients for audit logging purposes
-                        $this->changeOrg['clients'][] = $this->client;
-                        $this->changeOrg['new_organisation'][] = $this->client->getOrganisation()->getId();
+                        $this->changeOrg['client_ids'][] = $this->client->getId();
+                        $this->changeOrg['deputy_id'] = $this->client->getNamedDeputy()->getId();
+                        $this->changeOrg['new_organisation'] = $this->client->getOrganisation()->getId();
                     }
                 }
             }
