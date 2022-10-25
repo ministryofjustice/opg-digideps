@@ -147,11 +147,12 @@ class OrgService
             $this->output['skipped'] += $output['skipped'];
         }
 
-        if (!empty($output['$changeOrg'])) {
-            foreach ($output['$changeOrg'] as $group => $items) {
-                $this->output['$changeOrg'][$group] += count($items);
+        if (!empty($output['changeOrg'])) {
+            foreach ($output['changeOrg'] as $group => $items) {
+                $this->output['changeOrg'][$group] += count($items);
             }
         }
+
     }
 
     /**
@@ -220,14 +221,12 @@ class OrgService
                 $this->dispatchOrgCreatedEvent($organisation);
             }
 
-            $clientIds = $upload['sameOrg']['client_ids'];
+            $clientIds = $upload['changeOrg']['client_ids'];
+            $deputyId = $upload['changeOrg']['deputy_id'];
+            $previousOrgId = $upload['changeOrg']['old_organisation'];
+            $newOrgId = $upload['changeOrg']['new_organisation'];
 
-                foreach ($upload['sameOrg']['old_organisation'] as $previousOrg) {
-                    foreach ($upload['sameOrg']['new_organisation'] as $newOrg) {
-
-                        $this->dispatchDeputyChangingOrganisationEvent($previousOrg, $newOrg, $clientIds);
-                    }
-                }
+            $this->dispatchDeputyChangingOrganisationEvent($deputyId, $previousOrgId, $newOrgId, $clientIds);
 
 
             if (!$logged) {
@@ -285,14 +284,15 @@ class OrgService
         $this->eventDispatcher->dispatch($orgCreatedEvent, OrgCreatedEvent::NAME);
     }
 
-    private function dispatchDeputyChangingOrganisationEvent(int $previousOrg, int $newOrg, array $clientIds)
+    private function dispatchDeputyChangingOrganisationEvent( int $deputyId, int $previousOrgId, int $newOrgId, array $clientIds)
     {
         $trigger = AuditEvents::TRIGGER_DEPUTY_CHANGED_ORG;
 
         $deputyChangedOrganisationEvent = new DeputyChangedOrgEvent(
             $trigger,
-            $previousOrg,
-            $newOrg,
+            $deputyId,
+            $previousOrgId,
+            $newOrgId,
             $clientIds
         );
 

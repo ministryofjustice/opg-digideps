@@ -31,9 +31,10 @@ class DeputyChangedOrgSubscriber implements EventSubscriberInterface
             $deputyChangedOrgEvent = (new AuditEvents($this->dateTimeProvider))
                 ->deputyChangedOrganisationEvent (
                     $event->getTrigger(),
-                    $event->getPreviousOrg(),
-                    $event->getNewOrg(),
-                    $event->getClient()
+                    $event->getDeputyId(),
+                    $event->getPreviousOrgId(),
+                    $event->getNewOrgId(),
+                    $event->getClientIds()
                 );
 
             $this->logger->notice('', $deputyChangedOrgEvent);

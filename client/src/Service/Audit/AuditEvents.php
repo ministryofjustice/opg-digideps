@@ -394,20 +394,21 @@ final class AuditEvents
 
     /**
      * @param string $trigger , what caused the event
-     * @param int $previousOrg , previous deputy organisation
-     * @param int $newOrg , new deputy organisation
+     * @param int $deputyId , deputyId
+     * @param int $previousOrgId , previous deputy organisation
+     * @param int $newOrgId , new deputy organisation
      * @param array $clientIds, the client that moved across with deputy
      */
 
-    public function deputyChangedOrganisationEvent(string $trigger, int $previousOrg, int $newOrg, array $clientIds): array
+    public function deputyChangedOrganisationEvent(string $trigger, int $deputyId, int $previousOrgId, int $newOrgId, array $clientIds): array
     {
 
         $event = [
             'trigger' => $trigger,
             'date_deputy_changed' => $this->dateTimeProvider->getDateTime()->format(DateTime::ATOM),
-            'deputy_id' => $client['named_deputy_id'],
-            'organisation_moved_from' => $previousOrg,
-            'organisation_moved_to' => $newOrg,
+            'deputy_id' => $deputyId,
+            'organisation_moved_from' => $previousOrgId,
+            'organisation_moved_to' => $newOrgId,
             'clients_moved_over' => $clientIds,
         ];
 
