@@ -19,38 +19,31 @@ class CsvToArray
     /**
      * @var array
      */
-    private $expectedColumns = [];
+    private array $expectedColumns = [];
 
     /**
      * Columns that we definitely dont expect.
      * (those that are present that would indicate the wrong CSV is being used).
-     *
-     * @var array
      */
-    private $unexpectedColumns = [];
+    private array $unexpectedColumns = [];
 
-    /**
-     * @var array
-     */
-    private $optionalColumns = [];
+    private array $optionalColumns = [];
 
-    /**
-     * @var bool
-     */
-    private $normaliseNewLines;
+    private bool $normaliseNewLines;
 
-    private $firstRow = [];
+    private array $firstRow = [];
+
 
     /**
      * CsvToArray constructor.
      *
      * @param string $file
-     * @param bool   $normaliseNewLines
-     * @param bool   $autoDetectLineEndings - setup to maintain compatibility with other code that uses this class
+     * @param bool $normaliseNewLines
+     * @param bool $autoDetectLineEndings - setup to maintain compatibility with other code that uses this class
      *
      * @throws RuntimeException
      */
-    public function __construct($file, $normaliseNewLines, $autoDetectLineEndings = false)
+    public function __construct(string $file, bool $normaliseNewLines, bool $autoDetectLineEndings = false)
     {
         $this->normaliseNewLines = $normaliseNewLines;
 
@@ -100,7 +93,8 @@ class CsvToArray
         if (!empty($this->handle)) {
             return fgetcsv($this->handle, self::CHAR_LIMIT_PER_ROW, self::DELIMITER, self::ENCLOSURE, self::ESCAPE);
         }
-        throw new RuntimeException('Resourcce handle empty');
+
+        throw new RuntimeException('Resource handle empty');
     }
 
     /**
@@ -129,10 +123,10 @@ class CsvToArray
         if (!$header) {
             throw new RuntimeException('Empty or corrupted file, cannot parse CSV header');
         }
-        $missingColumns = array_diff($this->expectedColumns, $header);
-        if ($missingColumns) {
-            throw new RuntimeException('Invalid file. Cannot find expected header columns: '.implode(', ', $missingColumns));
-        }
+       $missingColumns = array_diff($this->expectedColumns, $header);
+       if ($missingColumns) {
+           throw new RuntimeException('Invalid file. Cannot find expected header columns: '.implode(', ', $missingColumns));
+       }
 
         $rogueColumns = array_intersect($header, $this->unexpectedColumns);
         if (!empty($rogueColumns)) {

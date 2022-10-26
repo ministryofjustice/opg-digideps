@@ -24,6 +24,7 @@ use App\Service\OrgService;
 use Aws\S3\Exception\S3Exception;
 use Aws\S3\S3Client;
 use DateTime;
+use Exception;
 use Predis\ClientInterface;
 use Psr\Log\LoggerInterface;
 use RuntimeException;
@@ -467,28 +468,44 @@ class IndexController extends AbstractController
         $uploadForm = $this->createForm(FormDir\UploadCsvType::class, null, [
             'method' => 'POST',
         ]);
-
-        $uploadForm->handleRequest($request);
-
         $processForm = $this->createForm(FormDir\OrgCsvProcessType::class, null, [
             'method' => 'POST',
         ]);
 
-        $processForm->handleRequest($request);
-
         /** S3 bucket information */
         $bucket = $this->params->get('s3_sirius_bucket');
-
         $paProReportFile = 'paProDeputyReport.csv';
         $bucketFileInfo = $this->s3->getObject([
             'Bucket' => $bucket,
             'Key' => $paProReportFile,
         ]);
 
-        if ($uploadForm->isSubmitted() && $uploadForm->isValid()) {
-            $this->handleUploadForm($uploadForm);
-        } else if ($processForm->isSubmitted() && $processForm->isValid()) {
-            $this->handleProcessForm($processForm, $bucket);
+        if ($request->isMethod('POST')) {
+            $uploadForm->handleRequest($request);
+            $processForm->handleRequest($request);
+
+            $outputStreamResponse = isset($_GET['ajax']);
+            if ($request->get('admin_upload')) {
+                if ($uploadForm->isSubmitted() && $uploadForm->isValid()) {
+                    $data = $this->handleUploadForm($uploadForm, $outputStreamResponse);
+
+                    $this->orgService->setLogging($outputStreamResponse);
+
+                    $redirectUrl = $this->generateUrl('admin_org_upload');
+
+                    return $this->orgService->process($data, $redirectUrl);
+                }
+            } else if ($request->get('admin_process')) {
+                if ($processForm->isSubmitted() && $processForm->isValid()) {
+                    $data = $this->handleProcessForm($processForm, $bucket, $outputStreamResponse);
+
+                    $this->orgService->setLogging($outputStreamResponse);
+
+                    $redirectUrl = $this->generateUrl('admin_org_upload');
+
+                    return $this->orgService->process($data, $redirectUrl);
+                }
+            }
         }
 
         return [
@@ -516,13 +533,11 @@ class IndexController extends AbstractController
         return new Response('[Link sent]');
     }
 
-    private function handleUploadForm(FormInterface $uploadForm) {
-        $outputStreamResponse = isset($_GET['ajax']);
-
+    private function handleUploadForm(FormInterface $uploadForm, bool $outputStreamResponse) {
         try {
             $fileName = $uploadForm->get('file')->getData();
 
-            $data = (new CsvToArray($fileName, false))
+            return (new CsvToArray($fileName, false))
                 ->setExpectedColumns([
                     'Case',
                     'ClientForename',
@@ -557,29 +572,12 @@ class IndexController extends AbstractController
                     'NDR',
                 ])
                 ->getData();
-
-            $this->orgService->setLogging($outputStreamResponse);
-
-            $redirectUrl = $this->generateUrl('admin_org_upload');
-
-            return $this->orgService->process($data, $redirectUrl);
         } catch (Throwable $e) {
-            $message = $e->getMessage();
-
-            if ($e instanceof RestClientException && isset($e->getData()['message'])) {
-                $message = $e->getData()['message'];
-            }
-
-            if ($outputStreamResponse) {
-                $this->addFlash('error', $message);
-                exit();
-            } else {
-                $uploadForm->get('file')->addError(new FormError($message));
-            }
+            $this->formExceptionError($e, $outputStreamResponse, $uploadForm);
         }
     }
 
-    private function handleProcessForm(FormInterface $processForm, string $bucketName) {
+    private function handleProcessForm(FormInterface $processForm, string $bucketName, bool $outputStreamResponse) {
         try {
             $this->s3->registerStreamWrapper();
 
@@ -588,8 +586,15 @@ class IndexController extends AbstractController
                 'Key' => 'paProDeputyReport.csv',
                 'SaveAs' => '/tmp/paDeputyReport.csv'
             ]);
+        } catch (S3Exception $e) {
+            if (in_array($e->getAwsErrorCode(), S3Storage::MISSING_FILE_AWS_ERROR_CODES)) {
+                throw new FileNotFoundException("Cannot find file with reference paProDeputyReport.csv");
+            }
+            throw $e;
+        }
 
-            $data = (new CsvToArray('/tmp/paDeputyReport.csv', false))
+        try {
+            return (new CsvToArray('/tmp/paDeputyReport.csv', false))
                 ->setExpectedColumns([
                     'Case',
                     'ClientForename',
@@ -624,14 +629,8 @@ class IndexController extends AbstractController
                     'NDR',
                 ])
                 ->getData();
-
-            $redirectUrl = $this->generateUrl('admin_org_upload');
-            return $this->orgService->process($data, $redirectUrl);
-        } catch (S3Exception $e) {
-            if (in_array($e->getAwsErrorCode(), S3Storage::MISSING_FILE_AWS_ERROR_CODES)) {
-                throw new FileNotFoundException("Cannot find file with reference paProDeputyReport.csv");
-            }
-            throw $e;
+        } catch (Throwable $e) {
+            $this->formExceptionError($e, $outputStreamResponse, $processForm);
         }
 
         return $this->redirect($this->generateUrl('admin_org_upload'));
@@ -659,5 +658,27 @@ class IndexController extends AbstractController
         );
 
         $this->eventDispatcher->dispatch($adminManagerDeletedEvent, AdminManagerDeletedEvent::NAME);
+    }
+
+    /**
+     * @param Throwable|Exception $e
+     * @param bool $outputStreamResponse
+     * @param FormInterface $processForm
+     * @return void
+     */
+    private function formExceptionError(Throwable|Exception $e, bool $outputStreamResponse, FormInterface $processForm): void
+    {
+        $message = $e->getMessage();
+
+        if ($e instanceof RestClientException && isset($e->getData()['message'])) {
+            $message = $e->getData()['message'];
+        }
+
+        if ($outputStreamResponse) {
+            $this->addFlash('error', $message);
+            exit();
+        } else {
+            $processForm->get('file')->addError(new FormError($message));
+        }
     }
 }
