@@ -57,7 +57,7 @@ up-app: ##@application Brings the app up
 	docker-compose -f docker-compose.yml -f docker-compose.dev.yml up -d --remove-orphans
 
 up-app-build: ##@application Brings the app up and rebuilds containers
-	COMPOSE_HTTP_TIMEOUT=90 docker-compose up -d --build --force-recreate --remove-orphans
+	COMPOSE_HTTP_TIMEOUT=90 docker-compose up -d --build --remove-orphans
 
 up-app-xdebug: ##@application Brings the app up, rebuilds containers and enabled xdebug in api and client (see DEBUGGING.md for config and setup)
 	REQUIRE_XDEBUG_CLIENT=1 REQUIRE_XDEBUG_API=1 XDEBUG_IDEKEY_API=PHPSTORM-API XDEBUG_IDEKEY_CLIENT=PHPSTORM-CLIENT docker-compose up -d --build --remove-orphans

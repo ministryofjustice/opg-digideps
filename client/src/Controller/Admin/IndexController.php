@@ -23,6 +23,7 @@ use App\Service\File\Storage\S3Storage;
 use App\Service\OrgService;
 use Aws\S3\Exception\S3Exception;
 use Aws\S3\S3Client;
+use DateTime;
 use Predis\ClientInterface;
 use Psr\Log\LoggerInterface;
 use RuntimeException;
@@ -475,17 +476,28 @@ class IndexController extends AbstractController
 
         $processForm->handleRequest($request);
 
+        /** S3 bucket information */
+        $bucket = $this->container->getParameter('s3_sirius_bucket');
+
+        $paProReportFile = 'paProDeputyReport.csv';
+        $bucketFileInfo = $this->s3->getObject([
+            'Bucket' => $bucket,
+            'Key' => $paProReportFile,
+        ]);
+
         if ($uploadForm->isSubmitted() && $uploadForm->isValid()) {
             $this->handleUploadForm($uploadForm);
         } else if ($processForm->isSubmitted() && $processForm->isValid()) {
-            $this->handleProcessForm($processForm);
+            $this->handleProcessForm($processForm, $bucket);
         }
-
-        // $s3FileInfo = $this->s3Storage->getFileInfo('paProDeputyReport.csv');
 
         return [
             'uploadForm' => $uploadForm->createView(),
             'processForm' => $processForm->createView(),
+            'fileUploadedInfo' => [
+                'fileName' => $paProReportFile,
+                'date' => $bucketFileInfo['LastModified']->format('d/m/Y - H:i:s A')
+            ],
         ];
     }
 
@@ -567,13 +579,12 @@ class IndexController extends AbstractController
         }
     }
 
-    private function handleProcessForm(FormInterface $processForm) {
+    private function handleProcessForm(FormInterface $processForm, string $bucketName) {
         try {
-            $bucket = $this->container->getParameter('s3_sirius_bucket');
             $this->s3->registerStreamWrapper();
 
             $this->s3->getObject([
-                'Bucket' => $bucket,
+                'Bucket' => $bucketName,
                 'Key' => 'paProDeputyReport.csv',
                 'SaveAs' => '/tmp/paDeputyReport.csv'
             ]);
@@ -617,7 +628,7 @@ class IndexController extends AbstractController
             $redirectUrl = $this->generateUrl('admin_org_upload');
             return $this->orgService->process($data, $redirectUrl);
         } catch (S3Exception $e) {
-            if (in_array($e->getAwsErrorCode(), self::MISSING_FILE_AWS_ERROR_CODES)) {
+            if (in_array($e->getAwsErrorCode(), S3Storage::MISSING_FILE_AWS_ERROR_CODES)) {
                 throw new FileNotFoundException("Cannot find file with reference paProDeputyReport.csv");
             }
             throw $e;
