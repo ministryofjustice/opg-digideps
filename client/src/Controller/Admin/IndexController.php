@@ -477,7 +477,7 @@ class IndexController extends AbstractController
         $processForm->handleRequest($request);
 
         /** S3 bucket information */
-        $bucket = $this->container->getParameter('s3_sirius_bucket');
+        $bucket = $this->params->get('s3_sirius_bucket');
 
         $paProReportFile = 'paProDeputyReport.csv';
         $bucketFileInfo = $this->s3->getObject([
