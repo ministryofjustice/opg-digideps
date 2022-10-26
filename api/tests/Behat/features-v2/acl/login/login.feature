@@ -24,7 +24,7 @@ Feature: Users logging into the service
         Given a super admin user tries to login with an invalid password
         Then I should see "You've tried to sign in with the wrong password too many times. Please check your password, wait for 30 minutes, and try again."
 
-    @lay-pfa-high-not-started-legacy-password-hash @gsc
+    @lay-pfa-high-not-started-legacy-password-hash
     Scenario: A user logins to the service and their password hash is upgraded, and updated their password
         Given a Lay Deputy exists with a legacy password hash
         When the user I'm interacting with logs in to the frontend of the app
