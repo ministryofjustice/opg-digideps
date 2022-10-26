@@ -22,7 +22,7 @@ class ClamFileScanner
     private $badPdfKeywords;
 
     /** @var int */
-    const MAX_SCAN_ATTEMPTS = 90;
+    public const MAX_SCAN_ATTEMPTS = 90;
 
     public function __construct(ClientInterface $client, LoggerInterface $logger, array $badPdfKeywords)
     {
@@ -83,7 +83,7 @@ class ClamFileScanner
     {
         return $this
             ->client
-            ->request('POST', "/scan?name={$file->getClientOriginalName()}", [
+            ->request('POST', '/scan', [
             'multipart' => [
                 [
                     'name' => 'file',
