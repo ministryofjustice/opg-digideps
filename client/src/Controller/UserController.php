@@ -125,7 +125,7 @@ class UserController extends AbstractController
             } else {
                 $request->getSession()->set('login-context', 'password-update');
 
-                return $this->redirect($redirector->getFirstPageAfterLogin($request->getSession()));
+                return $this->redirectToRoute('login');
             }
         }
 
