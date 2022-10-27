@@ -53,7 +53,7 @@ cross-browser-android-chrome:
                     device: "Samsung Galaxy S10"
                     build: "Android"
 
-v2-tests-goutte:
+v2-tests-browserkit:
     formatters:
         pretty:
             output_styles:
@@ -288,14 +288,15 @@ v2-tests-goutte:
     extensions:
         Behat\MinkExtension:
             files_path: "%paths.base%/fixtures/"
-            default_session: goutte
+            default_session: browserkit
             sessions:
                 symfony:
                     symfony: ~
-                goutte:
-                    goutte:
-                        guzzle_parameters:
-                            verify: false
+                browserkit:
+                    browserkit_http:
+                        http_client_parameters:
+                            verify_peer: false
+                            verify_host: false
         FriendsOfBehat\SymfonyExtension:
             kernel:
                 path: "%paths.base%/../../src/Kernel.php"
