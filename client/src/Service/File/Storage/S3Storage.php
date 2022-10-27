@@ -5,6 +5,7 @@ namespace App\Service\File\Storage;
 use Aws\ResultInterface;
 use Aws\S3\Exception\S3Exception;
 use Aws\S3\S3ClientInterface;
+use GuzzleHttp\Psr7\Stream;
 use Psr\Log\LoggerInterface;
 
 /**
@@ -16,7 +17,7 @@ use Psr\Log\LoggerInterface;
 class S3Storage implements StorageInterface
 {
     // If a file is deleted in S3 it will return an AccessDenied error until its permanently deleted
-    const MISSING_FILE_AWS_ERROR_CODES = ['NoSuchKey', 'AccessDenied'];
+    public const MISSING_FILE_AWS_ERROR_CODES = ['NoSuchKey', 'AccessDenied'];
     /**
      * @var S3ClientInterface
      *
@@ -72,7 +73,10 @@ class S3Storage implements StorageInterface
                 'Key' => $key,
             ]);
 
-            return $result['Body'];
+            /** @var Stream $stream */
+            $stream = $result['Body'];
+
+            return $stream->read($stream->getSize());
         } catch (S3Exception $e) {
             if (in_array($e->getAwsErrorCode(), self::MISSING_FILE_AWS_ERROR_CODES)) {
                 throw new FileNotFoundException("Cannot find file with reference $key");
@@ -116,7 +120,7 @@ class S3Storage implements StorageInterface
                 'Prefix' => $key,
             ]);
 
-            if (!$objectVersions instanceof ResultInterface || !($objectVersions->hasKey('Versions'))) {
+            if (!$objectVersions instanceof ResultInterface || !$objectVersions->hasKey('Versions')) {
                 throw new \RuntimeException('Could not remove file: No results returned');
             } else {
                 $objectVersions = $objectVersions->toArray();
@@ -273,7 +277,7 @@ class S3Storage implements StorageInterface
      */
     private function log($level, $message)
     {
-        //echo $message."\n"; //enable for debugging reasons. Tail the log with log-level=info otherwise
+        // echo $message."\n"; //enable for debugging reasons. Tail the log with log-level=info otherwise
 
         $this->logger->log($level, $message, ['extra' => [
             'service' => 's3-storage',
