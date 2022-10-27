@@ -19,6 +19,7 @@ use Exception;
 use RuntimeException;
 use Sensio\Bundle\FrameworkExtraBundle\Configuration\Security;
 use Symfony\Component\HttpFoundation\Request;
+use Symfony\Component\PasswordHasher\Hasher\PasswordHasherFactoryInterface;
 use Symfony\Component\PasswordHasher\Hasher\UserPasswordHasherInterface;
 use Symfony\Component\Routing\Annotation\Route;
 use Symfony\Component\Security\Core\Authentication\Token\TokenInterface;
@@ -42,6 +43,7 @@ class UserController extends RestController
         private EntityManagerInterface $em,
         private AuthService $authService,
         private RestFormatter $formatter,
+        private PasswordHasherFactoryInterface $hasherFactory
     ) {
     }
 
@@ -189,9 +191,7 @@ class UserController extends RestController
             'password' => 'notEmpty',
         ]);
 
-        $oldPassword = $this->passwordHasher->hashPassword($requestedUser, $data['password']);
-
-        return $oldPassword == $requestedUser->getPassword();
+        return $this->hasherFactory->getPasswordHasher($loggedInUser)->verify($requestedUser->getPassword(), $data['password']);
     }
 
     /**

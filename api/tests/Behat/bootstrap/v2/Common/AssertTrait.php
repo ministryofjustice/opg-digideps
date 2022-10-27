@@ -66,6 +66,19 @@ trait AssertTrait
         );
     }
 
+    public function assertStringDoesNotEqualString(
+        $notExpected,
+        $found,
+        string $comparisonSubject
+    ) {
+        $foundFormatted = strval(trim(strtolower($found)));
+        $notExpectedFormatted = strval(trim(strtolower($notExpected)));
+        assert(
+            $foundFormatted != $notExpectedFormatted,
+            $this->getAssertMessage('\''.$notExpectedFormatted.'\' should not exist in searched element!', $foundFormatted, $comparisonSubject)
+        );
+    }
+
     private function getAssertMessage(
         $expected,
         $found,

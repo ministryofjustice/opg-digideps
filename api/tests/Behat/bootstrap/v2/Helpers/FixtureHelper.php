@@ -21,7 +21,7 @@ use App\TestHelpers\UserTestHelper;
 use App\Tests\Behat\BehatException;
 use DateTime;
 use Doctrine\ORM\EntityManagerInterface;
-use Symfony\Component\Security\Core\Encoder\UserPasswordEncoderInterface;
+use Symfony\Component\PasswordHasher\Hasher\UserPasswordHasherInterface;
 
 class FixtureHelper
 {
@@ -38,7 +38,7 @@ class FixtureHelper
     public function __construct(
         private EntityManagerInterface $em,
         private array $fixtureParams,
-        private UserPasswordEncoderInterface $encoder,
+        private UserPasswordHasherInterface $hasher,
         private string $symfonyEnvironment,
         private PreRegistrationFactory $preRegistrationFactory
     ) {
@@ -935,6 +935,25 @@ class FixtureHelper
         return self::buildOrgUserDetails($user);
     }
 
+    public function createLayPfaHighAssetsNotStartedLegacyPasswordHash(string $testRunId, ?string $caseNumber = null): array
+    {
+        $user = $this->createDeputyClientAndReport(
+            $testRunId,
+            User::ROLE_LAY_DEPUTY,
+            'lay-pfa-high-assets-not-started',
+            Report::LAY_PFA_HIGH_ASSETS_TYPE,
+            false,
+            false,
+            false,
+            null,
+            null,
+            $caseNumber,
+            true
+        );
+
+        return self::buildUserDetails($user);
+    }
+
     public function createAdmin(string $testRunId): array
     {
         $user = $this->createAdminUser(
@@ -1053,7 +1072,7 @@ class FixtureHelper
         foreach ($userRoles as $userRole) {
             $user = $this->userTestHelper
                 ->createUser(null, $userRole['role'], sprintf('%s-%s@t.uk', $testPurpose.'-test-'.$userRole['typeSuffix'], $this->testRunId));
-            $this->setClientPassword($user);
+            $this->setPassword($user);
         }
 
         $this->createDeputyClientAndReport(
@@ -1069,15 +1088,16 @@ class FixtureHelper
 
     private function createDeputyClientAndReport(
         string $testRunId,
-                  $userRole,
-                  $emailPrefix,
-                  $reportType,
-                  $completed,
-                  $submitted,
+        $userRole,
+        $emailPrefix,
+        $reportType,
+        $completed,
+        $submitted,
         bool $ndr = false,
         ?DateTime $startDate = null,
         ?int $satisfactionScore = null,
-        ?string $caseNumber = null
+        ?string $caseNumber = null,
+        bool $legacyPasswordHash = false
     ) {
         if ('prod' === $this->symfonyEnvironment) {
             throw new BehatException('Prod mode enabled - cannot create fixture users');
@@ -1094,7 +1114,7 @@ class FixtureHelper
             $this->addClientsAndReportsToLayDeputy($deputy, $completed, $submitted, $reportType, $startDate, $satisfactionScore, $caseNumber);
         }
 
-        $this->setClientPassword($deputy);
+        $this->setPassword($deputy, $legacyPasswordHash);
 
         return $deputy;
     }
@@ -1106,21 +1126,21 @@ class FixtureHelper
         }
         $this->testRunId = $testRunId;
 
-        $client = $this->userTestHelper
+        $user = $this->userTestHelper
             ->createUser(null, $userRole, sprintf('%s-%s@t.uk', $emailPrefix, $this->testRunId));
 
-        $this->setClientPassword($client);
+        $this->setPassword($user);
 
-        return $client;
+        return $user;
     }
 
     private function createOrgUserClientNamedDeputyAndReport(
         string $testRunId,
-                  $userRole,
-                  $emailPrefix,
-                  $reportType,
-                  $completed,
-                  $submitted,
+        $userRole,
+        $emailPrefix,
+        $reportType,
+        $completed,
+        $submitted,
         ?string $namedDeputyEmail = null,
         ?string $caseNumber = null,
         ?string $deputyUid = null,
@@ -1155,15 +1175,20 @@ class FixtureHelper
             $deputyUid
         );
 
-        $this->setClientPassword($user);
+        $this->setPassword($user);
 
         return $user;
     }
 
-    private function setClientPassword($client)
+    private function setPassword($user, $legacyPasswordHash = false)
     {
-        $client->setPassword($this->encoder->encodePassword($client, $this->fixtureParams['account_password']));
-        $this->em->persist($client);
+        if ($legacyPasswordHash) {
+            $user->setPassword($this->fixtureParams['legacy_password_hash']);
+        } else {
+            $user->setPassword($this->hasher->hashPassword($user, $this->fixtureParams['account_password']));
+        }
+
+        $this->em->persist($user);
         $this->em->flush();
     }
 
@@ -1176,5 +1201,10 @@ class FixtureHelper
         $this->em->flush();
 
         return $preRegistration;
+    }
+
+    public function getLegacyPasswordHash(): string
+    {
+        return $this->fixtureParams['legacy_password_hash'];
     }
 }

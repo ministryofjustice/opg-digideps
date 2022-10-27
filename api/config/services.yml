@@ -1,6 +1,7 @@
 parameters:
     fixtures:
         account_password: "%env(FIXTURES_ACCOUNTPASSWORD)%"
+        legacy_password_hash: "%env(FIXTURES_LEGACYPASSWORDHASH)%"
 
     # set this param to a higher value than session_expire_seconds on the client
     user_provider_timeout_seconds: 3901
