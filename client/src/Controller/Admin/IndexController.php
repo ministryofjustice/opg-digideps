@@ -30,8 +30,6 @@ use Symfony\Bundle\FrameworkBundle\Console\Application;
 use Symfony\Component\Console\Input\ArrayInput;
 use Symfony\Component\Console\Output\NullOutput;
 use Symfony\Component\DependencyInjection\ParameterBag\ParameterBagInterface;
-use Symfony\Component\EventDispatcher\Event;
-use Symfony\Component\EventDispatcher\EventDispatcherInterface;
 use Symfony\Component\Form\Extension\Core\Type\ChoiceType;
 use Symfony\Component\Form\Extension\Core\Type\SubmitType;
 use Symfony\Component\Form\FormError;
@@ -39,7 +37,6 @@ use Symfony\Component\Form\FormInterface;
 use Symfony\Component\HttpFoundation\RedirectResponse;
 use Symfony\Component\HttpFoundation\Request;
 use Symfony\Component\HttpFoundation\Response;
-use Symfony\Component\HttpKernel\KernelEvents;
 use Symfony\Component\HttpKernel\KernelInterface;
 use Symfony\Component\Process\Process;
 use Symfony\Component\Routing\Annotation\Route;
@@ -371,95 +368,106 @@ class IndexController extends AbstractController
     {
         $chunkSize = 2000;
 
-        $form = $this->createForm(FormDir\UploadCsvType::class, null, [
+        $uploadForm = $this->createForm(FormDir\UploadCsvType::class, null, [
+            'method' => 'POST',
+        ]);
+        $processForm = $this->createForm(FormDir\ProcessCSVType::class, null, [
             'method' => 'POST',
         ]);
 
-        $form->handleRequest($request);
+        if ($request->isMethod('POST')) {
+            $uploadForm->handleRequest($request);
+            $processForm->handleRequest($request);
 
-        // AjaxController redirects to this page after working through chunks - check if its completed to dispatch event
-        if ('1' === $request->get('complete')) {
-            $this->dispatchCSVUploadEvent();
-        }
+            if ($request->get('admin_upload')) {
+                // AjaxController redirects to this page after working through chunks - check if its completed to dispatch event
+                if ('1' === $request->get('complete')) {
+                    $this->dispatchCSVUploadEvent();
+                }
 
-        if ($form->isSubmitted() && $form->isValid()) {
-            $fileName = $form->get('file')->getData();
-            try {
-                $csvToArray = new CsvToArray($fileName, false, true);
+                if ($uploadForm->isSubmitted() && $uploadForm->isValid()) {
+                    $data = $this->handleLayUploadForm($uploadForm);
 
-                $data = $csvToArray
-                    ->setOptionalColumns([
-                        'Case',
-                        'ClientSurname',
-                        'DeputyUid',
-                        'DeputySurname',
-                        'DeputyAddress1',
-                        'DeputyAddress2',
-                        'DeputyAddress3',
-                        'DeputyAddress4',
-                        'DeputyAddress5',
-                        'DeputyPostcode',
-                        'ReportType',
-                        'MadeDate',
-                        'OrderType',
-                        'CoDeputy',
-                    ])
-                    ->setUnexpectedColumns(['LastReportDay', 'DeputyOrganisation'])
-                    ->getData();
+                    // small amount of data -> immediate posting and redirect (needed for behat)
+                    if (count($data) < $chunkSize) {
+                        $compressedData = CsvUploader::compressData($data);
+                        $this->preRegistrationApi->deleteAll();
 
-                // small amount of data -> immediate posting and redirect (needed for behat)
-                if (count($data) < $chunkSize) {
-                    $compressedData = CsvUploader::compressData($data);
-                    $this->preRegistrationApi->deleteAll();
+                        $ret = $this->layDeputyshipApi->uploadLayDeputyShip($compressedData, 'below_2000_rows');
 
-                    $ret = $this->layDeputyshipApi->uploadLayDeputyShip($compressedData, 'below_2000_rows');
-
-                    $this->addFlash(
-                        'notice',
-                        sprintf('%d record uploaded, %d error(s), %d skipped', $ret['added'], count($ret['errors']), count($ret['skipped']))
-                    );
-
-                    foreach ($ret['errors'] as $err) {
-                        $this->logger->warning(
-                            sprintf('Error while uploading csv: %s', $err)
+                        $this->addFlash(
+                            'notice',
+                            sprintf('%d record(s) uploaded, %d error(s), %d skipped', $ret['added'], count($ret['errors']), count($ret['skipped']))
                         );
 
-                        $this->addFlash('error', $err);
+                        foreach ($ret['errors'] as $err) {
+                            $this->logger->warning(
+                                sprintf('Error while uploading csv: %s', $err)
+                            );
+
+                            $this->addFlash('error', $err);
+                        }
+
+                        $this->dispatchCSVUploadEvent();
+
+                        return $this->redirect($this->generateUrl('pre_registration_upload'));
                     }
 
-                    $this->dispatchCSVUploadEvent();
+                    // big amount of data => store in redis + redirect
+                    $chunks = array_chunk($data, $chunkSize);
+
+                    foreach ($chunks as $k => $chunk) {
+                        $compressedData = CsvUploader::compressData($chunk);
+                        $redisClient->set('chunk'.$k, $compressedData);
+                    }
+
+                    return $this->redirect($this->generateUrl('pre_registration_upload', ['nOfChunks' => count($chunks)]));
+                }
+            } else if ($request->get('admin_process')) {
+                if ($processForm->isSubmitted() && $processForm->isValid()) {
+                    /** Run the lay CSV command as a background task */
+                    $email = $this->tokenStorage->getToken()->getUser()->getUsername();
+                    $process = new Process(["ls", "-lsa"]);
+                    $process->setTimeout(3600);
+                    $process->setOptions(['create_new_console' => true]);
+                    $process->disableOutput();
+
+                    $process->start(function () use ($email) {
+                        $application = new Application($this->kernel);
+                        $input = new ArrayInput([
+                            'command' => 'digideps:process-lay-csv',
+                            'email' => $email,
+                        ]);
+
+                        $output = new NullOutput();
+                        $application->run($input, $output);
+                    });
+
+                    $this->addFlash("notice", "CSV import process started. Keep an eye on your emails for completion.");
 
                     return $this->redirect($this->generateUrl('pre_registration_upload'));
                 }
-
-                // big amount of data => store in redis + redirect
-                $chunks = array_chunk($data, $chunkSize);
-
-                foreach ($chunks as $k => $chunk) {
-                    $compressedData = CsvUploader::compressData($chunk);
-                    $redisClient->set('chunk'.$k, $compressedData);
-                }
-
-                return $this->redirect($this->generateUrl('pre_registration_upload', ['nOfChunks' => count($chunks)]));
-            } catch (Throwable $e) {
-                $this->logger->warning('DEBUG CSV UPLOAD...');
-                $this->logger->warning($e);
-
-                $message = $e->getMessage();
-
-                if ($e instanceof RestClientException && isset($e->getData()['message'])) {
-                    $message = $e->getData()['message'];
-                }
-
-                $form->get('file')->addError(new FormError($message));
             }
         }
+
+        /** S3 bucket information */
+        $bucket = $this->params->get('s3_sirius_bucket');
+        $layReportFile = 'layDeputyReport.csv';
+        $bucketFileInfo = $this->s3->getObject([
+            'Bucket' => $bucket,
+            'Key' => $layReportFile,
+        ]);
 
         return [
             'nOfChunks' => $request->get('nOfChunks'),
             'currentRecords' => $this->preRegistrationApi->count(),
-            'form' => $form->createView(),
+            'uploadForm' => $uploadForm->createView(),
+            'processForm' => $processForm->createView(),
             'maxUploadSize' => min([ini_get('upload_max_filesize'), ini_get('post_max_size')]),
+            'fileUploadedInfo' => [
+                'fileName' => $layReportFile,
+                'date' => $bucketFileInfo['LastModified']->format('d/m/Y - H:i:s A')
+            ],
         ];
     }
 
@@ -473,7 +481,7 @@ class IndexController extends AbstractController
         $uploadForm = $this->createForm(FormDir\UploadCsvType::class, null, [
             'method' => 'POST',
         ]);
-        $processForm = $this->createForm(FormDir\OrgCsvProcessType::class, null, [
+        $processForm = $this->createForm(FormDir\ProcessCSVType::class, null, [
             'method' => 'POST',
         ]);
 
@@ -484,7 +492,7 @@ class IndexController extends AbstractController
             $outputStreamResponse = isset($_GET['ajax']);
             if ($request->get('admin_upload')) {
                 if ($uploadForm->isSubmitted() && $uploadForm->isValid()) {
-                    $data = $this->handleUploadForm($uploadForm, $outputStreamResponse);
+                    $data = $this->handleOrgUploadForm($uploadForm, $outputStreamResponse);
 
                     $this->orgService->setLogging($outputStreamResponse);
 
@@ -493,15 +501,14 @@ class IndexController extends AbstractController
                 }
             } else if ($request->get('admin_process')) {
                 if ($processForm->isSubmitted() && $processForm->isValid()) {
-
-                    /** Run the process org command asynchronously */
+                    /** Run the org CSV command as a background task */
                     $email = $this->tokenStorage->getToken()->getUser()->getUsername();
                     $process = new Process(["ls", "-lsa"]);
                     $process->setTimeout(3600); //timeout set to an hour
                     $process->setOptions(['create_new_console' => true]);
                     $process->disableOutput();
 
-                    $process->start(function ($type, $buffer) use ($email) {
+                    $process->start(function () use ($email) {
                         $application = new Application($this->kernel);
                         $input = new ArrayInput([
                             'command' => 'digideps:process-org-csv',
@@ -512,9 +519,7 @@ class IndexController extends AbstractController
                         $application->run($input, $output);
                     });
 
-
-//                    $output = $process->getOutput();
-//                    $this->logger->notice(sprintf('Process org CSV command output: %s', $process->getOutput()));
+                    $this->addFlash("notice", "CSV import process started. Keep an eye on your emails for completion.");
 
                     return $this->redirect($this->generateUrl('admin_org_upload'));
                 }
@@ -554,7 +559,7 @@ class IndexController extends AbstractController
         return new Response('[Link sent]');
     }
 
-    private function handleUploadForm(FormInterface $uploadForm, bool $outputStreamResponse) {
+    private function handleOrgUploadForm(FormInterface $uploadForm, bool $outputStreamResponse) {
         try {
             $fileName = $uploadForm->get('file')->getData();
 
@@ -598,6 +603,34 @@ class IndexController extends AbstractController
         }
     }
 
+    private function handleLayUploadForm(FormInterface $form) {
+        try {
+            $fileName = $form->get('file')->getData();
+
+            return (new CsvToArray($fileName, false, false))
+                ->setOptionalColumns([
+                    'Case',
+                    'ClientSurname',
+                    'DeputyUid',
+                    'DeputySurname',
+                    'DeputyAddress1',
+                    'DeputyAddress2',
+                    'DeputyAddress3',
+                    'DeputyAddress4',
+                    'DeputyAddress5',
+                    'DeputyPostcode',
+                    'ReportType',
+                    'MadeDate',
+                    'OrderType',
+                    'CoDeputy',
+                ])
+                ->setUnexpectedColumns(['LastReportDay', 'DeputyOrganisation'])
+                ->getData();
+        } catch (Throwable $e) {
+            $this->formExceptionError($e, false, $form);
+        }
+    }
+
     private function dispatchCSVUploadEvent()
     {
         $csvUploadedEvent = new CSVUploadedEvent(
@@ -625,10 +658,10 @@ class IndexController extends AbstractController
     /**
      * @param Throwable|Exception $e
      * @param bool $outputStreamResponse
-     * @param FormInterface $processForm
+     * @param FormInterface $form
      * @return void
      */
-    private function formExceptionError(Throwable|Exception $e, bool $outputStreamResponse, FormInterface $processForm): void
+    private function formExceptionError(Throwable|Exception $e, bool $outputStreamResponse, FormInterface $form): void
     {
         $message = $e->getMessage();
 
@@ -640,7 +673,7 @@ class IndexController extends AbstractController
             $this->addFlash('error', $message);
             exit();
         } else {
-            $processForm->addError(new FormError($message));
+            $form->addError(new FormError($message));
         }
     }
 }

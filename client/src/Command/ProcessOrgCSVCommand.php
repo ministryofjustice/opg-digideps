@@ -58,13 +58,12 @@ class ProcessOrgCSVCommand extends Command {
     }
 
     protected function configure(): void {
-        $this->setDescription('Processes the PA/Prof CSV Report from the S3 bucket.');
-        $this->addArgument('email', InputArgument::REQUIRED, 'Email address to send the status of the process to');
+        $this
+            ->setDescription('Processes the PA/Prof CSV Report from the S3 bucket.')
+            ->addArgument('email', InputArgument::REQUIRED, 'Email address to send results to');
     }
 
     protected function execute(InputInterface $input, OutputInterface $output): int {
-        $output->writeln('Processing CSV...');
-
         $bucket = $this->params->get('s3_sirius_bucket');
         $paProReportFile = 'paProDeputyReport.csv';
 
@@ -72,7 +71,7 @@ class ProcessOrgCSVCommand extends Command {
             $this->s3->getObject([
                 'Bucket' => $bucket,
                 'Key' => $paProReportFile,
-                'SaveAs' => '/tmp/paDeputyReport.csv'
+                'SaveAs' => "/tmp/$paProReportFile"
             ]);
         } catch (S3Exception $e) {
             if (in_array($e->getAwsErrorCode(), S3Storage::MISSING_FILE_AWS_ERROR_CODES)) {
@@ -131,15 +130,6 @@ class ProcessOrgCSVCommand extends Command {
     private function process(mixed $data, string $email) {
         $chunks = array_chunk($data, self::CHUNK_SIZE);
 
-        $this->processChunks($chunks);
-
-        $this->mailer->sendProcessOrgCSVEmail($this->email, $this->output);
-    }
-
-    private function processChunks($chunks)
-    {
-        $chunkCount = count($chunks);
-
         $logged = false;
 
         foreach ($chunks as $index => $chunk) {
@@ -159,6 +149,8 @@ class ProcessOrgCSVCommand extends Command {
                 $logged = true;
             }
         }
+
+        $this->mailer->sendProcessOrgCSVEmail($this->email, $this->output);
     }
 
     private function storeOutput(array $output) {

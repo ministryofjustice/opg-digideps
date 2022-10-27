@@ -7,7 +7,7 @@ use Symfony\Component\Form\Extension\Core\Type as FormTypes;
 use Symfony\Component\Form\FormBuilderInterface;
 use Symfony\Component\OptionsResolver\OptionsResolver;
 
-class OrgCsvProcessType extends AbstractType
+class ProcessCSVType extends AbstractType
 {
     public function buildForm(FormBuilderInterface $builder, array $options)
     {
