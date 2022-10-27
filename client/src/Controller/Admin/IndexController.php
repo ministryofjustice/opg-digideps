@@ -26,6 +26,9 @@ use Psr\Log\LoggerInterface;
 use RuntimeException;
 use Sensio\Bundle\FrameworkExtraBundle\Configuration\Security;
 use Sensio\Bundle\FrameworkExtraBundle\Configuration\Template;
+use Symfony\Bundle\FrameworkBundle\Console\Application;
+use Symfony\Component\Console\Input\ArrayInput;
+use Symfony\Component\Console\Output\NullOutput;
 use Symfony\Component\DependencyInjection\ParameterBag\ParameterBagInterface;
 use Symfony\Component\EventDispatcher\Event;
 use Symfony\Component\EventDispatcher\EventDispatcherInterface;
@@ -37,6 +40,7 @@ use Symfony\Component\HttpFoundation\RedirectResponse;
 use Symfony\Component\HttpFoundation\Request;
 use Symfony\Component\HttpFoundation\Response;
 use Symfony\Component\HttpKernel\KernelEvents;
+use Symfony\Component\HttpKernel\KernelInterface;
 use Symfony\Component\Process\Process;
 use Symfony\Component\Routing\Annotation\Route;
 use Symfony\Component\Routing\RouterInterface;
@@ -59,7 +63,7 @@ class IndexController extends AbstractController
         private LayDeputyshipApi $layDeputyshipApi,
         private TokenStorageInterface $tokenStorage,
         private ParameterBagInterface $params,
-        private EventDispatcherInterface $dispatcher,
+        private KernelInterface $kernel,
         private S3Client $s3
     ) {
     }
@@ -492,16 +496,24 @@ class IndexController extends AbstractController
 
                     /** Run the process org command asynchronously */
                     $email = $this->tokenStorage->getToken()->getUser()->getUsername();
-                    $process = new Process(["php app/console digideps:process-org-csv", $email]);
+                    $process = new Process(["ls", "-lsa"]);
                     $process->setTimeout(3600); //timeout set to an hour
+                    $process->setOptions(['create_new_console' => true]);
                     $process->disableOutput();
 
-                    $this->dispatcher->addListener(
-                        KernelEvents::TERMINATE,
-                        function () use ($process) {
-                        $process->start();
+                    $process->start(function ($type, $buffer) use ($email) {
+                        $application = new Application($this->kernel);
+                        $input = new ArrayInput([
+                            'command' => 'digideps:process-org-csv',
+                            'email' => $email
+                        ]);
+
+                        $output = new NullOutput();
+                        $application->run($input, $output);
                     });
 
+
+//                    $output = $process->getOutput();
 //                    $this->logger->notice(sprintf('Process org CSV command output: %s', $process->getOutput()));
 
                     return $this->redirect($this->generateUrl('admin_org_upload'));
