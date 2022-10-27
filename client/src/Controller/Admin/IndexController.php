@@ -18,12 +18,8 @@ use App\Service\Client\Internal\UserApi;
 use App\Service\Client\RestClient;
 use App\Service\CsvUploader;
 use App\Service\DataImporter\CsvToArray;
-use App\Service\File\Storage\FileNotFoundException;
-use App\Service\File\Storage\S3Storage;
 use App\Service\OrgService;
-use Aws\S3\Exception\S3Exception;
 use Aws\S3\S3Client;
-use DateTime;
 use Exception;
 use Predis\ClientInterface;
 use Psr\Log\LoggerInterface;
@@ -31,6 +27,8 @@ use RuntimeException;
 use Sensio\Bundle\FrameworkExtraBundle\Configuration\Security;
 use Sensio\Bundle\FrameworkExtraBundle\Configuration\Template;
 use Symfony\Component\DependencyInjection\ParameterBag\ParameterBagInterface;
+use Symfony\Component\EventDispatcher\Event;
+use Symfony\Component\EventDispatcher\EventDispatcherInterface;
 use Symfony\Component\Form\Extension\Core\Type\ChoiceType;
 use Symfony\Component\Form\Extension\Core\Type\SubmitType;
 use Symfony\Component\Form\FormError;
@@ -38,6 +36,8 @@ use Symfony\Component\Form\FormInterface;
 use Symfony\Component\HttpFoundation\RedirectResponse;
 use Symfony\Component\HttpFoundation\Request;
 use Symfony\Component\HttpFoundation\Response;
+use Symfony\Component\HttpKernel\KernelEvents;
+use Symfony\Component\Process\Process;
 use Symfony\Component\Routing\Annotation\Route;
 use Symfony\Component\Routing\RouterInterface;
 use Symfony\Component\Security\Core\Authentication\Token\Storage\TokenStorageInterface;
@@ -59,6 +59,7 @@ class IndexController extends AbstractController
         private LayDeputyshipApi $layDeputyshipApi,
         private TokenStorageInterface $tokenStorage,
         private ParameterBagInterface $params,
+        private EventDispatcherInterface $dispatcher,
         private S3Client $s3
     ) {
     }
@@ -472,14 +473,6 @@ class IndexController extends AbstractController
             'method' => 'POST',
         ]);
 
-        /** S3 bucket information */
-        $bucket = $this->params->get('s3_sirius_bucket');
-        $paProReportFile = 'paProDeputyReport.csv';
-        $bucketFileInfo = $this->s3->getObject([
-            'Bucket' => $bucket,
-            'Key' => $paProReportFile,
-        ]);
-
         if ($request->isMethod('POST')) {
             $uploadForm->handleRequest($request);
             $processForm->handleRequest($request);
@@ -492,21 +485,37 @@ class IndexController extends AbstractController
                     $this->orgService->setLogging($outputStreamResponse);
 
                     $redirectUrl = $this->generateUrl('admin_org_upload');
-
                     return $this->orgService->process($data, $redirectUrl);
                 }
             } else if ($request->get('admin_process')) {
                 if ($processForm->isSubmitted() && $processForm->isValid()) {
-                    $data = $this->handleProcessForm($processForm, $bucket, $outputStreamResponse);
 
-                    $this->orgService->setLogging($outputStreamResponse);
+                    /** Run the process org command asynchronously */
+                    $email = $this->tokenStorage->getToken()->getUser()->getUsername();
+                    $process = new Process(["php app/console digideps:process-org-csv", $email]);
+                    $process->setTimeout(3600); //timeout set to an hour
+                    $process->disableOutput();
 
-                    $redirectUrl = $this->generateUrl('admin_org_upload');
+                    $this->dispatcher->addListener(
+                        KernelEvents::TERMINATE,
+                        function () use ($process) {
+                        $process->start();
+                    });
 
-                    return $this->orgService->process($data, $redirectUrl);
+//                    $this->logger->notice(sprintf('Process org CSV command output: %s', $process->getOutput()));
+
+                    return $this->redirect($this->generateUrl('admin_org_upload'));
                 }
             }
         }
+
+        /** S3 bucket information */
+        $bucket = $this->params->get('s3_sirius_bucket');
+        $paProReportFile = 'paProDeputyReport.csv';
+        $bucketFileInfo = $this->s3->getObject([
+            'Bucket' => $bucket,
+            'Key' => $paProReportFile,
+        ]);
 
         return [
             'uploadForm' => $uploadForm->createView(),
@@ -577,65 +586,6 @@ class IndexController extends AbstractController
         }
     }
 
-    private function handleProcessForm(FormInterface $processForm, string $bucketName, bool $outputStreamResponse) {
-        try {
-            $this->s3->registerStreamWrapper();
-
-            $this->s3->getObject([
-                'Bucket' => $bucketName,
-                'Key' => 'paProDeputyReport.csv',
-                'SaveAs' => '/tmp/paDeputyReport.csv'
-            ]);
-        } catch (S3Exception $e) {
-            if (in_array($e->getAwsErrorCode(), S3Storage::MISSING_FILE_AWS_ERROR_CODES)) {
-                throw new FileNotFoundException("Cannot find file with reference paProDeputyReport.csv");
-            }
-            throw $e;
-        }
-
-        try {
-            return (new CsvToArray('/tmp/paDeputyReport.csv', false))
-                ->setExpectedColumns([
-                    'Case',
-                    'ClientForename',
-                    'ClientSurname',
-                    'ClientDateOfBirth',
-                    'ClientPostcode',
-                    'DeputyUid',
-                    'DeputyType',
-                    'DeputyEmail',
-                    'DeputyOrganisation',
-                    'DeputyForename',
-                    'DeputySurname',
-                    'DeputyPostcode',
-                    'MadeDate',
-                    'LastReportDay',
-                    'ReportType',
-                    'OrderType',
-                ])
-                ->setOptionalColumns([
-                    'ClientAddress1',
-                    'ClientAddress2',
-                    'ClientAddress3',
-                    'ClientAddress4',
-                    'ClientAddress5',
-                    'DeputyAddress1',
-                    'DeputyAddress2',
-                    'DeputyAddress3',
-                    'DeputyAddress4',
-                    'DeputyAddress5',
-                ])
-                ->setUnexpectedColumns([
-                    'NDR',
-                ])
-                ->getData();
-        } catch (Throwable $e) {
-            $this->formExceptionError($e, $outputStreamResponse, $processForm);
-        }
-
-        return $this->redirect($this->generateUrl('admin_org_upload'));
-    }
-
     private function dispatchCSVUploadEvent()
     {
         $csvUploadedEvent = new CSVUploadedEvent(
@@ -678,7 +628,7 @@ class IndexController extends AbstractController
             $this->addFlash('error', $message);
             exit();
         } else {
-            $processForm->get('file')->addError(new FormError($message));
+            $processForm->addError(new FormError($message));
         }
     }
 }

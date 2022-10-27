@@ -78,4 +78,10 @@ class Mailer
             $this->mailFactory->createNdrSubmissionConfirmationEmail($submittedByDeputy, $submittedNdr, $newReport)
         );
     }
+
+    public function sendProcessOrgCSVEmail(string $adminUser, array $output) {
+        $this->mailSender->send(
+            $this->mailFactory->createProcessOrgCSVEmail($adminUser, $output)
+        );
+    }
 }

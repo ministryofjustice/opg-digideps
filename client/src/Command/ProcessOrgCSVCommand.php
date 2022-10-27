@@ -4,15 +4,21 @@ declare(strict_types=1);
 
 namespace App\Command;
 
+use App\Event\CSVUploadedEvent;
+use App\Event\OrgCreatedEvent;
+use App\Service\Audit\AuditEvents;
 use App\Service\Client\RestClient;
 use App\Service\CsvUploader;
 use App\Service\DataImporter\CsvToArray;
 use App\Service\File\Storage\FileNotFoundException;
 use App\Service\File\Storage\S3Storage;
+use App\Service\Mailer\Mailer;
 use Aws\S3\Exception\S3Exception;
 use Aws\S3\S3Client;
+use Psr\Log\LoggerInterface;
 use RuntimeException;
 use Symfony\Component\Console\Command\Command;
+use Symfony\Component\Console\Input\InputArgument;
 use Symfony\Component\Console\Input\InputInterface;
 use Symfony\Component\Console\Output\OutputInterface;
 use Symfony\Component\DependencyInjection\ParameterBag\ParameterBagInterface;
@@ -23,23 +29,41 @@ class ProcessOrgCSVCommand extends Command {
 
     private const CHUNK_SIZE = 50;
 
+    private array $output = [
+        'errors' => [],
+        'added' => [
+            'clients' => 0,
+            'named_deputies' => 0,
+            'reports' => 0,
+            'organisations' => 0,
+        ],
+        'updated' => [
+            'clients' => 0,
+            'named_deputies' => 0,
+            'reports' => 0,
+            'organisations' => 0,
+        ],
+        'skipped' => 0,
+    ];
+
     public function __construct(
         private S3Client $s3,
-        private string $siriusBucket,
         private CsvUploader $csvUploader,
         private RestClient $restClient,
         private ParameterBagInterface $params,
-    )
-    {
+        private Mailer $mailer,
+        private LoggerInterface $logger
+    ) {
         parent::__construct();
     }
 
     protected function configure(): void {
         $this->setDescription('Processes the PA/Prof CSV Report from the S3 bucket.');
+        $this->addArgument('email', InputArgument::REQUIRED, 'Email address to send the status of the process to');
     }
 
     protected function execute(InputInterface $input, OutputInterface $output): int {
-        $output->writeln('Processing CSV');
+        $output->writeln('Processing CSV...');
 
         $bucket = $this->params->get('s3_sirius_bucket');
         $paProReportFile = 'paProDeputyReport.csv';
@@ -52,13 +76,12 @@ class ProcessOrgCSVCommand extends Command {
             ]);
         } catch (S3Exception $e) {
             if (in_array($e->getAwsErrorCode(), S3Storage::MISSING_FILE_AWS_ERROR_CODES)) {
-                throw new FileNotFoundException("Cannot find file with reference paProDeputyReport.csv");
+                $this->logger->log('error', sprintf('File %s not found in bucket %s', $paProReportFile, $bucket));
             }
-            throw $e;
         }
 
         $data = $this->csvToArray('/tmp/paDeputyReport.csv');
-        $this->process($data);
+        $this->process($data, $input->getArgument('email'));
 
         return 0;
     }
@@ -101,14 +124,16 @@ class ProcessOrgCSVCommand extends Command {
             ])
             ->getData();
         } catch (Throwable $e) {
-            throw new RuntimeException('Error parsing CSV file', 0, $e);
+            $this->logger->log('error', sprintf('Error processing CSV: %s', $e->getMessage()));
         }
     }
 
-    private function process(mixed $data) {
+    private function process(mixed $data, string $email) {
         $chunks = array_chunk($data, self::CHUNK_SIZE);
 
         $this->processChunks($chunks);
+
+        $this->mailer->sendProcessOrgCSVEmail($this->email, $this->output);
     }
 
     private function processChunks($chunks)
@@ -123,8 +148,7 @@ class ProcessOrgCSVCommand extends Command {
             /** @var array $upload */
             $upload = $this->restClient->post('v2/org-deputyships', $compressedChunk);
 
-            $this->storeChunkOutput($upload);
-            $this->logProgress($index + 1, $chunkCount);
+            $this->storeOutput($upload);
 
             foreach ($upload['added']['organisations'] as $organisation) {
                 $this->dispatchOrgCreatedEvent($organisation);
@@ -135,5 +159,51 @@ class ProcessOrgCSVCommand extends Command {
                 $logged = true;
             }
         }
+    }
+
+    private function storeOutput(array $output) {
+        if (!empty($output['errors'])) {
+            $this->output['errors'] = array_merge($this->output['errors'], $output['errors']);
+        }
+
+        if (!empty($output['added'])) {
+            foreach ($output['added'] as $group => $items) {
+                $this->output['added'][$group] += count($items);
+            }
+        }
+
+        if (!empty($output['updated'])) {
+            foreach ($output['updated'] as $group => $items) {
+                $this->output['updated'][$group] += count($items);
+            }
+        }
+
+        if (!empty($output['skipped'])) {
+            $this->output['skipped'] += $output['skipped'];
+        }
+    }
+
+    private function dispatchCSVUploadEvent()
+    {
+        $csvUploadedEvent = new CSVUploadedEvent(
+            'ORG',
+            AuditEvents::EVENT_CSV_UPLOADED
+        );
+
+        $this->eventDispatcher->dispatch($csvUploadedEvent, CSVUploadedEvent::NAME);
+    }
+
+    private function dispatchOrgCreatedEvent(array $organisation)
+    {
+        $trigger = AuditEvents::TRIGGER_CSV_UPLOAD;
+        $currentUser = $this->tokenStorage->getToken()->getUser();
+
+        $orgCreatedEvent = new OrgCreatedEvent(
+            $trigger,
+            $currentUser,
+            $organisation
+        );
+
+        $this->eventDispatcher->dispatch($orgCreatedEvent, OrgCreatedEvent::NAME);
     }
 }
