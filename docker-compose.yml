@@ -172,7 +172,7 @@ services:
       - sync/sync.env
 
   pact-mock:
-    image: pactfoundation/pact-cli:latest
+    image: pactfoundation/pact-cli:0.50.0.32
     ports:
       - 1234:80
     command:
@@ -189,7 +189,7 @@ services:
       - OPG Data
 
   mock-sirius-integration:
-    image: muonsoft/openapi-mock:latest
+    image: muonsoft/openapi-mock:v0.3.3
     ports:
       - 6060:8080
     environment:
@@ -207,9 +207,9 @@ services:
       - --dynamic
 
   synchronisation:
+    container_name: opg-synchronisation-lambda
     build:
       context: ./lambda_functions/functions/synchronisation
-    image: synchronisation:latest
     ports:
       - 2080:8080
     environment:

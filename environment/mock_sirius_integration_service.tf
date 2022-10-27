@@ -68,7 +68,7 @@ locals {
   mock_sirius_integration_container = <<EOF
   {
     "name": "mock-sirius-integration",
-    "image": "muonsoft/openapi-mock:latest",
+    "image": "muonsoft/openapi-mock:${local.openapi_mock_version}",
     "portMappings": [{
           "containerPort": 8080,
           "hostPort": 8080,
