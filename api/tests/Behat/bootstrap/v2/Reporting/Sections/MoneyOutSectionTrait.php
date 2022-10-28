@@ -34,6 +34,7 @@ trait MoneyOutSectionTrait
         'deputy-security-bond' => 'Deputy security bond',
         'opg-fees' => 'OPG\'s fees',
         'professional-fees-eg-solicitor-accountant' => 'Fees charged by a solicitor, accountant or other professional',
+        'professional-fees-eg-solicitor-accountant-non-lay' => 'Fees charged by a solicitor, accountant or other professional (Do not include deputy costs)',
         'investment-bonds-purchased' => 'Investment bond',
         'investment-account-purchased' => 'Investment fund account',
         'stocks-and-shares-purchased' => 'Stocks and shares',
@@ -229,5 +230,27 @@ trait MoneyOutSectionTrait
 
         $this->chooseOption('add_another[addAnother]', $anotherFlag);
         $this->pressButton('Save and continue');
+    }
+
+    /**
+     * @When I add the Fees charged by a solicitor, accountant or other professional payment
+     */
+    public function iAddTheFeesChargedByASolicitorAccountantOrOtherProfessionalPayment()
+    {
+        $this->iAmOnMoneyOutAddPaymentPage();
+
+        $this->addPayment('professional-fees-eg-solicitor-accountant', $this->paymentTypeDictionary['professional-fees-eg-solicitor-accountant']);
+        $this->addAnother('no');
+    }
+
+    /**
+     * @When I add the Fees charged by a solicitor, accountant or other professional payment not including deputy costs
+     */
+    public function iAddTheFeesChargedByASolicitorAccountantOrOtherProfessionalPaymentNotIncludingDeputyCosts()
+    {
+        $this->iAmOnMoneyOutAddPaymentPage();
+
+        $this->addPayment('professional-fees-eg-solicitor-accountant-non-lay', $this->paymentTypeDictionary['professional-fees-eg-solicitor-accountant-non-lay']);
+        $this->addAnother('no');
     }
 }
