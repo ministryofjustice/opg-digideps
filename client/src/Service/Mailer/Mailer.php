@@ -84,4 +84,10 @@ class Mailer
             $this->mailFactory->createProcessOrgCSVEmail($adminUser, $output)
         );
     }
+
+    public function sendProcessLayCSVEmail(string $adminUser, array $output) {
+        $this->mailSender->send(
+            $this->mailFactory->createProcessLayCSVEmail($adminUser, $output)
+        );
+    }
 }

@@ -22,9 +22,9 @@ use Symfony\Component\DependencyInjection\ParameterBag\ParameterBagInterface;
 use Throwable;
 
 class ProcessLayCSVCommand extends Command {
-    protected static $defaultName = 'digideps:process-org-csv';
+    protected static $defaultName = 'digideps:process-lay-csv';
 
-    private const CHUNK_SIZE = 2000;
+    private const CHUNK_SIZE = 50;
 
     private array $output = [
         'errors' => [],
@@ -34,13 +34,10 @@ class ProcessLayCSVCommand extends Command {
 
     public function __construct(
         private S3Client $s3,
-        private CsvUploader $csvUploader,
         private RestClient $restClient,
         private ParameterBagInterface $params,
         private Mailer $mailer,
         private LoggerInterface $logger,
-        private LayDeputyshipApi $layApi,
-        private PreRegistrationApi $preRegApi,
     ) {
         parent::__construct();
     }
@@ -51,7 +48,7 @@ class ProcessLayCSVCommand extends Command {
             ->addArgument('email', InputArgument::REQUIRED, 'Email address to send results to');
     }
 
-    protected function execute(InputInterface $input, OutputInterface $output)
+    protected function execute(InputInterface $input, OutputInterface $output): int
     {
         $bucket = $this->params->get('s3_sirius_bucket');
         $layDeputyReportFile = 'layDeputyReport.csv';
@@ -68,7 +65,7 @@ class ProcessLayCSVCommand extends Command {
             }
         }
 
-        $data = $this->csvToArray('/tmp/layDeputyReport.csv');
+        $data = $this->csvToArray("/tmp/$layDeputyReportFile");
         $this->process($data, $input->getArgument('email'));
 
         return 0;
@@ -103,25 +100,29 @@ class ProcessLayCSVCommand extends Command {
     private function process(mixed $data, string $email) {
         $chunks = array_chunk($data, self::CHUNK_SIZE);
 
-        if (count($data) < self::CHUNK_SIZE) {
-            $compressedData = CsvUploader::compressData($data);
-            $this->preRegApi->deleteAll();
+        foreach ($chunks as $index => $chunk) {
+            $compressedChunk = CsvUploader::compressData($chunk);
 
-            $response = $this->layApi->uploadLayDeputyShip($compressedData, "below_2000_rows");
-            $this->storeOutput($response);
+            /** @var array $upload */
+            $upload = $this->restClient->post('v2/lay-deputyship/upload', $compressedChunk);
 
-            foreach ($response['errors'] as $err) {
-                $this->logger->warning(
-                    sprintf('Error while uploading csv: %s', $err)
-                );
-            }
+            $this->storeOutput($upload);
         }
+
+        $this->mailer->sendProcessLayCSVEmail($email, $this->output);
     }
 
-    private function storeOutput(array $response) {
-        $this->output['added'] += $response['added'];
-        $this->output['skipped'] += count($response['skipped']);
+    private function storeOutput(array $output) {
+        if (!empty($output['errors'])) {
+            $this->output['errors'] = array_merge($this->output['errors'], $output['errors']);
+        }
 
-        $this->output['errors'] = array_merge($this->output['errors'], $response['errors']);
+        if (!empty($output['added'])) {
+            $this->output['added'] += $output['added'];
+        }
+
+        if (!empty($output['skipped'])) {
+            $this->output['skipped'] += $output['skipped'];
+        }
     }
 }

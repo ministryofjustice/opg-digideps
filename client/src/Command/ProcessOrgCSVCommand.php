@@ -10,13 +10,11 @@ use App\Service\Audit\AuditEvents;
 use App\Service\Client\RestClient;
 use App\Service\CsvUploader;
 use App\Service\DataImporter\CsvToArray;
-use App\Service\File\Storage\FileNotFoundException;
 use App\Service\File\Storage\S3Storage;
 use App\Service\Mailer\Mailer;
 use Aws\S3\Exception\S3Exception;
 use Aws\S3\S3Client;
 use Psr\Log\LoggerInterface;
-use RuntimeException;
 use Symfony\Component\Console\Command\Command;
 use Symfony\Component\Console\Input\InputArgument;
 use Symfony\Component\Console\Input\InputInterface;
@@ -48,7 +46,6 @@ class ProcessOrgCSVCommand extends Command {
 
     public function __construct(
         private S3Client $s3,
-        private CsvUploader $csvUploader,
         private RestClient $restClient,
         private ParameterBagInterface $params,
         private Mailer $mailer,
@@ -64,6 +61,8 @@ class ProcessOrgCSVCommand extends Command {
     }
 
     protected function execute(InputInterface $input, OutputInterface $output): int {
+        $output->writeln('Processing CSV...');
+
         $bucket = $this->params->get('s3_sirius_bucket');
         $paProReportFile = 'paProDeputyReport.csv';
 
@@ -79,7 +78,7 @@ class ProcessOrgCSVCommand extends Command {
             }
         }
 
-        $data = $this->csvToArray('/tmp/paDeputyReport.csv');
+        $data = $this->csvToArray("/tmp/$paProReportFile");
         $this->process($data, $input->getArgument('email'));
 
         return 0;
@@ -150,7 +149,7 @@ class ProcessOrgCSVCommand extends Command {
             }
         }
 
-        $this->mailer->sendProcessOrgCSVEmail($this->email, $this->output);
+        $this->mailer->sendProcessOrgCSVEmail($email, $this->output);
     }
 
     private function storeOutput(array $output) {

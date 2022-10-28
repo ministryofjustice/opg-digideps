@@ -432,7 +432,7 @@ class IndexController extends AbstractController
                     $process->setOptions(['create_new_console' => true]);
                     $process->disableOutput();
 
-                    $process->start(function () use ($email) {
+                    $process->start(function ($type, $buffer) use ($email) {
                         $application = new Application($this->kernel);
                         $input = new ArrayInput([
                             'command' => 'digideps:process-lay-csv',
@@ -508,8 +508,9 @@ class IndexController extends AbstractController
                     $process->setOptions(['create_new_console' => true]);
                     $process->disableOutput();
 
-                    $process->start(function () use ($email) {
+                    $process->start(function ($type, $buffer) use ($email) {
                         $application = new Application($this->kernel);
+
                         $input = new ArrayInput([
                             'command' => 'digideps:process-org-csv',
                             'email' => $email
