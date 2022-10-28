@@ -30,6 +30,7 @@ use Symfony\Bundle\FrameworkBundle\Console\Application;
 use Symfony\Component\Console\Input\ArrayInput;
 use Symfony\Component\Console\Output\NullOutput;
 use Symfony\Component\DependencyInjection\ParameterBag\ParameterBagInterface;
+use Symfony\Component\EventDispatcher\EventDispatcher;
 use Symfony\Component\Form\Extension\Core\Type\ChoiceType;
 use Symfony\Component\Form\Extension\Core\Type\SubmitType;
 use Symfony\Component\Form\FormError;
@@ -37,11 +38,12 @@ use Symfony\Component\Form\FormInterface;
 use Symfony\Component\HttpFoundation\RedirectResponse;
 use Symfony\Component\HttpFoundation\Request;
 use Symfony\Component\HttpFoundation\Response;
+use Symfony\Component\HttpKernel\KernelEvents;
 use Symfony\Component\HttpKernel\KernelInterface;
-use Symfony\Component\Process\Process;
 use Symfony\Component\Routing\Annotation\Route;
 use Symfony\Component\Routing\RouterInterface;
 use Symfony\Component\Security\Core\Authentication\Token\Storage\TokenStorageInterface;
+use Symfony\Contracts\EventDispatcher\EventDispatcherInterface;
 use Symfony\Contracts\Translation\TranslatorInterface;
 use Throwable;
 
@@ -61,6 +63,7 @@ class IndexController extends AbstractController
         private TokenStorageInterface $tokenStorage,
         private ParameterBagInterface $params,
         private KernelInterface $kernel,
+        private EventDispatcherInterface $dispatcher,
         private S3Client $s3
     ) {
     }
@@ -363,6 +366,7 @@ class IndexController extends AbstractController
      * @Route("/pre-registration-upload", name="pre_registration_upload")
      * @Security("is_granted('ROLE_ADMIN') or is_granted('ROLE_AD')")
      * @Template("@App/Admin/Index/uploadUsers.html.twig")
+     * @throws Exception
      */
     public function uploadUsersAction(Request $request, ClientInterface $redisClient)
     {
@@ -427,12 +431,7 @@ class IndexController extends AbstractController
                 if ($processForm->isSubmitted() && $processForm->isValid()) {
                     /** Run the lay CSV command as a background task */
                     $email = $this->tokenStorage->getToken()->getUser()->getUsername();
-                    $process = new Process(["ls", "-lsa"]);
-                    $process->setTimeout(3600);
-                    $process->setOptions(['create_new_console' => true]);
-                    $process->disableOutput();
-
-                    $process->start(function ($type, $buffer) use ($email) {
+                    $this->dispatcher->addListener(KernelEvents::TERMINATE, function () use ($email) {
                         $application = new Application($this->kernel);
                         $input = new ArrayInput([
                             'command' => 'digideps:process-lay-csv',
@@ -475,6 +474,7 @@ class IndexController extends AbstractController
      * @Route("/org-csv-upload", name="admin_org_upload")
      * @Security("is_granted('ROLE_ADMIN') or is_granted('ROLE_AD')")
      * @Template("@App/Admin/Index/uploadOrgUsers.html.twig")
+     * @throws Exception
      */
     public function uploadOrgUsersAction(Request $request)
     {
@@ -503,22 +503,17 @@ class IndexController extends AbstractController
                 if ($processForm->isSubmitted() && $processForm->isValid()) {
                     /** Run the org CSV command as a background task */
                     $email = $this->tokenStorage->getToken()->getUser()->getUsername();
-                    $process = new Process(["ls", "-lsa"]);
-                    $process->setTimeout(3600); //timeout set to an hour
-                    $process->setOptions(['create_new_console' => true]);
-                    $process->disableOutput();
-
-                    $process->start(function ($type, $buffer) use ($email) {
+                    $this->dispatcher->addListener(KernelEvents::TERMINATE, function () use ($email) {
                         $application = new Application($this->kernel);
-
                         $input = new ArrayInput([
                             'command' => 'digideps:process-org-csv',
-                            'email' => $email
+                            'email' => $email,
                         ]);
 
                         $output = new NullOutput();
                         $application->run($input, $output);
                     });
+
 
                     $this->addFlash("notice", "CSV import process started. Keep an eye on your emails for completion.");
 

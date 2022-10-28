@@ -61,8 +61,6 @@ class ProcessOrgCSVCommand extends Command {
     }
 
     protected function execute(InputInterface $input, OutputInterface $output): int {
-        $output->writeln('Processing CSV...');
-
         $bucket = $this->params->get('s3_sirius_bucket');
         $paProReportFile = 'paProDeputyReport.csv';
 
@@ -70,7 +68,7 @@ class ProcessOrgCSVCommand extends Command {
             $this->s3->getObject([
                 'Bucket' => $bucket,
                 'Key' => $paProReportFile,
-                'SaveAs' => "/tmp/$paProReportFile"
+                'SaveAs' => "/tmp/orgReport.csv"
             ]);
         } catch (S3Exception $e) {
             if (in_array($e->getAwsErrorCode(), S3Storage::MISSING_FILE_AWS_ERROR_CODES)) {
@@ -78,7 +76,7 @@ class ProcessOrgCSVCommand extends Command {
             }
         }
 
-        $data = $this->csvToArray("/tmp/$paProReportFile");
+        $data = $this->csvToArray("/tmp/orgReport.csv");
         $this->process($data, $input->getArgument('email'));
 
         return 0;
@@ -129,8 +127,6 @@ class ProcessOrgCSVCommand extends Command {
     private function process(mixed $data, string $email) {
         $chunks = array_chunk($data, self::CHUNK_SIZE);
 
-        $logged = false;
-
         foreach ($chunks as $index => $chunk) {
             $compressedChunk = CsvUploader::compressData($chunk);
 
@@ -138,15 +134,6 @@ class ProcessOrgCSVCommand extends Command {
             $upload = $this->restClient->post('v2/org-deputyships', $compressedChunk);
 
             $this->storeOutput($upload);
-
-            foreach ($upload['added']['organisations'] as $organisation) {
-                $this->dispatchOrgCreatedEvent($organisation);
-            }
-
-            if (!$logged) {
-                $this->dispatchCSVUploadEvent();
-                $logged = true;
-            }
         }
 
         $this->mailer->sendProcessOrgCSVEmail($email, $this->output);
@@ -172,29 +159,5 @@ class ProcessOrgCSVCommand extends Command {
         if (!empty($output['skipped'])) {
             $this->output['skipped'] += $output['skipped'];
         }
-    }
-
-    private function dispatchCSVUploadEvent()
-    {
-        $csvUploadedEvent = new CSVUploadedEvent(
-            'ORG',
-            AuditEvents::EVENT_CSV_UPLOADED
-        );
-
-        $this->eventDispatcher->dispatch($csvUploadedEvent, CSVUploadedEvent::NAME);
-    }
-
-    private function dispatchOrgCreatedEvent(array $organisation)
-    {
-        $trigger = AuditEvents::TRIGGER_CSV_UPLOAD;
-        $currentUser = $this->tokenStorage->getToken()->getUser();
-
-        $orgCreatedEvent = new OrgCreatedEvent(
-            $trigger,
-            $currentUser,
-            $organisation
-        );
-
-        $this->eventDispatcher->dispatch($orgCreatedEvent, OrgCreatedEvent::NAME);
     }
 }

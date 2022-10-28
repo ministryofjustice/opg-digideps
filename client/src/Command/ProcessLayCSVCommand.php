@@ -57,7 +57,7 @@ class ProcessLayCSVCommand extends Command {
             $this->s3->getObject([
                 'Bucket' => $bucket,
                 'Key' => $layDeputyReportFile,
-                'SaveAs' => "/tmp/$layDeputyReportFile"
+                'SaveAs' => "/tmp/layReport.csv"
             ]);
         } catch (S3Exception $e) {
             if (in_array($e->getAwsErrorCode(), S3Storage::MISSING_FILE_AWS_ERROR_CODES)) {
@@ -65,7 +65,7 @@ class ProcessLayCSVCommand extends Command {
             }
         }
 
-        $data = $this->csvToArray("/tmp/$layDeputyReportFile");
+        $data = $this->csvToArray("/tmp/layReport.csv");
         $this->process($data, $input->getArgument('email'));
 
         return 0;
@@ -98,6 +98,8 @@ class ProcessLayCSVCommand extends Command {
     }
 
     private function process(mixed $data, string $email) {
+        $this->restClient->delete('/pre-registration/delete');
+
         $chunks = array_chunk($data, self::CHUNK_SIZE);
 
         foreach ($chunks as $index => $chunk) {
