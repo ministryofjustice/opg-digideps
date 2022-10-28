@@ -58,16 +58,16 @@
         },
         {
             "name": "aws/aws-sdk-php",
-            "version": "3.239.2",
+            "version": "3.240.4",
             "source": {
                 "type": "git",
                 "url": "https://github.com/aws/aws-sdk-php.git",
-                "reference": "36a8d7fbbc2e1b6f07784f4d381bb647bb7ab8dc"
+                "reference": "69c7fa97862694d8c0c03f2e905c7fe05683bee9"
             },
             "dist": {
                 "type": "zip",
-                "url": "https://api.github.com/repos/aws/aws-sdk-php/zipball/36a8d7fbbc2e1b6f07784f4d381bb647bb7ab8dc",
-                "reference": "36a8d7fbbc2e1b6f07784f4d381bb647bb7ab8dc",
+                "url": "https://api.github.com/repos/aws/aws-sdk-php/zipball/69c7fa97862694d8c0c03f2e905c7fe05683bee9",
+                "reference": "69c7fa97862694d8c0c03f2e905c7fe05683bee9",
                 "shasum": ""
             },
             "require": {
@@ -146,9 +146,9 @@
             "support": {
                 "forum": "https://forums.aws.amazon.com/forum.jspa?forumID=80",
                 "issues": "https://github.com/aws/aws-sdk-php/issues",
-                "source": "https://github.com/aws/aws-sdk-php/tree/3.239.2"
+                "source": "https://github.com/aws/aws-sdk-php/tree/3.240.4"
             },
-            "time": "2022-10-20T18:52:48+00:00"
+            "time": "2022-10-27T19:19:40+00:00"
         },
         {
             "name": "behat/transliterator",
