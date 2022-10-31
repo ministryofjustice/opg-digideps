@@ -147,12 +147,6 @@ class OrgService
             $this->output['skipped'] += $output['skipped'];
         }
 
-        if (!empty($output['changeOrg'])) {
-            foreach ($output['changeOrg'] as $group => $items) {
-                $this->output['changeOrg'][$group] += count($items);
-            }
-        }
-
     }
 
     /**
@@ -221,13 +215,9 @@ class OrgService
                 $this->dispatchOrgCreatedEvent($organisation);
             }
 
-            $clientIds = $upload['changeOrg']['client_ids'];
-            $deputyId = $upload['changeOrg']['deputy_id'];
-            $previousOrgId = $upload['changeOrg']['old_organisation'];
-            $newOrgId = $upload['changeOrg']['new_organisation'];
-
-            $this->dispatchDeputyChangingOrganisationEvent($deputyId, $previousOrgId, $newOrgId, $clientIds);
-
+            foreach($upload['changeOrg'] as $orgChange){
+                $this->dispatchDeputyChangingOrganisationEvent($orgChange['deputyId'], $orgChange['previousOrgId'], $orgChange['newOrgId'], $orgChange['clientId']);
+            }
 
             if (!$logged) {
                 $this->dispatchCSVUploadEvent();
@@ -284,7 +274,7 @@ class OrgService
         $this->eventDispatcher->dispatch($orgCreatedEvent, OrgCreatedEvent::NAME);
     }
 
-    private function dispatchDeputyChangingOrganisationEvent( int $deputyId, int $previousOrgId, int $newOrgId, array $clientIds)
+    private function dispatchDeputyChangingOrganisationEvent( int $deputyId, int $previousOrgId, int $newOrgId, int $clientIds)
     {
         $trigger = AuditEvents::TRIGGER_DEPUTY_CHANGED_ORG;
 

@@ -397,10 +397,10 @@ final class AuditEvents
      * @param int $deputyId , deputyId
      * @param int $previousOrgId , previous deputy organisation
      * @param int $newOrgId , new deputy organisation
-     * @param array $clientIds, the client that moved across with deputy
+     * @param int $clientId , the client that moved across with deputy
      */
 
-    public function deputyChangedOrganisationEvent(string $trigger, int $deputyId, int $previousOrgId, int $newOrgId, array $clientIds): array
+    public function deputyChangedOrganisationEvent(string $trigger, int $deputyId, int $previousOrgId, int $newOrgId, int $clientId): array
     {
 
         $event = [
@@ -409,7 +409,7 @@ final class AuditEvents
             'deputy_id' => $deputyId,
             'organisation_moved_from' => $previousOrgId,
             'organisation_moved_to' => $newOrgId,
-            'clients_moved_over' => $clientIds,
+            'clients_moved_over' => $clientId,
         ];
 
         return $event + $this->baseEvent(AuditEvents::EVENT_DEPUTY_CHANGED_ORG);

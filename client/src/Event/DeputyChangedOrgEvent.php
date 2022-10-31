@@ -10,13 +10,13 @@ class DeputyChangedOrgEvent extends Event
 {
     const NAME = 'deputy.changedOrg';
 
-    public function __construct(private string $trigger, private int $deputyId, private int $previousOrgId, private int $newOrgId, private array $clientIds)
+    public function __construct(private string $trigger, private int $deputyId, private int $previousOrgId, private int $newOrgId, private int $clientId)
     {
         $this->setTrigger($trigger);
         $this->setDeputyId($deputyId);
         $this->setPreviousOrgId($previousOrgId);
         $this->setNewOrgId($newOrgId);
-        $this->setClientIds($clientIds);
+        $this->setClientId($clientId);
     }
 
 
@@ -68,14 +68,14 @@ class DeputyChangedOrgEvent extends Event
         return $this;
     }
 
-    public function getClientIds(): array
+    public function getClientId(): int
     {
-        return $this->clientIds;
+        return $this->clientId;
     }
 
-    public function setClientIds(array $clientIds): DeputyChangedOrgEvent
+    public function setClientId(int $clientId): DeputyChangedOrgEvent
     {
-        $this->clientIds = $clientIds;
+        $this->clientId = $clientId;
 
         return $this;
     }

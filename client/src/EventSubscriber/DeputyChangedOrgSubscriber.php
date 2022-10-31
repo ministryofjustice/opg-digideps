@@ -34,7 +34,7 @@ class DeputyChangedOrgSubscriber implements EventSubscriberInterface
                     $event->getDeputyId(),
                     $event->getPreviousOrgId(),
                     $event->getNewOrgId(),
-                    $event->getClientIds()
+                    $event->getClientId()
                 );
 
             $this->logger->notice('', $deputyChangedOrgEvent);

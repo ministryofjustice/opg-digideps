@@ -57,12 +57,11 @@ class DeputyChangedOrgSubscriberTest extends TestCase
         $newOrg = OrganisationHelpers::createActivatedOrganisation();
         $client->setOrganisation($newOrg);
         $newOrgId = $client->getOrganisation()->getId();
-
-        $clientIds = [$client->getId()];
+        $clientId = $client->getId();
 
         $sut = new DeputyChangedOrgSubscriber($logger->reveal(), $dateTimeProvider->reveal());
 
-        $deputyChangedOrgEvent = new DeputyChangedOrgEvent($trigger, $deputyId, $previousOrgId, $newOrgId, $clientIds);
+        $deputyChangedOrgEvent = new DeputyChangedOrgEvent($trigger, $deputyId, $previousOrgId, $newOrgId, $clientId);
 
         $expectedEvent = [
             'trigger' => $trigger,
@@ -70,7 +69,7 @@ class DeputyChangedOrgSubscriberTest extends TestCase
             'deputy_id' => $deputyId,
             'organisation_moved_from' => $previousOrgId,
             'organisation_moved_to' => $newOrgId,
-            'clients_moved_over' => $clientIds,
+            'clients_moved_over' => $clientId,
             'event' => AuditEvents::EVENT_DEPUTY_CHANGED_ORG,
             'type' => 'audit',
         ];
