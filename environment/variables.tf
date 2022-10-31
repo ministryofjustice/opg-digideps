@@ -67,10 +67,14 @@ locals {
 
   route53_healthchecker_ips = data.aws_ip_ranges.route53_healthchecks_ips.cidr_blocks
 
-  account                 = contains(keys(var.accounts), local.environment) ? var.accounts[local.environment] : var.accounts["default"]
-  environment             = lower(terraform.workspace)
-  non_dev_environments    = ["production02", "preproduction", "training", "integration"]
-  sirius_environment      = contains(local.non_dev_environments, local.environment) ? local.environment : "dev"
+  account     = contains(keys(var.accounts), local.environment) ? var.accounts[local.environment] : var.accounts["default"]
+  environment = lower(terraform.workspace)
+
+  # Have to account for disparity in env names w/ Sirius
+  non_dev_environments     = ["production02", "preproduction", "training", "integration"]
+  sirius_environment_check = contains(local.non_dev_environments, local.environment) ? local.environment : "dev"
+  sirius_environment       = local.sirius_environment_check == "production02" ? "production" : local.sirius_environment_check
+
   subdomain               = local.account["subdomain_enabled"] ? local.environment : ""
   backup_account_id       = "238302996107"
   cross_account_role_name = "cross-acc-db-backup.digideps-production"
