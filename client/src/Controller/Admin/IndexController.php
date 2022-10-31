@@ -538,7 +538,6 @@ class IndexController extends AbstractController
 
         /** S3 bucket information */
         $bucket = $this->params->get('s3_sirius_bucket');
-        // $bucket = 'sirius-bucket-locals';
         $paProReportFile = 'paProDeputyReport.csv';
         $bucketFileInfo = [
             'LastModified' => null,
