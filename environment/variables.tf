@@ -71,9 +71,14 @@ locals {
   environment = lower(terraform.workspace)
 
   # Have to account for disparity in env names w/ Sirius
-  non_dev_environments     = ["production02", "preproduction", "training", "integration"]
-  sirius_environment_check = contains(local.non_dev_environments, local.environment) ? local.environment : "dev"
-  sirius_environment       = local.sirius_environment_check == "production02" ? "production" : local.sirius_environment_check
+  sirius_environments = tomap({
+    "development"   = "dev",
+    "preproduction" = "preproduction",
+    "production02"  = "production",
+    "training"      = "training",
+    "integration"   = "integration"
+  })
+  sirius_environment = contains(keys(local.sirius_environments), local.environment) ? local.sirius_environments[local.environment] : "dev"
 
   subdomain               = local.account["subdomain_enabled"] ? local.environment : ""
   backup_account_id       = "238302996107"
