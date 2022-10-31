@@ -11,6 +11,7 @@ variable "accounts" {
     object({
       name                                   = string
       account_id                             = string
+      sirius_environment                     = string
       admin_allow_list                       = list(string)
       force_destroy_bucket                   = bool
       front_allow_list                       = list(string)
@@ -70,15 +71,7 @@ locals {
   account     = contains(keys(var.accounts), local.environment) ? var.accounts[local.environment] : var.accounts["default"]
   environment = lower(terraform.workspace)
 
-  # Have to account for disparity in env names w/ Sirius
-  sirius_environments = tomap({
-    "development"   = "dev",
-    "preproduction" = "preproduction",
-    "production02"  = "production",
-    "training"      = "training",
-    "integration"   = "integration"
-  })
-  sirius_environment = contains(keys(local.sirius_environments), local.environment) ? local.sirius_environments[local.environment] : "dev"
+  sirius_environment = local.account["sirius_environment"]
 
   subdomain               = local.account["subdomain_enabled"] ? local.environment : ""
   backup_account_id       = "238302996107"
