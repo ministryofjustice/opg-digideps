@@ -44,10 +44,12 @@
 
                 {{ form_end(uploadForm) }}
             </div>
+            {% if fileUploadedInfo['date'] != null %}
             <div class="govuk-grid-column-one-half">
                 <h2 class="govuk-heading-m">Process S3 file</h2>
-                <p class="govuk-!-margin-0 govuk-!-margin-bottom-1">S3 Filename: {{ fileUploadedInfo['fileName'] }}</p>
-                <span class="govuk-hint">Time uploaded: {{ fileUploadedInfo['date'] }}</span>
+
+                    <p class="govuk-!-margin-0 govuk-!-margin-bottom-1">S3 Filename: {{ fileUploadedInfo['fileName'] }}</p>
+                    <span class="govuk-hint">Time uploaded: {{ fileUploadedInfo['date']|date('d/m/Y - H:i:s A') }}</span>
                 {{ form_errors(processForm) }}
 
                 {{ form_start(processForm) }}
@@ -59,9 +61,9 @@
                 </div>
 
                 {{ form_submit(processForm.process, 'uploadPA.process') }}
-
                 {{ form_end(processForm) }}
             </div>
+            {% endif %}
         </div>
     {% endif %}
     {% endblock %}

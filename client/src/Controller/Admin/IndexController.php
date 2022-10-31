@@ -19,7 +19,9 @@ use App\Service\Client\RestClient;
 use App\Service\CsvUploader;
 use App\Service\DataImporter\CsvToArray;
 use App\Service\OrgService;
+use Aws\S3\Exception\S3Exception;
 use Aws\S3\S3Client;
+use DateTime;
 use Exception;
 use Predis\ClientInterface;
 use Psr\Log\LoggerInterface;
@@ -451,10 +453,23 @@ class IndexController extends AbstractController
         /** S3 bucket information */
         $bucket = $this->params->get('s3_sirius_bucket');
         $layReportFile = 'layDeputyReport.csv';
-        $bucketFileInfo = $this->s3->getObject([
-            'Bucket' => $bucket,
-            'Key' => $layReportFile,
-        ]);
+        $bucketFileInfo = [
+            'LastModified' => null,
+        ];
+
+        try {
+            $bucketFileInfo = $this->s3->getObject([
+                'Bucket' => $bucket,
+                'Key' => $layReportFile,
+            ]);
+        } catch (S3Exception $e) {
+            $this->logger->warning(
+                sprintf('Error while getting S3 object: %s', $e->getMessage()),
+                ['bucket' => $bucket, 'key' => $layReportFile]
+            );
+
+            $this->addFlash('error', 'There was a problem locating the file inside the S3 Bucket. Please contact an administrator.');
+        }
 
         return [
             'nOfChunks' => $request->get('nOfChunks'),
@@ -464,7 +479,7 @@ class IndexController extends AbstractController
             'maxUploadSize' => min([ini_get('upload_max_filesize'), ini_get('post_max_size')]),
             'fileUploadedInfo' => [
                 'fileName' => $layReportFile,
-                'date' => $bucketFileInfo['LastModified']->format('d/m/Y - H:i:s A')
+                'date' => $bucketFileInfo['LastModified']
             ],
         ];
     }
@@ -523,18 +538,32 @@ class IndexController extends AbstractController
 
         /** S3 bucket information */
         $bucket = $this->params->get('s3_sirius_bucket');
+        // $bucket = 'sirius-bucket-locals';
         $paProReportFile = 'paProDeputyReport.csv';
-        $bucketFileInfo = $this->s3->getObject([
-            'Bucket' => $bucket,
-            'Key' => $paProReportFile,
-        ]);
+        $bucketFileInfo = [
+            'LastModified' => null,
+        ];
+
+        try {
+            $bucketFileInfo = $this->s3->getObject([
+                'Bucket' => $bucket,
+                'Key' => $paProReportFile,
+            ]);
+        } catch (S3Exception $e) {
+            $this->logger->warning(
+                sprintf('Error while getting S3 object: %s', $e->getMessage()),
+                ['bucket' => $bucket, 'key' => $paProReportFile]
+            );
+
+            $this->addFlash('error', 'There was a problem locating the file inside the S3 Bucket. Please contact an administrator.');
+        }
 
         return [
             'uploadForm' => $uploadForm->createView(),
             'processForm' => $processForm->createView(),
             'fileUploadedInfo' => [
                 'fileName' => $paProReportFile,
-                'date' => $bucketFileInfo['LastModified']->format('d/m/Y - H:i:s A')
+                'date' => $bucketFileInfo['LastModified']
             ],
         ];
     }
