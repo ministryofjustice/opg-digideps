@@ -23,6 +23,6 @@ class ProcessCSVType extends AbstractType
 
     public function getBlockPrefix()
     {
-        return 'admin_process';
+        return 'admin_s3_process';
     }
 }

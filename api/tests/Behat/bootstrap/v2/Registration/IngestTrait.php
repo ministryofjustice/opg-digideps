@@ -96,7 +96,7 @@ trait IngestTrait
             $this->assertOnAlertMessage(sprintf('%s organisation', $this->organisations['expected']));
             $this->assertOnAlertMessage(sprintf('%s reports', $this->reports['expected']));
         } else {
-            $this->assertOnAlertMessage(sprintf('%s record uploaded', $this->preRegistration['expected']));
+            $this->assertOnAlertMessage(sprintf('%s record(s) uploaded', $this->preRegistration['expected']));
         }
     }
 
@@ -174,7 +174,7 @@ trait IngestTrait
 
     private function uploadCsvAndCountCreatedEntities(string $csvFilepath, string $uploadButtonText)
     {
-        $this->attachFileToField('admin_upload[file]', $csvFilepath);
+        $this->attachFileToField('admin_csv_upload[file]', $csvFilepath);
         $this->pressButton($uploadButtonText);
         $this->waitForAjaxAndRefresh();
 
