@@ -5,6 +5,7 @@ namespace App\Service\File\Storage;
 use Aws\ResultInterface;
 use Aws\S3\Exception\S3Exception;
 use Aws\S3\S3ClientInterface;
+use GuzzleHttp\Psr7\Stream;
 use Psr\Log\LoggerInterface;
 
 /**
@@ -50,8 +51,6 @@ class S3Storage implements StorageInterface
         $this->s3Client = $s3Client;
         $this->bucketName = $bucketName;
         $this->logger = $logger;
-
-        $this->s3Client->registerStreamWrapper();
     }
 
     /**
@@ -69,9 +68,15 @@ class S3Storage implements StorageInterface
     public function retrieve(string $key)
     {
         try {
-            $file = sprintf('s3://%s/%s', $this->bucketName, $key);
+            $result = $this->s3Client->getObject([
+                'Bucket' => $this->bucketName,
+                'Key' => $key,
+            ]);
 
-            return file_get_contents($file);
+            /** @var Stream $stream */
+            $stream = $result['Body'];
+
+            return $stream->read($stream->getSize());
         } catch (S3Exception $e) {
             if (in_array($e->getAwsErrorCode(), self::MISSING_FILE_AWS_ERROR_CODES)) {
                 throw new FileNotFoundException("Cannot find file with reference $key");
