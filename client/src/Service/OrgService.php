@@ -3,6 +3,7 @@
 namespace App\Service;
 
 use App\Event\CSVUploadedEvent;
+use App\Event\DeputyChangedOrgEvent;
 use App\Event\OrgCreatedEvent;
 use App\EventDispatcher\ObservableEventDispatcher;
 use App\Service\Audit\AuditEvents;
@@ -11,6 +12,7 @@ use Symfony\Component\HttpFoundation\Session\SessionInterface;
 use Symfony\Component\HttpFoundation\StreamedResponse;
 use Symfony\Component\Security\Core\Authentication\Token\Storage\TokenStorageInterface;
 use Twig\Environment;
+use App\Entity\Client;
 
 class OrgService
 {
@@ -144,6 +146,7 @@ class OrgService
         if (!empty($output['skipped'])) {
             $this->output['skipped'] += $output['skipped'];
         }
+
     }
 
     /**
@@ -212,6 +215,10 @@ class OrgService
                 $this->dispatchOrgCreatedEvent($organisation);
             }
 
+            foreach($upload['changeOrg'] as $orgChange){
+                $this->dispatchDeputyChangingOrganisationEvent($orgChange['deputyId'], $orgChange['previousOrgId'], $orgChange['newOrgId'], $orgChange['clientId']);
+            }
+
             if (!$logged) {
                 $this->dispatchCSVUploadEvent();
                 $logged = true;
@@ -266,4 +273,20 @@ class OrgService
 
         $this->eventDispatcher->dispatch($orgCreatedEvent, OrgCreatedEvent::NAME);
     }
+
+    private function dispatchDeputyChangingOrganisationEvent( int $deputyId, int $previousOrgId, int $newOrgId, int $clientIds)
+    {
+        $trigger = AuditEvents::TRIGGER_DEPUTY_CHANGED_ORG;
+
+        $deputyChangedOrganisationEvent = new DeputyChangedOrgEvent(
+            $trigger,
+            $deputyId,
+            $previousOrgId,
+            $newOrgId,
+            $clientIds
+        );
+
+        $this->eventDispatcher->dispatch($deputyChangedOrganisationEvent, DeputyChangedOrgEvent::NAME);
+    }
+
 }
