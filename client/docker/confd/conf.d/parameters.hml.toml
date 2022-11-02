@@ -21,5 +21,7 @@ keys = [
     "/filescanner/url",
     "/filescanner/sslverify",
     "/htmltopdf/address",
-    "/secrets/manager/localstack"
+    "/secrets/manager/localstack",
+    "/pa/pro/report/csv/filename",
+    "/lay/report/csv/filename"
  ]

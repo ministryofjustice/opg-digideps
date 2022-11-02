@@ -95,7 +95,9 @@ locals {
       { "name": "OPG_DOCKER_TAG", "value": "${var.OPG_DOCKER_TAG}" },
       { "name": "HTMLTOPDF_ADDRESS", "value": "http://${local.htmltopdf_service_fqdn}" },
       { "name": "ENVIRONMENT", "value": "${local.environment}" },
-      { "name": "NGINX_APP_NAME", "value": "admin" }
+      { "name": "NGINX_APP_NAME", "value": "admin" },
+      { "name": "PA_PRO_REPORT_CSV_FILENAME", "value": "paProDeputyReport.csv" },
+      { "name": "LAY_REPORT_CSV_FILENAME", "value": "layDeputyReport.csv" }
     ]
   }
 

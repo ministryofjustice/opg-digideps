@@ -84,3 +84,5 @@ parameters:
   {{ end }}
     file_scanner_url: {{ if exists "/filescanner/url" }}{{ getv "/filescanner/url" }}{{ else }}http://file-scanner-rest:8080{{ end }}
     file_scanner_sslverify: {{ if exists "/filescanner/sslverify" }}{{ getv "/filescanner/sslverify" }}{{ else }}true{{ end }}
+    pa_pro_report_csv_filename: {{ if exists "/pa/pro/report/csv/filename" }}{{ getv "/pa/pro/report/csv/filename" }}{{ else }}not_set{{ end }}
+    lay_report_csv_filename: {{ if exists "/lay/report/csv/filename" }}{{ getv "/lay/report/csv/filename" }}{{ else }}not_set{{ end }}

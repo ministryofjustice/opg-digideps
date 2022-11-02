@@ -49,22 +49,28 @@ class ProcessLayCSVCommand extends Command {
     protected function execute(InputInterface $input, OutputInterface $output): int
     {
         $bucket = $this->params->get('s3_sirius_bucket');
-        $layDeputyReportFile = 'layDeputyReport.csv';
+        $layReportFile = $this->params->get('lay_report_csv_filename');
 
         try {
             $this->s3->getObject([
                 'Bucket' => $bucket,
-                'Key' => $layDeputyReportFile,
+                'Key' => $layReportFile,
                 'SaveAs' => "/tmp/layReport.csv"
             ]);
         } catch (S3Exception $e) {
             if (in_array($e->getAwsErrorCode(), S3Storage::MISSING_FILE_AWS_ERROR_CODES)) {
-                $this->logger->log('error', sprintf('File %s not found in bucket %s', $layDeputyReportFile, $bucket));
+                $this->logger->log('error', sprintf('File %s not found in bucket %s', $layReportFile, $bucket));
+            } else {
+                $this->logger->log('error', sprintf('Error getting file %s from bucket %s: %s', $layReportFile, $bucket, $e->getMessage()));
             }
         }
 
         $data = $this->csvToArray("/tmp/layReport.csv");
         $this->process($data, $input->getArgument('email'));
+
+        if (!unlink("/tmp/orgReport.csv")) {
+            $this->logger->log('error', 'Unable to delete file /tmp/orgReport.csv.');
+        }
 
         return 0;
     }

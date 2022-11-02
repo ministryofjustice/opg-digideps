@@ -59,7 +59,7 @@ class ProcessOrgCSVCommand extends Command {
 
     protected function execute(InputInterface $input, OutputInterface $output): int {
         $bucket = $this->params->get('s3_sirius_bucket');
-        $paProReportFile = 'paProDeputyReport.csv';
+        $paProReportFile = $this->params->get('pa_pro_report_csv_filename');
 
         try {
             $this->s3->getObject([
@@ -70,11 +70,17 @@ class ProcessOrgCSVCommand extends Command {
         } catch (S3Exception $e) {
             if (in_array($e->getAwsErrorCode(), S3Storage::MISSING_FILE_AWS_ERROR_CODES)) {
                 $this->logger->log('error', sprintf('File %s not found in bucket %s', $paProReportFile, $bucket));
+            } else {
+                $this->logger->log('error', sprintf('Error retrieving file %s from bucket %s', $paProReportFile, $bucket));
             }
         }
 
         $data = $this->csvToArray("/tmp/orgReport.csv");
         $this->process($data, $input->getArgument('email'));
+
+        if (!unlink("/tmp/orgReport.csv")) {
+            $this->logger->log('error', 'Unable to delete file /tmp/orgReport.csv.');
+        }
 
         return 0;
     }

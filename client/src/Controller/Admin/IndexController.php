@@ -459,7 +459,7 @@ class IndexController extends AbstractController
 
         /** S3 bucket information */
         $bucket = $this->params->get('s3_sirius_bucket');
-        $layReportFile = 'layDeputyReport.csv';
+        $layReportFile = $this->params->get('lay_report_csv_filename');
         $bucketFileInfo = [
             'LastModified' => null,
         ];
@@ -558,7 +558,7 @@ class IndexController extends AbstractController
 
         /** S3 bucket information */
         $bucket = $this->params->get('s3_sirius_bucket');
-        $paProReportFile = 'paProDeputyReport.csv';
+        $paProReportFile = $this->params->get('pa_pro_report_csv_filename');
         $bucketFileInfo = [
             'LastModified' => null,
         ];
