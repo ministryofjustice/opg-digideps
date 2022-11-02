@@ -13,7 +13,6 @@ resource "aws_s3_bucket_replication_configuration" "bucket_replication" {
     destination {
       account = var.backup_account_id
       bucket  = var.replication_to_backup_account_bucket
-
       encryption_configuration {
         replica_kms_key_id = var.backup_kms_key_id
       }
@@ -44,6 +43,9 @@ resource "aws_s3_bucket_replication_configuration" "bucket_replication" {
     destination {
       bucket        = var.replication_within_account_bucket
       storage_class = "STANDARD"
+      metrics {
+        status = "Enabled"
+      }
     }
 
     delete_marker_replication {
