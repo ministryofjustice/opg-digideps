@@ -33,7 +33,7 @@ addUserForm:
   heading: Add a user
   email:
     label: Email
-    hint: 'An activation email will be sent to the provided email address'
+    hint: "An activation email will be sent to the provided email address"
   emailEdit:
     label: Email
     hint: ""
@@ -79,8 +79,8 @@ deleteConfirm:
   pageTitle: Delete user
   supportTitle: Users
   question:
-    beforeMarkupText: 'Are you sure that you want to delete '
-    afterMarkupText: '? This action cannot be undone.'
+    beforeMarkupText: "Are you sure that you want to delete "
+    afterMarkupText: "? This action cannot be undone."
 
 viewUser:
   htmlTitle: Administration - Users
@@ -164,22 +164,22 @@ satisfactionPage:
       label: Download
 
 urResponses:
-    htmlTitle: Administration - Download User Research Responses
-    pageTitle: Download User Research Responses
-    supportTitle: Analytics
-    DescriptionPara: Report of user's satisfaction and user research responses
-    pleaseWait: Please wait ...
-    dataGenerated: |
-        Data is being generated, Click here to <a href="%csvFile%">download</a>
-    form:
-        fromDate:
-            legend: Start date
-            hint: For example, 31 3 2015
-        toDate:
-            legend: End date
-            hint: For example, 31 3 2016
-        submitAndDownload:
-            label: Download
+  htmlTitle: Administration - Download User Research Responses
+  pageTitle: Download User Research Responses
+  supportTitle: Analytics
+  DescriptionPara: Report of user's satisfaction and user research responses
+  pleaseWait: Please wait ...
+  dataGenerated: |
+    Data is being generated, Click here to <a href="%csvFile%">download</a>
+  form:
+    fromDate:
+      legend: Start date
+      hint: For example, 31 3 2015
+    toDate:
+      legend: End date
+      hint: For example, 31 3 2016
+    submitAndDownload:
+      label: Download
 
 upload:
   htmlTitle: Administration - Upload users
@@ -188,29 +188,32 @@ upload:
   form:
     type:
       choices:
-        lay: Upload lay users
-        org: Upload PA/professional users
+        lay: Lay users
+        org: PA/Professional users
     continue:
-        label: Continue
+      label: Continue
 
 uploadPA:
   htmlTitle: Administration - Upload PA/Prof users
-  pageTitle: Upload PA/professional users
+  pageTitle: PA/Professional users
   supportTitle: Users
   heading: Upload PA/Prof users along with clients and reports
   uploading: |
     Uploading... please wait.
     Do not refresh this page
   uploadError: An error occured whilst uploading. Some records may not have been updated. Please try again.
+  processError: An error occured whilst trying to process the file. Please try again.
   upload:
     label: Select CSV file
     hint: Max upload size is 64M
+  process:
+    label: Process CSV file from S3
   submit:
     label: Upload PA/Prof users
 
 uploadUsers:
   htmlTitle: Administration - Upload users
-  pageTitle: Upload lay users
+  pageTitle: Lay users
   supportTitle: Users
   heading: Upload users
   usersInTheDB: users in the database
@@ -221,24 +224,24 @@ uploadUsers:
   moreDetails: More details
 
 cancel:
-    label: Cancel
+  label: Cancel
 
 expiration:
-    label: Expire registration token
+  label: Expire registration token
 
 delete:
-    label: Delete User
+  label: Delete User
 
 no:
-    label: No, take me back
+  label: No, take me back
 
 yes:
-    label: Yes, I'm sure
+  label: Yes, I'm sure
 
 action:
-    message: Your changes were saved
+  message: Your changes were saved
 
 labels:
-    active: ACTIVE
-    submitted: SUBMITTED
-    incomplete: INCOMPLETE
+  active: ACTIVE
+  submitted: SUBMITTED
+  incomplete: INCOMPLETE

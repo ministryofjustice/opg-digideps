@@ -1,415 +1,411 @@
 parameters:
-    bad_pdf_keywords:
-        - "AcroForm"
-        - "JavaScript"
-        - "Launch"
-        - "RichMedia"
-        - "XFA"
-    # To avoid undefined variable errors at build time during clear-cache, we can define default values for env vars
-    # At runtime Symfony will fetch the actual value from the environment
-    env(AUDIT_LOG_GROUP_NAME): "dummy-build-time-value-overridden-at-runtime"
+  bad_pdf_keywords:
+    - "AcroForm"
+    - "JavaScript"
+    - "Launch"
+    - "RichMedia"
+    - "XFA"
+  # To avoid undefined variable errors at build time during clear-cache, we can define default values for env vars
+  # At runtime Symfony will fetch the actual value from the environment
+  env(AUDIT_LOG_GROUP_NAME): "dummy-build-time-value-overridden-at-runtime"
 
-    # translation key must be present in report-assets.en.yml, ndr-assets.en.yml, dropdown.<value>
-    asset_dropdown:
-        - antiques
-        - artwork
-        - investment_bonds
-        - jewellery
-        - national_savings_certificates
-        - premium_bonds
-        - property
-        - stocks_shares
-        - unit_trusts
-        - vehicles
-        - assets_held_outside_england_and_wales
-        - other_assets
+  # translation key must be present in report-assets.en.yml, ndr-assets.en.yml, dropdown.<value>
+  asset_dropdown:
+    - antiques
+    - artwork
+    - investment_bonds
+    - jewellery
+    - national_savings_certificates
+    - premium_bonds
+    - property
+    - stocks_shares
+    - unit_trusts
+    - vehicles
+    - assets_held_outside_england_and_wales
+    - other_assets
 
-    twig_components_extension:
-        progress_bars:
-            registration: [1, 2, 3]
-            registration_admin: [1, 2]
+  twig_components_extension:
+    progress_bars:
+      registration: [1, 2, 3]
+      registration_admin: [1, 2]
 
-    fallback_notify_base_uri: null
+  fallback_notify_base_uri: null
 
 services:
-    _defaults:
-        autowire: true
-        autoconfigure: true
-        bind:
-            $symfonyEnvironment: "%kernel.environment%"
-            $symfonyDebug: "%kernel.debug%"
-            Predis\ClientInterface: "@snc_redis.default"
-            $environment: "%env(ROLE)%"
-            $hostedEnv: "%env(ENVIRONMENT)%"
-            $projectDir: "%kernel.project_dir%"
-            $sessionPrefix: "%session_prefix%"
+  _defaults:
+    autowire: true
+    autoconfigure: true
+    bind:
+      $symfonyEnvironment: "%kernel.environment%"
+      $symfonyDebug: "%kernel.debug%"
+      Predis\ClientInterface: "@snc_redis.default"
+      $environment: "%env(ROLE)%"
+      $hostedEnv: "%env(ENVIRONMENT)%"
+      $projectDir: "%kernel.project_dir%"
+      $sessionPrefix: "%session_prefix%"
 
-    App\:
-        resource: "../src/"
-        exclude: "../src/{Entity,Event,Kernel.php}"
+  App\:
+    resource: "../src/"
+    exclude: "../src/{Entity,Event,Kernel.php}"
 
-    App\Controller\:
-        resource: "../src/Controller/"
-        tags: [controller.service_arguments]
+  App\Controller\:
+    resource: "../src/Controller/"
+    tags: [controller.service_arguments]
 
-    App\Service\Redirector:
-        class: App\Service\Redirector
-        arguments:
-            [
-                "@security.token_storage",
-                "@security.authorization_checker",
-                "@router",
-                "@session",
-                "%env(ROLE)%",
-            ]
+  App\Service\Redirector:
+    class: App\Service\Redirector
+    arguments:
+      [
+        "@security.token_storage",
+        "@security.authorization_checker",
+        "@router",
+        "@session",
+        "%env(ROLE)%",
+      ]
 
-    App\Service\HtmlToPdfGenerator:
-        arguments: ["%htmltopdf_address%", 30]
+  App\Service\HtmlToPdfGenerator:
+    arguments: ["%htmltopdf_address%", 30]
 
-    htmltopdf:
-        alias: App\Service\HtmlToPdfGenerator
+  htmltopdf:
+    alias: App\Service\HtmlToPdfGenerator
 
-    # Disable autowiring
-    App\Model\EmailAttachment: ~
-    App\Service\DataImporter\CsvToArray: ~
-    App\Service\NdrStatusService: ~
+  # Disable autowiring
+  App\Model\EmailAttachment: ~
+  App\Service\DataImporter\CsvToArray: ~
+  App\Service\NdrStatusService: ~
 
-    guzzle_api_gateway_client:
-        class: GuzzleHttp\Client
-        arguments:
-            $config:
-                timeout: 30
-                allow_redirects: false
+  guzzle_api_gateway_client:
+    class: GuzzleHttp\Client
+    arguments:
+      $config:
+        timeout: 30
+        allow_redirects: false
 
-    App\Service\Client\Sirius\SiriusApiGatewayClient:
-        class: App\Service\Client\Sirius\SiriusApiGatewayClient
-        arguments:
-            $httpClient: "@guzzle_api_gateway_client"
-            $requestSigner: '@App\Service\AWS\RequestSigner'
-            $baseUrl: "%env(SIRIUS_API_BASE_URI)%"
-            $serializer: "@serializer"
-            $logger: "@logger"
+  App\Service\Client\Sirius\SiriusApiGatewayClient:
+    class: App\Service\Client\Sirius\SiriusApiGatewayClient
+    arguments:
+      $httpClient: "@guzzle_api_gateway_client"
+      $requestSigner: '@App\Service\AWS\RequestSigner'
+      $baseUrl: "%env(SIRIUS_API_BASE_URI)%"
+      $serializer: "@serializer"
+      $logger: "@logger"
 
-    App\Service\Client\GovUK\BankHolidaysAPIClient:
-        class: App\Service\Client\GovUK\BankHolidaysAPIClient
-        arguments:
-            $httpClient: '@GuzzleHttp\Client'
-            $logger: "@logger"
+  App\Service\Client\GovUK\BankHolidaysAPIClient:
+    class: App\Service\Client\GovUK\BankHolidaysAPIClient
+    arguments:
+      $httpClient: '@GuzzleHttp\Client'
+      $logger: "@logger"
 
-    App\Service\AWS\RequestSigner:
-        class: App\Service\AWS\RequestSigner
-        arguments:
-            $credentialProvider: '@App\Service\AWS\DefaultCredentialProvider'
-            $signer: '@App\Service\AWS\SignatureV4Signer'
+  App\Service\AWS\RequestSigner:
+    class: App\Service\AWS\RequestSigner
+    arguments:
+      $credentialProvider: '@App\Service\AWS\DefaultCredentialProvider'
+      $signer: '@App\Service\AWS\SignatureV4Signer'
 
-    App\Service\AWS\DefaultCredentialProvider:
-        class: App\Service\AWS\DefaultCredentialProvider
+  App\Service\AWS\DefaultCredentialProvider:
+    class: App\Service\AWS\DefaultCredentialProvider
 
-    App\Service\AWS\SignatureV4Signer:
-        class: App\Service\AWS\SignatureV4Signer
+  App\Service\AWS\SignatureV4Signer:
+    class: App\Service\AWS\SignatureV4Signer
 
-    Aws\Ssm\SsmClient:
-        arguments: ["%ssm_client_params%"]
+  Aws\Ssm\SsmClient:
+    arguments: ["%ssm_client_params%"]
 
-    App\Service\ParameterStoreService:
-        arguments:
-            [
-                '@Aws\Ssm\SsmClient',
-                "%env(PARAMETER_PREFIX)%",
-                "%env(FEATURE_FLAG_PREFIX)%",
-            ]
+  App\Service\ParameterStoreService:
+    arguments:
+      [
+        '@Aws\Ssm\SsmClient',
+        "%env(PARAMETER_PREFIX)%",
+        "%env(FEATURE_FLAG_PREFIX)%",
+      ]
 
-    Aws\SecretsManager\SecretsManagerClient:
-        arguments: ["%secrets_manager_client_params%"]
+  Aws\SecretsManager\SecretsManagerClient:
+    arguments: ["%secrets_manager_client_params%"]
 
-    App\Service\SecretManagerService:
-        arguments:
-            [
-                '@Aws\SecretsManager\SecretsManagerClient',
-                "%env(SECRETS_PREFIX)%",
-            ]
+  App\Service\SecretManagerService:
+    arguments:
+      ['@Aws\SecretsManager\SecretsManagerClient', "%env(SECRETS_PREFIX)%"]
 
-    App\Serializer\SiriusDocumentUploadSerializer:
-        tags: ["serializer.normalizer"]
+  App\Serializer\SiriusDocumentUploadSerializer:
+    tags: ["serializer.normalizer"]
 
-    # Make optional availability services pullable
-    App\Service\Availability\ClamAvAvailability:
-        arguments: ["@guzzle_file_scanner_client"]
+  # Make optional availability services pullable
+  App\Service\Availability\ClamAvAvailability:
+    arguments: ["@guzzle_file_scanner_client"]
 
-    App\Service\Availability\SiriusApiAvailability:
-        arguments: ['@App\Service\Client\Sirius\SiriusApiGatewayClient']
+  App\Service\Availability\SiriusApiAvailability:
+    arguments: ['@App\Service\Client\Sirius\SiriusApiGatewayClient']
 
-    App\Service\Availability\HtmlToPdfAvailability:
-        arguments: ['@App\Service\HtmlToPdfGenerator']
+  App\Service\Availability\HtmlToPdfAvailability:
+    arguments: ['@App\Service\HtmlToPdfGenerator']
 
-    App\Service\Availability\NotifyAvailability:
-        arguments:
-            $notifyClient: '@Alphagov\Notifications\Client'
+  App\Service\Availability\NotifyAvailability:
+    arguments:
+      $notifyClient: '@Alphagov\Notifications\Client'
 
-    Aws\S3\S3ClientInterface:
-        alias: Aws\S3\S3Client
+  Aws\S3\S3ClientInterface:
+    alias: Aws\S3\S3Client
 
-    Aws\S3\S3Client:
-        arguments: ["%s3_client_params%"]
+  Aws\S3\S3Client:
+    arguments: ["%s3_client_params%"]
 
-    App\Service\File\Storage\S3Storage:
-        arguments: ['@Aws\S3\S3Client', "%s3_bucket_name%", "@logger"]
+  App\Service\File\Storage\S3Storage:
+    arguments: ['@Aws\S3\S3Client', "%s3_bucket_name%", "@logger"]
 
-    App\Command\DocumentRecoverCommand:
-        class: App\Command\DocumentRecoverCommand
-        arguments:
-            $s3BucketName: "%s3_bucket_name%"
+  App\Command\DocumentRecoverCommand:
+    class: App\Command\DocumentRecoverCommand
+    arguments:
+      $s3BucketName: "%s3_bucket_name%"
 
-    guzzle_file_scanner_client:
-        class: GuzzleHttp\Client
-        arguments:
-            $config:
-                base_uri: "%file_scanner_url%"
-                verify: "%file_scanner_sslverify%"
-                proxy: ""
-                debug: false
-                headers:
-                    Content-Type: multipart-form-data
-                version: "1.1"
-                timeout: 10
-                allow_redirects: false
+  guzzle_file_scanner_client:
+    class: GuzzleHttp\Client
+    arguments:
+      $config:
+        base_uri: "%file_scanner_url%"
+        verify: "%file_scanner_sslverify%"
+        proxy: ""
+        debug: false
+        headers:
+          Content-Type: multipart-form-data
+        version: "1.1"
+        timeout: 10
+        allow_redirects: false
 
-    App\Service\File\Verifier\MultiFileFormUploadVerifier:
-        calls:
-            - [addVerifier, ['@App\Service\File\Verifier\ConstraintVerifier']]
-            - [addVerifier, ['@App\Service\File\Verifier\ScannerVerifier']]
+  App\Service\File\Verifier\MultiFileFormUploadVerifier:
+    calls:
+      - [addVerifier, ['@App\Service\File\Verifier\ConstraintVerifier']]
+      - [addVerifier, ['@App\Service\File\Verifier\ScannerVerifier']]
 
-    App\Service\File\Scanner\ClamFileScanner:
-        arguments:
-            ["@guzzle_file_scanner_client", "@logger", "%bad_pdf_keywords%"]
+  App\Service\File\Scanner\ClamFileScanner:
+    arguments: ["@guzzle_file_scanner_client", "@logger", "%bad_pdf_keywords%"]
 
-    App\Service\DocumentSyncService:
-        arguments:
-            $storage: '@App\Service\File\Storage\S3Storage'
-            $siriusApiGatewayClient: '@App\Service\Client\Sirius\SiriusApiGatewayClient'
-            $restClient: '@App\Service\Client\RestClient'
+  App\Service\DocumentSyncService:
+    arguments:
+      $storage: '@App\Service\File\Storage\S3Storage'
+      $siriusApiGatewayClient: '@App\Service\Client\Sirius\SiriusApiGatewayClient'
+      $restClient: '@App\Service\Client\RestClient'
 
-    League\MimeTypeDetection\FinfoMimeTypeDetector:
-        class: League\MimeTypeDetection\FinfoMimeTypeDetector
+  League\MimeTypeDetection\FinfoMimeTypeDetector:
+    class: League\MimeTypeDetection\FinfoMimeTypeDetector
 
-    Aws\CloudWatchLogs\CloudWatchLogsClient:
-        class: Aws\CloudWatchLogs\CloudWatchLogsClient
-        arguments: ["%cloudwatch_logs_client_params%"]
+  Aws\CloudWatchLogs\CloudWatchLogsClient:
+    class: Aws\CloudWatchLogs\CloudWatchLogsClient
+    arguments: ["%cloudwatch_logs_client_params%"]
 
-    App\Service\Audit\AwsAuditLogHandler:
-        class: App\Service\Audit\AwsAuditLogHandler
-        arguments:
-            - '@Aws\CloudWatchLogs\CloudWatchLogsClient'
-            - "%env(AUDIT_LOG_GROUP_NAME)%"
+  App\Service\Audit\AwsAuditLogHandler:
+    class: App\Service\Audit\AwsAuditLogHandler
+    arguments:
+      - '@Aws\CloudWatchLogs\CloudWatchLogsClient'
+      - "%env(AUDIT_LOG_GROUP_NAME)%"
 
-    App\Service\Audit\LocalAuditLogHandler:
-        class: App\Service\Audit\LocalAuditLogHandler
+  App\Service\Audit\LocalAuditLogHandler:
+    class: App\Service\Audit\LocalAuditLogHandler
 
-    App\Twig\AssetsExtension:
-        public: false
-        arguments: ["%kernel.project_dir%"]
-        tags:
-            - { name: twig.extension }
+  App\Twig\AssetsExtension:
+    public: false
+    arguments: ["%kernel.project_dir%"]
+    tags:
+      - { name: twig.extension }
 
-    App\Service\Mailer\MailFactory:
-        arguments:
-            $emailParams: "%email_params%"
-            $baseURLs:
-                front: "%env(NONADMIN_HOST)%"
-                admin: "%env(ADMIN_HOST)%"
+  App\Service\Mailer\MailFactory:
+    arguments:
+      $emailParams: "%email_params%"
+      $baseURLs:
+        front: "%env(NONADMIN_HOST)%"
+        admin: "%env(ADMIN_HOST)%"
 
-    App\Service\Mailer\MailSenderInterface: '@App\Service\Mailer\MailSender'
+  App\Service\Mailer\MailSenderInterface: '@App\Service\Mailer\MailSender'
 
-    Alphagov\Notifications\Client:
-        class: Alphagov\Notifications\Client
-        arguments:
-            $config:
-                httpClient: '@Http\Adapter\Guzzle7\Client'
-                apiKey: "%env(NOTIFY_API_KEY)%"
-                #                Setting the URI to null defaults to the uri defined in the package
-                baseUrl: "%env(default:fallback_notify_base_uri:NOTIFY_API_BASE_URI)%"
+  Alphagov\Notifications\Client:
+    class: Alphagov\Notifications\Client
+    arguments:
+      $config:
+        httpClient: '@Http\Adapter\Guzzle7\Client'
+        apiKey: "%env(NOTIFY_API_KEY)%"
+        #                Setting the URI to null defaults to the uri defined in the package
+        baseUrl: "%env(default:fallback_notify_base_uri:NOTIFY_API_BASE_URI)%"
 
-    App\Service\Mailer\NotifyClientMock:
-        class: App\Service\Mailer\NotifyClientMock
-        arguments:
-            $config:
-                httpClient: '@Http\Adapter\Guzzle7\Client'
-                apiKey: "%env(NOTIFY_API_KEY)%"
-                #                Setting the URI to null defaults to the uri defined in the package
-                baseUrl: "%env(default:fallback_notify_base_uri:NOTIFY_API_BASE_URI)%"
-            $logger: "@logger"
+  App\Service\Mailer\NotifyClientMock:
+    class: App\Service\Mailer\NotifyClientMock
+    arguments:
+      $config:
+        httpClient: '@Http\Adapter\Guzzle7\Client'
+        apiKey: "%env(NOTIFY_API_KEY)%"
+        #                Setting the URI to null defaults to the uri defined in the package
+        baseUrl: "%env(default:fallback_notify_base_uri:NOTIFY_API_BASE_URI)%"
+      $logger: "@logger"
 
-    Http\Adapter\Guzzle7\Client:
-        class: Http\Adapter\Guzzle7\Client
+  Http\Adapter\Guzzle7\Client:
+    class: Http\Adapter\Guzzle7\Client
 
-    App\Form\Report\Asset\AssetTypeTitle:
-        arguments: ["%asset_dropdown%", "@translator", "report-assets"]
-        tags:
-            - { name: form.type }
+  App\Form\Report\Asset\AssetTypeTitle:
+    arguments: ["%asset_dropdown%", "@translator", "report-assets"]
+    tags:
+      - { name: form.type }
 
-    App\Form\Ndr\Asset\AssetTypeTitle:
-        arguments: ["%asset_dropdown%", "@translator", "ndr-assets"]
-        tags:
-            - { name: form.type }
+  App\Form\Ndr\Asset\AssetTypeTitle:
+    arguments: ["%asset_dropdown%", "@translator", "ndr-assets"]
+    tags:
+      - { name: form.type }
 
-    App\Validator\Constraints\EmailSameDomainValidator:
-        calls:
-            - [setTokenStorage, ["@security.token_storage"]]
-        tags:
-            - { name: validator.constraint_validator, alias: email_same_domain }
+  App\Validator\Constraints\EmailSameDomainValidator:
+    calls:
+      - [setTokenStorage, ["@security.token_storage"]]
+    tags:
+      - { name: validator.constraint_validator, alias: email_same_domain }
 
-    GuzzleHttp\Client:
-        arguments:
-            $config:
-                base_uri: "%api_base_url%"
-                verify: false
-                headers:
-                    Content-Type: application/json
-                timeout: 20
-                allow_redirects: false
+  GuzzleHttp\Client:
+    arguments:
+      $config:
+        base_uri: "%api_base_url%"
+        verify: false
+        headers:
+          Content-Type: application/json
+        timeout: 20
+        allow_redirects: false
 
-    App\Service\Client\RestClientInterface:
-        alias: App\Service\Client\RestClient
+  App\Service\Client\RestClientInterface:
+    alias: App\Service\Client\RestClient
 
-    App\Service\Client\RestClient:
-        arguments:
-            - "@service_container"
-            - '@GuzzleHttp\Client'
-            - '@App\Service\Client\TokenStorage\RedisStorage'
-            - "@jms_serializer"
-            - "@logger"
-            - "%api_client_secret%"
+  App\Service\Client\RestClient:
+    arguments:
+      - "@service_container"
+      - '@GuzzleHttp\Client'
+      - '@App\Service\Client\TokenStorage\RedisStorage'
+      - "@jms_serializer"
+      - "@logger"
+      - "%api_client_secret%"
 
-    rest_client:
-        alias: App\Service\Client\RestClient
+  rest_client:
+    alias: App\Service\Client\RestClient
 
-    App\EventListener\SessionListener:
-        arguments:
-            ["@router", "@logger", { idleTimeout: "%session_expire_seconds%" }]
-        tags:
-            - {
-                  name: kernel.event_listener,
-                  event: kernel.request,
-                  method: onKernelRequest,
-              }
+  App\EventListener\SessionListener:
+    arguments:
+      ["@router", "@logger", { idleTimeout: "%session_expire_seconds%" }]
+    tags:
+      - {
+          name: kernel.event_listener,
+          event: kernel.request,
+          method: onKernelRequest,
+        }
 
-    logout_listener:
-        class: App\EventListener\LogoutListener
-        arguments: ["@security.token_storage", "@rest_client", "@router"]
+  logout_listener:
+    class: App\EventListener\LogoutListener
+    arguments: ["@security.token_storage", "@rest_client", "@router"]
 
-    App\EventListener\ResponseNoCacheListener:
-        tags:
-            - {
-                  name: kernel.event_listener,
-                  event: kernel.response,
-                  method: onKernelResponse,
-              }
+  App\EventListener\ResponseNoCacheListener:
+    tags:
+      - {
+          name: kernel.event_listener,
+          event: kernel.response,
+          method: onKernelResponse,
+        }
 
-    App\EventListener\AuthTokenExpiredListener:
-        tags:
-            - {
-                  name: kernel.event_listener,
-                  event: kernel.exception,
-                  method: onKernelException,
-              }
+  App\EventListener\AuthTokenExpiredListener:
+    tags:
+      - {
+          name: kernel.event_listener,
+          event: kernel.exception,
+          method: onKernelException,
+        }
 
-    App\Service\RequestIdLoggerProcessor:
-        arguments: ["@service_container"]
-        tags:
-            - { name: monolog.processor, method: processRecord }
+  App\Service\RequestIdLoggerProcessor:
+    arguments: ["@service_container"]
+    tags:
+      - { name: monolog.processor, method: processRecord }
 
-    App\EventListener\LoginEventListener:
-        arguments:
-            - "@event_dispatcher"
-            - '@App\Service\Redirector'
-        tags:
-            - {
-                  name: kernel.event_listener,
-                  event: security.interactive_login,
-                  method: onSecurityInteractiveLogin,
-              }
+  App\EventListener\LoginEventListener:
+    arguments:
+      - "@event_dispatcher"
+      - '@App\Service\Redirector'
+    tags:
+      - {
+          name: kernel.event_listener,
+          event: security.interactive_login,
+          method: onSecurityInteractiveLogin,
+        }
 
-    App\EventListener\ResponseHeadersListener:
-        tags:
-            - {
-                  name: kernel.event_listener,
-                  event: kernel.response,
-                  method: onKernelResponse,
-              }
+  App\EventListener\ResponseHeadersListener:
+    tags:
+      - {
+          name: kernel.event_listener,
+          event: kernel.response,
+          method: onKernelResponse,
+        }
 
-    security.validator.d_user_password:
-        class: App\Validator\Constraints\DUserPasswordValidator
-        arguments: ["@security.token_storage", "@rest_client"]
-        tags:
-            - {
-                  name: validator.constraint_validator,
-                  alias: security.validator.d_user_password,
-              }
+  security.validator.d_user_password:
+    class: App\Validator\Constraints\DUserPasswordValidator
+    arguments: ["@security.token_storage", "@rest_client"]
+    tags:
+      - {
+          name: validator.constraint_validator,
+          alias: security.validator.d_user_password,
+        }
 
-    App\Service\Client\TokenStorage\RedisStorage:
-        arguments:
-            $redis: "@snc_redis.default"
+  App\Service\Client\TokenStorage\RedisStorage:
+    arguments:
+      $redis: "@snc_redis.default"
 
-    # Voter on User, used by PA area
-    # http://symfony.com/doc/2.8/security/voters.html
-    app.user_voter:
-        class: App\Security\UserVoter
-        arguments: ["@security.access.decision_manager"]
-        tags:
-            - { name: security.voter }
-        # small performance boost
-        public: false
-    app.note_voter:
-        class: App\Security\NoteVoter
-        arguments: ["@security.access.decision_manager"]
-        tags:
-            - { name: security.voter }
-        # small performance boost
-        public: false
-    app.client_contact_voter:
-        class: App\Security\ClientContactVoter
-        arguments: ["@security.access.decision_manager"]
-        tags:
-            - { name: security.voter }
-        # small performance boost
-        public: false
-    app.document_voter:
-        class: App\Security\DocumentVoter
-        arguments: ["@security.access.decision_manager"]
-        tags:
-            - { name: security.voter }
-        # small performance boost
-        public: false
+  # Voter on User, used by PA area
+  # http://symfony.com/doc/2.8/security/voters.html
+  app.user_voter:
+    class: App\Security\UserVoter
+    arguments: ["@security.access.decision_manager"]
+    tags:
+      - { name: security.voter }
+    # small performance boost
+    public: false
+  app.note_voter:
+    class: App\Security\NoteVoter
+    arguments: ["@security.access.decision_manager"]
+    tags:
+      - { name: security.voter }
+    # small performance boost
+    public: false
+  app.client_contact_voter:
+    class: App\Security\ClientContactVoter
+    arguments: ["@security.access.decision_manager"]
+    tags:
+      - { name: security.voter }
+    # small performance boost
+    public: false
+  app.document_voter:
+    class: App\Security\DocumentVoter
+    arguments: ["@security.access.decision_manager"]
+    tags:
+      - { name: security.voter }
+    # small performance boost
+    public: false
 
-    App\Twig\FormFieldsExtension:
-        class: App\Twig\FormFieldsExtension
-        arguments:
-            $environment: "@twig"
+  App\Twig\FormFieldsExtension:
+    class: App\Twig\FormFieldsExtension
+    arguments:
+      $environment: "@twig"
 
-    App\Twig\ComponentsExtension:
-        class: App\Twig\ComponentsExtension
-        arguments:
-            $environment: "@twig"
+  App\Twig\ComponentsExtension:
+    class: App\Twig\ComponentsExtension
+    arguments:
+      $environment: "@twig"
 
-    # Logtash formatter for Kibana
-    logstash_formatter:
-        class: Monolog\Formatter\LogstashFormatter
-        arguments: ["application.client", null, null, "", 1]
+  # Logtash formatter for Kibana
+  logstash_formatter:
+    class: Monolog\Formatter\LogstashFormatter
+    arguments: ["application.client", null, null, "", 1]
 
-    line_formatter:
-        class: Monolog\Formatter\LineFormatter
+  line_formatter:
+    class: Monolog\Formatter\LineFormatter
 
-    uuid_normalizer:
-        class: GBProd\UuidNormalizer\UuidNormalizer
-        tags:
-            - { name: serializer.normalizer }
+  uuid_normalizer:
+    class: GBProd\UuidNormalizer\UuidNormalizer
+    tags:
+      - { name: serializer.normalizer }
 
-    uuid_denormalizer:
-        class: GBProd\UuidNormalizer\UuidDenormalizer
-        tags:
-            - { name: serializer.denormalizer }
+  uuid_denormalizer:
+    class: GBProd\UuidNormalizer\UuidDenormalizer
+    tags:
+      - { name: serializer.denormalizer }
 
-    App\Command\CheckCSVUploadedCommand:
-        class: App\Command\CheckCSVUploadedCommand
-        arguments:
-            $auditLogGroupName: "%env(AUDIT_LOG_GROUP_NAME)%"
+  App\Command\CheckCSVUploadedCommand:
+    class: App\Command\CheckCSVUploadedCommand
+    arguments:
+      $auditLogGroupName: "%env(AUDIT_LOG_GROUP_NAME)%"

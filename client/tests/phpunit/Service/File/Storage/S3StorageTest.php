@@ -53,6 +53,7 @@ class S3StorageTest extends TestCase
         // create timestamped file and key to undo effects of potential previous executions
         $key = 'storagetest-upload-download-delete'.microtime(1);
 
+        /** @var S3ClientInterface */
         $awsClient = m::mock(S3ClientInterface::class);
 
         $awsClient->shouldReceive('putObject')
@@ -130,6 +131,7 @@ class S3StorageTest extends TestCase
 
     public function testUploadBinaryContent()
     {
+        /** @var S3ClientInterface */
         $awsClient = m::mock(S3ClientInterface::class);
 
         $awsClient->shouldReceive('putObject')->andReturn($this->generateAwsResult(200));
@@ -137,6 +139,7 @@ class S3StorageTest extends TestCase
             m::type('array')
         )->andReturn($this->generateAwsResult(200, [], file_get_contents(__DIR__.'/cat.jpg')));
 
+        /** @var LoggerInterface */
         $mockLogger = m::mock(LoggerInterface::class);
         $mockLogger->shouldReceive('log')->withAnyArgs();
 
@@ -257,6 +260,7 @@ class S3StorageTest extends TestCase
             )
         );
 
+        /** @var LoggerInterface */
         $mockLogger = m::mock(LoggerInterface::class);
         $mockLogger->shouldReceive('log')->withAnyArgs();
 
@@ -278,6 +282,7 @@ class S3StorageTest extends TestCase
     {
         $key = 'storagetest-upload-download-delete'.microtime(1).'.png';
 
+        /** @var S3ClientInterface */
         $awsClient = m::mock(S3ClientInterface::class);
 
         $awsClient->shouldReceive('listObjectVersions')->with(

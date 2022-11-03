@@ -7,12 +7,11 @@ use Symfony\Component\Form\Extension\Core\Type as FormTypes;
 use Symfony\Component\Form\FormBuilderInterface;
 use Symfony\Component\OptionsResolver\OptionsResolver;
 
-class UploadCsvType extends AbstractType
+class ProcessCSVType extends AbstractType
 {
     public function buildForm(FormBuilderInterface $builder, array $options)
     {
-        $builder->add('file', FormTypes\FileType::class)
-                 ->add('upload', FormTypes\SubmitType::class);
+        $builder->add('process', FormTypes\SubmitType::class);
     }
 
     public function configureOptions(OptionsResolver $resolver)
@@ -24,6 +23,6 @@ class UploadCsvType extends AbstractType
 
     public function getBlockPrefix()
     {
-        return 'admin_csv_upload';
+        return 'admin_s3_process';
     }
 }

@@ -31,6 +31,8 @@ class MailFactory
     public const INVITATION_ORG_TEMPLATE_ID = 'd410fce7-ce00-46eb-824d-82f998a437a4';
     public const POST_SUBMISSION_FEEDBACK_TEMPLATE_ID = '862f1ce7-bde5-4397-be68-bd9e4537cff0';
     public const RESET_PASSWORD_TEMPLATE_ID = '827555cc-498a-43ef-957a-63fa387065e3';
+    public const PROCESS_ORG_CSV_TEMPLATE_ID = 'ce20ca97-a954-4d34-8a21-8b4f156188a8';
+    public const PROCESS_LAY_CSV_TEMPLATE_ID = '1e6fddc4-999d-4c44-8038-1853ea0e8511';
 
     public const NOTIFY_FROM_EMAIL_ID = 'db930cb2-2153-4e2a-b3d0-06f7c7f92f37';
 
@@ -404,6 +406,57 @@ class MailFactory
             'endDate' => $report->getEndDate()->format(self::DATE_FORMAT),
             'EndDatePlus1' => $dateSubmittableFrom->format(self::DATE_FORMAT),
             'PFA' => 'yes',
+        ];
+
+        $email->setParameters($notifyParams);
+
+        return $email;
+    }
+
+    public function createProcessOrgCSVEmail(string $adminEmail, array $output): Email
+    {
+        $email = (new ModelDir\Email())
+            ->setFromEmailNotifyID(self::NOTIFY_FROM_EMAIL_ID)
+            ->setFromName($this->translator->trans('processOrgCSV.fromName', [], 'email'))
+            ->setToEmail($adminEmail)
+            ->setTemplate(self::PROCESS_ORG_CSV_TEMPLATE_ID);
+
+        $isError = count($output['errors']) > 0 ? 'yes' : 'no';
+
+        $notifyParams = [
+            'addedClients' => $output['added']['clients'],
+            'addedDeputies' => $output['added']['named_deputies'],
+            'addedReports' => $output['added']['reports'],
+            'addedOrganisations' => $output['added']['organisations'],
+            'skipped' => $output['skipped'],
+            'updatedClient' => $output['updated']['clients'],
+            'updatedDeputies' => $output['updated']['clients'],
+            'updatedReports' => $output['updated']['clients'],
+            'updatedOrganisations' => $output['updated']['clients'],
+            'isError' => $isError,
+        ];
+
+        $email->setParameters($notifyParams);
+
+        return $email;
+    }
+
+    public function createProcessLayCSVEmail(string $adminEmail, array $output): Email
+    {
+        $email = (new ModelDir\Email())
+            ->setFromEmailNotifyID(self::NOTIFY_FROM_EMAIL_ID)
+            ->setFromName($this->translator->trans('processLayCSV.fromName', [], 'email'))
+            ->setToEmail($adminEmail)
+            ->setTemplate(self::PROCESS_LAY_CSV_TEMPLATE_ID);
+
+        $errorCount = count($output['errors']);
+        $isError = $errorCount > 0 ? 'yes' : 'no';
+
+        $notifyParams = [
+            'added' => $output['added'],
+            'errors' => $errorCount,
+            'skipped' => $output['skipped'],
+            'isError' => $isError,
         ];
 
         $email->setParameters($notifyParams);

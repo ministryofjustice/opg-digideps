@@ -232,7 +232,7 @@ class OrgService
      *
      * @return StreamedResponse
      */
-    public function process($data, $redirectUrl)
+    public function process(mixed $data, string $redirectUrl): StreamedResponse
     {
         $chunks = array_chunk($data, self::CHUNK_SIZE);
 
