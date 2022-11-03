@@ -11,7 +11,7 @@ COPY . .
 
 RUN GOOS=linux CGO_ENABLED=0 GOARCH=amd64 go build -a -installsuffix cgo -o /go/bin/main ./main.go
 
-FROM alpine:3.15
+FROM alpine:3.16.2
 
 COPY --from=build-env /go/bin/main /var/task/main
 
