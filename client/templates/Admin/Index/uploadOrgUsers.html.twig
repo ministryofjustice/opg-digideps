@@ -13,30 +13,45 @@
 
 {% block pageContent %}
 
-    <h2 class="govuk-heading-m">{{ (page ~ '.heading') | trans }}</h2>
+<div class="govuk-grid-row">
+    <div class="govuk-grid-column-one-half">
+        <h2 class="govuk-heading-m">{{ (page ~ '.heading') | trans }}</h2>
+        {{ form_errors(form) }}
 
-    {{ form_errors(form) }}
-
-    {{ form_start(form, {attr: {'data-module': 'csv-upload-progress', novalidate: 'novalidate' }}) }}
-
-    <div class="opg-alert opg-alert--error hidden" data-js="upload-error">
-        <div class="opg-alert__message">
-            {{ (page ~ '.uploadError') | trans }}
+        {{ form_start(form, {attr: {'data-module': 'csv-upload-progress', novalidate: 'novalidate' }}) }}
+        <div class="opg-alert opg-alert--error hidden" data-js="upload-error">
+            <div class="opg-alert__message">
+                {{ (page ~ '.uploadError') | trans }}
+            </div>
         </div>
-    </div>
 
-    {{ form_input(form.file, 'uploadPA.upload', {
+        {{ form_input(form.file, 'uploadPA.upload', {
         'inputClass': 'no-border'
-    }) }}
+        }) }}
 
-    {{ form_submit(form.upload, 'uploadPA.submit') }}
+        {{ form_submit(form.upload, 'uploadPA.submit') }}
 
-    <div class="govuk-form-group">
-        <p class="hidden" data-js="upload-explanation">{{ (page ~ '.uploading') | trans | nl2br }}</p>
+        <div class="govuk-form-group">
+            <p class="hidden" data-js="upload-explanation">{{ (page ~ '.uploading') | trans | nl2br }}</p>
+            <progress value="0" min="0" max="1" class="hidden"></progress>
+        </div>
 
-        <progress value="0" min="0" max="1" class="hidden"></progress>
+        {{ form_end(form) }}
     </div>
+    {% if fileUploadedInfo['date'] != null %}
+    <div class="govuk-grid-column-one-half">
+        <h2 class="govuk-heading-m">Process S3 file</h2>
+        <p class="govuk-!-margin-0 govuk-!-margin-bottom-1">S3 Filename: {{ fileUploadedInfo['fileName'] }}</p>
+        <span class="govuk-hint">Time uploaded: {{ fileUploadedInfo['date']|date('d/m/Y - H:i:s A') }}</span>
+        {{ form_errors(processForm) }}
 
-    {{ form_end(form) }}
+        {{ form_start(processForm) }}
+
+        {{ form_submit(processForm.process, 'uploadPA.process') }}
+
+        {{ form_end(processForm) }}
+    </div>
+    {% endif %}
+</div>
 
 {% endblock %}

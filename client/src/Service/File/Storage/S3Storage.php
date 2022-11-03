@@ -2,11 +2,13 @@
 
 namespace App\Service\File\Storage;
 
+use Aws\Result;
 use Aws\ResultInterface;
 use Aws\S3\Exception\S3Exception;
 use Aws\S3\S3ClientInterface;
 use GuzzleHttp\Psr7\Stream;
 use Psr\Log\LoggerInterface;
+use RuntimeException;
 
 /**
  * Class to upload/download/delete files from S3.
@@ -19,32 +21,23 @@ class S3Storage implements StorageInterface
     // If a file is deleted in S3 it will return an AccessDenied error until its permanently deleted
     public const MISSING_FILE_AWS_ERROR_CODES = ['NoSuchKey', 'AccessDenied'];
     /**
-     * @var S3ClientInterface
-     *
      * https://github.com/aws/aws-sdk-php
-     * http://docs.aws.amazon.com/aws-sdk-php/v2/api/class-Aws.S3.S3Client.html
+     * http://docs.aws.amazon.com/aws-sdk-php/v2/api/class-Aws.S3.S3Client.html.
      *
      * for fake s3:
      * https://github.com/jubos/fake-s3
      * https://github.com/jubos/fake-s3/wiki/Supported-Clients
      */
-    private $s3Client;
+    private S3ClientInterface $s3Client;
 
-    /**
-     * @var string
-     */
-    private $bucketName;
-
-    /**
-     * @var LoggerInterface
-     */
-    private $logger;
+    private string $bucketName;
+    private LoggerInterface $logger;
 
     /**
      * S3Storage constructor.
      *
-     * @param S3ClientInterface $s3Client (Aws library)
-     * @param $bucketName S3 bucket name
+     * @param S3ClientInterface $s3Client   (Aws library)
+     * @param string            $bucketName S3 bucket name
      */
     public function __construct(S3ClientInterface $s3Client, string $bucketName, LoggerInterface $logger)
     {
@@ -59,13 +52,9 @@ class S3Storage implements StorageInterface
      * header('Content-Disposition: attachment; filename="' . $_GET['filename'] .'"');
      * readfile(<this method>);.
      *
-     * @param $key
-     *
-     * @throws FileNotFoundException is the file is not found
-     *
      * @return string file content
      */
-    public function retrieve(string $key)
+    public function retrieve(string $key): string
     {
         try {
             $result = $this->s3Client->getObject([
@@ -87,10 +76,8 @@ class S3Storage implements StorageInterface
 
     /**
      * @param string $key
-     *
-     * @return \Aws\Result
      */
-    public function delete($key)
+    public function delete($key): Result
     {
         $this->appendTagset($key, [['Key' => 'Purge', 'Value' => 1]]);
 
@@ -102,15 +89,11 @@ class S3Storage implements StorageInterface
 
     /**
      * Remove an object and all its versions from S3 completely.
-     *
-     * @param string $key
-     *
-     * @return array
      */
-    public function removeFromS3($key)
+    public function removeFromS3(string $key): array
     {
         if (empty($key)) {
-            throw new \RuntimeException('Could not remove file: Document not specified');
+            throw new RuntimeException('Could not remove file: Document not specified');
         } else {
             /*
              * ListObjectVersions is permitted by ListBucketVersions in IAM.
@@ -128,7 +111,7 @@ class S3Storage implements StorageInterface
 
                 $objectsToDelete = $this->prepareObjectsToDelete($objectVersions);
                 if (empty($objectsToDelete)) {
-                    throw new \RuntimeException('Could not remove file: No objects founds');
+                    throw new RuntimeException('Could not remove file: No objects founds');
                 } else {
                     $s3Result = $this->s3Client->deleteObjects([
                         'Bucket' => $this->bucketName,
@@ -139,19 +122,15 @@ class S3Storage implements StorageInterface
                     $this->handleS3Errors($s3Result);
                 }
 
-                $resultsSummary = $this->logS3Results($objectVersions, $objectsToDelete, $s3Result);
-
-                return $resultsSummary;
+                return $this->logS3Results($objectVersions, $objectsToDelete, $s3Result);
             }
         }
     }
 
     /**
      * Write results information to log.
-     *
-     * @return array
      */
-    private function logS3Results(array $objectVersions, array $objectsToDelete, array $s3Result)
+    private function logS3Results(array $objectVersions, array $objectsToDelete, array $s3Result): array
     {
         $resultsSummary = [
             'objectVersions' => $objectVersions,
@@ -168,13 +147,10 @@ class S3Storage implements StorageInterface
 
     /**
      * Extracts and returns new array structure from AwsResults array detailing objects to remove from S3.
-     *
-     * @return array
      */
-    private function prepareObjectsToDelete(array $objectVersions)
+    private function prepareObjectsToDelete(array $objectVersions): array
     {
         $objectsToDelete = [];
-        /** @var array $objectVersions */
         if (array_key_exists('Versions', $objectVersions)) {
             foreach ($objectVersions['Versions'] as $versionData) {
                 if (strlen($versionData['VersionId']) > 0) {
@@ -191,9 +167,9 @@ class S3Storage implements StorageInterface
 
     /**
      * Handles any errors returned from S3 SDK. Exceptions that might have been handled by the SDK and converted to
-     * an Errors array reutrned.
+     * an Errors array returned.
      *
-     * @throws \RuntimeException
+     * @throws RuntimeException
      */
     private function handleS3Errors(array $s3Result)
     {
@@ -204,17 +180,15 @@ class S3Storage implements StorageInterface
                     $s3Error['VersionId'].', Code: '.$s3Error['Code'].', Message: '.$s3Error['Message']);
             }
             $this->log('error', 'Unable to remove key from S3: '.json_encode($s3Result['Errors']));
-            throw new \RuntimeException('Could not remove files: '.json_encode($s3Result['Errors']));
+            throw new RuntimeException('Could not remove files: '.json_encode($s3Result['Errors']));
         }
     }
 
     /**
      * @param $key
      * @param $body
-     *
-     * @return \Aws\Result
      */
-    public function store($key, $body)
+    public function store($key, $body): Result
     {
         return $this->s3Client->putObject([
             'Bucket' => $this->bucketName,

@@ -729,6 +729,20 @@ class FixtureHelper
         return self::buildOrgUserDetails($user);
     }
 
+    public function createPaNamedPfaHighNotStarted(string $testRunId)
+    {
+        $user = $this->createOrgUserClientNamedDeputyAndReport(
+            $testRunId,
+            User::ROLE_PA_NAMED,
+            'pa-named-pfa-high-assets-not-started',
+            Report::PA_PFA_HIGH_ASSETS_TYPE,
+            false,
+            false
+        );
+
+        return self::buildOrgUserDetails($user);
+    }
+
     public function createPaNamedPfaHighSubmitted(string $testRunId)
     {
         $user = $this->createOrgUserClientNamedDeputyAndReport(

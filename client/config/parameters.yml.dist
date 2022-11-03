@@ -55,6 +55,7 @@ parameters:
           report_overview: /report/{reportId|}/overview
           client_home: /client/show
     s3_bucket_name: pa-uploads-local
+    s3_sirius_bucket: sirius-bucket-local
     s3_client_params:
       version: 'latest'
       region: 'eu-west-1'
@@ -74,3 +75,5 @@ parameters:
     file_scanner_url: http://file-scanner-rest:8080
     file_scanner_sslverify: false
     htmltopdf_address: "http://htmltopdf:80"
+    pa_pro_report_csv_filename: pa_pro_report.csv
+    lay_report_csv_filename: layDeputyReport.csv

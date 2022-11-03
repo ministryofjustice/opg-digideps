@@ -50,3 +50,24 @@ Feature: Money Out
         When I view and start the money out report section
         And I add a payment without filling in description and amount
         Then I should see correct money out description and amount validation message
+
+    @lay-pfa-high-not-started
+    Scenario: A Lay user can see the Fees charged by a solicitor, accountant or other professional option
+        Given a Lay Deputy has not started a Pfa High Assets report
+        When I view and start the money out report section
+        And I add the Fees charged by a solicitor, accountant or other professional payment
+        Then I should see the expected results on money out summary page
+
+    @pa-named-pfa-high-not-started
+    Scenario: A Public Authority user can see the professional fees not including deputy costs option
+        Given a Public Authority Named Deputy has not started a Pfa High Assets report
+        When I view and start the money out report section
+        And I add the Fees charged by a solicitor, accountant or other professional payment not including deputy costs
+        Then I should see the expected results on money out summary page
+
+    @prof-named-pfa-high-not-started
+    Scenario: A Professional user can see the professional fees not including deputy costs option
+        Given a Professional Deputy has not started a Pfa High Assets report
+        When I view and start the money out report section
+        And I add the Fees charged by a solicitor, accountant or other professional payment not including deputy costs
+        Then I should see the expected results on money out summary page

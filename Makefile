@@ -127,7 +127,7 @@ db-terminal: ##@database Login to the database via the terminal
 api-logs: ##@logs Follow the API logs
 	docker-compose logs api --follow
 
-frontend-logs: ##@logs Follow the frontend logs
+client-logs: ##@logs Follow the frontend logs
 	docker-compose logs frontend --follow
 
 admin-logs: ##@logs Follow the admin logs
