@@ -6,6 +6,7 @@ use Aws\Result;
 use Aws\ResultInterface;
 use Aws\S3\Exception\S3Exception;
 use Aws\S3\S3ClientInterface;
+use GuzzleHttp\Psr7\Stream;
 use Psr\Log\LoggerInterface;
 use RuntimeException;
 
@@ -18,11 +19,10 @@ use RuntimeException;
 class S3Storage implements StorageInterface
 {
     // If a file is deleted in S3 it will return an AccessDenied error until its permanently deleted
-    const MISSING_FILE_AWS_ERROR_CODES = ['NoSuchKey', 'AccessDenied'];
-
+    public const MISSING_FILE_AWS_ERROR_CODES = ['NoSuchKey', 'AccessDenied'];
     /**
      * https://github.com/aws/aws-sdk-php
-     * http://docs.aws.amazon.com/aws-sdk-php/v2/api/class-Aws.S3.S3Client.html
+     * http://docs.aws.amazon.com/aws-sdk-php/v2/api/class-Aws.S3.S3Client.html.
      *
      * for fake s3:
      * https://github.com/jubos/fake-s3
@@ -36,9 +36,8 @@ class S3Storage implements StorageInterface
     /**
      * S3Storage constructor.
      *
-     * @param S3ClientInterface $s3Client (Aws library)
-     * @param string $bucketName S3 bucket name
-     * @param LoggerInterface $logger
+     * @param S3ClientInterface $s3Client   (Aws library)
+     * @param string            $bucketName S3 bucket name
      */
     public function __construct(S3ClientInterface $s3Client, string $bucketName, LoggerInterface $logger)
     {
@@ -53,8 +52,6 @@ class S3Storage implements StorageInterface
      * header('Content-Disposition: attachment; filename="' . $_GET['filename'] .'"');
      * readfile(<this method>);.
      *
-     * @param string $key
-     *
      * @return string file content
      */
     public function retrieve(string $key): string
@@ -65,7 +62,10 @@ class S3Storage implements StorageInterface
                 'Key' => $key,
             ]);
 
-            return $result['Body'];
+            /** @var Stream $stream */
+            $stream = $result['Body'];
+
+            return $stream->read($stream->getSize());
         } catch (S3Exception $e) {
             if (in_array($e->getAwsErrorCode(), self::MISSING_FILE_AWS_ERROR_CODES)) {
                 throw new FileNotFoundException("Cannot find file with reference $key");
@@ -76,8 +76,6 @@ class S3Storage implements StorageInterface
 
     /**
      * @param string $key
-     *
-     * @return Result
      */
     public function delete($key): Result
     {
@@ -91,10 +89,6 @@ class S3Storage implements StorageInterface
 
     /**
      * Remove an object and all its versions from S3 completely.
-     *
-     * @param string $key
-     *
-     * @return array
      */
     public function removeFromS3(string $key): array
     {
@@ -109,8 +103,8 @@ class S3Storage implements StorageInterface
                 'Prefix' => $key,
             ]);
 
-            if (!$objectVersions instanceof ResultInterface || !($objectVersions->hasKey('Versions'))) {
-                throw new RuntimeException('Could not remove file: No results returned');
+            if (!$objectVersions instanceof ResultInterface || !$objectVersions->hasKey('Versions')) {
+                throw new \RuntimeException('Could not remove file: No results returned');
             } else {
                 $objectVersions = $objectVersions->toArray();
                 $s3Result = [];
@@ -135,11 +129,6 @@ class S3Storage implements StorageInterface
 
     /**
      * Write results information to log.
-     *
-     * @param array $objectVersions
-     * @param array $objectsToDelete
-     * @param array $s3Result
-     * @return array
      */
     private function logS3Results(array $objectVersions, array $objectsToDelete, array $s3Result): array
     {
@@ -158,9 +147,6 @@ class S3Storage implements StorageInterface
 
     /**
      * Extracts and returns new array structure from AwsResults array detailing objects to remove from S3.
-     *
-     * @param array $objectVersions
-     * @return array
      */
     private function prepareObjectsToDelete(array $objectVersions): array
     {
@@ -201,8 +187,6 @@ class S3Storage implements StorageInterface
     /**
      * @param $key
      * @param $body
-     *
-     * @return Result
      */
     public function store($key, $body): Result
     {
@@ -267,7 +251,7 @@ class S3Storage implements StorageInterface
      */
     private function log($level, $message)
     {
-        //echo $message."\n"; //enable for debugging reasons. Tail the log with log-level=info otherwise
+        // echo $message."\n"; //enable for debugging reasons. Tail the log with log-level=info otherwise
 
         $this->logger->log($level, $message, ['extra' => [
             'service' => 's3-storage',
