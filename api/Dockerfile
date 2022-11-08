@@ -16,7 +16,7 @@ RUN composer run-script post-install-cmd --no-interaction
 
 RUN composer dump-autoload --optimize
 
-FROM php:8.1.5-fpm-alpine3.15
+FROM php:8.1.12-fpm-alpine3.16
 WORKDIR /var/www
 EXPOSE 80
 EXPOSE 443
@@ -24,14 +24,14 @@ ENV TIMEOUT=20
 ENV PHP_EXT_DIR=/usr/local/lib/php/extensions/no-debug-non-zts-20210902/
 
 RUN apk --no-cache add \
-  postgresql-dev \
-  postgresql-client \
-  openssl \
-  nginx \
-  nginx-mod-http-headers-more \
-  su-exec \
-  php8-pecl-igbinary \
-  php8-pecl-redis
+    postgresql-dev \
+    postgresql-client \
+    openssl \
+    nginx \
+    nginx-mod-http-headers-more \
+    su-exec \
+    php8-pecl-igbinary \
+    php8-pecl-redis
 
 RUN docker-php-ext-install pdo pdo_pgsql opcache
 RUN docker-php-ext-enable opcache
@@ -44,39 +44,39 @@ RUN pecl install pcov && docker-php-ext-enable pcov
 ARG REQUIRE_XDEBUG=0
 ARG XDEBUG_IDEKEY_API=PHPSTORM
 RUN if [[ $REQUIRE_XDEBUG = 1 ]] ; then \
-  pecl install xdebug-3.1.4  ;\
-  docker-php-ext-enable $PHP_EXT_DIR/xdebug.so ; \
-  echo "xdebug.mode = develop,debug" >> /usr/local/etc/php/conf.d/docker-php-ext-xdebug.ini ; \
-  echo "xdebug.client_host = host.docker.internal" >> /usr/local/etc/php/conf.d/docker-php-ext-xdebug.ini ; \
-  echo "xdebug.start_with_request = yes" >> /usr/local/etc/php/conf.d/docker-php-ext-xdebug.ini ; \
-  echo "xdebug.log = /tmp/xdebug.log" >> /usr/local/etc/php/conf.d/docker-php-ext-xdebug.ini ; \
-  echo "xdebug.idekey = ${XDEBUG_IDEKEY_API}" >> /usr/local/etc/php/conf.d/docker-php-ext-xdebug.ini ; \
-  fi ;
+    pecl install xdebug-3.1.4  ;\
+    docker-php-ext-enable $PHP_EXT_DIR/xdebug.so ; \
+    echo "xdebug.mode = develop,debug" >> /usr/local/etc/php/conf.d/docker-php-ext-xdebug.ini ; \
+    echo "xdebug.client_host = host.docker.internal" >> /usr/local/etc/php/conf.d/docker-php-ext-xdebug.ini ; \
+    echo "xdebug.start_with_request = yes" >> /usr/local/etc/php/conf.d/docker-php-ext-xdebug.ini ; \
+    echo "xdebug.log = /tmp/xdebug.log" >> /usr/local/etc/php/conf.d/docker-php-ext-xdebug.ini ; \
+    echo "xdebug.idekey = ${XDEBUG_IDEKEY_API}" >> /usr/local/etc/php/conf.d/docker-php-ext-xdebug.ini ; \
+    fi ;
 
 # Route NGINX logs to stdout/stderr
 RUN ln -sf /dev/stdout /var/log/nginx/access.log \
-  && ln -sf /dev/stderr /var/log/nginx/error.log \
-  && ln -s /etc/nginx/http.d /etc/nginx/conf.d
+    && ln -sf /dev/stderr /var/log/nginx/error.log \
+    && ln -s /etc/nginx/http.d /etc/nginx/conf.d
 
 # Add Confd to configure parameters on start
 ENV CONFD_VERSION="0.16.0"
 RUN wget -q -O /usr/local/bin/confd "https://github.com/kelseyhightower/confd/releases/download/v${CONFD_VERSION}/confd-${CONFD_VERSION}-linux-amd64" \
-  && chmod +x /usr/local/bin/confd
+    && chmod +x /usr/local/bin/confd
 
 # Add Waitforit to wait on db starting
 ENV WAITFORIT_VERSION="v2.4.1"
 RUN wget -q -O /usr/local/bin/waitforit https://github.com/maxcnunes/waitforit/releases/download/$WAITFORIT_VERSION/waitforit-linux_amd64 \
-  && chmod +x /usr/local/bin/waitforit
+    && chmod +x /usr/local/bin/waitforit
 
 # Generate certificate
 RUN mkdir -p /etc/nginx/certs
 RUN openssl req -newkey rsa:4096 -x509 -nodes -keyout /etc/nginx/certs/app.key -new -out /etc/nginx/certs/app.crt -subj "/C=GB/ST=GB/L=London/O=OPG/OU=Digital/CN=default" -sha256 -days "3650"
 
 RUN mkdir -p var/cache \
-  && mkdir -p var/logs \
-  && mkdir -p /var/log/app \
-  && chown -R www-data var \
-  && chown -R www-data /var/log/app
+    && mkdir -p var/logs \
+    && mkdir -p /var/log/app \
+    && chown -R www-data var \
+    && chown -R www-data /var/log/app
 
 COPY docker/confd /etc/confd
 COPY --from=composer /app/app app
@@ -111,8 +111,8 @@ RUN su-exec www-data php -d memory_limit=-1 app/console cache:warmup
 RUN apk upgrade libxml2 openssl libssl1.1 libcrypto1.1 libretls zlib busybox curl gzip xz xz-libs libcurl
 
 CMD confd -onetime -backend env \
-  && waitforit -address=tcp://$DATABASE_HOSTNAME:$DATABASE_PORT -timeout=$TIMEOUT \
-  && su-exec www-data:www-data php app/console doctrine:migrations:migrate --allow-no-migration --no-interaction \
-  && su-exec www-data:www-data php app/console doctrine:migrations:up-to-date \
-  && php-fpm -D \
-  && nginx
+    && waitforit -address=tcp://$DATABASE_HOSTNAME:$DATABASE_PORT -timeout=$TIMEOUT \
+    && su-exec www-data:www-data php app/console doctrine:migrations:migrate --allow-no-migration --no-interaction \
+    && su-exec www-data:www-data php app/console doctrine:migrations:up-to-date \
+    && php-fpm -D \
+    && nginx
