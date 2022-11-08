@@ -43,6 +43,7 @@ class PreRegistrationFactory
             'MadeDate' => $dto->getOrderDate()->format('Y-m-d'),
             'OrderType' => $dto->getOrderType(),
             'CoDeputy' => $dto->getIsCoDeputy() ? 'yes' : 'no',
+            'Hybrid' => $dto->getHybrid(),
         ];
     }
 

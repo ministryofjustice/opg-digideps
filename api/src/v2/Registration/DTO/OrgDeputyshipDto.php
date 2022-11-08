@@ -23,6 +23,7 @@ class OrgDeputyshipDto
     private string $deputyPostcode;
     private string $organisationName;
     private string $reportType;
+    private string $hybrid;
 
     private ?string $clientAddress3;
     private ?string $clientAddress4;
@@ -408,5 +409,20 @@ class OrgDeputyshipDto
     public function deputyIsAnOrganisation(): bool
     {
         return $this->getOrganisationName() && empty($this->getDeputyFirstname());
+    }
+
+    public function getHybrid(): ?string
+    {
+        return $this->hybrid;
+    }
+
+    /**
+     * @return OrgDeputyshipDto
+     */
+    public function setHybrid(?string $hybrid): self
+    {
+        $this->hybrid = $hybrid;
+
+        return $this;
     }
 }
