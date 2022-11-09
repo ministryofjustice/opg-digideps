@@ -336,7 +336,14 @@ class PreRegistration
 
     public function getHybrid(): ?string
     {
-        return $this->orderType;
+        return $this->hybrid;
+    }
+
+    public function setHybrid(?string $hybrid): self
+    {
+        $this->hybrid = $hybrid;
+
+        return $this;
     }
 
     public function getIsCoDeputy(): mixed

@@ -23,6 +23,7 @@ class SiriusToLayDeputyshipDtoAssembler implements LayDeputyshipDtoAssemblerInte
         'MadeDate',
         'OrderType',
         'CoDeputy',
+        'Hybrid',
     ];
 
     private array $missingColumns = [];
@@ -68,7 +69,8 @@ class SiriusToLayDeputyshipDtoAssembler implements LayDeputyshipDtoAssemblerInte
                 ->setIsNdrEnabled(false)
                 ->setOrderDate(new DateTime($data['MadeDate']))
                 ->setOrderType($data['OrderType'])
-                ->setIsCoDeputy('yes' === $data['CoDeputy']);
+                ->setIsCoDeputy('yes' === $data['CoDeputy'])
+                ->setHybrid($data['Hybrid']);
     }
 
     private function collectMissingColumns(array $data)
