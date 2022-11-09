@@ -23,7 +23,7 @@ class OrgDeputyshipDto
     private string $deputyPostcode;
     private string $organisationName;
     private string $reportType;
-    private string $hybrid;
+    private ?string $hybrid;
 
     private ?string $clientAddress3;
     private ?string $clientAddress4;
