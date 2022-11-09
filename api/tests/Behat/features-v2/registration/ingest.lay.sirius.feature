@@ -1,7 +1,7 @@
 @v2 @registration @ingest @v2_sequential
 Feature: Lay CSV data ingestion - sirius source data
 
-    @super-admin
+    @super-admin @mia
     Scenario: Uploading a Lay CSV that contains new pre-registration entities only
         Given a super admin user accesses the admin app
         When I navigate to the upload users page
