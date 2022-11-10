@@ -93,7 +93,7 @@ Feature: Org CSV data ingestion - sirius source data
         And I upload an 'org' CSV that does not have any of the required columns
         Then I should see an error showing which columns are missing on the 'org' csv upload page
 
-    @super-admin @mia
+    @super-admin
     Scenario: Uploading a CSV that has an unexpected column
         Given a super admin user accesses the admin app
         When I visit the admin upload org users page
