@@ -22,7 +22,6 @@ use Symfony\Component\Routing\Annotation\Route;
 use Symfony\Component\Routing\Exception\ResourceNotFoundException;
 use Symfony\Component\Routing\RouterInterface;
 use Symfony\Component\Security\Core\Authentication\Token\Storage\TokenStorageInterface;
-use Symfony\Component\Security\Core\Exception\AccessDeniedException;
 use Symfony\Component\Security\Core\Exception\BadCredentialsException;
 use Symfony\Component\Security\Core\Exception\TooManyLoginAttemptsAuthenticationException;
 use Symfony\Component\Security\Http\Authentication\AuthenticationUtils;
@@ -160,9 +159,9 @@ class IndexController extends AbstractController
     /**
      * @Route("/access-denied", name="access_denied")
      */
-    public function accessDeniedAction()
+    public function accessDenied()
     {
-        throw new AccessDeniedException();
+        return $this->render('@App/Index/access-denied.html.twig');
     }
 
     /**

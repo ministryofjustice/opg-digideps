@@ -301,7 +301,15 @@ services:
           method: onKernelResponse,
         }
 
-  App\EventListener\AuthTokenExpiredListener:
+  App\EventListener\UnauthorizedExceptionListener:
+    tags:
+      - {
+          name: kernel.event_listener,
+          event: kernel.exception,
+          method: onKernelException,
+        }
+
+  App\EventListener\ForbiddenExceptionListener:
     tags:
       - {
           name: kernel.event_listener,
