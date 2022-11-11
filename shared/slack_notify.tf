@@ -39,7 +39,7 @@ resource "aws_sns_topic" "availability-alert" {
 #tfsec:ignore:aws-lambda-restrict-source-arn - access is actually restricted to single resource
 #tfsec:ignore:aws-lambda-enable-tracing - no control over this
 module "notify_slack_us-east-1" {
-  source = "github.com/terraform-aws-modules/terraform-aws-notify-slack.git?ref=v5.1.0"
+  source = "github.com/terraform-aws-modules/terraform-aws-notify-slack.git?ref=v5.4.1"
 
   providers = {
     aws = aws.us-east-1
