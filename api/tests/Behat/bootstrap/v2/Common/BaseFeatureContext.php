@@ -290,6 +290,15 @@ class BaseFeatureContext extends MinkContext
     }
 
     /**
+     * @BeforeScenario @pa-named-pfa-high-not-started
+     */
+    public function createPaNamedPfaHighNotStarted()
+    {
+        $userDetails = $this->fixtureHelper->createPaNamedPfaHighNotStarted($this->testRunId);
+        $this->fixtureUsers[] = $this->publicAuthorityNamedNotStartedPfaHighDetails = new UserDetails($userDetails);
+    }
+
+    /**
      * @BeforeScenario @pa-named-pfa-high-submitted
      */
     public function createPaNamedPfaHighSubmitted()
@@ -494,6 +503,15 @@ class BaseFeatureContext extends MinkContext
     {
         $userDetails = $this->fixtureHelper->createSuperAdmin($this->testRunId);
         $this->fixtureUsers[] = $this->superAdminDetails = new UserDetails($userDetails);
+    }
+
+    /**
+     * @BeforeScenario @lay-pfa-high-not-started-legacy-password-hash
+     */
+    public function createPfaHighNotStartedLegacyPasswordHash(?BeforeScenarioScope $scenario = null, ?string $caseNumber = null)
+    {
+        $userDetails = $this->fixtureHelper->createLayPfaHighAssetsNotStartedLegacyPasswordHash($this->testRunId, $caseNumber);
+        $this->fixtureUsers[] = $this->layDeputyNotStartedPfaHighAssetsDetails = new UserDetails($userDetails);
     }
 
     public function getAdminUrl(): string

@@ -24,6 +24,7 @@ class OrgDeputyshipUploader
 {
     private array $added = ['clients' => [], 'named_deputies' => [], 'reports' => [], 'organisations' => []];
     private array $updated = ['clients' => [], 'named_deputies' => [], 'reports' => [], 'organisations' => []];
+    private array $changeOrg = [];
 
     private ?Organisation $currentOrganisation = null;
     private ?NamedDeputy $namedDeputy = null;
@@ -48,7 +49,7 @@ class OrgDeputyshipUploader
 
     /**
      * @param OrgDeputyshipDto[] $deputyshipDtos
-     *
+     * 
      * @return array
      *
      * @throws Exception
@@ -85,6 +86,7 @@ class OrgDeputyshipUploader
 
         $uploadResults['added'] = $this->added;
         $uploadResults['updated'] = $this->updated;
+        $uploadResults['changeOrg'] = $this->changeOrg;
 
         return $uploadResults;
     }
@@ -213,10 +215,21 @@ class OrgDeputyshipUploader
             if (!$this->clientHasNewCourtOrder($this->client, $dto)) {
                 if ($this->clientHasSwitchedOrganisation($this->client)) {
                     if (!$this->clientHasNewNamedDeputy($this->client, $this->namedDeputy)) {
+
+                        // Track clients original organisation for audit logging before it is updated
+                       $tempArray = ['old_organisation' => $this->client->getOrganisation()->getId()];
+                        
                         $this->currentOrganisation->addClient($this->client);
                         $this->client->setOrganisation($this->currentOrganisation);
 
                         $this->updated['clients'][] = $this->client->getId();
+                        
+                        // Track clients for audit logging purposes
+                        $tempArray[] = ['client_id' => $this->client->getId()];
+                        $tempArray[] = ['deputy_id' => $this->client->getNamedDeputy()->getId()];
+                        $tempArray[] = ['new_organisation' => $this->client->getOrganisation()->getId()];
+                        
+                        $changeOrg[] = $tempArray;
                     }
                 }
             }

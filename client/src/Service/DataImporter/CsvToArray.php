@@ -2,6 +2,8 @@
 
 namespace App\Service\DataImporter;
 
+use RuntimeException;
+
 class CsvToArray
 {
     const DELIMITER = ',';
@@ -17,43 +19,36 @@ class CsvToArray
     /**
      * @var array
      */
-    private $expectedColumns = [];
+    private array $expectedColumns = [];
 
     /**
      * Columns that we definitely dont expect.
      * (those that are present that would indicate the wrong CSV is being used).
-     *
-     * @var array
      */
-    private $unexpectedColumns = [];
+    private array $unexpectedColumns = [];
 
-    /**
-     * @var array
-     */
-    private $optionalColumns = [];
+    private array $optionalColumns = [];
 
-    /**
-     * @var bool
-     */
-    private $normaliseNewLines;
+    private bool $normaliseNewLines;
 
-    private $firstRow = [];
+    private array $firstRow = [];
+
 
     /**
      * CsvToArray constructor.
      *
      * @param string $file
-     * @param bool   $normaliseNewLines
-     * @param bool   $autoDetectLineEndings - setup to maintain compatibility with other code that uses this class
+     * @param bool $normaliseNewLines
+     * @param bool $autoDetectLineEndings - setup to maintain compatibility with other code that uses this class
      *
-     * @throws \RuntimeException
+     * @throws RuntimeException
      */
-    public function __construct($file, $normaliseNewLines, $autoDetectLineEndings = false)
+    public function __construct(string $file, bool $normaliseNewLines, bool $autoDetectLineEndings = false)
     {
         $this->normaliseNewLines = $normaliseNewLines;
 
         if (!file_exists($file)) {
-            throw new \RuntimeException("file $file not found");
+            throw new RuntimeException("file $file not found");
         }
 
         $fileContent = (string) file_get_contents($file);
@@ -93,18 +88,19 @@ class CsvToArray
     /**
      * @return array|false|null returns false when EOF
      */
-    private function getRow()
+    private function getRow(): array|false|null
     {
         if (!empty($this->handle)) {
             return fgetcsv($this->handle, self::CHAR_LIMIT_PER_ROW, self::DELIMITER, self::ENCLOSURE, self::ESCAPE);
         }
-        throw new \RuntimeException('Resourcce handle empty');
+
+        throw new RuntimeException('Resource handle empty');
     }
 
     /**
      * @return array
      */
-    public function getFirstRow()
+    public function getFirstRow(): array
     {
         if (empty($this->firstRow)) {
             $this->firstRow = $this->getRow();
@@ -118,23 +114,23 @@ class CsvToArray
      *
      * @return array
      */
-    public function getData()
+    public function getData(): array
     {
         $ret = [];
 
         // parse header
         $header = $this->getFirstRow();
         if (!$header) {
-            throw new \RuntimeException('Empty or corrupted file, cannot parse CSV header');
+            throw new RuntimeException('Empty or corrupted file, cannot parse CSV header');
         }
-        $missingColumns = array_diff($this->expectedColumns, $header);
-        if ($missingColumns) {
-            throw new \RuntimeException('Invalid file. Cannot find expected header columns: '.implode(', ', $missingColumns));
-        }
+       $missingColumns = array_diff($this->expectedColumns, $header);
+       if ($missingColumns) {
+           throw new RuntimeException('Invalid file. Cannot find expected header columns: '.implode(', ', $missingColumns));
+       }
 
         $rogueColumns = array_intersect($header, $this->unexpectedColumns);
         if (!empty($rogueColumns)) {
-            throw new \RuntimeException('Invalid file. File contains unexpected header columns: '.implode(', ', $rogueColumns));
+            throw new RuntimeException('Invalid file. File contains unexpected header columns: '.implode(', ', $rogueColumns));
         }
 
         // read rows
@@ -144,12 +140,12 @@ class CsvToArray
             $rowArray = [];
             foreach ($this->expectedColumns as $expectedColumn) {
                 if (empty($header)) {
-                    throw new \RuntimeException('Empty header in CSV file');
+                    throw new RuntimeException('Empty header in CSV file');
                 }
                 $index = array_search($expectedColumn, $header);
                 if (false !== $index && !empty($row)) {
                     if (!array_key_exists($index, $row)) {
-                        throw new \RuntimeException("Can't find $expectedColumn column in line $rowNumber");
+                        throw new RuntimeException("Can't find $expectedColumn column in line $rowNumber");
                     }
                     $rowArray[$expectedColumn] = $row[$index];
                 }

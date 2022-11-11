@@ -88,13 +88,16 @@ locals {
       { "name": "PARAMETER_PREFIX", "value": "${local.parameter_prefix}" },
       { "name": "ROLE", "value": "admin" },
       { "name": "S3_BUCKETNAME", "value": "pa-uploads-${local.environment}" },
+      { "name": "S3_SIRIUS_BUCKET", "value": "digideps.${local.account.sirius_environment}.eu-west-1.sirius.opg.justice.gov.uk" },
       { "name": "SESSION_REDIS_DSN", "value": "redis://${aws_route53_record.frontend_redis.fqdn}" },
       { "name": "SESSION_PREFIX", "value": "dd_session_admin" },
       { "name": "APP_ENV", "value": "${local.account.app_env}" },
       { "name": "OPG_DOCKER_TAG", "value": "${var.OPG_DOCKER_TAG}" },
       { "name": "HTMLTOPDF_ADDRESS", "value": "http://${local.htmltopdf_service_fqdn}" },
       { "name": "ENVIRONMENT", "value": "${local.environment}" },
-      { "name": "NGINX_APP_NAME", "value": "admin" }
+      { "name": "NGINX_APP_NAME", "value": "admin" },
+      { "name": "PA_PRO_REPORT_CSV_FILENAME", "value": "paProDeputyReport.csv" },
+      { "name": "LAY_REPORT_CSV_FILENAME", "value": "layDeputyReport.csv" }
     ]
   }
 

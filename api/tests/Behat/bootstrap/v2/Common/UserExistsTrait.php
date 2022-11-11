@@ -21,4 +21,18 @@ trait UserExistsTrait
 
         $this->interactingWithUserDetails = $this->layDeputyNotStartedHealthWelfareDetails;
     }
+
+    /**
+     * @Given a Lay Deputy exists with a legacy password hash
+     *
+     * @throws BehatException
+     */
+    public function aLayDeputyExistsWithLegacyPasswordHash()
+    {
+        if (empty($this->layDeputyNotStartedPfaHighAssetsDetails)) {
+            throw new BehatException('It looks like fixtures are not loaded - missing $layDeputyNotStartedPfaHighAssetsDetails');
+        }
+
+        $this->interactingWithUserDetails = $this->layDeputyNotStartedPfaHighAssetsDetails;
+    }
 }

@@ -10,9 +10,11 @@ use Doctrine\Bundle\DoctrineBundle\Repository\ServiceEntityRepository;
 use Doctrine\ORM\QueryBuilder;
 use Doctrine\Persistence\ManagerRegistry;
 use Symfony\Component\HttpFoundation\Request;
+use Symfony\Component\Security\Core\User\PasswordUpgraderInterface;
+use Symfony\Component\Security\Core\User\UserInterface;
 use Symfony\Component\Serializer\SerializerInterface;
 
-class UserRepository extends ServiceEntityRepository
+class UserRepository extends ServiceEntityRepository implements PasswordUpgraderInterface
 {
     /** @var QueryBuilder */
     private $qb;
@@ -71,7 +73,7 @@ class UserRepository extends ServiceEntityRepository
             return $this;
         }
 
-        $operand = (strpos($roleName, '%')) !== false ? 'LIKE' : '=';
+        $operand = false !== strpos($roleName, '%') ? 'LIKE' : '=';
 
         $this
             ->qb
@@ -322,5 +324,15 @@ SQL;
             ->setParameter('date', $date);
 
         return $query->getResult();
+    }
+
+    public function upgradePassword(UserInterface $user, string $newEncodedPassword): void
+    {
+        // set the new encoded password on the User object
+        $user->setPassword($newEncodedPassword);
+
+        // execute the queries on the database
+        $this->getEntityManager()->persist($user);
+        $this->getEntityManager()->flush();
     }
 }

@@ -14,11 +14,14 @@ keys = [
     "/email",
     "/smtp",
     "/s3/bucketname",
+    "/s3/sirius/bucket",
     "/s3/localstack",
     "/ssm/localstack",
     "/cloudwatch/logs/localstack",
     "/filescanner/url",
     "/filescanner/sslverify",
     "/htmltopdf/address",
-    "/secrets/manager/localstack"
+    "/secrets/manager/localstack",
+    "/pa/pro/report/csv/filename",
+    "/lay/report/csv/filename"
  ]
