@@ -41,6 +41,7 @@ type ScanResult struct {
 
 var EICAR = []byte(`X5O!P%@AP[4\PZX54(P^)7CC)7}$EICAR-STANDARD-ANTIVIRUS-TEST-FILE!$H+H*`)
 
+// newConnection creates a new connection to ClamD
 func (c *Clamd) newConnection() (conn *CLAMDConn, err error) {
 
 	var u *url.URL
@@ -54,6 +55,7 @@ func (c *Clamd) newConnection() (conn *CLAMDConn, err error) {
 	return
 }
 
+// simpleCommand is a genric wrapper to issue commands to ClamD
 func (c *Clamd) simpleCommand(command string) (chan *ScanResult, error) {
 	conn, err := c.newConnection()
 	if err != nil {

@@ -31,7 +31,6 @@ func scanHandler(w http.ResponseWriter, r *http.Request) {
 			http.Error(w, err.Error(), http.StatusInternalServerError)
 			return
 		}
-
 		// Copy each part to destination
 		for {
 			part, err := reader.NextPart()
@@ -46,6 +45,7 @@ func scanHandler(w http.ResponseWriter, r *http.Request) {
 
 			fmt.Printf("%v Started scanning: %s\n", time.Now().Format(time.RFC3339), part.FileName())
 			var abort chan bool
+
 			// Do the scanning using clamav
 			response, err := c.ScanStream(part, abort)
 			for s := range response {
@@ -74,6 +74,7 @@ func scanHandler(w http.ResponseWriter, r *http.Request) {
 	}
 }
 
+// waitForClamD waits ubntil clamd is ready and prints a version to logs
 func waitForClamD(port string, times int) {
 	clamdTest := clamd.NewClamd(port)
 	clamdTest.Ping()
@@ -95,6 +96,7 @@ func waitForClamD(port string, times int) {
 	}
 }
 
+// healthHandler returns OK if clamd is up and running
 func healthHandler(w http.ResponseWriter, r *http.Request) {
 	switch r.Method {
 	case "GET":
