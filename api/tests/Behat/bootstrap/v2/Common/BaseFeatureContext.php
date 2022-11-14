@@ -10,7 +10,7 @@ use App\Tests\Behat\v2\Analytics\AnalyticsTrait;
 use App\Tests\Behat\v2\Helpers\FixtureHelper;
 use Behat\Behat\Hook\Call\BeforeScenario;
 use Behat\Behat\Hook\Scope\BeforeScenarioScope;
-use Behat\Mink\Driver\GoutteDriver;
+use Behat\Mink\Driver\BrowserKitDriver;
 use Behat\MinkExtension\Context\MinkContext;
 use Doctrine\ORM\EntityManagerInterface;
 use Exception;
@@ -538,7 +538,7 @@ class BaseFeatureContext extends MinkContext
 
     public function getPageContent(): string
     {
-        if ($this->getSession()->getDriver() instanceof GoutteDriver) {
+        if ($this->getSession()->getDriver() instanceof BrowserKitDriver) {
             return $this->getSession()->getPage()->getContent();
         } else {
             return $this->getSession()->getPage()->getText();
