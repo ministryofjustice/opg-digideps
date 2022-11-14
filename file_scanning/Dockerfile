@@ -1,16 +1,4 @@
-FROM alpine:3.16 as build
-
-# Update & Install Go
-RUN apk update upgrade && apk add --no-cache go
-
-# Configure Go
-ENV GOROOT /usr/lib/go
-ENV GOPATH /go/src
-ENV PATH /go/bin:$PATH
-
-RUN mkdir -p ${GOPATH} /go/bin
-
-WORKDIR $GOPATH
+FROM golang:1.19.3-alpine3.16 as build
 
 # Build go package
 ADD . /go/src/clamav-rest/
@@ -51,5 +39,5 @@ RUN freshclam --quiet --no-dns
 COPY entrypoint.sh /usr/bin/
 
 EXPOSE 8080
-
+USER clamav
 ENTRYPOINT [ "entrypoint.sh" ]
