@@ -18,10 +18,6 @@ class UnauthorizedExceptionListener
                 $response = new RedirectResponse('/login?from=api');
                 $exceptionEvent->setResponse($response);
                 $exceptionEvent->stopPropagation();
-            } elseif (Response::HTTP_FORBIDDEN == $exception->getStatusCode()) {
-                $response = new RedirectResponse('/access-denied');
-                $exceptionEvent->setResponse($response);
-                $exceptionEvent->stopPropagation();
             }
         }
     }
