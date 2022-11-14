@@ -161,7 +161,10 @@ class IndexController extends AbstractController
      */
     public function accessDenied()
     {
-        return $this->render('@App/Index/access-denied.html.twig');
+        return new Response(
+            $this->renderView('@App/Index/access-denied.html.twig'),
+            403  // return code
+        );
     }
 
     /**
