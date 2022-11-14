@@ -1,7 +1,7 @@
-@v2 @registration @ingest @v2_sequential
+@v2 @registration @ingest @v2_sequential 
 Feature: Lay CSV data ingestion - sirius source data
 
-    @super-admin @mia
+    @super-admin
     Scenario: Uploading a Lay CSV that contains new pre-registration entities only
         Given a super admin user accesses the admin app
         When I navigate to the upload users page
@@ -16,7 +16,7 @@ Feature: Lay CSV data ingestion - sirius source data
         And I upload a lay CSV that has a new report type '103' for case number '34343434'
         Then the clients report type should be updated
 
-    @super-admin
+    @super-admin 
     Scenario: Uploading a Lay CSV that contains deputies with missing required information alongside valid deputy rows
         Given a super admin user accesses the admin app
         When I visit the admin upload lay users page
