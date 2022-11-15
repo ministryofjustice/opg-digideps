@@ -1,2 +1,2 @@
-Case,ClientSurname,DeputyUid,DeputySurname,DeputyAddress1,DeputyAddress2,DeputyAddress3,DeputyAddress4,DeputyAddress5,DeputyPostcode,ReportType,MadeDate,OrderType,CoDeputy
-34343434,HUEY,19371940,DUCK,2 London Road,Padstow,Brentwood,Cornwall,,B1,OPG103,2011-06-14,pfa,no
+Case,ClientSurname,DeputyUid,DeputySurname,DeputyAddress1,DeputyAddress2,DeputyAddress3,DeputyAddress4,DeputyAddress5,DeputyPostcode,ReportType,MadeDate,OrderType,CoDeputy,Hybrid
+34343434,HUEY,19371940,DUCK,2 London Road,Padstow,Brentwood,Cornwall,,B1,OPG103,2011-06-14,pfa,no,SINGLE
