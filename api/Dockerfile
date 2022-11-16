@@ -33,7 +33,7 @@ RUN apk --no-cache add \
     php8-pecl-igbinary \
     php8-pecl-redis
 
-RUN docker-php-ext-install pdo pdo_pgsql opcache
+RUN docker-php-ext-install pdo pdo_pgsql opcache intl
 RUN docker-php-ext-enable opcache
 
 # Install pcov for faster coverage tooling

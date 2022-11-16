@@ -2,22 +2,22 @@
 
 namespace App\EventListener;
 
+use Symfony\Component\HttpFoundation\RedirectResponse;
 use Symfony\Component\HttpFoundation\Request;
 use Symfony\Component\Security\Core\Exception\AuthenticationException;
 use Symfony\Component\Security\Http\Authentication\AuthenticationFailureHandlerInterface;
-use Symfony\Component\Security\Http\Logout\LogoutSuccessHandlerInterface;
 
-class AuthenticationHandler implements AuthenticationFailureHandlerInterface, LogoutSuccessHandlerInterface
+class AuthenticationHandler implements AuthenticationFailureHandlerInterface
 {
-    public function onAuthenticationFailure(Request $request, AuthenticationException $exception)
+    public function onAuthenticationFailure(Request $request, AuthenticationException $exception): RedirectResponse
     {
         $referer = $request->headers->get('referer');
-        $request->getSession()->setFlash('error', $exception->getMessage());
+        $request->getSession()->getFlashBag()->add('error', $exception->getMessage());
 
         return new RedirectResponse($referer);
     }
 
-    public function onLogoutSuccess(Request $request)
+    public function onLogoutSuccess(Request $request): RedirectResponse
     {
         $request->getSession()->set('fromLogoutPage', 1);
 

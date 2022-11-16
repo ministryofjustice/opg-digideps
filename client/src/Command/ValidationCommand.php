@@ -37,7 +37,7 @@ class ValidationCommand extends Command
         return $ret;
     }
 
-    protected function execute(InputInterface $input, OutputInterface $output)
+    protected function execute(InputInterface $input, OutputInterface $output): int
     {
         $ret = [];
         foreach (glob($this->projectDir.'/src/App/Entity/*.php') as $entity) {
@@ -52,5 +52,7 @@ class ValidationCommand extends Command
         if ($input->getOption('print')) {
             $output->writeln(print_r($ret, true));
         }
+
+        return Command::SUCCESS;
     }
 }

@@ -8,11 +8,10 @@ use App\Event\OrgCreatedEvent;
 use App\EventDispatcher\ObservableEventDispatcher;
 use App\Service\Audit\AuditEvents;
 use App\Service\Client\RestClient;
-use Symfony\Component\HttpFoundation\Session\SessionInterface;
+use Symfony\Component\HttpFoundation\RequestStack;
 use Symfony\Component\HttpFoundation\StreamedResponse;
 use Symfony\Component\Security\Core\Authentication\Token\Storage\TokenStorageInterface;
 use Twig\Environment;
-use App\Entity\Client;
 
 class OrgService
 {
@@ -46,7 +45,7 @@ class OrgService
     public function __construct(
         private RestClient $restClient,
         private Environment $twig,
-        private SessionInterface $session,
+        private RequestStack $requestStack,
         private ObservableEventDispatcher $eventDispatcher,
         private TokenStorageInterface $tokenStorage
     ) {
@@ -154,7 +153,7 @@ class OrgService
      */
     protected function addFlashMessages()
     {
-        $flashBag = $this->session->getFlashBag();
+        $flashBag = $this->requestStack->getSession()->getFlashBag();
 
         if (count($this->output['errors'])) {
             $flash = $this->twig->render('@App/Admin/Index/_uploadErrorAlert.html.twig', [
@@ -239,7 +238,7 @@ class OrgService
         $response = $this->generateStreamedResponse();
 
         $response->setCallback(function () use ($chunks, $redirectUrl) {
-            $this->session->start();
+            $this->requestStack->getSession()->start();
 
             $this->processChunks($chunks);
 

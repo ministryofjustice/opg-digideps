@@ -43,7 +43,7 @@ class DocumentRecoverCommand extends Command
         ;
     }
 
-    protected function execute(InputInterface $input, OutputInterface $output)
+    protected function execute(InputInterface $input, OutputInterface $output): int
     {
         $refs = array_map('trim', array_filter(file($input->getArgument('file'))));
 
@@ -64,5 +64,6 @@ class DocumentRecoverCommand extends Command
         }
 
         $output->writeln("ok $ok - denied $denied");
+        return Command::SUCCESS;
     }
 }

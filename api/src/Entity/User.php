@@ -897,7 +897,7 @@ class User implements UserInterface, PasswordAuthenticatedUserInterface
      * @JMS\Type("integer")
      * @JMS\SerializedName("number_of_reports")
      */
-    public function getNumberOfReports()
+    public function getNumberOfReports(): int
     {
         return $this->getFirstClient() ? count($this->getFirstClient()->getReports()) : 0;
     }
