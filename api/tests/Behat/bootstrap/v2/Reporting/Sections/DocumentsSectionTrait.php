@@ -187,6 +187,8 @@ trait DocumentsSectionTrait
      */
     public function iUploadOneDocumentThatIsTooLarge()
     {
+        ini_set('memory_limit', '512M');
+        
         $this->uploadFiles([$this->tooLargeFilename]);
     }
 

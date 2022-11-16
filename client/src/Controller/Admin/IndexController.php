@@ -622,6 +622,7 @@ class IndexController extends AbstractController
                 'LastReportDay',
                 'ReportType',
                 'OrderType',
+                'Hybrid',
             ])
             ->setOptionalColumns([
                 'ClientAddress1',
@@ -659,6 +660,7 @@ class IndexController extends AbstractController
                 'MadeDate',
                 'OrderType',
                 'CoDeputy',
+                'Hybrid',
             ])
             ->setUnexpectedColumns(['LastReportDay', 'DeputyOrganisation'])
             ->getData();

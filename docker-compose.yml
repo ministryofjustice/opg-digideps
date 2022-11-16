@@ -220,3 +220,7 @@ services:
       SECRETS_PREFIX: default
       LOCALSTACK_ENDPOINT: http://localstack:4566
     entrypoint: /aws-lambda/aws-lambda-rie /var/task/main
+
+  composer:
+    image: composer:2.3.5
+    command: [ "install" ]

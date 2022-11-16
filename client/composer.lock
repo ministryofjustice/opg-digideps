@@ -4,7 +4,7 @@
         "Read more about it at https://getcomposer.org/doc/01-basic-usage.md#installing-dependencies",
         "This file is @generated automatically"
     ],
-    "content-hash": "ca9154209983f64733e24ec4da19af73",
+    "content-hash": "61b6bad7bf0b350f7846af482354e83b",
     "packages": [
         {
             "name": "alphagov/notifications-php-client",
@@ -13844,7 +13844,7 @@
     "prefer-stable": false,
     "prefer-lowest": false,
     "platform": {
-        "php": "^8.0.12"
+        "php": "^8.1"
     },
     "platform-dev": [],
     "plugin-api-version": "2.3.0"

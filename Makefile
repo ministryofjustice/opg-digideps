@@ -93,16 +93,16 @@ behat-tests: up-app-integration-tests reset-fixtures ##@behat Run the whole beha
 	docker-compose -f docker-compose.yml -f docker-compose.dev.yml run --rm test sh ./tests/Behat/run-tests.sh
 
 behat-tests-tag: up-app-integration-tests reset-fixtures ##@behat Run behat tests with specified tag e.g. make behat-tests-tag tag=<tag> (Do not include the @)
-	docker-compose -f docker-compose.yml -f docker-compose.dev.yml run --rm test sh ./tests/Behat/run-tests.sh --profile v2-tests-goutte --tags @$(tag)
+	docker-compose -f docker-compose.yml -f docker-compose.dev.yml run --rm test sh ./tests/Behat/run-tests.sh --profile v2-tests-browserkit --tags @$(tag)
 
-behat-tests-v2-goutte: up-app-integration-tests reset-fixtures disable-debug ##@behat Pass in suite name as arg e.g. make behat-tests-v2-goutte suite=<SUITE NAME>
+behat-tests-v2-browserkit: up-app-integration-tests reset-fixtures disable-debug ##@behat Pass in suite name as arg e.g. make behat-tests-v2-browserkit suite=<SUITE NAME>
 ifdef suite
-	docker-compose -f docker-compose.yml -f docker-compose.dev.yml run --rm test sh ./tests/Behat/run-tests.sh --profile v2-tests-goutte --tags @v2 --suite $(suite)
+	docker-compose -f docker-compose.yml -f docker-compose.dev.yml run --rm test sh ./tests/Behat/run-tests.sh --profile v2-tests-browserkit --tags @v2 --suite $(suite)
 else
-	docker-compose -f docker-compose.yml -f docker-compose.dev.yml run --rm test sh ./tests/Behat/run-tests.sh --profile v2-tests-goutte --tags @v2
+	docker-compose -f docker-compose.yml -f docker-compose.dev.yml run --rm test sh ./tests/Behat/run-tests.sh --profile v2-tests-browserkit --tags @v2
 endif
 
-behat-tests-v2-goutte-parallel: up-app-integration-tests reset-fixtures disable-debug ##@behat Run the integration tests in parallel
+behat-tests-v2-browserkit-parallel: up-app-integration-tests reset-fixtures disable-debug ##@behat Run the integration tests in parallel
 	docker-compose -f docker-compose.yml -f docker-compose.dev.yml run --rm test sh ./tests/Behat/run-tests.sh --tags @v2_sequential
 	docker-compose -f docker-compose.yml -f docker-compose.dev.yml run --rm test sh ./tests/Behat/run-tests-parallel.sh --tags "@v2&&~@v2_sequential"
 
@@ -179,9 +179,7 @@ get-audit-logs: ##@localstack Get audit log groups by passing event name e.g. ge
 	docker-compose exec localstack awslocal logs get-log-events --log-group-name audit-local --log-stream-name $(event_name)
 
 composer-api: ##@application Drops you into the API container with composer installed
-	docker-compose exec api sh install-composer.sh
-	docker-compose exec api sh
+	docker-compose run --rm --volume ~/.composer:/tmp --volume ${PWD}/api:/app composer ${COMPOSER_ARGS}
 
 composer-client: ##@application Drops you into the frontend container with composer installed
-	docker-compose exec frontend sh install-composer.sh
-	docker-compose exec frontend sh
+	docker-compose run --rm --volume ~/.composer:/tmp --volume ${PWD}/client:/app composer ${COMPOSER_ARGS}

@@ -105,6 +105,7 @@ class PreRegistrationFactoryTest extends TestCase
             ->setIsNdrEnabled(true)
             ->setOrderType('pfa')
             ->setOrderDate(new DateTime('2011-06-14'))
-            ->setIsCoDeputy(false);
+            ->setIsCoDeputy(false)
+            ->setHybrid('hybrid');
     }
 }

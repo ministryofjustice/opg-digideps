@@ -151,7 +151,7 @@ workflows:
               scale up services for integration tests,
             ]
           task_name: integration_test_v2
-          override: "sh,./tests/Behat/run-tests-parallel.sh,--tags,@v2_reporting_1,--profile,v2-tests-goutte"
+          override: "sh,./tests/Behat/run-tests-parallel.sh,--tags,@v2_reporting_1,--profile,v2-tests-browserkit"
           timeout: 1200
 
       - run-task:
@@ -162,7 +162,7 @@ workflows:
               scale up services for integration tests,
             ]
           task_name: integration_test_v2
-          override: "sh,./tests/Behat/run-tests-parallel.sh,--tags,@v2_reporting_2,--profile,v2-tests-goutte"
+          override: "sh,./tests/Behat/run-tests-parallel.sh,--tags,@v2_reporting_2,--profile,v2-tests-browserkit"
           timeout: 1200
 
       - run-task:
@@ -173,7 +173,7 @@ workflows:
               scale up services for integration tests,
             ]
           task_name: integration_test_v2
-          override: "sh,./tests/Behat/run-tests-parallel.sh,--tags,@v2_admin,--profile,v2-tests-goutte"
+          override: "sh,./tests/Behat/run-tests-parallel.sh,--tags,@v2_admin,--profile,v2-tests-browserkit"
           timeout: 1200
 
       - run-task:
@@ -184,7 +184,7 @@ workflows:
               scale up services for integration tests,
             ]
           task_name: integration_test_v2
-          override: "sh,./tests/Behat/run-tests.sh,--tags,@v2_sequential,--profile,v2-tests-goutte"
+          override: "sh,./tests/Behat/run-tests.sh,--tags,@v2_sequential,--profile,v2-tests-browserkit"
           timeout: 1200
 
       - terraform-plan-all:
@@ -353,7 +353,7 @@ workflows:
           filters: { branches: { only: [main] } }
           task_name: integration_test_v2
           tf_workspace: integration
-          override: "sh,./tests/Behat/run-tests.sh,--tags,@v2_sequential,--profile,v2-tests-goutte"
+          override: "sh,./tests/Behat/run-tests.sh,--tags,@v2_sequential,--profile,v2-tests-browserkit"
           timeout: 1200
 
       - scale-services:
@@ -538,7 +538,7 @@ workflows:
           filters: { branches: { only: [main] } }
           task_name: integration_test_v2
           tf_workspace: integration
-          override: "sh,./tests/Behat/run-tests.sh,--tags,@v2_sequential,--profile,v2-tests-goutte"
+          override: "sh,./tests/Behat/run-tests.sh,--tags,@v2_sequential,--profile,v2-tests-browserkit"
           timeout: 1200
       - scale-services:
           name: scale down services for integration tests
@@ -1300,7 +1300,7 @@ jobs:
 
   run-task:
     executor: terraform/terraform
-    resource_class: small
+    resource_class: medium
     parameters:
       tf_workspace:
         description: terraform workspace

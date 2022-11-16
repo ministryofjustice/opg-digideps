@@ -39,7 +39,8 @@ class PreRegistrationFactory
             ->setOrderDate(new DateTime())
             ->setTypeOfReport($reportType ?? 'OPG102')
             ->setOrderType($data['orderType'] ?? 'PFA')
-            ->setIsCoDeputy($data['createCoDeputy'] ?? false);
+            ->setIsCoDeputy($data['createCoDeputy'] ?? false)
+            ->setHybrid($data['hybrid'] ?? null);
 
         return $this->preRegistrationFactory->createFromDto($dto);
     }
@@ -64,7 +65,8 @@ class PreRegistrationFactory
             ->setOrderDate(new DateTime())
             ->setIsCoDeputy(true)
             ->setOrderType($data['orderType'] ?? 'PFA')
-            ->setTypeOfReport($data['reportType']);
+            ->setTypeOfReport($data['reportType'])
+            ->setHybrid($data['hybrid'] ?? null);
 
         return $this->preRegistrationFactory->createFromDto($dto);
     }

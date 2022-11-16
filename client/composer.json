@@ -10,9 +10,10 @@
         }
     },
     "require": {
-        "php": "^8.0.12",
+        "php": "^8.1",
         "alphagov/notifications-php-client": "^4.0.1",
         "aws/aws-sdk-php": "^3.100.9",
+        "doctrine/collections": "^1.6.8",
         "egulias/email-validator": "^3.2.1",
         "fakerphp/faker": "^1.16",
         "gbprod/uuid-normalizer": "^1.2",
@@ -78,8 +79,7 @@
         "symfony/yaml": "^5.4.0",
         "twig/extra-bundle": "^3.3",
         "twig/intl-extra": "^3.3",
-        "web-token/jwt-core": "^2.2",
-        "doctrine/collections": "^1.6.8"
+        "web-token/jwt-core": "^2.2"
     },
     "scripts": {
         "post-install-cmd": [

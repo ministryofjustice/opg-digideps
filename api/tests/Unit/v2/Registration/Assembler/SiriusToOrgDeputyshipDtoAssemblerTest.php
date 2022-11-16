@@ -65,6 +65,7 @@ class SiriusToOrgDeputyshipDtoAssemblerTest extends TestCase
         self::assertEquals($expectedReportStartDate, $dto->getReportStartDate());
         self::assertEquals($expectedReportEndDate, $dto->getReportEndDate());
         self::assertEquals('102-5', $dto->getReportType());
+        self::assertEquals($siriusArray['Hybrid'], $dto->getHybrid());
     }
 
     /** @test */
