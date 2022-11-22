@@ -8,16 +8,12 @@ use App\Entity\User;
 use DateTime;
 use Exception;
 use Faker\Factory;
-use Symfony\Component\Security\Core\Encoder\UserPasswordEncoderInterface;
+use Symfony\Component\PasswordHasher\Hasher\UserPasswordHasherInterface;
 
 class UserFactory
 {
-    /** @var UserPasswordEncoderInterface */
-    private $encoder;
-
-    public function __construct(UserPasswordEncoderInterface $encoder)
+    public function __construct(private UserPasswordHasherInterface $passwordHasher)
     {
-        $this->encoder = $encoder;
     }
 
     /**
@@ -49,7 +45,7 @@ class UserFactory
             ->setAgreeTermsUse(true);
 
         if ('true' === $data['activated'] || true === $data['activated']) {
-            $user->setPassword($this->encoder->encodePassword($user, 'DigidepsPass1234'));
+            $user->setPassword($this->passwordHasher->hashPassword($user, 'DigidepsPass1234'));
         } else {
             $user->setActive(false);
         }
@@ -92,7 +88,7 @@ class UserFactory
             ->setRoleName($data['adminType']);
 
         if ('true' === $data['activated']) {
-            $user->setPassword($this->encoder->encodePassword($user, 'DigidepsPass1234'))->setActive(true);
+            $user->setPassword($this->passwordHasher->hashPassword($user, 'DigidepsPass1234'))->setActive(true);
         }
 
         return $user;
@@ -121,7 +117,7 @@ class UserFactory
             ->setAddressCountry('GB')
             ->setRoleName('ROLE_PROF_TEAM_MEMBER');
 
-        $user->setPassword($this->encoder->encodePassword($user, 'DigidepsPass1234'));
+        $user->setPassword($this->passwordHasher->hashPassword($user, 'DigidepsPass1234'));
 
         return $user;
     }
@@ -144,7 +140,7 @@ class UserFactory
             ->setActive(true);
 
         if ('true' === $data['activated'] || true === $data['activated']) {
-            $user2->setPassword($this->encoder->encodePassword($user2, 'DigidepsPass1234'));
+            $user2->setPassword($this->passwordHasher->hashPassword($user2, 'DigidepsPass1234'));
         } else {
             $user2->setActive(false);
         }

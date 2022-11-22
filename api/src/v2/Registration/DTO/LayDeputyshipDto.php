@@ -23,6 +23,7 @@ class LayDeputyshipDto
     private ?DateTime $orderDate;
     private ?string $orderType;
     private ?string $typeOfReport;
+    private ?string $hybrid;
 
     public function getCaseNumber(): string
     {
@@ -200,6 +201,18 @@ class LayDeputyshipDto
     public function setOrderType(?string $orderType): LayDeputyshipDto
     {
         $this->orderType = $orderType;
+
+        return $this;
+    }
+
+    public function getHybrid(): ?string
+    {
+        return $this->hybrid;
+    }
+
+    public function setHybrid(?string $hybrid): LayDeputyshipDto
+    {
+        $this->hybrid = $hybrid;
 
         return $this;
     }

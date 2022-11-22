@@ -42,8 +42,9 @@ class DeputyProviderTest extends TestCase
         $user = m::mock('App\Entity\User')
             ->shouldReceive('getId')->andReturn(1)
             ->getMock();
+        $authToken = 'abc123';
 
-        $this->restClient->shouldReceive('login')->once()->with($credentials)->andReturn($user);
+        $this->restClient->shouldReceive('login')->once()->with($credentials)->andReturn([$user, $authToken]);
         $this->restClient->shouldReceive('setLoggedUserId')->once()->with(1);
 
         $this->logger->shouldReceive('info')->andReturnUsing(function ($e) {

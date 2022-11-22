@@ -70,7 +70,7 @@ trait DeputyManagementTrait
 
         $this->assertElementOnPage('input[name="admin[email]"]');
 
-        $this->completedFormFields['admin[email]'] = $this->faker->safeEmail;
+        $this->completedFormFields['admin[email]'] = $this->faker->safeEmail();
     }
 
     /**
@@ -84,9 +84,9 @@ trait DeputyManagementTrait
         $this->assertElementOnPage('input[name="admin[lastname]"]');
         $this->assertElementOnPage('input[name="admin[addressPostcode]"]');
 
-        $this->completedFormFields['admin[firstname]'] = $this->faker->firstname;
-        $this->completedFormFields['admin[lastname]'] = $this->faker->lastname;
-        $this->completedFormFields['admin[addressPostcode]'] = $this->faker->postcode;
+        $this->completedFormFields['admin[firstname]'] = $this->faker->firstName();
+        $this->completedFormFields['admin[lastname]'] = $this->faker->lastName();
+        $this->completedFormFields['admin[addressPostcode]'] = $this->faker->postcode();
     }
 
     /**

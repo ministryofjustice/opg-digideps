@@ -38,12 +38,12 @@ COPY src src
 RUN composer run-script post-install-cmd --no-interaction
 RUN composer dump-autoload --optimize
 
-FROM php:8.0.23-fpm-alpine3.16
+FROM php:8.1.12-fpm-alpine3.16
 WORKDIR /var/www
 EXPOSE 80
 EXPOSE 443
 ENV TIMEOUT=60
-ENV PHP_EXT_DIR=/usr/local/lib/php/extensions/no-debug-non-zts-20200930/
+ENV PHP_EXT_DIR=/usr/local/lib/php/extensions/no-debug-non-zts-20210902/
 
 # Install core PHP extensions
 RUN apk add --no-cache openssl nginx nginx-mod-http-headers-more su-exec postgresql-client libzip-dev unzip php8-pecl-igbinary php8-pecl-redis php8-pecl-imagick gmp gmp-dev
@@ -56,6 +56,7 @@ RUN pecl install pcov && docker-php-ext-enable pcov
 
 # Install Xdebug if directed to with build arg from docker-compose.yml
 ARG REQUIRE_XDEBUG=0
+ARG XDEBUG_IDEKEY_CLIENT=PHPSTORM
 RUN if [[ $REQUIRE_XDEBUG = 1 ]] ; then \
     pecl install xdebug-3.1.4  ;\
     docker-php-ext-enable $PHP_EXT_DIR/xdebug.so ; \
@@ -63,7 +64,7 @@ RUN if [[ $REQUIRE_XDEBUG = 1 ]] ; then \
     echo "xdebug.client_host = host.docker.internal" >> /usr/local/etc/php/conf.d/docker-php-ext-xdebug.ini ; \
     echo "xdebug.start_with_request = yes" >> /usr/local/etc/php/conf.d/docker-php-ext-xdebug.ini ; \
     echo "xdebug.log = /tmp/xdebug.log" >> /usr/local/etc/php/conf.d/docker-php-ext-xdebug.ini ; \
-    echo "xdebug.idekey = PHPSTORM" >> /usr/local/etc/php/conf.d/docker-php-ext-xdebug.ini ; \
+    echo "xdebug.idekey = ${XDEBUG_IDEKEY_CLIENT}" >> /usr/local/etc/php/conf.d/docker-php-ext-xdebug.ini ; \
     fi ;
 
 # Route NGINX logs to stdout/stderr
@@ -125,6 +126,5 @@ RUN su-exec www-data php -d memory_limit=-1 app/console cache:warmup
 RUN apk upgrade libxml2 openssl libssl1.1 libcrypto1.1 libretls zlib busybox curl gzip xz xz-libs libcurl
 
 CMD confd -onetime -backend env \
-    && waitforit -address=$API_URL/manage/availability -timeout=$TIMEOUT -insecure \
     && php-fpm -D \
     && nginx

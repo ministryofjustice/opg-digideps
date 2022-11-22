@@ -490,6 +490,24 @@ class ReportServiceTest extends TestCase
             'noUsersAttached' => [$noUserClient, false],
         ];
     }
+    
+    public function testUserStatusIsSetToActiveOnceReportIsSubmitted() 
+    {
+        $user = $this->user->setActive(null);
+       
+        $reportService = Mockery::mock( ReportService::class, [$this->em, $this->reportRepo])->makePartial();
+        
+        $this->em->shouldReceive('detach');
+        $this->em->shouldReceive('persist');
+        $this->em->shouldReceive('flush');
+
+        $this->report->setAgreedBehalfDeputy(true);
+       
+        $reportService->submit($this->report, $user, new DateTime());
+        
+        $this->assertTrue($user->getActive());
+        
+    }
 
     public function tearDown(): void
     {

@@ -296,7 +296,7 @@ class ReportController extends AbstractController
         $attachmentName = sprintf(
             'DigiChecklist-%s_%s_%s.pdf',
             $report->getEndDate()->format('Y'),
-            $report->getSubmitDate() instanceof DateTime ? $report->getSubmitDate()->format('Y-m-d') : 'n-a-', //some old reports have no submission date
+            $report->getSubmitDate() instanceof DateTime ? $report->getSubmitDate()->format('Y-m-d') : 'n-a-', // some old reports have no submission date
             $report->getClient()->getCaseNumber()
         );
 
@@ -310,7 +310,7 @@ class ReportController extends AbstractController
 
     /**
      * @Route("manage", name="admin_report_manage")
-     * @Security("is_granted('ROLE_ADMIN') or has_role('ROLE_AD')")
+     * @Security("is_granted('ROLE_ADMIN') or is_granted('ROLE_AD')")
      *
      * @param string $id
      *
@@ -423,7 +423,7 @@ class ReportController extends AbstractController
 
     /**
      * @Route("manage-confirm", name="admin_report_manage_confirm")
-     * @Security("is_granted('ROLE_ADMIN') or has_role('ROLE_AD')")
+     * @Security("is_granted('ROLE_ADMIN') or is_granted('ROLE_AD')")
      *
      * @param $id
      *
@@ -508,7 +508,7 @@ class ReportController extends AbstractController
 
     /**
      * @Route("manage-close-report-confirm", name="admin_report_manage_close_report_confirm")
-     * @Security("is_granted('ROLE_ADMIN') or has_role('ROLE_AD')")
+     * @Security("is_granted('ROLE_ADMIN') or is_granted('ROLE_AD')")
      *
      * @param $id
      *

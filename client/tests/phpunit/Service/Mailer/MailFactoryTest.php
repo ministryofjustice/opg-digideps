@@ -17,7 +17,6 @@ use Prophecy\PhpUnit\ProphecyTrait;
 use Prophecy\Prophecy\ObjectProphecy;
 use Symfony\Bundle\FrameworkBundle\Routing\Router;
 use Symfony\Bundle\FrameworkBundle\Translation\Translator;
-use Symfony\Bundle\TwigBundle\TwigEngine;
 
 class MailFactoryTest extends TestCase
 {
@@ -28,9 +27,6 @@ class MailFactoryTest extends TestCase
 
     /** @var ObjectProphecy&Router */
     private $router;
-
-    /** @var ObjectProphecy&TwigEngine */
-    private $templating;
 
     /** @var ObjectProphecy&IntlService */
     private $intlService;
@@ -83,7 +79,6 @@ class MailFactoryTest extends TestCase
 
         $this->translator = self::prophesize('Symfony\Bundle\FrameworkBundle\Translation\Translator');
         $this->router = self::prophesize('Symfony\Bundle\FrameworkBundle\Routing\Router');
-        $this->templating = self::prophesize('Symfony\Bundle\TwigBundle\TwigEngine');
         $this->intlService = self::prophesize('App\Service\IntlService');
     }
 
@@ -159,7 +154,6 @@ class MailFactoryTest extends TestCase
         return new MailFactory(
             $this->translator->reveal(),
             $this->router->reveal(),
-            $this->templating->reveal(),
             new IntlService(),
             $this->emailSendParams,
             $this->appBaseURLs

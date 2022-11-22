@@ -1,5 +1,5 @@
 twig:
-    default_path: "%kernel.root_dir%/templates"
+    default_path: "%kernel.project_dir%/templates"
     globals:
         env: "%env(ROLE)%"
         hosted_env: "%env(ENVIRONMENT)%"
@@ -13,4 +13,4 @@ twig:
     form_themes:
         - "@App/Form/fields.html.twig"
     paths:
-        "%kernel.root_dir%/templates": App
+        "%kernel.project_dir%/templates": App

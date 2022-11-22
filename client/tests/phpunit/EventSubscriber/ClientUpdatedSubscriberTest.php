@@ -141,16 +141,15 @@ class ClientUpdatedSubscriberTest extends TestCase
         $preUpdateClient = ClientHelpers::createClient();
 
         return [
-            'Firstname changed' => [$preUpdateClient, (clone $preUpdateClient)->setFirstname($faker->firstName)],
-            'Lastname changed' => [$preUpdateClient, (clone $preUpdateClient)->setLastname($faker->lastName)],
-            'Address changed' => [$preUpdateClient, (clone $preUpdateClient)->setAddress($faker->address)],
-            'Address2 changed' => [$preUpdateClient, (clone $preUpdateClient)->setAddress2($faker->address)],
+            'Firstname changed' => [$preUpdateClient, (clone $preUpdateClient)->setFirstname($faker->firstName())],
+            'Lastname changed' => [$preUpdateClient, (clone $preUpdateClient)->setLastname($faker->lastName())],
+            'Address changed' => [$preUpdateClient, (clone $preUpdateClient)->setAddress($faker->address())],
+            'Address2 changed' => [$preUpdateClient, (clone $preUpdateClient)->setAddress2($faker->address())],
             'CourtDate changed' => [$preUpdateClient, (clone $preUpdateClient)->setCourtDate(new DateTime($faker->date()))],
-            'County changed' => [$preUpdateClient, (clone $preUpdateClient)->setAddress3($faker->state)],
-            'Postcode changed' => [$preUpdateClient, (clone $preUpdateClient)->setPostcode($faker->postcode)],
+            'Postcode changed' => [$preUpdateClient, (clone $preUpdateClient)->setPostcode($faker->postcode())],
             'Country changed' => [$preUpdateClient, (clone $preUpdateClient)->setCountry('USA')],
-            'Phone changed' => [$preUpdateClient, (clone $preUpdateClient)->setPhone($faker->phoneNumber)],
-            'Email changed' => [$preUpdateClient, (clone $preUpdateClient)->setEmail($faker->email)],
+            'Phone changed' => [$preUpdateClient, (clone $preUpdateClient)->setPhone($faker->phoneNumber())],
+            'Email changed' => [$preUpdateClient, (clone $preUpdateClient)->setEmail($faker->email())],
         ];
     }
 

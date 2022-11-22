@@ -32,12 +32,12 @@ trait AuthTrait
     /**
      * @Given :email logs in to admin
      */
-    public function loginToAdminAs(string $email)
+    public function loginToAdminAs(string $email, string $password = 'DigidepsPass1234')
     {
         $this->visitAdminPath('/logout');
         $this->visitAdminPath('/login');
         $this->fillField('login_email', $email);
-        $this->fillField('login_password', 'DigidepsPass1234');
+        $this->fillField('login_password', $password);
 
         $this->pressButton('login_login');
 
@@ -91,6 +91,22 @@ trait AuthTrait
         }
 
         $this->loginToAdminAs($this->superAdminDetails->getUserEmail());
+    }
+
+    /**
+     * @Given a super admin user tries to login with an invalid password
+     */
+    public function superAdminUsersTriesToLoginWithInvalidPassword()
+    {
+        if (empty($this->superAdminDetails)) {
+            throw new BehatException('It looks like fixtures are not loaded - missing $this->superAdminDetails');
+        }
+
+        if ($this->loggedInUserDetails) {
+            $this->interactingWithUserDetails = $this->loggedInUserDetails;
+        }
+
+        $this->loginToAdminAs($this->superAdminDetails->getUserEmail(), 'totallyinvalidpassword');
     }
 
     private function userDetailsExists(string $email)
@@ -176,5 +192,19 @@ trait AuthTrait
         if (!$isExpectedRole) {
             throw new BehatException(sprintf('Logged in user role is "%s", should be %s', $expectedRole, $actualRole));
         }
+    }
+
+    /**
+     * @Then their password hash should automatically be upgraded
+     */
+    public function theirPasswordHashShouldAutomaticallyBeUpgraded()
+    {
+        $id = $this->interactingWithUserDetails->getUserId();
+
+        $user = $this->em->getRepository(User::class)->find($id);
+
+        $this->em->refresh($user);
+
+        $this->assertStringDoesNotEqualString($this->fixtureHelper->getLegacyPasswordHash(), $user->getPassword(), 'Asserting current password hash does not match legacy password hash');
     }
 }

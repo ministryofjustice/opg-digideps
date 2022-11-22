@@ -20,6 +20,8 @@ data "aws_iam_policy_document" "admin_s3" {
     resources = [
       module.pa_uploads.arn,
       "${module.pa_uploads.arn}/*",
+      "arn:aws:s3:::digideps.${local.account.sirius_environment}.eu-west-1.sirius.opg.justice.gov.uk",
+      "arn:aws:s3:::digideps.${local.account.sirius_environment}.eu-west-1.sirius.opg.justice.gov.uk/*"
     ]
   }
 }

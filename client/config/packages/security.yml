@@ -45,17 +45,17 @@ security:
         ROLE_PROF_ADMIN: [ROLE_PROF, ROLE_ORG_ADMIN]
         ROLE_PROF_TEAM_MEMBER: [ROLE_PROF, ROLE_ORG_TEAM_MEMBER]
 
+    enable_authenticator_manager: true
+
     providers:
         deputy:
             id: App\Service\DeputyProvider
+        client_user_provider:
+            id: App\Security\UserProvider
 
     firewalls:
         dev:
             pattern: ^/(_(profiler|wdt)|css|images|js)/
-            security: false
-
-        login:
-            pattern: ^/login$
             security: false
 
         passwordManaging:
@@ -79,20 +79,17 @@ security:
             security: false
 
         secured_area:
-            form_login:
-                #check_path: /login_check
-                login_path: /login
-                #username_parameter: login[email]
-                #password_parameter: login[password]
+            lazy: true
+            provider: client_user_provider
+            custom_authenticators:
+                - App\Security\LoginFormAuthenticator
+                - App\Security\SessionAuthenticator
             logout:
-                path: /logout
+                path: app_logout
                 target: /
                 success_handler: logout_listener
                 # needed to save custom login params
                 invalidate_session: false
-            anonymous: ~
-            switch_user: true
-            logout_on_user_change: true
 
     access_control:
         # /admin accessible only from ADMIN, super users and AD users
@@ -111,20 +108,18 @@ security:
         - { path: ^/report/\d+/deputy-expenses, roles: [ROLE_LAY_DEPUTY] }
 
         # open URLs
-        - { path: ^/v2/*, roles: IS_AUTHENTICATED_ANONYMOUSLY }
-        - { path: ^/login, roles: IS_AUTHENTICATED_ANONYMOUSLY }
-        - { path: ^/login-ad, roles: IS_AUTHENTICATED_ANONYMOUSLY }
-        - { path: ^/manage, roles: IS_AUTHENTICATED_ANONYMOUSLY }
-        - { path: ^/feedback, roles: IS_AUTHENTICATED_ANONYMOUSLY }
-        - { path: ^/register, roles: IS_AUTHENTICATED_ANONYMOUSLY }
-        - { path: ^/terms, roles: IS_AUTHENTICATED_ANONYMOUSLY }
-        - { path: ^/privacy, roles: IS_AUTHENTICATED_ANONYMOUSLY }
-        - { path: ^/cookies, roles: IS_AUTHENTICATED_ANONYMOUSLY }
-        - { path: ^/accessibility, roles: IS_AUTHENTICATED_ANONYMOUSLY }
-        - {
-              path: ^/behat/frontend/reset-fixtures,
-              roles: IS_AUTHENTICATED_ANONYMOUSLY,
-          }
-        - { path: ^/$, roles: IS_AUTHENTICATED_ANONYMOUSLY }
+        - { path: ^/v2/*, roles: PUBLIC_ACCESS }
+        - { path: ^/login, roles: PUBLIC_ACCESS }
+        - { path: ^/logout, roles: PUBLIC_ACCESS }
+        - { path: ^/login-ad, roles: PUBLIC_ACCESS }
+        - { path: ^/manage, roles: PUBLIC_ACCESS }
+        - { path: ^/feedback, roles: PUBLIC_ACCESS }
+        - { path: ^/register, roles: PUBLIC_ACCESS }
+        - { path: ^/terms, roles: PUBLIC_ACCESS }
+        - { path: ^/privacy, roles: PUBLIC_ACCESS }
+        - { path: ^/cookies, roles: PUBLIC_ACCESS }
+        - { path: ^/accessibility, roles: PUBLIC_ACCESS }
+        - { path: ^/behat/frontend/reset-fixtures, roles: PUBLIC_ACCESS }
+        - { path: ^/$, roles: PUBLIC_ACCESS }
         # all the rest needs authentication
         - { path: ^/, roles: IS_AUTHENTICATED_FULLY }

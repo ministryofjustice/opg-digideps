@@ -17,11 +17,11 @@ class EmailHelpers
         $faker = Factory::create();
 
         return (new Email())
-            ->setFromEmailNotifyID($faker->uuid)
-            ->setToEmail($faker->safeEmail)
-            ->setFromName($faker->name)
+            ->setFromEmailNotifyID($faker->uuid())
+            ->setToEmail($faker->safeEmail())
+            ->setFromName($faker->name())
             ->setSubject($faker->realText(35))
-            ->setTemplate($faker->uuid)
+            ->setTemplate($faker->uuid())
             ->setParameters($faker->words(3));
     }
 }

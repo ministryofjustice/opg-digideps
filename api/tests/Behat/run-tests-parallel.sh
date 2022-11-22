@@ -7,7 +7,7 @@ export APP_ENV=dev
 start=$(date +%s)
 
 confd -onetime -backend env
-./vendor/bin/behat --config=./tests/Behat/behat.yml --stop-on-failure --profile v2-tests-goutte --list-scenarios $@ | ./vendor/liuggio/fastest/fastest -vvv "./vendor/bin/behat --profile v2-tests-goutte --tags @v2 --config=./tests/Behat/behat.yml {}"
+./vendor/bin/behat --config=./tests/Behat/behat.yml --stop-on-failure --profile v2-tests-browserkit --list-scenarios $@ | ./vendor/liuggio/fastest/fastest -vvv "./vendor/bin/behat --profile v2-tests-browserkit --tags @v2 --config=./tests/Behat/behat.yml {}"
 
 end=$(date +%s)
 

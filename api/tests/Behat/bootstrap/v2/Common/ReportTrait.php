@@ -401,6 +401,19 @@ trait ReportTrait
     }
 
     /**
+     * @Given a Public Authority Named Deputy has not started a Pfa High Assets report
+     */
+    public function aPublicAuthorityNamedDeputyHasNotStartedAPfaHighAssetsReport()
+    {
+        if (empty($this->publicAuthorityNamedNotStartedPfaHighDetails)) {
+            throw new Exception('It looks like fixtures are not loaded - missing $publicAuthorityNamedNotStartedPfaHighDetails');
+        }
+
+        $this->loginToFrontendAs($this->publicAuthorityNamedNotStartedPfaHighDetails->getUserEmail());
+        $this->interactingWithUserDetails = $this->publicAuthorityNamedNotStartedPfaHighDetails;
+    }
+
+    /**
      * @Given a Public Authority Named Deputy has submitted a Pfa High Assets report
      */
     public function aPublicAuthorityNamedDeputyHasSubmittedAPfaHighAssetsReport()

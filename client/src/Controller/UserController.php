@@ -20,11 +20,8 @@ use Sensio\Bundle\FrameworkExtraBundle\Configuration\Template;
 use Symfony\Component\Form\FormError;
 use Symfony\Component\HttpFoundation\Request;
 use Symfony\Component\HttpFoundation\Response;
-use Symfony\Component\HttpFoundation\Session\SessionInterface;
 use Symfony\Component\Routing\Annotation\Route;
-use Symfony\Component\Security\Core\Authentication\Token\Storage\TokenStorageInterface;
-use Symfony\Component\Security\Core\Authentication\Token\UsernamePasswordToken;
-use Symfony\Component\Security\Core\Exception\UsernameNotFoundException;
+use Symfony\Component\Security\Core\Exception\UserNotFoundException;
 use Symfony\Contracts\Translation\TranslatorInterface;
 
 class UserController extends AbstractController
@@ -53,9 +50,7 @@ class UserController extends AbstractController
         Redirector $redirector,
         DeputyProvider $deputyProvider,
         string $action,
-        string $token,
-        TokenStorageInterface $tokenStorage,
-        SessionInterface $session
+        string $token
     ): Response {
         $isActivatePage = 'activate' === $action;
 
@@ -107,37 +102,30 @@ class UserController extends AbstractController
             // login user into API
             try {
                 $deputyProvider->login(['token' => $token]);
-            } catch (UsernameNotFoundException $e) {
+            } catch (UserNotFoundException $e) {
                 return $this->renderError('This activation link is not working or has already been used');
             }
 
             /** @var string */
             $data = json_encode([
-                'password_plain' => $user->getPassword(),
-                'set_active' => true,
+                'password' => $user->getPassword(),
+                'token' => $token,
             ]);
 
             // set password for user
-            $this->restClient->put('user/'.$user->getId().'/set-password', $data);
+            $this->restClient->apiCall('PUT', 'user/'.$user->getId().'/set-password', $data, 'array', [], false);
 
             // set agree terms for user
             $this->userApi->agreeTermsUse($token);
 
-            // log in
-            $clientToken = new UsernamePasswordToken($user, null, 'secured_area', $user->getRoles());
-            $tokenStorage->setToken($clientToken); // now the user is logged in
-
-            $session->set('_security_secured_area', serialize($clientToken));
-
             if ($isActivatePage) {
                 $request->getSession()->set('login-context', 'password-create');
-                $route = $user->getIsCoDeputy() ? 'codep_verification' : 'user_details';
 
-                return $this->redirectToRoute($route);
+                return $this->redirectToRoute('login');
             } else {
                 $request->getSession()->set('login-context', 'password-update');
 
-                return $this->redirect($redirector->getFirstPageAfterLogin($request->getSession()));
+                return $this->redirectToRoute('login');
             }
         }
 

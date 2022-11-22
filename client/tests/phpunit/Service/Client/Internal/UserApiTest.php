@@ -134,7 +134,7 @@ class UserApiTest extends TestCase
     public function resetPassword()
     {
         $userToResetPassword = UserHelpers::createUser();
-        $email = $this->faker->safeEmail;
+        $email = $this->faker->safeEmail();
 
         $this->restClient
             ->apiCall('put', sprintf('user/recreate-token/%s', $email), null, 'User', [], false)
@@ -152,7 +152,7 @@ class UserApiTest extends TestCase
     {
         $invitedCoDeputy = UserHelpers::createUser();
         $inviterDeputy = UserHelpers::createUser();
-        $email = $this->faker->safeEmail;
+        $email = $this->faker->safeEmail();
 
         $this->restClient
             ->apiCall('put', sprintf('user/recreate-token/%s', $email), null, 'User', [], false)
@@ -184,7 +184,7 @@ class UserApiTest extends TestCase
     public function reInviteDeputy()
     {
         $invitedDeputy = UserHelpers::createUser();
-        $email = $this->faker->safeEmail;
+        $email = $this->faker->safeEmail();
 
         $this->restClient
             ->apiCall('put', sprintf('user/recreate-token/%s', $email), null, 'User', [], false)

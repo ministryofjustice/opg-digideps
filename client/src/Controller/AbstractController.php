@@ -2,10 +2,10 @@
 
 namespace App\Controller;
 
-use Symfony\Bundle\FrameworkBundle\Controller\Controller;
+use Symfony\Bundle\FrameworkBundle\Controller\AbstractController as SymfonyAbstractController;
 use Symfony\Component\HttpFoundation\Response;
 
-abstract class AbstractController extends Controller
+abstract class AbstractController extends SymfonyAbstractController
 {
     /**
      * @param int $statusCode

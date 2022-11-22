@@ -24,6 +24,6 @@ doctrine:
         mappings:
             commonEntities:
                 type: annotation
-                dir: "%kernel.root_dir%/src/Entity"
+                dir: "%kernel.project_dir%/src/Entity"
                 prefix: App\Entity
                 is_bundle: false

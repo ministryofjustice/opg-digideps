@@ -117,7 +117,7 @@ class SettingsController extends AbstractController
         if ($form->isSubmitted() && $form->isValid()) {
             $plainPassword = $request->request->get('change_password')['password']['first'];
             $this->restClient->put('user/'.$user->getId().'/set-password', json_encode([
-                'password_plain' => $plainPassword,
+                'password' => $plainPassword,
             ]));
             $request->getSession()->set('login-context', 'password-update');
 
@@ -214,7 +214,7 @@ class SettingsController extends AbstractController
 
                 $this->addFlash('notice', 'For security reasons you have been logged out because you have changed your admin rights. Please log in again below');
 
-                $redirectRoute = $this->generateUrl('logout');
+                $redirectRoute = $this->generateUrl('app_logout');
             } else {
                 $this->addFlash('notice', 'Your account details have been updated');
 

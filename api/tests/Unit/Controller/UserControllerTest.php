@@ -187,14 +187,14 @@ class UserControllerTest extends AbstractTestController
     {
         $url = '/user/'.self::$deputy1->getId().'/set-password';
 
-        $this->assertEndpointNeedsAuth('PUT', $url);
+        $this->assertEndpointNeedsAuth('PUT', $url, ['password' => 'adfikhdbfsk']);
     }
 
     public function testChangePasswordAcl()
     {
         $url = '/user/'.self::$deputy2->getId().'/set-password';
 
-        $this->assertEndpointNotAllowedFor('PUT', $url, self::$tokenDeputy);
+        $this->assertEndpointNotAllowedFor('PUT', $url, self::$tokenDeputy, ['password' => 'ashjbasdfjhb']);
     }
 
     public function testChangePasswordMissingParams()
@@ -207,7 +207,7 @@ class UserControllerTest extends AbstractTestController
             'AuthToken' => self::$tokenDeputy,
             'assertResponseCode' => 400,
         ])['message'];
-        $this->assertStringContainsString('password_plain', $errorMessage);
+        $this->assertStringContainsString('password', $errorMessage);
     }
 
     public function testChangePasswordNoEmail()
@@ -218,7 +218,7 @@ class UserControllerTest extends AbstractTestController
             'mustSucceed' => true,
             'AuthToken' => self::$tokenDeputy,
             'data' => [
-                'password_plain' => 'DigidepsPass1234ne',
+                'password' => 'DigidepsPass1234ne',
             ],
         ]);
 
@@ -236,7 +236,7 @@ class UserControllerTest extends AbstractTestController
             'mustSucceed' => true,
             'AuthToken' => self::$tokenDeputy,
             'data' => [
-                'password_plain' => 'DigidepsPass1234pa',
+                'password' => 'DigidepsPass1234pa',
                 'send_email' => 'activate',
             ],
         ]);
@@ -255,7 +255,7 @@ class UserControllerTest extends AbstractTestController
             'mustSucceed' => true,
             'AuthToken' => self::$tokenDeputy,
             'data' => [
-                'password_plain' => 'DigidepsPass1234', // restore password for subsequent logins
+                'password' => 'DigidepsPass1234', // restore password for subsequent logins
                 'send_email' => 'password-reset',
             ],
         ]);

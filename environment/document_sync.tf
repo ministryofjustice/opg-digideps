@@ -28,9 +28,7 @@ locals {
       target      = module.mock_sirius_integration_security_group.id
     }
   }
-
-  document_sync_interval = local.environment == "production02" ? "rate(5 minutes)" : "rate(24 hours)"
-
+  document_sync_scheduled = local.environment == "production02" ? 0 : 1
 }
 
 module "document_sync_service_security_group" {
@@ -72,14 +70,16 @@ resource "aws_ecs_service" "document_sync" {
 }
 
 resource "aws_cloudwatch_event_rule" "document_sync_cron_rule" {
+  count               = local.document_sync_scheduled
   name                = "${aws_ecs_task_definition.document_sync.family}-schedule"
-  schedule_expression = local.document_sync_interval
+  schedule_expression = "rate(24 hours)"
   tags                = local.default_tags
 }
 
 resource "aws_cloudwatch_event_target" "document_sync_scheduled_task" {
+  count     = local.document_sync_scheduled
   target_id = "ScheduledDocumentSync"
-  rule      = aws_cloudwatch_event_rule.document_sync_cron_rule.name
+  rule      = aws_cloudwatch_event_rule.document_sync_cron_rule[0].name
   arn       = aws_ecs_cluster.main.arn
   role_arn  = aws_iam_role.events_task_runner.arn
 

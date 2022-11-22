@@ -54,8 +54,8 @@ Feature: deputy / user / set password
         And I should be on "/login"
         And I should see "Sign in to your new account"
         When I fill in the following:
-            | login_email     | behat-user@publicguardian.gov.uk |
-            | login_password  | DigidepsPass1234 |
+            | email     | behat-user@publicguardian.gov.uk |
+            | password  | DigidepsPass1234 |
         And I press "login_login"
         Then I should not see an "#error-summary" element
 
@@ -66,7 +66,7 @@ Feature: deputy / user / set password
         And I go to "logout"
         And I go to "/login"
         And I fill in the following:
-            | login_email     | behat-user-ndr@publicguardian.gov.uk |
-            | login_password  | DigidepsPass1234 |
+            | email     | behat-user-ndr@publicguardian.gov.uk |
+            | password  | DigidepsPass1234 |
         And I press "login_login"
         Then I should not see an "#error-summary" element

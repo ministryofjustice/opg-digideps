@@ -18,12 +18,13 @@ class MoneyShortTransactionType extends AbstractType
             ])
             ->add('amount', FormTypes\NumberType::class, [
                 'scale' => 2,
-                'grouping'  => true,
+                'grouping' => true,
             ])
-            ->add('date', FormTypes\DateType::class, ['widget'          => 'text',
-                                            'input'           => 'datetime',
-                                            'format'          => 'dd-MM-yyyy',
-                                            'invalid_message' => 'Enter a valid date',
+            ->add('date', FormTypes\DateType::class, [
+                'widget' => 'text',
+                'input' => 'datetime',
+                'format' => 'dd-MM-yyyy',
+                'invalid_message' => 'Enter a valid date',
             ])
             ->add('save', FormTypes\SubmitType::class);
     }
@@ -32,7 +33,7 @@ class MoneyShortTransactionType extends AbstractType
     {
         $resolver->setDefaults([
             'data_class' => MoneyTransactionShort::class,
-            'validation_groups'  => ['money-transaction-short'],
+            'validation_groups' => ['money-transaction-short'],
             'translation_domain' => 'report-money-short',
         ]);
     }

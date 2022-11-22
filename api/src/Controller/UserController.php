@@ -19,9 +19,10 @@ use Exception;
 use RuntimeException;
 use Sensio\Bundle\FrameworkExtraBundle\Configuration\Security;
 use Symfony\Component\HttpFoundation\Request;
+use Symfony\Component\PasswordHasher\Hasher\PasswordHasherFactoryInterface;
+use Symfony\Component\PasswordHasher\Hasher\UserPasswordHasherInterface;
 use Symfony\Component\Routing\Annotation\Route;
 use Symfony\Component\Security\Core\Authentication\Token\TokenInterface;
-use Symfony\Component\Security\Core\Encoder\EncoderFactoryInterface;
 use Symfony\Component\Security\Core\Security as SecurityHelper;
 
 // TODO
@@ -32,36 +33,18 @@ use Symfony\Component\Security\Core\Security as SecurityHelper;
  */
 class UserController extends RestController
 {
-    private UserService $userService;
-    private EncoderFactoryInterface $encoderFactory;
-    private UserRepository $userRepository;
-    private ClientRepository $clientRepository;
-    private UserVoter $userVoter;
-    private SecurityHelper $securityHelper;
-    private EntityManagerInterface $em;
-    private AuthService $authService;
-    private RestFormatter $formatter;
-
     public function __construct(
-        UserService $userService,
-        EncoderFactoryInterface $encoderFactory,
-        UserRepository $userRepository,
-        ClientRepository $clientRepository,
-        UserVoter $userVoter,
-        SecurityHelper $securityHelper,
-        EntityManagerInterface $em,
-        AuthService $authService,
-        RestFormatter $formatter
+        private UserService $userService,
+        private UserPasswordHasherInterface $passwordHasher,
+        private UserRepository $userRepository,
+        private ClientRepository $clientRepository,
+        private UserVoter $userVoter,
+        private SecurityHelper $securityHelper,
+        private EntityManagerInterface $em,
+        private AuthService $authService,
+        private RestFormatter $formatter,
+        private PasswordHasherFactoryInterface $hasherFactory
     ) {
-        $this->userService = $userService;
-        $this->encoderFactory = $encoderFactory;
-        $this->userRepository = $userRepository;
-        $this->clientRepository = $clientRepository;
-        $this->userVoter = $userVoter;
-        $this->securityHelper = $securityHelper;
-        $this->em = $em;
-        $this->authService = $authService;
-        $this->formatter = $formatter;
     }
 
     /**
@@ -208,36 +191,46 @@ class UserController extends RestController
             'password' => 'notEmpty',
         ]);
 
-        $oldPassword = $this->encoderFactory->getEncoder($requestedUser)->encodePassword($data['password'], $requestedUser->getSalt());
-
-        return $oldPassword == $requestedUser->getPassword();
+        return $this->hasherFactory->getPasswordHasher($loggedInUser)->verify($requestedUser->getPassword(), $data['password']);
     }
 
     /**
-     * change password, activate user and send remind email.
+     * See RegistrationTokenAuthenticator for checks and how User is set in session.
      *
      * @Route("/{id}/set-password", methods={"PUT"})
      */
     public function changePassword(Request $request, $id)
     {
-        /** @var User $loggedInUser */
-        $loggedInUser = $this->getUser();
+        $data = $this->formatter->deserializeBodyContent($request, [
+            'password' => 'notEmpty',
+        ]);
 
         /** @var User $requestedUser */
         $requestedUser = $this->findEntityBy(User::class, $id, 'User not found');
 
-        if ($loggedInUser->getId() != $requestedUser->getId()) {
-            throw $this->createAccessDeniedException("Not authorised to change other user's data");
+        if (!$requestedUser->getActive() && isset($data['token'])) {
+            if ($requestedUser->getRegistrationToken() !== $data['token']) {
+                $tokenMismatchMessage = sprintf('Registration token provided does not match the User (id: %s) registration token', $id);
+                throw $this->createAccessDeniedException($tokenMismatchMessage);
+            }
+        } else {
+            /** @var User $loggedInUser */
+            $loggedInUser = $this->getUser();
+
+            if (is_null($loggedInUser)) {
+                throw $this->createAccessDeniedException('A user is not set in session - ensure a user has been set before calling set-password');
+            }
+
+            if ($loggedInUser->getId() != $requestedUser->getId()) {
+                throw $this->createAccessDeniedException("Not authorised to change other user's data");
+            }
         }
 
-        $data = $this->formatter->deserializeBodyContent($request, [
-            'password_plain' => 'notEmpty',
-        ]);
-
-        $newPassword = $this->encoderFactory->getEncoder($requestedUser)->encodePassword($data['password_plain'], $requestedUser->getSalt());
+        $newPassword = $this->passwordHasher->hashPassword($requestedUser, $data['password']);
 
         $requestedUser->setPassword($newPassword);
 
+        $this->em->persist($requestedUser);
         $this->em->flush();
 
         return $requestedUser->getId();
@@ -265,10 +258,6 @@ class UserController extends RestController
         ]);
 
         $requestedUser->setEmail($data['updated_email']);
-
-        if (array_key_exists('set_active', $data)) {
-            $requestedUser->setActive($data['set_active']);
-        }
 
         $this->em->flush();
 

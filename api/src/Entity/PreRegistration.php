@@ -42,6 +42,7 @@ class PreRegistration
         $this->ndr = isset($row['NDR']) ? 'yes' === $row['NDR'] : null;
         $this->orderDate = isset($row['MadeDate']) ? new DateTime($row['MadeDate']) : null;
         $this->orderType = $row['OrderType'] ?? null;
+        $this->hybrid = $row['Hybrid'] ?? null;
         $this->isCoDeputy = isset($row['CoDeputy']) ? 'yes' === $row['CoDeputy'] : null;
 
         $this->updatedAt = null;
@@ -158,6 +159,11 @@ class PreRegistration
      * @ORM\Column(name="order_type", type="string", nullable=true)
      */
     private ?string $orderType;
+    
+    /**
+     * @ORM\Column(name="hybrid", type="string", nullable=true)
+     */
+    private ?string $hybrid;
 
     /**
      * @ORM\Column(name="is_co_deputy", type="boolean", nullable=true)
@@ -324,6 +330,18 @@ class PreRegistration
     public function setOrderType(mixed $orderType): self
     {
         $this->orderType = $orderType;
+
+        return $this;
+    }
+
+    public function getHybrid(): ?string
+    {
+        return $this->hybrid;
+    }
+
+    public function setHybrid(?string $hybrid): self
+    {
+        $this->hybrid = $hybrid;
 
         return $this;
     }

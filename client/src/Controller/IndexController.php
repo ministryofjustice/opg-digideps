@@ -7,8 +7,11 @@ use App\Service\Client\RestClient;
 use App\Service\DeputyProvider;
 use App\Service\Redirector;
 use App\Service\StringUtils;
+
 use const PHP_URL_PATH;
+
 use Sensio\Bundle\FrameworkExtraBundle\Configuration\Template;
+use Symfony\Component\DependencyInjection\ParameterBag\ParameterBagInterface;
 use Symfony\Component\EventDispatcher\EventDispatcherInterface;
 use Symfony\Component\Form\FormError;
 use Symfony\Component\HttpFoundation\RedirectResponse;
@@ -19,11 +22,11 @@ use Symfony\Component\Routing\Annotation\Route;
 use Symfony\Component\Routing\Exception\ResourceNotFoundException;
 use Symfony\Component\Routing\RouterInterface;
 use Symfony\Component\Security\Core\Authentication\Token\Storage\TokenStorageInterface;
-use Symfony\Component\Security\Core\Authentication\Token\UsernamePasswordToken;
 use Symfony\Component\Security\Core\Exception\AccessDeniedException;
-use Symfony\Component\Security\Http\Event\InteractiveLoginEvent;
+use Symfony\Component\Security\Core\Exception\BadCredentialsException;
+use Symfony\Component\Security\Core\Exception\TooManyLoginAttemptsAuthenticationException;
+use Symfony\Component\Security\Http\Authentication\AuthenticationUtils;
 use Symfony\Contracts\Translation\TranslatorInterface;
-use Throwable;
 
 class IndexController extends AbstractController
 {
@@ -34,7 +37,8 @@ class IndexController extends AbstractController
         private TokenStorageInterface $tokenStorage,
         private TranslatorInterface $translator,
         private RouterInterface $router,
-        private string $environment
+        private string $environment,
+        private ParameterBagInterface $params
     ) {
     }
 
@@ -56,47 +60,42 @@ class IndexController extends AbstractController
     }
 
     /**
+     * Session logic for login is now in LoginFormAuthenticator as of Symfony 5.4.
+     *
      * @Route("login", name="login")
      * @Template("@App/Index/login.html.twig")
      *
      * @return Response|null
      */
-    public function loginAction(Request $request)
+    public function loginAction(Request $request, AuthenticationUtils $authenticationUtils)
     {
-        $form = $this->createForm(FormDir\LoginType::class, null, [
-            'action' => $this->generateUrl('login'),
-        ]);
-        $form->handleRequest($request);
+        $form = $this->createForm(FormDir\LoginType::class);
+
         $vars = [
             'isAdmin' => 'admin' === $this->environment,
         ];
 
-        if ($form->isSubmitted() && $form->isValid()) {
-            try {
-                $this->logUserIn($form->getData(), $request, [
-                    '_adId' => null,
-                    '_adFirstname' => null,
-                    '_adLastname' => null,
-                    'loggedOutFrom' => null,
-                ]);
-            } catch (Throwable $e) {
-                $error = $e->getMessage();
+        // See LoginFormAuthenticator - exceptions are set in request session and accessed here once redirected
+        $lastAuthError = $authenticationUtils->getLastAuthenticationError();
 
-                if (423 == $e->getCode() && method_exists($e, 'getData')) {
-                    $lockedFor = ceil(($e->getData()['data'] - time()) / 60);
-                    $error = $this->translator->trans('bruteForceLocked', ['%minutes%' => $lockedFor], 'signin');
-                }
+        if ($lastAuthError) {
+            $errorMessage = $lastAuthError->getMessageKey();
 
-                if (499 == $e->getCode()) {
-                    // too-many-attempts warning. captcha ?
-                }
-
-                $form->addError(new FormError($error));
-
-                return $this->render('@App/Index/login.html.twig', [
-                        'form' => $form->createView(),
-                    ] + $vars);
+            if ($lastAuthError instanceof BadCredentialsException) {
+                $errorMessage = $this->translator->trans('signInForm.signin.invalidMessage', [], 'signin');
             }
+
+            if ($lastAuthError instanceof TooManyLoginAttemptsAuthenticationException) {
+                $lockedFor = $lastAuthError->getMessageData()['%minutes%'];
+                $errorMessage = $this->translator->trans('bruteForceLocked', ['%minutes%' => $lockedFor], 'signin');
+            }
+
+            $form->addError(new FormError($errorMessage));
+
+            return $this->render(
+                '@App/Index/login.html.twig',
+                ['form' => $form->createView()] + $vars
+            );
         }
 
         // different page version for timeout and manual logout
@@ -104,15 +103,15 @@ class IndexController extends AbstractController
         $session = $request->getSession();
 
         if ('logoutPage' === $session->get('loggedOutFrom')) {
-            $session->set('loggedOutFrom', null); //avoid display the message at next page reload
+            $session->set('loggedOutFrom', null); // avoid display the message at next page reload
 
             return $this->render('@App/Index/login-from-logout.html.twig', [
                     'form' => $form->createView(),
                 ] + $vars);
         } elseif ('timeout' === $session->get('loggedOutFrom') || 'api' === $request->query->get('from')) {
-            $session->set('loggedOutFrom', null); //avoid display the message at next page reload
+            $session->set('loggedOutFrom', null); // avoid display the message at next page reload
             $vars['error'] = $this->translator->trans('sessionTimeoutOutWarning', [
-                '%time%' => StringUtils::secondsToHoursMinutes($this->container->getParameter('session_expire_seconds')),
+                '%time%' => StringUtils::secondsToHoursMinutes($this->params->get('session_expire_seconds')),
             ], 'signin');
         }
 
@@ -120,66 +119,8 @@ class IndexController extends AbstractController
 
         return $this->render('@App/Index/login.html.twig', [
                 'form' => $form->createView(),
-                'serviceNotificationContent' => null,
                 'serviceNotificationContent' => $snSetting->isEnabled() ? $snSetting->getContent() : null,
         ] + $vars);
-    }
-
-    /**
-     * @Route("login-ad/{userToken}/{adId}/{adFirstname}/{adLastname}", name="ad_login")
-     *
-     * @param $userToken
-     * @param $adId
-     * @param $adFirstname
-     * @param $adLastname
-     *
-     * @return Response
-     *
-     * @throws Throwable
-     */
-    public function adLoginAction(Request $request, $userToken, $adId, $adFirstname, $adLastname)
-    {
-        $this->logUserIn(['token' => $userToken], $request, [
-            '_adId' => $adId,
-            '_adFirstname' => $adFirstname,
-            '_adLastname' => $adLastname,
-            'loggedOutFrom' => null,
-        ]);
-
-//        if failing on feature branch, just render a page that does a JS redirect.
-//        behat should open the page later and test you don't get redirected
-
-        $url = $this->generateUrl('user_details');
-
-        return new Response("<a href='$url'>continue</a>");
-    }
-
-    /**
-     * @param array $credentials see RestClient::login()
-     *
-     * @throws Throwable
-     */
-    private function logUserIn($credentials, Request $request, array $sessionVars)
-    {
-        $user = $this->deputyProvider->login($credentials);
-        // manually set session token into security context (manual login)
-        $token = new UsernamePasswordToken($user, null, 'secured_area', $user->getRoles());
-        $this->tokenStorage->setToken($token);
-
-        /** @var SessionInterface */
-        $session = $request->getSession();
-        $session->set('_security_secured_area', serialize($token));
-        foreach ($sessionVars as $k => $v) {
-            $session->set($k, $v);
-        }
-
-        // regenerate cookie, otherwise gc_* timeouts might logout out after successful login
-        $session->migrate();
-
-        $event = new InteractiveLoginEvent($request, $token);
-        $this->eventDispatcher->dispatch($event, 'security.interactive_login');
-
-        $session->set('lastLoggedIn', $user->getLastLoggedIn());
     }
 
     /**
@@ -255,19 +196,11 @@ class IndexController extends AbstractController
     }
 
     /**
-     * @Route("/logout", name="logout")
+     * @Route("/logout", name="app_logout")
      */
     public function logoutAction(Request $request)
     {
-        $this->tokenStorage->setToken(null);
-
-        /** @var SessionInterface */
-        $session = $request->getSession();
-        $session->invalidate();
-
-        return $this->redirect(
-            $this->generateUrl('homepage')
-        );
+        // Handled as automatically as part of Symfony security component
     }
 
     /**

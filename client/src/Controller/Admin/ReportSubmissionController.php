@@ -63,7 +63,7 @@ class ReportSubmissionController extends AbstractController
 
     /**
      * @Route("/documents/list", name="admin_documents", methods={"GET", "POST"})
-     * @Security("is_granted('ROLE_ADMIN') or has_role('ROLE_AD')")
+     * @Security("is_granted('ROLE_ADMIN') or is_granted('ROLE_AD')")
      * @Template("@App/Admin/ReportSubmission/index.html.twig")
      *
      * @return array<mixed>|Response
@@ -119,7 +119,7 @@ class ReportSubmissionController extends AbstractController
 
     /**
      * @Route("/documents/list/download", name="admin_documents_download", methods={"GET"})
-     * @Security("is_granted('ROLE_ADMIN') or has_role('ROLE_AD')")
+     * @Security("is_granted('ROLE_ADMIN') or is_granted('ROLE_AD')")
      */
     public function downloadDocuments(Request $request): Response
     {
@@ -147,7 +147,7 @@ class ReportSubmissionController extends AbstractController
 
     /**
      * @Route("/documents/{submissionId}/{documentId}/download", name="admin_document_download", methods={"GET"})
-     * @Security("is_granted('ROLE_ADMIN') or has_role('ROLE_AD')")
+     * @Security("is_granted('ROLE_ADMIN') or is_granted('ROLE_AD')")
      */
     public function downloadIndividualDocument(int $submissionId, int $documentId): Response
     {
@@ -184,7 +184,7 @@ class ReportSubmissionController extends AbstractController
 
     /**
      * @Route("/documents/list/download_ready", name="admin_documents_download_ready", methods={"GET"})
-     * @Security("is_granted('ROLE_ADMIN') or has_role('ROLE_AD')")
+     * @Security("is_granted('ROLE_ADMIN') or is_granted('ROLE_AD')")
      * @Template("@App/Admin/ReportSubmission/download-ready.html.twig")
      *
      * @return array<mixed>
@@ -218,10 +218,12 @@ class ReportSubmissionController extends AbstractController
             switch ($action) {
                 case self::ACTION_ARCHIVE:
                     $this->processArchive($checkedBoxes);
-                    $notice = $this->translator->transChoice(
-                        'page.postactions.archived.notice',
-                        $totalChecked,
-                        ['%count%' => $totalChecked],
+                    $transKey = $totalChecked > 1 ? 'page.postactions.archived.noticePlural' : 'page.postactions.archived.noticeSingular';
+                    $notice = $this->translator->trans(
+                        $transKey,
+                        [
+                            'count' => $totalChecked,
+                        ],
                         'admin-documents'
                     );
 

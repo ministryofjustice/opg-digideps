@@ -11,6 +11,7 @@ use Doctrine\Common\Collections\ArrayCollection;
 use Doctrine\ORM\Mapping as ORM;
 use Exception;
 use JMS\Serializer\Annotation as JMS;
+use Symfony\Component\Security\Core\User\PasswordAuthenticatedUserInterface;
 use Symfony\Component\Security\Core\User\UserInterface;
 
 /**
@@ -20,7 +21,7 @@ use Symfony\Component\Security\Core\User\UserInterface;
  * @ORM\Entity(repositoryClass="App\Repository\UserRepository")
  * @ORM\HasLifecycleCallbacks()
  */
-class User implements UserInterface
+class User implements UserInterface, PasswordAuthenticatedUserInterface
 {
     use CreateUpdateTimestamps;
     use AddressTrait;
@@ -690,7 +691,7 @@ class User implements UserInterface
         return;
     }
 
-    public function getPassword()
+    public function getPassword(): null|string
     {
         return $this->password;
     }
@@ -892,7 +893,7 @@ class User implements UserInterface
 
     /**
      * @JMS\VirtualProperty
-     * @JMS\Groups({"user-login"})
+     * @JMS\Groups({"user"})
      * @JMS\Type("integer")
      * @JMS\SerializedName("number_of_reports")
      */
@@ -1326,5 +1327,15 @@ class User implements UserInterface
     public function createdByCaseManager(): bool
     {
         return $this->getCreatedBy() && $this->getCreatedBy()->isCaseManager();
+    }
+
+    /**
+     * The public representation of the user (e.g. a username, an email address, etc.).
+     *
+     * @see UserInterface
+     */
+    public function getUserIdentifier(): string
+    {
+        return $this->email;
     }
 }

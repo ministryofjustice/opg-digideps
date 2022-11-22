@@ -11,6 +11,7 @@ variable "accounts" {
     object({
       name                                   = string
       account_id                             = string
+      sirius_environment                     = string
       admin_allow_list                       = list(string)
       force_destroy_bucket                   = bool
       front_allow_list                       = list(string)
@@ -68,8 +69,11 @@ locals {
 
   route53_healthchecker_ips = data.aws_ip_ranges.route53_healthchecks_ips.cidr_blocks
 
-  account                 = contains(keys(var.accounts), local.environment) ? var.accounts[local.environment] : var.accounts["default"]
-  environment             = lower(terraform.workspace)
+  account     = contains(keys(var.accounts), local.environment) ? var.accounts[local.environment] : var.accounts["default"]
+  environment = lower(terraform.workspace)
+
+  sirius_environment = local.account["sirius_environment"]
+
   subdomain               = local.account["subdomain_enabled"] ? local.environment : ""
   backup_account_id       = "238302996107"
   cross_account_role_name = "cross-acc-db-backup.digideps-production"
@@ -82,6 +86,8 @@ locals {
     infrastructure-support = "OPG WebOps: opgteam@digital.justice.gov.uk"
     is-production          = local.account.is_production
   }
+
+  openapi_mock_version = "v0.3.3"
 }
 
 data "terraform_remote_state" "shared" {

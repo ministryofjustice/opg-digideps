@@ -50,7 +50,8 @@ services:
     build:
       context: ./client
       args:
-        REQUIRE_XDEBUG: ${REQUIRE_XDEBUG_FRONTEND} # set REQUIRE_XDEBUG_FRONTEND=1 in .env to install Xdebug
+        REQUIRE_XDEBUG: ${REQUIRE_XDEBUG_CLIENT} # set REQUIRE_XDEBUG_CLIENT=1 in .env to install Xdebug
+        XDEBUG_IDEKEY_CLIENT: ${XDEBUG_IDEKEY_CLIENT}
     ports:
       - 8070:443
     depends_on:
@@ -80,7 +81,8 @@ services:
     build:
       context: ./client
       args:
-        REQUIRE_XDEBUG: ${REQUIRE_XDEBUG_FRONTEND} # set REQUIRE_XDEBUG_FRONTEND=1 in .env to install Xdebug
+        REQUIRE_XDEBUG: ${REQUIRE_XDEBUG_CLIENT} # set REQUIRE_XDEBUG_CLIENT=1 in .env to install Xdebug
+        XDEBUG_IDEKEY_CLIENT: ${XDEBUG_IDEKEY_CLIENT}
     ports:
       - 8082:443
     depends_on:
@@ -109,6 +111,7 @@ services:
       context: ./api
       args:
         REQUIRE_XDEBUG: ${REQUIRE_XDEBUG_API} # set REQUIRE_XDEBUG_API=1 in .env to install Xdebug
+        XDEBUG_IDEKEY_API: ${XDEBUG_IDEKEY_API}
     ports:
       - 8090:443
     depends_on:
@@ -147,18 +150,11 @@ services:
     image: redis:6.2.7
     restart: always
 
-  file-scanner-server:
-    image: mkodockx/docker-clamav:1.0.3-alpine
-    environment:
-      CLAMD_CONF_SelfCheck: 100000
-      FRESHCLAM_CONF_NotifyClamd: "no"
-
   file-scanner-rest:
-    image: acsauk/clamav-rest-1
+    build:
+      context: ./file_scanning
     ports:
       - 8085:8080
-    environment:
-      CLAMD_HOST: file-scanner-server
 
   sync:
     build: ./sync
@@ -169,7 +165,7 @@ services:
       - sync/sync.env
 
   pact-mock:
-    image: pactfoundation/pact-cli:latest
+    image: pactfoundation/pact-cli:0.50.0.32
     ports:
       - 1234:80
     command:
@@ -186,7 +182,7 @@ services:
       - OPG Data
 
   mock-sirius-integration:
-    image: muonsoft/openapi-mock:latest
+    image: muonsoft/openapi-mock:v0.3.3
     ports:
       - 6060:8080
     environment:
@@ -204,9 +200,9 @@ services:
       - --dynamic
 
   synchronisation:
+    container_name: opg-synchronisation-lambda
     build:
       context: ./lambda_functions/functions/synchronisation
-    image: synchronisation:latest
     ports:
       - 2080:8080
     environment:
@@ -217,3 +213,7 @@ services:
       SECRETS_PREFIX: default
       LOCALSTACK_ENDPOINT: http://localstack:4566
     entrypoint: /aws-lambda/aws-lambda-rie /var/task/main
+
+  composer:
+    image: composer:2.3.5
+    command: [ "install" ]

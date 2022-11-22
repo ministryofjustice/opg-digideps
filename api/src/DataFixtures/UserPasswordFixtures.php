@@ -5,15 +5,12 @@ namespace App\DataFixtures;
 use App\Entity\User;
 use Doctrine\Common\DataFixtures\OrderedFixtureInterface;
 use Doctrine\Persistence\ObjectManager;
-use Symfony\Component\Security\Core\Encoder\UserPasswordEncoderInterface;
+use Symfony\Component\PasswordHasher\Hasher\UserPasswordHasherInterface;
 
 class UserPasswordFixtures extends AbstractDataFixture implements OrderedFixtureInterface
 {
-    private $encoder;
-
-    public function __construct(UserPasswordEncoderInterface $encoder)
+    public function __construct(private UserPasswordHasherInterface $passwordHasher)
     {
-        $this->encoder = $encoder;
     }
 
     public function doLoad(ObjectManager $manager)
@@ -25,7 +22,7 @@ class UserPasswordFixtures extends AbstractDataFixture implements OrderedFixture
         $password = $this->container->getParameter('fixtures')['account_password'];
 
         foreach ($users as $user) {
-            $user->setPassword($this->encoder->encodePassword($user, $password));
+            $user->setPassword($this->passwordHasher->hashPassword($user, $password));
             $manager->persist($user);
         }
 

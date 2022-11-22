@@ -10,7 +10,7 @@ use App\Tests\Behat\v2\Analytics\AnalyticsTrait;
 use App\Tests\Behat\v2\Helpers\FixtureHelper;
 use Behat\Behat\Hook\Call\BeforeScenario;
 use Behat\Behat\Hook\Scope\BeforeScenarioScope;
-use Behat\Mink\Driver\GoutteDriver;
+use Behat\Mink\Driver\BrowserKitDriver;
 use Behat\MinkExtension\Context\MinkContext;
 use Doctrine\ORM\EntityManagerInterface;
 use Exception;
@@ -290,6 +290,15 @@ class BaseFeatureContext extends MinkContext
     }
 
     /**
+     * @BeforeScenario @pa-named-pfa-high-not-started
+     */
+    public function createPaNamedPfaHighNotStarted()
+    {
+        $userDetails = $this->fixtureHelper->createPaNamedPfaHighNotStarted($this->testRunId);
+        $this->fixtureUsers[] = $this->publicAuthorityNamedNotStartedPfaHighDetails = new UserDetails($userDetails);
+    }
+
+    /**
      * @BeforeScenario @pa-named-pfa-high-submitted
      */
     public function createPaNamedPfaHighSubmitted()
@@ -496,6 +505,15 @@ class BaseFeatureContext extends MinkContext
         $this->fixtureUsers[] = $this->superAdminDetails = new UserDetails($userDetails);
     }
 
+    /**
+     * @BeforeScenario @lay-pfa-high-not-started-legacy-password-hash
+     */
+    public function createPfaHighNotStartedLegacyPasswordHash(?BeforeScenarioScope $scenario = null, ?string $caseNumber = null)
+    {
+        $userDetails = $this->fixtureHelper->createLayPfaHighAssetsNotStartedLegacyPasswordHash($this->testRunId, $caseNumber);
+        $this->fixtureUsers[] = $this->layDeputyNotStartedPfaHighAssetsDetails = new UserDetails($userDetails);
+    }
+
     public function getAdminUrl(): string
     {
         return getenv('ADMIN_HOST');
@@ -520,7 +538,7 @@ class BaseFeatureContext extends MinkContext
 
     public function getPageContent(): string
     {
-        if ($this->getSession()->getDriver() instanceof GoutteDriver) {
+        if ($this->getSession()->getDriver() instanceof BrowserKitDriver) {
             return $this->getSession()->getPage()->getContent();
         } else {
             return $this->getSession()->getPage()->getText();

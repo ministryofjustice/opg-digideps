@@ -87,6 +87,9 @@ workflows:
       - lint:
           name: lint terraform
 
+      #      - go-unit-tests:
+      #          name: go unit tests
+
       - terraform-command:
           name: plan shared-development
           requires: [cancel redundant builds]
@@ -151,7 +154,7 @@ workflows:
               scale up services for integration tests,
             ]
           task_name: integration_test_v2
-          override: "sh,./tests/Behat/run-tests-parallel.sh,--tags,@v2_reporting_1,--profile,v2-tests-goutte"
+          override: "sh,./tests/Behat/run-tests-parallel.sh,--tags,@v2_reporting_1,--profile,v2-tests-browserkit"
           timeout: 1200
 
       - run-task:
@@ -162,7 +165,7 @@ workflows:
               scale up services for integration tests,
             ]
           task_name: integration_test_v2
-          override: "sh,./tests/Behat/run-tests-parallel.sh,--tags,@v2_reporting_2,--profile,v2-tests-goutte"
+          override: "sh,./tests/Behat/run-tests-parallel.sh,--tags,@v2_reporting_2,--profile,v2-tests-browserkit"
           timeout: 1200
 
       - run-task:
@@ -173,7 +176,7 @@ workflows:
               scale up services for integration tests,
             ]
           task_name: integration_test_v2
-          override: "sh,./tests/Behat/run-tests-parallel.sh,--tags,@v2_admin,--profile,v2-tests-goutte"
+          override: "sh,./tests/Behat/run-tests-parallel.sh,--tags,@v2_admin,--profile,v2-tests-browserkit"
           timeout: 1200
 
       - run-task:
@@ -184,7 +187,7 @@ workflows:
               scale up services for integration tests,
             ]
           task_name: integration_test_v2
-          override: "sh,./tests/Behat/run-tests.sh,--tags,@v2_sequential,--profile,v2-tests-goutte"
+          override: "sh,./tests/Behat/run-tests.sh,--tags,@v2_sequential,--profile,v2-tests-browserkit"
           timeout: 1200
 
       - terraform-plan-all:
@@ -353,7 +356,7 @@ workflows:
           filters: { branches: { only: [main] } }
           task_name: integration_test_v2
           tf_workspace: integration
-          override: "sh,./tests/Behat/run-tests.sh,--tags,@v2_sequential,--profile,v2-tests-goutte"
+          override: "sh,./tests/Behat/run-tests.sh,--tags,@v2_sequential,--profile,v2-tests-browserkit"
           timeout: 1200
 
       - scale-services:
@@ -538,7 +541,7 @@ workflows:
           filters: { branches: { only: [main] } }
           task_name: integration_test_v2
           tf_workspace: integration
-          override: "sh,./tests/Behat/run-tests.sh,--tags,@v2_sequential,--profile,v2-tests-goutte"
+          override: "sh,./tests/Behat/run-tests.sh,--tags,@v2_sequential,--profile,v2-tests-browserkit"
           timeout: 1200
       - scale-services:
           name: scale down services for integration tests
@@ -883,7 +886,7 @@ jobs:
 
   scale-services:
     docker:
-      - image: circleci/python:3
+      - image: cimg/python:3.10.7
         auth:
           username: $DOCKER_USER
           password: $DOCKER_ACCESS_TOKEN
@@ -944,13 +947,17 @@ jobs:
 
   cancel_redundant_builds:
     docker:
-      - image: circleci/python:3
+      - image: cimg/python:3.10.7
         auth:
           username: $DOCKER_USER
           password: $DOCKER_ACCESS_TOKEN
     resource_class: small
     steps:
       - checkout
+      - run:
+          name: install packages
+          command: python3 -m pip install -r requirements.txt
+          working_directory: ~/project/ecs_helper/cmd/circle_builds
       - run:
           name: Cancel running builds
           command: |
@@ -965,7 +972,7 @@ jobs:
 
   build:
     docker:
-      - image: circleci/python:3
+      - image: cimg/python:3.10.7
         auth:
           username: $DOCKER_USER
           password: $DOCKER_ACCESS_TOKEN
@@ -991,7 +998,7 @@ jobs:
     steps:
       - dockerhub_helper/dockerhub_login
       - setup_remote_docker:
-          version: 20.10.6
+          version: 20.10.17
       - aws-cli/install
       - add_ssh_keys:
           fingerprints:
@@ -1074,7 +1081,7 @@ jobs:
                 name: Install ECR Scan Results Requirements
                 working_directory: ~/project/ecs_helper/check_ecr_scan_results
                 command: |
-                  sudo pip3 install -r requirements.txt
+                  pip install -r requirements.txt
             - run:
                 name: Check ECR Scan Results
                 working_directory: ~/project/ecs_helper/check_ecr_scan_results
@@ -1089,14 +1096,15 @@ jobs:
 
   lambda-unit-test:
     docker:
-      - image: circleci/python:3
+      - image: cimg/python:3.7.7
         auth:
           username: $DOCKER_USER
           password: $DOCKER_ACCESS_TOKEN
     resource_class: small
     steps:
       - dockerhub_helper/dockerhub_login
-      - setup_remote_docker
+      - setup_remote_docker:
+          version: 20.10.17
       - checkout
       - attach_workspace: { at: ~/project }
       - run:
@@ -1111,7 +1119,7 @@ jobs:
           name: install requirements for all lambda layers
           command: |
             export LAYER_PATH=lambda_functions/layers/monitoring/python/lib/python3.7/site-packages
-            pip3 install -r lambda_functions/requirements/requirements.txt --target ./$LAYER_PATH/
+            python3 -m pip install -r lambda_functions/requirements/requirements.txt --target ./$LAYER_PATH/
             cd lambda_functions
             tar cvf layer.tar layers
       - persist_to_workspace:
@@ -1119,9 +1127,24 @@ jobs:
           paths:
             - ./lambda_functions/layer.tar
 
+  # Issue in circle with mock server. Fix in github actions
+  go-unit-tests:
+    docker:
+      - image: cimg/go:1.19.3
+        auth:
+          username: $DOCKER_USER
+          password: $DOCKER_ACCESS_TOKEN
+    resource_class: small
+    steps:
+      - checkout
+      - run:
+          name: run go tests
+          command: go test
+          working_directory: ~/project/file_scanning
+
   client-unit-test:
     docker:
-      - image: circleci/python:3
+      - image: cimg/python:3.10.7
         auth:
           username: $DOCKER_USER
           password: $DOCKER_ACCESS_TOKEN
@@ -1129,7 +1152,7 @@ jobs:
     steps:
       - dockerhub_helper/dockerhub_login
       - setup_remote_docker:
-          version: 17.09.0-ce
+          version: 20.10.17
       - checkout
       - attach_workspace: { at: ~/project }
       - run:
@@ -1140,11 +1163,7 @@ jobs:
             docker load -i ~/project/htmltopdf.tar
             docker tag client:latest admin:latest
             docker tag client:latest frontend:latest
-      - run:
-          name: install aws cli
-          command: |
-            pip3 install awscli --upgrade --user
-            aws --version
+      - aws-cli/install
       - run:
           name: Set environment
           command: |
@@ -1300,7 +1319,7 @@ jobs:
 
   run-task:
     executor: terraform/terraform
-    resource_class: small
+    resource_class: medium
     parameters:
       tf_workspace:
         description: terraform workspace

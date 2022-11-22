@@ -24,6 +24,6 @@ class UploadCsvType extends AbstractType
 
     public function getBlockPrefix()
     {
-        return 'admin_upload';
+        return 'admin_csv_upload';
     }
 }

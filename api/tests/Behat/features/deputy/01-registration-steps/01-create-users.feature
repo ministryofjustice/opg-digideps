@@ -6,21 +6,21 @@ Feature: deputy / user / add user
     Given I am on admin login page
       # test wrong credentials
     When I fill in the following:
-      | login_email    | admin@publicguardian.gov.uk |
-      | login_password | WRONG PASSWORD !!               |
+      | email    | admin@publicguardian.gov.uk |
+      | password | WRONG PASSWORD !!               |
     And I click on "login"
     Then I should see an "#error-summary" element
       # test user email in caps
     When I fill in the following:
-      | login_email    | admin@publicguardian.gov.uk |
-      | login_password | DigidepsPass1234                        |
+      | email    | admin@publicguardian.gov.uk |
+      | password | DigidepsPass1234                        |
     And I click on "login"
     Then I should see "admin@publicguardian.gov.uk" in the "users" region
     Given I go to "/logout"
       # test right credentials
     When I fill in the following:
-      | login_email    | admin@publicguardian.gov.uk |
-      | login_password | DigidepsPass1234                        |
+      | email    | admin@publicguardian.gov.uk |
+      | password | DigidepsPass1234                        |
     And I click on "login"
       #When I go to "/admin"
     Then I am on admin page "/admin"

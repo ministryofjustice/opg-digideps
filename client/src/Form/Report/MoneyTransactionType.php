@@ -41,9 +41,11 @@ class MoneyTransactionType extends AbstractType
         foreach (MoneyTransaction::$categories as $cat) {
             $categoryId = $cat[0];
             $type = $cat[3];
+
             // filter by user roles (if specified)
-            $allowedRoles = isset($cat[4]) ? $cat[4] : null;
-            $isCategoryAllowedForThisRole = null === $allowedRoles || $this->authorizationChecker->isGranted($allowedRoles);
+            $allowedRole = $cat[4] ?? null;
+
+            $isCategoryAllowedForThisRole = null === $allowedRole || $this->authorizationChecker->isGranted($allowedRole);
             // filter by
             if ($type === $this->type && $isCategoryAllowedForThisRole) {
                 $ret[$categoryId] = $categoryId;
