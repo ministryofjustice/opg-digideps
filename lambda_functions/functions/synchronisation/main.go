@@ -5,7 +5,6 @@ import (
 	"crypto/tls"
 	"errors"
 	"fmt"
-
 	"log"
 	"net/http"
 	"os"
@@ -36,8 +35,6 @@ type Lambda struct {
 
 func GetSecret(svc secretsmanageriface.SecretsManagerAPI) (string, error) {
 	secretPrefix := os.Getenv("SECRETS_PREFIX");
-
-	// fmt.Print(secretPrefix)
 
 	if secretPrefix == "" {
 		msg := "SECRETS_PREFIX environment variable not set"

@@ -150,18 +150,11 @@ services:
     image: redis:6.2.7
     restart: always
 
-  file-scanner-server:
-    image: mkodockx/docker-clamav:1.0.3-alpine
-    environment:
-      CLAMD_CONF_SelfCheck: 100000
-      FRESHCLAM_CONF_NotifyClamd: "no"
-
   file-scanner-rest:
-    image: acsauk/clamav-rest-1
+    build:
+      context: ./file_scanning
     ports:
       - 8085:8080
-    environment:
-      CLAMD_HOST: file-scanner-server
 
   sync:
     build: ./sync

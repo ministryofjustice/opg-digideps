@@ -20,7 +20,7 @@ class ClamAvAvailability extends ServiceAvailabilityAbstract
     public function ping()
     {
         try {
-            $response = $this->fileScannerClient->get('/');
+            $response = $this->fileScannerClient->get('/health');
             if (200 !== $response->getStatusCode()) {
                 throw new \RuntimeException('returned HTTP code '.$response->getStatusCode());
             }

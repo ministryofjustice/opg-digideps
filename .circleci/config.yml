@@ -87,6 +87,9 @@ workflows:
       - lint:
           name: lint terraform
 
+      #      - go-unit-tests:
+      #          name: go unit tests
+
       - terraform-command:
           name: plan shared-development
           requires: [cancel redundant builds]
@@ -1122,6 +1125,21 @@ jobs:
           root: .
           paths:
             - ./lambda_functions/layer.tar
+
+  # Issue in circle with mock server. Fix in github actions
+  go-unit-tests:
+    docker:
+      - image: cimg/go:1.19.3
+        auth:
+          username: $DOCKER_USER
+          password: $DOCKER_ACCESS_TOKEN
+    resource_class: small
+    steps:
+      - checkout
+      - run:
+          name: run go tests
+          command: go test
+          working_directory: ~/project/file_scanning
 
   client-unit-test:
     docker:
