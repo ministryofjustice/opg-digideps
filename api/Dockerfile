@@ -98,12 +98,14 @@ COPY phpstan.neon .
 RUN mkdir -p /tmp/html
 RUN mkdir -p /tmp/sql
 
-RUN chown www-data /var/www/tests/Behat/run-tests-smoke.sh
-RUN chmod 544 /var/www/tests/Behat/run-tests-smoke.sh
-RUN chown www-data /var/www/tests/Behat/run-tests.sh
-RUN chmod 544 /var/www/tests/Behat/run-tests.sh
-RUN chown www-data /var/www/tests/Behat/run-tests-parallel.sh
-RUN chmod 544 /var/www/tests/Behat/run-tests-parallel.sh
+RUN chown www-data /var/www/tests/Behat/run-tests-smoke.sh \
+    && chmod 544 /var/www/tests/Behat/run-tests-smoke.sh \
+    && chown www-data /var/www/tests/Behat/run-tests.sh \
+    && chmod 544 /var/www/tests/Behat/run-tests.sh \
+    && chown www-data /var/www/tests/Behat/run-tests-parallel.sh \
+    && chmod 544 /var/www/tests/Behat/run-tests-parallel.sh \
+    && chown www-data /var/www/scripts/bootstrap_db.sh \
+    && chmod 544 /var/www/scripts/bootstrap_db.sh
 
 # Prebuild cache
 RUN su-exec www-data php -d memory_limit=-1 app/console cache:warmup
@@ -114,6 +116,7 @@ RUN mkdir certs && chmod 755 certs && wget -O certs/rds-ca-2019-root.pem https:/
 
 CMD confd -onetime -backend env \
     && waitforit -address=tcp://$DATABASE_HOSTNAME:$DATABASE_PORT -timeout=$TIMEOUT \
+    && su-exec www-data:www-data /var/www/scripts/bootstrap_db.sh \
     && su-exec www-data:www-data php app/console doctrine:migrations:migrate --allow-no-migration --no-interaction \
     && su-exec www-data:www-data php app/console doctrine:migrations:up-to-date \
     && php-fpm -D \

@@ -121,6 +121,7 @@ services:
     environment:
       APP_ENV: ${APP_ENV:-dev}
       APP_DEBUG: ${APP_DEBUG:-0}
+      DATABASE_IAM_AUTH: 0
     env_file:
       - ./api/api.env
       - ./api/tests/Behat/test.env
@@ -216,4 +217,4 @@ services:
 
   composer:
     image: composer:2.3.5
-    command: [ "install" ]
+    command: ["install"]

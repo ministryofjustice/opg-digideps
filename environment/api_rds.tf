@@ -55,23 +55,24 @@ resource "aws_route53_record" "api_postgres" {
 
 data "aws_caller_identity" "current" {}
 
-resource "null_resource" "db_setup" {
-  triggers = {
-    file = filesha1("initial.sql")
-  }
-  provisioner "local-exec" {
-    command = <<-EOF
-			while read line; do
-				echo "$line"
-				aws rds-data execute-statement --resource-arn "$DB_ARN" --database  "$DB_NAME" --secret-arn "$SECRET_ARN" --sql "$line"
-			done  < <(awk 'BEGIN{RS=";\n"}{gsub(/\n/,""); if(NF>0) {print $0";"}}' initial.sql)
-			EOF
-    environment = {
-      DB_ARN     = module.api_aurora[0].cluster_arn
-      DB_NAME    = module.api_aurora[0].database_name
-      SECRET_ARN = data.aws_secretsmanager_secret.database_password.arn
-    }
-    interpreter = ["bash", "-c"]
-  }
-  depends_on = [module.api_aurora]
-}
+#resource "null_resource" "db_setup" {
+#  triggers = {
+#    file = filesha1("initial.sql")
+#  }
+#  provisioner "local-exec" {
+#    command = <<-EOF
+#			while read line; do
+#				echo "$line"
+#				aws rds-data execute-statement --resource-arn "$DB_ARN" --profile "digi-deps-dev" --region "$REGION" --database "$DB_NAME" --secret-arn "$SECRET_ARN" --sql "$line"
+#			done  < <(awk 'BEGIN{RS=";\n"}{gsub(/\n/,""); if(NF>0) {print $0";"}}' initial.sql)
+#			EOF
+#    environment = {
+#      DB_ARN     = module.api_aurora[0].cluster_arn
+#      DB_NAME    = module.api_aurora[0].database_name
+#      SECRET_ARN = data.aws_secretsmanager_secret.database_password.arn
+#      REGION     = data.aws_region.current.name
+#    }
+#    interpreter = ["bash", "-c"]
+#  }
+#  depends_on = [module.api_aurora]
+#}
