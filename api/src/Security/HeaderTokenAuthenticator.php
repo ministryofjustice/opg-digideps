@@ -41,11 +41,17 @@ class HeaderTokenAuthenticator extends AbstractAuthenticator
     {
         $authTokenKey = $request->headers->get(self::HEADER_NAME);
 
+        $redisToken = $this->redis->get($authTokenKey);
+        if (!$redisToken) {
+            $this->logger->warning(sprintf('Auth token not found in Redis with key %s', $authTokenKey));
+            throw new UserNotFoundException('User not found');
+        }
+
         /** @var PostAuthenticationToken $postAuthToken */
-        $postAuthToken = unserialize($this->redis->get($authTokenKey));
+        $postAuthToken = unserialize($redisToken);
 
         if (!$postAuthToken) {
-            $this->logger->warning(sprintf('Auth token not found in Redis with key %s', $authTokenKey));
+            $this->logger->warning(sprintf('Could not deserialize token with key %s', $authTokenKey));
             throw new UserNotFoundException('User not found');
         }
 

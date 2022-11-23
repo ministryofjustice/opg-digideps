@@ -7,13 +7,10 @@ class LayDeputyshipDtoCollection extends \ArrayObject
     /**
      * {@inheritDoc}
      */
-    public function append($item)
+    public function append($item): void
     {
         if (!$item instanceof LayDeputyshipDto) {
-            throw new \InvalidArgumentException(sprintf(
-                'Only items of type %s are allowed',
-                LayDeputyshipDto::class
-            ));
+            throw new \InvalidArgumentException(sprintf('Only items of type %s are allowed', LayDeputyshipDto::class));
         }
 
         parent::append($item);

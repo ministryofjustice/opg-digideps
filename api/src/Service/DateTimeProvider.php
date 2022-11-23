@@ -5,11 +5,11 @@ namespace App\Service;
 class DateTimeProvider
 {
     /**
-     * @param null $dateTime
+     * @param string $dateTime
      *
      * @return \DateTime
      */
-    public function getDateTime($dateTime = null)
+    public function getDateTime($dateTime = 'now')
     {
         return new \DateTime($dateTime);
     }

@@ -2,9 +2,11 @@
 
 namespace App\Controller;
 
+use App\Entity\User;
 use App\Repository\PreRegistrationRepository;
 use App\Service\Formatter\RestFormatter;
 use App\Service\PreRegistrationVerificationService;
+use Doctrine\ORM\EntityManagerInterface;
 use Doctrine\ORM\NonUniqueResultException;
 use Sensio\Bundle\FrameworkExtraBundle\Configuration\Security;
 use Symfony\Component\HttpFoundation\JsonResponse;
@@ -18,7 +20,8 @@ class PreRegistrationController extends RestController
 {
     public function __construct(
         private PreRegistrationVerificationService $preRegistrationVerificationService,
-        private RestFormatter $formatter
+        private RestFormatter $formatter,
+        private EntityManagerInterface $em
     ) {
     }
 
@@ -47,6 +50,7 @@ class PreRegistrationController extends RestController
     public function verify(Request $request, PreRegistrationVerificationService $verificationService)
     {
         $clientData = $this->formatter->deserializeBodyContent($request);
+        /** @var User $user */
         $user = $this->getUser();
 
         $verified = $verificationService->validate(
@@ -55,6 +59,12 @@ class PreRegistrationController extends RestController
             $user->getLastname(),
             $user->getAddressPostcode()
         );
+
+        if (1 == count($verificationService->getLastMatchedDeputyNumbers())) {
+            $user->setDeputyNo($verificationService->getLastMatchedDeputyNumbers()[0]);
+            $this->em->persist($user);
+            $this->em->flush();
+        }
 
         return ['verified' => $verified];
     }
