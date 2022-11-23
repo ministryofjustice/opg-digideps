@@ -33,6 +33,10 @@
         }}
     {% endif %}
 
+    {% if error is defined and error %}
+        {{ macros.notification('info', error) }}
+    {% endif %}
+
     {% if serviceNotificationContent is defined and serviceNotificationContent %}
         <div class="behat-region-service-notification">
             {{ macros.notification('info', serviceNotificationContent | nl2br) }}

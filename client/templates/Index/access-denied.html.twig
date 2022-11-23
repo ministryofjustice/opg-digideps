@@ -1,0 +1,13 @@
+{% extends '@App/Layouts/application.html.twig' %}
+{% set translationDomain = "error-pages" %}
+{% trans_default_domain translationDomain %}
+
+{% block htmlTitle %}{{ 'errors.access-denied.page.htmlTitle' | trans }} {% endblock %}
+{% block pageTitle %}{% trans %}errors.access-denied.page.pageTitle{% endtrans %}{% endblock %}
+
+
+{% block pageContent %}
+
+	<p class="govuk-body">{{ 'errors.access-denied.page.pageSectionDescription' | trans }}</p>
+
+{% endblock %}
