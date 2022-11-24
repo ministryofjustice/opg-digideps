@@ -39,7 +39,7 @@ resource "aws_ecs_task_definition" "scan" {
   network_mode             = "awsvpc"
   cpu                      = 1024
   memory                   = local.account.memory_high
-  container_definitions    = "[${local.file_scanner_rest_container},${local.file_scanner_server_container}]"
+  container_definitions    = "[${local.file_scanner_rest_container}]"
   task_role_arn            = aws_iam_role.scan.arn
   execution_role_arn       = aws_iam_role.execution_role.arn
   tags                     = local.default_tags
@@ -82,46 +82,17 @@ locals {
         "protocol": "tcp"
       }],
       "cpu": 0,
-      "image": "acsauk/clamav-rest-1",
-      "mountPoints": [],
-      "volumesFrom": [],
-      "dependsOn": [
-        {
-          "containerName": "server",
-          "condition": "HEALTHY"
-        }
-      ],
-      "logConfiguration": {
-        "logDriver": "awslogs",
-        "options": {
-          "awslogs-group": "${aws_cloudwatch_log_group.opg_digi_deps.name}",
-          "awslogs-region": "eu-west-1",
-          "awslogs-stream-prefix": "${aws_iam_role.scan.name}"
-        }
-      },
-      "environment": [
-        { "name": "CLAMD_HOST", "value": "127.0.0.1" }
-      ]
-  }
-
-EOF
-
-  file_scanner_server_container = <<EOF
-  {
-      "name": "server",
-      "essential": true,
-      "cpu": 0,
-      "image": "mkodockx/docker-clamav:1.0.3-alpine",
+      "image": "${local.images.file-scanner}",
       "mountPoints": [],
       "volumesFrom": [],
       "healthCheck": {
         "command": [
           "CMD-SHELL",
-          "./check.sh"
+          "wget --no-verbose --tries=1 --spider http://localhost:8080/health || exit 1"
         ],
         "interval": 30,
-        "retries": 5,
-        "timeout": 5
+        "timeout": 10,
+        "retries": 3
       },
       "logConfiguration": {
         "logDriver": "awslogs",
@@ -130,13 +101,7 @@ EOF
           "awslogs-region": "eu-west-1",
           "awslogs-stream-prefix": "${aws_iam_role.scan.name}"
         }
-      },
-      "environment": [
-        { "name": "CLAMD_CONF_SelfCheck", "value": "100000" },
-        { "name": "FRESHCLAM_CONF_NotifyClamd", "value": "no" }
-      ]
+      }
   }
-
 EOF
-
 }

@@ -18,3 +18,6 @@ services:
   synchronisation:
     image: ${AWS_REGISTRY}/digideps/synchronise-lambda:${VERSION}
     build: ./lambda_functions/functions/synchronisation
+  file-scanner:
+    image: ${AWS_REGISTRY}/digideps/file-scanner:${VERSION}
+    build: ./file_scanning
