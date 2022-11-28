@@ -17,11 +17,11 @@ repos:
       - id: requirements-txt-fixer # sorts entries in requirements.txt.
       - id: trailing-whitespace # trims trailing whitespace.
 
-  #  - repo: https://github.com/antonbabenko/pre-commit-terraform
-  #    rev: v1.72.1
-  #    hooks:
-  #      - id: terraform_fmt
-  #      - id: terraform_validate
+  - repo: https://github.com/antonbabenko/pre-commit-terraform
+    rev: v1.77.0
+    hooks:
+      - id: terraform_fmt
+      - id: terraform_validate
 
   - repo: https://github.com/awslabs/git-secrets
     rev: master

@@ -33,9 +33,8 @@ class ConnectionWrapper extends Connection
     public function __construct(
         array $params, Driver $driver, ?Configuration $config = null, ?EventManager $eventManager = null
     ) {
-        $start_time = microtime(true);
-
         parent::__construct($params, $driver, $config, $eventManager);
+        // Can't be passed in from services.yml as we can't increase number of arguments in unless we wrap driver
         $redis_dsn = getenv(self::REDIS_DSN);
         if (!$redis_dsn) {
             $redis_dsn = 'redis://redis-not-found';
@@ -46,26 +45,15 @@ class ConnectionWrapper extends Connection
             'port' => 6379,
         ]);
 
-        $end_time = microtime(true);
-        $execution_time = substr(strval(($end_time - $start_time) * 1000), 0, 13);
-        file_put_contents('php://stderr', print_r('class constructor setup: '.$execution_time, true));
-
-        $start_time = microtime(true);
-
         $this->params = $this->getParams();
 
         $this->iam_auth = getenv(self::IAM_AUTH);
 
         if ('1' == $this->iam_auth) {
             $this->params['user'] = 'iamuser';
-//            $this->params['user'] = 'api';
         }
 
         $this->autoCommit = $config->getAutoCommit();
-
-        $end_time = microtime(true);
-        $execution_time = substr(strval(($end_time - $start_time) * 1000), 0, 13);
-        file_put_contents('php://stderr', print_r('class constructor other logic: '.$execution_time, true));
     }
 
     /**
@@ -73,19 +61,10 @@ class ConnectionWrapper extends Connection
      */
     public function connect()
     {
-        $start_time = microtime(true);
         if (null !== $this->_conn) {
-            $end_time = microtime(true);
-            $execution_time = substr(strval(($end_time - $start_time) * 1000), 0, 13);
-            file_put_contents('php://stderr', print_r('connection false: '.$execution_time, true));
-
             return false;
         }
-        $end_time = microtime(true);
-        $execution_time = substr(strval(($end_time - $start_time) * 1000), 0, 13);
-        file_put_contents('php://stderr', print_r('connection true: '.$execution_time, true));
 
-        $start_time = microtime(true);
         if ('1' == $this->iam_auth) {
             $token = $this->redis->get(self::USER_TOKEN);
             if (!$token) {
@@ -95,21 +74,13 @@ class ConnectionWrapper extends Connection
 
             $this->params['password'] = $token;
         }
-        $end_time = microtime(true);
-        $execution_time = substr(strval(($end_time - $start_time) * 1000), 0, 13);
-        file_put_contents('php://stderr', print_r('check redis: '.$execution_time, true));
 
-        $start_time = microtime(true);
         try {
             $this->_conn = $this->_driver->connect($this->params);
         } catch (Driver\Exception $e) {
             throw $this->convertException($e);
         }
-        $end_time = microtime(true);
-        $execution_time = substr(strval(($end_time - $start_time) * 1000), 0, 13);
-        file_put_contents('php://stderr', print_r('connect to DB: '.$execution_time, true));
 
-        $start_time = microtime(true);
         if (false === $this->autoCommit) {
             $this->beginTransaction();
         }
@@ -121,10 +92,6 @@ class ConnectionWrapper extends Connection
 
         $this->_isConnected = true;
 
-        $end_time = microtime(true);
-        $execution_time = substr(strval(($end_time - $start_time) * 1000), 0, 13);
-        file_put_contents('php://stderr', print_r('rest of the stuff: '.$execution_time, true));
-
         return true;
     }
 
@@ -132,7 +99,6 @@ class ConnectionWrapper extends Connection
     {
         $provider = CredentialProvider::defaultProvider();
         $RdsAuthGenerator = new AuthTokenGenerator($provider);
-//        $token = 'api';
         $token = $RdsAuthGenerator->createToken($params['host'].':'.$params['port'], 'eu-west-1', $params['user']);
         $this->redis->set(self::USER_TOKEN, $token);
         $this->redis->expire(self::USER_TOKEN, 600);

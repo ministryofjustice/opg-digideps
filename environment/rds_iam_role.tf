@@ -1,13 +1,13 @@
-resource "aws_iam_role" "rds_iam_test" {
-  assume_role_policy = data.aws_iam_policy_document.rds_iam_test_profile.json
+resource "aws_iam_role" "rds_iam_c9" {
+  assume_role_policy = data.aws_iam_policy_document.rds_iam_c9_profile.json
   name               = "rds-iam-test.${local.environment}"
   tags               = local.default_tags
 }
 
-resource "aws_iam_role_policy" "rds_iam_test" {
+resource "aws_iam_role_policy" "rds_iam_c9" {
   name   = "rds-iam-test.${local.environment}"
   policy = data.aws_iam_policy_document.rds_iam.json
-  role   = aws_iam_role.rds_iam_test.id
+  role   = aws_iam_role.rds_iam_c9.id
 }
 
 data "aws_iam_policy_document" "rds_iam" {
@@ -110,12 +110,12 @@ data "aws_iam_policy_document" "rds_iam" {
   }
 }
 
-resource "aws_iam_instance_profile" "rds_iam_test_profile" {
+resource "aws_iam_instance_profile" "rds_iam_c9_profile" {
   name = "migration_rds_c9_profile.${local.environment}"
-  role = aws_iam_role.rds_iam_test.name
+  role = aws_iam_role.rds_iam_c9.name
 }
 
-data "aws_iam_policy_document" "rds_iam_test_profile" {
+data "aws_iam_policy_document" "rds_iam_c9_profile" {
   statement {
     effect  = "Allow"
     actions = ["sts:AssumeRole"]

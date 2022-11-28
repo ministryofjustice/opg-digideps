@@ -24,7 +24,7 @@ resource "aws_rds_cluster" "cluster" {
   iam_database_authentication_enabled = var.iam_database_authentication_enabled
   lifecycle {
     ignore_changes  = [replication_source_identifier]
-    prevent_destroy = false
+    prevent_destroy = true
   }
   depends_on = [var.log_group]
 }
