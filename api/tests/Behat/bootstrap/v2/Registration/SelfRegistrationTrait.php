@@ -4,6 +4,7 @@ declare(strict_types=1);
 
 namespace App\Tests\Behat\v2\Registration;
 
+use App\Entity\User;
 use App\Tests\Behat\v2\Common\UserDetails;
 
 trait SelfRegistrationTrait
@@ -12,31 +13,37 @@ trait SelfRegistrationTrait
     private string $invalidDeputyLastnameError = "The client's last name you provided does not match our records.";
     private string $invalidDeputyPostcodeError = 'Your last name you provided does not match our records.';
     private string $invalidClientLastnameError = 'The postcode you provided does not match our records.';
+    private string $userEmail;
+    private string $deputyUid;
 
     /**
      * @Given a Lay Deputy registers to deputise for a client with valid details
      */
     public function aLayDeputyRegistersToDeputiseForAClientWithValidDetails()
     {
+        $this->userEmail = 'brian@duck.co.uk';
+        $this->interactingWithUserDetails = new UserDetails(['userEmail' => $this->userEmail]);
+        $this->deputyUid = '19371937';
+
         $this->visitFrontendPath('/register');
         $this->fillInField('self_registration_firstname', 'Brian');
         $this->fillInField('self_registration_lastname', 'Duck');
-        $this->fillInField('self_registration_email_first', 'brian@duck.co.uk');
-        $this->fillInField('self_registration_email_second', 'brian@duck.co.uk');
+        $this->fillInField('self_registration_email_first', $this->userEmail);
+        $this->fillInField('self_registration_email_second', $this->userEmail);
         $this->fillInField('self_registration_postcode', 'B1');
         $this->fillInField('self_registration_clientFirstname', 'Billy');
         $this->fillInField('self_registration_clientLastname', 'Huey');
         $this->fillInField('self_registration_caseNumber', '31313131');
         $this->pressButton('self_registration_save');
 
-        $this->clickActivationOrPasswordResetLinkInEmail(false, 'activation', 'brian@duck.co.uk');
+        $this->clickActivationOrPasswordResetLinkInEmail(false, 'activation', $this->userEmail);
         $this->fillInField('set_password_password_first', 'DigidepsPass1234');
         $this->fillInField('set_password_password_second', 'DigidepsPass1234');
         $this->checkOption('set_password_showTermsAndConditions');
         $this->pressButton('set_password_save');
 
         $this->assertPageContainsText('Sign in to your new account');
-        $this->fillInField('login_email', 'brian@duck.co.uk');
+        $this->fillInField('login_email', $this->userEmail);
         $this->fillInField('login_password', 'DigidepsPass1234');
         $this->pressButton('login_login');
 
@@ -148,6 +155,8 @@ trait SelfRegistrationTrait
      */
     public function iCompleteTheCaseManagerUserRegistrationFlowWithValidDeputyhsipDetails()
     {
+        $this->deputyUid = '19371938';
+
         $this->fillInField('set_password_password_first', 'DigidepsPass1234');
         $this->fillInField('set_password_password_second', 'DigidepsPass1234');
         $this->checkOption('set_password_showTermsAndConditions');
@@ -196,9 +205,9 @@ trait SelfRegistrationTrait
     public function iCreateALayDeputyUserAccountForOneOfTheDeputysInTheCSV()
     {
         $this->iVisitAdminAddUserPage();
-        $userEmail = 'VANDERQUACK@DUCKTAILS.com';
+        $this->userEmail = 'VANDERQUACK@DUCKTAILS.com';
 
-        $this->fillInField('admin_email', $userEmail);
+        $this->fillInField('admin_email', $this->userEmail);
         $this->fillInField('admin_firstname', $this->faker->firstName);
         $this->fillInField('admin_lastname', 'Vanderquack');
         $this->fillInField('admin_addressPostcode', 'SW1');
@@ -209,6 +218,27 @@ trait SelfRegistrationTrait
 
         $this->assertOnAlertMessage('email has been sent to the user');
 
-        $this->interactingWithUserDetails = new UserDetails(['userEmail' => $userEmail]);
+        $this->interactingWithUserDetails = new UserDetails(['userEmail' => $this->userEmail]);
+    }
+
+    /**
+     * @Then my deputy details should be saved to my account
+     */
+    public function mySelfRegistrationDetailsShouldBeSavedToMyAccount()
+    {
+        $this->em->flush();
+        $this->em->clear();
+
+        /** @var User $deputy */
+        $deputy = $this->em->getRepository(User::class)->findOneBy(
+            ['email' => strtolower($this->interactingWithUserDetails->getUserEmail())]
+        );
+
+        $this->assertStringEqualsString($this->deputyUid, $deputy->getDeputyNo(), 'Asserting DeputyUid is the same');
+        $this->assertStringEqualsString('102 Petty France', $deputy->getAddress1(), 'Asserting Address Line 1 is the same');
+        $this->assertStringEqualsString('MOJ', $deputy->getAddress2(), 'Asserting Address Line 2 is the same');
+        $this->assertStringEqualsString('London', $deputy->getAddress3(), 'Asserting Address Line 3 is the same');
+        $this->assertStringEqualsString('GB', $deputy->getAddressCountry(), 'Asserting Address Country is the same');
+        $this->assertStringEqualsString('01789 321234', $deputy->getPhoneMain(), 'Asserting Main Phone is the same');
     }
 }
