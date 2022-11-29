@@ -1027,7 +1027,7 @@ jobs:
           command: echo ${VERSION}
       - run:
           name: Docker login
-          command: eval $(aws ecr get-login --region $AWS_REGION --no-include-email --profile digideps-ci)
+          command: aws ecr get-login-password --region $AWS_REGION --profile digideps-ci | docker login --username AWS --password-stdin $AWS_REGISTRY
       - run:
           name: Build images
           command: docker-compose -f docker-compose.ci.yml build --parallel
