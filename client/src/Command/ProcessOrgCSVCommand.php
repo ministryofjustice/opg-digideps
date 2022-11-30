@@ -11,6 +11,9 @@ use App\Service\File\Storage\S3Storage;
 use App\Service\Mailer\Mailer;
 use Aws\S3\Exception\S3Exception;
 use Aws\S3\S3Client;
+use DateTime;
+use Predis\Client;
+use Predis\ClientInterface;
 use Psr\Log\LoggerInterface;
 use Symfony\Component\Console\Command\Command;
 use Symfony\Component\Console\Input\InputArgument;
@@ -46,7 +49,8 @@ class ProcessOrgCSVCommand extends Command {
         private RestClient $restClient,
         private ParameterBagInterface $params,
         private Mailer $mailer,
-        private LoggerInterface $logger
+        private LoggerInterface $logger,
+        private ClientInterface $redis,
     ) {
         parent::__construct();
     }
@@ -105,6 +109,7 @@ class ProcessOrgCSVCommand extends Command {
                 'LastReportDay',
                 'ReportType',
                 'OrderType',
+                'Hybrid',
             ])
             ->setOptionalColumns([
                 'ClientAddress1',
@@ -130,6 +135,8 @@ class ProcessOrgCSVCommand extends Command {
     private function process(mixed $data, string $email) {
         $chunks = array_chunk($data, self::CHUNK_SIZE);
 
+        $this->redis->set('org-csv-processing', 'processing');
+
         foreach ($chunks as $index => $chunk) {
             $compressedChunk = CsvUploader::compressData($chunk);
 
@@ -138,6 +145,9 @@ class ProcessOrgCSVCommand extends Command {
 
             $this->storeOutput($upload);
         }
+
+        $this->redis->set('org-csv-processing', 'completed');
+        $this->redis->set('org-csv-completed-date', date('Y-m-d H:i:s'));
 
         $this->mailer->sendProcessOrgCSVEmail($email, $this->output);
     }

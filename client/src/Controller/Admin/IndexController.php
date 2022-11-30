@@ -365,7 +365,7 @@ class IndexController extends AbstractController
 
     /**
      * @Route("/pre-registration-upload", name="pre_registration_upload")
-     * @Security("is_granted('ROLE_ADMIN') or is_granted('ROLE_AD')")
+     * @Security("is_granted('ROLE_SUPER_ADMIN')")
      * @Template("@App/Admin/Index/uploadUsers.html.twig")
      * @throws Exception
      */
@@ -478,12 +478,17 @@ class IndexController extends AbstractController
             $this->addFlash('error', 'There was a problem locating the file inside the S3 Bucket. Please contact an administrator.');
         }
 
+        $processStatus = $redisClient->get('lay-csv-processing');
+        $processCompletedDate = $redisClient->get('lay-csv-completed-date');
+
         return [
             'nOfChunks' => $request->get('nOfChunks'),
             'currentRecords' => $this->preRegistrationApi->count(),
             'form' => $form->createView(),
             'processForm' => $processForm->createView(),
             'maxUploadSize' => min([ini_get('upload_max_filesize'), ini_get('post_max_size')]),
+            'processStatus' => $processStatus,
+            'processStatusDate' => $processCompletedDate,
             'fileUploadedInfo' => [
                 'fileName' => $layReportFile,
                 'date' => $bucketFileInfo['LastModified']
@@ -493,11 +498,11 @@ class IndexController extends AbstractController
 
     /**
      * @Route("/org-csv-upload", name="admin_org_upload")
-     * @Security("is_granted('ROLE_ADMIN') or is_granted('ROLE_AD')")
+     * @Security("is_granted('ROLE_SUPER_ADMIN')")
      * @Template("@App/Admin/Index/uploadOrgUsers.html.twig")
      * @throws Exception
      */
-    public function uploadOrgUsersAction(Request $request)
+    public function uploadOrgUsersAction(Request $request, ClientInterface $redisClient)
     {
         $form = $this->createForm(FormDir\UploadCsvType::class, null, [
             'method' => 'POST',
@@ -577,9 +582,14 @@ class IndexController extends AbstractController
             $this->addFlash('error', 'There was a problem locating the file inside the S3 Bucket. Please contact an administrator.');
         }
 
+        $processStatus = $redisClient->get('org-csv-processing');
+        $processCompletedDate = $redisClient->get('org-csv-completed-date');
+
         return [
             'form' => $form->createView(),
             'processForm' => $processForm->createView(),
+            'processStatus' => $processStatus,
+            'processStatusDate' => $processCompletedDate,
             'fileUploadedInfo' => [
                 'fileName' => $paProReportFile,
                 'date' => $bucketFileInfo['LastModified']

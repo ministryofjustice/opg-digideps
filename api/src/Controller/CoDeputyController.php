@@ -131,7 +131,7 @@ class CoDeputyController extends RestController
         $affected = 0;
         foreach (array_chunk($deputyNumbers, 500) as $chunk) {
             $sql = "UPDATE dd_user SET codeputy_client_confirmed = TRUE WHERE deputy_no IN ('".implode("','", $chunk)."')";
-            $affected += $conn->exec($sql);
+            $affected += $conn->executeStatement($sql);
         }
 
         return ['requested_mld_upgrades' => count($deputyNumbers), 'updated' => $affected, 'errors' => $retErrors];
