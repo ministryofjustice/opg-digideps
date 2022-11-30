@@ -50,7 +50,6 @@ resource "aws_ecs_service" "scan" {
   cluster                 = aws_ecs_cluster.main.id
   task_definition         = aws_ecs_task_definition.scan.arn
   desired_count           = local.account.scan_count
-  launch_type             = "FARGATE"
   platform_version        = "1.4.0"
   enable_ecs_managed_tags = true
   propagate_tags          = "SERVICE"
@@ -64,6 +63,24 @@ resource "aws_ecs_service" "scan" {
 
   service_registries {
     registry_arn = aws_service_discovery_service.scan.arn
+  }
+
+  capacity_provider_strategy {
+    capacity_provider = local.capacity_provider
+    weight            = 1
+  }
+
+  deployment_controller {
+    type = "ECS"
+  }
+
+  deployment_circuit_breaker {
+    enable   = false
+    rollback = false
+  }
+
+  lifecycle {
+    create_before_destroy = true
   }
 
   depends_on = [aws_service_discovery_service.scan]

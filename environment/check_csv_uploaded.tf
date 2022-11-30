@@ -46,23 +46,6 @@ resource "aws_ecs_task_definition" "check_csv_uploaded" {
   tags                     = local.default_tags
 }
 
-resource "aws_ecs_service" "check_csv_uploaded" {
-  name                    = aws_ecs_task_definition.check_csv_uploaded.family
-  cluster                 = aws_ecs_cluster.main.id
-  task_definition         = aws_ecs_task_definition.check_csv_uploaded.arn
-  launch_type             = "FARGATE"
-  platform_version        = "1.4.0"
-  enable_ecs_managed_tags = true
-  propagate_tags          = "SERVICE"
-  tags                    = local.default_tags
-
-  network_configuration {
-    security_groups  = [module.check_csv_uploaded_service_security_group.id]
-    subnets          = data.aws_subnet.private.*.id
-    assign_public_ip = false
-  }
-}
-
 resource "aws_cloudwatch_event_rule" "check_csv_uploaded_cron_rule" {
   name                = "${aws_ecs_task_definition.check_csv_uploaded.family}-schedule"
   description         = "Check daily which CSVs have been uploaded in ${terraform.workspace}"

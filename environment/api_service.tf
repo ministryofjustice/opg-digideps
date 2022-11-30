@@ -44,7 +44,6 @@ resource "aws_ecs_service" "api" {
   cluster                 = aws_ecs_cluster.main.id
   task_definition         = aws_ecs_task_definition.api.arn
   desired_count           = local.account.task_count
-  launch_type             = "FARGATE"
   platform_version        = "1.4.0"
   enable_ecs_managed_tags = true
   propagate_tags          = "SERVICE"
@@ -59,6 +58,24 @@ resource "aws_ecs_service" "api" {
 
   service_registries {
     registry_arn = aws_service_discovery_service.api.arn
+  }
+
+  capacity_provider_strategy {
+    capacity_provider = local.capacity_provider
+    weight            = 1
+  }
+
+  deployment_controller {
+    type = "ECS"
+  }
+
+  deployment_circuit_breaker {
+    enable   = false
+    rollback = false
+  }
+
+  lifecycle {
+    create_before_destroy = true
   }
 
   depends_on = [aws_service_discovery_service.api]
