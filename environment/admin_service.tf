@@ -15,7 +15,6 @@ resource "aws_ecs_service" "admin" {
   cluster                 = aws_ecs_cluster.main.id
   task_definition         = aws_ecs_task_definition.admin.arn
   desired_count           = 1
-  launch_type             = "FARGATE"
   platform_version        = "1.4.0"
   enable_ecs_managed_tags = true
   propagate_tags          = "SERVICE"
@@ -32,6 +31,24 @@ resource "aws_ecs_service" "admin" {
     target_group_arn = aws_lb_target_group.admin.arn
     container_name   = "admin_app"
     container_port   = 443
+  }
+
+  capacity_provider_strategy {
+    capacity_provider = local.capacity_provider
+    weight            = 1
+  }
+
+  deployment_controller {
+    type = "ECS"
+  }
+
+  deployment_circuit_breaker {
+    enable   = false
+    rollback = false
+  }
+
+  lifecycle {
+    create_before_destroy = true
   }
 
   depends_on = [aws_lb_listener.admin]

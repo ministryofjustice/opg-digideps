@@ -67,6 +67,19 @@ resource "aws_ecs_service" "document_sync" {
     subnets          = data.aws_subnet.private.*.id
     assign_public_ip = false
   }
+
+  deployment_controller {
+    type = "ECS"
+  }
+
+  deployment_circuit_breaker {
+    enable   = false
+    rollback = false
+  }
+
+  lifecycle {
+    create_before_destroy = true
+  }
 }
 
 resource "aws_cloudwatch_event_rule" "document_sync_cron_rule" {

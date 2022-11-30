@@ -47,6 +47,7 @@ variable "accounts" {
       s3_backup_replication                  = bool
       s3_backup_kms_arn                      = string
       associate_alb_with_waf_web_acl_enabled = bool
+      fargate_spot                           = bool
     })
   )
 }
@@ -87,6 +88,8 @@ locals {
   }
 
   openapi_mock_version = "v0.3.3"
+
+  capacity_provider = local.account.fargate_spot ? "FARGATE_SPOT" : "FARGATE"
 }
 
 data "terraform_remote_state" "shared" {
