@@ -177,6 +177,8 @@ class PreRegistrationControllerTest extends AbstractTestController
 
         $loggedInUser->setDeputyNo(null);
         $this->fixtures()->persist($loggedInUser);
+        $this->fixtures()->flush();
+        $this->fixtures()->clear();
 
         $this->assertJsonRequest('POST', '/pre-registration/verify', [
             'data' => [
@@ -187,7 +189,7 @@ class PreRegistrationControllerTest extends AbstractTestController
             'AuthToken' => self::$tokenDeputy,
         ]);
 
-        $this->fixtures()->refresh($loggedInUser);
+        $loggedInUser = $this->fixtures()->clear()->getRepo('User')->find($this->loggedInUserId);
 
         $this->assertEquals('Deputy No', $loggedInUser->getDeputyNo());
     }
@@ -206,6 +208,8 @@ class PreRegistrationControllerTest extends AbstractTestController
 
         $loggedInUser->setDeputyNo(null);
         $this->fixtures()->persist($loggedInUser);
+        $this->fixtures()->flush();
+        $this->fixtures()->clear();
 
         $this->assertJsonRequest('POST', '/pre-registration/verify', [
             'data' => [
@@ -216,7 +220,7 @@ class PreRegistrationControllerTest extends AbstractTestController
             'AuthToken' => self::$tokenDeputy,
         ]);
 
-        $this->fixtures()->refresh($loggedInUser);
+        $loggedInUser = $this->fixtures()->clear()->getRepo('User')->find($this->loggedInUserId);
 
         $this->assertNull($loggedInUser->getDeputyNo());
     }
