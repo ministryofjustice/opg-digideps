@@ -80,10 +80,6 @@ resource "aws_ecs_service" "front" {
     rollback = false
   }
 
-  lifecycle {
-    create_before_destroy = true
-  }
-
   depends_on = [aws_lb_listener.front_https, aws_service_discovery_service.front]
 }
 

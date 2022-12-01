@@ -79,10 +79,6 @@ resource "aws_ecs_service" "htmltopdf" {
     rollback = false
   }
 
-  lifecycle {
-    create_before_destroy = true
-  }
-
   depends_on = [aws_service_discovery_service.htmltopdf]
 
   tags = local.default_tags

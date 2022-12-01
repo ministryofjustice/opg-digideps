@@ -79,10 +79,6 @@ resource "aws_ecs_service" "scan" {
     rollback = false
   }
 
-  lifecycle {
-    create_before_destroy = true
-  }
-
   depends_on = [aws_service_discovery_service.scan]
 
   tags = local.default_tags

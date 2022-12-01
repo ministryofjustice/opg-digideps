@@ -74,10 +74,6 @@ resource "aws_ecs_service" "mock_sirius_integration" {
     rollback = false
   }
 
-  lifecycle {
-    create_before_destroy = true
-  }
-
   depends_on = [aws_service_discovery_service.mock_sirius_integration]
 }
 
