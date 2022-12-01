@@ -47,10 +47,6 @@ resource "aws_ecs_service" "admin" {
     rollback = false
   }
 
-  lifecycle {
-    create_before_destroy = true
-  }
-
   depends_on = [aws_lb_listener.admin]
 }
 
