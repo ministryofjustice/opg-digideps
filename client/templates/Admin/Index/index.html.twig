@@ -12,9 +12,11 @@
     <a href="{{ path('admin_add_user') }}" role="button" draggable="false" class="govuk-button govuk-button--secondary govuk-!-margin-right-2 govuk-!-margin-bottom-0" data-module="govuk-button">
         {{ (page ~ '.actions.addUser') | trans }}
     </a>
+    {% if is_granted('ROLE_SUPER_ADMIN') %}
     <a href="{{ path('admin_upload') }}" role="button" draggable="false" class="govuk-button govuk-button--secondary govuk-!-margin-bottom-0" data-module="govuk-button">
         {{ (page ~ '.actions.upload') | trans }}
     </a>
+    {% endif %}
 {% endblock %}
 
 {% block helpline %}{% endblock %}

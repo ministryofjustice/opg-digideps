@@ -41,6 +41,11 @@
     {% if fileUploadedInfo['date'] != null %}
     <div class="govuk-grid-column-one-half">
         <h2 class="govuk-heading-m">Process S3 file</h2>
+        {% if processStatus == 'completed' %}
+            <p class="govuk-!-margin-0 govuk-!-margin-bottom-2">Status: Last completed {{ processStatusDate|date('d/m/Y - H:i:s A') }}</span></p>
+        {% else %}
+            <p class="govuk-!-margin-0 govuk-!-margin-bottom-2">Status: {{ processStatus == 'processing' ? 'Currently processing' : '' }}</span></p>
+        {% endif %}
         <p class="govuk-!-margin-0 govuk-!-margin-bottom-1">S3 Filename: {{ fileUploadedInfo['fileName'] }}</p>
         <span class="govuk-hint">Time uploaded: {{ fileUploadedInfo['date']|date('d/m/Y - H:i:s A') }}</span>
         {{ form_errors(processForm) }}

@@ -11,6 +11,7 @@ use App\Service\File\Storage\S3Storage;
 use App\Service\Mailer\Mailer;
 use Aws\S3\Exception\S3Exception;
 use Aws\S3\S3Client;
+use Predis\ClientInterface;
 use Psr\Log\LoggerInterface;
 use Symfony\Component\Console\Command\Command;
 use Symfony\Component\Console\Input\InputArgument;
@@ -36,6 +37,7 @@ class ProcessLayCSVCommand extends Command {
         private ParameterBagInterface $params,
         private Mailer $mailer,
         private LoggerInterface $logger,
+        private ClientInterface $redis,
     ) {
         parent::__construct();
     }
@@ -68,8 +70,8 @@ class ProcessLayCSVCommand extends Command {
         $data = $this->csvToArray("/tmp/layReport.csv");
         $this->process($data, $input->getArgument('email'));
 
-        if (!unlink("/tmp/orgReport.csv")) {
-            $this->logger->log('error', 'Unable to delete file /tmp/orgReport.csv.');
+        if (!unlink("/tmp/layReport.csv")) {
+            $this->logger->log('error', 'Unable to delete file /tmp/layReport.csv.');
         }
 
         return 0;
@@ -93,6 +95,7 @@ class ProcessLayCSVCommand extends Command {
                     'MadeDate',
                     'OrderType',
                     'CoDeputy',
+                    'Hybrid',
                 ])
                 ->setUnexpectedColumns(['LastReportDay', 'DeputyOrganisation'])
                 ->getData();
@@ -106,6 +109,8 @@ class ProcessLayCSVCommand extends Command {
 
         $chunks = array_chunk($data, self::CHUNK_SIZE);
 
+        $this->redis->set('lay-csv-processing', 'processing');
+
         foreach ($chunks as $index => $chunk) {
             $compressedChunk = CsvUploader::compressData($chunk);
 
@@ -114,6 +119,9 @@ class ProcessLayCSVCommand extends Command {
 
             $this->storeOutput($upload);
         }
+
+        $this->redis->set('lay-csv-processing', 'completed');
+        $this->redis->set('lay-csv-completed-date', date('Y-m-d H:i:s'));
 
         $this->mailer->sendProcessLayCSVEmail($email, $this->output);
     }
