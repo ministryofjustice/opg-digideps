@@ -11,16 +11,16 @@ doctrine:
         types:
             uuid: Ramsey\Uuid\Doctrine\UuidType
     orm:
+        auto_mapping: true
         auto_generate_proxy_classes: "%kernel.debug%"
         proxy_dir: "%kernel.cache_dir%/doctrine/orm/Proxies"
-        auto_mapping: true
-        filters:
-            softdeleteable:
-                class: Gedmo\SoftDeleteable\Filter\SoftDeleteableFilter
-                enabled: true
         mappings:
             commonEntities:
                 type: annotation
                 dir: "%kernel.project_dir%/src/Entity"
                 prefix: App\Entity
                 is_bundle: false
+        filters:
+            softdeleteable:
+                class: Gedmo\SoftDeleteable\Filter\SoftDeleteableFilter
+                enabled: true
