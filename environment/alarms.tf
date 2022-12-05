@@ -356,7 +356,7 @@ resource "aws_cloudwatch_metric_alarm" "admin_alb_average_response_time" {
 }
 
 resource "aws_cloudwatch_metric_alarm" "admin_ddos_attack_external" {
-  alarm_name          = "ActorDDoSDetected"
+  alarm_name          = "AdminDDoSDetected"
   comparison_operator = "GreaterThanThreshold"
   evaluation_periods  = "3"
   metric_name         = "DDoSDetected"
@@ -366,14 +366,14 @@ resource "aws_cloudwatch_metric_alarm" "admin_ddos_attack_external" {
   threshold           = "0"
   alarm_description   = "Triggers when AWS Shield Advanced detects a DDoS attack"
   treat_missing_data  = "notBreaching"
-  alarm_actions       = [data.aws_sns_topic.availability-alert.arn]
+  alarm_actions       = [data.aws_sns_topic.alerts.arn]
   dimensions = {
     ResourceArn = aws_lb.admin.arn
   }
 }
 
 resource "aws_cloudwatch_metric_alarm" "front_ddos_attack_external" {
-  alarm_name          = "ViewerDDoSDetected"
+  alarm_name          = "FrontDDoSDetected"
   comparison_operator = "GreaterThanThreshold"
   evaluation_periods  = "3"
   metric_name         = "DDoSDetected"
@@ -383,7 +383,7 @@ resource "aws_cloudwatch_metric_alarm" "front_ddos_attack_external" {
   threshold           = "0"
   alarm_description   = "Triggers when AWS Shield Advanced detects a DDoS attack"
   treat_missing_data  = "notBreaching"
-  alarm_actions       = [data.aws_sns_topic.availability-alert.arn]
+  alarm_actions       = [data.aws_sns_topic.alerts.arn]
   dimensions = {
     ResourceArn = aws_lb.front.arn
   }
