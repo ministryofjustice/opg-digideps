@@ -56,6 +56,7 @@ class BankAccount implements BankAccountInterface
 
     /**
      * @var int
+     *
      * @JMS\Groups({"account"})
      * @ORM\Column(name="id", type="integer", nullable=false)
      * @ORM\Id
@@ -66,6 +67,7 @@ class BankAccount implements BankAccountInterface
 
     /**
      * @var string
+     *
      * @JMS\Groups({"account"})
      * @ORM\Column(name="bank_name", type="string", length=500, nullable=true)
      */
@@ -73,33 +75,33 @@ class BankAccount implements BankAccountInterface
 
     /**
      * @var string
-     * @JMS\Groups({"account"})
      *
+     * @JMS\Groups({"account"})
      * @ORM\Column(name="account_type", type="string", length=125, nullable=true)
      */
     private $accountType;
 
     /**
      * @var string
-     * @JMS\Groups({"account"})
      *
+     * @JMS\Groups({"account"})
      * @ORM\Column(name="sort_code", type="string", length=6, nullable=true)
      */
     private $sortCode;
 
     /**
      * @var string
-     * @JMS\Groups({"account"})
      *
+     * @JMS\Groups({"account"})
      * @ORM\Column(name="account_number", type="string", length=4, nullable=true)
      */
     private $accountNumber;
 
     /**
      * @var float
+     *
      * @JMS\Groups({"account"})
      * @JMS\Type("string")
-     *
      * @ORM\Column(name="opening_balance", type="decimal", precision=14, scale=2, nullable=true)
      */
     private $openingBalance;
@@ -109,13 +111,13 @@ class BankAccount implements BankAccountInterface
      *
      * @JMS\Type("string")
      * @JMS\Groups({"account"})
-     *
      * @ORM\Column(name="closing_balance", type="decimal", precision=14, scale=2, nullable=true)
      */
     private $closingBalance;
 
     /**
      * @var bool
+     *
      * @JMS\Groups({"account"})
      * @JMS\Type("boolean")
      * @ORM\Column(name="is_closed", type="boolean", options={ "default": false}, nullable=true)
@@ -135,7 +137,6 @@ class BankAccount implements BankAccountInterface
      *
      * @JMS\Type("string")
      * @JMS\Groups({"account"})
-     *
      * @ORM\Column(name="is_joint_account", type="string", length=3, nullable=true)
      */
     private $isJointAccount;
@@ -145,7 +146,6 @@ class BankAccount implements BankAccountInterface
      *
      * @JMS\Type("string")
      * @JMS\Groups({"account"})
-     *
      * @ORM\Column(name="meta", type="text", nullable=true)
      */
     private $meta;
@@ -405,7 +405,9 @@ class BankAccount implements BankAccountInterface
      */
     public function setIsJointAccount($isJointAccount)
     {
-        $this->isJointAccount = trim(strtolower($isJointAccount));
+        if (!is_null($isJointAccount)) {
+            $this->isJointAccount = trim(strtolower($isJointAccount));
+        }
 
         return $this;
     }

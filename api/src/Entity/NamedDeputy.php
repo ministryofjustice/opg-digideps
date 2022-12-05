@@ -21,8 +21,8 @@ class NamedDeputy
 
     /**
      * @var int
-     * @JMS\Type("integer")
      *
+     * @JMS\Type("integer")
      * @ORM\Column(name="id", type="integer", nullable=false)
      * @ORM\Id
      * @ORM\GeneratedValue(strategy="IDENTITY")
@@ -36,7 +36,6 @@ class NamedDeputy
      * Loaded from the CSV upload.
      *
      * @JMS\Exclude
-     *
      * @ORM\OneToMany(targetEntity="App\Entity\Client", mappedBy="namedDeputy")
      * @ORM\JoinColumn(name="id", referencedColumnName="named_deputy_id")
      */
@@ -53,9 +52,9 @@ class NamedDeputy
 
     /**
      * @var string
+     *
      * @JMS\Type("string")
      * @JMS\Groups({"report-submitted-by", "named-deputy"})
-     *
      * @ORM\Column(name="firstname", type="string", length=100, nullable=false)
      */
     private $firstname;
@@ -71,27 +70,27 @@ class NamedDeputy
 
     /**
      * @var string
+     *
      * @JMS\Groups({"report-submitted-by", "named-deputy"})
      * @JMS\Type("string")
-     *
      * @ORM\Column(name="email1", type="string", length=60, nullable=false, unique=false)
      */
     private $email1;
 
     /**
      * @var string
+     *
      * @JMS\Groups({"report-submitted-by", "named-deputy"})
      * @JMS\Type("string")
-     *
      * @ORM\Column(name="email2", type="string", length=60, nullable=true, unique=false)
      */
     private $email2;
 
     /**
      * @var string
+     *
      * @JMS\Groups({"report-submitted-by", "named-deputy"})
      * @JMS\Type("string")
-     *
      * @ORM\Column(name="email3", type="string", length=60, nullable=true, unique=false)
      */
     private $email3;
@@ -301,7 +300,9 @@ class NamedDeputy
      */
     public function setEmail2($email2)
     {
-        $this->email2 = trim($email2);
+        if (!is_null($email2)) {
+            $this->email2 = trim($email2);
+        }
 
         return $this;
     }
@@ -321,7 +322,9 @@ class NamedDeputy
      */
     public function setEmail3($email3)
     {
-        $this->email3 = trim($email3);
+        if (!is_null($email3)) {
+            $this->email3 = trim($email3);
+        }
 
         return $this;
     }
@@ -455,8 +458,6 @@ class NamedDeputy
     }
 
     /**
-     * @param $addressCountry
-     *
      * @return $this
      */
     public function setAddressCountry($addressCountry)
@@ -481,7 +482,9 @@ class NamedDeputy
      */
     public function setPhoneMain($phoneMain)
     {
-        $this->phoneMain = trim($phoneMain);
+        if (!is_null($phoneMain)) {
+            $this->phoneMain = trim($phoneMain);
+        }
 
         return $this;
     }
@@ -501,7 +504,9 @@ class NamedDeputy
      */
     public function setPhoneAlternative($phoneAlternative)
     {
-        $this->phoneAlternative = trim($phoneAlternative);
+        if (!is_null($phoneAlternative)) {
+            $this->phoneAlternative = trim($phoneAlternative);
+        }
 
         return $this;
     }

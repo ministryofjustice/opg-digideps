@@ -16,8 +16,6 @@ use App\Repository\ReportRepository;
 use App\Service\ReportUtils;
 use App\v2\Registration\Assembler\SiriusToOrgDeputyshipDtoAssembler;
 use App\v2\Registration\DTO\OrgDeputyshipDto;
-use DateTime;
-use DateTimeImmutable;
 use Doctrine\ORM\EntityManager;
 use Faker\Factory;
 use Faker\Provider\en_GB\Address;
@@ -49,7 +47,7 @@ class OrgDeputyshipDTOTestHelper
     public static function generateValidSiriusOrgDeputyshipArray()
     {
         $faker = Factory::create();
-        $courtOrderMadeDate = DateTimeImmutable::createFromMutable($faker->dateTimeThisYear());
+        $courtOrderMadeDate = \DateTimeImmutable::createFromMutable($faker->dateTimeThisYear());
         $reportPeriodEndDate = $courtOrderMadeDate->modify('12 months - 1 day');
 
         return [
@@ -80,6 +78,7 @@ class OrgDeputyshipDTOTestHelper
             'ReportType' => $faker->randomElement(['OPG102', 'OPG103', 'OPG104']),
             'OrderType' => $faker->randomElement(['pfa', 'hw']),
             'CoDeputy' => $faker->randomElement(['yes', 'no']),
+            'Hybrid' => 'SINGLE',
         ];
     }
 
@@ -251,7 +250,7 @@ class OrgDeputyshipDTOTestHelper
             ->setCaseNumber($dto->getCaseNumber())
             ->setFirstname($dto->getClientFirstname())
             ->setLastname($dto->getClientLastname())
-            ->setCourtDate(new DateTime())
+            ->setCourtDate(new \DateTime())
             ->addUser($layDeputy);
 
         $em->persist($layDeputy);
@@ -268,7 +267,7 @@ class OrgDeputyshipDTOTestHelper
         string $startDate = '2019-11-01',
         string $endDate = '2020-10-31'
     ) {
-        $report = new Report($client, $reportType, new DateTime($startDate), new DateTime($endDate));
+        $report = new Report($client, $reportType, new \DateTime($startDate), new \DateTime($endDate));
         $client->addReport($report);
 
         $em->persist($report);

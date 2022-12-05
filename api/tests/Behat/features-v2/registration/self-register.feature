@@ -25,7 +25,8 @@ Feature: Lay Deputy Self Registration
         When I navigate to the upload users page
         And I upload a lay CSV that contains 3 new pre-registration entities
         And a Lay Deputy registers to deputise for a client with valid details
-        Then I should be on the Lay homepage
+        Then my deputy details should be saved to my account
+        And I should be on the Lay homepage
 
     @super-admin
     Scenario: A Lay user with an existing pre-registration record and a user account created by a case manager can register
@@ -35,4 +36,5 @@ Feature: Lay Deputy Self Registration
         And I create a Lay Deputy user account for one of the deputies in the CSV
         When a Lay Deputy clicks the activation link in the registration email
         And I complete the case manager user registration flow with valid deputyship details
-        Then I should be on the Lay homepage
+        Then my deputy details should be saved to my account
+        And I should be on the Lay homepage

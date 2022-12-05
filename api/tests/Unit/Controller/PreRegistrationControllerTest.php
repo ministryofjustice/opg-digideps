@@ -3,13 +3,14 @@
 namespace App\Tests\Unit\Controller;
 
 use App\Entity\PreRegistration;
+use App\Entity\User;
 use App\Tests\Unit\Fixtures;
 
 class PreRegistrationControllerTest extends AbstractTestController
 {
-    private static $deputy1;
-    private static $admin1;
-    private static $deputy2;
+    private static User $deputy1;
+    private static User $admin1;
+    private static User $deputy2;
     private static $tokenAdmin = null;
     private static $tokenDeputy = null;
     private static $tokenProf = null;
@@ -50,6 +51,7 @@ class PreRegistrationControllerTest extends AbstractTestController
             'ReportType' => 'OPG102',
             'MadeDate' => '2010-03-30',
             'OrderType' => 'pfa',
+            'Hybrid' => 'SINGLE',
         ];
 
         $this->c1 = new PreRegistration($data);
@@ -141,22 +143,85 @@ class PreRegistrationControllerTest extends AbstractTestController
         ]);
     }
 
-    private function buildAndPersistPreRegistrationEntity(string $case): PreRegistration
+    private function buildAndPersistPreRegistrationEntity(string $case, string $hybrid = 'SINGLE', string $deputySurname = 'admin'): PreRegistration
     {
         $preRegistration = new PreRegistration([
             'Case' => $case,
             'ClientSurname' => 'I should get deleted',
             'DeputyUid' => 'Deputy No',
-            'DeputySurname' => 'admin',
+            'DeputySurname' => $deputySurname,
             'DeputyAddress1' => 'Victoria Road',
             'DeputyPostcode' => 'SW1',
             'ReportType' => 'OPG102',
             'MadeDate' => '2010-03-30',
             'OrderType' => 'pfa',
+            'Hybrid' => $hybrid,
         ]);
 
         $this->fixtures()->persist($preRegistration);
 
         return $preRegistration;
+    }
+
+    public function testDeputyUidSetWhenSingleMatchFound()
+    {
+        $this->buildAndPersistPreRegistrationEntity('17171717', 'SINGLE', 'deputy');
+        $this->buildAndPersistPreRegistrationEntity('28282828', 'SINGLE', 'deputy');
+        $this->fixtures()->flush();
+        $this->fixtures()->clear();
+
+        self::$tokenDeputy = $this->loginAsDeputy();
+
+        /** @var User $loggedInUser */
+        $loggedInUser = $this->fixtures()->clear()->getRepo('User')->find($this->loggedInUserId);
+
+        $loggedInUser->setDeputyNo(null);
+        $this->fixtures()->persist($loggedInUser);
+        $this->fixtures()->flush();
+        $this->fixtures()->clear();
+
+        $this->assertJsonRequest('POST', '/pre-registration/verify', [
+            'data' => [
+                'case_number' => '17171717',
+                'lastname' => 'I should get deleted',
+            ],
+            'mustSucceed' => true,
+            'AuthToken' => self::$tokenDeputy,
+        ]);
+
+        $loggedInUser = $this->fixtures()->clear()->getRepo('User')->find($this->loggedInUserId);
+
+        $this->assertEquals('Deputy No', $loggedInUser->getDeputyNo());
+    }
+
+    public function testDeputyUidNotSetWhenMultipleMatchesFound()
+    {
+        $this->buildAndPersistPreRegistrationEntity('39393939', 'DUAL', 'deputy');
+        $this->buildAndPersistPreRegistrationEntity('39393939', 'DUAL', 'deputy');
+        $this->fixtures()->flush();
+        $this->fixtures()->clear();
+
+        self::$tokenDeputy = $this->loginAsDeputy();
+
+        /** @var User $loggedInUser */
+        $loggedInUser = $this->fixtures()->clear()->getRepo('User')->find($this->loggedInUserId);
+
+        $loggedInUser->setDeputyNo(null);
+        $this->fixtures()->persist($loggedInUser);
+        $this->fixtures()->flush();
+        $this->fixtures()->clear();
+
+        $this->assertJsonRequest('POST', '/pre-registration/verify', [
+            'data' => [
+                'case_number' => '39393939',
+                'lastname' => 'I should get deleted',
+            ],
+            'mustSucceed' => true,
+            'AuthToken' => self::$tokenDeputy,
+        ]);
+
+        $loggedInUser = $this->fixtures()->clear()->getRepo('User')->find($this->loggedInUserId);
+
+        $this->assertNull($loggedInUser->getDeputyNo());
     }
 }

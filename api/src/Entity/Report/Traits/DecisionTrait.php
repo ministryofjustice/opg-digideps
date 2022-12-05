@@ -3,6 +3,7 @@
 namespace App\Entity\Report\Traits;
 
 use App\Entity\Report\Decision;
+use App\Entity\Report\Report;
 use Doctrine\ORM\Mapping as ORM;
 use JMS\Serializer\Annotation as JMS;
 
@@ -16,7 +17,6 @@ trait DecisionTrait
      * @ORM\OneToMany(targetEntity="App\Entity\Report\Decision", mappedBy="report", cascade={"persist", "remove"})
      */
     private $decisions;
-
 
     /**
      * @var string deputy reason for not having decision. Required if no decisions are added
@@ -40,8 +40,6 @@ trait DecisionTrait
     /**
      * Add decisions.
      *
-     * @param Decision $decision
-     *
      * @return Report
      */
     public function addDecision(Decision $decision)
@@ -53,8 +51,6 @@ trait DecisionTrait
 
     /**
      * Remove decisions.
-     *
-     * @param Decision $decision
      */
     public function removeDecision(Decision $decision)
     {
@@ -70,7 +66,9 @@ trait DecisionTrait
      **/
     public function setReasonForNoDecisions($reasonForNoDecisions)
     {
-        $this->reasonForNoDecisions = trim($reasonForNoDecisions, " \n");
+        if (!is_null($reasonForNoDecisions)) {
+            $this->reasonForNoDecisions = trim($reasonForNoDecisions, " \n");
+        }
 
         return $this;
     }
