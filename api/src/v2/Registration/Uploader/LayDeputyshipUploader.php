@@ -3,6 +3,7 @@
 namespace App\v2\Registration\Uploader;
 
 use App\Entity\PreRegistration;
+use App\Entity\Report\Report;
 use App\Entity\User;
 use App\Repository\ReportRepository;
 use App\v2\Registration\DTO\LayDeputyshipDto;
@@ -13,10 +14,7 @@ use Doctrine\Common\Persistence\Mapping\MappingException;
 use Doctrine\ORM\EntityManagerInterface;
 use Doctrine\ORM\OptimisticLockException;
 use Doctrine\ORM\ORMException;
-use Exception;
 use Psr\Log\LoggerInterface;
-use RuntimeException;
-use Throwable;
 
 class LayDeputyshipUploader
 {
@@ -66,7 +64,7 @@ class LayDeputyshipUploader
             $this
                 ->updateReportTypes()
                 ->commitTransactionToDatabase();
-        } catch (Throwable $e) {
+        } catch (\Throwable $e) {
             $this->verboseLogger->error($e->getMessage());
 
             return ['added' => $added, 'errors' => [$e->getMessage()]];
@@ -84,7 +82,7 @@ class LayDeputyshipUploader
     private function throwExceptionIfDataTooLarge(LayDeputyshipDtoCollection $collection): void
     {
         if ($collection->count() > self::MAX_UPLOAD) {
-            throw new RuntimeException(sprintf('Max %d records allowed in a single bulk insert', self::MAX_UPLOAD));
+            throw new \RuntimeException(sprintf('Max %d records allowed in a single bulk insert', self::MAX_UPLOAD));
         }
     }
 
@@ -101,7 +99,7 @@ class LayDeputyshipUploader
     }
 
     /**
-     * @throws Exception
+     * @throws \Exception
      */
     private function updateReportTypes(): LayDeputyshipUploader
     {
@@ -111,6 +109,7 @@ class LayDeputyshipUploader
         $reports = $this->reportRepository->findAllActiveReportsByCaseNumbersAndRole($caseNumbers, User::ROLE_LAY_DEPUTY);
 
         try {
+            /** @var Report $currentActiveReport */
             foreach ($reports as $currentActiveReport) {
                 $reportCaseNumber = strtolower($currentActiveReport->getClient()->getCaseNumber());
                 $currentActiveReportId = $currentActiveReport->getId();
@@ -118,14 +117,24 @@ class LayDeputyshipUploader
                 $preRegistration = $this->preRegistrationEntriesByCaseNumber[$reportCaseNumber];
                 $determinedReportType = PreRegistration::getReportTypeByOrderType($preRegistration->getTypeOfReport(), $preRegistration->getOrderType(), PreRegistration::REALM_LAY);
 
-                if ($currentActiveReport->getType() != $determinedReportType) {
-                    $currentActiveReport->setType($determinedReportType);
-                    $this->reportsUpdated[] = $reportCaseNumber;
+                // For Dual Cases, deputy uid needs to match for the report type to be updated
+                if (PreRegistration::DUAL_TYPE == $preRegistration->getHybrid()) {
+                    if ($currentActiveReport->getClient()->getUsers()[0]->getDeputyNo() == $preRegistration->getDeputyUid()) {
+                        if ($currentActiveReport->getType() != $determinedReportType) {
+                            $currentActiveReport->setType($determinedReportType);
+                            $this->reportsUpdated[] = $reportCaseNumber;
+                        }
+                    }
+                } else {
+                    if ($currentActiveReport->getType() != $determinedReportType) {
+                        $currentActiveReport->setType($determinedReportType);
+                        $this->reportsUpdated[] = $reportCaseNumber;
+                    }
                 }
             }
-        } catch (Throwable $e) {
+        } catch (\Throwable $e) {
             $this->verboseLogger->error(sprintf('Error whilst updating report type for report with ID: %d, for case number: %s', $currentActiveReportId, $reportCaseNumber));
-            throw new Exception($e->getMessage());
+            throw new \Exception($e->getMessage());
         }
 
         return $this;

@@ -24,6 +24,10 @@ class PreRegistration
     public const REALM_PROF = 'REALM_PROF';
     public const REALM_LAY = 'REALM_LAY';
 
+    public const SINGLE_TYPE = 'SINGLE';
+    public const HYBRID_TYPE = 'HYBRID';
+    public const DUAL_TYPE = 'DUAL';
+
     public function __construct(array $row)
     {
         $this->caseNumber = $row['Case'] ?? '';
