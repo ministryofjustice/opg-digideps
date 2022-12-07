@@ -312,6 +312,9 @@ v2-tests-browserstack:
                 - App\Tests\Behat\v2\Reporting\Sections\ReportingSectionsFeatureContext
     extensions:
         Behat\MinkExtension:
+            sessions:
+                symfony:
+                    symfony: ~
             browser_stack:
                 capabilities:
                     browserstack-debug: true
