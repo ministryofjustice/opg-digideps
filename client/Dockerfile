@@ -18,7 +18,7 @@ RUN npm audit --production
 #Build assets
 RUN NODE_ENV=production npm run build
 
-FROM composer:2.3.5 AS composer
+FROM composer:2.4.4 AS composer
 WORKDIR /app
 
 RUN apk update

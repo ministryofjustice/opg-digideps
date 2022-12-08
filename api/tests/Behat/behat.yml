@@ -312,6 +312,8 @@ v2-tests-browserstack:
                 - App\Tests\Behat\v2\Reporting\Sections\ReportingSectionsFeatureContext
     extensions:
         Behat\MinkExtension:
+            files_path: "%paths.base%/fixtures/"
+            default_session: browser_stack
             browser_stack:
                 capabilities:
                     browserstack-debug: true
@@ -324,5 +326,3 @@ v2-tests-browserstack:
                     os_version: "10"
                     build: "Chrome"
                     name: "v2-tests"
-            files_path: "%paths.base%/fixtures/"
-            default_session: browser_stack

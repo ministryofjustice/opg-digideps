@@ -1,4 +1,4 @@
-FROM python:3.10-alpine3.16
+FROM python:3.11-alpine3.16
 
 COPY requirements.txt /requirements.txt
 RUN apk update && apk upgrade && pip install --upgrade pip \
