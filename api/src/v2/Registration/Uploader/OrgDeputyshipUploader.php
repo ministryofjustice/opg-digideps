@@ -232,7 +232,7 @@ class OrgDeputyshipUploader
 
             // Temp fix for clients who have new named deputy in same organisation
             if (!$this->clientHasSwitchedOrganisation($this->client)) {
-                if ($this->clientHasNewNamedDeputy($this->client, $this->namedDeputy)) {
+                if ($this->clientHasNewNamedDeputy($this->client, $this->namedDeputy) && OrgDeputyshipDto::DUAL_TYPE != $dto->getHybrid()) {
                     $this->client->setNamedDeputy($this->namedDeputy);
 
                     $this->updated['clients'][] = $this->client->getId();

@@ -541,14 +541,11 @@ class OrgDeputyshipUploaderTest extends KernelTestCase
         $deputyships[0]->setReportType($changedReportType);
         $deputyships[0]->setHybrid(OrgDeputyshipDto::DUAL_TYPE);
         $deputyships[0]->setDeputyUid('87654321');
-        $deputyships[0]->setDeputyEmail('differentDeputy@differentorg.com');
 
-        $organisation = OrgDeputyshipDTOTestHelper::ensureOrgInUploadExists('originalorganisation.com', $this->em);
         $client = OrgDeputyshipDTOTestHelper::ensureClientInUploadExists($deputyships[0], $this->em);
         $namedDeputy = OrgDeputyshipDTOTestHelper::ensureNamedDeputyInUploadExists($deputyships[0], $this->em);
         $namedDeputy->setDeputyUid('12345678');
         $client->setNamedDeputy($namedDeputy);
-        $client->setOrganisation($organisation);
 
         $oldReportType = OrgDeputyshipDTOTestHelper::ensureAReportExistsAndIsAssociatedWithClient($client, $this->em)->getType();
 

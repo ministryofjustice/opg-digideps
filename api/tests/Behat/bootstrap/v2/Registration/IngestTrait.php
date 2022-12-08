@@ -11,7 +11,6 @@ use App\Entity\PreRegistration;
 use App\Entity\Report\Report;
 use App\Tests\Behat\BehatException;
 use Behat\Gherkin\Node\TableNode;
-use DateTime;
 
 trait IngestTrait
 {
@@ -28,7 +27,7 @@ trait IngestTrait
         'sirius_case_numbers' => [],
     ];
 
-    private ?DateTime $expectedClientCourtDate = null;
+    private ?\DateTime $expectedClientCourtDate = null;
 
     private string $expectedNamedDeputyName = '';
     private string $expectedNamedDeputyAddress = '';
@@ -260,6 +259,23 @@ trait IngestTrait
 
         $this->uploadCsvAndCountCreatedEntities(
             'sirius-csvs/org-1-updated-row-report-type.csv',
+            'Upload PA/Prof users'
+        );
+    }
+
+    /**
+     * @When I upload an org CSV that has a new report type :reportTypeNumber for a dual case
+     */
+    public function iUploadACsvThatHasANewReportTypeForDualCase(string $reportTypeNumber)
+    {
+        $this->iAmOnAdminOrgCsvUploadPage();
+
+        $this->expectedReportType = $reportTypeNumber;
+
+        $this->createProfAdminNotStarted(null, 'fuzzy.lumpkins@jojo6.com', '60000000', '740000000001');
+
+        $this->uploadCsvAndCountCreatedEntities(
+            'sirius-csvs/org-2-rows-1-row-updated-report-type-dual-case.csv',
             'Upload PA/Prof users'
         );
     }
