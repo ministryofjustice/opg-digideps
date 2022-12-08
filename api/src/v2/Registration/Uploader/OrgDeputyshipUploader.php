@@ -300,7 +300,7 @@ class OrgDeputyshipUploader
         if ($report) {
             if (!$report->getSubmitted() && empty($report->getUnSubmitDate())) {
                 if (OrgDeputyshipDto::DUAL_TYPE == $dto->getHybrid()) {
-                    if ($this->namedDeputy->getDeputyUid() == $dto->getDeputyUid()) {
+                    if ($this->client->getNamedDeputy()->getDeputyUid() == $dto->getDeputyUid()) {
                         if ($report->getType() !== $dto->getReportType()) {
                             $report->setType($dto->getReportType());
 

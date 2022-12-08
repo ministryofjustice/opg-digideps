@@ -12,22 +12,19 @@ use App\v2\Registration\DTO\LayDeputyshipDtoCollection;
 use App\v2\Registration\SelfRegistration\Factory\PreRegistrationCreationException;
 use App\v2\Registration\SelfRegistration\Factory\PreRegistrationFactory;
 use App\v2\Registration\Uploader\LayDeputyshipUploader;
-use DateTime;
 use Doctrine\ORM\EntityManager;
 use PHPUnit\Framework\TestCase;
-use PHPUnit_Framework_MockObject_MockObject;
 use Psr\Log\LoggerInterface;
-use RuntimeException;
 
 class LayDeputyshipUploaderTest extends TestCase
 {
-    /** @var EntityManager|PHPUnit_Framework_MockObject_MockObject */
+    /** @var EntityManager|\PHPUnit_Framework_MockObject_MockObject */
     protected $em;
 
-    /** @var ReportRepository|PHPUnit_Framework_MockObject_MockObject */
+    /** @var ReportRepository|\PHPUnit_Framework_MockObject_MockObject */
     protected $reportRepository;
 
-    /** @var PreRegistrationFactory|PHPUnit_Framework_MockObject_MockObject */
+    /** @var PreRegistrationFactory|\PHPUnit_Framework_MockObject_MockObject */
     private $factory;
 
     /** @var LayDeputyshipUploader */
@@ -57,7 +54,7 @@ class LayDeputyshipUploaderTest extends TestCase
      */
     public function throwsExceptionIfDataSetTooLarge()
     {
-        $this->expectException(RuntimeException::class);
+        $this->expectException(\RuntimeException::class);
         $collection = new LayDeputyshipDtoCollection();
 
         for ($i = 0; $i < LayDeputyshipUploader::MAX_UPLOAD + 1; ++$i) {
@@ -99,14 +96,27 @@ class LayDeputyshipUploaderTest extends TestCase
 
     /**
      * @test
+     *
      * @dataProvider reportTypeProvider
      */
-    public function updatesReportTypeOfActiveReportsIfRequired(string $currentReportType, string $preRegistrationNewReportType, string $expectedNewReportType)
+    public function updatesReportTypeOfActiveReportsIfRequired(
+        string $currentReportType,
+        string $preRegistrationNewReportType,
+        string $expectedNewReportType,
+        bool $isDualCase,
+        string $deputyUid)
     {
         $collection = new LayDeputyshipDtoCollection();
         $collection->append($this->buildLayDeputyshipDto(1));
 
-        $preRegistration = new PreRegistration(['ReportType' => $preRegistrationNewReportType, 'OrderType' => 'OPG104' === $preRegistrationNewReportType ? 'hw' : 'pfa']);
+        $caseType = $isDualCase ? 'DUAL' : 'SINGLE';
+
+        $preRegistration = new PreRegistration([
+            'ReportType' => $preRegistrationNewReportType,
+            'OrderType' => 'OPG104' === $preRegistrationNewReportType ? 'hw' : 'pfa',
+            'Hybrid' => $caseType,
+            'DeputyUid' => $deputyUid,
+        ]);
 
         $this->factory
             ->expects($this->once())
@@ -114,8 +124,28 @@ class LayDeputyshipUploaderTest extends TestCase
             ->willReturnOnConsecutiveCalls($preRegistration);
 
         // Ensure an existing Client is found with an active Report whose type is different to the new type in the upload.
-        $existingClient = (new Client())->setCaseNumber('case-1');
-        $activeReport = new Report($existingClient, $currentReportType, new DateTime(), new DateTime(), false);
+
+        $existingClient = $this->getMockBuilder(Client::class)->disableOriginalConstructor()->getMock();
+        $existingClient
+            ->expects($this->once())
+            ->method('getCaseNumber')
+            ->willReturn('case-1');
+
+        if ($isDualCase) {
+            $deputy = $this->getMockBuilder(User::class)->disableOriginalConstructor()->getMock();
+            $deputy
+                ->expects($this->once())
+                ->method('getDeputyNo')
+                ->willReturn('12345678');
+
+            $existingClient
+                ->expects($this->once())
+                ->method('getUsers')
+                ->willReturn([$deputy]);
+        }
+
+        // $existingClient = (new Client())->setCaseNumber('case-1');
+        $activeReport = new Report($existingClient, $currentReportType, new \DateTime(), new \DateTime(), false);
         $this->reportRepository
             ->expects($this->once())
             ->method('findAllActiveReportsByCaseNumbersAndRole')
@@ -131,9 +161,11 @@ class LayDeputyshipUploaderTest extends TestCase
     public function reportTypeProvider()
     {
         return [
-            'Changes to 102' => ['103', 'OPG102', '102'],
-            'Changes to 103' => ['102', 'OPG103', '103'],
-            'Changes to 104' => ['102', 'OPG104', '104'],
+            'Changes to 102' => ['103', 'OPG102', '102', false, '12345678'],
+            'Changes to 103' => ['102', 'OPG103', '103', false, '12345678'],
+            'Changes to 104' => ['102', 'OPG104', '104', false, '12345678'],
+            'Dual Case changes to 103' => ['102', 'OPG103', '103', true, '12345678'],
+            'Dual Case does not change' => ['102', 'OPG103', '102', true, '87654321'],
         ];
     }
 
@@ -160,9 +192,6 @@ class LayDeputyshipUploaderTest extends TestCase
         $this->assertEquals('ERROR IN LINE 2: Unable to create PreRegistration entity', $return['errors'][0]);
     }
 
-    /**
-     * @param $count
-     */
     private function buildLayDeputyshipDto($count): LayDeputyshipDto
     {
         return (new LayDeputyshipDto())

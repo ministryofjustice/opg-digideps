@@ -242,7 +242,7 @@ class OrgDeputyshipUploaderTest extends KernelTestCase
 
         $client = OrgDeputyshipDTOTestHelper::ensureClientInUploadExists($deputyships[0], $this->em);
         $client->setNamedDeputy($originalNamedDeputy)->setOrganisation($organisation);
-        $client->setCourtDate(new DateTime());
+        $client->setCourtDate(new \DateTime());
 
         $this->em->persist($client);
         $this->em->flush();
@@ -333,7 +333,7 @@ class OrgDeputyshipUploaderTest extends KernelTestCase
 
         $originalClient = OrgDeputyshipDTOTestHelper::ensureClientInUploadExists($deputyships[0], $this->em);
         $originalClient->setNamedDeputy($originalNamedDeputy)->setOrganisation($organisation);
-        $originalClient->setCourtDate(new DateTime());
+        $originalClient->setCourtDate(new \DateTime());
 
         $this->em->persist($originalClient);
         $this->em->flush();
@@ -382,7 +382,7 @@ class OrgDeputyshipUploaderTest extends KernelTestCase
 
         $originalClient = OrgDeputyshipDTOTestHelper::ensureClientInUploadExists($deputyships[0], $this->em);
         $originalClient->setNamedDeputy($originalNamedDeputy)->setOrganisation($organisation);
-        $originalClient->setCourtDate(new DateTime());
+        $originalClient->setCourtDate(new \DateTime());
 
         $this->em->persist($originalClient);
         $this->em->flush();
@@ -504,8 +504,72 @@ class OrgDeputyshipUploaderTest extends KernelTestCase
         );
     }
 
+    /** @test */
+    public function uploadExistingReportTypeIsChangedIfTypeIsDifferentAndDeputyUidMatchesForDualCase()
+    {
+        $deputyships = OrgDeputyshipDTOTestHelper::generateSiriusOrgDeputyshipDtos(1, 0);
+        $changedReportType = '102-5';
+        $deputyships[0]->setReportType($changedReportType);
+        $deputyships[0]->setHybrid(OrgDeputyshipDto::DUAL_TYPE);
+        $deputyships[0]->setDeputyUid('12345678');
+
+        $client = OrgDeputyshipDTOTestHelper::ensureClientInUploadExists($deputyships[0], $this->em);
+        $namedDeputy = OrgDeputyshipDTOTestHelper::ensureNamedDeputyInUploadExists($deputyships[0], $this->em);
+        $client->setNamedDeputy($namedDeputy);
+        $oldReportType = OrgDeputyshipDTOTestHelper::ensureAReportExistsAndIsAssociatedWithClient($client, $this->em)->getType();
+
+        $this->sut->upload($deputyships);
+
+        $caseNumber = $deputyships[0]->getCaseNumber();
+
+        self::assertTrue(
+            OrgDeputyshipDTOTestHelper::reportTypeHasChanged($oldReportType, $client, $this->reportRepository),
+            sprintf(
+                'Report associated to Client with case number "%s" had report type %s after upload which is the same as %s',
+                $caseNumber,
+                $client->getReports()->first()->getType(),
+                $oldReportType
+            )
+        );
+    }
+
+    /** @test */
+    public function uploadExistingReportTypeIsNotChangedIfTypeIsDifferentAndDeputyUidDoesNotMatchForDualCase()
+    {
+        $deputyships = OrgDeputyshipDTOTestHelper::generateSiriusOrgDeputyshipDtos(1, 0);
+        $changedReportType = '102-5';
+        $deputyships[0]->setReportType($changedReportType);
+        $deputyships[0]->setHybrid(OrgDeputyshipDto::DUAL_TYPE);
+        $deputyships[0]->setDeputyUid('87654321');
+        $deputyships[0]->setDeputyEmail('differentDeputy@differentorg.com');
+
+        $organisation = OrgDeputyshipDTOTestHelper::ensureOrgInUploadExists('originalorganisation.com', $this->em);
+        $client = OrgDeputyshipDTOTestHelper::ensureClientInUploadExists($deputyships[0], $this->em);
+        $namedDeputy = OrgDeputyshipDTOTestHelper::ensureNamedDeputyInUploadExists($deputyships[0], $this->em);
+        $namedDeputy->setDeputyUid('12345678');
+        $client->setNamedDeputy($namedDeputy);
+        $client->setOrganisation($organisation);
+
+        $oldReportType = OrgDeputyshipDTOTestHelper::ensureAReportExistsAndIsAssociatedWithClient($client, $this->em)->getType();
+
+        $this->sut->upload($deputyships);
+
+        $caseNumber = $deputyships[0]->getCaseNumber();
+
+        self::assertFalse(
+            OrgDeputyshipDTOTestHelper::reportTypeHasChanged($oldReportType, $client, $this->reportRepository),
+            sprintf(
+                'Report associated to Client with case number "%s" had report type %s after upload which is not the same as %s',
+                $caseNumber,
+                $client->getReports()->first()->getType(),
+                $oldReportType
+            )
+        );
+    }
+
     /**
      * @test
+     *
      * @dataProvider errorProvider
      */
     public function uploadErrorsAreAddedToErrorArray(OrgDeputyshipDto $dto, array $expectedErrorStrings)
@@ -616,7 +680,7 @@ class OrgDeputyshipUploaderTest extends KernelTestCase
         $namedDeputy = OrgDeputyshipDTOTestHelper::ensureNamedDeputyInUploadExists($deputyships[0], $this->em);
 
         $client->setNamedDeputy($namedDeputy);
-        $client->setArchivedAt(new DateTime());
+        $client->setArchivedAt(new \DateTime());
 
         $this->em->persist($client);
         $this->em->flush();
