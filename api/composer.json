@@ -78,7 +78,7 @@
         "behat/mink-selenium2-driver": "^1.6",
         "doctrine/doctrine-fixtures-bundle": "^3.4",
         "fakerphp/faker": "^1.16",
-        "friends-of-behat/symfony-extension": "^2.2",
+        "friends-of-behat/symfony-extension": "^2.4",
         "guzzlehttp/guzzle": "^7.0",
         "liuggio/fastest": "^1.9",
         "mockery/mockery": "^1.0.0",
