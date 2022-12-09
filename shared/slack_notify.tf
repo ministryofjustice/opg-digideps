@@ -9,7 +9,7 @@ resource "aws_sns_topic" "alerts" {
 #tfsec:ignore:aws-lambda-restrict-source-arn - access is actually restricted to single resource
 #tfsec:ignore:aws-lambda-enable-tracing - no control over this
 module "notify_slack" {
-  source = "github.com/terraform-aws-modules/terraform-aws-notify-slack.git?ref=v5.4.1"
+  source = "github.com/terraform-aws-modules/terraform-aws-notify-slack.git?ref=v5.5.0"
 
   sns_topic_name   = aws_sns_topic.alerts.name
   create_sns_topic = false
