@@ -104,7 +104,7 @@ class LayDeputyshipUploaderTest extends TestCase
         string $preRegistrationNewReportType,
         string $expectedNewReportType,
         bool $isDualCase,
-        string $deputyUid)
+        ?string $deputyUid)
     {
         $collection = new LayDeputyshipDtoCollection();
         $collection->append($this->buildLayDeputyshipDto(1));
@@ -166,6 +166,9 @@ class LayDeputyshipUploaderTest extends TestCase
             'Changes to 104' => ['102', 'OPG104', '104', false, '12345678'],
             'Dual Case changes to 103' => ['102', 'OPG103', '103', true, '12345678'],
             'Dual Case does not change' => ['102', 'OPG103', '102', true, '87654321'],
+            'Dual Case does not change with empty uid' => ['102', 'OPG103', '102', true, ''],
+            'Dual Case does not change with concat uids' => ['102', 'OPG103', '102', true, '12345678,87654321'],
+            'Dual Case does not change with null uid' => ['102', 'OPG103', '102', true, null],
         ];
     }
 
