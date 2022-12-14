@@ -78,7 +78,7 @@ class PreRegistration
 
     /**
      * @Assert\NotBlank()
-     * @ORM\Column(name="deputy_firstname", type="string", length=100, nullable=true, columnDefinition="BEFORE deputySurname")
+     * @ORM\Column(name="deputy_firstname", type="string", length=100, nullable=true)
      * @JMS\Type("string")
      */
     private string $deputyFirstname;
