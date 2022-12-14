@@ -34,6 +34,7 @@ class PreRegistrationFactory
             ->setDeputyAddress4($data['deputyAddress4'] ?? null)
             ->setDeputyAddress5($data['deputyAddress5'] ?? null)
             ->setDeputyPostcode($data['deputyPostCode'] ?? 'SW1')
+            ->setDeputyFirstname($data['deputyFirstname'] ?? 'Melissa')
             ->setDeputySurname($data['deputyLastName'] ?? 'Jones')
             ->setIsNdrEnabled(false)
             ->setOrderDate(new DateTime())
