@@ -297,25 +297,23 @@ class OrgDeputyshipUploader
     {
         $report = $this->client->getCurrentReport();
 
-        if ($report) {
-            if (!$report->getSubmitted() && empty($report->getUnSubmitDate())) {
-                if (OrgDeputyshipDto::DUAL_TYPE == $dto->getHybrid()) {
-                    if ($this->client->getNamedDeputy()->getDeputyUid() == $dto->getDeputyUid()) {
-                        if ($report->getType() !== $dto->getReportType()) {
-                            $report->setType($dto->getReportType());
+        if (!$report) {
+            $report = new Report(
+                $this->client,
+                $dto->getReportType(),
+                $dto->getReportStartDate(),
+                $dto->getReportEndDate()
+            );
 
-                            $this->updated['reports'][] = $report->getId();
-                        }
-                    }
-                } else {
-                    if ($report->getType() !== $dto->getReportType()) {
-                        // Add audit logging for report type changing
-                        $report->setType($dto->getReportType());
+            $this->client->addReport($report);
 
-                        $this->updated['reports'][] = $report->getId();
-                    }
-                }
-            }
+            $this->added['reports'][] = $this->client->getCaseNumber().'-'.$dto->getReportEndDate()->format('Y-m-d');
+
+            $this->em->persist($report);
+            $this->em->flush();
+
+            return;
+        }
 
 //            if ($this->clientHasNewOrgAndNamedDeputy($this->client, $this->namedDeputy)) {
 //                $report = new Report(
@@ -328,18 +326,32 @@ class OrgDeputyshipUploader
 //                $this->client->addReport($report);
 //
 //                $this->added['reports'][] = $this->client->getCaseNumber().'-'.$dto->getReportEndDate()->format('Y-m-d');
+//
+//                $this->em->persist($report);
+//                $this->em->flush();
+//
+//                return;
 //            }
+
+        if ($report->getSubmitted() || !empty($report->getUnSubmitDate())) {
+            return;
+        }
+
+        if (OrgDeputyshipDto::DUAL_TYPE == $dto->getHybrid()) {
+            if ($this->client->getNamedDeputy()->getDeputyUid() == $dto->getDeputyUid()) {
+                if ($report->getType() !== $dto->getReportType()) {
+                    $report->setType($dto->getReportType());
+
+                    $this->updated['reports'][] = $report->getId();
+                }
+            }
         } else {
-            $report = new Report(
-                $this->client,
-                $dto->getReportType(),
-                $dto->getReportStartDate(),
-                $dto->getReportEndDate()
-            );
+            if ($report->getType() !== $dto->getReportType()) {
+                // Add audit logging for report type changing
+                $report->setType($dto->getReportType());
 
-            $this->client->addReport($report);
-
-            $this->added['reports'][] = $this->client->getCaseNumber().'-'.$dto->getReportEndDate()->format('Y-m-d');
+                $this->updated['reports'][] = $report->getId();
+            }
         }
 
         $this->em->persist($report);

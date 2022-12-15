@@ -118,14 +118,15 @@ class LayDeputyshipUploader
                 $determinedReportType = PreRegistration::getReportTypeByOrderType($preRegistration->getTypeOfReport(), $preRegistration->getOrderType(), PreRegistration::REALM_LAY);
 
                 // For Dual Cases, deputy uid needs to match for the report type to be updated
-                if (PreRegistration::DUAL_TYPE == $preRegistration->getHybrid()) {
-                    if ($currentActiveReport->getClient()->getUsers()[0]->getDeputyNo() == $preRegistration->getDeputyUid()) {
-                        if ($currentActiveReport->getType() != $determinedReportType) {
-                            $currentActiveReport->setType($determinedReportType);
-                            $this->reportsUpdated[] = $reportCaseNumber;
-                        }
+                if (PreRegistration::DUAL_TYPE != $preRegistration->getHybrid()) {
+                    if ($currentActiveReport->getType() != $determinedReportType) {
+                        $currentActiveReport->setType($determinedReportType);
+                        $this->reportsUpdated[] = $reportCaseNumber;
                     }
-                } else {
+                    continue;
+                }
+
+                if ($currentActiveReport->getClient()->getUsers()[0]->getDeputyNo() == $preRegistration->getDeputyUid()) {
                     if ($currentActiveReport->getType() != $determinedReportType) {
                         $currentActiveReport->setType($determinedReportType);
                         $this->reportsUpdated[] = $reportCaseNumber;
