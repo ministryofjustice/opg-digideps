@@ -149,7 +149,11 @@ class ProcessOrgCSVCommand extends Command {
         $this->redis->set('org-csv-processing', 'completed');
         $this->redis->set('org-csv-completed-date', date('Y-m-d H:i:s'));
 
-        $this->mailer->sendProcessOrgCSVEmail($email, $this->output);
+        if ($email !== NULL) {
+            $this->mailer->sendProcessOrgCSVEmail($email, $this->output);
+        } else {
+            $this->mailer->sendProcessOrgCSVEmail($this->emailParams['csv_send_to_address'], $this->output);
+        }
     }
 
     private function storeOutput(array $output) {

@@ -123,7 +123,11 @@ class ProcessLayCSVCommand extends Command {
         $this->redis->set('lay-csv-processing', 'completed');
         $this->redis->set('lay-csv-completed-date', date('Y-m-d H:i:s'));
 
-        $this->mailer->sendProcessLayCSVEmail($email, $this->output);
+        if ($email !== NULL) {
+            $this->mailer->sendProcessOrgCSVEmail($email, $this->output);
+        } else {
+            $this->mailer->sendProcessOrgCSVEmail($this->emailParams['csv_send_to_address'], $this->output);
+        }
     }
 
     private function storeOutput(array $output) {

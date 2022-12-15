@@ -373,72 +373,12 @@ class IndexController extends AbstractController
     {
         $chunkSize = 2000;
 
-        $form = $this->createForm(FormDir\UploadCsvType::class, null, [
+        $form = $this->createForm(FormDir\ProcessCSVType::class, null, [
             'method' => 'POST',
         ]);
         $form->handleRequest($request);
 
-        $processForm = $this->createForm(FormDir\ProcessCSVType::class, null, [
-            'method' => 'POST',
-        ]);
-        $processForm->handleRequest($request);
-
-        // AjaxController redirects to this page after working through chunks - check if its completed to dispatch event
-        if ('1' === $request->get('complete')) {
-            $this->dispatchCSVUploadEvent();
-        }
-
         if ($form->isSubmitted() && $form->isValid()) {
-            try {
-                $fileName = $form->get('file')->getData();
-                $data = $this->handleLayUploadForm($fileName);
-
-                // small amount of data -> immediate posting and redirect (needed for behat)
-                if (count($data) < $chunkSize) {
-                    $compressedData = CsvUploader::compressData($data);
-                    $this->preRegistrationApi->deleteAll();
-
-                    $ret = $this->layDeputyshipApi->uploadLayDeputyShip($compressedData, 'below_2000_rows');
-
-                    $this->addFlash(
-                        'notice',
-                        sprintf('%d record(s) uploaded, %d error(s), %d skipped', $ret['added'], count($ret['errors']), count($ret['skipped']))
-                    );
-
-                    foreach ($ret['errors'] as $err) {
-                        $this->logger->warning(
-                            sprintf('Error while uploading csv: %s', $err)
-                        );
-
-                        $this->addFlash('error', $err);
-                    }
-
-                    $this->dispatchCSVUploadEvent();
-
-                    return $this->redirect($this->generateUrl('pre_registration_upload'));
-                }
-
-                // big amount of data => store in redis + redirect
-                $chunks = array_chunk($data, $chunkSize);
-
-                foreach ($chunks as $k => $chunk) {
-                    $compressedData = CsvUploader::compressData($chunk);
-                    $redisClient->set('chunk'.$k, $compressedData);
-                }
-
-                return $this->redirect($this->generateUrl('pre_registration_upload', ['nOfChunks' => count($chunks)]));
-            } catch (Throwable $e) {
-                $message = $e->getMessage();
-
-                if ($e instanceof RestClientException && isset($e->getData()['message'])) {
-                    $message = $e->getData()['message'];
-                }
-
-                $form->get('file')->addError(new FormError($message));
-            }
-        }
-
-        if ($processForm->isSubmitted() && $processForm->isValid()) {
             /** Run the lay CSV command as a background task */
             $email = $this->tokenStorage->getToken()->getUser()->getUserIdentifier();
             $this->dispatcher->addListener(KernelEvents::TERMINATE, function () use ($email) {
@@ -482,11 +422,8 @@ class IndexController extends AbstractController
         $processCompletedDate = $redisClient->get('lay-csv-completed-date');
 
         return [
-            'nOfChunks' => $request->get('nOfChunks'),
             'currentRecords' => $this->preRegistrationApi->count(),
-            'form' => $form->createView(),
-            'processForm' => $processForm->createView(),
-            'maxUploadSize' => min([ini_get('upload_max_filesize'), ini_get('post_max_size')]),
+            'processForm' => $form->createView(),
             'processStatus' => $processStatus,
             'processStatusDate' => $processCompletedDate,
             'fileUploadedInfo' => [
@@ -504,44 +441,12 @@ class IndexController extends AbstractController
      */
     public function uploadOrgUsersAction(Request $request, ClientInterface $redisClient)
     {
-        $form = $this->createForm(FormDir\UploadCsvType::class, null, [
+        $form = $this->createForm(FormDir\ProcessCSVType::class, null, [
             'method' => 'POST',
         ]);
         $form->handleRequest($request);
 
-        $processForm = $this->createForm(FormDir\ProcessCSVType::class, null, [
-            'method' => 'POST',
-        ]);
-        $processForm->handleRequest($request);
-
-        $outputStreamResponse = isset($_GET['ajax']);
-
         if ($form->isSubmitted() && $form->isValid()) {
-            try {
-                $fileName = $form->get('file')->getData();
-                $data = $this->handleOrgUploadForm($fileName);
-
-                $this->orgService->setLogging($outputStreamResponse);
-
-                $redirectUrl = $this->generateUrl('admin_org_upload');
-                return $this->orgService->process($data, $redirectUrl);
-            } catch (Throwable $e) {
-                $message = $e->getMessage();
-
-                if ($e instanceof RestClientException && isset($e->getData()['message'])) {
-                    $message = $e->getData()['message'];
-                }
-
-                if ($outputStreamResponse) {
-                    $this->addFlash('error', $message);
-                    exit();
-                } else {
-                    $form->get('file')->addError(new FormError($message));
-                }
-            }
-        }
-
-        if ($processForm->isSubmitted() && $processForm->isValid()) {
             /** Run the org CSV command as a background task */
             $email = $this->tokenStorage->getToken()->getUser()->getUserIdentifier();
             $this->dispatcher->addListener(KernelEvents::TERMINATE, function () use ($email) {
@@ -586,8 +491,7 @@ class IndexController extends AbstractController
         $processCompletedDate = $redisClient->get('org-csv-completed-date');
 
         return [
-            'form' => $form->createView(),
-            'processForm' => $processForm->createView(),
+            'processForm' => $form->createView(),
             'processStatus' => $processStatus,
             'processStatusDate' => $processCompletedDate,
             'fileUploadedInfo' => [

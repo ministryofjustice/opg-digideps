@@ -13,34 +13,12 @@
 
 {% block pageContent %}
 
-{% if nOfChunks %}
-<p class="govuk-body">
-    {{ (page ~ '.uploading.beforeMarkupText') | trans }}<br>
-    {{ (page ~ '.uploading.afterMarkupText') | trans }}
-</p>
-
-<progress id="uploadProgress" value="0" max="{{ nOfChunks + 1 }}" data-path-pre-registration-delete-ajax="{{ path('pre_registration_delete_ajax') }}" data-path-pre-registration-add-ajax="{{ path('pre_registration_add_ajax') }}" data-path-pre-registration-upload="{{ path('pre_registration_upload') }}" class="js-upload-progress">
-{% else %}
 <div class="data">
     <span class="data-item govuk-!-font-size-80 govuk-!-font-weight-bold">{{ currentRecords }}</span>
     <span class="data-item govuk-!-font-size-19 govuk-!-font-weight-bold">{{ (page ~ '.usersInTheDB') | trans }}</span>
 </div>
 
 <div class="govuk-grid-row">
-    <div class="govuk-grid-column-one-half">
-        <h2 class="govuk-heading-m">{{ (page ~ '.heading') | trans }}</h2>
-        {{ form_start(form, {attr: {novalidate: 'novalidate' }}) }}
-
-        {{ form_input(form.file, '', {
-            'labelText': 'Select CSV file exported from Sirius',
-            'hintText': 'Max upload size is ' ~ maxUploadSize,
-            'inputClass': 'no-border'
-        }) }}
-
-        {{ form_submit(form.upload, '', {'labelText': 'Upload Lay users'}) }}
-
-        {{ form_end(form) }}
-    </div>
     {% if fileUploadedInfo['date'] != null %}
     <div class="govuk-grid-column-one-half">
         <h2 class="govuk-heading-m">Process S3 file</h2>
@@ -57,6 +35,5 @@
     </div>
     {% endif %}
 </div>
-{% endif %}
 
 {% endblock %}
