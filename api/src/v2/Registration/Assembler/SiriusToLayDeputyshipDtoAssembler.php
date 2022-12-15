@@ -12,6 +12,7 @@ class SiriusToLayDeputyshipDtoAssembler implements LayDeputyshipDtoAssemblerInte
         'Case',
         'ClientSurname',
         'DeputyUid',
+        'DeputyFirstname',
         'DeputySurname',
         'DeputyAddress1',
         'DeputyAddress2',
@@ -23,7 +24,7 @@ class SiriusToLayDeputyshipDtoAssembler implements LayDeputyshipDtoAssemblerInte
         'MadeDate',
         'OrderType',
         'CoDeputy',
-        'Hybrid',
+        'Hybrid'
     ];
 
     private array $missingColumns = [];
@@ -58,6 +59,7 @@ class SiriusToLayDeputyshipDtoAssembler implements LayDeputyshipDtoAssemblerInte
                 ->setCaseNumber($data['Case'])
                 ->setClientSurname($data['ClientSurname'])
                 ->setDeputyUid($data['DeputyUid'])
+                ->setDeputyFirstname($data['DeputyFirstname'])
                 ->setDeputySurname($data['DeputySurname'])
                 ->setDeputyAddress1($data['DeputyAddress1'])
                 ->setDeputyAddress2($data['DeputyAddress2'])
