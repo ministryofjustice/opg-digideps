@@ -26,11 +26,9 @@ parameters:
         {{ if eq (getv "/email/send/internal") "true" }}
         feedback_send_to_address: digideps+feedback@digital.justice.gov.uk
         update_send_to_address: laydeputysupport@publicguardian.gov.uk
-        csv_send_to_address: digideps+csv@digital.justice.gov.uk
         {{ else }}
         feedback_send_to_address: digideps+noop@digital.justice.gov.uk
         update_send_to_address: digideps+noop@digital.justice.gov.uk
-        csv_send_to_address: digideps+noop@digital.justice.gov.uk
         {{ end }}
     htmltopdf_address: {{ if exists "/htmltopdf/address" }}{{ getv "/htmltopdf/address" }}{{ else }}'http://htmltopdf'{{ end }}
     s3_bucket_name: {{ if exists "/s3/bucketname" }}{{ getv "/s3/bucketname" }}{{ else }}not_set{{ end }}
