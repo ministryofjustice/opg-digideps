@@ -38,3 +38,15 @@ Feature: Lay Deputy Self Registration
         And I complete the case manager user registration flow with valid deputyship details
         Then my deputy details should be saved to my account
         And I should be on the Lay homepage
+
+    @super-admin
+    Scenario: A Lay user with an existing pre-registration record can self register
+        Given a super admin user accesses the admin app
+        When I navigate to the upload users page
+        And I upload a lay CSV that contains 2 new pre-registration entities for the same case
+        And one of the Lay Deputies registers to deputise for a client with valid details
+        Then my deputy details should be saved to my account
+        And I should be on the Lay homepage
+        When I invite a Co-Deputy to the service
+        Then they should be able to register to deputise for a client with valid details
+        And they should be on the Lay homepage

@@ -11,7 +11,6 @@ use App\Entity\PreRegistration;
 use App\Entity\Report\Report;
 use App\Tests\Behat\BehatException;
 use Behat\Gherkin\Node\TableNode;
-use DateTime;
 
 trait IngestTrait
 {
@@ -28,7 +27,7 @@ trait IngestTrait
         'sirius_case_numbers' => [],
     ];
 
-    private ?DateTime $expectedClientCourtDate = null;
+    private ?\DateTime $expectedClientCourtDate = null;
 
     private string $expectedNamedDeputyName = '';
     private string $expectedNamedDeputyAddress = '';
@@ -993,5 +992,22 @@ trait IngestTrait
         if (!$emailMatches) {
             throw new BehatException(sprintf("The deputy's email was not updated. Wanted: '%s', got '%s'", $email, $actualEmail));
         }
+    }
+
+    /**
+     * @Given I upload a lay CSV that contains :newEntitiesCount new pre-registration entities for the same case
+     */
+    public function iUploadALayCSVThatContainsNewPreRegistrationEntitiesForTheSameCase($newEntitiesCount)
+    {
+        $this->iamOnAdminUploadUsersPage();
+
+        $this->preRegistration['expected'] = $newEntitiesCount;
+
+        $this->selectOption('form[type]', 'lay');
+        $this->pressButton('Continue');
+
+        $filePath = 'sirius-csvs/lay-2-rows-co-deputy.csv';
+
+        $this->uploadCsvAndCountCreatedEntities($filePath, 'Upload Lay users');
     }
 }

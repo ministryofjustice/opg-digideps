@@ -141,7 +141,7 @@ trait IShouldBeOnFrontendTrait
     }
 
     /**
-     * @Then I should be on the Lay homepage
+     * @Then I/they should be on the Lay homepage
      */
     public function iAmOnLayMainPage(): bool
     {
