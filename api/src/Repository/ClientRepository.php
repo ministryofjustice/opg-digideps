@@ -108,15 +108,13 @@ class ClientRepository extends ServiceEntityRepository
     }
 
     /**
-     * @param $caseNumber
-     *
      * @return array<mixed>|null
      */
     public function getArrayByCaseNumber($caseNumber)
     {
         $query = $this
             ->getEntityManager()
-            ->createQuery('SELECT c FROM App\Entity\Client c WHERE c.caseNumber = ?1')
+            ->createQuery('SELECT c FROM App\Entity\Client c WHERE LOWER(c.caseNumber) = LOWER(?1)')
             ->setParameter(1, $caseNumber);
 
         $result = $query->getArrayResult();

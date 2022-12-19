@@ -14,6 +14,7 @@ trait SelfRegistrationTrait
     private string $invalidDeputyPostcodeError = 'Your last name you provided does not match our records.';
     private string $invalidClientLastnameError = 'The postcode you provided does not match our records.';
     private string $userEmail;
+    private string $coDeputyEmail;
     private string $deputyUid;
 
     /**
@@ -26,20 +27,18 @@ trait SelfRegistrationTrait
         $this->deputyUid = '19371937';
 
         $this->visitFrontendPath('/register');
-        $this->fillInField('self_registration_firstname', 'Brian');
-        $this->fillInField('self_registration_lastname', 'Duck');
-        $this->fillInField('self_registration_email_first', $this->userEmail);
-        $this->fillInField('self_registration_email_second', $this->userEmail);
-        $this->fillInField('self_registration_postcode', 'B1');
-        $this->fillInField('self_registration_clientFirstname', 'Billy');
-        $this->fillInField('self_registration_clientLastname', 'Huey');
-        $this->fillInField('self_registration_caseNumber', '31313131');
-        $this->pressButton('self_registration_save');
+        $this->fillInSelfRegistrationFieldsAndSubmit(
+            'Brian',
+            'Duck',
+            $this->userEmail,
+            'B1',
+            'Billy',
+            'Huey',
+            '31313131',
+        );
 
         $this->clickActivationOrPasswordResetLinkInEmail(false, 'activation', $this->userEmail);
-        $this->fillInField('set_password_password_first', 'DigidepsPass1234');
-        $this->fillInField('set_password_password_second', 'DigidepsPass1234');
-        $this->checkOption('set_password_showTermsAndConditions');
+        $this->setPasswordAndTickTAndCs();
         $this->pressButton('set_password_save');
 
         $this->assertPageContainsText('Sign in to your new account');
@@ -47,33 +46,11 @@ trait SelfRegistrationTrait
         $this->fillInField('login_password', 'DigidepsPass1234');
         $this->pressButton('login_login');
 
-        $this->fillInField('user_details_address1', '102 Petty France');
-        $this->fillInField('user_details_address2', 'MOJ');
-        $this->fillInField('user_details_address3', 'London');
-        $this->fillInField('user_details_addressCountry', 'GB');
-        $this->fillInField('user_details_phoneMain', '01789 321234');
-        $this->pressButton('user_details_save');
+        $this->fillUserDetailsAndSubmit();
 
-        $this->fillInField('client_address', '1 South Parade');
-        $this->fillInField('client_address2', 'First Floor');
-        $this->fillInField('client_address3', 'Big Building');
-        $this->fillInField('client_address4', 'Large Town');
-        $this->fillInField('client_address5', 'Notts');
-        $this->fillInField('client_postcode', 'NG1 2HT');
-        $this->fillInField('client_country', 'GB');
-        $this->fillInField('client_phone', '01789432876');
-        $this->fillInField('client_courtDate_day', '01');
-        $this->fillInField('client_courtDate_month', '01');
-        $this->fillInField('client_courtDate_year', '2016');
-        $this->pressButton('client_save');
+        $this->fillClientDetailsAndSubmit();
 
-        $this->fillInField('report_startDate_day', '01');
-        $this->fillInField('report_startDate_month', '01');
-        $this->fillInField('report_startDate_year', '2016');
-        $this->fillInField('report_endDate_day', '31');
-        $this->fillInField('report_endDate_month', '12');
-        $this->fillInField('report_endDate_year', '2016');
-        $this->pressButton('report_save');
+        $this->fillInReportDetailsAndSubmit();
     }
 
     /**
@@ -82,15 +59,15 @@ trait SelfRegistrationTrait
     public function aLayDeputyRegistersToDeputiseForAClientWithAnInvalidCaseNumber()
     {
         $this->visitFrontendPath('/register');
-        $this->fillInField('self_registration_firstname', 'Brian');
-        $this->fillInField('self_registration_lastname', 'Duck');
-        $this->fillInField('self_registration_email_first', 'brian2@duck.co.uk');
-        $this->fillInField('self_registration_email_second', 'brian2@duck.co.uk');
-        $this->fillInField('self_registration_postcode', 'B1');
-        $this->fillInField('self_registration_clientFirstname', 'Billy');
-        $this->fillInField('self_registration_clientLastname', 'Huey');
-        $this->fillInField('self_registration_caseNumber', '31313137');
-        $this->pressButton('self_registration_save');
+        $this->fillInSelfRegistrationFieldsAndSubmit(
+            'Brian',
+            'Duck',
+            'brian2@duck.co.uk',
+            'B1',
+            'Billy',
+            'Huey',
+            '31313137',
+        );
     }
 
     /**
@@ -99,14 +76,34 @@ trait SelfRegistrationTrait
     public function aLayDeputyRegistersToDeputiseForAClientWithAnValidCaseNumberAndInvalidCaseDetails()
     {
         $this->visitFrontendPath('/register');
-        $this->fillInField('self_registration_firstname', 'Wrong');
-        $this->fillInField('self_registration_lastname', 'Name');
-        $this->fillInField('self_registration_email_first', 'brian3@duck.co.uk');
-        $this->fillInField('self_registration_email_second', 'brian3@duck.co.uk');
-        $this->fillInField('self_registration_postcode', 'ABC 123');
-        $this->fillInField('self_registration_clientFirstname', 'Wrong');
-        $this->fillInField('self_registration_clientLastname', 'Name');
-        $this->fillInField('self_registration_caseNumber', '31313131');
+        $this->fillInSelfRegistrationFieldsAndSubmit(
+            'Wrong',
+            'Name',
+            'brian3@duck.co.uk',
+            'ABC 123',
+            'Wrong',
+            'Name',
+            '31313131',
+        );
+    }
+
+    private function fillInSelfRegistrationFieldsAndSubmit(
+        string $firstname,
+        string $lastname,
+        string $email,
+        string $postcode,
+        string $clientFirstname,
+        string $clientLastname,
+        string $caseNumber
+    ) {
+        $this->fillInField('self_registration_firstname', $firstname);
+        $this->fillInField('self_registration_lastname', $lastname);
+        $this->fillInField('self_registration_email_first', $email);
+        $this->fillInField('self_registration_email_second', $email);
+        $this->fillInField('self_registration_postcode', $postcode);
+        $this->fillInField('self_registration_clientFirstname', $clientFirstname);
+        $this->fillInField('self_registration_clientLastname', $clientLastname);
+        $this->fillInField('self_registration_caseNumber', $caseNumber);
         $this->pressButton('self_registration_save');
     }
 
@@ -157,9 +154,7 @@ trait SelfRegistrationTrait
     {
         $this->deputyUid = '19371938';
 
-        $this->fillInField('set_password_password_first', 'DigidepsPass1234');
-        $this->fillInField('set_password_password_second', 'DigidepsPass1234');
-        $this->checkOption('set_password_showTermsAndConditions');
+        $this->setPasswordAndTickTAndCs();
 
         $this->pressButton('Submit');
 
@@ -167,12 +162,7 @@ trait SelfRegistrationTrait
         $this->fillField('login_password', 'DigidepsPass1234');
         $this->pressButton('login_login');
 
-        $this->fillInField('user_details_address1', '102 Petty France');
-        $this->fillInField('user_details_address2', 'MOJ');
-        $this->fillInField('user_details_address3', 'London');
-        $this->fillInField('user_details_addressCountry', 'GB');
-        $this->fillInField('user_details_phoneMain', '01789 321234');
-        $this->pressButton('user_details_save');
+        $this->fillUserDetailsAndSubmit();
 
         $this->fillInField('client_firstname', $this->faker->firstName());
         $this->fillInField('client_lastname', 'DEWEY');
@@ -190,13 +180,7 @@ trait SelfRegistrationTrait
         $this->fillInField('client_courtDate_year', '2016');
         $this->pressButton('client_save');
 
-        $this->fillInField('report_startDate_day', '01');
-        $this->fillInField('report_startDate_month', '01');
-        $this->fillInField('report_startDate_year', '2016');
-        $this->fillInField('report_endDate_day', '31');
-        $this->fillInField('report_endDate_month', '12');
-        $this->fillInField('report_endDate_year', '2016');
-        $this->pressButton('report_save');
+        $this->fillInReportDetailsAndSubmit();
     }
 
     /**
@@ -240,5 +224,130 @@ trait SelfRegistrationTrait
         $this->assertStringEqualsString('London', $deputy->getAddress3(), 'Asserting Address Line 3 is the same');
         $this->assertStringEqualsString('GB', $deputy->getAddressCountry(), 'Asserting Address Country is the same');
         $this->assertStringEqualsString('01789 321234', $deputy->getPhoneMain(), 'Asserting Main Phone is the same');
+    }
+
+    /**
+     * @Given one of the Lay Deputies registers to deputise for a client with valid details
+     */
+    public function oneOfTheLayDeputiesRegistersToDeputiseForAClientWithValidDetails()
+    {
+        $this->userEmail = 'brian@mcduck.co.uk';
+        $this->interactingWithUserDetails = new UserDetails(['userEmail' => $this->userEmail]);
+        $this->deputyUid = '35672419';
+
+        $this->visitFrontendPath('/register');
+        $this->fillInSelfRegistrationFieldsAndSubmit(
+            'Brian',
+            'McDuck',
+            $this->userEmail,
+            'B73',
+            'Billy',
+            'Louie',
+            '1717171T',
+        );
+
+        $this->clickActivationOrPasswordResetLinkInEmail(false, 'activation', $this->userEmail);
+        $this->setPasswordAndTickTAndCs();
+        $this->pressButton('set_password_save');
+
+        $this->assertPageContainsText('Sign in to your new account');
+        $this->fillInField('login_email', $this->userEmail);
+        $this->fillInField('login_password', 'DigidepsPass1234');
+        $this->pressButton('login_login');
+
+        $this->fillUserDetailsAndSubmit();
+
+        $this->fillClientDetailsAndSubmit();
+
+        $this->fillInReportDetailsAndSubmit();
+    }
+
+    /**
+     * @When I invite a Co-Deputy to the service
+     */
+    public function iInviteACoDeputyToTheService()
+    {
+        $matches = [];
+        preg_match('/[^\/]+$/', $this->getCurrentUrl(), $matches);
+        $clientId = $matches[0];
+
+        $this->getCurrentUrl();
+        $this->visitPath(sprintf('/codeputy/%s/add', $clientId));
+
+        $this->coDeputyEmail = 'liam@mcquack.co.uk';
+
+        $this->fillInField('co_deputy_invite_email', $this->coDeputyEmail);
+        $this->pressButton('co_deputy_invite_submit');
+    }
+
+    /**
+     * @Then /^they should be able to register to deputise for a client with valid details$/
+     */
+    public function theyShouldBeAbleToRegisterToDeputiseForAClientWithValidDetails()
+    {
+        $this->visitPath('/logout');
+        $this->clickActivationOrPasswordResetLinkInEmail(false, 'activation', $this->coDeputyEmail);
+        $this->setPasswordAndTickTAndCs();
+        $this->pressButton('set_password_save');
+
+        $this->assertPageContainsText('Sign in to your new account');
+        $this->fillInField('login_email', $this->coDeputyEmail);
+        $this->fillInField('login_password', 'DigidepsPass1234');
+        $this->pressButton('login_login');
+
+        $this->fillInField('co_deputy_firstname', 'Liam');
+        $this->fillInField('co_deputy_lastname', 'McQuack');
+        $this->fillInField('co_deputy_address1', 'Fieldag');
+        $this->fillInField('co_deputy_addressPostcode', 'Y73');
+        $this->fillInField('co_deputy_addressCountry', 'GB');
+        $this->fillInField('co_deputy_phoneMain', '01789432876');
+        $this->fillInField('co_deputy_clientLastname', 'Louie');
+        $this->fillInField('co_deputy_clientCaseNumber', '1717171T');
+
+        $this->pressButton('co_deputy_save');
+    }
+
+    private function setPasswordAndTickTAndCs(): void
+    {
+        $this->fillInField('set_password_password_first', 'DigidepsPass1234');
+        $this->fillInField('set_password_password_second', 'DigidepsPass1234');
+        $this->checkOption('set_password_showTermsAndConditions');
+    }
+
+    private function fillUserDetailsAndSubmit(): void
+    {
+        $this->fillInField('user_details_address1', '102 Petty France');
+        $this->fillInField('user_details_address2', 'MOJ');
+        $this->fillInField('user_details_address3', 'London');
+        $this->fillInField('user_details_addressCountry', 'GB');
+        $this->fillInField('user_details_phoneMain', '01789 321234');
+        $this->pressButton('user_details_save');
+    }
+
+    private function fillClientDetailsAndSubmit(): void
+    {
+        $this->fillInField('client_address', '1 South Parade');
+        $this->fillInField('client_address2', 'First Floor');
+        $this->fillInField('client_address3', 'Big Building');
+        $this->fillInField('client_address4', 'Large Town');
+        $this->fillInField('client_address5', 'Notts');
+        $this->fillInField('client_postcode', 'NG1 2HT');
+        $this->fillInField('client_country', 'GB');
+        $this->fillInField('client_phone', '01789432876');
+        $this->fillInField('client_courtDate_day', '01');
+        $this->fillInField('client_courtDate_month', '01');
+        $this->fillInField('client_courtDate_year', '2016');
+        $this->pressButton('client_save');
+    }
+
+    private function fillInReportDetailsAndSubmit(): void
+    {
+        $this->fillInField('report_startDate_day', '01');
+        $this->fillInField('report_startDate_month', '01');
+        $this->fillInField('report_startDate_year', '2016');
+        $this->fillInField('report_endDate_day', '31');
+        $this->fillInField('report_endDate_month', '12');
+        $this->fillInField('report_endDate_year', '2016');
+        $this->pressButton('report_save');
     }
 }
