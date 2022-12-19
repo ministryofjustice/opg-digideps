@@ -201,6 +201,18 @@ class PreRegistration
         return $this->deputyUid;
     }
 
+    public function getDeputyFirstname(): string
+    {
+        return $this->deputyFirstname;
+    }
+
+    public function setDeputyFirstname(string $deputyFirstname): self
+    {
+        $this->deputyFirstname = $deputyFirstname;
+
+        return $this;
+    }
+
     public function getDeputySurname(): string
     {
         return $this->deputySurname;
