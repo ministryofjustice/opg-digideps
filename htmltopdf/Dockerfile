@@ -11,14 +11,17 @@ RUN apk --update --upgrade --no-cache add fontconfig ttf-freefont font-noto term
     && fc-cache -f \
     && fc-list | sort
 
+COPY requirements.txt .
+
 RUN set -ex \
 && apk add --no-cache --virtual .build-deps musl-dev gcc g++ zlib-dev libffi-dev \
-&& pip3 install --no-cache-dir werkzeug==1.0.1 executor==23.2 gunicorn==20.0.4 weasyprint==52.5 \
+&& pip3 install -r requirements.txt \
 && apk del .build-deps
 
 ADD docker-entrypoint.sh /docker-entrypoint.sh
 ADD app.py /app.py
 ADD clean-tmp /etc/periodic/hourly/clean-tmp
+
 EXPOSE 80
 
 # Make commands executable
