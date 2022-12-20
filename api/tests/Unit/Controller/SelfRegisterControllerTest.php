@@ -390,7 +390,6 @@ class SelfRegisterControllerTest extends AbstractTestController
             'Case' => $caseNumber,
             'ClientSurname' => $clientSurname,
             'DeputyUid' => $deputyUid,
-//            'DeputyFirstname' => $deputyFirstname,
             'DeputySurname' => $deputySurname,
             'DeputyAddress1' => 'Victoria Road',
             'DeputyPostcode' => 'SW1',
