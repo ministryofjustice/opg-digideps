@@ -10,6 +10,7 @@ class LayDeputyshipDto
 {
     private ?string $caseNumber;
     private ?string $clientSurname;
+    private ?string $deputyFirstname;
     private ?string $deputySurname;
     private ?string $deputyUid;
     private ?string $deputyAddress1;
@@ -57,6 +58,18 @@ class LayDeputyshipDto
     public function setDeputyUid(string $deputyUid): LayDeputyshipDto
     {
         $this->deputyUid = $deputyUid;
+
+        return $this;
+    }
+
+    public function getDeputyFirstname(): string
+    {
+        return $this->deputyFirstname;
+    }
+
+    public function setDeputyFirstname(string $deputyFirstname): LayDeputyshipDto
+    {
+        $this->deputyFirstname = $deputyFirstname;
 
         return $this;
     }

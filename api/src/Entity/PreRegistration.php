@@ -29,6 +29,7 @@ class PreRegistration
         $this->caseNumber = $row['Case'] ?? '';
         $this->clientLastname = $row['ClientSurname'] ?? '';
         $this->deputyUid = $row['DeputyUid'] ?? '';
+        $this->deputyFirstname = $row['DeputyFirstname'] ?? '';
         $this->deputySurname = $row['DeputySurname'] ?? '';
         $this->deputyAddress1 = $row['DeputyAddress1'] ?? null;
         $this->deputyAddress2 = $row['DeputyAddress2'] ?? null;
@@ -74,6 +75,13 @@ class PreRegistration
      * @ORM\Column(name="deputy_uid", type="string", length=100, nullable=false)
      */
     private string $deputyUid;
+
+    /**
+     * @Assert\NotBlank()
+     * @ORM\Column(name="deputy_firstname", type="string", length=100, nullable=true)
+     * @JMS\Type("string")
+     */
+    private string $deputyFirstname;
 
     /**
      * @Assert\NotBlank()
@@ -191,6 +199,18 @@ class PreRegistration
     public function getDeputyUid()
     {
         return $this->deputyUid;
+    }
+
+    public function getDeputyFirstname(): string
+    {
+        return $this->deputyFirstname;
+    }
+
+    public function setDeputyFirstname(string $deputyFirstname): self
+    {
+        $this->deputyFirstname = $deputyFirstname;
+
+        return $this;
     }
 
     public function getDeputySurname(): string

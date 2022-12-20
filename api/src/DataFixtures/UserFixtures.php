@@ -202,6 +202,7 @@ class UserFixtures extends AbstractDataFixture
                 'Case' => $data['id'],
                 'ClientSurname' => $data['id'],
                 'DeputyUid' => str_replace('-', '', $data['id']),
+                'DeputyFirstname' => 'User',
                 'DeputySurname' => 'User',
                 'DeputyAddress1' => 'Victoria Road',
                 'DeputyAddress2' => null,

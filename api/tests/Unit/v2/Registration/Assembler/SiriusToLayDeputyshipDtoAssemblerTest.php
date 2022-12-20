@@ -41,6 +41,7 @@ class SiriusToLayDeputyshipDtoAssemblerTest extends TestCase
             ['Case'],
             ['ClientSurname'],
             ['DeputyUid'],
+            ['DeputyFirstname'],
             ['DeputySurname'],
             ['DeputyAddress1'],
             ['DeputyAddress2'],
@@ -84,6 +85,7 @@ class SiriusToLayDeputyshipDtoAssemblerTest extends TestCase
         $this->assertEquals('caseT', $result->getCaseNumber());
         $this->assertEquals('surname', $result->getClientSurname());
         $this->assertEquals('deputy_no', $result->getDeputyUid());
+        $this->assertEquals('deputyfirstname', $result->getDeputyFirstname());
         $this->assertEquals('deputysurname', $result->getDeputySurname());
         $this->assertEquals('deputy_postcode', $result->getDeputyPostcode());
         $this->assertEquals('depaddress1', $result->getDeputyAddress1());
@@ -113,6 +115,7 @@ class SiriusToLayDeputyshipDtoAssemblerTest extends TestCase
             'Case' => 'caseT',
             'ClientSurname' => 'surname',
             'DeputyUid' => 'deputy_no',
+            'DeputyFirstname' => 'deputyfirstname',
             'DeputySurname' => 'deputysurname',
             'DeputyAddress1' => 'depaddress1',
             'DeputyAddress2' => 'depaddress2',

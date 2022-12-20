@@ -659,6 +659,7 @@ class IndexController extends AbstractController
                 'Case',
                 'ClientSurname',
                 'DeputyUid',
+                'DeputyFirstname',
                 'DeputySurname',
                 'DeputyAddress1',
                 'DeputyAddress2',
