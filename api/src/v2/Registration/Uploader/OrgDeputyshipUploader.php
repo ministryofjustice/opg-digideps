@@ -16,9 +16,6 @@ use App\v2\Assembler\NamedDeputyAssembler;
 use App\v2\Registration\DTO\OrgDeputyshipDto;
 use DateTime;
 use Doctrine\ORM\EntityManagerInterface;
-use Exception;
-use RuntimeException;
-use Throwable;
 
 class OrgDeputyshipUploader
 {
@@ -49,10 +46,10 @@ class OrgDeputyshipUploader
 
     /**
      * @param OrgDeputyshipDto[] $deputyshipDtos
-     * 
+     *
      * @return array
      *
-     * @throws Exception
+     * @throws \Exception
      */
     public function upload(array $deputyshipDtos)
     {
@@ -75,7 +72,7 @@ class OrgDeputyshipUploader
             } catch (ClientIsArchivedException $e) {
                 ++$uploadResults['skipped'];
                 continue;
-            } catch (Throwable $e) {
+            } catch (\Throwable $e) {
                 $message = sprintf('Error for case %s: %s', $deputyshipDto->getCaseNumber(), $e->getMessage());
                 $uploadResults['errors'][] = $message;
                 continue;
@@ -171,7 +168,7 @@ class OrgDeputyshipUploader
     private function handleClient(OrgDeputyshipDto $dto)
     {
         if ($this->client instanceof Client && $this->client->hasLayDeputy()) {
-            throw new RuntimeException('case number already used');
+            throw new \RuntimeException('case number already used');
         }
 
         if (is_null($this->client)) {
@@ -215,20 +212,19 @@ class OrgDeputyshipUploader
             if (!$this->clientHasNewCourtOrder($this->client, $dto)) {
                 if ($this->clientHasSwitchedOrganisation($this->client)) {
                     if (!$this->clientHasNewNamedDeputy($this->client, $this->namedDeputy)) {
-
                         // Track clients original organisation for audit logging before it is updated
-                       $tempArray = ['old_organisation' => $this->client->getOrganisation()->getId()];
-                        
+                        $tempArray = ['old_organisation' => $this->client->getOrganisation()->getId()];
+
                         $this->currentOrganisation->addClient($this->client);
                         $this->client->setOrganisation($this->currentOrganisation);
 
                         $this->updated['clients'][] = $this->client->getId();
-                        
+
                         // Track clients for audit logging purposes
                         $tempArray[] = ['client_id' => $this->client->getId()];
                         $tempArray[] = ['deputy_id' => $this->client->getNamedDeputy()->getId()];
                         $tempArray[] = ['new_organisation' => $this->client->getOrganisation()->getId()];
-                        
+
                         $changeOrg[] = $tempArray;
                     }
                 }
@@ -236,7 +232,7 @@ class OrgDeputyshipUploader
 
             // Temp fix for clients who have new named deputy in same organisation
             if (!$this->clientHasSwitchedOrganisation($this->client)) {
-                if ($this->clientHasNewNamedDeputy($this->client, $this->namedDeputy)) {
+                if ($this->clientHasNewNamedDeputy($this->client, $this->namedDeputy) && OrgDeputyshipDto::DUAL_TYPE != $dto->getHybrid()) {
                     $this->client->setNamedDeputy($this->namedDeputy);
 
                     $this->updated['clients'][] = $this->client->getId();
@@ -303,11 +299,21 @@ class OrgDeputyshipUploader
 
         if ($report) {
             if (!$report->getSubmitted() && empty($report->getUnSubmitDate())) {
-                if ($report->getType() !== $dto->getReportType()) {
-                    // Add audit logging for report type changing
-                    $report->setType($dto->getReportType());
+                if (OrgDeputyshipDto::DUAL_TYPE == $dto->getHybrid()) {
+                    if ($this->client->getNamedDeputy()->getDeputyUid() == $dto->getDeputyUid()) {
+                        if ($report->getType() !== $dto->getReportType()) {
+                            $report->setType($dto->getReportType());
 
-                    $this->updated['reports'][] = $report->getId();
+                            $this->updated['reports'][] = $report->getId();
+                        }
+                    }
+                } else {
+                    if ($report->getType() !== $dto->getReportType()) {
+                        // Add audit logging for report type changing
+                        $report->setType($dto->getReportType());
+
+                        $this->updated['reports'][] = $report->getId();
+                    }
                 }
             }
 
@@ -372,7 +378,7 @@ class OrgDeputyshipUploader
 
         if (!empty($missingDataTypes)) {
             $errorMessage = sprintf('Missing data to upload row: %s', implode(', ', $missingDataTypes));
-            throw new RuntimeException($errorMessage);
+            throw new \RuntimeException($errorMessage);
         }
     }
 
