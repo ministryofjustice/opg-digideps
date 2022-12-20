@@ -25,6 +25,13 @@ locals {
     ssm     = local.common_sg_rules.ssm
     ecr_api = local.common_sg_rules.ecr_api
     secrets = local.common_sg_rules.secrets
+    cache = {
+      port        = 6379
+      type        = "egress"
+      protocol    = "tcp"
+      target_type = "security_group_id"
+      target      = module.api_cache_security_group.id
+    }
     rds = {
       port        = 5432
       protocol    = "tcp"
@@ -82,6 +89,7 @@ locals {
       { "name": "DATABASE_NAME", "value": "${local.db.name}" },
       { "name": "DATABASE_PORT", "value": "${local.db.port}" },
       { "name": "DATABASE_USERNAME", "value": "${local.db.username}" },
+      { "name": "DATABASE_SSL", "value": "verify-full" },
       { "name": "FEATURE_FLAG_PREFIX", "value": "${local.feature_flag_prefix}" },
       { "name": "FIXTURES_ACCOUNTPASSWORD", "value": "DigidepsPass1234" },
       { "name": "NGINX_APP_NAME", "value": "api" },

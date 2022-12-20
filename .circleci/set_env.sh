@@ -12,6 +12,11 @@ then
   export TF_WORKSPACE=training
   export LIVE_DOCKER_TAG=$(terraform output | grep opg_docker_tag | awk -F'=' '{print $2}' | sed 's/ //g')
   echo "export TF_VAR_OPG_DOCKER_TAG=${LIVE_DOCKER_TAG}"
+elif [ "${REAPPLY}" == "true" ]
+then
+  export TF_WORKSPACE=${WORKSPACE}
+  export CURRENT_DOCKER_TAG=$(terraform output | grep opg_docker_tag | awk -F'=' '{print $2}' | sed 's/ //g')
+  echo "export TF_VAR_OPG_DOCKER_TAG=${CURRENT_DOCKER_TAG}"
 else
   echo "export TF_VAR_OPG_DOCKER_TAG=${VERSION}"
 fi

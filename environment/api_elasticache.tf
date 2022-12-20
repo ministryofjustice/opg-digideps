@@ -19,6 +19,13 @@ resource "aws_elasticache_replication_group" "api" {
 
 locals {
   api_cache_sg_rules = {
+    integration_test_v2 = {
+      port        = 6379
+      type        = "ingress"
+      protocol    = "tcp"
+      target_type = "security_group_id"
+      target      = module.integration_test_v2_security_group.id
+    }
     api_service = {
       port        = 6379
       type        = "ingress"

@@ -61,6 +61,28 @@ workflows:
           channel: opg-digicop-builds
           requires: [lint terraform]
 
+  #  rotate_secrets:
+  #    when:
+  #      and:
+  #        - not:
+  #            {
+  #              matches:
+  #                {
+  #                  pattern: "^dependabot/.+$",
+  #                  value: << pipeline.git.branch >>,
+  #                },
+  #            }
+  #        - not: { equal: [main, << pipeline.git.branch >>] }
+  #    jobs:
+  #      - rotate-secrets:
+  #          name: rotate secrets
+  #
+  #      - terraform-command:
+  #          name: terraform apply
+  #          requires: [rotate secrets]
+  #          tf_command: apply
+  #          tf_reapply: true
+
   pull_request:
     when:
       and:
@@ -792,6 +814,10 @@ jobs:
         description: whether this is doing the initial environment apply
         default: false
         type: boolean
+      tf_reapply:
+        description: whether this is doing the reapply of current tag
+        default: false
+        type: boolean
       pact_tag:
         description: whether to add environment tag to pact broker
         default: false
@@ -799,6 +825,7 @@ jobs:
     environment:
       WORKSPACE: << parameters.tf_workspace >>
       INIT_APPLY: << parameters.tf_initial_apply >>
+      REAPPLY: << parameters.tf_reapply >>
     working_directory: ~/project/<< parameters.tf_tier >>
     steps:
       - checkout:
@@ -823,6 +850,7 @@ jobs:
             and:
               - equal: [apply, << parameters.tf_command >>]
               - equal: [false, << parameters.tf_initial_apply >>]
+              - equal: [false, << parameters.tf_reapply >>]
           steps:
             - run:
                 name: Extract lambda layers
@@ -1220,6 +1248,7 @@ jobs:
             APP_ENV=test APP_DEBUG=0 docker-compose -f docker-compose.yml -f docker-compose.ci.test.yml --project-name api-unit-tests up -d api
             docker-compose -f docker-compose.yml -f docker-compose.ci.test.yml --project-name api-unit-tests exec api chmod -R 777 var
             docker-compose -f docker-compose.yml -f docker-compose.ci.test.yml --project-name api-unit-tests run --rm wait-for-it -address localstack:4566 --timeout=25 -debug
+            sleep 60
             docker-compose -f docker-compose.yml -f docker-compose.ci.test.yml --project-name api-unit-tests exec api sh scripts/apiunittest.sh
 
             docker-compose -f docker-compose.yml -f docker-compose.ci.test.yml --project-name api-unit-tests exec api chmod -R 777 tests/coverage/api-unit-tests.xml
@@ -1372,3 +1401,39 @@ jobs:
                 channel: opg-digideps-team
                 failure_message: << parameters.task_name >> has failed.
                 success_message: << parameters.task_name >> has succeeded.
+
+  rotate-secrets:
+    docker:
+      - image: cimg/python:3.10.7
+        auth:
+          username: $DOCKER_USER
+          password: $DOCKER_ACCESS_TOKEN
+    resource_class: small
+    parameters:
+      workspace:
+        description: workspace for tf_workspace
+        type: string
+        default: ""
+      secrets_prefix:
+        description: prefix for secret rotation
+        type: string
+        default: "default/"
+    environment:
+      WORKSPACE: << parameters.workspace >>
+      SECRETS_PREFIX: << parameters.secrets_prefix >>
+      SECRETS_ENDPOINT: https://secretsmanager.eu-west-1.amazonaws.com
+      AWS_REGION: eu-west-1
+    steps:
+      - checkout:
+          path: ~/project
+      - run:
+          name: Set environment
+          command: ~/project/.circleci/set_env.sh >> $BASH_ENV
+      - run:
+          name: Install requirements
+          command: pip3 install -r requirements.txt
+          working_directory: ~/project/environment/scripts/cycle_secrets
+      - run:
+          name: Set environment
+          command: python3 cycle_secrets.py
+          working_directory: ~/project/environment/scripts/cycle_secrets
