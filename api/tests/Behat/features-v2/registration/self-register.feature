@@ -39,8 +39,8 @@ Feature: Lay Deputy Self Registration
         Then my deputy details should be saved to my account
         And I should be on the Lay homepage
 
-    @super-admin
-    Scenario: A Lay user with an existing pre-registration record can self register
+    @super-admin @gsc
+    Scenario: A Co-deputy can register for the service
         Given a super admin user accesses the admin app
         When I navigate to the upload users page
         And I upload a lay CSV that contains 2 new pre-registration entities for the same case
