@@ -39,7 +39,7 @@ Feature: Lay Deputy Self Registration
         Then my deputy details should be saved to my account
         And I should be on the Lay homepage
 
-    @super-admin @gsc
+    @super-admin
     Scenario: A Co-deputy can register for the service
         Given a super admin user accesses the admin app
         When I navigate to the upload users page
