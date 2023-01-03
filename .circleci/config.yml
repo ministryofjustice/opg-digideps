@@ -20,6 +20,20 @@ workflows:
                     value: << pipeline.git.branch >>,
                   },
               },
+              {
+                matches:
+                  {
+                    pattern: "^dependabot/go_modules.+$",
+                    value: << pipeline.git.branch >>,
+                  },
+              },
+              {
+                matches:
+                  {
+                    pattern: "^dependabot/pip.+$",
+                    value: << pipeline.git.branch >>,
+                  },
+              },
             ]
         - not: { equal: [main, << pipeline.git.branch >>] }
     jobs:
