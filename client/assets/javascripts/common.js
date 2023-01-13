@@ -2,7 +2,6 @@ import SessionTimeout from './globals/SessionTimeout'
 import CookieBanner from './globals/CookieBanner'
 import MOJButtonMenu from './modules_new/ButtonMenu'
 import ButtonToggler from './modules_new/ButtonToggler'
-import CharacterLimiter from './globals/CharacterLimiter'
 import ConditionalFieldRevealer from './modules_new/ConditionalFieldRevealer'
 import Redirector from './globals/Redirector'
 import TextAreaAutoSize from './modules_new/TextAreaAutoSize'
@@ -25,9 +24,6 @@ window.addEventListener('DOMContentLoaded', (event) => {
   if (btnTogglers.length > 0) {
     ButtonToggler.init(btnTogglers)
   }
-
-  // Character Limiter
-  CharacterLimiter.init()
 
   // Conditional Field Revealer
   ConditionalFieldRevealer.init()
