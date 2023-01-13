@@ -32,7 +32,7 @@ window.addEventListener('DOMContentLoaded', (event) => {
   Redirector()
 
   // Text Area Auto Size
-  const formArea = document.querySelectorAll('form')
+  const formArea = document.querySelector('form')
   if (formArea.length > 0) {
     TextAreaAutoSize.init(formArea)
   }
