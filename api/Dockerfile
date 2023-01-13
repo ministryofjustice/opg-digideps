@@ -31,7 +31,8 @@ RUN apk --no-cache add \
     nginx-mod-http-headers-more \
     su-exec \
     php8-pecl-igbinary \
-    php8-pecl-redis
+    php8-pecl-redis \
+    icu-dev
 
 RUN docker-php-ext-install pdo pdo_pgsql opcache intl
 RUN docker-php-ext-enable opcache

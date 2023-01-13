@@ -46,7 +46,20 @@ ENV TIMEOUT=60
 ENV PHP_EXT_DIR=/usr/local/lib/php/extensions/no-debug-non-zts-20210902/
 
 # Install core PHP extensions
-RUN apk add --no-cache openssl nginx nginx-mod-http-headers-more su-exec postgresql-client libzip-dev unzip php8-pecl-igbinary php8-pecl-redis php8-pecl-imagick gmp gmp-dev
+RUN apk --no-cache add \
+    openssl \
+    nginx \
+    nginx-mod-http-headers-more \
+    su-exec \
+    postgresql-client \
+    libzip-dev \
+    unzip \
+    php8-pecl-igbinary \
+    php8-pecl-redis \
+    php8-pecl-imagick \
+    gmp \
+    gmp-dev \
+    icu-dev
 RUN docker-php-ext-install pcntl zip opcache gmp intl
 RUN docker-php-ext-enable opcache
 
