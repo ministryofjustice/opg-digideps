@@ -1,5 +1,5 @@
-import { describe, it } from '@jest/globals'
-import ConditionalFieldRevealer from '../../modules/ConditionalFieldRevealer'
+import { describe, it, expect } from '@jest/globals'
+import ConditionalFieldRevealer from '../../modules_new/ConditionalFieldRevealer'
 
 describe('ConditionalFieldRevealer', () => {
   const setBody = function () {

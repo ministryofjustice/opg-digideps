@@ -1,4 +1,4 @@
-import ConditionalFieldRevealer from '../modules/ConditionalFieldRevealer'
+import ConditionalFieldRevealer from '../modules_new/ConditionalFieldRevealer'
 
 window.addEventListener('DOMContentLoaded', (event) => {
   // We need to wait for gov.uk DS to apply its JS/CSS after DOM has loaded

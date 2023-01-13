@@ -10,7 +10,6 @@ module.exports = {
   entry: {
     application: './assets/javascripts/main.js',
     common: './assets/javascripts/common.js',
-    checklistSubmitted: './assets/javascripts/pages/checklistSubmitted.js',
     clientBenefitsCheckForm: './assets/javascripts/pages/clientBenefitsCheckForm.js',
     'formatted-report': './assets/scss/formatted-report.scss',
     fonts: './assets/scss/fonts.scss'

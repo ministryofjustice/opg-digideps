@@ -1,5 +1,5 @@
-import { describe, expect, it } from '@jest/globals'
-import SessionTimeoutDialog from '../../modules/SessionTimeoutDialog'
+import { describe, expect, it, jest } from '@jest/globals'
+import SessionTimeoutDialog from '../../modules_new/SessionTimeoutDialog'
 
 // Required to test against .fetch API
 require('jest-fetch-mock').enableMocks()
