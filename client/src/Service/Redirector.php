@@ -5,7 +5,6 @@ namespace App\Service;
 use App\Entity as EntityDir;
 use App\Entity\User;
 use Nyholm\Psr7\Request;
-use Symfony\Component\HttpFoundation\RequestStack;
 use Symfony\Component\HttpFoundation\Session\Session;
 use Symfony\Component\HttpFoundation\Session\SessionInterface;
 use Symfony\Component\Routing\Exception\ResourceNotFoundException;
@@ -41,14 +40,14 @@ class Redirector
      * @param TokenStorageInterface $tokenStorage
      * @param AuthorizationCheckerInterface $authChecker
      * @param RouterInterface $router
-     * @param RequestStack $requestStack
+     * @param Session $Session
      * @param string $env
      */
     public function __construct(
         protected TokenStorageInterface $tokenStorage,
         protected AuthorizationCheckerInterface $authChecker,
         protected RouterInterface $router,
-        protected RequestStack $requestStack,
+        protected Session $session,
         protected string $env
     ) {
     }
@@ -160,7 +159,7 @@ class Redirector
      */
     private function getLastAccessedUrl(): bool|string
     {
-        $lastUsedUrl = $this->requestStack->getSession()->get('_security.secured_area.target_path');
+        $lastUsedUrl = $this->session->get('_security.secured_area.target_path');
         if (!$lastUsedUrl) {
             return false;
         }
@@ -185,7 +184,7 @@ class Redirector
 
     public function removeLastAccessedUrl(): void
     {
-        $this->requestStack->getSession()->remove('_security.secured_area.target_path');
+        $this->session->remove('_security.secured_area.target_path');
     }
 
     /**
