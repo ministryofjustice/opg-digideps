@@ -14,7 +14,7 @@ window.addEventListener('DOMContentLoaded', (event) => {
   CookieBanner()
 
   // Menu Buttons
-  const menuButtons = document.querySelector('.moj-button-menu')
+  const menuButtons = document.querySelectorAll('.moj-button-menu')
   if (menuButtons.length > 0) {
     MOJButtonMenu.init(menuButtons)
   }

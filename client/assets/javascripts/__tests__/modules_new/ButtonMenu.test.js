@@ -7,13 +7,13 @@ describe('MOJButtonMenu', () => {
       document.body.innerHTML = `
         <div class="moj-button-menu">
           <div class="moj-button-menu__wrapper">
-            <a href="#" role="button" class="govuk-button">
+            <button role="button" class="govuk-button">
                 Click here!
-            </a>
+            </button>
           </div>
         </div>`
 
-      const btnGroups = document.querySelector('.moj-button-menu')
+      const btnGroups = document.querySelectorAll('.moj-button-menu')
       const spy = jest.spyOn(MOJButtonMenu, 'init')
 
       MOJButtonMenu.init(btnGroups)
@@ -29,7 +29,7 @@ describe('MOJButtonMenu', () => {
             </div>
           </div>`
 
-      const btnGroups = document.querySelector('.moj-button-menu')
+      const btnGroups = document.querySelectorAll('.moj-button-menu')
       const spy = jest.spyOn(MOJButtonMenu, 'init')
 
       MOJButtonMenu.init(btnGroups)
