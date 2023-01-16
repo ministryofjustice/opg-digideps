@@ -38,7 +38,6 @@ locals {
     "alex.saunders",
     "gugandeep.chani",
     "jack.goodby",
-    "mia.gordon",
-    "stephen.hinett"
+    "mia.gordon"
   ]
 }
