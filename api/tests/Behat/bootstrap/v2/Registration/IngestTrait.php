@@ -264,6 +264,23 @@ trait IngestTrait
     }
 
     /**
+     * @When I upload an org CSV that has a new report type :reportTypeNumber for a dual case
+     */
+    public function iUploadACsvThatHasANewReportTypeForDualCase(string $reportTypeNumber)
+    {
+        $this->iAmOnAdminOrgCsvUploadPage();
+
+        $this->expectedReportType = $reportTypeNumber;
+
+        $this->createProfAdminNotStarted(null, 'fuzzy.lumpkins@jojo6.com', '60000000', '750000000001');
+
+        $this->uploadCsvAndCountCreatedEntities(
+            'sirius-csvs/org-2-rows-1-row-updated-report-type-dual-case.csv',
+            'Upload PA/Prof users'
+        );
+    }
+
+    /**
      * @Then the report type should be updated
      */
     public function theReportTypeShouldBeUpdated()

@@ -31,6 +31,7 @@ class PreRegistrationFactory
             'Case' => $dto->getCaseNumber(),
             'ClientSurname' => $dto->getClientSurname(),
             'DeputyUid' => $dto->getDeputyUid(),
+            'DeputyFirstname' => $dto->getDeputyFirstname(),
             'DeputySurname' => $dto->getDeputySurname(),
             'DeputyAddress1' => $dto->getDeputyAddress1(),
             'DeputyAddress2' => $dto->getDeputyAddress2(),

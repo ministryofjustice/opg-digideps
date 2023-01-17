@@ -93,6 +93,7 @@ class PreRegistrationFactoryTest extends TestCase
         return (new LayDeputyshipDto())
             ->setCaseNumber('case')
             ->setDeputyUid('depnum')
+            ->setDeputyFirstname('depfirstname')
             ->setDeputySurname('depsurname')
             ->setClientSurname('clientsurname')
             ->setDeputyAddress1('depaddress1')

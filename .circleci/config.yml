@@ -61,27 +61,22 @@ workflows:
           channel: opg-digicop-builds
           requires: [lint terraform]
 
-  #  rotate_secrets:
-  #    when:
-  #      and:
-  #        - not:
-  #            {
-  #              matches:
-  #                {
-  #                  pattern: "^dependabot/.+$",
-  #                  value: << pipeline.git.branch >>,
-  #                },
-  #            }
-  #        - not: { equal: [main, << pipeline.git.branch >>] }
-  #    jobs:
-  #      - rotate-secrets:
-  #          name: rotate secrets
-  #
-  #      - terraform-command:
-  #          name: terraform apply
-  #          requires: [rotate secrets]
-  #          tf_command: apply
-  #          tf_reapply: true
+  rotate_secrets:
+    triggers:
+      - schedule:
+          cron: "0 02 * * 0-6" # once a day at 2am
+          filters: { branches: { only: [main] } }
+    jobs:
+      - rotate-secrets:
+          name: rotate secrets
+          secrets_prefix: default/
+
+      - terraform-command:
+          name: terraform apply
+          requires: [rotate secrets]
+          tf_workspace: development
+          tf_command: plan
+          tf_reapply: true
 
   pull_request:
     when:
@@ -1244,11 +1239,12 @@ jobs:
           name: Run tests
           command: |
             docker-compose -f docker-compose.yml -f docker-compose.ci.test.yml --project-name api-unit-tests up -d postgres
+            docker-compose -f docker-compose.yml -f docker-compose.ci.test.yml --project-name api-unit-tests up -d localstack
+            docker-compose -f docker-compose.yml -f docker-compose.ci.test.yml --project-name api-unit-tests run --rm wait-for-it -address localstack:4566 --timeout=25 -debug
+            while [ $(docker-compose -f docker-compose.yml -f docker-compose.ci.test.yml --project-name api-unit-tests exec localstack awslocal secretsmanager list-secrets | grep database-password | wc -l) -lt 1 ]; do sleep 1; done
             docker-compose -f docker-compose.yml -f docker-compose.ci.test.yml --project-name api-unit-tests run api sh scripts/reset_db_structure_local.sh
             APP_ENV=test APP_DEBUG=0 docker-compose -f docker-compose.yml -f docker-compose.ci.test.yml --project-name api-unit-tests up -d api
             docker-compose -f docker-compose.yml -f docker-compose.ci.test.yml --project-name api-unit-tests exec api chmod -R 777 var
-            docker-compose -f docker-compose.yml -f docker-compose.ci.test.yml --project-name api-unit-tests run --rm wait-for-it -address localstack:4566 --timeout=25 -debug
-            sleep 60
             docker-compose -f docker-compose.yml -f docker-compose.ci.test.yml --project-name api-unit-tests exec api sh scripts/apiunittest.sh
 
             docker-compose -f docker-compose.yml -f docker-compose.ci.test.yml --project-name api-unit-tests exec api chmod -R 777 tests/coverage/api-unit-tests.xml

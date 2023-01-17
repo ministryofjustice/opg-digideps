@@ -4,8 +4,6 @@ declare(strict_types=1);
 
 namespace App\v2\Registration\DTO;
 
-use DateTime;
-
 class OrgDeputyshipDto
 {
     private string $caseNumber;
@@ -32,19 +30,20 @@ class OrgDeputyshipDto
     private ?string $deputyAddress4;
     private ?string $deputyAddress5;
 
-    private ?DateTime $clientDateOfBirth;
-    private ?DateTime $courtDate;
-    private ?DateTime $reportStartDate;
-    private ?DateTime $reportEndDate;
+    private ?\DateTime $clientDateOfBirth;
+    private ?\DateTime $courtDate;
+    private ?\DateTime $reportStartDate;
+    private ?\DateTime $reportEndDate;
+
+    public const SINGLE_TYPE = 'SINGLE';
+    public const HYBRID_TYPE = 'HYBRID';
+    public const DUAL_TYPE = 'DUAL';
 
     public function getDeputyEmail(): ?string
     {
         return $this->deputyEmail;
     }
 
-    /**
-     * @return OrgDeputyshipDto
-     */
     public function setDeputyEmail(?string $deputyEmail): self
     {
         $this->deputyEmail = $deputyEmail;
@@ -57,9 +56,6 @@ class OrgDeputyshipDto
         return $this->deputyUid;
     }
 
-    /**
-     * @return OrgDeputyshipDto
-     */
     public function setDeputyUid(string $deputyUid): self
     {
         $this->deputyUid = $deputyUid;
@@ -72,9 +68,6 @@ class OrgDeputyshipDto
         return $this->deputyFirstname;
     }
 
-    /**
-     * @return OrgDeputyshipDto
-     */
     public function setDeputyFirstname(?string $deputyFirstname): self
     {
         $this->deputyFirstname = $deputyFirstname;
@@ -87,9 +80,6 @@ class OrgDeputyshipDto
         return $this->deputyLastname;
     }
 
-    /**
-     * @return OrgDeputyshipDto
-     */
     public function setDeputyLastname(string $deputyLastname): self
     {
         $this->deputyLastname = $deputyLastname;
@@ -102,9 +92,6 @@ class OrgDeputyshipDto
         return $this->caseNumber;
     }
 
-    /**
-     * @return OrgDeputyshipDto
-     */
     public function setCaseNumber(string $caseNumber): self
     {
         $this->caseNumber = $caseNumber;
@@ -113,17 +100,14 @@ class OrgDeputyshipDto
     }
 
     /**
-     * @return DateTime
+     * @return \DateTime
      */
     public function getCourtDate()
     {
         return $this->courtDate;
     }
 
-    /**
-     * @return OrgDeputyshipDto
-     */
-    public function setCourtDate(?DateTime $courtDate): self
+    public function setCourtDate(?\DateTime $courtDate): self
     {
         $this->courtDate = $courtDate;
 
@@ -138,9 +122,6 @@ class OrgDeputyshipDto
         return $this->clientFirstname;
     }
 
-    /**
-     * @return OrgDeputyshipDto
-     */
     public function setClientFirstname(string $clientFirstname): self
     {
         $this->clientFirstname = $clientFirstname;
@@ -156,9 +137,6 @@ class OrgDeputyshipDto
         return $this->clientLastname;
     }
 
-    /**
-     * @return OrgDeputyshipDto
-     */
     public function setClientLastname(string $clientLastname): self
     {
         $this->clientLastname = $clientLastname;
@@ -171,9 +149,6 @@ class OrgDeputyshipDto
         return $this->clientAddress1;
     }
 
-    /**
-     * @return OrgDeputyshipDto
-     */
     public function setClientAddress1(?string $clientAddress1): self
     {
         $this->clientAddress1 = $clientAddress1;
@@ -186,9 +161,6 @@ class OrgDeputyshipDto
         return $this->clientAddress2;
     }
 
-    /**
-     * @return OrgDeputyshipDto
-     */
     public function setClientAddress2(?string $clientAddress2): self
     {
         $this->clientAddress2 = $clientAddress2;
@@ -201,9 +173,6 @@ class OrgDeputyshipDto
         return $this->clientAddress3;
     }
 
-    /**
-     * @return OrgDeputyshipDto
-     */
     public function setClientAddress3(?string $clientAddress3): self
     {
         $this->clientAddress3 = $clientAddress3;
@@ -216,9 +185,6 @@ class OrgDeputyshipDto
         return $this->clientAddress4;
     }
 
-    /**
-     * @return OrgDeputyshipDto
-     */
     public function setClientAddress4(?string $clientAddress4): self
     {
         $this->clientAddress4 = $clientAddress4;
@@ -231,9 +197,6 @@ class OrgDeputyshipDto
         return $this->clientAddress5;
     }
 
-    /**
-     * @return OrgDeputyshipDto
-     */
     public function setClientAddress5(?string $clientAddress5): self
     {
         $this->clientAddress5 = $clientAddress5;
@@ -246,9 +209,6 @@ class OrgDeputyshipDto
         return $this->clientPostCode;
     }
 
-    /**
-     * @return OrgDeputyshipDto
-     */
     public function setClientPostCode(?string $clientPostCode): self
     {
         $this->clientPostCode = $clientPostCode;
@@ -256,15 +216,12 @@ class OrgDeputyshipDto
         return $this;
     }
 
-    public function getClientDateOfBirth(): ?DateTime
+    public function getClientDateOfBirth(): ?\DateTime
     {
         return $this->clientDateOfBirth;
     }
 
-    /**
-     * @return OrgDeputyshipDto
-     */
-    public function setClientDateOfBirth(?DateTime $clientDateOfBirth): self
+    public function setClientDateOfBirth(?\DateTime $clientDateOfBirth): self
     {
         $this->clientDateOfBirth = $clientDateOfBirth;
 
@@ -276,9 +233,6 @@ class OrgDeputyshipDto
         return $this->deputyAddress1;
     }
 
-    /**
-     * @return OrgDeputyshipDto
-     */
     public function setDeputyAddress1(string $deputyAddress1): self
     {
         $this->deputyAddress1 = $deputyAddress1;
@@ -291,9 +245,6 @@ class OrgDeputyshipDto
         return $this->deputyPostcode;
     }
 
-    /**
-     * @return OrgDeputyshipDto
-     */
     public function setDeputyPostcode(string $deputyPostcode): self
     {
         $this->deputyPostcode = $deputyPostcode;
@@ -306,9 +257,6 @@ class OrgDeputyshipDto
         return $this->reportType;
     }
 
-    /**
-     * @return OrgDeputyshipDto
-     */
     public function setReportType(string $reportType): self
     {
         $this->reportType = $reportType;
@@ -316,30 +264,24 @@ class OrgDeputyshipDto
         return $this;
     }
 
-    public function getReportStartDate(): ?DateTime
+    public function getReportStartDate(): ?\DateTime
     {
         return $this->reportStartDate;
     }
 
-    /**
-     * @return OrgDeputyshipDto
-     */
-    public function setReportStartDate(?DateTime $reportStartDate): self
+    public function setReportStartDate(?\DateTime $reportStartDate): self
     {
         $this->reportStartDate = $reportStartDate;
 
         return $this;
     }
 
-    public function getReportEndDate(): ?DateTime
+    public function getReportEndDate(): ?\DateTime
     {
         return $this->reportEndDate;
     }
 
-    /**
-     * @return OrgDeputyshipDto
-     */
-    public function setReportEndDate(?DateTime $reportEndDate): self
+    public function setReportEndDate(?\DateTime $reportEndDate): self
     {
         $this->reportEndDate = $reportEndDate;
 
@@ -416,9 +358,6 @@ class OrgDeputyshipDto
         return $this->hybrid;
     }
 
-    /**
-     * @return OrgDeputyshipDto
-     */
     public function setHybrid(?string $hybrid): self
     {
         $this->hybrid = $hybrid;

@@ -4,6 +4,7 @@ declare(strict_types=1);
 
 namespace App\DBAL;
 
+use Aws\SecretsManager\Exception\SecretsManagerException;
 use Aws\SecretsManager\SecretsManagerClient;
 use Doctrine\Common\EventManager;
 use Doctrine\DBAL\Configuration;
@@ -15,20 +16,20 @@ use Predis\Client as PredisClient;
 
 class ConnectionWrapper extends Connection
 {
-    public const REDIS_DSN = 'REDIS_DSN';
     public const DB_PASSWORD = 'DBPassword';
+    public const REDIS_DSN = 'REDIS_DSN';
+    public const SECRETS_PREFIX = 'SECRETS_PREFIX';
     public const SECRETS_ENDPOINT = 'SECRETS_ENDPOINT';
-    public const SECRETS_PREFIX = 'SECRETS_PREFIX_DB';
-    //    public const SECRETS_PREFIX = 'SECRETS_PREFIX';
 
     private bool $_isConnected = false;
 
-    private PredisClient $redis;
     /**
      * @var array|mixed[]
      */
     private array $params;
     private bool $autoCommit;
+    private PredisClient $redis;
+    private SecretsManagerClient $secretClient;
 
     public function __construct(
         array $params, Driver $driver, ?Configuration $config = null, ?EventManager $eventManager = null
@@ -37,18 +38,10 @@ class ConnectionWrapper extends Connection
 
         // Can't be passed in from services.yml as we can't increase number of arguments in unless we wrap driver
         $redis_dsn = getenv(self::REDIS_DSN);
-        if (!$redis_dsn) {
-            $redis_dsn = 'redis://redis-not-found';
-        }
-        $this->redis = new PredisClient([
-            'scheme' => 'redis',
-            'host' => explode('://', $redis_dsn)[1],
-            'port' => 6379,
-        ]);
-
+        $secretPrefix = getenv(self::SECRETS_PREFIX);
+        $this->setRedis($redis_dsn);
+        $this->setSecretsManagerClient($secretPrefix);
         $this->params = $this->getParams();
-
-        file_put_contents('php://stderr', print_r('PW_CONSTRUCT: '.substr($this->params['password'], -3), true));
         $this->autoCommit = $config->getAutoCommit();
     }
 
@@ -62,15 +55,14 @@ class ConnectionWrapper extends Connection
         }
 
         $db_password = $this->redis->get(self::DB_PASSWORD);
+        // Where password isn't in redis, set one (will be set with real secret when it connects).
         $this->params['password'] = (null == $db_password) ? 'initial_pw' : $db_password;
-
-        file_put_contents('php://stderr', print_r('PW_CONNECT: '.substr($this->params['password'], -3), true));
 
         try {
             $this->_conn = $this->_driver->connect($this->params);
         } catch (Driver\Exception $e) {
             try {
-                $this->refreshToken();
+                $this->refreshPassword();
                 $this->_conn = $this->_driver->connect($this->params);
             } catch (Driver\Exception $e) {
                 throw $this->convertException($e);
@@ -91,31 +83,53 @@ class ConnectionWrapper extends Connection
         return true;
     }
 
-    private function refreshToken()
+    private function refreshPassword()
     {
-        $endpoint = getenv(self::SECRETS_ENDPOINT);
-        $secret_name = sprintf('%sdatabase-password', getenv(self::SECRETS_PREFIX));
-
-        $client = new SecretsManagerClient([
-            'region' => 'eu-west-1',
-            'version' => '2017-10-17',
-            'endpoint' => $endpoint,
-        ]);
-
-        file_put_contents('php://stderr', print_r('SECRET_NAMES: '.$secret_name, true));
+        $secretPrefix = getenv(self::SECRETS_PREFIX);
+        $secretName = sprintf('%sdatabase-password', $secretPrefix);
 
         // Use the Secrets Manager client to retrieve the secret value
-        $result = $client->getSecretValue([
-            'SecretId' => $secret_name,
+        try {
+            $result = $this->secretClient->getSecretValue([
+                'SecretId' => $secretName,
+            ]);
+        } catch (SecretsManagerException $e) {
+            error_log($e->getMessage());
+        }
+        // Update redis and params with latest password
+        // Subsequent connections will use new value stored in redis
+        $secretValue = $result['SecretString'];
+        $this->redis->set(self::DB_PASSWORD, $secretValue);
+        $this->params['password'] = $secretValue;
+    }
+
+    public function setSecretsManagerClient($secretPrefix)
+    {
+        if ('local/' == $secretPrefix) {
+            $endpoint = getenv(self::SECRETS_ENDPOINT);
+            $this->secretClient = new SecretsManagerClient([
+                'region' => 'eu-west-1',
+                'version' => '2017-10-17',
+                'endpoint' => $endpoint,
+            ]);
+        } else {
+            $this->secretClient = new SecretsManagerClient([
+                'region' => 'eu-west-1',
+                'version' => '2017-10-17',
+            ]);
+        }
+    }
+
+    public function setRedis($redis_dsn)
+    {
+        if (!$redis_dsn) {
+            $redis_dsn = 'redis://redis-not-found';
+        }
+        $this->redis = new PredisClient([
+            'scheme' => 'redis',
+            'host' => explode('://', $redis_dsn)[1],
+            'port' => 6379,
         ]);
-
-        // The secret value is stored in the `SecretString` field of the result
-        $secret_value = $result['SecretString'];
-
-        file_put_contents('php://stderr', print_r('SECRET_RESULT: '.substr($secret_value, -3), true));
-
-        $this->redis->set(self::DB_PASSWORD, $secret_value);
-        $this->params['password'] = $secret_value;
     }
 
     /**

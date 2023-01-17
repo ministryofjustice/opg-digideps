@@ -32,6 +32,13 @@ Feature: Org CSV data ingestion - sirius source data
         And I upload an org CSV that has a new report type '103-5' for an existing report that has not been submitted or unsubmitted
         Then the report type should be updated
 
+    @super-admin
+    Scenario: Uploading a CSV that contains an existing dual case - report type updated only when deputy uid matches
+        Given a super admin user accesses the admin app
+        When I visit the admin upload org users page
+        And I upload an org CSV that has a new report type '103-5' for a dual case
+        Then the report type should be updated
+
 #    @super-admin
 #    Scenario: Uploading a CSV that contains a new named deputy in a new organisation for an existing client - same case number, same made date
 #        Given a super admin user accesses the admin app
