@@ -1,0 +1,54 @@
+name: "[Terraform] Validate terraform"
+
+defaults:
+  run:
+    shell: bash
+
+on:
+  workflow_call:
+    inputs:
+      workspace:
+        description: "Terraform workspace"
+        required: true
+        type: string
+jobs:
+  lint-terraform:
+    runs-on: ubuntu-latest
+    strategy:
+      matrix:
+        include:
+          - folder: "environment"
+          - folder: "shared"
+    steps:
+      - uses: actions/checkout@2541b1294d2704b0964813337f33b291d3f8596b # pin@v3
+
+      - uses: hashicorp/setup-terraform@17d4c9b8043b238f6f35641cdd8433da1e6f3867 # pin@v2.0.0
+        with:
+          terraform_version: 1.2.4
+
+      - name: configure AWS credentials for terraform
+        uses: aws-actions/configure-aws-credentials@67fbcbb121271f7775d2e7715933280b06314838 # pin@v1.7.0
+        with:
+          aws-access-key-id: ${{ secrets.AWS_ACCESS_KEY_ID_ACTIONS }}
+          aws-secret-access-key: ${{ secrets.AWS_SECRET_ACCESS_KEY_ACTIONS }}
+          aws-region: eu-west-1
+          role-duration-seconds: 1800
+          role-session-name: OPGDigidepsLintTerraformAction
+
+      - uses: webfactory/ssh-agent@fc49353b67b2b7c1e0e6a600572d01a69f2672dd # pin@v0.5.4
+        with:
+          ssh-private-key: ${{ secrets.SSH_PRIVATE_KEY_ALLOW_LIST_REPOSITORY }}
+
+      - name: terraform fmt ${{ matrix.folder }} check
+        run: terraform fmt -check -recursive
+        working-directory: ./${{ matrix.folder }}
+
+      - name: terraform validate ${{ inputs.workspace }}
+        env:
+          TF_WORKSPACE: default
+        run: |
+          terraform --version
+          terraform init
+          echo $TF_WORKSPACE
+          terraform validate
+        working-directory: ./${{ matrix.folder }}

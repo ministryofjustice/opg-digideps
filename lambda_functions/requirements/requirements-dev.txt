@@ -1,4 +1,0 @@
-pytest
-boto3
-moto
-psycopg2-binary

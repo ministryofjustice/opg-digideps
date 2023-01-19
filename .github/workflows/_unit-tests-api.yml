@@ -1,0 +1,55 @@
+name: "[Tests] API Unit Tests"
+
+defaults:
+  run:
+    shell: bash
+
+on:
+  workflow_call:
+
+jobs:
+  api-unit-tests:
+    runs-on: ubuntu-latest
+    steps:
+      - uses: actions/checkout@2541b1294d2704b0964813337f33b291d3f8596b # pin@v3
+      - name: cache docker layers
+        id: cache-docker
+        uses: actions/cache@365406cb701e1cc758077b05049298a49a8b71c2 # pin@v3.0.8
+        with:
+          path: /tmp/.buildx-cache
+          key: ${{ runner.os }}-api-build-${{ github.sha }}
+          restore-keys: |
+            ${{ runner.os }}-api-build
+      - name: build docker image
+        env:
+          IMAGE_NAME: api
+        run: docker buildx build --cache-from=type=local,src=/tmp/.buildx-cache --tag api:latest --output type=docker .
+        working-directory: api
+      - name: run api unit tests
+        id: unit-tests
+        run: |
+          echo "PART 1"
+          docker-compose -f docker-compose.yml -f docker-compose.ci.test.yml --project-name api-unit-tests up -d postgres
+          echo "PART 2"
+          docker-compose -f docker-compose.yml -f docker-compose.ci.test.yml --project-name api-unit-tests up -d localstack
+          echo "PART 3"
+          docker-compose -f docker-compose.yml -f docker-compose.ci.test.yml --project-name api-unit-tests run --rm wait-for-it -address localstack:4566 --timeout=25 -debug
+          echo "PART 4"
+          while [ $(docker-compose -f docker-compose.yml -f docker-compose.ci.test.yml --project-name api-unit-tests exec -T localstack awslocal secretsmanager list-secrets | grep synchronisation-jwt-token | wc -l) -lt 1 ]; do sleep 1; done
+          echo "PART 5"
+          docker-compose -f docker-compose.yml -f docker-compose.ci.test.yml --project-name api-unit-tests run --rm api sh scripts/reset_db_structure_local.sh
+          echo "PART 6"
+          APP_ENV=test APP_DEBUG=0 docker-compose -f docker-compose.yml -f docker-compose.ci.test.yml --project-name api-unit-tests up -d api
+          echo "PART 7"
+          docker-compose -f docker-compose.yml -f docker-compose.ci.test.yml --project-name api-unit-tests exec -T api chmod -R 777 var
+          echo "PART 8"
+          docker-compose -f docker-compose.yml -f docker-compose.ci.test.yml --project-name api-unit-tests exec -T api sh scripts/apiunittest.sh
+          echo "PART 9"
+          docker-compose -f docker-compose.yml -f docker-compose.ci.test.yml --project-name api-unit-tests exec -T api chmod -R 777 tests/coverage/api-unit-tests.xml
+          echo "PART 10"
+          docker cp "api-unit-tests-api:/var/www/tests/coverage/api-unit-tests.xml" "./api-unit-tests.xml"
+      - name: archive test results
+        uses: actions/upload-artifact@65d862660abb392b8c4a3d1195a2108db131dd05 # pin@v3.1.0
+        with:
+          name: api-unit-tests
+          path: api-unit-tests.xml

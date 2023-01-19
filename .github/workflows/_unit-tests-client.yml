@@ -1,0 +1,55 @@
+name: "[Tests] Client Unit Tests"
+
+defaults:
+  run:
+    shell: bash
+
+on:
+  workflow_call:
+
+jobs:
+  client-unit-tests:
+    runs-on: ubuntu-latest
+    steps:
+      - uses: actions/checkout@2541b1294d2704b0964813337f33b291d3f8596b # pin@v3
+      - name: cache docker layers
+        id: cache-docker
+        uses: actions/cache@365406cb701e1cc758077b05049298a49a8b71c2 # pin@v3.0.8
+        with:
+          path: /tmp/.buildx-cache
+          key: ${{ runner.os }}-client-build-${{ github.sha }}
+          restore-keys: |
+            ${{ runner.os }}-client-build
+
+      - name: build docker image
+        env:
+          IMAGE_NAME: client
+        run: docker buildx build --cache-from=type=local,src=/tmp/.buildx-cache --tag client:latest --output type=docker .
+        working-directory: client
+
+      - name: run client unit tests
+        id: unit-tests
+        run: |
+          echo "PART 1"
+          APP_ENV=dev APP_DEBUG=0 docker-compose -f docker-compose.yml -f docker-compose.ci.test.yml --project-name client-unit-tests up -d --no-deps frontend pact-mock
+          sleep 3
+          echo "PART 2"
+          docker-compose -f docker-compose.yml -f docker-compose.ci.test.yml --project-name client-unit-tests exec -T frontend sh scripts/client-unit-tests.sh
+          echo "PART 3"
+          docker-compose -f docker-compose.yml -f docker-compose.ci.test.yml --project-name client-unit-tests exec -T frontend chmod -R 777 tests/phpunit/coverage/client-unit-tests.xml
+          echo "PART 4"
+          docker cp "client-unit-tests-frontend:/var/www/tests/phpunit/coverage/client-unit-tests.xml" "./client-unit-tests.xml"
+          echo "PART 5"
+          docker-compose -f docker-compose.yml -f docker-compose.ci.test.yml --project-name client-unit-tests exec -T pact-mock cat /tmp/pacts/complete_the_deputy_report-opg_data.json > pact.json
+          echo "PART 6"
+          docker-compose -f docker-compose.yml -f docker-compose.ci.test.yml --project-name client-unit-tests stop pact-mock
+      - name: archive pact results
+        uses: actions/upload-artifact@65d862660abb392b8c4a3d1195a2108db131dd05 # pin@v3.1.0
+        with:
+          name: pact.json
+          path: .
+      - name: archive test results
+        uses: actions/upload-artifact@65d862660abb392b8c4a3d1195a2108db131dd05 # pin@v3.1.0
+        with:
+          name: client-unit-tests
+          path: client-unit-tests.xml

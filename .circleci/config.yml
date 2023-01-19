@@ -75,173 +75,173 @@ workflows:
           channel: opg-digicop-builds
           requires: [lint terraform]
 
-  pull_request:
-    when:
-      and:
-        - not:
-            {
-              matches:
-                {
-                  pattern: "^dependabot/.+$",
-                  value: << pipeline.git.branch >>,
-                },
-            }
-        - not: { equal: [main, << pipeline.git.branch >>] }
-    jobs:
-      - build:
-          name: build pr
-          ecr_scan_notify: "False"
-
-      - cancel_redundant_builds:
-          name: cancel redundant builds
-
-      - tfsec-scan:
-          name: scan with tfsec
-
-      - lint:
-          name: lint terraform
-
-      #      - go-unit-tests:
-      #          name: go unit tests
-
-      - terraform-command:
-          name: plan shared-development
-          requires: [cancel redundant builds]
-          tf_tier: shared
-          tf_workspace: development
-          tf_command: plan
-
-      - workspace-protection:
-          name: protect branch workspace
-          requires: [cancel redundant builds]
-
-      - terraform-command:
-          name: plan branch env
-          requires: [protect branch workspace]
-          tf_command: plan
-
-      - terraform-command:
-          name: initial terraform apply
-          requires: [lint terraform, plan shared-development, plan branch env]
-          tf_command: apply
-          tf_initial_apply: true
-
-      - lambda-unit-test:
-          name: lambda unit test
-          requires: [lint terraform]
-
-      - client-unit-test:
-          name: client unit test
-          requires: [build pr]
-
-      - api-unit-tests:
-          name: api unit test
-          requires: [build pr]
-
-      - terraform-command:
-          name: terraform apply
-          requires: [initial terraform apply, build pr, lambda unit test]
-          tf_command: apply
-
-      - scale-services:
-          name: scale up services for integration tests
-          replicas: "6"
-          requires: [terraform apply]
-
-      #            - pa11y-ci:
-      #                name: accessibility test
-      #                requires: [ apply environment ]
-      #                filters: { branches: { ignore: [ main ] } }
-
-      - run-task:
-          name: integration tests reset DB
-          requires: [terraform apply]
-          task_name: integration_test_v2
-          override: "sh,./tests/Behat/reset-db.sh"
-          timeout: 500
-
-      - run-task:
-          name: integration tests v2 reports 1
-          requires:
-            [
-              integration tests reset DB,
-              scale up services for integration tests,
-            ]
-          task_name: integration_test_v2
-          override: "sh,./tests/Behat/run-tests-parallel.sh,--tags,@v2_reporting_1,--profile,v2-tests-browserkit"
-          timeout: 1200
-
-      - run-task:
-          name: integration tests v2 reports 2
-          requires:
-            [
-              integration tests reset DB,
-              scale up services for integration tests,
-            ]
-          task_name: integration_test_v2
-          override: "sh,./tests/Behat/run-tests-parallel.sh,--tags,@v2_reporting_2,--profile,v2-tests-browserkit"
-          timeout: 1200
-
-      - run-task:
-          name: integration tests v2 admin
-          requires:
-            [
-              integration tests reset DB,
-              scale up services for integration tests,
-            ]
-          task_name: integration_test_v2
-          override: "sh,./tests/Behat/run-tests-parallel.sh,--tags,@v2_admin,--profile,v2-tests-browserkit"
-          timeout: 1200
-
-      - run-task:
-          name: integration tests sequential only
-          requires:
-            [
-              integration tests reset DB,
-              scale up services for integration tests,
-            ]
-          task_name: integration_test_v2
-          override: "sh,./tests/Behat/run-tests.sh,--tags,@v2_sequential,--profile,v2-tests-browserkit"
-          timeout: 1200
-
-      - terraform-plan-all:
-          name: plan all terraform environments
-          requires:
-            [protect branch workspace, scale up services for integration tests]
-          tf_tier: environment
-
-      - terraform-plan-all:
-          name: plan all shared terraform environments
-          requires:
-            [protect branch workspace, scale up services for integration tests]
-          tf_tier: shared
-
-      - scale-services:
-          name: scale down services for integration tests
-          replicas: "1"
-          requires:
-            [
-              integration tests v2 reports 1,
-              integration tests v2 reports 2,
-              integration tests v2 admin,
-              integration tests sequential only,
-            ]
-
-      - slack/approval-notification:
-          name: branch complete notification
-          message: Your branch << pipeline.git.branch >> has completed
-          channel: opg-digicop-builds
-          requires:
-            [
-              integration tests v2 reports 1,
-              integration tests v2 reports 2,
-              integration tests v2 admin,
-              integration tests sequential only,
-              plan all terraform environments,
-              plan all shared terraform environments,
-              api unit test,
-              client unit test,
-            ]
+  #  pull_request:
+  #    when:
+  #      and:
+  #        - not:
+  #            {
+  #              matches:
+  #                {
+  #                  pattern: "^dependabot/.+$",
+  #                  value: << pipeline.git.branch >>,
+  #                },
+  #            }
+  #        - not: { equal: [main, << pipeline.git.branch >>] }
+  #    jobs:
+  #      - build:
+  #          name: build pr
+  #          ecr_scan_notify: "False"
+  #
+  #      - cancel_redundant_builds:
+  #          name: cancel redundant builds
+  #
+  #      - tfsec-scan:
+  #          name: scan with tfsec
+  #
+  #      - lint:
+  #          name: lint terraform
+  #
+  #      #      - go-unit-tests:
+  #      #          name: go unit tests
+  #
+  #      - terraform-command:
+  #          name: plan shared-development
+  #          requires: [cancel redundant builds]
+  #          tf_tier: shared
+  #          tf_workspace: development
+  #          tf_command: plan
+  #
+  #      - workspace-protection:
+  #          name: protect branch workspace
+  #          requires: [cancel redundant builds]
+  #
+  #      - terraform-command:
+  #          name: plan branch env
+  #          requires: [protect branch workspace]
+  #          tf_command: plan
+  #
+  #      - terraform-command:
+  #          name: initial terraform apply
+  #          requires: [lint terraform, plan shared-development, plan branch env]
+  #          tf_command: apply
+  #          tf_initial_apply: true
+  #
+  #      - lambda-unit-test:
+  #          name: lambda unit test
+  #          requires: [lint terraform]
+  #
+  #      - client-unit-test:
+  #          name: client unit test
+  #          requires: [build pr]
+  #
+  #      - api-unit-tests:
+  #          name: api unit test
+  #          requires: [build pr]
+  #
+  #      - terraform-command:
+  #          name: terraform apply
+  #          requires: [initial terraform apply, build pr, lambda unit test]
+  #          tf_command: apply
+  #
+  #      - scale-services:
+  #          name: scale up services for integration tests
+  #          replicas: "6"
+  #          requires: [terraform apply]
+  #
+  #      #            - pa11y-ci:
+  #      #                name: accessibility test
+  #      #                requires: [ apply environment ]
+  #      #                filters: { branches: { ignore: [ main ] } }
+  #
+  #      - run-task:
+  #          name: integration tests reset DB
+  #          requires: [terraform apply]
+  #          task_name: integration_test_v2
+  #          override: "sh,./tests/Behat/reset-db.sh"
+  #          timeout: 500
+  #
+  #      - run-task:
+  #          name: integration tests v2 reports 1
+  #          requires:
+  #            [
+  #              integration tests reset DB,
+  #              scale up services for integration tests,
+  #            ]
+  #          task_name: integration_test_v2
+  #          override: "sh,./tests/Behat/run-tests-parallel.sh,--tags,@v2_reporting_1,--profile,v2-tests-browserkit"
+  #          timeout: 1200
+  #
+  #      - run-task:
+  #          name: integration tests v2 reports 2
+  #          requires:
+  #            [
+  #              integration tests reset DB,
+  #              scale up services for integration tests,
+  #            ]
+  #          task_name: integration_test_v2
+  #          override: "sh,./tests/Behat/run-tests-parallel.sh,--tags,@v2_reporting_2,--profile,v2-tests-browserkit"
+  #          timeout: 1200
+  #
+  #      - run-task:
+  #          name: integration tests v2 admin
+  #          requires:
+  #            [
+  #              integration tests reset DB,
+  #              scale up services for integration tests,
+  #            ]
+  #          task_name: integration_test_v2
+  #          override: "sh,./tests/Behat/run-tests-parallel.sh,--tags,@v2_admin,--profile,v2-tests-browserkit"
+  #          timeout: 1200
+  #
+  #      - run-task:
+  #          name: integration tests sequential only
+  #          requires:
+  #            [
+  #              integration tests reset DB,
+  #              scale up services for integration tests,
+  #            ]
+  #          task_name: integration_test_v2
+  #          override: "sh,./tests/Behat/run-tests.sh,--tags,@v2_sequential,--profile,v2-tests-browserkit"
+  #          timeout: 1200
+  #
+  #      - terraform-plan-all:
+  #          name: plan all terraform environments
+  #          requires:
+  #            [protect branch workspace, scale up services for integration tests]
+  #          tf_tier: environment
+  #
+  #      - terraform-plan-all:
+  #          name: plan all shared terraform environments
+  #          requires:
+  #            [protect branch workspace, scale up services for integration tests]
+  #          tf_tier: shared
+  #
+  #      - scale-services:
+  #          name: scale down services for integration tests
+  #          replicas: "1"
+  #          requires:
+  #            [
+  #              integration tests v2 reports 1,
+  #              integration tests v2 reports 2,
+  #              integration tests v2 admin,
+  #              integration tests sequential only,
+  #            ]
+  #
+  #      - slack/approval-notification:
+  #          name: branch complete notification
+  #          message: Your branch << pipeline.git.branch >> has completed
+  #          channel: opg-digicop-builds
+  #          requires:
+  #            [
+  #              integration tests v2 reports 1,
+  #              integration tests v2 reports 2,
+  #              integration tests v2 admin,
+  #              integration tests sequential only,
+  #              plan all terraform environments,
+  #              plan all shared terraform environments,
+  #              api unit test,
+  #              client unit test,
+  #            ]
 
   integration:
     jobs:
@@ -608,21 +608,21 @@ orbs:
           - docker/check:
               docker-password: DOCKER_ACCESS_TOKEN
               docker-username: DOCKER_USER
-  ecs_helper:
+  ecs-helper:
     commands:
       install:
         steps:
           - run:
               name: Install runner
-              working_directory: ~/project/ecs_helper
+              working_directory: ~/project/ecs-helper
               command: go install -mod vendor ./cmd/runner
           - run:
               name: Install stabilizer
-              working_directory: ~/project/ecs_helper
+              working_directory: ~/project/ecs-helper
               command: go install -mod vendor ./cmd/stabilizer
           - run:
               name: Install pact_tags
-              working_directory: ~/project/ecs_helper
+              working_directory: ~/project/ecs-helper
               command: go install -mod vendor ./cmd/pact_tags
       build:
         steps:
@@ -737,13 +737,13 @@ jobs:
       - checkout:
           path: ~/project
       - terraform/install
-      - ecs_helper/install
+      - ecs-helper/install
       - when:
           condition:
             and:
               - equal: [shared, << parameters.tf_tier >>]
           steps:
-            - ecs_helper/build
+            - ecs-helper/build
       - run:
           name: Initialize
           command: terraform init
@@ -818,13 +818,13 @@ jobs:
       - checkout:
           path: ~/project
       - terraform/install
-      - ecs_helper/install
+      - ecs-helper/install
       - when:
           condition:
             and:
               - equal: [shared, << parameters.tf_tier >>]
           steps:
-            - ecs_helper/build
+            - ecs-helper/build
       - attach_workspace: { at: ~/project }
       - run:
           name: Initialize
@@ -840,8 +840,8 @@ jobs:
           steps:
             - run:
                 name: Extract lambda layers
-                command: tar xvf ~/project/lambda_functions/layer.tar
-                working_directory: ~/project/lambda_functions
+                command: tar xvf ~/project/lambdas/layer.tar
+                working_directory: ~/project/lambdas
       - when:
           condition:
             and:
@@ -970,7 +970,7 @@ jobs:
       - run:
           name: install packages
           command: python3 -m pip install -r requirements.txt
-          working_directory: ~/project/ecs_helper/cmd/circle_builds
+          working_directory: ~/project/ecs-helper/cmd/circle_builds
       - run:
           name: Cancel running builds
           command: |
@@ -981,7 +981,7 @@ jobs:
             --circle_builds_token="${CIRCLE_BUILDS_TOKEN}" \
             --terms_to_waitfor="apply,plan,terraform" \
             --prod_job_terms=" production,shared-production"
-          working_directory: ~/project/ecs_helper/cmd/circle_builds
+          working_directory: ~/project/ecs-helper/cmd/circle_builds
 
   build:
     docker:
@@ -1092,12 +1092,12 @@ jobs:
                       command: docker-compose -f docker-compose.ci.dev.yml push
             - run:
                 name: Install ECR Scan Results Requirements
-                working_directory: ~/project/ecs_helper/check_ecr_scan_results
+                working_directory: ~/project/ecs-helper/check_ecr_scan_results
                 command: |
                   pip install -r requirements.txt
             - run:
                 name: Check ECR Scan Results
-                working_directory: ~/project/ecs_helper/check_ecr_scan_results
+                working_directory: ~/project/ecs-helper/check_ecr_scan_results
                 command: |
                   python3 aws_ecr_scan_results.py --search digideps --tag "${VERSION}" --slack_webhook "${SLACK_WEBHOOK}" --post_to_slack "${ECR_SCAN_NOTIFY}"
       - persist_to_workspace:
@@ -1122,7 +1122,7 @@ jobs:
       - attach_workspace: { at: ~/project }
       - run:
           name: Install lambda requirements for unit tests
-          working_directory: ~/project/lambda_functions
+          working_directory: ~/project/lambdas
           command: |
             docker-compose up -d
             sleep 5
@@ -1131,14 +1131,14 @@ jobs:
       - run:
           name: install requirements for all lambda layers
           command: |
-            export LAYER_PATH=lambda_functions/layers/monitoring/python/lib/python3.7/site-packages
-            python3 -m pip install -r lambda_functions/requirements/requirements.txt --target ./$LAYER_PATH/
-            cd lambda_functions
+            export LAYER_PATH=lambdas/layers/monitoring/python/lib/python3.7/site-packages
+            python3 -m pip install -r lambdas/requirements/requirements.txt --target ./$LAYER_PATH/
+            cd lambdas
             tar cvf layer.tar layers
       - persist_to_workspace:
           root: .
           paths:
-            - ./lambda_functions/layer.tar
+            - ./lambdas/layer.tar
 
   # Issue in circle with mock server. Fix in github actions
   go-unit-tests:
@@ -1153,7 +1153,7 @@ jobs:
       - run:
           name: run go tests
           command: go test
-          working_directory: ~/project/file_scanning
+          working_directory: ~/project/file-scanner
 
   client-unit-test:
     docker:
@@ -1235,7 +1235,6 @@ jobs:
             docker-compose -f docker-compose.yml -f docker-compose.ci.test.yml --project-name api-unit-tests exec api chmod -R 777 var
             docker-compose -f docker-compose.yml -f docker-compose.ci.test.yml --project-name api-unit-tests run --rm wait-for-it -address localstack:4566 --timeout=25 -debug
             docker-compose -f docker-compose.yml -f docker-compose.ci.test.yml --project-name api-unit-tests exec api sh scripts/apiunittest.sh
-
             docker-compose -f docker-compose.yml -f docker-compose.ci.test.yml --project-name api-unit-tests exec api chmod -R 777 tests/coverage/api-unit-tests.xml
             docker cp "api-unit-tests-api:/var/www/tests/coverage/api-unit-tests.xml" "./api-unit-tests.xml"
       - codecov/upload:
@@ -1257,8 +1256,8 @@ jobs:
       - run:
           name: Get secrets
           command: |
-            chmod 755 ecs_helper/cmd/get_secrets/get_secrets.sh
-            source ./ecs_helper/cmd/get_secrets/get_secrets.sh
+            chmod 755 ecs-helper/cmd/get_secrets/get_secrets.sh
+            source ./ecs-helper/cmd/get_secrets/get_secrets.sh
             touch .env behat/.env
             echo "export BROWSERSTACK_USERNAME=$BROWSERSTACK_USERNAME" >> $BASH_ENV
             echo "export BROWSERSTACK_KEY=$BROWSERSTACK_KEY" >> $BASH_ENV
@@ -1283,7 +1282,6 @@ jobs:
 
             docker-compose -f docker-compose.yml -f docker-compose.dev.yml -f docker-compose.browserstack.yml \
             --project-name cross-browser run --rm api sh scripts/reset_db_fixtures_local.sh
-
 
             ./behat/BrowserStackLocal --daemon "start" --key $BROWSERSTACK_KEY
             sudo ./generate_certs.sh
@@ -1360,7 +1358,7 @@ jobs:
       - checkout:
           path: ~/project
       - terraform/install
-      - ecs_helper/install
+      - ecs-helper/install
       - run:
           name: Initialize
           command: terraform init

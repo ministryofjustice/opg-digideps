@@ -43,17 +43,17 @@ resource "aws_lambda_layer_version" "monitoring_lambda_layer" {
 }
 
 data "local_file" "requirements" {
-  filename = "../lambda_functions/requirements/requirements.txt"
+  filename = "../lambdas/requirements/requirements.txt"
 }
 
 data "archive_file" "monitoring_lambda_zip" {
   type        = "zip"
-  source_dir  = "../lambda_functions/functions/monitoring"
+  source_dir  = "../lambdas/functions/monitoring"
   output_path = "./monitoring_lambda.zip"
 }
 
 data "archive_file" "monitoring_lambda_layer_zip" {
   type        = "zip"
-  source_dir  = "../lambda_functions/layers/monitoring"
+  source_dir  = "../lambdas/layers/monitoring"
   output_path = "./monitoring_lambda_layer.zip"
 }
