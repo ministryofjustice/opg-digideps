@@ -108,7 +108,7 @@ RUN chmod 544 /var/www/tests/Behat/run-tests-parallel.sh
 # Prebuild cache
 RUN su-exec www-data php -d memory_limit=-1 app/console cache:warmup
 
-RUN apk upgrade libxml2 openssl libssl1.1 libcrypto1.1 libretls zlib busybox curl gzip xz xz-libs libcurl
+RUN apk upgrade curl libcurl
 
 CMD confd -onetime -backend env \
     && waitforit -address=tcp://$DATABASE_HOSTNAME:$DATABASE_PORT -timeout=$TIMEOUT \
