@@ -16,7 +16,7 @@ RUN composer run-script post-install-cmd --no-interaction
 
 RUN composer dump-autoload --optimize
 
-FROM php:8.1.12-fpm-alpine3.16
+FROM php:8.2.1-fpm-alpine3.16
 WORKDIR /var/www
 EXPOSE 80
 EXPOSE 443
