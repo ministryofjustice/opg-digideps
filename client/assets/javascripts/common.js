@@ -3,7 +3,6 @@ import CookieBanner from './globals/CookieBanner'
 import MOJButtonMenu from './modules_new/ButtonMenu'
 import ButtonToggler from './modules_new/ButtonToggler'
 import ConditionalFieldRevealer from './modules_new/ConditionalFieldRevealer'
-import Redirector from './globals/Redirector'
 import TextAreaAutoSize from './modules_new/TextAreaAutoSize'
 
 window.addEventListener('DOMContentLoaded', (event) => {
@@ -27,9 +26,6 @@ window.addEventListener('DOMContentLoaded', (event) => {
 
   // Conditional Field Revealer
   ConditionalFieldRevealer.init()
-
-  // Redirector
-  Redirector()
 
   // Text Area Auto Size
   const formArea = document.querySelector('form')
