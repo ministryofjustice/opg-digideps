@@ -226,3 +226,13 @@ END;
 $$;
 
 select balance_mismatches_last_6_months()
+
+
+DROP FUNCTION get_total_money_out(int);
+DROP FUNCTION get_total_money_in(int);
+DROP FUNCTION get_open_balance(int);
+DROP FUNCTION get_closing_balance(int);
+DROP FUNCTION get_gifts_amount(int);
+DROP FUNCTION get_expense_amount(int);
+DROP FUNCTION calculate_balance_mismatch(int);
+DROP FUNCTION balance_mismatches_last_6_months();
