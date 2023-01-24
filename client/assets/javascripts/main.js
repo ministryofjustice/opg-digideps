@@ -20,19 +20,6 @@ const Stickyfill = require('stickyfilljs')
 const tableMultiSelect = require('./modules/table-multiselect.js')
 const uploadFile = require('./modules/uploadFile.js')
 
-/**
- * Taken from govuk-frontend. Supports back to IE8
- * See: https://github.com/alphagov/govuk-frontend/blob/063cd8e2470b62b824c6e50ca66342ac7a95d2d8/src/govuk/common.js#L6
- */
-export function nodeListForEach (nodes, callback) {
-  if (window.NodeList.prototype.forEach) {
-    return nodes.forEach(callback)
-  }
-  for (let i = 0; i < nodes.length; i++) {
-    callback.call(window, nodes[i], i, nodes)
-  }
-}
-
 window.opg = {
   Ga,
   SessionTimeoutDialog
