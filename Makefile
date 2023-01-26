@@ -183,3 +183,9 @@ composer-api: ##@application Drops you into the API container with composer inst
 
 composer-client: ##@application Drops you into the frontend container with composer installed
 	docker-compose run --rm --volume ~/.composer:/tmp --volume ${PWD}/client:/app composer ${COMPOSER_ARGS}
+
+test-js:
+	docker-compose -f docker-compose.yml -f docker-compose.dev.yml run npm --rm test
+
+build-js:
+	docker-compose -f docker-compose.yml -f docker-compose.dev.yml run npm --rm build
