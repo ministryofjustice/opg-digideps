@@ -7,12 +7,14 @@ const TextAreaAutoSize = {
   },
 
   resizeTextArea: function (event) {
-    if (event.target.tagName === 'TEXTAREA') {
+    if (event.target.tagName === 'TEXTAREA' && event.target.classList.contains('js-auto-size')) {
       const textArea = event.target
-      const initialHeight = textArea.style.height
+      const scrollHeight = (textArea.scrollHeight) || 120
+      const height = textArea.clientHeight
 
-      textArea.style.height = initialHeight - '20px'
-      textArea.style.height = textArea.scrollHeight + '20px'
+      if (scrollHeight > height) {
+        textArea.style.height = (scrollHeight + 10) + 'px'
+      }
     }
   }
 }
