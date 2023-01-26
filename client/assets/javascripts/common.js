@@ -32,6 +32,6 @@ window.addEventListener('DOMContentLoaded', (event) => {
 
   TextAreaAutoSize.init(document)
 
-  DoubleClickProtection.init()
+  DoubleClickProtection.init(document)
   
 })

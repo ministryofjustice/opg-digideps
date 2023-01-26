@@ -1,8 +1,8 @@
 const DoublClickProtection = {
 
-    init: function () {
+    init: function (listening_element) {
 
-        document.addEventListener('click', function (e) {
+        listening_element.addEventListener('click', function (e) {
             const element = e.target
             if (element.dataset.module === 'opg-toggleable-submit') {
 
@@ -10,14 +10,11 @@ const DoublClickProtection = {
                     'opg-submit-link--disabled',
                     'govuk-button--disabled'
                 )
-                element.disabled = true
-
                 setTimeout(function () {
                     element.classList.remove(
                         'opg-submit-link--disabled',
                         'govuk-button--disabled'
                     )
-                    element.disabled = false
                 }, 3000)
             }
         })
