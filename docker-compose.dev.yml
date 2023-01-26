@@ -48,8 +48,6 @@ services:
       APP_ENV: dev
     env_file:
       - .env
-    volumes:
-      - ./client/public/assets:/var/www/public/assets
 
   admin:
     environment:
