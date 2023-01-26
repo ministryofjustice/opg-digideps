@@ -13,7 +13,6 @@ const moneyTransfer = require('./modules/moneyTransfer.js')
 const returnHTML = require('./modules/returnHTML.js')
 const SessionTimeoutDialog = require('./modules_new/SessionTimeoutDialog.js')
 const ShowHideContent = require('./modules/show-hide-content.js')
-const Stickyfill = require('stickyfilljs')
 const tableMultiSelect = require('./modules/table-multiselect.js')
 const uploadFile = require('./modules/uploadFile.js')
 
@@ -48,11 +47,9 @@ $(document).ready(function () {
   showHideContent.init()
 
   // Error summaries
-  const $errorSummaries = document.querySelectorAll('#error-summary')
+  const $errorSummaries = document.querySelector('#error-summary')
   if ($errorSummaries !== null) {
-    $errorSummaries.forEach((ele) => {
-      ele.focus()
-    })
+    $errorSummaries.focus()
   }
 
   GoogleAnalyticsEvents.init()
@@ -68,7 +65,3 @@ $(document).ready(function () {
 
 GOVUKFrontend.initAll()
 MOJFrontend.initAll()
-
-// Polyfill elements with position:sticky
-const elements = document.querySelectorAll('.opg-sticky-menu')
-Stickyfill.add(elements)
