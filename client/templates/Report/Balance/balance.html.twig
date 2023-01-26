@@ -54,7 +54,7 @@
         {# If no transactions, don't display download CSV link #}
         {% if report.gifts is not empty or report.expenses is not empty or report.moneyTransactionsIn is not empty or report.moneyTransactionsOut is not empty %}
             <p class="text push--top">
-                <a id="transactionsCsv" href="{{ path('report_transactions_csv', {reportId: report.id}) }}" class="behat-link-download-transactions">
+                <a id="transactionsCsv" href="{{ path('report_transactions_csv', {reportId: report.id}) }}" class="js-trackDownloadLink behat-link-download-transactions">
                     {{ 'download-transactions.link' | trans }}
                 </a>
                 {{ 'download-transactions.afterMarkupText' | trans }}
