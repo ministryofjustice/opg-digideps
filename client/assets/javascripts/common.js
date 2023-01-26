@@ -4,6 +4,7 @@ import MOJButtonMenu from './modules_new/ButtonMenu'
 import ButtonToggler from './modules_new/ButtonToggler'
 import ConditionalFieldRevealer from './modules_new/ConditionalFieldRevealer'
 import TextAreaAutoSize from './modules_new/TextAreaAutoSize'
+import DoubleClickProtection from './modules_new/DoubleClickProtection'
 
 window.addEventListener('DOMContentLoaded', (event) => {
   // Session Timeout
@@ -30,5 +31,7 @@ window.addEventListener('DOMContentLoaded', (event) => {
   // Text Area Auto Size
 
   TextAreaAutoSize.init(document)
+
+  DoubleClickProtection.init()
   
 })

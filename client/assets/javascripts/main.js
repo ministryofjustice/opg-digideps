@@ -47,28 +47,6 @@ $(document).ready(function () {
   const showHideContent = new ShowHideContent()
   showHideContent.init()
 
-  const $submitButtons = document.querySelectorAll(
-    '[data-module="opg-toggleable-submit"]'
-  )
-
-  if ($submitButtons !== null) {
-    $submitButtons.forEach(function ($el) {
-      $el.addEventListener('click', function ($e) {
-        $e.target.classList.add(
-          'opg-submit-link--disabled',
-          'govuk-button--disabled'
-        )
-
-        setTimeout(function () {
-          $e.target.classList.remove(
-            'opg-submit-link--disabled',
-            'govuk-button--disabled'
-          )
-        }, 3000)
-      })
-    })
-  }
-
   // Error summaries
   const $errorSummaries = document.querySelectorAll('#error-summary')
   if ($errorSummaries !== null) {
