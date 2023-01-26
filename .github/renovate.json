@@ -1,0 +1,38 @@
+{
+  "$schema": "https://docs.renovatebot.com/renovate-schema.json",
+  "extends": ["config:base", "schedule:earlyMondays"],
+  "branchPrefix": "renovate-",
+  "commitMessageAction": "Renovate Update",
+  "labels": ["Dependencies", "Renovate"],
+  "packageRules": [
+    {
+      "groupName": "Patch & Minor Updates",
+      "groupSlug": "all-minor-patch-updates",
+      "labels": ["Dependencies", "Renovate"],
+      "matchPackagePatterns": ["*"],
+      "matchUpdateTypes": ["minor", "patch"],
+      "prPriority": 0,
+      "schedule": ["after 6am and before 7am on Monday"],
+      "stabilityDays": 3
+    }
+  ],
+  "major": {
+    "labels": ["Dependencies", "Renovate"],
+    "prCreation": "status-success",
+    "rangeStrategy": "pin",
+    "prPriority": 1,
+    "schedule": ["after 6am and before 7am on Monday"]
+  },
+  "vulnerabilityAlerts": {
+    "groupName": "Security Alerts",
+    "labels": ["Dependencies", "Renovate"],
+    "schedule": ["after 6am and before 7am every weekday"],
+    "dependencyDashboardApproval": false,
+    "stabilityDays": 0,
+    "rangeStrategy": "pin",
+    "commitMessagePrefix": "[SECURITY]",
+    "branchTopic": "{{{datasource}}}-{{{depName}}}-vulnerability",
+    "prCreation": "immediate",
+    "prPriority": 5
+  }
+}
