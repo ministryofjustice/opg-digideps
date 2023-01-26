@@ -5,7 +5,6 @@ import { GoogleAnalyticsEvents } from './modules/googleAnalyticsEvents'
 import MOJFrontend from '@ministryofjustice/frontend'
 
 require('../scss/application.scss')
-require('./modules/bind.js')
 
 const GOVUKFrontend = require('govuk-frontend')
 
