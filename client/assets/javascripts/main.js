@@ -1,7 +1,5 @@
 /* globals $ */
-// import { ButtonToggler } from './modules/buttonToggler.js'
 import { GoogleAnalyticsEvents } from './modules/googleAnalyticsEvents'
-// import { MOJButtonMenu } from './modules/buttonMenu'
 import MOJFrontend from '@ministryofjustice/frontend'
 
 require('../scss/application.scss')
@@ -32,8 +30,6 @@ $(document).ready(function () {
 
   // Details expander
   detailsExpander('.js-details-expander')
-  detailsExpander('.js-details-expander-travel-costs')
-  detailsExpander('.js-details-expander-specialist-service')
 
   // Upload Files
   uploadFile('.js-uploading')
