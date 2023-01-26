@@ -28,8 +28,7 @@ window.addEventListener('DOMContentLoaded', (event) => {
   ConditionalFieldRevealer.init()
 
   // Text Area Auto Size
-  const formArea = document.querySelector('form')
-  if (formArea.length > 0) {
-    TextAreaAutoSize.init(formArea)
-  }
+
+  TextAreaAutoSize.init(document)
+  
 })

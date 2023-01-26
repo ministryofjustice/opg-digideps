@@ -1,9 +1,9 @@
 const TextAreaAutoSize = {
-  init: function (formArea) {
-    formArea.addEventListener('input', this.resizeTextArea)
-    formArea.addEventListener('keyup', this.resizeTextArea)
-    formArea.addEventListener('paste', this.resizeTextArea)
-    formArea.addEventListener('change', this.resizeTextArea)
+  init: function (element) {
+    element.addEventListener('input', this.resizeTextArea)
+    element.addEventListener('keyup', this.resizeTextArea)
+    element.addEventListener('paste', this.resizeTextArea)
+    element.addEventListener('change', this.resizeTextArea)
   },
 
   resizeTextArea: function (event) {
