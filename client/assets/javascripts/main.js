@@ -25,7 +25,7 @@ $(document).ready(function () {
   $('.js-format-currency').on('blur', function (event) {
     formatCurrency(event.target)
   })
-  
+
   // Upload Files
   uploadFile('.js-uploading')
 
