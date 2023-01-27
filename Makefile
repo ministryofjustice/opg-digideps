@@ -185,7 +185,10 @@ composer-client: ##@application Drops you into the frontend container with compo
 	docker-compose run --rm --volume ~/.composer:/tmp --volume ${PWD}/client:/app composer ${COMPOSER_ARGS}
 
 test-js:
-	docker-compose -f docker-compose.yml -f docker-compose.dev.yml run npm --rm test
+	docker-compose -f docker-compose.yml -f docker-compose.dev.yml run npm --rm run test
 
 build-js:
-	docker-compose -f docker-compose.yml -f docker-compose.dev.yml run npm --rm build
+	docker-compose -f docker-compose.yml -f docker-compose.dev.yml run npm --rm run build
+
+lint-js:
+	docker-compose -f docker-compose.yml -f docker-compose.dev.yml run npm --rm run fix
