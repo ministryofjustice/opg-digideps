@@ -7,7 +7,7 @@ import TextAreaAutoSize from './modules_new/TextAreaAutoSize'
 import DoubleClickProtection from './modules_new/DoubleClickProtection'
 import DetailsExpander from './modules_new/DetailsExpander'
 
-window.addEventListener('DOMContentLoaded', (event) => {
+window.addEventListener('DOMContentLoaded', () => {
   // Session Timeout
   SessionTimeout()
 
