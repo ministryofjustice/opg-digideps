@@ -1,5 +1,4 @@
 /* globals $ */
-import { GoogleAnalyticsEvents } from './modules/googleAnalyticsEvents'
 import MOJFrontend from '@ministryofjustice/frontend'
 
 require('../scss/application.scss')
@@ -10,13 +9,11 @@ const formatCurrency = require('./modules/formatcurrency.js')
 const Ga = require('./modules/ga.js')
 const moneyTransfer = require('./modules/moneyTransfer.js')
 const returnHTML = require('./modules/returnHTML.js')
-const SessionTimeoutDialog = require('./modules_new/SessionTimeoutDialog.js')
 const ShowHideContent = require('./modules/show-hide-content.js')
 const tableMultiSelect = require('./modules/table-multiselect.js')
 
 window.opg = {
-  Ga,
-  SessionTimeoutDialog
+  Ga
 }
 
 $(document).ready(function () {
@@ -43,9 +40,6 @@ $(document).ready(function () {
   if ($errorSummaries !== null) {
     $errorSummaries.focus()
   }
-
-  GoogleAnalyticsEvents.init()
-  GoogleAnalyticsEvents.initFormValidationErrors()
 
   const trackableLinks = document.querySelectorAll('.js-trackDownloadLink')
 
