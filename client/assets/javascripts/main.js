@@ -6,7 +6,6 @@ require('../scss/application.scss')
 
 const GOVUKFrontend = require('govuk-frontend')
 
-const detailsExpander = require('./modules/detailsExpander.js')
 const formatCurrency = require('./modules/formatcurrency.js')
 const Ga = require('./modules/ga.js')
 const moneyTransfer = require('./modules/moneyTransfer.js')
@@ -26,10 +25,7 @@ $(document).ready(function () {
   $('.js-format-currency').on('blur', function (event) {
     formatCurrency(event.target)
   })
-
-  // Details expander
-  detailsExpander('.js-details-expander')
-
+  
   // Upload Files
   uploadFile('.js-uploading')
 

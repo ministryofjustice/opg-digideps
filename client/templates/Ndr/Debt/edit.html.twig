@@ -33,7 +33,7 @@
 
                 {% if debt.moreDetails is defined %}
                     <div class="govuk-form-group flush--bottom">
-                        <div class="opg-indented-block flush--bottom js-hidden">
+                        <div class="opg-indented-block flush--bottom js-hidden js-details-expandable">
                             {{ form_input(debt.moreDetails, 'moreDetails', {
                                 'labelText': ('form.entries.' ~ debt.debtTypeId.vars.value ~ '.moreInformations') | trans,
                                 'hintText': ('form.entries.' ~ debt.debtTypeId.vars.value ~ '.moreInfoHint') | trans(transOptions)

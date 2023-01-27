@@ -2,7 +2,6 @@ import { describe, expect, it, jest } from '@jest/globals'
 import DoubleClickProtection from '../../modules_new/DoubleClickProtection'
 
 describe('Double Click Protection', () => {
-  describe('init', () => {
     it('should call set disabled on click', () => {
       document.body.innerHTML = '<div data-module="opg-toggleable-submit"><a href="#">Click once</a></div>'
 
@@ -24,5 +23,4 @@ describe('Double Click Protection', () => {
       expect(wrapper.classList.contains('govuk-button--disabled')).toBe(false)
       expect(wrapper.classList.contains('opg-submit-link--disabled')).toBe(false)
     })
-  })
 })
