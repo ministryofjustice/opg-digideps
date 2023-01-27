@@ -13,7 +13,6 @@ const returnHTML = require('./modules/returnHTML.js')
 const SessionTimeoutDialog = require('./modules_new/SessionTimeoutDialog.js')
 const ShowHideContent = require('./modules/show-hide-content.js')
 const tableMultiSelect = require('./modules/table-multiselect.js')
-const uploadFile = require('./modules/uploadFile.js')
 
 window.opg = {
   Ga,
@@ -25,9 +24,6 @@ $(document).ready(function () {
   $('.js-format-currency').on('blur', function (event) {
     formatCurrency(event.target)
   })
-
-  // Upload Files
-  uploadFile('.js-uploading')
 
   // Return HTML with ajax
   returnHTML('.js-return-html')
