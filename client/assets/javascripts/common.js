@@ -38,5 +38,5 @@ window.addEventListener('DOMContentLoaded', () => {
 
   DetailsExpander.init(document)
 
-  uploadFile.init(document);
+  uploadFile.init(document)
 })

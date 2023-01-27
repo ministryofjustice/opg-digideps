@@ -17,7 +17,7 @@ const uploadFile = {
         const actionUrl = event.target.getAttribute('action')
 
         // check whether browser fully supports all File API
-        //TODO refactor to not use redirect for error
+        // TODO refactor to not use redirect for error
         if (
           window.File &&
                 window.FileReader &&
