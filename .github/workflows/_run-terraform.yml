@@ -102,27 +102,3 @@ jobs:
         run: |
           terraform apply -lock-timeout=300s -input=false -auto-approve -parallelism=30
         working-directory: ${{ inputs.terraform_path }}
-
-      - name: terraform output
-        if: inputs.apply == 'true' && inputs.terraform_path == 'environment'
-        env:
-          TF_WORKSPACE: ${{ inputs.workspace }}
-        run: terraform output -json > terraform.output.json
-        working-directory: ${{ inputs.terraform_path }}
-
-      - name: terraform output
-        if: inputs.apply == 'true' && inputs.terraform_path == 'environment'
-        env:
-          TF_WORKSPACE: ${{ inputs.workspace }}
-          ENCRYPT_STRING: ${{ secrets.ENCRYPT_STRING }}
-        run: |
-          terraform output -json > terraform.output.json
-          openssl enc -aes-256-cbc -salt -in terraform.output.json -out terraform.output.json.enc -k "${ENCRYPT_STRING}" &>/dev/null
-        working-directory: ${{ inputs.terraform_path }}
-
-      - name: archive encrypted terraform output file
-        if: inputs.apply == 'true' && inputs.terraform_path == 'environment'
-        uses: actions/upload-artifact@65d862660abb392b8c4a3d1195a2108db131dd05 # pin@v3.1.0
-        with:
-          name: tf_output_enc
-          path: environment/terraform.output.json.enc

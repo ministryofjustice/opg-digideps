@@ -30,18 +30,12 @@ jobs:
       - name: run client unit tests
         id: unit-tests
         run: |
-          echo "PART 1"
           APP_ENV=dev APP_DEBUG=0 docker-compose -f docker-compose.yml -f docker-compose.ci.test.yml --project-name client-unit-tests up -d --no-deps frontend pact-mock
           sleep 3
-          echo "PART 2"
           docker-compose -f docker-compose.yml -f docker-compose.ci.test.yml --project-name client-unit-tests exec -T frontend sh scripts/client-unit-tests.sh
-          echo "PART 3"
           docker-compose -f docker-compose.yml -f docker-compose.ci.test.yml --project-name client-unit-tests exec -T frontend chmod -R 777 tests/phpunit/coverage/client-unit-tests.xml
-          echo "PART 4"
           docker cp "client-unit-tests-frontend:/var/www/tests/phpunit/coverage/client-unit-tests.xml" "./client-unit-tests.xml"
-          echo "PART 5"
           docker-compose -f docker-compose.yml -f docker-compose.ci.test.yml --project-name client-unit-tests exec -T pact-mock cat /tmp/pacts/complete_the_deputy_report-opg_data.json > pact.json
-          echo "PART 6"
           docker-compose -f docker-compose.yml -f docker-compose.ci.test.yml --project-name client-unit-tests stop pact-mock
       - name: archive pact results
         uses: actions/upload-artifact@65d862660abb392b8c4a3d1195a2108db131dd05 # pin@v3.1.0
