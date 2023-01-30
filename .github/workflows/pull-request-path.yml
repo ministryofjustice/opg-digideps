@@ -205,7 +205,7 @@ jobs:
       override: "sh,./tests/Behat/run-tests-parallel.sh,--tags,@v2_admin,--profile,v2-tests-browserkit"
     secrets: inherit
 
-  integration_tests_sequential:
+  integration_tests_sequential_1:
     name: integration tests sequential
     uses: ./.github/workflows/_run-task.yml
     needs:
@@ -215,7 +215,20 @@ jobs:
       workspace: ${{ needs.workflow_variables.outputs.parsed_branch }}
       task_name: "integration_test_v2"
       timeout: "1200"
-      override: "sh,./tests/Behat/run-tests.sh,--tags,@v2_sequential,--profile,v2-tests-browserkit"
+      override: "sh,./tests/Behat/run-tests.sh,--tags,@v2_sequential_1,--profile,v2-tests-browserkit"
+    secrets: inherit
+
+  integration_tests_sequential_2:
+    name: integration tests sequential
+    uses: ./.github/workflows/_run-task.yml
+    needs:
+      - workflow_variables
+      - reset_database
+    with:
+      workspace: ${{ needs.workflow_variables.outputs.parsed_branch }}
+      task_name: "integration_test_v2"
+      timeout: "1200"
+      override: "sh,./tests/Behat/run-tests.sh,--tags,@v2_sequential_2,--profile,v2-tests-browserkit"
     secrets: inherit
 
   scale_services_down:
@@ -224,7 +237,8 @@ jobs:
     uses: ./.github/workflows/_scale-services.yml
     needs:
       - workflow_variables
-      - integration_tests_sequential
+      - integration_tests_sequential_1
+      - integration_tests_sequential_2
       - integration_tests_admin
       - integration_tests_1
       - integration_tests_2
