@@ -5,4 +5,4 @@ export BEHAT_PARAMS="{\"extensions\": {\"Behat\\\\MinkExtension\": {\"base_url\"
 export APP_ENV=dev
 
 confd -onetime -backend env
-./vendor/bin/behat --config=./tests/Behat/behat.yml --stop-on-failure --profile v2-tests-browserkit $@
+./vendor/bin/behat --config=./tests/Behat/behat.yml  --stop-on-failure --profile v2-tests-browserkit $@

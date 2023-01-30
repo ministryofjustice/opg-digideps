@@ -1,4 +1,4 @@
-@v2 @registration @activate @v2_sequential_2
+@v2 @registration @activate @v2_sequential
 Feature: Activate user account - Lay users (NDR)
 
     @super-admin @admin
