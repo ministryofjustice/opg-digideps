@@ -20,6 +20,8 @@ jobs:
           docker-compose run pythontests python -m pytest
           docker-compose down
         working-directory: lambdas
+      - name: fail
+        run: exit 1
       - name: archive monitoring lambda
         run: |
           export LAYER_PATH=lambdas/layers/monitoring/python/lib/python3.7/site-packages

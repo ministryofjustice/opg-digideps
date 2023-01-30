@@ -1,0 +1,100 @@
+name: "[Behat] Run behat tests"
+
+defaults:
+  run:
+    shell: bash
+
+on:
+  workflow_call:
+    inputs:
+      workspace:
+        description: "Terraform workspace"
+        required: true
+        type: string
+
+jobs:
+  build-web:
+    runs-on: ubuntu-latest
+    steps:
+      - uses: actions/checkout@2541b1294d2704b0964813337f33b291d3f8596b # pin@v3
+
+      - name: install python
+        uses: actions/setup-python@f60fe39c45f23b4a7683b4ae8e08239d4a2089bd # pin@v4.2.0
+        with:
+          python-version: "3.10"
+          cache: "pip"
+
+      - name: install chrome
+        uses: browser-actions/setup-chrome@latest # pin@NoVersions
+
+      - name: Setup PHP
+        uses: shivammathur/setup-php@e04e1d97f0c0481c6e1ba40f8a538454fe5d7709 # pin@v2.21.2
+        with:
+          php-version: 8.1
+
+      - name: show versions
+        run: |
+          chrome --version
+          python --version
+          pip --version
+          php --version
+          composer --version
+
+      - name: install and configure dependencies
+        run: composer install --prefer-dist --no-suggest --no-interaction --no-scripts --optimize-autoloader
+        working-directory: tests/smoke
+
+      - name: download cluster_config
+        uses: actions/download-artifact@fb598a63ae348fa914e94cd0ff38f362e927b741
+        with:
+          name: environment_config_file
+          path: terraform/environment
+
+      - name: configure aws credentials
+        uses: aws-actions/configure-aws-credentials@67fbcbb121271f7775d2e7715933280b06314838 # pin@v1.7.0
+        with:
+          aws-access-key-id: ${{ secrets.AWS_ACCESS_KEY_ID_ACTIONS }}
+          aws-secret-access-key: ${{ secrets.AWS_SECRET_ACCESS_KEY_ACTIONS }}
+          aws-region: eu-west-1
+          role-duration-seconds: 1800
+          role-session-name: OPGUseAnLPABehatGithubAction
+
+      - name: allow gh actions ingress to environment
+        env:
+          TF_WORKSPACE: ${{ inputs.workspace }}
+        run: |
+          pip install boto3
+          echo ${TF_WORKSPACE}
+          if [[ "${TF_WORKSPACE}" != "production" ]]; then
+            python scripts/pipeline/ci_ingress/ci_ingress.py ./terraform/environment/cluster_config.json --add
+          fi
+
+      - name: run behat test suite
+        run: |
+          viewer_fqdn=$(cat ./terraform/environment/cluster_config.json | jq .viewer_fqdn | xargs)
+          actor_fqdn=$(cat ./terraform/environment/cluster_config.json | jq .actor_fqdn | xargs)
+          public_facing_view_fqdn=$(cat ./terraform/environment/cluster_config.json | jq .public_facing_view_fqdn | xargs)
+          public_facing_use_fqdn=$(cat ./terraform/environment/cluster_config.json | jq .public_facing_use_fqdn | xargs)
+
+          ln -sf ../features tests/smoke/features
+
+          cd tests/smoke
+          BEHAT_VIEWER_URL=https://$public_facing_view_fqdn \
+            BEHAT_ACTOR_URL=https://$public_facing_use_fqdn \
+            BEHAT_OLD_VIEWER_URL=https://$viewer_fqdn \
+            BEHAT_OLD_ACTOR_URL=https://$actor_fqdn \
+            vendor/bin/behat
+
+      - name: archive failed test screenshots
+        uses: actions/upload-artifact@65d862660abb392b8c4a3d1195a2108db131dd05 # pin@v3.1.0
+        with:
+          name: behat-screenshots
+          path: tests/smoke/failed_step_screenshots
+
+      - name: remove gh actions ingress to environment
+        env:
+          TF_WORKSPACE: ${{ inputs.workspace }}
+        run: |
+          echo ${TF_WORKSPACE}
+          python scripts/pipeline/ci_ingress/ci_ingress.py ./terraform/environment/cluster_config.json
+        if: always()
