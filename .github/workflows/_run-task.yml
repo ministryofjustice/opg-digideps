@@ -41,18 +41,6 @@ jobs:
           role-duration-seconds: 1800
           role-session-name: OPGDigidepsRunTaskGithubAction
 
-      #      - name: download terraform output file
-      #        uses: actions/download-artifact@fb598a63ae348fa914e94cd0ff38f362e927b741
-      #        with:
-      #          name: tf_output_enc
-      #          path: environment/
-      #
-      #      - name: decrypt file
-      #        env:
-      #          ENCRYPT_STRING: ${{ secrets.ENCRYPT_STRING }}
-      #        run: |
-      #          openssl enc -aes-256-cbc -d -salt -in terraform.output.json.enc -out terraform.output.json -k ${ENCRYPT_STRING}
-      #        working-directory: environment
       - uses: webfactory/ssh-agent@fc49353b67b2b7c1e0e6a600572d01a69f2672dd # pin@v0.5.4
         with:
           ssh-private-key: ${{ secrets.SSH_PRIVATE_KEY_ALLOW_LIST_REPOSITORY }}
@@ -82,9 +70,6 @@ jobs:
           TASK_NAME: ${{ inputs.task_name }}
           TIMEOUT: ${{ inputs.timeout }}
         run: |
-          echo ${TASK_NAME}
-          echo ${TIMEOUT}
-          echo ${OVERRIDE}
           if [ "${OVERRIDE}" == "" ]
           then
             /home/runner/go/bin/runner -task ${TASK_NAME} -timeout ${TIMEOUT}

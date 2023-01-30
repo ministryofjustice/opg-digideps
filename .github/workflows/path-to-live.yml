@@ -1,0 +1,368 @@
+name: "[Workflow] All branch based pushes"
+
+concurrency:
+  group: ${{ github.ref }}-${{ github.workflow }}
+
+defaults:
+  run:
+    shell: bash
+
+on:
+  push:
+    branches:
+      - "*" # matches every branch that doesn't contain a '/'
+      - "*/*" # matches every branch containing a single '/'
+      - "**" # matches every branch
+      - "!main" # reverse match main
+      - "!dependabot/**" # reverse match dependabot PRs
+      - "dependabot/docker/**" # match dependabot PRs that update docker
+
+permissions:
+  contents: write
+  security-events: write
+  pull-requests: read
+  actions: none
+  checks: none
+  deployments: none
+  issues: none
+  packages: none
+  repository-projects: none
+  statuses: none
+
+jobs:
+  workflow_variables:
+    runs-on: ubuntu-latest
+    name: output workflow variables
+    outputs:
+      short_sha: ${{ steps.variables.outputs.short_sha }}
+    steps:
+      - uses: actions/checkout@2541b1294d2704b0964813337f33b291d3f8596b # pin@v3
+      - name: extract variables for workflow
+        id: variables
+        run: |
+          echo "short_sha=$(echo ${GITHUB_SHA:0:7})" >> $GITHUB_OUTPUT
+
+  terraform_lint:
+    name: lint terraform code
+    uses: ./.github/workflows/_lint-terraform.yml
+    needs:
+      - workflow_variables
+    with:
+      workspace: development
+    secrets: inherit
+
+  docker_build_scan_push:
+    name: build, scan and push
+    uses: ./.github/workflows/_build-and-push.yml
+    needs:
+      - workflow_variables
+    with:
+      tag: main-${{ needs.workflow_variables.outputs.short_sha }}
+      branch_name: main
+      push_to_ecr: true
+    secrets: inherit
+
+  api_unit_tests:
+    name: api unit tests
+    uses: ./.github/workflows/_unit-tests-api.yml
+    needs:
+      - workflow_variables
+      - docker_build_scan_push
+
+  client_unit_tests:
+    name: client unit tests
+    uses: ./.github/workflows/_unit-tests-client.yml
+    needs:
+      - workflow_variables
+      - docker_build_scan_push
+
+  codecov:
+    name: upload to codecov
+    uses: ./.github/workflows/_codecov.yml
+    needs:
+      - client_unit_tests
+      - api_unit_tests
+    secrets: inherit
+
+  synchronisation_unit_tests:
+    name: client unit tests
+    uses: ./.github/workflows/_unit-tests-synchronise-lambda.yml
+    needs:
+      - workflow_variables
+      - docker_build_scan_push
+
+  monitoring_lambda_unit_tests:
+    name: monitoring lambda unit tests
+    uses: ./.github/workflows/_unit-tests-monitoring-lambda.yml
+    needs:
+      - workflow_variables
+
+  terraform_apply_shared_development:
+    name: shared plan terraform development
+    uses: ./.github/workflows/_run-terraform.yml
+    needs:
+      - docker_build_scan_push
+      - terraform_lint
+    with:
+      workspace: development
+      terraform_path: shared
+      container_version: main-${{ needs.workflow_variables.outputs.short_sha }}
+      apply: true
+    secrets: inherit
+
+  terraform_apply_development:
+    name: environment apply terraform
+    uses: ./.github/workflows/_run-terraform.yml
+    needs:
+      - docker_build_scan_push
+      - terraform_lint
+      - monitoring_lambda_unit_tests
+      - workflow_variables
+    with:
+      workspace: development
+      terraform_path: environment
+      apply: true
+      container_version: main-${{ needs.workflow_variables.outputs.short_sha }}
+    secrets: inherit
+
+  terraform_apply_shared_integration:
+    name: shared plan terraform development
+    uses: ./.github/workflows/_run-terraform.yml
+    needs:
+      - workflow_variables
+      - terraform_apply_development
+    with:
+      workspace: integration
+      terraform_path: shared
+      container_version: main-${{ needs.workflow_variables.outputs.short_sha }}
+      apply: true
+    secrets: inherit
+
+  terraform_apply_integration:
+    name: environment apply terraform
+    uses: ./.github/workflows/_run-terraform.yml
+    needs:
+      - monitoring_lambda_unit_tests
+      - workflow_variables
+      - terraform_apply_shared_integration
+    with:
+      workspace: integration
+      terraform_path: environment
+      apply: true
+      container_version: main-${{ needs.workflow_variables.outputs.short_sha }}
+    secrets: inherit
+
+  scale_services_up:
+    name: scale up services
+    uses: ./.github/workflows/_scale-services.yml
+    needs:
+      - workflow_variables
+      - terraform_apply_integration
+    with:
+      replicas: 6
+      account: 248804316466
+      workspace: integration
+    secrets: inherit
+
+  reset_database:
+    name: reset database
+    uses: ./.github/workflows/_run-task.yml
+    needs:
+      - workflow_variables
+      - scale_services_up
+    with:
+      workspace: integration
+      task_name: "integration_test_v2"
+      timeout: "500"
+      override: "sh,./tests/Behat/reset-db.sh"
+    secrets: inherit
+
+  integration_tests_1:
+    name: integration tests frontend 1
+    uses: ./.github/workflows/_run-task.yml
+    needs:
+      - workflow_variables
+      - reset_database
+    with:
+      workspace: integration
+      task_name: "integration_test_v2"
+      timeout: "1200"
+      override: "sh,./tests/Behat/run-tests-parallel.sh,--tags,@v2_reporting_1,--profile,v2-tests-browserkit"
+    secrets: inherit
+
+  integration_tests_2:
+    name: integration tests frontend 2
+    uses: ./.github/workflows/_run-task.yml
+    needs:
+      - workflow_variables
+      - reset_database
+    with:
+      workspace: integration
+      task_name: "integration_test_v2"
+      timeout: "1200"
+      override: "sh,./tests/Behat/run-tests-parallel.sh,--tags,@v2_reporting_2,--profile,v2-tests-browserkit"
+    secrets: inherit
+
+  integration_tests_admin:
+    name: integration tests admin
+    uses: ./.github/workflows/_run-task.yml
+    needs:
+      - workflow_variables
+      - reset_database
+    with:
+      workspace: integration
+      task_name: "integration_test_v2"
+      timeout: "1200"
+      override: "sh,./tests/Behat/run-tests-parallel.sh,--tags,@v2_admin,--profile,v2-tests-browserkit"
+    secrets: inherit
+
+  integration_tests_sequential:
+    name: integration tests sequential
+    uses: ./.github/workflows/_run-task.yml
+    needs:
+      - workflow_variables
+      - reset_database
+    with:
+      workspace: integration
+      task_name: "integration_test_v2"
+      timeout: "1200"
+      override: "sh,./tests/Behat/run-tests.sh,--tags,@v2_sequential,--profile,v2-tests-browserkit"
+    secrets: inherit
+
+  scale_services_down:
+    if: always()
+    name: scale down services
+    uses: ./.github/workflows/_scale-services.yml
+    needs:
+      - workflow_variables
+      - integration_tests_sequential
+      - integration_tests_admin
+      - integration_tests_1
+      - integration_tests_2
+    with:
+      replicas: 1
+      account: 248804316466
+      workspace: integration
+    secrets: inherit
+
+  terraform_apply_shared_preproduction:
+    name: shared plan terraform development
+    uses: ./.github/workflows/_run-terraform.yml
+    needs:
+      - workflow_variables
+      - terraform_apply_integration
+    with:
+      workspace: preproduction
+      terraform_path: shared
+      container_version: main-${{ needs.workflow_variables.outputs.short_sha }}
+      apply: true
+    secrets: inherit
+
+  terraform_apply_preproduction:
+    name: environment apply terraform
+    uses: ./.github/workflows/_run-terraform.yml
+    needs:
+      - monitoring_lambda_unit_tests
+      - workflow_variables
+      - terraform_apply_shared_preproduction
+    with:
+      workspace: preproduction
+      terraform_path: environment
+      apply: true
+      container_version: main-${{ needs.workflow_variables.outputs.short_sha }}
+    secrets: inherit
+
+  terraform_apply_shared_production:
+    name: shared plan terraform development
+    uses: ./.github/workflows/_run-terraform.yml
+    needs:
+      - workflow_variables
+      - terraform_apply_preproduction
+      - integration_tests_1
+      - integration_tests_2
+      - integration_tests_admin
+      - integration_tests_sequential
+    with:
+      workspace: production02
+      terraform_path: shared
+      container_version: main-${{ needs.workflow_variables.outputs.short_sha }}
+      apply: true
+    secrets: inherit
+
+  terraform_apply_production:
+    name: environment apply terraform
+    uses: ./.github/workflows/_run-terraform.yml
+    needs:
+      - monitoring_lambda_unit_tests
+      - workflow_variables
+      - terraform_apply_shared_production
+    with:
+      workspace: production02
+      terraform_path: environment
+      apply: true
+      container_version: main-${{ needs.workflow_variables.outputs.short_sha }}
+    secrets: inherit
+
+  backup_production:
+    name: backup production
+    uses: ./.github/workflows/_run-task.yml
+    needs:
+      - workflow_variables
+      - reset_database
+      - terraform_apply_production
+    with:
+      workspace: production02
+      task_name: "backup"
+      timeout: "700"
+    secrets: inherit
+
+  restore_production_to_preproduction:
+    name: restore production to preproduction
+    uses: ./.github/workflows/_run-task.yml
+    needs:
+      - workflow_variables
+      - backup_production
+    with:
+      workspace: preproduction
+      task_name: "restore_from_production"
+      timeout: "700"
+    secrets: inherit
+
+  end_of_workflow:
+    name: end of workflow
+    runs-on: ubuntu-latest
+    needs:
+      - scale_services_down
+      - codecov
+      - workflow_variables
+    steps:
+      - name: workflow has ended without issue
+        run: |
+          echo "${{ needs.workflow_variables.outputs.parsed_branch }} PR environment tested, built and deployed"
+          echo "Tag Used: ${{ needs.workflow_variables.outputs.parsed_branch }}-${{ needs.workflow_variables.outputs.short_sha }}"
+          echo "URL: https://${{ needs.workflow_variables.outputs.parsed_branch }}.complete-deputy-report.service.gov.uk"
+
+  slack_notify_success:
+    name: notify of result
+    uses: ./.github/workflows/_slack-notification.yml
+    needs:
+      - workflow_variables
+      - end_of_workflow
+    with:
+      template: successful_environment_release.txt
+      branch: ${{ needs.workflow_variables.outputs.parsed_branch }}
+    secrets:
+      webhook: ${{ secrets.DEV_SLACK_WEBHOOK }}
+
+  slack_notify_failure:
+    name: notify of result
+    uses: ./.github/workflows/_slack-notification.yml
+    if: ${{ failure() }}
+    needs:
+      - workflow_variables
+      - end_of_workflow
+    with:
+      template: unsuccessful_environment_release.txt
+      branch: ${{ needs.workflow_variables.outputs.parsed_branch }}
+    secrets:
+      webhook: ${{ secrets.DEV_SLACK_WEBHOOK }}
