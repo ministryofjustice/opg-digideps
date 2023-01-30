@@ -7,7 +7,7 @@ import TextAreaAutoSize from './modules_new/TextAreaAutoSize'
 import DoubleClickProtection from './modules_new/DoubleClickProtection'
 import DetailsExpander from './modules_new/DetailsExpander'
 import uploadFile from './modules_new/UploadFile'
-import { GoogleAnalyticsEvents } from './modules/googleAnalyticsEvents'
+import { GoogleAnalyticsEvents } from './modules_new/googleAnalyticsEvents'
 
 window.addEventListener('DOMContentLoaded', () => {
   // Session Timeout
