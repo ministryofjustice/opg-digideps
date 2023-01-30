@@ -5,7 +5,6 @@ require('../scss/application.scss')
 
 const GOVUKFrontend = require('govuk-frontend')
 
-const formatCurrency = require('./modules/formatcurrency.js')
 const Ga = require('./modules/ga.js')
 const moneyTransfer = require('./modules/moneyTransfer.js')
 const returnHTML = require('./modules/returnHTML.js')
@@ -17,11 +16,6 @@ window.opg = {
 }
 
 $(document).ready(function () {
-  // Format currency module
-  $('.js-format-currency').on('blur', function (event) {
-    formatCurrency(event.target)
-  })
-
   // Return HTML with ajax
   returnHTML('.js-return-html')
 

@@ -8,6 +8,7 @@ import DoubleClickProtection from './modules_new/DoubleClickProtection'
 import DetailsExpander from './modules_new/DetailsExpander'
 import uploadFile from './modules_new/UploadFile'
 import { GoogleAnalyticsEvents } from './modules_new/googleAnalyticsEvents'
+import FormatCurrency from './modules_new/FormatCurrency'
 
 window.addEventListener('DOMContentLoaded', () => {
   // Session Timeout
@@ -15,6 +16,9 @@ window.addEventListener('DOMContentLoaded', () => {
 
   // Cookie Banner
   CookieBanner()
+
+  // Format currency module
+  FormatCurrency.init(document)
 
   // Menu Buttons
   const menuButtons = document.querySelectorAll('.moj-button-menu')
