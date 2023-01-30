@@ -28,25 +28,15 @@ jobs:
       - name: run api unit tests
         id: unit-tests
         run: |
-          echo "PART 1"
           docker-compose -f docker-compose.yml -f docker-compose.ci.test.yml --project-name api-unit-tests up -d postgres
-          echo "PART 2"
           docker-compose -f docker-compose.yml -f docker-compose.ci.test.yml --project-name api-unit-tests up -d localstack
-          echo "PART 3"
           docker-compose -f docker-compose.yml -f docker-compose.ci.test.yml --project-name api-unit-tests run --rm wait-for-it -address localstack:4566 --timeout=25 -debug
-          echo "PART 4"
           while [ $(docker-compose -f docker-compose.yml -f docker-compose.ci.test.yml --project-name api-unit-tests exec -T localstack awslocal secretsmanager list-secrets | grep synchronisation-jwt-token | wc -l) -lt 1 ]; do sleep 1; done
-          echo "PART 5"
           docker-compose -f docker-compose.yml -f docker-compose.ci.test.yml --project-name api-unit-tests run --rm api sh scripts/reset_db_structure_local.sh
-          echo "PART 6"
           APP_ENV=test APP_DEBUG=0 docker-compose -f docker-compose.yml -f docker-compose.ci.test.yml --project-name api-unit-tests up -d api
-          echo "PART 7"
           docker-compose -f docker-compose.yml -f docker-compose.ci.test.yml --project-name api-unit-tests exec -T api chmod -R 777 var
-          echo "PART 8"
           docker-compose -f docker-compose.yml -f docker-compose.ci.test.yml --project-name api-unit-tests exec -T api sh scripts/apiunittest.sh
-          echo "PART 9"
           docker-compose -f docker-compose.yml -f docker-compose.ci.test.yml --project-name api-unit-tests exec -T api chmod -R 777 tests/coverage/api-unit-tests.xml
-          echo "PART 10"
           docker cp "api-unit-tests-api:/var/www/tests/coverage/api-unit-tests.xml" "./api-unit-tests.xml"
       - name: archive test results
         uses: actions/upload-artifact@65d862660abb392b8c4a3d1195a2108db131dd05 # pin@v3.1.0
