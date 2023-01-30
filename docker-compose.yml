@@ -37,7 +37,7 @@ services:
       - LAMBDA_FORWARD_URL=http://synchronisation:8080
 
   wait-for-it:
-    build: ./wait_for_it
+    build: ./wait-for-it
 
   #    pa11y:
   #        build:
