@@ -9,6 +9,7 @@ import DetailsExpander from './modules_new/DetailsExpander'
 import uploadFile from './modules_new/UploadFile'
 import { GoogleAnalyticsEvents } from './modules_new/googleAnalyticsEvents'
 import FormatCurrency from './modules_new/FormatCurrency'
+import MoneyTransfer from './modules_new/MoneyTransfer'
 
 window.addEventListener('DOMContentLoaded', () => {
   // Session Timeout
@@ -47,4 +48,12 @@ window.addEventListener('DOMContentLoaded', () => {
 
   GoogleAnalyticsEvents.init()
   GoogleAnalyticsEvents.initFormValidationErrors()
+
+  MoneyTransfer.init(document)
+
+  // Error summaries
+  const errorSummaries = document.querySelector('#error-summary')
+  if (errorSummaries !== null) {
+    errorSummaries.focus()
+  }
 })

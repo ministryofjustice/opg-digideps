@@ -1,8 +1,8 @@
 module.exports = {
-  init: function (document, event_name) {
-    event_name = event_name || 'focusout'
+  init: function (document, eventName) {
+    eventName = eventName || 'focusout'
     const module = this // event needs to reference the outer object and this is rebound to event context
-    document.addEventListener(event_name, function (event) {
+    document.addEventListener(eventName, function (event) {
       if (event.target.tagName === 'INPUT' && event.target.classList.contains('js-format-currency')) {
         const number = event.target.value
         event.target.value = module.formatInput(number)
