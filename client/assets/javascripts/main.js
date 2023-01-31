@@ -6,7 +6,6 @@ require('../scss/application.scss')
 const GOVUKFrontend = require('govuk-frontend')
 
 const Ga = require('./modules/ga.js')
-const moneyTransfer = require('./modules/moneyTransfer.js')
 const returnHTML = require('./modules/returnHTML.js')
 const ShowHideContent = require('./modules/show-hide-content.js')
 const tableMultiSelect = require('./modules/table-multiselect.js')
