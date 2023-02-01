@@ -3,10 +3,10 @@ module.exports = {
     // if 'from' account is already selected when loading page, remove that account from the 'to'
     // (for example when only 'from' account is selected when posting form - which returns an error)
 
-    const selectedFromAccount = document.querySelector('.js-transfer-from').value
+    const selectedFromAccount = document.querySelector('.js-transfer-from')
 
-    if (selectedFromAccount !== '') {
-      document.querySelector('.js-transfer-to option[value=' + selectedFromAccount + ']').classList.add('hidden')
+    if (selectedFromAccount) {
+      document.querySelector('.js-transfer-to option[value=' + selectedFromAccount.value + ']').classList.add('hidden')
     }
 
     document.addEventListener('change', function (event) {

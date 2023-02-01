@@ -8,7 +8,6 @@ const GOVUKFrontend = require('govuk-frontend')
 const Ga = require('./modules/ga.js')
 const returnHTML = require('./modules/returnHTML.js')
 const ShowHideContent = require('./modules/show-hide-content.js')
-const tableMultiSelect = require('./modules/table-multiselect.js')
 
 window.opg = {
   Ga
@@ -17,9 +16,6 @@ window.opg = {
 $(document).ready(function () {
   // Return HTML with ajax
   returnHTML('.js-return-html')
-
-  // Table Multi Select
-  tableMultiSelect()
 
   // Initialising the Show Hide Content GOVUK module
   const showHideContent = new ShowHideContent()

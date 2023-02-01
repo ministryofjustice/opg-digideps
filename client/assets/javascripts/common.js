@@ -10,6 +10,7 @@ import uploadFile from './modules_new/UploadFile'
 import { GoogleAnalyticsEvents } from './modules_new/googleAnalyticsEvents'
 import FormatCurrency from './modules_new/FormatCurrency'
 import MoneyTransfer from './modules_new/MoneyTransfer'
+import TableMultiSelect from './modules_new/TableMultiSelect'
 
 window.addEventListener('DOMContentLoaded', () => {
   // Session Timeout
@@ -50,6 +51,8 @@ window.addEventListener('DOMContentLoaded', () => {
   GoogleAnalyticsEvents.initFormValidationErrors()
 
   MoneyTransfer.init(document)
+
+  TableMultiSelect.init(document)
 
   // Error summaries
   const errorSummaries = document.querySelector('#error-summary')
