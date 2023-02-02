@@ -73,7 +73,7 @@
   },
   "standard": {
     "globals": [
-      "Event","InputEvent"
+      "Event","InputEvent", "fetch"
     ],
     "env": [
       "jest"
