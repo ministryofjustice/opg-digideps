@@ -11,6 +11,7 @@ import { GoogleAnalyticsEvents } from './modules_new/googleAnalyticsEvents'
 import FormatCurrency from './modules_new/FormatCurrency'
 import MoneyTransfer from './modules_new/MoneyTransfer'
 import TableMultiSelect from './modules_new/TableMultiSelect'
+import ReturnHTML from './modules_new/ReturnHTML'
 
 window.addEventListener('DOMContentLoaded', () => {
   // Session Timeout
@@ -53,6 +54,8 @@ window.addEventListener('DOMContentLoaded', () => {
   MoneyTransfer.init(document)
 
   TableMultiSelect.init(document)
+
+  ReturnHTML.init(document)
 
   // Error summaries
   const errorSummaries = document.querySelector('#error-summary')

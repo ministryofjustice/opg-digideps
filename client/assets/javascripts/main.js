@@ -6,7 +6,6 @@ require('../scss/application.scss')
 const GOVUKFrontend = require('govuk-frontend')
 
 const Ga = require('./modules/ga.js')
-const returnHTML = require('./modules/returnHTML.js')
 const ShowHideContent = require('./modules/show-hide-content.js')
 
 window.opg = {
@@ -14,9 +13,6 @@ window.opg = {
 }
 
 $(document).ready(function () {
-  // Return HTML with ajax
-  returnHTML('.js-return-html')
-
   // Initialising the Show Hide Content GOVUK module
   const showHideContent = new ShowHideContent()
   showHideContent.init()
