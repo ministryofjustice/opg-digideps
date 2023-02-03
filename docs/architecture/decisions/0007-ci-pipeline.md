@@ -1,11 +1,18 @@
-## CI Pipeline
+# 6. CI Pipeline Usage
 
-### Decisions on CI product and style
+Date: 2023-02-02
+
+## Status
+
+Accepted
+
+## Context
+
 
 We are currently using github actions for our CI pipeline. We prefer this over circleci as it is
-easier to control permissions that each workflow and sub workflow has and the secrets that are available to it.
+easier to control the permissions that each workflow and sub workflow has and the secrets that are available to it.
 
-It's also integrates more natively with github which we use as our code repository.
+It also integrates more natively with github which we use as our code repository.
 
 We have two choices with the style and content of the actions.
 
@@ -78,3 +85,12 @@ in actions folder:
 
         ... (other steps go here)
 ```
+
+## Decision
+
+- Implementing github actions pipeline with reusable workflow syntax
+
+## Consequences
+
+- Better logging
+- All the workflows and sub workflows need to be in same folder
