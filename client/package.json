@@ -5,6 +5,7 @@
   "scripts": {
     "build": "webpack",
     "lint": "standard",
+    "fix": "standard --fix",
     "test": "jest assets/javascripts/__tests__ --verbose"
   },
   "devDependencies": {
