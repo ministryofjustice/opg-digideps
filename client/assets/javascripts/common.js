@@ -12,6 +12,7 @@ import FormatCurrency from './modules_new/FormatCurrency'
 import MoneyTransfer from './modules_new/MoneyTransfer'
 import TableMultiSelect from './modules_new/TableMultiSelect'
 import ReturnHTML from './modules_new/ReturnHTML'
+import GoogleAnalyticsLinkTracking from './modules_new/GoogleAnalyticsLinkTracking'
 
 window.addEventListener('DOMContentLoaded', () => {
   // Session Timeout
@@ -56,6 +57,8 @@ window.addEventListener('DOMContentLoaded', () => {
   TableMultiSelect.init(document)
 
   ReturnHTML.init(document)
+
+  GoogleAnalyticsLinkTracking.init(document, 250)
 
   // Error summaries
   const errorSummaries = document.querySelector('#error-summary')
