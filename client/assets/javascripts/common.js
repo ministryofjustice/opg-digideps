@@ -13,6 +13,9 @@ import MoneyTransfer from './modules_new/MoneyTransfer'
 import TableMultiSelect from './modules_new/TableMultiSelect'
 import ReturnHTML from './modules_new/ReturnHTML'
 import GoogleAnalyticsLinkTracking from './modules_new/GoogleAnalyticsLinkTracking'
+import ShowHideContent from './modules_new/ShowHideContent'
+import MOJFrontend from '@ministryofjustice/frontend'
+import GOVUKFrontend from 'govuk-frontend'
 
 window.addEventListener('DOMContentLoaded', () => {
   // Session Timeout
@@ -60,9 +63,14 @@ window.addEventListener('DOMContentLoaded', () => {
 
   GoogleAnalyticsLinkTracking.init(document, 250)
 
+  ShowHideContent.init()
+
   // Error summaries
   const errorSummaries = document.querySelector('#error-summary')
   if (errorSummaries !== null) {
     errorSummaries.focus()
   }
+
+  GOVUKFrontend.initAll()
+  MOJFrontend.initAll()
 })

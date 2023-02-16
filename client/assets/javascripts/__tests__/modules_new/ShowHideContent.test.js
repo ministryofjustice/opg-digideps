@@ -1,5 +1,5 @@
 import { describe, expect, it } from '@jest/globals'
-import ShowHideContent from '../../modules/show-hide-content'
+import ShowHideContent from '../../modules_new/ShowHideContent'
 
 describe('Show Hide Toggles', () => {
   it('Should toggle textarea on checkbox state change', () => {
@@ -11,10 +11,7 @@ describe('Show Hide Toggles', () => {
                               'for="income">My Label</label></div>' +
                               '<div id="more-details" class="opg-indented-block js-hidden"></div>'
 
-    global.$ = require('jquery')
-
-    const show = new ShowHideContent()
-    show.init()
+    ShowHideContent.init()
 
     const moreDetails = document.querySelector('#more-details')
     const checkBox = document.querySelector('input[type="checkbox"]')
@@ -36,13 +33,13 @@ describe('Show Hide Toggles', () => {
   it('Should show the textara when we toggle between a yes and no answer', () => {
     // example in the financial decisions section
     document.body.innerHTML =
-     '<div class="govuk-radios govuk-radios--inline" data-module="govuk-radios">' +
-        '<div class="govuk-radios__item" data-target="more-detail">' +
-        '    <input type="radio" id="opt1" name="action" required="required" class="govuk-radios__input " value="yes">' +
-        '   <label class="govuk-label govuk-radios__label " for="opt1">Yes</label>' +
+     '<div  data-module="govuk-radios">' +
+        '<div data-target="more-detail">' +
+        '    <input type="radio" id="opt1" name="action" value="yes">' +
+        '   <label  for="opt1">Yes</label>' +
         '</div>                                                       ' +
-        '<div class="govuk-radios__item">' +
-        '    <input type="radio" id="opt2" name="action" required="required" class="govuk-radios__input " value="no">' +
+        '<div >' +
+        '    <input type="radio" id="opt2" name="action" value="no">' +
         '    <label class="govuk-label govuk-radios__label" for="opt2">No</label>' +
         '</div>' +
         '</div>' +
@@ -53,10 +50,7 @@ describe('Show Hide Toggles', () => {
     const noBox = document.getElementById('opt2')
     const more = document.getElementById('more-detail')
 
-    global.$ = require('jquery')
-
-    const show = new ShowHideContent()
-    show.init()
+    ShowHideContent.init()
 
     expect(more.classList.contains('js-hidden')).toBe(true)
     expect(yesBox.getAttribute('aria-controls')).toBe('more-detail')
@@ -75,27 +69,27 @@ describe('Show Hide Toggles', () => {
 
   it('Should only show textbox if owning radio is clicked', () => {
     document.body.innerHTML =
-     '<div class="govuk-radios govuk-radios--inline" data-module="govuk-radios">' +
-        '<div class="govuk-radios__item" data-target="more-detail">' +
-        '    <input type="radio" id="opt1" name="action" required="required" class="govuk-radios__input " value="yes">' +
-        '   <label class="govuk-label govuk-radios__label " for="opt1">Yes</label>' +
-        '</div>                                                       ' +
-        '<div class="govuk-radios__item">' +
-        '    <input type="radio" id="opt2" name="action" required="required" class="govuk-radios__input " value="no">' +
-        '    <label class="govuk-label govuk-radios__label" for="opt2">No</label>' +
+     '<div data-module="govuk-radios">' +
+        '<div  data-target="more-detail">' +
+        '    <input type="radio" id="opt1" name="action" required="required"  value="yes">' +
+        '   <label for="opt1">Yes</label>' +
+        '</div>' +
+        '<div >' +
+        '    <input type="radio" id="opt2" name="action" required="required"  value="no">' +
+        '    <label for="opt2">No</label>' +
         '</div>' +
         '</div>' +
         '<div id="more-detail" class="opg-indented-block js-hidden" >' +
         '</div>' +
 
-        '<div class="govuk-radios govuk-radios--inline" data-module="govuk-radios">' +
-        '<div class="govuk-radios__item" data-target="more-detail-no2">' +
-        '    <input type="radio" id="opt3" name="action" required="required" class="govuk-radios__input " value="yes">' +
-        '   <label class="govuk-label govuk-radios__label " for="opt1">Yes</label>' +
-        '</div>                                                       ' +
-        '<div class="govuk-radios__item">' +
-        '    <input type="radio" id="opt4" name="action" required="required" class="govuk-radios__input " value="no">' +
-        '    <label class="govuk-label govuk-radios__label" for="opt2">No</label>' +
+        '<div  data-module="govuk-radios">' +
+        '<div  data-target="more-detail-no2">' +
+        '    <input type="radio" id="opt3" name="action2" required="required"  value="yes">' +
+        '   <label  for="opt3">Yes</label>' +
+        '</div>' +
+        '<div >' +
+        '    <input type="radio" id="opt4" name="action2" required="required"  value="no">' +
+        '    <label class="govuk-label govuk-radios__label" for="opt4">No</label>' +
         '</div>' +
         '</div>' +
         '<div id="more-detail-no2" class="opg-indented-block js-hidden" >' +
@@ -105,10 +99,7 @@ describe('Show Hide Toggles', () => {
     const more = document.getElementById('more-detail')
     const moreTwo = document.getElementById('more-detail-no2')
 
-    global.$ = require('jquery')
-
-    const show = new ShowHideContent()
-    show.init()
+    ShowHideContent.init()
 
     expect(more.classList.contains('js-hidden')).toBe(true)
     expect(moreTwo.classList.contains('js-hidden')).toBe(true)
@@ -116,8 +107,8 @@ describe('Show Hide Toggles', () => {
     expect(yesBox.getAttribute('aria-expanded')).toBe('false')
 
     yesBox.click()
+    expect(yesBox.getAttribute('aria-expanded')).toBe('true')
     expect(more.classList.contains('js-hidden')).toBe(false)
     expect(moreTwo.classList.contains('js-hidden')).toBe(true)
-    expect(yesBox.getAttribute('aria-expanded')).toBe('true')
   })
 })
