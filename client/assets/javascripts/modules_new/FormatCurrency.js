@@ -3,7 +3,7 @@ module.exports = {
     eventName = eventName || 'focusout'
     const module = this // event needs to reference the outer object and this is rebound to event context
     document.addEventListener(eventName, function (event) {
-      if (event.target.tagName === 'INPUT' && event.target.classList.contains('js-format-currency')) {
+      if (event.target.matches('input.js-format-currency')) {
         const number = event.target.value
         event.target.value = module.formatInput(number)
       }

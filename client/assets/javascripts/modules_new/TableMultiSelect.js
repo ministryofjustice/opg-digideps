@@ -16,7 +16,7 @@ module.exports = {
     }
 
     document.addEventListener('change', function (event) {
-      if (event.target.tagName === 'INPUT' && event.target.dataset?.js === 'multiselect-checkbox-all') {
+      if (event.target.matches('[data-js="multiselect-checkbox-all"]')) {
         const isChecked = event.target.checked
         checkboxes.forEach((element) => {
           element.checked = isChecked
@@ -30,7 +30,7 @@ module.exports = {
     })
 
     document.addEventListener('change', function (event) {
-      if (event.target.tagName === 'INPUT' && event.target.dataset?.js === 'multiselect-checkbox') {
+      if (event.target.matches('[data-js="multiselect-checkbox"]')) {
         const selectedCount = document.querySelectorAll('[data-js="multiselect-checkbox"]:checked').length
 
         event.target.closest('tr')?.classList.toggle(checkedClass)

@@ -4,7 +4,7 @@ module.exports = {
     const that = this
     document.addEventListener('click', function (event) {
       const el = event.target
-      if (el.tagName === 'A' && el?.classList.contains('js-return-html')) {
+      if (el.matches('a.js-return-html')) {
         event.preventDefault()
         event.stopPropagation()
         const href = el.getAttribute('href')

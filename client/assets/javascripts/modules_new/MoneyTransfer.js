@@ -10,7 +10,7 @@ module.exports = {
     }
 
     document.addEventListener('change', function (event) {
-      if (event.target.tagName === 'SELECT' && event.target.classList.contains('js-transfer-from')) {
+      if (event.target.matches('select.js-transfer-from')) {
         document.querySelectorAll('.js-transfer-to option').forEach((element) => {
           element.classList.remove('hidden')
         })

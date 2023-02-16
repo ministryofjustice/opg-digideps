@@ -7,7 +7,7 @@ const TextAreaAutoSize = {
   },
 
   resizeTextArea: function (event) {
-    if (event.target.tagName === 'TEXTAREA' && event.target.classList.contains('js-auto-size')) {
+    if (event.target.matches('textarea.js-auto-size')) {
       const textArea = event.target
       const scrollHeight = (textArea.scrollHeight) || 120
       const height = textArea.clientHeight
