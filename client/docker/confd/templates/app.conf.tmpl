@@ -12,7 +12,7 @@ server {
     add_header Referrer-Policy           "same-origin"                                                                                 always;
     add_header Content-Security-Policy   "default-src https:; script-src https: 'unsafe-inline'; style-src https: 'unsafe-inline';"    always;
     add_header X-Content-Type-Options    "nosniff"                                                                                     always;
-    add_header Permissions-Policy        "geolocation none;"                                                                           always;
+    add_header Permissions-Policy        "geolocation=()"                                                                           always;
 
     # This is handled by PHP
     client_max_body_size 0;
