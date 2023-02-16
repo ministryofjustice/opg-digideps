@@ -6,7 +6,7 @@ module.exports = {
     const selectedFromAccount = document.querySelector('.js-transfer-from')
 
     if (selectedFromAccount) {
-      document.querySelector('.js-transfer-to option[value=' + selectedFromAccount.value + ']').classList.add('hidden')
+      document.querySelector('.js-transfer-to option[value="' + selectedFromAccount.value + '"]').classList.add('hidden')
     }
 
     document.addEventListener('change', function (event) {

@@ -29,12 +29,10 @@ module.exports = {
         const name = elem.getAttribute('name')
         elem = parent?.querySelector(`input[type="radio"][name="${name}"][aria-controls]`)
       }
-
-      const controls = elem.getAttribute('aria-controls')
-      const toggleElement = document.getElementById(controls)
-
-      if (controls && toggleElement) {
-        if (elem.matches('input[type="checkbox"],input[type="radio"]')) {
+      if (elem && elem.matches('input[type="checkbox"],input[type="radio"]')) {
+        const controls = elem.getAttribute('aria-controls')
+        const toggleElement = document.getElementById(controls)
+        if (controls && toggleElement) {
           toggleHidden(elem, toggleElement)
         }
       }
