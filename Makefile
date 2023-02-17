@@ -53,7 +53,7 @@ lint-terraform: ##@checks Lint Terraform
 	@$(TFLINT) environment
 	@$(TFLINT) shared
 
-up-app: ##@application Brings the app up and mounts local folders in
+up-app: build-js ##@application Brings the app up and mounts local folders in
 	docker-compose -f docker-compose.yml -f docker-compose.dev.yml -f docker-compose.override.yml up -d --remove-orphans
 
 up-app-build: ##@application Brings the app up and rebuilds containers
