@@ -34,7 +34,7 @@ final class AuditEvents
             'trigger' => $trigger,
             'case_number' => $caseNumber,
             'archived_by' => $archivedBy,
-            'discharged_on' => $this->dateTimeProvider->getDateTime()->format(\DateTime::ATOM),
+            'archived_on' => $this->dateTimeProvider->getDateTime()->format(\DateTime::ATOM),
         ];
 
         return $event + $this->baseEvent(AuditEvents::EVENT_CLIENT_ARCHIVED);
