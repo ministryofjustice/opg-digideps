@@ -25,12 +25,13 @@ class AuditEventsTest extends TestCase
     /**
      * @test
      */
-    public function clientDischarged(): void
+    public function clientArchived(): void
     {
         $expected = [
             'trigger' => 'USER_ARCHIVED_CLIENT',
             'case_number' => '12345678',
             'archived_by' => 'me@test.com',
+            'deputyship_start_date' => '2023-01-01T00:00:00+00:00',
             'archived_on' => $this->now->format(\DateTime::ATOM),
             'event' => 'CLIENT_ARCHIVED',
             'type' => 'audit',
@@ -39,6 +40,7 @@ class AuditEventsTest extends TestCase
         $actual = (new AuditEvents($this->dateTimeProvider->reveal()))->clientArchived(
             'USER_ARCHIVED_CLIENT',
             '12345678',
+            new \DateTime('2023-01-01T00:00:00+00:00'),
             'me@test.com',
         );
 

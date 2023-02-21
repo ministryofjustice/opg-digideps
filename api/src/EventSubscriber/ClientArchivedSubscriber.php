@@ -36,6 +36,7 @@ class ClientArchivedSubscriber implements EventSubscriberInterface
         $this->logger->notice('', (new AuditEvents($this->dateTimeProvider))->clientArchived(
             $event->getTrigger(),
             $event->getClient()->getCaseNumber(),
+            $event->getClient()->getCourtDate(),
             $event->getCurrentUser()->getEmail(),
         ));
     }
