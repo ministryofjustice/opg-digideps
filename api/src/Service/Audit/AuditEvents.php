@@ -28,14 +28,14 @@ final class AuditEvents
     public function clientArchived(
         string $trigger,
         string $caseNumber,
-        \DateTime $deputyshipStartDate,
+        ?\DateTime $deputyshipStartDate,
         string $archivedBy,
     ): array {
         $event = [
             'trigger' => $trigger,
             'case_number' => $caseNumber,
             'archived_by' => $archivedBy,
-            'deputyship_start_date' => $deputyshipStartDate->format(\DateTime::ATOM),
+            'deputyship_start_date' => $deputyshipStartDate?->format(\DateTime::ATOM),
             'archived_on' => $this->dateTimeProvider->getDateTime()->format(\DateTime::ATOM),
         ];
 
