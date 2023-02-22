@@ -215,7 +215,6 @@ as
 $$
 DECLARE
 temprow RECORD;
-    balance_mismatch numeric(14,2);
 BEGIN FOR temprow IN
 SELECT * FROM report WHERE balance_mismatch_explanation is not null AND submit_date > CURRENT_DATE - INTERVAL '6 months'
     LOOP
