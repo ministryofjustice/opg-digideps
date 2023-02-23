@@ -32,7 +32,7 @@ $$
 DECLARE
 temprow RECORD;
 BEGIN FOR temprow IN
-SELECT * FROM report WHERE submit_date > CURRENT_DATE - INTERVAL '6 months'
+SELECT * FROM report WHERE report.type IN ('102', '102-4', '102-5', '102-4-5', '102-6', '102-4-6') AND submit_date > CURRENT_DATE - INTERVAL '6 months'
     LOOP
     RETURN QUERY
 SELECT temprow.type, get_number_of_transfers(temprow.id);
