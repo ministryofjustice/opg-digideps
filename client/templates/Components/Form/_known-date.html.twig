@@ -25,7 +25,7 @@
                 <div class="govuk-date-input__item">
                     <div class="govuk-form-group">
                         {{ form_label(element.day,'Day', {'label_attr': {'class': 'govuk-label govuk-date-input__label'}}) }}
-                        {{ form_widget(element.day, { 'type':'number', 'value': element.day.vars.value | pad_day_month, 'attr': {'class': 'govuk-input govuk-date-input__input govuk-input--width-2 js-limit-chars-2' ~ errorClass, 'min': 0, 'max': 31, 'pattern': '[0-9]*'}}) }}
+                        {{ form_widget(element.day, { 'type':'number', 'value': element.day.vars.value | pad_day_month, 'attr': {'class': 'govuk-input govuk-date-input__input govuk-input--width-2' ~ errorClass, 'min': 0, 'max': 31, 'pattern': '[0-9]*', 'maxlength': 2}}) }}
                     </div>
                 </div>
             {% else %}
@@ -35,14 +35,14 @@
             <div class="govuk-date-input__item">
                 <div class="govuk-form-group">
                     {{ form_label(element.month,'Month', {'label_attr': {'class': 'govuk-label govuk-date-input__label'}}) }}
-                    {{ form_widget(element.month, { 'type':'number', 'value': element.month.vars.value | pad_day_month, 'attr': {'class': 'govuk-input govuk-date-input__input govuk-input--width-2 js-limit-chars-2' ~ errorClass, 'min': 0, 'max': 12, 'pattern': '[0-9]*'}}) }}
+                    {{ form_widget(element.month, { 'type':'number', 'value': element.month.vars.value | pad_day_month, 'attr': {'class': 'govuk-input govuk-date-input__input govuk-input--width-2' ~ errorClass, 'min': 0, 'max': 12, 'pattern': '[0-9]*', 'maxlength': 2}}) }}
                 </div>
             </div>
 
             <div class="govuk-date-input__item">
                 <div class="govuk-form-group">
                     {{ form_label(element.year,'Year', {'label_attr': {'class': 'govuk-label govuk-date-input__label'}}) }}
-                    {{ form_widget(element.year, { 'type':'number', 'attr': {'class': 'govuk-input govuk-date-input__input govuk-input--width-4 js-limit-chars-4' ~ errorClass, 'min': 0, 'max': 2500, 'pattern': '[0-9]*'}}) }}
+                    {{ form_widget(element.year, { 'type':'number', 'attr': {'class': 'govuk-input govuk-date-input__input govuk-input--width-4' ~ errorClass, 'min': 0, 'max': 2500, 'pattern': '[0-9]*', 'maxlength': 4}}) }}
                 </div>
             </div>
         </div>

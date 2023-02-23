@@ -1,4 +1,4 @@
-import { GoogleAnalyticsEvents } from '../../modules/googleAnalyticsEvents'
+import { GoogleAnalyticsEvents } from '../../modules_new/googleAnalyticsEvents'
 import { beforeAll, describe, expect, it, jest } from '@jest/globals'
 
 const globals = (() => {

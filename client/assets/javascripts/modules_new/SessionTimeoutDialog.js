@@ -1,7 +1,7 @@
 // SESSION TIMEOUT POPUP LOGIC
 
 const SessionTimeoutDialog = {
-  init (options) {
+  init: function (options) {
     this.element = options.element
     this.sessionExpiresMs = options.sessionExpiresMs
     this.sessionPopupShowAfterMs = options.sessionPopupShowAfterMs
@@ -12,12 +12,12 @@ const SessionTimeoutDialog = {
     this.okBtn.addEventListener('click', this.onButtonClickHandler)
   },
 
-  onButtonClickHandler (event) {
+  onButtonClickHandler: function (event) {
     event.preventDefault()
     this.hidePopupAndRestartCountdown(this.element)
   },
 
-  startCountdown () {
+  startCountdown: function () {
     this.countDownPopupIntervalId = window.setInterval(
       this.displayElementBlock,
       this.sessionPopupShowAfterMs
@@ -29,15 +29,15 @@ const SessionTimeoutDialog = {
     )
   },
 
-  displayElementBlock () {
+  displayElementBlock: function () {
     this.element.style.display = 'block'
   },
 
-  reloadWindow () {
+  reloadWindow: function () {
     window.location.reload()
   },
 
-  hidePopupAndRestartCountdown (element) {
+  hidePopupAndRestartCountdown: function (element) {
     element.style.display = 'none'
 
     this.keepSessionAlive()
@@ -48,7 +48,7 @@ const SessionTimeoutDialog = {
     this.startCountdown()
   },
 
-  keepSessionAlive () {
+  keepSessionAlive: function () {
     window.fetch(this.keepSessionAliveUrl + '?refresh=' + Date.now())
   }
 }

@@ -1,5 +1,5 @@
 const ConditionalFieldRevealer = {
-  init: () => {
+  init: function () {
     const elementsWithValues = ConditionalFieldRevealer.getConditionallyHiddenElements()
 
     elementsWithValues.forEach(e => {
@@ -13,7 +13,7 @@ const ConditionalFieldRevealer = {
     })
   },
 
-  getConditionallyHiddenElements: () => {
+  getConditionallyHiddenElements: function () {
     return [...document.querySelectorAll('.govuk-radios__conditional--hidden')]
   }
 

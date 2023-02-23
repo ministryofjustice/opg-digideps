@@ -1,4 +1,4 @@
-import SessionTimeoutDialog from '../modules/SessionTimeoutDialog'
+import SessionTimeoutDialog from '../modules_new/SessionTimeoutDialog'
 
 const getDataAttributeData = function (dataAttributeName) {
   const element = document.querySelector(`[${dataAttributeName}]`)
