@@ -4,6 +4,7 @@
  The report type can be used to group the data by deputy type is required.
  In its current implementation, the query only returns the last 6 months worth of data,
  but this can be modified by changing the interval period.
+ Also, only 102 variations of the report (high assets) contain a money transfer section.
  */
 
 
