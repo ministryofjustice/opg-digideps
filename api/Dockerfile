@@ -16,7 +16,7 @@ RUN composer run-script post-install-cmd --no-interaction
 
 RUN composer dump-autoload --optimize
 
-FROM php:8.1.12-fpm-alpine3.16
+FROM php:8.1.16-fpm-alpine3.16
 WORKDIR /var/www
 EXPOSE 80
 EXPOSE 443
@@ -108,7 +108,7 @@ RUN chmod 544 /var/www/tests/Behat/run-tests-parallel.sh
 # Prebuild cache
 RUN su-exec www-data php -d memory_limit=-1 app/console cache:warmup
 
-RUN apk upgrade curl libcurl
+RUN apk upgrade curl libcurl openssl tar postgresql-client libssl1.1 libcrypto1.1
 
 CMD confd -onetime -backend env \
     && waitforit -address=tcp://$DATABASE_HOSTNAME:$DATABASE_PORT -timeout=$TIMEOUT \
