@@ -58,8 +58,6 @@ class LoginFormAuthenticator extends AbstractAuthenticator
                 } catch (AuthenticationException $e) {
                     throw $e;
                 }
-
-                return null;
             }),
             new CustomCredentials(function ($password) {
                 // We check credentials in API so as long as that returns then we can assume they are valid
