@@ -7,6 +7,7 @@ namespace App\Security;
 use App\Service\Client\RestClient;
 use App\Service\Client\TokenStorage\RedisStorage;
 use App\Service\Redirector;
+use App\Validator\RouteValidator;
 use Symfony\Component\HttpFoundation\RedirectResponse;
 use Symfony\Component\HttpFoundation\Request;
 use Symfony\Component\HttpFoundation\Response;
@@ -72,7 +73,13 @@ class LoginFormAuthenticator extends AbstractAuthenticator
 
     public function onAuthenticationSuccess(Request $request, TokenInterface $token, string $firewallName): ?Response
     {
-        $redirectUrl = $this->redirector->getFirstPageAfterLogin($request->getSession());
+        $redirectUrl = (
+            $request->query->get('lastPage') &&
+            RouteValidator::validateRoute($this->router, $request->query->get('lastPage'))
+        ) ?
+            urldecode($request->query->get('lastPage')) :
+            $this->redirector->getFirstPageAfterLogin($request->getSession());
+
         $this->redirector->removeLastAccessedUrl(); // avoid this URL to be used a the next login
 
         return new RedirectResponse($redirectUrl, Response::HTTP_FOUND);

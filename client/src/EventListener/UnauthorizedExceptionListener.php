@@ -11,11 +11,14 @@ class UnauthorizedExceptionListener
 {
     public function onKernelException(ExceptionEvent $exceptionEvent)
     {
+        $request = $exceptionEvent->getRequest();
         $exception = $exceptionEvent->getThrowable();
 
         if ($exception instanceof HttpException) {
             if (Response::HTTP_UNAUTHORIZED == $exception->getStatusCode()) {
-                $response = new RedirectResponse('/login?from=api');
+                $url = '/login?from=api&lastPage=' . urlencode($request->getRequestUri());
+
+                $response = new RedirectResponse($url);
                 $exceptionEvent->setResponse($response);
                 $exceptionEvent->stopPropagation();
             }
