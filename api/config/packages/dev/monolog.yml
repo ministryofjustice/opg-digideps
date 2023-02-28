@@ -15,3 +15,6 @@ monolog:
             formatter: line_formatter
             bubble: false
             channels: ["verbose"]
+        audit:
+            type: service
+            id: App\Service\Audit\AwsAuditLogHandler
