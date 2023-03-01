@@ -3,27 +3,29 @@
 namespace App\Controller;
 
 use App\Entity as EntityDir;
+use App\Event\ClientArchivedEvent;
+use App\EventDispatcher\ObservableEventDispatcher;
 use App\Repository\ClientRepository;
+use App\Service\Audit\AuditEvents;
 use App\Service\Formatter\RestFormatter;
 use Doctrine\ORM\EntityManagerInterface;
 use Sensio\Bundle\FrameworkExtraBundle\Configuration\Security;
 use Symfony\Component\HttpFoundation\Request;
 use Symfony\Component\Routing\Annotation\Route;
+use Symfony\Component\Security\Core\Authentication\Token\Storage\TokenStorageInterface;
 
 /**
  * @Route("/client")
  */
 class ClientController extends RestController
 {
-    private ClientRepository $repository;
-    private EntityManagerInterface $em;
-    private RestFormatter $formatter;
-
-    public function __construct(ClientRepository $repository, EntityManagerInterface $em, RestFormatter $formatter)
-    {
-        $this->repository = $repository;
-        $this->em = $em;
-        $this->formatter = $formatter;
+    public function __construct(
+        private ClientRepository $repository,
+        private EntityManagerInterface $em,
+        private RestFormatter $formatter,
+        private ObservableEventDispatcher $eventDispatcher,
+        private TokenStorageInterface $tokenStorage,
+    ) {
     }
 
     /**
@@ -163,6 +165,15 @@ class ClientController extends RestController
 
         $client->setArchivedAt(new \DateTime());
         $this->em->flush($client);
+
+        $trigger = AuditEvents::TRIGGER_USER_ARCHIVED_CLIENT;
+        $currentUser = $this->tokenStorage->getToken()->getUser();
+        $clientArchivedEvent = new ClientArchivedEvent(
+            $client,
+            $currentUser,
+            $trigger
+        );
+        $this->eventDispatcher->dispatch($clientArchivedEvent, ClientArchivedEvent::NAME);
 
         return [
             'id' => $client->getId(),

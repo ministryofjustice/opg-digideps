@@ -38,7 +38,7 @@ COPY src src
 RUN composer run-script post-install-cmd --no-interaction
 RUN composer dump-autoload --optimize
 
-FROM php:8.1.12-fpm-alpine3.16
+FROM php:8.1.16-fpm-alpine3.16
 WORKDIR /var/www
 EXPOSE 80
 EXPOSE 443
@@ -123,7 +123,7 @@ RUN wget -q -O /tmp/commonpasswords.txt "https://www.ncsc.gov.uk/static-assets/d
 # Prebuild cache
 RUN su-exec www-data php -d memory_limit=-1 app/console cache:warmup
 
-RUN apk upgrade libxml2 openssl libssl1.1 libcrypto1.1 libretls zlib busybox curl gzip xz xz-libs libcurl
+RUN apk upgrade libxml2 openssl libssl1.1 libcrypto1.1 libretls zlib busybox curl gzip xz xz-libs libcurl tar
 
 CMD confd -onetime -backend env \
     && php-fpm -D \
