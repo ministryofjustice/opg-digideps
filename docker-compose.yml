@@ -150,6 +150,7 @@ services:
     image: redis:6.2.7
     restart: always
 
+  # testing
   file-scanner-rest:
     build:
       context: ./file_scanning
@@ -216,4 +217,4 @@ services:
 
   composer:
     image: composer:2.3.5
-    command: [ "install" ]
+    command: ["install"]
