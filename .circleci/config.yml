@@ -34,6 +34,13 @@ workflows:
                     value: << pipeline.git.branch >>,
                   },
               },
+              {
+                matches:
+                  {
+                    pattern: "^dependabot/docker.+$",
+                    value: << pipeline.git.branch >>,
+                  },
+              },
             ]
         - not: { equal: [main, << pipeline.git.branch >>] }
     jobs:

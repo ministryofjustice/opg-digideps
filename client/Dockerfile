@@ -1,4 +1,4 @@
-FROM node:18.13.0-alpine AS webpack
+FROM node:18.14.2-alpine AS webpack
 WORKDIR /app
 
 COPY package.json .
