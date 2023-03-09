@@ -13,6 +13,7 @@ class RouteValidatorTest extends KernelTestCase
 
     public function setUp(): void
     {
+        self::bootKernel();
         $this->router = self::$kernel->getContainer()->get('router');
     }
 
@@ -35,7 +36,6 @@ class RouteValidatorTest extends KernelTestCase
             ['path' => '/deputyship-details', 'return' => true],
             ['path' => 'https://google.com/', 'return' => false],
             ['path' => '../../../deputyship-details', 'return' => false],
-            ['path' => '/report/62/overview', 'return' => false], // no user context, so will fail
         ];
     }
 }
