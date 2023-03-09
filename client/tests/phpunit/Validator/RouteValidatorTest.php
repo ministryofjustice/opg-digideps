@@ -4,8 +4,6 @@ declare(strict_types=1);
 
 namespace App\Validator;
 
-use PHPStan\Testing\TestCase;
-use Prophecy\PhpUnit\ProphecyTrait;
 use Symfony\Bundle\FrameworkBundle\Test\KernelTestCase;
 use Symfony\Component\Routing\RouterInterface;
 
@@ -35,7 +33,7 @@ class RouteValidatorTest extends KernelTestCase
     {
         return [
             ['path' => '/deputyship-details', 'return' => true],
-            ['path' => 'https://google.com', 'return' => false],
+            ['path' => 'https://google.com/', 'return' => false],
             ['path' => '../../../deputyship-details', 'return' => false],
             ['path' => '/report/62/overview', 'return' => false], // no user context, so will fail
         ];
