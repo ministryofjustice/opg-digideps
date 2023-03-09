@@ -34,10 +34,8 @@ window.addEventListener('DOMContentLoaded', () => {
   }
 
   // Toggleable Buttons
-  const btnTogglers = document.querySelectorAll('[data-module="opg-button-toggler"]')
-  if (btnTogglers.length > 0) {
-    ButtonToggler.init(btnTogglers)
-  }
+
+  ButtonToggler.init()
 
   // Conditional Field Revealer
   ConditionalFieldRevealer.init()
