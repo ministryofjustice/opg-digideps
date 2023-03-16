@@ -62,7 +62,7 @@ services:
 
   synchronisation:
     volumes:
-      - ./lambda_functions/functions/synchronisation/.aws-lambda-rie:/aws-lambda
+      - ./lambdas/functions/synchronisation/.aws-lambda-rie:/aws-lambda
 
   mock-notify-api:
     volumes:

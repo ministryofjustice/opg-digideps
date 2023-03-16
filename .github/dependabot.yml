@@ -131,7 +131,7 @@ updates:
 
   # Enable version updates for docker
   - package-ecosystem: "docker"
-    directory: "/lambda_functions"
+    directory: "/lambdas"
     schedule:
       interval: "weekly"
       day: "friday"
@@ -141,7 +141,7 @@ updates:
 
   # Enable version updates for docker
   - package-ecosystem: "docker"
-    directory: "/lambda_functions/functions/synchronisation"
+    directory: "/lambdas/functions/synchronisation"
     schedule:
       interval: "weekly"
       day: "friday"

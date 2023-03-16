@@ -1,0 +1,33 @@
+name: "[Tests] Monitoring Lambda Unit Tests"
+
+defaults:
+  run:
+    shell: bash
+
+on:
+  workflow_call:
+
+jobs:
+  monitoring-lambda-unit-tests:
+    runs-on: ubuntu-latest
+    steps:
+      - uses: actions/checkout@2541b1294d2704b0964813337f33b291d3f8596b # pin@v3
+      - name: run monitoring lambda unit tests
+        id: unit-tests
+        run: |
+          docker-compose up -d
+          sleep 5
+          docker-compose run pythontests python -m pytest
+          docker-compose down
+        working-directory: lambdas
+      - name: archive monitoring lambda
+        run: |
+          export LAYER_PATH=lambdas/layers/monitoring/python/lib/python3.7/site-packages
+          python3 -m pip install -r lambdas/requirements/requirements.txt --target ./$LAYER_PATH/
+          cd lambdas
+          tar cvf layer.tar layers
+      - name: archive lambda layer tar
+        uses: actions/upload-artifact@65d862660abb392b8c4a3d1195a2108db131dd05 # pin@v3.1.0
+        with:
+          name: layer.tar
+          path: lambdas/

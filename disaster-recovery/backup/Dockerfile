@@ -1,0 +1,9 @@
+FROM python:3.11-alpine3.16
+
+COPY requirements.txt /requirements.txt
+RUN apk update && apk upgrade && pip install --upgrade pip \
+    \ pip install -r /requirements.txt
+RUN pip uninstall -y wheel setuptools
+COPY ./dr-backup.py /dr-backup.py
+RUN chmod 755 dr-backup.py
+CMD ["python3", "dr-backup.py"]
