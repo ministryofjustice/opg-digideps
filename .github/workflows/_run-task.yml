@@ -55,7 +55,6 @@ jobs:
         env:
           TF_WORKSPACE: ${{ inputs.workspace }}
         run: |
-          ls -alt
           echo $TF_WORKSPACE
           terraform output -json > terraform.output.json
         working-directory: environment

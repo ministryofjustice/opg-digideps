@@ -34,12 +34,10 @@
             }) }}
 
             {% if fee.moreDetails is defined %}
-                <div class="js-hidden">
-                    {{ form_input(fee.moreDetails, 'moreDetails', {
-                        'labelText': ('form.entries.' ~ feeId ~ '.moreInformations') | trans,
-                        'formGroupClass': 'opg-indented-block hard--top'
-                    }) }}
-                </div>
+                {{ form_input(fee.moreDetails, 'moreDetails', {
+                    'labelText': ('form.entries.' ~ feeId ~ '.moreInformations') | trans,
+                    'formGroupClass': 'opg-indented-block hard--top js-hidden js-details-expandable'
+                }) }}
             {% endif %}
         </div>
     {% endfor %}

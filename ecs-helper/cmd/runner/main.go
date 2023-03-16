@@ -12,7 +12,7 @@ import (
 	"github.com/aws/aws-sdk-go/aws/session"
 	"github.com/aws/aws-sdk-go/service/cloudwatchlogs"
 	"github.com/aws/aws-sdk-go/service/ecs"
-	. "github.com/ministryofjustice/opg-digideps/ecs-helper/internal"
+ 	. "github.com/ministryofjustice/opg-digideps/ecs-helper/internal"
 	"log"
 	"os"
 	"time"

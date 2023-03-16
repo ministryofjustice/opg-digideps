@@ -12,6 +12,7 @@ services:
   admin:
     volumes:
       - ./client/src:/var/www/src
+      - ./client/public/assets:/var/www/public/assets
       - ./client/tests:/var/www/tests
       - ./client/frontend.env:/var/www/frontend.env
       - ./client/admin.env:/var/www/admin.env
@@ -43,6 +44,7 @@ services:
   frontend:
     volumes:
       - ./client/src:/var/www/src
+      - ./client/public/assets:/var/www/public/assets
       - ./client/tests:/var/www/tests
       - ./client/frontend.env:/var/www/frontend.env
       - ./client/admin.env:/var/www/admin.env

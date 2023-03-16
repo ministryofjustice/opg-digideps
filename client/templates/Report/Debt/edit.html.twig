@@ -31,13 +31,13 @@
             }) }}
 
             {% if debt.moreDetails is defined %}
-                <div class="js-hidden">
-                    {{ form_input(debt.moreDetails, 'moreDetails', {
-                        'labelText': ('form.entries.' ~ debt.debtTypeId.vars.value ~ '.moreInformations') | trans,
-                        'formGroupClass': 'opg-indented-block',
-                        'hintText': ('form.entries.' ~ debt.debtTypeId.vars.value ~ '.moreInfoHint') | trans(transOptions)
-                    }) }}
-                </div>
+                
+                {{ form_input(debt.moreDetails, 'moreDetails', {
+                    'labelText': ('form.entries.' ~ debt.debtTypeId.vars.value ~ '.moreInformations') | trans,
+                    'formGroupClass': 'opg-indented-block js-hidden js-details-expandable',
+                    'hintText': ('form.entries.' ~ debt.debtTypeId.vars.value ~ '.moreInfoHint') | trans(transOptions)
+                }) }}
+                
             {% endif %}
         </div>
     {% endfor %}

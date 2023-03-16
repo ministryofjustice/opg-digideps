@@ -25,7 +25,7 @@ services:
       APP_ENV: dev
 
   npm:
-    image: node:14.19.1-alpine
+    image: node:18.14.2-alpine
     working_dir: /app
     volumes:
       - ./client/:/app

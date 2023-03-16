@@ -3,6 +3,10 @@ parameters:
         account_password: "%env(FIXTURES_ACCOUNTPASSWORD)%"
         legacy_password_hash: "%env(FIXTURES_LEGACYPASSWORDHASH)%"
 
+    # To avoid undefined variable errors at build time during clear-cache, we can define default values for env vars
+    # At runtime Symfony will fetch the actual value from the environment
+    env(AUDIT_LOG_GROUP_NAME): "dummy-build-time-value-overridden-at-runtime"
+
     # set this param to a higher value than session_expire_seconds on the client
     user_provider_timeout_seconds: 3901
     client_permissions:
@@ -364,3 +368,16 @@ services:
                 '@Aws\SecretsManager\SecretsManagerClient',
                 "%env(SECRETS_PREFIX)%",
             ]
+
+    Aws\CloudWatchLogs\CloudWatchLogsClient:
+        class: Aws\CloudWatchLogs\CloudWatchLogsClient
+        arguments: ["%cloudwatch_logs_client_params%"]
+
+    App\Service\Audit\AwsAuditLogHandler:
+        class: App\Service\Audit\AwsAuditLogHandler
+        arguments:
+            - '@Aws\CloudWatchLogs\CloudWatchLogsClient'
+            - "%env(AUDIT_LOG_GROUP_NAME)%"
+
+    App\Service\Audit\LocalAuditLogHandler:
+        class: App\Service\Audit\LocalAuditLogHandler

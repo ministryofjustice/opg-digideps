@@ -1,4 +1,4 @@
-FROM python:3.11.0-slim-buster
+FROM python:3.11.2-slim-buster
 COPY requirements/requirements-dev.txt /requirements.txt
 RUN pip install -r /requirements.txt
 RUN mkdir workdir && cd workdir && mkdir lambdas

@@ -19,13 +19,12 @@
             </div>
 
             {% if syncFeatureIsEnabled == false %}
-                <div data-redirect-url="{{ path('admin_checklist_pdf', {'id': report.id}) }}">
+                <div>
                     <p class="govuk-body govuk-!-padding-top-6 govuk-!-padding-bottom-1">
                         {% set downloadLinkUrl = path('admin_checklist_pdf', {'id': report.id}) %}
-                        {{ (page ~ '.downloadTextPrefix') | trans }} <a href="{{ downloadLinkUrl }}" class="behat-link-download-checklist-pdf">Click here</a> {{ (page ~ '.downloadTextSuffix') | trans }}
+                        {{ (page ~ '.downloadTextPrefix') | trans }} <a href="{{ downloadLinkUrl }}" download class="behat-link-download-checklist-pdf">Click here</a> {{ (page ~ '.downloadTextSuffix') | trans }}
                     </p>
                 </div>
-
             {% endif %}
 
             <p class="govuk-body govuk-!-padding-top-1 govuk-!-padding-bottom-6">
@@ -42,10 +41,4 @@
             </a>
         </div>
     </div>
-{% endblock %}
-
-{% block javascripts %}
-    {{ parent() }}
-
-    <script src="{{ 'javascripts/checklistSubmitted.js'| assetUrl }}"></script>
 {% endblock %}
