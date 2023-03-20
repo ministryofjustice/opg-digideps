@@ -20,7 +20,7 @@ jobs:
           - folder: "environment"
           - folder: "shared"
     steps:
-      - uses: actions/checkout@2541b1294d2704b0964813337f33b291d3f8596b # pin@v3
+      - uses: actions/checkout@24cb9080177205b6e8c946b17badbe402adc938f # pin@v3
 
       - uses: hashicorp/setup-terraform@17d4c9b8043b238f6f35641cdd8433da1e6f3867 # pin@v2.0.0
         with:

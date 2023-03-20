@@ -24,7 +24,7 @@ jobs:
   send-slack-notification:
     runs-on: ubuntu-latest
     steps:
-      - uses: actions/checkout@2541b1294d2704b0964813337f33b291d3f8596b # pin@v3
+      - uses: actions/checkout@24cb9080177205b6e8c946b17badbe402adc938f # pin@v3
 
       - name: install python
         uses: actions/setup-python@f60fe39c45f23b4a7683b4ae8e08239d4a2089bd # pin@v4.2.0
