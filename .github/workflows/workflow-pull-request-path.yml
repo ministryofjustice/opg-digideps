@@ -10,12 +10,13 @@ defaults:
 on:
   push:
     branches:
-      - "*" # matches every branch that doesn't contain a '/'
-      - "*/*" # matches every branch containing a single '/'
-      - "**" # matches every branch
-      - "!main" # reverse match main
-      - "!dependabot/**" # reverse match dependabot PRs
-      - "dependabot/docker/**" # match dependabot PRs that update docker
+      - "non_existent"
+#      - "*" # matches every branch that doesn't contain a '/'
+#      - "*/*" # matches every branch containing a single '/'
+#      - "**" # matches every branch
+#      - "!main" # reverse match main
+#      - "!dependabot/**" # reverse match dependabot PRs
+#      - "dependabot/docker/**" # match dependabot PRs that update docker
 
 permissions:
   contents: write

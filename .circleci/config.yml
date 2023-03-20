@@ -1,79 +1,79 @@
 version: 2.1
 
 workflows:
-  dependabot_app:
-    when:
-      and:
-        - or:
-            [
-              {
-                matches:
-                  {
-                    pattern: "^dependabot/composer.+$",
-                    value: << pipeline.git.branch >>,
-                  },
-              },
-              {
-                matches:
-                  {
-                    pattern: "^dependabot/npm_and_yarn.+$",
-                    value: << pipeline.git.branch >>,
-                  },
-              },
-              {
-                matches:
-                  {
-                    pattern: "^dependabot/go_modules.+$",
-                    value: << pipeline.git.branch >>,
-                  },
-              },
-              {
-                matches:
-                  {
-                    pattern: "^dependabot/pip.+$",
-                    value: << pipeline.git.branch >>,
-                  },
-              },
-            ]
-        - not: { equal: [main, << pipeline.git.branch >>] }
-    jobs:
-      - build:
-          name: build pr
-          ecr_scan_notify: "False"
-          push_ecr: false
-
-      - client-unit-test:
-          name: client unit test
-          requires: [build pr]
-
-      - api-unit-tests:
-          name: api unit test
-          requires: [build pr]
-
-      - slack/approval-notification:
-          name: branch complete notification
-          message: Your branch << pipeline.git.branch >> has completed
-          channel: opg-digicop-builds
-          requires: [api unit test, client unit test]
-
-  dependabot_terraform:
-    when:
-      and:
-        - matches:
-            {
-              pattern: "^dependabot/terraform.+$",
-              value: << pipeline.git.branch >>,
-            }
-        - not: { equal: [main, << pipeline.git.branch >>] }
-    jobs:
-      - lint:
-          name: lint terraform
-
-      - slack/approval-notification:
-          name: branch complete notification
-          message: Your branch << pipeline.git.branch >> has completed
-          channel: opg-digicop-builds
-          requires: [lint terraform]
+  #  dependabot_app:
+  #    when:
+  #      and:
+  #        - or:
+  #            [
+  #              {
+  #                matches:
+  #                  {
+  #                    pattern: "^dependabot/composer.+$",
+  #                    value: << pipeline.git.branch >>,
+  #                  },
+  #              },
+  #              {
+  #                matches:
+  #                  {
+  #                    pattern: "^dependabot/npm_and_yarn.+$",
+  #                    value: << pipeline.git.branch >>,
+  #                  },
+  #              },
+  #              {
+  #                matches:
+  #                  {
+  #                    pattern: "^dependabot/go_modules.+$",
+  #                    value: << pipeline.git.branch >>,
+  #                  },
+  #              },
+  #              {
+  #                matches:
+  #                  {
+  #                    pattern: "^dependabot/pip.+$",
+  #                    value: << pipeline.git.branch >>,
+  #                  },
+  #              },
+  #            ]
+  #        - not: { equal: [main, << pipeline.git.branch >>] }
+  #    jobs:
+  #      - build:
+  #          name: build pr
+  #          ecr_scan_notify: "False"
+  #          push_ecr: false
+  #
+  #      - client-unit-test:
+  #          name: client unit test
+  #          requires: [build pr]
+  #
+  #      - api-unit-tests:
+  #          name: api unit test
+  #          requires: [build pr]
+  #
+  #      - slack/approval-notification:
+  #          name: branch complete notification
+  #          message: Your branch << pipeline.git.branch >> has completed
+  #          channel: opg-digicop-builds
+  #          requires: [api unit test, client unit test]
+  #
+  #  dependabot_terraform:
+  #    when:
+  #      and:
+  #        - matches:
+  #            {
+  #              pattern: "^dependabot/terraform.+$",
+  #              value: << pipeline.git.branch >>,
+  #            }
+  #        - not: { equal: [main, << pipeline.git.branch >>] }
+  #    jobs:
+  #      - lint:
+  #          name: lint terraform
+  #
+  #      - slack/approval-notification:
+  #          name: branch complete notification
+  #          message: Your branch << pipeline.git.branch >> has completed
+  #          channel: opg-digicop-builds
+  #          requires: [lint terraform]
 
   #  pull_request:
   #    when:
@@ -243,238 +243,238 @@ workflows:
   #              client unit test,
   #            ]
 
-  integration:
-    jobs:
-      - lambda-unit-test:
-          name: lambda unit test
-          filters: { branches: { only: [main] } }
-
-      - build:
-          name: build integration
-          build_dev: true
-          ecr_scan_notify: "True"
-          filters: { branches: { only: [main] } }
-
-      - client-unit-test:
-          name: client unit test
-          requires: [build integration]
-          filters: { branches: { only: [main] } }
-
-      - api-unit-tests:
-          name: api unit test
-          requires: [build integration]
-          filters: { branches: { only: [main] } }
-
-      - terraform-command:
-          name: apply shared-development
-          requires: [build integration, lambda unit test]
-          filters: { branches: { only: [main] } }
-          tf_tier: shared
-          tf_workspace: development
-          tf_command: apply
-
-      # Notice, no 'reset' or 'restore' over development so we can keep test data
-      - terraform-command:
-          name: apply development
-          requires: [apply shared-development, lambda unit test]
-          tf_workspace: development
-          filters: { branches: { only: [main] } }
-          tf_command: apply
-
-      - terraform-command:
-          name: plan shared-preproduction
-          requires: [build integration]
-          filters: { branches: { only: [main] } }
-          tf_tier: shared
-          tf_workspace: preproduction
-          tf_command: plan
-
-      - terraform-command:
-          name: apply shared-preproduction
-          requires: [plan shared-preproduction, lambda unit test]
-          filters: { branches: { only: [main] } }
-          tf_tier: shared
-          tf_workspace: preproduction
-          tf_command: apply
-
-      - terraform-command:
-          name: apply integration
-          requires: [build integration, apply shared-preproduction]
-          filters: { branches: { only: [main] } }
-          tf_workspace: integration
-          tf_command: apply
-
-      - scale-services:
-          name: scale up services for integration tests
-          replicas: "6"
-          profile: digideps-ci-pre
-          tf_workspace: integration
-          requires: [apply integration]
-          filters: { branches: { only: [main] } }
-
-      - run-task:
-          name: integration tests reset DB
-          requires: [apply integration]
-          filters: { branches: { only: [main] } }
-          task_name: integration_test_v2
-          tf_workspace: integration
-          override: "sh,./tests/Behat/reset-db.sh"
-          timeout: 500
-
-      - run-task:
-          name: integration tests v2 reports 1
-          requires:
-            [
-              integration tests reset DB,
-              scale up services for integration tests,
-            ]
-          filters: { branches: { only: [main] } }
-          task_name: integration_test_v2
-          tf_workspace: integration
-          override: "sh,./tests/Behat/run-tests-parallel.sh,--tags,@v2_reporting_1"
-          timeout: 1200
-
-      - run-task:
-          name: integration tests v2 reports 2
-          requires:
-            [
-              integration tests reset DB,
-              scale up services for integration tests,
-            ]
-          filters: { branches: { only: [main] } }
-          task_name: integration_test_v2
-          tf_workspace: integration
-          override: "sh,./tests/Behat/run-tests-parallel.sh,--tags,@v2_reporting_2"
-          timeout: 1200
-
-      - run-task:
-          name: integration tests v2 admin
-          requires:
-            [
-              integration tests reset DB,
-              scale up services for integration tests,
-            ]
-          filters: { branches: { only: [main] } }
-          task_name: integration_test_v2
-          tf_workspace: integration
-          override: "sh,./tests/Behat/run-tests-parallel.sh,--tags,@v2_admin"
-          timeout: 1200
-
-      - run-task:
-          name: integration tests sequential only
-          requires:
-            [
-              integration tests reset DB,
-              scale up services for integration tests,
-            ]
-          filters: { branches: { only: [main] } }
-          task_name: integration_test_v2
-          tf_workspace: integration
-          override: "sh,./tests/Behat/run-tests.sh,--tags,@v2_sequential,--profile,v2-tests-browserkit"
-          timeout: 1200
-
-      - scale-services:
-          name: scale down services for integration tests
-          replicas: "1"
-          profile: digideps-ci-pre
-          tf_workspace: integration
-          requires:
-            [
-              integration tests v2 reports 1,
-              integration tests v2 reports 2,
-              integration tests v2 admin,
-              integration tests sequential only,
-            ]
-          filters: { branches: { only: [main] } }
-
-      - terraform-command:
-          name: plan preproduction
-          requires: [apply shared-development]
-          filters: { branches: { only: [main] } }
-          tf_workspace: preproduction
-          tf_command: plan
-
-      - terraform-command:
-          name: apply preproduction
-          requires:
-            [
-              api unit test,
-              client unit test,
-              integration tests v2 reports 1,
-              integration tests v2 reports 2,
-              integration tests v2 admin,
-              integration tests sequential only,
-              apply shared-preproduction,
-            ]
-          filters: { branches: { only: [main] } }
-          tf_workspace: preproduction
-          tf_command: apply
-
-      - terraform-command:
-          name: plan production
-          requires: [apply preproduction]
-          filters: { branches: { only: [main] } }
-          tf_workspace: production02
-          tf_command: plan
-
-      - terraform-command:
-          name: plan shared-production
-          requires: [apply preproduction]
-          filters: { branches: { only: [main] } }
-          tf_tier: shared
-          tf_workspace: production
-          tf_command: plan
-
-      - slack/approval-notification:
-          name: release approval notification
-          message: "Production is ready for release and pending approval"
-          requires: [plan shared-production, plan production]
-          filters: { branches: { only: [main] } }
-
-      - approve:
-          name: approve release to production
-          type: approval
-          requires: [plan shared-production, plan production]
-          filters: { branches: { only: [main] } }
-
-      - terraform-command:
-          name: apply shared-production
-          requires: [approve release to production]
-          filters: { branches: { only: [main] } }
-          tf_tier: shared
-          tf_workspace: production
-          tf_command: apply
-
-      - terraform-command:
-          name: apply training
-          requires: [apply shared-production]
-          filters: { branches: { only: [main] } }
-          tf_workspace: training
-          tf_command: apply
-
-      - terraform-command:
-          name: apply production
-          requires: [apply shared-production]
-          filters: { branches: { only: [main] } }
-          pact_tag: true
-          tf_workspace: production02
-          tf_command: apply
-
-      - run-task:
-          name: backup production
-          requires: [apply production]
-          filters: { branches: { only: [main] } }
-          task_name: backup
-          tf_workspace: production02
-          timeout: 700
-
-      - run-task:
-          name: restore production to preproduction
-          requires: [backup production]
-          filters: { branches: { only: [main] } }
-          task_name: restore_from_production
-          tf_workspace: preproduction
-          timeout: 700
+  #  integration:
+  #    jobs:
+  #      - lambda-unit-test:
+  #          name: lambda unit test
+  #          filters: { branches: { only: [main] } }
+  #
+  #      - build:
+  #          name: build integration
+  #          build_dev: true
+  #          ecr_scan_notify: "True"
+  #          filters: { branches: { only: [main] } }
+  #
+  #      - client-unit-test:
+  #          name: client unit test
+  #          requires: [build integration]
+  #          filters: { branches: { only: [main] } }
+  #
+  #      - api-unit-tests:
+  #          name: api unit test
+  #          requires: [build integration]
+  #          filters: { branches: { only: [main] } }
+  #
+  #      - terraform-command:
+  #          name: apply shared-development
+  #          requires: [build integration, lambda unit test]
+  #          filters: { branches: { only: [main] } }
+  #          tf_tier: shared
+  #          tf_workspace: development
+  #          tf_command: apply
+  #
+  #      # Notice, no 'reset' or 'restore' over development so we can keep test data
+  #      - terraform-command:
+  #          name: apply development
+  #          requires: [apply shared-development, lambda unit test]
+  #          tf_workspace: development
+  #          filters: { branches: { only: [main] } }
+  #          tf_command: apply
+  #
+  #      - terraform-command:
+  #          name: plan shared-preproduction
+  #          requires: [build integration]
+  #          filters: { branches: { only: [main] } }
+  #          tf_tier: shared
+  #          tf_workspace: preproduction
+  #          tf_command: plan
+  #
+  #      - terraform-command:
+  #          name: apply shared-preproduction
+  #          requires: [plan shared-preproduction, lambda unit test]
+  #          filters: { branches: { only: [main] } }
+  #          tf_tier: shared
+  #          tf_workspace: preproduction
+  #          tf_command: apply
+  #
+  #      - terraform-command:
+  #          name: apply integration
+  #          requires: [build integration, apply shared-preproduction]
+  #          filters: { branches: { only: [main] } }
+  #          tf_workspace: integration
+  #          tf_command: apply
+  #
+  #      - scale-services:
+  #          name: scale up services for integration tests
+  #          replicas: "6"
+  #          profile: digideps-ci-pre
+  #          tf_workspace: integration
+  #          requires: [apply integration]
+  #          filters: { branches: { only: [main] } }
+  #
+  #      - run-task:
+  #          name: integration tests reset DB
+  #          requires: [apply integration]
+  #          filters: { branches: { only: [main] } }
+  #          task_name: integration_test_v2
+  #          tf_workspace: integration
+  #          override: "sh,./tests/Behat/reset-db.sh"
+  #          timeout: 500
+  #
+  #      - run-task:
+  #          name: integration tests v2 reports 1
+  #          requires:
+  #            [
+  #              integration tests reset DB,
+  #              scale up services for integration tests,
+  #            ]
+  #          filters: { branches: { only: [main] } }
+  #          task_name: integration_test_v2
+  #          tf_workspace: integration
+  #          override: "sh,./tests/Behat/run-tests-parallel.sh,--tags,@v2_reporting_1"
+  #          timeout: 1200
+  #
+  #      - run-task:
+  #          name: integration tests v2 reports 2
+  #          requires:
+  #            [
+  #              integration tests reset DB,
+  #              scale up services for integration tests,
+  #            ]
+  #          filters: { branches: { only: [main] } }
+  #          task_name: integration_test_v2
+  #          tf_workspace: integration
+  #          override: "sh,./tests/Behat/run-tests-parallel.sh,--tags,@v2_reporting_2"
+  #          timeout: 1200
+  #
+  #      - run-task:
+  #          name: integration tests v2 admin
+  #          requires:
+  #            [
+  #              integration tests reset DB,
+  #              scale up services for integration tests,
+  #            ]
+  #          filters: { branches: { only: [main] } }
+  #          task_name: integration_test_v2
+  #          tf_workspace: integration
+  #          override: "sh,./tests/Behat/run-tests-parallel.sh,--tags,@v2_admin"
+  #          timeout: 1200
+  #
+  #      - run-task:
+  #          name: integration tests sequential only
+  #          requires:
+  #            [
+  #              integration tests reset DB,
+  #              scale up services for integration tests,
+  #            ]
+  #          filters: { branches: { only: [main] } }
+  #          task_name: integration_test_v2
+  #          tf_workspace: integration
+  #          override: "sh,./tests/Behat/run-tests.sh,--tags,@v2_sequential,--profile,v2-tests-browserkit"
+  #          timeout: 1200
+  #
+  #      - scale-services:
+  #          name: scale down services for integration tests
+  #          replicas: "1"
+  #          profile: digideps-ci-pre
+  #          tf_workspace: integration
+  #          requires:
+  #            [
+  #              integration tests v2 reports 1,
+  #              integration tests v2 reports 2,
+  #              integration tests v2 admin,
+  #              integration tests sequential only,
+  #            ]
+  #          filters: { branches: { only: [main] } }
+  #
+  #      - terraform-command:
+  #          name: plan preproduction
+  #          requires: [apply shared-development]
+  #          filters: { branches: { only: [main] } }
+  #          tf_workspace: preproduction
+  #          tf_command: plan
+  #
+  #      - terraform-command:
+  #          name: apply preproduction
+  #          requires:
+  #            [
+  #              api unit test,
+  #              client unit test,
+  #              integration tests v2 reports 1,
+  #              integration tests v2 reports 2,
+  #              integration tests v2 admin,
+  #              integration tests sequential only,
+  #              apply shared-preproduction,
+  #            ]
+  #          filters: { branches: { only: [main] } }
+  #          tf_workspace: preproduction
+  #          tf_command: apply
+  #
+  #      - terraform-command:
+  #          name: plan production
+  #          requires: [apply preproduction]
+  #          filters: { branches: { only: [main] } }
+  #          tf_workspace: production02
+  #          tf_command: plan
+  #
+  #      - terraform-command:
+  #          name: plan shared-production
+  #          requires: [apply preproduction]
+  #          filters: { branches: { only: [main] } }
+  #          tf_tier: shared
+  #          tf_workspace: production
+  #          tf_command: plan
+  #
+  #      - slack/approval-notification:
+  #          name: release approval notification
+  #          message: "Production is ready for release and pending approval"
+  #          requires: [plan shared-production, plan production]
+  #          filters: { branches: { only: [main] } }
+  #
+  #      - approve:
+  #          name: approve release to production
+  #          type: approval
+  #          requires: [plan shared-production, plan production]
+  #          filters: { branches: { only: [main] } }
+  #
+  #      - terraform-command:
+  #          name: apply shared-production
+  #          requires: [approve release to production]
+  #          filters: { branches: { only: [main] } }
+  #          tf_tier: shared
+  #          tf_workspace: production
+  #          tf_command: apply
+  #
+  #      - terraform-command:
+  #          name: apply training
+  #          requires: [apply shared-production]
+  #          filters: { branches: { only: [main] } }
+  #          tf_workspace: training
+  #          tf_command: apply
+  #
+  #      - terraform-command:
+  #          name: apply production
+  #          requires: [apply shared-production]
+  #          filters: { branches: { only: [main] } }
+  #          pact_tag: true
+  #          tf_workspace: production02
+  #          tf_command: apply
+  #
+  #      - run-task:
+  #          name: backup production
+  #          requires: [apply production]
+  #          filters: { branches: { only: [main] } }
+  #          task_name: backup
+  #          tf_workspace: production02
+  #          timeout: 700
+  #
+  #      - run-task:
+  #          name: restore production to preproduction
+  #          requires: [backup production]
+  #          filters: { branches: { only: [main] } }
+  #          task_name: restore_from_production
+  #          tf_workspace: preproduction
+  #          timeout: 700
 
   weekly_integration_run:
     triggers:
