@@ -77,6 +77,13 @@ jobs:
         run: docker buildx build --cache-from=type=local,src=/tmp/.buildx-cache --cache-to=type=local,dest=/tmp/.buildx-cache-new --tag ${IMAGE_NAME}:latest --output type=docker .
         working-directory: ${{ matrix.sub_folder }}
 
+      - name: build docker image development
+        if: matrix.svc_name == 'client' && inputs.branch_name == 'main'
+        env:
+          IMAGE_NAME: ${{ matrix.svc_name }}
+        run: docker build --tag ${IMAGE_NAME}-dev:latest --file Dockerfile-dev .
+        working-directory: ${{ matrix.sub_folder }}
+
       - name: Move cache
         run: |
           rm -rf /tmp/.buildx-cache
@@ -108,6 +115,17 @@ jobs:
         env:
           IMAGE_TAG: ${{ inputs.tag }}
         run: echo "Tag to use - ${IMAGE_TAG}"
+
+      - name: tag and push user research development container
+        if: matrix.svc_name == 'client' && inputs.branch_name == 'main'
+        env:
+          ECR_REGISTRY: ${{ steps.login_ecr.outputs.registry }}
+          ECR_REGISTRY_ALIAS: digideps
+          IMAGE_TAG: ${{ inputs.tag }}
+          IMAGE_NAME: ${{ matrix.svc_name }}
+        run: |
+          export IMAGE_TAG_DEV="development-$(echo $IMAGE_TAG | awk -F'-' '{print $2}')"
+          docker tag $IMAGE_NAME-dev:latest $ECR_REGISTRY/$ECR_REGISTRY_ALIAS/$IMAGE_NAME:$IMAGE_TAG_DEV
 
       - name: tag and push container
         env:

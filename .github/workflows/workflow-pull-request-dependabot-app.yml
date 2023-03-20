@@ -60,7 +60,7 @@ jobs:
       - client_unit_tests
       - workflow_variables
     steps:
-      - name: workflow has ended without issue
+      - name: workflow ended successfully
         run: |
           echo "${{ needs.workflow_variables.outputs.parsed_branch }} PR environment tested, built and deployed"
           echo "Tag Used: ${{ needs.workflow_variables.outputs.parsed_branch }}-${{ needs.workflow_variables.outputs.short_sha }}"
