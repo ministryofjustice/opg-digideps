@@ -27,7 +27,7 @@ jobs:
           role-session-name: OPGUseAnLPAECRScanGithubAction
 
       - name: install python
-        uses: actions/setup-python@f60fe39c45f23b4a7683b4ae8e08239d4a2089bd # pin@v4.2.0
+        uses: actions/setup-python@dfa76f8d0df0f92390ab2d42e57c6537748ecc71 # pin@v4.2.0
         with:
           python-version: "3.10"
           cache: "pip"
