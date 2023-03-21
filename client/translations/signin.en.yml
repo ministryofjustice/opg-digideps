@@ -19,7 +19,7 @@ signInAdmin:
 forgottenPassword: Forgotten your password?
 sessionTimeoutOutWarning: You've been signed out because you've not used the service for more than %time%. Please sign in again.
 bruteForceLocked: You've tried to sign in with the wrong password too many times. Please check your password, wait for %minutes% minutes, and try again.
-loginInAttemptAfterSessionExpiration: You've been inactive for too long. Please refresh the page and log in again.
+loginInAttemptAfterSessionExpiration: Please try and sign in again.
 
 signInForm:
   email:
