@@ -39,8 +39,6 @@ class DecisionController extends AbstractController
      * @Route("/report/{reportId}/decisions", name="decisions")
      * @Template("@App/Report/Decision/start.html.twig")
      *
-     * @param $reportId
-     *
      * @return array|RedirectResponse
      */
     public function startAction($reportId)
@@ -59,8 +57,6 @@ class DecisionController extends AbstractController
     /**
      * @Route("/report/{reportId}/decisions/mental-capacity", name="decisions_mental_capacity")
      * @Template("@App/Report/Decision/mentalCapacity.html.twig")
-     *
-     * @param $reportId
      *
      * @return array|RedirectResponse
      */
@@ -100,8 +96,6 @@ class DecisionController extends AbstractController
     /**
      * @Route("/report/{reportId}/decisions/mental-assessment", name="decisions_mental_assessment")
      * @Template("@App/Report/Decision/mentalAssessment.html.twig")
-     *
-     * @param $reportId
      *
      * @return array|RedirectResponse
      */
@@ -143,8 +137,6 @@ class DecisionController extends AbstractController
      * @Route("/report/{reportId}/decisions/exist", name="decisions_exist")
      * @Template("@App/Report/Decision/exist.html.twig")
      *
-     * @param $reportId
-     *
      * @return array|RedirectResponse
      */
     public function existAction(Request $request, $reportId)
@@ -183,8 +175,6 @@ class DecisionController extends AbstractController
      * @Route("/report/{reportId}/decisions/add", name="decisions_add")
      * @Template("@App/Report/Decision/add.html.twig")
      *
-     * @param $reportId
-     *
      * @return array|RedirectResponse
      */
     public function addAction(Request $request, $reportId)
@@ -205,7 +195,7 @@ class DecisionController extends AbstractController
             return $this->redirect($this->generateUrl('decisions_add_another', ['reportId' => $reportId]));
         }
 
-        //TODO use $backLinkRoute logic and align to other controllers
+        // TODO use $backLinkRoute logic and align to other controllers
         try {
             $backLink = $this->generateUrl($from, ['reportId' => $reportId]);
 
@@ -226,8 +216,6 @@ class DecisionController extends AbstractController
     /**
      * @Route("/report/{reportId}/decisions/add_another", name="decisions_add_another")
      * @Template("@App/Report/Decision/addAnother.html.twig")
-     *
-     * @param $reportId
      *
      * @return array|RedirectResponse
      */
@@ -256,9 +244,6 @@ class DecisionController extends AbstractController
     /**
      * @Route("/report/{reportId}/decisions/edit/{decisionId}", name="decisions_edit")
      * @Template("@App/Report/Decision/edit.html.twig")
-     *
-     * @param $reportId
-     * @param $decisionId
      *
      * @return array|RedirectResponse
      */
@@ -293,8 +278,6 @@ class DecisionController extends AbstractController
      * @Route("/report/{reportId}/decisions/summary", name="decisions_summary")
      * @Template("@App/Report/Decision/summary.html.twig")
      *
-     * @param $reportId
-     *
      * @return array|RedirectResponse
      */
     public function summaryAction(Request $request, $reportId)
@@ -306,19 +289,19 @@ class DecisionController extends AbstractController
             return $this->redirectToRoute('decisions', ['reportId' => $reportId]);
         }
 
+        $numberOfDecisions = count($report->getDecisions());
+
         return [
             'comingFromLastStep' => 'skip-step' == $fromPage || 'last-step' == $fromPage,
             'report' => $report,
             'status' => $report->getStatus(),
+            'numOfDecisions' => $numberOfDecisions,
         ];
     }
 
     /**
      * @Route("/report/{reportId}/decisions/{decisionId}/delete", name="decisions_delete")
      * @Template("@App/Common/confirmDelete.html.twig")
-     *
-     * @param $reportId
-     * @param $decisionId
      *
      * @return array|RedirectResponse
      */
