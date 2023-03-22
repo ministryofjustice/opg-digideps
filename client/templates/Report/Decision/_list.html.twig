@@ -110,7 +110,11 @@
                 {{ 'existPage.form.hasDecisions.label' | trans(transOptions) }}
             </dt>
             <dd class="govuk-summary-list__value">
-                {{ report.hasDecisions | capitalize }}
+                {% if numOfDecisions > 0 %}
+                    Yes
+                {% else %}
+                    No
+                {% endif %}
             </dd>
         {% endif %}
         {% if not hideEditLink  %}
