@@ -71,14 +71,14 @@ class LoginFormAuthenticator extends AbstractAuthenticator
 
     public function onAuthenticationSuccess(Request $request, TokenInterface $token, string $firewallName): ?Response
     {
-        $decodedURL = urldecode($request->query->get('lastPage'));
+        $redirectUrl = $this->redirector->getFirstPageAfterLogin($request->getSession());
 
-        $redirectUrl = (
-            $request->query->get('lastPage') &&
-            RouteValidator::validateRoute($this->router, $decodedURL)
-        ) ?
-            $decodedURL :
-            $this->redirector->getFirstPageAfterLogin($request->getSession());
+        if ($request->query->has('lastPage')){
+            $decodedURL = urldecode($request->query->get('lastPage'));
+            if (RouteValidator::validateRoute($this->router, $decodedURL)){
+                $redirectUrl = $decodedURL;
+            }
+        }
 
         $this->redirector->removeLastAccessedUrl(); // avoid this URL to be used a the next login
 
