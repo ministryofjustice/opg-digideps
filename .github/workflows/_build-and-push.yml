@@ -51,7 +51,7 @@ jobs:
 
       - name: cache docker layers
         id: cache-docker
-        uses: actions/cache@365406cb701e1cc758077b05049298a49a8b71c2 # pin@v3.0.8
+        uses: actions/cache@04f198bf0b2a39f7230a4304bf07747a0bddf146 # pin@v3.0.8
         with:
           path: /tmp/.buildx-cache
           key: ${{ runner.os }}-${{ matrix.svc_name }}-build-${{ github.sha }}
