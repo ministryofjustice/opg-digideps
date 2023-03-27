@@ -242,8 +242,7 @@ jobs:
       - when:
           condition:
             and:
-              - equal: [apply, << parameters.tf_command >>]
-              - equal: [false, << parameters.tf_initial_apply >>]
+              - equal: [environment, << parameters.tf_tier >>]
           steps:
             - run:
                 name: Extract lambda layers
@@ -351,7 +350,10 @@ jobs:
           path: ~/project
       - terraform/install
       - terraform/install_workspace_manager
-      - attach_workspace: { at: ~/project }
+      - run:
+          name: make empty layer dir needed for destroy
+          command: mkdir -p layers/monitoring
+          working_directory: ~/project/lambdas
       - run:
           name: initialise terraform
           command: terraform init
