@@ -30,9 +30,9 @@ class ToolController extends AbstractController
     }
 
     /**
-     * @Route("/case-reassignment", name="admin_tools_case_reassignment")
+     * @Route("/report-reassignment", name="admin_tools_report_reassignment")
      * @Security("is_granted('ROLE_SUPER_ADMIN')")
-     * @Template("@App/Admin/Tools/case-asssignment.html.twig")
+     * @Template("@App/Admin/Tools/report-reasssignment.html.twig")
      */
     public function caseAssignmentAction(Request $request)
     {
