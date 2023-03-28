@@ -180,7 +180,8 @@ class ECRScanChecker:
             "LOW": 0,
             "MEDIUM": 0,
             "HIGH": 0,
-            "CRITICAL": 0
+            "CRITICAL": 0,
+            "UNTRIAGED":0
         }
         severity_lines = []
 
