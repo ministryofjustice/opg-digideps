@@ -59,6 +59,12 @@ jobs:
       workspace: ${{ needs.workflow_variables.outputs.parsed_branch }}
     secrets: inherit
 
+  test_js:
+    name: test javascript code
+    uses: ./.github/workflows/_test-js.yml
+    needs:
+      - workflow_variables
+
   docker_build_scan_push:
     name: build, scan and push
     uses: ./.github/workflows/_build-and-push.yml

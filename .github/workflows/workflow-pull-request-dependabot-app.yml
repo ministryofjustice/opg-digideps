@@ -46,6 +46,12 @@ jobs:
     needs:
       - workflow_variables
 
+  test_js:
+    name: test javascript code
+    uses: ./.github/workflows/_test-js.yml
+    needs:
+      - workflow_variables
+
   client_unit_tests:
     name: client unit tests
     uses: ./.github/workflows/_unit-tests-client.yml
