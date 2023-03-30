@@ -14,6 +14,7 @@ environments = {
 
 key_alias = 'alias/digideps-ca-db-backup'
 
+
 class SnapshotManagement:
     def __init__(
         self,
@@ -618,6 +619,7 @@ def main(
         restore_from_remote=restore_from_remote
     )
     dr_job.restore()
+
 
 if __name__ == "__main__":
     main()

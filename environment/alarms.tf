@@ -103,7 +103,7 @@ resource "aws_cloudwatch_metric_alarm" "availability-front" {
   statistic           = "Minimum"
   metric_name         = "HealthCheckStatus"
   comparison_operator = "LessThanThreshold"
-  datapoints_to_alarm = 2
+  datapoints_to_alarm = 5
   threshold           = 1
   period              = 60
   evaluation_periods  = 5
@@ -134,7 +134,7 @@ resource "aws_cloudwatch_metric_alarm" "availability-admin" {
   statistic           = "Minimum"
   metric_name         = "HealthCheckStatus"
   comparison_operator = "LessThanThreshold"
-  datapoints_to_alarm = 2
+  datapoints_to_alarm = 5
   threshold           = 1
   period              = 60
   evaluation_periods  = 5
@@ -284,8 +284,8 @@ resource "aws_cloudwatch_metric_alarm" "frontend_alb_average_response_time" {
   dimensions = {
     "LoadBalancer" = trimprefix(split(":", aws_lb.front.arn)[5], "loadbalancer/")
   }
-  datapoints_to_alarm       = 3
-  evaluation_periods        = 3
+  datapoints_to_alarm       = 7
+  evaluation_periods        = 10
   threshold                 = 1
   period                    = 60
   namespace                 = "AWS/ApplicationELB"
@@ -314,8 +314,8 @@ resource "aws_cloudwatch_metric_alarm" "admin_alb_average_response_time" {
   alarm_actions             = [data.aws_sns_topic.alerts.arn]
   comparison_operator       = "GreaterThanOrEqualToThreshold"
   alarm_description         = "Response Time for Admin ALB in ${local.environment} (ignoring csv upload)"
-  datapoints_to_alarm       = 3
-  evaluation_periods        = 3
+  datapoints_to_alarm       = 7
+  evaluation_periods        = 10
   threshold                 = 1
   insufficient_data_actions = []
   treat_missing_data        = "notBreaching"
