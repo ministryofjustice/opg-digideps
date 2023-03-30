@@ -1,4 +1,4 @@
-:rocket: *Use a Lasting Power of Attorney Production Release Successful* :rocket:
+:rocket: *Digideps Production Release Successful* :rocket:
 *User:* {{ gh_actor }}
 *Branch:* {{ branch }}
 *Links*
