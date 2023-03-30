@@ -23,27 +23,28 @@ const getElementByDataAttribute = function (dataAttribute) {
 }
 
 const SessionTimeout = function () {
-  const keepAliveUrl = getDataAttributeData('data-keep-alive')
-  const sessionExpiresValue = getDataAttributeData('data-session-expires')
-  const popupExpiresValue = getDataAttributeData('data-popup-expires')
+  if (document.URL.match('\\/login') === null) {
+    const keepAliveUrl = getDataAttributeData('data-keep-alive')
+    const sessionExpiresValue = getDataAttributeData('data-session-expires')
+    const popupExpiresValue = getDataAttributeData('data-popup-expires')
 
-  const appTimeoutPop = getElementByDataAttribute('data-module="app-timeout-popup"')
-  const okBtn = getElementByDataAttribute('data-js="ok-button"')
+    const appTimeoutPop = getElementByDataAttribute('data-module="app-timeout-popup"')
+    const okBtn = getElementByDataAttribute('data-js="ok-button"')
 
-  if ([keepAliveUrl, sessionExpiresValue, popupExpiresValue, appTimeoutPop, okBtn].includes(null)) {
-    console.log('Required data or element is missing from page')
-    return null
+    const elements = [keepAliveUrl, sessionExpiresValue, popupExpiresValue, appTimeoutPop, okBtn]
+
+    if (elements.includes(null)) {
+      SessionTimeoutDialog.init({
+        element: appTimeoutPop,
+        sessionExpiresMs: sessionExpiresValue * 1000,
+        sessionPopupShowAfterMs: popupExpiresValue * 1000,
+        keepSessionAliveUrl: keepAliveUrl,
+        okBtn: okBtn
+      })
+
+      return null
+    }
   }
-
-  SessionTimeoutDialog.init({
-    element: appTimeoutPop,
-    sessionExpiresMs: sessionExpiresValue * 1000,
-    sessionPopupShowAfterMs: popupExpiresValue * 1000,
-    keepSessionAliveUrl: keepAliveUrl,
-    okBtn: okBtn
-  })
-
-  SessionTimeoutDialog.startCountdown()
 }
 
 export default SessionTimeout
