@@ -85,18 +85,19 @@ jobs:
       - workflow_variables
 
   terraform_apply_shared_development:
-    name: shared plan terraform development
+    name: development shared apply terraform
     uses: ./.github/workflows/_run-terraform.yml
     needs:
       - workflow_variables
     with:
       workspace: development
       terraform_path: shared
+      apply: true
       container_version: ${{ needs.workflow_variables.outputs.parsed_branch }}-${{ needs.workflow_variables.outputs.short_sha }}
     secrets: inherit
 
   terraform_apply_development:
-    name: environment apply terraform
+    name: development environment apply terraform
     uses: ./.github/workflows/_run-terraform.yml
     needs:
       - terraform_apply_shared_development
@@ -111,7 +112,7 @@ jobs:
     secrets: inherit
 
   terraform_apply_shared_preproduction:
-    name: shared plan terraform development
+    name: preproduction shared apply terraform
     uses: ./.github/workflows/_run-terraform.yml
     needs:
       - workflow_variables
@@ -119,11 +120,12 @@ jobs:
     with:
       workspace: preproduction
       terraform_path: shared
+      apply: true
       container_version: ${{ needs.workflow_variables.outputs.parsed_branch }}-${{ needs.workflow_variables.outputs.short_sha }}
     secrets: inherit
 
   terraform_apply_integration:
-    name: environment apply terraform
+    name: integration environment apply terraform
     uses: ./.github/workflows/_run-terraform.yml
     needs:
       - terraform_apply_shared_preproduction
@@ -136,7 +138,7 @@ jobs:
     secrets: inherit
 
   scale_services_up:
-    name: scale up services
+    name: scale up integration services
     uses: ./.github/workflows/_scale-services.yml
     needs:
       - workflow_variables
@@ -148,7 +150,7 @@ jobs:
     secrets: inherit
 
   reset_database:
-    name: reset database
+    name: reset integration database
     uses: ./.github/workflows/_run-task.yml
     needs:
       - workflow_variables
@@ -214,7 +216,7 @@ jobs:
 
   scale_services_down:
     if: always()
-    name: scale down services
+    name: scale down integration services
     uses: ./.github/workflows/_scale-services.yml
     needs:
       - workflow_variables
@@ -229,7 +231,7 @@ jobs:
     secrets: inherit
 
   terraform_apply_preproduction:
-    name: environment apply terraform
+    name: preproduction environment apply terraform
     uses: ./.github/workflows/_run-terraform.yml
     needs:
       - terraform_apply_shared_preproduction
@@ -246,7 +248,7 @@ jobs:
     secrets: inherit
 
   terraform_apply_shared_production:
-    name: shared plan terraform development
+    name: production shared apply terraform
     uses: ./.github/workflows/_run-terraform.yml
     needs:
       - workflow_variables
@@ -254,11 +256,12 @@ jobs:
     with:
       workspace: production
       terraform_path: shared
+      apply: true
       container_version: ${{ needs.workflow_variables.outputs.parsed_branch }}-${{ needs.workflow_variables.outputs.short_sha }}
     secrets: inherit
 
   terraform_apply_training:
-    name: environment apply terraform
+    name: training environment apply terraform
     uses: ./.github/workflows/_run-terraform.yml
     needs:
       - terraform_apply_shared_production
@@ -271,7 +274,7 @@ jobs:
     secrets: inherit
 
   terraform_apply_production:
-    name: environment apply terraform
+    name: production environment apply terraform
     uses: ./.github/workflows/_run-terraform.yml
     needs:
       - terraform_apply_shared_production
@@ -284,7 +287,7 @@ jobs:
     secrets: inherit
 
   backup_production:
-    name: integration tests frontend 2
+    name: backup production
     uses: ./.github/workflows/_run-task.yml
     needs:
       - workflow_variables
@@ -296,11 +299,11 @@ jobs:
     secrets: inherit
 
   restore_to_preproduction:
-    name: integration tests frontend 2
+    name: restore to preproduction
     uses: ./.github/workflows/_run-task.yml
     needs:
       - workflow_variables
-      - terraform_apply_production
+      - backup_production
     with:
       workspace: preproduction
       task_name: "restore_from_production"
@@ -344,4 +347,4 @@ jobs:
       template: unsuccessful_production_release.txt
       branch: ${{ needs.workflow_variables.outputs.parsed_branch }}
     secrets:
-      webhook: ${{ secrets.SLACK_WEBHOOK }}
+      webhook: ${{ secrets.DEV_SLACK_WEBHOOK }}
