@@ -1,55 +1,48 @@
 // SESSION TIMEOUT POPUP LOGIC
 
 const SessionTimeoutDialog = {
-  init: function (options) {
+  init (options) {
     this.element = options.element
-    this.sessionExpiresMs = options.sessionExpiresMs
+    this.popUpButton = options.okBtn
     this.sessionPopupShowAfterMs = options.sessionPopupShowAfterMs
+    this.redirectAfterMs = options.sessionExpiresMs + 3000
     this.keepSessionAliveUrl = options.keepSessionAliveUrl
-    this.redirectAfterMs = 3000
-    this.okBtn = options.okBtn
 
-    this.okBtn.addEventListener('click', this.onButtonClickHandler)
+    const that = this
+
+    this.popUpButton.addEventListener('click', function (event) {
+      event.preventDefault()
+      this.hidePopupAndRestartCountdown(that)
+    })
+
+    this.startCountdown(that)
   },
 
-  onButtonClickHandler: function (event) {
-    event.preventDefault()
-    this.hidePopupAndRestartCountdown(this.element)
-  },
-
-  startCountdown: function () {
-    this.countDownPopupIntervalId = window.setInterval(
-      this.displayElementBlock,
-      this.sessionPopupShowAfterMs
+  startCountdown (that) {
+    that.countDownPopupIntervalId = window.setInterval(
+      function () {
+        that.element.style.display = 'block'
+      },
+      that.sessionPopupShowAfterMs
     )
 
-    this.countDownLogoutIntervalId = window.setInterval(
-      this.reloadWindow,
-      this.sessionExpiresMs + this.redirectAfterMs
+    that.countDownLogoutIntervalId = window.setInterval(
+      function () {
+        window.location.reload()
+      },
+      that.redirectAfterMs
     )
   },
 
-  displayElementBlock: function () {
-    this.element.style.display = 'block'
-  },
+  hidePopupAndRestartCountdown (that) {
+    that.element.style.display = 'none'
 
-  reloadWindow: function () {
-    window.location.reload()
-  },
-
-  hidePopupAndRestartCountdown: function (element) {
-    element.style.display = 'none'
-
-    this.keepSessionAlive()
+    window.fetch(that.keepSessionAliveUrl + '?refresh=' + Date.now())
 
     // restart countdown
-    window.clearInterval(this.countDownPopupIntervalId)
-    window.clearInterval(this.countDownLogoutIntervalId)
-    this.startCountdown()
-  },
-
-  keepSessionAlive: function () {
-    window.fetch(this.keepSessionAliveUrl + '?refresh=' + Date.now())
+    window.clearInterval(that.countDownPopupIntervalId)
+    window.clearInterval(that.countDownLogoutIntervalId)
+    this.startCountdown(that)
   }
 }
 
