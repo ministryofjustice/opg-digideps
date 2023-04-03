@@ -98,6 +98,7 @@ jobs:
           format: "sarif"
           security-checks: "vuln"
           output: "trivy-results.sarif"
+          timeout: 15m
 
       - name: upload trivy scan results to security tab
         id: trivy_upload_sarif
