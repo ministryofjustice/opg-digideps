@@ -46,6 +46,12 @@ jobs:
     needs:
       - workflow_variables
 
+  test_js:
+    name: test javascript code
+    uses: ./.github/workflows/_test-js.yml
+    needs:
+      - workflow_variables
+
   client_unit_tests:
     name: client unit tests
     uses: ./.github/workflows/_unit-tests-client.yml
@@ -60,7 +66,7 @@ jobs:
       - client_unit_tests
       - workflow_variables
     steps:
-      - name: workflow has ended without issue
+      - name: workflow ended successfully
         run: |
           echo "${{ needs.workflow_variables.outputs.parsed_branch }} PR environment tested, built and deployed"
           echo "Tag Used: ${{ needs.workflow_variables.outputs.parsed_branch }}-${{ needs.workflow_variables.outputs.short_sha }}"
