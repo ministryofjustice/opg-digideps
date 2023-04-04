@@ -65,7 +65,7 @@
     {{ form_input(form.email,'signInForm.email') }}
     {{ form_input(form.password,'signInForm.password', {'dataModule': 'moj-password-reveal' }) }}
 
-    {{ form_submit(form.login,'signInForm.signin', {'buttonClass': 'behat-link-login'}) }}
+    {{ form_submit(form.login,'signInForm.signin', {'buttonClass': 'behat-link-login', 'attr': {'data-prevent-double-click':'true'}}) }}
 
     {{ form_end(form) }}
 
