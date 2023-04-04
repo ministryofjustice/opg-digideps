@@ -7,9 +7,6 @@ use App\Service\Client\RestClient;
 use App\Service\DeputyProvider;
 use App\Service\Redirector;
 use App\Service\StringUtils;
-
-use const PHP_URL_PATH;
-
 use Sensio\Bundle\FrameworkExtraBundle\Configuration\Template;
 use Symfony\Component\DependencyInjection\ParameterBag\ParameterBagInterface;
 use Symfony\Component\EventDispatcher\EventDispatcherInterface;
@@ -23,6 +20,7 @@ use Symfony\Component\Routing\Exception\ResourceNotFoundException;
 use Symfony\Component\Routing\RouterInterface;
 use Symfony\Component\Security\Core\Authentication\Token\Storage\TokenStorageInterface;
 use Symfony\Component\Security\Core\Exception\BadCredentialsException;
+use Symfony\Component\Security\Core\Exception\InvalidCsrfTokenException;
 use Symfony\Component\Security\Core\Exception\TooManyLoginAttemptsAuthenticationException;
 use Symfony\Component\Security\Http\Authentication\AuthenticationUtils;
 use Symfony\Contracts\Translation\TranslatorInterface;
@@ -87,6 +85,10 @@ class IndexController extends AbstractController
             if ($lastAuthError instanceof TooManyLoginAttemptsAuthenticationException) {
                 $lockedFor = $lastAuthError->getMessageData()['%minutes%'];
                 $errorMessage = $this->translator->trans('bruteForceLocked', ['%minutes%' => $lockedFor], 'signin');
+            }
+
+            if ($lastAuthError instanceof InvalidCsrfTokenException) {
+                $errorMessage = $this->translator->trans('loginInAttemptAfterSessionExpiration', [], 'signin');
             }
 
             $form->addError(new FormError($errorMessage));
@@ -254,7 +256,7 @@ class IndexController extends AbstractController
             return null;
         }
 
-        $refererUrlPath = parse_url($referer, PHP_URL_PATH);
+        $refererUrlPath = parse_url($referer, \PHP_URL_PATH);
 
         if (!$refererUrlPath) {
             return null;
