@@ -1,6 +1,6 @@
 const DetailsExpander = {
-  init: function (nodes) {
-    const container = document.querySelectorAll('[class^="js-details-expander"],[class*=" js-details-expander"]')
+  init: function (document) {
+    const container = document.querySelectorAll('.js-details-expander')
 
     container.forEach((userItem) => {
       const inputBox = userItem.querySelector('input[type="text"]')
@@ -12,7 +12,7 @@ const DetailsExpander = {
   },
 
   expandDetails: function (event) {
-    const container = document.querySelectorAll('[class^="js-details-expander"],[class*=" js-details-expander"]')
+    const container = document.querySelectorAll('.js-details-expander')
 
     container.forEach((userItem) => {
       const textareaGroup = userItem.querySelector('.js-details-expandable')
