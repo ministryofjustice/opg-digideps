@@ -40,7 +40,7 @@ resource "aws_cloudwatch_log_metric_filter" "php_errors" {
 }
 
 resource "aws_cloudwatch_metric_alarm" "php_errors" {
-  alarm_name          = "${local.environment}-PHP-Errors"
+  alarm_name          = "${local.environment}-php-errors"
   statistic           = "Sum"
   metric_name         = aws_cloudwatch_log_metric_filter.php_errors.metric_transformation[0].name
   comparison_operator = "GreaterThanOrEqualToThreshold"
