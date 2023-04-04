@@ -15,14 +15,14 @@ documentation:
   - any: ["docs/**/*"]
 
 ecs-helper:
-  - any: ["ecs_helper/**/*"]
+  - any: ["ecs-helper/**/*"]
 
 infrastructure:
   - any: ["environment/**/*"]
   - any: ["shared/**/*"]
 
 lambdas:
-  - any: ["lambda_functions/**/*"]
+  - any: ["lambdas/**/*"]
 
 pa11y:
   - any: ["pa11y/**/*"]

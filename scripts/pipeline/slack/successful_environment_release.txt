@@ -1,0 +1,7 @@
+:sparkle: *Digideps Environment Updated* :sparkle:
+*User:* {{ gh_actor }}
+*Branch:* {{ branch }}
+*Links*
+    *Digideps Frontend:* {{ frontend_url }}
+    *Digideps Admin:* {{ admin_url }}
+    *GH Actions build url:* {{ gh_actions_build_url }}
