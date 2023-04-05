@@ -12,6 +12,7 @@ class SelfRegisterData
 {
     /**
      * @var string
+     *
      * @JMS\Type("string")
      * @Assert\NotBlank( message="user.firstname.notBlank", groups={"self_registration", "verify_codeputy"} )
      * @Assert\Length(min=2, max=50, minMessage="user.firstname.minLength", maxMessage="user.firstname.maxLength", groups={"self_registration", "verify_codeputy"} )
@@ -20,6 +21,7 @@ class SelfRegisterData
 
     /**
      * @var string lastname
+     *
      * @JMS\Type("string")
      * @Assert\NotBlank(message="user.lastname.notBlank", groups={"self_registration", "verify_codeputy"} )
      * @Assert\Length(min=2, max=50, minMessage="user.lastname.minLength", maxMessage="user.lastname.maxLength", groups={"self_registration", "verify_codeputy"} )
@@ -28,6 +30,7 @@ class SelfRegisterData
 
     /**
      * @var string email
+     *
      * @JMS\Type("string")
      * @Assert\NotBlank( message="user.email.notBlank", groups={"self_registration", "verify_codeputy"})
      * @Assert\Email( message="user.email.invalid", groups={"self_registration", "verify_codeputy"} )
@@ -37,6 +40,7 @@ class SelfRegisterData
 
     /**
      * @var string email
+     *
      * @JMS\Type("string")
      * @Assert\Length( max=10, maxMessage="user.addressPostcode.maxLength", groups={"self_registration", "verify_codeputy"})
      */
@@ -44,6 +48,7 @@ class SelfRegisterData
 
     /**
      * @var string
+     *
      * @JMS\Type("string")
      * @Assert\NotBlank( message="client.firstname.notBlank", groups={"self_registration"} )
      * @Assert\Length(min = 2, minMessage= "client.firstname.minMessage", max=50, maxMessage= "client.firstname.maxMessage", groups={"self_registration"})
@@ -52,6 +57,7 @@ class SelfRegisterData
 
     /**
      * @var string clientLastName
+     *
      * @JMS\Type("string")
      * @Assert\NotBlank( message="client.lastname.notBlank", groups={"self_registration", "verify_codeputy"} )
      * @Assert\Length(min = 2, minMessage= "client.lastname.minMessage", max=50, maxMessage= "client.lastname.maxMessage", groups={"self_registration", "verify_codeputy"})
@@ -60,6 +66,7 @@ class SelfRegisterData
 
     /**
      * @var string caseNumber
+     *
      * @JMS\Type("string")
      * @Assert\NotBlank( message="client.caseNumber.notBlank", groups={"self_registration", "verify_codeputy"})
      * @Assert\Length(min = 2, minMessage= "client.caseNumber.minMessage", max=20, maxMessage= "client.caseNumber.maxMessage", groups={"self_registration", "verify_codeputy"})
@@ -181,12 +188,24 @@ class SelfRegisterData
     public function toArray()
     {
         return [
-            //'deputy_firstname' => $this->firstname,
+            // 'deputy_firstname' => $this->firstname,
             'deputy_lastname' => $this->lastname,
-            //'deputy_email' => $this->email,
+            // 'deputy_email' => $this->email,
             'deputy_postcode' => $this->postcode,
             'client_lastname' => $this->clientLastname,
             'client_case_number' => $this->caseNumber,
         ];
+    }
+
+    /**
+     * Function to replace known Unicode chars with equivalent ASCII
+     * Used to better support matching user inputted data with data present in Pre-registration table.
+     */
+    public function replaceUnicodeChars()
+    {
+        $this->firstname = str_replace('’', '\'', $this->firstname);
+        $this->lastname = str_replace('’', '\'', $this->lastname);
+        $this->clientFirstname = str_replace('’', '\'', $this->clientFirstname);
+        $this->clientLastname = str_replace('’', '\'', $this->clientLastname);
     }
 }
