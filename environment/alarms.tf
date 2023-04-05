@@ -257,7 +257,7 @@ resource "aws_cloudwatch_metric_alarm" "frontend_alb_5xx_errors" {
 }
 
 resource "aws_cloudwatch_metric_alarm" "admin_alb_5xx_errors" {
-  alarm_name          = ".${local.environment}-admin-alb-5xx-errors"
+  alarm_name          = "${local.environment}-admin-alb-5xx-errors"
   alarm_description   = "Number of 5XX Errors returned to Internal Users from the ${local.environment} Admin ALB."
   actions_enabled     = local.account.alarms_active
   alarm_actions       = [data.aws_sns_topic.alerts.arn]
