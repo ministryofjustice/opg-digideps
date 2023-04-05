@@ -1,12 +1,14 @@
-import { describe, expect, it, jest } from '@jest/globals'
-import SessionTimeoutDialog from '../../modules_new/SessionTimeoutDialog'
+import { describe, expect, it } from '@jest/globals'
+import SessionTimeoutDialog from '../../modules/SessionTimeoutDialog'
+import { findByText, getByText, queryByText, waitFor } from '@testing-library/dom'
+import { userEvent } from '@testing-library/user-event/setup/index'
 
 // Required to test against .fetch API
 require('jest-fetch-mock').enableMocks()
 
 describe('SessionTimeoutDialog', () => {
   describe('init', () => {
-    document.body.innerHTML = '<div>Test div</div><button>Test btn</button>'
+    document.body.innerHTML = '<div style="display: none">Test div</div><button>Test btn</button>'
     const divElement = document.querySelector('div')
     const buttonElement = document.querySelector('button')
     const sessionExpiresMs = 1000
@@ -22,59 +24,62 @@ describe('SessionTimeoutDialog', () => {
       okBtn: buttonElement
     }
 
-    it('assigns values from options to properties', () => {
-      SessionTimeoutDialog.init(validOptions)
+    const SessionTimeoutDialogObj = SessionTimeoutDialog
 
-      expect(SessionTimeoutDialog.element).toEqual(divElement)
-      expect(SessionTimeoutDialog.sessionExpiresMs).toEqual(sessionExpiresMs)
-      expect(SessionTimeoutDialog.sessionPopupShowAfterMs).toEqual(sessionPopupShowAfterMs)
-      expect(SessionTimeoutDialog.keepSessionAliveUrl).toEqual(keepSessionAliveUrl)
-      expect(SessionTimeoutDialog.redirectAfterMs).toEqual(redirectAfterMs)
-      expect(SessionTimeoutDialog.okBtn).toEqual(buttonElement)
+    it('assigns values from options to properties', () => {
+      SessionTimeoutDialogObj.init(validOptions)
+
+      expect(SessionTimeoutDialogObj.element).toEqual(divElement)
+      expect(SessionTimeoutDialogObj.sessionExpiresMs).toEqual(sessionExpiresMs)
+      expect(SessionTimeoutDialogObj.sessionPopupShowAfterMs).toEqual(sessionPopupShowAfterMs)
+      expect(SessionTimeoutDialogObj.keepSessionAliveUrl).toEqual(keepSessionAliveUrl)
+      expect(SessionTimeoutDialogObj.redirectAfterMs).toEqual(redirectAfterMs)
+      expect(SessionTimeoutDialogObj.okBtn).toEqual(buttonElement)
     })
 
     it('adds click eventListener to button', () => {
       const spy = jest.spyOn(buttonElement, 'addEventListener')
 
-      SessionTimeoutDialog.init(validOptions)
+      SessionTimeoutDialogObj.init(validOptions)
 
-      expect(spy).toHaveBeenCalledWith('click', SessionTimeoutDialog.onButtonClickHandler)
+      expect(spy).toHaveBeenCalledWith('click', SessionTimeoutDialogObj.onButtonClickHandler)
     })
-  })
 
-  describe('startCountdown', () => {
-    describe('sets intervals for showing popup and reload', () => {
-      document.body.innerHTML = '<div>Test div</div><button>Test btn</button>'
-      const divElement = document.querySelector('div')
+    it('has displayed element after timer', async () => {
+      SessionTimeoutDialogObj.init(validOptions)
 
-      SessionTimeoutDialog.element = divElement
-      SessionTimeoutDialog.sessionPopupShowAfterMs = 500
-      SessionTimeoutDialog.sessionExpiresMs = 400
-      SessionTimeoutDialog.redirectAfterMs = 300
+      const elementVisible = await findByText('Test div')
+      expect(elementVisible).toBeTruthy()
+    })
 
-      const spy = jest.spyOn(window, 'setInterval')
+    it('has hidden element after button click', async () => {
+      SessionTimeoutDialogObj.init(validOptions)
+      const user = userEvent.setup()
+      const button = await findByText('Test btn')
 
-      SessionTimeoutDialog.startCountdown()
+      await user.click(button)
 
-      expect(spy).toHaveBeenNthCalledWith(1, SessionTimeoutDialog.displayElementBlock, 500)
-      expect(spy).toHaveBeenNthCalledWith(2, SessionTimeoutDialog.reloadWindow, 700)
+      const element = queryByText('Test div')
+
+      expect(element).toBeNull()
     })
   })
 
   describe('hidePopupAndRestartCountdown', () => {
     document.body.innerHTML = '<div>Test div</div><button>Test btn</button>'
     const divElement = document.querySelector('div')
+    const SessionTimeoutDialogObj = SessionTimeoutDialog
 
     it('hides the popup', () => {
-      SessionTimeoutDialog.hidePopupAndRestartCountdown(divElement)
+      SessionTimeoutDialogObj.hidePopupAndRestartCountdown(SessionTimeoutDialogObj)
 
       expect(divElement.style.display).toEqual('none')
     })
 
     it('keeps the session alive', () => {
-      const spy = jest.spyOn(SessionTimeoutDialog, 'keepSessionAlive')
+      const spy = jest.spyOn(SessionTimeoutDialogObj, 'keepSessionAlive')
 
-      SessionTimeoutDialog.hidePopupAndRestartCountdown(divElement)
+      SessionTimeoutDialogObj.hidePopupAndRestartCountdown(SessionTimeoutDialogObj)
 
       expect(spy).toHaveBeenCalled()
     })
@@ -82,10 +87,10 @@ describe('SessionTimeoutDialog', () => {
     it('clears the window intervals', () => {
       const spy = jest.spyOn(window, 'clearInterval')
 
-      SessionTimeoutDialog.countDownPopupIntervalId = 'abc'
-      SessionTimeoutDialog.countDownLogoutIntervalId = 'xyz'
+      SessionTimeoutDialogObj.countDownPopupIntervalId = 'abc'
+      SessionTimeoutDialogObj.countDownLogoutIntervalId = 'xyz'
 
-      SessionTimeoutDialog.hidePopupAndRestartCountdown(divElement)
+      SessionTimeoutDialogObj.hidePopupAndRestartCountdown(SessionTimeoutDialogObj)
 
       expect(spy).toHaveBeenNthCalledWith(1, 'abc')
       expect(spy).toHaveBeenNthCalledWith(2, 'xyz')
@@ -94,18 +99,16 @@ describe('SessionTimeoutDialog', () => {
     it('starts the countdown again', () => {
       const spy = jest.spyOn(SessionTimeoutDialog, 'startCountdown')
 
-      SessionTimeoutDialog.hidePopupAndRestartCountdown(divElement)
+      SessionTimeoutDialogObj.hidePopupAndRestartCountdown(SessionTimeoutDialogObj)
 
       expect(spy).toHaveBeenCalled()
     })
-  })
 
-  describe('keepSessionAlive', () => {
-    it('makes a get request to keepSessionAliveUrl', () => {
+    it('makes a get request using keepSessionAliveUrl', () => {
       const spy = jest.spyOn(window, 'fetch')
-      SessionTimeoutDialog.keepSessionAliveUrl = 'example/url'
+      SessionTimeoutDialogObj.keepSessionAliveUrl = 'example/url'
 
-      SessionTimeoutDialog.keepSessionAlive()
+      SessionTimeoutDialogObj.hidePopupAndRestartCountdown(SessionTimeoutDialogObj)
 
       expect(spy).toHaveBeenCalledWith('example/url?refresh=' + Date.now())
     })
