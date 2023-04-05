@@ -307,6 +307,43 @@ trait SelfRegistrationTrait
         $this->pressButton('co_deputy_save');
     }
 
+    /**
+     * @Given a Lay Deputy registers with valid details using unicode characters
+     */
+    public function aLayDeputyRegistersWithValidDetailsUsingUnicodeChars()
+    {
+        $this->userEmail = 'brian@duck.co.uk';
+        $this->interactingWithUserDetails = new UserDetails(['userEmail' => $this->userEmail]);
+        $this->deputyUid = '15151515';
+
+        $this->visitFrontendPath('/register');
+
+        $this->fillInSelfRegistrationFieldsAndSubmit(
+            'Jeanne',
+            'd\'Arc',
+            $this->userEmail,
+            'B1',
+            'Test',
+            'O’Name',
+            '51515151',
+        );
+
+        $this->clickActivationOrPasswordResetLinkInEmail(false, 'activation', $this->userEmail);
+        $this->setPasswordAndTickTAndCs();
+        $this->pressButton('set_password_save');
+
+        $this->assertPageContainsText('Sign in to your new account');
+        $this->fillInField('login_email', $this->userEmail);
+        $this->fillInField('login_password', 'DigidepsPass1234');
+        $this->pressButton('login_login');
+
+        $this->fillUserDetailsAndSubmit();
+
+        $this->fillClientDetailsAndSubmit();
+
+        $this->fillInReportDetailsAndSubmit();
+    }
+
     private function setPasswordAndTickTAndCs(): void
     {
         $this->fillInField('set_password_password_first', 'DigidepsPass1234');
