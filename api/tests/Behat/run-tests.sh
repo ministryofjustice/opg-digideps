@@ -4,7 +4,7 @@ export BEHAT_PARAMS="{\"extensions\": {\"Behat\\\\MinkExtension\": {\"base_url\"
 export APP_ENV=dev
 
 confd -onetime -backend env
-# check if the last command exited with failure
+echo "==== Starting test run ===="
 ./vendor/bin/behat --config=./tests/Behat/behat.yml --rerun --profile v2-tests-browserkit $@
 if [ $? -ne 0 ]; then
     echo "==== Rerunning failed tests once ===="

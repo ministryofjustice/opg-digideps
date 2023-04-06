@@ -22,7 +22,6 @@ trait ActivateTrait
     public function preRegistrationDetailsExistToAllowALayDeputyToRegisterForTheService()
     {
         $this->existingPreRegistration = $this->fixtureHelper->createPreRegistration();
-        file_put_contents('php://stderr', print_r($this->existingPreRegistration->getCaseNumber(), true));
     }
 
     /**

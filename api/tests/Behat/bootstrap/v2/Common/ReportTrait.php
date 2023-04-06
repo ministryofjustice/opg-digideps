@@ -77,8 +77,7 @@ trait ReportTrait
         if (empty($this->layDeputyNotStartedPfaHighAssetsDetails)) {
             throw new \Exception('It looks like fixtures are not loaded - missing $layDeputyNotStartedPfaHighAssetsDetails');
         }
-        file_put_contents('php://stderr', print_r($this->layDeputyNotStartedPfaHighAssetsDetails->getClientCaseNumber(), true));
-        file_put_contents('php://stderr', print_r($this->layDeputyNotStartedPfaHighAssetsDetails->getUserEmail(), true));
+
         $this->loginToFrontendAs($this->layDeputyNotStartedPfaHighAssetsDetails->getUserEmail());
         $this->interactingWithUserDetails = $this->layDeputyNotStartedPfaHighAssetsDetails;
     }
