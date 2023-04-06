@@ -1,7 +1,7 @@
 import { describe, expect, it, jest } from '@jest/globals'
 import SessionTimeoutDialog from '../../modules_new/SessionTimeoutDialog'
 import { findByText, queryByText } from '@testing-library/dom'
-import { userEvent } from '@testing-library/user-event/setup/index'
+import { userEvent } from '@testing-library/user-event/dist/types/setup/index'
 
 // Required to test against .fetch API
 require('jest-fetch-mock').enableMocks()
