@@ -37,14 +37,3 @@ module "api_cache_security_group" {
   tags        = local.default_tags
   vpc_id      = data.aws_vpc.vpc.id
 }
-
-resource "aws_elasticache_parameter_group" "digideps" {
-  name   = "api-cache-params"
-  family = "redis5.0"
-
-  parameter {
-    name  = "maxmemory-policy"
-    value = "allkeys-lru"
-  }
-
-}
