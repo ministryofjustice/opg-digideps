@@ -56,7 +56,7 @@ class SnapshotManagement:
         self.DBClusterParameterGroup = 'default.aurora-postgresql10'
         self.DBSubnetGroup = 'private'
         self.Engine = 'aurora-postgresql'
-        self.EngineVersion = '10.18'
+        self.EngineVersion = '13.7'
         self.VpcSecurityGroups = None
         self.StorageEncrypted = True
         self.KmsKeyId = None
@@ -144,6 +144,7 @@ class SnapshotManagement:
         print(self.instances)
 
     def get_cluster_info(self):
+        print(f"source is {self.db_cluster_identifier_source}")
         response = self.client.describe_db_clusters(
             DBClusterIdentifier=self.db_cluster_identifier_source
         )
@@ -192,8 +193,7 @@ class SnapshotManagement:
                 DeletionProtection=self.DeletionProtection,
                 EngineMode=self.EngineMode,
                 KmsKeyId=self.KmsKeyId,
-                Tags=self.TagList,
-                HttpEndpointEnabled=self.HttpEndpointEnabled
+                Tags=self.TagList
             )
         else:
             response = self.client.restore_db_cluster_from_snapshot(
@@ -207,8 +207,7 @@ class SnapshotManagement:
                 DeletionProtection=self.DeletionProtection,
                 EngineMode=self.EngineMode,
                 KmsKeyId=self.KmsKeyId,
-                Tags=self.TagList,
-                HttpEndpointEnabled=self.HttpEndpointEnabled
+                Tags=self.TagList
             )
 
         self.command_response('Restore from snapshot', response)

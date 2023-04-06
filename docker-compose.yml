@@ -217,3 +217,19 @@ services:
   composer:
     image: composer:2.3.5
     command: ["install"]
+#  test:
+#    build: ./api
+#    depends_on:
+#      - localstack
+#      - mock-sirius-integration
+#    volumes:
+#      - ./api/tests/Behat:/var/www/tests/Behat
+#      - ./api/src:/var/www/src
+#      - ./api/tests/Behat/snapshots:/tmp/html
+#      - ./api/vendor:/var/www/vendor
+#    env_file:
+#      - ./api/api.env
+#      - ./api/tests/Behat/test.env
+#      - ./api/tests/Behat/.env
+#    environment:
+#      APP_ENV: dev

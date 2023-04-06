@@ -3,6 +3,6 @@
 *Branch:* {{ branch }}
 *Links*
     *GH Actions build url:* {{ gh_actions_build_url }}
-
+    *Owner:* @James Warren
 *Commit message:*
 {{ commit_message }}

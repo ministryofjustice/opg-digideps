@@ -4,4 +4,5 @@
 *Links*
     *Digideps Frontend:* {{ frontend_url }}
     *Digideps Admin:* {{ admin_url }}
+    *Owner:* @James Warren
     *GH Actions build url:* {{ gh_actions_build_url }}
