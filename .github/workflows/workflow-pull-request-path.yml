@@ -41,7 +41,7 @@ jobs:
       - name: extract variables for workflow
         id: variables
         run: |
-          echo "branch_formatted=$(echo ${GITHUB_HEAD_REF:-${GITHUB_REF##*/}} | tr -cd '[:alnum:]' | tr '[:upper:]' '[:lower:]' | cut -c1-8)" >> $GITHUB_OUTPUT
+          echo "branch_formatted=$(echo ${GITHUB_HEAD_REF:-${GITHUB_REF##*/}} | awk -F'_' '{print $1}' | tr -cd '[:alnum:]' | tr '[:upper:]' '[:lower:]' | cut -c1-9)" >> $GITHUB_OUTPUT
           echo "short_sha=$(echo ${GITHUB_SHA:0:7})" >> $GITHUB_OUTPUT
       - uses: actions/labeler@main
         if: github.event_name == 'pull_request'
