@@ -31,8 +31,10 @@ class MessageGenerator:
         gh_repository = str(os.getenv('GITHUB_REPOSITORY', ''))
         gh_run_id = str(os.getenv('GITHUB_RUN_ID', ''))
 
-        frontend_url = f'https://{branch}.complete-deputy-report.service.gov.uk'
-        admin_url = f'https://admin.{branch}.complete-deputy-report.service.gov.uk'
+        frontend_url = 'https://complete-deputy-report.service.gov.uk' if branch == 'main' \
+            else f'https://{branch}.complete-deputy-report.service.gov.uk'
+        admin_url = 'https://admin.complete-deputy-report.service.gov.uk' if branch == 'main' \
+            else f'https://admin.{branch}.complete-deputy-report.service.gov.uk'
 
         mapping = {
             'frontend_url': frontend_url if frontend_url is not None else 'Frontend URL not provided',
