@@ -23,8 +23,8 @@ Feature: Lay Deputy Self Registration
     Scenario: A Lay user with an existing pre-registration record can self register
         Given a super admin user accesses the admin app
         When I navigate to the upload users page
-        And I upload a lay CSV that contains a new pre-registration entity with special characters
-        And a Lay Deputy registers with valid details using unicode characters
+        And I upload a lay CSV that contains 3 new pre-registration entities
+        And a Lay Deputy registers to deputise for a client with valid details
         Then my deputy details should be saved to my account
         And I should be on the Lay homepage
 
@@ -32,8 +32,8 @@ Feature: Lay Deputy Self Registration
     Scenario: A Lay user inputting unicode characters can self register
         Given a super admin user accesses the admin app
         When I navigate to the upload users page
-        And I upload a lay CSV that contains 3 new pre-registration entities
-        And a Lay Deputy registers to deputise for a client with valid details
+        And I upload a lay CSV that contains a new pre-registration entity with special characters
+        And a Lay Deputy registers with valid details using unicode characters
         Then my deputy details should be saved to my account
         And I should be on the Lay homepage
 

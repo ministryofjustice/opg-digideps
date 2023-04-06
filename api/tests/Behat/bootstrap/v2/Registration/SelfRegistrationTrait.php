@@ -312,7 +312,7 @@ trait SelfRegistrationTrait
      */
     public function aLayDeputyRegistersWithValidDetailsUsingUnicodeChars()
     {
-        $this->userEmail = 'brian@duck.co.uk';
+        $this->userEmail = 'jeanne@darc.co.uk';
         $this->interactingWithUserDetails = new UserDetails(['userEmail' => $this->userEmail]);
         $this->deputyUid = '15151515';
 
