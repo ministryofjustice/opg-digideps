@@ -452,6 +452,23 @@ trait IngestTrait
         $this->uploadCsvAndCountCreatedEntities($filePath, 'Upload Lay users');
     }
 
+    /**
+     * @When I upload a lay CSV that contains a new pre-registration entity with special characters
+     */
+    public function iUploadCsvContainingPreRegistrationEntityWithSpecialChars()
+    {
+        $this->iamOnAdminUploadUsersPage();
+
+        $this->preRegistration['expected'] = 1;
+
+        $this->selectOption('form[type]', 'lay');
+        $this->pressButton('Continue');
+
+        $filePath = 'sirius-csvs/lay-1-row-special-chars.csv';
+
+        $this->uploadCsvAndCountCreatedEntities($filePath, 'Upload Lay users');
+    }
+
     private function iAmOnCorrectUploadPage(string $type)
     {
         if (!in_array(strtolower($type), ['org', 'lay', 'pa'])) {
