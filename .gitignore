@@ -16,11 +16,12 @@ lib/
 node_modules/
 var/
 vendor/
-!ecs_helper/vendor/
+!ecs-helper/vendor/
 
 # Terraform
 .terraform/
 **/terraform.output.json
+**/terraform.output.json.enc
 **/terraform.plan*
 **/shared/builds
 
@@ -33,9 +34,9 @@ log/pact.log
 
 # Lambda specific
 *lambda*.zip
-!lambda_functions/layers/monitoring/python/lib/python3.7/site-packages/psycopg2
-!lambda_functions/layers/monitoring/python/lib/python3.7/site-packages/README.md
-lambda_functions/layers/monitoring/python/lib/python3.7/site-packages/
+!lambdas/layers/monitoring/python/lib/python3.7/site-packages/psycopg2
+!lambdas/layers/monitoring/python/lib/python3.7/site-packages/README.md
+lambdas/layers/monitoring/python/lib/python3.7/site-packages/
 *__pycache__*
 *venv*
 

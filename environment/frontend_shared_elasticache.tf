@@ -1,7 +1,7 @@
 resource "aws_elasticache_replication_group" "frontend" {
   automatic_failover_enabled = local.account.elasticache_count == 1 ? false : true
   engine                     = "redis"
-  engine_version             = "5.0.0"
+  engine_version             = "5.0.6"
   replication_group_id       = "frontend-rep-group-${local.environment}"
   description                = "Replication Group for Front and Admin"
   node_type                  = "cache.t2.micro"

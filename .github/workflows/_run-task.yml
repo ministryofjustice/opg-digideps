@@ -1,0 +1,81 @@
+on:
+  workflow_call:
+    inputs:
+      workspace:
+        description: "Workspace"
+        required: true
+        type: string
+      task_name:
+        description: "Name of the task to run"
+        required: true
+        type: string
+      timeout:
+        description: "Timeout for the task"
+        required: false
+        default: 120
+        type: string
+      override:
+        description: "Override for the task"
+        required: false
+        default: ""
+        type: string
+jobs:
+  run-task:
+    runs-on: ubuntu-latest
+    steps:
+      - uses: actions/checkout@24cb9080177205b6e8c946b17badbe402adc938f # pin@v3
+
+      - uses: unfor19/install-aws-cli-action@35a9630be0168293ad2afccbe06e8e9f47678d2c # pin@v1.0.3
+
+      - uses: hashicorp/setup-terraform@17d4c9b8043b238f6f35641cdd8433da1e6f3867 # pin@v2.0.0
+        with:
+          terraform_version: 1.2.4
+          terraform_wrapper: false
+
+      - name: configure AWS credentials for terraform
+        uses: aws-actions/configure-aws-credentials@67fbcbb121271f7775d2e7715933280b06314838 # pin@v1.7.0
+        with:
+          aws-access-key-id: ${{ secrets.AWS_ACCESS_KEY_ID_ACTIONS }}
+          aws-secret-access-key: ${{ secrets.AWS_SECRET_ACCESS_KEY_ACTIONS }}
+          aws-region: eu-west-1
+          role-duration-seconds: 1800
+          role-session-name: OPGDigidepsRunTaskGithubAction
+
+      - uses: webfactory/ssh-agent@fc49353b67b2b7c1e0e6a600572d01a69f2672dd # pin@v0.5.4
+        with:
+          ssh-private-key: ${{ secrets.SSH_PRIVATE_KEY_ALLOW_LIST_REPOSITORY }}
+
+      - name: terraform init
+        env:
+          TF_WORKSPACE: ${{ inputs.workspace }}
+        run: terraform init
+        working-directory: environment
+
+      - name: terraform output
+        env:
+          TF_WORKSPACE: ${{ inputs.workspace }}
+        run: |
+          echo $TF_WORKSPACE
+          terraform output -json > terraform.output.json
+        working-directory: environment
+
+      - name: install runner
+        run: go install -mod vendor ./cmd/runner
+        working-directory: ecs-helper
+
+      - name: run task
+        env:
+          OVERRIDE: ${{ inputs.override }}
+          TASK_NAME: ${{ inputs.task_name }}
+          TIMEOUT: ${{ inputs.timeout }}
+        run: |
+          echo ${TASK_NAME}
+          echo ${TIMEOUT}
+          echo ${OVERRIDE}
+          if [ "${OVERRIDE}" == "" ]
+          then
+            /home/runner/go/bin/runner -task ${TASK_NAME} -timeout ${TIMEOUT}
+          else
+            /home/runner/go/bin/runner -task ${TASK_NAME} -timeout ${TIMEOUT} -override ${OVERRIDE}
+          fi
+        working-directory: environment

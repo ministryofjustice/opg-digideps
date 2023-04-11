@@ -6,7 +6,7 @@ resource "aws_elasticache_replication_group" "api" {
   description                = "Replication Group for API"
   node_type                  = "cache.t2.micro"
   num_cache_clusters         = local.account.elasticache_count
-  parameter_group_name       = "default.redis5.0"
+  parameter_group_name       = "api-cache-params"
   port                       = 6379
   subnet_group_name          = local.account.ec_subnet_group
   security_group_ids         = [module.api_cache_security_group.id]

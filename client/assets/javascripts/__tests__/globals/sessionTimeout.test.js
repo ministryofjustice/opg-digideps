@@ -1,4 +1,4 @@
-import SessionTimeout from '../../globals/sessionTimeout'
+import SessionTimeout from '../../globals/SessionTimeout'
 import { describe, it, expect, jest } from '@jest/globals'
 import SessionTimeoutDialog from '../../modules_new/SessionTimeoutDialog'
 

@@ -37,7 +37,7 @@ services:
       - LAMBDA_FORWARD_URL=http://synchronisation:8080
 
   wait-for-it:
-    build: ./wait_for_it
+    build: ./wait-for-it
 
   #    pa11y:
   #        build:
@@ -152,7 +152,7 @@ services:
 
   file-scanner-rest:
     build:
-      context: ./file_scanning
+      context: ./file-scanner
     ports:
       - 8085:8080
 
@@ -202,7 +202,7 @@ services:
   synchronisation:
     container_name: opg-synchronisation-lambda
     build:
-      context: ./lambda_functions/functions/synchronisation
+      context: ./lambdas/functions/synchronisation
     ports:
       - 2080:8080
     environment:
@@ -216,4 +216,4 @@ services:
 
   composer:
     image: composer:2.3.5
-    command: [ "install" ]
+    command: ["install"]

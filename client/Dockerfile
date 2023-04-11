@@ -1,59 +1,49 @@
-FROM node:18.13.0-alpine AS webpack
+FROM node:18.14.2-alpine AS webpack
 WORKDIR /app
-
 COPY package.json .
 COPY package-lock.json .
 COPY webpack.config.js .
 COPY templates templates
 COPY assets assets
 COPY translations translations
-
 # Install NPM dependencies
 RUN npm install
-
 # Check linting
 RUN npm run lint
 RUN npm audit --production
-
 #Build assets
 RUN NODE_ENV=production npm run build
 
-FROM composer:2.4.4 AS composer
+FROM composer:2.5.4 AS composer
 WORKDIR /app
-
 RUN apk update
-
 RUN apk add libpng libpng-dev libjpeg-turbo-dev libwebp-dev zlib-dev libxpm-dev
-
 RUN composer --version
 # Install composer dependencies
 COPY composer.json .
 COPY composer.lock .
 # Remove '--ignore-platform-req=php' when we move to php 8
 RUN composer install --prefer-dist --no-interaction --no-scripts --ignore-platform-req=php
-
 COPY app app
 COPY config config
 COPY src src
 RUN composer run-script post-install-cmd --no-interaction
 RUN composer dump-autoload --optimize
 
-FROM php:8.1.16-fpm-alpine3.16
+FROM php:8.1.16-fpm-alpine3.16 as base
 WORKDIR /var/www
 EXPOSE 80
 EXPOSE 443
 ENV TIMEOUT=60
 ENV PHP_EXT_DIR=/usr/local/lib/php/extensions/no-debug-non-zts-20210902/
-
 # Install core PHP extensions
 RUN apk add --no-cache openssl nginx nginx-mod-http-headers-more su-exec postgresql-client libzip-dev unzip php8-pecl-igbinary php8-pecl-redis php8-pecl-imagick gmp gmp-dev
+RUN apk upgrade libxml2 openssl libssl1.1 libcrypto1.1 libretls zlib busybox curl gzip xz xz-libs libcurl
 RUN docker-php-ext-install pcntl zip opcache gmp
 RUN docker-php-ext-enable opcache
-
 # Install pcov for faster coverage tooling
 RUN apk add --no-cache autoconf build-base
 RUN pecl install pcov && docker-php-ext-enable pcov
-
 # Install Xdebug if directed to with build arg from docker-compose.yml
 ARG REQUIRE_XDEBUG=0
 ARG XDEBUG_IDEKEY_CLIENT=PHPSTORM
@@ -66,32 +56,35 @@ RUN if [[ $REQUIRE_XDEBUG = 1 ]] ; then \
     echo "xdebug.log = /tmp/xdebug.log" >> /usr/local/etc/php/conf.d/docker-php-ext-xdebug.ini ; \
     echo "xdebug.idekey = ${XDEBUG_IDEKEY_CLIENT}" >> /usr/local/etc/php/conf.d/docker-php-ext-xdebug.ini ; \
     fi ;
-
 # Route NGINX logs to stdout/stderr
 RUN ln -sf /dev/stdout /var/log/nginx/access.log \
     && ln -sf /dev/stderr /var/log/nginx/error.log \
     && ln -s /etc/nginx/http.d /etc/nginx/conf.d
-
 # Add Confd to configure parameters on start
 ENV CONFD_VERSION="0.16.0"
 RUN wget -q -O /usr/local/bin/confd "https://github.com/kelseyhightower/confd/releases/download/v${CONFD_VERSION}/confd-${CONFD_VERSION}-linux-amd64" \
     && chmod +x /usr/local/bin/confd
-
 # Add Waitforit to wait on API starting
 ENV WAITFORIT_VERSION="v2.4.1"
 RUN wget -q -O /usr/local/bin/waitforit https://github.com/maxcnunes/waitforit/releases/download/$WAITFORIT_VERSION/waitforit-linux_amd64 \
     && chmod +x /usr/local/bin/waitforit
-
 # Generate certificate
 RUN mkdir -p /etc/nginx/certs
 RUN openssl req -newkey rsa:4096 -x509 -nodes -keyout /etc/nginx/certs/app.key -new -out /etc/nginx/certs/app.crt -subj "/C=GB/ST=GB/L=London/O=OPG/OU=Digital/CN=default" -sha256 -days "3650"
-
+# Create var directories
 RUN mkdir -p var/cache \
     && mkdir -p var/logs \
     && mkdir -p /var/log/app \
     && chown -R www-data var \
     && chown -R www-data /var/log/app
+# Add common passwords file. Two options to combat flakey responses from site.
+COPY docker/extra/commonpasswords.txt /tmp/commonpasswords.txt
+RUN wget -q -O /tmp/commonpasswords.txt "https://www.ncsc.gov.uk/static-assets/documents/PwnedPasswordsTop100k.txt" \
+    || echo 'using local copy of pwnedpasswords' \
+    && chown www-data /tmp/commonpasswords.txt
 
+
+FROM base
 COPY --from=composer /app/app app
 COPY --from=composer /app/vendor/bin bin
 COPY --from=composer /app/vendor vendor
@@ -111,18 +104,9 @@ COPY phpstan.neon .
 COPY docker/confd /etc/confd
 COPY frontend.env frontend.env
 COPY admin.env admin.env
-
 RUN chown -R www-data scripts
-
-# Add common passwords file. Two options to combat flakey responses from site.
-COPY docker/extra/commonpasswords.txt /tmp/commonpasswords.txt
-RUN wget -q -O /tmp/commonpasswords.txt "https://www.ncsc.gov.uk/static-assets/documents/PwnedPasswordsTop100k.txt" \
-    || echo 'using local copy of pwnedpasswords' \
-    && chown www-data /tmp/commonpasswords.txt
-
 # Prebuild cache
 RUN su-exec www-data php -d memory_limit=-1 app/console cache:warmup
-
 RUN apk upgrade libxml2 openssl libssl1.1 libcrypto1.1 libretls zlib busybox curl gzip xz xz-libs libcurl tar
 
 CMD confd -onetime -backend env \
