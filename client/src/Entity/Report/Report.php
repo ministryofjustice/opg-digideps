@@ -10,7 +10,6 @@ use App\Validator\Constraints as AppAssert;
 use App\Validator\Constraints\StartEndDateComparableInterface;
 use DateTime;
 use JMS\Serializer\Annotation as JMS;
-use RuntimeException;
 use Symfony\Component\Validator\Constraints as Assert;
 
 /**
@@ -66,6 +65,10 @@ class Report implements ReportInterface, StartEndDateComparableInterface
 
     public const BENEFITS_CHECK_SECTION_REQUIRED_GRACE_PERIOD_DAYS = 60;
 
+    // Decisions
+    public const SIGNIFICANT_DECISION_MADE = 'Yes';
+    public const SIGNIFICANT_DECISION_NOT_MADE = 'No';
+
     /**
      * @JMS\Type("integer")
      * @JMS\Groups({"visits-care", "report-id"})
@@ -94,22 +97,20 @@ class Report implements ReportInterface, StartEndDateComparableInterface
     /**
      * @JMS\Type("DateTime<'Y-m-d'>")
      * @JMS\Groups({"startEndDates"})
-     *
      * @Assert\NotBlank( message="report.startDate.notBlank", groups={"start-end-dates"} )
      * @Assert\Type(type="DateTimeInterface", message="report.startDate.invalidMessage", groups={"start-end-dates"} )
      *
-     * @var DateTime|null
+     * @var \DateTime|null
      */
     private $startDate;
 
     /**
      * @JMS\Type("DateTime<'Y-m-d'>")
      * @JMS\Groups({"startEndDates"})
-     *
      * @Assert\NotBlank( message="report.endDate.notBlank", groups={"start-end-dates"} )
      * @Assert\Type(type="DateTimeInterface", message="report.endDate.invalidMessage", groups={"start-end-dates"} )
      *
-     * @var DateTime|null
+     * @var \DateTime|null
      */
     private $endDate;
 
@@ -124,12 +125,12 @@ class Report implements ReportInterface, StartEndDateComparableInterface
      * @JMS\Type("DateTime<'Y-m-d'>")
      * @JMS\Groups({"report_due_date"})
      *
-     * @var DateTime|null
+     * @var \DateTime|null
      */
     private $dueDate;
 
     /**
-     * @var DateTime|null
+     * @var \DateTime|null
      *
      * @JMS\Type("DateTime")
      * @JMS\Groups({"submit"})
@@ -137,7 +138,7 @@ class Report implements ReportInterface, StartEndDateComparableInterface
     private $submitDate;
 
     /**
-     * @var DateTime|null
+     * @var \DateTime|null
      *
      * @JMS\Type("DateTime<'Y-m-d'>")
      * @JMS\Groups({"unsubmit_date"})
@@ -226,7 +227,6 @@ class Report implements ReportInterface, StartEndDateComparableInterface
     /**
      * @JMS\Type("string")
      * @JMS\Groups({"reasonForNoContacts"})
-     *
      * @Assert\NotBlank( message="contact.reasonForNoContacts.notBlank", groups={"reasonForNoContacts"})
      *
      * @var string|null
@@ -235,8 +235,13 @@ class Report implements ReportInterface, StartEndDateComparableInterface
 
     /**
      * @JMS\Type("string")
+     * @JMS\Groups({"report","significantDecisionsMade"})
+     */
+    private $significantDecisionsMade;
+
+    /**
+     * @JMS\Type("string")
      * @JMS\Groups({"reasonForNoDecisions"})
-     *
      * @Assert\NotBlank( message="decision.reasonForNoDecisions.notBlank", groups={"reason-no-decisions"})
      *
      * @var string|null
@@ -268,8 +273,8 @@ class Report implements ReportInterface, StartEndDateComparableInterface
 
     /**
      * @var bool
-     * @JMS\Type("boolean")
      *
+     * @JMS\Type("boolean")
      * @Assert\IsTrue(message="report.agree", groups={"declare"} )
      */
     private $agree;
@@ -279,7 +284,6 @@ class Report implements ReportInterface, StartEndDateComparableInterface
      *
      * @JMS\Type("string")
      * @JMS\Groups({"report","submit", "submit_agreed"})
-     *
      * @Assert\NotBlank(message="report.agreedBehalfDeputy.notBlank", groups={"declare"} )
      */
     private $agreedBehalfDeputy;
@@ -289,7 +293,6 @@ class Report implements ReportInterface, StartEndDateComparableInterface
      *
      * @JMS\Type("string")
      * @JMS\Groups({"report","submit", "submit_agreed"})
-     *
      * @Assert\NotBlank(message="report.agreedBehalfDeputyExplanation.notBlank", groups={"declare-explanation"} )
      */
     private $agreedBehalfDeputyExplanation;
@@ -328,7 +331,6 @@ class Report implements ReportInterface, StartEndDateComparableInterface
     /**
      * @JMS\Type("string")
      * @JMS\Groups({"report", "wish-to-provide-documentation", "report-documents"})
-     *
      * @Assert\NotBlank(message="document.wishToProvideDocumentation.notBlank", groups={"wish-to-provide-documentation"})
      */
     private $wishToProvideDocumentation;
@@ -425,7 +427,7 @@ class Report implements ReportInterface, StartEndDateComparableInterface
     }
 
     /**
-     * @return DateTime|null
+     * @return \DateTime|null
      */
     public function getStartDate()
     {
@@ -435,9 +437,9 @@ class Report implements ReportInterface, StartEndDateComparableInterface
     /**
      * @return Report
      */
-    public function setStartDate(DateTime $startDate = null)
+    public function setStartDate(\DateTime $startDate = null)
     {
-        if ($startDate instanceof DateTime) {
+        if ($startDate instanceof \DateTime) {
             $startDate->setTime(0, 0, 0);
         }
         $this->startDate = $startDate;
@@ -446,17 +448,14 @@ class Report implements ReportInterface, StartEndDateComparableInterface
     }
 
     /**
-     * @return DateTime|null $endDate
+     * @return \DateTime|null $endDate
      */
     public function getEndDate()
     {
         return $this->endDate;
     }
 
-    /**
-     * @return Report
-     */
-    public function setDueDate(DateTime $dueDate = null): self
+    public function setDueDate(\DateTime $dueDate = null): self
     {
         $this->dueDate = $dueDate;
 
@@ -468,7 +467,7 @@ class Report implements ReportInterface, StartEndDateComparableInterface
      *
      * as a default, 8 weeks after the end date
      *
-     * @return DateTime|null $dueDate
+     * @return \DateTime|null $dueDate
      */
     public function getDueDate()
     {
@@ -483,13 +482,13 @@ class Report implements ReportInterface, StartEndDateComparableInterface
      *
      * @return int|void
      */
-    public function getDueDateDiffDays(DateTime $currentDate = null)
+    public function getDueDateDiffDays(\DateTime $currentDate = null)
     {
         if (is_null($this->getDueDate())) {
             return;
         }
 
-        $currentDate = $currentDate ? $currentDate : new DateTime();
+        $currentDate = $currentDate ? $currentDate : new \DateTime();
 
         // clone and set time to 0,0,0 (might not be needed)
         $currentDate = clone $currentDate;
@@ -505,7 +504,7 @@ class Report implements ReportInterface, StartEndDateComparableInterface
     /**
      * Get submitDate.
      *
-     * @return DateTime|null
+     * @return \DateTime|null
      */
     public function getSubmitDate()
     {
@@ -515,7 +514,7 @@ class Report implements ReportInterface, StartEndDateComparableInterface
     /**
      * @return Report
      */
-    public function setSubmitDate(DateTime $submitDate = null)
+    public function setSubmitDate(\DateTime $submitDate = null)
     {
         $this->submitDate = $submitDate;
 
@@ -523,7 +522,7 @@ class Report implements ReportInterface, StartEndDateComparableInterface
     }
 
     /**
-     * @return DateTime|null
+     * @return \DateTime|null
      */
     public function getUnSubmitDate()
     {
@@ -531,11 +530,11 @@ class Report implements ReportInterface, StartEndDateComparableInterface
     }
 
     /**
-     * @param DateTime $unSubmitDate
+     * @param \DateTime $unSubmitDate
      *
      * @return Report
      */
-    public function setUnSubmitDate(?DateTime $unSubmitDate)
+    public function setUnSubmitDate(?\DateTime $unSubmitDate)
     {
         $this->unSubmitDate = $unSubmitDate;
 
@@ -550,9 +549,6 @@ class Report implements ReportInterface, StartEndDateComparableInterface
         return $this->submittedBy;
     }
 
-    /**
-     * @return Report
-     */
     public function setSubmittedBy(?User $submittedBy): self
     {
         $this->submittedBy = $submittedBy;
@@ -561,13 +557,13 @@ class Report implements ReportInterface, StartEndDateComparableInterface
     }
 
     /**
-     * @param DateTime $endDate
+     * @param \DateTime $endDate
      *
      * @return Report
      */
-    public function setEndDate(DateTime $endDate = null)
+    public function setEndDate(\DateTime $endDate = null)
     {
-        if ($endDate instanceof DateTime) {
+        if ($endDate instanceof \DateTime) {
             $endDate->setTime(23, 59, 59);
         }
         $this->endDate = $endDate;
@@ -578,7 +574,7 @@ class Report implements ReportInterface, StartEndDateComparableInterface
     /**
      * Generates next reporting period's start date.
      *
-     * @return DateTime|null
+     * @return \DateTime|null
      */
     public function getNextStartDate()
     {
@@ -602,7 +598,7 @@ class Report implements ReportInterface, StartEndDateComparableInterface
      * Generates next reporting period's end date.
      * Note: Date diff returns 'difference' and so 1 day needs to be added.
      *
-     * @return DateTime|null
+     * @return \DateTime|null
      */
     public function getNextEndDate()
     {
@@ -632,7 +628,7 @@ class Report implements ReportInterface, StartEndDateComparableInterface
      */
     private function calculateReportingPeriod($format = '%a')
     {
-        if ($this->getStartDate() instanceof DateTime && $this->getEndDate() instanceof DateTime) {
+        if ($this->getStartDate() instanceof \DateTime && $this->getEndDate() instanceof \DateTime) {
             // add one day because difference doesn't include end date itself
             return $this->getStartDate()->diff($this->getEndDate())->format($format);
         }
@@ -652,7 +648,7 @@ class Report implements ReportInterface, StartEndDateComparableInterface
             return $this->period;
         }
 
-        if (!$this->startDate instanceof DateTime || !$this->endDate instanceof DateTime) {
+        if (!$this->startDate instanceof \DateTime || !$this->endDate instanceof \DateTime) {
             return $this->period;
         }
 
@@ -750,17 +746,29 @@ class Report implements ReportInterface, StartEndDateComparableInterface
         return null;
     }
 
-    /**
-     * @return string|null
-     */
-    public function hasDecisions()
+    public function getSignificantDecisionsMade()
     {
-        if (empty($this->getDecisions()) && !$this->getReasonForNoDecisions()) {
-            return null;
-        }
-
-        return $this->getReasonForNoDecisions() ? 'no' : 'yes';
+        return $this->significantDecisionsMade;
     }
+
+    public function setSignificantDecisionsMade($significantDecisionsMade)
+    {
+        $this->significantDecisionsMade = $significantDecisionsMade;
+
+        return $this;
+    }
+
+//    /**
+//     * @return string|null
+//     */
+//    public function hasDecisions()
+//    {
+//        if (empty($this->getDecisions()) && !$this->getReasonForNoDecisions()) {
+//            return null;
+//        }
+//
+//        return $this->getReasonForNoDecisions() ? 'no' : 'yes';
+//    }
 
     public function setHasDecisions($value)
     {
@@ -998,8 +1006,6 @@ class Report implements ReportInterface, StartEndDateComparableInterface
 
     /**
      * @param Document[] $submittedDocuments
-     *
-     * @return Report
      */
     public function setSubmittedDocuments(array $submittedDocuments): self
     {
@@ -1091,13 +1097,13 @@ class Report implements ReportInterface, StartEndDateComparableInterface
         $submitDate = $this->getSubmitDate();
 
         if (is_null($endDate)) {
-            throw new RuntimeException('Cannot create an attachment for a report with no end date');
+            throw new \RuntimeException('Cannot create an attachment for a report with no end date');
         }
 
         $attachmentName = sprintf(
             $format,
             $endDate->format('Y'),
-            $submitDate instanceof DateTime ? $submitDate->format('Y-m-d') : 'n-a-', // some old reports have no submission date
+            $submitDate instanceof \DateTime ? $submitDate->format('Y-m-d') : 'n-a-', // some old reports have no submission date
             $this->getClient()->getCaseNumber()
         );
 
@@ -1288,8 +1294,6 @@ class Report implements ReportInterface, StartEndDateComparableInterface
 
     /**
      * @param ReportSubmission[] $reportSubmissions
-     *
-     * @return Report
      */
     public function setReportSubmissions(array $reportSubmissions): self
     {

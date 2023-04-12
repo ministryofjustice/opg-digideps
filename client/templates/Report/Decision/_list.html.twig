@@ -96,7 +96,7 @@
 
     {# decisions #}
     <div class="govuk-summary-list__row behat-region-has-decisions">
-        {% if not report.hasDecisions %}
+        {% if not report.significantDecisionsMade == 'No' %}
             <dt class="govuk-summary-list__key">
                 <span class="error">
                     {{ 'existPage.form.hasDecisions.label' | trans(transOptions) }}
@@ -110,11 +110,7 @@
                 {{ 'existPage.form.hasDecisions.label' | trans(transOptions) }}
             </dt>
             <dd class="govuk-summary-list__value">
-                {% if numOfDecisions > 0 %}
-                    Yes
-                {% else %}
-                    No
-                {% endif %}
+                {{ report.significantDecisionsMade }}
             </dd>
         {% endif %}
         {% if not hideEditLink  %}
