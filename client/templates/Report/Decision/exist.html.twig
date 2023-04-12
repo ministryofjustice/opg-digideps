@@ -19,8 +19,8 @@
 
     {{ form_start(form, {attr: {novalidate: 'novalidate' }}) }}
 
-        <div class="govuk-form-group {% if not form.hasDecisions.vars.valid %}govuk-form-group--error{% endif %}">
-            {{ form_checkbox_group(form.hasDecisions, (page ~ '.form.hasDecisions'), {
+        <div class="govuk-form-group {% if not form.significantDecisionsMade.vars.valid %}govuk-form-group--error{% endif %}">
+            {{ form_checkbox_group(form.significantDecisionsMade, (page ~ '.form.hasDecisions'), {
                 'useFormGroup': false,
                 'labelParameters': transOptions,
                 legend: {

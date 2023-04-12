@@ -71,6 +71,9 @@ existPage:
     hasDecisions:
       label: Have you made any significant decisions for %client% during this reporting period?
       hint: ""
+    choices:
+      yes: Yes
+      no: No
     reasonForNoDecisions:
       label: Please give us an explanation
       hint: ""
