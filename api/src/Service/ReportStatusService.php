@@ -13,12 +13,12 @@ use JMS\Serializer\Annotation as JMS;
  */
 class ReportStatusService
 {
-    const STATE_NOT_STARTED = 'not-started';
-    const STATE_INCOMPLETE = 'incomplete';
-    const STATE_DONE = 'done';
-    const STATE_NOT_MATCHING = 'not-matching'; //only used for balance section
-    const STATE_EXPLAINED = 'explained'; //only used for balance section
-    const ENABLE_STATUS_CACHE = true;
+    public const STATE_NOT_STARTED = 'not-started';
+    public const STATE_INCOMPLETE = 'incomplete';
+    public const STATE_DONE = 'done';
+    public const STATE_NOT_MATCHING = 'not-matching'; // only used for balance section
+    public const STATE_EXPLAINED = 'explained'; // only used for balance section
+    public const ENABLE_STATUS_CACHE = true;
 
     /**
      * @JMS\Exclude
@@ -38,8 +38,6 @@ class ReportStatusService
     }
 
     /**
-     * @param $useStatusCache
-     *
      * @return $this
      */
     public function setUseStatusCache($useStatusCache)
@@ -60,7 +58,7 @@ class ReportStatusService
     {
         $hasDecisions = count($this->report->getDecisions()) > 0;
 
-        if (!$hasDecisions && !$this->report->getReasonForNoDecisions() && !$this->report->getMentalCapacity()) {
+        if (!$hasDecisions && !$this->report->getSignificantDecisionsMade() && !$this->report->getMentalCapacity()) {
             return ['state' => self::STATE_NOT_STARTED, 'nOfRecords' => 0];
         }
 
@@ -588,7 +586,7 @@ class ReportStatusService
                 return $this->getVisitsCareState();
             case Report::SECTION_LIFESTYLE:
                 return $this->getLifestyleState();
-            // money
+                // money
             case Report::SECTION_CLIENT_BENEFITS_CHECK:
                 return $this->getClientBenefitsCheckState();
             case Report::SECTION_BALANCE:
@@ -611,24 +609,24 @@ class ReportStatusService
                 return $this->getDebtsState();
             case Report::SECTION_GIFTS:
                 return $this->getGiftsState();
-            // end money
+                // end money
             case Report::SECTION_ACTIONS:
                 return $this->getActionsState();
             case Report::SECTION_OTHER_INFO:
                 return $this->getOtherInfoState();
             case Report::SECTION_DEPUTY_EXPENSES:
                 return $this->getExpensesState();
-            // pa
+                // pa
             case Report::SECTION_PA_DEPUTY_EXPENSES:
                 return $this->getPaFeesExpensesState();
-            // prof
+                // prof
             case Report::SECTION_PROF_CURRENT_FEES:
                 return $this->getProfCurrentFeesState();
             case Report::SECTION_PROF_DEPUTY_COSTS:
                 return $this->getProfDeputyCostsState();
             case Report::SECTION_PROF_DEPUTY_COSTS_ESTIMATE:
                 return $this->getProfDeputyCostsEstimateState();
-            // documents
+                // documents
             case Report::SECTION_DOCUMENTS:
                 return $this->getDocumentsState();
             default:
@@ -651,7 +649,7 @@ class ReportStatusService
 
         $ret = [];
         foreach ($this->report->getAvailableSections() as $sectionId) {
-            if (self::ENABLE_STATUS_CACHE && $this->useStatusCache) { //get cached value if exists
+            if (self::ENABLE_STATUS_CACHE && $this->useStatusCache) { // get cached value if exists
                 $ret[$sectionId] = isset($statusCached[$sectionId]['state'])
                     ? $statusCached[$sectionId]['state']
                     : self::STATE_NOT_STARTED; // should never happen, unless cron didn't update when this feature was firstly introduced
@@ -688,7 +686,7 @@ class ReportStatusService
         }
     }
 
- /**
+    /**
      * @JMS\VirtualProperty
      * @JMS\Type("array")
      * @JMS\Groups({"status", "client-benefits-check-state"})
@@ -708,7 +706,7 @@ class ReportStatusService
                 return ['state' => self::STATE_NOT_STARTED, 'nOfRecords' => 0];
             case 2:
                 if (in_array($answers['doOthersReceiveIncome'], [ClientBenefitsCheck::OTHER_MONEY_DONT_KNOW, ClientBenefitsCheck::OTHER_MONEY_NO])) {
-                     return ['state' => self::STATE_DONE, 'nOfRecords' => 0];
+                    return ['state' => self::STATE_DONE, 'nOfRecords' => 0];
                 } else {
                     return ['state' => self::STATE_INCOMPLETE, 'nOfRecords' => 0];
                 }
@@ -718,7 +716,7 @@ class ReportStatusService
             default:
                 return ['state' => self::STATE_INCOMPLETE, 'nOfRecords' => 0];
         }
-    }    
+    }
 
     /**
      * @JMS\Exclude

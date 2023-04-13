@@ -1137,7 +1137,7 @@ class Report implements ReportInterface
         return $this;
     }
 
-    public function getSignificantDecisionsMade(): string
+    public function getSignificantDecisionsMade(): ?string
     {
         return $this->significantDecisionsMade;
     }
