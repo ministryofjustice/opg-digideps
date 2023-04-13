@@ -12,7 +12,7 @@ resource "aws_cloudwatch_log_metric_filter" "php_critical_errors" {
 }
 
 resource "aws_cloudwatch_metric_alarm" "php_critical_errors" {
-  alarm_name          = "CriticalPHPErrors.${local.environment}"
+  alarm_name          = "${local.environment}-critical-php-errors"
   statistic           = "Sum"
   metric_name         = aws_cloudwatch_log_metric_filter.php_critical_errors.metric_transformation[0].name
   comparison_operator = "GreaterThanOrEqualToThreshold"
@@ -40,7 +40,7 @@ resource "aws_cloudwatch_log_metric_filter" "php_errors" {
 }
 
 resource "aws_cloudwatch_metric_alarm" "php_errors" {
-  alarm_name          = "PHPErrors.${local.environment}"
+  alarm_name          = "${local.environment}-php-errors"
   statistic           = "Sum"
   metric_name         = aws_cloudwatch_log_metric_filter.php_errors.metric_transformation[0].name
   comparison_operator = "GreaterThanOrEqualToThreshold"
@@ -67,7 +67,7 @@ resource "aws_cloudwatch_log_metric_filter" "queued_documents" {
 }
 
 resource "aws_cloudwatch_metric_alarm" "queued_documents" {
-  alarm_name          = "QueuedDocsOver1Hr.${local.environment}"
+  alarm_name          = "${local.environment}-queued-docs-over-1hr"
   statistic           = "Sum"
   metric_name         = aws_cloudwatch_log_metric_filter.queued_documents.metric_transformation[0].name
   comparison_operator = "GreaterThanOrEqualToThreshold"
@@ -103,7 +103,7 @@ resource "aws_cloudwatch_metric_alarm" "availability-front" {
   statistic           = "Minimum"
   metric_name         = "HealthCheckStatus"
   comparison_operator = "LessThanThreshold"
-  datapoints_to_alarm = 2
+  datapoints_to_alarm = 5
   threshold           = 1
   period              = 60
   evaluation_periods  = 5
@@ -134,7 +134,7 @@ resource "aws_cloudwatch_metric_alarm" "availability-admin" {
   statistic           = "Minimum"
   metric_name         = "HealthCheckStatus"
   comparison_operator = "LessThanThreshold"
-  datapoints_to_alarm = 2
+  datapoints_to_alarm = 5
   threshold           = 1
   period              = 60
   evaluation_periods  = 5
@@ -162,7 +162,7 @@ resource "aws_cloudwatch_log_metric_filter" "frontend_5xx_errors" {
 }
 
 resource "aws_cloudwatch_metric_alarm" "frontend_5xx_errors" {
-  alarm_name          = "Frontend5XXErrors.${local.environment}"
+  alarm_name          = "${local.environment}-frontend-5xx-errors"
   statistic           = "Sum"
   metric_name         = aws_cloudwatch_log_metric_filter.frontend_5xx_errors.metric_transformation[0].name
   comparison_operator = "GreaterThanOrEqualToThreshold"
@@ -191,7 +191,7 @@ resource "aws_cloudwatch_log_metric_filter" "admin_5xx_errors" {
 }
 
 resource "aws_cloudwatch_metric_alarm" "admin_5xx_errors" {
-  alarm_name          = "Admin5XXErrors.${local.environment}"
+  alarm_name          = "${local.environment}-admin-5xx-errors"
   statistic           = "Sum"
   metric_name         = aws_cloudwatch_log_metric_filter.admin_5xx_errors.metric_transformation[0].name
   comparison_operator = "GreaterThanOrEqualToThreshold"
@@ -220,7 +220,7 @@ resource "aws_cloudwatch_log_metric_filter" "api_5xx_errors" {
 }
 
 resource "aws_cloudwatch_metric_alarm" "api_5xx_errors" {
-  alarm_name          = "API5XXErrors.${local.environment}"
+  alarm_name          = "${local.environment}-api-5xx-errors"
   statistic           = "Sum"
   metric_name         = aws_cloudwatch_log_metric_filter.api_5xx_errors.metric_transformation[0].name
   comparison_operator = "GreaterThanOrEqualToThreshold"
@@ -237,10 +237,10 @@ resource "aws_cloudwatch_metric_alarm" "api_5xx_errors" {
 
 
 resource "aws_cloudwatch_metric_alarm" "frontend_alb_5xx_errors" {
+  alarm_name          = "${local.environment}-frontend-alb-5xx-errors"
+  alarm_description   = "Number of 5XX Errors returned to Public Users from the ${local.environment} Frontend ALB."
   actions_enabled     = local.account.alarms_active
   alarm_actions       = [data.aws_sns_topic.alerts.arn]
-  alarm_description   = "Number of 5XX Errors returned to Public Users from the ${local.environment} Frontend ALB."
-  alarm_name          = "FrontendALB5XXErrors.${local.environment}"
   comparison_operator = "GreaterThanThreshold"
   dimensions = {
     "LoadBalancer" = trimprefix(split(":", aws_lb.front.arn)[5], "loadbalancer/")
@@ -257,10 +257,10 @@ resource "aws_cloudwatch_metric_alarm" "frontend_alb_5xx_errors" {
 }
 
 resource "aws_cloudwatch_metric_alarm" "admin_alb_5xx_errors" {
+  alarm_name          = "${local.environment}-admin-alb-5xx-errors"
+  alarm_description   = "Number of 5XX Errors returned to Internal Users from the ${local.environment} Admin ALB."
   actions_enabled     = local.account.alarms_active
   alarm_actions       = [data.aws_sns_topic.alerts.arn]
-  alarm_description   = "Number of 5XX Errors returned to Internal Users from the ${local.environment} Admin ALB."
-  alarm_name          = "AdminALB5XXErrors.${local.environment}"
   comparison_operator = "GreaterThanThreshold"
   dimensions = {
     "LoadBalancer" = trimprefix(split(":", aws_lb.admin.arn)[5], "loadbalancer/")
@@ -276,16 +276,16 @@ resource "aws_cloudwatch_metric_alarm" "admin_alb_5xx_errors" {
 }
 
 resource "aws_cloudwatch_metric_alarm" "frontend_alb_average_response_time" {
+  alarm_name          = "${local.environment}-frontend-alb-response-time"
+  alarm_description   = "Response Time for Frontend ALB in ${local.environment}"
   actions_enabled     = local.account.alarms_active
   alarm_actions       = [data.aws_sns_topic.alerts.arn]
-  alarm_description   = "Response Time for Frontend ALB in ${local.environment}"
-  alarm_name          = "FrontendALBAverageResponseTime.${local.environment}"
   comparison_operator = "GreaterThanThreshold"
   dimensions = {
     "LoadBalancer" = trimprefix(split(":", aws_lb.front.arn)[5], "loadbalancer/")
   }
-  datapoints_to_alarm       = 3
-  evaluation_periods        = 3
+  datapoints_to_alarm       = 7
+  evaluation_periods        = 10
   threshold                 = 1
   period                    = 60
   namespace                 = "AWS/ApplicationELB"
@@ -310,12 +310,12 @@ resource "aws_cloudwatch_log_metric_filter" "pre_registration_add_in_progress" {
 }
 
 resource "aws_cloudwatch_metric_alarm" "admin_alb_average_response_time" {
-  alarm_name                = "AdminALBAverageResponseTime.${local.environment}"
+  alarm_name                = "${local.environment}-admin-alb-response-time"
   alarm_actions             = [data.aws_sns_topic.alerts.arn]
   comparison_operator       = "GreaterThanOrEqualToThreshold"
   alarm_description         = "Response Time for Admin ALB in ${local.environment} (ignoring csv upload)"
-  datapoints_to_alarm       = 3
-  evaluation_periods        = 3
+  datapoints_to_alarm       = 7
+  evaluation_periods        = 10
   threshold                 = 1
   insufficient_data_actions = []
   treat_missing_data        = "notBreaching"
@@ -356,7 +356,7 @@ resource "aws_cloudwatch_metric_alarm" "admin_alb_average_response_time" {
 }
 
 resource "aws_cloudwatch_metric_alarm" "admin_ddos_attack_external" {
-  alarm_name          = "AdminDDoSDetected"
+  alarm_name          = "admin-ddos-detected"
   comparison_operator = "GreaterThanThreshold"
   evaluation_periods  = "3"
   metric_name         = "DDoSDetected"
@@ -373,7 +373,7 @@ resource "aws_cloudwatch_metric_alarm" "admin_ddos_attack_external" {
 }
 
 resource "aws_cloudwatch_metric_alarm" "front_ddos_attack_external" {
-  alarm_name          = "FrontDDoSDetected"
+  alarm_name          = "front-ddos-detected"
   comparison_operator = "GreaterThanThreshold"
   evaluation_periods  = "3"
   metric_name         = "DDoSDetected"

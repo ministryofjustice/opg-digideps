@@ -1,0 +1,18 @@
+name: "[Tests] Synchronise Lambda Unit Tests"
+
+defaults:
+  run:
+    shell: bash
+
+on:
+  workflow_call:
+
+jobs:
+  synchronise-lambda-unit-tests:
+    runs-on: ubuntu-latest
+    steps:
+      - uses: actions/checkout@24cb9080177205b6e8c946b17badbe402adc938f # pin@v3
+      - name: run unit tests
+        id: unit-tests
+        run: go test
+        working-directory: lambdas/functions/synchronisation

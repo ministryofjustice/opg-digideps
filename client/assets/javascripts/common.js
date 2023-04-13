@@ -51,7 +51,6 @@ window.addEventListener('DOMContentLoaded', () => {
   uploadFile.init(document)
 
   GoogleAnalyticsEvents.init()
-  GoogleAnalyticsEvents.initFormValidationErrors()
 
   MoneyTransfer.init(document)
 

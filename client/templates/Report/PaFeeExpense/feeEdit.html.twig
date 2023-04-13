@@ -25,7 +25,7 @@
 
     {% for fee in form.fees %}
         {% set feeId = fee.feeTypeId.vars.value %}
-        <div class="{{ fee.moreDetails is defined ? ' js-details-expander-' ~ feeId  : '' }} inputs-right-aligned">
+        <div class="{{ fee.moreDetails is defined ? ' js-details-expander'  : '' }} inputs-right-aligned">
             {{ form_row(fee.feeTypeId) }}
             {{ form_input(fee.amount, 'amount', {
                 'inputPrefix' : '£',

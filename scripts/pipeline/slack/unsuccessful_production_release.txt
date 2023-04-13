@@ -1,0 +1,8 @@
+:x: *Digideps Path to Live Failure* :x:
+*User:* {{ gh_actor }}
+*Branch:* {{ branch }}
+*Links*
+    *GH Actions build url:* {{ gh_actions_build_url }}
+
+*Commit message:*
+{{ commit_message }}
