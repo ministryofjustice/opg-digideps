@@ -19,20 +19,13 @@ class DecisionController extends AbstractController
         'decision',
         'mental-capacity',
         'decision-status',
+        'significantDecisionMade',
     ];
 
-    /** @var RestClient */
-    private $restClient;
-
-    /** @var ReportApi */
-    private $reportApi;
-
     public function __construct(
-        RestClient $restClient,
-        ReportApi $reportApi
+       private RestClient $restClient,
+       private ReportApi $reportApi,
     ) {
-        $this->restClient = $restClient;
-        $this->reportApi = $reportApi;
     }
 
     /**
@@ -114,7 +107,6 @@ class DecisionController extends AbstractController
 
         if ($form->get('save')->isClicked() && $form->isSubmitted() && $form->isValid()) {
             $data = $form->getData();
-
             $data->setReport($report);
 
             $this->restClient->put('report/'.$reportId.'/mental-capacity', $data, ['mental-assessment-date']);
@@ -146,16 +138,24 @@ class DecisionController extends AbstractController
         $form->handleRequest($request);
 
         if ($form->isSubmitted() && $form->isValid()) {
-            switch ($form['hasDecisions']->getData()) {
-                case 'yes':
-                    return $this->redirectToRoute('decisions_add', ['reportId' => $reportId, 'from' => 'decisions_exist']);
-                case 'no':
-                    $this->restClient->put('report/'.$reportId, $report, ['reasonForNoDecisions']);
-                    foreach ($report->getDecisions() as $decision) {
-                        $this->restClient->delete('/report/decision/'.$decision->getId());
-                    }
+            $report = $form->getData();
+            $answer = $form['significantDecisionsMade']->getData();
 
-                    return $this->redirectToRoute('decisions_summary', ['reportId' => $reportId]);
+            if ('Yes' == $answer) {
+                $report->setReasonForNoDecisions(null);
+
+                $this->updateReport($report, $reportId, ['significantDecisionsMade', 'reasonForNoDecisions']);
+
+                return $this->redirectToRoute('decisions_add', ['reportId' => $reportId, 'from' => 'decisions_exist']);
+            } else {
+                foreach ($report->getDecisions() as $decision) {
+                    $this->restClient->delete('/report/decision/'.$decision->getId());
+                }
+
+                // this must proceed the deletion above if deputy switches from 'yes' to 'no' as it will not persist the 'reason for decision' answer
+                $this->updateReport($report, $reportId, ['significantDecisionsMade', 'reasonForNoDecisions']);
+
+                return $this->redirectToRoute('decisions_summary', ['reportId' => $reportId]);
             }
         }
 
@@ -169,6 +169,11 @@ class DecisionController extends AbstractController
             'form' => $form->createView(),
             'report' => $report,
         ];
+    }
+
+    private function updateReport($report, $reportId, $fields)
+    {
+        $this->restClient->put('report/'.$reportId, $report, $fields);
     }
 
     /**
