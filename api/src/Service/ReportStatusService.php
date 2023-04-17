@@ -328,7 +328,7 @@ class ReportStatusService
                 count($this->report->getDebtsWithValidAmount()) > 0) &&
                 !empty($this->report->getDebtManagement())
         ) {
-            return ['state' => self::STATE_DONE];
+            return ['state' => self::STATE_DONE, 'nOfRecords' => count($this->report->getDebtsWithValidAmount())];
         } else {
             return ['state' => self::STATE_INCOMPLETE, 'nOfRecords' => count($this->report->getDebtsWithValidAmount())];
         }
