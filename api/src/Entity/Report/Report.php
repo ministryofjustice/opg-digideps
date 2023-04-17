@@ -1142,7 +1142,7 @@ class Report implements ReportInterface
         return $this->significantDecisionsMade;
     }
 
-    public function setSignificantDecisionsMade(string $significantDecisionsMade): self
+    public function setSignificantDecisionsMade(?string $significantDecisionsMade): self
     {
         $this->significantDecisionsMade = $significantDecisionsMade;
 
