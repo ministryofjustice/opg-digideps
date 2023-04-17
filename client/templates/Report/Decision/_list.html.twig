@@ -115,7 +115,7 @@
         {% endif %}
         {% if not hideEditLink  %}
             <dd class="govuk-summary-list__actions">
-                <a class="govuk-link behat-link-edit" href="{{ path('decisions_exist', { 'reportId': report.id, 'from': 'summary' }) }}">
+                <a class="govuk-link behat-link-edit" id="significantDecisionsEdit" href="{{ path('decisions_exist', { 'reportId': report.id, 'from': 'summary' }) }}">
                     {{ 'edit' | trans({}, 'common') }}
                 </a>
             </dd>
