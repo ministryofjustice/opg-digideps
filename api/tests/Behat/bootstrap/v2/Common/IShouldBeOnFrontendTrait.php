@@ -736,6 +736,22 @@ trait IShouldBeOnFrontendTrait
     }
 
     /**
+     * @Then I should be on the clients add decision page
+     */
+    public function iAmOnDecisionsPage4(): bool
+    {
+        return $this->iAmOnPage(sprintf('/%s\/.*\/decisions\/add.*$/', $this->reportUrlPrefix));
+    }
+
+    /**
+     * @Then I should be on the clients add another decision page
+     */
+    public function iAmOnDecisionsPage5(): bool
+    {
+        return $this->iAmOnPage(sprintf('/%s\/.*\/decisions\/add_another.*$/', $this->reportUrlPrefix));
+    }
+
+    /**
      * @Then I should be on the client decisions summary page
      */
     public function iAmOnDecisionsSummaryPage(): bool

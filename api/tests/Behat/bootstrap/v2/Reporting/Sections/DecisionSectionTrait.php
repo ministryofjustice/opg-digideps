@@ -61,11 +61,11 @@ trait DecisionSectionTrait
     }
 
     /**
-     * @Given /^I confirm that no significant decisions have been made for the client$/
+     * @Given I confirm that :response significant decisions have been made for the client
      */
-    public function iConfirmThatNoSignificantDecisionsHaveBeenMadeForTheClient()
+    public function iConfirmThatNoSignificantDecisionsHaveBeenMadeForTheClient(string $response)
     {
-        $this->chooseOption('decision_exist[significantDecisionsMade]', 'No', 'significantDecisionsMade');
+        $this->chooseOption('decision_exist[significantDecisionsMade]', $response, 'significantDecisionsMade');
         $this->fillInField('decision_exist[reasonForNoDecisions]', 'test', 'reasonForNoDecisions');
         $this->pressButton('Save and continue');
     }
@@ -91,6 +91,74 @@ trait DecisionSectionTrait
 
         if ($this->getSectionAnswers('decision_exist[reasonForNoDecisions]')) {
             $this->expectedResultsDisplayedSimplified('reasonForNoDecision', true);
+        }
+    }
+
+    /**
+     * @Given /^I edit my response to the significant decisions question to \'([^\']*)\'$/
+     */
+    public function iEditMyResponseToTheSignificantDecisionsQuestionTo(string $response)
+    {
+        $this->clickLink('significantDecisionsEdit');
+        $this->chooseOption('decision_exist[significantDecisionsMade]', $response, 'significantDecisionsMade');
+
+        $this->pressButton('Save and continue');
+        $this->iAmOnDecisionsPage4();
+    }
+
+    /**
+     * @Given /^I add the details of the decision as requested$/
+     */
+    public function iAddTheDetailsOfTheDecisionAsRequested()
+    {
+        $this->fillInField('decision[description]', 'Decision entered', 'description');
+        $this->chooseOption('decision[clientInvolvedBoolean]', '0', 'clientInvolvedDetails');
+        $this->fillInField('decision[clientInvolvedDetails]', 'Decision entered', 'description');
+
+        $this->pressButton('Save and continue');
+        $this->iAmOnDecisionsPage5();
+
+        $this->chooseOption('add_another[addAnother]', 'no', 'addAnother');
+        $this->pressButton('Continue');
+    }
+
+    /**
+     * @Then /^the decisions summary page should reflect the updated details I entered$/
+     */
+    public function theDecisionsSummaryPageShouldReflectTheUpdatedDetailsIEntered()
+    {
+        $this->iAmOnDecisionsSummaryPage();
+
+        if ($this->getSectionAnswers('decision_exist[significantDecisionsMade]')) {
+            $this->expectedResultsDisplayedSimplified('significantDecisionsMade', true);
+        }
+
+        if ($this->getSectionAnswers('decision[description]')) {
+            $this->expectedResultsDisplayedSimplified('description', true);
+        }
+
+        if ($this->getSectionAnswers('decision[clientInvolvedBoolean]')) {
+            $this->expectedResultsDisplayedSimplified('clientInvolvedDetails', true);
+        }
+
+        $this->assertReasonForNoDecisionsIsNotVisible(true);
+    }
+
+    private function assertReasonForNoDecisionsIsNotVisible(bool $shouldNotBeVisible)
+    {
+        $reasonForNoDecisionPath = './/label[text()[contains(.,"Reason for no decisions")]]/..';
+
+        $reasonForNoDecisionDiv = $this->getSession()->getPage()->find('xpath', $reasonForNoDecisionPath);
+
+        $reasonForNoDecisionIsNotVisible = is_null($reasonForNoDecisionDiv);
+
+        if ($shouldNotBeVisible) {
+            if (!$reasonForNoDecisionIsNotVisible) {
+                $message = sprintf('The reason for no decision box is visible on the summary page when it shouldn\'t be: %s', $reasonForNoDecisionDiv->getHtml()
+                );
+
+                throw new BehatException($message);
+            }
         }
     }
 }
