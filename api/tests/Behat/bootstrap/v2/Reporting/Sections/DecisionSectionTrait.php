@@ -54,7 +54,7 @@ trait DecisionSectionTrait
     {
         $this->fillInField('mental_assessment[mentalAssessmentDate][month]', '01', 'mentalAssessmentDate');
 
-        $this->fillInField('mental_assessment[mentalAssessmentDate][year]', '01', 'mentalAssessmentDate');
+        $this->fillInField('mental_assessment[mentalAssessmentDate][year]', '2010', 'mentalAssessmentDate');
 
         $this->pressButton('Save and continue');
         $this->iAmOnDecisionsPage3();
