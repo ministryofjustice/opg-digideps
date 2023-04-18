@@ -14,7 +14,7 @@ final class Version268 extends AbstractMigration
 {
     public function getDescription(): string
     {
-        return '';
+        return 'Add significant decisions made column to report table';
     }
 
     public function up(Schema $schema): void
