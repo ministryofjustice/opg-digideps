@@ -6,8 +6,6 @@ namespace App\Tests\Behat\v2\Reporting\Sections;
 
 use App\Tests\Behat\BehatException;
 
-// use App\Tests\Behat\MinkExtension\Context;
-
 trait DecisionSectionTrait
 {
     /**
