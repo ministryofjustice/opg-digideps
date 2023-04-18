@@ -1,6 +1,6 @@
-@v2 @v2_reporting_2 @section-navigation @mia
+@v2 @v2_reporting_2 @section-navigation
 Feature: Section navigation from summary pages - Lay
-#
+
     @lay-pfa-high-completed
     Scenario: Decisions
         Given a Lay Deputy has a completed report
