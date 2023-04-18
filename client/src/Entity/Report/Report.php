@@ -758,18 +758,6 @@ class Report implements ReportInterface, StartEndDateComparableInterface
         return $this;
     }
 
-//    /**
-//     * @return string|null
-//     */
-//    public function hasDecisions()
-//    {
-//        if (empty($this->getDecisions()) && !$this->getReasonForNoDecisions()) {
-//            return null;
-//        }
-//
-//        return $this->getReasonForNoDecisions() ? 'no' : 'yes';
-//    }
-
     public function setHasDecisions($value)
     {
         // necessary to simplify form logic

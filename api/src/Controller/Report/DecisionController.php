@@ -46,7 +46,6 @@ class DecisionController extends RestController
             $this->denyAccessIfReportDoesNotBelongToUser($report);
             $decision = new EntityDir\Report\Decision();
             $decision->setReport($report);
-//            $report->setReasonForNoDecisions(null);
 
             $this->em->persist($report);
             $this->em->flush();
