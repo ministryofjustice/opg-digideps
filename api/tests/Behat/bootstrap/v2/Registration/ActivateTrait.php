@@ -8,7 +8,6 @@ use App\Entity\Organisation;
 use App\Entity\PreRegistration;
 use App\Entity\User;
 use App\Tests\Behat\BehatException;
-use DateTime;
 
 trait ActivateTrait
 {
@@ -158,7 +157,7 @@ trait ActivateTrait
                 $matchingString = $assertionByExpectation ? 'Yes' : 'No';
                 break;
             case 'Registration date':
-                $matchingString = $assertionByExpectation ? (new DateTime())->format('j/m/Y') : 'n.a.';
+                $matchingString = $assertionByExpectation ? (new \DateTime())->format('j/m/Y') : 'n.a.';
                 break;
             default:
                 $supportedProperties = ['Registration date', 'Active flag'];
