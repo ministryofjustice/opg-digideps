@@ -47,11 +47,11 @@ class ToolsController extends AbstractController
         $secondClientId = intval($fromRequest['secondClientId']);
 
         if (0 == $firstClientId || 0 == $secondClientId) {
-            return $this->buildErrorResponse('The client ids provided are not valid numbers');
+            return $this->buildErrorResponse('The client ids provided are not valid numbers!');
         }
 
         if ($firstClientId == $secondClientId) {
-            return $this->buildErrorResponse('Need two different Client ids to reassign reports!');
+            return $this->buildErrorResponse('The client ids provided are the same!');
         }
 
         /** @var Client $firstClient */
@@ -62,6 +62,10 @@ class ToolsController extends AbstractController
         /** @var Client $secondClient */
         if (null === $secondClient = $this->clientRepository->findByIdIncludingDischarged($secondClientId)) {
             return $this->buildErrorResponse(sprintf('Second Client with id %s not found', $secondClientId));
+        }
+
+        if ($firstClient->getCaseNumber() != $secondClient->getCaseNumber()) {
+            return $this->buildErrorResponse('The clients have two different case numbers!');
         }
 
         $firstReports = $firstClient->getReports();
