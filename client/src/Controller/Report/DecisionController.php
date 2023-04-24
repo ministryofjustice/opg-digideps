@@ -19,27 +19,18 @@ class DecisionController extends AbstractController
         'decision',
         'mental-capacity',
         'decision-status',
+        'significantDecisionMade',
     ];
 
-    /** @var RestClient */
-    private $restClient;
-
-    /** @var ReportApi */
-    private $reportApi;
-
     public function __construct(
-        RestClient $restClient,
-        ReportApi $reportApi
+       private RestClient $restClient,
+       private ReportApi $reportApi,
     ) {
-        $this->restClient = $restClient;
-        $this->reportApi = $reportApi;
     }
 
     /**
      * @Route("/report/{reportId}/decisions", name="decisions")
      * @Template("@App/Report/Decision/start.html.twig")
-     *
-     * @param $reportId
      *
      * @return array|RedirectResponse
      */
@@ -59,8 +50,6 @@ class DecisionController extends AbstractController
     /**
      * @Route("/report/{reportId}/decisions/mental-capacity", name="decisions_mental_capacity")
      * @Template("@App/Report/Decision/mentalCapacity.html.twig")
-     *
-     * @param $reportId
      *
      * @return array|RedirectResponse
      */
@@ -101,8 +90,6 @@ class DecisionController extends AbstractController
      * @Route("/report/{reportId}/decisions/mental-assessment", name="decisions_mental_assessment")
      * @Template("@App/Report/Decision/mentalAssessment.html.twig")
      *
-     * @param $reportId
-     *
      * @return array|RedirectResponse
      */
     public function mentalAssessmentAction(Request $request, $reportId)
@@ -120,7 +107,6 @@ class DecisionController extends AbstractController
 
         if ($form->get('save')->isClicked() && $form->isSubmitted() && $form->isValid()) {
             $data = $form->getData();
-
             $data->setReport($report);
 
             $this->restClient->put('report/'.$reportId.'/mental-capacity', $data, ['mental-assessment-date']);
@@ -143,8 +129,6 @@ class DecisionController extends AbstractController
      * @Route("/report/{reportId}/decisions/exist", name="decisions_exist")
      * @Template("@App/Report/Decision/exist.html.twig")
      *
-     * @param $reportId
-     *
      * @return array|RedirectResponse
      */
     public function existAction(Request $request, $reportId)
@@ -154,16 +138,24 @@ class DecisionController extends AbstractController
         $form->handleRequest($request);
 
         if ($form->isSubmitted() && $form->isValid()) {
-            switch ($form['hasDecisions']->getData()) {
-                case 'yes':
-                    return $this->redirectToRoute('decisions_add', ['reportId' => $reportId, 'from' => 'decisions_exist']);
-                case 'no':
-                    $this->restClient->put('report/'.$reportId, $report, ['reasonForNoDecisions']);
-                    foreach ($report->getDecisions() as $decision) {
-                        $this->restClient->delete('/report/decision/'.$decision->getId());
-                    }
+            $report = $form->getData();
+            $answer = $form['significantDecisionsMade']->getData();
 
-                    return $this->redirectToRoute('decisions_summary', ['reportId' => $reportId]);
+            if ('Yes' == $answer) {
+                $report->setReasonForNoDecisions(null);
+
+                $this->updateReport($report, $reportId, ['significantDecisionsMade', 'reasonForNoDecisions']);
+
+                return $this->redirectToRoute('decisions_add', ['reportId' => $reportId, 'from' => 'decisions_exist']);
+            } else {
+                foreach ($report->getDecisions() as $decision) {
+                    $this->restClient->delete('/report/decision/'.$decision->getId());
+                }
+
+                // this must proceed the deletion above if deputy switches from 'yes' to 'no' as it will not persist the 'reason for decision' answer
+                $this->updateReport($report, $reportId, ['significantDecisionsMade', 'reasonForNoDecisions']);
+
+                return $this->redirectToRoute('decisions_summary', ['reportId' => $reportId]);
             }
         }
 
@@ -179,11 +171,14 @@ class DecisionController extends AbstractController
         ];
     }
 
+    private function updateReport($report, $reportId, $fields)
+    {
+        $this->restClient->put('report/'.$reportId, $report, $fields);
+    }
+
     /**
      * @Route("/report/{reportId}/decisions/add", name="decisions_add")
      * @Template("@App/Report/Decision/add.html.twig")
-     *
-     * @param $reportId
      *
      * @return array|RedirectResponse
      */
@@ -205,7 +200,7 @@ class DecisionController extends AbstractController
             return $this->redirect($this->generateUrl('decisions_add_another', ['reportId' => $reportId]));
         }
 
-        //TODO use $backLinkRoute logic and align to other controllers
+        // TODO use $backLinkRoute logic and align to other controllers
         try {
             $backLink = $this->generateUrl($from, ['reportId' => $reportId]);
 
@@ -226,8 +221,6 @@ class DecisionController extends AbstractController
     /**
      * @Route("/report/{reportId}/decisions/add_another", name="decisions_add_another")
      * @Template("@App/Report/Decision/addAnother.html.twig")
-     *
-     * @param $reportId
      *
      * @return array|RedirectResponse
      */
@@ -256,9 +249,6 @@ class DecisionController extends AbstractController
     /**
      * @Route("/report/{reportId}/decisions/edit/{decisionId}", name="decisions_edit")
      * @Template("@App/Report/Decision/edit.html.twig")
-     *
-     * @param $reportId
-     * @param $decisionId
      *
      * @return array|RedirectResponse
      */
@@ -293,8 +283,6 @@ class DecisionController extends AbstractController
      * @Route("/report/{reportId}/decisions/summary", name="decisions_summary")
      * @Template("@App/Report/Decision/summary.html.twig")
      *
-     * @param $reportId
-     *
      * @return array|RedirectResponse
      */
     public function summaryAction(Request $request, $reportId)
@@ -306,19 +294,19 @@ class DecisionController extends AbstractController
             return $this->redirectToRoute('decisions', ['reportId' => $reportId]);
         }
 
+        $numberOfDecisions = count($report->getDecisions());
+
         return [
             'comingFromLastStep' => 'skip-step' == $fromPage || 'last-step' == $fromPage,
             'report' => $report,
             'status' => $report->getStatus(),
+            'numOfDecisions' => $numberOfDecisions,
         ];
     }
 
     /**
      * @Route("/report/{reportId}/decisions/{decisionId}/delete", name="decisions_delete")
      * @Template("@App/Common/confirmDelete.html.twig")
-     *
-     * @param $reportId
-     * @param $decisionId
      *
      * @return array|RedirectResponse
      */
