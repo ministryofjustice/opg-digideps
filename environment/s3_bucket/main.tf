@@ -3,11 +3,6 @@ resource "aws_s3_bucket" "bucket" {
   force_destroy = var.force_destroy
 }
 
-resource "aws_s3_bucket_acl" "bucket_acl" {
-  bucket = aws_s3_bucket.bucket.id
-  acl    = var.acl
-}
-
 resource "aws_s3_bucket_ownership_controls" "bucket_object_ownership" {
   bucket = aws_s3_bucket.bucket.id
   rule {
