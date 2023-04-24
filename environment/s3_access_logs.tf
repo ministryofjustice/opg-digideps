@@ -22,13 +22,6 @@ resource "aws_s3_bucket_versioning" "s3_access_logs" {
   }
 }
 
-resource "aws_s3_bucket_ownership_controls" "pa_uploads_branch_replication" {
-  bucket = aws_s3_bucket.s3_access_logs.id
-  rule {
-    object_ownership = "BucketOwnerEnforced"
-  }
-}
-
 resource "aws_s3_bucket_public_access_block" "s3_access_logs" {
   bucket = aws_s3_bucket.s3_access_logs.bucket
 
