@@ -1,20 +1,32 @@
 {% if decisions | length > 0 or report.reasonForNoDecisions != "" %}
     <div class="section break-before" id="decisions-section">
         <h2 class="section-heading">Decisions made over the reporting period</h2>
-        <div class="box">
+
+        <div class="box" >
+            <h3 class="label question bold">Have you made any significant decisions for John during this reporting period?</h3>
+
+            <table class="checkboxes labelvalue inline">
+                <tr>
+                    <td class="checkbox value"{% if report.significantDecisionsMade == 'Yes' %} aria-label=”Selected”>X{% else %}>&nbsp;{% endif %}</td>
+                    <td class="label">Yes</td>
+                    <td class="checkbox value"{% if report.significantDecisionsMade == 'No' %} aria-label=”Selected”>X{% else %}>&nbsp;{% endif %}</td>
+                    <td class="label">No</td>
+                </tr>
+            </table>
+
             {% if decisions | length == 0 %}
-                <div class="labelvalue">
+                <div class="labelvalue push-half--top">
                     <div class="label">No decisions made:</div>
                     <div class="value">{{ report.reasonForNoDecisions | nl2br}}</div>
                 </div>
             {% else %}
-                <div class="third-width">
+                <div class="third-width push-half--top">
                     <h3 class="flush--bottom">Deputy decision</h3>
                 </div>
-                <div class="third-width">
+                <div class="third-width push-half--top">
                     <h3 class="flush--bottom">Was {{ client.firstName }} involved?</h3>
                 </div>
-                <div class="third-width last">
+                <div class="third-width last push-half--top">
                     <h3 class="flush--bottom">Client involvement</h3>
                 </div>
 
@@ -32,6 +44,6 @@
                     </div>
                 {% endfor %}
             {% endif %}
+            </div>
         </div>
-    </div>
 {% endif %}

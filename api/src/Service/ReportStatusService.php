@@ -58,7 +58,7 @@ class ReportStatusService
     {
         $hasDecisions = count($this->report->getDecisions()) > 0;
 
-        if (!$hasDecisions && !$this->report->getReasonForNoDecisions() && !$this->report->getMentalCapacity()) {
+        if (!$hasDecisions && !$this->report->getSignificantDecisionsMade() && !$this->report->getMentalCapacity()) {
             return ['state' => self::STATE_NOT_STARTED, 'nOfRecords' => 0];
         }
 
