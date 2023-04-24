@@ -247,14 +247,14 @@ jobs:
       container_version: ${{ needs.workflow_variables.outputs.parsed_branch }}-${{ needs.workflow_variables.outputs.short_sha }}
     secrets: inherit
 
-  terraform_apply_instruction:
-    name: instruction environment apply terraform
+  terraform_apply_training:
+    name: training environment apply terraform
     uses: ./.github/workflows/_run-terraform.yml
     needs:
       - terraform_apply_preproduction
       - workflow_variables
     with:
-      workspace: instruction
+      workspace: training
       terraform_path: environment
       apply: true
       container_version: ${{ needs.workflow_variables.outputs.parsed_branch }}-${{ needs.workflow_variables.outputs.short_sha }}

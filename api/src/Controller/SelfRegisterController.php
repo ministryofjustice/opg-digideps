@@ -54,6 +54,8 @@ class SelfRegisterController extends RestController
             'case_number' => 'setCaseNumber',
         ]);
 
+        $selfRegisterData->replaceUnicodeChars();
+
         $errors = $this->validator->validate($selfRegisterData, null, 'self_registration');
 
         if (count($errors) > 0) {

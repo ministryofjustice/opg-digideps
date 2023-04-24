@@ -718,4 +718,44 @@ trait IShouldBeOnFrontendTrait
     {
         return $this->iAmOnPage(sprintf('/%s\/.*\/client-benefits-check\/step\/3.*$/', $this->reportUrlPrefix));
     }
+
+    /**
+     * @Then I should be on the client mental assessment page
+     */
+    public function iAmOnDecisionsPage2(): bool
+    {
+        return $this->iAmOnPage(sprintf('/%s\/.*\/decisions\/mental-assessment.*$/', $this->reportUrlPrefix));
+    }
+
+    /**
+     * @Then I should be on the clients significant decision page
+     */
+    public function iAmOnDecisionsPage3(): bool
+    {
+        return $this->iAmOnPage(sprintf('/%s\/.*\/decisions\/exist.*$/', $this->reportUrlPrefix));
+    }
+
+    /**
+     * @Then I should be on the clients add decision page
+     */
+    public function iAmOnDecisionsPage4(): bool
+    {
+        return $this->iAmOnPage(sprintf('/%s\/.*\/decisions\/add.*$/', $this->reportUrlPrefix));
+    }
+
+    /**
+     * @Then I should be on the clients add another decision page
+     */
+    public function iAmOnDecisionsPage5(): bool
+    {
+        return $this->iAmOnPage(sprintf('/%s\/.*\/decisions\/add_another.*$/', $this->reportUrlPrefix));
+    }
+
+    /**
+     * @Then I should be on the client decisions summary page
+     */
+    public function iAmOnDecisionsSummaryPage(): bool
+    {
+        return $this->iAmOnPage(sprintf('/%s\/.*\/decisions\/summary.*$/', $this->reportUrlPrefix));
+    }
 }
