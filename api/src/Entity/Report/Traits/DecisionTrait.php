@@ -66,8 +66,10 @@ trait DecisionTrait
      **/
     public function setReasonForNoDecisions($reasonForNoDecisions)
     {
-        if (!is_null($reasonForNoDecisions)) {
+        if (is_string($reasonForNoDecisions)) {
             $this->reasonForNoDecisions = trim($reasonForNoDecisions, " \n");
+        } else {
+            $this->reasonForNoDecisions = null;
         }
 
         return $this;

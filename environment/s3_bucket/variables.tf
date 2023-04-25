@@ -7,11 +7,6 @@ variable "account_name" {
   type        = string
 }
 
-variable "acl" {
-  description = "The canned ACL to apply. Defaults to private. (https://docs.aws.amazon.com/AmazonS3/latest/dev/acl-overview.html#canned-acl)"
-  default     = "private"
-}
-
 variable "force_destroy" {
   description = " A boolean that indicates all objects should be deleted from the bucket so that the bucket can be destroyed without error. These objects are not recoverable."
   default     = false

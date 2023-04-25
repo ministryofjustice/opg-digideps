@@ -8,9 +8,9 @@ use App\Entity\Report\ClientBenefitsCheck;
 
 class NdrStatusService
 {
-    const STATE_NOT_STARTED = 'not-started';
-    const STATE_INCOMPLETE = 'incomplete';
-    const STATE_DONE = 'done';
+    public const STATE_NOT_STARTED = 'not-started';
+    public const STATE_INCOMPLETE = 'incomplete';
+    public const STATE_DONE = 'done';
 
     /** @var Ndr */
     private $ndr;
@@ -139,7 +139,7 @@ class NdrStatusService
                 count($this->ndr->getDebtsWithValidAmount()) > 0) &&
             !empty($this->ndr->getDebtManagement())
         ) {
-            return ['state' => self::STATE_DONE];
+            return ['state' => self::STATE_DONE, 'nOfRecords' => count($this->ndr->getDebtsWithValidAmount())];
         } else {
             return ['state' => self::STATE_INCOMPLETE, 'nOfRecords' => count($this->ndr->getDebtsWithValidAmount())];
         }
