@@ -29,9 +29,12 @@ class ReportSectionsLinkService
         if ($report instanceof Ndr) {
             $routeParams = ['ndrId' => $report->getId()];
 
+            $clientBenefitsRouteParams = ['reportId' => $report->getId(), 'reportOrNdr' => 'ndr'];
+
             return [
                 ['section' => 'visitsCare', 'link' => $this->router->generate('ndr_visits_care', $routeParams)],
                 ['section' => 'deputyExpenses', 'link' => $this->router->generate('ndr_deputy_expenses', $routeParams)],
+                ['section' => 'clientBenefitsCheck', 'link' => $this->router->generate('client_benefits_check', $clientBenefitsRouteParams)],
                 ['section' => 'incomeBenefits', 'link' => $this->router->generate('ndr_income_benefits', $routeParams)],
                 ['section' => 'bankAccounts', 'link' => $this->router->generate('ndr_bank_accounts', $routeParams)],
                 ['section' => 'assets', 'link' => $this->router->generate('ndr_assets', $routeParams)],
@@ -69,7 +72,7 @@ class ReportSectionsLinkService
             'visitsCare' => ['section' => 'visitsCare', 'link' => $this->router->generate('visits_care', $routeParams)],
         ];
 
-        //TODO ask the business if links can follow a single order
+        // TODO ask the business if links can follow a single order
 
         // defined order for Client profile page (PROF or PA)
         if ($report->hasSection('paDeputyExpenses')) { // PAs
@@ -130,7 +133,6 @@ class ReportSectionsLinkService
     }
 
     /**
-     * @param $sectionId
      * @param int $offset
      *
      * @return array empty if it's the last or first section
