@@ -1,4 +1,4 @@
-@v2 @v2_reporting_2 @section-navigation @mia
+@v2 @v2_reporting_2 @section-navigation
 Feature: Section navigation - Lay combined
 #
     @lay-combined-high-not-started
