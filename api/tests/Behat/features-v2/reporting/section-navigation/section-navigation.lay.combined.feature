@@ -26,7 +26,7 @@ Feature: Section navigation - Lay combined
     Scenario: Bank Accounts
         Given a Lay Deputy has not started a Combined High Assets report
         When I visit the accounts report section
-        Then the previous section should be "Health and lifestyle"
+        Then the previous section should be "Client benefits check"
         And the next section should be "Deputy expenses"
 
     @lay-combined-high-not-started
@@ -104,4 +104,4 @@ Feature: Section navigation - Lay combined
         Given a Lay Deputy has not started a Combined High Assets report
         When I visit the health and lifestyle report section
         Then the previous section should be "Visits and care"
-        And the next section should be "Bank accounts"
+        And the next section should be "Client benefits check"
