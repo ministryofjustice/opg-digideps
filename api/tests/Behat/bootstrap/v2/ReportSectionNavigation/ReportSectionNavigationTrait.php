@@ -43,4 +43,15 @@ trait ReportSectionNavigationTrait
             throw new BehatException(sprintf('Link contained unexpected text. Wanted: %s. Got: %s ', $sectionName, $anchor->getText()));
         }
     }
+
+    /**
+     * @Given /^the link to the report overview page should display the correct reporting years$/
+     */
+    public function theLinkToTheReportOverviewPageShouldDisplayTheCorrectReportingYears()
+    {
+        $startYear = $this->interactingWithUserDetails->getCurrentReportStartDate()->format('Y');
+        $endYear = $this->interactingWithUserDetails->getCurrentReportDueDate()->format('Y');
+
+        $this->assertLinkWithTextIsOnPage(sprintf('%s to %s report overview', $startYear, $endYear));
+    }
 }
