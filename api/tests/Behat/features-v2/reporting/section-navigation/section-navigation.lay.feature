@@ -25,7 +25,16 @@ Feature: Section navigation from summary pages - Lay
         And I visit the report overview page
         When I visit the visits and care summary report section
         Then the previous section should be "Contacts"
-        And the next section should be "Bank accounts"
+        And the next section should be "Client benefits check"
+        And the link to the report overview page should display the correct reporting years
+
+    @lay-pfa-high-completed
+    Scenario: Client benefits check
+        Given a Lay Deputy has a completed report
+        And I visit the report overview page
+        When I visit the client benefits check summary page
+        Then the previous section should be "Visits and care"
+        And the next section should be "Accounts"
         And the link to the report overview page should display the correct reporting years
 
     @lay-pfa-high-completed
@@ -33,7 +42,7 @@ Feature: Section navigation from summary pages - Lay
         Given a Lay Deputy has a completed report
         And I visit the report overview page
         When I visit the accounts summary section
-        Then the previous section should be "Visits and care"
+        Then the previous section should be "Client benefits check"
         And the next section should be "Deputy expenses"
         And the link to the report overview page should display the correct reporting years
 
@@ -54,7 +63,6 @@ Feature: Section navigation from summary pages - Lay
         Then the previous section should be "Deputy expenses"
         And the next section should be "Money transfers"
         And the link to the report overview page should display the correct reporting years
-
 
     @lay-pfa-high-completed
     Scenario: Money In
@@ -110,7 +118,6 @@ Feature: Section navigation from summary pages - Lay
         Then the previous section should be "Actions"
         And the next section should be "Documents"
         And the link to the report overview page should display the correct reporting years
-
 
     @lay-pfa-high-completed
     Scenario: Documents
