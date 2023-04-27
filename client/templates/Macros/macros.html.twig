@@ -283,7 +283,7 @@
                             {% if isOrgUser %}
                                 {{ 'clientProfile' | trans({}, 'common' ) }}
                             {% else %}
-                                {{ 'deputyReportOverview' | trans({}, 'common' ) }}
+                                {{ 'deputyReportOverview' | trans({ 'startYear': report.startDate | date('Y'),'endYear': report.endDate | date('Y') }, 'common' ) }}
                             {% endif %}
                         </a>
                     {% endif %}
