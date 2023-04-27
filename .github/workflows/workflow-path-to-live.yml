@@ -104,6 +104,10 @@ jobs:
       - docker_build_scan_push
       - monitoring_lambda_unit_tests
       - workflow_variables
+      - api_unit_tests
+      - client_unit_tests
+      - monitoring_lambda_unit_tests
+      - synchronisation_unit_tests
     with:
       workspace: development
       terraform_path: environment
