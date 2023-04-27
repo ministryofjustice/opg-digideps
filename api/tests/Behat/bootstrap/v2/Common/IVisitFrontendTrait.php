@@ -177,11 +177,27 @@ trait IVisitFrontendTrait
     }
 
     /**
+     * @When I visit the any other information summary report section
+     */
+    public function iVisitAnyOtherInfoSummarySection()
+    {
+        $this->visitFrontendPath($this->getAnyOtherInfoSummaryUrl($this->loggedInUserDetails->getCurrentReportId()));
+    }
+
+    /**
      * @When I visit the actions report section
      */
     public function iVisitActionsSection()
     {
         $this->visitFrontendPath($this->getActionsSectionUrl($this->loggedInUserDetails->getCurrentReportId()));
+    }
+
+    /**
+     * @When I visit the actions summary report section
+     */
+    public function iVisitActionsSummarySection()
+    {
+        $this->visitFrontendPath($this->getActionsSummarySectionUrl($this->loggedInUserDetails->getCurrentReportId()));
     }
 
     /**
@@ -193,11 +209,27 @@ trait IVisitFrontendTrait
     }
 
     /**
+     * @When I visit the contacts summary report section
+     */
+    public function iVisitTheContactsSummaryReportSection()
+    {
+        $this->visitFrontendPath($this->getContactsSummaryUrl($this->loggedInUserDetails->getCurrentReportId()));
+    }
+
+    /**
      * @When I visit the decisions report section
      */
     public function iVisitDecisionsSection()
     {
         $this->visitFrontendPath($this->getDecisionsSectionUrl($this->loggedInUserDetails->getCurrentReportId()));
+    }
+
+    /**
+     * @When I visit the decisions summary report section
+     */
+    public function iVisitTheDecisionsSummaryReportSection()
+    {
+        $this->visitFrontendPath($this->getDecisionsSummarySectionUrl($this->loggedInUserDetails->getCurrentReportId()));
     }
 
     /**
@@ -209,6 +241,14 @@ trait IVisitFrontendTrait
     }
 
     /**
+     * @When I visit the deputy expenses summary report section
+     */
+    public function iVisitDeputyExpensesSummarySection()
+    {
+        $this->visitFrontendPath($this->getDeputyExpensesSummarySectionUrl($this->loggedInUserDetails->getCurrentReportId()));
+    }
+
+    /**
      * @When I visit the documents report section
      */
     public function iVisitDocumentsSection()
@@ -217,11 +257,27 @@ trait IVisitFrontendTrait
     }
 
     /**
+     * @When I visit the documents summary report section
+     */
+    public function iVisitDocumentsSummarySection()
+    {
+        $this->visitFrontendPath($this->getDocumentsSummarySectionUrl($this->loggedInUserDetails->getCurrentReportId()));
+    }
+
+    /**
      * @When I visit the gifts report section
      */
     public function iVisitGiftsSection()
     {
         $this->visitFrontendPath($this->getGiftsSectionUrl($this->loggedInUserDetails->getCurrentReportId()));
+    }
+
+    /**
+     * @When I visit the gifts summary report section
+     */
+    public function iVisitGiftsSummarySection()
+    {
+        $this->visitFrontendPath($this->getGiftsSummarySectionUrl($this->loggedInUserDetails->getCurrentReportId()));
     }
 
     /**
@@ -241,11 +297,27 @@ trait IVisitFrontendTrait
     }
 
     /**
+     * @When I visit the visits and care summary report section
+     */
+    public function iVisitTheVisitAndCareSummaryReportSection()
+    {
+        $this->visitFrontendPath($this->getVisitsAndCareSectionSummaryUrl($this->loggedInUserDetails->getCurrentReportId()));
+    }
+
+    /**
      * @When I visit the money in report section
      */
     public function iVisitMoneyInSection()
     {
         $this->visitFrontendPath($this->getMoneyInSectionUrl($this->loggedInUserDetails->getCurrentReportId()));
+    }
+
+    /**
+     * @When I visit the money in summary report section
+     */
+    public function iVisitMoneyInSummarySection()
+    {
+        $this->visitFrontendPath($this->getMoneyInSummarySectionUrl($this->loggedInUserDetails->getCurrentReportId()));
     }
 
     /**
@@ -317,9 +389,9 @@ trait IVisitFrontendTrait
      */
     public function iVisitTheActivateUserPageInteractingUser()
     {
-        $activationToken = ($this->em->getRepository(User::class)->findOneBy(
+        $activationToken = $this->em->getRepository(User::class)->findOneBy(
             ['email' => strtolower($this->interactingWithUserDetails->getUserEmail())]
-        ))->getRegistrationToken();
+        )->getRegistrationToken();
 
         $this->visitFrontendPath($this->getActivateUserUrl($activationToken));
     }

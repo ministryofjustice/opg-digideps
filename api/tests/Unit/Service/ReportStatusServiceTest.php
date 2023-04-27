@@ -17,21 +17,20 @@ use App\Entity\Report\MoneyTransfer;
 use App\Entity\Report\Report;
 use App\Entity\Report\VisitsCare;
 use App\Service\ReportStatusService as StatusService;
-use DateTime;
 use Mockery as m;
 use PHPUnit\Framework\TestCase;
-use PHPUnit_Framework_MockObject_MockObject;
 use Prophecy\PhpUnit\ProphecyTrait;
 
 class ReportStatusServiceTest extends TestCase
 {
     use ProphecyTrait;
 
-    /** @var Report | PHPUnit_Framework_MockObject_MockObject */
+    /** @var Report|\PHPUnit_Framework_MockObject_MockObject */
     private $report;
 
     /**
      * @test
+     *
      * @dataProvider decisionsProvider
      */
     public function decisions($mocks, $state)
@@ -62,6 +61,7 @@ class ReportStatusServiceTest extends TestCase
                 'getNoAssetToAdd' => null,
                 'getContacts' => [],
                 'getReasonForNoContacts' => null,
+                'getSignificantDecisionsMade' => null,
                 'getReasonForNoDecisions' => null,
                 'getVisitsCare' => m::mock(VisitsCare::class, [
                     'getDoYouLiveWithClient' => null,
@@ -117,9 +117,9 @@ class ReportStatusServiceTest extends TestCase
                 'hasProfDeputyOtherCosts' => null,
                 'isMissingMoneyOrAccountsOrClosingBalance' => true,
 //                'hasSection' => false,
-                //'getExpenses'                       => [],
-                //'getPaidForAnything'                => null,
-                'getAvailableSections' => [ //102 sections
+                // 'getExpenses'                       => [],
+                // 'getPaidForAnything'                => null,
+                'getAvailableSections' => [ // 102 sections
                     'decisions', 'contacts', 'visitsCare', 'balance', 'bankAccounts',
                     'moneyTransfers', 'moneyIn', 'moneyOut',
                     'assets', 'debts', 'gifts', 'actions', 'otherInfo', 'deputyExpenses', ],
@@ -132,6 +132,7 @@ class ReportStatusServiceTest extends TestCase
 
     /**
      * @test
+     *
      * @dataProvider contactsProvider
      */
     public function contacts($mocks, $state)
@@ -142,6 +143,7 @@ class ReportStatusServiceTest extends TestCase
 
     /**
      * @test
+     *
      * @dataProvider visitsCareProvider
      */
     public function visitsCare($mocks, $state)
@@ -174,6 +176,7 @@ class ReportStatusServiceTest extends TestCase
 
     /**
      * @test
+     *
      * @dataProvider lifestyleProvider
      */
     public function lifestyle($mocks, $state)
@@ -184,6 +187,7 @@ class ReportStatusServiceTest extends TestCase
 
     /**
      * @test
+     *
      * @dataProvider bankAccountProvider
      */
     public function bankAccount($mocks, $state)
@@ -194,6 +198,7 @@ class ReportStatusServiceTest extends TestCase
 
     /**
      * @test
+     *
      * @dataProvider moneyTransferProvider
      */
     public function moneyTransfer($mocks, $state)
@@ -204,6 +209,7 @@ class ReportStatusServiceTest extends TestCase
 
     /**
      * @test
+     *
      * @dataProvider moneyInProvider
      */
     public function moneyIn($mocks, $state)
@@ -214,6 +220,7 @@ class ReportStatusServiceTest extends TestCase
 
     /**
      * @test
+     *
      * @dataProvider moneyOutProvider
      */
     public function moneyOut($mocks, $state)
@@ -238,6 +245,7 @@ class ReportStatusServiceTest extends TestCase
 
     /**
      * @test
+     *
      * @dataProvider moneyInShortProvider
      */
     public function moneyInShort($mocks, $state)
@@ -261,6 +269,7 @@ class ReportStatusServiceTest extends TestCase
 
     /**
      * @test
+     *
      * @dataProvider moneyOutShortProvider
      */
     public function moneyOutShort($mocks, $state)
@@ -271,6 +280,7 @@ class ReportStatusServiceTest extends TestCase
 
     /**
      * @test
+     *
      * @dataProvider expensesProvider
      */
     public function expenses($mocks, $state)
@@ -293,6 +303,7 @@ class ReportStatusServiceTest extends TestCase
 
     /**
      * @test
+     *
      * @dataProvider paFeesExpensesProvider
      */
     public function paFeeExpenses($mocks, $state)
@@ -331,7 +342,7 @@ class ReportStatusServiceTest extends TestCase
         $scco = ['getProfDeputyCostsAmountToScco' => 1];
 
         return [
-            [[], StatusService::STATE_NOT_STARTED], //no data at all
+            [[], StatusService::STATE_NOT_STARTED], // no data at all
 
             [['getProfDeputyCostsHowCharged' => 'fixed'], StatusService::STATE_INCOMPLETE],
             [['getProfDeputyCostsHowCharged' => 'assessed'], StatusService::STATE_INCOMPLETE],
@@ -366,6 +377,7 @@ class ReportStatusServiceTest extends TestCase
 
     /**
      * @test
+     *
      * @dataProvider profDeputyCostsProvider
      */
     public function profDeputyCosts($mocks, $state)
@@ -379,11 +391,8 @@ class ReportStatusServiceTest extends TestCase
 
     /**
      * @test
-     * @dataProvider getProfDeputyCostsEstimateStateVariations
      *
-     * @param $howCharged
-     * @param $hasMoreInfo
-     * @param $expectedStatus
+     * @dataProvider getProfDeputyCostsEstimateStateVariations
      */
     public function getProfDeputyCostsEstimateStateReturnsCurrentState($howCharged, $hasMoreInfo, $expectedStatus)
     {
@@ -397,8 +406,6 @@ class ReportStatusServiceTest extends TestCase
     }
 
     /**
-     * @param $value
-     *
      * @return $this
      */
     private function setProfDeputyCostsEstimateHasMoreInfo($value)
@@ -409,8 +416,6 @@ class ReportStatusServiceTest extends TestCase
     }
 
     /**
-     * @param $value
-     *
      * @return $this
      */
     private function setProfDeputyCostsEstimateHowCharged($value)
@@ -426,7 +431,7 @@ class ReportStatusServiceTest extends TestCase
     private function initReport()
     {
         $this->report = $this->getMockBuilder(Report::class)
-            ->setConstructorArgs([new Client(), Report::LAY_PFA_HIGH_ASSETS_TYPE, new DateTime(), new DateTime()])
+            ->setConstructorArgs([new Client(), Report::LAY_PFA_HIGH_ASSETS_TYPE, new \DateTime(), new \DateTime()])
             ->setMethods(['hasSection'])
             ->getMock();
 
@@ -479,6 +484,7 @@ class ReportStatusServiceTest extends TestCase
 
     /**
      * @test
+     *
      * @dataProvider giftsProvider
      */
     public function gifts($mocks, $state)
@@ -498,6 +504,7 @@ class ReportStatusServiceTest extends TestCase
 
     /**
      * @test
+     *
      * @dataProvider assetsProvider
      */
     public function assets($mocks, $state)
@@ -508,6 +515,7 @@ class ReportStatusServiceTest extends TestCase
 
     /**
      * @test
+     *
      * @dataProvider debtsProvider
      */
     public function debts($mocks, $state)
@@ -529,6 +537,7 @@ class ReportStatusServiceTest extends TestCase
 
     /**
      * @test
+     *
      * @dataProvider profCurrentFeesProvider
      */
     public function profCurrentFeesState($mocks, $state)
@@ -542,6 +551,7 @@ class ReportStatusServiceTest extends TestCase
 
     /**
      * @test
+     *
      * @dataProvider balanceProvider
      */
     public function balance($mocks, $state)
@@ -557,6 +567,7 @@ class ReportStatusServiceTest extends TestCase
 
     /**
      * @test
+     *
      * @dataProvider actionsProvider
      */
     public function actions($mocks, $state)
@@ -567,6 +578,7 @@ class ReportStatusServiceTest extends TestCase
 
     /**
      * @test
+     *
      * @dataProvider otherInfoProvider
      */
     public function otherinfo($mocks, $state)
@@ -645,14 +657,14 @@ class ReportStatusServiceTest extends TestCase
         ]);
         $mcComplete = m::mock(MentalCapacity::class, [
             'getHasCapacityChanged' => 'no',
-            'getMentalAssessmentDate' => new DateTime('2016-01-01'),
+            'getMentalAssessmentDate' => new \DateTime('2016-01-01'),
         ]);
 
         return [
             [[], StatusService::STATE_NOT_STARTED, false],
             // incomplete
             [['getDecisions' => [$decision]], StatusService::STATE_INCOMPLETE, false],
-            [['getReasonForNoDecisions' => 'x'], StatusService::STATE_INCOMPLETE, false],
+            [['getSignificantDecisionsMade' => 'No'], StatusService::STATE_INCOMPLETE, false],
             [['getMentalCapacity' => $mcComplete], StatusService::STATE_INCOMPLETE, false],
             [['getMentalCapacity' => $mcPartial, 'getDecisions' => [$decision]], StatusService::STATE_INCOMPLETE, false],
             // done
