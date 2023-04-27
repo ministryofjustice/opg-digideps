@@ -162,6 +162,14 @@ trait IVisitAdminTrait
     }
 
     /**
+     * @When I visit the admin tools page
+     */
+    public function iVisitAdminToolsPage()
+    {
+        $this->visitAdminPath($this->getAdminToolsUrl());
+    }
+
+    /**
      * @When I visit the admin analytics page
      */
     public function iVisitAdminAnalyticsPage()

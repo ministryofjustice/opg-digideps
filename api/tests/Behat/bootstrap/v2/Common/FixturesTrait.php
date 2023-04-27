@@ -47,9 +47,6 @@ trait FixturesTrait
         }
     }
 
-    /**
-     * @param $row
-     */
     private function resolveReportType($row): string
     {
         $typeFromFeatureFile = strtolower($row['report_type']);
@@ -203,5 +200,10 @@ trait FixturesTrait
         }
 
         return $users;
+    }
+
+    public function changeCaseNumber(int $clientId, string $newCaseNumber)
+    {
+        $this->fixtureHelper->changeCaseNumber($clientId, $newCaseNumber);
     }
 }
