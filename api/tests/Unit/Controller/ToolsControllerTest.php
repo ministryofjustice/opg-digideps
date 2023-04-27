@@ -1,12 +1,12 @@
 <?php
 
-namespace App\Tests\Unit\v2\Tools\Controller;
+declare(strict_types=1);
+
+namespace App\Tests\Unit\Controller;
 
 use App\Entity\Client;
 use App\Entity\Report\Report;
 use App\Entity\User;
-use App\Repository\ClientRepository;
-use App\Tests\Unit\Controller\AbstractTestController;
 use Doctrine\ORM\EntityManager;
 use Symfony\Component\HttpFoundation\Response;
 
@@ -27,9 +27,9 @@ class ToolsControllerTest extends AbstractTestController
     private static ?string $tokenSuperAdmin = null;
     private static ?string $tokenLayDeputy = null;
 
-    private array $headersAdmin = [];
-    private array $headersSuperAdmin = [];
-    private array $headersDeputy = [];
+    private ?array $headersAdmin = [];
+    private ?array $headersSuperAdmin = [];
+    private ?array $headersDeputy = [];
 
     /**
      * {@inheritDoc}
@@ -37,7 +37,6 @@ class ToolsControllerTest extends AbstractTestController
     public function setUp(): void
     {
         parent::setUp();
-        self::$fixtures::deleteReportsData(['client']);
 
         if (null === self::$tokenAdmin) {
             self::$tokenAdmin = $this->loginAsAdmin();
@@ -64,15 +63,13 @@ class ToolsControllerTest extends AbstractTestController
         $this->headersDeputy = ['CONTENT_TYPE' => 'application/json', 'HTTP_AuthToken' => self::$tokenLayDeputy];
     }
 
-    // Test that admins don't have access, and that super-admins do
     /**
      * @test
      */
     public function onlyAuthorisedUsersCanAccessToolsEndpoint()
     {
-        var_dump('Pre');
         self::$frameworkBundleClient->request(
-            'GET',
+            'POST',
             '/v2/tools/reassign-reports',
             [],
             [],
@@ -80,7 +77,6 @@ class ToolsControllerTest extends AbstractTestController
             '{"firstClientId": "1", "secondClientId": "2"}'
         );
 
-        var_dump('Post');
         $response = self::$frameworkBundleClient->getResponse();
 
         $this->assertEquals(Response::HTTP_FORBIDDEN, $response->getStatusCode());
@@ -99,31 +95,30 @@ class ToolsControllerTest extends AbstractTestController
         $this->assertEquals(Response::HTTP_OK, $response->getStatusCode());
     }
 
-    // Assert reports change over
     /**
      * @test
      */
-    public function updateActionUpdatesAnOrganisation()
+    public function validPostRequest()
     {
         $previousClient = self::$em
-            ->getRepository(ClientRepository::class)
+            ->getRepository(Client::class)
             ->findOneBy(['id' => self::$previousClient->getId()]);
 
         $previousReports = $previousClient->getReports();
 
         $this->assertEquals(2, sizeof($previousReports));
-        $reportIds = array_map(function ($r) { return $r->getId(); }, $previousReports);
+        $reportIds = array_map(function ($r) { return $r->getId(); }, $previousReports->toArray());
         $this->assertContains(self::$previousReport1->getId(), $reportIds);
         $this->assertContains(self::$previousReport2->getId(), $reportIds);
 
         $newClient = self::$em
-            ->getRepository(ClientRepository::class)
+            ->getRepository(Client::class)
             ->findOneBy(['id' => self::$newClient->getId()]);
 
         $newReports = $newClient->getReports();
 
         $this->assertEquals(1, sizeof($newReports));
-        $this->assertContains(self::$newReport1->getId(), $newReports[0]->getId());
+        $this->assertEquals(self::$newReport1->getId(), $newReports[0]->getId());
 
         $content = sprintf('{"firstClientId": "%d", "secondClientId": "%d"}', self::$previousClient->getId(), self::$newClient->getId());
         self::$frameworkBundleClient->request(
@@ -135,24 +130,113 @@ class ToolsControllerTest extends AbstractTestController
             $content
         );
 
+        self::fixtures()->flush()->clear();
+
         $previousClient = self::$em
-            ->getRepository(ClientRepository::class)
+            ->getRepository(Client::class)
             ->findOneBy(['id' => self::$previousClient->getId()]);
 
         $reassignedReports = $previousClient->getReports();
 
         $this->assertEquals(1, sizeof($reassignedReports));
-        $this->assertContains(self::$newReport1->getId(), $reassignedReports[0]->getId());
+        $this->assertEquals(self::$newReport1->getId(), $reassignedReports[0]->getId());
 
         $newClient = self::$em
-            ->getRepository(ClientRepository::class)
+            ->getRepository(Client::class)
             ->findOneBy(['id' => self::$newClient->getId()]);
 
         $reassignedReports = $newClient->getReports();
 
         $this->assertEquals(2, sizeof($reassignedReports));
-        $reportIds = array_map(function ($r) { return $r->getId(); }, $reassignedReports);
+        $reportIds = array_map(function ($r) { return $r->getId(); }, $reassignedReports->toArray());
         $this->assertContains(self::$previousReport1->getId(), $reportIds);
         $this->assertContains(self::$previousReport2->getId(), $reportIds);
+    }
+
+    /**
+     * @test
+     *
+     * @dataProvider invalidPostDataProvider
+     */
+    public function invalidClientIdsPostRequest(string $content, int $expectedStatusCode, string $expectedResponse)
+    {
+        self::$frameworkBundleClient->request(
+            'POST',
+            '/v2/tools/reassign-reports',
+            [],
+            [],
+            $this->headersSuperAdmin,
+            $content
+        );
+
+        $response = self::$frameworkBundleClient->getResponse();
+
+        $this->assertEquals($expectedStatusCode, $response->getStatusCode());
+        $this->assertEquals($expectedResponse, $response->getContent());
+    }
+
+    /**
+     * Provides the content of the POST request, the expected status code and the expected response message.
+     *
+     * @return array
+     */
+    public function invalidPostDataProvider()
+    {
+        return [
+            [
+                '{"firstClientId": "", "secondClientId": ""}',
+                Response::HTTP_INTERNAL_SERVER_ERROR,
+                '{"success":false,"message":"The client ids provided are not valid numbers!"}',
+            ],
+            [
+                '{"firstClientId": "1", "secondClientId": "A"}',
+                Response::HTTP_INTERNAL_SERVER_ERROR,
+                '{"success":false,"message":"The client ids provided are not valid numbers!"}',
+            ],
+            [
+                '{"firstClientId": "1", "secondClientId": "1"}',
+                Response::HTTP_INTERNAL_SERVER_ERROR,
+                '{"success":false,"message":"The client ids provided are the same!"}',
+            ],
+            [
+                '{"firstClientId": "999999", "secondClientId": "1"}',
+                Response::HTTP_INTERNAL_SERVER_ERROR,
+                '{"success":false,"message":"First Client with id 999999 not found"}',
+            ],
+            [
+                '{"firstClientId": "1", "secondClientId": "101010"}',
+                Response::HTTP_INTERNAL_SERVER_ERROR,
+                '{"success":false,"message":"Second Client with id 101010 not found"}',
+            ],
+        ];
+    }
+
+    /**
+     * @test
+     */
+    public function clientsWithDifferentCaseNumbers()
+    {
+        $newClient = self::$em
+            ->getRepository(Client::class)
+            ->findOneBy(['id' => self::$newClient->getId()]);
+
+        $newClient->setCaseNumber('12121212');
+
+        self::fixtures()->flush()->clear();
+
+        $content = sprintf('{"firstClientId": "%d", "secondClientId": "%d"}', self::$previousClient->getId(), self::$newClient->getId());
+        self::$frameworkBundleClient->request(
+            'POST',
+            '/v2/tools/reassign-reports',
+            [],
+            [],
+            $this->headersSuperAdmin,
+            $content
+        );
+
+        $response = self::$frameworkBundleClient->getResponse();
+
+        $this->assertEquals(Response::HTTP_INTERNAL_SERVER_ERROR, $response->getStatusCode());
+        $this->assertEquals('{"success":false,"message":"The clients have two different case numbers!"}', $response->getContent());
     }
 }
