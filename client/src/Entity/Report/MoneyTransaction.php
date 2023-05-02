@@ -80,6 +80,7 @@ class MoneyTransaction
 
         ['broadband', false, 'household-bills', 'out'],
         ['council-tax', false, 'household-bills', 'out'],
+        ['telephone-and-broadband', false, 'household-bills', 'out'],
         ['dual-fuel', false, 'household-bills', 'out'],
         ['electricity', false, 'household-bills', 'out'],
         ['food', false, 'household-bills', 'out'],
@@ -153,7 +154,6 @@ class MoneyTransaction
      *
      * @JMS\Type("string")
      * @JMS\Groups({"transaction"})
-     *
      * @Assert\NotBlank(message="moneyTransaction.form.amount.notBlank", groups={"transaction-amount"})
      * @Assert\Range(min=0.01, max=100000000000, notInRangeMessage = "moneyTransaction.form.amount.notInRangeMessage", groups={"transaction-amount"})
      */
@@ -161,10 +161,9 @@ class MoneyTransaction
 
     /**
      * @var string
+     *
      * @JMS\Groups({"transaction"})
-     *
      * @Assert\NotBlank(message="moneyTransaction.form.description.notBlank", groups={"transaction-description"})
-     *
      * @JMS\Type("string")
      */
     private $description;
