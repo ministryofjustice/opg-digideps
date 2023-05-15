@@ -25,7 +25,7 @@ jobs:
     steps:
       - uses: actions/checkout@24cb9080177205b6e8c946b17badbe402adc938f # pin@v3
 
-      - uses: unfor19/install-aws-cli-action@35a9630be0168293ad2afccbe06e8e9f47678d2c # pin@v1.0.3
+      - uses: unfor19/install-aws-cli-action@457b7980b125044247e455d87b9a26fc2299b787 # pin@v1.0.3
 
       - uses: hashicorp/setup-terraform@61be50777dea1feab08297e52d0d05cb6c81e003 # pin@v2.0.0
         with:
