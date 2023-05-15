@@ -98,6 +98,7 @@ locals {
       "image": "${local.images.file-scanner}",
       "mountPoints": [],
       "volumesFrom": [],
+      "readonlyRootFilesystem": true,
       "healthCheck": {
         "command": [
           "CMD-SHELL",

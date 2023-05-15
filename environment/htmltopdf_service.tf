@@ -91,6 +91,7 @@ locals {
       "essential": true,
       "image": "${local.images.htmltopdf}",
       "mountPoints": [],
+      "readonlyRootFilesystem": true,
       "name": "htmltopdf",
       "volumesFrom": [],
       "healthCheck": {

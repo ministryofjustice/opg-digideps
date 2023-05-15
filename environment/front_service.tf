@@ -90,6 +90,7 @@ locals {
     "essential": true,
     "image": "${local.images.client}",
     "mountPoints": [],
+    "readonlyRootFilesystem": true,
     "name": "front_app",
     "portMappings": [{
       "containerPort": 443,

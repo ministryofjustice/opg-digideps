@@ -114,6 +114,7 @@ locals {
   {
     "name": "document-sync",
     "image": "${local.images.client}",
+    "readonlyRootFilesystem": true,
     "command": [ "sh", "scripts/documentsync.sh", "-d" ],
     "logConfiguration": {
       "logDriver": "awslogs",

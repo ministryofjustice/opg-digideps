@@ -122,6 +122,7 @@ locals {
   {
     "name": "checklist-sync",
     "image": "${local.images.client}",
+    "readonlyRootFilesystem": true,
     "command": [ "sh", "${local.script_name}", "-d" ],
     "logConfiguration": {
       "logDriver": "awslogs",

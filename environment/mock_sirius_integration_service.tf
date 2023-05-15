@@ -82,6 +82,7 @@ locals {
   {
     "name": "mock-sirius-integration",
     "image": "muonsoft/openapi-mock:${local.openapi_mock_version}",
+    "readonlyRootFilesystem": true,
     "portMappings": [{
           "containerPort": 8080,
           "hostPort": 8080,

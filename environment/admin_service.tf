@@ -57,6 +57,7 @@ locals {
     "essential": true,
     "image": "${local.images.client}",
     "mountPoints": [],
+    "readonlyRootFilesystem": true,
     "name": "admin_app",
     "portMappings": [{
       "containerPort": 443,

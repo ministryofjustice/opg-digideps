@@ -78,6 +78,7 @@ locals {
   {
     "name": "check-csv-uploaded",
     "image": "${local.images.client}",
+    "readonlyRootFilesystem": true,
     "command": [ "sh", "scripts/check-csv-uploaded.sh", "-d" ],
     "logConfiguration": {
       "logDriver": "awslogs",

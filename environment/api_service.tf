@@ -84,6 +84,7 @@ locals {
     "essential": true,
     "image": "${local.images.api}",
     "mountPoints": [],
+    "readonlyRootFilesystem": true,
     "name": "api_app",
     "portMappings": [{
       "containerPort": 443,

@@ -14,10 +14,11 @@ resource "aws_ecs_task_definition" "dr_backup" {
 
 locals {
   dr_backup = jsonencode({
-    cpu       = 0,
-    essential = true,
-    image     = var.images.drbackup,
-    name      = "dr_backup",
+    cpu                    = 0,
+    essential              = true,
+    image                  = var.images.drbackup,
+    readonlyRootFilesystem = true,
+    name                   = "dr_backup",
     healthCheck = {
       command     = ["CMD-SHELL", "echo healthy || exit 1"],
       startPeriod = 30,
