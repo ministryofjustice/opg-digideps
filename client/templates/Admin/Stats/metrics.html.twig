@@ -70,13 +70,23 @@
     </div>
 
     <div class="govuk-grid-row">
-        <div class="govuk-grid-column-full text--center">
+        <div class="govuk-grid-column-one-half text--center">
             <span class="govuk-caption-l govuk-!-margin-top-2" id="metric-satisfaction-total-label">
             {{ 'metrics.satisfaction.totalLabel' | trans }}
             </span>
-            <span class="govuk-heading-xl govuk-!-margin-bottom-4 govuk-!-font-size-80"
+            <span class="govuk-heading-l govuk-!-margin-bottom-4 govuk-!-font-size-80"
                   aria-labelledby="metric-satisfaction-total-label">
                 {{ stats.satisfaction.all | default('-') }}%
+            </span>
+        </div>
+
+        <div class="govuk-grid-column-one-half text--center">
+            <span class="govuk-caption-l govuk-!-margin-top-2" id="metric-respondents-total-label">
+            {{ 'metrics.respondents.totalLabel' | trans }}
+            </span>
+            <span class="govuk-heading-l govuk-!-margin-bottom-4 govuk-!-font-size-80"
+                  aria-labelledby="metric-respondents-total-label">
+                {{ stats.satisfaction.all | length }}
             </span>
         </div>
     </div>
