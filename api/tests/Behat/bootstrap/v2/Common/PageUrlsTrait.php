@@ -89,6 +89,10 @@ trait PageUrlsTrait
     private string $adminFixturesUrl = '/admin/fixtures';
     private string $courtOrdersFixtureUrl = '/admin/fixtures/court-orders?%s';
 
+    // Admin Tools
+    private string $adminToolsUrl = '/admin/tools';
+    private string $reportReassignmentUrl = '/admin/tools/report-reassignment';
+
     public function getReportSubmittedUrl(int $reportId): string
     {
         return sprintf($this->reportSubmittedUrl, $reportId);
@@ -242,6 +246,11 @@ trait PageUrlsTrait
     public function getAdminFixturesUrl(): string
     {
         return $this->adminFixturesUrl;
+    }
+
+    public function getAdminToolsUrl(): string
+    {
+        return $this->adminToolsUrl;
     }
 
     public function getAdminAnalyticsUrl(): string

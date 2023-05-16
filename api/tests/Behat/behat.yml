@@ -285,6 +285,12 @@ v2-tests-browserkit:
             contexts:
                 - App\Tests\Behat\v2\ServiceHealth\ServiceHealthFeatureContext
 
+        tools:
+            description: Covering the Admin Tools within the app
+            paths: ["%paths.base%/features-v2/tools"]
+            contexts:
+                - App\Tests\Behat\v2\Tools\ToolsFeatureContext
+
         user-management:
             description: Covering the user management features of the app (admin)
             paths: ["%paths.base%/features-v2/user-management"]

@@ -1,0 +1,10 @@
+list:
+  links:
+    reportReassignment: Report Reassignment
+reportReassignment:
+  firstClientId:
+    label: First Client ID
+  secondClientId:
+    label: Second Client ID
+  submit:
+    label: Reassign Reports
