@@ -71,6 +71,7 @@ trait ReportTrait
     /**
      * @Given a Lay Deputy has not started a report
      * @Given a Lay Deputy has not started a Pfa High Assets report
+     * @Given a Lay Deputy logs in again
      */
     public function aLayDeputyHasNotStartedAReport()
     {
@@ -568,5 +569,31 @@ trait ReportTrait
     public function myReportShouldBeSubmitted()
     {
         $this->assertPageContainsText('Your report has been sent to OPG');
+    }
+
+    /**
+     * @Then I should see :numberOfReports report(s)
+     */
+    public function iShouldSeeNumberOfReports(int $expectedNumberOfReports)
+    {
+        $links = $this->getSession()->getPage()->findAll('css', 'a');
+
+        $reportLinks = [];
+
+        foreach ($links as $link) {
+            if (preg_match('/report\/[0-9]+\/.*view/', $link->getAttribute('href')) && !in_array($link->getAttribute('href'), $reportLinks)) {
+                $reportLinks[] = $link->getAttribute('href');
+            }
+        }
+
+        if (sizeof($reportLinks) != $expectedNumberOfReports) {
+            $message = $this->getAssertMessage(
+                $expectedNumberOfReports,
+                sizeof($reportLinks),
+                'Found a different number of reports than expected'
+            );
+
+            assert(false, $message);
+        }
     }
 }

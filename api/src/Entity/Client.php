@@ -4,8 +4,8 @@ namespace App\Entity;
 
 use App\Entity\Ndr\Ndr;
 use App\Entity\Report\Report;
-use App\Entity\Traits\IsSoftDeleteableEntity;
 use App\Entity\Traits\CreateUpdateTimestamps;
+use App\Entity\Traits\IsSoftDeleteableEntity;
 use DateTime;
 use Doctrine\Common\Collections\ArrayCollection;
 use Doctrine\Common\Collections\Collection;
@@ -105,7 +105,6 @@ class Client implements ClientInterface
     /**
      * @JMS\Type("string")
      * @JMS\Groups({"client"})
-     *
      * @ORM\Column(name="address", type="string", length=200, nullable=true)
      */
     private ?string $address = null;
@@ -113,7 +112,6 @@ class Client implements ClientInterface
     /**
      * @JMS\Type("string")
      * @JMS\Groups({"client"})
-     *
      * @ORM\Column(name="address2", type="string", length=200, nullable=true)
      */
     private ?string $address2 = null;
@@ -121,7 +119,6 @@ class Client implements ClientInterface
     /**
      * @JMS\Type("string")
      * @JMS\Groups({"client"})
-     *
      * @ORM\Column(name="address3", type="string", length=200, nullable=true)
      */
     private ?string $address3 = null;
@@ -129,7 +126,6 @@ class Client implements ClientInterface
     /**
      * @JMS\Type("string")
      * @JMS\Groups({"client"})
-     *
      * @ORM\Column(name="address4", type="string", length=200, nullable=true)
      */
     private ?string $address4 = null;
@@ -137,7 +133,6 @@ class Client implements ClientInterface
     /**
      * @JMS\Type("string")
      * @JMS\Groups({"client"})
-     *
      * @ORM\Column(name="address5", type="string", length=200, nullable=true)
      */
     private ?string $address5 = null;
@@ -186,7 +181,7 @@ class Client implements ClientInterface
      * @JMS\Type("DateTime<'Y-m-d'>")
      * @JMS\Groups({"client", "client-court-date", "checklist-information"})
      *
-     * @var DateTime|null
+     * @var \DateTime|null
      *
      * @ORM\Column(name="court_date", type="date", nullable=true)
      */
@@ -196,7 +191,7 @@ class Client implements ClientInterface
      * @JMS\Type("DateTime<'Y-m-d'>")
      * @JMS\Groups({"client"})
      *
-     * @var DateTime|null
+     * @var \DateTime|null
      *
      * @ORM\Column(name="date_of_birth", type="date", nullable=true)
      */
@@ -236,10 +231,10 @@ class Client implements ClientInterface
     private $namedDeputy;
 
     /**
-     * @var DateTime|null
+     * @var \DateTime|null
+     *
      * @JMS\Type("DateTime<'Y-m-d H:i:s'>")
      * @JMS\Groups({"client"})
-     *
      * @ORM\Column(name="archived_at", type="datetime", nullable=true)
      */
     private $archivedAt;
@@ -249,7 +244,6 @@ class Client implements ClientInterface
      *
      * @JMS\Type("App\Entity\Organisation")
      * @JMS\Groups({"client-organisations"})
-     *
      * @ORM\ManyToOne(targetEntity="Organisation", inversedBy="clients")
      */
     private $organisation;
@@ -424,7 +418,7 @@ class Client implements ClientInterface
      *
      * @return Client
      */
-    public function setCourtDate(DateTime $courtDate = null)
+    public function setCourtDate(\DateTime $courtDate = null)
     {
         $this->courtDate = $courtDate;
 
@@ -434,7 +428,7 @@ class Client implements ClientInterface
     /**
      * Get courtDate.
      *
-     * @return DateTime|null
+     * @return \DateTime|null
      */
     public function getCourtDate()
     {
@@ -535,11 +529,23 @@ class Client implements ClientInterface
     }
 
     /**
+     * @param Report[] $reports
+     *
+     * @return \App\Entity\Client
+     */
+    public function setReports($reports)
+    {
+        $this->reports = $reports;
+
+        return $this;
+    }
+
+    /**
      * Get report by end date.
      *
      * @return Report|null
      */
-    public function getReportByEndDate(DateTime $endDate)
+    public function getReportByEndDate(\DateTime $endDate)
     {
         return $this->reports->filter(function ($report) use ($endDate) {
             return $endDate->format('Y-m-d') == $report->getEndDate()->format('Y-m-d');
@@ -705,7 +711,7 @@ class Client implements ClientInterface
     }
 
     /**
-     * @return DateTime|null $dateOfBirth
+     * @return \DateTime|null $dateOfBirth
      */
     public function getDateOfBirth()
     {
@@ -715,7 +721,7 @@ class Client implements ClientInterface
     /**
      * @return $this
      */
-    public function setDateOfBirth(DateTime $dateOfBirth = null)
+    public function setDateOfBirth(\DateTime $dateOfBirth = null)
     {
         $this->dateOfBirth = $dateOfBirth;
 
@@ -831,13 +837,13 @@ class Client implements ClientInterface
      *
      * @JMS\VirtualProperty
      *
-     * @var DateTime
+     * @var \DateTime
      *
      * @JMS\Type("DateTime<'Y-m-d'>")
      * @JMS\SerializedName("expected_report_start_date")
      * @JMS\Groups({"checklist-information"})
      *
-     * @return DateTime|null
+     * @return \DateTime|null
      */
     public function getExpectedReportStartDate($year = null)
     {
@@ -868,17 +874,17 @@ class Client implements ClientInterface
      *
      * @JMS\VirtualProperty
      *
-     * @var DateTime
+     * @var \DateTime
      *
      * @JMS\Type("DateTime<'Y-m-d'>")
      * @JMS\SerializedName("expected_report_end_date")
      * @JMS\Groups({"checklist-information"})
      *
-     * @return DateTime|null
+     * @return \DateTime|null
      */
     public function getExpectedReportEndDate($year = null)
     {
-        if (!($this->getExpectedReportStartDate($year) instanceof DateTime)) {
+        if (!($this->getExpectedReportStartDate($year) instanceof \DateTime)) {
             return null;
         }
         $expectedReportEndDate = clone $this->getExpectedReportStartDate($year);
@@ -886,13 +892,13 @@ class Client implements ClientInterface
         return $expectedReportEndDate->modify('+1year -1day');
     }
 
-    public function setArchivedAt(DateTime $archivedAt = null)
+    public function setArchivedAt(\DateTime $archivedAt = null)
     {
         $this->archivedAt = $archivedAt;
     }
 
     /**
-     * @return DateTime|null
+     * @return \DateTime|null
      */
     public function getArchivedAt()
     {
@@ -933,12 +939,12 @@ class Client implements ClientInterface
      * @JMS\SerializedName("active_from")
      * @JMS\Groups({"active-period"})
      *
-     * @return DateTime
+     * @return \DateTime
      */
     public function getActiveFrom()
     {
         $reports = $this->getReports();
-        $earliest = new DateTime('now');
+        $earliest = new \DateTime('now');
         foreach ($reports as $report) {
             if ($report->getStartDate() < $earliest) {
                 $earliest = $report->getStartDate();
