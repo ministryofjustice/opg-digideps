@@ -1,6 +1,6 @@
 import SessionTimeout from './globals/SessionTimeout'
 import CookieBanner from './globals/CookieBanner'
-import MOJButtonMenu from './modules_new/ButtonMenu'
+// import MOJButtonMenu from './modules_new/ButtonMenu'
 import ButtonToggler from './modules_new/ButtonToggler'
 import ConditionalFieldRevealer from './modules_new/ConditionalFieldRevealer'
 import TextAreaAutoSize from './modules_new/TextAreaAutoSize'
