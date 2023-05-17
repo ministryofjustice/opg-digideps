@@ -28,10 +28,10 @@ window.addEventListener('DOMContentLoaded', () => {
   FormatCurrency.init(document)
 
   // Menu Buttons
-  const menuButtons = document.querySelectorAll('.moj-button-menu')
-  if (menuButtons.length > 0) {
-    MOJButtonMenu.init(menuButtons)
-  }
+  // const menuButtons = document.querySelectorAll('.moj-button-menu')
+  // if (menuButtons.length > 0) {
+  //   MOJButtonMenu.init(menuButtons)
+  // }
 
   // Toggleable Buttons
 
