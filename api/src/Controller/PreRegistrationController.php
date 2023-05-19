@@ -53,6 +53,8 @@ class PreRegistrationController extends RestController
         /** @var User $user */
         $user = $this->getUser();
 
+        $clientData = $this->replaceUnicodeChars($clientData);
+
         $verified = $verificationService->validate(
             $clientData['case_number'],
             $clientData['lastname'],
@@ -90,5 +92,12 @@ class PreRegistrationController extends RestController
     public function clientHasCoDeputies(string $caseNumber)
     {
         return $this->preRegistrationVerificationService->isMultiDeputyCase($caseNumber);
+    }
+
+    private function replaceUnicodeChars(array $clientData)
+    {
+        $clientData['lastname'] = str_replace('’', '\'', $clientData['lastname']);
+
+        return $clientData;
     }
 }
