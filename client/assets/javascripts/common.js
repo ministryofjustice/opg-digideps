@@ -1,6 +1,5 @@
 import SessionTimeout from './globals/SessionTimeout'
 import CookieBanner from './globals/CookieBanner'
-// import MOJButtonMenu from './modules_new/ButtonMenu'
 import ButtonToggler from './modules_new/ButtonToggler'
 import ConditionalFieldRevealer from './modules_new/ConditionalFieldRevealer'
 import TextAreaAutoSize from './modules_new/TextAreaAutoSize'
@@ -26,12 +25,6 @@ window.addEventListener('DOMContentLoaded', () => {
 
   // Format currency module
   FormatCurrency.init(document)
-
-  // Menu Buttons
-  // const menuButtons = document.querySelectorAll('.moj-button-menu')
-  // if (menuButtons.length > 0) {
-  //   MOJButtonMenu.init(menuButtons)
-  // }
 
   // Toggleable Buttons
 
