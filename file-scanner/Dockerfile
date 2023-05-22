@@ -28,7 +28,8 @@ COPY --from=build /go/src/clamav-rest/file-scanner /usr/bin/
 RUN apk update && apk --no-cache add clamav clamav-libunrar \
     && mkdir /run/clamav \
     && chown clamav:clamav /run/clamav \
-    && apk upgrade openssl
+    && apk upgrade openssl \
+    && apk upgrade libcurl
 
 # Configure clamAV to run in foreground with port 3310
 RUN sed -i 's/^#Foreground .*$/Foreground true/g' /etc/clamav/clamd.conf \
