@@ -25,6 +25,14 @@ trait ActivateTrait
     }
 
     /**
+     * @Given pre-registration details exist with no unicode characters$/
+     */
+    public function preRegistrationDetailsExistWithNoUnicodeCharacters()
+    {
+        $this->existingPreRegistration = $this->fixtureHelper->createPreRegistration('OPG102', 'PFA', 'O\'Shea');
+    }
+
+    /**
      * @Given they create a :typeOfUser user with name details that match the pre-registration details
      * @Given a case manager creates an :typeOfUser user
      */
@@ -116,6 +124,24 @@ trait ActivateTrait
         if ($this->getSession()->getPage()->findById('client_caseNumber')) {
             $this->fillInField('client_firstname', $this->faker->firstName());
             $this->fillInField('client_lastname', $this->existingPreRegistration->getClientLastname());
+            $this->fillInField('client_caseNumber', $this->existingPreRegistration->getCaseNumber());
+        }
+
+        $this->pressButton('client_save');
+    }
+
+    private function completeClientDetailsSectionUsingUnicode()
+    {
+        $this->fillInField('client_address', '1 South Parade');
+        $this->fillInField('client_postcode', 'NG1 2HT');
+        $this->fillInField('client_country', 'GB');
+        $this->fillInField('client_courtDate_day', '01');
+        $this->fillInField('client_courtDate_month', '01');
+        $this->fillInField('client_courtDate_year', '2020');
+
+        if ($this->getSession()->getPage()->findById('client_caseNumber')) {
+            $this->fillInField('client_firstname', $this->faker->firstName());
+            $this->fillInField('client_lastname', 'O’Shea');
             $this->fillInField('client_caseNumber', $this->existingPreRegistration->getCaseNumber());
         }
 
@@ -262,5 +288,20 @@ trait ActivateTrait
         $this->selectOption('organisation_member_roleName_0', 'ROLE_PROF_TEAM_MEMBER');
 
         $this->pressButton('organisation_member_save');
+    }
+
+    /**
+     * @Given /^they complete the user registration flow using unicode characters$/
+     */
+    public function theyCompleteTheUserRegistrationFlowUsingUnicodeCharacters()
+    {
+        $this->completeSetPasswordStep();
+
+        $this->loginToFrontendAs($this->getUserForTestRun()['email']);
+        $this->completeUserDetailsSection();
+
+        $this->completeClientDetailsSectionUsingUnicode();
+
+        $this->completeFinalRegistrationSection($this->getUserForTestRun()['type']);
     }
 }
