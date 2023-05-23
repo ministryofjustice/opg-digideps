@@ -191,11 +191,13 @@
                     {{ decision.clientInvolvedDetails | nl2br }}
                 </dd>
                 <dd class="govuk-summary-list__actions">
+                {% if not hideEditLink  %}
                     <a href="{{ path('decisions_edit', { 'reportId': report.id, 'decisionId': decision.id }) }}"
                         class="behat-link-edit govuk-link">{{ 'edit' | trans({}, 'common') }}</a>
                     <a href="{{ path('decisions_delete', { 'reportId': report.id, 'decisionId': decision.id }) }}"
                         class="govuk-!-margin-left-1 govuk-link behat-link-delete">{{ 'remove' | trans({}, 'common' ) }}</a>
                 </dd>
+                {% endif %}
             </div>
         {% endfor %}
 
