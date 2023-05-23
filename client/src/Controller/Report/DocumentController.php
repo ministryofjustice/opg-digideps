@@ -15,6 +15,7 @@ use App\Service\Client\RestClient;
 use App\Service\DocumentService;
 use App\Service\File\S3FileUploader;
 use App\Service\File\Verifier\MultiFileFormUploadVerifier;
+use App\Service\File\Storage\FileUploadFailedException;
 use App\Service\StepRedirector;
 use Exception;
 use Psr\Log\LoggerInterface;
@@ -198,6 +199,10 @@ class DocumentController extends AbstractController
                     } catch (MimeTypeAndFileExtensionDoNotMatchException $e) {
                         $errorMessage = sprintf('Cannot upload file: %s.', $e->getMessage());
                         $logger->warning($errorMessage);
+
+                        $form->get('files')->addError(new FormError($errorMessage));
+                    } catch (FileUploadFailedException $e) {
+                        $errorMessage = sprintf('File "%s" upload did not complete, please try again', $e->getMessage());
 
                         $form->get('files')->addError(new FormError($errorMessage));
                     } catch (Throwable $e) {
