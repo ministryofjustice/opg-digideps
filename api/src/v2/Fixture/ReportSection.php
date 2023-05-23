@@ -2,7 +2,7 @@
 
 namespace App\v2\Fixture;
 
-use App\Entity\Ndr as Ndr;
+use App\Entity\Ndr;
 use App\Entity\Ndr\ClientBenefitsCheck as NdrClientBenefitsCheck;
 use App\Entity\Ndr\MoneyReceivedOnClientsBehalf as NdrMoneyReceivedOnClientsBehalf;
 use App\Entity\Report\Action;
@@ -16,7 +16,6 @@ use App\Entity\Report\ProfDeputyOtherCost;
 use App\Entity\Report\Report;
 use App\Entity\Report\VisitsCare;
 use App\Entity\ReportInterface;
-use DateTime;
 use Doctrine\Common\Collections\ArrayCollection;
 use Doctrine\ORM\EntityManagerInterface;
 
@@ -66,8 +65,9 @@ class ReportSection
      */
     private function completeDecisions(ReportInterface $report): void
     {
+        $report->setSignificantDecisionsMade('No');
         $report->setReasonForNoDecisions('No need for decisions');
-        (new MentalCapacity($report))->setHasCapacityChanged('no')->setMentalAssessmentDate(new DateTime());
+        (new MentalCapacity($report))->setHasCapacityChanged('no')->setMentalAssessmentDate(new \DateTime());
     }
 
     private function completeContacts(ReportInterface $report): void
@@ -254,7 +254,7 @@ class ReportSection
     {
         $typeOfIncome = $report instanceof Ndr\Ndr ? new NdrMoneyReceivedOnClientsBehalf() : new MoneyReceivedOnClientsBehalf();
 
-        $typeOfIncome->setCreated(new DateTime())
+        $typeOfIncome->setCreated(new \DateTime())
             ->setWhoReceivedMoney('Someone')
             ->setAmount(100.50)
             ->setMoneyType('Universal Credit');
@@ -263,8 +263,8 @@ class ReportSection
 
         $clientBenefitsCheck->setReport($report)
             ->setWhenLastCheckedEntitlement(ClientBenefitsCheck::WHEN_CHECKED_I_HAVE_CHECKED)
-            ->setDateLastCheckedEntitlement(new DateTime())
-            ->setCreated(new DateTime())
+            ->setDateLastCheckedEntitlement(new \DateTime())
+            ->setCreated(new \DateTime())
             ->setDoOthersReceiveMoneyOnClientsBehalf('yes')
             ->addTypeOfMoneyReceivedOnClientsBehalf($typeOfIncome)
         ;
