@@ -6,7 +6,6 @@ namespace App\Tests\Behat\v2\Analytics;
 
 use App\Entity\User;
 use App\Tests\Behat\BehatException;
-use Behat\Behat\Tester\Exception\PendingException;
 
 trait AnalyticsTrait
 {
@@ -15,6 +14,7 @@ trait AnalyticsTrait
     private array $expectedMetrics = [];
     private array $metricXPaths = [
         'feedBack' => '//span[@aria-labelledby=\'metric-satisfaction-total-label\']',
+        'totalRespondents' => '//span[@aria-labelledby=\'metric-respondents-total-label\']',
         'totalReports' => '//span[@aria-labelledby=\'metric-reportsSubmitted-total-label\']',
         'totalRegistered' => '//span[@aria-labelledby=\'metric-registeredDeputies-total-label\']',
         'laySatisfaction' => '//span[@aria-labelledby=\'metric-satisfaction-deputyType-lay-label\']',
