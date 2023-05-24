@@ -44,14 +44,14 @@ jobs:
           - svc_name: "synchronise-lambda"
             sub_folder: "lambdas/functions/synchronisation"
     steps:
-      - uses: actions/checkout@24cb9080177205b6e8c946b17badbe402adc938f # pin@v3
+      - uses: actions/checkout@f095bcc56b7c2baf48f3ac70d6d6782f4f553222 # pin@v3
 
       - name: set up docker buildx
         uses: docker/setup-buildx-action@b167a89702b8b5314c104ab9d211b3dcf774f2b1
 
       - name: cache docker layers
         id: cache-docker
-        uses: actions/cache@365406cb701e1cc758077b05049298a49a8b71c2 # pin@v3.0.8
+        uses: actions/cache@04f198bf0b2a39f7230a4304bf07747a0bddf146 # pin@v3.0.8
         with:
           path: /tmp/.buildx-cache
           key: ${{ runner.os }}-${{ matrix.svc_name }}-build-${{ github.sha }}
@@ -62,7 +62,7 @@ jobs:
         uses: unfor19/install-aws-cli-action@457b7980b125044247e455d87b9a26fc2299b787 # pin@v1.0.3
 
       - name: configure aws credentials
-        uses: aws-actions/configure-aws-credentials@67fbcbb121271f7775d2e7715933280b06314838 # pin@v1.7.0
+        uses: aws-actions/configure-aws-credentials@8815b6557cafe082774ec49c58d911e53c98849d # pin@v1.7.0
         with:
           aws-access-key-id: ${{ secrets.AWS_ACCESS_KEY_ID_ACTIONS }}
           aws-secret-access-key: ${{ secrets.AWS_SECRET_ACCESS_KEY_ACTIONS }}
@@ -108,7 +108,7 @@ jobs:
 
       - name: ecr login
         id: login_ecr
-        uses: aws-actions/amazon-ecr-login@9149ade017c57f86dea2f76a01f8b2d5bd06b10f # pin@v1.5.1
+        uses: aws-actions/amazon-ecr-login@fd4e6c8f3b0c1f60183fab906997c0eebdb9dd12 # pin@v1.5.1
         with:
           registries: 311462405659
 
