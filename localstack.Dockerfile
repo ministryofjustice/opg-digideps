@@ -1,4 +1,4 @@
-FROM localstack/localstack:0.14.2 as localstack
+FROM localstack/localstack:0.14.5 as localstack
 
 RUN apt -yq install bash-completion bash
 
