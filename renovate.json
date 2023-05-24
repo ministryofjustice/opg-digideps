@@ -78,7 +78,6 @@
       "automerge": true,
       "dependencyDashboardApproval": true,
       "labels": ["Dependencies", "Renovate"],
-      "prTitle": "chore(deps): update GitHub Actions",
       "prBody": "Updates the following GitHub Actions dependencies:\n\n{{#each dependencies}}- {{this.name}}\n{{/each}}",
       "schedule": ["after 6am and before 9am on Monday"],
       "stabilityDays": 3
