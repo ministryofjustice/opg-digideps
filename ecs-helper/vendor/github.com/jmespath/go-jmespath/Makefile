@@ -48,3 +48,4 @@ pprof-cpu:
 
 test-internal-testify:
 	cd internal/testify && go test ./...
+
