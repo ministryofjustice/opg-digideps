@@ -1,4 +1,4 @@
-FROM node:18.14.2-alpine AS webpack
+FROM node:18.16.0-alpine AS webpack
 WORKDIR /app
 COPY package.json .
 COPY package-lock.json .
@@ -14,7 +14,7 @@ RUN npm audit --production
 #Build assets
 RUN NODE_ENV=production npm run build
 
-FROM composer:2.5.4 AS composer
+FROM composer:2.5.5 AS composer
 WORKDIR /app
 RUN apk update
 RUN apk add libpng libpng-dev libjpeg-turbo-dev libwebp-dev zlib-dev libxpm-dev

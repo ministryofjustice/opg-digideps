@@ -11,7 +11,7 @@ COPY . .
 
 RUN GOOS=linux CGO_ENABLED=0 GOARCH=amd64 go build -a -installsuffix cgo -o /go/bin/main ./main.go
 
-FROM alpine:3.17
+FROM alpine:3.18
 
 RUN apk update && apk upgrade --no-cache openssl
 

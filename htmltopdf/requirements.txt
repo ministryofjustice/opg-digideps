@@ -1,6 +1,6 @@
 executor==23.2
-gunicorn==20.0.4
-setuptools==65.5.1
+gunicorn==20.1.0
+setuptools==65.7.0
 weasyprint==52.5
-werkzeug==2.2.3
-wheel==0.38.4
+werkzeug==2.3.4
+wheel==0.40.0
