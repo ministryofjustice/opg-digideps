@@ -24,7 +24,7 @@ jobs:
   terraform_workflow:
     runs-on: ubuntu-latest
     steps:
-      - uses: actions/checkout@24cb9080177205b6e8c946b17badbe402adc938f # pin@v3
+      - uses: actions/checkout@f095bcc56b7c2baf48f3ac70d6d6782f4f553222 # pin@v3
         with:
           fetch-depth: "0"
 
@@ -40,7 +40,7 @@ jobs:
           terraform_version: 1.2.4
 
       - name: configure AWS credentials for terraform
-        uses: aws-actions/configure-aws-credentials@67fbcbb121271f7775d2e7715933280b06314838 # pin@v1.7.0
+        uses: aws-actions/configure-aws-credentials@8815b6557cafe082774ec49c58d911e53c98849d # pin@v1.7.0
         with:
           aws-access-key-id: ${{ secrets.AWS_ACCESS_KEY_ID_ACTIONS }}
           aws-secret-access-key: ${{ secrets.AWS_SECRET_ACCESS_KEY_ACTIONS }}
@@ -54,7 +54,7 @@ jobs:
 
       - name: download artifact for monitoring lambda layer
         if: inputs.apply == 'true' && inputs.terraform_path == 'environment'
-        uses: actions/download-artifact@fb598a63ae348fa914e94cd0ff38f362e927b741
+        uses: actions/download-artifact@e9ef242655d12993efdcda9058dee2db83a2cb9b
         with:
           name: layer.tar
           path: lambdas
