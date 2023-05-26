@@ -45,6 +45,7 @@ trait AnalyticsTrait
 
         $this->expectedMetrics = [
             'feedBack' => 100,
+            'totalRespondents' => 3,
             'totalReports' => 3,
             'totalRegistered' => 3,
             'laySatisfaction' => 100,
@@ -71,6 +72,7 @@ trait AnalyticsTrait
 
         $this->expectedMetrics = [
             'feedBack' => 50,
+            'totalRespondents' => 6,
             'totalReports' => 6,
             'totalRegistered' => 3,
             'laySatisfaction' => 50,
@@ -105,6 +107,7 @@ trait AnalyticsTrait
     {
         $this->expectedMetrics = [
             'feedBack' => 50,
+            'totalRespondents' => 6,
             'totalReports' => 6,
             'totalRegistered' => 3,
             'laySatisfaction' => 50,
