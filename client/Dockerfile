@@ -14,7 +14,7 @@ RUN npm audit --production
 #Build assets
 RUN NODE_ENV=production npm run build
 
-FROM composer:2.5.4 AS composer
+FROM composer:2.5.7 AS composer
 WORKDIR /app
 RUN apk update
 RUN apk add libpng libpng-dev libjpeg-turbo-dev libwebp-dev zlib-dev libxpm-dev

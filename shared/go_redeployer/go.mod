@@ -4,6 +4,6 @@ go 1.16
 
 require (
 	github.com/aws/aws-lambda-go v1.32.1
-	github.com/aws/aws-sdk-go v1.44.49
+	github.com/aws/aws-sdk-go v1.44.266
 	gopkg.in/yaml.v3 v3.0.1 // indirect
 )
