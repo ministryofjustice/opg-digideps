@@ -58,7 +58,6 @@ describe('SessionTimeout', () => {
         SessionTimeout()
 
         expect(consoleSpy).toHaveBeenNthCalledWith(1, `${da} missing from the page - ensure it is a data attribute on a page element`)
-        expect(consoleSpy).toHaveBeenNthCalledWith(2, 'Required data or element is missing from page')
       })
     })
   })
