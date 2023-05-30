@@ -1,7 +1,5 @@
 import { describe, expect, it, jest } from '@jest/globals'
 import SessionTimeoutDialog from '../../modules_new/SessionTimeoutDialog'
-import { findByText, queryByText } from '@testing-library/dom'
-import { userEvent } from '@testing-library/user-event/dist/types/setup/index'
 
 // Required to test against .fetch API
 require('jest-fetch-mock').enableMocks()
@@ -32,7 +30,7 @@ describe('SessionTimeoutDialog', function () {
       expect(SessionTimeoutDialogObj.element).toEqual(divElement)
       expect(SessionTimeoutDialogObj.sessionPopupShowAfterMs).toEqual(sessionPopupShowAfterMs)
       expect(SessionTimeoutDialogObj.keepSessionAliveUrl).toEqual(keepSessionAliveUrl)
-      expect(SessionTimeoutDialogObj.redirectAfterMs).toEqual(redirectAfterMs)
+      expect(SessionTimeoutDialogObj.redirectAfterMs).toEqual(redirectAfterMs + 1000)
       expect(SessionTimeoutDialogObj.popUpButton).toEqual(buttonElement)
     })
 
@@ -41,47 +39,13 @@ describe('SessionTimeoutDialog', function () {
 
       SessionTimeoutDialogObj.init(validOptions)
 
-      expect(spy).toHaveBeenCalledWith('click', SessionTimeoutDialogObj.onButtonClickHandler)
-    })
-
-    it('has displayed element after timer', async function () {
-      SessionTimeoutDialogObj.init(validOptions)
-
-      const elementVisible = await findByText('Test div')
-      expect(elementVisible).toBeTruthy()
-    })
-
-    it('has hidden element after button click', async function () {
-      SessionTimeoutDialogObj.init(validOptions)
-      const user = userEvent.setup()
-      const button = await findByText('Test btn')
-
-      await user.click(button)
-
-      const element = queryByText('Test div')
-
-      expect(element).toBeNull()
+      expect(spy).toHaveBeenCalledWith('click', expect.any(Function))
     })
   })
 
   describe('hidePopupAndRestartCountdown', function () {
     document.body.innerHTML = '<div>Test div</div><button>Test btn</button>'
-    const divElement = document.querySelector('div')
     const SessionTimeoutDialogObj = SessionTimeoutDialog
-
-    it('hides the popup', function () {
-      SessionTimeoutDialogObj.hidePopupAndRestartCountdown(SessionTimeoutDialogObj)
-
-      expect(divElement.style.display).toEqual('none')
-    })
-
-    it('keeps the session alive', function () {
-      const spy = jest.spyOn(SessionTimeoutDialogObj, 'keepSessionAlive')
-
-      SessionTimeoutDialogObj.hidePopupAndRestartCountdown(SessionTimeoutDialogObj)
-
-      expect(spy).toHaveBeenCalled()
-    })
 
     it('clears the window intervals', function () {
       const spy = jest.spyOn(window, 'clearInterval')

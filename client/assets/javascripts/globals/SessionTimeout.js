@@ -23,28 +23,26 @@ const getElementByDataAttribute = function (dataAttribute) {
 }
 
 const SessionTimeout = function () {
-  if (document.URL.match('\\/login') === null) {
-    const keepAliveUrl = getDataAttributeData('data-keep-alive')
-    const sessionExpiresValue = getDataAttributeData('data-session-expires')
-    const popupExpiresValue = getDataAttributeData('data-popup-expires')
+  const keepAliveUrl = getDataAttributeData('data-keep-alive')
+  const sessionExpiresValue = getDataAttributeData('data-session-expires')
+  const popupExpiresValue = getDataAttributeData('data-popup-expires')
 
-    const appTimeoutPop = getElementByDataAttribute('data-module="app-timeout-popup"')
-    const okBtn = getElementByDataAttribute('data-js="ok-button"')
+  const appTimeoutPop = getElementByDataAttribute('data-module="app-timeout-popup"')
+  const okBtn = getElementByDataAttribute('data-js="ok-button"')
 
-    const elements = [keepAliveUrl, sessionExpiresValue, popupExpiresValue, appTimeoutPop, okBtn]
+  const elements = [keepAliveUrl, sessionExpiresValue, popupExpiresValue, appTimeoutPop, okBtn]
 
-    if (elements.includes(null)) {
-      SessionTimeoutDialog.init({
-        element: appTimeoutPop,
-        sessionExpiresMs: sessionExpiresValue * 1000,
-        sessionPopupShowAfterMs: popupExpiresValue * 1000,
-        keepSessionAliveUrl: keepAliveUrl,
-        okBtn: okBtn
-      })
-
-      return null
-    }
+  if (!elements.includes(null)) {
+    SessionTimeoutDialog.init({
+      element: appTimeoutPop,
+      sessionExpiresMs: sessionExpiresValue * 1000,
+      sessionPopupShowAfterMs: popupExpiresValue * 1000,
+      keepSessionAliveUrl: keepAliveUrl,
+      okBtn: okBtn
+    })
   }
+
+  return null
 }
 
 export default SessionTimeout

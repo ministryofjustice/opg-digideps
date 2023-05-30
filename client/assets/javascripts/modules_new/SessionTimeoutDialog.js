@@ -12,7 +12,7 @@ const SessionTimeoutDialog = {
 
     this.popUpButton.addEventListener('click', function (event) {
       event.preventDefault()
-      this.hidePopupAndRestartCountdown(that)
+      that.hidePopupAndRestartCountdown(that)
     })
 
     this.startCountdown(that)
