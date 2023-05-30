@@ -20,7 +20,11 @@ class S3Storage implements StorageInterface
 {
     // If a file is deleted in S3 it will return an AccessDenied error until its permanently deleted
     public const MISSING_FILE_AWS_ERROR_CODES = ['NoSuchKey', 'AccessDenied'];
+    
     /**
+     * S3Storage constructor.
+     * 
+     * 
      * https://github.com/aws/aws-sdk-php
      * http://docs.aws.amazon.com/aws-sdk-php/v2/api/class-Aws.S3.S3Client.html.
      *
@@ -28,32 +32,12 @@ class S3Storage implements StorageInterface
      * https://github.com/jubos/fake-s3
      * https://github.com/jubos/fake-s3/wiki/Supported-Clients
      */
-    private S3ClientInterface $s3Client;
+    function __construct(
+        private  S3ClientInterface $s3Client, 
+        private  string $bucketName,
+        private LoggerInterface $logger
+    ) {}
 
-    private string $bucketName;
-    private LoggerInterface $logger;
-
-    /**
-     * S3Storage constructor.
-     *
-     * @param S3ClientInterface $s3Client   (Aws library)
-     * @param string            $bucketName S3 bucket name
-     */
-    public function __construct(S3ClientInterface $s3Client, string $bucketName, LoggerInterface $logger)
-    {
-        $this->s3Client = $s3Client;
-        $this->bucketName = $bucketName;
-        $this->logger = $logger;
-    }
-
-    /**
-     * Gets file content
-     * To download it, use
-     * header('Content-Disposition: attachment; filename="' . $_GET['filename'] .'"');
-     * readfile(<this method>);.
-     *
-     * @return string file content
-     */
     public function retrieve(string $key): string
     {
         try {
@@ -74,9 +58,6 @@ class S3Storage implements StorageInterface
         }
     }
 
-    /**
-     * @param string $key
-     */
     public function delete($key): Result
     {
         $this->appendTagset($key, [['Key' => 'Purge', 'Value' => 1]]);
@@ -87,9 +68,6 @@ class S3Storage implements StorageInterface
         ]);
     }
 
-    /**
-     * Remove an object and all its versions from S3 completely.
-     */
     public function removeFromS3(string $key): array
     {
         if (empty($key)) {
@@ -104,7 +82,7 @@ class S3Storage implements StorageInterface
             ]);
 
             if (!$objectVersions instanceof ResultInterface || !$objectVersions->hasKey('Versions')) {
-                throw new \RuntimeException('Could not remove file: No results returned');
+                throw new RuntimeException('Could not remove file: No results returned');
             } else {
                 $objectVersions = $objectVersions->toArray();
                 $s3Result = [];
@@ -119,7 +97,7 @@ class S3Storage implements StorageInterface
                     ]);
                     $s3Result = $s3Result->toArray();
 
-                    $this->handleS3Errors($s3Result);
+                    $this->handleS3DeletionErrors($s3Result);
                 }
 
                 return $this->logS3Results($objectVersions, $objectsToDelete, $s3Result);
@@ -127,9 +105,6 @@ class S3Storage implements StorageInterface
         }
     }
 
-    /**
-     * Write results information to log.
-     */
     private function logS3Results(array $objectVersions, array $objectsToDelete, array $s3Result): array
     {
         $resultsSummary = [
@@ -165,13 +140,7 @@ class S3Storage implements StorageInterface
         return $objectsToDelete;
     }
 
-    /**
-     * Handles any errors returned from S3 SDK. Exceptions that might have been handled by the SDK and converted to
-     * an Errors array returned.
-     *
-     * @throws RuntimeException
-     */
-    private function handleS3Errors(array $s3Result)
+    private function handleS3DeletionErrors(array $s3Result)
     {
         if (array_key_exists('Errors', $s3Result) && count($s3Result['Errors']) > 0) {
             foreach ($s3Result['Errors'] as $s3Error) {
@@ -184,19 +153,28 @@ class S3Storage implements StorageInterface
         }
     }
 
-    /**
-     * @param $key
-     * @param $body
-     */
     public function store($key, $body): Result
     {
-        return $this->s3Client->putObject([
+        $response = $this->s3Client->putObject([
             'Bucket' => $this->bucketName,
             'Key' => $key,
             'Body' => $body,
             'ServerSideEncryption' => 'AES256',
             'Metadata' => [],
         ]);
+        
+        $this->s3Client->waitUntil('ObjectExists', array(
+            'Bucket' => $this->bucketName,
+            'Key'    => $key
+        ));
+
+        if (!$this->s3Client->doesObjectExistV2($this->bucketName, $key)) {
+            $this->log('error', 'Failed to upload file to S3. Filename: '. $key);
+
+            throw new FileUploadFailedException($key);
+        }
+
+        return $response;
     }
 
     /**

@@ -62,6 +62,9 @@ class S3StorageTest extends TestCase
             ->once()
             ->andReturn($this->generateAwsResult(200));
 
+        $awsClient->shouldReceive('waitUntil')->andReturn($awsClient);
+        $awsClient->shouldReceive('doesObjectExistV2')->andReturn(true);
+
         $awsClient->shouldReceive('getObjectTagging')
             ->with(m::type('array'))
             ->once()
@@ -130,15 +133,19 @@ class S3StorageTest extends TestCase
         return new Result($args);
     }
 
-    public function testUploadBinaryContent()
+    public function testSuccessfulUploadBinaryContent()
     {
         /** @var S3ClientInterface */
+
         $awsClient = m::mock(S3ClientInterface::class);
 
         $awsClient->shouldReceive('putObject')->andReturn($this->generateAwsResult(200));
         $awsClient->shouldReceive('getObject')->with(
             m::type('array')
         )->andReturn($this->generateAwsResult(200, [], $this->createMockStream(file_get_contents(__DIR__.'/cat.jpg'))));
+
+        $awsClient->shouldReceive('waitUntil')->andReturn($awsClient);
+        $awsClient->shouldReceive('doesObjectExistV2')->andReturn(true);
 
         /** @var LoggerInterface */
         $mockLogger = m::mock(LoggerInterface::class);
@@ -152,6 +159,34 @@ class S3StorageTest extends TestCase
 
         $this->object->store($key, $fileContent);
         $this->assertEquals($fileContent, $this->object->retrieve($key));
+    }
+
+    public function testFailedUploadBinaryContent()
+    {
+        /** @var S3ClientInterface */
+        
+        $awsClient = m::mock(S3ClientInterface::class);
+
+        $awsClient->shouldReceive('putObject')->andReturn($this->generateAwsResult(200));
+
+        $awsClient->shouldReceive('waitUntil')->andReturn($awsClient);;
+        $awsClient->shouldReceive('doesObjectExistV2')->andReturn(false);
+
+        // create timestamped file and key to undo effects of potential previous executions
+        $key = 'storagetest-upload-download-delete'.microtime(1).'.png';
+        $fileContent = file_get_contents(__DIR__.'/cat.jpg');
+
+        /** @var LoggerInterface */
+        $mockLogger = m::mock(LoggerInterface::class);
+        $mockLogger->shouldReceive('log')->withAnyArgs([
+            'error',
+            'Failed to upload file to S3. Filename: '. $key
+        ]);
+
+        $this->object = new S3Storage($awsClient, 'unit_test_bucket', $mockLogger);
+        
+        $this->expectException(FileUploadFailedException::class);
+        $this->object->store($key, $fileContent);
     }
 
     public function testRemoveFromS3NoErrors()
