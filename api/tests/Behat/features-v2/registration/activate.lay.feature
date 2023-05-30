@@ -32,9 +32,9 @@ Feature: Activate user account - Lay Users
         Then the partially registered users 'active flag' should 'be' set
         And the partially registered users 'registration date' should 'be' set
 
-    @super-admin @admin @gsc
+    @super-admin @admin
     Scenario: A Lay user registers for the service using unicode characters - case manager created
-        Given pre-registration details exist to allow a lay deputy to register for the service
+        Given pre-registration details exist with no unicode characters
         And a case manager accesses the admin app
         And they create a 'lay' user with name details that match the pre-registration details
         When the user clicks the activate account link in their email

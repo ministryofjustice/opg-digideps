@@ -25,7 +25,7 @@ trait ActivateTrait
     }
 
     /**
-     * @Given pre-registration details exist with no unicode characters$/
+     * @Given pre-registration details exist with no unicode characters
      */
     public function preRegistrationDetailsExistWithNoUnicodeCharacters()
     {

@@ -1218,7 +1218,7 @@ class FixtureHelper
 
     public function createPreRegistration(string $reportType = 'OPG102', string $orderType = 'PFA', string $clientLastname = 'Smith'): PreRegistration
     {
-        $data = ['reportType' => $reportType, 'orderType' => $orderType];
+        $data = ['reportType' => $reportType, 'orderType' => $orderType, 'clientLastName' => $clientLastname];
 
         $preRegistration = $this->preRegistrationFactory->create($data);
         $this->em->persist($preRegistration);
