@@ -143,11 +143,11 @@ services:
     restart: always
 
   redis-frontend:
-    image: redis:6.2.7
+    image: redis:6.2.12
     restart: always
 
   redis-api:
-    image: redis:6.2.7
+    image: redis:6.2.12
     restart: always
 
   file-scanner-rest:
@@ -182,7 +182,7 @@ services:
       - OPG Data
 
   mock-sirius-integration:
-    image: muonsoft/openapi-mock:v0.3.3
+    image: muonsoft/openapi-mock:0.3.9
     ports:
       - 6060:8080
     environment:

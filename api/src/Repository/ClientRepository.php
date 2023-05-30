@@ -138,4 +138,17 @@ class ClientRepository extends ServiceEntityRepository
             ->setParameter('caseNumber', $caseNumber)
             ->getOneOrNullResult();
     }
+
+    public function findByIdIncludingDischarged(int $id): ?Client
+    {
+        /** @var SoftDeleteableFilter $filter */
+        $filter = $this->_em->getFilters()->getFilter('softdeleteable');
+        $filter->disableForEntity(Client::class);
+
+        $client = $this->find($id);
+
+        $this->_em->getFilters()->enable('softdeleteable');
+
+        return $client;
+    }
 }

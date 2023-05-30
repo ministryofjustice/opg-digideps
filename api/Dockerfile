@@ -1,4 +1,4 @@
-FROM composer:2.5.4 AS composer
+FROM composer:2.5.7 AS composer
 
 WORKDIR /app
 # Install composer dependencies
@@ -12,7 +12,7 @@ COPY src src
 RUN composer run-script post-install-cmd --no-interaction
 RUN composer dump-autoload --optimize
 
-FROM php:8.1.16-fpm-alpine3.16 as base
+FROM php:8.1.18-fpm-alpine3.16 as base
 WORKDIR /var/www
 EXPOSE 80
 EXPOSE 443
@@ -25,8 +25,8 @@ RUN apk --no-cache add \
     nginx \
     nginx-mod-http-headers-more \
     su-exec \
-    php8-pecl-igbinary \
-    php8-pecl-redis
+    php81-pecl-igbinary  \
+    php81-pecl-redis
 RUN docker-php-ext-install pdo pdo_pgsql opcache
 RUN docker-php-ext-enable opcache
 # Install pcov for faster coverage tooling

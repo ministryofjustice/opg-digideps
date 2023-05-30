@@ -22,11 +22,6 @@ resource "aws_s3_bucket_versioning" "s3_access_logs" {
   }
 }
 
-resource "aws_s3_bucket_acl" "s3_access_logs" {
-  bucket = aws_s3_bucket.s3_access_logs.id
-  acl    = "log-delivery-write"
-}
-
 resource "aws_s3_bucket_public_access_block" "s3_access_logs" {
   bucket = aws_s3_bucket.s3_access_logs.bucket
 

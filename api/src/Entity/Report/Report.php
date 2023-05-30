@@ -11,14 +11,10 @@ use App\Entity\Traits\CreateUpdateTimestamps;
 use App\Entity\User;
 use App\Service\ReportService;
 use App\Service\ReportStatusService;
-use DateInterval;
 use DateTime;
-use DateTimeZone;
 use Doctrine\Common\Collections\ArrayCollection;
 use Doctrine\ORM\Mapping as ORM;
-use InvalidArgumentException;
 use JMS\Serializer\Annotation as JMS;
-use RuntimeException;
 
 /**
  * Reports.
@@ -57,83 +53,87 @@ class Report implements ReportInterface
      * Reports with total amount of assets
      * Threshold under which reports should be 103, and not 102.
      */
-    const ASSETS_TOTAL_VALUE_103_THRESHOLD = 21000;
+    public const ASSETS_TOTAL_VALUE_103_THRESHOLD = 21000;
 
-    const HEALTH_WELFARE = 1;
-    const PROPERTY_AND_AFFAIRS = 2;
+    public const HEALTH_WELFARE = 1;
+    public const PROPERTY_AND_AFFAIRS = 2;
 
-    const STATUS_NOT_STARTED = 'notStarted';
-    const STATUS_READY_TO_SUBMIT = 'readyToSubmit';
-    const STATUS_NOT_FINISHED = 'notFinished';
+    public const STATUS_NOT_STARTED = 'notStarted';
+    public const STATUS_READY_TO_SUBMIT = 'readyToSubmit';
+    public const STATUS_NOT_FINISHED = 'notFinished';
 
     // https://opgtransform.atlassian.net/wiki/spaces/DEPDS/pages/135266255/Report+variations
-    const LAY_PFA_LOW_ASSETS_TYPE = '103';
-    const LAY_PFA_HIGH_ASSETS_TYPE = '102';
-    const LAY_HW_TYPE = '104';
-    const LAY_COMBINED_LOW_ASSETS_TYPE = '103-4';
-    const LAY_COMBINED_HIGH_ASSETS_TYPE = '102-4';
+    public const LAY_PFA_LOW_ASSETS_TYPE = '103';
+    public const LAY_PFA_HIGH_ASSETS_TYPE = '102';
+    public const LAY_HW_TYPE = '104';
+    public const LAY_COMBINED_LOW_ASSETS_TYPE = '103-4';
+    public const LAY_COMBINED_HIGH_ASSETS_TYPE = '102-4';
 
     // PA
-    const PA_PFA_LOW_ASSETS_TYPE = '103-6';
-    const PA_PFA_HIGH_ASSETS_TYPE = '102-6';
-    const PA_HW_TYPE = '104-6';
-    const PA_COMBINED_LOW_ASSETS_TYPE = '103-4-6';
-    const PA_COMBINED_HIGH_ASSETS_TYPE = '102-4-6';
+    public const PA_PFA_LOW_ASSETS_TYPE = '103-6';
+    public const PA_PFA_HIGH_ASSETS_TYPE = '102-6';
+    public const PA_HW_TYPE = '104-6';
+    public const PA_COMBINED_LOW_ASSETS_TYPE = '103-4-6';
+    public const PA_COMBINED_HIGH_ASSETS_TYPE = '102-4-6';
 
     // PROF
-    const PROF_PFA_LOW_ASSETS_TYPE = '103-5';
-    const PROF_PFA_HIGH_ASSETS_TYPE = '102-5';
-    const PROF_HW_TYPE = '104-5';
-    const PROF_COMBINED_LOW_ASSETS_TYPE = '103-4-5';
-    const PROF_COMBINED_HIGH_ASSETS_TYPE = '102-4-5';
+    public const PROF_PFA_LOW_ASSETS_TYPE = '103-5';
+    public const PROF_PFA_HIGH_ASSETS_TYPE = '102-5';
+    public const PROF_HW_TYPE = '104-5';
+    public const PROF_COMBINED_LOW_ASSETS_TYPE = '103-4-5';
+    public const PROF_COMBINED_HIGH_ASSETS_TYPE = '102-4-5';
 
-    const TYPE_HEALTH_WELFARE = '104';
-    const TYPE_PROPERTY_AND_AFFAIRS_HIGH_ASSETS = '102';
-    const TYPE_PROPERTY_AND_AFFAIRS_LOW_ASSETS = '103';
-    const TYPE_COMBINED_HIGH_ASSETS = '102-4';
-    const TYPE_COMBINED_LOW_ASSETS = '103-4';
+    public const TYPE_HEALTH_WELFARE = '104';
+    public const TYPE_PROPERTY_AND_AFFAIRS_HIGH_ASSETS = '102';
+    public const TYPE_PROPERTY_AND_AFFAIRS_LOW_ASSETS = '103';
+    public const TYPE_COMBINED_HIGH_ASSETS = '102-4';
+    public const TYPE_COMBINED_LOW_ASSETS = '103-4';
 
-    const ENABLE_FEE_SECTIONS = false;
+    public const ENABLE_FEE_SECTIONS = false;
 
-    const SECTION_DECISIONS = 'decisions';
-    const SECTION_CONTACTS = 'contacts';
-    const SECTION_VISITS_CARE = 'visitsCare';
-    const SECTION_LIFESTYLE = 'lifestyle';
+    public const SECTION_DECISIONS = 'decisions';
+    public const SECTION_CONTACTS = 'contacts';
+    public const SECTION_VISITS_CARE = 'visitsCare';
+    public const SECTION_LIFESTYLE = 'lifestyle';
 
     // money
-    const SECTION_BALANCE = 'balance'; // not a real section, but needed as a flag for the view and the validation
-    const SECTION_BANK_ACCOUNTS = 'bankAccounts';
-    const SECTION_MONEY_TRANSFERS = 'moneyTransfers';
-    const SECTION_MONEY_IN = 'moneyIn';
-    const SECTION_MONEY_OUT = 'moneyOut';
-    const SECTION_MONEY_IN_SHORT = 'moneyInShort';
-    const SECTION_MONEY_OUT_SHORT = 'moneyOutShort';
-    const SECTION_ASSETS = 'assets';
-    const SECTION_DEBTS = 'debts';
-    const SECTION_GIFTS = 'gifts';
-    const SECTION_CLIENT_BENEFITS_CHECK = 'clientBenefitsCheck';
+    public const SECTION_BALANCE = 'balance'; // not a real section, but needed as a flag for the view and the validation
+    public const SECTION_BANK_ACCOUNTS = 'bankAccounts';
+    public const SECTION_MONEY_TRANSFERS = 'moneyTransfers';
+    public const SECTION_MONEY_IN = 'moneyIn';
+    public const SECTION_MONEY_OUT = 'moneyOut';
+    public const SECTION_MONEY_IN_SHORT = 'moneyInShort';
+    public const SECTION_MONEY_OUT_SHORT = 'moneyOutShort';
+    public const SECTION_ASSETS = 'assets';
+    public const SECTION_DEBTS = 'debts';
+    public const SECTION_GIFTS = 'gifts';
+    public const SECTION_CLIENT_BENEFITS_CHECK = 'clientBenefitsCheck';
     // end money
 
-    const SECTION_ACTIONS = 'actions';
-    const SECTION_OTHER_INFO = 'otherInfo';
-    const SECTION_DEPUTY_EXPENSES = 'deputyExpenses';
+    public const SECTION_ACTIONS = 'actions';
+    public const SECTION_OTHER_INFO = 'otherInfo';
+    public const SECTION_DEPUTY_EXPENSES = 'deputyExpenses';
 
     // pa only
-    const SECTION_PA_DEPUTY_EXPENSES = 'paDeputyExpenses'; //106, AKA Fee and expenses
+    public const SECTION_PA_DEPUTY_EXPENSES = 'paDeputyExpenses'; // 106, AKA Fee and expenses
 
     // prof only
-    const SECTION_PROF_CURRENT_FEES = 'profCurrentFees';
-    const SECTION_PROF_DEPUTY_COSTS = 'profDeputyCosts';
-    const SECTION_PROF_DEPUTY_COSTS_ESTIMATE = 'profDeputyCostsEstimate';
+    public const SECTION_PROF_CURRENT_FEES = 'profCurrentFees';
+    public const SECTION_PROF_DEPUTY_COSTS = 'profDeputyCosts';
+    public const SECTION_PROF_DEPUTY_COSTS_ESTIMATE = 'profDeputyCostsEstimate';
 
-    const SECTION_DOCUMENTS = 'documents';
+    public const SECTION_DOCUMENTS = 'documents';
 
     // Applies to both costs and estimate costs
-    const PROF_DEPUTY_COSTS_TYPE_FIXED = 'fixed';
-    const PROF_DEPUTY_COSTS_TYPE_ASSESSED = 'assessed';
-    const PROF_DEPUTY_COSTS_TYPE_BOTH = 'both';
+    public const PROF_DEPUTY_COSTS_TYPE_FIXED = 'fixed';
+    public const PROF_DEPUTY_COSTS_TYPE_ASSESSED = 'assessed';
+    public const PROF_DEPUTY_COSTS_TYPE_BOTH = 'both';
 
-    const BENEFITS_CHECK_SECTION_REQUIRED_GRACE_PERIOD_DAYS = 60;
+    public const BENEFITS_CHECK_SECTION_REQUIRED_GRACE_PERIOD_DAYS = 60;
+
+    // Decisions
+    public const SIGNIFICANT_DECISION_MADE = 'Yes';
+    public const SIGNIFICANT_DECISION_NOT_MADE = 'No';
 
     /**
      * https://opgtransform.atlassian.net/wiki/spaces/DEPDS/pages/135266255/Report+variations.
@@ -282,7 +282,7 @@ class Report implements ReportInterface
     private $clientBenefitsCheck;
 
     /**
-     * @var DateTime
+     * @var \DateTime
      *
      * @JMS\Groups({"report", "report-period"})
      * @JMS\Type("DateTime<'Y-m-d'>")
@@ -291,7 +291,7 @@ class Report implements ReportInterface
     private $startDate;
 
     /**
-     * @var DateTime
+     * @var \DateTime
      *
      * @JMS\Groups({"report", "report-period"})
      * @JMS\Type("DateTime<'Y-m-d'>")
@@ -300,7 +300,7 @@ class Report implements ReportInterface
     private $dueDate;
 
     /**
-     * @var DateTime
+     * @var \DateTime
      *
      * @JMS\Groups({"report", "report-period"})
      * @JMS\Accessor(getter="getEndDate")
@@ -310,7 +310,7 @@ class Report implements ReportInterface
     private $endDate;
 
     /**
-     * @var DateTime
+     * @var \DateTime
      *
      * @JMS\Groups({"report"})
      * @JMS\Accessor(getter="getSubmitDate")
@@ -320,7 +320,8 @@ class Report implements ReportInterface
     private $submitDate;
 
     /**
-     * @var DateTime
+     * @var \DateTime
+     *
      * @JMS\Accessor(getter="getUnSubmitDate")
      * @JMS\Groups({"report"})
      * @JMS\Type("DateTime<'Y-m-d'>")
@@ -351,6 +352,7 @@ class Report implements ReportInterface
      * @deprecated client shouldn't need this anymore
      *
      * @var bool
+     *
      * @JMS\Groups({"report"})
      * @JMS\Type("boolean")
      * @ORM\Column(name="report_seen", type="boolean", options={"default": true})
@@ -394,6 +396,7 @@ class Report implements ReportInterface
 
     /**
      * @var string
+     *
      * @JMS\Groups({"report", "wish-to-provide-documentation"})
      * @JMS\Type("string")
      * @ORM\Column(name="wish_to_provide_documentation", type="string", nullable=true)
@@ -428,11 +431,19 @@ class Report implements ReportInterface
     private $profFeesEstimateSccoReason;
 
     /**
+     * @var string yes | no (see constants)
+     *
+     * @JMS\Type("string")
+     * @JMS\Groups({"report", "significantDecisionsMade"})
+     * @ORM\Column(name="significant_decisions_made", type="text", nullable=true)
+     */
+    private $significantDecisionsMade;
+
+    /**
      * @var array
      *
      * @JMS\Groups({"report"})
      * @ORM\Column(name="unsubmitted_sections_list", type="text", nullable=true)
-     *
      * @JMS\Type("string")
      */
     private $unsubmittedSectionsList;
@@ -457,34 +468,32 @@ class Report implements ReportInterface
 
     /**
      * @ORM\OneToOne(targetEntity="App\Entity\Satisfaction", mappedBy="report", cascade={"persist", "remove"})
-     *
      * @JMS\Type("App\Entity\Satisfaction")
      * @JMS\Groups({"user-research", "satisfaction"})
      */
     private Satisfaction $satisfaction;
 
     private array $excludeSections = [];
-    private ?DateTime $benefitsSectionReleaseDate = null;
+    private ?\DateTime $benefitsSectionReleaseDate = null;
 
     /**
      * Report constructor.
      *
-     * @param $type
      * @param bool $dateChecks if true, perform checks around multiple reports and dates. Useful for PA upload
      */
-    public function __construct(Client $client, $type, DateTime $startDate, DateTime $endDate, $dateChecks = true)
+    public function __construct(Client $client, $type, \DateTime $startDate, \DateTime $endDate, $dateChecks = true)
     {
         if (!in_array($type, self::allRolesAllReportTypes())) {
-            throw new InvalidArgumentException("$type not a valid report type");
+            throw new \InvalidArgumentException("$type not a valid report type");
         }
         $this->type = $type;
         $this->client = $client;
-        $this->startDate = new DateTime($startDate->format('Y-m-d'), new DateTimeZone('Europe/London'));
-        $this->endDate = new DateTime($endDate->format('Y-m-d'), new DateTimeZone('Europe/London'));
+        $this->startDate = new \DateTime($startDate->format('Y-m-d'), new \DateTimeZone('Europe/London'));
+        $this->endDate = new \DateTime($endDate->format('Y-m-d'), new \DateTimeZone('Europe/London'));
         $this->updateDueDateBasedOnEndDate();
 
         if ($dateChecks && count($client->getUnsubmittedReports()) > 0) {
-            throw new RuntimeException('Client '.$client->getId().' already has an unsubmitted report. Cannot create another one');
+            throw new \RuntimeException('Client '.$client->getId().' already has an unsubmitted report. Cannot create another one');
         }
 
         // check date interval overlapping other reports
@@ -492,13 +501,13 @@ class Report implements ReportInterface
             $unsubmittedEndDates = array_map(function ($report) {
                 return $report->getEndDate();
             }, $client->getSubmittedReports()->toArray());
-            rsort($unsubmittedEndDates); //order by last first
+            rsort($unsubmittedEndDates); // order by last first
             $endDateLastReport = $unsubmittedEndDates[0];
             $expectedStartDate = clone $endDateLastReport;
             $expectedStartDate->modify('+1 day');
             $daysDiff = (int) $expectedStartDate->diff($this->startDate)->format('%a');
             if (0 !== $daysDiff) {
-                throw new RuntimeException(sprintf('Incorrect start date. Last submitted report was on %s, '.'therefore the new report is expected to start on %s, not on %s', $endDateLastReport->format('d/m/Y'), $expectedStartDate->format('d/m/Y'), $this->startDate->format('d/m/Y')));
+                throw new \RuntimeException(sprintf('Incorrect start date. Last submitted report was on %s, therefore the new report is expected to start on %s, not on %s', $endDateLastReport->format('d/m/Y'), $expectedStartDate->format('d/m/Y'), $this->startDate->format('d/m/Y')));
             }
         }
 
@@ -532,7 +541,7 @@ class Report implements ReportInterface
         foreach ($this->getAvailableSections() as $sectionId) {
             $statusCached[$sectionId] = ['state' => ReportStatusService::STATE_NOT_STARTED, 'nOfRecords' => 0];
         }
-        
+
         $this->setSectionStatusesCached($statusCached);
         $this->reportStatusCached = self::STATUS_NOT_STARTED;
     }
@@ -566,9 +575,9 @@ class Report implements ReportInterface
         // 13/11/19. Then it is 21 days (DDPB-2996)
         $this->dueDate = clone $this->endDate;
         if ($this->isLayReport() && $this->getEndDate()->format('Ymd') >= '20191113') {
-            $this->dueDate->add(new DateInterval('P21D'));
+            $this->dueDate->add(new \DateInterval('P21D'));
         } else {
-            $this->dueDate->add(new DateInterval('P56D'));
+            $this->dueDate->add(new \DateInterval('P56D'));
         }
     }
 
@@ -626,7 +635,7 @@ class Report implements ReportInterface
      *
      * @return Report
      */
-    public function setStartDate(DateTime $startDate)
+    public function setStartDate(\DateTime $startDate)
     {
         $this->startDate = $startDate;
 
@@ -636,7 +645,7 @@ class Report implements ReportInterface
     /**
      * Get startDate.
      *
-     * @return DateTime
+     * @return \DateTime
      */
     public function getStartDate()
     {
@@ -648,7 +657,7 @@ class Report implements ReportInterface
      *
      * @return Report
      */
-    public function setEndDate(DateTime $endDate)
+    public function setEndDate(\DateTime $endDate)
     {
         $this->endDate = $endDate;
 
@@ -658,7 +667,7 @@ class Report implements ReportInterface
     /**
      * Get endDate.
      *
-     * @return DateTime
+     * @return \DateTime
      */
     public function getEndDate()
     {
@@ -679,11 +688,11 @@ class Report implements ReportInterface
     /**
      * Set submitDate.
      *
-     * @param DateTime $submitDate
+     * @param \DateTime $submitDate
      *
      * @return Report
      */
-    public function setSubmitDate(DateTime $submitDate = null)
+    public function setSubmitDate(\DateTime $submitDate = null)
     {
         $this->submitDate = $submitDate;
 
@@ -693,7 +702,7 @@ class Report implements ReportInterface
     /**
      * Get submitDate.
      *
-     * @return DateTime
+     * @return \DateTime
      */
     public function getSubmitDate()
     {
@@ -701,7 +710,7 @@ class Report implements ReportInterface
     }
 
     /**
-     * @return DateTime|null
+     * @return \DateTime|null
      */
     public function getUnSubmitDate()
     {
@@ -709,7 +718,7 @@ class Report implements ReportInterface
     }
 
     /**
-     * @param DateTime|null $unSubmitDate
+     * @param \DateTime|null $unSubmitDate
      *
      * @return Report
      */
@@ -904,7 +913,7 @@ class Report implements ReportInterface
         $acceptedValues = ['not_deputy', 'only_deputy', 'more_deputies_behalf', 'more_deputies_not_behalf'];
 
         if ($agreeBehalfDeputy && !in_array($agreeBehalfDeputy, $acceptedValues)) {
-            throw new InvalidArgumentException(__METHOD__." {$agreeBehalfDeputy} given. Expected value: ".implode(' or ', $acceptedValues));
+            throw new \InvalidArgumentException(__METHOD__." {$agreeBehalfDeputy} given. Expected value: ".implode(' or ', $acceptedValues));
         }
 
         $this->agreedBehalfDeputy = $agreeBehalfDeputy;
@@ -937,7 +946,7 @@ class Report implements ReportInterface
     /**
      * @return Report
      */
-    public function setDueDate(DateTime $dueDate)
+    public function setDueDate(\DateTime $dueDate)
     {
         $this->dueDate = $dueDate;
 
@@ -945,7 +954,7 @@ class Report implements ReportInterface
     }
 
     /**
-     * @return DateTime
+     * @return \DateTime
      */
     public function getDueDate()
     {
@@ -1124,6 +1133,18 @@ class Report implements ReportInterface
     public function setProfFeesEstimateSccoReason($profFeesEstimateSccoReason)
     {
         $this->profFeesEstimateSccoReason = $profFeesEstimateSccoReason;
+
+        return $this;
+    }
+
+    public function getSignificantDecisionsMade(): ?string
+    {
+        return $this->significantDecisionsMade;
+    }
+
+    public function setSignificantDecisionsMade(?string $significantDecisionsMade): self
+    {
+        $this->significantDecisionsMade = $significantDecisionsMade;
 
         return $this;
     }
@@ -1398,15 +1419,12 @@ class Report implements ReportInterface
         return $this;
     }
 
-    public function getBenefitsSectionReleaseDate(): ?DateTime
+    public function getBenefitsSectionReleaseDate(): ?\DateTime
     {
-        return $this->benefitsSectionReleaseDate ?: new DateTime('16-03-2022 00:00:00');
+        return $this->benefitsSectionReleaseDate ?: new \DateTime('16-03-2022 00:00:00');
     }
 
-    /**
-     * @param DateTime |null $benefitsSectionReleaseDate
-     */
-    public function setBenefitsSectionReleaseDate(?DateTime $benefitsSectionReleaseDate): Report
+    public function setBenefitsSectionReleaseDate(?\DateTime $benefitsSectionReleaseDate): Report
     {
         $this->benefitsSectionReleaseDate = $benefitsSectionReleaseDate;
 

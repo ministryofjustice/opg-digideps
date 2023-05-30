@@ -1,0 +1,15 @@
+{% extends '@App/Layouts/application.html.twig' %}
+
+{% trans_default_domain "admin-tools" %}
+
+{% block htmlTitle %}Admin Tools - Report Reassignment{% endblock %}
+{% block pageTitle %}Report Reassignment{% endblock %}
+{% block supportTitleTop %}Report Reassignment{% endblock %}
+
+{% block pageContent %}
+    {{ form_start(form, {attr: {novalidate: 'novalidate' }}) }}
+    {{ form_input(form.firstClientId,'reportReassignment.firstClientId') }}
+    {{ form_input(form.secondClientId,'reportReassignment.secondClientId') }}
+    {{ form_submit(form.submit, 'reportReassignment.submit') }}
+    {{ form_end(form) }}
+{% endblock %}

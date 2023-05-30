@@ -29,6 +29,15 @@ Feature: Lay Deputy Self Registration
         And I should be on the Lay homepage
 
     @super-admin
+    Scenario: A Lay user inputting unicode characters can self register
+        Given a super admin user accesses the admin app
+        When I navigate to the upload users page
+        And I upload a lay CSV that contains a new pre-registration entity with special characters
+        And a Lay Deputy registers with valid details using unicode characters
+        Then my deputy details should be saved to my account
+        And I should be on the Lay homepage
+
+    @super-admin
     Scenario: A Lay user with an existing pre-registration record and a user account created by a case manager can register
         Given a super admin user accesses the admin app
         When I navigate to the upload users page

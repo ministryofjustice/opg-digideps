@@ -23,17 +23,17 @@ jobs:
   run-task:
     runs-on: ubuntu-latest
     steps:
-      - uses: actions/checkout@24cb9080177205b6e8c946b17badbe402adc938f # pin@v3
+      - uses: actions/checkout@f095bcc56b7c2baf48f3ac70d6d6782f4f553222 # pin@v3
 
-      - uses: unfor19/install-aws-cli-action@35a9630be0168293ad2afccbe06e8e9f47678d2c # pin@v1.0.3
+      - uses: unfor19/install-aws-cli-action@457b7980b125044247e455d87b9a26fc2299b787 # pin@v1.0.3
 
-      - uses: hashicorp/setup-terraform@17d4c9b8043b238f6f35641cdd8433da1e6f3867 # pin@v2.0.0
+      - uses: hashicorp/setup-terraform@61be50777dea1feab08297e52d0d05cb6c81e003 # pin@v2.0.0
         with:
           terraform_version: 1.2.4
           terraform_wrapper: false
 
       - name: configure AWS credentials for terraform
-        uses: aws-actions/configure-aws-credentials@67fbcbb121271f7775d2e7715933280b06314838 # pin@v1.7.0
+        uses: aws-actions/configure-aws-credentials@8815b6557cafe082774ec49c58d911e53c98849d # pin@v1.7.0
         with:
           aws-access-key-id: ${{ secrets.AWS_ACCESS_KEY_ID_ACTIONS }}
           aws-secret-access-key: ${{ secrets.AWS_SECRET_ACCESS_KEY_ACTIONS }}

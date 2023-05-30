@@ -14,7 +14,7 @@ RUN npm audit --production
 #Build assets
 RUN NODE_ENV=production npm run build
 
-FROM composer:2.5.4 AS composer
+FROM composer:2.5.7 AS composer
 WORKDIR /app
 RUN apk update
 RUN apk add libpng libpng-dev libjpeg-turbo-dev libwebp-dev zlib-dev libxpm-dev
@@ -30,15 +30,16 @@ COPY src src
 RUN composer run-script post-install-cmd --no-interaction
 RUN composer dump-autoload --optimize
 
-FROM php:8.1.16-fpm-alpine3.16 as base
+FROM php:8.1.18-fpm-alpine3.16 as base
 WORKDIR /var/www
 EXPOSE 80
 EXPOSE 443
 ENV TIMEOUT=60
 ENV PHP_EXT_DIR=/usr/local/lib/php/extensions/no-debug-non-zts-20210902/
 # Install core PHP extensions
-RUN apk add --no-cache openssl nginx nginx-mod-http-headers-more su-exec postgresql-client libzip-dev unzip php8-pecl-igbinary php8-pecl-redis php8-pecl-imagick gmp gmp-dev
-RUN apk upgrade libxml2 openssl libssl1.1 libcrypto1.1 libretls zlib busybox curl gzip xz xz-libs libcurl
+RUN apk add --no-cache openssl nginx nginx-mod-http-headers-more su-exec libzip-dev unzip php81-pecl-igbinary php81-pecl-redis php81-pecl-imagick gmp gmp-dev
+RUN apk upgrade libxml2 openssl libssl1.1 libcrypto1.1 libretls zlib busybox curl gzip xz xz-libs libcurl tar
+
 RUN docker-php-ext-install pcntl zip opcache gmp
 RUN docker-php-ext-enable opcache
 # Install pcov for faster coverage tooling
@@ -107,7 +108,6 @@ COPY admin.env admin.env
 RUN chown -R www-data scripts
 # Prebuild cache
 RUN su-exec www-data php -d memory_limit=-1 app/console cache:warmup
-RUN apk upgrade libxml2 openssl libssl1.1 libcrypto1.1 libretls zlib busybox curl gzip xz xz-libs libcurl tar
 
 CMD confd -onetime -backend env \
     && php-fpm -D \

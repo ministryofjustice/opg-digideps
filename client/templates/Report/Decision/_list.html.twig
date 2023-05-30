@@ -96,7 +96,7 @@
 
     {# decisions #}
     <div class="govuk-summary-list__row behat-region-has-decisions">
-        {% if not report.hasDecisions %}
+        {% if not report.significantDecisionsMade == 'No' %}
             <dt class="govuk-summary-list__key">
                 <span class="error">
                     {{ 'existPage.form.hasDecisions.label' | trans(transOptions) }}
@@ -110,12 +110,12 @@
                 {{ 'existPage.form.hasDecisions.label' | trans(transOptions) }}
             </dt>
             <dd class="govuk-summary-list__value">
-                {{ report.hasDecisions | capitalize }}
+                {{ report.significantDecisionsMade }}
             </dd>
         {% endif %}
         {% if not hideEditLink  %}
             <dd class="govuk-summary-list__actions">
-                <a class="govuk-link behat-link-edit" href="{{ path('decisions_exist', { 'reportId': report.id, 'from': 'summary' }) }}">
+                <a class="govuk-link behat-link-edit" id="significantDecisionsEdit" href="{{ path('decisions_exist', { 'reportId': report.id, 'from': 'summary' }) }}">
                     {{ 'edit' | trans({}, 'common') }}
                 </a>
             </dd>
@@ -191,11 +191,13 @@
                     {{ decision.clientInvolvedDetails | nl2br }}
                 </dd>
                 <dd class="govuk-summary-list__actions">
+                {% if not hideEditLink  %}
                     <a href="{{ path('decisions_edit', { 'reportId': report.id, 'decisionId': decision.id }) }}"
                         class="behat-link-edit govuk-link">{{ 'edit' | trans({}, 'common') }}</a>
                     <a href="{{ path('decisions_delete', { 'reportId': report.id, 'decisionId': decision.id }) }}"
                         class="govuk-!-margin-left-1 govuk-link behat-link-delete">{{ 'remove' | trans({}, 'common' ) }}</a>
                 </dd>
+                {% endif %}
             </div>
         {% endfor %}
 

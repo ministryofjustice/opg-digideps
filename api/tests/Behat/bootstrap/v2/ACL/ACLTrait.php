@@ -91,7 +91,8 @@ trait ACLTrait
 
         match (strtolower($page)) {
             'fixtures' => $this->iVisitAdminFixturesPage(),
-            'notifications' => $this->iVisitTheAdminNotificationPage()
+            'notifications' => $this->iVisitTheAdminNotificationPage(),
+            'tools' => $this->iVisitAdminToolsPage()
         };
 
         $this->canAccessSensitivePage();
@@ -106,7 +107,8 @@ trait ACLTrait
 
         match (strtolower($page)) {
             'fixtures' => $this->iVisitAdminFixturesPage(),
-            'notifications' => $this->iVisitTheAdminNotificationPage()
+            'notifications' => $this->iVisitTheAdminNotificationPage(),
+            'tools' => $this->iVisitAdminToolsPage()
         };
 
         $this->canNotAccessSensitivePage();

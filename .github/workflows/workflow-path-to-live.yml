@@ -32,7 +32,7 @@ jobs:
       parsed_branch: "main"
       short_sha: ${{ steps.variables.outputs.short_sha }}
     steps:
-      - uses: actions/checkout@2541b1294d2704b0964813337f33b291d3f8596b # pin@v3
+      - uses: actions/checkout@f095bcc56b7c2baf48f3ac70d6d6782f4f553222 # pin@v3
       - name: extract variables for workflow
         id: variables
         run: |
@@ -104,6 +104,10 @@ jobs:
       - docker_build_scan_push
       - monitoring_lambda_unit_tests
       - workflow_variables
+      - api_unit_tests
+      - client_unit_tests
+      - monitoring_lambda_unit_tests
+      - synchronisation_unit_tests
     with:
       workspace: development
       terraform_path: environment

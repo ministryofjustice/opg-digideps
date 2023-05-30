@@ -1,0 +1,14 @@
+{% extends '@App/Layouts/application.html.twig' %}
+
+{% trans_default_domain "admin-tools" %}
+
+{% set navSection = 'tools' %}
+
+{% block htmlTitle %}Admin Tools{% endblock %}
+{% block pageTitle %}Admin Tools{% endblock %}
+
+{% block pageContent %}
+    <p class="govuk-body">
+        <a href="{{ path('admin_tools_report_reassignment') }}" class="govuk-link"> {{ 'list.links.reportReassignment' | trans }} </a>
+    </p>
+{% endblock %}
