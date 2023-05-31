@@ -4,7 +4,6 @@ namespace App\Service;
 
 use App\Entity\PreRegistration;
 use App\Repository\PreRegistrationRepository;
-use RuntimeException;
 use Symfony\Component\Serializer\Normalizer\AbstractNormalizer;
 use Symfony\Component\Serializer\SerializerInterface;
 
@@ -90,7 +89,7 @@ class PreRegistrationVerificationService
                 'search_terms' => $detailsToMatchOn,
             ]);
 
-            throw new RuntimeException($errorJson, 460);
+            throw new \RuntimeException($errorJson, 460);
         }
 
         return $caseNumberMatches;
@@ -109,7 +108,7 @@ class PreRegistrationVerificationService
         $clientLastnameMatches = [];
 
         foreach ($caseNumberMatches as $match) {
-            if (trim(mb_strtolower($match->getClientLastname())) === trim(mb_strtolower($detailsToMatchOn['clientLastname']))) {
+            if ($this->normaliseName($match->getClientLastname()) === $this->normaliseName($detailsToMatchOn['clientLastname'])) {
                 $clientLastnameMatches[] = $match;
             }
         }
@@ -123,7 +122,7 @@ class PreRegistrationVerificationService
         $deputyLastnameMatches = [];
 
         foreach ($clientLastnameMatches as $match) {
-            if (trim(mb_strtolower($match->getDeputySurname())) === trim(mb_strtolower($detailsToMatchOn['deputyLastname']))) {
+            if ($this->normaliseName($match->getDeputySurname()) === $this->normaliseName($detailsToMatchOn['deputyLastname'])) {
                 $deputyLastnameMatches[] = $match;
             }
         }
@@ -172,7 +171,7 @@ class PreRegistrationVerificationService
                 'matching_errors' => $matchingErrors,
             ]);
 
-            throw new RuntimeException($errorJson, 461);
+            throw new \RuntimeException($errorJson, 461);
         }
 
         return $finalMatchingCases;
@@ -191,5 +190,12 @@ class PreRegistrationVerificationService
         );
 
         return $matches;
+    }
+
+    private function normaliseName(string $name): string
+    {
+        $normalisedName = str_replace('’', '\'', $name);
+
+        return trim(mb_strtolower($normalisedName));
     }
 }
