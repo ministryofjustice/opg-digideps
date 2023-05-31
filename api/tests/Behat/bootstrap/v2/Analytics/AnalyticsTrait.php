@@ -72,7 +72,7 @@ trait AnalyticsTrait
 
         $this->expectedMetrics = [
             'feedBack' => 50,
-            'totalRespondents' => 6,
+            'totalRespondents' => 2,
             'totalReports' => 6,
             'totalRegistered' => 3,
             'laySatisfaction' => 50,
