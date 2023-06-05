@@ -92,7 +92,10 @@
     "config": {
         "sort-packages": true,
         "platform": {
-            "php": "8.1.18"
+            "php": "8.1.19"
+        },
+        "allow-plugins": {
+            "php-http/discovery": true
         }
     },
     "minimum-stability": "stable",

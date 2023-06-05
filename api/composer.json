@@ -105,7 +105,7 @@
     "config": {
         "sort-packages": true,
         "platform": {
-            "php": "8.1.18"
+            "php": "8.1.19"
         }
     },
     "minimum-stability": "stable",
