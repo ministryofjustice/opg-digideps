@@ -1,36 +1,27 @@
 // Import the module to be tested
+import { describe, expect } from '@jest/globals'
 import PreventDoubleClick from '../../modules_new/PreventDoubleClick'
-import { describe, expect, jest } from '@jest/globals'
-
-// Mock the document object
-const mockDocument = {
-  getElementsByClassName: jest.fn().mockReturnValueOnce([
-    {
-      setAttribute: jest.fn()
-    },
-    {
-      setAttribute: jest.fn()
-    }
-  ])
-}
 
 // Test the init function
 describe('PreventDoubleClick', () => {
   test('should add the data-prevent-double-click attribute to all buttons', () => {
-    PreventDoubleClick.init(mockDocument)
+    // Clear the document body
+    document.body.innerHTML = ''
 
-    expect(mockDocument.getElementsByClassName).toHaveBeenCalledWith('govuk-button')
+    // Create some buttons with the class "govuk-button"
+    const button1 = document.createElement('button')
+    button1.classList.add('govuk-button')
+    document.body.appendChild(button1)
 
-    expect(mockDocument.getElementsByClassName().setAttribute).toHaveBeenNthCalledWith(
-      1,
-      'data-prevent-double-click',
-      'true'
-    )
+    const button2 = document.createElement('button')
+    button2.classList.add('govuk-button')
+    document.body.appendChild(button2)
 
-    expect(mockDocument.getElementsByClassName().setAttribute).toHaveBeenNthCalledWith(
-      2,
-      'data-prevent-double-click',
-      'true'
-    )
+    // Call the init function
+    PreventDoubleClick.init(document)
+
+    // Assert that the buttons have the "data-prevent-double-click" attribute
+    expect(button1.getAttribute('data-prevent-double-click')).toBe('true')
+    expect(button2.getAttribute('data-prevent-double-click')).toBe('true')
   })
 })
