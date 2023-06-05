@@ -4,8 +4,7 @@ WORKDIR /app
 # Install composer dependencies
 COPY composer.json .
 COPY composer.lock .
-# Remove '--ignore-platform-req=php' when we move to php 8
-RUN composer install --prefer-dist --no-interaction --no-scripts --ignore-platform-reqs
+RUN composer install --prefer-dist --no-interaction --no-scripts
 RUN composer check-platform-reqs
 COPY app app
 COPY config config
