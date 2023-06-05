@@ -22,15 +22,15 @@ RUN composer --version
 # Install composer dependencies
 COPY composer.json .
 COPY composer.lock .
-# Remove '--ignore-platform-req=php' when we move to php 8
-RUN composer install --prefer-dist --no-interaction --no-scripts --ignore-platform-req=php
+RUN composer install --prefer-dist --no-interaction --no-scripts
+RUN composer check-platform-reqs
 COPY app app
 COPY config config
 COPY src src
 RUN composer run-script post-install-cmd --no-interaction
 RUN composer dump-autoload --optimize
 
-FROM php:8.1.18-fpm-alpine3.16 as base
+FROM php:8.1.19-fpm-alpine3.18 as base
 WORKDIR /var/www
 EXPOSE 80
 EXPOSE 443
@@ -38,7 +38,8 @@ ENV TIMEOUT=60
 ENV PHP_EXT_DIR=/usr/local/lib/php/extensions/no-debug-non-zts-20210902/
 # Install core PHP extensions
 RUN apk add --no-cache openssl nginx nginx-mod-http-headers-more su-exec libzip-dev unzip php81-pecl-igbinary php81-pecl-redis php81-pecl-imagick gmp gmp-dev
-RUN apk upgrade libxml2 openssl libssl1.1 libcrypto1.1 libretls zlib busybox curl gzip xz xz-libs libcurl tar libwebp
+RUN apk update && \
+    apk upgrade curl libcurl openssl tar postgresql-client libssl1.1 libcrypto1.1 libssl3 openssl openssl-dev libcrypto3 cups-libs
 
 RUN docker-php-ext-install pcntl zip opcache gmp
 RUN docker-php-ext-enable opcache
