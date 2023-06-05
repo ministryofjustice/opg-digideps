@@ -1,9 +1,7 @@
 import SessionTimeout from './globals/SessionTimeout'
 import CookieBanner from './globals/CookieBanner'
-import ButtonToggler from './modules_new/ButtonToggler'
 import ConditionalFieldRevealer from './modules_new/ConditionalFieldRevealer'
 import TextAreaAutoSize from './modules_new/TextAreaAutoSize'
-import DoubleClickProtection from './modules_new/DoubleClickProtection'
 import PreventDoubleClick from './modules_new/PreventDoubleClick'
 import DetailsExpander from './modules_new/DetailsExpander'
 import uploadFile from './modules_new/UploadFile'
@@ -27,18 +25,15 @@ window.addEventListener('DOMContentLoaded', () => {
   // Format currency module
   FormatCurrency.init(document)
 
-  // Toggleable Buttons
-
-  ButtonToggler.init()
+  // Double Click Buttons
   PreventDoubleClick.init(document)
+
   // Conditional Field Revealer
   ConditionalFieldRevealer.init()
 
   // Text Area Auto Size
 
   TextAreaAutoSize.init(document)
-
-  DoubleClickProtection.init(document)
 
   DetailsExpander.init(document)
 

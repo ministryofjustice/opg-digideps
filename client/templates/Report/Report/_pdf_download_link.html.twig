@@ -2,6 +2,23 @@
 {% trans_default_domain translationDomain %}
 
 <a class="govuk-link button-link behat-link-download-pdf js-trackDownloadLink"
-   href="{{ path('report_pdf', {'reportId': report.id}) }}">
+   href="{{ path('report_pdf', {'reportId': report.id}) }}"
+   onclick="disableLink(this)">
     <i class="icon icon-pdf"></i>{{ 'downloadAsPdf' | trans() }}
 </a>
+
+<style>
+    .disabled {
+        pointer-events: none;
+        opacity: 0.5;
+        /* You can style the disabled link as per your requirement */
+    }
+</style>
+
+<script>
+    function disableLink(link) {
+        // Disable the link
+        link.classList.add('disabled');
+        link.removeEventListener('click', disableLink);
+    }
+</script>
