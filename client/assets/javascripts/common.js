@@ -4,7 +4,7 @@ import ButtonToggler from './modules_new/ButtonToggler'
 import ConditionalFieldRevealer from './modules_new/ConditionalFieldRevealer'
 import TextAreaAutoSize from './modules_new/TextAreaAutoSize'
 import DoubleClickProtection from './modules_new/DoubleClickProtection'
-import PreventDoubleClick from "./modules_new/PreventDoubleClick";
+import PreventDoubleClick from './modules_new/PreventDoubleClick'
 import DetailsExpander from './modules_new/DetailsExpander'
 import uploadFile from './modules_new/UploadFile'
 import { GoogleAnalyticsEvents } from './modules_new/googleAnalyticsEvents'
