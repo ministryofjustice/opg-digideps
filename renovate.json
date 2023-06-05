@@ -4,7 +4,6 @@
   "branchPrefix": "renovate-",
   "commitMessageAction": "Renovate Update",
   "labels": ["Dependencies", "Renovate"],
-  "constraints": { "php": "8.1.19" },
   "packageRules": [
     {
       "groupName": "Patch Updates PHP",

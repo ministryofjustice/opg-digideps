@@ -27,7 +27,8 @@ RUN apk --no-cache add \
     su-exec \
     php81-pecl-igbinary  \
     php81-pecl-redis
-RUN apk upgrade curl libcurl openssl tar postgresql-client libssl1.1 libcrypto1.1 libssl3 openssl openssl-dev libcrypto3
+RUN apk update && \
+    apk upgrade curl libcurl openssl tar postgresql-client libssl1.1 libcrypto1.1 libssl3 openssl openssl-dev libcrypto3
 RUN docker-php-ext-install pdo pdo_pgsql opcache
 RUN docker-php-ext-enable opcache
 # Install pcov for faster coverage tooling
@@ -66,7 +67,6 @@ RUN mkdir -p var/cache \
     && mkdir -p /var/log/app \
     && chown -R www-data var \
     && chown -R www-data /var/log/app
-# RUN apk upgrade libxml2 openssl libssl1.1 libcrypto1.1 libretls zlib busybox curl gzip xz xz-libs libcurl
 
 
 FROM base
