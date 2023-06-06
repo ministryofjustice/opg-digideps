@@ -10,41 +10,34 @@ use Symfony\Component\OptionsResolver\OptionsResolver;
 
 class MoneyTransferType extends AbstractType
 {
-    private $step;
-
     public function buildForm(FormBuilderInterface $builder, array $options)
     {
-        $this->step = (int) $options['step'];
-
         $banks = [];
         foreach ($options['banks'] as $bank) {
             /* $var $bank \App\Entity\Report\BankAccount */
             $banks[$bank->getNameOneLine()] = $bank->getId();
         }
 
-        if (1 == $this->step) {
-            $builder
-                ->add(
-                    'accountFromId',
-                    FormTypes\ChoiceType::class,
-                    [
-                        'choices' => $banks, 'placeholder' => 'Please select', ]
-                )->add(
-                    'accountToId',
-                    FormTypes\ChoiceType::class,
-                    [
-                        'choices' => $banks, 'placeholder' => 'Please select', ]
-                );
-        }
-        if (2 == $this->step) {
-            $builder
-                ->add('amount', FormTypes\NumberType::class, [
+        $builder
+            ->add(
+                'accountFromId',
+                FormTypes\ChoiceType::class,
+                [
+                    'choices' => $banks, 'placeholder' => 'Please select', ]
+            )->add(
+                'accountToId',
+                FormTypes\ChoiceType::class,
+                [
+                    'choices' => $banks, 'placeholder' => 'Please select', ]
+            )->add(
+                'amount',
+                FormTypes\NumberType::class,
+                [
                     'scale' => 2,
                     'grouping' => true,
                     'error_bubbling' => false,
-                    'invalid_message' => 'transfer.amount.notNumeric',
-                ]);
-        }
+                    'invalid_message' => 'transfer.amount.notNumeric', ]
+            );
 
         $builder
             ->add('save', FormTypes\SubmitType::class);
@@ -60,13 +53,9 @@ class MoneyTransferType extends AbstractType
 
                 $validationGroups = [];
 
-                if (1 === $this->step) {
-                    $validationGroups[] = 'money-transfer-account-from';
-                    $validationGroups[] = 'money-transfer-account-to';
-                }
-                if (2 === $this->step) {
-                    $validationGroups[] = 'money-transfer-amount';
-                }
+                $validationGroups[] = 'money-transfer-account-from';
+                $validationGroups[] = 'money-transfer-account-to';
+                $validationGroups[] = 'money-transfer-amount';
 
                 return $validationGroups;
             },
