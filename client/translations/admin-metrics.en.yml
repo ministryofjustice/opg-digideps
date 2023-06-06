@@ -1,78 +1,82 @@
 indexPage:
-    htmlTitle: Administration - Analytics
-    pageTitle: Analytics
-    downloadDAT: Download DAT file
-    reports: View reports
+  htmlTitle: Administration - Analytics
+  pageTitle: Analytics
+  downloadDAT: Download DAT file
+  reports: View reports
 
 adminAccounts:
-    htmlTitle: Administration - Admin Accounts Analytics
-    pageTitle: Admin Accounts
-    supportTitle: Analytics
+  htmlTitle: Administration - Admin Accounts Analytics
+  pageTitle: Admin Accounts
+  supportTitle: Analytics
 
 reports:
-    htmlTitle: Administration - Reports
-    pageTitle: Reports
-    downloadActiveLays: Download active lays report
-    downloadAssetsTotalValues: Download total value of assets on submitted reports in last 12 months report
-    downloadSatisfaction: Download satisfaction report
-    downloadUserResearch: Download user research report
-    userAccountReports: View admin account metrics
-    oldUserAccountReports: Download admin users not logged in within last 13 months report
-    benefitsSectionMetrics: View benefits report metrics
+  htmlTitle: Administration - Reports
+  pageTitle: Reports
+  downloadActiveLays: Download active lays report
+  downloadAssetsTotalValues: Download total value of assets on submitted reports in last 12 months report
+  downloadSatisfaction: Download satisfaction report
+  downloadUserResearch: Download user research report
+  userAccountReports: View admin account metrics
+  oldUserAccountReports: Download admin users not logged in within last 13 months report
+  benefitsSectionMetrics: View benefits report metrics
 
 benefitsReportMetrics:
-    htmlTitle: Administration - Benefits Report Metrics
-    pageTitle: Benefits Report Metrics
-    supportTitle: Analytics
-    form:
-        fromDate:
-            legend: Start date
-            hint: For example, 31 3 2015
-        toDate:
-            legend: End date
-            hint: For example, 31 3 2016
-        deputyType:
-            label: Select a Deputy Type
-        submitAndDownload:
-            label: Download
-        clear: Clear filter
+  htmlTitle: Administration - Benefits Report Metrics
+  pageTitle: Benefits Report Metrics
+  supportTitle: Analytics
+  form:
+    fromDate:
+      legend: Start date
+      hint: For example, 31 3 2015
+    toDate:
+      legend: End date
+      hint: For example, 31 3 2016
+    deputyType:
+      label: Select a Deputy Type
+    submitAndDownload:
+      label: Download
+    clear: Clear filter
 
 form:
-    title: Change reporting period
-    period:
-        label: Reporting period
-        options:
-            last-30: Last 30 days
-            this-year: This year
-            all-time: All time
-            custom: Custom
-    update:
-        label: Update date range
-    startDate:
-        label: Start date
-    endDate:
-        label: End date
+  title: Change reporting period
+  period:
+    label: Reporting period
+    options:
+      last-30: Last 30 days
+      this-year: This year
+      all-time: All time
+      custom: Custom
+  update:
+    label: Update date range
+  startDate:
+    label: Start date
+  endDate:
+    label: End date
 
 metrics:
-    clients:
-        label: Clients
-        totalLabel: Total clients
-        format: "%value%"
-    registeredDeputies:
-        label: Registered deputies
-        totalLabel: Total registered deputies
-        format: "%value%"
-    reportsSubmitted:
-        label: Reports submitted
-        totalLabel: Total reports submitted
-        format: "%value%"
-    satisfaction:
-        label: Satisfaction
-        totalLabel: Overall satisfaction
-        format: "%value%%"
+  clients:
+    label: Clients
+    totalLabel: Total clients
+    format: "%value%"
+  registeredDeputies:
+    label: Registered deputies
+    totalLabel: Total registered deputies
+    format: "%value%"
+  reportsSubmitted:
+    label: Reports submitted
+    totalLabel: Total reports submitted
+    format: "%value%"
+  satisfaction:
+    label: Satisfaction
+    totalLabel: Overall satisfaction
+    format: "%value%%"
+  respondents:
+    label: Respondents
+    totalLabel: Number of respondents
+    format: "%value%"
 
 dimensions:
-    deputyType:
-        lay: Lay deputies
-        pa: Public authority deputies
-        prof: Professional deputies
+  deputyType:
+    lay: Lay deputies
+    pa: Public authority deputies
+    prof: Professional deputies

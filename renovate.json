@@ -15,7 +15,7 @@
       "schedule": ["after 6am and before 9am on Monday"],
       "stabilityDays": 3,
       "excludePackageNames": ["php"],
-      "matchLanguages":["php"]
+      "matchLanguages": ["php"]
     },
     {
       "groupName": "Patch Updates Node",
@@ -26,7 +26,7 @@
       "prPriority": 0,
       "schedule": ["after 6am and before 9am on Monday"],
       "stabilityDays": 3,
-      "matchLanguages":["node"]
+      "matchLanguages": ["node"]
     },
     {
       "groupName": "Patch Updates Docker",
@@ -37,7 +37,7 @@
       "prPriority": 0,
       "schedule": ["after 6am and before 9am on Monday"],
       "stabilityDays": 3,
-      "matchLanguages":["docker"]
+      "matchLanguages": ["docker"]
     },
     {
       "groupName": "Patch Updates Python",
@@ -48,7 +48,7 @@
       "prPriority": 0,
       "schedule": ["after 6am and before 9am on Monday"],
       "stabilityDays": 3,
-      "matchLanguages":["python"]
+      "matchLanguages": ["python"]
     },
     {
       "groupName": "Patch Updates Golang",
@@ -59,7 +59,7 @@
       "prPriority": 0,
       "schedule": ["after 6am and before 9am on Monday"],
       "stabilityDays": 3,
-      "matchLanguages":["golang"]
+      "matchLanguages": ["golang"]
     },
     {
       "groupName": "Minor Updates",

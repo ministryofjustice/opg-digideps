@@ -4,15 +4,15 @@ WORKDIR /app
 # Install composer dependencies
 COPY composer.json .
 COPY composer.lock .
-# Remove '--ignore-platform-req=php' when we move to php 8
-RUN composer install --prefer-dist --no-interaction --no-scripts --ignore-platform-reqs
+RUN composer install --prefer-dist --no-interaction --no-scripts
+RUN composer check-platform-reqs
 COPY app app
 COPY config config
 COPY src src
 RUN composer run-script post-install-cmd --no-interaction
 RUN composer dump-autoload --optimize
 
-FROM php:8.1.18-fpm-alpine3.16 as base
+FROM php:8.1.19-fpm-alpine3.18 as base
 WORKDIR /var/www
 EXPOSE 80
 EXPOSE 443
@@ -27,6 +27,8 @@ RUN apk --no-cache add \
     su-exec \
     php81-pecl-igbinary  \
     php81-pecl-redis
+RUN apk update && \
+    apk upgrade curl libcurl openssl tar postgresql-client libssl1.1 libcrypto1.1 libssl3 openssl openssl-dev libcrypto3
 RUN docker-php-ext-install pdo pdo_pgsql opcache
 RUN docker-php-ext-enable opcache
 # Install pcov for faster coverage tooling
@@ -65,7 +67,6 @@ RUN mkdir -p var/cache \
     && mkdir -p /var/log/app \
     && chown -R www-data var \
     && chown -R www-data /var/log/app
-RUN apk upgrade libxml2 openssl libssl1.1 libcrypto1.1 libretls zlib busybox curl gzip xz xz-libs libcurl
 
 
 FROM base
@@ -95,8 +96,6 @@ RUN chown www-data /var/www/tests/Behat/run-tests-parallel.sh
 RUN chmod 544 /var/www/tests/Behat/run-tests-parallel.sh
 # Prebuild cache
 RUN su-exec www-data php -d memory_limit=-1 app/console cache:warmup
-
-RUN apk upgrade curl libcurl openssl tar postgresql-client libssl1.1 libcrypto1.1
 
 CMD confd -onetime -backend env \
     && waitforit -address=tcp://$DATABASE_HOSTNAME:$DATABASE_PORT -timeout=$TIMEOUT \
