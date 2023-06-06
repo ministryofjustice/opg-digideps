@@ -53,8 +53,8 @@ lint-terraform: ##@checks Lint Terraform
 	@$(TFLINT) environment
 	@$(TFLINT) shared
 
-up-app: ##@application Brings the app up
-	docker-compose -f docker-compose.yml -f docker-compose.dev.yml up -d --remove-orphans
+up-app: ##@application Brings the app up and mounts local folders in
+	docker-compose -f docker-compose.yml -f docker-compose.dev.yml -f docker-compose.override.yml up -d --remove-orphans
 
 up-app-build: ##@application Brings the app up and rebuilds containers
 	COMPOSE_HTTP_TIMEOUT=90 docker-compose up -d --build --remove-orphans
@@ -183,3 +183,17 @@ composer-api: ##@application Drops you into the API container with composer inst
 
 composer-client: ##@application Drops you into the frontend container with composer installed
 	docker-compose run --rm --volume ~/.composer:/tmp --volume ${PWD}/client:/app composer ${COMPOSER_ARGS}
+
+test-js:
+	docker-compose -f docker-compose.yml -f docker-compose.dev.yml run npm --rm run test
+
+##  allows you to do make test-js-single TEST='Currency Formatting' to run tests whose describe matches the string
+TEST:='all'
+test-js-single:
+	docker-compose -f docker-compose.yml -f docker-compose.dev.yml run npm --rm run test -- -t ${TEST} 
+
+build-js:
+	docker-compose -f docker-compose.yml -f docker-compose.dev.yml run npm --rm run build
+
+lint-js:
+	docker-compose -f docker-compose.yml -f docker-compose.dev.yml run npm --rm run fix

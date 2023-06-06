@@ -1,6 +1,6 @@
-import SessionTimeout from '../../globals/sessionTimeout'
-import { describe, it } from '@jest/globals'
-import SessionTimeoutDialog from '../../modules/SessionTimeoutDialog'
+import SessionTimeout from '../../globals/SessionTimeout'
+import { describe, it, expect, jest } from '@jest/globals'
+import SessionTimeoutDialog from '../../modules_new/SessionTimeoutDialog'
 
 describe('SessionTimeout', () => {
   const validDocumentBody = () => {

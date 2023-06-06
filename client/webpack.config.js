@@ -8,9 +8,8 @@ const tag = (new Date()).getTime()
 
 module.exports = {
   entry: {
-    application: './assets/javascripts/main.js',
+    application: './assets/scss/application.scss',
     common: './assets/javascripts/common.js',
-    checklistSubmitted: './assets/javascripts/pages/checklistSubmitted.js',
     clientBenefitsCheckForm: './assets/javascripts/pages/clientBenefitsCheckForm.js',
     'formatted-report': './assets/scss/formatted-report.scss',
     fonts: './assets/scss/fonts.scss'

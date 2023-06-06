@@ -37,7 +37,7 @@ services:
       - LAMBDA_FORWARD_URL=http://synchronisation:8080
 
   wait-for-it:
-    build: ./wait_for_it
+    build: ./wait-for-it
 
   #    pa11y:
   #        build:
@@ -143,16 +143,16 @@ services:
     restart: always
 
   redis-frontend:
-    image: redis:6.2.7
+    image: redis:6.2.12
     restart: always
 
   redis-api:
-    image: redis:6.2.7
+    image: redis:6.2.12
     restart: always
 
   file-scanner-rest:
     build:
-      context: ./file_scanning
+      context: ./file-scanner
     ports:
       - 8085:8080
 
@@ -182,7 +182,7 @@ services:
       - OPG Data
 
   mock-sirius-integration:
-    image: muonsoft/openapi-mock:v0.3.3
+    image: muonsoft/openapi-mock:0.3.9
     ports:
       - 6060:8080
     environment:
@@ -202,7 +202,7 @@ services:
   synchronisation:
     container_name: opg-synchronisation-lambda
     build:
-      context: ./lambda_functions/functions/synchronisation
+      context: ./lambdas/functions/synchronisation
     ports:
       - 2080:8080
     environment:

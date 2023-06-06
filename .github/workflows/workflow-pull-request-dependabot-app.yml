@@ -1,0 +1,72 @@
+name: "[Workflow] All dependabot app update pushes"
+
+concurrency:
+  group: ${{ github.ref }}-${{ github.workflow }}
+
+defaults:
+  run:
+    shell: bash
+
+on:
+  push:
+    branches:
+      - "dependabot/composer**" # match dependabot PRs that update composer
+      - "dependabot/npm_and_yarn**" # match dependabot PRs that update npm and yarn
+
+permissions:
+  contents: write
+  security-events: write
+  pull-requests: read
+  actions: none
+  checks: none
+  deployments: none
+  issues: none
+  packages: none
+  repository-projects: none
+  statuses: none
+
+jobs:
+  workflow_variables:
+    runs-on: ubuntu-latest
+    name: output workflow variables
+    outputs:
+      parsed_branch: ${{ steps.variables.outputs.branch_formatted }}
+      short_sha: ${{ steps.variables.outputs.short_sha }}
+    steps:
+      - uses: actions/checkout@f095bcc56b7c2baf48f3ac70d6d6782f4f553222 # pin@v3
+      - name: extract variables for workflow
+        id: variables
+        run: |
+          echo "branch_formatted=$(echo ${GITHUB_HEAD_REF:-${GITHUB_REF##*/}} | tr -cd '[:alnum:]' | tr '[:upper:]' '[:lower:]' | cut -c1-8)" >> $GITHUB_OUTPUT
+          echo "short_sha=$(echo ${GITHUB_SHA:0:7})" >> $GITHUB_OUTPUT
+
+  api_unit_tests:
+    name: api unit tests
+    uses: ./.github/workflows/_unit-tests-api.yml
+    needs:
+      - workflow_variables
+
+  test_js:
+    name: test javascript code
+    uses: ./.github/workflows/_test-js.yml
+    needs:
+      - workflow_variables
+
+  client_unit_tests:
+    name: client unit tests
+    uses: ./.github/workflows/_unit-tests-client.yml
+    needs:
+      - workflow_variables
+
+  end_of_workflow:
+    name: end of workflow
+    runs-on: ubuntu-latest
+    needs:
+      - api_unit_tests
+      - client_unit_tests
+      - workflow_variables
+    steps:
+      - name: workflow ended successfully
+        run: |
+          echo "${{ needs.workflow_variables.outputs.parsed_branch }} PR environment tested, built and deployed"
+          echo "Tag Used: ${{ needs.workflow_variables.outputs.parsed_branch }}-${{ needs.workflow_variables.outputs.short_sha }}"

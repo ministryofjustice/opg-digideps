@@ -1,0 +1,143 @@
+name: "[Docker] Build and Push Images"
+
+defaults:
+  run:
+    shell: bash
+
+on:
+  workflow_call:
+    inputs:
+      branch_name:
+        description: "Name of the branch doing the build"
+        required: true
+        type: string
+      tag:
+        description: "Tag for docker image"
+        required: false
+        default: "latest"
+        type: string
+      push_to_ecr:
+        description: "Whether to push to ECR"
+        required: false
+        default: "true"
+        type: string
+
+jobs:
+  docker_build_scan_push:
+    runs-on: ubuntu-latest
+    strategy:
+      fail-fast: false
+      matrix:
+        include:
+          - svc_name: "client"
+            sub_folder: "client"
+          - svc_name: "api"
+            sub_folder: "api"
+          - svc_name: "sync"
+            sub_folder: "sync"
+          - svc_name: "htmltopdf"
+            sub_folder: "htmltopdf"
+          - svc_name: "file-scanner"
+            sub_folder: "file-scanner"
+          - svc_name: "dr-backup"
+            sub_folder: "disaster-recovery/backup"
+          - svc_name: "synchronise-lambda"
+            sub_folder: "lambdas/functions/synchronisation"
+    steps:
+      - uses: actions/checkout@f095bcc56b7c2baf48f3ac70d6d6782f4f553222 # pin@v3
+
+      - name: set up docker buildx
+        uses: docker/setup-buildx-action@a946f06b5ddbde456d0115dc585e8dc3c7a0c3e0
+
+      - name: cache docker layers
+        id: cache-docker
+        uses: actions/cache@04f198bf0b2a39f7230a4304bf07747a0bddf146 # pin@v3.0.8
+        with:
+          path: /tmp/.buildx-cache
+          key: ${{ runner.os }}-${{ matrix.svc_name }}-build-${{ github.sha }}
+          restore-keys: |
+            ${{ runner.os }}-${{ matrix.svc_name }}-build
+
+      - name: install aws cli
+        uses: unfor19/install-aws-cli-action@457b7980b125044247e455d87b9a26fc2299b787 # pin@v1.0.3
+
+      - name: configure aws credentials
+        uses: aws-actions/configure-aws-credentials@8815b6557cafe082774ec49c58d911e53c98849d # pin@v1.7.0
+        with:
+          aws-access-key-id: ${{ secrets.AWS_ACCESS_KEY_ID_ACTIONS }}
+          aws-secret-access-key: ${{ secrets.AWS_SECRET_ACCESS_KEY_ACTIONS }}
+          aws-region: eu-west-1
+          role-to-assume: arn:aws:iam::311462405659:role/digideps-ci
+          role-duration-seconds: 1800
+          role-session-name: OPGDigidepsECRGithubAction
+
+      - name: build docker image
+        env:
+          IMAGE_NAME: ${{ matrix.svc_name }}
+        run: docker buildx build --cache-from=type=local,src=/tmp/.buildx-cache --cache-to=type=local,dest=/tmp/.buildx-cache-new --tag ${IMAGE_NAME}:latest --output type=docker .
+        working-directory: ${{ matrix.sub_folder }}
+
+      - name: build docker image development
+        if: matrix.svc_name == 'client' && inputs.branch_name == 'main'
+        env:
+          IMAGE_NAME: ${{ matrix.svc_name }}
+        run: docker build --tag ${IMAGE_NAME}-dev:latest --file Dockerfile-dev .
+        working-directory: ${{ matrix.sub_folder }}
+
+      - name: Move cache
+        run: |
+          rm -rf /tmp/.buildx-cache
+          mv /tmp/.buildx-cache-new /tmp/.buildx-cache
+
+      - name: trivy image scanning
+        id: trivy_scan
+        uses: aquasecurity/trivy-action@e5f43133f6e8736992c9f3c1b3296e24b37e17f2 # pin@v0.7.1
+        with:
+          image-ref: ${{ matrix.svc_name }}:latest
+          severity: "HIGH,CRITICAL"
+          format: "sarif"
+          security-checks: "vuln"
+          output: "trivy-results.sarif"
+          timeout: 15m
+
+      - name: upload trivy scan results to security tab
+        id: trivy_upload_sarif
+        uses: github/codeql-action/upload-sarif@v2
+        with:
+          sarif_file: "trivy-results.sarif"
+
+      - name: ecr login
+        id: login_ecr
+        uses: aws-actions/amazon-ecr-login@fd4e6c8f3b0c1f60183fab906997c0eebdb9dd12 # pin@v1.5.1
+        with:
+          registries: 311462405659
+
+      - name: show build tag
+        env:
+          IMAGE_TAG: ${{ inputs.tag }}
+        run: echo "Tag to use - ${IMAGE_TAG}"
+
+      - name: tag and push user research development container
+        if: matrix.svc_name == 'client' && inputs.branch_name == 'main'
+        env:
+          ECR_REGISTRY: ${{ steps.login_ecr.outputs.registry }}
+          ECR_REGISTRY_ALIAS: digideps
+          IMAGE_TAG: ${{ inputs.tag }}
+          IMAGE_NAME: ${{ matrix.svc_name }}
+        run: |
+          export IMAGE_TAG_DEV="development-$(echo $IMAGE_TAG | awk -F'-' '{print $2}')"
+          docker tag $IMAGE_NAME-dev:latest $ECR_REGISTRY/$ECR_REGISTRY_ALIAS/$IMAGE_NAME:$IMAGE_TAG_DEV
+
+      - name: tag and push container
+        env:
+          ECR_REGISTRY: ${{ steps.login_ecr.outputs.registry }}
+          ECR_REGISTRY_ALIAS: digideps
+          IMAGE_TAG: ${{ inputs.tag }}
+          IMAGE_NAME: ${{ matrix.svc_name }}
+          BRANCH_NAME: ${{ inputs.branch_name }}
+        run: |
+          docker tag $IMAGE_NAME:latest $ECR_REGISTRY/$ECR_REGISTRY_ALIAS/$IMAGE_NAME:$IMAGE_TAG
+          if [[ "${BRANCH_NAME}" == "main" ]]; then
+            docker tag $IMAGE_NAME:latest $ECR_REGISTRY/$ECR_REGISTRY_ALIAS/$IMAGE_NAME:latest
+          fi
+          docker push --all-tags $ECR_REGISTRY/$ECR_REGISTRY_ALIAS/$IMAGE_NAME

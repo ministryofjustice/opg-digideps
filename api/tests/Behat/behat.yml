@@ -201,6 +201,12 @@ v2-tests-browserkit:
             contexts:
                 - App\Tests\Behat\v2\Reporting\Sections\ReportingSectionsFeatureContext
 
+        section-decisions:
+            description: Covering the 'Decisions' section of the report
+            paths: ["%paths.base%/features-v2/reporting/sections/decisions"]
+            contexts:
+                - App\Tests\Behat\v2\Reporting\Sections\ReportingSectionsFeatureContext
+
         section-deputy-costs-estimate:
             description: Covering the 'Deputy Costs Estimate' section of the report
             paths:
@@ -278,6 +284,12 @@ v2-tests-browserkit:
             paths: ["%paths.base%/features-v2/service-health"]
             contexts:
                 - App\Tests\Behat\v2\ServiceHealth\ServiceHealthFeatureContext
+
+        tools:
+            description: Covering the Admin Tools within the app
+            paths: ["%paths.base%/features-v2/tools"]
+            contexts:
+                - App\Tests\Behat\v2\Tools\ToolsFeatureContext
 
         user-management:
             description: Covering the user management features of the app (admin)

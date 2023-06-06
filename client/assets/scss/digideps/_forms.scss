@@ -139,5 +139,8 @@ input[type="text"]::-ms-clear {
     width: 100%;
     min-height: 7em;
     padding: 0;
-    overflow: hidden;
+}
+
+.js-enabled .js-auto-size{
+    overflow: hidden; //only apply if the JS has loaded and is causing the textrea to grow automatically
 }

@@ -1,0 +1,104 @@
+on:
+  workflow_call:
+    inputs:
+      terraform_path:
+        description: "The name of the terraform path"
+        required: true
+        type: string
+      workspace:
+        description: "Terraform workspace"
+        required: true
+        type: string
+      container_version:
+        description: "Image tag to use"
+        required: false
+        type: string
+        default: ""
+      apply:
+        description: "Whether to apply terraform"
+        required: false
+        type: string
+        default: "false"
+
+jobs:
+  terraform_workflow:
+    runs-on: ubuntu-latest
+    steps:
+      - uses: actions/checkout@f095bcc56b7c2baf48f3ac70d6d6782f4f553222 # pin@v3
+        with:
+          fetch-depth: "0"
+
+      - uses: unfor19/install-aws-cli-action@457b7980b125044247e455d87b9a26fc2299b787 # pin@v1.0.3
+
+      - name: build redeployer
+        if: inputs.terraform_path == 'shared'
+        run: GOARCH=amd64 GOOS=linux go build -o main ./main.go
+        working-directory: shared/go_redeployer
+
+      - uses: hashicorp/setup-terraform@1fdd4cd311e198fb45135f3a68294d3df2d5bda8 # pin@v2.0.0
+        with:
+          terraform_version: 1.2.4
+
+      - name: configure AWS credentials for terraform
+        uses: aws-actions/configure-aws-credentials@8815b6557cafe082774ec49c58d911e53c98849d # pin@v1.7.0
+        with:
+          aws-access-key-id: ${{ secrets.AWS_ACCESS_KEY_ID_ACTIONS }}
+          aws-secret-access-key: ${{ secrets.AWS_SECRET_ACCESS_KEY_ACTIONS }}
+          aws-region: eu-west-1
+          role-duration-seconds: 1800
+          role-session-name: OPGDigidepsTerraformGithubAction
+
+      - uses: webfactory/ssh-agent@fc49353b67b2b7c1e0e6a600572d01a69f2672dd # pin@v0.5.4
+        with:
+          ssh-private-key: ${{ secrets.SSH_PRIVATE_KEY_ALLOW_LIST_REPOSITORY }}
+
+      - name: download artifact for monitoring lambda layer
+        if: inputs.apply == 'true' && inputs.terraform_path == 'environment'
+        uses: actions/download-artifact@e9ef242655d12993efdcda9058dee2db83a2cb9b
+        with:
+          name: layer.tar
+          path: lambdas
+
+      - name: extract lambda layers
+        if: inputs.apply == 'true' && inputs.terraform_path == 'environment'
+        run: tar xvf layer.tar
+        working-directory: lambdas
+
+      - name: terraform init
+        run: terraform init -input=false
+        working-directory: ${{ inputs.terraform_path }}
+
+      - name: terraform plan ${{ inputs.terraform_path }}
+        env:
+          TF_WORKSPACE: ${{ inputs.workspace }}
+          TF_VAR_OPG_DOCKER_TAG: ${{ inputs.container_version }}
+        run: |
+          terraform workspace show
+          terraform plan -input=false -parallelism=30 -lock-timeout=5m
+        working-directory: ${{ inputs.terraform_path }}
+
+      - name: install workspace manager
+        if: inputs.apply == 'true' && inputs.terraform_path == 'environment'
+        run: |
+          wget https://github.com/TomTucka/terraform-workspace-manager/releases/download/v0.3.1/terraform-workspace-manager_Linux_x86_64.tar.gz -O $HOME/terraform-workspace-manager.tar.gz
+          sudo tar -xvf $HOME/terraform-workspace-manager.tar.gz -C /usr/local/bin
+          sudo chmod +x /usr/local/bin/terraform-workspace-manager
+
+      - name: protect workspace
+        if: inputs.apply == 'true' && inputs.terraform_path == 'environment'
+        run: terraform-workspace-manager -register-workspace=$TF_WORKSPACE -time-to-protect="${PROTECT_TIME}" -aws-account-id=248804316466 -aws-iam-role=digideps-ci
+        env:
+          TF_WORKSPACE: ${{ needs.branch_name.outputs.formatted_branch }}
+          PROTECT_TIME: 3
+          AWS_ACCESS_KEY_ID: ${{ secrets.AWS_ACCESS_KEY_ID_ACTIONS }}
+          AWS_SECRET_ACCESS_KEY: ${{ secrets.AWS_SECRET_ACCESS_KEY_ACTIONS }}
+
+      - name: terraform apply ${{ inputs.terraform_path }}
+        if: inputs.apply == 'true'
+        env:
+          TF_WORKSPACE: ${{ inputs.workspace }}
+          TF_VAR_OPG_DOCKER_TAG: ${{ inputs.container_version }}
+          CI: true
+        run: |
+          terraform apply -lock-timeout=300s -input=false -auto-approve -parallelism=30
+        working-directory: ${{ inputs.terraform_path }}

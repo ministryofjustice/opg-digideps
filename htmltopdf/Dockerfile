@@ -5,9 +5,9 @@ RUN apk update
 ENV PYTHONUNBUFFERED 1
 
 RUN apk --update --upgrade --no-cache add \
-    cairo-dev pango-dev gdk-pixbuf bash jpeg-dev curl
+    cairo-dev pango-dev gdk-pixbuf bash jpeg-dev curl libwebp
 
-RUN apk --update --upgrade --no-cache add fontconfig ttf-freefont font-noto terminus-font \
+RUN apk --update --upgrade --no-cache add fontconfig ttf-freefont font-noto terminus-font  \
     && fc-cache -f \
     && fc-list | sort
 

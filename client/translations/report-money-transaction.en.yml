@@ -361,7 +361,7 @@ form:
       arrears:
         label: Arrears
       transfers-out-to-other-accounts:
-        label: Transfers from %client%'s account to other accounts
+        label: Payments from %client%'s account to other accounts
         moreInformations: Please enter the bank or building society name, the last 4 digits of the account number and the amount transferred
       cash-withdrawn:
         label: Cash withdrawn from %client%'s account
@@ -372,3 +372,5 @@ form:
       moneyout-other:
         label: Anything else paid out
         moreInformation: Give us more information
+      telephone-and-broadband:
+        label: Combined telephone and broadband

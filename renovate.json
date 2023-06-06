@@ -1,0 +1,105 @@
+{
+  "$schema": "https://docs.renovatebot.com/renovate-schema.json",
+  "extends": ["config:base", "schedule:earlyMondays"],
+  "branchPrefix": "renovate-",
+  "commitMessageAction": "Renovate Update",
+  "labels": ["Dependencies", "Renovate"],
+  "packageRules": [
+    {
+      "groupName": "Patch Updates PHP",
+      "groupSlug": "all-patch-updates-php",
+      "labels": ["Dependencies", "Renovate"],
+      "matchPackagePatterns": ["*"],
+      "matchUpdateTypes": ["patch"],
+      "prPriority": 0,
+      "schedule": ["after 6am and before 9am on Monday"],
+      "stabilityDays": 3,
+      "excludePackageNames": ["php"],
+      "matchLanguages": ["php"]
+    },
+    {
+      "groupName": "Patch Updates Node",
+      "groupSlug": "all-patch-updates-node",
+      "labels": ["Dependencies", "Renovate"],
+      "matchPackagePatterns": ["*"],
+      "matchUpdateTypes": ["patch"],
+      "prPriority": 0,
+      "schedule": ["after 6am and before 9am on Monday"],
+      "stabilityDays": 3,
+      "matchLanguages": ["node"]
+    },
+    {
+      "groupName": "Patch Updates Docker",
+      "groupSlug": "all-patch-updates-docker",
+      "labels": ["Dependencies", "Renovate"],
+      "matchPackagePatterns": ["*"],
+      "matchUpdateTypes": ["patch"],
+      "prPriority": 0,
+      "schedule": ["after 6am and before 9am on Monday"],
+      "stabilityDays": 3,
+      "matchLanguages": ["docker"]
+    },
+    {
+      "groupName": "Patch Updates Python",
+      "groupSlug": "all-patch-updates-python",
+      "labels": ["Dependencies", "Renovate"],
+      "matchPackagePatterns": ["*"],
+      "matchUpdateTypes": ["patch"],
+      "prPriority": 0,
+      "schedule": ["after 6am and before 9am on Monday"],
+      "stabilityDays": 3,
+      "matchLanguages": ["python"]
+    },
+    {
+      "groupName": "Patch Updates Golang",
+      "groupSlug": "all-patch-updates-golang",
+      "labels": ["Dependencies", "Renovate"],
+      "matchPackagePatterns": ["*"],
+      "matchUpdateTypes": ["patch"],
+      "prPriority": 0,
+      "schedule": ["after 6am and before 9am on Monday"],
+      "stabilityDays": 3,
+      "matchLanguages": ["golang"]
+    },
+    {
+      "groupName": "Minor Updates",
+      "groupSlug": "all-minor-updates",
+      "labels": ["Dependencies", "Renovate"],
+      "matchPackagePatterns": ["*"],
+      "matchUpdateTypes": ["minor"],
+      "prPriority": 0,
+      "schedule": ["after 6am and before 9am on Monday"],
+      "stabilityDays": 3,
+      "excludePackageNames": ["php"]
+    },
+    {
+      "groupName": "GitHub Actions",
+      "matchPackagePatterns": ["actions/*"],
+      "automerge": true,
+      "dependencyDashboardApproval": true,
+      "labels": ["Dependencies", "Renovate"],
+      "prBody": "Updates the following GitHub Actions dependencies:\n\n{{#each dependencies}}- {{this.name}}\n{{/each}}",
+      "schedule": ["after 6am and before 9am on Monday"],
+      "stabilityDays": 3
+    }
+  ],
+  "major": {
+    "labels": ["Dependencies", "Renovate"],
+    "prCreation": "status-success",
+    "rangeStrategy": "pin",
+    "prPriority": 1,
+    "schedule": ["after 6am and before 9am on Monday"]
+  },
+  "vulnerabilityAlerts": {
+    "groupName": "Security Alerts",
+    "labels": ["Dependencies", "Renovate"],
+    "schedule": ["after 6am and before 9am every weekday"],
+    "dependencyDashboardApproval": false,
+    "stabilityDays": 0,
+    "rangeStrategy": "pin",
+    "commitMessagePrefix": "[SECURITY]",
+    "branchTopic": "{{{datasource}}}-{{{depName}}}-vulnerability",
+    "prCreation": "immediate",
+    "prPriority": 5
+  }
+}

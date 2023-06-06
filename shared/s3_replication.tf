@@ -129,10 +129,12 @@ resource "aws_s3_bucket_versioning" "pa_uploads_branch_replication" {
   }
 }
 
-resource "aws_s3_bucket_acl" "pa_uploads_branch_replication" {
+resource "aws_s3_bucket_ownership_controls" "pa_uploads_branch_replication" {
   count  = local.account.name == "development" ? 1 : 0
   bucket = aws_s3_bucket.pa_uploads_branch_replication[0].id
-  acl    = "private"
+  rule {
+    object_ownership = "BucketOwnerEnforced"
+  }
 }
 
 resource "aws_s3_bucket_lifecycle_configuration" "pa_uploads_branch_replication" {

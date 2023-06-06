@@ -19,7 +19,6 @@ use App\TestHelpers\OrganisationTestHelper;
 use App\TestHelpers\ReportTestHelper;
 use App\TestHelpers\UserTestHelper;
 use App\Tests\Behat\BehatException;
-use DateTime;
 use Doctrine\ORM\EntityManagerInterface;
 use Symfony\Component\PasswordHasher\Hasher\UserPasswordHasherInterface;
 
@@ -226,7 +225,7 @@ class FixtureHelper
         bool $completed = false,
         bool $submitted = false,
         ?string $type = null,
-        ?DateTime $startDate = null,
+        ?\DateTime $startDate = null,
         int $satisfactionScore = null,
         ?string $caseNumber = null
     ) {
@@ -293,7 +292,7 @@ class FixtureHelper
         bool $completed = false,
         bool $submitted = false,
         string $reportType = Report::PROF_PFA_HIGH_ASSETS_TYPE,
-        ?DateTime $startDate = null,
+        ?\DateTime $startDate = null,
         int $satisfactionScore = null,
         ?string $namedDeputyEmail = null,
         ?string $caseNumber = null,
@@ -354,6 +353,17 @@ class FixtureHelper
         if (!$sameLastName) {
             $client->setLastname($client->getLastName().'ABC');
         }
+
+        $this->em->persist($client);
+        $this->em->flush();
+
+        return $client;
+    }
+
+    public function changeCaseNumber(int $clientId, string $newCaseNumber)
+    {
+        $client = $this->em->getRepository(Client::class)->find($clientId);
+        $client->setCaseNumber($newCaseNumber);
 
         $this->em->persist($client);
         $this->em->flush();
@@ -1003,7 +1013,7 @@ class FixtureHelper
 
     public function createDataForAnalytics(string $testRunId, $timeAgo, $satisfactionScore)
     {
-        $startDate = new DateTime($timeAgo);
+        $startDate = new \DateTime($timeAgo);
         $deputies = [];
 
         $deputies[] = $this->createOrgUserClientNamedDeputyAndReport(
@@ -1108,7 +1118,7 @@ class FixtureHelper
         $completed,
         $submitted,
         bool $ndr = false,
-        ?DateTime $startDate = null,
+        ?\DateTime $startDate = null,
         ?int $satisfactionScore = null,
         ?string $caseNumber = null,
         bool $legacyPasswordHash = false
@@ -1158,7 +1168,7 @@ class FixtureHelper
         ?string $namedDeputyEmail = null,
         ?string $caseNumber = null,
         ?string $deputyUid = null,
-        ?DateTime $startDate = null,
+        ?\DateTime $startDate = null,
         ?int $satisfactionScore = null
     ) {
         if ('prod' === $this->symfonyEnvironment) {
@@ -1206,9 +1216,9 @@ class FixtureHelper
         $this->em->flush();
     }
 
-    public function createPreRegistration(string $reportType = 'OPG102', string $orderType = 'PFA'): PreRegistration
+    public function createPreRegistration(string $reportType = 'OPG102', string $orderType = 'PFA', string $clientLastname = 'Smith'): PreRegistration
     {
-        $data = ['reportType' => $reportType, 'orderType' => $orderType];
+        $data = ['reportType' => $reportType, 'orderType' => $orderType, 'clientLastName' => $clientLastname];
 
         $preRegistration = $this->preRegistrationFactory->create($data);
         $this->em->persist($preRegistration);

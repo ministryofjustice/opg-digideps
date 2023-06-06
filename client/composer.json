@@ -90,7 +90,13 @@
         ]
     },
     "config": {
-        "sort-packages": true
+        "sort-packages": true,
+        "platform": {
+            "php": "8.1.19"
+        },
+        "allow-plugins": {
+            "php-http/discovery": true
+        }
     },
     "minimum-stability": "stable",
     "extra": {
@@ -119,7 +125,7 @@
         "phpstan/phpstan": "^1.0.0",
         "phpstan/phpstan-mockery": "^1.0.0",
         "phpstan/phpstan-phpunit": "^1.0.0",
-        "phpunit/phpcov": "8.2.0",
+        "phpunit/phpcov": "8.2.1",
         "phpunit/phpunit": "^9.5.10",
         "symfony/maker-bundle": "^1.29",
         "symfony/phpunit-bridge": "^5.4.0",

@@ -1,0 +1,44 @@
+on:
+  workflow_call:
+    inputs:
+      workspace:
+        description: "Workspace"
+        required: true
+        type: string
+      replicas:
+        description: "Count of replicas needed"
+        required: true
+        type: string
+      account:
+        description: "Account to use"
+        required: true
+        type: string
+jobs:
+  terraform_workflow:
+    runs-on: ubuntu-latest
+    steps:
+      - uses: actions/checkout@f095bcc56b7c2baf48f3ac70d6d6782f4f553222 # pin@v3
+        with:
+          fetch-depth: "0"
+
+      - name: install aws cli
+        uses: unfor19/install-aws-cli-action@457b7980b125044247e455d87b9a26fc2299b787 # pin@v1.0.3
+
+      - name: configure aws credentials
+        uses: aws-actions/configure-aws-credentials@8815b6557cafe082774ec49c58d911e53c98849d # pin@v1.7.0
+        with:
+          aws-access-key-id: ${{ secrets.AWS_ACCESS_KEY_ID_ACTIONS }}
+          aws-secret-access-key: ${{ secrets.AWS_SECRET_ACCESS_KEY_ACTIONS }}
+          aws-region: eu-west-1
+          role-to-assume: arn:aws:iam::${{ inputs.account }}:role/digideps-ci
+          role-duration-seconds: 1800
+          role-session-name: OPGDigidepsScaleServices
+
+      - name: scale services
+        env:
+          TF_WORKSPACE: ${{ inputs.workspace }}
+          REPLICAS: ${{ inputs.replicas }}
+        run: |
+          aws ecs update-service --service front-${TF_WORKSPACE} --cluster ${TF_WORKSPACE} --desired-count ${REPLICAS}
+          aws ecs update-service --service admin-${TF_WORKSPACE} --cluster ${TF_WORKSPACE} --desired-count ${REPLICAS}
+          aws ecs update-service --service api-${TF_WORKSPACE} --cluster ${TF_WORKSPACE} --desired-count ${REPLICAS}

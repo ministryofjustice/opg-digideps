@@ -14,10 +14,10 @@ services:
     build: ./htmltopdf
   drbackup:
     image: ${AWS_REGISTRY}/digideps/dr-backup:${VERSION}
-    build: ./disaster_recovery/backup
+    build: ./disaster-recovery/backup
   synchronisation:
     image: ${AWS_REGISTRY}/digideps/synchronise-lambda:${VERSION}
-    build: ./lambda_functions/functions/synchronisation
+    build: ./lambdas/functions/synchronisation
   file-scanner:
     image: ${AWS_REGISTRY}/digideps/file-scanner:${VERSION}
-    build: ./file_scanning
+    build: ./file-scanner

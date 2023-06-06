@@ -16,12 +16,15 @@
 
 {% block pageContent %}
 
-
     <div class="govuk-grid-row">
-        <div class="govuk-grid-column-three-quarters">
+        <div class="govuk-grid-column-two-thirds">
             <p class="govuk-body">{{ 'summaryPage.pageDescription' | trans(transOptions) }}</p>
             <p class="govuk-body govuk-!-font-weight-bold">{{ 'summaryPage.listedAnswers' | trans(transOptions) }}</p>
             <p class="govuk-body">{{ 'summaryPage.checkAnswers' | trans(transOptions) }}</p>
+        </div>
+
+        <div class="column-third">
+            {{ macros.relatedSections(report, 'clientBenefitsCheck') }}
         </div>
     </div>
 

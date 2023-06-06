@@ -15,7 +15,7 @@ class MoneyTransaction implements MoneyTransactionInterface
     use HasBankAccountTrait;
 
     /**
-     * Static list of possible money transaction categories
+     * Static list of possible money transaction categories.
      *
      * hasMoreDetails, order are not used any longer,
      *  but are left here for simplicity on future refactors / changes
@@ -70,6 +70,7 @@ class MoneyTransaction implements MoneyTransactionInterface
 
         ['broadband', false, 'household-bills', 'out'],
         ['council-tax', false, 'household-bills', 'out'],
+        ['telephone-and-broadband', false, 'household-bills', 'out'],
         ['dual-fuel', false, 'household-bills', 'out'],
         ['electricity', false, 'household-bills', 'out'],
         ['food', false, 'household-bills', 'out'],
@@ -113,7 +114,6 @@ class MoneyTransaction implements MoneyTransactionInterface
         ['transfers-out-to-other-accounts', true, 'moving-money', 'out'],
 
         ['anything-else-paid-out', true, 'moneyout-other', 'out'],
-
     ];
 
     /**
@@ -123,7 +123,6 @@ class MoneyTransaction implements MoneyTransactionInterface
      * @ORM\Id
      * @ORM\GeneratedValue(strategy="IDENTITY")
      * @ORM\SequenceGenerator(sequenceName="transaction_id_seq", allocationSize=1, initialValue=1)
-     *
      * @JMS\Groups({"transaction", "transactionsIn", "transactionsOut"})
      */
     private $id;
@@ -138,12 +137,11 @@ class MoneyTransaction implements MoneyTransactionInterface
 
     /**
      * Category (e.g. "dividends")
-     * Once the category is known, group (income and dividends) and type (in) are known as well, see self::$categories
+     * Once the category is known, group (income and dividends) and type (in) are known as well, see self::$categories.
      *
      * @var string
      *
      * @JMS\Groups({"transaction", "transactionsIn", "transactionsOut"})
-     *
      * @ORM\Column(name="category", type="string", length=255, nullable=false)
      */
     private $category;
@@ -153,7 +151,6 @@ class MoneyTransaction implements MoneyTransactionInterface
      *
      * @JMS\Type("string")
      * @JMS\Groups({"transaction", "transactionsIn", "transactionsOut"})
-     *
      * @ORM\Column(name="amount", type="decimal", precision=14, scale=2, nullable=false)
      */
     private $amount;
@@ -162,17 +159,15 @@ class MoneyTransaction implements MoneyTransactionInterface
      * @var string
      *
      * @JMS\Groups({"transaction", "transactionsIn", "transactionsOut"})
-     *
      * @ORM\Column(name="description", type="text", nullable=true)
      */
     private $description;
 
     /**
      * Used to serve migrations and recover data in case of errors
-     * Remove when DDPB-1852 is fully released
+     * Remove when DDPB-1852 is fully released.
      *
      * @var string
-     *
      *
      * @ORM\Column(name="meta", type="text", nullable=true)
      */
@@ -180,8 +175,6 @@ class MoneyTransaction implements MoneyTransactionInterface
 
     /**
      * MoneyTransaction constructor.
-     *
-     * @param Report $report
      */
     public function __construct(Report $report)
     {
@@ -276,7 +269,7 @@ class MoneyTransaction implements MoneyTransactionInterface
     }
 
     /**
-     * Get the group based on the category
+     * Get the group based on the category.
      *
      * @JMS\VirtualProperty
      * @JMS\SerializedName("group")
@@ -297,7 +290,7 @@ class MoneyTransaction implements MoneyTransactionInterface
     }
 
     /**
-     * Get the type (in/out) based on the category
+     * Get the type (in/out) based on the category.
      *
      * @JMS\VirtualProperty
      * @JMS\SerializedName("type")

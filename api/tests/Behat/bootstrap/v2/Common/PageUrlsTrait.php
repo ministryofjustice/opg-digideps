@@ -8,10 +8,12 @@ trait PageUrlsTrait
 {
     // Frontend
     private string $accountsAddAnAccountUrl = '/%s/%s/bank-account/step1';
-    private string $accountsSummaryUrl = '/%s/%s/bank-account/summary';
+    private string $accountsSummaryUrl = '/%s/%s/bank-accounts/summary';
     private string $actionsSectionUrl = '/%s/%s/actions';
+    private string $actionsSummarySectionUrl = '/%s/%s/actions/summary';
     private string $activateUserAccount = '/user/activate/%s';
     private string $anyOtherInfoUrl = '/%s/%s/any-other-info';
+    private string $anyOtherInfoSummaryUrl = '/%s/%s/any-other-info/summary';
     private string $assetsSectionUrl = '/%s/%s/assets';
     private string $assetsSummarySectionUrl = '/%s/%s/assets/summary';
     private string $availabilityUrl = '/manage/availability';
@@ -24,21 +26,26 @@ trait PageUrlsTrait
     private string $debtsSectionUrl = '/%s/%s/debts';
     private string $debtsSummarySectionUrl = '/%s/%s/debts/summary';
     private string $decisionsSectionUrl = '/%s/%s/decisions';
+    private string $decisionsSummarySectionUrl = '/%s/%s/decisions/summary';
     private string $deputyCostsUrl = '/report/%s/prof-deputy-costs';
     private string $deputyCostsEstimateSectionUrl = '/%s/%s/prof-deputy-costs-estimate';
     private string $deputyCostsSCCOAssessmentUrl = '/report/%s/prof-deputy-costs/amount-scco';
     private string $deputyExpensesSectionUrl = '/%s/%s/deputy-expenses';
+    private string $deputyExpensesSummarySectionUrl = '/%s/%s/deputy-expenses/summary';
     private string $deputyFeesExpensesSectionUrl = '/report/%s/pa-fee-expense';
     private string $documentsSectionUrl = '/report/%s/documents';
+    private string $documentsSummarySectionUrl = '/report/%s/documents/summary';
     private string $documentsStep2Url = '/%s/%s/documents/step/2';
     private string $documentsSubmitMoreUrl = '/%s/%s/documents/submit-more';
     private string $giftsSectionUrl = '/%s/%s/gifts';
+    private string $giftsSummarySectionUrl = '/%s/%s/gifts/summary';
     private string $healthAndLifestyleSectionUrl = '/%s/%s/lifestyle';
     private string $healthAndLifestyleSummaryUrl = '/%s/%s/lifestyle/summary';
     private string $incomeBenefitsSectionUrl = '/%s/%s/income-benefits';
     private string $incomeBenefitsSectionSummaryUrl = '/%s/%s/income-benefits/summary';
     private string $layStartPageUrl = '/lay';
     private string $moneyInSectionUrl = '/%s/%s/money-in';
+    private string $moneyInSummarySectionUrl = '/%s/%s/money-in/summary';
     private string $moneyInShortSectionUrl = '/%s/%s/money-in-short';
     private string $moneyInShortSectionSummaryUrl = '/%s/%s/money-in-short/summary';
     private string $moneyOutSectionUrl = '/%s/%s/money-out';
@@ -53,6 +60,7 @@ trait PageUrlsTrait
     private string $reportSubmittedUrl = '/report/%s/submitted';
     private string $userResearchSubmittedUrl = '/report/%s/post_submission_user_research/submitted';
     private string $visitsAndCareSectionUrl = '/%s/%s/visits-care';
+    private string $visitsAndCareSectionSummaryUrl = '/%s/%s/visits-care/summary';
 
     // Admin
     private string $adminUserSearchUrl = '/admin';
@@ -80,6 +88,10 @@ trait PageUrlsTrait
     // Fixtures
     private string $adminFixturesUrl = '/admin/fixtures';
     private string $courtOrdersFixtureUrl = '/admin/fixtures/court-orders?%s';
+
+    // Admin Tools
+    private string $adminToolsUrl = '/admin/tools';
+    private string $reportReassignmentUrl = '/admin/tools/report-reassignment';
 
     public function getReportSubmittedUrl(int $reportId): string
     {
@@ -236,6 +248,11 @@ trait PageUrlsTrait
         return $this->adminFixturesUrl;
     }
 
+    public function getAdminToolsUrl(): string
+    {
+        return $this->adminToolsUrl;
+    }
+
     public function getAdminAnalyticsUrl(): string
     {
         return $this->adminAnalyticsUrl;
@@ -296,9 +313,19 @@ trait PageUrlsTrait
         return sprintf($this->anyOtherInfoUrl, $this->reportUrlPrefix, $reportId);
     }
 
+    public function getAnyOtherInfoSummaryUrl(int $reportId): string
+    {
+        return sprintf($this->anyOtherInfoSummaryUrl, $this->reportUrlPrefix, $reportId);
+    }
+
     public function getActionsSectionUrl(int $reportId): string
     {
         return sprintf($this->actionsSectionUrl, $this->reportUrlPrefix, $reportId);
+    }
+
+    public function getActionsSummarySectionUrl(int $reportId): string
+    {
+        return sprintf($this->actionsSummarySectionUrl, $this->reportUrlPrefix, $reportId);
     }
 
     public function getContactsSectionUrl(int $reportId): string
@@ -311,9 +338,19 @@ trait PageUrlsTrait
         return sprintf($this->decisionsSectionUrl, $this->reportUrlPrefix, $reportId);
     }
 
+    public function getDecisionsSummarySectionUrl(int $reportId): string
+    {
+        return sprintf($this->decisionsSummarySectionUrl, $this->reportUrlPrefix, $reportId);
+    }
+
     public function getDeputyExpensesSectionUrl(int $reportId): string
     {
         return sprintf($this->deputyExpensesSectionUrl, $this->reportUrlPrefix, $reportId);
+    }
+
+    public function getDeputyExpensesSummarySectionUrl(int $reportId): string
+    {
+        return sprintf($this->deputyExpensesSummarySectionUrl, $this->reportUrlPrefix, $reportId);
     }
 
     public function getDocumentsSectionUrl(int $reportId): string
@@ -321,9 +358,19 @@ trait PageUrlsTrait
         return sprintf($this->documentsSectionUrl, $reportId);
     }
 
+    public function getDocumentsSummarySectionUrl(int $reportId): string
+    {
+        return sprintf($this->documentsSummarySectionUrl, $reportId);
+    }
+
     public function getGiftsSectionUrl(int $reportId): string
     {
         return sprintf($this->giftsSectionUrl, $this->reportUrlPrefix, $reportId);
+    }
+
+    public function getGiftsSummarySectionUrl(int $reportId): string
+    {
+        return sprintf($this->giftsSummarySectionUrl, $this->reportUrlPrefix, $reportId);
     }
 
     public function getMoneyTransfersSectionUrl(int $reportId): string
@@ -336,9 +383,19 @@ trait PageUrlsTrait
         return sprintf($this->visitsAndCareSectionUrl, $this->reportUrlPrefix, $reportId);
     }
 
+    public function getVisitsAndCareSectionSummaryUrl(int $reportId): string
+    {
+        return sprintf($this->visitsAndCareSectionSummaryUrl, $this->reportUrlPrefix, $reportId);
+    }
+
     public function getMoneyInSectionUrl(int $reportId): string
     {
         return sprintf($this->moneyInSectionUrl, $this->reportUrlPrefix, $reportId);
+    }
+
+    public function getMoneyInSummarySectionUrl(int $reportId): string
+    {
+        return sprintf($this->moneyInSummarySectionUrl, $this->reportUrlPrefix, $reportId);
     }
 
     public function getDeputyFeesAndExpensesSectionUrl(int $reportId): string
