@@ -1,6 +1,6 @@
 // Import the module to be tested
 import { describe, expect } from '@jest/globals'
-import PreventDoubleClick from '../../modules_new/PreventDoubleClick'
+import PreventDoubleClickButton from '../../modules_new/PreventDoubleClickButton'
 
 // Test the init function
 describe('PreventDoubleClick', () => {
@@ -18,7 +18,7 @@ describe('PreventDoubleClick', () => {
     document.body.appendChild(button2)
 
     // Call the init function
-    PreventDoubleClick.init(document)
+    PreventDoubleClickButton.init(document)
 
     // Assert that the buttons have the "data-prevent-double-click" attribute
     expect(button1.getAttribute('data-prevent-double-click')).toBe('true')

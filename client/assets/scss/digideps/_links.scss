@@ -1,6 +1,12 @@
 .opg-submit-link {
-  &--disabled {
+    &--disabled {
+        pointer-events: none;
+        cursor: default;
+    }
+}
+
+.disabled {
     pointer-events: none;
-    cursor: default;
-  }
+    opacity: 0.5;
+    /* Makes link translucent */
 }

@@ -2,7 +2,8 @@ import SessionTimeout from './globals/SessionTimeout'
 import CookieBanner from './globals/CookieBanner'
 import ConditionalFieldRevealer from './modules_new/ConditionalFieldRevealer'
 import TextAreaAutoSize from './modules_new/TextAreaAutoSize'
-import PreventDoubleClick from './modules_new/PreventDoubleClick'
+import PreventDoubleClickButton from './modules_new/PreventDoubleClickButton'
+import PreventDoubleClickLink from './modules_new/PreventDoubleClickLink'
 import DetailsExpander from './modules_new/DetailsExpander'
 import uploadFile from './modules_new/UploadFile'
 import { GoogleAnalyticsEvents } from './modules_new/googleAnalyticsEvents'
@@ -26,7 +27,10 @@ window.addEventListener('DOMContentLoaded', () => {
   FormatCurrency.init(document)
 
   // Double Click Buttons
-  PreventDoubleClick.init(document)
+  PreventDoubleClickButton.init(document)
+
+  // Double Click Links
+  PreventDoubleClickLink.init(document)
 
   // Conditional Field Revealer
   ConditionalFieldRevealer.init()

@@ -1,4 +1,4 @@
-const PreventDoubleClick = {
+const PreventDoubleClickButton = {
   init: function (document) {
     // Get all elements with the class "govuk-button"
     const buttons = document.getElementsByClassName('govuk-button')
@@ -10,4 +10,4 @@ const PreventDoubleClick = {
   }
 }
 
-export default PreventDoubleClick
+export default PreventDoubleClickButton
