@@ -1,11 +1,4 @@
 {% extends '@App/Layouts/application.html.twig' %}
-
-{% import '@App/Macros/macros.html.twig' as macros %}
-
-{% set translationDomain = "report-money-transfer" %}
-{% trans_default_domain translationDomain %}
-{% set transOptions = {'%client%': report.client.firstname | e } %}
-
 {% block htmlTitle %}{{ 'stepPage.htmlTitle' | trans(transOptions) }}{% endblock %}
 {% block pageTitle %}
     {{ 'stepPage.pageTitle' | trans(transOptions) }}
@@ -15,6 +8,13 @@
 {% block supportTitleTop %}
     <span class="heading-secondary">{{ 'stepPage.supportTitle' | trans }}</span>
 {% endblock %}
+
+{% import '@App/Macros/macros.html.twig' as macros %}
+
+{% set translationDomain = "report-money-transfer" %}
+{% trans_default_domain translationDomain %}
+{% set transOptions = {'%client%': report.client.firstname | e } %}
+
 
 {% block linkBack %}
     {{ macros.linkBackStep(backLink, 'back' | trans({}, 'common')) }}

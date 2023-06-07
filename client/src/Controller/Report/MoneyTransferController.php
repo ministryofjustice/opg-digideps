@@ -107,7 +107,7 @@ class MoneyTransferController extends AbstractController
     }
 
     /**
-     * @Route("/report/{reportId}/money-transfers/step{step}/{transferId}", name="money_transfers_step", requirements={"step":"\d+"})
+     * @Route("/report/{reportId}/money-transfers/step{step}/{transferId}", name="money_transfers_step")
      * @Template("@App/Report/MoneyTransfer/step.html.twig")
      *
      * @param null $transferId
@@ -116,10 +116,10 @@ class MoneyTransferController extends AbstractController
      */
     public function stepAction(Request $request, $reportId, $step, $transferId = null)
     {
-        $totalSteps = 2;
-//        if ($step < 1 || $step > $totalSteps) {
-//            return $this->redirectToRoute('money_transfers_summary', ['reportId' => $reportId]);
-//        }
+        $totalSteps = 1;
+        if ($step < 1 || $step > $totalSteps) {
+            return $this->redirectToRoute('money_transfers_summary', ['reportId' => $reportId]);
+        }
 
         // common vars and data
         $dataFromUrl = $request->get('data') ?: [];
@@ -159,13 +159,14 @@ class MoneyTransferController extends AbstractController
         ]);
 
         // create and handle form
-        $form = $this->createForm(FormDir\Report\MoneyTransferType::class, $transfer, ['step' => $step, 'banks' => $report->getBankAccounts()]);
+        $form = $this->createForm(FormDir\Report\MoneyTransferType::class, $transfer, ['banks' => $report->getBankAccounts()]);
         $form->handleRequest($request);
 
         /** @var SubmitButton $submitBtn */
         $submitBtn = $form->get('save');
         if ($submitBtn->isClicked() && $form->isSubmitted() && $form->isValid()) {
             // decide what data in the partial form needs to be passed to next step
+
             $stepUrlData['from-id'] = $transfer->getAccountFromId();
             $stepUrlData['to-id'] = $transfer->getAccountToId();
 
@@ -187,7 +188,7 @@ class MoneyTransferController extends AbstractController
         return [
             'transfer' => $transfer,
             'report' => $report,
-//            'step' => $step,
+            'step' => $step,
             'reportStatus' => $report->getStatus(),
             'form' => $form->createView(),
             'backLink' => $stepRedirector->getBackLink(),

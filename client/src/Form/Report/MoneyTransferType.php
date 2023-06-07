@@ -60,7 +60,7 @@ class MoneyTransferType extends AbstractType
                 return $validationGroups;
             },
         ])
-        ->setRequired(['step', 'banks'])
+        ->setRequired(['banks'])
         ->setAllowedTypes('banks', 'array')
         ;
     }
