@@ -2,11 +2,11 @@
 
 namespace App\Tests\Unit\Controller;
 
-class ManageControllerTest extends AbstractTestController
+class HealthControllerTest extends AbstractTestController
 {
-    public function testAvailability()
+    public function testServiceHealth()
     {
-        $ret = $this->assertJsonRequest('GET', '/manage/availability', [
+        $ret = $this->assertJsonRequest('GET', '/health-check/service', [
             'assertResponseCode' => 200,
         ])['data'];
 
@@ -14,9 +14,9 @@ class ManageControllerTest extends AbstractTestController
         $this->assertEquals('', $ret['errors']);
     }
 
-    public function testElb()
+    public function testContainerHealth()
     {
-        $ret = $this->assertJsonRequest('GET', '/manage/elb', [
+        $ret = $this->assertJsonRequest('GET', '/health-check', [
                 'assertResponseCode' => 200,
             ])['data'];
 
