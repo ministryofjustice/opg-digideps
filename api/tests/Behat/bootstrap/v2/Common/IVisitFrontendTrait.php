@@ -401,6 +401,6 @@ trait IVisitFrontendTrait
      */
     public function iVisitTheFrontendAvailabilityPage()
     {
-        $this->visitFrontendPath($this->getAvailabilityUrl());
+        $this->visitFrontendPath($this->getServiceHealthUrl());
     }
 }
