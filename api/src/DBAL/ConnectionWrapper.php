@@ -83,7 +83,7 @@ class ConnectionWrapper extends Connection
         return true;
     }
 
-    private function refreshPassword()
+    protected function refreshPassword()
     {
         $secretPrefix = getenv(self::SECRETS_PREFIX);
         $secretName = sprintf('%sdatabase-password', $secretPrefix);

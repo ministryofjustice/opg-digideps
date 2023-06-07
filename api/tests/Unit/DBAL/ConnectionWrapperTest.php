@@ -3,116 +3,109 @@
 namespace App\Tests\Unit\DBAL;
 
 use App\DBAL\ConnectionWrapper;
-use Aws\SecretsManager\Exception\SecretsManagerException;
 use Aws\SecretsManager\SecretsManagerClient;
-use Doctrine\Common\EventManager;
 use Doctrine\DBAL\Configuration;
-use Doctrine\DBAL\Connection;
-use Doctrine\DBAL\Driver;
+use Doctrine\DBAL\DriverManager;
 use PHPUnit\Framework\TestCase;
-use Predis\Client as PredisClient;
 
 class ConnectionWrapperTest extends TestCase
 {
-    public function testConnect()
+    private ?ConnectionWrapper $connection;
+
+    protected function setUp(): void
     {
-        // Create mocks for the dependencies
-        $driver = $this->createMock(Driver::class);
-        $config = $this->createMock(Configuration::class);
-        $eventManager = $this->createMock(EventManager::class);
-        $redis = $this->getMockClass('Predis\Client', [['exists', 'get', 'set']]);
-        $secretClient = $this->createMock(SecretsManagerClient::class);
-
-        // Set up the mock for the connect method of the driver
-        $conn = $this->createMock(Connection::class);
-        $driver->expects($this->once())->method('connect')->will($this->returnValue($conn));
-
-        // Set up the mock for the autoCommit method of the configuration
-        $config->expects($this->once())->method('getAutoCommit')->will($this->returnValue(false));
-
-        // Set up the mocks for the get and set methods of the RedisClient
-        $redis->expects($this->once())->method('get')->will($this->returnValue(false));
-
-        $redis->expects($this->once())->method('set')->with(
-            ConnectionWrapper::DB_PASSWORD,
-            'initial_pw'
-        );
-
-        // Set up the mock for the refreshPassword method
-        $secretClient->expects($this->once())->method('getSecretValue')->willThrowException(
-            new SecretsManagerException('Test exception')
-        );
-
-        $params = [
-            'dbname' => 'testdb',
-            'user' => 'testuser',
-            'password' => 'testpassword',
-            'host' => 'testhost',
-            'driver' => 'pdo_postgresql',
+        // Database connection settings
+        $dbParams = [
+            'dbname' => 'api',
+            'user' => 'api',
+            'password' => 'api',
+            'host' => 'postgres',
+            'driver' => 'pdo_pgsql',
         ];
 
-        // Create an instance of the ConnectionWrapper and call the connect method
-        $wrapper = new ConnectionWrapper(
-            $params,
-            $driver,
-            $config,
-            $eventManager
-        );
-//        $wrapper->setRedis($redis);
-//        $wrapper->setSecretsManagerClient($secretClient);
-        $result = $wrapper->connect();
+        // Redis connection settings
+        $redisDsn = 'redis://redis-api';
 
-        // Assert the result of the connect method
-        $this->assertTrue($result);
+        // Create the Doctrine DBAL connection
+        $config = new Configuration();
+        $pdo = DriverManager::getConnection($dbParams, $config);
+
+        // Create an instance of the ConnectionWrapper
+        $this->connection = new ConnectionWrapper($dbParams, $pdo->getDriver(), $config);
+        $this->connection->setRedis($redisDsn);
     }
 
-    public function testRefreshPassword()
+    public function testConnect()
     {
-        $params = [
-            'dbname' => 'testdb',
-            'user' => 'testuser',
-            'password' => 'testpassword',
-            'host' => 'testhost',
-            'driver' => 'pdo_postgresql',
+        // Connect to a real (not mocked) DB, Redis and Secret Manager
+        $result = $this->connection->connect();
+        $this->assertTrue($result);
+        $this->assertTrue($this->connection->isConnected());
+    }
+
+    public function testChangePasswordAndConnect()
+    {
+        // Connect to a real (not mocked) DB, Redis and Secret Manager after changing the DB password
+        $secretName = 'local/database-password';
+        $oldPassword = 'api';
+        $newPassword = 'changedpw';
+        $this->updateLocalstackSecret($secretName, $newPassword);
+
+        // Update PostgreSQL master password to changedpw
+        $this->updatePostgresMasterPassword($oldPassword, $newPassword);
+
+        // Connect to the database
+        $result = $this->connection->connect();
+        $this->assertTrue($result);
+        $this->assertTrue($this->connection->isConnected());
+    }
+
+    private function updateLocalstackSecret(string $secretName, string $newPassword)
+    {
+        // Use the Secrets Manager client to update the secret value in localstack
+        $secretClient = new SecretsManagerClient([
+            'region' => 'eu-west-1',
+            'version' => '2017-10-17',
+            'endpoint' => 'http://localstack:4566',
+        ]);
+
+        $secretClient->updateSecret([
+            'SecretId' => $secretName,
+            'SecretString' => $newPassword,
+        ]);
+    }
+
+    private function updatePostgresMasterPassword(string $oldPassword, string $newPassword)
+    {
+        // Update the PostgreSQL master password
+        $dbParams = [
+            'dbname' => 'api',
+            'user' => 'api',
+            'password' => $oldPassword,
+            'host' => 'postgres',
+            'driver' => 'pdo_pgsql',
         ];
 
-        $mockDriver = $this->createMock(Driver::class);
-        $mockConfig = $this->createMock(Configuration::class);
-        $mockEventManager = $this->createMock(EventManager::class);
+        $config = new Configuration();
+        $pdo = DriverManager::getConnection($dbParams, $config);
 
-        $mockConfig->method('getAutoCommit')
-            ->willReturn(true);
+        $pdo->exec("ALTER USER api WITH PASSWORD '{$newPassword}'");
+    }
 
-        $mockRedis = $this->createMock(PredisClient::class);
-        $mockRedis->method('get')
-            ->willReturn(null);
-
-        $mockRedis->method('set')
-            ->willReturn(true);
-
-        $mockSecretClient = $this->createMock(SecretsManagerClient::class);
-        $mockSecretClient->method('getSecretValue')
-            ->willReturn(['SecretString' => 'newsecret']);
-
-        $connectionWrapper = $this->getMockBuilder(ConnectionWrapper::class)
-            ->setConstructorArgs([$params, $mockDriver, $mockConfig, $mockEventManager])
-            ->setMethods(['setRedis', 'setSecretsManagerClient'])
-            ->getMock();
-
-        $connectionWrapper->expects($this->once())
-            ->method('setRedis')
-            ->with($this->equalTo($mockRedis));
-
-        $connectionWrapper->expects($this->once())
-            ->method('setSecretsManagerClient')
-            ->with($this->equalTo($mockSecretClient));
-
-        $connectionWrapper->connect();
-
-        $reflectedPassword = new ReflectionProperty(ConnectionWrapper::class, 'params');
-        $reflectedPassword->setAccessible(true);
-        $params = $reflectedPassword->getValue($connectionWrapper);
-
-        $this->assertEquals('newsecret', $params['password']);
+    protected function tearDown(): void
+    {
+        if ($this->connection && $this->connection->isConnected()) {
+            $this->connection->close();
+        }
+        $this->connection = null;
+        try {
+            $secretName = 'local/database-password';
+            $oldPassword = 'api';
+            $newPassword = 'changedpw';
+            $this->updateLocalstackSecret($secretName, $oldPassword);
+            $this->updatePostgresMasterPassword($newPassword, $oldPassword);
+        } catch (\Exception $e) {
+            // Do nothing
+        }
     }
 }
