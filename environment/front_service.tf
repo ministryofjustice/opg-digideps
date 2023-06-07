@@ -100,7 +100,7 @@ locals {
     "healthCheck": {
       "command": [
         "CMD-SHELL",
-        "curl -f -k https://localhost:443/manage/elb || exit 1"
+        "curl -f -k https://localhost:443/health-check || exit 1"
       ],
       "interval": 30,
       "timeout": 10,

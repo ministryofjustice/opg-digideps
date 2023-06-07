@@ -14,8 +14,6 @@ use App\Tests\Behat\OrganisationManagement\OrganisationManagementTrait;
 use App\Tests\Behat\UserManagement\UserManagementTrait;
 use Behat\Behat\Context\SnippetAcceptingContext;
 use Behat\MinkExtension\Context\MinkContext;
-use Exception;
-use RuntimeException;
 
 /**
  * Behat context class.
@@ -51,7 +49,7 @@ class FeatureContext extends MinkContext implements SnippetAcceptingContext
 
     public function __construct($options = [])
     {
-        //$options['session']; // not used
+        // $options['session']; // not used
         $maxNestingLevel = isset($options['maxNestingLevel']) ? $options['maxNestingLevel'] : 200;
         ini_set('xdebug.max_nesting_level', $maxNestingLevel);
         ini_set('max_nesting_level', $maxNestingLevel);
@@ -83,10 +81,10 @@ class FeatureContext extends MinkContext implements SnippetAcceptingContext
     {
         $headers = array_change_key_case($this->getSession()->getDriver()->getResponseHeaders(), CASE_LOWER);
         if (empty($headers[strtolower($header)][0])) {
-            throw new Exception("Header '{$header}' not found.");
+            throw new \Exception("Header '{$header}' not found.");
         }
         if (false === strpos($headers[strtolower($header)][0], $value)) {
-            throw new Exception("Header '{$header}' has value '{$headers[$header][0]}' that does not contains '{$value}'");
+            throw new \Exception("Header '{$header}' has value '{$headers[$header][0]}' that does not contains '{$value}'");
         }
     }
 
@@ -97,7 +95,7 @@ class FeatureContext extends MinkContext implements SnippetAcceptingContext
     {
         $baseUrl = $this->getAreaUrl($area);
 
-        $this->visitPath($baseUrl.'/manage/availability');
+        $this->visitPath($baseUrl.'/health-check/service');
         $this->assertResponseStatus(200);
     }
 
@@ -110,7 +108,7 @@ class FeatureContext extends MinkContext implements SnippetAcceptingContext
 
         $currentUrl = $this->getSession()->getCurrentUrl();
         if (substr($currentUrl, 0, strlen($baseUrl)) !== $baseUrl) {
-            throw new RuntimeException("$currentUrl does not start with $baseUrl");
+            throw new \RuntimeException("$currentUrl does not start with $baseUrl");
         }
     }
 
@@ -121,7 +119,7 @@ class FeatureContext extends MinkContext implements SnippetAcceptingContext
         } elseif ('admin' === $area) {
             return $this->getAdminUrl();
         } else {
-            throw new RuntimeException(__METHOD__.': area not valid');
+            throw new \RuntimeException(__METHOD__.': area not valid');
         }
     }
 }

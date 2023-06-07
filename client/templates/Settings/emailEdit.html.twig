@@ -23,8 +23,8 @@
 
         {{ form_input(form.password, 'form.changeEmail.currentPassword') }}
 
-        <div style="clear:both;display:inline-block;height:0px;" data-module="opg-toggleable-submit">
-            {{ form_submit(form.save,'form.changeEmail.controls.save', {'buttonClass': 'behat-link-save'}) }}
+        <div style="clear:both;display:inline-block;height:0px;">
+            {{ form_submit(form.save,'form.changeEmail.controls.save', {'buttonClass': 'govuk-button behat-link-save'}) }}
         </div>
 
     {{ form_end(form) }}
