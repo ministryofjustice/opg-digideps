@@ -14,9 +14,9 @@ use Symfony\Component\HttpFoundation\Response;
 use Symfony\Component\Routing\Annotation\Route;
 
 /**
- * @Route("/manage")
+ * @Route("/health-check")
  */
-class ManageController extends AbstractController
+class HealthController extends AbstractController
 {
     public function __construct(
         private string $symfonyEnvironment,
@@ -28,33 +28,37 @@ class ManageController extends AbstractController
     }
 
     /**
-     * @Route("/availability", methods={"GET"})
+     * @Route("", name="health-check", methods={"GET"})
      *
-     * @return Response|null
+     * @Template("@App/Health/health-check.html.twig")
      */
-    public function availabilityAction(
+    public function containerHealthAction()
+    {
+        return ['status' => 'OK'];
+    }
+
+    /**
+     * @Route("/service", methods={"GET"})
+     */
+    public function serviceHealthAction(
         ApiAvailability $apiAvailability,
-        NotifyAvailability $notifyAvailability,
         RedisAvailability $redisAvailability,
-        SiriusApiAvailability $siriusAvailability,
         ClamAvAvailability $clamAvailability,
         HtmlToPdfAvailability $htmlAvailability
-    ) {
+    ): ?Response {
         $services = [
             $apiAvailability,
             $redisAvailability,
-            $notifyAvailability,
         ];
 
         if ('admin' !== $this->environment) {
-            $services[] = $siriusAvailability;
             $services[] = $clamAvailability;
             $services[] = $htmlAvailability;
         }
 
         list($healthy, $services, $errors) = $this->servicesHealth($services);
 
-        $response = $this->render('@App/Manage/availability.html.twig', [
+        $response = $this->render('@App/Health/availability.html.twig', [
             'services' => $services,
             'errors' => $errors,
             'environment' => $this->symfonyEnvironment,
@@ -68,15 +72,43 @@ class ManageController extends AbstractController
     }
 
     /**
-     * @Route("/availability/pingdom", methods={"GET"})
-     *
-     * @return Response|null
+     * @Route("/dependencies", methods={"GET"})
+     */
+    public function dependencyHealthAction(
+        NotifyAvailability $notifyAvailability,
+        SiriusApiAvailability $siriusAvailability
+    ): ?Response {
+        $services = [
+            $notifyAvailability,
+        ];
+
+        if ('admin' !== $this->environment) {
+            $services[] = $siriusAvailability;
+        }
+
+        list($healthy, $services, $errors) = $this->servicesHealth($services);
+
+        $response = $this->render('@App/Health/availability.html.twig', [
+            'services' => $services,
+            'errors' => $errors,
+            'environment' => $this->symfonyEnvironment,
+            'debug' => $this->symfonyDebug,
+            'hostedEnv' => $this->hostedEnv,
+        ]);
+
+        $response->setStatusCode($healthy ? 200 : 500);
+
+        return $response;
+    }
+
+    /**
+     * @Route("/pingdom", methods={"GET"})
      */
     public function healthCheckXmlAction(
         ApiAvailability $apiAvailability,
         NotifyAvailability $notifyAvailability,
         RedisAvailability $redisAvailability
-    ) {
+    ): ?Response {
         $services = [
             $apiAvailability,
             $redisAvailability,
@@ -84,7 +116,7 @@ class ManageController extends AbstractController
         ];
         list($healthy, $services, $errors, $time) = $this->servicesHealth($services);
 
-        $response = $this->render('@App/Manage/health-check.xml.twig', [
+        $response = $this->render('@App/Health/pingdom.xml.twig', [
             'status' => $healthy ? 'OK' : 'ERRORS: ',
             'time' => $time * 1000,
         ]);
@@ -92,15 +124,6 @@ class ManageController extends AbstractController
         $response->headers->set('Content-Type', 'text/xml');
 
         return $response;
-    }
-
-    /**
-     * @Route("/elb", name="manage-elb", methods={"GET"})
-     * @Template("@App/Manage/elb.html.twig")
-     */
-    public function elbAction()
-    {
-        return ['status' => 'OK'];
     }
 
     /**
@@ -129,11 +152,11 @@ class ManageController extends AbstractController
             }
             $serviceTimeTaken = (microtime(true) - $startServiceTime);
             $logObject = $logObject.sprintf(
-                    '["service": "%s", "time": "%s", error: "%s"],',
-                    $service->getName(),
-                    round($serviceTimeTaken, 3),
-                    $service->getErrors()
-                );
+                '["service": "%s", "time": "%s", error: "%s"],',
+                $service->getName(),
+                round($serviceTimeTaken, 3),
+                $service->getErrors()
+            );
         }
 
         if ($logResponses) {

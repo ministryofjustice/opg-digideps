@@ -75,7 +75,7 @@ Below is the complete list of available options that can be used to customize yo
 ## Monitoring
 
 ```bash
-curl -i http://localhost:8085/health
+curl -i http://localhost:8085/health-check
 ```
 
 ```bash

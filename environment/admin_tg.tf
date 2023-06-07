@@ -8,7 +8,7 @@ resource "aws_lb_target_group" "admin" {
   tags                 = local.default_tags
 
   health_check {
-    path                = "/manage/elb"
+    path                = "/health-check"
     interval            = 30
     timeout             = 10
     unhealthy_threshold = 3

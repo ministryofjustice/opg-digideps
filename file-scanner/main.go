@@ -139,7 +139,7 @@ func main() {
 	fmt.Printf("Connected to clamd on %v\n", opts["CLAMD_PORT"])
 
 	http.HandleFunc("/scan", scanHandler)
-	http.HandleFunc("/health", healthHandler)
+	http.HandleFunc("/health-check", healthHandler)
 
 	// Start the HTTP server
 	http.ListenAndServe(PORT, nil)
