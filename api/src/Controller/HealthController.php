@@ -7,9 +7,9 @@ use Psr\Log\LoggerInterface;
 use Symfony\Component\Routing\Annotation\Route;
 
 /**
- * @Route("/manage")
+ * @Route("/health-check")
  */
-class ManageController extends RestController
+class HealthController extends RestController
 {
     private string $symfonyEnvironment;
     private LoggerInterface $logger;
@@ -23,11 +23,19 @@ class ManageController extends RestController
     }
 
     /**
-     * @Route("/availability", methods={"GET"})
+     * @Route("", name="health-check", methods={"GET"})
+     */
+    public function containerHealthAction()
+    {
+        return 'ok';
+    }
+
+    /**
+     * @Route("/service", methods={"GET"})
      *
      * @return array
      */
-    public function availabilityAction()
+    public function serviceHealthAction()
     {
         list($dbHealthy, $dbError) = $this->dbInfo();
 
@@ -36,14 +44,6 @@ class ManageController extends RestController
             'environment' => $this->symfonyEnvironment,
             'errors' => implode("\n", array_filter([$dbError])),
         ];
-    }
-
-    /**
-     * @Route("/elb", name="manage-elb", methods={"GET"})
-     */
-    public function elbAction()
-    {
-        return 'ok';
     }
 
     /**
