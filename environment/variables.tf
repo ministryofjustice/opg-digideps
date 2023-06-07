@@ -57,7 +57,7 @@ data "aws_ip_ranges" "route53_healthchecks_ips" {
 }
 
 module "allow_list" {
-  source = "git@github.com:ministryofjustice/terraform-aws-moj-ip-whitelist.git"
+  source = "git@github.com:ministryofjustice/opg-terraform-aws-moj-ip-allow-list.git"
 }
 
 locals {
