@@ -27,6 +27,7 @@ export PGHOST=${DATABASE_HOSTNAME:=postgres}
 export PGPASSWORD=${DATABASE_PASSWORD:=api}
 export PGDATABASE=${DATABASE_NAME:=digideps_unit_test}
 export PGUSER=${DATABASE_USERNAME:=api}
+export SSL=${DATABASE_SSL:=allow}
 
 # Run each folder of unit tests individually. If we were to run them all
 # individually it would cause a memory leak.
