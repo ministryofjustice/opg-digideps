@@ -2,19 +2,15 @@
 
 namespace App\Service\Stats;
 
-use DateInterval;
-use DateTime;
-
 class StatsQueryParameters
 {
     private $metric;
     private $dimensions;
     private $startDate;
     private $endDate;
-    private $canBeConstrainedByDates = ['satisfaction', 'reportsSubmitted', 'registeredDeputies'];
+    private $canBeConstrainedByDates = ['satisfaction', 'reportsSubmitted', 'registeredDeputies', 'respondents'];
 
     /**
-     * @param array $parameters
      * @throws \Exception
      */
     public function __construct(array $parameters)
@@ -22,7 +18,7 @@ class StatsQueryParameters
         $this->metric = isset($parameters['metric']) ? $parameters['metric'] : null;
         $this->dimensions = isset($parameters['dimension']) ? $parameters['dimension'] : null;
 
-        if ($this->metric === null) {
+        if (null === $this->metric) {
             throw new \InvalidArgumentException('Must specify a metric');
         }
 
@@ -44,28 +40,27 @@ class StatsQueryParameters
     }
 
     /**
-     * @param array $parameters
      * @throws \Exception
      */
     private function applyDateConstraints(array $parameters)
     {
-        $this->startDate = isset($parameters['startDate']) ?  $parameters['startDate'] : null;
+        $this->startDate = isset($parameters['startDate']) ? $parameters['startDate'] : null;
         $this->endDate = isset($parameters['endDate']) ? $parameters['endDate'] : null;
 
-        if ($this->startDate === null && $this->endDate === null) {
-            $this->endDate = new DateTime();
-            $this->startDate = new DateTime('-30 days');
-        } elseif ($this->startDate === null) {
-            $this->endDate = new DateTime($this->endDate);
+        if (null === $this->startDate && null === $this->endDate) {
+            $this->endDate = new \DateTime();
+            $this->startDate = new \DateTime('-30 days');
+        } elseif (null === $this->startDate) {
+            $this->endDate = new \DateTime($this->endDate);
             $this->startDate = clone $this->endDate;
-            $this->startDate->sub(new DateInterval('P30D'));
-        } elseif ($this->endDate === null) {
-            $this->startDate = new DateTime($this->startDate);
+            $this->startDate->sub(new \DateInterval('P30D'));
+        } elseif (null === $this->endDate) {
+            $this->startDate = new \DateTime($this->startDate);
             $this->endDate = clone $this->startDate;
-            $this->endDate->add(new DateInterval('P30D'));
+            $this->endDate->add(new \DateInterval('P30D'));
         } else {
-            $this->startDate = new DateTime($this->startDate);
-            $this->endDate = new DateTime($this->endDate);
+            $this->startDate = new \DateTime($this->startDate);
+            $this->endDate = new \DateTime($this->endDate);
         }
     }
 
