@@ -1,125 +1,125 @@
 services:
-    # Voter on User, used by PA area
-    # http://symfony.com/doc/2.8/security/voters.html
-    app.user_voter:
-        class: App\Security\UserVoter
-        tags:
-            - { name: security.voter }
-        # small performance boost
-        public: false
-    app.note_voter:
-        class: App\Security\NoteVoter
-        arguments: ["@security.access.decision_manager"]
-        tags:
-            - { name: security.voter }
-        # small performance boost
-        public: false
-    app.client_contact_voter:
-        class: App\Security\ClientContactVoter
-        arguments: ["@security.access.decision_manager"]
-        tags:
-            - { name: security.voter }
-        # small performance boost
-        public: false
-    app.document_voter:
-        class: App\Security\DocumentVoter
-        arguments: ["@security.access.decision_manager"]
-        tags:
-            - { name: security.voter }
-        # small performance boost
-        public: false
+  # Voter on User, used by PA area
+  # http://symfony.com/doc/2.8/security/voters.html
+  app.user_voter:
+    class: App\Security\UserVoter
+    tags:
+      - { name: security.voter }
+    # small performance boost
+    public: false
+  app.note_voter:
+    class: App\Security\NoteVoter
+    arguments: ["@security.access.decision_manager"]
+    tags:
+      - { name: security.voter }
+    # small performance boost
+    public: false
+  app.client_contact_voter:
+    class: App\Security\ClientContactVoter
+    arguments: ["@security.access.decision_manager"]
+    tags:
+      - { name: security.voter }
+    # small performance boost
+    public: false
+  app.document_voter:
+    class: App\Security\DocumentVoter
+    arguments: ["@security.access.decision_manager"]
+    tags:
+      - { name: security.voter }
+    # small performance boost
+    public: false
 
 security:
-    role_hierarchy:
-        ROLE_SUPER_ADMIN: [ROLE_ADMIN, ROLE_ADMIN_MANAGER]
-        ROLE_ADMIN_MANAGER: [ROLE_ADMIN]
+  role_hierarchy:
+    ROLE_SUPER_ADMIN: [ROLE_ADMIN, ROLE_ADMIN_MANAGER]
+    ROLE_ADMIN_MANAGER: [ROLE_ADMIN]
 
-        ROLE_PA: ROLE_ORG
-        ROLE_PROF: ROLE_ORG
+    ROLE_PA: ROLE_ORG
+    ROLE_PROF: ROLE_ORG
 
-        ROLE_PA_NAMED: [ROLE_PA, ROLE_ORG_NAMED]
-        ROLE_PA_ADMIN: [ROLE_PA, ROLE_ORG_ADMIN]
-        ROLE_PA_TEAM_MEMBER: [ROLE_PA, ROLE_ORG_TEAM_MEMBER]
+    ROLE_PA_NAMED: [ROLE_PA, ROLE_ORG_NAMED]
+    ROLE_PA_ADMIN: [ROLE_PA, ROLE_ORG_ADMIN]
+    ROLE_PA_TEAM_MEMBER: [ROLE_PA, ROLE_ORG_TEAM_MEMBER]
 
-        ROLE_PROF_NAMED: [ROLE_PROF, ROLE_ORG_NAMED]
-        ROLE_PROF_ADMIN: [ROLE_PROF, ROLE_ORG_ADMIN]
-        ROLE_PROF_TEAM_MEMBER: [ROLE_PROF, ROLE_ORG_TEAM_MEMBER]
+    ROLE_PROF_NAMED: [ROLE_PROF, ROLE_ORG_NAMED]
+    ROLE_PROF_ADMIN: [ROLE_PROF, ROLE_ORG_ADMIN]
+    ROLE_PROF_TEAM_MEMBER: [ROLE_PROF, ROLE_ORG_TEAM_MEMBER]
 
-    enable_authenticator_manager: true
+  enable_authenticator_manager: true
 
-    providers:
-        deputy:
-            id: App\Service\DeputyProvider
-        client_user_provider:
-            id: App\Security\UserProvider
+  providers:
+    deputy:
+      id: App\Service\DeputyProvider
+    client_user_provider:
+      id: App\Security\UserProvider
 
-    firewalls:
-        dev:
-            pattern: ^/(_(profiler|wdt)|css|images|js)/
-            security: false
+  firewalls:
+    dev:
+      pattern: ^/(_(profiler|wdt)|css|images|js)/
+      security: false
 
-        passwordManaging:
-            pattern: ^/password-managing*
-            security: false
+    passwordManaging:
+      pattern: ^/password-managing*
+      security: false
 
-        userManaging:
-            pattern: ^/user/(password-reset|activate|agree-terms-use)/*
-            security: false
+    userManaging:
+      pattern: ^/user/(password-reset|activate|agree-terms-use)/*
+      security: false
 
-        manageController:
-            pattern: ^/manage/*
-            security: false
+    healthController:
+      pattern: ^/health-check/*
+      security: false
 
-        synchroniseController:
-            pattern: ^/synchronise/*
-            security: false
+    synchroniseController:
+      pattern: ^/synchronise/*
+      security: false
 
-        error503:
-            pattern: ^/error-503
-            security: false
+    error503:
+      pattern: ^/error-503
+      security: false
 
-        secured_area:
-            lazy: true
-            provider: client_user_provider
-            custom_authenticators:
-                - App\Security\LoginFormAuthenticator
-                - App\Security\SessionAuthenticator
-            logout:
-                path: app_logout
-                target: /
-                success_handler: logout_listener
-                # needed to save custom login params
-                invalidate_session: false
+    secured_area:
+      lazy: true
+      provider: client_user_provider
+      custom_authenticators:
+        - App\Security\LoginFormAuthenticator
+        - App\Security\SessionAuthenticator
+      logout:
+        path: app_logout
+        target: /
+        success_handler: logout_listener
+        # needed to save custom login params
+        invalidate_session: false
 
-    access_control:
-        # /admin accessible only from ADMIN, super users and AD users
-        - { path: ^/admin, roles: [ROLE_ADMIN, ROLE_AD] }
-        # client settings not available to PA users
-        - {
-              path: ^/deputyship-details,
-              roles: [ROLE_LAY_DEPUTY, ROLE_ADMIN, ROLE_AD],
-          }
-        - { path: ^/ad, roles: [ROLE_AD] }
-        - { path: ^/pa/team/add, roles: [ROLE_ORG_NAMED, ROLE_ORG_ADMIN] }
-        - { path: ^/pa/team/edit, roles: [ROLE_ORG] }
-        - { path: ^/pa/, roles: [ROLE_ORG] }
-        # report expenses section access for Lay and PA
-        - { path: ^/report/\d+/pa-fee-expense, roles: [ROLE_ORG] }
-        - { path: ^/report/\d+/deputy-expenses, roles: [ROLE_LAY_DEPUTY] }
+  access_control:
+    # /admin accessible only from ADMIN, super users and AD users
+    - { path: ^/admin, roles: [ROLE_ADMIN, ROLE_AD] }
+    # client settings not available to PA users
+    - {
+        path: ^/deputyship-details,
+        roles: [ROLE_LAY_DEPUTY, ROLE_ADMIN, ROLE_AD],
+      }
+    - { path: ^/ad, roles: [ROLE_AD] }
+    - { path: ^/pa/team/add, roles: [ROLE_ORG_NAMED, ROLE_ORG_ADMIN] }
+    - { path: ^/pa/team/edit, roles: [ROLE_ORG] }
+    - { path: ^/pa/, roles: [ROLE_ORG] }
+    # report expenses section access for Lay and PA
+    - { path: ^/report/\d+/pa-fee-expense, roles: [ROLE_ORG] }
+    - { path: ^/report/\d+/deputy-expenses, roles: [ROLE_LAY_DEPUTY] }
 
-        # open URLs
-        - { path: ^/v2/*, roles: PUBLIC_ACCESS }
-        - { path: ^/login, roles: PUBLIC_ACCESS }
-        - { path: ^/logout, roles: PUBLIC_ACCESS }
-        - { path: ^/login-ad, roles: PUBLIC_ACCESS }
-        - { path: ^/manage, roles: PUBLIC_ACCESS }
-        - { path: ^/feedback, roles: PUBLIC_ACCESS }
-        - { path: ^/register, roles: PUBLIC_ACCESS }
-        - { path: ^/terms, roles: PUBLIC_ACCESS }
-        - { path: ^/privacy, roles: PUBLIC_ACCESS }
-        - { path: ^/cookies, roles: PUBLIC_ACCESS }
-        - { path: ^/accessibility, roles: PUBLIC_ACCESS }
-        - { path: ^/behat/frontend/reset-fixtures, roles: PUBLIC_ACCESS }
-        - { path: ^/$, roles: PUBLIC_ACCESS }
-        # all the rest needs authentication
-        - { path: ^/, roles: IS_AUTHENTICATED_FULLY }
+    # open URLs
+    - { path: ^/v2/*, roles: PUBLIC_ACCESS }
+    - { path: ^/login, roles: PUBLIC_ACCESS }
+    - { path: ^/logout, roles: PUBLIC_ACCESS }
+    - { path: ^/login-ad, roles: PUBLIC_ACCESS }
+    - { path: ^/manage, roles: PUBLIC_ACCESS }
+    - { path: ^/feedback, roles: PUBLIC_ACCESS }
+    - { path: ^/register, roles: PUBLIC_ACCESS }
+    - { path: ^/terms, roles: PUBLIC_ACCESS }
+    - { path: ^/privacy, roles: PUBLIC_ACCESS }
+    - { path: ^/cookies, roles: PUBLIC_ACCESS }
+    - { path: ^/accessibility, roles: PUBLIC_ACCESS }
+    - { path: ^/behat/frontend/reset-fixtures, roles: PUBLIC_ACCESS }
+    - { path: ^/$, roles: PUBLIC_ACCESS }
+    # all the rest needs authentication
+    - { path: ^/, roles: IS_AUTHENTICATED_FULLY }

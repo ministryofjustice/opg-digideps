@@ -101,7 +101,7 @@ locals {
       "healthCheck": {
         "command": [
           "CMD-SHELL",
-          "wget --no-verbose --tries=1 --spider http://localhost:8080/health || exit 1"
+          "wget --no-verbose --tries=1 --spider http://localhost:8080/health-check || exit 1"
         ],
         "interval": 30,
         "timeout": 10,
