@@ -44,9 +44,9 @@ resource "aws_iam_role_policy" "execution_role" {
 
 data "aws_iam_policy_document" "execution_role" {
   statement {
-    effect    = "Allow"
+    effect = "Allow"
+    #tfsec:ignore:aws-iam-no-policy-wildcards - Required for execution role to function
     resources = ["*"]
-
     actions = [
       "ecr:GetAuthorizationToken",
       "ecr:BatchCheckLayerAvailability",
@@ -56,7 +56,7 @@ data "aws_iam_policy_document" "execution_role" {
       "logs:GetLogEvents",
       "logs:PutLogEvents",
       "ssm:GetParameters",
-      "secretsmanager:GetSecretValue",
+      "secretsmanager:GetSecretValue"
     ]
   }
 

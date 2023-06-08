@@ -417,7 +417,7 @@ resource "aws_cloudwatch_metric_alarm" "admin_alb_average_response_time" {
 }
 
 resource "aws_cloudwatch_metric_alarm" "admin_ddos_attack_external" {
-  alarm_name          = "admin-ddos-detected"
+  alarm_name          = "${local.environment}-admin-ddos-detected"
   comparison_operator = "GreaterThanThreshold"
   evaluation_periods  = "3"
   metric_name         = "DDoSDetected"
@@ -434,7 +434,7 @@ resource "aws_cloudwatch_metric_alarm" "admin_ddos_attack_external" {
 }
 
 resource "aws_cloudwatch_metric_alarm" "front_ddos_attack_external" {
-  alarm_name          = "front-ddos-detected"
+  alarm_name          = "${local.environment}-front-ddos-detected"
   comparison_operator = "GreaterThanThreshold"
   evaluation_periods  = "3"
   metric_name         = "DDoSDetected"

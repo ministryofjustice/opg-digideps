@@ -70,7 +70,7 @@ data "aws_iam_policy_document" "lambda" {
   statement {
     sid       = "allowSecretsManagerAccess"
     effect    = "Allow"
-    resources = ["*"]
+    resources = var.secrets
     actions = [
       "secretsmanager:GetSecretValue"
     ]

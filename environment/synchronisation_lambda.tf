@@ -24,6 +24,8 @@ module "lamdba_synchronisation" {
   aws_subnet_ids        = data.aws_subnet.private.*.id
   memory                = 512
   vpc_id                = data.aws_vpc.vpc.id
+  secrets               = [data.aws_secretsmanager_secret.jwt_token_synchronisation.arn]
+  logs_kms_key_arn      = aws_kms_key.cloudwatch_logs.arn
 }
 
 resource "aws_security_group_rule" "lambda_sync_to_front" {

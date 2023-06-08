@@ -24,6 +24,7 @@ data "aws_iam_policy_document" "front_s3" {
       "s3:GetObjectTagging",
       "s3:PutObjectTagging",
     ]
+    #tfsec:ignore:aws-iam-no-policy-wildcards - Not overly permissive
     resources = [
       module.pa_uploads.arn,
       "${module.pa_uploads.arn}/*",
