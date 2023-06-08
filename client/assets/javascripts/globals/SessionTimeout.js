@@ -30,20 +30,19 @@ const SessionTimeout = function () {
   const appTimeoutPop = getElementByDataAttribute('data-module="app-timeout-popup"')
   const okBtn = getElementByDataAttribute('data-js="ok-button"')
 
-  if ([keepAliveUrl, sessionExpiresValue, popupExpiresValue, appTimeoutPop, okBtn].includes(null)) {
-    console.log('Required data or element is missing from page')
-    return null
+  const elements = [keepAliveUrl, sessionExpiresValue, popupExpiresValue, appTimeoutPop, okBtn]
+
+  if (!elements.includes(null)) {
+    SessionTimeoutDialog.init({
+      element: appTimeoutPop,
+      sessionExpiresMs: sessionExpiresValue * 1000,
+      sessionPopupShowAfterMs: popupExpiresValue * 1000,
+      keepSessionAliveUrl: keepAliveUrl,
+      okBtn: okBtn
+    })
   }
 
-  SessionTimeoutDialog.init({
-    element: appTimeoutPop,
-    sessionExpiresMs: sessionExpiresValue * 1000,
-    sessionPopupShowAfterMs: popupExpiresValue * 1000,
-    keepSessionAliveUrl: keepAliveUrl,
-    okBtn: okBtn
-  })
-
-  SessionTimeoutDialog.startCountdown()
+  return null
 }
 
 export default SessionTimeout
