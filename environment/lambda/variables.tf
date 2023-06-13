@@ -109,3 +109,8 @@ variable "secrets" {
   description = "Secrets lambda has access to"
   default     = []
 }
+
+variable "logs_kms_key_arn" {
+  description = "User managed KMS key for log encryption"
+  type        = string
+}
