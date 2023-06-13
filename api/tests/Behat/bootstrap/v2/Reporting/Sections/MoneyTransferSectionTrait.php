@@ -70,14 +70,6 @@ trait MoneyTransferSectionTrait
     }
 
     /**
-     * @Then /^I should be on the money transfer add another page$/
-     */
-    public function iShouldBeOnTheMoneyTransferAddAnotherPage(): bool
-    {
-        return $this->iAmOnPage(sprintf('/%s\/.*\/money-transfers\/add_another.*$/', $this->reportUrlPrefix));
-    }
-
-    /**
      * @Then /^I remove the money transfer I just added$/
      */
     public function iRemoveTheMoneyTransferIJustAdded()
