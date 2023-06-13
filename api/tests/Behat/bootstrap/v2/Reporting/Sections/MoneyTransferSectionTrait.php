@@ -16,9 +16,9 @@ trait MoneyTransferSectionTrait
     }
 
     /**
-     * @Then /^I should be able to add a transfer between two accounts$/
+     * @Then /^I add a transfer between two accounts$/
      */
-    public function iShouldBeAbleToAddATransferBetweenTwoAccounts()
+    public function iAddATransferBetweenTwoAccounts()
     {
         $this->pressButton('Start money transfers');
 
@@ -75,5 +75,34 @@ trait MoneyTransferSectionTrait
     public function iShouldBeOnTheMoneyTransferAddAnotherPage(): bool
     {
         return $this->iAmOnPage(sprintf('/%s\/.*\/money-transfers\/add_another.*$/', $this->reportUrlPrefix));
+    }
+
+    /**
+     * @Then /^I remove the money transfer I just added$/
+     */
+    public function iRemoveTheMoneyTransferIJustAdded()
+    {
+        $this->clickLink('Remove');
+        $this->iShouldBeOnTheMoneyTransferDeletePage();
+        $this->pressButton('Yes, remove transfer');
+    }
+
+    /**
+     * @Then I should be on the money transfer delete page
+     */
+    public function iShouldBeOnTheMoneyTransferDeletePage(): bool
+    {
+        return $this->iAmOnPage('/report\/.*\/money-transfers\/.*\/delete$/');
+    }
+
+    /**
+     * @Then /^I should be on the money transfers starting page and see entry deleted$/
+     */
+    public function iShouldBeOnTheMoneyTransfersStartingPageAndSeeEntryDeleted()
+    {
+        $this->iAmOnPage(sprintf('/%s\/.*\/money-transfers.*$/', $this->reportUrlPrefix));
+
+        $entryDeletedText = $this->getSession()->getPage()->find('css', '.opg-alert__message > .govuk-body')->getText();
+        assert('Money transfer deleted' == $entryDeletedText);
     }
 }
