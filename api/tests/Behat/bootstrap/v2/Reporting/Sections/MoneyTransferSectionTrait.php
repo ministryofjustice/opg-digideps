@@ -21,15 +21,59 @@ trait MoneyTransferSectionTrait
     public function iShouldBeAbleToAddATransferBetweenTwoAccounts()
     {
         $this->pressButton('Start money transfers');
+
+        $this->iAmOnMoneyTransfersExistPage();
+
         $this->selectOption('yes_no[noTransfersToAdd]', '0');
         $this->pressButton('Save and continue');
 
-        $this->selectOption('money_transfers_type[accountFromId]', '3');
-        $this->selectOption('money_transfers_type[accountToId]', '4');
-        $this->fillInField('money_transfers_type[amount]', '£100.00');
+        $this->iAmOnMoneyTransfersAddPage();
+
+        $this->selectOption('money_transfers_type[accountFromId]', '(****1234)');
+        $this->selectOption('money_transfers_type[accountToId]', 'account-1 - Current account (****1111)');
+        $this->fillInField('money_transfers_type[amount]', '100.00');
         $this->pressButton('Save and continue');
 
-        $this->selectOption('add_another[addAnother]', '1');
-        $this->pressButton('Continue');
+        $this->addAnotherTransfer('no');
+    }
+
+        private function addAnotherTransfer($anotherFlag)
+        {
+            $this->iAmOnMoneyTransfersAddAnotherPage();
+
+            $this->chooseOption('add_another[addAnother]', $anotherFlag);
+            $this->pressButton('Continue');
+        }
+
+    /**
+     * @Then /^I should see the transfer listed on the money transfers summary page$/
+     */
+    public function iShouldSeeTheExpectedResultsOnMoneyTransfersSummaryPage()
+    {
+        $this->iAmOnMoneyTransfersSummaryPage();
+
+        if ($this->getSectionAnswers('yes_no[noTransfersToAdd]')) {
+            $this->expectedResultsDisplayedSimplified('noTransfersToAdd', true);
+        }
+
+        if ($this->getSectionAnswers('money_transfers_type[accountFromId]')) {
+            $this->expectedResultsDisplayedSimplified('accountFromId', true);
+        }
+
+        if ($this->getSectionAnswers('money_transfers_type[accountToId]')) {
+            $this->expectedResultsDisplayedSimplified('accountToId', true);
+        }
+
+        if ($this->getSectionAnswers('money_transfers_type[amount]')) {
+            $this->expectedResultsDisplayedSimplified('amount', true);
+        }
+    }
+
+    /**
+     * @Then /^I should be on the money transfer add another page$/
+     */
+    public function iShouldBeOnTheMoneyTransferAddAnotherPage(): bool
+    {
+        return $this->iAmOnPage(sprintf('/%s\/.*\/money-transfers\/add_another.*$/', $this->reportUrlPrefix));
     }
 }
