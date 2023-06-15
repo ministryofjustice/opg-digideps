@@ -19,29 +19,8 @@ data "aws_kms_alias" "source_default_key" {
   name = "alias/aws/s3"
 }
 
-moved {
-  from = aws_s3_bucket.pa_uploads
-  to   = module.pa_uploads.aws_s3_bucket.bucket
-}
-
-moved {
-  from = aws_s3_bucket_public_access_block.pa_uploads
-  to   = module.pa_uploads.aws_s3_bucket_public_access_block.public_access_policy
-}
-
-moved {
-  from = aws_iam_policy_document.pa_uploads
-  to   = module.pa_uploads.data.aws_iam_policy_document.bucket
-}
-
-moved {
-  from = aws_s3_bucket_policy.pa_uploads
-  to   = module.pa_uploads.aws_s3_bucket_policy.bucket
-}
-
 module "pa_uploads" {
-  source = "./s3_bucket"
-
+  source                               = "./s3_bucket"
   account_name                         = local.account.name
   bucket_name                          = "pa-uploads-${local.environment}"
   force_destroy                        = local.account.force_destroy_bucket
