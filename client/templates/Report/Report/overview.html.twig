@@ -308,19 +308,9 @@
             </form>
         {% endif %}
         <a id="{{ report.status.isReadyToSubmit ? 'edit-report-review' : 'edit-report-preview' }}"
-           class="push--top behat-link-edit-report-review"
-           href="{{ path('report_review', {'reportId': report.id}) }}"
-        >
-            <button
-                class="govuk-button {{ report.isUnsubmitted ? 'govuk-button--disabled' : '' }}"
-                aria-disabled="{{ report.isUnsubmitted ? 'true' : 'false' }}"
-                {% if report.isUnsubmitted %}
-                    disabled="disabled"
-                {% endif %}
-                data-module="opg-toggleable-button"
-            >
-                {{ 'options.previewReport' | trans() }}
-            </button>
+           class="govuk-button behat-link-edit-report-review" href="{{ path('report_review', {'reportId': report.id}) }}"
+           aria-disabled="{{ report.isUnsubmitted ? 'true' : 'false' }}"
+           data-module="govuk-button">{{ 'options.previewReport' | trans() }}
         </a>
     </div>
 
