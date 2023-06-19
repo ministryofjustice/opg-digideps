@@ -67,13 +67,26 @@ describe('SessionTimeoutDialog', function () {
       expect(spy).toHaveBeenCalled()
     })
 
-    it('makes a get request using keepSessionAliveUrl', function () {
-      const spy = jest.spyOn(window, 'fetch')
-      SessionTimeoutDialogObj.keepSessionAliveUrl = 'example/url'
-
+    it('makes a get request using keepSessionAliveUrl', async function () {
+      // because of slight difference in time between our call and now var being set,
+      // we need to account for time to be slightly off
+      const fetchMock = jest.fn()
+      jest.spyOn(window, 'fetch').mockImplementation(fetchMock)
+      SessionTimeoutDialog.keepSessionAliveUrl = 'example/url'
       SessionTimeoutDialogObj.hidePopupAndRestartCountdown(SessionTimeoutDialogObj)
+      const now = Date.now()
+      const expectedUrl = 'example/url?refresh='
+      const expectedTimeframe = 10 // 10ms
+      // Assert that the fetch function is called with the expected URL within the specified timeframe
+      expect(fetchMock).toHaveBeenCalledWith(expect.stringContaining(expectedUrl))
 
-      expect(spy).toHaveBeenCalledWith('example/url?refresh=' + Date.now())
+      // Extract the timestamp from the received URL and calculate the difference from the current time
+      const receivedUrl = fetchMock.mock.calls[0][0]
+      const receivedTime = parseInt(receivedUrl.slice(receivedUrl.lastIndexOf('=') + 1), 10)
+      const timeDifference = Math.abs(now - receivedTime)
+
+      // Assert that the time difference is within the allowed threshold
+      expect(timeDifference).toBeLessThanOrEqual(expectedTimeframe)
     })
   })
 })
