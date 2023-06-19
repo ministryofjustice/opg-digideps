@@ -81,7 +81,8 @@ resource "aws_service_discovery_private_dns_namespace" "private" {
 
 data "aws_iam_policy_document" "ecs_task_logs" {
   statement {
-    effect    = "Allow"
+    effect = "Allow"
+    #tfsec:ignore:aws-iam-no-policy-wildcards - Describe only so not overly permissive given role
     resources = ["*"]
 
     actions = [
