@@ -11,6 +11,8 @@ resource "aws_elasticache_replication_group" "frontend" {
   subnet_group_name          = local.account.ec_subnet_group
   security_group_ids         = [module.frontend_cache_security_group.id]
   tags                       = local.default_tags
+  at_rest_encryption_enabled = true
+  transit_encryption_enabled = true
   apply_immediately          = true
 }
 
