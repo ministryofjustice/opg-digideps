@@ -36,6 +36,15 @@
         'labelClass' : 'text'
         }) }}
 
+    <div class="govuk-character-count" data-module="govuk-textarea govuk-js-character-count" data-maxlength="50">
+        {{ form_input(form.description, 'form.description.' ~ (form.description.vars.required ? 'mandatory' : 'optional'), {
+            'labelParameters' : transOptions
+        }) }}
+        <div class="govuk-hint govuk-character-count__message">
+            You can enter up to 50 characters
+        </div>
+    </div>
+
 
     {{ macros.saveAndContinueButton(form.save) }}
 

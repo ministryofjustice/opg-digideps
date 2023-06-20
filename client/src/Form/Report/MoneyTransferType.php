@@ -37,6 +37,12 @@ class MoneyTransferType extends AbstractType
                     'grouping' => true,
                     'error_bubbling' => false,
                     'invalid_message' => 'transfer.amount.notNumeric', ]
+            )->add(
+                'description',
+                FormTypes\TextareaType::class,
+                [
+                    'required' => false,
+                    'attr' => ['maxlength' => 50]]
             );
 
         $builder
