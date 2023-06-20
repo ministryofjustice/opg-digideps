@@ -14,6 +14,8 @@ ENV S3_S3V4 yes
 # install pg_dump and s3
 RUN apk add --no-cache postgresql python3 py3-pip
 
+RUN apk update && apk upgrade --no-cache openssl libcrypto3 libssl3
+
 RUN pip install awscli --ignore-installed six
 
 ADD backup.sh backup.sh

@@ -86,7 +86,7 @@
             </span>
             <span class="govuk-heading-l govuk-!-margin-bottom-4 govuk-!-font-size-80"
                   aria-labelledby="metric-respondents-total-label">
-                {{ stats.satisfaction.all | length }}
+                {{ stats.respondents.all | default('-') }}
             </span>
         </div>
     </div>

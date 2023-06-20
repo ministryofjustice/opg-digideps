@@ -3,7 +3,7 @@ data "aws_kms_alias" "secretmanager" {
 }
 
 data "aws_secretsmanager_secret" "database_password" {
-  name = join("/", compact(["default", "database-password"]))
+  name = join("/", compact([local.account.secrets_prefix, "database-password"]))
 }
 
 data "aws_secretsmanager_secret_version" "database_password" {

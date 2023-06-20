@@ -27,6 +27,7 @@ class ReportingSectionsFeatureContext extends BaseFeatureContext
     use MoneyInLowAssetsTrait;
     use MoneyOutSectionTrait;
     use MoneyOutShortSectionTrait;
+    use MoneyTransferSectionTrait;
     use ReportOverviewTrait;
     use VisitsCareSectionTrait;
     use IncomeBenefitsSectionTrait;

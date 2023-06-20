@@ -404,6 +404,35 @@ trait IShouldBeOnFrontendTrait
         return $this->iAmOnPage(sprintf('/%s\/.*\/money-out\/.*\/delete.*$/', $this->reportUrlPrefix));
     }
 
+    public function iAmOnMoneyTransfersExistPage(): bool
+    {
+        return $this->iAmOnPage(sprintf('/%s\/.*\/money-transfers\/exist.*/', $this->reportUrlPrefix));
+    }
+
+    /**
+     * @Then I should be on the money transfers add page
+     */
+    public function iAmOnMoneyTransfersAddPage(): bool
+    {
+        return $this->iAmOnPage(sprintf('/%s\/.*\/money-transfers\/step1.*/', $this->reportUrlPrefix));
+    }
+
+    /**
+     * @Then I should be on the money transfers add another page
+     */
+    public function iAmOnMoneyTransfersAddAnotherPage(): bool
+    {
+        return $this->iAmOnPage(sprintf('/%s\/.*\/money-transfers\/add_another.*/', $this->reportUrlPrefix));
+    }
+
+    /**
+     * @Then I should be on the money transfers summary page
+     */
+    public function iAmOnMoneyTransfersSummaryPage(): bool
+    {
+        return $this->iAmOnPage(sprintf('/%s\/.*\/money-transfers\/summary.*/', $this->reportUrlPrefix));
+    }
+
     /**
      * @Then I should be on the any other info summary page
      */

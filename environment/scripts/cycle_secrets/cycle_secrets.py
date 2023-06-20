@@ -5,18 +5,12 @@ from botocore.config import Config
 import secrets
 
 
-def get_session(account):
-    accounts = {
-        'development': '248804316466',
-        'preproduction': '454262938596',
-        'production': '515688267891'
-    }
-
+def get_session(account_id):
     # Check if the CI environment variable is set
     if 'CI' in os.environ:
-        role_to_assume = f'arn:aws:iam::{accounts[account]}:role/digideps-ci'
+        role_to_assume = f'arn:aws:iam::{account_id}:role/digideps-ci'
     else:
-        role_to_assume = f'arn:aws:iam::{accounts[account]}:role/operator'
+        role_to_assume = f'arn:aws:iam::{account_id}:role/operator'
 
     # Use the Boto3 STS client to assume the role and get a session
     sts_client = boto3.client('sts')
@@ -34,17 +28,14 @@ def get_session(account):
     return session
 
 
-def cycle_secrets(session):
+def cycle_secrets(session, prefix):
     aws_config = Config(
         region_name=os.environ.get('AWS_REGION'),
     )
-    endpoint = os.getenv("SECRETS_ENDPOINT")
-    # prefix = os.getenv("SECRETS_PREFIX")
     secrets_list = [
-        "default/database-password"
-        # f"{prefix}database-password"
+        f"{prefix}/database-password"
     ]
-    secret_manager = session.client('secretsmanager', config=aws_config, endpoint_url=endpoint)
+    secret_manager = session.client('secretsmanager', config=aws_config)
 
     # Retrieve all secrets in the Secrets Manager service
     secrets_response = secret_manager.list_secrets()
@@ -62,8 +53,24 @@ def cycle_secrets(session):
 
 
 def main(workspace):
-    session = get_session(workspace)
-    cycle_secrets(session)
+    accounts = {
+        'development': {
+            'id': '248804316466',
+            'secret_prefix': 'development'
+        },
+        'preproduction': {
+            'id': '454262938596',
+            'secret_prefix': 'preproduction'
+        },
+        'production': {
+            'id': '515688267891',
+            'secret_prefix': 'production02'
+        }
+    }
+    account_id = accounts[workspace]["id"]
+    prefix = accounts[workspace]["secret_prefix"]
+    session = get_session(account_id)
+    cycle_secrets(session, prefix)
 
 
 if __name__ == "__main__":

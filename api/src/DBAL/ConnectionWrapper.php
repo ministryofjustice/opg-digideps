@@ -85,7 +85,7 @@ class ConnectionWrapper extends Connection
 
     protected function refreshPassword()
     {
-        $secretPrefix = getenv(self::SECRETS_PREFIX_DB);
+        $secretPrefix = getenv(self::SECRETS_PREFIX);
         $secretName = sprintf('%sdatabase-password', $secretPrefix);
 
         // Use the Secrets Manager client to retrieve the secret value
