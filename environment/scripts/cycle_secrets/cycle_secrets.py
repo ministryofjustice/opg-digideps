@@ -1,7 +1,7 @@
 import boto3
 import os
+import sys
 from botocore.config import Config
-import logging
 import secrets
 
 
@@ -39,9 +39,10 @@ def cycle_secrets(session):
         region_name=os.environ.get('AWS_REGION'),
     )
     endpoint = os.getenv("SECRETS_ENDPOINT")
-    prefix = os.getenv("SECRETS_PREFIX")
+    # prefix = os.getenv("SECRETS_PREFIX")
     secrets_list = [
-        f"{prefix}database-password"
+        "default/database-password"
+        # f"{prefix}database-password"
     ]
     secret_manager = session.client('secretsmanager', config=aws_config, endpoint_url=endpoint)
 
@@ -60,10 +61,19 @@ def cycle_secrets(session):
         print(f"rotated secret: {secret['Name']}")
 
 
-def main():
-    session = get_session('development')
+def main(workspace):
+    session = get_session(workspace)
     cycle_secrets(session)
 
 
 if __name__ == "__main__":
-    main()
+    # Check if the correct number of arguments are provided
+    if len(sys.argv) > 2:
+        print("Usage: python script.py <workspace>")
+        sys.exit(1)
+
+    # Retrieve the command-line arguments
+    workspace = sys.argv[1]
+    print(workspace)
+    # Call the main function with the arguments
+    main(workspace)

@@ -130,6 +130,7 @@ locals {
       { "name": "OPG_DOCKER_TAG", "value": "${var.OPG_DOCKER_TAG}" },
       { "name": "PARAMETER_PREFIX", "value": "${local.parameter_prefix}" },
       { "name": "REDIS_DSN", "value": "redis://${aws_route53_record.api_redis.fqdn}" },
+      { "name": "SECRETS_PREFIX_DB", "value": "${join("", ["default", "/"])}" },
       { "name": "SECRETS_PREFIX", "value": "${join("", [local.account.secrets_prefix, "/"])}" }
     ]
   }

@@ -105,7 +105,7 @@ class ConnectionWrapperTest extends TestCase
             $this->updateLocalstackSecret($secretName, $oldPassword);
             $this->updatePostgresMasterPassword($newPassword, $oldPassword);
         } catch (\Exception $e) {
-            // Do nothing
+            // Do nothing: this is expected to fail if previous test has failed
         }
     }
 }

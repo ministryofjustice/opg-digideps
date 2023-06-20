@@ -19,6 +19,15 @@ resource "aws_elasticache_replication_group" "api" {
 
 locals {
   api_cache_sg_rules = {
+    api_service = {
+      port        = 6379
+      type        = "ingress"
+      protocol    = "tcp"
+      target_type = "security_group_id"
+      target      = module.api_service_security_group.id
+    }
+  }
+  api_cache_non_prod_sg_rules = {
     integration_test_v2 = {
       port        = 6379
       type        = "ingress"
@@ -39,7 +48,7 @@ locals {
 module "api_cache_security_group" {
   source      = "./security_group"
   description = "API Redis"
-  rules       = local.api_cache_sg_rules
+  rules       = local.account.name == "production" ? local.api_cache_sg_rules : local.api_cache_non_prod_sg_rules
   name        = "api-cache"
   tags        = local.default_tags
   vpc_id      = data.aws_vpc.vpc.id
