@@ -46,6 +46,7 @@ deletePage:
     accountFrom: Transferred from
     accountTo: Transferred to
     amount: Amount
+    description: Description
 
 errorPage:
   htmlTitle: "Money transfers - Complete the deputy report | GOV.UK"
