@@ -136,7 +136,7 @@ locals {
       { "name": "OPG_DOCKER_TAG", "value": "${var.OPG_DOCKER_TAG}" },
       { "name": "ADMIN_HOST", "value": "https://${aws_route53_record.admin.fqdn}" },
       { "name": "NONADMIN_HOST", "value": "https://${aws_route53_record.front.fqdn}" },
-      { "name": "SESSION_REDIS_DSN", "value": "rediss://${aws_route53_record.frontend_redis.fqdn}" },
+      { "name": "SESSION_REDIS_DSN", "value": "redis://${aws_elasticache_replication_group.frontend.primary_endpoint_address}" },
       { "name": "SESSION_PREFIX", "value": "dd_session_check" },
       { "name": "EMAIL_SEND_INTERNAL", "value": "${local.account.is_production == 1 ? "true" : "false"}" },
       { "name": "GA_DEFAULT", "value": "${local.account.ga_default}" },

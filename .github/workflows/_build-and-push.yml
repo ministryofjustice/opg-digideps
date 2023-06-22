@@ -96,7 +96,7 @@ jobs:
           image-ref: ${{ matrix.svc_name }}:latest
           severity: "HIGH,CRITICAL"
           format: "sarif"
-          security-checks: "vuln"
+          scanners: "vuln"
           output: "trivy-results.sarif"
           timeout: 15m
 

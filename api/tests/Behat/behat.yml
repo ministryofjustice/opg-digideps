@@ -260,6 +260,13 @@ v2-tests-browserkit:
             contexts:
                 - App\Tests\Behat\v2\Reporting\Sections\ReportingSectionsFeatureContext
 
+        section-money-transfers:
+            description: Covering the 'Money Transfers' section of the report
+            paths:
+                ["%paths.base%/features-v2/reporting/sections/money-transfers"]
+            contexts:
+                - App\Tests\Behat\v2\Reporting\Sections\ReportingSectionsFeatureContext
+
         section-visit-care:
             description: Covering the 'Visits and Care' section of the report
             paths: ["%paths.base%/features-v2/reporting/sections/visits-care"]

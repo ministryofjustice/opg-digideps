@@ -128,7 +128,7 @@ locals {
       { "name": "NGINX_APP_NAME", "value": "api" },
       { "name": "OPG_DOCKER_TAG", "value": "${var.OPG_DOCKER_TAG}" },
       { "name": "PARAMETER_PREFIX", "value": "${local.parameter_prefix}" },
-      { "name": "REDIS_DSN", "value": "rediss://${aws_route53_record.api_redis.fqdn}" },
+      { "name": "REDIS_DSN", "value": "redis://${aws_elasticache_replication_group.api.primary_endpoint_address}" },
       { "name": "SECRETS_PREFIX", "value": "${join("", [local.account.secrets_prefix, "/"])}" }
     ]
   }
