@@ -10,10 +10,9 @@ use App\Entity\Report\Report;
 use App\Entity\User;
 use App\Factory\OrganisationFactory;
 use App\Repository\OrganisationRepository;
-use DateTime;
 use Doctrine\Persistence\ObjectManager;
 
-class UserFixtures extends AbstractDataFixture
+class LayUserFixtures extends AbstractDataFixture
 {
     private $userData = [
         [
@@ -184,7 +183,7 @@ class UserFixtures extends AbstractDataFixture
             ->setLastname('User')
             ->setEmail(isset($data['email']) ? $data['email'] : 'behat-'.strtolower($data['deputyType']).'-deputy-'.$data['id'].'@publicguardian.gov.uk')
             ->setActive(true)
-            ->setRegistrationDate(new DateTime())
+            ->setRegistrationDate(new \DateTime())
             ->setNdrEnabled(isset($data['ndr']))
             ->setCoDeputyClientConfirmed(isset($data['codeputyEnabled']))
             ->setPhoneMain('07911111111111')
@@ -228,7 +227,7 @@ class UserFixtures extends AbstractDataFixture
             ->setLastname($data['id'].'-client')
             ->setPhone('022222222222222')
             ->setAddress('Victoria road')
-            ->setCourtDate(DateTime::createFromFormat('d/m/Y', '01/11/2017'));
+            ->setCourtDate(\DateTime::createFromFormat('d/m/Y', '01/11/2017'));
 
         if ('PROF' === $data['deputyType'] || 'PA' === $data['deputyType']) {
             $namedDeputy = new NamedDeputy();
