@@ -1,0 +1,29 @@
+name: "[Scheduled] Update Training Environment"
+
+on:
+  schedule:
+    # 11pm on Friday
+    - cron: "0 23 * * 5"
+
+permissions:
+  contents: read
+  security-events: none
+  pull-requests: none
+  actions: none
+  checks: none
+  deployments: none
+  issues: none
+  packages: none
+  repository-projects: none
+  statuses: none
+
+jobs:
+  reset_database:
+    name: reset training database
+    uses: ./.github/workflows/_run-task.yml
+    with:
+      workspace: training
+      task_name: "integration_test_v2"
+      timeout: "500"
+      override: "sh,./tests/Behat/reset-db.sh"
+    secrets: inherit
