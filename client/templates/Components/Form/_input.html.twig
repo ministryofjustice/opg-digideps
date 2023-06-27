@@ -4,7 +4,12 @@
 {% endif %}
 <div id="form-group-{{ element.vars.id }}"
      class="govuk-form-group{% if not element.vars.valid %} govuk-form-group--error{% endif %}{% if formGroupClass is defined %} {{formGroupClass}}{% endif %}{% if displayCountdown is defined %}govuk-character-count{% endif %}"
-    {% if displayCountdown is defined %} data-module="govuk-character-count" data-maxlength="{{ element.vars.attr.maxlength }}"{% endif %}>
+
+    {% if displayCountdown is defined %}
+        {% set describedby = element.vars.id ~ '-info' %}
+            data-module="govuk-character-count" data-maxlength="
+        {{ element.vars.attr.maxlength }}"
+    {% endif %}>
 
     {% if label.isPageHeading %}
         <h1 class="govuk-label-wrapper">

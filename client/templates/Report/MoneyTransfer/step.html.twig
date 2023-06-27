@@ -36,9 +36,8 @@
         'labelClass' : 'text'
         }) }}
 
-        {{ form_input(form.description, 'form.description.' ~ (form.description.vars.required ? 'mandatory' : 'optional'), {
-            'labelParameters': transOptions,
-            'inputClass': 'govuk-js-character-count'
+        {{ form_input(form.description, 'form.description', {
+            'inputClass': 'govuk-js-character-count',
         }) }}
 
     {{ macros.saveAndContinueButton(form.save) }}

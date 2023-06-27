@@ -39,7 +39,7 @@ class MoneyTransferType extends AbstractType
                     'invalid_message' => 'transfer.amount.notNumeric', ]
             )->add(
                 'description',
-                FormTypes\TextareaType::class,
+                FormTypes\TextType::class,
                 [
                     'required' => false,
                     'attr' => ['maxlength' => 50]]
