@@ -42,7 +42,7 @@ class MoneyTransferType extends AbstractType
                 FormTypes\TextType::class,
                 [
                     'required' => false,
-                    'attr' => ['maxlength' => 50]]
+                    'attr' => ['maxlength' => 75]]
             );
 
         $builder

@@ -20,7 +20,7 @@ final class Version269 extends AbstractMigration
     public function up(Schema $schema): void
     {
         // this up() migration is auto-generated, please modify it to your needs
-        $this->addSql('ALTER TABLE money_transfer ADD description VARCHAR(50) DEFAULT NULL');
+        $this->addSql('ALTER TABLE money_transfer ADD description VARCHAR(75) DEFAULT NULL');
     }
 
     public function down(Schema $schema): void
