@@ -16,7 +16,7 @@ use Doctrine\DBAL\Events;
 class ConnectionWrapper extends Connection
 {
     public const DATABASE_PASSWORD = 'DATABASE_PASSWORD';
-    public const SECRETS_PREFIX = 'SECRETS_PREFIX_DB';
+    public const SECRETS_PREFIX = 'SECRETS_PREFIX';
     public const SECRETS_ENDPOINT = 'SECRETS_ENDPOINT';
 
     private bool $_isConnected = false;

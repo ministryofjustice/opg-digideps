@@ -23,21 +23,17 @@ class ConnectionWrapperTest extends TestCase
             'driver' => 'pdo_pgsql',
         ];
 
-        // Redis connection settings
-        $redisDsn = 'redis://redis-api';
-
         // Create the Doctrine DBAL connection
         $config = new Configuration();
         $pdo = DriverManager::getConnection($dbParams, $config);
 
         // Create an instance of the ConnectionWrapper
         $this->connection = new ConnectionWrapper($dbParams, $pdo->getDriver(), $config);
-        $this->connection->setRedis($redisDsn);
     }
 
     public function testConnect()
     {
-        // Connect to a real (not mocked) DB, Redis and Secret Manager
+        // Connect to a real (not mocked) DB and Secret Manager
         $result = $this->connection->connect();
         $this->assertTrue($result);
         $this->assertTrue($this->connection->isConnected());
