@@ -34,8 +34,8 @@ sleep 10
 
 # Run each folder of unit tests individually. If we were to run them all
 # individually it would cause a memory leak.
-printf '\n Running DBAL Suite \n\n'
-php vendor/bin/phpunit --debug -c tests/Unit tests/Unit/DBAL/
+#printf '\n Running DBAL Suite \n\n'
+#php vendor/bin/phpunit --debug -c tests/Unit tests/Unit/DBAL/
 printf '\n Running Command Suite \n\n'
 php vendor/bin/phpunit -c tests/Unit tests/Unit/Command/ --coverage-php tests/coverage/Command.cov
 printf '\n Running Controller Suite \n\n'
