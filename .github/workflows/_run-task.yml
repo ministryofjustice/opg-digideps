@@ -20,7 +20,7 @@ on:
         default: ""
         type: string
 env:
-  HELPER_VERSION: "0.7.0"
+  HELPER_VERSION: "0.8.0"
 jobs:
   run-task:
     runs-on: ubuntu-latest
