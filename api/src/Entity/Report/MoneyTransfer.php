@@ -15,6 +15,7 @@ class MoneyTransfer
 {
     /**
      * @var int
+     *
      * @JMS\Groups({"money-transfer"})
      * @ORM\Column(name="id", type="integer")
      * @ORM\Id
@@ -24,6 +25,7 @@ class MoneyTransfer
 
     /**
      * @var string
+     *
      * @JMS\Groups({"money-transfer"})
      * @ORM\Column(name="amount", type="decimal", precision=14, scale=2, nullable=true)
      */
@@ -31,6 +33,7 @@ class MoneyTransfer
 
     /**
      * @var Account
+     *
      * @JMS\Groups({"account"})
      * @JMS\SerializedName("accountFrom")
      * @ORM\ManyToOne(targetEntity="App\Entity\Report\BankAccount")
@@ -40,6 +43,7 @@ class MoneyTransfer
 
     /**
      * @var Account
+     *
      * @JMS\Groups({"account"})
      * @JMS\SerializedName("accountTo")
      * @ORM\ManyToOne(targetEntity="App\Entity\Report\BankAccount")
@@ -49,10 +53,19 @@ class MoneyTransfer
 
     /**
      * @var Report
+     *
      * @ORM\ManyToOne(targetEntity="App\Entity\Report\Report", inversedBy="moneyTransfers")
      * @ORM\JoinColumn(name="report_id", referencedColumnName="id", onDelete="CASCADE")
      */
     private $report;
+
+    /**
+     * @var string
+     *
+     * @JMS\Groups({"money-transfer"})
+     * @ORM\Column(name="description", type="text", nullable=true)
+     */
+    private $description;
 
     /**
      * Get id.
@@ -105,8 +118,6 @@ class MoneyTransfer
     }
 
     /**
-     * @param BankAccount $from
-     *
      * @return MoneyTransfer
      */
     public function setFrom(BankAccount $from)
@@ -117,8 +128,6 @@ class MoneyTransfer
     }
 
     /**
-     * @param BankAccount $to
-     *
      * @return MoneyTransfer
      */
     public function setTo(BankAccount $to)
@@ -147,6 +156,30 @@ class MoneyTransfer
     public function setReport(Report $report)
     {
         $this->report = $report;
+
+        return $this;
+    }
+
+    /**
+     * Get description.
+     *
+     * @return string
+     */
+    public function getDescription()
+    {
+        return $this->description;
+    }
+
+    /**
+     * Set description.
+     *
+     * @param string $description
+     *
+     * @return MoneyTransfer
+     */
+    public function setDescription($description)
+    {
+        $this->description = $description;
 
         return $this;
     }

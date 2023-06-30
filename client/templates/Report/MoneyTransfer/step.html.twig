@@ -36,6 +36,9 @@
         'labelClass' : 'text'
         }) }}
 
+        {{ form_input(form.description, 'form.description', {
+            'inputClass': 'govuk-js-character-count govuk-!-width-two-thirds',
+        }) }}
 
     {{ macros.saveAndContinueButton(form.save) }}
 

@@ -6,9 +6,9 @@ use App\Controller\RestController;
 use App\Entity as EntityDir;
 use App\Service\Formatter\RestFormatter;
 use Doctrine\ORM\EntityManagerInterface;
-use Symfony\Component\Routing\Annotation\Route;
 use Sensio\Bundle\FrameworkExtraBundle\Configuration\Security;
 use Symfony\Component\HttpFoundation\Request;
+use Symfony\Component\Routing\Annotation\Route;
 
 class MoneyTransferController extends RestController
 {
@@ -40,7 +40,13 @@ class MoneyTransferController extends RestController
 
         $transfer = new EntityDir\Report\MoneyTransfer();
         $transfer->setReport($report);
+
+        if (array_key_exists('description', $data)) {
+            $transfer->setDescription($data['description']);
+        }
+
         $report->setNoTransfersToAdd(false);
+
         $this->fillEntity($transfer, $data);
 
         $this->em->persist($transfer);
@@ -70,6 +76,11 @@ class MoneyTransferController extends RestController
         ]);
 
         $transfer = $this->findEntityBy(EntityDir\Report\MoneyTransfer::class, $transferId);
+
+        if (array_key_exists('description', $data)) {
+            $transfer->setDescription($data['description']);
+        }
+
         $this->fillEntity($transfer, $data);
 
         $this->em->persist($transfer);
