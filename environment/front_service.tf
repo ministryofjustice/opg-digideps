@@ -140,7 +140,7 @@ locals {
       { "name": "ROLE", "value": "front" },
       { "name": "S3_BUCKETNAME", "value": "pa-uploads-${local.environment}" },
       { "name": "SECRETS_PREFIX", "value": "${join("", [local.account.secrets_prefix, "/"])}" },
-      { "name": "SESSION_REDIS_DSN", "value": "redis://${aws_elasticache_replication_group.frontend.primary_endpoint_address}" },
+      { "name": "SESSION_REDIS_DSN", "value": "redis://${aws_route53_record.frontend_redis.fqdn}" },
       { "name": "SESSION_PREFIX", "value": "dd_session_front" }
     ]
   }

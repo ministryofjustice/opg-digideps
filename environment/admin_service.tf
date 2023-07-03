@@ -102,7 +102,7 @@ locals {
       { "name": "ROLE", "value": "admin" },
       { "name": "S3_BUCKETNAME", "value": "pa-uploads-${local.environment}" },
       { "name": "S3_SIRIUS_BUCKET", "value": "digideps.${local.account.sirius_environment}.eu-west-1.sirius.opg.justice.gov.uk" },
-      { "name": "SESSION_REDIS_DSN", "value": "redis://${aws_elasticache_replication_group.frontend.primary_endpoint_address}" },
+      { "name": "SESSION_REDIS_DSN", "value": "redis://${aws_route53_record.frontend_redis.fqdn}" },
       { "name": "SESSION_PREFIX", "value": "dd_session_admin" },
       { "name": "APP_ENV", "value": "${local.account.app_env}" },
       { "name": "OPG_DOCKER_TAG", "value": "${var.OPG_DOCKER_TAG}" },

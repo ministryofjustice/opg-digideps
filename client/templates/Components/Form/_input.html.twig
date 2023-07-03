@@ -1,5 +1,15 @@
 {% set describedby = '' %}
-<div id="form-group-{{ element.vars.id }}" class="govuk-form-group{% if not element.vars.valid %} govuk-form-group--error{% endif %}{% if formGroupClass is defined %} {{formGroupClass}}{% endif %}">
+{% if 'govuk-js-character-count' in inputClass and element.vars.attr.maxlength is defined %}
+    {% set displayCountdown = 'character' %}
+{% endif %}
+<div id="form-group-{{ element.vars.id }}"
+     class="govuk-form-group{% if not element.vars.valid %} govuk-form-group--error{% endif %}{% if formGroupClass is defined %} {{formGroupClass}}{% endif %}{% if displayCountdown is defined %}govuk-character-count{% endif %}"
+
+    {% if displayCountdown is defined %}
+        {% set describedby = element.vars.id ~ '-info' %}
+            data-module="govuk-character-count" data-maxlength="
+        {{ element.vars.attr.maxlength }}"
+    {% endif %}>
 
     {% if label.isPageHeading %}
         <h1 class="govuk-label-wrapper">
@@ -64,6 +74,12 @@
                 'aria-describedby': describedby ~ ' ' ~ element.vars.id ~ '-error',
             }
         }) }}
+    {% endif %}
+
+    {% if displayCountdown is defined %}
+        <div class="govuk-hint govuk-character-count__message" id="{{ element.vars.id }}-info">
+            You can enter up to {{ element.vars.attr.maxlength }} characters
+        </div>
     {% endif %}
 
 </div>
