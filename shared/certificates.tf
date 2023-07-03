@@ -3,18 +3,6 @@ data "aws_route53_zone" "digideps_service_justice" {
   provider = aws.management
 }
 
-resource "aws_acm_certificate" "digideps_service_justice" {
-  domain_name       = "*.digideps.opg.service.justice.gov.uk"
-  validation_method = "DNS"
-  provider          = aws.management
-}
-
-resource "aws_acm_certificate_validation" "digideps_service_justice" {
-  certificate_arn         = aws_acm_certificate.digideps_service_justice.arn
-  validation_record_fqdns = [for record in aws_route53_record.certificate_validation_app : record.fqdn]
-  provider                = aws.management
-}
-
 resource "aws_route53_record" "certificate_validation_app" {
   provider = aws.management
   for_each = {
@@ -31,4 +19,14 @@ resource "aws_route53_record" "certificate_validation_app" {
   ttl             = 60
   type            = each.value.type
   zone_id         = data.aws_route53_zone.digideps_service_justice.zone_id
+}
+
+resource "aws_acm_certificate" "digideps_service_justice" {
+  domain_name       = "*.digideps.opg.service.justice.gov.uk"
+  validation_method = "DNS"
+}
+
+resource "aws_acm_certificate_validation" "digideps_service_justice" {
+  certificate_arn         = aws_acm_certificate.digideps_service_justice.arn
+  validation_record_fqdns = [for record in aws_route53_record.certificate_validation_app : record.fqdn]
 }
