@@ -8,7 +8,6 @@ use App\Repository\ReportRepository;
 use App\Service\Formatter\RestFormatter;
 use Doctrine\ORM\EntityManagerInterface;
 use DateTime;
-use Exception;
 use Symfony\Component\Routing\Annotation\Route;
 use Sensio\Bundle\FrameworkExtraBundle\Configuration\Security;
 use Symfony\Component\HttpFoundation\Request;
@@ -116,15 +115,5 @@ class SatisfactionController extends RestController
         $satisfaction = $this->addSatisfactionScore($data['score'], $data['comments']);
 
         return $satisfaction->getId();
-    }
-
-    /**
-     * @param array $date
-     * @return DateTime|null
-     * @throws Exception
-     */
-    private function convertDateStringToDateTime(string $date)
-    {
-        return empty($date) ? null : new DateTime($date);
     }
 }

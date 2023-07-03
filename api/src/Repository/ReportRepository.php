@@ -14,9 +14,12 @@ use DateTime;
 use Doctrine\Bundle\DoctrineBundle\Repository\ServiceEntityRepository;
 use Doctrine\DBAL\Connection;
 use Doctrine\DBAL\DBALException;
+use Doctrine\DBAL\Types\Types;
 use Doctrine\ORM\AbstractQuery;
 use Doctrine\ORM\NonUniqueResultException;
 use Doctrine\ORM\ORMException;
+use Doctrine\ORM\Query\ResultSetMapping;
+use Doctrine\ORM\Query\ResultSetMappingBuilder;
 use Doctrine\Persistence\ManagerRegistry;
 use Symfony\Component\HttpFoundation\ParameterBag;
 
@@ -297,5 +300,106 @@ END deputy_type";
         }
 
         return $query->getQuery()->getArrayResult();
+    }
+
+    public function findAllReportedImbalanceSubmissions(
+        ?\DateTime $fromDate = null,
+        ?\DateTime $toDate = null
+    ) {
+        if (is_null($fromDate) || is_null($toDate)) {
+            $fromDate = new DateTime('first day of last month');
+            $toDate = new DateTime('last day of last month');
+        }
+        
+        // terminal sql script located in 'Account Imbalance Report.sql'
+        $sql = "WITH report_info AS (
+              SELECT
+                id,
+                balance_mismatch_explanation AS withtext,
+                balance_mismatch_explanation AS notext,
+                type
+              FROM
+                report
+              WHERE submit_date >= :fromDate
+              AND submit_date <= :toDate
+            ),
+            lay AS (
+              SELECT
+                CAST(
+                  count(CASE WHEN withtext IS NOT NULL THEN 1 END) AS DECIMAL
+                ) AS withtext,
+                CAST(
+                  count(CASE WHEN notext IS NULL THEN 1 END) AS DECIMAL
+                ) AS notext
+              FROM
+                report_info
+              WHERE
+                type IN ('103', '102', '104', '103-4', '102-4')
+            ),
+            pa AS (
+              SELECT
+                CAST(
+                  count(CASE WHEN withtext IS NOT NULL THEN 1 END) AS DECIMAL
+                ) AS withtext,
+                CAST(
+                  count(CASE WHEN notext IS NULL THEN 1 END) AS DECIMAL
+                ) AS notext
+              FROM
+                report_info
+              WHERE
+                type IN ('103-6', '102-6', '104-6', '103-4-6', '102-4-6')
+            ),
+            prof AS (
+              SELECT
+                CAST(
+                  count(CASE WHEN withtext IS NOT NULL THEN 1 END) AS DECIMAL
+                ) AS withtext,
+                CAST(
+                  count(CASE WHEN notext IS NULL THEN 1 END) AS DECIMAL
+                ) AS notext
+              FROM
+                report_info
+              WHERE
+                type IN ('103-5', '102-5', '104-5', '103-4-5', '102-4-5')
+            )
+            SELECT
+              'LAY' AS deputy_type,
+              notext AS no_imbalance,
+              withtext AS reported_imbalance,
+              ROUND(withtext / (withtext + notext) * 100) AS imbalance_percent,
+              withtext + notext AS total
+            FROM
+              lay
+            UNION
+            SELECT
+              'PA' AS deputy_type,
+              notext AS no_imbalance,
+              withtext AS reported_imbalance,
+              ROUND(withtext / (withtext + notext) * 100) AS imbalance_percent,
+              withtext + notext AS total
+            FROM
+              pa
+            UNION
+            SELECT
+              'PROF' AS deputy_type,
+              notext AS no_imbalance,
+              withtext AS reported_imbalance,
+              ROUND(withtext / (withtext + notext) * 100) AS imbalance_percent,
+              withtext + notext AS total
+            FROM
+              prof;
+        ";
+        
+        $em = $this->getEntityManager();
+        $rsm = new ResultSetMappingBuilder($em);
+        $rsm->addScalarResult('deputy_type', 'deputy_type');
+        $rsm->addScalarResult('no_imbalance', 'no_imbalance');
+        $rsm->addScalarResult('reported_imbalance', 'reported_imbalance');
+        $rsm->addScalarResult('imbalance_percent', 'imbalance_percent');
+        $rsm->addScalarResult('total', 'total');
+        
+        $query = $em->createNativeQuery($sql, $rsm)->setParameters(['fromDate' => $fromDate, 'toDate' => $toDate]);
+
+        return $query->getResult();
     }
 }
