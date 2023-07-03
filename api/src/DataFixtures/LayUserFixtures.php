@@ -3,286 +3,202 @@
 namespace App\DataFixtures;
 
 use App\Entity\Client;
-use App\Entity\NamedDeputy;
 use App\Entity\Ndr\Ndr;
 use App\Entity\PreRegistration;
 use App\Entity\Report\Report;
 use App\Entity\User;
-use App\Factory\OrganisationFactory;
-use App\Repository\OrganisationRepository;
 use Doctrine\Persistence\ObjectManager;
 
 class LayUserFixtures extends AbstractDataFixture
 {
     private $userData = [
         [
-            'id' => '102',
-            'deputyType' => 'LAY',
+            'id' => 'Lay-OPG102',
+            'caseNumber' => '61111000',
+            'deputyUid' => '700761111000',
             'reportType' => 'OPG102',
-            'reportVariation' => 'L2',
+            'orderType' => 'pfa',
+            'coDeputy' => false,
+            'ndr' => false,
+            'count' => 2,
         ],
         [
-            'id' => '103',
-            'deputyType' => 'LAY',
+            'id' => 'Lay-OPG103',
+            'caseNumber' => '62222000',
+            'deputyUid' => '700762222000',
             'reportType' => 'OPG103',
-            'reportVariation' => 'L3',
+            'orderType' => 'pfa',
+            'coDeputy' => false,
+            'ndr' => false,
+            'count' => 2,
         ],
         [
-            'id' => '104',
-            'deputyType' => 'LAY',
+            'id' => 'Lay-OPG104',
+            'caseNumber' => '63333000',
+            'deputyUid' => '700763333000',
             'reportType' => 'OPG104',
-            'reportVariation' => 'HW',
+            'orderType' => 'hw',
+            'coDeputy' => false,
+            'ndr' => false,
+            'count' => 2,
         ],
         [
-            'id' => '103-4',
-            'deputyType' => 'LAY',
+            'id' => 'Lay-OPG102-4',
+            'caseNumber' => '64444000',
+            'deputyUid' => '700764444000',
+            'reportType' => 'OPG102',
+            'orderType' => 'hw',
+            'coDeputy' => false,
+            'ndr' => false,
+            'count' => 2,
+        ],
+        [
+            'id' => 'Lay-OPG103-4',
+            'caseNumber' => '65555000',
+            'deputyUid' => '700765555000',
             'reportType' => 'OPG103',
-            'reportVariation' => 'HW',
+            'orderType' => 'hw',
+            'coDeputy' => false,
+            'ndr' => false,
+            'count' => 2,
         ],
         [
-            'id' => '102-4',
-            'deputyType' => 'LAY',
+            'id' => 'Lay-OPG102-NDR',
+            'caseNumber' => '66666000',
+            'deputyUid' => '700766666000',
             'reportType' => 'OPG102',
-            'reportVariation' => 'HW',
-        ],
-        [
-            'id' => '103-6',
-            'deputyType' => 'PA',
-            'reportType' => 'OPG103',
-            'reportVariation' => 'A3',
-        ],
-        [
-            'id' => '102-6',
-            'deputyType' => 'PA',
-            'reportType' => 'OPG102',
-            'reportVariation' => 'A2',
-        ],
-        [
-            'id' => '104-6',
-            'deputyType' => 'PA',
-            'reportType' => 'OPG104',
-            'reportVariation' => 'HW',
-        ],
-        [
-            'id' => '102-4-6',
-            'deputyType' => 'PA',
-            'reportType' => 'OPG102',
-            'reportVariation' => 'HW',
-        ],
-        [
-            'id' => '103-4-6',
-            'deputyType' => 'PA',
-            'reportType' => 'OPG103',
-            'reportVariation' => 'HW',
-        ],
-        [
-            'id' => '103-5',
-            'deputyType' => 'PROF',
-            'reportType' => 'OPG103',
-            'reportVariation' => 'P3',
-        ],
-        [
-            'id' => '102-5',
-            'deputyType' => 'PROF',
-            'reportType' => 'OPG102',
-            'reportVariation' => 'P2',
-        ],
-        [
-            'id' => '104-5',
-            'deputyType' => 'PROF',
-            'reportType' => 'OPG104',
-            'reportVariation' => 'HW',
-        ],
-        [
-            'id' => '102-4-5',
-            'deputyType' => 'PROF',
-            'reportType' => 'OPG102',
-            'reportVariation' => 'HW',
-        ],
-        [
-            'id' => '103-4-5',
-            'deputyType' => 'PROF',
-            'reportType' => 'OPG103',
-            'reportVariation' => 'HW',
-        ],
-        [
-            'id' => 'ndr',
-            'deputyType' => 'LAY',
-            'reportType' => 'OPG102',
-            'reportVariation' => 'L2',
+            'orderType' => 'hw',
+            'coDeputy' => false,
             'ndr' => true,
+            'count' => 1,
         ],
         [
-            'id' => 'codep',
-            'deputyType' => 'LAY',
-            'reportType' => 'OPG102',
-            'reportVariation' => 'L2',
-            'codeputyEnabled' => true,
+            'id' => 'Lay-OPG103-4-NDR',
+            'caseNumber' => '67777000',
+            'deputyUid' => '700767777000',
+            'reportType' => 'OPG103',
+            'orderType' => 'hw',
+            'coDeputy' => false,
+            'ndr' => true,
+            'count' => 1,
         ],
         [
-            'id' => 'example1',
-            'email' => 'jo.brown@example.com',
-            'deputyType' => 'PROF',
-            'reportType' => 'OPG102',
-            'reportVariation' => 'HW',
+            'id' => 'Lay-OPG103-Co',
+            'caseNumber' => '68888000',
+            'deputyUid' => '700768888000',
+            'reportType' => 'OPG103',
+            'orderType' => 'pfa',
+            'coDeputy' => true,
+            'ndr' => false,
+            'count' => 1,
         ],
         [
-            'id' => 'example2',
-            'email' => 'bobby.blue@example.com',
-            'deputyType' => 'PROF',
-            'reportType' => 'OPG102',
-            'reportVariation' => 'HW',
-        ],
-        [
-            'id' => 'abc-ex1',
-            'email' => 'john.smith@abc-solicitors.example.com',
-            'deputyType' => 'PROF',
-            'reportType' => 'OPG102',
-            'reportVariation' => 'HW',
-        ],
-        [
-            'id' => 'abc-ex2',
-            'email' => 'kieth.willis@abc-solicitors.example.com',
-            'deputyType' => 'PROF',
-            'reportType' => 'OPG102',
-            'reportVariation' => 'HW',
-        ],
-        [
-            'id' => 'abcd-ex3',
-            'email' => 'marjorie.watkins@abcd-solicitors.example.com',
-            'deputyType' => 'PROF',
-            'reportType' => 'OPG102',
-            'reportVariation' => 'HW',
+            'id' => 'Lay-OPG103-4-Co',
+            'caseNumber' => '69999000',
+            'deputyUid' => '700769999000',
+            'reportType' => 'OPG103',
+            'orderType' => 'hw',
+            'coDeputy' => true,
+            'ndr' => false,
+            'count' => 1,
         ],
     ];
-
-    private OrganisationRepository $orgRepository;
-    private OrganisationFactory $orgFactory;
-
-    public function __construct(OrganisationRepository $orgRepository, OrganisationFactory $orgFactory)
-    {
-        $this->orgRepository = $orgRepository;
-        $this->orgFactory = $orgFactory;
-    }
 
     public function doLoad(ObjectManager $manager)
     {
         // Add users from array
         foreach ($this->userData as $data) {
-            $this->addUser($data, $manager);
+            for ($i = 1; $i <= $data['count']; ++$i) {
+                $this->addUser($data, $manager, $i);
+            }
         }
 
         $manager->flush();
     }
 
-    private function addUser($data, $manager)
+    private function addUser(array $data, ObjectManager $manager, int $iteration)
     {
         // Create user
         $user = (new User())
-            ->setFirstname(ucfirst($data['deputyType']).' Deputy '.$data['id'])
-            ->setLastname('User')
-            ->setEmail(isset($data['email']) ? $data['email'] : 'behat-'.strtolower($data['deputyType']).'-deputy-'.$data['id'].'@publicguardian.gov.uk')
+            ->setFirstname($data['id'])
+            ->setLastname('User '.$iteration)
+            ->setEmail(strtolower($data['id']).'-user-'.$iteration.'@publicguardian.gov.uk')
             ->setActive(true)
             ->setRegistrationDate(new \DateTime())
-            ->setNdrEnabled(isset($data['ndr']))
-            ->setCoDeputyClientConfirmed(isset($data['codeputyEnabled']))
+            ->setNdrEnabled($data['ndr'])
+            ->setCoDeputyClientConfirmed($data['coDeputy'])
             ->setPhoneMain('07911111111111')
-            ->setAddress1('Victoria Road')
-            ->setAddressPostcode('SW1')
+            ->setAddress1('ABC Road')
+            ->setAddressPostcode('AB1 2CD')
             ->setAddressCountry('GB')
-            ->setRoleName('LAY' === $data['deputyType'] ? 'ROLE_LAY_DEPUTY' : 'ROLE_'.$data['deputyType'].'_NAMED')
+            ->setRoleName('ROLE_LAY_DEPUTY')
             ->setAgreeTermsUse(true);
 
         $manager->persist($user);
 
         // Create PreRegistration record for lay deputies
-        if ('LAY' === $data['deputyType']) {
-            $preRegistrationData = [
-                'Case' => $data['id'],
-                'ClientSurname' => $data['id'],
-                'DeputyUid' => str_replace('-', '', $data['id']),
-                'DeputyFirstname' => 'User',
-                'DeputySurname' => 'User',
-                'DeputyAddress1' => 'Victoria Road',
-                'DeputyAddress2' => null,
-                'DeputyAddress3' => null,
-                'DeputyAddress4' => null,
-                'DeputyAddress5' => null,
-                'DeputyPostcode' => 'SW1',
-                'ReportType' => $data['reportType'] ?? null,
-                'NDR' => $data['ndr'] ?? null,
-                'MadeDate' => '2010-03-30',
-                'OrderType' => 'hw',
-                'CoDeputy' => $data['codeputyEnabled'] ?? null,
-            ];
 
-            $preRegistration = new PreRegistration($preRegistrationData);
-            $manager->persist($preRegistration);
-        }
+        $preRegistrationData = [
+            'Case' => substr_replace($data['caseNumber'], $iteration, -1),
+            'ClientSurname' => 'Client '.$iteration,
+            'DeputyUid' => substr_replace($data['deputyUid'], $iteration, -1),
+            'DeputyFirstname' => $data['id'].'-User-'.$iteration,
+            'DeputySurname' => 'User',
+            'DeputyAddress1' => 'ABC Road',
+            'DeputyAddress2' => null,
+            'DeputyAddress3' => null,
+            'DeputyAddress4' => null,
+            'DeputyAddress5' => null,
+            'DeputyPostcode' => 'AB1 2CD',
+            'ReportType' => $data['reportType'],
+            'NDR' => $data['ndr'],
+            'MadeDate' => '2010-03-30',
+            'OrderType' => $data['orderType'],
+            'CoDeputy' => $data['coDeputy'],
+        ];
+
+        $preRegistration = new PreRegistration($preRegistrationData);
+        $manager->persist($preRegistration);
+
         // Create client
         $client = new Client();
         $client
-            ->setCaseNumber($data['id'])
-            ->setFirstname('John')
-            ->setLastname($data['id'].'-client')
-            ->setPhone('022222222222222')
-            ->setAddress('Victoria road')
+            ->setCaseNumber(substr_replace($data['caseNumber'], $iteration, -1))
+            ->setFirstname($data['id'])
+            ->setLastname('Client '.$iteration)
+            ->setEmail(strtolower($data['id']).'-client-'.$iteration.'@example.com')
+            ->setPhone('07811111111111')
+            ->setAddress('ABC Road')
             ->setCourtDate(\DateTime::createFromFormat('d/m/Y', '01/11/2017'));
-
-        if ('PROF' === $data['deputyType'] || 'PA' === $data['deputyType']) {
-            $namedDeputy = new NamedDeputy();
-            $namedDeputy
-                ->setFirstname('Named')
-                ->setLastname('Deputy '.$data['id'])
-                ->setDeputyUid('nd-'.$data['id'])
-                ->setEmail1('behat-nd-'.$data['id'].'@publicguardian.gov.uk')
-                ->setPhoneMain('07911111111111')
-                ->setAddress1('Victoria Road')
-                ->setAddressPostcode('SW1')
-                ->setAddressCountry('GB');
-
-            $manager->persist($namedDeputy);
-
-            $client->setNamedDeputy($namedDeputy);
-        }
 
         $manager->persist($client);
         $user->addClient($client);
 
-        if (!$client->getNdr()) {
+        if ($data['ndr']) {
             $ndr = new Ndr($client);
+            $client->setNdr($ndr);
+
             $manager->persist($ndr);
-        }
+        } else {
+            $realm = PreRegistration::REALM_LAY;
+            $type = PreRegistration::getReportTypeByOrderType($data['reportType'], $data['orderType'], $realm);
 
-        // Create report for PROF/PA user 2 years ago
-        if ('PROF' === $data['deputyType'] || 'PA' === $data['deputyType']) {
-            $realm = 'PROF' === $data['deputyType'] ? PreRegistration::REALM_PROF : PreRegistration::REALM_PA;
-
-            $type = PreRegistration::getReportTypeByOrderType($data['reportType'], $data['reportVariation'], $realm);
             $startDate = $client->getExpectedReportStartDate();
             $startDate->setDate('2016', intval($startDate->format('m')), intval($startDate->format('d')));
+
             $endDate = $client->getExpectedReportEndDate();
             $endDate->setDate('2017', intval($endDate->format('m')), intval($endDate->format('d')));
 
             $report = new Report($client, $type, $startDate, $endDate);
 
             $manager->persist($report);
-
-            if (isset($data['email'])) {
-                $organisation = $this->orgRepository->findByEmailIdentifier($data['email']);
-                if (null === $organisation) {
-                    $organisation = $this->orgFactory->createFromFullEmail($data['email'], $data['email']);
-                    $manager->persist($organisation);
-                    $manager->flush($organisation);
-                }
-            }
         }
 
         // If codeputy was enabled, add a secondary account
-        if (isset($data['codeputyEnabled'])) {
+        if ($data['coDeputy']) {
             $user2 = clone $user;
-            $user2->setLastname($user2->getLastname().'-2');
-            $user2->setEmail('behat-'.strtolower($data['deputyType']).'-deputy-'.$data['id'].'-2@publicguardian.gov.uk');
+            $user2->setLastname($user->getLastname().'-codeputy');
+            $user2->setEmail(substr_replace($user->getEmail(), '-codeputy@publicguardian.gov.uk', -22));
             $user2->addClient($client);
 
             $manager->persist($user2);
