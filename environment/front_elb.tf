@@ -24,6 +24,11 @@ resource "aws_lb_listener" "front_https" {
   }
 }
 
+resource "aws_lb_listener_certificate" "front_loadbalancer_service_certificate" {
+  listener_arn    = aws_lb_listener.front_https.arn
+  certificate_arn = data.aws_acm_certificate.service_justice.arn
+}
+
 resource "aws_lb_listener_rule" "front_maintenance" {
   listener_arn = aws_lb_listener.front_https.arn
 
