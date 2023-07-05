@@ -185,6 +185,6 @@ class StatsController extends RestController
         $toDate = $this->convertDateStringToDateTime($request->get('toDate', ''));
         $toDate instanceof DateTime ? $toDate->setTime(23, 59, 59) : null;
 
-        return $this->reportRepository->findAllReportedImbalanceSubmissions($fromDate, $toDate);
+        return $this->reportRepository->getAllReportedImbalanceMetrics($fromDate, $toDate);
     }
 }

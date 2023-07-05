@@ -302,7 +302,7 @@ END deputy_type";
         return $query->getQuery()->getArrayResult();
     }
 
-    public function findAllReportedImbalanceSubmissions(
+    public function getAllReportedImbalanceMetrics(
         ?\DateTime $fromDate = null,
         ?\DateTime $toDate = null
     ) {
