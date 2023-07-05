@@ -46,6 +46,7 @@ parameters:
     database_name: {{ getv "/database/name" }}
     database_user: {{ getv "/database/username" }}
     database_password: {{ getv "/database/password" }}
+    database_ssl_mode: {{ getv "/database/ssl" }}
     locale: en
     secret: {{ getv "/secret" }}
     redis_dsn: '{{getv "/redis/dsn" }}'

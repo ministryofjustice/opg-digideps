@@ -1,0 +1,54 @@
+on:
+  workflow_call:
+    inputs:
+      terraform_path:
+        description: "The name of the terraform path"
+        required: true
+        type: string
+      workspace:
+        description: "Terraform workspace"
+        required: true
+        type: string
+    outputs:
+      image_tag:
+        description: "The latest version image tag"
+        value: ${{ jobs.export_image_tag.outputs.image_tag }}
+jobs:
+  export_image_tag:
+    runs-on: ubuntu-latest
+    outputs:
+      image_tag: ${{ steps.export_tag.outputs.image_tag }}
+    steps:
+      - uses: actions/checkout@f095bcc56b7c2baf48f3ac70d6d6782f4f553222 # pin@v3
+        with:
+          fetch-depth: "0"
+
+      - uses: hashicorp/setup-terraform@1fdd4cd311e198fb45135f3a68294d3df2d5bda8 # pin@v2.0.0
+        with:
+          terraform_version: 1.2.4
+
+      - name: configure AWS credentials for terraform
+        uses: aws-actions/configure-aws-credentials@8815b6557cafe082774ec49c58d911e53c98849d # pin@v1.7.0
+        with:
+          aws-access-key-id: ${{ secrets.AWS_ACCESS_KEY_ID_ACTIONS }}
+          aws-secret-access-key: ${{ secrets.AWS_SECRET_ACCESS_KEY_ACTIONS }}
+          aws-region: eu-west-1
+          role-duration-seconds: 1800
+          role-session-name: OPGDigidepsTerraformGithubAction
+
+      - uses: webfactory/ssh-agent@fc49353b67b2b7c1e0e6a600572d01a69f2672dd # pin@v0.5.4
+        with:
+          ssh-private-key: ${{ secrets.SSH_PRIVATE_KEY_ALLOW_LIST_REPOSITORY }}
+
+      - name: terraform init
+        run: terraform init -input=false
+        working-directory: ${{ inputs.terraform_path }}
+
+      - name: export latest image
+        id: export_tag
+        env:
+          TF_WORKSPACE: ${{ inputs.workspace }}
+        run: |
+          export IMAGE_TAG=$(terraform show -json | head -n 2 | tail -n 1 | jq -r '.values.root_module.resources[] | select(.address == "aws_ecs_task_definition.front") | .values.container_definitions | fromjson[].image | split(":")[1]' | tail -n 1 2>/dev/null)
+          echo "image_tag=$(echo ${IMAGE_TAG})" >> $GITHUB_OUTPUT
+        working-directory: ${{ inputs.terraform_path }}
