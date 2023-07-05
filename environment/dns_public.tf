@@ -57,7 +57,7 @@ data "aws_route53_zone" "service" {
 }
 
 resource "aws_route53_record" "service_front" {
-  count   = local.account.is_production == 1 ? 1 : 0
+  count   = local.account.is_production == 1 ? 0 : 1
   name    = local.subdomain
   type    = "A"
   zone_id = data.aws_route53_zone.service.id
@@ -71,7 +71,6 @@ resource "aws_route53_record" "service_front" {
 }
 
 resource "aws_route53_record" "service_admin" {
-  count   = local.account.is_production == 1 ? 1 : 0
   name    = join(".", compact(["admin", local.subdomain]))
   type    = "A"
   zone_id = data.aws_route53_zone.service.id
