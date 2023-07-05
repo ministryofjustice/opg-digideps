@@ -71,7 +71,7 @@ resource "aws_route53_record" "service_front" {
 }
 
 resource "aws_route53_record" "service_admin" {
-  name    = join(".", compact(["admin", local.subdomain]))
+  name    = join(".", compact([local.subdomain, "admin"]))
   type    = "A"
   zone_id = data.aws_route53_zone.service.id
 
