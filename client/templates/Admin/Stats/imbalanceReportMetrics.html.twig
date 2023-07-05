@@ -21,15 +21,11 @@
             'hintText': (page ~ '.form.toDate.hint') | trans,
         }) }}<span class="govuk-visually-hidden">of imbalance report metrics responses search period</span>
 
-        {{ form_select(form.deputyType, page ~ '.form.deputyType', {
-            'fieldSetClass' : 'inline',
-            'legendClass' : 'govuk-label--s'
-        }) }}
-
         <div class="govuk-form-group">
             {{ form_submit(form.submitAndDownload, page ~ '.form.submitAndDownload', {
                 'buttonClass': 'behat-link-submit-and-download'
             }) }}
+            <a href="{{ path('report_imbalance_metrics') }}" class="govuk-link button-link">{{ page ~ '.form.clear' | trans }}</a>
         </div>
     {{ form_end(form) }}
 

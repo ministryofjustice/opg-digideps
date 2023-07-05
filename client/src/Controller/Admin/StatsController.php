@@ -306,18 +306,16 @@ class StatsController extends AbstractController
      */
     public function reportImbalanceCsv(Request $request): array|Response
     {
-
-        $form = $this->createForm(ImbalanceMetricsFilterType::class, new DateRangeQuery());
-
-        $form->handleRequest($request);
-//        $form = $this->createFilterTypeForm($request, ImbalanceMetricsFilterType::class);
+        $form = $this->createFilterTypeForm($request, ImbalanceMetricsFilterType::class);
 
         if ($form->isSubmitted() && $form->isValid()) {
             try {
+                $append = '';
+
                 $startDate = $form->get('startDate')->getData();
                 $endDate = $form->get('endDate')->getData();
                 if (null !== $startDate && null !== $endDate) {
-                    $append = "&startDate={$startDate->format('Y-m-d')}&endDate={$endDate->format('Y-m-d')}";
+                    $append .= "?startDate={$startDate->format('Y-m-d')}&endDate={$endDate->format('Y-m-d')}";
                 }
 
                 $fileName = 'reportImbalanceMetrics.csv';

@@ -366,7 +366,7 @@ END deputy_type";
               'LAY' AS deputy_type,
               notext AS no_imbalance,
               withtext AS reported_imbalance,
-              ROUND(withtext / (withtext + notext) * 100) AS imbalance_percent,
+              CASE WHEN withtext = 0 AND notext = 0 THEN 0 ELSE ROUND(withtext / (withtext + notext) * 100) END AS imbalance_percent,
               withtext + notext AS total
             FROM
               lay
@@ -375,7 +375,7 @@ END deputy_type";
               'PA' AS deputy_type,
               notext AS no_imbalance,
               withtext AS reported_imbalance,
-              ROUND(withtext / (withtext + notext) * 100) AS imbalance_percent,
+              CASE WHEN withtext = 0 AND notext = 0 THEN 0 ELSE ROUND(withtext / (withtext + notext) * 100) END AS imbalance_percent,
               withtext + notext AS total
             FROM
               pa
@@ -384,7 +384,7 @@ END deputy_type";
               'PROF' AS deputy_type,
               notext AS no_imbalance,
               withtext AS reported_imbalance,
-              ROUND(withtext / (withtext + notext) * 100) AS imbalance_percent,
+              CASE WHEN withtext = 0 AND notext = 0 THEN 0 ELSE ROUND(withtext / (withtext + notext) * 100) END AS imbalance_percent,
               withtext + notext AS total
             FROM
               prof;

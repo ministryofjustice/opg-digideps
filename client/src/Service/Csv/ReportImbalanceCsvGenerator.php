@@ -19,10 +19,8 @@ class ReportImbalanceCsvGenerator
 
     public function generateReportImbalanceCsv(array $data): string
     {
-        $csvRows = [];
-
         foreach  ($data as $row) {
-            $csvRows = [
+            $csvRows[] = [
                 $row['deputy_type'],
                 $row['no_imbalance'],
                 $row['reported_imbalance'],
