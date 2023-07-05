@@ -8,6 +8,7 @@ parameters:
     database_name: dd_api
     database_user: setme
     database_password: setme
+    database_ssl_mode: allow
     locale: en
     secret: setme
     redis_dsn: redis://localhost

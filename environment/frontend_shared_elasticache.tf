@@ -2,8 +2,8 @@
 resource "aws_elasticache_replication_group" "frontend" {
   automatic_failover_enabled = local.account.elasticache_count == 1 ? false : true
   engine                     = "redis"
-  engine_version             = "5.0.6"
-  parameter_group_name       = "api-cache-params"
+  engine_version             = "6.x"
+  parameter_group_name       = "default.redis6.x"
   replication_group_id       = "frontend-rep-group-${local.environment}"
   description                = "Replication Group for Front and Admin"
   node_type                  = "cache.t2.micro"
@@ -12,7 +12,7 @@ resource "aws_elasticache_replication_group" "frontend" {
   subnet_group_name          = local.account.ec_subnet_group
   security_group_ids         = [module.frontend_cache_security_group.id]
   tags                       = local.default_tags
-  at_rest_encryption_enabled = false
+  at_rest_encryption_enabled = true
   #tfsec:ignore:aws-elasticache-enable-in-transit-encryption - too much of a performance hit. To be re-evaluated
   transit_encryption_enabled = false
   apply_immediately          = true
