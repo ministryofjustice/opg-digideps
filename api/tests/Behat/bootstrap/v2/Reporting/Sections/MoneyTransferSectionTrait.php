@@ -16,9 +16,9 @@ trait MoneyTransferSectionTrait
     }
 
     /**
-     * @Then /^I add a transfer between two accounts$/
+     * @Given /^I confirm that I have a transfer to add$/
      */
-    public function iAddATransferBetweenTwoAccounts()
+    public function iConfirmThatIHaveATransferToAdd()
     {
         $this->pressButton('Start money transfers');
 
@@ -28,10 +28,38 @@ trait MoneyTransferSectionTrait
         $this->pressButton('Save and continue');
 
         $this->iAmOnMoneyTransfersAddPage();
+    }
+
+    /**
+     * @Then /^I add the transfer details between two accounts$/
+     */
+    public function iAddTheTransferDetailsBetweenTwoAccounts()
+    {
+        $this->selectOption('money_transfers_type[accountFromId]', '(****1234)');
+        $this->selectOption('money_transfers_type[accountToId]', 'account-1 - Current account (****1111)');
+        $this->fillInField('money_transfers_type[amount]', '100.00');
+        $this->pressButton('Save and continue');
+
+        $this->addAnotherTransfer('no');
+    }
+
+    /**
+     * @Then /^I add the transfer details between two accounts with a description of (\d+) characters$/
+     */
+    public function iAddTheTransferDetailsBetweenTwoAccountsWithADescriptionOfCharacters($arg1)
+    {
+        $characters = '0123456789abcdefghijklmnopqrstuvwxyzABCDEFGHIJKLMNOPQRSTUVWXYZ';
+        $randomString = '';
+
+        for ($i = 0; $i < $arg1; ++$i) {
+            $index = rand(0, strlen($characters) - 1);
+            $randomString .= $characters[$index];
+        }
 
         $this->selectOption('money_transfers_type[accountFromId]', '(****1234)');
         $this->selectOption('money_transfers_type[accountToId]', 'account-1 - Current account (****1111)');
         $this->fillInField('money_transfers_type[amount]', '100.00');
+        $this->fillinField('money_transfers_type[description]', $randomString);
         $this->pressButton('Save and continue');
 
         $this->addAnotherTransfer('no');
@@ -66,6 +94,10 @@ trait MoneyTransferSectionTrait
 
         if ($this->getSectionAnswers('money_transfers_type[amount]')) {
             $this->expectedResultsDisplayedSimplified('amount', true);
+        }
+
+        if ($this->getSectionAnswers('money_transfers_type[description]')) {
+            $this->expectedResultsDisplayedSimplified('description', true);
         }
     }
 
