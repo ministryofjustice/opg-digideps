@@ -43,16 +43,6 @@
         <div class="govuk-grid-column-one-half">
             <h2 class="govuk-heading-m">List of money transfers</h2>
         </div>
-        <div class="govuk-grid-column-one-half text--right">
-            {% if not hideEditLink  %}
-                <a href="{{ path('money_transfers_step', { 'reportId': report.id, 'step': 1}) }}" class="govuk-link behat-link-add">
-                    <strong>
-                        <span class="icon icon-plus"></span>
-                        {{ 'summaryPage.addButton' | trans }}
-                    </strong>
-                </a>
-            {% endif %}
-        </div>
     </div>
 {% endif %}
 
@@ -113,4 +103,19 @@
             {% endfor %}
         </tbody>
     </table>
+{% if report.moneyTransfers | length > 0 %}
+    <div class="govuk-grid-row">
+        <div class="govuk-!-display-block text--right">
+            {% if not hideEditLink  %}
+            <div class="moj-button-menu">
+                <div class="moj-button-menu__wrapper">
+                <a href="{{ path('money_transfers_step', { 'reportId': report.id, 'step': 1}) }}" class="govuk-button moj-button-menu__item govuk-button--secondary" data-module="govuk-button">
+                        {{ 'summaryPage.addButton' | trans }}
+                </a>
+                </div>
+            </div>
+            {% endif %}
+        </div>
+    </div>
+{% endif %}
 {% endif %}
