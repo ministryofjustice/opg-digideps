@@ -1,8 +1,8 @@
 locals {
   non-replication_workspaces = ["production02", "preproduction", "training", "integration", "development"]
   bucket_replication_status  = contains(local.non-replication_workspaces, local.environment) ? false : true
-  long_expiry_workspaces     = ["production02", "development", "training"]
-  expiration_days            = contains(local.long_expiry_workspaces, local.environment) ? 490 : 14
+  long_expiry_workspaces     = ["production02", "development"]
+  expiration_days            = contains(local.long_expiry_workspaces, local.environment) ? 730 : 14
   noncurrent_expiration_days = contains(local.long_expiry_workspaces, local.environment) ? 365 : 7
 }
 
