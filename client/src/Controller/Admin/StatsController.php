@@ -30,7 +30,6 @@ use Symfony\Component\HttpFoundation\Request;
 use Symfony\Component\HttpFoundation\Response;
 use Symfony\Component\HttpFoundation\ResponseHeaderBag;
 use Symfony\Component\Routing\Annotation\Route;
-use Throwable;
 
 /**
  * @Route("/admin/stats")
@@ -69,7 +68,7 @@ class StatsController extends AbstractController
                 $downloadableData = $transformer->transform($reportSubmissionSummaries);
 
                 return $this->buildResponse($downloadableData);
-            } catch (Throwable $e) {
+            } catch (\Throwable $e) {
                 throw new DisplayableException($e);
             }
         }
@@ -167,16 +166,20 @@ class StatsController extends AbstractController
             $append = "&startDate={$startDate->format('Y-m-d')}&endDate={$endDate->format('Y-m-d')}";
         }
 
-        $metrics = ['satisfaction', 'reportsSubmitted', 'clients', 'registeredDeputies'];
+        $metrics = ['satisfaction', 'reportsSubmitted', 'clients', 'registeredDeputies', 'respondents'];
 
         foreach ($metrics as $metric) {
-            $all = $this->restClient->get('stats?metric=' . $metric . $append, 'array');
-            $byRole = $this->restClient->get('stats?metric=' . $metric . '&dimension[]=deputyType' . $append, 'array');
+            $all = $this->restClient->get('stats?metric='.$metric.$append, 'array');
 
-            $stats[$metric] = array_merge(
-                ['all' => $all[0]['amount']],
-                $this->mapToDeputyType($byRole)
-            );
+            if ('respondents' != $metric) {
+                $byRole = $this->restClient->get('stats?metric='.$metric.'&dimension[]=deputyType'.$append, 'array');
+                $stats[$metric] = array_merge(
+                    ['all' => $all[0]['amount']],
+                    $this->mapToDeputyType($byRole)
+                );
+            } else {
+                $stats[$metric] = ['all' => $all[0]['amount']];
+            }
         }
 
         return [

@@ -118,8 +118,8 @@ func Test_healthHandler(t *testing.T) {
 			opts = make(map[string]string)
 			opts["CLAMD_PORT"] = "tcp://" + tc.addr
 
-			// Create a request to pass to our handler. We don't have any query parameters for now, so we'll
-			req, err := http.NewRequest("GET", "/health", nil)
+			// Create a request to pass to our handler. We don't have any query parameters for now.
+			req, err := http.NewRequest("GET", "/health-check", nil)
 			if err != nil {
 				t.Fatal(err)
 			}

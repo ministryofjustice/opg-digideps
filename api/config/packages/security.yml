@@ -26,8 +26,8 @@ security:
             id: App\Security\RedisUserProvider
 
     firewalls:
-        elb:
-            pattern: ^/manage/
+        health:
+            pattern: ^/health-check/
             security: false
             methods: [GET]
         feedbackHomepage:

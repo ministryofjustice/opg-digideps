@@ -19,6 +19,8 @@ on:
         required: false
         default: ""
         type: string
+env:
+  HELPER_VERSION: "0.8.0"
 jobs:
   run-task:
     runs-on: ubuntu-latest
@@ -59,9 +61,20 @@ jobs:
           terraform output -json > terraform.output.json
         working-directory: environment
 
-      - name: install runner
-        run: go install -mod vendor ./cmd/runner
-        working-directory: ecs-helper
+      - name: cache ecs-helper
+        id: cache-ecs-helper
+        uses: actions/cache@v3
+        with:
+          path: ecs-helper
+          key: ecs-helper-${{ env.HELPER_VERSION }}
+
+      - name: get ecs-helper
+        if: steps.cache-ecs-helper.outputs.cache-hit != 'true'
+        run: |
+          wget "https://github.com/ministryofjustice/opg-ecs-helper/releases/download/v$HELPER_VERSION/opg-ecs-helper_Linux_x86_64.tar.gz"
+          mkdir ecs-helper
+          tar -xvf opg-ecs-helper_Linux_x86_64.tar.gz -C ecs-helper
+          chmod +x ecs-helper/ecs-runner
 
       - name: run task
         env:
@@ -74,8 +87,8 @@ jobs:
           echo ${OVERRIDE}
           if [ "${OVERRIDE}" == "" ]
           then
-            /home/runner/go/bin/runner -task ${TASK_NAME} -timeout ${TIMEOUT}
+            ../ecs-helper/ecs-runner -task ${TASK_NAME} -timeout ${TIMEOUT}
           else
-            /home/runner/go/bin/runner -task ${TASK_NAME} -timeout ${TIMEOUT} -override ${OVERRIDE}
+            ../ecs-helper/ecs-runner -task ${TASK_NAME} -timeout ${TIMEOUT} -override ${OVERRIDE}
           fi
         working-directory: environment

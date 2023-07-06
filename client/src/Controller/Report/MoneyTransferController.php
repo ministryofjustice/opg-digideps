@@ -46,8 +46,6 @@ class MoneyTransferController extends AbstractController
      * @Route("/report/{reportId}/money-transfers", name="money_transfers")
      * @Template("@App/Report/MoneyTransfer/start.html.twig")
      *
-     * @param $reportId
-     *
      * @return array|Response|RedirectResponse
      */
     public function startAction($reportId)
@@ -72,8 +70,6 @@ class MoneyTransferController extends AbstractController
     /**
      * @Route("/report/{reportId}/money-transfers/exist", name="money_transfers_exist")
      * @Template("@App/Report/MoneyTransfer/exist.html.twig")
-     *
-     * @param $reportId
      *
      * @return array|RedirectResponse
      */
@@ -111,18 +107,16 @@ class MoneyTransferController extends AbstractController
     }
 
     /**
-     * @Route("/report/{reportId}/money-transfers/step{step}/{transferId}", name="money_transfers_step", requirements={"step":"\d+"})
+     * @Route("/report/{reportId}/money-transfers/step{step}/{transferId}", name="money_transfers_step")
      * @Template("@App/Report/MoneyTransfer/step.html.twig")
      *
-     * @param $reportId
-     * @param $step
      * @param null $transferId
      *
      * @return array|RedirectResponse
      */
     public function stepAction(Request $request, $reportId, $step, $transferId = null)
     {
-        $totalSteps = 2;
+        $totalSteps = 1;
         if ($step < 1 || $step > $totalSteps) {
             return $this->redirectToRoute('money_transfers_summary', ['reportId' => $reportId]);
         }
@@ -165,37 +159,30 @@ class MoneyTransferController extends AbstractController
         ]);
 
         // create and handle form
-        $form = $this->createForm(FormDir\Report\MoneyTransferType::class, $transfer, ['step' => $step, 'banks' => $report->getBankAccounts()]);
+        $form = $this->createForm(FormDir\Report\MoneyTransferType::class, $transfer, ['banks' => $report->getBankAccounts()]);
         $form->handleRequest($request);
 
         /** @var SubmitButton $submitBtn */
         $submitBtn = $form->get('save');
         if ($submitBtn->isClicked() && $form->isSubmitted() && $form->isValid()) {
             // decide what data in the partial form needs to be passed to next step
-            if (1 == $step) {
-                $stepUrlData['from-id'] = $transfer->getAccountFromId();
-                $stepUrlData['to-id'] = $transfer->getAccountToId();
-            } elseif ($step == $totalSteps) {
-                if ($transferId) { // edit
-                    $this->addFlash(
-                        'notice',
-                        'Entry edited'
-                    );
-                    $this->restClient->put('/report/'.$reportId.'/money-transfers/'.$transferId, $transfer, ['money-transfer']);
 
-                    return $this->redirectToRoute('money_transfers_summary', ['reportId' => $reportId]);
-                } else { // add
-                    $this->restClient->post('/report/'.$reportId.'/money-transfers', $transfer, ['money-transfer']);
+            $stepUrlData['from-id'] = $transfer->getAccountFromId();
+            $stepUrlData['to-id'] = $transfer->getAccountToId();
 
-                    return $this->redirectToRoute('money_transfers_add_another', ['reportId' => $reportId]);
-                }
+            if ($transferId) { // edit
+                $this->addFlash(
+                    'notice',
+                    'Entry edited'
+                );
+                $this->restClient->put('/report/'.$reportId.'/money-transfers/'.$transferId, $transfer, ['money-transfer']);
+
+                return $this->redirectToRoute('money_transfers_summary', ['reportId' => $reportId]);
+            } else { // add
+                $this->restClient->post('/report/'.$reportId.'/money-transfers', $transfer, ['money-transfer']);
+
+                return $this->redirectToRoute('money_transfers_add_another', ['reportId' => $reportId]);
             }
-
-            $stepRedirector->setStepUrlAdditionalParams([
-                'data' => $stepUrlData,
-            ]);
-
-            return $this->redirect($stepRedirector->getRedirectLinkAfterSaving());
         }
 
         return [
@@ -212,8 +199,6 @@ class MoneyTransferController extends AbstractController
     /**
      * @Route("/report/{reportId}/money-transfers/add_another", name="money_transfers_add_another")
      * @Template("@App/Report/MoneyTransfer/addAnother.html.twig")
-     *
-     * @param $reportId
      *
      * @return array|RedirectResponse
      */
@@ -243,8 +228,6 @@ class MoneyTransferController extends AbstractController
      * @Route("/report/{reportId}/money-transfers/summary", name="money_transfers_summary")
      * @Template("@App/Report/MoneyTransfer/summary.html.twig")
      *
-     * @param $reportId
-     *
      * @return array|RedirectResponse
      */
     public function summaryAction($reportId)
@@ -262,8 +245,6 @@ class MoneyTransferController extends AbstractController
     /**
      * @Route("/report/{reportId}/money-transfers/{transferId}/delete", name="money_transfers_delete")
      * @Template("@App/Common/confirmDelete.html.twig")
-     *
-     * @param $reportId
      *
      * @return array|RedirectResponse
      */
@@ -299,6 +280,7 @@ class MoneyTransferController extends AbstractController
                 ['label' => 'deletePage.summary.accountFrom', 'value' => $transfer->getAccountFrom()->getNameOneLine()],
                 ['label' => 'deletePage.summary.accountTo', 'value' => $transfer->getAccountTo()->getNameOneLine()],
                 ['label' => 'deletePage.summary.amount', 'value' => $transfer->getAmount(), 'format' => 'money'],
+                ['label' => 'deletePage.summary.description', 'value' => $transfer->getDescription()],
             ],
             'backLink' => $this->generateUrl('money_transfers_summary', ['reportId' => $reportId]),
         ];

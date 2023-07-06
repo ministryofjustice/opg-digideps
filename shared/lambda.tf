@@ -33,6 +33,7 @@ data "aws_iam_policy_document" "lambda_redeployer" {
     actions = [
       "ecs:UpdateService",
     ]
+    #tfsec:ignore:aws-iam-no-policy-wildcards - redeployer should have access to update any ecs service
     resources = [
       "*",
     ]

@@ -88,7 +88,7 @@ data "aws_sns_topic" "availability-alert" {
 
 resource "aws_route53_health_check" "availability-front" {
   fqdn              = aws_route53_record.front.fqdn
-  resource_path     = "/manage/availability"
+  resource_path     = "/health-check"
   port              = 443
   type              = "HTTPS"
   failure_threshold = 1
@@ -103,10 +103,10 @@ resource "aws_cloudwatch_metric_alarm" "availability-front" {
   statistic           = "Minimum"
   metric_name         = "HealthCheckStatus"
   comparison_operator = "LessThanThreshold"
-  datapoints_to_alarm = 5
+  datapoints_to_alarm = 3
   threshold           = 1
   period              = 60
-  evaluation_periods  = 5
+  evaluation_periods  = 3
   namespace           = "AWS/Route53"
   alarm_actions       = [data.aws_sns_topic.availability-alert.arn]
   actions_enabled     = local.account.alarms_active
@@ -119,7 +119,7 @@ resource "aws_cloudwatch_metric_alarm" "availability-front" {
 
 resource "aws_route53_health_check" "availability-admin" {
   fqdn              = aws_route53_record.admin.fqdn
-  resource_path     = "/manage/availability"
+  resource_path     = "/health-check"
   port              = 443
   type              = "HTTPS"
   failure_threshold = 1
@@ -134,6 +134,68 @@ resource "aws_cloudwatch_metric_alarm" "availability-admin" {
   statistic           = "Minimum"
   metric_name         = "HealthCheckStatus"
   comparison_operator = "LessThanThreshold"
+  datapoints_to_alarm = 3
+  threshold           = 1
+  period              = 60
+  evaluation_periods  = 3
+  namespace           = "AWS/Route53"
+  alarm_actions       = [data.aws_sns_topic.availability-alert.arn]
+  actions_enabled     = local.account.alarms_active
+  tags                = local.default_tags
+
+  dimensions = {
+    HealthCheckId = aws_route53_health_check.availability-admin.id
+  }
+}
+
+resource "aws_route53_health_check" "availability-service" {
+  fqdn              = aws_route53_record.front.fqdn
+  resource_path     = "/health-check/service"
+  port              = 443
+  type              = "HTTPS"
+  failure_threshold = 1
+  request_interval  = 30
+  measure_latency   = true
+  tags              = merge(local.default_tags, { Name = "availability-service" }, )
+}
+
+resource "aws_cloudwatch_metric_alarm" "availability-service" {
+  provider            = aws.us-east-1
+  alarm_name          = "${local.environment}-availability-service"
+  statistic           = "Minimum"
+  metric_name         = "HealthCheckStatus"
+  comparison_operator = "LessThanThreshold"
+  datapoints_to_alarm = 3
+  threshold           = 1
+  period              = 60
+  evaluation_periods  = 3
+  namespace           = "AWS/Route53"
+  alarm_actions       = [data.aws_sns_topic.availability-alert.arn]
+  actions_enabled     = local.account.alarms_active
+  tags                = local.default_tags
+
+  dimensions = {
+    HealthCheckId = aws_route53_health_check.availability-service.id
+  }
+}
+
+resource "aws_route53_health_check" "availability-dependencies" {
+  fqdn              = aws_route53_record.front.fqdn
+  resource_path     = "/health-check/dependencies"
+  port              = 443
+  type              = "HTTPS"
+  failure_threshold = 1
+  request_interval  = 30
+  measure_latency   = true
+  tags              = merge(local.default_tags, { Name = "availability-dependencies" }, )
+}
+
+resource "aws_cloudwatch_metric_alarm" "availability-dependencies" {
+  provider            = aws.us-east-1
+  alarm_name          = "${local.environment}-availability-dependencies"
+  statistic           = "Minimum"
+  metric_name         = "HealthCheckStatus"
+  comparison_operator = "LessThanThreshold"
   datapoints_to_alarm = 5
   threshold           = 1
   period              = 60
@@ -144,7 +206,7 @@ resource "aws_cloudwatch_metric_alarm" "availability-admin" {
   tags                = local.default_tags
 
   dimensions = {
-    HealthCheckId = aws_route53_health_check.availability-admin.id
+    HealthCheckId = aws_route53_health_check.availability-dependencies.id
   }
 }
 
@@ -234,7 +296,6 @@ resource "aws_cloudwatch_metric_alarm" "api_5xx_errors" {
   actions_enabled     = local.account.alarms_active
   tags                = local.default_tags
 }
-
 
 resource "aws_cloudwatch_metric_alarm" "frontend_alb_5xx_errors" {
   alarm_name          = "${local.environment}-frontend-alb-5xx-errors"
@@ -356,7 +417,7 @@ resource "aws_cloudwatch_metric_alarm" "admin_alb_average_response_time" {
 }
 
 resource "aws_cloudwatch_metric_alarm" "admin_ddos_attack_external" {
-  alarm_name          = "admin-ddos-detected"
+  alarm_name          = "${local.environment}-admin-ddos-detected"
   comparison_operator = "GreaterThanThreshold"
   evaluation_periods  = "3"
   metric_name         = "DDoSDetected"
@@ -373,7 +434,7 @@ resource "aws_cloudwatch_metric_alarm" "admin_ddos_attack_external" {
 }
 
 resource "aws_cloudwatch_metric_alarm" "front_ddos_attack_external" {
-  alarm_name          = "front-ddos-detected"
+  alarm_name          = "${local.environment}-front-ddos-detected"
   comparison_operator = "GreaterThanThreshold"
   evaluation_periods  = "3"
   metric_name         = "DDoSDetected"

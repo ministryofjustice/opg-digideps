@@ -20,9 +20,9 @@ def test_get_secret(secret_code, environment, region):
     session = boto3.session.Session()
     client = session.client(service_name="secretsmanager", region_name=region)
 
-    client.create_secret(Name=f"default/database-password", SecretString=secret_code)
+    client.create_secret(Name=f"local/database-password", SecretString=secret_code)
 
-    assert get_secret("default/database-password") == secret_code
+    assert get_secret("local/database-password") == secret_code
 
 
 def setup_db(conn, no_of_queued):

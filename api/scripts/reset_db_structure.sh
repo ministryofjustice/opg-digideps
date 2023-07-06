@@ -5,6 +5,7 @@ export PGHOST=${DATABASE_HOSTNAME:=postgres}
 export PGPASSWORD=${DATABASE_PASSWORD:=api}
 export PGDATABASE=${DATABASE_NAME:=api}
 export PGUSER=${DATABASE_USERNAME:=api}
+export SSL=${DATABASE_SSL:=allow}
 
 # We need below to create the params file on container start
 confd -onetime -backend env

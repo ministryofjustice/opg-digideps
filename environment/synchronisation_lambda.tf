@@ -6,7 +6,7 @@ data "aws_ecr_repository" "deputy_reporting" {
 locals {
   lambda_env_vars = {
     DIGIDEPS_SYNC_ENDPOINT = "https://${local.front_service_fqdn}"
-    SECRETS_PREFIX         = local.account.secrets_prefix
+    SECRETS_PREFIX         = local.secrets_prefix
   }
 }
 
@@ -24,6 +24,8 @@ module "lamdba_synchronisation" {
   aws_subnet_ids        = data.aws_subnet.private.*.id
   memory                = 512
   vpc_id                = data.aws_vpc.vpc.id
+  secrets               = [data.aws_secretsmanager_secret.jwt_token_synchronisation.arn]
+  logs_kms_key_arn      = aws_kms_key.cloudwatch_logs.arn
 }
 
 resource "aws_security_group_rule" "lambda_sync_to_front" {

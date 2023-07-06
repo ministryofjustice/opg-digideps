@@ -22,7 +22,6 @@ resource "aws_iam_role_policy" "sync" {
   role   = aws_iam_role.sync.id
 }
 
-# follow up for tfsec fix. needs proper testing in dev environment
 data "aws_iam_policy_document" "sync" {
   statement {
     sid     = "AllowSyncTaskBucket"
@@ -39,6 +38,7 @@ data "aws_iam_policy_document" "sync" {
     actions = [
       "s3:*Object*"
     ]
+    #tfsec:ignore:aws-iam-no-policy-wildcards - Not overly permissive, permissions only on sync bucket
     resources = [
       "${data.aws_s3_bucket.sync.arn}/*",
     ]

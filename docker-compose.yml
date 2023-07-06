@@ -210,7 +210,7 @@ services:
       AWS_ACCESS_KEY_ID: localstack
       AWS_SECRET_ACCESS_KEY: localstack
       DIGIDEPS_SYNC_ENDPOINT: https://frontend
-      SECRETS_PREFIX: default
+      SECRETS_PREFIX: local
       LOCALSTACK_ENDPOINT: http://localstack:4566
     entrypoint: /aws-lambda/aws-lambda-rie /var/task/main
 

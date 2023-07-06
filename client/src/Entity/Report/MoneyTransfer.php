@@ -19,9 +19,9 @@ class MoneyTransfer
 
     /**
      * @var string
+     *
      * @Assert\NotBlank(message="transfer.amount.notBlank", groups={"money-transfer-amount"})
      * @Assert\Range(min=0, max=100000000000, notInRangeMessage = "transfer.amount.notInRangeMessage", groups={"money-transfer-amount"})
-     *
      * @JMS\Type("string")
      * @JMS\Groups({"money-transfer"})
      */
@@ -29,6 +29,7 @@ class MoneyTransfer
 
     /**
      * @var BankAccount
+     *
      * @JMS\SerializedName("accountFrom")
      * @JMS\Type("App\Entity\Report\BankAccount")
      */
@@ -37,13 +38,13 @@ class MoneyTransfer
     /**
      * @JMS\Type("integer")
      * @JMS\Groups({"money-transfer"})
-     *
      * @Assert\NotBlank(message="transfer.accountFrom.notBlank", groups={"money-transfer-account-from"})
      */
     private $accountFromId;
 
     /**
      * @var BankAccount
+     *
      * @JMS\SerializedName("accountTo")
      * @JMS\Type("App\Entity\Report\BankAccount")
      */
@@ -52,7 +53,6 @@ class MoneyTransfer
     /**
      * @JMS\Type("integer")
      * @JMS\Groups({"money-transfer"})
-     *
      * @Assert\NotBlank(message="transfer.accountTo.notBlank", groups={"money-transfer-account-to"})
      * @Assert\Expression(
      *     "(value == '' or value != this.getAccountFromId() )",
@@ -61,6 +61,14 @@ class MoneyTransfer
      * )
      */
     private $accountToId;
+
+    /**
+     * @var string
+     *
+     * @JMS\Type("string")
+     * @JMS\Groups({"money-transfer"})
+     */
+    private $description;
 
     /**
      * Get id.
@@ -166,5 +174,23 @@ class MoneyTransfer
     public function setAccountToId($accountToId)
     {
         $this->accountToId = $accountToId;
+    }
+
+    /**
+     * @return string
+     */
+    public function getDescription()
+    {
+        return $this->description;
+    }
+
+    /**
+     * @return MoneyTransfer
+     */
+    public function setDescription($description)
+    {
+        $this->description = $description;
+
+        return $this;
     }
 }

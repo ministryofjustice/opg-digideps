@@ -91,12 +91,12 @@ jobs:
 
       - name: trivy image scanning
         id: trivy_scan
-        uses: aquasecurity/trivy-action@e5f43133f6e8736992c9f3c1b3296e24b37e17f2 # pin@v0.7.1
+        uses: aquasecurity/trivy-action@41f05d9ecffa2ed3f1580af306000f734b733e54 # pin@v0.7.1
         with:
           image-ref: ${{ matrix.svc_name }}:latest
           severity: "HIGH,CRITICAL"
           format: "sarif"
-          security-checks: "vuln"
+          scanners: "vuln"
           output: "trivy-results.sarif"
           timeout: 15m
 
