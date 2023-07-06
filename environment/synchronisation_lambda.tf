@@ -6,7 +6,7 @@ data "aws_ecr_repository" "deputy_reporting" {
 locals {
   lambda_env_vars = {
     DIGIDEPS_SYNC_ENDPOINT = "https://${local.front_service_fqdn}"
-    SECRETS_PREFIX         = local.account.secrets_prefix
+    SECRETS_PREFIX         = local.secrets_prefix
   }
 }
 

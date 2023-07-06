@@ -13,6 +13,7 @@
                     <tr>
                         <th class="noborder hard--top">Transferred from</th>
                         <th class="noborder hard--top">Transferred to</th>
+                        <th class="noborder hard--top">Description</th>
                         <th class="numeric noborder hard--right hard--top">Amount</th>
                     </tr>
                 </thead>
@@ -28,6 +29,9 @@
                             {% set currentBank = transfer.accountTo %}
                             <span class="bold">{{ currentBank.bank }} {{ currentBank.accountTypeText }}</span>
                             <p class="flush--bottom">****{{ currentBank.accountNumber }}</p>
+                        </td>
+                        <td class="label">
+                            <p class="flush--bottom">{{ transfer.description }}</p>
                         </td>
                         <td class="value text--right width-fifth">&pound;{{ transfer.amount | money_format }}</td>
                     </tr>

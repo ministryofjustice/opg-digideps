@@ -19,7 +19,6 @@ variable "accounts" {
       ga_gds                                 = string
       subdomain_enabled                      = bool
       is_production                          = number
-      secrets_prefix                         = string
       task_count                             = number
       scan_count                             = number
       app_env                                = string
@@ -69,8 +68,9 @@ locals {
 
   route53_healthchecker_ips = data.aws_ip_ranges.route53_healthchecks_ips.cidr_blocks
 
-  account     = contains(keys(var.accounts), local.environment) ? var.accounts[local.environment] : var.accounts["default"]
-  environment = lower(terraform.workspace)
+  account        = contains(keys(var.accounts), local.environment) ? var.accounts[local.environment] : var.accounts["default"]
+  secrets_prefix = contains(keys(var.accounts), local.environment) ? local.environment : "default"
+  environment    = lower(terraform.workspace)
 
   sirius_environment = local.account["sirius_environment"]
 
