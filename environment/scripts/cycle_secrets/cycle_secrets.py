@@ -28,13 +28,11 @@ def get_session(account_id):
     return session
 
 
-def cycle_secrets(session, prefix):
+def cycle_secrets(session, secrets_list):
     aws_config = Config(
         region_name=os.environ.get('AWS_REGION'),
     )
-    secrets_list = [
-        f"{prefix}/database-password"
-    ]
+
     secret_manager = session.client('secretsmanager', config=aws_config)
 
     # Retrieve all secrets in the Secrets Manager service
@@ -56,21 +54,29 @@ def main(workspace):
     accounts = {
         'development': {
             'id': '248804316466',
-            'secret_prefix': 'development'
+            'secrets_list': [
+                'development/database-password'
+            ]
         },
         'preproduction': {
             'id': '454262938596',
-            'secret_prefix': 'preproduction'
+            'secrets_list': [
+                'integration/database-password',
+                'training/database-password',
+                'preproduction/database-password'
+            ]
         },
         'production': {
             'id': '515688267891',
-            'secret_prefix': 'production02'
+            'secrets_list': [
+                'production02/database-password'
+            ]
         }
     }
     account_id = accounts[workspace]["id"]
-    prefix = accounts[workspace]["secret_prefix"]
+    secrets_list = accounts[workspace]["secrets_list"]
     session = get_session(account_id)
-    cycle_secrets(session, prefix)
+    cycle_secrets(session, secrets_list)
 
 
 if __name__ == "__main__":
