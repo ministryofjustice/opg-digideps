@@ -1,0 +1,10 @@
+// Layout
+// ==========================================================================
+
+.opg-main-wrapper {
+  position: relative;
+}
+
+.opg-width-container--wider {
+  @include govuk-width-container(1200px);
+}

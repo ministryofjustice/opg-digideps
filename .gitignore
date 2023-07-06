@@ -30,7 +30,9 @@ docker/log
 terraform/to_import\.sh
 .certs
 log/pact.log
-
+**/local-load-balancer/certificates/nginx.crt
+**/local-load-balancer/certificates/nginx.key
+**/local-load-balancer/certificates/nginx.csr
 
 # Lambda specific
 *lambda*.zip
@@ -44,5 +46,5 @@ lambdas/layers/monitoring/python/lib/python3.7/site-packages/
 api/tests/coverage/
 
 #cache grinds
-client/cachegrind/*/cachegrind*
+client/app/cachegrind/*/cachegrind*
 api/cachegrind/*/cachegrind*

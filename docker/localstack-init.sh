@@ -40,7 +40,7 @@ awslocal secretsmanager create-secret --name "local/private-jwt-key-base64" --se
 awslocal secretsmanager create-secret --name "local/public-jwt-key-base64" --secret-string "$(base64 public.pem)"
 
 kid=$(echo -n $(base64 public.pem) | openssl dgst -sha256)
-b64headers=$(echo -n "{\"typ\": \"JWT\", \"alg\": \"RS256\", \"jku\": \"https://digideps.local/v2/.well-known/jwks.json\", \"kid\": \"${kid}\"}"  | openssl base64 -e -A | tr '+/' '-_' | tr -d '=';)
+b64headers=$(echo -n "{\"typ\": \"JWT\", \"alg\": \"RS256\", \"jku\": \"http://frontend-webserver/v2/.well-known/jwks.json\", \"kid\": \"${kid}\"}"  | openssl base64 -e -A | tr '+/' '-_' | tr -d '=';)
 b64payload=$(echo -n '{"aud": "urn:opg:registration_service","iat": 1659782970.135131,"exp": 1975402170.135139,"nbf": 1659782960.135146,"iss": "urn:opg:digideps"}' | openssl base64 -e -A | tr '+/' '-_' | tr -d '=';)
 b64headandpay="${b64headers}.${b64payload}"
 b64digest=$(echo -n ${b64headandpay} | openssl dgst -sha256 -sign private.pem -binary | openssl base64 -e -A | tr '+/' '-_' | tr -d '=';)

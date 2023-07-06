@@ -3,26 +3,26 @@ version: "3.2"
 #docker-compose.override.yml is loaded and merged with docker-compose.yml by default when calling docker-compose up.
 #This file won't be merged when using docker-compose -f docker-compose.yml up (or using any other compose file).
 services:
-  router:
-    volumes:
-      - /var/run/docker.sock:/tmp/docker.sock:ro
-      - ./.certs:/etc/nginx/certs
-      - ./docker/router/my_proxy.conf:/etc/nginx/conf.d/my_proxy.conf:ro
+  #  router:
+  #    volumes:
+  #      - /var/run/docker.sock:/tmp/docker.sock:ro
+  #      - ./.certs:/etc/nginx/certs
+  #      - ./docker/router/my_proxy.conf:/etc/nginx/conf.d/my_proxy.conf:ro
 
-  admin:
-    volumes:
-      - ./client/src:/var/www/src
-      - ./client/public/assets:/var/www/public/assets
-      - ./client/tests:/var/www/tests
-      - ./client/frontend.env:/var/www/frontend.env
-      - ./client/admin.env:/var/www/admin.env
-      - ./client/templates:/var/www/templates
-      - ./client/translations:/var/www/translations
-      - ./client/phpstan.neon:/var/www/phpstan.neon
-      - ./client/bin:/var/www/vendor/bin
-      - ./client/composer.json:/var/www/composer.json
-      - ./client/composer.lock:/var/www/composer.lock
-      - ./docker/install-composer.sh:/var/www/install-composer.sh
+  #  admin:
+  #    volumes:
+  #      - ./client/src:/var/www/src
+  #      - ./client/public/assets:/var/www/public/assets
+  #      - ./client/tests:/var/www/tests
+  #      - ./client/frontend.env:/var/www/frontend.env
+  #      - ./client/admin.env:/var/www/admin.env
+  #      - ./client/templates:/var/www/templates
+  #      - ./client/translations:/var/www/translations
+  #      - ./client/phpstan.neon:/var/www/phpstan.neon
+  #      - ./client/bin:/var/www/vendor/bin
+  #      - ./client/composer.json:/var/www/composer.json
+  #      - ./client/composer.lock:/var/www/composer.lock
+  #      - ./docker/install-composer.sh:/var/www/install-composer.sh
 
   api:
     volumes:
@@ -41,20 +41,20 @@ services:
       - ./api/composer.lock:/var/www/composer.lock
       - ./docker/install-composer.sh:/var/www/install-composer.sh
 
-  frontend:
-    volumes:
-      - ./client/src:/var/www/src
-      - ./client/public/assets:/var/www/public/assets
-      - ./client/tests:/var/www/tests
-      - ./client/frontend.env:/var/www/frontend.env
-      - ./client/admin.env:/var/www/admin.env
-      - ./client/templates:/var/www/templates
-      - ./client/translations:/var/www/translations
-      - ./client/phpstan.neon:/var/www/phpstan.neon
-      - ./client/bin:/var/www/vendor/bin
-      - ./client/composer.json:/var/www/composer.json
-      - ./client/composer.lock:/var/www/composer.lock
-      - ./docker/install-composer.sh:/var/www/install-composer.sh
+  #  frontend:
+  #    volumes:
+  #      - ./client/src:/var/www/src
+  #      - ./client/public/assets:/var/www/public/assets
+  #      - ./client/tests:/var/www/tests
+  #      - ./client/frontend.env:/var/www/frontend.env
+  #      - ./client/admin.env:/var/www/admin.env
+  #      - ./client/templates:/var/www/templates
+  #      - ./client/translations:/var/www/translations
+  #      - ./client/phpstan.neon:/var/www/phpstan.neon
+  #      - ./client/bin:/var/www/vendor/bin
+  #      - ./client/composer.json:/var/www/composer.json
+  #      - ./client/composer.lock:/var/www/composer.lock
+  #      - ./docker/install-composer.sh:/var/www/install-composer.sh
 
   htmltopdf:
     volumes:

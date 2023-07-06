@@ -1,7 +1,3 @@
-locals {
-  front_service_fqdn = "front.${aws_service_discovery_private_dns_namespace.private.name}"
-}
-
 resource "aws_service_discovery_service" "front" {
   name = "front"
 
@@ -27,13 +23,17 @@ resource "aws_service_discovery_service" "front" {
   force_destroy = local.account.deletion_protection ? false : true
 }
 
+locals {
+  front_service_fqdn = "${aws_service_discovery_service.front.name}.${aws_service_discovery_private_dns_namespace.private.name}"
+}
+
 resource "aws_ecs_task_definition" "front" {
   family                   = "front-${local.environment}"
   requires_compatibilities = ["FARGATE"]
   network_mode             = "awsvpc"
   cpu                      = local.account.cpu_low
   memory                   = local.account.memory_low
-  container_definitions    = "[${local.front_container}]"
+  container_definitions    = "[${local.front_web}, ${local.front_container}]"
   task_role_arn            = aws_iam_role.front.arn
   execution_role_arn       = aws_iam_role.execution_role.arn
   tags                     = local.default_tags
@@ -58,8 +58,8 @@ resource "aws_ecs_service" "front" {
 
   load_balancer {
     target_group_arn = aws_lb_target_group.front.arn
-    container_name   = "front_app"
-    container_port   = 443
+    container_name   = "front_web"
+    container_port   = 80
   }
 
   service_registries {
@@ -84,67 +84,84 @@ resource "aws_ecs_service" "front" {
 }
 
 locals {
-  front_container = <<EOF
-  {
-    "cpu": 0,
-    "essential": true,
-    "image": "${local.images.client}",
-    "mountPoints": [],
-    "name": "front_app",
-    "portMappings": [{
-      "containerPort": 443,
-      "hostPort": 443,
-      "protocol": "tcp"
-    }],
-    "volumesFrom": [],
-    "healthCheck": {
-      "command": [
-        "CMD-SHELL",
-        "curl -f -k https://localhost:443/health-check || exit 1"
+  front_web = jsonencode(
+    {
+      cpu         = 0,
+      essential   = true,
+      image       = local.images.client-webserver,
+      mountPoints = [],
+      name        = "front_web",
+      portMappings = [{
+        containerPort = 80,
+        hostPort      = 80,
+        protocol      = "tcp"
+      }],
+      volumesFrom = [],
+      logConfiguration = {
+        logDriver = "awslogs",
+        options = {
+          awslogs-group         = "${aws_cloudwatch_log_group.opg_digi_deps.name}",
+          awslogs-region        = "eu-west-1",
+          awslogs-stream-prefix = "${aws_iam_role.front.name}.web"
+        }
+      },
+      environment = [
+        { name = "APP_HOST", value = "127.0.0.1" },
+        { name = "APP_PORT", value = "9000" }
+      ]
+    }
+  )
+
+  front_container = jsonencode(
+    {
+      cpu         = 0,
+      essential   = true,
+      image       = local.images.client,
+      mountPoints = [],
+      name        = "front_app",
+      portMappings = [{
+        containerPort = 9000,
+        hostPort      = 9000,
+        protocol      = "tcp"
+      }],
+      volumesFrom = [],
+      logConfiguration = {
+        logDriver = "awslogs",
+        options = {
+          awslogs-group         = "${aws_cloudwatch_log_group.opg_digi_deps.name}",
+          awslogs-region        = "eu-west-1",
+          awslogs-stream-prefix = "${aws_iam_role.front.name}"
+        }
+      },
+      secrets = [
+        { name = "API_CLIENT_SECRET", valueFrom = "/aws/reference/secretsmanager/${data.aws_secretsmanager_secret.front_api_client_secret.name}" },
+        { name = "NOTIFY_API_KEY", valueFrom = "/aws/reference/secretsmanager/${data.aws_secretsmanager_secret.front_notify_api_key.name}" },
+        { name = "SECRET", valueFrom = "/aws/reference/secretsmanager/${data.aws_secretsmanager_secret.front_frontend_secret.name}" },
+        { name = "SIRIUS_API_BASE_URI", valueFrom = "${aws_ssm_parameter.sirius_api_base_uri.arn}" }
       ],
-      "interval": 30,
-      "timeout": 10,
-      "retries": 3
-    },
-    "logConfiguration": {
-      "logDriver": "awslogs",
-      "options": {
-        "awslogs-group": "${aws_cloudwatch_log_group.opg_digi_deps.name}",
-        "awslogs-region": "eu-west-1",
-        "awslogs-stream-prefix": "${aws_iam_role.front.name}"
-      }
-    },
-    "secrets": [
-      { "name": "API_CLIENT_SECRET", "valueFrom": "/aws/reference/secretsmanager/${data.aws_secretsmanager_secret.front_api_client_secret.name}" },
-      { "name": "NOTIFY_API_KEY", "valueFrom": "/aws/reference/secretsmanager/${data.aws_secretsmanager_secret.front_notify_api_key.name}" },
-      { "name": "SECRET", "valueFrom": "/aws/reference/secretsmanager/${data.aws_secretsmanager_secret.front_frontend_secret.name}" },
-      { "name": "SIRIUS_API_BASE_URI", "valueFrom": "${aws_ssm_parameter.sirius_api_base_uri.arn}" }
-    ],
-    "environment": [
-      { "name": "ADMIN_HOST", "value": "https://${aws_route53_record.admin.fqdn}" },
-      { "name": "API_URL", "value": "https://${local.api_service_fqdn}" },
-      { "name": "APP_ENV", "value": "${local.account.app_env}" },
-      { "name": "AUDIT_LOG_GROUP_NAME", "value": "audit-${local.environment}" },
-      { "name": "EMAIL_SEND_INTERNAL", "value": "${local.account.is_production == 1 ? "true" : "false"}" },
-      { "name": "ENVIRONMENT", "value": "${local.environment}" },
-      { "name": "FEATURE_FLAG_PREFIX", "value": "${local.feature_flag_prefix}" },
-      { "name": "FILESCANNER_SSLVERIFY", "value": "False" },
-      { "name": "FILESCANNER_URL", "value": "http://${local.scan_service_fqdn}:8080" },
-      { "name": "GA_DEFAULT", "value": "${local.account.ga_default}" },
-      { "name": "GA_GDS", "value": "${local.account.ga_gds}" },
-      { "name": "HTMLTOPDF_ADDRESS", "value": "http://${local.htmltopdf_service_fqdn}" },
-      { "name": "NGINX_APP_NAME", "value": "frontend" },
-      { "name": "NONADMIN_HOST", "value": "https://${aws_route53_record.front.fqdn}" },
-      { "name": "OPG_DOCKER_TAG", "value": "${var.OPG_DOCKER_TAG}" },
-      { "name": "PARAMETER_PREFIX", "value": "${local.parameter_prefix}" },
-      { "name": "ROLE", "value": "front" },
-      { "name": "S3_BUCKETNAME", "value": "pa-uploads-${local.environment}" },
-      { "name": "SECRETS_PREFIX", "value": "${join("", [local.secrets_prefix, "/"])}" },
-      { "name": "SESSION_REDIS_DSN", "value": "redis://${aws_route53_record.frontend_redis.fqdn}" },
-      { "name": "SESSION_PREFIX", "value": "dd_session_front" }
-    ]
-  }
-
-EOF
-
+      environment = [
+        { name = "ROLE", value = "front" },
+        { name = "ADMIN_HOST", value = "http://${local.admin_service_fqdn}" },
+        { name = "NONADMIN_HOST", value = "http://${local.front_service_fqdn}" },
+        { name = "API_URL", value = "https://${local.api_service_fqdn}" },
+        { name = "APP_ENV", value = "${local.account.app_env}" },
+        { name = "AUDIT_LOG_GROUP_NAME", value = "audit-${local.environment}" },
+        { name = "EMAIL_SEND_INTERNAL", value = "${local.account.is_production == 1 ? "true" : "false"}" },
+        { name = "ENVIRONMENT", value = "${local.environment}" },
+        { name = "FEATURE_FLAG_PREFIX", value = "${local.feature_flag_prefix}" },
+        { name = "FILESCANNER_SSLVERIFY", value = "False" },
+        { name = "FILESCANNER_URL", value = "http://${local.scan_service_fqdn}:8080" },
+        { name = "GA_DEFAULT", value = "${local.account.ga_default}" },
+        { name = "GA_GDS", value = "${local.account.ga_gds}" },
+        { name = "HTMLTOPDF_ADDRESS", value = "http://${local.htmltopdf_service_fqdn}" },
+        { name = "NGINX_APP_NAME", value = "frontend" },
+        { name = "OPG_DOCKER_TAG", value = "${var.OPG_DOCKER_TAG}" },
+        { name = "PARAMETER_PREFIX", value = "${local.parameter_prefix}" },
+        { name = "S3_BUCKETNAME", value = "pa-uploads-${local.environment}" },
+        { name = "SECRETS_PREFIX", value = "${join("", [local.secrets_prefix, "/"])}" },
+        { name = "SESSION_REDIS_DSN", value = "redis://${aws_route53_record.frontend_redis.fqdn}" },
+        { name = "SESSION_PREFIX", value = "dd_session_front" }
+      ]
+    }
+  )
 }

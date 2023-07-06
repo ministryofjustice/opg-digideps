@@ -1,0 +1,120 @@
+common:
+  tellUs: |
+    In this section you need to tell us:
+  tellUsBullets:
+    1: if you checked what benefits %client% is entitled to
+    2: about any benefits or money other people or organisations received directly on %client%'s behalf
+
+  htmlTitle: Benefits check and money others received - Complete the deputy report | GOV.UK
+  pageTitle: Benefits check and money others received
+
+startPage:
+  startButton: Start
+
+stepPage:
+  pageTitle:
+    1:
+      mainTitle: Did you check that %client% gets all the benefits they should have in the last reporting period?
+    2:
+      mainTitle: Did anyone receive any money from people or organisations on %client%'s behalf?
+    3:
+      mainTitle: Tell us about the money others received from people or organisations on %client%'s behalf
+  supportTitle: Benefits check and money others received
+  pageDescription:
+    1:
+      benefitsCalculatorSignpost: To help you find out which benefits %client% may be entitled to you can use
+    2:
+      bulletsParagraph: |
+        For example:
+      bullets:
+        1: benefits paid directly to a care home or family member
+        2: Housing Benefit paid directly to a landlord or housing association
+    3:
+      bulletsParagraph: |
+        For example:
+      bullets:
+        1: benefits paid directly to a care home or family member
+        2: Housing Benefit paid directly to a landlord or housing association
+  backLink: Back
+
+summaryPage:
+  pageDescription: Tell us if you checked what benefits %client% is entitled to, and about any money other people or organisations received on %client%'s behalf
+  listedAnswers: We've listed your saved answers below.
+  checkAnswers: Check they're correct and edit them where necessary
+  addMoneyButtonText: Add money
+  table:
+    benefitsCheck:
+      title: Benefits check
+      column1Title: Question
+      column2Title: Answer
+      edit: Edit
+    doOthersReceiveMoney:
+      title: Do others receive money on %client%'s behalf
+      column1Title: Question
+      column2Title: Answer
+      edit: Edit
+    moneyOtherPeopleReceive:
+      title: Money other people receive
+      column1Title: Type of payment
+      column2Title: Person or organisation who received the money
+      column3Title: Total amount for reporting period
+      edit: Edit
+      remove: Remove
+
+form:
+  whenLastChecked:
+    choices:
+      haveChecked: Yes, I checked this and believe %client% is getting all the benefits they’re entitled to
+      currentlyChecking: I have begun to check and am waiting to find out if %client% is getting all the benefits they’re entitled to
+      neverChecked: No, I did not check this
+    dateCheckedHint: Date of last check
+    dateCheckedHintExample: For example 4  2021
+    neverCheckedHint: Tell us why you did not check this
+    errors:
+      noOptionSelected: Tell us if you checked that %client% gets all the benefits they're entitled to
+      missingDate: Enter the date you last checked %client%'s benefits entitlement
+      invalidDate: The date of last check must be a real date
+      futureDate: The date of last check must be in the past
+      missingExplanation: Tell us why you did not check %client%'s benefits entitlement
+      explanationTooShort: In a few words, tell us why you have never checked %client%'s benefit entitlement
+
+  moneyOnClientsBehalf:
+    choices:
+      yes: Yes
+      no: No
+      dontKnow: I don't know
+    dontKnowLabel: Tell us why you don't know about this.
+    dontKnowHint: For example, is this something you've never checked, don't know how to check, or have been unable to find out.
+    errors:
+      noOptionSelected: Tell us whether anyone other than you received money on %client%'s behalf
+      missingExplanation: Tell us why you don't know if anyone other than you received money on %client%'s behalf
+      explanationTooShort: In a few words, tell us why you don't know if anyone other than you received money on %client%'s behalf
+
+  moneyDetails:
+    titleHint: For example, benefits paid directly to a care home or family member
+    moneyTypeLabel: Type of payment
+    amountLabel: Total amount for reporting period
+    whoReceivedMoneyLabel: Person or organisation who received the money
+    dontKnowCheckboxLabel: I don't know the amount
+    button:
+      saveAndContinue: Save and continue
+      addAnother: Add another
+    errors:
+      missingType: Enter the type of payment
+      missingAmount: Enter the total amount for the reporting period or select 'I don't know'
+      amountNotNumbers: The total amount for the reporting period must only be be a number
+      missingWhoReceivedMoney: Enter the name of the person or organisation who received the money
+      amountAndDontKnow: You cannot enter a total amount for the reporting period and select that you do not know the amount
+      missingMoney: Enter at least one payment
+
+  save:
+    label: Save and continue
+  cancel:
+    label: Cancel
+
+deletePage:
+  subject: money type
+
+reportReview:
+  neverCheckedEntitlementTitle: Explanation for never checking if %client% gets all the benefits they're entitled to
+  dontKnowMoneyTitle: Explanation for not knowing if others receive money on %client%'s behalf

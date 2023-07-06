@@ -1,0 +1,43 @@
+name: "[Docker] Build web resources"
+
+defaults:
+  run:
+    shell: bash
+
+on:
+  workflow_call:
+
+jobs:
+  build-web:
+    runs-on: ubuntu-latest
+    steps:
+      - uses: actions/checkout@f095bcc56b7c2baf48f3ac70d6d6782f4f553222 # pin@v3
+      - uses: actions/setup-node@869f4dd0c7f320ae834c2724d92a364de3893c24 # pin@v3.6.0
+        with:
+          node-version-file: "client/docker/resources/.nvmrc"
+      - name: cache node modules
+        id: cache-npm
+        uses: actions/cache@04f198bf0b2a39f7230a4304bf07747a0bddf146 # pin@v3.0.8
+        env:
+          cache-name: cache-node-modules
+        with:
+          path: ./web-resources/public
+          key: ${{ runner.os }}-build-${{ env.cache-name }}-${{ hashFiles('**/web-resources/package-lock.json') }}
+      - name: build assets
+        run: |
+          # Copy in templates and translations
+          cp -r ../client/app/templates ./templates
+          cp -r ../client/app/translations ./translations
+          # Install NPM dependencies
+          npm install
+          npm run lint
+          npm audit --production
+          #Build assets
+          NODE_ENV=production npm run build
+          ls -alt public
+        working-directory: client/resources
+      - name: archive dist
+        uses: actions/upload-artifact@65d862660abb392b8c4a3d1195a2108db131dd05 # pin@v3.1.0
+        with:
+          name: web-distribution
+          path: client/resources/public

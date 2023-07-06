@@ -2,15 +2,6 @@ version: "3.2"
 
 ## Define all volumes in docker-compose.override.yml so this file can be used in CI
 services:
-  router:
-    image: jwilder/nginx-proxy
-    ports:
-      - 443:443
-    depends_on:
-      - admin
-      - localstack
-    restart: always
-
   aws:
     image: infrastructureascode/aws-cli
     environment:
@@ -44,66 +35,93 @@ services:
   #            context: ./pa11y
   #        depends_on:
   #            - frontend
-
-  frontend:
-    container_name: opg-digideps-frontend
+  resources:
+    image: opg-digideps-resources
     build:
-      context: ./client
+      context: .
+      dockerfile: ./client/docker/resources/Dockerfile
+
+  load-balancer:
+    container_name: opg-digideps-lb
+    build:
+      context: docker/local-load-balancer
+    ports:
+      - 443:443
+
+  frontend-webserver:
+    container_name: opg-digideps-frontend-webserver
+    build:
+      context: .
+      dockerfile: ./client/docker/web/Dockerfile
+    ports:
+      - 8070:80
+    depends_on:
+      - frontend-app
+      - admin-webserver
+      - load-balancer
+    environment:
+      APP_HOST: frontend-app
+      APP_PORT: 9000
+    restart: always
+
+  frontend-app:
+    container_name: opg-digideps-frontend-app
+    build:
+      context: .
+      dockerfile: ./client/docker/app/Dockerfile
       args:
         REQUIRE_XDEBUG: ${REQUIRE_XDEBUG_CLIENT} # set REQUIRE_XDEBUG_CLIENT=1 in .env to install Xdebug
         XDEBUG_IDEKEY_CLIENT: ${XDEBUG_IDEKEY_CLIENT}
-    ports:
-      - 8070:443
     depends_on:
+      - resources
       - api
       - redis-frontend
       - htmltopdf
-      - router
       - localstack
       - mock-notify-api
     environment:
-      VIRTUAL_HOST: www.digideps.local,digideps.local
-      VIRTUAL_PROTO: https
-      VIRTUAL_PORT: 443
       APP_ENV: ${APP_ENV:-dev}
       APP_DEBUG: ${APP_DEBUG:-0}
     env_file:
-      - ./client/frontend.env
+      - ./client/app/frontend.env
     restart: always
-    networks:
-      default:
-        aliases:
-          - www.digideps.local
-          - digideps.local
 
-  admin:
-    container_name: opg-digideps-admin
+  admin-webserver:
+    container_name: opg-digideps-admin-webserver
     build:
-      context: ./client
+      context: .
+      dockerfile: ./client/docker/web/Dockerfile
+    ports:
+      - 8071:80
+    depends_on:
+      - admin-app
+    environment:
+      APP_HOST: admin-app
+      APP_PORT: 9000
+    restart: always
+
+  admin-app:
+    container_name: opg-digideps-admin-app
+    build:
+      context: .
+      dockerfile: ./client/docker/app/Dockerfile
       args:
         REQUIRE_XDEBUG: ${REQUIRE_XDEBUG_CLIENT} # set REQUIRE_XDEBUG_CLIENT=1 in .env to install Xdebug
         XDEBUG_IDEKEY_CLIENT: ${XDEBUG_IDEKEY_CLIENT}
-    ports:
-      - 8082:443
     depends_on:
+      - resources
       - api
       - redis-frontend
-      - mock-sirius-integration
+      - htmltopdf
+      - localstack
       - mock-notify-api
     environment:
-      VIRTUAL_HOST: admin.digideps.local
-      VIRTUAL_PROTO: https
-      VIRTUAL_PORT: 443
       APP_ENV: ${APP_ENV:-dev}
       APP_DEBUG: ${APP_DEBUG:-0}
     env_file:
-      - ./client/frontend.env
-      - ./client/admin.env
+      - ./client/app/frontend.env
+      - ./client/app/admin.env
     restart: always
-    networks:
-      default:
-        aliases:
-          - admin.digideps.local
 
   api:
     container_name: opg-digideps-api

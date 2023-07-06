@@ -1,0 +1,52 @@
+#this section seem deprecated. remove if not needed
+report:
+  header:
+    report: "report"
+    to: "to"
+    and: "and"
+    reportingPeriod: "Reporting period:"
+    submissionPeriod: "Report can be submitted between:"
+    dueDate: "Due date:"
+    caseNumber: "Case number:"
+    form:
+      readyMessage: "Your report will be ready to submit when you've completed all the sections"
+      controls:
+        reviewed_n_checked:
+          label: "I have reviewed and checked this report"
+        submit:
+          label: "Ready to submit report"
+    clientProfile: "Client profile:"
+    courtOrderNo: "Court order no:"
+
+prevNextLinks:
+  next: Next section
+  previous: Previous section
+  sections:
+    actions: Actions
+    assets: Assets
+    bankAccounts: Bank accounts
+    balance: Balance
+    clientProfile: Client profile
+    clientBenefitsCheck: Client benefits check
+    contacts: Contacts
+    debts: Debts
+    decisions: Decisions
+    deputyExpenses: Deputy expenses
+    documents: Documents
+    gifts: Gifts
+    incomeBenefits: Income and benefits
+    lifestyle: Health and lifestyle
+    mentalCapacity: Mental capacity
+    moneyIn: Money in
+    moneyInShort: Money in
+    moneyOut: Money out
+    moneyOutShort: Money out
+    moneyTransfers: Money transfers
+    otherInfo: Any other information
+    paDeputyExpenses: Deputy fees and expenses
+    paFeeExpense: Deputy fees and expenses
+    profCurrentFees: Current fees and expenses
+    profDeputyCosts: Deputy costs
+    profDeputyCostsEstimate: Deputy costs estimate
+    reportOverview: Report overview
+    visitsCare: Visits and care
