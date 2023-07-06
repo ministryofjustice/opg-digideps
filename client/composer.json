@@ -118,7 +118,7 @@
         }
     ],
     "require-dev": {
-        "jangregor/phpstan-prophecy": "^1.0.0",
+        "jangregor/phpstan-prophecy": "^1.0",
         "mockery/mockery": "^1.0.0",
         "pact-foundation/pact-php": "^7.1",
         "phpspec/prophecy-phpunit": "^2.0",
