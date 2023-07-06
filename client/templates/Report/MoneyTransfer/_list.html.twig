@@ -32,6 +32,7 @@
             <dd class="govuk-summary-list__actions">
                 <a class="govuk-link behat-link-edit" href="{{ url('money_transfers_exist', { 'reportId': report.id, 'from': 'summary' }) }}">
                     {{ 'edit' | trans({}, 'common') }}
+                    <span class="govuk-visually-hidden"> Question:{{ 'existPage.form.noTransfersToAdd.label' | trans(transOptions) }} Current answer:{{ report.noTransfersToAdd is not null ? (report.noTransfersToAdd ? 'No' : 'Yes') : '-'  }}</span>
                 </a>
             </dd>
         {% endif %}
@@ -91,11 +92,13 @@
                                 href="{{ url('money_transfers_step', { 'reportId': report.id, 'transferId': transfer.id, 'step': 1 }) }}"
                                 class="behat-link-edit govuk-link">
                                 {{ 'edit' | trans({}, 'common') }}
+                                <span class="govuk-visually-hidden">{{transfer.accountFrom.bank}}-{{transfer.accountTo.bank}} £{{transfer.amount | money_format}} {{transfer.description}}</span>
                             </a>
                             <a
                                 href="{{ path('money_transfers_delete', { 'reportId': report.id, 'transferId': transfer.id }) }}"
                                 class="behat-link-delete govuk-link govuk-!-margin-left-1">
                                 {{ 'remove' | trans({}, 'common' ) }}
+                                <span class="govuk-visually-hidden">{{transfer.accountFrom.bank}}-{{transfer.accountTo.bank}} £{{transfer.amount | money_format}} {{transfer.description}}</span>
                             </a>
                         </td>
                     {% endif %}
