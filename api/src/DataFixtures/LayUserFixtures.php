@@ -122,6 +122,7 @@ class LayUserFixtures extends AbstractDataFixture
         $user = (new User())
             ->setFirstname($data['id'])
             ->setLastname('User '.$iteration)
+            ->setDeputyNo($data['deputyUid'])
             ->setEmail(strtolower($data['id']).'-user-'.$iteration.'@publicguardian.gov.uk')
             ->setActive(true)
             ->setRegistrationDate(new \DateTime())
@@ -169,6 +170,8 @@ class LayUserFixtures extends AbstractDataFixture
             ->setEmail(strtolower($data['id']).'-client-'.$iteration.'@example.com')
             ->setPhone('07811111111111')
             ->setAddress('ABC Road')
+            ->setPostcode('AB1 2CD')
+            ->setCountry('GB')
             ->setCourtDate(\DateTime::createFromFormat('d/m/Y', '01/11/2017'));
 
         $manager->persist($client);
