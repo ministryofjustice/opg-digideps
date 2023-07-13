@@ -1,6 +1,6 @@
 resource "aws_elasticache_parameter_group" "digideps" {
   name   = "api-cache-params"
-  family = "redis5.0"
+  family = "redis6.x"
 
   parameter {
     name  = "maxmemory-policy"
