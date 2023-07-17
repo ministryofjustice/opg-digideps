@@ -55,7 +55,7 @@ RUN mkdir -p var/cache \
     && chown -R www-data var \
     && chown -R www-data /var/log/app
 # Add common passwords file. Two options to combat flakey responses from site.
-COPY client/app/docker/extra/commonpasswords.txt /tmp/commonpasswords.txt
+COPY client/docker/app/extra/commonpasswords.txt /tmp/commonpasswords.txt
 RUN wget -q -O /tmp/commonpasswords.txt "https://www.ncsc.gov.uk/static-assets/documents/PwnedPasswordsTop100k.txt" \
     || echo 'using local copy of pwnedpasswords' \
     && chown www-data /tmp/commonpasswords.txt
@@ -77,7 +77,7 @@ COPY --chown=www-data:www-data client/resources/assets assets
 COPY --chown=www-data:www-data client/app/translations translations
 COPY --chown=www-data:www-data client/app/tests tests
 COPY --chown=www-data:www-data client/app/phpstan.neon .
-COPY --chown=www-data:www-data client/app/docker/confd /etc/confd
+COPY --chown=www-data:www-data client/docker/app/confd /etc/confd
 COPY --chown=www-data:www-data client/app/frontend.env frontend.env
 COPY --chown=www-data:www-data client/app/admin.env admin.env
 RUN chown -R www-data:www-data scripts

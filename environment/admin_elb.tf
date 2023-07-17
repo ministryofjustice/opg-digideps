@@ -29,6 +29,11 @@ resource "aws_lb_listener_certificate" "admin_loadbalancer_service_certificate" 
   certificate_arn = data.aws_acm_certificate.service_justice.arn
 }
 
+resource "aws_lb_listener_certificate" "admin_loadbalancer_service_admin_certificate" {
+  listener_arn    = aws_lb_listener.admin.arn
+  certificate_arn = data.aws_acm_certificate.service_justice_admin.arn
+}
+
 resource "aws_lb_listener_rule" "admin_maintenance" {
   listener_arn = aws_lb_listener.admin.arn
 

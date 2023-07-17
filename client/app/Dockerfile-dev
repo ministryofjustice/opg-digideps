@@ -1,3 +1,0 @@
-FROM client:latest
-WORKDIR /var/www
-COPY docker/extra/robots.txt web/robots.txt

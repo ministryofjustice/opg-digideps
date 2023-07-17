@@ -2,14 +2,14 @@ version: "3.2"
 
 ## Override for tests in CI
 services:
-  frontend:
+  frontend-app:
     container_name: client-unit-tests-frontend
     image: frontend:latest
     environment:
       AWS_ACCESS_KEY_ID: aFakeSecretAccessKeyId
       AWS_SECRET_ACCESS_KEY: aFakeSecretAccessKey
       AWS_SESSION_TOKEN: fakeValue
-  admin:
+  admin-app:
     image: admin:latest
     environment:
       AWS_ACCESS_KEY_ID: aFakeSecretAccessKeyId

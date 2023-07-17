@@ -32,3 +32,7 @@ resource "aws_acm_certificate_validation" "wildcard" {
 data "aws_acm_certificate" "service_justice" {
   domain = "*.digideps.opg.service.justice.gov.uk"
 }
+
+data "aws_acm_certificate" "service_justice_admin" {
+  domain = "*.admin.digideps.opg.service.justice.gov.uk"
+}

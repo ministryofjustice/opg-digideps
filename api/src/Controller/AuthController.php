@@ -14,7 +14,6 @@ use Psr\Log\LoggerInterface;
 use Symfony\Component\Routing\Annotation\Route;
 use Symfony\Component\Security\Core\Authentication\Token\Storage\TokenStorageInterface;
 use Symfony\Component\Security\Core\Exception\UserNotFoundException;
-use Throwable;
 
 /**
  * @Route("/auth")
@@ -34,7 +33,7 @@ class AuthController extends RestController
      *
      * @return User
      *
-     * @throws Throwable
+     * @throws \Throwable
      */
     public function login(
         RestInputOuputFormatter $restInputOutputFormatter,
@@ -43,21 +42,27 @@ class AuthController extends RestController
     ) {
         try {
             // See LoginRequestAuthenticator and RegistrationTokenAuthenticator for checks. User is set in token storage on successful authentication via Symfony event
-            /** @var User $user */
-            $user = $this->tokenStorage->getToken()->getUser();
+            $token = $this->tokenStorage->getToken();
 
-            $user->setLastLoggedIn(new \DateTime());
-            $em->persist($user);
-            $em->flush();
+            if (null !== $token) {
+                /** @var User $user */
+                $user = $token->getUser();
 
-            // Now doing this inline rather than injecting RedisUserProvider
-            $authToken = $user->getId().'_'.sha1(microtime().spl_object_hash($user).rand(1, 999));
-            $redis->set($authToken, serialize($this->tokenStorage->getToken()));
+                $user->setLastLoggedIn(new \DateTime());
+                $em->persist($user);
+                $em->flush();
 
-            // add token into response
-            $restInputOutputFormatter->addResponseModifier(function ($response) use ($authToken) {
-                $response->headers->set(HeaderTokenAuthenticator::HEADER_NAME, $authToken);
-            });
+                // Now doing this inline rather than injecting RedisUserProvider
+                $authToken = $user->getId().'_'.sha1(microtime().spl_object_hash($user).rand(1, 999));
+                $redis->set($authToken, serialize($this->tokenStorage->getToken()));
+
+                // add token into response
+                $restInputOutputFormatter->addResponseModifier(function ($response) use ($authToken) {
+                    $response->headers->set(HeaderTokenAuthenticator::HEADER_NAME, $authToken);
+                });
+            } else {
+                throw new \Exception('User token is not available');
+            }
 
             if (User::ROLE_SUPER_ADMIN === $user->getRoleName()) {
                 $jwt = $this->JWTService->createNewJWT($user);
@@ -71,7 +76,7 @@ class AuthController extends RestController
             $this->restFormatter->setJmsSerialiserGroups(['user', 'user-login']);
 
             return $user;
-        } catch (Throwable $e) {
+        } catch (\Throwable $e) {
             $this->logger->warning(sprintf('Error when attempting to log user in: %s', $e->getMessage()));
             throw $e;
         }

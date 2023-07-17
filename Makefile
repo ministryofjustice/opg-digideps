@@ -54,10 +54,10 @@ lint-terraform: ##@checks Lint Terraform
 	@$(TFLINT) shared
 
 up-app: ##@application Brings the app up and mounts local folders in
-	docker-compose -f docker-compose.yml -f docker-compose.dev.yml -f docker-compose.override.yml up -d --remove-orphans
+	docker-compose -f docker-compose.yml -f docker-compose.dev.yml -f docker-compose.override.yml up -d --remove-orphans load-balancer
 
 up-app-build: ##@application Brings the app up and rebuilds containers
-	COMPOSE_HTTP_TIMEOUT=90 docker-compose up -d --build --remove-orphans
+	COMPOSE_HTTP_TIMEOUT=90 docker-compose up -d --build --remove-orphans load-balancer
 
 up-app-xdebug: ##@application Brings the app up, rebuilds containers and enabled xdebug in api and client (see DEBUGGING.md for config and setup)
 	REQUIRE_XDEBUG_CLIENT=1 REQUIRE_XDEBUG_API=1 XDEBUG_IDEKEY_API=PHPSTORM-API XDEBUG_IDEKEY_CLIENT=PHPSTORM-CLIENT docker-compose up -d --build --remove-orphans
@@ -82,8 +82,8 @@ down-app: ##@application Tears down the app
 	docker-compose down -v --remove-orphans
 
 client-unit-tests: ##@unit-tests Run the client unit tests
-	REQUIRE_XDEBUG_CLIENT=0 REQUIRE_XDEBUG_API=0 docker-compose build frontend admin
-	docker-compose -f docker-compose.yml run -e APP_ENV=unit_test -e APP_DEBUG=0 --rm frontend vendor/bin/phpunit -c tests/phpunit
+	REQUIRE_XDEBUG_CLIENT=0 REQUIRE_XDEBUG_API=0 docker-compose build frontend-app
+	docker-compose -f docker-compose.yml run -e APP_ENV=unit_test -e APP_DEBUG=0 --rm frontend-app vendor/bin/phpunit -c tests/phpunit
 
 api-unit-tests: reset-database reset-fixtures ##@unit-tests Run the api unit tests
 	REQUIRE_XDEBUG_FRONTEND=0 REQUIRE_XDEBUG_API=0 docker-compose build api
@@ -190,7 +190,7 @@ test-js:
 ##  allows you to do make test-js-single TEST='Currency Formatting' to run tests whose describe matches the string
 TEST:='all'
 test-js-single:
-	docker-compose -f docker-compose.yml -f docker-compose.dev.yml run npm --rm run test -- -t ${TEST} 
+	docker-compose -f docker-compose.yml -f docker-compose.dev.yml run npm --rm run test -- -t ${TEST}
 
 build-js:
 	docker-compose -f docker-compose.yml -f docker-compose.dev.yml run npm --rm run build

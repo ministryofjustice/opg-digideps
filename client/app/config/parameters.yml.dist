@@ -4,13 +4,13 @@
 parameters:
     locale:   en
     secret:   setme
-    api_base_url: http://api.digideps.local/
+    api_base_url: https://api.digideps.local/
     # START variables different for admin area, using the same codebase but running on a different container
     api_client_secret: setme
     redis_dsn: redis://setme
     # END
-    non_admin_host: http://digideps.local:8070
-    admin_host: http://admin.digideps.local:8071
+    non_admin_host: https://digideps.local
+    admin_host: https://admin.digideps.local
     client_base_urls:
         front: https://digideps.local
         admin: https://admin.digideps.local

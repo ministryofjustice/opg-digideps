@@ -260,7 +260,7 @@ services:
         base_uri: "%api_base_url%"
         verify: false
         headers:
-          Content-Type: app/json
+          Content-Type: application/json
         timeout: 20
         allow_redirects: false
 
@@ -398,7 +398,7 @@ services:
   # Logtash formatter for Kibana
   logstash_formatter:
     class: Monolog\Formatter\LogstashFormatter
-    arguments: ["app.client", null, null, "", 1]
+    arguments: ["application.client", null, null, "", 1]
 
   line_formatter:
     class: Monolog\Formatter\LineFormatter

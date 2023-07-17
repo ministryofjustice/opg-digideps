@@ -4,7 +4,7 @@
         "Read more about it at https://getcomposer.org/doc/01-basic-usage.md#installing-dependencies",
         "This file is @generated automatically"
     ],
-    "content-hash": "0f48c849e28d6cbd4aaa0aa22258b6e3",
+    "content-hash": "0687e85ddc5f678889a51f1deeb5009c",
     "packages": [
         {
             "name": "alphagov/notifications-php-client",
@@ -9289,16 +9289,16 @@
         },
         {
             "name": "amphp/cache",
-            "version": "v1.4.0",
+            "version": "v1.5.0",
             "source": {
                 "type": "git",
                 "url": "https://github.com/amphp/cache.git",
-                "reference": "e7bccc526fc2a555d59e6ee8380eeb39a95c0835"
+                "reference": "2b6b5dbb70e54cc914df9952ba7c012bc4cbcd28"
             },
             "dist": {
                 "type": "zip",
-                "url": "https://api.github.com/repos/amphp/cache/zipball/e7bccc526fc2a555d59e6ee8380eeb39a95c0835",
-                "reference": "e7bccc526fc2a555d59e6ee8380eeb39a95c0835",
+                "url": "https://api.github.com/repos/amphp/cache/zipball/2b6b5dbb70e54cc914df9952ba7c012bc4cbcd28",
+                "reference": "2b6b5dbb70e54cc914df9952ba7c012bc4cbcd28",
                 "shasum": ""
             },
             "require": {
@@ -9308,14 +9308,14 @@
                 "php": ">=7.1"
             },
             "conflict": {
-                "amphp/file": "<0.2 || >=2"
+                "amphp/file": "<0.2 || >=3"
             },
             "require-dev": {
-                "amphp/file": "^1",
+                "amphp/file": "^1 || ^2",
                 "amphp/php-cs-fixer-config": "dev-master",
                 "amphp/phpunit-util": "^1.1",
                 "phpunit/phpunit": "^6 | ^7 | ^8 | ^9",
-                "vimeo/psalm": "^3.11@dev"
+                "vimeo/psalm": "^4"
             },
             "type": "library",
             "autoload": {
@@ -9340,9 +9340,15 @@
             "support": {
                 "irc": "irc://irc.freenode.org/amphp",
                 "issues": "https://github.com/amphp/cache/issues",
-                "source": "https://github.com/amphp/cache/tree/v1.4.0"
+                "source": "https://github.com/amphp/cache/tree/v1.5.0"
             },
-            "time": "2020-04-19T16:10:08+00:00"
+            "funding": [
+                {
+                    "url": "https://github.com/amphp",
+                    "type": "github"
+                }
+            ],
+            "time": "2021-06-29T17:12:43+00:00"
         },
         {
             "name": "amphp/dns",
@@ -10714,22 +10720,22 @@
         },
         {
             "name": "pact-foundation/pact-php",
-            "version": "7.2.0",
+            "version": "8.1.0",
             "source": {
                 "type": "git",
                 "url": "https://github.com/pact-foundation/pact-php.git",
-                "reference": "c3279fb619665c734a63fab66b99992d7aa6c10d"
+                "reference": "3494299fcfeb58a1680b06af69dad8184501917b"
             },
             "dist": {
                 "type": "zip",
-                "url": "https://api.github.com/repos/pact-foundation/pact-php/zipball/c3279fb619665c734a63fab66b99992d7aa6c10d",
-                "reference": "c3279fb619665c734a63fab66b99992d7aa6c10d",
+                "url": "https://api.github.com/repos/pact-foundation/pact-php/zipball/3494299fcfeb58a1680b06af69dad8184501917b",
+                "reference": "3494299fcfeb58a1680b06af69dad8184501917b",
                 "shasum": ""
             },
             "require": {
                 "amphp/amp": "^2.5.1",
                 "amphp/byte-stream": "^1.8",
-                "amphp/cache": "v1.4.0",
+                "amphp/cache": "^1.4.0",
                 "amphp/dns": "^1.2.3",
                 "amphp/hpack": "^3.1.0",
                 "amphp/http-server": "^2.1",
@@ -10743,8 +10749,8 @@
                 "ext-json": "*",
                 "ext-openssl": "*",
                 "guzzlehttp/guzzle": "^6.5.8|^7.4.5",
-                "php": "^7.3|^8.0",
-                "phpunit/phpunit": ">=8.2.3"
+                "php": "^7.4|^8.0|^8.1",
+                "phpunit/phpunit": ">=8.5.23"
             },
             "require-dev": {
                 "friendsofphp/php-cs-fixer": "^3.0",
@@ -10778,9 +10784,9 @@
             "keywords": ["pact", "pact-php"],
             "support": {
                 "issues": "https://github.com/pact-foundation/pact-php/issues",
-                "source": "https://github.com/pact-foundation/pact-php/tree/7.2.0"
+                "source": "https://github.com/pact-foundation/pact-php/tree/8.1.0"
             },
-            "time": "2022-06-26T19:46:52+00:00"
+            "time": "2022-10-03T17:32:14+00:00"
         },
         {
             "name": "phar-io/manifest",

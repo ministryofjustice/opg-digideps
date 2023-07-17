@@ -32,6 +32,7 @@
             <dd class="govuk-summary-list__actions">
                 <a class="govuk-link behat-link-edit" href="{{ url('money_transfers_exist', { 'reportId': report.id, 'from': 'summary' }) }}">
                     {{ 'edit' | trans({}, 'common') }}
+                    <span class="govuk-visually-hidden"> Question:{{ 'existPage.form.noTransfersToAdd.label' | trans(transOptions) }} Current answer:{{ report.noTransfersToAdd is not null ? (report.noTransfersToAdd ? 'No' : 'Yes') : '-'  }}</span>
                 </a>
             </dd>
         {% endif %}
@@ -42,16 +43,6 @@
     <div class="govuk-grid-row">
         <div class="govuk-grid-column-one-half">
             <h2 class="govuk-heading-m">List of money transfers</h2>
-        </div>
-        <div class="govuk-grid-column-one-half text--right">
-            {% if not hideEditLink  %}
-                <a href="{{ path('money_transfers_step', { 'reportId': report.id, 'step': 1}) }}" class="govuk-link behat-link-add">
-                    <strong>
-                        <span class="icon icon-plus"></span>
-                        {{ 'summaryPage.addButton' | trans }}
-                    </strong>
-                </a>
-            {% endif %}
         </div>
     </div>
 {% endif %}
@@ -81,7 +72,7 @@
         </thead>
 
         <tbody class="govuk-table__body">
-            {% for transfer in report.moneyTransfers %}
+            {% for transfer in report.moneyTransfers|sort((a, b) => a.accountFrom.bank <=> b.accountFrom.bank) %}
                 <tr class="govuk-table__row behat-region-transfer-{{ transfer.accountFrom.accountNumber }}-{{ transfer.accountTo.accountNumber }}-{{ transfer.amount | behat_namify }}">
                     <th scope="row" class="govuk-table__header">
                         {{ _self.accountDetails(transfer.accountFrom) }}
@@ -89,7 +80,7 @@
                     <td class="govuk-table__cell">
                         {{ _self.accountDetails(transfer.accountTo) }}
                     </td>
-                    <td class="govuk-table__cell">
+                    <td class="govuk-table__cell govuk-!-width-one-quarter">
                         {{ transfer.description | nl2br }}
                     </td>
                     <td class="govuk-table__cell govuk-table__cell--numeric">
@@ -101,11 +92,13 @@
                                 href="{{ url('money_transfers_step', { 'reportId': report.id, 'transferId': transfer.id, 'step': 1 }) }}"
                                 class="behat-link-edit govuk-link">
                                 {{ 'edit' | trans({}, 'common') }}
+                                <span class="govuk-visually-hidden">{{transfer.accountFrom.bank}}-{{transfer.accountTo.bank}} £{{transfer.amount | money_format}} {{transfer.description}}</span>
                             </a>
                             <a
                                 href="{{ path('money_transfers_delete', { 'reportId': report.id, 'transferId': transfer.id }) }}"
                                 class="behat-link-delete govuk-link govuk-!-margin-left-1">
                                 {{ 'remove' | trans({}, 'common' ) }}
+                                <span class="govuk-visually-hidden">{{transfer.accountFrom.bank}}-{{transfer.accountTo.bank}} £{{transfer.amount | money_format}} {{transfer.description}}</span>
                             </a>
                         </td>
                     {% endif %}
@@ -113,4 +106,19 @@
             {% endfor %}
         </tbody>
     </table>
+{% if report.moneyTransfers | length > 0 %}
+    <div class="govuk-grid-row">
+        <div class="govuk-!-display-block text--right">
+            {% if not hideEditLink  %}
+            <div class="moj-button-menu">
+                <div class="moj-button-menu__wrapper">
+                <a href="{{ path('money_transfers_step', { 'reportId': report.id, 'step': 1}) }}" class="govuk-button moj-button-menu__item govuk-button--secondary" data-module="govuk-button">
+                        {{ 'summaryPage.addButton' | trans }}
+                </a>
+                </div>
+            </div>
+            {% endif %}
+        </div>
+    </div>
+{% endif %}
 {% endif %}

@@ -12,20 +12,17 @@ use Firebase\JWT\JWT;
 use GuzzleHttp\ClientInterface;
 use GuzzleHttp\Exception\RequestException;
 use GuzzleHttp\Exception\TransferException;
-use InvalidArgumentException;
 use JMS\Serializer\SerializationContext;
 use JMS\Serializer\SerializerInterface;
 use Lcobucci\JWT\Validation\ConstraintViolation;
 use Psr\Http\Message\ResponseInterface;
 use Psr\Log\LoggerInterface;
-use RuntimeException;
 use Symfony\Component\DependencyInjection\ContainerInterface;
 use Symfony\Component\DependencyInjection\ParameterBag\ParameterBagInterface;
 use Symfony\Component\HttpFoundation\Response;
 use Symfony\Component\Security\Core\Exception\BadCredentialsException;
 use Symfony\Component\Security\Core\Exception\TooManyLoginAttemptsAuthenticationException;
 use Symfony\Contracts\HttpClient\HttpClientInterface;
-use Throwable;
 
 /**
  * Connects to RESTful Server (API)
@@ -143,12 +140,12 @@ class RestClient implements RestClientInterface
             } catch (ConstraintViolation $e) {
                 // Swallow expired token errors for now and just log - implement once we're rolling JWT to all users
                 $this->logger->warning(sprintf('JWT expired: %s', $e->getMessage()));
-            } catch (Throwable $e) {
+            } catch (\Throwable $e) {
                 // Add steps for refreshing JWT if expired here
                 $jwtDecodeFailureReason = sprintf('Failed to decode JWT - %s', $e->getMessage());
                 $this->logger->warning($jwtDecodeFailureReason);
 
-                throw new RuntimeException('Problems decoding JWT - try again');
+                throw new \RuntimeException('Problems decoding JWT - try again');
             }
         }
 
@@ -208,7 +205,7 @@ class RestClient implements RestClientInterface
         }
 
         // guzzle 6 does not append query groups and params in the string.
-        // TODO add $queryParams as a method param (Replace last if not used) and avoid using endpoing with query string
+        // TODO add $queryParams as a method param (Replace last if not used) and avoid using endpoint with query string
 
         /** @var array */
         $url = parse_url($endpoint);
@@ -283,13 +280,10 @@ class RestClient implements RestClientInterface
     /**
      * @param string $method
      * @param string $endpoint
-     * @param mixed  $data
      * @param string $expectedResponseType
      * @param array  $options
      *
-     * @return mixed
-     *
-     * @throws InvalidArgumentException
+     * @throws \InvalidArgumentException
      */
     public function apiCall($method, $endpoint, $data, $expectedResponseType, $options = [], $authenticated = true)
     {
@@ -322,7 +316,7 @@ class RestClient implements RestClientInterface
         } elseif (class_exists('App\\Entity\\'.$expectedResponseType)) {
             return $this->arrayToEntity($expectedResponseType, $responseArray ?: []);
         } else {
-            throw new InvalidArgumentException(__METHOD__.": invalid type of expected response, $expectedResponseType given.");
+            throw new \InvalidArgumentException(__METHOD__.": invalid type of expected response, $expectedResponseType given.");
         }
     }
 
@@ -369,6 +363,8 @@ class RestClient implements RestClientInterface
             $options['timeout'] = $this->timeout;
         }
 
+        //        file_put_contents('php://stderr', print_r($options, TRUE));
+
         $start = microtime(true);
         try {
             $response = $this->client->$method($url, $options);
@@ -390,7 +386,7 @@ class RestClient implements RestClientInterface
                     $body = strval($response->getBody());
                     $data = $this->serializer->deserialize($body, 'array', 'json');
                 }
-            } catch (Throwable $e) {
+            } catch (\Throwable $e) {
                 $this->logger->warning('RestClient |  '.$url.' | '.$e->getMessage());
             }
 
@@ -413,7 +409,7 @@ class RestClient implements RestClientInterface
 
         try {
             $data = $this->serializer->deserialize(strval($response->getBody()), 'array', 'json');
-        } catch (Throwable $e) {
+        } catch (\Throwable $e) {
             $this->logger->error(__METHOD__.': '.$e->getMessage().'. Api responded with invalid JSON. [BODY START]: '.$response->getBody().'[END BODY]');
             throw new Exception\JsonDecodeException(self::ERROR_FORMAT.':'.$response->getBody());
         }
@@ -457,7 +453,7 @@ class RestClient implements RestClientInterface
             $entity = $this->arrayToEntity($expectedResponseType, $row);
 
             if (!method_exists($entity, 'getId')) {
-                throw new RuntimeException('Cannot deserialise entities without an ID');
+                throw new \RuntimeException('Cannot deserialise entities without an ID');
             }
 
             $ret[$entity->getId()] = $entity;

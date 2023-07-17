@@ -73,8 +73,6 @@ class IndexController extends AbstractController
             'isAdmin' => 'admin' === $this->environment,
         ];
 
-        file_put_contents('php://stderr', print_r($this->environment, true));
-
         // See LoginFormAuthenticator - exceptions are set in request session and accessed here once redirected
         $lastAuthError = $authenticationUtils->getLastAuthenticationError();
 

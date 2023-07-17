@@ -2,39 +2,6 @@ version: "3.2"
 
 ## Define all volumes in docker-compose.override.yml so this file can be used in CI
 services:
-  aws:
-    image: infrastructureascode/aws-cli
-    environment:
-      - AWS_ACCESS_KEY_ID=foo
-      - AWS_SECRET_ACCESS_KEY=bar
-    working_dir: /app
-    depends_on:
-      - localstack
-
-  localstack:
-    build:
-      context: .
-      dockerfile: ./localstack.Dockerfile
-    ports:
-      - "4566-4583:4566-4583"
-    environment:
-      - SERVICES=s3,ssm,logs,secretsmanager,lambda
-      - DATA_DIR=/tmp/localstack/data
-      - DEFAULT_REGION=eu-west-1
-      - USE_SINGLE_REGION=1
-      - DEBUG=1
-      - LAMBDA_EXECUTOR=docker
-      - LAMBDA_REMOVE_CONTAINERS="true"
-      - LAMBDA_FORWARD_URL=http://synchronisation:8080
-
-  wait-for-it:
-    build: ./wait-for-it
-
-  #    pa11y:
-  #        build:
-  #            context: ./pa11y
-  #        depends_on:
-  #            - frontend
   resources:
     image: opg-digideps-resources
     build:
@@ -65,7 +32,6 @@ services:
     depends_on:
       - frontend-app
       - admin-webserver
-      - load-balancer
     environment:
       APP_HOST: frontend-app
       APP_PORT: 9000
@@ -86,6 +52,7 @@ services:
       - htmltopdf
       - localstack
       - mock-notify-api
+      - pact-mock
     environment:
       APP_ENV: ${APP_ENV:-dev}
       APP_DEBUG: ${APP_DEBUG:-0}
@@ -162,9 +129,6 @@ services:
       - 5432:5432
     env_file:
       - ./api/postgres.env
-    environment:
-      # use a different data directory to avoid using the old 9.3 version
-      PGDATA: /var/lib/postgresql96/data
     restart: always
 
   redis-frontend:
@@ -188,6 +152,40 @@ services:
       - postgres
     env_file:
       - sync/sync.env
+
+  aws:
+    image: infrastructureascode/aws-cli
+    environment:
+      - AWS_ACCESS_KEY_ID=foo
+      - AWS_SECRET_ACCESS_KEY=bar
+    working_dir: /app
+    depends_on:
+      - localstack
+
+  localstack:
+    build:
+      context: .
+      dockerfile: ./localstack.Dockerfile
+    ports:
+      - "4566-4583:4566-4583"
+    environment:
+      - SERVICES=s3,ssm,logs,secretsmanager,lambda
+      - DATA_DIR=/tmp/localstack/data
+      - DEFAULT_REGION=eu-west-1
+      - USE_SINGLE_REGION=1
+      - DEBUG=1
+      - LAMBDA_EXECUTOR=docker
+      - LAMBDA_REMOVE_CONTAINERS="true"
+      - LAMBDA_FORWARD_URL=http://synchronisation:8080
+
+  wait-for-it:
+    build: ./wait-for-it
+
+  #    pa11y:
+  #        build:
+  #            context: ./pa11y
+  #        depends_on:
+  #            - frontend
 
   pact-mock:
     image: pactfoundation/pact-cli:0.50.0.32
