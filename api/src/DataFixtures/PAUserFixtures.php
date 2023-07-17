@@ -4,292 +4,262 @@ namespace App\DataFixtures;
 
 use App\Entity\Client;
 use App\Entity\NamedDeputy;
-use App\Entity\Ndr\Ndr;
 use App\Entity\PreRegistration;
 use App\Entity\Report\Report;
 use App\Entity\User;
 use App\Factory\OrganisationFactory;
 use App\Repository\NamedDeputyRepository;
 use App\Repository\OrganisationRepository;
-use App\Service\OrgService;
-use App\Service\ReportUtils;
 use Doctrine\Persistence\ObjectManager;
 
 class PAUserFixtures extends AbstractDataFixture
 {
-    /**
-     * @var ReportUtils
-     */
-    private $reportUtils;
-
-    /**
-     * @var NamedDeputyRepository
-     */
-    private $namedDeputyRepository;
-
-    /**
-     * @var OrgService
-     */
-    private $orgService;
-
-    /**
-     * @var OrganisationRepository
-     */
-    private $orgRepository;
-
-    /**
-     * @var OrganisationFactory
-     */
-    private $orgFactory;
-
-    private $userData = [
-        // CSV replacement fixtures for behat
+    private $fixtureData = [
         [
-            'id' => '',
-            'Dep Forename' => 'DEP1',
-            'Dep Surname' => 'SURNAME1',
-            'Email' => 'behat-pa1@publicguardian.gov.uk',
-            'active' => false,
-            'Deputy Uid' => '9000001',
-            'roleName' => 'ROLE_PA_NAMED',
-            'Dep Adrs1' => 'PA OPG',
-            'Dep Adrs2' => 'ADD2',
-            'Dep Adrs3' => 'ADD3',
-            'Dep Postcode' => 'SW1',
-            'Dep Adrs4' => 'ADD4',
-            'Dep Adrs5' => 'ADD5',
-            'Phone Main' => '+4410000000001',
-            'Agree Terms Use' => false,
-            'clients' => [
+            'users' => [
                 [
-                    'firstname' => 'CLY1',
-                    'lastname' => 'HENT1',
-                    'caseNumber' => '2100010',
-                    'lastReportDate' => '19/03/2017',
-                    'address1' => 'ADD1',
-                    'address2' => 'ADD2',
-                    'address3' => 'ADD3',
-                    'addressPostcode' => 'B301QL',
-                    'phone' => '078912345678',
-                    'email' => 'cly1@hent.com',
-                    'dob' => '01/01/1967',
-                    'reportType' => 'OPG102',
-                    'reportVariation' => 'A2',
+                    'id' => 'PA-102-Named',
+                    'email' => 'PA-102-Named@pa102s.gov.uk',
+                    'roleName' => 'ROLE_PA_NAMED',
+                    'isNamedDeputy' => true,
+                    'orgName' => 'PA 102 Org',
                 ],
                 [
-                    'firstname' => 'CLY7',
-                    'lastname' => 'HENT',
-                    'caseNumber' => '2100014',
-                    'lastReportDate' => '28/05/2017',
-                    'address1' => 'ADD1',
-                    'address2' => 'ADD2',
-                    'address3' => 'ADD3',
-                    'addressPostcode' => 'B301QL',
-                    'phone' => '078912345678',
-                    'email' => 'cly7@hent.com',
-                    'dob' => '07/07/1967',
-                    'reportType' => 'OPG102',
-                    'reportVariation' => 'A2',
+                    'id' => 'PA-102-Admin',
+                    'email' => 'PA-102-Admin@pa102s.gov.uk',
+                    'roleName' => 'ROLE_PA_ADMIN',
+                    'isNamedDeputy' => false,
+                ],
+                [
+                    'id' => 'PA-102-Member',
+                    'email' => 'PA-102-Member@pa102s.gov.uk',
+                    'roleName' => 'ROLE_PA_TEAM_MEMBER',
+                    'isNamedDeputy' => false,
                 ],
             ],
-            'additionalClients' => 16,
-        ],
-        [
-            'id' => '',
-            'Dep Forename' => 'DEP1',
-            'Dep Surname' => 'SURNAME1',
-            'Email' => 'behat-pa2@publicguardian.gov.uk',
-            'active' => false,
-            'Deputy Uid' => '9000002',
-            'roleName' => 'ROLE_PA_NAMED',
-            'Dep Adrs1' => 'PA OPG',
-            'Dep Adrs2' => 'ADD2',
-            'Dep Adrs3' => 'ADD3',
-            'Dep Postcode' => 'SW1',
-            'Dep Adrs4' => 'ADD4',
-            'Dep Adrs5' => 'ADD5',
-            'Phone Main' => '+4410000000002',
-            'Agree Terms Use' => false,
             'clients' => [
                 [
-                    'firstname' => 'CLY301',
-                    'lastname' => 'HENT301',
-                    'caseNumber' => '2200001',
-                    'lastReportDate' => '28/05/2017',
-                    'address1' => 'ADD1',
-                    'address2' => 'ADD2',
-                    'address3' => 'ADD3',
-                    'addressPostcode' => 'B301QL',
-                    'phone' => '078912345678',
-                    'email' => 'cly201@hent.com',
-                    'dob' => '02/02/1967',
+                    'id' => 'PA-OPG-102-6',
+                    'caseNumber' => '71111000',
+                    'reportType' => 'OPG102',
+                    'orderType' => 'pfa',
+                    'namedDeputyUid' => '700777777000',
+                ],
+                [
+                    'id' => 'PA-OPG-102-6-4',
+                    'caseNumber' => '71111001',
+                    'reportType' => 'OPG102',
+                    'orderType' => 'hw',
+                    'namedDeputyUid' => '700777777000',
+                ],
+            ],
+        ],
+        [
+            'users' => [
+                [
+                    'id' => 'PA-103-Named',
+                    'email' => 'PA-103-Named@pa103s.gov.uk',
+                    'roleName' => 'ROLE_PA_NAMED',
+                    'isNamedDeputy' => true,
+                    'orgName' => 'PA 103 Org',
+                ],
+                [
+                    'id' => 'PA-103-Admin',
+                    'email' => 'PA-103-Admin@pa103s.gov.uk',
+                    'roleName' => 'ROLE_PA_ADMIN',
+                    'isNamedDeputy' => false,
+                ],
+                [
+                    'id' => 'PA-103-Member',
+                    'email' => 'PA-103-Member@pa103s.gov.uk',
+                    'roleName' => 'ROLE_PA_TEAM_MEMBER',
+                    'isNamedDeputy' => false,
+                ],
+            ],
+            'clients' => [
+                [
+                    'id' => 'PA-OPG-103-6',
+                    'caseNumber' => '72111000',
                     'reportType' => 'OPG103',
-                    'reportVariation' => 'A3',
+                    'orderType' => 'pfa',
+                    'namedDeputyUid' => '700788888000',
+                ],
+                [
+                    'id' => 'PA-OPG-103-6-4',
+                    'caseNumber' => '72111001',
+                    'reportType' => 'OPG103',
+                    'orderType' => 'hw',
+                    'namedDeputyUid' => '700788888000',
                 ],
             ],
         ],
         [
-            'id' => '',
-            'Dep Forename' => 'DEP1',
-            'Dep Surname' => 'SURNAME1',
-            'Email' => 'behat-pa3@publicguardian.gov.uk',
-            'active' => false,
-            'Deputy Uid' => '9000003',
-            'roleName' => 'ROLE_PA_NAMED',
-            'Dep Adrs1' => 'PA OPG',
-            'Dep Adrs2' => 'ADD2',
-            'Dep Adrs3' => 'ADD3',
-            'Dep Postcode' => 'SW1',
-            'Dep Adrs4' => 'ADD4',
-            'Dep Adrs5' => 'ADD5',
-            'Phone Main' => '+4410000000003',
-            'Agree Terms Use' => false,
+            'users' => [
+                [
+                    'id' => 'PA-104-Named',
+                    'email' => 'PA-104-Named@pa104s.gov.uk',
+                    'roleName' => 'ROLE_PA_NAMED',
+                    'isNamedDeputy' => true,
+                    'orgName' => 'PA 104 Org',
+                ],
+                [
+                    'id' => 'PA-104-Admin',
+                    'email' => 'PA-104-Admin@pa104s.gov.uk',
+                    'roleName' => 'ROLE_PA_ADMIN',
+                    'isNamedDeputy' => false,
+                ],
+                [
+                    'id' => 'PA-104-Member',
+                    'email' => 'PA-104-Member@pa104s.gov.uk',
+                    'roleName' => 'ROLE_PA_TEAM_MEMBER',
+                    'isNamedDeputy' => false,
+                ],
+            ],
             'clients' => [
                 [
-                    'firstname' => 'CLY201',
-                    'lastname' => 'HENT201',
-                    'caseNumber' => '2300001',
-                    'lastReportDate' => '28/05/2017',
-                    'address1' => 'ADD1',
-                    'address2' => 'ADD2',
-                    'address3' => 'ADD3',
-                    'addressPostcode' => 'B301QL',
-                    'phone' => '078912345678',
-                    'email' => 'cly301@hent.com',
-                    'dob' => '02/02/1967',
-                    'reportType' => 'OPG102',
-                    'reportVariation' => 'A2',
+                    'id' => 'PA-OPG-104-6',
+                    'caseNumber' => '73111000',
+                    'reportType' => 'OPG104',
+                    'orderType' => 'hw',
+                    'namedDeputyUid' => '700799999000',
                 ],
             ],
         ],
     ];
 
-    public function __construct(OrgService $orgService, OrganisationRepository $orgRepository, OrganisationFactory $orgFactory, ReportUtils $reportUtils)
-    {
-        $this->orgService = $orgService;
-        $this->orgRepository = $orgRepository;
-        $this->orgFactory = $orgFactory;
-        $this->reportUtils = $reportUtils;
+    public function __construct(
+        private OrganisationRepository $orgRepository,
+        private OrganisationFactory $orgFactory,
+        private NamedDeputyRepository $namedDeputyRepository
+    ) {
     }
 
     public function doLoad(ObjectManager $manager)
     {
-        $this->namedDeputyRepository = $manager->getRepository(NamedDeputy::class);
-
-        // Add users from array
-        foreach ($this->userData as $data) {
-            $this->addUser($data, $manager);
+        // Loop through data sets.
+        // Creates users, clients, organisation and named deputies
+        foreach ($this->fixtureData as $data) {
+            $this->createFixture($data, $manager);
         }
 
         $manager->flush();
     }
 
-    private function addUser($data, $manager)
+    private function createFixture($data, $manager)
     {
-        // Create user
-        $user = (new User())
-            ->setFirstname(isset($data['Dep Forename']) ? $data['Dep Forename'] : 'test')
-            ->setLastname(isset($data['Dep Surname']) ? $data['Dep Surname'] : $data['id'])
-            ->setEmail(isset($data['Email']) ? $data['Email'] : $data['id'].'@example.org')
-            ->setActive(isset($data['active']) ? $data['active'] : true)
+        $namedDeputyData = null;
+        $organisation = null;
+
+        // Create users
+        foreach ($data['users'] as $userData) {
+            // Set the $namedDeputyData when we are processing the named deputy
+            if (null === $namedDeputyData) {
+                $namedDeputyData = $userData['isNamedDeputy'] ? $userData : null;
+            }
+
+            // Create user
+            $user = $this->createUser($userData);
+
+            $manager->persist($user);
+
+            $organisation = $this->orgRepository->findByEmailIdentifier($userData['email']);
+            // Create organisation if it doesn't exist
+            if (null === $organisation) {
+                $organisation = $this->orgFactory->createFromFullEmail($userData['orgName'] ?? 'Org Name', $userData['email']);
+
+                $manager->persist($organisation);
+                $manager->flush($organisation);
+            }
+
+            // Add user to organisation
+            $organisation->addUser($user);
+        }
+
+        // Create clients
+        foreach ($data['clients'] as $clientData) {
+            // Create client
+            $client = $this->createClient($clientData);
+
+            $namedDeputy = $this->namedDeputyRepository->findOneBy(['deputyUid' => $clientData['namedDeputyUid']]);
+            if (null === $namedDeputy) {
+                // Create named deputy if they don't exist
+                $namedDeputy = $this->createNamedDeputy($namedDeputyData, $clientData);
+
+                $manager->persist($namedDeputy);
+                $manager->flush($namedDeputy);
+            }
+
+            // Set the named deputy on the client
+            $client->setNamedDeputy($namedDeputy);
+
+            // Add the client to the organisation
+            $organisation->addClient($client);
+            $client->setOrganisation($organisation);
+
+            $manager->persist($client);
+
+            // Create report for client
+            $this->createReport($clientData, $client, $manager);
+        }
+    }
+
+    private function createUser($userData)
+    {
+        return (new User())
+            ->setFirstname($userData['id'])
+            ->setLastname('User')
+            ->setEmail($userData['email'])
+            ->setActive(true)
             ->setRegistrationDate(new \DateTime())
             ->setNdrEnabled(false)
-            ->setPhoneMain(isset($data['Phone Main']) ? $data['Phone Main'] : null)
-            ->setAddress1(isset($data['address1']) ? $data['address1'] : 'Victoria Road')
-            ->setAddress2(isset($data['address2']) ? $data['address2'] : null)
-            ->setAddress3(isset($data['address3']) ? $data['address3'] : null)
-            ->setAddressPostcode(isset($data['addressPostcode']) ? $data['addressPostcode'] : 'SW1')
+            ->setPhoneMain('07911111111111')
+            ->setAddress1('ABC Road')
+            ->setAddressPostcode('AB1 2CD')
             ->setAddressCountry('GB')
-            ->setRoleName($data['roleName'])
-            ->setAgreeTermsUse(isset($data['Agree Terms Use']) ? $data['Agree Terms Use'] : true);
-
-        $manager->persist($user);
-
-        $organisation = $this->orgRepository->findByEmailIdentifier($data['Email']);
-        if (null === $organisation) {
-            $organisation = $this->orgFactory->createFromFullEmail($data['Dep Adrs1'], $data['Email']);
-            $manager->persist($organisation);
-            $manager->flush($organisation);
-        }
-
-        if (isset($data['clients'])) {
-            foreach ($data['clients'] as $clientData) {
-                // Create client
-                $client = $this->createClient($clientData, $data, $user, $manager);
-                $user->addClient($client);
-            }
-            if (isset($data['additionalClients'])) {
-                // add dummy clients for pagination tests
-                for ($i = 1; $i <= $data['additionalClients']; ++$i) {
-                    $client = $this->createClient($this->generateTestClientData($i), $data, $user, $manager);
-                    $user->addClient($client);
-                    $organisation->addClient($client);
-                    $client->setOrganisation($organisation);
-                }
-            }
-        }
+            ->setRoleName($userData['roleName'])
+            ->setAgreeTermsUse(true);
     }
 
-    private function generateTestClientData($iterator)
+    private function createClient($clientData)
     {
-        return [
-            'lastReportDate' => '01/01/2018',
-            'dob' => '04/05/1977',
-            'caseNumber' => '90000'.$iterator,
-            'firstname' => 'TEST CLY'.$iterator,
-            'lastname' => 'HENT'.$iterator,
-            'address1' => 'Address1_'.$iterator,
-            'address2' => 'Address2_'.$iterator,
-            'address3' => 'Address3_'.$iterator,
-            'addressPostcode' => 'PC_'.$iterator,
-            'phone' => '01234123123',
-            'email' => 'testCly'.$iterator.'@hent.com',
-            'reportType' => 'OPG102',
-            'reportVariation' => 'A2',
-        ];
-    }
-
-    private function createClient($clientData, $userData, $user, $manager)
-    {
-        $client = new Client();
-        $courtDate = \DateTime::createFromFormat('d/m/Y', $clientData['lastReportDate']);
-        $dob = \DateTime::createFromFormat('d/m/Y', $clientData['dob']);
-
-        $client
-            ->setCaseNumber(User::padDeputyNumber($clientData['caseNumber']))
-            ->setFirstname($clientData['firstname'])
-            ->setLastname($clientData['lastname'])
-            ->setCourtDate($courtDate->modify('-1year +1day'))
-            ->setAddress($clientData['address1'])
-            ->setAddress2($clientData['address2'])
-            ->setAddress3($clientData['address3'])
-            ->setPostcode($clientData['addressPostcode'])
+        return (new Client())
+            ->setCaseNumber($clientData['caseNumber'])
+            ->setFirstname($clientData['id'])
+            ->setLastname('Client')
+            ->setEmail(strtolower($clientData['id']).'-client-@example.com')
+            ->setPhone('07811111111111')
+            ->setAddress('ABC Road')
+            ->setPostcode('AB1 2CD')
             ->setCountry('GB')
-            ->setPhone($clientData['phone'])
-            ->setEmail($clientData['email'])
-            ->setDateOfBirth($dob);
+            ->setCourtDate(\DateTime::createFromFormat('d/m/Y', '01/11/2017'));
+    }
 
-        if (null === ($namedDeputy = $this->orgService->identifyNamedDeputy($userData))) {
-            $namedDeputy = $this->orgService->createNamedDeputy($userData);
-        }
+    private function createReport($clientData, $client, $manager)
+    {
+        $realm = PreRegistration::REALM_PA;
+        $type = PreRegistration::getReportTypeByOrderType($clientData['reportType'], $clientData['orderType'], $realm);
 
-        $client->setNamedDeputy($namedDeputy);
+        $startDate = $client->getExpectedReportStartDate();
+        $startDate->setDate('2016', intval($startDate->format('m')), intval($startDate->format('d')));
 
-        $manager->persist($client);
+        $endDate = $client->getExpectedReportEndDate();
+        $endDate->setDate('2017', intval($endDate->format('m')), intval($endDate->format('d')));
 
-        if (isset($clientData['ndrEnabled']) && $clientData['ndrEnabled']) {
-            $ndr = new Ndr($client);
-            $manager->persist($ndr);
-        } else {
-            $type = PreRegistration::getReportTypeByOrderType($clientData['reportType'], $clientData['reportVariation'], PreRegistration::REALM_PA);
-            $endDate = \DateTime::createFromFormat('d/m/Y', $clientData['lastReportDate']);
-            $startDate = $this->reportUtils->generateReportStartDateFromEndDate($endDate);
-            $report = new Report($client, $type, $startDate, $endDate);
+        $report = new Report($client, $type, $startDate, $endDate);
 
-            $manager->persist($report);
-        }
+        $manager->persist($report);
+    }
 
-        return $client;
+    private function createNamedDeputy(mixed $namedDeputyData, mixed $clientData)
+    {
+        return (new NamedDeputy())
+            ->setFirstname($namedDeputyData['id'])
+            ->setLastname('Named Deputy')
+            ->setDeputyUid($clientData['namedDeputyUid'])
+            ->setEmail1($namedDeputyData['email'])
+            ->setAddress1('ABC Road')
+            ->setAddressPostcode('AB1 2CD')
+            ->setAddressCountry('GB');
     }
 
     protected function getEnvironments()

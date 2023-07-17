@@ -33,7 +33,7 @@ class ProfUserFixtures extends AbstractDataFixture
                 [
                     'id' => 'Prof-102-Member',
                     'email' => 'Prof-102-Member@prof102s.gov.uk',
-                    'roleName' => 'ROLE_PROF_MEMBER',
+                    'roleName' => 'ROLE_PROF_TEAM_MEMBER',
                     'isNamedDeputy' => false,
                 ],
             ],
@@ -43,14 +43,85 @@ class ProfUserFixtures extends AbstractDataFixture
                     'caseNumber' => '71111000',
                     'reportType' => 'OPG102',
                     'orderType' => 'pfa',
-                    'namedDeputyUid' => '700787777000',
+                    'namedDeputyUid' => '700777777000',
                 ],
                 [
                     'id' => 'Prof-OPG-102-5-4',
                     'caseNumber' => '71111001',
                     'reportType' => 'OPG102',
                     'orderType' => 'hw',
-                    'namedDeputyUid' => '700787777000',
+                    'namedDeputyUid' => '700777777000',
+                ],
+            ],
+        ],
+        [
+            'users' => [
+                [
+                    'id' => 'Prof-103-Named',
+                    'email' => 'Prof-103-Named@prof103s.gov.uk',
+                    'roleName' => 'ROLE_PROF_NAMED',
+                    'isNamedDeputy' => true,
+                    'orgName' => 'Prof 103 Org',
+                ],
+                [
+                    'id' => 'Prof-103-Admin',
+                    'email' => 'Prof-103-Admin@prof103s.gov.uk',
+                    'roleName' => 'ROLE_PROF_ADMIN',
+                    'isNamedDeputy' => false,
+                ],
+                [
+                    'id' => 'Prof-103-Member',
+                    'email' => 'Prof-103-Member@prof103s.gov.uk',
+                    'roleName' => 'ROLE_PROF_TEAM_MEMBER',
+                    'isNamedDeputy' => false,
+                ],
+            ],
+            'clients' => [
+                [
+                    'id' => 'Prof-OPG-103-5',
+                    'caseNumber' => '72111000',
+                    'reportType' => 'OPG103',
+                    'orderType' => 'pfa',
+                    'namedDeputyUid' => '700788888000',
+                ],
+                [
+                    'id' => 'Prof-OPG-103-5-4',
+                    'caseNumber' => '72111001',
+                    'reportType' => 'OPG103',
+                    'orderType' => 'hw',
+                    'namedDeputyUid' => '700788888000',
+                ],
+            ],
+        ],
+        [
+            'users' => [
+                [
+                    'id' => 'Prof-104-Named',
+                    'email' => 'Prof-104-Named@prof104s.gov.uk',
+                    'roleName' => 'ROLE_PROF_NAMED',
+                    'isNamedDeputy' => true,
+                    'orgName' => 'Prof 104 Org',
+                ],
+                [
+                    'id' => 'Prof-104-Admin',
+                    'email' => 'Prof-104-Admin@prof104s.gov.uk',
+                    'roleName' => 'ROLE_PROF_ADMIN',
+                    'isNamedDeputy' => false,
+                ],
+                [
+                    'id' => 'Prof-104-Member',
+                    'email' => 'Prof-104-Member@prof104s.gov.uk',
+                    'roleName' => 'ROLE_PROF_TEAM_MEMBER',
+                    'isNamedDeputy' => false,
+                ],
+            ],
+            'clients' => [
+                [
+                    'id' => 'Prof-OPG-104-5',
+                    'caseNumber' => '73111000',
+                    'reportType' => 'OPG104',
+                    'orderType' => 'hw',
+                    'namedDeputyUid' => '700799999000',
                 ],
             ],
         ],
