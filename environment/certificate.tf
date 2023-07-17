@@ -28,3 +28,11 @@ resource "aws_acm_certificate_validation" "wildcard" {
   certificate_arn         = aws_acm_certificate.wildcard.id
   validation_record_fqdns = aws_route53_record.wildcard_validation[*].fqdn
 }
+
+data "aws_acm_certificate" "service_justice" {
+  domain = "*.digideps.opg.service.justice.gov.uk"
+}
+
+data "aws_acm_certificate" "service_justice_admin" {
+  domain = "*.admin.digideps.opg.service.justice.gov.uk"
+}

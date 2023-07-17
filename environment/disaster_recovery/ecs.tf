@@ -93,13 +93,12 @@ data "aws_iam_policy_document" "dr_backup" {
       "kms:CreateGrant",
       "kms:DescribeKey"
     ]
-    resources = [
-      "*"
-    ]
+    resources = [aws_kms_key.db_backup.arn]
   }
   statement {
-    sid       = "allowSnapshotAccess"
-    effect    = "Allow"
+    sid    = "allowSnapshotAccess"
+    effect = "Allow"
+    #tfsec:ignore:aws-iam-no-policy-wildcards - needs access to snapshots of any name
     resources = ["*"]
     actions = [
       "rds:CreateClusterDBSnapshot",
