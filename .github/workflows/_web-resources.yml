@@ -26,15 +26,14 @@ jobs:
       - name: build assets
         run: |
           # Copy in templates and translations
-          cp -r ../client/app/templates ./templates
-          cp -r ../client/app/translations ./translations
+          cp -r ../app/templates ./templates
+          cp -r ../app/translations ./translations
           # Install NPM dependencies
           npm install
           npm run lint
           npm audit --production
           #Build assets
           NODE_ENV=production npm run build
-          ls -alt public
         working-directory: client/resources
       - name: archive dist
         uses: actions/upload-artifact@65d862660abb392b8c4a3d1195a2108db131dd05 # pin@v3.1.0

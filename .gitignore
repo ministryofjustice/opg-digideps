@@ -33,6 +33,7 @@ log/pact.log
 **/local-load-balancer/certificates/nginx.crt
 **/local-load-balancer/certificates/nginx.key
 **/local-load-balancer/certificates/nginx.csr
+**/client/resources/public/**
 
 # Lambda specific
 *lambda*.zip

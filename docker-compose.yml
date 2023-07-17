@@ -40,11 +40,18 @@ services:
     build:
       context: .
       dockerfile: ./client/docker/resources/Dockerfile
+    environment:
+      NODE_ENV: production
+    entrypoint: >
+      sh -c "npm run build"
 
   load-balancer:
-    container_name: opg-digideps-lb
+    container_name: opg-digideps-loadbalancer
     build:
       context: docker/local-load-balancer
+    depends_on:
+      - frontend-webserver
+      - admin-webserver
     ports:
       - 443:443
 

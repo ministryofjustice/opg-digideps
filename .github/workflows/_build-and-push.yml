@@ -32,6 +32,9 @@ jobs:
           - svc_name: "client"
             sub_folder: "."
             docker_file: "client/docker/app/Dockerfile"
+          - svc_name: "client-webserver"
+            sub_folder: "."
+            docker_file: "client/docker/web/Dockerfile"
           - svc_name: "api"
             sub_folder: "api"
             docker_file: "Dockerfile"
@@ -56,14 +59,14 @@ jobs:
       - name: set up docker buildx
         uses: docker/setup-buildx-action@a946f06b5ddbde456d0115dc585e8dc3c7a0c3e0
 
-      #      - name: cache docker layers
-      #        id: cache-docker
-      #        uses: actions/cache@04f198bf0b2a39f7230a4304bf07747a0bddf146 # pin@v3.0.8
-      #        with:
-      #          path: /tmp/.buildx-cache
-      #          key: ${{ runner.os }}-${{ matrix.svc_name }}-build-${{ github.sha }}
-      #          restore-keys: |
-      #            ${{ runner.os }}-${{ matrix.svc_name }}-build
+      - name: cache docker layers
+        id: cache-docker
+        uses: actions/cache@04f198bf0b2a39f7230a4304bf07747a0bddf146 # pin@v3.0.8
+        with:
+          path: /tmp/.buildx-cache
+          key: ${{ runner.os }}-${{ matrix.svc_name }}-build-${{ github.sha }}
+          restore-keys: |
+            ${{ runner.os }}-${{ matrix.svc_name }}-build
 
       - name: install aws cli
         uses: unfor19/install-aws-cli-action@457b7980b125044247e455d87b9a26fc2299b787 # pin@v1.0.3
@@ -78,74 +81,40 @@ jobs:
           role-duration-seconds: 1800
           role-session-name: OPGDigidepsECRGithubAction
 
-      - name: download artifact for monitoring lambda layer
-        if: inputs.apply == 'true' && inputs.terraform_path == 'environment'
+      - name: download resources artifact
         uses: actions/download-artifact@e9ef242655d12993efdcda9058dee2db83a2cb9b
         with:
-          name: layer.tar
-          path: lambdas
-
-      - name: build resources image
-        if: matrix.svc_name == 'client'
-        run: |
-          docker build \
-          --tag opg-digideps-resources:latest \
-          -f client/docker/resources/Dockerfile \
-          .
-
-      - name: build webserver docker image
-        if: matrix.svc_name == 'client'
-        env:
-          IMAGE_NAME: ${{ matrix.svc_name }}
-        run: |
-          docker build \
-          --tag ${IMAGE_NAME}-webserver:latest \
-          -f ${IMAGE_NAME}/docker/web/Dockerfile \
-          .
-        working-directory: ${{ matrix.sub_folder }}
+          name: web-distribution
+          path: client/resources/public
+        if: |
+          (matrix.svc_name == 'client' || matrix.svc_name == 'client-webserver')
 
       - name: build docker image
-        if: matrix.svc_name == 'client'
         env:
           IMAGE_NAME: ${{ matrix.svc_name }}
-          DOCKER_FILE: ${{ matrix.docker_file }}
+          DOCKERFILE: ${{ matrix.docker_file }}
         run: |
-          docker build --no-cache \
+          docker buildx build \
+          -f ${DOCKERFILE} \
+          --cache-from=type=local,src=/tmp/.buildx-cache \
+          --cache-to=type=local,dest=/tmp/.buildx-cache-new \
           --tag ${IMAGE_NAME}:latest \
-          -f ${DOCKER_FILE} \
+          --output type=docker \
           .
-        working-directory: ${{ matrix.sub_folder }}
-
-      - name: build docker image
-        if: matrix.svc_name == 'client'
-        env:
-          IMAGE_NAME: ${{ matrix.svc_name }}
-          DOCKER_FILE: ${{ matrix.docker_file }}
-        run: |
-          docker build --no-cache \
-          --tag ${IMAGE_NAME}:latest \
-          -f ${DOCKER_FILE} \
-          .
-        working-directory: ${{ matrix.sub_folder }}
-
-      - name: build docker image
-        if: matrix.svc_name != 'client'
-        env:
-          IMAGE_NAME: ${{ matrix.svc_name }}
-        run: docker buildx build --cache-from=type=local,src=/tmp/.buildx-cache --cache-to=type=local,dest=/tmp/.buildx-cache-new --tag ${IMAGE_NAME}:latest --output type=docker .
         working-directory: ${{ matrix.sub_folder }}
 
       - name: build docker image development
         if: matrix.svc_name == 'client' && inputs.branch_name == 'main'
         env:
           IMAGE_NAME: ${{ matrix.svc_name }}
-        run: docker build --tag ${IMAGE_NAME}-dev:latest --file Dockerfile-dev .
+          DOCKERFILE: ${{ matrix.docker_file }}
+        run: docker build -f ${DOCKERFILE} --tag ${IMAGE_NAME}-dev:latest --file Dockerfile-dev .
         working-directory: ${{ matrix.sub_folder }}
 
-      #      - name: Move cache
-      #        run: |
-      #          rm -rf /tmp/.buildx-cache
-      #          mv /tmp/.buildx-cache-new /tmp/.buildx-cache
+      - name: Move cache
+        run: |
+          rm -rf /tmp/.buildx-cache
+          mv /tmp/.buildx-cache-new /tmp/.buildx-cache
 
       - name: trivy image scanning
         id: trivy_scan
@@ -185,21 +154,6 @@ jobs:
         run: |
           export IMAGE_TAG_DEV="development-$(echo $IMAGE_TAG | awk -F'-' '{print $2}')"
           docker tag $IMAGE_NAME-dev:latest $ECR_REGISTRY/$ECR_REGISTRY_ALIAS/$IMAGE_NAME:$IMAGE_TAG_DEV
-
-      - name: tag and push webserver
-        if: matrix.svc_name == 'client'
-        env:
-          ECR_REGISTRY: ${{ steps.login_ecr.outputs.registry }}
-          ECR_REGISTRY_ALIAS: digideps
-          IMAGE_TAG: ${{ inputs.tag }}
-          IMAGE_NAME: ${{ matrix.svc_name }}
-          BRANCH_NAME: ${{ inputs.branch_name }}
-        run: |
-          docker tag $IMAGE_NAME-webserver:latest $ECR_REGISTRY/$ECR_REGISTRY_ALIAS/$IMAGE_NAME-webserver:$IMAGE_TAG
-          if [[ "${BRANCH_NAME}" == "main" ]]; then
-            docker tag $IMAGE_NAME:latest $ECR_REGISTRY/$ECR_REGISTRY_ALIAS/$IMAGE_NAME-webserver:latest
-          fi
-          docker push --all-tags $ECR_REGISTRY/$ECR_REGISTRY_ALIAS/$IMAGE_NAME-webserver
 
       - name: tag and push container
         env:
