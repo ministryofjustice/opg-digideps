@@ -60,7 +60,7 @@ RUN wget -q -O /tmp/commonpasswords.txt "https://www.ncsc.gov.uk/static-assets/d
     || echo 'using local copy of pwnedpasswords' \
     && chown www-data /tmp/commonpasswords.txt
 
-FROM base
+FROM base as application
 COPY --chown=www-data:www-data --from=composer /app/app app
 COPY --chown=www-data:www-data --from=composer /app/vendor/bin bin
 COPY --chown=www-data:www-data --from=composer /app/vendor vendor
@@ -85,6 +85,13 @@ RUN chown -R www-data:www-data scripts
 # Prebuild cache
 RUN su-exec www-data php -d memory_limit=-1 app/console cache:warmup
 
+
+FROM application as testing
+CMD confd -onetime -backend env \
+    && php-fpm
+
+
+FROM application as production
 COPY scripts/hardening/harden.sh /harden.sh
 RUN /harden.sh && rm /harden.sh
 

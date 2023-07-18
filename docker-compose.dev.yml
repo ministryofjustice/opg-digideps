@@ -19,7 +19,7 @@ services:
       APP_ENV: dev
 
   npm:
-    image: node:18.14.2-alpine
+    image: node:18.16.1-alpine
     working_dir: /app
     volumes:
       - ./client/:/app
@@ -28,12 +28,12 @@ services:
       NODE_ENV: production
 
   composerapi:
-    image: composer:2.2.12
+    image: composer:2.5.8
     volumes:
       - ./api/:/app
 
   composerfront:
-    image: composer:2.2.12
+    image: composer:2.5.8
     volumes:
       - ./client/:/app
 

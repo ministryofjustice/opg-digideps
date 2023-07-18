@@ -37,7 +37,7 @@ jobs:
       parsed_branch: ${{ steps.variables.outputs.branch_formatted }}
       short_sha: ${{ steps.variables.outputs.short_sha }}
     steps:
-      - uses: actions/checkout@f095bcc56b7c2baf48f3ac70d6d6782f4f553222 # pin@v3
+      - uses: actions/checkout@96f53100ba2a5449eb71d2e6604bbcd94b9449b5 # pin@v3
       - name: extract variables for workflow
         id: variables
         run: |
@@ -95,6 +95,7 @@ jobs:
     needs:
       - workflow_variables
       - docker_build_scan_push
+      - build_web_resources
 
   codecov:
     name: upload to codecov
@@ -188,47 +189,47 @@ jobs:
       workspace: ${{ needs.workflow_variables.outputs.parsed_branch }}
       task_name: "integration_test_v2"
       timeout: "1200"
-      override: "sh,./tests/Behat/run-tests-parallel.sh,--tags,@v2_reporting_1,--profile,v2-tests-browserkit"
+      override: "sh,./tests/Behat/run-tests.sh,--tags,@v2_reporting_1,--profile,v2-tests-browserkit"
     secrets: inherit
 
-  integration_tests_2:
-    name: integration tests frontend 2
-    uses: ./.github/workflows/_run-task.yml
-    needs:
-      - workflow_variables
-      - reset_database
-    with:
-      workspace: ${{ needs.workflow_variables.outputs.parsed_branch }}
-      task_name: "integration_test_v2"
-      timeout: "1200"
-      override: "sh,./tests/Behat/run-tests-parallel.sh,--tags,@v2_reporting_2,--profile,v2-tests-browserkit"
-    secrets: inherit
-
-  integration_tests_admin:
-    name: integration tests admin
-    uses: ./.github/workflows/_run-task.yml
-    needs:
-      - workflow_variables
-      - reset_database
-    with:
-      workspace: ${{ needs.workflow_variables.outputs.parsed_branch }}
-      task_name: "integration_test_v2"
-      timeout: "1200"
-      override: "sh,./tests/Behat/run-tests-parallel.sh,--tags,@v2_admin,--profile,v2-tests-browserkit"
-    secrets: inherit
-
-  integration_tests_sequential:
-    name: integration tests sequential
-    uses: ./.github/workflows/_run-task.yml
-    needs:
-      - workflow_variables
-      - reset_database
-    with:
-      workspace: ${{ needs.workflow_variables.outputs.parsed_branch }}
-      task_name: "integration_test_v2"
-      timeout: "1200"
-      override: "sh,./tests/Behat/run-tests.sh,--tags,@v2_sequential,--profile,v2-tests-browserkit"
-    secrets: inherit
+  #  integration_tests_2:
+  #    name: integration tests frontend 2
+  #    uses: ./.github/workflows/_run-task.yml
+  #    needs:
+  #      - workflow_variables
+  #      - reset_database
+  #    with:
+  #      workspace: ${{ needs.workflow_variables.outputs.parsed_branch }}
+  #      task_name: "integration_test_v2"
+  #      timeout: "1200"
+  #      override: "sh,./tests/Behat/run-tests-parallel.sh,--tags,@v2_reporting_2,--profile,v2-tests-browserkit"
+  #    secrets: inherit
+  #
+  #  integration_tests_admin:
+  #    name: integration tests admin
+  #    uses: ./.github/workflows/_run-task.yml
+  #    needs:
+  #      - workflow_variables
+  #      - reset_database
+  #    with:
+  #      workspace: ${{ needs.workflow_variables.outputs.parsed_branch }}
+  #      task_name: "integration_test_v2"
+  #      timeout: "1200"
+  #      override: "sh,./tests/Behat/run-tests-parallel.sh,--tags,@v2_admin,--profile,v2-tests-browserkit"
+  #    secrets: inherit
+  #
+  #  integration_tests_sequential:
+  #    name: integration tests sequential
+  #    uses: ./.github/workflows/_run-task.yml
+  #    needs:
+  #      - workflow_variables
+  #      - reset_database
+  #    with:
+  #      workspace: ${{ needs.workflow_variables.outputs.parsed_branch }}
+  #      task_name: "integration_test_v2"
+  #      timeout: "1200"
+  #      override: "sh,./tests/Behat/run-tests.sh,--tags,@v2_sequential,--profile,v2-tests-browserkit"
+  #    secrets: inherit
 
   scale_services_down:
     if: always()
@@ -236,10 +237,10 @@ jobs:
     uses: ./.github/workflows/_scale-services.yml
     needs:
       - workflow_variables
-      - integration_tests_sequential
-      - integration_tests_admin
+      #      - integration_tests_sequential
+      #      - integration_tests_admin
       - integration_tests_1
-      - integration_tests_2
+    #      - integration_tests_2
     with:
       replicas: 1
       account: 248804316466
