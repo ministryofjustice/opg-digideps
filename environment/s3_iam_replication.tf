@@ -1,7 +1,7 @@
 // CREATE BACKUP ROLE USED FOR LOCAL AND CROSS ACCOUNT REPLICATION
 resource "aws_iam_role" "backup_role" {
-  name_prefix        = "digideps-backup-role"
-  description        = "IAM Role for s3 replication in ${terraform.workspace}"
+  name               = "digideps-backup-role.${local.environment}"
+  description        = "IAM Role for s3 replication in ${local.environment}"
   assume_role_policy = data.aws_iam_policy_document.backup_role_policy.json
 }
 
