@@ -8,7 +8,6 @@
 import base64
 import json
 import tempfile
-import shutil
 import logging
 import sys
 
@@ -17,7 +16,6 @@ from weasyprint import HTML, CSS
 
 from werkzeug.wsgi import wrap_file
 from werkzeug.wrappers import Request, Response
-from executor import execute
 
 handler = logging.StreamHandler(sys.stdout)
 

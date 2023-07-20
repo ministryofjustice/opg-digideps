@@ -1,4 +1,4 @@
-FROM golang:1.20.4-alpine3.16 as build
+FROM golang:1.20.4-alpine3.18 as build
 
 # Build go package
 ADD . /go/src/clamav-rest/
@@ -28,8 +28,7 @@ COPY --from=build /go/src/clamav-rest/file-scanner /usr/bin/
 RUN apk update && apk --no-cache add clamav clamav-libunrar \
     && mkdir /run/clamav \
     && chown clamav:clamav /run/clamav \
-    && apk upgrade openssl \
-    && apk upgrade libcurl
+    && apk upgrade openssl libcrypto3 libcurl libssl3
 
 # Configure clamAV to run in foreground with port 3310
 RUN sed -i 's/^#Foreground .*$/Foreground true/g' /etc/clamav/clamd.conf \
