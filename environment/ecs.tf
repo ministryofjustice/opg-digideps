@@ -44,29 +44,74 @@ resource "aws_iam_role_policy" "execution_role" {
 
 data "aws_iam_policy_document" "execution_role" {
   statement {
-    effect = "Allow"
-    #tfsec:ignore:aws-iam-no-policy-wildcards - Required for execution role to function
+    sid       = "AllowECRTokenAccess"
+    effect    = "Allow"
     resources = ["*"]
+    actions   = ["ecr:GetAuthorizationToken"]
+  }
+
+  statement {
+    sid    = "AllowECRAccess"
+    effect = "Allow"
+    resources = [
+      data.aws_ecr_repository.images["api"].arn,
+      data.aws_ecr_repository.images["client"].arn,
+      data.aws_ecr_repository.images["client-webserver"].arn,
+      data.aws_ecr_repository.images["sync"].arn,
+      data.aws_ecr_repository.images["htmltopdf"].arn,
+      data.aws_ecr_repository.images["dr-backup"].arn,
+      data.aws_ecr_repository.images["file-scanner"].arn
+    ]
     actions = [
-      "ecr:GetAuthorizationToken",
       "ecr:BatchCheckLayerAvailability",
       "ecr:GetDownloadUrlForLayer",
-      "ecr:BatchGetImage",
-      "logs:CreateLogStream",
-      "logs:GetLogEvents",
-      "logs:PutLogEvents",
-      "ssm:GetParameters",
-      "secretsmanager:GetSecretValue"
+      "ecr:BatchGetImage"
     ]
   }
 
   statement {
+    sid    = "AllowLogsAccess"
     effect = "Allow"
-
+    #tfsec:ignore:aws-iam-no-policy-wildcards - Required for execution role to function
+    resources = ["arn:aws:logs:*:*:*"]
     actions = [
-      "kms:Decrypt",
+      "logs:CreateLogStream",
+      "logs:GetLogEvents",
+      "logs:PutLogEvents"
     ]
+  }
 
+  statement {
+    sid    = "AllowSSMAccess"
+    effect = "Allow"
+    #tfsec:ignore:aws-iam-no-policy-wildcards - Required for execution role to function
+    resources = ["arn:aws:ssm:*:*:*"]
+    actions = [
+      "ssm:GetParameters"
+    ]
+  }
+
+  statement {
+    sid    = "AllowSecretsAccess"
+    effect = "Allow"
+    resources = [
+      data.aws_secretsmanager_secret.public_jwt_key_base64.arn,
+      data.aws_secretsmanager_secret.private_jwt_key_base64.arn,
+      data.aws_secretsmanager_secret.jwt_token_synchronisation.arn,
+      data.aws_secretsmanager_secret.front_notify_api_key.arn,
+      data.aws_secretsmanager_secret.front_frontend_secret.arn,
+      data.aws_secretsmanager_secret.front_api_client_secret.arn,
+      data.aws_secretsmanager_secret.database_password.arn,
+      data.aws_secretsmanager_secret.api_secret.arn,
+      data.aws_secretsmanager_secret.admin_frontend_secret.arn,
+      data.aws_secretsmanager_secret.admin_api_client_secret.arn
+    ]
+    actions = ["secretsmanager:GetSecretValue"]
+  }
+
+  statement {
+    effect  = "Allow"
+    actions = ["kms:Decrypt"]
     resources = [
       data.aws_kms_alias.secretmanager.target_key_arn,
     ]
@@ -83,8 +128,7 @@ data "aws_iam_policy_document" "ecs_task_logs" {
   statement {
     effect = "Allow"
     #tfsec:ignore:aws-iam-no-policy-wildcards - Describe only so not overly permissive given role
-    resources = ["*"]
-
+    resources = ["arn:aws:logs:*:*:*"]
     actions = [
       "logs:DescribeLogGroups",
       "logs:DescribeLogStreams"
@@ -97,7 +141,6 @@ data "aws_iam_policy_document" "ecs_task_logs" {
       "${aws_cloudwatch_log_group.audit.arn}:log-stream:*",
       aws_cloudwatch_log_group.audit.arn
     ]
-
     actions = [
       "logs:CreateLogStream",
       "logs:PutLogEvents"

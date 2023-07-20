@@ -25,9 +25,6 @@ jobs:
           key: ${{ runner.os }}-build-${{ env.cache-name }}-${{ hashFiles('**/web-resources/package-lock.json') }}
       - name: build assets
         run: |
-          # Copy in templates and translations
-          cp -r ../app/templates ./templates
-          cp -r ../app/translations ./translations
           # Install NPM dependencies
           npm install
           npm run lint
