@@ -1,0 +1,52 @@
+version: "3.2"
+services:
+  # API Unit Testing 1
+  api-unit-tests:
+    container_name: api-unit-tests
+    image: api-unit-tests:latest
+    build:
+      context: ./api
+      args:
+        REQUIRE_XDEBUG: ${REQUIRE_XDEBUG_API} # set REQUIRE_XDEBUG_API=1 in .env to install Xdebug
+        XDEBUG_IDEKEY_API: ${XDEBUG_IDEKEY_API}
+    depends_on:
+      - postgres
+      - redis-api
+      - localstack
+    environment:
+      AWS_ACCESS_KEY_ID: aFakeSecretAccessKeyId
+      AWS_SECRET_ACCESS_KEY: aFakeSecretAccessKey
+      AWS_SESSION_TOKEN: fakeValue
+      APP_ENV: ${APP_ENV:-dev}
+      APP_DEBUG: ${APP_DEBUG:-0}
+    env_file:
+      - ./api/api.env
+      - ./api/tests/Behat/test.env
+
+  redis-api:
+    build:
+      context: .
+      dockerfile: docker/local-dockerfiles/redis.Dockerfile
+    restart: always
+
+  localstack:
+    build:
+      context: .
+      dockerfile: docker/local-dockerfiles/localstack.Dockerfile
+    environment:
+      - SERVICES=s3,ssm,logs,secretsmanager,lambda
+      - DATA_DIR=/tmp/localstack/data
+      - DEFAULT_REGION=eu-west-1
+      - USE_SINGLE_REGION=1
+      - DEBUG=1
+      - LAMBDA_EXECUTOR=docker
+      - LAMBDA_REMOVE_CONTAINERS="true"
+      - LAMBDA_FORWARD_URL=http://synchronisation:8080
+
+  postgres:
+    build:
+      context: .
+      dockerfile: docker/local-dockerfiles/postgres.Dockerfile
+    env_file:
+      - ./api/postgres.env
+    restart: always

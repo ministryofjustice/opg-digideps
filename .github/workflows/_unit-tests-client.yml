@@ -12,36 +12,52 @@ jobs:
     runs-on: ubuntu-latest
     steps:
       - uses: actions/checkout@96f53100ba2a5449eb71d2e6604bbcd94b9449b5 # pin@v3
+
+      - name: set up docker buildx
+        uses: docker/setup-buildx-action@4c0219f9ac95b02789c1075625400b2acbff50b1
+
       - name: cache docker layers
         id: cache-docker
         uses: actions/cache@67b839edb68371cc5014f6cea11c9aa77238de78 # pin@v3.0.8
         with:
           path: /tmp/.buildx-cache
-          key: ${{ runner.os }}-client-build-${{ github.sha }}
+          key: ${{ runner.os }}-client-unit-tests-build-${{ github.sha }}
           restore-keys: |
-            ${{ runner.os }}-client-build
+            ${{ runner.os }}-client-unit-tests-build
 
       - name: build docker image
         env:
           IMAGE_NAME: client
-        run: docker buildx build --cache-from=type=local,src=/tmp/.buildx-cache --tag client:latest --output type=docker .
+        run: |
+          REQUIRE_XDEBUG_CLIENT=0 REQUIRE_XDEBUG_API=0 docker buildx build \
+          --cache-from=type=local,src=/tmp/.buildx-cache \
+          --cache-to=type=local,dest=/tmp/.buildx-cache-new \
+          --tag frontend-unit-tests:latest \
+          --output type=docker .
         working-directory: client
 
       - name: run client unit tests
         id: unit-tests
         run: |
-          APP_ENV=dev APP_DEBUG=0 docker-compose -f docker-compose.yml -f docker-compose.ci.test.yml --project-name client-unit-tests up -d --no-deps frontend pact-mock
+          APP_ENV=dev APP_DEBUG=0 docker-compose -f docker-compose.ci.client-unit-tests.yml up -d --no-deps client-unit-tests pact-mock
           sleep 3
-          docker-compose -f docker-compose.yml -f docker-compose.ci.test.yml --project-name client-unit-tests exec -T frontend sh scripts/client-unit-tests.sh
-          docker-compose -f docker-compose.yml -f docker-compose.ci.test.yml --project-name client-unit-tests exec -T frontend chmod -R 777 tests/phpunit/coverage/client-unit-tests.xml
-          docker cp "client-unit-tests-frontend:/var/www/tests/phpunit/coverage/client-unit-tests.xml" "./client-unit-tests.xml"
-          docker-compose -f docker-compose.yml -f docker-compose.ci.test.yml --project-name client-unit-tests exec -T pact-mock cat /tmp/pacts/complete_the_deputy_report-opg_data.json > pact.json
-          docker-compose -f docker-compose.yml -f docker-compose.ci.test.yml --project-name client-unit-tests stop pact-mock
+          docker-compose -f docker-compose.ci.client-unit-tests.yml exec -T client-unit-tests sh scripts/client-unit-tests.sh
+          docker-compose -f docker-compose.ci.client-unit-tests.yml exec -T client-unit-tests chmod -R 777 tests/phpunit/coverage/client-unit-tests.xml
+          docker cp "client-unit-tests-app:/var/www/tests/phpunit/coverage/client-unit-tests.xml" "./client-unit-tests.xml"
+          docker-compose -f docker-compose.ci.client-unit-tests.yml exec -T pact-mock cat /tmp/pacts/complete_the_deputy_report-opg_data.json > pact.json
+          docker-compose -f docker-compose.ci.client-unit-tests.yml down
+
+      - name: Move cache
+        run: |
+          rm -rf /tmp/.buildx-cache
+          mv /tmp/.buildx-cache-new /tmp/.buildx-cache
+
       - name: archive pact results
         uses: actions/upload-artifact@65d862660abb392b8c4a3d1195a2108db131dd05 # pin@v3.1.0
         with:
           name: pact.json
-          path: .
+          path: pact.json
+
       - name: archive test results
         uses: actions/upload-artifact@65d862660abb392b8c4a3d1195a2108db131dd05 # pin@v3.1.0
         with:
