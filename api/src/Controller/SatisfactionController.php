@@ -2,17 +2,16 @@
 
 namespace App\Controller;
 
+use App\Entity as EntityDir;
 use App\Entity\Satisfaction;
 use App\Repository\NdrRepository;
 use App\Repository\ReportRepository;
+use App\Repository\SatisfactionRepository;
 use App\Service\Formatter\RestFormatter;
 use Doctrine\ORM\EntityManagerInterface;
-use DateTime;
-use Exception;
-use Symfony\Component\Routing\Annotation\Route;
 use Sensio\Bundle\FrameworkExtraBundle\Configuration\Security;
 use Symfony\Component\HttpFoundation\Request;
-use App\Entity as EntityDir;
+use Symfony\Component\Routing\Annotation\Route;
 
 /**
  * @Route("/satisfaction")
@@ -23,18 +22,18 @@ class SatisfactionController extends RestController
     private RestFormatter $formatter;
     private ReportRepository $reportRepository;
     private NdrRepository $ndrRepository;
+    private SatisfactionRepository $satisfactionRepository;
 
-    public function __construct(EntityManagerInterface $em, RestFormatter $formatter, ReportRepository $reportRepository, NdrRepository $ndrRepository)
+    public function __construct(EntityManagerInterface $em, RestFormatter $formatter, ReportRepository $reportRepository, NdrRepository $ndrRepository, SatisfactionRepository $satisfactionRepository)
     {
         $this->em = $em;
         $this->formatter = $formatter;
         $this->reportRepository = $reportRepository;
         $this->ndrRepository = $ndrRepository;
+        $this->satisfactionRepository = $satisfactionRepository;
     }
 
     /**
-     * @param string $satisfactionLevel
-     * @param string $comments
      * @return Satisfaction
      */
     private function addSatisfactionScore(string $satisfactionLevel, string $comments)
@@ -61,7 +60,18 @@ class SatisfactionController extends RestController
             'reportType' => 'notEmpty',
         ]);
 
-        $satisfaction = $this->addSatisfactionScore($data['score'], $data['comments']);
+        $report = $this->reportRepository->find($data['reportId']);
+        $satisfaction = $this->satisfactionRepository->findOneBy(['report' => $report]);
+
+        if ($satisfaction) {
+            $satisfaction->setScore($data['score']);
+            $satisfaction->setComments($data['comments']);
+
+            $this->em->persist($satisfaction);
+            $this->em->flush();
+        } else {
+            $satisfaction = $this->addSatisfactionScore($data['score'], $data['comments']);
+        }
 
         if ('ndr' === $data['reportType']) {
             $ndr = $this->ndrRepository->find($data['ndrId']);
@@ -90,10 +100,10 @@ class SatisfactionController extends RestController
         $repo = $this->getRepository(EntityDir\Satisfaction::class);
 
         $fromDate = $this->convertDateStringToDateTime($request->get('fromDate', ''));
-        $fromDate instanceof DateTime ? $fromDate->setTime(0, 0, 1) : null;
+        $fromDate instanceof \DateTime ? $fromDate->setTime(0, 0, 1) : null;
 
         $toDate = $this->convertDateStringToDateTime($request->get('toDate', ''));
-        $toDate instanceof DateTime ? $toDate->setTime(23, 59, 59) : null;
+        $toDate instanceof \DateTime ? $toDate->setTime(23, 59, 59) : null;
 
         return $repo->findAllSatisfactionSubmissions(
             $fromDate,
@@ -110,7 +120,7 @@ class SatisfactionController extends RestController
     {
         $data = $this->formatter->deserializeBodyContent($request, [
             'score' => 'notEmpty',
-            'comments' => 'notEmpty'
+            'comments' => 'notEmpty',
         ]);
 
         $satisfaction = $this->addSatisfactionScore($data['score'], $data['comments']);
@@ -120,11 +130,13 @@ class SatisfactionController extends RestController
 
     /**
      * @param array $date
-     * @return DateTime|null
-     * @throws Exception
+     *
+     * @return \DateTime|null
+     *
+     * @throws \Exception
      */
     private function convertDateStringToDateTime(string $date)
     {
-        return empty($date) ? null : new DateTime($date);
+        return empty($date) ? null : new \DateTime($date);
     }
 }
