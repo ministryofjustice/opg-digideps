@@ -20,7 +20,7 @@ class LayUserFixtures extends AbstractDataFixture
             'orderType' => 'pfa',
             'coDeputy' => false,
             'ndr' => false,
-            'count' => 2,
+            'count' => 15,
         ],
         [
             'id' => 'Lay-OPG103',
@@ -30,7 +30,7 @@ class LayUserFixtures extends AbstractDataFixture
             'orderType' => 'pfa',
             'coDeputy' => false,
             'ndr' => false,
-            'count' => 2,
+            'count' => 10,
         ],
         [
             'id' => 'Lay-OPG104',
@@ -40,7 +40,7 @@ class LayUserFixtures extends AbstractDataFixture
             'orderType' => 'hw',
             'coDeputy' => false,
             'ndr' => false,
-            'count' => 2,
+            'count' => 10,
         ],
         [
             'id' => 'Lay-OPG102-4',
@@ -50,7 +50,7 @@ class LayUserFixtures extends AbstractDataFixture
             'orderType' => 'hw',
             'coDeputy' => false,
             'ndr' => false,
-            'count' => 2,
+            'count' => 15,
         ],
         [
             'id' => 'Lay-OPG103-4',
@@ -60,7 +60,7 @@ class LayUserFixtures extends AbstractDataFixture
             'orderType' => 'hw',
             'coDeputy' => false,
             'ndr' => false,
-            'count' => 2,
+            'count' => 10,
         ],
         [
             'id' => 'Lay-OPG102-NDR',
@@ -70,7 +70,7 @@ class LayUserFixtures extends AbstractDataFixture
             'orderType' => 'hw',
             'coDeputy' => false,
             'ndr' => true,
-            'count' => 1,
+            'count' => 10,
         ],
         [
             'id' => 'Lay-OPG103-4-NDR',
@@ -80,7 +80,7 @@ class LayUserFixtures extends AbstractDataFixture
             'orderType' => 'hw',
             'coDeputy' => false,
             'ndr' => true,
-            'count' => 1,
+            'count' => 10,
         ],
         [
             'id' => 'Lay-OPG103-Co',
@@ -90,7 +90,7 @@ class LayUserFixtures extends AbstractDataFixture
             'orderType' => 'pfa',
             'coDeputy' => true,
             'ndr' => false,
-            'count' => 1,
+            'count' => 10,
         ],
         [
             'id' => 'Lay-OPG103-4-Co',
@@ -100,7 +100,7 @@ class LayUserFixtures extends AbstractDataFixture
             'orderType' => 'hw',
             'coDeputy' => true,
             'ndr' => false,
-            'count' => 1,
+            'count' => 10,
         ],
     ];
 
@@ -118,6 +118,8 @@ class LayUserFixtures extends AbstractDataFixture
 
     private function addUser(array $data, ObjectManager $manager, int $iteration)
     {
+        $offset = strlen((string) abs($iteration));
+
         // Create user
         $user = (new User())
             ->setFirstname($data['id'])
@@ -140,9 +142,9 @@ class LayUserFixtures extends AbstractDataFixture
         // Create PreRegistration record for lay deputies
 
         $preRegistrationData = [
-            'Case' => substr_replace($data['caseNumber'], $iteration, -1),
+            'Case' => substr_replace($data['caseNumber'], $iteration, -$offset),
             'ClientSurname' => 'Client '.$iteration,
-            'DeputyUid' => substr_replace($data['deputyUid'], $iteration, -1),
+            'DeputyUid' => substr_replace($data['deputyUid'], $iteration, -$offset),
             'DeputyFirstname' => $data['id'].'-User-'.$iteration,
             'DeputySurname' => 'User',
             'DeputyAddress1' => 'ABC Road',
@@ -164,7 +166,7 @@ class LayUserFixtures extends AbstractDataFixture
         // Create client
         $client = new Client();
         $client
-            ->setCaseNumber(substr_replace($data['caseNumber'], $iteration, -1))
+            ->setCaseNumber(substr_replace($data['caseNumber'], $iteration, -$offset))
             ->setFirstname($data['id'])
             ->setLastname('Client '.$iteration)
             ->setEmail(strtolower($data['id']).'-client-'.$iteration.'@example.com')
