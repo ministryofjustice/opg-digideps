@@ -3,7 +3,7 @@ module synchronisation
 go 1.19
 
 require (
-	github.com/aws/aws-lambda-go v1.34.1
+	github.com/aws/aws-lambda-go v1.41.0
 	github.com/aws/aws-sdk-go v1.44.281
 	github.com/stretchr/testify v1.8.3
 )

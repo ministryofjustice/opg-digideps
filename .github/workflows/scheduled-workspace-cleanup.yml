@@ -21,8 +21,8 @@ jobs:
   terraform_environment_cleanup:
     runs-on: ubuntu-latest
     steps:
-      - uses: actions/checkout@f095bcc56b7c2baf48f3ac70d6d6782f4f553222 # pin@v3
-      - uses: hashicorp/setup-terraform@1fdd4cd311e198fb45135f3a68294d3df2d5bda8 # pin@v2
+      - uses: actions/checkout@96f53100ba2a5449eb71d2e6604bbcd94b9449b5 # pin@v3
+      - uses: hashicorp/setup-terraform@57bfbbc6535fd286f7e8a8588117844d0e11e791 # pin@v2
         with:
           terraform_version: 1.2.4
           terraform_wrapper: false
@@ -32,7 +32,7 @@ jobs:
           ssh-private-key: ${{ secrets.SSH_PRIVATE_KEY_ALLOW_LIST_REPOSITORY }}
 
       - name: configure AWS credentials for terraform
-        uses: aws-actions/configure-aws-credentials@8815b6557cafe082774ec49c58d911e53c98849d # pin@v1.7.0
+        uses: aws-actions/configure-aws-credentials@35d8f9588bf190a9a7fda3411cd548fb8234bee2 # pin@v1.7.0
         with:
           aws-access-key-id: ${{ secrets.AWS_ACCESS_KEY_ID_ACTIONS }}
           aws-secret-access-key: ${{ secrets.AWS_SECRET_ACCESS_KEY_ACTIONS }}
