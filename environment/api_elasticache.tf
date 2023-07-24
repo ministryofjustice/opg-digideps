@@ -3,7 +3,7 @@ resource "aws_elasticache_replication_group" "api" {
   automatic_failover_enabled = local.account.elasticache_count == 1 ? false : true
   engine                     = "redis"
   engine_version             = "6.x"
-  parameter_group_name       = "default.redis6.x"
+  parameter_group_name       = "api-cache-params"
   replication_group_id       = "api-rep-group-${local.environment}"
   description                = "Replication Group for API"
   node_type                  = "cache.t2.micro"
