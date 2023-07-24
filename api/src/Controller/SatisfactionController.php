@@ -49,6 +49,20 @@ class SatisfactionController extends RestController
     }
 
     /**
+     * @return Satisfaction
+     */
+    private function updateSatisfactionScore(Satisfaction $satisfaction, string $satisfactionLevel, string $comments)
+    {
+        $satisfaction->setScore($satisfactionLevel);
+        $satisfaction->setComments($comments);
+
+        $this->em->persist($satisfaction);
+        $this->em->flush();
+
+        return $satisfaction;
+    }
+
+    /**
      * @Route("", methods={"POST"})
      * @Security("is_granted('ROLE_DEPUTY')")
      */
@@ -64,11 +78,7 @@ class SatisfactionController extends RestController
         $satisfaction = $this->satisfactionRepository->findOneBy(['report' => $report]);
 
         if ($satisfaction) {
-            $satisfaction->setScore($data['score']);
-            $satisfaction->setComments($data['comments']);
-
-            $this->em->persist($satisfaction);
-            $this->em->flush();
+            $satisfaction = $this->updateSatisfactionScore($satisfaction, $data['score'], $data['comments']);
         } else {
             $satisfaction = $this->addSatisfactionScore($data['score'], $data['comments']);
         }
