@@ -11,6 +11,8 @@
     <br>
     {% if (checklist.lastModifiedBy is defined) and (checklist.lastModifiedBy is not empty) %}
         {{ checklist.lastModifiedBy.fullName}}, {{ checklist.lastModifiedBy.roleFullName }}
+    {% else %}
+        {{ 'deletedUser' | trans({}, 'common') }}
     {% endif %}
 </p>
 
@@ -19,7 +21,11 @@
         {{ 'lastSubmitted' | trans({}, 'common') }}:
         {{ checklist.submittedOn | date("j F Y H:i") }}
         <br>
-        {{ checklist.submittedBy.fullName}}, {{ checklist.submittedBy.roleFullName }}
+        {% if (checklist.submittedBy is defined) and (checklist.submittedBy is not empty) %}
+            {{ checklist.submittedBy.fullName}}, {{ checklist.submittedBy.roleFullName }}
+        {% else %}
+            {{ 'deletedUser' | trans({}, 'common') }}
+        {% endif %}
     </p>
 
     {% if (syncStatus) %}
