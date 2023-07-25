@@ -1,6 +1,4 @@
-FROM python:3.10-alpine3.16
-
-RUN apk update
+FROM python:3.10-alpine3.18
 
 ENV PYTHONUNBUFFERED 1
 
