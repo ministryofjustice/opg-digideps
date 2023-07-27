@@ -50,31 +50,31 @@ jobs:
           repo-token: "${{ secrets.GITHUB_TOKEN }}"
           sync-labels: true
 
-    terraform_lint:
-      name: lint terraform code
-      uses: ./.github/workflows/_lint-terraform.yml
-      needs:
-        - workflow_variables
-      with:
-        workspace: ${{ needs.workflow_variables.outputs.parsed_branch }}
-      secrets: inherit
+  terraform_lint:
+    name: lint terraform code
+    uses: ./.github/workflows/_lint-terraform.yml
+    needs:
+      - workflow_variables
+    with:
+      workspace: ${{ needs.workflow_variables.outputs.parsed_branch }}
+    secrets: inherit
 
-    test_js:
-      name: test javascript code
-      uses: ./.github/workflows/_test-js.yml
-      needs:
-        - workflow_variables
+  test_js:
+    name: test javascript code
+    uses: ./.github/workflows/_test-js.yml
+    needs:
+      - workflow_variables
 
-    docker_build_scan_push:
-      name: build, scan and push
-      uses: ./.github/workflows/_build-and-push.yml
-      needs:
-        - workflow_variables
-      with:
-        tag: ${{ needs.workflow_variables.outputs.parsed_branch }}-${{ needs.workflow_variables.outputs.short_sha }}
-        branch_name: ${{ needs.workflow_variables.outputs.parsed_branch }}
-        push_to_ecr: true
-      secrets: inherit
+  docker_build_scan_push:
+    name: build, scan and push
+    uses: ./.github/workflows/_build-and-push.yml
+    needs:
+      - workflow_variables
+    with:
+      tag: ${{ needs.workflow_variables.outputs.parsed_branch }}-${{ needs.workflow_variables.outputs.short_sha }}
+      branch_name: ${{ needs.workflow_variables.outputs.parsed_branch }}
+      push_to_ecr: true
+    secrets: inherit
 
   api_unit_tests_1:
     name: api unit tests 1
