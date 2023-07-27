@@ -314,7 +314,7 @@ END deputy_type";
         // terminal sql script located in 'Account Imbalance Report.sql'
         $sql = "WITH report_info AS (
               SELECT
-                id,
+                DISTINCT id,
                 balance_mismatch_explanation AS withtext,
                 balance_mismatch_explanation AS notext,
                 type
@@ -322,6 +322,9 @@ END deputy_type";
                 report
               WHERE submit_date >= :fromDate
               AND submit_date <= :toDate
+              OR
+              updated_at >= :fromDate
+              AND updated_at <= :toDate
             ),
             lay AS (
               SELECT
