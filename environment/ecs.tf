@@ -9,9 +9,10 @@ resource "aws_ecs_cluster" "main" {
 }
 
 resource "aws_cloudwatch_log_group" "container_insights" {
-  name       = "/aws/ecs/containerinsights/${local.environment}/performance"
-  kms_key_id = aws_kms_key.cloudwatch_logs.arn
-  tags       = local.default_tags
+  name              = "/aws/ecs/containerinsights/${local.environment}/performance"
+  retention_in_days = 1
+  kms_key_id        = aws_kms_key.cloudwatch_logs.arn
+  tags              = local.default_tags
 }
 
 
