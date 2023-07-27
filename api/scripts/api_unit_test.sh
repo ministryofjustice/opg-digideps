@@ -40,15 +40,15 @@ case "$1" in
     # API Run 2
     printf '\n Running ControllerReport Suite \n\n'
     php vendor/bin/phpunit -c tests/Unit tests/Unit/ControllerReport/ --coverage-php tests/coverage/ControllerReport.cov
-    printf '\n Running Controller-Ndr Suite \n\n'
-    php vendor/bin/phpunit -c tests/Unit tests/Unit/Controller-Ndr/ --coverage-php tests/coverage/Controller-Ndr.cov
-    printf '\n Running Entity Suite \n\n'
-    php vendor/bin/phpunit -c tests/Unit tests/Unit/Entity/ --coverage-php tests/coverage/Entity.cov
     ;;
   selection-3)
     # API Run 3
     printf '\n Running DBAL Suite \n\n'
     php vendor/bin/phpunit --debug -c tests/Unit tests/Unit/DBAL/ --coverage-php tests/coverage/DBAL.cov
+    printf '\n Running Controller-Ndr Suite \n\n'
+    php vendor/bin/phpunit -c tests/Unit tests/Unit/Controller-Ndr/ --coverage-php tests/coverage/Controller-Ndr.cov
+    printf '\n Running Entity Suite \n\n'
+    php vendor/bin/phpunit -c tests/Unit tests/Unit/Entity/ --coverage-php tests/coverage/Entity.cov
     printf '\n Running Command Suite \n\n'
     php vendor/bin/phpunit -c tests/Unit tests/Unit/Command/ --coverage-php tests/coverage/Command.cov
     printf '\n Running Factory Suite \n\n'
@@ -97,4 +97,4 @@ case "$1" in
     ;;
 esac
 
-#php vendor/phpunit/phpcov/phpcov merge --clover "./tests/coverage/api-unit-tests.xml" "./tests/coverage"
+php vendor/phpunit/phpcov/phpcov merge --clover "./tests/coverage/api-unit-tests.xml" "./tests/coverage"

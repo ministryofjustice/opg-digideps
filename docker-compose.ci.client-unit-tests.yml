@@ -16,19 +16,6 @@ services:
       AWS_SESSION_TOKEN: fakeValue
     env_file:
       - ./client/frontend.env
+
   pact-mock:
-    image: pactfoundation/pact-cli:0.51.0.4
-    ports:
-      - 1234:80
-    command:
-      - mock-service
-      - -p
-      - "80"
-      - --host
-      - "0.0.0.0"
-      - --pact-dir
-      - /tmp/pacts
-      - --consumer
-      - Complete the deputy report
-      - --provider
-      - OPG Data
+    container_name: client-unit-tests-pact

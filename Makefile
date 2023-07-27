@@ -82,15 +82,14 @@ down-app: ##@application Tears down the app
 	docker-compose down -v --remove-orphans
 
 client-unit-tests: ##@unit-tests Run the client unit tests
-	REQUIRE_XDEBUG_CLIENT=0 REQUIRE_XDEBUG_API=0 docker-compose -f docker-compose.ci.test.yml build frontend
-	docker-compose -f docker-compose.ci.test.yml up -d pact-mock
+	REQUIRE_XDEBUG_CLIENT=0 REQUIRE_XDEBUG_API=0 docker-compose -f docker-compose.yml -f docker-compose.ci.client-unit-tests.yml build client-unit-tests
+	docker-compose -f docker-compose.yml -f docker-compose.ci.client-unit-tests.yml up -d pact-mock
 	sleep 5
-	docker-compose -f docker-compose.ci.test.yml run -e APP_ENV=unit_test -e APP_DEBUG=0 --rm frontend vendor/bin/phpunit -c tests/phpunit
-	docker-compose -f docker-compose.ci.test.yml down
+	docker-compose -f docker-compose.yml -f docker-compose.ci.client-unit-tests.yml run -e APP_ENV=dev -e APP_DEBUG=0 --rm client-unit-tests vendor/bin/phpunit -c tests/phpunit
 
-api-unit-tests: reset-database reset-fixtures ##@unit-tests Run the api unit tests
-	REQUIRE_XDEBUG_FRONTEND=0 REQUIRE_XDEBUG_API=0 docker-compose build api
-	docker-compose -f docker-compose.yml run --rm -e APP_ENV=test -e APP_DEBUG=0 api sh scripts/apiunittest.sh
+api-unit-tests: reset-database-unit-tests reset-fixtures-unit-tests ##@unit-tests Run the api unit tests
+	REQUIRE_XDEBUG_FRONTEND=0 REQUIRE_XDEBUG_API=0 docker-compose -f docker-compose.yml -f docker-compose.ci.api-unit-tests.yml build api-unit-tests
+	docker-compose -f docker-compose.yml -f docker-compose.ci.api-unit-tests.yml run -e APP_ENV=test -e APP_DEBUG=0 --rm api-unit-tests sh scripts/api_unit_test.sh selection-all
 
 behat-tests: up-app-integration-tests reset-fixtures ##@behat Run the whole behat test suite
 	docker-compose -f docker-compose.yml -f docker-compose.dev.yml run --rm test sh ./tests/Behat/run-tests.sh
@@ -119,10 +118,10 @@ behat-profile-suite: up-app-integration-tests reset-fixtures disable-debug ##@be
 	docker-compose -f docker-compose.yml -f docker-compose.dev.yml run --rm test sh ./tests/Behat/run-tests.sh --profile $(profile) --suite $(suite)
 
 reset-database-unit-tests: ##@database Resets the DB schema and runs migrations
-	docker-compose -f docker-compose.unit-tests.yml run --rm api-unit-tests-modify sh scripts/reset_db_structure_unit_local.sh
+	docker-compose -f docker-compose.yml -f docker-compose.ci.api-unit-tests.yml run --rm api-unit-tests sh scripts/reset_db_structure_local.sh
 
 reset-fixtures-unit-tests: ##@database Resets the DB schema and runs migrations
-	docker-compose -f docker-compose.unit-tests.yml run --rm api-unit-tests-modify sh scripts/reset_db_fixtures_unit_local.sh
+	docker-compose -f docker-compose.yml -f docker-compose.ci.api-unit-tests.yml run --rm api-unit-tests sh scripts/reset_db_fixtures_local.sh
 
 reset-database: ##@database Resets the DB schema and runs migrations
 	docker-compose run --rm api sh scripts/reset_db_structure_local.sh

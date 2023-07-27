@@ -23,27 +23,27 @@ jobs:
         uses: actions/download-artifact@e9ef242655d12993efdcda9058dee2db83a2cb9b
         with:
           name: api-unit-tests-selection-1
-          path: ./api-coverage/
+          path: ./
       - name: download artifact for api tests 2
         uses: actions/download-artifact@e9ef242655d12993efdcda9058dee2db83a2cb9b
         with:
           name: api-unit-tests-selection-2
-          path: ./api-coverage/
+          path: ./
       - name: download artifact for api tests 3
         uses: actions/download-artifact@e9ef242655d12993efdcda9058dee2db83a2cb9b
         with:
           name: api-unit-tests-selection-3
-          path: ./api-coverage/
-      - name: Setup PHP
-        uses: shivammathur/setup-php@c5fc0d8281aba02c7fda07d3a70cc5371548067d # pin@v2.21.2
-        with:
-          php-version: 8.1
-      - name: Install phpcov
-        run: composer require phpunit/phpcov --dev
-      - name: Merge Code Coverage Reports
-        run: |
-          ls -alt api-coverage
-          php vendor/bin/phpcov merge --clover api-unit-tests.xml api-coverage
+          path: ./
+      #      - name: Setup PHP
+      #        uses: shivammathur/setup-php@c5fc0d8281aba02c7fda07d3a70cc5371548067d # pin@v2.21.2
+      #        with:
+      #          php-version: 8.1
+      #      - name: Install phpcov
+      #        run: composer require phpunit/phpcov --dev
+      #      - name: Merge Code Coverage Reports
+      #        run: |
+      #          ls -alt api-coverage
+      #          php vendor/bin/phpcov merge --clover api-unit-tests.xml api-coverage
       - name: service client codecov upload
         uses: codecov/codecov-action@v3
         with:
@@ -57,7 +57,7 @@ jobs:
         uses: codecov/codecov-action@v3
         with:
           name: digideps-api-unit-tests
-          files: ./api-unit-tests.xml
+          files: ./api-unit-tests-selection-1.xml,./api-unit-tests-selection-2.xml,./api-unit-tests-selection-3.xml
           fail_ci_if_error: true
           flags: api
           verbose: true

@@ -1,6 +1,6 @@
 version: "3.2"
 services:
-  # API Unit Testing 1
+  # API Unit Testing
   api-unit-tests:
     container_name: api-unit-tests
     image: api-unit-tests:latest
@@ -24,29 +24,10 @@ services:
       - ./api/tests/Behat/test.env
 
   redis-api:
-    build:
-      context: .
-      dockerfile: docker/local-dockerfiles/redis.Dockerfile
     restart: always
 
   localstack:
-    build:
-      context: .
-      dockerfile: docker/local-dockerfiles/localstack.Dockerfile
-    environment:
-      - SERVICES=s3,ssm,logs,secretsmanager,lambda
-      - DATA_DIR=/tmp/localstack/data
-      - DEFAULT_REGION=eu-west-1
-      - USE_SINGLE_REGION=1
-      - DEBUG=1
-      - LAMBDA_EXECUTOR=docker
-      - LAMBDA_REMOVE_CONTAINERS="true"
-      - LAMBDA_FORWARD_URL=http://synchronisation:8080
+    restart: always
 
   postgres:
-    build:
-      context: .
-      dockerfile: docker/local-dockerfiles/postgres.Dockerfile
-    env_file:
-      - ./api/postgres.env
     restart: always
