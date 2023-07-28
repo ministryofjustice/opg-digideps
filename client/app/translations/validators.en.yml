@@ -768,6 +768,14 @@ organisation:
   isActivated:
     notBlank: Please select whether the organisation should be activated
 
+userResearchResponse:
+  deputyshipLength:
+    notBlank: Please confirm how long you have been a deputy
+  agreedResearchTypes:
+    notBlank: Please select types of user research sessions
+  hasAccessToVideoCallDevice:
+    notBlank: Please select either 'Yes' or 'No'
+
 #       COMMON ELEMENTS
 # ====================================================================================================
 

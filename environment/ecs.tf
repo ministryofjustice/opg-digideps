@@ -5,7 +5,16 @@ resource "aws_ecs_cluster" "main" {
     name  = "containerInsights"
     value = "enabled"
   }
+  depends_on = [aws_cloudwatch_log_group.container_insights]
 }
+
+resource "aws_cloudwatch_log_group" "container_insights" {
+  name              = "/aws/ecs/containerinsights/${local.environment}/performance"
+  retention_in_days = 1
+  kms_key_id        = aws_kms_key.cloudwatch_logs.arn
+  tags              = local.default_tags
+}
+
 
 data "aws_iam_policy_document" "task_role_assume_policy" {
   statement {

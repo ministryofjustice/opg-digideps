@@ -39,6 +39,13 @@ locals {
       target_type = "cidr_block"
       target      = "0.0.0.0/0"
     }
+    front_http = {
+      port        = 80
+      protocol    = "tcp"
+      type        = "egress"
+      target_type = "cidr_block"
+      target      = "0.0.0.0/0"
+    }
   }
 }
 
