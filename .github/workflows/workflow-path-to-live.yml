@@ -122,10 +122,12 @@ jobs:
       - docker_build_scan_push
       - monitoring_lambda_unit_tests
       - workflow_variables
-      - api_unit_tests
-      - client_unit_tests
       - monitoring_lambda_unit_tests
       - synchronisation_unit_tests
+      - client_unit_tests
+      - api_unit_tests_1
+      - api_unit_tests_2
+      - api_unit_tests_3
     with:
       workspace: development
       terraform_path: environment
@@ -163,10 +165,6 @@ jobs:
     name: scale up integration services
     uses: ./.github/workflows/_scale-services.yml
     needs:
-      - client_unit_tests
-      - api_unit_tests_1
-      - api_unit_tests_2
-      - api_unit_tests_3
       - workflow_variables
       - terraform_apply_integration
     with:
