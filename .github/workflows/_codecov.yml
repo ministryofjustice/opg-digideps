@@ -17,8 +17,6 @@ jobs:
         with:
           name: client-unit-tests
           path: ./
-      - name: Make API dir
-        run: mkdir api-coverage
       - name: download artifact for api tests 1
         uses: actions/download-artifact@e9ef242655d12993efdcda9058dee2db83a2cb9b
         with:

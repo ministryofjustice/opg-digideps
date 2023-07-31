@@ -26,9 +26,17 @@ jobs:
         with:
           path: client/resources/public
           key: ${{ runner.os }}-build-${{ env.cache-name }}-${{ hashFiles('**/package-lock.json') }}
-      - name: check contents of public
-        run: ls -alt client/resources
-      - name: build assets
+      - name: Check if directory exists and has content
+        id: check-directory
+        run: |
+          directory="client/resources/public"
+          if [ -d "$directory" ] && [ "$(ls -A "$directory")" ]; then
+            echo "directory_exists=$(echo true)" >> $GITHUB_OUTPUT
+          else
+            echo "directory_exists=$(echo false)" >> $GITHUB_OUTPUT
+          fi
+      - name: Build assets
+        if: steps.check-directory.outputs.directory_exists == 'false'
         run: |
           # Install NPM dependencies
           npm install

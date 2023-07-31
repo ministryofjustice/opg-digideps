@@ -53,3 +53,19 @@ resource "aws_lb_listener_rule" "admin_maintenance" {
     }
   }
 }
+
+resource "aws_lb_listener" "admin_http" {
+  load_balancer_arn = aws_lb.admin.arn
+  port              = "80"
+  protocol          = "HTTP"
+
+  default_action {
+    type = "redirect"
+
+    redirect {
+      port        = 443
+      protocol    = "HTTPS"
+      status_code = "HTTP_301"
+    }
+  }
+}

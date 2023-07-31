@@ -141,8 +141,8 @@ locals {
       ],
       environment = [
         { name = "ROLE", value = "front" },
-        { name = "ADMIN_HOST", value = "http://${local.admin_service_fqdn}" },
-        { name = "NONADMIN_HOST", value = "http://${local.front_service_fqdn}" },
+        { name = "ADMIN_HOST", value = "https://${aws_route53_record.admin.fqdn}" },
+        { name = "NONADMIN_HOST", value = "https://${aws_route53_record.front.fqdn}" },
         { name = "API_URL", value = "https://${local.api_service_fqdn}" },
         { name = "APP_ENV", value = "${local.account.app_env}" },
         { name = "AUDIT_LOG_GROUP_NAME", value = "audit-${local.environment}" },

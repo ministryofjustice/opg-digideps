@@ -13,7 +13,6 @@ use Behat\Behat\Hook\Scope\BeforeScenarioScope;
 use Behat\Mink\Driver\BrowserKitDriver;
 use Behat\MinkExtension\Context\MinkContext;
 use Doctrine\ORM\EntityManagerInterface;
-use Exception;
 use Faker\Factory;
 use Faker\Generator;
 use Symfony\Component\HttpKernel\KernelInterface;
@@ -122,7 +121,7 @@ class BaseFeatureContext extends MinkContext
         $this->appEnvironment = $this->symfonyKernel->getEnvironment();
 
         if ('prod' === $this->appEnvironment) {
-            throw new Exception('Unable to run behat tests in prod mode. Change the apps mode to dev or test and try again');
+            throw new \Exception('Unable to run behat tests in prod mode. Change the apps mode to dev or test and try again');
         }
     }
 
@@ -146,7 +145,7 @@ class BaseFeatureContext extends MinkContext
     /**
      * @BeforeScenario @lay-pfa-high-not-started
      */
-    public function createPfaHighNotStarted(?BeforeScenarioScope $scenario = null, ?string $caseNumber = null)
+    public function createPfaHighNotStarted(BeforeScenarioScope $scenario = null, string $caseNumber = null)
     {
         $userDetails = $this->fixtureHelper->createLayPfaHighAssetsNotStarted($this->testRunId, $caseNumber);
         $this->fixtureUsers[] = $this->layDeputyNotStartedPfaHighAssetsDetails = new UserDetails($userDetails);
@@ -227,7 +226,7 @@ class BaseFeatureContext extends MinkContext
     /**
      * @BeforeScenario @lay-combined-high-submitted
      */
-    public function createLayCombinedHighSubmitted(?BeforeScenarioScope $obj, ?string $testRunId = null)
+    public function createLayCombinedHighSubmitted(?BeforeScenarioScope $obj, string $testRunId = null)
     {
         $userDetails = new UserDetails($this->fixtureHelper->createLayCombinedHighAssetsSubmitted($testRunId ?: $this->testRunId));
         $this->fixtureUsers[] = $this->layDeputySubmittedCombinedHighDetails = $userDetails;
@@ -346,7 +345,7 @@ class BaseFeatureContext extends MinkContext
     /**
      * @BeforeScenario @prof-admin-health-welfare-not-started
      */
-    public function createProfAdminNotStarted(?BeforeScenarioScope $scenario = null, ?string $namedDeputyEmail = null, ?string $caseNumber = null, ?string $deputyUid = null)
+    public function createProfAdminNotStarted(BeforeScenarioScope $scenario = null, string $namedDeputyEmail = null, string $caseNumber = null, string $deputyUid = null)
     {
         $userDetails = $this->fixtureHelper->createProfAdminNotStarted($this->testRunId, $namedDeputyEmail, $caseNumber, $deputyUid);
         $this->fixtureUsers[] = $this->profAdminDeputyHealthWelfareNotStartedDetails = new UserDetails($userDetails);
@@ -355,7 +354,7 @@ class BaseFeatureContext extends MinkContext
     /**
      * @BeforeScenario @prof-admin-health-welfare-completed
      */
-    public function createProfAdminCompleted(?BeforeScenarioScope $scenario = null, ?string $namedDeputyEmail = null, ?string $caseNumber = null, ?string $deputyUid = null)
+    public function createProfAdminCompleted(BeforeScenarioScope $scenario = null, string $namedDeputyEmail = null, string $caseNumber = null, string $deputyUid = null)
     {
         $userDetails = $this->fixtureHelper->createProfAdminCompleted($this->testRunId, $namedDeputyEmail, $caseNumber, $deputyUid);
         $this->fixtureUsers[] = $this->profAdminDeputyHealthWelfareCompletedDetails = new UserDetails($userDetails);
@@ -364,7 +363,7 @@ class BaseFeatureContext extends MinkContext
     /**
      * @BeforeScenario @prof-admin-health-welfare-submitted
      */
-    public function createProfAdminSubmitted(?BeforeScenarioScope $scenario = null, ?string $namedDeputyEmail = null, ?string $caseNumber = null, ?string $deputyUid = null)
+    public function createProfAdminSubmitted(BeforeScenarioScope $scenario = null, string $namedDeputyEmail = null, string $caseNumber = null, string $deputyUid = null)
     {
         $userDetails = $this->fixtureHelper->createProfAdminSubmitted($this->testRunId, $namedDeputyEmail, $caseNumber, $deputyUid);
         $this->fixtureUsers[] = $this->profAdminDeputyHealthWelfareSubmittedDetails = new UserDetails($userDetails);
@@ -508,7 +507,7 @@ class BaseFeatureContext extends MinkContext
     /**
      * @BeforeScenario @lay-pfa-high-not-started-legacy-password-hash
      */
-    public function createPfaHighNotStartedLegacyPasswordHash(?BeforeScenarioScope $scenario = null, ?string $caseNumber = null)
+    public function createPfaHighNotStartedLegacyPasswordHash(BeforeScenarioScope $scenario = null, string $caseNumber = null)
     {
         $userDetails = $this->fixtureHelper->createLayPfaHighAssetsNotStartedLegacyPasswordHash($this->testRunId, $caseNumber);
         $this->fixtureUsers[] = $this->layDeputyNotStartedPfaHighAssetsDetails = new UserDetails($userDetails);
@@ -533,6 +532,8 @@ class BaseFeatureContext extends MinkContext
     public function visitAdminPath(string $path)
     {
         $adminUrl = $this->getAdminUrl();
+        $mypath = $this->locatePath($adminUrl.$path);
+        file_put_contents('php://stderr', print_r('Path to visit: '.$mypath, true));
         $this->visitPath($adminUrl.$path);
     }
 
@@ -547,6 +548,9 @@ class BaseFeatureContext extends MinkContext
 
     public function getCurrentUrl(): string
     {
+        $currentUrl = $this->getSession()->getCurrentUrl();
+        file_put_contents('php://stderr', print_r('current url: '.$currentUrl, true));
+
         return $this->getSession()->getCurrentUrl();
     }
 

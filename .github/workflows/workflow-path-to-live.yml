@@ -49,13 +49,6 @@ jobs:
       push_to_ecr: true
     secrets: inherit
 
-  api_unit_tests:
-    name: api unit tests
-    uses: ./.github/workflows/_unit-tests-api.yml
-    needs:
-      - workflow_variables
-      - docker_build_scan_push
-
   api_unit_tests_1:
     name: api unit tests 1
     uses: ./.github/workflows/_unit-tests-api.yml
@@ -129,10 +122,12 @@ jobs:
       - docker_build_scan_push
       - monitoring_lambda_unit_tests
       - workflow_variables
-      - api_unit_tests
-      - client_unit_tests
       - monitoring_lambda_unit_tests
       - synchronisation_unit_tests
+      - client_unit_tests
+      - api_unit_tests_1
+      - api_unit_tests_2
+      - api_unit_tests_3
     with:
       workspace: development
       terraform_path: environment

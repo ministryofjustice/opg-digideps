@@ -72,6 +72,8 @@ trait INavigateToAdminTrait
      */
     public function iNavigateToAddOrganisationPage()
     {
+        $currentUrl = $this->getSession()->getCurrentUrl();
+        file_put_contents('php://stderr', print_r(' ORG PAGE: '.$currentUrl, true));
         $this->pressButton('Add a new organisation');
         $this->iAmOnAdminAddOrganisationPage();
     }

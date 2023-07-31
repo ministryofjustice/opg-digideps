@@ -40,7 +40,7 @@ jobs:
           --cache-to=type=local,dest=/tmp/.buildx-cache-new \
           --tag frontend-unit-tests:latest \
           --output type=docker .
-        working-directory: client
+        working-directory: client/docker/app
 
       - name: run client unit tests
         id: unit-tests
