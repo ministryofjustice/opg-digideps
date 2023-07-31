@@ -23,7 +23,7 @@ services:
   localstack:
     build:
       context: .
-      dockerfile: ./localstack.Dockerfile
+      dockerfile: ./docker/local-dockerfiles/localstack.Dockerfile
     ports:
       - "4566-4583:4566-4583"
     environment:
