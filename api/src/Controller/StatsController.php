@@ -177,14 +177,12 @@ class StatsController extends RestController
      */
     public function getImbalanceReport(Request $request)
     {
-        $repo = $this->getRepository(Report::class);
+        $startDate = $this->convertDateStringToDateTime($request->get('startDate', ''));
+        $startDate instanceof DateTime ? $startDate->setTime(0, 0, 1) : null;
+        
+        $endDate = $this->convertDateStringToDateTime($request->get('endDate', ''));
+        $endDate instanceof DateTime ? $endDate->setTime(23, 59, 59) : null;
 
-        $fromDate = $this->convertDateStringToDateTime($request->get('fromDate', ''));
-        $fromDate instanceof DateTime ? $fromDate->setTime(0, 0, 1) : null;
-
-        $toDate = $this->convertDateStringToDateTime($request->get('toDate', ''));
-        $toDate instanceof DateTime ? $toDate->setTime(23, 59, 59) : null;
-
-        return $this->reportRepository->getAllReportedImbalanceMetrics($fromDate, $toDate);
+        return $this->reportRepository->getAllReportedImbalanceMetrics($startDate, $endDate);
     }
 }

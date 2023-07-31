@@ -308,10 +308,12 @@ END deputy_type";
     ) {
         if (is_null($fromDate) || is_null($toDate)) {
             $fromDate = new DateTime('first day of last month');
+            $fromDate->setTime(0, 0, 0);
+            
             $toDate = new DateTime('last day of last month');
+            $toDate->setTime(23, 59, 59);
         }
         
-        // terminal sql script located in 'Account Imbalance Report.sql'
         $sql = "WITH report_info AS (
               SELECT
                 DISTINCT id,
@@ -320,11 +322,12 @@ END deputy_type";
                 type
               FROM
                 report
-              WHERE submit_date >= :fromDate
-              AND submit_date <= :toDate
+              WHERE updated_at >= :fromDate
+              AND updated_at <= :toDate 
               OR
-              updated_at >= :fromDate
-              AND updated_at <= :toDate
+              submit_date >= :fromDate
+              AND submit_date <= :toDate
+              
             ),
             lay AS (
               SELECT
