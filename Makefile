@@ -82,12 +82,14 @@ down-app: ##@application Tears down the app
 	docker-compose down -v --remove-orphans
 
 client-unit-tests: ##@unit-tests Run the client unit tests
-	REQUIRE_XDEBUG_CLIENT=0 REQUIRE_XDEBUG_API=0 docker-compose build frontend admin
-	docker-compose -f docker-compose.yml run -e APP_ENV=unit_test -e APP_DEBUG=0 --rm frontend vendor/bin/phpunit -c tests/phpunit
+	REQUIRE_XDEBUG_CLIENT=0 REQUIRE_XDEBUG_API=0 docker-compose -f docker-compose.yml -f docker-compose.ci.client-unit-tests.yml build client-unit-tests
+	docker-compose -f docker-compose.yml -f docker-compose.ci.client-unit-tests.yml up -d pact-mock
+	sleep 5
+	docker-compose -f docker-compose.yml -f docker-compose.ci.client-unit-tests.yml run -e APP_ENV=dev -e APP_DEBUG=0 --rm client-unit-tests vendor/bin/phpunit -c tests/phpunit
 
-api-unit-tests: reset-database reset-fixtures ##@unit-tests Run the api unit tests
-	REQUIRE_XDEBUG_FRONTEND=0 REQUIRE_XDEBUG_API=0 docker-compose build api
-	docker-compose -f docker-compose.yml run --rm -e APP_ENV=test -e APP_DEBUG=0 api sh scripts/apiunittest.sh
+api-unit-tests: reset-database-unit-tests reset-fixtures-unit-tests ##@unit-tests Run the api unit tests
+	REQUIRE_XDEBUG_FRONTEND=0 REQUIRE_XDEBUG_API=0 docker-compose -f docker-compose.yml -f docker-compose.ci.api-unit-tests.yml build api-unit-tests
+	docker-compose -f docker-compose.yml -f docker-compose.ci.api-unit-tests.yml run -e APP_ENV=test -e APP_DEBUG=0 --rm api-unit-tests sh scripts/api_unit_test.sh selection-all
 
 behat-tests: up-app-integration-tests reset-fixtures ##@behat Run the whole behat test suite
 	docker-compose -f docker-compose.yml -f docker-compose.dev.yml run --rm test sh ./tests/Behat/run-tests.sh
@@ -114,6 +116,12 @@ behat-suite: up-app-integration-tests reset-fixtures ##@behat Pass in suite name
 
 behat-profile-suite: up-app-integration-tests reset-fixtures disable-debug ##@behat Pass in profile and suite name as args e.g. make behat-profile-suite profile=<PROFILE NAME> suite=<SUITE NAME>
 	docker-compose -f docker-compose.yml -f docker-compose.dev.yml run --rm test sh ./tests/Behat/run-tests.sh --profile $(profile) --suite $(suite)
+
+reset-database-unit-tests: ##@database Resets the DB schema and runs migrations
+	docker-compose -f docker-compose.yml -f docker-compose.ci.api-unit-tests.yml run --rm api-unit-tests sh scripts/reset_db_structure_local.sh
+
+reset-fixtures-unit-tests: ##@database Resets the DB schema and runs migrations
+	docker-compose -f docker-compose.yml -f docker-compose.ci.api-unit-tests.yml run --rm api-unit-tests sh scripts/reset_db_fixtures_local.sh
 
 reset-database: ##@database Resets the DB schema and runs migrations
 	docker-compose run --rm api sh scripts/reset_db_structure_local.sh
@@ -167,7 +175,6 @@ else
 	docker-compose run --rm api vendor/phpstan/phpstan/phpstan analyse src --memory-limit=1G --level=max
 endif
 
-
 phpstan-client: ##@static-analysis Runs PHPStan against client. Defaults to max level but supports passing level as an arg e.g. level=1
 ifdef level
 	docker-compose run --rm frontend vendor/phpstan/phpstan/phpstan analyse src --memory-limit=1G --level=$(level)
@@ -190,7 +197,7 @@ test-js:
 ##  allows you to do make test-js-single TEST='Currency Formatting' to run tests whose describe matches the string
 TEST:='all'
 test-js-single:
-	docker-compose -f docker-compose.yml -f docker-compose.dev.yml run npm --rm run test -- -t ${TEST} 
+	docker-compose -f docker-compose.yml -f docker-compose.dev.yml run npm --rm run test -- -t ${TEST}
 
 build-js:
 	docker-compose -f docker-compose.yml -f docker-compose.dev.yml run npm --rm run build

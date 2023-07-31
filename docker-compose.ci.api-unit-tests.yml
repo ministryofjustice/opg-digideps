@@ -1,0 +1,33 @@
+version: "3.2"
+services:
+  # API Unit Testing
+  api-unit-tests:
+    container_name: api-unit-tests
+    image: api-unit-tests:latest
+    build:
+      context: ./api
+      args:
+        REQUIRE_XDEBUG: ${REQUIRE_XDEBUG_API} # set REQUIRE_XDEBUG_API=1 in .env to install Xdebug
+        XDEBUG_IDEKEY_API: ${XDEBUG_IDEKEY_API}
+    depends_on:
+      - postgres
+      - redis-api
+      - localstack
+    environment:
+      AWS_ACCESS_KEY_ID: aFakeSecretAccessKeyId
+      AWS_SECRET_ACCESS_KEY: aFakeSecretAccessKey
+      AWS_SESSION_TOKEN: fakeValue
+      APP_ENV: ${APP_ENV:-dev}
+      APP_DEBUG: ${APP_DEBUG:-0}
+    env_file:
+      - ./api/api.env
+      - ./api/tests/Behat/test.env
+
+  redis-api:
+    restart: always
+
+  localstack:
+    restart: always
+
+  postgres:
+    restart: always
