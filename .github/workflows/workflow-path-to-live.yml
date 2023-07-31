@@ -49,13 +49,6 @@ jobs:
       push_to_ecr: true
     secrets: inherit
 
-  api_unit_tests:
-    name: api unit tests
-    uses: ./.github/workflows/_unit-tests-api.yml
-    needs:
-      - workflow_variables
-      - docker_build_scan_push
-
   api_unit_tests_1:
     name: api unit tests 1
     uses: ./.github/workflows/_unit-tests-api.yml
@@ -170,6 +163,10 @@ jobs:
     name: scale up integration services
     uses: ./.github/workflows/_scale-services.yml
     needs:
+      - client_unit_tests
+      - api_unit_tests_1
+      - api_unit_tests_2
+      - api_unit_tests_3
       - workflow_variables
       - terraform_apply_integration
     with:
