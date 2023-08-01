@@ -207,7 +207,7 @@ jobs:
       workspace: ${{ needs.workflow_variables.outputs.parsed_branch }}
       task_name: "integration_test_v2"
       timeout: "1200"
-      override: "sh,./tests/Behat/run-tests.sh,--tags,@v2_reporting_1,--profile,v2-tests-browserkit"
+      override: "sh,./tests/Behat/run-tests-parallel.sh,--tags,@v2_reporting_1,--profile,v2-tests-browserkit"
     secrets: inherit
 
   integration_tests_2:

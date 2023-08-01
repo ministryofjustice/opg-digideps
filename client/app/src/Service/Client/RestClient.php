@@ -363,8 +363,6 @@ class RestClient implements RestClientInterface
             $options['timeout'] = $this->timeout;
         }
 
-        //        file_put_contents('php://stderr', print_r($options, TRUE));
-
         $start = microtime(true);
         try {
             $response = $this->client->$method($url, $options);

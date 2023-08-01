@@ -532,8 +532,6 @@ class BaseFeatureContext extends MinkContext
     public function visitAdminPath(string $path)
     {
         $adminUrl = $this->getAdminUrl();
-        $mypath = $this->locatePath($adminUrl.$path);
-        file_put_contents('php://stderr', print_r('Path to visit: '.$mypath, true));
         $this->visitPath($adminUrl.$path);
     }
 
@@ -548,9 +546,6 @@ class BaseFeatureContext extends MinkContext
 
     public function getCurrentUrl(): string
     {
-        $currentUrl = $this->getSession()->getCurrentUrl();
-        file_put_contents('php://stderr', print_r('current url: '.$currentUrl, true));
-
         return $this->getSession()->getCurrentUrl();
     }
 

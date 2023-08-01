@@ -63,7 +63,6 @@ class LifestyleController extends RestController
         $this->denyAccessIfReportDoesNotBelongToUser($lifestyle->getReport());
 
         $data = $this->formatter->deserializeBodyContent($request);
-        //        file_put_contents('php://stderr', print_r($data, TRUE));
         $this->updateInfo($data, $lifestyle);
         $this->em->flush();
 
