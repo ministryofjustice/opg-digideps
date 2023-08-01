@@ -36,11 +36,11 @@ jobs:
           IMAGE_NAME: client
         run: |
           REQUIRE_XDEBUG_CLIENT=0 REQUIRE_XDEBUG_API=0 docker buildx build \
+          -f client/docker/app/Dockerfile \
           --cache-from=type=local,src=/tmp/.buildx-cache \
           --cache-to=type=local,dest=/tmp/.buildx-cache-new \
           --tag frontend-unit-tests:latest \
           --output type=docker .
-        working-directory: client/docker/app
 
       - name: run client unit tests
         id: unit-tests
