@@ -68,7 +68,6 @@ RUN mkdir -p var/cache \
     && chown -R www-data var \
     && chown -R www-data /var/log/app
 
-
 FROM base
 COPY docker/confd /etc/confd
 COPY --from=composer /app/app app
