@@ -10,6 +10,7 @@ use Symfony\Component\Form\Extension\Core\Type\ChoiceType;
 use Symfony\Component\Form\Extension\Core\Type\SubmitType;
 use Symfony\Component\Form\FormBuilderInterface;
 use Symfony\Component\OptionsResolver\OptionsResolver;
+use Symfony\Component\Validator\Constraints;
 use Symfony\Contracts\Translation\TranslatorInterface;
 
 class UserResearchResponseType extends AbstractType
@@ -51,6 +52,9 @@ class UserResearchResponseType extends AbstractType
                 'multiple' => false,
                 'required' => true,
                 'placeholder' => false,
+                'constraints' => [
+                    new Constraints\NotBlank(['message' => 'userResearchResponse.deputyshipLength.notBlank']),
+                ],
             ])
             ->add('agreedResearchTypes', ChoiceType::class, [
                 'choices' => array_combine($typesOfResearchLabels, $typesOfResearchTransKeys),
@@ -58,6 +62,9 @@ class UserResearchResponseType extends AbstractType
                 'multiple' => true,
                 'required' => true,
                 'placeholder' => false,
+                'constraints' => [
+                    new Constraints\NotBlank(['message' => 'userResearchResponse.agreedResearchTypes.notBlank']),
+                ],
             ])
             ->add('hasAccessToVideoCallDevice', ChoiceType::class, [
                 'choices' => array_combine($deviceAccessLabels, $deviceAccessTransKeys),
@@ -65,6 +72,9 @@ class UserResearchResponseType extends AbstractType
                 'multiple' => false,
                 'required' => true,
                 'placeholder' => false,
+                'constraints' => [
+                    new Constraints\NotBlank(['message' => 'userResearchResponse.hasAccessToVideoCallDevice.notBlank']),
+                ],
             ])
             ->add('submitButton', SubmitType::class);
     }
