@@ -4,8 +4,6 @@ namespace App\Repository;
 
 use App\Entity\Client;
 use App\Entity\User;
-use DateInterval;
-use DateTime;
 use Doctrine\Bundle\DoctrineBundle\Repository\ServiceEntityRepository;
 use Doctrine\ORM\QueryBuilder;
 use Doctrine\Persistence\ManagerRegistry;
@@ -164,8 +162,8 @@ class UserRepository extends ServiceEntityRepository implements PasswordUpgrader
      */
     public function findInactive($select = null)
     {
-        $thirtyDaysAgo = new DateTime();
-        $thirtyDaysAgo->sub(new DateInterval('P30D'));
+        $thirtyDaysAgo = new \DateTime();
+        $thirtyDaysAgo->sub(new \DateInterval('P30D'));
 
         $reportSubquery = $this->_em->createQueryBuilder()
             ->select('1')
@@ -196,7 +194,7 @@ class UserRepository extends ServiceEntityRepository implements PasswordUpgrader
      */
     public function findActiveLaysInLastYear()
     {
-        $oneYearAgo = (new DateTime())->modify('-1 Year')->format('Y-m-d');
+        $oneYearAgo = (new \DateTime())->modify('-1 Year')->format('Y-m-d');
 
         $conn = $this->getEntityManager()->getConnection();
 
@@ -256,7 +254,7 @@ SQL;
 
     public function getAllAdminAccountsCreatedButNotActivatedWithin(string $timeframe)
     {
-        $date = (new DateTime())->modify($timeframe);
+        $date = (new \DateTime())->modify($timeframe);
 
         $dql = "SELECT u FROM App\Entity\User u WHERE u.roleName IN('ROLE_ADMIN', 'ROLE_SUPER_ADMIN', 'ROLE_ADMIN_MANAGER')
                 AND u.lastLoggedIn IS NULL
@@ -282,24 +280,9 @@ SQL;
         return $query->getResult();
     }
 
-    public function getAllAdminAccountsNotUsedWithin(string $timeframe)
-    {
-        $date = (new DateTime())->modify($timeframe);
-
-        $dql = "SELECT u FROM App\Entity\User u WHERE u.roleName IN('ROLE_ADMIN', 'ROLE_SUPER_ADMIN', 'ROLE_ADMIN_MANAGER')
-                AND u.lastLoggedIn < :date ";
-
-        $query = $this
-            ->getEntityManager()
-            ->createQuery($dql)
-            ->setParameter('date', $date);
-
-        return $query->getResult();
-    }
-
     public function getAllAdminAccountsUsedWithin(string $timeframe)
     {
-        $date = (new DateTime())->modify($timeframe);
+        $date = (new \DateTime())->modify($timeframe);
 
         $dql = "SELECT u FROM App\Entity\User u WHERE u.roleName IN('ROLE_ADMIN', 'ROLE_SUPER_ADMIN', 'ROLE_ADMIN_MANAGER')
                 AND u.lastLoggedIn > :date ";
@@ -314,14 +297,25 @@ SQL;
 
     public function getAllAdminUserAccountsNotUsedWithin(string $timeframe)
     {
-        $date = (new DateTime())->modify($timeframe);
+        return $this->getAllRoleBasedUsers(['ROLE_ADMIN'], $timeframe);
+    }
 
-        $dql = "SELECT u FROM App\Entity\User u WHERE u.roleName IN('ROLE_ADMIN') AND u.lastLoggedIn < :date ";
+    public function getAllAdminAccountsNotUsedWithin(string $timeframe)
+    {
+        return $this->getAllRoleBasedUsers(['ROLE_ADMIN', 'ROLE_ADMIN_MANAGER', 'ROLA_SUPER_ADMIN'], $timeframe);
+    }
+
+    private function getAllRoleBasedUsers(array $roles, string $timeframe)
+    {
+        $date = (new \DateTime())->modify($timeframe);
+
+        $dql = "SELECT u FROM App\Entity\User u WHERE u.roleName IN(:roles) AND u.lastLoggedIn < :date ";
 
         $query = $this
             ->getEntityManager()
             ->createQuery($dql)
-            ->setParameter('date', $date);
+            ->setParameter('date', $date)
+            ->setParameter('roles', $roles);
 
         return $query->getResult();
     }
@@ -334,5 +328,17 @@ SQL;
         // execute the queries on the database
         $this->getEntityManager()->persist($user);
         $this->getEntityManager()->flush();
+    }
+
+    public function deleteInactiveAdminUsers(array $inactiveAdminUsers)
+    {
+        $sql = "DELETE FROM dd_user WHERE :inactiveAdminUsers AND last_logged_in < current_date - INTERVAL '14' month";
+
+        $query = $this
+            ->getEntityManager()
+            ->createQuery($sql)
+            ->setParameter('inactiveAdminUsers', $inactiveAdminUsers);
+
+        return $query->getResult();
     }
 }
