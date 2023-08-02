@@ -10,15 +10,15 @@ use App\Security\UserVoter;
 use App\Service\Auth\AuthService;
 use App\Service\Formatter\RestFormatter;
 use App\Service\UserService;
-use DateTime;
+use App\v2\Controller\ControllerTrait;
 use Doctrine\Common\Collections\ArrayCollection;
 use Doctrine\ORM\EntityManagerInterface;
 use Doctrine\ORM\OptimisticLockException;
 use Doctrine\ORM\ORMException;
-use Exception;
-use RuntimeException;
 use Sensio\Bundle\FrameworkExtraBundle\Configuration\Security;
+use Symfony\Component\HttpFoundation\JsonResponse;
 use Symfony\Component\HttpFoundation\Request;
+use Symfony\Component\HttpFoundation\Response;
 use Symfony\Component\PasswordHasher\Hasher\PasswordHasherFactoryInterface;
 use Symfony\Component\PasswordHasher\Hasher\UserPasswordHasherInterface;
 use Symfony\Component\Routing\Annotation\Route;
@@ -33,6 +33,8 @@ use Symfony\Component\Security\Core\Security as SecurityHelper;
  */
 class UserController extends RestController
 {
+    use ControllerTrait;
+
     public function __construct(
         private UserService $userService,
         private UserPasswordHasherInterface $passwordHasher,
@@ -105,7 +107,7 @@ class UserController extends RestController
         ]);
 
         if (array_key_exists('last_logged_in', $data)) {
-            $user->setLastLoggedIn(new DateTime($data['last_logged_in']));
+            $user->setLastLoggedIn(new \DateTime($data['last_logged_in']));
         }
 
         if (!empty($data['registration_token'])) {
@@ -113,7 +115,7 @@ class UserController extends RestController
         }
 
         if (!empty($data['token_date'])) { // important, keep this after "setRegistrationToken" otherwise date will be reset
-            $user->setTokenDate(new DateTime($data['token_date']));
+            $user->setTokenDate(new \DateTime($data['token_date']));
         }
 
         if (!empty($data['role_name'])) {
@@ -126,7 +128,7 @@ class UserController extends RestController
         }
 
         if (!empty($data['registration_date'])) {
-            $registrationDate = new DateTime($data['registration_date']);
+            $registrationDate = new \DateTime($data['registration_date']);
             $user->setRegistrationDate($registrationDate);
         }
 
@@ -283,26 +285,26 @@ class UserController extends RestController
             /** @var User|null $user */
             $user = $this->userRepository->findOneBy(['email' => strtolower($filter)]);
             if (!$user) {
-                throw new RuntimeException('User not found', 404);
+                throw new \RuntimeException('User not found', 404);
             }
         } elseif ('case_number' == $what) {
             /** @var Client|null $client */
             $client = $this->clientRepository->findOneBy(['caseNumber' => $filter]);
             if (!$client) {
-                throw new RuntimeException('Client not found', 404);
+                throw new \RuntimeException('Client not found', 404);
             }
             if (empty($client->getUsers())) {
-                throw new RuntimeException('Client has not users', 404);
+                throw new \RuntimeException('Client has not users', 404);
             }
             $user = $client->getUsers()[0];
         } elseif ('user_id' == $what) {
             /** @var User|null $user */
             $user = $this->userRepository->find($filter);
             if (!$user) {
-                throw new RuntimeException('User not found', 419);
+                throw new \RuntimeException('User not found', 419);
             }
         } else {
-            throw new RuntimeException('wrong query', 500);
+            throw new \RuntimeException('wrong query', 500);
         }
 
         /** @var User $loggedInUser */
@@ -388,6 +390,30 @@ class UserController extends RestController
     }
 
     /**
+     * Delete all inactive admin users.
+     *
+     * @Route("/admins/user_retention", methods={"DELETE"})
+     * @Security("is_granted('ROLE_SUPER_ADMIN')")
+     */
+    public function deleteInactiveAdminUsers(Request $request): JsonResponse
+    {
+        /** @var User $user */
+        $getInactiveAdminUsers = $this->userRepository->getAllAdminAccountsNotUsedWithin('-14 months');
+
+        $inactiveAdminUserIds = [];
+
+        foreach ($getInactiveAdminUsers as $adminUser) {
+            foreach ($adminUser as $user) {
+                $inactiveAdminUserIds[] = $user['id'];
+            }
+        }
+
+        $this->userRepository->deleteInactiveAdminUsers($inactiveAdminUserIds);
+
+        return $this->buildSuccessResponse([], '', Response::HTTP_NO_CONTENT);
+    }
+
+    /**
      * @Route("/get-all", methods={"GET"})
      * @Security("is_granted('ROLE_ADMIN') or is_granted('ROLE_AD')")
      */
@@ -406,7 +432,7 @@ class UserController extends RestController
     public function recreateToken(Request $request, $email)
     {
         if (!$this->authService->isSecretValid($request)) {
-            throw new RuntimeException('client secret not accepted.', 403);
+            throw new \RuntimeException('client secret not accepted.', 403);
         }
 
         /** @var User $user */
@@ -414,7 +440,7 @@ class UserController extends RestController
         $hasAdminSecret = $this->authService->isSecretValidForRole(User::ROLE_ADMIN, $request);
 
         if (!$hasAdminSecret && User::ROLE_ADMIN == $user->getRoleName()) {
-            throw new RuntimeException('Admin emails not accepted.', 403);
+            throw new \RuntimeException('Admin emails not accepted.', 403);
         }
 
         $user->recreateRegistrationToken();
@@ -432,14 +458,14 @@ class UserController extends RestController
     public function getByToken(Request $request, $token)
     {
         if (!$this->authService->isSecretValid($request)) {
-            throw new RuntimeException('client secret not accepted.', 403);
+            throw new \RuntimeException('client secret not accepted.', 403);
         }
 
         /* @var $user User */
         $user = $this->findEntityBy(User::class, ['registrationToken' => $token], 'User not found');
 
         if (!$this->authService->isSecretValidForRole($user->getRoleName(), $request)) {
-            throw new RuntimeException($user->getRoleName().' user role not allowed from this client.', 403);
+            throw new \RuntimeException($user->getRoleName().' user role not allowed from this client.', 403);
         }
 
         // `user-login` contains number of clients and reports, needed to properly redirect the user to the right page after activation
@@ -454,14 +480,14 @@ class UserController extends RestController
     public function agreeTermsUse(Request $request, $token)
     {
         if (!$this->authService->isSecretValid($request)) {
-            throw new RuntimeException('client secret not accepted.', 403);
+            throw new \RuntimeException('client secret not accepted.', 403);
         }
 
         /* @var $user User */
         $user = $this->findEntityBy(User::class, ['registrationToken' => $token], 'User not found');
 
         if (!$this->authService->isSecretValidForRole($user->getRoleName(), $request)) {
-            throw new RuntimeException($user->getRoleName().' user role not allowed from this client.', 403);
+            throw new \RuntimeException($user->getRoleName().' user role not allowed from this client.', 403);
         }
 
         $user->setAgreeTermsUse(true);
@@ -488,7 +514,7 @@ class UserController extends RestController
         $requestedUser = $this->userRepository->find($id);
 
         if (!$requestedUser) {
-            throw new RuntimeException('User not found', 419);
+            throw new \RuntimeException('User not found', 419);
         }
 
         /** @var ArrayCollection $requestedUserTeams */
@@ -514,7 +540,7 @@ class UserController extends RestController
      *
      * @Route("/get-reg-token", methods={"GET"})
      *
-     * @throws Exception
+     * @throws \Exception
      */
     public function getRegToken(Request $request)
     {
