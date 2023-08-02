@@ -10,15 +10,12 @@ use App\Security\UserVoter;
 use App\Service\Auth\AuthService;
 use App\Service\Formatter\RestFormatter;
 use App\Service\UserService;
-use App\v2\Controller\ControllerTrait;
 use Doctrine\Common\Collections\ArrayCollection;
 use Doctrine\ORM\EntityManagerInterface;
 use Doctrine\ORM\OptimisticLockException;
 use Doctrine\ORM\ORMException;
 use Sensio\Bundle\FrameworkExtraBundle\Configuration\Security;
-use Symfony\Component\HttpFoundation\JsonResponse;
 use Symfony\Component\HttpFoundation\Request;
-use Symfony\Component\HttpFoundation\Response;
 use Symfony\Component\PasswordHasher\Hasher\PasswordHasherFactoryInterface;
 use Symfony\Component\PasswordHasher\Hasher\UserPasswordHasherInterface;
 use Symfony\Component\Routing\Annotation\Route;
@@ -33,8 +30,6 @@ use Symfony\Component\Security\Core\Security as SecurityHelper;
  */
 class UserController extends RestController
 {
-    use ControllerTrait;
-
     public function __construct(
         private UserService $userService,
         private UserPasswordHasherInterface $passwordHasher,
@@ -387,30 +382,6 @@ class UserController extends RestController
         $this->em->flush();
 
         return [];
-    }
-
-    /**
-     * Delete all inactive admin users.
-     *
-     * @Route("/admins/user_retention", methods={"DELETE"})
-     * @Security("is_granted('ROLE_SUPER_ADMIN')")
-     */
-    public function deleteInactiveAdminUsers(Request $request): JsonResponse
-    {
-        /** @var User $user */
-        $getInactiveAdminUsers = $this->userRepository->getAllAdminAccountsNotUsedWithin('-14 months');
-
-        $inactiveAdminUserIds = [];
-
-        foreach ($getInactiveAdminUsers as $adminUser) {
-            foreach ($adminUser as $user) {
-                $inactiveAdminUserIds[] = $user['id'];
-            }
-        }
-
-        $this->userRepository->deleteInactiveAdminUsers($inactiveAdminUserIds);
-
-        return $this->buildSuccessResponse([], '', Response::HTTP_NO_CONTENT);
     }
 
     /**
