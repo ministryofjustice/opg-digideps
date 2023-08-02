@@ -332,8 +332,6 @@ class StatsController extends AbstractController
             }
         }
 
-        // dump($form->createView());
-
         return [
             'form' => $form->createView(),
         ];

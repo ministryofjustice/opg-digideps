@@ -25,6 +25,7 @@ class ReportImbalanceCsvGenerator
                 $row['no_imbalance'],
                 $row['reported_imbalance'],
                 $row['imbalance_percent'],
+                $row['total'],
             ];
         }
 
