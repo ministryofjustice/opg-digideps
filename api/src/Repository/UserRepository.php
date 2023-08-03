@@ -5,6 +5,7 @@ namespace App\Repository;
 use App\Entity\Client;
 use App\Entity\User;
 use Doctrine\Bundle\DoctrineBundle\Repository\ServiceEntityRepository;
+use Doctrine\ORM\Query\ResultSetMappingBuilder;
 use Doctrine\ORM\QueryBuilder;
 use Doctrine\Persistence\ManagerRegistry;
 use Symfony\Component\HttpFoundation\Request;
@@ -302,7 +303,7 @@ SQL;
 
     public function getAllAdminAccountsNotUsedWithin(string $timeframe)
     {
-        return $this->getAllRoleBasedUsers(['ROLE_ADMIN', 'ROLE_ADMIN_MANAGER', 'ROLA_SUPER_ADMIN'], $timeframe);
+        return $this->getAllRoleBasedUsers(['ROLE_ADMIN', 'ROLE_ADMIN_MANAGER', 'ROLE_SUPER_ADMIN'], $timeframe);
     }
 
     private function getAllRoleBasedUsers(array $roles, string $timeframe)
@@ -332,13 +333,17 @@ SQL;
 
     public function deleteInactiveAdminUsers(array $inactiveAdminUsers)
     {
-        $sql = "DELETE FROM dd_user WHERE :inactiveAdminUsers AND last_logged_in < current_date - INTERVAL '14' month";
+        $em = $this->getEntityManager();
+        $rsm = new ResultSetMappingBuilder($em);
 
-        $query = $this
-            ->getEntityManager()
-            ->createQuery($sql)
-            ->setParameter('inactiveAdminUsers', $inactiveAdminUsers);
+        $sql = "DELETE FROM dd_user WHERE id IN (:ids) AND last_logged_in < current_date - INTERVAL '24' month";
+        $params = [
+            'ids' => $inactiveAdminUsers,
+        ];
 
-        return $query->getResult();
+        $stmt = $em->createNativeQuery($sql, $rsm);
+        $result = $stmt->setParameters($params);
+
+        return $result->getResult();
     }
 }
