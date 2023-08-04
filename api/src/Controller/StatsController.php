@@ -8,6 +8,7 @@ use App\Entity\Ndr\AssetOther as NdrAssetOther;
 use App\Entity\Ndr\AssetProperty as NdrAssetProperty;
 use App\Entity\Report\AssetOther;
 use App\Entity\Report\AssetProperty;
+use App\Entity\Report\Report;
 use App\Exception\UnauthorisedException;
 use App\Repository\AssetRepository;
 use App\Repository\BankAccountRepository;
@@ -168,5 +169,20 @@ class StatsController extends RestController
         $endDate = $request->query->get('endDate');
 
         return $this->reportRepository->getBenefitsResponseMetrics($startDate, $endDate, $deputyType);
+    }
+
+    /**
+     * @Route("stats/report/imbalance", name="imbalance_report", methods={"GET"})
+     * @Security("is_granted('ROLE_SUPER_ADMIN')")
+     */
+    public function getImbalanceReport(Request $request)
+    {
+        $startDate = $this->convertDateStringToDateTime($request->get('startDate', ''));
+        $startDate instanceof DateTime ? $startDate->setTime(0, 0, 1) : null;
+        
+        $endDate = $this->convertDateStringToDateTime($request->get('endDate', ''));
+        $endDate instanceof DateTime ? $endDate->setTime(23, 59, 59) : null;
+
+        return $this->reportRepository->getAllReportedImbalanceMetrics($startDate, $endDate);
     }
 }
