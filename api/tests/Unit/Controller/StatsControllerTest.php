@@ -68,7 +68,7 @@ class StatsControllerTest extends AbstractTestController
         foreach ($unauthorisedUserTokens as $token) {
             $this->assertJsonRequest(
                 'GET',
-                '/stats/report/benefits_metrics',
+                '/stats/report/benefits-report-metrics',
                 [
                     'mustFail' => true,
                     'AuthToken' => $token,
@@ -94,6 +94,28 @@ class StatsControllerTest extends AbstractTestController
                 [
                    'mustFail' => true,
                    'AuthToken' => $token,
+                ]
+            );
+        }
+    }
+
+    /** @test */
+    public function imbalanceReportOnlySuperAdminsCanAccess()
+    {
+        $unauthorisedUserTokens = [
+            $this->loginAsAdmin(),
+            $this->loginAsDeputy(),
+            $this->loginAsProf(),
+            $this->loginAsPa(),
+        ];
+
+        foreach ($unauthorisedUserTokens as $token) {
+            $this->assertJsonRequest(
+                'GET',
+                '/stats/report/imbalance',
+                [
+                    'mustFail' => true,
+                    'AuthToken' => $token,
                 ]
             );
         }
