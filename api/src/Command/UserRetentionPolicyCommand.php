@@ -19,6 +19,8 @@ class UserRetentionPolicyCommand extends Command
 {
     use ControllerTrait;
 
+    public static $defaultName = 'digideps:user-retention-policy';
+
     public function __construct(
         private UserRepository $userRepository,
         private ObservableEventDispatcher $eventDispatcher,
@@ -30,7 +32,7 @@ class UserRetentionPolicyCommand extends Command
     protected function configure()
     {
         $this
-            ->setName('digideps:user-retention-policy')
+//            ->setName($this->defaultName)
             ->setDescription('Deletes inactive admin user accounts')
         ;
     }
@@ -42,26 +44,26 @@ class UserRetentionPolicyCommand extends Command
 
           $inactiveAdminUserIds = [];
 
-          if (is_array($getInactiveAdminUsers)) {
-              foreach ($getInactiveAdminUsers as $adminUser) {
-                  $inactiveAdminUserIds[] = $adminUser->getId();
-                  $this->auditLogDeletionAutomation($adminUser);
+          if ($getInactiveAdminUsers) {
+              if (is_array($getInactiveAdminUsers)) {
+                  foreach ($getInactiveAdminUsers as $adminUser) {
+                      $inactiveAdminUserIds[] = $adminUser->getId();
+                      $this->auditLogDeletionAutomation($adminUser);
+                  }
+              } elseif ($getInactiveAdminUsers instanceof User) {
+                  $inactiveAdminUserIds[] = $getInactiveAdminUsers->getId();
+                  $this->auditLogDeletionAutomation($getInactiveAdminUsers);
               }
           }
 
-          if ($getInactiveAdminUsers instanceof User) {
-              $inactiveAdminUserIds[] = $getInactiveAdminUsers->getId();
-              $this->auditLogDeletionAutomation($getInactiveAdminUsers);
-          }
-
           if (!empty($inactiveAdminUserIds)) {
+              $countOfAdminUsers = count($inactiveAdminUserIds);
+
               $this->userRepository->deleteInactiveAdminUsers($inactiveAdminUserIds);
-              $output->writeln('Done');
-
-              return 1;
+              $output->writeln(sprintf('%d inactive admin user(s) deleted', $countOfAdminUsers));
+          } else {
+              $output->writeln('No inactive admin users to delete');
           }
-
-          $output->writeln('No inactive admin users to delete');
 
           return 0;
       }
@@ -73,6 +75,6 @@ class UserRetentionPolicyCommand extends Command
 
             $this->eventDispatcher->dispatch($event, UserRetentionPolicyCommandEvent::NAME);
 
-            $this->logger->info(sprintf('Deleted user account with id: %i at admin permission level due to 2 year expiry.', $user->getId()));
+            $this->logger->info(sprintf('Deleted user account with id: %d at admin permission level due to 2 year expiry.', $user->getId()));
         }
 }
