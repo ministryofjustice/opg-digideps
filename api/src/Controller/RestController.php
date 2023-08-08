@@ -82,4 +82,14 @@ abstract class RestController extends AbstractController
             throw $this->createAccessDeniedException('Client does not belong to user');
         }
     }
+
+    /**
+     * @param array $date
+     * @return \DateTime|null
+     * @throws \Exception
+     */
+    protected function convertDateStringToDateTime(string $date)
+    {
+        return empty($date) ? null : new \DateTime($date);
+    }
 }

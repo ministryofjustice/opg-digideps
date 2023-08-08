@@ -13,6 +13,7 @@ class StatsApi
     protected const GET_OLD_ADMIN_USER_REPORT_DATA = 'stats/admins/old_report_data';
     protected const GET_ASSETS_TOTAL_VALUES = 'stats/assets/total_values';
     protected const GET_BENEFITS_REPORT_METRICS = 'stats/report/benefits-report-metrics';
+    protected const GET_DEPUTY_IMBALANCE_REPORT_DATA = 'stats/report/imbalance';
 
     private RestClientInterface $restClient;
 
@@ -70,6 +71,20 @@ class StatsApi
             self::GET_OLD_ADMIN_USER_REPORT_DATA,
             'array',
             ['user']
+        );
+    }
+
+    public function getReportsImbalanceMetrics(?string $append = null): array
+    {
+        $link = self::GET_DEPUTY_IMBALANCE_REPORT_DATA;
+        if (!empty($append)) {
+            $link = self::GET_DEPUTY_IMBALANCE_REPORT_DATA . $append;
+        }
+
+        return $this->restClient->get(
+            $link,
+            'array',
+            ['imbalance']
         );
     }
 }
