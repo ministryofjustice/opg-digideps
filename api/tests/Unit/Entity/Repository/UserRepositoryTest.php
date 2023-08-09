@@ -350,10 +350,10 @@ class UserRepositoryTest extends WebTestCase
 
         $this->sut->deleteInactiveAdminUsers($adminUserIds);
 
-        $deletedAdminUsers = [$inactiveAdminUser->getId(), $inactiveAdminManagerUser->getId()];
+        $adminUsersDeleted = [$inactiveAdminUser->getId(), $inactiveAdminManagerUser->getId()];
         $adminUsersNotDeleted = [$activeAdminUser->getId()];
 
-        $deletedAdminUsers = $this->sut->findBy(['id' => $deletedAdminUsers]);
+        $deletedAdminUsers = $this->sut->findBy(['id' => $adminUsersDeleted]);
         $this->assertCount(0, $deletedAdminUsers);
 
         $adminUserNotDeleted = $this->sut->findBy(['id' => $adminUsersNotDeleted]);

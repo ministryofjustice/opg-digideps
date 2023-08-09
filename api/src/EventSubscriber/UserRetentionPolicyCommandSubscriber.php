@@ -27,7 +27,7 @@ class UserRetentionPolicyCommandSubscriber implements EventSubscriberInterface
 
     public function logEvent(UserRetentionPolicyCommandEvent $event)
     {
-        $this->logger->notice('', (new AuditEvents($this->dateTimeProvider))->userDeletedAutomation(
+        $this->logger->notice('', (new AuditEvents($this->dateTimeProvider))->userAccountAutomatedDeletion(
             $event->getTrigger(),
             $event->getDeletedAdminUser()->getId(),
             $event->getDeletedAdminUser()->getEmail(),

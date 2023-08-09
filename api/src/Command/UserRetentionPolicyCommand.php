@@ -32,7 +32,6 @@ class UserRetentionPolicyCommand extends Command
     protected function configure()
     {
         $this
-//            ->setName($this->defaultName)
             ->setDescription('Deletes inactive admin user accounts')
         ;
     }

@@ -43,11 +43,6 @@ class UserRetentionPolicyCommandTest extends KernelTestCase
      */
     public function testOutputWithNoInactiveAdminUsers()
     {
-        $user = new User();
-        $user->setRoleName(User::ROLE_ADMIN);
-        $user->setId(1);
-        $user->setLastLoggedIn(new \DateTime('-1 months'));
-
         $this->userRepository->getAllAdminAccountsNotUsedWithin('-24 months')
             ->shouldBeCalled()
             ->willReturn(null);

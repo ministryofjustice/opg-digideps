@@ -331,14 +331,14 @@ SQL;
         $this->getEntityManager()->flush();
     }
 
-    public function deleteInactiveAdminUsers(array $inactiveAdminUsers)
+    public function deleteInactiveAdminUsers(array $inactiveAdminUserIds)
     {
         $em = $this->getEntityManager();
         $rsm = new ResultSetMappingBuilder($em);
 
         $sql = "DELETE FROM dd_user WHERE id IN (:ids) AND last_logged_in < current_date - INTERVAL '24' month";
         $params = [
-            'ids' => $inactiveAdminUsers,
+            'ids' => $inactiveAdminUserIds,
         ];
 
         $stmt = $em->createNativeQuery($sql, $rsm);

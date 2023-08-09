@@ -44,7 +44,7 @@ final class AuditEvents
         return $event + $this->baseEvent(AuditEvents::EVENT_CLIENT_ARCHIVED);
     }
 
-    public function userDeletedAutomation(
+    public function userAccountAutomatedDeletion(
         string $trigger,
         int $id,
         string $email,
