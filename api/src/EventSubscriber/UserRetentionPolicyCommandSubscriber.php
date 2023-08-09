@@ -6,10 +6,11 @@ namespace App\EventSubscriber;
 
 use App\Event\UserRetentionPolicyCommandEvent;
 use App\Service\Audit\AuditEvents;
-use App\Service\DateTimeProvider;
+use App\Service\Time\DateTimeProvider;
 use Psr\Log\LoggerInterface;
+use Symfony\Component\EventDispatcher\EventSubscriberInterface;
 
-class UserRetentionPolicyCommandSubscriber
+class UserRetentionPolicyCommandSubscriber implements EventSubscriberInterface
 {
     public function __construct(
         private LoggerInterface $logger,
