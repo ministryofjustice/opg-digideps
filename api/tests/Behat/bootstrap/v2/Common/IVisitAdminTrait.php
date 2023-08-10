@@ -59,6 +59,15 @@ trait IVisitAdminTrait
     }
 
     /**
+     * @When I visit the admin client details page associated with the lay deputy
+     */
+    public function iVisitAdminClientDetailsPageForLayDeputy()
+    {
+        $clientDetailsUrl = $this->getAdminClientDetailsUrl($this->layDeputySubmittedHealthWelfareDetails->getClientId());
+        $this->visitAdminPath($clientDetailsUrl);
+    }
+
+    /**
      * @When I visit the admin client details page for an existing client linked to a deputy in an Organisation
      */
     public function iVisitAdminOrgClientDetailsPage()
@@ -110,6 +119,16 @@ trait IVisitAdminTrait
 
         $this->visitAdminPath(
             $this->getAdminEditUserPage($this->interactingWithUserDetails->getUserId())
+        );
+    }
+
+    /**
+     * @When I visit the admin Edit User page for the admin user
+     */
+    public function iVisitAdminEditUserPageForTheAdminUser()
+    {
+        $this->visitAdminPath(
+            $this->getAdminEditUserPage($this->adminDetails->getUserId())
         );
     }
 
@@ -250,6 +269,16 @@ trait IVisitAdminTrait
 
         $this->visitAdminPath(
             $this->getAdminChecklistUrl($this->interactingWithUserDetails->getPreviousReportId())
+        );
+    }
+
+    /**
+     * @When I visit the checklist page for the previously submitted report for the lay deputy
+     */
+    public function iVisitTheChecklistPageForSubmittedReportByLayDeputy()
+    {
+        $this->visitAdminPath(
+            $this->getAdminChecklistUrl($this->layDeputySubmittedHealthWelfareDetails->getPreviousReportId())
         );
     }
 
