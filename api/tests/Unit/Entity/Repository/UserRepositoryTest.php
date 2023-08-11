@@ -332,6 +332,8 @@ class UserRepositoryTest extends WebTestCase
         $usersToAdd = [];
         $usersToAdd[] = $activeAdminUser = $userHelper->createUser(null, User::ROLE_ADMIN)
             ->setLastLoggedIn(new \DateTime('-2 months'));
+        $usersToAdd[] = $activeLayDeputyUser = $userHelper->createUser(null, User::ROLE_LAY_DEPUTY)
+            ->setLastLoggedIn(new \DateTime('-2 months'));
         $usersToAdd[] = $inactiveAdminUser = $userHelper->createUser(null, User::ROLE_ADMIN)
             ->setLastLoggedIn(new \DateTime('-25 months'));
         $usersToAdd[] = $inactiveAdminManagerUser = $userHelper->createUser(null, User::ROLE_ADMIN_MANAGER)
@@ -351,13 +353,13 @@ class UserRepositoryTest extends WebTestCase
         $this->sut->deleteInactiveAdminUsers($adminUserIds);
 
         $adminUsersDeleted = [$inactiveAdminUser->getId(), $inactiveAdminManagerUser->getId()];
-        $adminUsersNotDeleted = [$activeAdminUser->getId()];
+        $usersNotDeleted = [$activeAdminUser->getId(), $activeLayDeputyUser->getId()];
 
         $deletedAdminUsers = $this->sut->findBy(['id' => $adminUsersDeleted]);
         $this->assertCount(0, $deletedAdminUsers);
 
-        $adminUserNotDeleted = $this->sut->findBy(['id' => $adminUsersNotDeleted]);
-        $this->assertCount(1, $adminUserNotDeleted);
+        $usersNotDeleted = $this->sut->findBy(['id' => $usersNotDeleted]);
+        $this->assertCount(2, $usersNotDeleted);
     }
 
     protected function tearDown(): void

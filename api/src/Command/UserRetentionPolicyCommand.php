@@ -43,16 +43,14 @@ class UserRetentionPolicyCommand extends Command
 
           $inactiveAdminUserIds = [];
 
-          if ($getInactiveAdminUsers) {
-              if (is_array($getInactiveAdminUsers)) {
-                  foreach ($getInactiveAdminUsers as $adminUser) {
-                      $inactiveAdminUserIds[] = $adminUser->getId();
-                      $this->auditLogDeletionAutomation($adminUser);
-                  }
-              } elseif ($getInactiveAdminUsers instanceof User) {
-                  $inactiveAdminUserIds[] = $getInactiveAdminUsers->getId();
-                  $this->auditLogDeletionAutomation($getInactiveAdminUsers);
+          if (is_array($getInactiveAdminUsers)) {
+              foreach ($getInactiveAdminUsers as $adminUser) {
+                  $inactiveAdminUserIds[] = $adminUser->getId();
+                  $this->auditLogDeletionAutomation($adminUser);
               }
+          } elseif ($getInactiveAdminUsers instanceof User) {
+              $inactiveAdminUserIds[] = $getInactiveAdminUsers->getId();
+              $this->auditLogDeletionAutomation($getInactiveAdminUsers);
           }
 
           if (!empty($inactiveAdminUserIds)) {
@@ -60,9 +58,11 @@ class UserRetentionPolicyCommand extends Command
 
               $this->userRepository->deleteInactiveAdminUsers($inactiveAdminUserIds);
               $output->writeln(sprintf('%d inactive admin user(s) deleted', $countOfAdminUsers));
-          } else {
-              $output->writeln('No inactive admin users to delete');
+
+              return 1;
           }
+
+          $output->writeln('No inactive admin users to delete');
 
           return 0;
       }
