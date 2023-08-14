@@ -15,6 +15,9 @@ import GoogleAnalyticsLinkTracking from './modules_new/GoogleAnalyticsLinkTracki
 import ShowHideContent from './modules_new/ShowHideContent'
 import MOJFrontend from '@ministryofjustice/frontend'
 import GOVUKFrontend from 'govuk-frontend'
+import EnableJavascript from './modules_new/EnableJavascript'
+import GoogleAnalyticsObject from './modules_new/GoogleAnalyticsObject'
+import GoogleAnalyticsGtag from './modules_new/GoogleAnalyticsGtag'
 
 window.addEventListener('DOMContentLoaded', () => {
   // Session Timeout
@@ -54,6 +57,12 @@ window.addEventListener('DOMContentLoaded', () => {
   GoogleAnalyticsLinkTracking.init(document, 250)
 
   ShowHideContent.init()
+
+  EnableJavascript.init(document)
+
+  GoogleAnalyticsObject.init(document)
+
+  GoogleAnalyticsGtag.init(document)
 
   // Error summaries
   const errorSummaries = document.querySelector('#error-summary')
