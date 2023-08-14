@@ -1,0 +1,18 @@
+{% extends '@App/Layouts/application.html.twig' %}
+
+{% set translationDomain = "admin-metrics" %}
+{% trans_default_domain translationDomain %}
+{% set page = 'inactiveAdminUsersReport' %}
+
+{% set navSection = 'reports' %}
+
+{% block htmlTitle %}{{ (page ~ '.htmlTitle') | trans }}{% endblock %}
+{% block pageTitle %}{{ (page ~ '.pageTitle') | trans }}{% endblock %}
+{% block supportTitleTop %}{{ (page ~ '.supportTitle') | trans }}{% endblock %}
+
+{% block pageContent %}
+    {{ form_start(form) }}
+    {{ form_input(form.inactivityPeriod, page ~ '.form.inactivityPeriod') }}
+    {{ form_submit(form.submitAndDownload, page ~ '.form.submitAndDownload') }}
+    {{ form_end(form) }}
+{% endblock %}
