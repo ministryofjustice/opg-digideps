@@ -148,11 +148,13 @@ class ProcessOrgCSVCommand extends Command
 
                 $this->storeOutput($upload);
 
-                $this->logger->log('error', sprintf('Successfully processed chunk: %d', $index));
+                $this->logger->log('notice', sprintf('Successfully processed chunk: %d', $index));
             } catch (\Throwable $e) {
-                $this->logger->log('error', sprintf('Error processed chunk: %d, error: %s', $index, $e->getMessage()));
+                $this->logger->log('error', sprintf('Error processing chunk: %d, error: %s', $index, $e->getMessage()));
             }
         }
+
+        $this->logger->log('notice', 'Successfully processed all chunks');
 
         $this->redis->set('org-csv-processing', 'completed');
         $this->redis->set('org-csv-completed-date', date('Y-m-d H:i:s'));

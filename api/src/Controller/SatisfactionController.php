@@ -137,16 +137,4 @@ class SatisfactionController extends RestController
 
         return $satisfaction->getId();
     }
-
-    /**
-     * @param array $date
-     *
-     * @return \DateTime|null
-     *
-     * @throws \Exception
-     */
-    private function convertDateStringToDateTime(string $date)
-    {
-        return empty($date) ? null : new \DateTime($date);
-    }
 }

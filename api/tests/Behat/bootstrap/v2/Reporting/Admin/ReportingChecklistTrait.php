@@ -236,4 +236,28 @@ trait ReportingChecklistTrait
             throw new BehatException('There was an non successful response when running the checklist-sync command');
         }
     }
+
+    /**
+     * @Then the checklist details should show :expectedDetails
+     */
+    public function theChecklistDetailsShouldShow(string $expectedDetails)
+    {
+        $this->iAmOnAdminReportChecklistPage();
+
+        $xpath = sprintf('//p[contains(.,"%s")]', $expectedDetails);
+        $sideMenu = $this->getSession()->getPage()->find('xpath', $xpath);
+
+        if (is_null($sideMenu)) {
+            throw new BehatException(sprintf('The checklist details were not visible on the page. Expected %s', $expectedDetails));
+        }
+    }
+
+    /**
+     * @Then the checklist details should show my admin details
+     */
+    public function theChecklistDetailsShouldShowMyAdminDetails()
+    {
+        $expectedDetails = sprintf('%s, Admin', $this->adminDetails->getUserFullName());
+        $this->theChecklistDetailsShouldShow($expectedDetails);
+    }
 }

@@ -10,7 +10,7 @@ server {
     ## Headers
     add_header Strict-Transport-Security "max-age=31536000; includeSubdomains;";
     add_header Referrer-Policy           "same-origin"                                                                                 always;
-    add_header Content-Security-Policy   "default-src 'self'; img-src 'self' data: https://www.google-analytics.com https://www.googletagmanager.com; connect-src 'self' https://www.google-analytics.com https://region1.google-analytics.com; script-src 'self' https://www.google-analytics.com https://www.googletagmanager.com; script-src-elem 'self' https://www.google-analytics.com https://www.googletagmanager.com; style-src 'self' 'unsafe-inline';" always;
+    add_header Content-Security-Policy   "default-src 'self'; img-src 'self' data: https://www.google-analytics.com https://www.googletagmanager.com; connect-src 'self' https://www.google-analytics.com https://region1.google-analytics.com; script-src 'self' https://www.google-analytics.com https://www.googletagmanager.com; script-src-elem 'self' https://www.google-analytics.com https://www.googletagmanager.com; style-src 'self';" always;
     add_header X-XSS-Protection "1; mode=block" always;
     add_header X-Content-Type-Options    "nosniff" always;
     add_header Permissions-Policy        "geolocation=()" always;

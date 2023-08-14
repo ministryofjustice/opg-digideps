@@ -362,4 +362,19 @@ trait AdminManagementTrait
         $this->interactingWithUserDetails = null;
         $this->completedFormFields = [];
     }
+
+    /**
+     * @When I delete the existing admin user
+     */
+    public function IDeletedTheExistingAdminUser()
+    {
+        $this->iVisitAdminEditUserPageForTheAdminUser();
+
+        $this->assertLinkWithTextIsOnPage('Delete user');
+        $this->clickLink('Delete user');
+        $this->clickLink("Yes, I'm sure");
+
+        $user = $this->em->getRepository(User::class)->findOneBy(['email' => $this->adminDetails->getUserEmail()]);
+        $this->assertIsNull($user, sprintf('Queried DB for User with email %s', $this->adminDetails->getUserEmail()));
+    }
 }
