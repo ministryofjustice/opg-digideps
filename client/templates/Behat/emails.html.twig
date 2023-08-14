@@ -14,8 +14,8 @@
     </h1>
 
     {% for email in emails %}
-        <details style="margin-bottom: 3rem">
-            <summary style="display: block">
+        <details class="email-details">
+            <summary class="email-summary">
                 <strong class="govuk-!-font-weight-bold">{{ email.time | date("Y-m-d H:i:s") }}</strong>
                 <br>
                 {% for address, name in email.to %}
