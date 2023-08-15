@@ -12,6 +12,8 @@ final class AuditEvents
 
     public const TRIGGER_USER_ARCHIVED_CLIENT = 'USER_ARCHIVED_CLIENT';
 
+    public const USER_DELETED_AUTOMATION = 'USER_DELETED_AUTOMATION';
+
     /**
      * @var DateTimeProvider
      */
@@ -40,6 +42,22 @@ final class AuditEvents
         ];
 
         return $event + $this->baseEvent(AuditEvents::EVENT_CLIENT_ARCHIVED);
+    }
+
+    public function userAccountAutomatedDeletion(
+        string $trigger,
+        int $id,
+        string $email,
+    ) {
+        $event = [
+            'trigger' => $trigger,
+            'id' => $id,
+            'email_address' => $email,
+            'message' => 'Deletion due to two year retention policy',
+            'deleted_on' => $this->dateTimeProvider->getDateTime()->format(\DateTime::ATOM),
+        ];
+
+        return $event + $this->baseEvent(AuditEvents::USER_DELETED_AUTOMATION);
     }
 
     private function baseEvent(string $eventName): array
