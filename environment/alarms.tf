@@ -439,7 +439,7 @@ resource "aws_cloudwatch_metric_alarm" "front_ddos_attack_external" {
 
 resource "aws_cloudwatch_log_metric_filter" "document_queued_more_than_hour" {
   name           = "DocumentQueuedError.${local.environment}"
-  pattern        = "[t, ll = \"*NOTICE*\", q = \"queued_over_1_hour\", qv, p, pv, t, tv, e, ev, x1, x2]"
+  pattern        = "[ts, ll = \"*NOTICE*\", q = \"queued_over_1_hour\", qv, p, pv, t, tv, e, ev, x1, x2]"
   log_group_name = aws_cloudwatch_log_group.opg_digi_deps.name
 
   metric_transformation {
@@ -452,7 +452,7 @@ resource "aws_cloudwatch_log_metric_filter" "document_queued_more_than_hour" {
 
 resource "aws_cloudwatch_log_metric_filter" "document_in_progress_more_than_hour" {
   name           = "DocumentQueuedError.${local.environment}"
-  pattern        = "[t, ll = \"*NOTICE*\", q = \"queued_over_1_hour\", qv, p, pv, t, tv, e, ev, x1, x2]"
+  pattern        = "[ts, ll = \"*NOTICE*\", q = \"queued_over_1_hour\", qv, p, pv, t, tv, e, ev, x1, x2]"
   log_group_name = aws_cloudwatch_log_group.opg_digi_deps.name
 
   metric_transformation {
@@ -465,7 +465,7 @@ resource "aws_cloudwatch_log_metric_filter" "document_in_progress_more_than_hour
 
 resource "aws_cloudwatch_log_metric_filter" "document_temporary_error" {
   name           = "DocumentQueuedError.${local.environment}"
-  pattern        = "[t, ll = \"*NOTICE*\", q = \"queued_over_1_hour\", qv, p, pv, t, tv, e, ev, x1, x2]"
+  pattern        = "[ts, ll = \"*NOTICE*\", q = \"queued_over_1_hour\", qv, p, pv, t, tv, e, ev, x1, x2]"
   log_group_name = aws_cloudwatch_log_group.opg_digi_deps.name
 
   metric_transformation {
@@ -478,7 +478,7 @@ resource "aws_cloudwatch_log_metric_filter" "document_temporary_error" {
 
 resource "aws_cloudwatch_log_metric_filter" "document_permanent_error" {
   name           = "DocumentQueuedError.${local.environment}"
-  pattern        = "[t, ll = \"*NOTICE*\", q = \"queued_over_1_hour\", qv, p, pv, t, tv, e, ev, x1, x2]"
+  pattern        = "[ts, ll = \"*NOTICE*\", q = \"queued_over_1_hour\", qv, p, pv, t, tv, e, ev, x1, x2]"
   log_group_name = aws_cloudwatch_log_group.opg_digi_deps.name
 
   metric_transformation {
@@ -489,17 +489,17 @@ resource "aws_cloudwatch_log_metric_filter" "document_permanent_error" {
   }
 }
 
-#resource "aws_cloudwatch_metric_alarm" "queued_documents" {
-#  alarm_name          = "${local.environment}-queued-docs-over-1hr"
-#  statistic           = "Max"
-#  metric_name         = aws_cloudwatch_log_metric_filter.queued_documents.metric_transformation[0].name
-#  comparison_operator = "GreaterThanOrEqualToThreshold"
-#  threshold           = 500
-#  period              = 1800
-#  evaluation_periods  = 1
-#  treat_missing_data  = "notBreaching"
-#  namespace           = aws_cloudwatch_log_metric_filter.queued_documents.metric_transformation[0].namespace
-#  alarm_actions       = [data.aws_sns_topic.alerts.arn]
-#  actions_enabled     = local.account.alarms_active
-#  tags                = local.default_tags
-#}
+resource "aws_cloudwatch_metric_alarm" "document_queued_more_than_hour" {
+  alarm_name          = "${local.environment}-queued-docs-over-1hr"
+  statistic           = "Maximum"
+  metric_name         = aws_cloudwatch_log_metric_filter.document_queued_more_than_hour.metric_transformation[0].name
+  comparison_operator = "GreaterThanOrEqualToThreshold"
+  threshold           = 500
+  period              = 300
+  evaluation_periods  = 1
+  treat_missing_data  = "notBreaching"
+  namespace           = aws_cloudwatch_log_metric_filter.document_queued_more_than_hour.metric_transformation[0].namespace
+  alarm_actions       = [data.aws_sns_topic.alerts.arn]
+  actions_enabled     = local.account.alarms_active
+  tags                = local.default_tags
+}
