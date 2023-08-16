@@ -52,18 +52,6 @@ jobs:
         with:
           ssh-private-key: ${{ secrets.SSH_PRIVATE_KEY_ALLOW_LIST_REPOSITORY }}
 
-      - name: download artifact for monitoring lambda layer
-        if: inputs.apply == 'true' && inputs.terraform_path == 'environment'
-        uses: actions/download-artifact@e9ef242655d12993efdcda9058dee2db83a2cb9b
-        with:
-          name: layer.tar
-          path: lambdas
-
-      - name: extract lambda layers
-        if: inputs.apply == 'true' && inputs.terraform_path == 'environment'
-        run: tar xvf layer.tar
-        working-directory: lambdas
-
       - name: terraform init
         run: terraform init -input=false
         working-directory: ${{ inputs.terraform_path }}

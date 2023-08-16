@@ -123,12 +123,6 @@ jobs:
       - workflow_variables
       - docker_build_scan_push
 
-  monitoring_lambda_unit_tests:
-    name: monitoring lambda unit tests
-    uses: ./.github/workflows/_unit-tests-monitoring-lambda.yml
-    needs:
-      - workflow_variables
-
   terraform_plan_shared_development:
     name: shared plan terraform development
     uses: ./.github/workflows/_run-terraform.yml
@@ -146,7 +140,6 @@ jobs:
     needs:
       - docker_build_scan_push
       - terraform_lint
-      - monitoring_lambda_unit_tests
       - workflow_variables
     with:
       workspace: ${{ needs.workflow_variables.outputs.parsed_branch }}

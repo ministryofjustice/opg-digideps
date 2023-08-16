@@ -41,6 +41,7 @@ jobs:
         run: |
           APP_ENV=dev APP_DEBUG=0 docker-compose -f docker-compose.yml -f docker-compose.ci.client-unit-tests.yml up -d --no-deps client-unit-tests pact-mock
           sleep 3
+          docker-compose -f docker-compose.yml -f docker-compose.ci.client-unit-tests.yml exec -T client-unit-tests chown root /tmp/commonpasswords.txt
           docker-compose -f docker-compose.yml -f docker-compose.ci.client-unit-tests.yml exec -T client-unit-tests sh scripts/client-unit-tests.sh
           docker-compose -f docker-compose.yml -f docker-compose.ci.client-unit-tests.yml exec -T client-unit-tests chmod -R 777 tests/phpunit/coverage/client-unit-tests.xml
           docker cp "client-unit-tests-app:/var/www/tests/phpunit/coverage/client-unit-tests.xml" "./client-unit-tests.xml"
