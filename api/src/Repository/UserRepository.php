@@ -341,4 +341,20 @@ SQL;
 
         return $result->getResult();
     }
+
+    public function deleteStaffUsersThatAreNotInSirius(array $staffUsersToBeDeleted)
+    {
+        $em = $this->getEntityManager();
+        $rsm = new ResultSetMappingBuilder($em);
+
+        $sql = 'DELETE FROM dd_user WHERE id IN (:ids)';
+        $params = [
+            'ids' => $staffUsersToBeDeleted,
+        ];
+
+        $stmt = $em->createNativeQuery($sql, $rsm);
+        $result = $stmt->setParameters($params);
+
+        return $result->getResult();
+    }
 }
