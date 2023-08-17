@@ -50,10 +50,6 @@ jobs:
         working-directory: environment
         run: terraform init -input=false
 
-      - name: create lambda layers directory
-        working-directory: lambdas
-        run: mkdir -p layers/monitoring
-
       - name: clean up ephemeral environments
         working-directory: environment
         run: |

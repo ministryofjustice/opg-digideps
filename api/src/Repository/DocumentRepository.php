@@ -143,7 +143,6 @@ WHERE d.synchronisation_status IN ('{$queuedStatus}', '{$permanentErrorStatus}',
         $failedDocumentStmt = $conn->prepare($queuedDocumentsQuery);
         $result = $failedDocumentStmt->executeQuery();
 
-        // Get all queued documents
         $results = $result->fetchAllAssociative();
 
         $failedCounts = [];
