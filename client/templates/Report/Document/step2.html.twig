@@ -48,7 +48,7 @@
     <div class="js-hidden">
         {{ macros.notification('info', (page ~ '.uploadHint') | trans) }}
     </div>
-    <div style="clear:both;display:inline-block;height:0px;">
+    <div class="custom-submit">
         {{ form_submit(form.save, '', {'buttonClass': 'govuk-button behat-link-attach-file js-uploading', 'labelText': 'form.submitButton' | trans}) }}
     </div>
     <div>

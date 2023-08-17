@@ -8,7 +8,6 @@ input[type="text"]::-ms-clear {
 }
 
 .form-group {
-
     textarea.form-control {
         height: 7em;
     }
@@ -30,7 +29,7 @@ input[type="text"]::-ms-clear {
     margin: 2px;
     padding: 5px 10px 6px;
     border: 0;
-    background: govuk-colour('light-grey');
+    background: govuk-colour("light-grey");
     text-align: center;
     z-index: 1;
 
@@ -73,7 +72,6 @@ input[type="text"]::-ms-clear {
     }
 }
 
-
 // Horizontally lined up form-groups
 // Currently only used on the admin search (Search, Role, NDR check)
 
@@ -92,7 +90,6 @@ input[type="text"]::-ms-clear {
         }
     }
 }
-
 
 // Smaller checkboxes for admin
 // https://home-office-digital-patterns.herokuapp.com/components/checkboxes
@@ -141,6 +138,12 @@ input[type="text"]::-ms-clear {
     padding: 0;
 }
 
-.js-enabled .js-auto-size{
+.js-enabled .js-auto-size {
     overflow: hidden; //only apply if the JS has loaded and is causing the textrea to grow automatically
+}
+
+.custom-submit {
+    clear: both;
+    display: inline-block;
+    height: 0px;
 }
