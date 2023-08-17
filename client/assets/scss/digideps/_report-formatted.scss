@@ -3,7 +3,6 @@
 // Report formatted for PDF printing
 
 .formatted-report {
-
     width: 800px;
 
     #safeguarding-section table {
@@ -17,7 +16,6 @@
         td.checkbox {
             border-bottom: 1px solid $black;
         }
-
     }
 
     #action-section table {
@@ -31,7 +29,6 @@
         td.checkbox {
             border-bottom: 1px solid $black;
         }
-
     }
 
     #decisions-list {
@@ -40,7 +37,6 @@
             font-weight: bold;
         }
     }
-
 }
 
 .page-report-header {
@@ -51,5 +47,8 @@
         margin-top: 0;
         float: left;
     }
+}
 
+.total-reporting {
+    border-bottom: 0;
 }

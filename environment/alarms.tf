@@ -451,12 +451,12 @@ resource "aws_cloudwatch_log_metric_filter" "document_queued_more_than_hour" {
 }
 
 resource "aws_cloudwatch_log_metric_filter" "document_in_progress_more_than_hour" {
-  name           = "DocumentQueuedError.${local.environment}"
+  name           = "DocumentProgressError.${local.environment}"
   pattern        = "[ts, ll = \"*NOTICE*\", q = \"queued_over_1_hour\", qv, p, pv, t, tv, e, ev, x1, x2]"
   log_group_name = aws_cloudwatch_log_group.opg_digi_deps.name
 
   metric_transformation {
-    name          = "DocumentInProgressError.${local.environment}"
+    name          = "DocumentProgressError.${local.environment}"
     namespace     = "DigiDeps/Error"
     value         = "$pv"
     default_value = "0"
@@ -464,7 +464,7 @@ resource "aws_cloudwatch_log_metric_filter" "document_in_progress_more_than_hour
 }
 
 resource "aws_cloudwatch_log_metric_filter" "document_temporary_error" {
-  name           = "DocumentQueuedError.${local.environment}"
+  name           = "DocumentTemporaryError.${local.environment}"
   pattern        = "[ts, ll = \"*NOTICE*\", q = \"queued_over_1_hour\", qv, p, pv, t, tv, e, ev, x1, x2]"
   log_group_name = aws_cloudwatch_log_group.opg_digi_deps.name
 
@@ -477,7 +477,7 @@ resource "aws_cloudwatch_log_metric_filter" "document_temporary_error" {
 }
 
 resource "aws_cloudwatch_log_metric_filter" "document_permanent_error" {
-  name           = "DocumentQueuedError.${local.environment}"
+  name           = "DocumentPermanentError.${local.environment}"
   pattern        = "[ts, ll = \"*NOTICE*\", q = \"queued_over_1_hour\", qv, p, pv, t, tv, e, ev, x1, x2]"
   log_group_name = aws_cloudwatch_log_group.opg_digi_deps.name
 
@@ -489,6 +489,7 @@ resource "aws_cloudwatch_log_metric_filter" "document_permanent_error" {
   }
 }
 
+# Adding unrealistically high thresholds at the moment as we have to clear up some old document data
 resource "aws_cloudwatch_metric_alarm" "document_queued_more_than_hour" {
   alarm_name          = "${local.environment}-queued-docs-over-1hr"
   statistic           = "Maximum"
@@ -499,6 +500,51 @@ resource "aws_cloudwatch_metric_alarm" "document_queued_more_than_hour" {
   evaluation_periods  = 1
   treat_missing_data  = "notBreaching"
   namespace           = aws_cloudwatch_log_metric_filter.document_queued_more_than_hour.metric_transformation[0].namespace
+  alarm_actions       = [data.aws_sns_topic.alerts.arn]
+  actions_enabled     = local.account.alarms_active
+  tags                = local.default_tags
+}
+
+resource "aws_cloudwatch_metric_alarm" "document_progress_more_than_hour" {
+  alarm_name          = "${local.environment}-progress-docs-over-1hr"
+  statistic           = "Maximum"
+  metric_name         = aws_cloudwatch_log_metric_filter.document_in_progress_more_than_hour.metric_transformation[0].name
+  comparison_operator = "GreaterThanOrEqualToThreshold"
+  threshold           = 500
+  period              = 300
+  evaluation_periods  = 1
+  treat_missing_data  = "notBreaching"
+  namespace           = aws_cloudwatch_log_metric_filter.document_in_progress_more_than_hour.metric_transformation[0].namespace
+  alarm_actions       = [data.aws_sns_topic.alerts.arn]
+  actions_enabled     = local.account.alarms_active
+  tags                = local.default_tags
+}
+
+resource "aws_cloudwatch_metric_alarm" "document_temporary_error" {
+  alarm_name          = "${local.environment}-temporary-error"
+  statistic           = "Maximum"
+  metric_name         = aws_cloudwatch_log_metric_filter.document_temporary_error.metric_transformation[0].name
+  comparison_operator = "GreaterThanOrEqualToThreshold"
+  threshold           = 500
+  period              = 300
+  evaluation_periods  = 1
+  treat_missing_data  = "notBreaching"
+  namespace           = aws_cloudwatch_log_metric_filter.document_temporary_error.metric_transformation[0].namespace
+  alarm_actions       = [data.aws_sns_topic.alerts.arn]
+  actions_enabled     = local.account.alarms_active
+  tags                = local.default_tags
+}
+
+resource "aws_cloudwatch_metric_alarm" "document_permanent_error" {
+  alarm_name          = "${local.environment}-permanent-error"
+  statistic           = "Maximum"
+  metric_name         = aws_cloudwatch_log_metric_filter.document_permanent_error.metric_transformation[0].name
+  comparison_operator = "GreaterThanOrEqualToThreshold"
+  threshold           = 500
+  period              = 300
+  evaluation_periods  = 1
+  treat_missing_data  = "notBreaching"
+  namespace           = aws_cloudwatch_log_metric_filter.document_permanent_error.metric_transformation[0].namespace
   alarm_actions       = [data.aws_sns_topic.alerts.arn]
   actions_enabled     = local.account.alarms_active
   tags                = local.default_tags
