@@ -309,6 +309,7 @@ class UserRepositoryTest extends WebTestCase
         $recentlyLoggedInAdminUser->setLastLoggedIn(new \DateTime('-10 days'));
         $recentlyLoggedInAdminManagerUser->setLastLoggedIn(new \DateTime('-10 days'));
         $recentlyLoggedInSuperAdminManagerUser->setLastLoggedIn(new \DateTime('-10 days'));
+
         $recentlyLoggedInDeputyUser->setLastLoggedIn(new \DateTime('-10 days'));
 
         foreach ($usersToAdd as $user) {
@@ -327,6 +328,43 @@ class UserRepositoryTest extends WebTestCase
         foreach ($expectedRecentlyLoggedInUsersNotReturned as $user) {
             self::assertNotContains($user, $actualLoggedInAdminUsers);
         }
+    }
+
+    public function testInactiveAdminUsersAreDeleted()
+    {
+        $userHelper = new UserTestHelper();
+
+        $usersToAdd = [];
+        $usersToAdd[] = $activeAdminUser = $userHelper->createUser(null, User::ROLE_ADMIN)
+            ->setLastLoggedIn(new \DateTime('-2 months'));
+        $usersToAdd[] = $activeLayDeputyUser = $userHelper->createUser(null, User::ROLE_LAY_DEPUTY)
+            ->setLastLoggedIn(new \DateTime('-2 months'));
+        $usersToAdd[] = $inactiveAdminUser = $userHelper->createUser(null, User::ROLE_ADMIN)
+            ->setLastLoggedIn(new \DateTime('-25 months'));
+        $usersToAdd[] = $inactiveAdminManagerUser = $userHelper->createUser(null, User::ROLE_ADMIN_MANAGER)
+            ->setLastLoggedIn(new \DateTime('-26 months'));
+
+        foreach ($usersToAdd as $user) {
+            $this->em->persist($user);
+        }
+
+        $this->em->flush();
+
+        $adminUserIds = [];
+        foreach ($usersToAdd as $user) {
+            $adminUserIds[] = $user->getId();
+        }
+
+        $this->sut->deleteInactiveAdminUsers($adminUserIds);
+
+        $adminUsersDeleted = [$inactiveAdminUser->getId(), $inactiveAdminManagerUser->getId()];
+        $usersNotDeleted = [$activeAdminUser->getId(), $activeLayDeputyUser->getId()];
+
+        $deletedAdminUsers = $this->sut->findBy(['id' => $adminUsersDeleted]);
+        $this->assertCount(0, $deletedAdminUsers);
+
+        $usersNotDeleted = $this->sut->findBy(['id' => $usersNotDeleted]);
+        $this->assertCount(2, $usersNotDeleted);
     }
 
     protected function tearDown(): void

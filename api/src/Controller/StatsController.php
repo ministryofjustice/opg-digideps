@@ -109,7 +109,7 @@ class StatsController extends RestController
         $numberOfMonthsInactive = $request->query->get('inactivityPeriod');
         $timeframe = sprintf('-%d months', $numberOfMonthsInactive);
 
-        $inactiveAdminUserAccounts = $this->userRepository->getAllAdminUserAccountsNotUsedWithin($timeframe);
+        $inactiveAdminUserAccounts = $this->userRepository->getAllAdminAccountsNotUsedWithin($timeframe);
 
         return [
             'InactiveAdminAccounts' => $inactiveAdminUserAccounts,
