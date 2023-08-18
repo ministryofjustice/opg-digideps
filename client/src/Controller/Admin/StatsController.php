@@ -20,7 +20,7 @@ use App\Service\Client\RestClient;
 use App\Service\Csv\ActiveLaysCsvGenerator;
 use App\Service\Csv\AssetsTotalsCSVGenerator;
 use App\Service\Csv\ClientBenefitMetricsCsvGenerator;
-use App\Service\Csv\OldAdminUserCsvGenerator;
+use App\Service\Csv\InactiveAdminUsersCsvGenerator;
 use App\Service\Csv\ReportImbalanceCsvGenerator;
 use App\Service\Csv\SatisfactionCsvGenerator;
 use App\Service\Csv\UserResearchResponseCsvGenerator;
@@ -45,7 +45,7 @@ class StatsController extends AbstractController
         private readonly UserResearchResponseCsvGenerator $userResearchResponseCsvGenerator,
         private readonly AssetsTotalsCSVGenerator $assetsTotalsCSVGenerator,
         private readonly ClientBenefitMetricsCsvGenerator $clientBenefitMetricsCsvGenerator,
-        private readonly OldAdminUserCsvGenerator $inactiveAdminUserCsvGenerator,
+        private readonly InactiveAdminUsersCsvGenerator $inactiveAdminUserCsvGenerator,
         private readonly ReportImbalanceCsvGenerator $reportImbalanceCsvGenerator
     ) {
     }
@@ -298,7 +298,7 @@ class StatsController extends AbstractController
 
                 $fileName = 'inactiveAdminUsers.csv';
                 $reportData = $this->statsApi->getInactiveAdminUsers($append);
-                $csv = $this->inactiveAdminUserCsvGenerator->generateOldAdminUsersCsv($reportData);
+                $csv = $this->inactiveAdminUserCsvGenerator->generateInactiveAdminUsersCsv($reportData);
 
                 return $this->csvResponseGeneration($fileName, $csv);
             } catch (\Throwable $e) {
