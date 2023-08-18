@@ -205,11 +205,11 @@ trait IVisitAdminTrait
     }
 
     /**
-     * @When I visit the admin users not logged in within last 13 months report page
+     * @When I visit the inactive admin users report page
      */
-    public function iVisitOldAdminUsersReportsPage()
+    public function iVisitInactiveAdminUsersReportsPage()
     {
-        $this->visitAdminPath($this->getOldAdminUsersReportUrl());
+        $this->visitAdminPath($this->getInactiveAdminusersReportUrl());
     }
 
     /**
