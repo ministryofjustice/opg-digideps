@@ -321,7 +321,7 @@ class UserRepositoryTest extends WebTestCase
         $expectedLoggedInAdminUsers = [$notRecentlyLoggedInAdminUser, $notRecentlyLoggedInSuperAdminManagerUser];
         $expectedRecentlyLoggedInUsersNotReturned = [$recentlyLoggedInAdminUser, $recentlyLoggedInAdminManagerUser, $recentlyLoggedInDeputyUser];
 
-        $actualLoggedInAdminUsers = $this->sut->getAllAdminUserAccountsNotUsedWithin('-12 months');
+        $actualLoggedInAdminUsers = $this->sut->getAllAdminAccountsNotUsedWithin('-12 months');
 
         self::assertEquals($expectedLoggedInAdminUsers, $actualLoggedInAdminUsers);
 
