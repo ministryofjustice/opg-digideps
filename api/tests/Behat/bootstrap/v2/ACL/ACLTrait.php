@@ -74,8 +74,8 @@ trait ACLTrait
             case 'view reports':
                 $this->iVisitAdminStatsReportsPage();
                 break;
-            case 'admin users not logged in within last 13 months report':
-                $this->iVisitOldAdminUsersReportsPage();
+            case 'inactive admin users report':
+                $this->iVisitInactiveAdminUsersReportsPage();
                 break;
             default:
                 throw new BehatException(sprintf('Analytics page "%s" unrecognised', $lowercasePageName));

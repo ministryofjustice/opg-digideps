@@ -16,7 +16,7 @@ Feature: Limiting access to sections of the app to super admins
         When I visit the admin stats reports page
         Then I should be able to access the "user research report"
         When I visit the admin stats reports page
-        Then I should be able to access the "admin users not logged in within last 13 months report"
+        Then I should be able to access the "inactive admin users report"
         When I visit the admin stats reports page
         Then I should be able to access the 'Fixtures' page
         Then I should be able to access the 'Notifications' page
