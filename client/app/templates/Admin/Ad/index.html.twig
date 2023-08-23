@@ -67,7 +67,7 @@
 
 
         {% for user in users %}
-            <tr {% if user.id == app.request.get('userAdded') %} style="background-color: #e6db74"{% endif %}>
+            <tr {% if user.id == app.request.get('userAdded') %} class="admin-users"{% endif %}>
                 <td>
                     {{ user.id }}
                 </td>

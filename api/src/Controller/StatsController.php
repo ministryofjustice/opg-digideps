@@ -8,6 +8,7 @@ use App\Entity\Ndr\AssetOther as NdrAssetOther;
 use App\Entity\Ndr\AssetProperty as NdrAssetProperty;
 use App\Entity\Report\AssetOther;
 use App\Entity\Report\AssetProperty;
+use App\Entity\Report\Report;
 use App\Exception\UnauthorisedException;
 use App\Repository\AssetRepository;
 use App\Repository\BankAccountRepository;
@@ -19,7 +20,6 @@ use App\Service\Auth\AuthService;
 use App\Service\Formatter\RestFormatter;
 use App\Service\Stats\QueryFactory;
 use App\Service\Stats\StatsQueryParameters;
-use DateTime;
 use Sensio\Bundle\FrameworkExtraBundle\Configuration\Security;
 use Symfony\Component\HttpFoundation\JsonResponse;
 use Symfony\Component\HttpFoundation\Request;
@@ -98,18 +98,21 @@ class StatsController extends RestController
     }
 
     /**
-     * @Route("stats/admins/old_report_data", methods={"GET"})
+     * @Route("stats/admins/inactive_admin_users", methods={"GET"})
      * @Security("is_granted('ROLE_SUPER_ADMIN')")
      */
-    public function getOldAdminUserReportData(Request $request, Restformatter $formatter): array
+    public function getInactiveAdminUserReportData(Request $request, Restformatter $formatter): array
     {
         $serialisedGroups = (array) $request->query->get('groups');
         $formatter->setJmsSerialiserGroups($serialisedGroups);
 
-        $adminUserAccountsNotUsedWithin13Months = $this->userRepository->getAllAdminUserAccountsNotUsedWithin('-13 months');
+        $numberOfMonthsInactive = $request->query->get('inactivityPeriod');
+        $timeframe = sprintf('-%d months', $numberOfMonthsInactive);
+
+        $inactiveAdminUserAccounts = $this->userRepository->getAllAdminAccountsNotUsedWithin($timeframe);
 
         return [
-            'AdminUserAccountsNotUsedWithin13Months' => $adminUserAccountsNotUsedWithin13Months,
+            'InactiveAdminAccounts' => $inactiveAdminUserAccounts,
         ];
     }
 
@@ -126,7 +129,7 @@ class StatsController extends RestController
             'grandTotal' => 0,
         ];
 
-        $oneYearAgo = new DateTime('-1 year');
+        $oneYearAgo = new \DateTime('-1 year');
 
         $ret['lays']['non-liquid'] += $this->assetRepository->getSumOfAssets(AssetOther::class, 'LAY', $oneYearAgo);
         $ret['profs']['non-liquid'] += $this->assetRepository->getSumOfAssets(AssetOther::class, 'PROF', $oneYearAgo);
@@ -168,5 +171,20 @@ class StatsController extends RestController
         $endDate = $request->query->get('endDate');
 
         return $this->reportRepository->getBenefitsResponseMetrics($startDate, $endDate, $deputyType);
+    }
+
+    /**
+     * @Route("stats/report/imbalance", name="imbalance_report", methods={"GET"})
+     * @Security("is_granted('ROLE_SUPER_ADMIN')")
+     */
+    public function getImbalanceReport(Request $request)
+    {
+        $startDate = $this->convertDateStringToDateTime($request->get('startDate', ''));
+        $startDate instanceof \DateTime ? $startDate->setTime(0, 0, 1) : null;
+
+        $endDate = $this->convertDateStringToDateTime($request->get('endDate', ''));
+        $endDate instanceof \DateTime ? $endDate->setTime(23, 59, 59) : null;
+
+        return $this->reportRepository->getAllReportedImbalanceMetrics($startDate, $endDate);
     }
 }

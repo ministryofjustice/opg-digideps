@@ -129,7 +129,7 @@
 {% endmacro %}
 
 {% macro saveAndContinueButton(button) %}
-    <div style="clear:both;display:inline-block;height:0px;">
+    <div class="custom-submit">
         {{ form_submit(button, '', {
             'labelText': 'saveAndContinue',
             'labelTranslationDomain': 'common',
@@ -147,7 +147,7 @@
         {% set buttonClasses = 'govuk-button' %}
     {% endif %}
 
-    <div style="clear:both;display:inline-block;height:0px;">
+    <div class="custom-submit">
         {{ form_submit(button, '', {
             'labelText': labelText,
             'labelTranslationDomain': 'common',
@@ -157,7 +157,7 @@
 {% endmacro %}
 
 {% macro saveAndAddAnotherSaveButton(button) %}
-    <div style="clear:both;display:inline-block;height:0px;">
+    <div class="custom-submit">
         {{ form_submit(button, '', {
             'labelText': 'saveAndAddAnother' | trans({}, 'common'),
             'buttonClass': 'govuk-button govuk-button--secondary behat-link-save-and-add-another',

@@ -7,10 +7,16 @@
 
 <p class="govuk-body-s behat-region-{{ checklistDomain }}-last-saved-by">
     {{ 'lastSaved' | trans({}, 'common') }}:
-    {{ (checklist.lastModifiedOn) ? (checklist.lastModifiedOn | date("j F Y H:i")) : 'Not saved yet' }}
-    <br>
-    {% if (checklist.lastModifiedBy is defined) and (checklist.lastModifiedBy is not empty) %}
-        {{ checklist.lastModifiedBy.fullName}}, {{ checklist.lastModifiedBy.roleFullName }}
+    {% if checklist.lastModifiedOn %}
+        {{ (checklist.lastModifiedOn | date("j F Y H:i")) }}
+        <br>
+        {% if (checklist.lastModifiedBy is defined) and (checklist.lastModifiedBy is not empty) %}
+            {{ checklist.lastModifiedBy.fullName}}, {{ checklist.lastModifiedBy.roleFullName }}
+        {% else %}
+            {{ 'deletedUser' | trans({}, 'common') }}
+        {% endif %}
+    {% else %}
+        {{ (checklist.lastModifiedOn) ?  : 'Not saved yet' }}
     {% endif %}
 </p>
 
@@ -19,7 +25,11 @@
         {{ 'lastSubmitted' | trans({}, 'common') }}:
         {{ checklist.submittedOn | date("j F Y H:i") }}
         <br>
-        {{ checklist.submittedBy.fullName}}, {{ checklist.submittedBy.roleFullName }}
+        {% if (checklist.submittedBy is defined) and (checklist.submittedBy is not empty) %}
+            {{ checklist.submittedBy.fullName}}, {{ checklist.submittedBy.roleFullName }}
+        {% else %}
+            {{ 'deletedUser' | trans({}, 'common') }}
+        {% endif %}
     </p>
 
     {% if (syncStatus) %}

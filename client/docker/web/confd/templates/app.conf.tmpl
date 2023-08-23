@@ -6,7 +6,8 @@ server {
 
     ## Headers
     add_header Referrer-Policy           "same-origin"                                                                                 always;
-    add_header Content-Security-Policy   "default-src https:; script-src https: 'unsafe-inline'; style-src https: 'unsafe-inline';"    always;
+    add_header Content-Security-Policy   "default-src 'self'; img-src 'self' data: https://*.google-analytics.com https://*.googletagmanager.com; connect-src 'self' https://*.google-analytics.com https://*.analytics.google.com https://*.googletagmanager.com; script-src 'self' https://*.google-analytics.com https://*.googletagmanager.com; style-src 'self';" always;
+    add_header X-XSS-Protection "1; mode=block" always;
     add_header X-Content-Type-Options    "nosniff"                                                                                     always;
     add_header Strict-Transport-Security "max-age=3600; includeSubDomains";
     add_header Permissions-Policy        "geolocation=()"                                                                           always;
@@ -49,6 +50,9 @@ server {
     location ~ \.php$ {
         return 404;
     }
+
+    # Comply with https://ministryofjustice.github.io/security-guidance/contact/implement-security-txt/#implementing-securitytxt
+    rewrite ^/.well_known/security.txt$ https://raw.githubusercontent.com/ministryofjustice/security-guidance/master/contact/vulnerability-disclosure-security.txt permanent;
 }
 
 # this block is needed, along with the /_csp location defined above, to allow the

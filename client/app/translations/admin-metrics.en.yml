@@ -17,8 +17,9 @@ reports:
   downloadSatisfaction: Download satisfaction report
   downloadUserResearch: Download user research report
   userAccountReports: View admin account metrics
-  oldUserAccountReports: Download admin users not logged in within last 13 months report
+  inactiveAdminUsersReport: Download inactive admin users report
   benefitsSectionMetrics: View benefits report metrics
+  reportImbalanceMetrics: Download report imbalance metrics
 
 benefitsReportMetrics:
   htmlTitle: Administration - Benefits Report Metrics
@@ -36,6 +37,31 @@ benefitsReportMetrics:
     submitAndDownload:
       label: Download
     clear: Clear filter
+
+reportSectionImbalanceMetrics:
+  htmlTitle: Administration - Report Financial Imbalance Metrics
+  pageTitle: Financial Imbalance Metrics
+  supportTitle: Analytics
+  form:
+    fromDate:
+      legend: Start date
+      hint: For example, 31 3 2015
+    toDate:
+      legend: End date
+      hint: For example, 31 3 2016
+    submitAndDownload:
+      label: Download
+    clear: Clear filter
+
+inactiveAdminUsersReport:
+  htmlTitle: Administration - Inactive Admin Users Report
+  pageTitle: Inactive Admin Users Report
+  supportTitle: Analytics
+  form:
+    inactivityPeriod:
+      label: Months inactive
+    submitAndDownload:
+      label: Download
 
 form:
   title: Change reporting period

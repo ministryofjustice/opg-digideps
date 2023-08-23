@@ -133,13 +133,11 @@ checklistPage:
       qid: L8.3
     bondAdequate:
       label: |
-        Is the bond adequate protection for the client's assets? If ‘No’, refer to the Security
-        Bonds Discrepancy Resolution Job Card.
+        Is the bond adequate protection for the client's assets?
       qid: L9.1
     bondOrderMatchSirius:
       label: |
-        Does the bond amount on Sirius match that on the order? If ‘No’, refer to the Security
-        Bonds Discrepancy Resolution Job Card.
+        Does the bond amount on Sirius match that on the order?
       qid: L9.2
     paymentsMatchCostCertificate:
       label: |

@@ -15,13 +15,6 @@ locals {
     ssm     = local.common_sg_rules.ssm
     ecr_api = local.common_sg_rules.ecr_api
     secrets = local.common_sg_rules.secrets
-    front_elb = {
-      port        = 443
-      type        = "ingress"
-      protocol    = "tcp"
-      target_type = "security_group_id"
-      target      = module.front_elb_security_group.id
-    }
     front_elb_http = {
       port        = 80
       type        = "ingress"

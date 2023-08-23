@@ -69,7 +69,7 @@ jobs:
             ${{ runner.os }}-${{ matrix.svc_name }}-build
 
       - name: install aws cli
-        uses: unfor19/install-aws-cli-action@457b7980b125044247e455d87b9a26fc2299b787 # pin@v1.0.3
+        uses: unfor19/install-aws-cli-action@46282f151073130d90347412d9c4ef0640177f22 # pin@v1.0.3
 
       - name: configure aws credentials
         uses: aws-actions/configure-aws-credentials@35d8f9588bf190a9a7fda3411cd548fb8234bee2 # pin@v1.7.0
@@ -118,7 +118,7 @@ jobs:
 
       - name: trivy image scanning
         id: trivy_scan
-        uses: aquasecurity/trivy-action@e602665a11b530ef6d75951b866d4eea32732be9 # pin@v0.7.1
+        uses: aquasecurity/trivy-action@559eb1224e654a86c844a795e6702a0742c60c72 # pin@v0.7.1
         with:
           image-ref: ${{ matrix.svc_name }}:latest
           severity: "HIGH,CRITICAL"

@@ -9,13 +9,6 @@ module "admin_elb_security_group" {
 
 locals {
   admin_elb_sg_rules = {
-    admin_service = {
-      port        = 443
-      type        = "egress"
-      protocol    = "tcp"
-      target_type = "security_group_id"
-      target      = module.admin_service_security_group.id
-    }
     admin_service_http = {
       port        = 80
       type        = "egress"

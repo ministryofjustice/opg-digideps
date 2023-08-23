@@ -11,22 +11,20 @@ use App\Service\Time\DateTimeProvider;
 use App\TestHelpers\ClientHelpers;
 use App\TestHelpers\NamedDeputyHelper;
 use App\TestHelpers\OrganisationHelpers;
-use App\TestHelpers\UserHelpers;
 use PHPUnit\Framework\TestCase;
+use Prophecy\PhpUnit\ProphecyTrait;
 use Psr\Log\LoggerInterface;
-use DateTime;
-use Symfony\Component\DependencyInjection\Loader\Configurator\Traits\PropertyTrait;
 
 class DeputyChangedOrgSubscriberTest extends TestCase
 {
-    use PropertyTrait;
+    use ProphecyTrait;
 
     /** @test */
     public function getSubscribedEvents()
     {
         self::assertEquals(
             [
-                DeputyChangedOrgEvent::NAME => 'auditLog'
+                DeputyChangedOrgEvent::NAME => 'auditLog',
             ],
             DeputyChangedOrgSubscriber::getSubscribedEvents());
     }
@@ -37,12 +35,12 @@ class DeputyChangedOrgSubscriberTest extends TestCase
         $logger = self::prophesize(LoggerInterface::class);
         $dateTimeProvider = self::prophesize(DateTimeProvider::class);
 
-        $now = new DateTime();
+        $now = new \DateTime();
         $dateTimeProvider->getDateTime()->willReturn($now);
 
         $trigger = 'DEPUTY_CHANGED_ORG';
 
-//      Client record currently in database
+        //      Client record currently in database
         $client = ClientHelpers::createClient();
         $clientOrg = OrganisationHelpers::createActivatedOrganisation();
         $namedDeputy = NamedDeputyHelper::createNamedDeputy();
@@ -52,8 +50,7 @@ class DeputyChangedOrgSubscriberTest extends TestCase
         $deputyId = $client->getDeputy()->getId();
         $previousOrgId = $client->getOrganisation()->getId();
 
-
-//      New organisation linked to client
+        //      New organisation linked to client
         $newOrg = OrganisationHelpers::createActivatedOrganisation();
         $client->setOrganisation($newOrg);
         $newOrgId = $client->getOrganisation()->getId();
@@ -65,7 +62,7 @@ class DeputyChangedOrgSubscriberTest extends TestCase
 
         $expectedEvent = [
             'trigger' => $trigger,
-            'date_deputy_changed' => $now->format(DateTime::ATOM),
+            'date_deputy_changed' => $now->format(\DateTime::ATOM),
             'deputy_id' => $deputyId,
             'organisation_moved_from' => $previousOrgId,
             'organisation_moved_to' => $newOrgId,

@@ -96,6 +96,12 @@ locals {
         hostPort      = 80,
         protocol      = "tcp"
       }],
+      healthCheck = {
+        command : [
+          "CMD-SHELL",
+          "curl -f http://127.0.0.1:80/health-check || exit 1"
+        ]
+      },
       volumesFrom = [],
       logConfiguration = {
         logDriver = "awslogs",

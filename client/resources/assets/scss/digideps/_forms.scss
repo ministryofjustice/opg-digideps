@@ -141,3 +141,9 @@ input[type="text"]::-ms-clear {
 .js-enabled .js-auto-size {
   overflow: hidden; //only apply if the JS has loaded and is causing the textrea to grow automatically
 }
+
+.custom-submit {
+  clear: both;
+  display: inline-block;
+  height: 0px;
+}

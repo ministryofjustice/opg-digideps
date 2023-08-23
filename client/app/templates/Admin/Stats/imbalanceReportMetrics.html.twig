@@ -1,0 +1,32 @@
+{% extends '@App/Layouts/application.html.twig' %}
+
+{% set translationDomain = "admin-metrics" %}
+{% trans_default_domain translationDomain %}
+{% set page = 'reportSectionImbalanceMetrics' %}
+
+{% set navSection = 'reports' %}
+
+{% block htmlTitle %}{{ (page ~ '.htmlTitle') | trans }}{% endblock %}
+{% block pageTitle %}{{ (page ~ '.pageTitle') | trans }}{% endblock %}
+{% block supportTitleTop %}{{ (page ~ '.supportTitle') | trans }}{% endblock %}
+
+{% block pageContent %}
+
+    {{ form_start(form, {attr: {class: 'search', novalidate: 'novalidate' }}) }}
+        {{ form_known_date(form.startDate, page ~ '.form.fromDate', {
+            'hintText': (page ~ '.form.fromDate.hint') | trans,
+        }) }}<span class="govuk-visually-hidden">of imbalance report metrics responses search period</span>
+
+        {{ form_known_date(form.endDate, page ~ '.form.toDate', {
+            'hintText': (page ~ '.form.toDate.hint') | trans,
+        }) }}<span class="govuk-visually-hidden">of imbalance report metrics responses search period</span>
+
+        <div class="govuk-form-group">
+            {{ form_submit(form.submitAndDownload, page ~ '.form.submitAndDownload', {
+                'buttonClass': 'behat-link-submit-and-download'
+            }) }}
+            <a href="{{ path('report_imbalance_metrics') }}" class="govuk-link button-link">{{ page ~ '.form.clear' | trans }}</a>
+        </div>
+    {{ form_end(form) }}
+
+{% endblock %}

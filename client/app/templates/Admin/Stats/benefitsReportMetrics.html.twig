@@ -13,24 +13,24 @@
 {% block pageContent %}
 
     {{ form_start(form, {attr: {class: 'search', novalidate: 'novalidate' }}) }}
-        {{ form_known_date(form.startDate, 'benefitsReportMetrics.form.fromDate', {
+        {{ form_known_date(form.startDate, page ~ '.form.fromDate', {
             'hintText': (page ~ '.form.fromDate.hint') | trans,
         }) }}<span class="govuk-visually-hidden">of benefits report metrics responses search period</span>
 
-        {{ form_known_date(form.endDate, 'benefitsReportMetrics.form.toDate', {
+        {{ form_known_date(form.endDate, page ~ '.form.toDate', {
             'hintText': (page ~ '.form.toDate.hint') | trans,
         }) }}<span class="govuk-visually-hidden">of benefits report metrics responses search period</span>
 
-        {{ form_select(form.deputyType, 'benefitsReportMetrics.form.deputyType', {
+        {{ form_select(form.deputyType, page ~ '.form.deputyType', {
         'fieldSetClass' : 'inline',
         'legendClass' : 'govuk-label--s'
         }) }}
 
         <div class="govuk-form-group">
-            {{ form_submit(form.submitAndDownload, 'benefitsReportMetrics.form.submitAndDownload', {
+            {{ form_submit(form.submitAndDownload, page ~ '.form.submitAndDownload', {
                 'buttonClass': 'behat-link-submit-and-download'
             }) }}
-            <a href="{{ path('benefits_reoprt_metrics') }}" class="govuk-link button-link">{{ 'benefitsReportMetrics.form.clear' | trans }}</a>
+            <a href="{{ path('benefits_report_metrics') }}" class="govuk-link button-link">{{ page ~ '.form.clear' | trans }}</a>
         </div>
     {{ form_end(form) }}
 
