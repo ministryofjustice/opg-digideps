@@ -8,8 +8,8 @@ use App\Entity\Report\Document;
 use App\Exception\UnauthorisedException;
 use App\Service\Auth\AuthService;
 use App\Service\Formatter\RestFormatter;
-use DateTime;
 use Doctrine\ORM\EntityManagerInterface;
+use Psr\Log\LoggerInterface;
 use Sensio\Bundle\FrameworkExtraBundle\Configuration\Security;
 use Symfony\Component\HttpFoundation\Request;
 use Symfony\Component\Routing\Annotation\Route;
@@ -23,14 +23,15 @@ class DocumentController extends RestController
     private EntityManagerInterface $em;
     private AuthService $authService;
     private RestFormatter $formatter;
-
+    private LoggerInterface $verboseLogger;
     private array $sectionIds = [EntityDir\Report\Report::SECTION_DOCUMENTS];
 
-    public function __construct(EntityManagerInterface $em, AuthService $authService, RestFormatter $formatter)
+    public function __construct(EntityManagerInterface $em, AuthService $authService, RestFormatter $formatter, LoggerInterface $verboseLogger)
     {
         $this->authService = $authService;
         $this->em = $em;
         $this->formatter = $formatter;
+        $this->verboseLogger = $verboseLogger;
     }
 
     /**
@@ -38,6 +39,7 @@ class DocumentController extends RestController
      *     "reportId":"\d+",
      *     "reportType" = "(report|ndr)"
      * }, methods={"POST"})
+     *
      * @Security("is_granted('ROLE_DEPUTY')")
      */
     public function add(Request $request, $reportType, $reportId)
@@ -78,6 +80,7 @@ class DocumentController extends RestController
      * GET document by id.
      *
      * @Route("/document/{id}", requirements={"id":"\d+"}, methods={"GET"})
+     *
      * @Security("is_granted('ROLE_DEPUTY')")
      */
     public function getOneById(Request $request, $id)
@@ -99,6 +102,7 @@ class DocumentController extends RestController
      * Accessible only from deputy area.
      *
      * @Route("/document/{id}", methods={"DELETE"})
+     *
      * @Security("is_granted('ROLE_DEPUTY')")
      *
      * @param int $id
@@ -142,6 +146,19 @@ class DocumentController extends RestController
         $data = $this->formatter->deserializeBodyContent($request);
 
         $documentRepo = $em->getRepository(Document::class);
+
+        $failedDocuments = $documentRepo->logFailedDocuments();
+
+        if (0 == count($failedDocuments)) {
+            $this->verboseLogger->error('Unsupported number of rows from document sync counts');
+        } else {
+            $this->verboseLogger->notice(
+                'queued_over_1_hour '.$failedDocuments['queued_over_1_hour'].
+                ' in_progress_over_1_hour '.$failedDocuments['in_progress_over_1_hour'].
+                ' temporary_error_count '.$failedDocuments['temporary_error_count'].
+                ' permanent_error_count '.$failedDocuments['permanent_error_count']
+            );
+        }
 
         return json_encode($documentRepo->getQueuedDocumentsAndSetToInProgress($data['row_limit']));
     }
@@ -231,7 +248,7 @@ class DocumentController extends RestController
             }
 
             if (Document::SYNC_STATUS_SUCCESS === $data['syncStatus']) {
-                $document->setSynchronisationTime(new DateTime());
+                $document->setSynchronisationTime(new \DateTime());
             }
         }
 

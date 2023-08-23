@@ -1,3 +1,5 @@
+# ========== Log Error Alarms ==========
+
 resource "aws_cloudwatch_log_metric_filter" "php_critical_errors" {
   name           = "CriticalPHPErrorFilter.${local.environment}"
   pattern        = "CRITICAL"
@@ -54,32 +56,137 @@ resource "aws_cloudwatch_metric_alarm" "php_errors" {
   tags                = local.default_tags
 }
 
-resource "aws_cloudwatch_log_metric_filter" "queued_documents" {
-  name           = "MonitorQueuedDocuments.${local.environment}"
-  pattern        = "{ $.eventType = \"Queued_Documents\" }"
-  log_group_name = aws_cloudwatch_log_group.monitoring_lambda.name
+# ========== Log response status alarms ==========
+
+resource "aws_cloudwatch_log_metric_filter" "frontend_5xx_errors" {
+  name           = "Frontend5XXErrors.${local.environment}"
+  pattern        = "{($.service_name = \"frontend\") && ($.status = 5*)}"
+  log_group_name = aws_cloudwatch_log_group.opg_digi_deps.name
 
   metric_transformation {
-    name      = "QueuedGreaterThanHour.${local.environment}"
-    namespace = "DigiDeps/Error"
-    value     = "$.count"
+    name          = "Frontend5XXErrors.${local.environment}"
+    namespace     = "DigiDeps/Error"
+    value         = "1"
+    default_value = "0"
   }
 }
 
-resource "aws_cloudwatch_metric_alarm" "queued_documents" {
-  alarm_name          = "${local.environment}-queued-docs-over-1hr"
+resource "aws_cloudwatch_metric_alarm" "frontend_5xx_errors" {
+  alarm_name          = "${local.environment}-frontend-5xx-errors"
   statistic           = "Sum"
-  metric_name         = aws_cloudwatch_log_metric_filter.queued_documents.metric_transformation[0].name
+  metric_name         = aws_cloudwatch_log_metric_filter.frontend_5xx_errors.metric_transformation[0].name
   comparison_operator = "GreaterThanOrEqualToThreshold"
+  datapoints_to_alarm = 5
+  evaluation_periods  = 5
   threshold           = 1
-  period              = 1800
-  evaluation_periods  = 1
+  period              = 60
   treat_missing_data  = "notBreaching"
-  namespace           = aws_cloudwatch_log_metric_filter.queued_documents.metric_transformation[0].namespace
+  namespace           = aws_cloudwatch_log_metric_filter.frontend_5xx_errors.metric_transformation[0].namespace
   alarm_actions       = [data.aws_sns_topic.alerts.arn]
   actions_enabled     = local.account.alarms_active
   tags                = local.default_tags
 }
+
+resource "aws_cloudwatch_log_metric_filter" "admin_5xx_errors" {
+  name           = "Admin5XXErrors.${local.environment}"
+  pattern        = "{($.service_name = \"admin\") && ($.status = 5*)}"
+  log_group_name = aws_cloudwatch_log_group.opg_digi_deps.name
+
+  metric_transformation {
+    name          = "Admin5XXErrors.${local.environment}"
+    namespace     = "DigiDeps/Error"
+    value         = "1"
+    default_value = "0"
+  }
+}
+
+resource "aws_cloudwatch_metric_alarm" "admin_5xx_errors" {
+  alarm_name          = "${local.environment}-admin-5xx-errors"
+  statistic           = "Sum"
+  metric_name         = aws_cloudwatch_log_metric_filter.admin_5xx_errors.metric_transformation[0].name
+  comparison_operator = "GreaterThanOrEqualToThreshold"
+  datapoints_to_alarm = 5
+  evaluation_periods  = 5
+  threshold           = 1
+  period              = 60
+  treat_missing_data  = "notBreaching"
+  namespace           = aws_cloudwatch_log_metric_filter.admin_5xx_errors.metric_transformation[0].namespace
+  alarm_actions       = [data.aws_sns_topic.alerts.arn]
+  actions_enabled     = local.account.alarms_active
+  tags                = local.default_tags
+}
+
+resource "aws_cloudwatch_log_metric_filter" "api_5xx_errors" {
+  name           = "API5XXErrors.${local.environment}"
+  pattern        = "{($.service_name = \"api\") && ($.status = 5*)}"
+  log_group_name = aws_cloudwatch_log_group.opg_digi_deps.name
+
+  metric_transformation {
+    name          = "API5XXErrors.${local.environment}"
+    namespace     = "DigiDeps/Error"
+    value         = "1"
+    default_value = "0"
+  }
+}
+
+resource "aws_cloudwatch_metric_alarm" "api_5xx_errors" {
+  alarm_name          = "${local.environment}-api-5xx-errors"
+  statistic           = "Sum"
+  metric_name         = aws_cloudwatch_log_metric_filter.api_5xx_errors.metric_transformation[0].name
+  comparison_operator = "GreaterThanOrEqualToThreshold"
+  datapoints_to_alarm = 5
+  evaluation_periods  = 5
+  threshold           = 1
+  period              = 60
+  treat_missing_data  = "notBreaching"
+  namespace           = aws_cloudwatch_log_metric_filter.api_5xx_errors.metric_transformation[0].namespace
+  alarm_actions       = [data.aws_sns_topic.alerts.arn]
+  actions_enabled     = local.account.alarms_active
+  tags                = local.default_tags
+}
+
+# ========== Load balancer status response alarms ==========
+
+resource "aws_cloudwatch_metric_alarm" "frontend_alb_5xx_errors" {
+  alarm_name          = "${local.environment}-frontend-alb-5xx-errors"
+  alarm_description   = "Number of 5XX Errors returned to Public Users from the ${local.environment} Frontend ALB."
+  actions_enabled     = local.account.alarms_active
+  alarm_actions       = [data.aws_sns_topic.alerts.arn]
+  comparison_operator = "GreaterThanThreshold"
+  dimensions = {
+    "LoadBalancer" = trimprefix(split(":", aws_lb.front.arn)[5], "loadbalancer/")
+  }
+  datapoints_to_alarm = 5
+  evaluation_periods  = 5
+  threshold           = 1
+  period              = 60
+  metric_name         = "HTTPCode_Target_5XX_Count"
+  namespace           = "AWS/ApplicationELB"
+  statistic           = "Sum"
+  tags                = local.default_tags
+  treat_missing_data  = "notBreaching"
+}
+
+resource "aws_cloudwatch_metric_alarm" "admin_alb_5xx_errors" {
+  alarm_name          = "${local.environment}-admin-alb-5xx-errors"
+  alarm_description   = "Number of 5XX Errors returned to Internal Users from the ${local.environment} Admin ALB."
+  actions_enabled     = local.account.alarms_active
+  alarm_actions       = [data.aws_sns_topic.alerts.arn]
+  comparison_operator = "GreaterThanThreshold"
+  dimensions = {
+    "LoadBalancer" = trimprefix(split(":", aws_lb.admin.arn)[5], "loadbalancer/")
+  }
+  evaluation_periods = 1
+  metric_name        = "HTTPCode_Target_5XX_Count"
+  namespace          = "AWS/ApplicationELB"
+  period             = 3600
+  statistic          = "Sum"
+  tags               = local.default_tags
+  threshold          = 3
+  treat_missing_data = "notBreaching"
+}
+
+# ========== Healthcheck related Alarms ==========
 
 data "aws_sns_topic" "availability-alert" {
   provider = aws.us-east-1
@@ -210,131 +317,7 @@ resource "aws_cloudwatch_metric_alarm" "availability-dependencies" {
   }
 }
 
-resource "aws_cloudwatch_log_metric_filter" "frontend_5xx_errors" {
-  name           = "Frontend5XXErrors.${local.environment}"
-  pattern        = "{($.service_name = \"frontend\") && ($.status = 5*)}"
-  log_group_name = aws_cloudwatch_log_group.opg_digi_deps.name
-
-  metric_transformation {
-    name          = "Frontend5XXErrors.${local.environment}"
-    namespace     = "DigiDeps/Error"
-    value         = "1"
-    default_value = "0"
-  }
-}
-
-resource "aws_cloudwatch_metric_alarm" "frontend_5xx_errors" {
-  alarm_name          = "${local.environment}-frontend-5xx-errors"
-  statistic           = "Sum"
-  metric_name         = aws_cloudwatch_log_metric_filter.frontend_5xx_errors.metric_transformation[0].name
-  comparison_operator = "GreaterThanOrEqualToThreshold"
-  datapoints_to_alarm = 5
-  evaluation_periods  = 5
-  threshold           = 1
-  period              = 60
-  treat_missing_data  = "notBreaching"
-  namespace           = aws_cloudwatch_log_metric_filter.frontend_5xx_errors.metric_transformation[0].namespace
-  alarm_actions       = [data.aws_sns_topic.alerts.arn]
-  actions_enabled     = local.account.alarms_active
-  tags                = local.default_tags
-}
-
-resource "aws_cloudwatch_log_metric_filter" "admin_5xx_errors" {
-  name           = "Admin5XXErrors.${local.environment}"
-  pattern        = "{($.service_name = \"admin\") && ($.status = 5*)}"
-  log_group_name = aws_cloudwatch_log_group.opg_digi_deps.name
-
-  metric_transformation {
-    name          = "Admin5XXErrors.${local.environment}"
-    namespace     = "DigiDeps/Error"
-    value         = "1"
-    default_value = "0"
-  }
-}
-
-resource "aws_cloudwatch_metric_alarm" "admin_5xx_errors" {
-  alarm_name          = "${local.environment}-admin-5xx-errors"
-  statistic           = "Sum"
-  metric_name         = aws_cloudwatch_log_metric_filter.admin_5xx_errors.metric_transformation[0].name
-  comparison_operator = "GreaterThanOrEqualToThreshold"
-  datapoints_to_alarm = 5
-  evaluation_periods  = 5
-  threshold           = 1
-  period              = 60
-  treat_missing_data  = "notBreaching"
-  namespace           = aws_cloudwatch_log_metric_filter.admin_5xx_errors.metric_transformation[0].namespace
-  alarm_actions       = [data.aws_sns_topic.alerts.arn]
-  actions_enabled     = local.account.alarms_active
-  tags                = local.default_tags
-}
-
-resource "aws_cloudwatch_log_metric_filter" "api_5xx_errors" {
-  name           = "API5XXErrors.${local.environment}"
-  pattern        = "{($.service_name = \"api\") && ($.status = 5*)}"
-  log_group_name = aws_cloudwatch_log_group.opg_digi_deps.name
-
-  metric_transformation {
-    name          = "API5XXErrors.${local.environment}"
-    namespace     = "DigiDeps/Error"
-    value         = "1"
-    default_value = "0"
-  }
-}
-
-resource "aws_cloudwatch_metric_alarm" "api_5xx_errors" {
-  alarm_name          = "${local.environment}-api-5xx-errors"
-  statistic           = "Sum"
-  metric_name         = aws_cloudwatch_log_metric_filter.api_5xx_errors.metric_transformation[0].name
-  comparison_operator = "GreaterThanOrEqualToThreshold"
-  datapoints_to_alarm = 5
-  evaluation_periods  = 5
-  threshold           = 1
-  period              = 60
-  treat_missing_data  = "notBreaching"
-  namespace           = aws_cloudwatch_log_metric_filter.api_5xx_errors.metric_transformation[0].namespace
-  alarm_actions       = [data.aws_sns_topic.alerts.arn]
-  actions_enabled     = local.account.alarms_active
-  tags                = local.default_tags
-}
-
-resource "aws_cloudwatch_metric_alarm" "frontend_alb_5xx_errors" {
-  alarm_name          = "${local.environment}-frontend-alb-5xx-errors"
-  alarm_description   = "Number of 5XX Errors returned to Public Users from the ${local.environment} Frontend ALB."
-  actions_enabled     = local.account.alarms_active
-  alarm_actions       = [data.aws_sns_topic.alerts.arn]
-  comparison_operator = "GreaterThanThreshold"
-  dimensions = {
-    "LoadBalancer" = trimprefix(split(":", aws_lb.front.arn)[5], "loadbalancer/")
-  }
-  datapoints_to_alarm = 5
-  evaluation_periods  = 5
-  threshold           = 1
-  period              = 60
-  metric_name         = "HTTPCode_Target_5XX_Count"
-  namespace           = "AWS/ApplicationELB"
-  statistic           = "Sum"
-  tags                = local.default_tags
-  treat_missing_data  = "notBreaching"
-}
-
-resource "aws_cloudwatch_metric_alarm" "admin_alb_5xx_errors" {
-  alarm_name          = "${local.environment}-admin-alb-5xx-errors"
-  alarm_description   = "Number of 5XX Errors returned to Internal Users from the ${local.environment} Admin ALB."
-  actions_enabled     = local.account.alarms_active
-  alarm_actions       = [data.aws_sns_topic.alerts.arn]
-  comparison_operator = "GreaterThanThreshold"
-  dimensions = {
-    "LoadBalancer" = trimprefix(split(":", aws_lb.admin.arn)[5], "loadbalancer/")
-  }
-  evaluation_periods = 1
-  metric_name        = "HTTPCode_Target_5XX_Count"
-  namespace          = "AWS/ApplicationELB"
-  period             = 3600
-  statistic          = "Sum"
-  tags               = local.default_tags
-  threshold          = 3
-  treat_missing_data = "notBreaching"
-}
+# ========== Response time alarms ==========
 
 resource "aws_cloudwatch_metric_alarm" "frontend_alb_average_response_time" {
   alarm_name          = "${local.environment}-frontend-alb-response-time"
@@ -416,6 +399,8 @@ resource "aws_cloudwatch_metric_alarm" "admin_alb_average_response_time" {
   }
 }
 
+# ========== DDOS Alarms ==========
+
 resource "aws_cloudwatch_metric_alarm" "admin_ddos_attack_external" {
   alarm_name          = "${local.environment}-admin-ddos-detected"
   comparison_operator = "GreaterThanThreshold"
@@ -448,4 +433,119 @@ resource "aws_cloudwatch_metric_alarm" "front_ddos_attack_external" {
   dimensions = {
     ResourceArn = aws_lb.front.arn
   }
+}
+
+# Document Sync Alerts
+
+resource "aws_cloudwatch_log_metric_filter" "document_queued_more_than_hour" {
+  name           = "DocumentQueuedError.${local.environment}"
+  pattern        = "[ts, ll = \"*NOTICE*\", q = \"queued_over_1_hour\", qv, p, pv, t, tv, e, ev, x1, x2]"
+  log_group_name = aws_cloudwatch_log_group.opg_digi_deps.name
+
+  metric_transformation {
+    name          = "DocumentQueuedError.${local.environment}"
+    namespace     = "DigiDeps/Error"
+    value         = "$qv"
+    default_value = "0"
+  }
+}
+
+resource "aws_cloudwatch_log_metric_filter" "document_in_progress_more_than_hour" {
+  name           = "DocumentProgressError.${local.environment}"
+  pattern        = "[ts, ll = \"*NOTICE*\", q = \"queued_over_1_hour\", qv, p, pv, t, tv, e, ev, x1, x2]"
+  log_group_name = aws_cloudwatch_log_group.opg_digi_deps.name
+
+  metric_transformation {
+    name          = "DocumentProgressError.${local.environment}"
+    namespace     = "DigiDeps/Error"
+    value         = "$pv"
+    default_value = "0"
+  }
+}
+
+resource "aws_cloudwatch_log_metric_filter" "document_temporary_error" {
+  name           = "DocumentTemporaryError.${local.environment}"
+  pattern        = "[ts, ll = \"*NOTICE*\", q = \"queued_over_1_hour\", qv, p, pv, t, tv, e, ev, x1, x2]"
+  log_group_name = aws_cloudwatch_log_group.opg_digi_deps.name
+
+  metric_transformation {
+    name          = "DocumentTemporaryError.${local.environment}"
+    namespace     = "DigiDeps/Error"
+    value         = "$tv"
+    default_value = "0"
+  }
+}
+
+resource "aws_cloudwatch_log_metric_filter" "document_permanent_error" {
+  name           = "DocumentPermanentError.${local.environment}"
+  pattern        = "[ts, ll = \"*NOTICE*\", q = \"queued_over_1_hour\", qv, p, pv, t, tv, e, ev, x1, x2]"
+  log_group_name = aws_cloudwatch_log_group.opg_digi_deps.name
+
+  metric_transformation {
+    name          = "DocumentPermanentError.${local.environment}"
+    namespace     = "DigiDeps/Error"
+    value         = "$ev"
+    default_value = "0"
+  }
+}
+
+# Adding unrealistically high thresholds at the moment as we have to clear up some old document data
+resource "aws_cloudwatch_metric_alarm" "document_queued_more_than_hour" {
+  alarm_name          = "${local.environment}-queued-docs-over-1hr"
+  statistic           = "Maximum"
+  metric_name         = aws_cloudwatch_log_metric_filter.document_queued_more_than_hour.metric_transformation[0].name
+  comparison_operator = "GreaterThanOrEqualToThreshold"
+  threshold           = 500
+  period              = 300
+  evaluation_periods  = 1
+  treat_missing_data  = "notBreaching"
+  namespace           = aws_cloudwatch_log_metric_filter.document_queued_more_than_hour.metric_transformation[0].namespace
+  alarm_actions       = [data.aws_sns_topic.alerts.arn]
+  actions_enabled     = local.account.alarms_active
+  tags                = local.default_tags
+}
+
+resource "aws_cloudwatch_metric_alarm" "document_progress_more_than_hour" {
+  alarm_name          = "${local.environment}-progress-docs-over-1hr"
+  statistic           = "Maximum"
+  metric_name         = aws_cloudwatch_log_metric_filter.document_in_progress_more_than_hour.metric_transformation[0].name
+  comparison_operator = "GreaterThanOrEqualToThreshold"
+  threshold           = 500
+  period              = 300
+  evaluation_periods  = 1
+  treat_missing_data  = "notBreaching"
+  namespace           = aws_cloudwatch_log_metric_filter.document_in_progress_more_than_hour.metric_transformation[0].namespace
+  alarm_actions       = [data.aws_sns_topic.alerts.arn]
+  actions_enabled     = local.account.alarms_active
+  tags                = local.default_tags
+}
+
+resource "aws_cloudwatch_metric_alarm" "document_temporary_error" {
+  alarm_name          = "${local.environment}-temporary-error"
+  statistic           = "Maximum"
+  metric_name         = aws_cloudwatch_log_metric_filter.document_temporary_error.metric_transformation[0].name
+  comparison_operator = "GreaterThanOrEqualToThreshold"
+  threshold           = 500
+  period              = 300
+  evaluation_periods  = 1
+  treat_missing_data  = "notBreaching"
+  namespace           = aws_cloudwatch_log_metric_filter.document_temporary_error.metric_transformation[0].namespace
+  alarm_actions       = [data.aws_sns_topic.alerts.arn]
+  actions_enabled     = local.account.alarms_active
+  tags                = local.default_tags
+}
+
+resource "aws_cloudwatch_metric_alarm" "document_permanent_error" {
+  alarm_name          = "${local.environment}-permanent-error"
+  statistic           = "Maximum"
+  metric_name         = aws_cloudwatch_log_metric_filter.document_permanent_error.metric_transformation[0].name
+  comparison_operator = "GreaterThanOrEqualToThreshold"
+  threshold           = 500
+  period              = 300
+  evaluation_periods  = 1
+  treat_missing_data  = "notBreaching"
+  namespace           = aws_cloudwatch_log_metric_filter.document_permanent_error.metric_transformation[0].namespace
+  alarm_actions       = [data.aws_sns_topic.alerts.arn]
+  actions_enabled     = local.account.alarms_active
+  tags                = local.default_tags
 }

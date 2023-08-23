@@ -298,13 +298,18 @@ class UserRepositoryTest extends WebTestCase
         $userHelper = new UserTestHelper();
         $usersToAdd = [];
         $usersToAdd[] = $notRecentlyLoggedInAdminUser = $userHelper->createUser(null, User::ROLE_ADMIN);
+        $usersToAdd[] = $notRecentlyLoggedInSuperAdminManagerUser = $userHelper->createUser(null, User::ROLE_SUPER_ADMIN);
         $usersToAdd[] = $recentlyLoggedInAdminUser = $userHelper->createUser(null, User::ROLE_ADMIN);
         $usersToAdd[] = $recentlyLoggedInAdminManagerUser = $userHelper->createUser(null, User::ROLE_ADMIN_MANAGER);
+        $usersToAdd[] = $recentlyLoggedInSuperAdminManagerUser = $userHelper->createUser(null, User::ROLE_SUPER_ADMIN);
         $usersToAdd[] = $recentlyLoggedInDeputyUser = $userHelper->createUser(null, User::ROLE_LAY_DEPUTY);
 
-        $notRecentlyLoggedInAdminUser->setLastLoggedIn(new \DateTime('-14 months'));
+        $notRecentlyLoggedInAdminUser->setLastLoggedIn(new \DateTime('-13 months'));
+        $notRecentlyLoggedInSuperAdminManagerUser->setLastLoggedIn(new \DateTime('-24 months'));
         $recentlyLoggedInAdminUser->setLastLoggedIn(new \DateTime('-10 days'));
         $recentlyLoggedInAdminManagerUser->setLastLoggedIn(new \DateTime('-10 days'));
+        $recentlyLoggedInSuperAdminManagerUser->setLastLoggedIn(new \DateTime('-10 days'));
+
         $recentlyLoggedInDeputyUser->setLastLoggedIn(new \DateTime('-10 days'));
 
         foreach ($usersToAdd as $user) {
@@ -313,10 +318,10 @@ class UserRepositoryTest extends WebTestCase
 
         $this->em->flush();
 
-        $expectedLoggedInAdminUsers = [$notRecentlyLoggedInAdminUser];
+        $expectedLoggedInAdminUsers = [$notRecentlyLoggedInAdminUser, $notRecentlyLoggedInSuperAdminManagerUser];
         $expectedRecentlyLoggedInUsersNotReturned = [$recentlyLoggedInAdminUser, $recentlyLoggedInAdminManagerUser, $recentlyLoggedInDeputyUser];
 
-        $actualLoggedInAdminUsers = $this->sut->getAllAdminUserAccountsNotUsedWithin('-13 months');
+        $actualLoggedInAdminUsers = $this->sut->getAllAdminAccountsNotUsedWithin('-12 months');
 
         self::assertEquals($expectedLoggedInAdminUsers, $actualLoggedInAdminUsers);
 

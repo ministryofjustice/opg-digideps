@@ -10,7 +10,7 @@ class StatsApi
 {
     protected const GET_ACTIVE_LAY_REPORT_DATA_ENDPOINT = 'stats/deputies/lay/active';
     protected const GET_ADMIN_USER_ACCOUNT_REPORT_DATA = 'stats/admins/report_data';
-    protected const GET_OLD_ADMIN_USER_REPORT_DATA = 'stats/admins/old_report_data';
+    protected const GET_INACTIVE_ADMIN_USER_REPORT_DATA = 'stats/admins/inactive_admin_users';
     protected const GET_ASSETS_TOTAL_VALUES = 'stats/assets/total_values';
     protected const GET_BENEFITS_REPORT_METRICS = 'stats/report/benefits-report-metrics';
     protected const GET_DEPUTY_IMBALANCE_REPORT_DATA = 'stats/report/imbalance';
@@ -65,10 +65,15 @@ class StatsApi
         );
     }
 
-    public function getOldAdminUsers(): array
+    public function getInactiveAdminUsers(?string $append = null): array
     {
+        $link = self::GET_INACTIVE_ADMIN_USER_REPORT_DATA;
+        if (!empty($append)) {
+            $link = self::GET_INACTIVE_ADMIN_USER_REPORT_DATA.$append;
+        }
+
         return $this->restClient->get(
-            self::GET_OLD_ADMIN_USER_REPORT_DATA,
+            $link,
             'array',
             ['user']
         );
@@ -78,7 +83,7 @@ class StatsApi
     {
         $link = self::GET_DEPUTY_IMBALANCE_REPORT_DATA;
         if (!empty($append)) {
-            $link = self::GET_DEPUTY_IMBALANCE_REPORT_DATA . $append;
+            $link = self::GET_DEPUTY_IMBALANCE_REPORT_DATA.$append;
         }
 
         return $this->restClient->get(

@@ -13,13 +13,6 @@ resource "aws_cloudwatch_log_group" "audit" {
   tags       = local.default_tags
 }
 
-##### Lambda Log Group #####
-resource "aws_cloudwatch_log_group" "monitoring_lambda" {
-  name       = "/aws/lambda/monitoring-${local.environment}"
-  kms_key_id = aws_kms_key.cloudwatch_logs.arn
-  tags       = local.default_tags
-}
-
 ##### Shared KMS key for logs #####
 resource "aws_kms_key" "cloudwatch_logs" {
   description             = "Digideps cloudwatch logs for ${local.environment}"

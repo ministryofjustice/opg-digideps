@@ -90,7 +90,7 @@ class StatsControllerTest extends AbstractTestController
         foreach ($unauthorisedUserTokens as $token) {
             $this->assertJsonRequest(
                 'GET',
-                '/stats/admins/old_report_data',
+                '/stats/admins/inactive_admin_users',
                 [
                    'mustFail' => true,
                    'AuthToken' => $token,
