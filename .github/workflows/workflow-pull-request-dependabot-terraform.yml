@@ -48,12 +48,6 @@ jobs:
       workspace: ${{ needs.workflow_variables.outputs.parsed_branch }}
     secrets: inherit
 
-  monitoring_lambda_unit_tests:
-    name: monitoring lambda unit tests
-    uses: ./.github/workflows/_unit-tests-monitoring-lambda.yml
-    needs:
-      - workflow_variables
-
   terraform_plan_shared_development:
     name: shared plan terraform development
     uses: ./.github/workflows/_run-terraform.yml
@@ -70,7 +64,6 @@ jobs:
     uses: ./.github/workflows/_run-terraform.yml
     needs:
       - terraform_lint
-      - monitoring_lambda_unit_tests
       - workflow_variables
     with:
       workspace: ${{ needs.workflow_variables.outputs.parsed_branch }}

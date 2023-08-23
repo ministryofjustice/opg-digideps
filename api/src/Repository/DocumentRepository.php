@@ -5,7 +5,6 @@ declare(strict_types=1);
 namespace App\Repository;
 
 use App\Entity\Report\Document;
-use DateTime;
 use Doctrine\Bundle\DoctrineBundle\Repository\ServiceEntityRepository;
 use Doctrine\DBAL\Connection;
 use Doctrine\Persistence\ManagerRegistry;
@@ -83,7 +82,7 @@ LIMIT $limit;";
                 'report_submission_id' => $row['report_submission_id'],
                 'ndr_id' => $row['ndr_id'],
                 'report_id' => $row['report_id'],
-                'report_start_date' => isset($row['report_start_date']) ? $row['report_start_date'] : (new DateTime($row['ndr_start_date']))->format('Y-m-d'),
+                'report_start_date' => isset($row['report_start_date']) ? $row['report_start_date'] : (new \DateTime($row['ndr_start_date']))->format('Y-m-d'),
                 'report_end_date' => $row['report_end_date'],
                 'report_submit_date' => isset($row['report_submit_date']) ? $row['report_submit_date'] : $row['ndr_submit_date'],
                 'report_type' => $row['report_type'],
@@ -122,7 +121,49 @@ LIMIT $limit;";
         return [];
     }
 
-    public function updateSupportingDocumentStatusByReportSubmissionIds(array $reportSubmissionIds, ?string $syncErrorMessage = null)
+    public function logFailedDocuments()
+    {
+        $queuedStatus = Document::SYNC_STATUS_QUEUED;
+        $inProgressStatus = Document::SYNC_STATUS_IN_PROGRESS;
+        $temporaryErrorStatus = Document::SYNC_STATUS_TEMPORARY_ERROR;
+        $permanentErrorStatus = Document::SYNC_STATUS_PERMANENT_ERROR;
+
+        $queuedDocumentsQuery = "
+SELECT
+  COALESCE(SUM(CASE WHEN d.synchronisation_status = '{$queuedStatus}' AND rs.created_on < NOW() - INTERVAL '1 HOUR' THEN 1 ELSE 0 END), 0) AS queued_over_1_hour,
+  COALESCE(SUM(CASE WHEN d.synchronisation_status = '{$inProgressStatus}' AND rs.created_on < NOW() - INTERVAL '1 HOUR' THEN 1 ELSE 0 END), 0) AS in_progress_over_1_hour,
+  COALESCE(SUM(CASE WHEN d.synchronisation_status = '{$temporaryErrorStatus}' THEN 1 ELSE 0 END), 0) AS temporary_error_count,
+  COALESCE(SUM(CASE WHEN d.synchronisation_status = '{$permanentErrorStatus}' THEN 1 ELSE 0 END), 0) AS permanent_error_count
+FROM document d
+INNER JOIN report_submission rs ON d.report_submission_id = rs.id
+WHERE d.synchronisation_status IN ('{$queuedStatus}', '{$permanentErrorStatus}', '{$temporaryErrorStatus}', '{$inProgressStatus}')
+";
+        $conn = $this->getEntityManager()->getConnection();
+
+        $failedDocumentStmt = $conn->prepare($queuedDocumentsQuery);
+        $result = $failedDocumentStmt->executeQuery();
+
+        $results = $result->fetchAllAssociative();
+
+        $failedCounts = [];
+        $i = 0;
+        foreach ($results as $row) {
+            $failedCounts[$i] = [
+                'queued_over_1_hour' => $row['queued_over_1_hour'],
+                'in_progress_over_1_hour' => $row['in_progress_over_1_hour'],
+                'temporary_error_count' => $row['temporary_error_count'],
+                'permanent_error_count' => $row['permanent_error_count'],
+            ];
+            ++$i;
+        }
+        if (1 != count($failedCounts)) {
+            return [];
+        }
+
+        return $failedCounts[0];
+    }
+
+    public function updateSupportingDocumentStatusByReportSubmissionIds(array $reportSubmissionIds, string $syncErrorMessage = null)
     {
         $idsString = implode(',', $reportSubmissionIds);
         $status = Document::SYNC_STATUS_PERMANENT_ERROR;

@@ -12,9 +12,6 @@ use App\Entity\Report\ReportSubmission;
 use App\Entity\ReportInterface;
 use App\Entity\User;
 use App\Repository\DocumentRepository;
-use DateInterval;
-use DateTime;
-use DateTimeZone;
 use Doctrine\Common\DataFixtures\Purger\ORMPurger;
 use Doctrine\ORM\EntityManager;
 use Symfony\Bundle\FrameworkBundle\Test\KernelTestCase;
@@ -27,7 +24,7 @@ class DocumentRepositoryTest extends KernelTestCase
     /** @var DocumentRepository */
     private $documentRepository;
 
-    /** @var DateTime */
+    /** @var \DateTime */
     private $firstJulyAm;
     private $firstJulyPm;
     private $secondJulyAm;
@@ -54,7 +51,54 @@ class DocumentRepositoryTest extends KernelTestCase
         self::assertEquals(Document::SYNC_STATUS_IN_PROGRESS, $supportingDoc->getSynchronisationStatus());
     }
 
-    private function createAndSubmitReportWithSupportingDoc(DateTime $submittedOn)
+    private function createFailedDocumentSubmission($status, $createdOn, $caseNumber)
+    {
+        $client = $this->generateAndPersistClient('abc-123-'.$caseNumber);
+        $report = $this->generateAndPersistReport($client, false);
+        $reportPdfDoc = $this->generateAndPersistDocument($report, true, $status, $this->firstJulyAm, false);
+        $supportingDoc = $this->generateAndPersistDocument($report, false, $status, $this->firstJulyAm, false);
+        $reportSubmission = $this->submitReport($report, $this->firstJulyPm, $reportPdfDoc, $supportingDoc);
+        $reportSubmission->setCreatedOn($createdOn);
+        $this->entityManager->persist($reportSubmission);
+        $this->entityManager->flush();
+    }
+
+    /**
+     * @test
+     */
+    public function logFailedDocuments()
+    {
+        $currentDateTime = new \DateTime(); // Current date and time
+        $tomorrow = $currentDateTime->modify('+1 day');
+
+        // Tomorrow shouldn't count
+        $arguments = [
+            ['QUEUED', $this->firstJulyPm],
+            ['IN_PROGRESS', $this->firstJulyPm],
+            ['TEMPORARY_ERROR', $this->firstJulyPm],
+            ['PERMANENT_ERROR', $this->firstJulyPm],
+            ['QUEUED', $tomorrow],
+            ['IN_PROGRESS', $tomorrow],
+        ];
+
+        foreach ($arguments as $index => $argument) {
+            list($status, $date) = $argument;
+            $id = $index + 1;
+            $this->createFailedDocumentSubmission($status, $date, $id);
+        }
+
+        $result = $this->documentRepository->logFailedDocuments();
+
+        // 1 pdf and 1 supporting per submission.
+        $this->assertEquals([
+            'queued_over_1_hour' => 2,
+            'in_progress_over_1_hour' => 2,
+            'temporary_error_count' => 2,
+            'permanent_error_count' => 2,
+        ], $result);
+    }
+
+    private function createAndSubmitReportWithSupportingDoc(\DateTime $submittedOn)
     {
         $client = $this->generateAndPersistClient('abc-123');
         $report = $this->generateAndPersistReport($client, false);
@@ -86,7 +130,7 @@ class DocumentRepositoryTest extends KernelTestCase
                 $client,
                 Report::TYPE_PROPERTY_AND_AFFAIRS_HIGH_ASSETS,
                 $this->firstJulyAm,
-                $this->firstJulyAm->add(new DateInterval('P364D'))
+                $this->firstJulyAm->add(new \DateInterval('P364D'))
             )
             );
         }
@@ -96,7 +140,7 @@ class DocumentRepositoryTest extends KernelTestCase
         return $report;
     }
 
-    private function generateAndPersistDocument(ReportInterface $report, bool $isReportPdf, string $syncStatus, DateTime $createdOn, bool $isResubmission)
+    private function generateAndPersistDocument(ReportInterface $report, bool $isReportPdf, string $syncStatus, \DateTime $createdOn, bool $isResubmission)
     {
         $fileName = $isReportPdf ? 'report' : 'supporting-document';
         $storageRef = $isReportPdf ? 'storage-ref-report' : 'storage-ref-supporting-document';
@@ -116,10 +160,9 @@ class DocumentRepositoryTest extends KernelTestCase
         return $doc;
     }
 
-    private function submitReport(ReportInterface $report, DateTime $submittedOn, Document $reportPdf, ?Document $supportingDocument)
+    private function submitReport(ReportInterface $report, \DateTime $submittedOn, Document $reportPdf, ?Document $supportingDocument)
     {
         $report->setSubmitDate($submittedOn);
-
         $reportSubmission = $this->generateAndPersistReportSubmission($report, $submittedOn);
         $reportSubmission->addDocument($reportPdf);
 
@@ -138,7 +181,7 @@ class DocumentRepositoryTest extends KernelTestCase
         return $reportSubmission;
     }
 
-    private function generateAndPersistReportSubmission(ReportInterface $report, DateTime $createdOn)
+    private function generateAndPersistReportSubmission(ReportInterface $report, \DateTime $createdOn)
     {
         $submission = (new ReportSubmission($report, $this->generateAndPersistUser()))->setCreatedOn($createdOn);
 
@@ -154,7 +197,7 @@ class DocumentRepositoryTest extends KernelTestCase
             ->setLastname('User')
             ->setPassword('password123');
 
-        $datePostFix = (string) (new DateTime())->getTimestamp();
+        $datePostFix = (string) (new \DateTime())->getTimestamp();
         $user->setEmail(sprintf('test-user%s%s@test.com', $datePostFix, rand(0, 100000)));
 
         $this->entityManager->persist($user);
@@ -170,7 +213,7 @@ class DocumentRepositoryTest extends KernelTestCase
         Document $document,
         Client $client,
         ReportSubmission $submission,
-                         $report
+        $report
     ) {
         $docId = $document->getId();
 
@@ -265,7 +308,7 @@ class DocumentRepositoryTest extends KernelTestCase
         self::assertEquals($additionalSubmission->getId(), $documents[$additionalSupportingDoc->getId()]['report_submission_id']);
     }
 
-    private function createAndSubmitAdditionalDocuments(ReportInterface $report, DateTime $submittedOn)
+    private function createAndSubmitAdditionalDocuments(ReportInterface $report, \DateTime $submittedOn)
     {
         $additionalSubmission = $this->generateAndPersistReportSubmission($report, $submittedOn);
         $additionalSupportingDoc = $this->generateAndPersistDocument($report, false, 'QUEUED', $submittedOn, false);
@@ -299,7 +342,7 @@ class DocumentRepositoryTest extends KernelTestCase
         self::assertEquals($reportResubmission->getId(), $documents[$resubmissionSupportingDoc->getId()]['report_submission_id']);
     }
 
-    private function createAndSubmitResubmissionWithSupportingDoc(ReportInterface $report, DateTime $submittedOn)
+    private function createAndSubmitResubmissionWithSupportingDoc(ReportInterface $report, \DateTime $submittedOn)
     {
         $resubmissionReportPdfDoc = $this->generateAndPersistDocument($report, true, 'QUEUED', $this->secondJulyAm, true);
         $resubmissionSupportingDoc = $this->generateAndPersistDocument($report, false, 'QUEUED', $this->secondJulyAm, true);
@@ -448,12 +491,12 @@ class DocumentRepositoryTest extends KernelTestCase
 
         $this->purgeDatabase();
 
-        $this->firstJulyAm = DateTime::createFromFormat('d/m/Y', '01/07/2020', new DateTimeZone('UTC'));
-        $this->firstJulyPm = clone $this->firstJulyAm->add(new DateInterval('PT20H'));
-        $this->secondJulyAm = DateTime::createFromFormat('d/m/Y', '02/07/2020', new DateTimeZone('UTC'));
-        $this->secondJulyPm = clone $this->secondJulyAm->add(new DateInterval('PT20H'));
-        $this->thirdJulyAm = DateTime::createFromFormat('d/m/Y', '03/07/2020', new DateTimeZone('UTC'));
-        $this->thirdJulyPm = clone $this->thirdJulyAm->add(new DateInterval('PT20H'));
+        $this->firstJulyAm = \DateTime::createFromFormat('d/m/Y', '01/07/2020', new \DateTimeZone('UTC'));
+        $this->firstJulyPm = clone $this->firstJulyAm->add(new \DateInterval('PT20H'));
+        $this->secondJulyAm = \DateTime::createFromFormat('d/m/Y', '02/07/2020', new \DateTimeZone('UTC'));
+        $this->secondJulyPm = clone $this->secondJulyAm->add(new \DateInterval('PT20H'));
+        $this->thirdJulyAm = \DateTime::createFromFormat('d/m/Y', '03/07/2020', new \DateTimeZone('UTC'));
+        $this->thirdJulyPm = clone $this->thirdJulyAm->add(new \DateInterval('PT20H'));
     }
 
     private function purgeDatabase()
