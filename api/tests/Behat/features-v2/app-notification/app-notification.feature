@@ -1,4 +1,4 @@
-@v2 @v2_sequential @app-notification
+@v2 @v2_sequential_3 @app-notification
 Feature: App Notification - An admin can add and remove app notification for deputies
 
     @super-admin
