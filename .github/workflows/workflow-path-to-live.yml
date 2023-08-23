@@ -161,6 +161,7 @@ jobs:
       - terraform_apply_integration
     with:
       replicas: 6
+      acu: 16
       account: 454262938596
       workspace: integration
     secrets: inherit
@@ -217,8 +218,8 @@ jobs:
       override: "sh,./tests/Behat/run-tests-parallel.sh,--tags,@v2_admin,--profile,v2-tests-browserkit"
     secrets: inherit
 
-  integration_tests_sequential:
-    name: integration tests sequential
+  integration_tests_sequential_1:
+    name: integration tests sequential 1
     uses: ./.github/workflows/_run-task.yml
     needs:
       - workflow_variables
@@ -227,7 +228,33 @@ jobs:
       workspace: integration
       task_name: "integration_test_v2"
       timeout: "1200"
-      override: "sh,./tests/Behat/run-tests.sh,--tags,@v2_sequential,--profile,v2-tests-browserkit"
+      override: "sh,./tests/Behat/run-tests.sh,--tags,@v2_sequential_1,--profile,v2-tests-browserkit"
+    secrets: inherit
+
+  integration_tests_sequential_2:
+    name: integration tests sequential 2
+    uses: ./.github/workflows/_run-task.yml
+    needs:
+      - workflow_variables
+      - reset_database
+    with:
+      workspace: integration
+      task_name: "integration_test_v2"
+      timeout: "1200"
+      override: "sh,./tests/Behat/run-tests.sh,--tags,@v2_sequential_2,--profile,v2-tests-browserkit"
+    secrets: inherit
+
+  integration_tests_sequential_3:
+    name: integration tests sequential 3
+    uses: ./.github/workflows/_run-task.yml
+    needs:
+      - workflow_variables
+      - reset_database
+    with:
+      workspace: integration
+      task_name: "integration_test_v2"
+      timeout: "1200"
+      override: "sh,./tests/Behat/run-tests.sh,--tags,@v2_sequential_3,--profile,v2-tests-browserkit"
     secrets: inherit
 
   scale_services_down:
@@ -236,12 +263,15 @@ jobs:
     uses: ./.github/workflows/_scale-services.yml
     needs:
       - workflow_variables
-      - integration_tests_sequential
+      - integration_tests_sequential_1
+      - integration_tests_sequential_2
+      - integration_tests_sequential_3
       - integration_tests_admin
       - integration_tests_1
       - integration_tests_2
     with:
       replicas: 1
+      acu: 4
       account: 454262938596
       workspace: integration
     secrets: inherit
