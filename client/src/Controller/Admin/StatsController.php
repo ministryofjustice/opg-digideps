@@ -6,6 +6,7 @@ use App\Controller\AbstractController;
 use App\Exception\DisplayableException;
 use App\Form\Admin\BenefitsMetricsFilterType;
 use App\Form\Admin\ImbalanceMetricsFilterType;
+use App\Form\Admin\InactiveAdminReportFilterType;
 use App\Form\Admin\ReportSubmissionDownloadFilterType;
 use App\Form\Admin\SatisfactionFilterType;
 use App\Form\Admin\StatPeriodType;
@@ -19,7 +20,7 @@ use App\Service\Client\RestClient;
 use App\Service\Csv\ActiveLaysCsvGenerator;
 use App\Service\Csv\AssetsTotalsCSVGenerator;
 use App\Service\Csv\ClientBenefitMetricsCsvGenerator;
-use App\Service\Csv\OldAdminUserCsvGenerator;
+use App\Service\Csv\InactiveAdminUsersCsvGenerator;
 use App\Service\Csv\ReportImbalanceCsvGenerator;
 use App\Service\Csv\SatisfactionCsvGenerator;
 use App\Service\Csv\UserResearchResponseCsvGenerator;
@@ -44,7 +45,7 @@ class StatsController extends AbstractController
         private readonly UserResearchResponseCsvGenerator $userResearchResponseCsvGenerator,
         private readonly AssetsTotalsCSVGenerator $assetsTotalsCSVGenerator,
         private readonly ClientBenefitMetricsCsvGenerator $clientBenefitMetricsCsvGenerator,
-        private readonly OldAdminUserCsvGenerator $inactiveAdminUserCsvGenerator,
+        private readonly InactiveAdminUsersCsvGenerator $inactiveAdminUserCsvGenerator,
         private readonly ReportImbalanceCsvGenerator $reportImbalanceCsvGenerator
     ) {
     }
@@ -53,7 +54,6 @@ class StatsController extends AbstractController
      * @Route("", name="admin_stats")
      * @Security("is_granted('ROLE_ADMIN') or is_granted('ROLE_AD')")
      * @Template("@App/Admin/Stats/stats.html.twig")
-     *
      */
     public function stats(
         Request $request,
@@ -82,7 +82,6 @@ class StatsController extends AbstractController
      * @Route("/satisfaction", name="admin_satisfaction")
      * @Security("is_granted('ROLE_SUPER_ADMIN')")
      * @Template("@App/Admin/Stats/satisfaction.html.twig")
-     *
      */
     public function satisfaction(Request $request, ReportSatisfactionSummaryMapper $mapper): array|Response
     {
@@ -110,7 +109,6 @@ class StatsController extends AbstractController
      * @Route("/user-research", name="admin_user_research")
      * @Security("is_granted('ROLE_SUPER_ADMIN')")
      * @Template("@App/Admin/Stats/urResponses.html.twig")
-     *
      */
     public function userResearchResponses(Request $request, UserResearchResponseSummaryMapper $mapper): array|Response
     {
@@ -152,7 +150,6 @@ class StatsController extends AbstractController
      * @Route("/metrics", name="admin_metrics")
      * @Security("is_granted('ROLE_ADMIN') or is_granted('ROLE_AD')")
      * @Template("@App/Admin/Stats/metrics.html.twig")
-     *
      */
     public function metricsAction(Request $request): array|Response
     {
@@ -206,7 +203,6 @@ class StatsController extends AbstractController
      * @Route("/reports", name="admin_reports")
      * @Security("is_granted('ROLE_SUPER_ADMIN')")
      * @Template("@App/Admin/Stats/reports.html.twig")
-     *
      */
     public function reports(): void
     {
@@ -216,7 +212,6 @@ class StatsController extends AbstractController
      * @Route("/reports/user_accounts", name="admin_user_account_reports")
      * @Security("is_granted('ROLE_SUPER_ADMIN')")
      * @Template("@App/Admin/Stats/userAccountReports.html.twig")
-     *
      */
     public function userAccountReports(): array|Response
     {
@@ -227,7 +222,6 @@ class StatsController extends AbstractController
      * @Route("/reports/benefits-report-metrics", name="benefits_report_metrics")
      * @Security("is_granted('ROLE_SUPER_ADMIN')")
      * @Template("@App/Admin/Stats/benefitsReportMetrics.html.twig")
-     *
      */
     public function benefitsReportMetrics(Request $request): array|Response
     {
@@ -262,7 +256,6 @@ class StatsController extends AbstractController
     /**
      * @Route("/downloadActiveLaysCsv", name="admin_active_lays_csv")
      * @Security("is_granted('ROLE_SUPER_ADMIN')")
-     *
      */
     public function downloadActiveLayCsv(): Response
     {
@@ -276,7 +269,6 @@ class StatsController extends AbstractController
     /**
      * @Route("/downloadAssetsTotalValues", name="admin_total_assets_values")
      * @Security("is_granted('ROLE_SUPER_ADMIN')")
-     *
      */
     public function downloadAssetsTotalValues(): Response
     {
@@ -288,24 +280,41 @@ class StatsController extends AbstractController
     }
 
     /**
-     * @Route("/reports/downloadOldAdminUsersCsv", name="admin_old_user_account_report")
+     * @Route("/reports/inactive-admin-users-report", name="inactive_admin_users_report")
      * @Security("is_granted('ROLE_SUPER_ADMIN')")
-     *
+     * @Template("@App/Admin/Stats/inactiveAdminUsersReport.html.twig")
      */
-    public function downloadOldAdminUsersCsv(): Response
+    public function inactiveAdminUsersReport(Request $request): array|Response
     {
-        $fileName = 'inactiveAdminUsers.csv';
-        $reportData = $this->statsApi->getOldAdminUsers();
-        $csv = $this->inactiveAdminUserCsvGenerator->generateOldAdminUsersCsv($reportData);
+        $form = $this->createForm(InactiveAdminReportFilterType::class);
 
-        return $this->csvResponseGeneration($fileName, $csv);
+        $form->handleRequest($request);
+
+        if ($form->isSubmitted() && $form->isValid()) {
+            try {
+                $inactivityPeriod = $form->get('inactivityPeriod')->getData();
+
+                $append = '?inactivityPeriod='.$inactivityPeriod;
+
+                $fileName = 'inactiveAdminUsers.csv';
+                $reportData = $this->statsApi->getInactiveAdminUsers($append);
+                $csv = $this->inactiveAdminUserCsvGenerator->generateInactiveAdminUsersCsv($reportData);
+
+                return $this->csvResponseGeneration($fileName, $csv);
+            } catch (\Throwable $e) {
+                throw new DisplayableException($e);
+            }
+        }
+
+        return [
+            'form' => $form->createView(),
+        ];
     }
 
     /**
      * @Route("/reports/imbalanceMetrics", name="report_imbalance_metrics")
      * @Security("is_granted('ROLE_SUPER_ADMIN')")
      * @Template("@App/Admin/Stats/imbalanceReportMetrics.html.twig")
-     *
      */
     public function reportImbalanceCsv(Request $request): array|Response
     {

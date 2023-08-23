@@ -4,7 +4,7 @@ declare(strict_types=1);
 
 namespace App\Service\Csv;
 
-class OldAdminUserCsvGenerator
+class InactiveAdminUsersCsvGenerator
 {
     private CsvBuilder $csvBuilder;
 
@@ -16,7 +16,7 @@ class OldAdminUserCsvGenerator
     /**
      * @return string
      */
-    public function generateOldAdminUsersCsv(array $adminUsers)
+    public function generateInactiveAdminUsersCsv(array $adminUsers)
     {
         $headers = [
             'Id',
@@ -37,10 +37,11 @@ class OldAdminUserCsvGenerator
                     $user['email'],
                     $user['last_logged_in'],
                     $user['active'] ? 'Yes' : 'No',
-                    $user['role_name']
+                    $user['role_name'],
                 ];
             }
         }
+
         return $this->csvBuilder->buildCsv($headers, $rows);
     }
 }

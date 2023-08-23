@@ -296,11 +296,6 @@ SQL;
         return $query->getResult();
     }
 
-    public function getAllAdminUserAccountsNotUsedWithin(string $timeframe)
-    {
-        return $this->getAllRoleBasedUsers(['ROLE_ADMIN'], $timeframe);
-    }
-
     public function getAllAdminAccountsNotUsedWithin(string $timeframe)
     {
         return $this->getAllRoleBasedUsers(['ROLE_ADMIN', 'ROLE_ADMIN_MANAGER', 'ROLE_SUPER_ADMIN'], $timeframe);
