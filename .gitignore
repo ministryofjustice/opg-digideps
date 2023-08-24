@@ -25,6 +25,7 @@ vendor/
 **/terraform.output.json.enc
 **/terraform.plan*
 **/shared/builds
+**/modules/**/.terraform.lock.hcl
 
 # Repo-specific excludes
 docker/log
