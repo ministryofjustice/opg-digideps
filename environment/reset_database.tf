@@ -42,31 +42,55 @@ module "reset_database_security_group" {
 }
 
 locals {
-  reset_database_container = <<EOF
-  {
-    "name": "reset-database",
-    "image": "${local.images.api}",
-    "command": [ "sh", "scripts/reset_db_fixtures.sh" ],
-    "logConfiguration": {
-      "logDriver": "awslogs",
-      "options": {
-        "awslogs-group": "${aws_cloudwatch_log_group.opg_digi_deps.name}",
-        "awslogs-region": "eu-west-1",
-        "awslogs-stream-prefix": "${aws_iam_role.test.name}"
-      }
-    },
-    "secrets": [
-      { "name": "DATABASE_PASSWORD", "valueFrom": "${data.aws_secretsmanager_secret.database_password.arn}" },
-      { "name": "SECRET", "valueFrom": "${data.aws_secretsmanager_secret.api_secret.arn}" }
-    ],
-    "environment": [
-      { "name": "DATABASE_HOSTNAME", "value": "${local.db.endpoint}" },
-      { "name": "DATABASE_NAME", "value": "${local.db.name}" },
-      { "name": "DATABASE_PORT", "value": "${local.db.port}" },
-      { "name": "DATABASE_USERNAME", "value": "${local.db.username}" },
-      { "name": "FIXTURES_ACCOUNTPASSWORD", "value": "DigidepsPass1234" },
-      { "name": "REDIS_DSN", "value": "redis://${aws_route53_record.api_redis.fqdn}" }
-    ]
-  }
-EOF
+  reset_database_container = jsonencode(
+    {
+      name    = "reset-database",
+      image   = local.images.api,
+      command = ["sh", "scripts/reset_db_fixtures.sh"],
+      logConfiguration = {
+        logDriver = "awslogs",
+        options = {
+          awslogs-group         = aws_cloudwatch_log_group.opg_digi_deps.name,
+          awslogs-region        = "eu-west-1",
+          awslogs-stream-prefix = aws_iam_role.test.name
+        }
+      },
+      secrets = [
+        {
+          name      = "DATABASE_PASSWORD",
+          valueFrom = data.aws_secretsmanager_secret.database_password.arn
+        },
+        {
+          name      = "SECRET",
+          valueFrom = data.aws_secretsmanager_secret.api_secret.arn
+        }
+      ],
+      environment = [
+        {
+          name  = "DATABASE_HOSTNAME",
+          value = local.db.endpoint
+        },
+        {
+          name  = "DATABASE_NAME",
+          value = local.db.name
+        },
+        {
+          name  = "DATABASE_PORT",
+          value = tostring(local.db.port)
+        },
+        {
+          name  = "DATABASE_USERNAME",
+          value = local.db.username
+        },
+        {
+          name  = "FIXTURES_ACCOUNTPASSWORD",
+          value = "DigidepsPass1234"
+        },
+        {
+          name  = "REDIS_DSN",
+          value = "redis://${aws_route53_record.api_redis.fqdn}"
+        }
+      ]
+    }
+  )
 }

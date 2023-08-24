@@ -75,49 +75,119 @@ resource "aws_cloudwatch_event_target" "check_csv_uploaded_scheduled_task" {
 }
 
 locals {
-  check_csv_uploaded_container = <<EOF
-  {
-    "name": "check-csv-uploaded",
-    "image": "${local.images.client}",
-    "command": [ "sh", "scripts/check-csv-uploaded.sh", "-d" ],
-    "logConfiguration": {
-      "logDriver": "awslogs",
-      "options": {
-        "awslogs-group": "${aws_cloudwatch_log_group.opg_digi_deps.name}",
-        "awslogs-region": "eu-west-1",
-        "awslogs-stream-prefix": "check-csv-uploaded"
-      }
-    },
-    "secrets": [
-      { "name": "API_CLIENT_SECRET", "valueFrom": "/aws/reference/secretsmanager/${data.aws_secretsmanager_secret.front_api_client_secret.name}" },
-      { "name": "NOTIFY_API_KEY", "valueFrom": "/aws/reference/secretsmanager/${data.aws_secretsmanager_secret.front_notify_api_key.name}" },
-      { "name": "SECRET", "valueFrom": "/aws/reference/secretsmanager/${data.aws_secretsmanager_secret.front_frontend_secret.name}" },
-      { "name": "SIRIUS_API_BASE_URI", "valueFrom": "${aws_ssm_parameter.sirius_api_base_uri.arn}" }
-    ],
-    "environment": [
-      { "name": "ADMIN_HOST", "value": "https://${aws_route53_record.admin.fqdn}" },
-      { "name": "API_URL", "value": "https://${local.api_service_fqdn}" },
-      { "name": "APP_ENV", "value": "${local.account.app_env}" },
-      { "name": "AUDIT_LOG_GROUP_NAME", "value": "audit-${local.environment}" },
-      { "name": "EMAIL_SEND_INTERNAL", "value": "${local.account.is_production == 1 ? "true" : "false"}" },
-      { "name": "ENVIRONMENT", "value": "${local.environment}" },
-      { "name": "FEATURE_FLAG_PREFIX", "value": "${local.feature_flag_prefix}" },
-      { "name": "FILESCANNER_SSLVERIFY", "value": "False" },
-      { "name": "FILESCANNER_URL", "value": "http://${local.scan_service_fqdn}:8080" },
-      { "name": "GA_DEFAULT", "value": "${local.account.ga_default}" },
-      { "name": "GA_GDS", "value": "${local.account.ga_gds}" },
-      { "name": "HTMLTOPDF_ADDRESS", "value": "http://${local.htmltopdf_service_fqdn}" },
-      { "name": "NGINX_APP_NAME", "value": "frontend" },
-      { "name": "NONADMIN_HOST", "value": "https://${aws_route53_record.front.fqdn}" },
-      { "name": "OPG_DOCKER_TAG", "value": "${var.OPG_DOCKER_TAG}" },
-      { "name": "PARAMETER_PREFIX", "value": "${local.parameter_prefix}" },
-      { "name": "ROLE", "value": "front" },
-      { "name": "S3_BUCKETNAME", "value": "pa-uploads-${local.environment}" },
-      { "name": "SECRETS_PREFIX", "value": "${local.secrets_prefix}" },
-      { "name": "SESSION_REDIS_DSN", "value": "redis://${aws_route53_record.frontend_redis.fqdn}" },
-      { "name": "SESSION_PREFIX", "value": "dd_session_front" }
-    ]
-  }
+  check_csv_uploaded_container = jsonencode(
+    {
+      name    = "check-csv-uploaded",
+      image   = local.images.client,
+      command = ["sh", "scripts/check-csv-uploaded.sh", "-d"],
+      logConfiguration = {
+        logDriver = "awslogs",
+        options = {
+          awslogs-group         = aws_cloudwatch_log_group.opg_digi_deps.name,
+          awslogs-region        = "eu-west-1",
+          awslogs-stream-prefix = "check-csv-uploaded"
+        }
+      },
+      secrets = [
+        {
+          name = "API_CLIENT_SECRET",
+        valueFrom = "/aws/reference/secretsmanager/${data.aws_secretsmanager_secret.front_api_client_secret.name}" },
+        {
+          name = "NOTIFY_API_KEY",
+        valueFrom = "/aws/reference/secretsmanager/${data.aws_secretsmanager_secret.front_notify_api_key.name}" },
+        {
+          name = "SECRET",
+        valueFrom = "/aws/reference/secretsmanager/${data.aws_secretsmanager_secret.front_frontend_secret.name}" },
+        {
+          name = "SIRIUS_API_BASE_URI",
+        valueFrom = aws_ssm_parameter.sirius_api_base_uri.arn }
+      ],
+      environment = [
+        {
+          name  = "ADMIN_HOST",
+          value = "https://${aws_route53_record.admin.fqdn}"
+        },
+        {
+          name  = "API_URL",
+          value = "https://${local.api_service_fqdn}"
+        },
+        {
+          name  = "APP_ENV",
+          value = local.account.app_env
+        },
+        {
+          name  = "AUDIT_LOG_GROUP_NAME",
+          value = "audit-${local.environment}"
+        },
+        {
+          name  = "EMAIL_SEND_INTERNAL",
+          value = local.account.is_production == 1 ? "true" : "false"
+        },
+        {
+          name  = "ENVIRONMENT",
+          value = local.environment
+        },
+        {
+          name  = "FEATURE_FLAG_PREFIX",
+          value = local.feature_flag_prefix
+        },
+        {
+          name  = "FILESCANNER_SSLVERIFY",
+          value = "False"
+        },
+        {
+          name  = "FILESCANNER_URL",
+          value = "http://${local.scan_service_fqdn}:8080"
+        },
+        {
+          name  = "GA_DEFAULT",
+          value = local.account.ga_default
+        },
+        {
+          name  = "GA_GDS",
+          value = local.account.ga_gds
+        },
+        {
+          name  = "HTMLTOPDF_ADDRESS",
+          value = "http://${local.htmltopdf_service_fqdn}"
+        },
+        {
+          name  = "NGINX_APP_NAME",
+          value = "frontend"
+        },
+        {
+          name  = "NONADMIN_HOST",
+          value = "https://${aws_route53_record.front.fqdn}"
+        },
+        {
+          name  = "OPG_DOCKER_TAG",
+          value = var.OPG_DOCKER_TAG
+        },
+        {
+          name  = "PARAMETER_PREFIX",
+          value = local.parameter_prefix
+        },
+        {
+          name  = "ROLE",
+          value = "front"
+        },
+        {
+          name  = "S3_BUCKETNAME",
+          value = "pa-uploads-${local.environment}"
+        },
+        {
+          name  = "SECRETS_PREFIX",
+          value = local.secrets_prefix
+        },
+        {
+          name  = "SESSION_REDIS_DSN",
+          value = "redis://${aws_route53_record.frontend_redis.fqdn}"
+        },
+        {
+          name = "SESSION_PREFIX",
+        value = "dd_session_front" }
+      ]
+    }
 
-EOF
+  )
 }

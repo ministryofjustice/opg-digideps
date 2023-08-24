@@ -282,7 +282,9 @@ jobs:
     needs:
       - terraform_apply_shared_preproduction
       - workflow_variables
-      - integration_tests_sequential
+      - integration_tests_sequential_1
+      - integration_tests_sequential_2
+      - integration_tests_sequential_3
       - integration_tests_admin
       - integration_tests_1
       - integration_tests_2
