@@ -1,5 +1,5 @@
 module "disaster_recovery_backup" {
-  source                  = "./disaster_recovery"
+  source                  = "./modules/disaster_recovery"
   count                   = local.account.dr_backup ? 1 : 0
   default_tags            = local.default_tags
   default_role            = var.DEFAULT_ROLE

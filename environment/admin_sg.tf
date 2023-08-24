@@ -59,7 +59,7 @@ locals {
 }
 
 module "admin_service_security_group" {
-  source      = "./security_group"
+  source      = "./modules/security_group"
   description = "Admin Service"
   rules       = local.admin_sg_rules
   name        = "admin-service"
@@ -80,7 +80,7 @@ locals {
 }
 
 module "admin_elb_security_group" {
-  source      = "./security_group"
+  source      = "./modules/security_group"
   description = "Admin Elastic Load Balancer"
   rules       = local.admin_elb_sg_rules
   name        = "admin-elb"
@@ -101,7 +101,7 @@ resource "aws_security_group_rule" "admin_whitelist" {
 
 //No room for rules left in admin_elb_security_group
 module "admin_elb_security_group_route53_hc" {
-  source      = "./security_group"
+  source      = "./modules/security_group"
   description = "Admin Elastic Load Balancer Healthcheck"
   rules       = local.admin_elb_sg_rules
   name        = "admin-alb-route53-hc"

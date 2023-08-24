@@ -38,7 +38,7 @@ locals {
 }
 
 module "frontend_cache_security_group" {
-  source      = "./security_group"
+  source      = "./modules/security_group"
   description = "Front Redis"
   rules       = local.front_cache_sg_rules
   name        = "frontend-cache-${local.environment}"

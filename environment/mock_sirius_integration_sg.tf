@@ -40,7 +40,7 @@ locals {
 }
 
 module "mock_sirius_integration_security_group" {
-  source      = "./security_group"
+  source      = "./modules/security_group"
   description = "Mock Sirius Integration"
   rules       = local.mock_sirius_integration_sg_rules
   name        = "mock-sirius-integration"

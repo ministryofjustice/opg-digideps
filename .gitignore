@@ -19,7 +19,8 @@ vendor/
 !ecs-helper/vendor/
 
 # Terraform
-.terraform/
+**/.terraform/
+**/terraform.tfstate.d/
 **/terraform.output.json
 **/terraform.output.json.enc
 **/terraform.plan*
@@ -30,7 +31,6 @@ docker/log
 terraform/to_import\.sh
 .certs
 log/pact.log
-
 
 # Lambda specific
 *lambda*.zip

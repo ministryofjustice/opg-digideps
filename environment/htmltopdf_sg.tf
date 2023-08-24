@@ -29,7 +29,7 @@ locals {
 }
 
 module "htmltopdf_security_group" {
-  source      = "./security_group"
+  source      = "./modules/security_group"
   description = "HTML to PDF Service"
   rules       = local.htmltopdf_sg_rules
   name        = "htmltopdf"
