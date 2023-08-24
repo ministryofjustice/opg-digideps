@@ -72,6 +72,7 @@ module "front_service_security_group" {
   name        = "front-service"
   tags        = local.default_tags
   vpc_id      = data.aws_vpc.vpc.id
+  environment = local.environment
 }
 
 locals {
@@ -93,6 +94,7 @@ module "front_elb_security_group" {
   name        = "front-alb"
   tags        = local.default_tags
   vpc_id      = data.aws_vpc.vpc.id
+  environment = local.environment
 }
 
 # Using resources rather than a module here due to a large list of IPs
@@ -125,6 +127,7 @@ module "front_elb_security_group_route53_hc" {
   name        = "front-alb"
   tags        = local.default_tags
   vpc_id      = data.aws_vpc.vpc.id
+  environment = local.environment
 }
 
 resource "aws_security_group_rule" "front_elb_route53_hc_in" {

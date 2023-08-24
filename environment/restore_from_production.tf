@@ -38,6 +38,7 @@ module "restore_from_production_security_group" {
   name        = "restore-from-production"
   tags        = local.default_tags
   vpc_id      = data.aws_vpc.vpc.id
+  environment = local.environment
 }
 
 locals {

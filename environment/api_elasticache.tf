@@ -40,4 +40,5 @@ module "api_cache_security_group" {
   name        = "api-cache"
   tags        = local.default_tags
   vpc_id      = data.aws_vpc.vpc.id
+  environment = local.environment
 }

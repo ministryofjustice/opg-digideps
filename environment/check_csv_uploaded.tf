@@ -32,6 +32,7 @@ module "check_csv_uploaded_service_security_group" {
   name        = "check-csv-uploaded-service"
   tags        = local.default_tags
   vpc_id      = data.aws_vpc.vpc.id
+  environment = local.environment
 }
 
 resource "aws_ecs_task_definition" "check_csv_uploaded" {

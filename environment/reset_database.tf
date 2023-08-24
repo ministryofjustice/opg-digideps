@@ -38,6 +38,7 @@ module "reset_database_security_group" {
   name        = "reset-database"
   tags        = local.default_tags
   vpc_id      = data.aws_vpc.vpc.id
+  environment = local.environment
 }
 
 locals {

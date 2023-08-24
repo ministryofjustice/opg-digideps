@@ -38,6 +38,7 @@ module "backup_security_group" {
   name        = "backup"
   tags        = local.default_tags
   vpc_id      = data.aws_vpc.vpc.id
+  environment = local.environment
 }
 
 data "aws_canonical_user_id" "development" {
