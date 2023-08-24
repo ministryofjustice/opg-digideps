@@ -1,5 +1,5 @@
 module "integration_test_v2" {
-  source = "./task"
+  source = "./modules/task"
   name   = "integration-test-v2"
 
   cluster_name          = aws_ecs_cluster.main.name
@@ -43,7 +43,7 @@ locals {
 }
 
 module "integration_test_v2_security_group" {
-  source      = "./security_group"
+  source      = "./modules/security_group"
   description = "Integration Tests V2 Service"
   rules       = local.integration_test_v2_sg_rules
   name        = "integration-test-v2"

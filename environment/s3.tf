@@ -20,7 +20,7 @@ data "aws_kms_alias" "source_default_key" {
 }
 
 module "pa_uploads" {
-  source                               = "./s3_bucket"
+  source                               = "./modules/s3_bucket"
   account_name                         = local.account.name
   bucket_name                          = "pa-uploads-${local.environment}"
   force_destroy                        = local.account.force_destroy_bucket

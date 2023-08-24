@@ -1,5 +1,5 @@
 module "restore" {
-  source = "./task"
+  source = "./modules/task"
   name   = "restore"
 
   cluster_name          = aws_ecs_cluster.main.name
@@ -32,7 +32,7 @@ locals {
 }
 
 module "restore_security_group" {
-  source      = "./security_group"
+  source      = "./modules/security_group"
   description = "Restore Database Service"
   rules       = local.restore_sg_rules
   name        = "restore"

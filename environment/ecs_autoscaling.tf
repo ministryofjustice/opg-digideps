@@ -1,5 +1,5 @@
 module "front_ecs_autoscaling" {
-  source                           = "./ecs_autoscaling"
+  source                           = "./modules/ecs_autoscaling"
   environment                      = local.environment
   aws_ecs_cluster_name             = aws_ecs_cluster.main.name
   aws_ecs_service_name             = aws_ecs_service.front.name
@@ -9,7 +9,7 @@ module "front_ecs_autoscaling" {
 }
 
 module "api_ecs_autoscaling" {
-  source                           = "./ecs_autoscaling"
+  source                           = "./modules/ecs_autoscaling"
   environment                      = local.environment
   aws_ecs_cluster_name             = aws_ecs_cluster.main.name
   aws_ecs_service_name             = aws_ecs_service.api.name
