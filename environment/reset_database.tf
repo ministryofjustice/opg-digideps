@@ -1,5 +1,5 @@
 module "reset_database" {
-  source = "./task"
+  source = "./modules/task"
   name   = "reset-database"
 
   cluster_name          = aws_ecs_cluster.main.name
@@ -32,7 +32,7 @@ locals {
 }
 
 module "reset_database_security_group" {
-  source      = "./security_group"
+  source      = "./modules/security_group"
   description = "Reset Database Service"
   rules       = local.reset_database_sg_rules
   name        = "reset-database"

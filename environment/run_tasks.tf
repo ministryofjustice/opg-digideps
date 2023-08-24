@@ -1,5 +1,5 @@
 module "analyse" {
-  source = "./task"
+  source = "./modules/task"
   name   = "psql-analyse"
 
   cluster_name          = aws_ecs_cluster.main.name

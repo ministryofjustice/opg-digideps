@@ -34,7 +34,7 @@ locals {
 }
 
 module "api_cache_security_group" {
-  source      = "./security_group"
+  source      = "./modules/security_group"
   description = "API Redis"
   rules       = local.api_cache_sg_rules
   name        = "api-cache"

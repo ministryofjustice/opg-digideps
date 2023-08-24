@@ -32,7 +32,7 @@ locals {
 }
 
 module "document_sync_service_security_group" {
-  source      = "./security_group"
+  source      = "./modules/security_group"
   description = "Document Sync Service"
   rules       = local.document_sync_sg_rules
   name        = "document-sync-service"
