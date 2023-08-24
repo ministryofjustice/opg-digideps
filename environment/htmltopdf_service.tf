@@ -85,33 +85,31 @@ resource "aws_ecs_service" "htmltopdf" {
 }
 
 locals {
-  htmltopdf_container = <<EOF
-  {
-      "cpu": 0,
-      "essential": true,
-      "image": "${local.images.htmltopdf}",
-      "mountPoints": [],
-      "name": "htmltopdf",
-      "volumesFrom": [],
-      "healthCheck": {
-        "command": [
+  htmltopdf_container = jsonencode(
+    {
+      cpu         = 0,
+      essential   = true,
+      image       = local.images.htmltopdf,
+      mountPoints = [],
+      name        = "htmltopdf",
+      volumesFrom = [],
+      healthCheck = {
+        command = [
           "CMD-SHELL",
           "curl --fail -X POST -H 'Content-Type:application/json' -d '{\"contents\":\"dGVzdA==\"}' -o /dev/null http://localhost:80/ || exit 1"
         ],
-        "interval": 30,
-        "timeout": 5,
-        "retries": 3
+        interval = 30,
+        timeout  = 5,
+        retries  = 3
       },
-      "logConfiguration": {
-        "logDriver": "awslogs",
-        "options": {
-          "awslogs-group": "${aws_cloudwatch_log_group.opg_digi_deps.name}",
-          "awslogs-region": "eu-west-1",
-          "awslogs-stream-prefix": "${aws_iam_role.htmltopdf.name}"
+      logConfiguration = {
+        logDriver = "awslogs",
+        options = {
+          awslogs-group         = aws_cloudwatch_log_group.opg_digi_deps.name,
+          awslogs-region        = "eu-west-1",
+          awslogs-stream-prefix = aws_iam_role.htmltopdf.name
         }
       }
-  }
-
-EOF
-
+    }
+  )
 }

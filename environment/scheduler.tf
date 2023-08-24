@@ -10,14 +10,14 @@ resource "aws_cloudwatch_event_rule" "redeploy_file_scanner" {
 }
 
 resource "aws_cloudwatch_event_target" "redeploy_file_scanner" {
-  rule  = aws_cloudwatch_event_rule.redeploy_file_scanner.name
-  arn   = data.aws_lambda_function.redeployer_lambda.arn
-  input = <<EOF
+  rule = aws_cloudwatch_event_rule.redeploy_file_scanner.name
+  arn  = data.aws_lambda_function.redeployer_lambda.arn
+  input = jsonencode(
     {
-      "cluster": "${aws_ecs_cluster.main.name}",
-      "service": "${aws_ecs_service.scan.name}"
+      cluster = aws_ecs_cluster.main.name,
+      service = aws_ecs_service.scan.name
     }
-  EOF
+  )
 }
 
 resource "aws_lambda_permission" "allow_cloudwatch_call_lambda" {

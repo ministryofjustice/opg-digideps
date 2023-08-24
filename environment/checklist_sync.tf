@@ -117,43 +117,96 @@ resource "aws_cloudwatch_event_target" "checklist_sync_scheduled_task" {
 }
 
 locals {
-  script_name              = local.environment == "production02" ? "scripts/document_and_checklist_sched.sh" : "scripts/checklistsync.sh"
-  checklist_sync_container = <<EOF
-  {
-    "name": "checklist-sync",
-    "image": "${local.images.client}",
-    "command": [ "sh", "${local.script_name}", "-d" ],
-    "logConfiguration": {
-      "logDriver": "awslogs",
-      "options": {
-        "awslogs-group": "${aws_cloudwatch_log_group.opg_digi_deps.name}",
-        "awslogs-region": "eu-west-1",
-        "awslogs-stream-prefix": "checklist-sync"
-      }
-    },
-    "secrets": [
-      { "name": "API_CLIENT_SECRET", "valueFrom": "/aws/reference/secretsmanager/${data.aws_secretsmanager_secret.front_api_client_secret.name}" },
-      { "name": "SECRET", "valueFrom": "/aws/reference/secretsmanager/${data.aws_secretsmanager_secret.front_frontend_secret.name}" },
-      { "name": "SIRIUS_API_BASE_URI", "valueFrom": "${aws_ssm_parameter.sirius_api_base_uri.arn}" }
-    ],
-    "environment": [
-      { "name": "API_URL", "value": "https://${local.api_service_fqdn}" },
-      { "name": "ROLE", "value": "checklist_sync" },
-      { "name": "S3_BUCKETNAME", "value": "pa-uploads-${local.environment}" },
-      { "name": "APP_ENV", "value": "${local.account.app_env}" },
-      { "name": "OPG_DOCKER_TAG", "value": "${var.OPG_DOCKER_TAG}" },
-      { "name": "ADMIN_HOST", "value": "https://${aws_route53_record.admin.fqdn}" },
-      { "name": "NONADMIN_HOST", "value": "https://${aws_route53_record.front.fqdn}" },
-      { "name": "SESSION_REDIS_DSN", "value": "redis://${aws_route53_record.frontend_redis.fqdn}" },
-      { "name": "SESSION_PREFIX", "value": "dd_session_check" },
-      { "name": "EMAIL_SEND_INTERNAL", "value": "${local.account.is_production == 1 ? "true" : "false"}" },
-      { "name": "GA_DEFAULT", "value": "${local.account.ga_default}" },
-      { "name": "GA_GDS", "value": "${local.account.ga_gds}" },
-      { "name": "FEATURE_FLAG_PREFIX", "value": "${local.feature_flag_prefix}" },
-      { "name": "PARAMETER_PREFIX", "value": "${local.parameter_prefix}" },
-      { "name": "HTMLTOPDF_ADDRESS", "value": "http://${local.htmltopdf_service_fqdn}" }
-    ]
-  }
-
-EOF
+  script_name = local.environment == "production02" ? "scripts/document_and_checklist_sched.sh" : "scripts/checklistsync.sh"
+  checklist_sync_container = jsonencode(
+    {
+      name    = "checklist-sync",
+      image   = local.images.client,
+      command = ["sh", local.script_name, "-d"],
+      logConfiguration = {
+        logDriver = "awslogs",
+        options = {
+          awslogs-group         = aws_cloudwatch_log_group.opg_digi_deps.name,
+          awslogs-region        = "eu-west-1",
+          awslogs-stream-prefix = "checklist-sync"
+        }
+      },
+      secrets = [
+        {
+          name      = "API_CLIENT_SECRET",
+          valueFrom = "/aws/reference/secretsmanager/${data.aws_secretsmanager_secret.front_api_client_secret.name}"
+        },
+        {
+          name      = "SECRET",
+          valueFrom = "/aws/reference/secretsmanager/${data.aws_secretsmanager_secret.front_frontend_secret.name}"
+        },
+        {
+          name      = "SIRIUS_API_BASE_URI",
+          valueFrom = aws_ssm_parameter.sirius_api_base_uri.arn
+        }
+      ],
+      environment = [
+        {
+          name  = "API_URL",
+          value = "https://${local.api_service_fqdn}"
+        },
+        {
+          name  = "ROLE",
+          value = "checklist_sync"
+        },
+        {
+          name  = "S3_BUCKETNAME",
+          value = "pa-uploads-${local.environment}"
+        },
+        {
+          name  = "APP_ENV",
+          value = local.account.app_env
+        },
+        {
+          name  = "OPG_DOCKER_TAG",
+          value = var.OPG_DOCKER_TAG
+        },
+        {
+          name  = "ADMIN_HOST",
+          value = "https://${aws_route53_record.admin.fqdn}"
+        },
+        {
+          name  = "NONADMIN_HOST",
+          value = "https://${aws_route53_record.front.fqdn}"
+        },
+        {
+          name  = "SESSION_REDIS_DSN",
+          value = "redis://${aws_route53_record.frontend_redis.fqdn}"
+        },
+        {
+          name  = "SESSION_PREFIX",
+          value = "dd_session_check"
+        },
+        {
+          name  = "EMAIL_SEND_INTERNAL",
+          value = local.account.is_production == 1 ? "true" : "false"
+        },
+        {
+          name  = "GA_DEFAULT",
+          value = local.account.ga_default
+        },
+        {
+          name  = "GA_GDS",
+          value = local.account.ga_gds
+        },
+        {
+          name  = "FEATURE_FLAG_PREFIX",
+          value = local.feature_flag_prefix
+        },
+        {
+          name  = "PARAMETER_PREFIX",
+          value = local.parameter_prefix
+        },
+        {
+          name  = "HTMLTOPDF_ADDRESS",
+          value = "http://${local.htmltopdf_service_fqdn}"
+        }
+      ]
+    }
+  )
 }

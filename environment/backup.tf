@@ -58,53 +58,53 @@ data "aws_kms_alias" "backup" {
 }
 
 locals {
-  backup_container = <<EOF
-{
-    "name": "backup",
-    "image": "${local.images.sync}",
-    "command": ["./backup.sh"],
-    "logConfiguration": {
-        "logDriver": "awslogs",
-        "options": {
-            "awslogs-group": "${aws_cloudwatch_log_group.opg_digi_deps.name}",
-            "awslogs-region": "eu-west-1",
-            "awslogs-stream-prefix": "backup"
+  backup_container = jsonencode(
+    {
+      name    = "backup",
+      image   = local.images.sync,
+      command = ["./backup.sh"],
+      logConfiguration = {
+        logDriver = "awslogs",
+        options = {
+          awslogs-group         = aws_cloudwatch_log_group.opg_digi_deps.name,
+          awslogs-region        = "eu-west-1",
+          awslogs-stream-prefix = "backup"
         }
-    },
-    "secrets": [{
-        "name": "POSTGRES_PASSWORD",
-        "valueFrom": "${data.aws_secretsmanager_secret.database_password.arn}"
-    }],
-    "environment": [{
-            "name": "S3_BUCKET",
-            "value": "${data.aws_s3_bucket.backup.bucket}"
+      },
+      secrets = [{
+        name      = "POSTGRES_PASSWORD",
+        valueFrom = data.aws_secretsmanager_secret.database_password.arn
+      }],
+      environment = [{
+        name  = "S3_BUCKET",
+        value = data.aws_s3_bucket.backup.bucket
         },
         {
-            "name": "S3_OPTS",
-            "value": "--sse=aws:kms --sse-kms-key-id=${data.aws_kms_alias.backup.target_key_arn} --grants=read=id=${data.aws_canonical_user_id.preproduction.id},id=${data.aws_canonical_user_id.production.id}"
+          name  = "S3_OPTS",
+          value = "--sse=aws:kms --sse-kms-key-id=${data.aws_kms_alias.backup.target_key_arn} --grants=read=id=${data.aws_canonical_user_id.preproduction.id},id=${data.aws_canonical_user_id.production.id}"
         },
         {
-            "name": "S3_PREFIX",
-            "value": "${local.environment}"
+          name  = "S3_PREFIX",
+          value = local.environment
         },
         {
-            "name": "POSTGRES_DATABASE",
-            "value": "${local.db.name}"
+          name  = "POSTGRES_DATABASE",
+          value = local.db.name
         },
         {
-            "name": "POSTGRES_HOST",
-            "value": "${local.db.endpoint}"
+          name  = "POSTGRES_HOST",
+          value = local.db.endpoint
         },
         {
-            "name": "POSTGRES_PORT",
-            "value": "${local.db.port}"
+          name  = "POSTGRES_PORT",
+          value = tostring(local.db.port)
         },
         {
-            "name": "POSTGRES_USER",
-            "value": "${local.db.username}"
+          name  = "POSTGRES_USER",
+          value = local.db.username
         }
-    ]
-}
+      ]
+    }
 
-EOF
+  )
 }
