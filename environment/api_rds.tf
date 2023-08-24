@@ -1,5 +1,5 @@
 module "api_aurora" {
-  source                 = "./aurora"
+  source                 = "./modules/aurora"
   count                  = 1
   aurora_serverless      = local.account.aurora_serverless
   account_id             = data.aws_caller_identity.current.account_id

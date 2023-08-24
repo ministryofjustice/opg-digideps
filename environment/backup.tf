@@ -1,5 +1,5 @@
 module "backup" {
-  source = "./task"
+  source = "./modules/task"
   name   = "backup"
 
   cluster_name          = aws_ecs_cluster.main.name
@@ -32,7 +32,7 @@ locals {
 }
 
 module "backup_security_group" {
-  source      = "./security_group"
+  source      = "./modules/security_group"
   description = "Backup Service"
   rules       = local.backup_sg_rules
   name        = "backup"

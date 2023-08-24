@@ -1,5 +1,5 @@
 module "smoke_test" {
-  source = "./task"
+  source = "./modules/task"
   name   = "smoke-test"
 
   cluster_name          = aws_ecs_cluster.main.name
@@ -39,7 +39,7 @@ locals {
 }
 
 module "smoke_test_security_group" {
-  source      = "./security_group"
+  source      = "./modules/security_group"
   description = "Smoke Test Service"
   rules       = local.smoke_test_sg_rules
   name        = "smoke-test"
@@ -48,30 +48,51 @@ module "smoke_test_security_group" {
 }
 
 locals {
-  smoke_test_container = <<EOF
-  {
-    "name": "smoke-test",
-    "image": "${local.images.api}",
-    "logConfiguration": {
-      "logDriver": "awslogs",
-      "options": {
-        "awslogs-group": "${aws_cloudwatch_log_group.opg_digi_deps.name}",
-        "awslogs-region": "eu-west-1",
-        "awslogs-stream-prefix": "${aws_iam_role.test.name}"
-      }
-    },
-    "entryPoint": [ "sh", "./tests/Behat/run-tests-smoke.sh" ],
-    "secrets": [
-      { "name": "PGPASSWORD", "valueFrom": "${data.aws_secretsmanager_secret.database_password.arn}" },
-      { "name": "SECRET", "valueFrom": "${data.aws_secretsmanager_secret.front_frontend_secret.arn}" }
-    ],
-    "environment": [
-      { "name": "PGHOST", "value": "${local.db.endpoint}" },
-      { "name": "PGDATABASE", "value": "${local.db.name}" },
-      { "name": "PGUSER", "value": "${local.db.username}" },
-      { "name": "ADMIN_HOST", "value": "https://${aws_route53_record.admin.fqdn}" },
-      { "name": "NONADMIN_HOST", "value": "https://${aws_route53_record.front.fqdn}" }
-    ]
-  }
-EOF
+  smoke_test_container = jsonencode(
+    {
+      name  = "smoke-test",
+      image = local.images.api,
+      logConfiguration = {
+        logDriver = "awslogs",
+        options = {
+          awslogs-group         = aws_cloudwatch_log_group.opg_digi_deps.name,
+          awslogs-region        = "eu-west-1",
+          awslogs-stream-prefix = aws_iam_role.test.name
+        }
+      },
+      entryPoint = ["sh", "./tests/Behat/run-tests-smoke.sh"],
+      secrets = [
+        {
+          name      = "PGPASSWORD",
+          valueFrom = data.aws_secretsmanager_secret.database_password.arn
+        },
+        {
+          name      = "SECRET",
+          valueFrom = data.aws_secretsmanager_secret.front_frontend_secret.arn
+        }
+      ],
+      environment = [
+        {
+          name  = "PGHOST",
+          value = local.db.endpoint
+        },
+        {
+          name  = "PGDATABASE",
+          value = local.db.name
+        },
+        {
+          name  = "PGUSER",
+          value = local.db.username
+        },
+        {
+          name  = "ADMIN_HOST",
+          value = "https://${aws_route53_record.admin.fqdn}"
+        },
+        {
+          name  = "NONADMIN_HOST",
+          value = "https://${aws_route53_record.front.fqdn}"
+        }
+      ]
+    }
+  )
 }

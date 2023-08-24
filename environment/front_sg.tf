@@ -66,7 +66,7 @@ locals {
 }
 
 module "front_service_security_group" {
-  source      = "./security_group"
+  source      = "./modules/security_group"
   description = "Front Service"
   rules       = local.front_sg_rules
   name        = "front-service"
@@ -87,7 +87,7 @@ locals {
 }
 
 module "front_elb_security_group" {
-  source      = "./security_group"
+  source      = "./modules/security_group"
   description = "Front Elastic Load Balancer"
   rules       = local.front_elb_sg_rules
   name        = "front-alb"
@@ -119,7 +119,7 @@ resource "aws_security_group_rule" "front_elb_https_in" {
 
 //No room for rules left in front_elb_security_group
 module "front_elb_security_group_route53_hc" {
-  source      = "./security_group"
+  source      = "./modules/security_group"
   description = "Front Elastic Load Balancer Healthcheck"
   rules       = local.front_elb_sg_rules
   name        = "front-alb"

@@ -1,5 +1,5 @@
 module "integration_test" {
-  source = "./task"
+  source = "./modules/task"
   name   = "integration-test"
 
   cluster_name          = aws_ecs_cluster.main.name
@@ -39,7 +39,7 @@ locals {
 }
 
 module "integration_test_security_group" {
-  source      = "./security_group"
+  source      = "./modules/security_group"
   description = "Integration Tests Service"
   rules       = local.integration_test_sg_rules
   name        = "integration-test"
@@ -48,42 +48,99 @@ module "integration_test_security_group" {
 }
 
 locals {
-  integration_test_container = <<EOF
-  {
-    "name": "integration-test",
-    "image": "${local.images.api}",
-    "entrypoint": [ "sh", "./tests/Behat/run-tests.sh" ],
-    "logConfiguration": {
-      "logDriver": "awslogs",
-      "options": {
-        "awslogs-group": "${aws_cloudwatch_log_group.opg_digi_deps.name}",
-        "awslogs-region": "eu-west-1",
-        "awslogs-stream-prefix": "${aws_iam_role.test.name}"
-      }
-    },
-    "secrets": [
-      { "name": "PGPASSWORD", "valueFrom": "${data.aws_secretsmanager_secret.database_password.arn}" },
-      { "name": "SECRET", "valueFrom": "${data.aws_secretsmanager_secret.front_frontend_secret.arn}" },
-      { "name": "DATABASE_PASSWORD", "valueFrom": "${data.aws_secretsmanager_secret.database_password.arn}" },
-      { "name": "SECRETS_ADMIN_KEY", "valueFrom": "${data.aws_secretsmanager_secret.admin_api_client_secret.arn}" },
-      { "name": "SECRETS_FRONT_KEY", "valueFrom": "${data.aws_secretsmanager_secret.front_api_client_secret.arn}" }
-    ],
-    "environment": [
-      { "name": "PGHOST", "value": "${local.db.endpoint}" },
-      { "name": "PGDATABASE", "value": "${local.db.name}" },
-      { "name": "PGUSER", "value": "${local.db.username}" },
-      { "name": "ADMIN_HOST", "value": "https://${aws_route53_record.admin.fqdn}" },
-      { "name": "NONADMIN_HOST", "value": "https://${aws_route53_record.front.fqdn}" },
-      { "name": "AUDIT_LOG_GROUP_NAME", "value": "audit-${local.environment}" },
-      { "name": "DATABASE_HOSTNAME", "value": "${local.db.endpoint}" },
-      { "name": "DATABASE_NAME", "value": "${local.db.name}" },
-      { "name": "DATABASE_PORT", "value": "${local.db.port}" },
-      { "name": "DATABASE_USERNAME", "value": "${local.db.username}" },
-      { "name": "FIXTURES_ACCOUNTPASSWORD", "value": "DigidepsPass1234" },
-      { "name": "NGINX_APP_NAME", "value": "api" },
-      { "name": "OPG_DOCKER_TAG", "value": "${var.OPG_DOCKER_TAG}" },
-      { "name": "REDIS_DSN", "value": "redis://${aws_route53_record.api_redis.fqdn}" }
-    ]
-  }
-EOF
+  integration_test_container = jsonencode(
+    {
+      name       = "integration-test",
+      image      = local.images.api,
+      entrypoint = ["sh", "./tests/Behat/run-tests.sh"],
+      logConfiguration = {
+        logDriver = "awslogs",
+        options = {
+          awslogs-group         = aws_cloudwatch_log_group.opg_digi_deps.name,
+          awslogs-region        = "eu-west-1",
+          awslogs-stream-prefix = aws_iam_role.test.name
+        }
+      },
+      secrets = [
+        {
+          name      = "PGPASSWORD",
+          valueFrom = data.aws_secretsmanager_secret.database_password.arn
+        },
+        {
+          name      = "SECRET",
+          valueFrom = data.aws_secretsmanager_secret.front_frontend_secret.arn
+        },
+        {
+          name      = "DATABASE_PASSWORD",
+          valueFrom = data.aws_secretsmanager_secret.database_password.arn
+        },
+        {
+          name      = "SECRETS_ADMIN_KEY",
+          valueFrom = data.aws_secretsmanager_secret.admin_api_client_secret.arn
+        },
+        {
+          name      = "SECRETS_FRONT_KEY",
+          valueFrom = data.aws_secretsmanager_secret.front_api_client_secret.arn
+        }
+      ],
+      environment = [
+        {
+          name  = "PGHOST",
+          value = local.db.endpoint
+        },
+        {
+          name  = "PGDATABASE",
+          value = local.db.name
+        },
+        {
+          name  = "PGUSER",
+          value = local.db.username
+        },
+        {
+          name  = "ADMIN_HOST",
+          value = "https://${aws_route53_record.admin.fqdn}"
+        },
+        {
+          name  = "NONADMIN_HOST",
+          value = "https://${aws_route53_record.front.fqdn}"
+        },
+        {
+          name  = "AUDIT_LOG_GROUP_NAME",
+          value = "audit-${local.environment}"
+        },
+        {
+          name  = "DATABASE_HOSTNAME",
+          value = local.db.endpoint
+        },
+        {
+          name  = "DATABASE_NAME",
+          value = local.db.name
+        },
+        {
+          name  = "DATABASE_PORT",
+          value = local.db.port
+        },
+        {
+          name  = "DATABASE_USERNAME",
+          value = local.db.username
+        },
+        {
+          name  = "FIXTURES_ACCOUNTPASSWORD",
+          value = "DigidepsPass1234"
+        },
+        {
+          name  = "NGINX_APP_NAME",
+          value = "api"
+        },
+        {
+          name  = "OPG_DOCKER_TAG",
+          value = var.OPG_DOCKER_TAG
+        },
+        {
+          name  = "REDIS_DSN",
+          value = "redis://${aws_route53_record.api_redis.fqdn}"
+        }
+      ]
+    }
+  )
 }

@@ -1,5 +1,5 @@
 module "restore_from_production" {
-  source = "./task"
+  source = "./modules/task"
   name   = "restore-from-production"
 
   cluster_name          = aws_ecs_cluster.main.name
@@ -32,7 +32,7 @@ locals {
 }
 
 module "restore_from_production_security_group" {
-  source      = "./security_group"
+  source      = "./modules/security_group"
   description = "Restore from Production Service"
   rules       = local.restore_from_production_sg_rules
   name        = "restore-from-production"
