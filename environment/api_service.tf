@@ -129,53 +129,66 @@ locals {
       ],
       environment = [
         {
-          name = "ADMIN_HOST",
-        value = "https://${aws_route53_record.admin.fqdn}" },
+          name  = "ADMIN_HOST",
+          value = "https://${aws_route53_record.admin.fqdn}"
+        },
         {
-          name = "FRONTEND_HOST",
-        value = "https://${aws_route53_record.front.fqdn}" },
+          name  = "FRONTEND_HOST",
+          value = "https://${aws_route53_record.front.fqdn}"
+        },
         {
-          name = "AUDIT_LOG_GROUP_NAME",
-        value = "audit-${local.environment}" },
+          name  = "AUDIT_LOG_GROUP_NAME",
+          value = "audit-${local.environment}"
+        },
         {
-          name = "DATABASE_HOSTNAME",
-        value = local.db.endpoint },
+          name  = "DATABASE_HOSTNAME",
+          value = local.db.endpoint
+        },
         {
-          name = "DATABASE_NAME",
-        value = local.db.name },
+          name  = "DATABASE_NAME",
+          value = local.db.name
+        },
         {
-          name = "DATABASE_PORT",
-        value = local.db.port },
+          name  = "DATABASE_PORT",
+          value = tostring(local.db.port)
+        },
         {
-          name = "DATABASE_USERNAME",
-        value = local.db.username },
+          name  = "DATABASE_USERNAME",
+          value = local.db.username
+        },
         {
-          name = "DATABASE_SSL",
-        value = "verify-full" },
+          name  = "DATABASE_SSL",
+          value = "verify-full"
+        },
         {
-          name = "FEATURE_FLAG_PREFIX",
-        value = local.feature_flag_prefix },
+          name  = "FEATURE_FLAG_PREFIX",
+          value = local.feature_flag_prefix
+        },
         {
-          name = "FIXTURES_ACCOUNTPASSWORD",
-        value = "DigidepsPass1234" },
+          name  = "FIXTURES_ACCOUNTPASSWORD",
+          value = "DigidepsPass1234"
+        },
         {
-          name = "NGINX_APP_NAME",
-        value = "api" },
+          name  = "NGINX_APP_NAME",
+          value = "api"
+        },
         {
-          name = "OPG_DOCKER_TAG",
-        value = var.OPG_DOCKER_TAG },
+          name  = "OPG_DOCKER_TAG",
+          value = var.OPG_DOCKER_TAG
+        },
         {
-          name = "PARAMETER_PREFIX",
-        value = local.parameter_prefix },
+          name  = "PARAMETER_PREFIX",
+          value = local.parameter_prefix
+        },
         {
-          name = "REDIS_DSN",
-        value = "redis://${aws_route53_record.api_redis.fqdn}" },
+          name  = "REDIS_DSN",
+          value = "redis://${aws_route53_record.api_redis.fqdn}"
+        },
         {
-          name = "SECRETS_PREFIX",
-        value = join("", [local.secrets_prefix, "/"]) }
+          name  = "SECRETS_PREFIX",
+          value = join("", [local.secrets_prefix, "/"])
+        },
       ]
     }
-
   )
-
 }

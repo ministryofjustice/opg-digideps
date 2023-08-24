@@ -57,15 +57,24 @@ We use [Prophecy][prophecy] (and in some cases [Mockery][mockery]) to mock class
 
 ## Behat
 
-Behat tests are run against the environment's client container, meaning test data is stored in the corresponding database. This makes test failures easy to debug, but means that using the application during tests can cause failures.
+Behat tests are run from the api container against the frontend and creates fixture data in the environment's DB. This makes test failures easy to debug, but means that using the application during tests can cause failures.
 
 ### Suites
 
 Our modern behat suites are designed to test one piece of application functionality in isolation. This means multiple suites could be run in parallel, since they use different data and don't depend on each other.
 
-There are however 6 older suites which are much larger and have a lot of complicated dependent data. These cannot easily be broken down further, but are slowly being replaced with smaller suites to eventually be phased out.
+When creating new tests, try and make them so each suite is independent of all other suites and so that any data created does not impact other suites. This is usually a case of using a new report and users for each suite but ocassionally where we are looking at report counts or user counts, this can be more complex.
 
-See behat/tests/behat.yml for suite descriptions.
+If possible, give your new tests one of the following tags:
+
+- @v2_reporting_1
+- @v2_reporting_2
+- @v2_admin
+- @v2_sequential_1
+- @v2_sequential_2
+- @v2_sequential_3
+
+Look at the current times for the tags in github actions and add the tag for the one that applies to the logic of your new tests and has the lowest current running time. If your tests don't need to be run sequentially then add them to one of the non sequential runners.
 
 ### Fixture data
 

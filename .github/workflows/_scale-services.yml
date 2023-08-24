@@ -9,6 +9,10 @@ on:
         description: "Count of replicas needed"
         required: true
         type: string
+      acu:
+        description: "Max ACU allowed for serverless v2"
+        required: true
+        type: string
       account:
         description: "Account to use"
         required: true
@@ -38,7 +42,9 @@ jobs:
         env:
           TF_WORKSPACE: ${{ inputs.workspace }}
           REPLICAS: ${{ inputs.replicas }}
+          ACU: ${{ inputs.acu }}
         run: |
           aws ecs update-service --service front-${TF_WORKSPACE} --cluster ${TF_WORKSPACE} --desired-count ${REPLICAS}
           aws ecs update-service --service admin-${TF_WORKSPACE} --cluster ${TF_WORKSPACE} --desired-count ${REPLICAS}
           aws ecs update-service --service api-${TF_WORKSPACE} --cluster ${TF_WORKSPACE} --desired-count ${REPLICAS}
+          aws rds modify-db-cluster --db-cluster-identifier api-${TF_WORKSPACE} --serverless-v2-scaling-configuration MinCapacity=0.5,MaxCapacity=${ACU}

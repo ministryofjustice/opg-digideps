@@ -121,7 +121,7 @@ locals {
         },
         {
           name  = "DATABASE_PORT",
-          value = local.db.port
+          value = tostring(local.db.port)
         },
         {
           name  = "DATABASE_USERNAME",

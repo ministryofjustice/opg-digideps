@@ -3,7 +3,10 @@
 export BEHAT_PARAMS="{\"extensions\": {\"Behat\\\\MinkExtension\": {\"base_url\": \"$NONADMIN_HOST\/\", \"browser_stack\": { \"username\": \"$BROWSERSTACK_USERNAME\", \"access_key\": \"$BROWSERSTACK_KEY\"}}}}"
 export APP_ENV=dev
 
+start=$(date +%s)
+
 confd -onetime -backend env
+
 echo "==== Starting test run ===="
 ./vendor/bin/behat --config=./tests/Behat/behat.yml --rerun --profile v2-tests-browserkit $@
 if [ $? -ne 0 ]; then
@@ -16,4 +19,17 @@ if [ $? -ne 0 ]; then
         echo "==== Reruns successful. Exiting with success ===="
         exit 0
     fi
+fi
+
+end=$(date +%s)
+
+runtime=$(( end - start))
+
+echo "Time taken: ${runtime} secs"
+
+if [ $runtime -gt 420 ]
+then
+    echo "Stage taking too long. Failing the build!"
+    echo "Please split out your tests to a new container"
+    exit 1
 fi

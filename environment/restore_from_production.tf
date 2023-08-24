@@ -76,7 +76,7 @@ locals {
         },
         {
           name  = "POSTGRES_PORT",
-          value = local.db.port
+          value = tostring(local.db.port)
         },
         {
           name  = "POSTGRES_USER",
