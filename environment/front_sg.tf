@@ -124,7 +124,7 @@ module "front_elb_security_group_route53_hc" {
   source      = "./modules/security_group"
   description = "Front Elastic Load Balancer Healthcheck"
   rules       = local.front_elb_sg_rules
-  name        = "front-alb"
+  name        = "front-alb-route53-hc"
   tags        = local.default_tags
   vpc_id      = data.aws_vpc.vpc.id
   environment = local.environment
