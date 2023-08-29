@@ -11,7 +11,7 @@ data "aws_secretsmanager_secret_version" "slack_webhook_url" {
 module "environment_secrets" {
   for_each = local.account.environments
 
-  source      = "./environment_secrets"
+  source      = "./modules/environment_secrets"
   environment = each.value
   secrets = [
     "api-secret",
@@ -31,7 +31,7 @@ module "environment_secrets" {
 module "development_environment_secrets" {
   count = local.account.name == "development" ? 1 : 0
 
-  source      = "./environment_secrets"
+  source      = "./modules/environment_secrets"
   environment = local.account.name
   secrets = [
     "browserstack-username",
