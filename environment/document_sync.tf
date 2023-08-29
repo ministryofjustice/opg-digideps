@@ -110,41 +110,92 @@ resource "aws_cloudwatch_event_target" "document_sync_scheduled_task" {
 }
 
 locals {
-  document_sync_container = <<EOF
-  {
-    "name": "document-sync",
-    "image": "${local.images.client}",
-    "command": [ "sh", "scripts/documentsync.sh", "-d" ],
-    "logConfiguration": {
-      "logDriver": "awslogs",
-      "options": {
-        "awslogs-group": "${aws_cloudwatch_log_group.opg_digi_deps.name}",
-        "awslogs-region": "eu-west-1",
-        "awslogs-stream-prefix": "document-sync"
-      }
-    },
-    "secrets": [
-      { "name": "API_CLIENT_SECRET", "valueFrom": "/aws/reference/secretsmanager/${data.aws_secretsmanager_secret.front_api_client_secret.name}" },
-      { "name": "SECRET", "valueFrom": "/aws/reference/secretsmanager/${data.aws_secretsmanager_secret.front_frontend_secret.name}" },
-      { "name": "SIRIUS_API_BASE_URI", "valueFrom": "${aws_ssm_parameter.sirius_api_base_uri.arn}" }
-    ],
-    "environment": [
-      { "name": "API_URL", "value": "https://${local.api_service_fqdn}" },
-      { "name": "ROLE", "value": "document_sync" },
-      { "name": "S3_BUCKETNAME", "value": "pa-uploads-${local.environment}" },
-      { "name": "APP_ENV", "value": "${local.account.app_env}" },
-      { "name": "OPG_DOCKER_TAG", "value": "${var.OPG_DOCKER_TAG}" },
-      { "name": "ADMIN_HOST", "value": "https://${aws_route53_record.admin.fqdn}" },
-      { "name": "NONADMIN_HOST", "value": "https://${aws_route53_record.front.fqdn}" },
-      { "name": "SESSION_REDIS_DSN", "value": "redis://${aws_route53_record.frontend_redis.fqdn}" },
-      { "name": "SESSION_PREFIX", "value": "dd_session_check" },
-      { "name": "EMAIL_SEND_INTERNAL", "value": "${local.account.is_production == 1 ? "true" : "false"}" },
-      { "name": "GA_DEFAULT", "value": "${local.account.ga_default}" },
-      { "name": "GA_GDS", "value": "${local.account.ga_gds}" },
-      { "name": "FEATURE_FLAG_PREFIX", "value": "${local.feature_flag_prefix}" },
-      { "name": "PARAMETER_PREFIX", "value": "${local.parameter_prefix}" }
-    ]
-  }
+  document_sync_container = jsonencode(
+    {
+      name    = "document-sync",
+      image   = local.images.client,
+      command = ["sh", "scripts/documentsync.sh", "-d"],
+      logConfiguration = {
+        logDriver = "awslogs",
+        options = {
+          awslogs-group         = aws_cloudwatch_log_group.opg_digi_deps.name,
+          awslogs-region        = "eu-west-1",
+          awslogs-stream-prefix = "document-sync"
+        }
+      },
+      secrets = [
+        {
+          name      = "API_CLIENT_SECRET",
+          valueFrom = "/aws/reference/secretsmanager/${data.aws_secretsmanager_secret.front_api_client_secret.name}"
+        },
+        {
+          name      = "SECRET",
+          valueFrom = "/aws/reference/secretsmanager/${data.aws_secretsmanager_secret.front_frontend_secret.name}"
+        },
+        {
+          name      = "SIRIUS_API_BASE_URI",
+          valueFrom = aws_ssm_parameter.sirius_api_base_uri.arn
+        }
+      ],
+      environment = [
+        {
+          name  = "API_URL",
+          value = "https://${local.api_service_fqdn}"
+        },
+        {
+          name  = "ROLE",
+          value = "document_sync"
+        },
+        {
+          name  = "S3_BUCKETNAME",
+          value = "pa-uploads-${local.environment}"
+        },
+        {
+          name  = "APP_ENV",
+          value = local.account.app_env
+        },
+        {
+          name  = "OPG_DOCKER_TAG",
+          value = var.OPG_DOCKER_TAG
+        },
+        {
+          name  = "ADMIN_HOST",
+          value = "https://${aws_route53_record.admin.fqdn}"
+        },
+        {
+          name  = "NONADMIN_HOST",
+          value = "https://${aws_route53_record.front.fqdn}"
+        },
+        {
+          name  = "SESSION_REDIS_DSN",
+          value = "redis://${aws_route53_record.frontend_redis.fqdn}"
+        },
+        {
+          name  = "SESSION_PREFIX",
+          value = "dd_session_check"
+        },
+        {
+          name  = "EMAIL_SEND_INTERNAL",
+          value = local.account.is_production == 1 ? "true" : "false"
+        },
+        {
+          name  = "GA_DEFAULT",
+          value = local.account.ga_default
+        },
+        {
+          name  = "GA_GDS",
+          value = local.account.ga_gds
+        },
+        {
+          name  = "FEATURE_FLAG_PREFIX",
+          value = local.feature_flag_prefix
+        },
+        {
+          name  = "PARAMETER_PREFIX",
+          value = local.parameter_prefix
+        }
+      ]
+    }
 
-EOF
+  )
 }

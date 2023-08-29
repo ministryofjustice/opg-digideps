@@ -1,4 +1,4 @@
-@report-submissions @document-sync @v2_sequential @v2
+@v2 @v2_sequential_2 @report-submissions @document-sync
 Feature: Synchronising Documents with Sirius
 
     @super-admin @lay-pfa-high-completed

@@ -78,26 +78,29 @@ resource "aws_ecs_service" "mock_sirius_integration" {
 }
 
 locals {
-  mock_sirius_integration_container = <<EOF
-  {
-    "name": "mock-sirius-integration",
-    "image": "muonsoft/openapi-mock:${local.openapi_mock_version}",
-    "portMappings": [{
-          "containerPort": 8080,
-          "hostPort": 8080,
-          "protocol": "tcp"
-    }],
-    "logConfiguration": {
-      "logDriver": "awslogs",
-      "options": {
-        "awslogs-group": "${aws_cloudwatch_log_group.opg_digi_deps.name}",
-        "awslogs-region": "eu-west-1",
-        "awslogs-stream-prefix": "${aws_iam_role.mock_sirius_integration.name}"
-      }
-    },
-    "environment": [
-      { "name": "OPENAPI_MOCK_SPECIFICATION_URL", "value": "https://raw.githubusercontent.com/ministryofjustice/opg-data-deputy-reporting/master/lambda_functions/v2/openapi/deputy-reporting-openapi.yml" }
-    ]
-  }
-EOF
+  mock_sirius_integration_container = jsonencode(
+    {
+      name  = "mock-sirius-integration",
+      image = "muonsoft/openapi-mock:${local.openapi_mock_version}",
+      portMappings = [{
+        containerPort = 8080,
+        hostPort      = 8080,
+        protocol      = "tcp"
+      }],
+      logConfiguration = {
+        logDriver = "awslogs",
+        options = {
+          awslogs-group         = "${aws_cloudwatch_log_group.opg_digi_deps.name}",
+          awslogs-region        = "eu-west-1",
+          awslogs-stream-prefix = "${aws_iam_role.mock_sirius_integration.name}"
+        }
+      },
+      environment = [
+        {
+          name  = "OPENAPI_MOCK_SPECIFICATION_URL",
+          value = "https://raw.githubusercontent.com/ministryofjustice/opg-data-deputy-reporting/master/lambda_functions/v2/openapi/deputy-reporting-openapi.yml"
+        }
+      ]
+    }
+  )
 }
