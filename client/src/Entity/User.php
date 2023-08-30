@@ -75,7 +75,8 @@ class User implements UserInterface, DeputyInterface, PasswordAuthenticatedUserI
         self::ROLE_PROF_TEAM_MEMBER => 'Professional Deputy team member',
     ];
 
-    public const TOKEN_EXPIRE_HOURS = 48;
+    public const ACTIVATE_TOKEN_EXPIRE_HOURS = 48;
+    public const PASSWORD_TOKEN_EXPIRE_HOURS = 1;
 
     /**
      * @JMS\Type("integer")
@@ -174,7 +175,7 @@ class User implements UserInterface, DeputyInterface, PasswordAuthenticatedUserI
      * @JMS\Type("DateTime<'Y-m-d H:i:s'>")
      * @JMS\Groups({"user"})
      *
-     * @var DateTime|null
+     * @var \DateTime|null
      */
     private $registrationDate;
 
@@ -190,7 +191,7 @@ class User implements UserInterface, DeputyInterface, PasswordAuthenticatedUserI
      * @JMS\Type("DateTime<'Y-m-d H:i:s'>")
      * @JMS\Groups({"registrationToken"})
      *
-     * @var DateTime|null
+     * @var \DateTime|null
      */
     private $tokenDate;
 
@@ -289,7 +290,7 @@ class User implements UserInterface, DeputyInterface, PasswordAuthenticatedUserI
      * @JMS\Type("DateTime<'Y-m-d H:i:s'>")
      * @JMS\Groups({"lastLoggedIn"})
      *
-     * @var DateTime|null
+     * @var \DateTime|null
      */
     private $lastLoggedIn;
 
@@ -310,6 +311,7 @@ class User implements UserInterface, DeputyInterface, PasswordAuthenticatedUserI
 
     /**
      * @var bool|null
+     *
      * @JMS\Type("boolean")
      * @JMS\Groups({"ad_managed", "ad_add_user"})
      */
@@ -326,9 +328,9 @@ class User implements UserInterface, DeputyInterface, PasswordAuthenticatedUserI
 
     /**
      * @var bool
+     *
      * @JMS\Type("boolean")
      * @JMS\Groups({"agree_terms_use", "update_terms_use"})
-     *
      * @Assert\NotBlank( message="user.agreeTermsUse.notBlank", groups={"agree-terms-use"} )
      */
     private $agreeTermsUse;
@@ -551,7 +553,7 @@ class User implements UserInterface, DeputyInterface, PasswordAuthenticatedUserI
     }
 
     /**
-     * @return DateTime|null $registrationDate
+     * @return \DateTime|null $registrationDate
      */
     public function getRegistrationDate()
     {
@@ -559,11 +561,11 @@ class User implements UserInterface, DeputyInterface, PasswordAuthenticatedUserI
     }
 
     /**
-     * @param DateTime $registrationDate
+     * @param \DateTime $registrationDate
      *
      * @return User
      */
-    public function setRegistrationDate(DateTime $registrationDate = null)
+    public function setRegistrationDate(\DateTime $registrationDate = null)
     {
         $this->registrationDate = $registrationDate;
 
@@ -591,7 +593,7 @@ class User implements UserInterface, DeputyInterface, PasswordAuthenticatedUserI
     }
 
     /**
-     * @return DateTime $tokenDate
+     * @return \DateTime $tokenDate
      */
     public function getTokenDate()
     {
@@ -599,7 +601,7 @@ class User implements UserInterface, DeputyInterface, PasswordAuthenticatedUserI
     }
 
     /**
-     * @param DateTime $tokenDate
+     * @param \DateTime $tokenDate
      *
      * @return User
      */
@@ -662,8 +664,6 @@ class User implements UserInterface, DeputyInterface, PasswordAuthenticatedUserI
 
     /**
      * @param bool $isCoDeputyClientConfirmed
-     *
-     * @return User
      */
     public function setCoDeputyClientConfirmed($isCoDeputyClientConfirmed): self
     {
@@ -713,7 +713,7 @@ class User implements UserInterface, DeputyInterface, PasswordAuthenticatedUserI
     {
         $expiresSeconds = $hoursExpires * 3600;
 
-        $timeStampNow = (new DateTime())->getTimestamp();
+        $timeStampNow = (new \DateTime())->getTimestamp();
         $timestampToken = $this->getTokenDate()->getTimestamp();
 
         $diffSeconds = $timeStampNow - $timestampToken;
@@ -831,7 +831,7 @@ class User implements UserInterface, DeputyInterface, PasswordAuthenticatedUserI
     }
 
     /**
-     * @return DateTime|null
+     * @return \DateTime|null
      */
     public function getLastLoggedIn()
     {
@@ -839,9 +839,9 @@ class User implements UserInterface, DeputyInterface, PasswordAuthenticatedUserI
     }
 
     /**
-     * @param DateTime $lastLoggedIn
+     * @param \DateTime $lastLoggedIn
      */
-    public function setLastLoggedIn(DateTime $lastLoggedIn = null)
+    public function setLastLoggedIn(\DateTime $lastLoggedIn = null)
     {
         $this->lastLoggedIn = $lastLoggedIn;
     }
@@ -1240,8 +1240,6 @@ class User implements UserInterface, DeputyInterface, PasswordAuthenticatedUserI
 
     /**
      * @param ArrayCollection $organisations
-     *
-     * @return User
      */
     public function setOrganisations($organisations): self
     {
@@ -1287,12 +1285,10 @@ class User implements UserInterface, DeputyInterface, PasswordAuthenticatedUserI
 
     /**
      * Check if a user registration was before today.
-     *
-     * @param $user
      */
     public function regBeforeToday(User $user): bool
     {
-        return $user->getRegistrationDate() < (new DateTime())->setTime(00, 00, 00);
+        return $user->getRegistrationDate() < (new \DateTime())->setTime(00, 00, 00);
     }
 
     public function getAddress4()

@@ -63,12 +63,19 @@ class UserController extends AbstractController
         }
 
         // token expired
-        if (!$user->isTokenSentInTheLastHours(EntityDir\User::TOKEN_EXPIRE_HOURS)) {
-            $template = $isActivatePage ? '@App/User/activateTokenExpired.html.twig' : '@App/User/passwordResetTokenExpired.html.twig';
+        if (!$user->isTokenSentInTheLastHours(EntityDir\User::ACTIVATE_TOKEN_EXPIRE_HOURS) && $isActivatePage) {
+            $template = '@App/User/activateTokenExpired.html.twig';
 
             return $this->render($template, [
                 'token' => $token,
-                'tokenExpireHours' => EntityDir\User::TOKEN_EXPIRE_HOURS,
+                'tokenExpireHours' => EntityDir\User::ACTIVATE_TOKEN_EXPIRE_HOURS,
+            ]);
+        } elseif (!$user->isTokenSentInTheLastHours(EntityDir\User::PASSWORD_TOKEN_EXPIRE_HOURS) && !$isActivatePage) {
+            $template = '@App/User/passwordResetTokenExpired.html.twig';
+
+            return $this->render($template, [
+                'token' => $token,
+                'tokenExpireHours' => EntityDir\User::PASSWORD_TOKEN_EXPIRE_HOURS,
             ]);
         }
 
@@ -150,6 +157,7 @@ class UserController extends AbstractController
 
     /**
      * @return array<mixed>
+     *
      * @Route("/user/activate/password/sent/{token}", name="activation_link_sent")
      * @Template("@App/User/activateLinkSent.html.twig")
      */
@@ -157,7 +165,7 @@ class UserController extends AbstractController
     {
         return [
             'token' => $token,
-            'tokenExpireHours' => EntityDir\User::TOKEN_EXPIRE_HOURS,
+            'tokenExpireHours' => EntityDir\User::ACTIVATE_TOKEN_EXPIRE_HOURS,
         ];
     }
 
@@ -170,6 +178,7 @@ class UserController extends AbstractController
      * - PA.
      *
      * @return array<mixed>|Response
+     *
      * @Route("/user/details", name="user_details")
      * @Template("@App/User/details.html.twig")
      */
@@ -208,6 +217,7 @@ class UserController extends AbstractController
 
     /**
      * @return array<mixed>|Response
+     *
      * @Route("/password-managing/forgotten", name="password_forgotten")
      * @Template("@App/User/passwordForgotten.html.twig")
      **/
@@ -235,6 +245,7 @@ class UserController extends AbstractController
 
     /**
      * @return array<mixed>
+     *
      * @Route("/password-managing/sent", name="password_sent")
      * @Template("@App/User/passwordSent.html.twig")
      */
@@ -245,6 +256,7 @@ class UserController extends AbstractController
 
     /**
      * @return array<mixed>|Response
+     *
      * @Route("/register", name="register")
      * @Template("@App/User/register.html.twig")
      */
