@@ -35,9 +35,23 @@ jobs:
         run: GOARCH=amd64 GOOS=linux go build -o main ./main.go
         working-directory: shared/go_redeployer
 
+      - name: parse terraform version
+        id: tf_version_setup
+        run: |
+          if [ -f ./versions.tf ]; then
+            terraform_version=$(cat ./versions.tf | ../scripts/pipeline/terraform/terraform-version.sh)
+            echo "- Terraform version: [${terraform_version}]" >> $GITHUB_STEP_SUMMARY
+            echo "TERRAFORM_VERSION=${terraform_version}" >> $GITHUB_OUTPUT
+          fi
+        working-directory: ${{ inputs.terraform_path }}
+
+      - name: "Terraform version [${{ steps.tf_version_setup.outputs.TERRAFORM_VERSION }}]"
+        run: echo "terraform version [${{ steps.tf_version_setup.outputs.TERRAFORM_VERSION }}]"
+
       - uses: hashicorp/setup-terraform@4a142dabfba6f0c9b246187c3a3736c19548ec72 # pin@v2.0.0
         with:
-          terraform_version: 1.2.4
+          terraform_version: ${{ steps.tf_version_setup.outputs.TERRAFORM_VERSION }}
+          terraform_wrapper: false
 
       - name: configure AWS credentials for terraform
         uses: aws-actions/configure-aws-credentials@35d8f9588bf190a9a7fda3411cd548fb8234bee2 # pin@v1.7.0
