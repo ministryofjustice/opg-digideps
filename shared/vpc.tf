@@ -21,8 +21,8 @@ resource "aws_internet_gateway" "igw" {
 }
 
 resource "aws_eip" "nat" {
-  vpc   = true
-  count = 3
+  domain = "vpc"
+  count  = 3
   tags = merge(
     local.default_tags,
     {
