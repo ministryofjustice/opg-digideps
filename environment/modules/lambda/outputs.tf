@@ -1,9 +1,9 @@
 output "lambda" {
-  description = "The lambda function"
+  description = "Lambda function"
   value       = aws_lambda_function.lambda_function
 }
 
 output "lambda_sg" {
-  description = "The SG of the lambda"
+  description = "Security group of the lambda"
   value       = aws_security_group.lambda
 }
