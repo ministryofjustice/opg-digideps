@@ -25,10 +25,10 @@ resource "aws_cloudwatch_event_target" "cleanup" {
 
   input = jsonencode(
     {
-      "containerOverrides": [
+      "containerOverrides" : [
         {
-          "name": "api_app",
-          "command": [ "sh", "scripts/task_run_console_command.sh digideps:user-retention-policy" ]
+          "name" : "api_app",
+          "command" : ["sh", "scripts/task_run_console_command.sh digideps:user-retention-policy"]
         }
       ]
     }
