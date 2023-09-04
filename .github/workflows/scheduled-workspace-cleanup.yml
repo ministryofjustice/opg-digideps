@@ -36,7 +36,7 @@ jobs:
       - name: "Terraform version [${{ steps.tf_version_setup.outputs.TERRAFORM_VERSION }}]"
         run: echo "terraform version [${{ steps.tf_version_setup.outputs.TERRAFORM_VERSION }}]"
 
-      - uses: hashicorp/setup-terraform@4a142dabfba6f0c9b246187c3a3736c19548ec72 # pin@v2.0.0
+      - uses: hashicorp/setup-terraform@efd0b45bf6e6783512c00eb63fb868f211536e8e # pin@v2
         with:
           terraform_version: ${{ steps.tf_version_setup.outputs.TERRAFORM_VERSION }}
           terraform_wrapper: false
