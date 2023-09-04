@@ -22,7 +22,7 @@ jobs:
     runs-on: ubuntu-latest
     steps:
       - uses: actions/checkout@96f53100ba2a5449eb71d2e6604bbcd94b9449b5 # pin@v3
-      - uses: hashicorp/setup-terraform@4a142dabfba6f0c9b246187c3a3736c19548ec72 # pin@v2
+      - uses: hashicorp/setup-terraform@efd0b45bf6e6783512c00eb63fb868f211536e8e # pin@v2
         with:
           terraform_version: 1.2.4
           terraform_wrapper: false
