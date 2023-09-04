@@ -5,11 +5,11 @@ module "disaster_recovery_backup" {
   default_role            = var.DEFAULT_ROLE
   environment             = local.environment
   images                  = local.images
-  execution_role          = aws_iam_role.execution_role
+  execution_role_arn      = aws_iam_role.execution_role.arn
   backup_account_id       = local.backup_account_id
   aws_ecs_cluster_arn     = aws_ecs_cluster.main.arn
   aws_subnet_ids          = data.aws_subnet.private.*.id
-  account                 = local.account
+  account_id              = local.account.account_id
   db                      = local.db
   log_retention           = 30
   common_sg_rules         = local.common_sg_rules
