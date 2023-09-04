@@ -1,23 +1,29 @@
 output "master_username" {
-  value = var.aurora_serverless ? aws_rds_cluster.cluster_serverless[0].master_username : aws_rds_cluster.cluster[0].master_username
+  description = "The master username for the Aurora cluster."
+  value       = var.aurora_serverless ? aws_rds_cluster.cluster_serverless[0].master_username : aws_rds_cluster.cluster[0].master_username
 }
 
 output "port" {
-  value = var.aurora_serverless ? aws_rds_cluster.cluster_serverless[0].port : aws_rds_cluster.cluster[0].port
+  description = "The port number used to connect to the Aurora cluster."
+  value       = var.aurora_serverless ? aws_rds_cluster.cluster_serverless[0].port : aws_rds_cluster.cluster[0].port
 }
 
 output "endpoint" {
-  value = var.aurora_serverless ? aws_rds_cluster.cluster_serverless[0].endpoint : aws_rds_cluster.cluster[0].endpoint
+  description = "The endpoint for connecting to the Aurora cluster."
+  value       = var.aurora_serverless ? aws_rds_cluster.cluster_serverless[0].endpoint : aws_rds_cluster.cluster[0].endpoint
 }
 
 output "reader_endpoint" {
-  value = var.aurora_serverless ? aws_rds_cluster.cluster_serverless[0].reader_endpoint : aws_rds_cluster.cluster[0].reader_endpoint
+  description = "The reader endpoint for the Aurora cluster, if applicable."
+  value       = var.aurora_serverless ? aws_rds_cluster.cluster_serverless[0].reader_endpoint : aws_rds_cluster.cluster[0].reader_endpoint
 }
 
 output "name" {
-  value = var.aurora_serverless ? aws_rds_cluster.cluster_serverless[0].database_name : aws_rds_cluster.cluster[0].database_name
+  description = "The name of the database within the Aurora cluster."
+  value       = var.aurora_serverless ? aws_rds_cluster.cluster_serverless[0].database_name : aws_rds_cluster.cluster[0].database_name
 }
 
 output "cluster" {
-  value = var.aurora_serverless ? aws_rds_cluster.cluster_serverless[0] : aws_rds_cluster.cluster[0]
+  description = "Information about the Aurora cluster."
+  value       = var.aurora_serverless ? aws_rds_cluster.cluster_serverless[0] : aws_rds_cluster.cluster[0]
 }

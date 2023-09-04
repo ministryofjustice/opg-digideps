@@ -1,5 +1,6 @@
 variable "environment" {
   description = "Name of the environment to create secrets for."
+  type        = string
 }
 
 variable "secrets" {
@@ -9,4 +10,5 @@ variable "secrets" {
 
 variable "tags" {
   description = "Tags to apply to secrets."
+  type        = map(string)
 }
