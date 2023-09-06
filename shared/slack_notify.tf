@@ -26,7 +26,7 @@ module "notify_slack" {
   tags = local.default_tags
 }
 
-resource "aws_sns_topic" "availability-alert" {
+resource "aws_sns_topic" "availability_alert" {
   provider     = aws.us-east-1
   name         = "availability-alert"
   display_name = "${local.default_tags["application"]} ${local.default_tags["environment-name"]} Availability Alert"
@@ -45,7 +45,7 @@ module "notify_slack_us-east-1" {
     aws = aws.us-east-1
   }
 
-  sns_topic_name   = aws_sns_topic.availability-alert.name
+  sns_topic_name   = aws_sns_topic.availability_alert.name
   create_sns_topic = false
   create           = local.account.name != "development"
 
