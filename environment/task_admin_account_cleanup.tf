@@ -5,7 +5,7 @@ resource "aws_cloudwatch_event_rule" "monday-night" {
   tags                = local.default_tags
 }
 
-resource "aws_cloudwatch_event_target" "cleanup" {
+resource "aws_cloudwatch_event_target" "admin-account-cleanup" {
   rule     = aws_cloudwatch_event_rule.nightly.name
   arn      = aws_ecs_cluster.main.arn
   role_arn = aws_iam_role.events_task_runner.arn
