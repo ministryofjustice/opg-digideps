@@ -53,7 +53,7 @@ resource "aws_ecs_service" "mock_sirius_integration" {
   network_configuration {
     security_groups  = [module.mock_sirius_integration_security_group.id]
     subnets          = data.aws_subnet.private.*.id
-    assign_public_ip = true
+    assign_public_ip = false
   }
 
   service_registries {
