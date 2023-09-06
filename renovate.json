@@ -4,11 +4,20 @@
   "branchPrefix": "renovate-",
   "commitMessageAction": "Renovate Update",
   "labels": ["Dependencies", "Renovate"],
+  "regexManagers": [
+    {
+      "fileMatch": ["^Dockerfile.*$"],
+      "matchStrings": ["FROM node:(?<currentValue>.*?)-alpine.*\\n"],
+      "depNameTemplate": "node",
+      "datasourceTemplate": "node",
+      "versioningTemplate": "node"
+    }
+  ],
   "packageRules": [
     {
       "groupName": "Patch Updates PHP",
       "groupSlug": "all-patch-updates-php",
-      "labels": ["Dependencies", "Renovate"],
+      "labels": ["Dependencies", "Renovate", "PHP"],
       "matchPackagePatterns": ["*"],
       "matchUpdateTypes": ["patch"],
       "prPriority": 0,
@@ -20,7 +29,7 @@
     {
       "groupName": "Patch Updates Node",
       "groupSlug": "all-patch-updates-node",
-      "labels": ["Dependencies", "Renovate"],
+      "labels": ["Dependencies", "Renovate", "Node"],
       "matchPackagePatterns": ["*"],
       "matchUpdateTypes": ["patch"],
       "prPriority": 0,
@@ -31,7 +40,7 @@
     {
       "groupName": "Patch Updates Docker",
       "groupSlug": "all-patch-updates-docker",
-      "labels": ["Dependencies", "Renovate"],
+      "labels": ["Dependencies", "Renovate", "Docker"],
       "matchPackagePatterns": ["*"],
       "matchUpdateTypes": ["patch"],
       "prPriority": 0,
@@ -42,7 +51,7 @@
     {
       "groupName": "Patch Updates Python",
       "groupSlug": "all-patch-updates-python",
-      "labels": ["Dependencies", "Renovate"],
+      "labels": ["Dependencies", "Renovate", "Python"],
       "matchPackagePatterns": ["*"],
       "matchUpdateTypes": ["patch"],
       "prPriority": 0,
@@ -53,7 +62,7 @@
     {
       "groupName": "Patch Updates Golang",
       "groupSlug": "all-patch-updates-golang",
-      "labels": ["Dependencies", "Renovate"],
+      "labels": ["Dependencies", "Renovate", "Golang"],
       "matchPackagePatterns": ["*"],
       "matchUpdateTypes": ["patch"],
       "prPriority": 0,
@@ -62,9 +71,15 @@
       "matchLanguages": ["golang"]
     },
     {
+      "groupName": "Disable node updates for dockerfiles",
+      "matchPackageNames": ["node"],
+      "matchManagers": ["dockerfile"],
+      "enabled": false
+    },
+    {
       "groupName": "Minor Updates",
       "groupSlug": "all-minor-updates",
-      "labels": ["Dependencies", "Renovate"],
+      "labels": ["Dependencies", "Renovate", "All-Minor"],
       "matchPackagePatterns": ["*"],
       "matchUpdateTypes": ["minor"],
       "prPriority": 0,
@@ -77,14 +92,15 @@
       "matchPackagePatterns": ["actions/*"],
       "automerge": true,
       "dependencyDashboardApproval": true,
-      "labels": ["Dependencies", "Renovate"],
+      "prPriority": 0,
+      "labels": ["Dependencies", "Renovate", "Actions"],
       "prBody": "Updates the following GitHub Actions dependencies:\n\n{{#each dependencies}}- {{this.name}}\n{{/each}}",
       "schedule": ["after 6am and before 9am on Monday"],
       "stabilityDays": 3
     }
   ],
   "major": {
-    "labels": ["Dependencies", "Renovate"],
+    "labels": ["Dependencies", "Renovate", "Major"],
     "prCreation": "status-success",
     "rangeStrategy": "pin",
     "prPriority": 1,
@@ -92,7 +108,7 @@
   },
   "vulnerabilityAlerts": {
     "groupName": "Security Alerts",
-    "labels": ["Dependencies", "Renovate"],
+    "labels": ["Dependencies", "Renovate", "Vulnerability"],
     "schedule": ["after 6am and before 9am every weekday"],
     "dependencyDashboardApproval": false,
     "stabilityDays": 0,
