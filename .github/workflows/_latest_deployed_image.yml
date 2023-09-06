@@ -23,9 +23,23 @@ jobs:
         with:
           fetch-depth: "0"
 
+      - name: parse terraform version
+        id: tf_version_setup
+        run: |
+          if [ -f ./versions.tf ]; then
+            terraform_version=$(cat ./versions.tf | ../scripts/pipeline/terraform/terraform-version.sh)
+            echo "- Terraform version: [${terraform_version}]" >> $GITHUB_STEP_SUMMARY
+            echo "TERRAFORM_VERSION=${terraform_version}" >> $GITHUB_OUTPUT
+          fi
+        working-directory: ${{ inputs.terraform_path }}
+
+      - name: "Terraform version [${{ steps.tf_version_setup.outputs.TERRAFORM_VERSION }}]"
+        run: echo "terraform version [${{ steps.tf_version_setup.outputs.TERRAFORM_VERSION }}]"
+
       - uses: hashicorp/setup-terraform@efd0b45bf6e6783512c00eb63fb868f211536e8e # pin@v2.0.0
         with:
-          terraform_version: 1.2.4
+          terraform_version: ${{ steps.tf_version_setup.outputs.TERRAFORM_VERSION }}
+          terraform_wrapper: false
 
       - name: configure AWS credentials for terraform
         uses: aws-actions/configure-aws-credentials@35d8f9588bf190a9a7fda3411cd548fb8234bee2 # pin@v1.7.0
