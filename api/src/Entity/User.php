@@ -332,6 +332,15 @@ class User implements UserInterface, PasswordAuthenticatedUserInterface
     private $createdBy;
 
     /**
+     * @var bool
+     * @JMS\Type("boolean")
+     * @JMS\Groups({"user"})
+     *
+     * @ORM\Column(name="deletion_protection", type="boolean", nullable=true, options = { "default": null })
+     */
+    private $deletionProtection;
+
+    /**
      * Constructor.
      */
     public function __construct($coDeputyClientConfirmed = false)
