@@ -6,7 +6,7 @@ resource "aws_ecs_task_definition" "dr_backup" {
   memory                   = 512
   container_definitions    = "[${local.dr_backup}]"
   task_role_arn            = aws_iam_role.dr_backup.arn
-  execution_role_arn       = var.execution_role.arn
+  execution_role_arn       = var.execution_role_arn
   tags = merge(var.default_tags,
     { "Role" = "dr-backup-${var.environment}" },
   )
@@ -44,7 +44,7 @@ locals {
       },
       {
         name  = "SOURCE_ACCOUNT",
-        value = var.account.account_id
+        value = var.account_id
       },
       {
         name  = "BACKUP_ACCOUNT_ROLE",
