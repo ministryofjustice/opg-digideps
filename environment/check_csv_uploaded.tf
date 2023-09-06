@@ -68,7 +68,7 @@ resource "aws_cloudwatch_event_target" "check_csv_uploaded_scheduled_task" {
     platform_version    = "1.4.0"
     network_configuration {
       subnets          = data.aws_subnet.private.*.id
-      assign_public_ip = true
+      assign_public_ip = false
       security_groups  = [module.check_csv_uploaded_service_security_group.id]
     }
   }
