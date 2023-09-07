@@ -40,7 +40,7 @@ class UserRetentionPolicyCommand extends Command
         ;
     }
 
-    protected function execute(InputInterface $input, OutputInterface $output): bool
+    protected function execute(InputInterface $input, OutputInterface $output): int
     {
         $getInactiveAdminUsers = $this->userRepository->getAllAdminAccountsNotUsedWithin('-24 months');
         $this->excludedUsers = $this->userRepository->getAllDeletionProtectedAccounts();
@@ -61,17 +61,17 @@ class UserRetentionPolicyCommand extends Command
             $this->userRepository->deleteInactiveAdminUsers($this->inactiveAdminUserIds);
             $output->writeln(sprintf('%d inactive admin user(s) deleted', $countOfAdminUsers));
 
-            return true;
+            return 1;
         }
 
         $output->writeln('No inactive admin users to delete');
 
-        return false;
+        return 0;
     }
 
     private function storeUserIdForDeletion(User $user): void
     {
-        if (in_array($user->getId(), $this->excludedUsers)) {
+        if (!in_array($user->getId(), $this->excludedUsers)) {
             $this->inactiveAdminUserIds[] = $user->getId();
 
             $event = new UserRetentionPolicyCommandEvent($user, AuditEvents::USER_DELETED_AUTOMATION);
