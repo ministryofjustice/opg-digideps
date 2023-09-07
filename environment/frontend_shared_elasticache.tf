@@ -12,6 +12,8 @@ resource "aws_elasticache_replication_group" "frontend" {
   subnet_group_name          = local.account.ec_subnet_group
   security_group_ids         = [module.frontend_cache_security_group.id]
   tags                       = local.default_tags
+  snapshot_retention_limit   = 1
+  snapshot_window            = "03:00-06:00"
   at_rest_encryption_enabled = true
   #tfsec:ignore:aws-elasticache-enable-in-transit-encryption - too much of a performance hit. To be re-evaluated
   transit_encryption_enabled = false
