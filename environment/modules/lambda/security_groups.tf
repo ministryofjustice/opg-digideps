@@ -1,5 +1,5 @@
 resource "aws_security_group" "lambda" {
-  name_prefix = "${var.lambda_name}.${var.environment}"
+  name        = "${var.environment}-${var.lambda_name}"
   vpc_id      = var.vpc_id
   description = var.description
 
