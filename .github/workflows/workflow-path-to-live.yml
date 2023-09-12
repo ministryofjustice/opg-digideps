@@ -96,14 +96,14 @@ jobs:
       - workflow_variables
       - docker_build_scan_push
 
-  terraform_apply_shared_development:
-    name: development shared apply terraform
+  terraform_apply_account_development:
+    name: development account apply terraform
     uses: ./.github/workflows/_run-terraform.yml
     needs:
       - workflow_variables
     with:
       workspace: development
-      terraform_path: shared
+      terraform_path: account
       apply: true
       container_version: ${{ needs.workflow_variables.outputs.parsed_branch }}-${{ needs.workflow_variables.outputs.short_sha }}
     secrets: inherit
@@ -112,7 +112,7 @@ jobs:
     name: development environment apply terraform
     uses: ./.github/workflows/_run-terraform.yml
     needs:
-      - terraform_apply_shared_development
+      - terraform_apply_account_development
       - docker_build_scan_push
       - workflow_variables
       - synchronisation_unit_tests
@@ -127,15 +127,15 @@ jobs:
       container_version: ${{ needs.workflow_variables.outputs.parsed_branch }}-${{ needs.workflow_variables.outputs.short_sha }}
     secrets: inherit
 
-  terraform_apply_shared_preproduction:
-    name: preproduction shared apply terraform
+  terraform_apply_account_preproduction:
+    name: preproduction account apply terraform
     uses: ./.github/workflows/_run-terraform.yml
     needs:
       - workflow_variables
       - terraform_apply_development
     with:
       workspace: preproduction
-      terraform_path: shared
+      terraform_path: account
       apply: true
       container_version: ${{ needs.workflow_variables.outputs.parsed_branch }}-${{ needs.workflow_variables.outputs.short_sha }}
     secrets: inherit
@@ -144,7 +144,7 @@ jobs:
     name: integration environment apply terraform
     uses: ./.github/workflows/_run-terraform.yml
     needs:
-      - terraform_apply_shared_preproduction
+      - terraform_apply_account_preproduction
       - workflow_variables
     with:
       workspace: integration
@@ -280,7 +280,7 @@ jobs:
     name: preproduction environment apply terraform
     uses: ./.github/workflows/_run-terraform.yml
     needs:
-      - terraform_apply_shared_preproduction
+      - terraform_apply_account_preproduction
       - workflow_variables
       - integration_tests_sequential_1
       - integration_tests_sequential_2
@@ -308,15 +308,15 @@ jobs:
       container_version: ${{ needs.workflow_variables.outputs.parsed_branch }}-${{ needs.workflow_variables.outputs.short_sha }}
     secrets: inherit
 
-  terraform_apply_shared_production:
-    name: production shared apply terraform
+  terraform_apply_account_production:
+    name: production account apply terraform
     uses: ./.github/workflows/_run-terraform.yml
     needs:
       - workflow_variables
       - terraform_apply_preproduction
     with:
       workspace: production
-      terraform_path: shared
+      terraform_path: account
       apply: true
       container_version: ${{ needs.workflow_variables.outputs.parsed_branch }}-${{ needs.workflow_variables.outputs.short_sha }}
     secrets: inherit
@@ -325,7 +325,7 @@ jobs:
     name: production environment apply terraform
     uses: ./.github/workflows/_run-terraform.yml
     needs:
-      - terraform_apply_shared_production
+      - terraform_apply_account_production
       - workflow_variables
     with:
       workspace: production02
