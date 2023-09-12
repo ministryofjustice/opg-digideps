@@ -65,6 +65,7 @@ module "admin_service_security_group" {
   name        = "admin-service"
   tags        = local.default_tags
   vpc_id      = data.aws_vpc.vpc.id
+  environment = local.environment
 }
 
 locals {
@@ -86,6 +87,7 @@ module "admin_elb_security_group" {
   name        = "admin-elb"
   tags        = local.default_tags
   vpc_id      = data.aws_vpc.vpc.id
+  environment = local.environment
 }
 
 # Using a resource rather than module here due to a large list of IPs
@@ -107,6 +109,7 @@ module "admin_elb_security_group_route53_hc" {
   name        = "admin-alb-route53-hc"
   tags        = local.default_tags
   vpc_id      = data.aws_vpc.vpc.id
+  environment = local.environment
 }
 
 resource "aws_security_group_rule" "admin_elb_route53_hc_in" {

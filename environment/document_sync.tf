@@ -38,6 +38,7 @@ module "document_sync_service_security_group" {
   name        = "document-sync-service"
   tags        = local.default_tags
   vpc_id      = data.aws_vpc.vpc.id
+  environment = local.environment
 }
 
 resource "aws_ecs_task_definition" "document_sync" {

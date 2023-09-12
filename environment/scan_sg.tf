@@ -32,4 +32,5 @@ module "scan_security_group" {
   name        = "scan"
   tags        = local.default_tags
   vpc_id      = data.aws_vpc.vpc.id
+  environment = local.environment
 }

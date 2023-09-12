@@ -49,6 +49,7 @@ module "integration_test_v2_security_group" {
   name        = "integration-test-v2"
   tags        = local.default_tags
   vpc_id      = data.aws_vpc.vpc.id
+  environment = local.environment
 }
 
 locals {
