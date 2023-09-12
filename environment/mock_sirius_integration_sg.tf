@@ -46,4 +46,5 @@ module "mock_sirius_integration_security_group" {
   name        = "mock-sirius-integration"
   tags        = local.default_tags
   vpc_id      = data.aws_vpc.vpc.id
+  environment = local.environment
 }

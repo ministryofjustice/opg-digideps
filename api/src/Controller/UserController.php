@@ -462,9 +462,7 @@ class UserController extends RestController
         }
 
         $user->setAgreeTermsUse(true);
-        if ($user->regBeforeToday($user)) {
-            $user->setRegistrationToken(null);
-        }
+        $user->setRegistrationToken(null);
 
         $this->em->persist($user);
         $this->em->flush($user);
