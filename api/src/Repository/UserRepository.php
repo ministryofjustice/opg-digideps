@@ -305,7 +305,7 @@ SQL;
     {
         $date = (new \DateTime())->modify($timeframe);
 
-        $dql = "SELECT u FROM App\Entity\User u WHERE u.roleName IN(:roles) AND u.lastLoggedIn < :date ";
+        $dql = 'SELECT u FROM App\Entity\User u WHERE u.roleName IN(:roles) AND u.lastLoggedIn < :date ';
 
         $query = $this
             ->getEntityManager()
@@ -340,5 +340,14 @@ SQL;
         $result = $stmt->setParameters($params);
 
         return $result->getResult();
+    }
+
+    public function getAllDeletionProtectedAccounts()
+    {
+        $dql = 'SELECT u.id FROM App\Entity\User u WHERE u.deletionProtection IS true';
+
+        $stmt = $this->getEntityManager()->createQuery($dql);
+
+        return $stmt->getResult();
     }
 }
