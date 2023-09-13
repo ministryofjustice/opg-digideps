@@ -182,7 +182,7 @@ class ProfUserFixtures extends AbstractDataFixture
                 $organisation = $this->orgRepository->findByEmailIdentifier($fullEmail);
                 // Create organisation if it doesn't exist
                 if (null === $organisation) {
-                    $organisation = $this->orgFactory->createFromFullEmail($userData['orgName'] ?? 'Org Name', $fullEmail);
+                    $organisation = $this->orgFactory->createFromFullEmail($userData['orgName'] ?? 'Org Name', $fullEmail, true);
 
                     $manager->persist($organisation);
                     $manager->flush($organisation);
