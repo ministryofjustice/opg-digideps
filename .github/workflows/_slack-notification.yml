@@ -7,18 +7,20 @@ defaults:
 on:
   workflow_call:
     inputs:
-      template:
-        description: "Template to use"
+      success:
+        description: "Job status"
         required: true
         type: string
+        default: "False"
       branch:
         description: "Branch of the workflow"
         required: false
         type: string
         default: none
-    secrets:
-      webhook:
+      account:
+        description: "Account id to use"
         required: true
+        type: string
 
 jobs:
   send-slack-notification:
@@ -26,23 +28,32 @@ jobs:
     steps:
       - uses: actions/checkout@96f53100ba2a5449eb71d2e6604bbcd94b9449b5 # pin@v3
 
+      - name: configure aws credentials
+        uses: aws-actions/configure-aws-credentials@35d8f9588bf190a9a7fda3411cd548fb8234bee2 # pin@v1.7.0
+        with:
+          aws-access-key-id: ${{ secrets.AWS_ACCESS_KEY_ID_ACTIONS }}
+          aws-secret-access-key: ${{ secrets.AWS_SECRET_ACCESS_KEY_ACTIONS }}
+          aws-region: eu-west-1
+          role-to-assume: arn:aws:iam::${{ inputs.account }}:role/digideps-ci
+          role-duration-seconds: 1800
+          role-session-name: OPGDigidepsSlackNotify
+
       - name: install python
         uses: actions/setup-python@61a6322f88396a6271a6ee3565807d608ecaddd1 # pin@v4.2.0
         with:
-          python-version: "3.10"
+          python-version: "3.11"
           cache: "pip"
 
       - name: install requirements
-        run: pip install -r scripts/pipeline/slack/requirements.txt
+        run: pip install -r lambdas/functions/slack_lambda/requirements.txt
 
       - name: Notify Slack
         env:
-          SLACK_WEB_HOOK: ${{ secrets.webhook }}
-          TEMPLATE: ${{ inputs.template }}
           BRANCH: ${{ inputs.branch }}
+          SUCCESS: ${{ inputs.success }}
         run: |
-          python scripts/pipeline/slack/slack_notification.py \
-          --slack_webhook ${SLACK_WEB_HOOK} \
-          --template_path scripts/pipeline/slack/${TEMPLATE} \
+          python ci_slack.py \
+          --success "${SUCCESS}" \
           --commit_message "$(git log -1 --pretty=%B)" \
           --branch "${BRANCH}"
+        working-directory: lambdas/functions/slack_lambda/app

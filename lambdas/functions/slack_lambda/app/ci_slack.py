@@ -1,0 +1,55 @@
+import argparse
+import os
+import slack
+
+
+def main():
+    parser = argparse.ArgumentParser(description="Post-release Slack notifications.")
+    parser.add_argument(
+        "--success", type=str, default="True", help="Success or failure"
+    )
+    parser.add_argument(
+        "--commit_message",
+        type=str,
+        default="",
+        help="Commit message to include in slack notification",
+    )
+    parser.add_argument("--branch", type=str, help="Branch we are testing")
+
+    args = parser.parse_args()
+
+    gh_server = str(os.getenv("GITHUB_SERVER_URL", ""))
+    gh_repository = str(os.getenv("GITHUB_REPOSITORY", ""))
+    gh_run_id = str(os.getenv("GITHUB_RUN_ID", ""))
+    github_workflow = str(os.getenv("GITHUB_WORKFLOW", ""))
+    actor = str(os.getenv("GITHUB_ACTOR", "actor not included"))
+
+    frontend_url = (
+        "https://complete-deputy-report.service.gov.uk"
+        if args.branch == "main"
+        else f"https://{args.branch}.complete-deputy-report.service.gov.uk"
+    )
+    admin_url = (
+        "https://admin.complete-deputy-report.service.gov.uk"
+        if args.branch == "main"
+        else f"https://admin.{args.branch}.complete-deputy-report.service.gov.uk"
+    )
+
+    data = {
+        "GithubActions": {
+            "WorkflowName": github_workflow,
+            "GhActor": actor,
+            "Success": args.success,
+            "JobUrl": f"{gh_server}/{gh_repository}/actions/runs/{gh_run_id}",
+            "Branch": args.branch,
+            "FrontendUrl": frontend_url,
+            "AdminUrl": admin_url,
+            "CommitMessage": args.commit_message,
+        }
+    }
+
+    slack.lambda_handler(data, "")
+
+
+if __name__ == "__main__":
+    main()
