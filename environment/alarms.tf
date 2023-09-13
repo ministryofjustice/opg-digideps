@@ -188,12 +188,12 @@ resource "aws_cloudwatch_metric_alarm" "admin_alb_5xx_errors" {
 
 # ========== Healthcheck related Alarms ==========
 
-data "aws_sns_topic" "availability-alert" {
+data "aws_sns_topic" "availability_alert" {
   provider = aws.us-east-1
   name     = "availability-alert"
 }
 
-resource "aws_route53_health_check" "availability-front" {
+resource "aws_route53_health_check" "availability_front" {
   fqdn              = aws_route53_record.front.fqdn
   resource_path     = "/health-check"
   port              = 443
@@ -204,7 +204,7 @@ resource "aws_route53_health_check" "availability-front" {
   tags              = merge(local.default_tags, { Name = "availability-front" }, )
 }
 
-resource "aws_cloudwatch_metric_alarm" "availability-front" {
+resource "aws_cloudwatch_metric_alarm" "availability_front" {
   provider            = aws.us-east-1
   alarm_name          = "${local.environment}-availability-front"
   statistic           = "Minimum"
@@ -215,16 +215,16 @@ resource "aws_cloudwatch_metric_alarm" "availability-front" {
   period              = 60
   evaluation_periods  = 3
   namespace           = "AWS/Route53"
-  alarm_actions       = [data.aws_sns_topic.availability-alert.arn]
+  alarm_actions       = [data.aws_sns_topic.availability_alert.arn]
   actions_enabled     = local.account.alarms_active
   tags                = local.default_tags
 
   dimensions = {
-    HealthCheckId = aws_route53_health_check.availability-front.id
+    HealthCheckId = aws_route53_health_check.availability_front.id
   }
 }
 
-resource "aws_route53_health_check" "availability-admin" {
+resource "aws_route53_health_check" "availability_admin" {
   fqdn              = aws_route53_record.admin.fqdn
   resource_path     = "/health-check"
   port              = 443
@@ -235,7 +235,7 @@ resource "aws_route53_health_check" "availability-admin" {
   tags              = merge(local.default_tags, { Name = "availability-admin" }, )
 }
 
-resource "aws_cloudwatch_metric_alarm" "availability-admin" {
+resource "aws_cloudwatch_metric_alarm" "availability_admin" {
   provider            = aws.us-east-1
   alarm_name          = "${local.environment}-availability-admin"
   statistic           = "Minimum"
@@ -246,16 +246,16 @@ resource "aws_cloudwatch_metric_alarm" "availability-admin" {
   period              = 60
   evaluation_periods  = 3
   namespace           = "AWS/Route53"
-  alarm_actions       = [data.aws_sns_topic.availability-alert.arn]
+  alarm_actions       = [data.aws_sns_topic.availability_alert.arn]
   actions_enabled     = local.account.alarms_active
   tags                = local.default_tags
 
   dimensions = {
-    HealthCheckId = aws_route53_health_check.availability-admin.id
+    HealthCheckId = aws_route53_health_check.availability_admin.id
   }
 }
 
-resource "aws_route53_health_check" "availability-service" {
+resource "aws_route53_health_check" "availability_service" {
   fqdn              = aws_route53_record.front.fqdn
   resource_path     = "/health-check/service"
   port              = 443
@@ -266,7 +266,7 @@ resource "aws_route53_health_check" "availability-service" {
   tags              = merge(local.default_tags, { Name = "availability-service" }, )
 }
 
-resource "aws_cloudwatch_metric_alarm" "availability-service" {
+resource "aws_cloudwatch_metric_alarm" "availability_service" {
   provider            = aws.us-east-1
   alarm_name          = "${local.environment}-availability-service"
   statistic           = "Minimum"
@@ -277,16 +277,16 @@ resource "aws_cloudwatch_metric_alarm" "availability-service" {
   period              = 60
   evaluation_periods  = 3
   namespace           = "AWS/Route53"
-  alarm_actions       = [data.aws_sns_topic.availability-alert.arn]
+  alarm_actions       = [data.aws_sns_topic.availability_alert.arn]
   actions_enabled     = local.account.alarms_active
   tags                = local.default_tags
 
   dimensions = {
-    HealthCheckId = aws_route53_health_check.availability-service.id
+    HealthCheckId = aws_route53_health_check.availability_service.id
   }
 }
 
-resource "aws_route53_health_check" "availability-dependencies" {
+resource "aws_route53_health_check" "availability_dependencies" {
   fqdn              = aws_route53_record.front.fqdn
   resource_path     = "/health-check/dependencies"
   port              = 443
@@ -297,7 +297,7 @@ resource "aws_route53_health_check" "availability-dependencies" {
   tags              = merge(local.default_tags, { Name = "availability-dependencies" }, )
 }
 
-resource "aws_cloudwatch_metric_alarm" "availability-dependencies" {
+resource "aws_cloudwatch_metric_alarm" "availability_dependencies" {
   provider            = aws.us-east-1
   alarm_name          = "${local.environment}-availability-dependencies"
   statistic           = "Minimum"
@@ -308,12 +308,12 @@ resource "aws_cloudwatch_metric_alarm" "availability-dependencies" {
   period              = 60
   evaluation_periods  = 5
   namespace           = "AWS/Route53"
-  alarm_actions       = [data.aws_sns_topic.availability-alert.arn]
+  alarm_actions       = [data.aws_sns_topic.availability_alert.arn]
   actions_enabled     = local.account.alarms_active
   tags                = local.default_tags
 
   dimensions = {
-    HealthCheckId = aws_route53_health_check.availability-dependencies.id
+    HealthCheckId = aws_route53_health_check.availability_dependencies.id
   }
 }
 
