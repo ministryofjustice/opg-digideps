@@ -9,12 +9,12 @@ resource "aws_sns_topic" "alerts" {
 #tfsec:ignore:aws-lambda-restrict-source-arn - access is actually restricted to single resource
 #tfsec:ignore:aws-lambda-enable-tracing - no control over this
 module "notify_slack" {
-  source = "github.com/terraform-aws-modules/terraform-aws-notify-slack.git?ref=v5.6.0"
+  source = "github.com/terraform-aws-modules/terraform-aws-notify-slack.git?ref=v6.0.0"
 
-  sns_topic_name   = aws_sns_topic.alerts.name
-  create_sns_topic = false
-
-  lambda_function_name = "notify-slack"
+  sns_topic_name                        = aws_sns_topic.alerts.name
+  create_sns_topic                      = false
+  enable_sns_topic_delivery_status_logs = true
+  lambda_function_name                  = "notify-slack"
 
   cloudwatch_log_group_retention_in_days = 14
 
@@ -26,7 +26,7 @@ module "notify_slack" {
   tags = local.default_tags
 }
 
-resource "aws_sns_topic" "availability-alert" {
+resource "aws_sns_topic" "availability_alert" {
   provider     = aws.us-east-1
   name         = "availability-alert"
   display_name = "${local.default_tags["application"]} ${local.default_tags["environment-name"]} Availability Alert"
@@ -45,7 +45,7 @@ module "notify_slack_us-east-1" {
     aws = aws.us-east-1
   }
 
-  sns_topic_name   = aws_sns_topic.availability-alert.name
+  sns_topic_name   = aws_sns_topic.availability_alert.name
   create_sns_topic = false
   create           = local.account.name != "development"
 

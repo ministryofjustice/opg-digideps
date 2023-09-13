@@ -45,4 +45,5 @@ module "frontend_cache_security_group" {
   name        = "frontend-cache-${local.environment}"
   tags        = local.default_tags
   vpc_id      = data.aws_vpc.vpc.id
+  environment = local.environment
 }
