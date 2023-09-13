@@ -4,7 +4,7 @@
         "Read more about it at https://getcomposer.org/doc/01-basic-usage.md#installing-dependencies",
         "This file is @generated automatically"
     ],
-    "content-hash": "f9b98912c84d70cb6daf101830468784",
+    "content-hash": "13c082af31e1c8238ded66965266f6ff",
     "packages": [
         {
             "name": "aws/aws-crt-php",
@@ -10150,54 +10150,6 @@
             "time": "2022-03-28T14:55:17+00:00"
         },
         {
-            "name": "coderste/mink-extension",
-            "version": "2.7.3",
-            "source": {
-                "type": "git",
-                "url": "https://github.com/coderste/MinkExtension.git",
-                "reference": "e8f2950518a97142d64b5637ad37cdae27080b34"
-            },
-            "require": {
-                "behat/behat": "^3.0.5",
-                "behat/mink": "^1.5",
-                "php": ">=7.4",
-                "symfony/config": "^4.4 || ^5.0 || ^6.0"
-            },
-            "replace": {
-                "behat/mink-extension": "self.version"
-            },
-            "require-dev": {
-                "behat/mink-goutte-driver": "^1.1 || ^2.0",
-                "phpspec/phpspec": "^6.0 || ^7.0 || 7.1.x-dev"
-            },
-            "type": "behat-extension",
-            "extra": {
-                "branch-alias": {
-                    "dev-master": "2.1.x-dev"
-                }
-            },
-            "autoload": {
-                "psr-0": {
-                    "Behat\\MinkExtension": "src/"
-                }
-            },
-            "license": ["MIT"],
-            "authors": [
-                {
-                    "name": "Konstantin Kudryashov",
-                    "email": "ever.zet@gmail.com"
-                },
-                {
-                    "name": "Christophe Coevoet",
-                    "email": "stof@notk.org"
-                }
-            ],
-            "description": "Mink extension for Behat",
-            "homepage": "http://extensions.behat.org/mink",
-            "keywords": ["browser", "gui", "test", "web"],
-            "time": "2022-12-08T13:20:24+00:00"
-        },
-        {
             "name": "doctrine/data-fixtures",
             "version": "1.6.6",
             "source": {
@@ -10639,6 +10591,54 @@
                 "source": "https://github.com/liuggio/fastest/tree/v1.11.0"
             },
             "time": "2023-03-07T11:03:05+00:00"
+        },
+        {
+            "name": "ministryofjustice/mink-extension",
+            "version": "2.7.3",
+            "source": {
+                "type": "git",
+                "url": "https://github.com/ministryofjustice/MinkExtension.git",
+                "reference": "e8f2950518a97142d64b5637ad37cdae27080b34"
+            },
+            "require": {
+                "behat/behat": "^3.0.5",
+                "behat/mink": "^1.5",
+                "php": ">=7.4",
+                "symfony/config": "^4.4 || ^5.0 || ^6.0"
+            },
+            "replace": {
+                "behat/mink-extension": "self.version"
+            },
+            "require-dev": {
+                "behat/mink-goutte-driver": "^1.1 || ^2.0",
+                "phpspec/phpspec": "^6.0 || ^7.0 || 7.1.x-dev"
+            },
+            "type": "behat-extension",
+            "extra": {
+                "branch-alias": {
+                    "dev-master": "2.1.x-dev"
+                }
+            },
+            "autoload": {
+                "psr-0": {
+                    "Behat\\MinkExtension": "src/"
+                }
+            },
+            "license": ["MIT"],
+            "authors": [
+                {
+                    "name": "Konstantin Kudryashov",
+                    "email": "ever.zet@gmail.com"
+                },
+                {
+                    "name": "Christophe Coevoet",
+                    "email": "stof@notk.org"
+                }
+            ],
+            "description": "Mink extension for Behat",
+            "homepage": "http://extensions.behat.org/mink",
+            "keywords": ["browser", "gui", "test", "web"],
+            "time": "2022-12-08T13:20:24+00:00"
         },
         {
             "name": "mockery/mockery",
