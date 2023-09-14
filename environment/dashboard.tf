@@ -11,8 +11,8 @@ resource "aws_cloudwatch_dashboard" "main" {
         "height" : 3,
         "properties" : {
           "metrics" : [
-            ["AWS/Route53", "HealthCheckPercentageHealthy", "HealthCheckId", aws_route53_health_check.availability-front.id, { "region" : "us-east-1", "label" : "Public Frontend" }],
-            ["AWS/Route53", "HealthCheckPercentageHealthy", "HealthCheckId", aws_route53_health_check.availability-admin.id, { "region" : "us-east-1", "label" : "Admin Frontend" }]
+            ["AWS/Route53", "HealthCheckPercentageHealthy", "HealthCheckId", aws_route53_health_check.availability_front.id, { "region" : "us-east-1", "label" : "Public Frontend" }],
+            ["AWS/Route53", "HealthCheckPercentageHealthy", "HealthCheckId", aws_route53_health_check.availability_admin.id, { "region" : "us-east-1", "label" : "Admin Frontend" }]
           ],
           "region" : "eu-west-1",
           "view" : "singleValue",
@@ -34,8 +34,8 @@ resource "aws_cloudwatch_dashboard" "main" {
         "height" : 3,
         "properties" : {
           "metrics" : [
-            ["AWS/Route53", "HealthCheckPercentageHealthy", "HealthCheckId", aws_route53_health_check.availability-service.id, { "region" : "us-east-1", "label" : "Digideps Service" }],
-            ["AWS/Route53", "HealthCheckPercentageHealthy", "HealthCheckId", aws_route53_health_check.availability-service.id, { "region" : "us-east-1", "label" : "Digideps Dependencies" }]
+            ["AWS/Route53", "HealthCheckPercentageHealthy", "HealthCheckId", aws_route53_health_check.availability_service.id, { "region" : "us-east-1", "label" : "Digideps Service" }],
+            ["AWS/Route53", "HealthCheckPercentageHealthy", "HealthCheckId", aws_route53_health_check.availability_dependencies.id, { "region" : "us-east-1", "label" : "Digideps Dependencies" }]
           ],
           "region" : "eu-west-1",
           "view" : "singleValue",
