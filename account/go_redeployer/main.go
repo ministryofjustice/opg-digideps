@@ -2,10 +2,11 @@ package main
 
 import (
 	"fmt"
+
+	"github.com/aws/aws-lambda-go/lambda"
 	"github.com/aws/aws-sdk-go/aws"
 	"github.com/aws/aws-sdk-go/aws/session"
 	"github.com/aws/aws-sdk-go/service/ecs"
-	"github.com/aws/aws-lambda-go/lambda"
 )
 
 type RedeployEvent struct {
@@ -25,8 +26,8 @@ func HandleRequest(event RedeployEvent) (string, error) {
 	ecsSvc := ecs.New(sess)
 
 	_, deploymentErr := ecsSvc.UpdateService(&ecs.UpdateServiceInput{
-		Cluster: aws.String(event.Cluster),
-		Service: aws.String(event.Service),
+		Cluster:            aws.String(event.Cluster),
+		Service:            aws.String(event.Service),
 		ForceNewDeployment: aws.Bool(true),
 	})
 
