@@ -248,7 +248,10 @@ def alarm_message(message, region):
         filter = "filter*20*40message*20like*20*27CRITICAL*27*0a*7c*20"
     elif "PHPError" in alarm_name:
         fields = "fields*20*40timestamp*2c*20*40message*0a*7c*20"
-        filter = "filter*20*40message*20*3d*7e*20*2f*5c*5berror*5c*5d.*2a*7c*5c*5bcrit*5c*5d.*2a*7c*5c*5balert*5c*5d.*2a*7c*5c*5bemerg*5c*5d.*2a*2f*0a*7c*20"
+        filter = (
+            "filter*20*40message*20*3d*7e*20*2f*5c*5berror*5c*5d.*2a*7c*5c*5bcrit*5c*5d.*2a*7c*5c*5balert*5c*5d"
+            ".*2a*7c*5c*5bemerg*5c*5d.*2a*2f*0a*7c*20"
+        )
     else:
         fields = ""
         filter = ""
@@ -290,24 +293,36 @@ def github_actions_message(message):
     frontend_url = message["FrontendUrl"]
     admin_url = message["AdminUrl"]
     commit_message = message["CommitMessage"]
-
-    with open("github_actions.txt", "r") as file:
-        template_text = file.read()
+    scheduled_task = message["ScheduledTask"]
 
     status_emoji = ":white_check_mark:" if success == "True" else ":x:"
     success_string = "Success" if success == "True" else "Failure"
 
-    formatted_text = template_text.format(
-        workflow_name=workflow_name,
-        github_actor=github_actor,
-        status_emoji=status_emoji,
-        success_string=success_string,
-        job_url=job_url,
-        branch=branch,
-        frontend_url=frontend_url,
-        admin_url=admin_url,
-        commit_message=commit_message,
-    )
+    if scheduled_task != "":
+        with open("github_actions_scheduled_task.txt", "r") as file:
+            template_text = file.read()
+
+        formatted_text = template_text.format(
+            scheduled_task=scheduled_task,
+            status_emoji=status_emoji,
+            success_string=success_string,
+            job_url=job_url,
+        )
+    else:
+        with open("github_actions.txt", "r") as file:
+            template_text = file.read()
+
+        formatted_text = template_text.format(
+            workflow_name=workflow_name,
+            github_actor=github_actor,
+            status_emoji=status_emoji,
+            success_string=success_string,
+            job_url=job_url,
+            branch=branch,
+            frontend_url=frontend_url,
+            admin_url=admin_url,
+            commit_message=commit_message,
+        )
 
     return formatted_text
 

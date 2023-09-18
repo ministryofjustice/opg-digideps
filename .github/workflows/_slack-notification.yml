@@ -21,6 +21,11 @@ on:
         description: "Account id to use"
         required: true
         type: string
+      scheduled_task:
+        description: "Name of scheduled task if notification comes from a scheduled task"
+        required: false
+        default: ""
+        type: string
 
 jobs:
   send-slack-notification:
@@ -51,9 +56,11 @@ jobs:
         env:
           BRANCH: ${{ inputs.branch }}
           SUCCESS: ${{ inputs.success }}
+          SCHEDULED_TASK: ${{ inputs.scheduled_task }}
         run: |
           python ci_slack.py \
           --success "${SUCCESS}" \
-          --commit_message "$(git log -1 --pretty=%B)" \
-          --branch "${BRANCH}"
+          --commit_message "Not Applicable - Cycle Secrets Job" \
+          --branch "${BRANCH}" \
+          --scheduled_task "${SCHEDULED_TASK}"
         working-directory: lambdas/functions/slack_lambda/app

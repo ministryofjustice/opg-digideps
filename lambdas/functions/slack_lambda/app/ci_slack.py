@@ -15,7 +15,12 @@ def main():
         help="Commit message to include in slack notification",
     )
     parser.add_argument("--branch", type=str, help="Branch we are testing")
-
+    parser.add_argument(
+        "--scheduled_task",
+        type=str,
+        default="",
+        help="Name of scheduled task or blank if not scheduled",
+    )
     args = parser.parse_args()
 
     gh_server = str(os.getenv("GITHUB_SERVER_URL", ""))
@@ -45,6 +50,7 @@ def main():
             "FrontendUrl": frontend_url,
             "AdminUrl": admin_url,
             "CommitMessage": args.commit_message,
+            "ScheduledTask": args.scheduled_task,
         }
     }
 

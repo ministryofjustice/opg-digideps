@@ -34,9 +34,9 @@ terraform/to_import\.sh
 log/pact.log
 
 # Lambda specific
-*lambda*.zip
-*slack*.zip
-*layer*.zip
+**lambda*.zip
+**slack*.zip
+**layer*.zip
 lambdas/functions/slack_lambda/layers/**
 !lambdas/functions/slack_lambda/layers/**/.gitkeep
 
