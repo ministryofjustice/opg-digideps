@@ -114,6 +114,7 @@ def modify_db_instances_password(session, workspaces, aws_config):
         except Exception as e:
             print("Error occurred:")
             print(str(e))
+            exit(1)
 
 
 def main(environment):

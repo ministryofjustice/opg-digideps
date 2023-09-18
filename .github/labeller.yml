@@ -19,7 +19,7 @@ ecs-helper:
 
 infrastructure:
   - any: ["environment/**/*"]
-  - any: ["shared/**/*"]
+  - any: ["account/**/*"]
 
 lambdas:
   - any: ["lambdas/**/*"]
