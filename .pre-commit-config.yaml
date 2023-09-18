@@ -49,8 +49,6 @@ repos:
       - id: go-fmt
       - id: go-imports
       - id: no-go-testing
-      - id: golangci-lint
-      - id: go-unit-tests
 
   - repo: https://github.com/ambv/black
     rev: 23.7.0

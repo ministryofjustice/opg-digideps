@@ -48,14 +48,14 @@ jobs:
       workspace: ${{ needs.workflow_variables.outputs.parsed_branch }}
     secrets: inherit
 
-  terraform_plan_shared_development:
-    name: shared plan terraform development
+  terraform_plan_account_development:
+    name: account plan terraform development
     uses: ./.github/workflows/_run-terraform.yml
     needs:
       - terraform_lint
     with:
       workspace: development
-      terraform_path: shared
+      terraform_path: account
       container_version: latest
     secrets: inherit
 
