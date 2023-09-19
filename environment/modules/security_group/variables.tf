@@ -28,3 +28,8 @@ variable "description" {
   description = "A description of the purpose of the security group."
   type        = string
 }
+
+variable "environment" {
+  description = "The environment SG belongs to."
+  type        = string
+}

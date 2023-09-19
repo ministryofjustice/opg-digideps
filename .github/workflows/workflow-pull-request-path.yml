@@ -123,14 +123,14 @@ jobs:
       - workflow_variables
       - docker_build_scan_push
 
-  terraform_plan_shared_development:
-    name: shared plan terraform development
+  terraform_plan_account_development:
+    name: account plan terraform development
     uses: ./.github/workflows/_run-terraform.yml
     needs:
       - terraform_lint
     with:
       workspace: development
-      terraform_path: shared
+      terraform_path: account
       container_version: ${{ needs.workflow_variables.outputs.parsed_branch }}-${{ needs.workflow_variables.outputs.short_sha }}
     secrets: inherit
 
