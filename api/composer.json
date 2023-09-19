@@ -71,7 +71,7 @@
         "symfony/yaml": "^5.4.0"
     },
     "require-dev": {
-        "coderste/mink-extension": "^2.7.3",
+        "ministryofjustice/mink-extension": "^2.7.3",
         "behat/behat": "^3.8",
         "behat/mink": "^1.8",
         "behat/mink-browserkit-driver": "^2.1.0",
@@ -121,7 +121,7 @@
     },
     "repositories": [
         {
-            "url": "https://github.com/coderste/MinkExtension.git",
+            "url": "https://github.com/ministryofjustice/MinkExtension.git",
             "type": "git"
         }
     ]

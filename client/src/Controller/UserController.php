@@ -3,6 +3,7 @@
 namespace App\Controller;
 
 use App\Entity as EntityDir;
+use App\Event\IncorrectPasswordRequestEvent;
 use App\Event\RegistrationFailedEvent;
 use App\Event\RegistrationSucceededEvent;
 use App\EventDispatcher\ObservableEventDispatcher;
@@ -59,6 +60,10 @@ class UserController extends AbstractController
             /* @var $user EntityDir\User */
             $user = $this->restClient->loadUserByToken($token);
         } catch (\Throwable $e) {
+            // throw event here
+            $event = new IncorrectPasswordRequestEvent($request);
+            $this->eventDispatcher->dispatch($event, IncorrectPasswordRequestEvent::NAME);
+
             return $this->renderError('This link is not working or has already been used', $e->getCode());
         }
 
