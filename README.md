@@ -62,7 +62,7 @@ To develop with Terraform, you must have the following installed:
 - aws-vault for credentials handling (optional)
 - direnv (to set shell exports, see .envrc) (optional)
 
-You can then use the make files in `environment` and `shared` to set up the environment.
+You can then use the make files in `environment` and `account` to set up the environment.
 
 ```bash
 # ensure your environment is setup:

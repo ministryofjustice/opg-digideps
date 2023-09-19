@@ -65,6 +65,7 @@ module "api_service_security_group" {
   name        = "api-service"
   tags        = local.default_tags
   vpc_id      = data.aws_vpc.vpc.id
+  environment = local.environment
 }
 
 locals {
@@ -135,6 +136,7 @@ module "api_rds_security_group" {
   name        = "api-rds"
   tags        = local.default_tags
   vpc_id      = data.aws_vpc.vpc.id
+  environment = local.environment
 }
 
 data "aws_security_group" "cloud9" {

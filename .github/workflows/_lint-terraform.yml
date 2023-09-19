@@ -18,7 +18,7 @@ jobs:
       matrix:
         include:
           - folder: "environment"
-          - folder: "shared"
+          - folder: "account"
     steps:
       - uses: actions/checkout@96f53100ba2a5449eb71d2e6604bbcd94b9449b5 # pin@v3
 

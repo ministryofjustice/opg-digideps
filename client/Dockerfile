@@ -30,7 +30,7 @@ COPY src src
 RUN composer run-script post-install-cmd --no-interaction
 RUN composer dump-autoload --optimize
 
-FROM php:8.1.19-fpm-alpine3.18 as base
+FROM php:8.1.23-fpm-alpine3.18 as base
 WORKDIR /var/www
 EXPOSE 80
 EXPOSE 443
