@@ -25,6 +25,7 @@ vendor/
 **/terraform.output.json.enc
 **/terraform.plan*
 **/account/builds
+**/account/go_redeployer/bootstrap
 **/modules/**/.terraform.lock.hcl
 
 # Repo-specific excludes
