@@ -29,10 +29,11 @@ locals {
 }
 
 module "htmltopdf_security_group" {
-  source      = "./security_group"
+  source      = "./modules/security_group"
   description = "HTML to PDF Service"
   rules       = local.htmltopdf_sg_rules
   name        = "htmltopdf"
   tags        = local.default_tags
   vpc_id      = data.aws_vpc.vpc.id
+  environment = local.environment
 }

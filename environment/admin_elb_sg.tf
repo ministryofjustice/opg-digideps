@@ -1,9 +1,10 @@
 module "admin_elb_security_group" {
   name        = "admin-elb"
-  source      = "./security_group"
+  source      = "./modules/security_group"
   rules       = local.admin_elb_sg_rules
   tags        = local.default_tags
   vpc_id      = data.aws_vpc.vpc.id
+  environment = local.environment
   description = "Admin Elastic Load Balancer"
 }
 
@@ -43,10 +44,11 @@ resource "aws_security_group_rule" "admin_elb_https_in" {
 //No room for rules left in admin_elb_security_group
 module "admin_elb_security_group_route53_hc" {
   name        = "admin-elb-route53-hc"
-  source      = "./security_group"
+  source      = "./modules/security_group"
   rules       = local.admin_elb_sg_rules
   tags        = local.default_tags
   vpc_id      = data.aws_vpc.vpc.id
+  environment = local.environment
   description = "Admin Elastic Load Balancer Healthcheck"
 }
 

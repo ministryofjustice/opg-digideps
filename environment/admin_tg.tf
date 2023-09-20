@@ -18,5 +18,4 @@ resource "aws_lb_target_group" "admin" {
   lifecycle {
     create_before_destroy = true
   }
-
 }

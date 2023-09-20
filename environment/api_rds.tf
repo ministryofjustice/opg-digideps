@@ -1,5 +1,5 @@
 module "api_aurora" {
-  source                 = "./aurora"
+  source                 = "./modules/aurora"
   count                  = 1
   aurora_serverless      = local.account.aurora_serverless
   account_id             = data.aws_caller_identity.current.account_id
@@ -17,7 +17,7 @@ module "api_aurora" {
   skip_final_snapshot    = local.account.deletion_protection ? false : true
   vpc_security_group_ids = [module.api_rds_security_group.id]
   tags                   = local.default_tags
-  log_group              = aws_cloudwatch_log_group.api_cluster
+  log_group              = aws_cloudwatch_log_group.api_cluster.name
 }
 
 locals {

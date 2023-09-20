@@ -63,12 +63,19 @@ class UserController extends AbstractController
         }
 
         // token expired
-        if (!$user->isTokenSentInTheLastHours(EntityDir\User::TOKEN_EXPIRE_HOURS)) {
-            $template = $isActivatePage ? '@App/User/activateTokenExpired.html.twig' : '@App/User/passwordResetTokenExpired.html.twig';
+        if (!$user->isTokenSentInTheLastHours(EntityDir\User::ACTIVATE_TOKEN_EXPIRE_HOURS) && $isActivatePage) {
+            $template = '@App/User/activateTokenExpired.html.twig';
 
             return $this->render($template, [
                 'token' => $token,
-                'tokenExpireHours' => EntityDir\User::TOKEN_EXPIRE_HOURS,
+                'tokenExpireHours' => EntityDir\User::ACTIVATE_TOKEN_EXPIRE_HOURS,
+            ]);
+        } elseif (!$user->isTokenSentInTheLastHours(EntityDir\User::PASSWORD_TOKEN_EXPIRE_HOURS) && !$isActivatePage) {
+            $template = '@App/User/passwordResetTokenExpired.html.twig';
+
+            return $this->render($template, [
+                'token' => $token,
+                'tokenExpireHours' => EntityDir\User::PASSWORD_TOKEN_EXPIRE_HOURS,
             ]);
         }
 
@@ -138,6 +145,7 @@ class UserController extends AbstractController
 
     /**
      * @Route("/user/activate/password/send/{token}", name="activation_link_send")
+     *
      * @Template("@App/User/activateLinkSend.html.twig")
      */
     public function activateLinkSendAction(string $token): Response
@@ -150,14 +158,16 @@ class UserController extends AbstractController
 
     /**
      * @return array<mixed>
+     *
      * @Route("/user/activate/password/sent/{token}", name="activation_link_sent")
+     *
      * @Template("@App/User/activateLinkSent.html.twig")
      */
     public function activateLinkSentAction(string $token): array
     {
         return [
             'token' => $token,
-            'tokenExpireHours' => EntityDir\User::TOKEN_EXPIRE_HOURS,
+            'tokenExpireHours' => EntityDir\User::ACTIVATE_TOKEN_EXPIRE_HOURS,
         ];
     }
 
@@ -170,15 +180,17 @@ class UserController extends AbstractController
      * - PA.
      *
      * @return array<mixed>|Response
+     *
      * @Route("/user/details", name="user_details")
+     *
      * @Template("@App/User/details.html.twig")
      */
     public function detailsAction(Request $request, Redirector $redirector)
     {
         $user = $this->userApi->getUserWithData();
 
-        $client_validated = $this->clientApi->getFirstClient() instanceof EntityDir\Client &&
-            !$user->isDeputyOrg();
+        $client_validated = $this->clientApi->getFirstClient() instanceof EntityDir\Client
+            && !$user->isDeputyOrg();
 
         list($formType, $jmsPutGroups) = $this->getFormAndJmsGroupBasedOnUserRole($user);
         $form = $this->createForm($formType, $user);
@@ -192,7 +204,7 @@ class UserController extends AbstractController
                 return $this->redirectToRoute('client_add');
             }
 
-//            this is the final step for Org users so registration has succeeded
+            //            this is the final step for Org users so registration has succeeded
             $this->eventDispatcher->dispatch(new RegistrationSucceededEvent($user), RegistrationSucceededEvent::NAME);
 
             // all other users go to their homepage (dashboard for PROF/PA), or /admin for Admins
@@ -208,7 +220,9 @@ class UserController extends AbstractController
 
     /**
      * @return array<mixed>|Response
+     *
      * @Route("/password-managing/forgotten", name="password_forgotten")
+     *
      * @Template("@App/User/passwordForgotten.html.twig")
      **/
     public function passwordForgottenAction(Request $request)
@@ -235,7 +249,9 @@ class UserController extends AbstractController
 
     /**
      * @return array<mixed>
+     *
      * @Route("/password-managing/sent", name="password_sent")
+     *
      * @Template("@App/User/passwordSent.html.twig")
      */
     public function passwordSentAction(): array
@@ -245,7 +261,9 @@ class UserController extends AbstractController
 
     /**
      * @return array<mixed>|Response
+     *
      * @Route("/register", name="register")
+     *
      * @Template("@App/User/register.html.twig")
      */
     public function registerAction(Request $request)
@@ -372,6 +390,7 @@ class UserController extends AbstractController
 
     /**
      * @Route("/user/update-terms-use/{token}", name="user_updated_terms_use")
+     *
      * @Security("is_granted('ROLE_ORG')")
      */
     public function updatedTermsUseAction(Request $request, string $token): Response

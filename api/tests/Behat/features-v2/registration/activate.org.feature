@@ -1,4 +1,4 @@
-@v2 @registration @activate @v2_sequential
+@v2 @v2_sequential_2 @registration @activate
 Feature: Activate user account - Organisation users
 
     @admin

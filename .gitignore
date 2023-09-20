@@ -19,11 +19,13 @@ vendor/
 !ecs-helper/vendor/
 
 # Terraform
-.terraform/
+**/.terraform/
+**/terraform.tfstate.d/
 **/terraform.output.json
 **/terraform.output.json.enc
 **/terraform.plan*
-**/shared/builds
+**/account/builds
+**/modules/**/.terraform.lock.hcl
 
 # Repo-specific excludes
 docker/log

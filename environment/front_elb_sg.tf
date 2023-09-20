@@ -1,10 +1,11 @@
 module "front_elb_security_group" {
   name        = "front-elb"
-  source      = "./security_group"
+  source      = "./modules/security_group"
   rules       = local.front_elb_sg_rules
   tags        = local.default_tags
   vpc_id      = data.aws_vpc.vpc.id
   description = "Front Elastic Load Balancer"
+  environment = local.environment
 }
 
 locals {
@@ -43,10 +44,11 @@ resource "aws_security_group_rule" "front_elb_https_in" {
 //No room for rules left in front_elb_security_group
 module "front_elb_security_group_route53_hc" {
   name        = "front-elb-route53-hc"
-  source      = "./security_group"
+  source      = "./modules/security_group"
   rules       = local.front_elb_sg_rules
   tags        = local.default_tags
   vpc_id      = data.aws_vpc.vpc.id
+  environment = local.environment
   description = "Front Elastic Load Balancer Healthcheck"
 }
 

@@ -11,7 +11,7 @@ locals {
 }
 
 module "lamdba_synchronisation" {
-  source                = "./lambda"
+  source                = "./modules/lambda"
   lambda_name           = "synchronise-to-sirius-${local.environment}"
   description           = "Function to kick off document and checklist sync from digideps to sirius"
   working_directory     = "/var/task"

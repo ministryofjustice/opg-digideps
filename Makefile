@@ -51,7 +51,7 @@ check-terraform: ##@checks Check terraform files are formatted correctly
 lint-terraform: ##@checks Lint Terraform
 	@echo "Checking with tflint"
 	@$(TFLINT) environment
-	@$(TFLINT) shared
+	@$(TFLINT) account
 
 up-app: ##@application Brings the app up and mounts local folders in
 	docker-compose -f docker-compose.yml -f docker-compose.dev.yml -f docker-compose.override.yml up -d --remove-orphans load-balancer

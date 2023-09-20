@@ -1,10 +1,11 @@
 module "admin_service_security_group" {
-  source      = "./security_group"
+  source      = "./modules/security_group"
   description = "Admin Service"
   rules       = local.admin_sg_rules
   name        = "admin-service"
   tags        = local.default_tags
   vpc_id      = data.aws_vpc.vpc.id
+  environment = local.environment
 }
 
 locals {

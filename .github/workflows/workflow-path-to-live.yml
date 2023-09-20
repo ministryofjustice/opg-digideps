@@ -96,14 +96,14 @@ jobs:
       - workflow_variables
       - docker_build_scan_push
 
-  terraform_apply_shared_development:
-    name: development shared apply terraform
+  terraform_apply_account_development:
+    name: development account apply terraform
     uses: ./.github/workflows/_run-terraform.yml
     needs:
       - workflow_variables
     with:
       workspace: development
-      terraform_path: shared
+      terraform_path: account
       apply: true
       container_version: ${{ needs.workflow_variables.outputs.parsed_branch }}-${{ needs.workflow_variables.outputs.short_sha }}
     secrets: inherit
@@ -112,7 +112,7 @@ jobs:
     name: development environment apply terraform
     uses: ./.github/workflows/_run-terraform.yml
     needs:
-      - terraform_apply_shared_development
+      - terraform_apply_account_development
       - docker_build_scan_push
       - workflow_variables
       - synchronisation_unit_tests
@@ -127,15 +127,15 @@ jobs:
       container_version: ${{ needs.workflow_variables.outputs.parsed_branch }}-${{ needs.workflow_variables.outputs.short_sha }}
     secrets: inherit
 
-  terraform_apply_shared_preproduction:
-    name: preproduction shared apply terraform
+  terraform_apply_account_preproduction:
+    name: preproduction account apply terraform
     uses: ./.github/workflows/_run-terraform.yml
     needs:
       - workflow_variables
       - terraform_apply_development
     with:
       workspace: preproduction
-      terraform_path: shared
+      terraform_path: account
       apply: true
       container_version: ${{ needs.workflow_variables.outputs.parsed_branch }}-${{ needs.workflow_variables.outputs.short_sha }}
     secrets: inherit
@@ -144,7 +144,7 @@ jobs:
     name: integration environment apply terraform
     uses: ./.github/workflows/_run-terraform.yml
     needs:
-      - terraform_apply_shared_preproduction
+      - terraform_apply_account_preproduction
       - workflow_variables
     with:
       workspace: integration
@@ -161,6 +161,7 @@ jobs:
       - terraform_apply_integration
     with:
       replicas: 6
+      acu: 16
       account: 454262938596
       workspace: integration
     secrets: inherit
@@ -217,8 +218,8 @@ jobs:
       override: "sh,./tests/Behat/run-tests-parallel.sh,--tags,@v2_admin,--profile,v2-tests-browserkit"
     secrets: inherit
 
-  integration_tests_sequential:
-    name: integration tests sequential
+  integration_tests_sequential_1:
+    name: integration tests sequential 1
     uses: ./.github/workflows/_run-task.yml
     needs:
       - workflow_variables
@@ -227,7 +228,33 @@ jobs:
       workspace: integration
       task_name: "integration_test_v2"
       timeout: "1200"
-      override: "sh,./tests/Behat/run-tests.sh,--tags,@v2_sequential,--profile,v2-tests-browserkit"
+      override: "sh,./tests/Behat/run-tests.sh,--tags,@v2_sequential_1,--profile,v2-tests-browserkit"
+    secrets: inherit
+
+  integration_tests_sequential_2:
+    name: integration tests sequential 2
+    uses: ./.github/workflows/_run-task.yml
+    needs:
+      - workflow_variables
+      - reset_database
+    with:
+      workspace: integration
+      task_name: "integration_test_v2"
+      timeout: "1200"
+      override: "sh,./tests/Behat/run-tests.sh,--tags,@v2_sequential_2,--profile,v2-tests-browserkit"
+    secrets: inherit
+
+  integration_tests_sequential_3:
+    name: integration tests sequential 3
+    uses: ./.github/workflows/_run-task.yml
+    needs:
+      - workflow_variables
+      - reset_database
+    with:
+      workspace: integration
+      task_name: "integration_test_v2"
+      timeout: "1200"
+      override: "sh,./tests/Behat/run-tests.sh,--tags,@v2_sequential_3,--profile,v2-tests-browserkit"
     secrets: inherit
 
   scale_services_down:
@@ -236,12 +263,15 @@ jobs:
     uses: ./.github/workflows/_scale-services.yml
     needs:
       - workflow_variables
-      - integration_tests_sequential
+      - integration_tests_sequential_1
+      - integration_tests_sequential_2
+      - integration_tests_sequential_3
       - integration_tests_admin
       - integration_tests_1
       - integration_tests_2
     with:
       replicas: 1
+      acu: 4
       account: 454262938596
       workspace: integration
     secrets: inherit
@@ -250,9 +280,11 @@ jobs:
     name: preproduction environment apply terraform
     uses: ./.github/workflows/_run-terraform.yml
     needs:
-      - terraform_apply_shared_preproduction
+      - terraform_apply_account_preproduction
       - workflow_variables
-      - integration_tests_sequential
+      - integration_tests_sequential_1
+      - integration_tests_sequential_2
+      - integration_tests_sequential_3
       - integration_tests_admin
       - integration_tests_1
       - integration_tests_2
@@ -276,15 +308,15 @@ jobs:
       container_version: ${{ needs.workflow_variables.outputs.parsed_branch }}-${{ needs.workflow_variables.outputs.short_sha }}
     secrets: inherit
 
-  terraform_apply_shared_production:
-    name: production shared apply terraform
+  terraform_apply_account_production:
+    name: production account apply terraform
     uses: ./.github/workflows/_run-terraform.yml
     needs:
       - workflow_variables
       - terraform_apply_preproduction
     with:
       workspace: production
-      terraform_path: shared
+      terraform_path: account
       apply: true
       container_version: ${{ needs.workflow_variables.outputs.parsed_branch }}-${{ needs.workflow_variables.outputs.short_sha }}
     secrets: inherit
@@ -293,7 +325,7 @@ jobs:
     name: production environment apply terraform
     uses: ./.github/workflows/_run-terraform.yml
     needs:
-      - terraform_apply_shared_production
+      - terraform_apply_account_production
       - workflow_variables
     with:
       workspace: production02

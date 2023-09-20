@@ -14,6 +14,7 @@ use Symfony\Component\HttpFoundation\Response;
 use Symfony\Component\Routing\RouterInterface;
 use Symfony\Component\Security\Core\Authentication\Token\TokenInterface;
 use Symfony\Component\Security\Core\Exception\AuthenticationException;
+use Symfony\Component\Security\Core\Exception\BadCredentialsException;
 use Symfony\Component\Security\Core\Exception\UserNotFoundException;
 use Symfony\Component\Security\Core\Security;
 use Symfony\Component\Security\Http\Authenticator\AbstractAuthenticator;
@@ -42,6 +43,10 @@ class LoginFormAuthenticator extends AbstractAuthenticator
         $email = $request->get('login')['email'];
         $password = $request->get('login')['password'];
         $csrfToken = $request->request->get('login')['_token'];
+
+        if ('' === $email || null === $email || '' === $password || null === $password) {
+            throw new BadCredentialsException('Missing username or password');
+        }
 
         return new Passport(
             new UserBadge($email, function ($userEmail) use ($password) {
@@ -73,9 +78,9 @@ class LoginFormAuthenticator extends AbstractAuthenticator
     {
         $redirectUrl = $this->redirector->getFirstPageAfterLogin($request->getSession());
 
-        if ($request->query->has('lastPage')){
+        if ($request->query->has('lastPage')) {
             $decodedURL = urldecode($request->query->get('lastPage'));
-            if (RouteValidator::validateRoute($this->router, $decodedURL)){
+            if (RouteValidator::validateRoute($this->router, $decodedURL)) {
                 $redirectUrl = $decodedURL;
             }
         }

@@ -12,6 +12,7 @@ resource "aws_elasticache_replication_group" "frontend" {
   subnet_group_name          = local.account.ec_subnet_group
   security_group_ids         = [module.frontend_cache_security_group.id]
   tags                       = local.default_tags
+  snapshot_retention_limit   = 1
   at_rest_encryption_enabled = true
   #tfsec:ignore:aws-elasticache-enable-in-transit-encryption - too much of a performance hit. To be re-evaluated
   transit_encryption_enabled = false
@@ -38,10 +39,11 @@ locals {
 }
 
 module "frontend_cache_security_group" {
-  source      = "./security_group"
+  source      = "./modules/security_group"
   description = "Front Redis"
   rules       = local.front_cache_sg_rules
   name        = "frontend-cache-${local.environment}"
   tags        = local.default_tags
   vpc_id      = data.aws_vpc.vpc.id
+  environment = local.environment
 }

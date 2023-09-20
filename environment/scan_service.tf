@@ -85,36 +85,36 @@ resource "aws_ecs_service" "scan" {
 }
 
 locals {
-  file_scanner_rest_container = <<EOF
-  {
-      "name": "rest",
-      "essential": true,
-      "portMappings": [{
-        "containerPort": 8080,
-        "hostPort": 8080,
-        "protocol": "tcp"
+  file_scanner_rest_container = jsonencode(
+    {
+      name      = "rest",
+      essential = true,
+      portMappings = [{
+        containerPort = 8080,
+        hostPort      = 8080,
+        protocol      = "tcp"
       }],
-      "cpu": 0,
-      "image": "${local.images.file-scanner}",
-      "mountPoints": [],
-      "volumesFrom": [],
-      "healthCheck": {
-        "command": [
+      cpu         = 0,
+      image       = local.images.file-scanner,
+      mountPoints = [],
+      volumesFrom = [],
+      healthCheck = {
+        command = [
           "CMD-SHELL",
           "wget --no-verbose --tries=1 --spider http://localhost:8080/health-check || exit 1"
         ],
-        "interval": 30,
-        "timeout": 10,
-        "retries": 3
+        interval = 30,
+        timeout  = 10,
+        retries  = 3
       },
-      "logConfiguration": {
-        "logDriver": "awslogs",
-        "options": {
-          "awslogs-group": "${aws_cloudwatch_log_group.opg_digi_deps.name}",
-          "awslogs-region": "eu-west-1",
-          "awslogs-stream-prefix": "${aws_iam_role.scan.name}"
+      logConfiguration = {
+        logDriver = "awslogs",
+        options = {
+          awslogs-group         = aws_cloudwatch_log_group.opg_digi_deps.name,
+          awslogs-region        = "eu-west-1",
+          awslogs-stream-prefix = aws_iam_role.scan.name
         }
       }
-  }
-EOF
+    }
+  )
 }

@@ -11,6 +11,7 @@ resource "aws_elasticache_replication_group" "api" {
   port                       = 6379
   subnet_group_name          = local.account.ec_subnet_group
   security_group_ids         = [module.api_cache_security_group.id]
+  snapshot_retention_limit   = 1
   apply_immediately          = true
   at_rest_encryption_enabled = true
   #tfsec:ignore:aws-elasticache-enable-in-transit-encryption - too much of a performance hit. To be re-evaluated.
@@ -34,10 +35,11 @@ locals {
 }
 
 module "api_cache_security_group" {
-  source      = "./security_group"
+  source      = "./modules/security_group"
   description = "API Redis"
   rules       = local.api_cache_sg_rules
   name        = "api-cache"
   tags        = local.default_tags
   vpc_id      = data.aws_vpc.vpc.id
+  environment = local.environment
 }

@@ -1,5 +1,5 @@
 module "restore" {
-  source = "./task"
+  source = "./modules/task"
   name   = "restore"
 
   cluster_name          = aws_ecs_cluster.main.name
@@ -32,62 +32,63 @@ locals {
 }
 
 module "restore_security_group" {
-  source      = "./security_group"
+  source      = "./modules/security_group"
   description = "Restore Database Service"
   rules       = local.restore_sg_rules
   name        = "restore"
   tags        = local.default_tags
   vpc_id      = data.aws_vpc.vpc.id
+  environment = local.environment
 }
 
 locals {
-  restore_container = <<EOF
-{
-	"name": "restore",
-	"image": "${local.images.sync}",
-    "command": ["./restore.sh"],
-	"logConfiguration": {
-		"logDriver": "awslogs",
-		"options": {
-			"awslogs-group": "${aws_cloudwatch_log_group.opg_digi_deps.name}",
-			"awslogs-region": "eu-west-1",
-			"awslogs-stream-prefix": "restore"
-		}
-	},
-	"secrets": [{
-		"name": "POSTGRES_PASSWORD",
-		"valueFrom": "${data.aws_secretsmanager_secret.database_password.arn}"
-	}],
-	"environment": [{
-			"name": "S3_BUCKET",
-			"value": "${data.aws_s3_bucket.backup.bucket}"
-		},
-		{
-			"name": "S3_PREFIX",
-			"value": "${local.environment}"
-		},
-		{
-			"name": "POSTGRES_DATABASE",
-			"value": "${local.db.name}"
-		},
-		{
-			"name": "POSTGRES_HOST",
-			"value": "${local.db.endpoint}"
-		},
-		{
-			"name": "POSTGRES_PORT",
-			"value": "${local.db.port}"
-		},
-		{
-			"name": "POSTGRES_USER",
-			"value": "${local.db.username}"
-		},
-		{
-			"name": "DROP_PUBLIC",
-			"value": "yes"
-		}
-	]
-}
+  restore_container = jsonencode(
+    {
+      name    = "restore",
+      image   = local.images.sync,
+      command = ["./restore.sh"],
+      logConfiguration = {
+        logDriver = "awslogs",
+        options = {
+          awslogs-group         = aws_cloudwatch_log_group.opg_digi_deps.name,
+          awslogs-region        = "eu-west-1",
+          awslogs-stream-prefix = "restore"
+        }
+      },
+      secrets = [{
+        name      = "POSTGRES_PASSWORD",
+        valueFrom = data.aws_secretsmanager_secret.database_password.arn
+      }],
+      environment = [{
+        name  = "S3_BUCKET",
+        value = data.aws_s3_bucket.backup.bucket
+        },
+        {
+          name  = "S3_PREFIX",
+          value = local.environment
+        },
+        {
+          name  = "POSTGRES_DATABASE",
+          value = local.db.name
+        },
+        {
+          name  = "POSTGRES_HOST",
+          value = local.db.endpoint
+        },
+        {
+          name  = "POSTGRES_PORT",
+          value = tostring(local.db.port)
+        },
+        {
+          name  = "POSTGRES_USER",
+          value = local.db.username
+        },
+        {
+          name  = "DROP_PUBLIC",
+          value = "yes"
+        }
+      ]
+    }
 
-EOF
+  )
 }
