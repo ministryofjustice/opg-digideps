@@ -54,7 +54,7 @@ data "aws_iam_policy_document" "lambda_redeployer" {
 
 data "archive_file" "redeployer_zip" {
   type        = "zip"
-  source_file = "${path.module}/go_redeployer/main"
+  source_file = "${path.module}/go_redeployer/bootstrap"
   output_path = "${path.module}/go_redeployer/function.zip"
 }
 
@@ -62,8 +62,8 @@ resource "aws_lambda_function" "redeployer_lambda" {
   filename      = data.archive_file.redeployer_zip.output_path
   function_name = local.redeployer_lambda_function_name
   role          = aws_iam_role.lambda_redeployer.arn
-  handler       = "main"
-  runtime       = "go1.x"
+  handler       = "bootstrap"
+  runtime       = "provided.al2"
   depends_on    = [aws_cloudwatch_log_group.redeployer_lambda]
   tracing_config {
     mode = "Active"

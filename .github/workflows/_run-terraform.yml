@@ -32,7 +32,7 @@ jobs:
 
       - name: build redeployer
         if: inputs.terraform_path == 'account'
-        run: GOARCH=amd64 GOOS=linux go build -o main ./main.go
+        run: GOARCH=amd64 GOOS=linux go build -o bootstrap ./main.go
         working-directory: account/go_redeployer
 
       - uses: actions/setup-python@61a6322f88396a6271a6ee3565807d608ecaddd1
@@ -76,11 +76,16 @@ jobs:
         with:
           ssh-private-key: ${{ secrets.SSH_PRIVATE_KEY_ALLOW_LIST_REPOSITORY }}
 
-      - name: terraform init
+      - name: terraform init for account
+        if: inputs.terraform_path == 'account'
         run: terraform init -input=false
         env:
           TF_WORKSPACE: ${{ inputs.workspace }}
-          TF_VAR_OPG_DOCKER_TAG: ${{ inputs.container_version }}
+        working-directory: ${{ inputs.terraform_path }}
+
+      - name: terraform init for environment
+        run: terraform init -input=false
+        if: inputs.terraform_path == 'environment'
         working-directory: ${{ inputs.terraform_path }}
 
       - name: terraform plan ${{ inputs.terraform_path }}
