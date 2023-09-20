@@ -78,6 +78,9 @@ jobs:
 
       - name: terraform init
         run: terraform init -input=false
+        env:
+          TF_WORKSPACE: ${{ inputs.workspace }}
+          TF_VAR_OPG_DOCKER_TAG: ${{ inputs.container_version }}
         working-directory: ${{ inputs.terraform_path }}
 
       - name: terraform plan ${{ inputs.terraform_path }}
