@@ -41,7 +41,7 @@ jobs:
           python-version: "3.11"
 
       - name: python layers folder
-        if: inputs.terraform_path == 'shared'
+        if: inputs.terraform_path == 'account'
         run: pip3 install -r requirements.txt --target ./layers/python/lib/python3.11/site-packages/
         working-directory: lambdas/functions/slack_lambda
 
