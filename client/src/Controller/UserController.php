@@ -3,7 +3,6 @@
 namespace App\Controller;
 
 use App\Entity as EntityDir;
-use App\Event\IncorrectPasswordRequestEvent;
 use App\Event\RegistrationFailedEvent;
 use App\Event\RegistrationSucceededEvent;
 use App\EventDispatcher\ObservableEventDispatcher;
@@ -21,6 +20,7 @@ use Sensio\Bundle\FrameworkExtraBundle\Configuration\Template;
 use Symfony\Component\Form\FormError;
 use Symfony\Component\HttpFoundation\Request;
 use Symfony\Component\HttpFoundation\Response;
+use Symfony\Component\RateLimiter\RateLimiterFactory;
 use Symfony\Component\Routing\Annotation\Route;
 use Symfony\Component\Security\Core\Exception\UserNotFoundException;
 use Symfony\Contracts\Translation\TranslatorInterface;
@@ -51,19 +51,28 @@ class UserController extends AbstractController
         Redirector $redirector,
         DeputyProvider $deputyProvider,
         string $action,
-        string $token
+        string $token,
+        RateLimiterFactory $anonymousApiLimiter
     ): Response {
         $isActivatePage = 'activate' === $action;
+
+        $userId = substr($token, -8);
+
+        // rate limiting applied to track unsuccessful and successful requests
+        $limiter = $anonymousApiLimiter->create($userId);
+        $limit = $limiter->consume(1);
+
+        if (!$limit->isAccepted() && !$isActivatePage) {
+            return $this->renderError(sprintf('You have tried to reset your password too many times. Please try again in %s minutes.', ceil(($limit->getRetryAfter()->getTimestamp() - time()) / 60)), 429);
+        } elseif (!$limit->isAccepted() && $isActivatePage) {
+            return $this->renderError(sprintf('You have tried to activate your account too many times. Please try again in %s minutes.', ceil(($limit->getRetryAfter()->getTimestamp() - time()) / 60)), 429);
+        }
 
         // check $token is correct
         try {
             /* @var $user EntityDir\User */
             $user = $this->restClient->loadUserByToken($token);
         } catch (\Throwable $e) {
-            // throw event here
-            $event = new IncorrectPasswordRequestEvent($request);
-            $this->eventDispatcher->dispatch($event, IncorrectPasswordRequestEvent::NAME);
-
             return $this->renderError('This link is not working or has already been used', $e->getCode());
         }
 
@@ -245,6 +254,7 @@ class UserController extends AbstractController
 
         return [
             'form' => $form->createView(),
+            'user' => $user->getId(),
         ];
     }
 
