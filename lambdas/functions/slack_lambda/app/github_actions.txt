@@ -1,0 +1,12 @@
+:pipeline: *Digideps Workflow {success_string}* {status_emoji}
+
+*Branch:* {branch}
+*Workflow:* {workflow_name}
+*User:* {github_actor}
+
+*Links*
+    *Digideps Frontend:* {frontend_url}
+    *Digideps Admin:* {admin_url}
+    *GH Actions build url:* {job_url}
+
+*Commit message:* {commit_message}

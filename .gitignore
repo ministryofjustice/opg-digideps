@@ -35,10 +35,12 @@ terraform/to_import\.sh
 log/pact.log
 
 # Lambda specific
-*lambda*.zip
-!lambdas/layers/monitoring/python/lib/python3.7/site-packages/psycopg2
-!lambdas/layers/monitoring/python/lib/python3.7/site-packages/README.md
-lambdas/layers/monitoring/python/lib/python3.7/site-packages/
+**lambda*.zip
+**slack*.zip
+**layer*.zip
+lambdas/functions/slack_lambda/layers/**
+!lambdas/functions/slack_lambda/layers/**/.gitkeep
+
 *__pycache__*
 *venv*
 
