@@ -32,7 +32,7 @@ jobs:
 
       - name: build redeployer
         if: inputs.terraform_path == 'account'
-        run: GOARCH=amd64 GOOS=linux go build -o main ./main.go
+        run: GOARCH=amd64 GOOS=linux go build -o bootstrap ./main.go
         working-directory: account/go_redeployer
 
       - name: parse terraform version

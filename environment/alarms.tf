@@ -255,68 +255,6 @@ resource "aws_cloudwatch_metric_alarm" "availability_admin" {
   }
 }
 
-resource "aws_route53_health_check" "availability_service" {
-  fqdn              = aws_route53_record.front.fqdn
-  resource_path     = "/health-check/service"
-  port              = 443
-  type              = "HTTPS"
-  failure_threshold = 1
-  request_interval  = 30
-  measure_latency   = true
-  tags              = merge(local.default_tags, { Name = "availability-service" }, )
-}
-
-resource "aws_cloudwatch_metric_alarm" "availability_service" {
-  provider            = aws.us-east-1
-  alarm_name          = "${local.environment}-availability-service"
-  statistic           = "Minimum"
-  metric_name         = "HealthCheckStatus"
-  comparison_operator = "LessThanThreshold"
-  datapoints_to_alarm = 3
-  threshold           = 1
-  period              = 60
-  evaluation_periods  = 3
-  namespace           = "AWS/Route53"
-  alarm_actions       = [data.aws_sns_topic.availability_alert.arn]
-  actions_enabled     = local.account.alarms_active
-  tags                = local.default_tags
-
-  dimensions = {
-    HealthCheckId = aws_route53_health_check.availability_service.id
-  }
-}
-
-resource "aws_route53_health_check" "availability_dependencies" {
-  fqdn              = aws_route53_record.front.fqdn
-  resource_path     = "/health-check/dependencies"
-  port              = 443
-  type              = "HTTPS"
-  failure_threshold = 1
-  request_interval  = 30
-  measure_latency   = true
-  tags              = merge(local.default_tags, { Name = "availability-dependencies" }, )
-}
-
-resource "aws_cloudwatch_metric_alarm" "availability_dependencies" {
-  provider            = aws.us-east-1
-  alarm_name          = "${local.environment}-availability-dependencies"
-  statistic           = "Minimum"
-  metric_name         = "HealthCheckStatus"
-  comparison_operator = "LessThanThreshold"
-  datapoints_to_alarm = 5
-  threshold           = 1
-  period              = 60
-  evaluation_periods  = 5
-  namespace           = "AWS/Route53"
-  alarm_actions       = [data.aws_sns_topic.availability_alert.arn]
-  actions_enabled     = local.account.alarms_active
-  tags                = local.default_tags
-
-  dimensions = {
-    HealthCheckId = aws_route53_health_check.availability_dependencies.id
-  }
-}
-
 # ========== Response time alarms ==========
 
 resource "aws_cloudwatch_metric_alarm" "frontend_alb_average_response_time" {
