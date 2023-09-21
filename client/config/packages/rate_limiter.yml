@@ -3,5 +3,5 @@ framework:
     anonymous_api:
       # use 'sliding_window' if you prefer that policy
       policy: "sliding_window"
-      limit: 3
-      interval: "60 minutes"
+      limit: 100
+      interval: "5 minutes"
