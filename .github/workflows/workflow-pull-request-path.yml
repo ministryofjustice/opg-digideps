@@ -321,7 +321,7 @@ jobs:
       - workflow_variables
       - end_of_workflow
     with:
-      success: False
+      success: false
       branch: ${{ needs.workflow_variables.outputs.parsed_branch }}
       account: 248804316466
     secrets: inherit

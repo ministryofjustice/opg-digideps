@@ -379,7 +379,7 @@ jobs:
       - workflow_variables
       - end_of_workflow
     with:
-      success: True
+      success: true
       branch: ${{ needs.workflow_variables.outputs.parsed_branch }}
       account: 515688267891
     secrets: inherit
@@ -392,7 +392,7 @@ jobs:
       - workflow_variables
       - end_of_workflow
     with:
-      success: False
+      success: false
       branch: ${{ needs.workflow_variables.outputs.parsed_branch }}
       account: 515688267891
     secrets: inherit

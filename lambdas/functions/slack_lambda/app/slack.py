@@ -295,8 +295,8 @@ def github_actions_message(message):
     commit_message = message["CommitMessage"]
     scheduled_task = message["ScheduledTask"]
 
-    status_emoji = ":white_check_mark:" if success == "True" else ":x:"
-    success_string = "Success" if success == "True" else "Failure"
+    status_emoji = ":white_check_mark:" if success == "true" else ":x:"
+    success_string = "Success" if success == "true" else "Failure"
 
     if scheduled_task != "":
         with open("github_actions_scheduled_task.txt", "r") as file:
