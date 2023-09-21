@@ -28,29 +28,6 @@ resource "aws_cloudwatch_dashboard" "main" {
       },
       {
         "type" : "metric",
-        "x" : 15,
-        "y" : 0,
-        "width" : 9,
-        "height" : 3,
-        "properties" : {
-          "metrics" : [
-            ["AWS/Route53", "HealthCheckPercentageHealthy", "HealthCheckId", aws_route53_health_check.availability_service.id, { "region" : "us-east-1", "label" : "Digideps Service" }],
-            ["AWS/Route53", "HealthCheckPercentageHealthy", "HealthCheckId", aws_route53_health_check.availability_dependencies.id, { "region" : "us-east-1", "label" : "Digideps Dependencies" }]
-          ],
-          "region" : "eu-west-1",
-          "view" : "singleValue",
-          "stacked" : false,
-          "start" : "-P28D",
-          "end" : "P0D",
-          "period" : 60,
-          "title" : "Service Availability",
-          "stat" : "Average",
-          "singleValueFullPrecision" : false,
-          "setPeriodToTimeRange" : true
-        }
-      },
-      {
-        "type" : "metric",
         "x" : 0,
         "y" : 0,
         "width" : 15,
