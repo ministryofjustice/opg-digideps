@@ -39,7 +39,7 @@ ENV PHP_EXT_DIR=/usr/local/lib/php/extensions/no-debug-non-zts-20210902/
 # Install core PHP extensions
 RUN apk add --no-cache openssl nginx nginx-mod-http-headers-more su-exec libzip-dev unzip php81-pecl-igbinary php81-pecl-redis php81-pecl-imagick gmp gmp-dev
 RUN apk update && \
-    apk upgrade curl libcurl openssl tar postgresql-client libssl1.1 libcrypto1.1 libssl3 openssl openssl-dev libcrypto3 cups-libs
+    apk upgrade curl libcurl openssl tar postgresql-client libssl1.1 libcrypto1.1 libssl3 openssl openssl-dev libcrypto3 cups-libs libwebp
 
 RUN docker-php-ext-install pcntl zip opcache gmp
 RUN docker-php-ext-enable opcache

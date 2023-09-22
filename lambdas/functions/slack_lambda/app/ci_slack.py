@@ -6,7 +6,7 @@ import slack
 def main():
     parser = argparse.ArgumentParser(description="Post-release Slack notifications.")
     parser.add_argument(
-        "--success", type=str, default="True", help="Success or failure"
+        "--success", type=str, default="true", help="Success or failure"
     )
     parser.add_argument(
         "--commit_message",

@@ -26,6 +26,7 @@ vendor/
 **/terraform.plan*
 **/account/builds
 **/modules/**/.terraform.lock.hcl
+account/go_redeployer/bootstrap
 
 # Repo-specific excludes
 docker/log

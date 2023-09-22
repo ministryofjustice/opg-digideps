@@ -11,7 +11,7 @@ on:
         description: "Job status"
         required: true
         type: string
-        default: "False"
+        default: "false"
       branch:
         description: "Branch of the workflow"
         required: false
@@ -60,7 +60,7 @@ jobs:
         run: |
           python ci_slack.py \
           --success "${SUCCESS}" \
-          --commit_message "Not Applicable - Cycle Secrets Job" \
+          --commit_message "$(git log -1 --pretty=%B)" \
           --branch "${BRANCH}" \
           --scheduled_task "${SCHEDULED_TASK}"
         working-directory: lambdas/functions/slack_lambda/app
