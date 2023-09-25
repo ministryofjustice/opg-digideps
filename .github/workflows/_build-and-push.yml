@@ -47,7 +47,7 @@ jobs:
       - uses: actions/checkout@96f53100ba2a5449eb71d2e6604bbcd94b9449b5 # pin@v3
 
       - name: set up docker buildx
-        uses: docker/setup-buildx-action@c2153417150d92671c82aea83a1583b776b52910
+        uses: docker/setup-buildx-action@dedd61cf5d839122591f5027c89bf3ad27691d18
 
       - name: cache docker layers
         id: cache-docker
