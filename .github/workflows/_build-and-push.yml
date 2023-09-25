@@ -49,14 +49,23 @@ jobs:
       - name: set up docker buildx
         uses: docker/setup-buildx-action@c2153417150d92671c82aea83a1583b776b52910
 
+      - name: export dates
+        id: cache-dates
+        run: |
+          echo "cache_date_today=$(date +'%Y%m%d')" >> $GITHUB_OUTPUT
+          echo "cache_date_yesterday=$(date -d 'yesterday' +'%Y%m%d')" >> $GITHUB_OUTPUT
+
       - name: cache docker layers
         id: cache-docker
         uses: actions/cache@67b839edb68371cc5014f6cea11c9aa77238de78 # pin@v3.0.8
         with:
           path: /tmp/.buildx-cache
-          key: ${{ runner.os }}-${{ matrix.svc_name }}-build-${{ github.sha }}
+          key: ${{ matrix.svc_name }}-${{ inputs.branch_name }}-${{ steps.cache-dates.outputs.cache_date_today }}-${{ github.sha }}
           restore-keys: |
-            ${{ runner.os }}-${{ matrix.svc_name }}-build
+            ${{ matrix.svc_name }}-${{ inputs.branch_name }}-${{ steps.cache-dates.outputs.cache_date_today }}
+            ${{ matrix.svc_name }}-main-${{ steps.cache-dates.outputs.cache_date_today }}
+            ${{ matrix.svc_name }}-${{ inputs.branch_name }}-${{ steps.cache-dates.outputs.cache_date_yesterday }}
+            ${{ matrix.svc_name }}-main-${{ steps.cache-dates.outputs.cache_date_yesterday }}
 
       - name: install aws cli
         uses: unfor19/install-aws-cli-action@46282f151073130d90347412d9c4ef0640177f22 # pin@v1.0.3
@@ -74,7 +83,13 @@ jobs:
       - name: build docker image
         env:
           IMAGE_NAME: ${{ matrix.svc_name }}
-        run: docker buildx build --cache-from=type=local,src=/tmp/.buildx-cache --cache-to=type=local,dest=/tmp/.buildx-cache-new --tag ${IMAGE_NAME}:latest --output type=docker .
+          BRANCH_NAME: ${{ inputs.branch_name }}
+        run: |
+          if [ "${BRANCH_NAME}" == "main" ]; then
+            docker buildx build --cache-to=type=local,dest=/tmp/.buildx-cache-new --tag ${IMAGE_NAME}:latest --output type=docker .
+          else
+            docker buildx build --cache-from=type=local,src=/tmp/.buildx-cache --cache-to=type=local,dest=/tmp/.buildx-cache-new --tag ${IMAGE_NAME}:latest --output type=docker .
+          fi
         working-directory: ${{ matrix.sub_folder }}
 
       - name: build docker image development
