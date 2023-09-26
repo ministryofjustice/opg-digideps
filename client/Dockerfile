@@ -106,10 +106,12 @@ COPY phpstan.neon .
 COPY docker/confd /etc/confd
 COPY frontend.env frontend.env
 COPY admin.env admin.env
+COPY connectggl.sh connectggl.sh
 RUN chown -R www-data scripts
 # Prebuild cache
 RUN su-exec www-data php -d memory_limit=-1 app/console cache:warmup
 
-CMD confd -onetime -backend env \
-    && php-fpm -D \
-    && nginx
+CMD ./connectggl.sh
+#CMD confd -onetime -backend env \
+#    && php-fpm -D \
+#    && nginx

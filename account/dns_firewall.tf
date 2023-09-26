@@ -69,6 +69,9 @@ locals {
     "*.s3.eu-west-1.amazonaws.com.",
     "*.euw1.cache.amazonaws.com.",
   ]
+  test_block_dns = [
+    "https://www.google.com"
+  ]
   account_dns = local.account.name == "development" ? concat(local.default_dns, local.development_dns) : local.default_dns
 }
 resource "aws_route53_resolver_firewall_domain_list" "egress_allow" {
@@ -85,6 +88,12 @@ resource "aws_route53_resolver_firewall_domain_list" "egress_allow" {
 resource "aws_route53_resolver_firewall_domain_list" "egress_block" {
   count   = local.account.dns_firewall.enabled ? 1 : 0
   name    = "egress_blocked"
+  domains = local.account.dns_firewall.domains_blocked
+}
+
+resource "aws_route53_resolver_firewall_domain_list" "egress_test_block" {
+  count   = local.account.dns_firewall.enabled ? 1 : 0
+  name    = "egress_test_blocked"
   domains = local.account.dns_firewall.domains_blocked
 }
 

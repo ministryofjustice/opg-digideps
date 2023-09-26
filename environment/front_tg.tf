@@ -7,13 +7,13 @@ resource "aws_lb_target_group" "front" {
   deregistration_delay = 0
   tags                 = local.default_tags
 
-  health_check {
-    path                = "/health-check"
-    interval            = 30
-    timeout             = 10
-    unhealthy_threshold = 3
-    protocol            = "HTTPS"
-  }
+  #  health_check {
+  #    path                = "/health-check"
+  #    interval            = 30
+  #    timeout             = 10
+  #    unhealthy_threshold = 3
+  #    protocol            = "HTTPS"
+  #  }
 
   lifecycle {
     create_before_destroy = true

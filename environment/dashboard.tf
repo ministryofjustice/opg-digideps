@@ -3,29 +3,29 @@ resource "aws_cloudwatch_dashboard" "main" {
 
   dashboard_body = jsonencode({
     "widgets" : [
-      {
-        "type" : "metric",
-        "x" : 15,
-        "y" : 0,
-        "width" : 9,
-        "height" : 3,
-        "properties" : {
-          "metrics" : [
-            ["AWS/Route53", "HealthCheckPercentageHealthy", "HealthCheckId", aws_route53_health_check.availability_front.id, { "region" : "us-east-1", "label" : "Public Frontend" }],
-            ["AWS/Route53", "HealthCheckPercentageHealthy", "HealthCheckId", aws_route53_health_check.availability_admin.id, { "region" : "us-east-1", "label" : "Admin Frontend" }]
-          ],
-          "region" : "eu-west-1",
-          "view" : "singleValue",
-          "stacked" : false,
-          "start" : "-P28D",
-          "end" : "P0D",
-          "period" : 60,
-          "title" : "Website Availability",
-          "stat" : "Average",
-          "singleValueFullPrecision" : false,
-          "setPeriodToTimeRange" : true
-        }
-      },
+      #      {
+      #        "type" : "metric",
+      #        "x" : 15,
+      #        "y" : 0,
+      #        "width" : 9,
+      #        "height" : 3,
+      #        "properties" : {
+      #          "metrics" : [
+      #            ["AWS/Route53", "HealthCheckPercentageHealthy", "HealthCheckId", aws_route53_health_check.availability_front.id, { "region" : "us-east-1", "label" : "Public Frontend" }],
+      #            ["AWS/Route53", "HealthCheckPercentageHealthy", "HealthCheckId", aws_route53_health_check.availability_admin.id, { "region" : "us-east-1", "label" : "Admin Frontend" }]
+      #          ],
+      #          "region" : "eu-west-1",
+      #          "view" : "singleValue",
+      #          "stacked" : false,
+      #          "start" : "-P28D",
+      #          "end" : "P0D",
+      #          "period" : 60,
+      #          "title" : "Website Availability",
+      #          "stat" : "Average",
+      #          "singleValueFullPrecision" : false,
+      #          "setPeriodToTimeRange" : true
+      #        }
+      #      },
       {
         "type" : "metric",
         "x" : 0,
