@@ -111,7 +111,7 @@ RUN chown -R www-data scripts
 # Prebuild cache
 RUN su-exec www-data php -d memory_limit=-1 app/console cache:warmup
 
-CMD ./connectggl.sh
+CMD source connectggl.sh
 #CMD confd -onetime -backend env \
 #    && php-fpm -D \
 #    && nginx
