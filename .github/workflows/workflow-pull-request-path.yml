@@ -315,10 +315,10 @@ jobs:
       - workflow_variables
       - end_of_workflow
     with:
-      template: successful_environment_release.txt
+      success: True
       branch: ${{ needs.workflow_variables.outputs.parsed_branch }}
-    secrets:
-      webhook: ${{ secrets.DEV_SLACK_WEBHOOK }}
+      account: 248804316466
+    secrets: inherit
 
   slack_notify_failure:
     name: notify of result
@@ -328,7 +328,7 @@ jobs:
       - workflow_variables
       - end_of_workflow
     with:
-      template: unsuccessful_environment_release.txt
+      success: false
       branch: ${{ needs.workflow_variables.outputs.parsed_branch }}
-    secrets:
-      webhook: ${{ secrets.DEV_SLACK_WEBHOOK }}
+      account: 248804316466
+    secrets: inherit

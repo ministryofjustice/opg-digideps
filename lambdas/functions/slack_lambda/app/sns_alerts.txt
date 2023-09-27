@@ -1,0 +1,11 @@
+:warning: *ALARM - {alarm_name}* :x:
+
+*Message:* Moved from {old_state} to {new_state}
+*Environment:* {environment}
+*Region:* {region}
+
+*Alarm Link:*
+{alarm_url}
+
+*Log Query Link:*
+{log_url}

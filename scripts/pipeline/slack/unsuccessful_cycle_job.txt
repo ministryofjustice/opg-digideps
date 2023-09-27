@@ -1,3 +1,0 @@
-:x: *Digideps Cycle Secrets Failure* :x:
-*Links*
-    *GH Actions build url:* {{ gh_actions_build_url }}

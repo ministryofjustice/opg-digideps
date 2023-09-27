@@ -25,7 +25,9 @@ vendor/
 **/terraform.output.json.enc
 **/terraform.plan*
 **/account/builds
+**/account/go_redeployer/bootstrap
 **/modules/**/.terraform.lock.hcl
+account/go_redeployer/bootstrap
 
 # Repo-specific excludes
 docker/log
@@ -38,10 +40,12 @@ log/pact.log
 **/client/resources/public/**
 
 # Lambda specific
-*lambda*.zip
-!lambdas/layers/monitoring/python/lib/python3.7/site-packages/psycopg2
-!lambdas/layers/monitoring/python/lib/python3.7/site-packages/README.md
-lambdas/layers/monitoring/python/lib/python3.7/site-packages/
+**lambda*.zip
+**slack*.zip
+**layer*.zip
+lambdas/functions/slack_lambda/layers/**
+!lambdas/functions/slack_lambda/layers/**/.gitkeep
+
 *__pycache__*
 *venv*
 
