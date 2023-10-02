@@ -151,13 +151,27 @@ trait AuthTrait
     }
 
     /**
+     * @Given /^the user clicks on the registration link sent to their email which has an \'([^\']*)\' token$/
+     */
+    public function theUserClicksOnTheRegistrationLinkSentToTheirEmailWhichHasAnToken($arg1)
+    {
+        $this->clickActivationOrPasswordResetLinkInEmail(false, 'password reset', $this->interactingWithUserDetails->getUserEmail(), $arg1);
+    }
+
+    /**
      * @When /^I click the (admin |)(activation|password reset) link in the email sent to my address "(.+)"$/
      */
-    public function clickActivationOrPasswordResetLinkInEmail($admin, $pageType, $email)
+    public function clickActivationOrPasswordResetLinkInEmail($admin, $pageType, $email, $token)
     {
         $user = $this->em->getRepository(User::class)->findOneBy(['email' => $email]);
 
         $this->em->refresh($user);
+
+        if ('expired' === $token) {
+            $user->setTokenDate(new \DateTime('-2hours'));
+            $this->em->persist($user);
+            $this->em->flush($user);
+        }
 
         $token = $user->getRegistrationToken();
 
@@ -222,12 +236,10 @@ trait AuthTrait
     }
 
     /**
-     * @Given /^successfully resets their password via the registration link sent to their email$/
+     * @Given /^the user successfully resets their password$/
      */
-    public function successfullyResetsTheirPasswordViaTheRegistrationLinkSentToTheirEmail()
+    public function theUserSuccessfullyResetsTheirPassword()
     {
-        $this->clickActivationOrPasswordResetLinkInEmail(false, 'password reset', $this->interactingWithUserDetails->getUserEmail());
-
         $this->fillInField('reset_password_password_first', 'aRandomPassword100');
         $this->fillInField('reset_password_password_second', 'aRandomPassword100');
 
@@ -254,5 +266,15 @@ trait AuthTrait
         $invalidPasswordResetLink = 'This link is not working or has already been used';
 
         $this->assertElementContainsText('body', $invalidPasswordResetLink);
+    }
+
+    /**
+     * @Then /^the password reset page should be expired$/
+     */
+    public function thePasswordResetPageShouldBeExpired()
+    {
+        $expiredPasswordResetPage = 'This page has expired';
+
+        $this->assertElementContainsText('body', $expiredPasswordResetPage);
     }
 }
