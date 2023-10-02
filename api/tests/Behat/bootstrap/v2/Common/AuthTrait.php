@@ -233,4 +233,26 @@ trait AuthTrait
 
         $this->pressButton('Save password');
     }
+
+    /**
+     * @When /^the user visits an invalid password reset url$/
+     */
+    public function theUserVisitsAnInvalidPasswordResetUrl()
+    {
+        $randomToken = 'randomToken00000000000000000000000000000';
+
+        $this->visitPath(sprintf('/user/password-reset/%s', $randomToken));
+
+        $this->assertElementContainsText('body', 'This link is not working or has already been used');
+    }
+
+    /**
+     * @Then /^a password reset error should be thrown to the user$/
+     */
+    public function aPasswordResetErrorShouldBeThrownToTheUser()
+    {
+        $invalidPasswordResetLink = 'This link is not working or has already been used';
+
+        $this->assertElementContainsText('body', $invalidPasswordResetLink);
+    }
 }
