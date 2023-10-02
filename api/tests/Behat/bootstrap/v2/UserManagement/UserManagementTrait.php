@@ -660,11 +660,10 @@ trait UserManagementTrait
     }
 
     /**
-     * @Given /^the user logs out and visits the forgotten your password page$/
+     * @When /^the user visits the forgotten your password page$/
      */
-    public function theUserLogsOutAndVisitsTheForgottenYourPasswordPage()
+    public function theUserVisitsTheForgottenYourPasswordPage()
     {
-        $this->clickLink('Sign out');
         $this->visitsTheForgottenYourPasswordPage();
     }
 }

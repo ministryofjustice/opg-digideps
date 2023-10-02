@@ -157,9 +157,9 @@ trait AuthTrait
     {
         $user = $this->em->getRepository(User::class)->findOneBy(['email' => $email]);
 
-        $token = $user->getRegistrationToken();
+        $this->em->refresh($user);
 
-//        dump($user);
+        $token = $user->getRegistrationToken();
 
         $page = 'activation' === $pageType ? 'activate' : 'password-reset';
 
@@ -218,18 +218,13 @@ trait AuthTrait
         $this->fillInField('password_forgotten[email]', $this->interactingWithUserDetails->getUserEmail());
         $this->pressButton('Reset your password');
 
-        $user = $this->em->getRepository(User::class)->findOneBy(['email' => $this->interactingWithUserDetails->getUserEmail()]);
-
-//        $token = $user->getRegistrationToken();
-//        dump($user);
-
         $this->assertElementContainsText('body', 'We have sent a new registration link to your email. Use the link to reset your password.');
     }
 
     /**
-     * @Given /^resets their password via the registration link sent to their email$/
+     * @Given /^successfully resets their password via the registration link sent to their email$/
      */
-    public function resetsTheirPasswordViaTheRegistrationLinkSentToTheirEmail()
+    public function successfullyResetsTheirPasswordViaTheRegistrationLinkSentToTheirEmail()
     {
         $this->clickActivationOrPasswordResetLinkInEmail(false, 'password reset', $this->interactingWithUserDetails->getUserEmail());
 
