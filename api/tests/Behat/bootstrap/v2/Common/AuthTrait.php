@@ -159,6 +159,8 @@ trait AuthTrait
 
         $token = $user->getRegistrationToken();
 
+//        dump($user);
+
         $page = 'activation' === $pageType ? 'activate' : 'password-reset';
 
         if ('' === $admin || false === $admin) {
@@ -206,5 +208,34 @@ trait AuthTrait
         $this->em->refresh($user);
 
         $this->assertStringDoesNotEqualString($this->fixtureHelper->getLegacyPasswordHash(), $user->getPassword(), 'Asserting current password hash does not match legacy password hash');
+    }
+
+    /**
+     * @Then /^the user sends a request to reset their password$/
+     */
+    public function theUserSendsARequestToResetTheirPassword()
+    {
+        $this->fillInField('password_forgotten[email]', $this->interactingWithUserDetails->getUserEmail());
+        $this->pressButton('Reset your password');
+
+        $user = $this->em->getRepository(User::class)->findOneBy(['email' => $this->interactingWithUserDetails->getUserEmail()]);
+
+//        $token = $user->getRegistrationToken();
+//        dump($user);
+
+        $this->assertElementContainsText('body', 'We have sent a new registration link to your email. Use the link to reset your password.');
+    }
+
+    /**
+     * @Given /^resets their password via the registration link sent to their email$/
+     */
+    public function resetsTheirPasswordViaTheRegistrationLinkSentToTheirEmail()
+    {
+        $this->clickActivationOrPasswordResetLinkInEmail(false, 'password reset', $this->interactingWithUserDetails->getUserEmail());
+
+        $this->fillInField('reset_password_password_first', 'aRandomPassword100');
+        $this->fillInField('reset_password_password_second', 'aRandomPassword100');
+
+        $this->pressButton('Save password');
     }
 }
