@@ -35,6 +35,16 @@ jobs:
         run: GOARCH=amd64 GOOS=linux go build -o bootstrap ./main.go
         working-directory: account/go_redeployer
 
+      - uses: actions/setup-python@61a6322f88396a6271a6ee3565807d608ecaddd1
+        if: inputs.terraform_path == 'shared'
+        with:
+          python-version: "3.11"
+
+      - name: python layers folder
+        if: inputs.terraform_path == 'account'
+        run: pip3 install -r requirements.txt --target ./layers/python/lib/python3.11/site-packages/
+        working-directory: lambdas/functions/slack_lambda
+
       - name: parse terraform version
         id: tf_version_setup
         run: |
@@ -62,12 +72,20 @@ jobs:
           role-duration-seconds: 1800
           role-session-name: OPGDigidepsTerraformGithubAction
 
-      - uses: webfactory/ssh-agent@fc49353b67b2b7c1e0e6a600572d01a69f2672dd # pin@v0.5.4
+      - uses: webfactory/ssh-agent@d4b9b8ff72958532804b70bbe600ad43b36d5f2e # pin@v0.5.4
         with:
           ssh-private-key: ${{ secrets.SSH_PRIVATE_KEY_ALLOW_LIST_REPOSITORY }}
 
-      - name: terraform init
+      - name: terraform init for account
+        if: inputs.terraform_path == 'account'
         run: terraform init -input=false
+        env:
+          TF_WORKSPACE: ${{ inputs.workspace }}
+        working-directory: ${{ inputs.terraform_path }}
+
+      - name: terraform init for environment
+        run: terraform init -input=false
+        if: inputs.terraform_path == 'environment'
         working-directory: ${{ inputs.terraform_path }}
 
       - name: terraform plan ${{ inputs.terraform_path }}

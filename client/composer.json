@@ -13,7 +13,7 @@
         "php": "^8.1",
         "alphagov/notifications-php-client": "^4.0.1",
         "aws/aws-sdk-php": "^3.100.9",
-        "doctrine/collections": "^1.6.8",
+        "doctrine/collections": "^2.0.0",
         "egulias/email-validator": "^4.0.0",
         "fakerphp/faker": "^1.16",
         "gbprod/uuid-normalizer": "^1.2",
