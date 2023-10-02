@@ -6,8 +6,18 @@ Feature: Deputy attempts to reset their password
         Given a Lay Deputy exists
         When the user visits the forgotten your password page
         And the user sends a request to reset their password
-        And successfully resets their password via the registration link sent to their email
+        And the user clicks on the registration link sent to their email which has an 'active' token
+        And the user successfully resets their password
         Then the user I'm interacting with logs in to the frontend of the app
+
+
+    @lay-health-welfare-not-started
+    Scenario: A deputy is unable to reset their password if the registration link has expired
+        Given a Lay Deputy exists
+        When the user visits the forgotten your password page
+        And the user sends a request to reset their password
+        And the user clicks on the registration link sent to their email which has an 'expired' token
+        Then the password reset page should be expired
 
 
     @lay-health-welfare-not-started
