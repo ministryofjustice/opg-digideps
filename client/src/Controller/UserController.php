@@ -20,6 +20,7 @@ use Sensio\Bundle\FrameworkExtraBundle\Configuration\Template;
 use Symfony\Component\Form\FormError;
 use Symfony\Component\HttpFoundation\Request;
 use Symfony\Component\HttpFoundation\Response;
+use Symfony\Component\HttpKernel\Exception\TooManyRequestsHttpException;
 use Symfony\Component\RateLimiter\RateLimiterFactory;
 use Symfony\Component\Routing\Annotation\Route;
 use Symfony\Component\Security\Core\Exception\UserNotFoundException;
@@ -63,6 +64,14 @@ class UserController extends AbstractController
         $limit = $limiter->consume(1);
 
         if (!$limit->isAccepted() && !$isActivatePage) {
+            $lockedOutPeriod = ceil(($limit->getRetryAfter()->getTimestamp() - time()) / 60);
+
+            $tooManyResetAttemptsErrorMessage = $this->translator->trans('form.password.tooManyAttempts', ['%minutes%' => $lockedOutPeriod], 'password-reset');
+
+            $request->getSession()->getFlashBag()->add('error', $tooManyResetAttemptsErrorMessage);
+
+//            throw new TooManyRequestsHttpException($lockedOutFor, $tooManyResetAttemptsErrorMessage, null, 429, []);
+
             return $this->renderError(sprintf('You have tried to reset your password too many times. Please try again in %s minutes.', ceil(($limit->getRetryAfter()->getTimestamp() - time()) / 60)), 429);
         } elseif (!$limit->isAccepted() && $isActivatePage) {
             return $this->renderError(sprintf('You have tried to activate your account too many times. Please try again in %s minutes.', ceil(($limit->getRetryAfter()->getTimestamp() - time()) / 60)), 429);
