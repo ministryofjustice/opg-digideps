@@ -38,11 +38,17 @@ jobs:
         run: |
           echo "short_sha=$(echo ${GITHUB_SHA:0:7})" >> $GITHUB_OUTPUT
 
+  build_web_resources:
+    name: build web resources
+    uses: ./.github/workflows/_web-resources.yml
+    secrets: inherit
+
   docker_build_scan_push:
     name: build, scan and push
     uses: ./.github/workflows/_build-and-push.yml
     needs:
       - workflow_variables
+      - build_web_resources
     with:
       tag: ${{ needs.workflow_variables.outputs.parsed_branch }}-${{ needs.workflow_variables.outputs.short_sha }}
       branch_name: ${{ needs.workflow_variables.outputs.parsed_branch }}
@@ -78,6 +84,7 @@ jobs:
     uses: ./.github/workflows/_unit-tests-client.yml
     needs:
       - workflow_variables
+      - build_web_resources
 
   codecov:
     name: upload to codecov
