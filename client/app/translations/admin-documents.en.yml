@@ -1,0 +1,33 @@
+page:
+  htmlTitle: Administration - Submissions
+  pageTitle: Submitted reports and supporting documents
+  tabs:
+    new.label: New
+    pending.label: Pending
+    archived.label: Synchronised
+  searchForm:
+    search:
+      label: Client, deputy or case number
+  postactions:
+    download: Download
+    archive: Archive
+    synchronise: Synchronise
+    archived:
+      noticeSingular: "1 document archived"
+      noticePlural: "count documents archived"
+  resultsTable:
+    header:
+      all: All
+      client: Client
+      caseNumber: Case number
+      deputy: Deputy
+      period: Reporting period
+      documents: Documents
+      submitted: Submitted
+      user: User
+    noDocumentsFound: No documents found
+    automaticallyArchived: Automatically archived by automation
+  table:
+    rows:
+      documents: "{0} No documents | {1} 1 document | ]1,Inf[ %count% documents"
+      documentsWithReport: "{0} No documents | {1} Report | ]1,Inf[ Report + docs"

@@ -1,0 +1,20 @@
+monolog:
+  channels: ["verbose"]
+  handlers:
+    main:
+      type: stream
+      path: php://stderr
+      level: "%log_level%"
+      formatter: logstash_formatter
+      channels: ["!verbose"]
+      bubble: false
+    csv:
+      type: stream
+      path: php://stderr
+      level: "%verbose_log_level%"
+      formatter: logstash_formatter
+      channels: ["verbose"]
+      bubble: false
+    audit:
+      type: service
+      id: App\Service\Audit\AwsAuditLogHandler

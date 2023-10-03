@@ -1,0 +1,71 @@
+htmlTitle: Accessibility Statement | GOV.UK
+pageTitle: Accessibility statement for the Complete the deputy report service
+
+intro:
+  para01:
+    beforeMarkupText: "This online service is run by the "
+    afterMarkupText: "We want as many people as possible to be able to use this service. For example, that means you should be able to:"
+  bullets:
+    changeColours: change colours, contrast levels and fonts using accessibility software you have installed on your computer
+    zoom: zoom in up to 300% without the text spilling off the screen
+    navigateKeyboard: navigate most of the website using just a keyboard
+    navigateSpeech: navigate most of the website using speech recognition software
+    screenReader: listen to most of the website using a screen reader (including the most recent versions of JAWS, NVDA and VoiceOver)
+  para02: We’ve also made the service text as simple as possible to understand.
+  para03: "has advice on making your device easier to use if you have a disability."
+
+cannotAccess:
+  heading: What to do if you cannot access parts of this service
+  para01:
+    part1: "If you cannot use this service, you can "
+    link1: "https://www.gov.uk/government/publications/deputy-annual-report-accounting-for-your-actions"
+    linkText1: "complete your deputy report using a paper form"
+    part2: "If you need the form in a more accessible format, email "
+    link2: "mailto:customerservices@publicguardian.gov.uk"
+    linkText2: "customerservices@publicguardian.gov.uk"
+    part3: " and tell us what format you need."
+
+reportProblems:
+  heading: Reporting accessibility problems with this service
+  para01: "We’re always looking to improve the accessibility of this service. If you find any problems not listed on this page or think we’re not meeting accessibility requirements, please contact us:"
+  bullets:
+    phone: "Telephone: 0300 456 0300"
+    textPhone: "Textphone: 0115 934 2778"
+    email:
+      link: "mailto:digideps@digital.justice.gov.uk"
+      linkText: digideps@digital.justice.gov.uk
+      beforeMarkupText: "Email: "
+  para02: We’re available Monday, Tuesday, Thursday, Friday 9:30am to 5pm. Wednesday 10am to 5pm
+
+enforcementProcedure:
+  heading: Enforcement procedure
+  para01: "The Equality and Human Rights Commission (EHRC) is responsible for enforcing the Public Sector Bodies (Websites and Mobile Applications) (No. 2) Accessibility Regulations 2018 (the ‘accessibility regulations’). If you’re not happy with how we respond to your complaint, "
+  link: "https://www.equalityadvisoryservice.com/"
+  linkText: "contact the Equality Advisory and Support Service (EASS)"
+
+technicalInfo:
+  heading: Technical information about this website’s accessibility
+  para01: The Office of the Public Guardian is committed to making its online services accessible, in accordance with the Public Sector Bodies (Websites and Mobile Applications) (No. 2) Accessibility Regulations 2018.
+  para02:
+    beforeMarkupText: "This website fully conforms to the "
+    link: "https://www.w3.org/TR/WCAG21/"
+    linkText: "Web Content Accessibility Guidelines version 2.1"
+    afterMarkupText: "AA standard."
+  para03: The content listed below is non-accessible for the following reasons.
+
+burden:
+  heading: Disproportionate burden
+  para01: If you upload scans or photographs of documents to your deputy report, there will not be a text alternative to this ‘non-text content’ (WCAG 2.1 AA guideline 1.1.1).
+  para02: We cannot change any photographs, PDFs of other files you upload to make them more accessible.
+
+outsideScope:
+  heading: Content that’s not within the scope of the accessibility regulations
+  para01: The service lets you download a PDF of your completed report.
+  para02: The headers and footers on this PDF are not all the same on each page. This fails WCAG 2.0 AA success criteria 3.2.3 on consistent navigation.
+  para03: The default language of the PDF is not defined in the document catalog. This fails WCAG 2.0 PDF16.
+
+howTested:
+  heading: How we tested this website
+  para01: This service was last tested on 24th March 2020. The test was carried out by the Digital Accessibility Centre.
+
+lastUpdatedDate: "Last updated: 22 September 2020"

@@ -1,7 +1,0 @@
-# # redirecting the admin home
-root:
-    path: /pa
-    defaults:
-        _controller: Symfony\Bundle\FrameworkBundle\Controller\RedirectController::redirectAction
-        route: org_dashboard
-        permanent: true

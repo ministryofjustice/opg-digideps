@@ -1,0 +1,2 @@
+FROM client-webserver:latest
+COPY client/docker/app/extra/robots.txt /public/robots.txt

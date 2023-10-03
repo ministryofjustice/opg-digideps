@@ -1,0 +1,5 @@
+page:
+  htmlTitle: Remove %subject% - Complete the deputy report | GOV.UK
+  question: Are you sure you want to remove this %subject%?
+  title: Remove %subject%
+  linkButtonLabel: Yes, remove %subject%

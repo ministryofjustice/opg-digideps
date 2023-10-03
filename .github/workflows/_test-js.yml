@@ -12,14 +12,14 @@ jobs:
     runs-on: ubuntu-latest
     defaults:
       run:
-        working-directory: ./client
+        working-directory: ./client/resources
     steps:
       - uses: actions/checkout@v3
       - name: Use Node.js 18
         uses: actions/setup-node@v3
         with:
           node-version: 18
-      - run: npm install   
-      - run: npm run lint 
+      - run: npm install
+      - run: npm run lint
       - run: npm run build
       - run: npm run test

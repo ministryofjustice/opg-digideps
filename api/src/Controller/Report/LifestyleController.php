@@ -6,9 +6,9 @@ use App\Controller\RestController;
 use App\Entity as EntityDir;
 use App\Service\Formatter\RestFormatter;
 use Doctrine\ORM\EntityManagerInterface;
-use Symfony\Component\Routing\Annotation\Route;
 use Sensio\Bundle\FrameworkExtraBundle\Configuration\Security;
 use Symfony\Component\HttpFoundation\Request;
+use Symfony\Component\Routing\Annotation\Route;
 
 /**
  * @Route("/report")
@@ -28,6 +28,7 @@ class LifestyleController extends RestController
 
     /**
      * @Route("/lifestyle", methods={"POST"})
+     *
      * @Security("is_granted('ROLE_DEPUTY')")
      */
     public function addAction(Request $request)
@@ -52,6 +53,7 @@ class LifestyleController extends RestController
 
     /**
      * @Route("/lifestyle/{id}", methods={"PUT"})
+     *
      * @Security("is_granted('ROLE_DEPUTY')")
      */
     public function updateAction(Request $request, $id)
@@ -72,6 +74,7 @@ class LifestyleController extends RestController
 
     /**
      * @Route("/{reportId}/lifestyle", methods={"GET"})
+     *
      * @Security("is_granted('ROLE_DEPUTY')")
      *
      * @param int $reportId
@@ -88,6 +91,7 @@ class LifestyleController extends RestController
 
     /**
      * @Route("/lifestyle/{id}", methods={"GET"})
+     *
      * @Security("is_granted('ROLE_DEPUTY')")
      *
      * @param int $id
@@ -98,7 +102,7 @@ class LifestyleController extends RestController
             ? (array) $request->query->get('groups') : ['lifestyle'];
         $this->formatter->setJmsSerialiserGroups($serialiseGroups);
 
-        $lifestyle = $this->findEntityBy(EntityDir\Report\Lifestyle::class, $id, 'Lifestyle with id:' . $id . ' not found');
+        $lifestyle = $this->findEntityBy(EntityDir\Report\Lifestyle::class, $id, 'Lifestyle with id:'.$id.' not found');
         $this->denyAccessIfReportDoesNotBelongToUser($lifestyle->getReport());
 
         return $lifestyle;
@@ -106,6 +110,7 @@ class LifestyleController extends RestController
 
     /**
      * @Route("/lifestyle/{id}", methods={"DELETE"})
+     *
      * @Security("is_granted('ROLE_DEPUTY')")
      */
     public function deleteLifestyle($id)
@@ -125,9 +130,6 @@ class LifestyleController extends RestController
     }
 
     /**
-     * @param array                      $data
-     * @param EntityDir\Report\Lifestyle $lifestyle
-     *
      * @return \App\Entity\Report\Report $report
      */
     private function updateInfo(array $data, EntityDir\Report\Lifestyle $lifestyle)
@@ -139,8 +141,8 @@ class LifestyleController extends RestController
         if (array_key_exists('does_client_undertake_social_activities', $data)) {
             $yesNo = $data['does_client_undertake_social_activities'];
             $lifestyle->setDoesClientUndertakeSocialActivities($yesNo);
-            $lifestyle->setActivityDetailsYes($yesNo === 'yes' ?  $data['activity_details_yes'] : null);
-            $lifestyle->setActivityDetailsNo($yesNo === 'no' ?  $data['activity_details_no'] : null);
+            $lifestyle->setActivityDetailsYes('yes' === $yesNo ? $data['activity_details_yes'] : null);
+            $lifestyle->setActivityDetailsNo('no' === $yesNo ? $data['activity_details_no'] : null);
         }
 
         return $lifestyle;

@@ -65,6 +65,7 @@ data "aws_iam_policy_document" "execution_role" {
     resources = [
       data.aws_ecr_repository.images["api"].arn,
       data.aws_ecr_repository.images["client"].arn,
+      data.aws_ecr_repository.images["client-webserver"].arn,
       data.aws_ecr_repository.images["sync"].arn,
       data.aws_ecr_repository.images["htmltopdf"].arn,
       data.aws_ecr_repository.images["dr-backup"].arn,

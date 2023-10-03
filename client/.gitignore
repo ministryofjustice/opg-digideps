@@ -1,9 +1,0 @@
-.sass-cache
-node_modules
-public/assets
-public/images
-
-app/SymfonyRequirements.php
-app/bootstrap.php.cache
-app/check.php
-config/parameters.yml

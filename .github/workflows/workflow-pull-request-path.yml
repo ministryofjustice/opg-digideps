@@ -50,6 +50,11 @@ jobs:
           repo-token: "${{ secrets.GITHUB_TOKEN }}"
           sync-labels: true
 
+  build_web_resources:
+    name: build web resources
+    uses: ./.github/workflows/_web-resources.yml
+    secrets: inherit
+
   terraform_lint:
     name: lint terraform code
     uses: ./.github/workflows/_lint-terraform.yml
@@ -70,6 +75,7 @@ jobs:
     uses: ./.github/workflows/_build-and-push.yml
     needs:
       - workflow_variables
+      - build_web_resources
     with:
       tag: ${{ needs.workflow_variables.outputs.parsed_branch }}-${{ needs.workflow_variables.outputs.short_sha }}
       branch_name: ${{ needs.workflow_variables.outputs.parsed_branch }}
@@ -105,6 +111,7 @@ jobs:
     uses: ./.github/workflows/_unit-tests-client.yml
     needs:
       - workflow_variables
+      - build_web_resources
 
   codecov:
     name: upload to codecov

@@ -6,9 +6,9 @@ use App\Controller\RestController;
 use App\Entity as EntityDir;
 use App\Service\Formatter\RestFormatter;
 use Doctrine\ORM\EntityManagerInterface;
-use Symfony\Component\Routing\Annotation\Route;
 use Sensio\Bundle\FrameworkExtraBundle\Configuration\Security;
 use Symfony\Component\HttpFoundation\Request;
+use Symfony\Component\Routing\Annotation\Route;
 
 class GiftController extends RestController
 {
@@ -25,6 +25,7 @@ class GiftController extends RestController
 
     /**
      * @Route("/report/{reportId}/gift/{giftId}", requirements={"reportId":"\d+", "giftId":"\d+"}, methods={"GET"})
+     *
      * @Security("is_granted('ROLE_DEPUTY')")
      */
     public function getOneById(Request $request, $reportId, $giftId)
@@ -44,6 +45,7 @@ class GiftController extends RestController
 
     /**
      * @Route("/report/{reportId}/gift", requirements={"reportId":"\d+"}, methods={"POST"})
+     *
      * @Security("is_granted('ROLE_DEPUTY')")
      */
     public function add(Request $request, $reportId)
@@ -72,6 +74,7 @@ class GiftController extends RestController
 
     /**
      * @Route("/report/{reportId}/gift/{giftId}", requirements={"reportId":"\d+", "giftId":"\d+"}, methods={"PUT"})
+     *
      * @Security("is_granted('ROLE_DEPUTY')")
      */
     public function edit(Request $request, $reportId, $giftId)
@@ -104,6 +107,7 @@ class GiftController extends RestController
 
     /**
      * @Route("/report/{reportId}/gift/{giftId}", requirements={"reportId":"\d+", "giftId":"\d+"}, methods={"DELETE"})
+     *
      * @Security("is_granted('ROLE_DEPUTY')")
      */
     public function delete($reportId, $giftId)
@@ -138,7 +142,7 @@ class GiftController extends RestController
             )->findOneBy(
                 [
                     'id' => $data['bank_account_id'],
-                    'report' => $report->getId()
+                    'report' => $report->getId(),
                 ]
             );
             if ($bankAccount instanceof EntityDir\Report\BankAccount) {

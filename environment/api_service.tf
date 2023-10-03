@@ -136,6 +136,9 @@ locals {
           name  = "FRONTEND_HOST",
           value = "https://${aws_route53_record.front.fqdn}"
         },
+        { name  = "JWT_HOST",
+          value = "https://${aws_route53_record.front.fqdn}"
+        },
         {
           name  = "AUDIT_LOG_GROUP_NAME",
           value = "audit-${local.environment}"

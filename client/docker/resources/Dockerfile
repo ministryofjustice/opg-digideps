@@ -1,0 +1,13 @@
+FROM node:18.16.1-alpine
+WORKDIR /app
+COPY client/resources/package.json .
+COPY client/resources/package-lock.json .
+COPY client/resources/webpack.config.js .
+COPY client/resources/assets assets
+# Install NPM dependencies
+RUN npm install
+# Check linting
+RUN npm run lint
+RUN npm audit --production
+#Build assets
+RUN NODE_ENV=production npm run build
