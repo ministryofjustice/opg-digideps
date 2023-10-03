@@ -1,5 +1,5 @@
 resource "aws_lb_target_group" "admin" {
-  name                 = "admin-${local.environment}"
+  name                 = "admin-tg-${local.environment}"
   port                 = 80
   protocol             = "HTTP"
   target_type          = "ip"

@@ -1,5 +1,5 @@
 resource "aws_lb_target_group" "front" {
-  name                 = "front-${local.environment}"
+  name                 = "front-tg-${local.environment}"
   port                 = 80
   protocol             = "HTTP"
   target_type          = "ip"
