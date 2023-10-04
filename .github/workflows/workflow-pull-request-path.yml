@@ -134,6 +134,7 @@ jobs:
     name: account plan terraform development
     uses: ./.github/workflows/_run-terraform.yml
     needs:
+      - workflow_variables
       - terraform_lint
     with:
       workspace: development

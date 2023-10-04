@@ -253,7 +253,7 @@ def alarm_message(message, region):
             ".*2a*7c*5c*5bemerg*5c*5d.*2a*2f*0a*7c*20"
         )
     else:
-        fields = ""
+        fields = "fields*20*40timestamp*2c*20*40message*2c*20*40logStream*2c*20*40log*0a*7c*20"
         filter = ""
 
     sort = "sort*20*40timestamp*20desc*0a*7c*20limit*20100~"
@@ -295,8 +295,12 @@ def github_actions_message(message):
     commit_message = message["CommitMessage"]
     scheduled_task = message["ScheduledTask"]
 
+    path_to_live = True if "Path to live" in workflow_name else False
+
     status_emoji = ":white_check_mark:" if success == "true" else ":x:"
     success_string = "Success" if success == "true" else "Failure"
+    workflow_type = "Digideps Live Release" if path_to_live else "Digideps Workflow"
+    extra_emoji = ":rocket:" if path_to_live and success == "true" else ""
 
     if scheduled_task != "":
         with open("github_actions_scheduled_task.txt", "r") as file:
@@ -314,6 +318,8 @@ def github_actions_message(message):
 
         formatted_text = template_text.format(
             workflow_name=workflow_name,
+            workflow_type=workflow_type,
+            extra_emoji=extra_emoji,
             github_actor=github_actor,
             status_emoji=status_emoji,
             success_string=success_string,
