@@ -11,12 +11,10 @@ on:
         description: "Job status"
         required: true
         type: string
-        default: "false"
       branch:
         description: "Branch of the workflow"
-        required: false
+        required: true
         type: string
-        default: none
       account:
         description: "Account id to use"
         required: true
