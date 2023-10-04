@@ -7,8 +7,8 @@ confd -onetime -backend env
 while true
 do
     echo "performing document sync at: $(date)"
-	su-exec www-data php app/console digideps:document-sync
+	php app/console digideps:document-sync
 	echo "performing checklist sync at: $(date)"
-	su-exec www-data php app/console digideps:checklist-sync
+	php app/console digideps:checklist-sync
 	sleep 60
 done
