@@ -1,4 +1,4 @@
-:pipeline: *Digideps Workflow {success_string}* {status_emoji}
+:pipeline: *{workflow_type} {success_string}* {status_emoji} {extra_emoji}
 
 *Branch:* {branch}
 *Workflow:* {workflow_name}
