@@ -22,28 +22,30 @@ Once both boxes are checked click `Apply & Restart` then run the `Make` command 
 ## Installation
 
 - Add `127.0.0.1 digideps.local admin.digideps.local api.digideps.local www.digideps.local` to `/etc/hosts`
-- Navigate to the root directory of this repository and run `make up-app`
-- Check `https://digideps.local/` (Deputy area) and `https://admin.digideps.local/` (Admin area). Your browser will warn you about a self-signed certificate.
-- Run `./generate_certs.sh` to populate your certs directory
-    - **NB:** Once this has ran it will create a directory called `./certs` inside there are multiple `.crt` files. On a macOS system you need to add these certificates to your keychain. Use the following link if you are unsure how to do that [Adding certificate to macOS keychain](https://support.apple.com/en-gb/guide/keychain-access/kyca2431/mac)
-    - Once these have been added to your keychain you need to 'Always Trust' these certificates so Chrome will also trust them.
-        - Open up `Keychain access` find the certificates you have added. These will either live inside `Default Keychains -> login` or `System Keychains -> System` on the sidebar
-        - Once you have located each certificate, double-click them to open the certificate.
-        - Click the `Trust` section and then change `When using this certificate:` from `Use System Defaults` to `Always Trust`. **Do this step for all 3 certificates**
+- Make sure you have docker desktop installed.
+- Follow the instructions for creating your own self-signed certificates here: [self-signed-certificate-instructions](docker/local-load-balancer/certificates/certificates.md)
+- Make sure you are in the root directory of this repository and run:
 
-### Reset the database
-
-Recreate DB schema and run migrations:
-
-```shell script
-$ make reset-database
+```
+make create-app
 ```
 
-Wipe DB contents and re-run fixtures:
+This will build the app, start it up and reset the DB and install fixtures so you may not want to use this for a simple rebuild.
 
-```shell script
-$ make reset-fixtures
+- If you followed all the instructions correctly you should be able to navigate to `https://digideps.local` for the frontend
+and `https://admin.digideps.local` for the admin app.
+
+### Managing your local environment
+
+Have a read through:
+
 ```
+make help
+```
+
+This is a full list of functions for administering our local environment. All information provided in the make file
+should be considered the most up to date source of truth. For bringing your app back up use: `up-app` and `up-app-rebuild`
+instead of `create-app` after your initial build of everything as those commands will be considerably faster.
 
 ## Traffic Flow Diagram
 
@@ -90,13 +92,13 @@ _See [deployment documentation](docs/DEPLOYMENT.md)_
 
 ## Built with
 
-- Terraform 1.0.0
-- PHP 8.0
-- Symfony 5.4
-- Doctrine 3.0
+- Terraform
+- PHP
+- Symfony
+- Doctrine
 - Twig
-- Behat 3
-- PHPUnit 9
+- Behat
+- PHPUnit
 - [GOV.UK Design System](https://design-system.service.gov.uk/)
 - [GOV.UK Notify](https://notifications.service.gov.uk/)
 
