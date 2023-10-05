@@ -256,7 +256,6 @@ class UserController extends AbstractController
 
         return [
             'form' => $form->createView(),
-            'user' => $user->getId(),
         ];
     }
 
