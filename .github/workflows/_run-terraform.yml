@@ -108,7 +108,7 @@ jobs:
         if: inputs.apply == 'true' && inputs.terraform_path == 'environment'
         run: terraform-workspace-manager -register-workspace=$TF_WORKSPACE -time-to-protect="${PROTECT_TIME}" -aws-account-id=248804316466 -aws-iam-role=digideps-ci
         env:
-          TF_WORKSPACE: ${{ needs.branch_name.outputs.formatted_branch }}
+          TF_WORKSPACE: ${{ inputs.workspace }}
           PROTECT_TIME: 3
           AWS_ACCESS_KEY_ID: ${{ secrets.AWS_ACCESS_KEY_ID_ACTIONS }}
           AWS_SECRET_ACCESS_KEY: ${{ secrets.AWS_SECRET_ACCESS_KEY_ACTIONS }}

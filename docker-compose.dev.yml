@@ -37,13 +37,13 @@ services:
     volumes:
       - ./client/:/app
 
-  frontend:
+  frontend-app:
     environment:
       APP_ENV: dev
     env_file:
       - .env
 
-  admin:
+  admin-app:
     environment:
       APP_ENV: dev
     env_file:
