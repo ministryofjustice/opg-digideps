@@ -20,7 +20,6 @@ use Sensio\Bundle\FrameworkExtraBundle\Configuration\Template;
 use Symfony\Component\Form\FormError;
 use Symfony\Component\HttpFoundation\Request;
 use Symfony\Component\HttpFoundation\Response;
-use Symfony\Component\HttpKernel\Exception\TooManyRequestsHttpException;
 use Symfony\Component\RateLimiter\RateLimiterFactory;
 use Symfony\Component\Routing\Annotation\Route;
 use Symfony\Component\Security\Core\Exception\UserNotFoundException;
@@ -66,15 +65,9 @@ class UserController extends AbstractController
         if (!$limit->isAccepted() && !$isActivatePage) {
             $lockedOutPeriod = ceil(($limit->getRetryAfter()->getTimestamp() - time()) / 60);
 
-            $tooManyResetAttemptsErrorMessage = $this->translator->trans('form.password.tooManyAttempts', ['%minutes%' => $lockedOutPeriod], 'password-reset');
-
-            $request->getSession()->getFlashBag()->add('error', $tooManyResetAttemptsErrorMessage);
-
-//            throw new TooManyRequestsHttpException($lockedOutFor, $tooManyResetAttemptsErrorMessage, null, 429, []);
-
-            return $this->renderError(sprintf('You have tried to reset your password too many times. Please try again in %s minutes.', ceil(($limit->getRetryAfter()->getTimestamp() - time()) / 60)), 429);
+            return $this->renderError(sprintf('You have tried to reset your password too many times. Please try again in %s minutes.', ceil(($limit->getRetryAfter()->getTimestamp() - time()) / 60)), 429, 'There is a problem');
         } elseif (!$limit->isAccepted() && $isActivatePage) {
-            return $this->renderError(sprintf('You have tried to activate your account too many times. Please try again in %s minutes.', ceil(($limit->getRetryAfter()->getTimestamp() - time()) / 60)), 429);
+            return $this->renderError(sprintf('You have tried to activate your account too many times. Please try again in %s minutes.', ceil(($limit->getRetryAfter()->getTimestamp() - time()) / 60)), 429, 'There is a problem');
         }
 
         // check $token is correct
@@ -82,7 +75,7 @@ class UserController extends AbstractController
             /* @var $user EntityDir\User */
             $user = $this->restClient->loadUserByToken($token);
         } catch (\Throwable $e) {
-            return $this->renderError('This link is not working or has already been used', $e->getCode());
+            return $this->renderError('This link is not working or has already been used.', $e->getCode(), 'There is a problem');
         }
 
         // token expired
@@ -133,7 +126,7 @@ class UserController extends AbstractController
             try {
                 $deputyProvider->login(['token' => $token]);
             } catch (UserNotFoundException $e) {
-                return $this->renderError('This activation link is not working or has already been used');
+                return $this->renderError('This activation link is not working or has already been used', 'There is a problem');
             }
 
             /** @var string */
