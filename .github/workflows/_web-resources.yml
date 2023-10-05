@@ -13,7 +13,7 @@ jobs:
     steps:
       - uses: actions/checkout@f095bcc56b7c2baf48f3ac70d6d6782f4f553222 # pin@v3
       - name: create nvmrc file
-        run: grep "FROM node:" Dockerfile | sed 's/^FROM node:\(.*\)-.*/\1/' > .nvmrc
+        run: grep "FROM node:" Dockerfile | awk -F' ' '{print $2}' | sed 's/^node:\(.*\)-.*/\1/' > .nvmrc
         working-directory: client/docker/resources
       - uses: actions/setup-node@869f4dd0c7f320ae834c2724d92a364de3893c24 # pin@v3.6.0
         with:

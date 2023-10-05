@@ -1,4 +1,4 @@
-FROM node:18.16.1-alpine
+FROM node:18.16.1-alpine as node-base
 WORKDIR /app
 COPY client/resources/package.json .
 COPY client/resources/package-lock.json .
@@ -11,3 +11,9 @@ RUN npm run lint
 RUN npm audit --production
 #Build assets
 RUN NODE_ENV=production npm run build
+
+FROM node-base as testing
+RUN npm install -g jest jest-environment-jsdom
+RUN npm run build
+
+FROM node-base as build
