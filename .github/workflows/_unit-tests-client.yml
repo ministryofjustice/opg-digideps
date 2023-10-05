@@ -16,6 +16,12 @@ jobs:
       - name: set up docker buildx
         uses: docker/setup-buildx-action@dedd61cf5d839122591f5027c89bf3ad27691d18
 
+      - name: download resources artifact
+        uses: actions/download-artifact@e9ef242655d12993efdcda9058dee2db83a2cb9b
+        with:
+          name: web-distribution
+          path: client/resources/public
+
       - name: cache docker layers
         id: cache-docker
         uses: actions/cache@67b839edb68371cc5014f6cea11c9aa77238de78 # pin@v3.0.8
@@ -30,11 +36,12 @@ jobs:
           IMAGE_NAME: client
         run: |
           REQUIRE_XDEBUG_CLIENT=0 REQUIRE_XDEBUG_API=0 docker buildx build \
+          -f client/docker/app/Dockerfile \
           --cache-from=type=local,src=/tmp/.buildx-cache \
           --cache-to=type=local,dest=/tmp/.buildx-cache-new \
           --tag frontend-unit-tests:latest \
+          --target testing \
           --output type=docker .
-        working-directory: client
 
       - name: run client unit tests
         id: unit-tests

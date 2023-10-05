@@ -1,7 +1,0 @@
-version: "3.2"
-services:
-  client:
-    image: ${AWS_REGISTRY}/digideps/client:${DEV_VERSION}
-    build:
-      context: ./client
-      dockerfile: Dockerfile-dev

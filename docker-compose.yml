@@ -2,14 +2,156 @@ version: "3.2"
 
 ## Define all volumes in docker-compose.override.yml so this file can be used in CI
 services:
-  router:
-    image: jwilder/nginx-proxy
+  resources:
+    image: opg-digideps-resources
+    build:
+      context: .
+      dockerfile: ./client/docker/resources/Dockerfile
+    environment:
+      NODE_ENV: production
+    entrypoint: >
+      sh -c "npm run build"
+
+  load-balancer:
+    container_name: opg-digideps-loadbalancer
+    build:
+      context: docker/local-load-balancer
+    depends_on:
+      - frontend-webserver
+      - admin-webserver
     ports:
       - 443:443
+
+  frontend-webserver:
+    container_name: opg-digideps-frontend-webserver
+    build:
+      context: .
+      dockerfile: ./client/docker/web/Dockerfile
+    ports:
+      - 8070:80
     depends_on:
-      - admin
-      - localstack
+      - frontend-app
+      - admin-webserver
+    environment:
+      APP_HOST: frontend-app
+      APP_PORT: 9000
     restart: always
+
+  frontend-app:
+    container_name: opg-digideps-frontend-app
+    build:
+      context: .
+      dockerfile: ./client/docker/app/Dockerfile
+      args:
+        REQUIRE_XDEBUG: ${REQUIRE_XDEBUG_CLIENT} # set REQUIRE_XDEBUG_CLIENT=1 in .env to install Xdebug
+        XDEBUG_IDEKEY_CLIENT: ${XDEBUG_IDEKEY_CLIENT}
+    depends_on:
+      - resources
+      - api
+      - redis-frontend
+      - htmltopdf
+      - localstack
+      - mock-notify-api
+      - pact-mock
+    environment:
+      APP_ENV: ${APP_ENV:-dev}
+      APP_DEBUG: ${APP_DEBUG:-0}
+    env_file:
+      - ./client/app/frontend.env
+    restart: always
+
+  admin-webserver:
+    container_name: opg-digideps-admin-webserver
+    build:
+      context: .
+      dockerfile: ./client/docker/web/Dockerfile
+    ports:
+      - 8071:80
+    depends_on:
+      - admin-app
+    environment:
+      APP_HOST: admin-app
+      APP_PORT: 9000
+    restart: always
+
+  admin-app:
+    container_name: opg-digideps-admin-app
+    build:
+      context: .
+      dockerfile: ./client/docker/app/Dockerfile
+      args:
+        REQUIRE_XDEBUG: ${REQUIRE_XDEBUG_CLIENT} # set REQUIRE_XDEBUG_CLIENT=1 in .env to install Xdebug
+        XDEBUG_IDEKEY_CLIENT: ${XDEBUG_IDEKEY_CLIENT}
+    depends_on:
+      - resources
+      - api
+      - redis-frontend
+      - htmltopdf
+      - localstack
+      - mock-notify-api
+    environment:
+      APP_ENV: ${APP_ENV:-dev}
+      APP_DEBUG: ${APP_DEBUG:-0}
+    env_file:
+      - ./client/app/frontend.env
+      - ./client/app/admin.env
+    restart: always
+
+  api:
+    container_name: opg-digideps-api
+    build:
+      context: ./api
+      args:
+        REQUIRE_XDEBUG: ${REQUIRE_XDEBUG_API} # set REQUIRE_XDEBUG_API=1 in .env to install Xdebug
+        XDEBUG_IDEKEY_API: ${XDEBUG_IDEKEY_API}
+    ports:
+      - 8090:443
+    depends_on:
+      - postgres
+      - redis-api
+      - localstack
+    environment:
+      APP_ENV: ${APP_ENV:-dev}
+      APP_DEBUG: ${APP_DEBUG:-0}
+    env_file:
+      - ./api/api.env
+      - ./api/tests/Behat/test.env
+    restart: always
+
+  htmltopdf:
+    build: ./htmltopdf
+    restart: always
+
+  postgres:
+    container_name: opg-digideps-postgres
+    image: postgres:13.11
+    ports:
+      - 5432:5432
+    env_file:
+      - ./api/postgres.env
+    restart: always
+
+  redis-frontend:
+    image: redis:6.2.12
+    restart: always
+
+  redis-api:
+    image: redis:6.2.12
+    restart: always
+
+  file-scanner-rest:
+    build:
+      context: ./file-scanner
+    ports:
+      - 8085:8080
+
+  sync:
+    build: ./sync
+    depends_on:
+      - localstack
+      - postgres
+    env_file:
+      - sync/sync.env
 
   aws:
     image: infrastructureascode/aws-cli
@@ -44,125 +186,6 @@ services:
   #            context: ./pa11y
   #        depends_on:
   #            - frontend
-
-  frontend:
-    container_name: opg-digideps-frontend
-    build:
-      context: ./client
-      args:
-        REQUIRE_XDEBUG: ${REQUIRE_XDEBUG_CLIENT} # set REQUIRE_XDEBUG_CLIENT=1 in .env to install Xdebug
-        XDEBUG_IDEKEY_CLIENT: ${XDEBUG_IDEKEY_CLIENT}
-    ports:
-      - 8070:443
-    depends_on:
-      - api
-      - redis-frontend
-      - htmltopdf
-      - router
-      - localstack
-      - mock-notify-api
-    environment:
-      VIRTUAL_HOST: www.digideps.local,digideps.local
-      VIRTUAL_PROTO: https
-      VIRTUAL_PORT: 443
-      APP_ENV: ${APP_ENV:-dev}
-      APP_DEBUG: ${APP_DEBUG:-0}
-    env_file:
-      - ./client/frontend.env
-    restart: always
-    networks:
-      default:
-        aliases:
-          - www.digideps.local
-          - digideps.local
-
-  admin:
-    container_name: opg-digideps-admin
-    build:
-      context: ./client
-      args:
-        REQUIRE_XDEBUG: ${REQUIRE_XDEBUG_CLIENT} # set REQUIRE_XDEBUG_CLIENT=1 in .env to install Xdebug
-        XDEBUG_IDEKEY_CLIENT: ${XDEBUG_IDEKEY_CLIENT}
-    ports:
-      - 8082:443
-    depends_on:
-      - api
-      - redis-frontend
-      - mock-sirius-integration
-      - mock-notify-api
-    environment:
-      VIRTUAL_HOST: admin.digideps.local
-      VIRTUAL_PROTO: https
-      VIRTUAL_PORT: 443
-      APP_ENV: ${APP_ENV:-dev}
-      APP_DEBUG: ${APP_DEBUG:-0}
-    env_file:
-      - ./client/frontend.env
-      - ./client/admin.env
-    restart: always
-    networks:
-      default:
-        aliases:
-          - admin.digideps.local
-
-  api:
-    container_name: opg-digideps-api
-    build:
-      context: ./api
-      args:
-        REQUIRE_XDEBUG: ${REQUIRE_XDEBUG_API} # set REQUIRE_XDEBUG_API=1 in .env to install Xdebug
-        XDEBUG_IDEKEY_API: ${XDEBUG_IDEKEY_API}
-    ports:
-      - 8090:443
-    depends_on:
-      - postgres
-      - redis-api
-      - localstack
-    environment:
-      APP_ENV: ${APP_ENV:-dev}
-      APP_DEBUG: ${APP_DEBUG:-0}
-    env_file:
-      - ./api/api.env
-      - ./api/tests/Behat/test.env
-    restart: always
-
-  htmltopdf:
-    build: ./htmltopdf
-    restart: always
-
-  postgres:
-    container_name: opg-digideps-postgres
-    image: postgres:13.11
-    ports:
-      - 5432:5432
-    env_file:
-      - ./api/postgres.env
-    environment:
-      # use a different data directory to avoid using the old 9.3 version
-      PGDATA: /var/lib/postgresql96/data
-    restart: always
-
-  redis-frontend:
-    image: redis:6.2.12
-    restart: always
-
-  redis-api:
-    image: redis:6.2.12
-    restart: always
-
-  file-scanner-rest:
-    build:
-      context: ./file-scanner
-    ports:
-      - 8085:8080
-
-  sync:
-    build: ./sync
-    depends_on:
-      - localstack
-      - postgres
-    env_file:
-      - sync/sync.env
 
   pact-mock:
     image: pactfoundation/pact-cli:0.51.0.4

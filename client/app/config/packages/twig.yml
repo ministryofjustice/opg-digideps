@@ -1,0 +1,16 @@
+twig:
+  default_path: "%kernel.project_dir%/templates"
+  globals:
+    env: "%env(ROLE)%"
+    hosted_env: "%env(ENVIRONMENT)%"
+    opg_docker_tag: "%opg_docker_tag%"
+    session_expires_seconds: "%session_expire_seconds%"
+    session_popup_show_after: "%session_popup_show_after%"
+    #       Set Google Analytics IDs as global twig var - see parameters.yml
+    ga: "%ga%"
+  debug: "%kernel.debug%"
+  strict_variables: "%kernel.debug%"
+  form_themes:
+    - "@App/Form/fields.html.twig"
+  paths:
+    "%kernel.project_dir%/templates": App

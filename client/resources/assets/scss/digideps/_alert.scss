@@ -1,0 +1,88 @@
+// =======================================================
+// ALERT
+.opg-alert {
+  @include govuk-responsive-padding(4);
+  @include govuk-responsive-margin(8, "bottom");
+  max-width: 30em;
+  border-left: 5px solid transparent;
+
+  &__icon {
+    margin-right: 10px;
+    float: left;
+  }
+
+  &__message {
+    overflow: hidden;
+  }
+
+  &--notice {
+    background-color: fade-out($govuk-border-colour, 0.9);
+  }
+
+  &--success {
+    border-color: govuk-colour("turquoise");
+    background-color: fade-out(govuk-colour("turquoise"), 0.9);
+  }
+
+  &--error {
+    border-color: $govuk-error-colour;
+    background-color: fade-out($govuk-error-colour, 0.9);
+  }
+
+  &--info {
+    border-color: govuk-colour("light-blue");
+    background-color: fade-out(govuk-colour("light-blue"), 0.9);
+  }
+
+  &--important {
+    border-color: govuk-colour("black");
+    background-color: fade-out(govuk-colour("black"), 0.9);
+  }
+}
+
+%alert-base {
+  max-width: 30em;
+
+  .icon {
+    margin-right: 10px;
+    float: left;
+  }
+
+  &:focus {
+    outline: 3px solid $focus-colour;
+  }
+}
+
+.alert,
+.alert-notice {
+  @extend %alert-base;
+  background-color: rgba($border-colour, 0.1);
+}
+
+.alert-success {
+  @extend %alert-base;
+  border-color: $turquoise;
+  background-color: rgba($turquoise, 0.1);
+}
+
+.alert-error {
+  @extend %alert-base;
+  border-color: $error-colour;
+  background-color: rgba($error-colour, 0.1);
+}
+
+.alert-info {
+  @extend %alert-base;
+  border-color: $light-blue;
+  background-color: rgba($light-blue, 0.1);
+}
+
+.alert-important {
+  @extend %alert-base;
+  border-color: $black;
+  background-color: govuk-colour("light-grey");
+}
+
+.alert-message {
+  overflow: hidden;
+}

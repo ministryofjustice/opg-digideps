@@ -1,0 +1,1012 @@
+.flush {
+  margin: 0 !important;
+}
+.flush--top {
+  margin-top: 0 !important;
+}
+.flush--right {
+  margin-right: 0 !important;
+}
+.flush--bottom {
+  margin-bottom: 0 !important;
+}
+.flush--left {
+  margin-left: 0 !important;
+}
+.flush--ends {
+  margin-top: 0 !important;
+  margin-bottom: 0 !important;
+}
+.flush--sides {
+  margin-right: 0 !important;
+  margin-left: 0 !important;
+}
+.hard {
+  padding: 0 !important;
+}
+.hard--top {
+  padding-top: 0 !important;
+}
+.hard--right {
+  padding-right: 0 !important;
+}
+.hard--bottom {
+  padding-bottom: 0 !important;
+}
+.hard--left {
+  padding-left: 0 !important;
+}
+.hard--ends {
+  padding-top: 0 !important;
+  padding-bottom: 0 !important;
+}
+.hard--sides {
+  padding-right: 0 !important;
+  padding-left: 0 !important;
+}
+.push {
+  margin: 30px !important;
+}
+.push--top {
+  margin-top: 30px !important;
+}
+.push--right {
+  margin-right: 30px !important;
+}
+.push--bottom {
+  margin-bottom: 30px !important;
+}
+.push--left {
+  margin-left: 30px !important;
+}
+.push--ends {
+  margin-top: 30px !important;
+  margin-bottom: 30px !important;
+}
+.push--sides {
+  margin-right: 30px !important;
+  margin-left: 30px !important;
+}
+.push-half {
+  margin: 15px !important;
+}
+.push-half--top {
+  margin-top: 15px !important;
+}
+.push-half--right {
+  margin-right: 15px !important;
+}
+.push-half--bottom {
+  margin-bottom: 15px !important;
+}
+.push-half--left {
+  margin-left: 15px !important;
+}
+.push-half--ends {
+  margin-top: 15px !important;
+  margin-bottom: 15px !important;
+}
+.push-half--sides {
+  margin-right: 15px !important;
+  margin-left: 15px !important;
+}
+.push-double {
+  margin: 60px !important;
+}
+.push-double--top {
+  margin-top: 60px !important;
+}
+.push-double--right {
+  margin-right: 60px !important;
+}
+.push-double--bottom {
+  margin-bottom: 60px !important;
+}
+.push-double--left {
+  margin-left: 60px !important;
+}
+.push-double--ends {
+  margin-top: 60px !important;
+  margin-bottom: 60px !important;
+}
+.push-double--sides {
+  margin-right: 60px !important;
+  margin-left: 60px !important;
+}
+.soft {
+  padding: 30px !important;
+}
+.soft--top {
+  padding-top: 30px !important;
+}
+.soft--right {
+  padding-right: 30px !important;
+}
+.soft--bottom {
+  padding-bottom: 30px !important;
+}
+.soft--left {
+  padding-left: 30px !important;
+}
+.soft--ends {
+  padding-top: 30px !important;
+  padding-bottom: 30px !important;
+}
+.soft--sides {
+  padding-right: 30px !important;
+  padding-left: 30px !important;
+}
+.soft-half {
+  padding: 15px !important;
+}
+.soft-half--top {
+  padding-top: 15px !important;
+}
+.soft-half--right {
+  padding-right: 15px !important;
+}
+.soft-half--bottom {
+  padding-bottom: 15px !important;
+}
+.soft-half--left {
+  padding-left: 15px !important;
+}
+.soft-half--ends {
+  padding-top: 15px !important;
+  padding-bottom: 15px !important;
+}
+.soft-half--sides {
+  padding-right: 15px !important;
+  padding-left: 15px !important;
+}
+.move-quarter--up {
+  position: relative;
+  top: -7.5px;
+}
+.text--left {
+  text-align: left !important;
+}
+.text--center {
+  text-align: center !important;
+}
+.text--right {
+  text-align: right !important;
+}
+.text-red {
+  color: #d4351c;
+}
+.width-full {
+  width: 100%;
+}
+.width-three-quarters {
+  width: 75%;
+}
+.width-two-thirds {
+  width: 66.6666666667%;
+}
+.width-half {
+  width: 50%;
+}
+.width-third {
+  width: 33.3333333333%;
+}
+.width-quarter {
+  width: 25%;
+}
+.width-fifth {
+  width: 20%;
+}
+.width-sixth {
+  width: 16.6666666667%;
+}
+.width-seventh {
+  width: 14.2857142857%;
+}
+.width-eighth {
+  width: 12.5%;
+}
+.width-tenth {
+  width: 10%;
+}
+.width-twentieth {
+  width: 5%;
+}
+.no-wrap {
+  white-space: nowrap;
+}
+.proper-case {
+  text-transform: capitalize;
+}
+.right {
+  float: right !important;
+}
+.left {
+  float: left !important;
+}
+.cl {
+  clear: left;
+}
+.cr {
+  clear: right;
+}
+.border-bottom {
+  border-bottom: 1px solid #bfc1c3;
+}
+.border-top {
+  border-top: 1px solid #bfc1c3;
+}
+.no-border {
+  border: 0;
+}
+.no-border td {
+  border: 0;
+}
+.no-border-bottom {
+  border-bottom: 0;
+}
+.no-border-bottom td {
+  border-bottom: 0;
+}
+.dont-break-out {
+  word-wrap: break-word;
+  -ms-word-break: break-all;
+  word-break: break-word;
+  overflow-wrap: break-word;
+}
+.align--top {
+  vertical-align: top;
+}
+.align--bottom {
+  vertical-align: bottom;
+}
+.admin-users {
+  background-color: #e6db74;
+}
+.formatted-report {
+  font-family: "GDS Transport", arial, sans-serif;
+  -webkit-font-smoothing: antialiased;
+  -moz-osx-font-smoothing: grayscale;
+  font-weight: 400;
+  font-size: 12px;
+  font-size: 0.75rem;
+  line-height: 1.25;
+  color: #0b0c0c;
+  overflow: hidden;
+  box-sizing: border-box;
+}
+.formatted-report:after {
+  content: "";
+  display: block;
+  clear: both;
+}
+@media print {
+  .formatted-report {
+    font-family: sans-serif;
+  }
+}
+@media (min-width: 40.0625em) {
+  .formatted-report {
+    font-size: 14px;
+    font-size: 0.875rem;
+    line-height: 1.4285714286;
+  }
+}
+@media print {
+  .formatted-report {
+    font-size: 12pt;
+    line-height: 1.2;
+  }
+}
+.formatted-report tr {
+  page-break-inside: avoid;
+}
+.formatted-report .section-heading {
+  page-break-after: avoid;
+}
+.formatted-report .section,
+.formatted-report .box,
+.formatted-report .labelvalue {
+  page-break-inside: avoid;
+}
+.formatted-report .dont-break {
+  page-break-inside: avoid;
+}
+.formatted-report .break-before {
+  page-break-before: always;
+}
+.formatted-report h1 {
+  font-family: "GDS Transport", arial, sans-serif;
+  -webkit-font-smoothing: antialiased;
+  -moz-osx-font-smoothing: grayscale;
+  font-weight: 700;
+  font-size: 32px;
+  font-size: 2rem;
+  line-height: 1.09375;
+  width: 600px;
+}
+@media print {
+  .formatted-report h1 {
+    font-family: sans-serif;
+  }
+}
+@media (min-width: 40.0625em) {
+  .formatted-report h1 {
+    font-size: 48px;
+    font-size: 3rem;
+    line-height: 1.0416666667;
+  }
+}
+@media print {
+  .formatted-report h1 {
+    font-size: 32pt;
+    line-height: 1.15;
+  }
+}
+.formatted-report h2,
+.formatted-report h3 {
+  margin: 0 0 20px 0;
+}
+.formatted-report h2 {
+  font-family: "GDS Transport", arial, sans-serif;
+  -webkit-font-smoothing: antialiased;
+  -moz-osx-font-smoothing: grayscale;
+  font-weight: 400;
+  font-size: 18px;
+  font-size: 1.125rem;
+  line-height: 1.1111111111;
+  clear: both;
+}
+@media print {
+  .formatted-report h2 {
+    font-family: sans-serif;
+  }
+}
+@media (min-width: 40.0625em) {
+  .formatted-report h2 {
+    font-size: 24px;
+    font-size: 1.5rem;
+    line-height: 1.25;
+  }
+}
+@media print {
+  .formatted-report h2 {
+    font-size: 18pt;
+    line-height: 1.15;
+  }
+}
+.formatted-report h2.section-heading {
+  padding-bottom: 10px;
+  border-bottom: 1px solid #bfc1c3;
+}
+.formatted-report h3 {
+  font-family: "GDS Transport", arial, sans-serif;
+  -webkit-font-smoothing: antialiased;
+  -moz-osx-font-smoothing: grayscale;
+  font-weight: 700;
+  font-size: 16px;
+  font-size: 1rem;
+  line-height: 1.25;
+}
+@media print {
+  .formatted-report h3 {
+    font-family: sans-serif;
+  }
+}
+@media (min-width: 40.0625em) {
+  .formatted-report h3 {
+    font-size: 19px;
+    font-size: 1.1875rem;
+    line-height: 1.3157894737;
+  }
+}
+@media print {
+  .formatted-report h3 {
+    font-size: 14pt;
+    line-height: 1.15;
+  }
+}
+.formatted-report .flush--bottom {
+  margin-bottom: 0 !important;
+}
+.formatted-report .flush--ends {
+  margin-top: 0 !important;
+  margin-bottom: 0 !important;
+}
+.formatted-report #report-header {
+  width: 200px;
+  margin: 10px 0 40px 0;
+  padding: 45px 0 0 10px;
+  border-left: 3px solid #0b0c0c;
+  background: url(data:image/png;base64,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)
+    10px 0 no-repeat;
+  background-size: 50px;
+}
+.formatted-report .section {
+  margin-bottom: 40px;
+}
+.formatted-report .section:after {
+  content: "";
+  display: block;
+  clear: both;
+}
+.formatted-report .subsection {
+  margin-bottom: 20px;
+}
+.formatted-report .subsection:after {
+  content: "";
+  display: block;
+  clear: both;
+}
+.formatted-report .noborder {
+  border-bottom: 0;
+}
+.formatted-report .balance .message {
+  font-family: "GDS Transport", arial, sans-serif;
+  -webkit-font-smoothing: antialiased;
+  -moz-osx-font-smoothing: grayscale;
+  font-weight: 400;
+  font-size: 16px;
+  font-size: 1rem;
+  line-height: 1.25;
+  height: 35px;
+  text-align: center;
+}
+@media print {
+  .formatted-report .balance .message {
+    font-family: sans-serif;
+  }
+}
+@media (min-width: 40.0625em) {
+  .formatted-report .balance .message {
+    font-size: 19px;
+    font-size: 1.1875rem;
+    line-height: 1.3157894737;
+  }
+}
+@media print {
+  .formatted-report .balance .message {
+    font-size: 14pt;
+    line-height: 1.15;
+  }
+}
+.formatted-report .balance .total {
+  font-family: "GDS Transport", arial, sans-serif;
+  -webkit-font-smoothing: antialiased;
+  -moz-osx-font-smoothing: grayscale;
+  font-weight: 700;
+  font-size: 16px;
+  font-size: 1rem;
+  line-height: 1.25;
+  text-align: center;
+}
+@media print {
+  .formatted-report .balance .total {
+    font-family: sans-serif;
+  }
+}
+@media (min-width: 40.0625em) {
+  .formatted-report .balance .total {
+    font-size: 19px;
+    font-size: 1.1875rem;
+    line-height: 1.3157894737;
+  }
+}
+@media print {
+  .formatted-report .balance .total {
+    font-size: 14pt;
+    line-height: 1.15;
+  }
+}
+.formatted-report .box {
+  margin: 20px 0;
+  padding: 15px;
+  clear: both;
+  border: 0;
+  background: #c2c2c2;
+  box-sizing: border-box;
+}
+.formatted-report .box:after {
+  content: "";
+  display: block;
+  clear: both;
+}
+.formatted-report .box > .label {
+  margin-top: 0;
+}
+.formatted-report .box-heading {
+  margin-bottom: 1px;
+}
+.formatted-report .box-white {
+  margin: 0;
+  border: 1px solid #c2c2c2;
+  border-top: 0;
+  background: #fff;
+}
+.formatted-report .box-contain:after {
+  content: "";
+  display: block;
+  clear: both;
+}
+.formatted-report .labelvalue {
+  margin: 0;
+  padding: 0;
+}
+.formatted-report .labelvalue.inline:after {
+  content: "";
+  display: block;
+  clear: both;
+}
+.formatted-report .labelvalue.inline .label,
+.formatted-report .labelvalue.inline .value {
+  display: inline-block;
+}
+.formatted-report .labelvalue.inline .value {
+  margin-left: 20px;
+}
+.formatted-report .labelvalue.inline .value.checkbox {
+  margin-left: 0;
+}
+.formatted-report .labelvalue.money .value {
+  border: 1px solid #0b0c0c;
+  color: #454572;
+}
+.formatted-report .labelvalue.money .value.total {
+  border-width: 2px;
+}
+.formatted-report .label {
+  font-family: "GDS Transport", arial, sans-serif;
+  -webkit-font-smoothing: antialiased;
+  -moz-osx-font-smoothing: grayscale;
+  font-weight: 400;
+  font-size: 14px;
+  font-size: 0.875rem;
+  line-height: 1.1428571429;
+}
+@media print {
+  .formatted-report .label {
+    font-family: sans-serif;
+  }
+}
+@media (min-width: 40.0625em) {
+  .formatted-report .label {
+    font-size: 16px;
+    font-size: 1rem;
+    line-height: 1.25;
+  }
+}
+@media print {
+  .formatted-report .label {
+    font-size: 14pt;
+    line-height: 1.2;
+  }
+}
+.formatted-report .label.bigger {
+  font-family: "GDS Transport", arial, sans-serif;
+  -webkit-font-smoothing: antialiased;
+  -moz-osx-font-smoothing: grayscale;
+  font-weight: 400;
+  font-size: 16px;
+  font-size: 1rem;
+  line-height: 1.25;
+}
+@media print {
+  .formatted-report .label.bigger {
+    font-family: sans-serif;
+  }
+}
+@media (min-width: 40.0625em) {
+  .formatted-report .label.bigger {
+    font-size: 19px;
+    font-size: 1.1875rem;
+    line-height: 1.3157894737;
+  }
+}
+@media print {
+  .formatted-report .label.bigger {
+    font-size: 14pt;
+    line-height: 1.15;
+  }
+}
+.formatted-report .label.bold {
+  font-weight: 700;
+}
+.formatted-report .value {
+  font-family: "GDS Transport", arial, sans-serif;
+  -webkit-font-smoothing: antialiased;
+  -moz-osx-font-smoothing: grayscale;
+  font-weight: 400;
+  font-size: 14px;
+  font-size: 0.875rem;
+  line-height: 1.1428571429;
+  min-height: 34px;
+  margin: 2px 0 15px 0;
+  padding: 7px 8px 5px 8px;
+  border: 1px solid #0b0c0c;
+  background: #fff;
+  color: #454572;
+  box-sizing: border-box;
+}
+@media print {
+  .formatted-report .value {
+    font-family: sans-serif;
+  }
+}
+@media (min-width: 40.0625em) {
+  .formatted-report .value {
+    font-size: 16px;
+    font-size: 1rem;
+    line-height: 1.25;
+  }
+}
+@media print {
+  .formatted-report .value {
+    font-size: 14pt;
+    line-height: 1.2;
+  }
+}
+.formatted-report .value.checkbox {
+  min-height: 0;
+  margin: 0;
+  padding: 4px 8px 2px 10px;
+  box-sizing: content-box;
+}
+.formatted-report .value:last-child {
+  margin-bottom: 0;
+}
+.formatted-report .value.text--right {
+  vertical-align: top;
+}
+.formatted-report .value.total {
+  font-family: "GDS Transport", arial, sans-serif;
+  -webkit-font-smoothing: antialiased;
+  -moz-osx-font-smoothing: grayscale;
+  font-weight: 700;
+  font-size: 14px;
+  font-size: 0.875rem;
+  line-height: 1.1428571429;
+  border-width: 2px;
+  text-align: right;
+}
+@media print {
+  .formatted-report .value.total {
+    font-family: sans-serif;
+  }
+}
+@media (min-width: 40.0625em) {
+  .formatted-report .value.total {
+    font-size: 16px;
+    font-size: 1rem;
+    line-height: 1.25;
+  }
+}
+@media print {
+  .formatted-report .value.total {
+    font-size: 14pt;
+    line-height: 1.2;
+  }
+}
+.formatted-report .question {
+  margin: 20px 0 10px 0;
+}
+.formatted-report .checkbox {
+  font-family: "GDS Transport", arial, sans-serif;
+  -webkit-font-smoothing: antialiased;
+  -moz-osx-font-smoothing: grayscale;
+  font-weight: 700;
+  font-size: 12px;
+  font-size: 0.75rem;
+  line-height: 1.25;
+  display: -moz-inline-stack;
+  display: inline-block;
+  width: 0.75em;
+  margin: 10px 5px 10px 0;
+  padding: 4px 10px 2px 10px;
+  border: solid 1px #0b0c0c;
+  background: #fff;
+}
+@media print {
+  .formatted-report .checkbox {
+    font-family: sans-serif;
+  }
+}
+@media (min-width: 40.0625em) {
+  .formatted-report .checkbox {
+    font-size: 14px;
+    font-size: 0.875rem;
+    line-height: 1.4285714286;
+  }
+}
+@media print {
+  .formatted-report .checkbox {
+    font-size: 12pt;
+    line-height: 1.2;
+  }
+}
+.formatted-report .full-width {
+  width: 100%;
+  float: left;
+}
+.formatted-report .half-width {
+  width: 49%;
+  float: left;
+  box-sizing: border-box;
+}
+.formatted-report .half-width.first {
+  margin-right: 2%;
+}
+.formatted-report .half-width.tight {
+  width: 50%;
+  margin-right: 0;
+  border-right: 1px solid #fff;
+}
+.formatted-report .half-width.last {
+  margin-right: 0;
+  border-right: 0;
+}
+.formatted-report .third-width {
+  width: 32%;
+  margin-right: 2%;
+  float: left;
+  box-sizing: border-box;
+}
+.formatted-report .third-width.tight {
+  width: 33.33%;
+  margin-right: 0;
+  border-right: 1px solid #fff;
+}
+.formatted-report .third-width.last {
+  margin-right: 0;
+  border-right: 0;
+}
+.formatted-report table tr:last-child .label {
+  border-bottom: 0;
+}
+.formatted-report table tr,
+.formatted-report table td {
+  padding: 0.63158em 1.05263em 0.47368em 0;
+}
+.formatted-report .clean-cell {
+  padding: 0;
+  border: 0;
+  vertical-align: top;
+}
+.formatted-report .checkboxes {
+  width: auto;
+}
+.formatted-report .checkboxes .label {
+  padding: 3px 25px 0 8px;
+  border: 0;
+}
+.formatted-report .checkboxes.vertical .label {
+  padding-top: 7px;
+  padding-bottom: 19px;
+}
+.formatted-report .category .label {
+  width: 75%;
+}
+.formatted-report .category .value {
+  width: 25%;
+}
+.formatted-report table.money {
+  width: 100%;
+  border-collapse: collapse;
+  border-spacing: 0;
+}
+.formatted-report table.money td {
+  font-family: "GDS Transport", arial, sans-serif;
+  -webkit-font-smoothing: antialiased;
+  -moz-osx-font-smoothing: grayscale;
+  font-weight: 400;
+  font-size: 14px;
+  font-size: 0.875rem;
+  line-height: 1.1428571429;
+  padding: em(6, 12) em(20, 12) em(6, 12) 0;
+  border-bottom: 1px solid #bfc1c3;
+  color: #0b0c0c;
+  text-align: left;
+}
+@media print {
+  .formatted-report table.money td {
+    font-family: sans-serif;
+  }
+}
+@media (min-width: 40.0625em) {
+  .formatted-report table.money td {
+    font-size: 16px;
+    font-size: 1rem;
+    line-height: 1.25;
+  }
+}
+@media print {
+  .formatted-report table.money td {
+    font-size: 14pt;
+    line-height: 1.2;
+  }
+}
+.formatted-report table.money th {
+  font-family: "GDS Transport", arial, sans-serif;
+  -webkit-font-smoothing: antialiased;
+  -moz-osx-font-smoothing: grayscale;
+  font-weight: 400;
+  font-size: 14px;
+  font-size: 0.875rem;
+  line-height: 1.1428571429;
+  padding: em(12, 12) 0 em(9, 12) 0;
+  border-bottom: 1px solid #bfc1c3;
+  color: #0b0c0c;
+  font-weight: 700;
+  text-align: left;
+}
+@media print {
+  .formatted-report table.money th {
+    font-family: sans-serif;
+  }
+}
+@media (min-width: 40.0625em) {
+  .formatted-report table.money th {
+    font-size: 16px;
+    font-size: 1rem;
+    line-height: 1.25;
+  }
+}
+@media print {
+  .formatted-report table.money th {
+    font-size: 14pt;
+    line-height: 1.2;
+  }
+}
+.formatted-report table.money th.numeric {
+  text-align: right;
+}
+.formatted-report table.money td.numeric {
+  font-family: "GDS Transport", arial, sans-serif;
+  -webkit-font-smoothing: antialiased;
+  -moz-osx-font-smoothing: grayscale;
+  font-weight: 400;
+  font-size: 14px;
+  font-size: 0.875rem;
+  line-height: 1.1428571429;
+  text-align: right;
+}
+@media print {
+  .formatted-report table.money td.numeric {
+    font-family: sans-serif;
+  }
+}
+@media (min-width: 40.0625em) {
+  .formatted-report table.money td.numeric {
+    font-size: 16px;
+    font-size: 1rem;
+    line-height: 1.25;
+  }
+}
+@media print {
+  .formatted-report table.money td.numeric {
+    font-size: 14pt;
+    line-height: 1.2;
+  }
+}
+.formatted-report table.money tr.totals td {
+  font-family: "GDS Transport", arial, sans-serif;
+  -webkit-font-smoothing: antialiased;
+  -moz-osx-font-smoothing: grayscale;
+  font-weight: 400;
+  font-size: 14px;
+  font-size: 0.875rem;
+  line-height: 1.1428571429;
+  padding: em(6, 18) 20px em(9, 18) 0;
+  border-bottom: 0;
+}
+@media print {
+  .formatted-report table.money tr.totals td {
+    font-family: sans-serif;
+  }
+}
+@media (min-width: 40.0625em) {
+  .formatted-report table.money tr.totals td {
+    font-size: 16px;
+    font-size: 1rem;
+    line-height: 1.25;
+  }
+}
+@media print {
+  .formatted-report table.money tr.totals td {
+    font-size: 14pt;
+    line-height: 1.2;
+  }
+}
+.formatted-report table.money .grey {
+  background: #dee0e2;
+}
+.formatted-report table.money .reverse {
+  background: #0b0c0c;
+  color: #fff;
+}
+.formatted-report table.money .review-account-number {
+  padding: 5px;
+  color: #6f777b;
+}
+.formatted-report table.money .review-account-number .review-account-closed {
+  display: inline-block;
+  margin-top: 2px;
+  padding: 2px 6px 0 6px;
+  border: 2px solid #6f777b;
+  border-radius: 5px;
+  font-size: 1em;
+}
+.formatted-report table.table-within-box {
+  width: 100% !important;
+  border: 1px solid #0b0c0c;
+  border-collapse: collapse;
+  border-spacing: 0;
+}
+.formatted-report table.table-within-box th,
+.formatted-report table.table-within-box td {
+  padding: 4px 8px;
+  background-color: #fff;
+}
+.formatted-report table.table-within-box th {
+  font-family: "GDS Transport", arial, sans-serif;
+  -webkit-font-smoothing: antialiased;
+  -moz-osx-font-smoothing: grayscale;
+  font-weight: 700;
+  font-size: 14px;
+  font-size: 0.875rem;
+  line-height: 1.1428571429;
+  border-bottom: 1px solid #0b0c0c !important;
+}
+@media print {
+  .formatted-report table.table-within-box th {
+    font-family: sans-serif;
+  }
+}
+@media (min-width: 40.0625em) {
+  .formatted-report table.table-within-box th {
+    font-size: 16px;
+    font-size: 1rem;
+    line-height: 1.25;
+  }
+}
+@media print {
+  .formatted-report table.table-within-box th {
+    font-size: 14pt;
+    line-height: 1.2;
+  }
+}
+.formatted-report table.table-within-box td {
+  font-family: "GDS Transport", arial, sans-serif;
+  -webkit-font-smoothing: antialiased;
+  -moz-osx-font-smoothing: grayscale;
+  font-weight: 400;
+  font-size: 14px;
+  font-size: 0.875rem;
+  line-height: 1.1428571429;
+  color: #454572;
+}
+@media print {
+  .formatted-report table.table-within-box td {
+    font-family: sans-serif;
+  }
+}
+@media (min-width: 40.0625em) {
+  .formatted-report table.table-within-box td {
+    font-size: 16px;
+    font-size: 1rem;
+    line-height: 1.25;
+  }
+}
+@media print {
+  .formatted-report table.table-within-box td {
+    font-size: 14pt;
+    line-height: 1.2;
+  }
+}
+.opg-border--secondary {
+  border-width: thin;
+  border-style: solid;
+  border-color: #505a5f;
+  padding: 1rem;
+  width: 800px;
+}
+
+/*# sourceMappingURL=formatted-report.css.map*/

@@ -1,7 +1,0 @@
-jms_serializer:
-    profiler: false
-    metadata:
-        cache: file
-        # not clear if loaded (buggy library ?)
-        # cache: jms_redis_cache_doctrine_adapter
-        debug: "%kernel.debug%"

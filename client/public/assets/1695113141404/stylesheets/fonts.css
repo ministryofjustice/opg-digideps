@@ -1,0 +1,19 @@
+/*! Copyright (c) 2011 by Margaret Calvert & Henrik Kubel. All rights reserved. The font has been customised for exclusive use on gov.uk. This cut is not commercially available. */
+@font-face {
+  font-family: "GDS Transport";
+  font-style: normal;
+  font-weight: normal;
+  src: url(../b4bc640ee7e4862b9701.woff2?inline) format("woff2"),
+    url(../a53c6b66c340beec00a6.woff?inline) format("woff");
+  font-display: fallback;
+}
+@font-face {
+  font-family: "GDS Transport";
+  font-style: normal;
+  font-weight: bold;
+  src: url(../303f4bb496a99639b428.woff2?inline) format("woff2"),
+    url(../846426a19e13b46fb418.woff?inline) format("woff");
+  font-display: fallback;
+}
+
+/*# sourceMappingURL=fonts.css.map*/

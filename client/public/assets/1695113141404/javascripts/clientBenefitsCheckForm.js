@@ -1,0 +1,2 @@
+!function(){"use strict";const e={init:function(){e.getConditionallyHiddenElements().forEach((e=>{[e.querySelector("input"),e.querySelector("textarea")].forEach((n=>{n&&e&&"value"in n&&n.value.length>0&&e.classList.remove("govuk-radios__conditional--hidden")}))}))},getConditionallyHiddenElements:function(){return[...document.querySelectorAll(".govuk-radios__conditional--hidden")]}};var n=e;window.addEventListener("load",(e=>{n.init()}))}();
+//# sourceMappingURL=clientBenefitsCheckForm.js.map

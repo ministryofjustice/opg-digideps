@@ -6,9 +6,9 @@ use App\Controller\RestController;
 use App\Entity as EntityDir;
 use App\Service\Formatter\RestFormatter;
 use Doctrine\ORM\EntityManagerInterface;
-use Symfony\Component\Routing\Annotation\Route;
 use Sensio\Bundle\FrameworkExtraBundle\Configuration\Security;
 use Symfony\Component\HttpFoundation\Request;
+use Symfony\Component\Routing\Annotation\Route;
 
 /**
  * @Route("/report")
@@ -27,6 +27,7 @@ class VisitsCareController extends RestController
 
     /**
      * @Route("/visits-care", methods={"POST"})
+     *
      * @Security("is_granted('ROLE_DEPUTY')")
      */
     public function addAction(Request $request)
@@ -51,6 +52,7 @@ class VisitsCareController extends RestController
 
     /**
      * @Route("/visits-care/{id}", methods={"PUT"})
+     *
      * @Security("is_granted('ROLE_DEPUTY')")
      */
     public function updateAction(Request $request, $id)
@@ -71,6 +73,7 @@ class VisitsCareController extends RestController
 
     /**
      * @Route("/{reportId}/visits-care", methods={"GET"})
+     *
      * @Security("is_granted('ROLE_DEPUTY')")
      *
      * @param int $reportId
@@ -89,6 +92,7 @@ class VisitsCareController extends RestController
 
     /**
      * @Route("/visits-care/{id}", methods={"GET"})
+     *
      * @Security("is_granted('ROLE_DEPUTY')")
      *
      * @param int $id
@@ -99,7 +103,7 @@ class VisitsCareController extends RestController
             ? (array) $request->query->get('groups') : ['visits-care'];
         $this->formatter->setJmsSerialiserGroups($serialiseGroups);
 
-        $visitsCare = $this->findEntityBy(EntityDir\Report\VisitsCare::class, $id, 'VisitsCare with id:' . $id . ' not found');
+        $visitsCare = $this->findEntityBy(EntityDir\Report\VisitsCare::class, $id, 'VisitsCare with id:'.$id.' not found');
         $this->denyAccessIfReportDoesNotBelongToUser($visitsCare->getReport());
 
         return $visitsCare;
@@ -107,6 +111,7 @@ class VisitsCareController extends RestController
 
     /**
      * @Route("/visits-care/{id}", methods={"DELETE"})
+     *
      * @Security("is_granted('ROLE_DEPUTY')")
      */
     public function deleteVisitsCare($id)
@@ -124,9 +129,6 @@ class VisitsCareController extends RestController
     }
 
     /**
-     * @param array                       $data
-     * @param EntityDir\Report\VisitsCare $visitsCare
-     *
      * @return \App\Entity\Report\Report $report
      */
     private function updateInfo(array $data, EntityDir\Report\VisitsCare $visitsCare)

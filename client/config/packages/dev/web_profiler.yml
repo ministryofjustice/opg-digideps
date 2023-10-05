@@ -1,3 +1,0 @@
-web_profiler:
-    toolbar: "%kernel.debug%"
-    intercept_redirects: false

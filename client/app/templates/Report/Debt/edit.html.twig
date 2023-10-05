@@ -1,0 +1,49 @@
+{% extends '@App/Layouts/application.html.twig' %}
+
+{% import '@App/Macros/macros.html.twig' as macros %}
+
+{% set translationDomain = "report-debts" %}
+{% trans_default_domain translationDomain %}
+{% set transOptions = {'%client%': report.client.firstname | e } %}
+
+{% block htmlTitle %}{{ 'editPage.htmlTitle' | trans(transOptions) }}{% endblock %}
+{% block pageTitle %}{{ 'editPage.pageTitle' | trans(transOptions) }}{% endblock %}
+{% block supportTitleTop %}{{ 'editPage.supportTitle' | trans(transOptions) }}{% endblock %}
+
+{% block linkBack %}
+    {{ macros.linkBackStep(backLink, 'back' | trans({}, 'common')) }}
+{% endblock %}
+
+{% block pageContent %}
+
+    <p class="govuk-hint">{{ 'editPage.pageHint' | trans(transOptions, translationDomain) }}</p>
+
+    {{ form_start(form, {attr: {novalidate: 'novalidate'}}) }}
+
+    {% for debt in form.debts %}
+        <div class="{{ debt.moreDetails is defined ? ' js-details-expander ' : '' }}">
+            {{ form_row(debt.debtTypeId) }}
+            {{ form_input(debt.amount, 'amount', {
+                'inputPrefix' : '£',
+                'inputClass' : 'govuk-!-width-one-quarter js-format-currency',
+                'labelText': ('form.entries.' ~ debt.debtTypeId.vars.value ~ '.label') | trans,
+                'hintText': ('form.entries.' ~ debt.debtTypeId.vars.value ~ '.hint') | trans(transOptions),
+            }) }}
+
+            {% if debt.moreDetails is defined %}
+
+                {{ form_input(debt.moreDetails, 'moreDetails', {
+                    'labelText': ('form.entries.' ~ debt.debtTypeId.vars.value ~ '.moreInformations') | trans,
+                    'formGroupClass': 'opg-indented-block js-hidden js-details-expandable',
+                    'hintText': ('form.entries.' ~ debt.debtTypeId.vars.value ~ '.moreInfoHint') | trans(transOptions)
+                }) }}
+
+            {% endif %}
+        </div>
+    {% endfor %}
+
+    {{ macros.saveAndContinueButton(form.save) }}
+
+    {{ form_end(form) }}
+
+{% endblock %}

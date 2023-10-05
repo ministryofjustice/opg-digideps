@@ -5,7 +5,9 @@ services:
     container_name: client-unit-tests-app
     image: frontend-unit-tests:latest
     build:
-      context: ./client
+      dockerfile: client/docker/app/Dockerfile
+      context: .
+      target: testing
     depends_on:
       - pact-mock
     environment:
@@ -15,7 +17,7 @@ services:
       AWS_SECRET_ACCESS_KEY: aFakeSecretAccessKey
       AWS_SESSION_TOKEN: fakeValue
     env_file:
-      - ./client/frontend.env
+      - ./client/app/frontend.env
 
   pact-mock:
     container_name: client-unit-tests-pact

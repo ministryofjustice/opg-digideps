@@ -29,20 +29,30 @@ jobs:
       fail-fast: false
       matrix:
         include:
+          - svc_name: "client-webserver"
+            sub_folder: "."
+            docker_file: "client/docker/web/Dockerfile"
           - svc_name: "client"
-            sub_folder: "client"
+            sub_folder: "."
+            docker_file: "client/docker/app/Dockerfile"
           - svc_name: "api"
             sub_folder: "api"
+            docker_file: "Dockerfile"
           - svc_name: "sync"
             sub_folder: "sync"
+            docker_file: "Dockerfile"
           - svc_name: "htmltopdf"
             sub_folder: "htmltopdf"
+            docker_file: "Dockerfile"
           - svc_name: "file-scanner"
             sub_folder: "file-scanner"
+            docker_file: "Dockerfile"
           - svc_name: "dr-backup"
             sub_folder: "disaster-recovery/backup"
+            docker_file: "Dockerfile"
           - svc_name: "synchronise-lambda"
             sub_folder: "lambdas/functions/synchronisation"
+            docker_file: "Dockerfile"
     steps:
       - uses: actions/checkout@96f53100ba2a5449eb71d2e6604bbcd94b9449b5 # pin@v3
 
@@ -80,23 +90,44 @@ jobs:
           role-duration-seconds: 1800
           role-session-name: OPGDigidepsECRGithubAction
 
+      - name: download resources artifact
+        uses: actions/download-artifact@e9ef242655d12993efdcda9058dee2db83a2cb9b
+        with:
+          name: web-distribution
+          path: client/resources/public
+        if: |
+          (matrix.svc_name == 'client' || matrix.svc_name == 'client-webserver')
+
       - name: build docker image
         env:
           IMAGE_NAME: ${{ matrix.svc_name }}
+          DOCKERFILE: ${{ matrix.docker_file }}
           BRANCH_NAME: ${{ inputs.branch_name }}
         run: |
           if [ "${BRANCH_NAME}" == "main" ]; then
-            docker buildx build --cache-to=type=local,dest=/tmp/.buildx-cache-new --tag ${IMAGE_NAME}:latest --output type=docker .
+            docker buildx build \
+            -f ${DOCKERFILE} \
+            --cache-to=type=local,dest=/tmp/.buildx-cache-new \
+            --tag ${IMAGE_NAME}:latest \
+            --output type=docker \
+            .
           else
-            docker buildx build --cache-from=type=local,src=/tmp/.buildx-cache --cache-to=type=local,dest=/tmp/.buildx-cache-new --tag ${IMAGE_NAME}:latest --output type=docker .
+            docker buildx build \
+            -f ${DOCKERFILE} \
+            --cache-from=type=local,src=/tmp/.buildx-cache \
+            --cache-to=type=local,dest=/tmp/.buildx-cache-new \
+            --tag ${IMAGE_NAME}:latest \
+            --output type=docker \
+            .
           fi
         working-directory: ${{ matrix.sub_folder }}
 
       - name: build docker image development
-        if: matrix.svc_name == 'client' && inputs.branch_name == 'main'
+        if: matrix.svc_name == 'client-webserver' && inputs.branch_name == 'main'
         env:
           IMAGE_NAME: ${{ matrix.svc_name }}
-        run: docker build --tag ${IMAGE_NAME}-dev:latest --file Dockerfile-dev .
+          DOCKERFILE: ${{ matrix.docker_file }}
+        run: docker build --file client/docker/app/Dockerfile-dev --tag ${IMAGE_NAME}-dev:latest .
         working-directory: ${{ matrix.sub_folder }}
 
       - name: Move cache
@@ -133,7 +164,7 @@ jobs:
         run: echo "Tag to use - ${IMAGE_TAG}"
 
       - name: tag and push user research development container
-        if: matrix.svc_name == 'client' && inputs.branch_name == 'main'
+        if: matrix.svc_name == 'client-webserver' && inputs.branch_name == 'main'
         env:
           ECR_REGISTRY: ${{ steps.login_ecr.outputs.registry }}
           ECR_REGISTRY_ALIAS: digideps
