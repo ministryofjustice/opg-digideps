@@ -1,0 +1,69 @@
+# This file is auto-generated during the composer install
+parameters:
+  locale: en
+  secret: setme
+  api_base_url: "http://api.digideps.local/"
+  api_client_secret: setme
+  redis_dsn: "redis://setme"
+  non_admin_host: "https://digideps.local"
+  admin_host: "https://admin.digideps.local"
+  client_base_urls:
+    front: "https://digideps.local"
+    admin: "https://admin.digideps.local"
+  session_expire_seconds: 3900
+  session_popup_show_after: 3600
+  session_cookie_secure: false
+  session_prefix: application_session
+  ga:
+    default: null
+    gds: null
+  opg_docker_tag: 0.0.0
+  log_level: warning
+  verbose_log_level: notice
+  log_path: /var/log/app/application.log
+  email_params:
+    from_email: noreply-opgdeputyservice@digideps.dsd.io
+    report_submit_to_address: digideps+noop@digital.justice.gov.uk
+    feedback_send_to_address: digideps+noop@digital.justice.gov.uk
+    update_send_to_address: digideps+noop@digital.justice.gov.uk
+  email_send:
+    from_email: no-reply@digideps.dsd.io
+  email_report_submit:
+    from_email: no-reply@digideps.dsd.io
+    to_email: behat-digideps@digital.justice.gov.uk
+  email_feedback_send:
+    from_email: no-reply@digideps.dsd.io
+    to_email: behat-digideps@digital.justice.gov.uk
+  email:
+    base_url:
+      frontend: "https://digideps.local"
+      admin: "https://admin.digideps.local"
+      routes:
+        user_activate: "/user/activate/{token}"
+        password_reset: "/user/password-reset/{token}"
+        homepage: /
+        report_overview: "/report/{reportId|}/overview"
+        client_home: /client/show
+  s3_bucket_name: pa-uploads-local
+  s3_sirius_bucket: sirius-bucket-local
+  s3_client_params:
+    version: latest
+    region: eu-west-1
+    validate: true
+  ssm_client_params:
+    version: latest
+    region: eu-west-1
+    validate: true
+  secrets_manager_client_params:
+    version: latest
+    region: eu-west-1
+    validate: true
+  cloudwatch_logs_client_params:
+    version: latest
+    region: eu-west-1
+    validate: true
+  file_scanner_url: "http://file-scanner-rest:8080"
+  file_scanner_sslverify: false
+  htmltopdf_address: "http://htmltopdf:80"
+  pa_pro_report_csv_filename: pa_pro_report.csv
+  lay_report_csv_filename: layDeputyReport.csv
