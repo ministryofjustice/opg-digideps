@@ -15,8 +15,7 @@ RUN wget -q -O /usr/local/bin/waitforit https://github.com/maxcnunes/waitforit/r
   && chmod +x /usr/local/bin/waitforit
 
 COPY --chown=nginx client/docker/web/confd /etc/confd
-COPY --chown=nginx client/resources/public/assets public/assets
-COPY --chown=nginx client/resources/public/images public/images
+COPY --chown=nginx client/resources/public/ public/
 
 RUN apk --no-cache add libcap && \
     setcap 'cap_net_bind_service=+ep' /usr/sbin/nginx && \
