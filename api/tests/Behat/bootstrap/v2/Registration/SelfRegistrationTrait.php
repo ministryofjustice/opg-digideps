@@ -37,7 +37,7 @@ trait SelfRegistrationTrait
             '31313131',
         );
 
-        $this->clickActivationOrPasswordResetLinkInEmail(false, 'activation', $this->userEmail);
+        $this->clickActivationOrPasswordResetLinkInEmail(false, 'activation', $this->userEmail, 'active');
         $this->setPasswordAndTickTAndCs();
         $this->pressButton('set_password_save');
 
@@ -246,7 +246,7 @@ trait SelfRegistrationTrait
             '1717171T',
         );
 
-        $this->clickActivationOrPasswordResetLinkInEmail(false, 'activation', $this->userEmail);
+        $this->clickActivationOrPasswordResetLinkInEmail(false, 'activation', $this->userEmail, 'active');
         $this->setPasswordAndTickTAndCs();
         $this->pressButton('set_password_save');
 
@@ -286,7 +286,7 @@ trait SelfRegistrationTrait
     public function theyShouldBeAbleToRegisterToDeputiseForAClientWithValidDetails()
     {
         $this->visitPath('/logout');
-        $this->clickActivationOrPasswordResetLinkInEmail(false, 'activation', $this->coDeputyEmail);
+        $this->clickActivationOrPasswordResetLinkInEmail(false, 'activation', $this->coDeputyEmail, 'active');
         $this->setPasswordAndTickTAndCs();
         $this->pressButton('set_password_save');
 
@@ -328,7 +328,7 @@ trait SelfRegistrationTrait
             '51515151',
         );
 
-        $this->clickActivationOrPasswordResetLinkInEmail(false, 'activation', $this->userEmail);
+        $this->clickActivationOrPasswordResetLinkInEmail(false, 'activation', $this->userEmail, 'active');
         $this->setPasswordAndTickTAndCs();
         $this->pressButton('set_password_save');
 

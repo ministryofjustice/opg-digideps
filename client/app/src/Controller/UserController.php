@@ -20,6 +20,7 @@ use Sensio\Bundle\FrameworkExtraBundle\Configuration\Template;
 use Symfony\Component\Form\FormError;
 use Symfony\Component\HttpFoundation\Request;
 use Symfony\Component\HttpFoundation\Response;
+use Symfony\Component\RateLimiter\RateLimiterFactory;
 use Symfony\Component\Routing\Annotation\Route;
 use Symfony\Component\Security\Core\Exception\UserNotFoundException;
 use Symfony\Contracts\Translation\TranslatorInterface;
@@ -50,16 +51,31 @@ class UserController extends AbstractController
         Redirector $redirector,
         DeputyProvider $deputyProvider,
         string $action,
-        string $token
+        string $token,
+        RateLimiterFactory $anonymousApiLimiter
     ): Response {
         $isActivatePage = 'activate' === $action;
+
+        $userId = substr($token, -8);
+
+        // rate limiting applied to track unsuccessful and successful requests
+        $limiter = $anonymousApiLimiter->create($userId);
+        $limit = $limiter->consume(1);
+
+        if (!$limit->isAccepted() && !$isActivatePage) {
+            $lockedOutPeriod = ceil(($limit->getRetryAfter()->getTimestamp() - time()) / 60);
+
+            return $this->renderError(sprintf('You have tried to reset your password too many times. Please try again in %s minutes.', ceil(($limit->getRetryAfter()->getTimestamp() - time()) / 60)), 429, 'There is a problem');
+        } elseif (!$limit->isAccepted() && $isActivatePage) {
+            return $this->renderError(sprintf('You have tried to activate your account too many times. Please try again in %s minutes.', ceil(($limit->getRetryAfter()->getTimestamp() - time()) / 60)), 429, 'There is a problem');
+        }
 
         // check $token is correct
         try {
             /* @var $user EntityDir\User */
             $user = $this->restClient->loadUserByToken($token);
         } catch (\Throwable $e) {
-            return $this->renderError('This link is not working or has already been used', $e->getCode());
+            return $this->renderError('This link is not working or has already been used.', $e->getCode(), 'There is a problem');
         }
 
         // token expired
@@ -110,7 +126,7 @@ class UserController extends AbstractController
             try {
                 $deputyProvider->login(['token' => $token]);
             } catch (UserNotFoundException $e) {
-                return $this->renderError('This activation link is not working or has already been used');
+                return $this->renderError('This activation link is not working or has already been used', 'There is a problem');
             }
 
             /** @var string */
@@ -145,7 +161,6 @@ class UserController extends AbstractController
 
     /**
      * @Route("/user/activate/password/send/{token}", name="activation_link_send")
-     *
      * @Template("@App/User/activateLinkSend.html.twig")
      */
     public function activateLinkSendAction(string $token): Response
@@ -160,7 +175,6 @@ class UserController extends AbstractController
      * @return array<mixed>
      *
      * @Route("/user/activate/password/sent/{token}", name="activation_link_sent")
-     *
      * @Template("@App/User/activateLinkSent.html.twig")
      */
     public function activateLinkSentAction(string $token): array
@@ -182,7 +196,6 @@ class UserController extends AbstractController
      * @return array<mixed>|Response
      *
      * @Route("/user/details", name="user_details")
-     *
      * @Template("@App/User/details.html.twig")
      */
     public function detailsAction(Request $request, Redirector $redirector)
@@ -222,7 +235,6 @@ class UserController extends AbstractController
      * @return array<mixed>|Response
      *
      * @Route("/password-managing/forgotten", name="password_forgotten")
-     *
      * @Template("@App/User/passwordForgotten.html.twig")
      **/
     public function passwordForgottenAction(Request $request)
@@ -251,7 +263,6 @@ class UserController extends AbstractController
      * @return array<mixed>
      *
      * @Route("/password-managing/sent", name="password_sent")
-     *
      * @Template("@App/User/passwordSent.html.twig")
      */
     public function passwordSentAction(): array
@@ -263,7 +274,6 @@ class UserController extends AbstractController
      * @return array<mixed>|Response
      *
      * @Route("/register", name="register")
-     *
      * @Template("@App/User/register.html.twig")
      */
     public function registerAction(Request $request)
@@ -390,7 +400,6 @@ class UserController extends AbstractController
 
     /**
      * @Route("/user/update-terms-use/{token}", name="user_updated_terms_use")
-     *
      * @Security("is_granted('ROLE_ORG')")
      */
     public function updatedTermsUseAction(Request $request, string $token): Response

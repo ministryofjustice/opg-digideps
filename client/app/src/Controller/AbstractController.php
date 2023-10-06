@@ -12,10 +12,10 @@ abstract class AbstractController extends SymfonyAbstractController
      *
      * @return Response
      */
-    protected function renderError(string $description, $statusCode = 500)
+    protected function renderError(string $description, $statusCode = 500, $message = 'Application error')
     {
         $text = $this->renderView('bundles/TwigBundle/Exception/template.html.twig', [
-            'message' => 'Application error',
+            'message' => $message,
             'description' => $description,
         ]);
 

@@ -74,7 +74,7 @@ trait ActivateTrait
     public function theUserClicksTheActivateAccountLinkInTheirEmail()
     {
         $this->getSession()->reset();
-        $this->clickActivationOrPasswordResetLinkInEmail(false, 'activation', $this->getUserForTestRun()['email']);
+        $this->clickActivationOrPasswordResetLinkInEmail(false, 'activation', $this->getUserForTestRun()['email'], 'active');
     }
 
     /**

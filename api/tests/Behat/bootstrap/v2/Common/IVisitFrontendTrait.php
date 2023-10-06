@@ -403,4 +403,12 @@ trait IVisitFrontendTrait
     {
         $this->visitFrontendPath($this->getServiceHealthUrl());
     }
+
+    /**
+     * @Given /^ visits the forgotten your password page$/
+     */
+    public function visitsTheForgottenYourPasswordPage()
+    {
+        $this->visitFrontendPath($this->getForgottenYourPasswordUrl());
+    }
 }
