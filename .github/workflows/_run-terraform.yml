@@ -49,11 +49,11 @@ jobs:
         id: tf_version_setup
         run: |
           if [ -f ./versions.tf ]; then
-            terraform_version=$(cat ./versions.tf | ../scripts/pipeline/terraform/terraform-version.sh)
+            terraform_version=$(cat ./versions.tf | ../../scripts/pipeline/terraform/terraform-version.sh)
             echo "- Terraform version: [${terraform_version}]" >> $GITHUB_STEP_SUMMARY
             echo "TERRAFORM_VERSION=${terraform_version}" >> $GITHUB_OUTPUT
           fi
-        working-directory: ${{ inputs.terraform_path }}
+        working-directory: terraform/${{ inputs.terraform_path }}
 
       - name: "Terraform version [${{ steps.tf_version_setup.outputs.TERRAFORM_VERSION }}]"
         run: echo "terraform version [${{ steps.tf_version_setup.outputs.TERRAFORM_VERSION }}]"
@@ -81,12 +81,12 @@ jobs:
         run: terraform init -input=false
         env:
           TF_WORKSPACE: ${{ inputs.workspace }}
-        working-directory: ${{ inputs.terraform_path }}
+        working-directory: terraform/${{ inputs.terraform_path }}
 
       - name: terraform init for environment
         run: terraform init -input=false
         if: inputs.terraform_path == 'environment'
-        working-directory: ${{ inputs.terraform_path }}
+        working-directory: terraform/${{ inputs.terraform_path }}
 
       - name: terraform plan ${{ inputs.terraform_path }}
         env:
@@ -95,7 +95,7 @@ jobs:
         run: |
           terraform workspace show
           terraform plan -input=false -parallelism=30 -lock-timeout=5m
-        working-directory: ${{ inputs.terraform_path }}
+        working-directory: terraform/${{ inputs.terraform_path }}
 
       - name: install workspace manager
         if: inputs.apply == 'true' && inputs.terraform_path == 'environment'
@@ -121,4 +121,4 @@ jobs:
           CI: true
         run: |
           terraform apply -lock-timeout=300s -input=false -auto-approve -parallelism=30
-        working-directory: ${{ inputs.terraform_path }}
+        working-directory: terraform/${{ inputs.terraform_path }}
