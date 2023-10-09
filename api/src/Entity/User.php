@@ -334,9 +334,9 @@ class User implements UserInterface, PasswordAuthenticatedUserInterface
 
     /**
      * @var bool
+     *
      * @JMS\Type("boolean")
      * @JMS\Groups({"user"})
-     *
      * @ORM\Column(name="deletion_protection", type="boolean", nullable=true, options = { "default": null })
      */
     private $deletionProtection;
@@ -505,7 +505,10 @@ class User implements UserInterface, PasswordAuthenticatedUserInterface
      */
     public function recreateRegistrationToken()
     {
-        $this->setRegistrationToken(bin2hex(random_bytes(16)));
+        $userIdWithLeadingZeros = sprintf('%08d', $this->getId());
+        $token = bin2hex(random_bytes(16)).$userIdWithLeadingZeros;
+
+        $this->setRegistrationToken($token);
         $this->setTokenDate(new \DateTime());
 
         return $this;

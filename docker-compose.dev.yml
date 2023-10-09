@@ -1,8 +1,9 @@
 version: "3.2"
 
 services:
-  test:
-    build: ./api
+  integration-tests:
+    build:
+      context: ./api
     depends_on:
       - localstack
       - mock-sirius-integration
@@ -13,37 +14,17 @@ services:
       - ./api/vendor:/var/www/vendor
     env_file:
       - ./api/api.env
-      - ./api/tests/Behat/test.env
-      - ./api/tests/Behat/.env
+      - ./api/tests/Behat/integration-test.env
     environment:
       APP_ENV: dev
 
-  npm:
-    image: node:18.16.1-alpine
-    working_dir: /app
-    volumes:
-      - ./client/:/app
-    entrypoint: npm
-    environment:
-      NODE_ENV: production
-
-  composerapi:
-    image: composer:2.5.8
-    volumes:
-      - ./api/:/app
-
-  composerfront:
-    image: composer:2.5.8
-    volumes:
-      - ./client/:/app
-
-  frontend:
+  frontend-app:
     environment:
       APP_ENV: dev
     env_file:
       - .env
 
-  admin:
+  admin-app:
     environment:
       APP_ENV: dev
     env_file:
@@ -52,3 +33,12 @@ services:
   synchronisation:
     restart: "no"
     entrypoint: ["echo", "Service sync disabled"]
+
+  node-js:
+    image: opg-digideps-resources
+    build:
+      context: .
+      dockerfile: ./client/docker/resources/Dockerfile
+      target: testing
+    environment:
+      NODE_ENV: production

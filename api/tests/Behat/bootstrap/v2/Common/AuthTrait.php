@@ -151,11 +151,27 @@ trait AuthTrait
     }
 
     /**
+     * @Given /^the user clicks on the registration link sent to their email which has an \'([^\']*)\' token$/
+     */
+    public function theUserClicksOnTheRegistrationLinkSentToTheirEmailWhichHasAnToken($arg1)
+    {
+        $this->clickActivationOrPasswordResetLinkInEmail(false, 'password reset', $this->interactingWithUserDetails->getUserEmail(), $arg1);
+    }
+
+    /**
      * @When /^I click the (admin |)(activation|password reset) link in the email sent to my address "(.+)"$/
      */
-    public function clickActivationOrPasswordResetLinkInEmail($admin, $pageType, $email)
+    public function clickActivationOrPasswordResetLinkInEmail($admin, $pageType, $email, $token)
     {
         $user = $this->em->getRepository(User::class)->findOneBy(['email' => $email]);
+
+        $this->em->refresh($user);
+
+        if ('expired' === $token) {
+            $user->setTokenDate(new \DateTime('-2hours'));
+            $this->em->persist($user);
+            $this->em->flush($user);
+        }
 
         $token = $user->getRegistrationToken();
 
@@ -206,5 +222,59 @@ trait AuthTrait
         $this->em->refresh($user);
 
         $this->assertStringDoesNotEqualString($this->fixtureHelper->getLegacyPasswordHash(), $user->getPassword(), 'Asserting current password hash does not match legacy password hash');
+    }
+
+    /**
+     * @Then /^the user sends a request to reset their password$/
+     */
+    public function theUserSendsARequestToResetTheirPassword()
+    {
+        $this->fillInField('password_forgotten[email]', $this->interactingWithUserDetails->getUserEmail());
+        $this->pressButton('Reset your password');
+
+        $this->assertElementContainsText('body', 'We have sent a new registration link to your email. Use the link to reset your password.');
+    }
+
+    /**
+     * @Given /^the user successfully resets their password$/
+     */
+    public function theUserSuccessfullyResetsTheirPassword()
+    {
+        $this->fillInField('reset_password_password_first', 'aRandomPassword100');
+        $this->fillInField('reset_password_password_second', 'aRandomPassword100');
+
+        $this->pressButton('Save password');
+    }
+
+    /**
+     * @When /^the user visits an invalid password reset url$/
+     */
+    public function theUserVisitsAnInvalidPasswordResetUrl()
+    {
+        $randomToken = 'randomToken00000000000000000000000000000';
+
+        $this->visitPath(sprintf('/user/password-reset/%s', $randomToken));
+
+        $this->assertElementContainsText('body', 'This link is not working or has already been used');
+    }
+
+    /**
+     * @Then /^a password reset error should be thrown to the user$/
+     */
+    public function aPasswordResetErrorShouldBeThrownToTheUser()
+    {
+        $invalidPasswordResetLink = 'This link is not working or has already been used';
+
+        $this->assertElementContainsText('body', $invalidPasswordResetLink);
+    }
+
+    /**
+     * @Then /^the password reset page should be expired$/
+     */
+    public function thePasswordResetPageShouldBeExpired()
+    {
+        $expiredPasswordResetPage = 'This page has expired';
+
+        $this->assertElementContainsText('body', $expiredPasswordResetPage);
     }
 }

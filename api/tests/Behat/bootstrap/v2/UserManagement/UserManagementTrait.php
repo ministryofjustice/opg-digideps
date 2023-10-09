@@ -450,9 +450,9 @@ trait UserManagementTrait
         foreach ($this->expectedUsers as $key => $addedUser) {
             $this->iAmOnAdminUsersSearchPage();
             $this->searchUserWithFilter('', $addedUser['email']);
-            //update the email now we have searched for it...
+            // update the email now we have searched for it...
             $this->expectedUsers[$key]['email'] = $addedUser['email'].'.edit';
-            //click on the first result (should only be one)
+            // click on the first result (should only be one)
             $this->iClickOnFirstUserReturnedBySearch();
             $this->iNavigateToEditUser();
             $this->fillFieldsAndSubmitOnEditExistingUser($this->expectedUsers[$key]);
@@ -657,5 +657,13 @@ trait UserManagementTrait
     private function iClickOnFirstUserReturnedBySearch()
     {
         $this->iClickOnNthElementBasedOnRegex('/admin\/user\/[0-9].*$/', 0);
+    }
+
+    /**
+     * @When /^the user visits the forgotten your password page$/
+     */
+    public function theUserVisitsTheForgottenYourPasswordPage()
+    {
+        $this->visitsTheForgottenYourPasswordPage();
     }
 }

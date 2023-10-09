@@ -37,6 +37,7 @@ trait PageUrlsTrait
     private string $documentsSummarySectionUrl = '/report/%s/documents/summary';
     private string $documentsStep2Url = '/%s/%s/documents/step/2';
     private string $documentsSubmitMoreUrl = '/%s/%s/documents/submit-more';
+    private string $forgottenYourPasswordUrl = '/password-managing/forgotten';
     private string $giftsSectionUrl = '/%s/%s/gifts';
     private string $giftsSummarySectionUrl = '/%s/%s/gifts/summary';
     private string $healthAndLifestyleSectionUrl = '/%s/%s/lifestyle';
@@ -481,5 +482,10 @@ trait PageUrlsTrait
     public function getOrgAddUserUrl(string $orgId): string
     {
         return sprintf($this->orgAddUserUrl, $orgId);
+    }
+
+    public function getForgottenYourPasswordUrl(): string
+    {
+        return $this->forgottenYourPasswordUrl;
     }
 }
