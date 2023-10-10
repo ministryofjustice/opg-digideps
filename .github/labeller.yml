@@ -5,27 +5,26 @@ pipelines:
   - any: [".circleci/**/*"]
   - any: [".github/workflows/*"]
 
-api:
+api-service:
   - any: ["api/**/*"]
 
-client:
+client-service:
   - any: ["client/**/*"]
+
+htmltopdf-service:
+  - any: ["htmltopdf/**/*"]
+
+file-scanner-service:
+  - any: ["file-scanner/**/*"]
 
 documentation:
   - any: ["docs/**/*"]
 
-ecs-helper:
-  - any: ["ecs-helper/**/*"]
-
 infrastructure:
-  - any: ["environment/**/*"]
-  - any: ["account/**/*"]
+  - any: ["terraform/**/*"]
 
 lambdas:
   - any: ["lambdas/**/*"]
 
-pa11y:
-  - any: ["pa11y/**/*"]
-
-sync-scripts:
+sync-service:
   - any: ["sync/**/*"]
