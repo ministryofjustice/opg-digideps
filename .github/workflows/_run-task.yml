@@ -100,8 +100,8 @@ jobs:
           echo ${OVERRIDE}
           if [ "${OVERRIDE}" == "" ]
           then
-            ../ecs-helper/ecs-runner -task ${TASK_NAME} -timeout ${TIMEOUT}
+            ../../ecs-helper/ecs-runner -task ${TASK_NAME} -timeout ${TIMEOUT}
           else
-            ../ecs-helper/ecs-runner -task ${TASK_NAME} -timeout ${TIMEOUT} -override ${OVERRIDE}
+            ../../ecs-helper/ecs-runner -task ${TASK_NAME} -timeout ${TIMEOUT} -override ${OVERRIDE}
           fi
         working-directory: terraform/environment

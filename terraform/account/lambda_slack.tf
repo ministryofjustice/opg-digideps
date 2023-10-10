@@ -104,14 +104,14 @@ data "aws_iam_policy_document" "lambda_slack" {
 
 data "archive_file" "slack_zip" {
   type        = "zip"
-  source_dir  = "../lambdas/functions/slack_lambda/app"
-  output_path = "../lambdas/functions/slack_lambda/slack.zip"
+  source_dir  = "../../lambdas/functions/slack_lambda/app"
+  output_path = "../../lambdas/functions/slack_lambda/slack.zip"
 }
 
 data "archive_file" "slack_layer" {
   type        = "zip"
-  source_dir  = "../lambdas/functions/slack_lambda/layers"
-  output_path = "../lambdas/functions/slack_lambda/layer.zip"
+  source_dir  = "../../lambdas/functions/slack_lambda/layers"
+  output_path = "../../lambdas/functions/slack_lambda/layer.zip"
 }
 
 resource "aws_lambda_layer_version" "lambda_layer" {
