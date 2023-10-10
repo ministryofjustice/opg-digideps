@@ -33,11 +33,11 @@ jobs:
         id: tf_version_setup
         run: |
           if [ -f ./versions.tf ]; then
-            terraform_version=$(cat ./versions.tf | ../scripts/pipeline/terraform/terraform-version.sh)
+            terraform_version=$(cat ./versions.tf | ../../scripts/pipeline/terraform/terraform-version.sh)
             echo "- Terraform version: [${terraform_version}]" >> $GITHUB_STEP_SUMMARY
             echo "TERRAFORM_VERSION=${terraform_version}" >> $GITHUB_OUTPUT
           fi
-        working-directory: environment
+        working-directory: terraform/environment
 
       - name: "Terraform version [${{ steps.tf_version_setup.outputs.TERRAFORM_VERSION }}]"
         run: echo "terraform version [${{ steps.tf_version_setup.outputs.TERRAFORM_VERSION }}]"
@@ -64,7 +64,7 @@ jobs:
         env:
           TF_WORKSPACE: ${{ inputs.workspace }}
         run: terraform init
-        working-directory: environment
+        working-directory: terraform/environment
 
       - name: terraform output
         env:
@@ -72,7 +72,7 @@ jobs:
         run: |
           echo $TF_WORKSPACE
           terraform output -json > terraform.output.json
-        working-directory: environment
+        working-directory: terraform/environment
 
       - name: cache ecs-helper
         id: cache-ecs-helper
@@ -100,8 +100,8 @@ jobs:
           echo ${OVERRIDE}
           if [ "${OVERRIDE}" == "" ]
           then
-            ../ecs-helper/ecs-runner -task ${TASK_NAME} -timeout ${TIMEOUT}
+            ../../ecs-helper/ecs-runner -task ${TASK_NAME} -timeout ${TIMEOUT}
           else
-            ../ecs-helper/ecs-runner -task ${TASK_NAME} -timeout ${TIMEOUT} -override ${OVERRIDE}
+            ../../ecs-helper/ecs-runner -task ${TASK_NAME} -timeout ${TIMEOUT} -override ${OVERRIDE}
           fi
-        working-directory: environment
+        working-directory: terraform/environment
