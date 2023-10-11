@@ -37,7 +37,7 @@ jobs:
       parsed_branch: ${{ steps.variables.outputs.branch_formatted }}
       short_sha: ${{ steps.variables.outputs.short_sha }}
     steps:
-      - uses: actions/checkout@96f53100ba2a5449eb71d2e6604bbcd94b9449b5 # pin@v3
+      - uses: actions/checkout@7cdaf2fbc075e6f3b9ca94cfd6cec5adc8a75622 # pin@v3
       - name: extract variables for workflow
         id: variables
         run: |
