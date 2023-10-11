@@ -15,14 +15,14 @@ jobs:
   api-unit-tests:
     runs-on: ubuntu-latest
     steps:
-      - uses: actions/checkout@96f53100ba2a5449eb71d2e6604bbcd94b9449b5 # pin@v3
+      - uses: actions/checkout@7cdaf2fbc075e6f3b9ca94cfd6cec5adc8a75622 # pin@v3
 
       - name: set up docker buildx
         uses: docker/setup-buildx-action@dedd61cf5d839122591f5027c89bf3ad27691d18
 
       - name: cache docker layers
         id: cache-docker
-        uses: actions/cache@67b839edb68371cc5014f6cea11c9aa77238de78 # pin@v3.0.8
+        uses: actions/cache@704facf57e6136b1bc63b828d79edcd491f0ee84 # pin@v3.0.8
         with:
           path: /tmp/.buildx-cache
           key: ${{ runner.os }}-api-unit-tests-${{ github.sha }}
@@ -63,7 +63,7 @@ jobs:
           docker-compose -f docker-compose.yml -f docker-compose.ci.api-unit-tests.yml down
 
       - name: archive test results
-        uses: actions/upload-artifact@65d862660abb392b8c4a3d1195a2108db131dd05 # pin@v3.1.0
+        uses: actions/upload-artifact@a8a3f3ad30e3422c9c7b888a15615d19a852ae32 # pin@v3.1.0
         with:
           name: api-unit-tests-${{ inputs.selection }}
           path: api-unit-tests-${{ inputs.selection }}.xml
