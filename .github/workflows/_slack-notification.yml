@@ -29,10 +29,10 @@ jobs:
   send-slack-notification:
     runs-on: ubuntu-latest
     steps:
-      - uses: actions/checkout@96f53100ba2a5449eb71d2e6604bbcd94b9449b5 # pin@v3
+      - uses: actions/checkout@7cdaf2fbc075e6f3b9ca94cfd6cec5adc8a75622 # pin@v3
 
       - name: configure aws credentials
-        uses: aws-actions/configure-aws-credentials@35d8f9588bf190a9a7fda3411cd548fb8234bee2 # pin@v1.7.0
+        uses: aws-actions/configure-aws-credentials@e49c9972c28e00c16bb2eb7bea9f63a625cb86c1 # pin@v1.7.0
         with:
           aws-access-key-id: ${{ secrets.AWS_ACCESS_KEY_ID_ACTIONS }}
           aws-secret-access-key: ${{ secrets.AWS_SECRET_ACCESS_KEY_ACTIONS }}
@@ -42,7 +42,7 @@ jobs:
           role-session-name: OPGDigidepsSlackNotify
 
       - name: install python
-        uses: actions/setup-python@61a6322f88396a6271a6ee3565807d608ecaddd1 # pin@v4.2.0
+        uses: actions/setup-python@5f2af211d616f86005883b44826180b21abb4060 # pin@v4.2.0
         with:
           python-version: "3.11"
           cache: "pip"
