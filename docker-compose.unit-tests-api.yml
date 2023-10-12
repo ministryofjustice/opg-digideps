@@ -5,8 +5,8 @@ services:
     container_name: api-unit-tests
     image: api-unit-tests:latest
     build:
-      dockerfile: api/docker/app/Dockerfile
       context: .
+      dockerfile: api/docker/app/Dockerfile
       args:
         REQUIRE_XDEBUG: ${REQUIRE_XDEBUG_API} # set REQUIRE_XDEBUG_API=1 in .env to install Xdebug
         XDEBUG_IDEKEY_API: ${XDEBUG_IDEKEY_API}

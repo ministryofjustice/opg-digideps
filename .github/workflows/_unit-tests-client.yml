@@ -32,8 +32,6 @@ jobs:
             ${{ runner.os }}-client-unit-tests-build
 
       - name: build docker image
-        env:
-          IMAGE_NAME: client
         run: |
           REQUIRE_XDEBUG_CLIENT=0 REQUIRE_XDEBUG_API=0 docker buildx build \
           -f client/docker/app/Dockerfile \

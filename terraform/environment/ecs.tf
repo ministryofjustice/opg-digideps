@@ -64,6 +64,7 @@ data "aws_iam_policy_document" "execution_role" {
     effect = "Allow"
     resources = [
       data.aws_ecr_repository.images["api"].arn,
+      data.aws_ecr_repository.images["api-webserver"].arn,
       data.aws_ecr_repository.images["client"].arn,
       data.aws_ecr_repository.images["client-webserver"].arn,
       data.aws_ecr_repository.images["sync"].arn,
