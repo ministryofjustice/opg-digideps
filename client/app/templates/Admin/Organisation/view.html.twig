@@ -28,6 +28,24 @@
 {% endblock %}
 
 {% block pageContent %}
+    {% set filtersToPreserveInPagination = {
+        'tab': currentTab,
+        'id': orgId,
+        'status': filters.status,
+        'q': filters.q,
+        'created_by_role': filters.created_by_role,
+    } %}
+
+    {% if app.request.get('tab') == 'clients' %}
+        {% set singular = 'Showing 1 client' %}
+        {% set plural = 'Showing %count% clients' %}
+        {% set multiPage = 'Showing %from% - %to% of %total% clients' %}
+    {% else %}
+        {% set singular = 'Showing 1 user' %}
+        {% set plural = 'Showing %count% users' %}
+        {% set multiPage = 'Showing %from% - %to% of %total% users' %}
+    {% endif %}
+
     <dl class="govuk-summary-list govuk-summary-list--no-border">
         <div class="govuk-summary-list__row">
             <dt class="govuk-summary-list__key">
@@ -42,7 +60,7 @@
                 {{ (page ~ '.summary.users') | trans }}
             </dt>
             <dd class="govuk-summary-list__value">
-                {{ organisation.users | length }}
+                {{ organisation.totalUserCount }}
             </dd>
         </div>
         <div class="govuk-summary-list__row">
@@ -50,7 +68,7 @@
                 {{ (page ~ '.summary.clients') | trans }}
             </dt>
             <dd class="govuk-summary-list__value">
-                {{ organisation.clients | length }}
+                {{ organisation.totalClientCount }}
             </dd>
         </div>
         <div class="govuk-summary-list__row">
@@ -93,7 +111,7 @@
             </thead>
 
             <tbody class="govuk-table__body">
-            {% for client in organisation.clients %}
+            {% for client in tabData %}
                 <tr class="govuk-table__row behat-region-org-{{ client.caseNumber | behat_namify }}">
                     <td class="govuk-table__cell">
                         <a class="govuk-link" href="{{ url('admin_client_details', { id: client.id }) }}">
@@ -134,7 +152,7 @@
             </thead>
 
             <tbody class="govuk-table__body">
-            {% for user in organisation.users %}
+            {% for user in tabData %}
                 <tr class="govuk-table__row behat-region-org-{{ user.fullName | behat_namify }}">
                     <td class="govuk-table__cell">
                         <a class="govuk-link" href="{{ url('admin_user_view', { id: user.id }) }}">
@@ -167,10 +185,19 @@
         </table>
     {% endif %}
 
-
-
-
-
-
+    {% include '@App/Components/paginator.html.twig' with {
+        currentOffset: filters.offset,
+        recordsPerPage: filters.limit,
+        totalRecords: count,
+        routeName: 'admin_organisation_view',
+        routeParams: filtersToPreserveInPagination,
+        messages: {
+            singlePage: {
+                singular: singular,
+                plural: plural
+            },
+            multiPage: multiPage
+        }
+    } %}
 
 {% endblock %}

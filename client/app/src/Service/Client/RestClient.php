@@ -425,7 +425,7 @@ class RestClient implements RestClientInterface
      *
      * @return object of type $class
      */
-    private function arrayToEntity($class, array $data)
+    public function arrayToEntity($class, array $data)
     {
         $fullClassName = (str_contains($class, 'App')) ? $class : 'App\\Entity\\'.$class;
 

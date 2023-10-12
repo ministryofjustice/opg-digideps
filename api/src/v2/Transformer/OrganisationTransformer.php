@@ -24,18 +24,15 @@ class OrganisationTransformer
         $this->clientTransformer = $clientTransformer;
     }
 
-    /**
-     * @param OrganisationDto $dto
-     * @param array $exclude
-     * @return array
-     */
     public function transform(OrganisationDto $dto, array $exclude = []): array
     {
         $data = [
             'id' => $dto->getId(),
             'name' => $dto->getName(),
             'email_identifier' => $dto->getEmailIdentifier(),
-            'is_activated' => $dto->isActivated()
+            'is_activated' => $dto->isActivated(),
+            'total_user_count' => $dto->getTotalUserCount(),
+            'total_client_count' => $dto->getTotalClientCount(),
         ];
 
         if (!in_array('users', $exclude) && $dto->getUsers()) {
@@ -49,10 +46,6 @@ class OrganisationTransformer
         return $data;
     }
 
-    /**
-     * @param array $users
-     * @return array
-     */
     private function transformUsers(array $users): array
     {
         if (empty($users)) {
@@ -70,10 +63,6 @@ class OrganisationTransformer
         return $transformed;
     }
 
-    /**
-     * @param array $clients
-     * @return array
-     */
     private function transformClients(array $clients, ?array $transformedOrg = null): array
     {
         if (empty($clients)) {
@@ -81,7 +70,7 @@ class OrganisationTransformer
         }
 
         $transformed = [];
-        
+
         foreach ($clients as $client) {
             if ($client instanceof ClientDto) {
                 $transformed[] = $this->clientTransformer->transform($client, ['reports', 'ndr', 'organisation']);

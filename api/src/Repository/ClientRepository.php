@@ -151,4 +151,61 @@ class ClientRepository extends ServiceEntityRepository
 
         return $client;
     }
+
+    public function findByOrganisationId(int $offset, int $limit, int $id)
+    {
+        $query = $this
+            ->getEntityManager()
+            ->createQuery('SELECT c, count(r.id) FROM App\Entity\Client c INNER JOIN c.reports r WHERE c.organisation = ?1 GROUP BY c.id ORDER BY c.lastname ASC, c.firstname ASC')
+            ->setParameter(1, $id)
+            ->setFirstResult($offset)
+            ->setMaxResults($limit);
+
+        return $query->getArrayResult();
+    }
+
+    public function findByFiltersWithCounts(
+        $q,
+        $offset,
+        $limit,
+        $id
+    ) {
+        // BASE QUERY BUILDER with filters (for both count and results)
+        $qb = $this->createQueryBuilder('c');
+        $qb->andWhere('c.organisation = :id');
+        $qb->setParameter('id', $id);
+
+        // search filter
+        if ($q) {
+            $qb->andWhere(implode(' OR ', [
+                'lower(c.firstname) LIKE :qLike',
+                'lower(c.lastname) LIKE :qLike',
+            ]));
+
+            $qb->setParameter('qLike', '%'.strtolower($q).'%');
+            $qb->setParameter('q', strtolower($q));
+        }
+
+        // get results (base query + ordered + pagination + status filter)
+        $qbSelect = clone $qb;
+        $qbSelect->select('c');
+        $qbSelect
+            ->groupBy('c.id')
+            ->addOrderBy('c.lastname', 'ASC')
+            ->setFirstResult($offset)
+            ->setMaxResults($limit);
+        $this->_em->getFilters()->getFilter('softdeleteable')->disableForEntity(Client::class); // disable softdelete for createdBy, needed from admin area
+        $records = $qbSelect->getQuery()->getResult(); /* @var $records User[] */
+        $this->_em->getFilters()->enable('softdeleteable');
+
+        // run counts on the base query for each status (new/archived)
+        $qbCount = clone $qb;
+        $queryCount = $qbCount->select('count(DISTINCT c.id)')->getQuery();
+        $count = $queryCount->getSingleScalarResult();
+
+        return [
+            'records' => $records,
+            'count' => $count,
+        ];
+    }
 }

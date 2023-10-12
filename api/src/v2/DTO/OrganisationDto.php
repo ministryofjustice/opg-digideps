@@ -22,75 +22,55 @@ class OrganisationDto
     /** @var array */
     private $clients;
 
-    /**
-     * @return int
-     */
+    private int $totalUserCount;
+
+    private int $totalClientCount;
+
     public function getId(): int
     {
         return $this->id;
     }
 
-    /**
-     * @param int $id
-     * @return OrganisationDto
-     */
     public function setId(int $id): OrganisationDto
     {
         $this->id = $id;
+
         return $this;
     }
 
-    /**
-     * @return string
-     */
     public function getName(): string
     {
         return $this->name;
     }
 
-    /**
-     * @param string $name
-     * @return OrganisationDto
-     */
     public function setName(string $name): OrganisationDto
     {
         $this->name = $name;
+
         return $this;
     }
 
-    /**
-     * @return string
-     */
     public function getEmailIdentifier(): string
     {
         return $this->emailIdentifier;
     }
 
-    /**
-     * @param string $emailIdentifier
-     * @return OrganisationDto
-     */
     public function setEmailIdentifier(string $emailIdentifier): OrganisationDto
     {
         $this->emailIdentifier = $emailIdentifier;
+
         return $this;
     }
 
-    /**
-     * @return bool
-     */
     public function isActivated(): bool
     {
         return $this->isActivated;
     }
 
-    /**
-     * @param bool $isActivated
-     * @return OrganisationDto
-     */
     public function setIsActivated(bool $isActivated): OrganisationDto
     {
         $this->isActivated = $isActivated;
+
         return $this;
     }
 
@@ -102,13 +82,10 @@ class OrganisationDto
         return $this->users;
     }
 
-    /**
-     * @param array $users
-     * @return OrganisationDto
-     */
     public function setUsers(array $users): OrganisationDto
     {
         $this->users = $users;
+
         return $this;
     }
 
@@ -120,13 +97,30 @@ class OrganisationDto
         return $this->clients;
     }
 
-    /**
-     * @param array $clients
-     * @return OrganisationDto
-     */
     public function setClients(array $clients): OrganisationDto
     {
         $this->clients = $clients;
+
         return $this;
+    }
+
+    public function getTotalUserCount()
+    {
+        return $this->totalUserCount;
+    }
+
+    public function setTotalUserCount(int $totalUserCount)
+    {
+        $this->totalUserCount = $totalUserCount;
+    }
+
+    public function getTotalClientCount()
+    {
+        return $this->totalClientCount;
+    }
+
+    public function setTotalClientCount(int $totalClientCount)
+    {
+        $this->totalClientCount = $totalClientCount;
     }
 }

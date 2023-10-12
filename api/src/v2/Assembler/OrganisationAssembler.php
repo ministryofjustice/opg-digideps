@@ -2,20 +2,20 @@
 
 namespace App\v2\Assembler;
 
-use App\v2\DTO\DtoPropertySetterTrait;
-use App\v2\DTO\OrganisationDto;
 use App\Entity\Client;
 use App\Entity\Organisation;
 use App\Entity\User;
+use App\v2\DTO\DtoPropertySetterTrait;
+use App\v2\DTO\OrganisationDto;
 
 class OrganisationAssembler
 {
     use DtoPropertySetterTrait;
 
-    /** @var DeputyAssembler  */
+    /** @var DeputyAssembler */
     private $deputyDtoAssembler;
 
-    /** @var ClientAssembler  */
+    /** @var ClientAssembler */
     private $clientDtoAssembler;
 
     /**
@@ -29,7 +29,6 @@ class OrganisationAssembler
     }
 
     /**
-     * @param array $data
      * @return OrganisationDto
      */
     public function assembleFromArray(array $data)
@@ -38,11 +37,11 @@ class OrganisationAssembler
 
         $this->setPropertiesFromData($dto, $data);
 
-        if (isset($data['users'])  && is_array($data['users'])) {
+        if (isset($data['users']) && is_array($data['users'])) {
             $dto->setUsers($this->assembleOrganisationUsers($data['users']));
         }
 
-        if (isset($data['clients'])  && is_array($data['clients'])) {
+        if (isset($data['clients']) && is_array($data['clients'])) {
             $dto->setClients($this->assembleOrganisationClients($data['clients']));
         }
 
@@ -50,10 +49,9 @@ class OrganisationAssembler
     }
 
     /**
-     * @param Organisation $organisation
      * @return OrganisationDto
      */
-    public function assembleFromEntity(Organisation $organisation)
+    public function assembleFromEntity(Organisation $organisation, bool $inclAssociatedEntities = false)
     {
         $dto = new OrganisationDto();
 
@@ -61,20 +59,23 @@ class OrganisationAssembler
         $dto->setName($organisation->getName());
         $dto->setEmailIdentifier($organisation->getEmailIdentifier());
         $dto->setIsActivated($organisation->isActivated());
+        $dto->setTotalUserCount($organisation->getTotalUserCount());
+        $dto->setTotalClientCount($organisation->getTotalClientCount());
 
-        if ($organisation->getUsers()) {
-            $dto->setUsers($this->assembleOrganisationUsers($organisation->getUsers()));
-        }
+        if ($inclAssociatedEntities) {
+            if ($organisation->getUsers()) {
+                $dto->setUsers($this->assembleOrganisationUsers($organisation->getUsers()));
+            }
 
-        if ($organisation->getClients()) {
-            $dto->setClients($this->assembleOrganisationClients($organisation->getClients()));
+            if ($organisation->getClients()) {
+                $dto->setClients($this->assembleOrganisationClients($organisation->getClients()));
+            }
         }
 
         return $dto;
     }
 
     /**
-     * @param iterable $users
      * @return array
      */
     private function assembleOrganisationUsers(iterable $users)
@@ -94,6 +95,7 @@ class OrganisationAssembler
 
     /**
      * @param array $clients
+     *
      * @return array
      */
     private function assembleOrganisationClients(iterable $clients)
