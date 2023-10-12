@@ -31,7 +31,6 @@ services:
       - 8070:80
     depends_on:
       - frontend-app
-      - admin-webserver
     environment:
       APP_HOST: frontend-app
       APP_PORT: 9000
@@ -47,7 +46,7 @@ services:
         XDEBUG_IDEKEY_CLIENT: ${XDEBUG_IDEKEY_CLIENT}
     depends_on:
       - resources
-      - api
+      - api-webserver
       - redis-frontend
       - htmltopdf
       - localstack
@@ -84,7 +83,7 @@ services:
         XDEBUG_IDEKEY_CLIENT: ${XDEBUG_IDEKEY_CLIENT}
     depends_on:
       - resources
-      - api
+      - api-webserver
       - redis-frontend
       - htmltopdf
       - localstack
@@ -97,15 +96,28 @@ services:
       - ./client/app/admin.env
     restart: always
 
-  api:
-    container_name: opg-digideps-api
+  api-webserver:
+    container_name: opg-digideps-api-webserver
     build:
-      context: ./api
+      context: .
+      dockerfile: ./api/docker/web/Dockerfile
+    ports:
+      - 8072:80
+    depends_on:
+      - api-app
+    environment:
+      APP_HOST: api-app
+      APP_PORT: 9000
+    restart: always
+
+  api-app:
+    container_name: opg-digideps-api-app
+    build:
+      context: .
+      dockerfile: ./api/docker/app/Dockerfile
       args:
         REQUIRE_XDEBUG: ${REQUIRE_XDEBUG_API} # set REQUIRE_XDEBUG_API=1 in .env to install Xdebug
         XDEBUG_IDEKEY_API: ${XDEBUG_IDEKEY_API}
-    ports:
-      - 8090:443
     depends_on:
       - postgres
       - redis-api
@@ -114,8 +126,8 @@ services:
       APP_ENV: ${APP_ENV:-dev}
       APP_DEBUG: ${APP_DEBUG:-0}
     env_file:
-      - ./api/api.env
-      - ./api/tests/Behat/test.env
+      - ./api/app/api.env
+      - ./api/app/tests/Behat/test.env
     restart: always
 
   htmltopdf:
@@ -128,7 +140,7 @@ services:
     ports:
       - 5432:5432
     env_file:
-      - ./api/postgres.env
+      - ./api/app/postgres.env
     restart: always
 
   redis-frontend:

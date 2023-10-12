@@ -1,105 +1,28 @@
-FROM composer:2.5.7 AS composer
+FROM nginxinc/nginx-unprivileged:stable-alpine
+USER root
 
-WORKDIR /app
-# Install composer dependencies
-COPY composer.json .
-COPY composer.lock .
-RUN composer install --prefer-dist --no-interaction --no-scripts
-RUN composer check-platform-reqs
-COPY app app
-COPY config config
-COPY src src
-RUN composer run-script post-install-cmd --no-interaction
-RUN composer dump-autoload --optimize
-
-FROM php:8.1.23-fpm-alpine3.18 as base
-WORKDIR /var/www
-EXPOSE 80
-EXPOSE 443
-ENV TIMEOUT=20
-ENV PHP_EXT_DIR=/usr/local/lib/php/extensions/no-debug-non-zts-20210902/
-RUN apk --no-cache add \
-    postgresql-dev \
-    postgresql-client \
-    openssl \
-    nginx \
-    nginx-mod-http-headers-more \
-    su-exec \
-    php81-pecl-igbinary  \
-    php81-pecl-redis
 RUN apk update && apk upgrade
-RUN docker-php-ext-install pdo pdo_pgsql opcache
-RUN docker-php-ext-enable opcache
-# Install pcov for faster coverage tooling
-RUN apk add --no-cache autoconf build-base
-RUN pecl install pcov && docker-php-ext-enable pcov
-# Install Xdebug if directed to with build arg from docker-compose.yml
-ARG REQUIRE_XDEBUG=0
-ARG XDEBUG_IDEKEY_API=PHPSTORM
-RUN if [[ $REQUIRE_XDEBUG = 1 ]] ; then \
-    pecl install xdebug-3.1.4  ;\
-    docker-php-ext-enable $PHP_EXT_DIR/xdebug.so ; \
-    echo "xdebug.mode = develop,debug" >> /usr/local/etc/php/conf.d/docker-php-ext-xdebug.ini ; \
-    echo "xdebug.client_host = host.docker.internal" >> /usr/local/etc/php/conf.d/docker-php-ext-xdebug.ini ; \
-    echo "xdebug.start_with_request = yes" >> /usr/local/etc/php/conf.d/docker-php-ext-xdebug.ini ; \
-    echo "xdebug.log = /tmp/xdebug.log" >> /usr/local/etc/php/conf.d/docker-php-ext-xdebug.ini ; \
-    echo "xdebug.idekey = ${XDEBUG_IDEKEY_API}" >> /usr/local/etc/php/conf.d/docker-php-ext-xdebug.ini ; \
-    fi ;
-# Route NGINX logs to stdout/stderr
-RUN ln -sf /dev/stdout /var/log/nginx/access.log \
-    && ln -sf /dev/stderr /var/log/nginx/error.log \
-    && ln -s /etc/nginx/http.d /etc/nginx/conf.d
-# Add Confd to configure parameters on start
+
+# Add Confd to configure nginx on start
 ENV CONFD_VERSION="0.16.0"
 RUN wget -q -O /usr/local/bin/confd "https://github.com/kelseyhightower/confd/releases/download/v${CONFD_VERSION}/confd-${CONFD_VERSION}-linux-amd64" \
-    && chmod +x /usr/local/bin/confd
-# Add Waitforit to wait on db starting
+  && chmod +x /usr/local/bin/confd
+
+# Add Waitforit to wait on app starting
 ENV WAITFORIT_VERSION="v2.4.1"
 RUN wget -q -O /usr/local/bin/waitforit https://github.com/maxcnunes/waitforit/releases/download/$WAITFORIT_VERSION/waitforit-linux_amd64 \
-    && chmod +x /usr/local/bin/waitforit
-# Generate certificate
-RUN mkdir -p /etc/nginx/certs
-RUN openssl req -newkey rsa:4096 -x509 -nodes -keyout /etc/nginx/certs/app.key -new -out /etc/nginx/certs/app.crt -subj "/C=GB/ST=GB/L=London/O=OPG/OU=Digital/CN=default" -sha256 -days "3650"
-# Create var folders
-RUN mkdir -p var/cache \
-    && mkdir -p var/logs \
-    && mkdir -p /var/log/app \
-    && chown -R www-data var \
-    && chown -R www-data /var/log/app
+  && chmod +x /usr/local/bin/waitforit
 
-FROM base
-COPY docker/confd /etc/confd
-COPY --from=composer /app/app app
-COPY --from=composer /app/vendor/bin bin
-COPY --from=composer /app/vendor vendor
-COPY --from=composer /app/composer.lock composer.lock
-COPY --from=composer /app/config/parameters.yml config/parameters.yml
-COPY app app
-COPY config config
-COPY public public
-COPY scripts scripts
-COPY src src
-COPY tests tests
-COPY api.env api.env
-COPY postgres.env postgres.env
-COPY phpstan.neon .
-# Behat
-RUN mkdir -p /tmp/html
-RUN mkdir -p /tmp/sql
-RUN chown www-data /var/www/tests/Behat/run-tests-smoke.sh
-RUN chmod 544 /var/www/tests/Behat/run-tests-smoke.sh
-RUN chown www-data /var/www/tests/Behat/run-tests.sh
-RUN chmod 544 /var/www/tests/Behat/run-tests.sh
-RUN chown www-data /var/www/tests/Behat/run-tests-parallel.sh
-RUN chmod 544 /var/www/tests/Behat/run-tests-parallel.sh
-# Prebuild cache
-RUN su-exec www-data php -d memory_limit=-1 app/console cache:warmup
+COPY --chown=nginx api/docker/web/confd /etc/confd
 
-RUN mkdir certs && chmod 755 certs && wget -O certs/rds-ca-2019-root.pem https://s3.amazonaws.com/rds-downloads/rds-ca-2019-root.pem
+RUN apk --no-cache add libcap && \
+    setcap 'cap_net_bind_service=+ep' /usr/sbin/nginx && \
+    apk del libcap
+
+COPY scripts/hardening/harden-nginx.sh /harden-nginx.sh
+RUN /harden-nginx.sh && rm /harden-nginx.sh
+
+USER nginx
 
 CMD confd -onetime -backend env \
-    && waitforit -address=tcp://$DATABASE_HOSTNAME:$DATABASE_PORT -timeout=$TIMEOUT \
-    && su-exec www-data:www-data php app/console doctrine:migrations:migrate --allow-no-migration --no-interaction \
-    && su-exec www-data:www-data php app/console doctrine:migrations:up-to-date \
-    && php-fpm -D \
-    && nginx
+  && nginx -g "daemon off;"
