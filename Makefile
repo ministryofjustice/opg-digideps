@@ -86,20 +86,20 @@ else
 endif
 
 client-unit-tests: ##@unit-tests Run the client unit tests
-	REQUIRE_XDEBUG_CLIENT=0 REQUIRE_XDEBUG_API=0 docker-compose -f docker-compose.yml -f docker-compose.ci.client-unit-tests.yml build client-unit-tests
-	docker-compose -f docker-compose.yml -f docker-compose.ci.client-unit-tests.yml up -d pact-mock
+	REQUIRE_XDEBUG_CLIENT=0 REQUIRE_XDEBUG_API=0 docker-compose -f docker-compose.yml -f docker-compose.unit-tests-client.yml build client-unit-tests
+	docker-compose -f docker-compose.yml -f docker-compose.unit-tests-client.yml up -d pact-mock
 	sleep 5
-	docker-compose -f docker-compose.yml -f docker-compose.ci.client-unit-tests.yml run -e APP_ENV=dev -e APP_DEBUG=0 --rm client-unit-tests vendor/bin/phpunit -c tests/phpunit
+	docker-compose -f docker-compose.yml -f docker-compose.unit-tests-client.yml run -e APP_ENV=dev -e APP_DEBUG=0 --rm client-unit-tests vendor/bin/phpunit -c tests/phpunit
 
 api-unit-tests: reset-database-unit-tests reset-fixtures-unit-tests ##@unit-tests Run the api unit tests
-	REQUIRE_XDEBUG_FRONTEND=0 REQUIRE_XDEBUG_API=0 docker-compose -f docker-compose.yml -f docker-compose.ci.api-unit-tests.yml build api-unit-tests
-	docker-compose -f docker-compose.yml -f docker-compose.ci.api-unit-tests.yml run -e APP_ENV=test -e APP_DEBUG=0 --rm api-unit-tests sh scripts/api_unit_test.sh selection-all
+	REQUIRE_XDEBUG_FRONTEND=0 REQUIRE_XDEBUG_API=0 docker-compose -f docker-compose.yml -f docker-compose.unit-tests-api.yml build api-unit-tests
+	docker-compose -f docker-compose.yml -f docker-compose.unit-tests-api.yml run -e APP_ENV=test -e APP_DEBUG=0 --rm api-unit-tests sh scripts/api_unit_test.sh selection-all
 
 reset-database-unit-tests: ##@database Resets the DB schema and runs migrations
-	docker-compose -f docker-compose.yml -f docker-compose.ci.api-unit-tests.yml run --rm api-unit-tests sh scripts/reset_db_structure_local.sh
+	docker-compose -f docker-compose.yml -f docker-compose.unit-tests-api.yml run --rm api-unit-tests sh scripts/reset_db_structure_local.sh
 
 reset-fixtures-unit-tests: ##@database Resets the DB schema and runs migrations
-	docker-compose -f docker-compose.yml -f docker-compose.ci.api-unit-tests.yml run --rm api-unit-tests sh scripts/reset_db_fixtures_local.sh
+	docker-compose -f docker-compose.yml -f docker-compose.unit-tests-api.yml run --rm api-unit-tests sh scripts/reset_db_fixtures_local.sh
 
 reset-database: ##@database Resets the DB schema and runs migrations
 	docker-compose run --rm api sh scripts/reset_db_structure_local.sh

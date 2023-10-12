@@ -25,7 +25,7 @@ services:
       - ./client/app/phpstan.neon:/var/www/phpstan.neon
       - ./client/app/composer.json:/var/www/composer.json
       - ./client/app/composer.lock:/var/www/composer.lock
-      - ./docker/install-composer.sh:/var/www/install-composer.sh
+      - ./scripts/miscellaneous/install-composer.sh:/var/www/install-composer.sh
 
   admin-webserver:
     volumes:
@@ -45,7 +45,7 @@ services:
       - ./client/app/phpstan.neon:/var/www/phpstan.neon
       - ./client/app/composer.json:/var/www/composer.json
       - ./client/app/composer.lock:/var/www/composer.lock
-      - ./docker/install-composer.sh:/var/www/install-composer.sh
+      - ./scripts/miscellaneous/install-composer.sh:/var/www/install-composer.sh
 
   api:
     volumes:
@@ -62,7 +62,7 @@ services:
       - ./api/bin:/var/www/vendor/bin
       - ./api/composer.json:/var/www/composer.json
       - ./api/composer.lock:/var/www/composer.lock
-      - ./docker/install-composer.sh:/var/www/install-composer.sh
+      - ./scripts/miscellaneous/install-composer.sh:/var/www/install-composer.sh
 
   htmltopdf:
     volumes:

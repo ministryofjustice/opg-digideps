@@ -23,7 +23,7 @@ Once both boxes are checked click `Apply & Restart` then run the `Make` command 
 
 - Add `127.0.0.1 digideps.local admin.digideps.local api.digideps.local www.digideps.local` to `/etc/hosts`
 - Make sure you have docker desktop installed.
-- Follow the instructions for creating your own self-signed certificates here: [self-signed-certificate-instructions](docker/local-load-balancer/certificates/certificates.md)
+- Follow the instructions for creating your own self-signed certificates here: [self-signed-certificate-instructions](local-resources/local-load-balancer/certificates/certificates.md)
 - Make sure you are in the root directory of this repository and run:
 
 ```

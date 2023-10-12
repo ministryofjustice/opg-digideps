@@ -15,7 +15,7 @@ services:
   load-balancer:
     container_name: opg-digideps-loadbalancer
     build:
-      context: docker/local-load-balancer
+      context: local-resources/local-load-balancer
     depends_on:
       - frontend-webserver
       - admin-webserver
@@ -165,7 +165,7 @@ services:
   localstack:
     build:
       context: .
-      dockerfile: ./docker/local-dockerfiles/localstack.Dockerfile
+      dockerfile: local-resources/localstack/Dockerfile
     ports:
       - "4566-4583:4566-4583"
     environment:

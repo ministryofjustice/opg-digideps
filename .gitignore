@@ -30,7 +30,6 @@ vendor/
 account/go_redeployer/bootstrap
 
 # Repo-specific excludes
-docker/log
 terraform/to_import\.sh
 .certs
 log/pact.log

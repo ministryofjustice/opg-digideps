@@ -14,7 +14,7 @@ services:
       - ./api/vendor:/var/www/vendor
     env_file:
       - ./api/api.env
-      - ./api/tests/Behat/integration-test.env
+      - ./api/tests/Behat/test.env
     environment:
       APP_ENV: dev
 
