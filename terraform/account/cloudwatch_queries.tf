@@ -90,7 +90,7 @@ QUERY
 }
 
 resource "aws_cloudwatch_query_definition" "sync_logs" {
-  name            = "Document-Sync/all-document-and-checklist-sync-logs"
+  name            = "Document-Sync/All-Document-And-Checklist-Sync-Logs"
   log_group_names = [local.default_insights_query_log_identifier[local.account.name]]
 
   query_string = <<QUERY
