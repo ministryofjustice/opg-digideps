@@ -351,18 +351,6 @@ SQL;
         return $stmt->getResult();
     }
 
-    public function findByOrganisationId(int $offset, int $limit, int $id)
-    {
-        $query = $this
-            ->getEntityManager()
-            ->createQuery('SELECT u FROM App\Entity\User u LEFT JOIN u.organisations o WHERE o.id = ?1 ORDER BY u.lastname ASC, u.firstname ASC')
-            ->setParameter(1, $id)
-            ->setFirstResult($offset)
-            ->setMaxResults($limit);
-
-        return $query->getArrayResult();
-    }
-
     public function findByFiltersWithCounts(
         $q,
         $offset,

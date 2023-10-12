@@ -152,18 +152,6 @@ class ClientRepository extends ServiceEntityRepository
         return $client;
     }
 
-    public function findByOrganisationId(int $offset, int $limit, int $id)
-    {
-        $query = $this
-            ->getEntityManager()
-            ->createQuery('SELECT c, count(r.id) FROM App\Entity\Client c INNER JOIN c.reports r WHERE c.organisation = ?1 GROUP BY c.id ORDER BY c.lastname ASC, c.firstname ASC')
-            ->setParameter(1, $id)
-            ->setFirstResult($offset)
-            ->setMaxResults($limit);
-
-        return $query->getArrayResult();
-    }
-
     public function findByFiltersWithCounts(
         $q,
         $offset,

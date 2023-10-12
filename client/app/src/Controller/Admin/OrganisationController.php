@@ -51,28 +51,6 @@ class OrganisationController extends AbstractController
         ];
     }
 
-//    /**
-//     * @Route("/{id}", name="admin_organisation_view", requirements={"id":"\d+"})
-//     * @Security("is_granted('ROLE_ADMIN')")
-//     * @Template("@App/Admin/Organisation/view.html.twig")
-//     *
-//     * @param $id
-//     *
-//     * @return array
-//     */
-//    public function viewAction($id)
-//    {
-//        try {
-//            $organisation = $this->restClient->get('v2/organisation/'.$id.'/all-data', 'Organisation');
-//        } catch (RestClientException $e) {
-//            throw $this->createNotFoundException('Organisation not found');
-//        }
-//
-//        return [
-//            'organisation' => $organisation,
-//        ];
-//    }
-
     /**
      * @Route("/{id}", name="admin_organisation_view", methods={"GET"})
      * @Security("is_granted('ROLE_ADMIN')")
@@ -85,7 +63,6 @@ class OrganisationController extends AbstractController
         /** @var $organisation Organisation */
         $organisation = $this->restClient->get('v2/organisation/'.$id, 'Organisation');
 
-        var_dump($organisation);
         $tab = $request->get('tab', 'users');
         $currentFilters = self::getFiltersFromRequest($request);
 

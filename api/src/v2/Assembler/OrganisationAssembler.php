@@ -51,7 +51,7 @@ class OrganisationAssembler
     /**
      * @return OrganisationDto
      */
-    public function assembleFromEntity(Organisation $organisation, bool $inclAssociatedEntities = false)
+    public function assembleFromEntity(Organisation $organisation)
     {
         $dto = new OrganisationDto();
 
@@ -61,16 +61,6 @@ class OrganisationAssembler
         $dto->setIsActivated($organisation->isActivated());
         $dto->setTotalUserCount($organisation->getTotalUserCount());
         $dto->setTotalClientCount($organisation->getTotalClientCount());
-
-        if ($inclAssociatedEntities) {
-            if ($organisation->getUsers()) {
-                $dto->setUsers($this->assembleOrganisationUsers($organisation->getUsers()));
-            }
-
-            if ($organisation->getClients()) {
-                $dto->setClients($this->assembleOrganisationClients($organisation->getClients()));
-            }
-        }
 
         return $dto;
     }
