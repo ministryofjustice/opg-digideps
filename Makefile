@@ -24,7 +24,7 @@ HELP_FUN = \
 help: ##@other Show this help.
 	@perl -e '$(HELP_FUN)' $(MAKEFILE_LIST)
 
-APP_CONTAINERS := frontend api admin
+APP_CONTAINERS := frontend-app api admin-app
 REDIS_CONTAINERS := redis-frontend redis-api
 
 .ONESHELL:
