@@ -379,6 +379,7 @@ SQL;
         $qbSelect->select('u');
         $qbSelect
             ->addOrderBy('u.lastname', 'ASC')
+            ->addOrderBy('u.firstname', 'ASC')
             ->setFirstResult($offset)
             ->setMaxResults($limit);
         $this->_em->getFilters()->getFilter('softdeleteable')->disableForEntity(User::class); // disable softdelete for createdBy, needed from admin area

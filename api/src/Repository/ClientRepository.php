@@ -178,8 +178,8 @@ class ClientRepository extends ServiceEntityRepository
         $qbSelect = clone $qb;
         $qbSelect->select('c');
         $qbSelect
-            ->groupBy('c.id')
             ->addOrderBy('c.lastname', 'ASC')
+            ->addOrderBy('c.firstname', 'ASC')
             ->setFirstResult($offset)
             ->setMaxResults($limit);
         $this->_em->getFilters()->getFilter('softdeleteable')->disableForEntity(Client::class); // disable softdelete for createdBy, needed from admin area
