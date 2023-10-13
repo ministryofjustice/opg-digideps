@@ -322,7 +322,16 @@ class UserController extends RestController
             && !$this->isGranted(User::ROLE_AD)
             && !$requestedUserIsLogged
         ) {
-            throw $this->createAccessDeniedException("Not authorised to see other user's data");
+            if (
+                $this->isGranted(User::ROLE_PA_ADMIN)
+                || $this->isGranted(User::ROLE_PROF_ADMIN)
+                || $this->isGranted(User::ROLE_PA_NAMED)
+                || $this->isGranted(User::ROLE_PROF_NAMED)
+            ) {
+                $this->denyAccessUnlessGranted('delete-user', $user, 'Access denied');
+            } else {
+                throw $this->createAccessDeniedException("Not authorised to see other user's data");
+            }
         }
 
         return $user;

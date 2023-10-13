@@ -52,7 +52,7 @@ class OrganisationController extends AbstractController
     }
 
     /**
-     * @Route("/{id}", name="admin_organisation_view", methods={"GET"})
+     * @Route("/{id}", name="admin_organisation_view", requirements={"id":"\d+"}, methods={"GET"})
      * @Security("is_granted('ROLE_ADMIN')")
      * @Template("@App/Admin/Organisation/view.html.twig")
      *
