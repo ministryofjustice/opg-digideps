@@ -185,6 +185,33 @@ class ClientController extends AbstractController
                         $form->addError(new FormError($translator->trans('formErrors.matching', [], 'register')));
                         break;
 
+                    case 403:
+                        $form->addError(new FormError($translator->trans('formErrors.coDepCaseAlreadyRegistered', [], 'register')));
+                        break;
+
+                    case 425:
+                        $form->addError(new FormError($translator->trans('formErrors.caseNumberAlreadyUsed', [], 'register')));
+                        break;
+
+                    case 460:
+                        $form->get('caseNumber')->addError(new FormError($translator->trans('matchingErrors.caseNumber', [], 'register')));
+                        break;
+
+                    case 461:
+                        $decodedError = json_decode($e->getData()['message'], true);
+
+                        if (true == $decodedError['matching_errors']['client_lastname']) {
+                            $form->get('clientLastname')->addError(new FormError($translator->trans('matchingErrors.clientLastname', [], 'register')));
+                        }
+                        if (true == $decodedError['matching_errors']['deputy_lastname']) {
+                            $form->get('lastname')->addError(new FormError($translator->trans('matchingErrors.deputyLastname', [], 'register')));
+                        }
+                        if (true == $decodedError['matching_errors']['deputy_postcode']) {
+                            $form->get('postcode')->addError(new FormError($translator->trans('matchingErrors.deputyPostcode', [], 'register')));
+                        }
+
+                        break;
+
                     default:
                         $form->addError(new FormError($translator->trans('formErrors.generic', [], 'register')));
                 }

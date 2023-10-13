@@ -2,6 +2,8 @@
 
 namespace App\Controller;
 
+use App\Entity\Client;
+use App\Entity\Organisation;
 use App\Entity\User;
 use App\Repository\PreRegistrationRepository;
 use App\Service\Formatter\RestFormatter;
@@ -52,6 +54,26 @@ class PreRegistrationController extends RestController
         $clientData = $this->formatter->deserializeBodyContent($request);
         /** @var User $user */
         $user = $this->getUser();
+
+        $isMultiDeputyCase = $verificationService->isMultiDeputyCase($clientData['case_number']);
+        $existingClient = $this->em->getRepository('App\Entity\Client')->findOneByCaseNumber($clientData['case_number']);
+
+        // ward off non-fee-paying codeps trying to self-register
+        if ($isMultiDeputyCase && ($existingClient instanceof Client) && $existingClient->hasDeputies()) {
+            // if client exists with case number, the first codep already registered.
+            throw new \RuntimeException(json_encode('Co-deputy cannot self register.'), 403);
+        }
+
+        // Check the client is unique and has no deputies attached
+        if ($existingClient instanceof Client) {
+            if ($existingClient->hasDeputies() || $existingClient->getOrganisation() instanceof Organisation) {
+                throw new \RuntimeException(json_encode(sprintf('User registration: Case number %s already used', $existingClient->getCaseNumber())), 425);
+            } else {
+                // soft delete client
+                $this->em->remove($existingClient);
+                $this->em->flush();
+            }
+        }
 
         $verified = $verificationService->validate(
             $clientData['case_number'],
