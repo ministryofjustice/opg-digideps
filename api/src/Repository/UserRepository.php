@@ -176,12 +176,18 @@ class UserRepository extends ServiceEntityRepository implements PasswordUpgrader
             ->from('App\Entity\Ndr\Ndr', 'n')
             ->andWhere('n.client = c');
 
+        $feedbackSubquery = $this->_em->createQueryBuilder()
+            ->select('1')
+            ->from('App\Entity\UserResearch\UserResearchResponse', 'urr')
+            ->andWhere('urr.user = u');
+
         $qb = $this->createQueryBuilder('u');
         $qb
             ->select($select)
             ->leftJoin('u.clients', 'c')
             ->andWhere('u.registrationDate < :reg_cutoff')
             ->andWhere('u.roleName = :lay_deputy_role')
+            ->andWhere($qb->expr()->not($qb->expr()->exists($feedbackSubquery->getDQL())))
             ->andWhere($qb->expr()->not($qb->expr()->exists($reportSubquery->getDQL())))
             ->andWhere($qb->expr()->not($qb->expr()->exists($ndrSubquery->getDQL())))
             ->setParameter('reg_cutoff', $thirtyDaysAgo)
