@@ -112,6 +112,8 @@ class OrganisationDto
     public function setTotalUserCount(int $totalUserCount)
     {
         $this->totalUserCount = $totalUserCount;
+
+        return $this;
     }
 
     public function getTotalClientCount()
@@ -122,5 +124,7 @@ class OrganisationDto
     public function setTotalClientCount(int $totalClientCount)
     {
         $this->totalClientCount = $totalClientCount;
+
+        return $this;
     }
 }

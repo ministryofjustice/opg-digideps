@@ -60,7 +60,7 @@
                 {{ (page ~ '.summary.users') | trans }}
             </dt>
             <dd class="govuk-summary-list__value">
-                {{ organisation.totalUserCount }}
+                {{ organisation.totalUserCount ?: '0' }}
             </dd>
         </div>
         <div class="govuk-summary-list__row">
@@ -68,7 +68,7 @@
                 {{ (page ~ '.summary.clients') | trans }}
             </dt>
             <dd class="govuk-summary-list__value">
-                {{ organisation.totalClientCount }}
+                {{ organisation.totalClientCount ?: '0' }}
             </dd>
         </div>
         <div class="govuk-summary-list__row">
