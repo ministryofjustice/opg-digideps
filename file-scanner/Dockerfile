@@ -35,7 +35,7 @@ RUN sed -i 's/^#Foreground .*$/Foreground true/g' /etc/clamav/clamd.conf \
     && sed -i 's/^#TCPSocket .*$/TCPSocket 3310/g' /etc/clamav/clamd.conf \
     && sed -i 's/^#Foreground .*$/Foreground true/g' /etc/clamav/freshclam.conf
 
-RUN freshclam
+RUN freshclam --quiet --no-dns
 
 COPY entrypoint.sh /usr/bin/
 

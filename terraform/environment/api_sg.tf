@@ -6,14 +6,6 @@ locals {
     ssm            = local.common_sg_rules.ssm
     ecr_api        = local.common_sg_rules.ecr_api
     secrets_egress = local.common_sg_rules.secrets
-    #    CHECK ON THIS
-    secrets_ingress = {
-      port        = 80
-      type        = "ingress"
-      protocol    = "tcp"
-      target_type = "security_group_id"
-      target      = data.aws_security_group.secrets_endpoint.id
-    }
     cache = {
       port        = 6379
       type        = "egress"
