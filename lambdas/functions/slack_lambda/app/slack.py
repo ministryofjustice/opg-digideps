@@ -155,8 +155,8 @@ def is_bank_holiday():
         # Check if today's date is in the list of bank holidays
         for holiday in england_and_wales_holidays.get("events", []):
             if holiday.get("date") == today_date:
-                return False  # Today is a bank holiday
-        return True  # Today is not a bank holiday
+                return True  # Today is a bank holiday
+        return False  # Today is not a bank holiday
     else:
         logger.warning("Failed to fetch bank holiday data.")
         return False  # Unable to determine if today is a bank holiday
@@ -345,11 +345,9 @@ def generate_message(event):
     elif "GithubActions" in event:
         message = event["GithubActions"]
         response = github_actions_message(message)
-    elif "detail-type" in event:
-        if event["detail-type"] == "Scheduled Event":
-            if "detail" in event:
-                message = event["detail"]
-                response = cloudwatch_event(message)
+    elif "scheduled-event-detail" in event:
+        message = event["scheduled-event-detail"]
+        response = cloudwatch_event(message)
     else:
         logger.warning("Unknown event. No actions performed")
 

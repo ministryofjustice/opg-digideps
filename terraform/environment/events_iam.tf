@@ -1,3 +1,4 @@
+# Event Task Runner Role and Permissions
 resource "aws_iam_role" "events_task_runner" {
   name               = "events-task-runner.${local.environment}"
   assume_role_policy = data.aws_iam_policy_document.events_task_runner.json
@@ -58,3 +59,44 @@ data "aws_iam_policy_document" "events_task_runner_policy" {
     actions   = ["ecs:RunTask"]
   }
 }
+
+# Event SNS Publisher Role and Permissions
+#
+#resource "aws_iam_role" "event_sns_publisher" {
+#  name = "events-sns-publisher.${terraform.workspace}"
+#  assume_role_policy = data.aws_iam_policy_document.sns_publisher_assume.json
+#  tags               = local.default_tags
+#}
+#
+#data "aws_iam_policy_document" "sns_publisher_assume" {
+#  statement {
+#    effect  = "Allow"
+#    actions = ["sts:AssumeRole"]
+#
+#    principals {
+#      identifiers = ["events.amazonaws.com"]
+#      type        = "Service"
+#    }
+#  }
+#}
+#
+#resource "aws_iam_policy" "event_sns_publisher" {
+#  name        = "events-sns-publish.${local.environment}"
+#  description = "Allow publishing to the SNS topic"
+#
+#  policy = data.aws_iam_policy_document.event_sns_publisher.json
+#}
+#
+#data "aws_iam_policy_document" "event_sns_publisher" {
+#  statement {
+#    effect    = "Allow"
+#    resources = [data.aws_sns_topic.alerts.arn]
+#    actions = ["sns:Publish"]
+#  }
+#}
+#
+#resource "aws_iam_role_policy" "event_sns_publisher" {
+#  name   = "events-sns-publisher.${local.environment}"
+#  policy = data.aws_iam_policy_document.event_sns_publisher.json
+#  role   = aws_iam_role.event_sns_publisher.id
+#}

@@ -50,7 +50,7 @@ data "aws_iam_policy_document" "lambda_slack_policy" {
 }
 
 resource "aws_iam_role_policy" "lambda_slack" {
-  name   = "lambda_slack"
+  name   = "lambda-slack"
   policy = data.aws_iam_policy_document.lambda_slack.json
   role   = aws_iam_role.lambda_slack.id
 }
@@ -60,11 +60,9 @@ data "aws_iam_policy_document" "lambda_slack" {
     sid    = "WriteLogs"
     effect = "Allow"
     actions = [
-      "logs:CreateLogStream",
-      "logs:PutLogEvents",
-      "logs:DescribeLogStreams"
+      "logs:*"
     ]
-    resources = [aws_cloudwatch_log_group.slack_lambda.arn]
+    resources = ["*"]
   }
 
   statement {
@@ -83,8 +81,8 @@ data "aws_iam_policy_document" "lambda_slack" {
     sid    = "SNS"
     effect = "Allow"
     actions = [
-      "sns:Subscribe",
-      "sns:Receive"
+      "SNS:Subscribe",
+      "SNS:Receive",
     ]
     resources = [
       aws_sns_topic.alerts.arn,
