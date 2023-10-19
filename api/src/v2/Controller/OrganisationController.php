@@ -4,12 +4,16 @@ namespace App\v2\Controller;
 
 use App\Entity\Organisation;
 use App\Entity\User;
+use App\Repository\ClientRepository;
 use App\Repository\OrganisationRepository;
+use App\Repository\UserRepository;
+use App\Service\Formatter\RestFormatter;
 use App\Service\RestHandler\OrganisationRestHandler;
 use App\v2\Assembler\OrganisationAssembler;
 use App\v2\Transformer\OrganisationTransformer;
 use Doctrine\ORM\OptimisticLockException;
 use Doctrine\ORM\ORMException;
+use Psr\Log\LoggerInterface;
 use Sensio\Bundle\FrameworkExtraBundle\Configuration\Entity;
 use Sensio\Bundle\FrameworkExtraBundle\Configuration\Security;
 use Symfony\Bundle\FrameworkBundle\Controller\AbstractController;
@@ -25,29 +29,25 @@ class OrganisationController extends AbstractController
 {
     use ControllerTrait;
 
-    /** @var OrganisationRestHandler */
-    private $restHandler;
-
-    /** @var OrganisationRepository */
-    private $repository;
-
-    /** @var OrganisationAssembler */
-    private $assembler;
-
-    /** @var OrganisationTransformer */
-    private $transformer;
-
     public function __construct(
-        OrganisationRestHandler $restHandler,
-        OrganisationRepository $repository,
-        OrganisationAssembler $assembler,
-        OrganisationTransformer $transformer,
+        private OrganisationRestHandler $restHandler,
+        private OrganisationRepository $organisationRepository,
+        private UserRepository $userRepository,
+        private ClientRepository $clientRepository,
+        private OrganisationAssembler $assembler,
+        private OrganisationTransformer $transformer,
+        private RestFormatter $formatter,
+        private LoggerInterface $verboseLogger
     ) {
-        $this->restHandler = $restHandler;
-        $this->repository = $repository;
-        $this->assembler = $assembler;
-        $this->transformer = $transformer;
     }
+
+    private static array $jmsGroups = [
+        'client-id',
+        'client-name',
+        'client-case-number',
+        'total-report-count',
+        'user-list',
+    ];
 
     /**
      * @Route("/list", methods={"GET"})
@@ -56,7 +56,7 @@ class OrganisationController extends AbstractController
     public function getAllAction(): JsonResponse
     {
         // Fetch all data from db
-        $data = $this->repository->getNonDeletedArray();
+        $data = $this->organisationRepository->getNonDeletedArray();
 
         $data = $this->snakeCase($data);
 
@@ -93,6 +93,7 @@ class OrganisationController extends AbstractController
 
     /**
      * @Route("/{id}", requirements={"id":"\d+"}, methods={"GET"})
+     * @Entity("organisation", expr="repository.find(id)")
      * @Security("is_granted('view', organisation)")
      *
      * @param int $id
@@ -103,6 +104,46 @@ class OrganisationController extends AbstractController
         $transformedDto = $this->transformer->transform($dto);
 
         return $this->buildSuccessResponse($transformedDto);
+    }
+
+    /**
+     * @Route("/{id}/users", requirements={"id":"\d+"}, methods={"GET"})
+     * @Entity("organisation", expr="repository.find(id)")
+     * @Security("is_granted('view', organisation)")
+     */
+    public function getUsers(Organisation $organisation, Request $request)
+    {
+        $ret = $this->userRepository->findByFiltersWithCounts(
+            $request->get('q'),
+            $request->get('offset', 0),
+            $request->get('limit', 15),
+            $organisation->getId()
+        );
+
+        $this->formatter->setJmsSerialiserGroups(self::$jmsGroups);
+
+        return $ret;
+    }
+
+    /**
+     * @Route("/{id}/clients", requirements={"id":"\d+"}, methods={"GET"})
+     * @Entity("organisation", expr="repository.find(id)")
+     * @Security("is_granted('view', organisation)")
+     *
+     * @param int $id
+     */
+    public function getClients(Organisation $organisation, Request $request)
+    {
+        $ret = $this->clientRepository->findByFiltersWithCounts(
+            $request->get('q'),
+            $request->get('offset', 0),
+            $request->get('limit', 15),
+            $organisation->getId()
+        );
+
+        $this->formatter->setJmsSerialiserGroups(self::$jmsGroups);
+
+        return $ret;
     }
 
     /**
