@@ -53,8 +53,6 @@ class ClientController extends RestController
     /**
      * @Route("/{id}", requirements={"id":"\d+"}, methods={"GET"})
      * @Security("is_granted('ROLE_ADMIN') or is_granted('ROLE_AD') or is_granted('ROLE_DEPUTY')")
-     *
-     * @param $id
      */
     public function getByIdAction(int $id): JsonResponse
     {
@@ -66,9 +64,10 @@ class ClientController extends RestController
 
         $orgDto = null;
         $transformedOrg = null;
+
         if (isset($data['organisation'])) {
             $orgDto = $this->orgAssembler->assembleFromArray($data['organisation']);
-            $transformedOrg = $this->orgTransformer->transform($orgDto);
+            $transformedOrg = $this->orgTransformer->transform($orgDto, ['total_user_count', 'total_client_count', 'users', 'clients']);
         }
 
         $transformedDto = $this->clientTransformer->transform($dto, [], $transformedOrg);

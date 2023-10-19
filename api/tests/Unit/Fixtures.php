@@ -74,7 +74,7 @@ class Fixtures
     /**
      * @return EntityDir\Client
      */
-    public function createClient(EntityDir\User $user, array $settersMap = [])
+    public function createClient(EntityDir\User $user = null, array $settersMap = [])
     {
         // add clent, cot, report, needed for assets
         $client = new EntityDir\Client();
@@ -83,7 +83,9 @@ class Fixtures
             $client->$k($v);
         }
 
-        $user->addClient($client);
+        if ($user) {
+            $user->addClient($client);
+        }
 
         $this->em->persist($client);
 

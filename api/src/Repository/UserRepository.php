@@ -176,14 +176,26 @@ class UserRepository extends ServiceEntityRepository implements PasswordUpgrader
             ->from('App\Entity\Ndr\Ndr', 'n')
             ->andWhere('n.client = c');
 
+        $feedbackSubquery = $this->_em->createQueryBuilder()
+            ->select('1')
+            ->from('App\Entity\UserResearch\UserResearchResponse', 'urr')
+            ->andWhere('urr.user = u');
+
+        $createdBySubquery = $this->_em->createQueryBuilder()
+            ->select('1')
+            ->from('App\Entity\User', 'us')
+            ->andWhere('us.createdBy = u');
+
         $qb = $this->createQueryBuilder('u');
         $qb
             ->select($select)
             ->leftJoin('u.clients', 'c')
             ->andWhere('u.registrationDate < :reg_cutoff')
             ->andWhere('u.roleName = :lay_deputy_role')
+            ->andWhere($qb->expr()->not($qb->expr()->exists($feedbackSubquery->getDQL())))
             ->andWhere($qb->expr()->not($qb->expr()->exists($reportSubquery->getDQL())))
             ->andWhere($qb->expr()->not($qb->expr()->exists($ndrSubquery->getDQL())))
+            ->andWhere($qb->expr()->not($qb->expr()->exists($createdBySubquery->getDQL())))
             ->setParameter('reg_cutoff', $thirtyDaysAgo)
             ->setParameter('lay_deputy_role', User::ROLE_LAY_DEPUTY);
 
@@ -349,5 +361,51 @@ SQL;
         $stmt = $this->getEntityManager()->createQuery($dql);
 
         return $stmt->getResult();
+    }
+
+    public function findByFiltersWithCounts(
+        $q,
+        $offset,
+        $limit,
+        $id
+    ) {
+        // BASE QUERY BUILDER with filters (for both count and results)
+        $qb = $this->createQueryBuilder('u');
+        $qb->leftJoin('u.organisations', 'o');
+        $qb->andWhere('o.id = :id');
+        $qb->setParameter('id', $id);
+
+        // search filter
+        if ($q) {
+            $qb->andWhere(implode(' OR ', [
+                'lower(u.firstname) LIKE :qLike',
+                'lower(u.lastname) LIKE :qLike',
+            ]));
+
+            $qb->setParameter('qLike', '%'.strtolower($q).'%');
+            $qb->setParameter('q', strtolower($q));
+        }
+
+        // get results (base query + ordered + pagination + status filter)
+        $qbSelect = clone $qb;
+        $qbSelect->select('u');
+        $qbSelect
+            ->addOrderBy('u.lastname', 'ASC')
+            ->addOrderBy('u.firstname', 'ASC')
+            ->setFirstResult($offset)
+            ->setMaxResults($limit);
+        $this->_em->getFilters()->getFilter('softdeleteable')->disableForEntity(User::class); // disable softdelete for createdBy, needed from admin area
+        $records = $qbSelect->getQuery()->getResult(); /* @var $records User[] */
+        $this->_em->getFilters()->enable('softdeleteable');
+
+        // run counts on the base query for each status (new/archived)
+        $qbCount = clone $qb;
+        $queryCount = $qbCount->select('count(DISTINCT u.id)')->getQuery();
+        $count = $queryCount->getSingleScalarResult();
+
+        return [
+            'records' => $records,
+            'count' => $count,
+        ];
     }
 }
