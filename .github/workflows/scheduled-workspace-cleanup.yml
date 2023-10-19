@@ -31,7 +31,7 @@ jobs:
             echo "- Terraform version: [${terraform_version}]" >> $GITHUB_STEP_SUMMARY
             echo "TERRAFORM_VERSION=${terraform_version}" >> $GITHUB_OUTPUT
           fi
-        working-directory: environment
+        working-directory: terraform/environment
 
       - name: "Terraform version [${{ steps.tf_version_setup.outputs.TERRAFORM_VERSION }}]"
         run: echo "terraform version [${{ steps.tf_version_setup.outputs.TERRAFORM_VERSION }}]"
@@ -52,7 +52,7 @@ jobs:
           aws-secret-access-key: ${{ secrets.AWS_SECRET_ACCESS_KEY_ACTIONS }}
           aws-region: eu-west-1
           role-duration-seconds: 3600
-          role-session-name: OPGUseAnLPATerraformGithubAction
+          role-session-name: OPGDigidepsCleanupGithubAction
 
       - name: install workspace manager
         run: |
@@ -61,11 +61,11 @@ jobs:
           sudo chmod +x /usr/local/bin/terraform-workspace-manager
 
       - name: terraform init
-        working-directory: environment
         run: terraform init -input=false
+        working-directory: terraform/environment
 
       - name: clean up ephemeral environments
-        working-directory: environment
         run: |
           unset TF_WORKSPACE
           ./scripts/workspace_cleanup.sh $(terraform-workspace-manager -protected-workspaces=true -aws-account-id=248804316466 -aws-iam-role=digideps-ci)
+        working-directory: terraform/environment
