@@ -19,7 +19,7 @@
         "gbprod/uuid-normalizer": "^1.2",
         "guzzlehttp/guzzle": "^7.4.0",
         "incenteev/composer-parameter-handler": "^2.1.3",
-        "jms/serializer-bundle": "^4.0.1",
+        "jms/serializer-bundle": "^5.0.0",
         "jolicode/slack-php-api": "^4.4",
         "lcobucci/jwt": "^4.1",
         "league/mime-type-detection": "^1.5",
