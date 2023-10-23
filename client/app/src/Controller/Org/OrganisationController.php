@@ -75,16 +75,23 @@ class OrganisationController extends AbstractController
      * @Route("/{id}", name="org_organisation_view")
      * @Template("@App/Org/Organisation/view.html.twig")
      */
-    public function viewAction(Request $request, string $id)
+    public function viewAction(Request $request, int $id)
     {
-        try {
-            $organisation = $this->restClient->get('v2/organisation/'.$id, 'Organisation');
-        } catch (RestClientException $e) {
-            throw $this->createNotFoundException('Organisation not found');
-        }
+        /** @var $organisation EntityDir\Organisation */
+        $organisation = $this->restClient->get('v2/organisation/'.$id, 'Organisation');
+
+        $currentFilters = self::getFiltersFromRequest($request);
+
+        $result = $this->restClient->get('/v2/organisation/'.$id.'/users?'.http_build_query($currentFilters), 'array');
+
+        $users = $this->restClient->arrayToEntities(EntityDir\User::class.'[]', $result['records']);
 
         return [
+            'filters' => $currentFilters,
             'organisation' => $organisation,
+            'orgId' => $organisation->getId(),
+            'users' => $users,
+            'count' => $result['count'],
         ];
     }
 
@@ -99,7 +106,7 @@ class OrganisationController extends AbstractController
         try {
             $organisation = $this->restClient->get('v2/organisation/'.$id, 'Organisation');
         } catch (AccessDeniedException $e) {
-            throw ($e);
+            throw $e;
         } catch (RestClientException $e) {
             throw $this->createNotFoundException('Organisation not found');
         }
@@ -173,7 +180,7 @@ class OrganisationController extends AbstractController
     {
         try {
             $organisation = $this->restClient->get('v2/organisation/'.$orgId, 'Organisation');
-            $userToEdit = $organisation->getUserById($userId);
+            $userToEdit = $this->restClient->get('user/'.$userId, 'User');
         } catch (RestClientException $e) {
             throw $this->createNotFoundException('Organisation not found');
         }
@@ -243,7 +250,7 @@ class OrganisationController extends AbstractController
     {
         try {
             $organisation = $this->restClient->get('v2/organisation/'.$orgId, 'Organisation');
-            $userToRemove = $organisation->getUserById($userId);
+            $userToRemove = $this->restClient->get('user/'.$userId, 'User');
         } catch (RestClientException $e) {
             throw $this->createNotFoundException('Organisation not found');
         }
@@ -325,5 +332,16 @@ class OrganisationController extends AbstractController
         }
 
         return $this->redirectToRoute('org_organisation_view', ['id' => $organisation->getId()]);
+    }
+
+    /**
+     * @return array<mixed>
+     */
+    private static function getFiltersFromRequest(Request $request)
+    {
+        return [
+            'limit' => $request->query->get('limit') ?: 15,
+            'offset' => $request->query->get('offset') ?: 0,
+        ];
     }
 }

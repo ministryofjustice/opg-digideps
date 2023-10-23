@@ -14,15 +14,12 @@ use Symfony\Component\Console\Output\OutputInterface;
 class ChecklistSyncCommand extends Command
 {
     /** @var string */
-    const FALLBACK_ROW_LIMITS = '30';
-    const COMPLETED_MESSAGE = 'Sync command completed';
+    public const FALLBACK_ROW_LIMITS = '30';
+    public const COMPLETED_MESSAGE = 'Sync command completed';
 
     /** @var string */
     public static $defaultName = 'digideps:checklist-sync';
 
-    /**
-     * @param null $name
-     */
     public function __construct(
         private ChecklistSyncService $syncService,
         private ParameterStoreService $parameterStore,
@@ -51,10 +48,10 @@ class ChecklistSyncCommand extends Command
         $notSyncedCount = $this->syncService->syncChecklistsByReports($reports);
 
         if ($notSyncedCount > 0) {
-            $output->writeln(sprintf('%d checklists failed to sync', $notSyncedCount));
+            $output->writeln(sprintf('sync_checklists_check - failure - %d checklists failed to sync', $notSyncedCount));
+        } else {
+            $output->writeln(sprintf('sync_checklists_check - success - %d', self::COMPLETED_MESSAGE));
         }
-
-        $output->writeln(self::COMPLETED_MESSAGE);
 
         return 0;
     }
@@ -64,9 +61,6 @@ class ChecklistSyncCommand extends Command
         return '1' === $this->parameterStore->getFeatureFlag(ParameterStoreService::FLAG_CHECKLIST_SYNC);
     }
 
-    /**
-     * {@inheritDoc}
-     */
     protected function configure(): void
     {
         $this->setDescription('Uploads queued checklists to Sirius and reports back the success');

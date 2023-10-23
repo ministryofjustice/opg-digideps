@@ -7,8 +7,6 @@ use App\Model\Sirius\QueuedDocumentData;
 use App\Service\Client\RestClient;
 use App\Service\DocumentSyncService;
 use App\Service\ParameterStoreService;
-use DateTime;
-use DateTimeZone;
 use Prophecy\Argument;
 use Prophecy\PhpUnit\ProphecyTrait;
 use Prophecy\Prophecy\ObjectProphecy;
@@ -89,9 +87,9 @@ class DocumentSyncCommandTest extends KernelTestCase
             ->setIsReportPdf(true)
             ->setFilename('test.pdf')
             ->setStorageReference('stor-ref-123')
-            ->setReportStartDate(new DateTime('2017-02-01', new DateTimeZone('Europe/London')))
-            ->setReportEndDate(new DateTime('2018-01-31', new DateTimeZone('Europe/London')))
-            ->setReportSubmitDate(new DateTime('2020-04-29 15:05:23', new DateTimeZone('Europe/London')))
+            ->setReportStartDate(new \DateTime('2017-02-01', new \DateTimeZone('Europe/London')))
+            ->setReportEndDate(new \DateTime('2018-01-31', new \DateTimeZone('Europe/London')))
+            ->setReportSubmitDate(new \DateTime('2020-04-29 15:05:23', new \DateTimeZone('Europe/London')))
             ->setReportType('104');
 
         $this->parameterStore
@@ -194,6 +192,6 @@ class DocumentSyncCommandTest extends KernelTestCase
 
         $output = $this->commandTester->getDisplay();
         $this->assertStringContainsString('0 documents to upload', $output);
-        $this->assertStringContainsString('6 documents failed to sync', $output);
+        $this->assertStringContainsString('sync_documents_check - failure - 6 documents failed to sync', $output);
     }
 }

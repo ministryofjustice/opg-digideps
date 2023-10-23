@@ -17,6 +17,10 @@
 {% endblock %}
 
 {% block pageContent %}
+    {% set filtersToPreserveInPagination = {
+        'id': orgId
+    } %}
+
     {% if not organisation.getIsDomainIdentifier %}
     <p class="govuk-body">{{ 'viewPage.introPublicDomain' | trans }}</p>
     {% else %}
@@ -52,7 +56,7 @@
         </thead>
 
         <tbody class="govuk-table__body">
-        {% for user in organisation.users %}
+        {% for user in users %}
             <tr class="govuk-table__row behat-region-team-user-{{ user.email | behat_namify }}">
                 <td class="govuk-table__cell">
                     <strong>{{ user.firstname }} {{ user.lastname }}</strong>
@@ -93,5 +97,20 @@
         {% endfor %}
         </tbody>
     </table>
+
+    {% include '@App/Components/paginator.html.twig' with {
+        currentOffset: filters.offset,
+        recordsPerPage: filters.limit,
+        totalRecords: count,
+        routeName: 'org_organisation_view',
+        routeParams: filtersToPreserveInPagination,
+        messages: {
+            singlePage: {
+                singular: 'Showing 1 user',
+                plural: 'Showing %count% users'
+            },
+            multiPage: 'Showing %from% - %to% of %total% users'
+        }
+    } %}
 
 {% endblock %}

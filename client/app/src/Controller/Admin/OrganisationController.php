@@ -3,6 +3,7 @@
 namespace App\Controller\Admin;
 
 use App\Controller\AbstractController;
+use App\Entity\Client;
 use App\Entity\Organisation;
 use App\Entity\User;
 use App\Event\OrgCreatedEvent;
@@ -17,6 +18,7 @@ use Sensio\Bundle\FrameworkExtraBundle\Configuration\Security;
 use Sensio\Bundle\FrameworkExtraBundle\Configuration\Template;
 use Symfony\Component\Form\FormError;
 use Symfony\Component\HttpFoundation\Request;
+use Symfony\Component\HttpFoundation\Response;
 use Symfony\Component\Routing\Annotation\Route;
 use Symfony\Component\Security\Core\Authentication\Token\Storage\TokenStorageInterface;
 use Symfony\Contracts\Translation\TranslatorInterface;
@@ -50,24 +52,35 @@ class OrganisationController extends AbstractController
     }
 
     /**
-     * @Route("/{id}", name="admin_organisation_view", requirements={"id":"\d+"})
+     * @Route("/{id}", name="admin_organisation_view", requirements={"id":"\d+"}, methods={"GET"})
      * @Security("is_granted('ROLE_ADMIN')")
      * @Template("@App/Admin/Organisation/view.html.twig")
      *
-     * @param $id
-     *
-     * @return array
+     * @return array<mixed>|Response
      */
-    public function viewAction($id)
+    public function viewAction(Request $request, int $id)
     {
-        try {
-            $organisation = $this->restClient->get('v2/organisation/'.$id, 'Organisation');
-        } catch (RestClientException $e) {
-            throw $this->createNotFoundException('Organisation not found');
+        /** @var $organisation Organisation */
+        $organisation = $this->restClient->get('v2/organisation/'.$id, 'Organisation');
+
+        $tab = $request->get('tab', 'users');
+        $currentFilters = self::getFiltersFromRequest($request);
+
+        $result = $this->restClient->get('/v2/organisation/'.$id.'/'.$tab.'?'.http_build_query($currentFilters), 'array');
+
+        if ('clients' == $tab) {
+            $tabData = $this->restClient->arrayToEntities(Client::class.'[]', $result['records']);
+        } else {
+            $tabData = $this->restClient->arrayToEntities(User::class.'[]', $result['records']);
         }
 
         return [
+            'filters' => $currentFilters,
             'organisation' => $organisation,
+            'orgId' => $organisation->getId(),
+            'currentTab' => $tab,
+            'tabData' => $tabData,
+            'count' => $result['count'],
         ];
     }
 
@@ -299,5 +312,19 @@ class OrganisationController extends AbstractController
         );
 
         $this->eventDispatcher->dispatch($orgCreatedEvent, OrgCreatedEvent::NAME);
+    }
+
+    /**
+     * @return array<mixed>
+     */
+    private static function getFiltersFromRequest(Request $request)
+    {
+        return [
+            'q' => $request->get('q'),
+            'limit' => $request->query->get('limit') ?: 15,
+            'offset' => $request->query->get('offset') ?: 0,
+            'orderBy' => $request->get('orderBy', 'lastname'),
+            'order' => $request->get('order', 'ASC'),
+        ];
     }
 }

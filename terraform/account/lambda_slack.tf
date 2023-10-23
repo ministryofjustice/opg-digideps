@@ -10,6 +10,7 @@ resource "aws_lambda_function" "slack_lambda" {
   runtime       = "python3.11"
   layers        = [aws_lambda_layer_version.lambda_layer.arn]
   depends_on    = [aws_cloudwatch_log_group.slack_lambda]
+  timeout       = 300
   tracing_config {
     mode = "Active"
   }
@@ -57,12 +58,17 @@ resource "aws_iam_role_policy" "lambda_slack" {
 
 data "aws_iam_policy_document" "lambda_slack" {
   statement {
-    sid    = "WriteLogs"
+    sid    = "allowLogging"
     effect = "Allow"
-    actions = [
-      "logs:*"
+    resources = [
+      aws_cloudwatch_log_group.slack_lambda.arn,
+      "${aws_cloudwatch_log_group.slack_lambda.arn}:*"
     ]
-    resources = ["*"]
+    actions = [
+      "logs:CreateLogStream",
+      "logs:PutLogEvents",
+      "logs:DescribeLogStreams"
+    ]
   }
 
   statement {

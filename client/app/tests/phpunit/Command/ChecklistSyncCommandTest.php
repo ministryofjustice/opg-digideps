@@ -73,9 +73,9 @@ class ChecklistSyncCommandTest extends KernelTestCase
             ->ensureThereAreNChecklistsToSync(3)
             ->ensureNChecklistsFailedToSync(2)
             ->invokeTest()
-            ->assertCommandOutputContains('3 checklists to upload')
-            ->assertCommandOutputContains('2 checklists failed to sync')
-            ->assertCommandOutputContains('Sync command completed');
+            ->assertCommandOutputContains('sync_checklists_check - failure - 3 checklists to upload')
+            ->assertCommandOutputContains('sync_checklists_check - failure - 2 checklists failed to sync')
+            ->assertCommandOutputContains('sync_checklists_check - success - Sync command completed');
     }
 
     private function assertSyncServiceIsNotInvoked(): ChecklistSyncCommandTest

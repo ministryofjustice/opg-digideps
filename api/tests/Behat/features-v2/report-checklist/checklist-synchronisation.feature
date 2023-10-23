@@ -27,7 +27,7 @@ Feature: Synchronising Checklists with Sirius
         And I visit the checklist page for the previously submitted report for the user I am interacting with
         Then the checklist status should be 'synced'
 
-    @super-admin @admin @lay-health-welfare-submitted @gsc
+    @super-admin @admin @lay-health-welfare-submitted
     Scenario: A completed checklist has placeholder details when the associated case managers account is deleted
         Given a Lay Deputy has submitted a health and welfare report
         And an admin user accesses the admin app

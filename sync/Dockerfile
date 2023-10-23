@@ -21,4 +21,4 @@ RUN pip install awscli --ignore-installed six
 ADD backup.sh backup.sh
 ADD restore.sh restore.sh
 ADD common.sh common.sh
-ADD analyse.sh analyse.sh
+ADD analyse-database.sh analyse-database.sh

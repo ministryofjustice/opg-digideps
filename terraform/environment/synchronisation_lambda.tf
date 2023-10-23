@@ -52,6 +52,7 @@ resource "aws_cloudwatch_event_rule" "sync_documents" {
   name                = "synchronise-documents-schedule-${local.environment}"
   description         = "Kicks off document synch to sirius in ${terraform.workspace}"
   schedule_expression = "rate(24 hours)"
+  is_enabled          = false
   tags                = local.default_tags
 }
 
@@ -59,6 +60,7 @@ resource "aws_cloudwatch_event_rule" "sync_checklists" {
   name                = "synchronise-checklists-schedule-${local.environment}"
   description         = "Kicks off checklist synch to sirius in ${terraform.workspace}"
   schedule_expression = "rate(24 hours)"
+  is_enabled          = false
   tags                = local.default_tags
 }
 
