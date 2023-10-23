@@ -151,4 +151,49 @@ class ClientRepository extends ServiceEntityRepository
 
         return $client;
     }
+
+    public function findByFiltersWithCounts(
+        $q,
+        $offset,
+        $limit,
+        $id
+    ) {
+        // BASE QUERY BUILDER with filters (for both count and results)
+        $qb = $this->createQueryBuilder('c');
+        $qb->andWhere('c.organisation = :id');
+        $qb->setParameter('id', $id);
+
+        // search filter
+        if ($q) {
+            $qb->andWhere(implode(' OR ', [
+                'lower(c.firstname) LIKE :qLike',
+                'lower(c.lastname) LIKE :qLike',
+            ]));
+
+            $qb->setParameter('qLike', '%'.strtolower($q).'%');
+            $qb->setParameter('q', strtolower($q));
+        }
+
+        // get results (base query + ordered + pagination + status filter)
+        $qbSelect = clone $qb;
+        $qbSelect->select('c');
+        $qbSelect
+            ->addOrderBy('c.lastname', 'ASC')
+            ->addOrderBy('c.firstname', 'ASC')
+            ->setFirstResult($offset)
+            ->setMaxResults($limit);
+        $this->_em->getFilters()->getFilter('softdeleteable')->disableForEntity(Client::class); // disable softdelete for createdBy, needed from admin area
+        $records = $qbSelect->getQuery()->getResult(); /* @var $records User[] */
+        $this->_em->getFilters()->enable('softdeleteable');
+
+        // run counts on the base query for each status (new/archived)
+        $qbCount = clone $qb;
+        $queryCount = $qbCount->select('count(DISTINCT c.id)')->getQuery();
+        $count = $queryCount->getSingleScalarResult();
+
+        return [
+            'records' => $records,
+            'count' => $count,
+        ];
+    }
 }

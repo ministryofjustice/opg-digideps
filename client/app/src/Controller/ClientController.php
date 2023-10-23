@@ -18,14 +18,12 @@ use App\Service\Client\RestClient;
 use App\Service\Redirector;
 use App\Service\Time\DateTimeProvider;
 use Psr\Log\LoggerInterface;
-use RuntimeException;
 use Sensio\Bundle\FrameworkExtraBundle\Configuration\Template;
 use Symfony\Component\Form\FormError;
 use Symfony\Component\HttpFoundation\RedirectResponse;
 use Symfony\Component\HttpFoundation\Request;
 use Symfony\Component\Routing\Annotation\Route;
 use Symfony\Contracts\Translation\TranslatorInterface;
-use Throwable;
 
 class ClientController extends AbstractController
 {
@@ -41,6 +39,7 @@ class ClientController extends AbstractController
 
     /**
      * @Route("/deputyship-details/your-client", name="client_show")
+     *
      * @Template("@App/Client/show.html.twig")
      */
     public function showAction(Redirector $redirector)
@@ -63,6 +62,7 @@ class ClientController extends AbstractController
 
     /**
      * @Route("/deputyship-details/your-client/edit", name="client_edit")
+     *
      * @Template("@App/Client/edit.html.twig")
      *
      * @return array|RedirectResponse
@@ -76,7 +76,7 @@ class ClientController extends AbstractController
             /** @var User $user */
             $user = $this->getUser();
             $userId = $user->getId();
-            throw new RuntimeException("User $userId does not have a client");
+            throw new \RuntimeException("User $userId does not have a client");
         }
 
         $form = $this->createForm(ClientType::class, clone $preUpdateClient, [
@@ -111,6 +111,7 @@ class ClientController extends AbstractController
 
     /**
      * @Route("/client/add", name="client_add")
+     *
      * @Template("@App/Client/add.html.twig")
      *
      * @return array|RedirectResponse
@@ -145,9 +146,8 @@ class ClientController extends AbstractController
         if ($form->isSubmitted() && $form->isValid()) {
             try {
                 // validate against pre-registration data
-                $this->preRegistrationApi->verify($client);
-
-                if ('post' === $method) {
+                if (!$client_validated) {
+                    $this->preRegistrationApi->verify($client);
                     $response = $this->clientApi->create($form->getData());
                 } else {
                     $response = $this->clientApi->update($client, $form->getData(), AuditEvents::TRIGGER_DEPUTY_USER_EDIT_CLIENT_DURING_REGISTRATION);
@@ -167,7 +167,7 @@ class ClientController extends AbstractController
                 }
 
                 return $this->redirect($url);
-            } catch (Throwable $e) {
+            } catch (\Throwable $e) {
                 if (!$e instanceof RestClientException) {
                     $failureData = json_decode($e->getData()['message'], true);
 
@@ -183,6 +183,33 @@ class ClientController extends AbstractController
                 switch ((int) $e->getCode()) {
                     case 400:
                         $form->addError(new FormError($translator->trans('formErrors.matching', [], 'register')));
+                        break;
+
+                    case 403:
+                        $form->addError(new FormError($translator->trans('formErrors.coDepCaseAlreadyRegistered', [], 'register')));
+                        break;
+
+                    case 425:
+                        $form->addError(new FormError($translator->trans('formErrors.caseNumberAlreadyUsed', [], 'register')));
+                        break;
+
+                    case 460:
+                        $form->addError(new FormError($translator->trans('matchingErrors.caseNumber', [], 'register')));
+                        break;
+
+                    case 461:
+                        $decodedError = json_decode($e->getData()['message'], true);
+
+                        if ($decodedError['matching_errors']['client_lastname']) {
+                            $form->addError(new FormError($translator->trans('matchingErrors.clientLastname', [], 'register')));
+                        }
+                        if ($decodedError['matching_errors']['deputy_lastname']) {
+                            $form->addError(new FormError($translator->trans('matchingErrors.deputyLastname', [], 'register')));
+                        }
+                        if ($decodedError['matching_errors']['deputy_postcode']) {
+                            $form->addError(new FormError($translator->trans('matchingErrors.deputyPostcode', [], 'register')));
+                        }
+
                         break;
 
                     default:

@@ -53,6 +53,7 @@ services:
       - localstack
       - mock-notify-api
       - pact-mock
+      - file-scanner-rest
     environment:
       APP_ENV: ${APP_ENV:-dev}
       APP_DEBUG: ${APP_DEBUG:-0}

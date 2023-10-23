@@ -62,6 +62,7 @@ class Organisation implements OrganisationInterface
 
     /**
      * @var ArrayCollection
+     *
      * @JMS\Type("ArrayCollection<App\Entity\User>")
      * @ORM\ManyToMany(targetEntity="User", inversedBy="organisations")
      */
@@ -69,6 +70,7 @@ class Organisation implements OrganisationInterface
 
     /**
      * @var ArrayCollection
+     *
      * @JMS\Type("ArrayCollection<App\Entity\Clients>")
      * @ORM\OneToMany(targetEntity="Client", mappedBy="organisation")
      */
@@ -176,5 +178,31 @@ class Organisation implements OrganisationInterface
     public function containsUser(User $user)
     {
         return $this->users->contains($user);
+    }
+
+    /**
+     * @JMS\VirtualProperty
+     * @JMS\Type("integer")
+     * @JMS\SerializedName("total-user-count")
+     * @JMS\Groups({"total-user-count"})
+     *
+     * @return int
+     */
+    public function getTotalUserCount()
+    {
+        return count($this->getUsers());
+    }
+
+    /**
+     * @JMS\VirtualProperty
+     * @JMS\Type("integer")
+     * @JMS\SerializedName("total-client-count")
+     * @JMS\Groups({"total-client-count"})
+     *
+     * @return int
+     */
+    public function getTotalClientCount()
+    {
+        return count($this->getClients());
     }
 }
