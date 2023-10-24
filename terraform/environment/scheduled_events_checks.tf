@@ -21,7 +21,7 @@ resource "aws_cloudwatch_event_rule" "cross_account_backup_check" {
   name                = "check-backup-cross-account-${terraform.workspace}"
   description         = "Execute the cross account DR backup check for ${terraform.workspace}"
   schedule_expression = "cron(10 09 * * ? *)"
-  is_enabled          = true
+  is_enabled          = local.account.is_production == 1 ? true : false
 }
 
 resource "aws_cloudwatch_event_target" "cross_account_backup_check" {
@@ -50,7 +50,7 @@ resource "aws_cloudwatch_event_rule" "delete_inactive_users_check" {
   name                = "check-delete-inactive-users-${terraform.workspace}"
   description         = "Execute the delete inactive users check for ${terraform.workspace}"
   schedule_expression = "cron(11 09 * * ? *)"
-  is_enabled          = true
+  is_enabled          = local.account.is_production == 1 ? true : false
 }
 
 
@@ -80,7 +80,7 @@ resource "aws_cloudwatch_event_rule" "delete_zero_activity_users_check" {
   name                = "check-delete-zero-activity-users-${terraform.workspace}"
   description         = "Execute the delete zero activity users check for ${terraform.workspace}"
   schedule_expression = "cron(12 09 * * ? *)"
-  is_enabled          = true
+  is_enabled          = local.account.is_production == 1 ? true : false
 }
 
 resource "aws_cloudwatch_event_target" "delete_zero_activity_users_check" {
@@ -109,7 +109,7 @@ resource "aws_cloudwatch_event_rule" "db_analyse_command_check" {
   name                = "check-database-analyse-command-${terraform.workspace}"
   description         = "Execute the delete zero activity users check for ${terraform.workspace}"
   schedule_expression = "cron(13 09 * * ? *)"
-  is_enabled          = true
+  is_enabled          = local.account.is_production == 1 ? true : false
 }
 
 resource "aws_cloudwatch_event_target" "db_analyse_command_check" {
@@ -138,7 +138,7 @@ resource "aws_cloudwatch_event_rule" "sync_documents_check" {
   name                = "check-document-sync-${terraform.workspace}"
   description         = "Execute the document sync check for ${terraform.workspace}"
   schedule_expression = local.sync_service_cron_schedule
-  is_enabled          = true
+  is_enabled          = local.account.is_production == 1 ? true : false
 }
 
 resource "aws_cloudwatch_event_target" "sync_documents_check" {
@@ -167,7 +167,7 @@ resource "aws_cloudwatch_event_rule" "sync_checklists_check" {
   name                = "check-checklist-sync-${terraform.workspace}"
   description         = "Execute the checklist sync check for ${terraform.workspace}"
   schedule_expression = local.sync_service_cron_schedule
-  is_enabled          = true
+  is_enabled          = local.account.is_production == 1 ? true : false
 }
 
 resource "aws_cloudwatch_event_target" "sync_checklists_check" {
