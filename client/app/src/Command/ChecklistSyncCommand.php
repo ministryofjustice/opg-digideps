@@ -15,7 +15,7 @@ class ChecklistSyncCommand extends Command
 {
     /** @var string */
     public const FALLBACK_ROW_LIMITS = '30';
-    public const COMPLETED_MESSAGE = 'Sync command completed';
+    public const COMPLETED_MESSAGE = 'sync_checklists_to_sirius - success - Sync command completed';
 
     /** @var string */
     public static $defaultName = 'digideps:checklist-sync';
@@ -32,7 +32,6 @@ class ChecklistSyncCommand extends Command
     protected function execute(InputInterface $input, OutputInterface $output): int
     {
         ini_set('memory_limit', '512M');
-
         if (!$this->isFeatureEnabled()) {
             $output->writeln('Feature disabled, sleeping');
 
@@ -48,9 +47,9 @@ class ChecklistSyncCommand extends Command
         $notSyncedCount = $this->syncService->syncChecklistsByReports($reports);
 
         if ($notSyncedCount > 0) {
-            $output->writeln(sprintf('sync_checklists_check - failure - %d checklists failed to sync', $notSyncedCount));
+            $output->writeln(sprintf('sync_checklists_to_sirius - failure - %d checklists failed to sync', $notSyncedCount));
         } else {
-            $output->writeln(sprintf('sync_checklists_check - success - %d', self::COMPLETED_MESSAGE));
+            $output->writeln(self::COMPLETED_MESSAGE);
         }
 
         return 0;

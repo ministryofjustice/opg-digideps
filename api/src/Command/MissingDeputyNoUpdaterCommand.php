@@ -37,8 +37,8 @@ class MissingDeputyNoUpdaterCommand extends Command
     protected function configure()
     {
         $this
-            ->setName('digideps:delete-invalid-reports')
-            ->setDescription('add-missing-deputy-numbers');
+            ->setName('digideps:add-missing-deputy-numbers')
+            ->setDescription('add missing deputy numbers');
     }
 
     protected function execute(InputInterface $input, OutputInterface $output)

@@ -175,7 +175,9 @@ def cloudwatch_event(event):
     log_entries = event["log-entries"]
     search_timespan = event["search-timespan"]
     run_bank_holidays = event["bank-holidays"]
-    channel_identifier = event["channel-identifier"]
+    channel_identifier_absent = event["channel-identifier-absent"]
+    channel_identifier_success = event["channel-identifier-success"]
+    channel_identifier_failure = event["channel-identifier-failure"]
 
     bank_holiday_check = (
         is_bank_holiday() if run_bank_holidays.lower() == "true" else False
@@ -193,9 +195,10 @@ def cloudwatch_event(event):
     )
     status_emoji = ""
     if len(template_values_collection) == 0:
-        logger.info("No template values collection")
+        logger.info(f"No records found during the last {search_timespan}")
         success_string = "Failure"
         status_emoji = ":mario_wave_bye:"
+        channel_identifier = channel_identifier_absent
         main_body = (
             f"The above job has not run during the last {search_timespan}.\n\n"
             "Please check what has gone wrong."
@@ -205,21 +208,33 @@ def cloudwatch_event(event):
         or template_values_collection[0]["count"] > 1
     ):
         main_body = ""
+        failed_events_exist = False
         for template_value in template_values_collection:
             main_body = (
                 f"{main_body}*{template_value['log_title']}* - *{template_value['status']}*: "
                 f"{template_value['count']}\n"
                 f"Description: {template_value['description']}\n\n"
             )
+            if template_value["status"].lower() == "failure":
+                failed_events_exist = True
         success_string = "Results"
         status_emoji = ""
+        channel_identifier = (
+            channel_identifier_failure
+            if failed_events_exist
+            else channel_identifier_success
+        )
     elif len(template_values_collection) == 1:
         template_value = template_values_collection[0]
         status = template_value["status"]
         success_string = "Success" if status == "success" else "Failure"
         main_body = template_value["description"]
         status_emoji = ":white_check_mark:" if status == "success" else ":x:"
-
+        channel_identifier = (
+            channel_identifier_success
+            if status == "success"
+            else channel_identifier_failure
+        )
     with open("cloudwatch_event.txt", "r") as file:
         template_text = file.read()
 

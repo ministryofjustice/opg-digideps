@@ -73,9 +73,22 @@ class ChecklistSyncCommandTest extends KernelTestCase
             ->ensureThereAreNChecklistsToSync(3)
             ->ensureNChecklistsFailedToSync(2)
             ->invokeTest()
-            ->assertCommandOutputContains('sync_checklists_check - failure - 3 checklists to upload')
-            ->assertCommandOutputContains('sync_checklists_check - failure - 2 checklists failed to sync')
-            ->assertCommandOutputContains('sync_checklists_check - success - Sync command completed');
+            ->assertCommandOutputContains('3 checklists to upload')
+            ->assertCommandOutputContains('sync_checklists_to_sirius - failure - 2 checklists failed to sync');
+    }
+
+    /**
+     * @test
+     */
+    public function outputContainsExpectedTextSuccess()
+    {
+        $this
+            ->ensureFeatureIsEnabled()
+            ->ensureThereAreNChecklistsToSync(2)
+            ->ensureNChecklistsFailedToSync(0)
+            ->invokeTest()
+            ->assertCommandOutputContains('2 checklists to upload')
+            ->assertCommandOutputContains('sync_checklists_to_sirius - success - Sync command completed');
     }
 
     private function assertSyncServiceIsNotInvoked(): ChecklistSyncCommandTest
