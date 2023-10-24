@@ -49,8 +49,6 @@ class MoneyInController extends AbstractController
      * @Route("/report/{reportId}/money-in", name="money_in")
      * @Template("@App/Report/MoneyIn/start.html.twig")
      *
-     * @param $reportId
-     *
      * @return array|RedirectResponse
      */
     public function startAction($reportId)
@@ -66,11 +64,32 @@ class MoneyInController extends AbstractController
     }
 
     /**
+     * @Route("/report/{reportId}/money-in/exist", name="money_in_exist")
+     * @Template("@App/Report/MoneyIn/exist.html.twig")
+     *
+     * @return array
+     */
+    public function existAction(Request $request, $reportId)
+    {
+        $report = $this->reportApi->getReportIfNotSubmitted($reportId, self::$jmsGroups);
+        $form = $this->createForm(FormDir\Report\MoneyInExistType::class, $report);
+        $form->handleRequest($request);
+
+        // need to add logic for updating db and redirection
+
+        $backLink = $this->generateUrl('money_in', ['reportId' => $reportId]);
+
+        return [
+            'backLink' => $backLink,
+            'report' => $report,
+            'form' => $form->createView(),
+        ];
+    }
+
+    /**
      * @Route("/report/{reportId}/money-in/step{step}/{transactionId}", name="money_in_step", requirements={"step":"\d+"})
      * @Template("@App/Report/MoneyIn/step.html.twig")
      *
-     * @param $reportId
-     * @param $step
      * @param null $transactionId
      *
      * @return array|RedirectResponse
@@ -180,8 +199,6 @@ class MoneyInController extends AbstractController
      * @Route("/report/{reportId}/money-in/add_another", name="money_in_add_another")
      * @Template("@App/Report/MoneyIn/addAnother.html.twig")
      *
-     * @param $reportId
-     *
      * @return array|RedirectResponse
      */
     public function addAnotherAction(Request $request, $reportId)
@@ -210,8 +227,6 @@ class MoneyInController extends AbstractController
      * @Route("/report/{reportId}/money-in/summary", name="money_in_summary")
      * @Template("@App/Report/MoneyIn/summary.html.twig")
      *
-     * @param $reportId
-     *
      * @return array|RedirectResponse
      */
     public function summaryAction($reportId)
@@ -229,9 +244,6 @@ class MoneyInController extends AbstractController
     /**
      * @Route("/report/{reportId}/money-in/{transactionId}/delete", name="money_in_delete")
      * @Template("@App/Common/confirmDelete.html.twig")
-     *
-     * @param $reportId
-     * @param $transactionId
      *
      * @return array|RedirectResponse
      */
