@@ -565,6 +565,28 @@ class Report implements ReportInterface
      **/
     private $reasonForNoMoneyIn;
 
+    /**
+     * @var string yes | no
+     *
+     * @JMS\Type("string")
+     *
+     * @JMS\Groups({"report"})
+     *
+     * @ORM\Column(name="money_out_exists", type="text", nullable=true)
+     */
+    private $moneyOutExists;
+
+    /**
+     * @var string captures reason for no money out. Required if no money has gone out
+     *
+     * @JMS\Type("string")
+     *
+     * @JMS\Groups({"report"})
+     *
+     * @ORM\Column(name="reason_for_no_money_out", type="text", nullable=true)
+     **/
+    private $reasonForNoMoneyOut;
+
     private array $excludeSections = [];
     private ?\DateTime $benefitsSectionReleaseDate = null;
 
