@@ -16,7 +16,7 @@ use Symfony\Component\DependencyInjection\ContainerAwareTrait;
  *
  * @codeCoverageIgnore
  */
-class CleanDataCommand extends Command
+class MissingDeputyNoUpdaterCommand extends Command
 {
     use ContainerAwareTrait;
 
@@ -37,8 +37,8 @@ class CleanDataCommand extends Command
     protected function configure()
     {
         $this
-            ->setName('digideps:clean-data')
-            ->setDescription('delete unassigned and duplicate reports');
+            ->setName('digideps:add-missing-deputy-numbers')
+            ->setDescription('add missing deputy numbers');
     }
 
     protected function execute(InputInterface $input, OutputInterface $output)

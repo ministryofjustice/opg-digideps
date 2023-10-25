@@ -356,7 +356,7 @@ SQL;
 
     public function getAllDeletionProtectedAccounts()
     {
-        $dql = 'SELECT u.id FROM App\Entity\User u WHERE u.deletionProtection IS true';
+        $dql = 'SELECT u.id FROM App\Entity\User u WHERE u.deletionProtection = true';
 
         $stmt = $this->getEntityManager()->createQuery($dql);
 

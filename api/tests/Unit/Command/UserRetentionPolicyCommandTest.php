@@ -49,7 +49,7 @@ class UserRetentionPolicyCommandTest extends KernelTestCase
 
         $this->userRepository->getAllDeletionProtectedAccounts()
             ->shouldBeCalled()
-            ->willReturn([1,2,3,4,5,6]);
+            ->willReturn([1, 2, 3, 4, 5, 6]);
 
         $result = $this->commandTester->execute([]);
         $this->assertEquals(0, $result);
@@ -71,7 +71,7 @@ class UserRetentionPolicyCommandTest extends KernelTestCase
 
         $this->userRepository->getAllDeletionProtectedAccounts()
             ->shouldBeCalled()
-            ->willReturn([2,3,4,5,6]);
+            ->willReturn([2, 3, 4, 5, 6]);
 
         $trigger = 'USER_DELETED_AUTOMATION';
         $userRetentionEvent = new UserRetentionPolicyCommandEvent($user, $trigger);
@@ -82,7 +82,7 @@ class UserRetentionPolicyCommandTest extends KernelTestCase
         $this->userRepository->deleteInactiveAdminUsers([1])->shouldBeCalled();
 
         $result = $this->commandTester->execute([]);
-        $this->assertEquals(1, $result);
+        $this->assertEquals(0, $result);
     }
 
     /**
@@ -111,9 +111,9 @@ class UserRetentionPolicyCommandTest extends KernelTestCase
         $inactiveSuperAdminProtected->setLastLoggedIn(new \DateTime('-26 months'));
 
         $expectedInactiveAdminUsersReturned = [
-            $inactiveAdminUser, 
-            $inactiveAdminManagerUser, 
-            $inactiveSuperAdminProtected
+            $inactiveAdminUser,
+            $inactiveAdminManagerUser,
+            $inactiveSuperAdminProtected,
         ];
 
         $this->userRepository->getAllAdminAccountsNotUsedWithin('-24 months')
@@ -137,6 +137,6 @@ class UserRetentionPolicyCommandTest extends KernelTestCase
         $this->userRepository->deleteInactiveAdminUsers([1, 2])->shouldBeCalled();
 
         $result = $this->commandTester->execute([]);
-        $this->assertEquals(1, $result);
+        $this->assertEquals(0, $result);
     }
 }

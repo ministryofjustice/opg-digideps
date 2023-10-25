@@ -1,5 +1,6 @@
 import logging
 import re
+import time
 import urllib
 from datetime import datetime, timedelta
 import boto3
@@ -12,13 +13,15 @@ logger = logging.getLogger(__name__)
 logger.setLevel("INFO")
 
 
-def get_slack_webhook_secret(secret_name):
+def get_slack_webhook_secret(secret_name, channel_identifier):
     try:
         # Initialize the Secrets Manager client
         client = boto3.client("secretsmanager")
         response = client.get_secret_value(SecretId=secret_name)
         secret = response["SecretString"]
-        return secret
+        secret_dict = json.loads(secret)
+        webhook_url = secret_dict.get(channel_identifier)
+        return webhook_url
     except Exception as e:
         # Handle any exceptions here
         logger.error(f"Error: {str(e)}")
@@ -90,6 +93,7 @@ def search_log_group(log_group, log_entries, search_timespan):
 
     # Iterate through each log entry pattern to search for
     for log_entry_pattern in log_entries:
+        logger.info(f"trying to find this pattern: {log_entry_pattern}")
         # Perform a CloudWatch Logs query for the log group
         response = client.start_query(
             logGroupName=log_group,
@@ -110,6 +114,7 @@ def search_log_group(log_group, log_entries, search_timespan):
             query_status = client.get_query_results(queryId=query_id)
             if query_status["status"] == "Complete":
                 break
+            time.sleep(1)
 
         # Process each query result
         for result in query_status["results"]:
@@ -155,8 +160,8 @@ def is_bank_holiday():
         # Check if today's date is in the list of bank holidays
         for holiday in england_and_wales_holidays.get("events", []):
             if holiday.get("date") == today_date:
-                return False  # Today is a bank holiday
-        return True  # Today is not a bank holiday
+                return True  # Today is a bank holiday
+        return False  # Today is not a bank holiday
     else:
         logger.warning("Failed to fetch bank holiday data.")
         return False  # Unable to determine if today is a bank holiday
@@ -170,23 +175,30 @@ def cloudwatch_event(event):
     log_entries = event["log-entries"]
     search_timespan = event["search-timespan"]
     run_bank_holidays = event["bank-holidays"]
+    channel_identifier_absent = event["channel-identifier-absent"]
+    channel_identifier_success = event["channel-identifier-success"]
+    channel_identifier_failure = event["channel-identifier-failure"]
 
     bank_holiday_check = (
         is_bank_holiday() if run_bank_holidays.lower() == "true" else False
     )
 
+    logger.info(f"Running bank holiday check")
     if bank_holiday_check:
         logger.info(
             "It's a bank holiday and bank holiday check is on. Skipping log check"
         )
         return ""
+    logger.info(f"Starting log search for {job_name}")
     template_values_collection = search_log_group(
         log_group, log_entries, search_timespan
     )
     status_emoji = ""
     if len(template_values_collection) == 0:
+        logger.info(f"No records found during the last {search_timespan}")
         success_string = "Failure"
         status_emoji = ":mario_wave_bye:"
+        channel_identifier = channel_identifier_absent
         main_body = (
             f"The above job has not run during the last {search_timespan}.\n\n"
             "Please check what has gone wrong."
@@ -196,21 +208,33 @@ def cloudwatch_event(event):
         or template_values_collection[0]["count"] > 1
     ):
         main_body = ""
+        failed_events_exist = False
         for template_value in template_values_collection:
             main_body = (
                 f"{main_body}*{template_value['log_title']}* - *{template_value['status']}*: "
                 f"{template_value['count']}\n"
                 f"Description: {template_value['description']}\n\n"
             )
+            if template_value["status"].lower() == "failure":
+                failed_events_exist = True
         success_string = "Results"
         status_emoji = ""
+        channel_identifier = (
+            channel_identifier_failure
+            if failed_events_exist
+            else channel_identifier_success
+        )
     elif len(template_values_collection) == 1:
         template_value = template_values_collection[0]
         status = template_value["status"]
         success_string = "Success" if status == "success" else "Failure"
         main_body = template_value["description"]
         status_emoji = ":white_check_mark:" if status == "success" else ":x:"
-
+        channel_identifier = (
+            channel_identifier_success
+            if status == "success"
+            else channel_identifier_failure
+        )
     with open("cloudwatch_event.txt", "r") as file:
         template_text = file.read()
 
@@ -221,7 +245,9 @@ def cloudwatch_event(event):
         main_body=main_body,
     )
 
-    return formatted_text
+    payload = {"text": formatted_text, "channel": channel_identifier}
+
+    return payload
 
 
 def alarm_message(message, region):
@@ -279,7 +305,9 @@ def alarm_message(message, region):
         log_url=log_url,
     )
 
-    return formatted_text
+    payload = {"text": formatted_text, "channel": "default"}
+
+    return payload
 
 
 def github_actions_message(message):
@@ -330,50 +358,62 @@ def github_actions_message(message):
             commit_message=commit_message,
         )
 
-    return formatted_text
+    payload = {"text": formatted_text, "channel": "default"}
+
+    return payload
 
 
 def generate_message(event):
-    response = ""
+    payload = ""
     if "Records" in event:
         for record in event["Records"]:
             if "Sns" in record:
                 message = json.loads(record["Sns"]["Message"])
                 region = record["Sns"]["TopicArn"].split(":")[3]
                 if "AlarmName" in message:
-                    response = alarm_message(message, region)
+                    payload = alarm_message(message, region)
     elif "GithubActions" in event:
         message = event["GithubActions"]
-        response = github_actions_message(message)
-    elif "detail-type" in event:
-        if event["detail-type"] == "Scheduled Event":
-            if "detail" in event:
-                message = event["detail"]
-                response = cloudwatch_event(message)
+        payload = github_actions_message(message)
+    elif "scheduled-event-detail" in event:
+        message = event["scheduled-event-detail"]
+        payload = cloudwatch_event(message)
     else:
         logger.warning("Unknown event. No actions performed")
 
-    return response
+    return payload
 
 
 def send_message(payload):
     # Data for the message
-    data = {"text": payload}
+    data = {"text": payload["text"]}
     # Send the POST request to the Slack webhook URL
-    webhook_url = get_slack_webhook_secret("slack-webhook-url")
+    webhook_url = get_slack_webhook_secret("slack-webhook-url", payload["channel"])
     response = requests.post(webhook_url, data=json.dumps(data))
     # Check the response
+    response_object = {
+        "statusCode": None,
+        "headers": {
+            "Content-Type": "application/json",
+            "Access-Control-Allow-Origin": "*",
+        },
+        "body": "",
+    }
     if response.status_code == 200:
         logger.info(f"Slack message sent")
+        response_object["statusCode"] = 200
+        response_object["body"] = "Event processed successfully"
     else:
         logger.warning(
             f"Failed to send slack message: {response.status_code} - {response.text}"
         )
+        response_object["statusCode"] = 500
+        response_object["body"] = "Event failed to process"
 
-    return response
+    return response_object
 
 
-def lambda_handler(event, context) -> str:
+def lambda_handler(event, context):
     payload = generate_message(event)
     response = send_message(payload)
 

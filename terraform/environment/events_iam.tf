@@ -1,3 +1,4 @@
+# Event Task Runner Role and Permissions
 resource "aws_iam_role" "events_task_runner" {
   name               = "events-task-runner.${local.environment}"
   assume_role_policy = data.aws_iam_policy_document.events_task_runner.json
@@ -35,10 +36,10 @@ locals {
   events_dr_task_list = local.account.dr_backup ? [module.disaster_recovery_backup[0].task_definition_arn] : []
   events_task_list = [
     aws_ecs_task_definition.check_csv_uploaded.arn,
-    aws_ecs_task_definition.check_csv_uploaded.arn,
     aws_ecs_task_definition.checklist_sync.arn,
     aws_ecs_task_definition.api.arn,
     aws_ecs_task_definition.document_sync.arn,
+    module.analyse.task_definition_arn
   ]
   combined_events_task_list = tolist(concat(local.events_task_list, local.events_dr_task_list))
 }
