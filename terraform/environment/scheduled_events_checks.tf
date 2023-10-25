@@ -3,8 +3,8 @@ data "aws_lambda_function" "slack_lambda" {
 }
 
 locals {
-  sync_service_schedule      = terraform.workspace == "production02" ? "1 hour" : "24 hours"
-  sync_service_cron_schedule = terraform.workspace == "production02" ? "cron(00 * ? * * *)" : "cron(00 01 ? * * *)"
+  sync_service_schedule      = "24 hours"
+  sync_service_cron_schedule = "cron(00 05 ? * * *)"
 }
 
 resource "aws_lambda_permission" "invocation_from_checks" {
