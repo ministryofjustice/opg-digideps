@@ -10,7 +10,7 @@ doctrine:
                 user: "%database_user%"
                 password: "%database_password%"
                 sslmode: "%database_ssl_mode%"
-                sslrootcert: "%kernel.project_dir%/certs/rds-ca-2019-root.pem"
+                sslrootcert: "%kernel.project_dir%/certs/eu-west-1-bundle.pem"
                 wrapper_class: App\DBAL\ConnectionWrapper
                 charset: UTF8
                 options:

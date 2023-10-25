@@ -24,7 +24,7 @@ HELP_FUN = \
 help: ##@other Show this help.
 	@perl -e '$(HELP_FUN)' $(MAKEFILE_LIST)
 
-APP_CONTAINERS := frontend api admin
+APP_CONTAINERS := frontend-app api admin-app
 REDIS_CONTAINERS := redis-frontend redis-api
 
 .ONESHELL:
@@ -129,9 +129,9 @@ cache-clear: ##@application Clear the cache of the application
 	docker-compose exec api-app sh -c "rm -rf var/cache/*" && \
 	docker-compose -f docker-compose.yml -f docker-compose.dev.yml exec api sh -c "rm -rf var/cache/*" && \
 	docker-compose exec frontend-app sh -c "rm -rf var/cache/*" && \
-	docker-compose -f docker-compose.yml -f docker-compose.dev.yml exec frontend sh -c "rm -rf var/cache/*" && \
+	docker-compose -f docker-compose.yml -f docker-compose.dev.yml exec frontend-app sh -c "rm -rf var/cache/*" && \
 	docker-compose exec admin-app sh -c "rm -rf var/cache/*" && \
-	docker-compose -f docker-compose.yml -f docker-compose.dev.yml exec admin sh -c "rm -rf var/cache/*" && \
+	docker-compose -f docker-compose.yml -f docker-compose.dev.yml exec admin-app sh -c "rm -rf var/cache/*" && \
 	echo "Cache reset"
 
 enable-debug: ##@application Puts app in dev mode and enables debug (so the app has toolbar/profiling)

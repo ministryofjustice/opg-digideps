@@ -22,6 +22,10 @@ class OrganisationDto
     /** @var array */
     private $clients;
 
+    private int $totalUserCount;
+
+    private int $totalClientCount;
+
     public function getId(): int
     {
         return $this->id;
@@ -96,6 +100,30 @@ class OrganisationDto
     public function setClients(array $clients): OrganisationDto
     {
         $this->clients = $clients;
+
+        return $this;
+    }
+
+    public function getTotalUserCount()
+    {
+        return $this->totalUserCount;
+    }
+
+    public function setTotalUserCount(int $totalUserCount)
+    {
+        $this->totalUserCount = $totalUserCount;
+
+        return $this;
+    }
+
+    public function getTotalClientCount()
+    {
+        return $this->totalClientCount;
+    }
+
+    public function setTotalClientCount(int $totalClientCount)
+    {
+        $this->totalClientCount = $totalClientCount;
 
         return $this;
     }

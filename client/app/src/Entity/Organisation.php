@@ -57,6 +57,22 @@ class Organisation
     private $clients;
 
     /**
+     * @var int
+     *
+     * @JMS\Type("integer")
+     * @JMS\Groups({"total-user-count"})
+     */
+    private $totalUserCount;
+
+    /**
+     * @var int
+     *
+     * @JMS\Type("integer")
+     * @JMS\Groups({"total-client-count"})
+     */
+    private $totalClientCount;
+
+    /**
      * @return int
      */
     public function getId()
@@ -273,6 +289,46 @@ class Organisation
     public function setClients($clients)
     {
         $this->clients = $clients;
+
+        return $this;
+    }
+
+    /**
+     * @return int
+     */
+    public function getTotalUserCount()
+    {
+        return $this->totalUserCount;
+    }
+
+    /**
+     * @param int
+     *
+     * @return $this
+     */
+    public function setTotalUserCount($count)
+    {
+        $this->totalUserCount = $count;
+
+        return $this;
+    }
+
+    /**
+     * @return int
+     */
+    public function getTotalClientCount()
+    {
+        return $this->totalClientCount;
+    }
+
+    /**
+     * @param int
+     *
+     * @return $this
+     */
+    public function setTotalClientCount($count)
+    {
+        $this->totalClientCount = $count;
 
         return $this;
     }

@@ -143,6 +143,36 @@ class PreRegistrationControllerTest extends AbstractTestController
         ]);
     }
 
+    public function testVerifyPreRegistrationCoDeputyCannotSignUp()
+    {
+        $deputy1 = $this->fixtures()->getRepo('User')->findOneByEmail('deputy@example.org');
+        $this->fixtures()->createClient($deputy1, ['setFirstname' => 'deputy1Client1', 'setCaseNumber' => '12345678']);
+
+        $this->buildAndPersistPreRegistrationEntity('12345678', 'SINGLE', 'deputy');
+        $this->buildAndPersistPreRegistrationEntity('12345678', 'SINGLE', 'codeputy');
+        $this->fixtures()->flush();
+        $this->fixtures()->clear();
+
+        self::$tokenDeputy = $this->loginAsDeputy();
+
+        /** @var User $loggedInUser */
+        $loggedInUser = $this->fixtures()->clear()->getRepo('User')->find($this->loggedInUserId);
+
+        $this->fixtures()->persist($loggedInUser);
+        $this->fixtures()->flush();
+        $this->fixtures()->clear();
+
+        $this->assertJsonRequest('POST', '/pre-registration/verify', [
+            'data' => [
+                'case_number' => '12345678',
+                'lastname' => 'I should get deleted',
+            ],
+            'mustFail' => true,
+            'AuthToken' => self::$tokenDeputy,
+            'assertResponseCode' => 403,
+        ]);
+    }
+
     private function buildAndPersistPreRegistrationEntity(string $case, string $hybrid = 'SINGLE', string $deputySurname = 'admin'): PreRegistration
     {
         $preRegistration = new PreRegistration([

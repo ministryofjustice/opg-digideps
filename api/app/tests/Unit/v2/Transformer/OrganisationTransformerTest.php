@@ -26,7 +26,7 @@ class OrganisationTransformerTest extends TestCase
             ->disableOriginalConstructor()
             ->getMock();
 
-        $transformed = (new OrganisationTransformer($deputyTransformer))->transform($dto, ['users']);
+        $transformed = (new OrganisationTransformer($deputyTransformer))->transform($dto, ['users', 'total_user_count', 'total_client_count']);
 
         $this->assertEquals(4, $transformed['id']);
         $this->assertEquals('foo', $transformed['name']);
@@ -45,7 +45,8 @@ class OrganisationTransformerTest extends TestCase
             ->setName('foo')
             ->setEmailIdentifier('bar')
             ->setIsActivated(true)
-            ->setUsers([new DeputyDto(), new DeputyDto()]);
+            ->setUsers([new DeputyDto(), new DeputyDto()])
+            ->setTotalUserCount(2);
 
         $deputyTransformer = $this
             ->getMockBuilder(DeputyTransformer::class)
@@ -64,13 +65,14 @@ class OrganisationTransformerTest extends TestCase
                 ['user_two' => 'transformed']
             );
 
-        $transformed = (new OrganisationTransformer($deputyTransformer))->transform($dto);
+        $transformed = (new OrganisationTransformer($deputyTransformer))->transform($dto, ['total_client_count', 'clients']);
 
         $this->assertEquals(4, $transformed['id']);
         $this->assertEquals('foo', $transformed['name']);
         $this->assertEquals('bar', $transformed['email_identifier']);
         $this->assertTrue($transformed['is_activated']);
         $this->assertCount(2, $transformed['users']);
+        $this->assertEquals(2, $transformed['total_user_count']);
         $this->assertEquals(['user_one' => 'transformed'], $transformed['users'][0]);
         $this->assertEquals(['user_two' => 'transformed'], $transformed['users'][1]);
     }

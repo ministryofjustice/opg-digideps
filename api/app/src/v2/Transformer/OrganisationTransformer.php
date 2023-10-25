@@ -33,6 +33,14 @@ class OrganisationTransformer
             'is_activated' => $dto->isActivated(),
         ];
 
+        if (!in_array('total_user_count', $exclude) && $dto->getTotalUserCount()) {
+            $data['total_user_count'] = $dto->getTotalUserCount();
+        }
+
+        if (!in_array('total_client_count', $exclude) && $dto->getTotalClientCount()) {
+            $data['total_client_count'] = $dto->getTotalClientCount();
+        }
+
         if (!in_array('users', $exclude) && $dto->getUsers()) {
             $data['users'] = $this->transformUsers($dto->getUsers());
         }

@@ -59,14 +59,8 @@ class OrganisationAssembler
         $dto->setName($organisation->getName());
         $dto->setEmailIdentifier($organisation->getEmailIdentifier());
         $dto->setIsActivated($organisation->isActivated());
-
-        if ($organisation->getUsers()) {
-            $dto->setUsers($this->assembleOrganisationUsers($organisation->getUsers()));
-        }
-
-        if ($organisation->getClients()) {
-            $dto->setClients($this->assembleOrganisationClients($organisation->getClients()));
-        }
+        $dto->setTotalUserCount($organisation->getTotalUserCount());
+        $dto->setTotalClientCount($organisation->getTotalClientCount());
 
         return $dto;
     }

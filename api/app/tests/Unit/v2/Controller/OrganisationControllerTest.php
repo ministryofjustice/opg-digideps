@@ -51,7 +51,6 @@ class OrganisationControllerTest extends AbstractTestController
         self::fixtures()->flush()->clear();
 
         self::$em = self::fixtures()->getEntityManager();
-        self::$em->getFilters()->disable('softdeleteable');
 
         if (null === self::$tokenAdmin) {
             self::$tokenAdmin = $this->loginAsAdmin();
@@ -596,5 +595,122 @@ class OrganisationControllerTest extends AbstractTestController
 
         $response = self::$frameworkBundleClient->getResponse();
         $this->assertEquals(Response::HTTP_OK, $response->getStatusCode());
+    }
+
+    /**
+     * @test
+     */
+    public function getUsersReturnsTheCorrectAmountOfUsers()
+    {
+        $orgId = end(self::$orgs)->getId();
+
+        for ($x = 0; $x < 10; ++$x) {
+            $newUser = self::fixtures()->createUser(['setRoleName' => User::ROLE_PROF]);
+
+            self::fixtures()->flush()->clear();
+
+            self::fixtures()->addUserToOrganisation($newUser->getId(), $orgId);
+            self::fixtures()->flush()->clear();
+        }
+
+        self::$frameworkBundleClient->request(
+            'GET',
+            '/v2/organisation/'.$orgId.'/users',
+            [],
+            [],
+            $this->headersDeputy
+        );
+
+        $response = self::$frameworkBundleClient->getResponse();
+        $this->assertEquals(Response::HTTP_OK, $response->getStatusCode());
+
+        $responseContent = json_decode($response->getContent(), true);
+        $this->assertCount(11, $responseContent['data']['records']);
+
+        self::$frameworkBundleClient->request(
+            'GET',
+            '/v2/organisation/'.$orgId.'/users',
+            ['offset' => 0, 'limit' => 7],
+            [],
+            $this->headersDeputy
+        );
+
+        $response = self::$frameworkBundleClient->getResponse();
+        $this->assertEquals(Response::HTTP_OK, $response->getStatusCode());
+
+        $responseContent = json_decode($response->getContent(), true);
+        $this->assertCount(7, $responseContent['data']['records']);
+
+        self::$frameworkBundleClient->request(
+            'GET',
+            '/v2/organisation/'.$orgId.'/users',
+            ['offset' => 7, 'limit' => 7],
+            [],
+            $this->headersDeputy
+        );
+
+        $response = self::$frameworkBundleClient->getResponse();
+        $this->assertEquals(Response::HTTP_OK, $response->getStatusCode());
+
+        $responseContent = json_decode($response->getContent(), true);
+        $this->assertCount(4, $responseContent['data']['records']);
+    }
+
+    /**
+     * @test
+     */
+    public function getClientsReturnsTheCorrectAmountOfClients()
+    {
+        $orgId = end(self::$orgs)->getId();
+
+        for ($x = 0; $x < 10; ++$x) {
+            $newClient = self::fixtures()->createClient();
+            self::fixtures()->flush()->clear();
+
+            self::fixtures()->addClientToOrganisation($newClient->getId(), $orgId);
+            self::fixtures()->flush()->clear();
+        }
+
+        self::$frameworkBundleClient->request(
+            'GET',
+            '/v2/organisation/'.$orgId.'/clients',
+            [],
+            [],
+            $this->headersDeputy
+        );
+
+        $response = self::$frameworkBundleClient->getResponse();
+        $this->assertEquals(Response::HTTP_OK, $response->getStatusCode());
+
+        $responseContent = json_decode($response->getContent(), true);
+        $this->assertCount(10, $responseContent['data']['records']);
+
+        self::$frameworkBundleClient->request(
+            'GET',
+            '/v2/organisation/'.$orgId.'/clients',
+            ['offset' => 0, 'limit' => 7],
+            [],
+            $this->headersDeputy
+        );
+
+        $response = self::$frameworkBundleClient->getResponse();
+        $this->assertEquals(Response::HTTP_OK, $response->getStatusCode());
+
+        $responseContent = json_decode($response->getContent(), true);
+        $this->assertCount(7, $responseContent['data']['records']);
+
+        self::$frameworkBundleClient->request(
+            'GET',
+            '/v2/organisation/'.$orgId.'/clients',
+            ['offset' => 7, 'limit' => 7],
+            [],
+            $this->headersDeputy
+        );
+
+        $response = self::$frameworkBundleClient->getResponse();
+        $this->assertEquals(Response::HTTP_OK, $response->getStatusCode());
+
+        $responseContent = json_decode($response->getContent(), true);
+        $this->assertCount(3, $responseContent['data']['records']);
     }
 }

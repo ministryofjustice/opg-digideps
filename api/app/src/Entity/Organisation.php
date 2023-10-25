@@ -196,4 +196,36 @@ class Organisation implements OrganisationInterface
     {
         return $this->users->contains($user);
     }
+
+    /**
+     * @JMS\VirtualProperty
+     *
+     * @JMS\Type("integer")
+     *
+     * @JMS\SerializedName("total-user-count")
+     *
+     * @JMS\Groups({"total-user-count"})
+     *
+     * @return int
+     */
+    public function getTotalUserCount()
+    {
+        return count($this->getUsers());
+    }
+
+    /**
+     * @JMS\VirtualProperty
+     *
+     * @JMS\Type("integer")
+     *
+     * @JMS\SerializedName("total-client-count")
+     *
+     * @JMS\Groups({"total-client-count"})
+     *
+     * @return int
+     */
+    public function getTotalClientCount()
+    {
+        return count($this->getClients());
+    }
 }

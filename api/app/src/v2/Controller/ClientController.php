@@ -65,9 +65,10 @@ class ClientController extends RestController
 
         $orgDto = null;
         $transformedOrg = null;
+
         if (isset($data['organisation'])) {
             $orgDto = $this->orgAssembler->assembleFromArray($data['organisation']);
-            $transformedOrg = $this->orgTransformer->transform($orgDto);
+            $transformedOrg = $this->orgTransformer->transform($orgDto, ['total_user_count', 'total_client_count', 'users', 'clients']);
         }
 
         $transformedDto = $this->clientTransformer->transform($dto, [], $transformedOrg);
