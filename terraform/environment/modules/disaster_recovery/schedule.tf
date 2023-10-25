@@ -1,12 +1,12 @@
 resource "aws_cloudwatch_event_rule" "dr_backup" {
-  name                = "dr-backup-${terraform.workspace}"
-  description         = "Execute the disaster recovery backup for ${terraform.workspace}"
+  name                = "backup-cross-account-${terraform.workspace}"
+  description         = "Execute the cross account DR backup for ${terraform.workspace}"
   schedule_expression = "cron(00 01 * * ? *)"
   is_enabled          = true
 }
 
 resource "aws_cloudwatch_event_target" "dr_backup" {
-  target_id = "dr-backup-${terraform.workspace}"
+  target_id = "backup-cross-account-${terraform.workspace}"
   arn       = var.aws_ecs_cluster_arn
   rule      = aws_cloudwatch_event_rule.dr_backup.name
   role_arn  = var.task_runner_arn

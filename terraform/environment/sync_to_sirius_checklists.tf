@@ -1,5 +1,5 @@
 locals {
-  document_sync_sg_rules = {
+  checklist_sync_sg_rules = {
     ecr     = local.common_sg_rules.ecr
     logs    = local.common_sg_rules.logs
     s3      = local.common_sg_rules.s3
@@ -20,6 +20,13 @@ locals {
       target_type = "cidr_block"
       target      = "0.0.0.0/0"
     }
+    pdf = {
+      port        = 80
+      type        = "egress"
+      protocol    = "tcp"
+      target_type = "security_group_id"
+      target      = module.htmltopdf_security_group.id
+    }
     mock_sirius_integration = {
       port        = 8080
       type        = "egress"
@@ -28,35 +35,35 @@ locals {
       target      = module.mock_sirius_integration_security_group.id
     }
   }
-  document_sync_scheduled = local.environment == "production02" ? 0 : 1
 }
 
-module "document_sync_service_security_group" {
+module "checklist_sync_service_security_group" {
   source      = "./modules/security_group"
-  description = "Document Sync Service"
-  rules       = local.document_sync_sg_rules
-  name        = "document-sync-service"
+  description = "Checklist Sync Service"
+  rules       = local.checklist_sync_sg_rules
+  name        = "checklist-sync-service"
   tags        = local.default_tags
   vpc_id      = data.aws_vpc.vpc.id
   environment = local.environment
 }
 
-resource "aws_ecs_task_definition" "document_sync" {
-  family                   = "document-sync-${local.environment}"
+resource "aws_ecs_task_definition" "checklist_sync" {
+  family                   = "checklist-sync-${local.environment}"
   requires_compatibilities = ["FARGATE"]
   network_mode             = "awsvpc"
   cpu                      = 512
   memory                   = 1024
-  container_definitions    = "[${local.document_sync_container}]"
+  container_definitions    = "[${local.checklist_sync_container}]"
   task_role_arn            = aws_iam_role.front.arn
   execution_role_arn       = aws_iam_role.execution_role.arn
   tags                     = local.default_tags
 }
 
-resource "aws_ecs_service" "document_sync" {
-  name                    = aws_ecs_task_definition.document_sync.family
+resource "aws_ecs_service" "checklist_sync" {
+  name                    = aws_ecs_task_definition.checklist_sync.family
   cluster                 = aws_ecs_cluster.main.id
-  task_definition         = aws_ecs_task_definition.document_sync.arn
+  task_definition         = aws_ecs_task_definition.checklist_sync.arn
+  desired_count           = local.environment == "production02" ? 1 : 0
   launch_type             = "FARGATE"
   platform_version        = "1.4.0"
   enable_ecs_managed_tags = true
@@ -64,7 +71,7 @@ resource "aws_ecs_service" "document_sync" {
   tags                    = local.default_tags
 
   network_configuration {
-    security_groups  = [module.document_sync_service_security_group.id]
+    security_groups  = [module.checklist_sync_service_security_group.id]
     subnets          = data.aws_subnet.private.*.id
     assign_public_ip = false
   }
@@ -83,45 +90,19 @@ resource "aws_ecs_service" "document_sync" {
   }
 }
 
-resource "aws_cloudwatch_event_rule" "document_sync_cron_rule" {
-  count               = local.document_sync_scheduled
-  name                = "${aws_ecs_task_definition.document_sync.family}-schedule"
-  schedule_expression = "rate(24 hours)"
-  tags                = local.default_tags
-}
-
-resource "aws_cloudwatch_event_target" "document_sync_scheduled_task" {
-  count     = local.document_sync_scheduled
-  target_id = "ScheduledDocumentSync"
-  rule      = aws_cloudwatch_event_rule.document_sync_cron_rule[0].name
-  arn       = aws_ecs_cluster.main.arn
-  role_arn  = aws_iam_role.events_task_runner.arn
-
-  ecs_target {
-    task_count          = 1
-    task_definition_arn = aws_ecs_task_definition.document_sync.arn
-    launch_type         = "FARGATE"
-    platform_version    = "1.4.0"
-    network_configuration {
-      subnets          = data.aws_subnet.private.*.id
-      assign_public_ip = false
-      security_groups  = [module.document_sync_service_security_group.id]
-    }
-  }
-}
-
 locals {
-  document_sync_container = jsonencode(
+  script_name = local.environment == "production02" ? "scripts/document_and_checklist_sched.sh" : "scripts/checklistsync.sh"
+  checklist_sync_container = jsonencode(
     {
-      name    = "document-sync",
+      name    = "checklist-sync",
       image   = local.images.client,
-      command = ["sh", "scripts/documentsync.sh", "-d"],
+      command = ["sh", local.script_name, "-d"],
       logConfiguration = {
         logDriver = "awslogs",
         options = {
           awslogs-group         = aws_cloudwatch_log_group.opg_digi_deps.name,
           awslogs-region        = "eu-west-1",
-          awslogs-stream-prefix = "document-sync"
+          awslogs-stream-prefix = "checklist-sync"
         }
       },
       secrets = [
@@ -145,7 +126,7 @@ locals {
         },
         {
           name  = "ROLE",
-          value = "document_sync"
+          value = "checklist_sync"
         },
         {
           name  = "S3_BUCKETNAME",
@@ -194,9 +175,12 @@ locals {
         {
           name  = "PARAMETER_PREFIX",
           value = local.parameter_prefix
+        },
+        {
+          name  = "HTMLTOPDF_ADDRESS",
+          value = "http://${local.htmltopdf_service_fqdn}"
         }
       ]
     }
-
   )
 }
