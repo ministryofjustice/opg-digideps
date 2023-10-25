@@ -7,14 +7,6 @@ locals {
   sync_service_cron_schedule = "cron(00 05 ? * * *)"
 }
 
-resource "aws_lambda_permission" "invocation_from_checks" {
-  statement_id  = "AllowExecutionFromDeleteInactiveUsersCheck"
-  action        = "lambda:InvokeFunction"
-  function_name = data.aws_lambda_function.slack_lambda.function_name
-  principal     = "events.amazonaws.com"
-  source_arn    = "arn:aws:events:eu-west-1:248804316466:rule/check-*"
-}
-
 # Cross account DR backup check
 
 resource "aws_cloudwatch_event_rule" "cross_account_backup_check" {
