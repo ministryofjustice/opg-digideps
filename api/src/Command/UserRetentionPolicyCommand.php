@@ -19,7 +19,7 @@ class UserRetentionPolicyCommand extends Command
 {
     use ControllerTrait;
 
-    public static $defaultName = 'digideps:user-retention-policy';
+    public static $defaultName = 'digideps:delete-inactive-users';
 
     private array $inactiveAdminUserIds = [];
     
@@ -42,31 +42,37 @@ class UserRetentionPolicyCommand extends Command
 
     protected function execute(InputInterface $input, OutputInterface $output): int
     {
-        $getInactiveAdminUsers = $this->userRepository->getAllAdminAccountsNotUsedWithin('-24 months');
-        $this->excludedUsers = $this->userRepository->getAllDeletionProtectedAccounts();
-
-        if (is_array($getInactiveAdminUsers)) {
-            foreach ($getInactiveAdminUsers as $adminUser) {
-                $this->storeUserIdForDeletion($adminUser);
+      try {
+            $getInactiveAdminUsers = $this->userRepository->getAllAdminAccountsNotUsedWithin('-24 months');
+            $this->excludedUsers = $this->userRepository->getAllDeletionProtectedAccounts();
+    
+            if (is_array($getInactiveAdminUsers)) {
+                foreach ($getInactiveAdminUsers as $adminUser) {
+                    $this->storeUserIdForDeletion($adminUser);
+                }
             }
-        }
-
-        if ($getInactiveAdminUsers instanceof User) {
-            $this->storeUserIdForDeletion($getInactiveAdminUsers);
-        }
-
-        if (!empty($this->inactiveAdminUserIds)) {
-            $countOfAdminUsers = count($this->inactiveAdminUserIds);
-
-            $this->userRepository->deleteInactiveAdminUsers($this->inactiveAdminUserIds);
-            $output->writeln(sprintf('%d inactive admin user(s) deleted', $countOfAdminUsers));
-
+    
+            if ($getInactiveAdminUsers instanceof User) {
+                $this->storeUserIdForDeletion($getInactiveAdminUsers);
+            }
+    
+            if (!empty($this->inactiveAdminUserIds)) {
+                $countOfAdminUsers = count($this->inactiveAdminUserIds);
+    
+                $this->userRepository->deleteInactiveAdminUsers($this->inactiveAdminUserIds);
+                $output->writeln(sprintf('delete_inactive_users - success - %d inactive admin user(s) deleted', $countOfAdminUsers));
+                
+                return 0;
+            }
+    
+            $output->writeln('delete_inactive_users - success - No inactive admin users to delete');
+    
+            return 0;
+        } catch (Exception $e) {
+            $output->writeln("delete_inactive_users - failure - Failed to delete inactive users");
+            $output->writeln($e);
             return 1;
         }
-
-        $output->writeln('No inactive admin users to delete');
-
-        return 0;
     }
 
     private function storeUserIdForDeletion(User $user): void

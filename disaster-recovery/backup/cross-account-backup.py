@@ -244,8 +244,10 @@ def assume_session(
     print(f"Assumed role {role_arn}")
     return boto3.Session(**create_session_kwargs)
 
+
 def str_to_bool(v):
     return v.lower() in ("yes", "true", "t", "1")
+
 
 def main():
     aws_region = "eu-west-1"
@@ -263,53 +265,57 @@ def main():
 
     print(f"Database to backup {cluster_id}")
 
-    snapshot_identifier = get_latest_snapshot(client, cluster_id, cluster)
-    target_snapshot_identifier = snapshot_identifier.replace("rds:", "")
+    try:
+        snapshot_identifier = get_latest_snapshot(client, cluster_id, cluster)
+        target_snapshot_identifier = snapshot_identifier.replace("rds:", "")
 
-    if cluster:
-        shared_snapshot_identifier = f"arn:aws:rds:{aws_region}:{source_account}:cluster-snapshot:{target_snapshot_identifier}"
-    else:
-        shared_snapshot_identifier = f"arn:aws:rds:{aws_region}:{source_account}:snapshot:{target_snapshot_identifier}"
+        if cluster:
+            shared_snapshot_identifier = f"arn:aws:rds:{aws_region}:{source_account}:cluster-snapshot:{target_snapshot_identifier}"
+        else:
+            shared_snapshot_identifier = f"arn:aws:rds:{aws_region}:{source_account}:snapshot:{target_snapshot_identifier}"
 
-    backup_snapshot_identifier = f"{target_snapshot_identifier}-bck"
+        backup_snapshot_identifier = f"{target_snapshot_identifier}-bck"
 
-    # Delete target if it exists
-    delete_snapshot(client, target_snapshot_identifier, cluster)
+        # Delete target if it exists
+        delete_snapshot(client, target_snapshot_identifier, cluster)
 
-    # Copy snapshot over to manual using KMS key
-    copy_latest_snapshot(client, snapshot_identifier, target_snapshot_identifier, kms_key_id, cluster)
+        # Copy snapshot over to manual using KMS key
+        copy_latest_snapshot(client, snapshot_identifier, target_snapshot_identifier, kms_key_id, cluster)
 
-    # Share the snapshot with sandbox
-    share_snapshot(client, target_snapshot_identifier, backup_account, cluster)
+        # Share the snapshot with sandbox
+        share_snapshot(client, target_snapshot_identifier, backup_account, cluster)
 
-    backup_session = assume_session(
-        'backup_session',
-        backup_acc_role_arn,
-        aws_region)
+        backup_session = assume_session(
+            'backup_session',
+            backup_acc_role_arn,
+            aws_region)
 
-    backup_client = backup_session.client('rds', region_name=aws_region)
+        backup_client = backup_session.client('rds', region_name=aws_region)
 
-    # Delete backup acc target if it exists
-    delete_snapshot(backup_client, backup_snapshot_identifier, cluster)
+        # Delete backup acc target if it exists
+        delete_snapshot(backup_client, backup_snapshot_identifier, cluster)
 
-    copy_individual_snapshot(
-        backup_client,
-        shared_snapshot_identifier,
-        backup_snapshot_identifier,
-        shared_kms_key_id,
-        aws_region,
-        cluster
-    )
+        copy_individual_snapshot(
+            backup_client,
+            shared_snapshot_identifier,
+            backup_snapshot_identifier,
+            shared_kms_key_id,
+            aws_region,
+            cluster
+        )
 
-    # Delete shared manual backup
-    delete_snapshot(client, target_snapshot_identifier, cluster)
+        # Delete shared manual backup
+        delete_snapshot(client, target_snapshot_identifier, cluster)
 
-    print("Deleting old backups...")
-    for snapshot in get_snapshots_to_delete(backup_client, cluster_id, backups_to_keep, cluster):
-        print(f"Found {snapshot} to delete")
-        delete_snapshot(backup_client, snapshot, cluster)
+        print("Deleting old backups...")
+        for snapshot in get_snapshots_to_delete(backup_client, cluster_id, backups_to_keep, cluster):
+            print(f"Found {snapshot} to delete")
+            delete_snapshot(backup_client, snapshot, cluster)
 
-    print("Finished processing DR backups")
+        print("cross_account_backup - success - Finished processing cross account DR backups")
+
+    except Exception:
+        print("cross_account_backup - failure - Error processing cross account DR backups")
 
 
 if __name__ == "__main__":
