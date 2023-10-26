@@ -87,6 +87,29 @@ class MoneyInController extends AbstractController
     }
 
     /**
+     * @Route("/report/{reportId}/money-in/no-money-in-exists", name="no_money_in_exists")
+     * @Template("@App/Report/MoneyIn/noMoneyInToReport.html.twig")
+     *
+     * @return array
+     */
+    public function noMoneyInToReport(Request $request, $reportId)
+    {
+        $report = $this->reportApi->getReportIfNotSubmitted($reportId, self::$jmsGroups);
+        $form = $this->createForm(FormDir\Report\NoMoneyInType::class, $report);
+        $form->handleRequest($request);
+
+        // need to add logic for updating db and redirection
+
+        $backLink = $this->generateUrl('money_in_exist', ['reportId' => $reportId]);
+
+        return [
+            'backLink' => $backLink,
+            'report' => $report,
+            'form' => $form->createView(),
+        ];
+    }
+
+    /**
      * @Route("/report/{reportId}/money-in/step{step}/{transactionId}", name="money_in_step", requirements={"step":"\d+"})
      * @Template("@App/Report/MoneyIn/step.html.twig")
      *

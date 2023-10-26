@@ -249,6 +249,15 @@ class Report implements ReportInterface, StartEndDateComparableInterface
     private $reasonForNoDecisions;
 
     /**
+     * @JMS\Type("string")
+     * @JMS\Groups({"reasonForNoMoneyIn"})
+     * @Assert\NotBlank( message="moneyIn.reasonForNoMoneyIn.notBlank", groups={"reasonForNoMoneyIn"})
+     *
+     * @var string|null
+     */
+    private $reasonForNoMoneyIn;
+
+    /**
      * @JMS\Type("boolean")
      * @JMS\Groups({"noAssetsToAdd"})
      *
@@ -802,6 +811,26 @@ class Report implements ReportInterface, StartEndDateComparableInterface
     public function getReasonForNoDecisions()
     {
         return $this->reasonForNoDecisions;
+    }
+
+    /**
+     * @param string $reasonForNoMoneyIn
+     *
+     * @return Report
+     */
+    public function setReasonForNoMoneyIn($reasonForNoMoneyIn)
+    {
+        $this->reasonForNoMoneyIn = $reasonForNoMoneyIn;
+
+        return $this;
+    }
+
+    /**
+     * @return string|null
+     */
+    public function getReasonForNoMoneyIn()
+    {
+        return $this->reasonForNoMoneyIn;
     }
 
     /**

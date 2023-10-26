@@ -7,21 +7,19 @@ use Symfony\Component\Form\Extension\Core\Type as FormTypes;
 use Symfony\Component\Form\FormBuilderInterface;
 use Symfony\Component\Validator\Constraints\NotBlank;
 
-class MoneyInExistType extends AbstractType
+class NoMoneyInType extends AbstractType
 {
     public function buildForm(FormBuilderInterface $builder, array $options)
     {
         $builder
-            ->add('hasMoneyIn', FormTypes\ChoiceType::class, [
-                'choices' => ['Yes' => 'yes', 'No' => 'no'],
-                'expanded' => true,
-                'constraints' => [new NotBlank(['message' => 'moneyIn.moneyInChoice.notBlank', 'groups' => ['money-in-exist']])],
+            ->add('reasonForNoMoneyIn', FormTypes\TextareaType::class, [
+                'constraints' => [new NotBlank(['message' => 'moneyIn.reasonForNoMoneyIn.notBlank', 'groups' => ['no_money_in_exists']])],
             ])
             ->add('save', FormTypes\SubmitType::class, ['label' => 'save.label']);
     }
 
     public function getBlockPrefix()
     {
-        return 'money_in_exist';
+        return 'no_money_in_exists';
     }
 }

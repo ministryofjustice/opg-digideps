@@ -255,6 +255,12 @@ account:
   isClosed:
     notBlank: Please select either 'Yes' or 'No'
 
+moneyIn:
+  moneyInChoice:
+    notBlank: Please select either 'Yes' or 'No'
+  reasonForNoMoneyIn:
+    notBlank: Please enter a reason
+
 moneyTransaction:
   addAnother.notBlank: Please choose an option
   form:
