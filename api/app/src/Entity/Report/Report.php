@@ -543,6 +543,50 @@ class Report implements ReportInterface
      */
     private Satisfaction $satisfaction;
 
+    /**
+     * @var string yes | no
+     *
+     * @JMS\Type("string")
+     *
+     * @JMS\Groups({"report"})
+     *
+     * @ORM\Column(name="money_in_exists", type="text", nullable=true)
+     */
+    private $moneyInExists;
+
+    /**
+     * @var string captures reason for no money in. Required if no money has gone in
+     *
+     * @JMS\Type("string")
+     *
+     * @JMS\Groups({"report"})
+     *
+     * @ORM\Column(name="reason_for_no_money_in", type="text", nullable=true)
+     **/
+    private $reasonForNoMoneyIn;
+
+    /**
+     * @var string yes | no
+     *
+     * @JMS\Type("string")
+     *
+     * @JMS\Groups({"report"})
+     *
+     * @ORM\Column(name="money_out_exists", type="text", nullable=true)
+     */
+    private $moneyOutExists;
+
+    /**
+     * @var string captures reason for no money out. Required if no money has gone out
+     *
+     * @JMS\Type("string")
+     *
+     * @JMS\Groups({"report"})
+     *
+     * @ORM\Column(name="reason_for_no_money_out", type="text", nullable=true)
+     **/
+    private $reasonForNoMoneyOut;
+
     private array $excludeSections = [];
     private ?\DateTime $benefitsSectionReleaseDate = null;
 
@@ -760,8 +804,6 @@ class Report implements ReportInterface
     /**
      * Set submitDate.
      *
-     * @param \DateTime $submitDate
-     *
      * @return Report
      */
     public function setSubmitDate(\DateTime $submitDate = null)
@@ -825,17 +867,12 @@ class Report implements ReportInterface
         return $this->submitted;
     }
 
-    /**
-     * @return mixed
-     */
     public function getSubmittedBy()
     {
         return $this->submittedBy;
     }
 
     /**
-     * @param mixed $submittedBy
-     *
      * @return Report
      */
     public function setSubmittedBy($submittedBy)
@@ -847,8 +884,6 @@ class Report implements ReportInterface
 
     /**
      * Set client.
-     *
-     * @param Client $client
      *
      * @return Report
      */
@@ -883,8 +918,6 @@ class Report implements ReportInterface
     }
 
     /**
-     * @param VisitsCare $visitsCare
-     *
      * @return Report
      */
     public function setVisitsCare(VisitsCare $visitsCare = null)
@@ -1123,8 +1156,6 @@ class Report implements ReportInterface
 
     /**
      * @JMS\SerializedName("report_submissions")
-     *
-     * @return mixed
      */
     public function getReportSubmissions()
     {
@@ -1150,8 +1181,6 @@ class Report implements ReportInterface
     }
 
     /**
-     * @param mixed $wishToProvideDocumentation
-     *
      * @return $this
      */
     public function setWishToProvideDocumentation($wishToProvideDocumentation)

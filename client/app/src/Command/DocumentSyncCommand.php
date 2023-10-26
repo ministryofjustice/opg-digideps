@@ -14,8 +14,8 @@ use Symfony\Component\Serializer\SerializerInterface;
 
 class DocumentSyncCommand extends DaemonableCommand
 {
-    const FALLBACK_ROW_LIMITS = '100';
-    const COMPLETED_MESSAGE = 'Sync command completed';
+    public const FALLBACK_ROW_LIMITS = '100';
+    public const COMPLETED_MESSAGE = 'Sync command completed';
 
     public static $defaultName = 'digideps:document-sync';
 
@@ -77,11 +77,11 @@ class DocumentSyncCommand extends DaemonableCommand
         }
 
         if ($this->documentSyncService->getDocsNotSyncedCount() > 0) {
-            $output->writeln(sprintf('%d documents failed to sync', $this->documentSyncService->getDocsNotSyncedCount()));
+            $output->writeln(sprintf('sync_documents_to_sirius - failure - %d documents failed to sync', $this->documentSyncService->getDocsNotSyncedCount()));
             $this->documentSyncService->setDocsNotSyncedCount(0);
+        } else {
+            $output->writeln(sprintf('sync_documents_to_sirius - success - %d', self::COMPLETED_MESSAGE));
         }
-
-        $output->writeln(self::COMPLETED_MESSAGE);
 
         return 0;
     }

@@ -10,6 +10,7 @@ resource "aws_lambda_function" "slack_lambda" {
   runtime       = "python3.11"
   layers        = [aws_lambda_layer_version.lambda_layer.arn]
   depends_on    = [aws_cloudwatch_log_group.slack_lambda]
+  timeout       = 300
   tracing_config {
     mode = "Active"
   }
@@ -50,21 +51,24 @@ data "aws_iam_policy_document" "lambda_slack_policy" {
 }
 
 resource "aws_iam_role_policy" "lambda_slack" {
-  name   = "lambda_slack"
+  name   = "lambda-slack"
   policy = data.aws_iam_policy_document.lambda_slack.json
   role   = aws_iam_role.lambda_slack.id
 }
 
 data "aws_iam_policy_document" "lambda_slack" {
   statement {
-    sid    = "WriteLogs"
+    sid    = "allowLogging"
     effect = "Allow"
+    resources = [
+      aws_cloudwatch_log_group.slack_lambda.arn,
+      "${aws_cloudwatch_log_group.slack_lambda.arn}:*"
+    ]
     actions = [
       "logs:CreateLogStream",
       "logs:PutLogEvents",
       "logs:DescribeLogStreams"
     ]
-    resources = [aws_cloudwatch_log_group.slack_lambda.arn]
   }
 
   statement {
@@ -83,8 +87,8 @@ data "aws_iam_policy_document" "lambda_slack" {
     sid    = "SNS"
     effect = "Allow"
     actions = [
-      "sns:Subscribe",
-      "sns:Receive"
+      "SNS:Subscribe",
+      "SNS:Receive",
     ]
     resources = [
       aws_sns_topic.alerts.arn,
@@ -129,10 +133,24 @@ resource "aws_lambda_layer_version" "lambda_layer" {
 }
 
 resource "aws_lambda_permission" "sns" {
+  statement_id  = "AllowExecutionFromSNSTopic"
   action        = "lambda:InvokeFunction"
   function_name = aws_lambda_function.slack_lambda.function_name
   principal     = "sns.amazonaws.com"
   source_arn    = aws_sns_topic.alerts.arn
+  lifecycle {
+    replace_triggered_by = [
+      aws_lambda_function.slack_lambda
+    ]
+  }
+}
+
+resource "aws_lambda_permission" "scheduled_checks" {
+  statement_id  = "AllowExecutionFromScheduledCheck"
+  action        = "lambda:InvokeFunction"
+  function_name = aws_lambda_function.slack_lambda.function_name
+  principal     = "events.amazonaws.com"
+  source_arn    = "arn:aws:events:eu-west-1:248804316466:rule/check-*"
   lifecycle {
     replace_triggered_by = [
       aws_lambda_function.slack_lambda

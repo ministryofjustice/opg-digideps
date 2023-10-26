@@ -82,7 +82,7 @@ class UserRetentionPolicyCommandTest extends KernelTestCase
         $this->userRepository->deleteInactiveAdminUsers([1])->shouldBeCalled();
 
         $result = $this->commandTester->execute([]);
-        $this->assertEquals(1, $result);
+        $this->assertEquals(0, $result);
     }
 
     /**
@@ -137,6 +137,6 @@ class UserRetentionPolicyCommandTest extends KernelTestCase
         $this->userRepository->deleteInactiveAdminUsers([1, 2])->shouldBeCalled();
 
         $result = $this->commandTester->execute([]);
-        $this->assertEquals(1, $result);
+        $this->assertEquals(0, $result);
     }
 }

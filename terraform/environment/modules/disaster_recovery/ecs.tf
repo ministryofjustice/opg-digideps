@@ -1,5 +1,5 @@
 resource "aws_ecs_task_definition" "dr_backup" {
-  family                   = "dr-backup-${terraform.workspace}"
+  family                   = "backup-cross-account-${terraform.workspace}"
   requires_compatibilities = ["FARGATE"]
   network_mode             = "awsvpc"
   cpu                      = 256
@@ -8,7 +8,7 @@ resource "aws_ecs_task_definition" "dr_backup" {
   task_role_arn            = aws_iam_role.dr_backup.arn
   execution_role_arn       = var.execution_role_arn
   tags = merge(var.default_tags,
-    { "Role" = "dr-backup-${var.environment}" },
+    { "Role" = "backup-cross-account-${var.environment}" },
   )
 }
 
@@ -17,7 +17,7 @@ locals {
     cpu       = 0,
     essential = true,
     image     = var.images.drbackup,
-    name      = "dr_backup",
+    name      = "backup_cross_account",
     healthCheck = {
       command     = ["CMD-SHELL", "echo healthy || exit 1"],
       startPeriod = 30,
@@ -30,7 +30,7 @@ locals {
       options = {
         awslogs-group         = aws_cloudwatch_log_group.dr_backup.name,
         awslogs-region        = "eu-west-1",
-        awslogs-stream-prefix = "dr-backup-${var.environment}"
+        awslogs-stream-prefix = "backup-cross-account-${var.environment}"
       }
     },
     environment = [
@@ -63,7 +63,7 @@ locals {
 }
 
 resource "aws_cloudwatch_log_group" "dr_backup" {
-  name              = "dr-backup-${var.environment}"
+  name              = "backup-cross-account-${var.environment}"
   retention_in_days = var.log_retention
   kms_key_id        = var.logs_kms_key_arn
   tags              = var.default_tags
@@ -121,7 +121,7 @@ data "aws_iam_policy_document" "dr_backup" {
 }
 
 resource "aws_iam_role_policy" "dr_backup" {
-  name   = "dr-backup-task.${var.environment}"
+  name   = "backup-cross-account-task.${var.environment}"
   policy = data.aws_iam_policy_document.dr_backup.json
   role   = aws_iam_role.dr_backup.id
 }

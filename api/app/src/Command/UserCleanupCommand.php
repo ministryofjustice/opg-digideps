@@ -9,9 +9,9 @@ use Symfony\Component\Console\Command\Command;
 use Symfony\Component\Console\Input\InputInterface;
 use Symfony\Component\Console\Output\OutputInterface;
 
-class CleanupCommand extends Command
+class UserCleanupCommand extends Command
 {
-    protected static $defaultName = 'digideps:cleanup';
+    protected static $defaultName = 'digideps:delete-zero-activity-users';
 
     /** @var EntityManagerInterface */
     private $em;
@@ -29,10 +29,17 @@ class CleanupCommand extends Command
 
     protected function execute(InputInterface $input, OutputInterface $output)
     {
-        $deleteCount = $this->deleteInactivateUsers();
-        $output->writeln("Deleted $deleteCount inactive user(s)");
+        try {
+            $deleteCount = $this->deleteInactivateUsers();
+            $output->writeln("delete_zero_activity_users - success - Deleted $deleteCount lay user(s) that have never had any activity after 30 days of registration");
 
-        return 0;
+            return 0;
+        } catch (Exception $e) {
+            $output->writeln('delete_zero_activity_users - failure - Failed to delete lay user(s) that have never had any activity after 30 days of registration');
+            $output->writeln($e);
+
+            return 1;
+        }
     }
 
     private function deleteInactivateUsers(): int
