@@ -150,7 +150,7 @@ resource "aws_lambda_permission" "scheduled_checks" {
   action        = "lambda:InvokeFunction"
   function_name = aws_lambda_function.slack_lambda.function_name
   principal     = "events.amazonaws.com"
-  source_arn    = "arn:aws:events:eu-west-1:248804316466:rule/check-*"
+  source_arn    = "arn:aws:events:${data.aws_region.current.name}:${data.aws_caller_identity.current.account_id}:rule/check-*"
   lifecycle {
     replace_triggered_by = [
       aws_lambda_function.slack_lambda

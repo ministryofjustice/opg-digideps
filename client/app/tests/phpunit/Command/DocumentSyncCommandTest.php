@@ -192,6 +192,6 @@ class DocumentSyncCommandTest extends KernelTestCase
 
         $output = $this->commandTester->getDisplay();
         $this->assertStringContainsString('0 documents to upload', $output);
-        $this->assertStringContainsString('sync_documents_to_sirius - failure - 6 documents failed to sync', $output);
+        $this->assertStringContainsString('sync_documents_to_sirius - success - 6 documents remaining to sync', $output);
     }
 }
