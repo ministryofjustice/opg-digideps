@@ -22,13 +22,13 @@ class UserRetentionPolicyCommand extends Command
     public static $defaultName = 'digideps:delete-inactive-users';
 
     private array $inactiveAdminUserIds = [];
-    
+
     private array $excludedUsers = [];
 
     public function __construct(
         private UserRepository $userRepository,
         private ObservableEventDispatcher $eventDispatcher,
-        private LoggerInterface $logger
+        private LoggerInterface $verboseLogger
     ) {
         parent::__construct();
     }
@@ -42,35 +42,37 @@ class UserRetentionPolicyCommand extends Command
 
     protected function execute(InputInterface $input, OutputInterface $output): int
     {
-      try {
+        try {
             $getInactiveAdminUsers = $this->userRepository->getAllAdminAccountsNotUsedWithin('-24 months');
             $this->excludedUsers = $this->userRepository->getAllDeletionProtectedAccounts();
-    
+
             if (is_array($getInactiveAdminUsers)) {
                 foreach ($getInactiveAdminUsers as $adminUser) {
                     $this->storeUserIdForDeletion($adminUser);
+                    usleep(250000); // Sleep for 0.25 seconds (250,000 microseconds)
                 }
             }
-    
+
             if ($getInactiveAdminUsers instanceof User) {
                 $this->storeUserIdForDeletion($getInactiveAdminUsers);
             }
-    
+
             if (!empty($this->inactiveAdminUserIds)) {
                 $countOfAdminUsers = count($this->inactiveAdminUserIds);
-    
+
                 $this->userRepository->deleteInactiveAdminUsers($this->inactiveAdminUserIds);
                 $output->writeln(sprintf('delete_inactive_users - success - %d inactive admin user(s) deleted', $countOfAdminUsers));
-                
+
                 return 0;
             }
-    
+
             $output->writeln('delete_inactive_users - success - No inactive admin users to delete');
-    
+
             return 0;
         } catch (Exception $e) {
-            $output->writeln("delete_inactive_users - failure - Failed to delete inactive users");
+            $output->writeln('delete_inactive_users - failure - Failed to delete inactive users');
             $output->writeln($e);
+
             return 1;
         }
     }
@@ -83,8 +85,8 @@ class UserRetentionPolicyCommand extends Command
             $event = new UserRetentionPolicyCommandEvent($user, AuditEvents::USER_DELETED_AUTOMATION);
             $this->eventDispatcher->dispatch($event, UserRetentionPolicyCommandEvent::NAME);
 
-            $this->logger->info(
-                sprintf('Deleted user account with id: %d at admin permission level due to 2 year expiry.', 
+            $this->verboseLogger->notice(
+                sprintf('Deleted user account with id: %d at admin permission level due to 2 year expiry.',
                     $user->getId()
                 )
             );
