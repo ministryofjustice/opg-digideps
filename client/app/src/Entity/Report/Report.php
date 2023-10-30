@@ -250,6 +250,13 @@ class Report implements ReportInterface, StartEndDateComparableInterface
 
     /**
      * @JMS\Type("string")
+     * @JMS\Groups({"report", "moneyInExists"})
+     * @Assert\NotBlank( message="moneyIn.moneyInChoice.notBlank", groups={"moneyInExists"})
+     */
+    private $moneyInExists;
+
+    /**
+     * @JMS\Type("string")
      * @JMS\Groups({"reasonForNoMoneyIn"})
      * @Assert\NotBlank( message="moneyIn.reasonForNoMoneyIn.notBlank", groups={"reasonForNoMoneyIn"})
      *
@@ -1340,6 +1347,18 @@ class Report implements ReportInterface, StartEndDateComparableInterface
     public function setClientBenefitsCheck(?ClientBenefitsCheck $clientBenefitsCheck): Report
     {
         $this->clientBenefitsCheck = $clientBenefitsCheck;
+
+        return $this;
+    }
+
+    public function getMoneyInExists(): ?string
+    {
+        return $this->moneyInExists;
+    }
+
+    public function setMoneyInExists(?string $moneyInExists): self
+    {
+        $this->moneyInExists = $moneyInExists;
 
         return $this;
     }

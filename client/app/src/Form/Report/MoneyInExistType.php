@@ -12,16 +12,17 @@ class MoneyInExistType extends AbstractType
     public function buildForm(FormBuilderInterface $builder, array $options)
     {
         $builder
-            ->add('hasMoneyIn', FormTypes\ChoiceType::class, [
+            ->add('moneyInExists', FormTypes\ChoiceType::class, [
                 'choices' => ['Yes' => 'yes', 'No' => 'no'],
                 'expanded' => true,
-                'constraints' => [new NotBlank(['message' => 'moneyIn.moneyInChoice.notBlank', 'groups' => ['money-in-exist']])],
+                'mapped' => false,
+                'constraints' => [new NotBlank(['message' => 'moneyIn.moneyInChoice.notBlank', 'groups' => ['moneyInExists']])],
             ])
             ->add('save', FormTypes\SubmitType::class, ['label' => 'save.label']);
     }
 
     public function getBlockPrefix()
     {
-        return 'money_in_exist';
+        return 'money_in_exists';
     }
 }
