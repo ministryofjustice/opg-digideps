@@ -257,7 +257,7 @@ class Report implements ReportInterface, StartEndDateComparableInterface
 
     /**
      * @JMS\Type("string")
-     * @JMS\Groups({"reasonForNoMoneyIn"})
+     * @JMS\Groups({"report", "reasonForNoMoneyIn"})
      * @Assert\NotBlank( message="moneyIn.reasonForNoMoneyIn.notBlank", groups={"reasonForNoMoneyIn"})
      *
      * @var string|null
@@ -821,26 +821,6 @@ class Report implements ReportInterface, StartEndDateComparableInterface
     }
 
     /**
-     * @param string $reasonForNoMoneyIn
-     *
-     * @return Report
-     */
-    public function setReasonForNoMoneyIn($reasonForNoMoneyIn)
-    {
-        $this->reasonForNoMoneyIn = $reasonForNoMoneyIn;
-
-        return $this;
-    }
-
-    /**
-     * @return string|null
-     */
-    public function getReasonForNoMoneyIn()
-    {
-        return $this->reasonForNoMoneyIn;
-    }
-
-    /**
      * @return VisitsCare
      */
     public function getVisitsCare()
@@ -1356,9 +1336,27 @@ class Report implements ReportInterface, StartEndDateComparableInterface
         return $this->moneyInExists;
     }
 
-    public function setMoneyInExists(?string $moneyInExists): self
+    /**
+     * @param string $moneyInExists
+     */
+    public function setMoneyInExists(?string $moneyInExists): Report
     {
         $this->moneyInExists = $moneyInExists;
+
+        return $this;
+    }
+
+    public function getReasonForNoMoneyIn(): ?string
+    {
+        return $this->reasonForNoMoneyIn;
+    }
+
+    /**
+     * @param string $reasonForNoMoneyIn
+     */
+    public function setReasonForNoMoneyIn(?string $reasonForNoMoneyIn): Report
+    {
+        $this->reasonForNoMoneyIn = $reasonForNoMoneyIn;
 
         return $this;
     }

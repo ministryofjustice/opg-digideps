@@ -13,13 +13,13 @@ class NoMoneyInType extends AbstractType
     {
         $builder
             ->add('reasonForNoMoneyIn', FormTypes\TextareaType::class, [
-                'constraints' => [new NotBlank(['message' => 'moneyIn.reasonForNoMoneyIn.notBlank', 'groups' => ['no_money_in_exists']])],
+                'constraints' => [new NotBlank(['message' => 'moneyIn.reasonForNoMoneyIn.notBlank', 'groups' => ['no_money_exists']])],
             ])
             ->add('save', FormTypes\SubmitType::class, ['label' => 'save.label']);
     }
 
     public function getBlockPrefix()
     {
-        return 'no_money_in_exists';
+        return 'no_money_exists';
     }
 }

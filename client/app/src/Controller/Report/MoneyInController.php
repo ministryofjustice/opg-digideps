@@ -72,9 +72,6 @@ class MoneyInController extends AbstractController
     public function existAction(Request $request, $reportId)
     {
         $report = $this->reportApi->getReportIfNotSubmitted($reportId, self::$jmsGroups);
-
-        $reportId = $report->getId();
-
         $form = $this->createForm(FormDir\Report\MoneyInExistType::class, $report);
         $form->handleRequest($request);
 
@@ -85,7 +82,7 @@ class MoneyInController extends AbstractController
             $report->setMoneyInExists($answer);
             $this->restClient->put('report/'.$reportId, $report, ['moneyInExists']);
 
-            if ('yes' == $answer) {
+            if ('yes' === $answer) {
                 return $this->redirectToRoute('money_in_step', ['reportId' => $reportId, 'step' => 1, 'from' => 'money_in_exist']);
             } else {
                 return $this->redirectToRoute('no_money_in_exists', ['reportId' => $reportId, 'from' => 'money_in_exist']);
@@ -105,7 +102,7 @@ class MoneyInController extends AbstractController
      * @Route("/report/{reportId}/money-in/no-money-in-exists", name="no_money_in_exists")
      * @Template("@App/Report/MoneyIn/noMoneyInToReport.html.twig")
      *
-     * @return array
+     * @return array|RedirectResponse
      */
     public function noMoneyInToReport(Request $request, $reportId)
     {
@@ -113,7 +110,16 @@ class MoneyInController extends AbstractController
         $form = $this->createForm(FormDir\Report\NoMoneyInType::class, $report);
         $form->handleRequest($request);
 
-        // need to add logic for updating db and redirection
+        if ($form->isSubmitted() && $form->isValid()) {
+            $report = $form->getData();
+            $answer = $form['reasonForNoMoneyIn']->getData();
+
+            $report->setReasonForNoMoneyIn($answer);
+            $report->getStatus()->setMoneyInState(Status::STATE_DONE);
+            $this->restClient->put('report/'.$reportId, $report, ['reasonForNoMoneyIn']);
+
+            return $this->redirectToRoute('money_in_summary', ['reportId' => $reportId]);
+        }
 
         $backLink = $this->generateUrl('money_in_exist', ['reportId' => $reportId]);
 

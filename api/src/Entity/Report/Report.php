@@ -486,9 +486,9 @@ class Report implements ReportInterface
      * @var string captures reason for no money in. Required if no money has gone in
      *
      * @JMS\Type("string")
-     * @JMS\Groups({"report"})
+     * @JMS\Groups({"report", "reasonForNoMoneyIn"})
      * @ORM\Column(name="reason_for_no_money_in", type="text", nullable=true)
-     **/
+     */
     private $reasonForNoMoneyIn;
 
     /**
@@ -1458,6 +1458,18 @@ class Report implements ReportInterface
     public function setMoneyInExists(?string $moneyInExists): self
     {
         $this->moneyInExists = $moneyInExists;
+
+        return $this;
+    }
+
+    public function getReasonForNoMoneyIn(): ?string
+    {
+        return $this->reasonForNoMoneyIn;
+    }
+
+    public function setReasonForNoMoneyIn(?string $reasonForNoMoneyIn): self
+    {
+        $this->reasonForNoMoneyIn = $reasonForNoMoneyIn;
 
         return $this;
     }

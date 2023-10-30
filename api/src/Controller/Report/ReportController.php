@@ -416,6 +416,20 @@ class ReportController extends RestController
             ]);
         }
 
+        if (array_key_exists('money_in_exists', $data)) {
+            $report->setMoneyInExists($data['money_in_exists']);
+            $report->updateSectionsStatusCache([
+                Report::SECTION_MONEY_IN,
+            ]);
+        }
+
+        if (array_key_exists('reason_for_no_money_in', $data)) {
+            $report->setReasonForNoMoneyIn($data['reason_for_no_money_in']);
+            $report->updateSectionsStatusCache([
+                Report::SECTION_MONEY_IN,
+            ]);
+        }
+
         if (array_key_exists('money_short_categories_in', $data)) {
             foreach ($data['money_short_categories_in'] as $row) {
                 $e = $report->getMoneyShortCategoryByTypeId($row['type_id']);
