@@ -26,11 +26,6 @@ class StepRedirector
     /**
      * @var string
      */
-    private $routeMoneyInExists;
-
-    /**
-     * @var string
-     */
     private $routeSummary;
 
     /**
@@ -73,10 +68,9 @@ class StepRedirector
     /**
      * @return $this
      */
-    public function setRoutes($step1BackLink, $routeMoneyInExists, $routeStep, $routeSummary)
+    public function setRoutes($step1BackLink, $routeStep, $routeSummary)
     {
         $this->step1BackLink = $step1BackLink;
-        $this->routeMoneyInExists = $routeMoneyInExists;
         $this->routeStep = $routeStep;
         $this->routeSummary = $routeSummary;
 
@@ -161,7 +155,7 @@ class StepRedirector
         if ('summary' === $this->fromPage) {
             return $this->generateUrl($this->routeSummary, ['from' => 'skip-step']);
         } elseif (1 == $this->currentStep) {
-            return $this->generateUrl($this->routeMoneyInExists);
+            return $this->generateUrl($this->step1BackLink);
         }
 
         return $this->generateUrl($this->routeStep, [

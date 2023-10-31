@@ -152,7 +152,7 @@ class MoneyInController extends AbstractController
         $fromPage = $request->get('from');
 
         $stepRedirector = $this->stepRedirector
-            ->setRoutes('money_in', 'money_in_exist', 'money_in_step', 'money_in_summary')
+            ->setRoutes('money_in', 'money_in_step', 'money_in_summary')
             ->setFromPage($fromPage)
             ->setCurrentStep($step)->setTotalSteps($totalSteps)
             ->setRouteBaseParams(['reportId' => $reportId, 'transactionId' => $transactionId]);
