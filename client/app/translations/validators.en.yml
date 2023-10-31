@@ -174,7 +174,7 @@ contact:
 decision:
   noDecisionChoice.notBlank: Please select either 'Yes' or 'No'
   reasonForNoDecisions.notBlank: |
-    Explain why you have not had to make any significant decisions for the client
+    Please explain why you have not had to make any significant decisions for the client
   addAnother.notBlank: Please specify if you want to add another decision
   description:
     notBlank: Enter some details about this decision

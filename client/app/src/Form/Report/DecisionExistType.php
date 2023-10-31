@@ -8,7 +8,7 @@ use Symfony\Component\Form\Extension\Core\Type as FormTypes;
 use Symfony\Component\Form\FormBuilderInterface;
 use Symfony\Component\Form\FormInterface;
 use Symfony\Component\OptionsResolver\OptionsResolver;
-use Symfony\Component\Validator\Constraints\NotBlank;
+use Symfony\Component\Validator\Constraints;
 
 class DecisionExistType extends AbstractType
 {
@@ -22,7 +22,12 @@ class DecisionExistType extends AbstractType
                     'existPage.form.choices.no' => Report::SIGNIFICANT_DECISION_NOT_MADE,
                 ],
                 'expanded' => true,
-                'constraints' => [new NotBlank(['message' => 'decision.noDecisionChoice.notBlank', 'groups' => ['significantDecisionsMade']])],
+                'constraints' => [
+                    new Constraints\NotBlank([
+                        'message' => 'decision.noDecisionChoice.notBlank',
+                        'groups' => 'decisions-exist',
+                    ]),
+                ],
             ])
             ->add('reasonForNoDecisions', FormTypes\TextareaType::class)
             ->add('save', FormTypes\SubmitType::class, ['label' => 'save.label']);
@@ -48,6 +53,6 @@ class DecisionExistType extends AbstractType
 
     public function getBlockPrefix()
     {
-        return 'decision_exist';
+        return 'decisions_exist';
     }
 }
