@@ -36,6 +36,9 @@ log/pact.log
 **/local-load-balancer/certificates/nginx.*
 **/client/resources/public/assets
 **/client/resources/public/images
+**/client/resources/public/*.png
+**/client/resources/public/*.ico
+
 
 # Lambda specific
 **lambda*.zip
