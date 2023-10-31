@@ -5,7 +5,8 @@ namespace App\Form\Report;
 use Symfony\Component\Form\AbstractType;
 use Symfony\Component\Form\Extension\Core\Type as FormTypes;
 use Symfony\Component\Form\FormBuilderInterface;
-use Symfony\Component\Validator\Constraints\NotBlank;
+use Symfony\Component\OptionsResolver\OptionsResolver;
+use Symfony\Component\Validator\Constraints;
 
 class MoneyInExistType extends AbstractType
 {
@@ -16,9 +17,17 @@ class MoneyInExistType extends AbstractType
                 'choices' => ['Yes' => 'yes', 'No' => 'no'],
                 'expanded' => true,
                 'mapped' => false,
-                'constraints' => [new NotBlank(['message' => 'moneyIn.moneyInChoice.notBlank', 'groups' => ['moneyInExists']])],
+                'constraints' => [new Constraints\NotBlank(['message' => 'moneyIn.moneyInChoice.notBlank', 'groups' => ['money-in-exists']])],
             ])
             ->add('save', FormTypes\SubmitType::class, ['label' => 'save.label']);
+    }
+
+    public function configureOptions(OptionsResolver $resolver)
+    {
+        $resolver->setDefaults([
+            'translation_domain' => 'report-money-in',
+            'validation_groups' => ['money-in-exists'],
+        ]);
     }
 
     public function getBlockPrefix()

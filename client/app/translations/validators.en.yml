@@ -259,7 +259,9 @@ moneyIn:
   moneyInChoice:
     notBlank: Please select either 'Yes' or 'No'
   reasonForNoMoneyIn:
-    notBlank: Please enter a reason
+    notBlank: Please enter a description
+    minLength: The description must be at least {{ limit }} characters long
+    maxLength: The description cannot be longer than {{ limit }} characters
 
 moneyTransaction:
   addAnother.notBlank: Please choose an option
