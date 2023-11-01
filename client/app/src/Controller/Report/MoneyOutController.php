@@ -49,8 +49,6 @@ class MoneyOutController extends AbstractController
      * @Route("/report/{reportId}/money-out", name="money_out")
      * @Template("@App/Report/MoneyOut/start.html.twig")
      *
-     * @param $reportId
-     *
      * @return array|RedirectResponse
      */
     public function startAction(Request $request, $reportId)
@@ -66,11 +64,76 @@ class MoneyOutController extends AbstractController
     }
 
     /**
+     * @Route("/report/{reportId}/money-out/exist", name="money_out_exist")
+     * @Template("@App/Report/MoneyOut/exist.html.twig")
+     *
+     * @return array|RedirectResponse
+     */
+    public function existAction(Request $request, $reportId)
+    {
+        $report = $this->reportApi->getReportIfNotSubmitted($reportId, self::$jmsGroups);
+        $form = $this->createForm(FormDir\Report\MoneyOutExistType::class, $report);
+        $form->handleRequest($request);
+
+        if ($form->isSubmitted() && $form->isValid()) {
+            $report = $form->getData();
+            $answer = $form['moneyOutExists']->getData();
+
+            $report->setMoneyOutExists($answer);
+            $this->restClient->put('report/'.$reportId, $report, ['moneyOutExists']);
+
+            if ('yes' === $answer) {
+                return $this->redirectToRoute('money_out_step', ['reportId' => $reportId, 'step' => 1, 'from' => 'money_out_exist']);
+            } else {
+                return $this->redirectToRoute('no_money_out_exists', ['reportId' => $reportId, 'from' => 'money_out_exist']);
+            }
+        }
+
+        $backLink = $this->generateUrl('money_out', ['reportId' => $reportId]);
+
+        return [
+            'backLink' => $backLink,
+            'report' => $report,
+            'form' => $form->createView(),
+        ];
+    }
+
+    /**
+     * @Route("/report/{reportId}/money-out/no-money-out-exists", name="no_money_out_exists")
+     * @Template("@App/Report/MoneyOut/noMoneyOutToReport.html.twig")
+     *
+     * @return array|RedirectResponse
+     */
+    public function noMoneyOutToReport(Request $request, $reportId)
+    {
+        $report = $this->reportApi->getReportIfNotSubmitted($reportId, self::$jmsGroups);
+        $form = $this->createForm(FormDir\Report\NoMoneyOutType::class, $report);
+        $form->handleRequest($request);
+
+        if ($form->isSubmitted() && $form->isValid()) {
+            $report = $form->getData();
+            $answer = $form['reasonForNoMoneyOut']->getData();
+
+            $report->setReasonForNoMoneyOut($answer);
+            $report->getStatus()->setMoneyOutState(Status::STATE_DONE);
+            $this->restClient->put('report/'.$reportId, $report, ['reasonForNoMoneyOut']);
+
+            return $this->redirectToRoute('money_out_summary', ['reportId' => $reportId]);
+        }
+
+        $backLink = $this->generateUrl('money_out_exist', ['reportId' => $reportId]);
+
+        return [
+            'backLink' => $backLink,
+            'report' => $report,
+            'form' => $form->createView(),
+        ];
+    }
+
+    /**
      * @Route("/report/{reportId}/money-out/step{step}/{transactionId}", name="money_out_step", requirements={"step":"\d+"})
      * @Template("@App/Report/MoneyOut/step.html.twig")
      *
-     * @param $reportId
-     * @param $step
      * @param null $transactionId
      *
      * @return array|RedirectResponse
@@ -180,8 +243,6 @@ class MoneyOutController extends AbstractController
      * @Route("/report/{reportId}/money-out/add_another", name="money_out_add_another")
      * @Template("@App/Report/MoneyOut/addAnother.html.twig")
      *
-     * @param $reportId
-     *
      * @return array|RedirectResponse
      */
     public function addAnotherAction(Request $request, $reportId)
@@ -210,8 +271,6 @@ class MoneyOutController extends AbstractController
      * @Route("/report/{reportId}/money-out/summary", name="money_out_summary")
      * @Template("@App/Report/MoneyOut/summary.html.twig")
      *
-     * @param $reportId
-     *
      * @return array|RedirectResponse
      */
     public function summaryAction($reportId)
@@ -229,9 +288,6 @@ class MoneyOutController extends AbstractController
     /**
      * @Route("/report/{reportId}/money-out/{transactionId}/delete", name="money_out_delete")
      * @Template("@App/Common/confirmDelete.html.twig")
-     *
-     * @param $reportId
-     * @param $transactionId
      *
      * @return array|RedirectResponse
      */

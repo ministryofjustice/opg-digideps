@@ -249,6 +249,22 @@ class Report implements ReportInterface, StartEndDateComparableInterface
     private $reasonForNoDecisions;
 
     /**
+     * @JMS\Type("string")
+     * @JMS\Groups({"report", "moneyOutExists"})
+     * @Assert\NotBlank( message="moneyOut.moneyOutChoice.notBlank", groups={"moneyOutExists"})
+     */
+    private $moneyOutExists;
+
+    /**
+     * @JMS\Type("string")
+     * @JMS\Groups({"report", "reasonForNoMoneyOut"})
+     * @Assert\NotBlank( message="moneyOut.reasonForNoMoneyOut.notBlank", groups={"reasonForNoMoneyOut"})
+     *
+     * @var string|null
+     */
+    private $reasonForNoMoneyOut;
+
+    /**
      * @JMS\Type("boolean")
      * @JMS\Groups({"noAssetsToAdd"})
      *
@@ -1311,6 +1327,36 @@ class Report implements ReportInterface, StartEndDateComparableInterface
     public function setClientBenefitsCheck(?ClientBenefitsCheck $clientBenefitsCheck): Report
     {
         $this->clientBenefitsCheck = $clientBenefitsCheck;
+
+        return $this;
+    }
+
+    public function getMoneyOutExists(): ?string
+    {
+        return $this->moneyOutExists;
+    }
+
+    /**
+     * @param string $moneyOutExists
+     */
+    public function setMoneyOutExists(?string $moneyOutExists): Report
+    {
+        $this->moneyOutExists = $moneyOutExists;
+
+        return $this;
+    }
+
+    public function getReasonForNoMoneyOut(): ?string
+    {
+        return $this->reasonForNoMoneyOut;
+    }
+
+    /**
+     * @param string $reasonForNoMoneyOut
+     */
+    public function setReasonForNoMoneyOut(?string $reasonForNoMoneyOut): Report
+    {
+        $this->reasonForNoMoneyOut = $reasonForNoMoneyOut;
 
         return $this;
     }

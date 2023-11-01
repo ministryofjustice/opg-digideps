@@ -186,6 +186,10 @@ class ReportStatusService
     {
         if ($this->report->hasMoneyOut()) {
             return ['state' => self::STATE_DONE, 'nOfRecords' => count($this->report->getMoneyTransactionsOut())];
+        } elseif ($this->report->getMoneyOutExists() && $this->report->getReasonForNoMoneyOut()) {
+            return ['state' => self::STATE_DONE];
+        } elseif ($this->report->getMoneyOutExists()) {
+            return ['state' => self::STATE_INCOMPLETE];
         }
 
         return ['state' => self::STATE_NOT_STARTED, 'nOfRecords' => 0];
