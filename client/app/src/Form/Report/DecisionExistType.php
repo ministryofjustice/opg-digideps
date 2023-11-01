@@ -25,7 +25,7 @@ class DecisionExistType extends AbstractType
                 'constraints' => [
                     new Constraints\NotBlank([
                         'message' => 'decision.noDecisionChoice.notBlank',
-                        'groups' => 'decisions-exist',
+                        'groups' => 'decision-exist',
                     ]),
                 ],
             ])
@@ -40,7 +40,7 @@ class DecisionExistType extends AbstractType
             'validation_groups' => function (FormInterface $form) {
                 $data = $form->getData();
 
-                $validationGroups = ['decisions-exist'];
+                $validationGroups = ['decision-exist'];
 
                 if ('No' == $data->getSignificantDecisionsMade()) {
                     $validationGroups[] = 'reason-no-decisions';
@@ -53,6 +53,6 @@ class DecisionExistType extends AbstractType
 
     public function getBlockPrefix()
     {
-        return 'decisions_exist';
+        return 'decision_exist';
     }
 }
