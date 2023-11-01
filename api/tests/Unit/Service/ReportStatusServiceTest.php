@@ -79,6 +79,7 @@ class ReportStatusServiceTest extends TestCase
                 ]),
                 'getActionMoreInfo' => null,
                 'getMentalCapacity' => null,
+                'getMoneyInExists' => null,
                 'hasMoneyIn' => false,
                 'getMoneyTransactionsIn' => [],
                 'hasMoneyOut' => false,
