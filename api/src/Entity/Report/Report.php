@@ -477,10 +477,10 @@ class Report implements ReportInterface
      * @var string yes | no
      *
      * @JMS\Type("string")
-     * @JMS\Groups({"report", "moneyInExists"})
+     * @JMS\Groups({"report", "doesMoneyInExist"})
      * @ORM\Column(name="money_in_exists", type="text", nullable=true)
      */
-    private $moneyInExists;
+    private $doesMoneyInExist;
 
     /**
      * @var string captures reason for no money in. Required if no money has gone in
@@ -1450,14 +1450,14 @@ class Report implements ReportInterface
         return $this;
     }
 
-    public function getMoneyInExists(): ?string
+    public function getDoesMoneyInExist(): ?string
     {
-        return $this->moneyInExists;
+        return $this->doesMoneyInExist;
     }
 
-    public function setMoneyInExists(?string $moneyInExists): self
+    public function setDoesMoneyInExist(?string $doesMoneyInExist): self
     {
-        $this->moneyInExists = $moneyInExists;
+        $this->doesMoneyInExist = $doesMoneyInExist;
 
         return $this;
     }

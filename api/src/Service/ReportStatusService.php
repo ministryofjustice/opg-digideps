@@ -170,9 +170,9 @@ class ReportStatusService
     {
         if ($this->report->hasMoneyIn()) {
             return ['state' => self::STATE_DONE, 'nOfRecords' => count($this->report->getMoneyTransactionsIn())];
-        } elseif ($this->report->getMoneyInExists() && $this->report->getReasonForNoMoneyIn()) {
+        } elseif ($this->report->getDoesMoneyInExist() && $this->report->getReasonForNoMoneyIn()) {
             return ['state' => self::STATE_DONE];
-        } elseif ($this->report->getMoneyInExists()) {
+        } elseif ($this->report->getDoesMoneyInExist()) {
             return ['state' => self::STATE_INCOMPLETE];
         }
 

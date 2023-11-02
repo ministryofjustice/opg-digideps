@@ -250,10 +250,10 @@ class Report implements ReportInterface, StartEndDateComparableInterface
 
     /**
      * @JMS\Type("string")
-     * @JMS\Groups({"report", "moneyInExists"})
-     * @Assert\NotBlank( message="moneyIn.moneyInChoice.notBlank", groups={"moneyInExists"})
+     * @JMS\Groups({"report", "doesMoneyInExist"})
+     * @Assert\NotBlank( message="moneyIn.moneyInChoice.notBlank", groups={"doesMoneyInExist"})
      */
-    private $moneyInExists;
+    private $doesMoneyInExist;
 
     /**
      * @JMS\Type("string")
@@ -1331,17 +1331,17 @@ class Report implements ReportInterface, StartEndDateComparableInterface
         return $this;
     }
 
-    public function getMoneyInExists(): ?string
+    public function getDoesMoneyInExist(): ?string
     {
-        return $this->moneyInExists;
+        return $this->doesMoneyInExist;
     }
 
     /**
-     * @param string $moneyInExists
+     * @param string $doesMoneyInExist
      */
-    public function setMoneyInExists(?string $moneyInExists): Report
+    public function setDoesMoneyInExist(?string $doesMoneyInExist): Report
     {
-        $this->moneyInExists = $moneyInExists;
+        $this->doesMoneyInExist = $doesMoneyInExist;
 
         return $this;
     }

@@ -8,16 +8,16 @@ use Symfony\Component\Form\FormBuilderInterface;
 use Symfony\Component\OptionsResolver\OptionsResolver;
 use Symfony\Component\Validator\Constraints;
 
-class MoneyInExistType extends AbstractType
+class DoesMoneyInExistType extends AbstractType
 {
     public function buildForm(FormBuilderInterface $builder, array $options)
     {
         $builder
-            ->add('moneyInExists', FormTypes\ChoiceType::class, [
+            ->add('doesMoneyInExist', FormTypes\ChoiceType::class, [
                 'choices' => ['Yes' => 'yes', 'No' => 'no'],
                 'expanded' => true,
                 'mapped' => false,
-                'constraints' => [new Constraints\NotBlank(['message' => 'moneyIn.moneyInChoice.notBlank', 'groups' => ['money-in-exists']])],
+                'constraints' => [new Constraints\NotBlank(['message' => 'moneyIn.moneyInChoice.notBlank', 'groups' => ['does-money-in-exist']])],
             ])
             ->add('save', FormTypes\SubmitType::class, ['label' => 'save.label']);
     }
@@ -26,12 +26,12 @@ class MoneyInExistType extends AbstractType
     {
         $resolver->setDefaults([
             'translation_domain' => 'report-money-in',
-            'validation_groups' => ['money-in-exists'],
+            'validation_groups' => ['does-money-in-exist'],
         ]);
     }
 
     public function getBlockPrefix()
     {
-        return 'money_in_exists';
+        return 'does_money_in_exist';
     }
 }
