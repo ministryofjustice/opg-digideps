@@ -41,7 +41,7 @@ resource "aws_cloudwatch_event_target" "cross_account_backup_check" {
 resource "aws_cloudwatch_event_rule" "delete_inactive_users_check" {
   name                = "check-delete-inactive-users-${terraform.workspace}"
   description         = "Execute the delete inactive users check for ${terraform.workspace}"
-  schedule_expression = "cron(11 09 * * ? *)"
+  schedule_expression = "cron(0 10 ? * 1 *)"
   is_enabled          = local.account.is_production == 1 ? true : false
 }
 
