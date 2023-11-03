@@ -107,7 +107,10 @@ class MoneyInController extends AbstractController
     public function noMoneyInToReport(Request $request, $reportId)
     {
         $report = $this->reportApi->getReportIfNotSubmitted($reportId, self::$jmsGroups);
-        $form = $this->createForm(FormDir\Report\NoMoneyInType::class, $report);
+        $form = $this->createForm(
+            FormDir\Report\NoMoneyInType::class,
+            $report,
+            ['translation_domain' => 'report-money-in']);
         $form->handleRequest($request);
 
         if ($form->isSubmitted() && $form->isValid()) {

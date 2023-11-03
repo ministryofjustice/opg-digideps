@@ -27,7 +27,8 @@ class DoesMoneyInExistType extends AbstractType
         $resolver->setDefaults([
             'translation_domain' => 'report-money-in',
             'validation_groups' => ['does-money-in-exist'],
-        ]);
+        ])
+        ->setAllowedTypes('translation_domain', 'string');
     }
 
     public function getBlockPrefix()

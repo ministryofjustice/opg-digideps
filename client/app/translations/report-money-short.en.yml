@@ -18,6 +18,25 @@ startPage:
     £21,000. We may have removed some information you entered previously because we
     no longer need it to process your report.
 
+existPage:
+  htmlTitle: "Money In - Complete the deputy report | GOV.UK"
+  supportTitle: Money in
+  form:
+    exist:
+      label: Have you added money in on %client%'s behalf during this reporting period?
+    save:
+      label: Save and continue
+
+noMoneyIn:
+  htmlTitle: "Money In - Complete the deputy report | GOV.UK"
+  supportTitle: Money in
+  form:
+    explanation:
+      label: No money added into my accounts
+      hintText: Please give a description
+    save:
+      label: Save and continue
+
 categoryPage:
   moneyIn:
     htmlTitle: "Money in - Complete the deputy report | GOV.UK"
@@ -26,7 +45,7 @@ categoryPage:
     htmlTitle: "Money out - Complete the deputy report | GOV.UK"
     supportTitle: Money out
 
-existPage:
+oneOffPaymentExistPage:
   moneyIn:
     htmlTitle: "Money in - Complete the deputy report | GOV.UK"
     supportTitle: Money in
