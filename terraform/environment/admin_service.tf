@@ -62,8 +62,21 @@ resource "aws_ecs_service" "admin" {
     container_port   = 80
   }
 
-  service_registries {
-    registry_arn = aws_service_discovery_service.admin.arn
+  #  service_registries {
+  #    registry_arn = aws_service_discovery_service.admin.arn
+  #  }
+
+  service_connect_configuration {
+    enabled   = true
+    namespace = aws_service_discovery_http_namespace.cloudmap_namespace.arn
+    service {
+      discovery_name = "admin"
+      port_name      = "admin-port"
+      client_alias {
+        dns_name = "admin"
+        port     = 80
+      }
+    }
   }
 
   capacity_provider_strategy {
@@ -91,11 +104,19 @@ locals {
       image       = local.images.client-webserver,
       mountPoints = [],
       name        = "admin_web",
-      portMappings = [{
-        containerPort = 80,
-        hostPort      = 80,
-        protocol      = "tcp"
-      }],
+      portMappings = [
+        #        {
+        #        containerPort = 80,
+        #        hostPort      = 80,
+        #        protocol      = "tcp"
+        #      },
+        {
+          name : "admin-port",
+          containerPort : 80,
+          hostPort = 80,
+          protocol = "tcp"
+        }
+      ],
       healthCheck = {
         command : [
           "CMD-SHELL",

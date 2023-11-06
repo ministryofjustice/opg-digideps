@@ -1,3 +1,8 @@
+resource "aws_service_discovery_http_namespace" "cloudmap_namespace" {
+  name        = "digideps-${local.environment}"
+  description = "Namespace for Service Discovery"
+}
+
 resource "aws_ecs_cluster" "main" {
   name = local.environment
   tags = local.default_tags
