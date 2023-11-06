@@ -28,7 +28,7 @@ class UserRetentionPolicyCommand extends Command
     public function __construct(
         private UserRepository $userRepository,
         private ObservableEventDispatcher $eventDispatcher,
-        private LoggerInterface $logger
+        private LoggerInterface $verboseLogger
     ) {
         parent::__construct();
     }
@@ -49,6 +49,7 @@ class UserRetentionPolicyCommand extends Command
             if (is_array($getInactiveAdminUsers)) {
                 foreach ($getInactiveAdminUsers as $adminUser) {
                     $this->storeUserIdForDeletion($adminUser);
+                    usleep(250000); // Sleep for 0.25 seconds (250,000 microseconds)
                 }
             }
 
@@ -84,7 +85,7 @@ class UserRetentionPolicyCommand extends Command
             $event = new UserRetentionPolicyCommandEvent($user, AuditEvents::USER_DELETED_AUTOMATION);
             $this->eventDispatcher->dispatch($event, UserRetentionPolicyCommandEvent::NAME);
 
-            $this->logger->info(
+            $this->verboseLogger->notice(
                 sprintf('Deleted user account with id: %d at admin permission level due to 2 year expiry.',
                     $user->getId()
                 )

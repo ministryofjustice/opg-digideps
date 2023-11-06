@@ -12,6 +12,8 @@ RUN apk --update --upgrade --no-cache add fontconfig ttf-freefont font-noto term
 
 COPY requirements.txt .
 
+RUN pip3 install --upgrade pip && pip install --upgrade pip
+
 RUN set -ex \
 && apk add --no-cache --virtual .build-deps musl-dev gcc g++ zlib-dev libffi-dev \
 && pip3 install -r requirements.txt \

@@ -72,15 +72,16 @@ class DocumentSyncCommand extends DaemonableCommand
         }
 
         if (count($this->documentSyncService->getSyncErrorSubmissionIds()) > 0) {
+            $output->writeln(sprintf('sync_documents_to_sirius - failure - %d documents failed to sync', count($this->documentSyncService->getSyncErrorSubmissionIds())));
             $this->documentSyncService->setSubmissionsDocumentsToPermanentError();
             $this->documentSyncService->setSyncErrorSubmissionIds([]);
         }
 
         if ($this->documentSyncService->getDocsNotSyncedCount() > 0) {
-            $output->writeln(sprintf('sync_documents_to_sirius - failure - %d documents failed to sync', $this->documentSyncService->getDocsNotSyncedCount()));
+            $output->writeln(sprintf('sync_documents_to_sirius - success - %d documents remaining to sync', $this->documentSyncService->getDocsNotSyncedCount()));
             $this->documentSyncService->setDocsNotSyncedCount(0);
         } else {
-            $output->writeln(sprintf('sync_documents_to_sirius - success - %d', self::COMPLETED_MESSAGE));
+            $output->writeln(sprintf('sync_documents_to_sirius - success - %s', self::COMPLETED_MESSAGE));
         }
 
         return 0;

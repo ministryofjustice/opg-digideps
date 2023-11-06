@@ -82,7 +82,9 @@ module.exports = {
           to: path.resolve(__dirname, 'public/images')
         },
         { from: 'node_modules/govuk_frontend_toolkit/images', to: path.resolve(__dirname, 'public/images') },
-        { from: 'assets/images', to: path.resolve(__dirname, 'public/images') }
+        { from: 'assets/images', to: path.resolve(__dirname, 'public/images') },
+        { from: 'assets/images/generic-images', to: path.resolve(__dirname, 'public') },
+        { from: 'assets/images/generic-images', to: path.resolve(__dirname, 'public/images') }
       ]
     }),
     new MiniCssExtractPlugin({

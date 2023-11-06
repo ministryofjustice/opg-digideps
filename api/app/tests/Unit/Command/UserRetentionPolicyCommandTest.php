@@ -77,7 +77,7 @@ class UserRetentionPolicyCommandTest extends KernelTestCase
         $userRetentionEvent = new UserRetentionPolicyCommandEvent($user, $trigger);
 
         $this->eventDispatcher->dispatch($userRetentionEvent, 'user.deleted')->shouldBeCalled();
-        $this->logger->info('Deleted user account with id: 1 at admin permission level due to 2 year expiry.')->shouldBeCalled();
+        $this->logger->notice('Deleted user account with id: 1 at admin permission level due to 2 year expiry.')->shouldBeCalled();
 
         $this->userRepository->deleteInactiveAdminUsers([1])->shouldBeCalled();
 
@@ -128,11 +128,11 @@ class UserRetentionPolicyCommandTest extends KernelTestCase
 
         $userRetentionEvent = new UserRetentionPolicyCommandEvent($inactiveAdminUser, $trigger);
         $this->eventDispatcher->dispatch($userRetentionEvent, 'user.deleted')->shouldBeCalled();
-        $this->logger->info('Deleted user account with id: 1 at admin permission level due to 2 year expiry.')->shouldBeCalled();
+        $this->logger->notice('Deleted user account with id: 1 at admin permission level due to 2 year expiry.')->shouldBeCalled();
 
         $userRetentionEvent = new UserRetentionPolicyCommandEvent($inactiveAdminManagerUser, $trigger);
         $this->eventDispatcher->dispatch($userRetentionEvent, 'user.deleted')->shouldBeCalled();
-        $this->logger->info('Deleted user account with id: 2 at admin permission level due to 2 year expiry.')->shouldBeCalled();
+        $this->logger->notice('Deleted user account with id: 2 at admin permission level due to 2 year expiry.')->shouldBeCalled();
 
         $this->userRepository->deleteInactiveAdminUsers([1, 2])->shouldBeCalled();
 
