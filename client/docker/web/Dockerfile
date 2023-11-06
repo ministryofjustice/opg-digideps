@@ -27,4 +27,5 @@ RUN /harden-nginx.sh && rm /harden-nginx.sh
 USER nginx
 
 CMD confd -onetime -backend env \
+  && ls -alt /public/images \
   && nginx -g "daemon off;"

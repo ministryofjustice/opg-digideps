@@ -96,4 +96,5 @@ RUN /harden.sh && rm /harden.sh
 USER www-data
 
 CMD confd -onetime -backend env \
+    && ls -alt /var/www/public/images \
     && php-fpm
