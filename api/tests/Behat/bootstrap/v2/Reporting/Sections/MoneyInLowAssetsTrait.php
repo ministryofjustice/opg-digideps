@@ -91,7 +91,6 @@ trait MoneyInLowAssetsTrait
             $this->tickCheckbox(
                 'money-types',
                 $this->moneyInShortTypeDictionary[$optionIndex],
-//                "money_short[moneyShortCategoriesIn][$optionIndex][present]",
                 'money-types',
                 $this->moneyInShortTypeDictionary[$optionIndex]
             );
