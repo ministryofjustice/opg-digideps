@@ -6,13 +6,6 @@ locals {
     ssm            = local.common_sg_rules.ssm
     ecr_api        = local.common_sg_rules.ecr_api
     secrets_egress = local.common_sg_rules.secrets
-    secrets_ingress = {
-      port        = 443
-      type        = "ingress"
-      protocol    = "tcp"
-      target_type = "security_group_id"
-      target      = data.aws_security_group.secrets_endpoint.id
-    }
     cache = {
       port        = 6379
       type        = "egress"
@@ -28,28 +21,28 @@ locals {
       target      = module.api_rds_security_group.id
     }
     admin = {
-      port        = 443
+      port        = 80
       type        = "ingress"
       protocol    = "tcp"
       target_type = "security_group_id"
       target      = module.admin_service_security_group.id
     }
     front = {
-      port        = 443
+      port        = 80
       type        = "ingress"
       protocol    = "tcp"
       target_type = "security_group_id"
       target      = module.front_service_security_group.id
     }
     document_sync = {
-      port        = 443
+      port        = 80
       type        = "ingress"
       protocol    = "tcp"
       target_type = "security_group_id"
       target      = module.document_sync_service_security_group.id
     }
     checklist_sync = {
-      port        = 443
+      port        = 80
       type        = "ingress"
       protocol    = "tcp"
       target_type = "security_group_id"

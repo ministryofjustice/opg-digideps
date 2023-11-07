@@ -11,6 +11,10 @@ on:
         description: "api tests selection to run"
         required: true
         type: string
+      branch_name:
+        description: "Name of the branch doing the build"
+        required: true
+        type: string
 jobs:
   api-unit-tests:
     runs-on: ubuntu-latest
@@ -25,18 +29,19 @@ jobs:
         uses: actions/cache@704facf57e6136b1bc63b828d79edcd491f0ee84 # pin@v3.0.8
         with:
           path: /tmp/.buildx-cache
-          key: ${{ runner.os }}-api-unit-tests-${{ github.sha }}
+          key: api-unit-tests-${{ inputs.branch_name }}-${{ github.sha }}
           restore-keys: |
-            ${{ runner.os }}-api-unit-tests
+            api-unit-tests-${{ inputs.branch_name }}
+            api-unit-tests-main
 
       - name: build docker images
         run: |
           docker buildx build \
+          -f api/docker/app/Dockerfile \
           --cache-from=type=local,src=/tmp/.buildx-cache \
           --cache-to=type=local,dest=/tmp/.buildx-cache-new \
           --tag api-unit-tests:latest \
           --output type=docker .
-        working-directory: api
 
       - name: Move cache
         run: |
@@ -48,6 +53,7 @@ jobs:
         run: |
           docker-compose -f docker-compose.yml -f docker-compose.unit-tests-api.yml up -d localstack postgres redis-api
           while [ $(docker-compose -f docker-compose.yml -f docker-compose.unit-tests-api.yml exec -T localstack awslocal secretsmanager list-secrets | grep synchronisation-jwt-token | wc -l) -lt 1 ]; do sleep 1; done
+          docker-compose -f docker-compose.yml -f docker-compose.unit-tests-api.yml run --rm api-unit-tests ls -alt
           docker-compose -f docker-compose.yml -f docker-compose.unit-tests-api.yml run --rm api-unit-tests sh scripts/reset_db_structure_local.sh
 
       - name: run api unit tests
