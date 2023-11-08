@@ -31,7 +31,7 @@ locals {
       target      = module.frontend_cache_security_group.id
     }
     api = {
-      port        = 443
+      port        = 80
       type        = "egress"
       protocol    = "tcp"
       target_type = "security_group_id"

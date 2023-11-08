@@ -3,7 +3,8 @@ version: "3.2"
 services:
   integration-tests:
     build:
-      context: ./api
+      dockerfile: api/docker/app/Dockerfile
+      context: .
     depends_on:
       - localstack
       - mock-sirius-integration
@@ -13,8 +14,8 @@ services:
       - ./api/tests/Behat/snapshots:/tmp/html
       - ./api/vendor:/var/www/vendor
     env_file:
-      - ./api/api.env
-      - ./api/tests/Behat/test.env
+      - ./api/app/api.env
+      - ./api/app/tests/Behat/test.env
     environment:
       APP_ENV: dev
 
