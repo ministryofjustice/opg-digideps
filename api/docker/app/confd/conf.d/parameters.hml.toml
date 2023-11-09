@@ -15,4 +15,5 @@ keys = [
     "/smtp",
     "/ssm/localstack",
     "/url",
+    "/workspace"
 ]

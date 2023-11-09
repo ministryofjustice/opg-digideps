@@ -21,11 +21,8 @@ use App\Service\DataImporter\CsvToArray;
 use App\Service\OrgService;
 use Aws\S3\Exception\S3Exception;
 use Aws\S3\S3Client;
-use DateTime;
-use Exception;
 use Predis\ClientInterface;
 use Psr\Log\LoggerInterface;
-use RuntimeException;
 use Sensio\Bundle\FrameworkExtraBundle\Configuration\Security;
 use Sensio\Bundle\FrameworkExtraBundle\Configuration\Template;
 use Symfony\Bundle\FrameworkBundle\Console\Application;
@@ -35,7 +32,6 @@ use Symfony\Component\DependencyInjection\ParameterBag\ParameterBagInterface;
 use Symfony\Component\Form\Extension\Core\Type\ChoiceType;
 use Symfony\Component\Form\Extension\Core\Type\SubmitType;
 use Symfony\Component\Form\FormError;
-use Symfony\Component\Form\FormInterface;
 use Symfony\Component\HttpFoundation\RedirectResponse;
 use Symfony\Component\HttpFoundation\Request;
 use Symfony\Component\HttpFoundation\Response;
@@ -46,7 +42,6 @@ use Symfony\Component\Routing\RouterInterface;
 use Symfony\Component\Security\Core\Authentication\Token\Storage\TokenStorageInterface;
 use Symfony\Contracts\EventDispatcher\EventDispatcherInterface;
 use Symfony\Contracts\Translation\TranslatorInterface;
-use Throwable;
 
 /**
  * @Route("/admin")
@@ -65,13 +60,16 @@ class IndexController extends AbstractController
         private ParameterBagInterface $params,
         private KernelInterface $kernel,
         private EventDispatcherInterface $dispatcher,
-        private S3Client $s3
+        private S3Client $s3,
+        private string $workspace
     ) {
     }
 
     /**
      * @Route("/", name="admin_homepage")
+     *
      * @Security("is_granted('ROLE_ADMIN') or is_granted('ROLE_AD')")
+     *
      * @Template("@App/Admin/Index/index.html.twig")
      */
     public function indexAction(Request $request)
@@ -104,7 +102,9 @@ class IndexController extends AbstractController
 
     /**
      * @Route("/user-add", name="admin_add_user")
+     *
      * @Security("is_granted('ROLE_ADMIN') or is_granted('ROLE_AD')")
+     *
      * @Template("@App/Admin/Index/addUser.html.twig")
      *
      * @return array|RedirectResponse
@@ -118,7 +118,7 @@ class IndexController extends AbstractController
             // add user
             try {
                 if (!$this->isGranted(EntityDir\User::ROLE_SUPER_ADMIN) && EntityDir\User::ROLE_SUPER_ADMIN == $form->getData()->getRoleName()) {
-                    throw new RuntimeException('Cannot add admin from non-admin user');
+                    throw new \RuntimeException('Cannot add admin from non-admin user');
                 }
 
                 $this->userApi->createUser($form->getData());
@@ -141,10 +141,10 @@ class IndexController extends AbstractController
 
     /**
      * @Route("/user/{id}", name="admin_user_view", requirements={"id":"\d+"})
-     * @Security("is_granted('ROLE_ADMIN')")
-     * @Template("@App/Admin/Index/viewUser.html.twig")
      *
-     * @param $id
+     * @Security("is_granted('ROLE_ADMIN')")
+     *
+     * @Template("@App/Admin/Index/viewUser.html.twig")
      *
      * @return User[]|Response
      */
@@ -152,19 +152,21 @@ class IndexController extends AbstractController
     {
         try {
             return ['user' => $this->getPopulatedUser($id)];
-        } catch (Throwable $e) {
+        } catch (\Throwable $e) {
             return $this->renderNotFound();
         }
     }
 
     /**
      * @Route("/edit-user", name="admin_editUser", methods={"GET", "POST"})
+     *
      * @Security("is_granted('ROLE_ADMIN') or is_granted('ROLE_AD')")
+     *
      * @Template("@App/Admin/Index/editUser.html.twig")
      *
      * @return array|Response
      *
-     * @throws Throwable
+     * @throws \Throwable
      */
     public function editUserAction(Request $request, TranslatorInterface $translator)
     {
@@ -173,13 +175,13 @@ class IndexController extends AbstractController
         try {
             /* @var User $user */
             $user = $this->getPopulatedUser($filter);
-        } catch (Throwable $e) {
+        } catch (\Throwable $e) {
             return $this->renderNotFound();
         }
 
         try {
             $this->denyAccessUnlessGranted('edit-user', $user);
-        } catch (Throwable $e) {
+        } catch (\Throwable $e) {
             $accessErrorMessage = 'You do not have permission to edit this user';
 
             return $this->render('@App/Admin/Index/error.html.twig', [
@@ -198,7 +200,7 @@ class IndexController extends AbstractController
                 $this->restClient->put('user/'.$user->getId(), $updateUser, ['admin_edit_user']);
                 $this->addFlash('notice', 'Your changes were saved');
                 $this->redirectToRoute('admin_editUser', ['filter' => $user->getId()]);
-            } catch (Throwable $e) {
+            } catch (\Throwable $e) {
                 switch ((int) $e->getCode()) {
                     case 422:
                         $form->get('email')->addError(new FormError($translator->trans('editUserForm.email.existingError', [], 'admin')));
@@ -229,9 +231,6 @@ class IndexController extends AbstractController
         return $view;
     }
 
-    /**
-     * @param $id
-     */
     private function getPopulatedUser($id): User
     {
         /* @var User $user */
@@ -252,6 +251,7 @@ class IndexController extends AbstractController
 
     /**
      * @Route("/edit-ndr/{id}", name="admin_editNdr", methods={"POST"})
+     *
      * @Security("is_granted('ROLE_ADMIN') or is_granted('ROLE_AD')")
      *
      * @param string $id
@@ -280,7 +280,9 @@ class IndexController extends AbstractController
 
     /**
      * @Route("/delete-confirm/{id}", name="admin_delete_confirm", methods={"GET"})
+     *
      * @Security("is_granted('ROLE_ADMIN') or is_granted('ROLE_AD')")
+     *
      * @Template("@App/Admin/Index/deleteConfirm.html.twig")
      *
      * @param int $id
@@ -299,6 +301,7 @@ class IndexController extends AbstractController
 
     /**
      * @Route("/delete/{id}", name="admin_delete", methods={"GET"})
+     *
      * @Security("is_granted('ROLE_ADMIN') or is_granted('ROLE_AD')")
      *
      * @param int $id
@@ -317,7 +320,7 @@ class IndexController extends AbstractController
             }
 
             return $this->redirect($this->generateUrl('admin_homepage'));
-        } catch (Throwable $e) {
+        } catch (\Throwable $e) {
             $this->logger->warning(
                 sprintf('Error while deleting deputy: %s', $e->getMessage()),
                 ['deputy_email' => $user->getEmail()]
@@ -331,7 +334,9 @@ class IndexController extends AbstractController
 
     /**
      * @Route("/upload", name="admin_upload")
+     *
      * @Security("is_granted('ROLE_ADMIN') or is_granted('ROLE_AD')")
+     *
      * @Template("@App/Admin/Index/upload.html.twig")
      */
     public function uploadAction(Request $request, RouterInterface $router)
@@ -365,9 +370,12 @@ class IndexController extends AbstractController
 
     /**
      * @Route("/pre-registration-upload", name="pre_registration_upload")
+     *
      * @Security("is_granted('ROLE_SUPER_ADMIN')")
+     *
      * @Template("@App/Admin/Index/uploadUsers.html.twig")
-     * @throws Exception
+     *
+     * @throws \Exception
      */
     public function uploadUsersAction(Request $request, ClientInterface $redisClient)
     {
@@ -423,11 +431,11 @@ class IndexController extends AbstractController
 
                 foreach ($chunks as $k => $chunk) {
                     $compressedData = CsvUploader::compressData($chunk);
-                    $redisClient->set('chunk'.$k, $compressedData);
+                    $redisClient->set($this->workspace.'_chunk'.$k, $compressedData);
                 }
 
                 return $this->redirect($this->generateUrl('pre_registration_upload', ['nOfChunks' => count($chunks)]));
-            } catch (Throwable $e) {
+            } catch (\Throwable $e) {
                 $message = $e->getMessage();
 
                 if ($e instanceof RestClientException && isset($e->getData()['message'])) {
@@ -452,7 +460,7 @@ class IndexController extends AbstractController
                 $application->run($input, $output);
             });
 
-            $this->addFlash("notice", "CSV import process started. Keep an eye on your emails for completion.");
+            $this->addFlash('notice', 'CSV import process started. Keep an eye on your emails for completion.');
 
             return $this->redirect($this->generateUrl('pre_registration_upload'));
         }
@@ -491,16 +499,19 @@ class IndexController extends AbstractController
             'processStatusDate' => $processCompletedDate,
             'fileUploadedInfo' => [
                 'fileName' => $layReportFile,
-                'date' => $bucketFileInfo['LastModified']
+                'date' => $bucketFileInfo['LastModified'],
             ],
         ];
     }
 
     /**
      * @Route("/org-csv-upload", name="admin_org_upload")
+     *
      * @Security("is_granted('ROLE_SUPER_ADMIN')")
+     *
      * @Template("@App/Admin/Index/uploadOrgUsers.html.twig")
-     * @throws Exception
+     *
+     * @throws \Exception
      */
     public function uploadOrgUsersAction(Request $request, ClientInterface $redisClient)
     {
@@ -524,8 +535,9 @@ class IndexController extends AbstractController
                 $this->orgService->setLogging($outputStreamResponse);
 
                 $redirectUrl = $this->generateUrl('admin_org_upload');
+
                 return $this->orgService->process($data, $redirectUrl);
-            } catch (Throwable $e) {
+            } catch (\Throwable $e) {
                 $message = $e->getMessage();
 
                 if ($e instanceof RestClientException && isset($e->getData()['message'])) {
@@ -534,7 +546,7 @@ class IndexController extends AbstractController
 
                 if ($outputStreamResponse) {
                     $this->addFlash('error', $message);
-                    exit();
+                    exit;
                 } else {
                     $form->get('file')->addError(new FormError($message));
                 }
@@ -555,8 +567,7 @@ class IndexController extends AbstractController
                 $application->run($input, $output);
             });
 
-
-            $this->addFlash("notice", "CSV import process started. Keep an eye on your emails for completion.");
+            $this->addFlash('notice', 'CSV import process started. Keep an eye on your emails for completion.');
 
             return $this->redirect($this->generateUrl('admin_org_upload'));
         }
@@ -592,27 +603,28 @@ class IndexController extends AbstractController
             'processStatusDate' => $processCompletedDate,
             'fileUploadedInfo' => [
                 'fileName' => $paProReportFile,
-                'date' => $bucketFileInfo['LastModified']
+                'date' => $bucketFileInfo['LastModified'],
             ],
         ];
     }
 
     /**
      * @Route("/send-activation-link/{email}", name="admin_send_activation_link")
+     *
      * @Security("is_granted('ROLE_ADMIN') or is_granted('ROLE_AD')")
      **/
     public function sendUserActivationLinkAction(string $email, LoggerInterface $logger)
     {
         try {
             $this->userApi->activate($email, 'pass-reset');
-        } catch (Throwable $e) {
+        } catch (\Throwable $e) {
             $logger->debug($e->getMessage());
         }
 
         return new Response('[Link sent]');
     }
 
-    private function handleOrgUploadForm($fileName): Throwable|Exception|array
+    private function handleOrgUploadForm($fileName): \Throwable|\Exception|array
     {
         return (new CsvToArray($fileName, false))
             ->setExpectedColumns([
@@ -652,7 +664,7 @@ class IndexController extends AbstractController
             ->getData();
     }
 
-    private function handleLayUploadForm($fileName): Throwable|Exception|array
+    private function handleLayUploadForm($fileName): \Throwable|\Exception|array
     {
         return (new CsvToArray($fileName, false, true))
             ->setOptionalColumns([

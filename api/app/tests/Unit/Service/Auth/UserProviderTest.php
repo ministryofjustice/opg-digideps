@@ -24,7 +24,7 @@ class UserProviderTest extends TestCase
         $this->logger = m::stub('Symfony\Bridge\Monolog\Logger');
         $options = ['timeout_seconds' => 7];
 
-        $this->userProvider = new RedisUserProvider($this->em, $this->redis, $this->logger, $options, $this->repo);
+        $this->userProvider = new RedisUserProvider($this->em, $this->redis, $this->logger, $options, $this->repo, 'testing');
     }
 
     public function testloadUserByUsernameRedisNotFound()
@@ -75,7 +75,7 @@ class UserProviderTest extends TestCase
             'getId' => 123,
         ]);
 
-        $tokenMatchPattern = '/^123_[0-9a-f]{5,40}[\d]{1,}/';
+        $tokenMatchPattern = '/^testing_123_[0-9a-f]{5,40}[\d]{1,}/';
 
         $this->redis->shouldReceive('set')->with(\Mockery::pattern($tokenMatchPattern), 123)->atLeast(1);
         $this->redis->shouldReceive('expire')->with(\Mockery::pattern($tokenMatchPattern), 7)->atLeast(1);
