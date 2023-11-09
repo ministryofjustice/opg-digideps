@@ -58,7 +58,7 @@
         {% endif %}
         {% if not hideEditLink  %}
             <dd class="govuk-summary-list__actions">
-                <a class="govuk-link behat-link-edit" href="{{ path('money_out_short_exist', { 'reportId': report.id, 'from': 'summary' }) }}">
+                <a class="govuk-link behat-link-edit" href="{{ path('money_out_short_one_off_payments_exist', { 'reportId': report.id, 'from': 'summary' }) }}">
                     {{ 'edit' | trans({}, 'common') }}
                 </a>
             </dd>
