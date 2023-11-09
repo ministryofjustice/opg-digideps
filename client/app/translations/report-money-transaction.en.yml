@@ -127,11 +127,28 @@ summaryPage:
     pageTitle: Money in
     moreDetails: More details about this section
     totalValue: "Total money in: £%value%"
+    hasMoneyIn:
+      label: Have you added money in on %client%'s behalf during this reporting period?
+    reasonForNoMoneyIn:
+      label: Reason for no money in
+    listOfMoneyIns: Income you've already told us about
+    addIncome: Add item of income
+    list:
+      label:
+        type: Type
+        description: Description
+        bankAccount: Bank account
+        amount: Amount
+        totalAmount: Total amount
   moneyOut:
     htmlTitle: "Money out - Complete the deputy report | GOV.UK"
     pageTitle: Money out
     moreDetails: More details about this section
     totalValue: "Total money out: £%value%"
+    hasMoneyIn:
+      label: Have you added money in on %client%'s behalf during this reporting period?
+    reasonForNoDecisions:
+      label: Reason for no money in
 
 form:
   group:

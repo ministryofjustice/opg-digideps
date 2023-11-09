@@ -1617,4 +1617,53 @@ class Report implements ReportInterface
             self::PROF_PFA_LOW_ASSETS_TYPE, self::PROF_PFA_HIGH_ASSETS_TYPE, self::PROF_COMBINED_LOW_ASSETS_TYPE, self::PROF_COMBINED_HIGH_ASSETS_TYPE,
         ];
     }
+
+    public function getMoneyInExists()
+    {
+        return $this->moneyInExists;
+    }
+
+    /**
+     * @param mixed $moneyInExists
+     */
+    public function setMoneyInExists(string $moneyInExists)
+    {
+        $this->moneyInExists = $moneyInExists;
+    }
+
+    public function getReasonForNoMoneyIn()
+    {
+        return $this->reasonForNoMoneyIn;
+    }
+
+    /**
+     * @param mixed $reasonForNoMoneyIn
+     */
+    public function setReasonForNoMoneyIn(string $reasonForNoMoneyIn)
+    {
+        $this->reasonForNoMoneyIn = $reasonForNoMoneyIn;
+    }
+
+    public function getMoneyOutExists()
+    {
+        return $this->moneyOutExists;
+    }
+
+    public function setMoneyOutExists($moneyOutExists)
+    {
+        $this->moneyOutExists = $moneyOutExists;
+    }
+
+    public function getReasonForNoMoneyOut()
+    {
+        return $this->reasonForNoMoneyOut;
+    }
+
+    /**
+     * @param mixed $reasonForNoMoneyOut
+     */
+    public function setReasonForNoMoneyOut(string $reasonForNoMoneyOut)
+    {
+        $this->reasonForNoMoneyOut = $reasonForNoMoneyOut;
+    }
 }

@@ -1,0 +1,161 @@
+{% import '@App/Macros/macros.html.twig' as macros %}
+
+{% set translationDomain = "report-money-transaction" %}
+{% trans_default_domain translationDomain %}
+{% set transOptions = {'%client%': report.client.firstname | e } %}
+
+{% set hideEditLink = hideEditLink | default(false) %}
+
+<dl class="govuk-summary-list">
+    {{ macros.summaryListHeaderQA(hideEditLink) }}
+
+    <div class="govuk-summary-list__row behat-region-has-moneyIn">
+        {% if not report.moneyInExists == 'No' %}
+            <dt class="govuk-summary-list__key">
+                <span class="error">
+                    {{ 'summaryPage.moneyIn.hasMoneyIn.label' | trans(transOptions) }}
+                </span>
+            </dt>
+            <dd class="govuk-summary-list__value">
+                <span class="error-message">{{ 'pleaseAnswer' | trans({}, 'common' ) }}</span>
+            </dd>
+        {% else %}
+            <dt class="govuk-summary-list__key">
+                {{ 'summaryPage.moneyIn.hasMoneyIn.label' | trans(transOptions) }}
+            </dt>
+            <dd class="govuk-summary-list__value">
+                {{ report.moneyInExists }}
+            </dd>
+        {% endif %}
+        {% if not hideEditLink  %}
+            <dd class="govuk-summary-list__actions">
+                <a class="govuk-link behat-link-edit" id="moneyInExistsEdit" href="{{ path('money_in_step', { 'reportId': report.id, 'step': 1, 'from': 'summary' }) }}">
+                    {{ 'edit' | trans({}, 'common') }}
+                </a>
+            </dd>
+        {% endif %}
+    </div>
+
+    {% if report.reasonForNoMoneyIn %}
+        <div class="govuk-summary-list__row behat-region-reason-no-money-in">
+            <dt class="govuk-summary-list__key">
+                {{ 'summaryPage.moneyIn.reasonForNoMoneyIn.label' | trans(transOptions) }}
+            </dt>
+            <dd class="govuk-summary-list__value">
+                {{ report.reasonForNoMoneyIn | nl2br }}
+            </dd>
+            {% if not hideEditLink  %}
+                <dd class="govuk-summary-list__actions">
+                    <a class="govuk-link behat-link-edit" href="{{ path('money_in_step', { 'reportId': report.id, 'step': 1, 'from': 'summary'}) }}">
+                        {{ 'edit' | trans({}, 'common') }}
+                    </a>
+                </dd>
+            {% endif %}
+        </div>
+    {% endif %}
+</dl>
+
+{% if report.moneyTransactionsIn | length > 0 %}
+    <div class="govuk-grid-row">
+        <div class="govuk-grid-column-one-half">
+            <h2 class="govuk-heading-l">{{ 'summaryPage.moneyIn.listOfMoneyIns' | trans(transOptions) }}</h2>
+        </div>
+        <div class="govuk-grid-column-one-half text--right">
+            {% if not hideEditLink  %}
+                <a href="{{ path('money_in_step' , {'reportId': report.id, 'step': 1, 'from': 'summary'}) }}" class="govuk-link behat-link-add">
+                    <strong>
+                        <span class="icon icon-plus"></span>
+                        {{ 'summaryPage.moneyIn.addIncome' | trans(transOptions) }}
+                    </strong>
+                </a>
+            {% endif %}
+        </div>
+    </div>
+
+    {% for groupId, groupData in report.groupMoneyTransactionsByGroup(report.moneyTransactionsIn) %}
+
+        <h3 class="govuk-heading-m">{{ ('form.group.entries.' ~ groupId) | trans(transOptions) }}</h3>
+
+        <table class="govuk-table behat-region-list-accounts">
+            <thead class="govuk-table__head">
+                <tr class="govuk-table__row">
+                    <th scope="col" class="govuk-table__header">
+                        {{ 'summaryPage.moneyIn.list.label.type' | trans(transOptions) }}
+                    </th>
+                    <th scope="col" class="govuk-table__header">
+                        {{ 'summaryPage.moneyIn.list.label.description' | trans(transOptions) }}
+                    </th>
+                    {% if report.canLinkToBankAccounts %}
+                        <th scope="col" class="govuk-table__header">
+                            {{ 'summaryPage.moneyIn.list.label.bankAccount' | trans(transOptions) }}
+                        </th>
+                    {% endif %}
+                    <th scope="col" class="govuk-table__header govuk-table__header--numeric">
+                        {{ 'summaryPage.moneyIn.list.label.amount' | trans(transOptions) }}
+                    </th>
+                    {% if not hideEditLink  %}
+                        <th scope="col" class="govuk-table__header">
+                            <span class="govuk-visually-hidden">{{ 'actions' | trans({}, 'common') }}</span>
+                        </th>
+                    {% endif %}
+                </tr>
+            </thead>
+
+            <tbody class="govuk-table__body">
+                {% for entry in groupData.entries %}
+                    <tr class="govuk-table__row behat-region-transaction-{{ entry.description | behat_namify }}">
+                        <th scope="row" class="govuk-table__header">
+                            {{ ('form.category.entries.' ~ entry.category ~ '.label') | trans }}
+                        </th>
+                        <td class="govuk-table__cell">
+                            {{ entry.description | nl2br }}
+                        </td>
+                        {% if report.canLinkToBankAccounts %}
+                            <td class="govuk-table__cell">
+                                {{ (entry.bankAccount) ? entry.bankAccount.nameOneLine : '-' }}
+                            </td>
+                        {% endif %}
+                        <td class="govuk-table__cell govuk-table__cell--numeric">
+                            £{{ entry.amount | money_format }}
+                        </td>
+                        {% if not hideEditLink  %}
+                            <td class="govuk-table__cell govuk-table__cell--numeric">
+                                <a class="behat-link-edit govuk-link" href="{{ path('money_in_step', {'reportId': report.id, 'step': 2, 'transactionId': entry.id, 'from': 'summary'}) }}">
+                                    {{ 'edit' | trans({}, 'common' ) }}
+                                </a>
+                                <a class="behat-link-delete govuk-link govuk-!-margin-left-1" href="{{ path('money_in_delete', {'reportId': report.id, 'transactionId': entry.id}) }}">
+                                    {{ 'remove' | trans({}, 'common' ) }}
+                                </a>
+                            </td>
+                        {% endif %}
+                    </tr>
+                {% endfor %}
+            </tbody>
+
+            <tbody class="govuk-table__body">
+                <tr class="govuk-table__row">
+                    <th scope="col" class="govuk-summary-list__key">
+                        <span class="govuk-!-font-size-19 govuk-!-font-weight-bold">{{ 'summaryPage.moneyIn.list.label.totalAmount' | trans(transOptions) }}</span>
+                    </th>
+                    <td class="govuk-table__cell"></td>
+                    {% if report.canLinkToBankAccounts %}
+                        <td class="govuk-table__cell"></td>
+                    {% endif %}
+                    <td class="govuk-table__cell govuk-table__cell--numeric">
+                        <strong class="behat-region-{{ groupId | behat_namify }}-total">
+                            £{{ groupData.amountTotal | money_format }}
+                        </strong>
+                    </td>
+                    {% if not hideEditLink  %}
+                        <td class="govuk-table__cell govuk-table__cell--numeric"></td>
+                    {% endif %}
+                </tr>
+            </tbody>
+        </table>
+    {% endfor %}
+
+    {# Total money in #}
+    <div class="govuk-heading-m text--right behat-region-total-amount">
+        {{ 'summaryPage.moneyIn.totalValue' | trans({ '%value%': (report.moneyInTotal | money_format) }) }}
+    </div>
+{% endif %}
