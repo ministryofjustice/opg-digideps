@@ -56,6 +56,7 @@ jobs:
     uses: ./.github/workflows/_unit-tests-api.yml
     with:
       selection: selection-1
+      branch_name: ${{ needs.workflow_variables.outputs.parsed_branch }}
     needs:
       - workflow_variables
 
@@ -64,6 +65,7 @@ jobs:
     uses: ./.github/workflows/_unit-tests-api.yml
     with:
       selection: selection-2
+      branch_name: ${{ needs.workflow_variables.outputs.parsed_branch }}
     needs:
       - workflow_variables
 
@@ -72,6 +74,7 @@ jobs:
     uses: ./.github/workflows/_unit-tests-api.yml
     with:
       selection: selection-3
+      branch_name: ${{ needs.workflow_variables.outputs.parsed_branch }}
     needs:
       - workflow_variables
 

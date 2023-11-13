@@ -1,0 +1,26 @@
+services:
+    _defaults:
+        autowire: true
+        autoconfigure: true
+
+        bind:
+            $fixtureParams: "%fixtures%"
+            $symfonyEnvironment: "%kernel.environment%"
+
+    App\Service\BruteForce\AttemptsInTimeChecker:
+        public: true
+        arguments: ["@snc_redis.default"]
+        calls:
+            - [setRedisPrefix, ["test_ac_ret_code"]]
+            # after 5 attempts in the last 10 minutes, return a different return code (activate captcha)
+            - [addTrigger, [5, 600]]
+    App\Service\BruteForce\AttemptsIncrementalWaitingChecker:
+        public: true
+        arguments: ["@snc_redis.default"]
+        calls:
+            - [setRedisPrefix, ["test_ac_exception"]]
+            # after 10 attempts, freeze for 10 minutes. used by AuthControllerTest::testBruteForceSameEmail
+            - [addFreezingRule, [10, 600]]
+
+    App\Tests\Behat\:
+        resource: "../tests/Behat/bootstrap/*"

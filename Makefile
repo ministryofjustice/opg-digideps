@@ -102,16 +102,16 @@ reset-fixtures-unit-tests: ##@database Resets the DB schema and runs migrations
 	docker-compose -f docker-compose.yml -f docker-compose.unit-tests-api.yml run --rm api-unit-tests sh scripts/reset_db_fixtures_local.sh
 
 reset-database: ##@database Resets the DB schema and runs migrations
-	docker-compose run --rm api sh scripts/reset_db_structure_local.sh
+	docker-compose run --rm api-app sh scripts/reset_db_structure_local.sh
 
 reset-fixtures: ##@database Resets the DB contents and reloads fixtures
-	docker-compose run --rm api sh scripts/reset_db_fixtures_local.sh
+	docker-compose run --rm api-app sh scripts/reset_db_fixtures_local.sh
 
 db-terminal: ##@database Login to the database via the terminal
 	docker-compose exec -it postgres sh -c "psql -U api"
 
 api-logs: ##@logs Follow the API logs
-	docker-compose logs api --follow
+	docker-compose logs api-webserver api-app --follow
 
 front-logs: ##@logs Follow the frontend logs
 	docker-compose logs frontend-webserver frontend-app --follow
@@ -126,7 +126,7 @@ redis-clear: ##@database Clears out all the data from redis (session related tok
 	done
 
 cache-clear: ##@application Clear the cache of the application
-	docker-compose exec api sh -c "rm -rf var/cache/*" && \
+	docker-compose exec api-app sh -c "rm -rf var/cache/*" && \
 	docker-compose -f docker-compose.yml -f docker-compose.dev.yml exec api sh -c "rm -rf var/cache/*" && \
 	docker-compose exec frontend-app sh -c "rm -rf var/cache/*" && \
 	docker-compose -f docker-compose.yml -f docker-compose.dev.yml exec frontend-app sh -c "rm -rf var/cache/*" && \
@@ -148,9 +148,9 @@ disable-debug: ##@application Puts app in dev mode and disables debug (so the ap
 
 phpstan-api: ##@static-analysis Runs PHPStan against API. Defaults to max level but supports passing level as an arg e.g. level=1
 ifdef level
-	docker-compose run --rm api vendor/phpstan/phpstan/phpstan analyse src --memory-limit=1G --level=$(level)
+	docker-compose run --rm api-app vendor/phpstan/phpstan/phpstan analyse src --memory-limit=1G --level=$(level)
 else
-	docker-compose run --rm api vendor/phpstan/phpstan/phpstan analyse src --memory-limit=1G --level=max
+	docker-compose run --rm api-app vendor/phpstan/phpstan/phpstan analyse src --memory-limit=1G --level=max
 endif
 
 phpstan-client: ##@static-analysis Runs PHPStan against client. Defaults to max level but supports passing level as an arg e.g. level=1

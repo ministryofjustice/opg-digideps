@@ -4,6 +4,7 @@ locals {
 
   images = {
     api              = "${data.aws_ecr_repository.images["api"].repository_url}:${var.OPG_DOCKER_TAG}"
+    api-webserver    = "${data.aws_ecr_repository.images["api-webserver"].repository_url}:${var.OPG_DOCKER_TAG}"
     client           = "${data.aws_ecr_repository.images["client"].repository_url}:${var.OPG_DOCKER_TAG}"
     client-webserver = "${data.aws_ecr_repository.images["client-webserver"].repository_url}:${local.client_web_tag}"
     sync             = "${data.aws_ecr_repository.images["sync"].repository_url}:${var.OPG_DOCKER_TAG}"
@@ -15,6 +16,7 @@ locals {
 
   repositories = [
     "api",
+    "api-webserver",
     "client",
     "client-webserver",
     "dr-backup",
