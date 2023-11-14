@@ -1416,9 +1416,6 @@ class Report implements ReportInterface, StartEndDateComparableInterface
         return $this->reasonForNoMoneyOut;
     }
 
-    /**
-     * @param mixed $reasonForNoMoneyOut
-     */
     public function setReasonForNoMoneyOut(?string $reasonForNoMoneyOut): self
     {
         $this->reasonForNoMoneyOut = $reasonForNoMoneyOut;
