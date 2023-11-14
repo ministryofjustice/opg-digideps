@@ -5,6 +5,7 @@ namespace App\Controller\Report;
 use App\Controller\AbstractController;
 use App\Entity as EntityDir;
 use App\Entity\Report\MoneyTransactionShort;
+use App\Entity\Report\Status;
 use App\Form as FormDir;
 use App\Service\Client\Internal\ReportApi;
 use App\Service\Client\RestClient;
@@ -60,11 +61,11 @@ class MoneyOutShortController extends AbstractController
      *
      * @return array|RedirectResponse
      */
-    public function existActionNew(Request $request, $reportId)
+    public function existAction(Request $request, $reportId)
     {
         $report = $this->reportApi->getReportIfNotSubmitted($reportId, self::$jmsGroups);
         $form = $this->createForm(
-            FormDir\Report\MoneyOutExistType::class,
+            FormDir\Report\DoesMoneyOutExistType::class,
             $report,
             ['translation_domain' => 'report-money-short']);
         $form->handleRequest($request);
@@ -154,7 +155,7 @@ class MoneyOutShortController extends AbstractController
                 return $this->redirectToRoute('money_out_short_summary', ['reportId' => $reportId]);
             }
 
-            return $this->redirectToRoute('money_out_short_exist', ['reportId' => $reportId]);
+            return $this->redirectToRoute('money_out_short_one_off_payments_exist', ['reportId' => $reportId]);
         }
 
         return [

@@ -64,7 +64,7 @@ class MoneyOutController extends AbstractController
     }
 
     /**
-     * @Route("/report/{reportId}/money-out/exist", name="money_out_exist")
+     * @Route("/report/{reportId}/money-out/exist", name="does_money_out_exist")
      * @Template("@App/Report/MoneyOut/exist.html.twig")
      *
      * @return array|RedirectResponse
@@ -72,20 +72,20 @@ class MoneyOutController extends AbstractController
     public function existAction(Request $request, $reportId)
     {
         $report = $this->reportApi->getReportIfNotSubmitted($reportId, self::$jmsGroups);
-        $form = $this->createForm(FormDir\Report\MoneyOutExistType::class, $report);
+        $form = $this->createForm(FormDir\Report\DoesMoneyOutExistType::class, $report);
         $form->handleRequest($request);
 
         if ($form->isSubmitted() && $form->isValid()) {
             $report = $form->getData();
-            $answer = $form['moneyOutExists']->getData();
+            $answer = $form['doesMoneyOutExist']->getData();
 
-            $report->setMoneyOutExists($answer);
-            $this->restClient->put('report/'.$reportId, $report, ['moneyOutExists']);
+            $report->setDoesMoneyOutExist($answer);
+            $this->restClient->put('report/'.$reportId, $report, ['doesMoneyOutExist']);
 
             if ('yes' === $answer) {
-                return $this->redirectToRoute('money_out_step', ['reportId' => $reportId, 'step' => 1, 'from' => 'money_out_exist']);
+                return $this->redirectToRoute('money_out_step', ['reportId' => $reportId, 'step' => 1, 'from' => 'does_money_out_exist']);
             } else {
-                return $this->redirectToRoute('no_money_out_exists', ['reportId' => $reportId, 'from' => 'money_out_exist']);
+                return $this->redirectToRoute('no_money_out_exists', ['reportId' => $reportId, 'from' => 'does_money_out_exist']);
             }
         }
 
@@ -121,7 +121,7 @@ class MoneyOutController extends AbstractController
             return $this->redirectToRoute('money_out_summary', ['reportId' => $reportId]);
         }
 
-        $backLink = $this->generateUrl('money_out_exist', ['reportId' => $reportId]);
+        $backLink = $this->generateUrl('does_money_out_exist', ['reportId' => $reportId]);
 
         return [
             'backLink' => $backLink,
