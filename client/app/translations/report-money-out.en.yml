@@ -7,6 +7,7 @@ deletePage:
     amount: Amount
     bankAccount: Bank account
     date: Date
+
 existPage:
   htmlTitle: "Money out - Complete the deputy report | GOV.UK"
   supportTitle: Money out
