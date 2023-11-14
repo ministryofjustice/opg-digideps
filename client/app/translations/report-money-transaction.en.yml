@@ -145,10 +145,19 @@ summaryPage:
     pageTitle: Money out
     moreDetails: More details about this section
     totalValue: "Total money out: £%value%"
-    hasMoneyIn:
-      label: Have you added money in on %client%'s behalf during this reporting period?
-    reasonForNoDecisions:
-      label: Reason for no money in
+    hasMoneyOut:
+      label: Have you taken money out on %client%'s behalf during this reporting period?
+    reasonForNoMoneyOut:
+      label: Reason for no money out
+    listOfMoneyOuts: Payments you've already told us about
+    addPayment: Add a payment
+    list:
+      label:
+        type: Type
+        description: Description
+        bankAccount: Bank account
+        amount: Amount
+        totalAmount: Total amount
 
 form:
   group:

@@ -1375,40 +1375,43 @@ class Report implements ReportInterface, StartEndDateComparableInterface
         return $this;
     }
 
-    public function getMoneyInExists()
+    public function getMoneyInExists(): ?string
     {
         return $this->moneyInExists;
     }
 
-    public function setMoneyInExists($moneyInExists)
+    public function setMoneyInExists(?string $moneyInExists): self
     {
         $this->moneyInExists = $moneyInExists;
+
+        return $this;
     }
 
-    public function getReasonForNoMoneyIn()
+    public function getReasonForNoMoneyIn(): ?string
     {
         return $this->reasonForNoMoneyIn;
     }
 
-    /**
-     * @param mixed $reasonForNoMoneyIn
-     */
-    public function setReasonForNoMoneyIn(string $reasonForNoMoneyIn)
+    public function setReasonForNoMoneyIn(?string $reasonForNoMoneyIn): self
     {
         $this->reasonForNoMoneyIn = $reasonForNoMoneyIn;
+
+        return $this;
     }
 
-    public function getMoneyOutExists()
+    public function getMoneyOutExists(): ?string
     {
         return $this->moneyOutExists;
     }
 
-    public function setMoneyOutExists($moneyOutExists)
+    public function setMoneyOutExists(string $moneyOutExists): self
     {
         $this->moneyOutExists = $moneyOutExists;
+
+        return $this;
     }
 
-    public function getReasonForNoMoneyOut()
+    public function getReasonForNoMoneyOut(): ?string
     {
         return $this->reasonForNoMoneyOut;
     }
@@ -1416,8 +1419,10 @@ class Report implements ReportInterface, StartEndDateComparableInterface
     /**
      * @param mixed $reasonForNoMoneyOut
      */
-    public function setReasonForNoMoneyOut(string $reasonForNoMoneyOut)
+    public function setReasonForNoMoneyOut(?string $reasonForNoMoneyOut): self
     {
         $this->reasonForNoMoneyOut = $reasonForNoMoneyOut;
+
+        return $this;
     }
 }
