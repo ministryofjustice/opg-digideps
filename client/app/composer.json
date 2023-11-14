@@ -72,7 +72,7 @@
         "symfony/string": "^5.4.0",
         "symfony/templating": "^5.4.0",
         "symfony/translation": "^5.4.0",
-        "symfony/twig-bridge": "5.4.22",
+        "symfony/twig-bridge": "5.4.31",
         "symfony/twig-bundle": "^5.4.0",
         "symfony/validator": "^5.4.0",
         "symfony/var-exporter": "^5.4.0",
