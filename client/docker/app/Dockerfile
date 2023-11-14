@@ -66,7 +66,6 @@ COPY --chown=www-data:www-data --from=composer /app/composer.lock composer.lock
 COPY --chown=www-data:www-data --from=composer /app/config/parameters.yml config/parameters.yml
 COPY --chown=www-data:www-data client/app/config config
 COPY --chown=www-data:www-data client/app/public public
-COPY --chown=www-data:www-data client/resources/public/ public/
 COPY --chown=www-data:www-data client/app/scripts scripts
 COPY --chown=www-data:www-data client/app/src src
 COPY --chown=www-data:www-data client/app/templates templates
