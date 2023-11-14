@@ -62,8 +62,21 @@ resource "aws_ecs_service" "front" {
     container_port   = 80
   }
 
-  service_registries {
-    registry_arn = aws_service_discovery_service.front.arn
+  #  service_registries {
+  #    registry_arn = aws_service_discovery_service.front.arn
+  #  }
+
+  service_connect_configuration {
+    enabled   = true
+    namespace = aws_service_discovery_http_namespace.cloudmap_namespace.arn
+    service {
+      discovery_name = "front"
+      port_name      = "front-port"
+      client_alias {
+        dns_name = "front"
+        port     = 80
+      }
+    }
   }
 
   capacity_provider_strategy {
@@ -92,6 +105,7 @@ locals {
       mountPoints = [],
       name        = "front_web",
       portMappings = [{
+        name          = "front-port",
         containerPort = 80,
         hostPort      = 80,
         protocol      = "tcp"
@@ -148,7 +162,7 @@ locals {
         { name = "ROLE", value = "front" },
         { name = "ADMIN_HOST", value = "https://${aws_route53_record.admin.fqdn}" },
         { name = "NONADMIN_HOST", value = "https://${aws_route53_record.front.fqdn}" },
-        { name = "API_URL", value = "https://${local.api_service_fqdn}" },
+        { name = "API_URL", value = "http://${local.api_service_fqdn}" },
         { name = "APP_ENV", value = local.account.app_env },
         { name = "AUDIT_LOG_GROUP_NAME", value = "audit-${local.environment}" },
         { name = "EMAIL_SEND_INTERNAL", value = local.account.is_production == 1 ? "true" : "false" },

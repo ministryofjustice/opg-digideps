@@ -33,7 +33,7 @@ resource "aws_ecs_task_definition" "api" {
   network_mode             = "awsvpc"
   cpu                      = 512
   memory                   = 1024
-  container_definitions    = "[${local.api_container}]"
+  container_definitions    = "[${local.api_web}, ${local.api_container}]"
   task_role_arn            = aws_iam_role.api.arn
   execution_role_arn       = aws_iam_role.execution_role.arn
   tags                     = local.default_tags
@@ -56,8 +56,21 @@ resource "aws_ecs_service" "api" {
     assign_public_ip = false
   }
 
-  service_registries {
-    registry_arn = aws_service_discovery_service.api.arn
+  #  service_registries {
+  #    registry_arn = aws_service_discovery_service.api.arn
+  #  }
+
+  service_connect_configuration {
+    enabled   = true
+    namespace = aws_service_discovery_http_namespace.cloudmap_namespace.arn
+    service {
+      discovery_name = "api"
+      port_name      = "api-port"
+      client_alias {
+        dns_name = "api"
+        port     = 80
+      }
+    }
   }
 
   capacity_provider_strategy {
@@ -78,6 +91,40 @@ resource "aws_ecs_service" "api" {
 }
 
 locals {
+  api_web = jsonencode(
+    {
+      cpu         = 0,
+      essential   = true,
+      image       = local.images.api-webserver,
+      mountPoints = [],
+      name        = "api_web",
+      portMappings = [{
+        name          = "api-port",
+        containerPort = 80,
+        hostPort      = 80,
+        protocol      = "tcp"
+      }],
+      healthCheck = {
+        command : [
+          "CMD-SHELL",
+          "curl -f http://127.0.0.1:80/health-check || exit 1"
+        ]
+      },
+      volumesFrom = [],
+      logConfiguration = {
+        logDriver = "awslogs",
+        options = {
+          awslogs-group         = aws_cloudwatch_log_group.opg_digi_deps.name,
+          awslogs-region        = "eu-west-1",
+          awslogs-stream-prefix = "${aws_iam_role.api.name}.web"
+        }
+      },
+      environment = [
+        { name = "APP_HOST", value = "127.0.0.1" },
+        { name = "APP_PORT", value = "9000" }
+      ]
+    }
+  )
   api_container = jsonencode(
     {
       cpu         = 0,
@@ -86,27 +133,18 @@ locals {
       mountPoints = [],
       name        = "api_app",
       portMappings = [{
-        containerPort = 443,
-        hostPort      = 443,
+        containerPort = 9000,
+        hostPort      = 9000,
         protocol      = "tcp"
       }],
       volumesFrom = [],
       stopTimeout = 60,
-      healthCheck = {
-        command = [
-          "CMD-SHELL",
-          "curl -f -k https://localhost:443/health-check || exit 1"
-        ],
-        interval = 30,
-        timeout  = 10,
-        retries  = 3
-      },
       logConfiguration = {
         logDriver = "awslogs",
         options = {
           awslogs-group         = aws_cloudwatch_log_group.opg_digi_deps.name,
           awslogs-region        = "eu-west-1",
-          awslogs-stream-prefix = aws_iam_role.api.name
+          awslogs-stream-prefix = "${aws_iam_role.api.name}.app"
         }
       },
       secrets = [

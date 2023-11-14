@@ -1,7 +1,0 @@
-version: '3.2'
-
-services:
-  router:
-    environment:
-      DEFAULT_HOST: localhost
-      CERT_NAME: digideps.local.crt

@@ -61,8 +61,21 @@ resource "aws_ecs_service" "scan" {
     assign_public_ip = false
   }
 
-  service_registries {
-    registry_arn = aws_service_discovery_service.scan.arn
+  #  service_registries {
+  #    registry_arn = aws_service_discovery_service.scan.arn
+  #  }
+
+  service_connect_configuration {
+    enabled   = true
+    namespace = aws_service_discovery_http_namespace.cloudmap_namespace.arn
+    service {
+      discovery_name = "api"
+      port_name      = "api-port"
+      client_alias {
+        dns_name = "api"
+        port     = 80
+      }
+    }
   }
 
   capacity_provider_strategy {
@@ -90,6 +103,7 @@ locals {
       name      = "rest",
       essential = true,
       portMappings = [{
+        name          = "scan-port",
         containerPort = 8080,
         hostPort      = 8080,
         protocol      = "tcp"

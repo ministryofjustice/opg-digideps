@@ -105,11 +105,6 @@ locals {
       mountPoints = [],
       name        = "admin_web",
       portMappings = [
-        #        {
-        #        containerPort = 80,
-        #        hostPort      = 80,
-        #        protocol      = "tcp"
-        #      },
         {
           name : "admin-port",
           containerPort : 80,
@@ -169,7 +164,7 @@ locals {
         { name = "ROLE", value = "admin" },
         { name = "ADMIN_HOST", value = "https://${aws_route53_record.admin.fqdn}" },
         { name = "NONADMIN_HOST", value = "https://${aws_route53_record.front.fqdn}" },
-        { name = "API_URL", value = "https://${local.api_service_fqdn}" },
+        { name = "API_URL", value = "http://${local.api_service_fqdn}" },
         { name = "AUDIT_LOG_GROUP_NAME", value = "audit-${local.environment}" },
         { name = "EMAIL_SEND_INTERNAL", value = local.account.is_production == 1 ? "true" : "false" },
         { name = "FEATURE_FLAG_PREFIX", value = local.feature_flag_prefix },

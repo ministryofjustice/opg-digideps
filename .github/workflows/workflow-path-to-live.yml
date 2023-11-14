@@ -10,7 +10,7 @@ defaults:
 on:
   push:
     branches:
-      - "main" # match main
+      - main # match main
 
 permissions:
   contents: write
@@ -29,7 +29,7 @@ jobs:
     runs-on: ubuntu-latest
     name: output workflow variables
     outputs:
-      parsed_branch: "main"
+      build_identifier: "main"
       short_sha: ${{ steps.variables.outputs.short_sha }}
     steps:
       - uses: actions/checkout@7cdaf2fbc075e6f3b9ca94cfd6cec5adc8a75622 # pin@v3
@@ -50,8 +50,8 @@ jobs:
       - workflow_variables
       - build_web_resources
     with:
-      tag: ${{ needs.workflow_variables.outputs.parsed_branch }}-${{ needs.workflow_variables.outputs.short_sha }}
-      branch_name: ${{ needs.workflow_variables.outputs.parsed_branch }}
+      tag: ${{ needs.workflow_variables.outputs.build_identifier }}-${{ needs.workflow_variables.outputs.short_sha }}
+      branch_name: ${{ needs.workflow_variables.outputs.build_identifier }}
       push_to_ecr: true
     secrets: inherit
 
@@ -60,6 +60,7 @@ jobs:
     uses: ./.github/workflows/_unit-tests-api.yml
     with:
       selection: selection-1
+      branch_name: ${{ needs.workflow_variables.outputs.build_identifier }}
     needs:
       - workflow_variables
 
@@ -68,6 +69,7 @@ jobs:
     uses: ./.github/workflows/_unit-tests-api.yml
     with:
       selection: selection-2
+      branch_name: ${{ needs.workflow_variables.outputs.build_identifier }}
     needs:
       - workflow_variables
 
@@ -76,6 +78,7 @@ jobs:
     uses: ./.github/workflows/_unit-tests-api.yml
     with:
       selection: selection-3
+      branch_name: ${{ needs.workflow_variables.outputs.build_identifier }}
     needs:
       - workflow_variables
 
@@ -112,7 +115,7 @@ jobs:
       workspace: development
       terraform_path: account
       apply: true
-      container_version: ${{ needs.workflow_variables.outputs.parsed_branch }}-${{ needs.workflow_variables.outputs.short_sha }}
+      container_version: ${{ needs.workflow_variables.outputs.build_identifier }}-${{ needs.workflow_variables.outputs.short_sha }}
     secrets: inherit
 
   terraform_apply_development:
@@ -131,7 +134,7 @@ jobs:
       workspace: development
       terraform_path: environment
       apply: true
-      container_version: ${{ needs.workflow_variables.outputs.parsed_branch }}-${{ needs.workflow_variables.outputs.short_sha }}
+      container_version: ${{ needs.workflow_variables.outputs.build_identifier }}-${{ needs.workflow_variables.outputs.short_sha }}
     secrets: inherit
 
   terraform_apply_account_preproduction:
@@ -144,7 +147,7 @@ jobs:
       workspace: preproduction
       terraform_path: account
       apply: true
-      container_version: ${{ needs.workflow_variables.outputs.parsed_branch }}-${{ needs.workflow_variables.outputs.short_sha }}
+      container_version: ${{ needs.workflow_variables.outputs.build_identifier }}-${{ needs.workflow_variables.outputs.short_sha }}
     secrets: inherit
 
   terraform_apply_integration:
@@ -157,7 +160,7 @@ jobs:
       workspace: integration
       terraform_path: environment
       apply: true
-      container_version: ${{ needs.workflow_variables.outputs.parsed_branch }}-${{ needs.workflow_variables.outputs.short_sha }}
+      container_version: ${{ needs.workflow_variables.outputs.build_identifier }}-${{ needs.workflow_variables.outputs.short_sha }}
     secrets: inherit
 
   scale_services_up:
@@ -299,7 +302,7 @@ jobs:
       workspace: preproduction
       terraform_path: environment
       apply: true
-      container_version: ${{ needs.workflow_variables.outputs.parsed_branch }}-${{ needs.workflow_variables.outputs.short_sha }}
+      container_version: ${{ needs.workflow_variables.outputs.build_identifier }}-${{ needs.workflow_variables.outputs.short_sha }}
     secrets: inherit
 
   terraform_apply_training:
@@ -312,7 +315,7 @@ jobs:
       workspace: training
       terraform_path: environment
       apply: true
-      container_version: ${{ needs.workflow_variables.outputs.parsed_branch }}-${{ needs.workflow_variables.outputs.short_sha }}
+      container_version: ${{ needs.workflow_variables.outputs.build_identifier }}-${{ needs.workflow_variables.outputs.short_sha }}
     secrets: inherit
 
   terraform_apply_account_production:
@@ -325,7 +328,7 @@ jobs:
       workspace: production
       terraform_path: account
       apply: true
-      container_version: ${{ needs.workflow_variables.outputs.parsed_branch }}-${{ needs.workflow_variables.outputs.short_sha }}
+      container_version: ${{ needs.workflow_variables.outputs.build_identifier }}-${{ needs.workflow_variables.outputs.short_sha }}
     secrets: inherit
 
   terraform_apply_production:
@@ -338,7 +341,7 @@ jobs:
       workspace: production02
       terraform_path: environment
       apply: true
-      container_version: ${{ needs.workflow_variables.outputs.parsed_branch }}-${{ needs.workflow_variables.outputs.short_sha }}
+      container_version: ${{ needs.workflow_variables.outputs.build_identifier }}-${{ needs.workflow_variables.outputs.short_sha }}
     secrets: inherit
 
   backup_production:
@@ -375,9 +378,9 @@ jobs:
     steps:
       - name: workflow ended successfully
         run: |
-          echo "${{ needs.workflow_variables.outputs.parsed_branch }} PR environment tested, built and deployed"
-          echo "Tag Used: ${{ needs.workflow_variables.outputs.parsed_branch }}-${{ needs.workflow_variables.outputs.short_sha }}"
-          echo "URL: https://${{ needs.workflow_variables.outputs.parsed_branch }}.complete-deputy-report.service.gov.uk"
+          echo "${{ needs.workflow_variables.outputs.build_identifier }} PR environment tested, built and deployed"
+          echo "Tag Used: ${{ needs.workflow_variables.outputs.build_identifier }}-${{ needs.workflow_variables.outputs.short_sha }}"
+          echo "URL: https://${{ needs.workflow_variables.outputs.build_identifier }}.complete-deputy-report.service.gov.uk"
 
   slack_notify_success:
     name: notify of result
@@ -387,7 +390,7 @@ jobs:
       - end_of_workflow
     with:
       success: true
-      branch: ${{ needs.workflow_variables.outputs.parsed_branch }}
+      branch: ${{ needs.workflow_variables.outputs.build_identifier }}
       account: 515688267891
     secrets: inherit
 
@@ -400,6 +403,6 @@ jobs:
       - end_of_workflow
     with:
       success: false
-      branch: ${{ needs.workflow_variables.outputs.parsed_branch }}
+      branch: ${{ needs.workflow_variables.outputs.build_identifier }}
       account: 515688267891
     secrets: inherit

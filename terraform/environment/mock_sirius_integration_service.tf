@@ -56,8 +56,21 @@ resource "aws_ecs_service" "mock_sirius_integration" {
     assign_public_ip = false
   }
 
-  service_registries {
-    registry_arn = aws_service_discovery_service.mock_sirius_integration.arn
+  #  service_registries {
+  #    registry_arn = aws_service_discovery_service.mock_sirius_integration.arn
+  #  }
+
+  service_connect_configuration {
+    enabled   = true
+    namespace = aws_service_discovery_http_namespace.cloudmap_namespace.arn
+    service {
+      discovery_name = "mock-sirius-integration"
+      port_name      = "mock-sirius-integration-port"
+      client_alias {
+        dns_name = "mock-sirius-integration"
+        port     = 8080
+      }
+    }
   }
 
   capacity_provider_strategy {
@@ -83,6 +96,7 @@ locals {
       name  = "mock-sirius-integration",
       image = "muonsoft/openapi-mock:${local.openapi_mock_version}",
       portMappings = [{
+        name          = "mock-sirius-integration-port",
         containerPort = 8080,
         hostPort      = 8080,
         protocol      = "tcp"

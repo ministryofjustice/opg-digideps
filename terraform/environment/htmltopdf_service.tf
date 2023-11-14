@@ -61,8 +61,21 @@ resource "aws_ecs_service" "htmltopdf" {
     assign_public_ip = false
   }
 
-  service_registries {
-    registry_arn = aws_service_discovery_service.htmltopdf.arn
+  #  service_registries {
+  #    registry_arn = aws_service_discovery_service.htmltopdf.arn
+  #  }
+
+  service_connect_configuration {
+    enabled   = true
+    namespace = aws_service_discovery_http_namespace.cloudmap_namespace.arn
+    service {
+      discovery_name = "htmltopdf"
+      port_name      = "htmltopdf-port"
+      client_alias {
+        dns_name = "htmltopdf"
+        port     = 80
+      }
+    }
   }
 
   capacity_provider_strategy {
@@ -92,6 +105,12 @@ locals {
       image       = local.images.htmltopdf,
       mountPoints = [],
       name        = "htmltopdf",
+      portMappings = [{
+        name          = "htmltopdf-port",
+        containerPort = 80,
+        hostPort      = 80,
+        protocol      = "tcp"
+      }],
       volumesFrom = [],
       healthCheck = {
         command = [
