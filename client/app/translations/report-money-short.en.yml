@@ -125,7 +125,7 @@ summaryPage:
     addButton: Add an payment over £1,000
     hasMoneyOut:
       label: Have you taken money out on %client%'s behalf during this reporting period?
-    reasonForNoMoneyIn:
+    reasonForNoMoneyOut:
       label: Reason for no money out
     listOfExpenses: List of expenses over £1000
     list:
