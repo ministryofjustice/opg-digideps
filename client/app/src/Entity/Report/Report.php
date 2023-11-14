@@ -250,10 +250,10 @@ class Report implements ReportInterface, StartEndDateComparableInterface
 
     /**
      * @JMS\Type("string")
-     * @JMS\Groups({"report", "moneyOutExists"})
-     * @Assert\NotBlank( message="moneyOut.moneyOutChoice.notBlank", groups={"moneyOutExists"})
+     * @JMS\Groups({"report", "doesMoneyOutExist"})
+     * @Assert\NotBlank( message="moneyOut.moneyOutChoice.notBlank", groups={"doesMoneyOutExist"})
      */
-    private $moneyOutExists;
+    private $doesMoneyOutExist;
 
     /**
      * @JMS\Type("string")
@@ -1331,17 +1331,14 @@ class Report implements ReportInterface, StartEndDateComparableInterface
         return $this;
     }
 
-    public function getMoneyOutExists(): ?string
+    public function getDoesMoneyOutExist(): ?string
     {
-        return $this->moneyOutExists;
+        return $this->doesMoneyOutExist;
     }
 
-    /**
-     * @param string $moneyOutExists
-     */
-    public function setMoneyOutExists(?string $moneyOutExists): Report
+    public function setDoesMoneyOutExist(?string $doesMoneyOutExist): Report
     {
-        $this->moneyOutExists = $moneyOutExists;
+        $this->doesMoneyOutExist = $doesMoneyOutExist;
 
         return $this;
     }
@@ -1351,9 +1348,6 @@ class Report implements ReportInterface, StartEndDateComparableInterface
         return $this->reasonForNoMoneyOut;
     }
 
-    /**
-     * @param string $reasonForNoMoneyOut
-     */
     public function setReasonForNoMoneyOut(?string $reasonForNoMoneyOut): Report
     {
         $this->reasonForNoMoneyOut = $reasonForNoMoneyOut;

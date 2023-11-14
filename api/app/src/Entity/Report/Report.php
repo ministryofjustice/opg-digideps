@@ -495,10 +495,10 @@ class Report implements ReportInterface
      * @var string yes | no
      *
      * @JMS\Type("string")
-     * @JMS\Groups({"report", "moneyOutExists"})
+     * @JMS\Groups({"report", "doesMoneyOutExist"})
      * @ORM\Column(name="money_out_exists", type="text", nullable=true)
      */
-    private $moneyOutExists;
+    private $doesMoneyOutExist;
 
     /**
      * @var string captures reason for no money out. Required if no money has gone out
@@ -1523,14 +1523,14 @@ class Report implements ReportInterface
         ];
     }
 
-    public function getMoneyOutExists(): ?string
+    public function getDoesMoneyOutExist(): ?string
     {
-        return $this->moneyOutExists;
+        return $this->doesMoneyOutExist;
     }
 
-    public function setMoneyOutExists(?string $moneyOutExists): self
+    public function setDoesMoneyOutExist(?string $doesMoneyOutExist): self
     {
-        $this->moneyOutExists = $moneyOutExists;
+        $this->doesMoneyOutExist = $doesMoneyOutExist;
 
         return $this;
     }

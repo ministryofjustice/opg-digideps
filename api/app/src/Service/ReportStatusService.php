@@ -49,9 +49,7 @@ class ReportStatusService
 
     /**
      * @JMS\VirtualProperty
-     *
      * @JMS\Type("array")
-     *
      * @JMS\Groups({"status", "decision-status"})
      *
      * @return array
@@ -79,9 +77,7 @@ class ReportStatusService
 
     /**
      * @JMS\VirtualProperty
-     *
      * @JMS\Type("array")
-     *
      * @JMS\Groups({"status", "contact-status"})
      *
      * @return array
@@ -98,9 +94,7 @@ class ReportStatusService
 
     /**
      * @JMS\VirtualProperty
-     *
      * @JMS\Type("array")
-     *
      * @JMS\Groups({"status", "visits-care-state"})
      *
      * @return array
@@ -127,9 +121,7 @@ class ReportStatusService
 
     /**
      * @JMS\VirtualProperty
-     *
      * @JMS\Type("array")
-     *
      * @JMS\Groups({"status", "account-state"})
      *
      * @return array
@@ -150,9 +142,7 @@ class ReportStatusService
 
     /**
      * @JMS\VirtualProperty
-     *
      * @JMS\Type("array")
-     *
      * @JMS\Groups({"status", "money-transfer-state"})
      *
      * @return array
@@ -171,9 +161,7 @@ class ReportStatusService
 
     /**
      * @JMS\VirtualProperty
-     *
      * @JMS\Type("array")
-     *
      * @JMS\Groups({"status", "money-in-state"})
      *
      * @return array
@@ -189,9 +177,7 @@ class ReportStatusService
 
     /**
      * @JMS\VirtualProperty
-     *
      * @JMS\Type("array")
-     *
      * @JMS\Groups({"status", "money-out-state"})
      *
      * @return array
@@ -200,9 +186,9 @@ class ReportStatusService
     {
         if ($this->report->hasMoneyOut()) {
             return ['state' => self::STATE_DONE, 'nOfRecords' => count($this->report->getMoneyTransactionsOut())];
-        } elseif ($this->report->getMoneyOutExists() && $this->report->getReasonForNoMoneyOut()) {
+        } elseif ($this->report->getDoesMoneyOutExist() && $this->report->getReasonForNoMoneyOut()) {
             return ['state' => self::STATE_DONE];
-        } elseif ($this->report->getMoneyOutExists()) {
+        } elseif ($this->report->getDoesMoneyOutExist()) {
             return ['state' => self::STATE_INCOMPLETE];
         }
 
@@ -211,9 +197,7 @@ class ReportStatusService
 
     /**
      * @JMS\VirtualProperty
-     *
      * @JMS\Type("array")
-     *
      * @JMS\Groups({"status", "money-in-short-state"})
      *
      * @return array
@@ -237,9 +221,7 @@ class ReportStatusService
 
     /**
      * @JMS\VirtualProperty
-     *
      * @JMS\Type("array")
-     *
      * @JMS\Groups({"status", "money-out-short-state"})
      *
      * @return array
@@ -263,9 +245,7 @@ class ReportStatusService
 
     /**
      * @JMS\VirtualProperty
-     *
      * @JMS\Type("array")
-     *
      * @JMS\Groups({"status", "balance-state"})
      *
      * see https://opgtransform.atlassian.net/wiki/spaces/DEPDS/pages/152502291
@@ -301,9 +281,7 @@ class ReportStatusService
 
     /**
      * @JMS\VirtualProperty
-     *
      * @JMS\Type("boolean")
-     *
      * @JMS\Groups({"status"})
      *
      * @return bool
@@ -315,9 +293,7 @@ class ReportStatusService
 
     /**
      * @JMS\VirtualProperty
-     *
      * @JMS\Type("array")
-     *
      * @JMS\Groups({"status", "asset-state"})
      *
      * @return array
@@ -340,9 +316,7 @@ class ReportStatusService
 
     /**
      * @JMS\VirtualProperty
-     *
      * @JMS\Type("array")
-     *
      * @JMS\Groups({"status", "debt-state"})
      *
      * @return array
@@ -366,9 +340,7 @@ class ReportStatusService
 
     /**
      * @JMS\VirtualProperty
-     *
      * @JMS\Type("array")
-     *
      * @JMS\Groups({"status", "fee-state"})
      *
      * @return array
@@ -393,9 +365,7 @@ class ReportStatusService
 
     /**
      * @JMS\VirtualProperty
-     *
      * @JMS\Type("array")
-     *
      * @JMS\Groups({"status", "fee-state"})
      *
      * @return array
@@ -419,9 +389,7 @@ class ReportStatusService
 
     /**
      * @JMS\VirtualProperty
-     *
      * @JMS\Type("array")
-     *
      * @JMS\Groups({"status", "prof-deputy-costs-state"})
      *
      * @return array
@@ -466,9 +434,7 @@ class ReportStatusService
 
     /**
      * @JMS\VirtualProperty
-     *
      * @JMS\Type("array")
-     *
      * @JMS\Groups({"status", "prof-deputy-costs-state"})
      *
      * @return array
@@ -494,9 +460,7 @@ class ReportStatusService
 
     /**
      * @JMS\VirtualProperty
-     *
      * @JMS\Type("array")
-     *
      * @JMS\Groups({"status", "action-state"})
      *
      * @return array
@@ -521,9 +485,7 @@ class ReportStatusService
 
     /**
      * @JMS\VirtualProperty
-     *
      * @JMS\Type("array")
-     *
      * @JMS\Groups({"status", "more-info-state"})
      *
      * @return array
@@ -539,9 +501,7 @@ class ReportStatusService
 
     /**
      * @JMS\VirtualProperty
-     *
      * @JMS\Type("array")
-     *
      * @JMS\Groups({"status", "documents-state"})
      *
      * @return array
@@ -563,9 +523,7 @@ class ReportStatusService
 
     /**
      * @JMS\VirtualProperty
-     *
      * @JMS\Type("array")
-     *
      * @JMS\Groups({"status", "expenses-state"})
      *
      * @return array
@@ -586,9 +544,7 @@ class ReportStatusService
 
     /**
      * @JMS\VirtualProperty
-     *
      * @JMS\Type("array")
-     *
      * @JMS\Groups({"status", "gifts-state"})
      *
      * @return array
@@ -711,9 +667,7 @@ class ReportStatusService
 
     /**
      * @JMS\VirtualProperty
-     *
      * @JMS\Type("array")
-     *
      * @JMS\Groups({"status", "lifestyle-state"})
      *
      * @return array
@@ -738,9 +692,7 @@ class ReportStatusService
 
     /**
      * @JMS\VirtualProperty
-     *
      * @JMS\Type("array")
-     *
      * @JMS\Groups({"status", "client-benefits-check-state"})
      */
     public function getClientBenefitsCheckState(): array
@@ -811,9 +763,7 @@ class ReportStatusService
      * e.g. "filled"
      *
      * @JMS\VirtualProperty
-     *
      * @JMS\Type("string")
-     *
      * @JMS\Groups({"status", "report-status"})
      *
      * @return string notStarted|readyToSubmit|notFinished
