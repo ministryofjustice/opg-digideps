@@ -1660,9 +1660,6 @@ class Report implements ReportInterface
         return $this->reasonForNoMoneyOut;
     }
 
-    /**
-     * @param mixed $reasonForNoMoneyOut
-     */
     public function setReasonForNoMoneyOut(?string $reasonForNoMoneyOut): self
     {
         $this->reasonForNoMoneyOut = $reasonForNoMoneyOut;
