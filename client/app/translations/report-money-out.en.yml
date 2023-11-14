@@ -7,13 +7,12 @@ deletePage:
     amount: Amount
     bankAccount: Bank account
     date: Date
-
 existPage:
   htmlTitle: "Money out - Complete the deputy report | GOV.UK"
   supportTitle: Money out
   form:
     exist:
-      label: Have you withdrawn money on %client%'s behalf during this reporting period?
+      label: Have you taken money out on %client%'s behalf during this reporting period?
     save:
       label: Save and continue
 
