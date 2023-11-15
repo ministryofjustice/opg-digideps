@@ -22,8 +22,9 @@ class RedisStorageTest extends TestCase
     {
         $this->redis = m::mock(Client::class);
         $this->prefix = 'prefix';
+        $this->workspace = 'testing';
 
-        $this->object = new RedisStorage($this->redis, $this->prefix);
+        $this->object = new RedisStorage($this->redis, $this->prefix, $this->workspace);
     }
 
     public function testGet()
@@ -31,7 +32,7 @@ class RedisStorageTest extends TestCase
         $value = 'v';
         $id = 1;
 
-        $this->redis->shouldReceive('get')->with($this->prefix . $id)->andReturn($value);
+        $this->redis->shouldReceive('get')->with($this->workspace.'_'.$this->prefix.$id)->andReturn($value);
 
         $this->assertEquals($value, $this->object->get($id));
     }
@@ -42,7 +43,7 @@ class RedisStorageTest extends TestCase
         $returnValue = 'rv';
         $id = 1;
 
-        $this->redis->shouldReceive('set')->with($this->prefix . $id, $value)->andReturn($returnValue);
+        $this->redis->shouldReceive('set')->with($this->workspace.'_'.$this->prefix.$id, $value)->andReturn($returnValue);
 
         $this->assertEquals($returnValue, $this->object->set($id, $value));
     }

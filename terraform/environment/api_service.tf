@@ -215,6 +215,10 @@ locals {
           name  = "SECRETS_PREFIX",
           value = join("", [local.secrets_prefix, "/"])
         },
+        {
+          name  = "WORKSPACE",
+          value = local.environment
+        },
       ]
     }
   )

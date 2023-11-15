@@ -21,16 +21,22 @@ class AttemptsInTimeChecker
      */
     private $redisPrefix;
 
-    public function __construct(PredisClient $redis, $prefix = null)
+    /**
+     * @var string
+     */
+    private $workspace;
+
+    public function __construct(PredisClient $redis, $workspace, $prefix = null)
     {
         $this->redis = $redis;
         $this->redisPrefix = $prefix;
         $this->triggers = [];
+        $this->workspace = $workspace;
     }
 
     public function setRedisPrefix($redisPrefix)
     {
-        $this->redisPrefix = $redisPrefix;
+        $this->redisPrefix = $this->workspace.'_'.$redisPrefix;
 
         return $this;
     }

@@ -6,4 +6,4 @@ snc_redis:
       dsn: "%redis_dsn%"
   session:
     client: default
-    prefix: "%session_prefix%"
+    prefix: "%workspace%_%session_prefix%"

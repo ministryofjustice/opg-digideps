@@ -39,3 +39,5 @@ parameters:
         version: 'latest'
         region: 'eu-west-1'
         validate: true
+
+    workspace: local
