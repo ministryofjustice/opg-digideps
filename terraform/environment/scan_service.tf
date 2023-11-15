@@ -69,11 +69,11 @@ resource "aws_ecs_service" "scan" {
     enabled   = true
     namespace = aws_service_discovery_http_namespace.cloudmap_namespace.arn
     service {
-      discovery_name = "api"
-      port_name      = "api-port"
+      discovery_name = "scan"
+      port_name      = "scan-port"
       client_alias {
-        dns_name = "api"
-        port     = 80
+        dns_name = "scan"
+        port     = 8080
       }
     }
   }
