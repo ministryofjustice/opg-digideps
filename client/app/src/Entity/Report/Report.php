@@ -253,7 +253,7 @@ class Report implements ReportInterface, StartEndDateComparableInterface
      * @JMS\Groups({"report", "doesMoneyOutExist"})
      * @Assert\NotBlank( message="moneyOut.moneyOutChoice.notBlank", groups={"doesMoneyOutExist"})
      */
-    private $doesMoneyOutExist;
+    private $moneyOutExists;
 
     /**
      * @JMS\Type("string")
@@ -1333,12 +1333,12 @@ class Report implements ReportInterface, StartEndDateComparableInterface
 
     public function getDoesMoneyOutExist(): ?string
     {
-        return $this->doesMoneyOutExist;
+        return $this->moneyOutExists;
     }
 
-    public function setDoesMoneyOutExist(?string $doesMoneyOutExist): Report
+    public function setDoesMoneyOutExist(?string $moneyOutExists): Report
     {
-        $this->doesMoneyOutExist = $doesMoneyOutExist;
+        $this->moneyOutExists = $moneyOutExists;
 
         return $this;
     }
