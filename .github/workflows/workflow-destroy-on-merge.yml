@@ -1,14 +1,9 @@
-name: "[Scheduled] Cleanup PR Workspaces"
-
-on:
-  schedule:
-    # 10pm every day except Sundays
-    - cron: "0 22 * * 0-6"
+name: "[Workflow] Destroy ephemeral environment"
 
 permissions:
   contents: read
   security-events: none
-  pull-requests: none
+  pull-requests: write
   actions: none
   checks: none
   deployments: none
@@ -17,11 +12,41 @@ permissions:
   repository-projects: none
   statuses: none
 
+defaults:
+  run:
+    shell: bash
+
+on:
+  pull_request:
+    branches:
+      - main
+    types:
+      - closed
+
 jobs:
-  terraform_environment_cleanup:
+  workspace_name:
     runs-on: ubuntu-latest
+    name: output workflow variables
+    outputs:
+      build_identifier: ${{ steps.variables.outputs.build_identifier }}
     steps:
       - uses: actions/checkout@7cdaf2fbc075e6f3b9ca94cfd6cec5adc8a75622 # pin@v3
+      - name: extract variables for workflow
+        id: variables
+        env:
+          PR_NUMBER: ${{ github.event.pull_request.number }}
+        run: |
+          export BRANCH=$(echo ${GITHUB_HEAD_REF:-${GITHUB_REF##*/}} | awk -F'_' '{print $1}' | tr -cd '[:alnum:]' | tr '[:upper:]' '[:lower:]' | cut -c1-8)
+          echo "build_identifier=$(echo ${BRANCH}${PR_NUMBER})" >> $GITHUB_OUTPUT
+
+  cleanup_workspace:
+    if: github.event.pull_request.merged == true
+    runs-on: ubuntu-latest
+    needs:
+      - workspace_name
+    steps:
+      - name: Checkout
+        uses: actions/checkout@c85c95e3d7251135ab7dc9ce3241c5835cc595a9 # v3.5.3
 
       - name: parse terraform version
         id: tf_version_setup
@@ -36,7 +61,7 @@ jobs:
       - name: "Terraform version [${{ steps.tf_version_setup.outputs.TERRAFORM_VERSION }}]"
         run: echo "terraform version [${{ steps.tf_version_setup.outputs.TERRAFORM_VERSION }}]"
 
-      - uses: hashicorp/setup-terraform@1b93182764c8332e7679b2393cb307cbe7baf9dc # pin@v2
+      - uses: hashicorp/setup-terraform@ee8c4d7d5b925ac3369bba1fefe3a0f4d3dd4624 # pin@v2
         with:
           terraform_version: ${{ steps.tf_version_setup.outputs.TERRAFORM_VERSION }}
           terraform_wrapper: false
@@ -52,20 +77,13 @@ jobs:
           aws-secret-access-key: ${{ secrets.AWS_SECRET_ACCESS_KEY_ACTIONS }}
           aws-region: eu-west-1
           role-duration-seconds: 3600
-          role-session-name: OPGDigidepsCleanupGithubAction
+          role-session-name: OPGDigidepsDestroyEnvironment
 
-      - name: install workspace manager
+      - name: clean up environment
+        working-directory: ./terraform/environment
+        env:
+          WORKSPACE: ${{ needs.workspace_name.outputs.build_identifier }}
+          TF_VAR_OPG_DOCKER_TAG: foo
         run: |
-          wget https://github.com/TomTucka/terraform-workspace-manager/releases/download/v0.3.0/terraform-workspace-manager_Linux_x86_64.tar.gz -O $HOME/terraform-workspace-manager.tar.gz
-          sudo tar -xvf $HOME/terraform-workspace-manager.tar.gz -C /usr/local/bin
-          sudo chmod +x /usr/local/bin/terraform-workspace-manager
-
-      - name: terraform init
-        run: terraform init -input=false
-        working-directory: terraform/environment
-
-      - name: clean up ephemeral environments
-        run: |
-          unset TF_WORKSPACE
-          ./scripts/workspace_cleanup.sh $(terraform-workspace-manager -protected-workspaces=true -aws-account-id=248804316466 -aws-iam-role=digideps-ci)
-        working-directory: terraform/environment
+          echo "Running script against ${WORKSPACE}"
+          ./scripts/destroy_workspace.sh ${WORKSPACE}

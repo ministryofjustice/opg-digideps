@@ -62,7 +62,7 @@
         "symfony/security-core": "^5.4.0",
         "symfony/security-csrf": "^5.4.0",
         "symfony/security-guard": "^5.4.0",
-        "symfony/security-http": "^5.4.0",
+        "symfony/security-http": "5.4.31",
         "symfony/serializer": "^5.4.0",
         "symfony/string": "^5.4.0",
         "symfony/twig-bundle": "^5.4.0",
