@@ -13,13 +13,13 @@ locals {
       target_type = "security_group_id"
       target      = module.api_cache_security_group.id
     }
-    cache_api = {
-      port        = 6379
-      type        = "egress"
-      protocol    = "tcp"
-      target_type = "security_group_id"
-      target      = data.aws_security_group.api_cache_sg.id
-    }
+    #    cache_api = {
+    #      port        = 6379
+    #      type        = "egress"
+    #      protocol    = "tcp"
+    #      target_type = "security_group_id"
+    #      target      = data.aws_security_group.api_cache_sg.id
+    #    }
     rds = {
       port        = 5432
       type        = "egress"
