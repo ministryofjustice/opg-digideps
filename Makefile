@@ -127,7 +127,7 @@ redis-clear: ##@database Clears out all the data from redis (session related tok
 
 cache-clear: ##@application Clear the cache of the application
 	docker-compose exec api-app sh -c "rm -rf var/cache/*" && \
-	docker-compose -f docker-compose.yml -f docker-compose.dev.yml exec api sh -c "rm -rf var/cache/*" && \
+	docker-compose -f docker-compose.yml -f docker-compose.dev.yml exec api-app sh -c "rm -rf var/cache/*" && \
 	docker-compose exec frontend-app sh -c "rm -rf var/cache/*" && \
 	docker-compose -f docker-compose.yml -f docker-compose.dev.yml exec frontend-app sh -c "rm -rf var/cache/*" && \
 	docker-compose exec admin-app sh -c "rm -rf var/cache/*" && \
