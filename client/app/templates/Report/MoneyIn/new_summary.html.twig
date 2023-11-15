@@ -1,0 +1,66 @@
+{% extends '@App/Layouts/application.html.twig' %}
+
+{% import '@App/Macros/macros.html.twig' as macros %}
+
+{% set translationDomain = "report-money-transaction" %}
+{% trans_default_domain translationDomain %}
+{% set transOptions = {
+    '%client%': report.client.firstname | e,
+    '%startDate%': report.startDate | date("j F Y"),
+    '%endDate%': report.endDate | date("j F Y"),
+    '%moneyTransfersPath%': path('money_transfers', {reportId: report.id})
+} %}
+
+{% set hideEditLink = hideEditLink | default(false) %}
+
+{# Page Titles #}
+{% block htmlTitle %}{{ 'summaryPage.moneyIn.htmlTitle' | trans(transOptions) }}{% endblock %}
+{% block pageTitle %}{{ 'summaryPage.moneyIn.pageTitle' | trans(transOptions) }}{% endblock %}
+
+
+{# Breadcrumbs #}
+{% block breadcrumbs %}{{ macros.breadcrumbs(report) }}{% endblock %}
+
+{% block pageContent %}
+
+    <div class="govuk-grid-row">
+        <div class="govuk-grid-column-two-thirds">
+            {# Introduction text #}
+            <p class="govuk-body">{{ 'startPage.moneyIn.pageSectionDescription1' | trans(transOptions) }}</p>
+
+            {# More details (from the start page) #}
+            <details class="govuk-details" data-module="govuk-details">
+                <summary class="govuk-details__summary">
+                    <span class="govuk-details__summary-text">{{ 'summaryPage.moneyIn.moreDetails' |trans }}</span>
+                </summary>
+                <div class="govuk-details__text">
+                    <p class="govuk-body">
+                        {{ 'startPage.moneyIn.pageSectionDescription2.beforeMarkupText' | trans(transOptions) }}
+                        <a href="{{ path('money_transfers', {reportId: report.id}) }}">money transfers</a>
+                        {{ 'startPage.moneyIn.pageSectionDescription2.afterMarkupText' | trans(transOptions) }}
+                    </p>
+                    <p class="govuk-body">{{ 'startPage.moneyIn.pageSectionDescription3' | trans }}</p>
+                    <p class="govuk-body"><strong>{{ 'startPage.moneyIn.totalOrIndividualHeading' | trans }}</strong></p>
+                    <p class="govuk-body">{{ 'startPage.moneyIn.totalOrIndividualPara' | trans }}</p>
+                </div>
+            </details>
+
+            {# Check answers text #}
+            <p class="govuk-body"><strong>{{ 'weHaveListed' | trans(transOptions, 'common') }}</strong></p>
+            <p class="govuk-body">{{ 'checkCorrect' | trans(transOptions, 'common') }}</p>
+        </div>
+        <div class="govuk-grid-column-one-third">
+            {{ macros.relatedSections(report, 'moneyIn') }}
+        </div>
+    </div>
+
+    {# Items list #}
+    {% include "@App/Report/MoneyIn/_list_new.html.twig" %}
+
+    {# Pagination #}
+    {% include '@App/Report/_nextprevious.html.twig' with {
+        'report': report,
+        'sectionId': 'moneyIn',
+    } %}
+
+{% endblock %}
