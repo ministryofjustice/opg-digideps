@@ -64,8 +64,8 @@ down-app: ##@application Tears down the app
 	docker-compose down -v --remove-orphans
 
 integration-tests: up-app reset-database reset-fixtures ##@integration-tests Brings the app up using test env vars (see test.env)
-	REQUIRE_XDEBUG_CLIENT=0 REQUIRE_XDEBUG_API=0 docker-compose -f docker-compose.yml -f docker-compose.dev.yml -f docker-compose.override.yml build frontend-app frontend-webserver admin-app admin-webserver api integration-tests
-	REQUIRE_XDEBUG_CLIENT=0 REQUIRE_XDEBUG_API=0 docker-compose -f docker-compose.yml -f docker-compose.dev.yml -f docker-compose.override.yml up -d frontend-app frontend-webserver admin-app admin-webserver api
+	REQUIRE_XDEBUG_CLIENT=0 REQUIRE_XDEBUG_API=0 docker-compose -f docker-compose.yml -f docker-compose.dev.yml -f docker-compose.override.yml build frontend-app frontend-webserver admin-app admin-webserver api-app integration-tests
+	REQUIRE_XDEBUG_CLIENT=0 REQUIRE_XDEBUG_API=0 docker-compose -f docker-compose.yml -f docker-compose.dev.yml -f docker-compose.override.yml up -d frontend-app frontend-webserver admin-app admin-webserver api-app
 	APP_DEBUG=0 docker-compose -f docker-compose.yml -f docker-compose.dev.yml -f docker-compose.override.yml run --remove-orphans integration-tests sh ./tests/Behat/run-tests.sh --tags @v2
 
 integration-tests-rerun: reset-fixtures ##@integration-tests Rerun integration tests (requires you to have run integration-tests previously)
