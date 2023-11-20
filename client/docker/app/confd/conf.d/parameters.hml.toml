@@ -2,6 +2,7 @@
 src = "parameters.yml.tmpl"
 dest = "/var/www/config/parameters.yml"
 keys = [
+    "/workspace",
     "/opg/docker/tag",
     "/session",
     "/ga",

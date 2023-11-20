@@ -25,17 +25,23 @@ class AttemptsIncrementalWaitingChecker
 
     private array $secondsBeforeNextAttempt;
 
-    public function __construct(PredisClient $redis, $prefix = null)
+    /**
+     * @var string
+     */
+    private $workspace;
+
+    public function __construct(PredisClient $redis, $workspace, $prefix = null)
     {
         $this->redis = $redis;
         $this->redisPrefix = $prefix;
         $this->freezeRules = [];
         $this->secondsBeforeNextAttempt = [];
+        $this->workspace = $workspace;
     }
 
     public function setRedisPrefix($redisPrefix)
     {
-        $this->redisPrefix = $redisPrefix;
+        $this->redisPrefix = $this->workspace.'_'.$redisPrefix;
 
         return $this;
     }

@@ -24,7 +24,7 @@ HELP_FUN = \
 help: ##@other Show this help.
 	@perl -e '$(HELP_FUN)' $(MAKEFILE_LIST)
 
-APP_CONTAINERS := frontend-app api admin-app
+APP_CONTAINERS := frontend-app api-app admin-app
 REDIS_CONTAINERS := redis-frontend redis-api
 
 .ONESHELL:
@@ -32,9 +32,8 @@ REDIS_CONTAINERS := redis-frontend redis-api
 
 create-app: build-app up-app reset-database reset-fixtures ##@application Brings up app with DB reset and a full no-cache build
 
-build-app: down-app ##@application Brings up app with a full no-cache build
+build-app: down-app build-js ##@application Brings up app with a full no-cache build
 	docker container prune --force
-	docker-compose build --no-cache resources
 	docker-compose build --no-cache
 
 up-app: ##@application Brings the app up and mounts local folders
@@ -64,11 +63,11 @@ down-app: ##@application Tears down the app
 	docker-compose down -v --remove-orphans
 
 integration-tests: up-app reset-database reset-fixtures ##@integration-tests Brings the app up using test env vars (see test.env)
-	REQUIRE_XDEBUG_CLIENT=0 REQUIRE_XDEBUG_API=0 docker-compose -f docker-compose.yml -f docker-compose.dev.yml -f docker-compose.override.yml build frontend-app frontend-webserver admin-app admin-webserver api integration-tests
-	REQUIRE_XDEBUG_CLIENT=0 REQUIRE_XDEBUG_API=0 docker-compose -f docker-compose.yml -f docker-compose.dev.yml -f docker-compose.override.yml up -d frontend-app frontend-webserver admin-app admin-webserver api
+	REQUIRE_XDEBUG_CLIENT=0 REQUIRE_XDEBUG_API=0 docker-compose -f docker-compose.yml -f docker-compose.dev.yml -f docker-compose.override.yml build frontend-app frontend-webserver admin-app admin-webserver api-app integration-tests
+	REQUIRE_XDEBUG_CLIENT=0 REQUIRE_XDEBUG_API=0 docker-compose -f docker-compose.yml -f docker-compose.dev.yml -f docker-compose.override.yml up -d load-balancer
 	APP_DEBUG=0 docker-compose -f docker-compose.yml -f docker-compose.dev.yml -f docker-compose.override.yml run --remove-orphans integration-tests sh ./tests/Behat/run-tests.sh --tags @v2
 
-integration-tests-rerun: reset-fixtures ##@integration-tests Rerun integration tests (requires you to have run integration-tests previously)
+integration-tests-rerun: reset-fixtures ##@integration-tests Rerun integration tests (requires you to have run integration-tests previously), argument in format: tag=your_tag
 	APP_DEBUG=0 docker-compose -f docker-compose.yml -f docker-compose.dev.yml -f docker-compose.override.yml run --remove-orphans integration-tests sh ./tests/Behat/run-tests.sh --tags @v2
 
 integration-tests-tag: reset-fixtures ##@integration-tests Rerun integration tests with a tag (requires you to have run integration-tests previously)
@@ -127,7 +126,7 @@ redis-clear: ##@database Clears out all the data from redis (session related tok
 
 cache-clear: ##@application Clear the cache of the application
 	docker-compose exec api-app sh -c "rm -rf var/cache/*" && \
-	docker-compose -f docker-compose.yml -f docker-compose.dev.yml exec api sh -c "rm -rf var/cache/*" && \
+	docker-compose -f docker-compose.yml -f docker-compose.dev.yml exec api-app sh -c "rm -rf var/cache/*" && \
 	docker-compose exec frontend-app sh -c "rm -rf var/cache/*" && \
 	docker-compose -f docker-compose.yml -f docker-compose.dev.yml exec frontend-app sh -c "rm -rf var/cache/*" && \
 	docker-compose exec admin-app sh -c "rm -rf var/cache/*" && \

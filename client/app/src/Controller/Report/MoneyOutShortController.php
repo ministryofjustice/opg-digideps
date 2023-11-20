@@ -38,9 +38,8 @@ class MoneyOutShortController extends AbstractController
 
     /**
      * @Route("/report/{reportId}/money-out-short", name="money_out_short")
-     * @Template("@App/Report/MoneyOutShort/start.html.twig")
      *
-     * @param $reportId
+     * @Template("@App/Report/MoneyOutShort/start.html.twig")
      *
      * @return array|RedirectResponse
      */
@@ -59,6 +58,7 @@ class MoneyOutShortController extends AbstractController
 
     /**
      * @Route("/report/{reportId}/money-out-short/category", name="money_out_short_category")
+     *
      * @Template("@App/Report/MoneyOutShort/category.html.twig")
      *
      * @
@@ -100,9 +100,8 @@ class MoneyOutShortController extends AbstractController
 
     /**
      * @Route("/report/{reportId}/money-out-short/exist", name="money_out_short_exist")
-     * @Template("@App/Report/MoneyOutShort/exist.html.twig")
      *
-     * @param $reportId
+     * @Template("@App/Report/MoneyOutShort/exist.html.twig")
      *
      * @return array|RedirectResponse
      */
@@ -130,7 +129,7 @@ class MoneyOutShortController extends AbstractController
         }
 
         return [
-            'backLink' => $this->generateUrl($fromSummaryPage ? 'money_out_short_summary' : 'money_out_short_category', ['reportId' => $reportId]), //FIX when from summary
+            'backLink' => $this->generateUrl($fromSummaryPage ? 'money_out_short_summary' : 'money_out_short_category', ['reportId' => $reportId]), // FIX when from summary
             'form' => $form->createView(),
             'report' => $report,
         ];
@@ -138,9 +137,8 @@ class MoneyOutShortController extends AbstractController
 
     /**
      * @Route("/report/{reportId}/money-out-short/add", name="money_out_short_add")
-     * @Template("@App/Report/MoneyOutShort/add.html.twig")
      *
-     * @param $reportId
+     * @Template("@App/Report/MoneyOutShort/add.html.twig")
      *
      * @return array|RedirectResponse
      */
@@ -180,9 +178,8 @@ class MoneyOutShortController extends AbstractController
 
     /**
      * @Route("/report/{reportId}/money-out-short/add_another", name="money_out_short_add_another")
-     * @Template("@App/Report/MoneyOutShort/addAnother.html.twig")
      *
-     * @param $reportId
+     * @Template("@App/Report/MoneyOutShort/addAnother.html.twig")
      *
      * @return array|RedirectResponse
      */
@@ -210,10 +207,8 @@ class MoneyOutShortController extends AbstractController
 
     /**
      * @Route("/report/{reportId}/money-out-short/edit/{transactionId}", name="money_out_short_edit")
-     * @Template("@App/Report/MoneyOutShort/edit.html.twig")
      *
-     * @param $reportId
-     * @param $transactionId
+     * @Template("@App/Report/MoneyOutShort/edit.html.twig")
      *
      * @return array|RedirectResponse
      */
@@ -243,10 +238,8 @@ class MoneyOutShortController extends AbstractController
 
     /**
      * @Route("/report/{reportId}/money-out-short/{transactionId}/delete", name="money_out_short_delete")
-     * @Template("@App/Common/confirmDelete.html.twig")
      *
-     * @param $reportId
-     * @param $transactionId
+     * @Template("@App/Common/confirmDelete.html.twig")
      *
      * @return array|RedirectResponse
      */
@@ -287,13 +280,34 @@ class MoneyOutShortController extends AbstractController
 
     /**
      * @Route("/report/{reportId}/money-out-short/summary", name="money_out_short_summary")
-     * @Template("@App/Report/MoneyOutShort/summary.html.twig")
      *
-     * @param $reportId
+     * @Template("@App/Report/MoneyOutShort/summary.html.twig")
      *
      * @return array|RedirectResponse
      */
     public function summaryAction(Request $request, $reportId)
+    {
+        $fromPage = $request->get('from');
+        $report = $this->reportApi->getReportIfNotSubmitted($reportId, self::$jmsGroups);
+        if (EntityDir\Report\Status::STATE_NOT_STARTED == $report->getStatus()->getMoneyOutShortState()['state'] && 'skip-step' != $fromPage) {
+            return $this->redirectToRoute('money_out_short', ['reportId' => $reportId]);
+        }
+
+        return [
+            'comingFromLastStep' => 'skip-step' == $fromPage || 'last-step' == $fromPage,
+            'report' => $report,
+            'status' => $report->getStatus(),
+        ];
+    }
+
+    /**
+     * @Route("/report/{reportId}/money-out-short/new_summary", name="money_out_short_new_summary")
+     *
+     * @Template("@App/Report/MoneyOutShort/new_summary.html.twig")
+     *
+     * @return array|RedirectResponse
+     */
+    public function newSummaryAction(Request $request, $reportId)
     {
         $fromPage = $request->get('from');
         $report = $this->reportApi->getReportIfNotSubmitted($reportId, self::$jmsGroups);

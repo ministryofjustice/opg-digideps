@@ -24,8 +24,9 @@ class RedisUserProvider implements UserProviderInterface, PasswordUpgraderInterf
         private Client $redis,
         private LoggerInterface $logger,
         private array $options,
-        private UserRepository $userRepository)
-    {
+        private UserRepository $userRepository,
+        private string $workspace
+    ) {
         $this->timeoutSeconds = $options['timeout_seconds'];
     }
 
@@ -34,7 +35,7 @@ class RedisUserProvider implements UserProviderInterface, PasswordUpgraderInterf
      */
     public function generateRandomTokenAndStore(User $user)
     {
-        $token = $user->getId().'_'.sha1(microtime().spl_object_hash($user).rand(1, 999));
+        $token = $this->workspace.'_'.$user->getId().'_'.sha1(microtime().spl_object_hash($user).rand(1, 999));
 
         $this->redis->set($token, $user->getId());
         $this->redis->expire($token, $this->timeoutSeconds);

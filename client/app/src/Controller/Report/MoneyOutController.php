@@ -47,9 +47,8 @@ class MoneyOutController extends AbstractController
 
     /**
      * @Route("/report/{reportId}/money-out", name="money_out")
-     * @Template("@App/Report/MoneyOut/start.html.twig")
      *
-     * @param $reportId
+     * @Template("@App/Report/MoneyOut/start.html.twig")
      *
      * @return array|RedirectResponse
      */
@@ -67,10 +66,9 @@ class MoneyOutController extends AbstractController
 
     /**
      * @Route("/report/{reportId}/money-out/step{step}/{transactionId}", name="money_out_step", requirements={"step":"\d+"})
+     *
      * @Template("@App/Report/MoneyOut/step.html.twig")
      *
-     * @param $reportId
-     * @param $step
      * @param null $transactionId
      *
      * @return array|RedirectResponse
@@ -178,9 +176,8 @@ class MoneyOutController extends AbstractController
 
     /**
      * @Route("/report/{reportId}/money-out/add_another", name="money_out_add_another")
-     * @Template("@App/Report/MoneyOut/addAnother.html.twig")
      *
-     * @param $reportId
+     * @Template("@App/Report/MoneyOut/addAnother.html.twig")
      *
      * @return array|RedirectResponse
      */
@@ -208,9 +205,8 @@ class MoneyOutController extends AbstractController
 
     /**
      * @Route("/report/{reportId}/money-out/summary", name="money_out_summary")
-     * @Template("@App/Report/MoneyOut/summary.html.twig")
      *
-     * @param $reportId
+     * @Template("@App/Report/MoneyOut/summary.html.twig")
      *
      * @return array|RedirectResponse
      */
@@ -227,11 +223,28 @@ class MoneyOutController extends AbstractController
     }
 
     /**
-     * @Route("/report/{reportId}/money-out/{transactionId}/delete", name="money_out_delete")
-     * @Template("@App/Common/confirmDelete.html.twig")
+     * @Route("/report/{reportId}/money-out/new_summary", name="money_out_new_summary")
      *
-     * @param $reportId
-     * @param $transactionId
+     * @Template("@App/Report/MoneyOut/new_summary.html.twig")
+     *
+     * @return array|RedirectResponse
+     */
+    public function newSummaryAction($reportId)
+    {
+        $report = $this->reportApi->getReportIfNotSubmitted($reportId, self::$jmsGroups);
+        if (Status::STATE_NOT_STARTED == $report->getStatus()->getMoneyOutState()['state']) {
+            return $this->redirectToRoute('money_out', ['reportId' => $reportId]);
+        }
+
+        return [
+            'report' => $report,
+        ];
+    }
+
+    /**
+     * @Route("/report/{reportId}/money-out/{transactionId}/delete", name="money_out_delete")
+     *
+     * @Template("@App/Common/confirmDelete.html.twig")
      *
      * @return array|RedirectResponse
      */

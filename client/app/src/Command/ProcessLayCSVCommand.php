@@ -18,9 +18,9 @@ use Symfony\Component\Console\Input\InputArgument;
 use Symfony\Component\Console\Input\InputInterface;
 use Symfony\Component\Console\Output\OutputInterface;
 use Symfony\Component\DependencyInjection\ParameterBag\ParameterBagInterface;
-use Throwable;
 
-class ProcessLayCSVCommand extends Command {
+class ProcessLayCSVCommand extends Command
+{
     protected static $defaultName = 'digideps:process-lay-csv';
 
     private const CHUNK_SIZE = 50;
@@ -38,11 +38,13 @@ class ProcessLayCSVCommand extends Command {
         private Mailer $mailer,
         private LoggerInterface $logger,
         private ClientInterface $redis,
+        private string $workspace
     ) {
         parent::__construct();
     }
 
-    protected function configure(): void {
+    protected function configure(): void
+    {
         $this
             ->setDescription('Process the Lay Deputies CSV from the S3 bucket')
             ->addArgument('email', InputArgument::REQUIRED, 'Email address to send results to');
@@ -57,7 +59,7 @@ class ProcessLayCSVCommand extends Command {
             $this->s3->getObject([
                 'Bucket' => $bucket,
                 'Key' => $layReportFile,
-                'SaveAs' => "/tmp/layReport.csv"
+                'SaveAs' => '/tmp/layReport.csv',
             ]);
         } catch (S3Exception $e) {
             if (in_array($e->getAwsErrorCode(), S3Storage::MISSING_FILE_AWS_ERROR_CODES)) {
@@ -67,17 +69,18 @@ class ProcessLayCSVCommand extends Command {
             }
         }
 
-        $data = $this->csvToArray("/tmp/layReport.csv");
+        $data = $this->csvToArray('/tmp/layReport.csv');
         $this->process($data, $input->getArgument('email'));
 
-        if (!unlink("/tmp/layReport.csv")) {
+        if (!unlink('/tmp/layReport.csv')) {
             $this->logger->log('error', 'Unable to delete file /tmp/layReport.csv.');
         }
 
         return 0;
     }
 
-    private function csvToArray(string $fileName) {
+    private function csvToArray(string $fileName)
+    {
         try {
             return (new CsvToArray($fileName, false, false))
                 ->setOptionalColumns([
@@ -100,17 +103,18 @@ class ProcessLayCSVCommand extends Command {
                 ])
                 ->setUnexpectedColumns(['LastReportDay', 'DeputyOrganisation'])
                 ->getData();
-        } catch (Throwable $e) {
+        } catch (\Throwable $e) {
             $this->logger->log('error', sprintf('Error processing CSV file: %s', $e->getMessage()));
         }
     }
 
-    private function process(mixed $data, string $email) {
+    private function process(mixed $data, string $email)
+    {
         $this->restClient->delete('/pre-registration/delete');
 
         $chunks = array_chunk($data, self::CHUNK_SIZE);
 
-        $this->redis->set('lay-csv-processing', 'processing');
+        $this->redis->set($this->workspace.'-lay-csv-processing', 'processing');
 
         foreach ($chunks as $index => $chunk) {
             $compressedChunk = CsvUploader::compressData($chunk);
@@ -121,13 +125,14 @@ class ProcessLayCSVCommand extends Command {
             $this->storeOutput($upload);
         }
 
-        $this->redis->set('lay-csv-processing', 'completed');
-        $this->redis->set('lay-csv-completed-date', date('Y-m-d H:i:s'));
+        $this->redis->set($this->workspace.'-lay-csv-processing', 'completed');
+        $this->redis->set($this->workspace.'-lay-csv-completed-date', date('Y-m-d H:i:s'));
 
         $this->mailer->sendProcessLayCSVEmail($email, $this->output);
     }
 
-    private function storeOutput(array $output) {
+    private function storeOutput(array $output)
+    {
         if (!empty($output['errors'])) {
             $this->output['errors'] = array_merge($this->output['errors'], $output['errors']);
         }

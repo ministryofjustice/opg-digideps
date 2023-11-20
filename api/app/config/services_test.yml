@@ -6,6 +6,7 @@ services:
         bind:
             $fixtureParams: "%fixtures%"
             $symfonyEnvironment: "%kernel.environment%"
+            $workspace: "%workspace%"
 
     App\Service\BruteForce\AttemptsInTimeChecker:
         public: true
