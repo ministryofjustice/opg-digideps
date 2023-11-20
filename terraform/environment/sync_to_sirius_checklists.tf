@@ -154,7 +154,7 @@ locals {
         },
         {
           name  = "SESSION_PREFIX",
-          value = "dd_session_check"
+          value = "dd_check"
         },
         {
           name  = "EMAIL_SEND_INTERNAL",
@@ -179,6 +179,10 @@ locals {
         {
           name  = "HTMLTOPDF_ADDRESS",
           value = "http://${local.htmltopdf_service_fqdn}"
+        },
+        {
+          name  = "WORKSPACE",
+          value = local.environment
         }
       ]
     }

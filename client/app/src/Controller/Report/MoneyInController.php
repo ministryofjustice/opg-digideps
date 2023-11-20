@@ -49,8 +49,6 @@ class MoneyInController extends AbstractController
      * @Route("/report/{reportId}/money-in", name="money_in")
      * @Template("@App/Report/MoneyIn/start.html.twig")
      *
-     * @param $reportId
-     *
      * @return array|RedirectResponse
      */
     public function startAction($reportId)
@@ -69,8 +67,6 @@ class MoneyInController extends AbstractController
      * @Route("/report/{reportId}/money-in/step{step}/{transactionId}", name="money_in_step", requirements={"step":"\d+"})
      * @Template("@App/Report/MoneyIn/step.html.twig")
      *
-     * @param $reportId
-     * @param $step
      * @param null $transactionId
      *
      * @return array|RedirectResponse
@@ -180,8 +176,6 @@ class MoneyInController extends AbstractController
      * @Route("/report/{reportId}/money-in/add_another", name="money_in_add_another")
      * @Template("@App/Report/MoneyIn/addAnother.html.twig")
      *
-     * @param $reportId
-     *
      * @return array|RedirectResponse
      */
     public function addAnotherAction(Request $request, $reportId)
@@ -210,8 +204,6 @@ class MoneyInController extends AbstractController
      * @Route("/report/{reportId}/money-in/summary", name="money_in_summary")
      * @Template("@App/Report/MoneyIn/summary.html.twig")
      *
-     * @param $reportId
-     *
      * @return array|RedirectResponse
      */
     public function summaryAction($reportId)
@@ -227,11 +219,26 @@ class MoneyInController extends AbstractController
     }
 
     /**
+     * @Route("/report/{reportId}/money-in/new_summary", name="money_in_new_summary")
+     * @Template("@App/Report/MoneyIn/new_summary.html.twig")
+     *
+     * @return array|RedirectResponse
+     */
+    public function newSummaryAction($reportId)
+    {
+        $report = $this->reportApi->getReportIfNotSubmitted($reportId, self::$jmsGroups);
+        if (Status::STATE_NOT_STARTED == $report->getStatus()->getMoneyInState()['state']) {
+            return $this->redirectToRoute('money_in', ['reportId' => $reportId]);
+        }
+
+        return [
+            'report' => $report,
+        ];
+    }
+
+    /**
      * @Route("/report/{reportId}/money-in/{transactionId}/delete", name="money_in_delete")
      * @Template("@App/Common/confirmDelete.html.twig")
-     *
-     * @param $reportId
-     * @param $transactionId
      *
      * @return array|RedirectResponse
      */

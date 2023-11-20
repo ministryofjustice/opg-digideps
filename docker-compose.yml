@@ -126,6 +126,7 @@ services:
     environment:
       APP_ENV: ${APP_ENV:-dev}
       APP_DEBUG: ${APP_DEBUG:-0}
+      WORKSPACE: local
     env_file:
       - ./api/app/api.env
       - ./api/app/tests/Behat/test.env

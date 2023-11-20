@@ -49,6 +49,7 @@ class ProcessOrgCSVCommand extends Command
         private Mailer $mailer,
         private LoggerInterface $logger,
         private ClientInterface $redis,
+        private string $workspace
     ) {
         parent::__construct();
     }
@@ -137,7 +138,7 @@ class ProcessOrgCSVCommand extends Command
     {
         $chunks = array_chunk($data, self::CHUNK_SIZE);
 
-        $this->redis->set('org-csv-processing', 'processing');
+        $this->redis->set($this->workspace.'-org-csv-processing', 'processing');
 
         foreach ($chunks as $index => $chunk) {
             try {
@@ -156,8 +157,8 @@ class ProcessOrgCSVCommand extends Command
 
         $this->logger->log('notice', 'Successfully processed all chunks');
 
-        $this->redis->set('org-csv-processing', 'completed');
-        $this->redis->set('org-csv-completed-date', date('Y-m-d H:i:s'));
+        $this->redis->set($this->workspace.'-org-csv-processing', 'completed');
+        $this->redis->set($this->workspace.'-org-csv-completed-date', date('Y-m-d H:i:s'));
 
         $this->mailer->sendProcessOrgCSVEmail($email, $this->output);
     }

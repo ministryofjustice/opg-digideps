@@ -1,0 +1,51 @@
+{% extends '@App/Layouts/application.html.twig'%}
+
+{% import '@App/Macros/macros.html.twig' as macros %}
+
+{% set translationDomain = "report-money-short" %}
+{% trans_default_domain translationDomain %}
+{% set transOptions = {'%client%': report.client.firstname | e } %}
+
+{# Page Titles #}
+{% block htmlTitle %}{{ 'summaryPage.moneyOut.htmlTitle' | trans }}{% endblock %}
+{% block pageTitle %}{{ 'summaryPage.moneyOut.pageTitle' | trans }}{% endblock %}
+
+
+{# Breadcrumbs #}
+{% block breadcrumbs %}{{ macros.breadcrumbs(report) }}{% endblock %}
+
+{% block pageContent %}
+
+    <div class="govuk-grid-row">
+        <div class="govuk-grid-column-two-thirds">
+            {# Introduction text #}
+            <p class="govuk-body">{{ 'summaryPage.moneyOut.weAskAbout' | trans(transOptions) }}</p>
+
+            {# Check answers text #}
+            <p class="govuk-body"><strong>{{ 'weHaveListed' | trans(transOptions, 'common') }}</strong></p>
+            <p class="govuk-body">{{ 'checkCorrect' | trans(transOptions, 'common') }}</p>
+
+            {# Missing questions alerts #}
+            {% if status.moneyOutShortState.state != 'done' and comingFromLastStep%}
+                {{ macros.notification('notice', 'remindComplete' | trans(transOptions, 'common')) }}
+            {% endif %}
+
+            {% if status.moneyOutShortState.state != 'done' and not comingFromLastStep%}
+                {{ macros.notification('notice', 'canYouAnswer' | trans(transOptions, 'common')) }}
+            {% endif %}
+        </div>
+        <div class="govuk-grid-column-one-third">
+            {{ macros.relatedSections(report, 'moneyOutShort') }}
+        </div>
+    </div>
+
+    {# Questions and answers table #}
+    {% include '@App/Report/MoneyOutShort/_answers_new.html.twig' %}
+
+    {# Pagination #}
+    {% include '@App/Report/_nextprevious.html.twig' with {
+        'report': report,
+        'sectionId': 'moneyOutShort',
+    } %}
+
+{% endblock %}

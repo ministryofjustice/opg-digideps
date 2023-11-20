@@ -79,7 +79,7 @@ class MoneyOutController extends AbstractController
             $report = $form->getData();
             $answer = $form['doesMoneyOutExist']->getData();
 
-            $report->setDoesMoneyOutExist($answer);
+            $report->setMoneyOutExists($answer);
             $this->restClient->put('report/'.$reportId, $report, ['doesMoneyOutExist']);
 
             if ('yes' === $answer) {
@@ -274,6 +274,24 @@ class MoneyOutController extends AbstractController
      * @return array|RedirectResponse
      */
     public function summaryAction($reportId)
+    {
+        $report = $this->reportApi->getReportIfNotSubmitted($reportId, self::$jmsGroups);
+        if (Status::STATE_NOT_STARTED == $report->getStatus()->getMoneyOutState()['state']) {
+            return $this->redirectToRoute('money_out', ['reportId' => $reportId]);
+        }
+
+        return [
+            'report' => $report,
+        ];
+    }
+
+    /**
+     * @Route("/report/{reportId}/money-out/new_summary", name="money_out_new_summary")
+     * @Template("@App/Report/MoneyOut/new_summary.html.twig")
+     *
+     * @return array|RedirectResponse
+     */
+    public function newSummaryAction($reportId)
     {
         $report = $this->reportApi->getReportIfNotSubmitted($reportId, self::$jmsGroups);
         if (Status::STATE_NOT_STARTED == $report->getStatus()->getMoneyOutState()['state']) {

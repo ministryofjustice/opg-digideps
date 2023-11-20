@@ -184,8 +184,13 @@ locals {
           value = "redis://${aws_route53_record.frontend_redis.fqdn}"
         },
         {
-          name = "SESSION_PREFIX",
-        value = "dd_session_front" }
+          name  = "SESSION_PREFIX",
+          value = "dd_front"
+        },
+        {
+          name  = "WORKSPACE",
+          value = local.environment
+        }
       ]
     }
 

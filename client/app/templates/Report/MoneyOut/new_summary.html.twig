@@ -1,0 +1,84 @@
+{% extends '@App/Layouts/application.html.twig' %}
+
+{% import '@App/Macros/macros.html.twig' as macros %}
+
+{% set translationDomain = "report-money-transaction" %}
+{% trans_default_domain translationDomain %}
+{% set transOptions = {
+    '%client%': report.client.firstname | e,
+    '%startDate%': report.startDate | date("j F Y"),
+    '%endDate%': report.endDate | date("j F Y"),
+    '%moneyTransfersPath%': path('money_transfers', {reportId: report.id}),
+    '%deputyExpensesPath%': path('deputy_expenses', {reportId: report.id}),
+    '%paDeputyExpensesPath%': path('pa_fee_expense', {reportId: report.id}),
+    '%giftsPath%': path('gifts', {reportId: report.id}),
+    '%deputyCostsPath%': path('prof_deputy_costs', {reportId: report.id})
+} %}
+
+{# Page Titles #}
+{% block htmlTitle %}{{ 'summaryPage.moneyOut.htmlTitle' | trans(transOptions) }}{% endblock %}
+{% block pageTitle %}{{ 'summaryPage.moneyOut.pageTitle' | trans(transOptions) }}{% endblock %}
+
+
+{# Breadcrumbs #}
+{% block breadcrumbs %}{{ macros.breadcrumbs(report) }}{% endblock %}
+
+{% block pageContent %}
+
+    <div class="govuk-grid-row">
+        <div class="govuk-grid-column-two-thirds">
+            {# Introduction text #}
+            <div class="text">
+                <p class="govuk-body">{{ 'startPage.moneyOut.pageSectionDescription1' | trans(transOptions) }}</p>
+            </div>
+
+            {# More details (from the start page) #}
+            <details class="govuk-details" data-module="govuk-details">
+                <summary class="govuk-details__summary">
+                    <span class="govuk-details__summary-text">{{ 'summaryPage.moneyOut.moreDetails' |trans }}</span>
+                </summary>
+                <div class="govuk-details__text">
+                    <p class="govuk-body">
+                        {{ ('startPage.moneyOut.pageSectionDescription2' ~ app.user.getRoleForTrans ~ '.part1') | trans(transOptions) }}
+                        <a href="{{ path('money_transfers', {reportId: report.id}) }}">
+                            {{ ('startPage.moneyOut.pageSectionDescription2' ~ app.user.getRoleForTrans ~ '.link1') | trans(transOptions) }}
+                        </a>
+                        {{ ('startPage.moneyOut.pageSectionDescription2' ~ app.user.getRoleForTrans ~ '.part2') | trans(transOptions) }}
+                        {% if app.user.getRoleForTrans == '-PROF' %}
+                        <a href="{{ path('prof_deputy_costs', {reportId: report.id}) }}">
+                        {% elseif app.user.getRoleForTrans == '-PA' %}
+                        <a href="{{ path('pa_fee_expense', {reportId: report.id}) }}">
+                        {% else %}
+                        <a href="{{ path('deputy_expenses', {reportId: report.id}) }}">
+                        {% endif %}
+                            {{ ('startPage.moneyOut.pageSectionDescription2' ~ app.user.getRoleForTrans ~ '.link2') | trans(transOptions) }}</a>,
+                        {{ ('startPage.moneyOut.pageSectionDescription2' ~ app.user.getRoleForTrans ~ '.part3') | trans(transOptions) }}
+                        <a href="{{ path('gifts', {reportId: report.id}) }}">
+                            {{ ('startPage.moneyOut.pageSectionDescription2' ~ app.user.getRoleForTrans ~ '.link3') | trans(transOptions) }}
+                        </a>
+                    </p>
+                    <p class="govuk-body">{{ 'startPage.moneyOut.pageSectionDescription3' | trans }}</p>
+                    <h2 class="govuk-heading-s">{{ 'startPage.moneyOut.totalOrIndividualHeading' | trans }}</h2>
+                    <p class="govuk-body">{{ 'startPage.moneyOut.totalOrIndividualPara' | trans }}</p>
+                </div>
+            </details>
+
+            {# Check answers text #}
+            <h2 class="govuk-heading-s">{{ 'weHaveListed' | trans(transOptions, 'common') }}</h2>
+            <p class="govuk-body">{{ 'checkCorrect' | trans(transOptions, 'common') }}</p>
+        </div>
+        <div class="column-third">
+            {{ macros.relatedSections(report, 'moneyOut') }}
+        </div>
+    </div>
+
+    {# Items list #}
+    {% include "@App/Report/MoneyOut/_list_new.html.twig" %}
+
+    {# Pagination #}
+    {% include '@App/Report/_nextprevious.html.twig' with {
+        'report': report,
+        'sectionId': 'moneyOut',
+    } %}
+
+{% endblock %}

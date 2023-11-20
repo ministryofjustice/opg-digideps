@@ -249,22 +249,6 @@ class Report implements ReportInterface, StartEndDateComparableInterface
     private $reasonForNoDecisions;
 
     /**
-     * @JMS\Type("string")
-     * @JMS\Groups({"report", "doesMoneyOutExist"})
-     * @Assert\NotBlank( message="moneyOut.moneyOutChoice.notBlank", groups={"doesMoneyOutExist"})
-     */
-    private $moneyOutExists;
-
-    /**
-     * @JMS\Type("string")
-     * @JMS\Groups({"report", "reasonForNoMoneyOut"})
-     * @Assert\NotBlank( message="moneyOut.reasonForNoMoneyOut.notBlank", groups={"reasonForNoMoneyOut"})
-     *
-     * @var string|null
-     */
-    private $reasonForNoMoneyOut;
-
-    /**
      * @JMS\Type("boolean")
      * @JMS\Groups({"noAssetsToAdd"})
      *
@@ -385,6 +369,38 @@ class Report implements ReportInterface, StartEndDateComparableInterface
      * @var string
      */
     private $reportTitle;
+
+    /**
+     * @JMS\Type("string")
+     * @JMS\Groups({"report"})
+     */
+    private $moneyInExists;
+
+    /**
+     * @var string captures reason for no money in. Required if no money has gone in
+     *
+     * @JMS\Type("string")
+     * @JMS\Groups({"report"})
+     *
+     * @var string|null
+     */
+    private $reasonForNoMoneyIn;
+
+    /**
+     * @JMS\Type("string")
+     * @JMS\Groups({"report", "moneyOutExist"})
+     * @Assert\NotBlank( message="moneyOut.moneyOutChoice.notBlank", groups={"doesMoneyOutExist"})
+     */
+    private $moneyOutExists;
+
+    /**
+     * @var string captures reason for no money out. Required if no money has gone out
+     *
+     * @JMS\Type("string")
+     * @JMS\Groups({"report"})
+     * @Assert\NotBlank( message="moneyOut.reasonForNoMoneyOut.notBlank", groups={"reasonForNoMoneyOut"})
+     */
+    private $reasonForNoMoneyOut;
 
     /**
      * @return int $id
@@ -546,8 +562,6 @@ class Report implements ReportInterface, StartEndDateComparableInterface
     }
 
     /**
-     * @param \DateTime $unSubmitDate
-     *
      * @return Report
      */
     public function setUnSubmitDate(?\DateTime $unSubmitDate)
@@ -573,8 +587,6 @@ class Report implements ReportInterface, StartEndDateComparableInterface
     }
 
     /**
-     * @param \DateTime $endDate
-     *
      * @return Report
      */
     public function setEndDate(\DateTime $endDate = null)
@@ -1070,9 +1082,6 @@ class Report implements ReportInterface, StartEndDateComparableInterface
         $this->status = $status;
     }
 
-    /**
-     * @return mixed
-     */
     public function getWishToProvideDocumentation()
     {
         return $this->wishToProvideDocumentation;
@@ -1331,12 +1340,36 @@ class Report implements ReportInterface, StartEndDateComparableInterface
         return $this;
     }
 
-    public function getDoesMoneyOutExist(): ?string
+    public function getMoneyInExists(): ?string
+    {
+        return $this->moneyInExists;
+    }
+
+    public function setMoneyInExists(?string $moneyInExists): self
+    {
+        $this->moneyInExists = $moneyInExists;
+
+        return $this;
+    }
+
+    public function getReasonForNoMoneyIn(): ?string
+    {
+        return $this->reasonForNoMoneyIn;
+    }
+
+    public function setReasonForNoMoneyIn(?string $reasonForNoMoneyIn): self
+    {
+        $this->reasonForNoMoneyIn = $reasonForNoMoneyIn;
+
+        return $this;
+    }
+
+    public function getMoneyOutExists(): ?string
     {
         return $this->moneyOutExists;
     }
 
-    public function setDoesMoneyOutExist(?string $moneyOutExists): Report
+    public function setMoneyOutExists(string $moneyOutExists): self
     {
         $this->moneyOutExists = $moneyOutExists;
 
@@ -1348,7 +1381,7 @@ class Report implements ReportInterface, StartEndDateComparableInterface
         return $this->reasonForNoMoneyOut;
     }
 
-    public function setReasonForNoMoneyOut(?string $reasonForNoMoneyOut): Report
+    public function setReasonForNoMoneyOut(?string $reasonForNoMoneyOut): self
     {
         $this->reasonForNoMoneyOut = $reasonForNoMoneyOut;
 

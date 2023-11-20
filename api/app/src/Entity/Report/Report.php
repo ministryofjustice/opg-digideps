@@ -15,6 +15,7 @@ use DateTime;
 use Doctrine\Common\Collections\ArrayCollection;
 use Doctrine\ORM\Mapping as ORM;
 use JMS\Serializer\Annotation as JMS;
+use phpDocumentor\Reflection\Types\This;
 
 /**
  * Reports.
@@ -495,7 +496,7 @@ class Report implements ReportInterface
      * @var string yes | no
      *
      * @JMS\Type("string")
-     * @JMS\Groups({"report", "doesMoneyOutExist"})
+     * @JMS\Groups({"report", "moneyOutExist"})
      * @ORM\Column(name="money_out_exists", type="text", nullable=true)
      */
     private $moneyOutExists;
@@ -1523,12 +1524,36 @@ class Report implements ReportInterface
         ];
     }
 
-    public function getDoesMoneyOutExist(): ?string
+    public function getMoneyInExists(): ?string
+    {
+        return $this->moneyInExists;
+    }
+
+    public function setMoneyInExists(?string $moneyInExists): self
+    {
+        $this->moneyInExists = $moneyInExists;
+
+        return $this;
+    }
+
+    public function getReasonForNoMoneyIn(): ?string
+    {
+        return $this->reasonForNoMoneyIn;
+    }
+
+    public function setReasonForNoMoneyIn(?string $reasonForNoMoneyIn): self
+    {
+        $this->reasonForNoMoneyIn = $reasonForNoMoneyIn;
+
+        return $this;
+    }
+
+    public function getMoneyOutExists(): ?string
     {
         return $this->moneyOutExists;
     }
 
-    public function setDoesMoneyOutExist(?string $moneyOutExists): self
+    public function setMoneyOutExists(string $moneyOutExists): self
     {
         $this->moneyOutExists = $moneyOutExists;
 
