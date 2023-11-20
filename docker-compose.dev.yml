@@ -9,10 +9,9 @@ services:
       - localstack
       - mock-sirius-integration
     volumes:
-      - ./api/tests/Behat:/var/www/tests/Behat
-      - ./api/src:/var/www/src
-      - ./api/tests/Behat/snapshots:/tmp/html
-      - ./api/vendor:/var/www/vendor
+      - ./api/app/tests/Behat:/var/www/tests/Behat
+      - ./api/app/src:/var/www/src
+      - ./api/app/tests/Behat/snapshots:/tmp/html
     env_file:
       - ./api/app/api.env
       - ./api/app/tests/Behat/test.env
