@@ -6,13 +6,6 @@ locals {
     ssm            = local.common_sg_rules.ssm
     ecr_api        = local.common_sg_rules.ecr_api
     secrets_egress = local.common_sg_rules.secrets
-    cache = {
-      port        = 6379
-      type        = "egress"
-      protocol    = "tcp"
-      target_type = "security_group_id"
-      target      = module.api_cache_security_group.id
-    }
     cache_api = {
       port        = 6379
       type        = "egress"
