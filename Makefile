@@ -32,9 +32,8 @@ REDIS_CONTAINERS := redis-frontend redis-api
 
 create-app: build-app up-app reset-database reset-fixtures ##@application Brings up app with DB reset and a full no-cache build
 
-build-app: down-app ##@application Brings up app with a full no-cache build
+build-app: down-app build-js ##@application Brings up app with a full no-cache build
 	docker container prune --force
-	docker-compose build --no-cache resources
 	docker-compose build --no-cache
 
 up-app: ##@application Brings the app up and mounts local folders

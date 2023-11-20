@@ -90,6 +90,10 @@ _See [testing](docs/TESTING.md)_ and [debugging ](docs/DEBUGGING.md) documentati
 
 _See [deployment documentation](docs/DEPLOYMENT.md)_
 
+## Environment Variable
+
+_See [managing environment variables](docs/ENVIRONMENT_VARIABLES.md)_
+
 ## Built with
 
 - Terraform
