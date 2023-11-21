@@ -81,7 +81,7 @@ class ReportStatusServiceTest extends TestCase
                 'getMentalCapacity' => null,
                 'hasMoneyIn' => false,
                 'getMoneyTransactionsIn' => [],
-                'getDoesMoneyOutExist' => null,
+                'getMoneyOutExists' => null,
                 'hasMoneyOut' => false,
                 'getMoneyTransactionsOut' => [],
                 'getHasDebts' => null,
