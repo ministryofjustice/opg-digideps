@@ -148,7 +148,7 @@ locals {
         { name = "ROLE", value = "admin" },
         { name = "ADMIN_HOST", value = "https://${aws_route53_record.admin.fqdn}" },
         { name = "NONADMIN_HOST", value = "https://${aws_route53_record.front.fqdn}" },
-        { name = "API_URL", value = "https://${local.api_service_fqdn}" },
+        { name = "API_URL", value = "http://${local.api_service_fqdn}" },
         { name = "AUDIT_LOG_GROUP_NAME", value = "audit-${local.environment}" },
         { name = "EMAIL_SEND_INTERNAL", value = local.account.is_production == 1 ? "true" : "false" },
         { name = "FEATURE_FLAG_PREFIX", value = local.feature_flag_prefix },
@@ -160,14 +160,15 @@ locals {
         { name = "S3_BUCKETNAME", value = "pa-uploads-${local.environment}" },
         { name = "S3_SIRIUS_BUCKET", value = "digideps.${local.account.sirius_environment}.eu-west-1.sirius.opg.justice.gov.uk" },
         { name = "SESSION_REDIS_DSN", value = "redis://${aws_route53_record.frontend_redis.fqdn}" },
-        { name = "SESSION_PREFIX", value = "dd_session_admin" },
+        { name = "SESSION_PREFIX", value = "dd_admin" },
         { name = "APP_ENV", value = local.account.app_env },
         { name = "OPG_DOCKER_TAG", value = var.OPG_DOCKER_TAG },
         { name = "HTMLTOPDF_ADDRESS", value = "http://${local.htmltopdf_service_fqdn}" },
         { name = "ENVIRONMENT", value = local.environment },
         { name = "NGINX_APP_NAME", value = "admin" },
         { name = "PA_PRO_REPORT_CSV_FILENAME", value = "paProDeputyReport.csv" },
-        { name = "LAY_REPORT_CSV_FILENAME", value = "layDeputyReport.csv" }
+        { name = "LAY_REPORT_CSV_FILENAME", value = "layDeputyReport.csv" },
+        { name = "WORKSPACE", value = local.environment }
       ]
     }
   )

@@ -35,9 +35,12 @@ jobs:
           - svc_name: "client"
             sub_folder: "."
             docker_file: "client/docker/app/Dockerfile"
+          - svc_name: "api-webserver"
+            sub_folder: "."
+            docker_file: "api/docker/web/Dockerfile"
           - svc_name: "api"
-            sub_folder: "api"
-            docker_file: "Dockerfile"
+            sub_folder: "."
+            docker_file: "api/docker/app/Dockerfile"
           - svc_name: "sync"
             sub_folder: "sync"
             docker_file: "Dockerfile"
@@ -137,7 +140,7 @@ jobs:
 
       - name: trivy image scanning
         id: trivy_scan
-        uses: aquasecurity/trivy-action@f78e9ecf42a1271402d4f484518b9313235990e1 # pin@v0.7.1
+        uses: aquasecurity/trivy-action@2b6a709cf9c4025c5438138008beaddbb02086f0 # pin@v0.7.1
         with:
           image-ref: ${{ matrix.svc_name }}:latest
           severity: "HIGH,CRITICAL"

@@ -124,6 +124,17 @@ summaryPage:
       In this section we ask for details of how you have managed
       %client%'s money during this reporting period.
     addButton: Add an item of income over £1,000
+    hasMoneyIn:
+      label: Have you added money in on %client%'s behalf during this reporting period?
+    reasonForNoMoneyIn:
+      label: Reason for no money in
+    listOfIncomeItems: List of items of income over £1000
+    list:
+      label:
+        description: Description
+        date: Date
+        amount: Amount
+        totalAmount: Total money in
   moneyOut:
     htmlTitle: "Money out - Complete the deputy report | GOV.UK"
     pageTitle: Money out
@@ -131,6 +142,17 @@ summaryPage:
       In this section we ask for details of how you have managed
       %client%'s money during this reporting period.
     addButton: Add an payment over £1,000
+    hasMoneyOut:
+      label: Have you taken money out on %client%'s behalf during this reporting period?
+    reasonForNoMoneyOut:
+      label: Reason for no money out
+    listOfExpenses: List of expenses over £1000
+    list:
+      label:
+        description: Description
+        date: Date
+        amount: Amount
+        totalAmount: Total money out
 
 form:
   categoriesIn:

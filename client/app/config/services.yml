@@ -43,6 +43,7 @@ services:
       $hostedEnv: "%env(ENVIRONMENT)%"
       $projectDir: "%kernel.project_dir%"
       $sessionPrefix: "%session_prefix%"
+      $workspace: "%workspace%"
 
   App\:
     resource: "../src/"

@@ -1,0 +1,56 @@
+# This file is auto-generated during the composer install
+
+
+# This file is a "template" of what your parameters.yml file should look like
+parameters:
+    cloudwatch_logs_client_params:
+       version: 'latest'
+       region: 'eu-west-1'
+{{ if exists "/cloudwatch/logs/localstack" }}
+       endpoint: 'http://localstack:4566'
+       validate: false
+       credentials:
+           key: 'FAKE_ID'
+           secret: 'FAKE_KEY'
+{{ else }}
+       validate: true
+{{ end }}
+    ssm_client_params:
+      version: 'latest'
+      region: 'eu-west-1'
+{{ if exists "/ssm/localstack" }}
+      endpoint: 'http://localstack:4566'
+      validate: false
+      credentials:
+        key: 'FAKE_ID'
+        secret: 'FAKE_KEY'
+{{ else }}
+      validate: true
+{{ end }}
+
+    secrets_manager_client_params:
+      version: 'latest'
+      region: 'eu-west-1'
+    {{ if exists "/secrets/manager/localstack" }}
+      endpoint: 'http://localstack:4566'
+      validate: false
+      credentials:
+        key: 'FAKE_ID'
+        secret: 'FAKE_KEY'
+    {{ else }}
+      validate: true
+    {{ end }}
+    database_driver: pdo_pgsql
+    database_host: {{ getv "/database/hostname" }}
+    database_port: {{ getv "/database/port" }}
+    database_name: {{ getv "/database/name" }}
+    database_user: {{ getv "/database/username" }}
+    database_password: {{ getv "/database/password" }}
+    database_ssl_mode: {{ getv "/database/ssl" }}
+    locale: en
+    secret: {{ getv "/secret" }}
+    redis_dsn: '{{ getv "/redis/dsn" }}'
+    log_level: warning
+    verbose_log_level: notice
+    log_path: /var/log/app/application.log
+    workspace: {{ getv "/workspace" }}

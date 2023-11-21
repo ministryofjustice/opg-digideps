@@ -2,13 +2,12 @@ version: "3.2"
 
 #docker-compose.cachegrind.yml
 services:
-
-  frontend:
+  frontend-app:
     volumes:
       - ./client/cachegrind/frontend:/var/www/cachegrind
-  admin:
+  admin-app:
     volumes:
       - ./client/cachegrind/admin:/var/www/cachegrind
-  api:
+  api-app:
     volumes:
       - ./api/cachegrind/api:/var/www/cachegrind

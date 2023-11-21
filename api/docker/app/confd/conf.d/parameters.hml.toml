@@ -1,0 +1,19 @@
+[template]
+src = "parameters.yml.tmpl"
+dest = "/var/www/config/parameters.yml"
+keys = [
+    "/cloudwatch/logs/localstack",
+    "/database",
+    "/fixtures",
+    "/email",
+    "/email_settings",
+    "/redis",
+    "/secret",
+    "/secrets",
+    "/secrets/manager/localstack",
+    "/security",
+    "/smtp",
+    "/ssm/localstack",
+    "/url",
+    "/workspace"
+]

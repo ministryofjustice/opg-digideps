@@ -47,6 +47,7 @@ class MoneyInController extends AbstractController
 
     /**
      * @Route("/report/{reportId}/money-in", name="money_in")
+     *
      * @Template("@App/Report/MoneyIn/start.html.twig")
      *
      * @return array|RedirectResponse
@@ -79,7 +80,7 @@ class MoneyInController extends AbstractController
             $report = $form->getData();
             $answer = $form['doesMoneyInExist']->getData();
 
-            $report->setDoesMoneyInExist($answer);
+            $report->setMoneyInExists($answer);
             $this->restClient->put('report/'.$reportId, $report, ['doesMoneyInExist']);
 
             if ('yes' === $answer) {
@@ -135,6 +136,7 @@ class MoneyInController extends AbstractController
 
     /**
      * @Route("/report/{reportId}/money-in/step{step}/{transactionId}", name="money_in_step", requirements={"step":"\d+"})
+     *
      * @Template("@App/Report/MoneyIn/step.html.twig")
      *
      * @param null $transactionId
@@ -244,6 +246,7 @@ class MoneyInController extends AbstractController
 
     /**
      * @Route("/report/{reportId}/money-in/add_another", name="money_in_add_another")
+     *
      * @Template("@App/Report/MoneyIn/addAnother.html.twig")
      *
      * @return array|RedirectResponse
@@ -272,6 +275,7 @@ class MoneyInController extends AbstractController
 
     /**
      * @Route("/report/{reportId}/money-in/summary", name="money_in_summary")
+     *
      * @Template("@App/Report/MoneyIn/summary.html.twig")
      *
      * @return array|RedirectResponse
@@ -289,7 +293,27 @@ class MoneyInController extends AbstractController
     }
 
     /**
+     * @Route("/report/{reportId}/money-in/new_summary", name="money_in_new_summary")
+     *
+     * @Template("@App/Report/MoneyIn/new_summary.html.twig")
+     *
+     * @return array|RedirectResponse
+     */
+    public function newSummaryAction($reportId)
+    {
+        $report = $this->reportApi->getReportIfNotSubmitted($reportId, self::$jmsGroups);
+        if (Status::STATE_NOT_STARTED == $report->getStatus()->getMoneyInState()['state']) {
+            return $this->redirectToRoute('money_in', ['reportId' => $reportId]);
+        }
+
+        return [
+            'report' => $report,
+        ];
+    }
+
+    /**
      * @Route("/report/{reportId}/money-in/{transactionId}/delete", name="money_in_delete")
+     *
      * @Template("@App/Common/confirmDelete.html.twig")
      *
      * @return array|RedirectResponse

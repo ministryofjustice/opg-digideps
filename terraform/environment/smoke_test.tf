@@ -92,6 +92,10 @@ locals {
         {
           name  = "NONADMIN_HOST",
           value = "https://${aws_route53_record.front.fqdn}"
+        },
+        {
+          name  = "WORKSPACE",
+          value = local.environment
         }
       ]
     }

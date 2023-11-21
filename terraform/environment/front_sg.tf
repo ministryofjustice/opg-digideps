@@ -23,15 +23,15 @@ locals {
       target_type = "security_group_id"
       target      = module.front_elb_security_group.id
     }
-    cache = {
+    cache_front = {
       port        = 6379
       type        = "egress"
       protocol    = "tcp"
       target_type = "security_group_id"
-      target      = module.frontend_cache_security_group.id
+      target      = data.aws_security_group.front_cache_sg.id
     }
     api = {
-      port        = 443
+      port        = 80
       type        = "egress"
       protocol    = "tcp"
       target_type = "security_group_id"
