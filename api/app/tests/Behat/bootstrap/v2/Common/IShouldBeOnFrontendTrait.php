@@ -327,9 +327,9 @@ trait IShouldBeOnFrontendTrait
     /**
      * @Then I should be on the money out short exists page
      */
-    public function iAmOnMoneyOutShortExistsPage(): bool
+    public function iAmOnMoneyOutShortOneOffPaymentsExistsPage(): bool
     {
-        return $this->iAmOnPage(sprintf('/%s\/.*\/money-out-short\/exist.*$/', $this->reportUrlPrefix));
+        return $this->iAmOnPage(sprintf('/%s\/.*\/money-out-short\/oneOffPaymentsExist.*$/', $this->reportUrlPrefix));
     }
 
     /**
