@@ -109,7 +109,7 @@ locals {
         },
         {
           name  = "API_URL",
-          value = "http://${local.api_service_fqdn}"
+          value = "http://api"
         },
         {
           name  = "APP_ENV",
@@ -137,7 +137,7 @@ locals {
         },
         {
           name  = "FILESCANNER_URL",
-          value = "http://${local.scan_service_fqdn}:8080"
+          value = "http://scan:8080"
         },
         {
           name  = "GA_DEFAULT",
@@ -149,7 +149,7 @@ locals {
         },
         {
           name  = "HTMLTOPDF_ADDRESS",
-          value = "http://${local.htmltopdf_service_fqdn}"
+          value = "http://htmltopdf"
         },
         {
           name  = "NGINX_APP_NAME",

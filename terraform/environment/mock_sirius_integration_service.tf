@@ -1,32 +1,3 @@
-locals {
-  mock_sirius_integration_service_fqdn = "mock-sirius-integration.${aws_service_discovery_private_dns_namespace.private.name}"
-}
-
-resource "aws_service_discovery_service" "mock_sirius_integration" {
-  name = "mock-sirius-integration"
-
-  dns_config {
-    namespace_id = aws_service_discovery_private_dns_namespace.private.id
-
-    dns_records {
-      ttl  = 10
-      type = "A"
-    }
-
-    routing_policy = "MULTIVALUE"
-  }
-
-  health_check_custom_config {
-    failure_threshold = 1
-  }
-
-  tags = local.default_tags
-
-  depends_on = [aws_service_discovery_private_dns_namespace.private]
-
-  force_destroy = local.account.deletion_protection ? false : true
-}
-
 resource "aws_ecs_task_definition" "mock_sirius_integration" {
   family                   = "mock-sirius-integration-${local.environment}"
   requires_compatibilities = ["FARGATE"]
@@ -56,10 +27,6 @@ resource "aws_ecs_service" "mock_sirius_integration" {
     assign_public_ip = false
   }
 
-  #  service_registries {
-  #    registry_arn = aws_service_discovery_service.mock_sirius_integration.arn
-  #  }
-
   service_connect_configuration {
     enabled   = true
     namespace = aws_service_discovery_http_namespace.cloudmap_namespace.arn
@@ -86,8 +53,6 @@ resource "aws_ecs_service" "mock_sirius_integration" {
     enable   = false
     rollback = false
   }
-
-  depends_on = [aws_service_discovery_service.mock_sirius_integration]
 }
 
 locals {

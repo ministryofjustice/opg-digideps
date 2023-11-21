@@ -1,32 +1,3 @@
-locals {
-  api_service_fqdn = "api.${aws_service_discovery_private_dns_namespace.private.name}"
-}
-
-resource "aws_service_discovery_service" "api" {
-  name = "api"
-
-  dns_config {
-    namespace_id = aws_service_discovery_private_dns_namespace.private.id
-
-    dns_records {
-      ttl  = 10
-      type = "A"
-    }
-
-    routing_policy = "MULTIVALUE"
-  }
-
-  health_check_custom_config {
-    failure_threshold = 1
-  }
-
-  tags = local.default_tags
-
-  depends_on = [aws_service_discovery_private_dns_namespace.private]
-
-  force_destroy = local.account.deletion_protection ? false : true
-}
-
 resource "aws_ecs_task_definition" "api" {
   family                   = "api-${local.environment}"
   requires_compatibilities = ["FARGATE"]
@@ -56,10 +27,6 @@ resource "aws_ecs_service" "api" {
     assign_public_ip = false
   }
 
-  #  service_registries {
-  #    registry_arn = aws_service_discovery_service.api.arn
-  #  }
-
   service_connect_configuration {
     enabled   = true
     namespace = aws_service_discovery_http_namespace.cloudmap_namespace.arn
@@ -86,8 +53,6 @@ resource "aws_ecs_service" "api" {
     enable   = false
     rollback = false
   }
-
-  depends_on = [aws_service_discovery_service.api]
 }
 
 locals {

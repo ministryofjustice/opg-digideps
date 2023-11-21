@@ -114,7 +114,7 @@ locals {
       environment = [
         {
           name  = "API_URL",
-          value = "http://${local.api_service_fqdn}"
+          value = "http://api"
         },
         {
           name  = "ROLE",

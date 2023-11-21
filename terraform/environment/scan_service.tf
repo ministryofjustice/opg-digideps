@@ -1,32 +1,3 @@
-locals {
-  scan_service_fqdn = "scan.${aws_service_discovery_private_dns_namespace.private.name}"
-}
-
-resource "aws_service_discovery_service" "scan" {
-  name = "scan"
-
-  dns_config {
-    namespace_id = aws_service_discovery_private_dns_namespace.private.id
-
-    dns_records {
-      ttl  = 10
-      type = "A"
-    }
-
-    routing_policy = "MULTIVALUE"
-  }
-
-  health_check_custom_config {
-    failure_threshold = 1
-  }
-
-  tags = local.default_tags
-
-  depends_on = [aws_service_discovery_private_dns_namespace.private]
-
-  force_destroy = local.account.deletion_protection ? false : true
-}
-
 resource "aws_iam_role" "scan" {
   assume_role_policy = data.aws_iam_policy_document.task_role_assume_policy.json
   name               = "scan.${local.environment}"
@@ -61,10 +32,6 @@ resource "aws_ecs_service" "scan" {
     assign_public_ip = false
   }
 
-  #  service_registries {
-  #    registry_arn = aws_service_discovery_service.scan.arn
-  #  }
-
   service_connect_configuration {
     enabled   = true
     namespace = aws_service_discovery_http_namespace.cloudmap_namespace.arn
@@ -91,8 +58,6 @@ resource "aws_ecs_service" "scan" {
     enable   = false
     rollback = false
   }
-
-  depends_on = [aws_service_discovery_service.scan]
 
   tags = local.default_tags
 }

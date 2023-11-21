@@ -133,12 +133,6 @@ data "aws_iam_policy_document" "execution_role" {
   }
 }
 
-resource "aws_service_discovery_private_dns_namespace" "private" {
-  name = "${local.environment}.private"
-  vpc  = data.aws_vpc.vpc.id
-  tags = local.default_tags
-}
-
 data "aws_iam_policy_document" "ecs_task_logs" {
   statement {
     effect = "Allow"
