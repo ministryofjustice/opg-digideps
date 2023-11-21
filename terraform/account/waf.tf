@@ -86,34 +86,61 @@ resource "aws_wafv2_web_acl" "main" {
     }
   }
 
-  # Add a custom rule to block specific URIs
-  #  rule {
-  #    name     = "BlockSpecificURIs"
-  #    priority = 20  # Choose a priority higher than the existing rules
-  #
-  #    action {
-  #      block {}
-  #    }
-  #
-  #    statement {
-  #      regex_pattern_set_reference_statement {
-  #        arn = aws_wafv2_regex_pattern_set.block_uris.arn
-  #        field_to_match {
-  #          uri_path {}
-  #        }
-  #        text_transformation {
-  #          priority = 0
-  #          type     = "NONE"
-  #        }
-  #      }
-  #    }
-  #
-  #    visibility_config {
-  #      cloudwatch_metrics_enabled = true
-  #      metric_name                = "BlockSpecificURIs"
-  #      sampled_requests_enabled   = true
-  #    }
-  #  }
+  rule {
+    name     = "AllowSpecificURIs"
+    priority = 20
+
+    action {
+      allow {}
+    }
+
+    statement {
+      regex_pattern_set_reference_statement {
+        arn = aws_wafv2_regex_pattern_set.allow_uris.arn
+        field_to_match {
+          uri_path {}
+        }
+        text_transformation {
+          priority = 0
+          type     = "NONE"
+        }
+      }
+    }
+
+    visibility_config {
+      cloudwatch_metrics_enabled = true
+      metric_name                = "AllowSpecificURIs"
+      sampled_requests_enabled   = true
+    }
+  }
+
+  rule {
+    name     = "BlockSpecificURIs"
+    priority = 25
+
+    action {
+      block {}
+    }
+
+    statement {
+      regex_pattern_set_reference_statement {
+        arn = aws_wafv2_regex_pattern_set.block_uris.arn
+        field_to_match {
+          uri_path {}
+        }
+        text_transformation {
+          priority = 0
+          type     = "NONE"
+        }
+      }
+    }
+
+    visibility_config {
+      cloudwatch_metrics_enabled = true
+      metric_name                = "BlockSpecificURIs"
+      sampled_requests_enabled   = true
+    }
+  }
 
   visibility_config {
     cloudwatch_metrics_enabled = true
@@ -122,20 +149,43 @@ resource "aws_wafv2_web_acl" "main" {
   }
 }
 
-#resource "aws_wafv2_regex_pattern_set" "block_uris" {
-#  name        = "${local.account.name}-block-uris"
-#  description = "Regex pattern set for blocking specific URIs"
-#
-#  regular_expression {
-#    regex_string = "^/public/wp-content/.*$"
-#  }
-#
-#  regular_expression {
-#    regex_string = "^/public/swagger/.*$"
-#  }
-#
-#  scope = "REGIONAL"
-#}
+resource "aws_wafv2_regex_pattern_set" "block_uris" {
+  name        = "${local.account.name}-block-uris"
+  description = "Regex pattern set for blocking specific public URIs"
+
+  regular_expression {
+    regex_string = "^/public/.*$"
+  }
+
+  scope = "REGIONAL"
+}
+
+resource "aws_wafv2_regex_pattern_set" "allow_uris" {
+  name        = "${local.account.name}-allow-uris"
+  description = "Regex pattern set for allowing specific public URIs"
+
+  regular_expression {
+    regex_string = "^/public/apple.*\\.png$"
+  }
+
+  regular_expression {
+    regex_string = "^/public/favicon.ico$"
+  }
+
+  regular_expression {
+    regex_string = "^/public/opengraph-image.png$"
+  }
+
+  regular_expression {
+    regex_string = "^/public/assets/.*\\.(js|js.map|txt|css|css.map|woff|woff2)$"
+  }
+
+  regular_expression {
+    regex_string = "^/public/images/.*\\.png$"
+  }
+
+  scope = "REGIONAL"
+}
 
 data "aws_caller_identity" "current" {}
 data "aws_region" "current" {}
