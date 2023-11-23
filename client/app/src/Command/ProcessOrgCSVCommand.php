@@ -65,32 +65,42 @@ class ProcessOrgCSVCommand extends Command
     {
         $bucket = $this->params->get('s3_sirius_bucket');
         $paProReportFile = $this->params->get('pa_pro_report_csv_filename');
+        $fileLocation = sprintf('/tmp/%s', $paProReportFile);
 
         try {
             $this->s3->getObject([
                 'Bucket' => $bucket,
                 'Key' => $paProReportFile,
-                'SaveAs' => '/tmp/orgReport.csv',
+                'SaveAs' => $fileLocation,
             ]);
         } catch (S3Exception $e) {
             if (in_array($e->getAwsErrorCode(), S3Storage::MISSING_FILE_AWS_ERROR_CODES)) {
-                $this->logger->log('error', sprintf('File %s not found in bucket %s', $paProReportFile, $bucket));
+                $this->logger->error(sprintf('File %s not found in bucket %s', $paProReportFile, $bucket));
             } else {
-                $this->logger->log('error', sprintf('Error retrieving file %s from bucket %s', $paProReportFile, $bucket));
+                $this->logger->error(
+                    sprintf(
+                        'Error retrieving file %s from bucket %s',
+                        $paProReportFile,
+                        $bucket
+                    )
+                );
             }
         }
 
-        $data = $this->csvToArray('/tmp/orgReport.csv');
-        $this->process($data, $input->getArgument('email'));
+        $data = $this->csvToArray($fileLocation);
 
-        if (!unlink('/tmp/orgReport.csv')) {
-            $this->logger->log('error', 'Unable to delete file /tmp/orgReport.csv.');
+        if ($this->process($data, $input->getArgument('email')) && empty($this->output['errors'])) {
+            if (!unlink($fileLocation)) {
+                $this->logger->error('Unable to delete file /tmp/orgReport.csv.');
+            }
+
+            return 1;
         }
 
         return 0;
     }
 
-    private function csvToArray(string $fileName)
+    private function csvToArray(string $fileName): array
     {
         try {
             return (new CsvToArray($fileName, false))
@@ -130,11 +140,11 @@ class ProcessOrgCSVCommand extends Command
             ])
             ->getData();
         } catch (\Throwable $e) {
-            $this->logger->log('error', sprintf('Error processing CSV: %s', $e->getMessage()));
+            $this->logger->error(sprintf('Error processing CSV: %s', $e->getMessage()));
         }
     }
 
-    private function process(mixed $data, string $email)
+    private function process(mixed $data, string $email): bool
     {
         $chunks = array_chunk($data, self::CHUNK_SIZE);
 
@@ -160,10 +170,10 @@ class ProcessOrgCSVCommand extends Command
         $this->redis->set($this->workspace.'-org-csv-processing', 'completed');
         $this->redis->set($this->workspace.'-org-csv-completed-date', date('Y-m-d H:i:s'));
 
-        $this->mailer->sendProcessOrgCSVEmail($email, $this->output);
+        return $this->mailer->sendProcessOrgCSVEmail($email, $this->output);
     }
 
-    private function storeOutput(array $output)
+    private function storeOutput(array $output): void
     {
         if (!empty($output['errors'])) {
             $this->output['errors'] = array_merge($this->output['errors'], $output['errors']);
