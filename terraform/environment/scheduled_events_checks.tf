@@ -95,12 +95,41 @@ resource "aws_cloudwatch_event_target" "delete_zero_activity_users_check" {
   )
 }
 
+# Resubmit re-submittable error documents check
+
+resource "aws_cloudwatch_event_rule" "resubmit_error_documents_check" {
+  name                = "check-resync-resubmittable-error-documents-${terraform.workspace}"
+  description         = "Execute the resync resubmittable error documents check for ${terraform.workspace}"
+  schedule_expression = "cron(13 09 * * ? *)"
+  is_enabled          = local.account.is_production == 1 ? true : false
+}
+
+resource "aws_cloudwatch_event_target" "resubmit_error_documents_check" {
+  target_id = "check-resync-resubmittable-error-documents-${terraform.workspace}"
+  arn       = data.aws_lambda_function.slack_lambda.arn
+  rule      = aws_cloudwatch_event_rule.resubmit_error_documents_check.name
+  input = jsonencode(
+    {
+      scheduled-event-detail = {
+        job-name                   = "resubmit_error_documents_check"
+        log-group                  = terraform.workspace,
+        log-entries                = ["resync_resubmittable_error_documents"],
+        search-timespan            = "24 hours",
+        bank-holidays              = "true",
+        channel-identifier-absent  = "scheduled-jobs",
+        channel-identifier-success = "scheduled-jobs",
+        channel-identifier-failure = "scheduled-jobs"
+      }
+    }
+  )
+}
+
 # DB Analyse command check
 
 resource "aws_cloudwatch_event_rule" "db_analyse_command_check" {
   name                = "check-database-analyse-command-${terraform.workspace}"
   description         = "Execute the delete zero activity users check for ${terraform.workspace}"
-  schedule_expression = "cron(13 09 * * ? *)"
+  schedule_expression = "cron(14 09 * * ? *)"
   is_enabled          = local.account.is_production == 1 ? true : false
 }
 

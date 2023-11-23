@@ -51,12 +51,43 @@ class DocumentRepositoryTest extends KernelTestCase
         self::assertEquals(Document::SYNC_STATUS_IN_PROGRESS, $supportingDoc->getSynchronisationStatus());
     }
 
-    private function createFailedDocumentSubmission($status, $createdOn, $caseNumber)
+    /**
+     * @test
+     */
+    public function getResubmittableErrorDocumentsAndSetToQueued()
+    {
+        [$_, $_, $reportPdfDoc, $supportingDoc, $_] = $this->createAndSubmitReportWithSupportingDoc($this->firstJulyAm);
+
+        $reportPdfDoc->setSynchronisationStatus(Document::SYNC_STATUS_PERMANENT_ERROR);
+        $reportPdfDoc->setSynchronisationError('Document failed to sync after 4 attempts');
+        $supportingDoc->setSynchronisationStatus(Document::SYNC_STATUS_PERMANENT_ERROR);
+        $supportingDoc->setSynchronisationError('Report PDF failed to sync');
+
+        $this->entityManager->persist($reportPdfDoc);
+        $this->entityManager->persist($supportingDoc);
+        $this->entityManager->flush();
+        self::assertEquals(Document::SYNC_STATUS_PERMANENT_ERROR, $reportPdfDoc->getSynchronisationStatus());
+        self::assertEquals(Document::SYNC_STATUS_PERMANENT_ERROR, $supportingDoc->getSynchronisationStatus());
+
+        $documents = $this->documentRepository->getResubmittableErrorDocumentsAndSetToQueued('100');
+        $this->entityManager->refresh($reportPdfDoc);
+        $this->entityManager->refresh($supportingDoc);
+
+        self::assertEquals(2, count($documents));
+        self::assertEquals(Document::SYNC_STATUS_QUEUED, $reportPdfDoc->getSynchronisationStatus());
+        self::assertEquals(Document::SYNC_STATUS_QUEUED, $supportingDoc->getSynchronisationStatus());
+    }
+
+    private function createFailedDocumentSubmission($status, $createdOn, $caseNumber, $error = null)
     {
         $client = $this->generateAndPersistClient('abc-123-'.$caseNumber);
         $report = $this->generateAndPersistReport($client, false);
         $reportPdfDoc = $this->generateAndPersistDocument($report, true, $status, $this->firstJulyAm, false);
         $supportingDoc = $this->generateAndPersistDocument($report, false, $status, $this->firstJulyAm, false);
+        if ($error) {
+            $supportingDoc->setSynchronisationError($error);
+            $this->entityManager->persist($supportingDoc);
+        }
         $reportSubmission = $this->submitReport($report, $this->firstJulyPm, $reportPdfDoc, $supportingDoc);
         $reportSubmission->setCreatedOn($createdOn);
         $this->entityManager->persist($reportSubmission);
