@@ -373,10 +373,10 @@ class IndexController extends AbstractController
     {
         $chunkSize = 2000;
 
-        $form = $this->createForm(FormDir\UploadCsvType::class, null, [
+        /** $form = $this->createForm(FormDir\UploadCsvType::class, null, [
             'method' => 'POST',
         ]);
-        $form->handleRequest($request);
+        $form->handleRequest($request); */
 
         $processForm = $this->createForm(FormDir\ProcessCSVType::class, null, [
             'method' => 'POST',
@@ -388,7 +388,7 @@ class IndexController extends AbstractController
             $this->dispatchCSVUploadEvent();
         }
 
-        if ($form->isSubmitted() && $form->isValid()) {
+        /** if ($form->isSubmitted() && $form->isValid()) {
             try {
                 $fileName = $form->get('file')->getData();
                 $data = $this->handleLayUploadForm($fileName);
@@ -436,7 +436,7 @@ class IndexController extends AbstractController
 
                 $form->get('file')->addError(new FormError($message));
             }
-        }
+        } */
 
         if ($processForm->isSubmitted() && $processForm->isValid()) {
             /** Run the lay CSV command as a background task */
@@ -484,7 +484,7 @@ class IndexController extends AbstractController
         return [
             'nOfChunks' => $request->get('nOfChunks'),
             'currentRecords' => $this->preRegistrationApi->count(),
-            'form' => $form->createView(),
+            /** 'form' => $form->createView(), */
             'processForm' => $processForm->createView(),
             'maxUploadSize' => min([ini_get('upload_max_filesize'), ini_get('post_max_size')]),
             'processStatus' => $processStatus,
@@ -504,17 +504,17 @@ class IndexController extends AbstractController
      */
     public function uploadOrgUsersAction(Request $request, ClientInterface $redisClient)
     {
-        $form = $this->createForm(FormDir\UploadCsvType::class, null, [
+        /** $form = $this->createForm(FormDir\UploadCsvType::class, null, [
             'method' => 'POST',
         ]);
-        $form->handleRequest($request);
+        $form->handleRequest($request); */
 
         $processForm = $this->createForm(FormDir\ProcessCSVType::class, null, [
             'method' => 'POST',
         ]);
         $processForm->handleRequest($request);
 
-        $outputStreamResponse = isset($_GET['ajax']);
+        /**$outputStreamResponse = isset($_GET['ajax']);
 
         if ($form->isSubmitted() && $form->isValid()) {
             try {
@@ -539,7 +539,7 @@ class IndexController extends AbstractController
                     $form->get('file')->addError(new FormError($message));
                 }
             }
-        }
+        } */
 
         if ($processForm->isSubmitted() && $processForm->isValid()) {
             /** Run the org CSV command as a background task */
@@ -586,7 +586,7 @@ class IndexController extends AbstractController
         $processCompletedDate = $redisClient->get('org-csv-completed-date');
 
         return [
-            'form' => $form->createView(),
+            /** 'form' => $form->createView(), */
             'processForm' => $processForm->createView(),
             'processStatus' => $processStatus,
             'processStatusDate' => $processCompletedDate,

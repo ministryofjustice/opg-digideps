@@ -14,7 +14,7 @@
 {% block pageContent %}
 
 <div class="govuk-grid-row">
-    <div class="govuk-grid-column-one-half hidden">
+    {# <div class="govuk-grid-column-one-half hidden">
         <h2 class="govuk-heading-m">{{ (page ~ '.heading') | trans }}</h2>
         {{ form_errors(form) }}
 
@@ -37,7 +37,7 @@
         </div>
 
         {{ form_end(form) }}
-    </div>
+    </div> #}
     {% if fileUploadedInfo['date'] != null %}
     <div class="govuk-grid-column-one-half">
         <h2 class="govuk-heading-m">Process S3 file</h2>
