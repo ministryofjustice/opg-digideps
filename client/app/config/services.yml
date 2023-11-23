@@ -418,3 +418,10 @@ services:
     class: App\Command\CheckCSVUploadedCommand
     arguments:
       $auditLogGroupName: "%env(AUDIT_LOG_GROUP_NAME)%"
+
+  App\EventListener\NotFoundExceptionListener:
+    arguments:
+      $logger: "@logger"
+      $environment: "@twig"
+    tags:
+      - { name: kernel.event_listener, event: kernel.exception, priority: 100 }

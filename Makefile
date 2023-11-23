@@ -163,7 +163,7 @@ get-audit-logs: ##@localstack Get audit log groups by passing event name e.g. ge
 	docker-compose exec localstack awslocal logs get-log-events --log-group-name audit-local --log-stream-name $(event_name)
 
 composer-api: ##@application Drops you into the API container with composer installed
-	docker-compose run --rm --volume ~/.composer:/tmp --volume ${PWD}/api:/app composer ${COMPOSER_ARGS}
+	docker-compose run --rm --volume ~/.composer:/tmp --volume ${PWD}/api/app:/app composer ${COMPOSER_ARGS}
 
 composer-client: ##@application Drops you into the frontend container with composer installed
 	docker-compose run --rm --volume ~/.composer:/tmp --volume ${PWD}/client/app:/app composer ${COMPOSER_ARGS}
