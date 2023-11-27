@@ -270,13 +270,6 @@ class Report implements ReportInterface, StartEndDateComparableInterface
     private $reasonForNoDecisions;
 
     /**
-     * @JMS\Type("string")
-     * @JMS\Groups({"report", "doesMoneyInExist"})
-     * @Assert\NotBlank( message="moneyIn.moneyInChoice.notBlank", groups={"doesMoneyInExist"})
-     */
-    private $doesMoneyInExist;
-
-    /**
      * @JMS\Type("boolean")
      *
      * @JMS\Groups({"noAssetsToAdd"})
@@ -414,21 +407,23 @@ class Report implements ReportInterface, StartEndDateComparableInterface
      * @JMS\Type("string")
      *
      * @JMS\Groups({"report"})
+     *
+     * @Assert\NotBlank( message="moneyIn.moneyInChoice.notBlank", groups={"doesMoneyInExist"})
      */
     private $moneyInExists;
 
     /**
      * @var string captures reason for no money in. Required if no money has gone in
      *
-     * @JMS\Type("string", "reasonForNoMoneyIn")
+     * @JMS\Type("string")
      *
      * @JMS\Groups({"report"})
+     *
      * @Assert\NotBlank( message="moneyIn.reasonForNoMoneyIn.notBlank", groups={"reasonForNoMoneyIn"})
      *
      * @var string|null
      */
     private $reasonForNoMoneyIn;
-
 
     /**
      * @JMS\Type("string")

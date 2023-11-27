@@ -421,7 +421,7 @@ class ReportController extends RestController
         }
 
         if (array_key_exists('does_money_in_exist', $data)) {
-            $report->setDoesMoneyInExist($data['does_money_in_exist']);
+            $report->setMoneyInExists($data['does_money_in_exist']);
             $report->updateSectionsStatusCache([
                 Report::SECTION_MONEY_IN,
             ]);

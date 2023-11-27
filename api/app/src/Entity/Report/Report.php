@@ -478,7 +478,9 @@ class Report implements ReportInterface
      * @var string yes | no
      *
      * @JMS\Type("string")
+     * 
      * @JMS\Groups({"report", "moneyInExist"})
+     * 
      * @ORM\Column(name="money_in_exists", type="text", nullable=true)
      */
     private $moneyInExists;
@@ -487,7 +489,9 @@ class Report implements ReportInterface
      * @var string captures reason for no money in. Required if no money has gone in
      *
      * @JMS\Type("string")
+     * 
      * @JMS\Groups({"report", "reasonForNoMoneyIn"})
+     * 
      * @ORM\Column(name="reason_for_no_money_in", type="text", nullable=true)
      */
     private $reasonForNoMoneyIn;
@@ -496,7 +500,9 @@ class Report implements ReportInterface
      * @var string yes | no
      *
      * @JMS\Type("string")
+     * 
      * @JMS\Groups({"report"})
+     * 
      * @ORM\Column(name="money_out_exists", type="text", nullable=true)
      */
     private $moneyOutExists;
@@ -505,7 +511,9 @@ class Report implements ReportInterface
      * @var string captures reason for no money out. Required if no money has gone out
      *
      * @JMS\Type("string")
+     * 
      * @JMS\Groups({"report"})
+     * 
      * @ORM\Column(name="reason_for_no_money_out", type="text", nullable=true)
      **/
     private $reasonForNoMoneyOut;
