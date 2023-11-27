@@ -6,7 +6,7 @@ resource "aws_elasticache_replication_group" "cache_api" {
   parameter_group_name       = "api-cache-params"
   replication_group_id       = "api-redis-${local.account.name}"
   description                = "Replication Group for API"
-  node_type                  = "cache.m7g.large"
+  node_type                  = "cache.t4g.small"
   num_cache_clusters         = 2
   port                       = 6379
   subnet_group_name          = local.account.ec_subnet_group
@@ -42,7 +42,7 @@ resource "aws_elasticache_replication_group" "front_api" {
   parameter_group_name       = "default.redis6.x"
   replication_group_id       = "frontend-redis-${local.account.name}"
   description                = "Replication Group for Front and Admin"
-  node_type                  = "cache.m7g.large"
+  node_type                  = "cache.t4g.small"
   num_cache_clusters         = 2
   port                       = 6379
   subnet_group_name          = local.account.ec_subnet_group
