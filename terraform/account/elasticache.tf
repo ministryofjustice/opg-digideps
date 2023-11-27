@@ -6,13 +6,14 @@ resource "aws_elasticache_replication_group" "cache_api" {
   parameter_group_name       = "api-cache-params"
   replication_group_id       = "api-redis-${local.account.name}"
   description                = "Replication Group for API"
-  node_type                  = "cache.m7g.large"
+  node_type                  = "cache.t4g.small"
   num_cache_clusters         = 2
   port                       = 6379
   subnet_group_name          = local.account.ec_subnet_group
   security_group_ids         = [aws_security_group.cache_api_sg.id]
   snapshot_retention_limit   = 1
   apply_immediately          = local.account.apply_immediately
+  snapshot_window            = "02:00-03:50"
   maintenance_window         = local.account.name == "production" ? "wed:04:00-wed:06:00" : "tue:04:00-tue:06:00"
   at_rest_encryption_enabled = true
   #tfsec:ignore:aws-elasticache-enable-in-transit-encryption - too much of a performance hit. To be re-evaluated.
@@ -41,13 +42,14 @@ resource "aws_elasticache_replication_group" "front_api" {
   parameter_group_name       = "default.redis6.x"
   replication_group_id       = "frontend-redis-${local.account.name}"
   description                = "Replication Group for Front and Admin"
-  node_type                  = "cache.m7g.large"
+  node_type                  = "cache.t4g.small"
   num_cache_clusters         = 2
   port                       = 6379
   subnet_group_name          = local.account.ec_subnet_group
   security_group_ids         = [aws_security_group.cache_front_sg.id]
   snapshot_retention_limit   = 1
   apply_immediately          = local.account.apply_immediately
+  snapshot_window            = "02:00-03:50"
   maintenance_window         = local.account.name == "production" ? "wed:04:00-wed:06:00" : "tue:04:00-tue:06:00"
   at_rest_encryption_enabled = true
   #tfsec:ignore:aws-elasticache-enable-in-transit-encryption - too much of a performance hit. To be re-evaluated.
