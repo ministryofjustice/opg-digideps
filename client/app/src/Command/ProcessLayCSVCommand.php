@@ -113,6 +113,8 @@ class ProcessLayCSVCommand extends Command
                 ])
                 ->setUnexpectedColumns(['LastReportDay', 'DeputyOrganisation'])
                 ->getData();
+
+        } catch (Throwable $e) {
             $this->logger->error(sprintf('Error processing CSV file: %s', $e->getMessage()));
         }
     }

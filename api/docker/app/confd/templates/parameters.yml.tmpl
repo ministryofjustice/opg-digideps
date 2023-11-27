@@ -27,7 +27,7 @@ parameters:
 {{ else }}
       validate: true
 {{ end }}
-
+    session_prefix: {{ getv "/session/prefix" }}
     secrets_manager_client_params:
       version: 'latest'
       region: 'eu-west-1'
@@ -54,3 +54,21 @@ parameters:
     verbose_log_level: notice
     log_path: /var/log/app/application.log
     workspace: {{ getv "/workspace" }}
+
+    s3_client_params:
+        version: 'latest'
+        region: 'eu-west-1'
+    {{ if exists "/s3/localstack" }}
+        endpoint: 'http://localstack:4566'
+        use_path_style_endpoint: true
+        validate: false
+        credentials:
+            key: 'FAKE_ID'
+            secret: 'FAKE_KEY'
+    {{ else }}
+        validate: true
+    {{ end }}
+    s3_bucket_name: pa-uploads-local
+    s3_sirius_bucket: sirius-bucket-local
+    pa_pro_report_csv_filename: pa_pro_report.csv
+    lay_report_csv_filename: layDeputyReport.csv
