@@ -121,6 +121,80 @@ LIMIT $limit;";
         return [];
     }
 
+    public function getResubmittableErrorDocumentsAndSetToQueued(string $limit)
+    {
+        $resubmittableErrorDocumentsQuery = "
+SELECT d.id AS document_id,
+d.created_on AS document_created_on,
+d.report_submission_id AS report_submission_id,
+d.is_report_pdf AS is_report_pdf,
+d.filename AS filename,
+d.storage_reference AS storage_reference,
+d.report_id AS report_id,
+d.ndr_id AS ndr_id,
+d.sync_attempts AS document_sync_attempts,
+r.start_date AS report_start_date,
+r.end_date AS report_end_date,
+r.submit_date AS report_submit_date,
+r.type AS report_type,
+rs.opg_uuid AS opg_uuid,
+rs.created_on AS report_submission_created_on,
+o.start_date AS ndr_start_date,
+o.submit_date AS ndr_submit_date,
+COALESCE(c1.case_number, c2.case_number) AS case_number
+FROM document AS d
+LEFT JOIN report AS r on d.report_id = r.id
+LEFT JOIN odr AS o on d.ndr_id = o.id
+LEFT JOIN report_submission AS rs on d.report_submission_id  = rs.id
+LEFT JOIN client AS c1 on r.client_id = c1.id
+LEFT JOIN client AS c2 on o.client_id = c2.id
+WHERE d.synchronisation_status='PERMANENT_ERROR'
+AND (
+    d.synchronisation_error LIKE 'Report PDF failed to sync%'
+    OR
+    d.synchronisation_error LIKE 'Document failed to sync after%'
+)
+ORDER BY is_report_pdf DESC, report_submission_id ASC
+LIMIT $limit;";
+
+        $conn = $this->getEntityManager()->getConnection();
+
+        $docStmt = $conn->prepare($resubmittableErrorDocumentsQuery);
+        $result = $docStmt->executeQuery();
+
+        $documents = [];
+
+        // Get all queued documents
+        $results = $result->fetchAllAssociative();
+        foreach ($results as $row) {
+            $documents[$row['document_id']] = [
+                'document_id' => $row['document_id'],
+                'document_created_on' => $row['document_created_on'],
+                'report_submission_id' => $row['report_submission_id'],
+                'ndr_id' => $row['ndr_id'],
+                'report_id' => $row['report_id'],
+                'report_start_date' => isset($row['report_start_date']) ? $row['report_start_date'] : (new \DateTime($row['ndr_start_date']))->format('Y-m-d'),
+                'report_end_date' => $row['report_end_date'],
+                'report_submit_date' => isset($row['report_submit_date']) ? $row['report_submit_date'] : $row['ndr_submit_date'],
+                'report_type' => $row['report_type'],
+                'is_report_pdf' => $row['is_report_pdf'],
+                'filename' => $row['filename'],
+                'storage_reference' => $row['storage_reference'],
+                'report_submission_uuid' => $row['opg_uuid'],
+                'case_number' => $row['case_number'],
+                'document_sync_attempts' => $row['document_sync_attempts'],
+            ];
+        }
+
+        if (count($documents) > 0) {
+            $this->setErrorDocumentsToQueued($documents, $conn);
+
+            return $documents;
+        }
+
+        return [];
+    }
+
     public function logFailedDocuments()
     {
         $queuedStatus = Document::SYNC_STATUS_QUEUED;
@@ -325,6 +399,30 @@ AND is_report_pdf=false";
                 $idsString = implode(',', $ids);
 
                 $updateStatusQuery = "UPDATE document SET synchronisation_status = 'IN_PROGRESS' WHERE id IN ($idsString)";
+                $stmt = $connection->prepare($updateStatusQuery);
+
+                $stmt->execute();
+            }
+        }
+    }
+
+    /**
+     * @throws \Doctrine\DBAL\DBALException
+     */
+    private function setErrorDocumentsToQueued(array $documents, Connection $connection): void
+    {
+        if (count($documents)) {
+            // Set documents to queued where they are re-submittable
+            $ids = [];
+            foreach ($documents as $data) {
+                $ids[] = $data['document_id'];
+
+                $idsString = implode(',', $ids);
+
+                $updateStatusQuery = "
+UPDATE document
+SET synchronisation_status = 'QUEUED', synchronisation_error = ''
+WHERE id IN ($idsString)";
                 $stmt = $connection->prepare($updateStatusQuery);
 
                 $stmt->execute();
