@@ -12,7 +12,8 @@ resource "aws_elasticache_replication_group" "cache_api" {
   subnet_group_name          = local.account.ec_subnet_group
   security_group_ids         = [aws_security_group.cache_api_sg.id]
   snapshot_retention_limit   = 1
-  apply_immediately          = true
+  apply_immediately          = local.account.apply_immediately
+  maintenance_window         = local.account.name == "production" ? "wed:04:00-wed:06:00" : "tue:04:00-tue:06:00"
   at_rest_encryption_enabled = true
   #tfsec:ignore:aws-elasticache-enable-in-transit-encryption - too much of a performance hit. To be re-evaluated.
   transit_encryption_enabled = false
@@ -46,7 +47,8 @@ resource "aws_elasticache_replication_group" "front_api" {
   subnet_group_name          = local.account.ec_subnet_group
   security_group_ids         = [aws_security_group.cache_front_sg.id]
   snapshot_retention_limit   = 1
-  apply_immediately          = true
+  apply_immediately          = local.account.apply_immediately
+  maintenance_window         = local.account.name == "production" ? "wed:04:00-wed:06:00" : "tue:04:00-tue:06:00"
   at_rest_encryption_enabled = true
   #tfsec:ignore:aws-elasticache-enable-in-transit-encryption - too much of a performance hit. To be re-evaluated.
   transit_encryption_enabled = false

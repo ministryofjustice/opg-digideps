@@ -56,26 +56,38 @@ class DocumentRepositoryTest extends KernelTestCase
      */
     public function getResubmittableErrorDocumentsAndSetToQueued()
     {
-        [$_, $_, $reportPdfDoc, $supportingDoc, $_] = $this->createAndSubmitReportWithSupportingDoc($this->firstJulyAm);
+        [$_, $_, $reportPdfDocValid, $supportingDocValid, $_] = $this->createAndSubmitReportWithSupportingDoc($this->firstJulyAm);
+        [$_, $_, $reportPdfDocNotValid, $supportingDocNotValid, $_] = $this->createAndSubmitReportWithSupportingDoc($this->firstJulyAm);
 
-        $reportPdfDoc->setSynchronisationStatus(Document::SYNC_STATUS_PERMANENT_ERROR);
-        $reportPdfDoc->setSynchronisationError('Document failed to sync after 4 attempts');
-        $supportingDoc->setSynchronisationStatus(Document::SYNC_STATUS_PERMANENT_ERROR);
-        $supportingDoc->setSynchronisationError('Report PDF failed to sync');
+        $reportPdfDocValid->setSynchronisationStatus(Document::SYNC_STATUS_PERMANENT_ERROR);
+        $reportPdfDocValid->setSynchronisationError('Document failed to sync after 4 attempts');
+        $supportingDocValid->setSynchronisationStatus(Document::SYNC_STATUS_PERMANENT_ERROR);
+        $supportingDocValid->setSynchronisationError('Report PDF failed to sync');
+        $reportPdfDocNotValid->setSynchronisationStatus(Document::SYNC_STATUS_SUCCESS);
+        $supportingDocNotValid->setSynchronisationStatus(Document::SYNC_STATUS_PERMANENT_ERROR);
+        $supportingDocNotValid->setSynchronisationError('Some non resubmittable error message');
 
-        $this->entityManager->persist($reportPdfDoc);
-        $this->entityManager->persist($supportingDoc);
+        $this->entityManager->persist($reportPdfDocValid);
+        $this->entityManager->persist($supportingDocValid);
+        $this->entityManager->persist($reportPdfDocNotValid);
+        $this->entityManager->persist($supportingDocNotValid);
         $this->entityManager->flush();
-        self::assertEquals(Document::SYNC_STATUS_PERMANENT_ERROR, $reportPdfDoc->getSynchronisationStatus());
-        self::assertEquals(Document::SYNC_STATUS_PERMANENT_ERROR, $supportingDoc->getSynchronisationStatus());
+        self::assertEquals(Document::SYNC_STATUS_PERMANENT_ERROR, $reportPdfDocValid->getSynchronisationStatus());
+        self::assertEquals(Document::SYNC_STATUS_PERMANENT_ERROR, $supportingDocValid->getSynchronisationStatus());
+        self::assertEquals(Document::SYNC_STATUS_SUCCESS, $reportPdfDocNotValid->getSynchronisationStatus());
+        self::assertEquals(Document::SYNC_STATUS_PERMANENT_ERROR, $supportingDocNotValid->getSynchronisationStatus());
 
         $documents = $this->documentRepository->getResubmittableErrorDocumentsAndSetToQueued('100');
-        $this->entityManager->refresh($reportPdfDoc);
-        $this->entityManager->refresh($supportingDoc);
+        $this->entityManager->refresh($reportPdfDocValid);
+        $this->entityManager->refresh($supportingDocValid);
+        $this->entityManager->refresh($reportPdfDocNotValid);
+        $this->entityManager->refresh($supportingDocNotValid);
 
         self::assertEquals(2, count($documents));
-        self::assertEquals(Document::SYNC_STATUS_QUEUED, $reportPdfDoc->getSynchronisationStatus());
-        self::assertEquals(Document::SYNC_STATUS_QUEUED, $supportingDoc->getSynchronisationStatus());
+        self::assertEquals(Document::SYNC_STATUS_QUEUED, $reportPdfDocValid->getSynchronisationStatus());
+        self::assertEquals(Document::SYNC_STATUS_QUEUED, $supportingDocValid->getSynchronisationStatus());
+        self::assertEquals(Document::SYNC_STATUS_SUCCESS, $reportPdfDocNotValid->getSynchronisationStatus());
+        self::assertEquals(Document::SYNC_STATUS_PERMANENT_ERROR, $supportingDocNotValid->getSynchronisationStatus());
     }
 
     private function createFailedDocumentSubmission($status, $createdOn, $caseNumber, $error = null)
