@@ -34,12 +34,4 @@ locals {
   }
 
   s3_bucket = local.account.name == "production" ? "${local.account.name}02" : local.account.name
-
-  cloud9_users = [
-    "alex.saunders",
-    "gugandeep.chani",
-    "jack.goodby",
-    "mia.gordon",
-    "chris.rafferty"
-  ]
 }
