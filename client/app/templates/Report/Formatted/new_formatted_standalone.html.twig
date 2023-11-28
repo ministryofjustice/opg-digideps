@@ -1,0 +1,14 @@
+<!DOCTYPE html>
+<html lang="en">
+    <head>
+        <meta http-equiv="content-type" content="text/html; charset=UTF-8" />
+        <title>OPG Report</title>
+        <style media="screen, print">
+            {{ 'stylesheets/formatted-report.css' | assetSource | raw }}
+            {{ 'stylesheets/fonts.css' | assetSource | raw }}
+        </style>
+    </head>
+    <body>
+        {% include '@App/Report/Formatted/new_formatted_body.html.twig' %}
+    </body>
+</html>
