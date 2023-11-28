@@ -79,8 +79,11 @@
                     <h2 class="section-heading">Accounts</h2>
                     {% include '@App/Report/Formatted/Accounts/_summary.html.twig' %}
                 {% endif %}
-                {% include '@App/Report/Formatted/Accounts/_money_in_out_short.html.twig' with {
+                {% include '@App/Report/Formatted/Accounts/_new_money_in_out_short.html.twig' with {
                 'title': 'Money in',
+                'moneyInOutQuestion': 'summaryPage.moneyIn.hasMoneyIn.label',
+                'moneyInOutExists': report.moneyInExists,
+                'noMoneyInOutReason': report.reasonForNoMoneyIn,
                 'categories': report.moneyShortCategoriesInPresent,
                 'transactions': report.moneyTransactionsShortIn,
                 'transactionsExist': report.moneyTransactionsShortInExist,
@@ -88,8 +91,11 @@
                 'existQuestion' : 'Have there been any items of income over £1,000? ',
                 'totalText': 'Money in total (items over £1,000)'
                 } %}
-                {% include '@App/Report/Formatted/Accounts/_money_in_out_short.html.twig' with {
+                {% include '@App/Report/Formatted/Accounts/_new_money_in_out_short.html.twig' with {
                 'title': 'Money out',
+                'moneyInOutQuestion': 'summaryPage.moneyOut.hasMoneyOut.label',
+                'moneyInOutExists': report.moneyOutExists,
+                'noMoneyInOutReason': report.reasonForNoMoneyOut,
                 'categories': report.moneyShortCategoriesOutPresent,
                 'transactions': report.moneyTransactionsShortOut,
                 'transactionsExist': report.moneyTransactionsShortOutExist,
