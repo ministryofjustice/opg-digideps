@@ -16,6 +16,7 @@ variable "accounts" {
         domains_blocked = list(string)
       })
       sirius_account_id = string
+      apply_immediately = bool
     })
   )
 }
