@@ -20,8 +20,6 @@ use App\Service\Client\Internal\ReportApi;
 use App\Service\Client\RestClient;
 use App\Service\ParameterStoreService;
 use App\Service\ReportSubmissionService;
-use DateTime;
-use Exception;
 use Psr\Log\LoggerInterface;
 use Sensio\Bundle\FrameworkExtraBundle\Configuration\Security;
 use Sensio\Bundle\FrameworkExtraBundle\Configuration\Template;
@@ -117,6 +115,7 @@ class ReportController extends AbstractController
 
     /**
      * @Route("checklist", name="admin_report_checklist")
+     *
      * @Security("is_granted('ROLE_ADMIN')")
      *
      * @param string $id
@@ -245,10 +244,142 @@ class ReportController extends AbstractController
     }
 
     /**
+     * @Route("new_checklist", name="admin_report_new_checklist")
+     *
+     * @Security("is_granted('ROLE_ADMIN')")
+     *
+     * @param string $id
+     *
+     * @Template("@App/Admin/Client/Report/new_checklist.html.twig")
+     *
+     * @return array|RedirectResponse|Response
+     */
+    public function newChecklistAction(Request $request, $id)
+    {
+        $report = $this->reportApi->getReport(
+            intval($id),
+            array_merge(
+                self::$reportGroupsAll,
+                [
+                    'report-checklist', 'checklist-information', 'last-modified', 'user', 'previous-report-data', 'action', 'report-submitted-by', 'synchronisation',
+                ]
+            )
+        );
+
+        if (!$report->getSubmitted() && empty($report->getUnSubmitDate())) {
+            throw new ReportNotSubmittedException('Cannot lodge a checklist for an incomplete report');
+        }
+
+        $checklist = $report->getChecklist();
+        $checklist = empty($checklist) ? new Checklist($report) : $checklist;
+
+        /** @var Form $form */
+        $form = $this->createForm(ReportChecklistType::class, $checklist, ['report' => $report]);
+        $form->handleRequest($request);
+
+        /** @var SubmitButton $buttonClicked */
+        $buttonClicked = $form->getClickedButton();
+
+        $reviewChecklist = $this->restClient->get('report/'.$report->getId().'/checklist', 'Report\\ReviewChecklist');
+        /** @var Form $reviewForm */
+        $reviewForm = $this->createForm(ReviewChecklistType::class, $reviewChecklist);
+        $reviewForm->handleRequest($request);
+
+        if ($reviewForm->isSubmitted() && $reviewForm->isValid()) {
+            /** @var SubmitButton $button */
+            $button = $reviewForm->getClickedButton();
+            if (ReviewChecklistType::SUBMIT_ACTION === $button->getName()) {
+                $reviewChecklist->setIsSubmitted(true);
+            }
+
+            if (!empty($reviewChecklist->getId())) {
+                $this->restClient->put('report/'.$report->getId().'/checklist', $reviewChecklist);
+            } else {
+                $this->restClient->post('report/'.$report->getId().'/checklist', $reviewChecklist);
+            }
+
+            if (ReviewChecklistType::SUBMIT_ACTION === $button->getName()) {
+                return $this->redirect($this->generateUrl('admin_report_checklist_submitted', ['id' => $report->getId()]));
+            } else {
+                $this->addFlash('notice', 'Review checklist saved');
+
+                return $this->redirect($this->generateUrl('admin_report_checklist', ['id' => $report->getId()]).'#anchor-fullReview-checklist');
+            }
+        }
+
+        if ($buttonClicked instanceof SubmitButton) {
+            $checklist->setButtonClicked($buttonClicked->getName());
+        }
+
+        if ($form->isSubmitted() && $form->isValid()) {
+            if (!empty($checklist->getId())) {
+                $this->restClient->put('report/'.$report->getId().'/checked', $checklist, [
+                    'report-checklist', 'checklist-information',
+                ]);
+            } else {
+                $this->restClient->post('report/'.$report->getId().'/checked', $checklist, [
+                    'report-checklist', 'checklist-information',
+                ]);
+            }
+
+            /** @var Session $session */
+            $session = $request->getSession();
+
+            if (!$session->getFlashBag()->has('notice')) {
+                // the duplicate notice is because the PDF view action doesn't actually refresh the page and therefore the original
+                // 'saved' notice never gets rendered
+                $this->addFlash('notice', 'Lodging checklist saved');
+            }
+
+            if ('saveFurtherInformation' == $buttonClicked->getName()) {
+                return $this->redirect(
+                    $this->generateUrl('admin_report_checklist', ['id' => $report->getId()]).'#furtherInformation'
+                );
+            } else {
+                if ('submitAndContinue' == $buttonClicked->getName()) {
+                    return $this->redirect($this->generateUrl('admin_report_checklist_submitted', ['id' => $report->getId()]));
+                } else {
+                    return $this->redirect($this->generateUrl('admin_report_checklist', ['id' => $report->getId()]).'#');
+                }
+            }
+        }
+
+        $costBreakdown = null;
+
+        if (Report::PROF_DEPUTY_COSTS_TYPE_FIXED !== $report->getProfDeputyCostsEstimateHowCharged()) {
+            $costBreakdown = $report->generateActualSubmittedEstimateCosts();
+        }
+
+        $syncStatus = null;
+
+        if ($checklist->getSynchronisationStatus()) {
+            $syncStatus = match ($checklist->getSynchronisationStatus()) {
+                SynchronisableInterface::SYNC_STATUS_QUEUED, SynchronisableInterface::SYNC_STATUS_IN_PROGRESS => 'Pending',
+                SynchronisableInterface::SYNC_STATUS_PERMANENT_ERROR, SynchronisableInterface::SYNC_STATUS_TEMPORARY_ERROR => 'Failed',
+                SynchronisableInterface::SYNC_STATUS_SUCCESS => 'Sent to Sirius',
+            };
+        }
+
+        return [
+            'report' => $report,
+            'submittedEstimateCosts' => $costBreakdown,
+            'form' => $form->createView(),
+            'reviewForm' => $reviewForm->createView(),
+            'checklist' => $checklist,
+            'reviewChecklist' => $reviewChecklist,
+            'previousReportData' => $report->getPreviousReportData(),
+            'reportOrNdr' => $report instanceof Ndr ? 'ndr' : 'report',
+            'syncStatus' => $syncStatus,
+        ];
+    }
+
+    /**
      * @Route("checklist-submitted", name="admin_report_checklist_submitted")
+     *
      * @Security("is_granted('ROLE_ADMIN')")
      *
      * @return array
+     *
      * @Template("@App/Admin/Client/Report/checklistSubmitted.html.twig")
      */
     public function checklistSubmittedAction(int $id, ParameterStoreService $parameterStore)
@@ -277,6 +408,7 @@ class ReportController extends AbstractController
      * Generate and return Checklist as Response object.
      *
      * @Route("checklist.pdf", name="admin_checklist_pdf")
+     *
      * @Security("is_granted('ROLE_ADMIN')")
      *
      * @return Response
@@ -296,7 +428,7 @@ class ReportController extends AbstractController
         $attachmentName = sprintf(
             'DigiChecklist-%s_%s_%s.pdf',
             $report->getEndDate()->format('Y'),
-            $report->getSubmitDate() instanceof DateTime ? $report->getSubmitDate()->format('Y-m-d') : 'n-a-', // some old reports have no submission date
+            $report->getSubmitDate() instanceof \DateTime ? $report->getSubmitDate()->format('Y-m-d') : 'n-a-', // some old reports have no submission date
             $report->getClient()->getCaseNumber()
         );
 
@@ -310,6 +442,7 @@ class ReportController extends AbstractController
 
     /**
      * @Route("manage", name="admin_report_manage")
+     *
      * @Security("is_granted('ROLE_ADMIN') or is_granted('ROLE_AD')")
      *
      * @param string $id
@@ -318,7 +451,7 @@ class ReportController extends AbstractController
      *
      * @return array|Response|RedirectResponse
      *
-     * @throws Exception
+     * @throws \Exception
      */
     public function manageAction(Request $request, $id)
     {
@@ -356,7 +489,7 @@ class ReportController extends AbstractController
     }
 
     /**
-     * @throws Exception
+     * @throws \Exception
      */
     private function prepopulateWithPreviousChoices(array $dataFromUrl, FormInterface $form): void
     {
@@ -365,7 +498,7 @@ class ReportController extends AbstractController
         }
 
         foreach (['dueDateCustom', 'startDate', 'endDate'] as $field) {
-            $form->has($field) && array_key_exists($field, $dataFromUrl) && $form[$field]->setData(new DateTime($dataFromUrl[$field]));
+            $form->has($field) && array_key_exists($field, $dataFromUrl) && $form[$field]->setData(new \DateTime($dataFromUrl[$field]));
         }
 
         if ($form->has('unsubmittedSection') && isset($dataFromUrl['unsubmittedSectionsList'])) {
@@ -381,7 +514,7 @@ class ReportController extends AbstractController
     }
 
     /**
-     * @throws Exception
+     * @throws \Exception
      */
     private function setChoicesInSession(Request $request, FormInterface $form, Report $report): void
     {
@@ -393,7 +526,7 @@ class ReportController extends AbstractController
             'type' => $form['type']->getData(),
             'dueDate' => $this->determineNewDueDateFromForm($report, $form)->format('Y-m-d'),
             'dueDateChoice' => $form['dueDateChoice']->getData(),
-            'dueDateCustom' => $customDueDate instanceof DateTime ? $customDueDate->format('Y-m-d') : null,
+            'dueDateCustom' => $customDueDate instanceof \DateTime ? $customDueDate->format('Y-m-d') : null,
             'startDate' => $startDate,
             'endDate' => $endDate,
             'unsubmittedSectionsList' => implode(',', $report->getUnsubmittedSectionsIds()),
@@ -401,20 +534,18 @@ class ReportController extends AbstractController
     }
 
     /**
-     * @param array $data
+     * @return \DateTime|null
      *
-     * @return DateTime|null
-     *
-     * @throws Exception
+     * @throws \Exception
      */
     private function determineNewDueDateFromForm(Report $report, FormInterface $form)
     {
         $newDueDate = $report->getDueDate();
 
         if (preg_match('/^\d+$/', $form['dueDateChoice']->getData())) {
-            $newDueDate = new DateTime();
+            $newDueDate = new \DateTime();
             $newDueDate->modify("+{$form['dueDateChoice']->getData()} weeks");
-        } elseif ('custom' == $form['dueDateChoice']->getData() && $form['dueDateCustom']->getData() instanceof DateTime) {
+        } elseif ('custom' == $form['dueDateChoice']->getData() && $form['dueDateCustom']->getData() instanceof \DateTime) {
             $newDueDate = $form['dueDateCustom']->getData();
         }
 
@@ -423,13 +554,13 @@ class ReportController extends AbstractController
 
     /**
      * @Route("manage-confirm", name="admin_report_manage_confirm")
-     * @Security("is_granted('ROLE_ADMIN') or is_granted('ROLE_AD')")
      *
-     * @param $id
+     * @Security("is_granted('ROLE_ADMIN') or is_granted('ROLE_AD')")
      *
      * @return array|Response|RedirectResponse
      *
-     * @throws Exception
+     * @throws \Exception
+     *
      * @Template("@App/Admin/Client/Report/manageConfirm.html.twig")
      */
     public function manageConfirmAction(Request $request, $id)
@@ -478,16 +609,16 @@ class ReportController extends AbstractController
     private function sufficientDataInSession(array $sessionData): bool
     {
         return
-            array_key_exists('type', $sessionData) &&
-            array_key_exists('dueDateChoice', $sessionData) &&
-            array_key_exists('dueDateCustom', $sessionData) &&
-            array_key_exists('startDate', $sessionData) &&
-            array_key_exists('endDate', $sessionData) &&
-            array_key_exists('unsubmittedSectionsList', $sessionData);
+            array_key_exists('type', $sessionData)
+            && array_key_exists('dueDateChoice', $sessionData)
+            && array_key_exists('dueDateCustom', $sessionData)
+            && array_key_exists('startDate', $sessionData)
+            && array_key_exists('endDate', $sessionData)
+            && array_key_exists('unsubmittedSectionsList', $sessionData);
     }
 
     /**
-     * @throws Exception
+     * @throws \Exception
      */
     private function populateReportFromSession(Report $report, array $sessionData): void
     {
@@ -501,21 +632,21 @@ class ReportController extends AbstractController
         foreach (['dueDate', 'startDate', 'endDate'] as $field) {
             if (isset($sessionData[$field])) {
                 $setter = sprintf('set%s', ucfirst($field));
-                $report->{$setter}(new DateTime($sessionData[$field]));
+                $report->{$setter}(new \DateTime($sessionData[$field]));
             }
         }
     }
 
     /**
      * @Route("manage-close-report-confirm", name="admin_report_manage_close_report_confirm")
+     *
      * @Security("is_granted('ROLE_ADMIN') or is_granted('ROLE_AD')")
      *
-     * @param $id
-     *
      * @return array|RedirectResponse
+     *
      * @Template("@App/Admin/Client/Report/manageCloseReportConfirm.html.twig")
      *
-     * @throws Exception
+     * @throws \Exception
      */
     public function manageCloseReportConfirmAction(Request $request, $id)
     {
