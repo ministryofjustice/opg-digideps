@@ -39,3 +39,14 @@ module "development_environment_secrets" {
   ]
   tags = local.default_tags
 }
+
+# Account wide secrets
+resource "aws_secretsmanager_secret" "cloud9_users" {
+  name        = "cloud9-users"
+  description = "Digideps team Cloud9 users"
+  tags        = local.default_tags
+}
+
+data "aws_secretsmanager_secret_version" "cloud9_users" {
+  secret_id = aws_secretsmanager_secret.cloud9_users.id
+}
