@@ -1,0 +1,58 @@
+{% from '@App/Macros/macros.html.twig' import details %}
+{% trans_default_domain 'admin-checklist' %}
+{% set hideEditLink = true %}
+
+{% if report.hasSection('moneyIn') %}
+    {% set moneyInSummary = '@App/Report/MoneyIn/_list_new.html.twig' %}
+{% endif %}
+
+{% if report.hasSection('moneyInShort') %}
+    {% set moneyInSummary = '@App/Report/MoneyInShort/_answers_new.html.twig' %}
+{% endif %}
+
+{% if report.hasSection('moneyOut') %}
+    {% set moneyOutSummary = '@App/Report/MoneyOut/_list_new.html.twig' %}
+{% endif %}
+
+{% if report.hasSection('moneyOutShort') %}
+    {% set moneyOutSummary = '@App/Report/MoneyOutShort/_answers_new.html.twig' %}
+{% endif %}
+
+{% if report.hasSection('moneyTransfers') %}
+    {% if report.enoughBankAccountForTransfers %}
+        <details class="govuk-details govuk-!-margin-bottom-0" data-module="govuk-details">
+            <summary class="govuk-details__summary">
+                <span class="govuk-details__summary-text">{{ (page ~ '.revealTitle.moneyTransfersSummary') | trans }}</span>
+            </summary>
+            <div class="govuk-details__text">
+                {% include '@App/Report/MoneyTransfer/_list.html.twig' %}
+            </div>
+        </details>
+    {% else %}
+        <p class="govuk-body govuk-!-margin-bottom-0">
+            {{ (page ~ '.noTransferToShow') | trans }}
+        </p>
+    {% endif %}
+{% endif %}
+
+{% if moneyInSummary is defined %}
+    <details class="govuk-details govuk-!-margin-bottom-0" data-module="govuk-details">
+        <summary class="govuk-details__summary">
+            <span class="govuk-details__summary-text">{{ (page ~ '.revealTitle.moneyInSummary') | trans }}</span>
+        </summary>
+        <div class="govuk-details__text">
+            {% include moneyInSummary %}
+        </div>
+    </details>
+{% endif %}
+
+{% if moneyOutSummary is defined %}
+    <details class="govuk-details {{ (collapseMargin is defined and collapseMargin) ? 'govuk-!-margin-bottom-0' : '' }}" data-module="govuk-details">
+        <summary class="govuk-details__summary">
+            <span class="govuk-details__summary-text">{{ (page ~ '.revealTitle.moneyOutSummary') | trans }}</span>
+        </summary>
+        <div class="govuk-details__text">
+            {% include moneyOutSummary %}
+        </div>
+    </details>
+{% endif %}
