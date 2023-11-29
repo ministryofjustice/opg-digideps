@@ -38,7 +38,6 @@ class MoneyInShortController extends AbstractController
 
     /**
      * @Route("/report/{reportId}/money-in-short", name="money_in_short")
-     *
      * @Template("@App/Report/MoneyInShort/start.html.twig")
      *
      * @return array|RedirectResponse
@@ -128,7 +127,6 @@ class MoneyInShortController extends AbstractController
 
     /**
      * @Route("/report/{reportId}/money-in-short/category", name="money_in_short_category")
-     *
      * @Template("@App/Report/MoneyInShort/category.html.twig")
      *
      * @return array|RedirectResponse
@@ -204,7 +202,6 @@ class MoneyInShortController extends AbstractController
 
     /**
      * @Route("/report/{reportId}/money-in-short/add", name="money_in_short_add")
-     *
      * @Template("@App/Report/MoneyInShort/add.html.twig")
      *
      * @return array|RedirectResponse
@@ -235,7 +232,6 @@ class MoneyInShortController extends AbstractController
 
     /**
      * @Route("/report/{reportId}/money-in-short/add_another", name="money_in_short_add_another")
-     *
      * @Template("@App/Report/MoneyInShort/addAnother.html.twig")
      *
      * @return array|RedirectResponse
@@ -264,7 +260,6 @@ class MoneyInShortController extends AbstractController
 
     /**
      * @Route("/report/{reportId}/money-in-short/edit/{transactionId}", name="money_in_short_edit")
-     *
      * @Template("@App/Report/MoneyInShort/edit.html.twig")
      *
      * @return array|RedirectResponse
@@ -295,7 +290,6 @@ class MoneyInShortController extends AbstractController
 
     /**
      * @Route("/report/{reportId}/money-in-short/{transactionId}/delete", name="money_in_short_delete")
-     *
      * @Template("@App/Common/confirmDelete.html.twig")
      *
      * @return array|RedirectResponse
@@ -335,7 +329,6 @@ class MoneyInShortController extends AbstractController
 
     /**
      * @Route("/report/{reportId}/money-in-short/summary", name="money_in_short_summary")
-     *
      * @Template("@App/Report/MoneyInShort/summary.html.twig")
      *
      * @return array|RedirectResponse
@@ -358,7 +351,6 @@ class MoneyInShortController extends AbstractController
 
     /**
      * @Route("/report/{reportId}/money-in-short/new_summary", name="money_in_short_new_summary")
-     *
      * @Template("@App/Report/MoneyInShort/new_summary.html.twig")
      *
      * @return array|RedirectResponse

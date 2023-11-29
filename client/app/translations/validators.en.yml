@@ -262,6 +262,14 @@ moneyIn:
     notBlank: Please provide a reason
     minLength: Your reason must be at least {{ limit }} characters long
     maxLength: Your reason cannot be longer than {{ limit }} characters
+    
+moneyOut:
+  moneyOutChoice:
+    notBlank: Please select either 'Yes' or 'No'
+  reasonForNoMoneyOut:
+    notBlank: Please provide a reason
+    minLength: Your reason must be at least {{ limit }} characters long
+    maxLength: Your reason cannot be longer than {{ limit }} characters
 
 moneyTransaction:
   addAnother.notBlank: Please choose an option

@@ -38,7 +38,7 @@ jobs:
           --cache-from=type=local,src=/tmp/.buildx-cache \
           --cache-to=type=local,dest=/tmp/.buildx-cache-new \
           --tag frontend-unit-tests:latest \
-          --target testing \
+          --target ci-tests \
           --output type=docker .
 
       - name: run client unit tests

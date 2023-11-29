@@ -44,6 +44,21 @@ categoryPage:
   moneyOut:
     htmlTitle: "Money out - Complete the deputy report | GOV.UK"
     supportTitle: Money out
+  form:
+    moneyOutShort:
+      label: Have you taken money out on %client%'s behalf during this reporting period?
+    save:
+      label: Save and continue
+
+noMoneyOut:
+  htmlTitle: "Money out - Complete the deputy report | GOV.UK"
+  supportTitle: Money out
+  form:
+    explanation:
+      label: No money withdrawn from %client%'s accounts
+      hintText: Please provide a reason
+    save:
+      label: Save and continue
 
 oneOffPaymentExistPage:
   moneyIn:
@@ -59,6 +74,14 @@ oneOffPaymentExistPage:
       label: Have there been any one-off payments over £1,000?
     save:
       label: Save and continue
+
+categoryPage:
+  moneyIn:
+    htmlTitle: "Money in - Complete the deputy report | GOV.UK"
+    supportTitle: Money in
+  moneyOut:
+    htmlTitle: "Money out - Complete the deputy report | GOV.UK"
+    supportTitle: Money out
 
 addPage:
   moneyIn:

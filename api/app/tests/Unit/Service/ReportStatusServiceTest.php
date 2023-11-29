@@ -82,6 +82,7 @@ class ReportStatusServiceTest extends TestCase
                 'getMoneyInExists' => null,
                 'hasMoneyIn' => false,
                 'getMoneyTransactionsIn' => [],
+                'getMoneyOutExists' => null,
                 'hasMoneyOut' => false,
                 'getMoneyTransactionsOut' => [],
                 'getHasDebts' => null,

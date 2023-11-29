@@ -480,7 +480,7 @@ class Report implements ReportInterface
      * @JMS\Type("string")
      * 
      * @JMS\Groups({"report", "moneyInExist"})
-     * 
+     *
      * @ORM\Column(name="money_in_exists", type="text", nullable=true)
      */
     private $moneyInExists;
@@ -501,8 +501,8 @@ class Report implements ReportInterface
      *
      * @JMS\Type("string")
      * 
-     * @JMS\Groups({"report"})
-     * 
+     * @JMS\Groups({"report", "moneyOutExist"})
+     *
      * @ORM\Column(name="money_out_exists", type="text", nullable=true)
      */
     private $moneyOutExists;
@@ -512,8 +512,8 @@ class Report implements ReportInterface
      *
      * @JMS\Type("string")
      * 
-     * @JMS\Groups({"report"})
-     * 
+     * @JMS\Groups({"report", "reasonForNoMoneyOut"})
+     *
      * @ORM\Column(name="reason_for_no_money_out", type="text", nullable=true)
      **/
     private $reasonForNoMoneyOut;
