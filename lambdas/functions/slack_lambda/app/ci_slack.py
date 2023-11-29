@@ -32,12 +32,12 @@ def main():
     frontend_url = (
         "https://complete-deputy-report.service.gov.uk"
         if args.branch == "main"
-        else f"https://{args.branch}.complete-deputy-report.service.gov.uk"
+        else f"https://{args.branch}.digideps.opg.service.justice.gov.uk"
     )
     admin_url = (
-        "https://admin.complete-deputy-report.service.gov.uk"
+        "https://admin.digideps.opg.service.justice.gov.uk"
         if args.branch == "main"
-        else f"https://admin.{args.branch}.complete-deputy-report.service.gov.uk"
+        else f"https://{args.branch}.admin.digideps.opg.service.justice.gov.uk"
     )
 
     data = {

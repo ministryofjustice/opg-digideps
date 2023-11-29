@@ -28,9 +28,9 @@ resource "aws_cloudwatch_event_target" "cross_account_backup_check" {
         log-entries                = ["cross_account_backup"],
         search-timespan            = "24 hours",
         bank-holidays              = "true",
-        channel-identifier-absent  = "scheduled-jobs",
+        channel-identifier-absent  = "team",
         channel-identifier-success = "scheduled-jobs",
-        channel-identifier-failure = "scheduled-jobs"
+        channel-identifier-failure = "team"
       }
     }
   )
@@ -58,9 +58,9 @@ resource "aws_cloudwatch_event_target" "delete_inactive_users_check" {
         log-entries                = ["delete_inactive_users"],
         search-timespan            = "24 hours",
         bank-holidays              = "true",
-        channel-identifier-absent  = "scheduled-jobs",
+        channel-identifier-absent  = "team",
         channel-identifier-success = "scheduled-jobs",
-        channel-identifier-failure = "scheduled-jobs"
+        channel-identifier-failure = "team"
       }
     }
   )
@@ -87,9 +87,9 @@ resource "aws_cloudwatch_event_target" "delete_zero_activity_users_check" {
         log-entries                = ["delete_zero_activity_users"],
         search-timespan            = "24 hours",
         bank-holidays              = "true",
-        channel-identifier-absent  = "scheduled-jobs",
+        channel-identifier-absent  = "team",
         channel-identifier-success = "scheduled-jobs",
-        channel-identifier-failure = "scheduled-jobs"
+        channel-identifier-failure = "team"
       }
     }
   )
@@ -116,9 +116,9 @@ resource "aws_cloudwatch_event_target" "resubmit_error_documents_check" {
         log-entries                = ["resync_resubmittable_error_documents"],
         search-timespan            = "24 hours",
         bank-holidays              = "true",
-        channel-identifier-absent  = "scheduled-jobs",
+        channel-identifier-absent  = "team",
         channel-identifier-success = "scheduled-jobs",
-        channel-identifier-failure = "scheduled-jobs"
+        channel-identifier-failure = "team"
       }
     }
   )
@@ -145,9 +145,9 @@ resource "aws_cloudwatch_event_target" "db_analyse_command_check" {
         log-entries                = ["analyze_database"],
         search-timespan            = "24 hours",
         bank-holidays              = "true",
-        channel-identifier-absent  = "scheduled-jobs",
+        channel-identifier-absent  = "team",
         channel-identifier-success = "scheduled-jobs",
-        channel-identifier-failure = "scheduled-jobs"
+        channel-identifier-failure = "team"
       }
     }
   )
@@ -174,7 +174,7 @@ resource "aws_cloudwatch_event_target" "sync_documents_check" {
         log-entries                = ["sync_documents_to_sirius"],
         search-timespan            = local.sync_service_schedule
         bank-holidays              = "true"
-        channel-identifier-absent  = "scheduled-jobs",
+        channel-identifier-absent  = "team",
         channel-identifier-success = "scheduled-jobs",
         channel-identifier-failure = "scheduled-jobs"
       }
@@ -203,7 +203,7 @@ resource "aws_cloudwatch_event_target" "sync_checklists_check" {
         log-entries                = ["sync_checklists_to_sirius"],
         search-timespan            = local.sync_service_schedule
         bank-holidays              = "true"
-        channel-identifier-absent  = "scheduled-jobs",
+        channel-identifier-absent  = "team",
         channel-identifier-success = "scheduled-jobs",
         channel-identifier-failure = "scheduled-jobs"
       }
