@@ -64,6 +64,76 @@ class MoneyInController extends AbstractController
     }
 
     /**
+     * @Route("/report/{reportId}/money-in/exist", name="does_money_in_exist")
+     * @Template("@App/Report/MoneyIn/exist.html.twig")
+     *
+     * @return array|RedirectResponse
+     */
+    public function existAction(Request $request, $reportId)
+    {
+        $report = $this->reportApi->getReportIfNotSubmitted($reportId, self::$jmsGroups);
+        $form = $this->createForm(FormDir\Report\DoesMoneyInExistType::class, $report);
+        $form->handleRequest($request);
+
+        if ($form->isSubmitted() && $form->isValid()) {
+            $report = $form->getData();
+            $answer = $form['doesMoneyInExist']->getData();
+
+            $report->setMoneyInExists($answer);
+            $this->restClient->put('report/'.$reportId, $report, ['doesMoneyInExist']);
+
+            if ('yes' === $answer) {
+                return $this->redirectToRoute('money_in_step', ['reportId' => $reportId, 'step' => 1, 'from' => 'does_money_in_exist']);
+            } else {
+                return $this->redirectToRoute('no_money_in_exists', ['reportId' => $reportId, 'from' => 'does_money_in_exist']);
+            }
+        }
+
+        $backLink = $this->generateUrl('money_in', ['reportId' => $reportId]);
+
+        return [
+            'backLink' => $backLink,
+            'report' => $report,
+            'form' => $form->createView(),
+        ];
+    }
+
+    /**
+     * @Route("/report/{reportId}/money-in/no-money-in-exists", name="no_money_in_exists")
+     * @Template("@App/Report/MoneyIn/noMoneyInToReport.html.twig")
+     *
+     * @return array|RedirectResponse
+     */
+    public function noMoneyInToReport(Request $request, $reportId)
+    {
+        $report = $this->reportApi->getReportIfNotSubmitted($reportId, self::$jmsGroups);
+        $form = $this->createForm(
+            FormDir\Report\NoMoneyInType::class,
+            $report,
+            ['translation_domain' => 'report-money-in']);
+        $form->handleRequest($request);
+
+        if ($form->isSubmitted() && $form->isValid()) {
+            $report = $form->getData();
+            $answer = $form['reasonForNoMoneyIn']->getData();
+
+            $report->setReasonForNoMoneyIn($answer);
+            $report->getStatus()->setMoneyInState(Status::STATE_DONE);
+            $this->restClient->put('report/'.$reportId, $report, ['reasonForNoMoneyIn']);
+
+            return $this->redirectToRoute('money_in_summary', ['reportId' => $reportId]);
+        }
+
+        $backLink = $this->generateUrl('does_money_in_exist', ['reportId' => $reportId]);
+
+        return [
+            'backLink' => $backLink,
+            'report' => $report,
+            'form' => $form->createView(),
+        ];
+    }
+
+    /**
      * @Route("/report/{reportId}/money-in/step{step}/{transactionId}", name="money_in_step", requirements={"step":"\d+"})
      * @Template("@App/Report/MoneyIn/step.html.twig")
      *

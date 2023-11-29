@@ -19,12 +19,21 @@ startPage:
     no longer need it to process your report.
 
 existPage:
-  moneyOut:
-    htmlTitle: "Money out - Complete the deputy report | GOV.UK"
-    supportTitle: Money out
+  htmlTitle: "Money In - Complete the deputy report | GOV.UK"
+  supportTitle: Money in
   form:
-    moneyOutShort:
-      label: Have you taken money out on %client%'s behalf during this reporting period?
+    exist:
+      label: Have you added money in on %client%'s behalf during this reporting period?
+    save:
+      label: Save and continue
+
+noMoneyIn:
+  htmlTitle: "Money In - Complete the deputy report | GOV.UK"
+  supportTitle: Money in
+  form:
+    explanation:
+      label: No money added into %client%'s accounts
+      hintText: Please provide a reason
     save:
       label: Save and continue
 
@@ -60,6 +69,11 @@ categoryPage:
   moneyOut:
     htmlTitle: "Money out - Complete the deputy report | GOV.UK"
     supportTitle: Money out
+    form:
+      moneyOutShort:
+        label: Have you taken money out on %client%'s behalf during this reporting period?
+      save:
+        label: Save and continue
 
 addPage:
   moneyIn:

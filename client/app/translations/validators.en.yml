@@ -174,7 +174,7 @@ contact:
 decision:
   noDecisionChoice.notBlank: Please select either 'Yes' or 'No'
   reasonForNoDecisions.notBlank: |
-    Explain why you have not had to make any significant decisions for the client
+    Please explain why you have not had to make any significant decisions for the client
   addAnother.notBlank: Please specify if you want to add another decision
   description:
     notBlank: Enter some details about this decision
@@ -255,6 +255,14 @@ account:
   isClosed:
     notBlank: Please select either 'Yes' or 'No'
 
+moneyIn:
+  moneyInChoice:
+    notBlank: Please select either 'Yes' or 'No'
+  reasonForNoMoneyIn:
+    notBlank: Please provide a reason
+    minLength: Your reason must be at least {{ limit }} characters long
+    maxLength: Your reason cannot be longer than {{ limit }} characters
+    
 moneyOut:
   moneyOutChoice:
     notBlank: Please select either 'Yes' or 'No'

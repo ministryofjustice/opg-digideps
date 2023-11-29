@@ -373,6 +373,8 @@ class Report implements ReportInterface, StartEndDateComparableInterface
     /**
      * @JMS\Type("string")
      * @JMS\Groups({"report"})
+     *
+     * @Assert\NotBlank( message="moneyIn.moneyInChoice.notBlank", groups={"doesMoneyInExist"})
      */
     private $moneyInExists;
 
@@ -381,6 +383,8 @@ class Report implements ReportInterface, StartEndDateComparableInterface
      *
      * @JMS\Type("string")
      * @JMS\Groups({"report"})
+     *
+     * @Assert\NotBlank( message="moneyIn.reasonForNoMoneyIn.notBlank", groups={"reasonForNoMoneyIn"})
      *
      * @var string|null
      */
@@ -1358,6 +1362,7 @@ class Report implements ReportInterface, StartEndDateComparableInterface
     {
         return $this->reasonForNoMoneyIn;
     }
+
 
     public function setReasonForNoMoneyIn(?string $reasonForNoMoneyIn): self
     {

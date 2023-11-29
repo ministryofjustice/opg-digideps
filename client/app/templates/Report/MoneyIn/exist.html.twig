@@ -2,11 +2,11 @@
 
 {% import '@App/Macros/macros.html.twig' as macros %}
 
-{% set translationDomain = "report-money-short" %}
+{% set translationDomain = "report-money-in" %}
 {% trans_default_domain translationDomain %}
 {% set transOptions = {'%client%': report.client.firstname | e } %}
 
-{% block htmlTitle %}{{ 'existPage.htmlTitle' | trans }}{% endblock %}
+{% block htmlTitle %}{{ 'existPage.htmlTitle' | trans(transOptions) }}{% endblock %}
 {% block pageHeader %}{% endblock %}
 
 {% block linkBack %}

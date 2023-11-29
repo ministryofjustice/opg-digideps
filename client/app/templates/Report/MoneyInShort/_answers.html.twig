@@ -19,8 +19,10 @@
             {% else %}
                 <ul class="govuk-list govuk-list--bullet">
                     {% for c in categories %}
+                        {{ dump(c.typeId) }}
                         <li>
-                            {{ ('form.categoriesEntries.' ~ c.typeId ~ '.label') | trans(transOptions) }}
+                             {{ dump('form.categoriesEntries.label') }}
+                             {{ ('form.categoriesEntries.' ~ c.typeId ~ '.label') | trans(transOptions) }}
                         </li>
                     {% endfor %}
                 </ul>
@@ -51,7 +53,7 @@
             </dd>
         {% else %}
             <dt class="govuk-summary-list__key">
-                {{ 'existPage.form.moneyTransactionsShortInExist.label' | trans(transOptions) }}
+                {{ 'oneOffPaymentExistPage.form.moneyTransactionsShortInExist.label' | trans(transOptions) }}
             </dt>
             <dd class="govuk-summary-list__value">
                 {{ report.moneyTransactionsShortInExist | capitalize }}
@@ -59,7 +61,7 @@
         {% endif %}
         {% if not hideEditLink  %}
             <dd class="govuk-summary-list__actions">
-                <a class="govuk-link behat-link-edit" href="{{ path('money_in_short_exist', { 'reportId': report.id, 'from': 'summary' }) }}">
+                <a class="govuk-link behat-link-edit" href="{{ path('money_in_short_one_off_payments_exist', { 'reportId': report.id, 'from': 'summary' }) }}">
                     {{ 'edit' | trans({}, 'common') }}
                 </a>
             </dd>
