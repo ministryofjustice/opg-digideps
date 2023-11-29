@@ -1,6 +1,6 @@
 FROM composer:2.5.7 AS composer
+
 WORKDIR /app
-RUN composer --version
 # Install composer dependencies
 COPY client/app/composer.json .
 COPY client/app/composer.lock .
@@ -19,6 +19,7 @@ ENV PHP_EXT_DIR=/usr/local/lib/php/extensions/no-debug-non-zts-20210902/
 # Install core PHP extensions
 RUN apk add --no-cache su-exec libzip-dev unzip php81-pecl-igbinary php81-pecl-redis php81-pecl-imagick gmp gmp-dev
 RUN apk update && apk upgrade
+# Install necessary PHP extensions
 RUN docker-php-ext-install pcntl zip opcache gmp
 RUN docker-php-ext-enable opcache
 # Install pcov for faster coverage tooling
@@ -83,10 +84,10 @@ RUN chown -R www-data:www-data scripts
 RUN su-exec www-data php -d memory_limit=-1 app/console cache:warmup
 
 
-FROM application as testing
+FROM application as ci-tests
+# We use this setup for certain commands as part of the CI processing of unit tests
 CMD confd -onetime -backend env \
     && php-fpm
-
 
 FROM application as production
 COPY scripts/hardening/harden.sh /harden.sh
