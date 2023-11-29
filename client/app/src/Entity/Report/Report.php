@@ -14,11 +14,8 @@ use Symfony\Component\Validator\Constraints as Assert;
 
 /**
  * @AppAssert\EndDateNotGreaterThanTwelveMonths(groups={"start-end-dates"})
- *
  * @AppAssert\EndDateNotBeforeStartDate(groups={"start-end-dates"})
- *
  * @AppAssert\ProfDeputyCostsEstimate\CostBreakdownNotGreaterThanTotal(groups={"prof-deputy-estimate-costs"})
- *
  * @Assert\Callback(callback="debtsValid", groups={"debts"})
  * @Assert\Callback(callback="feesValid", groups={"fees"})
  * @Assert\Callback(callback="profCostsInterimAtLeastOne", groups={"prof-deputy-interim-costs"})
@@ -74,7 +71,6 @@ class Report implements ReportInterface, StartEndDateComparableInterface
 
     /**
      * @JMS\Type("integer")
-     *
      * @JMS\Groups({"visits-care", "report-id"})
      *
      * @var int
@@ -83,7 +79,6 @@ class Report implements ReportInterface, StartEndDateComparableInterface
 
     /**
      * @JMS\Type("string")
-     *
      * @JMS\Groups({"report_type"})
      *
      * see TYPE_* constant
@@ -101,11 +96,8 @@ class Report implements ReportInterface, StartEndDateComparableInterface
 
     /**
      * @JMS\Type("DateTime<'Y-m-d'>")
-     *
      * @JMS\Groups({"startEndDates"})
-     *
      * @Assert\NotBlank( message="report.startDate.notBlank", groups={"start-end-dates"} )
-     *
      * @Assert\Type(type="DateTimeInterface", message="report.startDate.invalidMessage", groups={"start-end-dates"} )
      *
      * @var \DateTime|null
@@ -114,11 +106,8 @@ class Report implements ReportInterface, StartEndDateComparableInterface
 
     /**
      * @JMS\Type("DateTime<'Y-m-d'>")
-     *
      * @JMS\Groups({"startEndDates"})
-     *
      * @Assert\NotBlank( message="report.endDate.notBlank", groups={"start-end-dates"} )
-     *
      * @Assert\Type(type="DateTimeInterface", message="report.endDate.invalidMessage", groups={"start-end-dates"} )
      *
      * @var \DateTime|null
@@ -134,7 +123,6 @@ class Report implements ReportInterface, StartEndDateComparableInterface
 
     /**
      * @JMS\Type("DateTime<'Y-m-d'>")
-     *
      * @JMS\Groups({"report_due_date"})
      *
      * @var \DateTime|null
@@ -145,7 +133,6 @@ class Report implements ReportInterface, StartEndDateComparableInterface
      * @var \DateTime|null
      *
      * @JMS\Type("DateTime")
-     *
      * @JMS\Groups({"submit"})
      */
     private $submitDate;
@@ -154,7 +141,6 @@ class Report implements ReportInterface, StartEndDateComparableInterface
      * @var \DateTime|null
      *
      * @JMS\Type("DateTime<'Y-m-d'>")
-     *
      * @JMS\Groups({"unsubmit_date"})
      */
     private $unSubmitDate;
@@ -231,9 +217,7 @@ class Report implements ReportInterface, StartEndDateComparableInterface
 
     /**
      * @JMS\Type("App\Entity\Report\ClientBenefitsCheck")
-     *
      * @Assert\Valid(groups={"client-benefits-check"})
-     *
      * @JMS\Groups({"client-benefits-check"})
      *
      * @var ClientBenefitsCheck
@@ -242,9 +226,7 @@ class Report implements ReportInterface, StartEndDateComparableInterface
 
     /**
      * @JMS\Type("string")
-     *
      * @JMS\Groups({"reasonForNoContacts"})
-     *
      * @Assert\NotBlank( message="contact.reasonForNoContacts.notBlank", groups={"reasonForNoContacts"})
      *
      * @var string|null
@@ -253,16 +235,13 @@ class Report implements ReportInterface, StartEndDateComparableInterface
 
     /**
      * @JMS\Type("string")
-     *
      * @JMS\Groups({"report","significantDecisionsMade"})
      */
     private $significantDecisionsMade;
 
     /**
      * @JMS\Type("string")
-     *
      * @JMS\Groups({"reasonForNoDecisions"})
-     *
      * @Assert\NotBlank( message="decision.reasonForNoDecisions.notBlank", groups={"reason-no-decisions"})
      *
      * @var string|null
@@ -271,7 +250,6 @@ class Report implements ReportInterface, StartEndDateComparableInterface
 
     /**
      * @JMS\Type("boolean")
-     *
      * @JMS\Groups({"noAssetsToAdd"})
      *
      * @var bool
@@ -280,7 +258,6 @@ class Report implements ReportInterface, StartEndDateComparableInterface
 
     /**
      * @JMS\Type("boolean")
-     *
      * @JMS\Groups({"submit", "submitted"})
      *
      * @var bool
@@ -298,7 +275,6 @@ class Report implements ReportInterface, StartEndDateComparableInterface
      * @var bool
      *
      * @JMS\Type("boolean")
-     *
      * @Assert\IsTrue(message="report.agree", groups={"declare"} )
      */
     private $agree;
@@ -307,9 +283,7 @@ class Report implements ReportInterface, StartEndDateComparableInterface
      * @var string
      *
      * @JMS\Type("string")
-     *
      * @JMS\Groups({"report","submit", "submit_agreed"})
-     *
      * @Assert\NotBlank(message="report.agreedBehalfDeputy.notBlank", groups={"declare"} )
      */
     private $agreedBehalfDeputy;
@@ -318,9 +292,7 @@ class Report implements ReportInterface, StartEndDateComparableInterface
      * @var string
      *
      * @JMS\Type("string")
-     *
      * @JMS\Groups({"report","submit", "submit_agreed"})
-     *
      * @Assert\NotBlank(message="report.agreedBehalfDeputyExplanation.notBlank", groups={"declare-explanation"} )
      */
     private $agreedBehalfDeputyExplanation;
@@ -329,14 +301,12 @@ class Report implements ReportInterface, StartEndDateComparableInterface
      * @var Document[]
      *
      * @JMS\Groups({"report-documents"})
-     *
      * @JMS\Type("array<App\Entity\Report\Document>")
      */
     private $documents = [];
 
     /**
      * @JMS\Type("array<App\Entity\Report\Document>")
-     *
      * @JMS\Groups({"report-documents"})
      *
      * @var Document[]
@@ -345,7 +315,6 @@ class Report implements ReportInterface, StartEndDateComparableInterface
 
     /**
      * @JMS\Type("array<App\Entity\Report\Document>")
-     *
      * @JMS\Groups({"report-documents"})
      *
      * @var Document[]
@@ -361,9 +330,7 @@ class Report implements ReportInterface, StartEndDateComparableInterface
 
     /**
      * @JMS\Type("string")
-     *
      * @JMS\Groups({"report", "wish-to-provide-documentation", "report-documents"})
-     *
      * @Assert\NotBlank(message="document.wishToProvideDocumentation.notBlank", groups={"wish-to-provide-documentation"})
      */
     private $wishToProvideDocumentation;
@@ -405,7 +372,6 @@ class Report implements ReportInterface, StartEndDateComparableInterface
 
     /**
      * @JMS\Type("string")
-     *
      * @JMS\Groups({"report"})
      */
     private $moneyInExists;
@@ -414,7 +380,6 @@ class Report implements ReportInterface, StartEndDateComparableInterface
      * @var string captures reason for no money in. Required if no money has gone in
      *
      * @JMS\Type("string")
-     *
      * @JMS\Groups({"report"})
      *
      * @var string|null
@@ -423,7 +388,8 @@ class Report implements ReportInterface, StartEndDateComparableInterface
 
     /**
      * @JMS\Type("string")
-     *
+     * @JMS\Groups({"report", "moneyOutExist"})
+     * @Assert\NotBlank( message="moneyOut.moneyOutChoice.notBlank", groups={"doesMoneyOutExist"})
      * @JMS\Groups({"report"})
      */
     private $moneyOutExists;
@@ -432,7 +398,8 @@ class Report implements ReportInterface, StartEndDateComparableInterface
      * @var string captures reason for no money out. Required if no money has gone out
      *
      * @JMS\Type("string")
-     *
+     * @JMS\Groups({"report"})
+     * @Assert\NotBlank( message="moneyOut.reasonForNoMoneyOut.notBlank", groups={"reasonForNoMoneyOut"})
      * @JMS\Groups({"report"})
      */
     private $reasonForNoMoneyOut;

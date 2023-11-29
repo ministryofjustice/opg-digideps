@@ -80,7 +80,6 @@ class ReportController extends RestController
      * Pa report are instead created via OrgService::createReport().
      *
      * @Route("", methods={"POST"})
-     *
      * @Security("is_granted('ROLE_DEPUTY')")
      */
     public function addAction(Request $request)
@@ -113,7 +112,6 @@ class ReportController extends RestController
 
     /**
      * @Route("/{id}", requirements={"id":"\d+"}, methods={"GET"})
-     *
      * @Security("is_granted('ROLE_DEPUTY') or is_granted('ROLE_ADMIN')")
      *
      * @param int $id
@@ -145,7 +143,6 @@ class ReportController extends RestController
 
     /**
      * @Route("/{id}/submit", requirements={"id":"\d+"}, methods={"PUT"})
-     *
      * @Security("is_granted('ROLE_DEPUTY')")
      */
     public function submit(Request $request, $id)
@@ -186,7 +183,6 @@ class ReportController extends RestController
 
     /**
      * @Route("/{id}", requirements={"id":"\d+"}, methods={"PUT"})
-     *
      * @Security("is_granted('ROLE_DEPUTY') or is_granted('ROLE_ADMIN')")
      */
     public function update(Request $request, $id)
@@ -420,6 +416,20 @@ class ReportController extends RestController
             ]);
         }
 
+        if (array_key_exists('does_money_out_exist', $data)) {
+            $report->setMoneyOutExists($data['does_money_out_exist']);
+            $report->updateSectionsStatusCache([
+                Report::SECTION_MONEY_OUT,
+            ]);
+        }
+
+        if (array_key_exists('reason_for_no_money_out', $data)) {
+            $report->setReasonForNoMoneyOut($data['reason_for_no_money_out']);
+            $report->updateSectionsStatusCache([
+                Report::SECTION_MONEY_OUT,
+            ]);
+        }
+
         if (array_key_exists('money_short_categories_in', $data)) {
             foreach ($data['money_short_categories_in'] as $row) {
                 $e = $report->getMoneyShortCategoryByTypeId($row['type_id']);
@@ -538,7 +548,6 @@ class ReportController extends RestController
 
     /**
      * @Route("/{id}/unsubmit", requirements={"id":"\d+"}, methods={"PUT"})
-     *
      * @Security("is_granted('ROLE_ADMIN')")
      */
     public function unsubmit(Request $request, $id)
@@ -573,7 +582,6 @@ class ReportController extends RestController
 
     /**
      * @Route("/get-all-by-user", methods={"GET"})
-     *
      * @Security("is_granted('ROLE_ORG')")
      *
      * @throws NonUniqueResultException
@@ -700,7 +708,6 @@ class ReportController extends RestController
 
     /**
      * @Route("/get-all-by-orgs", methods={"GET"})
-     *
      * @Security("is_granted('ROLE_ORG')")
      *
      * @return array
@@ -724,7 +731,6 @@ class ReportController extends RestController
 
     /**
      * @Route("/{id}/submit-documents", requirements={"id":"\d+"}, methods={"PUT"})
-     *
      * @Security("is_granted('ROLE_DEPUTY')")
      */
     public function submitDocuments($id)
@@ -745,7 +751,6 @@ class ReportController extends RestController
      * Add a checklist for the report.
      *
      * @Route("/{report_id}/checked", requirements={"report_id":"\d+"}, methods={"POST"})
-     *
      * @Security("is_granted('ROLE_ADMIN')")
      */
     public function insertChecklist(Request $request, $report_id)
@@ -820,7 +825,6 @@ class ReportController extends RestController
      * Update a checklist for the report.
      *
      * @Route("/{report_id}/checked", requirements={"report_id":"\d+"}, methods={"PUT"})
-     *
      * @Security("is_granted('ROLE_ADMIN')")
      */
     public function updateChecklist(Request $request, $report_id)
@@ -861,7 +865,6 @@ class ReportController extends RestController
      * Get a checklist for the report.
      *
      * @Route("/{report_id}/checklist", requirements={"report_id":"\d+"}, methods={"GET"})
-     *
      * @Security("is_granted('ROLE_ADMIN')")
      */
     public function getChecklist(Request $request, $report_id)
@@ -879,7 +882,6 @@ class ReportController extends RestController
      * Update a checklist for the report.
      *
      * @Route("/{report_id}/checklist", requirements={"report_id":"\d+"}, methods={"POST", "PUT"})
-     *
      * @Security("is_granted('ROLE_ADMIN')")
      */
     public function upsertChecklist(Request $request, $report_id)
