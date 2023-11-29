@@ -22,7 +22,7 @@ noMoneyIn:
   supportTitle: Money in
   form:
     explanation:
-      label: No money added into my accounts
-      hintText: Please give a description
+      label: No money added into %client%'s accounts
+      hintText: Please provide a reason
     save:
       label: Save and continue
