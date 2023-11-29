@@ -210,7 +210,8 @@ SELECT
   COALESCE(SUM(CASE WHEN d.synchronisation_status = '{$permanentErrorStatus}' THEN 1 ELSE 0 END), 0) AS permanent_error_count
 FROM document d
 INNER JOIN report_submission rs ON d.report_submission_id = rs.id
-WHERE d.synchronisation_status IN ('{$queuedStatus}', '{$permanentErrorStatus}', '{$temporaryErrorStatus}', '{$inProgressStatus}')
+WHERE rs.archived is false
+AND d.synchronisation_status IN ('{$queuedStatus}', '{$permanentErrorStatus}', '{$temporaryErrorStatus}', '{$inProgressStatus}')
 ";
         $conn = $this->getEntityManager()->getConnection();
 

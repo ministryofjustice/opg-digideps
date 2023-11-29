@@ -90,18 +90,15 @@ class DocumentRepositoryTest extends KernelTestCase
         self::assertEquals(Document::SYNC_STATUS_PERMANENT_ERROR, $supportingDocNotValid->getSynchronisationStatus());
     }
 
-    private function createFailedDocumentSubmission($status, $createdOn, $caseNumber, $error = null)
+    private function createFailedDocumentSubmission($status, $createdOn, $caseNumber, $archived)
     {
         $client = $this->generateAndPersistClient('abc-123-'.$caseNumber);
         $report = $this->generateAndPersistReport($client, false);
         $reportPdfDoc = $this->generateAndPersistDocument($report, true, $status, $this->firstJulyAm, false);
         $supportingDoc = $this->generateAndPersistDocument($report, false, $status, $this->firstJulyAm, false);
-        if ($error) {
-            $supportingDoc->setSynchronisationError($error);
-            $this->entityManager->persist($supportingDoc);
-        }
         $reportSubmission = $this->submitReport($report, $this->firstJulyPm, $reportPdfDoc, $supportingDoc);
         $reportSubmission->setCreatedOn($createdOn);
+        $reportSubmission->setArchived($archived);
         $this->entityManager->persist($reportSubmission);
         $this->entityManager->flush();
     }
@@ -114,20 +111,21 @@ class DocumentRepositoryTest extends KernelTestCase
         $currentDateTime = new \DateTime(); // Current date and time
         $tomorrow = $currentDateTime->modify('+1 day');
 
-        // Tomorrow shouldn't count
+        // Tomorrow shouldn't count. Archived shouldn't count.
         $arguments = [
-            ['QUEUED', $this->firstJulyPm],
-            ['IN_PROGRESS', $this->firstJulyPm],
-            ['TEMPORARY_ERROR', $this->firstJulyPm],
-            ['PERMANENT_ERROR', $this->firstJulyPm],
-            ['QUEUED', $tomorrow],
-            ['IN_PROGRESS', $tomorrow],
+            ['QUEUED', $this->firstJulyPm, false],
+            ['IN_PROGRESS', $this->firstJulyPm, false],
+            ['TEMPORARY_ERROR', $this->firstJulyPm, false],
+            ['PERMANENT_ERROR', $this->firstJulyPm, false],
+            ['PERMANENT_ERROR', $this->firstJulyPm, true],
+            ['QUEUED', $tomorrow, false],
+            ['IN_PROGRESS', $tomorrow, false],
         ];
 
         foreach ($arguments as $index => $argument) {
-            list($status, $date) = $argument;
+            list($status, $date, $archived) = $argument;
             $id = $index + 1;
-            $this->createFailedDocumentSubmission($status, $date, $id);
+            $this->createFailedDocumentSubmission($status, $date, $id, $archived);
         }
 
         $result = $this->documentRepository->logFailedDocuments();
