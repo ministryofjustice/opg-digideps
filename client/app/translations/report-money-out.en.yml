@@ -21,7 +21,7 @@ noMoneyOut:
   supportTitle: Money out
   form:
     explanation:
-      label: No money taken from accounts
-      hintText: Please give a description
+      label: No money taken from %client%'s accounts
+      hintText: Please provide a reason
     save:
       label: Save and continue

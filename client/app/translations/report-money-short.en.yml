@@ -33,8 +33,8 @@ noMoneyOut:
   supportTitle: Money out
   form:
     explanation:
-      label: No money withdrawn from accounts
-      hintText: Please give a description
+      label: No money withdrawn from %client%'s accounts
+      hintText: Please provide a reason
     save:
       label: Save and continue
 
