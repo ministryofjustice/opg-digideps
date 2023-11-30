@@ -66,10 +66,6 @@ class StepRedirector
     }
 
     /**
-     * @param $step1BackLink
-     * @param $routeStep
-     * @param $routeSummary
-     *
      * @return $this
      */
     public function setRoutes($step1BackLink, $routeStep, $routeSummary)

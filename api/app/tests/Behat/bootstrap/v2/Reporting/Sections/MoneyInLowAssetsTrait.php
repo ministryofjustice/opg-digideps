@@ -90,7 +90,7 @@ trait MoneyInLowAssetsTrait
 
             $this->tickCheckbox(
                 'money-types',
-                "money_short[moneyShortCategoriesIn][$optionIndex][present]",
+                $this->moneyInShortTypeDictionary[$optionIndex],
                 'money-types',
                 $this->moneyInShortTypeDictionary[$optionIndex]
             );
@@ -139,7 +139,7 @@ trait MoneyInLowAssetsTrait
     {
         $this->iVisitMoneyInShortSummarySection();
         $this->iAmOnMoneyInShortSummaryPage();
-        $urlRegex = sprintf('/%s\/.*\/money-in-short\/exist.*$/', $this->reportUrlPrefix);
+        $urlRegex = sprintf('/%s\/.*\/money-in-short\/oneOffPaymentsExist\?from\=summary$/', $this->reportUrlPrefix);
         $this->iClickOnNthElementBasedOnRegex($urlRegex, 0);
 
         $this->chooseOption('yes_no[moneyTransactionsShortInExist]', 'yes', 'one-off-payments');
@@ -160,7 +160,7 @@ trait MoneyInLowAssetsTrait
     {
         $this->iVisitMoneyInShortSummarySection();
         $this->iAmOnMoneyInShortSummaryPage();
-        $urlRegex = sprintf('/%s\/.*\/money-in-short\/exist.*$/', $this->reportUrlPrefix);
+        $urlRegex = sprintf('/%s\/.*\/money-in-short\/oneOffPaymentsExist\?from\=summary$/', $this->reportUrlPrefix);
         $this->iClickOnNthElementBasedOnRegex($urlRegex, 0);
 
         $this->chooseOption('yes_no[moneyTransactionsShortInExist]', 'yes', 'one-off-payments');

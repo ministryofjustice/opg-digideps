@@ -6,7 +6,7 @@
 {% trans_default_domain translationDomain %}
 {% set transOptions = {'%client%': report.client.firstname | e } %}
 
-{% block htmlTitle %}{{ 'existPage.htmlTitle' | trans }}{% endblock %}
+{% block htmlTitle %}{{ 'noMoneyOut.htmlTitle' | trans(transOptions) }}{% endblock %}
 {% block pageHeader %}{% endblock %}
 
 {% block linkBack %}
@@ -15,15 +15,19 @@
 
 {% block pageContent %}
 
+    {% block supportTitleTop %}
+        <span class="govuk-caption-xl">{{ 'noMoneyOut.supportTitle' | trans }}</span>
+    {% endblock %}
+    {% block pageTitle %}
+        <h1 class="govuk-heading-xl">{{ 'noMoneyOut.form.explanation.label' | trans(transOptions) }}</h1>
+    {% endblock %}
+
+
     {{ form_start(form, {attr: {novalidate: 'novalidate' }}) }}
 
-    {{ form_checkbox_group(form.doesMoneyInExist, 'existPage.form.exist', {
-        'fieldSetClass' : 'govuk-radios--inline',
-        'legendText' : 'existPage.form.exist.label' | trans(transOptions, translationDomain),
-        legend: {
-            isPageHeading: true,
-            caption: 'existPage.supportTitle' | trans
-        }
+    {{ form_input(form.reasonForNoMoneyOut, '', {
+        inputClass: 'govuk-input--width-full',
+        'hintText': 'noMoneyOut.form.explanation.hintText' | trans(transOptions, translationDomain),
     }) }}
 
     {{ macros.saveAndContinueButton(form.save) }}

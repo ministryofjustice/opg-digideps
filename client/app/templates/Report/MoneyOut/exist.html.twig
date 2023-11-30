@@ -2,11 +2,11 @@
 
 {% import '@App/Macros/macros.html.twig' as macros %}
 
-{% set translationDomain = "report-money-short" %}
+{% set translationDomain = "report-money-out" %}
 {% trans_default_domain translationDomain %}
 {% set transOptions = {'%client%': report.client.firstname | e } %}
 
-{% block htmlTitle %}{{ 'existPage.htmlTitle' | trans }}{% endblock %}
+{% block htmlTitle %}{{ 'existPage.htmlTitle' | trans(transOptions) }}{% endblock %}
 {% block pageHeader %}{% endblock %}
 
 {% block linkBack %}
@@ -17,7 +17,7 @@
 
     {{ form_start(form, {attr: {novalidate: 'novalidate' }}) }}
 
-    {{ form_checkbox_group(form.doesMoneyInExist, 'existPage.form.exist', {
+    {{ form_checkbox_group(form.doesMoneyOutExist, 'existPage.form.exist', {
         'fieldSetClass' : 'govuk-radios--inline',
         'legendText' : 'existPage.form.exist.label' | trans(transOptions, translationDomain),
         legend: {

@@ -191,7 +191,7 @@ trait MoneyOutShortSectionTrait
 
     private function oneOffPaymentOver1kExists($selection)
     {
-        $this->iAmOnMoneyOutShortExistsPage();
+        $this->iAmOnMoneyOutShortOneOffPaymentsExistsPage();
 
         $this->chooseOption('yes_no[moneyTransactionsShortOutExist]', $selection, 'over1K');
         $this->iClickBasedOnAttributeTypeAndValue('button', 'id', 'yes_no_save');
