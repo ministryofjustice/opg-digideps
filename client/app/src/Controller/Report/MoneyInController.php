@@ -80,7 +80,7 @@ class MoneyInController extends AbstractController
             $answer = $form['doesMoneyInExist']->getData();
 
             $report->setMoneyInExists($answer);
-            $this->restClient->put('report/'.$reportId, $report, ['doesMoneyInExist']);
+            $this->restClient->put('report/'.$reportId, $report, ['moneyInExists']);
 
             if ('yes' === $answer) {
                 return $this->redirectToRoute('money_in_step', ['reportId' => $reportId, 'step' => 1, 'from' => 'does_money_in_exist']);
@@ -155,7 +155,7 @@ class MoneyInController extends AbstractController
         $fromPage = $request->get('from');
 
         $stepRedirector = $this->stepRedirector
-            ->setRoutes('money_in', 'money_in_step', 'money_in_summary')
+            ->setRoutes('does_money_in_exist', 'money_in_step', 'money_in_summary')
             ->setFromPage($fromPage)
             ->setCurrentStep($step)->setTotalSteps($totalSteps)
             ->setRouteBaseParams(['reportId' => $reportId, 'transactionId' => $transactionId]);
