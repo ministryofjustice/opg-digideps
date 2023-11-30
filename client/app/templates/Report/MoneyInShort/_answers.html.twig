@@ -19,9 +19,7 @@
             {% else %}
                 <ul class="govuk-list govuk-list--bullet">
                     {% for c in categories %}
-                        {{ dump(c.typeId) }}
                         <li>
-                             {{ dump('form.categoriesEntries.label') }}
                              {{ ('form.categoriesEntries.' ~ c.typeId ~ '.label') | trans(transOptions) }}
                         </li>
                     {% endfor %}
