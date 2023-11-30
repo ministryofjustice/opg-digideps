@@ -80,7 +80,7 @@ class MoneyInController extends AbstractController
             $answer = $form['doesMoneyInExist']->getData();
 
             $report->setMoneyInExists($answer);
-            $this->restClient->put('report/'.$reportId, $report, ['moneyInExists']);
+            $this->restClient->put('report/'.$reportId, $report, ['doesMoneyInExist']);
 
             if ('yes' === $answer) {
                 return $this->redirectToRoute('money_in_step', ['reportId' => $reportId, 'step' => 1, 'from' => 'does_money_in_exist']);
@@ -107,10 +107,7 @@ class MoneyInController extends AbstractController
     public function noMoneyInToReport(Request $request, $reportId)
     {
         $report = $this->reportApi->getReportIfNotSubmitted($reportId, self::$jmsGroups);
-        $form = $this->createForm(
-            FormDir\Report\NoMoneyInType::class,
-            $report,
-            ['translation_domain' => 'report-money-in']);
+        $form = $this->createForm(FormDir\Report\NoMoneyInType::class, $report);
         $form->handleRequest($request);
 
         if ($form->isSubmitted() && $form->isValid()) {

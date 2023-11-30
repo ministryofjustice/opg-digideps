@@ -479,7 +479,7 @@ class Report implements ReportInterface
      *
      * @JMS\Type("string")
      * 
-     * @JMS\Groups({"report", "moneyInExists"})
+     * @JMS\Groups({"report", "doesMoneyInExist"})
      *
      * @ORM\Column(name="money_in_exists", type="text", nullable=true)
      */
