@@ -5,6 +5,7 @@ module "api_aurora" {
   account_id             = data.aws_caller_identity.current.account_id
   apply_immediately      = local.account.deletion_protection ? false : true
   cluster_identifier     = "api"
+  ca_cert_identifier     = "rds-ca-2019"
   db_subnet_group_name   = local.account.db_subnet_group
   deletion_protection    = local.account.deletion_protection ? true : false
   database_name          = "api"
