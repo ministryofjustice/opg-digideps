@@ -110,7 +110,7 @@ class MoneyInShortController extends AbstractController
             $answer = $form['reasonForNoMoneyIn']->getData();
 
             $report->setReasonForNoMoneyIn($answer);
-            $report->getStatus()->setMoneyInState(Status::STATE_DONE);
+            $report->getStatus()->setMoneyInShortState(Status::STATE_DONE);
             $this->restClient->put('report/'.$reportId, $report, ['reasonForNoMoneyIn']);
 
             return $this->redirectToRoute('money_in_short_summary', ['reportId' => $reportId]);

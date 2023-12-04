@@ -212,6 +212,10 @@ class ReportStatusService
         $transactionsExist = $this->report->getMoneyTransactionsShortInExist();
         $isCompleted = ('no' == $transactionsExist || ('yes' == $transactionsExist and count($this->report->getMoneyTransactionsShortIn()) > 0));
 
+        if ($this->report->getMoneyInExists() === 'no'){
+            return ['state' => self::STATE_DONE, 'nOfRecords' => 0];
+        }
+        
         if ($isCompleted) {
             return ['state' => self::STATE_DONE, 'nOfRecords' => count($this->report->getMoneyTransactionsShortIn())];
         }
@@ -235,7 +239,11 @@ class ReportStatusService
         $categoriesCount = count($this->report->getMoneyShortCategoriesOutPresent());
         $transactionsExist = $this->report->getMoneyTransactionsShortOutExist();
         $isCompleted = ('no' == $transactionsExist || ('yes' == $transactionsExist and count($this->report->getMoneyTransactionsShortOut()) > 0));
-
+        
+        if ($this->report->getMoneyOutExists() === 'no'){
+            return ['state' => self::STATE_DONE, 'nOfRecords' => 0];
+        }
+        
         if ($isCompleted) {
             return ['state' => self::STATE_DONE, 'nOfRecords' => count($this->report->getMoneyTransactionsShortOut())];
         }

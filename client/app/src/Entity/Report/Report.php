@@ -392,9 +392,9 @@ class Report implements ReportInterface, StartEndDateComparableInterface
 
     /**
      * @JMS\Type("string")
-     * @JMS\Groups({"report", "moneyOutExist"})
+     * @JMS\Groups({"report", "doesMoneyOutExist"})
+     *
      * @Assert\NotBlank( message="moneyOut.moneyOutChoice.notBlank", groups={"doesMoneyOutExist"})
-     * @JMS\Groups({"report"})
      */
     private $moneyOutExists;
 
@@ -402,9 +402,10 @@ class Report implements ReportInterface, StartEndDateComparableInterface
      * @var string captures reason for no money out. Required if no money has gone out
      *
      * @JMS\Type("string")
-     * @JMS\Groups({"report"})
+     * @JMS\Groups({"report", "reasonForNoMoneyOut"})
+     *
      * @Assert\NotBlank( message="moneyOut.reasonForNoMoneyOut.notBlank", groups={"reasonForNoMoneyOut"})
-     * @JMS\Groups({"report"})
+     *
      */
     private $reasonForNoMoneyOut;
 

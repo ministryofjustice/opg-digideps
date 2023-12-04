@@ -43,6 +43,6 @@ class NoMoneyInType extends AbstractType
 
     public function getBlockPrefix()
     {
-        return 'reason-for-no-money';
+        return 'reason_for_no_money';
     }
 }

@@ -501,7 +501,7 @@ class Report implements ReportInterface
      *
      * @JMS\Type("string")
      * 
-     * @JMS\Groups({"report", "moneyOutExist"})
+     * @JMS\Groups({"report", "doesMoneyOutExist"})
      *
      * @ORM\Column(name="money_out_exists", type="text", nullable=true)
      */
@@ -1561,7 +1561,7 @@ class Report implements ReportInterface
         return $this->moneyOutExists;
     }
 
-    public function setMoneyOutExists(string $moneyOutExists): self
+    public function setMoneyOutExists(?string $moneyOutExists): self
     {
         $this->moneyOutExists = $moneyOutExists;
 

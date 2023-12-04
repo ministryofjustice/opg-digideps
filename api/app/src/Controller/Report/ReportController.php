@@ -430,8 +430,8 @@ class ReportController extends RestController
             ]);
         }
       
-        if (array_key_exists('does_money_out_exist', $data)) {
-            $report->setMoneyOutExists($data['does_money_out_exist']);
+        if (array_key_exists('money_out_exists', $data)) {
+            $report->setMoneyOutExists($data['money_out_exists']);
             $report->updateSectionsStatusCache([
                 Report::SECTION_MONEY_OUT,
             ]);

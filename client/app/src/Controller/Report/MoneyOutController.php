@@ -152,7 +152,7 @@ class MoneyOutController extends AbstractController
         $fromPage = $request->get('from');
 
         $stepRedirector = $this->stepRedirector
-            ->setRoutes('money_out', 'money_out_step', 'money_out_summary')
+            ->setRoutes('does_money_out_exist', 'money_out_step', 'money_out_summary')
             ->setFromPage($fromPage)
             ->setCurrentStep($step)->setTotalSteps($totalSteps)
             ->setRouteBaseParams(['reportId' => $reportId, 'transactionId' => $transactionId]);

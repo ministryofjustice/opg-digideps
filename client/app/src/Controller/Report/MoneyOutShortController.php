@@ -111,6 +111,7 @@ class MoneyOutShortController extends AbstractController
 
             $report->setReasonForNoMoneyOut($answer);
             $report->getStatus()->setMoneyOutState(Status::STATE_DONE);
+
             $this->restClient->put('report/'.$reportId, $report, ['reasonForNoMoneyOut']);
 
             return $this->redirectToRoute('money_out_short_summary', ['reportId' => $reportId]);
@@ -159,7 +160,7 @@ class MoneyOutShortController extends AbstractController
         return [
             'report' => $report,
             'form' => $form->createView(),
-            'backLink' => $this->generateUrl($fromSummaryPage ? 'money_out_short_summary' : 'money_out_short', ['reportId' => $reportId]),
+            'backLink' => $this->generateUrl($fromSummaryPage ? 'money_out_short_summary' : 'does_money_out_short_exist', ['reportId' => $reportId]),
         ];
     }
 
