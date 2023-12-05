@@ -321,7 +321,7 @@ trait IShouldBeOnFrontendTrait
      */
     public function iAmOnMoneyOutShortCategoryPage(): bool
     {
-        return $this->iAmOnPage(sprintf('/%s\/.*\/money-out-short\/category$/', $this->reportUrlPrefix));
+        return $this->iAmOnPage(sprintf('/%s\/.*\/money-out-short\/category.*$/', $this->reportUrlPrefix));
     }
 
     /**

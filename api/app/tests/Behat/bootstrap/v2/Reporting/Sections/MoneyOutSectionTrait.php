@@ -56,7 +56,22 @@ trait MoneyOutSectionTrait
     {
         $this->iVisitMoneyOutSection();
         $this->clickLink('Start money out');
+    }
 
+    /**
+     * @Given /^I confirm "([^"]*)" to taking money out on the clients behalf$/
+     */
+    public function iConfirmToAddingMoneyInOnTheClientsBehalf($arg1)
+    {
+        $this->chooseOption('does_money_out_exist[doesMoneyOutExist]', $arg1);
+        $this->pressButton('Save and continue');
+    }
+
+    /**
+     * @Then /^I select from the money out payment options$/
+     */
+    public function iSelectFromTheMoneyOutPaymentOptions()
+    {
         $this->paymentTypeDictionary['cash-withdrawn'] = sprintf(
             $this->paymentTypeDictionary['cash-withdrawn'],
             $this->loggedInUserDetails->getClientFirstName()
