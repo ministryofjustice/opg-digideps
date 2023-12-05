@@ -55,6 +55,15 @@ trait MoneyInHighAssetsTrait
     }
 
     /**
+     * @Given /^I confirm "([^"]*)" to adding money in on the clients behalf$/
+     */
+    public function iConfirmToAddingMoneyInOnTheClientsBehalf($arg1)
+    {
+        $this->chooseOption('does_money_in_exist[doesMoneyInExist]', $arg1);
+        $this->pressButton('Save and continue');
+    }
+    
+    /**
      * @When I view and start the money in report section
      */
     public function iViewAndStartMoneyInSection()

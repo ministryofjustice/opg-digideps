@@ -4,6 +4,7 @@ declare(strict_types=1);
 
 namespace App\Tests\Behat\v2\Reporting\Sections;
 
+use Behat\Behat\Tester\Exception\PendingException;
 use Behat\Gherkin\Node\TableNode;
 
 trait MoneyInLowAssetsTrait
@@ -30,6 +31,15 @@ trait MoneyInLowAssetsTrait
     {
         $this->iVisitMoneyInShortSection();
         $this->pressButton('Start money in');
+    }
+
+    /**
+     * @Given /^I answer "([^"]*)" to adding money in on the clients behalf$/
+     */
+    public function iAnswerToAddingMoneyInOnTheClientsBehalf($arg1)
+    {
+        $this->chooseOption('does_money_in_exist[doesMoneyInExist]', $arg1);
+        $this->pressButton('Save and continue');
     }
 
     /**

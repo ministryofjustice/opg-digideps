@@ -61,7 +61,7 @@ trait MoneyOutSectionTrait
     /**
      * @Given /^I confirm "([^"]*)" to taking money out on the clients behalf$/
      */
-    public function iConfirmToAddingMoneyInOnTheClientsBehalf($arg1)
+    public function iConfirmToTakingMoneyOutOnTheClientsBehalf($arg1)
     {
         $this->chooseOption('does_money_out_exist[doesMoneyOutExist]', $arg1);
         $this->pressButton('Save and continue');
