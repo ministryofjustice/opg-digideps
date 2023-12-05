@@ -7,7 +7,7 @@ namespace App\Tests\Behat\v2\Reporting\Sections;
 use Behat\Behat\Tester\Exception\PendingException;
 use Behat\Gherkin\Node\TableNode;
 
-trait MoneyInLowAssetsTrait
+trait MoneyInShortSectionTrait
 {
     private int $moneyOutPaymentCount = 0;
     private array $moneyInShortTypeDictionary = [

@@ -6,7 +6,7 @@ namespace App\Tests\Behat\v2\Reporting\Sections;
 
 use App\Tests\Behat\BehatException;
 
-trait MoneyInHighAssetsTrait
+trait MoneyInSectionTrait
 {
     // Expected validation errors
     private string $invalidSelectOptionError = 'Please choose an option';
