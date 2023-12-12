@@ -25,9 +25,6 @@ ADD --chown=htmltopdf:htmltopdf htmltopdf/app.py /app.py
 ADD --chown=htmltopdf:htmltopdf htmltopdf/clean-tmp /etc/periodic/hourly/clean-tmp
 
 EXPOSE 80
-RUN apk --no-cache add libcap && \
-    setcap 'cap_net_bind_service=+ep' usr/local/bin/gunicorn && \
-    apk del libcap
 
 # Make commands executable
 RUN ["chmod", "+x", "/etc/periodic/hourly/clean-tmp"]
@@ -40,4 +37,4 @@ USER htmltopdf
 
 ENTRYPOINT ["/docker-entrypoint.sh"]
 
-CMD ["-b", "0.0.0.0:80", "--log-file", "-", "app:application"]
+CMD ["-b", "0.0.0.0:8080", "--log-file", "-", "app:application"]

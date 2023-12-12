@@ -134,6 +134,8 @@ services:
     build:
       context: .
       dockerfile: ./htmltopdf/Dockerfile
+    ports:
+      - 8080:8080
     restart: always
 
   postgres:

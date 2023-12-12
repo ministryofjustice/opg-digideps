@@ -11,11 +11,11 @@ jobs:
   build-web:
     runs-on: ubuntu-latest
     steps:
-      - uses: actions/checkout@7cdaf2fbc075e6f3b9ca94cfd6cec5adc8a75622 # pin@v3
+      - uses: actions/checkout@b4ffde65f46336ab88eb53be808477a3936bae11 # pin@v3
       - name: create nvmrc file
         run: grep "FROM node:" Dockerfile | awk -F' ' '{print $2}' | sed 's/^node:\(.*\)-.*/\1/' > .nvmrc
         working-directory: client/docker/resources
-      - uses: actions/setup-node@2a017f350dbf6c4b6bb4508cc83809719115162e # pin@v3.6.0
+      - uses: actions/setup-node@5ef044f9d09786428e6e895be6be17937becee3a # pin@v3.6.0
         with:
           node-version-file: "client/docker/resources/.nvmrc"
       - name: cache node modules

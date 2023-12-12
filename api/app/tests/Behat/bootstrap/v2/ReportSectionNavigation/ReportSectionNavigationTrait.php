@@ -50,7 +50,7 @@ trait ReportSectionNavigationTrait
     public function theLinkToTheReportOverviewPageShouldDisplayTheCorrectReportingYears()
     {
         $startYear = $this->interactingWithUserDetails->getCurrentReportStartDate()->format('Y');
-        $endYear = $this->interactingWithUserDetails->getCurrentReportDueDate()->format('Y');
+        $endYear = $this->interactingWithUserDetails->getCurrentReportEndDate()->format('Y');
 
         $this->assertLinkWithTextIsOnPage(sprintf('%s to %s report overview', $startYear, $endYear));
     }
