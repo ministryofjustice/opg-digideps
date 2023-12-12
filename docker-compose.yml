@@ -131,7 +131,9 @@ services:
     restart: always
 
   htmltopdf:
-    build: ./htmltopdf
+    build:
+      context: .
+      dockerfile: ./htmltopdf/Dockerfile
     restart: always
 
   postgres:
@@ -153,7 +155,8 @@ services:
 
   file-scanner-rest:
     build:
-      context: ./file-scanner
+      context: .
+      dockerfile: ./file-scanner/Dockerfile
     ports:
       - 8085:8080
 

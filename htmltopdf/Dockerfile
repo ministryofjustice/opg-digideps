@@ -2,6 +2,7 @@ FROM python:3.10-alpine3.18
 
 ENV PYTHONUNBUFFERED 1
 
+RUN addgroup -S htmltopdf && adduser -S htmltopdf -G htmltopdf
 RUN apk --update --upgrade --no-cache add \
     cairo-dev pango-dev gdk-pixbuf bash jpeg-dev curl libwebp tiff libcrypto1.1 libssl1.1 ncurses-libs ncurses-terminfo-base libwebp
 
@@ -10,7 +11,7 @@ RUN apk --update --upgrade --no-cache add fontconfig ttf-freefont font-noto term
     && fc-cache -f \
     && fc-list | sort
 
-COPY requirements.txt .
+COPY htmltopdf/requirements.txt .
 
 RUN pip3 install --upgrade pip && pip install --upgrade pip
 
@@ -19,15 +20,20 @@ RUN set -ex \
 && pip3 install -r requirements.txt \
 && apk del .build-deps
 
-ADD docker-entrypoint.sh /docker-entrypoint.sh
-ADD app.py /app.py
-ADD clean-tmp /etc/periodic/hourly/clean-tmp
+ADD --chown=htmltopdf:htmltopdf htmltopdf/docker-entrypoint.sh /docker-entrypoint.sh
+ADD --chown=htmltopdf:htmltopdf htmltopdf/app.py /app.py
+ADD --chown=htmltopdf:htmltopdf htmltopdf/clean-tmp /etc/periodic/hourly/clean-tmp
 
 EXPOSE 80
 
 # Make commands executable
 RUN ["chmod", "+x", "/etc/periodic/hourly/clean-tmp"]
 RUN ["chmod", "+x", "/docker-entrypoint.sh"]
+
+COPY scripts/hardening/harden.sh /harden.sh
+RUN /harden.sh htmltopdf && rm /harden.sh
+
+USER htmltopdf
 
 ENTRYPOINT ["/docker-entrypoint.sh"]
 
