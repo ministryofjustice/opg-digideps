@@ -20,11 +20,35 @@ use Throwable;
 
 class ProcessLayCSVCommand extends Command 
 {
-    protected static $defaultName = 'digideps:api:process-lay-csv';
+    public static $defaultName = 'digideps:api:process-lay-csv';
 
     private const JOB_NAME = 'lay_csv_processing';
 
     private const CHUNK_SIZE = 50;
+    
+    private const EXPECTED_COLUMNS = [
+        'Case',
+        'ClientSurname',
+        'DeputyUid',
+        'DeputyFirstname',
+        'DeputySurname',
+        'DeputyAddress1',
+        'DeputyAddress2',
+        'DeputyAddress3',
+        'DeputyAddress4',
+        'DeputyAddress5',
+        'DeputyPostcode',
+        'ReportType',
+        'MadeDate',
+        'OrderType',
+        'CoDeputy',
+        'Hybrid',
+    ];
+    
+    private const UNEXPECTED_COLUMNS = [
+        'LastReportDay', 
+        'DeputyOrganisation'
+    ];
 
     private array $processingOutput = [
         'errors' => [],
@@ -111,25 +135,8 @@ class ProcessLayCSVCommand extends Command
     {
         try {
             return (new CsvToArray($fileName, false, false))
-                ->setExpectedColumns([
-                    'Case',
-                    'ClientSurname',
-                    'DeputyUid',
-                    'DeputyFirstname',
-                    'DeputySurname',
-                    'DeputyAddress1',
-                    'DeputyAddress2',
-                    'DeputyAddress3',
-                    'DeputyAddress4',
-                    'DeputyAddress5',
-                    'DeputyPostcode',
-                    'ReportType',
-                    'MadeDate',
-                    'OrderType',
-                    'CoDeputy',
-                    'Hybrid',
-                ])
-                ->setUnexpectedColumns(['LastReportDay', 'DeputyOrganisation'])
+                ->setExpectedColumns(self::EXPECTED_COLUMNS)
+                ->setUnexpectedColumns(self::UNEXPECTED_COLUMNS)
                 ->getData();
         } catch (Throwable $e) {
             $logMessage = sprintf('Error processing CSV: %s', $e->getMessage());

@@ -18,7 +18,7 @@ use Symfony\Component\DependencyInjection\ParameterBag\ParameterBagInterface;
 
 class ProcessOrgCSVCommand extends Command
 {
-    protected static $defaultName = 'digideps:process-org-csv';
+    public static $defaultName = 'digideps:process-org-csv';
     private const JOB_NAME = 'org_csv_processing';
 
     private const CHUNK_SIZE = 50;
