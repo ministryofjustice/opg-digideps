@@ -20,7 +20,7 @@ jobs:
           - folder: "environment"
           - folder: "account"
     steps:
-      - uses: actions/checkout@7cdaf2fbc075e6f3b9ca94cfd6cec5adc8a75622 # pin@v3
+      - uses: actions/checkout@b4ffde65f46336ab88eb53be808477a3936bae11 # pin@v3
 
       - name: parse terraform version
         id: tf_version_setup
@@ -41,7 +41,7 @@ jobs:
           terraform_wrapper: false
 
       - name: configure AWS credentials for terraform
-        uses: aws-actions/configure-aws-credentials@e49c9972c28e00c16bb2eb7bea9f63a625cb86c1 # pin@v1.7.0
+        uses: aws-actions/configure-aws-credentials@f749619a9bd295c431b5a3fff1885bc7059e9c16 # pin@v1.7.0
         with:
           aws-access-key-id: ${{ secrets.AWS_ACCESS_KEY_ID_ACTIONS }}
           aws-secret-access-key: ${{ secrets.AWS_SECRET_ACCESS_KEY_ACTIONS }}
