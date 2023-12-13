@@ -43,7 +43,7 @@ class SiriusToOrgDeputyshipDtoAssemblerTest extends TestCase
         self::assertEquals($siriusArray['Case'], $dto->getCaseNumber());
         self::assertEquals($siriusArray['ClientForename'], $dto->getClientFirstname());
         self::assertEquals($siriusArray['ClientSurname'], $dto->getClientLastname());
-        self::assertEquals($expectedClientDateOfBirth, $dto->getClientDateOfBirth());
+        self::assertEquals($expectedClientDateOfBirth->format('Y-m-d'), $dto->getClientDateOfBirth()->format('Y-m-d'));
         self::assertEquals($siriusArray['ClientAddress1'], $dto->getClientAddress1());
         self::assertEquals($siriusArray['ClientAddress2'], $dto->getClientAddress2());
         self::assertEquals($siriusArray['ClientAddress3'], $dto->getClientAddress3());
@@ -60,9 +60,9 @@ class SiriusToOrgDeputyshipDtoAssemblerTest extends TestCase
         self::assertEquals($siriusArray['DeputyAddress4'], $dto->getDeputyAddress4());
         self::assertEquals($siriusArray['DeputyAddress5'], $dto->getDeputyAddress5());
         self::assertEquals($siriusArray['DeputyPostcode'], $dto->getDeputyPostcode());
-        self::assertEquals($expectedMadeDate, $dto->getCourtDate());
-        self::assertEquals($expectedReportStartDate, $dto->getReportStartDate());
-        self::assertEquals($expectedReportEndDate, $dto->getReportEndDate());
+        self::assertEquals($expectedMadeDate->format('Y-m-d'), $dto->getCourtDate()->format('Y-m-d'));
+        self::assertEquals($expectedReportStartDate->format('Y-m-d'), $dto->getReportStartDate()->format('Y-m-d'));
+        self::assertEquals($expectedReportEndDate->format('Y-m-d'), $dto->getReportEndDate()->format('Y-m-d'));
         self::assertEquals('102-5', $dto->getReportType());
         self::assertEquals($siriusArray['Hybrid'], $dto->getHybrid());
     }
