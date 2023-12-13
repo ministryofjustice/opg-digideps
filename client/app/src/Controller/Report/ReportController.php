@@ -474,42 +474,6 @@ class ReportController extends AbstractController
     /**
      * Used for active and archived report.
      *
-     * @Route("/report/{reportId}/new_review", name="report_new_review")
-     *
-     * @Template("@App/Report/Report/new_review.html.twig")
-     *
-     * @return array
-     *
-     * @throws \Exception
-     */
-    public function newReviewAction($reportId)
-    {
-        $report = $this->reportApi->getReport($reportId, self::$reportGroupsAll);
-
-        // check status
-        $status = $report->getStatus();
-
-        /** @var User $user */
-        $user = $this->getUser();
-
-        if ($user->isDeputyOrg()) {
-            $backLink = $this->clientApi->generateClientProfileLink($report->getClient());
-        } else {
-            $backLink = $this->generateUrl('lay_home');
-        }
-
-        return [
-            'user' => $this->getUser(),
-            'report' => $report,
-            'reportStatus' => $status,
-            'backLink' => $backLink,
-            'feeTotals' => $report->getFeeTotals(),
-        ];
-    }
-
-    /**
-     * Used for active and archived report.
-     *
      * @Route("/report/{reportId}/pdf-debug")
      *
      * @return Response|null
@@ -536,38 +500,6 @@ class ReportController extends AbstractController
     {
         $report = $this->reportApi->getReport($reportId, self::$reportGroupsAll);
         $pdfBinary = $reportSubmissionService->getPdfBinaryContent($report);
-
-        $response = new Response($pdfBinary);
-        $response->headers->set('Content-Type', 'application/pdf');
-
-        $submitDate = $report->getSubmitDate();
-        /** @var \DateTime $endDate */
-        $endDate = $report->getEndDate();
-
-        $attachmentName = sprintf(
-            'DigiRep-%s_%s_%s.pdf',
-            $endDate->format('Y'),
-            $submitDate instanceof \DateTime ? $submitDate->format('Y-m-d') : 'n-a-', // some old reports have no submission date
-            $report->getClient()->getCaseNumber()
-        );
-
-        $response->headers->set('Content-Disposition', 'attachment; filename="'.$attachmentName.'"');
-
-        // Send headers before outputting anything
-        $response->sendHeaders();
-
-        return $response;
-    }
-
-    /**
-     * @Route("/report/new_deputyreport-{reportId}.pdf", name="report_new_pdf")
-     *
-     * @return Response
-     */
-    public function newPdfViewAction($reportId, ReportSubmissionService $reportSubmissionService)
-    {
-        $report = $this->reportApi->getReport($reportId, self::$reportGroupsAll);
-        $pdfBinary = $reportSubmissionService->getNewPdfBinaryContent($report);
 
         $response = new Response($pdfBinary);
         $response->headers->set('Content-Type', 'application/pdf');
