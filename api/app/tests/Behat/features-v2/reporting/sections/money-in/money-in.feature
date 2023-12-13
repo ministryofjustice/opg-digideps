@@ -93,4 +93,4 @@ Feature: Money in High Assets
     And I remove the dividends item
     Then I should be on the money in summary page and see entry deleted
     When I follow link back to report overview page
-    Then I should see "money-in" as "not started"
+    Then I should see "money-in" as "not finished"
