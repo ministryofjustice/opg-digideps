@@ -14,7 +14,7 @@ class DoesMoneyInExistType extends AbstractType
     {
         $builder
             ->add('doesMoneyInExist', FormTypes\ChoiceType::class, [
-                'choices' => ['Yes' => 'yes', 'No' => 'no'],
+                'choices' => ['Yes' => 'Yes', 'No' => 'No'],
                 'expanded' => true,
                 'mapped' => false,
                 'constraints' => [new Constraints\NotBlank(['message' => 'moneyIn.moneyInChoice.notBlank', 'groups' => ['does-money-in-exist']])],
