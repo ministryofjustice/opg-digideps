@@ -5,21 +5,21 @@ locals {
     s3      = local.common_sg_rules.s3
     ecr_api = local.common_sg_rules.ecr_api
     front = {
-      port        = 80
+      port        = 8080
       type        = "ingress"
       protocol    = "tcp"
       target_type = "security_group_id"
       target      = module.front_service_security_group.id
     },
     admin = {
-      port        = 80
+      port        = 8080
       type        = "ingress"
       protocol    = "tcp"
       target_type = "security_group_id"
       target      = module.admin_service_security_group.id
     }
     checklist = {
-      port        = 80
+      port        = 8080
       type        = "ingress"
       protocol    = "tcp"
       target_type = "security_group_id"
