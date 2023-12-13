@@ -103,7 +103,7 @@ CMD confd -onetime -backend env \
 
 FROM application as production
 COPY scripts/hardening/harden.sh /harden.sh
-RUN /harden.sh && rm /harden.sh
+RUN /harden.sh www-data && rm /harden.sh
 
 USER www-data
 
