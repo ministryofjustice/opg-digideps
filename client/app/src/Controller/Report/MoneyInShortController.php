@@ -38,6 +38,7 @@ class MoneyInShortController extends AbstractController
 
     /**
      * @Route("/report/{reportId}/money-in-short", name="money_in_short")
+     *
      * @Template("@App/Report/MoneyInShort/start.html.twig")
      *
      * @return array|RedirectResponse
@@ -57,6 +58,7 @@ class MoneyInShortController extends AbstractController
 
     /**
      * @Route("/report/{reportId}/money-in-short/exist", name="does_money_in_short_exist")
+     *
      * @Template("@App/Report/MoneyInShort/exist.html.twig")
      *
      * @return array|RedirectResponse
@@ -95,6 +97,7 @@ class MoneyInShortController extends AbstractController
 
     /**
      * @Route("/report/{reportId}/money-in-short/no-money-in-short-exists", name="no_money_in_short_exists")
+     *
      * @Template("@App/Report/MoneyInShort/noMoneyInShortToReport.html.twig")
      *
      * @return array|RedirectResponse
@@ -127,6 +130,7 @@ class MoneyInShortController extends AbstractController
 
     /**
      * @Route("/report/{reportId}/money-in-short/category", name="money_in_short_category")
+     *
      * @Template("@App/Report/MoneyInShort/category.html.twig")
      *
      * @return array|RedirectResponse
@@ -202,6 +206,7 @@ class MoneyInShortController extends AbstractController
 
     /**
      * @Route("/report/{reportId}/money-in-short/add", name="money_in_short_add")
+     *
      * @Template("@App/Report/MoneyInShort/add.html.twig")
      *
      * @return array|RedirectResponse
@@ -232,6 +237,7 @@ class MoneyInShortController extends AbstractController
 
     /**
      * @Route("/report/{reportId}/money-in-short/add_another", name="money_in_short_add_another")
+     *
      * @Template("@App/Report/MoneyInShort/addAnother.html.twig")
      *
      * @return array|RedirectResponse
@@ -260,6 +266,7 @@ class MoneyInShortController extends AbstractController
 
     /**
      * @Route("/report/{reportId}/money-in-short/edit/{transactionId}", name="money_in_short_edit")
+     *
      * @Template("@App/Report/MoneyInShort/edit.html.twig")
      *
      * @return array|RedirectResponse
@@ -290,6 +297,7 @@ class MoneyInShortController extends AbstractController
 
     /**
      * @Route("/report/{reportId}/money-in-short/{transactionId}/delete", name="money_in_short_delete")
+     *
      * @Template("@App/Common/confirmDelete.html.twig")
      *
      * @return array|RedirectResponse
@@ -329,33 +337,12 @@ class MoneyInShortController extends AbstractController
 
     /**
      * @Route("/report/{reportId}/money-in-short/summary", name="money_in_short_summary")
+     *
      * @Template("@App/Report/MoneyInShort/summary.html.twig")
      *
      * @return array|RedirectResponse
      */
     public function summaryAction(Request $request, $reportId)
-    {
-        $fromPage = $request->get('from');
-        $report = $this->reportApi->getReportIfNotSubmitted($reportId, self::$jmsGroups);
-
-        if (EntityDir\Report\Status::STATE_NOT_STARTED == $report->getStatus()->getMoneyInShortState()['state'] && 'skip-step' != $fromPage) {
-            return $this->redirectToRoute('money_in_short', ['reportId' => $reportId]);
-        }
-
-        return [
-            'comingFromLastStep' => 'skip-step' == $fromPage || 'last-step' == $fromPage,
-            'report' => $report,
-            'status' => $report->getStatus(),
-        ];
-    }
-
-    /**
-     * @Route("/report/{reportId}/money-in-short/new_summary", name="money_in_short_new_summary")
-     * @Template("@App/Report/MoneyInShort/new_summary.html.twig")
-     *
-     * @return array|RedirectResponse
-     */
-    public function newSummaryAction(Request $request, $reportId)
     {
         $fromPage = $request->get('from');
         $report = $this->reportApi->getReportIfNotSubmitted($reportId, self::$jmsGroups);

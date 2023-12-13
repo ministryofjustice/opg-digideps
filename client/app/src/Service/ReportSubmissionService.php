@@ -140,24 +140,6 @@ class ReportSubmissionService
     }
 
     /**
-     * Generate the HTML of the report and convert to PDF.
-     *
-     * @param Report $report
-     * @param bool   $showSummary
-     *
-     * @return string binary PDF content
-     */
-    public function getNewPdfBinaryContent(ReportInterface $report, $showSummary = false)
-    {
-        $html = $this->templating->render('@App/Report/Formatted/new_formatted_standalone.html.twig', [
-            'report' => $report,
-            'showSummary' => $showSummary,
-        ]);
-
-        return $this->htmltopdf->getPdfFromHtml($html);
-    }
-
-    /**
      * @to-do move this into a checklist or pdf service
      * Generate the HTML of the report and convert to PDF
      *

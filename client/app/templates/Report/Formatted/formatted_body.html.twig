@@ -30,13 +30,13 @@
         {% include '@App/Report/Formatted/_decisions.html.twig' %}
         {% if report.mentalCapacity is not null %}
             {% include '@App/Report/Formatted/_mental-capacity.html.twig' with {
-            'mentalCapacity': report.mentalCapacity
+                'mentalCapacity': report.mentalCapacity
             } %}
         {% endif %}
         {% include '@App/Report/Formatted/_contacts.html.twig' %}
         {% if report.visitsCare is not null %}
             {% include '@App/Report/Formatted/_visits_care.html.twig' with {
-            'visitsCare': report.visitsCare
+                'visitsCare': report.visitsCare
             } %}
         {% endif %}
         {% if report.hasSection('lifestyle') %}
@@ -80,22 +80,28 @@
                     {% include '@App/Report/Formatted/Accounts/_summary.html.twig' %}
                 {% endif %}
                 {% include '@App/Report/Formatted/Accounts/_money_in_out_short.html.twig' with {
-                'title': 'Money in',
-                'categories': report.moneyShortCategoriesInPresent,
-                'transactions': report.moneyTransactionsShortIn,
-                'transactionsExist': report.moneyTransactionsShortInExist,
-                'transactionsTitle': 'Items of income over £1,000',
-                'existQuestion' : 'Have there been any items of income over £1,000? ',
-                'totalText': 'Money in total (items over £1,000)'
+                    'title': 'Money in',
+                    'moneyInOutQuestion': 'summaryPage.moneyIn.hasMoneyIn.label',
+                    'moneyInOutExists': report.moneyInExists,
+                    'noMoneyInOutReason': report.reasonForNoMoneyIn,
+                    'categories': report.moneyShortCategoriesInPresent,
+                    'transactions': report.moneyTransactionsShortIn,
+                    'transactionsExist': report.moneyTransactionsShortInExist,
+                    'transactionsTitle': 'Items of income over £1,000',
+                    'existQuestion' : 'Have there been any items of income over £1,000? ',
+                    'totalText': 'Money in total (items over £1,000)'
                 } %}
                 {% include '@App/Report/Formatted/Accounts/_money_in_out_short.html.twig' with {
-                'title': 'Money out',
-                'categories': report.moneyShortCategoriesOutPresent,
-                'transactions': report.moneyTransactionsShortOut,
-                'transactionsExist': report.moneyTransactionsShortOutExist,
-                'transactionsTitle': 'Expenses over £1,000',
-                'existQuestion' : 'Have there been any one-off items of expense over £1,000? ',
-                'totalText': 'Money out total (items over £1,000)'
+                    'title': 'Money out',
+                    'moneyInOutQuestion': 'summaryPage.moneyOut.hasMoneyOut.label',
+                    'moneyInOutExists': report.moneyOutExists,
+                    'noMoneyInOutReason': report.reasonForNoMoneyOut,
+                    'categories': report.moneyShortCategoriesOutPresent,
+                    'transactions': report.moneyTransactionsShortOut,
+                    'transactionsExist': report.moneyTransactionsShortOutExist,
+                    'transactionsTitle': 'Expenses over £1,000',
+                    'existQuestion' : 'Have there been any one-off items of expense over £1,000? ',
+                    'totalText': 'Money out total (items over £1,000)'
                 } %}
             </div>
         {% endif %}
@@ -134,7 +140,7 @@
         } %}
 
         {% include '@App/Report/Formatted/_attached_documents.html.twig' with {
-        'title': 'Would you like to upload supporting documentation?',
+            'title': 'Would you like to upload supporting documentation?',
         } %}
         <div class="section" id="declaration">
             {% include '@App/Report/Formatted/_submission_declaration.html.twig' %}
