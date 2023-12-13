@@ -4,6 +4,7 @@
   "branchPrefix": "renovate-",
   "commitMessageAction": "Renovate Update",
   "labels": ["Dependencies", "Renovate"],
+  "branchConcurrentLimit": 5,
   "regexManagers": [
     {
       "fileMatch": ["^Dockerfile.*$"],
@@ -15,60 +16,77 @@
   ],
   "packageRules": [
     {
-      "groupName": "Patch Updates PHP",
+      "groupName": "Minor and Patch Updates PHP",
       "groupSlug": "all-patch-updates-php",
       "labels": ["Dependencies", "Renovate", "PHP"],
       "matchPackagePatterns": ["*"],
-      "matchUpdateTypes": ["patch"],
+      "matchUpdateTypes": ["minor", "patch"],
       "prPriority": 0,
       "schedule": ["after 6am and before 9am on Monday"],
       "stabilityDays": 3,
+      "prCreation": "immediate",
       "excludePackageNames": ["php"],
       "matchLanguages": ["php"]
     },
     {
-      "groupName": "Patch Updates Node",
+      "groupName": "Minor and Patch Updates Node",
       "groupSlug": "all-patch-updates-node",
       "labels": ["Dependencies", "Renovate", "Node"],
       "matchPackagePatterns": ["*"],
-      "matchUpdateTypes": ["patch"],
+      "matchUpdateTypes": ["minor", "patch"],
       "prPriority": 0,
       "schedule": ["after 6am and before 9am on Monday"],
       "stabilityDays": 3,
+      "prCreation": "immediate",
       "matchLanguages": ["node"]
     },
     {
-      "groupName": "Patch Updates Docker",
+      "groupName": "Minor and Patch Updates Docker",
       "groupSlug": "all-patch-updates-docker",
       "labels": ["Dependencies", "Renovate", "Docker"],
       "matchPackagePatterns": ["*"],
-      "matchUpdateTypes": ["patch"],
+      "matchUpdateTypes": ["minor", "patch"],
       "prPriority": 0,
       "schedule": ["after 6am and before 9am on Monday"],
       "stabilityDays": 3,
+      "prCreation": "immediate",
       "matchLanguages": ["docker"]
     },
     {
-      "groupName": "Patch Updates Python",
+      "groupName": "Minor and Patch Updates Python",
       "groupSlug": "all-patch-updates-python",
       "labels": ["Dependencies", "Renovate", "Python"],
       "matchPackagePatterns": ["*"],
-      "matchUpdateTypes": ["patch"],
+      "matchUpdateTypes": ["minor", "patch"],
       "prPriority": 0,
       "schedule": ["after 6am and before 9am on Monday"],
       "stabilityDays": 3,
+      "prCreation": "immediate",
       "matchLanguages": ["python"]
     },
     {
-      "groupName": "Patch Updates Golang",
+      "groupName": "Minor and Patch Updates Golang",
       "groupSlug": "all-patch-updates-golang",
       "labels": ["Dependencies", "Renovate", "Golang"],
       "matchPackagePatterns": ["*"],
-      "matchUpdateTypes": ["patch"],
+      "matchUpdateTypes": ["minor", "patch"],
       "prPriority": 0,
       "schedule": ["after 6am and before 9am on Monday"],
       "stabilityDays": 3,
+      "prCreation": "immediate",
       "matchLanguages": ["golang"]
+    },
+    {
+      "groupName": "GitHub Actions",
+      "matchPackagePatterns": ["actions/*"],
+      "automerge": true,
+      "dependencyDashboardApproval": true,
+      "prPriority": 0,
+      "labels": ["Dependencies", "Renovate", "Actions"],
+      "prBody": "Updates the following GitHub Actions dependencies:\n\n{{#each dependencies}}- {{this.name}}\n{{/each}}",
+      "schedule": ["after 6am and before 9am on Monday"],
+      "stabilityDays": 3,
+      "prCreation": "immediate"
     },
     {
       "groupName": "Disable node updates for dockerfiles",
@@ -82,21 +100,11 @@
       "labels": ["Dependencies", "Renovate", "All-Minor"],
       "matchPackagePatterns": ["*"],
       "matchUpdateTypes": ["minor"],
-      "prPriority": 0,
+      "prPriority": -1,
       "schedule": ["after 6am and before 9am on Monday"],
       "stabilityDays": 3,
+      "prCreation": "immediate",
       "excludePackageNames": ["php"]
-    },
-    {
-      "groupName": "GitHub Actions",
-      "matchPackagePatterns": ["actions/*"],
-      "automerge": true,
-      "dependencyDashboardApproval": true,
-      "prPriority": 0,
-      "labels": ["Dependencies", "Renovate", "Actions"],
-      "prBody": "Updates the following GitHub Actions dependencies:\n\n{{#each dependencies}}- {{this.name}}\n{{/each}}",
-      "schedule": ["after 6am and before 9am on Monday"],
-      "stabilityDays": 3
     }
   ],
   "major": {

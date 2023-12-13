@@ -470,8 +470,8 @@ class IndexController extends AbstractController
             $this->addFlash('error', 'There was a problem locating the file inside the S3 Bucket. Please contact an administrator.');
         }
 
-        $processStatus = $redisClient->get('lay-csv-processing');
-        $processCompletedDate = $redisClient->get('lay-csv-completed-date');
+        $processStatus = $redisClient->get($this->workspace.'-lay-csv-processing');
+        $processCompletedDate = $redisClient->get($this->workspace.'-lay-csv-completed-date');
 
         return [
             'nOfChunks' => $request->get('nOfChunks'),
@@ -575,8 +575,8 @@ class IndexController extends AbstractController
             $this->addFlash('error', 'There was a problem locating the file inside the S3 Bucket. Please contact an administrator.');
         }
 
-        $processStatus = $redisClient->get('org-csv-processing');
-        $processCompletedDate = $redisClient->get('org-csv-completed-date');
+        $processStatus = $redisClient->get($this->workspace.'-org-csv-processing');
+        $processCompletedDate = $redisClient->get($this->workspace.'-org-csv-completed-date');
 
         return [
             'form' => $form->createView(),

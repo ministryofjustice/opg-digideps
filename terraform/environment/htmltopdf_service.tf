@@ -1,5 +1,5 @@
 locals {
-  htmltopdf_service_fqdn = "htmltopdf.${aws_service_discovery_private_dns_namespace.private.name}"
+  htmltopdf_service_fqdn = "htmltopdf.${aws_service_discovery_private_dns_namespace.private.name}:8080"
 }
 
 resource "aws_service_discovery_service" "htmltopdf" {
@@ -92,11 +92,16 @@ locals {
       image       = local.images.htmltopdf,
       mountPoints = [],
       name        = "htmltopdf",
+      portMappings = [{
+        containerPort = 8080,
+        hostPort      = 8080,
+        protocol      = "tcp"
+      }],
       volumesFrom = [],
       healthCheck = {
         command = [
           "CMD-SHELL",
-          "curl --fail -X POST -H 'Content-Type:application/json' -d '{\"contents\":\"dGVzdA==\"}' -o /dev/null http://localhost:80/ || exit 1"
+          "curl --fail -X POST -H 'Content-Type:application/json' -d '{\"contents\":\"dGVzdA==\"}' -o /dev/null http://localhost:8080/ || exit 1"
         ],
         interval = 30,
         timeout  = 5,

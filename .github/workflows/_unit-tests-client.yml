@@ -11,10 +11,10 @@ jobs:
   client-unit-tests:
     runs-on: ubuntu-latest
     steps:
-      - uses: actions/checkout@7cdaf2fbc075e6f3b9ca94cfd6cec5adc8a75622 # pin@v3
+      - uses: actions/checkout@b4ffde65f46336ab88eb53be808477a3936bae11 # pin@v3
 
       - name: set up docker buildx
-        uses: docker/setup-buildx-action@6d5347c4025fdf2bb05167a2519cac535a14a408
+        uses: docker/setup-buildx-action@edfb0fe6204400c56fbfd3feba3fe9ad1adfa345
 
       - name: download resources artifact
         uses: actions/download-artifact@e9ef242655d12993efdcda9058dee2db83a2cb9b

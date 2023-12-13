@@ -35,6 +35,11 @@ variable "cluster_identifier" {
   type        = string
 }
 
+variable "ca_cert_identifier" {
+  description = "Identifier of the CA certificate for the DB instance."
+  type        = string
+}
+
 variable "deletion_protection" {
   description = "Indicates whether deletion protection is enabled for the cluster."
   type        = bool
