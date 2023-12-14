@@ -85,8 +85,16 @@ class MoneyOutController extends AbstractController
             $this->restClient->put('report/'.$reportId, $report, ['doesMoneyOutExist']);
 
             if ('Yes' === $answer) {
+                $report->setReasonForNoMoneyOut(null);
+
+                $this->restClient->put('report/'.$reportId, $report, ['reasonForNoMoneyOut']);
+
                 return $this->redirectToRoute('money_out_step', ['reportId' => $reportId, 'step' => 1, 'from' => 'does_money_out_exist']);
             } else {
+                foreach($report->getMoneyTransactionsOut() as $transactions) {
+                    $this->restClient->delete('/report/'.$reportId.'/money-transaction/'.$transactions->getId());
+                }
+
                 return $this->redirectToRoute('no_money_out_exists', ['reportId' => $reportId, 'from' => 'does_money_out_exist']);
             }
         }
