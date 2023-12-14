@@ -15,6 +15,9 @@ existPage:
       label: Have you taken money out on %client%'s behalf during this reporting period?
     save:
       label: Save and continue
+    choices:
+      yes: Yes
+      no: No
 
 noMoneyOut:
   htmlTitle: "Money out - Complete the deputy report | GOV.UK"

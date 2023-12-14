@@ -79,7 +79,7 @@ class MoneyInController extends AbstractController
 
         if ($form->isSubmitted() && $form->isValid()) {
             $report = $form->getData();
-            $answer = $form['doesMoneyInExist']->getData();
+            $answer = $form['moneyInExists']->getData();
 
             $report->setMoneyInExists($answer);
             $this->restClient->put('report/'.$reportId, $report, ['doesMoneyInExist']);
