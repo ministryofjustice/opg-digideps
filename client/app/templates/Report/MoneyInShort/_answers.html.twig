@@ -92,7 +92,7 @@
             {% if report.moneyTransactionsShortInExist is null or (report.moneyTransactionsShortInExist == "yes" and report.moneyTransactionsShortIn | length == 0) %}
                 <dt class="govuk-summary-list__key">
                     <span class="error">
-                        {{ 'existPage.form.moneyTransactionsShortInExist.label' | trans(transOptions) }}
+                        {{ 'summaryPage.moneyIn.moneyTransactionsShortInExist.label' | trans(transOptions) }}
                     </span>
                 </dt>
                 <dd class="govuk-summary-list__value">
@@ -100,7 +100,7 @@
                 </dd>
             {% else %}
                 <dt class="govuk-summary-list__key">
-                    {{ 'existPage.form.moneyTransactionsShortInExist.label' | trans(transOptions) }}
+                    {{ 'summaryPage.moneyIn.moneyTransactionsShortInExist.label' | trans(transOptions) }}
                 </dt>
                 <dd class="govuk-summary-list__value">
                     {{ report.moneyTransactionsShortInExist | capitalize }}

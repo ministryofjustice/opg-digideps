@@ -69,6 +69,10 @@ class Report implements ReportInterface, StartEndDateComparableInterface
     public const SIGNIFICANT_DECISION_MADE = 'Yes';
     public const SIGNIFICANT_DECISION_NOT_MADE = 'No';
 
+    //Money in and out exists
+    public const YES_MONEY_EXISTS = 'Yes';
+    public const NO_MONEY_EXISTS = 'No';
+
     /**
      * @JMS\Type("integer")
      * @JMS\Groups({"visits-care", "report-id"})
@@ -1377,7 +1381,7 @@ class Report implements ReportInterface, StartEndDateComparableInterface
         return $this->moneyOutExists;
     }
 
-    public function setMoneyOutExists(string $moneyOutExists): self
+    public function setMoneyOutExists(?string $moneyOutExists): self
     {
         $this->moneyOutExists = $moneyOutExists;
 

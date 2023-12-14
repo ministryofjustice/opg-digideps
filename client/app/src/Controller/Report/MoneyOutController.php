@@ -79,12 +79,12 @@ class MoneyOutController extends AbstractController
 
         if ($form->isSubmitted() && $form->isValid()) {
             $report = $form->getData();
-            $answer = $form['doesMoneyOutExist']->getData();
+            $answer = $form['moneyOutExists']->getData();
 
             $report->setMoneyOutExists($answer);
             $this->restClient->put('report/'.$reportId, $report, ['doesMoneyOutExist']);
 
-            if ('yes' === $answer) {
+            if ('Yes' === $answer) {
                 return $this->redirectToRoute('money_out_step', ['reportId' => $reportId, 'step' => 1, 'from' => 'does_money_out_exist']);
             } else {
                 return $this->redirectToRoute('no_money_out_exists', ['reportId' => $reportId, 'from' => 'does_money_out_exist']);

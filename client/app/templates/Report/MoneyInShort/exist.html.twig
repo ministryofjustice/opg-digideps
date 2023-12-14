@@ -17,7 +17,7 @@
 
     {{ form_start(form, {attr: {novalidate: 'novalidate' }}) }}
 
-    {{ form_checkbox_group(form.doesMoneyInExist, 'existPage.moneyIn.form', {
+    {{ form_checkbox_group(form.moneyInExists, 'existPage.moneyIn.form', {
         'fieldSetClass' : 'govuk-radios--inline',
         'legendText' : 'existPage.moneyIn.form.exist.label' | trans(transOptions, translationDomain),
         legend: {

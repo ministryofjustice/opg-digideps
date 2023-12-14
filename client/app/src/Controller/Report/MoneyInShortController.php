@@ -74,12 +74,12 @@ class MoneyInShortController extends AbstractController
 
         if ($form->isSubmitted() && $form->isValid()) {
             $report = $form->getData();
-            $answer = $form['doesMoneyInExist']->getData();
+            $answer = $form['moneyInExists']->getData();
 
             $report->setMoneyInExists($answer);
             $this->restClient->put('report/'.$reportId, $report, ['doesMoneyInExist']);
 
-            if ('yes' === $answer) {
+            if ('Yes' === $answer) {
                 return $this->redirectToRoute('money_in_short_category', ['reportId' => $reportId, 'from' => 'does_money_in_short_exist']);
             } else {
                 return $this->redirectToRoute('no_money_in_short_exists', ['reportId' => $reportId, 'from' => 'does_money_in_short_exist']);
