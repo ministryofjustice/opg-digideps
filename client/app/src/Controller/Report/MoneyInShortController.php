@@ -80,8 +80,17 @@ class MoneyInShortController extends AbstractController
             $this->restClient->put('report/'.$reportId, $report, ['doesMoneyInExist']);
 
             if ('Yes' === $answer) {
+                $report->setReasonForNoMoneyIn(null);
+
+                $this->restClient->put('report/'.$reportId, $report, ['reasonForNoMoneyIn']);
+
                 return $this->redirectToRoute('money_in_short_category', ['reportId' => $reportId, 'from' => 'does_money_in_short_exist']);
             } else {
+
+                $this->cleanDataIfAnswerIsChangedFromYesToNo($report);
+
+                $this->restClient->put('report/'.$reportId, $report, ['moneyShortCategoriesIn']);
+
                 return $this->redirectToRoute('no_money_in_short_exists', ['reportId' => $reportId, 'from' => 'does_money_in_short_exist']);
             }
         }
@@ -93,6 +102,27 @@ class MoneyInShortController extends AbstractController
             'report' => $report,
             'form' => $form->createView(),
         ];
+    }
+
+    private function cleanDataIfAnswerIsChangedFromYesToNo($report): void
+    {
+
+        // selected categories in money short category table are set to false
+        foreach($report->getMoneyShortCategoriesIn() as $shortCategories) {
+            if($shortCategories->isPresent()) {
+                $shortCategories->setPresent(false);
+            }
+        }
+
+        // all transactions are deleted from 'money transaction short' table if present
+
+        $reportId = $report->getId();
+
+        if ($report->getMoneyTransactionsShortInExist()) {
+            $report->setMoneyTransactionsShortInExist('no');
+
+            $this->restClient->put('report/'.$reportId, $report, ['money-transactions-short-in-exist']);
+        }
     }
 
     /**
