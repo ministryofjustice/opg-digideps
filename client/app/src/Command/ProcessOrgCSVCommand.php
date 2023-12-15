@@ -94,10 +94,10 @@ class ProcessOrgCSVCommand extends Command
                 $this->logger->error('Unable to delete file /tmp/orgReport.csv.');
             }
 
-            return 1;
+            return Command::SUCCESS;
         }
 
-        return 0;
+        return Command::FAILURE;
     }
 
     private function csvToArray(string $fileName): array

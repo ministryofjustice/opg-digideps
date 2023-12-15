@@ -6,10 +6,12 @@ use App\Repository\PreRegistrationRepository;
 use App\Service\DataImporter\CsvToArray;
 use App\v2\Registration\DeputyshipProcessing\CSVDeputyshipProcessing;
 use Aws\S3\Exception\S3Exception;
+use Aws\S3\S3Client;
 use Aws\S3\S3ClientInterface;
 use Aws\Result;
 use Mockery as Mock;
 use Predis\ClientInterface;
+use Prophecy\Argument;
 use Prophecy\PhpUnit\ProphecyTrait;
 use Psr\Log\LoggerInterface;
 use Symfony\Bundle\FrameworkBundle\Console\Application;
@@ -27,7 +29,10 @@ class ProcessOrgCSVCommandTest extends KernelTestCase
         $kernel = static::createKernel();
         $app = new Application($kernel);
 
-        $this->s3 = self::prophesize(S3ClientInterface::class);
+        # TODO Refactor CSV Process so we can mock this properly
+        copy(dirname(dirname(__DIR__)) .'/csv/paProDeputyReport.csv', '/tmp/paProDeputyReport.csv');
+
+        $this->s3 = self::prophesize(S3Client::class);
         $this->params = self::prophesize(ParameterBagInterface::class);
         $this->params->get('s3_sirius_bucket')
             ->shouldBeCalled()
@@ -61,66 +66,41 @@ class ProcessOrgCSVCommandTest extends KernelTestCase
 
     public function testExecuteWithSuccessfulFilePull(): void
     {
-        $this->s3->getObject()
+        $this->s3->getObject(Argument::any())
             ->shouldBeCalled()
             ->willReturn(new Result());
 
-        $this->csvArray->shouldReceive(
-            'setExpectedColumns->setUnexpectedColumns->getData'
-        )->andReturn([
-            '0' => [
-                'Case' => '45454545',
-                'ClientForename' => 'CHARLIE',
-                'ClientSurname' => 'PUFF',
-                'ClientDateOfBirth' => '1998-11-18',
-                'ClientAddress1' => '32 ALSTON VERGE',
-                'ClientAddress2' => 'BECKS POINT',
-                'ClientAddress3' => 'LUTE',
-                'ClientAddress4' => 'LONDONVILLE',
-                'ClientAddress5' => '',
-                'ClientPostcode' => 'SE1 ZYD',
-                'DeputyUid' => '700000000001',
-                'DeputyType' => 'PRO',
-                'DeputyEmail' => 'professor@mccracken.com',
-                'DeputyOrganisation' => 'McCracken Associates',
-                'DeputyForename' => 'PROFESSOR',
-                'DeputySurname' => 'MCCRACKEN',
-                'DeputyAddress1' => 'MCCRACKEN INC',
-                'DeputyAddress2' => '1 BIG ROAD',
-                'DeputyAddress3' => 'OLD TOWN',
-                'DeputyAddress4' => 'TOWNSVILLE',
-                'DeputyAddress5' => '',
-                'DeputyPostcode' => 'TW1 V99',
-                'MadeDate' => '2018-08-09',
-                'LastReportDay' => '2021-08-08',
-                'ReportType' => 'OPG102',
-                'OrderType' => 'pfa',
-                'Hybrid' => 'SINGLE'
-            ]
-        ]);
+        $this->csvProcessing->orgProcessing(Argument::any())
+            ->shouldBeCalled()
+            ->willReturn([
+                'added' => 1,
+                'errors' => 0,
+                'report-update-count' => 0,
+                'cases-with-updated-reports' => 0,
+                'source' => 'sirius',
+            ]);
         
         $this->commandTester->execute([]);
         $this->commandTester->assertCommandIsSuccessful();
         $output = $this->commandTester->getDisplay();
 
         $this->assertStringContainsString(
-            'lay_csv_processing - success - Finished processing LayCSV. Output:', 
+            'org_csv_processing - success - Finished processing OrgCSV. Output:', 
             $output
         );
     }
 
     public function testExecuteWithFailedFilePullS3Error(): void
     {
-        $this->s3->getObject()
+        $this->s3->getObject(Argument::any())
             ->shouldBeCalled()
             ->willThrow(S3Exception::class);
 
         $this->commandTester->execute([]);
-        $this->commandTester->assertCommandIsSuccessful();
         $output = $this->commandTester->getDisplay();
 
         $this->assertStringContainsString(
-    'lay_csv_processing - failure - Error retrieving file layDeputyReport.csv from bucket bucket',
+    'org_csv_processing - failure - Error retrieving file paProDeputyReport.csv from bucket',
             $output
         );
     }
@@ -129,22 +109,23 @@ class ProcessOrgCSVCommandTest extends KernelTestCase
 
     public function testExecuteWithMissingCSVCol(): void
     {
+        # Required so we can trigger missing column exception with bad file
+        copy(dirname(dirname(__DIR__)) .'/csv/paProDeputyReport-bad.csv', '/tmp/paProDeputyReport.csv');
         $mockError = new \RuntimeException('Invalid file. Cannot find expected header');
         
         $this->csvArray->shouldReceive(
             'setExpectedColumns->setUnexpectedColumns->getData'
-        )->willThrow($mockError);
+        )->andThrow($mockError);
 
-        $this->s3->getObject()
+        $this->s3->getObject(Argument::any())
             ->shouldBeCalled()
             ->willReturn(new Result());
 
         $this->commandTester->execute([]);
-        $this->commandTester->assertCommandIsSuccessful();
         $output = $this->commandTester->getDisplay();
 
         $this->assertStringContainsString(
-            'lay_csv_processing - failure - Error processing CSV: Invalid file. Cannot find expected header',
+            'org_csv_processing - failure - Error processing CSV: Invalid file. Cannot find expected header',
             $output
         );
     }

@@ -83,10 +83,10 @@ class ProcessLayCSVCommand extends Command
                 $this->logger->error(sprintf('Unable to delete file %s.', $layReportFile));
             }
 
-            return 1;
+            return Command::SUCCESS;
         }
 
-        return 0;
+        return Command::FAILURE;
     }
 
     private function csvToArray(string $fileName): array

@@ -9,6 +9,7 @@ use App\Service\File\Storage\S3Storage;
 use App\v2\Registration\DeputyshipProcessing\CSVDeputyshipProcessing;
 use Aws\S3\Exception\S3Exception;
 use Aws\S3\S3Client;
+use Aws\S3\S3ClientInterface;
 use Predis\ClientInterface;
 use Psr\Log\LoggerInterface;
 use Symfony\Component\Console\Command\Command;
@@ -23,6 +24,43 @@ class ProcessOrgCSVCommand extends Command
 
     private const CHUNK_SIZE = 50;
 
+    private const EXPECTED_COLUMNS = [
+        'Case',
+        'ClientForename',
+        'ClientSurname',
+        'ClientDateOfBirth',
+        'ClientPostcode',
+        'DeputyUid',
+        'DeputyType',
+        'DeputyEmail',
+        'DeputyOrganisation',
+        'DeputyForename',
+        'DeputySurname',
+        'DeputyPostcode',
+        'MadeDate',
+        'LastReportDay',
+        'ReportType',
+        'OrderType',
+        'Hybrid',
+    ];
+    
+    private const OPTIONAL_COLUMNS = [
+        'ClientAddress1',
+        'ClientAddress2',
+        'ClientAddress3',
+        'ClientAddress4',
+        'ClientAddress5',
+        'DeputyAddress1',
+        'DeputyAddress2',
+        'DeputyAddress3',
+        'DeputyAddress4',
+        'DeputyAddress5',
+    ];
+    
+    private const UNEXPECTED_COLUMNS = [
+        'NDR'
+    ];
+    
     private array $processingOutput = [
         'errors' => [],
         'added' => [
@@ -40,7 +78,7 @@ class ProcessOrgCSVCommand extends Command
         'skipped' => 0,
     ];
 
-    private OutputInterface $commandLineOutput;
+    private OutputInterface $cliOutput;
 
     public function __construct(
         private S3Client $s3,
@@ -57,9 +95,9 @@ class ProcessOrgCSVCommand extends Command
         $this->setDescription('Processes the PA/Prof CSV Report from the S3 bucket.');
     }
 
-    protected function execute(InputInterface $input, OutputInterface $commandLineOutput): int
+    protected function execute(InputInterface $input, OutputInterface $output): int
     {
-        $this->commandLineOutput = $commandLineOutput;
+        $this->cliOutput = $output;
         $bucket = $this->params->get('s3_sirius_bucket');
         $paProReportFile = $this->params->get('pa_pro_report_csv_filename');
         $fileLocation = sprintf('/tmp/%s', $paProReportFile);
@@ -79,107 +117,83 @@ class ProcessOrgCSVCommand extends Command
             $logMessage = sprintf($logMessage, $paProReportFile, $bucket);
             
             $this->logger->error($logMessage);
-            $this->commandLineOutput->writeln(sprintf('%s - failure - %s', self::JOB_NAME, $logMessage));
+            $this->cliOutput->writeln(sprintf('%s - failure - %s', self::JOB_NAME, $logMessage));
+            
+            return Command::FAILURE;
         }
 
         $data = $this->csvToArray($fileLocation);
-
-        if ($this->process($data) && empty($this->processingOutput['errors'])) {
+        if (count($data) >= 1 && $this->process($data) && empty($this->processingOutput['errors'])) {
             if (!unlink($fileLocation)) {
                 $logMessage = sprintf('Unable to delete file %s', $fileLocation);
 
                 $this->logger->error($logMessage);
-                $this->commandLineOutput->writeln(
+                $this->cliOutput->writeln(
                     sprintf(
                         '%s - partial - %s processing Output: %s',
                         self::JOB_NAME,
                         $logMessage,
-                        implode(', ', $this->processingOutput)
+                        $this->processedStringOutput()
                     )
                 );
                 
-                return 1;
+                return Command::SUCCESS;
             }
 
-            $this->commandLineOutput->writeln(
+            $this->cliOutput->writeln(
                 sprintf(
                     '%s - success - Finished processing OrgCSV. Output: %s', 
                     self::JOB_NAME, 
-                    implode(', ', $this->processingOutput)
+                    $this->processedStringOutput()
                 )
             );
-            return 1;
+            return Command::SUCCESS;
         }
 
-        return 0;
+        return Command::FAILURE;
     }
 
     private function csvToArray(string $fileName)
     {
         try {
             return (new CsvToArray($fileName, false))
-            ->setExpectedColumns([
-                'Case',
-                'ClientForename',
-                'ClientSurname',
-                'ClientDateOfBirth',
-                'ClientPostcode',
-                'DeputyUid',
-                'DeputyType',
-                'DeputyEmail',
-                'DeputyOrganisation',
-                'DeputyForename',
-                'DeputySurname',
-                'DeputyPostcode',
-                'MadeDate',
-                'LastReportDay',
-                'ReportType',
-                'OrderType',
-                'Hybrid',
-            ])
-            ->setOptionalColumns([
-                'ClientAddress1',
-                'ClientAddress2',
-                'ClientAddress3',
-                'ClientAddress4',
-                'ClientAddress5',
-                'DeputyAddress1',
-                'DeputyAddress2',
-                'DeputyAddress3',
-                'DeputyAddress4',
-                'DeputyAddress5',
-            ])
-            ->setUnexpectedColumns([
-                'NDR',
-            ])
+            ->setExpectedColumns(self::EXPECTED_COLUMNS)
+            ->setOptionalColumns(self::OPTIONAL_COLUMNS)
+            ->setUnexpectedColumns(self::UNEXPECTED_COLUMNS)
             ->getData();
         } catch (\Throwable $e) {
             $logMessage = sprintf('Error processing CSV: %s', $e->getMessage());
 
             $this->logger->error($logMessage);
-            $this->commandLineOutput->writeln(self::JOB_NAME .' - failure - '. $logMessage);
+            $this->cliOutput->writeln(self::JOB_NAME .' - failure - '. $logMessage);
         }
+        
+        return [];
     }
 
     private function process(mixed $data): bool
     {
-        $chunks = array_chunk($data, self::CHUNK_SIZE);
+        if (is_array($data)) {
+            $chunks = array_chunk($data, self::CHUNK_SIZE);
 
-        $this->redis->set('org-csv-processing', 'processing');
-        foreach ($chunks as $index => $chunk) {
-            $upload = $this->csvProcessing->orgProcessing($chunk);
+            $this->redis->set('org-csv-processing', 'processing');
+            foreach ($chunks as $index => $chunk) {
+                $upload = $this->csvProcessing->orgProcessing($chunk);
 
-            $this->storeOutput($upload);
+                $this->storeOutput($upload);
 
-            $this->logger->info(sprintf('Successfully processed chunk: %d', $index));
+                $this->logger->info(sprintf('Successfully processed chunk: %d', $index));
+            }
+
+            $this->logger->info('Successfully processed all chunks');
+
+            $this->redis->set('org-csv-processing', 'completed');
+            $this->redis->set('org-csv-completed-date', date('Y-m-d H:i:s'));
+
+            return true;
         }
-
-        $this->logger->info('Successfully processed all chunks');
-
-        $this->redis->set('org-csv-processing', 'completed');
-        $this->redis->set('org-csv-completed-date', date('Y-m-d H:i:s'));
         
-        return true;
+        return false;
     }
 
     private function storeOutput(array $processingOutput)
@@ -206,5 +220,21 @@ class ProcessOrgCSVCommand extends Command
         if (!empty($processingOutput['skipped'])) {
             $this->processingOutput['skipped'] += $processingOutput['skipped'];
         }
+    }
+
+    private function processedStringOutput()
+    {
+        $processed = "";
+        foreach ($this->processingOutput as $reportedHeader => $stats ) {
+            if (is_array($stats) && count($stats) >= 1) {
+                foreach ($stats as $statHeader => $statValue ) {
+                    $processed .= sprintf("%s %s: %s. ", ucfirst($statHeader), $reportedHeader, $statValue);
+                }
+            } else {
+                $processed .= sprintf("%s %s. ", $stats, $reportedHeader);
+            }
+        }
+
+        return $processed;
     }
 }
