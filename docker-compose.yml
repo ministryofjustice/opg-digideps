@@ -140,7 +140,7 @@ services:
 
   postgres:
     container_name: opg-digideps-postgres
-    image: postgres:13.11
+    image: postgres:13.13
     ports:
       - 5432:5432
     env_file:
@@ -205,7 +205,7 @@ services:
   #            - frontend
 
   pact-mock:
-    image: pactfoundation/pact-cli:0.51.0.4
+    image: pactfoundation/pact-cli:0.56.0.6
     ports:
       - 1234:80
     command:
@@ -229,7 +229,7 @@ services:
       - OPENAPI_MOCK_SPECIFICATION_URL=https://raw.githubusercontent.com/ministryofjustice/opg-data-deputy-reporting/master/lambda_functions/v2/openapi/deputy-reporting-openapi.yml
 
   mock-notify-api:
-    image: stoplight/prism:5.4.0
+    image: stoplight/prism:5.5.2
     ports:
       - 4010:4010
     command:
@@ -255,5 +255,5 @@ services:
     entrypoint: /aws-lambda/aws-lambda-rie /var/task/main
 
   composer:
-    image: composer:2.5.8
+    image: composer:2.6.5
     command: ["install"]
