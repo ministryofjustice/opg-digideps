@@ -38,7 +38,7 @@ trait MoneyInShortSectionTrait
      */
     public function iAnswerToAddingMoneyInOnTheClientsBehalf($arg1)
     {
-        $this->chooseOption('does_money_in_exist[doesMoneyInExist]', $arg1);
+        $this->chooseOption('does_money_in_exist[moneyInExists]', $arg1);
         $this->pressButton('Save and continue');
     }
 
