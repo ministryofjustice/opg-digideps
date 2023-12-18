@@ -1,13 +1,13 @@
 # Sirius Lay CSV Ingestion
-resource "aws_cloudwatch_event_rule" "delete_zero_activity_users" {
-  name                = "delete-zero-activity-users-${local.environment}"
-  description         = "Delete zero activity users in ${terraform.workspace}"
+resource "aws_cloudwatch_event_rule" "csv_automation_lay_processing" {
+  name                = "csv-automation-lay-processing-${local.environment}"
+  description         = "Process Sirus Lay CSV for Lay Users ${terraform.workspace}"
   schedule_expression = "cron(0 1 * * ? *)"
   tags                = local.default_tags
 }
 
-resource "aws_cloudwatch_event_target" "delete_zero_activity_users" {
-  rule     = aws_cloudwatch_event_rule.delete_zero_activity_users.name
+resource "aws_cloudwatch_event_target" "csv_automation_lay_processing" {
+  rule     = aws_cloudwatch_event_rule.csv_automation_lay_processing.name
   arn      = aws_ecs_cluster.main.arn
   role_arn = aws_iam_role.events_task_runner.arn
 
@@ -36,15 +36,15 @@ resource "aws_cloudwatch_event_target" "delete_zero_activity_users" {
 }
 
 # Sirius Org CSV Ingestion
-resource "aws_cloudwatch_event_rule" "delete_zero_activity_users" {
-  name                = "delete-zero-activity-users-${local.environment}"
-  description         = "Delete zero activity users in ${terraform.workspace}"
+resource "aws_cloudwatch_event_rule" "csv_automation_org_processing" {
+  name                = "csv-automation-org-processing-${local.environment}"
+  description         = "Process Sirus Org CSV for Org Users  ${terraform.workspace}"
   schedule_expression = "cron(0 2 * * ? *)"
   tags                = local.default_tags
 }
 
-resource "aws_cloudwatch_event_target" "delete_zero_activity_users" {
-  rule     = aws_cloudwatch_event_rule.delete_zero_activity_users.name
+resource "aws_cloudwatch_event_target" "csv_automation_org_processing" {
+  rule     = aws_cloudwatch_event_rule.csv_automation_org_processing.name
   arn      = aws_ecs_cluster.main.arn
   role_arn = aws_iam_role.events_task_runner.arn
 
