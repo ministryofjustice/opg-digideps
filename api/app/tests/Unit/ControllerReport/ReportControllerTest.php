@@ -14,6 +14,7 @@ class ReportControllerTest extends AbstractTestController
     private static $deputy1;
     private static $client1;
     private static $report1;
+    private static $report102;
     private static $report103;
     private static $deputy2;
     private static $client2;
@@ -86,6 +87,13 @@ class ReportControllerTest extends AbstractTestController
             'setType' => Report::LAY_PFA_LOW_ASSETS_TYPE,
             'setSubmitted' => true,
             'setSubmittedBy' => self::$deputy1,
+        ]);
+        self::$report102 = self::fixtures()->createReport(self::$client1, [
+            'setStartDate' => new \DateTime('2016-01-01'),
+            'setEndDate' => new \DateTime('2016-12-31'),
+            'setType' => Report::LAY_PFA_HIGH_ASSETS_TYPE,
+            'setSubmitted' => false,
+            'setSubmittedBy' => null,
         ]);
 
         // deputy 2
@@ -619,6 +627,73 @@ class ReportControllerTest extends AbstractTestController
         $this->assertEquals('md2', $data['action_more_info_details']);
     }
 
+    public function testMoneyInLowAssetDoesNotExist()
+    {
+        $reportId = self::$report103->getId();
+        
+        $url = '/report/'.$reportId;
+        $this->assertJsonRequest('PUT', $url, [
+            'mustSucceed' => true,
+            'AuthToken' => self::$tokenDeputy,
+            'data' => [
+                'money_in_exists' => 'No',
+            ]])['data'];
+
+        self::$report103 = self::fixtures()->getReportById($reportId);
+
+        $moneyInSectionStateStatusShort = self::fixtures()->getReportFreshSectionStatus(self::$report103, Report::SECTION_MONEY_IN_SHORT)['state'];
+
+        $this->assertEquals('No', self::$report103->getMoneyInExists());
+        $this->assertEquals('incomplete', $moneyInSectionStateStatusShort);
+    }
+
+    public function testMoneyInLowAssetDoesNotExistWithReason()
+    {
+        $report = self::fixtures()->getReportById(self::$report103->getId());
+        $reportId = $report->getId();
+
+        $report->setMoneyInExists('No');
+        self::fixtures()->persist($report)->flush();
+
+        $url = '/report/'.$reportId;
+
+        $this->assertJsonRequest('PUT', $url, [
+            'mustSucceed' => true,
+            'AuthToken' => self::$tokenDeputy,
+            'data' => [
+                'reason_for_no_money_in' => 'No money in',
+            ]])['data'];
+        
+        self::fixtures()->clear();
+        $report = self::fixtures()->getReportById(self::$report103->getId());
+        
+        $moneyInSectionStateStatusShort = self::fixtures()->getReportFreshSectionStatus($report, Report::SECTION_MONEY_IN_SHORT)['state'];
+
+        $this->assertEquals('No money in', $report->getReasonForNoMoneyIn());
+        $this->assertEquals('done', $moneyInSectionStateStatusShort);
+    }
+
+    public function testMoneyOutHighAssetExists()
+    {
+        $reportId = self::$report102->getId();
+
+        $url = '/report/'.$reportId;
+        $this->assertJsonRequest('PUT', $url, [
+            'mustSucceed' => true,
+            'AuthToken' => self::$tokenDeputy,
+            'data' => [
+                'money_out_exists' => 'Yes',
+            ]])['data'];
+
+        self::$report102 = self::fixtures()->getReportById($reportId);
+
+        $moneyOutSectionStateStatus = self::fixtures()->getReportFreshSectionStatus(self::$report102, Report::SECTION_MONEY_OUT)['state'];
+
+        $this->assertEquals('Yes', self::$report102->getMoneyOutExists());
+        $this->assertEquals('incomplete', $moneyOutSectionStateStatus);
+    }
+
+    
     public function testMoneyCategories()
     {
         $url = '/report/'.self::$report103->getId();
