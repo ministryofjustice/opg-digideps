@@ -9,7 +9,6 @@ use App\Service\File\Storage\S3Storage;
 use App\v2\Registration\DeputyshipProcessing\CSVDeputyshipProcessing;
 use Aws\S3\Exception\S3Exception;
 use Aws\S3\S3Client;
-use Aws\S3\S3ClientInterface;
 use Predis\ClientInterface;
 use Psr\Log\LoggerInterface;
 use Symfony\Component\Console\Command\Command;
@@ -19,7 +18,7 @@ use Symfony\Component\DependencyInjection\ParameterBag\ParameterBagInterface;
 
 class ProcessOrgCSVCommand extends Command
 {
-    public static $defaultName = 'digideps:process-org-csv';
+    public static $defaultName = 'digideps:api:process-org-csv';
     private const JOB_NAME = 'org_csv_processing';
 
     private const CHUNK_SIZE = 50;
