@@ -55,6 +55,7 @@ services:
             $frontendHost: "%env(JWT_HOST)%"
             $workspace: "%workspace%"
             $sessionPrefix: "%env(SESSION_PREFIX)%"
+            Predis\ClientInterface: "@snc_redis.default"
 
     # makes classes in src/ available to be used as services
     # this creates a service per class whose id is the fully-qualified class name

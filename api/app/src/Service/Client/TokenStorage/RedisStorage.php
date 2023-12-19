@@ -7,6 +7,13 @@ namespace App\Service\Client\TokenStorage;
 use Predis\ClientInterface as PredisClientInterface;
 use Symfony\Component\Security\Core\Authentication\Token\Storage\TokenStorage;
 
+
+/**
+ * Unless we actually implement something other than directly interacting with Predis, 
+ * we should ignore unit tests for this classs
+ *
+ * @codeCoverageIgnore
+ */
 class RedisStorage extends TokenStorage
 {
     public function __construct(

@@ -41,11 +41,6 @@ parameters:
         validate: true
 
     api_base_url: https://api.digideps.local/
-    email_params:
-        from_email: noreply-opgdeputyservice@digideps.dsd.io
-        report_submit_to_address: digideps+noop@digital.justice.gov.uk
-        feedback_send_to_address: digideps+noop@digital.justice.gov.uk
-        update_send_to_address: digideps+noop@digital.justice.gov.uk
     s3_client_params:
         version: 'latest'
         region: 'eu-west-1'
