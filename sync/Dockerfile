@@ -1,4 +1,4 @@
-FROM alpine:3.18
+FROM alpine:3.19
 
 ENV POSTGRES_DATABASE **None**
 ENV POSTGRES_HOST **None**
