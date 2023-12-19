@@ -148,12 +148,22 @@ class ReportSection
 
     private function completeMoneyIn(ReportInterface $report): void
     {
+        if (Report::LAY_PFA_HIGH_ASSETS_TYPE === $report->getType() || Report::LAY_COMBINED_HIGH_ASSETS_TYPE === $report->getType()
+            || Report::PA_PFA_HIGH_ASSETS_TYPE === $report->getType() || Report::PA_COMBINED_HIGH_ASSETS_TYPE === $report->getType()
+            || Report::PROF_PFA_HIGH_ASSETS_TYPE === $report->getType() || Report::PROF_COMBINED_HIGH_ASSETS_TYPE === $report->getType()) {
+            $report->setMoneyInExists('Yes');
+        }
         $mt = (new MoneyTransaction($report))->setCategory('salary-or-wages')->setAmount(200);
         $report->addMoneyTransaction($mt);
     }
 
     private function completeMoneyOut(ReportInterface $report): void
     {
+        if (Report::LAY_PFA_HIGH_ASSETS_TYPE === $report->getType() || Report::LAY_COMBINED_HIGH_ASSETS_TYPE === $report->getType()
+            || Report::PA_PFA_HIGH_ASSETS_TYPE === $report->getType() || Report::PA_COMBINED_HIGH_ASSETS_TYPE === $report->getType()
+            || Report::PROF_PFA_HIGH_ASSETS_TYPE === $report->getType() || Report::PROF_COMBINED_HIGH_ASSETS_TYPE === $report->getType()) {
+            $report->setMoneyOutExists('Yes');
+        }
         $mt = (new MoneyTransaction($report))->setCategory('care-fees')->setAmount(200);
         $report->addMoneyTransaction($mt);
     }
@@ -170,11 +180,23 @@ class ReportSection
 
     private function completeMoneyInShort(ReportInterface $report): void
     {
+        if (Report::LAY_PFA_LOW_ASSETS_TYPE === $report->getType() || Report::LAY_COMBINED_LOW_ASSETS_TYPE === $report->getType()
+            || Report::PA_PFA_LOW_ASSETS_TYPE === $report->getType() || Report::PA_COMBINED_LOW_ASSETS_TYPE === $report->getType()
+            || Report::PROF_PFA_LOW_ASSETS_TYPE === $report->getType() || Report::PROF_COMBINED_LOW_ASSETS_TYPE === $report->getType()) {
+            $report->setMoneyInExists('No');
+            $report->setReasonForNoMoneyIn('No money in');
+        }
         $report->setMoneyTransactionsShortInExist('no');
     }
 
     private function completeMoneyOutShort(ReportInterface $report): void
     {
+        if (Report::LAY_PFA_LOW_ASSETS_TYPE === $report->getType() || Report::LAY_COMBINED_LOW_ASSETS_TYPE === $report->getType()
+            || Report::PA_PFA_LOW_ASSETS_TYPE === $report->getType() || Report::PA_COMBINED_LOW_ASSETS_TYPE === $report->getType()
+            || Report::PROF_PFA_LOW_ASSETS_TYPE === $report->getType() || Report::PROF_COMBINED_LOW_ASSETS_TYPE === $report->getType()) {
+            $report->setMoneyOutExists('No');
+            $report->setReasonForNoMoneyOut('No money out');
+        }
         $report->setMoneyTransactionsShortOutExist('no');
     }
 
