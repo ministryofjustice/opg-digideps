@@ -109,7 +109,9 @@ class RestClient implements RestClientInterface
     public function login(array $credentials)
     {
         try {
+            file_put_contents('php://stderr', print_r(' inside_login ', true));
             $response = $this->apiCall('post', '/auth/login', $credentials, 'response', [], false);
+            file_put_contents('php://stderr', print_r(' login_success ', true));
         } catch (AppException\RestClientException $e) {
             if (423 == $e->getCode()) {
                 throw new TooManyLoginAttemptsAuthenticationException($e->getData()['data']);

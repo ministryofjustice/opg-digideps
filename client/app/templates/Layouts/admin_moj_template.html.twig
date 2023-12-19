@@ -48,7 +48,11 @@
                                 {{ 'signOut' | trans({}, 'common' ) }}
                             </a>
                         </li>
+                        <li>LoggedIn</li>
+                    {% else %}
+                        <li>LoggedOut</li>
                     {% endif %}
+
                 </ul>
                 </nav>
             </div>
