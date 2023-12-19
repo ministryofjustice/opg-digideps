@@ -14,7 +14,6 @@ class ReportControllerTest extends AbstractTestController
     private static $deputy1;
     private static $client1;
     private static $report1;
-    private static $report102;
     private static $report103;
     private static $deputy2;
     private static $client2;
@@ -87,13 +86,6 @@ class ReportControllerTest extends AbstractTestController
             'setType' => Report::LAY_PFA_LOW_ASSETS_TYPE,
             'setSubmitted' => true,
             'setSubmittedBy' => self::$deputy1,
-        ]);
-        self::$report102 = self::fixtures()->createReport(self::$client1, [
-            'setStartDate' => new \DateTime('2016-01-01'),
-            'setEndDate' => new \DateTime('2016-12-31'),
-            'setType' => Report::LAY_PFA_HIGH_ASSETS_TYPE,
-            'setSubmitted' => false,
-            'setSubmittedBy' => null,
         ]);
 
         // deputy 2
@@ -675,21 +667,22 @@ class ReportControllerTest extends AbstractTestController
 
     public function testMoneyOutHighAssetExists()
     {
-        $reportId = self::$report102->getId();
+        $reportId = self::$pa1Client1Report1->getId();
 
         $url = '/report/'.$reportId;
         $this->assertJsonRequest('PUT', $url, [
             'mustSucceed' => true,
-            'AuthToken' => self::$tokenDeputy,
+            'AuthToken' => self::$tokenPa,
             'data' => [
                 'money_out_exists' => 'Yes',
             ]])['data'];
 
-        self::$report102 = self::fixtures()->getReportById($reportId);
+        self::fixtures()->clear();
+        self::$pa1Client1Report1 = self::fixtures()->getReportById($reportId);
 
-        $moneyOutSectionStateStatus = self::fixtures()->getReportFreshSectionStatus(self::$report102, Report::SECTION_MONEY_OUT)['state'];
+        $moneyOutSectionStateStatus = self::fixtures()->getReportFreshSectionStatus(self::$pa1Client1Report1, Report::SECTION_MONEY_OUT)['state'];
 
-        $this->assertEquals('Yes', self::$report102->getMoneyOutExists());
+        $this->assertEquals('Yes', self::$pa1Client1Report1->getMoneyOutExists());
         $this->assertEquals('incomplete', $moneyOutSectionStateStatus);
     }
 
