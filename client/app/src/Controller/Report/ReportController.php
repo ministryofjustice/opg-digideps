@@ -27,7 +27,6 @@ use App\Service\Csv\TransactionsCsvGenerator;
 use App\Service\ParameterStoreService;
 use App\Service\Redirector;
 use App\Service\ReportSubmissionService;
-use DateTime;
 use Sensio\Bundle\FrameworkExtraBundle\Configuration\Template;
 use Symfony\Component\Form\FormFactoryInterface;
 use Symfony\Component\HttpFoundation\RedirectResponse;
@@ -114,6 +113,7 @@ class ReportController extends AbstractController
      *
      * @Route("/lay", name="lay_home")
      * //TODO we should add Security("is_granted('ROLE_LAY_DEPUTY')") here, but not sure as not clear what "getCorrectRouteIfDifferent" does
+     *
      * @Template("@App/Report/Report/index.html.twig")
      *
      * @return array|RedirectResponse
@@ -152,9 +152,8 @@ class ReportController extends AbstractController
      * Edit single report.
      *
      * @Route("/reports/edit/{reportId}", name="report_edit")
-     * @Template("@App/Report/Report/edit.html.twig")
      *
-     * @param $reportId
+     * @Template("@App/Report/Report/edit.html.twig")
      *
      * @return array|RedirectResponse
      *
@@ -197,9 +196,8 @@ class ReportController extends AbstractController
      *   defaults={ "action" = "create"},
      *   requirements={ "action" = "(create|add)"}
      * )
-     * @Template("@App/Report/Report/create.html.twig")
      *
-     * @param $clientId
+     * @Template("@App/Report/Report/create.html.twig")
      *
      * @return array|RedirectResponse
      */
@@ -242,9 +240,8 @@ class ReportController extends AbstractController
 
     /**
      * @Route("/report/{reportId}/overview", name="report_overview")
-     * @Template("@App/Report/Report/overview.html.twig")
      *
-     * @param $reportId
+     * @Template("@App/Report/Report/overview.html.twig")
      *
      * @return RedirectResponse|Response|null
      */
@@ -307,8 +304,6 @@ class ReportController extends AbstractController
      * Due to some profs having many dozens of deputies attached to clients, we need to be conservative about generating
      * the list. Its needed for a permissions check on add client contact (logged in user has to be associated).
      *
-     * @param $clientId
-     *
      * @return Client
      */
     private function generateClient(User $user, $clientId)
@@ -360,9 +355,8 @@ class ReportController extends AbstractController
 
     /**
      * @Route("/report/{reportId}/declaration", name="report_declaration")
-     * @Template("@App/Report/Report/declaration.html.twig")
      *
-     * @param $reportId
+     * @Template("@App/Report/Report/declaration.html.twig")
      *
      * @return array|RedirectResponse
      */
@@ -389,7 +383,7 @@ class ReportController extends AbstractController
             /** @var User $currentUser */
             $currentUser = $this->getUser();
 
-            $report->setSubmitted(true)->setSubmitDate(new DateTime());
+            $report->setSubmitted(true)->setSubmitDate(new \DateTime());
             $reportSubmissionService->generateReportDocuments($report);
 
             $this->reportApi->submit($report, $currentUser);
@@ -409,9 +403,8 @@ class ReportController extends AbstractController
      * Page displaying the report has been submitted.
      *
      * @Route("/report/{reportId}/submitted", name="report_submit_confirmation")
-     * @Template("@App/Report/Report/submitConfirmation.html.twig")
      *
-     * @param $reportId
+     * @Template("@App/Report/Report/submitConfirmation.html.twig")
      *
      * @return array|RedirectResponse
      */
@@ -446,9 +439,8 @@ class ReportController extends AbstractController
      * Used for active and archived report.
      *
      * @Route("/report/{reportId}/review", name="report_review")
-     * @Template("@App/Report/Report/review.html.twig")
      *
-     * @param $reportId
+     * @Template("@App/Report/Report/review.html.twig")
      *
      * @return array
      *
@@ -482,9 +474,43 @@ class ReportController extends AbstractController
     /**
      * Used for active and archived report.
      *
-     * @Route("/report/{reportId}/pdf-debug")
+     * @Route("/report/{reportId}/new_review", name="report_new_review")
      *
-     * @param $reportId
+     * @Template("@App/Report/Report/new_review.html.twig")
+     *
+     * @return array
+     *
+     * @throws \Exception
+     */
+    public function newReviewAction($reportId)
+    {
+        $report = $this->reportApi->getReport($reportId, self::$reportGroupsAll);
+
+        // check status
+        $status = $report->getStatus();
+
+        /** @var User $user */
+        $user = $this->getUser();
+
+        if ($user->isDeputyOrg()) {
+            $backLink = $this->clientApi->generateClientProfileLink($report->getClient());
+        } else {
+            $backLink = $this->generateUrl('lay_home');
+        }
+
+        return [
+            'user' => $this->getUser(),
+            'report' => $report,
+            'reportStatus' => $status,
+            'backLink' => $backLink,
+            'feeTotals' => $report->getFeeTotals(),
+        ];
+    }
+
+    /**
+     * Used for active and archived report.
+     *
+     * @Route("/report/{reportId}/pdf-debug")
      *
      * @return Response|null
      */
@@ -504,8 +530,6 @@ class ReportController extends AbstractController
     /**
      * @Route("/report/deputyreport-{reportId}.pdf", name="report_pdf")
      *
-     * @param $reportId
-     *
      * @return Response
      */
     public function pdfViewAction($reportId, ReportSubmissionService $reportSubmissionService)
@@ -517,13 +541,45 @@ class ReportController extends AbstractController
         $response->headers->set('Content-Type', 'application/pdf');
 
         $submitDate = $report->getSubmitDate();
-        /** @var DateTime $endDate */
+        /** @var \DateTime $endDate */
         $endDate = $report->getEndDate();
 
         $attachmentName = sprintf(
             'DigiRep-%s_%s_%s.pdf',
             $endDate->format('Y'),
-            $submitDate instanceof DateTime ? $submitDate->format('Y-m-d') : 'n-a-', // some old reports have no submission date
+            $submitDate instanceof \DateTime ? $submitDate->format('Y-m-d') : 'n-a-', // some old reports have no submission date
+            $report->getClient()->getCaseNumber()
+        );
+
+        $response->headers->set('Content-Disposition', 'attachment; filename="'.$attachmentName.'"');
+
+        // Send headers before outputting anything
+        $response->sendHeaders();
+
+        return $response;
+    }
+
+    /**
+     * @Route("/report/new_deputyreport-{reportId}.pdf", name="report_new_pdf")
+     *
+     * @return Response
+     */
+    public function newPdfViewAction($reportId, ReportSubmissionService $reportSubmissionService)
+    {
+        $report = $this->reportApi->getReport($reportId, self::$reportGroupsAll);
+        $pdfBinary = $reportSubmissionService->getNewPdfBinaryContent($report);
+
+        $response = new Response($pdfBinary);
+        $response->headers->set('Content-Type', 'application/pdf');
+
+        $submitDate = $report->getSubmitDate();
+        /** @var \DateTime $endDate */
+        $endDate = $report->getEndDate();
+
+        $attachmentName = sprintf(
+            'DigiRep-%s_%s_%s.pdf',
+            $endDate->format('Y'),
+            $submitDate instanceof \DateTime ? $submitDate->format('Y-m-d') : 'n-a-', // some old reports have no submission date
             $report->getClient()->getCaseNumber()
         );
 
@@ -539,8 +595,6 @@ class ReportController extends AbstractController
      * Generates Transactions CSV and returns as CSV file response.
      *
      * @Route("/report/transactions-{reportId}.csv", name="report_transactions_csv")
-     *
-     * @param $reportId
      *
      * @return Response
      */
@@ -560,13 +614,13 @@ class ReportController extends AbstractController
         $response->headers->set('Content-Type', 'text/csv');
 
         $submitDate = $report->getSubmitDate();
-        /** @var DateTime $endDate */
+        /** @var \DateTime $endDate */
         $endDate = $report->getEndDate();
 
         $attachmentName = sprintf(
             'DigiRepTransactions-%s_%s_%s.csv',
             $endDate->format('Y'),
-            $submitDate instanceof DateTime ? $submitDate->format('Y-m-d') : 'n-a-', // some old reports have no submission date
+            $submitDate instanceof \DateTime ? $submitDate->format('Y-m-d') : 'n-a-', // some old reports have no submission date
             $report->getClient()->getCaseNumber()
         );
 

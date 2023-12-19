@@ -1,0 +1,37 @@
+{% extends '@App/Layouts/application.html.twig' %}
+
+{% import '@App/Macros/macros.html.twig' as macros %}
+
+{% set translationDomain = "report-money-short" %}
+{% trans_default_domain translationDomain %}
+{% set transOptions = {'%client%': report.client.firstname | e } %}
+
+{% block htmlTitle %}{{ 'noMoneyIn.htmlTitle' | trans(transOptions) }}{% endblock %}
+{% block pageHeader %}{% endblock %}
+
+{% block linkBack %}
+    {{ macros.linkBackStep(backLink, 'back' | trans({}, 'common')) }}
+{% endblock %}
+
+{% block pageContent %}
+
+    {% block supportTitleTop %}
+        <span class="govuk-caption-xl">{{ 'noMoneyIn.supportTitle' | trans }}</span>
+    {% endblock %}
+    {% block pageTitle %}
+        <h1 class="govuk-heading-xl">{{ 'noMoneyIn.form.explanation.label' | trans(transOptions) }}</h1>
+    {% endblock %}
+
+
+    {{ form_start(form, {attr: {novalidate: 'novalidate' }}) }}
+
+    {{ form_input(form.reasonForNoMoneyIn, '', {
+        inputClass: 'govuk-input--width-full',
+        'hintText': 'noMoneyIn.form.explanation.hintText' | trans(transOptions, translationDomain),
+    }) }}
+
+    {{ macros.saveAndContinueButton(form.save) }}
+
+    {{ form_end(form) }}
+
+{% endblock %}

@@ -33,7 +33,7 @@ jobs:
       build_identifier: ${{ steps.variables.outputs.build_identifier }}
       short_sha: ${{ steps.variables.outputs.short_sha }}
     steps:
-      - uses: actions/checkout@7cdaf2fbc075e6f3b9ca94cfd6cec5adc8a75622 # pin@v3
+      - uses: actions/checkout@b4ffde65f46336ab88eb53be808477a3936bae11 # pin@v3
       - name: extract variables for workflow
         id: variables
         env:

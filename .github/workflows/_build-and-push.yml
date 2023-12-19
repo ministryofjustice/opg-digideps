@@ -45,11 +45,11 @@ jobs:
             sub_folder: "sync"
             docker_file: "Dockerfile"
           - svc_name: "htmltopdf"
-            sub_folder: "htmltopdf"
-            docker_file: "Dockerfile"
+            sub_folder: "."
+            docker_file: "htmltopdf/Dockerfile"
           - svc_name: "file-scanner"
-            sub_folder: "file-scanner"
-            docker_file: "Dockerfile"
+            sub_folder: "."
+            docker_file: "file-scanner/Dockerfile"
           - svc_name: "dr-backup"
             sub_folder: "disaster-recovery/backup"
             docker_file: "Dockerfile"
@@ -57,10 +57,10 @@ jobs:
             sub_folder: "lambdas/functions/synchronisation"
             docker_file: "Dockerfile"
     steps:
-      - uses: actions/checkout@7cdaf2fbc075e6f3b9ca94cfd6cec5adc8a75622 # pin@v3
+      - uses: actions/checkout@b4ffde65f46336ab88eb53be808477a3936bae11 # pin@v3
 
       - name: set up docker buildx
-        uses: docker/setup-buildx-action@6d5347c4025fdf2bb05167a2519cac535a14a408
+        uses: docker/setup-buildx-action@edfb0fe6204400c56fbfd3feba3fe9ad1adfa345
 
       - name: export dates
         id: cache-dates
@@ -84,7 +84,7 @@ jobs:
         uses: unfor19/install-aws-cli-action@46282f151073130d90347412d9c4ef0640177f22 # pin@v1.0.3
 
       - name: configure aws credentials
-        uses: aws-actions/configure-aws-credentials@e49c9972c28e00c16bb2eb7bea9f63a625cb86c1 # pin@v1.7.0
+        uses: aws-actions/configure-aws-credentials@f749619a9bd295c431b5a3fff1885bc7059e9c16 # pin@v1.7.0
         with:
           aws-access-key-id: ${{ secrets.AWS_ACCESS_KEY_ID_ACTIONS }}
           aws-secret-access-key: ${{ secrets.AWS_SECRET_ACCESS_KEY_ACTIONS }}
@@ -157,7 +157,7 @@ jobs:
 
       - name: ecr login
         id: login_ecr
-        uses: aws-actions/amazon-ecr-login@3cc40709b867c699d43a67363c42ad6580d8152a # pin@v1.5.1
+        uses: aws-actions/amazon-ecr-login@79d640e3c3ccfd72c7ba25828453278793ab09ee # pin@v1.5.1
         with:
           registries: 311462405659
 

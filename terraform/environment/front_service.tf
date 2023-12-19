@@ -139,7 +139,7 @@ locals {
         { name = "FILESCANNER_URL", value = "http://scan:8080" },
         { name = "GA_DEFAULT", value = local.account.ga_default },
         { name = "GA_GDS", value = local.account.ga_gds },
-        { name = "HTMLTOPDF_ADDRESS", value = "http://htmltopdf" },
+        { name = "HTMLTOPDF_ADDRESS", value = "http://htmltopdf:8080" },
         { name = "NGINX_APP_NAME", value = "frontend" },
         { name = "OPG_DOCKER_TAG", value = var.OPG_DOCKER_TAG },
         { name = "PARAMETER_PREFIX", value = local.parameter_prefix },

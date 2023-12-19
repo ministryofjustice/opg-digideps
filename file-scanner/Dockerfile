@@ -1,7 +1,7 @@
 FROM golang:1.20.4-alpine3.18 as build
 
 # Build go package
-ADD . /go/src/clamav-rest/
+ADD file-scanner/. /go/src/clamav-rest/
 RUN cd /go/src/clamav-rest && go mod vendor && go build -v
 
 FROM alpine:3.18
@@ -35,9 +35,11 @@ RUN sed -i 's/^#Foreground .*$/Foreground true/g' /etc/clamav/clamd.conf \
     && sed -i 's/^#TCPSocket .*$/TCPSocket 3310/g' /etc/clamav/clamd.conf \
     && sed -i 's/^#Foreground .*$/Foreground true/g' /etc/clamav/freshclam.conf
 
-RUN freshclam --quiet --no-dns
+RUN freshclam --quiet
 
-COPY entrypoint.sh /usr/bin/
+COPY file-scanner/entrypoint.sh /usr/bin/
+COPY scripts/hardening/harden.sh /harden.sh
+RUN /harden.sh clamav && rm /harden.sh
 
 EXPOSE 8080
 USER clamav

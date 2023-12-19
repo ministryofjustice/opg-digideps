@@ -51,7 +51,46 @@ class DocumentRepositoryTest extends KernelTestCase
         self::assertEquals(Document::SYNC_STATUS_IN_PROGRESS, $supportingDoc->getSynchronisationStatus());
     }
 
-    private function createFailedDocumentSubmission($status, $createdOn, $caseNumber)
+    /**
+     * @test
+     */
+    public function getResubmittableErrorDocumentsAndSetToQueued()
+    {
+        [$_, $_, $reportPdfDocValid, $supportingDocValid, $_] = $this->createAndSubmitReportWithSupportingDoc($this->firstJulyAm);
+        [$_, $_, $reportPdfDocNotValid, $supportingDocNotValid, $_] = $this->createAndSubmitReportWithSupportingDoc($this->firstJulyAm);
+
+        $reportPdfDocValid->setSynchronisationStatus(Document::SYNC_STATUS_PERMANENT_ERROR);
+        $reportPdfDocValid->setSynchronisationError('Document failed to sync after 4 attempts');
+        $supportingDocValid->setSynchronisationStatus(Document::SYNC_STATUS_PERMANENT_ERROR);
+        $supportingDocValid->setSynchronisationError('Report PDF failed to sync');
+        $reportPdfDocNotValid->setSynchronisationStatus(Document::SYNC_STATUS_SUCCESS);
+        $supportingDocNotValid->setSynchronisationStatus(Document::SYNC_STATUS_PERMANENT_ERROR);
+        $supportingDocNotValid->setSynchronisationError('Some non resubmittable error message');
+
+        $this->entityManager->persist($reportPdfDocValid);
+        $this->entityManager->persist($supportingDocValid);
+        $this->entityManager->persist($reportPdfDocNotValid);
+        $this->entityManager->persist($supportingDocNotValid);
+        $this->entityManager->flush();
+        self::assertEquals(Document::SYNC_STATUS_PERMANENT_ERROR, $reportPdfDocValid->getSynchronisationStatus());
+        self::assertEquals(Document::SYNC_STATUS_PERMANENT_ERROR, $supportingDocValid->getSynchronisationStatus());
+        self::assertEquals(Document::SYNC_STATUS_SUCCESS, $reportPdfDocNotValid->getSynchronisationStatus());
+        self::assertEquals(Document::SYNC_STATUS_PERMANENT_ERROR, $supportingDocNotValid->getSynchronisationStatus());
+
+        $documents = $this->documentRepository->getResubmittableErrorDocumentsAndSetToQueued('100');
+        $this->entityManager->refresh($reportPdfDocValid);
+        $this->entityManager->refresh($supportingDocValid);
+        $this->entityManager->refresh($reportPdfDocNotValid);
+        $this->entityManager->refresh($supportingDocNotValid);
+
+        self::assertEquals(2, count($documents));
+        self::assertEquals(Document::SYNC_STATUS_QUEUED, $reportPdfDocValid->getSynchronisationStatus());
+        self::assertEquals(Document::SYNC_STATUS_QUEUED, $supportingDocValid->getSynchronisationStatus());
+        self::assertEquals(Document::SYNC_STATUS_SUCCESS, $reportPdfDocNotValid->getSynchronisationStatus());
+        self::assertEquals(Document::SYNC_STATUS_PERMANENT_ERROR, $supportingDocNotValid->getSynchronisationStatus());
+    }
+
+    private function createFailedDocumentSubmission($status, $createdOn, $caseNumber, $archived)
     {
         $client = $this->generateAndPersistClient('abc-123-'.$caseNumber);
         $report = $this->generateAndPersistReport($client, false);
@@ -59,6 +98,7 @@ class DocumentRepositoryTest extends KernelTestCase
         $supportingDoc = $this->generateAndPersistDocument($report, false, $status, $this->firstJulyAm, false);
         $reportSubmission = $this->submitReport($report, $this->firstJulyPm, $reportPdfDoc, $supportingDoc);
         $reportSubmission->setCreatedOn($createdOn);
+        $reportSubmission->setArchived($archived);
         $this->entityManager->persist($reportSubmission);
         $this->entityManager->flush();
     }
@@ -71,20 +111,21 @@ class DocumentRepositoryTest extends KernelTestCase
         $currentDateTime = new \DateTime(); // Current date and time
         $tomorrow = $currentDateTime->modify('+1 day');
 
-        // Tomorrow shouldn't count
+        // Tomorrow shouldn't count. Archived shouldn't count.
         $arguments = [
-            ['QUEUED', $this->firstJulyPm],
-            ['IN_PROGRESS', $this->firstJulyPm],
-            ['TEMPORARY_ERROR', $this->firstJulyPm],
-            ['PERMANENT_ERROR', $this->firstJulyPm],
-            ['QUEUED', $tomorrow],
-            ['IN_PROGRESS', $tomorrow],
+            ['QUEUED', $this->firstJulyPm, false],
+            ['IN_PROGRESS', $this->firstJulyPm, false],
+            ['TEMPORARY_ERROR', $this->firstJulyPm, false],
+            ['PERMANENT_ERROR', $this->firstJulyPm, false],
+            ['PERMANENT_ERROR', $this->firstJulyPm, true],
+            ['QUEUED', $tomorrow, false],
+            ['IN_PROGRESS', $tomorrow, false],
         ];
 
         foreach ($arguments as $index => $argument) {
-            list($status, $date) = $argument;
+            list($status, $date, $archived) = $argument;
             $id = $index + 1;
-            $this->createFailedDocumentSubmission($status, $date, $id);
+            $this->createFailedDocumentSubmission($status, $date, $id, $archived);
         }
 
         $result = $this->documentRepository->logFailedDocuments();

@@ -149,7 +149,7 @@ locals {
         },
         {
           name  = "HTMLTOPDF_ADDRESS",
-          value = "http://htmltopdf"
+          value = "http://htmltopdf:8080"
         },
         {
           name  = "NGINX_APP_NAME",

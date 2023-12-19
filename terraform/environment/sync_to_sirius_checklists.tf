@@ -21,7 +21,7 @@ locals {
       target      = "0.0.0.0/0"
     }
     pdf = {
-      port        = 80
+      port        = 8080
       type        = "egress"
       protocol    = "tcp"
       target_type = "security_group_id"
@@ -178,7 +178,7 @@ locals {
         },
         {
           name  = "HTMLTOPDF_ADDRESS",
-          value = "http://htmltopdf"
+          value = "http://htmltopdf:8080"
         },
         {
           name  = "WORKSPACE",

@@ -8,7 +8,7 @@ use Symfony\Component\Form\Extension\Core\Type as FormTypes;
 use Symfony\Component\Form\FormBuilderInterface;
 use Symfony\Component\Form\FormInterface;
 use Symfony\Component\OptionsResolver\OptionsResolver;
-use Symfony\Component\Validator\Constraints\NotBlank;
+use Symfony\Component\Validator\Constraints;
 
 class DecisionExistType extends AbstractType
 {
@@ -22,7 +22,12 @@ class DecisionExistType extends AbstractType
                     'existPage.form.choices.no' => Report::SIGNIFICANT_DECISION_NOT_MADE,
                 ],
                 'expanded' => true,
-                'constraints' => [new NotBlank(['message' => 'decision.noDecisionChoice.notBlank', 'groups' => ['significantDecisionsMade']])],
+                'constraints' => [
+                    new Constraints\NotBlank([
+                        'message' => 'decision.noDecisionChoice.notBlank',
+                        'groups' => 'decision-exist',
+                    ]),
+                ],
             ])
             ->add('reasonForNoDecisions', FormTypes\TextareaType::class)
             ->add('save', FormTypes\SubmitType::class, ['label' => 'save.label']);
@@ -35,7 +40,7 @@ class DecisionExistType extends AbstractType
             'validation_groups' => function (FormInterface $form) {
                 $data = $form->getData();
 
-                $validationGroups = ['decisions-exist'];
+                $validationGroups = ['decision-exist'];
 
                 if ('No' == $data->getSignificantDecisionsMade()) {
                     $validationGroups[] = 'reason-no-decisions';

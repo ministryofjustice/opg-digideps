@@ -6,7 +6,7 @@
 {% trans_default_domain translationDomain %}
 {% set transOptions = {'%client%': report.client.firstname | e } %}
 
-{% block htmlTitle %}{{ 'existPage.moneyOut.htmlTitle' | trans }}{% endblock %}
+{% block htmlTitle %}{{ 'existPage.moneyOut.htmlTitle' | trans(transOptions) }}{% endblock %}
 {% block pageHeader %}{% endblock %}
 
 {% block linkBack %}
@@ -17,9 +17,9 @@
 
     {{ form_start(form, {attr: {novalidate: 'novalidate' }}) }}
 
-    {{ form_checkbox_group(form.moneyTransactionsShortOutExist, 'existPage.form.moneyTransactionsShortOutExist', {
+    {{ form_checkbox_group(form.doesMoneyOutExist, 'existPage.form.moneyOutShort', {
         'fieldSetClass' : 'govuk-radios--inline',
-        'labelParameters': transOptions,
+        'legendText' : 'existPage.form.moneyOutShort.label' | trans(transOptions, translationDomain),
         legend: {
             isPageHeading: true,
             caption: 'existPage.moneyOut.supportTitle' | trans

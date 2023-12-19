@@ -146,7 +146,7 @@ locals {
         { name = "SESSION_PREFIX", value = "dd_admin" },
         { name = "APP_ENV", value = local.account.app_env },
         { name = "OPG_DOCKER_TAG", value = var.OPG_DOCKER_TAG },
-        { name = "HTMLTOPDF_ADDRESS", value = "http://htmltopdf" },
+        { name = "HTMLTOPDF_ADDRESS", value = "http://htmltopdf:8080" },
         { name = "ENVIRONMENT", value = local.environment },
         { name = "NGINX_APP_NAME", value = "admin" },
         { name = "PA_PRO_REPORT_CSV_FILENAME", value = "paProDeputyReport.csv" },
