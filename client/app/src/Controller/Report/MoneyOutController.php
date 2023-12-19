@@ -91,7 +91,7 @@ class MoneyOutController extends AbstractController
 
                 return $this->redirectToRoute('money_out_step', ['reportId' => $reportId, 'step' => 1, 'from' => 'does_money_out_exist']);
             } else {
-                foreach($report->getMoneyTransactionsOut() as $transactions) {
+                foreach ($report->getMoneyTransactionsOut() as $transactions) {
                     $this->restClient->delete('/report/'.$reportId.'/money-transaction/'.$transactions->getId());
                 }
 
@@ -287,15 +287,18 @@ class MoneyOutController extends AbstractController
      *
      * @return array|RedirectResponse
      */
-    public function summaryAction($reportId)
+    public function summaryAction(Request $request, $reportId)
     {
+        $fromPage = $request->get('from');
         $report = $this->reportApi->getReportIfNotSubmitted($reportId, self::$jmsGroups);
-        if (Status::STATE_NOT_STARTED == $report->getStatus()->getMoneyOutState()['state']) {
+        if (Status::STATE_NOT_STARTED == $report->getStatus()->getMoneyOutState()['state'] && 'skip-step' != $fromPage) {
             return $this->redirectToRoute('money_out', ['reportId' => $reportId]);
         }
 
         return [
+            'comingFromLastStep' => 'skip-step' == $fromPage || 'last-step' == $fromPage,
             'report' => $report,
+            'status' => $report->getStatus(),
         ];
     }
 
