@@ -7,7 +7,7 @@ Feature: Money Out
         And I visit the report overview page
         Then I should see "money-out" as "not started"
         When I view and start the money out report section
-        And I confirm "yes" to taking money out on the clients behalf 
+        And I confirm "Yes" to taking money out on the clients behalf 
         Then I select from the money out payment options  
         And I try to save and continue without adding a payment
         Then I should see correct money out validation message
@@ -16,7 +16,7 @@ Feature: Money Out
     Scenario: A user adds one of each payment type
         Given a Lay Deputy has not started a Pfa High Assets report
         When I view and start the money out report section
-        And I confirm "yes" to taking money out on the clients behalf
+        And I confirm "Yes" to taking money out on the clients behalf
         Then I select from the money out payment options
         And I add one type of money out payment from each category
         Then I should see the expected results on money out summary page
@@ -27,7 +27,7 @@ Feature: Money Out
     Scenario: A user removes a payment
         Given a Lay Deputy has not started a Pfa High Assets report
         When I view and start the money out report section
-        And I confirm "yes" to taking money out on the clients behalf
+        And I confirm "Yes" to taking money out on the clients behalf
         And I add one money out payment
         When I add another money out payment from an existing account
         When I visit the money out summary section
@@ -45,7 +45,7 @@ Feature: Money Out
     Scenario: A user adds an additional payment
         Given a Lay Deputy has not started a Pfa High Assets report
         When I view and start the money out report section
-        And I confirm "yes" to taking money out on the clients behalf
+        And I confirm "Yes" to taking money out on the clients behalf
         And I add one money out payment
         When I add another money out payment from an existing account
         Then I should see the expected results on money out summary page
@@ -54,7 +54,7 @@ Feature: Money Out
     Scenario: A user tries to add a one off payment of less than £1k
         Given a Lay Deputy has not started a Pfa High Assets report
         When I view and start the money out report section
-        And I confirm "yes" to taking money out on the clients behalf
+        And I confirm "Yes" to taking money out on the clients behalf
         And I add a payment without filling in description and amount
         Then I should see correct money out description and amount validation message
 
@@ -62,7 +62,7 @@ Feature: Money Out
     Scenario: A Lay user can see the Fees charged by a solicitor, accountant or other professional option
         Given a Lay Deputy has not started a Pfa High Assets report
         When I view and start the money out report section
-        And I confirm "yes" to taking money out on the clients behalf
+        And I confirm "Yes" to taking money out on the clients behalf
         And I add the Fees charged by a solicitor, accountant or other professional payment
         Then I should see the expected results on money out summary page
 
@@ -70,7 +70,7 @@ Feature: Money Out
     Scenario: A Public Authority user can see the professional fees not including deputy costs option
         Given a Public Authority Named Deputy has not started a Pfa High Assets report
         When I view and start the money out report section
-        And I confirm "yes" to taking money out on the clients behalf
+        And I confirm "Yes" to taking money out on the clients behalf
         And I add the Fees charged by a solicitor, accountant or other professional payment not including deputy costs
         Then I should see the expected results on money out summary page
 
@@ -78,6 +78,6 @@ Feature: Money Out
     Scenario: A Professional user can see the professional fees not including deputy costs option
         Given a Professional Deputy has not started a Pfa High Assets report
         When I view and start the money out report section
-        And I confirm "yes" to taking money out on the clients behalf
+        And I confirm "Yes" to taking money out on the clients behalf
         And I add the Fees charged by a solicitor, accountant or other professional payment not including deputy costs
         Then I should see the expected results on money out summary page

@@ -212,8 +212,10 @@ class ReportStatusService
         $transactionsExist = $this->report->getMoneyTransactionsShortInExist();
         $isCompleted = ('no' == $transactionsExist || ('yes' == $transactionsExist and count($this->report->getMoneyTransactionsShortIn()) > 0));
 
-        if ($this->report->getMoneyInExists() === 'No'){
+        if ($this->report->getMoneyInExists() === 'No' && $this->report->getReasonForNoMoneyIn()){
             return ['state' => self::STATE_DONE, 'nOfRecords' => 0];
+        } elseif($this->report->getMoneyInExists() === 'No'){
+            return ['state' => self::STATE_INCOMPLETE];
         }
         
         if ($isCompleted) {
@@ -240,8 +242,10 @@ class ReportStatusService
         $transactionsExist = $this->report->getMoneyTransactionsShortOutExist();
         $isCompleted = ('no' == $transactionsExist || ('yes' == $transactionsExist and count($this->report->getMoneyTransactionsShortOut()) > 0));
         
-        if ($this->report->getMoneyOutExists() === 'No'){
+        if ($this->report->getMoneyOutExists() === 'No' && $this->report->getReasonForNoMoneyOut()){
             return ['state' => self::STATE_DONE, 'nOfRecords' => 0];
+        } elseif($this->report->getMoneyOutExists() === 'No'){
+            return ['state' => self::STATE_INCOMPLETE];
         }
         
         if ($isCompleted) {

@@ -5,7 +5,7 @@ Feature: Money in High Assets
   Scenario: A user saves and continues without selecting a valid money in option
     Given a Lay Deputy has not started a report
     When I view and start the money in report section
-    And I confirm "yes" to adding money in on the clients behalf
+    And I confirm "Yes" to adding money in on the clients behalf
     And I click save and continue
     Then I should see a select option error
 
@@ -13,7 +13,7 @@ Feature: Money in High Assets
   Scenario: A user submits a single item of income form with empty values
     Given a Lay Deputy has not started a report
     When I view and start the money in report section
-    And I confirm "yes" to adding money in on the clients behalf
+    And I confirm "Yes" to adding money in on the clients behalf
     And I have 'Dividends' to report on
     And I try to submit an empty amount
     Then I should see an empty field error
@@ -22,7 +22,7 @@ Feature: Money in High Assets
   Scenario: A user submits a single item of income form with invalid values
     Given a Lay Deputy has not started a report
     When I view and start the money in report section
-    And I confirm "yes" to adding money in on the clients behalf
+    And I confirm "Yes" to adding money in on the clients behalf
     And I have 'Dividends' to report on
     And I try to submit an invalid amount
     Then I should see an invalid field error
@@ -31,7 +31,7 @@ Feature: Money in High Assets
   Scenario: A user submits a two items of income form with valid values
     Given a Lay Deputy has not started a report
     When I view and start the money in report section
-    And I confirm "yes" to adding money in on the clients behalf
+    And I confirm "Yes" to adding money in on the clients behalf
     And I have 'Dividends' to report on
     And I enter a valid amount
     And I add another item
@@ -46,7 +46,7 @@ Feature: Money in High Assets
   Scenario: A user submits a single item of income form with valid values and then edits it
     Given a Lay Deputy has not started a report
     When I view and start the money in report section
-    And I confirm "yes" to adding money in on the clients behalf
+    And I confirm "Yes" to adding money in on the clients behalf
     And I have 'Dividends' to report on
     And I enter a valid amount
     And I dont add another item
@@ -60,7 +60,7 @@ Feature: Money in High Assets
   Scenario: A user adds a single item of income form with valid values from the summary page
     Given a Lay Deputy has not started a report
     When I view and start the money in report section
-    And I confirm "yes" to adding money in on the clients behalf
+    And I confirm "Yes" to adding money in on the clients behalf
     And I have 'Dividends' to report on
     And I enter a valid amount
     And I dont add another item
@@ -73,7 +73,7 @@ Feature: Money in High Assets
   Scenario: A user submits multiple items of income forms with valid values
     Given a Lay Deputy has not started a report
     When I view and start the money in report section
-    And I confirm "yes" to adding money in on the clients behalf
+    And I confirm "Yes" to adding money in on the clients behalf
     And I have 'Dividends' to report on
     And I enter a valid amount
     When I add another item
@@ -86,7 +86,7 @@ Feature: Money in High Assets
   Scenario: A user submits a single item of income form with valid values then removes the item
     Given a Lay Deputy has not started a report
     When I view and start the money in report section
-    And I confirm "yes" to adding money in on the clients behalf
+    And I confirm "Yes" to adding money in on the clients behalf
     And I have 'Dividends' to report on
     And I enter a valid amount
     And I dont add another item

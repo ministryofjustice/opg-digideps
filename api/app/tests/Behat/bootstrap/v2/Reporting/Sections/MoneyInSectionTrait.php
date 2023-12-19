@@ -59,7 +59,7 @@ trait MoneyInSectionTrait
      */
     public function iConfirmToAddingMoneyInOnTheClientsBehalf($arg1)
     {
-        $this->chooseOption('does_money_in_exist[doesMoneyInExist]', $arg1);
+        $this->chooseOption('does_money_in_exist[moneyInExists]', $arg1);
         $this->pressButton('Save and continue');
     }
     
