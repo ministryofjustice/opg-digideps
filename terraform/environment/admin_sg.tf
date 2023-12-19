@@ -38,7 +38,7 @@ locals {
       target      = module.api_service_security_group.id
     }
     pdf = {
-      port        = 80
+      port        = 8080
       type        = "egress"
       protocol    = "tcp"
       target_type = "security_group_id"

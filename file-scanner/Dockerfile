@@ -1,10 +1,10 @@
-FROM golang:1.20.4-alpine3.18 as build
+FROM golang:1.21.5-alpine3.18 as build
 
 # Build go package
-ADD . /go/src/clamav-rest/
+ADD file-scanner/. /go/src/clamav-rest/
 RUN cd /go/src/clamav-rest && go mod vendor && go build -v
 
-FROM alpine:3.18
+FROM alpine:3.19
 
 ENV MAX_SCAN_SIZE=100M
 ENV MAX_FILE_SIZE=25M
@@ -37,7 +37,9 @@ RUN sed -i 's/^#Foreground .*$/Foreground true/g' /etc/clamav/clamd.conf \
 
 RUN freshclam --quiet --no-dns
 
-COPY entrypoint.sh /usr/bin/
+COPY file-scanner/entrypoint.sh /usr/bin/
+COPY scripts/hardening/harden.sh /harden.sh
+RUN /harden.sh clamav && rm /harden.sh
 
 EXPOSE 8080
 USER clamav

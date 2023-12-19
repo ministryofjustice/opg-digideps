@@ -1,0 +1,33 @@
+{% extends '@App/Layouts/application.html.twig' %}
+
+{% import '@App/Macros/macros.html.twig' as macros %}
+
+{% set translationDomain = "report-money-short" %}
+{% trans_default_domain translationDomain %}
+{% set transOptions = {'%client%': report.client.firstname | e } %}
+
+{% block htmlTitle %}{{ 'oneOffPaymentExistPage.moneyIn.htmlTitle' | trans }}{% endblock %}
+{% block pageHeader %}{% endblock %}
+
+{% block linkBack %}
+    {{ macros.linkBackStep(backLink, 'back' | trans({}, 'common')) }}
+{% endblock %}
+
+{% block pageContent %}
+
+    {{ form_start(form, {attr: {novalidate: 'novalidate' }}) }}
+
+    {{ form_checkbox_group(form.moneyTransactionsShortInExist, 'oneOffPaymentExistPage.form.moneyTransactionsShortInExist', {
+        'fieldSetClass' : 'govuk-radios--inline',
+        'labelParameters': transOptions,
+        legend: {
+            isPageHeading: true,
+            caption: 'oneOffPaymentExistPage.moneyIn.supportTitle' | trans
+        }
+    }) }}
+
+    {{ macros.saveAndContinueButton(form.save) }}
+
+    {{ form_end(form) }}
+
+{% endblock %}

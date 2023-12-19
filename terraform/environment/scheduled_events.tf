@@ -148,6 +148,43 @@ resource "aws_cloudwatch_event_target" "delete_zero_activity_users" {
   )
 }
 
+# Resubmit re-submittable error documents
+resource "aws_cloudwatch_event_rule" "resubmit_error_documents" {
+  name                = "resync-resubmittable-error-documents-${local.environment}"
+  description         = "Resync resubmittable error documents in ${terraform.workspace}"
+  schedule_expression = "cron(00 08 * * ? *)"
+  tags                = local.default_tags
+}
+
+resource "aws_cloudwatch_event_target" "resubmit_error_documents" {
+  rule     = aws_cloudwatch_event_rule.resubmit_error_documents.name
+  arn      = aws_ecs_cluster.main.arn
+  role_arn = aws_iam_role.events_task_runner.arn
+
+  ecs_target {
+    task_count          = 1
+    task_definition_arn = aws_ecs_task_definition.api.arn
+    launch_type         = "FARGATE"
+    platform_version    = "1.4.0"
+
+    network_configuration {
+      security_groups  = [module.api_service_security_group.id]
+      subnets          = data.aws_subnet.private.*.id
+      assign_public_ip = false
+    }
+  }
+  input = jsonencode(
+    {
+      "containerOverrides" : [
+        {
+          "name" : "api_app",
+          "command" : ["sh", "scripts/task_run_console_command.sh", "digideps:resync-resubmittable-error-documents"]
+        }
+      ]
+    }
+  )
+}
+
 # Redeploy file scanner
 
 data "aws_lambda_function" "redeployer_lambda" {

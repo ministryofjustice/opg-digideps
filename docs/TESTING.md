@@ -198,3 +198,38 @@ docker-compose run --rm frontend bin/phpstan analyse src tests --memory-limit=0 
 [prophecy]: https://github.com/phpspec/prophecy
 [phpstan]: https://github.com/phpstan/phpstan
 [govuk-notify]: https://www.notifications.service.gov.uk/
+
+## Running your tests from PHPStorm
+
+To set up PHP storm to run your tests, you should use the test suites on the docker containers.
+
+It's quickest if you already have an environment up and just run them on existing containers.
+
+To set this up in PHPStorm, you should perform the following steps:
+
+1)
+   - Open PhpStorm->Settings... and click on PHP tab on left hand side.
+   - Check php language level is set to current php language level (currently 8.1)
+   - Find Cli interpreter box and click on the `...`
+   - Click on `+` to add a new interpreter and call it frontend-app
+     - Pick from Docker,Vagrant…
+     - Docker Compose as the type
+     - Create a new server and call it docker and pick docker for mac (other options can remain untouched). You will use this for both interpreters.
+     - Configuration files should be ./docker-compose.yml; ./docker-compose.override.yml
+     - Service should be frontend-app (should now be selectable in drop down as it recognises it from docker compose file) if setting up client tests or api-app if setting up api tests.
+     - Environment variables can be set to some defaults to avoid seeing warnings: `REQUIRE_XDEBUG_CLIENT=False;XDEBUG_IDEKEY_CLIENT=FOO;XDEBUG_IDEKEY_API=FOO;REQUIRE_XDEBUG_API=False`
+     - PHP interpreter path php
+     - Once created there will be a few more options. Choose Lifecycle->Connect to existing container.
+     - Under general check that php executable is set to php and a PHP version shows below with a little blue i symbol. This means it recognises your php executable.
+   - Repeat all steps in process 1 but for api-app instead of frontend-app
+2)
+   - Go to PHPStorm->Settings… and the choose PHP->Test Frameworks
+   - Click the `+` to add a new test framework
+     - Pick PHPUnit by remote interpreter and choose frontend-app (or api-app if you’re creating api-app framework) which you created in step 1
+     - Cli interpreter and Path Mappings should be correct
+     - Under PHPUnit Library, pick Use Composer Autoloader
+     - For path to script enter `/var/www/vendor/autoload.php` and hit the little refresh icon next to the field
+     - Under Test Runner, tick both default configuration file and default bootstrap file. The locations for these are different on frontend and api. On frontend it’s `/var/www/tests/phpunit/phpunit.xml` and `/var/www/tests/phpunit/bootstrap.php` whereas on api side it’s `/var/www/tests/Unit/phpunit.xml` and `/var/www/tests/Unit/bootstrap.php`
+3)
+   - That's all there is to it. Now you can switch between contexts for running your tests by going to PHPStorm->Settings…->PHP and changing the interpreter
+   - When you have the correct interpreter for your tests, you can click on the green arrow icon by individual tests to run them individually

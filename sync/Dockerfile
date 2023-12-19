@@ -1,4 +1,4 @@
-FROM alpine:latest
+FROM alpine:3.19
 
 ENV POSTGRES_DATABASE **None**
 ENV POSTGRES_HOST **None**
@@ -16,7 +16,7 @@ RUN apk add --no-cache postgresql python3 py3-pip
 
 RUN apk update && apk upgrade
 
-RUN pip install awscli --ignore-installed six
+RUN apk add --no-cache aws-cli
 
 ADD backup.sh backup.sh
 ADD restore.sh restore.sh

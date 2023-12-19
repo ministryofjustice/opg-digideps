@@ -74,7 +74,7 @@ parameters:
       validate: true
     file_scanner_url: http://file-scanner-rest:8080
     file_scanner_sslverify: false
-    htmltopdf_address: "http://htmltopdf:80"
+    htmltopdf_address: "http://htmltopdf:8080"
     pa_pro_report_csv_filename: pa_pro_report.csv
     lay_report_csv_filename: layDeputyReport.csv
     workspace: local

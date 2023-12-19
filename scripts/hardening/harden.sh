@@ -1,4 +1,5 @@
 #!/bin/sh
+CONTAINER_USER=$1
 echo "=== Starting Hardening Script ==="
 
 echo "add default user"
@@ -19,16 +20,19 @@ echo "Remove world-writeable permissions except for /tmp/"
 find / -xdev -type d -perm +0002 -exec chmod o-w {} + \
   && find / -xdev -type f -perm +0002 -exec chmod o-w {} + \
   && chmod 777 /tmp/ \
-  && chown www-data:root /tmp/
+  && chown $CONTAINER_USER:root /tmp/
 
 echo "Remove unnecessary user accounts."
-sed -i -r '/^(user|root|sshd|www-data|nobody)/!d' /etc/group
-sed -i -r '/^(user|root|sshd|www-data|nobody)/!d' /etc/passwd
+sed -i -r "/^(user|root|sshd|$CONTAINER_USER|nobody)/!d" /etc/group
+sed -i -r "/^(user|root|sshd|$CONTAINER_USER|nobody)/!d" /etc/passwd
 
-echo "Remove existing crontabs, if any."
-rm -fr /var/spool/cron \
-  && rm -fr /etc/crontabs \
-  && rm -fr /etc/periodic
+if [[ $CONTAINER_USER != "clamav" ]]
+then
+	echo "Remove existing crontabs, if any."
+	rm -fr /var/spool/cron \
+	  && rm -fr /etc/crontabs \
+	  && rm -fr /etc/periodic
+fi
 
 echo "Remove interactive login shell for everybody but user."
 sed -i -r '/^user:/! s#^(.*):[^:]*$#\1:/sbin/nologin#' /etc/passwd
@@ -45,8 +49,17 @@ find $sysdirs -xdev -type d \
   -exec chown root:root {} \; \
   -exec chmod 0755 {} \;
 
-echo "Putting back ownership of php-fpm.d for www-data"
-chown -R www-data:www-data /usr/local/etc/php-fpm.d
+if [[ $CONTAINER_USER == "clamav"]]
+then
+	echo "changing clamav folder ownership"
+	chown -R clamav:clamav /etc/clamav
+fi
+
+if [[ $CONTAINER_USER == "www-data" ]]
+then
+	echo "Putting back ownership of php-fpm.d for $CONTAINER_USER"
+	chown -R $CONTAINER_USER:$CONTAINER_USER /usr/local/etc/php-fpm.d
+fi
 
 echo "Remove apk configs."
 find $sysdirs -xdev -regex '.*apk.*' -exec rm -fr {} +
@@ -91,8 +104,17 @@ rm -fr /root
 echo "Remove fstab since we do not need it."
 rm -f /etc/fstab
 
-echo "Remove all but a handful of admin commands."
-find /sbin /usr/sbin ! -type d -a ! -name apk -a ! -name ln -delete
+
+if [[ ${CONTAINER_USER} == "htmltopdf" ]]
+then
+	echo "Remove all but a handful of admin commands."
+	find /sbin /usr/sbin ! -type d -a ! -name apk -a ! -name ln ! -name crond -delete
+fi
+
+if [[ ${CONTAINER_USER} == "www-data" ]]
+then
+	find /sbin /usr/sbin ! -type d -a ! -name apk -a ! -name ln -delete
+fi
 
 echo "Remove broken symlinks (because we removed the targets above)."
 find $sysdirs -xdev -type l -exec test ! -e {} \; -delete

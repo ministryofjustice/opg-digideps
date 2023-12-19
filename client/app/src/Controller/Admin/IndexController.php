@@ -67,9 +67,7 @@ class IndexController extends AbstractController
 
     /**
      * @Route("/", name="admin_homepage")
-     *
      * @Security("is_granted('ROLE_ADMIN') or is_granted('ROLE_AD')")
-     *
      * @Template("@App/Admin/Index/index.html.twig")
      */
     public function indexAction(Request $request)
@@ -102,9 +100,7 @@ class IndexController extends AbstractController
 
     /**
      * @Route("/user-add", name="admin_add_user")
-     *
      * @Security("is_granted('ROLE_ADMIN') or is_granted('ROLE_AD')")
-     *
      * @Template("@App/Admin/Index/addUser.html.twig")
      *
      * @return array|RedirectResponse
@@ -141,9 +137,7 @@ class IndexController extends AbstractController
 
     /**
      * @Route("/user/{id}", name="admin_user_view", requirements={"id":"\d+"})
-     *
      * @Security("is_granted('ROLE_ADMIN')")
-     *
      * @Template("@App/Admin/Index/viewUser.html.twig")
      *
      * @return User[]|Response
@@ -159,9 +153,7 @@ class IndexController extends AbstractController
 
     /**
      * @Route("/edit-user", name="admin_editUser", methods={"GET", "POST"})
-     *
      * @Security("is_granted('ROLE_ADMIN') or is_granted('ROLE_AD')")
-     *
      * @Template("@App/Admin/Index/editUser.html.twig")
      *
      * @return array|Response
@@ -251,7 +243,6 @@ class IndexController extends AbstractController
 
     /**
      * @Route("/edit-ndr/{id}", name="admin_editNdr", methods={"POST"})
-     *
      * @Security("is_granted('ROLE_ADMIN') or is_granted('ROLE_AD')")
      *
      * @param string $id
@@ -280,9 +271,7 @@ class IndexController extends AbstractController
 
     /**
      * @Route("/delete-confirm/{id}", name="admin_delete_confirm", methods={"GET"})
-     *
      * @Security("is_granted('ROLE_ADMIN') or is_granted('ROLE_AD')")
-     *
      * @Template("@App/Admin/Index/deleteConfirm.html.twig")
      *
      * @param int $id
@@ -301,7 +290,6 @@ class IndexController extends AbstractController
 
     /**
      * @Route("/delete/{id}", name="admin_delete", methods={"GET"})
-     *
      * @Security("is_granted('ROLE_ADMIN') or is_granted('ROLE_AD')")
      *
      * @param int $id
@@ -334,9 +322,7 @@ class IndexController extends AbstractController
 
     /**
      * @Route("/upload", name="admin_upload")
-     *
      * @Security("is_granted('ROLE_ADMIN') or is_granted('ROLE_AD')")
-     *
      * @Template("@App/Admin/Index/upload.html.twig")
      */
     public function uploadAction(Request $request, RouterInterface $router)
@@ -370,9 +356,7 @@ class IndexController extends AbstractController
 
     /**
      * @Route("/pre-registration-upload", name="pre_registration_upload")
-     *
      * @Security("is_granted('ROLE_SUPER_ADMIN')")
-     *
      * @Template("@App/Admin/Index/uploadUsers.html.twig")
      *
      * @throws \Exception
@@ -486,8 +470,8 @@ class IndexController extends AbstractController
             $this->addFlash('error', 'There was a problem locating the file inside the S3 Bucket. Please contact an administrator.');
         }
 
-        $processStatus = $redisClient->get('lay-csv-processing');
-        $processCompletedDate = $redisClient->get('lay-csv-completed-date');
+        $processStatus = $redisClient->get($this->workspace.'-lay-csv-processing');
+        $processCompletedDate = $redisClient->get($this->workspace.'-lay-csv-completed-date');
 
         return [
             'nOfChunks' => $request->get('nOfChunks'),
@@ -506,9 +490,7 @@ class IndexController extends AbstractController
 
     /**
      * @Route("/org-csv-upload", name="admin_org_upload")
-     *
      * @Security("is_granted('ROLE_SUPER_ADMIN')")
-     *
      * @Template("@App/Admin/Index/uploadOrgUsers.html.twig")
      *
      * @throws \Exception
@@ -593,8 +575,8 @@ class IndexController extends AbstractController
             $this->addFlash('error', 'There was a problem locating the file inside the S3 Bucket. Please contact an administrator.');
         }
 
-        $processStatus = $redisClient->get('org-csv-processing');
-        $processCompletedDate = $redisClient->get('org-csv-completed-date');
+        $processStatus = $redisClient->get($this->workspace.'-org-csv-processing');
+        $processCompletedDate = $redisClient->get($this->workspace.'-org-csv-completed-date');
 
         return [
             /** 'form' => $form->createView(), */
@@ -610,7 +592,6 @@ class IndexController extends AbstractController
 
     /**
      * @Route("/send-activation-link/{email}", name="admin_send_activation_link")
-     *
      * @Security("is_granted('ROLE_ADMIN') or is_granted('ROLE_AD')")
      **/
     public function sendUserActivationLinkAction(string $email, LoggerInterface $logger)
