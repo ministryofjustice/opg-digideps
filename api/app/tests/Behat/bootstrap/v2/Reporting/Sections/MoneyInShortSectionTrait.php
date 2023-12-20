@@ -149,12 +149,15 @@ trait MoneyInShortSectionTrait
     {
         $this->iVisitMoneyInShortSummarySection();
         $this->iAmOnMoneyInShortSummaryPage();
-        $urlRegex = sprintf('/%s\/.*\/money-in-short\/oneOffPaymentsExist\?from\=summary$/', $this->reportUrlPrefix);
+        $urlRegex = sprintf('/%s\/.*\/money-in-short\/exist\?from\=summary$/', $this->reportUrlPrefix);
         $this->iClickOnNthElementBasedOnRegex($urlRegex, 0);
-
+        
+        $this->iAnswerToAddingMoneyInOnTheClientsBehalf('Yes');
+        $this->iClickSaveAndContinue();
+        
         $this->chooseOption('yes_no[moneyTransactionsShortInExist]', 'yes', 'one-off-payments');
         $this->iClickBasedOnAttributeTypeAndValue('button', 'id', 'yes_no_save');
-
+        
         $this->addMoneyOutPayment('Lorem ipsum', 1500, '08/12/2021');
 
         $this->chooseOption('add_another[addAnother]', 'no');
@@ -170,8 +173,11 @@ trait MoneyInShortSectionTrait
     {
         $this->iVisitMoneyInShortSummarySection();
         $this->iAmOnMoneyInShortSummaryPage();
-        $urlRegex = sprintf('/%s\/.*\/money-in-short\/oneOffPaymentsExist\?from\=summary$/', $this->reportUrlPrefix);
+        $urlRegex = sprintf('/%s\/.*\/money-in-short\/exist\?from\=summary$/', $this->reportUrlPrefix);
         $this->iClickOnNthElementBasedOnRegex($urlRegex, 0);
+
+        $this->iAnswerToAddingMoneyInOnTheClientsBehalf('Yes');
+        $this->iClickSaveAndContinue();
 
         $this->chooseOption('yes_no[moneyTransactionsShortInExist]', 'yes', 'one-off-payments');
         $this->iClickBasedOnAttributeTypeAndValue('button', 'id', 'yes_no_save');
