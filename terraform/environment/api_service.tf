@@ -216,7 +216,7 @@ locals {
           value = join("", [local.secrets_prefix, "/"])
         },
         {
-          name = "SESSION_PREFIX",
+          name  = "SESSION_PREFIX",
           value = "dd_api"
         },
         {
