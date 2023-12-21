@@ -94,6 +94,10 @@ locals {
           value = "https://${aws_route53_record.front.fqdn}"
         },
         {
+          name  = "SESSION_PREFIX",
+          value = "dd_api"
+        },
+        {
           name  = "WORKSPACE",
           value = local.environment
         }
