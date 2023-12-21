@@ -77,7 +77,7 @@ resource "aws_cloudwatch_event_target" "csv_automation_org_processing" {
 resource "aws_cloudwatch_event_rule" "delete_inactive_users" {
   name                = "delete-inactive-users-${local.environment}"
   description         = "Delete inactive admin users in ${terraform.workspace}"
-  schedule_expression = "cron(0 3 ? * 1 *)"
+  schedule_expression = "cron(0 4 ? * 1 *)"
   tags                = local.default_tags
 }
 
@@ -115,7 +115,7 @@ resource "aws_cloudwatch_event_target" "delete_inactive_users" {
 resource "aws_cloudwatch_event_rule" "delete_zero_activity_users" {
   name                = "delete-zero-activity-users-${local.environment}"
   description         = "Delete zero activity users in ${terraform.workspace}"
-  schedule_expression = "cron(10 3 * * ? *)"
+  schedule_expression = "cron(10 4 * * ? *)"
   tags                = local.default_tags
 }
 
