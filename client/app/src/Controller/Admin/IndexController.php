@@ -12,13 +12,10 @@ use App\Exception\RestClientException;
 use App\Form as FormDir;
 use App\Security\UserVoter;
 use App\Service\Audit\AuditEvents;
-use App\Service\Client\Internal\LayDeputyshipApi;
 use App\Service\Client\Internal\PreRegistrationApi;
 use App\Service\Client\Internal\UserApi;
 use App\Service\Client\RestClient;
-use App\Service\CsvUploader;
 use App\Service\DataImporter\CsvToArray;
-use App\Service\OrgService;
 use Aws\S3\Exception\S3Exception;
 use Aws\S3\S3Client;
 use Predis\ClientInterface;
@@ -49,19 +46,17 @@ use Symfony\Contracts\Translation\TranslatorInterface;
 class IndexController extends AbstractController
 {
     public function __construct(
-        private OrgService $orgService,
-        private LoggerInterface $logger,
-        private RestClient $restClient,
-        private UserApi $userApi,
-        private ObservableEventDispatcher $eventDispatcher,
-        private PreRegistrationApi $preRegistrationApi,
-        private LayDeputyshipApi $layDeputyshipApi,
-        private TokenStorageInterface $tokenStorage,
-        private ParameterBagInterface $params,
-        private KernelInterface $kernel,
-        private EventDispatcherInterface $dispatcher,
-        private S3Client $s3,
-        private string $workspace
+        private readonly LoggerInterface $logger,
+        private readonly RestClient $restClient,
+        private readonly UserApi $userApi,
+        private readonly ObservableEventDispatcher $eventDispatcher,
+        private readonly PreRegistrationApi $preRegistrationApi,
+        private readonly TokenStorageInterface $tokenStorage,
+        private readonly ParameterBagInterface $params,
+        private readonly KernelInterface $kernel,
+        private readonly EventDispatcherInterface $dispatcher,
+        private readonly S3Client $s3,
+        private readonly string $workspace
     ) {
     }
 
@@ -105,7 +100,7 @@ class IndexController extends AbstractController
      *
      * @return array|RedirectResponse
      */
-    public function addUserAction(Request $request)
+    public function addUserAction(Request $request): array
     {
         $form = $this->createForm(FormDir\Admin\AddUserType::class, new EntityDir\User());
 
@@ -365,10 +360,10 @@ class IndexController extends AbstractController
     {
         $chunkSize = 2000;
 
-        /** $form = $this->createForm(FormDir\UploadCsvType::class, null, [
+        $form = $this->createForm(FormDir\UploadCsvType::class, null, [
             'method' => 'POST',
         ]);
-        $form->handleRequest($request); */
+        $form->handleRequest($request);
 
         $processForm = $this->createForm(FormDir\ProcessCSVType::class, null, [
             'method' => 'POST',
@@ -380,7 +375,7 @@ class IndexController extends AbstractController
             $this->dispatchCSVUploadEvent();
         }
 
-        /** if ($form->isSubmitted() && $form->isValid()) {
+        if ($form->isSubmitted() && $form->isValid()) {
             try {
                 $fileName = $form->get('file')->getData();
                 $data = $this->handleLayUploadForm($fileName);
@@ -428,7 +423,7 @@ class IndexController extends AbstractController
 
                 $form->get('file')->addError(new FormError($message));
             }
-        } */
+        }
 
         if ($processForm->isSubmitted() && $processForm->isValid()) {
             /** Run the lay CSV command as a background task */
@@ -476,7 +471,7 @@ class IndexController extends AbstractController
         return [
             'nOfChunks' => $request->get('nOfChunks'),
             'currentRecords' => $this->preRegistrationApi->count(),
-            /** 'form' => $form->createView(), */
+            'form' => $form->createView(),
             'processForm' => $processForm->createView(),
             'maxUploadSize' => min([ini_get('upload_max_filesize'), ini_get('post_max_size')]),
             'processStatus' => $processStatus,
@@ -497,17 +492,17 @@ class IndexController extends AbstractController
      */
     public function uploadOrgUsersAction(Request $request, ClientInterface $redisClient)
     {
-        /** $form = $this->createForm(FormDir\UploadCsvType::class, null, [
+        $form = $this->createForm(FormDir\UploadCsvType::class, null, [
             'method' => 'POST',
         ]);
-        $form->handleRequest($request); */
+        $form->handleRequest($request);
 
         $processForm = $this->createForm(FormDir\ProcessCSVType::class, null, [
             'method' => 'POST',
         ]);
         $processForm->handleRequest($request);
 
-        /**$outputStreamResponse = isset($_GET['ajax']);
+        $outputStreamResponse = isset($_GET['ajax']);
 
         if ($form->isSubmitted() && $form->isValid()) {
             try {
@@ -533,7 +528,7 @@ class IndexController extends AbstractController
                     $form->get('file')->addError(new FormError($message));
                 }
             }
-        } */
+        }
 
         if ($processForm->isSubmitted() && $processForm->isValid()) {
             /** Run the org CSV command as a background task */
@@ -579,7 +574,7 @@ class IndexController extends AbstractController
         $processCompletedDate = $redisClient->get($this->workspace.'-org-csv-completed-date');
 
         return [
-            /** 'form' => $form->createView(), */
+            'form' => $form->createView(),
             'processForm' => $processForm->createView(),
             'processStatus' => $processStatus,
             'processStatusDate' => $processCompletedDate,
