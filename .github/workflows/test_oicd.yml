@@ -1,0 +1,38 @@
+name: Test S3
+on:
+  push:
+    branches:
+      - nonexistent
+
+jobs:
+  test:
+    permissions:
+      id-token: write
+    runs-on: ubuntu-latest
+    steps:
+      - uses: actions/checkout@b4ffde65f46336ab88eb53be808477a3936bae11 # pin@v3
+        with:
+          fetch-depth: "0"
+
+      - uses: hashicorp/setup-terraform@1b93182764c8332e7679b2393cb307cbe7baf9dc # pin@v2.0.0
+        with:
+          terraform_version: 1.6.6
+          terraform_wrapper: false
+
+      - name: configure aws credentials
+        uses: aws-actions/configure-aws-credentials@f749619a9bd295c431b5a3fff1885bc7059e9c16
+        with:
+          role-to-assume: arn:aws:iam::248804316466:role/github-actions-test-role-ddls1021494
+          role-session-name: gh-actions
+          aws-region: eu-west-1
+
+      - name: terraform init for environment
+        run: terraform init -input=false
+        working-directory: terraform/oidctesting
+
+      - name: Terraform Plan
+        env:
+          TF_WORKSPACE: testingws
+        run: |
+          terraform apply -lock-timeout=300s -input=false -auto-approve -parallelism=30
+        working-directory: terraform/oidctesting
