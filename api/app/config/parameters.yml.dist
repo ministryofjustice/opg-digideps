@@ -47,3 +47,5 @@ parameters:
         validate: true
 
     workspace: local
+    
+    session_prefix: 'dd_api'
