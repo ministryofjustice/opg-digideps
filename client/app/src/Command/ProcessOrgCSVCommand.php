@@ -148,8 +148,6 @@ class ProcessOrgCSVCommand extends Command
     {
         $chunks = array_chunk($data, self::CHUNK_SIZE);
 
-        $this->redis->set($this->workspace.'-org-csv-processing', 'processing');
-
         foreach ($chunks as $index => $chunk) {
             try {
                 $compressedChunk = CsvUploader::compressData($chunk);
@@ -159,16 +157,14 @@ class ProcessOrgCSVCommand extends Command
 
                 $this->storeOutput($upload);
 
-                $this->logger->log('notice', sprintf('Successfully processed chunk: %d', $index));
+                $this->logger->notice(sprintf('Successfully processed chunk: %d', $index));
             } catch (\Throwable $e) {
-                $this->logger->log('error', sprintf('Error processing chunk: %d, error: %s', $index, $e->getMessage()));
+                $this->logger->error(sprintf('Error processing chunk: %d, error: %s', $index, $e->getMessage()));
             }
         }
 
-        $this->logger->log('notice', 'Successfully processed all chunks');
+        $this->logger->notice('Successfully processed all chunks');
 
-        $this->redis->set($this->workspace.'-org-csv-processing', 'completed');
-        $this->redis->set($this->workspace.'-org-csv-completed-date', date('Y-m-d H:i:s'));
 
         return $this->mailer->sendProcessOrgCSVEmail($email, $this->output);
     }

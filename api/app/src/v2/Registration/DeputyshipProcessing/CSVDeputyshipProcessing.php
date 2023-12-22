@@ -31,13 +31,13 @@ class CSVDeputyshipProcessing
         $assembler = $this->layFactory->create();
         $uploadCollection = $assembler->assembleFromArray($data);
 
-        $this->logger->info(
+        $this->logger->notice(
             sprintf(
                 'Assembled DTO collection from chunkId: %s',
                 $chunkId
             )
         );
-        $this->logger->info(
+        $this->logger->notice(
             sprintf(
                 'Size of DTO Collection: %d',
                 count($uploadCollection['collection'])
@@ -47,7 +47,7 @@ class CSVDeputyshipProcessing
         $result = $this->layUploader->upload($uploadCollection['collection']);
         $result['skipped'] = $uploadCollection['skipped'];
 
-        $this->logger->info(
+        $this->logger->notice(
             sprintf(
                 'Persisted DTO Collection with chunkId: %s',
                 $chunkId

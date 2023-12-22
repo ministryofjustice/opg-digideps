@@ -136,9 +136,6 @@ class ProcessLayCSVCommand extends Command
             $this->storeOutput($upload);
         }
 
-        $this->redis->set($this->workspace.'-lay-csv-processing', 'completed');
-        $this->redis->set($this->workspace.'-lay-csv-completed-date', date('Y-m-d H:i:s'));
-
         $this->mailer->sendProcessLayCSVEmail($email, $this->output);
     }
 

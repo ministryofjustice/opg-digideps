@@ -161,14 +161,11 @@ class ProcessLayCSVCommand extends Command
             $this->redis->set('lay-csv-processing', 'processing');
 
             foreach ($chunks as $index => $chunk) {
-                $this->logger->info(sprintf('Uploading chunk with Id: %s', $index));
+                $this->logger->notice(sprintf('Uploading chunk with Id: %s', $index));
 
                 $result = $this->csvProcessing->layProcessing($chunk, $index);
                 $this->storeOutput($result);
             }
-
-            $this->redis->set('lay-csv-processing', 'completed');
-            $this->redis->set('lay-csv-completed-date', date('Y-m-d H:i:s'));
 
             return true;
         }
