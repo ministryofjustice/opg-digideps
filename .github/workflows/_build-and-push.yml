@@ -84,7 +84,7 @@ jobs:
         uses: unfor19/install-aws-cli-action@46282f151073130d90347412d9c4ef0640177f22 # pin@v1.0.3
 
       - name: configure aws credentials
-        uses: aws-actions/configure-aws-credentials@f749619a9bd295c431b5a3fff1885bc7059e9c16 # pin@v1.7.0
+        uses: aws-actions/configure-aws-credentials@dca38186811c8a0dd295aa416daa974a40eeb950 # pin@v1.7.0
         with:
           aws-access-key-id: ${{ secrets.AWS_ACCESS_KEY_ID_ACTIONS }}
           aws-secret-access-key: ${{ secrets.AWS_SECRET_ACCESS_KEY_ACTIONS }}
@@ -94,7 +94,7 @@ jobs:
           role-session-name: OPGDigidepsECRGithubAction
 
       - name: download resources artifact
-        uses: actions/download-artifact@e9ef242655d12993efdcda9058dee2db83a2cb9b
+        uses: actions/download-artifact@f44cd7b40bfd40b6aa1cc1b9b5b7bf03d3c67110
         with:
           name: web-distribution
           path: client/resources/public
@@ -157,7 +157,7 @@ jobs:
 
       - name: ecr login
         id: login_ecr
-        uses: aws-actions/amazon-ecr-login@79d640e3c3ccfd72c7ba25828453278793ab09ee # pin@v1.5.1
+        uses: aws-actions/amazon-ecr-login@7332729044a3edfa5afcc3f1ad43c7758d10cfbb # pin@v1.5.1
         with:
           registries: 311462405659
 
