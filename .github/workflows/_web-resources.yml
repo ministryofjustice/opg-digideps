@@ -15,7 +15,7 @@ jobs:
       - name: create nvmrc file
         run: grep "FROM node:" Dockerfile | awk -F' ' '{print $2}' | sed 's/^node:\(.*\)-.*/\1/' > .nvmrc
         working-directory: client/docker/resources
-      - uses: actions/setup-node@5ef044f9d09786428e6e895be6be17937becee3a # pin@v3.6.0
+      - uses: actions/setup-node@d86ebcd40b3cb50b156bfa44dd277faf38282d12 # pin@v3.6.0
         with:
           node-version-file: "client/docker/resources/.nvmrc"
       - name: cache node modules
@@ -46,7 +46,7 @@ jobs:
           NODE_ENV=production npm run build
         working-directory: client/resources
       - name: archive dist
-        uses: actions/upload-artifact@a8a3f3ad30e3422c9c7b888a15615d19a852ae32 # pin@v3.1.0
+        uses: actions/upload-artifact@cf8714cfeaba5687a442b9bcb85b29e23f468dfa # pin@v3.1.0
         with:
           name: web-distribution
           path: client/resources/public
