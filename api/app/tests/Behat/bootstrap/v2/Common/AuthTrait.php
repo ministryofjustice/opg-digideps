@@ -94,6 +94,19 @@ trait AuthTrait
     }
 
     /**
+     * @Given a Lay Deputy attempts to log into the admin app
+     */
+    public function aLayDeputyAttemptsToLogIntoTheAdminApp()
+    {
+        
+        $this->visitAdminPath('/login');
+        $this->fillField('login_email', $this->layDeputyNotStartedPfaHighAssetsDetails->getUserEmail());
+        $this->fillField('login_password', 'DigidepsPass1234');
+
+        $this->pressButton('login_login');
+    }
+
+    /**
      * @Given a super admin user tries to login with an invalid password
      */
     public function superAdminUsersTriesToLoginWithInvalidPassword()
