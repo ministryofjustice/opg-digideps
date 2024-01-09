@@ -19,7 +19,6 @@ server {
 
     location / {
         root    /public;
-
         # cache static assets for 90 days
         location ~* \.(css|jpg|js|png|ico|jpeg|woff2|woff)$ {
             expires    90d;
@@ -34,7 +33,6 @@ server {
     # pass the PHP scripts to FastCGI upstream server
     location ~ \.php$ {
         fastcgi_split_path_info ^(.+\.php)(/.*)$;
-
         include fastcgi_params;
         fastcgi_param SCRIPT_FILENAME      /var/www/public$fastcgi_script_name;
 

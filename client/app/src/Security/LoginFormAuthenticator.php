@@ -40,6 +40,9 @@ class LoginFormAuthenticator extends AbstractAuthenticator
 
     public function authenticate(Request $request): Passport
     {
+        file_put_contents('php://stderr', print_r('JIMREQUESTCONTENT: '.$request->getContent(), true));
+
+        file_put_contents('php://stderr', print_r('JIMREQUEST: '.$request, true));
         $email = $request->get('login')['email'];
         $password = $request->get('login')['password'];
         file_put_contents('php://stderr', print_r('jim user email and pw: '.$email.' - '.$password, true));
