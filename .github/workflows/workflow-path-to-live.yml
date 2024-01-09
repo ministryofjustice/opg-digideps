@@ -30,13 +30,15 @@ jobs:
     name: output workflow variables
     outputs:
       build_identifier: "main"
-      short_sha: ${{ steps.variables.outputs.short_sha }}
+      version_tag: ${{steps.semver_tag.outputs.tag}}
     steps:
       - uses: actions/checkout@b4ffde65f46336ab88eb53be808477a3936bae11 # pin@v3
-      - name: extract variables for workflow
-        id: variables
-        run: |
-          echo "short_sha=$(echo ${GITHUB_SHA:0:7})" >> $GITHUB_OUTPUT
+      - name: generate semver tag and release
+        id: semver_tag
+        uses: ministryofjustice/opg-github-actions/.github/actions/semver-tag@v2.3.2
+        with:
+          prerelease: "false"
+          github_token: "${{ secrets.GITHUB_TOKEN }}"
 
   build_web_resources:
     name: build web resources
@@ -50,7 +52,7 @@ jobs:
       - workflow_variables
       - build_web_resources
     with:
-      tag: ${{ needs.workflow_variables.outputs.build_identifier }}-${{ needs.workflow_variables.outputs.short_sha }}
+      tag: ${{ needs.workflow_variables.outputs.build_identifier }}-${{ needs.workflow_variables.outputs.version_tag }}
       branch_name: ${{ needs.workflow_variables.outputs.build_identifier }}
       push_to_ecr: true
     secrets: inherit
@@ -115,7 +117,8 @@ jobs:
       workspace: development
       terraform_path: account
       apply: true
-      container_version: ${{ needs.workflow_variables.outputs.build_identifier }}-${{ needs.workflow_variables.outputs.short_sha }}
+      container_version: ${{ needs.workflow_variables.outputs.build_identifier }}-${{ needs.workflow_variables.outputs.version_tag }}
+      path_to_live: true
     secrets: inherit
 
   terraform_apply_development:
@@ -134,7 +137,8 @@ jobs:
       workspace: development
       terraform_path: environment
       apply: true
-      container_version: ${{ needs.workflow_variables.outputs.build_identifier }}-${{ needs.workflow_variables.outputs.short_sha }}
+      container_version: ${{ needs.workflow_variables.outputs.build_identifier }}-${{ needs.workflow_variables.outputs.version_tag }}
+      path_to_live: true
     secrets: inherit
 
   terraform_apply_account_preproduction:
@@ -147,7 +151,8 @@ jobs:
       workspace: preproduction
       terraform_path: account
       apply: true
-      container_version: ${{ needs.workflow_variables.outputs.build_identifier }}-${{ needs.workflow_variables.outputs.short_sha }}
+      container_version: ${{ needs.workflow_variables.outputs.build_identifier }}-${{ needs.workflow_variables.outputs.version_tag }}
+      path_to_live: true
     secrets: inherit
 
   terraform_apply_integration:
@@ -160,7 +165,8 @@ jobs:
       workspace: integration
       terraform_path: environment
       apply: true
-      container_version: ${{ needs.workflow_variables.outputs.build_identifier }}-${{ needs.workflow_variables.outputs.short_sha }}
+      container_version: ${{ needs.workflow_variables.outputs.build_identifier }}-${{ needs.workflow_variables.outputs.version_tag }}
+      path_to_live: true
     secrets: inherit
 
   scale_services_up:
@@ -302,7 +308,8 @@ jobs:
       workspace: preproduction
       terraform_path: environment
       apply: true
-      container_version: ${{ needs.workflow_variables.outputs.build_identifier }}-${{ needs.workflow_variables.outputs.short_sha }}
+      container_version: ${{ needs.workflow_variables.outputs.build_identifier }}-${{ needs.workflow_variables.outputs.version_tag }}
+      path_to_live: true
     secrets: inherit
 
   terraform_apply_training:
@@ -315,7 +322,8 @@ jobs:
       workspace: training
       terraform_path: environment
       apply: true
-      container_version: ${{ needs.workflow_variables.outputs.build_identifier }}-${{ needs.workflow_variables.outputs.short_sha }}
+      container_version: ${{ needs.workflow_variables.outputs.build_identifier }}-${{ needs.workflow_variables.outputs.version_tag }}
+      path_to_live: true
     secrets: inherit
 
   terraform_apply_account_production:
@@ -328,7 +336,8 @@ jobs:
       workspace: production
       terraform_path: account
       apply: true
-      container_version: ${{ needs.workflow_variables.outputs.build_identifier }}-${{ needs.workflow_variables.outputs.short_sha }}
+      container_version: ${{ needs.workflow_variables.outputs.build_identifier }}-${{ needs.workflow_variables.outputs.version_tag }}
+      path_to_live: true
     secrets: inherit
 
   terraform_apply_production:
@@ -341,7 +350,8 @@ jobs:
       workspace: production02
       terraform_path: environment
       apply: true
-      container_version: ${{ needs.workflow_variables.outputs.build_identifier }}-${{ needs.workflow_variables.outputs.short_sha }}
+      container_version: ${{ needs.workflow_variables.outputs.build_identifier }}-${{ needs.workflow_variables.outputs.version_tag }}
+      path_to_live: true
     secrets: inherit
 
   backup_production:
@@ -379,7 +389,7 @@ jobs:
       - name: workflow ended successfully
         run: |
           echo "${{ needs.workflow_variables.outputs.build_identifier }} PR environment tested, built and deployed"
-          echo "Tag Used: ${{ needs.workflow_variables.outputs.build_identifier }}-${{ needs.workflow_variables.outputs.short_sha }}"
+          echo "Tag Used: ${{ needs.workflow_variables.outputs.build_identifier }}-${{ needs.workflow_variables.outputs.version_tag }}"
           echo "URL: https://${{ needs.workflow_variables.outputs.build_identifier }}.complete-deputy-report.service.gov.uk"
 
   slack_notify_success:
