@@ -10,6 +10,7 @@ use App\Entity\Organisation;
 use App\Entity\PreRegistration;
 use App\Entity\Report\Report;
 use App\Tests\Behat\BehatException;
+use Behat\Behat\Tester\Exception\PendingException;
 use Behat\Gherkin\Node\TableNode;
 
 trait IngestTrait
@@ -433,6 +434,15 @@ trait IngestTrait
         $this->iAmOnAdminOrgCsvUploadPage();
 
         $this->assertOnErrorMessage($this->expectedUnexpectedColumn);
+    }
+
+    /**
+     * @Given I attempt to upload a lay CSV
+     */
+    public function iAttemptToUploadALayCSV()
+    {
+        $this->selectOption('form[type]', 'lay');
+        $this->pressButton('Continue');
     }
 
     /**
@@ -1043,5 +1053,17 @@ trait IngestTrait
         $filePath = 'sirius-csvs/lay-2-rows-co-deputy.csv';
 
         $this->uploadCsvAndCountCreatedEntities($filePath, 'Upload Lay users');
+    }
+
+    /**
+     * @Then /^I should be redirected and denied access to continue$/
+     */
+    public function IShouldBeRedirectedAndDeniedAccessToContinue()
+    {
+        $this->assertIntEqualsInt(
+            '403',
+            $this->getSession()->getStatusCode(),
+            'Status code after accessing endpoint'
+        );
     }
 }
