@@ -31,7 +31,7 @@ jobs:
     outputs:
       parsed_branch: ${{ steps.variables.outputs.branch_formatted }}
       build_identifier: ${{ steps.variables.outputs.build_identifier }}
-      short_sha: ${{ steps.variables.outputs.short_sha }}
+      version_tag: ${{steps.semver_tag.outputs.tag}}
     steps:
       - uses: actions/checkout@b4ffde65f46336ab88eb53be808477a3936bae11 # pin@v3
       - name: extract variables for workflow
@@ -42,13 +42,18 @@ jobs:
           export BRANCH=$(echo ${GITHUB_HEAD_REF:-${GITHUB_REF##*/}} | awk -F'_' '{print $1}' | tr -cd '[:alnum:]' | tr '[:upper:]' '[:lower:]' | cut -c1-8)
           echo "branch_formatted=$(echo ${BRANCH})" >> $GITHUB_OUTPUT
           echo "build_identifier=$(echo ${BRANCH}${PR_NUMBER})" >> $GITHUB_OUTPUT
-          echo "short_sha=$(echo ${GITHUB_SHA:0:7})" >> $GITHUB_OUTPUT
           echo ${build_identifier}
+      - name: generate semver tag and release
+        id: semver_tag
+        uses: ministryofjustice/opg-github-actions/.github/actions/semver-tag@v2.5.0-testingselfrefac.0
+        with:
+          prerelease: true
+          github_token: ${{ secrets.GITHUB_TOKEN }}
       - uses: actions/labeler@main
         if: github.event_name == 'pull_request'
         with:
-          configuration-path: ".github/labeller.yml"
-          repo-token: "${{ secrets.GITHUB_TOKEN }}"
+          configuration-path: .github/labeller.yml
+          repo-token: ${{ secrets.GITHUB_TOKEN }}
           sync-labels: true
 
   build_web_resources:
@@ -78,7 +83,7 @@ jobs:
       - workflow_variables
       - build_web_resources
     with:
-      tag: ${{ needs.workflow_variables.outputs.build_identifier }}-${{ needs.workflow_variables.outputs.short_sha }}
+      tag: ${{ needs.workflow_variables.outputs.build_identifier }}-${{ needs.workflow_variables.outputs.version_tag }}
       branch_name: ${{ needs.workflow_variables.outputs.build_identifier }}
       push_to_ecr: true
     secrets: inherit
@@ -143,7 +148,7 @@ jobs:
     with:
       workspace: development
       terraform_path: account
-      container_version: ${{ needs.workflow_variables.outputs.build_identifier }}-${{ needs.workflow_variables.outputs.short_sha }}
+      container_version: ${{ needs.workflow_variables.outputs.build_identifier }}-${{ needs.workflow_variables.outputs.version_tag }}
     secrets: inherit
 
   terraform_apply_environment:
@@ -157,14 +162,14 @@ jobs:
       workspace: ${{ needs.workflow_variables.outputs.build_identifier }}
       terraform_path: environment
       apply: true
-      container_version: ${{ needs.workflow_variables.outputs.build_identifier }}-${{ needs.workflow_variables.outputs.short_sha }}
+      container_version: ${{ needs.workflow_variables.outputs.build_identifier }}-${{ needs.workflow_variables.outputs.version_tag }}
     secrets: inherit
 
   ecr_scan_results:
     name: ecr scan results
     uses: ./.github/workflows/_ecr-scanning.yml
     with:
-      tag: ${{ needs.workflow_variables.outputs.build_identifier }}-${{ needs.workflow_variables.outputs.short_sha }}
+      tag: ${{ needs.workflow_variables.outputs.build_identifier }}-${{ needs.workflow_variables.outputs.version_tag }}
     needs:
       - terraform_apply_environment
       - workflow_variables
@@ -310,7 +315,7 @@ jobs:
       - name: workflow ended successfully
         run: |
           echo "${{ needs.workflow_variables.outputs.build_identifier }} PR environment tested, built and deployed"
-          echo "Tag Used: ${{ needs.workflow_variables.outputs.build_identifier }}-${{ needs.workflow_variables.outputs.short_sha }}"
+          echo "Tag Used: ${{ needs.workflow_variables.outputs.build_identifier }}-${{ needs.workflow_variables.outputs.version_tag }}"
           echo "URL: https://${{ needs.workflow_variables.outputs.build_identifier }}.complete-deputy-report.service.gov.uk"
 
   slack_notify_success:
