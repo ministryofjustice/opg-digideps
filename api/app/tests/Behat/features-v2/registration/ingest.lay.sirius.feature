@@ -45,7 +45,7 @@ Feature: Lay CSV data ingestion - sirius source data
     Scenario: An admin manager is unable to upload a Lay CSV when logged into the admin app
         Given an admin manager user accesses the admin app
         When I visit the admin upload users page
-        And I attempt to upload a lay CSV
+        And I attempt to upload a 'lay' CSV
         Then I should be redirected and denied access to continue
         
         

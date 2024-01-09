@@ -437,11 +437,11 @@ trait IngestTrait
     }
 
     /**
-     * @Given I attempt to upload a lay CSV
+     * @Given I attempt to upload a :deputyRole CSV
      */
-    public function iAttemptToUploadALayCSV()
+    public function iAttemptToUploadACSV(string $deputyRole)
     {
-        $this->selectOption('form[type]', 'lay');
+        $this->selectOption('form[type]', $deputyRole);
         $this->pressButton('Continue');
     }
 
