@@ -3,9 +3,10 @@ env:
   contexts:
     - name: "Digideps"
       urls:
-        - "http://admin-webserver"
+        - "http://admin-webserver/admin/organisations/3"
       includePaths:
-        - "http://admin-webserver.*"
+        - "http://admin-webserver/login"
+        - "http://admin-webserver/admin/organisations.*"
       excludePaths:
         - "http://admin-webserver/logout"
       authentication:
@@ -66,7 +67,7 @@ jobs:
   - parameters:
       context: "Digideps"
       user: "admin"
-      url: "http://admin-webserver"
+      url: "http://admin-webserver/admin/organisations"
       maxDepth: 10
       maxParseSizeBytes: 26214400
     name: "spider"
