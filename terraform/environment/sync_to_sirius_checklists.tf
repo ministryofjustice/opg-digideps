@@ -70,6 +70,19 @@ resource "aws_ecs_service" "checklist_sync" {
   propagate_tags          = "SERVICE"
   tags                    = local.default_tags
 
+  service_connect_configuration {
+    enabled   = true
+    namespace = aws_service_discovery_http_namespace.cloudmap_namespace.arn
+    service {
+      discovery_name = "checklist"
+      port_name      = "checklist-port"
+      client_alias {
+        dns_name = "checklist"
+        port     = 80
+      }
+    }
+  }
+
   network_configuration {
     security_groups  = [module.checklist_sync_service_security_group.id]
     subnets          = data.aws_subnet.private.*.id
@@ -94,7 +107,13 @@ locals {
   script_name = local.environment == "production02" ? "scripts/document_and_checklist_sched.sh" : "scripts/checklistsync.sh"
   checklist_sync_container = jsonencode(
     {
-      name    = "checklist-sync",
+      name = "checklist-sync",
+      portMappings = [{
+        name          = "checklist-port",
+        containerPort = 80,
+        hostPort      = 80,
+        protocol      = "tcp"
+      }],
       image   = local.images.client,
       command = ["sh", local.script_name, "-d"],
       logConfiguration = {
@@ -122,7 +141,7 @@ locals {
       environment = [
         {
           name  = "API_URL",
-          value = "http://${local.api_service_fqdn}"
+          value = "http://api"
         },
         {
           name  = "ROLE",
@@ -178,7 +197,7 @@ locals {
         },
         {
           name  = "HTMLTOPDF_ADDRESS",
-          value = "http://${local.htmltopdf_service_fqdn}"
+          value = "http://htmltopdf:8080"
         },
         {
           name  = "WORKSPACE",
