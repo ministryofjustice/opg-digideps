@@ -1,3 +1,8 @@
+resource "aws_service_discovery_http_namespace" "cloudmap_namespace" {
+  name        = "digideps-${local.environment}"
+  description = "Namespace for Service Discovery"
+}
+
 resource "aws_ecs_cluster" "main" {
   name = local.environment
   tags = local.default_tags
@@ -126,12 +131,6 @@ data "aws_iam_policy_document" "execution_role" {
       data.aws_kms_alias.secretmanager.target_key_arn,
     ]
   }
-}
-
-resource "aws_service_discovery_private_dns_namespace" "private" {
-  name = "${local.environment}.private"
-  vpc  = data.aws_vpc.vpc.id
-  tags = local.default_tags
 }
 
 data "aws_iam_policy_document" "ecs_task_logs" {

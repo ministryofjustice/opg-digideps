@@ -1,7 +1,7 @@
 locals {
   feature_flag_prefix       = "/${local.environment}/flag/"
   parameter_prefix          = "/${local.environment}/parameter/"
-  sirius_api_base_uri_value = local.environment == "production02" ? "https://deputy-reporting.api.opg.service.justice.gov.uk" : "http://${local.mock_sirius_integration_service_fqdn}:8080"
+  sirius_api_base_uri_value = local.environment == "production02" ? "https://deputy-reporting.api.opg.service.justice.gov.uk" : "http://mock-sirius-integration:8080"
 }
 
 resource "aws_ssm_parameter" "sirius_api_base_uri" {

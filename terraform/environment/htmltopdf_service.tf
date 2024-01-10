@@ -1,32 +1,3 @@
-locals {
-  htmltopdf_service_fqdn = "htmltopdf.${aws_service_discovery_private_dns_namespace.private.name}:8080"
-}
-
-resource "aws_service_discovery_service" "htmltopdf" {
-  name = "htmltopdf"
-
-  dns_config {
-    namespace_id = aws_service_discovery_private_dns_namespace.private.id
-
-    dns_records {
-      ttl  = 10
-      type = "A"
-    }
-
-    routing_policy = "MULTIVALUE"
-  }
-
-  health_check_custom_config {
-    failure_threshold = 1
-  }
-
-  tags = local.default_tags
-
-  depends_on = [aws_service_discovery_private_dns_namespace.private]
-
-  force_destroy = local.account.deletion_protection ? false : true
-}
-
 resource "aws_iam_role" "htmltopdf" {
   assume_role_policy = data.aws_iam_policy_document.task_role_assume_policy.json
   name               = "htmltopdf.${local.environment}"
@@ -61,8 +32,17 @@ resource "aws_ecs_service" "htmltopdf" {
     assign_public_ip = false
   }
 
-  service_registries {
-    registry_arn = aws_service_discovery_service.htmltopdf.arn
+  service_connect_configuration {
+    enabled   = true
+    namespace = aws_service_discovery_http_namespace.cloudmap_namespace.arn
+    service {
+      discovery_name = "htmltopdf"
+      port_name      = "htmltopdf-port"
+      client_alias {
+        dns_name = "htmltopdf"
+        port     = 8080
+      }
+    }
   }
 
   capacity_provider_strategy {
@@ -79,8 +59,6 @@ resource "aws_ecs_service" "htmltopdf" {
     rollback = false
   }
 
-  depends_on = [aws_service_discovery_service.htmltopdf]
-
   tags = local.default_tags
 }
 
@@ -93,6 +71,7 @@ locals {
       mountPoints = [],
       name        = "htmltopdf",
       portMappings = [{
+        name          = "htmltopdf-port",
         containerPort = 8080,
         hostPort      = 8080,
         protocol      = "tcp"
