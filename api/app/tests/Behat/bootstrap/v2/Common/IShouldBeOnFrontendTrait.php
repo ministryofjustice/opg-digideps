@@ -787,4 +787,10 @@ trait IShouldBeOnFrontendTrait
     {
         return $this->iAmOnPage(sprintf('/%s\/.*\/decisions\/summary.*$/', $this->reportUrlPrefix));
     }
+
+    public function iAmOnOrgSettingsPage()
+    {
+        return $this->iAmOnPage('/org\/settings.*$/');
+
+    }
 }

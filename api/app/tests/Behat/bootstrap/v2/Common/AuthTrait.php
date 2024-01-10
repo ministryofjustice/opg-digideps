@@ -290,4 +290,16 @@ trait AuthTrait
 
         $this->assertElementContainsText('body', $expiredPasswordResetPage);
     }
+
+    /**
+     * @Then /^I should be redirected and denied access to continue$/
+     */
+    public function IShouldBeRedirectedAndDeniedAccessToContinue()
+    {
+        $this->assertIntEqualsInt(
+            '403',
+            $this->getSession()->getStatusCode(),
+            'Status code after accessing endpoint'
+        );
+    }
 }

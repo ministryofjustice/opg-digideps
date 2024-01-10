@@ -4,6 +4,10 @@ declare(strict_types=1);
 
 namespace App\Tests\Behat\v2\UserManagement;
 
+use App\Entity\Organisation;
+use App\Tests\Behat\BehatException;
+use Behat\Behat\Tester\Exception\PendingException;
+
 trait UserManagementTrait
 {
     private ?int $userCount = null;
@@ -666,4 +670,53 @@ trait UserManagementTrait
     {
         $this->visitsTheForgottenYourPasswordPage();
     }
+    
+    /**
+     * @Then /^I can only view my user details$/
+     */
+    public function iCanOnlyViewMyUserDetails()
+    {
+        $orgUserEmail = $this->interactingWithUserDetails->getUserEmail();
+
+        $xpath = '//div[contains(@class, "govuk-summary-list__row")]';
+        
+        $listSummaryRows = $this->getSession()->getPage()->findAll('xpath', $xpath);
+
+        $formattedDataElements = [];
+
+        foreach ($listSummaryRows as $row) {
+            $formattedDataElements[] = strtolower($row->getText());
+        }
+        
+        $expectedRowCount = 2;
+        $this->assertIntEqualsInt($expectedRowCount, count($formattedDataElements), 'Row count for users email and password data only');
+       
+        $this->assertStringContainsString($orgUserEmail, $formattedDataElements[0], 'Asserting users email address found on page');
+
+    }
+
+    /**
+     * @Then /^I should be able to add a new user to the organisation$/
+     */
+    public function iShouldBeAbleToAddANewUserToTheOrganisation()
+    {
+        $newUser = [
+            'firstName' => 'NewUserFirstName',
+            'lastName' => 'NewUserLastName',
+            'email' => 'newOrgUser@test.com'
+            ];
+        
+        $this->fillField('organisation_member_firstname', $newUser['firstName']);
+        $this->fillField('organisation_member_lastname', $newUser['lastName']);
+        $this->fillField('organisation_member_email', $newUser['email']);
+        
+        $this->selectOption('organisation_member[roleName]', 'ROLE_PROF_ADMIN');
+        $this->pressButton('Save');
+        
+        $this->iAmOnOrgSettingsPage();
+        
+        $this->assertElementContainsText('table', $newUser['firstName'] . " " . $newUser['lastName']);
+        $this->assertElementContainsText('table', $newUser['email']);
+    }
+    
 }
