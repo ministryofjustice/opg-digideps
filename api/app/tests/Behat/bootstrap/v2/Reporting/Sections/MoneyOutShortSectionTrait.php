@@ -36,7 +36,7 @@ trait MoneyOutShortSectionTrait
      */
     public function iAnswerToTakingMoneyOutOnTheClientsBehalf($arg1)
     {
-        $this->chooseOption('does_money_out_exist[moneyOutExists]', $arg1);
+        $this->chooseOption('does_money_out_exist[moneyOutExists]', $arg1, 'moneyOutExists');
         $this->pressButton('Save and continue');
     }
 

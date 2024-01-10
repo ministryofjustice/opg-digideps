@@ -59,10 +59,10 @@ trait MoneyInSectionTrait
      */
     public function iConfirmToAddingMoneyInOnTheClientsBehalf($arg1)
     {
-        $this->chooseOption('does_money_in_exist[moneyInExists]', $arg1);
+        $this->chooseOption('does_money_in_exist[moneyInExists]', $arg1, 'moneyInExists');
         $this->pressButton('Save and continue');
     }
-    
+
     /**
      * @When I view and start the money in report section
      */
@@ -204,6 +204,14 @@ trait MoneyInSectionTrait
     public function theMoneyInSummaryPageShouldContainTheMoneyInValuesIAdded()
     {
         assert($this->iShouldSeeTheMoneyInSummary());
+
+        if ($this->getSectionAnswers('moneyInExists')) {
+            $this->expectedResultsDisplayedSimplified('moneyInExists');
+        }
+
+        if ($this->getSectionAnswers('reasonForNoMoneyIn')) {
+            $this->expectedResultsDisplayedSimplified('reasonForNoMoneyIn');
+        }
 
         foreach (array_unique($this->moneyTypeCategoriesCompleted) as $completedCategory) {
             $this->expectedResultsDisplayedSimplified($completedCategory);
