@@ -40,73 +40,42 @@ class LoginFormAuthenticator extends AbstractAuthenticator
 
     public function authenticate(Request $request): Passport
     {
-        file_put_contents('php://stderr', print_r('JIMREQUESTCONTENT: '.$request->getContent(), true));
-
-        file_put_contents('php://stderr', print_r('JIMREQUEST: '.$request, true));
         $email = $request->get('login')['email'];
         $password = $request->get('login')['password'];
-        file_put_contents('php://stderr', print_r('jim user email and pw: '.$email.' - '.$password, true));
-
         $csrfToken = $request->request->get('login')['_token'];
 
-        file_put_contents('php://stderr', print_r(' csrfToken: '.$csrfToken, true));
         if ('' === $email || null === $email || '' === $password || null === $password) {
             throw new BadCredentialsException('Missing username or password');
         }
-        file_put_contents('php://stderr', print_r(' password_fine ', true));
 
-        $userBadge = new UserBadge($email, function ($userEmail) use ($password) {
-            try {
-                [$user, $authToken] = $this->restClient->login(['email' => $userEmail, 'password' => $password]);
+        return new Passport(
+            new UserBadge($email, function ($userEmail) use ($password) {
+                try {
+                    [$user, $authToken] = $this->restClient->login(['email' => $userEmail, 'password' => $password]);
 
-                file_put_contents('php://stderr', print_r(' auth token: ', true));
-                file_put_contents('php://stderr', print_r($authToken, true));
-                file_put_contents('php://stderr', print_r(' user: ', true));
-                file_put_contents('php://stderr', print_r($user, true));
+                    if (!$user) {
+                        throw new UserNotFoundException('User not found');
+                    }
 
-                if (!$user) {
-                    throw new UserNotFoundException('User not found');
+                    $this->tokenStorage->set((string) $user->getId(), $authToken);
+
+                    return $user;
+                } catch (AuthenticationException $e) {
+                    throw $e;
                 }
-
-                $this->tokenStorage->set((string) $user->getId(), $authToken);
-
-                return $user;
-            } catch (AuthenticationException $e) {
-                throw $e;
-            }
-        });
-
-        file_put_contents('php://stderr', print_r($userBadge->getUser()->getUserIdentifier(), true));
-
-        $custCreds = new CustomCredentials(function ($password) {
-            // We check credentials in API so as long as that returns then we can assume they are valid
-            return true;
-        }, $password);
-
-        file_put_contents('php://stderr', print_r(' Finished custom creds with password ', true));
-        //        file_put_contents('php://stderr', print_r($custCreds, true));
-
-        $badgeToken = [
-            new CsrfTokenBadge('ddloginform', $csrfToken),
-        ];
-
-        file_put_contents('php://stderr', print_r(' badge token: ', true));
-        file_put_contents('php://stderr', print_r($badgeToken, true));
-
-        $passport = new Passport(
-            $userBadge,
-            $custCreds,
-            $badgeToken
+            }),
+            new CustomCredentials(function ($password) {
+                // We check credentials in API so as long as that returns then we can assume they are valid
+                return true;
+            }, $password),
+            [
+                new CsrfTokenBadge('ddloginform', $csrfToken),
+            ]
         );
-        file_put_contents('php://stderr', print_r('passport user: '.$passport->getUser()->getUserIdentifier().' end passport user', true));
-        //        file_put_contents('php://stderr', print_r($passport->get, true));
-
-        return $passport;
     }
 
     public function onAuthenticationSuccess(Request $request, TokenInterface $token, string $firewallName): ?Response
     {
-        file_put_contents('php://stderr', print_r(' login achieved ', true));
         $redirectUrl = $this->redirector->getFirstPageAfterLogin($request->getSession());
 
         if ($request->query->has('lastPage')) {
