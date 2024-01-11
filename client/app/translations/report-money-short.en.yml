@@ -153,9 +153,9 @@ summaryPage:
       %client%'s money during this reporting period.
     addButton: Add an item of income over £1,000
     hasMoneyIn:
-      label: Have you added money in on %client%'s behalf during this reporting period?
+      label: Has any money been added to %client%'s account(s) during this reporting period?
     reasonForNoMoneyIn:
-      label: Reason for no money in
+      label: Why has no money been added to the account?
     moneyTransactionsShortInExist:
       label: Have there been any one-off income payments over £1,000?
     listOfIncomeItems: List of items of income over £1000
@@ -173,7 +173,7 @@ summaryPage:
       %client%'s money during this reporting period.
     addButton: Add an payment over £1,000
     hasMoneyOut:
-      label: Have you taken money out on %client%'s behalf during this reporting period?
+      label: Has any money been taken out of %client%'s account(s) during this reporting period?
     reasonForNoMoneyOut:
       label: Why has no money been taken out of the account?
     moneyTransactionsShortOutExist:

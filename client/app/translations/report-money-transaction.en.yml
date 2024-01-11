@@ -128,9 +128,9 @@ summaryPage:
     moreDetails: More details about this section
     totalValue: "Total money in: £%value%"
     hasMoneyIn:
-      label: Have you added money in on %client%'s behalf during this reporting period?
+      label: Has any money been added to %client%'s account(s) during this reporting period?
     reasonForNoMoneyIn:
-      label: Reason for no money in
+      label: Why has no money been added to the account?
     listOfMoneyIns: Income you've already told us about
     addIncome: Add item of income
     list:
@@ -146,9 +146,9 @@ summaryPage:
     moreDetails: More details about this section
     totalValue: "Total money out: £%value%"
     hasMoneyOut:
-      label: Have you taken money out on %client%'s behalf during this reporting period?
+      label: Has any money been taken out of %client%'s account(s) during this reporting period?
     reasonForNoMoneyOut:
-      label: Reason for no money out
+      label: Why has no money been taken out of the account?
     listOfMoneyOuts: Payments you've already told us about
     addPayment: Add a payment
     list:

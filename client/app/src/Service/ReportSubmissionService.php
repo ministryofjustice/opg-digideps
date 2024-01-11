@@ -94,14 +94,17 @@ class ReportSubmissionService
         $this->generateReportPdf($report);
 
         if (in_array($report->getType(), Report::HIGH_ASSETS_REPORT_TYPES)) {
-            $csvContent = $this->csvGenerator->generateTransactionsCsv($report);
+            if ('yes' == $report->getGiftsExist() || 'yes' == $report->getPaidForAnything() || 'Yes' == $report->getMoneyInExists()
+                || 'Yes' == $report->getMoneyOutExists()) {
+                $csvContent = $this->csvGenerator->generateTransactionsCsv($report);
 
-            $this->fileUploader->uploadFileAndPersistDocument(
-                $report,
-                $csvContent,
-                $report->createAttachmentName('DigiRepTransactions-%s_%s_%s.csv'),
-                false
-            );
+                $this->fileUploader->uploadFileAndPersistDocument(
+                    $report,
+                    $csvContent,
+                    $report->createAttachmentName('DigiRepTransactions-%s_%s_%s.csv'),
+                    false
+                );
+            }
         }
     }
 
