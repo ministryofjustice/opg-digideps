@@ -1,32 +1,3 @@
-resource "aws_service_discovery_service" "front" {
-  name = "front"
-
-  dns_config {
-    namespace_id = aws_service_discovery_private_dns_namespace.private.id
-
-    dns_records {
-      ttl  = 10
-      type = "A"
-    }
-
-    routing_policy = "MULTIVALUE"
-  }
-
-  health_check_custom_config {
-    failure_threshold = 1
-  }
-
-  tags = local.default_tags
-
-  depends_on = [aws_service_discovery_private_dns_namespace.private]
-
-  force_destroy = local.account.deletion_protection ? false : true
-}
-
-locals {
-  front_service_fqdn = "${aws_service_discovery_service.front.name}.${aws_service_discovery_private_dns_namespace.private.name}"
-}
-
 resource "aws_ecs_task_definition" "front" {
   family                   = "front-${local.environment}"
   requires_compatibilities = ["FARGATE"]
@@ -62,8 +33,17 @@ resource "aws_ecs_service" "front" {
     container_port   = 80
   }
 
-  service_registries {
-    registry_arn = aws_service_discovery_service.front.arn
+  service_connect_configuration {
+    enabled   = true
+    namespace = aws_service_discovery_http_namespace.cloudmap_namespace.arn
+    service {
+      discovery_name = "front"
+      port_name      = "front-port"
+      client_alias {
+        dns_name = "front"
+        port     = 80
+      }
+    }
   }
 
   capacity_provider_strategy {
@@ -80,7 +60,7 @@ resource "aws_ecs_service" "front" {
     rollback = false
   }
 
-  depends_on = [aws_lb_listener.front_https, aws_service_discovery_service.front]
+  depends_on = [aws_lb_listener.front_https]
 }
 
 locals {
@@ -92,6 +72,7 @@ locals {
       mountPoints = [],
       name        = "front_web",
       portMappings = [{
+        name          = "front-port",
         containerPort = 80,
         hostPort      = 80,
         protocol      = "tcp"
@@ -148,17 +129,17 @@ locals {
         { name = "ROLE", value = "front" },
         { name = "ADMIN_HOST", value = "https://${aws_route53_record.admin.fqdn}" },
         { name = "NONADMIN_HOST", value = "https://${aws_route53_record.front.fqdn}" },
-        { name = "API_URL", value = "http://${local.api_service_fqdn}" },
+        { name = "API_URL", value = "http://api" },
         { name = "APP_ENV", value = local.account.app_env },
         { name = "AUDIT_LOG_GROUP_NAME", value = "audit-${local.environment}" },
         { name = "EMAIL_SEND_INTERNAL", value = local.account.is_production == 1 ? "true" : "false" },
         { name = "ENVIRONMENT", value = local.environment },
         { name = "FEATURE_FLAG_PREFIX", value = local.feature_flag_prefix },
         { name = "FILESCANNER_SSLVERIFY", value = "False" },
-        { name = "FILESCANNER_URL", value = "http://${local.scan_service_fqdn}:8080" },
+        { name = "FILESCANNER_URL", value = "http://scan:8080" },
         { name = "GA_DEFAULT", value = local.account.ga_default },
         { name = "GA_GDS", value = local.account.ga_gds },
-        { name = "HTMLTOPDF_ADDRESS", value = "http://${local.htmltopdf_service_fqdn}" },
+        { name = "HTMLTOPDF_ADDRESS", value = "http://htmltopdf:8080" },
         { name = "NGINX_APP_NAME", value = "frontend" },
         { name = "OPG_DOCKER_TAG", value = var.OPG_DOCKER_TAG },
         { name = "PARAMETER_PREFIX", value = local.parameter_prefix },
