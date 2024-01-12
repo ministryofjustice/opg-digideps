@@ -293,4 +293,15 @@ trait MoneyInSectionTrait
     {
         $this->theMoneyInSummaryPageShouldContainTheMoneyInValuesIAdded();
     }
+
+    /**
+     * @Then /^I enter a reason for no money in$/
+     */
+    public function iEnterAReasonForNoMoneyIn()
+    {
+        $this->iAmOnNoMoneyInExistsPage();
+        
+        $this->fillInField('reason_for_no_money[reasonForNoMoneyIn]', 'No money in', 'reasonForNoMoneyIn');
+        $this->pressButton('Save and continue');
+    }
 }

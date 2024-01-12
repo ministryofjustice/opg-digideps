@@ -787,4 +787,14 @@ trait IShouldBeOnFrontendTrait
     {
         return $this->iAmOnPage(sprintf('/%s\/.*\/decisions\/summary.*$/', $this->reportUrlPrefix));
     }
+    
+    public function iAmOnNoMoneyInExistsPage(): bool
+    {
+        return $this->iAmOnPage(sprintf('/%s\/.*\/money-in\/no-money-in-exists?.*$/', $this->reportUrlPrefix));
+    }
+
+    public function iAmOnNoMoneyOutExistsPage(): bool
+    {
+        return $this->iAmOnPage(sprintf('/%s\/.*\/money-out\/no-money-out-exists?.*$/', $this->reportUrlPrefix));
+    }
 }

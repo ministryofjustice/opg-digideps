@@ -49,6 +49,8 @@ trait MoneyOutSectionTrait
         'anything-else-paid-out' => 'Anything else paid out',
     ];
 
+    private array $moneyTypeCategoriesCompleted = [];
+
     /**
      * @When I view and start the money out report section
      */
@@ -200,11 +202,21 @@ trait MoneyOutSectionTrait
     /**
      * @Then I should see the expected results on money out summary page
      */
-    public function iShouldSeeExpectedResultsOnMoneyOutPage()
+    public function iShouldSeeExpectedResultsOnMoneyOutSummaryPage()
     {
         $this->iAmOnMoneyOutSummaryPage();
 
-        $this->expectedResultsDisplayedSimplified(null, false, true);
+        if ($this->getSectionAnswers('moneyOutExists')) {
+            $this->expectedResultsDisplayedSimplified('moneyOutExists');
+        }
+
+        if ($this->getSectionAnswers('reasonForNoMoneyOut')) {
+            $this->expectedResultsDisplayedSimplified('reasonForNoMoneyOut');
+        }
+
+        foreach (array_unique($this->moneyTypeCategoriesCompleted) as $completedCategory) {
+            $this->expectedResultsDisplayedSimplified($completedCategory);
+        }
     }
 
     private function addPayment(string $radioPaymentValue, string $translatedPaymentValue)
@@ -267,5 +279,16 @@ trait MoneyOutSectionTrait
 
         $this->addPayment('professional-fees-eg-solicitor-accountant-non-lay', $this->paymentTypeDictionary['professional-fees-eg-solicitor-accountant-non-lay']);
         $this->addAnother('no');
+    }
+
+    /**
+     * @Then /^I enter a reason for no money out$/
+     */
+    public function iEnterAReasonForNoMoneyOut()
+    {
+        $this->iAmOnNoMoneyOutExistsPage();
+
+        $this->fillInField('reason_for_no_money[reasonForNoMoneyOut]', 'No money out', 'reasonForNoMoneyOut');
+        $this->pressButton('Save and continue');
     }
 }

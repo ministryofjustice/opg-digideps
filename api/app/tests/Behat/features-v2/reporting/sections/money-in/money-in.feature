@@ -94,3 +94,11 @@ Feature: Money in High Assets
     Then I should be on the money in summary page and see entry deleted
     When I follow link back to report overview page
     Then I should see "money-in" as "not finished"
+
+@lay-pfa-high-not-started
+  Scenario: A Lay user reports having no money in to report
+    Given a Lay Deputy has not started a report
+    When I view and start the money in report section
+    And I confirm "No" to adding money in on the clients behalf
+    And I enter a reason for no money in
+    Then the money in summary page should contain the money in values I added

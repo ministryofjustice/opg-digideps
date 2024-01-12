@@ -81,3 +81,11 @@ Feature: Money Out
         And I confirm "Yes" to taking money out on the clients behalf
         And I add the Fees charged by a solicitor, accountant or other professional payment not including deputy costs
         Then I should see the expected results on money out summary page
+
+    @lay-pfa-high-not-started
+    Scenario: A Lay user reports having no money out to report
+        Given a Lay Deputy has not started a report
+        When I view and start the money out report section
+        And I confirm "No" to taking money out on the clients behalf
+        And I enter a reason for no money out
+        Then I should see the expected results on money out summary page
