@@ -141,7 +141,7 @@ class ReportSubmissionServiceTest extends TestCase
     {
         $report = self::prophesize(Report::class);
         $report->getType()->willReturn($reportType);
-        $report->getGiftsExist()->willReturn('yes');
+        $report->getGifts()->shouldBeCalled()->willReturn(['a gift']);
         $report->createAttachmentName('DigiRep-%s_%s_%s.pdf')->shouldBeCalled()->willReturn('reportFileName');
         $report->createAttachmentName('DigiRepTransactions-%s_%s_%s.csv')->shouldBeCalled()->willReturn('transactionCSVName');
 

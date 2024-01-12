@@ -94,8 +94,8 @@ class ReportSubmissionService
         $this->generateReportPdf($report);
 
         if (in_array($report->getType(), Report::HIGH_ASSETS_REPORT_TYPES)) {
-            if ('yes' == $report->getGiftsExist() || 'yes' == $report->getPaidForAnything() || 'Yes' == $report->getMoneyInExists()
-                || 'Yes' == $report->getMoneyOutExists()) {
+            if (!empty($report->getGifts()) || !empty($report->getExpenses()) || !empty($report->getMoneyTransactionsIn())
+                || !empty($report->getMoneyTransactionsOut())) {
                 $csvContent = $this->csvGenerator->generateTransactionsCsv($report);
 
                 $this->fileUploader->uploadFileAndPersistDocument(

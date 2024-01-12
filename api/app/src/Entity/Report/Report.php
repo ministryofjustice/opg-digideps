@@ -1074,9 +1074,7 @@ class Report implements ReportInterface
      */
     public function isMissingMoneyOrAccountsOrClosingBalance()
     {
-        return ('Yes' == $this->getMoneyInExists() && !$this->hasMoneyIn())
-        || ('Yes' == $this->getMoneyOutExists() && !$this->hasMoneyOut())
-        || !$this->hasAccounts()
+        return !$this->hasAccounts()
         || count($this->getBankAccountsIncomplete()) > 0;
     }
 
