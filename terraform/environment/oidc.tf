@@ -8,8 +8,9 @@ locals {
 }
 
 resource "aws_iam_role" "oidc_role" {
-  name               = "github-actions-test-role-${local.environment}"
-  assume_role_policy = data.aws_iam_policy_document.github_actions_assume_role_policy.json
+  name                 = "github-actions-test-role-${local.environment}"
+  assume_role_policy   = data.aws_iam_policy_document.github_actions_assume_role_policy.json
+  max_session_duration = 14400
 }
 
 data "aws_iam_policy_document" "github_actions_assume_role_policy" {
@@ -35,13 +36,30 @@ data "aws_iam_policy_document" "github_actions_assume_role_policy" {
   }
 }
 
+data "aws_iam_policy_document" "oidc_assume_other" {
+  statement {
+    sid     = "StsAssume"
+    effect  = "Allow"
+    actions = ["sts:AssumeRole"]
 
+    resources = [
+      aws_iam_role.tf_basic_user.arn,
+      aws_iam_role.tf_basic_user_sb.arn
+    ]
+  }
+}
 
+resource "aws_iam_role_policy" "oidc_policy" {
+  name   = "oidc-basic-${local.environment}"
+  role   = aws_iam_role.oidc_role.name
+  policy = data.aws_iam_policy_document.oidc_assume_other.json
+}
 
 # TF BASIC USER FOR TESTING PURPOSES
 resource "aws_iam_role" "tf_basic_user" {
-  name               = "tf-basic-user-${local.environment}"
-  assume_role_policy = data.aws_iam_policy_document.tf_basic_user_assume_role_policy.json
+  name                 = "tf-basic-user-${local.environment}"
+  max_session_duration = 14400
+  assume_role_policy   = data.aws_iam_policy_document.tf_basic_user_assume_role_policy.json
 }
 
 data "aws_iam_policy_document" "tf_basic_user_assume_role_policy" {
@@ -80,6 +98,18 @@ data "aws_iam_policy_document" "tf_basic_policy" {
   }
 
   statement {
+    sid    = "S3AllowCreate"
+    effect = "Allow"
+    actions = [
+      "s3:CreateBucket",
+      "s3:GetBucketLocation",
+      "s3:ListAllMyBuckets",
+      "s3:PutBucketVersioning"
+    ]
+    resources = ["*"]
+  }
+
+  statement {
     sid       = "SNSAllow"
     effect    = "Allow"
     actions   = ["sns:*"]
@@ -91,5 +121,42 @@ data "aws_iam_policy_document" "tf_basic_policy" {
     effect    = "Allow"
     actions   = ["dynamodb:*"]
     resources = ["arn:aws:dynamodb:eu-west-1:248804316466:table/remote_lock"]
+  }
+}
+
+# TF BASIC USER IN SANDBOX FOR TESTING PURPOSES
+resource "aws_iam_role" "tf_basic_user_sb" {
+  provider           = aws.sandbox
+  name               = "tf-basic-user-${local.environment}"
+  assume_role_policy = data.aws_iam_policy_document.tf_basic_user_assume_role_policy_sb.json
+}
+
+data "aws_iam_policy_document" "tf_basic_user_assume_role_policy_sb" {
+  provider = aws.sandbox
+  statement {
+    sid    = "AllowAssumeFromOICDRole"
+    effect = "Allow"
+    principals {
+      type        = "AWS"
+      identifiers = [aws_iam_role.oidc_role.arn]
+    }
+    actions = ["sts:AssumeRole"]
+  }
+}
+
+resource "aws_iam_role_policy" "tf_basic_user_sb" {
+  provider = aws.sandbox
+  name     = "tf-basic-${local.environment}"
+  role     = aws_iam_role.tf_basic_user_sb.name
+  policy   = data.aws_iam_policy_document.tf_basic_policy_sb.json
+}
+
+data "aws_iam_policy_document" "tf_basic_policy_sb" {
+  provider = aws.sandbox
+  statement {
+    sid       = "SNSAllow"
+    effect    = "Allow"
+    actions   = ["sns:*"]
+    resources = ["*"]
   }
 }

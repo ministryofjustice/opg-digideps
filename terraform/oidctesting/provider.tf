@@ -1,3 +1,7 @@
+locals {
+  default_role = var.DEFAULT_ROLE
+}
+
 terraform {
   backend "s3" {
     bucket         = "s3-access-logs.jstestsp"
@@ -12,7 +16,16 @@ terraform {
 provider "aws" {
   region = "eu-west-1"
   assume_role {
-    role_arn     = "arn:aws:iam::248804316466:role/tf-basic-user-ddls1021494"
+    role_arn     = "arn:aws:iam::248804316466:role/${var.DEFAULT_ROLE}"
+    session_name = "terraform-session"
+  }
+}
+
+provider "aws" {
+  region = "eu-west-1"
+  alias  = "sandbox"
+  assume_role {
+    role_arn     = "arn:aws:iam::995199299616:role/${var.DEFAULT_ROLE}"
     session_name = "terraform-session"
   }
 }

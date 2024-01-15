@@ -32,6 +32,18 @@ provider "aws" {
   }
 }
 
+provider "aws" {
+  region = "eu-west-1"
+  alias  = "sandbox"
+  default_tags {
+    tags = local.default_tags
+  }
+  assume_role {
+    role_arn     = "arn:aws:iam::995199299616:role/${var.DEFAULT_ROLE}"
+    session_name = "terraform-session"
+  }
+}
+
 # DD has it's public DNS in production, not management
 provider "aws" {
   region = "eu-west-1"

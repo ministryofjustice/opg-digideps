@@ -1,8 +1,8 @@
 name: Test S3
 on:
   push:
-    branches:
-      - nonexistent
+#    branches:
+#      - nonexistent
 
 jobs:
   test:
@@ -24,13 +24,14 @@ jobs:
         with:
           role-to-assume: arn:aws:iam::248804316466:role/github-actions-test-role-ddls1021494
           role-session-name: gh-actions
+          role-duration-seconds: 7400
           aws-region: eu-west-1
 
       - name: terraform init for environment
         run: terraform init -input=false
         working-directory: terraform/oidctesting
 
-      - name: Terraform Plan
+      - name: Terraform Apply
         env:
           TF_WORKSPACE: testingws
         run: |

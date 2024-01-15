@@ -19,6 +19,11 @@ on:
         required: false
         type: string
         default: "false"
+      path_to_live:
+        description: "Called from path to live"
+        required: false
+        type: string
+        default: "false"
 
 jobs:
   terraform_workflow:
@@ -30,12 +35,7 @@ jobs:
 
       - uses: unfor19/install-aws-cli-action@46282f151073130d90347412d9c4ef0640177f22 # pin@v1.0.3
 
-      - name: build redeployer
-        if: inputs.terraform_path == 'account'
-        run: GOARCH=amd64 GOOS=linux go build -o bootstrap ./main.go
-        working-directory: terraform/account/go_redeployer
-
-      - uses: actions/setup-python@0a5c61591373683505ea898e09a3ea4f39ef2b9c
+      - uses: actions/setup-python@e9d6f990972a57673cdb72ec29e19d42ba28880f
         if: inputs.terraform_path == 'shared'
         with:
           python-version: "3.11"
@@ -45,26 +45,19 @@ jobs:
         run: pip3 install -r requirements.txt --target ./layers/python/lib/python3.11/site-packages/
         working-directory: lambdas/functions/slack_lambda
 
-      - name: parse terraform version
-        id: tf_version_setup
-        run: |
-          if [ -f ./versions.tf ]; then
-            terraform_version=$(cat ./versions.tf | ../../scripts/pipeline/terraform/terraform-version.sh)
-            echo "- Terraform version: [${terraform_version}]" >> $GITHUB_STEP_SUMMARY
-            echo "TERRAFORM_VERSION=${terraform_version}" >> $GITHUB_OUTPUT
-          fi
-        working-directory: terraform/${{ inputs.terraform_path }}
-
-      - name: "Terraform version [${{ steps.tf_version_setup.outputs.TERRAFORM_VERSION }}]"
-        run: echo "terraform version [${{ steps.tf_version_setup.outputs.TERRAFORM_VERSION }}]"
+      - id: terraform_version
+        name: get terraform version
+        uses: ministryofjustice/opg-github-actions/.github/actions/terraform-version@v2.5.0
+        with:
+          terraform_directory: terraform/${{ inputs.terraform_path }}
 
       - uses: hashicorp/setup-terraform@1b93182764c8332e7679b2393cb307cbe7baf9dc # pin@v2.0.0
         with:
-          terraform_version: ${{ steps.tf_version_setup.outputs.TERRAFORM_VERSION }}
+          terraform_version: ${{ steps.terraform_version.outputs.version }}
           terraform_wrapper: false
 
       - name: configure AWS credentials for terraform
-        uses: aws-actions/configure-aws-credentials@f749619a9bd295c431b5a3fff1885bc7059e9c16 # pin@v1.7.0
+        uses: aws-actions/configure-aws-credentials@dca38186811c8a0dd295aa416daa974a40eeb950 # pin@v1.7.0
         with:
           aws-access-key-id: ${{ secrets.AWS_ACCESS_KEY_ID_ACTIONS }}
           aws-secret-access-key: ${{ secrets.AWS_SECRET_ACCESS_KEY_ACTIONS }}
@@ -75,6 +68,11 @@ jobs:
       - uses: webfactory/ssh-agent@fd34b8dee206fe74b288a5e61bc95fba2f1911eb # pin@v0.5.4
         with:
           ssh-private-key: ${{ secrets.SSH_PRIVATE_KEY_ALLOW_LIST_REPOSITORY }}
+
+      - name: build redeployer
+        if: inputs.terraform_path == 'account'
+        run: GOARCH=amd64 GOOS=linux go build -o bootstrap ./main.go
+        working-directory: terraform/account/go_redeployer
 
       - name: terraform init for account
         if: inputs.terraform_path == 'account'
@@ -97,21 +95,17 @@ jobs:
           terraform plan -input=false -parallelism=30 -lock-timeout=5m
         working-directory: terraform/${{ inputs.terraform_path }}
 
-      - name: install workspace manager
-        if: inputs.apply == 'true' && inputs.terraform_path == 'environment'
-        run: |
-          wget https://github.com/TomTucka/terraform-workspace-manager/releases/download/v0.3.1/terraform-workspace-manager_Linux_x86_64.tar.gz -O $HOME/terraform-workspace-manager.tar.gz
-          sudo tar -xvf $HOME/terraform-workspace-manager.tar.gz -C /usr/local/bin
-          sudo chmod +x /usr/local/bin/terraform-workspace-manager
-
-      - name: protect workspace
-        if: inputs.apply == 'true' && inputs.terraform_path == 'environment'
-        run: terraform-workspace-manager -register-workspace=$TF_WORKSPACE -time-to-protect="${PROTECT_TIME}" -aws-account-id=248804316466 -aws-iam-role=digideps-ci
-        env:
-          TF_WORKSPACE: ${{ inputs.workspace }}
-          PROTECT_TIME: 3
-          AWS_ACCESS_KEY_ID: ${{ secrets.AWS_ACCESS_KEY_ID_ACTIONS }}
-          AWS_SECRET_ACCESS_KEY: ${{ secrets.AWS_SECRET_ACCESS_KEY_ACTIONS }}
+      - id: terraform_workspace
+        if: inputs.apply == 'true' && inputs.terraform_path == 'environment' && inputs.path_to_live == 'false'
+        name: register workspace
+        uses: ministryofjustice/opg-github-actions/.github/actions/terraform-workspace-manager@v2.5.0
+        with:
+          aws_access_key_id: ${{ secrets.AWS_ACCESS_KEY_ID }}
+          aws_secret_access_key: ${{ secrets.AWS_SECRET_ACCESS_KEY }}
+          aws_account_id: 248804316466
+          aws_iam_role: digideps-ci
+          register_workspace: ${{ inputs.workspace }}
+          time_to_protect: 3
 
       - name: terraform apply ${{ inputs.terraform_path }}
         if: inputs.apply == 'true'
