@@ -22,10 +22,48 @@ jobs:
       - name: configure aws credentials
         uses: aws-actions/configure-aws-credentials@f749619a9bd295c431b5a3fff1885bc7059e9c16
         with:
-          role-to-assume: arn:aws:iam::248804316466:role/github-actions-test-role-ddls1021494
-          role-session-name: gh-actions
-          role-duration-seconds: 7400
+          role-to-assume: arn:aws:iam::995199299616:role/tf-basic-user-ddls1021494
+          role-session-name: gh-actions-sandbox
+          role-duration-seconds: 3600
           aws-region: eu-west-1
+
+      - name: Setup Profile Sandbox
+        shell: bash
+        run: |
+          aws configure set region eu-west-1 --profile sandbox
+          aws configure set aws_access_key_id ${{ env.AWS_ACCESS_KEY_ID }} --profile sandbox
+          aws configure set aws_secret_access_key ${{ env.AWS_SECRET_ACCESS_KEY }} --profile sandbox
+          aws configure set aws_session_token ${{ env.AWS_SESSION_TOKEN }} --profile sandbox
+
+      - name: Reset AWS Environment Variables
+        shell: bash
+        run: |
+          echo "AWS_ACCESS_KEY_ID=" >> $GITHUB_ENV
+          echo "AWS_SECRET_ACCESS_KEY=" >> $GITHUB_ENV
+          echo "AWS_SESSION_TOKEN=" >> $GITHUB_ENV
+
+      - name: configure aws credentials
+        uses: aws-actions/configure-aws-credentials@f749619a9bd295c431b5a3fff1885bc7059e9c16
+        with:
+          role-to-assume: arn:aws:iam::248804316466:role/tf-basic-user-ddls1021494
+          role-session-name: gh-actions-digideps
+          role-duration-seconds: 3600
+          aws-region: eu-west-1
+
+      - name: Setup Profile Digideps
+        shell: bash
+        run: |
+          aws configure set region eu-west-1 --profile digideps
+          aws configure set aws_access_key_id ${{ env.AWS_ACCESS_KEY_ID }} --profile digideps
+          aws configure set aws_secret_access_key ${{ env.AWS_SECRET_ACCESS_KEY }} --profile digideps
+          aws configure set aws_session_token ${{ env.AWS_SESSION_TOKEN }} --profile digideps
+
+      - name: Reset AWS Environment Variables
+        shell: bash
+        run: |
+          echo "AWS_ACCESS_KEY_ID=" >> $GITHUB_ENV
+          echo "AWS_SECRET_ACCESS_KEY=" >> $GITHUB_ENV
+          echo "AWS_SESSION_TOKEN=" >> $GITHUB_ENV
 
       - name: terraform init for environment
         run: terraform init -input=false

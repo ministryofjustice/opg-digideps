@@ -8,24 +8,18 @@ terraform {
     key            = "opg-digi-deps-infra/terraform.tfstate"
     encrypt        = true
     region         = "eu-west-1"
-    role_arn       = "arn:aws:iam::248804316466:role/tf-basic-user-ddls1021494"
+    profile        = "digideps"
     dynamodb_table = "remote_lock"
   }
 }
 
 provider "aws" {
-  region = "eu-west-1"
-  assume_role {
-    role_arn     = "arn:aws:iam::248804316466:role/${var.DEFAULT_ROLE}"
-    session_name = "terraform-session"
-  }
+  region  = "eu-west-1"
+  profile = "digideps"
 }
 
 provider "aws" {
-  region = "eu-west-1"
-  alias  = "sandbox"
-  assume_role {
-    role_arn     = "arn:aws:iam::995199299616:role/${var.DEFAULT_ROLE}"
-    session_name = "terraform-session"
-  }
+  region  = "eu-west-1"
+  alias   = "sandbox"
+  profile = "sandbox"
 }

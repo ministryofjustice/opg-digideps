@@ -2,6 +2,17 @@ module "oidc_provider" {
   source = "./modules/oidc"
 }
 
+data "tls_certificate" "github" {
+  url = "https://token.actions.githubusercontent.com/.well-known/openid-configuration"
+}
+
+resource "aws_iam_openid_connect_provider" "github_actions_sb" {
+  provider        = aws.sandbox
+  url             = "https://token.actions.githubusercontent.com"
+  client_id_list  = ["sts.amazonaws.com"]
+  thumbprint_list = [data.tls_certificate.github.certificates[0].sha1_fingerprint]
+}
+
 locals {
   github_oicd_issuer = "token.actions.githubusercontent.com"
   repo               = "ministryofjustice/opg-digideps"
@@ -64,14 +75,35 @@ resource "aws_iam_role" "tf_basic_user" {
 
 data "aws_iam_policy_document" "tf_basic_user_assume_role_policy" {
   statement {
-    sid    = "AllowAssumeFromOICDRole"
-    effect = "Allow"
+    sid     = "AssumeRoleWithWebId"
+    actions = ["sts:AssumeRoleWithWebIdentity"]
     principals {
-      type        = "AWS"
-      identifiers = [aws_iam_role.oidc_role.arn]
+      type        = "Federated"
+      identifiers = [module.oidc_provider.openid_connect_provider.arn]
     }
-    actions = ["sts:AssumeRole"]
+
+    condition {
+      test     = "StringEquals"
+      variable = "${local.github_oicd_issuer}:aud"
+      values   = ["sts.amazonaws.com"]
+    }
+
+    condition {
+      test     = "StringLike"
+      variable = "${local.github_oicd_issuer}:sub"
+      values   = ["repo:${local.repo}:*"]
+    }
   }
+
+  #  statement {
+  #    sid    = "AllowAssumeFromOICDRole"
+  #    effect = "Allow"
+  #    principals {
+  #      type        = "AWS"
+  #      identifiers = [aws_iam_role.oidc_role.arn]
+  #    }
+  #    actions = ["sts:AssumeRole"]
+  #  }
 }
 
 resource "aws_iam_role_policy" "tf_basic_user" {
@@ -104,9 +136,22 @@ data "aws_iam_policy_document" "tf_basic_policy" {
       "s3:CreateBucket",
       "s3:GetBucketLocation",
       "s3:ListAllMyBuckets",
-      "s3:PutBucketVersioning"
+      "s3:PutBucketVersioning",
+      "s3:GetObject",
+      "s3:ListBucket"
     ]
     resources = ["*"]
+  }
+
+  statement {
+    sid     = "S3AllowAllOnTestBucket"
+    effect  = "Allow"
+    actions = ["*"]
+
+    resources = [
+      "arn:aws:s3:::opg-oidc-test-bucket-todel",
+      "arn:aws:s3:::opg-oidc-test-bucket-todel/*"
+    ]
   }
 
   statement {
@@ -134,13 +179,24 @@ resource "aws_iam_role" "tf_basic_user_sb" {
 data "aws_iam_policy_document" "tf_basic_user_assume_role_policy_sb" {
   provider = aws.sandbox
   statement {
-    sid    = "AllowAssumeFromOICDRole"
-    effect = "Allow"
+    sid     = "AssumeRoleWithWebId"
+    actions = ["sts:AssumeRoleWithWebIdentity"]
     principals {
-      type        = "AWS"
-      identifiers = [aws_iam_role.oidc_role.arn]
+      type        = "Federated"
+      identifiers = [aws_iam_openid_connect_provider.github_actions_sb.arn]
     }
-    actions = ["sts:AssumeRole"]
+
+    condition {
+      test     = "StringEquals"
+      variable = "${local.github_oicd_issuer}:aud"
+      values   = ["sts.amazonaws.com"]
+    }
+
+    condition {
+      test     = "StringLike"
+      variable = "${local.github_oicd_issuer}:sub"
+      values   = ["repo:${local.repo}:*"]
+    }
   }
 }
 
