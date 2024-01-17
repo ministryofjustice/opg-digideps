@@ -5,8 +5,7 @@ declare(strict_types=1);
 namespace App\Tests\Behat\v2\UserManagement;
 
 use App\Entity\Organisation;
-use App\Tests\Behat\BehatException;
-use Behat\Behat\Tester\Exception\PendingException;
+use App\Entity\User;
 
 trait UserManagementTrait
 {
@@ -718,5 +717,89 @@ trait UserManagementTrait
         $this->assertElementContainsText('table', $newUser['firstName'] . " " . $newUser['lastName']);
         $this->assertElementContainsText('table', $newUser['email']);
     }
+
+    /**
+     * @Then /^I attempt to remove an org user$/
+     */
+    public function iAttemptToRemoveAnOrgUser()
+    {
+
+        $loggedInUserName = $this->loggedInUserDetails->getUserFullName();
+        $orgUsersArray = $this->getAllOrgUsers();
+
+        $orgUserToBeDeleted = '';
+
+        foreach($orgUsersArray as $orgUser)
+        {
+            if($orgUser !== $this->loggedInUserDetails->getUserEmail())
+            {
+                $orgUserToBeDeleted = $this->em->getRepository(User::class)->find($orgUser['id'])->getId();
+            }
+        }
+        
+        $userToBeDeletedFullName = $this->em->getRepository(User::class)->findOneBy(['id' => $orgUserToBeDeleted])->getFullName();
+        
+        // assert that both users are present
+        $this->assertElementContainsText('table', $loggedInUserName);
+        $this->assertElementContainsText('table', $userToBeDeletedFullName);
+  
+        $this->clickLink('Remove');
+        $this->pressButton('Yes, remove user from this organisation');
+        
+    }
     
+    /**
+     * @Then /^the the user should be deleted$/
+     */
+    public function theTheUserShouldBeDeleted()
+    {
+        $orgUsersArray = $this->getAllOrgUsers();
+        
+        $xpath = '//tr[contains(@class, "govuk-table__row behat")]';
+        
+        $listSummaryRows = $this->getSession()->getPage()->findAll('xpath', $xpath);
+
+        $formattedDataElements = [];
+
+        foreach ($listSummaryRows as $row) {
+            $formattedDataElements[] = strtolower($row->getText());
+        }
+        
+        $expectedRowCount = 1;
+        $this->assertIntEqualsInt($expectedRowCount, count($formattedDataElements), 'Only one row now exists for the logged in user');
+
+        $expectedOrgUsers = 1;
+        $this->assertIntEqualsInt($expectedOrgUsers, count($orgUsersArray), 'Only one user now exists in the organisation');
+    }
+
+    /**
+     * @Then /^I can view the other org user but I can't delete them$/
+     */
+    public function iCanViewTheOtherOrgUserButICanTDeleteThem()
+    {
+        $orgUsersArray = $this->getAllOrgUsers();
+        $otherOrgUser = '';
+
+        foreach($orgUsersArray as $orgUser)
+        {
+            if($orgUser !== $this->loggedInUserDetails->getUserEmail())
+            {
+                $otherOrgUser = $this->em->getRepository(User::class)->find($orgUser['id'])->getEmail();
+            }
+        }
+        
+        $this->assertElementContainsText('table', $otherOrgUser);
+        $this->assertElementNotContainsText('table', 'Remove');
+    }
+
+    private function getAllOrgUsers()
+    {
+        $orgEmailIdentifier = $this->loggedInUserDetails->getOrganisationEmailIdentifier();
+
+        $orgId = $this->em->getRepository(Organisation::class)->findByEmailIdentifier($orgEmailIdentifier)->getId();
+
+        return $this->em->getRepository(Organisation::class)->findArrayById($orgId)['users'];
+    }
+
+
 }

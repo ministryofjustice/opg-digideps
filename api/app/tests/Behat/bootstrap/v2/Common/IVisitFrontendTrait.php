@@ -4,6 +4,7 @@ declare(strict_types=1);
 
 namespace App\Tests\Behat\v2\Common;
 
+use App\Entity\Organisation;
 use App\Entity\User;
 use App\Tests\Behat\BehatException;
 
@@ -410,5 +411,20 @@ trait IVisitFrontendTrait
     public function visitsTheForgottenYourPasswordPage()
     {
         $this->visitFrontendPath($this->getForgottenYourPasswordUrl());
+    }
+
+    /**
+     * @Given /^I visit the organisation settings page for the logged in user$/
+     */
+    public function iVisitTheOrganisationSettingsPageForTheLoggedInUser()
+    {
+        $emailIdentifier = $this->loggedInUserDetails->getOrganisationEmailIdentifier();
+        $organisation = $this->em->getRepository(Organisation::class)->findOneBy(['emailIdentifier' => $emailIdentifier]);
+
+        if (is_null($organisation)) {
+            throw new BehatException(sprintf('Could not find an organisation with email identifier "%s"', $emailIdentifier));
+        }
+
+        $this->visitFrontendPath($this->getOrgSettingsUrl(strval($organisation->getId())));
     }
 }
