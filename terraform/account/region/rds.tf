@@ -2,8 +2,8 @@ resource "aws_iam_role" "enhanced_monitoring" {
   name               = "rds-enhanced-monitoring"
   assume_role_policy = data.aws_iam_policy_document.enhanced_monitoring.json
   tags = merge(
-    local.default_tags,
-    { Name = "rds-enhanced-monitoring-role-${local.account.name}" },
+    var.default_tags,
+    { Name = "rds-enhanced-monitoring-role-${var.account.name}" },
   )
 }
 

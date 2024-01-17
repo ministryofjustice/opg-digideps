@@ -1,5 +1,5 @@
 module "environment_secrets" {
-  for_each = local.account.environments
+  for_each = var.account.environments
 
   source      = "./modules/environment_secrets"
   environment = each.value
@@ -15,26 +15,26 @@ module "environment_secrets" {
     "public-jwt-key-base64",
     "private-jwt-key-base64"
   ]
-  tags = local.default_tags
+  tags = var.default_tags
 }
 
 module "development_environment_secrets" {
-  count = local.account.name == "development" ? 1 : 0
+  count = var.account.name == "development" ? 1 : 0
 
   source      = "./modules/environment_secrets"
-  environment = local.account.name
+  environment = var.account.name
   secrets = [
     "browserstack-username",
     "browserstack-access-key"
   ]
-  tags = local.default_tags
+  tags = var.default_tags
 }
 
 # Account wide secrets
 resource "aws_secretsmanager_secret" "cloud9_users" {
   name        = "cloud9-users"
   description = "Digideps team Cloud9 users"
-  tags        = local.default_tags
+  tags        = var.default_tags
 }
 
 data "aws_secretsmanager_secret_version" "cloud9_users" {
@@ -44,7 +44,7 @@ data "aws_secretsmanager_secret_version" "cloud9_users" {
 resource "aws_secretsmanager_secret" "slack_webhook_url" {
   name        = "slack-webhook-url"
   description = "URL of webhook for Slack Integration"
-  tags        = local.default_tags
+  tags        = var.default_tags
 }
 
 data "aws_secretsmanager_secret_version" "slack_webhook_url" {

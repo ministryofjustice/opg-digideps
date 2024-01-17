@@ -1,7 +1,7 @@
 resource "aws_iam_role" "sync" {
   assume_role_policy = data.aws_iam_policy_document.sync_assume_policy.json
   name               = "sync"
-  tags               = local.default_tags
+  tags               = var.default_tags
 }
 
 data "aws_iam_policy_document" "sync_assume_policy" {

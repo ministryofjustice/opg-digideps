@@ -1,13 +1,13 @@
 #tfsec:ignore:aws-s3-enable-bucket-logging - only contains dev data. no need for access logging
 resource "aws_s3_bucket" "pa_uploads_branch_replication" {
-  count         = local.account.name == "development" ? 1 : 0
+  count         = var.account.name == "development" ? 1 : 0
   bucket        = "pa-uploads-branch-replication"
   force_destroy = true
-  tags          = local.default_tags
+  tags          = var.default_tags
 }
 
 resource "aws_s3_bucket_public_access_block" "pa_uploads_branch_replication" {
-  count  = local.account.name == "development" ? 1 : 0
+  count  = var.account.name == "development" ? 1 : 0
   bucket = aws_s3_bucket.pa_uploads_branch_replication[0].bucket
 
   block_public_acls       = true
@@ -17,13 +17,13 @@ resource "aws_s3_bucket_public_access_block" "pa_uploads_branch_replication" {
 }
 
 resource "aws_s3_bucket_policy" "pa_uploads_branch_replication" {
-  count  = local.account.name == "development" ? 1 : 0
+  count  = var.account.name == "development" ? 1 : 0
   bucket = aws_s3_bucket_public_access_block.pa_uploads_branch_replication[0].bucket
   policy = data.aws_iam_policy_document.pa_uploads_branch_replication[0].json
 }
 
 data "aws_iam_policy_document" "pa_uploads_branch_replication" {
-  count     = local.account.name == "development" ? 1 : 0
+  count     = var.account.name == "development" ? 1 : 0
   policy_id = "PutObjPolicy"
 
   statement {
@@ -47,7 +47,7 @@ data "aws_iam_policy_document" "pa_uploads_branch_replication" {
 }
 
 resource "aws_iam_role" "replication" {
-  count = local.account.name == "development" ? 1 : 0
+  count = var.account.name == "development" ? 1 : 0
   name  = "replication-role.replication"
 
   assume_role_policy = <<POLICY
@@ -66,13 +66,13 @@ resource "aws_iam_role" "replication" {
 }
 POLICY
   tags = merge(
-    local.default_tags,
-    { Name = "replication-role-${local.account.name}" },
+    var.default_tags,
+    { Name = "replication-role-${var.account.name}" },
   )
 }
 
 resource "aws_iam_policy" "replication" {
-  count = local.account.name == "development" ? 1 : 0
+  count = var.account.name == "development" ? 1 : 0
   name  = "replication-policy.replication"
 
   policy = <<POLICY
@@ -105,13 +105,13 @@ POLICY
 }
 
 resource "aws_iam_role_policy_attachment" "replication" {
-  count      = local.account.name == "development" ? 1 : 0
+  count      = var.account.name == "development" ? 1 : 0
   role       = aws_iam_role.replication[0].name
   policy_arn = aws_iam_policy.replication[0].arn
 }
 
 resource "aws_s3_bucket_server_side_encryption_configuration" "pa_uploads_branch_replication" {
-  count  = local.account.name == "development" ? 1 : 0
+  count  = var.account.name == "development" ? 1 : 0
   bucket = aws_s3_bucket.pa_uploads_branch_replication[0].bucket
 
   rule {
@@ -122,7 +122,7 @@ resource "aws_s3_bucket_server_side_encryption_configuration" "pa_uploads_branch
 }
 
 resource "aws_s3_bucket_versioning" "pa_uploads_branch_replication" {
-  count  = local.account.name == "development" ? 1 : 0
+  count  = var.account.name == "development" ? 1 : 0
   bucket = aws_s3_bucket.pa_uploads_branch_replication[0].id
   versioning_configuration {
     status = "Enabled"
@@ -130,7 +130,7 @@ resource "aws_s3_bucket_versioning" "pa_uploads_branch_replication" {
 }
 
 resource "aws_s3_bucket_ownership_controls" "pa_uploads_branch_replication" {
-  count  = local.account.name == "development" ? 1 : 0
+  count  = var.account.name == "development" ? 1 : 0
   bucket = aws_s3_bucket.pa_uploads_branch_replication[0].id
   rule {
     object_ownership = "BucketOwnerEnforced"
@@ -138,7 +138,7 @@ resource "aws_s3_bucket_ownership_controls" "pa_uploads_branch_replication" {
 }
 
 resource "aws_s3_bucket_lifecycle_configuration" "pa_uploads_branch_replication" {
-  count  = local.account.name == "development" ? 1 : 0
+  count  = var.account.name == "development" ? 1 : 0
   bucket = aws_s3_bucket.pa_uploads_branch_replication[0].id
 
   rule {
