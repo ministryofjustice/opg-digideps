@@ -46,7 +46,7 @@ jobs:
       - workspace_name
     steps:
       - name: Checkout
-        uses: actions/checkout@f43a0e5ff2bd294095638e18286ca9a3d1956744 # v3.6.0
+        uses: actions/checkout@b4ffde65f46336ab88eb53be808477a3936bae11 # v4.1.1
 
       - name: parse terraform version
         id: tf_version_setup
@@ -71,7 +71,7 @@ jobs:
           ssh-private-key: ${{ secrets.SSH_PRIVATE_KEY_ALLOW_LIST_REPOSITORY }}
 
       - name: configure AWS credentials for terraform
-        uses: aws-actions/configure-aws-credentials@dca38186811c8a0dd295aa416daa974a40eeb950 # pin@v1.7.0
+        uses: aws-actions/configure-aws-credentials@2119c3b07593cce0acbcee3240f1787eebcf4697 # pin@v1.7.0
         with:
           aws-access-key-id: ${{ secrets.AWS_ACCESS_KEY_ID_ACTIONS }}
           aws-secret-access-key: ${{ secrets.AWS_SECRET_ACCESS_KEY_ACTIONS }}
