@@ -566,3 +566,7 @@ moved {
   from = module.environment_secrets["training"].aws_secretsmanager_secret.secret
   to   = module.eu_west_1[0].module.environment_secrets["training"].aws_secretsmanager_secret.secret
 }
+moved {
+  from = module.eu_west_1[0].module.workspace-cleanup.aws_dynamodb_table.workspace_cleanup_table[0]
+  to   = module.eu_west_1[0].aws_dynamodb_table.workspace_cleanup_table[0]
+}

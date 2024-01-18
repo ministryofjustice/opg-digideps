@@ -1,3 +1,5 @@
+# INFO - Redis is shared across environments within an account with one api and one front redis per account
+
 # see comments for ticket ddpb-3661 for extra details on in transit encryption decisions
 resource "aws_elasticache_replication_group" "cache_api" {
   automatic_failover_enabled = true

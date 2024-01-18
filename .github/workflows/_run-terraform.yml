@@ -47,7 +47,7 @@ jobs:
 
       - id: terraform_version
         name: get terraform version
-        uses: ministryofjustice/opg-github-actions/.github/actions/terraform-version@v2.5.0
+        uses: ministryofjustice/opg-github-actions/.github/actions/terraform-version@v2.7.3
         with:
           terraform_directory: terraform/${{ inputs.terraform_path }}
 
@@ -98,7 +98,7 @@ jobs:
       - id: terraform_workspace
         if: inputs.apply == 'true' && inputs.terraform_path == 'environment' && inputs.path_to_live == 'false'
         name: register workspace
-        uses: ministryofjustice/opg-github-actions/.github/actions/terraform-workspace-manager@v2.5.0
+        uses: ministryofjustice/opg-github-actions/.github/actions/terraform-workspace-manager@v2.7.3
         with:
           aws_access_key_id: ${{ secrets.AWS_ACCESS_KEY_ID }}
           aws_secret_access_key: ${{ secrets.AWS_SECRET_ACCESS_KEY }}
