@@ -6,7 +6,7 @@ resource "aws_flow_log" "vpc_flow_logs" {
 }
 
 resource "aws_cloudwatch_log_group" "vpc_flow_logs" {
-  name              = "vpc-flow-logs-${local.account.name}"
+  name              = "vpc-flow-logs-${var.account.name}"
   kms_key_id        = aws_kms_key.cloudwatch_logs.arn
   retention_in_days = 180
 }
@@ -19,13 +19,13 @@ resource "aws_flow_log" "vpc_flow_logs_default" {
 }
 
 resource "aws_cloudwatch_log_group" "vpc_flow_logs_default" {
-  name              = "vpc-flow-logs-default-${local.account.name}"
+  name              = "vpc-flow-logs-default-${var.account.name}"
   kms_key_id        = aws_kms_key.cloudwatch_logs.arn
   retention_in_days = 180
 }
 
 resource "aws_iam_role" "vpc_flow_logs" {
-  name               = "vpc-flow-logs-${local.account.name}"
+  name               = "vpc-flow-logs-${var.account.name}"
   assume_role_policy = data.aws_iam_policy_document.vpc_flow_logs_role_assume_role_policy.json
 }
 
@@ -41,7 +41,7 @@ data "aws_iam_policy_document" "vpc_flow_logs_role_assume_role_policy" {
 }
 
 resource "aws_iam_role_policy" "vpc_flow_logs" {
-  name   = "vpc-flow-logs-${local.account.name}"
+  name   = "vpc-flow-logs-${var.account.name}"
   role   = aws_iam_role.vpc_flow_logs.id
   policy = data.aws_iam_policy_document.vpc_flow_logs_role_policy.json
 }

@@ -40,7 +40,7 @@ trait DecisionSectionTrait
      */
     public function iConfirmThatTheClientsMentalCapacityIsTheSame()
     {
-        $this->chooseOption('mental_capacity[hasCapacityChanged]', 'stayedSame', 'hasCapacityChanged');
+        $this->chooseOption('mental_capacity[hasCapacityChanged]', 'stayedSame', 'hasCapacityChanged', 'stayed the same');
         $this->pressButton('Save and continue');
         $this->iAmOnDecisionsPage2();
     }
@@ -75,20 +75,20 @@ trait DecisionSectionTrait
     {
         $this->iAmOnDecisionsSummaryPage();
 
-        if ($this->getSectionAnswers('mental_capacity[hasCapacityChanged]')) {
+        if ($this->getSectionAnswers('hasCapacityChanged')) {
             $this->expectedResultsDisplayedSimplified('hasCapacityChanged', true);
         }
 
-        if ($this->getSectionAnswers('mental_capacity[mentalAssessmentDate]')) {
+        if ($this->getSectionAnswers('mentalAssessmentDate')) {
             $this->expectedResultsDisplayedSimplified('mentalAssessmentDate', true);
         }
 
-        if ($this->getSectionAnswers('decision_exist[significantDecisionsMade]')) {
+        if ($this->getSectionAnswers('significantDecisionsMade')) {
             $this->expectedResultsDisplayedSimplified('significantDecisionsMade', true);
         }
 
-        if ($this->getSectionAnswers('decision_exist[reasonForNoDecisions]')) {
-            $this->expectedResultsDisplayedSimplified('reasonForNoDecision', true);
+        if ($this->getSectionAnswers('reasonForNoDecisions')) {
+            $this->expectedResultsDisplayedSimplified('reasonForNoDecisions', true);
         }
     }
 
@@ -127,15 +127,15 @@ trait DecisionSectionTrait
     {
         $this->iAmOnDecisionsSummaryPage();
 
-        if ($this->getSectionAnswers('decision_exist[significantDecisionsMade]')) {
+        if ($this->getSectionAnswers('significantDecisionsMade')) {
             $this->expectedResultsDisplayedSimplified('significantDecisionsMade', true);
         }
 
-        if ($this->getSectionAnswers('decision[description]')) {
+        if ($this->getSectionAnswers('description')) {
             $this->expectedResultsDisplayedSimplified('description', true);
         }
 
-        if ($this->getSectionAnswers('decision[clientInvolvedBoolean]')) {
+        if ($this->getSectionAnswers('clientInvolvedDetails')) {
             $this->expectedResultsDisplayedSimplified('clientInvolvedDetails', true);
         }
 
