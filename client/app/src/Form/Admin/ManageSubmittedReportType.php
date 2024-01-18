@@ -8,9 +8,8 @@ use App\Form\Traits\HasTranslatorTrait;
 use Symfony\Component\Form\AbstractType;
 use Symfony\Component\Form\Extension\Core\Type as FormTypes;
 use Symfony\Component\Form\FormBuilderInterface;
-use Symfony\Component\Form\FormInterface;
 use Symfony\Component\OptionsResolver\OptionsResolver;
-use Symfony\Component\Validator\Constraints as Constraints;
+use Symfony\Component\Validator\Constraints;
 use Symfony\Component\Validator\Constraints\Valid;
 
 class ManageSubmittedReportType extends AbstractType
@@ -46,8 +45,8 @@ class ManageSubmittedReportType extends AbstractType
                 'mapped' => false,
                 'required' => false,
                 'constraints' => [
-                    new Constraints\NotBlank(['message' => 'report.dueDate.notBlank', 'groups' => ['due_date_new']]),
-                    new Constraints\Date(['message' => 'report.dueDate.invalidMessage', 'groups' => ['due_date_new']]),
+                    new Constraints\NotBlank(['message' => 'report.dueDate.notBlank']),
+                    new Constraints\Date(['message' => 'report.dueDate.invalidMessage']),
                 ],
             ])
             ->add('save', FormTypes\SubmitType::class);
@@ -59,15 +58,7 @@ class ManageSubmittedReportType extends AbstractType
             'translation_domain' => 'admin-clients',
             'name' => 'report',
             'compound' => true,
-            'validation_groups' => function (FormInterface $form) {
-                $ret = ['unsubmitted_sections', 'change_due_date', 'startEndDates'];
-
-                if ('custom' == $form['dueDateChoice']->getData()) {
-                    $ret[] = 'due_date_new';
-                }
-
-                return $ret;
-            },
+            'validation_groups' => ['unsubmitted_sections', 'change_due_date', 'startEndDates'],
         ]);
     }
 
