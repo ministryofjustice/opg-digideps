@@ -5,7 +5,7 @@ locals {
 resource "aws_iam_role" "lambda_redeployer" {
   assume_role_policy = data.aws_iam_policy_document.lambda_redeployer_policy.json
   name               = "lambda_redeployer"
-  tags               = local.default_tags
+  tags               = var.default_tags
 }
 
 data "aws_iam_policy_document" "lambda_redeployer_policy" {
@@ -71,8 +71,8 @@ resource "aws_lambda_function" "redeployer_lambda" {
 
   source_code_hash = filebase64sha256(data.archive_file.redeployer_zip.output_path)
   tags = merge(
-    local.default_tags,
-    { Name = "redeployer-${local.account.name}" },
+    var.default_tags,
+    { Name = "redeployer-${var.account.name}" },
   )
 }
 
@@ -81,7 +81,7 @@ resource "aws_cloudwatch_log_group" "redeployer_lambda" {
   retention_in_days = 14
   kms_key_id        = aws_kms_key.cloudwatch_logs.arn
   tags = merge(
-    local.default_tags,
-    { Name = "redeployer-${local.account.name}-log-group" },
+    var.default_tags,
+    { Name = "redeployer-${var.account.name}-log-group" },
   )
 }
