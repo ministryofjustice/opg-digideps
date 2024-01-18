@@ -41,6 +41,8 @@ trait ReportManagementTrait
         'deputyExpenses' => 'Deputy expenses',
     ];
 
+    private \DateTime $customDueDate;
+
     protected string $reportStatus = '';
 
     /**
@@ -182,11 +184,15 @@ trait ReportManagementTrait
         $numberWeeksExtended = $this->getSectionAnswers('manage-report')[0] ?? null;
 
         if ($numberWeeksExtended['manage_report[dueDateChoice]'] ?? null) {
-            $expectedDueDate = (new \DateTime())
-                ->modify(
-                    sprintf('+ %s weeks', $numberWeeksExtended['manage_report[dueDateChoice]'])
-                )
-                ->format('j F Y');
+            if ('custom' == $numberWeeksExtended['manage_report[dueDateChoice]']) {
+                $expectedDueDate = $this->customDueDate->format('j F Y');
+            } else {
+                $expectedDueDate = (new \DateTime())
+                    ->modify(
+                        sprintf('+ %s weeks', $numberWeeksExtended['manage_report[dueDateChoice]'])
+                    )
+                    ->format('j F Y');
+            }
         } else {
             $expectedDueDate = $reportDueDate->format('j F Y');
         }
@@ -215,7 +221,7 @@ trait ReportManagementTrait
         }
 
         if ($this->clientBenefitsSectionAvailable) {
-            $extraFields['clientBenefitsCheck'] = 'Benefits check and income other people receive';
+            $extraFields['clientBenefitsCheck'] = 'Benefits check and money others received';
         }
 
         $checkboxValuesAndTranslations = array_merge(
@@ -452,5 +458,23 @@ trait ReportManagementTrait
                 throw new BehatException($message);
             }
         }
+    }
+
+    /**
+     * @Given I set the due date of the report to a custom date
+     */
+    public function iSetTheDueDateOfTheReportToACustomDate()
+    {
+        $this->iAmOnAdminManageReportPage();
+
+        $day = mt_rand(1, 28);
+        $month = mt_rand(1, 12);
+        $year = mt_rand(2018, 2028);
+
+        $this->fillInField('manage_report[dueDateChoice]', 'custom', 'manage-report');
+        $this->fillInDateFields('manage_report[dueDateCustom]', $day, $month, $year);
+
+        $date = new \DateTime();
+        $this->customDueDate = $date->setDate($year, $month, $day);
     }
 }
