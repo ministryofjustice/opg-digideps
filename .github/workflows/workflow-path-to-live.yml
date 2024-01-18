@@ -39,6 +39,7 @@ jobs:
         with:
           prerelease: false
           github_token: ${{ secrets.GITHUB_TOKEN }}
+          default_bump: "minor"
 
   build_web_resources:
     name: build web resources
