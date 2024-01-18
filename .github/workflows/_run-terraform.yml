@@ -72,7 +72,7 @@ jobs:
       - name: build redeployer
         if: inputs.terraform_path == 'account'
         run: GOARCH=amd64 GOOS=linux go build -o bootstrap ./main.go
-        working-directory: terraform/account/go_redeployer
+        working-directory: terraform/account/region/go_redeployer
 
       - name: terraform init for account
         if: inputs.terraform_path == 'account'

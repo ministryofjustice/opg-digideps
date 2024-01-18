@@ -8,7 +8,7 @@ locals {
 
 resource "aws_cloudwatch_query_definition" "non_healthcheck_requests" {
   name            = "Analysis/App-Services-No-Healthchecks"
-  log_group_names = [local.default_insights_query_log_identifier[local.account.name]]
+  log_group_names = [local.default_insights_query_log_identifier[var.account.name]]
 
   query_string = <<QUERY
 # Purpose: General view of logs without the healthchecks
@@ -22,7 +22,7 @@ QUERY
 
 resource "aws_cloudwatch_query_definition" "exceptions_and_errors" {
   name            = "Analysis/Error-Exceptions"
-  log_group_names = [local.default_insights_query_log_identifier[local.account.name]]
+  log_group_names = [local.default_insights_query_log_identifier[var.account.name]]
 
   query_string = <<QUERY
 # Purpose: Display application errors from logs
@@ -36,7 +36,7 @@ QUERY
 
 resource "aws_cloudwatch_query_definition" "slow_response_times" {
   name            = "Analysis/Requests-With-Slow-Response-Times"
-  log_group_names = [local.default_insights_query_log_identifier[local.account.name]]
+  log_group_names = [local.default_insights_query_log_identifier[var.account.name]]
 
   query_string = <<QUERY
 # Purpose: Shows requests with response time of more than 2 seconds
@@ -50,7 +50,7 @@ QUERY
 
 resource "aws_cloudwatch_query_definition" "status_5xx" {
   name            = "Analysis/Requests-With-5xx-Status"
-  log_group_names = [local.default_insights_query_log_identifier[local.account.name]]
+  log_group_names = [local.default_insights_query_log_identifier[var.account.name]]
 
   query_string = <<QUERY
 # Purpose: 5xx webserver responses and messages that contain error strings
@@ -64,7 +64,7 @@ QUERY
 
 resource "aws_cloudwatch_query_definition" "status_4xx" {
   name            = "Analysis/Requests-With-4xx-Status"
-  log_group_names = [local.default_insights_query_log_identifier[local.account.name]]
+  log_group_names = [local.default_insights_query_log_identifier[var.account.name]]
 
   query_string = <<QUERY
 # Purpose: 4xx webserver responses
@@ -78,7 +78,7 @@ QUERY
 
 resource "aws_cloudwatch_query_definition" "response_distribution" {
   name            = "Analysis/Response-Distribution-By-Status"
-  log_group_names = [local.default_insights_query_log_identifier[local.account.name]]
+  log_group_names = [local.default_insights_query_log_identifier[var.account.name]]
 
   query_string = <<QUERY
 # Purpose: Get an idea of response distribution compared to baseline
@@ -91,7 +91,7 @@ QUERY
 
 resource "aws_cloudwatch_query_definition" "sync_logs" {
   name            = "Document-Sync/All-Document-And-Checklist-Sync-Logs"
-  log_group_names = [local.default_insights_query_log_identifier[local.account.name]]
+  log_group_names = [local.default_insights_query_log_identifier[var.account.name]]
 
   query_string = <<QUERY
 # Purpose: Show all logs for document and checklist sync
@@ -104,7 +104,7 @@ QUERY
 
 resource "aws_cloudwatch_query_definition" "container_cpu_memory" {
   name            = "ECS-Statistics/Container-Cpu-Memory"
-  log_group_names = ["/aws/ecs/containerinsights/${local.default_insights_query_log_identifier[local.account.name]}/performance"]
+  log_group_names = ["/aws/ecs/containerinsights/${local.default_insights_query_log_identifier[var.account.name]}/performance"]
 
   query_string = <<QUERY
 # Purpose: Container CPU and Memory Stats
@@ -119,7 +119,7 @@ QUERY
 
 resource "aws_cloudwatch_query_definition" "container_high_cpu_memory_only" {
   name            = "ECS-Statistics/Container-High-CPU-Memory-Only"
-  log_group_names = ["/aws/ecs/containerinsights/${local.default_insights_query_log_identifier[local.account.name]}/performance"]
+  log_group_names = ["/aws/ecs/containerinsights/${local.default_insights_query_log_identifier[var.account.name]}/performance"]
 
   query_string = <<QUERY
 # Purpose: High Container CPU and Memory Stats
@@ -135,7 +135,7 @@ QUERY
 
 resource "aws_cloudwatch_query_definition" "container_turnover" {
   name            = "ECS-Statistics/Container-Turnover"
-  log_group_names = ["/aws/ecs/containerinsights/${local.default_insights_query_log_identifier[local.account.name]}/performance"]
+  log_group_names = ["/aws/ecs/containerinsights/${local.default_insights_query_log_identifier[var.account.name]}/performance"]
 
   query_string = <<QUERY
 # Purpose: Shows when main containers were last provisioned

@@ -4,7 +4,7 @@ resource "aws_subnet" "private" {
   availability_zone = data.aws_availability_zones.all.names[count.index]
   vpc_id            = aws_vpc.main.id
   tags = merge(
-    local.default_tags,
+    var.default_tags,
     { Name = "private" },
   )
 }
@@ -23,21 +23,21 @@ resource "aws_route_table" "private" {
     nat_gateway_id = aws_nat_gateway.nat[count.index].id
   }
   tags = merge(
-    local.default_tags,
-    { Name = "private-rt-${local.account.name}-${count.index}" },
+    var.default_tags,
+    { Name = "private-rt-${var.account.name}-${count.index}" },
   )
 }
 
 resource "aws_elasticache_subnet_group" "private" {
-  name       = local.account.ec_subnet_group
+  name       = var.account.ec_subnet_group
   subnet_ids = aws_subnet.private[*].id
 }
 
 resource "aws_db_subnet_group" "private" {
-  name       = local.account.db_subnet_group
+  name       = var.account.db_subnet_group
   subnet_ids = aws_subnet.private[*].id
   tags = merge(
-    local.default_tags,
-    { Name = "rds-subnet-group-${local.account.name}" },
+    var.default_tags,
+    { Name = "rds-subnet-group-${var.account.name}" },
   )
 }
