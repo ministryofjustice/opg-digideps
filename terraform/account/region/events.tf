@@ -46,5 +46,5 @@ resource "aws_cloudwatch_event_rule" "nightly" {
   name                = "nightly"
   description         = "Nightly scheduled tasks"
   schedule_expression = "cron(0 3 * * ? *)"
-  tags                = local.default_tags
+  tags                = var.default_tags
 }

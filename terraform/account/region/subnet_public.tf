@@ -4,7 +4,7 @@ resource "aws_subnet" "public" {
   availability_zone = data.aws_availability_zones.all.names[count.index]
   vpc_id            = aws_vpc.main.id
   tags = merge(
-    local.default_tags,
+    var.default_tags,
     { Name = "public" },
   )
 }
@@ -23,7 +23,7 @@ resource "aws_route_table" "public" {
     gateway_id = aws_internet_gateway.igw.id
   }
   tags = merge(
-    local.default_tags,
+    var.default_tags,
     { Name = "public" },
   )
 }
