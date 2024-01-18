@@ -54,7 +54,8 @@ trait PageUrlsTrait
     private string $moneyOutShortSectionUrl = '/%s/%s/money-out-short';
     private string $moneyOutShortSectionSummaryUrl = '/%s/%s/money-out-short/summary';
     private string $moneyTransfersSectionUrl = '/%s/%s/money-transfers';
-    private string $orgSettingsUrl = '/org/settings/organisation/%s';
+    private string $orgSettingsUrl = '/org/settings';
+    private string $orgSettingsUserAccountUrl = '/org/settings/organisation/%s';
     private string $orgAddUserUrl = '/org/settings/organisation/%s/add-user';
     private string $orgDashboardUrl = '/org';
     private string $postSubmissionUserResearchUrl = '/report/%s/post_submission_user_research';
@@ -484,10 +485,15 @@ trait PageUrlsTrait
     {
         return sprintf($this->orgAddUserUrl, $orgId);
     }
-
-    public function getOrgSettingsUrl(string $orgId): string
+    
+    public function getOrgSettingsUrl(): string
     {
-        return sprintf($this->orgSettingsUrl, $orgId);
+        return $this->orgSettingsUrl;
+    }
+
+    public function getOrgSettingsUserAccountUrl(string $orgId): string
+    {
+        return sprintf($this->orgSettingsUserAccountUrl, $orgId);
     }
 
     public function getForgottenYourPasswordUrl(): string

@@ -793,4 +793,15 @@ trait IShouldBeOnFrontendTrait
         return $this->iAmOnPage('/org\/settings.*$/');
 
     }
+
+    public function iAmOnOrgUserAccountsPage()
+    {
+        return $this->iAmOnPage('/org\/settings\/organisation.*$/');
+
+    }
+
+    public function iAmOnOrgSettingsEditAnotherUserPage()
+    {
+        return $this->iAmOnPage('/org\/settings\/organisation\/.*\/edit\/.*.*$/', );
+    }
 }

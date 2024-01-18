@@ -700,9 +700,9 @@ trait UserManagementTrait
     public function iShouldBeAbleToAddANewUserToTheOrganisation()
     {
         $newUser = [
-            'firstName' => 'NewUserFirstName',
-            'lastName' => 'NewUserLastName',
-            'email' => 'newOrgUser@test.com'
+            'firstName' => $this->faker->firstName(),
+            'lastName' => $this->faker->lastName(),
+            'email' => $this->faker->email()
             ];
         
         $this->fillField('organisation_member_firstname', $newUser['firstName']);
@@ -718,42 +718,38 @@ trait UserManagementTrait
         $this->assertElementContainsText('table', $newUser['email']);
     }
 
+    
     /**
      * @Then /^I attempt to remove an org user$/
      */
     public function iAttemptToRemoveAnOrgUser()
     {
+        $orgUsersArray = $this->getAllOrgUsers()['users'];
 
-        $loggedInUserName = $this->loggedInUserDetails->getUserFullName();
-        $orgUsersArray = $this->getAllOrgUsers();
-
-        $orgUserToBeDeleted = '';
+        $orgUserToBeDeletedEmail = '';
 
         foreach($orgUsersArray as $orgUser)
         {
             if($orgUser !== $this->loggedInUserDetails->getUserEmail())
             {
-                $orgUserToBeDeleted = $this->em->getRepository(User::class)->find($orgUser['id'])->getId();
+                $orgUserToBeDeletedEmail = $this->em->getRepository(User::class)->find($orgUser['id'])->getEmail();
             }
         }
         
-        $userToBeDeletedFullName = $this->em->getRepository(User::class)->findOneBy(['id' => $orgUserToBeDeleted])->getFullName();
-        
-        // assert that both users are present
-        $this->assertElementContainsText('table', $loggedInUserName);
-        $this->assertElementContainsText('table', $userToBeDeletedFullName);
+        $this->assertElementContainsText('table', $orgUserToBeDeletedEmail);
   
+        //user with admin permissions can only remove other users, they can't remove themselves on this page
         $this->clickLink('Remove');
         $this->pressButton('Yes, remove user from this organisation');
-        
     }
+    
     
     /**
      * @Then /^the the user should be deleted$/
      */
     public function theTheUserShouldBeDeleted()
     {
-        $orgUsersArray = $this->getAllOrgUsers();
+        $orgUsersArray = $this->getAllOrgUsers()['users'];
         
         $xpath = '//tr[contains(@class, "govuk-table__row behat")]';
         
@@ -772,34 +768,100 @@ trait UserManagementTrait
         $this->assertIntEqualsInt($expectedOrgUsers, count($orgUsersArray), 'Only one user now exists in the organisation');
     }
 
+    
     /**
-     * @Then /^I can view the other org user but I can't delete them$/
+     * @Then /^I can view the other org user but I cannot \'([^\']*)\' them$/
      */
-    public function iCanViewTheOtherOrgUserButICanTDeleteThem()
+    public function iCanViewTheOtherOrgUserButICannotThem($arg1)
     {
-        $orgUsersArray = $this->getAllOrgUsers();
-        $otherOrgUser = '';
+        $orgIdAndUsersArray = $this->getAllOrgUsers();
 
-        foreach($orgUsersArray as $orgUser)
+        $otherOrgUserDetails = [];
+
+        foreach($orgIdAndUsersArray['users'] as $orgUser)
         {
             if($orgUser !== $this->loggedInUserDetails->getUserEmail())
             {
-                $otherOrgUser = $this->em->getRepository(User::class)->find($orgUser['id'])->getEmail();
+                $otherOrgUserDetails[] = $orgUser['id'];
+                $otherOrgUserDetails[] = $orgUser['email'];
             }
         }
         
-        $this->assertElementContainsText('table', $otherOrgUser);
-        $this->assertElementNotContainsText('table', 'Remove');
+        $this->assertElementContainsText('table', $otherOrgUserDetails[1]);
+
+        $xpathLocator = sprintf(
+            "//a[contains(@href,'/org/settings/organisation/%s/delete-user/%s')]",
+            $orgIdAndUsersArray['id'],
+            $otherOrgUserDetails[0]
+        );
+
+        !$this->getSession()->getPage()->find('xpath', $xpathLocator);
+        $this->assertElementNotContainsText('table', '$arg1');
+    }
+
+    
+    /**
+     * @Given /^I click to edit the other org user$/
+     */
+    public function iClickToEditTheOtherOrgUser()
+    {
+        // identify the id of the user to be edited
+        $orgIdAndUsersArray = $this->getAllOrgUsers();
+
+        $orgUserIdToBeEdited = '';
+
+        foreach($orgIdAndUsersArray['users'] as $orgUser)
+        {
+            if($orgUser !== $this->loggedInUserDetails->getUserEmail())
+            {
+                $orgUserIdToBeEdited = $orgUser['id'];
+            }
+        }
+        
+        $xpathLocator = sprintf(
+            "//a[contains(@href,'/org/settings/organisation/%s/edit/%s')]",
+            $orgIdAndUsersArray['id'],
+            $orgUserIdToBeEdited
+        );
+        
+        $this->getSession()->getPage()->find('xpath', $xpathLocator)->click();
     }
 
     private function getAllOrgUsers()
     {
         $orgEmailIdentifier = $this->loggedInUserDetails->getOrganisationEmailIdentifier();
 
+        $orgUsersArray = [];
+
         $orgId = $this->em->getRepository(Organisation::class)->findByEmailIdentifier($orgEmailIdentifier)->getId();
 
-        return $this->em->getRepository(Organisation::class)->findArrayById($orgId)['users'];
+        $orgUsersArray['id'] = $orgId;
+
+        $orgUsersArray['users'] = $this->em->getRepository(Organisation::class)->findArrayById($orgId)['users'];
+
+        return $orgUsersArray;
+    }
+    
+    
+    /**
+     * @When /^I edit the users account details$/
+     */
+    public function iEditTheUsersAccountDetails()
+    {
+        $this->iAmonOrgSettingsEditAnotherUserPage();
+        $this->fillInField('organisation_member[firstname]', $this->faker->lastName(),'firstname');
+        $this->pressButton('Save');
     }
 
+    
+    /**
+     * @Then /^then the user should be updated$/
+     */
+    public function thenTheUserShouldBeUpdated()
+    {
+        $this->iAmOnOrgUserAccountsPage();
+        
+        $this->assertOnAlertMessage('The user has been edited');
+    }
 
 }

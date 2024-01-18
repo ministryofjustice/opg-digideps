@@ -414,9 +414,9 @@ trait IVisitFrontendTrait
     }
 
     /**
-     * @Given /^I visit the organisation settings page for the logged in user$/
+     * @Given /^I visit the organisation settings user account page for the logged in user$/
      */
-    public function iVisitTheOrganisationSettingsPageForTheLoggedInUser()
+    public function iVisitTheOrganisationSettingsUserAccountsPageForTheLoggedInUser()
     {
         $emailIdentifier = $this->loggedInUserDetails->getOrganisationEmailIdentifier();
         $organisation = $this->em->getRepository(Organisation::class)->findOneBy(['emailIdentifier' => $emailIdentifier]);
@@ -425,6 +425,6 @@ trait IVisitFrontendTrait
             throw new BehatException(sprintf('Could not find an organisation with email identifier "%s"', $emailIdentifier));
         }
 
-        $this->visitFrontendPath($this->getOrgSettingsUrl(strval($organisation->getId())));
+        $this->visitFrontendPath($this->getOrgSettingsUserAccountUrl(strval($organisation->getId())));
     }
 }
