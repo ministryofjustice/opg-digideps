@@ -13,7 +13,7 @@ resource "aws_cloud9_environment_ec2" "shared" {
   image_id                    = "amazonlinux-2-x86_64"
   description                 = "Shared Cloud9 instance to be used by all devs"
   subnet_id                   = aws_subnet.public[0].id
-  owner_arn                   = "arn:aws:iam::${var.account.account_id}:assumed-role/operator/${nonsensitive(local.cloud9_owner_from_secret)}"
+  owner_arn                   = "arn:aws:iam::${var.account.account_id}:assumed-role/${nonsensitive(local.cloud9_owner_from_secret)}/${nonsensitive(local.cloud9_owner_from_secret)}"
   tags                        = var.default_tags
 }
 
