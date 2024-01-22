@@ -8,11 +8,11 @@ resource "aws_sns_topic" "alerts" {
 
 resource "aws_sns_topic" "availability-alert" {
   provider     = aws.global
-  name         = "availability-alert"
+  name         = "availability-alert-${local.current_main_region}"
   display_name = "${var.default_tags["application"]} ${var.default_tags["environment-name"]} Availability Alert"
   tags = merge(
     var.default_tags,
-    { Name = "availability-alert-${var.account.name}" },
+    { Name = "availability-alert-${var.account.name}-${local.current_main_region}" },
   )
 }
 
