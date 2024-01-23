@@ -45,10 +45,11 @@ jobs:
           echo ${build_identifier}
       - name: generate semver tag and release
         id: semver_tag
-        uses: ministryofjustice/opg-github-actions/.github/actions/semver-tag@v2.5.0
+        uses: ministryofjustice/opg-github-actions/.github/actions/semver-tag@v2.7.3
         with:
           prerelease: true
           github_token: ${{ secrets.GITHUB_TOKEN }}
+          default_bump: "minor"
       - uses: actions/labeler@main
         if: github.event_name == 'pull_request'
         with:

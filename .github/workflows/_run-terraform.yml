@@ -47,7 +47,7 @@ jobs:
 
       - id: terraform_version
         name: get terraform version
-        uses: ministryofjustice/opg-github-actions/.github/actions/terraform-version@v2.5.0
+        uses: ministryofjustice/opg-github-actions/.github/actions/terraform-version@v2.7.3
         with:
           terraform_directory: terraform/${{ inputs.terraform_path }}
 
@@ -57,7 +57,7 @@ jobs:
           terraform_wrapper: false
 
       - name: configure AWS credentials for terraform
-        uses: aws-actions/configure-aws-credentials@dca38186811c8a0dd295aa416daa974a40eeb950 # pin@v1.7.0
+        uses: aws-actions/configure-aws-credentials@2119c3b07593cce0acbcee3240f1787eebcf4697 # pin@v1.7.0
         with:
           aws-access-key-id: ${{ secrets.AWS_ACCESS_KEY_ID_ACTIONS }}
           aws-secret-access-key: ${{ secrets.AWS_SECRET_ACCESS_KEY_ACTIONS }}
@@ -72,7 +72,7 @@ jobs:
       - name: build redeployer
         if: inputs.terraform_path == 'account'
         run: GOARCH=amd64 GOOS=linux go build -o bootstrap ./main.go
-        working-directory: terraform/account/go_redeployer
+        working-directory: terraform/account/region/go_redeployer
 
       - name: terraform init for account
         if: inputs.terraform_path == 'account'
@@ -98,7 +98,7 @@ jobs:
       - id: terraform_workspace
         if: inputs.apply == 'true' && inputs.terraform_path == 'environment' && inputs.path_to_live == 'false'
         name: register workspace
-        uses: ministryofjustice/opg-github-actions/.github/actions/terraform-workspace-manager@v2.5.0
+        uses: ministryofjustice/opg-github-actions/.github/actions/terraform-workspace-manager@v2.7.3
         with:
           aws_access_key_id: ${{ secrets.AWS_ACCESS_KEY_ID }}
           aws_secret_access_key: ${{ secrets.AWS_SECRET_ACCESS_KEY }}

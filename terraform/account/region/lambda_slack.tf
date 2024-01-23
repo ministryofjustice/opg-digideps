@@ -2,6 +2,7 @@ locals {
   slack_lambda_function_name = "slack-notifier"
 }
 
+# INFO - Lambda used to manage all our slack notifications
 resource "aws_lambda_function" "slack_lambda" {
   filename      = data.archive_file.slack_zip.output_path
   function_name = local.slack_lambda_function_name
@@ -17,8 +18,8 @@ resource "aws_lambda_function" "slack_lambda" {
 
   source_code_hash = filebase64sha256(data.archive_file.slack_zip.output_path)
   tags = merge(
-    local.default_tags,
-    { Name = "slack-${local.account.name}" },
+    var.default_tags,
+    { Name = "slack-${var.account.name}" },
   )
 }
 
@@ -27,15 +28,15 @@ resource "aws_cloudwatch_log_group" "slack_lambda" {
   retention_in_days = 14
   kms_key_id        = aws_kms_key.cloudwatch_logs.arn
   tags = merge(
-    local.default_tags,
-    { Name = "${local.account.name}-slack-log-group" },
+    var.default_tags,
+    { Name = "${var.account.name}-slack-log-group" },
   )
 }
 
 resource "aws_iam_role" "lambda_slack" {
   assume_role_policy = data.aws_iam_policy_document.lambda_slack_policy.json
   name               = "lambda_slack"
-  tags               = local.default_tags
+  tags               = var.default_tags
 }
 
 data "aws_iam_policy_document" "lambda_slack_policy" {
@@ -158,12 +159,6 @@ resource "aws_lambda_permission" "scheduled_checks" {
   }
 }
 
-resource "aws_sns_topic_subscription" "subscription" {
-  endpoint  = aws_lambda_function.slack_lambda.arn
-  protocol  = "lambda"
-  topic_arn = aws_sns_topic.alerts.arn
-}
-
 resource "aws_lambda_permission" "sns_availability" {
   action        = "lambda:InvokeFunction"
   function_name = aws_lambda_function.slack_lambda.function_name
@@ -174,12 +169,4 @@ resource "aws_lambda_permission" "sns_availability" {
       aws_lambda_function.slack_lambda
     ]
   }
-}
-
-resource "aws_sns_topic_subscription" "subscription_availability" {
-  provider = aws.us-east-1
-
-  endpoint  = aws_lambda_function.slack_lambda.arn
-  protocol  = "lambda"
-  topic_arn = aws_sns_topic.availability-alert.arn
 }
