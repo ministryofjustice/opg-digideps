@@ -75,8 +75,13 @@ class SatisfactionController extends RestController
             'reportType' => 'notEmpty',
         ]);
 
-        $report = $this->reportRepository->find($data['reportId']);
-        $satisfaction = $this->satisfactionRepository->findOneBy(['report' => $report]);
+        if ('ndr' === $data['reportType']) {
+            $ndr = $this->ndrRepository->find($data['ndrId']);
+            $satisfaction = $this->satisfactionRepository->findOneBy(['ndr' => $ndr]);
+        } else {
+            $report = $this->reportRepository->find($data['reportId']);
+            $satisfaction = $this->satisfactionRepository->findOneBy(['report' => $report]);
+        }
 
         if ($satisfaction) {
             $satisfaction = $this->updateSatisfactionScore($satisfaction, $data['score'], $data['comments']);
@@ -85,10 +90,8 @@ class SatisfactionController extends RestController
         }
 
         if ('ndr' === $data['reportType']) {
-            $ndr = $this->ndrRepository->find($data['ndrId']);
             $satisfaction->setNdr($ndr);
         } else {
-            $report = $this->reportRepository->find($data['reportId']);
             $satisfaction->setReport($report);
         }
 
