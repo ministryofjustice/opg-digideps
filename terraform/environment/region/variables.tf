@@ -1,20 +1,20 @@
 variable "default_tags" {
-  type = any
+  type        = any
   description = "The default tags to use"
 }
 
 variable "account" {
-  type = any
+  type        = any
   description = "The account map"
 }
 
 variable "default_role" {
-  type = string
+  type        = string
   description = "The default role to use"
 }
 
 variable "secrets_prefix" {
-  type = string
+  type        = string
   description = "The account map"
 }
 
@@ -31,11 +31,11 @@ locals {
 
   route53_healthchecker_ips = data.aws_ip_ranges.route53_healthchecks_ips.cidr_blocks
 
-  environment    = lower(terraform.workspace)
+  environment = lower(terraform.workspace)
 
   sirius_environment = var.account["sirius_environment"]
 
-  subdomain               = var.account["subdomain_enabled"] ? local.environment : ""
+  subdomain = var.account["subdomain_enabled"] ? local.environment : ""
 
   openapi_mock_version = "v0.3.3"
 
