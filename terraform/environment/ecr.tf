@@ -33,3 +33,8 @@ data "aws_ecr_repository" "images" {
   name     = "digideps/${each.key}"
   provider = aws.management
 }
+
+data "aws_ecr_repository" "deputy_reporting" {
+  provider = aws.management
+  name     = "integrations/deputy-reporting-lambda"
+}

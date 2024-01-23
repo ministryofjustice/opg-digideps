@@ -60,21 +60,10 @@ module "allow_list" {
 }
 
 locals {
-  project = "digideps"
-
-  default_allow_list = concat(module.allow_list.moj_sites, formatlist("%s/32", data.aws_nat_gateway.nat[*].public_ip))
-  admin_allow_list   = length(local.account["admin_allow_list"]) > 0 ? local.account["admin_allow_list"] : local.default_allow_list
-  front_allow_list   = length(local.account["front_allow_list"]) > 0 ? local.account["front_allow_list"] : local.default_allow_list
-
-  route53_healthchecker_ips = data.aws_ip_ranges.route53_healthchecks_ips.cidr_blocks
-
   account        = contains(keys(var.accounts), local.environment) ? var.accounts[local.environment] : var.accounts["default"]
   secrets_prefix = contains(keys(var.accounts), local.environment) ? local.environment : "default"
   environment    = lower(terraform.workspace)
 
-  sirius_environment = local.account["sirius_environment"]
-
-  subdomain               = local.account["subdomain_enabled"] ? local.environment : ""
   backup_account_id       = "238302996107"
   cross_account_role_name = "cross-acc-db-backup.digideps-production"
 
@@ -85,20 +74,5 @@ locals {
     owner                  = "OPG Supervision"
     infrastructure-support = "OPG WebOps: opgteam@digital.justice.gov.uk"
     is-production          = local.account.is_production
-  }
-
-  openapi_mock_version = "v0.3.3"
-
-  capacity_provider = local.account.fargate_spot ? "FARGATE_SPOT" : "FARGATE"
-}
-
-data "terraform_remote_state" "shared" {
-  backend   = "s3"
-  workspace = local.account.state_source
-  config = {
-    bucket   = "opg.terraform.state"
-    key      = "digideps-infrastructure-shared/terraform.tfstate"
-    region   = "eu-west-1"
-    role_arn = "arn:aws:iam::311462405659:role/${var.DEFAULT_ROLE}"
   }
 }
