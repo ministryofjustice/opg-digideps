@@ -29,8 +29,8 @@ resource "aws_cloudwatch_metric_alarm" "php_critical_errors" {
   period              = 60
   namespace           = aws_cloudwatch_log_metric_filter.php_critical_errors.metric_transformation[0].namespace
   alarm_actions       = [data.aws_sns_topic.alerts.arn]
-  actions_enabled     = local.account.alarms_active
-  tags                = local.default_tags
+  actions_enabled     = var.account.alarms_active
+  tags                = var.default_tags
 }
 
 resource "aws_cloudwatch_log_metric_filter" "php_errors" {
@@ -57,8 +57,8 @@ resource "aws_cloudwatch_metric_alarm" "php_errors" {
   period              = 60
   namespace           = aws_cloudwatch_log_metric_filter.php_errors.metric_transformation[0].namespace
   alarm_actions       = [data.aws_sns_topic.alerts.arn]
-  actions_enabled     = local.account.alarms_active
-  tags                = local.default_tags
+  actions_enabled     = var.account.alarms_active
+  tags                = var.default_tags
 }
 
 # ========== Log response status alarms ==========
@@ -88,8 +88,8 @@ resource "aws_cloudwatch_metric_alarm" "frontend_5xx_errors" {
   treat_missing_data  = "notBreaching"
   namespace           = aws_cloudwatch_log_metric_filter.frontend_5xx_errors.metric_transformation[0].namespace
   alarm_actions       = [data.aws_sns_topic.alerts.arn]
-  actions_enabled     = local.account.alarms_active
-  tags                = local.default_tags
+  actions_enabled     = var.account.alarms_active
+  tags                = var.default_tags
 }
 
 resource "aws_cloudwatch_log_metric_filter" "admin_5xx_errors" {
@@ -117,8 +117,8 @@ resource "aws_cloudwatch_metric_alarm" "admin_5xx_errors" {
   treat_missing_data  = "notBreaching"
   namespace           = aws_cloudwatch_log_metric_filter.admin_5xx_errors.metric_transformation[0].namespace
   alarm_actions       = [data.aws_sns_topic.alerts.arn]
-  actions_enabled     = local.account.alarms_active
-  tags                = local.default_tags
+  actions_enabled     = var.account.alarms_active
+  tags                = var.default_tags
 }
 
 resource "aws_cloudwatch_log_metric_filter" "api_5xx_errors" {
@@ -146,8 +146,8 @@ resource "aws_cloudwatch_metric_alarm" "api_5xx_errors" {
   treat_missing_data  = "notBreaching"
   namespace           = aws_cloudwatch_log_metric_filter.api_5xx_errors.metric_transformation[0].namespace
   alarm_actions       = [data.aws_sns_topic.alerts.arn]
-  actions_enabled     = local.account.alarms_active
-  tags                = local.default_tags
+  actions_enabled     = var.account.alarms_active
+  tags                = var.default_tags
 }
 
 # ========== Load balancer status response alarms ==========
@@ -155,7 +155,7 @@ resource "aws_cloudwatch_metric_alarm" "api_5xx_errors" {
 resource "aws_cloudwatch_metric_alarm" "frontend_alb_5xx_errors" {
   alarm_name          = "${local.environment}-frontend-alb-5xx-errors"
   alarm_description   = "Number of 5XX Errors returned to Public Users from the ${local.environment} Frontend ALB."
-  actions_enabled     = local.account.alarms_active
+  actions_enabled     = var.account.alarms_active
   alarm_actions       = [data.aws_sns_topic.alerts.arn]
   comparison_operator = "GreaterThanThreshold"
   dimensions = {
@@ -168,14 +168,14 @@ resource "aws_cloudwatch_metric_alarm" "frontend_alb_5xx_errors" {
   metric_name         = "HTTPCode_Target_5XX_Count"
   namespace           = "AWS/ApplicationELB"
   statistic           = "Sum"
-  tags                = local.default_tags
+  tags                = var.default_tags
   treat_missing_data  = "notBreaching"
 }
 
 resource "aws_cloudwatch_metric_alarm" "admin_alb_5xx_errors" {
   alarm_name          = "${local.environment}-admin-alb-5xx-errors"
   alarm_description   = "Number of 5XX Errors returned to Internal Users from the ${local.environment} Admin ALB."
-  actions_enabled     = local.account.alarms_active
+  actions_enabled     = var.account.alarms_active
   alarm_actions       = [data.aws_sns_topic.alerts.arn]
   comparison_operator = "GreaterThanThreshold"
   dimensions = {
@@ -186,78 +186,9 @@ resource "aws_cloudwatch_metric_alarm" "admin_alb_5xx_errors" {
   namespace          = "AWS/ApplicationELB"
   period             = 3600
   statistic          = "Sum"
-  tags               = local.default_tags
+  tags               = var.default_tags
   threshold          = 3
   treat_missing_data = "notBreaching"
-}
-
-# ========== Healthcheck related Alarms ==========
-
-data "aws_sns_topic" "availability_alert" {
-  provider = aws.us-east-1
-  name     = "availability-alert"
-}
-
-resource "aws_route53_health_check" "availability_front" {
-  fqdn              = aws_route53_record.front.fqdn
-  resource_path     = "/health-check"
-  port              = 443
-  type              = "HTTPS"
-  failure_threshold = 1
-  request_interval  = 30
-  measure_latency   = true
-  tags              = merge(local.default_tags, { Name = "availability-front" }, )
-}
-
-resource "aws_cloudwatch_metric_alarm" "availability_front" {
-  provider            = aws.us-east-1
-  alarm_name          = "${local.environment}-availability-front"
-  statistic           = "Minimum"
-  metric_name         = "HealthCheckStatus"
-  comparison_operator = "LessThanThreshold"
-  datapoints_to_alarm = 3
-  threshold           = 1
-  period              = 60
-  evaluation_periods  = 3
-  namespace           = "AWS/Route53"
-  alarm_actions       = [data.aws_sns_topic.availability_alert.arn]
-  actions_enabled     = local.account.alarms_active
-  tags                = local.default_tags
-
-  dimensions = {
-    HealthCheckId = aws_route53_health_check.availability_front.id
-  }
-}
-
-resource "aws_route53_health_check" "availability_admin" {
-  fqdn              = aws_route53_record.admin.fqdn
-  resource_path     = "/health-check"
-  port              = 443
-  type              = "HTTPS"
-  failure_threshold = 1
-  request_interval  = 30
-  measure_latency   = true
-  tags              = merge(local.default_tags, { Name = "availability-admin" }, )
-}
-
-resource "aws_cloudwatch_metric_alarm" "availability_admin" {
-  provider            = aws.us-east-1
-  alarm_name          = "${local.environment}-availability-admin"
-  statistic           = "Minimum"
-  metric_name         = "HealthCheckStatus"
-  comparison_operator = "LessThanThreshold"
-  datapoints_to_alarm = 3
-  threshold           = 1
-  period              = 60
-  evaluation_periods  = 3
-  namespace           = "AWS/Route53"
-  alarm_actions       = [data.aws_sns_topic.availability_alert.arn]
-  actions_enabled     = local.account.alarms_active
-  tags                = local.default_tags
-
-  dimensions = {
-    HealthCheckId = aws_route53_health_check.availability_admin.id
-  }
 }
 
 # ========== Response time alarms ==========
@@ -265,7 +196,7 @@ resource "aws_cloudwatch_metric_alarm" "availability_admin" {
 resource "aws_cloudwatch_metric_alarm" "frontend_alb_average_response_time" {
   alarm_name          = "${local.environment}-frontend-alb-response-time"
   alarm_description   = "Response Time for Frontend ALB in ${local.environment}"
-  actions_enabled     = local.account.alarms_active
+  actions_enabled     = var.account.alarms_active
   alarm_actions       = [data.aws_sns_topic.alerts.arn]
   comparison_operator = "GreaterThanThreshold"
   dimensions = {
@@ -280,7 +211,7 @@ resource "aws_cloudwatch_metric_alarm" "frontend_alb_average_response_time" {
   statistic                 = "Average"
   insufficient_data_actions = []
   treat_missing_data        = "notBreaching"
-  tags                      = local.default_tags
+  tags                      = var.default_tags
 }
 
 resource "aws_cloudwatch_log_metric_filter" "pre_registration_add_in_progress" {
@@ -306,7 +237,7 @@ resource "aws_cloudwatch_metric_alarm" "admin_alb_average_response_time" {
   threshold                 = 1
   insufficient_data_actions = []
   treat_missing_data        = "notBreaching"
-  tags                      = local.default_tags
+  tags                      = var.default_tags
 
   metric_query {
     id          = "real_long_response"
@@ -444,8 +375,8 @@ resource "aws_cloudwatch_metric_alarm" "document_queued_more_than_hour" {
   treat_missing_data  = "notBreaching"
   namespace           = aws_cloudwatch_log_metric_filter.document_queued_more_than_hour.metric_transformation[0].namespace
   alarm_actions       = [data.aws_sns_topic.alerts.arn]
-  actions_enabled     = local.account.alarms_active
-  tags                = local.default_tags
+  actions_enabled     = var.account.alarms_active
+  tags                = var.default_tags
 }
 
 resource "aws_cloudwatch_metric_alarm" "document_progress_more_than_hour" {
@@ -459,8 +390,8 @@ resource "aws_cloudwatch_metric_alarm" "document_progress_more_than_hour" {
   treat_missing_data  = "notBreaching"
   namespace           = aws_cloudwatch_log_metric_filter.document_in_progress_more_than_hour.metric_transformation[0].namespace
   alarm_actions       = [data.aws_sns_topic.alerts.arn]
-  actions_enabled     = local.account.alarms_active
-  tags                = local.default_tags
+  actions_enabled     = var.account.alarms_active
+  tags                = var.default_tags
 }
 
 resource "aws_cloudwatch_metric_alarm" "document_temporary_error" {
@@ -474,8 +405,8 @@ resource "aws_cloudwatch_metric_alarm" "document_temporary_error" {
   treat_missing_data  = "notBreaching"
   namespace           = aws_cloudwatch_log_metric_filter.document_temporary_error.metric_transformation[0].namespace
   alarm_actions       = [data.aws_sns_topic.alerts.arn]
-  actions_enabled     = local.account.alarms_active
-  tags                = local.default_tags
+  actions_enabled     = var.account.alarms_active
+  tags                = var.default_tags
 }
 
 resource "aws_cloudwatch_metric_alarm" "document_permanent_error" {
@@ -489,6 +420,6 @@ resource "aws_cloudwatch_metric_alarm" "document_permanent_error" {
   treat_missing_data  = "notBreaching"
   namespace           = aws_cloudwatch_log_metric_filter.document_permanent_error.metric_transformation[0].namespace
   alarm_actions       = [data.aws_sns_topic.alerts.arn]
-  actions_enabled     = local.account.alarms_active
-  tags                = local.default_tags
+  actions_enabled     = var.account.alarms_active
+  tags                = var.default_tags
 }

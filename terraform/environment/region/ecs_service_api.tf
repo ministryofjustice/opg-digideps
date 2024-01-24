@@ -133,14 +133,14 @@ locals {
       environment = [
         {
           name  = "ADMIN_HOST",
-          value = "https://${aws_route53_record.admin.fqdn}"
+          value = "https://${var.admin_fqdn}"
         },
         {
           name  = "FRONTEND_HOST",
-          value = "https://${aws_route53_record.front.fqdn}"
+          value = "https://${var.front_fqdn}"
         },
         { name  = "JWT_HOST",
-          value = "https://${aws_route53_record.front.fqdn}"
+          value = "https://${var.front_fqdn}"
         },
         {
           name  = "AUDIT_LOG_GROUP_NAME",
@@ -180,7 +180,7 @@ locals {
         },
         {
           name  = "OPG_DOCKER_TAG",
-          value = var.OPG_DOCKER_TAG
+          value = var.docker_tag
         },
         {
           name  = "PARAMETER_PREFIX",
@@ -192,7 +192,7 @@ locals {
         },
         {
           name  = "SECRETS_PREFIX",
-          value = join("", [local.secrets_prefix, "/"])
+          value = join("", [var.secrets_prefix, "/"])
         },
         {
           name  = "WORKSPACE",
