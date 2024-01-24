@@ -22,12 +22,15 @@ use phpDocumentor\Reflection\Types\This;
  *
  * @ORM\Table(name="report",
  *     indexes={
+ *
  *     @ORM\Index(name="end_date_idx", columns={"end_date"}),
  *     @ORM\Index(name="submit_date_idx", columns={"submit_date"}),
  *     @ORM\Index(name="submitted_idx", columns={"submitted"}),
  *     @ORM\Index(name="report_status_cached_idx", columns={"report_status_cached"})
  *  })
+ *
  * @ORM\Entity(repositoryClass="App\Repository\ReportRepository")
+ *
  * @ORM\HasLifecycleCallbacks()
  */
 class Report implements ReportInterface
@@ -210,10 +213,15 @@ class Report implements ReportInterface
      * @var int
      *
      * @JMS\Groups({"report", "report-id"})
+     *
      * @JMS\Type("integer")
+     *
      * @ORM\Column(name="id", type="integer", nullable=false)
+     *
      * @ORM\Id
+     *
      * @ORM\GeneratedValue(strategy="IDENTITY")
+     *
      * @ORM\SequenceGenerator(sequenceName="report_id_seq", allocationSize=1, initialValue=1)
      */
     private $id;
@@ -222,7 +230,9 @@ class Report implements ReportInterface
      * @var string TYPE_ constants
      *
      * @JMS\Groups({"report", "report-type"})
+     *
      * @JMS\Type("string")
+     *
      * @ORM\Column(name="type", type="string", length=10, nullable=false)
      */
     private $type;
@@ -231,8 +241,11 @@ class Report implements ReportInterface
      * @var int
      *
      * @JMS\Groups({"report-client"})
+     *
      * @JMS\Type("App\Entity\Client")
+     *
      * @ORM\ManyToOne(targetEntity="App\Entity\Client", inversedBy="reports")
+     *
      * @ORM\JoinColumn(name="client_id", referencedColumnName="id", onDelete="CASCADE")
      */
     private $client;
@@ -241,7 +254,9 @@ class Report implements ReportInterface
      * @var VisitsCare
      *
      * @JMS\Groups({"visits-care"})
+     *
      * @JMS\Type("App\Entity\Report\VisitsCare")
+     *
      * @ORM\OneToOne(targetEntity="App\Entity\Report\VisitsCare", mappedBy="report", cascade={"persist", "remove"}, fetch="LAZY")
      **/
     private $visitsCare;
@@ -250,7 +265,9 @@ class Report implements ReportInterface
      * @var Lifestyle
      *
      * @JMS\Groups({"lifestyle"})
+     *
      * @JMS\Type("App\Entity\Report\Lifestyle")
+     *
      * @ORM\OneToOne(targetEntity="App\Entity\Report\Lifestyle", mappedBy="report", cascade={"persist", "remove"})
      **/
     private $lifestyle;
@@ -259,7 +276,9 @@ class Report implements ReportInterface
      * @var Action
      *
      * @JMS\Groups({"action"})
+     *
      * @JMS\Type("App\Entity\Report\Action")
+     *
      * @ORM\OneToOne(targetEntity="App\Entity\Report\Action", mappedBy="report", cascade={"persist", "remove"})
      **/
     private $action;
@@ -268,7 +287,9 @@ class Report implements ReportInterface
      * @var MentalCapacity
      *
      * @JMS\Groups({ "mental-capacity"})
+     *
      * @JMS\Type("App\Entity\Report\MentalCapacity")
+     *
      * @ORM\OneToOne(targetEntity="App\Entity\Report\MentalCapacity", mappedBy="report", cascade={"persist", "remove"})
      **/
     private $mentalCapacity;
@@ -277,7 +298,9 @@ class Report implements ReportInterface
      * @var ClientBenefitsCheck|null
      *
      * @JMS\Groups({"client-benefits-check"})
+     *
      * @JMS\Type("App\Entity\Report\ClientBenefitsCheck")
+     *
      * @ORM\OneToOne(targetEntity="App\Entity\Report\ClientBenefitsCheck", mappedBy="report", cascade={"persist", "remove"})
      **/
     private $clientBenefitsCheck;
@@ -286,7 +309,9 @@ class Report implements ReportInterface
      * @var \DateTime
      *
      * @JMS\Groups({"report", "report-period"})
+     *
      * @JMS\Type("DateTime<'Y-m-d'>")
+     *
      * @ORM\Column(name="start_date", type="date", nullable=true)
      */
     private $startDate;
@@ -295,7 +320,9 @@ class Report implements ReportInterface
      * @var \DateTime
      *
      * @JMS\Groups({"report", "report-period"})
+     *
      * @JMS\Type("DateTime<'Y-m-d'>")
+     *
      * @ORM\Column(name="due_date", type="date", nullable=true)
      */
     private $dueDate;
@@ -304,8 +331,11 @@ class Report implements ReportInterface
      * @var \DateTime
      *
      * @JMS\Groups({"report", "report-period"})
+     *
      * @JMS\Accessor(getter="getEndDate")
+     *
      * @JMS\Type("DateTime<'Y-m-d'>")
+     *
      * @ORM\Column(name="end_date", type="date", nullable=true)
      */
     private $endDate;
@@ -314,8 +344,11 @@ class Report implements ReportInterface
      * @var \DateTime
      *
      * @JMS\Groups({"report"})
+     *
      * @JMS\Accessor(getter="getSubmitDate")
+     *
      * @JMS\Type("DateTime")
+     *
      * @ORM\Column(name="submit_date", type="datetime", nullable=true)
      */
     private $submitDate;
@@ -324,8 +357,11 @@ class Report implements ReportInterface
      * @var \DateTime
      *
      * @JMS\Accessor(getter="getUnSubmitDate")
+     *
      * @JMS\Groups({"report"})
+     *
      * @JMS\Type("DateTime<'Y-m-d'>")
+     *
      * @ORM\Column(name="un_submit_date", type="datetime", nullable=true)
      */
     private $unSubmitDate;
@@ -334,7 +370,9 @@ class Report implements ReportInterface
      * @var bool whether the report is submitted or not
      *
      * @JMS\Groups({"report"})
+     *
      * @JMS\Type("boolean")
+     *
      * @ORM\Column(name="submitted", type="boolean", nullable=true)
      */
     private $submitted;
@@ -343,8 +381,11 @@ class Report implements ReportInterface
      * @var User
      *
      * @JMS\Groups({"report-submitted-by"})
+     *
      * @JMS\Type("App\Entity\User")
+     *
      * @ORM\ManyToOne(targetEntity="App\Entity\User")
+     *
      * @ORM\JoinColumn(name="submitted_by", referencedColumnName="id", onDelete="SET NULL")
      */
     private $submittedBy;
@@ -355,7 +396,9 @@ class Report implements ReportInterface
      * @var bool
      *
      * @JMS\Groups({"report"})
+     *
      * @JMS\Type("boolean")
+     *
      * @ORM\Column(name="report_seen", type="boolean", options={"default": true})
      */
     private $reportSeen;
@@ -364,7 +407,9 @@ class Report implements ReportInterface
      * @var string not_deputy|only_deputy|more_deputies_behalf|more_deputies_not_behalf
      *
      * @JMS\Type("string")
+     *
      * @JMS\Groups({"report"})
+     *
      * @ORM\Column(name="agreed_behalf_deputy", type="string", length=50, nullable=true)
      */
     private $agreedBehalfDeputy;
@@ -373,7 +418,9 @@ class Report implements ReportInterface
      * @var string required if agreedBehalfDeputy == more_deputies_not_behalf
      *
      * @JMS\Type("string")
+     *
      * @JMS\Groups({"report"})
+     *
      * @ORM\Column(name="agreed_behalf_deputy_explanation", type="text", nullable=true)
      */
     private $agreedBehalfDeputyExplanation;
@@ -382,15 +429,20 @@ class Report implements ReportInterface
      * @var ArrayCollection
      *
      * @JMS\Type("ArrayCollection<App\Entity\Report\Document>")
+     *
      * @JMS\Groups({"report-documents"})
+     *
      * @ORM\OneToMany(targetEntity="App\Entity\Report\Document", mappedBy="report", cascade={"persist", "remove"}, fetch="EXTRA_LAZY")
+     *
      * @ORM\OrderBy({"createdOn"="DESC"})
      */
     private $documents;
 
     /**
      * @JMS\Type("ArrayCollection<App\Entity\Report\ReportSubmission>")
+     *
      * @JMS\Groups({"document-sync"})
+     *
      * @ORM\OneToMany(targetEntity="App\Entity\Report\ReportSubmission", mappedBy="report", fetch="EXTRA_LAZY")
      */
     private $reportSubmissions;
@@ -399,7 +451,9 @@ class Report implements ReportInterface
      * @var string
      *
      * @JMS\Groups({"report", "wish-to-provide-documentation"})
+     *
      * @JMS\Type("string")
+     *
      * @ORM\Column(name="wish_to_provide_documentation", type="string", nullable=true)
      */
     private $wishToProvideDocumentation;
@@ -408,7 +462,9 @@ class Report implements ReportInterface
      * @var string yes/no
      *
      * @JMS\Type("string")
+     *
      * @JMS\Groups({"report", "current-prof-payments-received"})
+     *
      * @ORM\Column(name="current_prof_payments_received", type="string", nullable=true)
      */
     private $currentProfPaymentsReceived;
@@ -417,7 +473,9 @@ class Report implements ReportInterface
      * @var string yes/no
      *
      * @JMS\Type("string")
+     *
      * @JMS\Groups({"report", "report-prof-estimate-fees"})
+     *
      * @ORM\Column(name="previous_prof_fees_estimate_given", length=3, type="string", nullable=true)
      */
     private $previousProfFeesEstimateGiven;
@@ -426,7 +484,9 @@ class Report implements ReportInterface
      * @var string
      *
      * @JMS\Type("string")
+     *
      * @JMS\Groups({"report", "report-prof-estimate-fees"})
+     *
      * @ORM\Column(name="prof_fees_estimate_scco_reason", type="text", nullable=true)
      */
     private $profFeesEstimateSccoReason;
@@ -435,7 +495,9 @@ class Report implements ReportInterface
      * @var string yes | no (see constants)
      *
      * @JMS\Type("string")
+     *
      * @JMS\Groups({"report", "significantDecisionsMade"})
+     *
      * @ORM\Column(name="significant_decisions_made", type="text", nullable=true)
      */
     private $significantDecisionsMade;
@@ -444,7 +506,9 @@ class Report implements ReportInterface
      * @var array
      *
      * @JMS\Groups({"report"})
+     *
      * @ORM\Column(name="unsubmitted_sections_list", type="text", nullable=true)
+     *
      * @JMS\Type("string")
      */
     private $unsubmittedSectionsList;
@@ -453,7 +517,9 @@ class Report implements ReportInterface
      * @var Checklist
      *
      * @JMS\Groups({"report", "report-checklist"})
+     *
      * @JMS\Type("App\Entity\Report\Checklist")
+     *
      * @ORM\OneToOne(targetEntity="App\Entity\Report\Checklist", mappedBy="report", cascade={"persist", "remove"})
      */
     private $checklist;
@@ -462,14 +528,18 @@ class Report implements ReportInterface
      * @var ReviewChecklist
      *
      * @JMS\Groups({"report", "report-checklist"})
+     *
      * @JMS\Type("App\Entity\Report\ReviewChecklist")
+     *
      * @ORM\OneToOne(targetEntity="App\Entity\Report\ReviewChecklist", mappedBy="report", cascade={"persist", "remove"})
      */
     private $reviewChecklist;
 
     /**
      * @ORM\OneToOne(targetEntity="App\Entity\Satisfaction", mappedBy="report", cascade={"persist", "remove"})
+     *
      * @JMS\Type("App\Entity\Satisfaction")
+     *
      * @JMS\Groups({"user-research", "satisfaction"})
      */
     private Satisfaction $satisfaction;
@@ -478,8 +548,8 @@ class Report implements ReportInterface
      * @var string yes | no
      *
      * @JMS\Type("string")
-     * 
-     * @JMS\Groups({"report", "moneyInExist"})
+     *
+     * @JMS\Groups({"report", "doesMoneyInExist"})
      *
      * @ORM\Column(name="money_in_exists", type="text", nullable=true)
      */
@@ -489,9 +559,9 @@ class Report implements ReportInterface
      * @var string captures reason for no money in. Required if no money has gone in
      *
      * @JMS\Type("string")
-     * 
+     *
      * @JMS\Groups({"report", "reasonForNoMoneyIn"})
-     * 
+     *
      * @ORM\Column(name="reason_for_no_money_in", type="text", nullable=true)
      */
     private $reasonForNoMoneyIn;
@@ -500,8 +570,8 @@ class Report implements ReportInterface
      * @var string yes | no
      *
      * @JMS\Type("string")
-     * 
-     * @JMS\Groups({"report", "moneyOutExist"})
+     *
+     * @JMS\Groups({"report", "doesMoneyOutExist"})
      *
      * @ORM\Column(name="money_out_exists", type="text", nullable=true)
      */
@@ -511,7 +581,7 @@ class Report implements ReportInterface
      * @var string captures reason for no money out. Required if no money has gone out
      *
      * @JMS\Type("string")
-     * 
+     *
      * @JMS\Groups({"report", "reasonForNoMoneyOut"})
      *
      * @ORM\Column(name="reason_for_no_money_out", type="text", nullable=true)
@@ -630,7 +700,9 @@ class Report implements ReportInterface
      * Get sections based on the report type.
      *
      * @JMS\VirtualProperty
+     *
      * @JMS\Groups({"report", "report-sections"})
+     *
      * @JMS\Type("array")
      */
     public function getAvailableSections()
@@ -969,7 +1041,9 @@ class Report implements ReportInterface
 
     /**
      * @JMS\VirtualProperty
+     *
      * @JMS\SerializedName("is_due")
+     *
      * @JMS\Groups({"report"})
      */
     public function isDue()
@@ -1000,9 +1074,7 @@ class Report implements ReportInterface
      */
     public function isMissingMoneyOrAccountsOrClosingBalance()
     {
-        return !$this->hasMoneyIn()
-        || !$this->hasMoneyOut()
-        || !$this->hasAccounts()
+        return !$this->hasAccounts()
         || count($this->getBankAccountsIncomplete()) > 0;
     }
 
@@ -1016,8 +1088,11 @@ class Report implements ReportInterface
      * //TODO remove from mocks
      *
      * @JMS\VirtualProperty
+     *
      * @JMS\Type("boolean")
+     *
      * @JMS\SerializedName("has106flag")
+     *
      * @JMS\Groups({"report", "report-106-flag"})
      */
     public function has106Flag()
@@ -1037,7 +1112,9 @@ class Report implements ReportInterface
      * Unsubmitted Reports.
      *
      * @JMS\VirtualProperty
+     *
      * @JMS\SerializedName("unsubmitted_documents")
+     *
      * @JMS\Groups({"documents"})
      *
      * @return ArrayCollection|Document[]
@@ -1053,8 +1130,11 @@ class Report implements ReportInterface
      * Submitted reports.
      *
      * @JMS\VirtualProperty("submittedDocuments")
+     *
      * @JMS\SerializedName("submitted_documents")
+     *
      * @JMS\Groups({"documents"})
+     *
      * @JMS\Type("ArrayCollection<App\Entity\Report\Document>")
      *
      * @return ArrayCollection|Document[]
@@ -1243,8 +1323,11 @@ class Report implements ReportInterface
      * Previous report data. Just return id and type for second api call to allo new JMS groups.
      *
      * @JMS\VirtualProperty
+     *
      * @JMS\SerializedName("previous_report_data")
+     *
      * @JMS\Groups({"previous-report-data"})
+     *
      * @JMS\Type("array")
      *
      * @return array
@@ -1345,7 +1428,9 @@ class Report implements ReportInterface
      * for the translation keys (translations are in 'report' domain).
      *
      * @JMS\VirtualProperty
+     *
      * @JMS\Groups({"report"})
+     *
      * @JMS\Type("string")
      *
      * @return string
@@ -1561,7 +1646,7 @@ class Report implements ReportInterface
         return $this->moneyOutExists;
     }
 
-    public function setMoneyOutExists(string $moneyOutExists): self
+    public function setMoneyOutExists(?string $moneyOutExists): self
     {
         $this->moneyOutExists = $moneyOutExists;
 

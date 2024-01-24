@@ -2,6 +2,7 @@
 
 namespace App\Form\Report;
 
+use App\Entity\Report\Report;
 use Symfony\Component\Form\AbstractType;
 use Symfony\Component\Form\Extension\Core\Type as FormTypes;
 use Symfony\Component\Form\FormBuilderInterface;
@@ -13,10 +14,12 @@ class DoesMoneyOutExistType extends AbstractType
     public function buildForm(FormBuilderInterface $builder, array $options)
     {
         $builder
-            ->add('doesMoneyOutExist', FormTypes\ChoiceType::class, [
-                'choices' => ['Yes' => 'yes', 'No' => 'no'],
+            ->add('moneyOutExists', FormTypes\ChoiceType::class, [
+                'choices' => [
+                    'existPage.form.choices.yes' => Report::YES_MONEY_EXISTS,
+                    'existPage.form.choices.no' => Report::NO_MONEY_EXISTS
+                ],
                 'expanded' => true,
-                'mapped' => false,
                 'constraints' => [new Constraints\NotBlank(['message' => 'moneyOut.moneyOutChoice.notBlank', 'groups' => ['does-money-out-exist']])],
             ])
             ->add('save', FormTypes\SubmitType::class, ['label' => 'save.label']);
