@@ -87,6 +87,7 @@ class ReportSubmissionServiceTest extends TestCase
 
     /**
      * @test
+     *
      * @dataProvider lowOrNoAssetsReportTypeProvider
      */
     public function generateReportDocumentsWithoutTransactionCsv(string $reportType)
@@ -133,12 +134,14 @@ class ReportSubmissionServiceTest extends TestCase
 
     /**
      * @test
+     *
      * @dataProvider HighAssetsReportTypeProvider
      */
     public function generateReportDocumentsWithTransactionCsv(string $reportType)
     {
         $report = self::prophesize(Report::class);
         $report->getType()->willReturn($reportType);
+        $report->getGifts()->shouldBeCalled()->willReturn(['a gift']);
         $report->createAttachmentName('DigiRep-%s_%s_%s.pdf')->shouldBeCalled()->willReturn('reportFileName');
         $report->createAttachmentName('DigiRepTransactions-%s_%s_%s.csv')->shouldBeCalled()->willReturn('transactionCSVName');
 
@@ -221,7 +224,7 @@ class ReportSubmissionServiceTest extends TestCase
         $id = '123';
 
         $this->mockRestClient->shouldReceive('get')->once()->with(
-            "report-submission/${id}",
+            "report-submission/{$id}",
             'Report\\ReportSubmission'
         );
 

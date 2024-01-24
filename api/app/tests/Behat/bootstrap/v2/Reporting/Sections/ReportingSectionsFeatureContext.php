@@ -23,8 +23,8 @@ class ReportingSectionsFeatureContext extends BaseFeatureContext
     use DeputyExpensesSectionTrait;
     use GiftsSectionTrait;
     use HealthAndLifestyleTrait;
-    use MoneyInHighAssetsTrait;
-    use MoneyInLowAssetsTrait;
+    use MoneyInSectionTrait;
+    use MoneyInShortSectionTrait;
     use MoneyOutSectionTrait;
     use MoneyOutShortSectionTrait;
     use MoneyTransferSectionTrait;

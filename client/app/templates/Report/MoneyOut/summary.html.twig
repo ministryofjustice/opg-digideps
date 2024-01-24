@@ -46,16 +46,16 @@
                         {{ ('startPage.moneyOut.pageSectionDescription2' ~ app.user.getRoleForTrans ~ '.part2') | trans(transOptions) }}
                         {% if app.user.getRoleForTrans == '-PROF' %}
                         <a href="{{ path('prof_deputy_costs', {reportId: report.id}) }}">
-                        {% elseif app.user.getRoleForTrans == '-PA' %}
-                        <a href="{{ path('pa_fee_expense', {reportId: report.id}) }}">
-                        {% else %}
-                        <a href="{{ path('deputy_expenses', {reportId: report.id}) }}">
-                        {% endif %}
-                            {{ ('startPage.moneyOut.pageSectionDescription2' ~ app.user.getRoleForTrans ~ '.link2') | trans(transOptions) }}</a>,
-                        {{ ('startPage.moneyOut.pageSectionDescription2' ~ app.user.getRoleForTrans ~ '.part3') | trans(transOptions) }}
-                        <a href="{{ path('gifts', {reportId: report.id}) }}">
-                            {{ ('startPage.moneyOut.pageSectionDescription2' ~ app.user.getRoleForTrans ~ '.link3') | trans(transOptions) }}
-                        </a>
+                            {% elseif app.user.getRoleForTrans == '-PA' %}
+                            <a href="{{ path('pa_fee_expense', {reportId: report.id}) }}">
+                                {% else %}
+                                <a href="{{ path('deputy_expenses', {reportId: report.id}) }}">
+                                    {% endif %}
+                                    {{ ('startPage.moneyOut.pageSectionDescription2' ~ app.user.getRoleForTrans ~ '.link2') | trans(transOptions) }}</a>,
+                                {{ ('startPage.moneyOut.pageSectionDescription2' ~ app.user.getRoleForTrans ~ '.part3') | trans(transOptions) }}
+                                <a href="{{ path('gifts', {reportId: report.id}) }}">
+                                    {{ ('startPage.moneyOut.pageSectionDescription2' ~ app.user.getRoleForTrans ~ '.link3') | trans(transOptions) }}
+                                </a>
                     </p>
                     <p class="govuk-body">{{ 'startPage.moneyOut.pageSectionDescription3' | trans }}</p>
                     <h2 class="govuk-heading-s">{{ 'startPage.moneyOut.totalOrIndividualHeading' | trans }}</h2>
@@ -66,6 +66,15 @@
             {# Check answers text #}
             <h2 class="govuk-heading-s">{{ 'weHaveListed' | trans(transOptions, 'common') }}</h2>
             <p class="govuk-body">{{ 'checkCorrect' | trans(transOptions, 'common') }}</p>
+
+            {# Missing questions alerts #}
+            {% if status.moneyOutState.state != 'done' and comingFromLastStep%}
+                {{ macros.notification('notice', 'remindComplete' | trans(transOptions, 'common')) }}
+            {% endif %}
+
+            {% if status.moneyOutState.state != 'done' and not comingFromLastStep%}
+                {{ macros.notification('notice', 'canYouAnswer' | trans(transOptions, 'common')) }}
+            {% endif %}
         </div>
         <div class="column-third">
             {{ macros.relatedSections(report, 'moneyOut') }}

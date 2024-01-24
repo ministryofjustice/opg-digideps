@@ -48,6 +48,15 @@
             {# Check answers text #}
             <p class="govuk-body"><strong>{{ 'weHaveListed' | trans(transOptions, 'common') }}</strong></p>
             <p class="govuk-body">{{ 'checkCorrect' | trans(transOptions, 'common') }}</p>
+
+            {# Missing questions alerts #}
+            {% if status.moneyInState.state != 'done' and comingFromLastStep%}
+                {{ macros.notification('notice', 'remindComplete' | trans(transOptions, 'common')) }}
+            {% endif %}
+
+            {% if status.moneyInState.state != 'done' and not comingFromLastStep%}
+                {{ macros.notification('notice', 'canYouAnswer' | trans(transOptions, 'common')) }}
+            {% endif %}
         </div>
         <div class="govuk-grid-column-one-third">
             {{ macros.relatedSections(report, 'moneyIn') }}
