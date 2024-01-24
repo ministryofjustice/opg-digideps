@@ -321,7 +321,7 @@ trait IShouldBeOnFrontendTrait
      */
     public function iAmOnMoneyOutShortCategoryPage(): bool
     {
-        return $this->iAmOnPage(sprintf('/%s\/.*\/money-out-short\/category$/', $this->reportUrlPrefix));
+        return $this->iAmOnPage(sprintf('/%s\/.*\/money-out-short\/category.*$/', $this->reportUrlPrefix));
     }
 
     /**
@@ -786,5 +786,15 @@ trait IShouldBeOnFrontendTrait
     public function iAmOnDecisionsSummaryPage(): bool
     {
         return $this->iAmOnPage(sprintf('/%s\/.*\/decisions\/summary.*$/', $this->reportUrlPrefix));
+    }
+    
+    public function iAmOnNoMoneyInExistsPage(): bool
+    {
+        return $this->iAmOnPage(sprintf('/%s\/.*\/money-in\/no-money-in-exists?.*$/', $this->reportUrlPrefix));
+    }
+
+    public function iAmOnNoMoneyOutExistsPage(): bool
+    {
+        return $this->iAmOnPage(sprintf('/%s\/.*\/money-out\/no-money-out-exists?.*$/', $this->reportUrlPrefix));
     }
 }

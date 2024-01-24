@@ -163,6 +163,7 @@
                     description: true
                     } %}
                 {% endif %}
+                {{ dump(reportStatus.moneyInState) }}
                 {% if report.hasSection('moneyInShort') and report.hasSection('moneyOutShort') %}
                     {% include '@App/Report/Report/_subsection.html.twig' with {
                     transDomain: translationDomain,

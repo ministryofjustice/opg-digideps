@@ -6,7 +6,7 @@
 {% trans_default_domain translationDomain %}
 {% set transOptions = {'%client%': report.client.firstname | e } %}
 
-{% block htmlTitle %}{{ 'existPage.htmlTitle' | trans }}{% endblock %}
+{% block htmlTitle %}{{ 'existPage.moneyIn.htmlTitle' | trans }}{% endblock %}
 {% block pageHeader %}{% endblock %}
 
 {% block linkBack %}
@@ -17,12 +17,12 @@
 
     {{ form_start(form, {attr: {novalidate: 'novalidate' }}) }}
 
-    {{ form_checkbox_group(form.doesMoneyInExist, 'existPage.form.exist', {
+    {{ form_checkbox_group(form.moneyInExists, 'existPage.moneyIn.form', {
         'fieldSetClass' : 'govuk-radios--inline',
-        'legendText' : 'existPage.form.exist.label' | trans(transOptions, translationDomain),
+        'legendText' : 'existPage.moneyIn.form.exist.label' | trans(transOptions, translationDomain),
         legend: {
             isPageHeading: true,
-            caption: 'existPage.supportTitle' | trans
+            caption: 'existPage.moneyIn.supportTitle' | trans
         }
     }) }}
 

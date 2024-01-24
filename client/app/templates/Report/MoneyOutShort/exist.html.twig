@@ -17,9 +17,9 @@
 
     {{ form_start(form, {attr: {novalidate: 'novalidate' }}) }}
 
-    {{ form_checkbox_group(form.doesMoneyOutExist, 'existPage.form.moneyOutShort', {
+    {{ form_checkbox_group(form.moneyOutExists, 'existPage.moneyOut.form', {
         'fieldSetClass' : 'govuk-radios--inline',
-        'legendText' : 'existPage.form.moneyOutShort.label' | trans(transOptions, translationDomain),
+        'legendText' : 'existPage.moneyOut.form.exist.label' | trans(transOptions, translationDomain),
         legend: {
             isPageHeading: true,
             caption: 'existPage.moneyOut.supportTitle' | trans

@@ -6,7 +6,7 @@ namespace App\Tests\Behat\v2\Reporting\Sections;
 
 use Behat\Gherkin\Node\TableNode;
 
-trait MoneyInLowAssetsTrait
+trait MoneyInShortSectionTrait
 {
     private int $moneyOutPaymentCount = 0;
     private array $moneyInShortTypeDictionary = [
@@ -30,6 +30,15 @@ trait MoneyInLowAssetsTrait
     {
         $this->iVisitMoneyInShortSection();
         $this->pressButton('Start money in');
+    }
+
+    /**
+     * @Given /^I answer "([^"]*)" to adding money in on the clients behalf$/
+     */
+    public function iAnswerToAddingMoneyInOnTheClientsBehalf($arg1)
+    {
+        $this->chooseOption('does_money_in_exist[moneyInExists]', $arg1, 'moneyInExists');
+        $this->pressButton('Save and continue');
     }
 
     /**
@@ -139,8 +148,11 @@ trait MoneyInLowAssetsTrait
     {
         $this->iVisitMoneyInShortSummarySection();
         $this->iAmOnMoneyInShortSummaryPage();
-        $urlRegex = sprintf('/%s\/.*\/money-in-short\/oneOffPaymentsExist\?from\=summary$/', $this->reportUrlPrefix);
+        $urlRegex = sprintf('/%s\/.*\/money-in-short\/exist\?from\=summary$/', $this->reportUrlPrefix);
         $this->iClickOnNthElementBasedOnRegex($urlRegex, 0);
+
+        $this->iAnswerToAddingMoneyInOnTheClientsBehalf('Yes');
+        $this->iClickSaveAndContinue();
 
         $this->chooseOption('yes_no[moneyTransactionsShortInExist]', 'yes', 'one-off-payments');
         $this->iClickBasedOnAttributeTypeAndValue('button', 'id', 'yes_no_save');
@@ -160,8 +172,11 @@ trait MoneyInLowAssetsTrait
     {
         $this->iVisitMoneyInShortSummarySection();
         $this->iAmOnMoneyInShortSummaryPage();
-        $urlRegex = sprintf('/%s\/.*\/money-in-short\/oneOffPaymentsExist\?from\=summary$/', $this->reportUrlPrefix);
+        $urlRegex = sprintf('/%s\/.*\/money-in-short\/exist\?from\=summary$/', $this->reportUrlPrefix);
         $this->iClickOnNthElementBasedOnRegex($urlRegex, 0);
+
+        $this->iAnswerToAddingMoneyInOnTheClientsBehalf('Yes');
+        $this->iClickSaveAndContinue();
 
         $this->chooseOption('yes_no[moneyTransactionsShortInExist]', 'yes', 'one-off-payments');
         $this->iClickBasedOnAttributeTypeAndValue('button', 'id', 'yes_no_save');
