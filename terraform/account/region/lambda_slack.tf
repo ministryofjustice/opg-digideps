@@ -2,6 +2,7 @@ locals {
   slack_lambda_function_name = "slack-notifier"
 }
 
+# INFO - Lambda used to manage all our slack notifications
 resource "aws_lambda_function" "slack_lambda" {
   filename      = data.archive_file.slack_zip.output_path
   function_name = local.slack_lambda_function_name

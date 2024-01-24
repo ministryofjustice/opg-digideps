@@ -35,7 +35,7 @@ jobs:
       - uses: actions/checkout@b4ffde65f46336ab88eb53be808477a3936bae11 # pin@v3
       - name: generate semver tag and release
         id: semver_tag
-        uses: ministryofjustice/opg-github-actions/.github/actions/semver-tag@v2.5.0
+        uses: ministryofjustice/opg-github-actions/.github/actions/semver-tag@v2.7.3
         with:
           prerelease: false
           github_token: ${{ secrets.GITHUB_TOKEN }}
