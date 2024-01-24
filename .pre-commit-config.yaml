@@ -22,7 +22,7 @@ repos:
     hooks:
       - id: terraform_fmt
       - id: terraform_validate
-        exclude: terraform/account/region/[^/]+$
+        exclude: terraform/.*/region/[^/]+$
 
   - repo: https://github.com/awslabs/git-secrets
     rev: master

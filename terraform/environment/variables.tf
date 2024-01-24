@@ -47,25 +47,33 @@ variable "accounts" {
       s3_backup_kms_arn                      = string
       associate_alb_with_waf_web_acl_enabled = bool
       fargate_spot                           = bool
+      secondary_region_enabled               = bool
     })
   )
-}
-
-data "aws_ip_ranges" "route53_healthchecks_ips" {
-  services = ["route53_healthchecks"]
 }
 
 module "allow_list" {
   source = "git@github.com:ministryofjustice/opg-terraform-aws-moj-ip-allow-list.git"
 }
 
+data "aws_canonical_user_id" "development" {
+  provider = aws.development
+}
+
+data "aws_canonical_user_id" "preproduction" {
+  provider = aws.preproduction
+}
+
+data "aws_canonical_user_id" "production" {
+  provider = aws.production
+}
+
 locals {
   account        = contains(keys(var.accounts), local.environment) ? var.accounts[local.environment] : var.accounts["default"]
   secrets_prefix = contains(keys(var.accounts), local.environment) ? local.environment : "default"
-  environment    = lower(terraform.workspace)
+  subdomain      = local.account["subdomain_enabled"] ? local.environment : ""
 
-  backup_account_id       = "238302996107"
-  cross_account_role_name = "cross-acc-db-backup.digideps-production"
+  environment = lower(terraform.workspace)
 
   default_tags = {
     business-unit          = "OPG"
@@ -74,5 +82,11 @@ locals {
     owner                  = "OPG Supervision"
     infrastructure-support = "OPG WebOps: opgteam@digital.justice.gov.uk"
     is-production          = local.account.is_production
+  }
+
+  canonical_user_ids = {
+    development   = data.aws_canonical_user_id.development.id
+    preproduction = data.aws_canonical_user_id.preproduction.id
+    production    = data.aws_canonical_user_id.production.id
   }
 }

@@ -1,15 +1,15 @@
 module "disaster_recovery_backup" {
   source                  = "./modules/disaster_recovery"
-  count                   = local.account.dr_backup ? 1 : 0
-  default_tags            = local.default_tags
-  default_role            = var.DEFAULT_ROLE
+  count                   = var.account.dr_backup ? 1 : 0
+  default_tags            = var.default_tags
+  default_role            = var.default_role
   environment             = local.environment
   images                  = local.images
   execution_role_arn      = aws_iam_role.execution_role.arn
   backup_account_id       = local.backup_account_id
   aws_ecs_cluster_arn     = aws_ecs_cluster.main.arn
   aws_subnet_ids          = data.aws_subnet.private.*.id
-  account_id              = local.account.account_id
+  account_id              = var.account.account_id
   db                      = local.db
   log_retention           = 30
   common_sg_rules         = local.common_sg_rules

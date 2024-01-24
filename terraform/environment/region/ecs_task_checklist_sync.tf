@@ -108,15 +108,15 @@ locals {
         },
         {
           name  = "OPG_DOCKER_TAG",
-          value = var.OPG_DOCKER_TAG
+          value = var.docker_tag
         },
         {
           name  = "ADMIN_HOST",
-          value = "https://${aws_route53_record.admin.fqdn}"
+          value = "https://${var.admin_fqdn}"
         },
         {
           name  = "NONADMIN_HOST",
-          value = "https://${aws_route53_record.front.fqdn}"
+          value = "https://${var.front_fqdn}"
         },
         {
           name  = "SESSION_REDIS_DSN",

@@ -1,7 +1,7 @@
 locals {
   lambda_env_vars = {
-    DIGIDEPS_SYNC_ENDPOINT = "https://${aws_route53_record.front.fqdn}"
-    SECRETS_PREFIX         = local.secrets_prefix
+    DIGIDEPS_SYNC_ENDPOINT = "https://${var.front_fqdn}"
+    SECRETS_PREFIX         = var.secrets_prefix
   }
 }
 

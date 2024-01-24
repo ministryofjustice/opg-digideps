@@ -11,8 +11,8 @@ resource "aws_cloudwatch_dashboard" "main" {
         "height" : 3,
         "properties" : {
           "metrics" : [
-            ["AWS/Route53", "HealthCheckPercentageHealthy", "HealthCheckId", aws_route53_health_check.availability_front.id, { "region" : "us-east-1", "label" : "Public Frontend" }],
-            ["AWS/Route53", "HealthCheckPercentageHealthy", "HealthCheckId", aws_route53_health_check.availability_admin.id, { "region" : "us-east-1", "label" : "Admin Frontend" }]
+            ["AWS/Route53", "HealthCheckPercentageHealthy", "HealthCheckId", var.r53_hc_front.id, { "region" : "us-east-1", "label" : "Public Frontend" }],
+            ["AWS/Route53", "HealthCheckPercentageHealthy", "HealthCheckId", var.r53_hc_admin.id, { "region" : "us-east-1", "label" : "Admin Frontend" }]
           ],
           "region" : "eu-west-1",
           "view" : "singleValue",

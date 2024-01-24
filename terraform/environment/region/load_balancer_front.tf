@@ -16,12 +16,16 @@ resource "aws_lb_listener" "front_https" {
   port              = "443"
   protocol          = "HTTPS"
   ssl_policy        = "ELBSecurityPolicy-FS-1-2-Res-2020-10"
-  certificate_arn   = aws_acm_certificate_validation.wildcard.certificate_arn
+  certificate_arn   = var.certificate_arn
 
   default_action {
     target_group_arn = aws_lb_target_group.front.arn
     type             = "forward"
   }
+}
+
+data "aws_acm_certificate" "service_justice" {
+  domain = "*.digideps.opg.service.justice.gov.uk"
 }
 
 resource "aws_lb_listener_certificate" "front_loadbalancer_service_certificate" {

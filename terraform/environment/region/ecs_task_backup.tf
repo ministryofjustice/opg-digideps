@@ -41,18 +41,6 @@ module "backup_security_group" {
   environment = local.environment
 }
 
-data "aws_canonical_user_id" "development" {
-  provider = aws.development
-}
-
-data "aws_canonical_user_id" "preproduction" {
-  provider = aws.preproduction
-}
-
-data "aws_canonical_user_id" "production" {
-  provider = aws.production
-}
-
 data "aws_kms_alias" "backup" {
   name     = "alias/backup"
   provider = aws.management
@@ -82,7 +70,7 @@ locals {
         },
         {
           name  = "S3_OPTS",
-          value = "--sse=aws:kms --sse-kms-key-id=${data.aws_kms_alias.backup.target_key_arn} --grants=read=id=${data.aws_canonical_user_id.preproduction.id},id=${data.aws_canonical_user_id.production.id}"
+          value = "--sse=aws:kms --sse-kms-key-id=${data.aws_kms_alias.backup.target_key_arn} --grants=read=id=${var.canonical_user_ids["preproduction"]},id=${var.canonical_user_ids["production"]}"
         },
         {
           name  = "S3_PREFIX",
@@ -107,4 +95,15 @@ locals {
       ]
     }
   )
+}
+
+# Role that we use for backup and restore operations
+data "aws_iam_role" "sync" {
+  name = "sync"
+}
+
+# Bucket that we backup and restore from
+data "aws_s3_bucket" "backup" {
+  bucket   = "backup.complete-deputy-report.service.gov.uk"
+  provider = aws.management
 }

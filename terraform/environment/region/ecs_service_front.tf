@@ -127,8 +127,8 @@ locals {
       ],
       environment = [
         { name = "ROLE", value = "front" },
-        { name = "ADMIN_HOST", value = "https://${aws_route53_record.admin.fqdn}" },
-        { name = "NONADMIN_HOST", value = "https://${aws_route53_record.front.fqdn}" },
+        { name = "ADMIN_HOST", value = "https://${var.admin_fqdn}" },
+        { name = "NONADMIN_HOST", value = "https://${var.front_fqdn}" },
         { name = "API_URL", value = "http://api" },
         { name = "APP_ENV", value = var.account.app_env },
         { name = "AUDIT_LOG_GROUP_NAME", value = "audit-${local.environment}" },
@@ -141,10 +141,10 @@ locals {
         { name = "GA_GDS", value = var.account.ga_gds },
         { name = "HTMLTOPDF_ADDRESS", value = "http://htmltopdf:8080" },
         { name = "NGINX_APP_NAME", value = "frontend" },
-        { name = "OPG_DOCKER_TAG", value = var.OPG_DOCKER_TAG },
+        { name = "OPG_DOCKER_TAG", value = var.docker_tag },
         { name = "PARAMETER_PREFIX", value = local.parameter_prefix },
         { name = "S3_BUCKETNAME", value = "pa-uploads-${local.environment}" },
-        { name = "SECRETS_PREFIX", value = join("", [local.secrets_prefix, "/"]) },
+        { name = "SECRETS_PREFIX", value = join("", [var.secrets_prefix, "/"]) },
         { name = "SESSION_REDIS_DSN", value = "redis://${aws_route53_record.frontend_redis.fqdn}" },
         { name = "SESSION_PREFIX", value = "dd_front" },
         { name = "WORKSPACE", value = local.environment }
