@@ -6,7 +6,7 @@ namespace App\Tests\Behat\v2\Reporting\Sections;
 
 use App\Tests\Behat\BehatException;
 
-trait MoneyInHighAssetsTrait
+trait MoneyInSectionTrait
 {
     // Expected validation errors
     private string $invalidSelectOptionError = 'Please choose an option';
@@ -52,6 +52,15 @@ trait MoneyInHighAssetsTrait
         $activeReportId = $this->loggedInUserDetails->getCurrentReportId();
         $reportSectionUrl = sprintf(self::REPORT_SECTION_ENDPOINT, $this->reportUrlPrefix, $activeReportId, 'money-in');
         $this->visitPath($reportSectionUrl);
+    }
+
+    /**
+     * @Given /^I confirm "([^"]*)" to adding money in on the clients behalf$/
+     */
+    public function iConfirmToAddingMoneyInOnTheClientsBehalf($arg1)
+    {
+        $this->chooseOption('does_money_in_exist[moneyInExists]', $arg1, 'moneyInExists');
+        $this->pressButton('Save and continue');
     }
 
     /**
@@ -196,6 +205,14 @@ trait MoneyInHighAssetsTrait
     {
         assert($this->iShouldSeeTheMoneyInSummary());
 
+        if ($this->getSectionAnswers('moneyInExists')) {
+            $this->expectedResultsDisplayedSimplified('moneyInExists');
+        }
+
+        if ($this->getSectionAnswers('reasonForNoMoneyIn')) {
+            $this->expectedResultsDisplayedSimplified('reasonForNoMoneyIn');
+        }
+
         foreach (array_unique($this->moneyTypeCategoriesCompleted) as $completedCategory) {
             $this->expectedResultsDisplayedSimplified($completedCategory);
         }
@@ -275,5 +292,16 @@ trait MoneyInHighAssetsTrait
     public function theMoneyInSummaryPageShouldContainTheAddedValue()
     {
         $this->theMoneyInSummaryPageShouldContainTheMoneyInValuesIAdded();
+    }
+
+    /**
+     * @Then /^I enter a reason for no money in$/
+     */
+    public function iEnterAReasonForNoMoneyIn()
+    {
+        $this->iAmOnNoMoneyInExistsPage();
+        
+        $this->fillInField('reason_for_no_money[reasonForNoMoneyIn]', 'No money in', 'reasonForNoMoneyIn');
+        $this->pressButton('Save and continue');
     }
 }

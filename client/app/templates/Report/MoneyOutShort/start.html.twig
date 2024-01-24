@@ -22,7 +22,7 @@
         {{ 'startPage.moneyOut.pageSectionDescription1' | trans(transOptions, translationDomain) }}
     </p>
 
-    {{ macros.startSectionButton(path('money_out_short_category', { 'reportId': report.id}), 'startPage.moneyOut.startButton' | trans) }}
+    {{ macros.startSectionButton(path('does_money_out_short_exist', { 'reportId': report.id}), 'startPage.moneyOut.startButton' | trans) }}
 
     {# Pagination #}
     {% include '@App/Report/_nextprevious.html.twig' with {
