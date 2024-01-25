@@ -8,7 +8,7 @@ module "smoke_test" {
   environment           = local.environment
   execution_role_arn    = aws_iam_role.execution_role.arn
   subnet_ids            = data.aws_subnet.private[*].id
-  task_role_arn         = data.aws_iam_role.sync.arn
+  task_role_arn         = aws_iam_role.integration_tests.arn
   vpc_id                = data.aws_vpc.vpc.id
   security_group_id     = module.smoke_test_security_group.id
 }

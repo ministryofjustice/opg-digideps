@@ -8,7 +8,7 @@ module "reset_database" {
   environment           = local.environment
   execution_role_arn    = aws_iam_role.execution_role.arn
   subnet_ids            = data.aws_subnet.private[*].id
-  task_role_arn         = data.aws_iam_role.sync.arn
+  task_role_arn         = aws_iam_role.task_runner.arn
   vpc_id                = data.aws_vpc.vpc.id
   security_group_id     = module.reset_database_security_group.id
 }

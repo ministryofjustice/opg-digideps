@@ -43,7 +43,7 @@ resource "aws_iam_role_policy_attachment" "access_policy_attachment" {
 }
 
 # ===== RDS Enhanced Monitoring Role =====
-# INFO - This role is required for enhanced rds monitoring. TODO - add this to RDS.
+# INFO - This role is required for enhanced rds monitoring.
 
 resource "aws_iam_role" "enhanced_monitoring" {
   name               = "rds-enhanced-monitoring"

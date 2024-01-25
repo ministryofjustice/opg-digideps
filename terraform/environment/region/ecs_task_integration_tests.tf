@@ -8,7 +8,7 @@ module "integration_tests" {
   environment           = local.environment
   execution_role_arn    = aws_iam_role.execution_role.arn
   subnet_ids            = data.aws_subnet.private[*].id
-  task_role_arn         = data.aws_iam_role.sync.arn
+  task_role_arn         = aws_iam_role.integration_tests.arn
   vpc_id                = data.aws_vpc.vpc.id
   security_group_id     = module.integration_test_v2_security_group.id
   cpu                   = 4096
