@@ -1,24 +1,24 @@
 module "integration_tests" {
   source = "./modules/task"
-  name   = "integration-test-v2"
+  name   = "integration-tests"
 
   cluster_name          = aws_ecs_cluster.main.name
-  container_definitions = "[${local.integration_test_v2_container}]"
+  container_definitions = "[${local.integration_tests_container}]"
   tags                  = var.default_tags
   environment           = local.environment
   execution_role_arn    = aws_iam_role.execution_role.arn
   subnet_ids            = data.aws_subnet.private[*].id
   task_role_arn         = aws_iam_role.integration_tests.arn
   vpc_id                = data.aws_vpc.vpc.id
-  security_group_id     = module.integration_test_v2_security_group.id
+  security_group_id     = module.integration_tests_security_group.id
   cpu                   = 4096
   memory                = 8192
   override              = ["sh", "./tests/Behat/run-tests-parallel.sh"]
-  service_name          = "integration-test-v2"
+  service_name          = "integration-tests"
 }
 
 locals {
-  integration_test_v2_sg_rules = {
+  integration_tests_sg_rules = {
     ecr     = local.common_sg_rules.ecr
     logs    = local.common_sg_rules.logs
     s3      = local.common_sg_rules.s3
@@ -49,27 +49,27 @@ locals {
   }
 }
 
-module "integration_test_v2_security_group" {
+module "integration_tests_security_group" {
   source      = "./modules/security_group"
   description = "Integration Tests V2 Service"
-  rules       = local.integration_test_v2_sg_rules
-  name        = "integration-test-v2"
+  rules       = local.integration_tests_sg_rules
+  name        = "integration-tests"
   tags        = var.default_tags
   vpc_id      = data.aws_vpc.vpc.id
   environment = local.environment
 }
 
 locals {
-  integration_test_v2_container = jsonencode(
+  integration_tests_container = jsonencode(
     {
-      name  = "integration-test-v2",
+      name  = "integration-tests",
       image = local.images.api,
       logConfiguration = {
         logDriver = "awslogs",
         options = {
           awslogs-group         = aws_cloudwatch_log_group.opg_digi_deps.name,
           awslogs-region        = "eu-west-1",
-          awslogs-stream-prefix = aws_iam_role.test.name
+          awslogs-stream-prefix = "integration-tests"
         }
       },
       secrets = [

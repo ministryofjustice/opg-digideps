@@ -58,7 +58,7 @@ locals {
         options = {
           awslogs-group         = aws_cloudwatch_log_group.opg_digi_deps.name,
           awslogs-region        = "eu-west-1",
-          awslogs-stream-prefix = aws_iam_role.test.name
+          awslogs-stream-prefix = "smoke-test"
         }
       },
       entryPoint = ["sh", "./tests/Behat/run-tests-smoke.sh"],
