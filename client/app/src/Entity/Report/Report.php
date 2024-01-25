@@ -69,6 +69,10 @@ class Report implements ReportInterface, StartEndDateComparableInterface
     public const SIGNIFICANT_DECISION_MADE = 'Yes';
     public const SIGNIFICANT_DECISION_NOT_MADE = 'No';
 
+    //Money in and out exists
+    public const YES_MONEY_EXISTS = 'Yes';
+    public const NO_MONEY_EXISTS = 'No';
+
     /**
      * @JMS\Type("integer")
      * @JMS\Groups({"visits-care", "report-id"})
@@ -372,7 +376,7 @@ class Report implements ReportInterface, StartEndDateComparableInterface
 
     /**
      * @JMS\Type("string")
-     * @JMS\Groups({"report"})
+     * @JMS\Groups({"report", "doesMoneyInExist"})
      *
      * @Assert\NotBlank( message="moneyIn.moneyInChoice.notBlank", groups={"doesMoneyInExist"})
      */
@@ -382,7 +386,7 @@ class Report implements ReportInterface, StartEndDateComparableInterface
      * @var string captures reason for no money in. Required if no money has gone in
      *
      * @JMS\Type("string")
-     * @JMS\Groups({"report"})
+     * @JMS\Groups({"report", "reasonForNoMoneyIn"})
      *
      * @Assert\NotBlank( message="moneyIn.reasonForNoMoneyIn.notBlank", groups={"reasonForNoMoneyIn"})
      *
@@ -392,9 +396,9 @@ class Report implements ReportInterface, StartEndDateComparableInterface
 
     /**
      * @JMS\Type("string")
-     * @JMS\Groups({"report", "moneyOutExist"})
+     * @JMS\Groups({"report", "doesMoneyOutExist"})
+     *
      * @Assert\NotBlank( message="moneyOut.moneyOutChoice.notBlank", groups={"doesMoneyOutExist"})
-     * @JMS\Groups({"report"})
      */
     private $moneyOutExists;
 
@@ -402,9 +406,10 @@ class Report implements ReportInterface, StartEndDateComparableInterface
      * @var string captures reason for no money out. Required if no money has gone out
      *
      * @JMS\Type("string")
-     * @JMS\Groups({"report"})
+     * @JMS\Groups({"report", "reasonForNoMoneyOut"})
+     *
      * @Assert\NotBlank( message="moneyOut.reasonForNoMoneyOut.notBlank", groups={"reasonForNoMoneyOut"})
-     * @JMS\Groups({"report"})
+     *
      */
     private $reasonForNoMoneyOut;
 
@@ -1376,7 +1381,7 @@ class Report implements ReportInterface, StartEndDateComparableInterface
         return $this->moneyOutExists;
     }
 
-    public function setMoneyOutExists(string $moneyOutExists): self
+    public function setMoneyOutExists(?string $moneyOutExists): self
     {
         $this->moneyOutExists = $moneyOutExists;
 

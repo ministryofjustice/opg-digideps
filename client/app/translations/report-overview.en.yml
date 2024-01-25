@@ -137,23 +137,23 @@ money_in:
   subSectionTitle: "Money in"
   subSectionDescription: "Enter details of money paid into %client%'s accounts"
   label:
-    done: "{0} no items | {1} 1 item | ]1,Inf[ %count% items"
+    done: "{0} no money in | {1} 1 item | ]1,Inf[ %count% items"
 money_out:
   subSectionTitle: "Money out"
   subSectionDescription: "Enter details of money you've spent on %client%'s living and other costs"
   label:
-    done: "{0} no items | {1} 1 item | ]1,Inf[ %count% items"
+    done: "{0} no money out | {1} 1 item | ]1,Inf[ %count% items"
 
 money_in_short:
   subSectionTitle: "Money in"
   subSectionDescription: "Tell us about money paid into %client%'s accounts"
   label:
-    done: "{0} no items | {1} 1 item | ]1,Inf[ %count% items"
+    done: "{0} no money in | {1} 1 item | ]1,Inf[ %count% items"
 money_out_short:
   subSectionTitle: "Money out"
   subSectionDescription: "Tell us about money you have spent on %client%'s living and welfare costs"
   label:
-    done: "{0} no items | {1} 1 item | ]1,Inf[ %count% items"
+    done: "{0} no money out | {1} 1 item | ]1,Inf[ %count% items"
 balance:
   subSectionTitle: "Accounts balance check"
   subSectionDescription:
