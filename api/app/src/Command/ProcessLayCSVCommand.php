@@ -13,6 +13,7 @@ use Aws\S3\S3Client;
 use Predis\ClientInterface;
 use Psr\Log\LoggerInterface;
 use Symfony\Component\Console\Command\Command;
+use Symfony\Component\Console\Input\InputArgument;
 use Symfony\Component\Console\Input\InputInterface;
 use Symfony\Component\Console\Output\OutputInterface;
 use Symfony\Component\DependencyInjection\ParameterBag\ParameterBagInterface;
@@ -26,7 +27,7 @@ class ProcessLayCSVCommand extends Command
 
     private const CHUNK_SIZE = 50;
     
-    private const EXPECTED_COLUMNS = [
+    protected const EXPECTED_COLUMNS = [
         'Case',
         'ClientSurname',
         'DeputyUid',
@@ -45,7 +46,7 @@ class ProcessLayCSVCommand extends Command
         'Hybrid',
     ];
     
-    private const UNEXPECTED_COLUMNS = [
+    protected const UNEXPECTED_COLUMNS = [
         'LastReportDay', 
         'DeputyOrganisation'
     ];
@@ -72,14 +73,15 @@ class ProcessLayCSVCommand extends Command
     protected function configure(): void 
     {
         $this
-            ->setDescription('Process the Lay Deputies CSV from the S3 bucket');
+            ->setDescription('Process the Lay Deputies CSV from the S3 bucket')
+            ->addArgument('csv-filename', InputArgument::REQUIRED, 'Specify the file name of the CSV to retreive');
     }
 
     protected function execute(InputInterface $input, OutputInterface $output): int
     {
         $this->cliOutput = $output;
         $bucket = $this->params->get('s3_sirius_bucket');
-        $layReportFile = $this->params->get('lay_report_csv_filename');
+        $layReportFile = $input->getArgument('csv-filename');
         $fileLocation = sprintf('/tmp/%s', $layReportFile);
 
         try {
@@ -120,7 +122,6 @@ class ProcessLayCSVCommand extends Command
                 return Command::SUCCESS;
             }
 
-            echo $this->processedStringOutput();
             $this->cliOutput->writeln(
                 sprintf(
                     '%s - success - Finished processing LayCSV. Output: %s',
@@ -141,7 +142,7 @@ class ProcessLayCSVCommand extends Command
                 ->setExpectedColumns(self::EXPECTED_COLUMNS)
                 ->setUnexpectedColumns(self::UNEXPECTED_COLUMNS)
                 ->getData();
-        } catch (Throwable $e) {
+        } catch (RuntimeException $e) {
             $logMessage = sprintf('Error processing CSV: %s', $e->getMessage());
 
             $this->logger->error($logMessage);
@@ -187,7 +188,7 @@ class ProcessLayCSVCommand extends Command
         }
 
         if (!empty($processingOutput['skipped'])) {
-            $this->processingOutput['skipped'] += $processingOutput['skipped'];
+            $this->processingOutput['skipped'] = count($processingOutput['skipped']);
         }
     }
     
@@ -195,7 +196,7 @@ class ProcessLayCSVCommand extends Command
     {
         $processed = "";
         foreach ($this->processingOutput as $reportedHeader => $stats ) {
-            if (is_array($stats) && count($stats) >= 1) {
+            if (is_array($stats)) {
                 foreach ($stats as $statHeader => $statValue ) {
                     $processed .= sprintf("%s %s: %s. ", ucfirst($statHeader), $reportedHeader, $statValue);
                 }
