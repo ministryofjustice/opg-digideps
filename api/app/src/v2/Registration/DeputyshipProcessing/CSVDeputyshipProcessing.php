@@ -46,6 +46,12 @@ class CSVDeputyshipProcessing
 
         $result = $this->layUploader->upload($uploadCollection['collection']);
         $result['skipped'] = $uploadCollection['skipped'];
+        
+        if (count($result['skipped']) >= 1) {
+            foreach ($result['skipped'] as $lineSkipped) {
+                $this->logger->notice(sprintf('Line skipped in CSV due to missing values: %s', $lineSkipped));
+            }
+        }
 
         $this->logger->notice(
             sprintf(
