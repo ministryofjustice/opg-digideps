@@ -29,21 +29,9 @@ class CsvToArray
 
     private array $optionalColumns = [];
 
-    private bool $normaliseNewLines;
-
     private array $firstRow = [];
 
-
-    /**
-     * CsvToArray constructor.
-     *
-     * @param string $file
-     * @param bool $normaliseNewLines
-     * @param bool $autoDetectLineEndings - setup to maintain compatibility with other code that uses this class
-     *
-     * @throws RuntimeException
-     */
-    public function __construct(string $file, bool $normaliseNewLines, bool $autoDetectLineEndings = false)
+    public function __construct(string $file, bool $normaliseNewLines)
     {
         $this->normaliseNewLines = $normaliseNewLines;
 
@@ -51,17 +39,7 @@ class CsvToArray
             throw new RuntimeException("file $file not found");
         }
 
-        $fileContent = (string) file_get_contents($file);
-
-        // if line endings need to be normalised, the stream is replaced with a string stream with the content replaced
-        if ($this->normaliseNewLines) {
-            $content = str_replace(["\r\n", "\r"], ["\n", "\n"], $fileContent);
-            $this->handle = fopen('data://text/plain,'.$content, 'r');
-        } else {
-            ini_set('auto_detect_line_endings', true);
-            $openMode = $autoDetectLineEndings ? 'rb' : 'r';
-            $this->handle = fopen($file, $openMode);
-        }
+        $this->handle = fopen($file, 'r');
     }
 
     public function setExpectedColumns(array $expectedColumns)
@@ -170,10 +148,6 @@ class CsvToArray
     {
         if (false !== $this->handle) {
             fclose($this->handle);
-        }
-
-        if ($this->normaliseNewLines) {
-            ini_set('auto_detect_line_endings', false);
         }
     }
 }
