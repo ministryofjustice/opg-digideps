@@ -69,6 +69,7 @@ data "aws_canonical_user_id" "production" {
 }
 
 locals {
+  primary_region = "eu-west-1"
   account        = contains(keys(var.accounts), local.environment) ? var.accounts[local.environment] : var.accounts["default"]
   secrets_prefix = contains(keys(var.accounts), local.environment) ? local.environment : "default"
   subdomain      = local.account["subdomain_enabled"] ? local.environment : ""
