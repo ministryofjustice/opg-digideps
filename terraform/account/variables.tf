@@ -1,5 +1,6 @@
 variable "DEFAULT_ROLE" {
   default = "digideps-ci"
+  type    = string
 }
 
 variable "accounts" {
