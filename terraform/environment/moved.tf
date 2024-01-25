@@ -847,6 +847,18 @@ moved {
   to   = module.eu_west_1[0].module.integration_tests.aws_ecs_task_definition.task
 }
 moved {
+  from = module.eu_west_1[0].module.integration_test_v2_security_group.aws_security_group.group
+  to   = module.eu_west_1[0].module.integration_tests_security_group.aws_security_group.group
+}
+moved {
+  from = module.eu_west_1[0].module.integration_test_v2_security_group.aws_security_group_rule.rules
+  to   = module.eu_west_1[0].module.integration_tests_security_group.aws_security_group_rule.rules
+}
+moved {
+  from = module.eu_west_1[0].module.integration_test_v2.aws_ecs_task_definition.task
+  to   = module.eu_west_1[0].module.integration_tests.aws_ecs_task_definition.task
+}
+moved {
   from = module.lamdba_synchronisation.aws_cloudwatch_log_group.lambda
   to   = module.eu_west_1[0].module.lamdba_synchronisation.aws_cloudwatch_log_group.lambda
 }
