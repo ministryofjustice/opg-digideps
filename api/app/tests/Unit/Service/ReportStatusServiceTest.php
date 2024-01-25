@@ -772,6 +772,8 @@ class ReportStatusServiceTest extends TestCase
         // if any of the dependend section is not completed, status should be not-started
         $allComplete = [
             'isMissingMoneyOrAccountsOrClosingBalance' => false,
+            'hasMoneyIn' => true,
+            'hasMoneyOut' => true,
             'giftsSectionCompleted' => true,
             'expensesSectionCompleted' => true,
             'paFeesExpensesNotStarted' => false,

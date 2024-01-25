@@ -94,14 +94,17 @@ class ReportSubmissionService
         $this->generateReportPdf($report);
 
         if (in_array($report->getType(), Report::HIGH_ASSETS_REPORT_TYPES)) {
-            $csvContent = $this->csvGenerator->generateTransactionsCsv($report);
+            if (!empty($report->getGifts()) || !empty($report->getExpenses()) || !empty($report->getMoneyTransactionsIn())
+                || !empty($report->getMoneyTransactionsOut())) {
+                $csvContent = $this->csvGenerator->generateTransactionsCsv($report);
 
-            $this->fileUploader->uploadFileAndPersistDocument(
-                $report,
-                $csvContent,
-                $report->createAttachmentName('DigiRepTransactions-%s_%s_%s.csv'),
-                false
-            );
+                $this->fileUploader->uploadFileAndPersistDocument(
+                    $report,
+                    $csvContent,
+                    $report->createAttachmentName('DigiRepTransactions-%s_%s_%s.csv'),
+                    false
+                );
+            }
         }
     }
 
@@ -132,24 +135,6 @@ class ReportSubmissionService
     public function getPdfBinaryContent(ReportInterface $report, $showSummary = false)
     {
         $html = $this->templating->render('@App/Report/Formatted/formatted_standalone.html.twig', [
-            'report' => $report,
-            'showSummary' => $showSummary,
-        ]);
-
-        return $this->htmltopdf->getPdfFromHtml($html);
-    }
-
-    /**
-     * Generate the HTML of the report and convert to PDF.
-     *
-     * @param Report $report
-     * @param bool   $showSummary
-     *
-     * @return string binary PDF content
-     */
-    public function getNewPdfBinaryContent(ReportInterface $report, $showSummary = false)
-    {
-        $html = $this->templating->render('@App/Report/Formatted/new_formatted_standalone.html.twig', [
             'report' => $report,
             'showSummary' => $showSummary,
         ]);

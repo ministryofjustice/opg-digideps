@@ -32,6 +32,15 @@ trait MoneyOutShortSectionTrait
     }
 
     /**
+     * @Given /^I answer "([^"]*)" to taking money out on the clients behalf$/
+     */
+    public function iAnswerToTakingMoneyOutOnTheClientsBehalf($arg1)
+    {
+        $this->chooseOption('does_money_out_exist[moneyOutExists]', $arg1, 'moneyOutExists');
+        $this->pressButton('Save and continue');
+    }
+
+    /**
      * @When I have made no payments out
      */
     public function iHaveMadeNoPaymentsOut()

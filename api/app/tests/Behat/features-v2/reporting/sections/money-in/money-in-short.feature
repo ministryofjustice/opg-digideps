@@ -7,27 +7,30 @@ Feature: Money in Low Assets
         And I visit the report overview page
         Then I should see "money-in-short" as "not started"
         When I view and start the money in short report section
+        And I answer "Yes" to adding money in on the clients behalf
         And I have no payments going out
         Then I should see the expected money in section summary
         When I follow link back to report overview page
-        Then I should see "money-in-short" as "no items"
+        Then I should see "money-in-short" as "no money in"
 
     @lay-pfa-low-not-started
     Scenario: A user has had a single item of money go in but nothing over £1k
         Given a Lay Deputy has not started a Pfa Low Assets report
         When I view and start the money in short report section
+        And I answer "Yes" to adding money in on the clients behalf
         And I am reporting on:
             | Benefit Type    |
             | Salary or wages |
         And I have no one-off payments over £1k
         Then I should see the expected money in section summary
         When I follow link back to report overview page
-        Then I should see "money-in-short" as "no items"
+        Then I should see "money-in-short" as "no money in"
 
     @lay-pfa-low-not-started
     Scenario: A user has had a multiple items of money go in but nothing over £1k
         Given a Lay Deputy has not started a Pfa Low Assets report
         When I view and start the money in short report section
+        And I answer "Yes" to adding money in on the clients behalf
         And I am reporting on:
             | Benefit Type                                        |
             | State pension and benefits                          |
@@ -40,12 +43,13 @@ Feature: Money in Low Assets
         And I have no one-off payments over £1k
         Then I should see the expected money in section summary
         When I follow link back to report overview page
-        Then I should see "money-in-short" as "no items"
+        Then I should see "money-in-short" as "no money in"
 
     @lay-pfa-low-not-started
     Scenario: A user has had a single item of money go in and payment over £1k
         Given a Lay Deputy has not started a Pfa Low Assets report
         When I view and start the money in short report section
+        And I answer "Yes" to adding money in on the clients behalf
         And I am reporting on:
             | Benefit Type    |
             | Salary or wages |
