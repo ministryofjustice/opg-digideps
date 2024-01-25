@@ -791,19 +791,17 @@ trait IShouldBeOnFrontendTrait
     public function iAmOnOrgSettingsPage()
     {
         return $this->iAmOnPage('/org\/settings.*$/');
-
     }
 
     public function iAmOnOrgUserAccountsPage()
     {
         return $this->iAmOnPage('/org\/settings\/organisation.*$/');
-
     }
 
     public function iAmOnOrgSettingsEditAnotherUserPage()
     {
-        return $this->iAmOnPage('/org\/settings\/organisation\/.*\/edit\/.*.*$/', );
-    {
+        return $this->iAmOnPage('/org\/settings\/organisation\/.*\/edit\/.*.*$/',);
+    }
       
     public function iAmOnNoMoneyInExistsPage(): bool
     {
