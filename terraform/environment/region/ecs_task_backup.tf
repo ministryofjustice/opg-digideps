@@ -70,7 +70,7 @@ locals {
         },
         {
           name  = "S3_OPTS",
-          value = "--sse=aws:kms --sse-kms-key-id=${data.aws_kms_alias.backup.target_key_arn} --grants=read=id=${var.canonical_user_ids["preproduction"]},id=${var.canonical_user_ids["production"]}"
+          value = "--sse=aws:kms --sse-kms-key-id=${data.aws_kms_alias.backup.target_key_arn} --grants=read=id=${var.shared_environment_variables["canonical_id_preproduction"]},id=${var.shared_environment_variables["canonical_id_production"]}"
         },
         {
           name  = "S3_PREFIX",
