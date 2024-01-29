@@ -95,6 +95,8 @@ provider "aws" {
   }
 }
 
+# Remove the following providers once this has gone through
+
 provider "aws" {
   region = "eu-west-1"
   alias  = "development"

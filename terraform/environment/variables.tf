@@ -56,16 +56,19 @@ module "allow_list" {
   source = "git@github.com:ministryofjustice/opg-terraform-aws-moj-ip-allow-list.git"
 }
 
-data "aws_canonical_user_id" "development" {
-  provider = aws.development
+data "aws_ssm_parameter" "env_vars_development" {
+  provider = aws.management
+  name     = "/digideps/development/environment_variables"
 }
 
-data "aws_canonical_user_id" "preproduction" {
-  provider = aws.preproduction
+data "aws_ssm_parameter" "env_vars_preproduction" {
+  provider = aws.management
+  name     = "/digideps/preproduction/environment_variables"
 }
 
-data "aws_canonical_user_id" "production" {
-  provider = aws.production
+data "aws_ssm_parameter" "env_vars_production" {
+  provider = aws.management
+  name     = "/digideps/production/environment_variables"
 }
 
 locals {
@@ -85,9 +88,10 @@ locals {
     is-production          = local.account.is_production
   }
 
-  canonical_user_ids = {
-    development   = data.aws_canonical_user_id.development.id
-    preproduction = data.aws_canonical_user_id.preproduction.id
-    production    = data.aws_canonical_user_id.production.id
+  shared_environment_variables = {
+    canonical_id_development   = jsondecode(nonsensitive(data.aws_ssm_parameter.env_vars_development.value))["canonical_user_id"]
+    canonical_id_preproduction = jsondecode(nonsensitive(data.aws_ssm_parameter.env_vars_preproduction.value))["canonical_user_id"]
+    canonical_id_production    = jsondecode(nonsensitive(data.aws_ssm_parameter.env_vars_production.value))["canonical_user_id"]
+    replication_bucket         = jsondecode(nonsensitive(data.aws_ssm_parameter.env_vars_development.value))["replication_bucket"]
   }
 }

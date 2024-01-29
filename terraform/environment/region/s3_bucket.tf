@@ -4,15 +4,10 @@ locals {
   long_expiry_workspaces     = ["production02", "development"]
   expiration_days            = contains(local.long_expiry_workspaces, local.environment) ? 730 : 14
   noncurrent_expiration_days = contains(local.long_expiry_workspaces, local.environment) ? 365 : 7
+  replication_bucket         = var.shared_environment_variables["replication_bucket"]
 }
 
 data "aws_region" "current" {}
-
-// GET DEV REPLICATION BUCKET
-data "aws_s3_bucket" "replication_bucket" {
-  bucket   = "pa-uploads-branch-replication"
-  provider = aws.development
-}
 
 // DATA SOURCE FOR DEFAULT KEY
 data "aws_kms_alias" "source_default_key" {
@@ -30,7 +25,7 @@ module "pa_uploads" {
   expiration_days                      = local.expiration_days
   non_current_expiration_days          = local.noncurrent_expiration_days
   replication_within_account           = local.bucket_replication_status
-  replication_within_account_bucket    = data.aws_s3_bucket.replication_bucket.arn
+  replication_within_account_bucket    = local.replication_bucket
   replication_to_backup                = var.account.s3_backup_replication
   replication_to_backup_account_bucket = "arn:aws:s3:::${var.account.name}.backup.digideps.opg.service.justice.gov.uk"
   replication_role_arn                 = aws_iam_role.backup_role.arn
