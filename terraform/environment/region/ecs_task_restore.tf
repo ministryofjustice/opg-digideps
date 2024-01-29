@@ -1,3 +1,4 @@
+# Not used explicitly but can be called manually to restore from bucket in the same environment
 module "restore" {
   source = "./modules/task"
   name   = "restore"
